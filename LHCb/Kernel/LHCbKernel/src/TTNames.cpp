@@ -10,9 +10,14 @@
 #include <iostream>
 
 std::string LHCb::TTNames::UniqueSectorToString(const LHCb::STChannelID& chan) {
-  std::string theString = UniqueRegionToString(chan) + "Sector" + boost::lexical_cast<std::string>(chan.sector());
+  std::string theString = UniqueRegionToString(chan) + SectorToString(chan);
   return theString;
 }
+
+std::string LHCb::TTNames::SectorToString(const LHCb::STChannelID& chan) {
+  return "Sector"+ boost::lexical_cast<std::string>(chan.sector());;
+}
+
 
 std::vector<std::string> LHCb::TTNames::stations() {
 

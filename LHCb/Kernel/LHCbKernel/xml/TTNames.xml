@@ -83,7 +83,14 @@
         type = "std::string"
         argList = "LHCb::STChannelID chan"
         desc = "unique sector string from id"> 
+      </method>
 
+    
+      <method
+        name = "SectorToString"
+        type = "std::string"
+        argList = "LHCb::STChannelID chan"
+        desc = "sector string from id"> 
       </method>
 
   <method

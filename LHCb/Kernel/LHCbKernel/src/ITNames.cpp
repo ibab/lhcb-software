@@ -3,9 +3,14 @@
 #include "boost/lexical_cast.hpp"
 #include <iostream>
 
+
 std::string LHCb::ITNames::UniqueSectorToString(const LHCb::STChannelID& chan) {
-  std::string theString = UniqueLayerToString(chan) + "Sector" + boost::lexical_cast<std::string>(chan.sector());
+  std::string theString = UniqueLayerToString(chan) + SectorToString(chan);
   return theString;
+}
+
+std::string LHCb::ITNames::SectorToString(const LHCb::STChannelID& chan) {
+  return "Sector"+ boost::lexical_cast<std::string>(chan.sector());;
 }
 
 std::string LHCb::ITNames::channelToString(const LHCb::STChannelID& chan) {
