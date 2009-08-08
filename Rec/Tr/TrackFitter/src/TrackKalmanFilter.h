@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.29 2009-07-08 14:25:30 wouter Exp $
+// $Id: TrackKalmanFilter.h,v 1.30 2009-08-08 10:33:47 mneedham Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -88,6 +88,8 @@ private:
   
   //! helper to print a failure comment
   StatusCode failure( const std::string& comment ) const;
+
+  unsigned int m_DoF;
 
   bool m_debugLevel;
 };

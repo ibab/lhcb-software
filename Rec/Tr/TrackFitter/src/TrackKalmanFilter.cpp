@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.69 2009-07-08 14:25:30 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.70 2009-08-08 10:33:47 mneedham Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -48,6 +48,7 @@ TrackKalmanFilter::TrackKalmanFilter( const std::string& type,
 
   declareProperty( "BiDirectionalFit" , m_biDirectionalFit  = true   );
   declareProperty( "Smooth", m_smooth = true ) ;
+  declareProperty( "DoF", m_DoF = 5u);
 }
 
 //=========================================================================
@@ -89,7 +90,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 
   // ==> prediction and filter
   double chisq(0) ;
-  int ndof(-state.nParameters()) ;
+  int ndof(-m_DoF) ;
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Running forward filter" << endmsg ;
 
