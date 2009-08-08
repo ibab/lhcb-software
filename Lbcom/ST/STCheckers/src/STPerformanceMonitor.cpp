@@ -1,4 +1,4 @@
-// $Id: STPerformanceMonitor.cpp,v 1.7 2009-02-26 14:45:11 mneedham Exp $
+// $Id: STPerformanceMonitor.cpp,v 1.8 2009-08-08 11:11:12 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -11,12 +11,17 @@
 // STDet
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+#include "STDet/DeTTSector.h"
 
 // Event
 #include "Event/STSummary.h"
 
 // local
 #include "STPerformanceMonitor.h"
+
+#include "Kernel/ITDetectorPlot.h"
+#include "Kernel/TTDetectorPlot.h"
+
 
 using namespace LHCb;
 
@@ -55,7 +60,71 @@ StatusCode STPerformanceMonitor::initialize()
   // Initialize GaudiHistoAlg
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return Error("Failed to initialize", sc);
-    
+
+  // get the disabled sectors
+  const DeSTDetector::Sectors disabledSec = tracker()->disabledSectors();
+  if (disabledSec.size() != 0u){  
+    for (DeSTDetector::Sectors::const_iterator iterS = disabledSec.begin(); 
+         iterS != disabledSec.end(); ++iterS){    
+      info() << "disabled " << (*iterS)->nickname() << endmsg;  
+    } // for      
+  }
+  else {
+    info() << "All sectors enabled " << endmsg;
+  }
+
+  // get the disabled beetles
+  std::vector<LHCb::STChannelID> disabledB = tracker()->disabledBeetles();
+  if (disabledB.size() != 0u){  
+    for (std::vector<LHCb::STChannelID>::const_iterator iterB = disabledB.begin(); 
+         iterB != disabledB.end(); ++iterB){    
+      info() << "disabled " << uniqueBeetle(*iterB) << endmsg;  
+    } // for      
+  }
+  else {
+    info() << "All beetles enabled " << endmsg;
+  }
+
+  // active fraction
+  info () << "fraction active " << tracker()->fractionActive() << endmsg; 
+
+  const DeSTDetector::Sectors& sectors = tracker()->sectors();  
+  DeSTDetector::Sectors::const_iterator iterSector = sectors.begin();
+
+  if (detType() == "IT"){
+    ST::ITDetectorPlot activeProp("fracActive", "Active fraction");
+    ST::ITDetectorPlot noiseProp("noise", "Noise fraction");   
+    for (; iterSector != sectors.end(); ++iterSector){
+      // 2-D plot what is active in the detector element
+      ST::ITDetectorPlot::Bins bins = activeProp.toBins((*iterSector)->elementID());
+      plot2D(bins.xBin, bins.yBin, activeProp.name(), activeProp.title(), 
+             activeProp.minBinX(), activeProp.maxBinX(), activeProp.minBinY(), activeProp.maxBinY(),
+             activeProp.nBinX(), activeProp.nBinY(), (*iterSector)->fractionActive());
+      plot2D(bins.xBin, bins.yBin, noiseProp.name(), noiseProp.title(), 
+             noiseProp.minBinX(), noiseProp.maxBinX(), noiseProp.minBinY(), noiseProp.maxBinY(),
+             noiseProp.nBinX(), noiseProp.nBinY(), (*iterSector)->sectorNoise());
+    } // loop sectors
+  } // detType 
+  else {
+    // the TT version
+    ST::TTDetectorPlot noiseProp("noise", "Noise fraction");
+    ST::TTDetectorPlot activeProp("fracActive", "Active fraction");
+    for (; iterSector != sectors.end(); ++iterSector){
+      // 2-D plot what is active in the detector element
+      const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(*iterSector);
+      ST::TTDetectorPlot::Bins bins = activeProp.toBins(ttSector);
+      for (int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin){
+        plot2D(bins.xBin, yBin, activeProp.name(), activeProp.title(), 
+               activeProp.minBinX(), activeProp.maxBinX(), activeProp.minBinY(), activeProp.maxBinY(),
+               activeProp.nBinX(), activeProp.nBinY(), (*iterSector)->fractionActive());
+        plot2D(bins.xBin, yBin, noiseProp.name(), noiseProp.title(), 
+              noiseProp.minBinX(), noiseProp.maxBinX(), noiseProp.minBinY(), noiseProp.maxBinY(),
+              noiseProp.nBinX(), noiseProp.nBinY(), (*iterSector)->sectorNoise());
+      } // loop bin Y
+    } // loop sectors
+  } // detType 
+
+
   return StatusCode::SUCCESS;
 }
 
@@ -107,16 +176,14 @@ StatusCode STPerformanceMonitor::execute()
   double tm = SiChargeFun::truncatedMean(clusterCont->begin(),clusterCont->end());
   plot(tm, "tm", 0., 100., 200);
   plot2D(m_event,tm,13,"tms versus time", 0., m_expectedEvents, 0., 100, 200, 200);
-
-  /*
+ 
   double lms = SiChargeFun::LMS(clusterCont->begin(), clusterCont->end());
   plot(lms,"lms", 0., 100., 200 );
-  */
-
+ 
   double gm = SiChargeFun::generalizedMean(clusterCont->begin(), clusterCont->end());
   plot(gm,"gm", 0., 100., 200);
-
  
+
   return StatusCode::SUCCESS;
 }
 

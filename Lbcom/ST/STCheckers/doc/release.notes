@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-08-08 M Needham
+ - Add plots to STPerformanceMonitor
+
 !=========================== STCheckers v2r13 2009-05-25 ======================
 ! 2009-05-16 - M Tobin
  - Moved STCluster monitoring to STMonitors

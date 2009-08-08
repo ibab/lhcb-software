@@ -13,3 +13,10 @@ beetleFitFunc.C
    fit of the beetle pulse shape in a scan
 
 
+itactiveplot.C 
+
+   plot of what in IT is active
+
+ttnoise.C
+
+  noise map for TT
