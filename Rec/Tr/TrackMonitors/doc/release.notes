@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen, Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
+
+! 2009-08-08 M Needham
+ - Tidy up STEfficiency algorithm
+
 ! 2009-08-05 Stephanie Hansmann-Menzemer
 - adapt to changes in track class 
 
