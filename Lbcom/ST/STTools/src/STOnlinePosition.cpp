@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.cpp,v 1.13 2008-01-08 10:21:49 mneedham Exp $
+// $Id: STOnlinePosition.cpp,v 1.14 2009-08-08 10:51:05 mneedham Exp $
  
 // Kernel
 #include "GaudiKernel/ToolFactory.h"
@@ -29,6 +29,7 @@ STOnlinePosition::STOnlinePosition( const std::string& type,
 {
   m_errorVec += 0.22, 0.14, 0.25;
   declareProperty("ErrorVec",m_errorVec);
+  declareProperty("APE", m_APE = 0.0);
 
   declareInterface<ISTClusterPosition>(this);
 }
@@ -93,8 +94,12 @@ STOnlinePosition::estimate(const SmartRefVector<LHCb::STDigit>& digits) const
 double STOnlinePosition::error(const unsigned int nStrips) const
 { 
  // estimate of error
- return ( nStrips < m_errorVec.size() ? 
-          m_errorVec[nStrips-1] : m_errorVec.back() );
+ double eValue =0.0;
+ nStrips < m_errorVec.size() ?  eValue = m_errorVec[nStrips-1] : eValue = m_errorVec.back();
+ if (m_APE > 0.0){
+   eValue = sqrt(eValue*eValue + m_APE*m_APE );
+ }
+ return eValue;
 }
 
 

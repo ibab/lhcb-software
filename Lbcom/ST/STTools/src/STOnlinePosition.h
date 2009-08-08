@@ -1,4 +1,4 @@
-// $Id: STOnlinePosition.h,v 1.7 2008-01-08 10:21:49 mneedham Exp $
+// $Id: STOnlinePosition.h,v 1.8 2009-08-08 10:51:05 mneedham Exp $
 #ifndef STOnlinePosition_H
 #define STOnlinePosition_H 1
 
@@ -42,6 +42,9 @@ private:
  
   // job options
   std::vector<double> m_errorVec; ///< Error parametrized by cluster size
+
+  /// alignment
+  double m_APE; 
 
 };
 
