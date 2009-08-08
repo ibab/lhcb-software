@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.12 2009-05-03 07:41:24 mneedham Exp $
+// $Id: STKernelDict.h,v 1.13 2009-08-08 10:48:42 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -16,6 +16,9 @@
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/STBoardMapping.h"
+#include "Kernel/ITDetectorPlot.h"
+#include "Kernel/TTDetectorPlot.h"
+
 
 struct _Instantiations{
 
@@ -24,6 +27,10 @@ struct _Instantiations{
   STDAQ::StripRepresentation m_stripRep;
 
   STDAQ::chanPair m_chanPair;
+  
+  ST::ITDetectorPlot m_itdetPlot;
+  ST::TTDetectorPlot m_ttdetPlot;
+
 
 }; 
 
