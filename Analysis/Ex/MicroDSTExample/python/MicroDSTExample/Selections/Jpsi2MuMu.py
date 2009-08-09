@@ -1,8 +1,8 @@
-# $Id: Jpsi2MuMu.py,v 1.1 2009-07-14 10:14:31 jpalac Exp $
+# $Id: Jpsi2MuMu.py,v 1.2 2009-08-09 16:30:38 jpalac Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = 'April 2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Roadmap Jpsi->mumu selection using LoKi::Hybrid and python
@@ -25,7 +25,11 @@ Jpsi2MuMu.Code = "  (MAXTREE('mu+'==ABSID, TRCHI2DOF) < 5.0)" \
                  "& (MAXTREE('mu+'==ABSID, PIDK) < 5.0)" \
                  "& (ADMASS('J/psi(1S)') < 42.*MeV)"
 
-from PhysSelPython.Wrappers import Selection
+from PhysSelPython.Wrappers import Selection, DataOnDemand
 
-SelJpsi2MuMu = Selection(Jpsi2MuMu,
-                         requiredSelections = ['StdLTUnbiasedJpsi2MuMu'] )
+MyStdJpsi = DataOnDemand('DODStdLTUnbiasedJpsi2MuMu',
+                         Location = 'StdLTUnbiasedJpsi2MuMu')
+
+SelJpsi2MuMu = Selection("SelJpsi2MuMu",
+                         Algorithm = Jpsi2MuMu,
+                         RequiredSelections = [MyStdJpsi] )

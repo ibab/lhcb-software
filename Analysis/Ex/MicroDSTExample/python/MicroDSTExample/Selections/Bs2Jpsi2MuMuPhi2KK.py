@@ -1,8 +1,8 @@
-# $Id: Bs2Jpsi2MuMuPhi2KK.py,v 1.1 2009-07-14 10:14:31 jpalac Exp $
+# $Id: Bs2Jpsi2MuMuPhi2KK.py,v 1.2 2009-08-09 16:30:38 jpalac Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = 'April 2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 The roadmap Bs->JpsiPhi selection using LoKi::Hybrid and python
@@ -32,8 +32,9 @@ from Phi2KK import SelPhi2KK
 
 from PhysSelPython.Wrappers import Selection
 
-SelBs2Jpsi2MuMuPhi2KK = Selection(Bs2Jpsi2MuMuPhi2KK,
-                                  requiredSelections = [SelJpsi2MuMu,
+SelBs2Jpsi2MuMuPhi2KK = Selection("SelBs2Jpsi2MuMuPhi2KK",
+                                  Algorithm = Bs2Jpsi2MuMuPhi2KK,
+                                  RequiredSelections = [SelJpsi2MuMu,
                                                         SelPhi2KK] )
 
 
