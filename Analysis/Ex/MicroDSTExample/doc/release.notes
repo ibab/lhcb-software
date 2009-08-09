@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.40 2009-08-09 16:43:26 jpalac Exp $
+!$Id: release.notes,v 1.41 2009-08-09 16:45:06 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
@@ -10,6 +10,8 @@
   . Increase to v2r9
  - options/TestMicroDSTMakeNewConf.py
   . Use new MicroDSTWriter configurable.
+ - python/MicroDSTExample/Selections/*.py
+  . Use new configurable PhysSelPython.Wrappers classes.
 
 ! 2009-08-03 - Juan PALACIOS
  - Remove
