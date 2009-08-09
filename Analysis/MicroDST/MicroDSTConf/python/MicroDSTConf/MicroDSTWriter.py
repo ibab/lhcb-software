@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.1 2009-08-09 16:28:23 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.2 2009-08-09 21:32:34 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -12,7 +12,7 @@ from GaudiConf.Configuration import *
 class MicroDSTWriter(LHCbConfigurableUser) :
 
     __slots__ = {
-        "MicroDSTFile"           : "MicroDST.mdst"
+        "MicroDSTFile"           : ""
         , "SelectionSequence"    : ""
         , "CopyParticles"        : True
         , "CopyPVs"              : True
@@ -25,7 +25,7 @@ class MicroDSTWriter(LHCbConfigurableUser) :
         }
 
     _propertyDocDct = {  
-        "MicroDSTFile"           : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
+        "MicroDSTFile"           : """ Write name of output MicroDST file. Default '': On;y make sequence, don't write MicroDST."""
         , "SelectionSequence"    : """            # Name of selection sequence that defines data for MicroDST"""
         , "CopyParticles"        : """ """
         , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
@@ -41,6 +41,10 @@ class MicroDSTWriter(LHCbConfigurableUser) :
         from Configurables import OutputStream
         name = self.name()
         outputFileName = self.getProp('MicroDSTFile')
+        
+        if outputFileName == "" :
+            print "No OutputStream! Returning None!"
+            return
         streamName = 'MicroDSTStream'+ name
         stream = OutputStream(streamName)
         stream.OptItemList = ["/Event/"+ name +"#99"]
@@ -49,8 +53,11 @@ class MicroDSTWriter(LHCbConfigurableUser) :
             stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
         
     def outputStream(self) :
-        return OutputStream('MicroDSTStream'+ self.name())
-
+        if (self.getProp('MicroDSTFile') ) != '' :
+            return OutputStream('MicroDSTStream'+ self.name())
+        else :
+            print "No OutputStream! Returning None!"
+            
     def _personaliseName(self, name) :
         return name + "_" + self.name()
 
@@ -178,4 +185,6 @@ class MicroDSTWriter(LHCbConfigurableUser) :
         if self.getProp("CopyHltDecReports") : self.copyHltDecReports()
         if self.getProp("CopyRelatedPVs")    : self.copyRelatedPVs()
         if self.getProp("CopyMCTruth")       : self.copyMCInfo()
-        self.sequence().Members += [self.outputStream()]
+        outStream = self.outputStream()
+        if outStream != None :
+            self.sequence().Members += [self.outputStream()]
