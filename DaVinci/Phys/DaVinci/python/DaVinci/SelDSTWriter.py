@@ -1,8 +1,8 @@
 """
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
-"""∑
-__version__ = "$Id: SelDSTWriter.py,v 1.1 2009-08-09 19:51:07 jpalac Exp $"
+"""
+__version__ = "$Id: SelDSTWriter.py,v 1.2 2009-08-09 20:03:32 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
