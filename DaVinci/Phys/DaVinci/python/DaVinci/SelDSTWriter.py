@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.2 2009-08-09 20:03:32 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.3 2009-08-09 21:30:59 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -17,16 +17,14 @@ class SelDSTWriter(ConfigurableUser) :
         "DSTFile"           : "DaVinci.dst"
         , "SelectionSequence"    : ""
         , "Items"                : []
-        , "SaveCandidates"       : False
         }
 
     _propertyDocDct = {  
         "DSTFile"             : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
         , "SelectionSequence" : """ Name of PhysSlePython.SelectionSequence that defines the selection"""
         , "Items"             : """ Extra items from the TES to be copied."""
-        , "CopyCandidates"    : """ Copy selection candidates and full decay tree. NOT IMPLEMENTED."""
         }
-    
+
     def selectionSeq(self) :
         return self.getProp('SelectionSequence')
 
@@ -37,6 +35,9 @@ class SelDSTWriter(ConfigurableUser) :
         from Configurables import InputCopyStream
         stream = InputCopyStream( self._streamName() )
         stream.OptItemList = self.getProp("Items")
+        from Configurables import MicroDSTWriter
+        if type (self.selectionSeq() ) == MicroDSTWriter :
+            self.outputStream().OptItemList += ["/Event/" + self.selectionSeq().name() + "#99"]
         stream.TakeOptionalFromTES = True
         stream.Preload = False          # True makes LoKi crash (why?)
         stream.PreloadOptItems = False  # True makes LoKi crash (why?)
@@ -60,5 +61,6 @@ class SelDSTWriter(ConfigurableUser) :
         """
         SelDSTWriter configuration
         """
+
         self._initOutStream()
         self.sequence().Members += [self.outputStream()]
