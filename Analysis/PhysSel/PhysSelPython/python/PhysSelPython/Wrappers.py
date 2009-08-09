@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.2 2009-07-14 12:30:33 jpalac Exp $
+#$Id: Wrappers.py,v 1.3 2009-08-09 16:17:45 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 """
@@ -12,7 +12,33 @@ are available:
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-class Selection :
+from LHCbKernel.Configuration import *
+from GaudiConf.Configuration import *
+from Configurables import LHCbConfigurableUser
+
+class DataOnDemand(LHCbConfigurableUser) :
+    """
+    Simple wrapper for a Data-On-Demand location. Returns output location
+    via algName() method. Can be used as a Selection in RequiredSelections
+    field of other Selections.
+
+    Example: wrap StdLoosePions
+
+    SelStdLoosePions = DataOnDemand('SelStdLoosePions',
+                                    Location = 'StdLoosePions')
+    """
+
+    __author__ = "Juan Palacios juan.palacios@nikhef.nl"
+    
+    __slots__ = {
+        "Algorithm"           : ""   ,
+        "Location"            : ""   , 
+        "RequiredSelections"  : []
+        }
+    def algName(self) :
+        return self.getProp('Location')
+    
+class Selection(LHCbConfigurableUser) :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
     configurable plus a list of required selection configurables. It uses
@@ -30,28 +56,38 @@ class Selection :
     from C2cc import SelC
     # now create a Selection instance using the B and C selections:
     from PhysSelPython.Wrappers import Selection
-    SelA2B2bbC2cc = Selection(A2B2bbC2cc, requiredSelecitons=[SelB, SelC]    
+    SelA2B2bbC2cc = Selection('SelA2B2bbC2cc',
+                              Algorithm = A2B2bbC2cc,
+                              RequiredSelections = [SelB, SelC]    
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
-    def __init__(self, algo, requiredSelections ) :
-        self.algo = algo
-        self.requiredSelections = []
-        for sel in requiredSelections :
-            if type(sel) == str :
-                self.dealWithStringSelection(sel) # Std should not do anything
-                self.algo.InputLocations += [sel]
-            else :
-                self.algo.InputLocations += [sel.name()]
-                self.requiredSelections.append(sel)
-        print "Required Selection Algorithms: ", self.requiredSelections
+
+    __slots__ = {
+        "Algorithm"           : ""   ,
+        "RequiredSelections"  : []
+        }
+    
+    def __apply_configuration__(self) :
+        print "Set Algo"
+        print "Set required selections"
+        for sel in self.requiredSelections() :
+            print self.algName(),  " adding InputLocation ", sel.algName()
+            self.algorithm().InputLocations += [sel.algName()]
+        print "Required Selection Algorithms: ", self.requiredSelections()
+
+    def requiredSelections(self) :
+        return self.getProp('RequiredSelections')
+
     def algorithm(self) :
-        return self.algo
+        return self.getProp('Algorithm')
+
     def dealWithStringSelection(self, selection) :
         print "Selection.dealWithStringSelection(", selection, "): DO NOTHING"
-    def name(self) :
-        return self.algo.name()
 
-class SelectionSequence :
+    def algName(self) :
+        return self.algorithm().name()
+
+class SelectionSequence(LHCbConfigurableUser) :
     """
     Wrapper class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -64,27 +100,41 @@ class SelectionSequence :
     # A -> B(bb), C(cc)
     from A2B2bbC2cc import SelA2B2bbC2cc
     from PhysSelPython.Wrappers import SelectionSequence
-    SeqA2B2bbC2cc = SelectionSequence(SelA2B2bbC2cc)
+    SeqA2B2bbC2cc = SelectionSequence('SeqA2B2bbC2cc',
+                                      TopSelection = SelA2B2bbC2cc)
     # use it
     mySelSeq = SeqA2B2bbC2cc.sequence()
     dv = DaVinci()
     dv.UserAlgorithms = [mySelSeq]
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
-    def __init__(self, TopSelection ) :
-        self.algo = TopSelection.algorithm()
-        self.seq = GaudiSequencer("Seq"+self.algo.name())
-        self.seq.Members += [TopSelection.algorithm()]
-        self.buildSelectionList( TopSelection.requiredSelections )
-        self.seq.Members.reverse()
+
+    __slots__ = {
+        "TopSelection" : ""
+        }
+
+    def __apply_configuration__(self) :
+        self.sequence().Members += [self.algorithm()]
+        self.buildSelectionList( self.topSelection().RequiredSelections )
+        self.sequence().Members.reverse()
+
+    def topSelection(self) :
+        return self.getProp('TopSelection')
+
+    def algorithm(self) :
+        return self.topSelection().algorithm()
+    
     def sequence(self) :
-        return self.seq
-    def name(self) :
-        return self.seq.name()
-    def topAlgName(self) :
-        return self.algo.name()
+        return GaudiSequencer("GaudiSeq"+self.algorithm().name())
+
+    def algName(self) :
+        return self.algorithm().name()
+
     def buildSelectionList(self, selections) :
         for sel in selections :
-            print "Adding Algo ", sel.name(), " to ", self.seq.name()
-            self.seq.Members += [sel.algorithm()]
-            self.buildSelectionList( sel.requiredSelections )
+            print "Adding Algo ", sel.algName(), " to ", self.sequence().name()
+            if type(sel) == DataOnDemand :
+                print "DataOnDemand: do nothing"
+            else :
+                self.sequence().Members += [sel.algorithm()]
+                self.buildSelectionList( sel.requiredSelections() )
