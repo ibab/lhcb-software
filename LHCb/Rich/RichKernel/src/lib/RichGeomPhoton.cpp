@@ -5,7 +5,7 @@
  *  Implementation file for class : RichGeomPhoton
  *
  *  CVS Log :-
- *  $Id: RichGeomPhoton.cpp,v 1.7 2009-03-28 14:23:31 jonrob Exp $
+ *  $Id: RichGeomPhoton.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis

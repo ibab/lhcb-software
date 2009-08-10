@@ -1,11 +1,11 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichHistoToolBase.cpp
+/** @file RichHistoAlgBase.cpp
  *
- *  Implementation file for class : RichHistoToolBase
+ *  Implementation file for class : RichHistoAlgBase
  *
  *  CVS Log :-
- *  $Id: RichHistoToolBase.cpp,v 1.3 2009-07-27 20:29:02 jonrob Exp $
+ *  $Id: RichHistoAlgBase.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2002-04-05
@@ -13,11 +13,11 @@
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichHistoToolBase.h"
+#include "RichKernel/RichHistoAlgBase.h"
 
 // ============================================================================
 // Force creation of templated class
 #include "RichHistoBase.icpp"
-template class Rich::CommonBase < GaudiHistoTool > ;
-template class Rich::HistoBase  < GaudiHistoTool > ;
+template class Rich::CommonBase < GaudiHistoAlg > ;
+template class Rich::HistoBase  < GaudiHistoAlg > ;
 // ============================================================================

@@ -5,7 +5,7 @@
  *  Implementation file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.cpp,v 1.6 2009-03-03 12:01:00 jonrob Exp $
+ *  $Id: RichSmartIDCnv.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008

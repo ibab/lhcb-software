@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.236 2009-08-10 12:06:57 jonrob Exp $
+! $Id: release.notes,v 1.237 2009-08-10 12:12:05 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
 ! 2009-08-10 - Chris Jones
+ - Move Linker library source files to src/lib/ directory
  - Slight simplification of the booking methods in RichHistoBase.icpp
 
 ! 2009-08-07 - Ross Young

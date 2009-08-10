@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.10 2009-07-27 20:29:02 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18

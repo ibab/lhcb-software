@@ -2,7 +2,7 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.88 2009-07-30 09:25:25 jonrob Exp $
+# $Id: requirements,v 1.89 2009-08-10 12:12:05 jonrob Exp $
 #============================================================================
 
 package RichKernel
@@ -25,7 +25,7 @@ end_private
 apply_pattern install_more_includes more=RichKernel
 
 # ================ linker library ============================================
-library RichKernelLib ../src/*.cpp
+library RichKernelLib ../src/lib/*.cpp
 apply_pattern linker_library library=RichKernelLib
 
 # ================ component library=========================================

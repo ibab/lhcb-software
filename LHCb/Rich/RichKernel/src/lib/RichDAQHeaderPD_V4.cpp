@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH DAQ class : RichDAQHeaderV4::RichDAQHeaderPD
  *
- *  $Id: RichDAQHeaderPD_V4.cpp,v 1.2 2007-09-04 16:45:10 jonrob Exp $
+ *  $Id: RichDAQHeaderPD_V4.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   23/04/2007

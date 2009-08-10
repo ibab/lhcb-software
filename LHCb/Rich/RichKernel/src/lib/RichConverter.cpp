@@ -1,23 +1,22 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichTupleAlgBase.cpp
+/** @file RichConverter.cpp
  *
- *  Implementation file for class : RichTupleAlgBase
+ *  Implementation file for class : Rich::Converter
  *
  *  CVS Log :-
- *  $Id: RichTupleAlgBase.cpp,v 1.3 2009-07-27 20:29:02 jonrob Exp $
+ *  $Id: RichConverter.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
- *  @date   2002-04-05
+ *  @date   2009-07-07
  */
 //-----------------------------------------------------------------------------
 
 // local
-#include "RichKernel/RichTupleAlgBase.h"
+#include "RichKernel/RichConverter.h"
 
 // ============================================================================
-// Force creation of templated class
-#include "RichHistoBase.icpp"
-template class Rich::CommonBase < GaudiTupleAlg > ;
-template class Rich::HistoBase  < GaudiTupleAlg > ;
+// Force creation of templated classes
+#include "RichCommonBase.icpp"
+template class Rich::CommonBase< Rich::Converter_Imp > ;
 // ============================================================================

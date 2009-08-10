@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.3 2009-07-30 11:28:22 jonrob Exp $
+ *  $Id: RichConverter_Imp.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07

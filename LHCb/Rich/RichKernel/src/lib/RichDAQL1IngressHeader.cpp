@@ -5,7 +5,7 @@
  *  Implementation file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.cpp,v 1.2 2007-05-30 16:46:02 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   619/01/2007

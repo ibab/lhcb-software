@@ -5,7 +5,7 @@
  *  Implementation file for class : RichTrackSegment
  *
  *  CVS Log :-
- *  $Id: RichTrackSegment.cpp,v 1.8 2008-02-16 11:51:55 jonrob Exp $
+ *  $Id: RichTrackSegment.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @author  Antonis Papanestis
