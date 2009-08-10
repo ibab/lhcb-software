@@ -206,18 +206,9 @@ public:
 
    template <typename T>
    bool updateLeaf(const T& key2value) { // T::value_type must be pair<string,string>, representing (key,value)
-           PropertyConfig::Properties props = m_leaf->properties();
-           for (typename T::const_iterator j=key2value.begin();j!=key2value.end();++j) {
-               PropertyConfig::Properties::iterator i = find_if( props.begin(),  
-                                                                 props.end(),
-                                                                 bind(&PropertyConfig::Prop::first,_1) == j->first );
-               if (i==props.end()) {
-                    cerr << "trying to update a non-existing property: " << j->first << endl;
-                    return false;
-               }
-               *i = *j;
-           }
-           m_ownedLeaf.reset( m_leaf->clone(props) );
+           PropertyConfig update = m_leaf->update(key2value.begin(),key2value.end());
+           if (!update.digest().valid()) return false;
+           m_ownedLeaf.reset( new PropertyConfig(update));
            m_leaf = m_ownedLeaf.get();
            return true;
    }
@@ -303,13 +294,34 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
 
    multimap<string,pair<string,string> >  mm;
    for (vector<string>::const_iterator i = updates.begin(); i!=updates.end(); ++i) {
+       //TODO: use common code in PropertyConfig for parsing updates...
        string::size_type c = i->find(':');
+       Assert(c != string::npos ) ;
        string lhs = i->substr(0,c);
        string rhs = i->substr(c+1,string::npos);
        string::size_type d = lhs.rfind('.');
        string comp = lhs.substr(0,d);
        string key  = lhs.substr(d+1,string::npos);
        mm.insert( make_pair( comp, make_pair(key, rhs ) ) );
+   }
+   return updateAndWrite( in, mm, label );
+}
+
+ConfigTreeNode::digest_type
+ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
+                                 const map<string,vector<string> >& updates,
+                                 const string& label) const {
+
+   multimap<string,pair<string,string> >  mm;
+   for (map<string,vector<string> >::const_iterator i = updates.begin(); i!=updates.end(); ++i) {
+       for (vector<string>::const_iterator j = i->second.begin(); j!=i->second.end();++j) {
+            //TODO: use common code in PropertyConfig for parsing updates...
+           string::size_type c = j->find(':');
+           Assert(c != string::npos ) ;
+           string key = j->substr(0,c);
+           string value = j->substr(c+1,string::npos);
+           mm.insert( make_pair( i->first, make_pair(key, value ) ) );
+       }
    }
    return updateAndWrite( in, mm, label );
 }

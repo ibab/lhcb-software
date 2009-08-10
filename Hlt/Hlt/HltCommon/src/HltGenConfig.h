@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.h,v 1.10 2008-08-10 18:27:03 graven Exp $
+// $Id: HltGenConfig.h,v 1.11 2009-08-10 14:42:58 graven Exp $
 #ifndef HLTGENCONFIG_H 
 #define HLTGENCONFIG_H 1
 
@@ -47,6 +47,7 @@ private:
   std::string              m_hltType;     ///< what runtype do we label this config as?
   std::string              m_release;     ///< what is the Moore release we use as a label?
   std::string              m_label;     ///< what is the Moore release we use as a label?
+  std::map<std::string, std::vector<std::string> > m_overrule;
 
   StatusCode                generateConfig() const;
   

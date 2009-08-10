@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.14 2009-04-21 18:50:05 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.15 2009-08-10 14:42:58 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -61,9 +61,10 @@ HltGenConfig::HltGenConfig( const string& name, ISvcLocator* pSvcLocator)
                                                       ( string("HltDataSvc") ) );
     declareProperty("ConfigAccessSvc",   s_accessSvc = "ConfigFileAccessSvc");
     declareProperty("PropertyConfigSvc", s_configSvc = "PropertyConfigSvc");
-    declareProperty("hltType", m_hltType );
-    declareProperty("mooreRelease", m_release );
-    declareProperty("label", m_label );
+    declareProperty("HltType", m_hltType );
+    declareProperty("MooreRelease", m_release );
+    declareProperty("Label", m_label );
+    declareProperty("Overrule", m_overrule);
 }
 //=============================================================================
 // Destructor
@@ -134,7 +135,13 @@ HltGenConfig::generateConfig(const INamedInterface& obj) const
     vector<PropertyConfig::digest_type> depRefs = gatherDependencies(obj);
 
     //create and write the leaf object
-    PropertyConfig::digest_type propRef = m_accessSvc->writePropertyConfig( m_configSvc->currentConfiguration(obj) );
+    PropertyConfig currentConfig = m_configSvc->currentConfiguration(obj);
+    // check whether there is a modification request for this component...
+    std::map<std::string, std::vector<std::string> >::const_iterator overrule = m_overrule.find( obj.name() ) ;
+    if (overrule != m_overrule.end()) {
+        currentConfig.update(overrule->second.begin(), overrule->second.end());
+    }
+    PropertyConfig::digest_type propRef = m_accessSvc->writePropertyConfig( currentConfig );
     if (propRef.invalid()){  
         error() << "problem writing PropertyConfig" << endmsg;
         return ConfigTreeNode::digest_type::createInvalid();

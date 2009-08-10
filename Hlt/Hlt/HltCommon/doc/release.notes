@@ -3,6 +3,10 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-08-10 - Gerhard Raven
+ - allow one to overrule properties during generation of config instead of
+   having to do it a posteriori
+
 ! 2009-08-06 - Gerhard Raven
  - HltConfigSvc now adds task ID + 16 lower bits of IP addr to HltDecReports
 

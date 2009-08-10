@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.32 2009-08-06 12:41:52 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.33 2009-08-10 14:42:58 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -105,7 +105,7 @@ StatusCode HltConfigSvc::initialize() {
         bool found = false;
         m_id = boost::lexical_cast<unsigned int>( what[2] );
 #if linux
-        char name[HOST_NAME_MAX]; size_t len;
+        char name[HOST_NAME_MAX]; size_t len=0;
         if (!gethostname(name,len)) {
             struct hostent *x = gethostbyname(name);
             if (x) {

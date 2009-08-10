@@ -1,4 +1,4 @@
-// $Id: ConfigTreeEditor.h,v 1.5 2009-06-30 13:41:41 graven Exp $
+// $Id: ConfigTreeEditor.h,v 1.6 2009-08-10 14:42:58 graven Exp $
 #ifndef CONFIGTREEEDITOR_H 
 #define CONFIGTREEEDITOR_H 1
 #include "GaudiAlg/GaudiTool.h"
@@ -41,6 +41,9 @@ public:
                                               const std::vector<std::string>& updates,
                                               const std::string& label) const ;
 
+   ConfigTreeNode::digest_type updateAndWrite(const ConfigTreeNode::digest_type& in,
+                                              const std::map<std::string,std::vector<std::string> >& updates,
+                                              const std::string& label) const;
 private:
     std::string         s_propertyConfigSvc, s_configAccessSvc;
     IPropertyConfigSvc *m_propertyConfigSvc;

@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.22 2009-06-30 13:40:49 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.23 2009-08-10 14:42:58 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -102,7 +102,7 @@ PropertyConfigSvc::PropertyConfigSvc( const string& name, ISvcLocator* pSvcLocat
 {
   declareProperty("ConfigAccessSvc", s_accessSvc = "ConfigFileAccessSvc");
   declareProperty("prefetchConfig", m_prefetch);
-  declareProperty("skipAlgorithm", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
+  declareProperty("SkipComponent", m_skip); // do not touch these algorithms configurations, NOR THEIR DEPENDENTS!
   declareProperty("optionsfile", m_ofname);
   declareProperty("createGraphVizFile", m_createGraphVizFile=false);
 }
@@ -382,7 +382,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
         if (find(m_skip.begin(),m_skip.end(),config->name())!=m_skip.end()) {
             warning() << " skipping configuration of " << config->name()
                       << " because it is in the 'skip' list" 
-                      << endl;
+                      << endmsg;
             continue;
         }
         if ( m_configPushed[config->name()] != *i ) { 
