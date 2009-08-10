@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.cpp,v 1.7 2009-08-05 17:41:46 ibelyaev Exp $
+// $Id: Calo2Calo.cpp,v 1.8 2009-08-10 11:55:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -143,6 +143,14 @@ const std::vector<LHCb::CaloCellID>& Calo2Calo::addCell
   
   // add the cells
   m_cells.push_back( id );
+  
+  // added by VB.
+  if ( 0 == m_digs ) 
+  {
+    Error ( "Digits* points to NULL") ;
+    return m_cells ;
+  }
+
   LHCb::CaloDigit* digit = m_digs->object( id );
   if( NULL != digit ) {
     m_digits.push_back( digit );

@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTrackAlg.cpp,v 1.7 2009-08-06 18:07:06 smenzeme Exp $
+// $Id: CaloCosmicsTrackAlg.cpp,v 1.8 2009-08-10 11:55:13 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -112,7 +112,8 @@ StatusCode CaloCosmicsTrackAlg::execute() {
     debug() << " backward  : "<< track->checkFlag(LHCb::Track::Backward) << endmsg;
     debug() << " Timed : " << track->checkFlag(LHCb::Track::Selected) << " / " << m_caloTrack->timed() << endmsg;
     debug() << " firstState : "<< track->firstState() << endmsg;
-    debug() << " Time : " << track->likelihood()<< endmsg;
+    // commented out by VB. 8.8.2k+9
+    // debug() << " Time : " << track->likelihood()<< endmsg;
     debug() << " Chi2 : " << track->info(LHCb::Track::FitMatchChi2, 999.)<< endmsg; 
     double z = 8000;
     m_caloTrack->propagate( z );
