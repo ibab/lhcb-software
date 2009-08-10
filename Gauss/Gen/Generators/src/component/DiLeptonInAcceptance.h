@@ -1,4 +1,4 @@
-// $Id: DiLeptonInAcceptance.h,v 1.1 2007-03-08 19:56:17 robbep Exp $
+// $Id: DiLeptonInAcceptance.h,v 1.2 2009-08-10 13:15:56 tblake Exp $
 #ifndef GENERATORS_DILEPTONINACCEPTANCE_H 
 #define GENERATORS_DILEPTONINACCEPTANCE_H 1
 
@@ -15,11 +15,31 @@
  *  
  *  Cut on events with two leptons in LHCb acceptance + minimum pT.
  *  and mass of lepton pair in sepcified range
+ *
+ *  Examples:
+ *
+ *  Generate a pair of opposite sign muons 
+ *  ( RequireOppositeSign = true; LeptonOneID = 13; LeptonOneID = 13 )
+ *
+ *  NB: this is the default
+ *  
+ *  Generate all possible same and opposite sign combinations 
+ *  ( RequireOppositeSign = false; RequireSameSign = false; )
+ *  
+ *  Generate same sign combinations
+ *  ( RequireOppositeSign = false; RequireSameSign = true; )
+ *
+ *  Generate e+mu- and e-mu+ combinations
+ *  ( LeptonOneID = 13; LeptonTwoID = 11; )
+ *  
+ *  Generate e-mu- and e+mu+ combiantions
+ *  ( LeptonOneID = 13; LeptonTwoID = 11; RequireOppositeSign = false; RequireSameSign = true; )
+ * 
  * 
  *  Implementation of IFullGenEventCutTool.
  *
  *  @author T Blake
- *  @date   2007-01-31
+ *  @date   2009-08-10
  */
 
 class DiLeptonInAcceptance : public GaudiTool , 
@@ -44,39 +64,60 @@ class DiLeptonInAcceptance : public GaudiTool ,
   
  private:
   
-  bool isPositiveLepton( const HepMC::GenParticle* ) const;
-  bool isNegativeLepton( const HepMC::GenParticle* ) const;
-  bool isInAcceptance( const HepMC::GenParticle* ) const;
+  /// Check if the lepton is in the detector acceptance, has minimum p and pT.
+  bool isInAcceptance( const HepMC::GenParticle* , 
+                       const double, const double,
+                       const double, const double ) const;
 
+
+  /// Check if the combination of two leptons is allowed
   bool isCombination( const HepMC::GenParticle*, 
                       const HepMC::GenParticle* ) const;
   
   
-  /// Maximum value for theta angle of lepton (set by options)
-  double m_chargedThetaMax ;
+  /// Maximum value for theta angle of the first lepton (set by options)
+  double m_thetaMaxLOne ;
 
-  /// Minimum value for theta angle of lepton (set by options)
-  double m_chargedThetaMin ;
+  /// Minimum value for theta angle of the first lepton (set by options)
+  double m_thetaMinLOne ;
   
-  /// Minimum pT of lepton (set by options)
-  double m_ptMin ;
+  /// Maximum value for theta angle of the first lepton (set by options)
+  double m_thetaMaxLTwo ;
+
+  /// Minimum value for theta angle of the first lepton (set by options)
+  double m_thetaMinLTwo ;
   
+  /// Minimum pT of first lepton (set by options)
+  double m_ptMinLOne ;
+
+  /// Minimum p of first lepton (set by options)
+  double m_pMinLOne;
+
+  /// Minimum pT of second lepton (set by options)
+  double m_ptMinLTwo ;
+
+  /// Minimum p of second lepton (set by options)
+  double m_pMinLTwo;
+
   /// Di Lepton mass range - Lower (set by options)
   double m_minMass; 
 
   /// Di Lepton mass range - Upper (set by options)
   double m_maxMass; 
 
-  /// Allowed lepton - Plus (set by options)
-  int m_leptonMinusPDG ; 
+  /// Allowed lepton - first lepton (set by options)
+  int m_leptonOnePDG ; 
 
-  /// Allowed lepton - Minus (set by options)
-  int m_leptonPlusPDG ;  
+  /// Allowed lepton - second lepton (set by options)
+  int m_leptonTwoPDG ;  
 
-  /// Allow combinations with the Plus/Minus pdg id interchanged ( set by options, default = true )  
-  bool m_ccFlag; 
+  /// Only allow decays with opposite sign leptons 
+  bool m_oppSign; 
   
-
+  /// Only allow decays with same sign leptons. Opposite sign leptons take precedence. 
+  bool m_sameSign;
+  
+  
 };
 
 #endif // GENERATORS_DILEPTONINACCEPTANCE_H

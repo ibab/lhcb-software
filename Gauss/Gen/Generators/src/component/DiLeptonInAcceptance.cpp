@@ -1,4 +1,4 @@
-// $Id: DiLeptonInAcceptance.cpp,v 1.2 2008-07-24 22:05:38 robbep Exp $
+// $Id: DiLeptonInAcceptance.cpp,v 1.3 2009-08-10 13:15:56 tblake Exp $
 // Include files 
 
 // from Gaudi
@@ -34,14 +34,25 @@ DiLeptonInAcceptance::DiLeptonInAcceptance( const std::string& type,
 {
   declareInterface<IFullGenEventCutTool>( this );
   
-  declareProperty( "PtMin"     , m_ptMin = 0*Gaudi::Units::GeV );
-  declareProperty( "MinTheta"  , m_chargedThetaMin = 10*Gaudi::Units::mrad );
-  declareProperty( "MaxTheta"  , m_chargedThetaMax = 400*Gaudi::Units::mrad );
+  declareProperty( "LeptonIDOne" , m_leptonOnePDG = 13 );
+  declareProperty( "LeptonIDTwo" , m_leptonTwoPDG = 13 );
+  
+  declareProperty( "LeptonOnePtMin", m_ptMinLOne = 0*Gaudi::Units::GeV );
+  declareProperty( "LeptonOnePMin", m_pMinLOne = 0*Gaudi::Units::GeV );
+  declareProperty( "LeptonTwoPtMin", m_ptMinLTwo = 0*Gaudi::Units::GeV );
+  declareProperty( "LeptonTwoPMin", m_pMinLTwo = 0*Gaudi::Units::GeV );
+  declareProperty( "LeptonOneMinTheta"  , m_thetaMinLOne = 10*Gaudi::Units::mrad );
+  declareProperty( "LeptonOneMaxTheta"  , m_thetaMaxLOne = 400*Gaudi::Units::mrad );
+  declareProperty( "LeptonTwoMinTheta"  , m_thetaMinLTwo = 10*Gaudi::Units::mrad );
+  declareProperty( "LeptonTwoMaxTheta"  , m_thetaMaxLTwo = 400*Gaudi::Units::mrad );
+  
+
   declareProperty( "MinMass"   , m_minMass = 0*Gaudi::Units::GeV );
   declareProperty( "MaxMass"   , m_maxMass = 100*Gaudi::Units::GeV );
-  declareProperty( "PositiveLepton" , m_leptonPlusPDG = -13 );
-  declareProperty( "NegativeLepton" , m_leptonMinusPDG = 13 );
-  declareProperty( "CCFlag"    , m_ccFlag = true );
+ 
+  declareProperty( "RequireOppositeSign" , m_oppSign = true );
+  declareProperty( "RequireSameSign" , m_sameSign = false );
+
 }
 
 //=============================================================================
@@ -57,62 +68,70 @@ DiLeptonInAcceptance::~DiLeptonInAcceptance() {}
 bool DiLeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
                                          LHCb::GenCollisions * /* col */ )
   const {
-
-  std::list< HepMC::GenParticle* > leptonPlusList;
-  std::list< HepMC::GenParticle* > leptonMinusList;
-
+  
+  std::list< HepMC::GenParticle* > leptonOneList;
+  std::list< HepMC::GenParticle* > leptonTwoList;
+  
+  if ( m_oppSign && m_sameSign ) {
+    warning() << " Trying to force both opposite and same sign leptons! Choosing same sign " << endmsg;
+  }
+  
+  
   for (LHCb::HepMCEvents::iterator theEventIter = theEvents->begin() ;
        theEventIter != theEvents->end() ; ++theEventIter) {
     
     
-     for ( HepMC::GenEvent::particle_const_iterator
-             iParticle = ( *theEventIter ) -> pGenEvt() -> particles_begin() ;
-           iParticle != ( *theEventIter ) -> pGenEvt() -> particles_end() ; 
-           ++iParticle ){
+    for ( HepMC::GenEvent::particle_const_iterator
+            iParticle = ( *theEventIter ) -> pGenEvt() -> particles_begin() ;
+          iParticle != ( *theEventIter ) -> pGenEvt() -> particles_end() ; 
+          ++iParticle ){
       
-       HepMC::GenParticle* particle = (*iParticle);
-       
-       if ( isPositiveLepton( particle ) && isInAcceptance( particle ) ){
-         debug() << " Found l+ in accpetance" << endmsg;
-         leptonPlusList.push_back( particle );
-       }
-       
-       if ( isNegativeLepton( particle ) && isInAcceptance( particle ) ){
-         debug() << " Found l- in accpetance" << endmsg;
-         leptonMinusList.push_back( particle );
-       }       
-     }
-
+      HepMC::GenParticle* particle = (*iParticle);
+      
+      int absid = abs(particle->pdg_id());
+      
+      if ( m_leptonOnePDG == absid && //isInAcceptance( particle ) ){
+           isInAcceptance( particle, m_pMinLOne, m_ptMinLOne, m_thetaMinLOne, m_thetaMaxLOne )  ){
+        debug() << " Found lepton [" << m_leptonOnePDG << "] in accpetance" << endmsg;
+        leptonOneList.push_back( particle );
+      }
+      
+      if ( m_leptonTwoPDG == absid && //isInAcceptance( particle ) ) {
+           isInAcceptance( particle, m_pMinLTwo, m_ptMinLTwo, m_thetaMinLTwo, m_thetaMaxLTwo )  ){
+        debug() << " Found lepton [" << m_leptonTwoPDG << "] in accpetance" << endmsg;
+        leptonTwoList.push_back( particle );
+      }
+    } 
   }
   
   
-  if ( leptonPlusList.empty() || leptonMinusList.empty() ){
-    debug() << "No lepton pair found in this event" << endmsg ;
+  if ( leptonOneList.empty() || leptonTwoList.empty() ){
+    debug() << "No leptons found in this event" << endmsg ;
     return false;
   }
   
   // apply dimuon mass constraint
   double dimuonMass;
   
+  std::list< HepMC::GenParticle * >::const_iterator iterOne;
+  std::list< HepMC::GenParticle * >::const_iterator iterTwo;
+  
+  
+  for ( iterOne = leptonOneList.begin() ; 
+        iterOne != leptonOneList.end() ; ++iterOne ) {      
     
-  for (std::list< HepMC::GenParticle * >::const_iterator 
-         plusIter = leptonPlusList.begin() ; 
-       plusIter != leptonPlusList.end() ; ++plusIter ) {      
+    for ( iterTwo = leptonTwoList.begin() ; 
+          iterTwo != leptonTwoList.end() ; ++iterTwo ){
       
-    for (std::list <HepMC::GenParticle *>::const_iterator 
-           minusIter = leptonMinusList.begin() ; 
-         minusIter != leptonMinusList.end() ; ++minusIter ){
-
-
       // Check combination
-      if ( !isCombination( (*plusIter), (*minusIter) ) ) continue;
+      if ( !isCombination( (*iterOne), (*iterTwo) ) ) continue;
       
       // Apply Di Muon Mass Cut
       HepMC::FourVector sum ;
-      sum.setPx( (*minusIter) -> momentum().px() + (*plusIter)->momentum().px() ) ;
-      sum.setPy( (*minusIter) -> momentum().py() + (*plusIter)->momentum().py() ) ;
-      sum.setPz( (*minusIter) -> momentum().px() + (*plusIter)->momentum().pz() ) ;
-      sum.setE ( (*minusIter) -> momentum().e()  + (*plusIter)->momentum().e() ) ;
+      sum.setPx( (*iterOne) -> momentum().px() + (*iterTwo)->momentum().px() ) ;
+      sum.setPy( (*iterOne) -> momentum().py() + (*iterTwo)->momentum().py() ) ;
+      sum.setPz( (*iterOne) -> momentum().px() + (*iterTwo)->momentum().pz() ) ;
+      sum.setE ( (*iterOne) -> momentum().e()  + (*iterTwo)->momentum().e() ) ;
       dimuonMass = sum.m();
       
       if ( dimuonMass >= m_minMass && dimuonMass <= m_maxMass ){
@@ -127,47 +146,34 @@ bool DiLeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
   return false;
 }
 
-bool DiLeptonInAcceptance::isCombination( const HepMC::GenParticle *pPlus, 
-                                          const HepMC::GenParticle *pMinus )
-  const {
-  
-  if ( m_leptonPlusPDG  == pPlus->pdg_id() && 
-       m_leptonMinusPDG == pMinus->pdg_id() ) return true;
-  
-  
-  if ( m_ccFlag ){
-    if ( -m_leptonPlusPDG  == pMinus->pdg_id() &&
-         -m_leptonMinusPDG == pPlus->pdg_id() ) return true;
-  }
-  
-  return false;
-}
 
-bool DiLeptonInAcceptance::isPositiveLepton( const HepMC::GenParticle *p )
+bool DiLeptonInAcceptance::isCombination( const HepMC::GenParticle *particleOne, 
+                                          const HepMC::GenParticle *particleTwo )
   const {
   
-  if ( -11 == p->pdg_id() || -13 == p->pdg_id() ) {
-    debug() << "found positive letpon " << endmsg;
-    return true;
+  if ( particleOne == particleTwo ) return false ;
+  
+  int combination =  (particleOne->pdg_id())*(particleTwo->pdg_id()) ;
+  
+  // Same sign takes precedence 
+  if ( m_sameSign ) { 
+    if ( combination < 0 ) return false ;
+  } 
+  else if ( m_oppSign ) {
+    if ( combination > 0 ) return false;
   }
   
-  return false;
+  return true ;
 }
 
 
-bool DiLeptonInAcceptance::isNegativeLepton( const HepMC::GenParticle *p ) 
-  const {
-  
-  if ( 11 == p->pdg_id() || 13 == p->pdg_id() ) {
-    debug() << "found negative letpon" << endmsg;
-    return true;
-  }
 
-  return false;  
-}
-
-bool DiLeptonInAcceptance::isInAcceptance( const HepMC::GenParticle *p )
-  const {
+bool DiLeptonInAcceptance::isInAcceptance( const HepMC::GenParticle *p, 
+                                           const double pmin, 
+                                           const double ptmin, 
+                                           const double thetamin, 
+                                           const double thetamax ) const 
+{
   
    double px, py, pz, pp, theta, pt;
    
@@ -179,15 +185,16 @@ bool DiLeptonInAcceptance::isInAcceptance( const HepMC::GenParticle *p )
    py = p->momentum().py();
    
    pp = sqrt( px*px + py*py + pz*pz );
+   if ( pp < pmin ) return false ;
+   
    pt = sqrt( px*px + py*py);
+   if ( pt < ptmin ) return false ;
+   
    theta = acos( pz / pp );
    
-   return ( pt    >= m_ptMin && 
-            theta <= m_chargedThetaMax && 
-            theta >= m_chargedThetaMin );  
+   return ( theta <= thetamax && 
+            theta >= thetamin );
 }
-
-
 
 
 
