@@ -1,3 +1,9 @@
+2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/MkLCGCMTtar: Added the creation of the link to libdpm.so called 
+	libshift.so.2.1
+	* scripts/makedoc added the support for the VanDerMeer project. 
+
 2009-08-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: doesn't try to self-update for the check option.

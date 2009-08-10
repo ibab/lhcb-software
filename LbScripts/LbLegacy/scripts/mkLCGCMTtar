@@ -57,6 +57,27 @@ def help() :
     sys.exit()
 
 #----------------------------------------------------------------------------
+#  create libshift link ==============================================
+#----------------------------------------------------------------------------
+def fixDPMRFIO(searchdir=None, shiftvers="2.1"):
+    if not searchdir :
+        searchdir = os.getcwd()
+    shiftname = "libshift.so.%s" % shiftvers
+    for root, dirs, files in os.walk(searchdir) :
+        for f in files :
+            if f == "libdpm.so" :
+                if debug_flag == 1:
+                    print "found libdpm.so in %s" % root
+                if os.path.exists(shiftname) :
+                    os.remove(libshiftname)
+                os.symlink(f, shiftname)
+                if debug_flag == 1 :
+                    print "created symlink %s to libdpm.so" % shiftname
+                break
+
+
+
+#----------------------------------------------------------------------------
 #  get native versions ==============================================
 #----------------------------------------------------------------------------
 def get_base_project(native_version):
@@ -361,6 +382,8 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
 # clean CLHEP directory
     if os.path.isdir('clhep'):
         rc = clean_clhep_dir(packages_versions['LCGCMT'],packages_versions['CLHEP'],binary_dir)
+
+    fixDPMRFIO()
 
 # make the final tar file from /tmp/main_dir/binary_dir
     if len(missing) == 0 and len(tarko) == 0:

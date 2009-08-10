@@ -169,6 +169,8 @@ class builder :
                             packSys = 'LHCbSys'
                         elif pack == 'DAVINCI':
                             packSys = 'DaVinciSys'
+                        elif pack == 'VANDERMEER' :
+                            packSys = 'VanDerMeerSys'
                         else:
                             packSys = pack.capitalize() + 'Sys'
 
