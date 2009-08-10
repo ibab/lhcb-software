@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06.py,v 1.7 2009-04-29 09:49:41 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-Effective.py,v 1.1 2009-08-10 15:08:02 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -11,6 +11,10 @@
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 ########################################################################
+moni = GaudiSequencer("Hlt2MonitorSeq")
+moni.IgnoreFilterPassed = True
+moni.Context = "HLT"
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 #
 # Standard configuration
 #
@@ -20,6 +24,7 @@ DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
 DaVinci().DataType = "DC06"                    # Default is "DC06"
 DaVinci().Simulation   = True
+DaVinci().MoniSequence = [ moni ] 
 ########################################################################
 #
 # HLT
@@ -27,8 +32,12 @@ DaVinci().Simulation   = True
 DaVinci().ReplaceL0BanksWithEmulated = True    ## enable if you want to rerun L0
 DaVinci().Hlt2Requires = 'L0'                  ## Run Hlt1 and 2
 DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-DaVinci().Input   = [
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/L0-v1-lumi2/00001959/DST/0000/00001959_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().HltThresholdSettings = 'Effective_Nominal'
+#
+# DC06 stripped BB in order to get some statistics
+#
+EventSelector().Input   = [
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

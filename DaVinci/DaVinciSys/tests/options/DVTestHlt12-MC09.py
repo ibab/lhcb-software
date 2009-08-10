@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.2 2009-07-09 09:38:45 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.3 2009-08-10 15:08:02 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the HltType.
 #
@@ -29,6 +29,7 @@ DaVinci().Simulation   = True
 #
 DaVinci().Hlt2Requires = 'L0'
 DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().HltThresholdSettings = 'Effective_Nominal'  ## need to replace with MC09
 #-- GAUDI jobOptions generated on Mon Jun 22 16:57:21 2009
 #-- Contains event types : 
 #--   11144001 - 15 files - 215879 events - 62.23 GBytes

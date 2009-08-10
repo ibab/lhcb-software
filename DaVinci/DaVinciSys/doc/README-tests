@@ -4,22 +4,28 @@ In cmt/ do
 
 cmt qmtest_run
 
-To run one-by-one
+To run one-by-one :
 
-cmt qmtest_run sam
-cmt qmtest_run davincisys.hlt.test_hlt12_dc06
-cmt qmtest_run davincisys.hlt.test_hlt12_mc09
-cmt qmtest_run davincisys.hlt.test_hlt12_mdf
-cmt qmtest_run davincisys.hlt.test_hlt1_mc09
-cmt qmtest_run davincisys.hlt.test_tistos
-cmt qmtest_run davincisys.davincisys
-cmt qmtest_run davincisys.io.test_decaytreetuple
-cmt qmtest_run davincisys.io.test_dst
-cmt qmtest_run davincisys.io.test_read
-cmt qmtest_run davincisys.preselections.test_dc06stripping
-cmt qmtest_run davincisys.preselections.test_bd2kstarmumu_mc09
-cmt qmtest_run davincisys.preselections.test_bu2llk_dc06
-cmt qmtest_run davincisys.preselections.test_stripping
-cmt qmtest_run davincisys.preselections.test_stripping_read
-cmt qmtest_run davincisys.tag.test_tag
+cmt qmtest_run davincisys.davincisys >! davincisys &
+
+cmt qmtest_run davincisys.preselections.test_dc06stripping >! dc06stripping & 
+cmt qmtest_run davincisys.preselections.test_bu2llk_dc06 >! bu2llk_dc06 & 
+cmt qmtest_run davincisys.tag.test_tag >! tag & 
+cmt qmtest_run davincisys.io.test_dst >! dst &  
+cmt qmtest_run davincisys.preselections.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
+cmt qmtest_run davincisys.preselections.test_stripping >! stripping & 
+cmt qmtest_run davincisys.hlt.test_tistos >! tistos & 
+cmt qmtest_run davincisys.io.test_decaytreetuple >! decaytreetuple & 
+cmt qmtest_run davincisys.hlt.test_hlt12_dc06_effective >! hlt12_dc06_effective & 
+cmt qmtest_run davincisys.hlt.test_hlt12_dc06_leptonic >! hlt12_dc06_leptonic & 
+cmt qmtest_run davincisys.hlt.test_hlt12_dc06_charming >! hlt12_dc06_charming & 
+cmt qmtest_run davincisys.hlt.test_hlt12_dc06_hadronic >! hlt12_dc06_hadronic & 
+cmt qmtest_run davincisys.hlt.test_hlt1_mc09 >! hlt1_mc09 & 
+cmt qmtest_run davincisys.hlt.test_hlt12_mc09 >! hlt12_mc09 & 
+cmt qmtest_run davincisys.hlt.test_hlt12_mc09_dev >! hlt12_mc09_dev & 
+cmt qmtest_run davincisys.hlt.test_hlt12_mdf >! hlt12_mdf & 
+
+# require some of the above :
+cmt qmtest_run davincisys.io.test_read >! read & 
+cmt qmtest_run davincisys.preselections.test_stripping_read >! stripping_read  & 
 

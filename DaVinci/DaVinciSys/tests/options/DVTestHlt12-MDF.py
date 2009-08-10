@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.4 2009-07-09 09:38:45 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.5 2009-08-10 15:08:02 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -19,16 +19,16 @@ DaVinci().HltThresholdSettings = 'Miriam_20090430'
 DaVinci().EvtMax = 10000                       # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
-DaVinci().DataType = "2009"                    # Default is "MC09", prentend it's real data
+DaVinci().DataType = "2009"                    # Default is "MC09", pretend it's real data
 # DaVinci().Simulation   = False 
 # DaVinci().MoniSequence += [ ReadHltSummary() ]
 ########################################################################
 #
 # HLT
 #
-DaVinci().Hlt2Requires = 'L0+Hlt1'
 DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 DaVinci().InputType = "MDF"
+DaVinci().HltThresholdSettings = 'Effective_Nominal'
 EventSelector().Input   = [
     "   DATA='PFN:castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_00000002_1.mdf' SVC='LHCb::MDFSelector'" ]
 

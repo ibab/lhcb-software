@@ -3,20 +3,20 @@
 <extension class="GaudiTest.GaudiExeTest" kind="test">
 <argument name="program"><text>gaudirun.py</text></argument>
 <argument name="args"><set>
-  <text>../options/DVTestHlt12-MC09.py</text>
+  <text>../options/DVTestHlt-DC06-Hadronic.py</text>
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |         68 |(  68.0000 +- 4.66476  )%|   -------   |   -------   |
- | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |       500 |        136 |(  27.2000 +- 1.99006  )%|   -------   |   -------   |
+ | "#errors"                                       |       500 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        90 |         63 |(  70.0000 +- 4.83046  )%|   -------   |   -------   |
- | "#errors"                                       |        90 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |       338 |         56 |(  16.5680 +- 2.02229  )%|   -------   |   -------   |
+ | "#errors"                                       |       338 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
