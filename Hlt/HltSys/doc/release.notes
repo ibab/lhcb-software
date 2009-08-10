@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v6r6>2009-08-11 HltSys v6r6</A></H1><PRE>
+ - Hlt2 framework for thresholds now complete
+ - Include making of particles into lines
+ - Restructing of dependencies, some python has been moved
+
 </PRE><H1><A NAME=v6r5>2009-07-23 HltSys v6r5</A></H1><PRE>
  - Setup framework for Hlt2 thresholds. Not yet complete.
  - Leptonic scenario works and gets 2 kHz on DC06.
