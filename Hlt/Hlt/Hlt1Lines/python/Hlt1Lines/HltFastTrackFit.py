@@ -2,8 +2,8 @@ from inspect import isclass
 from Gaudi import Configuration
 
 # why is this not automatically the case if RecoName == FitTrack ???
-def setupHltFastTrackFit( name ) :
-    fit = Configuration.allConfigurables[name]
+def setupHltFastTrackFit( fit ) :
+    if type(fit) == str: fit = Configuration.allConfigurables[fit]
     if fit.getType() is not 'HltTrackUpgrade' and fit.getType() is not 'HltVertexUpgrade' :
            raise AttributeError, "The argument '%s' is of type %s, should be either HltTrackUpgrade or HltVertexUpgrade"%(fit,fit.getType())
     if fit.RecoName != 'FitTrack' : 

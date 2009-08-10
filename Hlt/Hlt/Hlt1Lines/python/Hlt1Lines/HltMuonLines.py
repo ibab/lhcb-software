@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.9 2009-08-10 12:37:16 pkoppenb Exp $
+# $Id: HltMuonLines.py,v 1.10 2009-08-10 13:34:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 
@@ -106,10 +106,10 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         TMatchV = [ DecodeIT
                   , Member ('TU', 'TConf' , RecoName = 'TMuonConf')
                   , Member ('TF', 'DeltaP' 
-                           , FilterDescriptor = ['DeltaP,>,'+str(self.getProp('Muon_DeltaPCut')) ])
+                           , FilterDescriptor = ['DeltaP,>,%(Muon_DeltaPCut)s' %self.getProps()])
                   , RZVelo
                   , Member ('TF', 'RZVelo'
-                             , FilterDescriptor = ['RZVeloTMatch_%TFDeltaP,||<,'+str(self.getProp('Muon_VeloTMatchCut'))] )
+                             , FilterDescriptor = ['RZVeloTMatch_%%TFDeltaP,||<,%(Muon_VeloTMatchCut)s'%self.getProps()] )
                   , Member ('TU', 'Velo' , RecoName = 'Velo' )
                   , DecodeTT
                   , Member ('TM', 'VeloT'
@@ -120,50 +120,50 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                              ) 
                   ]
         ### Check if 2 muons can come from a Vertex
-        MakeVertex = [ Member( 'VM1', 'DOCA', FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('DiMuon_DOCACut')) ])
+        MakeVertex = [ Member( 'VM1', 'DOCA', FilterDescriptor = [ 'DOCA,<,%(DiMuon_DOCACut)s'%self.getProps() ])
                      , Member( 'VF', 'VeloT'  
-                             , FilterDescriptor = [ 'VertexMatchIDsFraction_%VM1L0DiMuon,>,'+str(self.getProp('DiMuon_IDCut')) ]) 
+                             , FilterDescriptor = [ 'VertexMatchIDsFraction_%%VM1L0DiMuon,>,%(DiMuon_IDCut)s'%self.getProps() ]) 
                      ]
         ### FastFit to improve track quality
         # single track without IP cut
-        FastFitNoIP = [ Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack')
+        FastFitNoIP = [ Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                       , Member ( 'TF' , 'Chi2Mu'
-                               , FilterDescriptor = ["FitMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
+                               , FilterDescriptor = ['FitMuChi2,<,%(Muon_FitMuChi2Cut)s'%self.getProps()])
                       , Member ( 'TF' , 'Chi2OverN'
                                , OutputSelection = '%Decision'
-                               , FilterDescriptor = ["FitChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
+                               , FilterDescriptor = ['FitChi2OverNdf,<,%(Muon_FitChiCut)s'%self.getProps()])
                       ]
         # single track with IP cut
         FastFitWithIP = [ PV2D.ignoreOutputSelection()
-                        , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack')
+                        , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                         , Member ( 'TF' , 'IP' 
-                                 ,  FilterDescriptor = ["FitIP_PV2D,||>,"+str(self.getProp('Muon_IPMinCut'))])
+                                 ,  FilterDescriptor = ['FitIP_PV2D,||>,'+str(self.getProp('Muon_IPMinCut'))])
                         , Member ( 'TF' , 'Chi2Mu'
-                                 , FilterDescriptor = ["FitMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
+                                 , FilterDescriptor = ['FitMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))])
                                  , Member ( 'TF' , 'Chi2OverN'
                                  , OutputSelection = '%Decision'
-                                 , FilterDescriptor = ["FitChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
+                                 , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
                         ]
         # vertex (two tracks) without IP cut
-        FastFitVtxNoIP = [ Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+        FastFitVtxNoIP = [ Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                          , Member ( 'VF' , 'Chi2Mu'
-                                  , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
+                                  , FilterDescriptor = ['FitVertexMaxMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))])
                          , Member ( 'VF' , 'Chi2OverN'
                                   , OutputSelection = '%Decision'
-                                  , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
+                                  , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
                          ]
         # vertex (two tracks) with IP cut
         FastFitVtxWithIP = [ PV2D.ignoreOutputSelection()
-                           , Member( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack')
+                           , Member( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                            , Member( 'VF','IP'
                                    ,  FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiMuon_IPCut')) ])
                            , Member( 'VF','Mass'
                                    , FilterDescriptor = [ 'VertexDimuonMass,>,'+str(self.getProp('DiMuonIP_MassCut')) ])
                            , Member( 'VF' , 'Chi2Mu'
-                                   , FilterDescriptor = ["FitVertexMaxMuChi2,<,"+str(self.getProp('Muon_FitMuChi2Cut'))])
+                                   , FilterDescriptor = ['FitVertexMaxMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))])
                            , Member( 'VF' , 'Chi2OverN'
                                    , OutputSelection = '%Decision'
-                                   , FilterDescriptor = ["FitVertexMaxChi2OverNdf,<,"+str(self.getProp('Muon_FitChiCut'))])
+                                   , FilterDescriptor = ['FitVertexMaxChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
                            ]
         ###  Prepare 
         # Muons 
@@ -247,37 +247,35 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         if ( 'SingleMuonNoIPL0' in ActiveLines ):
           SingleMuonNoIPL0 = Line( 'SingleMuonNoIPL0'
                                  , prescale = self.prescale
-                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                                 , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
                                  , algos = [ MuonPrep 
                                            , Member( 'TF', 'PT' 
-                                                   , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
+                                                   , FilterDescriptor = ['PT,>,%(Muon_PtCut)s'%self.getProps()] 
                                                    ) 
                                            ] + FastFitNoIP 
                                  , postscale = self.postscale
                                  )
-          setupHltFastTrackFit('Hlt1SingleMuonNoIPL0TUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon without IP cut from L0Muon with GEC (Muon)
         #--------------------------------------------------------------------
         if ( 'SingleMuonNoIPGEC' in ActiveLines ):
           SingleMuonNoIPGEC = Line( 'SingleMuonNoIPGEC'
                                   , prescale = self.prescale
-                                  , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuonGEC'))+"')"
+                                  , L0DU = "L0_CHANNEL('%(L0SingleMuonGEC)s')"%self.getProps()
                                   , algos = [ MuonGECPrep 
                                             , Member( 'TF', 'PT' 
-                                                    , FilterDescriptor = ['PT,>,'+str(self.getProp('Muon_PtCut'))] 
+                                                    , FilterDescriptor = ['PT,>,%(Muon_PtCut)s'%self.getProps()] 
                                                     ) 
                                             ] + FastFitNoIP 
                                   , postscale = self.postscale
                                   )
-          setupHltFastTrackFit('Hlt1SingleMuonNoIPGECTUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon with IP cut from L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
         if ( 'SingleMuonIPCL0' in ActiveLines ):
           SingleMuonIPCL0 = Line( 'SingleMuonIPCL0'
                                  , prescale = self.prescale
-                                 , L0DU = "L0_CHANNEL('"+str(self.getProp('L0SingleMuon'))+"')"
+                                 , L0DU = "L0_CHANNEL('%(L0SingleMuon)s')"%self.getProps()
                                  , algos = [ MuonPrep
                                            , PV2D.ignoreOutputSelection()
                                            , Member ( 'TF', 'PT'
@@ -285,7 +283,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                            ] + FastFitWithIP 
                                  , postscale = self.postscale
                                  ) 
-          setupHltFastTrackFit('Hlt1SingleMuonIPCL0TUFitTrack')
         #--------------------------------------------------------------------
         # Single Muon with IP cut from L0Muon with GEC (Muon)
         #--------------------------------------------------------------------
@@ -299,7 +296,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                            ] + FastFitWithIP 
                                  , postscale = self.postscale
                                  ) 
-          setupHltFastTrackFit('Hlt1SingleMuonIPCGECTUFitTrack')
         #--------------------------------------------------------------------
         ####         DiMuon Lines           ####
         #--------------------------------------------------------------------
@@ -315,7 +311,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                          ] + FastFitVtxNoIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonNoIPL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut from 2 L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
@@ -336,7 +331,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                       ] + FastFitVtxNoIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonNoIP2L0VUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut from 1 L0Muon (MuonNoGlob) and 1 L0GEC (Muon) or from 2 L0GEC (Muon) 
         #--------------------------------------------------------------------
@@ -356,7 +350,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                           ] + FastFitVtxNoIP
                                 , postscale = self.postscale
                                 )
-          setupHltFastTrackFit('Hlt1DiMuonNoIPL0GECVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut using L0Muon (MuonNoGlob) and 1 Muon Segment
         #--------------------------------------------------------------------
@@ -381,7 +374,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         ] + FastFitVtxNoIP
                                 , postscale = self.postscale
                                 )
-          setupHltFastTrackFit('Hlt1DiMuonNoIPL0SegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without IP cut using L0Muon with GEC (Muon) and 1 Muon Segment
         #--------------------------------------------------------------------
@@ -402,7 +394,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                          ] + FastFitVtxNoIP
                                  , postscale = self.postscale
                                  )
-          setupHltFastTrackFit('Hlt1DiMuonNoIPGECSegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut from L0DiMuon (DiMuon) 
         #--------------------------------------------------------------------
@@ -413,7 +404,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                               , algos = [ DiMuonPrep ] + FastFitVtxWithIP
                               , postscale = self.postscale
                               )
-          setupHltFastTrackFit('Hlt1DiMuonIPCL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut from 2 L0Muon (MuonNoGlob) 
         #--------------------------------------------------------------------
@@ -432,7 +422,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                      ] + FastFitVtxWithIP
                              , postscale = self.postscale
                              )
-          setupHltFastTrackFit('Hlt1DiMuonIPC2L0VUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut from 1 L0Muon (MuonNoGlob) and 1 L0GEC (Muon) or from 2 L0GEC (Muon) 
         #--------------------------------------------------------------------
@@ -450,7 +439,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                        ] + FastFitVtxWithIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonIPCL0GECVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut using L0Muon (MuonNoGlob) and 1 Muon Segment
         #--------------------------------------------------------------------
@@ -469,7 +457,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                        ] + FastFitVtxWithIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonIPCL0SegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon with IP cut using L0Muon with GEC (Muon) and 1 Muon Segment
         #--------------------------------------------------------------------
@@ -488,7 +475,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         ] + FastFitVtxWithIP
                                 , postscale = self.postscale
                                 )
-          setupHltFastTrackFit('Hlt1DiMuonIPCGECSegVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex from L0DiMuon (DiMuon,lowMult) 
         #--------------------------------------------------------------------
@@ -502,7 +488,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                          ] + FastFitVtxNoIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonNoPVL0DiVUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex from L0Muon (Muon,lowMult) 
         #--------------------------------------------------------------------
@@ -518,7 +503,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                        ] + FastFitVtxNoIP
                                , postscale = self.postscale
                                )
-          setupHltFastTrackFit('Hlt1DiMuonNoPV2L0VUFitTrack')
         #--------------------------------------------------------------------
         # DiMuon without reconstructed Primary Vertex using L0Muon (Muon.lowMult) and 1 Muon Segment
         #--------------------------------------------------------------------
@@ -539,7 +523,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         ] + FastFitVtxNoIP
                                 , postscale = self.postscale
                                 )
-          setupHltFastTrackFit('Hlt1DiMuonNoPVL0SegVUFitTrack')
 
         #-----------------------------------------------------
         # MUON+TRACK ALLEY Lines (Antonio Perez-Calero, aperez@ecm.ub.es):
@@ -605,7 +588,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                    , HistoDescriptor = { 'VertexPointing': ( 'VertexPointing',0.,1.,100), 'VertexPointingBest': ( 'VertexPointingBest',0.,1.,100)}
                                    )
                          , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
-                                  , RecoName = 'FitTrack'
+                                  , RecoName = 'FitTrack' , callback = setupHltFastTrackFit
                                   )
                          , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
                                     , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2')),
@@ -631,7 +614,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                        , postscale = self.postscale
                        )
 
-        setupHltFastTrackFit('Hlt1MuTrackVUVTrackFit')
         
         #------------------------- TESTING FOR IMPROVED TIMING------------------------------------------
         
@@ -652,7 +634,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         , HistoDescriptor = {'IP': ( 'IP',-1.,3.,400), 'IPBest': ( 'IPBest',-1.,3.,400)}
                                         )
                          
-                              , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack')
+                              , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                               , Member ( 'TF', 'MuonChi2' , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2'))])
                               , Member ( 'TF', 'MuonFitIPpT' , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('MuTrackMuIP')),
                                                                                    'PT,>,'+str(self.getProp('MuTrackMuPt'))
@@ -701,7 +683,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         , HistoDescriptor = { 'VertexPointing': ( 'VertexPointing',0.,1.,100), 'VertexPointingBest': ( 'VertexPointingBest',0.,1.,100)}
                                         )
                               , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
-                                         , RecoName = 'FitTrack'
+                                         , RecoName = 'FitTrack', callback = setupHltFastTrackFit
                                          )
                               , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
                                          , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi2')),
@@ -727,9 +709,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                             , postscale = self.postscale
                             )
 
-        setupHltFastTrackFit('Hlt1MuTrackFitMuTUMuonFit')
-        setupHltFastTrackFit('Hlt1MuTrackFitMuVUVTrackFit')
-        
         #------------------------- Muon + Track for JPsi lifetime unbiased ---------------------------------------
 
         MuTrack4JPsi= Line( 'MuTrack4JPsi'
@@ -780,7 +759,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                                         , HistoDescriptor = {'VertexDimuonMass': ('DiMuonMass',0.,10000,200)}
                                         )
                               , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
-                                         , RecoName = 'FitTrack'
+                                         , RecoName = 'FitTrack', callback = setupHltFastTrackFit
                                          )
                               , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
                                          , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi')),
@@ -801,7 +780,6 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
                             , postscale = self.postscale
                             )
         
-        setupHltFastTrackFit('Hlt1MuTrack4JPsiVUVTrackFit')
 
         
         #------------------------- TESTING FOR IMPROVED TIMING------------------------------------------
@@ -817,7 +795,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 ##                                         , HistoDescriptor = { 'PT': ( 'PT',0.,6000.,400), 'PTBest': ( 'PTBest',0.,6000.,400)}
 ##                                         )
 
-##                               , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack')
+##                               , Member ( 'TU' , 'MuonFit' ,  RecoName = 'FitTrack', callback = setupHltFastTrackFit)
 ##                               , Member ( 'TF', 'MuonChi2' , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi'))])
 
 ##                               , Velo
@@ -856,7 +834,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 ##                                         , HistoDescriptor = {'VertexDimuonMass': ('DiMuonMass',0.,10000,200)}
 ##                                         )
 ##                               , Member ( 'VU', 'VTrackFit' # // Fast fit of tracks for selected vertices
-##                                          , RecoName = 'FitTrack'
+##                                          , RecoName = 'FitTrack', callback = setupHltFastTrackFit
 ##                                          )
 ##                               , Member ( 'VF', 'TrackChi2' # // Filter on track quality (Chi2 cut taken from hadron line)
 ##                                          , FilterDescriptor = ['FitVertexTrack1Chi2OverNdf,<,'+str(self.getProp('MuTrackMuChi24JPsi')),
@@ -876,7 +854,4 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 ##                               ]
 ##                             , postscale = self.postscale
 ##                             )        
-        
-##         setupHltFastTrackFit('Hlt1MuTrackFitMu4JPsiTUMuonFit')
-##         setupHltFastTrackFit('Hlt1MuTrackFitMu4JPsiVUVTrackFit')
         

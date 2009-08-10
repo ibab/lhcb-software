@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.6 2009-08-05 14:10:41 pkoppenb Exp $
+# $Id: HltHadronLines.py,v 1.7 2009-08-10 13:34:32 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -198,7 +198,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #--------------------------------
         def afterburn():
             after = [ PV2D.ignoreOutputSelection()
-                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack")
+                , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , '1FitTrack' ,
                            FilterDescriptor = ["FitIP_PV2D,||>,"+_cut('HadMain_IPCut')],
                            HistogramUpdatePeriod = 1,
@@ -218,7 +218,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         def vafterburn(type=""):
             IPCut = _cut(type+'HadMain_IPCut')
             vafter =  [ PV2D.ignoreOutputSelection()
-                , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack')
+                , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                 , Member ( 'VF', '1FitTrack',
                            FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+IPCut],
                            HistogramUpdatePeriod = 1,
@@ -241,7 +241,6 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
                , algos = confirmation()+singlehadron()+afterburn()
                )
-        setupHltFastTrackFit('Hlt1SingleHadronTUFitTrack')
 
         # DiHadron Line
         #-----------------------------------
@@ -251,7 +250,6 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
               , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
               , algos =  confirmation()+companion()+dihadron()+vafterburn()
               )
-        setupHltFastTrackFit('Hlt1DiHadronVUFitTrack')
 
         # Soft DiHadron Line
         #-----------------------------------
@@ -261,4 +259,3 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
              , L0DU = "L0_ALL"
              , algos = confirmation('Soft')+companion()+dihadron()+vafterburn()
              )
-        setupHltFastTrackFit('Hlt1SoftDiHadronVUFitTrack')
