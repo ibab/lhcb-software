@@ -52,7 +52,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                   ,'HltANNSvcID'        : {'IncPhi'           : 50000
                                           ,'IncPhiSidebands'  : 50003
                                           ,'IncPhiRobust'     : 50001
-                                          ,'IncPhiTF'         : 50002
+                                          ,'IncPhiTrackFit'   : 50002
                                           }
                   }
     
@@ -194,7 +194,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                       Hlt2InclusivePhiTF]
                           , postscale = self.postscale
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTFDecision" : self.getProp('HltANNSvcID')['IncPhiTF'] } )
+          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
 
 
         ############################################################################
