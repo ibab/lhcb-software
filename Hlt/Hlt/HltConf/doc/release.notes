@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.308 2009-08-10 15:51:56 spradlin Exp $ 
+! $Id: release.notes,v 1.309 2009-08-10 16:26:51 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v4r2 2009-08-10 ===================
 ! 2009-08-10 - Patrick Spradlin
   - Updated the thresholds for the Hlt2 Topological lines for the Hadronic,
       Leptonic, and Charming scenarios.  Relative to the previous tuning, this
