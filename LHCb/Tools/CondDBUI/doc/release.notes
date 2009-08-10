@@ -1,11 +1,10 @@
 ! =============================================================================
-! $Id: release.notes,v 1.119 2009-08-06 17:20:08 ishapova Exp $
+! $Id: release.notes,v 1.120 2009-08-10 11:41:27 ishapova Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-!===================== Tools/CondDBUI v2r22 2009-08-06 ========================
 ! 2009-08-03 - Illya Shapoval
  - Added function to ReleaseNotes class for global tag duplication case detection 
    in the release_notes.xml file.
