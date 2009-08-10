@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.27 2009-08-10 13:35:09 graven Exp $
+! $Id: release.notes,v 1.28 2009-08-10 13:48:05 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Move Muon lines names to HltConf
 
 ! 2009-08-10 - Gerhard Raven
  - use callback mechanism in member to 'localize' the setup of fast 

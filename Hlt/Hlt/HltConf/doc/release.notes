@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.304 2009-08-10 10:54:09 pkoppenb Exp $ 
+! $Id: release.notes,v 1.305 2009-08-10 13:46:50 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2009-08-10 - Patrick Koppenburg
  - Comment out ZPositions from Phi fit. Not seetting them should be OK.
+ - Move HltMuon lines names to Hlt_Default
 
 ! 2009-08-07 - Gerhard Raven
  - rename FEST_FEST to Effective_FEST
