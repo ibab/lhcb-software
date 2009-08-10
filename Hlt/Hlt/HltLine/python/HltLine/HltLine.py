@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.6 2009-08-03 12:08:03 graven Exp $ 
+# $Id: HltLine.py,v 1.7 2009-08-10 13:31:14 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -685,13 +685,14 @@ class Hlt1Member ( object ) :
     >>> m1 = Member ( 'TU' , 'Velo'   , RecoName = 'Velo' ) # 'HltTrackUpgrade'
     
     """
-    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools' )
+    __slots__ = ( 'Type' , 'Name' , 'Args', 'Tools', 'CallBack' )
     
     ### The standard constructor to create the  Hlt1Member instance:
     def __init__ ( self       ,    ## ...
                    Type       ,    ## short type of members, e.g. 'TF' HltTrackFilter
                    name  = '' ,    ## the specific part of the algorithm name 
                    tools = [] ,    ## list of tool options for this algorithm
+                   callback = None, ## after generating the configurable, call the callback with the generated instance
                    **Args     ) :  ## arguments 
         """
         The standard constructor to create the  Hlt1Member instance:
@@ -706,6 +707,7 @@ class Hlt1Member ( object ) :
         name  = deepcopy ( name  )
         tools = deepcopy ( tools )
         Args  = deepcopy ( Args  )
+        callback  = deepcopy ( callback  )
         ##
         Name = name
         if type(Type) is str : Type = typeFromNick ( Type ) 
@@ -715,6 +717,7 @@ class Hlt1Member ( object ) :
         self.Name = Name 
         self.Args = Args
         self.Tools = tools
+        self.CallBack = callback
         for key in Args :
             if  key not in self.Type.__slots__  :
                 raise AttributeError, "The key %s is not allowed"%key
@@ -742,6 +745,7 @@ class Hlt1Member ( object ) :
         # see if alg has any special Tool requests...
         instance =  self.Type( _name, **args)
         for tool in self.Tools : tool.createConfigurable( instance )
+        if self.CallBack : self.CallBack( instance )
         return instance
 
 # ============================================================================

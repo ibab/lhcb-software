@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.19 2009-08-05 21:04:26 graven Exp $
+! $Id: release.notes,v 1.20 2009-08-10 13:31:14 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2009-08-10 - Gerhard Raven
+ - add callback support to member: allow to call a specified function after 
+   the member has been used to create a configurable, with the instance as
+   argument
+ - streamline decoderaw -- can now also support _not_ disabling data-on-demand
 
 !========================== HltLine v1r4 2009-08-05 ===================
 ! 2009-08-05 - Gerhard Raven
