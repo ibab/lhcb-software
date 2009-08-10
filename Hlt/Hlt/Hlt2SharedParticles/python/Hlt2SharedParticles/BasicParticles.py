@@ -40,7 +40,7 @@ Hlt2RichPIDsKaons.Kaon.Selection = [ "RequiresDet='RICH' CombDLL(k-pi)>'-5.0'" ]
 Hlt2Muons = CombinedParticleMaker("Hlt2Muons")
 Hlt2Muons.Particle = "muon" 
 Hlt2Muons.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2Muons.Muon.Selection = ["RequiresDet='MUON'" ]
+Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2Muons.addTool(TrackSelector)
 Hlt2Muons.TrackSelector.TrackTypes = ["Long"] 
 Hlt2Muons.Input =  "Hlt/ProtoP/Charged"

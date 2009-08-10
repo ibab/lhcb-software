@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.38 2009-08-07 09:50:56 pkoppenb Exp $
+$Id: release.notes,v 1.39 2009-08-10 13:33:04 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ] 
+   -> adapt to new Muon ID algorithms
 
 ! 2009-08-07 - Patrick Koppenburg
  - Restore dependency on RICH :-(
