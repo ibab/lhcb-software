@@ -1,3 +1,10 @@
+2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/__ini__.py: added the createMakefile function. This makefile 
+	is LHCb specific (The one in LbUtils is generic for CMT projects)
+	* data/Makefile: top Makefile for LHCb CMT projects.
+	* python/LbRelease/GetPack.py: use createProjectMakefile from the LbRelease module.
+
 2009-08-05  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: use make with options
