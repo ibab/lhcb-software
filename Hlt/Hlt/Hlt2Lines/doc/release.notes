@@ -1,11 +1,11 @@
-$Id: release.notes,v 1.42 2009-08-10 16:24:33 pkoppenb Exp $
+$Id: release.notes,v 1.43 2009-08-10 16:26:32 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
-!========================== Hlt2Lines v1r6 2009-08-10 ===================
+!========================== Hlt2Lines v1r5p1 2009-08-10 ===================
 ! 2009-08-10 - Gerhard Raven
  - update ANNSvc name in Hlt2InclusivePhi
 ! 2009-08-07 - Magnus Lieng & Kim Vervink
