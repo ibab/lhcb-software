@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.26 2009-08-10 12:37:16 pkoppenb Exp $
+! $Id: release.notes,v 1.27 2009-08-10 13:35:09 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Gerhard Raven
+ - use callback mechanism in member to 'localize' the setup of fast 
+   track fit
+ - make HltFastTrackFit.py play nice with callback use
+ - minor format changes to muon lines
 
 ! 2009-08-10 - Patrick Koppenburg
  - Remove confusing and commented out ``DC06'' block from muon lines
