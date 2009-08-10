@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt2-MC09.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+Hlt2Global                                                  SUCCESS Number of counters : 3
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        90 |         63 |(  70.0000 +- 4.83046  )%|   -------   |   -------   |
+ | "#errors"                                       |        90 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+""", stdout, result, causes, signature_offset = 0, id = "Hlt2")
+</text></argument>
+</extension>
