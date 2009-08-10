@@ -1,4 +1,4 @@
-// $Id: Z0Checker.cpp,v 1.1 2008-08-05 09:37:43 pkoppenb Exp $
+// $Id: Z0Checker.cpp,v 1.2 2009-08-10 08:24:50 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -83,27 +83,27 @@ StatusCode Z0Checker::execute() {
             imm != mum.end() ; ++imm){
         double m = ((*imp)->momentum()+(*imm)->momentum()).mass();
         if ( m > 80*Gaudi::Units::GeV ){
-          info() << "Dimuon of mass " << m << endmsg ;
+          if (msgLevel(MSG::DEBUG)) debug() << "Dimuon of mass " << m << endmsg ;
           double w;
           const Particle* Pp = linker->firstP( *imp, w );
           const Particle* Pm = linker->firstP( *imm, w );
           counter("Found Z0")++;
-          info() << "    Mu+ " << (*imp)->momentum() ;
+          if (msgLevel(MSG::DEBUG)) debug() << "    Mu+ " << (*imp)->momentum() ;
           if ( 0!=Pp ) {
-            info() << " -> " << Pp->particleID().pid() 
+            if (msgLevel(MSG::DEBUG)) debug() << " -> " << Pp->particleID().pid() 
                               << " " << Pp->momentum() << endmsg ;
             counter("Found Reco Mu+")++;
-          } else info() << endmsg ;
-          info() << "    Mu- " << (*imm)->momentum() ;
+          } else if (msgLevel(MSG::DEBUG)) debug() << endmsg ;
+          if (msgLevel(MSG::DEBUG)) debug() << "    Mu- " << (*imm)->momentum() ;
           if ( 0!=Pm ) {
-            info() << " -> " << Pm->particleID().pid() 
+            if (msgLevel(MSG::DEBUG)) debug() << " -> " << Pm->particleID().pid() 
                               << " " << Pm->momentum() << endmsg ;
             counter("Found Reco Mu-")++;
             if (0!=Pp) {
               counter("Found Both Reco Mu")++;
               setFilterPassed(true);
             }
-          } else info() << endmsg ;
+          } else if (msgLevel(MSG::DEBUG)) debug() << endmsg ;
           if ((( 0!=Pp ) && ( Pp->particleID().threeCharge()!=
                               (*imp)->particleID().threeCharge())) || 
               (( 0!=Pm ) && (  Pm->particleID().threeCharge()!=

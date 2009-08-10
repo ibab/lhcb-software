@@ -18,8 +18,11 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2UnbiasedBmm"] # probably not optimal
-DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
+from Configurables import DecayTreeTuple
+#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2UnbiasedBmm"] # probably not optimal
+#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "J/psi(1S) -> ^mu+ ^mu-"
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Muons"] # probably not optimal
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "mu-"
 #
 # various instances of Z0 checker
 #
@@ -45,7 +48,7 @@ DaVinci().DataType = "DC06"
 DaVinci().Simulation = True 
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().MoniSequence += [ moni, Z0 ]
+DaVinci().MoniSequence += [ moni, Z0, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
   "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Z02MuMu.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
 ]
