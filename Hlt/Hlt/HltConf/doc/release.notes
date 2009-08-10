@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.305 2009-08-10 13:46:50 pkoppenb Exp $ 
+! $Id: release.notes,v 1.306 2009-08-10 14:11:01 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Last word (?) on ZPositions. Mail by Wouter :
+     The problem is that the standard 'ConfiguredFastFitter' removes the states 
+     by doing    
+        fitter.AddDefaultReferenceNodes = False     
+     This used to be
+        fitter.ZPositions = []
+     So, to get the relevant states you shouldn't comment out the line, but 
+     restore the default value
+        fitter.AddDefaultReferenceNodes = True
+   -> do this.
 
 ! 2009-08-10 - Patrick Koppenburg
  - Comment out ZPositions from Phi fit. Not seetting them should be OK.

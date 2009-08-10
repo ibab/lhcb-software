@@ -32,7 +32,7 @@ fitter = ConfiguredFastFitter( getattr(Hlt2IncPhiTFTrackFit,'Fitter'))
 
 fitter.NodeFitter.BiDirectionalFit = True
 fitter.NodeFitter.Smooth = True
-# fitter.ZPositions = [ 990., 9450.]
+fitter.AddDefaultReferenceNodes = True    # says Wouter
 
 ######################################################################
 # Set up Kalman fitted ChargedProtoPAlg
