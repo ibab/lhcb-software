@@ -1,16 +1,20 @@
-! $Id: release.notes,v 1.61 2009-08-05 17:29:53 ibelyaev Exp $
+! $Id: release.notes,v 1.62 2009-08-10 11:52:36 ibelyaev Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+! 2009-08-10 - Vanya BELYAEV
+
+ - more polishing of interfaces 
+
 ! 2009-08-05 - Vanya BELYAEV
 
- - some polishing of interfaces 
+ - some polishing of interfaces
 
- - cmt/requirements 
+ - cmt/requirements
 
-    version increment to v8r0 
+    version increment to v8r0
 
 ! 2009-08-02 - Dmitry GOLUBKOV
  - IL0Calo2Calo.h tool added new virtual method
@@ -18,15 +22,15 @@
 
 !========================= CaloInterfaces v7r13 2009-07-28 ====================
 ! 2009-07-27 - Vanya Belyaev
- - CaloInterafces/IL0Calo2Calo.h: new interface by Dima Golubkov  
+ - CaloInterafces/IL0Calo2Calo.h: new interface by Dima Golubkov
 
 !========================= CaloInterfaces v7r12 2009-06-29 ====================
 ! 2009-06-17 O. Deschamps for V. Egorychev
  - ICaloClusterisation tool new virtual method
- 
+
 !========================= CaloInterfaces v7r11 2009-05-28 ====================
 ! 2009-05-28 - Marco Cattaneo
- - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows 
+ - In requirements, add hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-05-19 - Marco Cattaneo
  - Remove unnecessary dependence on PhysEvent
@@ -43,16 +47,16 @@
  - Fix gcc 4.3 compilation warnings
 
 !========================== CaloInterfaces v7r8 2008-09-30 ====================
-! 2008-09-21 - Olivier Deschamps 
+! 2008-09-21 - Olivier Deschamps
   - ICaloClusterization : add iterations() virtual method (return the number of iterations)
 
-! 2008-09-11 - Olivier Deschamps 
+! 2008-09-11 - Olivier Deschamps
  - ICalo2Calo : add multiplicity virtual methods (increase interfaceID release number)
  - new interface : ICaloHypo2Calo
 
 !========================== CaloInterfaces v7r7 2008-06-30 ====================
-! 2008-06-30 - Olivier Deschamps 
- - add virtual kernel() in ICaloCosmicsTool 
+! 2008-06-30 - Olivier Deschamps
+ - add virtual kernel() in ICaloCosmicsTool
  - increment release number (1.1) in ICaloCosmicsTool
 
 !========================== CaloInterfaces v7r6 2008-06-02 ====================
@@ -62,7 +66,7 @@
 ! 2008-05-22 - Deschamps Olivier
   - Add new interfaces for cosmics reconstruction tool:
 	ICaloCosmicsTool, ICaloCosmicsTrackTool
- 
+
 !========================== CaloInterfaces v7r5 2008-04-22 ====================
 ! 2008-04-22 - Marco Cattaneo
  - Add new interface to dictionary
@@ -78,14 +82,14 @@
  - Remove unneccessary includes from these interfaces, use forward declarations
 
 ! 2007-06-25 - Olivier Deschamps
- - New interfaces : ITrack2Calo and IPart2Calo --> match Track/Part to calo 
+ - New interfaces : ITrack2Calo and IPart2Calo --> match Track/Part to calo
 
 !========================== CaloInterfaces v7r3 2007-06-08 ====================
 ! 2007-05-30 - Olivier Deschamps
- - New interface : ICalo2Calo 
+ - New interface : ICalo2Calo
 
 !========================== CaloInterfaces v7r2 2007-03-30 ====================
-! 2007-03-27 - Olivier Deschamps 
+! 2007-03-27 - Olivier Deschamps
  - Remove const qualifiers in ICaloMomentum
  - add new virtual method : bremstrahlung() & bremCaloMomentum() to ICaloMomentum
  - ICaloElectron moved to CaloUtils
@@ -98,10 +102,10 @@
  - Remove an LHCbDefinitions include
 
 !========================== CaloInterfaces v7r0 2007-01-14  ===================
-! 2007-12-01 - Olivier Deschamps 
+! 2007-12-01 - Olivier Deschamps
  - remove 'circular' depedency to CaloUtils
 
-! 2006-12-21 - Olivier Deschamps 
+! 2006-12-21 - Olivier Deschamps
  - new interface added : ICaloElectron.h
  - add dependency to PhysEvent, CaloUtils, CaloDet
 
@@ -122,10 +126,10 @@
 ! 2005-11-04 - Olivier Deschamps
  - Adapt to new Track Event Model (TrackEvent v1r4)
 
-  modified file :  
+  modified file :
    CaloInterface/ICaloTrackIdEval.h
 
- - cmt/requirements 
+ - cmt/requirements
    version increment to v5r0
 !======================= CaloInterfaces v4r3 2005-01-24 =====================
 ! 2005-01-24 - Marco Cattaneo
@@ -134,13 +138,13 @@
 
 !======================= CaloInterfaces v4r2 2004-09-02 =====================
 ! 2004-09-02 - Vanya BELYAEV
-  Modification of interfaces to prepare to HTL/Trigger developments 
+  Modification of interfaces to prepare to HTL/Trigger developments
    - CaloInterfaces/ICaloTrackIdEval.h, CaloInterfaces/ICaloTrackMatch.h
-      add the methods with TrgTrack 
+      add the methods with TrgTrack
    - src/IIDICaloTrackIdEval.h, src/IIDICaloTrackMatch.h
-      increment the major version of interfaces 
-   - cmt/requirement 
-      version increment to v4r1 
+      increment the major version of interfaces
+   - cmt/requirement
+      version increment to v4r1
 
 !======================= CaloInterfaces v4r1 2004-07-19 =====================
 ! 2004-07-19 - Marco Cattaneo
@@ -150,18 +154,18 @@
 ! 2004-02-17 - Vanya BELYAEV
 
  - make the fix in the interface names:
- 
+
      ICaloHypoLikelyhood -> ICaloHypoLikelihood
      ICaloLikelyhood     -> ICaloLikelihood
 
-- src/CaloInterfaces.cpp     
-    new file with the implementations of 
-      I::interfaceID() and I::~I() methods 	   
-    It ensures that dynamic_cast will ALWAYS work 
+- src/CaloInterfaces.cpp
+    new file with the implementations of
+      I::interfaceID() and I::~I() methods
+    It ensures that dynamic_cast will ALWAYS work
     (even without explicit loading of GCC-stuff from GaudiKernel)
 
-- cmt/requirements 
-   increase the major version to v4r0 
+- cmt/requirements
+   increase the major version to v4r0
 
 !======================= CaloInterfaces v3r1 2004-01-07 =====================
 ! 2004-01-07 - Marco Cattaneo
@@ -176,14 +180,14 @@
  - requirements - use new versions
 
 !===================== CaloInterfaces v2r3 2002-11-19 =====================
-! 2002-11-10 - Ivan Belyaev   
+! 2002-11-10 - Ivan Belyaev
  - new files :
-   1. CaloInterfaces/ICaloTrackIdEval.h         - new interface 
-   2. CaloInterfaces/IIDICaloTrackIdEval.h      - IID for new interafce 
+   1. CaloInterfaces/ICaloTrackIdEval.h         - new interface
+   2. CaloInterfaces/IIDICaloTrackIdEval.h      - IID for new interafce
  - removed   :
-   1. CaloInterfaces/ICaloTrackExrapolator.h    - removed 
-   2. CaloInterfaces/IIDICaloTrackExrapolator.h - removed 
- - modified  : 
+   1. CaloInterfaces/ICaloTrackExrapolator.h    - removed
+   2. CaloInterfaces/IIDICaloTrackExrapolator.h - removed
+ - modified  :
    1.  cmt/requirements                         - increase the version
 
 !=================== CaloInterfaces v2r2 2002-07-18 ==========================
