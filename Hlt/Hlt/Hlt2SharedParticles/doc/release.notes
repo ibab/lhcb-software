@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.39 2009-08-10 13:33:04 pkoppenb Exp $
+$Id: release.notes,v 1.40 2009-08-10 16:31:18 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v2r1 2009-08-10 ===================
 ! 2009-08-10 - Patrick Koppenburg
  - Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ] 
    -> adapt to new Muon ID algorithms
