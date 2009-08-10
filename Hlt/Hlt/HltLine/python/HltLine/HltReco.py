@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.3 2009-08-05 18:15:44 pkoppenb Exp $
+# $Id: HltReco.py,v 1.4 2009-08-10 15:38:49 pkoppenb Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -202,7 +202,7 @@ trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
 				                  ,  recoVelo
-                                  ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
+#                                  ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
 				  ] )
 
 # Now we add different algorithms for long track reco based on the different reconstruction scenarios

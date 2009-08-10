@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.20 2009-08-10 13:31:14 graven Exp $
+! $Id: release.notes,v 1.21 2009-08-10 15:38:49 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Comment out 3D PV from Hlt2 sequence
+
 ! 2009-08-10 - Gerhard Raven
  - add callback support to member: allow to call a specified function after 
    the member has been used to create a configurable, with the instance as
