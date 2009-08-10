@@ -1,10 +1,24 @@
-! $Id: release.notes,v 1.307 2009-08-10 15:37:54 pkoppenb Exp $ 
+! $Id: release.notes,v 1.308 2009-08-10 15:51:56 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-08-10 - Patrick Spradlin
+  - Updated the thresholds for the Hlt2 Topological lines for the Hadronic,
+      Leptonic, and Charming scenarios.  Relative to the previous tuning, this
+      tuning treats the 4-body channels differently and includes a throttle
+      at 7kHz on the robust stage accept rate.
+      In this most recent tuning, the topological trigger was optimized with
+      the 4-body lines turned on fully or turned off fully.  In this tuning,
+      by '4-body lines' i mean every line that relies on a 4-body
+      reconstruction in either the robust or the post-track-fit stage.
+      Subject to the conditions of the tuning,  configurations with the
+      4-body lines turned off performed significantly better than those with
+      the 4-body lines turned on, so the changes committed exclude all of the
+      4-body lines from ActiveLines
+      
 ! 2009-08-10 - Patrick Koppenburg
  - Make sure L0DUFormRawAlg is run when running Hlt2 requiring L0 but
    not running Hlt1

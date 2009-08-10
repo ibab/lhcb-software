@@ -29,17 +29,13 @@ class Leptonic_Nominal :
         # Remaining
         d.update( { Hlt2TopologicalLinesConf : { 'ComRobAllTrkPtLL' : 800.0
                                              , 'ComRobAllTrkPVIPLL' : 0.025
-                                             , 'ComRobPairMinDocaUL' : 0.1
+                                             , 'ComRobPairMinDocaUL' : 0.075
                                              , 'ComRobTrkMaxPtLL' : 1500.0
-                                             , 'ComTFVtxPVDispChi2LL' : 169.0
-                                             , 'RobustPointingUL' : 0.12
-                                             , 'TFPointUL' : 0.2
-                                             , 'CharmRobustPointUL' : 0.04
+                                             , 'ComTFVtxPVDispChi2LL' : 196.0
+                                             , 'RobustPointingUL' : 0.28
+                                             , 'TFPointUL' : 0.16
+                                             , 'CharmRobustPointUL' : 0.08
                                              , 'CharmTFPointUL' : 0.04
-                                             , 'Prescale' : { 'Hlt2TopoTF4BodyCharmSignal' : 0.0
-                                                            , 'Hlt2TopoTF4BodyReq4Yes' : 0.2
-                                                            , 'Hlt2TopoTF4BodyReq3Yes' : 0.2
-                                                            , 'Hlt2TopoTF4BodyReq2Yes' : 0.2 }
                                                }
                     })
         #
@@ -59,35 +55,35 @@ class Leptonic_Nominal :
         
         list = Hlt1_Nominal().ActiveLines()
 ##
-## topo : whole list
+## topo : leave out 4-body lines
 ##
         list.extend( [ 'Hlt2Topo2BodySA',
-                       'Hlt2Topo4BodySA',
+                       #'Hlt2Topo4BodySA',
                        'Hlt2Topo3BodySA',
-                       'Hlt2TopoTF4BodySA',
+                       #'Hlt2TopoTF4BodySA',
                        'Hlt2TopoTF3BodySA',
                        'Hlt2TopoTF2BodySA',
-                       'Hlt2TopoTF4BodyReq4Yes',
-                       'Hlt2TopoTF4BodyReq3Yes',
-                       'Hlt2TopoTF4BodyReq2Yes',
-                       'Hlt2TopoTF3BodyReq4Yes',
+                       #'Hlt2TopoTF4BodyReq4Yes',
+                       #'Hlt2TopoTF4BodyReq3Yes',
+                       #'Hlt2TopoTF4BodyReq2Yes',
+                       #'Hlt2TopoTF3BodyReq4Yes',
                        'Hlt2TopoTF3BodyReq3Yes',
                        'Hlt2TopoTF3BodyReq2Yes',
-                       'Hlt2TopoTF2BodyReq4Yes',
+                       #'Hlt2TopoTF2BodyReq4Yes',
                        'Hlt2TopoTF2BodyReq3Yes',
                        'Hlt2TopoTF2BodyReq2Yes' ] )
 ##
-## charm : whole list
+## charm : leave out 4-body lines
 ##
         list.extend( [ 'Hlt2Topo3BodyCharmSA',
                        'Hlt2Topo2BodyCharmSA',
-                       'Hlt2Topo4BodyCharmSA',
+                       #'Hlt2Topo4BodyCharmSA',
                        'Hlt2TopoTF2BodyCharmSignal',
                        'Hlt2TopoTF3BodyCharmSignal',
-                       'Hlt2TopoTF4BodyCharmSignal',
+                       #'Hlt2TopoTF4BodyCharmSignal',
                        'Hlt2TopoTF2BodyCharmWideMass',
                        'Hlt2TopoTF3BodyCharmWideMass',
-                       'Hlt2TopoTF4BodyCharmWideMass',
+                       #'Hlt2TopoTF4BodyCharmWideMass',
                        'Hlt2DX3BodyCopKsDD',
                        'Hlt2DX3BodyCopNoKs' ] )
 ##
