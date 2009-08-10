@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.8 2009-08-06 19:41:56 graven Exp $
+# $Id: HltMuonLines.py,v 1.9 2009-08-10 12:37:16 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 
@@ -31,19 +31,7 @@ from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 class HltMuonLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 
-    #  DC06 (FFFF) Muon Lines
-        #'Lines'                    :['SingleMuonNoIPL0','SingleMuonNoIPGEC','SingleMuonIPCL0','SingleMuonIPCGEC',
-        #                             'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
-        #                             'DiMuonNoIPL0GEC','DiMuonNoIPGECSeg',
-        #                             'DiMuonIPCL0Di','DiMuonIPC2L0','DiMuonIPCL0GEC','DiMuonIPCL0Seg',
-        #                             'DiMuonIPCL0GEC','DiMuonIPCGECSeg']
-        #                             'DiMuonNoPVL0Di','DiMuonNoPV2L0','DiMuonNoPVL0Seg']
-        #,'L0SingleMuon'             :"MuonNoGlob"
-        #,'L0SingleMuonGEC'          :"Muon"
-        #,'L0SingleMuonNoPV'         :""
-        #,'L0DiMuonNoPV'             :""
-        #,'DiMuon_SumPtCut'          : 1500.
-    #  DC09 Muon Lines
+    #  Muon Lines
         'Lines'                     :['SingleMuonNoIPL0','SingleMuonIPCL0',                    
                                      'DiMuonNoIPL0Di','DiMuonNoIP2L0','DiMuonNoIPL0Seg',
                                      'DiMuonIPCL0Di','DiMuonIPC2L0','DiMuonIPCL0Seg',

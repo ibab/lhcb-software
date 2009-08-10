@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.25 2009-08-06 19:41:55 graven Exp $
+! $Id: release.notes,v 1.26 2009-08-10 12:37:16 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Remove confusing and commented out ``DC06'' block from muon lines
 
 ! 2009-08-06 - Gerhard Raven
  - remove redundant DecodeVelo in muon lines
