@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ConfUtils.py,v 1.1 2009-08-05 17:26:05 ibelyaev Exp $
+# $Id: ConfUtils.py,v 1.2 2009-08-10 13:39:59 ibelyaev Exp $
 # =============================================================================
 ## Useful utulities for building Calo-configurables 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ Trivial module with few helper utilities to build  Calo-configurables
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'hltContext'     ,              ##    trivial function to check HLT context
@@ -138,7 +138,7 @@ def addAlgs  ( seq , algs ) :
 
 # =============================================================================
 ## local variable to store on-demand actions 
-_caloOnDemand = {}
+__caloOnDemand = {}
 
 # =============================================================================
 ##  Configure Data-On-Demand service
@@ -153,9 +153,10 @@ def onDemand ( location , alg ) :
     
     """
     if not location : return
-    DataOnDemandSvc().AlgMap .update ( { location : alg } ) 
-    _caloOnDemand            .update ( { location : alg } ) 
-    
+    dod = DataOnDemandSvc() 
+    dod.AlgMap     .update ( { location : alg.getFullName () } ) 
+    __caloOnDemand .update ( { location : alg.getFullName () } ) 
+
 # =============================================================================
 def caloOnDemand () :
     """
@@ -164,7 +165,7 @@ def caloOnDemand () :
     >>> print caloOnDemand()
     
     """
-    return _caloOnDemand
+    return __caloOnDemand
 
     
 # =============================================================================
@@ -175,14 +176,15 @@ def getAlgo ( typ , name , context , location = None , enable = True ) :
     
     """
     if hltContext ( context ) :
-        if 0 != name.find ('Hlt' ) : name = "Hlt" + name
-        if location  and -1 == location.find('Hlt/') : 
-            if 0 == location.find('Rec/') :
-                location = location.replace ('Rec/','Hlt/')
+        
+        if -1 == name.find ('Hlt' ) and -1 == name.find('HLT') :
+            name = "Hlt" + name
+            
+        if location and -1 == location.find('Hlt/') : 
+            location = location.replace ('Rec/','Hlt/')
                 
     alg = typ ( name )
-    ## if hasattr ( alg , 'Context' ) : setattr ( alg , 'Context' , context ) 
-    setattr ( alg , 'Context' , context ) 
+    if _hasProp ( alg , 'Context' )  : setattr ( alg , 'Context' , context ) 
     if location and enable : onDemand ( location , alg ) 
     return alg 
 
@@ -195,13 +197,18 @@ def printOnDemand () :
     Print current Calo-On-Demand configuration
     
     """
-    recs = caloOnDemand()
+    recs   = caloOnDemand()
     result = 'No "Calo-On-Demand" Configuration available'
     if recs :
-        result = 'Calo-On-Demand is configured as:'
+        line   = '+' + 102*'-' + '+'
+        result  = '\n' + line 
+        result += '\n' + 35*' ' + ' Calo-On-Demand configuration '
+        result += '\n' + line 
         for l in recs :
-            result += '\n | %-45.45s : %-50.50s |' % ( l , recs[l] )        
-    return result 
+            result += '\n| %-45.45s --> %-50.50s |' % ( l , recs[l] )    
+        result += '\n' + line
+
+    return result
 
 
 
