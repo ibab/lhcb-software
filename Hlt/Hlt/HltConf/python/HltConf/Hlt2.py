@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -181,8 +181,11 @@ class Hlt2Conf(LHCbConfigurableUser):
         if reqs.upper() != "NONE" :
             from Configurables import LoKi__HDRFilter   as HltFilter
             from Configurables import LoKi__L0Filter    as L0Filter
-            hlt2requires = { 'L0'   : L0Filter( 'L0Pass',          Code = "L0_DECISION" )
-                             , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
+            from Configurables import L0DUFromRawAlg
+            L0accept = Sequence(name='Hlt2L0Requirements', Members = [ L0DUFromRawAlg(), L0Filter( 'L0Pass', Code = "L0_DECISION" )])
+            
+            hlt2requires = { 'L0'   : L0accept 
+                           , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
                              }
             for i in reqs.split('+') :
                 if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )

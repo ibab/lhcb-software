@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.306 2009-08-10 14:11:01 pkoppenb Exp $ 
+! $Id: release.notes,v 1.307 2009-08-10 15:37:54 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Patrick Koppenburg
+ - Make sure L0DUFormRawAlg is run when running Hlt2 requiring L0 but
+   not running Hlt1
 
 ! 2009-08-10 - Patrick Koppenburg
  - Last word (?) on ZPositions. Mail by Wouter :
