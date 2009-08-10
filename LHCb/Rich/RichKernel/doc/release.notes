@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.235 2009-08-07 00:39:32 ryoung Exp $
+! $Id: release.notes,v 1.236 2009-08-10 12:06:57 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-08-10 - Chris Jones
+ - Slight simplification of the booking methods in RichHistoBase.icpp
 
 ! 2009-08-07 - Ross Young
  - globalPixelX() and globalPixelY() in RichSmartIDCnv.h updated to display 
