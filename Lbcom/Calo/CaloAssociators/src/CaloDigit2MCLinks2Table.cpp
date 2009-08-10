@@ -1,20 +1,6 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.6 2009-07-25 01:06:47 odescham Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.7 2009-08-10 13:33:46 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.5  2006/04/06 13:26:11  odescham
-// generic tools moved to CaloUtils
-//
-// Revision 1.4  2006/03/28 14:44:36  cattanem
-// remove checks on return code from methods that only fail with exception
-//
-// Revision 1.3  2006/02/23 21:30:45  odescham
-// Standardize TES path + cleaning
-//
-// Revision 1.2  2006/02/21 10:04:46  odescham
-// update for new Event Model
-//
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -44,9 +30,6 @@
 #include "Linker/LinkedTo.h"
 #include "Linker/LinkedFrom.h"
 // ============================================================================
-//
-
-// ============================================================================
 /** @class  CaloDigit2MCLinks2Table  CaloDigit2MCLinks2Table.cpp
  *
  *  Helper algorithm to "decode" idirotic linker object 
@@ -72,11 +55,16 @@
 // ============================================================================
 class CaloDigit2MCLinks2Table : public GaudiAlgorithm
 {
+  // ==========================================================================
   friend class AlgFactory<CaloDigit2MCLinks2Table> ;
+  // ==========================================================================
 public:
+  // ==========================================================================
   /// algorithm execution 
   virtual StatusCode execute    () ;
+  // ==========================================================================
 protected:
+  // ==========================================================================
   /** standard constructor 
    *  @param name algorithm instance name 
    *  @param pSvc pointer to service locator
@@ -87,10 +75,12 @@ protected:
     : GaudiAlgorithm ( name , pSvc ) 
     , m_inputs ( 1 , LHCb::CaloDigitLocation::Ecal      ) 
     , m_output ( "Relations/" + LHCb::CaloDigitLocation::Default ) 
-  { } ;
+  { } 
   /// virtual destructor (protected)
   virtual ~CaloDigit2MCLinks2Table() {};
+  // ==========================================================================
 private:
+  // ==========================================================================
   // default constructor  is disabled 
   CaloDigit2MCLinks2Table ();
   // copy    constructor  is disabled  
@@ -99,21 +89,20 @@ private:
   // assignement operator is disabled
   CaloDigit2MCLinks2Table& operator=
   ( const CaloDigit2MCLinks2Table& ) ;
+  // ==========================================================================
 private:
+  // ==========================================================================
   typedef std::vector<std::string>  Inputs ;
   Inputs      m_inputs ;
   std::string m_output ;
+  // ==========================================================================
 };
-// ============================================================================
-
 // ============================================================================
 // declare the factory
 // ============================================================================
 DECLARE_ALGORITHM_FACTORY(CaloDigit2MCLinks2Table);
 // ============================================================================
-
-// ============================================================================
-/// algorithm execution 
+// algorithm execution 
 // ============================================================================
 StatusCode CaloDigit2MCLinks2Table::execute    () 
 {
@@ -123,10 +112,10 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   typedef const LHCb::CaloDigits                     Digits ;
   /// the actual type of relation table 
   typedef LHCb::Calo2MC::DigitTable Table  ;
-
+  
   // create and register the relation table 
-  Table* table = new Table( 1000 ) ;
-  put( table , m_output ) ;
+  Table* table = new Table ( 3000 ) ;
+  put ( table , m_output ) ;
   
   if ( m_inputs.empty() ) 
   { return Error ( "No Linker object are specified" ) ; }
@@ -182,26 +171,24 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
         table->i_push ( digit , particle , energy ) ; // NB !!
       }
       
-    }; // end of the loop over digits in the container 
+    } // end of the loop over digits in the container 
     
-  }; // end of loop over all input containers
+  } // end of loop over all input containers
   
   // mandatory operation after "i_push"!       
   table->i_sort() ;                               // NB !!
-
-  if ( table->relations().empty() ) 
-  { Warning ( "Empty Relation table" ) ; }
+  
+  if ( table->relations().empty() ) { Warning ( "Empty Relation table" ) ; }
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << "Number of MC-links #" 
             << table->relations().size() << endreq ; }
   
+  counter( "#CD2MC links") += table->relations().size() ;
+  
   return StatusCode::SUCCESS ;
   
-};
-// ============================================================================
-
-
+}
 // ============================================================================
 // The END 
 // ============================================================================
