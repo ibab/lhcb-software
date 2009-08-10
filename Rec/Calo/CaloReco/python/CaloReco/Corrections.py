@@ -1,7 +1,7 @@
 
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Corrections.py,v 1.1 2009-08-05 17:38:29 ibelyaev Exp $ 
+# $Id: Corrections.py,v 1.2 2009-08-10 12:55:39 ibelyaev Exp $ 
 # =============================================================================
 ## @file CaloReco/Corrections.py
 #  Set of E/S/L-correction parameters
@@ -14,7 +14,7 @@
 Set of Calo E/S/L-correction parameters
 """
 # =============================================================================
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__  = (
     'eCorrection'  , ## E-corretions 
@@ -60,9 +60,6 @@ def eCorrection ( ecorr , version = None ) :
     ecorr.GlobalFactor    =     [   1.000   , 0.977      , 1.000 ,      0.988   ]
     ##
     log.info ('Configure E-Corrections for Ecal hypotheses: %s' % ecorr.name () )
-
-
-    print 'QQQQQQQQQ: corrections are set for : ', ecorr.name()
     
     return ecorr
 
@@ -124,9 +121,6 @@ if '__main__' == __name__ :
     print __doc__ 
     print __version__ 
 
-
-# =============================================================================
-# $Log: not supported by cvs2svn $
 # =============================================================================
 # The END 
 # =============================================================================

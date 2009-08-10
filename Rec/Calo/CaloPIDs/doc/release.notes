@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.70 2009-08-05 17:35:32 ibelyaev Exp $ 
+! $Id: release.notes,v 1.71 2009-08-10 12:53:41 ibelyaev Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2009-08-10 - Vanya BELYAEV
+
+ - polish the configurables 
 
 ! 2009-08-05 - Vanya BELYAEV
 

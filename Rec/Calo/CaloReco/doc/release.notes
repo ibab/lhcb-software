@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.148 2009-08-05 17:38:29 ibelyaev Exp $
+! $Id: release.notes,v 1.149 2009-08-10 12:55:39 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-10 - Vanya BELYAEV
+
+ - further polishing of configurables 
 
 ! 2009-08-05 - Vanya BELYAEV
 

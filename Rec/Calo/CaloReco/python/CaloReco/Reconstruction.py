@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.1 2009-08-05 17:38:29 ibelyaev Exp $
+# $Id: Reconstruction.py,v 1.2 2009-08-10 12:55:39 ibelyaev Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'digitsReco'     , 
@@ -106,9 +106,9 @@ def clusterReco ( context , enableRecoOnDemand ) :
     share = getAlgo ( CaloSharedCellAlg        , "EcalShare" , context ) 
     covar = getAlgo ( CaloClusterCovarianceAlg , "EcalCovar" , context )
 
-    clust.PropertiesPrint = True
-    share.PropertiesPrint = True
-    covar.PropertiesPrint = True
+    #clust.PropertiesPrint = True
+    #share.PropertiesPrint = True
+    #covar.PropertiesPrint = True
     
     if hltContext ( context ) :
         clust.OutputData = 'Hlt/Calo/EcalClusters'
@@ -214,11 +214,13 @@ def electronReco ( context , enableRecoOnDemand ) :
     if hltContext ( context ) :
         alg = getAlgo ( CaloElectronAlg      ,
                         'HltElectronHypoRec' ,
+                        context              ,
                         'Hlt/Calo/Electrons' ,
                         enableRecoOnDemand   ) 
     else:
         alg = getAlgo ( CaloElectronAlg      ,
                         'ElectronHypoRec'    ,
+                        context              ,
                         'Rec/Calo/Electrons' ,
                         enableRecoOnDemand   ) 
         
@@ -271,19 +273,19 @@ def electronReco ( context , enableRecoOnDemand ) :
     lcorr = lCorrection ( lcorr )
 
     
-    seq = getAlgo ( GaudiSequencer , "ElectronReco" , context )
+    eseq = getAlgo ( GaudiSequencer , "ElectronReco" , context )
     
-    addAlgs ( seq , trackMatch ( context , enableRecoOnDemand ) ) 
-    addAlgs ( seq , alg ) 
+    addAlgs ( eseq , trackMatch ( context , enableRecoOnDemand ) ) 
+    addAlgs ( eseq , alg ) 
     
-    setTheProperty ( seq , 'Context' , context )
+    setTheProperty ( eseq , 'Context' , context )
 
     if hltContext (  context ) :
-        log.debug ( 'Configure Electron Hypo Reco for HLT     : %s' % alg.name() )
+        log.debug ( 'Configure Electron Hypo Reco for HLT     : %s' % eseq.name() )
     else:
-        log.debug ( 'Configure Electron Hypo Reco for Offline : %s' % alg.name() )
+        log.debug ( 'Configure Electron Hypo Reco for Offline : %s' % eseq.name() )
 
-    return seq
+    return eseq
 
     
 # =============================================================================
@@ -350,32 +352,32 @@ def mergedPi0Reco ( context , enableRecoOnDemand ) :
         lcorr 
         ]
     
-    seq = getAlgo ( GaudiSequencer        ,
-                    'MergedPi0Reco'       ,
-                    context               , 
-                    'Rec/Calo/MergedPi0s' ,
-                    enableRecoOnDemand    )
+    mseq = getAlgo ( GaudiSequencer        ,
+                     'MergedPi0Reco'       ,
+                     context               , 
+                     'Rec/Calo/MergedPi0s' ,
+                     enableRecoOnDemand    )
     
-    seq.Members = [ pi0 , splitg ] 
+    mseq.Members = [ pi0 , splitg ] 
     
     if enableRecoOnDemand :
         ## split photons
         if hltContext ( context ) :
-            onDemand ( 'Hlt/Calo/EcalSplitClusters' , seq ) 
-            onDemand ( 'Hlt/Calo/SplitPhotons'      , seq ) 
+            onDemand ( 'Hlt/Calo/EcalSplitClusters' , mseq ) 
+            onDemand ( 'Hlt/Calo/SplitPhotons'      , mseq ) 
         else :
-            onDemand ( 'Rec/Calo/EcalSplitClusters' , seq ) 
-            onDemand ( 'Rec/Calo/SplitPhotons'      , seq ) 
+            onDemand ( 'Rec/Calo/EcalSplitClusters' , mseq ) 
+            onDemand ( 'Rec/Calo/SplitPhotons'      , mseq ) 
 
 
-    setTheProperty ( seq , 'Context' , context )
+    setTheProperty ( mseq , 'Context' , context )
 
     if hltContext ( context ) :
-        log.debug ( 'Configure Merged Pi0 Reco     for HLT     : %s' % seq.name() )
+        log.debug ( 'Configure Merged Pi0 Reco     for HLT     : %s' % mseq.name() )
     else:
-        log.debug ( 'Configure Merged Pi0 Reco     for Offline : %s' % seq.name() )
+        log.debug ( 'Configure Merged Pi0 Reco     for Offline : %s' % mseq.name() )
 
-    return seq
+    return mseq
 
 
 # =============================================================================

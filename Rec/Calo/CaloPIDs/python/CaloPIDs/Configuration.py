@@ -9,7 +9,7 @@ Configurable for Calorimeter PID
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__   = (
     'HltCaloPIDsConf'     ,
@@ -43,10 +43,10 @@ class CaloPIDsConf(LHCbConfigurableUser):
         , "MeasureTime"        : True        # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
-        , 'Sequence'           : None        # The sequencer to add the CALO reconstruction algorithms to
+        , 'Sequence'           : ''          # The sequencer to add the CALO reconstruction algorithms to
         , 'EnablePIDsOnDemand' : False       # enable Reco-On-Demand
         ##
-        , 'DataType'           : None        # Data type  
+        , 'DataType'           : 'MC09'      # Data type  
         }
     
     ## Configure recontruction of Calo Charged  PIDs 
@@ -54,9 +54,9 @@ class CaloPIDsConf(LHCbConfigurableUser):
         """
         Configure recontruction of Calo Charged  PIDs 
         """
-        cmp = caloPIDs ( self.Context            ,
-                         self.EnablePIDsOnDemand ) 
-        log.info ('Configured Calo PIDs      Reco : %s ' % cmp.name()  )
+        cmp = caloPIDs ( self.getProp( 'Context'            )  ,
+                         self.getProp( 'EnablePIDsOnDemand' )  ) 
+        log.info ('Configured Calo PIDs           : %s ' % cmp.name()  )
         ##
         return cmp 
     
@@ -77,12 +77,12 @@ class CaloPIDsConf(LHCbConfigurableUser):
         self.checkConfiguration()
         
         pids = self.caloPIDs()
-
-        setTheProperty ( pids , 'Context'     , self.Context )
+        
+        setTheProperty ( pids , 'Context'     , self.getProp('Context'    ) )
         setTheProperty ( pids , 'OutputLevel' , self.getProp('OutputLevel') )
         setTheProperty ( pids , 'MeasureTime' , self.getProp('MeasureTime') )
-        
-        if self.getProp('Sequence') :
+
+        if self.getProp ( 'Sequence' ) :
             addAlgs  ( self.Sequence , pids ) 
             log.info ('Configure main Calo PIDs Sequence  : %s '% self.Sequence.name() )
             log.info ( prntCmp ( self.Sequence ) ) 
@@ -90,8 +90,6 @@ class CaloPIDsConf(LHCbConfigurableUser):
             log.info ('Configure Calorimeter PIDs blocks ' )            
             log.info ( prntCmp ( pids ) )
             
-        ##print ' CONFIGURATIONL' , prntCmp ( pids )
-        
         # configure the histogram input: 
         hsvc = HistogramSvc ( 'HistogramDataSvc' )
         inputs = hsvc.Input
@@ -101,18 +99,17 @@ class CaloPIDsConf(LHCbConfigurableUser):
             
         if found :
             log.info ("CaloPIDsConf: LUN 'CaloPIDs' has been defined already") 
-        elif 'DC06' == self.DataType :
+        elif 'DC06' == self.getProp('DataType') :
             hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC06_v2.root' TYP='ROOT'" ]
         else:
             hsvc.Input += [ "CaloPIDs DATAFILE='$PARAMFILESROOT/data/CaloPIDs_DC09_v1.root' TYP='ROOT'" ]
 
-        if hltContext ( self.Context ) : 
+        if hltContext ( self.getProp('Context')  ) : 
             importOptions("$CALOPIDSROOT/options/HltPhotonPDF.opts")
         else :
             importOptions("$CALOPIDSROOT/options/PhotonPDF.opts")
-        
-            
-        if self.EnablePIDsOnDemand :
+                    
+        if self.getProp( 'EnablePIDsOnDemand')  :
             log.info ( printOnDemand () ) 
 
         ##print ' ON-DEMAND ' , printOnDemand () 
@@ -133,7 +130,7 @@ class HltCaloPIDsConf(CaloPIDsConf):
         """
         Check the configuration
         """
-        if not hltContext ( self.Context ) :
+        if not hltContext ( self.getProp('Context') ) :
             raise AttributeError, 'Invalid context for HltCaloPIDsConf'
         
 # =============================================================================
@@ -152,7 +149,7 @@ class OffLineCaloPIDsConf(CaloPIDsConf):
         """
         Check the configuration
         """
-        if hltContext ( self.Context ) :
+        if hltContext ( self.getProp('Context') ) :
             raise AttributeError, 'Invalid context for OffLineCaloPIDsConf'
         
 
