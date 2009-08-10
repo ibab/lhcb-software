@@ -9,7 +9,7 @@ Confurable for Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__  = (
     'CaloMoniDstConf',
@@ -76,7 +76,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         cmp = eflowMoni ( self.Context )
 
-        return cmt
+        return cmp
 
     ## configure Clusters monitoring 
     def clusters ( self ) :
@@ -85,7 +85,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         cmp = clustersMoni ( self.Context )
         
-        return cmt
+        return cmp
 
     ## configure Hypos monitoring 
     def hypos ( self ) :
@@ -94,7 +94,7 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         cmp = hyposMoni ( self.Context )
         
-        return cmt
+        return cmp
 
     ## configure pi0 monitoring 
     def pi0s ( self ) :
@@ -103,17 +103,17 @@ class CaloMoniDstConf(LHCbConfigurableUser):
         """
         cmp = pi0sMoni ( self.Context )
         
-        return cmt
+        return cmp
 
-
+    
     ## configure PID monitoring 
-    def pidss ( self ) :
+    def pids ( self ) :
         """
         Configure PIDs monitoring
         """
         cmp = pidsMoni ( self.Context )
         
-        return cmt
+        return cmp
     
     
     ## Check the configuration
