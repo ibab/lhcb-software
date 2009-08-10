@@ -10,7 +10,7 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes", 
-                 "Curie", "Vetra", "Compat"]
+                 "Curie", "Vetra", "Compat", "VanDerMeer"]
 
 # ------------------------------------------------------------------------------------
 
@@ -286,4 +286,8 @@ Phys.setFullSize(2000000)#IGNORE:E0602
 
 # Rec
 Rec.setFullSize(6000000)#IGNORE:E0602
+
+# VanDerMeer
+VanDerMeer.setFullSize(50000)#IGNORE:E0602
+VanDerMeer.setAFSVolumeName("VDM")#IGNORE:E0602
 
