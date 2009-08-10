@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.11 2009-08-10 13:47:46 pkoppenb Exp $
+# $Id: HltMuonLines.py,v 1.12 2009-08-10 16:16:54 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 
@@ -33,7 +33,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 
     #  Muon Lines
          'L0SingleMuon'             :"Muon"
-        ,'L0SingleMuonGEC'          :""
+        ,'L0SingleMuonGEC'          :"Muon" ### is that correct?
         ,'L0SingleMuonNoPV'         :"Muon,lowMult"
         ,'L0DiMuonNoPV'             :"DiMuon,lowMult"
         ,'DiMuon_SumPtCut'          : 1000.
