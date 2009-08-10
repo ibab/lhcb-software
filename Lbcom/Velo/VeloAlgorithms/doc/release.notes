@@ -1,6 +1,15 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+! 2008-08-06 - Tomasz Szumlak
+ - add a bunch of algorithms to implement Tell1 clusterization process
+   in LHCb simulation stream
+   VeloSimTell1ClusterMaker
+   SimTell1ZSProcessEngine
+   VeloTell1DataProcessor
+ - add helper classes for Tell1 clusterization
+   Digitizer
+   compareSensor
 
 !===================== VeloAlgorithms v4r8 2009-01-12 =====================
 ! 2008-12-15 - David Hutchcroft
