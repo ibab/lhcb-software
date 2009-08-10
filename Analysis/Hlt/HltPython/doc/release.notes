@@ -4,6 +4,7 @@
 ! Purpose     : Exposing Hlt tools to Python, share common python tools
 !-----------------------------------------------------------------------------
 
+!========================== HltPython v1r17 2009-08-10 ===================
 ! 2009-08-04- Gerhard Raven
  - remove manipulations of PYTHONPATH from the requirements which add
    four directories to it -- please use the 'normal' installation in 
