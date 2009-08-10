@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r10 2009-08-10 ===================
 ! 2009-08-05 - Jaap Panman
  - LumiAnalyser: better binning control and more basic plots
 
