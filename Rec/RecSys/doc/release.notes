@@ -5,6 +5,13 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-08-10 - Vanya BELYAEV
+
+ - python/RecSys/Configuration.py
+
+    add usage of CaloReco & CaloPIDs configurables 
+
+
 </PRE><H1><A NAME=v7r5>2009-07-30 RecSys v7r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r5.
 

@@ -4,13 +4,17 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2009-07-27 00:23:45 jcidvida Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2009-08-10 15:02:40 ibelyaev Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from TrackSys.Configuration   import *
 from RichRecSys.Configuration import *
 from GlobalReco.Configuration import *
+
+from CaloReco.Configuration   import OffLineCaloRecoConf 
+from CaloPIDs.Configuration   import OffLineCaloPIDsConf
+
 from Configurables import ProcessPhase
 
 ## @class RecSysConf
@@ -20,7 +24,11 @@ from Configurables import ProcessPhase
 class RecSysConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ GlobalRecoConf, TrackSys, RichRecSysConf ]
+    __used_configurables__ = [ GlobalRecoConf      ,
+                               TrackSys            ,
+                               OffLineCaloPIDsConf ,
+                               OffLineCaloRecoConf ,
+                               RichRecSysConf ]
 
     ## Default tracking Sub-detector processing sequence
     DefaultTrackingSubdets = ["VELO","TT","IT","OT","Tr","Vertex"]
@@ -91,13 +99,35 @@ class RecSysConf(LHCbConfigurableUser):
             
         # CALO
         if "CALO" in recoSeq:
-            importOptions("$CALORECOOPTS/Brunel.opts")
-            if self.getProp("DataType") == "DC06":
-                importOptions("$CALORECOOPTS/CaloPIDs-DC06.opts")
-            else:
-                importOptions("$CALORECOOPTS/CaloPIDs.opts")
-            importOptions("$CALOPIDSOPTS/PhotonPDF.opts")
             
+            seq  = GaudiSequencer ( 'RecoCALOSeq' )
+
+            reco = GaudiSequencer ( 'CaloRecoSeq' )
+            pids = GaudiSequencer ( 'CaloPIDsSeq' )
+
+            seq.Members = [ reco , pids ]
+
+            
+            caloConf = OffLineCaloRecoConf(
+                Sequence           = reco                           ,
+                Context            = self.getProp('Context')        ,
+                OutputLevel        = self.getProp('OutputLevel')    ,
+                ##
+                UseTracks          = True                           ,
+                EnableRecoOnDemand = False 
+                )
+            self.setOtherProps ( caloConf , ['Context', 'OutputLevel'] )
+            
+            caloPIDs = OffLineCaloPIDsConf (
+                Sequence           = pids                           ,
+                Context            = self.getProp('Context')        ,
+                OutputLevel        = self.getProp('OutputLevel')    ,
+                EnablePIDsOnDemand = False                          ,
+                DataType           = self.getProp ('DataType')      
+                )
+            self.setOtherProps ( caloPIDs , ['Context', 'OutputLevel'] )
+
+
         # MUON
         if "MUON" in recoSeq:
             from MuonID import ConfiguredMuonIDs
