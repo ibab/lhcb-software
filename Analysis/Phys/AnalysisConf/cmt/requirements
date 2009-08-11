@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           AnalysisConf
-version           v1r3
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -19,6 +19,7 @@ use       Python      v* LCG_Interfaces
 include_path      none
 # =============================================================================
 # ======= the patterns ========================================================
+macro AnalysisConfConfUserModules "AnalysisConf.Configuration AnalysisConf.BaseDSTWriter"
 apply_pattern install_python_modules
 # =============================================================================
 
