@@ -4,6 +4,8 @@
 ! Purpose     : Filters for ProtoParticles
 !-----------------------------------------------------------------------------
 
+!===================== ProtoParticleFilter v1r4 2009-09-11 =================
+
 ! 2009-07-28 - Juan PALACIOS
  - cmt/requirements
   . Use DaVinciInterfaces and GaudiAlg instead of DaVinciKernel.
