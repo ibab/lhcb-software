@@ -3,6 +3,10 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+! 2009-08-11 - Gerhard Raven
+ - when creating configurations, make sure ODIN is
+   decoded even in the most stripped configuration
+
 ! 2009-08-05 - Gerhard Raven
  - improve manifest installation
 

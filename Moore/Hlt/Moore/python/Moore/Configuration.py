@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.71 2009-07-15 20:50:09 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.72 2009-08-11 14:04:26 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -281,7 +281,8 @@ class Moore(LHCbConfigurableUser):
                           , mooreRelease = self.getRelease()
                           , label = self.getProp('configLabel'))
         # make sure gen is the very first Top algorithm...
-        ApplicationMgr().TopAlg = [ gen.getFullName() ] + ApplicationMgr().TopAlg
+        from HltLine.HltDecodeRaw import DecodeODIN
+        ApplicationMgr().TopAlg = DecodeODIN.members() + [ gen.getFullName() ] + ApplicationMgr().TopAlg
 
     def _l0(self) :
         if ( (self.getProp("HltType")!='') and (self.getProp("DataType") == 'DC06') and (not self.getProp("L0")) ):
