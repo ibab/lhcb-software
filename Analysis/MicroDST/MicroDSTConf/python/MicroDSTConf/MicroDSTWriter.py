@@ -1,12 +1,10 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.4 2009-08-11 08:04:45 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.5 2009-08-11 08:05:27 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
-
 from GaudiConf.Configuration import *
 
 from AnalysisConf.BaseDSTWriter import BaseDSTWriter
