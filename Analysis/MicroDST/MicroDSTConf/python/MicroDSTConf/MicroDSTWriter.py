@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.3 2009-08-11 07:51:47 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.4 2009-08-11 08:04:45 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -23,9 +23,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "OutputPrefix"         : "MicroDST"
                   }
 
-
-    _propertyDocDct = BaseDSTWriter._propertyDocDct
-    _propertyDocDct =  {  "CopyParticles"        : """ """
+     _propertyDocDct =  {  "CopyParticles"        : """ """
                           , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
                           , "CopyBTags"            : """ """
                           , "P2PVRelationsSuffix"  : """ """
