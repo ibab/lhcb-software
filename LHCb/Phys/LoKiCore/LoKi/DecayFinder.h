@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.2 2009-06-28 16:41:46 ibelyaev Exp $
+// $Id: DecayFinder.h,v 1.3 2009-08-11 18:19:24 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_DECAYFINDER_H 
 #define LOKI_DECAYFINDER_H 
@@ -31,6 +31,11 @@ namespace Decays
     /// the type for collection 
     typedef typename Decays::iTree_<PARTICLE>::Collection          Collection ;    
     typedef typename Collection::const_iterator                    iterator   ;
+    // ========================================================================
+  public: 
+    // ========================================================================
+    typedef Decays::iTree_<PARTICLE>                                    iTree ;
+    typedef Decays::Tree_<PARTICLE>                                      Tree ;
     // ========================================================================
   public: 
     // ========================================================================
@@ -222,7 +227,7 @@ namespace Decays
   private:
     // ========================================================================
     /// the actual selection tree 
-    Tree_<PARTICLE> m_tree ;                       // the actual selection tree 
+    Decays::Tree_<PARTICLE> m_tree ;               // the actual selection tree 
     // ========================================================================
   } ;
   // ==========================================================================

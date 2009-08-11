@@ -1,4 +1,4 @@
-// $Id: UniqueKeeper.h,v 1.9 2008-10-31 17:24:08 ibelyaev Exp $
+// $Id: UniqueKeeper.h,v 1.10 2009-08-11 18:19:25 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_UNIQUEKEEPER_H 
 #define LOKI_UNIQUEKEEPER_H 1
@@ -50,12 +50,14 @@ namespace LoKi
   {
   public: 
     // ========================================================================
-    typedef typename std::set<const OBJECT*>                  Objects ;
-    typedef typename Objects::const_iterator                 iterator ;
-    typedef iterator                                   const_iterator ;
-    typedef typename Objects::const_reverse_iterator reverse_iterator ;
-    typedef reverse_iterator                   const_reverse_iterator ;
-    typedef typename Objects::value_type                   value_type ;
+    typedef typename std::set<const OBJECT*>                          Objects ;
+    typedef typename Objects::const_iterator                         iterator ;
+    typedef iterator                                           const_iterator ;
+    typedef typename Objects::const_reverse_iterator         reverse_iterator ;
+    typedef reverse_iterator                           const_reverse_iterator ;
+    typedef typename Objects::value_type                           value_type ;
+    typedef typename Objects::reference                             reference ;
+    typedef typename Objects::const_reference                 const_reference ;    
     // ========================================================================
   public:
     // ========================================================================
