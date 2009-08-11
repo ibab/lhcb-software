@@ -1,8 +1,8 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.8 2009-08-10 09:04:25 hmdegaud Exp $
+# $Id: GetPack.py,v 1.9 2009-08-11 15:13:17 hmdegaud Exp $
 
 from LbUtils.Script import Script
-from LbRelease import createProjectMakefile
+from LbConfiguration import createProjectMakefile
 import rcs
 import os, sys, re
 from subprocess import Popen, PIPE, STDOUT
@@ -100,7 +100,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.8 2009-08-10 09:04:25 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.9 2009-08-11 15:13:17 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"

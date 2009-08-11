@@ -2,6 +2,7 @@ package LbRelease
 version v2r12
 
 use LbUtils v*
+use LbConfiguration v*
 
 apply_pattern python_alias script=showProjects
 apply_pattern python_alias script=usedProjects

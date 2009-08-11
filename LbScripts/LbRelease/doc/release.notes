@@ -1,3 +1,11 @@
+2009-08-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbRelease/__ini__.py: 
+	* data/Makefile: moved the Makefile to LbConfiguration to avoid a CMT dependency
+	loop between LbRelease and LbConfiguration
+    * python/LbRelease/GetPack.py: use createProjectMakefile from the LbConfiguration
+    module.
+    
 2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbRelease/__ini__.py: added the createMakefile function. This makefile 
