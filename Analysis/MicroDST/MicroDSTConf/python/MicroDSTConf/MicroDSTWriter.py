@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.6 2009-08-11 08:07:35 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.7 2009-08-11 09:44:08 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -11,6 +11,8 @@ from AnalysisConf.BaseDSTWriter import BaseDSTWriter
 
 class MicroDSTWriter(BaseDSTWriter) :
     __slots__ = { "CopyParticles"        : True
+                  , "CopyODIN"             : True
+                  , "CopyRecHeader"        : True
                   , "CopyPVs"              : True
                   , "CopyBTags"            : True
                   , "CopyRelatedPVs"       : False
@@ -55,18 +57,21 @@ class MicroDSTWriter(BaseDSTWriter) :
     def setOutputPrefix(self, alg) :
         alg.OutputPrefix = self.getProp('OutputPrefix')
     
-    def copyDefaultStuff(self, sel):
-        from Configurables import CopyRecHeader, CopyODIN
+    def _copyRecHeader(self, sel):
+        from Configurables import CopyRecHeader
         copyRecHeader = CopyRecHeader(self._personaliseName(sel,
                                                             "CopyRecHeader"))
         self.setOutputPrefix(copyRecHeader)
         sel.sequence().Members += [copyRecHeader]
+
+    def _copyODIN(self, sel) :
+        from Configurables import CopyODIN
         copyODIN = CopyODIN(self._personaliseName(sel,"CopyODIN"))
         self.setOutputPrefix(copyODIN)
         sel.sequence().Members += [copyODIN]
 
         
-    def copyParticleTrees(self, sel) :
+    def _copyParticleTrees(self, sel) :
         from Configurables import (CopyParticles,
                                    VertexCloner,
                                    ProtoParticleCloner )
@@ -80,7 +85,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(copyParticles)
         sel.sequence().Members += [copyParticles]  
 
-    def copyP2PVRelations(self, sel, name, location) :
+    def _copyP2PVRelations(self, sel, name, location) :
         from Configurables import CopyParticle2PVRelations
         copyP2PVRel = CopyParticle2PVRelations(self._personaliseName(sel,name))
         copyP2PVRel.InputLocation = location
@@ -88,17 +93,17 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(copyP2PVRel)
         sel.sequence().Members += [copyP2PVRel]
 
-    def copyPVs(self, sel) :
+    def _copyPVs(self, sel) :
         from Configurables import CopyPrimaryVertices
         copyPV=CopyPrimaryVertices(self._personaliseName(sel,'CopyPrimaryVertices'))
         copyPV.OutputLevel = 4
         self.setOutputPrefix(copyPV)
         sel.sequence().Members += [copyPV]
         if self.getProp('CopyParticles') :
-            self.copyP2PVRelations(sel,"CopyP2PVRelations",
-                                   self.mainLocation(sel)+"/Particle2VertexRelations")
+            self._copyP2PVRelations(sel,"CopyP2PVRelations",
+                                    self.mainLocation(sel)+"/Particle2VertexRelations")
         
-    def copyMCInfo(self, sel) :
+    def _copyMCInfo(self, sel) :
         """
         Copy related MC particles of candidates plus daughters
         """
@@ -120,7 +125,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(copyP2MCRel)
         sel.sequence().Members += [copyP2MCRel]
 
-    def copyBTaggingInfo(self, sel) :
+    def _copyBTaggingInfo(self, sel) :
         from Configurables import BTagging, BTaggingTool
         from Configurables import CopyFlavourTag
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
@@ -135,32 +140,33 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(copyFlavTag)
         sel.sequence().Members += [copyFlavTag]
 
-    def P2PVLocation(self, sel) :
+    def _P2PVLocation(self, sel) :
         return self.mainLocation(sel)+"/"+self.P2PVRelationsSuffix
 
-    def copyRelatedPVs(self, sel) :
+    def _copyRelatedPVs(self, sel) :
         if self.getProp('CopyParticles') :
-            self.copyP2PVRelations(sel,"CopyUserP2PVRelations",
-                                   self.P2PVLocation(sel) )
+            self._copyP2PVRelations(sel,"CopyUserP2PVRelations",
+                                   self._P2PVLocation(sel) )
 
-    def copyL0DUReport(self, sel) :
+    def _copyL0DUReport(self, sel) :
         from Configurables import CopyL0DUReport
         copyL0 = CopyL0DUReport(self._personaliseName(sel,'CopyL0DUReport'))
         self.setOutputPrefix(copyL0)
         sel.sequence().Members += [copyL0]
 
-    def copyHltDecReports(self, sel) :
+    def _copyHltDecReports(self, sel) :
         from Configurables import CopyHltDecReports
         copyHlt = CopyHltDecReports(self._personaliseName(sel,'CopyHltDecReports'))
         self.setOutputPrefix(copyHlt)
         sel.sequence().Members += [copyHlt]
 
     def extendSequence(self, sel) :
-        self.copyDefaultStuff(sel)
-        if self.getProp("CopyParticles")     : self.copyParticleTrees(sel)
-        if self.getProp("CopyPVs")           : self.copyPVs(sel)
-        if self.getProp("CopyBTags")         : self.copyBTaggingInfo(sel)
-        if self.getProp("CopyL0DUReport")    : self.copyL0DUReport(sel)
-        if self.getProp("CopyHltDecReports") : self.copyHltDecReports(sel)
-        if self.getProp("CopyRelatedPVs")    : self.copyRelatedPVs(sel)
-        if self.getProp("CopyMCTruth")       : self.copyMCInfo(sel)
+        if self.getProp("CopyODIN")          : self._copyODIN(sel)
+        if self.getProp("CopyRecHeader")     : self._copyRecHeader(sel)
+        if self.getProp("CopyParticles")     : self._copyParticleTrees(sel)
+        if self.getProp("CopyPVs")           : self._copyPVs(sel)
+        if self.getProp("CopyBTags")         : self._copyBTaggingInfo(sel)
+        if self.getProp("CopyL0DUReport")    : self._copyL0DUReport(sel)
+        if self.getProp("CopyHltDecReports") : self._copyHltDecReports(sel)
+        if self.getProp("CopyRelatedPVs")    : self._copyRelatedPVs(sel)
+        if self.getProp("CopyMCTruth")       : self._copyMCInfo(sel)
