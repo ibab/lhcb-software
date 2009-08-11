@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.1 2009-08-11 07:46:30 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.2 2009-08-11 09:41:59 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,6 +35,8 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def outputStreamType(self) :
         from Configurables import InputCopyStream
+        return InputCopyStream    def outputStreamType(self) :
+        from Configurables import InputCopyStream
         return InputCopyStream
     
     def extendStream(self, stream) :
@@ -49,24 +51,16 @@ class BaseDSTWriter(ConfigurableUser) :
         return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC'"
     
     def _initOutputStreams(self, sel) :
-        if self.getProp('OutputFilePrefix') == "" :
-            print "No OutputStreams!"
-            return 
         stream = self.outputStreamType()( self.streamName(sel) )
         stream.Output = self.outputFileName(sel)
         self.extendStream(stream)
         
     def outputStream(self, sel) :
-        if (self.getProp('OutputFilePrefix') ) != '' :
-            return self.outputStreamType()( self.streamName(sel) )
-        else :
-            print "No OutputStream! Returning None!"
+        return self.outputStreamType()( self.streamName(sel) )
 
     def extendSequence(self, sel) :
-        outStream = self.outputStream(sel)
-        if outStream != None :
-            sel.sequence().Members += [self.outputStream(sel)]
-
+        return
+    
     def addOutputStream(self, sel) :
         outStream = self.outputStream(sel)
         if outStream != None :
