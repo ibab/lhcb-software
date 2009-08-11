@@ -1,10 +1,12 @@
-!$Id: release.notes,v 1.32 2009-07-30 06:02:37 jpalac Exp $
+!$Id: release.notes,v 1.33 2009-08-11 14:05:02 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+!====================== MicroDSTBase v1r5 2009-08-11 ======================
 
 ! 2009-07-30 - Juan PALACIOS
  - MicroDST, src/Lib: 
