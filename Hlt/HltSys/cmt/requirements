@@ -10,7 +10,7 @@ branches cmt doc
 use HltConf             v4r2    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLine             v1r5    Hlt   # Vanya Belyaev, Gerhard Raven
 use Hlt1Lines           v1r4    Hlt   # Gerhard Raven
-use HltBase             v6r5p1  Hlt   # Gerhard Raven
+use HltBase             v6r6    Hlt   # Gerhard Raven
 use HltCommon           v5r8p3  Hlt   # Gerhard Raven
 
 use HltTracking         v4r1    Hlt   # Jose Angel Hernando-Morata
