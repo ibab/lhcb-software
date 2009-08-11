@@ -7,8 +7,8 @@ from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
 conf = MicroDSTWriter("MicroDST0")
-conf.MicroDSTFile = "MyTestMDST0_MC_newConfWithAlgo3.mdst"
-conf.SelectionSequence = selSequence
+conf.OutputFilePrefix = "MyTest"
+conf.SelectionSequences = [selSequence]
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
 conf.CopyMCTruth = True
