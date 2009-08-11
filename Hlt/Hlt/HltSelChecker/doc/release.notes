@@ -19,7 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v8r6 2009-08-10 ===================
+!========================== HltSelChecker v8r6 2009-08-11 ===================
+! 2009-08-11 - Patrick Koppenburg
+ - Correct some options (remove DecayTreeTuple)
+ - Remove Bu2D0K_KsDD. It does the same as HH.
+
 ! 2009-08-10 - Patrick Koppenburg
  - Fill single muon for Z0
 
