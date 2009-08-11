@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.152 2009-08-04 09:05:30 jonrob Exp $
+!$Id: release.notes,v 1.153 2009-08-11 13:48:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
 !-----------------------------------------------------------------------------
+
+!========================= CommonParticles v6r1 2009-08-11 ===================
 
 ! 2009-08-04 - Chris Jones
  - Update Muon Selections to use new ProtoParticleFilter options to select
