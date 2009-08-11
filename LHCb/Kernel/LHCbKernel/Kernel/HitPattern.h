@@ -4,7 +4,7 @@
 #include <vector>
 #include <bitset>
 #include "Kernel/LHCbID.h"
-#include "OTDet/DeOTDetector.h"
+
 
 
 namespace LHCb
@@ -24,7 +24,7 @@ namespace LHCb
     // this is the OT monolagyers
     enum OTType {OT1stMonoLayer=0, OT2ndMonoLayer=1 } ;
     
-    HitPattern( const std::vector<LHCbID>& ids, const DeOTDetector* otDet ) ;
+    HitPattern( const std::vector<LHCbID>& ids) ;
 
     HitPattern();
 

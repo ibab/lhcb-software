@@ -3,6 +3,10 @@
 ! Package manager: M.Cattaneo
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
+
+! 2009-08-11 - Stephanie Hansmann-Menzemer
+- adapt to change in HitPattern class
+
 ! 2009-08-08 M Needham
  - Add functionality to ITNames to TTNames 
 

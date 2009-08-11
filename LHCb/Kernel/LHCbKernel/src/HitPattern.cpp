@@ -6,7 +6,7 @@ namespace LHCb
     }
     
     
-    HitPattern::HitPattern( const std::vector<LHCbID>& ids, const DeOTDetector* otDet  ) {
+    HitPattern::HitPattern( const std::vector<LHCbID>& ids  ) {
 
 	for( std::vector<LHCbID>::const_iterator id = ids.begin() ;
 	     id != ids.end(); ++id) {
@@ -47,8 +47,14 @@ namespace LHCb
 		{
 		    LHCb::OTChannelID otid = id->otID() ;
 		    unsigned int uniquelayer = (otid.station()-1)*4 + otid.layer() ;
-		    unsigned int monolayer= otDet->findModule( otid )->monoLayerB(otid.straw()) ;
-		    m_ot[monolayer].set(uniquelayer) ;
+		    
+		    
+		    unsigned int monolayer = 0;
+		    if ((otid.quarter()==0 || otid.quarter()==2) && otid.module()==9)
+		      monolayer =  (otid.straw()-1)/32;
+		    else
+		      monolayer =  (otid.straw()-1)/64;
+		    m_ot[monolayer].set(uniquelayer);
 		}
 		break ;
 		case LHCbID::Muon:
