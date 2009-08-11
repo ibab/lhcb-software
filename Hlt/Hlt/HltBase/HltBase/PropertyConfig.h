@@ -29,14 +29,14 @@ public:
       , m_name(name)
       , m_kind(kind)
       , m_digest(digest_type::createInvalid())
-   { initProperties( obj ) ; }
+    { initProperties( obj ) ; }
 
     PropertyConfig(const std::string& name, const std::string& type, const std::string& kind)
       : m_type(type)
       , m_name(name)
       , m_kind(kind)
       , m_digest(digest_type::createInvalid())
-   {  }
+    {  }
 
     PropertyConfig(const std::string& name, const std::string& type, const std::string& kind, const Properties& props)
       : m_properties(props)
@@ -44,7 +44,22 @@ public:
       , m_name(name)
       , m_kind(kind)
       , m_digest(digest_type::createInvalid())
-   {  }
+    { }
+
+    PropertyConfig(const PropertyConfig& orig )
+        : m_properties( orig.m_properties)
+        , m_type( orig.m_type )
+        , m_name( orig.m_name )
+        , m_kind( orig.m_kind )
+        , m_digest( digest_type::createInvalid())
+    { }
+    PropertyConfig(const PropertyConfig& orig, const Properties& properties)
+        : m_properties( properties )
+        , m_type( orig.m_type )
+        , m_name( orig.m_name )
+        , m_kind( orig.m_kind )
+        , m_digest( digest_type::createInvalid())
+    { }
 
     bool operator==(const PropertyConfig& rhs) const { 
         return m_type == rhs.m_type 
@@ -53,16 +68,20 @@ public:
             && m_properties == rhs.m_properties;
     }
 
-    const std::string & name() const    { return m_name;}
+    const std::string& name() const    { return m_name;}
     std::string  fullyQualifiedName() const    { return type() + "/" + name();}
-    const std::string & type() const    { return m_type;}
-    const std::string & kind() const    { return m_kind;}
+    const std::string& type() const    { return m_type;}
+    const std::string& kind() const    { return m_kind;}
     const Properties& properties() const { return m_properties;}
 
-    PropertyConfig* clone( boost::optional<const Properties&> properties = boost::optional<const Properties&>() )  const {
-        return new PropertyConfig(m_name,m_type,m_kind, 
-                                  properties ? properties.get() : m_properties);
-    }
+    PropertyConfig update(const std::string& key, const std::string& value ) const;
+    PropertyConfig update(const std::string& keyAndValue) const;
+
+    template <typename T>
+    PropertyConfig update(const std::pair<T,T>& keyAndValue) const { return update(keyAndValue.first,keyAndValue.second);}
+    
+    template <typename T>
+    PropertyConfig update(T begin, T end) const { PropertyConfig ret(*this); while (begin!=end) ret=this->update(*begin++); return ret;}
 
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);

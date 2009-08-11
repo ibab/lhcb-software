@@ -2,8 +2,12 @@
 #include "boost/regex.hpp"
 #include "GaudiKernel/Property.h"
 #include "GaudiKernel/IProperty.h"
+#include "boost/lambda/lambda.hpp"
+#include "boost/lambda/bind.hpp"
 
 using namespace std;
+using namespace boost;
+using namespace boost::lambda;
 
 void PropertyConfig::initProperties(const IProperty& obj) {
     typedef vector<Property*> PropertyList;
@@ -12,6 +16,31 @@ void PropertyConfig::initProperties(const IProperty& obj) {
         m_properties.push_back(make_pair((*i)->name(),(*i)->toString()));
     }
     m_digest = digest_type::createInvalid();
+}
+
+PropertyConfig PropertyConfig::update(const std::string& key, const std::string& value ) const
+{
+    PropertyConfig::Properties update = properties();
+    PropertyConfig::Properties::iterator i = find_if( update.begin(),  
+                                                      update.end(),
+                                                      bind(&PropertyConfig::Prop::first,_1) == key );
+    if (i==update.end()) {
+          cerr << "trying to update a non-existing property: " << key << endl;
+          return PropertyConfig();
+    }
+    
+    i->second = value;
+    return PropertyConfig(*this, update);
+}
+
+PropertyConfig PropertyConfig::update(const std::string& keyAndValue) const
+{
+    string::size_type c = keyAndValue.find(':');
+    if (c == string::npos ) { 
+        cerr << "could not split keyAndValue: " << keyAndValue << endl;
+        return PropertyConfig(); 
+    }
+    return update(keyAndValue.substr(0,c),keyAndValue.substr(c+1,string::npos));
 }
 
 istream& PropertyConfig::read(istream& is) {
