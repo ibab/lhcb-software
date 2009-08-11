@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: AllProjectsSetup.py,v 1.1 2009-01-13 17:43:40 hmdegaud Exp $
+# $Id: AllProjectsSetup.py,v 1.2 2009-08-11 15:03:52 hmdegaud Exp $
 
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -9,7 +9,7 @@ from tempfile import mkstemp
 from optparse import OptionValueError
 import sys, os
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 
 def _check_output_options_cb(option, opt_str, value, parser):
     if opt_str == "--mktemp":
@@ -61,7 +61,7 @@ class AllProjectsSetupScript(Script):
         parser.set_defaults(output=None)
         parser.add_option("--output", action="callback", metavar="FILE",
                           type = "string", callback = _check_output_options_cb,
-                          help="(internal) output the command to set up the environment ot the given file instead of stdout")
+                          help="(internal) output the command to set up the environment of the given file instead of stdout")
 
     def getEnv(self):
         ev = Environment(orig=dict())
