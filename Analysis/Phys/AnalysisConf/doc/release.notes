@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.22 2009-07-23 16:35:02 jpalac Exp $
+!$Id: release.notes,v 1.23 2009-08-11 07:46:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-08-11 - Juan PALACIOS
+ - Add BaseMicroDSTWriter configurable
+ - cmt/requirements
+  . Increase version to v1r4
 
 !========================== AnalysisConf v1r3 2009-07-23 ====================
 
