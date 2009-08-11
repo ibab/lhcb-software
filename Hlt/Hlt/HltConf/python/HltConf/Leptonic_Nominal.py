@@ -82,10 +82,9 @@ class Leptonic_Nominal :
                        'Hlt2TopoTF3BodyCharmSignal',
                        #'Hlt2TopoTF4BodyCharmSignal',
                        'Hlt2TopoTF2BodyCharmWideMass',
-                       'Hlt2TopoTF3BodyCharmWideMass',
-                       #'Hlt2TopoTF4BodyCharmWideMass',
-                       'Hlt2DX3BodyCopKsDD',
-                       'Hlt2DX3BodyCopNoKs' ] )
+                       'Hlt2TopoTF3BodyCharmWideMass'
+                       #'Hlt2TopoTF4BodyCharmWideMass'
+                       ] )
 ##
 ## (di)muons : Leptonic list
 ##

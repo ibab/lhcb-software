@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.309 2009-08-10 16:26:51 pkoppenb Exp $ 
+! $Id: release.notes,v 1.310 2009-08-11 14:28:47 spradlin Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-11 - Patrick Spradlin
+  - Removed the DX lines from the scenario settings.  The DX lines were not
+    part of the July scenario optimization, so they should not be in the
+    'official' products of that optimization.
+      python/HltConf/Charming_Nominal.py
+      python/HltConf/Hadronic_Nominal.py
+      python/HltConf/Leptonic_Nominal.py
 
 !========================== HltConf v4r2 2009-08-10 ===================
 ! 2009-08-10 - Patrick Spradlin
