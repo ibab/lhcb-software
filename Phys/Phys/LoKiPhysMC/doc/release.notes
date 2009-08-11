@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.59 2009-05-25 13:13:36 cattanem Exp $ 
+! $Id: release.notes,v 1.60 2009-08-11 18:26:59 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-11 - Vanya BELYAEV
+
+ - add new "context" symbol MCMATCH to be used with CombineParticles/FilterDesktop 
+
+ - cmt/requirements 
+
+   version increment to v8r4 
 
 !========================== LoKiPhysMC v8r3 2009-05-25 ========================
 ! 2009-05-09 - Vanya BELYAEV

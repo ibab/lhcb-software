@@ -18,7 +18,11 @@ from LoKiCore.decorators import LHCb
 MCTRUTH  = LoKi.PhysMCParticles.MCTruth 
 GMCTRUTH = LoKi.PhysMCParticles.GenMCTruth
 RCTRUTH  = LoKi.PhysMCParticles.RCTruth
- 
+
+
+
+MCMATCH  = LoKi.PhysMCParticles.MCMatcher
+
 # =============================================================================
 if '__main__' == __name__ :
     for o in dir() : print o        

@@ -14,7 +14,6 @@ __author__ = "Vanya BELYAEV ibelyaev@physics.syr.edu"
 
 from   LoKiPhysMC.functions import *
 
-print dir()
 
 # =============================================================================
 ## decorate MCMatch object:

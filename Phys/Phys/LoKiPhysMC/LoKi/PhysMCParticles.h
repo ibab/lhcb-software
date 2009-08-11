@@ -1,35 +1,21 @@
-// $Id: PhysMCParticles.h,v 1.10 2008-05-19 06:46:13 cattanem Exp $
+// $Id: PhysMCParticles.h,v 1.11 2009-08-11 18:26:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSMCPARTICLES_H 
 #define LOKI_PHYSMCPARTICLES_H 1
 // ============================================================================
 // Include files
 // ============================================================================
-// LoKiCore
+// LokiPhysMC 
 // ============================================================================
-#include "LoKi/Keeper.h"
-#include "LoKi/Interface.h"
+#include "LoKi/MCTruth.h"
 // ============================================================================
-// LoKiPhys 
+// LoKiGen
 // ============================================================================
-#include "LoKi/PhysTypes.h"
-#include "LoKi/PhysRangeTypes.h"
-// ============================================================================
-// LoKiMC  
-// ============================================================================
-#include "LoKi/MCTypes.h"
 #include "LoKi/GenTypes.h"
-// ============================================================================
-// LoKiPhysMC 
-// ============================================================================
-#include "LoKi/PhysMCTypes.h"
-#include "LoKi/MCMatch.h"
 // ============================================================================
 // DaVinciMCKernel
 // ============================================================================
 #include "Kernel/HepMC2MC.h"
-// ============================================================================
-
 // ============================================================================
 /** @file
  *
@@ -45,208 +31,14 @@
  *  @date 2006-02-20 
  */
 // ============================================================================
-
 namespace LoKi 
 {
+  // =========================================================================
   /// forward declarations 
   class MCMatch ;
   // ==========================================================================
   namespace PhysMCParticles 
   { 
-    // ========================================================================
-    /** @class MCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
-     *  
-     *  Helper and useful function to be used to check the matching of  
-     *  LHCb::Particle and some LHCb::MCParticle
-     *
-     *  @code 
-     * 
-     *  // some sequence of mc-particle
-     *  SEQUENCE mcps = ...  ;
-     *  // get mc-matcher 
-     *  MCMatch   mc =  ... ;
-     *  // create the function 
-     *  Cut cut = MCTRUTH( mc , mcps.begin() , mcps.end() ) ;
-     *  
-     *
-     *  const LHCb::Particle* B = ... ;
-     *  // use the predicate!
-     * 
-     *  const bool good = cut( B ) ;
-     *
-     *  @endcode 
-     *
-     *  @see LoKi::Cuts::MCTRUTH
-     *  @see LoKi::MCMatchObj
-     *  @see LoKi::MCMatch
-     *  @see LHCb::Particle
-     *  @see LHCb::MCParticle
-     *
-     *  @author Vanya BELYAEV Ivan.Belyaev@itep.ru
-     *  @date   2003-01-28
-     */
-    class MCTruth 
-      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
-      , public LoKi::Keeper<LHCb::MCParticle>
-    {
-    public:      
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param particle  pointer to MC particle object 
-       */
-      MCTruth 
-      ( const LoKi::MCMatch&     match    , 
-        const LHCb::MCParticle*  particle ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCMatch&            match   , 
-        const LoKi::MCTypes::MCRange&  range   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCMatch&                       match   , 
-        const LHCb::MCParticle::Vector&            range   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCMatch&                       match   , 
-        const LHCb::MCParticle::ConstVector&       range   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCMatch&                       match   , 
-        const LoKi::Keeper<LHCb::MCParticle>&      range   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCMatch&                        match   , 
-        const LoKi::UniqueKeeper<LHCb::MCParticle>& range   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param begin begin iterator of any sequence of MC particles  
-       *  @param end   end   iterator of any sequence of MC particles  
-       */
-      template <class MCPARTICLE>
-      MCTruth 
-      ( const LoKi::MCMatch&    match    , 
-        MCPARTICLE              begin    , 
-        MCPARTICLE              end      ) 
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-        , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
-        , m_match     ( match       )
-      {}
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param particle  pointer to MC particle object 
-       */
-      MCTruth 
-      ( const LHCb::MCParticle*  particle ,
-        const LoKi::MCMatch&     match    ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::MCTypes::MCRange&  range    ,
-        const LoKi::MCMatch&            match   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LHCb::MCParticle::Vector&   range   ,
-        const LoKi::MCMatch&              match   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LHCb::MCParticle::ConstVector&       range   ,
-        const LoKi::MCMatch&                       match   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::Keeper<LHCb::MCParticle>&      range   ,
-        const LoKi::MCMatch&                       match   ) ;
-      /** constructor 
-       *  @param match MCMatch object (working horse)
-       *  @param range range of MC particles 
-       */
-      MCTruth
-      ( const LoKi::UniqueKeeper<LHCb::MCParticle>& range   ,
-        const LoKi::MCMatch&                        match   ) ;
-      /** constructor 
-       *  @param begin begin iterator of any sequence of MC particles  
-       *  @param end   end   iterator of any sequence of MC particles  
-       *  @param match MCMatch object (working horse)
-       */
-      template <class MCPARTICLE>
-      MCTruth 
-      ( MCPARTICLE              begin    , 
-        MCPARTICLE              end      ,
-        const LoKi::MCMatch&    match    )
-        : LoKi::BasicFunctors<const LHCb::Particle*>::Predicate () 
-        , LoKi::Keeper<LHCb::MCParticle> ( begin , end ) 
-        , m_match ( match )
-      {}
-      /// copy constructor 
-      MCTruth( const MCTruth& right ) ;
-      /// MANDATORY: virual destructor 
-      virtual ~MCTruth() ;
-      /// MANDATORY: clone method ("virtual constructor")
-      virtual MCTruth* clone () const ; 
-      /// MANDATORY: the only one essential method ("function")
-      virtual result_type operator () ( argument ) const ;
-      /// OPTIONAL: the specific printout 
-      virtual std::ostream& fillStream ( std::ostream& s ) const ;
-    public:
-      /** add additional particle to the 
-       *  list of MCParticles to be matched 
-       *  @param mcp MC particle
-       */
-      MCTruth& add ( const LHCb::MCParticle* mcp  ) 
-      { addObject ( mcp ) ; return *this ; }
-      /** add additional particles to the 
-       *  list of MCParticles to be matched 
-       *  @param range new range of MC particles 
-       */
-      MCTruth& add ( const LoKi::MCTypes::MCRange& range ) 
-      { return add ( range.begin() , range.end() ) ; }
-      /** add few additional particles to the list of 
-       *  MCParticles  to be matched 
-       *  @param first "begin" iterator of sequence 
-       *  @param last   
-       */
-      template <class MCPARTICLE>
-      MCTruth& add 
-      ( MCPARTICLE first  , 
-        MCPARTICLE last   ) 
-      { addObjects ( first, last ) ; return *this ; } 
-    public:
-      /// implicit convertion to match object
-      operator const MCMatch& () const { return m_match ; }
-    private:
-      // default constructor is disabled 
-      MCTruth();
-      // assignement is disabled 
-      MCTruth& operator=( const MCTruth& ) ;
-    private:
-      // match-object 
-      LoKi::MCMatch m_match     ; ///< match-object 
-    } ;
     // ========================================================================    
     /** @class GenMCTruth PhysMCParticles.h LoKi/PhysMCParticles.h
      *
@@ -285,6 +77,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate 
     {
     public:
+      // ======================================================================
       /// constructor from HepMC::GenVertex
       GenMCTruth 
       ( const HepMC::GenVertex*             particle   , 
@@ -328,7 +121,9 @@ namespace LoKi
       virtual result_type operator () ( argument ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// rebuild the internal storages 
       StatusCode rebuild() ;
       /// add HepMC::GenParticle
@@ -348,7 +143,9 @@ namespace LoKi
         rebuild() ;
         return *this ;
       } 
+      // ======================================================================
     public:
+      // ======================================================================
       /// conversion operator to relation table:
       operator const LoKi::Interface<LHCb::HepMC2MC>&        () const 
       { return m_table ; }
@@ -358,7 +155,9 @@ namespace LoKi
       // conversion operator to LoKi::MCMatch object 
       operator const LoKi::MCMatch&                          () const 
       { return m_match ; }
+      // ======================================================================
     protected:
+      // ======================================================================
       /// add HepMC::GenParticle
       void _add ( const HepMC::GenParticle*              p ) ;
       /// add HepMC::GenVertex
@@ -371,6 +170,7 @@ namespace LoKi
       template <class OBJECT>
       void _add ( OBJECT first , OBJECT last  ) 
       { for ( ; first != last ; ++first ) { _add ( *first ) ; } }
+      // ======================================================================
     private:
       // the first relation table HepMC -> MC  
       LoKi::Interface<LHCb::HepMC2MC>        m_table ;
@@ -401,6 +201,7 @@ namespace LoKi
       , public LoKi::Keeper<LHCb::Particle>
     {
     public:      
+      // ======================================================================
       /** constructor 
        *  @param match MCMatch object (working horse)
        *  @param particle  pointer to particle object 
@@ -523,7 +324,9 @@ namespace LoKi
       virtual result_type operator () ( argument ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** add additional particle to the 
        *  list of Particles to be matched 
        *  @param p particle to be added 
@@ -548,32 +351,42 @@ namespace LoKi
         addObjects ( first , last ) ;
         return *this ;
       }      
+      // ======================================================================
     private:
+      // ======================================================================
       // default constructor is disabled 
       RCTruth();
       // assignement is disabled 
       RCTruth& operator=( const RCTruth& ) ;
+      // ======================================================================
     private:
-      // MC-match object
-      LoKi::MCMatch  m_match ; ///< MC-match object
+      // ======================================================================
+      /// MC-match object
+      LoKi::MCMatch  m_match ;                               // MC-match object
+      // ======================================================================
     };
     // ========================================================================
     namespace Particles 
     {
-      /// import the type into proepr namespace 
+      // ======================================================================
+      /// import the type into the proper namespace 
       typedef LoKi::PhysMCParticles::MCTruth    MCTruth    ;      
-      /// import the type into proepr namespace 
+      /// import the type into the proeper namespace 
       typedef LoKi::PhysMCParticles::GenMCTruth GenMCTruth ;
+      // ======================================================================
     }
     // ========================================================================
     namespace MCParticles 
     {
-      /// import the type into proepr namespace 
+      // ======================================================================
+      /// import the type into proper namespace 
       typedef LoKi::PhysMCParticles::RCTruth    RCTruth    ;
+      // ======================================================================
     }
-    
-  } // end of namespace LoKi::PhysMCParticles
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                   end of namespace LoKi::PhysMCParticles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,4 +1,4 @@
-// $Id: MCMatchObj.h,v 1.8 2009-05-09 19:25:44 ibelyaev Exp $
+// $Id: MCMatchObj.h,v 1.9 2009-08-11 18:26:59 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCMATCHOBJ_H 
 #define LOKI_MCMATCHOBJ_H 1
@@ -136,6 +136,16 @@ namespace LoKi
     /// clear the internal storage
     void clear() ;
     // ========================================================================
+    bool empty() const 
+    {
+      return 
+        m_tableP2MC  . empty () &&
+        m_tableP2MCW . empty () && 
+        m_tablePP2MC . empty () && 
+        m_tableT2MC  . empty () && 
+        m_tableT2MCW . empty () ;
+    }
+    // ========================================================================
   protected:
     // ========================================================================    
     /** look at MC truth information using "direct" relation table 
@@ -191,10 +201,10 @@ namespace LoKi
     TablesT2MCWs   m_tableT2MCW ;
     // ========================================================================    
   } ; 
-    // ========================================================================    
-} // end of the namespace LoKi
+  // ==========================================================================
+} //                                                  end of the namespace LoKi
 // ============================================================================
-/** check the match of MC truth information 
+/*  check the match of MC truth information 
  *  @param  first       begin  iterator for sequence of particles 
  *  @param  last        end    iterator for sequence of particles 
  *  @param  mcparticle  pointer to MCParticle object 
@@ -212,9 +222,9 @@ inline PARTICLE LoKi::MCMatchObj::match
   for ( ; first != last ; ++first ) 
   { if ( match ( *first , mcparticle ) ) { return first ; } }       // RETURN 
   return last ;                                                     // RETURN 
-};
+}
 // ============================================================================
-/** check the match of MC truth information 
+/*  check the match of MC truth information 
  *  @param  particle    pointer to Particle object 
  *  @param  first       begin  iterator for sequence of MC particles 
  *  @param  last        end    iterator for sequence of MC particles 
@@ -232,9 +242,9 @@ inline MCPARTICLE LoKi::MCMatchObj::match
   for ( ; first != last ; ++first ) 
   { if ( match ( particle , *first ) ) { return first ; } }          // RETURN 
   return  last ;                                                     // RETURN 
-};
+}
 // ============================================================================
-/** check the match of MC truth information 
+/*  check the match of MC truth information 
  *  @param  first       begin  iterator for sequence of MC particles 
  *  @param  last        end    iterator for sequence of MC particles 
  *  @return true if *ALL* 'particles' are matched 
@@ -257,7 +267,7 @@ inline bool LoKi::MCMatchObj::match
   return    match ( first , last , firstMC , lastMC   ) ; 
 }
 // ============================================================================
-/** look at MC truth information using "direct" relation table 
+/*  look at MC truth information using "direct" relation table 
  *  @param table      pointer to relation table 
  *  @param object     the object (particle, protoparticle, track, etc..)
  *  @param mcparticle pointer to MCParticle object 
@@ -281,8 +291,7 @@ inline bool LoKi::MCMatchObj::matchInTable
   return false ;                                                 // RETURN 
 }
 // ============================================================================
-/** look at MC truth information using "direct" relation table 
- */
+// look at MC truth information using "direct" relation table 
 // ============================================================================
 template <class TABLE, class OBJECT, class MCPARTICLE>
 inline bool LoKi::MCMatchObj::matchInTable 
@@ -296,7 +305,7 @@ inline bool LoKi::MCMatchObj::matchInTable
   return false ;
 } 
 // ============================================================================
-/** look at MC truth information using "direct" relation table 
+/*  look at MC truth information using "direct" relation table 
  *  @param tables     pointer to relation tables 
  *  @param obj        the object (Particle/ProtoParticle/Track/...)
  *  @param mcp        pointer to MCParticle object 
