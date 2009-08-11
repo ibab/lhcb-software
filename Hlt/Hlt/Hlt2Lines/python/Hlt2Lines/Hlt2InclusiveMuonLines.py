@@ -39,14 +39,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                   ,'MuTrackTrIP'         : 0.125     # mm
                   ,'MuTrackPoint'        : 0.3       # dimensionless
                   ,'MuTrack4JpsiMuPt'    : 1200      # MeV
-                  ,'MuTrack4JpsiTrPt'    : 600       # MeV
-                  
-                  ,'IncludeLines' :['SingleMuonMid'
-                                    ,'SingleMuonLow'
-                                    ,'SingleHighPTMuon'
-                                    ,'IncMuTrackMid'
-                                    ,'IncMuTrack4Jpsi'
-                                    ]
+                  ,'MuTrack4JpsiTrPt'    : 600       # MeV                  
                   }
     
     
@@ -77,13 +70,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                         , InputLocations  = [Muons]
                                         , Code = "((PT>2.8*GeV) & (MIPDV(PRIMARY)>0.220))"
                                         )
-        if 'SingleMuon' in self.getProp('IncludeLines'):
-            Hlt2Line('SingleMuon'
-                     , prescale = self.prescale 
-                     , algos = [ Muons, Hlt2SelSingleMuon ]
-                     , postscale = self.postscale
-                     )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50190 } )
+        Hlt2Line('SingleMuon'
+                 , prescale = self.prescale 
+                 , algos = [ Muons, Hlt2SelSingleMuon ]
+                 , postscale = self.postscale
+                 )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50190 } )
             
         #--------------------------------------------
         
@@ -92,14 +84,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                            , InputLocations  = [Muons]
                                            , Code = "((PT>"+str(self.getProp('SingleMuonPt'))+"*MeV) & (MIPDV(PRIMARY)>"+str(self.getProp('SingleMuonIP'))+"))"
                                            )
-        if 'SingleMuonMid' in self.getProp('IncludeLines'):
-            Hlt2Line('SingleMuonMid'
-                     , prescale = self.prescale 
-                     , algos = [ Muons, Hlt2SelSingleMuonMid ]
-                     , postscale = self.postscale
-                     )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonMidDecision" : 50191 } )
-            
+        Hlt2Line('SingleMuonMid'
+                 , prescale = self.prescale 
+                 , algos = [ Muons, Hlt2SelSingleMuonMid ]
+                 , postscale = self.postscale
+                 )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonMidDecision" : 50191 } )
+        
         #--------------------------------------------
         
         Hlt2SelSingleMuonLow = Hlt2Member( FilterDesktop
@@ -108,14 +99,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                            #, Code = "((PT>4.6*GeV) & (MIPDV(PRIMARY)>0.220))"
                                            , Code = "((PT>3.0*GeV) & (MIPDV(PRIMARY)>0.300))"
                                            )
-        if 'SingleMuonLow' in self.getProp('IncludeLines'):
-            Hlt2Line('SingleMuonLow'
-                     , prescale = self.prescale
-                     , algos = [ Muons, Hlt2SelSingleMuonLow ]
-                     , postscale = self.postscale
-                     )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonLowDecision" : 50192 } )
-        
+        Hlt2Line('SingleMuonLow'
+                 , prescale = self.prescale
+                 , algos = [ Muons, Hlt2SelSingleMuonLow ]
+                 , postscale = self.postscale
+                 )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonLowDecision" : 50192 } )
+    
 
         ############################################################################
         #    Selection for a large PT single muon:  Sara Taynor <sara.traynor@ucd.ie>
@@ -126,14 +116,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                                 , Code = "(PT>20*GeV)"
                                                 , InputLocations  = [Muons]
                                                 )
-        if 'SingleHighPTMuon' in self.getProp('IncludeLines'):
-            line = Hlt2Line( 'SingleHighPTMuon'
-                             , prescale = self.prescale 
-                             , algos = [ Muons, Hlt2SelSingleHighPTMuon]
-                             , postscale = self.postscale
-                             )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleHighPTMuonDecision" : 50440 } )
-
+        line = Hlt2Line( 'SingleHighPTMuon'
+                         , prescale = self.prescale 
+                         , algos = [ Muons, Hlt2SelSingleHighPTMuon]
+                         , postscale = self.postscale
+                         )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleHighPTMuonDecision" : 50440 } )
+        
 
         ############################################################################
         #    Selections for inclusive decays with mu + track with mass cuts
@@ -147,14 +136,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                               , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.40)" 
                               , InputLocations  = [ Muons , NoCutsPions ]
                               )
-        if 'IncMuTrack' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrack'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combine]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackDecision" : 50400 } )
-            
+        line = Hlt2Line('IncMuTrack'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combine]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackDecision" : 50400 } )
+        
         #---------------------------------------------------------------------------------------
         combine_mid = Hlt2Member( CombineParticles
                                   , "CombineBMid"
@@ -165,14 +153,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                   , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<"+str(self.getProp('MuTrackPoint'))+")" 
                                   , InputLocations  = [ Muons , NoCutsPions ]
                                   )
-        if 'IncMuTrackMid' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrackMid'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combine_mid]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackMidDecision" : 50401 } )
-
+        line = Hlt2Line('IncMuTrackMid'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combine_mid]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackMidDecision" : 50401 } )
+        
         #---------------------------------------------------------------------------------------
         
         combine_low = Hlt2Member( CombineParticles
@@ -184,14 +171,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                   , MotherCut = Dz+" & "+"(BPVTRGPOINTINGWPT<0.30)" 
                                   , InputLocations  = [ Muons , NoCutsPions ]
                                   )
-        if 'IncMuTrackLow' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrackLow'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combine_low]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowDecision" : 50402 } )
-            
+        line = Hlt2Line('IncMuTrackLow'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combine_low]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowDecision" : 50402 } )
+        
         ############################################################################
         #    Selections for inclusive decays with mu + track no hard mass cuts
         ############################################################################
@@ -204,14 +190,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                 , MotherCut = "(BPVVDZ>2.) & (BPVTRGPOINTINGWPT<0.4)  "
                                 , InputLocations  = [ Muons , NoCutsPions ]
                                 )
-        if 'IncMuTrackLowMass' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrackLowMass'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combineLM]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassDecision" : 50403 } )
-
+        line = Hlt2Line('IncMuTrackLowMass'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combineLM]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassDecision" : 50403 } )
+        
         #---------------------------------------------------------------------------------------
         
         combineLM_mid = Hlt2Member( CombineParticles
@@ -223,13 +208,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                     , MotherCut = "(BPVVDZ>2) & (BPVTRGPOINTINGWPT<0.35)  "
                                     , InputLocations  = [ Muons , NoCutsPions ]
                                     )
-        if 'IncMuTrackLowMassMid' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrackLowMassMid'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combineLM_mid]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassMidDecision" : 50404 } )
+        line = Hlt2Line('IncMuTrackLowMassMid'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combineLM_mid]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassMidDecision" : 50404 } )
         
         #---------------------------------------------------------------------------------------
         
@@ -242,14 +226,13 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                     , MotherCut = "(BPVVDZ>2.) & (BPVTRGPOINTINGWPT<0.30)  "
                                     , InputLocations  = [ Muons , NoCutsPions ]
                                     )
-        if 'IncMuTrackLowMassLow' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrackLowMassLow'
-                            , prescale = self.prescale 
-                            , algos = [Muons, NoCutsPions, combineLM_low]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassLowDecision" : 50405 } )
-
+        line = Hlt2Line('IncMuTrackLowMassLow'
+                        , prescale = self.prescale 
+                        , algos = [Muons, NoCutsPions, combineLM_low]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassLowDecision" : 50405 } )
+        
         ############################################################################
         #    Selection for inclusive decays with JPsi ->mu+track
         ############################################################################
@@ -263,13 +246,12 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                                     , MotherCut = "(P>20000*MeV) & (PT>1000*MeV)"  
                                     , InputLocations  = [ Muons , NoCutsPions ]
                                     )
-        if 'IncMuTrack4Jpsi' in self.getProp('IncludeLines'):
-            line = Hlt2Line('IncMuTrack4Jpsi'
-                            , prescale = self.prescale 
-                            , HLT = Hlt1UnbDiMu
-                            , algos = [Muons, NoCutsPions, combine_4jpsi]
-                            , postscale = self.postscale
-                            )
-            HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrack4JpsiDecision" : 50406 } )
+        line = Hlt2Line('IncMuTrack4Jpsi'
+                        , prescale = self.prescale 
+                        , HLT = Hlt1UnbDiMu
+                        , algos = [Muons, NoCutsPions, combine_4jpsi]
+                        , postscale = self.postscale
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrack4JpsiDecision" : 50406 } )
             
             
