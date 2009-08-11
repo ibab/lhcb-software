@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.5 2009-08-11 08:05:27 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.6 2009-08-11 08:07:35 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -21,7 +21,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "OutputPrefix"         : "MicroDST"
                   }
 
-     _propertyDocDct =  {  "CopyParticles"        : """ """
+    _propertyDocDct =  {  "CopyParticles"        : """ """
                           , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
                           , "CopyBTags"            : """ """
                           , "P2PVRelationsSuffix"  : """ """
@@ -30,7 +30,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                           , "CopyRelatedPVs"       : """ """
                           , "CopyMCTruth"          : """ """
                           , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST."""
-                                }
+                          }
 
     def outputStreamType(self) :
         from Configurables import OutputStream
