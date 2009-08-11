@@ -7,12 +7,12 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.16 2009-07-03 08:51:59 kkruzele Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.17 2009-08-11 15:11:27 hmdegaud Exp $"
 
 try:
-    from LbUtils import createProjectMakefile
+    from LbConfiguration import createProjectMakefile
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.16 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
 except ImportError :
     # dummy implementation for when we do not have LbScripts in the path yet.
     def createProjectMakefile(path, force):

@@ -1,3 +1,10 @@
+2009-08-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/__ini__.py: added the createMakefile function. This makefile 
+	is LHCb specific (The one in LbUtils is generic for CMT projects)
+	* data/Makefile: top Makefile for LHCb CMT projects.
+	* python/LbConfiguration/SetupProject.py: use createProjectMakefile from the LbConfiguration module.
+
 2009-08-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/generateLogin:
