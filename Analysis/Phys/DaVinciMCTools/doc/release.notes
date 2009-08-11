@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.268 2009-08-06 20:36:27 jpalac Exp $
+! $Id: release.notes,v 1.269 2009-08-11 13:56:09 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r21 2009-08-11 =================
 
 ! 2009-05-13 - Juan PALACIOS
  - Removed TrueMCFilterCriterion, FilterByBackCat.
