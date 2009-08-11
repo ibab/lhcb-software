@@ -1,9 +1,19 @@
-!$Id: release.notes,v 1.18 2009-07-23 16:27:09 jpalac Exp $
+!$Id: release.notes,v 1.19 2009-08-11 11:23:38 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2009-08-11 - Vanya BELYAEV
+
+ - python/PhysConf/Configuration.py
+
+     make use of new CeloReco & CaloPIDs configurables 
+
+ - cmt/requirements 
+
+     version increment to v1r3 
 
 !========================== PhysConf v1r2 2009-07-23 =========================
 

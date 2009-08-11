@@ -1,14 +1,18 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.15 2009-07-08 13:34:21 pkoppenb Exp $"
-__author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
+__version__ = "$Id: Configuration.py,v 1.16 2009-08-11 11:23:38 ibelyaev Exp $"
+__author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import LoKiSvc
 import GaudiKernel.ProcessJobOptions
+
+from Configurables import OffLineCaloRecoConf  
+from Configurables import OffLineCaloPIDsConf   
+
 
 class PhysConf(LHCbConfigurableUser) :
     from Configurables import (GaudiSequencer)
@@ -17,7 +21,12 @@ class PhysConf(LHCbConfigurableUser) :
      ,  "Simulation"      : True                               # set to True to use SimCond
      ,  "InputType"       : 'DST'                              # Hopefully irrelevant
         }
-
+    
+    __used_configurables__ = (
+        OffLineCaloRecoConf ,
+        OffLineCaloPIDsConf 
+        )
+    
 #
 # configure reconstruction to be redone
 #
@@ -37,8 +46,15 @@ class PhysConf(LHCbConfigurableUser) :
         """
         Configure Reconstruction to be redone
         """
-        # Calo reco
-        importOptions("$CALORECOROOT/options/CaloRecoOnDemand.opts")
+        ## CaloPIDs 
+        caloPIDs = OffLineCaloPIDsConf (
+            EnablePIDsOnDemand = True   , ## enable PIDs-On-Demand
+            DataType           = self.getProp('DataType')
+            )
+        ## Calo reco
+        caloReco = OffLineCaloRecoConf (
+            EnableRecoOnDemand = True     ## enable Reco-On-Demand
+            )
         #
         # Proto recalibration
         #
