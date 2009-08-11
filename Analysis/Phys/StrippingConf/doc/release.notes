@@ -1,8 +1,11 @@
+!$Id: release.notes,v 1.15 2009-08-11 14:01:04 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+!========================== StrippingConf v1r3 2009-08-11 ===================
 
 ! 2009-08-11 - Juan Palacios
  - cmt/requirements
