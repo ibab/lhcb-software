@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.44 2009-08-11 10:21:09 jnardull Exp $
+$Id: release.notes,v 1.45 2009-08-11 12:22:22 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-11 Gerhard Raven
+ - add Hlt2 commissioning lines which cause Hlt2 to accept certain Hlt1 lines, 
+   eg. accept a fraction of 1e-5 of Hlt1Global, always accept the 
+   Hlt1 unbiased pass-through, velo closing lines, ...
 
 ! 2009-08-11 Jacopo Nardulli & Patrick Spradlin
   - Splitting of four body combinatorics of DX and topological lines
