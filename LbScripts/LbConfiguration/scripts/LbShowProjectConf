@@ -1,28 +1,62 @@
+#!/usr/bin/env python
+# $Id: LbShowProjectConf,v 1.2 2009-08-11 16:19:23 hmdegaud Exp $
+""" Show the LHCb project configuration """
+
+from LbConfiguration.Project import getProject, project_list
+
 from LbUtils.Script import Script
 from LbUtils.CVS import CVS2Version
-from LbConfiguration.Project import project_list, getProject
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
+__author__ = "hmd"
 
 class LbShowProjectConfScript(Script):
     _version = __version__
+    _description = __doc__
     def defineOpts(self):
-        pass 
+        parser = self.parser
+        parser.set_defaults(name=False)
+        parser.add_option("-n", "--name", 
+                          dest="name",
+                          action="store_true",
+                          help="show the original name of the project")
+        parser.set_defaults(release_area=False)
+        parser.add_option("-r", "--release-area", 
+                          dest="release_area",
+                          action="store_true",
+                          help="show the release area of the project")
+        parser.set_defaults(container=False)
+        parser.add_option("-c", "--container", "--steering-package",
+                          dest="container",
+                          action="store_true",
+                          help="show the name of the container package of the project")
+        parser.set_defaults(all=False)
+        parser.add_option("-a", "--all",
+                          dest="all",
+                          action="store_true",
+                          help="show all infos for the project")
+        
     def main(self):
-        projname = None
-        if len(self.args) > 0:
-            projname = self.args[0]
-                
-        options = self.options
-
-        if projname == None :
-            for p in project_list:
-                print p
+        opts = self.options
+        if self.args :
+            plist = self.args
         else :
-            print getProject(projname)
+            plist = project_list
+        for a in plist : 
+            p = getProject(a)
+            if opts.name :
+                print p.Name()
+            if opts.release_area :
+                print p.ReleaseArea()
+            if opts.container :
+                print p.SteeringPackage()
+            if opts.all :
+                print p
+
+        return 0
 
 
 if __name__ == '__main__':
     s = LbShowProjectConfScript(usage="%prog [options] projectname")
     s.run()
-  
+
