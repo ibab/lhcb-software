@@ -5,6 +5,11 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v3r3p1 2009-08-11 =========================
+! 2009-08-11 - Magnus Lieng
+ - Fixed timing issue
+   .TimeCorrSource.cpp
+
 !=========================== LbMIB v3r3 2009-05-05 ===========================
 ! 2009-05-05 - Magnus Lieng
  - Added variable 'CombW' to TTree 'Particles' in root file generation 

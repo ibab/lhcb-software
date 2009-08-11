@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.2 2009-05-05 17:49:02 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.3 2009-08-11 12:37:35 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -449,7 +449,7 @@ HepMC::FourVector TimeCorrSource::getVertex(double ekin, int pid,
   double protonAtIntPlaneClock = m_zOrigin*sqrt(1/(1-1/pow(1+m_beamEnergy/pMass,2)))/Gaudi::Units::c_light;
 
   // Time at which the paticle has to start from the interface plane
-  double partAtIntPlaneClock = protonAtIntPlaneClock - dt;
+  double partAtIntPlaneClock = dt - protonAtIntPlaneClock;
 
   // Time at which the particle has to start. (If generation point an interface plane are not the same.)
   double partAtGenClock = partAtIntPlaneClock + (m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz);
