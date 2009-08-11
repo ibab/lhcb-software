@@ -4,6 +4,10 @@
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+! 2009-08-11 - Juan Palacios
+ - cmt/requirements
+  . Increase version to v1r3
+
 ! 2009-07-31 - Anton Poluektov
 
   * Added checkPV attribute to the StrippingLine. checkPV=True by default. 
