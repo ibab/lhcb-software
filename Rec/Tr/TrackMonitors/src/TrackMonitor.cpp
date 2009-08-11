@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.15 2009-08-06 18:18:10 smenzeme Exp $
+// $Id: TrackMonitor.cpp,v 1.16 2009-08-11 14:06:59 smenzeme Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -12,7 +12,6 @@
 #include "Kernel/HitPattern.h"
 
 // Det
-#include "OTDet/DeOTDetector.h"
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeITDetector.h"
 #include "VeloDet/DeVelo.h"
@@ -60,8 +59,7 @@ StatusCode TrackMonitor::initialize()
   StatusCode sc = TrackMonitorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
   m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
-  m_otDet   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-  
+    
   return StatusCode::SUCCESS;
 }
 
@@ -308,7 +306,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     } // iterInfo
   }
    
-  LHCb::HitPattern hitpattern( track.lhcbIDs(), m_otDet ) ;
+  LHCb::HitPattern hitpattern( track.lhcbIDs()) ;
   plot( hitpattern.numVeloStations(),
 	type+"/NumVeloStations", "Number of traversed stations in Velo", -0.5,21.5, 22) ;
   plot( hitpattern.numVeloStationsOverlap(), 

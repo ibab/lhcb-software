@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.4 2009-08-06 18:18:10 smenzeme Exp $
+// $Id: TrackMonitor.h,v 1.5 2009-08-11 14:06:59 smenzeme Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -50,7 +50,7 @@ class TrackMonitor : public TrackMonitorBase {
   double m_yMax;
 
   const DeVelo*        m_veloDet ;
-  const DeOTDetector*  m_otDet;
+
 };
 
 

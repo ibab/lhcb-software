@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-08-11 Stephanie Hansmann-Menzemer
+- adapt to changes in HitPattern
+
 ! 2009-08-08 M Needham
  - Tidy up STEfficiency algorithm
 

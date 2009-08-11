@@ -9,8 +9,6 @@
 #include "TrackComputeExpectedHits.h"
 #include "GaudiKernel/ToStream.h"
 
-#include "OTDet/DeOTDetector.h"
-
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IVeloExpectation.h"
 
@@ -40,8 +38,6 @@ StatusCode TrackComputeExpectedHits::initialize() {
   m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
   m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
   
-  m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-  
   return StatusCode::SUCCESS;
 }
 
@@ -61,7 +57,7 @@ StatusCode TrackComputeExpectedHits::execute(){
     m_itExpectation->collect(*aTrack, ids);
     m_otExpectation->collect(*aTrack, ids);
     
-    LHCb::HitPattern hitPattern = LHCb::HitPattern(ids, m_otDet);
+    LHCb::HitPattern hitPattern = LHCb::HitPattern(ids);
     hitPattern.setVelo(velo);
 
     (*iterT)->setExpectedHitPattern(hitPattern);

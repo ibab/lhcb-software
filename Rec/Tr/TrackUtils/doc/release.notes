@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2009-08-11 - Stephanie Hansmann-Menzemer
+- Adapt to changes in HitPattern class
+
 ! 2009-08-04 - Stephanie Hansmann-Menzemer
 - Add algorithm to fill expected hit information
 - Add algorithm to clean track extra info

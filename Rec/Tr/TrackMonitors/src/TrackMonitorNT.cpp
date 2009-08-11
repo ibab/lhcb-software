@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.6 2009-08-06 18:18:10 smenzeme Exp $
+// $Id: TrackMonitorNT.cpp,v 1.7 2009-08-11 14:06:59 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,6 @@
 #include "Kernel/HitPattern.h"
 
 // Det
-//#include "OTDet/DeOTDetector.h"
 //#include "STDet/DeSTDetector.h"
 //#include "STDet/DeITDetector.h"
 
@@ -74,8 +73,7 @@ private:
   typedef std::map<LHCb::Track::Types,ITrackSelector*> Selectors;
   mutable Selectors m_selectors; 
   std::string m_allString;  
-  const DeOTDetector* m_otDet;
-
+  
 };
 
 DECLARE_ALGORITHM_FACTORY( TrackMonitorNT );
@@ -122,8 +120,7 @@ StatusCode TrackMonitorNT::initialize()
     m_selectors[LHCb::Track::TypeUnknown] = selector;  
   } // splitByType
 
-   m_otDet   = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-
+   
   return StatusCode::SUCCESS;
 };
 
@@ -312,7 +309,7 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
   theTuple->column("TChi2", aTrack->info(LHCb::Track::FitTChi2,0)) ;
   theTuple->column("TNdof", aTrack->info(LHCb::Track::FitTNDoF,0)) ;
   
-  LHCb::HitPattern hitpattern(aTrack->lhcbIDs(), m_otDet) ;
+  LHCb::HitPattern hitpattern(aTrack->lhcbIDs()) ;
   theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
   theTuple->column("numVeloStationsOverlap",hitpattern.numVeloStationsOverlap()) ;
   theTuple->column("numITStationsOverlap",hitpattern.numITStationsOverlap()) ;
