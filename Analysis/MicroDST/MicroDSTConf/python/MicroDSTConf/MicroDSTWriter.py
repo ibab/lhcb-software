@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.2 2009-08-09 21:32:34 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.3 2009-08-11 07:51:47 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -9,114 +9,100 @@ from GaudiConf.Configuration import *
 
 from GaudiConf.Configuration import *
 
-class MicroDSTWriter(LHCbConfigurableUser) :
+from AnalysisConf.BaseDSTWriter import BaseDSTWriter
 
-    __slots__ = {
-        "MicroDSTFile"           : ""
-        , "SelectionSequence"    : ""
-        , "CopyParticles"        : True
-        , "CopyPVs"              : True
-        , "CopyBTags"            : True
-        , "CopyRelatedPVs"       : False
-        , "P2PVRelationsSuffix"  : ""
-        , "CopyL0DUReport"       : False
-        , "CopyHltDecReports"    : False
-        , "CopyMCTruth"          : False
-        }
+class MicroDSTWriter(BaseDSTWriter) :
+    __slots__ = { "CopyParticles"        : True
+                  , "CopyPVs"              : True
+                  , "CopyBTags"            : True
+                  , "CopyRelatedPVs"       : False
+                  , "P2PVRelationsSuffix"  : ""
+                  , "CopyL0DUReport"       : False
+                  , "CopyHltDecReports"    : False
+                  , "CopyMCTruth"          : False
+                  , "OutputPrefix"         : "MicroDST"
+                  }
 
-    _propertyDocDct = {  
-        "MicroDSTFile"           : """ Write name of output MicroDST file. Default '': On;y make sequence, don't write MicroDST."""
-        , "SelectionSequence"    : """            # Name of selection sequence that defines data for MicroDST"""
-        , "CopyParticles"        : """ """
-        , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
-        , "CopyBTags"            : """ """
-        , "CopyRelatedPVs"      : """ """
-        , "CopyMCTruth"          : """ """
-        }
 
-    def selectionSeq(self) :
-        return self.getProp('SelectionSequence')
-    
-    def _initMicroDSTStream(self) :
+    _propertyDocDct = BaseDSTWriter._propertyDocDct
+    _propertyDocDct =  {  "CopyParticles"        : """ """
+                          , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
+                          , "CopyBTags"            : """ """
+                          , "P2PVRelationsSuffix"  : """ """
+                          , "CopyL0DUReport"       : """ """
+                          , "CopyHltDecReports"    : """ """
+                          , "CopyRelatedPVs"       : """ """
+                          , "CopyMCTruth"          : """ """
+                          , "OutputPrefix"         : """ TES location of output. Default: /Event/MicroDST."""
+                                }
+
+    def outputStreamType(self) :
         from Configurables import OutputStream
-        name = self.name()
-        outputFileName = self.getProp('MicroDSTFile')
-        
-        if outputFileName == "" :
-            print "No OutputStream! Returning None!"
-            return
-        streamName = 'MicroDSTStream'+ name
-        stream = OutputStream(streamName)
-        stream.OptItemList = ["/Event/"+ name +"#99"]
-        dstName = outputFileName
-        if (dstName != "" ) :
-            stream.Output = "DATAFILE='"+dstName +"' TYP='POOL_ROOTTREE' OPT='REC'"
-        
-    def outputStream(self) :
-        if (self.getProp('MicroDSTFile') ) != '' :
-            return OutputStream('MicroDSTStream'+ self.name())
-        else :
-            print "No OutputStream! Returning None!"
-            
-    def _personaliseName(self, name) :
-        return name + "_" + self.name()
+        return OutputStream
+    
+    def extendStream(self, stream) :
+        location = self.getProp("OutputPrefix")
+        stream.OptItemList = ["/Event/"+ location +"#99"]
 
-    def sequence(self) :
-        return self.selectionSeq().sequence()
+    def fileExtension(self) :
+        return ".mdst"
+    
+    def _personaliseName(self, sel, name) :
+        return name + "_" + sel.name()
 
-    def algorithm(self) :
-        return self.selectionSeq().algorithm()
+    def algName(self, sel) :        
+        return sel.algorithm().name()
 
-    def algName(self) :        
-        return self.algorithm().name()
-
-    def mainLocation(self) :
-        return 'Phys/' + self.algName()
+    def mainLocation(self, sel) :
+        return 'Phys/' + self.algName(sel)
 
     def setOutputPrefix(self, alg) :
-        alg.OutputPrefix = self.name()
+        alg.OutputPrefix = self.getProp('OutputPrefix')
     
-    def copyDefaultStuff(self):
+    def copyDefaultStuff(self, sel):
         from Configurables import CopyRecHeader, CopyODIN
-        copyRecHeader = CopyRecHeader(self._personaliseName("CopyRecHeader"))
+        copyRecHeader = CopyRecHeader(self._personaliseName(sel,
+                                                            "CopyRecHeader"))
         self.setOutputPrefix(copyRecHeader)
-        self.sequence().Members += [copyRecHeader]
-        copyODIN = CopyODIN(self._personaliseName("CopyODIN"))
+        sel.sequence().Members += [copyRecHeader]
+        copyODIN = CopyODIN(self._personaliseName(sel,"CopyODIN"))
         self.setOutputPrefix(copyODIN)
-        self.sequence().Members += [copyODIN]
+        sel.sequence().Members += [copyODIN]
 
         
-    def copyParticleTrees(self) :
-        from Configurables import CopyParticles, VertexCloner, ProtoParticleCloner
-        copyParticles = CopyParticles(self._personaliseName('CopyParticles'))
-        copyParticles.InputLocation = self.mainLocation()+"/Particles"
+    def copyParticleTrees(self, sel) :
+        from Configurables import (CopyParticles,
+                                   VertexCloner,
+                                   ProtoParticleCloner )
+        copyParticles = CopyParticles(self._personaliseName(sel,
+                                                            'CopyParticles'))
+        copyParticles.InputLocation = self.mainLocation(sel)+"/Particles"
         copyParticles.addTool(VertexCloner(), name='VertexCloner')
         copyParticles.addTool(ProtoParticleCloner(),
                               name='ProtoParticleCloner')
         copyParticles.OutputLevel=4
         self.setOutputPrefix(copyParticles)
-        self.sequence().Members += [copyParticles]  
+        sel.sequence().Members += [copyParticles]  
 
-    def copyP2PVRelations(self, name, location) :
+    def copyP2PVRelations(self, sel, name, location) :
         from Configurables import CopyParticle2PVRelations
-        copyP2PVRel = CopyParticle2PVRelations(self._personaliseName(name))
+        copyP2PVRel = CopyParticle2PVRelations(self._personaliseName(sel,name))
         copyP2PVRel.InputLocation = location
         copyP2PVRel.OutputLevel=4
         self.setOutputPrefix(copyP2PVRel)
-        self.sequence().Members += [copyP2PVRel]
+        sel.sequence().Members += [copyP2PVRel]
 
-
-    def copyPVs(self) :
+    def copyPVs(self, sel) :
         from Configurables import CopyPrimaryVertices
-        copyPV=CopyPrimaryVertices(self._personaliseName('CopyPrimaryVertices'))
+        copyPV=CopyPrimaryVertices(self._personaliseName(sel,'CopyPrimaryVertices'))
         copyPV.OutputLevel = 4
         self.setOutputPrefix(copyPV)
-        self.sequence().Members += [copyPV]
+        sel.sequence().Members += [copyPV]
         if self.getProp('CopyParticles') :
-            self.copyP2PVRelations("CopyP2PVRelations",
-                                   self.mainLocation()+"/Particle2VertexRelations")
+            self.copyP2PVRelations(sel,"CopyP2PVRelations",
+                                   self.mainLocation(sel)+"/Particle2VertexRelations")
         
-    def copyMCInfo(self) :
+    def copyMCInfo(self, sel) :
         """
         Copy related MC particles of candidates plus daughters
         """
@@ -124,67 +110,61 @@ class MicroDSTWriter(LHCbConfigurableUser) :
         from Configurables import MCParticleCloner, MCVertexCloner
         # first, get matches MCParticles for selected candidates.
         # This will make a relations table in mainLocation+"/P2MCPRelations"
-        p2mcRelator = P2MCRelatorAlg(self._personaliseName('P2MCRel'))
-        p2mcRelator.ParticleLocation = self.mainLocation()+'/Particles'
+        p2mcRelator = P2MCRelatorAlg(self._personaliseName(sel,'P2MCRel'))
+        p2mcRelator.ParticleLocation = self.mainLocation(sel)+'/Particles'
         p2mcRelator.OutputLevel=4
-        self.sequence().Members += [p2mcRelator]
+        sel.sequence().Members += [p2mcRelator]
         # Now copy relations table + matched MCParticles to MicroDST
-        copyP2MCRel = CopyParticle2MCRelations(self._personaliseName("CopyP2MCRel"))
+        copyP2MCRel = CopyParticle2MCRelations(self._personaliseName(sel,
+                                                                     "CopyP2MCRel"))
         copyP2MCRel.addTool(MCParticleCloner)
         copyP2MCRel.MCParticleCloner.addTool(MCVertexCloner,
                                              name = 'ICloneMCVertex')
-        copyP2MCRel.InputLocation = self.mainLocation()+"/P2MCPRelations"
+        copyP2MCRel.InputLocation = self.mainLocation(sel)+"/P2MCPRelations"
         self.setOutputPrefix(copyP2MCRel)
-        self.sequence().Members += [copyP2MCRel]
+        sel.sequence().Members += [copyP2MCRel]
 
-    def copyBTaggingInfo(self) :
+    def copyBTaggingInfo(self, sel) :
         from Configurables import BTagging, BTaggingTool
         from Configurables import CopyFlavourTag
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
-        BTagAlgo = BTagging(self._personaliseName('BTagging'))
-        BTagAlgo.InputLocations=[self.mainLocation()]
-        BTagLocation = self.mainLocation()+"/Tagging"
+        BTagAlgo = BTagging(self._personaliseName(sel,'BTagging'))
+        BTagAlgo.InputLocations=[self.mainLocation(sel)]
+        BTagLocation = self.mainLocation(sel)+"/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
-        self.sequence().Members += [BTagAlgo]
-        copyFlavTag = CopyFlavourTag(self._personaliseName("CopyFlavourTag"))
+        sel.sequence().Members += [BTagAlgo]
+        copyFlavTag = CopyFlavourTag(self._personaliseName(sel,
+                                                           "CopyFlavourTag"))
         copyFlavTag.InputLocation = BTagLocation
         self.setOutputPrefix(copyFlavTag)
-        self.sequence().Members += [copyFlavTag]
+        sel.sequence().Members += [copyFlavTag]
 
-    def P2PVLocation(self) :
-        return self.mainLocation()+"/"+self.P2PVRelationsSuffix
+    def P2PVLocation(self, sel) :
+        return self.mainLocation(sel)+"/"+self.P2PVRelationsSuffix
 
-    def copyRelatedPVs(self) :
+    def copyRelatedPVs(self, sel) :
         if self.getProp('CopyParticles') :
-            self.copyP2PVRelations("CopyUserP2PVRelations",
-                                   self.P2PVLocation() )
+            self.copyP2PVRelations(sel,"CopyUserP2PVRelations",
+                                   self.P2PVLocation(sel) )
 
-    def copyL0DUReport(self) :
+    def copyL0DUReport(self, sel) :
         from Configurables import CopyL0DUReport
-        copyL0 = CopyL0DUReport(self._personaliseName('CopyL0DUReport'))
+        copyL0 = CopyL0DUReport(self._personaliseName(sel,'CopyL0DUReport'))
         self.setOutputPrefix(copyL0)
-        self.sequence().Members += [copyL0]
+        sel.sequence().Members += [copyL0]
 
-    def copyHltDecReports(self) :
+    def copyHltDecReports(self, sel) :
         from Configurables import CopyHltDecReports
-        copyHlt = CopyHltDecReports(self._personaliseName('CopyHltDecReports'))
+        copyHlt = CopyHltDecReports(self._personaliseName(sel,'CopyHltDecReports'))
         self.setOutputPrefix(copyHlt)
-        self.sequence().Members += [copyHlt]
+        sel.sequence().Members += [copyHlt]
 
-
-    def __apply_configuration__(self) :
-        """
-        PhysMicroDST configuration
-        """
-        self._initMicroDSTStream()
-        self.copyDefaultStuff()
-        if self.getProp("CopyParticles")     : self.copyParticleTrees()
-        if self.getProp("CopyPVs")           : self.copyPVs()
-        if self.getProp("CopyBTags")         : self.copyBTaggingInfo()
-        if self.getProp("CopyL0DUReport")    : self.copyL0DUReport()
-        if self.getProp("CopyHltDecReports") : self.copyHltDecReports()
-        if self.getProp("CopyRelatedPVs")    : self.copyRelatedPVs()
-        if self.getProp("CopyMCTruth")       : self.copyMCInfo()
-        outStream = self.outputStream()
-        if outStream != None :
-            self.sequence().Members += [self.outputStream()]
+    def extendSequence(self, sel) :
+        self.copyDefaultStuff(sel)
+        if self.getProp("CopyParticles")     : self.copyParticleTrees(sel)
+        if self.getProp("CopyPVs")           : self.copyPVs(sel)
+        if self.getProp("CopyBTags")         : self.copyBTaggingInfo(sel)
+        if self.getProp("CopyL0DUReport")    : self.copyL0DUReport(sel)
+        if self.getProp("CopyHltDecReports") : self.copyHltDecReports(sel)
+        if self.getProp("CopyRelatedPVs")    : self.copyRelatedPVs(sel)
+        if self.getProp("CopyMCTruth")       : self.copyMCInfo(sel)
