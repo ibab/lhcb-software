@@ -87,9 +87,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                                , 'Hlt2TopoTF2BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF3BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF4BodyCharmWideMass' : 0.05
-                                               , 'Hlt2DX3BodyCopNoKs' : 0.01
-                                               , 'Hlt2DX4BodyCopNoKs' : 0.01
-                                               , 'Hlt2DX4BodyLowRobCopNoKs' : 0.01
+                                               , 'Hlt2B2DX3BodyNoKs' : 0.01
+                                               , 'Hlt2B2DX4BodyNoKs' : 0.01
                                               }
                 , 'Postscale'               : {'Hlt2Topo2BodySA' : 0.02
                                                , 'Hlt2Topo3BodySA' : 0.001
@@ -126,12 +125,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoTF4BodyCharmSignal'   : True
                                    , 'Hlt2TopoTF4BodyCharmWideMass' : True
                                    # DX lines.  Here temporarily.
-                                   , 'Hlt2DX3BodyCopKsDD'           : True
-                                   , 'Hlt2DX4BodyCopKsDD'           : False
-                                   , 'Hlt2DX3BodyCopNoKs'           : True
-                                   , 'Hlt2DX4BodyCopNoKs'           : False
-                                   , 'Hlt2DX4BodyLowRobCopKsDD'     : False
-                                   , 'Hlt2DX4BodyLowRobCopNoKs'     : False
+                                   , 'Hlt2B2DX3BodyKsDD'           : True
+                                   , 'Hlt2B2DX4BodyKsDD'           : False
+                                   , 'Hlt2B2DX3BodyNoKs'           : True
+                                   , 'Hlt2B2DX4BodyNoKs'           : False
                                    }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : {'Hlt2Topo2BodySADecision'         : 50700
@@ -160,12 +157,10 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoTF4BodyCharmSignalDecision' : 50950
                                    , 'Hlt2TopoTF4BodyCharmWideMassDecision' : 50960
                                    # DX lines.  Here temporarily.
-                                   , 'Hlt2DX3BodyCopKsDDDecision'     : 62000
-                                   , 'Hlt2DX4BodyCopKsDDDecision'     : 62010
-                                   , 'Hlt2DX3BodyCopNoKsDecision'     : 62020
-                                   , 'Hlt2DX4BodyCopNoKsDecision'     : 62030
-                                   , 'Hlt2DX4BodyLowRobCopKsDDDecision' : 62040
-                                   , 'Hlt2DX4BodyLowRobCopNoKsDecision' : 62050
+                                   , 'Hlt2B2DX3BodyKsDDDecision'     : 62000
+                                   , 'Hlt2B2DX4BodyKsDDDecision'     : 62010
+                                   , 'Hlt2B2DX3BodyNoKsDecision'     : 62020
+                                   , 'Hlt2B2DX4BodyNoKsDecision'     : 62030
                                    }
                 }
 
@@ -432,13 +427,11 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         ###################################################################
         # There seems to be a lot of CPUT consumed in managing the large number
         #   of 4-body candidates.  The list needs to be as small as possible.
-        hackCut = """((BPVTRGPOINTINGWPT< %(RobustPointingUL)s )
-                     | (BPVDVDOCA()< %(DXRobustCoplanUL)s ))""" % self.getProps()
         topo4Body = robustCombine(  name = 'Topo4Body'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
                                   , extracuts = { 'CombinationCut' : '(AM>4*GeV)'
-                                                , 'MotherCut'      : hackCut }
+                                                , 'MotherCut'      : "(BPVTRGPOINTINGWPT< %(RobustPointingUL)s )" % self.getProps() }
                                   )
 
 
@@ -790,37 +783,26 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # Construct a sequence for the DX robust 3-body decision.
         ###################################################################
-        dxRobust3BodySeq = dxRobustFilter('DXRobust3BodyCop', [topo3Body])
+        dxRobust3BodySeq = dxRobustFilter('DXRobust3Body', [topo3Body])
 
         # Construct sequences for the DX robust 4-body decision.
-        # Requiers 2 sequences:
-        #   1) Sequence based on topo4Body, which has a mass window that
-        #      covers only half of the DX robust mass window.
-        #   2) Sequence based on a new filter that covers the remainder of
-        #      the robust mass window.
-        # This is done to prevent repetition of the 4-body combinatorics in
-        #   the mass region where this overlaps with the topological.  This
-        #   also leads to a duplication of lines, one based on each of the
-        #   complementary robust mass regions.  This may become a problem if
-        #   the complementary lines are independently prescaled....
         # Note that the original DX trigger had a different set of decay
         #   descriptors that included
         #   ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
-        # The default 4-body construction in topo4Body currently does not.
+        # The default 4-body construction in dx4Body currently does not.
         ###################################################################
-        dxRobust4BodySeq = dxRobustFilter('DXRobust4BodyCop', [topo4Body])
 
-        # CombineParticles for the complementary 4-body combinations that
-        #   covers the DX mass range not covered by robust topological.
+        # CombineParticles for the 4-body combinations.
         ###################################################################
-        dx4BodyLow = robustCombine(  name = 'DXRobust4BodyLow'
+        dx4Body = robustCombine(  name = 'DXRobust4Body'
                                   , inputSeq = [lclInputParticles, topo3Body ]
                                   , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , extracuts = {'CombinationCut' : '(AM>2000*MeV) & (AM<4000*MeV)'
+                                  , extracuts = {'CombinationCut' : '(AM>2000*MeV) & (AM<6000*MeV)'
                                                 , 'MotherCut'     : "(BPVDVDOCA()< %(DXRobustCoplanUL)s )" % self.getProps()
                                                 }
                                   )
-        dxRobust4BodyLowSeq = dxRobustFilter('DXRobust4BodyLowCop', [dx4BodyLow])
+
+        dxRobust4BodySeq = dxRobustFilter('DXRobust4Body', [dx4Body])
 
 
         ###################################################################
@@ -869,33 +851,27 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # Line for 3-body with Ks
         ###################################################################
         dxTF3BodyKsDDSeq = dxTFFilter('DXPostTF3BodyKsDD', [dxTF3BodyKsDD])
-        makeLine('DX3BodyCopKsDD'
+        makeLine('B2DX3BodyKsDD'
                  , algos = [ dxRobust3BodySeq, dxTF3BodyKsDDSeq ])
 
 
         # Lines for 4-body with Ks
         ###################################################################
         dxTF4BodyKsDDSeq = dxTFFilter('DXPostTF4BodyKsDD', [dxTF4BodyKsDD])
-        makeLine('DX4BodyCopKsDD'
+        makeLine('B2DX4BodyKsDD'
                  , algos = [ dxRobust4BodySeq, dxTF4BodyKsDDSeq ])
-
-        makeLine('DX4BodyLowRobCopKsDD'
-                 , algos = [ dxRobust4BodyLowSeq, dxTF4BodyKsDDSeq ])
 
 
         # Line for 3-body without Ks
         ###################################################################
         dxTF3BodySeq = dxTFFilter('DXPostTF3Body', [topoTF3Body])
-        makeLine('DX3BodyCopNoKs'
+        makeLine('B2DX3BodyNoKs'
                  , algos = [ dxRobust3BodySeq, dxTF3BodySeq ])
 
         # Lines for 4-body without Ks
         ###################################################################
         dxTF4BodySeq = dxTFFilter('DXPostTF4Body', [topoTF4Body])
-        makeLine('DX4BodyCopNoKs'
+        makeLine('B2DX4BodyNoKs'
                  , algos = [ dxRobust4BodySeq, dxTF4BodySeq ])
-
-        makeLine('DX4BodyLowRobCopNoKs'
-                 , algos = [ dxRobust4BodyLowSeq, dxTF4BodySeq ])
 
 
