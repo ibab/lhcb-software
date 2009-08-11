@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.23 2009-07-14 17:02:36 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.24 2009-08-11 08:02:30 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -31,7 +31,7 @@ from Configurables import MakeResonances
 # Some steering options
 #
 # number of events to process
-nEvents = 5000
+nEvents = 500
 # Copy information for events not passing the selection?
 allEventInfo = False
 # Copy MC particles when signal MC decay is found?
@@ -51,8 +51,8 @@ importOptions("$STDOPTS/LHCbApplication.opts")
 importOptions('$MICRODSTEXAMPLEROOT/options/JpsiPhiDataPFN.py')
 from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 mySequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
-mainLocation = "Phys/"+mySequence.topAlgName()
-mainSelector = mySequence.algo
+mainLocation = "Phys/"+mySequence.algName()
+mainSelector = mySequence.algorithm()
 #mainSelector.ReFitPVs=True
 mainSelector.OutputLevel=4
 #
@@ -67,7 +67,7 @@ ApplicationMgr().OutStream.append(MicroDSTStream)
 evtString = ""
 if not (nEvents==-1) :
     evtString = str(nEvents/1000.)
-outputName =  "DATAFILE='"+ mySequence.name() +DSTMC+"_"+ evtString +"_Kevt_NewPythonSelection.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
+outputName =  "DATAFILE='"+ mySequence.name() +DSTMC+"_"+ evtString +"_Kevt_NewPythonSelectionX.mdst' TYP='POOL_ROOTTREE' OPT='REC'"
 MicroDSTStream.Output = outputName
 MicroDSTStream.OutputLevel=4;
 
