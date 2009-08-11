@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.48 2009-08-05 17:40:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.49 2009-08-11 11:26:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-11 - Vanya BELYAEV
+
+ - futher polishing of configurables 
+
 
 ! 2009-08-05 - Vanya BELYAEV
 
