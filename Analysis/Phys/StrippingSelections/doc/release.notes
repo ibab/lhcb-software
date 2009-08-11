@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r4 2009-08-11 ====================
+
 ! 2009-August-05 - Patrick Spradlin and Andrew Powell
  - Maintenance of stripping selections for RICH PID calibration:
    . options/StrippingDstarNoPID.py
