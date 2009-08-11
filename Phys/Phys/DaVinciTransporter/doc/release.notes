@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.62 2009-07-28 16:10:47 jpalac Exp $
+! $Id: release.notes,v 1.63 2009-08-11 11:54:51 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r9 2009-08-11 ====================
 
 ! 2009-07-28 - Juan PALACIOS
  - Bring back dependency on DaVinciKernel: needed for free functions.
