@@ -1,9 +1,30 @@
-! $Id: release.notes,v 1.60 2009-08-11 18:26:59 ibelyaev Exp $ 
+! $Id: release.notes,v 1.61 2009-08-12 15:54:07 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-12 - Vanya BELYAEV
+
+ - add more context symnols:
+
+      MCSELMATCH 
+      MCNODEMATCH 
+      MCTREEMATCH 
+
+   and the helper function mcMatch 
+
+ Thus one can use following constructions for 
+   CombineParticles/FilterDesktop & "Hybrid" Plot/Print/Tuple-tools
+
+
+    XXX.DaughterCuts  = { 
+      'K+'  :  " ( PT > 1*GeV ) & MCMATCH     ( '[B_s0 => ^K+ ^K-]cc' ) " , 
+      'pi+' :  " ( PT > 1*GeV ) & MCSELMATCH  ( 'pi+' == MCABSD )  "      , 
+      'mu+' :  " ( PT > 1*GeV ) & MCNODEMATCH ( Lepton ) "   
+     }
+
 
 ! 2009-08-11 - Vanya BELYAEV
 

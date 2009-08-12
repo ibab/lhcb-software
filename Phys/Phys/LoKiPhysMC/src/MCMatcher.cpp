@@ -1,4 +1,4 @@
-// $Id: MCMatcher.cpp,v 1.1 2009-08-11 18:27:00 ibelyaev Exp $
+// $Id: MCMatcher.cpp,v 1.2 2009-08-12 15:54:07 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -26,10 +26,12 @@
 // ============================================================================
 #include "LoKi/Trees.h"
 #include "LoKi/IReporter.h"
+#include "LoKi/select.h"
 // ============================================================================
 // LoKiMC 
 // ============================================================================
 #include "LoKi/IMCDecay.h"
+#include "LoKi/MCParticles.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -48,8 +50,8 @@ namespace
   // ==========================================================================
   /// validation of decay finder 
   inline StatusCode _validate 
-  ( const LoKi::PhysMCParticles::MCMatcher::iTree& tree , 
-    const LHCb::IParticlePropertySvc*              svc  ) 
+  ( const LoKi::PhysMCParticles::MCTreeMatch::iTree& tree , 
+    const LHCb::IParticlePropertySvc*                svc  ) 
   { return tree.validate ( svc ) ; }
   // ==========================================================================
   /// get gaudi algorithm from the context 
@@ -62,11 +64,395 @@ namespace
   /// invalid decay
   const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid s_INVALID ;
   // ==========================================================================
-} //                                                 end of anonymous namespace 
+} //                                                 end of anonymous namespace
 // ============================================================================
-// check the decay descriptor
+/*  constructor from the decay and MC-truth matching tables
+ *  @param locations the location of MCtruth relation tables 
+ */
 // ============================================================================
-void LoKi::PhysMCParticles::MCMatcher::checkFinder ()
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const LoKi::PhysMCParticles::MCMatcherBase::Locations&  locations ) 
+  : LoKi::PhysMCParticles::MCTruth() 
+  , m_locations ( locations  )
+  , m_alg       ( 0          )
+{}
+// ============================================================================
+//  constructor from the decay and MC-truth matching tables
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const std::string&  location ) 
+  : LoKi::PhysMCParticles::MCTruth() 
+  , m_locations ( 1 , location )
+  , m_alg       ( 0            )
+{}
+// ============================================================================
+//  constructor from the decay and MC-truth matching tables
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const std::string&  location1 ,
+  const std::string&  location2 ) 
+  : LoKi::PhysMCParticles::MCTruth() 
+  , m_locations ()
+  , m_alg       ( 0            )
+{
+  m_locations.push_back ( location1 ) ;
+  m_locations.push_back ( location2 ) ;  
+}
+// ============================================================================
+//  constructor from the decay and MC-truth matching tables
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const std::string&  location1 ,
+  const std::string&  location2 , 
+  const std::string&  location3 ) 
+  : LoKi::PhysMCParticles::MCTruth() 
+  , m_locations ()
+  , m_alg       ( 0 )
+{
+  m_locations.push_back ( location1 ) ;
+  m_locations.push_back ( location2 ) ;  
+  m_locations.push_back ( location3 ) ;  
+}
+// ============================================================================
+/*  constructor from the decay and MC-truth matching tables
+ *  @param locations the location of MCtruth relation tables 
+ */
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
+( const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch ) 
+  : LoKi::PhysMCParticles::MCTruth() 
+  , m_locations ()
+  , m_alg       ( 0 )
+{
+  switch ( protoMatch ) 
+  {
+  case Neutral     : 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ; break ;
+  case ChargedLong : 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; break ;
+  case Charged     : 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; break ;
+  default:
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; 
+    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ;
+  }
+}
+// ============================================================================
+// clear all storages 
+// ============================================================================
+void LoKi::PhysMCParticles::MCMatcherBase::clearAll () const 
+{ 
+  // clear the list of MC-particles
+  storage().clear  () ;  
+  // clear the relation tables  
+  if ( !(!match() ) ) { match() -> clear () ; }
+}
+// ============================================================================
+// load the data 
+// ============================================================================
+StatusCode LoKi::PhysMCParticles::MCMatcherBase::load() const  // load the data 
+{
+  
+  if ( !match().validPointer() ) 
+  {
+    // get GaudiAlgorithm 
+    if ( 0 == alg () ) { setAlg ( _getAlg ( lokiSvc () ) ) ; }
+    Assert ( 0 != alg () , "GaudiAlgorithm* points to NULL" ) ;
+    LoKi::IReporter* rep = alg() ->tool<LoKi::IReporter>
+      ( "LoKi::Reporter/" + this -> printOut () , alg () ) ;
+    setMatch ( new MCMatchObj ( this -> printOut () , rep ) ) ;
+  }
+  
+  /// clear all storages 
+  clearAll () ;
+  
+  // get GaudiAlgorithm 
+  if ( 0 == alg () ) { setAlg ( _getAlg ( lokiSvc () ) ) ; }
+  Assert ( 0 != alg () , "GaudiAlgorithm* points to NULL" ) ;
+  
+  // locate the data 
+  for ( Locations::const_iterator item = m_locations.begin() ; 
+        m_locations.end() != item ; ++item ) 
+  {
+    if      ( alg()->exist<LoKi::Types::TableP2MC> ( *item ) ) 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MC>  ( *item ) ) ; }
+    else if ( alg()->exist<LoKi::Types::TableP2MCW> ( *item ) ) 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MCW> ( *item ) ) ; }
+    else if ( alg()->exist<LoKi::Types::TablePP2MC> ( *item ) ) 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TablePP2MC> ( *item ) ) ; }
+    else if ( alg()->exist<LoKi::Types::TableT2MC>  ( *item ) ) 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MC>  ( *item ) ) ; }
+    else if ( alg()->exist<LoKi::Types::TableT2MCW> ( *item ) ) 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MCW> ( *item ) ) ; }
+    else { Error ( "No valid relation table at '" + (*item) + "'" ) ; } 
+  }
+  //
+  if ( match() -> empty() ) 
+  { Error ("Empty list of relation tables, MC-truth matching is disabled") ; }
+  // get MC-particles 
+  const LHCb::MCParticle::Container* mcparticles = 
+    m_alg->get<LHCb::MCParticle::Container> ( LHCb::MCParticleLocation::Default ) ;
+  
+  /// load Monte Carlo particles 
+  getMCParticles ( *mcparticles ).ignore() ;
+  
+  if ( empty() ) 
+  { return Warning( "load(): No MC-Particles are selected" , 
+                    StatusCode::SUCCESS ) ; }
+  
+  return StatusCode::SUCCESS ; 
+}
+// ======================================================================
+
+
+// ======================================================================
+/*  constructor from MC-selector and TES-locations 
+ *  @param selector Monte Carlo selector
+ *  @param locations TES-locations of relation tables 
+ */
+// ======================================================================
+LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
+( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&       selector  , 
+  const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( locations ) 
+  , m_cuts ( selector ) 
+{}
+// ======================================================================
+/*  constructor from MC-selector and TES-locations 
+ *  @param selector Monte Carlo selector
+ */
+// ======================================================================
+LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
+( const LoKi::PhysMCParticles::MCSelMatch::MCCuts& selector , 
+  const std::string& location ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  , m_cuts ( selector ) 
+{}
+// ======================================================================
+/*  constructor from MC-selector and TES-locations 
+ *  @param selector Monte Carlo selector
+ */
+// ======================================================================
+LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
+( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&       selector , 
+  const std::string& location1 , 
+  const std::string& location2 ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
+                                           location2  ) 
+  , m_cuts ( selector ) 
+{}
+// ======================================================================
+/*  constructor from MC-selector and TES-locations 
+ *  @param selector Monte Carlo selector
+ */
+// ======================================================================
+LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
+( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&       selector , 
+  const std::string& location1 , 
+  const std::string& location2 ,
+  const std::string& location3 ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1  , 
+                                           location2  ,
+                                           location3  ) 
+  , m_cuts ( selector ) 
+{}
+// ======================================================================
+/*  constructor from MC-selector and TES-locations 
+ *  @param selector Monte Carlo selector
+ */
+// ======================================================================
+LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
+( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&         selector , 
+  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
+  , m_cuts ( selector ) 
+{}
+// ============================================================================
+// destructor 
+// ============================================================================
+LoKi::PhysMCParticles::MCSelMatch::~MCSelMatch() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::PhysMCParticles::MCSelMatch*
+LoKi::PhysMCParticles::MCSelMatch::clone() const
+{ return new LoKi::PhysMCParticles::MCSelMatch ( m_cuts , locations() ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::PhysMCParticles::MCSelMatch::result_type 
+LoKi::PhysMCParticles::MCSelMatch::operator()
+  ( LoKi::PhysMCParticles::MCSelMatch::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::Particle* point to NULL, return false") ;
+    return false ;
+  }
+  // the same event ? 
+  if ( !sameEvent() ) { load () ; }
+  // 
+  return match  ( p ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream&
+LoKi::PhysMCParticles::MCSelMatch::fillStream( std::ostream& s ) const 
+{
+  s << "MCSELMATCH(" << m_cuts << "," ;
+  switch ( locations().size() ) 
+  {
+  case 1 : 
+    return s << "'"   << locations()[0] << "')" ;
+  case 2 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] << "')" ;
+  case 3 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] 
+             << "','" << locations()[2] << "')" ;
+  default:
+    break ;
+  }
+  return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
+}
+// ============================================================================
+// get MC-particles 
+// ============================================================================
+StatusCode LoKi::PhysMCParticles::MCSelMatch::getMCParticles 
+( const LHCb::MCParticle::Container& cnt ) const 
+{
+  // clear MC-particles ;
+  storage().clear() ;
+  
+  if ( cnt.empty() ) 
+  { return Warning ("Empty input container of MC-particles") ; }
+  
+  LoKi::select ( cnt.begin () , 
+                 cnt.end   () , 
+                 std::back_inserter ( storage() ) , 
+                 m_cuts       ) ;
+  
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+
+
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const LoKi::PhysMCParticles::MCTreeMatch::iTree&       decay     , 
+  const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( locations ) 
+  , m_finder ( decay ) 
+{
+  checkFinder () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const LoKi::PhysMCParticles::MCTreeMatch::iTree& decay , 
+  const std::string& location ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  , m_finder ( decay ) 
+{
+  checkFinder () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const LoKi::PhysMCParticles::MCTreeMatch::iTree& decay , 
+  const std::string& location1 , 
+  const std::string& location2 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  , m_finder ( decay ) 
+{
+  checkFinder () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const LoKi::PhysMCParticles::MCTreeMatch::iTree& decay , 
+  const std::string& location1 , 
+  const std::string& location2 ,
+  const std::string& location3 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+                                           location2 ,
+                                           location3 ) 
+  , m_finder ( decay ) 
+{
+  checkFinder () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const LoKi::PhysMCParticles::MCTreeMatch::iTree&         decay      , 
+  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
+  , m_finder ( decay ) 
+{
+  checkFinder () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const std::string&                                     decay     , 
+  const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( locations ) 
+  , m_finder ( s_INVALID ) 
+{
+  getFinder ( decay ) ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const std::string& decay    , 
+  const std::string& location ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  , m_finder ( s_INVALID ) 
+{
+  getFinder ( decay ) ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const std::string& decay     , 
+  const std::string& location1 , 
+  const std::string& location2 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  , m_finder ( s_INVALID ) 
+{
+  getFinder ( decay ) ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const std::string& decay     , 
+  const std::string& location1 , 
+  const std::string& location2 ,
+  const std::string& location3 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+                                           location2 ,
+                                           location3 ) 
+  , m_finder ( s_INVALID ) 
+{
+  getFinder ( decay ) ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
+( const std::string&                                       decay      , 
+  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
+  , m_finder ( s_INVALID ) 
+{
+  getFinder ( decay ) ;
+}
+// ============================================================================
+// destructor 
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::~MCTreeMatch() {}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch*
+LoKi::PhysMCParticles::MCTreeMatch::clone() const 
+{ return new LoKi::PhysMCParticles::MCTreeMatch ( m_finder , locations() ) ; }
+// ============================================================================
+void LoKi::PhysMCParticles::MCTreeMatch::checkFinder ()
 {
   if ( !m_finder ) 
   {
@@ -83,273 +469,218 @@ void LoKi::PhysMCParticles::MCMatcher::checkFinder ()
 // ============================================================================
 // check the decay descriptor
 // ============================================================================
-void LoKi::PhysMCParticles::MCMatcher::getFinder ( const std::string& decay )
+void LoKi::PhysMCParticles::MCTreeMatch::getFinder ( const std::string& decay )
 {
   // get GaudiAlgorithm 
-  if ( 0 == m_alg ) { m_alg = _getAlg ( lokiSvc () ) ; }
-  Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL" ) ;
+  if ( 0 == alg () ) { setAlg ( _getAlg ( lokiSvc () ) ) ; }
+  Assert ( 0 != alg() , "GaudiAlgorithm* points to NULL" ) ;
   // get the factory:
   Decays::IMCDecay* factory = 
-    m_alg->tool<Decays::IMCDecay>( "LoKi::MCDecay" , m_alg ) ;
+    alg()->tool<Decays::IMCDecay>( "LoKi::MCDecay" , alg () ) ;
   // get the decay finder from the factory 
   m_finder = Finder ( factory->tree ( decay ) ) ;
   //
   checkFinder ( ) ;
+
+}// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::PhysMCParticles::MCTreeMatch::result_type 
+LoKi::PhysMCParticles::MCTreeMatch::operator()
+  ( LoKi::PhysMCParticles::MCTreeMatch::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::Particle* point to NULL, return false") ;
+    return false ;
+  }
+  // the same event ? 
+  if ( !sameEvent() ) { load () ; }
+  // 
+  return match  ( p ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream&
+LoKi::PhysMCParticles::MCTreeMatch::fillStream( std::ostream& s ) const 
+{
+  s << "MCMATCH('" << m_finder << "'," ;
+  switch ( locations().size() ) 
+  {
+  case 1 : 
+    return s << "'"   << locations()[0] << "')" ;
+  case 2 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] << "')" ;
+  case 3 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] 
+             << "','" << locations()[2] << "')" ;
+  default:
+    break ;
+  }
+  return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
+}
+// ============================================================================
+// get MC-particles 
+// ============================================================================
+StatusCode LoKi::PhysMCParticles::MCTreeMatch::getMCParticles 
+( const LHCb::MCParticle::Container& cnt ) const 
+{
+  // clear MC-particles ;
+  storage().clear() ;
+  
+  if ( cnt.empty() ) 
+  { return Warning ("Empty input container of MC-particles") ; }
+  
+  m_finder ( cnt.begin () , 
+             cnt.end   () , 
+             std::back_inserter ( storage() ) ) ;
+  
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+
+
+
+
+
+
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
+( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
+  const LoKi::PhysMCParticles::MCMatcherBase::Locations& locations ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( locations ) 
+  , m_node ( node ) 
+{
+  checkNode () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
+( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node , 
+  const std::string& location ) 
+  : LoKi::PhysMCParticles::MCMatcherBase ( location ) 
+  , m_node ( node ) 
+{
+  checkNode () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
+( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
+  const std::string& location1 , 
+  const std::string& location2 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , location2 ) 
+  , m_node ( node ) 
+{
+  checkNode () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
+( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
+  const std::string& location1 , 
+  const std::string& location2 ,
+  const std::string& location3 )
+  : LoKi::PhysMCParticles::MCMatcherBase ( location1 , 
+                                           location2 ,
+                                           location3 ) 
+  , m_node ( node ) 
+{
+  checkNode () ;
+}
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
+( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
+  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
+  , m_node ( node ) 
+{
+  checkNode () ;
 }
 // ============================================================================
 // destructor 
 // ============================================================================
-LoKi::PhysMCParticles::MCMatcher::~MCMatcher() {}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- *  @param locations the location of MCtruth relation tables 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const LoKi::PhysMCParticles::MCMatcher::iTree&      decay     , 
-  const LoKi::PhysMCParticles::MCMatcher::Locations&  locations ) 
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( decay      ) 
-  , m_locations ( locations  )
-  , m_alg       ( 0          )
-{
-  checkFinder () ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const LoKi::PhysMCParticles::MCMatcher::iTree& decay     , 
-  const std::string&                             location ) 
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( decay         ) 
-  , m_locations ( 1 , location  )
-  , m_alg       ( 0             )
-{
-  checkFinder () ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const LoKi::PhysMCParticles::MCMatcher::iTree& decay     , 
-  const std::string&                             location1 ,
-  const std::string&                             location2 ) 
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( decay         ) 
-  , m_locations ()
-  , m_alg       ( 0             )
-{
-  m_locations.push_back ( location1 ) ;
-  m_locations.push_back ( location2 ) ;  
-  checkFinder () ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching type for 
- *  protoparticles 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const LoKi::PhysMCParticles::MCMatcher::iTree&       decay     , 
-  const LoKi::PhysMCParticles::MCMatcher::ProtoPMatch  matchType ) 
-  : LoKi::PhysMCParticles::MCTruth()
-  , m_finder    ( decay ) 
-  , m_locations (       )
-  , m_alg       ( 0     )
-{
-  //
-  switch ( matchType ) 
-  {
-  case Neutral     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ; break ;
-  case ChargedLong : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; break ;
-  case Charged     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; break ;
-  default:
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ;
-  }
-  //
-  checkFinder () ;
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- *  @param locations the location of MCtruth relation tables 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const std::string&                                  decay     , 
-  const LoKi::PhysMCParticles::MCMatcher::Locations&  locations ) 
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( s_INVALID  ) 
-  , m_locations ( locations  )
-  , m_alg       ( 0          )
-{
-  getFinder   ( decay ) ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const std::string&  decay     , 
-  const std::string&  location  ) 
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( s_INVALID  ) 
-  , m_locations ( 1  , location  )
-  , m_alg       ( 0          )
-{
-  getFinder   ( decay ) ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching tables
- *  @param decay the decay 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const std::string&  decay     , 
-  const std::string&  location1 , 
-  const std::string&  location2 )
-  : LoKi::PhysMCParticles::MCTruth() 
-  , m_finder    ( s_INVALID  ) 
-  , m_locations ()
-  , m_alg       ( 0          )
-{
-  m_locations.push_back ( location1 ) ;
-  m_locations.push_back ( location2 ) ;  
-  getFinder   ( decay ) ; 
-}
-// ============================================================================
-/*  constructor from the decay and MC-truth matching type for 
- *  protoparticles 
- */
-// ============================================================================
-LoKi::PhysMCParticles::MCMatcher::MCMatcher 
-( const std::string&                                   decay     , 
-  const LoKi::PhysMCParticles::MCMatcher::ProtoPMatch  matchType ) 
-  : LoKi::PhysMCParticles::MCTruth()
-  , m_finder    ( s_INVALID ) 
-  , m_locations (       )
-  , m_alg       ( 0     )
-{
-  //
-  switch ( matchType ) 
-  {
-  case Neutral     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ; break ;
-  case ChargedLong : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; break ;
-  case Charged     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; break ;
-  default:
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ;
-  }
-  //
-  getFinder   ( decay ) ;
-}
+LoKi::PhysMCParticles::MCNodeMatch::~MCNodeMatch() {}
 // ============================================================================
 // MANDATORY: clone method ("virtual constructor")
 // ============================================================================
-LoKi::PhysMCParticles::MCMatcher*
-LoKi::PhysMCParticles::MCMatcher::clone() const 
-{ return new LoKi::PhysMCParticles::MCMatcher ( m_finder    , m_locations ) ; }
+LoKi::PhysMCParticles::MCNodeMatch*
+LoKi::PhysMCParticles::MCNodeMatch::clone() const
+{ return new LoKi::PhysMCParticles::MCNodeMatch ( m_node , locations() ) ; }
+// ============================================================================
+void LoKi::PhysMCParticles::MCNodeMatch::checkNode ()
+{
+  if ( !m_node ) 
+  {
+    // try to locate IParticle property service 
+    SmartIF<LHCb::IParticlePropertySvc> ppSvc ( lokiSvc().getObject() ) ;
+    Assert ( !(!ppSvc) , "LHCb::IParticleProperty is not available for '"  + 
+             m_node.toString() + "'") ;
+    StatusCode sc = m_node.validate ( ppSvc ) ;
+    Assert ( sc.isSuccess() , "Can't validate the node descritor '"  + 
+             m_node.toString() + "'" ) ;
+  }
+}
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::PhysMCParticles::MCNodeMatch::result_type 
+LoKi::PhysMCParticles::MCNodeMatch::operator()
+  ( LoKi::PhysMCParticles::MCNodeMatch::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ("LHCb::Particle* point to NULL, return false") ;
+    return false ;
+  }
+  // the same event ? 
+  if ( !sameEvent() ) { load () ; }
+  // 
+  return match  ( p ) ;
+}
 // ============================================================================
 // OPTIONAL: nice printout 
 // ============================================================================
-std::ostream& 
-LoKi::PhysMCParticles::MCMatcher::fillStream ( std::ostream& s ) const 
+std::ostream&
+LoKi::PhysMCParticles::MCNodeMatch::fillStream( std::ostream& s ) const 
 {
-  const iTree& tree = m_finder ;
-  s << "MCMATCH('" << tree << "'," ;
-  Gaudi::Utils::toStream ( m_locations , s ) ;
-  return s << ")" ;
+  s << "MCNODEMATCH('" << m_node << "'," ;
+  switch ( locations().size() ) 
+  {
+  case 1 : 
+    return s << "'"   << locations()[0] << "')" ;
+  case 2 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] << "')" ;
+  case 3 : 
+    return s << "'"   << locations()[0] 
+             << "','" << locations()[1] 
+             << "','" << locations()[2] << "')" ;
+  default:
+    break ;
+  }
+  return Gaudi::Utils::toStream ( locations() , s ) << ")" ;
 }
 // ============================================================================
-// MANDATORY: the only one essential method
+// get MC-particles 
 // ============================================================================
-LoKi::PhysMCParticles::MCMatcher::result_type 
-LoKi::PhysMCParticles::MCMatcher::operator()
-  ( LoKi::PhysMCParticles::MCMatcher::argument p ) const 
+StatusCode LoKi::PhysMCParticles::MCNodeMatch::getMCParticles 
+( const LHCb::MCParticle::Container& cnt ) const 
 {
-  // check argument 
-  if ( 0 == p ) 
-  {
-    Error ( "Invalid Particle! return 'False'" ) ;
-    return false ;                                         // RETURN 
-  }
-  // 
-  if ( !match().validPointer() ) 
-  {
-    // get GaudiAlgorithm 
-    if ( 0 == m_alg ) { m_alg = _getAlg ( lokiSvc () ) ; }
-    Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL" ) ;
-    const iTree& tree = m_finder ;
-    LoKi::IReporter* rep = m_alg->tool<LoKi::IReporter>
-      ( "LoKi::Reporter/MCMATCH(" + tree.toString() + ")" , m_alg ) ;
-    setMatch ( new MCMatchObj ( tree.toString () , rep ) ) ;
-  }
-  // the same event ? 
-  if ( !sameEvent() ) 
-  {
-    
-    // clear the list of MC-particles
-    storage().clear() ;
-    
-    // clear the relation tables  
-    match() -> clear () ;
-    
-    // get GaudiAlgorithm 
-    if ( 0 == m_alg ) { m_alg = _getAlg ( lokiSvc () ) ; }
-    Assert ( 0 != m_alg , "GaudiAlgorithm* points to NULL" ) ;
-    
-    // locate the data 
-    for ( Locations::const_iterator item = m_locations.begin() ; 
-          m_locations.end() != item ; ++item ) 
-    {
-      if      ( m_alg->exist<LoKi::Types::TableP2MC> ( *item ) ) 
-      { match()->addMatchInfo ( m_alg->get<LoKi::Types::TableP2MC>  ( *item ) ) ; }
-      else if ( m_alg->exist<LoKi::Types::TableP2MCW> ( *item ) ) 
-      { match()->addMatchInfo ( m_alg->get<LoKi::Types::TableP2MCW> ( *item ) ) ; }
-      else if ( m_alg->exist<LoKi::Types::TablePP2MC> ( *item ) ) 
-      { match()->addMatchInfo ( m_alg->get<LoKi::Types::TablePP2MC> ( *item ) ) ; }
-      else if ( m_alg->exist<LoKi::Types::TableT2MC>  ( *item ) ) 
-      { match()->addMatchInfo ( m_alg->get<LoKi::Types::TableT2MC>  ( *item ) ) ; }
-      else if ( m_alg->exist<LoKi::Types::TableT2MCW> ( *item ) ) 
-      { match()->addMatchInfo ( m_alg->get<LoKi::Types::TableT2MCW> ( *item ) ) ; }
-      else { Error ( "No valid relation table at '" + (*item) + "'" ) ; } 
-    }
-    //
-    if ( match() -> empty() ) 
-    { Error ("Empty list of relation tables, MC-truth matching is disabled") ; }
-    // get MC-particles 
-    const LHCb::MCParticle::Container* mcparticles = 
-      m_alg->get<LHCb::MCParticle::Container> ( LHCb::MCParticleLocation::Default ) ;
-    
-    // use the decay finder to fill keeper with interesing decays
-    m_finder ( mcparticles -> begin ()    , 
-               mcparticles -> end   ()    , 
-               std::back_inserter ( storage () ) ) ;
-    
-  }
-  /// use the base class matching 
-  return match ( p ) ;
-}
-// ============================================================================
-
+  // clear MC-particles ;
+  storage().clear() ;
   
+  if ( cnt.empty() ) 
+  { return Warning ("Empty input container of MC-particles") ; }
+  
+  LoKi::select ( cnt.begin () , 
+                 cnt.end   () , 
+                 std::back_inserter ( storage() )      , 
+                 LoKi::MCParticles::DecNode ( m_node ) ) ;
+  
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 
 
 
