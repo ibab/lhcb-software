@@ -1,4 +1,4 @@
-### @file DVTestHlt2Bs2PhiPhi.opts
+ca### @file DVTestHlt2Bs2PhiPhi.opts
  #
  #  Test file for HLT Bs->PhiPhi selection
  #
@@ -30,9 +30,9 @@ GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True
 moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
-#importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
-#importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
-#importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple
 ###

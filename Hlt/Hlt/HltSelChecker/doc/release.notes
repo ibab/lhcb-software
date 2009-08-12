@@ -20,6 +20,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v8r6 2009-08-11 ===================
+! 2009-08-12 - Patrick Koppenburg
+ - Correct Bs2PhiPhi
+
 ! 2009-08-11 - Patrick Koppenburg
  - Correct some options (remove DecayTreeTuple)
  - Remove Bu2D0K_KsDD. It does the same as HH.
