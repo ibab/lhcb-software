@@ -1,4 +1,4 @@
-// $Id: IGenDecay.h,v 1.2 2009-06-02 16:49:17 ibelyaev Exp $
+// $Id: IGenDecay.h,v 1.3 2009-08-12 09:50:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IGENDECAY_H 
 #define LOKI_IGENDECAY_H 1
@@ -28,9 +28,11 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
-    // the actual type of the tree 
-    typedef Decays::Tree_<const HepMC::GenParticle*>                   Tree   ;
-    // the actual type of decay finder:
+    /// the actual type of the tree 
+    typedef Decays::Tree_<const HepMC::GenParticle*>                     Tree ;
+    /// the actual type of the tree 
+    typedef Decays::iTree_<const HepMC::GenParticle*>                   iTree ;
+    /// the actual type of decay finder:
     typedef Decays::Finder_<const HepMC::GenParticle*>                 Finder ;
     // ========================================================================
   public:

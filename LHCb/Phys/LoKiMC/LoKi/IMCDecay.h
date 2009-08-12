@@ -1,4 +1,4 @@
-// $Id: IMCDecay.h,v 1.2 2009-06-02 16:48:22 ibelyaev Exp $
+// $Id: IMCDecay.h,v 1.3 2009-08-12 09:50:04 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IMCDECAY_H 
 #define LOKI_IMCDECAY_H 1
@@ -28,9 +28,11 @@ namespace Decays
     // ========================================================================
   public:
     // ========================================================================
-    // the actual type of the tree 
-    typedef Decays::Tree_<const LHCb::MCParticle*>                     Tree   ;
-    // the actual type of decay finder:
+    /// the actual type of the tree 
+    typedef Decays::Tree_<const LHCb::MCParticle*>                       Tree ;
+    /// the actual type of the tree 
+    typedef Decays::iTree_<const LHCb::MCParticle*>                     iTree ;
+    /// the actual type of decay finder:
     typedef Decays::Finder_<const LHCb::MCParticle*>                   Finder ;
     // ========================================================================
   public:
