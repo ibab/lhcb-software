@@ -23,8 +23,8 @@ class Hadronic_Nominal :
         from Hlt1_Nominal import Hlt1_Nominal
         d = Hlt1_Nominal().Thresholds()
         # Phi thresholds
-        from Phi_Nominal import PhiLow_Nominal
-        d.update( PhiLow_Nominal().Thresholds() )
+        from Phi_Nominal import PhiHigh_Nominal
+        d.update( PhiHigh_Nominal().Thresholds() )
         # Remaining
         d.update(  { Hlt2TopologicalLinesConf  : { 'ComRobAllTrkPtLL' : 400.0
                                                , 'ComRobAllTrkPVIPLL' : 0.025

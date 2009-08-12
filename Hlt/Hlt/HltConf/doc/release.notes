@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.311 2009-08-12 09:07:12 graven Exp $ 
+! $Id: release.notes,v 1.312 2009-08-12 13:32:25 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-12 - Patrick Koppenburg
+ - python/HltConf/Hadronic_Nominal : Use Phi high, not Phi low.
 
 ! 2009-08-12 - Gerhard Raven
  - make sure 'log' is known in ThresholdUtils
