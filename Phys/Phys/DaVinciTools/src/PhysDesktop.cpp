@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.68 2009-08-05 15:36:37 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.69 2009-08-12 15:16:06 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -307,9 +307,8 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   for ( Particle2Vertex::Range::const_iterator i = range.begin();
         i != range.end();
         ++i) {
-    i_p2PVTable().i_push(newP, i->to(), i->weight() );
+    i_p2PVTable().i_relate(newP, i->to(), i->weight() );
   }
-  i_p2PVTable().i_sort();
   
   // Link to outgoing particles is followed through the keep(LHCb::Vertex)
   // Link to originators will be correct because they are in the heap
@@ -578,9 +577,8 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
                                           << "\nand PV " << *(j->to())
                                           << "\nwith weight " << j->weight()
                                           << endmsg;
-    i_p2PVTable().i_push(j->from(), j->to(), j->weight());
+    i_p2PVTable().i_relate(j->from(), j->to(), j->weight());
   }
-  i_p2PVTable().i_sort();
 
   return saveTrees(cloned);
 
