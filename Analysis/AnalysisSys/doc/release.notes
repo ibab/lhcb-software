@@ -3,12 +3,39 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v3r8>2009-08-11 Analysis v3r8 </A></H1><PRE>
+</PRE><H1><A NAME=v3r8>2009-08-12 Analysis v3r8 </A></H1><PRE>
 
  - Based on LHCb v27r5 and Gaudi v21r3
 
   Highlights:
 
+  * AnalysisConf: 
+      New BaseMicroDSTWriter configurable. Write DSTs for events passing selections. (Juan)
+  * CommonParticles: 
+      Update Muon selections with new ProtoParticleFilter (Chris Jones)
+  * DaVinciFilter:
+      Remove dependency on obsolete IRelatedPV tool. No longer dependent on
+      Kernel base classes. (Juan)
+      New functor to return best PV from parent DVAlgorithm.
+  * DaVinciMCTools:
+      REMOVED TrueMCFilterCriterion, FilterByBackCat. (Juan)
+  * REMOVED DaVincuUser, LoKiUser. Now need to be getpacksd.
+  * DecayTreeTuple:
+      Add # of particles stats (Patrick K)
+  * AnalysisPython:
+      Add documentation for Functors (Juan)
+      Add AppMgr.rewind and iHistogramSvc.reset methods for interactive rewinding of event loops (Juan)
+  * PhysSelPython:
+      Complete overhaul. Selection and SelectionSequence are now configurables
+      so they can be used to define other configurables. New Selection wrapper
+      for DataOnDemandSvc locations. Mimicks a Selection. (Juan)
+  * MicroDSTConf:
+      New MicroDSTWriter configurable, inherits from AnalysisConf.BaseMicroDSTWriter. Allows to process many selections and write a MicroDST for each one.
+  * StrippingConf
+      AddStrippingLine.checkPV (Anton P)
+  * StrippingSelections:
+      Added B->Jpsi f0 (Anton P, LiMing), Bd -> D* MuNu (Greig C), Lambda for RICH PID calibration (Patrick S, Andrew P)
+ 
 </PRE><H1><A NAME=v3r7>2009-07-28 Analysis v3r7 </A></H1><PRE>
 
  - Based on LHCb v27r4 and Gaudi v21r3
