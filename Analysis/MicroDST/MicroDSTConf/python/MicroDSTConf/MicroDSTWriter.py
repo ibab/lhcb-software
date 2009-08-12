@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.9 2009-08-11 11:44:51 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.10 2009-08-12 15:08:29 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -48,11 +48,8 @@ class MicroDSTWriter(BaseDSTWriter) :
     def _personaliseName(self, sel, name) :
         return name + "_" + sel.name()
 
-    def algName(self, sel) :        
-        return sel.algorithm().name()
-
     def mainLocation(self, sel) :
-        return 'Phys/' + self.algName(sel)
+        return 'Phys/' + sel.algName()
 
     def setOutputPrefix(self, alg) :
         alg.OutputPrefix = self.getProp('OutputPrefix')

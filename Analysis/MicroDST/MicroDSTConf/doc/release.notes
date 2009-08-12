@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.18 2009-08-11 14:09:00 jpalac Exp $
+!$Id: release.notes,v 1.19 2009-08-12 15:08:29 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-12 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Remove algName method. Use SelectionSequence.algName()
+ - cmt/requirements
+  . Increase version to v2r4p1
 
 !========================== MicroDSTConf v2r4 2009-08-11 ==================
 
