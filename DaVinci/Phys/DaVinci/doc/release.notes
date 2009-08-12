@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.368 2009-07-28 17:38:35 jpalac Exp $
+! $Id: release.notes,v 1.369 2009-08-12 07:49:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,13 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v24r1 2009-08-12 ===================
+
+! 2009-08-12 - Juan PALACIOS
+ - Added SelDSTWriter configurable. Inherits from MicroDSTWriter. Allows to
+   write out the full DST plus candidate decay tree for a selection.
+   See options/DaVinci-WriteSelDST.py for an example.
 
 !========================== DaVinci v23r4 2009-07-28 ===================
 
