@@ -7,6 +7,7 @@ import subprocess
 import string
 from os import pathsep, listdir 
 from os.path import exists, isdir, realpath, islink
+from zipfile import is_zipfile
 import fnmatch
 
 
@@ -14,9 +15,9 @@ def StripPath(path,predicate=None):
     collected = []
     for p in path.split(pathsep):
         rp = realpath(p)
-        if exists(rp) and isdir(rp):
-            if len(listdir(rp))!=0 and p not in collected and ( not predicate or predicate(p) ): 
-                collected.append(p)
+        if exists(rp) :
+            if ( isdir(rp) and len(listdir(rp))!=0 ) or is_zipfile(rp) :
+                if p not in collected and ( not predicate or predicate(p) ): collected.append(p)
     return pathsep.join(collected)
 #
 def ContainsFNmatch(dir,matches) :
@@ -68,6 +69,12 @@ if len(sys.argv)>2:
             line = 'export %s="%s"'%(name,value)
         if input!=line : f.write('#ORIG:# %s\n'%input)
         f.write(line+'\n')        
+    print 'checking for tcmalloc'
+    tcmalloc = os.path.expandvars('$LCG_release_area/tcmalloc/1.3/$CMTCONFIG/lib/libtcmalloc_minimal.so')
+    if os.path.isfile(tcmalloc) :
+        f.write('#Added TCMALLOC\n')
+        f.write('export LD_PRELOAD=%s\n'%tcmalloc)
+
     f.close()
 
 

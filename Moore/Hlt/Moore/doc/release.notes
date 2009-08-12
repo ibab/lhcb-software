@@ -3,6 +3,9 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+! 2009-08-12 - Gerhard Raven
+ - check for TCMALLOC, and use if available
+
 ! 2009-08-11 - Gerhard Raven
  - when creating configurations, make sure ODIN is
    decoded even in the most stripped configuration
