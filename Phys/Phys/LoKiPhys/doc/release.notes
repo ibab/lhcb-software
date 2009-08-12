@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.110 2009-07-13 15:09:27 cattanem Exp $ 
+! $Id: release.notes,v 1.111 2009-08-12 09:50:29 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-12 - Vanya BELYAEV
+
+ - add useful typedef  
 
 ! ========================== LoKiPhys v8r8 2009-07-09 =========================
 ! 2009-07-09 - Vanya BELYAEV
