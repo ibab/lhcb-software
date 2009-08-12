@@ -3,7 +3,7 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-</PRE><H1><A NAME=v8r8>2009-08-11 Phys v8r8 </A></H1><PRE>
+</PRE><H1><A NAME=v8r8>2009-08-12 Phys v8r8 </A></H1><PRE>
 
 ###############################################################################
 #                                  PHYS v8r8                                  #
@@ -12,6 +12,16 @@ Purpose             : LHCb physics packages
  - Based on LHCb v27r5 and Gaudi v21r3
 
   Highlights:
+
+  * ProtoPartifleFilter: 
+      Muon ProtoParticleFilter updates. New cuts in IsMuon and IsMuonLoose (C. Jones)
+  * DaVinciTools: 
+      Remove obsolete RelatedPVTool. P2PVInputLocations now set directly from
+      from PhysDesktop's parent DVAlgorithm. (Juan)
+  * DaVinciTransporter free transport functions now available in DaVinciKernel,
+    namespace DaVinci::Transporter. (Juan)
+  * P2VV angles calculators: Replace some tools by new free functions. in  
+    namespace DaVinci::P2VVAngles. Correct the maths for the functions. (G.Cowan)
 
 
 </PRE><H1><A NAME=v8r7>2009-07-28 Phys v8r7 </A></H1><PRE>
