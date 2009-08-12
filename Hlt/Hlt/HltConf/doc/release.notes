@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.310 2009-08-11 14:28:47 spradlin Exp $ 
+! $Id: release.notes,v 1.311 2009-08-12 09:07:12 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-12 - Gerhard Raven
+ - make sure 'log' is known in ThresholdUtils
 
 ! 2009-08-11 - Patrick Spradlin
   - Removed the DX lines from the scenario settings.  The DX lines were not

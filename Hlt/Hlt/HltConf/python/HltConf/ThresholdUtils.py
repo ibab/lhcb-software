@@ -10,6 +10,7 @@ def setThresholds(ThresholdSettings,confs):
     @date 23/7/2009 (moved)
     """
     conf = confs()  # The configurable _must_ be called even if not configured. Or it will be ignored
+    from Gaudi.Configuration import log
     if confs in ThresholdSettings : 
         #       print '# Found', conf.name()
         for (k,v) in ThresholdSettings[confs].iteritems() :
