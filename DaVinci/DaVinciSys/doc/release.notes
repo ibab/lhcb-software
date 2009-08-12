@@ -3,6 +3,33 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r1>2009-08-12 DaVinci v24r1 MC09 development release</A></H1><PRE>
+
+Based on Phys v8r8, Analysis v3r8, Rec v7r5, HLT v6r6, Lbcom v7r5, LHCb v27r5, Gaudi v21r3
+
+Highlights:
+
+  * New (Micro) DST writing configurables (Juan):
+    - BaseMicroDSTWrite: Write DSTs for events passing selections. 
+    - MicroDSTWriter: inherits from AnalysisConf.BaseMicroDSTWriter. Allows to process many selections and write a MicroDST for each one.
+    - SelDSTWriter. Inherits from MicroDSTWriter. Write a DST with the full DST plus candidate full decay tree for events passing a selection.
+
+  * Add CheckPV option to StrippingLine: guarantee that stripping is performed for that line. (Anton)
+
+  * PhysDesktop.P2PVInputLocations can now be set directly from parentDVAlgorithm. MyAlg.PhysDesktop.P2PVInputLocations => MyAlg.P2PVInputLocations (Juan)
+
+  * REMOVED: IRelatedPV, RelatedPV, TrueMCFilterCriterion, FilterByBackCat
+
+  * REMOVED FROM RELEASE: Phys/DavinciUser, Phys/LoKiuser. Getpack if needed.
+
+  * New namespace DaVinci::P2VVAngles with free functions to calculate angles for P->VV analysis. Re-structure P2VV GaudiTools to use these (Greig Cowan)
+
+  * New namespace DaVinci::Transporter with Particle transport functions. Taken from DaVinciTransporter, available in Kernel/TransporterFunctions.h (Juan)
+
+  * PhysSelPython: Overhaul of Selections and SelectionSequence classes. They are now UserConfigurables. See wiki page: https://twiki.cern.ch/twiki/bin/view/LHCb/ParticleSelection
+
+  * Re-structuring of DaVinciKernel: new package DaVinciInterfaces now contains all the tool abstract interfaces.
+
 </PRE><H1><A NAME=v24r0>2009-07-28 DaVinci v24r0 MC09 development release</A></H1><PRE>
 
 Based on Phys v8r7, Analysis v3r7, Rec v7r4, HLT v6r5, Lbcom v7r4, LHCb v27r4, Gaudi v21r3
