@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.452 2009-08-11 11:53:10 jpalac Exp $
+! $Id: release.notes,v 1.453 2009-08-12 15:16:17 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-12 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . Replace calls to Particle2Vertex::LightTable::i_push() and 
+    Particle2Vertex::LightTable::i_sort() by 
+    Particle2Vertex::LightTable::i_relate()
+ - cmt/requirements
+  . Increase version to v19r1p1
 
 !========================== DaVinciTools v19r1 2009-08-11 ===================
 
