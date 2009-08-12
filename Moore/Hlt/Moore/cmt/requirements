@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.71 2009-08-06 06:58:09 graven Exp $
+# $Id: requirements,v 1.72 2009-08-12 14:17:16 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -37,6 +37,7 @@ use LHCbAlgs           v*    Kernel         -no_auto_imports
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
+use L0Muon               v8r5p1 L0
 use LbcomSys            v*        -no_auto_imports
 
 #-- Rec packages 
