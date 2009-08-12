@@ -1,4 +1,4 @@
-ca### @file DVTestHlt2Bs2PhiPhi.opts
+### @file DVTestHlt2Bs2PhiPhi.opts
  #
  #  Test file for HLT Bs->PhiPhi selection
  #
