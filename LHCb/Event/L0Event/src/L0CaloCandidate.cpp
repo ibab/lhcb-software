@@ -1,6 +1,6 @@
-// $Id: L0CaloCandidate.cpp,v 1.6 2008-04-15 11:18:15 odescham Exp $
+// $Id: L0CaloCandidate.cpp,v 1.7 2009-08-12 09:16:24 ibelyaev Exp $
 // Include files 
-
+#include <vector>
 #include "GaudiKernel/SystemOfUnits.h"
 
 #include "Event/L0CaloCandidate.h"
