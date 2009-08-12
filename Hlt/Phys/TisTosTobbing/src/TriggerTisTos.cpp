@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.10 2009-01-19 17:12:30 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.11 2009-08-12 21:39:19 graven Exp $
 // Include files 
 #include <algorithm>
 
@@ -7,6 +7,9 @@
 
 // local
 #include "TriggerTisTos.h"
+
+#include "boost/regex.hpp"
+
 
 #include "HltBase/HltUtils.h"
 #include "Event/Particle.h"
@@ -106,10 +109,21 @@ void TriggerTisTos::setTriggerInput()
 
 void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWildChar)
 {
+  // if selectionNameWithWildChar contains a * without a . in front of it: print warning...
+  static boost::regex warn("[^\\.]\\*");
+  if ( boost::regex_search( selectionNameWithWildChar, warn )  ) {
+        Warning( " addToTriggerInput now does Posix (Perl) regular expression matching instead of globbing;" 
+                 " this implies that eg. a '*' should be replaced by '.*'. You've specified "
+                 " a selectionName using a '*', without leading '.': '" + selectionNameWithWildChar 
+               + "'. Please verify whether this is what you still want\n "
+               " For more information on the supported syntax, please check "
+               " http://www.boost.org/doc/libs/1_39_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html",StatusCode::SUCCESS ).ignore();
+  }
   unsigned int sizeAtEntrance( m_triggerInput_Selections.size() );
   getTriggerNames();
+  boost::regex expr(selectionNameWithWildChar);
   for( std::vector< std::string >::const_iterator inpt=m_triggerNames.begin();inpt!=m_triggerNames.end();++inpt){
-    if( wildcmp( selectionNameWithWildChar.c_str(), inpt->c_str()) ){ 
+    if( boost::regex_match( *inpt, expr ) ) {
       if( find( m_triggerInput_Selections.begin(), m_triggerInput_Selections.end(), *inpt ) 
           == m_triggerInput_Selections.end() ){
         m_triggerInput_Selections.push_back(*inpt);

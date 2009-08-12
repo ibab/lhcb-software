@@ -3,7 +3,7 @@
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           TisTosTobbing
-version           v3r3
+version           v3r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -28,6 +28,8 @@ use CaloDet          v*      Det
 
 use DaVinciKernel    v* Phys
 
+use Boost        v*   LCG_Interfaces
+
 # =============== include directories =========================================
 # apply_pattern     install_more_includes more=TisTosTobbing
 
@@ -39,3 +41,5 @@ library          TisTosTobbing    ../src/*.cpp
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=TisTosTobbing
+macro_append Boost_linkopts " $(Boost_linkopts_regex) "
+

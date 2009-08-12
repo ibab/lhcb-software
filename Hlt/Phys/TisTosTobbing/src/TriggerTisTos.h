@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.8 2008-11-14 06:55:39 tskwarni Exp $
+// $Id: TriggerTisTos.h,v 1.9 2009-08-12 21:39:19 graven Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -49,48 +49,6 @@ public:
    /// calculate decision,Tis,Tos  (for previously defined Offline and Trigger Inputs)
   void triggerTisTos( bool & decision, bool & tis, bool & tos);
   
-  /** @par wild character name matching functions:
-   *  @par
-   *     both "*" (matching any number of characters including none) and "?" (matching exactly one character) are wild 
-   *  @par
-   *     they can appear multiply times (or not at all), including beginning and and of the string
-   *  @par
-   *     returns 0 for no match; 1 for match
-   */  
-  /// function to do wild character matching
-  inline static int wildcmp(const char *wild, const char *string) {
-  // Written by Jack Handy 
-  const char *cp = NULL, *mp = NULL;
-  while ((*string) && (*wild != '*')) {
-    if ((*wild != *string) && (*wild != '?')) {
-      return 0;
-    }
-    wild++;
-    string++;
-  }
-  while (*string) {
-    if (*wild == '*') {
-      if (!*++wild) {
-        return 1;
-      }
-      mp = wild;
-      cp = string+1;
-    } else if ((*wild == *string) || (*wild == '?')) {
-      wild++;
-      string++;
-    } else {
-      wild = mp;
-      string = cp++;
-    }
-  }
-  while (*wild == '*') {
-    wild++;
-  }
-  return !*wild;
-  }
-  
-protected:
-
 private:
 
   /// obtain all known trigger names
