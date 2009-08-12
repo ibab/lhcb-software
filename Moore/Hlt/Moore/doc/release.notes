@@ -5,6 +5,7 @@ Purpose     : LHCb HLT application
 
 ! 2009-08-12 - Gerhard Raven
  - check for TCMALLOC, and use if available
+ - fix install_manifest
 
 ! 2009-08-11 - Gerhard Raven
  - when creating configurations, make sure ODIN is

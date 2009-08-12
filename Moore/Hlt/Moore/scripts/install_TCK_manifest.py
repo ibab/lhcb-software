@@ -11,6 +11,6 @@ target_dir = dirname( argv[2] )
 if exists( manifest)        : 
     print 'copying ' + manifest + ' to ' + argv[2]
     if not exists( target_dir ) : makedirs( target_dir )
-    copy2( manifest,  argv[1] )
+    copy2( manifest,  argv[2] )
 else:
     print 'manifest  ' + manifest + ' does not exist'
