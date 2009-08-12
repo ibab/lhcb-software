@@ -5,4 +5,4 @@
  #  @date 2009-07-20
  #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'FEST_FEST'  # just an example
+DaVinci().HltThresholdSettings = 'Effective_FEST'  # just an example
