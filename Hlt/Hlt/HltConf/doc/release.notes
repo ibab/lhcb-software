@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.312 2009-08-12 13:32:25 pkoppenb Exp $ 
+! $Id: release.notes,v 1.313 2009-08-13 20:57:07 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-13 - Gerhard Raven
+ - add PV = True/False to Hlt2Line constructors
+ - add Hlt2CommissioningLines
+ - move LumiBankKillerAcceptFraction from Hlt1 to Configuration, as it 
+   is an option of the end sequence, not of Hlt1
 
 ! 2009-08-12 - Patrick Koppenburg
  - python/HltConf/Hadronic_Nominal : Use Phi high, not Phi low.

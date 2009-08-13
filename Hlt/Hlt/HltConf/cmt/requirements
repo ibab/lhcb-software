@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2009-08-12 13:32:25 pkoppenb Exp $ 
+# $Id: requirements,v 1.50 2009-08-13 20:57:07 graven Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -9,7 +9,6 @@ version v4r3
 # ======= the actual dependencies =============================================
 use       GaudiPolicy v*                             
 use       Python      v* LCG_Interfaces 
-use       HltCommon   v*  Hlt
 use       HltLine     v*  Hlt
 use       Hlt1Lines   v*  Hlt
 use       Hlt2Lines   v*  Hlt

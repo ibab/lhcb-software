@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -26,6 +26,7 @@ from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
+from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 from Configurables import Hlt2PID
 
 # Define what categories stand for
@@ -46,10 +47,11 @@ _type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
                          , Hlt2B2HHLinesConf
                          , Hlt2B2LLXLinesConf
                          , Hlt2DisplVerticesLinesConf ]
+               , 'COMM': [ Hlt2CommissioningLinesConf ]
               }
 
 def hlt2TypeDecoder(hlttype) :
-      trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL'  # @todo need express as well
+      trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL+COMM'  # @todo need express as well
               }
       for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
       # split hlttype in known and unknown bits
@@ -107,7 +109,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         The actual lines
         """
         from HltLine.HltLine     import Hlt2Line
-        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255 )
+        Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, PV = False )
         Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
         ThresholdSettings = self.getProp("ThresholdSettings")
         #print "# Hlt2 thresholds:", ThresholdSettings
@@ -181,8 +183,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         if reqs.upper() != "NONE" :
             from Configurables import LoKi__HDRFilter   as HltFilter
             from Configurables import LoKi__L0Filter    as L0Filter
-            from Configurables import L0DUFromRawAlg
-            L0accept = Sequence(name='Hlt2L0Requirements', Members = [ L0DUFromRawAlg(), L0Filter( 'L0Pass', Code = "L0_DECISION" )])
+            from HltLine.HltDecodeRaw import DecodeL0DU
+            L0accept = Sequence(name='Hlt2L0Requirements', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION" )])
             
             hlt2requires = { 'L0'   : L0accept 
                            , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )

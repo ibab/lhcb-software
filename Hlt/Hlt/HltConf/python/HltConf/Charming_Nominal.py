@@ -105,6 +105,11 @@ class Charming_Nominal :
 ##
         from Exclusive_Nominal import Exclusive_Nominal
         list.extend( Exclusive_Nominal().ActiveLines() )
+##
+## commissioning : whole list
+##
+        from Commissioning_Nominal import Commissioning_Nominal
+        list.extend( Commissioning_Nominal().ActiveLines() )
         
         return list
     

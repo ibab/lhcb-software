@@ -1,11 +1,10 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.107 2009-08-06 21:15:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.108 2009-08-13 20:57:07 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
-from pprint import *
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
@@ -31,18 +30,26 @@ class HltConf(LHCbConfigurableUser):
                 , "DataType"                   : '2009'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
-                , "LumiBankKillerAcceptFraction" : 0. # fraction of lumi-only events where raw event is stripped down
                 , "HistogrammingLevel"         : 'None' # or 'Line'
-                , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Effective_Nominal' or 'FEST'
+                , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Effective_Nominal'
                 , "EnableHltGlobalMonitor"       : True
                 , "EnableHltDecReports"          : True
                 , "EnableHltSelReports"          : True
                 , "EnableHltVtxReports"          : True
                 , "EnableHltRoutingBits"         : True
-                , "EnableLumiEventWriting"       : True
+                , "EnableLumiEventWriting"       : False
+                , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
+                                                          # (only matters if EnablelumiEventWriting = True)
                 }
 
     __settings__ = None 
+    #import logging
+    #_log = logging.getLogger( 'HltConf.Configuration')
+    #handler = logging.StreamHandler()
+    #formatter = logging.Formatter("# %(name)s - %(levelname)s : %(message)s")
+    #handler.setFormatter( formatter )
+    #_log.addHandler( handler )
+    #_log.setLevel(logging.DEBUG)
 
 ##################################################################################
     def defineL0Channels(self, L0TCK = None) :
@@ -86,7 +93,6 @@ class HltConf(LHCbConfigurableUser):
         #
         #  main HLT sequencer
         # 
-        from Configurables import L0DUFromRawAlg
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = 
                        [ Sequence('Hlt1') 
@@ -101,11 +107,11 @@ class HltConf(LHCbConfigurableUser):
         if ( thresClass != None ):
             ThresholdSettings = thresClass.Thresholds()
         else :
-            print '##################################################################'
-            print '## WARNING You are running the HLT with no defined thresholds   ##'
-            print '## WARNING You will get the default cuts and all lines          ##'
-            print '## WARNING Set a ThresholdSetting to get something well defined ##'
-            print '## ###############################################################'
+            log.warning( '##################################################################' )
+            log.warning( '## WARNING You are running the HLT with no defined thresholds   ##' )
+            log.warning( '## WARNING You will get the default cuts and all lines          ##' )
+            log.warning( '## WARNING Set a ThresholdSetting to get something well defined ##' )
+            log.warning( '## ###############################################################' )
 
         #
         # decode Hlt types
@@ -116,18 +122,18 @@ class HltConf(LHCbConfigurableUser):
         #
         ( hlt1type, hlttype ) = hlt1TypeDecoder( hlttype )
         if hlt1type != '' :
+            Hlt1Conf()
             Hlt1Conf().ThresholdSettings = ThresholdSettings
             Hlt1Conf().Hlt1Type = hlt1type
-            Hlt1Conf()
         #
         # decode Hlt2 types
         #
         ( hlt2type, hlttype ) = hlt2TypeDecoder( hlttype )
         if hlt2type != '':
-            Hlt2Conf().ThresholdSettings = ThresholdSettings
-            Hlt2Conf().Hlt2Type = hlt2type
             self.setOtherProps(Hlt2Conf(),[ "DataType","Hlt2Requires" ])
             Hlt2Conf()
+            Hlt2Conf().ThresholdSettings = ThresholdSettings
+            Hlt2Conf().Hlt2Type = hlt2type
 
         if hlttype and hlttype not in [ '', 'NONE' ]:
             raise AttributeError, "unknown HltType fragment '%s'"%hlttype
@@ -149,7 +155,8 @@ class HltConf(LHCbConfigurableUser):
         Routing bits
         """
         ## set triggerbits
-        #  0-31: reserved for L0  // need to add L0DU support to routing bit writer
+        #  0-15: reserved for ODIN  // need to add ODIN support to routing bit writer
+        # 16-31: reserved for L0    // need to add L0DU support to routing bit writer
         # 32-63: reserved for Hlt1
         # 64-91: reserved for Hlt2
 
@@ -183,6 +190,14 @@ class HltConf(LHCbConfigurableUser):
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
+        veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
+               , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D' , 'TES:Hlt/Track/Long', 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
+               , 'TES:Hlt/Vertex/PV2D' 
+               , 'TES:Hlt/Track/MuonSegmentForL0Single'
+               , 'RZVeloBW'
+               ]
+        HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
+        HltSelReportsMaker().DebugEventPeriod = 2000
 
 ##################################################################################
     def configureANNSelections(self) :
@@ -206,7 +221,7 @@ class HltConf(LHCbConfigurableUser):
 
         if False :
             for i in hlt1Lines() :
-                print "checking " + i.name()
+                log.debug( "checking " + i.name() )
                 decisionName = i.name() + 'Decision'
                 if decisionName in HltANNSvc().Hlt1SelectionID :
                     id = HltANNSvc().Hlt1SelectionID[ decisionName ] 
@@ -214,12 +229,12 @@ class HltConf(LHCbConfigurableUser):
                     id = None
 
                 if id :
-                    print i.index()
+                    log.debug( i.index() )
                     for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
                         if key in hlt1Selections()['All'] :
                             # TODO: see if the selection is unique to this line...
                             cur = HltANNSvc().Hlt1SelectionID[ key ] if key in HltANNSvc().Hlt1SelectionID else  None
-                            print ' selection %s in line %s should have ID %d:%d -- has %d' % ( key,  i.name(), id, value, cur) 
+                            log.debug( ' selection %s in line %s should have ID %d:%d -- has %d' % ( key,  i.name(), id, value, cur)  )
                         #else :
                         #    print ' line %s, algo %s does not have a selection? ' % (i.name(),key)
                 else :
@@ -305,22 +320,21 @@ class HltConf(LHCbConfigurableUser):
         sets = self.settings()
         if ( sets != None ):
             activeLines = sets.ActiveLines()
-#            print '# active lines', activeLines
 
 #        for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
         
         lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt1Global' ] ) ]
-        print '# Added Hlt1 lines: ', str( lines1 )
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
+        log.info( '# List of configured Hlt1Lines not added to Hlt1 : ' + str(set(hlt1Lines())-set(lines1)) )
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
 #        for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
         
         lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt2Global' ]) ]
-#        print '# Added Hlt2 lines: ', str( lines2 )
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
+        log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
         Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
 
         self.configureHltMonitoring(lines1)
@@ -336,7 +350,7 @@ class HltConf(LHCbConfigurableUser):
 #
     def endSequence(self,hlttype):
         """
-        define end sequence (mostly for lumi)
+        define end sequence (mostly for persistence + monitoring)
         """
         from Configurables       import GaudiSequencer as Sequence
         from Configurables       import HltGlobalMonitor
@@ -371,24 +385,22 @@ class HltConf(LHCbConfigurableUser):
             EndMembers += [ c() for c in i ]
         if (self.getProp("EnableLumiEventWriting")) :
             EndMembers += [ HltLumiWriter()
-                            , Sequence( 'LumiStripper' , Members = 
-                                        [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
-                                          , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
-                                          , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
-                                          ])
-                            ] 
+                          , Sequence( 'LumiStripper' , Members = 
+                                      [ HltFilter('LumiStripperFilter' , Code = "HLT_PASS_SUBSTR('Hlt1Lumi') & ~HLT_PASS_RE('Hlt1(?!Lumi).*Decision') " ) 
+                                      , Prescale('LumiStripperPrescaler',AcceptFraction=self.getProp('LumiBankKillerAcceptFraction')) 
+                                      , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
+                                      ])
+                          ] 
 ##################################################################################
     def __apply_configuration__(self):
         """
         Apply Hlt configuration
         """
-        log.info("Hlt configuration")
+        log.debug("Hlt configuration")
         import GaudiKernel.ProcessJobOptions
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$HLTCONFROOT/options/HltInit.py')
-        log.info("Loaded HltInit")
         
-        self.setOtherProp( Hlt1Conf(), 'LumiBankKillerAcceptFraction' )
         self.confType(self.getProp('HltType'))      
         self.endSequence(self.getProp('HltType'))
         # make sure 'strings' is known...
