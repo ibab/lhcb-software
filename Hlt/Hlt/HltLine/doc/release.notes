@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.24 2009-08-13 11:54:26 graven Exp $
+! $Id: release.notes,v 1.25 2009-08-13 20:52:07 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -7,6 +7,8 @@
 
 ! 2009-08-13 - Gerhard Raven
  - add a bindMembers for PV3D
+ - add a mandatory PV argument to Hlt2Line c'tor to flag if line requires
+   a PV or not
 
 ! 2009-08-12 - Gerhard Raven
  - accept events on error/incident/slow, no quota for now

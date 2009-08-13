@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.7 2009-08-10 13:31:14 graven Exp $ 
+# $Id: HltLine.py,v 1.8 2009-08-13 20:52:07 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -74,7 +74,10 @@ __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself
 
 import re
 from copy import deepcopy 
-from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable 
+from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable , log
+#import logging
+#log = logging.getLogger( 'HltLine.HltLine')
+#log.setLevel(logging.DEBUG)
 from Configurables import DeterministicPrescaler as Scaler
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
@@ -320,7 +323,7 @@ _types_ = { TrackUpgrade  : 'TU'
 ## protected attributes 
 _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Prescale','Postscale','Filter1' )
 ## own slots for HltLine 
-_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'priority', 'postscale' , 'ODIN' , 'L0DU' , 'HLT' , 'algos' , 'PV' ) 
 
 # =============================================================================
 ## Get the full algorithm type from short nick
@@ -335,6 +338,22 @@ def typeFromNick ( nick ) :
         if nick == _types_[t] : return t
     raise AttributeError, " No type is defined for nick '%s'"%nick 
 
+# =============================================================================
+## Try to promote a string to the corresponding configurable
+def string2Configurable( name ) :
+    # try to decode it into something reasonable
+    (n,t) = (name,None) if name.find('/') == -1 else name.split('/')
+    from Gaudi.Configuration import allConfigurables
+    cfg = allConfigurables.get(n)
+    if cfg :
+        if ( t and cfg.getType() == t ) or cfg.getType() == 'ConfigurableGeneric' :
+            return cfg
+        else :
+            print 'got something for %s, don\'t know what to do with %s'%(self,str(cfg))
+            return None
+    print 'cannot convert %s into a known configurable' % name
+    return None
+            
 # =============================================================================
 ## Construct the full selection name
 #  The convention is
@@ -497,11 +516,11 @@ class bindMembers (object) :
             missing = set(req_inputs) - set(known_inputs)
             if missing :
                 extra = set(known_inputs) - set(req_inputs) - set(  _OutputLocationsGetter(alg) )
-                print '# WARNING: input/output matchmaker for  %s generated warnings' %(alg.name())
-                print '# WARNING:   ---> missing requests: ' + str(missing) 
+                log.warning( ' input/output matchmaker for  %s generated warnings' %(alg.name()) )
+                log.warning( ' ---> missing requests: ' + str(missing)  )
                 if extra : 
-                    print '# WARNING:   --->   extra requests: ' + str(extra)
-                    print '# WARNING:   this might be OK if eg. the extra requests produce the output of the missing requests... but this can not yet be verified automatically'
+                    log.warning( ' --->   extra requests: ' + str(extra) )
+                    log.warning( ' this might be OK if eg. the extra requests produce the output of the missing requests... but this can not yet be verified automatically')
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
@@ -606,7 +625,7 @@ class bindMembers (object) :
                                algName , line ) ;
             #
         else :
-            print "# WARNING: Line '%s', Member '%s'  with strange configuration " % ( line , algName )
+            log.warning( "Line '%s', Member '%s'  with strange configuration " % ( line , algName ) )
 
         
         ## output selection (default: the algorithm instance name)
@@ -872,7 +891,7 @@ class Hlt1Line(object):
                     _add_to_hlt1_output_selections_ ( _m.name         () )
 
         if self._outputsel is not None and self._outputsel!= decisionName( line ) :
-            print "# WARNING: Line '%s' has a final output selection named '%s'"%(line,self._outputsel)
+            log.warning( "Line '%s' has a final output selection named '%s'"%(line,self._outputsel) )
 
         # create the line configurable
         # NOTE: even if pre/postscale = 1, we want the scaler, as we may want to clone configurations
@@ -1202,6 +1221,9 @@ class Hlt2Line(object):
     @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
     @date   2009-03-25   
     """
+
+    from HltReco import PV3D
+    _PVAlgorithms = PV3D.members()
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1210,6 +1232,7 @@ class Hlt2Line(object):
     #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
     #    - 'L0DU'      : the list of L0Channels names for L0Filter 
     #    - 'HLT'       : the list of HLT selections for HLTFilter
+    #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
     def __init__ ( self             ,
@@ -1221,6 +1244,7 @@ class Hlt2Line(object):
                    algos     = []   ,   # the list of algorithms/members
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
+                   PV        = None ,   # insert PV reconstruction at the start of the line
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1235,11 +1259,14 @@ class Hlt2Line(object):
         - 'postscale' : the postscale factor
         
         """
+        if PV not in [ True, False ] : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
+
         ## 1) clone all arguments
         name  = deepcopy ( name  )
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
+        PV    = deepcopy ( PV   )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -1253,6 +1280,7 @@ class Hlt2Line(object):
         self._ODIN      = ODIN
         self._L0DU      = L0DU
         self._HLT       = HLT
+        self._PV        = PV
         self._algos     = algos
         self._args      = args
 
@@ -1273,6 +1301,7 @@ class Hlt2Line(object):
         # bind members to line
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
+        if self._PV : _members = self._PVAlgorithms + _members
 
 
         # create the line configurable
@@ -1404,6 +1433,7 @@ class Hlt2Line(object):
         __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
         __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
+        __PV         = deepcopy ( args.get ( 'PV'        , self._PV        ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __priority   = deepcopy ( args.get ( 'priority ' , self._priority  ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
@@ -1435,6 +1465,7 @@ class Hlt2Line(object):
                           ODIN      = __ODIN       ,
                           L0DU      = __L0DU       ,
                           HLT       = __HLT        ,
+                          PV        = __PV         ,
                           postscale = __postscale  ,
                           priority  = __priority   ,
                           algos     = __algos      , **__args )
@@ -1613,16 +1644,8 @@ def __enroll__ ( self       ,   ## the object
     """
 
     if type(self) == str :
-        # try to decode it into something reasonable
-        (n,t) = (self,None) if self.find('/') == -1 else self.split('/')
-        from Gaudi.Configuration import allConfigurables
-        cfg = allConfigurables.get(n)
-        if cfg :
-            if cfg.getType() == t or cfg.getType() == 'ConfigurableGeneric' :
-                self = cfg
-            else :
-                print 'got something for %s, don\'t know what to do with %s'%(self,str(cfg))
-            
+        cfg = string2Configurable(self)
+        if cfg : self = cfg
     if hasattr ( self , 'sequencer' ) :
         return __enroll__ ( self.sequencer() , level )
 
