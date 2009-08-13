@@ -142,6 +142,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                                        SeqHlt2TFParticlesForTopo,
                                        combineEE,
                                        combineB ]
+                          , postscale = self.postscale
+                          , PV = True
                           )
         ###########################################################################
         #
@@ -150,7 +152,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         ###########################################################################
         line_S = line_M.clone(   'Bu2eeKSignal'
-                                 , prescale = 1
+                                 , prescale = self.prescale
                                  , EE = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
                                  , Bu = { "CombinationCut" : combcut+" & (AM< %(SignalBUpperMass)s *MeV)" % self.getProps() }
                                  )

@@ -56,10 +56,10 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
         Mass = "(AM>2.2*GeV) & (AM<6.*GeV)"
         LowMass = "(AM>0.5*GeV) & (AM<6.*GeV)"
         
-        singmuNoIP = "HLT_PASS('Hlt1SingleMuonNoIPL0Decision')"
-        dimuonNoIP = "HLT_PASS('Hlt1DiMuonNoIPL0DiDecision') | HLT_PASS('Hlt1DiMuonNoIP2L0Decision') | HLT_PASS('Hlt1DiMuonNoIPL0SegDecision')"
+        singmuNoIP  = "HLT_PASS_SUBSTR('Hlt1SingleMuonNoIP')"
+        dimuonNoIP  = "HLT_PASS_SUBSTR('Hlt1DiMuonNoIP')"
         mutrackNoIP = "HLT_PASS('Hlt1MuTrack4JPsiDecision')"
-        Hlt1UnbDiMu = singmuNoIP+" | "+dimuonNoIP+" | "+mutrackNoIP
+        Hlt1UnbDiMu = "HLT_PASS_RE('Hlt1(Single|Di)MuonNoIP')" +"|" +mutrackNoIP
                                 
         ############################################################################
         #    Single muon selection
@@ -74,6 +74,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale 
                  , algos = [ Muons, Hlt2SelSingleMuon ]
                  , postscale = self.postscale
+                 , PV = True
                  )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonDecision" : 50190 } )
             
@@ -88,6 +89,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale 
                  , algos = [ Muons, Hlt2SelSingleMuonMid ]
                  , postscale = self.postscale
+                 , PV = True
                  )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonMidDecision" : 50191 } )
         
@@ -103,6 +105,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                  , prescale = self.prescale
                  , algos = [ Muons, Hlt2SelSingleMuonLow ]
                  , postscale = self.postscale
+                 , PV = True
                  )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleMuonLowDecision" : 50192 } )
     
@@ -120,6 +123,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                          , prescale = self.prescale 
                          , algos = [ Muons, Hlt2SelSingleHighPTMuon]
                          , postscale = self.postscale
+                         , PV = False
                          )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2SingleHighPTMuonDecision" : 50440 } )
         
@@ -140,6 +144,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combine]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackDecision" : 50400 } )
         
@@ -157,6 +162,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combine_mid]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackMidDecision" : 50401 } )
         
@@ -175,6 +181,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combine_low]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowDecision" : 50402 } )
         
@@ -194,6 +201,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combineLM]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassDecision" : 50403 } )
         
@@ -212,6 +220,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combineLM_mid]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassMidDecision" : 50404 } )
         
@@ -230,6 +239,7 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [Muons, NoCutsPions, combineLM_low]
                         , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrackLowMassLowDecision" : 50405 } )
         
@@ -251,7 +261,6 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
                         , HLT = Hlt1UnbDiMu
                         , algos = [Muons, NoCutsPions, combine_4jpsi]
                         , postscale = self.postscale
+                        , PV = False
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncMuTrack4JpsiDecision" : 50406 } )
-            
-            

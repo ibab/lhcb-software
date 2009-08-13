@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.6 2009-08-13 11:56:25 graven Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.7 2009-08-13 20:53:17 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -90,17 +90,18 @@ class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
+                        , PV = False
                         )
 
         # Now do the detached 
         # Note: we should _share_ the J/psi and phi between these two lines!!
         BsCutsDetached = BsCuts + "& (BPVLTIME()>" + str(self.getProp('BsLifetimeCut')) + "*ps)"
-        from HltLine.HltReco import PV3D
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
-                   , algos = PV3D.members() + [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
+                   , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCutsDetached}
+                   , PV = True
                    )
 
 #####################################################################################
@@ -150,6 +151,7 @@ class Hlt2Bs2JpsiPhiLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, PhiCombine, BsCombine]
+                        , PV = False
                         )
 
         # Now do the Signal selection
@@ -208,6 +210,7 @@ class Hlt2Bd2JpsiKstarLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, NoCutsPions, KstarCombine, BdCombine]
+                        , PV = False
                         )
 
         # Now do the Signal selection
@@ -258,6 +261,7 @@ class Hlt2Bu2JpsiKLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, BuCombine]
+                        , PV = False
                         )
 
         # Now do the Signal selection

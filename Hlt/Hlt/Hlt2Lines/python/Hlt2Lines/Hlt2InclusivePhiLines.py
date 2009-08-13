@@ -73,12 +73,12 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi selection, robust cuts
         ############################################################################
         
-        kaonPtCut = "(PT>"+str(self.getProp('KaonPT'))+"*MeV)"
-        kaonIpCut = "(MIPDV(PRIMARY)>"+str(self.getProp('KaonIP'))+")"
-        phiMassCut = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWin'))+"*MeV)"
-        phiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('PhiMassWin'))+"*MeV)"
-        phiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<"+str(self.getProp('PhiDOCA'))+")"
-        phiPtCut = "(PT>"+str(self.getProp('PhiPT'))+"*MeV)"
+        kaonPtCut = "(PT>%(KaonPT)s*MeV)" % self.getProps()
+        kaonIpCut = "(MIPDV(PRIMARY)>%(KaonIP)s)"%self.getProps()
+        phiMassCut = "(ADAMASS('phi(1020)')<%(PhiMassWin)s*MeV)"%self.getProps()+""
+        phiMassCutSB = "(ADAMASS('phi(1020)')<%(PhiMassWinSB)s*MeV)"%self.getProps()
+        phiDocaCut = "(AMINDOCA('LoKi::TrgDistanceCalculator')<%(PhiDOCA)s)"%self.getProps()
+        phiPtCut = "(PT>%(PhiPT)s*MeV)"%self.getProps()
         Hlt2InclusivePhi = Hlt2Member( CombineParticles
                                        , "Combine"
                                        , DecayDescriptors = decayDesc
@@ -101,12 +101,12 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi selection, Track fitted
         ############################################################################
         
-        TfKaonPtCut = "(PT>"+str(self.getProp('TFKaonPT'))+"*MeV)"
-        TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>"+str(self.getProp('TFKaonIPS'))+")"
-        TfPhiMassCut = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWin'))+"*MeV)"
-        TfPhiMassCutSB = "(ADAMASS('phi(1020)')<"+str(self.getProp('TFPhiMassWin'))+"*MeV)"
-        TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('TFPhiVCHI2'))+")"
-        TfPhiPtCut = "(PT>"+str(self.getProp('TFPhiPT'))+"*MeV)"
+        TfKaonPtCut = "(PT>%(TFKaonPT)s*MeV)"%self.getProps()
+        TfKaonIpsCut = "(MIPCHI2DV(PRIMARY)>%(TFKaonIPS)s)"%self.getProps()
+        TfPhiMassCut = "(ADAMASS('phi(1020)')<%(TFPhiMassWin)s*MeV)"%self.getProps()
+        TfPhiMassCutSB = "(ADAMASS('phi(1020)')<%(TFPhiMassWinSB)s*MeV)"%self.getProps()
+        TfPhiVchi2Cut = "(VFASPF(VCHI2/VDOF)<%(TFPhiVCHI2)s)"%self.getProps()
+        TfPhiPtCut = "(PT>%(TFPhiPT)s*MeV)"%self.getProps()
         Hlt2InclusivePhiTF = Hlt2Member( CombineParticles
                                          , "TFCombine"
                                          , DecayDescriptors = decayDesc
@@ -163,6 +163,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                       GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
                                       Hlt2InclusivePhiRich]
                           , postscale = self.postscale
+                          , PV = True
                           )
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
 
@@ -177,6 +178,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                           , algos = [ GoodKaons, 
                                       Hlt2InclusivePhi]
                           , postscale = self.postscale
+                          , PV = True
                           )
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : self.getProp('HltANNSvcID')['IncPhiRobust'] } )
 
@@ -193,6 +195,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                       GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                       Hlt2InclusivePhiTF]
                           , postscale = self.postscale
+                          , PV = True
                           )
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
 
@@ -211,6 +214,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                       GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
                                       Hlt2InclusivePhiRichSB]
                           , postscale = self.postscale
+                          , PV = True
                           )
           HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
           

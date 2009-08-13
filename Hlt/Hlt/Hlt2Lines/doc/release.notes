@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.47 2009-08-13 11:56:25 graven Exp $
+$Id: release.notes,v 1.48 2009-08-13 20:53:17 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -7,6 +7,7 @@ $Id: release.notes,v 1.47 2009-08-13 11:56:25 graven Exp $
 
 ! 2009-08-13 Gerhard Raven
  - add PV3D (needs new HltLine!) to detached J/psi phi line
+ - add PV = True/False to all Hlt2Line c'tor calls
 
 ! 2009-08-11 Gerhard Raven
  - add Hlt2 commissioning lines which cause Hlt2 to accept certain Hlt1 lines, 

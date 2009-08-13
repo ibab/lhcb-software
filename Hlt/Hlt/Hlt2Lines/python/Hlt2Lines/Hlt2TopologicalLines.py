@@ -197,6 +197,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                      , prescale = self.prescale
                      , postscale = self.postscale
                      , algos = algos
+                     , PV=True
                     )
                 self.updateHltANNSvc(lineName)
 

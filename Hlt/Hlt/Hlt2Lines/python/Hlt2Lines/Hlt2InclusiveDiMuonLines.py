@@ -83,10 +83,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
         filter = Hlt2Member(   FilterDesktop 
                                , "Filter"
-                               , Code = "(MM>"+str(self.getProp('UnbiasedDiMuonMinMass'))+"*MeV) "
-                               +"& (PT>"+str(self.getProp('UnbiasedDiMuonPt'))+"*MeV) "
-                               +"& (MINTREE('mu-'==ABSID,PT)>"+str(self.getProp('UnbiasedDiMuonMuPt'))+"*MeV) "
-                               +"& (VFASPF(VCHI2/VDOF)<"+str(self.getProp('UnbiasedDiMuonVertexChi2'))+")"
+                               , Code = "(MM>%(UnbiasedDiMuonMinMass)d*MeV) & (PT>%(UnbiasedDiMuonPt)d*MeV) & (MINTREE('mu-'==ABSID,PT)>%(UnbiasedDiMuonMuPt)d*MeV) & (VFASPF(VCHI2/VDOF)<%(UnbiasedDiMuonVertexChi2)d)" %  self.getProps() 
                                , InputLocations  = [ DiMuon ]
                                )
         
@@ -98,6 +95,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [ DiMuon, filter ]
                         , postscale = self.postscale
+                        , PV = False
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
             
@@ -182,19 +180,19 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
            cut definitions for biased DiMuon Lines
         '''
-        MuPtCut = "( MAXTREE(ABSID=='mu+',PT)>"+str(self.getProp('BiasedSingleMuonPt'))+"*MeV)"
-        MassCut = "(MM>"+str(self.getProp('BiasedMass'))+"*MeV)"
-        MassLCut = "(MM>"+str(self.getProp('BiasedLMass'))+"*MeV)"
-        MassTCut = "(MM>"+str(self.getProp('BiasedTMass'))+"*MeV)"
-        MuIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonIP'))+"*mm)))"
-        MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>"+str(self.getProp('BiasedSingleMuonTIP'))+"*mm)))"
-        LTimeCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTime'))+"*ps)"
-        LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>"+str(self.getProp('BiasedLTimeT'))+"*ps)"
-        IPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPChi2'))+")"
-        TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>"+str(self.getProp('BiasedSingleIPTChi2'))+")"
-        VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<"+str(self.getProp('BiasedVertexChi2'))+")"
-        PVDistChi2Cut = "(BPVVDCHI2>"+str(self.getProp('BiasedPVDistanceChi2'))+")"
-        PVDistTChi2Cut = "(BPVVDCHI2>"+str(self.getProp('BiasedPVDistanceTChi2'))+")"
+        MuPtCut = "( MAXTREE(ABSID=='mu+',PT)>%(BiasedSingleMuonPt)s*MeV)" % self.getProps()
+        MassCut = "(MM>%(BiasedMass)s*MeV)" % self.getProps()
+        MassLCut = "(MM>%(BiasedLMass)s*MeV)" % self.getProps()
+        MassTCut = "(MM>%(BiasedTMass)s*MeV)" % self.getProps()
+        MuIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonIP)s*mm)))" % self.getProps()
+        MuTIPCut = "(2==NINTREE((ABSID=='mu+') & (MIPDV(PRIMARY)>%(BiasedSingleMuonTIP)s*mm)))" % self.getProps()
+        LTimeCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTime)s*ps)" % self.getProps()
+        LTimeTCut = "(BPVLTIME('PropertimeFitter/properTime:PUBLIC')>%(BiasedLTimeT)s*ps)" % self.getProps()
+        IPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPChi2)s)" % self.getProps()
+        TIPChi2Cut = "( MAXTREE(ABSID=='mu+',MIPCHI2DV(PRIMARY))>%(BiasedSingleIPTChi2)s)" % self.getProps()
+        VertexChi2Cut = "(VFASPF(VCHI2/VDOF)<%(BiasedVertexChi2)s)" % self.getProps()
+        PVDistChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceChi2)s)" % self.getProps()
+        PVDistTChi2Cut = "(BPVVDCHI2>%(BiasedPVDistanceTChi2)s)" % self.getProps()
         '''
            sequence definitions for biased DiMuon Lines
         '''
@@ -216,6 +214,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [ DiMuon, RobustDiMuon ]
                         , postscale = self.postscale
+                        , PV = True
                         )
 
         #--------------------------------------------
@@ -226,6 +225,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [ DiMuon, RobustDiMuon, RefinedDiMuon ]
                         , postscale = self.postscale
+                        , PV = True
                         )
 
         #--------------------------------------------

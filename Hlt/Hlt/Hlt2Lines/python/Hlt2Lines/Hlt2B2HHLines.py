@@ -31,15 +31,15 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
                                , DecayDescriptor = "B0 -> pi+ pi-"
                                , CombinationCut = "((AM> %(BMassWinLow)s *MeV) & (AM< %(BMassWinHigh)s *MeV) & (AMAXDOCA('LoKi::TrgDistanceCalculator')< %(doca)s ))" % self.getProps()
                                , DaughtersCuts = { "pi+" : "(PT> %(PionPTmin)s *MeV) & (MIPDV(PRIMARY)> %(PionIPmin)s )" % self.getProps() }
-                               # , DaughtersCuts = { "pi+" : "(PT> 700 *MeV) & (MIPDV(PRIMARY)>0.08 )" }
                                , MotherCut = "(BPVIP()< %(BIP)s ) & (BPVVDSIGN> %(BSignDistFlight)s ) & (INTREE ( (ABSID=='pi+') & (PT> %(PionPTmax)s *MeV))) & ( INTREE(( ABSID=='pi+') & (MIPDV(PRIMARY)> %(PionIPmax)s )))" % self.getProps()
                                , InputLocations = [GoodPions])
-###########################################################################
+        ###########################################################################
         # Define the Hlt2 Line
         #
         line = Hlt2Line('B2HH'
-                        , prescale = 1
-                        ,  algos = [ GoodPions, Hlt2B2HH ]
-                        ,postscale = 1
+                        , prescale = self.prescale
+                        , algos = [ GoodPions, Hlt2B2HH ]
+                        , postscale = self.postscale
+                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHDecision" : 50080 } )

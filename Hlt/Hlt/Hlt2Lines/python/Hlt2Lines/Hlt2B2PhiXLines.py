@@ -1,4 +1,4 @@
-# $Id: Hlt2B2PhiXLines.py,v 1.2 2009-07-30 09:11:30 pkoppenb Exp $
+# $Id: Hlt2B2PhiXLines.py,v 1.3 2009-08-13 20:53:17 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -33,8 +33,8 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
                                  , "PhiCombine"
                                  , DecayDescriptor = "phi(1020) -> K+ K-"
                                  , InputLocations = [NoCutsKaons] #[Hlt2GoodKaons]
-                                 , DaughtersCuts = { "K+" : "(PT>"+ str(self.getProp('KaonPtCut')) +")" }
-                                 , CombinationCut = "(ADAMASS('phi(1020)')<"+ str(self.getProp('PhiMassWindow')) +"*MeV)"
+                                 , DaughtersCuts = { "K+" : "(PT>%(KaonPtCut)s)"% self.getProps() }
+                                 , CombinationCut = "(ADAMASS('phi(1020)')<%(PhiMassWindow)s*MeV)"% self.getProps()
                                  , MotherCut = "(ALL)" #"(M<1100*MeV) & (PT>500*MeV)"
                                  )
 								 
@@ -43,12 +43,13 @@ class Hlt2B2PhiXLinesConf(HltLinesConfigurableUser) :
                                  , "BsCombine"
                                  , DecayDescriptor = "B_s0 ->  phi(1020) phi(1020)"
                                  , InputLocations  = [phiCombine]
-                                 , CombinationCut = "(ADAMASS('B_s0')<"+ str(self.getProp('BsMassWindow')) +"*MeV) & (ACHILD(PT,1)*ACHILD(PT,2)>"+ str(self.getProp('BsDaughtersPtProductCut')) +")"
-                                 , MotherCut = "(BPVDIRA>"+ str(self.getProp('BsDIRACut')) +") & (VFASPF(VCHI2)<"+ str(self.getProp('BsVertexChi2Cut')) +")"
+                                 , CombinationCut = "(ADAMASS('B_s0')<%(BsMassWindow)s*MeV) & (ACHILD(PT,1)*ACHILD(PT,2)>%(BsDaughtersPtProductCut)s) "% self.getProps()
+                                 , MotherCut = "(BPVDIRA>%(BsDIRACut)s) & (VFASPF(VCHI2)<%(BsVertexChi2Cut)s)"%self.getProps()
                                  )
        
         line = Hlt2Line('Bs2PhiPhi'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [NoCutsKaons, phiCombine, BsCombine]
+                        , PV = True
                         )
