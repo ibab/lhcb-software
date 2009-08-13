@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.53 2009-07-27 12:31:32 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.54 2009-08-13 10:35:14 ibelyaev Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -98,7 +98,7 @@ DVAlgorithm::DVAlgorithm
   declareProperty ( "ParticleFilters"   , m_filterNames, "Names of ParticleFilters"   ) ;
   // 
   declareProperty ( "ReFitPVs"    , m_refitPVs, "Refit PV"     ) ; 
-  m_particleCombinerNames [ ""              ] = "OfflineVertexFitter" ;
+
   m_particleCombinerNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_particleCombinerNames [ "Trigger"       ] = "TrgVertexFitter"     ;
   m_particleCombinerNames [ "Kalman"        ] = "LoKi::VertexFitter"  ;
@@ -109,7 +109,10 @@ DVAlgorithm::DVAlgorithm
   m_particleCombinerNames [ "Combiner"      ] = "MomentumCombiner"    ;
   m_particleCombinerNames [ "Momenta"       ] = "MomentumCombiner"    ;
   m_particleCombinerNames [ "Jet"           ] = "MomentumCombiner"    ;
-  declareProperty ( "ParticleCombiners"  , m_particleCombinerNames, "Names of particle combiners" ) ;
+  declareProperty
+    ( "ParticleCombiners"     , 
+      m_particleCombinerNames , 
+      "Names of particle combiners, the basic tools for creation of composed particles" ) ;
   //
   m_particleReFitterNames [ ""              ] = "OfflineVertexFitter"   ;
   m_particleReFitterNames [ "Offline"       ] = "OfflineVertexFitter"   ;
@@ -229,6 +232,13 @@ StatusCode DVAlgorithm::loadTools()
   
   // vertex fitter
   IOnOffline* onof = NULL;
+  
+  if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
+  {
+    if ( 0==onof) { onof = tool<IOnOffline>( "OnOfflineTool" , this ) ; }
+    m_particleCombinerNames[""] = onof->particleCombinerType() ;
+  }
+  
   if ( m_vertexFitNames.end() == m_vertexFitNames.find("") )
   {
     if ( 0==onof) onof = tool<IOnOffline>("OnOfflineTool",this);

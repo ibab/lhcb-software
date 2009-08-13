@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.315 2009-08-06 11:59:03 jpalac Exp $
+!$Id: release.notes,v 1.316 2009-08-13 10:35:14 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2009-08-13 - Vanya BELYAEV
+
+ - remove the default value of DVAlgorithm.ParticleCombiners
+
+    now the default value (if not specified explicitly) 
+    is picked up from IOnOffLineTool 
+     
 ! 2009-08-06 - Juan PALACIOS
  - Kernel/Particle2VertexAsct.h
   . Removed. Obsolete and not used anywhere.
