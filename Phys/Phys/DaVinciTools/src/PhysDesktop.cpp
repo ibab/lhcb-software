@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.69 2009-08-12 15:16:06 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.70 2009-08-13 09:03:48 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -285,12 +285,8 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
      return keptP;
   }
   // Create new particle on the heap
-  LHCb::Particle* newP = new LHCb::Particle();
+  LHCb::Particle* newP = new LHCb::Particle(*keptP);
 
-  // Input LHCb::Particle from stack is given as input to fill newly created particle
-  // Copy contents to newly created particle
-  LHCb::Particle& newPcont = *newP;
-  newPcont = *keptP;
   // Check if link to endProducts exist and set it
   if( 0 != keptP->endVertex() ) {
     const LHCb::Vertex* newV = keep( keptP->endVertex() );
@@ -338,13 +334,9 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
   
 
   // Create new vertex on the heap
-  LHCb::Vertex* newV = new LHCb::Vertex();
+  LHCb::Vertex* newV = new LHCb::Vertex(*keptV);
   if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
 
-  // Input vertex from stack is given as input to fill new created vertex
-  // Copy contents to newly created vertex
-  LHCb::Vertex& newVcont = *newV;
-  newVcont = *keptV;
   newV->clearOutgoingParticles();
   // Check if link to endProducts exist and set it
   SmartRefVector<LHCb::Particle> outP = keptV->outgoingParticles();
