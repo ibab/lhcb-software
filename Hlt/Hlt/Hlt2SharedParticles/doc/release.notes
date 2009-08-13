@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.41 2009-08-11 10:27:51 jnardull Exp $
+$Id: release.notes,v 1.42 2009-08-13 17:54:36 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-13 - Patrick Koppenburg
+ - CaloReco.py : make it even more configurable
 
 ! 2009-08-11 - Jacopo Nardulli & Patrick Spradlin
   - We removed DXTF2BodyKs.py & DXTF3BodyKs.py. They are obsolete.
