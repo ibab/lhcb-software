@@ -1,8 +1,40 @@
-! $Id: release.notes,v 1.454 2009-08-13 09:04:54 jpalac Exp $
+! $Id: release.notes,v 1.455 2009-08-13 10:48:16 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-13 - Vanya BELYAEV
+
+ - CombineParticles.cpp
+
+   make use of IParticleCombiner instead IVertexFit for creation 
+   of composed particles.
+
+   the type of default IParticleCombiner tool ( if not specified through 
+   XXXX.ParticleCombiners proeprty explicitly) is picked up by base class 
+   DVAlgorithm from IOnOffline tool.
+  
+   Therefore for usage of "non-standard" particle creators 
+   ( e.g. "ParticleAdder" or "MomentumCombiner") one needs to specify these 
+   "non-standard" creators through "ParticleCombiners" property instead of
+    "VertexFitters". 
+
+    XXX.ParticleCombiners += { "" : "MomentumCombiner" }
+
+      or 
+
+    XXX.ParticleCombiners += { "" : "ParticleAdder" }
+
+
+   Correspondingly of OnOffline tool:
+
+       XXX.OnOffLine.OffLinePartricleCombiner = ...
+       XXX.OnOffLine.OnLinePartricleCombiner  = ...
+
+   The fault configurtaion is suitabel for paractially all cases
+
+ 
 
 ! 2009-08-13 - Juan PALACIOS
  - src/PhysDesktop.cpp
@@ -10,8 +42,8 @@
 
 ! 2009-08-12 - Juan PALACIOS
  - src/PhysDesktop.cpp
-  . Replace calls to Particle2Vertex::LightTable::i_push() and 
-    Particle2Vertex::LightTable::i_sort() by 
+  . Replace calls to Particle2Vertex::LightTable::i_push() and
+    Particle2Vertex::LightTable::i_sort() by
     Particle2Vertex::LightTable::i_relate()
  - cmt/requirements
   . Increase version to v19r1p1
@@ -20,31 +52,31 @@
 
 ! 2009-08-05 - Juan PALACIOS
  - src/PhysDesktop.cpp
-  . setP2PVInputLocations: Be more gentle about empty input locations being 
+  . setP2PVInputLocations: Be more gentle about empty input locations being
     set. Issue ONE warning, return StatusCode::SUCCESS.
 
 ! 2009-08-03 - Juan PALACIOS
  - Removed RelatedPV tool
 
 ! 2009-08-04 - Greig Cowan
- - Added new helper function to P2VAnglesFun.cpp which is used in all angle 
+ - Added new helper function to P2VAnglesFun.cpp which is used in all angle
    calculation functions.
  - Bug fix in Bs2JpsiPhiAngleCalculator.cpp where arguments were in wrong
    order for thetal.
 
 ! 2009-08-03 - Juan PALACIOS
  - Modifications to allow compilation against LHCb v27r5:
- - Copy Kernel/DaFinciFun.cpp DaVinci:P2VVAngles functions to 
+ - Copy Kernel/DaFinciFun.cpp DaVinci:P2VVAngles functions to
    src/P2VVAnglesFun.h
  - src/Bs2JpsiPhiAngleCalculator.cpp
   . Use functions from src/P2VVAnglesFun.cpp
 
 ! 2009-08-02 - Greig Cowan
- - Modified Bs2JpsiPhiAngleCalculator.cpp to use the functions in the new 
-   P2VVAngles namespace. 
+ - Modified Bs2JpsiPhiAngleCalculator.cpp to use the functions in the new
+   P2VVAngles namespace.
 
 ! 2009-07-27 - Juan PALACIOS
- - PhysDesktop: Add implementation for 
+ - PhysDesktop: Add implementation for
    virtual StatusCode  setP2PVInputLocations( const std::vector<std::string>& )
    method
  - cmt/requirements
@@ -61,7 +93,7 @@
 
 ! 2009-07-20 - Juan PALACIOS
  - src/CombineParticles.cpp
-  . Fix doxygen: <code> and </code> -> @code and @endcode 
+  . Fix doxygen: <code> and </code> -> @code and @endcode
 ! 2009-07-15 - Gerhard Raven
  - update warning text in case of stopped combinatorics
 
@@ -75,7 +107,7 @@
 
 
 ! 2009-07-06 - Patrick Koppenburg
- - PhysDesktop : Remove PhysDesktop.InputLocations property. Please 
+ - PhysDesktop : Remove PhysDesktop.InputLocations property. Please
    access this via DVAlgorithm.
  - Increment to v19r0
 
@@ -92,7 +124,7 @@
  - src/CombineParticles.cpp
 
   some tricks to treat very busy events
- 
+
   The default behaviour is THE SAME...
 
   One have two handles  (each of them "per decay" basis)
@@ -100,23 +132,23 @@
     - the quick estimate of the overall (maxima) number of combinations (per decay channel) BEFORE loop
     - the number of SAVED/good candidates (per decay channel)
 
-  The thresholds are set through the properties: 
+  The thresholds are set through the properties:
 
      "MaxCombinations" and "MaxCandidates",  the value 0 (the default) means "no cut".
 
-  The action is under the control of boolean properties: 
+  The action is under the control of boolean properties:
 
      "StopAtMaxCombinations" and "StopAtMaxCandidates"   (the default is "false")
 
-  If the corresponding threshold is set and the property is activated, the futher procession 
+  If the corresponding threshold is set and the property is activated, the futher procession
     for the given decay channel breaks.   (go to next channel)
 
-  If this "stop/break" condition occurs *and* if the property "StopIncidentType" is not 
+  If this "stop/break" condition occurs *and* if the property "StopIncidentType" is not
   empty the incident is fired at the end of execution.
 
  - cmt/requirements
-   
-    version increment to v18r6 
+
+    version increment to v18r6
 
 
 !========================== DaVinciTools v18r5p1 2009-06-02 =================
@@ -155,7 +187,7 @@
 !========================== DaVinciTools v18r4p1 2009-05-16 =================
 
 ! 2009-05-16 - Gerhard Raven
- - PhysDesktop : if InputLocations set equivalently in both in PhysDesktop and 
+ - PhysDesktop : if InputLocations set equivalently in both in PhysDesktop and
    DVAlgorithm do NOT return an error...
 
 !========================== DaVinciTools v18r4 2009-05-08 ===================
@@ -170,7 +202,7 @@
 
  - src/CombineParticles.cpp
 
-    hopefully the final fix for the #bug 45964 
+    hopefully the final fix for the #bug 45964
 
 ! 2009-04-25 - Patrick Spradlin
  - src/CombineParticles.cpp
@@ -202,7 +234,7 @@
  - cmt/requirements
   . Increase version to v18r3
  - src/PhysDesktop.h
-  . inTES, findTo and clearLocalContainer methods moved to Kernel/DaVinciFun.h 
+  . inTES, findTo and clearLocalContainer methods moved to Kernel/DaVinciFun.h
     under Davinci namespace
  - src/PhysDesktop.cpp
   . Use DaVinci::inTES and DaVinci::safeContainerClear
@@ -230,7 +262,7 @@
 
 ! 2009-02-23 - Juan PALACIOS
  - src/PhysDesktop.h
-  . Add inline method to get related vertex from local relations table, 
+  . Add inline method to get related vertex from local relations table,
     return null if none there.
  - src/PhysDesktop.cpp
   . saveParticles calls inline method described above, instead of calling
@@ -249,7 +281,7 @@
   . Fix clearLocalContainer. It was taking container to be cleared by value!
  - src/PhysDesktop.cpp
   . Add safety for case where P->PV relations table is empty. Add some debug.
- 
+
 ! 2009-02-13 - Juan PALACIOS
  - src/PhysDesktop.h
   . add some debug to clearLocalContainer.
@@ -263,24 +295,24 @@
   . relatedVertex now const method.
   . Add templated method clearLocalContainer and use where applicable
   . Make withspread use of templates inTES method
-  . Only save to the TES re-fitted PVs that are related to particles also 
+  . Only save to the TES re-fitted PVs that are related to particles also
     being saved to the TES
-  . IMPORTANT: relatedVertex no longer triggers calculation of related PV 
-    on demand! It only takes it from relaitons table. To create new P->PV 
+  . IMPORTANT: relatedVertex no longer triggers calculation of related PV
+    on demand! It only takes it from relaitons table. To create new P->PV
     relations, use DVAlgorithm::calculateRelatedPV or DVAlgorithm::getRelatedPV
-    
+
 ! 2009-02-06 - Juan PALACIOS
  - PhysDesktop
   . Add methods
-   virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const; 
+   virtual const Particle2Vertex::LightTable& Particle2VertexRelations() const;
    virtual Particle2Vertex::LightTable& Particle2VertexRelations();
- 
+
    void saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const;
 
     Change storeRelaitonsInTable for overWriteRelations
 
 ! 2009-02-04 - Patrick Koppenburg
- - src/CheckPV : add Print option. 
+ - src/CheckPV : add Print option.
 
 ! 2009-02-04 - Juan PALACIOS
  - src/PhysDesktop.h
@@ -314,7 +346,7 @@
  - remove all .opts files.
 
 ! 2008-12-11 - Marco Cattaneo
- - Adapt to IOnOfflineTool interface change (fix gcc 4.3 warning) 
+ - Adapt to IOnOfflineTool interface change (fix gcc 4.3 warning)
 
 ! 2008-12-09 - Patrick Koppenburg
  - Move SpotLight to DaVinciMonitors
@@ -323,24 +355,24 @@
  - Move SimplePlots to DaVinciMonitors
 
 ! 2008-12-05 - Vanya BELYAEV
- - make adaptation to new Particle Property Service 
+ - make adaptation to new Particle Property Service
  - cmt/requirements
-   version increment to v18r1 
+   version increment to v18r1
 
 !========================== DaVinciTools v18r0 2008-11-26 ===================
 
 ! 2008-11-24 - Juan PALACIOS
  - src/OnlineP2PVWithIP.cpp
   . Fix typo in typedef: OnlineP2PVWithIPChi2 -> OnlineP2PVWithIP
- - cmt/requirements 
+ - cmt/requirements
   . Add python directory to branches.
   . apply_pattern install_python_modules
  - Add python/DaVinciTools/Conf.py
   . Contains short names (C++ typedefs) for GenericParticle2PVRelator specialisations configurables P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, OnlineP2PVWithIP
  - Add python/DaVinciTools/Tools.py
-  . Short names for tool typename strings needed to retrieve instances of 
+  . Short names for tool typename strings needed to retrieve instances of
     P2PVWithIP, P2PVWithIP, OnlineP2PVWithIP, and OnlineP2PVWithIP from
-    python AppMge().toolsvc(). 
+    python AppMge().toolsvc().
 
 ! 2008-11-12 - Patrick Koppenburg
  - CheckSelResultTool : fix compilation warning
@@ -374,12 +406,12 @@
 
 ! 2008-10-31 - Juan PALACIOS
  - src/PhysDesktop{.h, .cpp}
-  . Add method 
+  . Add method
     void fixInputLocations(std::vector<std::string>::iterator begin,
                            std::vector<std::string>::iterator end);
    which adds a leading "Phys" or "Hlt" to input locations that don't
    contain any "/":
-   * "MyBsSelection" becomes "Phys/MyBsSelection" if m_OnOffline->online() ==false and 
+   * "MyBsSelection" becomes "Phys/MyBsSelection" if m_OnOffline->online() ==false and
    * "MyBsSelection" becomes "Hlt/MyBsSelection" if m_OnOffline->online() == true.
    * "Phys/MyBsSelection" remains unchanged.
    * "Anything/MyBsSelection" remains unchanged.
@@ -405,7 +437,7 @@
 ! 2008-10-30 - Juan PALACIOS
  - PhysDesktop class
   . Add property P2PVInputLocations, vector of strings with TES locations of
-    Particle* -> VertexBase* relations. The PhysDesktop now can take 
+    Particle* -> VertexBase* relations. The PhysDesktop now can take
     user-defined P->PV relations tables. These over-write relations loaded
     from the default location InputLocations + "/Particle2Vertices".
   . When dealing with Particles and PVs, users should now use the relations
@@ -413,7 +445,7 @@
 
  - src/PhysDesktop{.h, .cpp}
   . rename getRelations() to getInputRelations()
-  . Add private methods 
+  . Add private methods
 
     StatusCode getInputRelations(std::vector<std::string>::const_iterator begin,
                                  std::vector<std::string>::const_iterator end)
@@ -456,7 +488,7 @@
   . Adapt to change above.
  - src/PhysDesktop{.h, .cpp}
   . Adapt to IPhysDesktop change: remove Particle2Vertex::Table Table() method.
-    The state of the table is  not well defined until it is stored on the TES. 
+    The state of the table is  not well defined until it is stored on the TES.
     So better to use other methods to access the relations.
 
 
@@ -464,8 +496,8 @@
 
  - Remove RelatedPVFinder
 
- - Add new Particle -> PV association code. Add compile-time 
-   configured implementations of IRelatedPVFinder, with no run-time 
+ - Add new Particle -> PV association code. Add compile-time
+   configured implementations of IRelatedPVFinder, with no run-time
    configuration allowed. They are specialisations
    of the new GenericParticle2PVRelator template class. The template parameters
    control the "bestness logic" in calculating the best PVs for a given
@@ -474,13 +506,13 @@
 
  - New IRelatedPVFinder implementations.
   . src/P2PVWithIP.cpp
-    Uses LoKi::DistanceCalculator to get the best vertices based on impact 
+    Uses LoKi::DistanceCalculator to get the best vertices based on impact
     paramerer.
   . src/P2PVWithIPChi2.cpp
-    Uses LoKi::DistanceCalculator to get the best vertices based on impact 
+    Uses LoKi::DistanceCalculator to get the best vertices based on impact
     paramerer chi2.
   . src/OnlineP2PVWithIPChi2.cpp
-    Uses LoKi::TrgDistanceCalculator to get the best vertices based on impact 
+    Uses LoKi::TrgDistanceCalculator to get the best vertices based on impact
     paramerer chi2.
  - "Bestness" logic:
   . src/P2PVLogic.h
@@ -490,7 +522,7 @@
                          const IDistanceCalculator*)
  - IDistanceCalculator implementation control
   . src/DistanceCalculatorNames.h
-    Structs holding strings with the names of IDistanceCalculator 
+    Structs holding strings with the names of IDistanceCalculator
     implementation class names.
  - IRelatedPVFinder implementation template
    src/GenericParticle2PVRelator.h
@@ -507,12 +539,12 @@
 ! 2008-10-14 - Juan PALACIOS
 
  - src/PhysDesktop{.cpp, .h}
-  . Add helper private method 
+  . Add helper private method
       void storeRelationsInTable(const LHCb::Particle* part);
   . Use new IRelatedPVFinder
 
  - src/RelatedPVFinder{.cpp, .h}
-  . Adapt to change in Kernel/IRelatedPVFinder.h: 
+  . Adapt to change in Kernel/IRelatedPVFinder.h:
     Now return Particle2Vertex::Relations instead of Particle2Vertex::Range
 
 ! 2008-10-13 - Patrick Koppenburg
@@ -524,43 +556,43 @@
 
 ! 2008-10-08 - Juan PALACIOS
  - src/PhysDesktop.h
-  . Add virtual keyword to methods inherited from IPhysDesktop 
+  . Add virtual keyword to methods inherited from IPhysDesktop
  - src/PhysDesktop.cpp
   . Remove typo.
 
 ! 2008-10-01 - Vanya BELYAEV
 
- - src/FilterDesktop.cpp,  
+ - src/FilterDesktop.cpp,
    src/CombineParticles.cpp
 
    few coherent changes
 
-   1) add the new property "Preambulo", which is a the list of 
+   1) add the new property "Preambulo", which is a the list of
    python strings to be inserted into the effective Python/Bender script
    just before the actual creation of LoKi-functors.
- 
-   2) the major "structural" properties 
-      ( "DecayDescriptor", "DecayDescriptors", 
-        "Factory", "Preambulo", "DaughtersCuts", 
-        "CombinationCut" and "MotherCuts") for CombineParticles and 
+
+   2) the major "structural" properties
+      ( "DecayDescriptor", "DecayDescriptors",
+        "Factory", "Preambulo", "DaughtersCuts",
+        "CombinationCut" and "MotherCuts") for CombineParticles and
       ( "Factory", "Preambulo" and "Code" ) for FilterDesktop are equipped
       with 'update'-property handlers. From now the "post"-initialization
-      change in the algorithm is propagated properly and it takes effect   at 
-      the next "execute". The corresponding warning message is produced.  
-      (Clearly it is needed only for the interactive work in GaudiPython, 
-       for any batch-like application  it is irrelevant) 
-      
-   3) All "histogram"-related properties are also equipped with similar
-      property handlers, thus one can interactively switch on/off the 
-      histogramming, modify/substitute the plot tools, etc ... 
+      change in the algorithm is propagated properly and it takes effect   at
+      the next "execute". The corresponding warning message is produced.
+      (Clearly it is needed only for the interactive work in GaudiPython,
+       for any batch-like application  it is irrelevant)
 
-   4) Make more coherent treatment of the names for plot tool, 
-      empty name or any name which after conversion to lowercase is equal to 
+   3) All "histogram"-related properties are also equipped with similar
+      property handlers, thus one can interactively switch on/off the
+      histogramming, modify/substitute the plot tools, etc ...
+
+   4) Make more coherent treatment of the names for plot tool,
+      empty name or any name which after conversion to lowercase is equal to
       "none" is interpreted as "no-corresponding-tool-to-be-used".
 
  - src/FilterDesktop.h
 
-     remove the file 
+     remove the file
 
 
 ! 2008-10-01 - Juan PALACIOS
@@ -579,7 +611,7 @@
     It no longer holds any tools of its own.
 
  - src/RelatedPVFinder{.h, .cpp}
-  . Conform to new IRelatedPVDinfer interface. Now contains 
+  . Conform to new IRelatedPVDinfer interface. Now contains
     three simple methods taking a particle, some primary vertices, and a
     pointer to an IDistanceCalculator, and return a range of weighted
     Particle->RecVertex relations. The parent algorithm or tool is now
@@ -589,7 +621,7 @@
   . Desktop now uses new IOnOfflineTool and it's own IRelatedPVFinder.
     Defaults for IRelatedPVFinder and IDistanceCalculator are now "".
     In this case, IOnOfflineTool is in charge of getting the type name
-    of the implementation of these two. A similar logic applies to the 
+    of the implementation of these two. A similar logic applies to the
     location of primary vertices.
 
  - cmt/requirements
@@ -610,12 +642,12 @@
 ! 2008-09-22 - Vanya BELYAEV
 
  - src/LoKi_FilterDesktop.cpp
-   new algorithm LoKi::FilterDesktop (temporary, to be renamed after 
-   some validation&tests) - LoKi/Bender "Hybrid" implementation of 
+   new algorithm LoKi::FilterDesktop (temporary, to be renamed after
+   some validation&tests) - LoKi/Bender "Hybrid" implementation of
    FilterDesktop concept.
 
  - cmt/requirements
-   version incremen to v17r3 
+   version incremen to v17r3
 
 !========================== DaVinciTools v17r2p1 2008-09-11 =================
 
@@ -631,7 +663,7 @@
   . Add private method returning PV location.
  - src/PhysDesktop.cpp
   . Sort out setting and use of PV location.
-  . De-couple IRelatedPVFinder from IOnOffline. Now the desktop controls it, 
+  . De-couple IRelatedPVFinder from IOnOffline. Now the desktop controls it,
     and the PV location is set to its own PV location. The distance calculator
     is set from the desktop, but to that given by the IOnOffline tool.
 
@@ -640,8 +672,8 @@
  - Moved ParticleFilter from DaVinciFilter.
 
 ! 2008-08-07 - Patrick Koppenburg
- - CombineParticles : Set default value of MotherCut to "Configure me!". This 
-   forces a python error if the cut is not configured. Was "NONE", cutting all 
+ - CombineParticles : Set default value of MotherCut to "Configure me!". This
+   forces a python error if the cut is not configured. Was "NONE", cutting all
    candidates away silently.
  - Increment to v7r1
 
@@ -657,7 +689,7 @@
  - src/CombineParticles.cpp
 
    Add the assertion for valid names od daughter paricles, used an the keys
-   for the map: { "name":"cuts" } 
+   for the map: { "name":"cuts" }
 
 ! 2008-07-17 - Patrick Koppenburg
  - More verbose printout in FilterDesktop
@@ -673,25 +705,25 @@
     for the interactive processing.
 
     ## get the iAlgorithm
-    >>> myalg = gaudi.algorithm('MyCombineParticlesAlgorithm') 
+    >>> myalg = gaudi.algorithm('MyCombineParticlesAlgorithm')
 
-    ## get the underlying interface: e.g. getattr( myalg, '_ialg' ) 
-    >>> iAlg = ... 
+    ## get the underlying interface: e.g. getattr( myalg, '_ialg' )
+    >>> iAlg = ...
 
-    ## get the function 
-    >>> setInput = cpp.DaVinci.Utils.setInput 
+    ## get the function
+    >>> setInput = cpp.DaVinci.Utils.setInput
 
-    ## inside the event loop:     
-    >>> particles = ... # get vector of particles 
+    ## inside the event loop:
+    >>> particles = ... # get vector of particles
 
     ## set input particle for the algorithm
-    >>> sc =  setInput ( iAlg , particles ) 
+    >>> sc =  setInput ( iAlg , particles )
     >>> if sc.isFailure() : ....
 
     ## run the algorithm
-    >>> sc = iAlg.sysExecute() 
-    >>> if sc.isFailure() : ... 
-    
+    >>> sc = iAlg.sysExecute()
+    >>> if sc.isFailure() : ...
+
 
 
 ! 2008-07-10 - Patrick Koppenburg
@@ -730,7 +762,7 @@
  - move (and rename) the temporary file TemporaryGetDecay.cpp into DaVinciKernel package
 
 ! 2008-05-21 - Patrick Koppenburg
- - Temporary file TemporaryGetDecay.cpp that implements a few methods which should 
+ - Temporary file TemporaryGetDecay.cpp that implements a few methods which should
    be moved to DaVinciKernel.
 
 ! 2008-05-20 - Patrick Koppenburg
@@ -758,8 +790,8 @@
 
 CombineParticles.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
 CombineParticles.DaughtersCuts = {
-  'mu-' : "PT>1*GeV" ,    
-  'K-'  : "PT>1*GeV"     
+  'mu-' : "PT>1*GeV" ,
+  'K-'  : "PT>1*GeV"
 };
 CombineParticles.CombinationCut = "ADAMASS('B0')<500*MeV"
 CombineParticles.MotherCut = "PT>1*GeV" ;
@@ -773,7 +805,7 @@ CombineParticles.MotherCut = "PT>1*GeV" ;
  - PhysDesktop: the save(X) method is now called keep(X) to make it clearer.
 
 ! 2008-04-16 - Patrick Koppenburg
- - PhysDesktop: 
+ - PhysDesktop:
    . Completey remove the std::set of Particles in TES. This can be found
      from parent()
    . Rename save() to putOnDesktop(). save is kept for bacward compatibility for
@@ -784,48 +816,48 @@ CombineParticles.MotherCut = "PT>1*GeV" ;
    . Bug fix: daughters of input particles were saved along with mother when
      saveDesktop() was called. Example: a Bs->j/psi phi LoKi_CombineParticles
      would save the Bs, the two mus and and the two K's in the TES.
-     -> the effective change is to add all particles with 0!=P->parent() 
+     -> the effective change is to add all particles with 0!=P->parent()
        to the list of particles already in the TES.
    . rename methods inDesktop and setInDesktop to inTES() and
-     setInTES(). 
+     setInTES().
    . new method printOut that prints out in verbse mode.
 
 ! 2008-04-15 - Juan PALACIOS
  - src/Particle2State{.cpp, .h}
   . Tidy up and add const wherever possible.
 
-! 2008-04-10 - Vanya BELYAEV 
+! 2008-04-10 - Vanya BELYAEV
  - DecodeSimpleDecayString.cpp
-    fix a bug 
+    fix a bug
 
 ! 2008-04-09 - Patrick Koppenburg
  - CombineParticles : initialize filters at initialize, not first event.
  - PhysDesktop : better printout
 
 ! 2008-03-31 - Patrick Koppenburg
- - DecodeSimpleDecayString : Get antiparticle from ParticleProperty, not from 
+ - DecodeSimpleDecayString : Get antiparticle from ParticleProperty, not from
 	 the service
  - Increment to v15r9
 
 ! 2008-03-31 - Vanya BELYAEV
- - make use of new setters for DaVinci::Decay 
+ - make use of new setters for DaVinci::Decay
 
 ! 2008-03-31 - Vanya BELYAEV
  - src/DecodeSimpleDecayString.h,.cpp
-    add few mehtods to deal with DaVinci::Decay 
+    add few mehtods to deal with DaVinci::Decay
 
 ! 2008-03-30 - Vanya BELYAEV
 
  - src/PrintDecayTree.cpp
   new algoruthm (simplified,MC-free version of PrintTree)
- 
+
 
 ! 2008-03-28 - Patrick Koppenburg
  - CombineParticles : Fix uninitialised m_printStats
 Test.DecayDescriptors = { "B0 -> mu+ mu- K+ K-" } ;
 Test.DaughtersCuts = {
-  'mu-' : "PT>1*GeV" ,    
-  'K-'  : "PT>1*GeV"     
+  'mu-' : "PT>1*GeV" ,
+  'K-'  : "PT>1*GeV"
 };
 Test.MotherCut = "PT>1*GeV" ;
 
@@ -856,7 +888,7 @@ Test.MotherCut = "PT>1*GeV" ;
  - New method calcProjectedFlightDistance in GeomDispCalculators
 
 ! 2008-01-17 - Patrick Koppenburg
- - CombineParticles: Declare LoKi::Hybrid::FilterCriterion/FILTERX as 
+ - CombineParticles: Declare LoKi::Hybrid::FilterCriterion/FILTERX as
    default filters for phases X=0,1,2. Remove unnecessary lines in test options.
 
 ! 2008-01-15 - Patrick Koppenburg
@@ -864,7 +896,7 @@ Test.MotherCut = "PT>1*GeV" ;
  - info -> debug in intialize
 
 ! 2008-01-14 - Patrick Koppenburg
- - Remove DVTestMakeResonances as it uses the obsolete version 
+ - Remove DVTestMakeResonances as it uses the obsolete version
    of CombineParticles.
  - Add DVTestCombineParticles.opts
  - PhysDesktop: do not clean at finalize()
@@ -886,7 +918,7 @@ Test.MotherCut = "PT>1*GeV" ;
 ! 2007-11-07 - Juan PALACIOS
 
  - src/DecayFinder.cpp
-  . Remove deletes of particle property and event data services. 
+  . Remove deletes of particle property and event data services.
     These are not owned by the class.
  - cmt/requirements
   . Increase version to v15r6p1
@@ -895,7 +927,7 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2007-10-25 - Juan PALACIOS
  - src/DecayFinder.h
-  . Move ParticlePropertySvc initialisation from constructor 
+  . Move ParticlePropertySvc initialisation from constructor
     to initialize and delete in finalize.
  - cmt/requirements
   . Increase version to v15r6
@@ -908,8 +940,8 @@ Test.MotherCut = "PT>1*GeV" ;
     LoKi::HybridFilterCriterion is now LoKi::Hybrid::FilterCriterion
 
 ! 2007-09-210 Juan PALACIOS
- - Import src/CombineParticles{.h, .cpp} from Hlt/HltSelections. 
-   CombineParticles is a LoKi::Hybrid::FilterCriterion-based 
+ - Import src/CombineParticles{.h, .cpp} from Hlt/HltSelections.
+   CombineParticles is a LoKi::Hybrid::FilterCriterion-based
    re-implementation of MakeResonances.
 
 
@@ -922,13 +954,13 @@ Test.MotherCut = "PT>1*GeV" ;
  - src/GeomDispCalculator{.h, .cpp}, src/TrgDispCalculator{.h, .cpp}
    . Add empry implementaitons for new method
       StatusCode calcSignedFlightDistance( const LHCb::VertexBase& vertex,
-                                           const LHCb::Particle& particle, 
-                                           double& distance, 
+                                           const LHCb::Particle& particle,
+                                           double& distance,
                                            double& distanceError) const
 
 
 ! 2007-09-18 - Patrick Koppenburg for Tom Blake
- - New tool Bd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*. 
+ - New tool Bd2KstarMuMuAngleCalculator that calculates angles in B->mumuK*.
    Assumes there are tow leptons, a K and a pi in the decay chain.
  - New tool P2VVAngleCalculator used internally. Uses 4-vectors.
 
@@ -941,7 +973,7 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2007-08-22 - Patrick Koppenburg
  - src/NeutralCCChangePIDTool.cpp
-   Replace all by particle -> setParticleID( m_Id ); by 
+   Replace all by particle -> setParticleID( m_Id ); by
    particle -> setParticleID( LHCb::ParticleID (m_Id) );
 
 ! 2007-08-22 - Juan PALACIOS
@@ -971,7 +1003,7 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2007-07-12 - Juan Palacios
  - src/GeomDispCalculator.cpp
-   . Fix discrepancy between momenta and covariance matrix used to calculate 
+   . Fix discrepancy between momenta and covariance matrix used to calculate
      error on distance between two particles.
 
 ! 2007-07-11 - Patrick Koppenburg
@@ -995,7 +1027,7 @@ Test.MotherCut = "PT>1*GeV" ;
    . Give some variables meaningful names for clarity.
    . Remove all the MotherToNGammas hacks. Users requiring special treatment
      for X -> N*gamma should set ParticleAdder as vertex fitter from options.
- 
+
 
 !========================== DaVinciTools v15r4p1 2007-06-18 =================
 
@@ -1072,7 +1104,7 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2007-01-15 - Juan PALACIOS
 
-  - Fix use DECLARE_TOOL_FACTORY and DACLARE_ALGORITHM_FACTORY macros 
+  - Fix use DECLARE_TOOL_FACTORY and DACLARE_ALGORITHM_FACTORY macros
     in remaining src/*.cpp files. Files modified.
 
     Modified files:
@@ -1109,7 +1141,7 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2006-12-21 - Juan PALACIOS
 
-  - Restore CaloElectron tool for next release. To be removed for 
+  - Restore CaloElectron tool for next release. To be removed for
     new version of LHCb.
 
 ! 2006-12-21 - Olivier Deschamps
@@ -1146,27 +1178,27 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2006-12-03 - O. Deschamps
  - src/BremAdder.{cpp,h} : add chi2(Brem) cut - default value < 300 (rough DC06 tuning)
- - src/CaloElectron.{cpp,h} added : tool to get Calo related info on particle 
+ - src/CaloElectron.{cpp,h} added : tool to get Calo related info on particle
   as pOvert(part), bremMomentum(part), ...
 
 !========================== DaVinciTools v14r4 2006-11-16 ===================
 
 ! 2006-11-01 - P. Koppenburg
  - src/SimplePlots.cpp
-   . Call of DVAlgorithm::initialize() added. This caused a very strange 
+   . Call of DVAlgorithm::initialize() added. This caused a very strange
      error in ContextTool.
    . Call of   DVAlgorithm::finalize() also added.
- Increment to v14r4  
+ Increment to v14r4
 
-! 2006-10-26 - Olivier Deschamps 
- - add src/BremAdder.{cpp,h} 
+! 2006-10-26 - Olivier Deschamps
+ - add src/BremAdder.{cpp,h}
    . tool implementation for bremstrahlung adding/removal to/from particle
 
 !========================== DaVinciTools v14r3 2006-10-24 ===================
 
 ! 2006-10-24 - Yuehong Xie
  - src/Particle2State.cpp,src/Particle2State.h
-   . fix bug in setting particle covariance matrix elements related 
+   . fix bug in setting particle covariance matrix elements related
      to energy for basic particles
 
 ! 2006-10-23 - P. Koppenburg
@@ -1191,23 +1223,23 @@ Test.MotherCut = "PT>1*GeV" ;
 
 ! 2006-10-13 - P. Koppenburg
   - src/RelatedPV.cpp
-    . Set SelectBySmallestIP = true to be default instead of 
+    . Set SelectBySmallestIP = true to be default instead of
       SelectByClosestZ = true .
-      The latter does not work for final state particles, which causes a 
+      The latter does not work for final state particles, which causes a
       fatal error when one cuts on the maximum IP of a final state particle.
 
 !========================== DaVinciTools v14r2 2006-10-04 ===================
 
 ! 2006-10-03 - Juan PALACIOS
   - src/MakeResonances.cpp
-    . Re-write Decay::replaceResonanceByDaughters method using 
+    . Re-write Decay::replaceResonanceByDaughters method using
       IParticleDescendants tool.
 
 ! 2006-09-21 - J. PALACIOS
   - src/MakeResonances.cpp
     . Fix small bug in verbose printout of daughter PID.
   - src/Particle2State.cpp
-    . Add protection for neutral particles. These should not be mapped to a 
+    . Add protection for neutral particles. These should not be mapped to a
       state so return an error.
 
 ! 2006-09-18 - P. Koppenburg
@@ -1215,30 +1247,30 @@ Test.MotherCut = "PT>1*GeV" ;
   *strings* and is used by high-level tools and the new high-level
   ContextTool that returns pointers to tools and PVs depending on context
   (its also absorbs dome PV functionality from RelatedPV)
-  Users should use this one. 
+  Users should use this one.
   - src/ContextTool.{cpp,h}
     . New tool
   - src/OnOfflineTool.cpp
-    . new default location for trigger 3D vertices 
+    . new default location for trigger 3D vertices
   - RelatedPV.{cpp,h}
     . get PVs and tools from ContextTool
   - src/SimplePlotTool.cpp
-    . Une ContextTool  
-     
+    . Une ContextTool
+
 ! 2006-09-14 - P. Koppenburg
   Added new automatic particle-to-PV association features making use of
   Juan's new table in PhysDesktop and IRelatedPV tool.
-  
+
   - src/RelatedPV.{cpp,h}
     . Concrete implemtation of IRelatedPV
-  
+
 ! 2006-08-22 - Juan PALACIOS
   - src/Particle2VertexAsctAlg{.h, .cpp}
     . re-write completely to use new Particle->PV relations scheme.
 
 ! 2006-08-16 - Vanya BELYAEV
  - src/MakeResonances.cpp
-   make adaptation to new semantics of "vertexFitter" method 
+   make adaptation to new semantics of "vertexFitter" method
 
 ! 2006-07-03 - Philippe CHARPENTIER
   - src/Particle2State.cpp
@@ -1277,14 +1309,14 @@ Test.MotherCut = "PT>1*GeV" ;
 ! 2006-06-19 - Juan PALACIOS
   - src/Particle2VertexAsctAlg.cpp:  Fix getting of primary vertices. Need to
     get LHCb::PrimVertex::Container explicitly, LHCb::Vertex::Container will
-    throw exception. Needs expanded IParticle2VertexAsct interface from 
+    throw exception. Needs expanded IParticle2VertexAsct interface from
     DaVinciKernel.
 
-! 2006-06-08 - Juan PALACIOS	
+! 2006-06-08 - Juan PALACIOS
   - Add src/Particle2VertexAsctAlg.h, .cpp
-    . Simple algorithm that uses an IParticle2VertexAsct tool to generate 
+    . Simple algorithm that uses an IParticle2VertexAsct tool to generate
       relations tables between particles in TES locations and primary vertices.
-      In charge of retrieving particles and vertices, and storing relations 
+      In charge of retrieving particles and vertices, and storing relations
       tables to TES. Location of particles and tables given by options.
 
 ! 2006-06-02 - P. Koppenburg
@@ -1301,8 +1333,8 @@ Test.MotherCut = "PT>1*GeV" ;
 
 !========================== DaVinciTools v13r1 2006-05-30 ===================
 
-! 2006-05-30 - Juan PALACIOS  
-  src/MakeResonances.cpp: Fix Windows compilation problem (windows doesn't 
+! 2006-05-30 - Juan PALACIOS
+  src/MakeResonances.cpp: Fix Windows compilation problem (windows doesn't
                           like OUT and IN)
 
 ! 2006-05-09 - P. Koppenburg
@@ -1314,7 +1346,7 @@ Test.MotherCut = "PT>1*GeV" ;
     . Restore GeomDispCalculator as offlineGeomTool.
 
 ! 2006-05-10 - Juan Palacios
-  - re-write and restore CheckVeloOverlap. 
+  - re-write and restore CheckVeloOverlap.
 
 ! 2006-05-10 - Juan Palacios
   - src/TrgDispCalculator: simplify some of the code. Use Kernel/GeomFun.
@@ -1330,17 +1362,17 @@ Test.MotherCut = "PT>1*GeV" ;
    . Read PVs as LHCb::PrimVertices
 
 ! 2006-05-03 - P. Koppenburg
-  - CheckOverlap: 
-       Issue a warning instead of an error when a particle has no 
+  - CheckOverlap:
+       Issue a warning instead of an error when a particle has no
        proto() nor endVertex(). It could be from an MC-Particle.
 
 !========================== DaVinciTools v13r0 2006-03-28 ===================
 ! 2006-03-16 - J. Palacios
-  - DecayFinder: 
+  - DecayFinder:
        Replace LHCb::Particle::ConstContainer by LHCb::Particle::Container
 
 ! 2006-03-15 - J. Palacios
-  - DecayFinder: 
+  - DecayFinder:
        Replace LHCb::ConstParticles with new LHCb::Particle::ConstContainer
   - CheckPV.cpp: Prepend LHCb:: to Vertices.
 
@@ -1351,8 +1383,8 @@ Test.MotherCut = "PT>1*GeV" ;
 !========================== DaVinciTools v12r5 2006-02-03 ===================
 ! 2006-02-03 - P. Koppenburg
  - src/MakeResonances.{cpp,h}
-   . Make a both cc states if requested even if decay products are cc. 
-     Example: "[D0 -> pi+pi-]cc" will make both D0 and D~0. 
+   . Make a both cc states if requested even if decay products are cc.
+     Example: "[D0 -> pi+pi-]cc" will make both D0 and D~0.
      Warning: This duplicates all combinations.
 ! 2006-01-30 - P. Koppenburg
  - src/FilterDesktop.{cpp,h}
@@ -1370,7 +1402,7 @@ Test.MotherCut = "PT>1*GeV" ;
     . Moved from DaVinciFilter
 
 ! 2006-03-14 - J. Palacios
-  - src/DecayFinder.h and src/DecayFinder.cpp: 
+  - src/DecayFinder.h and src/DecayFinder.cpp:
         change to use LHCb::ConstPatricles inatead of LHCb::Particles
 
 ! 2006-02-20 - P. Koppenburg
@@ -1408,7 +1440,7 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/SimplePlotTool.cpp
   - src/CheckPV.cpp
     . Use OnOffline tool privately.
-                                                                                                                                                                           
+
 !========================== DaVinciTools v12r1 2005-07-18 ===================
 ! 2005-07-13 - P. Koppenburg
   - MakeResonances.{cpp,h}
@@ -1420,7 +1452,7 @@ Test.MotherCut = "PT>1*GeV" ;
     . Bug fix: add mother to list of required particles.
 ! 2005-07-08 - P. Koppenburg
   - MakeResonances.{cpp,h}
-    . Discard not needed particles (wrong PID) before one tried to run 
+    . Discard not needed particles (wrong PID) before one tried to run
       the filter
     . Do not produce histograms by default
 ! 2005-07-07 - P. Koppenburg
@@ -1453,17 +1485,17 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/SimplePlotTool.cpp
   - src/SimplePlotTool.h
     . Modified accordingly
-                                                                                                                                                                                  
+
 ! 2005-06-08 - P. Koppenburg
   - src/Algorithm2ID.h
     . Return size of algorithm array
-                                                                                                                                                                                  
+
 ! 2005-06-02 - P. Koppenburg based on an idea by Miriam Calvi
   - src/CheckVeloOverlap.{cpp,h}
     . New ICheckOverlap tool that checks for common velo clusters.
       By default it returns true when theer are shared clusters. This can be
       tuned using the MaxCommonClusters and MaxCommonFraction properties.
-         
+
 !========================== DaVinciTools v11r8p1 2005-05-30 ===================
 ! 2005-05-24 - P. Koppenburg
   - options/PreLoadParticles.opts
@@ -1473,7 +1505,7 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/CheckPV.cpp
   - src/PIDFilter.cpp
     . No info() printout in execute()
-    
+
 ! 2005-05-02 - P. Koppenburg
   - src/MakeResonances.cpp
     . Remove MakePlots option. Now use HistoProduce option inherited from
@@ -1498,7 +1530,7 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/DaVinciTools_load.cpp
     . Move MakeResonances from HltSelections
   - src/MakeResonances.{cpp,h}
-    . Algorithm replacing CombineParticles (in PhysSelections).    
+    . Algorithm replacing CombineParticles (in PhysSelections).
     ALL entries about MakeResonances copied from HltSelections:
     2005-03-11 - P. Koppenburg
     . In cases when two particles of same PID are used in a decay,
@@ -1515,9 +1547,9 @@ Test.MotherCut = "PT>1*GeV" ;
     . Override produceHitsos variable from GaudiHistoAlg so that it is off
       by default
     . New option "DecayDescriptors", a vector of strings that *supercedes*
-      the DecayDescriptor for the initialisation of the 
+      the DecayDescriptor for the initialisation of the
       DecodeSimpleDecayDescriptor tool. This allows the same algorithm to
-      find several decays. 
+      find several decays.
       Example:
     2005-01-10 - P. Koppenburg
     . Use IPlotTools to make recursive plots.
@@ -1532,13 +1564,13 @@ Test.MotherCut = "PT>1*GeV" ;
          HLTFilterDstar.MotherPlotsPath   = "DstarOut";
     2004-12-02 - P. Koppenburg
     . Replacement algorithm for CombineParticles.
-    . Uses the ByPIDFilterCriterion to have the same syntax as 
+    . Uses the ByPIDFilterCriterion to have the same syntax as
       FilterDesktop (replacing RefineSelection), in Phys/DaVinciFilter
-    . Allows to apply a mass window *before* the vertex cut that can 
-      save orders of magnitude in CPU time for a three-body decay 
+    . Allows to apply a mass window *before* the vertex cut that can
+      save orders of magnitude in CPU time for a three-body decay
       for instance.
     . Allows to kill overlapping combination of particles (can be switched off
-      by options)  
+      by options)
     . Practical Example:
          MakeResonances.PhysDesktop.InputLocations = {"Phys/PreLoadKaons", "Phys/PreLoadPions", "Phys/PreLoadProtons"};
 
@@ -1551,17 +1583,17 @@ Test.MotherCut = "PT>1*GeV" ;
          MakeResonances.MotherFilter.DsFilter.MaxChi2 = 200 ; // some filtering
   - options/DVTestMakeResonances.opts
     . Tests that MakeResonances gets the same results as CombineParticles.
-    
+
 ! 2005-03-10- P. Koppenburg for Luis Fernadez
   - src/CheckOverlap.{h,cpp}
     . Correct another bugs
-     
+
 !========================== DaVinciTools v11r6 2005-03-03 ===================
 ! 2005-02-24- P. Koppenburg
   - src/CheckOverlap.{h,cpp}
     . Correct a few bugs
     . Adapt again to new interface (see Phys/Kernel)
-    
+
 ! 2005-02-21 - P. Koppenburg
   - src/CheckOverlap.{h,cpp}
     . Adapt to new interface with const methods.
@@ -1585,23 +1617,23 @@ Test.MotherCut = "PT>1*GeV" ;
     . Add trailer "from [MotherName]" for all particles in recursive loop.
   - src/SimplePlotTool.cpp
     . Added "WM" variable for wide mass, to be used only with B
-      
+
 ! 2005-01-12 - P. Koppenburg
   - src/DecodeSimpleDecayString.{h,cpp}
-    . Add a reset() method to reset the vectors when a new DecayDescriptor 
-      is given. For the unexpected cases where there are several to be analysed by 
+    . Add a reset() method to reset the vectors when a new DecayDescriptor
+      is given. For the unexpected cases where there are several to be analysed by
       the same tool.
-      
+
 ! 2005-01-10 - P. Koppenburg
   - src/RecursivePlotTool.{cpp,h}
-    . IPlotTool that calls SimplePlotTool for all particles in vector and 
+    . IPlotTool that calls SimplePlotTool for all particles in vector and
       all decendents recursively
   - src/SimplePlotTool.{cpp,h}
     . Foresee re-initialization to allow RecursivePlotTool to change
       the SimplePlotTool properties.
   - src/SimplePlots.{cpp,h}
     . Add option ("PlotTool", m_plotTool = "SimplePlotTool/Plots") that allows
-      to change the IPlotTool used.    
+      to change the IPlotTool used.
   - src/DaVinciTools_load.cpp
     . New tool RecursivePlotTool
 
@@ -1617,14 +1649,14 @@ Test.MotherCut = "PT>1*GeV" ;
       HLTB2HHPlots.Plots.Variables = { "M", "Chi2", "Pt" } ;
   - src/SimplePlots.cpp
     . Moved from HltSelChecher package. Applied SimplePlotTool to InputLocation.
-    
+
 !========================== DaVinciTools v11r3 2004-12-01 ===================
 ! 2004-11-18 - P. Koppenburg
   - src/CheckPV.{h,cpp}
     . New algorithm that checks if a PV is there and has been reconstructed.
   - options/DVCheckPV.opts
     . Example option file
-    
+
 ! 2004-11-15 - P. Koppenburg
   - PreDV.{h,cpp}
    . Remove it as it is not necessary anymore.
@@ -1634,59 +1666,59 @@ Test.MotherCut = "PT>1*GeV" ;
   - PreDV.{h,cpp}
     . Buglet fixed
       It prevented reading data already containing a SelResults object.
-     
+
 ! 2004-11-11 - P. Koppenburg
   - PreDV.{h,cpp}
     . Make it a GaudiAlgorithm.
-     
+
 ! 2004-10-27 - P. Koppenburg
   - src/PVLocator.{cpp,h}
     . New Tool that stores location of primary vertex. This tool is
       used by all filtercriteria that use the PV. It allows to switch
       between offline and HLT PV.
   - src/ResetPVLocation.{cpp,h}
-    . Algorithm that sets the PVLocator tool. 
+    . Algorithm that sets the PVLocator tool.
       Options:
           PVLocation ( = VertexLocation::Primary by default ) : PV location
 	  ResetToOffline ( = false ) : Restore default
       Example:
-    
+
           HLTSelections.Members += { "ResetPVLocation/SetHLTPV" };
           SetHLTPV.PVLocation = "/Event/Phys/Trg/Vertices" ;
           < do rest of HLT >
 	  HLTSelections.Members += { "ResetPVLocation/SetOfflinePV" };
           SetOfflinePV.ResetToOffline = true ;
-	   
+
 !========================== DaVinciTools v11r1 2004-09-16 ===================
 ! 2004-09-02 - P. Koppenburg
   - src/DecayFinder.*
-    . Make it a GaudiTool   
+    . Make it a GaudiTool
 ! 2004-08-25 - P. Koppenburg
   - cmt/requirements
    . Do not export header files
   - Remove DaVinciTools and Lib directories
-    
+
 !========================== DaVinciTools v11r0 2004-08-25 ===================
 ! 2004-08-25 - P. Koppenburg
  - src/DaVinciTools_load.cpp
    . Remove FilterByBestParticles
-   
+
 ! 2004-08-23 - P. Koppenburg
- - Split DaVinciTools package into 
+ - Split DaVinciTools package into
    . Phys/DaVinciKernel : DVAlgorithm, PhysDesktop and all Interfaces
    . Phys/ParticleMaker : All particle makers and the ParticleStuffer
    . Phys/DaVinciFilter : All Filter
    . Phys/VertexFit : All vertex fitters and the GeomDispCalculator.cpp
    . Phys/DaVinciTransporter : All transporters
    . Phys/DaVinciTools : Basically all high-level tools that are none
-        of the abvove, f.i. DecayFinder, PreDV, CheckOverlap...    
+        of the abvove, f.i. DecayFinder, PreDV, CheckOverlap...
    This split became necessary since DaVinciTools was become a huge monster
-   containing unrelated stuff (what do the TrackTypeFilterCriterion and the 
+   containing unrelated stuff (what do the TrackTypeFilterCriterion and the
    CombinedParticleMaker have in common?). Also DaVinciTools was evolving
-   with all versions of DaVinci. In the short term, I hope that most 
+   with all versions of DaVinci. In the short term, I hope that most
    developments will affect DaVinciFilter, while the other packages will
    be rather stable except for bug fixes.
-   
+
 !========================== DaVinciTools v10r3 2004-08-23 ===================
 ! 2004-08-23 - Florence RANJARD
  - replace GaudiTools/ with GaudiAlg
@@ -1704,10 +1736,10 @@ Test.MotherCut = "PT>1*GeV" ;
     . Use PV from Trg when UseTrgPV option is switched on (OFF by default)
     . Use PV from Phys when UseOfflinePV option is switched on (OFF by default)
     . Determine which PV to use from track origin when nothing is switched on.
-      This does not work as expected when composte particles made from Trg 
+      This does not work as expected when composte particles made from Trg
       particles are used. To be revised...
   - src/TrackTypeFilterCriterion.*
-    . Works with Trg tracks, but assumes they are all Long.      
+    . Works with Trg tracks, but assumes they are all Long.
   Also a little cosmetics:
   - src/MassDifferenceFilterCriterion.*
   & src/MassFilterCriterion.*
@@ -1733,14 +1765,14 @@ Test.MotherCut = "PT>1*GeV" ;
  - src/DecayFinder.*
    . New method decaySubTrees as for the MCDecayFinder
  - src/Momentum2FlightAngleFilterCriterion.cpp
-   . Returns a yes/no depending on the cosine of the angle between the particle 
+   . Returns a yes/no depending on the cosine of the angle between the particle
      momentum and the flight distance w.r.t either
      -> all PVs
      -> Best PV (default), chosen as the one for which the IPS of the composite
         particle is the smallest
  - src/ChangeDecayChain.*
    . added temprarily
-   
+
 ! 2004-07-29 - P. Koppenburg
  - cmt/requirements
    . Boost link options for v11r12. Remove them for v12r0.
@@ -1754,18 +1786,18 @@ Test.MotherCut = "PT>1*GeV" ;
 ! 2004-07-22 - P. Koppenburg for Yuehong Xie
  - src/NsctVeloTransporter.cpp
  - src/TrTransporter.cpp
-   . Problem found with impact parameter of a gamma converting to two electrons. 
-     The problem was that I forgot to set the error of z to zero after all the 
-     other elements of the error matrix are transform to a state with err_z=0. 
-     It didn't cause any problem to vertex fitting, which doesn't use the error 
-     of z at all, but led to failure in calculating impact parameter, for which 
+   . Problem found with impact parameter of a gamma converting to two electrons.
+     The problem was that I forgot to set the error of z to zero after all the
+     other elements of the error matrix are transform to a state with err_z=0.
+     It didn't cause any problem to vertex fitting, which doesn't use the error
+     of z at all, but led to failure in calculating impact parameter, for which
      the error of z is used.
 
    . In NsctVeloTransporter.cpp I fixed two other problems:
      o checked charge of particles before adding multiple scattering error
-     o for multiple scattering, added 3 missed correlation elements in the 
-       error matrices. 
- 
+     o for multiple scattering, added 3 missed correlation elements in the
+       error matrices.
+
 ! 2004-07-20 - P. Koppenburg
   - src/LagrangeMassVertexFitter.cpp
     . Bug affecting only Windows
@@ -1778,51 +1810,51 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/NsctVeloTransporter.cpp
   - src/ParabolicTransporter.cpp
   - src/TrTransporter.cpp
-    . Redefinition of error on z position for transport of composite particles.   
+    . Redefinition of error on z position for transport of composite particles.
     This changes the chi^2 of vertices:
     . It is understood why chi2 is bigger after the change in transporter
-      to take in to account the uncertainty in z of fitted vertex. The reason 
-      is vx and vy are highly correlated with vz. If error of vz is neglected, 
+      to take in to account the uncertainty in z of fitted vertex. The reason
+      is vx and vy are highly correlated with vz. If error of vz is neglected,
       all the uncertainties are ascribed to errors of vx and vy. By transfroming
-      this vertex to a fixed z with a linear assumption, the uncertainty in vx 
-      and vy due to the uncertainty of vz is removed, so the errors of vx and 
-      vy actually become smaller. Average vertex fit chi2 is thus increased. 
+      this vertex to a fixed z with a linear assumption, the uncertainty in vx
+      and vy due to the uncertainty of vz is removed, so the errors of vx and
+      vy actually become smaller. Average vertex fit chi2 is thus increased.
       This explains why the selection cuts are harder. It is possible that
-      more bb events are rejected than signal events, becasue generally 
-      speaking the uncertianty in z of a combinatorial vertex is bigger than 
-      that of a true vertex. So I expect signal to background ratio won't be 
-      worse than before if all chi2 cuts are relaxed a bit to achieve same 
+      more bb events are rejected than signal events, becasue generally
+      speaking the uncertianty in z of a combinatorial vertex is bigger than
+      that of a true vertex. So I expect signal to background ratio won't be
+      worse than before if all chi2 cuts are relaxed a bit to achieve same
       efficiencies as before.
 
 ! 2004-07-19 - P. Koppenburg for Luis Fernandez
   - src/FlightDistanceFilterCriterion.{h.cpp}
     Shorter options. see below.
-  
+
 ! 2004-07-16 - P. Koppenburg for Yuehong Xie
   - src/LifetimeFitter.cpp
-    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp, 
+    . posMomCorr() was misused as the upper square in LifetimeFitter.cpp,
       and this is fixed.
   - src/LinearTransporter.cpp
-    . A transfromation is introduced in  LinearTransporter.cpp to account 
-      for the z uncertainty of the initial state. It changes nothing when 
-      the initial state is not from a fitted vertex and thus has no error 
+    . A transfromation is introduced in  LinearTransporter.cpp to account
+      for the z uncertainty of the initial state. It changes nothing when
+      the initial state is not from a fitted vertex and thus has no error
       on z.
-      The code for the linear transport of the covariance is also rewritten 
-      to make it short and to fix the problem of two missing lines in the 
+      The code for the linear transport of the covariance is also rewritten
+      to make it short and to fix the problem of two missing lines in the
       old version
         newPosSlopesCorr(1,2) = oldPosSlopesCorr(1,2) + dz*oldSlopesMomErr(1,2);
         newPosSlopesCorr(2,1) = oldPosSlopesCorr(2,1) + dz*oldSlopesMomErr(2,1);
       This is not a complete fix to the initial covariance matrix problem.
       There are two things to be solved:
       *) charged particles like D+, Ds+
-      *) if one use CombinedTransporter which uses extrapolators in the 
-         Tr/TrExtrapolator package. 
+      *) if one use CombinedTransporter which uses extrapolators in the
+         Tr/TrExtrapolator package.
 
 ! 2004-07-16 - P. Koppenburg for Luis Fernandez
   - src/FlightDistanceFilterCriterion.{h.cpp} (preliminary version)
-    . Returns a yes/no depending on flight distance / significance w.r.t either 
+    . Returns a yes/no depending on flight distance / significance w.r.t either
        -> all PVs (for the min cuts)
-       -> Best PV, chosen as the one for which the IPS of the composite 
+       -> Best PV, chosen as the one for which the IPS of the composite
           particle is the smallest (for the min and max cuts)
        Cuts:
         - on the minimum signed or unsigned flight distance or significance
@@ -1831,29 +1863,29 @@ Test.MotherCut = "PT>1*GeV" ;
           w.r.t the Best PV
   - options/DVFlightDistanceFilterCriterion.opts
     . Test options for the above
-  
+
 ! 2004-07-16 - P. Koppenburg
   - Lib/DVAlgorithm.cpp
     . Swap order of initialization and Tools loading. Old order prvented
       DVAlgorithms to use tools in their initalize method.
-      
+
 ! 2004-07-16 - P. Koppenburg
   - DaVinciTools/DVAlgorithm.h, Lib/DVAlgorithm.cpp
     . Make it inherit from GaudiAlgorithm. This allows for instance
       to use the shortcuts warning(), err(), debug() for msg << MSG::XXXX
 
-  - DaVinciTools/IBestParticles.h  
+  - DaVinciTools/IBestParticles.h
     . Interface for a new kind of "filter" tool that filters a ParticleVector
       and returns another ParticleVector.
   - src/FilterByBestParticles.{h,cpp}
     . Generic DVAlgorithm that uses an IBestParticles tool to filter
-      particles.  
+      particles.
   - src/KinBestParticles.{h,cpp}
-    . IBestParticles tool that returns an ordered vector with the n particles 
-      with highest P, Pt, E from a vector. 
+    . IBestParticles tool that returns an ordered vector with the n particles
+      with highest P, Pt, E from a vector.
   - options/DVFilterByBestParticles.opts
     . Example option file to use FilterByBestParticles with KinBestParticles.
-      
+
 !========================== DaVinciTools v9r8 2004-07-16 ===================
 ! 2004-07-15 - P. Koppenburg
   - src/DaVinciTools_load.cpp
@@ -1865,11 +1897,11 @@ Test.MotherCut = "PT>1*GeV" ;
   - src/ChangePID.*
     . DVAlgorithm that copies a particle into
       another location and changes its PID. Works for single (from protoparticle)
-      and composite particles (from vertex). In the former case 
+      and composite particles (from vertex). In the former case
       the energy is recalculated. Never apply this algorithm on particles
       created by a mass-constrained vertex fitter (obviously).
       Note that it is forbidden to change the PID of an existing particle.
-    
+
 ! 2004-07-08 - P. Koppenburg
   - src/ChargedParticleMaker.*
   - src/ElectronParticleMaker.*
@@ -1884,9 +1916,9 @@ Test.MotherCut = "PT>1*GeV" ;
          declareProperty ( "UseLongTracks",     m_longTracks );
          declareProperty ( "UseDownstreamTracks", m_downstreamTracks );
          declareProperty ( "UseUpstreamTracks",      m_vttTracks );
-      For HLT      
+      For HLT
   - src/PVIPFilterCriterion.*
-    . Made it a GaudiTool   
+    . Made it a GaudiTool
   - src/TrackTypeFilterCriterion.*
     . New filter criterion that filters particles according to track types.
          declareProperty( "RequireLong",       m_reqLong         = false );
@@ -1904,20 +1936,20 @@ Test.MotherCut = "PT>1*GeV" ;
       Switch this to true to keep neutrals or compisite particles,
       or they get filtered out if any of the above is true...
          declareProperty( "IgnoreNonTracks",   m_ignoreNonTracks = false );
-    
+
 ! 2004-07-06 - P. Koppenburg
   - DaVinciTools/DVAlgorithm.h
     . New getDecayString method
-    
+
 !========================== DaVinciTools v9r7 2004-07-05 ===================
 ! 2004-07-02 - P. Koppenburg
   - cmt/requirements
     . Ship also the boost link options
-    
+
 ! 2004-07-01 - P. Koppenburg
   - src/DecodeSimpleDecayString.cpp
     . Moved decay string parser from CombineParticles.
-    
+
 !========================== DaVinciTools v9r6 2004-06-28 ===================
 ! 2004-06-25 - P. Koppenburg
   - src/PVIPFilterCriterion.{cpp,h}
@@ -1925,21 +1957,21 @@ Test.MotherCut = "PT>1*GeV" ;
       There are four possible cuts:
       o MinIP:       Minimal IP on *any* PV. Typically to select B tracks.
       o MinIPsignif: The same but cutting on IP/error
-      o MaxIP:       Maximal IP on *at least one* PV. 
+      o MaxIP:       Maximal IP on *at least one* PV.
                      Typically to select the B itself
       o MaxIPsignif: The same but cutting on IP/error.
-    Example of use can be found in $BU2LLKROOT/options/  
+    Example of use can be found in $BU2LLKROOT/options/
 
 ! 2004-06-22 - P. Koppenburg
   - Lib/DVAlgorithm.cpp
     . Correct location is Selresult
-    
+
 ! 2004-06-18 - P. Koppenburg for Vanya Belyaev
   - src/ParticleMakerSeq.cpp
   - src/ParticleMakerSeq.h
     . new
 Very simple particle maker which just a sequence of concrete particle
-makers. Being invoked this particle maker just execute all "dependent" 
+makers. Being invoked this particle maker just execute all "dependent"
 particle makers. The dependent particle makers can be either private
 or public. The last case can be used for some "standard" particle makers
 or avoid very long configuration lines, like
@@ -1956,7 +1988,7 @@ LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PrivateMa
 
 LongAlgorithmNameForPreselectionalgorithm.PhysDesktop.ParticleMakerSeq.PublicMakers
  = { "CombinedParticleMaker/TheFirstPublicMaker",
-     "NoPIDsParticleMaker/PionMaker" , 
+     "NoPIDsParticleMaker/PionMaker" ,
      "NoPIDsPArticleMaker/MuonMaker" };
 
 The MAIN advantage of this particle maker:
@@ -1966,69 +1998,69 @@ The MAIN advantage of this particle maker:
     in this approach.
 
 I guess that in sumamry one can get *SOME* simplification fo job-options
-file. (probably not for all cases) 
-    
+file. (probably not for all cases)
+
 !========================= DaVinciTools v9r5 2004-06-04 ===================
 ! 2004-06-04 - P. Koppenburg
   - src/LagrangeGeomVertexFitter.cpp
     . String over two lines corrected for Windows
-    
+
 ! 2004-05-26 - P. Koppenburg
   - src/TrTransporter.cpp
     . Change FATAL printouts to ERROR
-    
+
 ! 2004-05-18 - P. Koppenburg
   - src/PhysDesktop.cpp
-    . In PhysDesktop::saveTrees( int partid ) call saveTrees 
+    . In PhysDesktop::saveTrees( int partid ) call saveTrees
       also when there's nothing to save. Avoids having no container when
       the algorithm has been executed.
-  
+
 ! 2004-05-15 - P. Koppenburg
   - src/CombinedTransporter.cpp
   - src/LinearTransporter.cpp
   - src/NsctVeloTransporter.cpp
   - src/ParabolicTransporter.cpp
   - src/TrTransporter.cpp
-    . I am sick of these messages: 
-    <     log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0" 
+    . I am sick of these messages:
+    <     log << MSG::WARNING << " z is out of range, z < -500.0 or z > 21000.0"
     ---
-    >     log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0" 
-   
+    >     log << MSG::DEBUG << " z is out of range, z < -500.0 or z > 21000.0"
+
 ! 2004-05-15 - P. Koppenburg
  - Lib/DVAlgorithm.cpp
    . Some more debugging messages
-   
+
 ! 2004-05-11 - P. Koppenburg
  - Lib/DVAlgorithm.cpp
    . Move all executable code from DVAlgorithm.h to DVAlgorithm.cpp.
      Make it a linker library.
-   
+
 ! 2004-05-11 - P. Koppenburg
  - DaVinciTools/DVAlgorithm.h
    . Add statistics for selected events. It can be switched off with
      PrintSelResult = false ;
-   
+
 ! 2004-05-11 - P. Koppenburg for Claudia Pereira Nunes
  - src/LagrangeGeomVertexFitter.{cpp,h}
  - DaVinciTools/IGeomVertexFitter.h
-   . New constrained vertex fitting tool. This tool has two public methods. 
-     One, called fitWithGeom, makes only a geometrical  constrained fit for 
-     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit, 
+   . New constrained vertex fitting tool. This tool has two public methods.
+     One, called fitWithGeom, makes only a geometrical  constrained fit for
+     at most 4 tracks. It doesn't make any kind of invariant mass vertex fit,
      like the LagrangeMassVertexFitter tool does, it just constrain the
-     particles to come from the same point. The other method, called 
-     fitWithGeomAndSubMass, makes a geometrical constrained fit and an 
-     invariant mass constrained fit of any daughter which is a resonance 
-     (with width < 10 MeV).  This method only works if there is a daughter 
-     resonance and it works for at most 4 tracks also. 
+     particles to come from the same point. The other method, called
+     fitWithGeomAndSubMass, makes a geometrical constrained fit and an
+     invariant mass constrained fit of any daughter which is a resonance
+     (with width < 10 MeV).  This method only works if there is a daughter
+     resonance and it works for at most 4 tracks also.
  - src/LagrangeMassVertexFitter.{cpp,h}
-   . Corrected an error on the way the geometrical constrained 
+   . Corrected an error on the way the geometrical constrained
      equations were being obtained.
 
 !========================= DaVinciTools v9r4 2004-05-05 ===================
 ! 2004-05-03 - P. Koppenburg for Gerhard Raven
  - */V0MakerAlg.*
  - src/ElectronParticleMaker_bbincl.*
-   . Obsolete -> removed 
+   . Obsolete -> removed
 
 !========================== DaVinciTools v9r3p1 2004-04-29 ==================
 ! 2004-04-29 - P. Koppenburg for Gerhard Raven
@@ -2040,53 +2072,53 @@ file. (probably not for all cases)
 ! 2004-04-22 - Vanya BELYAEV
  - src/PhotonFromMergedParticleMaker.cpp
  - src/PhotonFromMergedParticleMaker.h
-	     fix a problem with inproper release of PhotonParam tool 
+	     fix a problem with inproper release of PhotonParam tool
  - src/NoPIDsParticleMaker.cpp
  - src/NoPIDsParticleMaker.h
-       remove unnesessary location fo services and their release 
+       remove unnesessary location fo services and their release
 
 ! 2004-04-21 - Vanya Belyaev
   - src/PhotonParticleMaker.h,(.cpp)
-    updated version of PhotonParticleMaker from Frederic Machefert 
+    updated version of PhotonParticleMaker from Frederic Machefert
     which make use of his new "PhotonID" tool (the combined likelihood
     for single gammas). For default configuration the "CL" for
-    photons is a result of this estimator, other estimators are not used 
+    photons is a result of this estimator, other estimators are not used
     in evaluation of CL, but available for analysis.
-     (for future: one need to think how to include other 
-      information into CL and to provide CL normalization, 
-      "similar to charged") 
+     (for future: one need to think how to include other
+      information into CL and to provide CL normalization,
+      "similar to charged")
 
 !========================== DaVinciTools v9r2 2004-03-31 ==================
 ! 2004-03-31 - P. Koppenburg for Sandra Amato and Angelo Carbone
  - src/ParticleStuffer.*
    . Go back to previous version. Found bugs in the new Sutuffer.
  - src/TrTransporter.*
-   . Handle neutral particles correctly. 
+   . Handle neutral particles correctly.
    . Update energy after transport to avoid negative masses.
-  
+
 ! 2004-03-30 - P. Koppenburg for Miriam Gandelman
  - src/GeomDispCalculator.cpp
    . Bug fix
-  
+
 ! 2004-03-29 - P. Koppenburg
  - src/LifetimeSignificanceCriterion.cpp,  src/MassFilterCriterion.cpp
    . Small modifications to allow compilation on Windows.
-  
+
 ! 2004-03-25 - P. Koppenburg for Sandra Amato
  - src/ParticleStuffer.*
-   . If the daughters of the particle to be stuffed is a resonance, do not 
+   . If the daughters of the particle to be stuffed is a resonance, do not
      transport it's parameters
    . Calculated the momentum position correlation matrix.
 
 !========================== DaVinciTools v9r1 2004-03-23 ==================
 ! 2004-03-23 - P. Koppenburg for Gerhard Raven
  - src/BooleanFilterCriterion.*
-  It makes logical 'and' and 'or' combinations of other IFilterCriterion 
-  which can be specified in the options. The difference with ParticleFilter 
-  is that both 'and' and 'or' are supported, and it satisfies the 
-  IFilterCriterion interface -- which makes it much easier/more elegant 
-  to use from eg. LoKi. 
-  
+  It makes logical 'and' and 'or' combinations of other IFilterCriterion
+  which can be specified in the options. The difference with ParticleFilter
+  is that both 'and' and 'or' are supported, and it satisfies the
+  IFilterCriterion interface -- which makes it much easier/more elegant
+  to use from eg. LoKi.
+
 ! 2004-03-16 - P. Koppenburg for Hugo Ruiz
  - src/DecayFinder.cpp
    . K0L is NOT the antiparticle of K0S!
@@ -2094,26 +2126,26 @@ file. (probably not for all cases)
    . keepSelHistory becomes KeepSelHistory
  - src/PreLoadParticles.{cpp,h}
    . becomes a DVAlgorithm
-   
+
 !========================== DaVinciTools v9r0 2004-03-11 ==================
 ! 2004-02-11 - P. Koppenburg for Hugo Ruiz
  - src/CombinedParticleMaker.*
    . upstream -> downstream
  - src/DaVinciTools_load.cpp
    . New algorithm PreDV
- - src/Particle2VertexAsct.h, DaVinciTools/Particle2VertexAsct.h, 
+ - src/Particle2VertexAsct.h, DaVinciTools/Particle2VertexAsct.h,
    src/DaVinciTools_load.cpp, src/LifetimeSignificanceCriterion.h,
    src/Particle2VertexWithIPS.h
    . Particle2VertexAsct.h moved to src
  - src/PhotonParticleMaker.cpp
-   . New calo tools 
+   . New calo tools
  - src/PhysDesktop.cpp, PreDV.*
-   . Removed Outputlocation. New mandatory DVAlgorithm PreDV. 
+   . Removed Outputlocation. New mandatory DVAlgorithm PreDV.
  - src/reclecer.* (Odie)
    . Correct eta_prime bug
  - DaVinciHeader.cpp
    . moved to src
-   
+
 !========================== DaVinciTools v8r5 2004-02-11 ==================
 ! 2004-02-11 - Gloria CORTI for Vincenzo VAGNONI
  - src/TrTransporter.cpp
@@ -2124,33 +2156,33 @@ file. (probably not for all cases)
 !========================== DaVinciTools v8r4 2004-01-29 ==================
 ! 2004-01-29 - Gloria CORTI for Vincenzo VAGNONI
  - src/ParabolicTransporter.cpp
-   . bug fix of two swapped indeces in the error matrix causing 
-     the Chi2 to become ill defined when using TTT tracks.   
+   . bug fix of two swapped indeces in the error matrix causing
+     the Chi2 to become ill defined when using TTT tracks.
 
 ! 2004-01-14 - Gloria CORTI
  - cmt/requirements
    . use v* to allow compilation against fifferent versions of LHCb
  - DaVinciTools/IGeomDispCalCulator.h
    src/GeomDispCalculator.{h,cpp}
-   . propagate change from DaVinci v8r3 that was built on a branch  
+   . propagate change from DaVinci v8r3 that was built on a branch
  - src/MassDifferenceFilterCriterion.cpp,
        LifetimeSignificanceCriterion.cpp,
        MassFilterCriterion.cpp,
        V0MakerAlg.cpp
    . remove inclusion of unnecessary ParticleID.h (preventing compilation
-     against LHCb v12r1 and v15r0 at the same time since in different 
+     against LHCb v12r1 and v15r0 at the same time since in different
      locations)
  - src/NeutralParticleMaker.cpp
    . little backward compatible change preventing compilation against
      LHCb v15r0 ( CaloCellID() != operator does not exist )
  - src/CheckOverlap.cpp
  - ElectronParticleMaker.cpp, ElectronParticleMaker_bbincl.cpp
-       LinearTransporter.cpp, NoPIDsParticleMaker.cpp, 
+       LinearTransporter.cpp, NoPIDsParticleMaker.cpp,
        ParabolicTransporter.cpp, ParticleFilter.cpp, TrTransporter.cpp
-   . little fixes to remove warning messages (implicit typename, 
+   . little fixes to remove warning messages (implicit typename,
      passing double instead of int)
    . little fixes to remove warning messages (passing double instead of
-     int in HepMatrices)       
+     int in HepMatrices)
 
 ! 2004-01-12 - Gloria CORTI
  - DaVinciTools/Particle2VertexAsct.h
@@ -2197,16 +2229,16 @@ file. (probably not for all cases)
    . introduce new properties to select the type of tracks to be kept
      for analysis: < UseLongTracks > , < UseUpstreamTracks > ,
      < UseVTTTracks > ( each one can be switched on/off independenly )
- 
+
 ! 2003-07-23 - Gloria CORTI
- - src/ChargedParticleMaker.cpp 
+ - src/ChargedParticleMaker.cpp
        ElectronParticleMaker.cpp
-       MuonParticleMaker.cpp, 
+       MuonParticleMaker.cpp,
        NeutralParticleMaker.cpp
        PhysDesktop.cpp
    . remove initialization of iterator = 0 to please gcc32
  - src/ElectronParticleMaker_bbincl.cpp
-       RichParticleMaker.cpp       
+       RichParticleMaker.cpp
    . remove initialization of iterator = 0 to please gcc32
    . set last argument of Hep(Sym)Matrix constructor as int (gcc32 warning)
 
@@ -2220,7 +2252,7 @@ file. (probably not for all cases)
      at finalization to release the tools (valgrind possible memory leak)
    . rename MsgStream from log to msg
  - src/LagrangeMassVertexFitter.h & cpp
-   . introduce method finalize where tools are released (valgrind 
+   . introduce method finalize where tools are released (valgrind
      possible memory leak)
  - src/GeomDispCalculator.h & cpp
    . introduce method finalize where tools are released (valgrind
@@ -2232,7 +2264,7 @@ file. (probably not for all cases)
    . introduce method finalize where tools are released (valgrind
      possible memory leak)
    . move m_XXX variable to private
-   
+
 !========================== DaVinciTools v8r1p1 2003-06-18 ==================
 ! 2003-06-18 - Gloria CORTI
  - src/PhysDesktop.cpp
@@ -2242,7 +2274,7 @@ file. (probably not for all cases)
  - src/ChargedParticleMaker.cpp
    . replace name of MsgStream log with msg and set all message in
      makeParticles() in DEBUG mode
-     
+
 ! 2003-06-06 - Gloria CORTI
  - src/PhysDesktop.cpp
    . fix debugging bug that was checking size of particles container instead
@@ -2265,12 +2297,12 @@ file. (probably not for all cases)
 
 ! 2003-05-30 - Gloria Corti
  - src/CombinedParticleMaker.h, CombinedParticleMaker.cpp
-   . new tool to allow making charged particles from ProtoParticles 
-     choosing based on combination of delta log likelihood values 
+   . new tool to allow making charged particles from ProtoParticles
+     choosing based on combination of delta log likelihood values
      from various detectors techniques for a particular hypothesis
- - src/PMakerSelection.h 
-   . new class to hold conditions for selection for a particleID 
-     hypothesis.  
+ - src/PMakerSelection.h
+   . new class to hold conditions for selection for a particleID
+     hypothesis.
  - src/DaVinciTools_load.cpp
    . add new tool CombinedParticleMaker
 
@@ -2296,7 +2328,7 @@ file. (probably not for all cases)
    . new electron particle maker for generic bb filtering
 
 ! 2003-04-29 - Gloria Corti
- - src/MassFilterCriterion.h, MassFilterCriterion.cpp, 
+ - src/MassFilterCriterion.h, MassFilterCriterion.cpp,
        VtxFilterCriterion.h, VtxFilterCriterion.cpp
    . move criteriafrom Bs2JpsiPhi package since they are of general utility
    . MassFilterCriterion returns a yes/no depending on the mass window,
@@ -2312,29 +2344,29 @@ file. (probably not for all cases)
    . New PhotonFromMergedParticleMaker.h/cpp to be used when
      making merged pi0 ( see MergedPi0Alg in Bd2PiPiPi0 )
    . New PhotonFromMergedParamaters.h/cpp and Interface is necessary
-     because the fact that there are 2 CaloHypothesis 
+     because the fact that there are 2 CaloHypothesis
      ("PhotonFromMergedPi0) for each ProtoParticle does not allow
      to use the existing PhotonParamaters tool for split photons.
  - Increase version number to v8r0
  - src/PhotonParticleMaker.cpp set default value for "UseAllPhotons"
-   property to "true" to have backwards compatible behaviour of the 
+   property to "true" to have backwards compatible behaviour of the
    tool
 
 ! 2003-04-08 - Vanya BELYAEV
- - src/PhotonParticleMaker.h,.cpp   
-      The Particle maker is updated to be able to produce 
+ - src/PhotonParticleMaker.h,.cpp
+      The Particle maker is updated to be able to produce
       separately converted and non-converted photons
       If "UseAllPhotons"  (bbolean)property is activated
-      the tool produces *all* (both converted and non-converted 
+      the tool produces *all* (both converted and non-converted
       photons). Otherwise only non-converted photons are produces.
-      The default value of this options is "false". 
- - src/CnvPhotonParticleMaker.h,.cpp   
-      new particle maker for converted photons (indeed it is just a   
+      The default value of this options is "false".
+ - src/CnvPhotonParticleMaker.h,.cpp
+      new particle maker for converted photons (indeed it is just a
       special consfiguration of PhotonParticleMaker).
       It always produces only converted photons, and this behaviour
       cannot be redefined through job-options.
- - src/DaVinciTools_load.cpp      
-      Declare CnvPhotonParticleMaker factory.  
+ - src/DaVinciTools_load.cpp
+      Declare CnvPhotonParticleMaker factory.
 
 
 ! 2003-03-18 - Olivier Dormond
@@ -2397,18 +2429,18 @@ file. (probably not for all cases)
    . default possible options are in V0MakerAlg.opts
 
 ! 2003-01-22 - Ivan BELYAEV
- - DaVinciTools/IPhotonParams.h   new abstract interface for the 
-                                  (re)evaluation of photons parameters 
-                                  at photon production vertex 
+ - DaVinciTools/IPhotonParams.h   new abstract interface for the
+                                  (re)evaluation of photons parameters
+                                  at photon production vertex
  - src/PhotonParameters.h,.cpp    concrete implementation of IPhotonParams
-                                  abstract interface 
+                                  abstract interface
  - src/PhotonParticleMaker.h,.cpp new particle maker for photons.
                                   Only "normal" 1-cluster photons are considered.
-                                  Split photons from merged pi0s are ignored 
+                                  Split photons from merged pi0s are ignored
                                   in this version
  - src/DaVinciTools_load.h        add the factories for new tools
 
- - src/NeutralParticleMaker.cpp   put the guards against Merged pi0s 
+ - src/NeutralParticleMaker.cpp   put the guards against Merged pi0s
 
 !========================== DaVinciTools v7r2 2003-01-06 ====================
 ! 2003-01-06 - Florence Ranjard
@@ -2416,14 +2448,14 @@ file. (probably not for all cases)
 
 !=========================== DaVinciTools v7r1 2002-12-20 ===================
 ! 2002-12-20 - Gloria Corti
- - Modified ParticleStuffer (S.Amato) to add transporting of daughter 
+ - Modified ParticleStuffer (S.Amato) to add transporting of daughter
    particles to vertex before combining their momentum parameters to
    obtain that of mother particle.
 
 ! 2002-11-14 - Gerhard Raven
  - Add new selection criterion MassDifferenceFilterCriterion
    which allows to cut on the mass difference between a particle
-   and one of its daughters. 
+   and one of its daughters.
 
 !=========================== DaVinciTools v7r0 2002-11-13 ===================
 ! 2002-11-13 - Gloria Corti
@@ -2433,7 +2465,7 @@ file. (probably not for all cases)
 ! 2002-11-11 - Gloria Corti
  - In ParticleStuffer Remove comment for setIsResonace based on lifetime
    since link to intermediate particles has been fixed in UnconstVertexFitter.
- - Fix problem in tree propagation in UnconstVertexFitter when using 
+ - Fix problem in tree propagation in UnconstVertexFitter when using
    resonances and fix bug reported by Gerhard Raven of hessian/2 (Sandra Amato)
  - Introduce property with cut value on width of mother particle in order to
    use products or not to make vertex in LagrangeMassVertexFitter (S.Amato)
@@ -2459,7 +2491,7 @@ file. (probably not for all cases)
    daughters of resonaces are used.
 
 ! 2002-10-28 - Gloria Corti
- - Modify misleading comment in initialize of NeutralParticleMaker 
+ - Modify misleading comment in initialize of NeutralParticleMaker
    (F.Machefert)
 
 ! 2002-10-22 - Gloria Corti
@@ -2467,7 +2499,7 @@ file. (probably not for all cases)
    GeomDispCalculator to be able to set which Transporter to use
    (CombinedTransporter beeing the default (as in v5r0)). An example of
    how to do it can be found in the DaVinciTest package.
- - New tool interface IDirectionFitter.h and one implementation 
+ - New tool interface IDirectionFitter.h and one implementation
    LagrangeDirectionFitter.h/cpp that contrain an input particle to
    point to a given vertex (B.Viaud)
  - Introduce new method in IMassVertexFitter to give 4 particles as input
@@ -2481,7 +2513,7 @@ file. (probably not for all cases)
       and momentum and not only positions
  - Bug fix reported by M.Musy in ElectronParticleMaker that was setting
    particleID swapped for e+/e- (H.Terrier)
- - Modified UnconstVertexFitter (S.Amato) 
+ - Modified UnconstVertexFitter (S.Amato)
     + check if a particle is a resonace in which case uses the daughters
       to perform the fit
     + fix error reported by B.Viaud to use transported values of slopes
@@ -2499,7 +2531,7 @@ file. (probably not for all cases)
  - Introduce initialize in LinearTransporter.cpp and swap of znew/zold for
    boundaries in LinearTransporter and NsctTransporter (E. de Oliveira)
  - Fix bug in ParabolicTransporter for indexing of auxiliary momentum vector
-   (E. de Oliveira) 
+   (E. de Oliveira)
  - New ElectronParticleMaker that makes electron using Calorimeter, or Rich
    or Rich and Calorimeters to make eletrons and can add brem (H.Terrier)
  - New tool CheckOverlap (and interface ICheckOverlap) that verify if
@@ -2508,8 +2540,8 @@ file. (probably not for all cases)
    and correlation. Introduce ConfLevel = 0.0 for all neutral clusters,
    ConfLevel = 0.5 for coverted gammas, ConfLevel = 1.0 for non coverted
    gammas (F.Machefert)
- - Use CaloUtils v4r* and CaloInterfaces v2r* for changes in 
-	 NeutralParticleMaker 
+ - Use CaloUtils v4r* and CaloInterfaces v2r* for changes in
+	 NeutralParticleMaker
  - Change PhysDesktop to load all vertices in InputLocations and not
    only those related to particles. This allows to have vertices as
    head of trees and to load them back. (J.H.Lopes).
@@ -2521,7 +2553,7 @@ file. (probably not for all cases)
 
 ! 2002-10-20 - Gloria Corti
  - Fix bug in FilterParticle where filterNegative was not passing any particle
-   (bug introduced in changes of 2002-10-14) (O.Dormond) 
+   (bug introduced in changes of 2002-10-14) (O.Dormond)
 
 ! 2002-10-15 - Gloria Corti
  - Modify ParticleStuffer to by default setResonance in a new particle
@@ -2554,7 +2586,7 @@ file. (probably not for all cases)
 
 !=========================== DaVinciTools v5r0 2002-07-29 ===================
 ! 2002-07-28 - Gloria Corti
- - replace macro "and" with && for compilation on windows in 
+ - replace macro "and" with && for compilation on windows in
    ParticleFilter
 
 ! 2002-07-27 - Gloria Corti
@@ -2562,15 +2594,15 @@ file. (probably not for all cases)
    not found
  - New MuonParticleMaker to make particles as muon based on only Muon
    Detector particleID result ( J.H.Lopes )
- - Add error calculation in DCA for parallel particles in 
+ - Add error calculation in DCA for parallel particles in
    GeomDispCalculator ( M.Gandelman )
  - Add counters for particle passing criterias both independently and
    cumulative and introduce methods in IParticleFilter interface to
-   access counters  results in ParticleFilter ( S.Amato ) 
+   access counters  results in ParticleFilter ( S.Amato )
  - use AIDA v2r*
 
 ! 2002-07-26 - Olivier Dormond
- - Added alternative decay at top level, i.e. you can write 
+ - Added alternative decay at top level, i.e. you can write
    "{B0 -> K+ pi-, B0 -> K- pi+}".
  - Added alternative set of decay products, i.e. you can write
    "B0 -> {K+ pi-, K- pi+}".
@@ -2580,14 +2612,14 @@ file. (probably not for all cases)
    on Window, comment use of <unistd.h> not existing on windows and not
    necessary.
  - Make enum public and move template implementation in body of class
-   in DecayFinder. 
+   in DecayFinder.
 
 ! 2002-07-24 - Gloria Corti
  - Change interface of IParticleTransporter to use ParticleVector iterator
    and propagate to all Transporters implementation
 
 ! 2002-07-19 - Gloria Corti
- - Remove obsolete FillParticleAlgorithm that filled particles from 
+ - Remove obsolete FillParticleAlgorithm that filled particles from
    AxPartCandidate
 
 ! 2002-07-18 - Gloria Corti
@@ -2610,13 +2642,13 @@ file. (probably not for all cases)
 ! 2002-05-24 - Gloria Corti
  - Use commited version of yacc automatically generated code (win)
  - Remove YYCLASS in mcparser.ypp to fix compilation error on win
- - Replace strndup in mclexer.lpp (not available on win) with 
+ - Replace strndup in mclexer.lpp (not available on win) with
    strncpy (Pere Mato)
 
 ! 2002-05-20 - Gloria Corti
-  - New tool DecayFinder (Olivier Dormond) to find a decay as specified 
+  - New tool DecayFinder (Olivier Dormond) to find a decay as specified
     by a string in jobOptions. Use a special parser ypp (fragments and
-    changes in requirements, and recparser.ypp, reclexer.lpp)  
+    changes in requirements, and recparser.ypp, reclexer.lpp)
 
 ! 2002-05-17 - Gloria Corti
   - Initial printout for input locations in PhysDesktop
@@ -2631,7 +2663,7 @@ file. (probably not for all cases)
     AxPartCandidate before creating a Particle
 
 ! 2002-05-10 - Gloria Corti
-  - New tool category of tool IParticleMaker to which PhysDesktop 
+  - New tool category of tool IParticleMaker to which PhysDesktop
     delegates creations of Particles from different type of objects:
     one implementation AxParticleMaker making Particles from
     AxPartCandidates (Helder Lopes)
@@ -2651,27 +2683,27 @@ file. (probably not for all cases)
     available, use new template method for service retrieval (test),
     introduce protection if no CL list is specified
   - Change version number in modified interfaces
-  - Introduce different transporter tools (Edgar de Oliveira)      
+  - Introduce different transporter tools (Edgar de Oliveira)
     LinearTransporter: simple linear transport with no material
     NsctVeloTransporter: simple linear transport with multiple scattering
     contribution in error matrix
-    ParabolicTransporter: parabolic tranporter for magnetic field zone    
+    ParabolicTransporter: parabolic tranporter for magnetic field zone
     CombinedTransporter: uses different transporters in VELO and in z>500mm
   - DaVinciTools/IParticleTransporter.h: return arguments changed
-    from Point+momentum+errors to Particle 
+    from Point+momentum+errors to Particle
     Additional methods with Particle& and const Particle& as input arguments
     (Edgar de Oliveira)
   - DaVinciTools/IGeomDispCalculator.h: return type of method changed from
     void to StatusCode (Miriam Gandelman)
   - src/GeomDispCalculator: use transporter (Miriam Gandelman)
-  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3 
+  - DaVinciTools/IVertexFitter.h: new methods (short-cuts) for 2 and 3
     particle vertices (Sandra Amato)
   - src/UnconsVertexFitter: short cut methods implementation (Sandra Amato)
-  
+
 
 ! ======================================================================
 ! 20020402 - DaVinciTools v3r0 (G.Corti)
-  - Remove obsolete tool on AxPartCandidates: interfaces, header and 
+  - Remove obsolete tool on AxPartCandidates: interfaces, header and
     cpp files (AddFourMom, ImpactPar)
 
   - src/FillParticleAlgorithm.h&cpp, algorithm to fill Particles starting
@@ -2680,9 +2712,9 @@ file. (probably not for all cases)
   - Introduce new OO tools working with new PhysEvent model
     The interfaces are in DaVinciTools subdirectory.
     - DaVinciTools/IGeomDispCalculator.h (interface)
-      src/GeomDispCalculator.h&cpp 
-          Tool to calculate varius geometrical distances between Particles & 
-          Vertices (ex. impact parameter) 
+      src/GeomDispCalculator.h&cpp
+          Tool to calculate varius geometrical distances between Particles &
+          Vertices (ex. impact parameter)
       author: Miriam Gandelman
 
     - DaVinciTools/IParticleFilter.h (interface)
@@ -2695,7 +2727,7 @@ file. (probably not for all cases)
           criteria to be satified by a Particle to be filtered
       src/PIDFilterCriterion.h&cpp, concrete implementation of filtering
           by ParticleID + Confidence Level
-      src/KinFilterCriterion.h&cpp, concrete implementation of filtering 
+      src/KinFilterCriterion.h&cpp, concrete implementation of filtering
           based on kinematic quantities
       author: Paul Colrain
 
@@ -2708,16 +2740,16 @@ file. (probably not for all cases)
     - DaVinciTools/IVertexFitter.h, interface for generic vertex fitters
       src/UnconstVertexFitter.h&cpp, concrete implementation of a vertex fitter
           based on Fortran axksvrtx.F
-      author: Sandra Amato      
+      author: Sandra Amato
     - DaVinciTools/IMassVertexFitter.h, interface for mass constrained vertex
                                        fitters
       src/LagrangeMassVertexFitter.h&cpp, concrete implementation using
           Lagrangian Multipliers
       author: Joao de Mello
-                            
+
     - DaVinciTools/IParticleStuffer.h (interface)
-      src/ParticleStuffer.h&cpp 
-          Tool to fill contents of a Particle class starting from info 
+      src/ParticleStuffer.h&cpp
+          Tool to fill contents of a Particle class starting from info
           provided by its end (decay) vertex
       author: Paul Colrain
 
@@ -2727,7 +2759,7 @@ file. (probably not for all cases)
       src/PhysDesktop.h&cpp, a concrete implementation getting info from
          various locations in TES for previous processing
       authors: Sandra Amato, Gloria Corti
-      
+
 
 ! 28022002 - DaVinciTools v3r0 (GCorti)
   - adapt to new PhysEvent structure
@@ -2757,7 +2789,7 @@ file. (probably not for all cases)
 
 ! 16072001 - DaVinciTools v1r1 (GCorti)
   By default read seldecay.cdf file from $AXSELLIBROOT set in application
-  (in options file) 
+  (in options file)
   Change MSG levels in PhysSelAlgorithms
   Introduce calls to suinit, sulast in DaVinciFinalisation
 
@@ -2768,18 +2800,18 @@ file. (probably not for all cases)
   Default options for tools and algorithms are in options/DaVinciTools.opts
   In particular it contains:
    - AxPart2MCParticleAsct,  an associator between AxPartCandidates and
-                             MCParticles 
+                             MCParticles
    - MCDecayFinderAlgorithm, a sample algorithm to look at one step decays
-   - ImpactPar, an algtool to calculate Impact Parameter between 
-                AxPartCandidate and VtxCandidate 
-   - AddFourMom, an algtool to make a new AxPartCandidate by summing 
-                 the 4-momentum 
+   - ImpactPar, an algtool to calculate Impact Parameter between
+                AxPartCandidate and VtxCandidate
+   - AddFourMom, an algtool to make a new AxPartCandidate by summing
+                 the 4-momentum
    - AxPrimVertexAlgorithm, an algorithm that calculates the primary vertex
                             in the event via the Fortran AXPV routine (in
                             axreclib) and stores the results in the transient
                             event as "/Event/Phys/PrimaryVertices"
-   - PhysSelectAlgorithm, an algorithm steering the physics selection 
-                          algorithms. At the moment it interfaces to the 
+   - PhysSelectAlgorithm, an algorithm steering the physics selection
+                          algorithms. At the moment it interfaces to the
                           Fortran AXSEL package. The results are stored in
                           the transient store "/Event/Phys/Selection".
                           One can retrieve the different decays info specifying
@@ -2788,11 +2820,11 @@ file. (probably not for all cases)
                           algorithms: axselconfig, axselidcode, fhfileend,
                           fhfileopen, setcdffname
    - DaVinciInitialisation, the DaVinci program initialization. It does the
-                            necessary Fortran initializations, per job and 
+                            necessary Fortran initializations, per job and
                             per event. It also create the "Event/Phys" tree
                             were to put all Physics new objects created in
                             the job. The following codes are helpers
-                            to the algorithm: DaVinciInit.F, sicbvers.F, 
+                            to the algorithm: DaVinciInit.F, sicbvers.F,
                             DaVinciZebra.inc, DaVinciVersion.h
    - DaVinciFinalisation, the last DaVinci algorithm to be executed, it
                           interfaces to the Fortran user routine suanal.

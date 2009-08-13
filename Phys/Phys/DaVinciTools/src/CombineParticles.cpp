@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.32 2009-07-20 20:25:46 jpalac Exp $
+// $Id: CombineParticles.cpp,v 1.33 2009-08-13 10:48:16 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,11 +45,10 @@ namespace
 {
   // ==========================================================================
   /// make the plots ? 
-  inline bool validPlots ( std::string name ) 
+  inline bool validPlots ( const std::string& name ) 
   {
     if ( name.empty() ) { return false ; }
-    boost::to_lower ( name ) ;
-    return "none" != name ;
+    return "none" != boost::to_lower_copy ( name ) ;
   }
   // ==========================================================================
   /** @class PV_Sentry 
@@ -140,34 +139,45 @@ namespace
  *
  *
  *  Example python configuration fragment (from DaVinci tutorial):
+ *
  *  @code
- *   # make a CombioneParticles instance
+ *
+ *   # 1) make a CombineParticles instance
  *   bs2jpsiphi = CombineParticles("Bs2JpsiPhi")
- *   # give it some input particles (leading "Phys/" no longer needed)
- *   # Assuming selections "Jpsi2MuMuSel" and "Phi2KKSel" have been run.
- *   bs2jpsiphiPhysDesktop.InputLocations  = ["Jpsi2MuMuSel",
- *                                            "Phi2KKSel"]
- *   # Give it a (mandatory) decay descriptor
- *   bs2jpsiphi.DecayDescriptor = "B_s0 -> phi(1020) J/psi(1S)"
- *   # Cut on the input particles
+ *
+ *   # 2) give it some input particles ( leading "Phys/" no longer needed)
+ *   #    Assuming selections "Jpsi2MuMuSel" and "Phi2KKSel" have been run.
+ *   bs2jpsiphiPhysDesktop.InputLocations  = [ 'Jpsi2MuMuSel' ,
+ *                                             'Phi2KKSel'    ]
+ *   # 3) Give it a (mandatory) decay descriptor
+ *   bs2jpsiphi.DecayDescriptor = 'B_s0 -> phi(1020) J/psi(1S)'
+ *
+ *   # 4) Define the cuts on the input particles
  *   bs2jpsiphi.DaughtersCuts = {
  *      "phi(1020)" : "(MAXTREE(ABSID=='mu+',TRCHI2DOF)<10) & (ADMASS('phi(1020)')<30*MeV) & (PT>1000*MeV)",
- *      "J/psi(1S)" : " (ADMASS('J/psi(1S)')<100*MeV)"}
- *   # Cut on combinations of particles (in this case, J/Psi and Phi)
+ *      "J/psi(1S)" : " (ADMASS('J/psi(1S)')<100*MeV)"
+ *       }
+ *    
+ *   # 5) Cut on combinations of particles (in this case, J/Psi and Phi)
  *   bs2jpsiphi.CombinationCut = "ADAMASS('B_s0')<2*GeV"
- *   # Cut on the actual fitted Bs candidate
+ *  
+ *   # 6) Cut on the actual created Bs candidate
  *   bs2jpsiphi.MotherCut = "(VFASPF(VCHI2/VDOF)<10) & (BPVIPCHI2()<100)"
- *   #
- *   # Add some plots
+ *   
+ *   # 7) Add some plots
  *   bs2jpsiphi.HistoProduce = True
- *   bs2jpsiphi.addTool( PlotTool("DaughtersPlots") )
- *   bs2jpsiphi.DaughtersPlots.Histos = { "P/1000"  : ('momentum',0,100) ,
- *                                        "PT/1000" : ('pt_%1%',0,5,500) ,
- *                                        "M"       : ('mass in MeV_%1%_%2%_%3%',0.8*Units.GeV,4*Units.GeV) }
- *   bs2jpsiphi.addTool( PlotTool("MotherPlots") )
- *   bs2jpsiphi.MotherPlots.Histos = { "P/1000"  : ('momentum',0,100) ,
- *                                     "PT/1000" : ('pt_%1%',0,5,500) ,
- *                                      "M"       : ('mass in MeV_%1%_%2%_%3%',4*Units.GeV,6*Units.GeV) }
+ *   bs2jpsiphi.addTool ( PlotTool ( 'DaughtersPlots' ) )
+ *   bs2jpsiphi.DaughtersPlots.Histos = { 
+ *       'P/Units.GeV'  : ('momentum' , 0 ,100      ) ,
+ *       'PT/Units.GeV' : ('pt_%1%'   , 0 ,5   ,500 ) ,
+ *       'M'            : ('mass in MeV_%1%_%2%_%3%',0.8*Units.GeV,4*Units.GeV) 
+ *       }
+ *   bs2jpsiphi.addTool( PlotTool ( "MotherPlots" ) )
+ *   bs2jpsiphi.MotherPlots.Histos = { 
+ *        "P/1000"  : ('momentum',0,100) ,
+ *        "PT/1000" : ('pt_%1%',0,5,500) ,
+ *        "M"      : ('mass in MeV_%1%_%2%_%3%',4*Units.GeV,6*Units.GeV) 
+ *      }
  *
  *  @endcode
  *
@@ -270,7 +280,10 @@ private:
   /// perform the update of histogram properties 
   StatusCode updateHistos () ;
   /// helper to get histo tools
-  StatusCode getHistoTool( IPlotTool*& histoTool, std::string name, std::string path);
+  StatusCode getHistoTool 
+  ( IPlotTool*&        histoTool , 
+    const std::string& name      ,   
+    const std::string& path      ) ;
   // ==========================================================================  
 public:
   // ==========================================================================
@@ -286,25 +299,31 @@ private:
   typedef std::vector<std::string>            Strings ;
   // ==========================================================================
   /** @class MyCut helpe structure to hold the cuts 
+   *  Essentially it is doen to bypass the absence of dafault constructor 
+   *   for  LoKi::PhysTypes::Cut type 
    *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-19
    */
   class MyCut 
   {
   public:
-    // the cinstructor 
+    // ========================================================================
+    /// the constructor 
     MyCut() 
       : m_pid  ()  // the particle PID  
       , m_name ()  // the particle NAME 
       , m_cut ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( true ) )
     {}
+    // ========================================================================
   public:
+    // ========================================================================
     /// the particle pid
-    LHCb::ParticleID     m_pid  ; // the particle pid
+    LHCb::ParticleID     m_pid  ;                       // the particle pid
     /// the particle name
-    std::string          m_name ; // the particle name
+    std::string          m_name ;                       // the particle name
     /// the cut itself 
-    LoKi::PhysTypes::Cut m_cut  ; // the cut itself 
+    LoKi::PhysTypes::Cut m_cut  ;                       // the cut itself 
+    // ========================================================================
   };
   // ==========================================================================
   // the actual type for the vector of daughter cuts 
@@ -313,9 +332,9 @@ private:
 private:   // properties 
   // ==========================================================================
   /// The decay descriptors: 
-  Strings      m_decayDescriptors ; // The decay descriptors: 
+  Strings      m_decayDescriptors ; //                    The decay descriptors
   /// The map of the cuts for the daughter particles:
-  Map          m_daughterCuts     ; // The map of the cuts for daughter particles:
+  Map          m_daughterCuts     ; // The map of the cuts for daughter particles
   /// the cut to be applied for combination of good daughters 
   std::string  m_combinationCut   ; // the cut to be applied for combination of good daughters 
   /// the cut to be applied to the constructed mother particle 
@@ -325,17 +344,17 @@ private:   // properties
   /// the preambulo 
   std::vector<std::string> m_preambulo ; // the preambulo 
   /// "DaughterPlots" tool 
-  std::string  m_daughtersPlotsName   ; // the type/name of "Daughter Plots" tool 
+  std::string  m_daughtersPlotsName    ; // the type/name of "Daughter Plots" tool 
   /// "CombinationPlots" tool 
-  std::string  m_combinationPlotsName ; // the type/name of "Combination Plots" tool 
+  std::string  m_combinationPlotsName  ; // the type/name of "Combination Plots" tool 
   /// "MotherPlots" tool 
-  std::string  m_motherPlotsName      ; // the type/name of "Mother Plots" tool
+  std::string  m_motherPlotsName       ; // the type/name of "Mother Plots" tool
   /// "DaughterPlots" path
-  std::string  m_daughtersPlotsPath   ; // the path for "Daughter Plots" tool 
+  std::string  m_daughtersPlotsPath    ; // the path for "Daughter Plots" tool 
   /// "CombinationPlots" path 
-  std::string  m_combinationPlotsPath ; // the path for "Combination Plots" tool 
+  std::string  m_combinationPlotsPath  ; // the path for "Combination Plots" tool 
   /// "MotherPlots" path 
-  std::string  m_motherPlotsPath      ; // the path for "Mother Plots" tool
+  std::string  m_motherPlotsPath       ; // the path for "Mother Plots" tool
   // ==========================================================================
 private: // try to be efficient
   // ==========================================================================
@@ -640,14 +659,14 @@ StatusCode CombineParticles::execute    ()  // standard execution
     if ( sc.isFailure() ) 
     { return Error ( "Error from updateMajor"  , sc ) ; }  // RETURN
   }
+  
   if ( m_to_be_updated2 ) 
   {
     StatusCode sc = updateHistos () ;
     if ( sc.isFailure() ) 
     { return Error ( "Error from updateHistos" , sc ) ; }  // RETURN
   }
-
-
+  
   // the local storage of selected particles 
   typedef LoKi::Selected_<LHCb::Particle::ConstVector>  Selected ;
   
@@ -664,7 +683,8 @@ StatusCode CombineParticles::execute    ()  // standard execution
       << " The external set of " << particles.size() 
       << " particles is used instead of PhysDesktop " 
       << endreq ; 
-  }    
+  }
+  
   if ( msgLevel ( MSG::VERBOSE ) ) 
   {
     for ( LHCb::Particle::ConstVector::const_iterator i = particles.begin(); i!=particles.end();++i)
@@ -696,8 +716,10 @@ StatusCode CombineParticles::execute    ()  // standard execution
     }
   }
   
-  // get the particle combiner/creator 
-  //  IParticleCombiner* combiner = particleCombiner() ;
+  /** get the default particle combiner/creator 
+   *  @attention Particle Combiner is used for creation of Mother Particle!
+   */
+  IParticleCombiner* combiner = particleCombiner() ; // get the particle combiner 
   
   // the counter of recontructed/selected decays:
   size_t nTotal = 0 ;
@@ -707,7 +729,7 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the actual type of relation table 
   typedef Particle2Vertex::LightTable Table ;
   Table& p2pv_table = desktop() ->Particle2VertexRelations() ;
-
+  
   // loop over all decays 
   for ( std::vector<Decays::Decay>::const_iterator 
           idecay = m_decays.begin() ; 
@@ -754,23 +776,27 @@ StatusCode CombineParticles::execute    ()  // standard execution
 
       loop.current ( combination.begin() ) ;
 
-      if (msgLevel(MSG::VERBOSE)){
+      if ( msgLevel(MSG::VERBOSE) )
+      {
         for ( LHCb::Particle::ConstVector::const_iterator i = combination.begin(); i!=combination.end();++i)
           verbose() << "New Com: " << (*i)->key() << " " << (*i)->particleID().pid() << " "
                     << (*i)->momentum() << endmsg ; 
       }
-      if (checkOverlap()->foundOverlap(combination)) {
-        if (msgLevel(MSG::VERBOSE)) verbose() << "    Overlap!" << endmsg ;
+      if ( checkOverlap()->foundOverlap ( combination ) ) 
+      {
+        if ( msgLevel( MSG::VERBOSE ) ) verbose() << "    Overlap!" << endmsg ;
         continue ;
       } 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    No Overlap" << endmsg ;
-
+      if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    No Overlap" << endmsg ;
+      
       // here we have the combination and can apply the cut:
       
-      if ( !m_acut ( combination ) )  { 
-        if (msgLevel(MSG::VERBOSE)) verbose() << "    Failed Cut!" << endmsg ;
-        continue ; }               // CONTINUE      
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    Good combination" << endmsg ;
+      if ( !m_acut ( combination ) )  
+      { 
+        if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    Failed Cut!" << endmsg ;
+        continue ; 
+      }               // CONTINUE      
+      if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    Good combination" << endmsg ;
       
       // here we can create the particle (and the vertex)
       
@@ -780,16 +806,21 @@ StatusCode CombineParticles::execute    ()  // standard execution
       // lock the relation table Particle -> Primary Vertex:
       PV_Sentry lock ( p2pv_table , &mother ) ;
       
-      //      StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
-      StatusCode sc = vertexFitter()->fit( combination , mother , vertex ) ;
+      // use default particle combiner to create the composed particle
+      /** use default particle combiner to create the composed particle
+       *  @attention use default particle combiner to create the composed particle
+       */
+      StatusCode sc = combiner -> combine ( combination , mother , vertex ) ;
+      // StatusCode sc = vertexFitter()->fit( combination , mother , vertex ) ;
       if ( sc.isFailure() ) 
       { 
         Print ( "Error from IParticleCombiner, skip the combination" , sc, MSG::DEBUG ) ;
-        counter("Error from IParticleCombiner, skip the combination")++;
+        ++counter("Error from IParticleCombiner, skip the combination");
         continue ;                                                 // CONTINUE 
       }
       
-      if (msgLevel(MSG::VERBOSE)) verbose() << "    Passed fit" << endmsg ;
+      if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    Passed IParticleCombiner" << endmsg ;
+      
       if ( 0 != m_combinationPlots ) 
       {
         StatusCode sc = m_combinationPlots->fillPlots ( &mother ) ;
@@ -829,13 +860,13 @@ StatusCode CombineParticles::execute    ()  // standard execution
   if (!sc) { return sc ; }
   
   // the final decision 
-  setFilterPassed ( 0 < nTotal ) ;
+  setFilterPassed ( 0 != nTotal ) ;
   
   if ( problem ) 
   {
     Warning ( "A problem with combinatorics has occured" ) ; 
     if ( !m_stopIncidentName.empty() ) 
-    { incSvc()->fireIncident   ( Incident( name() , m_stopIncidentName ) ) ; }
+    { incSvc()->fireIncident   ( Incident ( name() , m_stopIncidentName ) ) ; }
   }
 
   return StatusCode::SUCCESS ;
@@ -985,11 +1016,16 @@ StatusCode CombineParticles::updateMajor  ()
 // ============================================================================
 // perform the update of the histogram properties 
 // ============================================================================
-StatusCode CombineParticles::getHistoTool( IPlotTool*& histoTool, std::string name, std::string path)
+StatusCode CombineParticles::getHistoTool 
+( IPlotTool*&        histoTool , 
+  const std::string& name      , 
+  const std::string& path      )
 {
-  if ( validPlots( name )){
+  if ( validPlots ( name ) ) 
+  {
     histoTool = tool<IPlotTool>( name, this ) ;
-    if ("" != path ){
+    if ( !path.empty() )
+    {
       StatusCode sc = m_daughtersPlots -> setPath ( path ) ;
       if ( sc.isFailure() ) 
       { return Error ( "Unable to set Plots Path "+path+" for tool "+name , sc ) ; }
