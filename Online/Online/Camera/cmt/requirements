@@ -18,14 +18,14 @@ use GaudiPolicy       v*
 use GaudiAlg          v*
 use ROOT              v*    LCG_Interfaces  -no_auto_imports
 
-apply_pattern disable_package_on platform=target-winxp
+#apply_pattern disable_package_on platform=target-winxp
 
 #============================================================================
 # Includes
 #============================================================================
 
 macro_append includes " -I$(CAMERAROOT)/Camera -I$(CAMERAROOT)/src" \
-                      WIN32 " -I$(CAMERAROOT)/Camera -I$(CAMERAROOT)/src"
+                      WIN32 " -I$(CAMERAROOT)\Camera -I$(CAMERAROOT)\src"
 
 # Install headers.
 apply_pattern install_more_includes more=Camera
@@ -43,8 +43,8 @@ document rootcint MessagePresenter MessagePresenter.h
 
 # The additional ROOT libraries required for linking.
 # -lHist -lGpad -lGraf -lGui " \
-macro_append ROOT_linkopts " `root-config --glibs` -lGui " \
-                           WIN32 " libHist.lib libGPAD.lib libGraf.lib libGui.lib "
+macro_append ROOT_linkopts " `root-config --glibs` " \
+                           WIN32 " libCore.lib libCint.lib libRIO.lib libNet.lib libHist.lib libGraf.lib libGraf3d.lib libGpad.lib libTree.lib libRint.lib libPostscript.lib libMatrix.lib libPhysics.lib libMathCore.lib libThread.lib libGui.lib"
 
 macro_remove cppflags "-pedantic "
 
