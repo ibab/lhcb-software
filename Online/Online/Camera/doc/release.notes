@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-08-13 - Gareth Rogers
+ - Added the list of libraries required to compile on Windows after comparison with
+   root-config output which runs on linux only.
+
 ! 2009-08-05 - Gareth Rogers
  - Added the missing file TClient which is used on Windows instead of client.h.
 
