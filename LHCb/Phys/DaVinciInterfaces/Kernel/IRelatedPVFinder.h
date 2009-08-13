@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.3 2009-08-13 14:57:18 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -105,6 +105,24 @@ public:
    */
   virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
                                                        const std::string& PVLocation) const =0;
+
+
+  /**
+   *
+   * New interfaces returning best related PV
+   * @todo document.
+   *
+   */
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::Container& PVs) const =0;
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::ConstVector& PVs) const =0;
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::VertexBase::Container& PVs) const =0;
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::VertexBase::Container& PVs) const =0;
+  virtual const LHCb::VertexBase* relatedPVs(const LHCb::Particle* particle,
+                                             const std::string& PVLocation) const =0;
 
 };
 #endif // KERNEL_IRELATEDPVFINDER_H
