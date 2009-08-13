@@ -13,7 +13,6 @@
 #include "RichKernel/RichDAQL0Header.h"
 
 // Interfaces
-#include "RichKernel/ICameraTool.h"
 #include "RichKernel/IHpdUkL1DisableTool.h"
 #include "RichKernel/IRichDetParameters.h"
 #include "RichKernel/IRichMirrorSegFinder.h"

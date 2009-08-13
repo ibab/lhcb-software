@@ -1,6 +1,5 @@
 <lcgdict>
 
-  <class name    = "ICameraTool"                         />
   <class name    = "Rich::HPDPixelCluster"               />
   <class name    = "Rich::HPDPixelClusters"               />
   <class name    = "Rich::HPDPixelClusters::ConstSharedPtn" />
