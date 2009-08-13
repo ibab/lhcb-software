@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.23 2009-08-12 20:32:48 graven Exp $
+! $Id: release.notes,v 1.24 2009-08-13 11:54:26 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-08-13 - Gerhard Raven
+ - add a bindMembers for PV3D
 
 ! 2009-08-12 - Gerhard Raven
  - accept events on error/incident/slow, no quota for now

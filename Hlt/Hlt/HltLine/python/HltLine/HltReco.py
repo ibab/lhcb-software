@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.4 2009-08-10 15:38:49 pkoppenb Exp $
+# $Id: HltReco.py,v 1.5 2009-08-13 11:54:26 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -32,6 +32,7 @@
 # 
 
 __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to get 'PV2D'
+          , 'PV3D'            # bindMembers instance with algorithms needed to get 'PV3D'
           , 'RZVelo'          # bindMembers instance with algorithms needed to get 'RZVelo'
           , 'Velo'            # bindMembers instance with algorithms needed to get 'Velo'
           , 'Forward'         # bindMembers instance with algorithms needed to get 'Forward'
@@ -261,6 +262,7 @@ importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward , prepareForward ] )
+PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
 RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
 #Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )
