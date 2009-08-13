@@ -4,17 +4,12 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::PixelQC
  *
- *  $Id: RichRecPixelQC.cpp,v 1.26 2009-07-30 11:02:36 jonrob Exp $
+ *  $Id: RichRecPixelQC.cpp,v 1.27 2009-08-13 13:22:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
  */
 //-----------------------------------------------------------------------------
-
-#include <fstream>
-
-// from Gaudi
-#include "GaudiKernel/AlgFactory.h"
 
 // local
 #include "RichRecPixelQC.h"

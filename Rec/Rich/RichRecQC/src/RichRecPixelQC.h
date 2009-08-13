@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::PixelQC
  *
  *  CVS Log :-
- *  $Id: RichRecPixelQC.h,v 1.11 2009-07-29 12:35:06 jonrob Exp $
+ *  $Id: RichRecPixelQC.h,v 1.12 2009-08-13 13:22:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -17,6 +17,9 @@
 
 // STD
 #include <sstream>
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
 
 // base class
 #include "RichRecBase/RichRecHistoAlgBase.h"

@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::TrackSelEff
  *
  *  CVS Log :-
- *  $Id: RichTrackSelEffMoni.cpp,v 1.8 2009-08-06 18:13:45 smenzeme Exp $
+ *  $Id: RichTrackSelEffMoni.cpp,v 1.9 2009-08-13 13:22:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   21/05/2009
@@ -129,7 +129,6 @@ StatusCode TrackSelEff::execute()
     // Ghost ?
     const LHCb::MCParticle * mcP = ( mcTrackOK ?
                                      m_richRecMCTruth->mcParticle(*iT,m_mcAssocWeight) : NULL );
-    const std::string tkClass = ( !mcTrackOK ? "All/" : mcP ? "Real/" : "Ghost/" );
     if ( mcTrackOK )
     {
       if ( mcP ) { ++nReal; } else { ++nGhost; }

@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : Rich::Rec::MC::HPDHitsMoni
  *
- *  $Id: RichHPDHitsMoni.cpp,v 1.10 2009-08-05 23:14:59 jonrob Exp $
+ *  $Id: RichHPDHitsMoni.cpp,v 1.11 2009-08-13 13:22:50 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -102,6 +102,7 @@ StatusCode HPDHitsMoni::execute()
         const int nPixRows = ( (*iHPD).second.header().aliceMode() ? 
                                Rich::DAQ::MaxDataSizeALICE : Rich::DAQ::MaxDataSize );
 
+        // number of hits plot
         plot1D( rawIDs.size(),
                 hid(rich,"NumHits"+ZS+(std::string)l0ID), HPD1.str(),
                 -0.5,100.5,101 );
@@ -116,15 +117,22 @@ StatusCode HPDHitsMoni::execute()
                             (*iR).pixelRow()*Rich::DAQ::NumAlicePixelsPerLHCbPixel + (*iR).pixelSubRow() :
                             (*iR).pixelRow() );
 
-          // fill plot
+          // HPD hit map
           plot2D( (*iR).pixelCol(), row,
                   hid(rich,"HitMaps"+ZS+(std::string)l0ID), HPD2.str(),
                   -0.5,Rich::DAQ::NumPixelColumns-0.5,
                   -0.5,nPixRows-0.5,
                   Rich::DAQ::NumPixelColumns,nPixRows );
 
+          // Combined hit map
+          plot2D( (*iR).pixelCol(), row,
+                  hid(rich,"HitMaps"+ZS+"Combined"), "Combined HPD Hit Map",
+                  -0.5,Rich::DAQ::NumPixelColumns-0.5,
+                  -0.5,nPixRows-0.5,
+                  Rich::DAQ::NumPixelColumns,nPixRows );
+          
         } // raw channel ids
-
+        
       } // loop over HPDs
     } // ingresses
   } // L1 boards
