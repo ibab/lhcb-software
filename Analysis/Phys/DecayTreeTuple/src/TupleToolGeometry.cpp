@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.8 2008-12-19 13:12:08 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.9 2009-08-13 10:48:50 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -38,8 +38,12 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
   , m_dist(0)
   ,m_photonID(22)
   ,m_pi0ID(111)
+  ,m_fillMother(true)
 {
   declareInterface<IParticleTupleTool>(this);
+  declareProperty("FillMother",m_fillMother=true,
+		  "Turn false if the mother is expected to be NULL, will not fill mother PV info");
+  
 }
 
 //=============================================================================
@@ -67,47 +71,80 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
                                     , const Particle* P
                                     , const std::string& head
                                     , Tuples::Tuple& tuple ){
-  Assert( P && mother && m_dist && m_context
-          , "This should not happen, you are inside TupleToolGeometry.cpp :(" );
+  Assert( P && (mother || !m_fillMother) && m_dist && m_context
+          , "No mother or particle, or tools misconfigured. This should not happen, you are inside TupleToolGeometry.cpp :( Try setting FillMother=False. " );
   
   if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID  ){
     return Warning("Will not fill geometry tuple for photons and pi0. No worry.", StatusCode::SUCCESS, 10);
   }
   
+  //fill min IP
   StatusCode sc = fillMinIP(P,head,tuple);
   if (!sc) return sc;
- 
-  // fill with mother PV
-  const VertexBase* motherPV = m_context->desktop()->relatedVertex ( mother );
-  sc = fillBPV(motherPV,P,head,tuple);
-  if (!sc) return sc;
   
-  // fill with particle's best PV
-  if ( mother != P ){
-    const VertexBase* myPV = m_context->desktop()->relatedVertex ( P );
-    sc = fillBPV(myPV,P,head,tuple,"_OWNPV");
+  const VertexBase* aPV = NULL;
+  
+  //=========================================================================
+  // fill IP for Particles's Own BPV.. if it isn't the mother!
+  //=========================================================================
+  if ( !m_fillMother || !mother || mother != P )
+  {
+    aPV = m_context->desktop()->relatedVertex ( P );
+    sc = fillVertexFull(aPV,P,head,"_OWNPV",tuple);
     if (!sc) return sc;
   }
+  //=========================================================================
+  // fill IP for head of chain's own BPV
+  //=========================================================================
+  if ( mother && m_fillMother )
+  {
+    aPV = m_context->desktop()->relatedVertex ( mother );
+    sc = fillVertexFull(aPV,P,head,"_PV",tuple);
+    if (!sc) return sc;
+  }
+  //=========================================================================
+  // fill IP wrt Mother's decay vertex, if it isn't the mother!
+  //=========================================================================
+  if ( mother && m_fillMother && mother != P)
+  {
+    aPV = originVertex( mother, P );
+    sc = fillVertexFull(aPV,P,head,"_ORIVX",tuple);
+    if (!sc) return sc;
+  }
+  //=========================================================================
   // nothing more for basic particles
   if( P->isBasicParticle() ) return sc ;
+  //=========================================================================
+  
+  //=========================================================================
+  //fill end vertex info
+  //=========================================================================
+  const VertexBase* evtx = P->endVertex();
+  if( 0==evtx ) return Error("Can't retrieve the end vertex for " + head );
   // end vertex 
-  sc = fillEndVertex(P,head,tuple);
-  if (!sc) return sc;
-  // flight wrt Mother BPV
-  sc = fillFlight(motherPV,P,head,tuple);
-  if (!sc) return sc;
-  if ( mother != P ){
-    // flight wrt own best PV
-    sc = fillFlight(motherPV,P,head,tuple,"_OWNPV");
-    if (!sc) return sc;
-    // flight wrt origin vertex (I.e. the B for a D)
-    const VertexBase* vtx = originVertex( mother, P );
-    if( 0==vtx ) return Error("Can't retrieve the origin vertex for " + head );
-    sc = fillFlight(vtx,P,head,tuple,"_ORIVX");
-  }
+  sc = fillVertex(evtx,head+"_ENDVERTEX",tuple);
 
   return sc ;
+  
 }
+//=========================================================================
+//  Fill Everything for this vertex for related PV 
+//=========================================================================
+StatusCode TupleToolGeometry::fillVertexFull(const LHCb::VertexBase* vtx, 
+				      const LHCb::Particle* P, 
+				      std::string head, std::string vtx_name, 
+				      Tuples::Tuple& tuple) const 
+{
+    if( 0==vtx ) return Error("Can't retrieve the " +vtx_name+ " vertex for " + head );
+    StatusCode sc = fillVertex(vtx,head+vtx_name,tuple);
+    if (!sc) return sc;
+    sc = fillBPV(vtx,P,head,tuple,vtx_name);
+    if (!sc) return sc;
+    if( !P->isBasicParticle() ) sc = fillFlight(vtx,P,head,tuple,vtx_name);
+    return sc;
+
+}
+
 //=========================================================================
 //  Fill PV for related PV 
 //=========================================================================
@@ -161,20 +198,20 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
 //=========================================================================
 // fill vertex stuff 
 //=========================================================================
-StatusCode TupleToolGeometry::fillEndVertex( const Particle* P
-                                          , const std::string head
+StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
+                                          , std::string vtx_name
                                           , Tuples::Tuple& tuple ) const {
   bool test = true ;
-
-  const VertexBase* evtx = P->endVertex();
+  
   // decay vertex information:
-  test &= tuple->column( head + "_ENDVERTEX_", evtx->position() );
-  const Gaudi::SymMatrix3x3 & m = evtx->covMatrix ();
-  test &= tuple->column( head + "_ENDVERTEX_XERR", std::sqrt( m(0,0) ) );
-  test &= tuple->column( head + "_ENDVERTEX_YERR", std::sqrt( m(1,1) ) );
-  test &= tuple->column( head + "_ENDVERTEX_ZERR", std::sqrt( m(2,2) ) );
-  test &= tuple->column( head + "_ENDVERTEX_CHI2", evtx->chi2() );
-  test &= tuple->column( head + "_ENDVERTEX_NDOF", evtx->nDoF() );
+  test &= tuple->column( vtx_name+"_", vtx->position() );
+  const Gaudi::SymMatrix3x3 & m = vtx->covMatrix ();
+  test &= tuple->column(  vtx_name + "_XERR", std::sqrt( m(0,0) ) );
+  test &= tuple->column(  vtx_name + "_YERR", std::sqrt( m(1,1) ) );
+  test &= tuple->column(  vtx_name + "_ZERR", std::sqrt( m(2,2) ) );
+  test &= tuple->column(  vtx_name + "_CHI2", vtx->chi2() );
+  test &= tuple->column(  vtx_name + "_NDOF", vtx->nDoF() );
+  test &= tuple->matrix(  vtx_name + "_COV_", m );
   // --------------------------------------------------
   return StatusCode(test) ;
 
@@ -216,6 +253,7 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
   return StatusCode(test);
 }
 // =====================================================
+// find origin vertex in the decay chain
 // =====================================================
 const VertexBase* TupleToolGeometry::originVertex( const Particle* top
 						 , const Particle* P ) const {

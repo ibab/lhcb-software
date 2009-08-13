@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.6 2008-12-19 13:12:08 pkoppenb Exp $
+// $Id: TupleToolGeometry.h,v 1.7 2009-08-13 10:48:50 rlambert Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -26,21 +26,28 @@ namespace LHCb {
  * - head_ENDVERTEX_[X|Y|Z]ERR : decay vertex position error estimate for composite particles
  * - head_ENDVERTEX_CHI2 : decay vertex chi2
  * - head_ENDVERTEX_NDOF : decay vertex nDoF
+ * - head_PV_[X|Y|Z] : PhysDesktop::relatedVertex() of the top of decay chain position
+ * - head_PV_[X|Y|Z]ERR : PhysDesktop::relatedVertex() of the top of decay chain position error estimate
+ * - head_PV_CHI2 : PhysDesktop::relatedVertex() of the top of decay chain chi2
+ * - head_PV_NDOF : PhysDesktop::relatedVertex() of the top of decay chain nDoF
  * - head_IP : impact parameter with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_IPCHI2 : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_FD : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_FDCHI2 : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() of the top of decay chain
  * - head_DIRA : direction angle wrt. the PhysDesktop::relatedVertex() of the top of decay chain
+ * - head_OWNPV_[X|Y|Z] : related primary vertex position
+ * - head_OWNPV_[X|Y|Z]ERR : related primary vertex position error estimate for composite particles
+ * - head_OWNPV_CHI2 : related primary vertex chi2
+ * - head_OWNPV_NDOF : related primary vertex nDoF
  * - head_IP_OWNPV : impact parameter with respect to the PhysDesktop::relatedVertex() considered particle 
- *  (not vailable for the top of decay chain)
  * - head_IPCHI2_OWNPV : impact parameter chi2 with respect to the PhysDesktop::relatedVertex() considered particle 
- * (not vailable for the top of decay chain)
  * - head_FD_OWNPV : flight distance of composite particle wrt. the PhysDesktop::relatedVertex() considered particle 
- * (not vailable for the top of decay chain)
  * - head_FDCHI2_OWNPV : flight distance significance in units of chi2 wrt. the PhysDesktop::relatedVertex() considered particle 
- * (not vailable for the top of decay chain)
  * - head_DIRA_OWNPV : direction angle wrt. the PhysDesktop::relatedVertex() considered particle 
- * (not vailable for the top of decay chain)
+ * - head_ORIVX_[X|Y|Z] : ancestor's related primary vertex position (when applicable)
+ * - head_ORIVX_[X|Y|Z]ERR : ancestor's related primary vertex position error estimate (when applicable)
+ * - head_ORIVX_CHI2 : ancestor's related primary vertex chi2 (when applicable)
+ * - head_ORIVX_NDOF : ancestor's related primary vertex nDoF (when applicable)
  * - head_IP_ORIVX : impact parameter with respect to the ancestor's vertex (when applicable)
  * - head_IPCHI2_ORIVX : impact parameter chi2 with respect to the ancestor's vertex (when applicable)
  * - head_FD_ORIVX : flight distance of composite particle wrt. the ancestor's vertex (when applicable)
@@ -70,6 +77,11 @@ public:
 
 private:
 
+  /// fill end vertex stuff
+  StatusCode fillVertexFull(const LHCb::VertexBase* vtx, 
+		     const LHCb::Particle* P, 
+		     std::string head, std::string vtx_name, Tuples::Tuple&) const ;
+
   /// origin vertex
   const LHCb::VertexBase* originVertex( const  LHCb::Particle*
                                         , const LHCb::Particle* ) const;
@@ -80,10 +92,7 @@ private:
   StatusCode fillMinIP(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
 
   /// fill end vertex stuff
-  StatusCode fillEndVertex(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
-
-  /// fill origin vertex stuff
-  StatusCode fillOriginVertex(const LHCb::Particle*, std::string, Tuples::Tuple&) const ;
+  StatusCode fillVertex(const LHCb::VertexBase* vtx, std::string vtx_name, Tuples::Tuple&) const ;
 
   /// fill flight
   StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*, 
@@ -94,6 +103,8 @@ private:
   
   int m_photonID; 
   int m_pi0ID;
+  bool m_fillMother;
+  
 
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H
