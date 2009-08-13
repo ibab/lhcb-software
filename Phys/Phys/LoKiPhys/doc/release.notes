@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.111 2009-08-12 09:50:29 ibelyaev Exp $ 
+! $Id: release.notes,v 1.112 2009-08-13 11:27:40 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-13 - Vanya BELYAEV
+
+ - substitute assertions by error messages for BPV*LT* functors 
 
 ! 2009-08-12 - Vanya BELYAEV
 

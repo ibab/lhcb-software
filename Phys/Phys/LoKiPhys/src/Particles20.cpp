@@ -1,4 +1,4 @@
-// $Id: Particles20.cpp,v 1.9 2009-04-29 15:00:26 ibelyaev Exp $
+// $Id: Particles20.cpp,v 1.10 2009-08-13 11:27:40 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -920,8 +920,8 @@ LoKi::Particles::LifeTimeDV::operator()
 {
   if ( 0 == p ) 
   {
-    Error ( "LHCb::Particle* points to NULL, return -InvalidTime") ;
-    return -LoKi::Constants::InvalidTime ;
+    Error ( "LHCb::Particle* points to NULL, return InvalidTime") ;
+    return LoKi::Constants::InvalidTime ;
   }    
   // check the tool 
   if ( 0 == tool() ) { loadFitter ( *this , lokiSvc() , m_fit ) ; }
@@ -931,8 +931,15 @@ LoKi::Particles::LifeTimeDV::operator()
   if ( !validDesktop() ) { loadDesktop() ; }
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
-  // get the vertex from desktop 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  // get the vertex from desktop
+  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  if ( 0 == vx ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
+    return LoKi::Constants::InvalidTime ;
+  }
+  //
+  setVertex ( vx ) ;
   // use the functor 
   return lifeTime ( p ) ;
 }
@@ -981,7 +988,13 @@ LoKi::Particles::LifeTimeChi2DV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  if ( 0 == vx ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  setVertex ( vx ) ;
   // use the functor 
   return lifeTimeChi2 ( p ) ;
 }
@@ -1032,7 +1045,13 @@ LoKi::Particles::LifeTimeSignedChi2DV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  if ( 0 == vx ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  setVertex ( vx ) ;
   // use the functor 
   return lifeTimeSignedChi2 ( p ) ;
 }
@@ -1083,7 +1102,13 @@ LoKi::Particles::LifeTimeFitChi2DV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  if ( 0 == vx ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;
+  }
+  setVertex ( vx ) ;
   // use the functor 
   return lifeTimeFitChi2 ( p ) ;
 }
@@ -1136,7 +1161,13 @@ LoKi::Particles::LifeTimeErrorDV::operator()
   // check it!
   Assert ( validDesktop () , "No valid IPhysDesktop is found" );
   // get the vertex from desktop 
-  setVertex ( desktop() -> relatedVertex ( p ) ) ;
+  const LHCb::VertexBase* vx = desktop()->relatedVertex ( p ) ;
+  if ( 0 == vx ) 
+  {
+    Error ( "LHCb::VertexBase* points to NULL, return InvalidTime") ;
+    return LoKi::Constants::InvalidTime ;
+  }
+  setVertex ( vx ) ;
   // use the functor 
   return lifeTimeError ( p ) ;
 }
