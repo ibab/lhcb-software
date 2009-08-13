@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.8 2009-07-23 08:22:15 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.9 2009-08-13 15:02:58 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -98,10 +98,49 @@ public:
     return Particle2Vertex::LightTable();
   }
 
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::Container& PVs) const 
+  {
+    return relatedPV(particle, PVs.begin(), PVs.end());
+  }
+  
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::RecVertex::ConstVector& PVs) const 
+  {
+    return relatedPV(particle, PVs.begin(), PVs.end());
+  }
+  
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::VertexBase::Container& PVs) const 
+  {
+    return relatedPV(particle, PVs.begin(), PVs.end());
+  }
+  
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const LHCb::VertexBase::Container& PVs) const 
+  {
+    return relatedPV(particle, PVs.begin(), PVs.end());
+  }
+  
+  virtual const LHCb::VertexBase* relatedPVs(const LHCb::Particle* particle,
+                                             const std::string& PVLocation) const
+  {
+    LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>( PVLocation );
+    
+    if (0!=PVs) {
+      return relatedPV(particle, PVs->begin(), PVs->end() );
+    } else {
+      Error("No LHcb::RecVertex::Container found at "+PVLocation).ignore();
+    }
+    return 0;
+  }
+  
+
+
 private:
 
   template <typename Iter> 
-  const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+  inline const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
                                                Iter begin,
                                                Iter end     ) const
   {
@@ -121,6 +160,17 @@ private:
     }
     return table;
   }
+
+  template <typename Iter>
+  const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                    Iter begin,
+                                    Iter end ) const
+  {
+    /// @todo implement this!
+    return 0;
+    
+  }
+  
   
 private:
 
