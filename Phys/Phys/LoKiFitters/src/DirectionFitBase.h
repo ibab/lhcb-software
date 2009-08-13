@@ -1,4 +1,4 @@
-// $Id: DirectionFitBase.h,v 1.4 2009-05-16 12:28:12 ibelyaev Exp $
+// $Id: DirectionFitBase.h,v 1.5 2009-08-13 14:44:42 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_DIRECTIONFITBASE_H 
 #define LOKIFITTERS_DIRECTIONFITBASE_H 1
@@ -29,6 +29,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // =========================================================================
   /** @class DirectionFitBase DirectionFitBase.h
    *
    *  The useful base class for implementationof two importantdf fitters
@@ -355,7 +356,8 @@ namespace LoKi
     {
       if ( 0 == m_transporter ) 
       { m_transporter = tool<IParticleTransporter> ( m_transporterName ) ; }
-      return m_transporter -> transportAndProject ( p1 , z , p2 ) ;
+      // return m_transporter -> transportAndProject ( p1 , z , p2 ) ;
+      return m_transporter -> transport  ( p1 , z , p2 ) ;
     }
     // ========================================================================
     /** transport the particle into new position 

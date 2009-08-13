@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.18 2009-05-16 15:54:56 ibelyaev Exp $ 
+! $Id: release.notes,v 1.19 2009-08-13 14:44:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-13 - Vanya BELYAEV
+
+ - DirectionFitterBase::transport 
+
+      revert to "old" ( "pre-May 2k+9" ) behaviour 
+
+          "transport" instead of "transportAndProject" 
+
+- cmt/requirments
+
+     version inrement to v2r2 
+
 
 !========================== LoKiFitters v2r1p1 2009-05-16 =================
 
