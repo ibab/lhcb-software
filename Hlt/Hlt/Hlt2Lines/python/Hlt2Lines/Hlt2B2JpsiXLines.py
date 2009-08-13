@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.5 2009-07-29 16:30:07 conti Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.6 2009-08-13 11:56:25 graven Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -92,11 +92,14 @@ class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
                         , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
                         )
 
-        # Now do the detached
+        # Now do the detached 
+        # Note: we should _share_ the J/psi and phi between these two lines!!
         BsCutsDetached = BsCuts + "& (BPVLTIME()>" + str(self.getProp('BsLifetimeCut')) + "*ps)"
+        from HltLine.HltReco import PV3D
         line.clone('Bs2JpsiPhiDetached'
                    , prescale = self.prescale
                    , postscale = self.postscale
+                   , algos = PV3D.members() + [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCutsDetached}
                    )
 

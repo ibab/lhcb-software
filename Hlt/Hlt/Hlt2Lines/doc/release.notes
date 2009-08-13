@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.46 2009-08-11 14:34:11 pkoppenb Exp $
+$Id: release.notes,v 1.47 2009-08-13 11:56:25 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-13 Gerhard Raven
+ - add PV3D (needs new HltLine!) to detached J/psi phi line
 
 ! 2009-08-11 Gerhard Raven
  - add Hlt2 commissioning lines which cause Hlt2 to accept certain Hlt1 lines, 
