@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.453 2009-08-12 15:16:17 jpalac Exp $
+! $Id: release.notes,v 1.454 2009-08-13 09:04:54 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-13 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . Remove bizarre and unorthodox way of copying Particle and Vertex.
 
 ! 2009-08-12 - Juan PALACIOS
  - src/PhysDesktop.cpp
