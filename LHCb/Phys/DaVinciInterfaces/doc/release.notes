@@ -4,6 +4,15 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-08-13 -  Vanya BELYAEV
+
+ - Kernel/IOnOffLine.h 
+
+    add method  "particleCombinerType" to get the default (contetx-dependent)
+    type for IParticleCombiner tool, 
+    the tool whcihis responsible to creation of composed particles 
+
+
 ! 2009-08-04 - Juan Palacios
  - Remove IRelatedPV.
   . Obsolete for a while.
