@@ -1,9 +1,10 @@
-// $Id: IVeloExpectation.h,v 1.4 2007-07-05 14:05:17 cattanem Exp $ 
+// $Id: IVeloExpectation.h,v 1.5 2009-08-13 14:58:04 smenzeme Exp $ 
 #ifndef _IVeloExpectation_H
 #define _IVeloExpectation_H
  
 #include "GaudiKernel/IAlgTool.h"
- 
+#include <bitset>
+
 static const InterfaceID IID_IVeloExpectation( "IVeloExpectation", 0, 0 );
  
 /** @class IVeloExpectation IVeloExpectation.h TrackInterfaces/IVeloExpectation.h
@@ -52,6 +53,14 @@ public:
   */
   virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack ) const = 0;
 
+  /** Returns Info on hits expected, from zFirst to endVelo and fills a bitmap for hit pattern
+  *
+  *  @param aTrack Reference to the Track to test
+  *
+  *  @return Info
+  */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack, std::bitset<23> velo[4]) const = 0;
+
   /** Returns number of hits expected, from zStart to zStop
    *
    *  @code 
@@ -77,7 +86,18 @@ public:
   *
   *  @return Info
   */
-  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0;
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop) const = 0; 
+
+
+  /** Returns Info on hits expected, from zStart to zStop and fills a bitmap for hit pattern
+  *
+  *  @param aTrack Reference to the Track to test
+  *  @param zStart --> start of scan range
+  *  @param zStop --> end of scan range
+  *
+  *  @return Info
+  */
+  virtual IVeloExpectation::Info expectedInfo ( const LHCb::Track& aTrack , const double zStart, const double zStop,  std::bitset<23> velo[4]) const = 0;
 
 
   /** Returns number of hits missed, from zBeamLine to firstHit
