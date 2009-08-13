@@ -8,6 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
+from HltLine.HltReco import PV3D
 from Configurables import FilterDesktop
 from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
 ##########################################################################
@@ -30,6 +31,6 @@ Hlt2GoodPions.InputLocations = [ NoCutsPions.outputSelection()]
 
 __all__ = ( 'GoodKaons','GoodPions' )
 
-GoodKaons = bindMembers( None, [ NoCutsKaons, Hlt2GoodKaons ] )
-GoodPions = bindMembers( None, [ NoCutsPions, Hlt2GoodPions ] )
+GoodKaons = bindMembers( None, [ PV3D, NoCutsKaons, Hlt2GoodKaons ] )
+GoodPions = bindMembers( None, [ PV3D, NoCutsPions, Hlt2GoodPions ] )
 

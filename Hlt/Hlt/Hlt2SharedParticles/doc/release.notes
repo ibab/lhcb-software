@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.42 2009-08-13 17:54:36 pkoppenb Exp $
+$Id: release.notes,v 1.43 2009-08-13 18:54:58 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-13 - Gerhard Raven
+ - add dependency of GoodPions and GoodKaons on PV
 
 ! 2009-08-13 - Patrick Koppenburg
  - CaloReco.py : make it even more configurable
