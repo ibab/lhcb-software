@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.9 2009-08-13 10:48:50 rlambert Exp $
+// $Id: TupleToolGeometry.cpp,v 1.10 2009-08-14 07:57:40 rlambert Exp $
 // Include files
 
 // from Gaudi
@@ -256,8 +256,11 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
 // find origin vertex in the decay chain
 // =====================================================
 const VertexBase* TupleToolGeometry::originVertex( const Particle* top
-						 , const Particle* P ) const {
-  if( top == P || P->isBasicParticle() ) return 0;
+						 , const Particle* P ) const 
+{
+  //this used to pass back zero if P was a basic particle.
+  //I don't think that's necessary. R Lambert 2009-08-14
+  if( top == P || top->isBasicParticle() ) return 0;
 
   const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
   if( dau.empty() ) return 0;

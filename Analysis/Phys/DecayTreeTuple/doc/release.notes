@@ -7,13 +7,17 @@
 ! Use $DAVINCISYSROOT/tests/options/DVTestDecayTreeTuple.py for tests
 !
 !----------------------------------------------------------------------------
-! 2009-08-05 - Stephanie Hansmann-Menzemer - ! 
-- remove filling of track-extra info, according to changes in Track.xml class
+
+! 2009-08-14 - Rob Lambert
+ - Fixed minor bug in TupleToolGeometry
 
 ! 2009-08-13 - Rob Lambert
  - Added vertex position information into TupleToolGeometry
  - Added TupleToolTrackIsolation, Fills information about the number
    of tracks within a particular cone angle of the track
+
+! 2009-08-05 - Stephanie Hansmann-Menzemer - ! 
+- remove filling of track-extra info, according to changes in Track.xml class
 
 !========================== DecayTreeTuple v2r4 2009-08-07 ==================
 
