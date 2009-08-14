@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.7 2009-08-06 14:46:53 pkoppenb Exp $
+# $Id: HltCommissioningLines.py,v 1.8 2009-08-14 08:38:52 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -42,7 +42,7 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
         from Configurables import FilterByBankType
         Line('Tell1Error'
             , ODIN='ODIN_ALL'
-            , algos = [ FilterByBankType('AcceptTell1Error' 
+            , algos = [ FilterByBankType('Hlt1Tell1ErrorDecision' 
                                         , PassSelectedEvents = True
                                         , BankNames = [ ".*Error" ] 
                                         )
@@ -56,7 +56,7 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
         ###        no control as to the order in which things run...
         Line('Incident'
             , ODIN = 'ODIN_ALL'
-            , algos = [ HltIncidentFilter() ]
+            , algos = [ HltIncidentFilter('Hlt1IncidentDecision') ]
             , prescale = self.prescale
             , postscale = self.postscale
             , priority = 254
