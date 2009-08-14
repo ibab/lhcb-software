@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.30 2009-07-08 18:28:26 jonrob Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.31 2009-08-14 15:50:55 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -154,8 +154,16 @@ private: // methods
 
   /// Loads a CALO relations table
   template < typename TYPE >
-  inline bool loadCaloTable( TYPE *& table, const std::string & location ) const
+  inline bool loadCaloTable( TYPE *& table, const std::string & loc ) const
   {
+    std::string location = loc ;
+    if (""!=m_hltLocation && "Hlt"!=m_hltLocation){
+      unsigned int pos = location.find("Hlt");
+      if (pos>=location.size()) Exception("Did not find Hlt in "+location);
+      location.replace(pos,3,m_hltLocation) ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << loc << " -> " << location << endmsg ;
+    }
+    
     const bool ok = exist<TYPE>(location);
     if ( !ok )
     {
@@ -229,13 +237,14 @@ private: // data
   const LHCb::Calo2Track::ITrEvalTable*  m_BremChi2Table ;
   const LHCb::Calo2Track::ITrEvalTable*  m_EcalChi2Table ;
 
-  // tallies
-
   /// Event count
   unsigned long m_nEvts;
 
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;
+
+  /// non standard hlt location
+  std::string m_hltLocation ;
   
 };
 

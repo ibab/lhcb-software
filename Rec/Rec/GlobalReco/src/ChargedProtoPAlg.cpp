@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.72 2009-07-30 12:16:52 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.73 2009-08-14 15:50:55 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -98,6 +98,8 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
 
   // output data
   declareProperty( "OutputProtoParticleLocation", m_protoPath );
+  // non standard Hlt location
+  declareProperty( "NonStandardHltLocation", m_hltLocation = "" );
 
 }
 
@@ -136,11 +138,11 @@ StatusCode ChargedProtoPAlg::initialize()
   if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS ).ignore();
   if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable RICH warnings
-  if (!m_richPID)  Warning( "RICH PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_richPID) Warning( "RICH PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable MUON warnings
-  if (!m_muonPID)  Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_muonPID) Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable VELO warnings
-  if (!m_veloPID)  Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
+  if (!m_veloPID) Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
@@ -1029,7 +1031,8 @@ void ChargedProtoPAlg::printStats( const MSG::Level level ) const
   const std::string LINES(148,'=');
 
   msg << LINES << endmsg;
-  msg << " # Tracks Per Event         |    Track     |     RICH         MUON         ECAL         BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
+  msg << " # Tracks Per Event         |    Track     |     RICH         MUON         ECAL         " 
+      << "BREM         SPD          PRS          HCAL     VELO(dE/dx)" << endmsg;
   msg << lines << endmsg;
   for ( TrackMap::const_iterator iT = m_nTracks.begin();
         iT != m_nTracks.end(); ++iT )
