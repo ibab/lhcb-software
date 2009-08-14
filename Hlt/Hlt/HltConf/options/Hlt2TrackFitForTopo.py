@@ -3,6 +3,8 @@
 #  Redo Hlt exclusive selections particle making with refit tracks.
 #  Based on HltConf/Hlt2Particles.opts
 #
+#  @todo REPLACE THIS WITH HltReco.py with special settings
+#
 #---------------------------------------------------------------------
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
@@ -109,7 +111,7 @@ SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFChargedForTopoProtoPAlg
 
 Hlt2TFChargedForTopoProtoPAlg.InputTrackLocation = "Hlt/Track/TFForwardForTopo"
 Hlt2TFChargedForTopoProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForTopo"
-# Clones will not be accepted
+# Clones will not be accepte
 Hlt2TFChargedForTopoProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
 Hlt2TFChargedForTopoProtoPAlg.TrackSelector.AcceptClones = False
 
@@ -172,37 +174,4 @@ HltRichPIDsTFKaonsForTopo.addTool(TrackSelector())
 HltRichPIDsTFKaonsForTopo.TrackSelector.TrackTypes = ["Long"]
 HltRichPIDsTFKaonsForTopo.addTool(ProtoParticleCALOFilter('Kaon'))
 HltRichPIDsTFKaonsForTopo.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-5.0'"]
-
-#---------------------------------------------------------------------
-# Muons sequence
-#---------------------------------------------------------------------
-SeqHlt2TFMuonsForTopo = GaudiSequencer('SeqHlt2TFMuonsForTopo')
-SeqHlt2TFParticlesForTopo.Members += [ SeqHlt2TFMuonsForTopo ]
-SeqHlt2TFMuonsForTopo.IgnoreFilterPassed = 1
-
-#---------------------------------------------------------------------
-# Muons from Long tracks
-#---------------------------------------------------------------------
-Hlt2TFMuonsForTopo = CombinedParticleMaker('Hlt2TFMuonsForTopo')
-SeqHlt2TFMuonsForTopo.Members += [ Hlt2TFMuonsForTopo ]
-
-Hlt2TFMuonsForTopo.Input =  "/Event/Hlt/ProtoP/TFChargedForTopo"
-Hlt2TFMuonsForTopo.Particle = "muon"
-Hlt2TFMuonsForTopo.addTool(ProtoParticleMUONFilter('Muon'))
-Hlt2TFMuonsForTopo.Muon.Selection = ["RequiresDet='MUON'"]
-Hlt2TFMuonsForTopo.addTool(TrackSelector())
-Hlt2TFMuonsForTopo.TrackSelector.TrackTypes = ["Long"]
-Hlt2TFMuonsForTopo.DecayDescriptor = "Muon"
-
-#---------------------------------------------------------------------
-# Special case for electrons 
-#---------------------------------------------------------------------
-Hlt2TFElectronsForTopo = CombinedParticleMaker('Hlt2TFElectronsForTopo')
-SeqHlt2TFParticlesForTopo.Members += [ Hlt2TFElectronsForTopo ]
-
-Hlt2TFElectronsForTopo.Particle =  "electron"
-Hlt2TFElectronsForTopo.Input =  "/Event/Hlt/ProtoP/TFChargedForTopo"
-Hlt2TFElectronsForTopo.addTool(ProtoParticleCALOFilter('Electron'))
-Hlt2TFElectronsForTopo.Electron.Selection = ["RequiresDet='CALO' CombDLL(e-pi)>'-2.0'"]
-
 

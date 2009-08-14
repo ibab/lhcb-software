@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.316 2009-08-14 10:26:19 graven Exp $ 
+! $Id: release.notes,v 1.317 2009-08-14 15:52:18 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-14 - Patrick Koppenburg
+ - TrackFitForTopo : remove muons and electrons. Now in Hlt2SharedParticles
 
 ! 2009-08-14 - Gerhard Raven
  - add pragma print off to options/TsaTool.opts
