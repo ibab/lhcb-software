@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.48 2009-08-13 20:53:17 graven Exp $
+$Id: release.notes,v 1.49 2009-08-14 10:23:21 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-14 Gerhard Raven
+ - add monitoring line for forward/long tracking
 
 ! 2009-08-13 Gerhard Raven
  - add PV3D (needs new HltLine!) to detached J/psi phi line

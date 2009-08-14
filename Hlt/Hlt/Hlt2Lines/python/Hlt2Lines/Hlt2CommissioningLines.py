@@ -1,8 +1,8 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.2 2009-08-13 20:53:17 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.3 2009-08-14 10:23:22 graven Exp $
 # =============================================================================
 ## @file
-#  Configuration of Hlt Lines for commissioning
+#  Configuration of Hlt Lines for commissioning 
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
 #  @date 2009-08-11
 # =============================================================================
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -21,6 +21,7 @@ from HltLine.HltLine import Hlt2Line   as Line
 class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
+                              , 'Hlt2Forward'      : 0.0001
                               }
                }
    def __apply_configuration__(self):
@@ -34,7 +35,20 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             , postscale = self.postscale
             , PV = False
             )
+
+        from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
+
+        Line('Forward', prescale = self.prescale, postscale = self.postscale
+            , algos = [ HltCopyTrackSelection( 'Hlt2ForwardDecision' 
+                                             , InputSelection = 'TES:/Hlt/Track/Long' # carefull! needs info from HltLine.HltReco!!
+
+                                             )
+                      ]
+            , PV = False
+            )
+
         from Configurables import HltANNSvc
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2PassThroughDecision"     : 50011
-                                            , "Hlt2TransparantDecision"     : 50012 } )
+                                            , "Hlt2TransparantDecision"     : 50012
+                                            , "Hlt2ForwardDecision"         : 50013} )
 
