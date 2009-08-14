@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.8 2009-08-13 20:52:07 graven Exp $ 
+# $Id: HltLine.py,v 1.9 2009-08-14 10:20:55 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1245,6 +1245,7 @@ class Hlt2Line(object):
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
                    PV        = None ,   # insert PV reconstruction at the start of the line
+                   #Lumi      = False ,   # process lumi exclusive events
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1298,10 +1299,9 @@ class Hlt2Line(object):
         #start to contruct the sequence        
         line = self.subname()
 
-        # bind members to line
-        _boundMembers = bindMembers( line, algos )
+        # bind members to line 
+        _boundMembers = bindMembers( line, algos if not self._PV else self._PVAlgorithms + algos )
         _members = _boundMembers.members()
-        if self._PV : _members = self._PVAlgorithms + _members
 
 
         # create the line configurable
@@ -1320,13 +1320,15 @@ class Hlt2Line(object):
             while hasattr(last,'Members') : 
                 last = getattr(last,'Members')[-1]
             ## TODO: check if 'last' is a FilterDesktop, CombineParticles, or something else...
-            from Configurables import CombineParticles, FilterDesktop
-            knownLastMembers = [ CombineParticles, FilterDesktop ]
-            #if last.getName() not in knownLastMembers :
-            #  print 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType()
-            members = _members + [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
-                                                           , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
-                                                           , OutputSelection = decisionName(line, 'Hlt2')) ]
+            needsCopy = [ 'CombineParticles', 'FilterDesktop', 'Hlt2DisplVertices' ]
+            knownLastMembers = needsCopy + [ 'HltCopySelection<LHCb::Track>' ]
+            if last.getType() not in knownLastMembers :
+              log.warning( 'last item in line ' + self.name() + ' is ' + last.getName() + ' with type ' + last.getType() )
+            members = _members
+            if last.getType() in needsCopy :
+                members += [ HltCopyParticleSelection( decisionName( line, 'Hlt2')
+                                                     , InputSelection = 'TES:/Event/HLT/%s/Particles'%last.getName()
+                                                     , OutputSelection = decisionName(line, 'Hlt2')) ]
             mdict.update( { 'Filter1' : GaudiSequencer( filterName ( line,'Hlt2' ) , Members = members ) })
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
