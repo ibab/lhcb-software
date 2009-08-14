@@ -4,6 +4,13 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-08-03 - Neal Gauvin (Gueissaz)
+  - PythiaLSP has been updated with new options on the daughters of the LSP.
+    Note : it can be used not only for Susy particles, but for any particles.
+           For instance, keep t decays with both b and W in acceptance.
+  - ParticlesInAcceptance : same as PythiaLSP, but FullGenEventCutTool version
+    Useful for requiring 4 b in acceptance, in the full event, including pile-up
+
 !========================= LbPythia v8r3 2009-02-09 ==========================
 ! 2009-01-26 - Patrick Robbe
  - PythiaProduction.cpp: re-activate extra charmonium processes which had
