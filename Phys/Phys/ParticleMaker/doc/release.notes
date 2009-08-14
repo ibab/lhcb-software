@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.100 2009-07-02 09:55:58 jpalac Exp $ 
+! $Id: release.notes,v 1.101 2009-08-14 11:35:30 pkoppenb Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2009-08-14 - Patrick Koppenburg
+ - Raise an exception when ProtoParticles are not present. This
+   should be handled by a proper sequencing.
+ -v5r3
 
 !========================== ParticleMaker v5r2 2009-07-02 ===================
 

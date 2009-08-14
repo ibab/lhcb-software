@@ -1,4 +1,4 @@
-// $Id: MergedPi0Maker.cpp,v 1.9 2009-04-23 10:39:31 pkoppenb Exp $
+// $Id: MergedPi0Maker.cpp,v 1.10 2009-08-14 11:35:30 pkoppenb Exp $
 // ============================================================================
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/DeclareFactoryEntries.h"
@@ -136,7 +136,6 @@ StatusCode MergedPi0Maker::makeParticles (LHCb::Particle::Vector & particles )
 
   // locate input data
   const LHCb::ProtoParticles* pps = protos() ;
-  if( 0 == pps ) { return StatusCode::FAILURE ; }
 
   unsigned long nPp    = 0 ;
   unsigned long nSelPp = 0 ;

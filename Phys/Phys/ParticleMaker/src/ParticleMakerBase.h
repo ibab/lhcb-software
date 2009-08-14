@@ -1,4 +1,4 @@
-// $Id: ParticleMakerBase.h,v 1.3 2009-04-23 14:49:25 pkoppenb Exp $
+// $Id: ParticleMakerBase.h,v 1.4 2009-08-14 11:35:30 pkoppenb Exp $
 #ifndef PARTICLEMAKERBASE_H 
 #define PARTICLEMAKERBASE_H 1
 
@@ -50,7 +50,7 @@ protected:
     if ( exist<LHCb::ProtoParticles>( m_input )){
       pp = get< LHCb::ProtoParticles > (m_input);
     } else {
-      Warning("No ProtoParticles at "+m_input,StatusCode::FAILURE,1);
+      Exception("No ProtoParticles at "+m_input);
     }
     return pp ;
   }
