@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.49 2009-08-14 10:23:21 graven Exp $
+$Id: release.notes,v 1.50 2009-08-14 15:55:52 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-14 - Patrick Koppenburg
+ - Hlt2B2LLXLines.py : use TF electrons and muons
 
 ! 2009-08-14 Gerhard Raven
  - add monitoring line for forward/long tracking

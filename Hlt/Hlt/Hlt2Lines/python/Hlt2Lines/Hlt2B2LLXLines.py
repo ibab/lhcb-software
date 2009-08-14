@@ -60,13 +60,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.GoodParticles import GoodKaons
         from Hlt2SharedParticles.DiMuon import DiMuon
         from Hlt2SharedParticles.DiElectron import DiElectron
-        
-        ###################################################################
-        # Electrons and kaons track fit
-        #
-        importOptions("$HLTCONFROOT/options/Hlt2TrackFitForTopo.py")
-        SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the sequencer that does the track fit
-        
+                
         ###################################################################
         # CombineBu cuts
         #
@@ -92,18 +86,22 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         # CombineEE : make fitted dielectron
         #
+        from Hlt2SharedParticles.TFBasicParticles import TFElectrons
+        #
         combineEE = Hlt2Member( CombineParticles                               # type
                               , "EE"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
                               , DecayDescriptor = "J/psi(1S) -> e+ e-"
                               , DaughtersCuts = { "e-" : leptoncut }
                               , CombinationCut = llmasscut
                               , MotherCut = llcut
-                              , InputLocations = [ 'Hlt2TFElectronsForTopo' ]
+                              , InputLocations = [ TFElectrons ]
                               )
         
         ###################################################################
         #
-        # CombineMM : make fitted dielectron
+        # CombineMM : make fitted dimuon
+        #
+        from Hlt2SharedParticles.TFBasicParticles import TFMuons
         #
         combineMM = Hlt2Member( CombineParticles                               # type
                               , "MM"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
@@ -111,7 +109,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , DaughtersCuts = { "mu-" : leptoncut }
                               , CombinationCut = llmasscut
                               , MotherCut = llcut
-                              , InputLocations = [ 'Hlt2TFMuonsForTopo' ]
+                              , InputLocations = [ TFMuons ]
                               )
         
         ###################################################################
@@ -139,7 +137,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                           , prescale = self.prescale
 # OLD                         ,  algos = [ DiElectron, GoodKaons , combineB ]
                           ,  algos = [ DiElectron,
-                                       SeqHlt2TFParticlesForTopo,
+                                       TFElectrons,
                                        combineEE,
                                        combineB ]
                           , postscale = self.postscale
@@ -193,24 +191,24 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, SeqHlt2TFParticlesForTopo, combineMM, line_M._algos[-1] ]  # 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, combineMM, line_M._algos[-1] ]  # 'Bu' ]
                      , Bu = { 'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
-                     , algos = [ DiMuon, SeqHlt2TFParticlesForTopo, combineMM, line_S._algos[-1] ] # 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, combineMM, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
                      , Bu = { 'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, SeqHlt2TFParticlesForTopo, combineMM, line_J._algos[-1] ]# 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, combineMM, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
                      , Bu = {'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
-                     , algos = [ DiMuon, SeqHlt2TFParticlesForTopo, combineMM, line_H._algos[-1] ]# 'Bu' ]
+                     , algos = [ DiMuon, TFMuons, combineMM, line_H._algos[-1] ]# 'Bu' ]
                      , Bu = {'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
                      )
         
