@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.30 2009-08-14 08:38:52 graven Exp $
+! $Id: release.notes,v 1.31 2009-08-14 08:42:03 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 ! 2009-08-14 - Gerhard Raven
- - update names of 'decision' algorithms for Tell1Error and Incident lines
+ - update names of 'decision' algorithms for Tell1Error, Incident and AlignVelo lines
 
 !========================== Hlt1Lines v1r4 2009-08-10 ===================
 ! 2009-08-10 - Patrick Koppenburg

@@ -18,7 +18,7 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
             , prescale = self.prescale
             , postscale = self.postscale
             , algos = [ DecodeVELO
-                      , PatVeloAlignTrackFilter('HltAlignVeloFilter') 
+                      , PatVeloAlignTrackFilter('Hlt1AlignVeloDecision') 
                       ] 
             )
 
