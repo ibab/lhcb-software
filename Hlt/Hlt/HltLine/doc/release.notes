@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.26 2009-08-14 10:20:55 graven Exp $
+! $Id: release.notes,v 1.27 2009-08-14 10:22:09 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -8,6 +8,8 @@
 ! 2009-08-14 - Gerhard Raven
  - improve PV binding in Hlt2Line
  - add support for none CombineParticles/FilterDesktop last algorithm in Hlt2Line
+ - remove PrepareForward now that there is an Hlt2 monitoring line for long/forward
+   tracking
 
 ! 2009-08-13 - Gerhard Raven
  - add a bindMembers for PV3D

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.5 2009-08-13 11:54:26 graven Exp $
+# $Id: HltReco.py,v 1.6 2009-08-14 10:22:09 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -145,11 +145,6 @@ ConfiguredFastFitter( getattr(FitSeeding,'Fitter'))
 
 ##### Hlt selections
 
-prepareForward = HltTrackFilter( 'HltPrepareForward' 
-		, InputSelection = "TES:Hlt/Track/Long" #@gk temporarily fixed
-                               , OutputSelection = "Forward1"
-                               , RequirePositiveInputs = False )
-
 # why does Hlt1PrepareRZVelo::initialize  trigger an init of ToolSvc.OTRawBankDecoder???
 prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
                               , InputSelection   = "TES:" + patVeloR.OutputTracksName
@@ -222,10 +217,6 @@ else:
 if RunFastFit    :  trackRecoSequence.Members += [ fastKalman]
 if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 
-#### and last prepareForward 
-## TODO: remove as soon as an Hlt2 monitoring line exists for this...
-trackRecoSequence.Members += [ prepareForward]
-
 
 ####TODO
 ###           HltTrackRecoSequence                  GaudiSequencer           
@@ -261,11 +252,11 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
-#Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward , prepareForward ] )
+#Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward ] )
 PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
 RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
-#Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward , prepareForward ] )
+#Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward ] )
 #PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
 #RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
