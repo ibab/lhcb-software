@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.315 2009-08-14 10:24:58 graven Exp $ 
+! $Id: release.notes,v 1.316 2009-08-14 10:26:19 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -8,6 +8,7 @@
 ! 2009-08-14 - Gerhard Raven
  - add pragma print off to options/TsaTool.opts
  - activate forward/long tracking monitoring Hlt2 line
+ - in ThresholdUtils.py, if about to set what is already set, move on
 
 ! 2009-08-13 - Gerhard Raven
  - add PV = True/False to Hlt2Line constructors
