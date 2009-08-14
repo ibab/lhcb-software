@@ -8,7 +8,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -34,13 +34,14 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         """
         Calorimeter options
         """
-        caloSeq = Sequence("HltRecoCALOSeq", Context = "HLT", IgnoreFilterPassed = True ) 
+        Hlt2Tracks = [ self.getProp("Hlt2Tracks") ]
+        prefix = self.getProp("Prefix")
+
+        caloSeq = Sequence(prefix+"RecoCALOSeq", Context = "HLT", IgnoreFilterPassed = True ) 
         
         ## Options for Calo reconstruction
         caloSeq.Members += [ self.commonCaloOptions() ]
                                 
-        Hlt2Tracks = [ self.getProp("Hlt2Tracks") ]
-        prefix = self.getProp("Prefix")
         
         #------ Track-Cluster 2D matching for Neutral/Charged cluster selection
         caloSeq.Members += [ self.hltCaloTrackMatch(Hlt2Tracks,prefix) ]
@@ -65,42 +66,12 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         HltCaloTrackMatch.Members += [ self.hltCaloAcceptance(Hlt2Tracks,prefix) ,
                                        HltClusterMatch   ] 
         HltClusterMatch.Tracks = Hlt2Tracks
-        if (prefix!="Hlt"): HltClusterMatch.Output = prefix+"/Calo/PhotonMatch"
+        if (prefix!="Hlt"):
+            HltClusterMatch.Output = prefix+"/Calo/ClusterMatch"
+            HltClusterMatch.Filter = prefix+"/Calo/InAccEcal"
         # else, use default from algorithm + context()
         
         return HltCaloTrackMatch
-    
-###############################################################################
-    #
-    def hltCaloAcceptance(self,Hlt2Tracks,prefix):
-        """
-        Track-Cluster 2D matching for Neutral/Charged cluster selection
-        """
-        HltCaloAcceptance = Sequence(prefix+"CaloAcceptance")
-        # Special online setting : use fast extrapolator for first alg.
-        from Configurables import InSpdAcceptanceAlg, InSpdAcceptance, InPrsAcceptanceAlg
-        from Configurables import InEcalAcceptanceAlg, InHcalAcceptanceAlg, InBremAcceptanceAlg
-        InSpdAcceptanceAlg(prefix+"InSPD").Tool = "InSpdAcceptance/HltInSpd:PUBLIC"
-        ToolSvc().addTool(InSpdAcceptance, name =prefix+"InSpd")
-        ToolSvc().HltInSpd.Extrapolator = "TrackHerabExtrapolator"
-        
-        HltCaloAcceptance.Members = [ InSpdAcceptanceAlg(prefix+"InSPD") ,
-                                      InPrsAcceptanceAlg(prefix+"InPRS") ,
-                                      InEcalAcceptanceAlg(prefix+"InECAL"), 
-                                      InHcalAcceptanceAlg(prefix+"InHCAL") ,
-                                      InBremAcceptanceAlg(prefix+"InBREM") ]
-        InSpdAcceptanceAlg(prefix+"InSPD").Inputs   =     Hlt2Tracks
-        if (prefix!="Hlt"): InSpdAcceptanceAlg(prefix+"InSPD").Output = prefix+"/Calo/InAccSpd"
-        InPrsAcceptanceAlg(prefix+"InPRS").Inputs   =     Hlt2Tracks
-        if (prefix!="Hlt"): InPrsAcceptanceAlg(prefix+"InPRS").Output = prefix+"/Calo/InAccPrs"
-        InEcalAcceptanceAlg(prefix+"InECAL").Inputs =     Hlt2Tracks
-        if (prefix!="Hlt"): InEcalAcceptanceAlg(prefix+"InECAL").Output = prefix+"/Calo/InAccEcal"
-        InHcalAcceptanceAlg(prefix+"InHCAL").Inputs =     Hlt2Tracks
-        if (prefix!="Hlt"): InHcalAcceptanceAlg(prefix+"InHCAL").Output = prefix+"/Calo/InAccHcal"
-        InBremAcceptanceAlg(prefix+"InBREM").Inputs =     Hlt2Tracks
-        if (prefix!="Hlt"): InBremAcceptanceAlg(prefix+"InBREM").Output = prefix+"/Calo/InAccBrem"
-        
-        return HltCaloAcceptance
     
 ###############################################################################
     #
@@ -141,7 +112,7 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         """
         from Configurables import CaloElectronAlg
         HltElectronRec = CaloElectronAlg(prefix+"ElectronRec")
-        HltElectronRec.HypoTools        = [ "CaloExtraDigits/SpdPrsExtraE"  ] 
+        HltElectronRec.HypoTools          = [ "CaloExtraDigits/SpdPrsExtraE"  ] 
         HltElectronRec.CorrectionTools2   = [ "CaloECorrection/ECorrection" ] 
         HltElectronRec.CorrectionTools2  += [ "CaloSCorrection/SCorrection" ] 
         HltElectronRec.CorrectionTools2  += [ "CaloLCorrection/LCorrection" ] 
@@ -151,6 +122,8 @@ class Hlt2CaloReco(LHCbConfigurableUser):
             "CaloSelectNeutralClusterWithSpd/"+prefix+"ClusterWithSpd",
             "CaloSelectClusterWithPrs/"+prefix+"ClusterWithPrs"
             ]
+        if ( prefix != "Hlt"): HltElectronRec.OutputData = prefix+"/Calo/Electrons"
+        
         from Configurables import CaloSelectCluster, CaloSelectorNOT, CaloSelectNeutralClusterWithSpd
         from Configurables import CaloSelectClusterWithPrs, CaloSelectNeutralClusterWithTracks
         ToolSvc().addTool(CaloSelectorNOT, name =prefix+"ChargedCluster")
@@ -209,6 +182,40 @@ class Hlt2CaloReco(LHCbConfigurableUser):
                 
 ###############################################################################
     #
+    def hltCaloAcceptance(self,Hlt2Tracks,prefix):
+        """
+        Track-Cluster 2D matching for Neutral/Charged cluster selection
+        """
+        HltCaloAcceptance = Sequence(prefix+"CaloAcceptance")
+        # Special online setting : use fast extrapolator for first alg.
+        from Configurables import InSpdAcceptanceAlg, InSpdAcceptance, InPrsAcceptanceAlg
+        from Configurables import InEcalAcceptanceAlg, InHcalAcceptanceAlg, InBremAcceptanceAlg
+        InSpdAcceptanceAlg(prefix+"InSPD").Tool = "InSpdAcceptance/HltInSpd:PUBLIC"
+        ToolSvc().addTool(InSpdAcceptance, name ="HltInSpd")
+        ToolSvc().HltInSpd.Extrapolator = "TrackHerabExtrapolator"
+        
+        HltCaloAcceptance.Members = [ InSpdAcceptanceAlg(prefix+"InSPD") ,
+                                      InPrsAcceptanceAlg(prefix+"InPRS") ,
+                                      InEcalAcceptanceAlg(prefix+"InECAL"), 
+                                      InHcalAcceptanceAlg(prefix+"InHCAL") ,
+                                      InBremAcceptanceAlg(prefix+"InBREM") ]
+        
+        InSpdAcceptanceAlg(prefix+"InSPD").Inputs   =     Hlt2Tracks
+        InPrsAcceptanceAlg(prefix+"InPRS").Inputs   =     Hlt2Tracks
+        InEcalAcceptanceAlg(prefix+"InECAL").Inputs =     Hlt2Tracks
+        InHcalAcceptanceAlg(prefix+"InHCAL").Inputs =     Hlt2Tracks
+        InBremAcceptanceAlg(prefix+"InBREM").Inputs =     Hlt2Tracks
+        if (prefix!="Hlt"):
+            InSpdAcceptanceAlg(prefix+"InSPD").Output = prefix+"/Calo/InAccSpd"
+            InPrsAcceptanceAlg(prefix+"InPRS").Output = prefix+"/Calo/InAccPrs"
+            InEcalAcceptanceAlg(prefix+"InECAL").Output = prefix+"/Calo/InAccEcal"
+            InHcalAcceptanceAlg(prefix+"InHCAL").Output = prefix+"/Calo/InAccHcal"
+            InBremAcceptanceAlg(prefix+"InBREM").Output = prefix+"/Calo/InAccBrem"
+        
+        return HltCaloAcceptance
+    
+###############################################################################
+    #
     def hltCaloPIDs(self,Hlt2Tracks,prefix):
         """
         Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
@@ -218,9 +225,13 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         HltCaloMatch.Members += [ ElectronMatchAlg(prefix+"ElectronMatch"),
                                   BremMatchAlg(prefix+"BremMatch") ]    
         ElectronMatchAlg(prefix+"ElectronMatch").Tracks = Hlt2Tracks
+        BremMatchAlg(prefix+"BremMatch").Tracks =         Hlt2Tracks
         if (prefix!="Hlt"):
             ElectronMatchAlg(prefix+"ElectronMatch").Output = prefix+"/Calo/ElectronMatch"
-        BremMatchAlg(prefix+"BremMatch").Tracks =         Hlt2Tracks
+            ElectronMatchAlg(prefix+"ElectronMatch").Calos = [ prefix+"/Calo/Electrons" ] # from electronrec
+            ElectronMatchAlg(prefix+"ElectronMatch").Filter = prefix+"/Calo/InAccEcal"
+            BremMatchAlg(prefix+"BremMatch").Output = prefix+"/Calo/BremMatch"
+            BremMatchAlg(prefix+"BremMatch").Filter = prefix+"/Calo/InAccBrem"
         
         HltCaloEnergy = Sequence(prefix+"CaloEnergy")
         from Configurables import Track2SpdEAlg, Track2PrsEAlg, Track2EcalEAlg, Track2HcalEAlg
@@ -233,42 +244,53 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         Track2EcalEAlg(prefix+"EcalE").Inputs =           Hlt2Tracks
         Track2HcalEAlg(prefix+"HcalE").Inputs =           Hlt2Tracks
         HltCaloDLLs = Sequence(prefix+"CaloDLLs")
+        if (prefix!="Hlt"):
+            Track2PrsEAlg(prefix+"PrsE").Output = prefix+"/Calo/PrsE"
+            Track2EcalEAlg(prefix+"EcalE").Output = prefix+"/Calo/EcalE"
+            Track2HcalEAlg(prefix+"HcalE").Output = prefix+"/Calo/HcalE"
+            Track2SpdEAlg(prefix+"SpdE").Output = prefix+"/Calo/SpdE"
         
         from Configurables import EcalChi22ID, BremChi22ID, ClusChi22ID, PrsPIDeAlg
         from Configurables import BremPIDeAlg, EcalPIDeAlg, HcalPIDeAlg, EcalPIDmuAlg, HcalPIDmuAlg
-        HltCaloDLLs.Members +=   [   EcalChi22ID(prefix+"EcalChi22ID"), 
-                                     BremChi22ID(prefix+"BremChi22ID"), 
-                                     ClusChi22ID(prefix+"ClusChi22ID"), 
-                                     PrsPIDeAlg(prefix+"PrsPIDe" ), 
-                                     BremPIDeAlg(prefix+"BremPIDe"),  
-                                     EcalPIDeAlg(prefix+"EcalPIDe" ), 
-                                     HcalPIDeAlg(prefix+"HcalPIDe" ), 
-                                     EcalPIDmuAlg(prefix+"EcalPIDmu"),  
-                                     HcalPIDmuAlg(prefix+"HcalPIDmu")  ]
-        EcalChi22ID(prefix+"EcalChi22ID").Tracks =        Hlt2Tracks
-        BremChi22ID(prefix+"BremChi22ID").Tracks =        Hlt2Tracks
-        ClusChi22ID(prefix+"ClusChi22ID").Tracks =        Hlt2Tracks
+        HltCaloDLLs.Members +=   [ EcalChi22ID(prefix+"EcalChi22ID"), 
+                                   BremChi22ID(prefix+"BremChi22ID"), 
+                                   ClusChi22ID(prefix+"ClusChi22ID"), 
+                                   PrsPIDeAlg(prefix+"PrsPIDe" ), 
+                                   BremPIDeAlg(prefix+"BremPIDe"),  
+                                   EcalPIDeAlg(prefix+"EcalPIDe" ), 
+                                   HcalPIDeAlg(prefix+"HcalPIDe" ), 
+                                   EcalPIDmuAlg(prefix+"EcalPIDmu"),  
+                                   HcalPIDmuAlg(prefix+"HcalPIDmu")  ]
+        EcalChi22ID(prefix+"EcalChi22ID").Tracks =  Hlt2Tracks
+        BremChi22ID(prefix+"BremChi22ID").Tracks =  Hlt2Tracks
+        ClusChi22ID(prefix+"ClusChi22ID").Tracks =  Hlt2Tracks
 
-        # refine outputs (not needed for defaulr)
+        # refine outputs (not needed for default)
         if (prefix!="Hlt"):
-            BremMatchAlg(prefix+"BremMatch").Output = prefix+"/Calo/BremMatch"
-            Track2PrsEAlg(prefix+"PrsE").Ouput = prefix+"/Calo/PrsE"
-            Track2EcalEAlg(prefix+"EcalE").Ouput = prefix+"/Calo/EcalE"
-            Track2HcalEAlg(prefix+"HcalE").Ouput = prefix+"/Calo/HcalE"
-            Track2SpdEAlg(prefix+"SpdE").Ouput = prefix+"/Calo/SpdE"
+            EcalChi22ID(prefix+"EcalChi22ID").Input  = prefix+"/Calo/ElectronMatch"
             EcalChi22ID(prefix+"EcalChi22ID").Output = prefix+"/Calo/EcalChi2"
-            EcalChi22ID(prefix+"EcalChi22ID").Output = prefix+"/Calo/BremChi2"
-            EcalChi22ID(prefix+"EcalChi22ID").Output = prefix+"/Calo/ClusChi2"
+
+            BremChi22ID(prefix+"BremChi22ID").Input  = prefix+"/Calo/BremMatch"
+            BremChi22ID(prefix+"BremChi22ID").Output = prefix+"/Calo/BremChi2"
+
+            ClusChi22ID(prefix+"ClusChi22ID").Input  = prefix+"/Calo/ClusterMatch"
+            ClusChi22ID(prefix+"ClusChi22ID").Output = prefix+"/Calo/ClusChi2"
+
             PrsPIDeAlg(prefix+"PrsPIDe").Input = prefix+"/Calo/PrsE"
             PrsPIDeAlg(prefix+"PrsPIDe").Output = prefix+"/Calo/PrsPIDe"
+
             BremPIDeAlg(prefix+"BremPIDe").Input = prefix+"/Calo/BremChi2"
             BremPIDeAlg(prefix+"BremPIDe").Output = prefix+"/Calo/BremPIDe"
+
             EcalPIDeAlg(prefix+"EcalPIDe").Input = prefix+"/Calo/EcalChi2"
             EcalPIDeAlg(prefix+"EcalPIDe").Output = prefix+"/Calo/EcalPIDe"
+
             HcalPIDeAlg(prefix+"HcalPIDe").Input = prefix+"/Calo/HcalE"
             HcalPIDeAlg(prefix+"HcalPIDe").Output = prefix+"/Calo/HcalPIDe"
+
             EcalPIDmuAlg(prefix+"EcalPIDmu").Input = prefix+"/Calo/EcalE"
             EcalPIDmuAlg(prefix+"EcalPIDmu").Output = prefix+"/Calo/EcalPIDmu"
+
             HcalPIDmuAlg(prefix+"HcalPIDmu").Input = prefix+"/Calo/HcalE"
             HcalPIDmuAlg(prefix+"HcalPIDmu").Output = prefix+"/Calo/HcalPIDmu"
             

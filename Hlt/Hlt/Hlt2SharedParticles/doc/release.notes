@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.43 2009-08-13 18:54:58 graven Exp $
+$Id: release.notes,v 1.44 2009-08-14 15:54:35 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-14 - Patrick Koppenburg
+ - python/Hlt2SharedParticles/TFBasicParticles.py : electrons and muons based on TF
+ - Hlt2PID and Hlt2CaloReco : allow for TF tracks
+ -> requires Rec/GlobalReco pkoppenb_20090814
 
 ! 2009-08-13 - Gerhard Raven
  - add dependency of GoodPions and GoodKaons on PV
@@ -12,7 +17,7 @@ $Id: release.notes,v 1.43 2009-08-13 18:54:58 graven Exp $
  - CaloReco.py : make it even more configurable
 
 ! 2009-08-11 - Jacopo Nardulli & Patrick Spradlin
-  - We removed DXTF2BodyKs.py & DXTF3BodyKs.py. They are obsolete.
+ - We removed DXTF2BodyKs.py & DXTF3BodyKs.py. They are obsolete.
 
 !========================== Hlt2SharedParticles v2r1 2009-08-10 ===================
 ! 2009-08-10 - Patrick Koppenburg

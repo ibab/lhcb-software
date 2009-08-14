@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -19,10 +19,11 @@ from RichRecSys.Configuration import RichRecSysConf
 # Hlt2 PID
 #
 class Hlt2PID(LHCbConfigurableUser):
-    __used_configurables__ = [  RichRecSysConf ]
+#    __used_configurables__ = [  RichRecSysConf ]  # !!!! If I uncomment that I get a circluar dependency. Why ?
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
        , "Hlt2Tracks"                 : "Hlt/Track/Long"
+       , "Prefix"                     : "Hlt"     # default prefix for all instance names (but common)
          }
 
 ###################################################################################
@@ -33,15 +34,16 @@ class Hlt2PID(LHCbConfigurableUser):
         """
         Muon ID options
         """
+        prefix = self.getProp("Prefix")
         from MuonID import ConfiguredMuonIDs
         from Configurables import MuonRec, MuonIDAlg
         cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-        HltMuonIDAlg = cm.configureMuonIDAlg("HltMuonIDAlg")
+        HltMuonIDAlg = cm.configureMuonIDAlg(prefix+"MuonIDAlg")
         HltMuonIDAlg.TrackLocation = self.getProp("Hlt2Tracks") 
-        HltMuonIDAlg.MuonIDLocation = "Hlt/Muon/MuonPID"
-        HltMuonIDAlg.MuonTrackLocation = "Hlt/Track/Muon"
+        HltMuonIDAlg.MuonIDLocation = prefix+"/Muon/MuonPID"    # output
+        HltMuonIDAlg.MuonTrackLocation = prefix+"/Track/Muon"
         
-        return bindMembers ( None, [ MuonRec(), HltMuonIDAlg] )
+        return bindMembers ( None, [ MuonRec(), HltMuonIDAlg ] )
     
     
 ###################################################################################
@@ -52,8 +54,9 @@ class Hlt2PID(LHCbConfigurableUser):
         """
         Neutral protoparticles 
         """
+        prefix = self.getProp("Prefix")  
         from Configurables import NeutralProtoPAlg
-        HltNeutralProtoPAlg = NeutralProtoPAlg('HltNeutralProtoPAlg')
+        HltNeutralProtoPAlg = NeutralProtoPAlg(prefix+'NeutralProtoPAlg')
         # Overwrite some default offline settings with HLT special settings (taken from CaloReco.opts)
         HltNeutralProtoPAlg.PhotonIDName = "HltPhotonPID"
         from Configurables import CaloPhotonEstimatorTool
@@ -72,18 +75,19 @@ class Hlt2PID(LHCbConfigurableUser):
         """
         charged protoparticles 
         """
-        protos = "Hlt/ProtoP/Charged"
-        tracks = "Hlt/Track/Long"
+        prefix = self.getProp("Prefix")  
+        protos = prefix+"/ProtoP/Charged"
+        tracks = self.getProp("Hlt2Tracks") 
         
         from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
-        SeqHlt2ChargedProtos = GaudiSequencer("Hlt2ChargedProtos", Context ="HLT")
+        SeqHlt2ChargedProtos = GaudiSequencer(prefix+"ChargedProtos", Context ="HLT")
         
-        Hlt2ChargedProtoPAlg = ChargedProtoPAlg('Hlt2ChargedProtoPAlg')
+        Hlt2ChargedProtoPAlg = ChargedProtoPAlg(prefix+'ChargedProtoPAlg')
         Hlt2ChargedProtoPAlg.InputTrackLocation = tracks
         Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = protos
         Hlt2ChargedProtoPAlg.addTool( TrackSelector, name="TrackSelector")
         Hlt2ChargedProtoPAlg.TrackSelector.AcceptClones = False
-        Hlt2ChargedProtoPAlg.InputMuonPIDLocation = "Hlt/Muon/MuonPID"
+        Hlt2ChargedProtoPAlg.InputMuonPIDLocation = prefix+"/Muon/MuonPID"
         ## Calo PID
         Hlt2ChargedProtoPAlg.UseCaloSpdPID = True 
         Hlt2ChargedProtoPAlg.UseCaloPrsPID = True 
@@ -94,8 +98,9 @@ class Hlt2PID(LHCbConfigurableUser):
         Hlt2ChargedProtoPAlg.UseRichPID = True     ## Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
         Hlt2ChargedProtoPAlg.UseMuonPID = True 
         Hlt2ChargedProtoPAlg.UseVeloPID = False
+        if (prefix!='Hlt'): Hlt2ChargedProtoPAlg.NonStandardHltLocation = prefix
         
-        Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2ChargedProtoCombDLL')
+        Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg(prefix+'ChargedProtoCombDLL')
         Hlt2ChargedProtoCombDLL.ProtoParticleLocation = protos 
 
         return bindMembers ( None, [ Hlt2ChargedProtoPAlg, Hlt2ChargedProtoCombDLL ] )
