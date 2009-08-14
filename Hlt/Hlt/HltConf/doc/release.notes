@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.313 2009-08-13 20:57:07 graven Exp $ 
+! $Id: release.notes,v 1.314 2009-08-14 08:47:39 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-14 - Gerhard Raven
+ - add pragma print off to options/TsaTool.opts
 
 ! 2009-08-13 - Gerhard Raven
  - add PV = True/False to Hlt2Line constructors

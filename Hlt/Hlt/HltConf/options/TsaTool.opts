@@ -1,3 +1,4 @@
+#pragma print off
 //options for T confirmation with L0 muon single
 
 ToolSvc.TsaConfirmTool.calcLikelihood = false;
