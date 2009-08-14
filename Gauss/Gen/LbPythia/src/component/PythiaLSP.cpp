@@ -1,4 +1,4 @@
-// $Id: PythiaLSP.cpp,v 1.1 2008-11-27 16:04:00 robbep Exp $
+// $Id: PythiaLSP.cpp,v 1.2 2009-08-14 13:13:22 robbep Exp $
 // Include files 
 
 // local
@@ -16,7 +16,7 @@ using namespace std ;
 //-----------------------------------------------------------------------------
 // Implementation file for class : PythiaLSP
 //
-// 2008-September-1 : Neal Gueissaz
+// 2008-September-1 : Neal Gauvin (Gueissaz)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -29,12 +29,14 @@ DECLARE_TOOL_FACTORY( PythiaLSP );
 PythiaLSP::PythiaLSP( const std::string & type , 
                                       const std::string & name ,
                                       const IInterface * parent )
-  : GaudiTool ( type, name , parent ) {
+  : GaudiTool ( type, name , parent )
+{
     declareInterface< IGenCutTool >( this );
     declareProperty( "LSPID" , m_LSPID );
     declareProperty( "NbLSP" , m_NbLSP = 1 );
     declareProperty( "AtLeast" , m_AtLeast = true );
     declareProperty( "LSPCond" , m_LSPCond = 1 );
+    declareProperty( "DgtsInAcc" , m_Dgts );
     declareProperty( "EtaMin" , m_EtaMin = 1.8 );
     declareProperty( "EtaMax" , m_EtaMax = 4.9 );
     declareProperty( "DistToPVMin" , m_DistToPVMin = -1. );
@@ -42,6 +44,7 @@ PythiaLSP::PythiaLSP( const std::string & type ,
     declareProperty( "ZPosMin" , m_ZPosMin = -500.0*mm );
     declareProperty( "ZPosMax" , m_ZPosMax = 1.0*km );
     if( m_LSPID.size() == 0 ){ m_LSPID.push_back( 1000022); }
+    
 }
 //=============================================================================
 // Destructor
@@ -66,14 +69,21 @@ bool PythiaLSP::applyCut( ParticleVector & /* theParticleVector */ ,
   HepMC::GenEvent::particle_const_iterator p= theEvent->particles_begin();
   PV = (*p)->end_vertex();
   debug()<<"--------------------------------------------------" << endmsg;
-  debug()<<"Primary Vertex " << PV->position() << endmsg;
+  debug()<<"Primary Vertex " << Print(PV->position()) << endmsg;
 
   //Find the interesting particles
   for( p= theEvent->particles_begin(); p!= theEvent->particles_end();++p){
-    //debug()<<"Particle " << (*p)->pdg_id() <<" "<< (*p)->status() << endmsg;
-    if( IsLSP( *p )  && (*p)->status() == 2 ){
+    verbose()<<"Particle " << (*p)->pdg_id() <<" "<< (*p)->status() << endmsg;
+    if( IsLSP( *p ) ){
+
+      //The LSP must not decay into itself (W decays)
+      if( (*p)->end_vertex() != NULL ){
+	HepMC::GenVertex* vtx = (*p)->end_vertex();
+	HepMC::GenVertex::particles_out_const_iterator dp = 
+	  vtx->particles_out_const_begin();
+	if( IsLSP( *dp ) ) continue;
+      }
       LSP.push_back( (*p) );
-      //debug()<<"Found a LSP!"<< endmsg;
     }
   }
 
@@ -87,11 +97,11 @@ bool PythiaLSP::applyCut( ParticleVector & /* theParticleVector */ ,
   //Does the LSP's satisfy criteria ?
   int nbok = 0, nbinacc = 0;
   for( vector< HepMC::GenParticle* >::iterator i = LSP.begin(); 
-       i < LSP.end(); i++ ){
+       i < LSP.end(); ++i ){
 
     debug()<<"LSP mass [MeV] : "<< (*i)->momentum().m()
 	   <<", eta : "<< (*i)->momentum().eta() << ", Decay Vertices " 
-	   << (*i)->end_vertex()->position() << endmsg;
+	   << Print((*i)->end_vertex()->position()) << endmsg;
 
     if( m_LSPCond == 1 ){
       double eta = (*i)->momentum().eta();
@@ -108,9 +118,7 @@ bool PythiaLSP::applyCut( ParticleVector & /* theParticleVector */ ,
 	double eta = (*dp)->momentum().eta();
 
 	debug() << "Daughter id " << (*dp)->pdg_id()<< endmsg;
-	if( m_LSPCond == 2 && !IsQuark( *dp ) ) continue;
-	if( m_LSPCond == 3 && !IsLepton( *dp ) ) continue;
-	if( m_LSPCond == 4 && !IsLepton( *dp ) && !IsQuark( *dp ) ) continue;
+	if( !IsDgts( *dp ) ) continue;
 	debug() << "Daughter id " << (*dp)->pdg_id() 
 		<< " eta " << eta << endmsg;
 
@@ -189,6 +197,7 @@ bool PythiaLSP::IsLepton( HepMC::GenParticle * p ) const {
   } else return false;
 }
 
+
 //=============================================================================
 //  IsLSP : Is particle one of the LSP ?
 //             In some theoretical, there are more than one LSP ! Sepecially
@@ -198,7 +207,29 @@ bool PythiaLSP::IsLepton( HepMC::GenParticle * p ) const {
 
 bool PythiaLSP::IsLSP( HepMC::GenParticle * p ) const {
   int pid = abs(p->pdg_id());
-  for( vector<int>::const_iterator i = m_LSPID.begin(); i != m_LSPID.end(); i++ ){
+  for( vector<int>::const_iterator i = m_LSPID.begin(); i != m_LSPID.end(); 
+       ++i ){
+    if( pid == (*i) ){
+      // t always has status 3
+      if( pid == 6 && p->status() == 3 ) return true;
+      if( p->status() == 2 ) return true;
+    }
+  }
+  return false;
+}
+
+//=============================================================================
+//  IsDgts : Is particle one of the daughters of the LSP that we'd like 
+//           to have in acceptance ?
+//=============================================================================
+
+bool PythiaLSP::IsDgts( HepMC::GenParticle * p ) const {
+
+  if( m_LSPCond == 3 ) return true;
+
+  int pid = abs(p->pdg_id());
+  for( vector<int>::const_iterator i = m_Dgts.begin(); i != m_Dgts.end(); 
+       ++i ){
     if( pid == (*i) ) return true;
   }
   return false;
@@ -218,3 +249,21 @@ double PythiaLSP::Dist( HepMC::GenVertex* v1, HepMC::GenVertex * v2 ) const {
 }
 
 //=============================================================================
+// Return decay vertices as a string
+//=============================================================================
+string PythiaLSP::Print( HepMC::ThreeVector v ) const {
+  stringstream kss;
+  kss<<" ( "<< v.x() <<", "<< v.y() <<", "<< v.z() <<" ) ";
+  return kss.str();
+}
+
+string PythiaLSP::Print( HepMC::FourVector v ) const {
+  stringstream kss;
+  kss<<" ( "<< v.x() <<", "<< v.y() <<", "<< v.z() <<", "<< v.t() <<" ) ";
+  return kss.str();
+}
+
+//=============================================================================
+
+//=============================================================================
+

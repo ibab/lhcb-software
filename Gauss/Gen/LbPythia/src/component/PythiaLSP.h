@@ -1,4 +1,4 @@
-// $Id: PythiaLSP.h,v 1.1 2008-11-27 16:04:00 robbep Exp $
+// $Id: PythiaLSP.h,v 1.2 2009-08-14 13:13:22 robbep Exp $
 #ifndef COMPONENT_PYTHIALSP_H 
 #define COMPONENT_PYTHIALSP_H 1
 
@@ -19,10 +19,11 @@
  * Usage :
  * Generation.Special.CutTool="PythiaLSP";
  * Condition to apply :
- * LSPCond = 1 : LSP in acceptance, = 2 : daughter quarks in acceptance
- *         = 3 : daughter leptons in acceptance
- *         = 4 : daughters quarks and leptons
- *         = 5 : all daughters in acceptance
+ * LSPCond = 1 : LSP in acceptance, 
+ *         = 2 : all daughters in DgtsInAcc in acceptance
+ *         = 3 : all daughters in acceptance
+ * Daughters required to be in acceptance :
+ * DgtsInAcc = {3,4,5,23,24}, D = {}
  * Generation.Special.PythiaLSP.LSPCond = 1 ; // =d
  * Number of desired LSP :
  * Generation.Special.PythiaLSP.NbLSP = 1 ; //=d
@@ -34,7 +35,7 @@
  * Generation.Special.PythiaLSP.EtaMax = 1.8 ; // =d
  * Generation.Special.PythiaLSP.EtaMin = 4.9 ; // =d
  *
- *  @author Neal Gueissaz
+ *  @author Neal Gauvin (Gueissaz)
  *  @date   2008-September-1
  */
 class PythiaLSP : public GaudiTool , virtual public IGenCutTool {
@@ -53,17 +54,21 @@ protected:
 
 private:
 
-  //void ResetParticles( HepMC::GenParticle *,CLHEP::HepLorentzVector &) const;
   bool IsQuark( HepMC::GenParticle * ) const;
   bool IsLepton( HepMC::GenParticle * ) const;
   bool IsLSP( HepMC::GenParticle * ) const;
+  bool IsDgts( HepMC::GenParticle * ) const;
   double Dist( HepMC::GenVertex *, HepMC::GenVertex *) const;
+  std::string Print( HepMC::ThreeVector ) const;
+  std::string Print( HepMC::FourVector ) const;
 
   std::vector<int> m_LSPID;    
+  std::vector<int> m_Dgts;
   int m_NbLSP;
   int m_LSPCond;
   bool m_AtLeast;
   double m_EtaMin, m_EtaMax;
   double m_DistToPVMin, m_DistToPVMax, m_ZPosMin, m_ZPosMax;
+
 };
 #endif // COMPONENT_PYTHIALSP_H
