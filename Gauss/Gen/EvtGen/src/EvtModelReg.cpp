@@ -89,7 +89,7 @@
 //#include "EvtGenModels/EvtBToDDalitzCPK.hh"
 #include "EvtGenModels/EvtPVVCPLH.hh"
 #include "EvtGenModels/EvtLambdaB2LambdaV.hh"
-//#include "EvtGenModels/EvtSSD_DirectCP.hh"
+#include "EvtGenModels/EvtSSD_DirectCP.hh"
 
 #include "EvtGenModels/EvtHQET.hh"
 #include "EvtGenModels/EvtHQET2.hh"
