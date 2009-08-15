@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.1 2009-07-03 18:10:08 frankb Exp $
+// $Id: StompSensor.cpp,v 1.2 2009-08-15 16:21:13 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.1 2009-07-03 18:10:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.2 2009-08-15 16:21:13 frankb Exp $
 
 #include "Stomp/StompSensor.h"
 #include "Stomp/stomp.h"
@@ -194,7 +194,7 @@ int StompSensor::read(Frame*& data_frame, apr_pool_t*& pool)  {
   }
   rc = ::stomp_read(m_con, &frame, pool);
   if ( rc == APR_EOF )  {
-    return 0;
+    return 2;
   }
   else if ( rc != APR_SUCCESS )  {
     report(-2, "StompSensor> Could not read frame", rc);
@@ -349,6 +349,10 @@ int StompSensor::execute()  {
             if ( res == 1 )  {
               ::wtc_insert(m_facility, msg.release());
             }
+	    else if ( res == 2 ) {
+	      report(-2, "StompSensor> EOF detected. Bad channel.", res);
+	      m_stop = true;
+	    }
           }
         }
         break;
