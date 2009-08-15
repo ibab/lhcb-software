@@ -1,0 +1,375 @@
+var _dataProvider   = null;
+var _dataLogger     = null;
+
+var LOG_ERROR       = 0;
+var LOG_WARNING     = 1;
+var LOG_INFO        = 2;
+var LOG_DEBUG       = 3;
+var LOG_VERBOSE     = 4;
+
+/**@class OutputLogger
+ *
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+OutputLogger = function(parent, len, level, style)  {
+  this.className    = style;
+  this.lines        = new Array();
+  this.parent       = parent;
+  this.length       = len;
+  this.level        = level;
+  this.curr         = 0;
+  this.lines.length = 0;
+  this.table        = document.createElement('table');
+  this.body         = document.createElement('tbody');
+  this.messages     = document.createElement('tr');
+  this.output_td    = document.createElement('td');
+  this.output       = document.createElement('div');
+  this.b_hide       = document.createElement('td');
+  this.b_show       = document.createElement('td');
+  this.b_clear      = document.createElement('td');
+
+  _dataLogger = this;
+
+  this.output.className = this.className;
+  this.output.innerHTML = '';
+  this.output_td.colSpan = 3;
+  this.output_td.appendChild(this.output);
+  this.messages.appendChild(this.output_td);
+  this.body.appendChild(this.messages);
+
+  row = document.createElement('tr');
+  row.appendChild(this.b_hide);
+  row.appendChild(this.b_show);
+  row.appendChild(this.b_clear);
+
+  this.body.appendChild(row);
+  this.table.appendChild(this.body);
+  //this.table.className = this.className;
+  this.parent.appendChild(this.table);
+
+
+  this.showMessages = function() {
+    if ( this.output != null && this.lines.length > 0 ) {
+      var message = '';
+      for(var i=this.curr; i>=0; --i)
+        message += '&rarr; ' + this.lines[i] + '<br>';
+      for(var i=this.lines.length-1; i>this.curr; --i)
+        message += '&rarr; ' + this.lines[i] + '<br>';
+      this.output.innerHTML = message;
+      this.output.scrollTop = this.output.scrollHeight
+    }
+    return this;
+  }
+
+  this.print = function(level, msg) {
+    if ( level <= this.level ) {
+     if ( this.lines.length < this.length ) {
+	this.lines.length = this.lines.length+1;
+      }
+      if ( this.curr>this.lines.length-1 ) this.curr = 0;
+      if ( level == LOG_VERBOSE ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [VERBOSE]:  '+msg);
+      }
+      else if ( level == LOG_DEBUG ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [DEBUG]:    '+msg);
+      }
+      else if ( level == LOG_INFO ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [INFO]:     '+msg);
+      }
+      else if ( level == LOG_ERROR ) {
+	this.lines[this.curr] = this.format(Date().toString()+' [ERROR]:    '+msg);
+      }
+      else  {
+	this.lines[this.curr] = this.format(Date().toString()+' [UNKNOWN]:  '+msg);
+      }
+      this.showMessages();
+      this.curr = this.curr + 1;
+    }
+    return this;
+  }
+
+  this.hide = function() {
+    this.b_hide.innerHTML = '';
+    this.b_clear.innerHTML = '';
+    this.b_show.innerHTML = '<BUTTON id="_dataLogger_show_button" onclick="_dataLogger.show()">Show Messages</BUTTON>';
+    this.output_td.removeChild(this.output);
+  }
+  
+  this.show = function() {
+    this.b_show.innerHTML = '';
+    this.b_clear.innerHTML = '<BUTTON onclick="_dataLogger.clear()">Clear</BUTTON>';
+    this.b_hide.innerHTML  = '<BUTTON id="_dataLogger_hide_button" onclick="_dataLogger.hide()">Hide Messages</BUTTON>';
+    this.output_td.appendChild(this.output);
+    this.showMessages();
+  }
+  
+  this.error = function(msg) {
+    return this.print(LOG_ERROR,msg);
+  }
+  
+  this.info = function(msg) {
+    return this.print(LOG_INFO,msg);
+  }
+  
+  this.debug = function(msg) {
+    return this.print(LOG_DEBUG,msg);
+  }
+
+  this.verbose = function(msg) {
+    return this.print(LOG_VERBOSE,msg);
+  }
+
+  this.clear = function() {
+    this.curr         = 0;
+    this.lines.length = 0;
+    this.output.innerHTML = '';
+    this.output.scrollTop = this.output.scrollHeight
+  }
+
+  this.format = function(expr) {
+    var s = prettyprint(expr)
+    s = htmlescape(s)
+    return s
+  }
+  
+  var htmlescape = function(s) {
+    var s = s.replace("&", "&amp;", "g")
+    s = s.replace("<", "&lt;", "g")
+    s = s.replace(">", "&gt;", "g")
+    s = s.replace(" ", "&nbsp;", "g")
+    s = s.replace("\n", "<br>", "g")
+    return s
+  }
+
+  var prettyprint = function(s) {
+    var q = "("
+    if(typeof(s) == "string")
+    return s
+    for (var i=0; i<s.length; i++) {
+      if (typeof(s[i]) != "object")
+      q += s[i]
+      else
+      q += prettyprint(s[i])
+      if (i < s.length -1)
+      q += " "
+    }
+    q += ")"
+    return q
+  }
+
+  this.hide();
+  return this;
+}
+
+
+dataLoggerTest = function(id) {
+  var logger  = new OutputLogger(document.getElementById(id),10,LOG_DEBUG);
+  logger.print(LOG_DEBUG,   'LOG_DEBUG: hello 1');
+  logger.print(LOG_INFO,    'LOG_INFO: hello 1');
+  logger.print(LOG_WARNING, 'LOG_WARNING: hello 1');
+  logger.print(LOG_ERROR,   'LOG_ERROR: hello 1');
+  for(var k=0; k<20; ++k)  {
+    logger.info(k+' : hello 1  --> '+k);
+  }
+}
+
+/** @class DataItem
+ *
+ * Simple scripting class to place streaming data items into an html file.
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+DataItem = function(provider, name)   {
+  this._name  = name;
+  this._elem = null;
+  provider.subscribe(this._name,this);
+  
+  /// Late access of the document's element
+  this.element = function() {
+    if ( this._elem == null )   {
+      this._elem = document.getElementById(this._name);
+      if ( this._elem == null ) {
+	alert('Invalid document:'+document.location+'\n\nNo element found with ID:'+this._name+'\n');
+      }
+    }
+    return this._elem;
+  }
+  
+  /// Default callback for dataprovider on feeeding data
+  this.set = function(data) {
+    this.element().innerHTML = data;
+  }
+}
+
+/** @class DataProvider
+ *
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+DataProvider = function(logger)  {
+  this.calls = new Array();
+  this.items = new Object();
+  this.calls.length = 0;
+  this.logger = logger;
+  this.isConnected = false;
+  _dataProvider = this;
+
+  // set up stomp client.
+  stomp = new STOMPClient();
+  this.service = stomp;
+
+
+  stomp.onopen = function() {
+    _dataProvider.logger.info("Transport opened");
+  };
+
+  stomp.onclose = function(code) {
+    _dataProvider.isConnected = false;
+    _dataProvider.logger.info("Transport closed (code: " + code + ")");
+  };
+
+  stomp.onerror = function(error) {
+    _dataProvider.logger.error("onerror: " + error);
+  };
+
+  stomp.onerrorframe = function(frame) {
+    _dataProvider.logger.error("onerrorframe: " + frame.body);
+  };
+
+  stomp.onconnectedframe = function() {
+    _dataProvider.logger.info("Connected ..");
+    _dataProvider.isConnected = true;
+    _dataProvider.connect();
+  };
+
+  /// Data dispatch callback once stomp receieves data
+  stomp.onmessageframe = function(frame) {
+    //alert('stomp.onmessageframe:'+frame.body);
+    var v = frame.body.split('#');
+    if ( v.length >= 2 ) {
+      var itm = v[1];
+      var data = v.slice(2);
+      // _dataProvider.logger.debug('DataProvider: Update data item['+itm+'] = '+data);
+      var o = _dataProvider.items[itm];
+      var len = o.length;
+      for(var i=0; i<len; ++i) {
+	if ( o[i] ) {
+	  o[i].set(data);
+	}
+	else {
+	  alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
+	}
+      }
+      return;
+    }
+    _dataProvider.logger.error('onmessage: retrieved data with invalid item number');    
+  }
+
+  /** Connect to stomp channel
+   *
+   *  @return  Reference to self
+   */
+  this.start = function() {
+    this.service.connect('localhost', 61613, 'guest', 'guest');
+  }
+
+  /** Disconnect from stomp channel
+   *
+   *  @return  Reference to self
+   */
+  this.reset = function()  {
+    this.service.disconnect();
+    this.service.reset();
+    return this;
+  }
+  
+  /** Pre-Subscribe to data items
+   *  @param item      Name of stomp topic to subscribe to
+   *  @param callback  Object implementing "set" method when new data is received.
+   *
+   *  @return  Reference to self
+   */
+  this.subscribe = function(item,callback)  {
+    var len = this.calls.length;
+
+    this.calls.length = this.calls.length+1;
+    this.calls[len] = item;
+
+    if ( !this.items.hasOwnProperty(item) )
+      this.items[item] = new Array(callback);
+    else
+      this.items[item].push(callback);
+    this.logger.debug('DataProvider: Subscribed to data item:'+item+'   '+stomp);
+    if ( _dataProvider.isConnected )   {
+      var msg = 'SUBSCRIBE:'+this.calls[len];
+      this.service.subscribe(this.calls[len],{exchange:''});
+      this.service.send(msg,'/topic/home',{exchange:''});
+    }
+    return this;
+  }
+
+  /** Unubscribe to data items
+   *  @param item      Name of stomp topic to subscribe to
+   *
+   *  @return  Reference to self
+   */
+  this.unsubscribe = function(item)  {
+    for(var i=0; i<this.calls.length;++i) {
+      if ( this.calls[i] == item ) {
+	this.service.unsubscribe(item,{exchange:''});
+	delete this.calls[i];
+	this.calls.length = this.calls.length-1;
+	return this;
+      }
+    }
+    return null;
+  }
+  /// Disconnect from all item topics
+  this.unsubscribeAll = function()  {
+    this.logger.info("Disconnect all pending data services ..");
+    for(var i=0; i<this.calls.length;++i)
+      this.service.unsubscribe(item,{exchange:''});
+    this.calls = new Array();
+    this.calls.length = 0;
+    this.items = new Object();
+    return this;
+  }
+  /// Update all data items by requesting a "SUBSCRIBE:<item> call to the server
+  this.update = function() {
+    for (var i=0; i < this.calls.length; ++i)  {
+      var msg = 'SUBSCRIBE:'+this.calls[i];
+      this.service.send(msg,'/topic/home',{exchange:''});
+      this.logger.verbose('DataProvider: Connect data item:'+msg);
+    }
+  }
+
+  /// Connect to item topics and force first update
+  this.connect = function()  {
+    this.logger.info("Connecting all pending data leaves to services ..");
+    for (var i=0; i < this.calls.length; ++i)
+      this.service.subscribe(this.calls[i],{exchange:''});
+    this.update();
+  }
+
+  /// Disconnect to item topics and force first update
+  this.disconnect = function()  {
+    this.unsubscribeAll();
+    this.service.disconnect();
+    this.service.reset();
+  }
+
+  //this.start();
+  return this;
+}
+
+dataProviderReset = function() {
+  if ( null != _dataProvider ) {
+    _dataProvider.reset();
+  }
+}
+
+if ( _debugLoading ) alert('Script lhcb.display.data.cpp loaded successfully');
