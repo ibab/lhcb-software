@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.3 2009-08-13 14:57:18 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.4 2009-08-16 21:23:21 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -120,8 +120,8 @@ public:
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
                                             const LHCb::VertexBase::Container& PVs) const =0;
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
-                                            const LHCb::VertexBase::Container& PVs) const =0;
-  virtual const LHCb::VertexBase* relatedPVs(const LHCb::Particle* particle,
+                                            const LHCb::VertexBase::ConstVector& PVs) const =0;
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
                                              const std::string& PVLocation) const =0;
 
 };
