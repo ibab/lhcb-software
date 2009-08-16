@@ -1,8 +1,11 @@
-!$Id: release.notes,v 1.316 2009-08-13 10:35:14 ibelyaev Exp $
+!$Id: release.notes,v 1.317 2009-08-16 22:09:38 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-16 - Juan PALACIOS
+ - Remove FilterCriterionBase class. Moved to Phys/DaVinciFilters.
 
 ! 2009-08-13 - Vanya BELYAEV
 
