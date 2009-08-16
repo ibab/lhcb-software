@@ -5,6 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-08-16 - Juan Palacios
+ - Kernel/IRelatedPVFinder.h
+  . Fix typos
  - dict/DaVinciInterfacesDict.h, .xml
   . Remove IRelatedPV.h
 
