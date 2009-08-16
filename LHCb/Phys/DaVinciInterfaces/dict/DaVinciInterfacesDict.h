@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.2 2009-07-29 08:18:19 cattanem Exp $
+d // $Id: DaVinciInterfacesDict.h,v 1.3 2009-08-16 21:20:21 jpalac Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -52,7 +52,6 @@
 #include "Kernel/IProtoParticleFilter.h"
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/IRelatedPVFinder.h"
-#include "Kernel/IRelatedPV.h"
 #include "Kernel/ISecondaryVertexTool.h"
 #include "Kernel/ITagger.h"
 #include "Kernel/ITriggerSelectionTisTos.h"

@@ -41,7 +41,6 @@
   <class name = "IProtoParticleFilter"/>
   <class name = "IPVReFitter"/>
   <class name = "IRelatedPVFinder"/>
-  <class name = "IRelatedPV"/>
   <class name = "ISecondaryVertexTool"/> 
   <class name = "ITagger"/>
   <class name = "ITriggerSelectionTisTos"/>
