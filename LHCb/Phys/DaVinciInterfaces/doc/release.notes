@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-08-16 - Juan Palacios
+ - dict/DaVinciInterfacesDict.h, .xml
+  . Remove IRelatedPV.h
+
 ! 2009-08-14 - Juan Palacios
  - Kernel/IRelatedPVFinder.h
   . Add methods returning single "best" related VertexBase for a given 
