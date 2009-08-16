@@ -1,4 +1,4 @@
-// $Id: gslSVDsolver.h,v 1.8 2009-08-16 14:16:24 wouter Exp $
+// $Id: gslSVDsolver.h,v 1.9 2009-08-16 14:31:51 wouter Exp $
 #ifndef GSLSVDSOLVER_H 
 #define GSLSVDSOLVER_H 1
 
@@ -34,7 +34,7 @@ public:
 
   bool compute(AlSymMat& symMatrix, AlVec& vector) const {
     AlVec dummy(vector.size()) ;
-    compute( symMatrix, vector,dummy) ;
+    return compute( symMatrix, vector,dummy) ;
   }
   
 protected:
