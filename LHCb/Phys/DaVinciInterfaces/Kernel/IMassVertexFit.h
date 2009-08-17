@@ -60,9 +60,11 @@ class GAUDI_API IMassVertexFit :
   virtual public extend_interfaces2<IParticleCombiner , IParticleReFitter> 
 {
 public:
-
+  // ==========================================================================
+  /// inteface machinery
   DeclareInterfaceID(IMassVertexFit, 2, 0);
-  
+  // ==========================================================================
+public:
   // ========================================================================== 
   /** The major method for mass-vertex constrain fit
    *  The particles from the input container container  are fit to produce 
@@ -239,8 +241,8 @@ public:
   // ==========================================================================
 protected:
   // ==========================================================================  
-  // virtual and protected destructor 
-  virtual ~IMassVertexFit(); ///< virtual and protected destructor 
+  /// virtual and protected destructor 
+  virtual ~IMassVertexFit();                // virtual and protected destructor 
   // ==========================================================================  
 };
 // ============================================================================

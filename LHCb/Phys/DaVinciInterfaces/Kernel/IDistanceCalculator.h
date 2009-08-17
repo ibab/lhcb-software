@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IDistanceCalculator.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -38,9 +38,11 @@ namespace LHCb
 class GAUDI_API IDistanceCalculator : virtual public IAlgTool 
 {
 public:
-
+  // ==========================================================================
+  /// interface machinery
   DeclareInterfaceID(IDistanceCalculator, 2, 0);
-
+  // ==========================================================================
+public:
   // ==========================================================================
   /** @defgroup ParticleVertex Methods to evaluate distances between "particle" and "vertex"
    *
@@ -567,7 +569,7 @@ public:
 protected:
   // ==========================================================================
   /// virtual and protected desctructor 
-  virtual ~IDistanceCalculator() ; // virtual and protected desctrustor 
+  virtual ~IDistanceCalculator() ;         // virtual and protected desctrustor 
   // ==========================================================================  
 };
 // ============================================================================

@@ -1,4 +1,5 @@
-// $Id: IDirectionFit.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IDirectionFit.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
+// ============================================================================
 #ifndef DAVINCIKERNEL_IDIRECTIONFIT_H 
 #define DAVINCIKERNEL_IDIRECTIONFIT_H 1
 // ============================================================================
@@ -16,7 +17,8 @@
 // ============================================================================
 #include "Kernel/IParticleReFitter.h"
 // ============================================================================
-
+namespace LHCb { class VertexBase ; }
+// ============================================================================
 /** @class IDirectionFit IDirectionFit.h VertexFitter/IDirectionFit.h
  *
  *  The "concrete" interface for "direction fitter".
@@ -55,9 +57,12 @@
 class GAUDI_API IDirectionFit : virtual public IParticleReFitter 
 {
 public:  
-
+  // ==========================================================================
+  /// interface machinery
   DeclareInterfaceID(IDirectionFit, 2, 0);
-
+  // ==========================================================================
+public:
+  // ==========================================================================
   /** perform a "direction" fit for the particle.
    *  The angle between the momentum of the particle 
    *  and the vectro from primary vertex to the decay 
@@ -91,14 +96,13 @@ public:
   virtual StatusCode fit 
   ( const LHCb::VertexBase& primary ,
     LHCb::Particle&     particle ) const = 0 ;
-
+  // ==========================================================================
 protected:
-  
-  // virtual and protected destructor 
-  virtual ~IDirectionFit() ; ///< virtual and protected destructor
-  
+  // ==========================================================================  
+  /// virtual and protected destructor 
+  virtual ~IDirectionFit() ;                // virtual and protected destructor
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END 
 // ============================================================================

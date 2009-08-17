@@ -1,29 +1,6 @@
-// $Id: IJetMaker.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IJetMaker.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.2 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2009/07/22 20:54:51  jpalac
-// First import of Phys/DaVinciInterfaces
-//
-// Revision 1.5  2008/04/17 14:46:13  pkoppenb
-// PhysDestop save renamed to keep
-//
-// Revision 1.4  2007/02/06 09:57:56  pkoppenb
-// Related PV update
-//
-// Revision 1.3  2006/03/15 13:34:02  pkoppenb
-// Head is now DC06
-//
-// Revision 1.2.4.1  2006/01/17 08:54:45  pkoppenb
-// First DC06 version
-//
-// Revision 1.2  2005/07/27 08:12:38  ibelyaev
-//  improve Doxygen comments for IJetMaker interface
-//
-// Revision 1.1  2005/07/26 16:26:17  ibelyaev
-//  add new abstract interface IJetMaker
-// 
+// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.3 $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IJETMAKER_H 
 #define DAVINCIKERNEL_IJETMAKER_H 1
@@ -42,9 +19,7 @@
 // forward decalrations 
 // ============================================================================
 #include "Event/Particle.h"
-
 // ============================================================================
-
 /** @class IJetMaker IJetMaker.h Kernel/IJetMaker.h
  *
  *  The abstract interface to Jet Maker 
@@ -59,15 +34,19 @@
 class GAUDI_API IJetMaker : public virtual IAlgTool 
 {
 public: 
-
+  // ==========================================================================
+  /// interface machinery 
   DeclareInterfaceID(IJetMaker, 2, 0);
-  
+  // ==========================================================================
+public:
+  // ==========================================================================
   /// the actual type of input data container 
   typedef LHCb::Particle::ConstVector   Input  ;  
   /// the actual type of output container of jets 
   typedef LHCb::Particle::Vector        Jets   ;  
+  // ==========================================================================
 public:
-  
+  // ==========================================================================  
   /** The main method: jet-finding procedure 
    * 
    *  @code 
@@ -117,7 +96,7 @@ public:
    */
   virtual StatusCode makeJets 
   ( const Input& input , Jets& jets ) const = 0 ;
-  
+  // ==========================================================================  
   /** perform jet-finding procedute getting the input data from
    *  arbitrary sequence of data, convertible to "const LHCb::Particle*", 
    *  e.g. LHCb::Particle::ConstVector, Particles, LoKi::Range, etc... 
@@ -192,12 +171,13 @@ public:
     PARTICLE last  , 
     Jets&    jets  ) const 
   { return makeJets ( Input( first , last )  , jets ) ; }
-  
+  // ==========================================================================  
 protected:
+  // ==========================================================================
   /// virtual and protected destructor 
-  virtual ~IJetMaker();
+  virtual ~IJetMaker();                     // virtual and protected destructor 
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END 
 // ============================================================================

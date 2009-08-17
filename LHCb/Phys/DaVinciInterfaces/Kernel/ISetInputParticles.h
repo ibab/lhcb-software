@@ -1,4 +1,4 @@
-// $Id: ISetInputParticles.h,v 1.3 2009-08-04 10:13:23 jpalac Exp $
+// $Id: ISetInputParticles.h,v 1.4 2009-08-17 08:04:22 jpalac Exp $
 // ============================================================================
 #ifndef KERNEL_ISETINPUTPARTICLES_H 
 #define KERNEL_ISETINPUTPARTICLES_H 1
@@ -9,7 +9,8 @@
 // ============================================================================
 #include "GaudiKernel/IInterface.h"
 // ============================================================================
-// event
+// Event
+// ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
 /** @class ISetInputParticles ISetInputParticles.h Kernel/ISetInputParticles.h
@@ -23,9 +24,11 @@
 class GAUDI_API ISetInputParticles : virtual public IInterface 
 {
 public:
-
+  // ==========================================================================
+  /// interface machinery
   DeclareInterfaceID(ISetInputParticles, 2, 0);
-  
+  // ==========================================================================
+public:
   // ==========================================================================  
   /** the only one essential method:
    *  it sets the input particles
@@ -38,7 +41,7 @@ public:
 protected:
   // ==========================================================================
   /// the destructor is virtual and protected 
-  virtual ~ISetInputParticles() ;
+  virtual ~ISetInputParticles() ;    // the destructor is virtual and protected 
   // ==========================================================================
 };
 // ============================================================================

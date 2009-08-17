@@ -1,8 +1,6 @@
-// $Id: IParticleCombiner.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IParticleCombiner.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.2 $
-// ============================================================================
-// 
+// CVS tag $Name: not supported by cvs2svn $; version $Revision: 1.3 $
 // ============================================================================
 #ifndef VERTEXFITTER_IPARTICLECOMBINER_H 
 #define VERTEXFITTER_IPARTICLECOMBINER_H 1
@@ -18,8 +16,10 @@
 #include "GaudiKernel/IInterface.h"
 #include "GaudiKernel/IAlgTool.h"
 // ============================================================================
+// Event 
+// ============================================================================
 #include "Event/Particle.h"
-
+// ============================================================================
 /** @class IParticleCombiner IParticleCombiner.h 
  * 
  *  The first "basic" abstract interface interface 
@@ -31,15 +31,12 @@
 class GAUDI_API IParticleCombiner : virtual public IAlgTool 
 {
 public:
-
+  // ==========================================================================
+  /// interafce machinery
   DeclareInterfaceID(IParticleCombiner, 2, 0);
-  
-  /** the actual type for containe rof daughter particles 
-   *  Important: the daughters are considered to have "const" qualifier!
-   */
-  
+  // ==========================================================================  
 public:
-  
+  // ==========================================================================  
   /** The major method for "combining" the daughter particles 
    *  into "mother" particle.
    *
@@ -89,7 +86,7 @@ public:
   ( const LHCb::Particle::ConstVector&  daughters ,  
     LHCb::Particle&         mother    , 
     LHCb::Vertex&           vertex    ) const = 0 ;
-  
+  // ==========================================================================  
   /** The method which allows to use almost an arbitrary 
    *  sequence of daughter particles, e.g. 
    *  LHCb::Particle::ConstVector, Particles, SmartRefVector<Particle>, etc.. 
@@ -130,16 +127,14 @@ public:
   {
     const LHCb::Particle::ConstVector children = Daughters( begin , end ) ;
     return combine( children , mother , vertex ) ;
-  };
-  
-  
-protected:
-  
-  // virtual and protected destructor 
-  virtual ~IParticleCombiner(); ///< virtual and protected destructor 
-
+  }
+  // ==========================================================================  
+protected: 
+  // ========================================================================== 
+  /// virtual and protected destructor 
+  virtual ~IParticleCombiner();             // virtual and protected destructor 
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END 
 // ============================================================================

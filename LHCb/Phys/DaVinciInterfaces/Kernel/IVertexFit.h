@@ -16,7 +16,6 @@
 // ============================================================================
 #include "Event/Particle.h"
 // ============================================================================
-
 /** @class IVertexFit IVertexFit.h VertexFitter/IVertexFit.h
  *
  *  The "concrete" vertex interface.
@@ -67,9 +66,12 @@ class GAUDI_API IVertexFit :
                                     IParticleReFitter> 
 {
 public:
- 
+  // ========================================================================== 
+  /// interface machinery
   DeclareInterfaceID(IVertexFit, 2, 0);
-  
+  // ==========================================================================
+public:
+  // ==========================================================================  
   /** The vertex fitting method without creation of a Particle 
    *
    *  @code
@@ -100,8 +102,8 @@ public:
    */
   virtual StatusCode fit 
   ( const LHCb::Particle::ConstVector& daughters ,
-    LHCb::Vertex&          vertex    ) const = 0 ;
-  
+    LHCb::Vertex&          vertex    ) const = 0 ;  
+  // ==========================================================================  
   /** the vertex fitting method without creation of a Particle, 
    *  which allow to use an almost arbitrary sequence of 
    *  daughter particles 
@@ -152,8 +154,8 @@ public:
     LHCb::Vertex&          vertex    ) const 
   {
     return fit ( LHCb::Particle::ConstVector( begin , end ) , vertex ) ;
-  };
-
+  }
+  // ==========================================================================  
   /** The vertex fitting method with creation of LHCb::Particle 
    *  ("classical")
    *
@@ -188,8 +190,8 @@ public:
   virtual StatusCode fit 
   ( const LHCb::Particle::ConstVector& daughters ,
     LHCb::Particle&        particle  ,
-    LHCb::Vertex&          vertex    ) const = 0 ;
-  
+    LHCb::Vertex&          vertex    ) const = 0 ;  
+  // ==========================================================================  
   /** the vertex fitting method with creation of LHCb::Particle ("classical")
    *  which allow to use almost arbotrary sequence of 
    *  daughter partricles 
@@ -240,9 +242,8 @@ public:
     LHCb::Vertex&          vertex    ) const 
   {
     return fit ( LHCb::Particle::ConstVector ( begin , end ) , particle , vertex ) ;
-  };
-
-  
+  }  
+  // ==========================================================================  
   /** add the particle to the vertex and refit 
    * 
    *  @code
@@ -267,8 +268,8 @@ public:
    */
   virtual StatusCode add
   ( const LHCb::Particle*  particle , 
-    LHCb::Vertex&          vertex   ) const = 0 ;
-  
+    LHCb::Vertex&          vertex   ) const = 0 ;  
+  // ==========================================================================  
   /** remove the particle from the vertex and refit 
    *
    *  @code
@@ -294,8 +295,7 @@ public:
   virtual StatusCode remove
   ( const LHCb::Particle*  particle , 
     LHCb::Vertex&          vertex   ) const = 0 ;
-
-
+  // ==========================================================================  
   /** Creation a vertex from two particles without 
    *  creation of an output  Particle 
    *  
@@ -322,7 +322,7 @@ public:
     tmp[1]=&daughter1;
     return fit ( tmp , vertex ) ;
   }
-
+  // ==========================================================================  
   /** Creation a vertex from three particles without 
    *  creation of an output  Particle 
    *  
@@ -352,6 +352,7 @@ public:
     tmp[2]=&daughter2;
     return fit ( tmp , vertex ) ;
   }  
+  // ==========================================================================  
   /** Creation a Vertex and an output Particle from two Particles
    *  
    *  @author Juan Palacios Juan.Palacios@cern.ch
@@ -378,8 +379,8 @@ public:
     tmp[0]=&daughter0;
     tmp[1]=&daughter1;
     return fit( tmp, particle, vertex );
-  }
-  
+  }  
+  // ==========================================================================  
   /** Creation a Vertex and an output Particle from three Particles
    *  
    *  @author Juan Palacios Juan.Palacios@cern.ch
@@ -410,14 +411,13 @@ public:
     tmp[2]=&daughter2;
     return fit( tmp, particle, vertex );    
   }  
-  
+  // ==========================================================================  
 protected:
-  
-  // virtual and protected destructor 
-  virtual ~IVertexFit() ;  ///< virtual and protected destructor 
-
+  // ==========================================================================
+  /// virtual and protected destructor 
+  virtual ~IVertexFit() ;                   // virtual and protected destructor 
+  // ==========================================================================
 };
-
 // ============================================================================
 // The END 
 // ============================================================================

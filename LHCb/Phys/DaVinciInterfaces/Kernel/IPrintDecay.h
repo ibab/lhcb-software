@@ -1,4 +1,4 @@
-// $Id: IPrintDecay.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IPrintDecay.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IPRINTDECAY_H 
 #define DAVINCIKERNEL_IPRINTDECAY_H 1
@@ -24,9 +24,11 @@ namespace LHCb { class Particle ; }
 class GAUDI_API IPrintDecay : virtual public IAlgTool 
 {
 public: 
-
+  // ==========================================================================
+  /// interface machinery
   DeclareInterfaceID(IPrintDecay, 2, 0);
-  
+  // ==========================================================================
+public:
   // ==========================================================================
   /** Print the decay tree for a given particle
    *
@@ -73,7 +75,7 @@ public:
 protected:
   // ==========================================================================
   /// virtual and protected destructor 
-  virtual ~IPrintDecay() ; // virtual and protected destructor 
+  virtual ~IPrintDecay() ;                 // virtual and protected destructor 
   // ==========================================================================
 };
 // ============================================================================
