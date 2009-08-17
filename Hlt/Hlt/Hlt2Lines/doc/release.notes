@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.50 2009-08-14 15:55:52 pkoppenb Exp $
+$Id: release.notes,v 1.51 2009-08-17 08:44:17 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-17 - Patrick Koppenburg
+ - add a line which switches (at a low rate)  HltSelReportsMaker to debug mode
+   (needs HltCommon, HltRawData graven_20090817)
 
 ! 2009-08-14 - Patrick Koppenburg
  - Hlt2B2LLXLines.py : use TF electrons and muons
