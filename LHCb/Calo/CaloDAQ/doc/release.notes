@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2009-09-17 - Olivier Deschamps
+ - new algorithm : CaloAdcFromRaw produces ADC from rawBanks with possible mis-calibration
+
 !========================== CaloDAQ v4r12 2009-06-29 =========================
 ! 2009-06-19 - Olivier Deschamps
  - (I)Calo(L0)DataProvider(FromTES) : new method for partial CaloBank decoding
