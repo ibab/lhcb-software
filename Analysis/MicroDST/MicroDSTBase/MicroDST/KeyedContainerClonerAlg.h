@@ -1,4 +1,4 @@
-// $Id: KeyedContainerClonerAlg.h,v 1.5 2009-03-20 13:52:36 jpalac Exp $
+// $Id: KeyedContainerClonerAlg.h,v 1.6 2009-08-17 19:13:43 jpalac Exp $
 #ifndef MICRODST_KEYEDCONTAINERCLONERALG_H 
 #define MICRODST_KEYEDCONTAINERCLONERALG_H 1
 
@@ -48,8 +48,8 @@ public:
 
     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-    if (inputTESLocation()=="")  {
-      verbose() << "changing input TES location to " 
+    if ( inputTESLocation()=="")  {
+      verbose() << "Setting input TES location default: " 
                 << LOCATION::Default << endmsg;
       setInputTESLocation(LOCATION::Default);
     }
@@ -70,23 +70,33 @@ public:
   
   StatusCode execute() 
   {
-
+    
     debug() << "==> Execute" << endmsg;
-    verbose() << "Going to store Primary Vertex bank from " 
-              << inputTESLocation()
-              << " into " << fullOutputTESLocation() << endmsg;
 
-    const typename T::Container* cont = 
-      copyKeyedContainer<typename T::Container, CLONER>(inputTESLocation(),
-                                                        m_cloner      );
-  
-    setFilterPassed(true);
+    typedef std::vector<std::string>::const_iterator stringIter;
+    stringIter locBegin = this->inputTESLocations().begin();
+    stringIter locEnd = this->inputTESLocations().end();
+    
+    for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
 
-    if (0==cont) {
-      Warning("Unable clone or get container from "+ inputTESLocation(),
-              StatusCode::FAILURE, 10).ignore();
+      const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
+      const std::string outputLocation = 
+        this->outputTESLocation( inputLocation );
+        
+      verbose() << "Going to clone KeyedContainer from " << inputLocation
+                << " into " << outputLocation << endmsg;
+
+      const typename T::Container* cont = 
+        copyKeyedContainer<typename T::Container, CLONER>(inputLocation,
+                                                          m_cloner      );
+
+      if (0==cont) {
+        Warning("Unable clone or get container from "+ inputLocation,
+                StatusCode::FAILURE, 10).ignore();
+      }
     }
 
+    setFilterPassed(true);
     return StatusCode::SUCCESS;
 
   }
@@ -97,9 +107,6 @@ public:
     return MicroDSTAlgorithm::finalize();
   }
   
-
-protected:
-
 private:
 
   CLONER* m_cloner;

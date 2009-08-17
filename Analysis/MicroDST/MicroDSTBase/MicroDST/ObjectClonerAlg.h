@@ -1,4 +1,4 @@
-// $Id: ObjectClonerAlg.h,v 1.3 2008-09-01 17:03:11 jpalac Exp $
+// $Id: ObjectClonerAlg.h,v 1.4 2009-08-17 19:13:43 jpalac Exp $
 #ifndef MICRODST_MICRODSTOBJECTCLONERALG_H 
 #define MICRODST_MICRODSTOBJECTCLONERALG_H 1
 
@@ -42,7 +42,7 @@ namespace MicroDST
       if ( sc.isFailure() ) return sc;
 
       if (inputTESLocation()=="")  {
-        verbose() << "changing input TES location to " 
+        verbose() << "Setting input TES location to default: " 
                   << LOCATION::Default << endmsg;
         setInputTESLocation(LOCATION::Default);
       }
@@ -53,15 +53,31 @@ namespace MicroDST
     
     StatusCode execute() 
     {
-        debug() << "==> Execute" << endmsg;
+      debug() << "==> Execute" << endmsg;
+      typedef std::vector<std::string>::const_iterator stringIter;
+      stringIter locBegin = this->inputTESLocations().begin();
+      stringIter locEnd = this->inputTESLocations().end();
+    
+      for (stringIter iLoc = locBegin; iLoc != locEnd; ++iLoc) {
+        const std::string inputLocation = MicroDST::niceLocationName(*iLoc);
+        const std::string outputLocation = 
+          this->outputTESLocation( inputLocation );
+        verbose() << "Going to clone KeyedContainer from " << inputLocation
+                  << " into " << outputLocation << endmsg;
 
-        setFilterPassed(true);
-  
-        verbose() << "Going to object from " << inputTESLocation()
-                  << " into " << fullOutputTESLocation() << endmsg;
-        return (0!=copyAndStoreObject<T, CLONER >(inputTESLocation(),
-                                                  fullOutputTESLocation() ) ) ?
-          StatusCode::SUCCESS : StatusCode::FAILURE;
+        const T* cont = 
+          copyAndStoreObject<T, CLONER>(inputLocation,
+                                        outputLocation      );
+
+        if (0==cont) {
+          Warning("Unable clone or get object from "+ inputLocation,
+                  StatusCode::FAILURE, 10).ignore();
+        }
+      }
+
+      setFilterPassed(true);
+      return StatusCode::SUCCESS;
+      
     }
     
     StatusCode finalize  () 

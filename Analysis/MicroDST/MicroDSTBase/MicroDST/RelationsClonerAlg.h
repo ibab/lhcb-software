@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.9 2009-05-27 13:57:34 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.10 2009-08-17 19:13:43 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -60,8 +60,8 @@ namespace MicroDST
 
       if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-      if (inputTESLocation()=="")  {
-        verbose() << "changing input TES location to " 
+      if ( inputTESLocation()=="" )  {
+        verbose() << "Setting input TES location to default: " 
                   << LOCATION::Default << endmsg;
         setInputTESLocation(LOCATION::Default);
       }
@@ -85,10 +85,13 @@ namespace MicroDST
 
       if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
+      const std::string outputLocation = 
+        this->outputTESLocation( this->inputTESLocation() );
+
       if ( msgLevel(MSG::VERBOSE) ) {
         verbose() << "Going to clone relations from " 
                   << inputTESLocation()
-                  << " into " << fullOutputTESLocation() << endmsg;
+                  << " into " << outputLocation << endmsg;
       }
       
       setFilterPassed(true);
@@ -109,11 +112,11 @@ namespace MicroDST
           if ( msgLevel(MSG::VERBOSE) ) {
             verbose() << "Going to store relations table from " 
                       << inputTESLocation()
-                      << " into " << fullOutputTESLocation() << endmsg;
+                      << " into " << outputLocation << endmsg;
             verbose() << "Number of relations in cloned table: "
                       << cloneTable->relations().size() << endmsg;
           }
-          put( cloneTable, fullOutputTESLocation() );
+          put( cloneTable, outputLocation );
           return StatusCode::SUCCESS;
         }
         return StatusCode::FAILURE;
@@ -124,7 +127,7 @@ namespace MicroDST
         }
         
         TABLE* cloneTable = new TABLE();
-        put( cloneTable, fullOutputTESLocation() );
+        put( cloneTable, outputLocation );
         return StatusCode::SUCCESS;
       }
 
