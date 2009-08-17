@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.318 2009-08-17 08:44:58 graven Exp $ 
+! $Id: release.notes,v 1.319 2009-08-17 08:59:24 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-08-17 - Gerhard Raven
- - enable Hlt2DebugEvent line
+ - enable Hlt2DebugEvent line, add routingbit for this line
 
 ! 2009-08-14 - Patrick Koppenburg
  - TrackFitForTopo : remove muons and electrons. Now in Hlt2SharedParticles
