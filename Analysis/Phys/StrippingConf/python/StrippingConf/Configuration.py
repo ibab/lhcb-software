@@ -91,7 +91,7 @@ class StrippingConf( LHCbConfigurableUser ):
 	    tag = EventTuple("TagCreator")
 	    tag.EvtColsProduce = True
 	    tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
-	    tag.addTool(TupleToolSelResults())
+	    tag.addTool(TupleToolSelResults)
 
 #           Sequencer for the global selection (logical OR of all selections)
 #           We need this in addition to StrippingSequencer because in ModeOR=TRUE 
