@@ -50,7 +50,7 @@ def ConfiguredMasterFitter( Name,
         fitter.Extrapolator.ApplyEnergyLossCorr = False
         fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
         fitter.ApplyEnergyLossCorr = False
-        fitter.NodeFitter.DOF = 4
+        fitter.NodeFitter.DoF = 4
 
     # change the smoother
     if KalmanSmoother:
