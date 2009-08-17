@@ -1,13 +1,15 @@
-// $Id: HltSelReportsMaker.h,v 1.7 2009-05-02 15:51:36 tskwarni Exp $
+// $Id: HltSelReportsMaker.h,v 1.8 2009-08-17 08:40:39 graven Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
 // Include files
+#include <string>
 // from Gaudi
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/VectorMap.h"
 #include "Event/HltObjectSummary.h"
 #include "Event/Track.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "GaudiKernel/VectorMap.h"
 
 
 #include "Kernel/IANNSvc.h"
@@ -28,7 +30,8 @@ namespace LHCb {
  *  Algorithm to translate HltSummary  into HltSelResults and associated HltObjectSummaries
  *
  */
-class HltSelReportsMaker : public GaudiAlgorithm {
+class HltSelReportsMaker : public GaudiAlgorithm 
+                         , virtual public IIncidentListener {
 public:
 
   enum OutputInfoLevel { kMinInfoLevel=0, ///< lhcbIDs only
@@ -50,7 +53,7 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
+  void handle(const Incident&);
 
 private:
 
@@ -134,8 +137,9 @@ private:
   typedef SimpleProperty< std::map<std::string,int> > SelectionSettingProp;
   
 
-  /// Present output mode (0=normal 1=debug)
-  unsigned int m_debugMode;
+  /// Present output mode (false=normal true=debug)
+  bool m_debugMode;
+  std::string m_debugIncidentName;
 
   /// Present output info level (depends on selection context)
   unsigned int m_presentInfoLevel;

@@ -1,9 +1,10 @@
-// $Id: HltSelReportsMaker.cpp,v 1.13 2009-05-30 11:28:02 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.14 2009-08-17 08:40:39 graven Exp $
 // #define DEBUGCODE
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/IIncidentSvc.h"
 
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
@@ -23,6 +24,16 @@
 
 using namespace LHCb;
 
+
+namespace {
+    // FUN =  int (HltSelReportsMaker::*)(const T*) const
+    template <typename T,typename FUN> bool dispatch(const ContainedObject* obj,HltSelReportsMaker* parent, FUN fun, int& rank) {
+        const T* c = dynamic_cast<const T*>(obj);
+        bool ret = (c!=0);
+        if (ret) rank = (parent->*fun)(c);
+        return ret;
+    }
+}
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltSelReportsMaker
@@ -84,11 +95,21 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   declareProperty("InfoLevelCaloCluster", m_infoLevelCaloCluster = ((unsigned int)kMaxInfoLevel) );
   declareProperty("InfoLevelCaloClusterDebug", m_infoLevelCaloClusterDebug = ((unsigned int)kMaxInfoLevel) );
 
+  declareProperty("DebugIncident", m_debugIncidentName = "RequestDebugEvent" );
 
-  m_debugMode=0;
+
+  m_debugMode=false;
   m_event=0;
 
 }
+
+// add incident listener, and set m_event 
+void HltSelReportsMaker::handle ( const Incident& /*incident*/ ) {
+    m_event = 0u-1; // yes, it is unsigned, but all we need is
+                    // ++m_event to be zero to force a debug event;-)
+}
+
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -105,6 +126,11 @@ StatusCode HltSelReportsMaker::initialize() {
 
   m_hltANNSvc = svc<IANNSvc>("HltANNSvc");
   m_hltDataSvc = svc<IHltDataSvc>("HltDataSvc");
+
+  if (!m_debugIncidentName.empty() ) {
+    svc<IIncidentSvc>("IncidentSvc")->addListener(this,m_debugIncidentName);
+  }
+
 
   // seup string-to-int selection ID map (vector)
   std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
@@ -139,8 +165,8 @@ StatusCode HltSelReportsMaker::initialize() {
        }
      }
      m_selectionIntIDs.push_back(intSelID);
-     m_debugMode = 0; m_maxCand.push_back( maximumNumberOfCandidatesToStore( selName ) );
-     m_debugMode = 1;  m_maxCandDebug.push_back( maximumNumberOfCandidatesToStore( selName ) );
+     m_debugMode = false; m_maxCand.push_back( maximumNumberOfCandidatesToStore( selName ) );
+     m_debugMode = true;  m_maxCandDebug.push_back( maximumNumberOfCandidatesToStore( selName ) );
 
   }
 
@@ -166,14 +192,8 @@ StatusCode HltSelReportsMaker::execute() {
 
   // determine output mode 
   ++m_event;
-  if( m_event == m_debugPeriod ){
-    // debug
-    m_debugMode = 1;
-    m_event =0;    
-  } else {
-    // normal
-    m_debugMode = 0;
-  }
+  m_debugMode = ( m_event == m_debugPeriod );
+  if( m_debugMode ) m_event =0;    
 
   m_HLTmuonTracks=0;  // will get them only if needed
 
@@ -295,29 +315,13 @@ StatusCode HltSelReportsMaker::execute() {
      // classify according to first candidate
      int rank(0);
      // go through all cases of supported candidates
-     Track* candi = dynamic_cast<Track*>(candidate);
-     if( candi ){
-       rank = rankTrack( candi );
-     } else {
-       RecVertex* candi = dynamic_cast<RecVertex*>(candidate);
-       if( candi ){
-         rank = rankRecVertex( candi );
-       } else {
-         Particle* candi = dynamic_cast<Particle*>(candidate);
-         if( candi ){
-           rank = rankParticle( candi );
-         } else { 
-           CaloCluster* candi = dynamic_cast<CaloCluster*>(candidate);
-           if( candi ){
-             rank = rankCaloCluster( candi );
-           } else { 
-             Warning( " Unsupported data type among candidates - skip selection ID=" 
-                      +selName,StatusCode::SUCCESS, 10 );
-             continue;    
-           }
-         }
-       }
-     }
+     if (  !dispatch<Track>    (candidate,this, &HltSelReportsMaker::rankTrack,       rank)
+        && !dispatch<RecVertex>(candidate,this, &HltSelReportsMaker::rankRecVertex,   rank)
+        && !dispatch<Particle> (candidate,this, &HltSelReportsMaker::rankParticle,    rank)
+        && !dispatch<CaloCluster> (candidate,this, &HltSelReportsMaker::rankCaloCluster, rank) )
+         Warning( " Unsupported data type among candidates - skip selection ID=" 
+                          +selName,StatusCode::SUCCESS, 10 );
+
      stringint selNameInt(selName,i);
      sortedSelections.push_back( RankedSelection(rank,selNameInt) );     
   }
