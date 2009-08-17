@@ -48,3 +48,9 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2Jpsif0.py")
 
 # Sebastian's Bs -> Phi Phi selection
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2PhiPhi.py")
+
+# Diego's selections
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKstarDetached.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKstarDetachedR.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiKDetached.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiKDetachedR.py")
