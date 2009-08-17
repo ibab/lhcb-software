@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.5 2009-07-30 10:05:04 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.6 2009-08-17 19:13:08 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -27,10 +27,8 @@ public:
                   ISvcLocator* pSvcLocator )
     : 
     PBASE(name, pSvcLocator),
-    m_inputTESLocation(""),
     m_outputPrefix("microDST")
   {
-    this->declareProperty( "InputLocation", m_inputTESLocation );
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
   
@@ -41,10 +39,8 @@ public:
                   const IInterface* parent )
     : 
     PBASE(type, name, parent),
-    m_inputTESLocation(""),
     m_outputPrefix("microDST")
   {
-    this->declareProperty( "InputLocation", m_inputTESLocation );
     this->declareProperty( "OutputPrefix",  m_outputPrefix  );
   }
   
@@ -67,16 +63,16 @@ public:
    * @author Ulrich Kerzel
    */
   template <class T, class CopyFunctor>
-  const T* copyAndStoreObject( const std::string& from,
-                               const std::string& to   );
+  inline const T* copyAndStoreObject( const std::string& from,
+                                      const std::string& to   );
   
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  const T* copyKeyedContainer( const std::string& from,
-                               const std::string& to    );
+  inline const T* copyKeyedContainer( const std::string& from,
+                                      const std::string& to    );
 
 
   /**
@@ -84,36 +80,36 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  const T* copyKeyedContainer( const T* from, T* to    ) ;
+  inline const T* copyKeyedContainer( const T* from, T* to    ) ;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class ContainedItemCloner >
-  const T* copyKeyedContainer( const std::string& from, 
-                               ContainedItemCloner* cloner    ) ;
+  inline const T* copyKeyedContainer( const std::string& from, 
+                                      ContainedItemCloner* cloner    ) ;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T, class itemCloner>
-  T* cloneKeyedContainerItem( const T* item );
+  inline T* cloneKeyedContainerItem( const T* item );
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  const T* getStoredClone( const KeyedObject<int>* original    ) const;
+  inline const T* getStoredClone( const KeyedObject<int>* original    ) const;
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getStoredClone( const KeyedObject<int>* original    ) ;
+  inline T* getStoredClone( const KeyedObject<int>* original    ) ;
 
 
   /**
@@ -125,14 +121,14 @@ public:
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  T* getOutputContainer( const std::string& location );
+  inline T* getOutputContainer( const std::string& location );
 
   /**
    *
    * @author Juan Palacios juancho@nikhef.nl
    */
   template <class T>
-  const T* getInputContainer( const std::string& location ) ;
+  inline const T* getInputContainer( const std::string& location ) ;
 
 
   template <class T>
@@ -145,44 +141,11 @@ public:
     return PBASE:: template get<T>(location);
   }
 
-
 protected:
-  
-  inline const std::string& inputTESLocation() const 
-  {
-    return m_inputTESLocation;
-  }
-
-  inline std::string& inputTESLocation()
-  {
-    return m_inputTESLocation;
-  }
 
   inline const std::string& outputPrefix() const 
   {
     return m_outputPrefix;
-  }
-
-  inline const std::string& fullOutputTESLocation() const 
-  {
-    return m_fullOutputTESLocation;
-  }
-
-  inline std::string& fullOutputTESLocation() 
-  {
-    return m_fullOutputTESLocation;
-  }
-
-  inline void setInputTESLocation(const std::string& newLocation) 
-  {
-    this->inputTESLocation() = newLocation;
-    setFullOutputTESLocation();
-  }
-
-  inline void setFullOutputTESLocation() 
-  {
-    this->fullOutputTESLocation() = "/Event/"+ this->outputPrefix() + 
-      "/" + this->inputTESLocation();
   }
 
   inline const std::string outputTESLocation(const std::string& inputLocation) const
@@ -191,12 +154,8 @@ protected:
       MicroDST::niceLocationName(inputLocation);
   }
 
-
-protected:
-
 private:
 
-  std::string m_inputTESLocation;
   std::string m_outputPrefix;
   std::string m_fullOutputTESLocation;
   

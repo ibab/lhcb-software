@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.h,v 1.3 2009-07-30 06:02:37 jpalac Exp $
+// $Id: MicroDSTAlgorithm.h,v 1.4 2009-08-17 19:13:08 jpalac Exp $
 #ifndef MICRODSTALGORITHM_H 
 #define MICRODSTALGORITHM_H 1
 
@@ -30,6 +30,30 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
   virtual StatusCode finalize  ();    ///< Algorithm finalization
+
+protected:
+
+  inline const std::string& inputTESLocation() const 
+  {
+    return m_inputTESLocations.empty() ? "" : m_inputTESLocations[0];
+  }
+
+  inline std::vector<std::string>& inputTESLocations()
+  {
+    return m_inputTESLocations;
+  }
+
+
+  inline void setInputTESLocation(const std::string& newLocation) 
+  {
+    m_inputTESLocations.clear();
+    m_inputTESLocations.push_back(newLocation);
+  }
+
+private:
+
+  std::string m_inputTESLocation;
+  std::vector<std::string> m_inputTESLocations;
 
 };
 #endif // COPYANDSTOREDATA_H

@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.cpp,v 1.2 2008-09-02 09:04:57 jpalac Exp $
+// $Id: MicroDSTAlgorithm.cpp,v 1.3 2009-08-17 19:13:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -19,8 +19,14 @@
 MicroDSTAlgorithm::MicroDSTAlgorithm( const std::string& name,
                                       ISvcLocator* pSvcLocator)
   : 
-  MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator )
+  MicroDSTCommon<GaudiAlgorithm> ( name , pSvcLocator ),
+  m_inputTESLocation(""),
+  m_inputTESLocations()
 {
+  this->declareProperty( "InputLocation", m_inputTESLocation );
+
+  m_inputTESLocations.clear();
+  this->declareProperty( "InputLocations", m_inputTESLocations );
 }
 //=============================================================================
 // Destructor
@@ -31,12 +37,21 @@ MicroDSTAlgorithm::~MicroDSTAlgorithm() {}
 // Initialization
 //=============================================================================
 StatusCode MicroDSTAlgorithm::initialize() {
+
   StatusCode sc = MicroDSTCommon<GaudiAlgorithm>::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   debug() << "==> Initialize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  if ( !m_inputTESLocations.empty() && m_inputTESLocation != "" ) {
+    sc = Error("You have set both InputLocation AND InputLocations properties");
+  }
+ 
+  if ( m_inputTESLocations.empty() ) {
+    this->setInputTESLocation(m_inputTESLocation);
+  }
+
+  return sc;
 }
 //=============================================================================
 StatusCode MicroDSTAlgorithm::execute() {
