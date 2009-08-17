@@ -4,6 +4,9 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-08-17 - Gerhard Raven
+ - add HltIncidentGenerator: algorithm which fires a configured incident
+   as part of execute
 !========================== HltCommon v5r9 2009-08-11 ===================
 ! 2009-08-10 - Gerhard Raven
  - allow one to overrule properties during generation of config instead of
