@@ -16,6 +16,6 @@ class Commissioning_Nominal :
         Returns a list of active lines
         """
         
-        return       [ 'Hlt2Transparant', 'Hlt2PassThrough', 'Hlt2Forward' ]
+        return       [ 'Hlt2Transparant', 'Hlt2PassThrough', 'Hlt2Forward', 'Hlt2DebugEvent' ]
 
    
