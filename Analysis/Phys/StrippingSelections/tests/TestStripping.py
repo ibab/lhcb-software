@@ -40,5 +40,5 @@ DaVinci().HistogramFile = "TestStripping.root"
 #
 # Import input DST files (B->JpsiMuMu inclusive)
 #
-# importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-MinimumBiasDst.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
+# importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-MinimumBiasDst.py")

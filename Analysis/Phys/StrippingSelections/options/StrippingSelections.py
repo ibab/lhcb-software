@@ -45,3 +45,6 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingMuIDCalib.py")
 
 # LiMing's Bs -> Jpsi f0 selection
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2Jpsif0.py")
+
+# Sebastian's Bs -> Phi Phi selection
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2PhiPhi.py")
