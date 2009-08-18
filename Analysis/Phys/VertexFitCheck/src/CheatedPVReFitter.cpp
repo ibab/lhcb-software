@@ -1,4 +1,4 @@
-// $Id: CheatedPVReFitter.cpp,v 1.4 2008-10-10 12:58:17 jpalac Exp $
+// $Id: CheatedPVReFitter.cpp,v 1.5 2009-08-18 09:13:13 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -13,7 +13,8 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
 #include "Event/MCHeader.h"
-
+#include "Event/ProtoParticle.h"
+#include "Event/Particle.h"
 
 // local
 #include "CheatedPVReFitter.h"
