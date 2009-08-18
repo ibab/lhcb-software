@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.44 2009-08-14 15:54:35 pkoppenb Exp $
+$Id: release.notes,v 1.45 2009-08-18 14:26:07 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-18 - Patrick Koppenburg
+ - Add TFKaons and Pions. This is a bit of an overkill. It requires CaloReco to do pions.
 
 ! 2009-08-14 - Patrick Koppenburg
  - python/Hlt2SharedParticles/TFBasicParticles.py : electrons and muons based on TF

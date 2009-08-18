@@ -36,13 +36,13 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                                      , 'Hlt2Bu2MuMuKJpsi'     :  1 # 0.1  # J/psi peak
                                      , 'Hlt2Bu2MuMuKHighMass' :  1 # 0.2  # high mass band
                                      }
-                ,  'BFlightCHI2'        : 50        # adimentional 
-                ,  'BDIRA'              : 0.9998    # adimentional
-                ,  'BIPCHI2'            : 25        # adimentional  
-                ,  'BVertexCHI2'        : 3         # adimentional
-                ,  'LeptonPT'           : 1000      # MeV 
-                ,  'KaonIPCHI2'         : 4         # adimentional
-                ,  'KaonPT'             : 1400      # MeV 
+                ,  'BFlightCHI2'        : 1   # 50        # adimentional 
+                ,  'BDIRA'              : 0.5 # 0.9998    # adimentional
+                ,  'BIPCHI2'            : 100 # 25        # adimentional  
+                ,  'BVertexCHI2'        : 100 # 3         # adimentional
+                ,  'LeptonPT'           : 0   # 1000      # MeV 
+                ,  'KaonIPCHI2'         : 0   # 4         # adimentional
+                ,  'KaonPT'             : 0   # 1400      # MeV 
                 ,  'JpsiMassWindow'     : 500       # MeV (J/psi box mass window)
                 ,  'HighMassBLowerMass' : 5400      # MeV (Lower bound of high-mass box)
                 ,  'SignalBUpperMass'   : 5500      # MeV (Higher bound of signal box)
@@ -116,13 +116,14 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         #
         # CombineBu : apply hard cuts
         #
+        from Hlt2SharedParticles.TFBasicParticles import TFKaons
         combineB = Hlt2Member( CombineParticles                               # type
                              , "Bu"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
                              , DecayDescriptor = "[ B+ -> J/psi(1S) K+ ]cc"
                              , DaughtersCuts = { "K+" : kaoncut }
                              , CombinationCut = combcut
                              , MotherCut = bcut
-                             , InputLocations = [ 'Hlt2TFKaonsForTopo', combineEE ]
+                             , InputLocations = [ TFKaons, combineEE ]
                              )
 #        from Configurables import PrintHeader
 #        DEBUGPrintHeader1 = PrintHeader("DEBUGPrintHeader1")
@@ -151,7 +152,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         ###########################################################################
         line_S = line_M.clone(   'Bu2eeKSignal'
                                  , prescale = self.prescale
-                                 , EE = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
+#                                 , EE = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites)
+                                 , EE = { "CombinationCut" : "(AM<4*GeV)" } # don't change that (tightens combcut and hence overwrites)
                                  , Bu = { "CombinationCut" : combcut+" & (AM< %(SignalBUpperMass)s *MeV)" % self.getProps() }
                                  )
         ###########################################################################
@@ -192,24 +194,24 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         line_M.clone('Bu2MuMuK'
                      , prescale = self.prescale
                      , algos = [ DiMuon, TFMuons, combineMM, line_M._algos[-1] ]  # 'Bu' ]
-                     , Bu = { 'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
+                     , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_S.clone('Bu2MuMuKSignal'
                      , prescale = 1
                      , algos = [ DiMuon, TFMuons, combineMM, line_S._algos[-1] ] # 'Bu' ]
                      , MM = { "CombinationCut" : "(AM<3*GeV)" } # don't change that (tightens combcut and hence overwrites
-                     , Bu = { 'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
+                     , Bu = { 'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_J.clone('Bu2MuMuKJpsi'
                      , prescale = self.prescale
                      , algos = [ DiMuon, TFMuons, combineMM, line_J._algos[-1] ]# 'Bu' ]
                      , MM = {  "CombinationCut" : "(ADAMASS('J/psi(1S)')< %(JpsiMassWindow)s *MeV)" % self.getProps() } 
-                     , Bu = {'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
+                     , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         line_H.clone('Bu2MuMuKHighMass'
                      , prescale = self.prescale
                      , algos = [ DiMuon, TFMuons, combineMM, line_H._algos[-1] ]# 'Bu' ]
-                     , Bu = {'InputLocations' :  [ 'Hlt2TFKaonsForTopo', combineMM ]} 
+                     , Bu = {'InputLocations' :  [ TFKaons, combineMM ]} 
                      )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2eeKDecision" : 50060 } )   # whole prescaled box

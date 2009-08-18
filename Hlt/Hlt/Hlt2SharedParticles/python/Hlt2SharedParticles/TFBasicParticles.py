@@ -29,6 +29,24 @@ Hlt2TFMuons.addTool(TrackSelector())
 Hlt2TFMuons.TrackSelector.TrackTypes = ["Long"]
 ##########################################################################
 #
+# Make the pions
+#
+Hlt2TFPions = NoPIDsParticleMaker("Hlt2TFPions")
+Hlt2TFPions.Particle =  "pion"
+Hlt2TFPions.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFPions.addTool(TrackSelector())
+Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
+# Make the kaons
+#
+Hlt2TFKaons = CombinedParticleMaker("Hlt2TFKaons")
+Hlt2TFKaons.Particle =  "kaon"
+Hlt2TFKaons.Input =  "/Event/"+prefix+"/ProtoP/Charged"
+Hlt2TFKaons.addTool(TrackSelector())
+Hlt2TFKaons.TrackSelector.TrackTypes = ["Long"]
+##########################################################################
+#
 # Make the electrons
 #
 Hlt2TFElectrons = CombinedParticleMaker("Hlt2TFElectrons")
@@ -79,10 +97,16 @@ SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the se
 # from Hlt2SharedParticles.TFBasicParticles import TFMuons
 #
 
-__all__ = ( 'TFMuons', 'TFElectrons', 'TFChargedProtos' )
+__all__ = ( 'TFMuons', 'TFElectrons', 'TFKaons', 'TFPions', 'TFChargedProtos' )
 
 TFChargedProtos = bindMembers( None, [ SeqHlt2TFParticlesForTopo, Hlt2TFCaloRecoSeq,
                                        Hlt2TFMuonIDSeq, TFChargedProtoMaker ] )
 
+#
+# @todo : A bit stupid to require calo reco for this
+#
+TFKaons         = bindMembers( None, [ TFChargedProtos, Hlt2TFKaons ] )
+TFPions         = bindMembers( None, [ TFChargedProtos, Hlt2TFPions ] )
 TFMuons         = bindMembers( None, [ TFChargedProtos, Hlt2TFMuons ] )
 TFElectrons     = bindMembers( None, [ TFChargedProtos, Hlt2TFElectrons ] )
+
