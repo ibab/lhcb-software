@@ -5,7 +5,7 @@
  * Implementation file for class : RichMCTruthTool
  *
  * CVS Log :-
- * $Id: RichMCTruthTool.cpp,v 1.38 2009-07-30 12:12:41 jonrob Exp $
+ * $Id: RichMCTruthTool.cpp,v 1.39 2009-08-18 12:32:56 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -570,9 +570,16 @@ MCTruthTool::smartIDToMCRichHitsMap() const
         const LHCb::RichSmartID pixelID = (*iHit)->sensDetID().pixelID();
         if ( msgLevel(MSG::VERBOSE) )
         {
-          verbose() << "Adding MCRichHit to list for PixelID " << pixelID << endmsg;
+          verbose() << "Adding MCRichHit to list for Pixel ID " << pixelID << endmsg;
         }
         m_smartIDsToHits[pixelID].push_back( *iHit );
+        // Add another entry for the HPD
+        const LHCb::RichSmartID hpdID = pixelID.hpdID();
+        if ( msgLevel(MSG::VERBOSE) )
+        {
+          verbose() << "Adding MCRichHit to list for HPD ID " << hpdID << endmsg;
+        }
+        m_smartIDsToHits[hpdID].push_back( *iHit );
       }
       if ( msgLevel(MSG::DEBUG) )
       {
