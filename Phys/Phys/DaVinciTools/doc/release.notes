@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.457 2009-08-18 08:18:11 rlambert Exp $
+! $Id: release.notes,v 1.458 2009-08-18 11:56:05 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-18 - Juan PALACIOS
+ - src/Genericarticle2PVRelator.h
+  . Make distance calculator tool public, fix typo
 
 ! 2009-08-18 - Rob Lambert
  - Added new Filter, FilterEventList
