@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.54 2009-08-13 10:35:14 ibelyaev Exp $
+// $Id: DVAlgorithm.cpp,v 1.55 2009-08-18 14:46:10 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -209,9 +209,12 @@ StatusCode DVAlgorithm::initialize ()
     { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
 
-  if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << m_p2PVInputLocations << endmsg;
-  desktop()->setP2PVInputLocations(m_p2PVInputLocations);
-
+  if (!m_p2PVInputLocations.empty() ) 
+  {
+    if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << endmsg;
+    desktop()->setP2PVInputLocations(m_p2PVInputLocations);
+  }
+      
   if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
   return sc;
