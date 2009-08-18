@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.456 2009-08-13 15:04:34 jpalac Exp $
+! $Id: release.notes,v 1.457 2009-08-18 08:18:11 rlambert Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-18 - Rob Lambert
+ - Added new Filter, FilterEventList
+   This will select, or not select events from a (Event,Run) list
+   For those odd cases where you forgot to generate an ETC
 
 ! 2009-08-14 - Juan PALACIOS
  - src/GenericParticle2PVRelator.h
