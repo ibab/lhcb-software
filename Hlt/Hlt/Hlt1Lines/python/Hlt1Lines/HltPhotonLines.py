@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.7 2009-08-18 13:01:55 witekma Exp $
+# $Id: HltPhotonLines.py,v 1.8 2009-08-18 13:40:43 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
 # =============================================================================
 
 
@@ -34,6 +34,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                , 'Track_IPCut3D'   : 0.15   # for global optimization 2
                , 'Pho_IsPho'       : -0.1   # for global optimization 3 optional
                , 'Pho_EtCut'       : 2500.
+               , 'PhoTra_PtCut'    : 1250.
                }
 
    def __apply_configuration__(self):
@@ -48,8 +49,9 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
         TRACK_IP_CUT = str(self.getProp('Track_IPCut3D'))
         IS_PHOTON    = str(self.getProp('Pho_IsPho'))
         L0ET_CUT     = str(self.getProp('Pho_EtCut'))
+        PHOTRA_PT_CUT = str(self.getProp('PhoTra_PtCut'))
 
-        commonSeq =   [ Member ('TF', 'L0ET' , FilterDescriptor = ['L0ET,>,'+L0ET_CUT]) 
+        commonSeq1 =  [ Member ('TF', 'L0ET' , FilterDescriptor = ['L0ET,>,'+L0ET_CUT]) 
                       , DecodeIT
                       , Member ('TF', 'AntiEle' , FilterDescriptor = ['AntiEleConf,>,0.5'] 
                                , tools = [ Tool( HltTrackFunctionFactory,
@@ -59,16 +61,21 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                )
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON])
                       , RZVelo, PV2D.ignoreOutputSelection()
-                      , Member ('TF', 'RZVelo'
+                      , Member ('TF', 'RZVelo'  # 2D IP selection
                                , FilterDescriptor = ['rIP_PV2D,||[],0.10,3.0']
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'rIP' : ('rIP',-1.,3.,400), 'rIPBest' : ('rIPBest',-1.,3.,400)}
                                )
-                      , Member ('TU', 'Velo' , RecoName = 'Velo') #  Velo Reco
+                      , Member ('TU', 'Velo' , RecoName = 'Velo')
                       , Member ('TF', 'Velo' #  3D IP selection
                                , FilterDescriptor = ['IP_PV2D,||[],'+TRACK_IP_CUT+',3.0']
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
+                               )
+                      , Member ('TU' ,'FirstForward' , RecoName = 'Forward') 
+                      ]
+        commonSeq2 =  [ Member ('TF', 'FirstForward'
+                               , FilterDescriptor = ['PT,>,'+TRACK_PT_CUT]
                                )
                       , Velo
                       , Member ('TF', 'SecondVelo' 
@@ -76,15 +83,15 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
-                      , Member ('TU' ,'Forward' , RecoName = 'Forward') #  upgrade to Forward 
-                      , Member ('TF', 'Forward' #  Pt cut (call it pretrigger sice could not implement veloTT)
+                      , Member ('TU' ,'SecondForward' , RecoName = 'Forward')
+                      , Member ('TF', 'SecondForward'
                                , FilterDescriptor = ['PT,>,'+TRACK_PT_CUT]
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                                )
                       , Member ('VM2', 'DiTrack' # two track vertex: DOCA
-                               , InputSelection1 = '%TFForward'
-                               , InputSelection2 = '%TFSecondVelo'
+                               , InputSelection1 = '%TFFirstForward'
+                               , InputSelection2 = '%TFSecondForward'
                                , FilterDescriptor = [ 'DOCA,<,0.2']
                                , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
                                )
@@ -92,16 +99,44 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                , FilterDescriptor = [ 'VertexDz_PV2D,>,0.']
                                , HistoDescriptor = { 'VertexDz_PV2D':('VertexDz_PV2D',-3.,3.,100), 'VertexDz_PV2DBest':('VertexDz_PV2D',-3.,3.,100) }
                                )
-                      , Member ('VU', 'DiTrack' , RecoName = 'Forward')
-                      , Member ('VF', 'SecondDiTrack' , FilterDescriptor = [ 'VertexMinPT,>,'+TRACK_PT_CUT])
                       ]
 
-        Line ('Photon' 
+        Line ('PhotonTrack' 
               , prescale = self.prescale
               , L0DU = "L0_CHANNEL('Photon')"
-              , algos = [ convertL0Candidates('Photon') ] + commonSeq
+              , algos = [ convertL0Candidates('Photon') ] + commonSeq1
+                      + [ Member ('TF', 'Forward'
+                                  , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                 )
+                        , Member ('VM2', 'PhoTra'
+                               , InputSelection1 = '%TFPhoton'
+                               , InputSelection2 = '%TFForward'
+                               )
+                        ]
+              , postscale = self.postscale
+             )
+
+        Line ('PhotonFromEleTrack' 
+              , prescale = self.prescale
+              , L0DU = "L0_CHANNEL('Electron')"
+              , algos = [ convertL0Candidates('Electron') ] + commonSeq1
+                      + [ Member ('TF', 'Forward'
+                                  , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                 )
+                        , Member ('VM2', 'PhoTra'
+                               , InputSelection1 = '%TFPhoton'
+                               , InputSelection2 = '%TFForward'
+                               )
+                        ]
+              , postscale = self.postscale
+             )
+
+        Line ('PhotonDiTrack' 
+              , prescale = self.prescale
+              , L0DU = "L0_CHANNEL('Photon')"
+              , algos = [ convertL0Candidates('Photon') ] + commonSeq1 + commonSeq2
                       + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
-                                 , InputSelection1 = '%VFSecondDiTrack'
+                                 , InputSelection1 = '%VFDiTrack'
                                  , InputSelection2 = '%TFPhoton'
                                  , OutputSelection = '%Decision'
                                  )
@@ -109,12 +144,12 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
               , postscale = self.postscale
              )
 
-        Line ('PhotonFromEle' 
+        Line ('PhotonFromEleDiTrack' 
               , prescale = self.prescale
               , L0DU = "L0_CHANNEL('Electron')"
-              , algos = [ convertL0Candidates('Electron') ] + commonSeq
+              , algos = [ convertL0Candidates('Electron') ] + commonSeq1 + commonSeq2
                       + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
-                                 , InputSelection1 = '%VFSecondDiTrack'
+                                 , InputSelection1 = '%VFDiTrack'
                                  , InputSelection2 = '%TFPhoton'
                                  , OutputSelection = '%Decision'
                                  )
