@@ -72,7 +72,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
 
         companionTrackNoIP    = [ Velo
                                 , Member ( 'TF', 'CompanionVelo', 
-                                           FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
+                                           FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.15' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
                                 , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
                                 , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
@@ -113,7 +113,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                      + [ Member ( 'VF', 'VertexCut'
                                 , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                 )
-                       , DecodeECAL
+                       , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                        , Member ( 'VF', 'MassCut'
                                 , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
                                 , OutputSelection = '%Decision'
