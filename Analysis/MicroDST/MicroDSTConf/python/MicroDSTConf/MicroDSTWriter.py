@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.10 2009-08-12 15:08:29 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.11 2009-08-18 10:01:29 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,6 +14,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "CopyODIN"             : True
                   , "CopyRecHeader"        : True
                   , "CopyPVs"              : True
+                  , "CopyProtoParticles"   : True
                   , "CopyBTags"            : True
                   , "CopyRelatedPVs"       : False
                   , "P2PVRelationsSuffix"  : ""
@@ -25,6 +26,7 @@ class MicroDSTWriter(BaseDSTWriter) :
 
     _propertyDocDct =  {  "CopyParticles"        : """ """
                           , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
+                          , "CopyProtoParticles"   : """Copy the ProtoParticles stored Particles were made of"""
                           , "CopyBTags"            : """ """
                           , "P2PVRelationsSuffix"  : """ """
                           , "CopyL0DUReport"       : """ """
@@ -77,8 +79,9 @@ class MicroDSTWriter(BaseDSTWriter) :
                                                             'CopyParticles'))
         copyParticles.InputLocation = self.mainLocation(sel)+"/Particles"
         copyParticles.OutputLevel=4
-        copyParticles.addTool(ParticleCloner, name="ParticleCloner")
-        copyParticles.ParticleCloner.ICloneProtoParticle="NONE"
+        if self.getProp("CopyProtoParticles") == False :
+            copyParticles.addTool(ParticleCloner, name="ParticleCloner")
+            copyParticles.ParticleCloner.ICloneProtoParticle="NONE"
         self.setOutputPrefix(copyParticles)
         sel.sequence().Members += [copyParticles]  
 
