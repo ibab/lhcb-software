@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.41 2009-05-25 13:01:44 cattanem Exp $ 
+$Id: release.notes,v 1.42 2009-08-18 09:49:22 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2009-08-18 - Vanya BELYAEV
+
+ - HybridFilterCriterion
+
+      fix for removed FilterCriterionBase 
+ 
+ - cmt/requirements
+     
+      version increment to v8r5 
 
 !========================== LoKiArrayFunctors v8r4 2009-05-25 ===================
 ! 2009-05-09 - Vanya BELYAEV
