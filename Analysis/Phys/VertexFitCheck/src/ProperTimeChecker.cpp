@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.cpp,v 1.7 2008-02-20 21:08:47 pkoppenb Exp $
+// $Id: ProperTimeChecker.cpp,v 1.8 2009-08-18 09:14:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -15,7 +15,6 @@
 #include "Kernel/ILifetimeFitter.h"
 #include "Kernel/IContextTool.h"
 #include "Kernel/IGeomDispCalculator.h"
-#include "Kernel/IRelatedPV.h"     
 #include "Kernel/IPVReFitter.h"   
 
 // local
@@ -82,12 +81,6 @@ StatusCode ProperTimeChecker::initialize() {
   m_geomTool = m_contextTool->geomTool();
   if (!m_geomTool) {
     fatal() << "    Unable to retrieve GeomDispCalculator " ;
-    return StatusCode::FAILURE;
-  }
-
-  m_relatedPV = tool<IRelatedPV>("RelatedPV",this );
-  if (!m_relatedPV) {
-    fatal() << "    Unable to retrieve RelatedPV " ;
     return StatusCode::FAILURE;
   }
 

@@ -1,4 +1,4 @@
-// $Id: PVChecker.cpp,v 1.1.1.1 2007-10-17 07:07:00 jpalac Exp $
+// $Id: PVChecker.cpp,v 1.2 2009-08-18 09:14:20 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -12,7 +12,6 @@
 #include "Event/MCHeader.h"
 
 #include "Kernel/IContextTool.h"
-#include "Kernel/IRelatedPV.h"     
 
 // local
 #include "PVChecker.h"
@@ -56,12 +55,6 @@ StatusCode PVChecker::initialize() {
   m_contextTool = tool<IContextTool>("ContextTool",this );
   if (!m_contextTool) {
     fatal() << "    Unable to retrieve ContextTool" ;
-    return StatusCode::FAILURE;
-  }
-
-  m_relatedPV = tool<IRelatedPV>("RelatedPV",this );
-  if (!m_relatedPV) {
-    fatal() << "    Unable to retrieve RelatedPV " ;
     return StatusCode::FAILURE;
   }
 

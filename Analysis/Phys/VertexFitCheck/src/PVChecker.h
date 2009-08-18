@@ -1,4 +1,4 @@
-// $Id: PVChecker.h,v 1.2 2007-10-17 07:27:55 jpalac Exp $
+// $Id: PVChecker.h,v 1.3 2009-08-18 09:14:20 jpalac Exp $
 #ifndef PVCHECKER_H 
 #define PVCHECKER_H 1
 
@@ -9,7 +9,6 @@
 #include "Kernel/Particle2MCLinker.h"
 
 class IContextTool;
-class IRelatedPV;
 
 /** @class PVChecker PVChecker.h
  *  
@@ -43,7 +42,6 @@ private:
 private:
 
   IContextTool* m_contextTool;
-  IRelatedPV* m_relatedPV;
 
 };
 #endif 

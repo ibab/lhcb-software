@@ -1,4 +1,4 @@
-// $Id: ProperTimeChecker.h,v 1.4 2007-11-11 03:11:45 xieyu Exp $
+// $Id: ProperTimeChecker.h,v 1.5 2009-08-18 09:14:20 jpalac Exp $
 #ifndef PROPERTIMECHECKER_H 
 #define PROPERTIMECHECKER_H 1
 
@@ -12,7 +12,6 @@
 class ILifetimeFitter;
 class IGeomDispCalculator;
 class IContextTool;
-class IRelatedPV;
 class IPVReFitter;
 
 /** @class ProperTimeChecker ProperTimeChecker.h
@@ -52,7 +51,6 @@ private:
   ILifetimeFitter* m_timeFitter;
   IContextTool* m_contextTool;
   const IGeomDispCalculator* m_geomTool;
-  IRelatedPV* m_relatedPV;
   IPVReFitter* m_pvReFitter;
   IPVReFitter* m_cheatedPVReFitter;
 
