@@ -1,4 +1,4 @@
-// $Id: MicroDSTAlgorithm.h,v 1.4 2009-08-17 19:13:08 jpalac Exp $
+// $Id: MicroDSTAlgorithm.h,v 1.5 2009-08-18 09:58:45 jpalac Exp $
 #ifndef MICRODSTALGORITHM_H 
 #define MICRODSTALGORITHM_H 1
 
@@ -35,7 +35,9 @@ protected:
 
   inline const std::string& inputTESLocation() const 
   {
-    return m_inputTESLocations.empty() ? "" : m_inputTESLocations[0];
+    return m_inputTESLocations.empty() 
+      ? m_inputTESLocation 
+      : m_inputTESLocations[0];
   }
 
   inline std::vector<std::string>& inputTESLocations()
