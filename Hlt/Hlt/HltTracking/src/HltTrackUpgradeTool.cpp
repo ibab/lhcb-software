@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.34 2009-06-30 20:34:58 aperezca Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.35 2009-08-18 12:53:55 witekma Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -128,6 +128,15 @@ void HltTrackUpgradeTool::recoConfiguration() {
   m_recoConf.add("FitTrack/ITrackType", (int) LHCb::Track::Long);
   m_recoConf.add("FitTrack/OTrackType", (int) LHCb::Track::Long);
   m_recoConf.add("FitTrack/TESOutput",std::string("Hlt1/Track/FitTrack"));
+
+  m_recoConf.add("RadCor/Tool",std::string("HltRadCorTool"));
+  m_recoConf.add("RadCor/Owner",true);
+  m_recoConf.add("RadCor/View",false);
+  m_recoConf.add("RadCor/TransferIDs",true);
+  m_recoConf.add("RadCor/TransferAncestor",true);
+  m_recoConf.add("RadCor/ITrackType", (int) LHCb::Track::Long);
+  m_recoConf.add("RadCor/OTrackType", (int) LHCb::Track::Long);
+  m_recoConf.add("RadCor/TESOutput",std::string("Hlt1/Track/RadCor"));
 
 }
 //=============================================================================
