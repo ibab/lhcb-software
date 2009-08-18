@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.44 2009-08-17 08:40:39 graven Exp $
+!$Id: release.notes,v 1.45 2009-08-18 07:24:01 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-08-18 - Patrick Koppenburg
+ - Remove _dll file
 
 ! 2009-08-17 - Gerhard Raven
  - make HltSelReportsMaker listen for an incident which triggers debug mode
