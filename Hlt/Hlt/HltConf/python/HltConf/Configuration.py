@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.109 2009-08-17 08:59:24 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.110 2009-08-18 07:08:00 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -170,7 +170,7 @@ class HltConf(LHCbConfigurableUser):
                       , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
-                      , 65 : "HLT_PASS('Hlt2DebugEventDecision')
+                      , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
                       }
 
         ## and record the settings in the ANN service

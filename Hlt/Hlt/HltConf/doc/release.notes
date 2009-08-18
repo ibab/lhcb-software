@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.319 2009-08-17 08:59:24 graven Exp $ 
+! $Id: release.notes,v 1.320 2009-08-18 07:08:00 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-18 - Patrick Koppenburg
+ - Fix obvious typo in Hlt2DebugEvent
 
 ! 2009-08-17 - Gerhard Raven
  - enable Hlt2DebugEvent line, add routingbit for this line
