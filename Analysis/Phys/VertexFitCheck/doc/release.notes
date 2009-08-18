@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.19 2009-08-18 09:14:34 jpalac Exp $
+!$Id: release.notes,v 1.20 2009-08-18 09:15:28 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
@@ -10,6 +10,8 @@
   . add some missing includes
  - src/PVChecker{.cpp, .h}, src/ProperTimeChecker{.cpp, .h}
   . Remove dependencies on IRelatedPV
+ - cmt/requirements
+  . Increase version to v1r4
 
 !===================== VertexFitCheck v1r3p1 2008-11-26 ====================
 
