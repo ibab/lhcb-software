@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.10 2009-08-18 11:55:26 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.11 2009-08-18 12:21:42 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -117,7 +117,7 @@ public:
   }
   
   virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
-                                            const LHCb::VertexBase::Container& PVs) const 
+                                            const LHCb::VertexBase::ConstVector& PVs) const 
   {
     return relatedPV(particle, PVs.begin(), PVs.end());
   }
