@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.19 2009-08-12 15:08:29 jpalac Exp $
+!$Id: release.notes,v 1.20 2009-08-18 10:01:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-18 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Add property CopyProtoParticles, to copy a copied Particle's ProtoParticle.
+ - cmt/requirements
+  . Increase version to v2r5
 
 ! 2009-08-12 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
