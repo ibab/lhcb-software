@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.h,v 1.2 2008-12-03 12:30:54 graven Exp $
+// $Id: HltIsPhotonTool.h,v 1.3 2009-08-18 12:48:47 witekma Exp $
 #ifndef HLTISPHOTONTOOL_H 
 #define HLTISPHOTONTOOL_H 1
 
@@ -8,7 +8,7 @@
 #include "Event/Track.h"
 #include "TrackInterfaces/IFunctionTool.h"            // Interface
 #include "Event/L0CaloCandidate.h"
-#include "CaloInterfaces/ICaloClusterization.h"
+#include "CaloInterfaces/IL0Calo2Calo.h"
 #include "CaloDet/DeCalorimeter.h"
 #include "TMVA_FisherArea0.C"
 #include "TMVA_FisherArea1.C"
@@ -47,7 +47,7 @@ private:
 
   bool m_useFastDecoding; 
   const DeCalorimeter* m_detector;
-  ICaloClusterization* m_tool;
+  IL0Calo2Calo* m_tool;
   void caloClusterShapeVariables(const LHCb::CaloCluster *cluster,
 				 double& fr2, double& fasym, double& fkappa, double& fr2r4);
           

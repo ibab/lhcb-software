@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-08-18 - Mariusz Witek
+- new version of alley with ECAL partial decoding and fast clusterization
+
 !========================== HltEcalAlley v1r7 2009-06-03 ===================
 ! 2009-05-30- Gerhard Raven
  - move Hlt{,RZ}VeloEcalMatch.{cpp,h} to Hlt/HltTracking

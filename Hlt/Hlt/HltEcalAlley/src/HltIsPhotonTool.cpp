@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.8 2009-02-19 16:02:45 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.9 2009-08-18 12:48:47 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -48,8 +48,9 @@ StatusCode HltIsPhotonTool::initialize() {
   /// Retrieve geometry of detector
   m_detector = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   if( 0 == m_detector ) { return StatusCode::FAILURE; }
-  // Tool Interface
-  m_tool = tool<ICaloClusterization>("CaloClusterizationTool", this);
+
+  // Calo clusterization interface
+  m_tool = tool<IL0Calo2Calo>("L0Calo2CaloTool");
   if(!m_tool)debug()<<"error retrieving the clasterization tool "<<endreq;
 
   // TMVA discriminant
@@ -104,13 +105,10 @@ double HltIsPhotonTool::function(const Track& ctrack)
   double xc = pos.x() ;
   double yc = pos.y() ;
 
-  // get input data (sequential and simultaneously direct access!)  
-  LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
-  
   std::vector<CaloCluster*> clusters;
   unsigned int level = 3; // level 1:3x3, 2:5x5, 3:7x7
-  // remember to delete cluster
-  m_tool->clusterize(clusters, digits, m_detector, idL0, level);
+  // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
+  m_tool->clusterize(clusters, idL0, level);
   if (clusters.empty()) return -9999999.;
 
   // get cluster closest to Track ( = L0Photon )
@@ -178,13 +176,6 @@ double HltIsPhotonTool::function(const Track& ctrack)
   double z = clustermin->position().z();
   double sin_alpha = sqrt( (x*x+y*y) / (x*x+y*y+z*z));
   double etnew = clustermin->e()*sin_alpha;
-
-  // delete reconstructed clusters
-  for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
-        clusters.end() != cluster; ++cluster ) { 
-    CaloCluster* cl = *cluster;
-    if ( cl ) delete cl;
-  }
 
   if ( etnew > m_minEtCluster ) {
     return phovar;

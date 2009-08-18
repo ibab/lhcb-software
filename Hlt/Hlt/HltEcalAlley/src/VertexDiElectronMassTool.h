@@ -1,4 +1,4 @@
-// $Id: VertexDiElectronMassTool.h,v 1.1 2009-02-17 16:24:03 witekma Exp $
+// $Id: VertexDiElectronMassTool.h,v 1.2 2009-08-18 12:48:47 witekma Exp $
 #ifndef VERTEXDIELECTRONMASSTOOL_H 
 #define VERTEXDIELECTRONMASSTOOL_H 1
 
@@ -33,17 +33,6 @@ public:
   double function(const LHCb::RecVertex& vertex);
 
 private:
-
-  void getRadiation(const LHCb::Track& tra, LHCb::L0CaloCandidates* calos, Gaudi::XYZVector& phorad);
-
-  void getRadiationFromClusters(const LHCb::Track& tra, Gaudi::XYZVector& phorad);
-
-
-  double m_minEtCluster;
-
-  const DeCalorimeter* m_detector;
-
-  ICaloClusterization* m_tool;
 
 };
 #endif // VERTEXDIELECTRONMASSTOOL_H
