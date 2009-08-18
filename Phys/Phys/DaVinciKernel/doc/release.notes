@@ -1,8 +1,12 @@
-!$Id: release.notes,v 1.317 2009-08-16 22:09:38 jpalac Exp $
+!$Id: release.notes,v 1.318 2009-08-18 14:46:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-18 - Juan PALACIOS
+ - src/Lib/DVAlgorithm.cpp
+  . Do not attempt to set PhysDesktop's P2PVInputLocations if locations empty.
 
 ! 2009-08-16 - Juan PALACIOS
  - Remove FilterCriterionBase class. Moved to Phys/DaVinciFilters.
