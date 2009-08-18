@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.9 2009-08-13 15:02:58 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.10 2009-08-18 11:55:26 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -53,7 +53,7 @@ public:
     
     StatusCode sc( GaudiTool::initialize() );
     if (sc.isSuccess()) {
-      m_distCalculator = tool<IDistanceCalculator>(DistCalcName::value);
+      m_distCalculator = tool<IDistanceCalculator>(DistCalcName::value, this);
     }
     return sc;
   }
@@ -122,8 +122,8 @@ public:
     return relatedPV(particle, PVs.begin(), PVs.end());
   }
   
-  virtual const LHCb::VertexBase* relatedPVs(const LHCb::Particle* particle,
-                                             const std::string& PVLocation) const
+  virtual const LHCb::VertexBase* relatedPV(const LHCb::Particle* particle,
+                                            const std::string& PVLocation) const
   {
     LHCb::RecVertex::Container* PVs = get<LHCb::RecVertices>( PVLocation );
     
