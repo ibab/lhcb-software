@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteSelDST.py,v 1.2 2009-08-12 08:28:28 jpalac Exp $
+# $Id: DaVinci-WriteSelDST.py,v 1.3 2009-08-18 10:24:37 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -48,7 +48,8 @@ printDec.InputLocations = [ "MyJpsi" ]
 #
 dstWriter = SelDSTWriter("JpsiDST",
                          SelectionSequences = [SeqJpsi],
-                         SaveCandidates = True)
+                         SaveCandidates = True,
+                         CopyProtoParticles = False )
 ##############################################################################
 DaVinci().EvtMax = 100
 DaVinci().PrintFreq = 1
