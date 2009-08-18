@@ -1,3 +1,9 @@
+2009-08-18  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbUtils/Processes.py: new file. Module contains a class parsing
+	ps command output (ps -eo) and methods to print and kill a process tree
+	efficiently.
+
 2009-08-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r17
@@ -35,7 +41,7 @@
 
 2009-06-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbUtils/__init__.py: 
+	* python/LbUtils/__init__.py:
 	- moved the python/LbUtils/CMT_project_Makefile into data/Makefile.
 	- modified the behavior: instead of copying the Makefile at the top of
 	the directory, it is included with LBUTILSROOT/data as location.
