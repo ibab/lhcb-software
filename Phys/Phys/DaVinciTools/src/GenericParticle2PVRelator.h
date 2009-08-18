@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.11 2009-08-18 12:21:42 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.12 2009-08-18 14:35:35 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IRelatedPVFinder.h"            // Interface
 #include "Kernel/Particle2Vertex.h"
-
+#include <algorithm>
 class IDistanceCalculator;
 
 /** @class GenericParticle2PVRelator GenericParticle2PVRelator.h
@@ -141,20 +141,19 @@ private:
 
   template <typename Iter> 
   inline const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
-                                               Iter begin,
-                                               Iter end     ) const
+                                                      Iter begin,
+                                                      Iter end     ) const
   {
     Particle2Vertex::LightTable table;
     if (0!=particle) {
       for ( Iter iPV = begin ; iPV != end ; ++iPV){
         const double wt = BestLogic::weight(particle, *iPV, m_distCalculator);
         if (wt > std::numeric_limits<double>::epsilon() ) {
-          table.i_push(particle,*iPV, wt );
+          table.i_relate(particle,*iPV, wt );
         } else {
           Warning("Weight effectively 0. PV not related.").ignore();
         }
       }
-      table.i_sort();
     } else {
       Warning("No particle!").ignore();
     }
@@ -166,11 +165,36 @@ private:
                                     Iter begin,
                                     Iter end ) const
   {
-    /// @todo implement this!
-    return 0;
-    
+    typedef typename std::iterator_traits<Iter>::value_type PV;
+    typedef std::pair<PV, double> WeightedPV;
+    typedef std::vector< WeightedPV > WeightedPVs;
+    WeightedPVs weightedPVs;
+    Iter iPV = begin;
+    for ( ; iPV != end; ++iPV) {
+      const double wt = BestLogic::weight(particle, *iPV, m_distCalculator);
+      weightedPVs.push_back(  WeightedPV(*iPV, wt) );
+    }
+
+    typename WeightedPVs::const_iterator bestPV = 
+      std::max_element(weightedPVs.begin(),
+                       weightedPVs.end(),
+                       SortByWeight<WeightedPV>());
+
+    return bestPV->first;
+
   }
   
+private:
+
+  template <typename T>
+  struct SortByWeight : public std::binary_function<T, T, bool>
+  {
+    inline bool operator() (const T& pv0, const T& pv1) 
+    {
+      return pv0.second > pv1.second;
+    }
+    
+  };
   
 private:
 
