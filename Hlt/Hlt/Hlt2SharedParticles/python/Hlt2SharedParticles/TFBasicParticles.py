@@ -40,7 +40,7 @@ Hlt2TFPions.TrackSelector.TrackTypes = ["Long"]
 #
 # Make the kaons
 #
-Hlt2TFKaons = CombinedParticleMaker("Hlt2TFKaons")
+Hlt2TFKaons = NoPIDsParticleMaker("Hlt2TFKaons")
 Hlt2TFKaons.Particle =  "kaon"
 Hlt2TFKaons.Input =  "/Event/"+prefix+"/ProtoP/Charged"
 Hlt2TFKaons.addTool(TrackSelector())
