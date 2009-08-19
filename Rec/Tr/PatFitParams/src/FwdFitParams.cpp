@@ -1,4 +1,4 @@
-// $Id: FwdFitParams.cpp,v 1.2 2009-05-22 07:14:54 cattanem Exp $
+// $Id: FwdFitParams.cpp,v 1.3 2009-08-19 14:16:15 ocallot Exp $
 // Include files
 #include <string>
 #include <stdio.h>
@@ -103,7 +103,7 @@ StatusCode FwdFitParams::initialize() {
   m_yPar.init  ( "y"        , m_yParams );
   m_y1Par.init ( "y1"       , m_y1Params );
 
-  m_momPar.init( "momentum", m_momParams );
+  m_momPar.init( "Momentum", m_momParams );
 
   m_XsPar.init( "Xs"      , m_XsParams );
 
@@ -659,25 +659,20 @@ StatusCode FwdFitParams::finalize() {
 
     std::cout << std::endl;
 
-    m_ZmPar.printParams( name() );
-    m_xPar.printParams( name() );
-    m_yPar.printParams( name() );
-    m_y1Par.printParams( name() );
+    m_ZmPar.printPythonParams( name() );
+    m_xPar.printPythonParams( name() );
+    m_yPar.printPythonParams( name() );
+    m_y1Par.printPythonParams( name() );
 
-    m_momPar.printParams(name() );
-    m_XsPar.printParams( name() );
+    m_momPar.printPythonParams(name() );
+    m_XsPar.printPythonParams( name() );
 
     std::string toolName = "ToolSvc.PatFwdTool";
-    std::cout
-      << std::endl
-      << toolName << ".ZReference = " << m_zRef    << " ;" << std::endl
-      << toolName << ".ZAfter     = " << m_zRefExt << " ;" << std::endl;
+    std::cout << std::endl;
     
     m_ZmPar.printParams( toolName );
     m_xPar.printParams( toolName );
-    m_yPar.printParams( toolName );
-    m_y1Par.printParams( toolName );
-
+    std::cout << toolName << ".yParams = { "<< m_yPar.param(0) << ", " << m_y1Par.param(0) << " };" << std::endl;
     m_momPar.printParams(toolName );
     m_XsPar.printParams( toolName );
     std::cout << std::endl;

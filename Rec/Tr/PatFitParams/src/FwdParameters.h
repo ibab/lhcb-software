@@ -1,4 +1,4 @@
-// $Id: FwdParameters.h,v 1.1.1.1 2007-10-09 18:50:43 smenzeme Exp $
+// $Id: FwdParameters.h,v 1.2 2009-08-19 14:16:15 ocallot Exp $
 #ifndef FWDPARAMETERS_H 
 #define FWDPARAMETERS_H 1
 
@@ -34,6 +34,9 @@ public:
 
   /// Print on cout the parameters in a jobOption format
   void printParams ( std::string prefix );
+
+  /// Print on cout the parameters in a python format
+  void printPythonParams ( std::string prefix );
 
   /// return the specified parameter
   double param( int i ) const  { return m_par[i]; }

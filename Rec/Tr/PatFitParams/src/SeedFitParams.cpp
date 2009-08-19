@@ -1,4 +1,4 @@
-// $Id: SeedFitParams.cpp,v 1.3 2009-05-22 07:14:54 cattanem Exp $
+// $Id: SeedFitParams.cpp,v 1.4 2009-08-19 14:16:15 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -44,12 +44,12 @@ SeedFitParams::SeedFitParams( const std::string& name,
   // for many of these parameters, PatSeeding only takes the first one
   // while we fit for several to disentangle dependencies which would
   // move the values we'd obtain away from their "best" value
-  declareProperty( "InitialArrow",       m_initialArrowParams  = boost::assign::list_of(4.21826e-09)(-8.93796e-08)(0.372981) );
-  declareProperty( "MomentumScaleParams",     m_momentumScaleParams  = boost::assign::list_of(40.3751)(1163.24)(-682850) );
+  declareProperty( "InitialArrowParams", m_initialArrowParams  = boost::assign::list_of(4.21826e-09)(-8.93796e-08)(0.372981) );
+  declareProperty( "MomentumScaleParams",m_momentumScaleParams  = boost::assign::list_of(40.3751)(1163.24)(-682850) );
   declareProperty( "zMagnetParams",      m_zMagParams = boost::assign::list_of(5372.27)(-3111.41)(384.74) );
 
   declareProperty( "dRatioParams",      m_dRatio = boost::assign::list_of(-3.77e-4)(4.7) );
-  declareProperty( "yCorrection", m_yCorrection = boost::assign::list_of(1.25e-14) );
+  declareProperty( "yCorrectionParams", m_yCorrection = boost::assign::list_of(1.25e-14) );
  
   m_nEvent = 0;
   m_nTrack = 0;
@@ -69,9 +69,8 @@ StatusCode SeedFitParams::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_initialArrowPar.init( "InitialArrow"   , m_initialArrowParams );
-  m_momentumScalePar.init( "momentum" , m_momentumScaleParams );
+  m_momentumScalePar.init( "MomentumScale" , m_momentumScaleParams );
   m_zMagPar.init( "zMagnet"  , m_zMagParams );
-
   m_dRatioPar.init( "dRatio", m_dRatio );
   m_yCorrectionPar.init( "yCorrection", m_yCorrection );
 
@@ -303,17 +302,24 @@ StatusCode SeedFitParams::finalize() {
   m_initialArrowPar.updateParameters( msg );
   m_momentumScalePar.updateParameters(  msg );
   m_zMagPar.updateParameters(  msg );
-
   m_dRatioPar.updateParameters(  msg );
   m_yCorrectionPar.updateParameters(  msg );
 
   std::cout << std::endl;
-  m_initialArrowPar.printParams( name() );
-  m_momentumScalePar.printParams( name() );
-  m_zMagPar.printParams( name() );
-
-  m_dRatioPar.printParams( name() );
-  m_yCorrectionPar.printParams( name() );
+  m_initialArrowPar.printPythonParams( name() );
+  m_momentumScalePar.printPythonParams( name() );
+  m_zMagPar.printPythonParams( name() );
+  m_dRatioPar.printPythonParams( name() );
+  m_yCorrectionPar.printPythonParams( name() );
+  std::cout << std::endl;
+  
+  std::string toolName = "ToolSvc.PatSeedingTool";
+  
+  m_initialArrowPar.printPythonParams( toolName );
+  m_momentumScalePar.printPythonParams( toolName );
+  m_zMagPar.printPythonParams( toolName );
+  m_dRatioPar.printPythonParams( toolName );
+  m_yCorrectionPar.printPythonParams( toolName );
   std::cout << std::endl;
 
   return GaudiTupleAlg::finalize();  // must be called after all other actions

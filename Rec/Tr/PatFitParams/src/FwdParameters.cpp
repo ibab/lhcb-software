@@ -1,4 +1,4 @@
-// $Id: FwdParameters.cpp,v 1.2 2009-05-22 07:14:54 cattanem Exp $
+// $Id: FwdParameters.cpp,v 1.3 2009-08-19 14:16:15 ocallot Exp $
 // Include files 
 #include <stdio.h> 
 
@@ -167,6 +167,21 @@ void FwdParameters::printParams ( std::string prefix ) {
     std::cout << ", " << m_par[i++];
   }
   std::cout << " };" << std::endl;
+}
+
+//=========================================================================
+//  Print on cout the new input line
+//=========================================================================
+void FwdParameters::printPythonParams ( std::string prefix ) {
+  if ( 0 == m_nbPar ) { return; }
+  
+  std::cout << prefix << "()."
+            << m_title << "Params = [ "<< m_par[0];
+  int i = 1;
+  while ( 0 != m_mat[i][i] ) {
+    std::cout << ", " << m_par[i++];
+  }
+  std::cout << " ]" << std::endl;
 }
 
 //=============================================================================

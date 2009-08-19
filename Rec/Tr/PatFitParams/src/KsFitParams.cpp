@@ -1,4 +1,4 @@
-// $Id: KsFitParams.cpp,v 1.3 2009-05-22 07:14:54 cattanem Exp $
+// $Id: KsFitParams.cpp,v 1.4 2009-08-19 14:16:15 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -283,8 +283,8 @@ StatusCode KsFitParams::finalize() {
   m_momPar.updateParameters(  msg );
 
   std::cout << std::endl;
-  m_zMagPar.printParams( name() );
-  m_momPar.printParams(  name() );
+  m_zMagPar.printPythonParams( name() );
+  m_momPar.printPythonParams(  name() );
   std::cout << std::endl;
 
   m_zMagPar.printParams( "PatKShort" );

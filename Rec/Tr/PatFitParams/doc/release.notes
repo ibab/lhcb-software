@@ -4,6 +4,11 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Olivier Callot
+ - Adapt to python configurable so that it is easy to run:
+   after havind setup Brunel, just do gaudirun.py ../options/FitParams.py
+ - Change output of the fit algorithms to produce python options
+
 !======================== PatFitParams v3r2p3 2009-05-25 =====================
 ! 2009-05-22 - Marco Cattaneo
  - Fix gcc43 compilation warning
