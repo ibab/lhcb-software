@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.20 2009-08-18 10:01:42 jpalac Exp $
+!$Id: release.notes,v 1.21 2009-08-19 18:30:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-18 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Modify to make sure order of the MicroDSTAlgorithms and other algorithms
+    necessary for making a MicroDST from a selection sequence is maintained 
+    and not affected by the order in which different elements are configured.
 
 ! 2009-08-18 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
