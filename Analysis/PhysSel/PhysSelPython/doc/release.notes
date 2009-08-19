@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.6 2009-08-11 13:44:17 jpalac Exp $
+!$Id: release.notes,v 1.7 2009-08-19 18:57:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-08-18 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Class SelectionSequence: avoid reversing sequence. Insert algorithms in 0th
+    position. Insert main algo in 0th position in case the sequence has been
+    already built elsewhere.
+ - cmt/requirements
+  . Increase version to v2r0p1
 
 !==================== PhysSel/PhysSelPython v2r0 2009-08-11 ==================
 
