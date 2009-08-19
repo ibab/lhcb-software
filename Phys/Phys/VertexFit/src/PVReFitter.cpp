@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.11 2008-07-02 13:27:24 jpalac Exp $
+// $Id: PVReFitter.cpp,v 1.12 2009-08-19 06:41:49 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,8 @@
 
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
+#include "Event/ProtoParticle.h"
+#include "Event/Particle.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 

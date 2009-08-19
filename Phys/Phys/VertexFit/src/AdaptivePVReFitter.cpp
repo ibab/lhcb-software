@@ -5,6 +5,8 @@
 
 #include "Event/VertexBase.h"
 #include "Event/RecVertex.h"
+#include "Event/ProtoParticle.h"
+#include "Event/Particle.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
 
