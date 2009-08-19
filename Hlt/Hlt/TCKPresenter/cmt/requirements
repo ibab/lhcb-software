@@ -14,8 +14,9 @@ branches          cmt doc src
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 # use   Package      v1r*    Hat
-use       Python      v* LCG_Interfaces
 use       GaudiPolicy v*
+use 	  pydot       v*     LCG_Interfaces
+use       TCKUtils    v*     Hlt
 
 include_path      none
 #============================================================================
