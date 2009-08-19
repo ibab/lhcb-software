@@ -6,6 +6,17 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Vanya BELYAEV
+
+ - ValueWithError
+
+    1. add the constuctor form (value.error)-pair 
+    2. add the conversion to  (value,error)-pair 
+
+ - cmt/requirements
+
+   version increment to v3r12
+
 !========================= LHCbMath v3r11p1 2009-07-28 =======================
 ! 2009-07-20 - Juan PALACIOS
  - python/LHCbMath.py

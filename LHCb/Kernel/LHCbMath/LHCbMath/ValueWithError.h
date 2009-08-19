@@ -1,4 +1,4 @@
-// $Id: ValueWithError.h,v 1.2 2009-06-13 08:15:17 ibelyaev Exp $
+// $Id: ValueWithError.h,v 1.3 2009-08-19 14:32:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_ERRORS_H 
 #define LHCBMATH_ERRORS_H 1
@@ -8,6 +8,7 @@
 // STD& STL 
 // ============================================================================
 #include <iosfwd>
+#include <utility>
 // ============================================================================
 /** @file 
  *  Collection fo useful objects with associated "covarinaces".
@@ -39,6 +40,12 @@ namespace Gaudi
       /// constructor from the value and covariance 
       ValueWithError ( const double value      = 0 , 
                        const double covariance = 0 ) ;
+      /** constructor from the (value,error)-pair 
+       *   - first  element is "value" 
+       *   - second element is "error" 
+       *  @param pair_  (value,error)-pair 
+       */
+      ValueWithError ( const std::pair<double,double>& pair_ ) ;
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================
@@ -53,13 +60,14 @@ namespace Gaudi
       // ======================================================================
     public: // setters 
       // ======================================================================
-      void setValue      ( const double v ) { m_value = v ; }
-      void setCovariance ( const double c ) { m_cov2  = c ; }
+      void setValue      ( const double v ) { m_value = v      ; }
+      void setCovariance ( const double c ) { m_cov2  = c      ; }
+      void setError      ( const double e ) { m_cov2  = e * e  ; }
       // ======================================================================
     public: // finally it is just a value 
       // ======================================================================
       /// cast 
-      operator double ( )const { return value () ; }                    // cast 
+      operator double () const { return value () ; }                    // cast 
       // ======================================================================
     public:  // operators
       // ======================================================================      
@@ -87,6 +95,15 @@ namespace Gaudi
       // ======================================================================
       /// unary - 
       ValueWithError operator-() const ;                             // unary - 
+      // ======================================================================
+    public: // as pair:
+      // ======================================================================
+      /// get as std::pair 
+      std::pair<double,double> asPair () const 
+      { return std::pair<double,double> ( value () , error () ) ; }
+      /// conversion to std::pair
+      operator std::pair<double,double>() const 
+      { return std::pair<double,double> ( value () , error () ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -135,8 +152,8 @@ namespace Gaudi
       // ======================================================================
       /// the actual value 
       double m_value ;                             //          the actual value 
-      /// the associated covarinace 
-      double m_cov2 ;                              // the associated covarinace 
+      /// the associated covariance
+      double m_cov2 ;                              // the associated covariance
       // ======================================================================
     };
     // ========================================================================
