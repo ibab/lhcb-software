@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.3 2009-08-09 16:17:45 jpalac Exp $
+#$Id: Wrappers.py,v 1.4 2009-08-19 18:20:42 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 """
@@ -114,9 +114,9 @@ class SelectionSequence(LHCbConfigurableUser) :
         }
 
     def __apply_configuration__(self) :
-        self.sequence().Members += [self.algorithm()]
+        print "Adding Algo ", self.algorithm().name(),  " to ", self.sequence().name()
+        self.sequence().Members.insert(0,self.algorithm())
         self.buildSelectionList( self.topSelection().RequiredSelections )
-        self.sequence().Members.reverse()
 
     def topSelection(self) :
         return self.getProp('TopSelection')
@@ -125,7 +125,7 @@ class SelectionSequence(LHCbConfigurableUser) :
         return self.topSelection().algorithm()
     
     def sequence(self) :
-        return GaudiSequencer("GaudiSeq"+self.algorithm().name())
+        return GaudiSequencer("GaudiSeq"+self.name() )
 
     def algName(self) :
         return self.algorithm().name()
@@ -136,5 +136,5 @@ class SelectionSequence(LHCbConfigurableUser) :
             if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
-                self.sequence().Members += [sel.algorithm()]
+                self.sequence().Members.insert( 0, sel.algorithm() )
                 self.buildSelectionList( sel.requiredSelections() )
