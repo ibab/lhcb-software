@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.169 2009-08-11 11:57:31 jpalac Exp $
+! $Id: release.notes,v 1.170 2009-08-19 06:42:08 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-08-18 - Juan PALACIOS
+ - src/PVReFitter.cpp, AdaptivePVReFitter.cpp
+  . Add missing includes
+ - cmt/requirements
+  . Increase version to v5r7p1
 
 !========================== VertexFit v5r7 2009-08-11 =================
 
