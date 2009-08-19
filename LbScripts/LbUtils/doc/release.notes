@@ -1,4 +1,11 @@
-2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/File.py: added a few tuned utilities
+	* python/LbUtils/Tar.py: implementation of the tar utilies
+	* scripts/createTarBall: script to create tarball according to a list 
+	of binaries
+
+2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Links.py: fixed verbosity of the fixLink function.
 
