@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.318 2009-08-18 14:46:22 jpalac Exp $
+!$Id: release.notes,v 1.319 2009-08-19 11:54:04 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-19 - Vanya BELYAEV
+ - Kernel/DecayTree.h
+    1. moveclass DecayTreeFitter::Tree by Wouter Hulsbergen from Phys/DecayTreeFitter package
+    2. rename is as LHCb::DecayTree
+
 
 ! 2009-08-18 - Juan PALACIOS
  - src/Lib/DVAlgorithm.cpp

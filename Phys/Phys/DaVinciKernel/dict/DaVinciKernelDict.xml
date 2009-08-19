@@ -5,5 +5,16 @@
   <class name = "DVAlgorithm"/>
   <function name = "DaVinci::Utils::setInput"/>
   <function name = "DaVinci::Transporter::*"/>
-
+  
+  <class name = "LHCb::DecayTree">
+    <field name="m_head"     transient="true" />
+    <field name="m_clonemap" transient="true" />
+  </class>
+  
+  <exclusion>
+    <class name = "LHCb::DecayTree">
+      <method name="cloneMap"/>
+    </class>
+  </exclusion>
+  
 </lcgdict>
