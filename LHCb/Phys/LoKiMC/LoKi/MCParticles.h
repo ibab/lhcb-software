@@ -1,4 +1,4 @@
-// $Id: MCParticles.h,v 1.20 2008-12-18 15:24:34 ibelyaev Exp $
+// $Id: MCParticles.h,v 1.21 2009-08-19 13:37:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCPARTICLES_H 
 #define LOKI_MCPARTICLES_H 1
@@ -461,12 +461,14 @@ namespace LoKi
     class IsHadron : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsHadron* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class IsNucleus
@@ -477,12 +479,14 @@ namespace LoKi
     class IsNucleus : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /// clone method (mandatory!)
       virtual IsNucleus* clone() const ;
       /// the only one essential method 
       result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class FromMCDecayTree 
@@ -495,8 +499,11 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     protected:
+      // ======================================================================
       typedef std::vector<const LHCb::MCParticle*> MCCont ;
+      // ======================================================================
     public:
+      // ======================================================================
       /** constructor from 1 MC particle 
        *  @param mcp pointer to MC particle
        */
@@ -576,7 +583,7 @@ namespace LoKi
           if ( code.isFailure() ) { sc = code ; }
         } 
         return sc ;
-      }; 
+      }
       /** set new LHCb::MCParticles 
        *  @param first begin of sequence 
        *  @param last  end of the sequence  
@@ -605,6 +612,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor 
        *  @param cut cut to be inspected 
        */
@@ -618,8 +626,11 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::MCTypes::MCCut m_cut ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCMotherFunction
@@ -633,6 +644,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function
     {
     public:
+      // ======================================================================
       /** constructor 
        *  @param fun function to be evaluated 
        *  @param val value to be returned for 'invalid' mother 
@@ -650,9 +662,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       double               m_val ;
       LoKi::MCTypes::MCFun m_fun ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCMotherPredicate 
@@ -666,6 +681,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /** constructor 
        *  @param cut predicate to be evaluated 
        *  @param val value to be returned for 'invalid' mother 
@@ -700,8 +716,11 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
+      // ======================================================================
       typedef std::vector<const LHCb::MCParticle*> Objects;
+      // ======================================================================
     public:
+      // ======================================================================
       /** constructor from 1 particle 
        *  @param object object to be compared 
        */
@@ -737,9 +756,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
-      Objects m_objects ; 
-    };
+      // ======================================================================
+      Objects m_objects ;  
+      // ======================================================================
+   };
     // ========================================================================    
     /** @class IsContainedObject 
      *  Trivial predicate to check 
@@ -752,8 +774,11 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate 
     {
     public:
+      // ======================================================================
       typedef std::vector<const ContainedObject*> Objects;
+      // ======================================================================
     public:
+      // ======================================================================
       /** constructor from contained object
        *  @param object object to be compared 
        */
@@ -782,8 +807,11 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
+      // ======================================================================
       Objects m_objects ; 
+      // ======================================================================
     };    
     // ========================================================================    
     /** @class MomentumDistance 
@@ -816,6 +844,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
+      // ======================================================================
       /// constructor from four components
       MomentumDistance
       ( const double px , 
@@ -839,8 +868,11 @@ namespace LoKi
       private:
       /// default constructor is private
       MomentumDistance() ;
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::LorentzVector m_vct ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class TransverseMomentumRel
@@ -865,6 +897,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public:
+      // ======================================================================
       /// constructor from theta & phi 
       TransverseMomentumRel ( const double theta , const double phi ) ;
       /** constructor
@@ -886,6 +919,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ;
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private:
       // ======================================================================
       /// default constructor is private
@@ -1108,6 +1142,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Predicate
     {
     public:
+      // ======================================================================
       /// MANDATORY : virtual destructor 
       virtual ~ValidOrigin();
       /// MANDATORY : clone method ("virtual constructor")
@@ -1116,6 +1151,7 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ; 
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCVertexFunAdapter 
@@ -1128,6 +1164,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<const LHCb::MCParticle*>::Function 
     {
     public  :
+      // ======================================================================
       /** constructor from vertex funtion 
        *  @param vfunc vertex function 
        *  @param err  value to be returned for invalid argument
@@ -1143,9 +1180,12 @@ namespace LoKi
       virtual result_type operator() ( argument p ) const ; 
       /// "SHORT" representation, @see LoKi::AuxFunBase 
       virtual  std::ostream& fillStream( std::ostream& s ) const ;      
+      // ======================================================================
     private :
+      // ======================================================================
       LoKi::MCTypes::MCVFun m_fun ;
       double                m_err ;
+      // ======================================================================
     };
     // ========================================================================    
     /** @class MCDecayPattern
@@ -1930,7 +1970,7 @@ namespace LoKi
       StatusCode validate ( const LHCb::IParticlePropertySvc* svc ) const
       { return m_tree.validate ( svc ) ; }
       // reset the collection
-      void reset() const { m_tree.reset() ; }
+      void reset() const { tree().reset() ; }
       // ======================================================================
     private:
       // ======================================================================

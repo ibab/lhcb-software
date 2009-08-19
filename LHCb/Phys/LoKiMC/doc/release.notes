@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.74 2009-08-12 09:50:04 ibelyaev Exp $ 
+! $Id: release.notes,v 1.75 2009-08-19 13:37:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,13 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+! 2009-08-19 - Vanya BELYAEV
+
+ - DecTree   ( MCDECTREE ) 
+
+    allow extraction of marked elements, however it can be rather slow
+
 
 ! 2009-08-12 - Vanya BELYAEV
 

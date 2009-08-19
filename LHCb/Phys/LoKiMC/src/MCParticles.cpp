@@ -1,4 +1,4 @@
-// $Id: MCParticles.cpp,v 1.19 2008-12-18 15:24:34 ibelyaev Exp $
+// $Id: MCParticles.cpp,v 1.20 2009-08-19 13:37:13 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -2174,8 +2174,36 @@ LoKi::MCParticles::DecTree::operator()
     Error ( "LoKi::MCParticles::DecTree::Tree  is invalid, return false") ;
     return false ;
   }
-  // use the node for evaluation
-  return m_tree.tree ( p ) ;
+  // evaluate the tree 
+  const bool OK = m_tree.tree ( p ) ;
+  if ( OK               ) { return true  ; }                          // RETURN
+
+  // for no-marked trees, the search is completed 
+  if ( !m_tree.marked() ) { return false ; }                          // RETURN  
+  
+  // check for "marked" elements 
+  iTree::Collection marked ;
+  
+  // loop over all "mother" particles 
+  const LHCb::MCParticle* mother = p->mother() ;
+  while ( 0 != mother ) 
+  {
+    reset () ;
+    // check if mother matches the tree 
+    if  ( m_tree.tree ( mother ) ) 
+    {
+      // collect the marked elements 
+      marked.clear() ;
+      m_tree.collect ( marked ) ;
+      // look for particle in the list of marked particles 
+      if ( marked.end() != std::find 
+           ( marked.begin() , marked.end() , p ) ) { return true ; } // RETURN
+    }
+    // go to the next level 
+    mother = mother->mother() ;                                // NEXT LEVEL 
+  }
+  //
+  return false ;                                                      // RETURN 
 }
 // ============================================================================
 // OPTIONAL: the nice printout
