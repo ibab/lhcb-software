@@ -1,3 +1,7 @@
+2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Links.py: fixed verbosity of the fixLink function.
+
 2009-08-18  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbUtils/Processes.py: new file. Module contains a class parsing

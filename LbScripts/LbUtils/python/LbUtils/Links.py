@@ -135,12 +135,18 @@ def fixLink(data, linkname):
         else :
             tobefixed = False
             if isLinkAbsolute(linkname) :
-                log.info("The link %s is absolute" % linkname)
+                if dryrunmode :
+                    log.info("The link %s is absolute" % linkname)
+                else :
+                    log.debug("The link %s is absolute" % linkname)
                 if not absolutemode :
                     linktarget = relativizeLink(linkname)
                     tobefixed = True
             else :
-                log.info("The link %s is relative" % linkname)
+                if dryrunmode :
+                    log.info("The link %s is relative" % linkname)
+                else :
+                    log.debug("The link %s is relative" % linkname)
                 if absolutemode :
                     linkcont = readlink(linkname)
                     linktarget = normpath(join(dirname(linkname),linkcont))
@@ -160,6 +166,7 @@ def fixVisitor(data, dirnm, filesindir):
             fixLink(data, filename)
     
 def fixLinks(treebase, show=False, absolute=False, dryrun=False ):
+    log = logging.getLogger()
     """ recursively displays the links of a tree """
     data = dict()
     data["treebase"] = treebase
@@ -169,6 +176,7 @@ def fixLinks(treebase, show=False, absolute=False, dryrun=False ):
     data["dryrun"] = dryrun
     if show:
         visitor = printVisitor
+    log.info("Fixing Links in %s" % treebase)
     walk(treebase, visitor, data)
     
 
