@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           DecayTreeFitter
-version           v1r4p1
+version           v1r5
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -15,13 +15,8 @@ include_path      none
 # Used packages.
 #============================================================================
 use   CLHEP       	v* 	LCG_Interfaces
-use   GaudiAlg        	v*
-use   GaudiUtils        v*
-use   PhysEvent         v*      Event
-use   RecEvent		v*	Event
-use   TrackEvent       	v*	Event
-use   PartProp          v*      Kernel
-use   LoKi              v*      Phys
+use   LoKiCore          v*      Phys
+use   DaVinciKernel     v*      Phys 
 #use   TrackFitEvent     v*      Tr
 
 apply_pattern install_more_includes more=DecayTreeFitter

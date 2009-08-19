@@ -8,6 +8,17 @@
 ! http://www.slac.stanford.edu/spires/find/hep/www?eprint=physics/0503191
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Vanya BELYAEV
+
+ - move the class DecayTreeFitter::Tree into Phys/DaVinciKernel package
+   with the name LHCb::DecayTree 
+
+ - cmt/requirements
+
+     use Phys/LoKiCore instead of Phys/LoKi
+     use Phys/DaVinciKernel 
+     version increment to v1r5 
+
 !======================= DecayTreeFitter v1r4p1 2009-07-02 ===================
 ! 2009-07-08 - Patrick Koppenburg
  - Do not build on windows
