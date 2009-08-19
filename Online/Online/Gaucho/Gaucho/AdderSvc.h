@@ -98,6 +98,7 @@ private:
   std::string m_dimClientDns;
   int m_refreshTime;
   bool m_enablePostEvents;
+  bool m_reconfigured;
   int m_publishRates;  
   };
 }  //end namespace LHCb  

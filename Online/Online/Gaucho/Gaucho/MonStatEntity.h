@@ -5,64 +5,67 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
 #include <boost/archive/binary_oarchive.hpp>
 #include <boost/archive/binary_iarchive.hpp>
 #include "Gaucho/MonObject.h"
-
-
+#include "GaudiKernel/StatEntity.h"
 #include <pthread.h>
+
 
 class MonStatEntity: public MonObject{
 
-protected:
-  float m_min;
-  float m_max;
-  float m_sumX;
-  float m_sumXw2;
-  float m_entries;
-  float m_sumY;
-  float m_sumYw2;
-  std::string m_name;
-  float m_events;
-
-  BOOST_SERIALIZATION_SPLIT_MEMBER()
+protected: 
+  StatEntity *m_StatEntity;
 
 public:
+  BOOST_SERIALIZATION_SPLIT_MEMBER()
+  
   MonStatEntity(IMessageSvc* msgSvc, const std::string& source, int version=0);
   virtual ~MonStatEntity();
 
   virtual void save(boost::archive::binary_oarchive & ar, const unsigned int version);
-  virtual void load(boost::archive::binary_iarchive  & ar, const unsigned int version);
+  virtual void load(boost::archive::binary_iarchive & ar, const unsigned int version);
+
   void save2(boost::archive::binary_oarchive  & ar);
   void load2(boost::archive::binary_iarchive  & ar);
+  
+  void splitObject();
+  
+  double m_nEntries;
+  double m_flag;
+  double m_flag2; 
+  double m_flagMean;
+  double m_flagRMS;
+  double m_flagMeanErr;
+  double m_flagMin;
+  double m_flagMax;
+  double m_efficiency;
+  double m_efficiencyErr;   
+  double nEntries() {return m_nEntries;}
+  double flag() {return m_flag;}  
+  double flag2() {return m_flag2;}  
+  double flagMean() {return m_flagMean;}  
+  double flagRMS() {return m_flagRMS;}  
+  double flagMeanErr() {return m_flagMeanErr;}  
+  double flagMin() {return m_flagMin;}  
+  double flagMax() {return m_flagMax;}  
+  double efficiency() {return m_efficiency;}  
+  double efficiencyErr() {return m_efficiencyErr;}  
 
-  float sumX(){return m_sumX;}
-  float sumXw2(){return m_sumXw2;}
-
-  float sumY(){return m_sumY;}
-  float sumYw2(){return m_sumYw2;}
-  float entries(){return m_entries;}
-  float events(){return m_events;}
-  void incevents(){m_events++;}
-
-  float min(){return m_min;}
-  float max(){return m_max;}
-
-  float meanX(){return m_sumX/m_entries;}
-  float rmsX(){return sqrt( (m_sumXw2 -2*meanX()*m_sumX + m_sumX*meanX()) / m_entries );}
-
-  float meanY(){return m_sumY/m_entries;}
-  float rmsY(){return sqrt( (m_sumYw2 -2*meanY()*m_sumY + m_sumY*meanY()) / m_entries );}
-
+ 
+  std::string format();
   virtual void combine(MonObject* S);
   virtual void copyFrom(MonObject* monObject);
   virtual void reset();
   virtual void add(MonStatEntity &S);
   virtual void print();
   virtual void write(){};
-  void fill(float x,float y, float w=1);
+  
+  void setMonStatEntity(const StatEntity& se);
 
+  void setValue(const StatEntity& val){m_StatEntity = const_cast<StatEntity *>(&val);}
+  
+  bool isLoaded;
+  bool objectCreated;
 };
 #endif //GAUCHO_MONSTATENTITY_H

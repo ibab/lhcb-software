@@ -1,4 +1,4 @@
-// $Id: IGauchoMonitorSvc.h,v 1.14 2008-10-10 06:26:41 evh Exp $
+// $Id: IGauchoMonitorSvc.h,v 1.15 2009-08-19 08:39:45 evh Exp $
 #ifndef KERNEL_IGAUCHOMONITORSVC_H 
 #define KERNEL_IGAUCHOMONITORSVC_H 1
 
@@ -48,7 +48,7 @@ public:
 //   virtual void setTimerElapsed(bool timerelapsed) = 0;
 //   virtual bool getTimerElapsed() const = 0;
 
-  virtual void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle) = 0;
+  virtual void declareMonRateComplement( int& runNumber, unsigned int& triggerConfigurationKey, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle) = 0;
   
   virtual void enableMonObjectsForBool() = 0;
   virtual void enableMonObjectsForInt() = 0;
