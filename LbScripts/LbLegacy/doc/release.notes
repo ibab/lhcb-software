@@ -1,3 +1,9 @@
+2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py:
+	  - use absolute patch for the local distribution.htm file
+      - put security around the usage of fixLinks. 
+
 2009-08-10  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/MkLCGCMTtar: Added the creation of the link to libdpm.so called 

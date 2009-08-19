@@ -205,7 +205,9 @@
  090602 - Moved to LbScripts v4r1
  090618 - fixed bootstrap order for the removal mode.
  090709 - Don't try to create a log file in check-mode.
- 090804 - Moved the Compat project verson to v1r2 
+ 090804 - Moved the Compat project verson to v1r2
+ 090819 - use absolute patch for the local distribution.htm file
+        - put security around the usage of fixLinks. 
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, urllib
@@ -215,7 +217,7 @@ import commands
 import logging
 from shutil import rmtree
 
-script_version = '090804'
+script_version = '090819'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r2"
@@ -936,7 +938,7 @@ def getProjectList(name,version,binary=' '):
     os.chdir(this_html_dir)
     getFile(url_dist+'html/',tar_file+'.html')
     
-    disthtm = "distribution.htm"
+    disthtm = os.path.join(this_html_dir,"distribution.htm")
     
     if os.path.exists(disthtm) :
         os.remove(disthtm)
@@ -1119,8 +1121,11 @@ def getProjectTar(tar_list, already_present_list=None):
                             os.chdir('InstallArea')
                             os.mkdir(pack_ver[2])
                     if sys.platform != 'win32' :
-                        from LbLegacy.ProjectLinks import fixLinks
-                        fixLinks(pack_ver[3])
+                        try :
+                            from LbLegacy.ProjectLinks import fixLinks
+                            fixLinks(pack_ver[3])
+                        except :
+                            log.warning("Cannot use fixLinks")
                     if multiple_mysiteroot :
                         if os.path.isdir('EXTRAPACKAGES'):
                             extradir = None
