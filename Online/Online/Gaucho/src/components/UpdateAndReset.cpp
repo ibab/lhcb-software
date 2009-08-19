@@ -171,7 +171,8 @@ StatusCode UpdateAndReset::initialize() {
   m_runStatus = s_statusNoUpdated;
   m_cycleStatus = s_statusNoUpdated;
 
-  if (0==m_disableMonRate) m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
+  if (0==m_disableMonRate)
+  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
   return StatusCode::SUCCESS;
 }
 
@@ -290,6 +291,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
+  unsigned int triggerConfigurationKey=0;
   ulonglong gpsTime = GauchoTimer::currentTime();
   bool changed = false;
 
@@ -302,6 +304,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //      msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
       runNumber = odin->runNumber();
       gpsTime = odin->gpsTime();
+      triggerConfigurationKey = odin->triggerConfigurationKey();
  //     msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
     }
     else
@@ -317,6 +320,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
      changed = true;
   }   
   m_runNumber = runNumber;
+  m_triggerConfigurationKey = triggerConfigurationKey;
   std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpsTime);
   
   // return std::pair<int, bool>(runNumber,changed);

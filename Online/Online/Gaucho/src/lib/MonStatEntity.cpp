@@ -1,4 +1,3 @@
-
 #include "Gaucho/MonStatEntity.h"
 #include <stdlib.h>
 #include <iostream>
@@ -8,49 +7,92 @@ MonObject(msgSvc, source, version)
 {
   m_typeName=s_monStatEntity;
   m_dimPrefix="MonSE";
-  m_sumX=0;
-  m_sumXw2=0;
-  m_sumY=0;
-  m_sumYw2=0;
-  m_entries=0;
-  m_events=0;
-  m_min=m_max=0;
+  m_nEntries=0;
+  m_flag=0;
+  m_flag2=0;
+  m_flagMean=0;
+  m_flagRMS=0;
+  m_flagMeanErr=0;
+  m_flagMin=0;
+  m_flagMax=0;
+  m_efficiency=0;
+  m_efficiencyErr=0;  
+  m_StatEntity = new StatEntity();
+  isLoaded = false;
+  objectCreated = true;
 }
 
 MonStatEntity::~MonStatEntity(){
-
+  delete m_StatEntity;
 }
 
-void MonStatEntity::save(boost::archive::binary_oarchive & ar, const unsigned int version)
-{ 
+void MonStatEntity::save(boost::archive::binary_oarchive & ar, const unsigned int version){
   MonObject::save(ar,version);
   save2(ar);
 }
 
-void MonStatEntity::save2(boost::archive::binary_oarchive  & ar)
-{
-  ar & m_sumX;
-  ar & m_sumY;
-  ar & m_entries; 
-  ar & m_sumXw2; 
-  ar & m_sumYw2; 
-  ar & m_name; 
-}
- 
+
 void MonStatEntity::load(boost::archive::binary_iarchive  & ar, const unsigned int version)
 {
-  MonObject::load(ar,version);
+  MonObject::load(ar, version);
   load2(ar);
 }
+
+
+std::string MonStatEntity::format() {
+   StatEntity * se = (StatEntity *)m_StatEntity; 
+   return se->format();
+}   
+
+
+void MonStatEntity::setMonStatEntity(const StatEntity& se) {
+  MsgStream msg = createMsgStream();
+  msg <<MSG::INFO<<"Setting MonStatEntity." << endreq;
+   m_StatEntity = (StatEntity *)&se;
+   splitObject();
+}
+
+void MonStatEntity::splitObject(){
+  MsgStream msg = createMsgStream();
+  StatEntity * se = (StatEntity *)m_StatEntity; 
+  m_nEntries=se->nEntries();
+  m_flag=se->flag();
+  m_flag2=se->flag2(); 
+  m_flagMean=se->flagMean();
+  m_flagRMS=se->flagRMS();
+  m_flagMeanErr=se->flagMeanErr();
+  m_flagMin=se->flagMin();
+  m_flagMax=se->flagMax();
+  m_efficiency=se->efficiency();
+  m_efficiencyErr=se->efficiencyErr(); 
+  
+  isLoaded=true;
+}
+
+void MonStatEntity::save2(boost::archive::binary_oarchive  & ar){
+    ar & m_nEntries;
+    ar & m_flag;
+    ar & m_flag2;
+    ar & m_flagMean;
+    ar & m_flagRMS;
+    ar & m_flagMeanErr;
+    ar & m_flagMin;
+    ar & m_flagMax;
+    ar & m_efficiency;
+    ar & m_efficiencyErr;
+}
  
-void MonStatEntity::load2(boost::archive::binary_iarchive  & ar)
-{ 
-  ar & m_sumX;
-  ar & m_sumY;
-  ar & m_entries; 
-  ar & m_sumXw2; 
-  ar & m_sumYw2;
-  ar & m_name;
+void MonStatEntity::load2(boost::archive::binary_iarchive  & ar){
+    ar & m_nEntries;
+    ar & m_flag;
+    ar & m_flag2;
+    ar & m_flagMean;
+    ar & m_flagRMS;
+    ar & m_flagMeanErr;
+    ar & m_flagMin;
+    ar & m_flagMax;
+    ar & m_efficiency;
+    ar & m_efficiencyErr;    
 }
   
 void MonStatEntity::combine(MonObject* S){
@@ -74,61 +116,54 @@ void MonStatEntity::copyFrom(MonObject * S){
   }
   MonStatEntity *mo = (MonStatEntity*)S;
   m_endOfRun = mo->endOfRun();
-  m_sumX=mo->sumY();
-  m_sumXw2=mo->sumYw2();
-  m_sumY=mo->sumY();
-  m_sumYw2=mo->sumYw2();
-  m_entries=mo->entries();
-  m_events=mo->events();
-  m_min=mo->min();
-  m_max=mo->max();
+  m_nEntries= mo->nEntries();
+  m_flag= mo->flag();
+  m_flag2= mo->flag2();
+  m_flagMean= mo->flagMean();
+  m_flagRMS= mo->flagRMS();
+  m_flagMeanErr= mo->flagMeanErr();
+  m_flagMin= mo->flagMin();
+  m_flagMax= mo->flagMax();
+  m_efficiency= mo->efficiency();
+  m_efficiencyErr= mo->efficiencyErr();
   m_comments = mo->comments();
 }
 
 void MonStatEntity::reset(){
-  m_sumX=0.0;
-  m_sumXw2=0.0;
-  m_sumY=0.0;
-  m_sumYw2=0.0;
-  m_entries=0;
-  m_events=0;
+    m_nEntries= 0.0;
+    m_flag= 0.0;
+    m_flag2= 0.0;
+    m_flagMean= 0.0;
+    m_flagRMS= 0.0;
+    m_flagMeanErr= 0.0;
+    m_flagMin= 0.0;
+    m_flagMax= 0.0;
+    m_efficiency= 0.0;
+    m_efficiencyErr= 0.0;
 }
 
 void MonStatEntity::add(MonStatEntity &S){
-  m_sumX+=S.sumY();
-  m_sumXw2+=S.sumYw2();
-  m_sumY+=S.sumY();
-  m_sumYw2+=S.sumYw2();
-  m_entries+=S.entries();
-  m_events+=S.events();
-  if (S.min() < m_min) m_min = S.min();
-  if (S.max() > m_max) m_max = S.max();
+    m_nEntries+= S.nEntries();
+    m_flag+= S.flag();
+    m_flag2+= S.flag2();    
+    m_flagMin = std::min(m_flagMin,S.flagMin());
+    m_flagMax = std::max(m_flagMax,S.flagMax());
 }
 
-void MonStatEntity::fill(float x,float y, float w){
-  m_sumX+=x*w;
-  m_sumXw2+=x*x*w*w;
-  m_sumY+=y*w;
-  m_sumYw2+=y*y*w*w;
-  m_entries += w;
-  // if (f < m_min) m_min = f;
-  // if (f > m_max) m_max = f;
-}
 void MonStatEntity::print(){
   MonObject::print();
   MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO<< "*************************************"<<endreq;
   msgStream << MSG::INFO<<"   " << m_typeName << " value:" << endreq;
-  msgStream << MSG::INFO<<"   mean X=" << meanX() << endreq;
-  msgStream << MSG::INFO<<"   RMS X="<<rmsX() << endreq;
-  msgStream << MSG::INFO<<"   mean Y=" << meanY() << endreq;
-  msgStream << MSG::INFO<<"   RMS Y="<<rmsY() << endreq;
-  msgStream << MSG::INFO<<"   entries="<<m_entries << endreq;
-  msgStream << MSG::INFO<<"   min=" << min() << endreq;
-  msgStream << MSG::INFO<<"   max="<<max() << endreq;
-  msgStream << MSG::INFO<<"   events="<<m_events << endreq;
+  msgStream << MSG::INFO<<"   flagmean =" << flagMean() << endreq;
+  msgStream << MSG::INFO<<"   flagRMS ="<<flagRMS() << endreq;
+  msgStream << MSG::INFO<<"   flagmeanErr=" << flagMeanErr() << endreq;
+  msgStream << MSG::INFO<<"   nEntries="<< nEntries() << endreq;
+  msgStream << MSG::INFO<<"   flagMin=" << flagMin() << endreq;
+  msgStream << MSG::INFO<<"   flagMax="<< flagMax() << endreq;
+  msgStream << MSG::INFO<<"   efficiency="<< efficiency() << endreq;
+  msgStream << MSG::INFO<<"   efficiencyErr="<< efficiencyErr() << endreq;
   msgStream << MSG::INFO<< "*************************************"<<endreq;
-  
 }
 
 

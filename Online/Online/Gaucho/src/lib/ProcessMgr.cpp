@@ -8,6 +8,7 @@
 #include "CPP/Interactor.h"
 #include "TFile.h"
 
+
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
   m_monitoringFarm = false;
@@ -73,15 +74,15 @@ void ProcessMgr::timerHandler(){
   msg << MSG::DEBUG << "inside timerHandler"<< endreq;
 
   if (m_serviceOwner.compare(s_Adder) == 0){
-    msg << MSG::DEBUG << "isAdder"<< endreq;
     m_serviceMap->add();
+    msg << MSG::DEBUG << "isAdder"<< endreq;
   }
   else if (m_serviceOwner.compare(s_Saver) == 0) { //it's a saver May be we have to save every deltaT
     msg << MSG::DEBUG << "isSaver"<< endreq;
     //std::string fileName = "from timerHandler";
     //int fileSize = 0;
     //m_serviceMap->write(m_saveDir, *m_pFile);
-    msg << MSG::DEBUG << "Before Save histograms in file: "<< m_fileName << endreq;
+    msg << MSG::DEBUG << "Before Save hiostograms in file: "<< m_fileName << endreq;
     write();
     msg << MSG::DEBUG << "After Save histograms in file: "<< m_fileName << endreq;
     //m_pGauchoMonitorSvc->updateAll(false);
@@ -198,15 +199,14 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     msg << MSG::DEBUG << "svctype = " << svctype << endreq;
 
 
-    if ((svctype.compare(s_pfixMonH1F) != 0)&&(svctype.compare(s_pfixMonH1D) != 0)&&(svctype.compare(s_pfixMonH2F) != 0)&&
-    (svctype.compare(s_pfixMonH2D) != 0)&&(svctype.compare(s_pfixMonProfile) != 0)&&(svctype.compare(s_pfixMonRate) != 0)) {
-      msg << MSG::DEBUG << "REFUSED because Service is not MonHisto, MonProfile, MonRate: " << svctype << endreq;
+    if ((svctype.compare(s_pfixMonH1F) != 0)&&(svctype.compare(s_pfixMonH1D) != 0)&&(svctype.compare(s_pfixMonH2F) != 0)&&(svctype.compare(s_pfixMonH2D) != 0)&&(svctype.compare(s_pfixMonProfile) != 0)&&(svctype.compare(s_pfixMonRate)!= 0)&&(svctype.compare(s_pfixMonStatEntity)!=0)) {
+      msg << MSG::DEBUG << "REFUSED because Service is not MonHisto, MonProfile, MonRate or MonStatEntity: " << svctype << endreq;
       continue;
     }
 
     if (s_Saver == m_serviceOwner) { // savers do not save MonRate
-       if (svctype.compare(s_pfixMonRate) == 0 ) {
-        msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate !!" << endreq;
+       if ((svctype.compare(s_pfixMonRate) == 0) ||(svctype.compare(s_pfixMonStatEntity)==svctype)) {
+        msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate or MonStatEntity!" << endreq;
         continue; 
       } 
     }

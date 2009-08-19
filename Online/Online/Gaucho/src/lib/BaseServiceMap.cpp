@@ -8,6 +8,7 @@
 #include "Gaucho/MonH2D.h"
 #include "Gaucho/MonProfile.h"
 #include "Gaucho/MonRate.h"
+#include "Gaucho/MonStatEntity.h"
 #include "Gaucho/DimInfoServers.h"
 #include "Gaucho/ProcessMgr.h"
 #include "Gaucho/BaseServiceMap.h"
@@ -425,8 +426,7 @@ std::string BaseServiceMap::createAdderName (const std::string &serviceName){
   }
   else adderName = svctype + "/" + m_processMgr->utgid()  + "/" + task + "/";
   
-  if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||
-      (s_pfixMonRate==svctype))
+  if ((s_pfixMonH1F==svctype)||(s_pfixMonH2F==svctype)||(s_pfixMonH1D==svctype)||(s_pfixMonH2D==svctype)||(s_pfixMonProfile==svctype)||(s_pfixMonRate==svctype)||(s_pfixMonStatEntity==svctype))
     adderName = adderName + algo + "/" + object;
   else
     adderName = adderName + object;
@@ -496,6 +496,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
+/*    std::string dirName = saveDir + taskName + "/" + taskName;  
+    void *hdir = gSystem->OpenDirectory(dirName.c_str());
+    if (hdir == 0) {
+     gSystem->mkdir(dirName.c_str(),true);
+    }*/
+
     f = new TFile(fileName.c_str(),"create");
     
     for (it=m_dimInfoIt->second.begin(); it!=m_dimInfoIt->second.end(); ++it) {
@@ -505,6 +511,8 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
       //(for the presenter) - not that slice name PARTxx
       //if (!m_processMgr->dimInfoServers()->isActive(serverName)) continue;
      if(0 == it->second->monObject()) continue;
+
+      msg << MSG::DEBUG << "Term being saved: " << it->second->dimInfo()->getName() << endreq;
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
@@ -519,6 +527,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
              //HistoDirName keeps track of the directory names, to avoid rewriting them
 	        if (i>3) {   
 		    if (dir->GetDirectory(HistoFullName[i].c_str())) { 
+		          msg << MSG::DEBUG << "cding 1 into " << HistoFullName[i].c_str()<< endreq; 
 		          dir->cd(HistoFullName[i].c_str());}
 		    else {
 		       dir=dir->mkdir(HistoFullName[i].c_str(),TString::Format("subsubdir %02d",i)); 
@@ -528,11 +537,13 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 	        else {
 		  if (dir) {
 		      dir=f->GetDirectory(HistoFullName[i].c_str());
+		      msg << MSG::DEBUG << "cding 2 into " << HistoFullName[i].c_str()<< endreq; 
 		      dir->cd(HistoFullName[i].c_str());		       
 		  }    
 		  else { 
 		      if (dir=f->GetDirectory(HistoFullName[i].c_str())) {}		         
 		      else {
+		      msg << MSG::DEBUG << "Making directory HistoFullName[" << i << "]= " << HistoFullName[i].c_str() <<endreq; 		      
 		      dir=f->mkdir(HistoFullName[i].c_str(),TString::Format("subdir %02d",i));
 		      }
 		  }   
@@ -543,7 +554,9 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 	 }	
 	 else {	  
 	     f->cd();
-	 }	
+	 }
+	  msg << MSG::DEBUG << "writing " << endreq; 
+	
           it->second->monObject()->write();
 
       }

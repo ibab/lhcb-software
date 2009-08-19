@@ -21,6 +21,7 @@ void MonRateDecoder::resetValues() {
   m_oldOffsetGpsTimeLastEvInCycle = 0;
   m_oldNumEntries = 0;
   m_oldRunNumber = 0;
+  m_oldTriggerConfigurationKey = 0;
   m_oldCycleNumber = 0;
   m_oldDesiredDeltaT = 0;
 
@@ -29,10 +30,12 @@ void MonRateDecoder::resetValues() {
   m_newOffsetGpsTimeLastEvInCycle = 0;
   m_newNumEntries = 0;
   m_newRunNumber = 0;
+  m_newTriggerConfigurationKey = 0;
   m_newCycleNumber = 0;
   m_newDesiredDeltaT = 0;
   procexists=false;
   countexists=false;
+  TCKexists=false;
 
 }
 
@@ -55,6 +58,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   m_oldOffsetGpsTimeLastEvInCycle = m_newOffsetGpsTimeLastEvInCycle;
   m_oldNumEntries = m_newNumEntries;
   m_oldRunNumber = m_newRunNumber;
+  m_oldTriggerConfigurationKey = m_newTriggerConfigurationKey;
   m_oldCycleNumber = m_newCycleNumber;
   m_oldDesiredDeltaT = m_newDesiredDeltaT;
   m_oldNumCounters = m_newNumCounters;
@@ -62,7 +66,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   int tmpcycle;
   int tmpentries;
   tmpentries = (int) monRate->binEntry(4);
-  tmpcycle = (int) monRate->binContent(6);
+  tmpcycle = (int) monRate->binContent(7);
   msg << MSG::DEBUG << "The old cycle number was :" << m_oldCycleNumber << endreq;
   msg << MSG::DEBUG << "checking the new cycle number :" << tmpcycle << endreq;
   if (m_oldCycleNumber == tmpcycle ) {
@@ -75,8 +79,9 @@ void MonRateDecoder::update(MonRate *monRate) {
   m_newOffsetGpsTimeLastEvInCycle = monRate->binContent(3);
   m_newNumEntries = (int) monRate->binEntry(4);
   m_newRunNumber = (int) monRate->binContent(5);
-  m_newCycleNumber = (int) monRate->binContent(6);
-  m_newDesiredDeltaT = monRate->binContent(7);
+  m_newTriggerConfigurationKey = (unsigned int) monRate->binContent(6);
+  m_newCycleNumber = (int) monRate->binContent(7);
+  m_newDesiredDeltaT = monRate->binContent(8);
   m_newNumCounters = monRate->numbinx();
 
   Data m_numprocessesData;
@@ -103,6 +108,35 @@ void MonRateDecoder::update(MonRate *monRate) {
     procexists=true;
   } 
   else  m_dimSvcNumberOfProcess->updateService((void*)&m_numprocessesData, nbprocdataSize);
+  
+  Data m_TCKData;
+  m_TCKData.value = m_newTriggerConfigurationKey;
+  m_TCKData.counter = m_newTriggerConfigurationKey;
+  strcpy(m_TCKData.comment, "\0");
+  std::string TCKComment="Currently active TCK";
+  int TCKcommentSize = Misc::min(MAX_CAR, TCKComment.length()+1);
+  strncpy(m_TCKData.comment, TCKComment.c_str(), TCKcommentSize);
+  int TCKdataSize = sizeof(double) + TCKcommentSize * sizeof(char);
+  std::string TCKSvcName =  m_monRateSvcName.substr(s_pfixMonRate.length()+1, 
+                                                    m_monRateSvcName.length() - s_pfixMonRate.length()+1) +
+                                                                 "/TCK";
+//  m_dimSvcNumberOfProcess = new DimService(numberOfProcessSvcName.c_str(), m_newNumEntries);
+   msg << MSG::DEBUG << "MonRateDecoder update m_TCKData.value: "<< m_TCKData.value << endreq;
+  
+  
+  if (!TCKexists) {
+    static const std::string s_TCKFormat("D:2;C");
+    char * ttmpFormat = new char[s_TCKFormat.length()+1];
+    strcpy(ttmpFormat, s_TCKFormat.c_str());    
+    m_dimSvcTCK = new DimService(TCKSvcName.c_str(), ttmpFormat, (void*)&m_TCKData,  TCKdataSize);
+    delete ttmpFormat;
+    TCKexists=true;
+  } 
+  else  m_dimSvcTCK->updateService((void*)&m_TCKData, TCKdataSize);
+  
+  
+  
+  
 
   Data m_numcountersData;
   //need to add 1 for the number of processes service
@@ -147,14 +181,14 @@ void MonRateDecoder::update(MonRate *monRate) {
   for (int i = 0; i < m_newNumCounters; i++) {
     msg << MSG::DEBUG << "updating counter " << i <<endreq;
 
-    std::string comment(monRate->binLabX(7 + i));
+    std::string comment(monRate->binLabX(8 + i));
     if (comment.compare("") == 0) {
       msg << MSG::DEBUG << "comment empty, then we assume that the counters end is here "<<endreq;
       m_newNumCounters = i;
       break;
     }
 
-    double counterMean = monRate->binContent(8 + i);
+    double counterMean = monRate->binContent(9 + i);
     double counterValue = m_newNumEntries*counterMean;
     m_newCounters[i] = std::pair<std::string, double> (comment, counterValue);
 
@@ -257,6 +291,9 @@ void MonRateDecoder::print(){
   msg << MSG::INFO << "************************************************"<<endreq;
   msg << MSG::INFO << " newRunNumber: "<<  m_newRunNumber << endreq;
   msg << MSG::INFO << " oldRunNumber: "<<  m_oldRunNumber << endreq;
+  msg << MSG::INFO << "************************************************"<<endreq;
+  msg << MSG::INFO << " newTCK: "<<  m_newTriggerConfigurationKey << endreq;
+  msg << MSG::INFO << " oldTCK: "<<  m_oldTriggerConfigurationKey << endreq;
   msg << MSG::INFO << "************************************************"<<endreq;
   msg << MSG::INFO << " newCycleNumber: "<<  m_newCycleNumber << endreq;
   msg << MSG::INFO << " oldCycleNumber: "<<  m_oldCycleNumber << endreq;

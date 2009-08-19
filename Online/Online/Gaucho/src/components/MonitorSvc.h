@@ -4,6 +4,7 @@
 #include "GaudiKernel/Service.h"
 #include "GaudiKernel/IMonitorSvc.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
+#include "GaudiKernel/StatEntity.h"
 #include <string>
 #include <map>
 #include <set>
@@ -62,6 +63,8 @@ public:
                    const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const std::pair<double,double>&var,
                    const std::string& desc, const IInterface* owner) ;
+  void declareInfo(const std::string& name, const StatEntity& var, 
+                   const std::string& desc, const IInterface* owner) ;
   void declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                    const std::string& desc, const IInterface* owner) ;
   // We can not modify IMonitorSvc then we use this method to declare MonObjecs...
@@ -69,7 +72,7 @@ public:
                    int size, const std::string& desc, const IInterface* owner) ;
 
   //Eric: To be implemented?
-  virtual void declareInfo(const std::string&, const StatEntity&, const std::string&, const IInterface*) {}
+  //virtual void declareInfo(const std::string&, const StatEntity&, const std::string&, const IInterface*) {}
 
   /** Undeclare monitoring information
       @param name Monitoring information name knwon to the external system
@@ -142,7 +145,7 @@ private:
   
   
 public:    
-   void declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle);  
+   void declareMonRateComplement( int& runNumber, unsigned int& triggerConfigurationKey, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle);  
 
   int m_disableMonRate;
   int m_disableDimPropServer;

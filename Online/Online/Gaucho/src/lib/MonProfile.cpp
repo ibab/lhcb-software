@@ -351,8 +351,8 @@ void MonProfile::combine(MonObject * H){
   }
 
   for (int i = 0; i < (nbinsx+2); ++i){
-    if ((this->typeName()=="MonRate") && ((i==5)||(i==6))) {
-       //do not add the runnumber or cyclenumber; we assume they are all the same.
+    if ((this->typeName()=="MonRate") && (((i==5)||(i==6))||(i==7))) {
+       //do not add the runnumber, tck or cyclenumber; we assume they are all the same.
        //this code needs to be corrected when we ensure consistency at end of run
        binSum[i] = HH->binSum[i];
     }

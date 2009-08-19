@@ -35,6 +35,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
 
   //declareProperty("savedir", m_saveDir);
   m_enablePostEvents = true;
+  m_reconfigured = false;
 }
 
 AdderSvc::~AdderSvc() {}
@@ -145,6 +146,10 @@ void AdderSvc::startUp(){
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "*******************************************" << endreq;
   msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
   m_processMgr->createInfoServers();
   m_processMgr->createTimerProcess();
   msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
@@ -156,6 +161,11 @@ void AdderSvc::shutDown(){
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "*******************************************" << endreq;
   msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
+  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
   msg << MSG::DEBUG << "*******************************************" << endreq;
   m_enablePostEvents = false;
   m_processMgr->dimTimerProcess()->stop();
@@ -163,6 +173,8 @@ void AdderSvc::shutDown(){
   m_processMgr->destroyInfoServers();
   m_processMgr->destroyInfoServices();
   m_enablePostEvents = true;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
+  msg << MSG::DEBUG << "*******************************************" << endreq;
   msg << MSG::DEBUG << "*******************************************" << endreq;
 }
 
@@ -177,6 +189,7 @@ void AdderSvc::handle(const Event&  ev) {
     shutDown();
     msg << MSG::DEBUG << " StartingUp the Adder " << endreq;
     startUp();
+    m_reconfigured = true;
   }
   if(s_startTimer == ev.type) {
     msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
@@ -236,7 +249,13 @@ void AdderSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   msg << MSG::DEBUG << "******************************************************" << endreq;
+  msg << MSG::DEBUG << "******************************************************" << endreq;
   msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+  msg << MSG::DEBUG << "******************************************************" << endreq;
   msg << MSG::DEBUG << "******************************************************" << endreq;
   IocSensor::instance().send(this, s_reconfigureAdder, this);
 }

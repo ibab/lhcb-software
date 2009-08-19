@@ -60,6 +60,7 @@ private:
   
   // MonRate information
   int m_runNumber;  
+  unsigned int m_triggerConfigurationKey;
   int m_cycleNumber;
   int m_firstCycleNumber;
   ulonglong m_timeStart;

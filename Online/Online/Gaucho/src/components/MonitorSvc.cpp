@@ -24,6 +24,7 @@
 #include "Gaucho/MonVectorD.h"
 #include "Gaucho/MonObjectCreator.h"
 #include "Gaucho/MonRate.h"
+#include "Gaucho/MonStatEntity.h"
 #include "MonitorSvc.h"
 #include "DimPropServer.h"
 #include "DimRpcGaucho.h"
@@ -226,7 +227,7 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
-    return;
+    return;   
   }  
   
   MonObject *monObject = 0;
@@ -279,8 +280,8 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
       
       m_monRate->addCounter(newName, desc, (double&) var);
     }
-    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
-    return;
+    else  msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
+    return; 
   } 
   
   MonObject *monObject=0;
@@ -448,11 +449,54 @@ void MonitorSvc::declareInfo(const std::string& name, const std::string& format,
   msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
 }
 
+void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var, 
+                             const std::string& desc, const IInterface* owner) 
+{
+  MsgStream msg(msgSvc(),"MonitorSvc");
+  if (name.find("COUNTER_TO_RATE") != std::string::npos) {
+    std::string newName = extract("COUNTER_TO_RATE", name);
+    if ( 0 == m_disableMonRate) {
+      if (!m_monRateDeclared) {
+        if (!registerName("monRate", this)) return;
+        m_monRate->setComments("MonRate !!");
+        std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
+        if (dimSvcName.second.compare("") == 0) return;
+        m_monRate->print();
+        m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+        m_monRateDeclared = true;
+      }
+        m_monRate->addCounter(newName, desc, var);
+    }
+    else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
+    return;
+  }
+
+  MonObject *monObject=0;
+  bool isMonObject = false;
+  std::string prefix = "";
+  isMonObject = true;
+  monObject = MonObjectCreator::createMonObject(s_monStatEntity, msgSvc(), "MonitorSvc");
+  monObject->setComments(desc);
+  prefix = monObject->dimPrefix() + "/";
+  
+  ((MonStatEntity*) monObject)->setMonStatEntity(var);
+  if (!registerName(name, owner)) return;
+  std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
+  if (dimSvcName.second.compare("") == 0) return;
+  
+  m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, monObject);
+  msg << MSG::DEBUG << "New DimService: " + dimSvcName.second << endreq;
+  
+}
+
+
+
+
 void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram* var, 
                              const std::string& desc, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
-  //msg << MSG::DEBUG << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+ // msg << MSG::INFO << "m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
 
   if (0 != m_disableDeclareInfoHistos) return;
 
@@ -492,12 +536,12 @@ void MonitorSvc::declareInfo(const std::string& name, const AIDA::IBaseHistogram
 
 }
 
-void MonitorSvc::declareMonRateComplement( int& runNumber, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle){
+void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle){
   MsgStream msg(msgSvc(),"MonitorSvc");
   msg << MSG::DEBUG << "Inside declareMonRateComplement" << endreq;
 
   if ( 0 == m_disableMonRate) {
-    m_monRate->addComplement(&runNumber, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
+    m_monRate->addComplement(&runNumber, &tck, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
     m_monRate->print();
   }
   else  msg << MSG::INFO << "Complement of MonRate was not declared because MonRate process is disabled." << endreq; 
