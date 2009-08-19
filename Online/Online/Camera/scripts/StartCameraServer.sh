@@ -16,4 +16,4 @@ Camera_release=/sw/lib/lhcb/ONLINE/ONLINE_$version/Online/Camera/
 source `which SetupProject.sh` Online $version
 
 # Start the executable.
-exec -a CameraServer `which CameraServer.exe` -C Camera_release/scripts/etc/CameraServer.conf
+exec -a CameraServer `which CameraServer.exe` -C $Camera_release/scripts/etc/CameraServer.conf
