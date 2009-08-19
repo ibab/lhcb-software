@@ -1,4 +1,4 @@
-// $Id: KsFitParams.cpp,v 1.4 2009-08-19 14:16:15 ocallot Exp $
+// $Id: KsFitParams.cpp,v 1.5 2009-08-19 14:24:18 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -99,7 +99,7 @@ StatusCode KsFitParams::execute() {
       if ( 0 == kDecay ) continue;
       kShort = kDecay->mother();
       if ( 0 == kShort ) continue;
-      if ( 310 == kShort->particleID().pid() ) continue;
+      if ( 310 != kShort->particleID().pid() ) continue;
       const LHCb::MCVertex* origin = kShort->originVertex();
       if ( 0 == origin ) continue;
       if ( 8. < origin->position().R() ) continue;  // Kshorts from close the beam line
