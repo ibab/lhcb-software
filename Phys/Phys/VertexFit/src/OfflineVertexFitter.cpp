@@ -1,4 +1,4 @@
-// $Id: OfflineVertexFitter.cpp,v 1.36 2009-06-02 08:06:24 pkoppenb Exp $
+// $Id: OfflineVertexFitter.cpp,v 1.37 2009-08-19 15:52:11 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -82,9 +82,10 @@ StatusCode OfflineVertexFitter::initialize(){
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
-                                     LHCb::Particle& P, 
-                                     LHCb::Vertex& V) const
+StatusCode OfflineVertexFitter::fit
+( const LHCb::Particle::ConstVector& parts, 
+  LHCb::Vertex&   V , 
+  LHCb::Particle& P ) const
 {
   // xieyh
   if (msgLevel(MSG::DEBUG)) debug() << "start fit " <<endmsg;
@@ -222,10 +223,12 @@ StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode OfflineVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
-                                     LHCb::Vertex& V) const{  
+StatusCode OfflineVertexFitter::fit
+( LHCb::Vertex& V , 
+  const LHCb::Particle::ConstVector& parts ) const
+{  
   LHCb::Particle tPart;
-  return fit(parts, tPart, V);
+  return fit(parts, V , tPart );
 }
 
 //==================================================================

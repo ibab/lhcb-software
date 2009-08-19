@@ -28,16 +28,17 @@ public:
   StatusCode initialize();
 
   /// Method to fit a vertex 
-  StatusCode fit( const LHCb::Particle::ConstVector&,
-                  LHCb::Vertex& ) const ;  
-
+  StatusCode fit
+  ( LHCb::Vertex& , 
+    const LHCb::Particle::ConstVector& ) const ;  
+  
   /// Method to fit a vertex returning a Particle (that should already know its PID)
   StatusCode fit( const LHCb::Particle::ConstVector&,
-                  LHCb::Particle&,
-                  LHCb::Vertex& ) const ; 
-
+                  LHCb::Vertex&  , 
+                  LHCb::Particle&) const ; 
+  
   StatusCode reFit( LHCb::Particle& particle ) const;
-
+  
   StatusCode add( const LHCb::Particle*, 
                   LHCb::Vertex& ) const;
 

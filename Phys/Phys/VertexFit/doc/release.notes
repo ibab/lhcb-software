@@ -1,8 +1,21 @@
-! $Id: release.notes,v 1.170 2009-08-19 06:42:08 jpalac Exp $
+! $Id: release.notes,v 1.171 2009-08-19 15:52:11 ibelyaev Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-08-19 - Vanya BELYAEV
+ - OfflineVertexFitter, 
+   TrgVertexFitter, 
+   ParticleAdder
+    
+   change  a bit the signature due to modified IVertexFit: 
+ 
+    1. for all methods, WITHOUT creation of "mother" particle, 
+       the vertex os the first argument ( "fit vertex" ) 
+    2. for all methdos WITH creation of "mother" particle, 
+       the mother particle is the last argument , after vertex 
+ 
 
 ! 2009-08-18 - Juan PALACIOS
  - src/PVReFitter.cpp, AdaptivePVReFitter.cpp

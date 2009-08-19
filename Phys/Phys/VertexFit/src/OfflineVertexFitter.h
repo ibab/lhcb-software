@@ -34,38 +34,40 @@ class OfflineVertexFitter : public GaudiTool, virtual public IVertexFit {
 public: 
   /// Standard constructor
   OfflineVertexFitter( const std::string& type, 
-                   const std::string& name,
-                   const IInterface* parent);
+                       const std::string& name,
+                       const IInterface* parent);
 
   StatusCode initialize();
 
   /// Method to fit a vertex 
-  StatusCode fit( const LHCb::Particle::ConstVector&,  
-                  LHCb::Vertex& ) const ;  
+  StatusCode fit( LHCb::Vertex& ,  
+                  const LHCb::Particle::ConstVector& ) const ;  
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
-  StatusCode fit( const LHCb::Particle::ConstVector&,  
-                  LHCb::Particle&, 
-                  LHCb::Vertex& ) const ; 
-
+  StatusCode fit
+  ( const LHCb::Particle::ConstVector&,  
+    LHCb::Vertex&   , 
+    LHCb::Particle& ) const ; 
+  
   virtual ~OfflineVertexFitter( ); ///< Destructor
 
 
-  StatusCode reFit( LHCb::Particle& particle ) const {
-     LHCb::Vertex* vertex = particle.endVertex() ;
-     return fit( particle.daughtersVector(),
-                 particle , *vertex         ) ;
+  StatusCode reFit( LHCb::Particle& particle ) const 
+  {
+    LHCb::Vertex* vertex = particle.endVertex() ;
+    return fit( particle.daughtersVector(),
+                *vertex  , particle ) ;
   }
-
+  
   StatusCode combine
   ( const LHCb::Particle::ConstVector& daughter, 
     LHCb::Particle&                    mother  , 
     LHCb::Vertex&                      vertex  ) const 
   {
-    return fit ( daughter , mother , vertex ) ;
+    return fit ( daughter , vertex , mother ) ;
   }
-
-
+  
+  
   StatusCode add(const LHCb::Particle*, 
                  LHCb::Vertex& ) const {
     Error("add is not implemented for OffLineVertexFitter");

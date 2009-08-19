@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.h,v 1.9 2009-02-11 11:12:12 pkoppenb Exp $
+// $Id: TrgVertexFitter.h,v 1.10 2009-08-19 15:52:11 ibelyaev Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
@@ -26,10 +26,14 @@ public:
   StatusCode initialize();
 
   /// Method to fit a vertex 
-  StatusCode fit( const LHCb::Particle::ConstVector&,  LHCb::Vertex& ) const ;  
+  StatusCode fit
+  ( LHCb::Vertex&                      , 
+    const LHCb::Particle::ConstVector& ) const ;  
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
-  StatusCode fit( const LHCb::Particle::ConstVector&,  LHCb::Particle&, LHCb::Vertex& ) const ; 
+  StatusCode fit( const LHCb::Particle::ConstVector&,
+                  LHCb::Vertex&   , 
+                  LHCb::Particle& ) const ; 
 
   virtual ~TrgVertexFitter( ); ///< Destructor
 

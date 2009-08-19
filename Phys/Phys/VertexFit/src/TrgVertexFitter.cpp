@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.27 2009-02-11 11:12:12 pkoppenb Exp $
+// $Id: TrgVertexFitter.cpp,v 1.28 2009-08-19 15:52:11 ibelyaev Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -68,9 +68,12 @@ StatusCode TrgVertexFitter::initialize(){
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
-                                 LHCb::Particle& P, LHCb::Vertex& V) const{
-  StatusCode sc = fit(parts,V);
+StatusCode TrgVertexFitter::fit
+( const LHCb::Particle::ConstVector& parts, 
+  LHCb::Vertex&   V ,
+  LHCb::Particle& P ) const
+{
+  StatusCode sc = fit(V,parts);
   if (!sc) return sc ;
   sc = m_stuffer->fillParticle(parts,V,P);
   if ( msgLevel(MSG::DEBUG) ) {
@@ -84,11 +87,10 @@ StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts,
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode TrgVertexFitter::fit( const LHCb::Particle::ConstVector& parts, 
-                                  LHCb::Vertex& V) const{
-  
-
-
+StatusCode TrgVertexFitter::fit
+( LHCb::Vertex& V , 
+  const LHCb::Particle::ConstVector& parts ) const
+{
   if (msgLevel(MSG::DEBUG)) debug() << "Hello from TrgVertexFitter vertexing " << parts.size() << " particles" << endmsg ;
   
   // Vector of particles to use in fit, can contain daughters of input particles
@@ -329,18 +331,19 @@ StatusCode TrgVertexFitter::vertexPositionAndError(const double& AX,
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-StatusCode TrgVertexFitter::reFit( LHCb::Particle& particle ) const {
+StatusCode TrgVertexFitter::reFit( LHCb::Particle& particle ) const 
+{
   LHCb::Vertex* vertex = particle.endVertex() ;
   LHCb::Particle::ConstVector t ;
   for ( SmartRefVector<LHCb::Particle>::const_iterator i= vertex->outgoingParticles().begin(); 
         i!= vertex->outgoingParticles().end();++i) t.push_back(*i);
-  return fit( t , particle , *vertex ) ; 
-} ; 
+  return fit( t , *vertex , particle ) ; 
+} 
 //=============================================================================
 StatusCode TrgVertexFitter::combine( const LHCb::Particle::ConstVector& daughters , 
                                      LHCb::Particle&        mother   , 
                                      LHCb::Vertex&          vertex   ) const{
-  return fit( daughters , mother , vertex ) ;
+  return fit( daughters , vertex , mother ) ;
 };
 //=============================================================================
 /// add not active for fast vertex fitter

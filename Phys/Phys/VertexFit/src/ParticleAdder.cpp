@@ -52,9 +52,10 @@ StatusCode ParticleAdder::initialize(){
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts, 
-                               LHCb::Particle& P, 
-                               LHCb::Vertex& V) const
+StatusCode ParticleAdder::fit
+( const LHCb::Particle::ConstVector& parts, 
+  LHCb::Vertex&   V , 
+  LHCb::Particle& P ) const
 {
   debug() << "start ParticleAdder fit " <<endreq;
   debug() << "using " << parts.size() <<" particles" <<endreq;
@@ -90,15 +91,17 @@ StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts,
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode ParticleAdder::fit( const LHCb::Particle::ConstVector& parts, 
-                               LHCb::Vertex& V) const{  
+StatusCode ParticleAdder::fit 
+( LHCb::Vertex& V ,
+  const LHCb::Particle::ConstVector& parts ) const
+{  
   LHCb::Particle tPart;
-  return fit(parts, tPart, V);
+  return fit(parts, V , tPart );
 }
 //=============================================================================
 StatusCode ParticleAdder::reFit( LHCb::Particle& particle ) const {
   LHCb::Vertex* vertex = particle.endVertex() ;
-  return fit( particle.daughtersVector(), particle ,*vertex ) ;
+  return fit( particle.daughtersVector(), *vertex , particle ) ;
 }
 //=============================================================================
 StatusCode ParticleAdder::add(const LHCb::Particle*, 
@@ -118,6 +121,6 @@ StatusCode ParticleAdder::combine
   LHCb::Particle&                    mother  , 
   LHCb::Vertex&                      vertex  ) const 
 {
-  return fit ( daughter , mother , vertex ) ;
+  return fit ( daughter , vertex , mother ) ;
 }
 //=============================================================================
