@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.72 2009-08-12 14:17:16 graven Exp $
+# $Id: requirements,v 1.73 2009-08-19 09:12:45 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v7r3
+version v7r4
 
 branches doc cmt options python
 
@@ -37,44 +37,13 @@ use LHCbAlgs           v*    Kernel         -no_auto_imports
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
-use L0Muon               v8r5p1 L0
 use LbcomSys            v*        -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
-### Temporarily here...
-use Hlt2SharedParticles v2r0    Hlt
-use Hlt1Lines           v1r2p1  Hlt
-use Hlt2Lines           v1r5    Hlt
-use HltCommon           v5r8p4  Hlt
-use HltLine             v1r4    Hlt
-use HltConf             v4r1    Hlt
-use HltGlobalMonitor    v2r6    Hlt
-use TCKUtils            v1r3    Hlt
-#use HltSys		v*	     -no_auto_imports
-#######################
-use HltBase             v6r5p1  Hlt   # Gerhard Raven
-use HltTracking         v4r1    Hlt   # Jose Angel Hernando-Morata
-use HltEcalAlley        v1r7    Hlt   # Mariusz Witek
-use HltMuon             v3r5    Hlt   # Alessia Satta          
-use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
-use HltL0Conf           v2r9p1  Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato  
-use HltRecChecker	v1r10	Hlt   # Jose Angel Hernando-Morata
-use HltLuminosity       v2r9    Hlt   # Jaap Panman
-use HltRawData          v2r0    Hlt   # Tomasz Skwarnicki
-use HltSelections       v9r5    Hlt   # Patrick Koppenburg
-use Fidel               v1r3p1  Phys  # Sara Furcas    
-use HltKshort           v2r0    Hlt   # Jaap Panman
-use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
-use HltDisplVertices    v1r1    Hlt   # Neil Gauvin
-use HltSelChecker       v8r5    Hlt   # Patrick Koppenburg
-use LoKiTrigger         v9r5   Phys   # Vanya Belyaev
-use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
-
-#######################
+use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 
 use PhysSys		v*	     -no_auto_imports

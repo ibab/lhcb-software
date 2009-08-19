@@ -3,6 +3,7 @@ Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
 
+!========================== Moore v7r3 2009-08-12 ===================
 ! 2009-08-12 - Gerhard Raven
  - check for TCMALLOC, and use if available
  - fix install_manifest
