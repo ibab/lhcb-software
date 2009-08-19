@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Patrick Koppenburg
+ - Remove Bu2MuMuK. Add track info to Tuple
+
 ! 2009-08-12 - Patrick Koppenburg
  - Do Truth in K*K*
 

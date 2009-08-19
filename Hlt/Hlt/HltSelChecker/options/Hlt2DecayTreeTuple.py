@@ -34,6 +34,8 @@ Hlt2DecayTreeTuple.ToolList += [
     , "TupleToolMCBackgroundInfo"
     , "TupleToolGeometry"
     , "TupleToolKinematic"
+    , "TupleToolTrackInfo"
+    , "TupleToolPid"
     , "TupleToolPropertime"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
