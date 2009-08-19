@@ -4,6 +4,20 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Vanya BELYAEV
+
+ - IVertexFit.h
+
+    to resolve the ambiguities for python uage of IVertexFit interface
+
+    the signature of methods has been changed:
+
+    1. for all methods, WIHTOUT creation of "mother" particle, 
+       the vertex os the first argument ( "fit vertex" ) 
+    2. for all methdos with creaton of "mother" particle, 
+       the mother particle is the last argument , after vertex 
+    
+
 ! 2009-08-16 - Juan Palacios
  - Kernel/IRelatedPVFinder.h
   . Fix typos

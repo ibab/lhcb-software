@@ -1,3 +1,5 @@
+// $Id: IVertexFit.h,v 1.4 2009-08-19 15:50:37 ibelyaev Exp $ 
+// ============================================================================
 #ifndef DAVINCIKERNEL_IVERTEXFIT_H 
 #define DAVINCIKERNEL_IVERTEXFIT_H 1
 // ============================================================================
@@ -53,7 +55,7 @@
  *     LHCb::Vertex* vertex = particle.endVertex() ;
  *    return fit( vertex->products().begin() , 
  *                vertex->products().end  () , 
- *                particle , *vertex         ) ; 
+ *                particle , *vertex       ) ; 
  *  } ; 
  *  
  *  @endcode 
@@ -68,7 +70,7 @@ class GAUDI_API IVertexFit :
 public:
   // ========================================================================== 
   /// interface machinery
-  DeclareInterfaceID(IVertexFit, 2, 0);
+  DeclareInterfaceID(IVertexFit, 3, 0);
   // ==========================================================================
 public:
   // ==========================================================================  
@@ -96,13 +98,13 @@ public:
    *  @see GaudiAlgorithm::tool
    *  @see GaudiAlgorithm::Warning
    *
-   *  @param daughters vector of daughter particles  (input)
-   *  @param vertex result of vertex fit             (output) 
+   *  @param vertex    (OUTPUT) result of vertex fit   
+   *  @param daughters (INPUT)  vector of daughter particles 
    *  @return status code 
    */
   virtual StatusCode fit 
-  ( const LHCb::Particle::ConstVector& daughters ,
-    LHCb::Vertex&          vertex    ) const = 0 ;  
+  ( LHCb::Vertex&                      vertex    ,
+    const LHCb::Particle::ConstVector& daughters ) const = 0 ;  
   // ==========================================================================  
   /** the vertex fitting method without creation of a Particle, 
    *  which allow to use an almost arbitrary sequence of 
@@ -148,13 +150,74 @@ public:
    *  @return status code 
    */
   template <class DAUGHTER>
-  inline  StatusCode fit 
-  ( DAUGHTER         begin     ,
-    DAUGHTER         end       ,
-    LHCb::Vertex&          vertex    ) const 
+  inline  StatusCode fit  
+  ( LHCb::Vertex&    vertex    , 
+    DAUGHTER         begin     ,
+    DAUGHTER         end       ) const 
   {
-    return fit ( LHCb::Particle::ConstVector( begin , end ) , vertex ) ;
+    return fit ( vertex , LHCb::Particle::ConstVector( begin , end ) ) ;
   }
+  // ==========================================================================  
+  /** Creation a vertex from two particles without 
+   *  creation of an output  Particle 
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit
+  ( LHCb::Vertex&         vertex    , 
+    const LHCb::Particle& daughter0 , 
+    const LHCb::Particle& daughter1 ) const 
+  {
+    LHCb::Particle::ConstVector tmp(2);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    return fit ( vertex , tmp ) ;
+  }
+  // ==========================================================================
+  /** Creation a vertex from three particles without 
+   *  creation of an output  Particle 
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param daughter2 third daughter particle  (input)
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit
+  ( LHCb::Vertex&         vertex    ,
+    const LHCb::Particle& daughter0 , 
+    const LHCb::Particle& daughter1 ,
+    const LHCb::Particle& daughter2 ) const
+  {
+    LHCb::Particle::ConstVector tmp(3);
+    tmp[0]=&daughter0;
+    tmp[1]=&daughter1;
+    tmp[2]=&daughter2;
+    return fit ( vertex , tmp ) ;
+  }  
+  // ==========================================================================  
+public: 
   // ==========================================================================  
   /** The vertex fitting method with creation of LHCb::Particle 
    *  ("classical")
@@ -183,19 +246,19 @@ public:
    *  @see GaudiAlgorithm::Warning
    *
    *  @param daughters vector of daughter particles  (input)
-   *  @param particle  result of vertex fit             (output) 
    *  @param vertex    result of vertex fit             (output) 
+   *  @param particle  result of vertex fit             (output) 
    *  @return status code 
    */
   virtual StatusCode fit 
   ( const LHCb::Particle::ConstVector& daughters ,
-    LHCb::Particle&        particle  ,
-    LHCb::Vertex&          vertex    ) const = 0 ;  
+    LHCb::Vertex&                      vertex    ,
+    LHCb::Particle&                    particle  ) const = 0 ;  
   // ==========================================================================  
   /** the vertex fitting method with creation of LHCb::Particle ("classical")
    *  which allow to use almost arbotrary sequence of 
    *  daughter partricles 
-   *  (E.g. follwoing types could be used:
+   *  (E.g. following types could be used:
    *     - LHCb::Particle::ConstVector 
    *     - std::vector<LHCb::Particle*> 
    *     - std::vector<const LHCb::Particle*> 
@@ -217,8 +280,8 @@ public:
    *  LHCb::Particle particle ;
    *  StatusCode sc = fitter->fit( particles->begin()  ,
    *                               particles->end()    ,
-   *                               particle            ,
-   *                               vertex              ) ; 
+   *                               vertex              ,
+   *                               particle            ) ; 
    *  if( sc.isFailure() ) { Warning("Error in vertex fit", sc ) ; }
    *   
    *  @endcode 
@@ -236,13 +299,76 @@ public:
    */
   template <class DAUGHTER>
   inline StatusCode  fit 
-  ( DAUGHTER         begin     ,
-    DAUGHTER         end       ,
-    LHCb::Particle&        particle  ,
-    LHCb::Vertex&          vertex    ) const 
+  ( DAUGHTER               begin     ,
+    DAUGHTER               end       ,
+    LHCb::Vertex&          vertex    ,
+    LHCb::Particle&        particle  ) const 
   {
-    return fit ( LHCb::Particle::ConstVector ( begin , end ) , particle , vertex ) ;
+    return fit ( LHCb::Particle::ConstVector ( begin , end ) , vertex , particle ) ;
   }  
+  // ==========================================================================  
+  /** Creation a Vertex and an output Particle from two Particles
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param particle result of vertex fit      (output) 
+   *  @param vertex result of vertex fit        (output) 
+   *  @return status code 
+   *  @todo test
+   */
+  virtual StatusCode fit
+  ( const LHCb::Particle& daughter0 , 
+    const LHCb::Particle& daughter1 ,
+    LHCb::Vertex&         vertex    ,
+    LHCb::Particle&       particle  ) const
+  {
+    LHCb::Particle::ConstVector tmp(2) ;
+    tmp[0]=&daughter0 ;
+    tmp[1]=&daughter1 ;
+    return fit( tmp , vertex , particle ) ;
+  }  
+  // ==========================================================================  
+  /** Creation a Vertex and an output Particle from three Particles
+   *  
+   *  @author Juan Palacios Juan.Palacios@cern.ch
+   *  @date 09-05-2006
+   *
+   *  @see Particle
+   *  @see Vertex
+   *  @see GaudiAlgorithm::tool
+   *  @see GaudiAlgorithm::Warning
+   *
+   *  @param daughter0 first daughter particle  (input)
+   *  @param daughter1 second daughter particle (input)
+   *  @param daughter2 third daughter particle  (input)
+   *  @param vertex result of vertex fit        (output) 
+   *  @param particle result of vertex fit      (output) 
+   *  @return status code 
+   *  @todo test
+   */  
+  virtual StatusCode fit 
+  ( const LHCb::Particle& daughter0 , 
+    const LHCb::Particle& daughter1 ,
+    const LHCb::Particle& daughter2 ,
+    LHCb::Vertex&         vertex    ,
+    LHCb::Particle&       particle  ) const
+  {
+    LHCb::Particle::ConstVector tmp(3);
+    tmp[0] = &daughter0 ;
+    tmp[1] = &daughter1 ;
+    tmp[2] = &daughter2 ;
+    return fit( tmp, vertex , particle ) ;    
+  }
+  // ==========================================================================  
+public:
   // ==========================================================================  
   /** add the particle to the vertex and refit 
    * 
@@ -295,122 +421,6 @@ public:
   virtual StatusCode remove
   ( const LHCb::Particle*  particle , 
     LHCb::Vertex&          vertex   ) const = 0 ;
-  // ==========================================================================  
-  /** Creation a vertex from two particles without 
-   *  creation of an output  Particle 
-   *  
-   *  @author Juan Palacios Juan.Palacios@cern.ch
-   *  @date 09-05-2006
-   *
-   *  @see Particle
-   *  @see Vertex
-   *  @see GaudiAlgorithm::tool
-   *  @see GaudiAlgorithm::Warning
-   *
-   *  @param daughter0 first daughter particle  (input)
-   *  @param daughter1 second daughter particle (input)
-   *  @param vertex result of vertex fit        (output) 
-   *  @return status code 
-   *  @todo test
-   */
-  virtual StatusCode fit(const LHCb::Particle& daughter0, 
-                         const LHCb::Particle& daughter1,  
-                         LHCb::Vertex&         vertex) const 
-  {
-    LHCb::Particle::ConstVector tmp(2);
-    tmp[0]=&daughter0;
-    tmp[1]=&daughter1;
-    return fit ( tmp , vertex ) ;
-  }
-  // ==========================================================================  
-  /** Creation a vertex from three particles without 
-   *  creation of an output  Particle 
-   *  
-   *  @author Juan Palacios Juan.Palacios@cern.ch
-   *  @date 09-05-2006
-   *
-   *  @see Particle
-   *  @see Vertex
-   *  @see GaudiAlgorithm::tool
-   *  @see GaudiAlgorithm::Warning
-   *
-   *  @param daughter0 first daughter particle  (input)
-   *  @param daughter1 second daughter particle (input)
-   *  @param daughter2 third daughter particle  (input)
-   *  @param vertex result of vertex fit        (output) 
-   *  @return status code 
-   *  @todo test
-   */
-  virtual StatusCode fit(const LHCb::Particle& daughter0, 
-                         const LHCb::Particle& daughter1,
-                         const LHCb::Particle& daughter2,  
-                         LHCb::Vertex&         vertex) const
-  {
-    LHCb::Particle::ConstVector tmp(3);
-    tmp[0]=&daughter0;
-    tmp[1]=&daughter1;
-    tmp[2]=&daughter2;
-    return fit ( tmp , vertex ) ;
-  }  
-  // ==========================================================================  
-  /** Creation a Vertex and an output Particle from two Particles
-   *  
-   *  @author Juan Palacios Juan.Palacios@cern.ch
-   *  @date 09-05-2006
-   *
-   *  @see Particle
-   *  @see Vertex
-   *  @see GaudiAlgorithm::tool
-   *  @see GaudiAlgorithm::Warning
-   *
-   *  @param daughter0 first daughter particle  (input)
-   *  @param daughter1 second daughter particle (input)
-   *  @param particle result of vertex fit      (output) 
-   *  @param vertex result of vertex fit        (output) 
-   *  @return status code 
-   *  @todo test
-   */
-  virtual StatusCode fit(const LHCb::Particle& daughter0, 
-                         const LHCb::Particle& daughter1,
-                         LHCb::Particle&       particle,
-                         LHCb::Vertex&         vertex) const
-  {
-    LHCb::Particle::ConstVector tmp(2);
-    tmp[0]=&daughter0;
-    tmp[1]=&daughter1;
-    return fit( tmp, particle, vertex );
-  }  
-  // ==========================================================================  
-  /** Creation a Vertex and an output Particle from three Particles
-   *  
-   *  @author Juan Palacios Juan.Palacios@cern.ch
-   *  @date 09-05-2006
-   *
-   *  @see Particle
-   *  @see Vertex
-   *  @see GaudiAlgorithm::tool
-   *  @see GaudiAlgorithm::Warning
-   *
-   *  @param daughter0 first daughter particle  (input)
-   *  @param daughter1 second daughter particle (input)
-   *  @param daughter2 third daughter particle  (input)
-   *  @param particle result of vertex fit      (output) 
-   *  @param vertex result of vertex fit        (output) 
-   *  @return status code 
-   *  @todo test
-   */  
-  virtual StatusCode fit(const LHCb::Particle& daughter0, 
-                         const LHCb::Particle& daughter1,
-                         const LHCb::Particle& daughter2,
-                         LHCb::Particle&       particle,
-                         LHCb::Vertex&         vertex) const
-  {
-    LHCb::Particle::ConstVector tmp(3);
-    tmp[0]=&daughter0;
-    tmp[1]=&daughter1;
-    tmp[2]=&daughter2;
-    return fit( tmp, particle, vertex );    
-  }  
   // ==========================================================================  
 protected:
   // ==========================================================================
