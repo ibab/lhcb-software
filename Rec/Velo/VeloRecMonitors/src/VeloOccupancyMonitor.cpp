@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.1 2009-08-05 15:00:44 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.2 2009-08-19 09:04:38 keaveney Exp $
 // Include files 
 // -------------
 
@@ -26,7 +26,7 @@
 // VELO occupancy monitoring algorithm.
 // Produces a set of histograms from the cluster banks in the TES.
 // Can also be configured to produce strip masking conditions XML. 
-//
+// 2009-08-18 : James Michael Keaveney
 // 2009-08-04 : Kurt Rinnert
 //
 //-----------------------------------------------------------------------------
@@ -67,6 +67,8 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
+  m_nstrips = 180224;
+
   // try to find TAE sample name in algo instance name (for histo titles)
   std::string tmpTae = name();
   size_t posPrev = tmpTae.find("Prev");
@@ -92,6 +94,18 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
 
   m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
   m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
+  h_veloOccVsBunchId.resize(2);
+  m_nClusters.resize(2);
+
+  for (unsigned int lr=0;lr<h_veloOccVsBunchId.size();lr++){
+    std::string side="ASide";
+    if(lr) side="CSide";
+    std::string name = "h_veloOccVsBunchId_"+side;
+    std::string title= "Percentage Velo Occupancy vs LHC bunch-ID ("+side+")";
+    h_veloOccVsBunchId[lr] = bookProfile1D(name,title,-0.5,3563.5,3564);
+   
+      }
+
 
   for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
       si != m_veloDet->sensorsEnd();
@@ -198,18 +212,22 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 // Retrieve the VeloClusters
 //=============================================================================
 StatusCode Velo::VeloOccupancyMonitor::veloClusters() {
-
-  if ( m_debugLevel )
+   if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
-
-  if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    debug() << "No VeloClusters container found for this event !" << endmsg;
-    return StatusCode::FAILURE;
+   
+    if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default))
+        debug() << "The ODIN bank is not found"<< endmsg;
+    m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+   
+    if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
+      debug() << "No VeloClusters found for this event !" << endmsg;
+      return StatusCode::FAILURE;
   }
   else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
-    if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
-      << m_clusters->size() <<endmsg;
+  
+     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
+    << m_clusters->size() <<endmsg;
   }
 
   return StatusCode::SUCCESS;
@@ -225,18 +243,25 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
   StatusCode sc = veloClusters();
   if( sc.isFailure() ) return;
 
+  for(int i=0; i<2; i++){
+    m_nClusters[i]=0;
+     }
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
   for ( itVC = m_clusters -> begin(); itVC != m_clusters -> end(); ++itVC ) {
 
     LHCb::VeloCluster* cluster = (*itVC);
-
     unsigned int sensorNumber = cluster -> channelID().sensor();
     const DeVeloSensor* veloSensor = m_veloDet -> sensor( sensorNumber );
     unsigned int stripNumber   = cluster -> channelID().strip();
     unsigned int chipChannel   = veloSensor -> StripToChipChannel( stripNumber ); // 0 -> 2047
 
+    for(unsigned int isRight=0;isRight<2;isRight++){
+      if(isRight != veloSensor->isRight()) continue;
+    m_nClusters[isRight]++;
+    }
+   
     // Produce occupancy plots
     // -----------------------
     TH1D* occHist = 0;
@@ -245,10 +270,15 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     occHistCh = m_channelOccupancyHistPerSensor[sensorNumber];
     double occ = occHist->GetBinContent(stripNumber+1)/100.0+(1.0/m_occupancyDenom);
     occHist->SetBinContent(stripNumber+1,occ*100.0);
-    occHistCh->SetBinContent(chipChannel+1,occ*100.0);
-
-  }
+    occHistCh->SetBinContent(chipChannel+1,occ*100.0); 
+  }//end clusters loop
     
+
+  for(int t=0; t<2; t++){
+    m_percOcc = ((m_nClusters[t])/(m_nstrips));  
+  h_veloOccVsBunchId[t]->fill(m_odin->bunchId(),m_percOcc*100.0);
+ }
+
   // Produce occupancy spectra
   // -------------------------
   m_histOccSpectAll->Reset();

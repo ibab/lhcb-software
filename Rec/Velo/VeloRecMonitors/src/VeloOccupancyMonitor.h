@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.h,v 1.1 2009-08-05 15:00:44 krinnert Exp $
+// $Id: VeloOccupancyMonitor.h,v 1.2 2009-08-19 09:04:38 keaveney Exp $
 #ifndef VELORECMONITORS_VELOOCCUPANCYMONITOR_H 
 #define VELORECMONITORS_VELOOCCUPANCYMONITOR_H 1
 
@@ -7,12 +7,16 @@
 #include "TH1D.h"
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 
 #include "Event/VeloCluster.h"
 
 #include "DetDesc/Condition.h"
 
 #include "VeloMonitorBase.h"
+
+// from LHCb
+#include "Event/ODIN.h"
 
 /** @class VeloOccupancyMonitor VeloOccupancyMonitor.h
  *  
@@ -48,7 +52,8 @@ namespace Velo
 
     // Data members
     std::string m_tae;
-
+    LHCb::ODIN* m_odin;
+    std::vector< int > m_nClusters;
     LHCb::VeloClusters* m_clusters;
     
     TH1D* m_histOccSpectAll;
@@ -56,7 +61,12 @@ namespace Velo
     TH1D* m_histAvrgSensor;
     std::vector< TH1D* > m_stripOccupancyHistPerSensor;
     std::vector< TH1D* > m_channelOccupancyHistPerSensor;
+    std::vector< IProfile1D* > h_veloOccVsBunchId;
+    
+
     unsigned int m_occupancyDenom;
+    double m_nstrips;
+    double m_percOcc; 
    
     std::map<unsigned int, Condition> m_conditions; 
     
