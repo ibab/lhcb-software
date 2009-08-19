@@ -1,4 +1,4 @@
-// $Id: VertexFitter.cpp,v 1.5 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: VertexFitter.cpp,v 1.6 2009-08-19 15:53:43 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -230,8 +230,8 @@ StatusCode LoKi::VertexFitter::_seed ( const LHCb::Vertex* vertex ) const
 // The vertex fitting method without creation of a Particle
 // ============================================================================
 StatusCode LoKi::VertexFitter::fit 
-( const LHCb::Particle::ConstVector& daughters ,
-  LHCb::Vertex&                      vertex    ) const 
+( LHCb::Vertex&                      vertex    ,
+  const LHCb::Particle::ConstVector& daughters ) const 
 {
   // load the data 
   StatusCode sc = _load ( daughters ) ;
@@ -275,8 +275,8 @@ StatusCode LoKi::VertexFitter::fit
 // ============================================================================
 StatusCode LoKi::VertexFitter::fit 
 ( const LHCb::Particle::ConstVector& daughters ,
-  LHCb::Particle&                    particle  ,
-  LHCb::Vertex&                      vertex    ) const 
+  LHCb::Vertex&                      vertex    ,
+  LHCb::Particle&                    particle  ) const 
 {
   using namespace ROOT::Math ;
   //
@@ -285,7 +285,7 @@ StatusCode LoKi::VertexFitter::fit
   { particle.eraseInfo ( LHCb::Particle::Chi2OfVertexConstrainedFit )  ; }
   
   // make a vertex fit 
-  StatusCode sc = fit ( daughters , vertex ) ;
+  StatusCode sc = fit ( vertex , daughters ) ;
   if ( sc.isFailure() ) { return Error ( "fit(): failure form fit", sc ) ; }
   // links:
   particle.clearDaughters() ;
@@ -353,8 +353,9 @@ StatusCode LoKi::VertexFitter::add
     // first need to fit it! 
     const IVertexFit* vFit = this ;
     StatusCode sc = 
-      vFit->fit ( vertex.outgoingParticles().begin () , 
-                  vertex.outgoingParticles().end   () , vertex ) ;
+      vFit->fit ( vertex                              , 
+                  vertex.outgoingParticles().begin () , 
+                  vertex.outgoingParticles().end   () ) ;
     if ( sc.isFailure() ) 
     { return Error ( "add: error from 'fit'", sc ) ; }
   }
@@ -413,8 +414,9 @@ StatusCode LoKi::VertexFitter::remove
     // first need to fit it !
     const IVertexFit* vFit = this ;
     StatusCode sc = 
-      vFit->fit ( vertex.outgoingParticles().begin() , 
-                  vertex.outgoingParticles().end  () , vertex ) ;
+      vFit->fit ( vertex                             , 
+                  vertex.outgoingParticles().begin() , 
+                  vertex.outgoingParticles().end  () ) ;
     if ( sc.isFailure() ) 
     { return Error ( "remove: error from 'fit'", sc ) ;  }           // RETURN 
   }

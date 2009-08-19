@@ -1,9 +1,23 @@
-! $Id: release.notes,v 1.19 2009-08-13 14:44:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.20 2009-08-19 15:53:42 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiFitters
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 ! Purpose     : collection of various kinematical LoKi-based fitters 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-19 - Vanya BELYAEV
+
+ - VertexFitter
+
+    change the signature for modified IVertexFit interface
+
+  
+    1. for all methods, WITHOUT creation of "mother" particle, 
+       the vertex os the first argument ( "fit vertex" ) 
+    2. for all methdos WITH creation of "mother" particle, 
+       the mother particle is the last argument , after vertex 
+    
+
 
 ! 2009-08-13 - Vanya BELYAEV
 

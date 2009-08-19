@@ -1,4 +1,4 @@
-// $Id: VertexFitter.h,v 1.3 2008-03-10 18:24:43 ibelyaev Exp $
+// $Id: VertexFitter.h,v 1.4 2009-08-19 15:53:43 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKIFITTERS_VERTEXFITTER_H 
 #define LOKIFITTERS_VERTEXFITTER_H 1
@@ -226,8 +226,8 @@ namespace LoKi
      *  @return status code 
      */
     virtual StatusCode fit 
-    ( const LHCb::Particle::ConstVector& daughters ,
-      LHCb::Vertex&                      vertex    ) const ;  
+    ( LHCb::Vertex&                      vertex    , 
+      const LHCb::Particle::ConstVector& daughters ) const ;  
     // ========================================================================
   public:
     // ========================================================================
@@ -265,8 +265,8 @@ namespace LoKi
      */
     virtual StatusCode fit 
     ( const LHCb::Particle::ConstVector& daughters ,
-      LHCb::Particle&        particle  ,
-      LHCb::Vertex&          vertex    ) const ;  
+      LHCb::Vertex&          vertex    , 
+      LHCb::Particle&        particle  ) const ;  
     // ========================================================================
   public:
     // ========================================================================
@@ -378,7 +378,7 @@ namespace LoKi
     ( const LHCb::Particle::ConstVector&  daughters ,  
       LHCb::Particle&                     mother    , 
       LHCb::Vertex&                       vertex    ) const 
-    { return fit ( daughters , mother , vertex ) ; } 
+    { return fit ( daughters , vertex , mother ) ; } 
     // ========================================================================
   public:
     // ========================================================================
@@ -416,7 +416,7 @@ namespace LoKi
       const IVertexFit* vFit = this ;
       StatusCode sc = vFit->fit ( vertex->outgoingParticles().begin() , 
                                   vertex->outgoingParticles().end  () , 
-                                  particle , *vertex                  ) ; 
+                                  *vertex , particle                  ) ; 
       if ( sc.isFailure() ) { return Error("reFit(): error from fit()" , sc )  ; }
       //
       // in the case of success update the extra-info:
