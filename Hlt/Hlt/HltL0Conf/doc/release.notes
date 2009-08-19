@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-08-19 - Alessia Satta
+ - fix a bug in MuonSeedTool appeared with sorting of lhcbid in new track 
+   event model
 !========================== HltL0Conf v2r9p1 2009-06-03 ===================
 ! 2009-05-27 - Gerhard Raven
  - remove newlines in L0ConfirmWithT, change info() -> debug()

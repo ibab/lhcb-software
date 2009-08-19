@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.12 2009-04-30 13:34:09 asatta Exp $
+// $Id: MuonSeedTool.cpp,v 1.13 2009-08-19 10:15:56 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -106,19 +106,25 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
 {
   //copy lhcbids from inputTrack to outputTrack
   std::vector<LHCb::LHCbID> lhcbIDs=inputTrack.lhcbIDs();
-  
+  MuonTileID tileM2 ;
+  MuonTileID tileM3 ;
+
   std::vector< LHCb::LHCbID >::const_iterator id;
   for(id = lhcbIDs.begin() ; id < lhcbIDs.end() ; id++ ){
     
     if(id->isMuon()){
       //explicit cast from MuonTileId to LHCb id
       outputTrack.addToLhcbIDs( LHCbID( id->muonID() ) );
+      if( id->muonID().station()==1) tileM2 = id->muonID();
+      if( id->muonID().station()==2) tileM3 = id->muonID();
     }
   }
+  if(!(tileM2.isValid()&&tileM3.isValid())){   
+    err()<<"No hit in M2 and/or M3 station return "<<endmsg;
+    return StatusCode::SUCCESS;
+  }
   
-
-  MuonTileID tileM2 = lhcbIDs[0].muonID();
-  MuonTileID tileM3 = lhcbIDs[1].muonID();
+  
 
   int muonRegion;
   if (tileM2){
