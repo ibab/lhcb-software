@@ -4,12 +4,22 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r7 ===============
+
+! 2009-08-19 - Gareth Rogers
+ - Fixed a bug in the StartCameraServer.sh and StartCameraWebServer.sh where
+   they were not using the Camera_release variable as the $ was missing.
+
+=============== v1r6 ===============
+
 ! 2009-08-13 - Gareth Rogers
  - Added the list of libraries required to compile on Windows after comparison with
    root-config output which runs on linux only.
 
 ! 2009-08-05 - Gareth Rogers
  - Added the missing file TClient which is used on Windows instead of client.h.
+
+=============== v1r5 ===============
 
 ! 2009-06-11 - Gareth Rogers
  - Renamed runCamServ.sh to runCameraServers.sh and stopped calling newCameraLog.sh.
