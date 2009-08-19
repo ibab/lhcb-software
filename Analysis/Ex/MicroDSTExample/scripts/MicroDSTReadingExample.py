@@ -27,7 +27,7 @@ def printHelp():
     print "\t--root          TES root of everything."
     print "                  Default 'Event/microDST'"
     
-locationRoot = '/Event/microDST'
+locationRoot = '/Event/MicroDST'
 selection = 'Bs2Jpsi2MuMuPhi2KK'
 microDSTFile = ['']
 histoFileName = selection+"_mDST_newSel.root"
