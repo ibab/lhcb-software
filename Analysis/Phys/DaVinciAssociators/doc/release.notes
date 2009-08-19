@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.135 2009-08-11 13:57:16 jpalac Exp $
+! $Id: release.notes,v 1.136 2009-08-19 14:53:58 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+! 2009-08-18 - Patrick Koppenburg
+ - Remove _dll 
+ - Give InputData to ChargedPP2MC
 
 !========================== DaVinciAssociators v9r3p4 2009-08-11 ==============
 

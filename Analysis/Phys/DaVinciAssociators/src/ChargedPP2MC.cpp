@@ -1,4 +1,4 @@
-// $Id: ChargedPP2MC.cpp,v 1.14 2009-06-04 13:59:55 pkoppenb Exp $
+// $Id: ChargedPP2MC.cpp,v 1.15 2009-08-19 14:53:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -78,6 +78,7 @@ ChargedPP2MC::ChargedPP2MC( const std::string& name,
 
   m_trackLocations.push_back(TrackLocation::Default);
   declareProperty("TrackLocations", m_trackLocations );
+  declareProperty("InputData", m_inputData );
   
 }
 
