@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.11 2009-07-29 09:39:39 jpalac Exp $
+// $Id: SVertexTool.cpp,v 1.12 2009-08-20 13:30:07 ibelyaev Exp $
 #include "SVertexTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -134,7 +134,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       if( ips/iperrs < 2.0 ) continue;                            //preselection
       if( ips/iperrs > 100.0 ) continue;                          //preselection
       //cut on the z position of the seed
-      sc = fitter->fit( **jp, **kp, vtx );
+      // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( **jp, **kp, vtx );
+      sc = fitter->fit( vtx , **jp, **kp );
       if( sc.isFailure() ) continue;
       if( vtx.chi2() / vtx.nDoF() > 10.0 ) continue;           //preselection
       if((vtx.position().z()/mm - RVz) < 1.0 ) continue;       //preselection
@@ -225,7 +226,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
 
       Pfit.push_back(*jpp);
 
-      sc = fitter->fit( Pfit, VfitTMP ); /////////FIT///////////
+      // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT///////////
+      sc = fitter->fit( VfitTMP , Pfit ); /////////FIT///////////
       if( !sc ) { Pfit.pop_back(); continue; }
     
       if( VfitTMP.chi2() / VfitTMP.nDoF()  > 5.0 ) 
@@ -245,7 +247,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        sc = fitter->fit( tmplist, vtx ); 
+        // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( tmplist, vtx ); 
+        sc = fitter->fit( vtx , tmplist ); 
         if( !sc ) continue;
 
         sc = geom->calcImpactPar(**kpp, vtx, ip, ipe);
@@ -268,7 +271,8 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         }
       }
     }
-    sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
+    // replaced by V.B., 20 aug 2k+9: sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
+    sc = fitter->fit( Vfit , Pfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }
   debug() << "================ Fit Results: " << Pfit.size() <<endreq;

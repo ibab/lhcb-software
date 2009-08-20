@@ -282,7 +282,8 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
       // if (msgLevel(MSG::DEBUG)) debug() << "Adding trk pid"  << (*iparts)->particleID().pid() << " to vtx" << endmsg;
       
       // Fit
-      sc = m_pVertexFit->fit(parts2Vertex,vtxWithExtraTrack);
+      sc = m_pVertexFit->fit (vtxWithExtraTrack,parts2Vertex);
+      // replaced by V.B. 20.Aug.2k+9: (parts2Vertex,vtxWithExtraTrack);
       // Remove the added track from parts2Vertex
 
       parts2Vertex.pop_back();

@@ -1,4 +1,4 @@
-// $Id: SVertexNNTool.cpp,v 1.5 2009-07-29 09:39:39 jpalac Exp $
+// $Id: SVertexNNTool.cpp,v 1.6 2009-08-20 13:30:07 ibelyaev Exp $
 #include "SVertexNNTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -104,8 +104,9 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
         lcs = track->chi2()/((track->measurements()).size()-5);
       if( lcs > 2.0 ) continue;                                //preselection
       if( track->type() == Track::Long ) continue;             //preselection
-
-      sc = fitter->fit( **jp, **kp, vtx );
+      
+      // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( **jp, **kp, vtx );
+      sc = fitter->fit( vtx , **jp, **kp );
       if( sc.isFailure() ) continue;
       if((vtx.position().z()/mm - RVz) < -10.0 ) continue;    //preselection
 
@@ -171,7 +172,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       double probb=(1-probi1)*(1-probp1);
       if( probs/(probs+probb) < 0.2 ) continue;                          //cut
 
-      sc = fitter->fit( Pfit, VfitTMP ); /////////FIT before
+      // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT before
+      sc = fitter->fit( VfitTMP , Pfit ); /////////FIT before
       if( !sc ) continue; 
       sc = geom->calcImpactPar(**jpp, VfitTMP, ip, ipe, ipVec, errMatrix);
       if( !sc ) continue; 
@@ -180,7 +182,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       //Add track to the fit
       Pfit.push_back(*jpp);
 
-      sc = fitter->fit( Pfit, VfitTMP ); /////////FIT after
+      // replaced by V.B. 20 aug 2k+9: sc = fitter->fit( Pfit, VfitTMP ); /////////FIT after
+      sc = fitter->fit( VfitTMP , Pfit ); /////////FIT after
       if( !sc ) { Pfit.pop_back(); continue; }
     
       if( VfitTMP.chi2() / VfitTMP.nDoF() > 5.0 ) 
@@ -206,7 +209,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
         Particle::ConstVector tmplist = Pfit;
         tmplist.erase( tmplist.begin() + ikpp );
 
-        sc = fitter->fit( tmplist, vtx ); 
+        // replaced by V.B. 20 aug 2k+9: sc = fitter->fit( tmplist, vtx ); 
+        sc = fitter->fit( vtx , tmplist ); 
         if( !sc ) continue;
 
         sc = geom->calcImpactPar(**kpp, vtx, ip, ipe, ipVec, errMatrix);
@@ -221,7 +225,8 @@ std::vector<Vertex> SVertexNNTool::buildVertex( const RecVertex& RecVert,
       if( worse_exist && ipmax > 3.0) Pfit.erase( kpp_worse );
     }
 
-    sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
+    // replaced by V.B. 20 Aug 2k+9: sc = fitter->fit( Pfit, Vfit ); //RE-FIT////////////////////
+    sc = fitter->fit( Vfit , Pfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }
   debug() << "================ Fit Results: " << Pfit.size() <<endreq;
