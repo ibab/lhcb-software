@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.35 2009-08-20 07:51:39 jpalac Exp $
+!$Id: release.notes,v 1.36 2009-08-20 08:22:09 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -7,6 +7,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-08-10 - Juan PALACIOS
+ - MicroDST/RelationsClonerAlg.h
+  . Allow not cloning the Tos. Cloner table will point to the original Tos.
  - MicroDST/MicroDSTCommon{.h, .icpp}
   . Method copyAndStoreObject protected against object already existing in the
     TES. Do not copy, return the existing object.
