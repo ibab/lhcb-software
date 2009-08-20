@@ -1,4 +1,4 @@
-// $Id: Dstar2D0Pi.cpp,v 1.4 2009-05-03 14:49:33 jonrob Exp $
+// $Id: Dstar2D0Pi.cpp,v 1.5 2009-08-20 13:31:46 ibelyaev Exp $
 // Include files
 
 // from Gaudi
@@ -178,8 +178,10 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
           StatusCode SCD0PionVertex_NoPid=
             vertexFitter()->fit(*(*i1),
                                 *(*i2),
-                                candDstar,
-                                D0PionVertex_NoPid);
+                                // swapped by V.B. 20.Aug 2k+9 candDstar         ,
+                                //                             D0PionVertex_NoPid 
+                                D0PionVertex_NoPid ,
+                                candDstar  );
 
           if (!SCD0PionVertex_NoPid) {
             Warning("Fit error",StatusCode::SUCCESS,1).ignore();

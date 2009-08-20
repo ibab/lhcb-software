@@ -1,4 +1,4 @@
-// $Id: D02KPiNoPID.cpp,v 1.3 2009-05-03 14:49:33 jonrob Exp $
+// $Id: D02KPiNoPID.cpp,v 1.4 2009-08-20 13:31:46 ibelyaev Exp $
 // Include files
 
 // from Gaudi
@@ -211,8 +211,11 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
           StatusCode SCPionKaonVertex_NoPid=
             vertexFitter()->fit(*(*i1),
                                 *(*i2),
-                                candD0,
-                                PionKaonVertex_NoPid);
+                                // swapped by V.B., 20 aug 2k+9:  candD0,
+                                //                                PionKaonVertex_NoPid);
+                                PionKaonVertex_NoPid , 
+                                candD0 ) ;
+          
 
           if (!SCPionKaonVertex_NoPid) {
             Warning("Fit error",StatusCode::SUCCESS,1).ignore();

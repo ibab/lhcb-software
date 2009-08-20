@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.6 2009-05-11 13:26:03 jpalac Exp $
+!$Id: release.notes,v 1.7 2009-08-20 13:31:46 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/DstCalibSel
 ! Responsible : Andrew Powell
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
+
+! 2009-08-20 - Vanya BELYAEV
+
+ - src/D02KPiNoPID.cpp
+   src/Dstar2D0Pi.cpp
+ 
+     fix fo rnew signature of IVertexFit interface  
 
 !========================== DstCalibSel v1r1 2009-05-11 ======================
 
