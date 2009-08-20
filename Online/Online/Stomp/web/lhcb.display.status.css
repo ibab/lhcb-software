@@ -1,9 +1,9 @@
-<style type="text/css">
+/* <style type="text/css"> */
 
-<!-- The 3 main widgets of the RunStatus display: envelope, status and logger window -->
+/* The 3 main widgets of the RunStatus display: envelope, status and logger window */
 
 .RunStatus  {
-    width:            760px;
+    width:            820px;
     background-color: #CCCCCC;
     color:            #000000;
     border:           solid;
@@ -17,7 +17,7 @@
 
 .RunStatusPanel  {
     background-color: #CCCCCC;
-    width:            750px;
+    width:            810px;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
@@ -28,17 +28,20 @@
     background-color: #EEEEEE;
     overflow-x:       scroll;
     overflow-y:       scroll;
-    width:            742px;
+    width:            802px;
     height:           250px;
     border:           solid;
     border-width:     1px;
     text-align:       left;
 }
 
-<!-- The 3 main widgets of the FSM display: envelope, status and logger window -->
+/* The 3 main widgets of the FSM display: envelope, status and logger window */
 .FSMFrame   {
     background-color: #CCCCCC;
+    width:            2000px;
+    height:           1200px;
 }
+
 .FSMStatus  {
     width:            550px;
     background-color: #CCCCCC;
@@ -48,7 +51,7 @@
     border-color:     #000000;
     text-align:       center;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
+    font-size:        12px;
     font-weight:      bold;
 }
 
@@ -59,7 +62,6 @@
     border-width:     1px;
     border-color:     #000000;
     width:            550px;
-    height:           300px;
 }
 
 .FSMStatusLogger   {
@@ -73,178 +75,247 @@
     text-align:       left;
 }
 
-<!-- The stuff inside the FSM tables: labels, states and locks -->
+/* The stuff inside the FSM tables: labels, states and locks 
+     FSM status from above
+
++---------- FSMTable ----------+
+| FSMLabel         FSMStatus   |
+| FSMLabel         FSMStatus   |
+| ....             ....        |
++------------------------------+
+
+and
+
+StatusText:
++------------- FSMTable --------------+
+| FSMLabel     FSMLabel    ....       |
+| FSMStatus    FSMStatus   ....       |
++-------------------------------------+
+
+
+*/
 .FSMTable	{
     color:            #000000;
     background-color: #CCCCCC;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
-    border-spacing:   10px;
+    border-spacing:   2px;
     text-align:       center;
     width:            100%;
     height:           0%;
 }
 
 .FSMLabel	{
-    color:           #000000;
-    background-color:#BBBBBB;
-    font-family:     Arial, Helvetica, sans-serif;
-    font-size:       16px;
-    font-weight:     bold;
-    line-height:     20px;
-    text-decoration: none;
-    border:          solid;
-    border-width:    1px;
-    text-align:      left;
-    width:           135px;
+    color:            #000000;
+    background-color: #BBBBBB;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    line-height:      12px;
+    text-decoration:  none;
+    text-align:       left;
+    border:           solid;
+    border-width:     0px;
+    width:            135px;
 }
 
-<!-- Other helpers  -->
+.FSMLabelHorizontal	{
+    color:            #000000;
+    background-color: #BBBBBB;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    line-height:      12px;
+    text-decoration:  none;
+    text-align:       left;
+    border:           solid;
+    border-width:     0px;
+    width:            135px;
+}
+
+.FSMSpacer	{
+    font-size:        8px;
+    font-weight:      bold;
+    line-height:      8px;
+    text-decoration:  none;
+    border:           none;
+}
+
+/* Other helpers  */
+.StatusPlain	{
+    color: #000000;
+    background-color: #CCCCCC;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+    line-height:      20px;
+    text-decoration:  none;
+    text-align:       left;
+    border:           none;
+    border-width:     0px;
+}
 .StatusText	{
     color: #000000;
-    background-color:#CCCCCC;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 20px;
-    font-weight: bold;
-    line-height: 24px;
-    text-decoration: none;
-    border: none;
-    border-width:0px;
+    background-color: #CCCCCC;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+    line-height:      20px;
+    text-decoration:  underline;
+    text-align:       left;
+    border:           none;
+    border-width:     0px;
 }
 
-<!-- Property table layout  -->
+.DisplayButton	{
+    color:            #000000;
+    background-color: #EEEEEE;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       center;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    height:           24px;
+}
+
+
+/* Property table layout  */
 .PropertyTable	{
-    color:             #000000;
-    background-color:  #CCCCCC;
-    border:            solid;
-    border-width:      1px;
-    border-color:      #000000;
+    color:            #000000;
+    background-color: #CCCCCC;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
 }
 
 .PropertyTableItem  {
-    color:             #000000;
-    background-color:  #DDDDDD;
-    font-family:       Arial, Helvetica, sans-serif;
-    font-size:         14px;
-    font-weight:       bold;
-    line-height:       16px;
-    height:            16px;
-    border:            none;
-    border-width:      0px;
-    text-decoration:   none
+    color:            #000000;
+    background-color: #DDDDDD;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    line-height:      16px;
+    height:           16px;
+    border:           none;
+    border-width:     0px;
+    text-decoration:  none
 }
 
 .PropertyTableValue	{
-    color: #000000;
-    background-color:#FFFFFF;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 14px;
-    line-height: 16px;
-    height: 16px;
-    border: none;
-    border-width:      0px;
-    text-decoration: none
+    color:            #000000;
+    background-color: #FFFFFF;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    line-height:      16px;
+    height:           16px;
+    border:           none;
+    border-width:     0px;
+    text-decoration:  none
 }
 
 .PropertyTableSpacer	{
-    color: #000000;
-    background-color:#DDDDDD;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 8px;
-    line-height: 8px;
-    height: 8px;
-    border: none;
-    border-width:      0px;
-    text-decoration: none
+    color:            #000000;
+    background-color: #DDDDDD;
+    line-height:      4px;
+    border:           none;
+    border-width:     0px;
 }
 
-<!--   FSM states a la JCOP -->
+/*   FSM states a la JCOP */
 
 .FwDEAD   {
     color: #000000;
     background-color:#CCCCCC;
     font-family:  Arial, Helvetica, sans-serif;
-    font-size:    16px;
+    font-size:    12px;
     font-weight:  bold;
-    line-height:  18px;
+    line-height:  16px;
     border:       dotted;
     border-width: 1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 
 .FwStateAttention1
 {
     color: #000000;
-    background-color:#FFFFCC;
+    background-color:#F1F166;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
+    line-height: 16px;
     border: dotted;
     border-width:1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 .FwStateAttention2
 {
-    color: #FFFFFF;
+    color: #000000;
     background-color:#FF9900;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
+    line-height: 16px;
     border: dotted;
     border-width:1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 .FwStateAttention3
 {
     color: #000000;
     background-color:#FF0000;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
+    line-height: 16px;
     border: dotted;
     border-width:1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 .FwStateOKNotPhysics
 {
     color: #000000;
     background-color:#0099FF;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
+    line-height: 16px;
     border: dotted;
     border-width:1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 .FwStateOKPhysics
 {
     color: #000000;
     background-color:#00CC99;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
+    line-height: 16px;
     border: dotted;
     border-width:1px;
-    text-decoration: none
+    text-decoration: none;
+    width:        135px;
 }
 .FwLock
 {
     color: #000000;
     background-color:#DDDDDD;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 16px;
+    font-size: 12px;
     font-weight: bold;
-    line-height: 18px;
-    width: 18px;
+    line-height: 12px;
+    width: 12px;
     border: dotted;
     border-width:1px;
     text-decoration: none
 }
 
-</STYLE>
+/* </STYLE>  */

@@ -4,75 +4,85 @@ _loadScript('dom.print.cpp');
 _loadFile('lhcb.display.status','css');
 
 
-FSMTable = function(parent,partition) {
-  this.parent = parent;
-  this.system = partition;
-  this.provider = null;
-  this.listener = null;
-  this.logger = null;
+FSMTable = function(parent,partition,msg,state) {
+  table.element  = document.createElement('table');
+  table.body   = document.createElement('tbody');
+
+  table._system = partition;
+  table._messages = msg;
+  table._state = state;
+  table.provider = null;
+  table.listener = null;
+  table.logger = null;
   
-  this.add = function(object) {
+  /**
+   */
+  table.add = function(object) {
     tr = document.createElement('tr');
     td = document.createElement('td');
     td.appendChild(object);
     td.colSpan = 3;
     tr.appendChild(td);
-    this._body.appendChild(tr);
+    this.body.appendChild(tr);
   }
-
-  this.close_display = function() {
-    var self = this.invoker;
-    //alert('close_display: '+self.listener+' self.system:'+self.system);
+  /**
+   */
+  table.close_display = function() {
+    var self = this.handler;
+    self.logger.debug('close_display: '+self.listener+' self.system:'+self._system);
     if ( self.listener )  {
-      self.listener.close_child(self.system);
+      self.listener.close_child(self._system);
     }
   }
+  /**
+   */
+  table.createDisplay = function()   {
+    if ( null != this.listener ) this.listener.close2();
+    this.listener = new FSMListener(this.logger,this.provider,this.display,this._messages);
+    this.listener.trace = false;
+    this.listener.start(this._system,'lbWeb.'+this._system+'.FSM.children');
+  }
 
-  this.element  = document.createElement('table');
-  this.element.className = 'FSMStatus';
-  this._body   = document.createElement('tbody');
+  table.className = 'FSMStatus';
+  table.body.className = 'FSMStatus';
 
-  this.close = document.createElement('button');
-  this.close.value = 'Close Display';
-  this.close.onclick = this.close_display;
-  this.close.invoker = this;
-
-  this.update = document.createElement('button');
-  this.update.value = 'Update Display';
-  this.update.onclick = function() { _dataProvider.update();  }
-
-  this.display = document.createElement('div');
-  this.logDisplay = document.createElement('div');
+  table.display = document.createElement('div');
+  table.logDisplay = document.createElement('div');
 
   var tr = document.createElement('tr');
   var td = document.createElement('td');
-  td.innerHTML = 'FSM display of '+this.system;
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.appendChild(this.update);
-  tr.appendChild(td);
-
-  td = document.createElement('td');
-  td.appendChild(this.close);
-  tr.appendChild(td);
-
-  this._body.appendChild(tr);
-
-  this.add(this.display);
-  this.add(this.logDisplay);
-
-  this.element.appendChild(this._body);
-  this.parent.appendChild(this.element);
-
-  this.createDisplay = function()   {
-    if ( null != this.listener ) this.listener.close2();
-    this.listener = new FSMListener(this.logger,this.provider,this.display);
-    this.listener.start(this.system,'lbWeb.'+this.system+'.FSM.children');
+  td.innerHTML = table._system;
+  if ( table._state )  {
+    td.innerHTML = td.innerHTML+' is '+table._state;
+    td.innerHTML = td.innerHTML+' <IMG SRC="'+_fileBase+'/Icons/Modes/'+table._state+'.bmp">';
   }
-  return this;
-}
+  td.className = 'StatusPlain';
+  tr.appendChild(td);
 
+  table.update = document.createElement('td');
+  table.update.cellPadding = 0;
+  table.update.className   = 'DisplayButton';
+  table.update.innerHTML   = 'Update';
+  table.update.onclick     = function()   { _dataProvider.update(); }
+  table.update.handler     = this;
+  tr.appendChild(table.update);
+
+  table.close = document.createElement('td');
+  table.close.className    = 'DisplayButton';
+  table.close.innerHTML    = 'Close';
+  table.close.cellPadding  = 0;
+  table.close.onclick      = table.close_display;
+  table.close.handler      = this;
+  tr.appendChild(table.close);
+
+  table.body.appendChild(tr);
+
+  table.add(table.display);
+  table.add(table.logDisplay);
+
+  table.appendChild(table.body);
+  return table;
+}
 
 fsm_unload = function()  {
   dataProviderReset();
@@ -80,17 +90,25 @@ fsm_unload = function()  {
 }
 
 fsm_body2 = function(body)  {
-  document.bgcolor = '#CCCCCC';
-  var selector = new FSMTable(body,the_displayObject['system']);
-  selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO,'FSMStatusLogger');
+  var sys = the_displayObject['system'];
+  var msg = the_displayObject['messages'];
+  var state = the_displayObject['state'];
+  var selector = FSMTable(sys,msg,state);
+  body.appendChild(selector);
+  if ( msg == null ) {
+    selector.logger = new OutputLogger(selector.logDisplay,  -1, LOG_INFO,'FSMStatusLogger');
+  }
+  else {
+    selector.logger = new OutputLogger(selector.logDisplay, 200, LOG_INFO,'FSMStatusLogger');
+  }
   selector.provider = new DataProvider(selector.logger);
   selector.createDisplay();
   selector.provider.start();
 }
 
 fsm_body = function()  {
-  fsm_body2(document.getElementsByTagName('body')[0]);
+  var body = document.getElementsByTagName('body')[0];
+  fsm_body2(body);
 }
-
 
 if ( _debugLoading ) alert('Script lhcb.display.fsm.cpp loaded successfully');

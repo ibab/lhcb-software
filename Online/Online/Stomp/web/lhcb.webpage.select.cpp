@@ -7,6 +7,7 @@ var _loadStatic = function(name)
 {  document.write('<SCRIPT language="JavaScript" src="'+name+'"></SCRIPT>');   }
 
 var TCPSocket = Orbited.TCPSocket; 
+
 _loadStatic('/static/protocols/stomp/stomp.js');
 _loadScript('lhcb.display.data.cpp');
 
@@ -34,13 +35,9 @@ var display_type = function()   {
   this.body = null;
   var url = document.location.toString();
   var pars = url.split('?');
-  this.header = function() {
-    var msg = 'The URL\n'+url+'\nis not a valid display URL!\n';
-    alert(msg);
-  }
+  this.header = function() {  }
   this.body = function()   {  }
-  this.unload = function() { alert('Bye, Bye my friend....'); }
-
+  this.unload = function() {  }
   if ( pars.length > 1 )  {
     var disp_func = '';
     var p = pars[1].split('&');
@@ -50,25 +47,13 @@ var display_type = function()   {
       this[v[0]] = v[1];
     }
     this.url_base = pars[0];
-    if ( this.type != null ) {
-      eval("this.header = function()     { _loadScript('lhcb.display."+this.type+".cpp'); }");
-      eval("this.body   = function()     { "+this.type+"_body(); }");
-      eval("this.unload = function()     { "+this.type+"_unload(); }");
-    }
   }
-
-  this.dump = function() {
-    var text = '';
-    for( p in this) {
-      text += p.toString() + '=' + this[p] +'\n';
-    }
-    alert(text);
-  }
-
 }
 
 var the_displayObject = new display_type();
 the_displayObject.header();
 
+var connectOnlineData = function()      { lhcb.setup(false).data.stomp.scanDocument();  }
+var disconnectOnlineData = function()   { dataProviderReset();                          }
 
 if ( _debugLoading ) alert('Script lhcb.display.select.cpp loaded successfully');

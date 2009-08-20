@@ -1,3 +1,5 @@
+_loadScript('lhcb.tools.cpp');
+
 var _dataProvider   = null;
 var _dataLogger     = null;
 
@@ -13,7 +15,7 @@ var LOG_VERBOSE     = 4;
  *  @author  M.frank
  *  @version 1.0
  */
-OutputLogger = function(parent, len, level, style)  {
+var OutputLogger = function(parent, len, level, style)  {
   this.className    = style;
   this.lines        = new Array();
   this.parent       = parent;
@@ -39,14 +41,13 @@ OutputLogger = function(parent, len, level, style)  {
   this.messages.appendChild(this.output_td);
   this.body.appendChild(this.messages);
 
-  row = document.createElement('tr');
+  var row = document.createElement('tr');
   row.appendChild(this.b_hide);
   row.appendChild(this.b_show);
   row.appendChild(this.b_clear);
 
   this.body.appendChild(row);
   this.table.appendChild(this.body);
-  //this.table.className = this.className;
   this.parent.appendChild(this.table);
 
 
@@ -64,7 +65,7 @@ OutputLogger = function(parent, len, level, style)  {
   }
 
   this.print = function(level, msg) {
-    if ( level <= this.level ) {
+    if ( level <= this.level && this.length>0 ) {
      if ( this.lines.length < this.length ) {
 	this.lines.length = this.lines.length+1;
       }
@@ -93,14 +94,19 @@ OutputLogger = function(parent, len, level, style)  {
   this.hide = function() {
     this.b_hide.innerHTML = '';
     this.b_clear.innerHTML = '';
-    this.b_show.innerHTML = '<BUTTON id="_dataLogger_show_button" onclick="_dataLogger.show()">Show Messages</BUTTON>';
+    if ( this.length > 0 ) {
+      this.b_show.innerHTML = '<BUTTON class="DisplayButton" onclick="_dataLogger.show()">Show Messages</BUTTON>';
+    }
+    else {
+      this.b_show.innerHTML = '';
+    }
     this.output_td.removeChild(this.output);
   }
   
   this.show = function() {
     this.b_show.innerHTML = '';
-    this.b_clear.innerHTML = '<BUTTON onclick="_dataLogger.clear()">Clear</BUTTON>';
-    this.b_hide.innerHTML  = '<BUTTON id="_dataLogger_hide_button" onclick="_dataLogger.hide()">Hide Messages</BUTTON>';
+    this.b_clear.innerHTML = '<BUTTON class="DisplayButton" onclick="_dataLogger.clear()">Clear</BUTTON>';
+    this.b_hide.innerHTML  = '<BUTTON class="DisplayButton" onclick="_dataLogger.hide()">Hide Messages</BUTTON>';
     this.output_td.appendChild(this.output);
     this.showMessages();
   }
@@ -134,8 +140,8 @@ OutputLogger = function(parent, len, level, style)  {
     return s
   }
   
-  var htmlescape = function(s) {
-    var s = s.replace("&", "&amp;", "g")
+  var htmlescape = function(expr) {
+    var s = expr.replace("&", "&amp;", "g")
     s = s.replace("<", "&lt;", "g")
     s = s.replace(">", "&gt;", "g")
     s = s.replace(" ", "&nbsp;", "g")
@@ -164,7 +170,7 @@ OutputLogger = function(parent, len, level, style)  {
 }
 
 
-dataLoggerTest = function(id) {
+var dataLoggerTest = function(id) {
   var logger  = new OutputLogger(document.getElementById(id),10,LOG_DEBUG);
   logger.print(LOG_DEBUG,   'LOG_DEBUG: hello 1');
   logger.print(LOG_INFO,    'LOG_INFO: hello 1');
@@ -182,7 +188,7 @@ dataLoggerTest = function(id) {
  *  @author  M.frank
  *  @version 1.0
  */
-DataItem = function(provider, name)   {
+var DataItem = function(provider, name)   {
   this._name  = name;
   this._elem = null;
   provider.subscribe(this._name,this);
@@ -204,13 +210,46 @@ DataItem = function(provider, name)   {
   }
 }
 
+/** @class ElementItem
+ *
+ * Simple scripting class to place streaming data items into an html file.
+ *
+ *  @author  M.frank
+ *  @version 1.0
+ */
+var ElementItem = function(provider, name, fmt, element)   {
+  e = element;
+  e._name  = name;
+  e._format = fmt;
+  provider.subscribe(e._name,e);
+  
+  /// Default callback for dataprovider on feeeding data
+  e.set = function(data) {
+    if ( this._format != null ) {
+      if ( data[0] == 21 )        // Integer
+	item_data = sprintf(this._format,parseInt(data[1]));
+      else if ( data[0] == 22 )   // Float
+	item_data = sprintf(this._format,parseFloat(data[1]));
+      else if ( data[0] == 25 )   // String
+	item_data = sprintf(this._format,parseFloat(data[1]));
+      else
+	item_data = data[1];
+    }
+    else {
+      item_data = data[1];
+    }
+    this._element.innerHTML = item_data;
+  }
+  return e;
+}
+
 /** @class DataProvider
  *
  *
  *  @author  M.frank
  *  @version 1.0
  */
-DataProvider = function(logger)  {
+var DataProvider = function(logger)  {
   this.calls = new Array();
   this.items = new Object();
   this.calls.length = 0;
@@ -219,9 +258,8 @@ DataProvider = function(logger)  {
   _dataProvider = this;
 
   // set up stomp client.
-  stomp = new STOMPClient();
+  var stomp = new STOMPClient();
   this.service = stomp;
-
 
   stomp.onopen = function() {
     _dataProvider.logger.info("Transport opened");
@@ -282,8 +320,11 @@ DataProvider = function(logger)  {
    *  @return  Reference to self
    */
   this.reset = function()  {
-    this.service.disconnect();
-    this.service.reset();
+    if ( this.isConnected ) {
+      this.service.disconnect();
+      this.service.reset();
+      this.isConnected = false;
+    }
     return this;
   }
   
@@ -318,33 +359,49 @@ DataProvider = function(logger)  {
    *  @return  Reference to self
    */
   this.unsubscribe = function(item)  {
-    for(var i=0; i<this.calls.length;++i) {
-      if ( this.calls[i] == item ) {
-	this.service.unsubscribe(item,{exchange:''});
-	delete this.calls[i];
-	this.calls.length = this.calls.length-1;
-	return this;
+    if ( this.isConnected ) {
+      for(var i=0; i<this.calls.length;++i) {
+	if ( this.calls[i] == item ) {
+	  this.service.unsubscribe(item,{exchange:''});
+	  delete this.calls[i];
+	  this.calls.length = this.calls.length-1;
+	  return this;
+	}
       }
+    }
+    else {
+      this.unsubscribeAll();
     }
     return null;
   }
-  /// Disconnect from all item topics
+  /** Disconnect from all item topics
+   *
+   *  @return  Reference to self
+   */
   this.unsubscribeAll = function()  {
     this.logger.info("Disconnect all pending data services ..");
-    for(var i=0; i<this.calls.length;++i)
-      this.service.unsubscribe(item,{exchange:''});
+    if ( this.isConnected ) {
+      for(var i=0; i<this.calls.length;++i) {
+	var item = this.calls[i];
+	this.service.unsubscribe(item,{exchange:''});
+      }
+    }
     this.calls = new Array();
     this.calls.length = 0;
     this.items = new Object();
     return this;
   }
-  /// Update all data items by requesting a "SUBSCRIBE:<item> call to the server
+  /** Update all data items by requesting a "SUBSCRIBE:<item> call to the server
+   *
+   *  @return  Reference to self
+   */
   this.update = function() {
     for (var i=0; i < this.calls.length; ++i)  {
       var msg = 'SUBSCRIBE:'+this.calls[i];
       this.service.send(msg,'/topic/home',{exchange:''});
       this.logger.verbose('DataProvider: Connect data item:'+msg);
     }
+    return this;
   }
 
   /// Connect to item topics and force first update
@@ -366,10 +423,39 @@ DataProvider = function(logger)  {
   return this;
 }
 
-dataProviderReset = function() {
+var dataProviderReset = function() {
   if ( null != _dataProvider ) {
     _dataProvider.reset();
   }
+}
+
+var lhcb = new Object();
+lhcb.setup = function(show_log) {
+  var body = document.getElementsByTagName('body')[0];
+  lhcb.data = new Object();
+  lhcb.logWindow = document.createElement('div');
+  lhcb.logWindow.id = 'LHCb_LogWindow_std';
+  body.appendChild(lhcb.logWindow);
+  body.onunload = function() { dataProviderReset(); }
+
+  lhcb.data.logger   = new OutputLogger(lhcb.logWindow, -1, LOG_INFO, 'RunStatusLogger');
+  lhcb.data.provider = new DataProvider(lhcb.data.logger);
+  lhcb.data.stomp    = new Object();
+  lhcb.data.stomp.scanDocument = function() {
+    var elts = document.getElementsByTagName('STOMP');
+    var items = new Array();
+    var provider = lhcb.data.provider;
+    items.length = elts.length;
+    for (var i=0; i<elts.length;++i) {
+      var e = elts[i];
+      var item = e.getAttribute('data');
+      var fmt  = e.getAttribute('format');
+      items[i] = ElementItem(provider,item,fmt,e.parentNode);
+    }
+    lhcb.data.items = items;
+    provider.start();
+  }
+  return lhcb;
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.data.cpp loaded successfully');

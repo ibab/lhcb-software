@@ -2,13 +2,56 @@
 var _DisplayDebug = 0;
 
 function detector_run_header(part)  
-{ return '<DIV class="StatusText">'+lhcb_online_picture()+' '+part+' Run Status</DIV>';  }
+{ return '<DIV class="StatusText">'+part+' Run Status</DIV>';  }
+//{ return '<DIV class="StatusText">'+lhcb_online_picture()+' '+part+' Run Status</DIV>';  }
 
 function detector_header(part)  
 { return '<DIV class="StatusText">'+lhcb_online_picture()+' '+part+' FSM Status</DIV>';  }
 
 function lhcb_online_picture() 
 { return '<IMG SRC="http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.PNG" HEIGHT="50"></IMG>';   }
+
+var Spacer = function() {
+  var td = document.createElement('td');
+  td.innerHTML = '&nbsp;';
+  td.className = 'FSMSpacer';
+  return td;
+}
+
+/** Add single text cell to the display
+ *
+ *  @param text      Data content
+ *  @param nspan     Spanning for multi column cells
+ *  @param className Class name for cell item
+ *
+ *  @return Reference to the created cell.
+ */
+var Cell = function(text,nspan,className) {
+  var c = document.createElement('td');
+  //var t = document.createTextNode(text);
+  if ( nspan       != null ) c.colSpan = nspan;
+  if ( className   != null ) c.className = className;
+  c.innerHTML = text;
+  //c.appendChild(t);
+  return c;
+}
+
+var StatusText = function(text,ncols) {
+  var td = document.createElement('td');
+  td.colSpan = ncols;
+  td.innerHTML = '<div class="StatusText">'+text+'</div>';
+  return td;
+}
+
+var StatusRow = function(text,ncols,body) {
+  if ( text ) {
+    var tr = document.createElement('tr');
+    tr.appendChild(StatusText(text,ncols));
+    body.appendChild(tr);
+    return tr;
+  }
+  return null;
+}
 
 /** @class DisplayItem
  *  
@@ -18,8 +61,8 @@ function lhcb_online_picture()
  *  @author  M.Frank
  *  @version 1.0
  */
-DisplayItem = function(item_name)  {
-  this.name = item_name;
+var DisplayItem = function(item_name)    {
+  this.name    = item_name;
   this.element = null;
 
   /** Standard callback for data provider for updates
@@ -30,6 +73,7 @@ DisplayItem = function(item_name)  {
   this.set = function(data)  {
     if ( _DisplayDebug > 2 ) alert('DisplayItem.set('+this.name+'): '+data);
     var v = data.split('#',3);
+    return this.display(v);
     if ( v[0]==1 ) return this.display(v[1]);       // integer
     else if ( v[0]==2 ) return this.display(v[1]);  // float
     else if ( v[0]==3 ) return this.display(v[1]);  // simple text
@@ -54,17 +98,19 @@ DisplayItem = function(item_name)  {
  *  @author  M.Frank
  *  @version 1.0
  */
-StyledItem = function(item_name, class_name)  {
-  this.className = class_name;
-  this.inheritsFrom = DisplayItem;
-  this.inheritsFrom(item_name);
+var StyledItem = function(item_name, class_name, fmt)  {
+  element = document.createElement('td');
+  element.name   = item_name;
+  element.format = fmt;
+
+  element.className = class_name;
 
   /** Standard callback for data provider for updates
    *  @param data   Data value as string
    *
    *  @return On success reference to self, null otherwise
    */
-  this.set = function(data)   {
+  element.set = function(data)   {
     return this.display(data);
   }
 
@@ -74,14 +120,28 @@ StyledItem = function(item_name, class_name)  {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.display = function(data)  {
-    var item_data = data[1];
-    this.element.innerHTML = item_data;
-    this.element.setAttribute('className',this.className);
+  element.display = function(data)  {
+    var fmt = this.format;
+    var item_data;
+    if ( fmt != null ) {
+      if ( data[0] == 21 )        // Integer
+	item_data = sprintf(fmt,parseInt(data[1]));
+      else if ( data[0] == 22 )   // Float
+	item_data = sprintf(fmt,parseFloat(data[1]));
+      else if ( data[0] == 25 )   // String
+	item_data = sprintf(fmt,parseFloat(data[1]));
+      else
+	item_data = data[1];
+    }
+    else {
+      item_data = data[1];
+    }
+    this.innerHTML = item_data;
+    this.className = this.className;
     if ( _DisplayDebug>1 ) alert('StyledItem.display:'+item_data);
     return this;
   }
-  return this;
+  return element;
 }
 
 /** @class FSMItem
@@ -89,19 +149,44 @@ StyledItem = function(item_name, class_name)  {
  *  @author  M.Frank
  *  @version 1.0
  */
-FSMItem = function(item_name, logger, is_child)  {
-  this.inheritsFrom = DisplayItem;
-  this.inheritsFrom(item_name+'.FSM.state');
-  this.sysname = item_name;
-  this.lock = null;
-  this._label = null;
-  this._logger = logger;
-  this._is_child = is_child;
+var FSMItem = function(item_name, logger, is_child)  {
+  element = document.createElement('td');
+  element.lock = document.createElement('td');
+  element.label = document.createElement('td');
 
-  this._logger.debug('FSMItem.init:'+item_name+' -> '+this.name);
+  element.name       = item_name+'.FSM.state';
+  element.sysname    = item_name;
+  element.childState = 'FwDEAD';
+  element.data       = null;
 
+  element._logger    = logger;
+  element._is_child  = is_child;
 
-  this.setState = function(name) {
+  element.innerHTML = 'Unknown';
+  element.textAlign = 'center';
+
+  element.lock.colSpan = 1;
+  element.lock.innerHTML = '';
+  element.lock.className = 'FwLock';
+
+  element.label.colSpan = 1;
+  element.label.innerHTML = element.sysname;
+  element.label.className = 'FSMLabel';
+  element._logger.debug('FSMItem.init:'+item_name+' -> '+element.name);
+
+  element.setChildState = function(name) {
+    if ( !(name == 'INCLUDED' || name == 'ENABLED') ) {
+      this._is_child = false;
+      this.childState = name;
+    }
+    else {
+      this._is_child = true;
+      this.childState = name;
+    }
+    this.setState(name);
+  }
+
+  element.setState = function(name) {
     this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Icons/Modes/'+name+'.bmp">';
     return this;
   }
@@ -110,10 +195,9 @@ FSMItem = function(item_name, logger, is_child)  {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.subscribe = function(provider) {
+  element.subscribe = function(provider) {
+    this._logger.debug('FSMItem.init:'+this.name+' -> subscribe');
     provider.subscribe('lbWeb.'+this.name,this);
-    this.label.setAttribute('className','FSMLabel');
-    this.lock.setAttribute('className','FwLock');
     return this;
   }
 
@@ -122,10 +206,13 @@ FSMItem = function(item_name, logger, is_child)  {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.set = function(data)  {
-    if ( data.length == 2 )   {
-      // alert(this.name+':  '+data);
-      return this.display(data[1]);
+  element.set = function(data)  {
+    this._logger.debug('FSMItem.set:'+this.name+' '+this.__tag+' -> data:'+data);
+    if ( data != null ) {
+      this.data = data;
+      if ( data.length == 2 )   {
+	return this.display(data[1]);
+      }
     }
     this._logger.error('FSMItem['+this.name+'].set: Invalid data:'+data);
     return null;
@@ -137,16 +224,23 @@ FSMItem = function(item_name, logger, is_child)  {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.display = function(data)  {
+  element.display = function(data)  {
     var v = data.split('/',10);
     // State name:  v[0]
     // Meta state:  v[1]  (DEAD,...)
     // In/Excluded & Style: v[2]
     //
-    if ( !this._is_child ) this.setState(v[2]);
-    this.element.setAttribute('innerHTML',v[0]);
-    this.element.setAttribute('className',v[1]);
-    this._logger.debug('FSMItem['+this.name+'].display: Udate Done.');
+    if ( !this._is_child )   {
+      this.setState(this.childState);
+      this.className = 'FwDEAD';
+    }
+    else {
+      this.setState(v[3]);
+      this.className = v[2];
+    }
+    this.label.innerHTML = v[0];
+    this.innerHTML = v[1];
+    this._logger.debug('FSMItem['+this.name+'].display: '+data+' '+this.childState+' update Done.');
     return this;
   }
 
@@ -157,13 +251,13 @@ FSMItem = function(item_name, logger, is_child)  {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.setCallback = function(caller, call)   {
+  element.setCallback = function(caller, call)   {
     this.label.onclick = call;
-    this.label.callback_item = this;
-    this.label.callback_handler = caller;
+    this.label.item = this;
+    this.label.handler = caller;
     return this;
   }
-  return this;
+  return element;
 }
 
 /** @class FSMDisplay
@@ -171,25 +265,30 @@ FSMItem = function(item_name, logger, is_child)  {
  *  @author  M.Frank
  *  @version 1.0
  */
-FSMDisplay = function(par,provider,logger)  {
-  this.items     = new Object();
-  this.names     = null;
-  this.root      = null;
-  this.title     = null;
+var FSMDisplay = function(provider,logger,title)  {
+  table           = document.createElement('table');
+  table.body      = document.createElement('tbody');
 
-  this._body     = null;
-  this._parent   = par;
-  this._logger   = logger;
-  this._provider = provider;
+  table._logger   = logger;
+  table._provider = provider;
 
-  this._logger.debug('FSMDisplay.init: Creating FSM display...parent:'+this._parent);
+  table.items     = new Object();
+  table.names     = null;
+
+  table.className = 'FSMTable';
+  table.body.className = 'FSMTable';
+  table.body.cellSpacing = 3;
+  table.appendChild(table.body);
+
+  if ( title ) table.title = title;
+  table._logger.debug('FSMDisplay.init: Creating FSM display...');
 
   /** Function to add new subsystem to the display object
    *
    *  @param name          FSM item name
    *  @return              Reference to self
    */
-  this.add = function(name,fsm_obj)   {
+  table.add = function(name,fsm_obj)   {
     this.items[name] = fsm_obj;
     return this;
   }
@@ -199,14 +298,12 @@ FSMDisplay = function(par,provider,logger)  {
    *  @param name          FSM item name
    *  @return              Reference to self
    */
-  this.remove = function(name)   {
-    if ( this._body != null )  {
-      var n = this.items[name];
-      if ( n != null )  {
-        var p = n.parentNode.parentNode;
-        this._logger.verbose('FSMDisplay.remove:'+name+' '+p);
-        this._body.removeChild(p);
-      }
+  table.remove = function(name)   {
+    var n = this.items[name];
+    if ( n )  {
+      var p = n.parentNode;
+      this._logger.verbose('FSMDisplay.remove:'+name+' '+p);
+      this.body.removeChild(p);
     }
     delete this.items[name];
     return this;
@@ -216,164 +313,105 @@ FSMDisplay = function(par,provider,logger)  {
    *
    *  @param sub_system       Array of string containing sub-system names
    */
-  this.setup = function(sub_systems)  {
+  table.setup = function(sub_systems)  {
     this.names = sub_systems;
-    this._logger.debug('FSMDisplay.set:'+this.names);
+    this._logger.info('FSMDisplay.set:'+this.names+' ['+this.names.length+']');
     for (var i=0; i < this.names.length; ++i)  {
       var n = this.names[i];
-      this.add(n,new FSMItem(n,this._logger,true));
+      this.items[n] = FSMItem(n,this._logger,true);
     }
     return this;
   }
 
-  /** Add single text cell to the display
-   *
-   *  @param row       Row object the cell should be added to
-   *  @param name      Name of the item with dynamic information
-   *  @param txt       Data content
-   *
-   *  @return Reference to the created cell.
-   */
-  this.addTextCell = function(row,name,txt,nspan)  {
-    var c = document.createElement('td');
-    c.innerHTML = txt;
-    if ( nspan != null ) c.setAttribute('colSpan',nspan);
-    row.appendChild(c);
-    return c;
+
+  table.subscribe = function() {
+    // Once the table is ready, we can subscribe to the data items
+    for (var i=0; i < this.names.length; ++i)
+      this.items[this.names[i]].subscribe(this._provider);
+    return this;
   }
 
   /** Build widget and display it as an HTML table
    *
    *  @return Reference to self
    */
-  this.build = function()  {
-    this._logger.debug('FSMDisplay.build:'+this.names);
-    this.root = document.createElement('table');
-    this.root.setAttribute('className','FSMTable');
-    this._body  = document.createElement('tbody');
-    if ( this.title != null ) {
-      var tr = document.createElement('tr');
-      var td = document.createElement('td');
-      td.setAttribute('colSpan',ncols);
-      td.innerHTML = '<div class="StatusText">Subdetectors:</div>';
-      row.appendChild(td);
-      this._body.appendChild(tr);
-    }
-
+  table.build = function()  {
+    if ( this.title ) StatusRow(this.names.length+' '+this.title,3,this.body);
     for (var i=0; i < this.names.length; ++i)  {
       var n = this.names[i];
       var itm = this.items[n];
       var row = document.createElement('tr');
-      this._logger.debug('FSMDisplay.build: detector:'+n+' id:'+n+'.Status');
-      itm.label = this.addTextCell(row, n+'.Name',     n, 1);
-      itm.element = this.addTextCell(row, n+'.FSM.state','Unknown', 1);
-      itm.element.textAlign = 'center';
-      itm.lock = this.addTextCell(row, n+'.Lock',     '', 1);
-      this._body.appendChild(row);
+      row.appendChild(itm.label);
+      row.appendChild(itm);
+      row.appendChild(itm.lock);
+      this.body.appendChild(row);
     }
-    this.root.appendChild(this._body);
-    this.root.cellSpacing = 3;
-    this._parent.appendChild(this.root);
-    // Once the table is ready, we can subscribe to the data items
-    for (var i=0; i < this.names.length; ++i)  {
-      this.items[this.names[i]].subscribe(this._provider);
-    }
-    this._logger.debug('FSMDisplay.build: ... done ...');
-    return this;
+    return this.subscribe();
   }
 
   /** Build widget and display it as an HTML table
    *
    *  @return Reference to self
    */
-  this.buildHorizontal = function(ncols)  {
-    var item = new Object();
+  table.buildHorizontal = function(ncols)  {
     var count = 0;
     var name_row = null;
     var state_row = null;
     var empty_row = null;
-
-    this._logger.debug('FSMDisplay.build:'+this.names);
-    this.root = document.createElement('table');
-    this.root.setAttribute('className','FSMTable');
-    this._body  = document.createElement('tbody');
-
-    if ( this.title != null ) {
-      var tr = document.createElement('tr');
-      var td = document.createElement('td');
-      td.setAttribute('colSpan',ncols);
-      td.innerHTML = '<DIV class="StatusText">Subdetectors:</DIV>';
-      row.appendChild(td);
-      this._body.appendChild(tr);
-    }
-
+    if ( this.title ) StatusRow(this.names.length+' '+this.title,ncols,this.body);
     for (var i=0; i < this.names.length; ++i)  {
       var td, c;
       var n = this.names[i];
       var itm = this.items[n];
-      if ( name_row == null ) name_row = document.createElement('tr');
+      if ( name_row == null  ) name_row = document.createElement('tr');
       if ( state_row == null ) state_row = document.createElement('tr');
       if ( empty_row == null ) empty_row = document.createElement('tr');
       this._logger.debug('FSMDisplay.build: detector:'+n+' id:'+n+'.Status');
-      itm.lock = this.addTextCell(name_row, n+'.Lock',     '', 1);
-      itm.label = this.addTextCell(name_row, n+'.Name',     n, 1);
-      itm.label.setAttribute('className','FSMLabel');
-      itm.element = this.addTextCell(state_row, n+'.FSM.state','Unknown', 2);
-      itm.element.textAlign = 'center';
-      c = document.createElement('td');
-      c.innerHTML = '&nbsp;';
-      name_row.appendChild(c);
 
-      c = document.createElement('td');
-      c.innerHTML = '&nbsp;';
-      state_row.appendChild(c);
+      itm.textAlign = 'center';
+      itm.colSpan   = 2;
+      itm.label.className = 'FSMLabelHorizontal';
 
-      c = document.createElement('td');
-      c.innerHTML = '&nbsp;';
-      empty_row.appendChild(c);
+      name_row.appendChild(itm.label);
+      name_row.appendChild(itm.lock);
+      name_row.appendChild(Spacer());
+      state_row.appendChild(itm);
+      state_row.appendChild(Spacer());
+      empty_row.appendChild(Spacer());
 
       count = count + 1;
       if ( (count%ncols) == 0 ) {
-	this._body.appendChild(name_row);
-	this._body.appendChild(state_row);
+	this.body.appendChild(name_row);
+	this.body.appendChild(state_row);
 	if ( count < this.names.length ) {
-	  var td = document.createElement('td');
+	  var td = Spacer();
 	  td.setAttribute('colSpan',3*ncols);
-	  td.innerHTML='&nbsp';
 	  empty_row.appendChild(td);
-	  this._body.appendChild(empty_row);
+	  this.body.appendChild(empty_row);
 	}
 	name_row  = null;
 	state_row = null;
 	empty_row = null;
       }
     }
-    if ( name_row  != null ) this._body.appendChild(name_row);
-    if ( state_row != null ) this._body.appendChild(state_row);
-
-    this.root.appendChild(this._body);
-    this.root.cellSpacing = 3;
-    this._parent.appendChild(this.root);
-    // Once the table is ready, we can subscribe to the data items
-    for (var i=0; i < this.names.length; ++i)
-      this.items[this.names[i]].subscribe(this._provider);
-    this._logger.debug('FSMDisplay.build: ... done ...');
-    return this;
+    if ( name_row  != null ) this.body.appendChild(name_row);
+    if ( state_row != null ) this.body.appendChild(state_row);
+    return this.subscribe();
   }
 
   /** Clear display and remove widget
    *
    *  @return Reference to self
    */
-  this.clear = function()  {
-    this._logger.debug('FSMDisplay.clear:Table:'+this.root+' Parent:'+this._parent);
-    if ( this.root != null ) {
-      this._parent.removeChild(this.root);
-    }
+  table.clear = function()  {
+    this._logger.debug('FSMDisplay.clear:Table:'+this+' Parent:'+this.parentNode);
+    this.parentNode.removeChild(this);
     this.items = new Object();
     this.names = null;
     return this;
   }
+
+  return table;
 }
 
 /** @class PropertyTable
@@ -381,107 +419,93 @@ FSMDisplay = function(par,provider,logger)  {
  *  @author  M.Frank
  *  @version 1.0
  */
-PropertyTable = function(parent, data_provider, logger, num_cols, desc_class, value_class) {
-  this._parent      = parent;
-  this._body        = null;
-  this._logger      = logger;
+var PropertyTable = function(data_provider, logger, num_cols, desc_class, value_class) {
+  table = document.createElement('table');
+  table.body = document.createElement('tbody');
+  table._logger      = logger;
 
-  this.cols        = num_cols;
-  this.root        = null;
-  this.items       = new Array();
-  this.property    = new Object();
-  this.desc_class  = desc_class;
-  this.value_class = value_class;
-  this.data_provider = data_provider;
+  table.cols        = num_cols;
+  table.items       = new Array();
+  table.desc_class  = desc_class;
+  table.value_class = value_class;
+  table.provider    = data_provider;
 
-  this._logger.debug('PropertyTable.init: Creating property table...');
+  table.className      = 'PropertyTable';
+  table.body.className = 'PropertyTable';
+  table.width = '100%';
+
+  table._logger.debug('PropertyTable.init: Creating property table...');
 
   /** Add new data item to property table
    *
    *  @param name        Name of the item with dynamic information
    *  @param description Descriptive text of the item
+   *  @param span        For multi-column entries: number of spaning columns
+   *  @param fmt         Formatting string
    */
-  this.add = function(name, description, span)   {
-    var nam = name;
-    var obj = new StyledItem(nam,this.value_class);
-    obj['span'] = span;
-    obj['description'] = description;
-    this.property[name] = obj;
+  table.addFormat = function(name, description, span, fmt)   {
+    var obj         = StyledItem(name,this.value_class,fmt);
+    obj.colSpan     = span;
+    obj.spacer      = Cell('',span,'PropertyTableSpacer');
+    obj.description = Cell(description,span,this.desc_class);
     this.items.push(obj);
-    this._logger.debug('PropertyTable.add: added '+nam+' ['+description+'] '+this.items.length);
-    return this;
+    this._logger.debug('PropertyTable.add: added '+name+' ['+description+'] '+this.items.length);
+    return obj;
   }
 
-  /** Add single text cell to the display
+  table.add = function(name, description, span)   {
+    return this.addFormat(name, description, span, null);
+  }
+
+  /** Subscribe data items to provider
    *
-   *  @param row       Row object the cell should be added to
-   *  @param name      Name of the item with dynamic information
-   *  @param txt       Data content
-   *  @param nspan     Spanning for multi column cells
-   *  @param className Class name for cell item
-   *
-   *  @return Reference to the created cell.
+   *  @return Reference to self
    */
-  this.addTextCell = function(row,name,txt,nspan,className)  {
-    var c = document.createElement('td');
-    var t = document.createTextNode(txt);
-    if ( nspan       != null ) c.setAttribute('colSpan',nspan);
-    if ( className   != null ) c.setAttribute('className',className);
-    c.appendChild(t);
-    row.appendChild(c);
-    return c;
+  table.subscribe = function() {
+    for (var i=0; i < this.items.length; ++i)  {
+      var n = this.items[i];
+      this.provider.subscribe(n.name,n);
+    }
+    return this;
   }
 
   /** Build widget and display it as an HTML table
    *
    *  @return Reference to self
    */
-  this.build = function() {
-    var c, ncols = 0;
+  table.build = function() {
+    var ncols = 0;
     var desc    = document.createElement('tr');
     var data    = document.createElement('tr');
     var fill    = document.createElement('tr');
-    this.root  = document.createElement('table');
-    this._body   = document.createElement('tbody');
 
     this._logger.debug('PropertyTable.build: start to build table with '+this.items.length+' items');
     for (var i=0; i < this.items.length; ++i)  {
       var n = this.items[i];
       if ( ncols>=this.cols ) {
         this._logger.debug('PropertyTable.build: new row');
-        this._body.appendChild(desc);
-        this._body.appendChild(data);
-        this._body.appendChild(fill);
+        this.body.appendChild(desc);
+        this.body.appendChild(data);
+        this.body.appendChild(fill);
         desc = document.createElement('tr');
         data = document.createElement('tr');
         fill = document.createElement('tr');
         ncols = 0;
       }
-      nspan = n['span'];
-      ncols = ncols + nspan;
-      this.addTextCell(desc, null,   n['description'],nspan, this.desc_class);
-      n.element = 
-	this.addTextCell(data, n.name, '---',           nspan, this.value_class);
-      this.addTextCell(fill, n.name, '',              nspan, 'PropertyTableSpacer');
-      this._logger.verbose('PropertyTable.build: '+n.name+'  '+n['description']+'  Span:'+nspan);
+      ncols = ncols + n.colSpan;
+      fill.appendChild(n.spacer);
+      desc.appendChild(n.description);
+      data.appendChild(n);
     }
-    this._body.appendChild(desc);
-    this._body.appendChild(data);
-    this._body.appendChild(fill);
-    this.root.appendChild(this._body);
-    this.root.setAttribute('width','95%');
-    this.root.setAttribute('className','PropertyTable');
-    this._parent.appendChild(this.root);
-
-    for (var i=0; i < this.items.length; ++i)  {
-      var n = this.items[i];
-      this.data_provider.subscribe(n.name,n);
-    }
-
-    this._logger.debug('PropertyTable.build: table finished');
-    return this;
+    this.body.appendChild(desc);
+    this.body.appendChild(data);
+    this.body.appendChild(fill);
+    return this.subscribe();
   }
-  this._logger.debug('PropertyTable.init: Creating property table...Done.');
+
+  table.appendChild(table.body);
+  table._logger.debug('PropertyTable.init: Creating property table...Done.');
+  return table;
 }
 
 /** @class ControlsStatusDisplay
@@ -489,53 +513,27 @@ PropertyTable = function(parent, data_provider, logger, num_cols, desc_class, va
  *  @author  M.Frank
  *  @version 1.0
  */
-ControlsStatusDisplay = function(parent,partition,provider,logger) {
-  // private variables
-  this._provider = provider;
-  this._parent = parent;
-  this._logger = logger;
-  this._body = null;
-
+var ControlsStatusDisplay = function(partition,provider,logger) {
   // public stuff
-  this.partition = partition;
-  this.root = null;
-  this.fsm = new FSMItem(this.partition,this._logger,false);
+  table       = document.createElement('table');
+  table.body  = document.createElement('tbody');
 
-  /** Build widget and display it as an HTML table
-   *
-   *  @return Reference to self
-   */
-  this.build = function() {
-    this.root   = document.createElement('table');
-    this._body  = document.createElement('tbody');
-    var row     = document.createElement('tr');;
+  // private variables
+  table._provider = provider;
+  table._logger = logger;
 
-    this.root.width = '95%';
-    this.root.className = 'FSMTable';
+  table.width = '95%';
+  table.partition = partition;
+  table.className = 'FSMTable';
+  table.fsm = FSMItem(table.partition,table._logger,true);
+  table.fsm.__tag = 'ControlsStatusDisplay';
 
-    this._logger.debug('ControlsStatusDisplay: Building.');
-    this.fsm.label = document.createElement('td');
-    this.fsm.label.innerHTML = this.partition;
-    row.appendChild(this.fsm.label);
-
-    this.fsm.element = document.createElement('td');
-    this.fsm.element.innerHTML = 'Unknown';
-    row.appendChild(this.fsm.element);
-
-    this.fsm.lock = document.createElement('td');
-    this.fsm.lock.innerHTML = '';
-    row.appendChild(this.fsm.lock);
-
-    this._body.appendChild(row);
-    this.root.appendChild(this._body);
-    this._parent.appendChild(this.root);
-    return this;
-  }
-
-  /// Function to subscribe to the required data items
-  this.subscribe = function() {
-    this.fsm.subscribe(this._provider);
-  }
+  table.row = document.createElement('tr');
+  table.row.appendChild(table.fsm.label);
+  table.row.appendChild(table.fsm);
+  table.row.appendChild(table.fsm.lock); 
+  table.body.appendChild(table.row);
+  table.appendChild(table.body);
 
   /** Set callback function if the detector item is clicked
    *
@@ -544,12 +542,13 @@ ControlsStatusDisplay = function(parent,partition,provider,logger) {
    *
    *  @return On success reference to self, null otherwise
    */
-  this.setCallback = function(caller, call)   {
+  table.setCallback = function(caller, call)   {
     this.fsm.setCallback(caller,call);
   }
 
-  this._logger.debug('ControlsStatusDisplay: Constructor OK.');
-  return this;
+  table.fsm.subscribe(table._provider);
+  table._logger.debug('ControlsStatusDisplay: Constructor OK.');
+  return table;
 }
 
 /** @class RunStatusDisplay
@@ -557,82 +556,72 @@ ControlsStatusDisplay = function(parent,partition,provider,logger) {
  *  @author  M.Frank
  *  @version 1.0
  */
-RunStatusDisplay = function(parent,partition,provider,logger) {
-  this.experiment_run_header = null;
-  this.ctrl_status = null;
-  this.run_properties = null;
-  this.fsm_items = null;
-  this.det_items = null;
-  this.trg_items = null;
-  this.root = null;
-  this.detDisplay = null;
-  this.trgDisplay = null;
-  this.det_row = null;
-  this.det_label = null;
-  this.trg_row = null;
-  this.trg_label = null;
-  this.statusDisplay = null;
+var RunStatusDisplay = function(partition,provider,logger) {
+  table = document.createElement('table');
+  table.body = document.createElement('tbody');
+  table.experiment_run_header = null;
+  table.ctrl_status = null;
+  table.run_properties = null;
+  table.fsm_items = null;
+  table.det_items = null;
+  table.trg_items = null;
+  table.detDisplay = null;
+  table.trgDisplay = null;
+  table.det_row = null;
+  table.trg_row = null;
+  table.statusDisplay = null;
 
+  table._partition = partition;
+  table._provider = provider;
+  table._logger = logger;
 
-  this._partition = partition;
-  this._provider = provider;
-  this._parent = parent;
-  this._logger = logger;
-  this._body = null;
+  table._logger.debug('RunStatusDisplay.init: Creating display.. Partition:'+table._partition);
 
-  this._logger.debug('RunStatusDisplay.init: Creating display...parent:'+this._parent+' Partition:'+this._partition);
+  table.body.className = 'RunStatusPanel';
+  table.className = 'RunStatusPanel';
+  table.appendChild(table.body);
 
-  /** Build widget and display it as an HTML table
-   *
-   *  @return Reference to self
-   */
-  this.build = function() {
-    this.root   = document.createElement('TABLE');
-    this._body  = document.createElement('TBODY');
-    var row     = null;
-    var td      = null;
+  /// Build widget and display it as an HTML table
+  var row     = null;
+  var td      = null;
+  
+  table._logger.debug('RunStatusDisplay.build: Creating table...');
+  
+  row = document.createElement('tr');
+  table.experiment_run_header = document.createElement('td');
+  row.appendChild(table.experiment_run_header);
+  td = Cell(lhcb_online_picture(),1,null);
+  td.style.textAlign = 'right';
+  td.rowSpan = 2;
+  row.appendChild(td);
+  table.body.appendChild(row);
 
-    this._logger.debug('RunStatusDisplay.build: Creating table...');
-    this.root.className = 'RunStatusPanel';
+  row = document.createElement('tr');
+  table.ctrl_status = document.createElement('td');
+  row.appendChild(table.ctrl_status);
+  table.body.appendChild(row);
+  
+  row = document.createElement('tr');
+  table.fsm_items = document.createElement('td');
+  table.fsm_items.width = '40%';
+  row.appendChild(table.fsm_items);
 
-    row = document.createElement('tr');
-    this.experiment_run_header = document.createElement('td');
-    row.appendChild(this.experiment_run_header);
-    row.appendChild(document.createElement('td'));
-    this._body.appendChild(row);
+  table.run_properties = document.createElement('td');
+  row.appendChild(table.run_properties);
+  table.body.appendChild(row);
+  
+  table.det_row = document.createElement('tr');
+  table.det_items = Cell('',2,null);
+  table.det_items.width = '100%';
+  table.det_items.textAlign = 'left';
+  table.det_row.appendChild(table.det_items);
+  table.body.appendChild(table.det_row);
 
-    row = document.createElement('tr');
-    this.ctrl_status = document.createElement('td');
-    row.appendChild(this.ctrl_status);
-    row.appendChild(document.createElement('td'));
-    this._body.appendChild(row);
-
-    row = document.createElement('tr');
-    this.fsm_items = document.createElement('td');
-    row.appendChild(this.fsm_items);
-
-    this.run_properties = document.createElement('td');
-    row.appendChild(this.run_properties);
-    this._body.appendChild(row);
-    
-    this.det_row = document.createElement('tr');
-    this.det_items = document.createElement('td');
-    this.det_items.colSpan = 2;
-    this.det_row.appendChild(this.det_items);
-    this._body.appendChild(this.det_row);
-
-    this.trg_row = document.createElement('tr');
-    this.trg_items = document.createElement('td');
-    this.trg_items.colSpan = 2;
-    this.trg_row.appendChild(this.trg_items);
-    this._body.appendChild(this.trg_row);
-
-    this.root.appendChild(this._body);
-    this._parent.appendChild(this.root);
-
-    this._logger.info('RunStatusDisplay.build: Created table...Done.');
-    return this;
-  }
+  table.trg_row = document.createElement('tr');
+  table.trg_items = Cell('',2,null);
+  table.trg_row.appendChild(table.trg_items);
+  table.body.appendChild(table.trg_row);
+  table._logger.info('RunStatusDisplay.build: Created table...Done.');
 
   /** Attach display items. 
    * Note: Display must be "built" before. Otherwise the service updates do not find the
@@ -640,77 +629,72 @@ RunStatusDisplay = function(parent,partition,provider,logger) {
    *
    *  @return Reference to self
    */
-  this.attach = function(systems)   {
+  table.attach = function(systems)   {
     this.experiment_run_header.innerHTML = detector_run_header(this._partition);
-    this.statusDisplay = new ControlsStatusDisplay(this.ctrl_status,this._partition,this._provider,this._logger);
-    this.statusDisplay.build();
+    this.statusDisplay = ControlsStatusDisplay(this._partition,this._provider,this._logger);
+    this.ctrl_status.appendChild(this.statusDisplay);
 
-    this.runPropertyDisplay = new PropertyTable(this.run_properties, 
-						this._provider, 
-						this._logger, 
-						3,
-						'PropertyTableItem',
-						'PropertyTableValue');
+    this.runPropertyDisplay = PropertyTable(this._provider, 
+					    this._logger, 
+					    2,
+					    'PropertyTableItem',
+					    'PropertyTableValue');
     var prop = this.runPropertyDisplay;
     var prefix = 'lbWeb.'+this._partition+'_RunInfo.';
-    prop.add(prefix+'general.runNumber',    'Run Number',1);
-    prop.add(prefix+'general.runType',      'Run Type',2);
-    prop.add(prefix+'TrgConf',              'Trigger Configuration',1);
-    prop.add(prefix+'L0Gap',                'L0 Gap',1);
-    prop.add(prefix+'TAE',                  'TAE Half window',1);
-    prop.add(prefix+'general.runStartTime', 'Run Start Time',1);
-    prop.add(prefix+'general.runStopTime',  'Run Duration',2);
-    prop.add(prefix+'TFC.nTriggers',        'Number of Events',1);
-    prop.add(prefix+'TFC.deadTime',         'Dead Time',2);
-    prop.add(prefix+'TFC.runTriggerRate',   'Trigger Rate',1);
-    prop.add(prefix+'TFC.nTriggersU',       'nTriggersU',2);
+    prop.add(prefix+'general.runNumber',          'Run number',1);
+    prop.add(prefix+'general.runType',            'Run type',1);
+
+    prop.add(prefix+'Trigger.TCKLabel',           'Trigger configuration (TCK)',2);
+
+    prop.add(prefix+'general.runStartTime',       'Run start time',1);
+    prop.add(prefix+'general.runStopTime',        'Run duration',1);
+
+    prop.add(prefix+'general.dataType',           'Data type',1);
+    prop.add(prefix+'Storage.storeFlag',          'Data destination',1);
+
+    prop.add(prefix+'TFC.nTriggers',              'Number of L0 events',1);
+    prop.add(prefix+'HLTFarm.hltNTriggers',       'Number of HLT Accept events',1);
+
+    prop.addFormat(prefix+'TFC.triggerRate',      'L0 Trigger Rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'TFC.runTriggerRate',   'Integrated L0 trigger rate',1,'%8.2f Hz');
+
+    prop.addFormat(prefix+'HLTFarm.hltRate',      'HLT Accept Rate',1,'%8.2f Hz');
+    prop.addFormat(prefix+'HLTFarm.runHltRate',   'Integrated HLT accept rate',1,'%8.2f Hz');
+
+    prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
+    prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
+
     prop.build();
+    this.run_properties.appendChild(this.runPropertyDisplay);
 
-    this.statusDisplay.subscribe();
-
-    this.fsmDisplay = new FSMDisplay(this.fsm_items,this._provider,this._logger);
+    this.fsmDisplay = FSMDisplay(this._provider,this._logger,null);
     this.fsmDisplay.setup(systems).build();
-
+    this.fsm_items.appendChild(this.fsmDisplay);
     return this;
   }
 
-  this.attachDetectors = function(systems) {
-    if ( this.det_label == null ) {
-      var row = document.createElement('tr');
-      this.det_label = document.createElement('td');
-      this.det_items.setAttribute('colSpan','2');
-      this.det_label.className = 'StatusText';
-      row.appendChild(this.det_label);
-      this._body.insertBefore(row,this.det_row);
-    }
+  table.attachDetectors = function(systems) {
     if ( this.detDisplay != null ) {      
-      this.det_items.removeChild(this.detDisplay.root);
+      this.det_items.removeChild(this.detDisplay);
     }
-    this.detDisplay = new FSMDisplay(this.det_items,this._provider,this._logger);
-    this.detDisplay.setup(systems);
-    this.detDisplay.buildHorizontal(6);
+    this.detDisplay = FSMDisplay(this._provider,this._logger,'Subdetectors');
+    this.detDisplay.setup(systems).buildHorizontal(7);
+    this.det_items.appendChild(this.detDisplay);
     return this;
   } 
 
-  this.attachTriggers = function(systems) {
-    if ( this.trg_label == null ) {
-      var row = document.createElement('tr');
-      this.trg_label = document.createElement('td');
-      this.trg_items.setAttribute('colSpan','2');
-      this.trg_label.innerHTML = '<div class="StatusText">Triggers:</div>';
-      row.appendChild(this.trg_label);
-      this._body.insertBefore(row,this.trg_row);
-    }
+  table.attachTriggers = function(systems) {
     if ( this.trgDisplay != null ) {
-      this.trg_items.removeChild(this.trgDisplay.root);
+      this.trg_items.removeChild(this.trgDisplay);
     }
-    this.trgDisplay = new FSMDisplay(this.trg_items,this._provider,this._logger);
-    this.trgDisplay.setup(systems);
-    this.trgDisplay.buildHorizontal(6);
+    this.trgDisplay = FSMDisplay(this._provider,this._logger,'Triggers');
+    this.trgDisplay.setup(systems).buildHorizontal(6);
+    this.trg_items.appendChild(this.trgDisplay);
     return this;
   }
 
-  this._logger.info('RunStatusDisplay.init: Creating display...Done.');
+  table._logger.info('RunStatusDisplay.init: Creating display...Done.');
+  return table;
 }
 
 /** @class FSMStatusDisplay
@@ -718,61 +702,41 @@ RunStatusDisplay = function(parent,partition,provider,logger) {
  *  @author  M.Frank
  *  @version 1.0
  */
-FSMStatusDisplay = function(parent,partition,provider,logger) {
-  this.experiment_run_header = null;
-  this.ctrl_status = null;
-  this.fsm_items = null;
-  this.root = null;
-  this.detData = null;
-  this.statusDisplay = null;
+var FSMStatusDisplay = function(partition,provider,logger) {
+  table = document.createElement('TABLE');
+  table.body  = document.createElement('TBODY');
+  table.experiment_run_header = null;
+  table.ctrl_status = null;
+  table.fsm_items = null;
+  table.detData = null;
+  table.statusDisplay = null;
 
+  table._partition = partition;
+  table._provider = provider;
+  table._logger = logger;
 
-  this._partition = partition;
-  this._provider = provider;
-  this._parent = parent;
-  this._logger = logger;
-  this._body = null;
+  table._logger.debug('FSMStatusDisplay.init: Creating display... Partition:'+table._partition);
 
-  this._logger.debug('FSMStatusDisplay.init: Creating display...parent:'+this._parent+' Partition:'+this._partition);
-
-  /** Build widget and display it as an HTML table
-   *
-   *  @return Reference to self
-   */
-  this.build = function() {
-    this.root   = document.createElement('TABLE');
-    this._body   = document.createElement('TBODY');
-    var row     = null;
-    var td      = null;
-
-    this._logger.debug('FSMStatusDisplay.build: Creating table...');
-    this.root.width = '100%';
-    this.root.className = 'FSMStatusPanel';
-
-    row = document.createElement('tr');
-    this.experiment_run_header = document.createElement('td');
-    row.appendChild(this.experiment_run_header);
-    row.appendChild(document.createElement('td'));
-    this._body.appendChild(row);
-
-    row = document.createElement('tr');
-    this.ctrl_status = document.createElement('td');
-    row.appendChild(this.ctrl_status);
-    row.appendChild(document.createElement('td'));
-    this._body.appendChild(row);
-
-    row = document.createElement('tr');
-    this.fsm_items = document.createElement('td');
-    //this.fsm_items.setAttribute('width','100%');
-    row.appendChild(this.fsm_items);
-    this._body.appendChild(row);
-
-    this.root.appendChild(this._body);
-    this._parent.appendChild(this.root);
-
-    this._logger.info('FSMStatusDisplay.build: Created table...Done.');
-    return this;
-  }
+  table.width = '100%';
+  table.className = 'FSMStatusPanel';
+  table.body.className = 'FSMStatusPanel';
+  var row = document.createElement('tr');
+  table.experiment_run_header = document.createElement('td');
+  row.appendChild(table.experiment_run_header);
+  row.appendChild(document.createElement('td'));
+  table.body.appendChild(row);
+  
+  row = document.createElement('tr');
+  table.ctrl_status = document.createElement('td');
+  row.appendChild(table.ctrl_status);
+  row.appendChild(document.createElement('td'));
+  table.body.appendChild(row);
+  
+  row = document.createElement('tr');
+  table.fsm_items = document.createElement('td');
+  row.appendChild(table.fsm_items);
+  table.body.appendChild(row);
+  table.appendChild(table.body);
 
   /** Attach display items. 
    * Note: Display must be "built" before. Otherwise the service updates do not find the
@@ -780,18 +744,18 @@ FSMStatusDisplay = function(parent,partition,provider,logger) {
    *
    *  @return Reference to self
    */
-  this.attach = function(systems)   {
+  table.attach = function(systems)   {
     this.experiment_run_header.innerHTML = detector_header(this._partition);
-    this.statusDisplay = new ControlsStatusDisplay(this.ctrl_status,this._partition,this._provider,this._logger);
-    this.statusDisplay.build();
-    this.statusDisplay.subscribe();
-    this.fsmDisplay = new FSMDisplay(this.fsm_items,this._provider,this._logger);
-    this.fsmDisplay.setup(systems);
-    this.fsmDisplay.build();
+    this.statusDisplay = ControlsStatusDisplay(this._partition,this._provider,this._logger);
+    this.ctrl_status.appendChild(this.statusDisplay);
+    this.fsmDisplay = FSMDisplay(this._provider,this._logger,'Subsystems');
+    this.fsm_items.appendChild(this.fsmDisplay);
+    this.fsmDisplay.setup(systems).build();
+    table._logger.info('FSMStatusDisplay.attach: Children created:'+systems);
     return this;
   }
-
-  this._logger.info('FSMStatusDisplay.init: Creating display...Done.');
+  table._logger.info('FSMStatusDisplay.init: Creating display...Done.');
+  return table;
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.items.cpp loaded successfully');
