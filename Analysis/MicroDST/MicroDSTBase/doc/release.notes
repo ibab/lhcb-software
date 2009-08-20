@@ -1,10 +1,15 @@
-!$Id: release.notes,v 1.34 2009-08-17 19:14:47 jpalac Exp $
+!$Id: release.notes,v 1.35 2009-08-20 07:51:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
 ! Purpose     : Base classes for MicroDST algorithms and tools, plus helper
 !               functions and functors.
 !-----------------------------------------------------------------------------
+
+! 2009-08-10 - Juan PALACIOS
+ - MicroDST/MicroDSTCommon{.h, .icpp}
+  . Method copyAndStoreObject protected against object already existing in the
+    TES. Do not copy, return the existing object.
 
 ! 2009-08-16 - Juan PALACIOS
  - MicroDSTCommon, MicroDSTAlgorithm
