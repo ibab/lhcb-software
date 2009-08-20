@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.h,v 1.6 2009-08-17 19:13:08 jpalac Exp $
+// $Id: MicroDSTCommon.h,v 1.7 2009-08-20 07:50:37 jpalac Exp $
 #ifndef MICRODST_MICRODSTCOMMON_H 
 #define MICRODST_MICRODSTCOMMON_H 1
 
@@ -53,7 +53,8 @@ public:
 
   /**
    * Copy an object of type T from the TES onto another TES location.
-   * Uses the copy constructor of type T for copying.
+   * Uses the copy constructor of type T for copying. Do not copy if object
+   * already exists in that location.
    * 
    * @param from The TES location of the object to be copied
    * @param to   The TES location where the copy should be stored

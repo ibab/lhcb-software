@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.9 2009-08-17 19:13:08 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.10 2009-08-20 07:50:37 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -35,6 +35,11 @@ const T* MicroDSTCommon<PBASE>::copyAndStoreObject( const std::string& from,
 {
   this->verbose() << "try to get data container" << endmsg;
 
+  if (exist<T>( to ) ) {
+    this->Warning("Object "+ to + " already exists. Not cloning.", 
+                  StatusCode::SUCCESS,10).ignore();
+    return this->get<T>( to );
+  }
   if (exist<T>( from ) ) {
     const T* data = this->get<T>( from );
     this->verbose() << "now copy information" << endmsg;
@@ -106,8 +111,7 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
     this->Warning("CopyKeyedContainer failed to clone "+ from,
                   StatusCode::FAILURE, 10).ignore();
   }
-  
-  
+
 
   return  clones; 
 
