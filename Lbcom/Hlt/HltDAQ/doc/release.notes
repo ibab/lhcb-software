@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-08-20 - Jaap Panman
+ - bug fix in HltLumiWriter
+
 !========================== HltDAQ v1r0 2009-06-29 ===========================
 ! 2009-06-29 - Tomasz Skwarnicki
  - add HltDAQ_dll.cpp

@@ -1,14 +1,11 @@
-// $Id: HltLumiWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltLumiWriter.cpp,v 1.2 2009-08-20 07:27:31 panmanj Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
-#include "Kernel/IANNSvc.h"
-
-#include "boost/foreach.hpp"
-
 
 // local
 #include "Event/HltLumiSummary.h"
+#include "Event/LumiCounters.h"
 #include "HltLumiWriter.h"
 
 
@@ -48,8 +45,6 @@ StatusCode HltLumiWriter::initialize() {
   m_bank.reserve(20);
   m_bankType  = LHCb::RawBank::HltLumiSummary;
 
-  m_items = svc<IANNSvc>("LumiANNSvc")->items("LumiCounters");
-
   return StatusCode::SUCCESS;
 };
 
@@ -58,7 +53,6 @@ StatusCode HltLumiWriter::initialize() {
 //=============================================================================
 StatusCode HltLumiWriter::restart() {
   debug() << "==> Restart" << endmsg;
-  m_items = svc<IANNSvc>("LumiANNSvc")->items("LumiCounters");
   return StatusCode::SUCCESS;
 }
 
@@ -132,16 +126,18 @@ void HltLumiWriter::fillDataBankShort ( ) {
   LHCb::HltLumiSummary* HltLumiSummary = get<LHCb::HltLumiSummary>(m_inputBank);
   debug() << m_inputBank << " found" << endmsg ;
 
-  BOOST_FOREACH( IANNSvc::minor_value_type iKey, m_items )  {
-    // check for existing counters
-    int s_value = HltLumiSummary->info( iKey.second, -1);
-    if ( s_value<0) continue;
+  LHCb::HltLumiSummary::ExtraInfo::iterator summaryIter;
+  LHCb::HltLumiSummary::ExtraInfo  summaryInfo = HltLumiSummary->extraInfo();
+  for (summaryIter = summaryInfo.begin(); summaryIter != summaryInfo.end(); summaryIter++) {
+    // get the key and value of the input info
+    int key = summaryIter->first;
+    int s_value = summaryIter->second;
     // handle overflow
     int i_value = (s_value < 0xFFFF) ? (int) s_value : (int)0xFFFF;
-    unsigned int word = ( iKey.second << 16 ) | ( i_value & 0xFFFF );
+    unsigned int word = ( key << 16 ) | ( i_value & 0xFFFF );
     m_bank.push_back( word );
     if ( MSG::VERBOSE >= msgLevel() ) {
-      verbose() << format ( " %8x %11d %11d %11d ", word, word, iKey.second, i_value ) << endreq;
+      verbose() << format ( " %8x %11d %11d %11d ", word, word, key, i_value ) << endreq;
     }
   }
   

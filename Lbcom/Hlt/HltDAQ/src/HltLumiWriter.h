@@ -1,12 +1,10 @@
-// $Id: HltLumiWriter.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltLumiWriter.h,v 1.2 2009-08-20 07:27:31 panmanj Exp $
 #ifndef HLTLUMIWRITER_H 
 #define HLTLUMIWRITER_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
-#include "Kernel/IANNSvc.h"
-
 #include "Event/RawEvent.h"
 
 /** @class HltLumiWriter HltLumiWriter.h
@@ -34,7 +32,6 @@ protected:
 private:
   std::string m_inputBank;
 
-  std::vector<IANNSvc::minor_value_type> m_items;
   // Statistics  
   double m_totDataSize;
   int m_nbEvents;
