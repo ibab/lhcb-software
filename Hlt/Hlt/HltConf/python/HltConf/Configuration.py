@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.110 2009-08-18 07:08:00 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.111 2009-08-20 21:03:49 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -168,6 +168,8 @@ class HltConf(LHCbConfigurableUser):
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"  
                       , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
+                      , 37 : "HLT_PASS('Hlt1RandomDecision','Hlt1RandomODINDecision')"
+                      , 38 : "HLT_PASS('Hlt1PhysicsDecision','Hlt1NonRandomODINDecision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
