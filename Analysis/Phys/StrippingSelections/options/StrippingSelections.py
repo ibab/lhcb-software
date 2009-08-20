@@ -54,3 +54,6 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKstarDetached.p
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBd2JpsiKstarDetachedR.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiKDetached.py")
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2JpsiKDetachedR.py")
+
+#Susan's selection
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBu2D0K_D02KSPiPi.py")
