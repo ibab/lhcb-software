@@ -52,7 +52,7 @@ alley_s_p                  = myConst.alley_s_p
 
 class myGraph:
 
-     server = 'http://plus501/subst_temp.py/online?File='
+     server  = 'http://plus501/subst_temp.py/online?File='
      offline = 'http://plus501/TCKs/'
 
      ## Constructer for the myGraph object which is basically
@@ -191,13 +191,13 @@ class myGraph:
           create_level_4_instances = self.create_level_4_instances
           linelist = self.linelist
           str = graph_start()
-          str = str + create_node('Hlt', 'Hlt', self.offline+'Hlt'+'.xhml', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', NODE_RARE)
           ## basic is with rate, offline without
           str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', NODE_PHYSICS_WITHOUTRATE)
           ## The structures for the other systems then Hlt1 are not yet implemented.
           if system == 'Hlt1':
                str = str + create_label('Hlt1Global', 'Global', LABEL_PLAIN1)
-               str = str + create_node('Lumi', 'Lumi', self.offline+TCK+'/offline/extended_Hlt_Hlt1_Lumi'+'.xthml', alley_type_withoutrate["Lumi"])
+               str = str + create_node('Lumi', 'Lumi', self.offline+TCK+'/offline/extended_Hlt_Hlt1_Lumi'+'.xhtml', alley_type_withoutrate["Lumi"])
                str = str + create_label('Hlt1IgnoringLumi', 'IgnoringLumi', LABEL_PLAIN2)
                ## the alleys are hardcoded (myConstants)
                alleys = create_level_2_instances(system)
@@ -205,7 +205,7 @@ class myGraph:
                for alley in alleys:
                     ## Here are the different alleys and there types
                     if alley != "Lumi":
-                         str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xthml', alley_type_withoutrate[alley])
+                         str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', alley_type_withoutrate[alley])
                     if alley=='Electron':
                          str = str + create_node('Muon', 'Muon', '', NODE_RARE)
                str = str + "}}"
