@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.48 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.49 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -129,6 +129,7 @@ class LbLoginScript(Script):
         self._triedAFSsetup = False
     def _write_script(self, env):
         """ select the ouput stream according to the cmd line options """
+        log = logging.getLogger()
         close_output = False
         if self.options.output:
             self.output_file = open(self.options.output,"w")
@@ -146,6 +147,8 @@ class LbLoginScript(Script):
             self.output_file = sys.stdout
             close_output = False
         # write the data
+        if self.output_name :
+            log.debug("Writing output to %s" % self.output_name)
         self.output_file.write(env)
         self.output_file.write("\n") # @todo: this may be avoided
         if close_output: 
@@ -292,11 +295,12 @@ class LbLoginScript(Script):
             del ev["MYSITEROOT"]
         if opts.mysiteroot :
             # use the mysiteroot value as the top priority choice for the site guessing
-            log.debug("Using MYSITEROOT: %s" % opts.mysiteroot)
             ev["SITEROOT"] = opts.mysiteroot
-            ev["CMTSITE"] = "LOCAL"
             opts.cmtsite = "LOCAL"
+            ev["CMTSITE"] = opts.cmtsite
+            log.debug("CMTSITE is set to %s" % ev["CMTSITE"])
             ev["MYSITEROOT"] = opts.mysiteroot
+            log.debug("MYSITEROOT is set to %s" % ev["MYSITEROOT"])
         else :
             # if no mysiteroot has been passed to the script, use CMTSITE for the guessing
             log.debug("No MYSITEROOT defined. Trying CMTSITE (%s) setting." % opts.cmtsite)
@@ -327,7 +331,7 @@ class LbLoginScript(Script):
                 self.setSite()
             elif opts.cmtsite == "CERN" :
                 self._triedAFSsetup = True
-                log.debug("CMTSITE set to CERN.")                                    
+                log.debug("CMTSITE is set to CERN.")                                    
                 cernbase = "cern.ch"
                 afsroot = "/afs"
                 cernroot = os.path.join(afsroot, cernbase)
@@ -367,7 +371,6 @@ class LbLoginScript(Script):
             else :
                 log.error("Unknown CMTSITE %s" % opts.cmtsite)
             
-
 # sites defaults
 
         if opts.cmtsite == "CERN" :
@@ -400,8 +403,10 @@ class LbLoginScript(Script):
         return natbin
 
     def setCMTBin(self):
+        log = logging.getLogger()
         ev = self._env
         ev["CMTBIN"] = self.getNativeBin()
+        log.debug("CMTBIN is set to %s" % ev["CMTBIN"])
         
     def hasCommand(self, cmd):
         hascmd = False
@@ -485,6 +490,7 @@ class LbLoginScript(Script):
             ev["CMT_DIR"] = ev["CONTRIBDIR"]
             ev["CMTROOT"] = _multiPathGet(ev["CMT_DIR"], os.path.join("CMT", opts.cmtvers))
         if not os.path.isdir(ev["CMTROOT"]) :
+            log.error("Directory %s doesn't exist" % ev["CMTROOT"])
             ev["CMTROOT"] = self._currentcmtroot
         
         ev["CMTVERS"] = opts.cmtvers
@@ -495,6 +501,7 @@ class LbLoginScript(Script):
         ev = self._env
         al = self._aliases
         opts = self.options
+        log = logging.getLogger()
         if opts.cmtsite != "standalone" :
             if opts.cmtsite == "LOCAL" :
                 ev["LHCBHOME"] = opts.mysiteroot.split(os.pathsep)[0]
@@ -539,7 +546,7 @@ class LbLoginScript(Script):
             ev["OSC_release_area"] = ev["CONTRIBDIR"]
             ev["Gaudi_release_area"] = ev["GAUDISOFT"]
             ev["LHCb_release_area"] = ev["LHCBRELEASES"]
-
+            log.debug("LHCBPROJECTPATH is set to %s" % ev["LHCBPROJECTPATH"])
 #-----------------------------------------------------------------------------------
                       
     def setHomeDir(self):
@@ -591,6 +598,7 @@ class LbLoginScript(Script):
             if not opts.userarea :
                 opts.userarea = os.path.join(ev["HOME"], "cmtuser") # @todo: use something different for window
             ev["User_release_area"] = opts.userarea
+            log.debug("User_release_area is set to %s" % ev["User_release_area"])
     
             if os.path.exists(opts.userarea) :
                 if not os.path.isdir(opts.userarea) :
@@ -602,7 +610,6 @@ class LbLoginScript(Script):
             else :
                 os.mkdir(opts.userarea)
                 newdir = True
-    
             if opts.cmtsite == "CERN" and sys.platform != "win32" and self.hasCommand("fs"):
                 if newdir :
                     os.system("fs setacl %s system:anyuser rl" % opts.userarea )
@@ -612,7 +619,8 @@ class LbLoginScript(Script):
                 al["mkprivate"] = "find . -type d -print -exec fs setacl {} system:anyuser l \\;"
                 al["mkpublic"] = "find . -type d -print -exec fs setacl {} system:anyuser rl \\;"
         elif ev.has_key("User_release_area") :
-            del ev["User_release_area"] 
+            del ev["User_release_area"]
+            log.debug("Removed User_release_area from the environment")
             
     def setSharedArea(self):
         opts = self.options
@@ -714,7 +722,7 @@ class LbLoginScript(Script):
     def setCMTConfig(self, debug=False):
         ev = self._env
         opts = self.options
-        
+        log = logging.getLogger()
         if opts.cmtconfig :
             self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
             if not opts.no_compat and self.needsCompat() :
@@ -756,16 +764,20 @@ class LbLoginScript(Script):
             ev["PYTHON_BINOFFSET"] = ""
 
                     
-        ev["CMTOPT"] = getConfig(self.binary, self.platform, self.compdef)               
+        ev["CMTOPT"] = getConfig(self.binary, self.platform, self.compdef)
+        log.debug("CMTOPT is set to %s" % ev["CMTOPT"])               
         ev["CMTDEB"] = getBinaryDbg(ev["CMTOPT"])
+        log.debug("CMTDEB is set to %s" % ev["CMTDEB"])               
         ev["CMTCONFIG"] = ev["CMTOPT"]
         if debug or sys.platform == "win32":
             ev["CMTCONFIG"] = ev["CMTDEB"]
+        log.debug("CMTCONFIG is set to %s" % ev["CMTCONFIG"])               
 
             
     def setCMTPath(self):
         ev = self._env
         opts = self.options
+        log = logging.getLogger()
         
         self.setHomeDir()
         
@@ -784,17 +796,20 @@ class LbLoginScript(Script):
                     ev["CMTPROJECTPATH"] = os.pathsep.join([ev["User_release_area"], ev["LHCBPROJECTPATH"]])
                 else :
                     ev["CMTPROJECTPATH"] = ev["LHCBPROJECTPATH"]
+                log.debug("CMTPROJECTPATH is set to %s" % ev["CMTPROJECTPATH"])
             else :
                 if ev.has_key("CMTPROJECTPATH") :
                     del ev["CMTPROJECTPATH"]
                 if not opts.remove_userarea and ev.has_key("User_release_area"):
                     ev["CMTPATH"] = ev["User_release_area"]
+                    log.debug("CMTPATH is set to %s" % ev["CMTPATH"])
         
     
     def setupLbScripts(self):
         log = logging.getLogger()
         opts = self.options
 
+        log.debug("Setting up LbScripts and appending to the output")
         for var in self._env.keys() :
             os.environ[var] = self._env[var]
         
