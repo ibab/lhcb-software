@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-08-20 - Gerhard Raven
+ - remove fixTCKdirPermission which now lives in HltTCK
+
 !========================== TCKUtils v1r3 2009-08-05 ===================
 ! 2009-08-04 - Gerhard Raven
  - add functions from Klaus for TCK visualizer 
