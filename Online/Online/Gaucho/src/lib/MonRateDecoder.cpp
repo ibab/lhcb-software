@@ -109,14 +109,13 @@ void MonRateDecoder::update(MonRate *monRate) {
   } 
   else  m_dimSvcNumberOfProcess->updateService((void*)&m_numprocessesData, nbprocdataSize);
   
-  Data m_TCKData;
+  IData m_TCKData;
   m_TCKData.value = m_newTriggerConfigurationKey;
-  m_TCKData.counter = m_newTriggerConfigurationKey;
   strcpy(m_TCKData.comment, "\0");
   std::string TCKComment="Currently active TCK";
   int TCKcommentSize = Misc::min(MAX_CAR, TCKComment.length()+1);
   strncpy(m_TCKData.comment, TCKComment.c_str(), TCKcommentSize);
-  int TCKdataSize = sizeof(double) + TCKcommentSize * sizeof(char);
+  int TCKdataSize = sizeof(unsigned int) + TCKcommentSize * sizeof(char);
   std::string TCKSvcName =  m_monRateSvcName.substr(s_pfixMonRate.length()+1, 
                                                     m_monRateSvcName.length() - s_pfixMonRate.length()+1) +
                                                                  "/TCK";
@@ -125,11 +124,11 @@ void MonRateDecoder::update(MonRate *monRate) {
   
   
   if (!TCKexists) {
-    static const std::string s_TCKFormat("D:2;C");
-    char * ttmpFormat = new char[s_TCKFormat.length()+1];
-    strcpy(ttmpFormat, s_TCKFormat.c_str());    
-    m_dimSvcTCK = new DimService(TCKSvcName.c_str(), ttmpFormat, (void*)&m_TCKData,  TCKdataSize);
-    delete ttmpFormat;
+    static const std::string s_TCKFormat("I:1;C");
+    char * tcmpFormat = new char[s_TCKFormat.length()+1];
+    strcpy(tcmpFormat, s_TCKFormat.c_str());    
+    m_dimSvcTCK = new DimService(TCKSvcName.c_str(), tcmpFormat, (void*)&m_TCKData,  TCKdataSize);
+    delete tcmpFormat;
     TCKexists=true;
   } 
   else  m_dimSvcTCK->updateService((void*)&m_TCKData, TCKdataSize);
