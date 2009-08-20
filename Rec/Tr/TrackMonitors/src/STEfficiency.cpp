@@ -1,4 +1,4 @@
-// $Id: STEfficiency.cpp,v 1.3 2009-08-08 10:59:42 mneedham Exp $
+// $Id: STEfficiency.cpp,v 1.4 2009-08-20 08:18:46 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@
 // AIDA
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram2D.h"
+#include "AIDA/IHistogram1D.h"
 
 #include "LoKi/select.h"
 
@@ -56,7 +57,9 @@ DECLARE_ALGORITHM_FACTORY( STEfficiency );
 //=============================================================================
 STEfficiency::STEfficiency( const std::string& name,
 			      ISvcLocator* pSvcLocator)
-  : TrackMonitorBase ( name , pSvcLocator )
+  : TrackMonitorBase ( name , pSvcLocator ),
+    m_totalExpected(0u),
+    m_totalFound(0u)
 {
   declareProperty("DetType"         , m_detType =  "IT" );
   declareProperty("ExpectedHitsTool", m_expectedHitsTool = "ITHitExpectation");
@@ -124,6 +127,13 @@ StatusCode STEfficiency::initialize()
 
   } // iterS
 
+  for (unsigned int iCut=0 ; iCut < m_NbrOfCuts; ++iCut){
+      if ( fabs( m_xCut - m_spacialCut[iCut] ) < .005 )
+	m_whichCut[0] = iCut;
+      else if ( fabs( m_stereoCut -  m_spacialCut[iCut]) < .005 )
+	m_whichCut[1] = iCut;
+  } // loop cuts
+
 
   return StatusCode::SUCCESS;
 }
@@ -190,8 +200,16 @@ StatusCode STEfficiency::execute()
       std::vector<unsigned int>::iterator iterExp = expectedSectors.begin();
       for ( ; iterExp != expectedSectors.end(); ++iterExp){
 	  ++m_expectedSector[*iterExp];
+          ++m_totalExpected;
 	  for (unsigned int i = 0; i < m_NbrOfCuts; ++i){
 	      if (foundHitInSector(output, *iterExp, m_spacialCut[i])){
+		  DeSTSector* sector = m_nameMapSector[*iterExp];
+                  if (sector->isStereo() && i == m_whichCut[1]) {
+                    ++m_totalFound;
+		  }
+                  else if (!sector->isStereo()&&  i == m_whichCut[0]){
+                    ++m_totalFound;
+		  }
 		  ++m_foundSector[i][*iterExp]; 
 	      }
 	    } // loop cuts
@@ -276,8 +294,9 @@ StatusCode STEfficiency::finalize()
   STChannelID channelID;
   std::string nick, root;
 
-  unsigned int i;
+  unsigned int i; unsigned int presentCut = 0u;
 
+  //  double totExpected = 0; double totFound = 0;
   double nExpected, nFound, err, eff;
 
   ITDetectorPlot prop( "EffciencyPlot", "EfficiencyPlot" );
@@ -286,20 +305,11 @@ StatusCode STEfficiency::finalize()
 				prop.nBinX(), prop.minBinY(), prop.maxBinY(), prop.nBinY());
 
 
-  // get the defaults used to quote cuts for the x and stereo ladders
-  unsigned int whichCut[2] = { 0, 0 }, presentCut(0); 
-  for (cutIt = cutBegin; cutIt != cutEnd; cutIt++){
-      if ( fabs( m_xCut - *cutIt ) < .005 )
-	whichCut[0] = static_cast<unsigned int>(cutIt - cutBegin);
-      else if ( fabs( m_stereoCut - *cutIt ) < .005 )
-	whichCut[1] = static_cast<unsigned int>(cutIt - cutBegin);
-  } // loop cuts
-
   for (; iterS != m_nameMapSector.end(); ++iterS ) {
 
       channelID = iterS -> second -> elementID();
       nick   = iterS -> second -> nickname();
-      iterS->second->isStereo() == true ? presentCut = whichCut[1]: presentCut = whichCut[0] ;
+      iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
       
       if (m_detType == "IT"){
         root = ITNames().UniqueBoxToString(channelID);
@@ -323,6 +333,7 @@ StatusCode STEfficiency::finalize()
 	       
   		  ST::ITDetectorPlot::Bins theBins = prop.toBins(channelID); 
 		  histo -> fill( theBins.xBin, theBins.yBin, eff );
+                  plot(eff,"sector eff", "sector eff", 0., 100., 200);
 	      }
 	  } // i
       } //nExpected
@@ -331,7 +342,7 @@ StatusCode STEfficiency::finalize()
   for (iterS = m_nameMapLayer.begin(); iterS != m_nameMapLayer.end(); ++iterS )
     {
       channelID = iterS -> second -> elementID();
-      iterS->second->isStereo() == true ? presentCut = whichCut[1]: presentCut = whichCut[0] ;
+      iterS->second->isStereo() == true ? presentCut = m_whichCut[1]: presentCut = m_whichCut[0] ;
       if (m_detType == "IT") {
         nick  = ITNames().UniqueLayerToString(channelID);
       }
@@ -352,6 +363,7 @@ StatusCode STEfficiency::finalize()
 		      static_cast<unsigned int>(1000 * m_spacialCut.back()));
 	    if ( i == presentCut )
 	      {
+                plot(eff, "layer eff", "layer eff", 0., 100, 200);
 		info() << std::setw(11) << std::left << nick << ' ' << nFound
 		       << " found tracks, cut = " << m_spacialCut[i] << ' '
 		       << /*setprecision(2) <<*/ eff << " +/- " << err << endmsg;
@@ -361,6 +373,19 @@ StatusCode STEfficiency::finalize()
       } // nExpected
     } // iterS
       
+  // total efficency
+  double teff = 100 * m_totalFound/m_totalExpected;
+  double terror = sqrt( eff * (100. - eff) / m_totalExpected );
+  info() << "Total Eff " << teff <<  " +/- " << terror << endmsg; 
+  
+  std::string layerEff = "layer eff";
+  AIDA::IHistogram1D* layerHisto = histo1D(layerEff);
+  info() << "Layer Eff: " << layerHisto->mean() << " rms " << layerHisto->rms() << endmsg;  
+
+  std::string sectorEff = "sector eff";
+  IHistogram1D* sectorHisto = histo1D(sectorEff);
+  info() << "sector Eff: " << sectorHisto->mean() << " rms " << sectorHisto->rms() << endmsg;  
+
   return TrackMonitorBase::finalize();  // must be called after all other actions
 }
 

@@ -1,4 +1,4 @@
-// $Id: STEfficiency.h,v 1.2 2009-07-27 13:44:46 jluisier Exp $
+// $Id: STEfficiency.h,v 1.3 2009-08-20 08:18:46 mneedham Exp $
 #ifndef STEFFICIENCY_H 
 #define STEFFICIENCY_H 1
 
@@ -62,8 +62,12 @@ private:
   
   std::vector< double > m_spacialCut;
   double m_xCut, m_stereoCut;
+  unsigned int m_totalExpected;
+  unsigned int m_totalFound;
+  unsigned int m_whichCut[2];
   unsigned int m_NbrOfCuts;
   unsigned int m_minHits;
+  
 
   std::string m_detType;
   DeSTDetector* m_tracker;
