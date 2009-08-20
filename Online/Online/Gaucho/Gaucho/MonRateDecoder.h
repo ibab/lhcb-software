@@ -19,6 +19,12 @@ struct Data
   char comment[MAX_CAR+1];
 };
 
+struct IData
+{
+  unsigned int value;
+  char comment[MAX_CAR+1];
+};
+
 class MonRate;
 class MonRateDecoder {
 
