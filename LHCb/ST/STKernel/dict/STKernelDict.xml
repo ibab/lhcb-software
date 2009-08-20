@@ -4,6 +4,7 @@
   <class name = "ISTSignalToNoiseTool" />
   <class name = "ISTClusterSelector" />
   <class name = "ISTChannelIDSelector" />
+  <class name = "ISTRawADCInfo" />
   <class name = "STTell1ID" />
   <class name = "STTell1Board" />
   <class name = "STBitsPolicy" />

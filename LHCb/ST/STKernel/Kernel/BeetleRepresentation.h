@@ -1,4 +1,4 @@
-// $Id: BeetleRepresentation.h,v 1.2 2009-01-22 11:43:44 mneedham Exp $
+// $Id: BeetleRepresentation.h,v 1.3 2009-08-20 07:58:46 mneedham Exp $
 #ifndef _STDAQ_BeetleRepresentation_H
 #define _STDAQ_BeetleRepresentation_H 1
 
@@ -41,6 +41,10 @@ namespace STDAQ{
     /** decompose into beetle, port, strip **/
     void decompose(unsigned int& beetle,
                    unsigned int& port,
+                   unsigned int& strip) const;
+
+    /** decompose into beetle and strip **/
+    void decompose(unsigned int& beetle,
                    unsigned int& strip) const;
 
     /** cast to int */
@@ -102,10 +106,18 @@ inline STDAQ::StripRepresentation STDAQ::BeetleRepresentation::toStripRepresenta
 inline void STDAQ::BeetleRepresentation::decompose(unsigned int& beetle,
                                               unsigned int& port,
                                               unsigned int& strip) const{
-  beetle = m_value/LHCbConstants::nStripsInBeetle;
-  const unsigned beetleStrip = m_value%LHCbConstants::nStripsInBeetle;
+
+  unsigned beetleStrip;
+  decompose(beetle,beetleStrip); // turn into Beetle and strip
+
   port = beetleStrip/LHCbConstants::nStripsInPort;
   strip = beetleStrip%LHCbConstants::nStripsInPort;
+} 
+
+inline void STDAQ::BeetleRepresentation::decompose(unsigned int& beetle,
+                                                   unsigned int& strip) const{
+  beetle = m_value/LHCbConstants::nStripsInBeetle;
+  strip = m_value%LHCbConstants::nStripsInBeetle;
 } 
 
 inline std::ostream& STDAQ::BeetleRepresentation::fillStream(std::ostream& s) const {
