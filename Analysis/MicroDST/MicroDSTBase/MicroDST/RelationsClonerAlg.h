@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.11 2009-08-20 08:21:41 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.12 2009-08-20 13:28:30 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -73,8 +73,9 @@ namespace MicroDST
 
       if (m_cloner) {
         debug() << "Found cloner " << m_clonerType << endmsg;
-      } else if (m_clonreType=="NONE") {
-        sc = Debug("No cloning of Relations' To performed.", StatusCode::SUCCESS);
+      } else if (m_clonerType=="NONE") {
+        sc = this->Warning("ClonerType set to NONE. No cloning of To performed.", 
+                         StatusCode::SUCCESS);
       } else {
         sc = Error("Failed to find cloner " + m_clonerType,
                    StatusCode::FAILURE);
