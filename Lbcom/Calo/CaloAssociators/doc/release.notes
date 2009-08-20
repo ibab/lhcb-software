@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.59 2009-08-10 13:33:46 ibelyaev Exp $
+! $Id: release.notes,v 1.60 2009-08-20 08:03:29 graven Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2009-08-20 - Gerhard Raven
+ -  make sure that a request to the data-on-demand service for 
+    Relations/Raw/Calo/Digits first creates digits, without relying on a cascade 
+    from the data-on-demand service
 
 ! 2009-08-10 - Vanya BELYAEV
 
