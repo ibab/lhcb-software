@@ -10,8 +10,8 @@ TChain* MakeChain(TString head, int max, TString loc = "TriggerTuple/EventTuple"
 
 int main(int argc, char** argv){
   cout << "Hello world " << argc << endl ;
-  if ( argc!=3 && argc!=4 ) {
-    cout << "./GetRates.exe Tuples/Hlt12-StatsTuple-305- 30" << endl ;
+  if ( argc!=3 && argc!=4  ) {
+    cout << "./GetRates.exe Tuples/Hlt12-StatsTuple-*" << endl ;
     return -9 ;
   }
   

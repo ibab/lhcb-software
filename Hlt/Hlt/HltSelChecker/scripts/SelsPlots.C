@@ -43,20 +43,21 @@ TString findCategory(TString sel){
   if ( sel.Contains("Hlt1")){
     if ( sel.Contains("Hlt1Global") ) return "Hlt1" ;
     if ( sel.Contains("Hlt1IgnoringLumi") ) return "Hlt1" ;
-    if ( sel.Contains("Hlt1Physics") ) return "Hlt1" ;
-    if ( sel.Contains("Hlt1Random") ) return "Hlt1" ;
-    if ( sel.Contains("Hlt1RawBankConversion") ) return "Hlt1" ;
-    if ( sel.Contains("Hlt1Incident") ) return "Hlt1" ;
-     if ( sel.Contains("Hlt1L0") ) return "Hlt1Com" ;
-     if ( sel.Contains("BeamGas") ) return "Hlt1Com" ;
-     if ( sel.Contains("Hadron") ) return "Hlt1Hadron" ;
-     if ( sel.Contains("Mu") ) return "Hlt1Muon" ;
-     if ( sel.Contains("Electron") ) return "Hlt1Electron" ;
-     if ( sel.Contains("Pho") ) return "Hlt1Photon" ;
-     if ( sel.Contains("Lumi") ) return "Hlt1Lumi" ;
-     if ( sel.Contains("Velo") ) return "Hlt1Com" ;
-     if ( sel.Contains("Tell") ) return "Hlt1Com" ;
-     if ( sel.Contains("XPress") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hlt1Physics") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hlt1Random") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hlt1RawBankConversion") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hlt1Incident") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hlt1L0") ) return "Hlt1Com" ;
+    if ( sel.Contains("BeamGas") ) return "Hlt1Com" ;
+    if ( sel.Contains("Hadron") ) return "Hlt1Hadron" ;
+    if ( sel.Contains("Mu") ) return "Hlt1Muon" ;
+    if ( sel.Contains("Electron") ) return "Hlt1Electron" ;
+    if ( sel.Contains("Pho") ) return "Hlt1Photon" ;
+    if ( sel.Contains("Lumi") ) return "Hlt1Com" ;
+    if ( sel.Contains("Velo") ) return "Hlt1Com" ;
+    if ( sel.Contains("Tell") ) return "Hlt1Com" ;
+    if ( sel.Contains("XPress") ) return "Hlt1Com" ;
+    if ( sel.Contains("ODIN") ) return "Hlt1Com" ;
   } else if ( sel.Contains("Hlt2")){
     if ( sel.Contains("Hlt2Global") ) return "Hlt2" ;
     if ( sel.Contains("B2") || sel.Contains("Bd2") || 
@@ -218,7 +219,8 @@ void GetRates(TString ss, TString cat, TString FullCut, TChain* MB12, TH1D* Hcol
   else MB12->Draw("Collisions >> Hcolls", FullCut) ;      
   if (ss!="Hlt1Global") MB12->Draw("HeaviestQuarkInEvent==5 >> Hbfracs", FullCut+" && Hlt1Global==1 && L0Decision==1") ;
   else MB12->Draw("HeaviestQuarkInEvent==5 >> Hbfracs", FullCut) ;
-      
+  
+  if (( cat=="Hlt1Com") && (rateNo<0.01)) return ;
   wiki_printName(cat,ss);
   if ( showHlt1 ){
     if (ss.Contains("Hlt2") || ( ss=="" && !cat.Contains("Hlt1"))) wiki_printRate(rateNo,errNo);
@@ -259,7 +261,7 @@ void SelsPlots(TChain* MB12){
   int Hlt1events = MB12->GetEntries("Hlt1Global==1  && L0Decision==1");
   double Hlt1eff = 1.0*Hlt1events/L0events ;
   bool showHlt1 = true ;
-  double L0rate = 1000000. ;
+  double L0rate = 900000. ;
   double Hlt1rate = 36800 ; // says Hans on 6/7/09
 
   vector<TString> sels ;
@@ -280,7 +282,7 @@ void SelsPlots(TChain* MB12){
   appendToCategory("Hlt2Global",categories) ;
 
   cout << endl << endl << endl ;
-  cout << "---++ Hlt1 and 2 rates" << endl << endl ;
+  cout << "---+++ Hlt1 and 2 rates" << endl << endl ;
   
   double normalisation = L0rate/L0events  ;
   if ( Hlt1eff > 0.5 ){
@@ -288,7 +290,8 @@ void SelsPlots(TChain* MB12){
     normalisation = Hlt1rate*Hlt1eff/MB12->GetEntries("Hlt1Global==1")  ;
     showHlt1 = false ;
   } else {
-    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is not already applied." << endl ;
+    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is not already applied. Normalising to an L0 rate of " 
+         << L0rate << " Hz" << endl ;
   }
   cout << "Using " << MB12->GetEntries("L0Decision==1") << " events. Normalisation factor is " 
        << normalisation << endl << endl ;
