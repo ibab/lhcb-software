@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.10 2009-08-17 19:13:43 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.11 2009-08-20 08:21:41 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -16,8 +16,10 @@
 #include <boost/type_traits/remove_pointer.hpp>
 /** @class RelationsClonerAlg RelationsClonerAlg.h MicroDST/RelationsClonerAlg.h
  *
- *  Templated algorithm to clone a relations table between Froms and Tos. The
- *  Tos are also cloned.
+ *  Templated algorithm to clone a relations table between Froms and Tos. The Froms
+ *  are assumed to be cloner already. The Tos are cloned, unless the ClonerType 
+ *  property is set to "NONE", in which case the cloner table points to the original 
+ *  Tos.
  *
  *  @author Juan PALACIOS juan.palacios@nikhef.nl
  *  @date   2009-04-14
@@ -71,9 +73,11 @@ namespace MicroDST
 
       if (m_cloner) {
         debug() << "Found cloner " << m_clonerType << endmsg;
+      } else if (m_clonreType=="NONE") {
+        sc = Debug("No cloning of Relations' To performed.", StatusCode::SUCCESS);
       } else {
         sc = Error("Failed to find cloner " + m_clonerType,
-                   StatusCode::FAILURE, 10);
+                   StatusCode::FAILURE);
       }
 
       return sc;
@@ -163,6 +167,7 @@ namespace MicroDST
 
     inline const typename TABLE::To cloneTo(const typename TABLE::To to) 
     {
+      if (0==m_cloner) return to;
       const typename TABLE::To storedTo = getStoredClone< TO_TYPE >(to);
       return (0!=storedTo) ? storedTo : (*m_cloner)( to );
     }
