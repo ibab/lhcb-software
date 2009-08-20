@@ -7,7 +7,8 @@ from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
 conf = MicroDSTWriter("MicroDST0")
-conf.OutputFilePrefix = "MyTest"
+conf.OutputFilePrefix = "MyTest5"
+conf.CopyProtoParticles = False
 conf.SelectionSequences = [selSequence]
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
