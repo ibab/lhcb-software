@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.10 2009-04-24 13:08:46 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.11 2009-08-20 09:22:50 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -574,7 +574,7 @@ LoKi::AParticles::VertexChi2::operator()
   }
   // create the vertex
   LHCb::Vertex vertex ;
-  StatusCode sc = m_fit -> fit ( a.begin() , a.end() , vertex ) ;
+  StatusCode sc = m_fit -> fit ( vertex , a.begin() , a.end() ) ;
   if ( sc.isFailure() ) 
   {
     Error ( "Error from the VertexFitter, return InvalidChi2" , sc ) ;
