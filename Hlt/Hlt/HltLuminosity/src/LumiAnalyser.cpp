@@ -1,4 +1,4 @@
-// $Id: LumiAnalyser.cpp,v 1.12 2009-08-06 21:53:18 panmanj Exp $
+// $Id: LumiAnalyser.cpp,v 1.13 2009-08-20 07:45:49 panmanj Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -122,9 +122,9 @@ StatusCode LumiAnalyser::initialize() {
     std::string name  = *ivar;
     // announce the values
     if (m_publishToDIM ) {
-      //declareInfo("COUNTER_TO_RATE["+name+"_mean]", m_means[k], "mean of "+name);
-      //declareInfo("COUNTER_TO_RATE["+name+"_threshold]", m_thresholds[k], "fraction over threshold of "+name);
+      m_means[k] = 0;
       declareInfo(name+"_mean", m_means[k], "mean of "+name);
+      m_thresholds[k] = 0;
       declareInfo(name+"_threshold", m_thresholds[k], "fraction over threshold of "+name);
       info() << "counter " << name << " declared to DIM (" << k << ") with threshold " << m_Thresholds[k] << endmsg;
     }
@@ -137,7 +137,9 @@ StatusCode LumiAnalyser::initialize() {
   for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx, ++ib) {
     std::string bx=*iBx;
     if (m_publishToDIM ) {
+      m_countBxTypes[ib] = 0; // reset
       declareInfo(bx, m_countBxTypes[ib], "number of "+bx);
+      declareInfo("COUNTER_TO_RATE["+bx+"_rate]", m_countBxTypes[ib], "rate of "+bx);
     }
   }
   m_allBxTypes = 0;
@@ -199,6 +201,14 @@ StatusCode LumiAnalyser::finalize() {
     info() << endmsg;
   }
 
+  // BXTypes seen
+  info() << "BXTypes seen ";
+  int ib = 0;
+  for (std::vector<std::string>::iterator iBx = m_BXTypes.begin(); iBx != m_BXTypes.end(); ++iBx, ++ib) {
+    std::string bx=*iBx;
+    info() << "  " << bx << ": " << m_countBxTypes[ib];
+  }
+  info() << "  Total: " << m_allBxTypes << endmsg;
 
   // release storage
   delete[] m_means;
