@@ -8,7 +8,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -79,7 +79,7 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         """
         Merged Pi0, Single Photon & Electron reconstruction
         """
-        HltCaloRec = Sequence("HltCaloRec")
+        HltCaloRec = Sequence(prefix+"CaloRec")
         from Configurables import CaloMergedPi0Alg, CaloHypoAlg, CaloSinglePhotonAlg, CaloElectronAlg
         HltCaloRec.Members += [ self.hltMergedPi0Rec(prefix), 
                                 self.hltPhotonFromMergedRec(prefix),
@@ -146,7 +146,7 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         Hypo tools for single photon
         """
         from Configurables import CaloSinglePhotonAlg
-        HltSinglePhotonRec = CaloSinglePhotonAlg("HltSinglePhotonRec")
+        HltSinglePhotonRec = CaloSinglePhotonAlg(prefix+"SinglePhotonRec")
         HltSinglePhotonRec.HypoTools          = [ "CaloExtraDigits/SpdPrsExtraG" ] 
         HltSinglePhotonRec.CorrectionTools2   = [ "CaloECorrection/ECorrection"  ] 
         HltSinglePhotonRec.CorrectionTools2  += [ "CaloSCorrection/SCorrection"  ] 
@@ -173,7 +173,7 @@ class Hlt2CaloReco(LHCbConfigurableUser):
         @todo Need prefix?
         """
         from Configurables import CaloHypoAlg
-        HltPhotonFromMergedRec = CaloHypoAlg("HltPhotonFromMergedRec")
+        HltPhotonFromMergedRec = CaloHypoAlg(prefix+"PhotonFromMergedRec")
         HltPhotonFromMergedRec.InputData =   "Hlt/Calo/SplitPhotons"        
         HltPhotonFromMergedRec.Tools    += [ "CaloECorrection/ECorrection" ]   # Ecorrection
         HltPhotonFromMergedRec.Tools    += [ "CaloSCorrection/SCorrection" ]   # Scorrection
