@@ -1,6 +1,6 @@
-### @file DVTestHlt2Bs2DsH.opts
+### $Id: DVTestHlt2Bd2DstarMu.py,v 1.2 2009-08-21 14:37:50 pkoppenb Exp $
  #
- #  Test file for HLT Bs->Ds(KKpi)(K,pi) selection
+ #  Test file for HLT Bd->D*MuNu
  #
  #  @author P. Koppenburg
  #  @date 2007-07-20
