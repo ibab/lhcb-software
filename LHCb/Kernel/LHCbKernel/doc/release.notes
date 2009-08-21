@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-08-21 - Olivier Deschamps
+- CaloCellCode.h : add missing include
+
 ! 2009-08-11 - Stephanie Hansmann-Menzemer
 - adapt to change in HitPattern class
 

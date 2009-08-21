@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.8 2009-07-30 12:08:28 ibelyaev Exp $ 
+// $Id: CaloCellCode.h,v 1.9 2009-08-21 17:07:17 odescham Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -7,6 +7,7 @@
 // ============================================================================
 // STD and STL 
 // ============================================================================
+#include <vector>
 #include <iostream> 
 #include <iomanip> 
 #include <string>
