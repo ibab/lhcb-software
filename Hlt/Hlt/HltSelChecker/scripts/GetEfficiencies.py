@@ -23,7 +23,6 @@ def getStats(f,signal):
       if inTable==0:
         if re.search("Correlation Table",line):
           inTable = 1
-          foundTable = 1
       else:
 #        if (debug): print inTable, line
         if re.search("=======",line):
@@ -35,6 +34,7 @@ def getStats(f,signal):
 #            if (debug): print "L0 line:", line
             L0Eff = float((line.split()[2]).replace("%",""))
  #           if (debug): print "L0", L0Eff
+            foundTable = 1
           elif (re.search("Hlt1Global",line)): 
  #           if (debug): print line
             Hlt1Eff   = float((line.split()[2]).replace("%",""))
@@ -62,6 +62,7 @@ def getStats(f,signal):
 #            if (( line.split()[-1]).find('#')<0) :
 #                SelEff = float((line.split()[-1]).replace("%",""))  # track
     if foundTable:
+#        print signal
         s0,v0 = sortedDictValues(BestSelDict,0)
         s1,v1 = sortedDictValues(BestSelDict,1)
         s2,v2 = sortedDictValues(BestSelDict,2)
@@ -88,6 +89,17 @@ wiki = True
 if ( len(sys.argv) == 2 ):
     mainhead = sys.argv[1]
 #
+print "\n   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
+print "   $ *Trigger* : Overall Trigger efficiency."
+print "   $ *L0* : L0 efficiency."
+print "   $ *Hlt* : Hlt efficiency on L0 events."
+print "   $ *Hlt1* : Hlt1 efficiency on L0 events."
+print "   $ *Hlt2* : Overall Hlt2 efficiency including all selections."
+print "   $ *Hlt2/Hlt1* : Hlt2 efficiency given Hlt1."
+print "   $ *Tk* : Hlt2 tracking efficiency on all tracks."
+print "   $ *Sel* : Name and efficiency  (on Hlt1 accepted events) of 4 best Hlt2 selections."
+print " "
+print "All efficiencies after L0 and offline (except L0 of course). Null efficiencies are due to missing or incorrect Hlt2 selections. To know what is exactly done and what offline selection is used see =HltSelChecker=. \n\n"
 #
 #
 if ( mainhead == "<unset>" ):
@@ -104,15 +116,3 @@ for f in files :
     f  = open(f, 'r')
     getStats(f,s)
     
-print "   $ *Signal* : Signal sample as described in =Hlt/HltSelChecker= options.  "
-print "   $ *Trigger* : Overall Trigger efficiency."
-print "   $ *L0* : L0 efficiency."
-print "   $ *Hlt* : Hlt efficiency on L0 events."
-print "   $ *Hlt1* : Hlt1 efficiency on L0 events."
-print "   $ *Hlt2* : Overall Hlt2 efficiency including all selections."
-print "   $ *Hlt2/Hlt1* : Hlt2 efficiency given Hlt1."
-print "   $ *Tk* : Hlt2 tracking efficiency on all tracks."
-print "   $ *Sel* : Name and efficiency  (on Hlt1 accepted events) of 4 best Hlt2 selections."
-print " "
-print "All efficiencies after L0 and offline (except L0 of course). Null efficiencies are due to missing or incorrect Hlt2 selections. To know what is exactly done and what offline selection is used see =HltSelChecker=. "
-print " "

@@ -107,12 +107,11 @@ bool statsCat(TString n){
 //
 //-----------------------------------------------------------------------------
 //
-void wiki_header(bool showHlt1,vector<category>* categories){
-  if ( showHlt1){
-    cout << "|  *Category*  |  *Selection*  |  *No Hlt1*  |  *Rate*  |  *Weighted*  |  *# Coll.*  |  *% b*  |  ";
-  } else {
-    cout << "|  *Category*  |  *Selection*  |  *Rate*  |  *Weighted*  |  *# Coll.*  |  *% b*  |  " ;
-  }
+void wiki_header(bool showHlt2withoutHlt1,bool showHlt2requiringHlt1,vector<category>* categories){
+  cout << "|  *Category*  |  *Selection*  |";
+  if ( showHlt2withoutHlt1 ) cout << "  *No Hlt1*  |"  ;
+  if ( showHlt2requiringHlt1) cout << "  *With Hlt1*  |" ;
+  cout << "  *Weighted*  |  *# Coll.*  |  *% b*  |  " ;
   if (0!=categories){
     for ( vector<category>::iterator c = categories->begin() ; c!=categories->end() ; c++  ){
       if (statsCat(c->getName())) cout << "<nox>"+c->getName() << "  |  " ;
@@ -123,11 +122,11 @@ void wiki_header(bool showHlt1,vector<category>* categories){
 //
 //-----------------------------------------------------------------------------
 //
-void wiki_footer(bool showHlt1){
+void wiki_footer(bool showHlt2withoutHlt1,bool showHlt2requiringHlt1){
   cout << endl ;
-  if (showHlt1) cout << "   $ *No Hlt1* : Hlt2 rate without running Hlt1 (but L0)" << endl ;
-  cout << "   $ *Rate* : Hlt2 rate after Hlt1 (Hz) " << endl ;
-  cout << "   $ *Weighted* : Hlt2 rate (Hz) after Hlt1 and re-weighting all events by the number of";
+  if (showHlt2withoutHlt1) cout << "   $ *No Hlt1* : Hlt2 rate without running Hlt1 (but L0)" << endl ;
+  if (showHlt2requiringHlt1) cout << "   $ *With Hlt1* : Hlt1/2 rate requiring Hlt1" << endl ;
+  cout << "   $ *Weighted* : Hlt2 rate re-weighting all events by the number of";
   cout << "selections that have selected it (i.e. how much does this selection contribute to the rate?).";
   cout << "The sum should be equal to the Hlt2 rate. *This is probably the number you want*. " << endl ;
   cout << "   $ *# coll* : Average number of pp collision in selected events (the lower the better)" << endl ;
@@ -190,7 +189,8 @@ double SumWeights(TH1D* h, double& err){
 // Ugly...
 //
 void GetRates(TString ss, TString cat, TString FullCut, TChain* MB12, TH1D* Hcolls, TH1D* Hbfracs,  TH1D* HnHltSels,
-              int L0events, int Hlt1events, double normalisation, bool showHlt1, vector<category>* categories){
+              int L0events, int Hlt1events, double normalisation, bool showHlt2withoutHlt1, bool showHlt2requiringHlt1, 
+              vector<category>* categories){
 
   bool isHlt2Selection = ((ss.Contains("Hlt2")) && (ss.Contains("Decision"))) ;
   bool isHlt1Selection = ((ss.Contains("Hlt1")) && (ss.Contains("Decision"))) ;
@@ -222,11 +222,14 @@ void GetRates(TString ss, TString cat, TString FullCut, TChain* MB12, TH1D* Hcol
   
   if (( cat=="Hlt1Com") && (rateNo<0.01)) return ;
   wiki_printName(cat,ss);
-  if ( showHlt1 ){
-    if (ss.Contains("Hlt2") || ( ss=="" && !cat.Contains("Hlt1"))) wiki_printRate(rateNo,errNo);
-    else cout << "  |  " ;
+  if ( showHlt2withoutHlt1 || cat.Contains("Hlt1") ){
+    wiki_printRate(rateNo,errNo);
+    //    if (ss.Contains("Hlt2") || ( ss=="" && !cat.Contains("Hlt1"))) wiki_printRate(rateNo,errNo);
+    //    else cout << "  |  " ;
   }
-  wiki_printRate(rateWithHlt1,errWithHlt1);
+  if ( showHlt2requiringHlt1 ){
+    wiki_printRate(rateWithHlt1,errWithHlt1);
+  }
   if (!ss.Contains("Global") && ss!="") wiki_printRate(Weighted,errWeighted);
   else cout << "  |  " ;
   if ( rateWithHlt1 > 0.0001 ) cout << (int(Hcolls->GetMean()*10.))/10. ;
@@ -260,7 +263,8 @@ void SelsPlots(TChain* MB12){
   int L0events = MB12->GetEntries("L0Decision==1");
   int Hlt1events = MB12->GetEntries("Hlt1Global==1  && L0Decision==1");
   double Hlt1eff = 1.0*Hlt1events/L0events ;
-  bool showHlt1 = true ;
+  bool showHlt2withoutHlt1 = true ;
+  bool showHlt2requiringHlt1 = true ;
   double L0rate = 900000. ;
   double Hlt1rate = 36800 ; // says Hans on 6/7/09
 
@@ -286,16 +290,17 @@ void SelsPlots(TChain* MB12){
   
   double normalisation = L0rate/L0events  ;
   if ( Hlt1eff > 0.5 ){
-    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is already applied at " << Hlt1rate*Hlt1eff << " kHz\n" << endl ;
-    normalisation = Hlt1rate*Hlt1eff/MB12->GetEntries("Hlt1Global==1")  ;
-    showHlt1 = false ;
+    cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is already applied at " << Hlt1rate << " kHz." << endl ;
+    cout << "Will ignore Hlt1 when quoting Hlt2 rate (i.e. use the Hlt1 run on the data instead)." << endl ;
+    normalisation = Hlt1rate/MB12->GetEntries("Hlt1Global==1")  ;
+    showHlt2requiringHlt1 = false ;
   } else {
     cout << "Hlt1 eff is " << 100*Hlt1eff << "%. Assuming it is not already applied. Normalising to an L0 rate of " 
          << L0rate << " Hz" << endl ;
   }
   cout << "Using " << MB12->GetEntries("L0Decision==1") << " events. Normalisation factor is " 
        << normalisation << endl << endl ;
-  wiki_header(showHlt1,&categories);
+  wiki_header(showHlt2withoutHlt1,showHlt2requiringHlt1,&categories);
   
   // utilities histos
   TH1D* Hcolls = new TH1D("Hcolls","colls",10,-0.5,9.5);
@@ -309,13 +314,15 @@ void SelsPlots(TChain* MB12){
       TString ss = sels[s] ;
       if (cat != findCategory(ss)) continue ;
       TString FullCut = "("+ss+"==1)" ;
-      GetRates(ss, cat, FullCut, MB12, Hcolls, Hbfracs,  HnHltSels, L0events, Hlt1events, normalisation, showHlt1, &categories);
+      GetRates(ss, cat, FullCut, MB12, Hcolls, Hbfracs,  HnHltSels, L0events, Hlt1events, normalisation, 
+               showHlt2withoutHlt1,showHlt2requiringHlt1, &categories);
     }
     if ( cat!="Hlt1" && cat!= "Hlt2") 
-      GetRates("",cat,cc->cut(),MB12, Hcolls, Hbfracs,  HnHltSels, L0events, Hlt1events, normalisation, showHlt1, &categories);
+      GetRates("",cat,cc->cut(),MB12, Hcolls, Hbfracs,  HnHltSels, L0events, Hlt1events, normalisation, 
+               showHlt2withoutHlt1,showHlt2requiringHlt1, &categories);
   }
   
-  wiki_footer(showHlt1) ;
+  wiki_footer(showHlt2withoutHlt1,showHlt2requiringHlt1) ;
   cout << endl ;
   return ;
   
