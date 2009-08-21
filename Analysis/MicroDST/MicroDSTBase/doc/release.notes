@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.36 2009-08-20 08:22:09 jpalac Exp $
+!$Id: release.notes,v 1.37 2009-08-21 15:51:50 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTBase
 ! Responsible : Juan Palacios
@@ -6,7 +6,11 @@
 !               functions and functors.
 !-----------------------------------------------------------------------------
 
-! 2009-08-10 - Juan PALACIOS
+! 2009-08-21 - Juan PALACIOS
+ - MicroDST/RelationsClonerAlg.h
+  . Protect against output location being ocupied
+
+! 2009-08-20 - Juan PALACIOS
  - MicroDST/RelationsClonerAlg.h
   . Allow not cloning the Tos. Cloner table will point to the original Tos.
  - MicroDST/MicroDSTCommon{.h, .icpp}
