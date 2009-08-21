@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2009-08-20 08:03:29 graven Exp $
+! $Id: release.notes,v 1.61 2009-08-21 12:35:57 pkoppenb Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,6 +6,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r8p1 2009-08-21 ========================
 ! 2009-08-20 - Gerhard Raven
  -  make sure that a request to the data-on-demand service for 
     Relations/Raw/Calo/Digits first creates digits, without relying on a cascade 
