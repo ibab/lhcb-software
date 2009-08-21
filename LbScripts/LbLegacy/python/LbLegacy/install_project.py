@@ -208,16 +208,20 @@
  090804 - Moved the Compat project verson to v1r2
  090819 - use absolute patch for the local distribution.htm file
         - put security around the usage of fixLinks. 
+ 090821 - implemented retry loop for the software retrieval.
 """
 #------------------------------------------------------------------------------
-import sys, os, getopt, time, shutil, urllib
+import sys, os, getopt, time, shutil
 import atexit
 import stat
 import commands
 import logging
+import random
+import socket
+from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '090819'
+script_version = '090821'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r2"
@@ -269,7 +273,7 @@ list_flag = False
 remove_flag = False
 make_flag = ' '
 md5_check = True
-nb_retries = 1
+nb_retries = 3
 check_only = False
 overwrite_mode = False
 
@@ -326,6 +330,54 @@ def help() :
       tar.gz file which cannot be untared is removed and a message is printed
       """
     sys.exit()
+    
+#----------------------------------------------------------------------------------
+
+def initRandSeed():
+    random.seed("%d-%s" % (os.getpid(), socket.gethostname()))
+
+_block_count = 0
+_block_size  = 0
+_file_size   = 0
+_cur_size    = 0
+
+def reportHook(bcount, bsize, fsize):
+    global _block_count, _block_size, _file_size, _cur_size
+    _block_count = bcount
+    _block_size  = bsize
+    _file_size   = fsize
+    _cur_size   += bcount * bsize 
+
+_retry_time = 120.0
+
+def retrieve(url, dest):
+    global _block_count, _block_size, _file_size, _cur_size
+    log = logging.getLogger()
+    retrieved = False
+    local_retries = nb_retries + 1
+    while not retrieved and local_retries :
+        try :
+            retrieved = True
+            fname, finfo = urlretrieve(url, dest, reportHook)
+        except :
+            retrieved = False
+            log.error("Failed to retrieve %s" % url)
+            if os.path.exists(fname) :
+                os.remove(fname)
+        local_retries -= 1
+        if local_retries and not retrieved:
+            sleep_time = _retry_time + random.uniform(-_retry_time/2, _retry_time/2)
+            log.warning("Sleeping for %f second before retrying" % sleep_time)
+            time.sleep(sleep_time)
+    log.debug("Block count: %d\tBlock size: %d\tFile size:%d\tRetrieved: %d" % (_block_count, _block_size, _file_size, _cur_size) )
+    _block_size  = 0
+    _block_count = 0
+    _file_size   = 0
+    _cur_size    = 0
+
+    return fname, finfo
+
+
 #----------------------------------------------------------------------------------
 
 _postinstall_commands = {}
@@ -749,7 +801,7 @@ def getFile(url,file):
         local_retries = nb_retries + 1
         hasbeendownloaded = False
         while ( not hasbeendownloaded and (local_retries>0) ) :
-            h =  urllib.urlretrieve(url+'/'+file,dest)[1]
+            h =  retrieve(url+'/'+file,dest)[1]
             if h.type.find(filetype) == -1:
                 log.warning('cannot download %s - retry' % file)
                 os.remove(dest)
@@ -799,14 +851,14 @@ def removeReferenceMD5(fnm, dest):
         except:
             log.warning('cannot remove file %s' % filename)
 
-def getReferenceMD5(url,file,dest):
+def getReferenceMD5(url, filen, dest):
     log = logging.getLogger()
-    md5name = getMD5FileName(file)
+    md5name = getMD5FileName(filen)
     filename = os.path.join(dest,md5name)
     if md5name :
         if os.path.exists(filename) :
             os.remove(filename)
-        urllib.urlretrieve(url+'/'+ md5name, filename )
+        filename = retrieve(url+'/'+ md5name, filename )[0]
     else:
         log.warning('cannot retrieve %s' % md5name)
     for line in open(filename,"r").readlines():
@@ -1265,7 +1317,7 @@ def listVersions(pname):
     log.debug('listVersions for %s ' % pname)
 
     PROJECT = pname.upper()
-    webpage = urllib.urlopen(url_dist+'/'+PROJECT)
+    webpage = urlopen(url_dist+'/'+PROJECT)
     weblines = webpage.readlines()
     for webline in weblines:
         if webline.find('href="'+PROJECT) != -1:
@@ -1273,6 +1325,7 @@ def listVersions(pname):
             quote1 = webline[href:].index('"')
             quote2 = webline[href+quote1+1:].index('"')
             log.info(webline[href+quote1+1:href+quote1+1+quote2])
+    atexit.register(urlcleanup)
 
 #
 #  read a string from a file ==============================================
@@ -1525,7 +1578,6 @@ def appendVariable(scriptfile, shell, varname, varcont):
 
 
 def StripPath(path):
-    log = logging.getLogger()
     collected = []
     for p in path.split(os.pathsep):
         rp = os.path.realpath(p)
@@ -1663,6 +1715,11 @@ def runInstall(pname,pversion,binary=''):
 
     log.info(' +++++++ start install_project.py version= %s ' % script_version)
     log.info('cmt version =%s, make_flag= %s, debug_flag= %s, list_flag= %s, remove_flag= %s' % (cmtversion, make_flag, debug_flag, list_flag, remove_flag))
+
+# cleanup the cache at exit
+    urlcleanup()
+    atexit.register(urlcleanup)
+
 # if list_flag is set: give the list of available versions for this project
     if list_flag :
         listVersions(pname)
@@ -2056,7 +2113,7 @@ def main():
     global debug_flag, full_flag, list_flag, remove_flag
     global cmtversion, md5_check, grid_version, nb_retries
     global setup_script, check_only, overwrite_mode
-
+    global _retry_time
 # get arguments
     pname =' '
     pversion = ' '
@@ -2071,7 +2128,7 @@ def main():
             ['help','debug','full','list','remove','binary=',
              'project=','version=','cmtversion=','nocheck',
              'retry=','grid=','setup-script=','check', 'overwrite',
-             'compatversion='])
+             'compatversion=', 'retrytime='])
 
     except getopt.GetoptError:
         help()
@@ -2107,6 +2164,8 @@ def main():
             grid_version = value
         if key == '--retry':
             nb_retries = int(value)
+        if key == '--retrytime':
+            _retry_time = float(value)
         if key in ('-s', '--setup-script') :
             setup_script = value
         if key == '--check':
@@ -2137,7 +2196,7 @@ def main():
     if pversion == ' ' and pname != 'LHCbGrid':
         list_flag = True
 
-
+    initRandSeed()
     lognm = createBaseDirs(pname, pversion)
 
     if lognm :

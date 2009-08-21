@@ -1,3 +1,10 @@
+2009-08-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: implemented retry loop for the 
+	software retrieval. Added tunable retry time option. The retry is performed
+	at random time t+uniform(-t/2,t/2). The default time is 120 seconds. The random
+	seed is initialized to the hash of "pid-hostname".
+
 2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py:
