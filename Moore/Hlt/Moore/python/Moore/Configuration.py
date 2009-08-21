@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.73 2009-08-12 07:19:53 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.74 2009-08-21 13:56:37 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -119,7 +119,9 @@ class Moore(LHCbConfigurableUser):
         evtMerger.DataType = OnlineEnv.MDF_BANKS
         if 'EventSelector' in allConfigurables : 
             del allConfigurables['EventSelector']
-        eventSelector = OnlineEnv.mbmSelector(input='EVENT',TAE=( OnlineEnv.TAE != 0 ))
+        TAE   = OnlineEnv.TAE != 0
+        input = 'EVENT' if not TAE else 'MEP'
+        eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
         app.ExtSvc.append(eventSelector)
         OnlineEnv.evtDataSvc()
 
