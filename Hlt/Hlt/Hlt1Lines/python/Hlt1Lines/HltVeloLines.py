@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.9 2009-08-05 18:59:03 graven Exp $
+# $Id: HltVeloLines.py,v 1.10 2009-08-21 08:14:37 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 #
@@ -20,7 +20,7 @@ from HltLine.HltLine import Hlt1Line   as Line
 from HltLine.HltLine import Hlt1Member as Member
 
 class HltVeloLinesConf(HltLinesConfigurableUser):
-   __slots__ = { 'Prescale'                   : { 'Hlt1Velo.Side' : 0.0001 } 
+   __slots__ = { 'Prescale'                   : { 'Hlt1Velo(.Side|TrTr)' : 0.0001 } 
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
@@ -40,6 +40,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
         from Configurables import Tf__PatVeloTraversingTracking as PatVeloTraversingTracking
         from Configurables import Tf__PatVeloRHitManager as PatVeloRHitManager
         from Configurables import Tf__PatVeloPhiHitManager as PatVeloPhiHitManager
+        from Configurables import Tf__PatVeloTraversingTracking as PatVeloTraversingTracking
         from Configurables import PatPV3D, PVOfflineTool
         ### find primary vertices seperately in each side
         for side in [ 'ASide', 'CSide' ] :
@@ -51,41 +52,46 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                   , OutputClusterLocation = "/Event/Raw/Velo/" + side + "Clusters"
                                   , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
                                   )
+            ## do the R tracking
+            rm = DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
+                                      , ClusterLocation = cf.OutputClusterLocation 
+                                      , LiteClusterLocation = cf.OutputLiteClusterLocation )
             rt = PatVeloRTracking( 'Hlt1Velo' + side + 'RTracking'
                                      , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
-                                     , HitManagerName = side + 'RHitManager')
-            DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
-                                      , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
-                                      , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
-                                    
-            DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
-                                        , ClusterLocation = '/Event/Raw/Velo/' + side + 'Clusters'
-                                        , LiteClusterLocation = '/Event/Raw/Velo/' + side + 'LiteClusters' )
-            st = PatVeloSpaceTracking('Hlt1Velo' +  side + 'SpaceTracking'
-                                         , InputTracksName = 'Hlt/Track/'+side+'RZVelo'
-                                         , OutputTracksName = 'Hlt/Track/'+side+'Velo'
-                                         , SpaceToolName = 'Tf__PatVeloSpaceTool/' + side + "SpaceTool")
-            PatVeloSpaceTool( side + 'SpaceTool'
-                                , RHitManagerName= side+"RHitManager"
-                                , PhiHitManagerName= side + "PhiHitManager"
-                                , TrackToolName= side + "TrackTool" )
-            gt = PatVeloGeneralTracking( 'Hlt1Velo' + side + 'GeneralTracking'
-                                           , RHitManagerName = side + 'RHitManager'
-                                           , PhiHitManagerName= side + 'PhiHitManager'
-                                           , TrackToolName= side + 'TrackTool'
-                                           , OutputTracksLocation = 'Hlt/Track/' + side + 'Velo')
-            PatVeloTrackTool( side + 'TrackTool'
-                                , RHitManagerName= side + "RHitManager"
-                                , PhiHitManagerName= side + "PhiHitManager"
-                                , TracksInHalfBoxFrame = True)
- 
+                                     , HitManagerName = rm.name())
 
-            PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName= side + "DefaultVeloRHitManager")
-            PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName= side + "DefaultVeloPhiHitManager")
+
+            ## do the space tracking
+            pm = DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
+                                      , ClusterLocation = cf.OutputClusterLocation 
+                                      , LiteClusterLocation = cf.OutputLiteClusterLocation )
+            # wrap a new level of managment around the previous ones
+            pm = PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName = rm.name() )
+            rm = PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName = pm.name() )
+                                    
+            tt = PatVeloTrackTool( side + 'TrackTool'
+                                , RHitManagerName= rm.name()
+                                , PhiHitManagerName= pm.name()
+                                , TracksInHalfBoxFrame = True)
+            spacetool = PatVeloSpaceTool( side + 'SpaceTool'
+                                , RHitManagerName= rm.name()
+                                , PhiHitManagerName= pm.name()
+                                , TrackToolName= tt.name()  )
+
+            tracks = 'Hlt/Track/%sVelo' % side
+            st = PatVeloSpaceTracking('Hlt1Velo' +  side + 'SpaceTracking'
+                                         , InputTracksName = rt.OutputTracksName
+                                         , OutputTracksName = tracks
+                                         , SpaceToolName = spacetool.getFullName())
+            gt = PatVeloGeneralTracking( 'Hlt1Velo' + side + 'GeneralTracking'
+                                           , RHitManagerName = rm.name() 
+                                           , PhiHitManagerName= pm.name()
+                                           , TrackToolName= tt.name()
+                                           , OutputTracksLocation = tracks)
 
             pv3D = PatPV3D( 'Hlt1Velo' + side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
             pv3D.addTool( PVOfflineTool, name = 'PVOfflineTool')
-            pv3D.PVOfflineTool.InputTracks = ['Hlt/Track/' + side + 'Velo']
+            pv3D.PVOfflineTool.InputTracks = [tracks]
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"
             pv3D.PVOfflineTool.PVSeedingName = "PVSeed3DTool"
 
@@ -97,7 +103,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                 [ DecodeVELO, cf, rt, st, gt, pv3D
                 , Member( 'VF' , 'Decision'
                         , OutputSelection = '%Decision'
-                        , InputSelection  = 'TES:Hlt/Vertex/' + side + 'PV3D'
+                        , InputSelection  = 'TES:%s' % pv3D.OutputVerticesName
                         , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
                         , HistogramUpdatePeriod = 1
                         , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}

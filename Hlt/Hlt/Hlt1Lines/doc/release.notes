@@ -1,12 +1,15 @@
-! $Id: release.notes,v 1.32 2009-08-18 13:04:46 witekma Exp $
+! $Id: release.notes,v 1.33 2009-08-21 08:14:37 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
+! 2009-08-21 - Gerhard Raven
+ - improve daisy-chaining of logic & input/output in velo lines
+
 ! 2009-08-18 - Mariusz Witek
-- Modifications of electron and photon lines for ECAL partial decoding and faster electron radiation correction
+ - Modifications of electron and photon lines for ECAL partial decoding and faster electron radiation correction
 
 ! 2009-08-14 - Gerhard Raven
  - update names of 'decision' algorithms for Tell1Error, Incident and AlignVelo lines
