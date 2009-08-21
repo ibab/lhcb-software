@@ -3,7 +3,7 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           AnalysisConf
-version           v1r4p1
+version           v1r4
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -14,7 +14,6 @@ branches          cmt doc python
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use       GaudiPolicy v*                             
-use       GaudiConf   v* -no_auto_imports
 use       Python      v* LCG_Interfaces 
 
 include_path      none
