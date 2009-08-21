@@ -1,4 +1,4 @@
-// $Id: STKernelDict.h,v 1.14 2009-08-20 07:58:46 mneedham Exp $
+// $Id: STKernelDict.h,v 1.15 2009-08-21 17:13:28 mneedham Exp $
 #ifndef DICT_STKERNELDICT_H 
 #define DICT_STKERNELDICT_H 1
 
@@ -19,7 +19,7 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/ITDetectorPlot.h"
 #include "Kernel/TTDetectorPlot.h"
-
+#include "Kernel/STXMLUtils.h"
 
 struct _Instantiations{
 

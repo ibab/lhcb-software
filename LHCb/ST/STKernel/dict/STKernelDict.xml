@@ -22,5 +22,5 @@
   <function pattern= "STBoardMapping::printTTMap" />
   <function pattern= "STBoardMapping::printITMap" />
   <function pattern = "STBoardMapping::find" />
-
+  <function pattern = "ST::XMLUtils*" />
 </lcgdict>
