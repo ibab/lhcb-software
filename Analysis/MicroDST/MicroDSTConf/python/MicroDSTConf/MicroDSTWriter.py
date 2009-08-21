@@ -1,11 +1,14 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.12 2009-08-19 18:29:59 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.13 2009-08-21 15:55:38 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
+
+import GaudiPython
+GaudiPython.loaddict('libEventAssocDict')
 
 from AnalysisConf.BaseDSTWriter import BaseDSTWriter
 
@@ -16,8 +19,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                   , "CopyPVs"              : True
                   , "CopyProtoParticles"   : True
                   , "CopyBTags"            : True
-                  , "CopyRelatedPVs"       : False
-                  , "P2PVRelationsSuffix"  : ""
+                  , "CopyPVRelations"      : {"Particle2VertexRelations":True}
                   , "CopyL0DUReport"       : False
                   , "CopyHltDecReports"    : False
                   , "CopyMCTruth"          : False
@@ -28,7 +30,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                           , "CopyPVs"              : """Copy Primary vertices and standard Particle->PV relaitons """
                           , "CopyProtoParticles"   : """Copy the ProtoParticles stored Particles were made of. Default: True"""
                           , "CopyBTags"            : """ """
-                          , "P2PVRelationsSuffix"  : """ """
+                          , "P2PVSuffixes"         : """ """
                           , "CopyL0DUReport"       : """ """
                           , "CopyHltDecReports"    : """ """
                           , "CopyRelatedPVs"       : """ """
@@ -98,10 +100,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                                          'CopyPrimaryVertices'))
         cloner.OutputLevel = 4
         self.setOutputPrefix(cloner)
-        if self.getProp('CopyParticles') :
-            pvRelCloner = self._copyP2PVRelations(sel,"CopyP2PVRelations",
-                                                  self.mainLocation(sel)+"/Particle2VertexRelations")
-        return [cloner, pvRelCloner]
+        return [cloner]
     
     def _copyMCInfo(self, sel) :
         """
@@ -139,14 +138,19 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
-    def _P2PVLocation(self, sel) :
-        return self.mainLocation(sel)+"/"+self.P2PVRelationsSuffix
-
-    def _copyRelatedPVs(self, sel) :
+    def _copyPVRelations(self, sel) :
+        # loop over related PV locations and copy each table.
+        # If no PV copying, keep original PV
+        cloners = []
         if self.getProp('CopyParticles') :
-            cloner = self._copyP2PVRelations(sel,"CopyUserP2PVRelations",
-                                             self._P2PVLocation(sel) )
-        return [cloner]
+            for loc, copyPV in self.getProp("CopyPVRelations").iteritems() :
+                print "Copy PV relations ", loc
+                fullLoc = self.mainLocation(sel) + "/" + loc
+                cloner = self._copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc )
+                if copyPV == False :
+                    cloner.ClonerType = "NONE"
+                cloners += [cloner]
+        return cloners
     
     def _copyL0DUReport(self, sel) :
         from Configurables import CopyL0DUReport
@@ -163,15 +167,24 @@ class MicroDSTWriter(BaseDSTWriter) :
     def extendSequence(self, sel) :
         print self.name(), ": Extending sequence ", sel.sequence().Members
         clonerList = []
-        if self.getProp("CopyODIN")          : clonerList+=self._copyODIN(sel)
-        if self.getProp("CopyRecHeader")     : clonerList+=self._copyRecHeader(sel)
-        if self.getProp("CopyParticles")     : clonerList+=self._copyParticleTrees(sel)
-        if self.getProp("CopyPVs")           : clonerList+=self._copyPVs(sel)
-        if self.getProp("CopyBTags")         : clonerList+=self._copyBTaggingInfo(sel)
-        if self.getProp("CopyL0DUReport")    : clonerList+=self._copyL0DUReport(sel)
-        if self.getProp("CopyHltDecReports") : clonerList+=self._copyHltDecReports(sel)
-        if self.getProp("CopyRelatedPVs")    : clonerList+=self._copyRelatedPVs(sel)
-        if self.getProp("CopyMCTruth")       : clonerList+=self._copyMCInfo(sel)
+        if self.getProp("CopyODIN")          :
+            clonerList+=self._copyODIN(sel)
+        if self.getProp("CopyRecHeader")     :
+            clonerList+=self._copyRecHeader(sel)
+        if self.getProp("CopyParticles")     :
+            clonerList+=self._copyParticleTrees(sel)
+        if self.getProp("CopyPVs")           :
+            clonerList+=self._copyPVs(sel)
+        if self.getProp("CopyBTags")         :
+            clonerList+=self._copyBTaggingInfo(sel)
+        if self.getProp("CopyL0DUReport")    :
+            clonerList+=self._copyL0DUReport(sel)
+        if self.getProp("CopyHltDecReports") :
+            clonerList+=self._copyHltDecReports(sel)
+        if self.getProp("CopyMCTruth")       :
+            clonerList+=self._copyMCInfo(sel)
+        if len(self.getProp("CopyPVRelations")) > 0 :
+            clonerList+=self._copyPVRelations(sel)
         sel.sequence().Members += clonerList
 
         print self.name(), ": Extended sequence is now", sel.sequence().Members
