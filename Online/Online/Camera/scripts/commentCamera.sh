@@ -1,4 +1,4 @@
 #!/bin/bash
 echo $*
-export SERVER=localhost
-CameraComment.exe $SERVER $USER/0/"$*"
+export SERVER=localhost:12346
+CameraCommand.exe $SERVER $USER/0/"$*"
