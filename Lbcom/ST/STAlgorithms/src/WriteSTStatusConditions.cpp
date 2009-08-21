@@ -1,4 +1,4 @@
-// $Id: WriteSTStatusConditions.cpp,v 1.2 2009-05-08 17:04:24 jvantilb Exp $
+// $Id: WriteSTStatusConditions.cpp,v 1.3 2009-08-21 17:15:14 mneedham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,6 +9,10 @@
 // STDet
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
+
+
+// STKernel
+#include "Kernel/STXMLUtils.h"
 
 DECLARE_ALGORITHM_FACTORY( WriteSTStatusConditions );
 
@@ -29,6 +33,11 @@ WriteSTStatusConditions::WriteSTStatusConditions( const std::string& name,
   declareProperty("depths", m_depth = 3u );
   declareProperty("precision", m_precision = 16u);
   declareProperty("removeCondb", m_removeCondb = false);
+  declareProperty("author", m_author = "Joe Bloggs");
+  declareProperty("tag", m_tag = "None");
+  declareProperty("description", m_desc = "BlahBlahBlah"); 
+
+  setForcedInit();
 }
 
 StatusCode WriteSTStatusConditions::execute()
@@ -74,6 +83,11 @@ StatusCode WriteSTStatusConditions::finalize()
                                                                  m_precision))
              << std::endl;
 
+  // add comments
+  std::ostringstream comment;
+  ST::XMLUtils::fullComment(comment, m_author, m_tag, m_desc);
+  outputFile << comment.str() << std::endl; 
+
   for( DeSTDetector::Sectors::const_iterator iterS = sectors.begin();
        iterS != sectors.end(); ++iterS){
     const Condition* aCon = (*iterS)->statusCondition();
@@ -103,33 +117,21 @@ std::string WriteSTStatusConditions::header(const std::string& conString) const
 
   // correct the location of the DTD
   if( m_removeCondb ) {
-    replace(temp,"conddb:", "");
+    ST::XMLUtils::replace(temp,"conddb:", "");
     std::string location;
     for (unsigned int i = 0;  i< m_depth; ++i) location += "../";
     std::string::size_type pos = temp.find("/DTD/");
     temp.insert(pos,location);
-    replace(temp,"//", "/");
+    ST::XMLUtils::replace(temp,"//", "/");
   }
 
   return temp;
 } 
+
 
 std::string WriteSTStatusConditions::strip(const std::string& conString) const
 {
   std::string::size_type startpos = conString.find(m_startTag);
   std::string::size_type endpos = conString.find(m_footer);
   return conString.substr(startpos, endpos - startpos);
-} 
-
-void WriteSTStatusConditions::replace(std::string& conString, std::string in, 
-                                      std::string out ) const
-{
-  std::string::size_type pos = 0;
-  while (pos != std::string::npos){
-    pos = conString.find(in,pos);
-    if (pos != std::string::npos) {
-      conString.replace(pos,in.size(),out);
-    }
-  } //pos
-
 } 

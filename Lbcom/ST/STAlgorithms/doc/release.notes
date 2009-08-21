@@ -2,6 +2,9 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-08-21 M Needham
+ - Modify WriteSTStatusConditions to use STXMLUtils 
+
 !======================= STAlgorithms v3r8 2009-07-13 ========================
 ! 2009-07-13 - Marco Cattaneo
  - Remove obsolete file STAlgorithms_dll.cpp

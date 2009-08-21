@@ -1,4 +1,4 @@
-// $Id: WriteSTStatusConditions.h,v 1.2 2009-05-08 17:04:24 jvantilb Exp $
+// $Id: WriteSTStatusConditions.h,v 1.3 2009-08-21 17:15:14 mneedham Exp $
 #ifndef WriteSTStatusConditions_H
 #define WriteSTStatusConditions_H 1
 
@@ -38,10 +38,12 @@ private:
   std::string footer() const;
   std::string header(const std::string& conString) const;
   std::string strip(const std::string& conString) const;
-  void replace(std::string& conString,std::string in, std::string out ) const;
 
   std::string m_outputFileName;
   std::ofstream m_outputFile;
+  std::string m_author;
+  std::string m_tag;
+  std::string m_desc;
   bool m_removeCondb;
   unsigned int m_precision;
   unsigned int m_depth;
