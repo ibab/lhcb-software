@@ -1,4 +1,4 @@
-// $Id: RelationsClonerAlg.h,v 1.12 2009-08-20 13:28:30 jpalac Exp $
+// $Id: RelationsClonerAlg.h,v 1.13 2009-08-21 15:50:35 jpalac Exp $
 #ifndef MICRODST_RELATIONSCLONERALG_H 
 #define MICRODST_RELATIONSCLONERALG_H 1
 
@@ -69,16 +69,18 @@ namespace MicroDST
       }
       verbose() << "inputTESLocation() is " << inputTESLocation() << endmsg;
 
-      m_cloner = tool<CLONER>(m_clonerType, this);
-
-      if (m_cloner) {
-        debug() << "Found cloner " << m_clonerType << endmsg;
-      } else if (m_clonerType=="NONE") {
+      if (m_clonerType=="NONE") {
         sc = this->Warning("ClonerType set to NONE. No cloning of To performed.", 
-                         StatusCode::SUCCESS);
+                           StatusCode::SUCCESS);
       } else {
-        sc = Error("Failed to find cloner " + m_clonerType,
-                   StatusCode::FAILURE);
+        m_cloner = tool<CLONER>(m_clonerType, this);
+        if (m_cloner) {
+          debug() << "Found cloner " << m_clonerType << endmsg;
+          sc = StatusCode::SUCCESS;
+        } else {
+          sc = Error("Failed to find cloner " + m_clonerType,
+                     StatusCode::FAILURE);
+        }
       }
 
       return sc;
@@ -100,6 +102,13 @@ namespace MicroDST
       }
       
       setFilterPassed(true);
+
+      if (exist<TABLE>(outputLocation) )
+      {
+        return this->Warning("Object "+ outputLocation + " already exists. Not cloning.", 
+                             StatusCode::SUCCESS,10) ;
+      }
+          
 
       if (exist<TABLE>(inputTESLocation()) )
       {
