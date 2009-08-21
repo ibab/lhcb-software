@@ -9,7 +9,7 @@
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       100 |         68 |(  68.0000 +- 4.66476  )%|   -------   |   -------   |
+ |*"#accept"                                       |       100 |         69 |(  69.0000 +- 4.62493  )%|   -------   |   -------   |
  | "#errors"                                       |       100 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
