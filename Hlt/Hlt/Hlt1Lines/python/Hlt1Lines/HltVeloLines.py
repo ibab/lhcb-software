@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.10 2009-08-21 08:14:37 graven Exp $
+# $Id: HltVeloLines.py,v 1.11 2009-08-21 09:16:52 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 #
@@ -66,8 +66,8 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                       , ClusterLocation = cf.OutputClusterLocation 
                                       , LiteClusterLocation = cf.OutputLiteClusterLocation )
             # wrap a new level of managment around the previous ones
-            pm = PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName = rm.name() )
-            rm = PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName = pm.name() )
+            rm = PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName = rm.name() )
+            pm = PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName = pm.name() )
                                     
             tt = PatVeloTrackTool( side + 'TrackTool'
                                 , RHitManagerName= rm.name()
