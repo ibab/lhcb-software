@@ -58,7 +58,7 @@ DaVinci().Simulation = True
 DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni, DecayTreeTuple("Hlt2DecayTreeTuple") ]
-DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2eeK-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bu2eeK-lum2-fixedL0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 DaVinci().RedoMCLinks = True 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 

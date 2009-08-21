@@ -1,21 +1,20 @@
-### @file DVTestHlt2Bs2DsDs.opts
+### @file DVTestHlt2Bs2DsH.opts
  #
- #  Test file for HLT Bs->Ds(KKpi)Ds(KKpi) selection
+ #  Test file for HLT Bs->Ds(KKpi)(K,pi) selection
  #
  #  @author P. Koppenburg
  #  @date 2007-07-20
-###
+ #/
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, PrintHeader, CheckSelResult
+from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, CheckSelResult
 #--------------------------------------------------------------
-signal = "Bs2DsDs"
+signal = "Bd2DstarMu"
 #
 # True filter criterion - will only run HLT on True signal
 #
 importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
 FilterTrueTracks().addTool(MCDecayFinder)
-FilterTrueTracks().MCDecayFinder.Decay = "[B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...]cc, [B_s0 -> (D*_s+ -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) ... ) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc,  [B_s0 -> (D_s+ => ^K+ ^K- ^pi+ {,gamma}{,gamma}{,gamma}) (D*_s- -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ...) ...]cc" 
-#
+FilterTrueTracks().MCDecayFinder.Decay =  "{[[B0]nos -> nu_mu ^mu+ (D*(2010)- -> ^pi- (D~0 -> ^K+ ^pi-))]cc, [[B0]os -> nu_mu~ ^mu- (D*(2010)+ -> ^pi+ (D0 -> ^K- ^pi+))]cc}" 
 # Set the following to false if you want only events with a signal
 # fully reconstructed in the HLT
 #
@@ -33,12 +32,12 @@ moni.Context = "HLT"
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 importOptions( "$HLTSELECTIONSROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
-###
- # Tuple
-###
+#
+# Decay Tree Tuple
+#
 #importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2DsDsCombine"]
-#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (D_s+ -> ^K+ ^K- ^pi+ ) (D_s- => ^K+ ^K- ^pi- )]cc"
+#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2B2DplusHCombine"]
+#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^D+ => ^K+ ^pi+ ^pi- ) ^pi- ]cc" 
 #
 # Configuration
 #
@@ -53,4 +52,5 @@ DaVinci().TupleFile =  "HLT-"+signal+".root"
 DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
 DaVinci().MoniSequence += [ moni ] #, DecayTreeTuple("Hlt2DecayTreeTuple") ]
 DaVinci().Input = [
-  "DATAFILE='PFN:/afs/cern.ch/lhcb/group/trigger/vol1/dijkstra/Selections/Bs2DsDs-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bd2DstarMu-lum2-fixedL0.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+  ]
