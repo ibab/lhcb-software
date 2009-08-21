@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.7 2009-08-19 18:57:47 jpalac Exp $
+!$Id: release.notes,v 1.8 2009-08-21 12:08:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-08-21 - Juan PALACIOS
+ - cmt/requirements
+  . Use GaudiConf and LHCbKernel explicitly
 
 ! 2009-08-18 - Juan PALACIOS
  - python/PhysSelPython/Wrappers.py
