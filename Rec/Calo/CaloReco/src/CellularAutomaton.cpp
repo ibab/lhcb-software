@@ -1,4 +1,4 @@
-// $Id: CellularAutomaton.cpp,v 1.18 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CellularAutomaton.cpp,v 1.19 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/CaloDigit.h"
@@ -7,6 +7,7 @@
 #include "Event/CellID.h"
 #include "CaloKernel/CaloUtil.h"
 #include "CaloUtils/ClusterFunctors.h"
+#include "CaloUtils/CaloAlgUtils.h"
 #include "CellularAutomaton.h"
 #include "TaggedCellFunctor.h"
 #include "boost/lexical_cast.hpp"
@@ -135,24 +136,10 @@ CellularAutomaton::CellularAutomaton
   declareProperty ( "Sort"     , m_sort     ) ;
   declareProperty ( "SortByET" , m_sortByET ) ;
   declareProperty ( "CellSelectorForEnergy" , m_used = "3x3");
-    
   // set default data as a function of detector
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  std::string det = name.substr( index, 4 );
-  if(det == "Ecal"){
-    m_inputData=   LHCb::CaloDigitLocation::Ecal;
-    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
-      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
-    m_detData= DeCalorimeterLocation::Ecal;
-  }
-  else if( det == "Hcal"){
-    m_inputData=   LHCb::CaloDigitLocation::Hcal;
-    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
-      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
-    m_detData= DeCalorimeterLocation::Hcal;
-  }
-
-
+  m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_inputData  = LHCb::CaloAlgUtils::CaloDigitLocation( name , context() );
+  m_outputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 };
 // ============================================================================
 

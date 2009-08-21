@@ -1,4 +1,4 @@
-// $Id: CaloSCorrection.cpp,v 1.7 2009-06-22 13:06:32 cattanem Exp $
+// $Id: CaloSCorrection.cpp,v 1.8 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -75,7 +75,7 @@ CaloSCorrection::CaloSCorrection
   Level.push_back ( true ); 
   Level.push_back ( true );
   Level.push_back ( true ); 
-  /// interafces 
+  /// interafaces 
   declareInterface<ICaloHypoTool> ( this ) ;  
 };
 // ============================================================================

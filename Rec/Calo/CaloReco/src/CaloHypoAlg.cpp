@@ -1,4 +1,4 @@
-// $Id: CaloHypoAlg.cpp,v 1.9 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CaloHypoAlg.cpp,v 1.10 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -17,6 +17,7 @@
 // CaloEvent/Event
 // ============================================================================
 #include "Event/CaloHypo.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -52,6 +53,7 @@ CaloHypoAlg::CaloHypoAlg
       "the list of generic Hypo-tools to be applied" ) ;
   
   declareProperty ( "InputData" , m_inputData );
+  declareProperty ( "HypoType"  , m_type );
   
   setProperty ( "PropertiesPrint" , true ) ;
 }
@@ -72,11 +74,14 @@ StatusCode CaloHypoAlg::initialize()
   StatusCode sc = GaudiAlgorithm::initialize();
   if( sc.isFailure() ) 
   { return Error("Could not initialize the base class CaloAlgorithm",sc);}
+
+  // apply default context-dependent TES location (if not defined)
+  if(  m_inputData.empty() && !m_type.empty() )m_inputData =  LHCb::CaloAlgUtils::CaloHypoLocation( m_type , context() );
+
   
   if ( m_inputData.empty() ) 
   { return Error ( "Empty 'InptuData'"  ) ; }
   //
-  
   for( Names::const_iterator it = m_names.begin() ; 
        m_names.end() != it ; ++it ) 
   {

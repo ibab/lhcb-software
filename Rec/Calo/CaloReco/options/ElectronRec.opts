@@ -1,36 +1,5 @@
-// $Id: ElectronRec.opts,v 1.8 2009-04-16 12:56:08 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.7  2008/09/22 01:41:23  odescham
-// review clusterization and cluster selection
-//
-// Revision 1.6  2008/06/30 15:36:33  odescham
-// prepare for HLT processing
-//
-// Revision 1.5  2006/05/30 09:41:59  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.4  2005/11/07 12:12:40  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.3  2002/12/09 17:43:08  cattanem
-// bug fixes
-//
-// Revision 1.2  2002/12/01 14:22:56  ibelyaev
-//  Hcal stuff and updated S-coprrections
-//
-// ============================================================================
-
-/** @file 
- *  Options to run  CaloElectronAlg "PhotonRec" algorithm 
- *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
- *  @date 2002-10-31
- */
 
 
-// Tools and correctors
 ElectronRec.HypoTools          = { "CaloExtraDigits/SpdPrsExtraE"     } ;
 ElectronRec.CorrectionTools2   = { "CaloECorrection/ECorrection"      } ;
 ElectronRec.CorrectionTools2  += { "CaloSCorrection/SCorrection"      } ;

@@ -1,4 +1,4 @@
-// $Id: CaloClusterCovarianceAlg.cpp,v 1.11 2009-06-22 13:06:32 cattanem Exp $ 
+// $Id: CaloClusterCovarianceAlg.cpp,v 1.12 2009-08-21 16:48:11 odescham Exp $ 
 //  ===========================================================================
 #define CALORECO_CALOCLUSTERCOVARIANCEALG_CPP 1 
 /// ===========================================================================
@@ -14,6 +14,7 @@
 #include  "CaloInterfaces/ICaloSubClusterTag.h"
 // CaloUtils 
 #include  "CaloUtils/CovarianceEstimator.h"
+#include  "CaloUtils/CaloAlgUtils.h"
 // local
 #include  "CaloClusterCovarianceAlg.h"
 
@@ -78,19 +79,8 @@ CaloClusterCovarianceAlg::CaloClusterCovarianceAlg
   declareProperty ( "Detector"        , m_detData      = DeCalorimeterLocation::Ecal) ;  
 
   // set default data as a function of detector
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  std::string det = name.substr( index, 4 ); 
-  if(det == "Ecal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
-    m_detData   = DeCalorimeterLocation::Ecal;
-  }
-  else if(det == "Hcal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
-    m_detData   = DeCalorimeterLocation::Hcal;
-  }
-
+  m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 };
 // ===========================================================================
 

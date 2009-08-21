@@ -1,8 +1,11 @@
-// $Id: BremPIDeAlg.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
+// $Id: BremPIDeAlg.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.5  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -42,15 +45,10 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    if( "HLT" == context() ){
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2Hlt  ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDeHlt  ) ;
-    }
-    else{
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::BremChi2  ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::BremPIDe  ) ;
-    }
-    
+
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Input"  , CaloIdLocation( "BremChi2" , context() ) );
+    _setProperty ( "Output" , CaloIdLocation( "BremPIDe" , context() ) );    
 
     _setProperty ( "nVlong" , Gaudi::Utils::toString( 200 ) );
     _setProperty ( "nVvelo" , Gaudi::Utils::toString( 200 ) );

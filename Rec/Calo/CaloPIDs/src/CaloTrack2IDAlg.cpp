@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.cpp,v 1.5 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloTrack2IDAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -35,7 +35,7 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
   ISvcLocator*       pSvc ) 
   : CaloTrackAlg( name , pSvc ) 
   // input tracks 
-  , m_inputs   ( 1 , LHCb::TrackLocation::Default ) ///< input tracks 
+  , m_inputs   () ///< input tracks 
   // output data 
   , m_output   () ///< output data
   // filter data 
@@ -57,11 +57,9 @@ CaloTrack2IDAlg::CaloTrack2IDAlg
                       LHCb::Track::Downstream ,
                       LHCb::Track::Ttrack     ) ) ;
 
-  if( "HLT" == context() ){
-    m_inputs.clear();
-    //    m_inputs.push_back( "Hlt/Track/ForwardCLEANED" );
-    m_inputs.push_back(  LHCb::TrackLocation::HltForward );
-  }
+   // context-dependent default track container 
+  m_inputs.clear();
+  m_inputs.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
 } ;
 // ============================================================================
 /// standard algorithm initilization

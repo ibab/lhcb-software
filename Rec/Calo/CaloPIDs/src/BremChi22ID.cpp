@@ -1,4 +1,4 @@
-// $Id: BremChi22ID.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
+// $Id: BremChi22ID.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,16 +23,9 @@ protected:
     ISvcLocator*       pSvc ) 
     :  CaloChi22ID ( name , pSvc ) 
   {
-    if("HLT"==context()){
-      _setProperty( "Input"  , LHCb::CaloIdLocation::BremMatchHlt ) ;
-      _setProperty( "Output" , LHCb::CaloIdLocation::BremChi2Hlt  ) ;
-    }
-    else{
-      _setProperty( "Input"  , LHCb::CaloIdLocation::BremMatch ) ;
-      _setProperty( "Output" , LHCb::CaloIdLocation::BremChi2      ) ;
-    }
-    
-
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty( "Input"  , CaloIdLocation( "BremMatch", context() ) ) ;
+    _setProperty( "Output" , CaloIdLocation( "BremChi2" , context() ) ) ;
     // @todo it must be in agrement with "Threshold" for BremMatchAlg 
     _setProperty( "CutOff" , "10000"  ) ; //  
     // track types:

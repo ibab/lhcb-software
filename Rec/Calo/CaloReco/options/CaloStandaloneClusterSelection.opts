@@ -1,4 +1,3 @@
-ToolSvc.EcalClusterWithPrs.MinEnergy = 10*MeV ;
 //-------------------------------------------
 // Select neutral clusters for Photon hypo
 //-------------------------------------------
@@ -7,9 +6,10 @@ SinglePhotonRec.SelectionTools   += {
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",
   "CaloSelectorNOT/SpdNOT"
 }; 
-ToolSvc.SpdNOT.SelectorTools =  { "CaloSelectNeutralClusterWithSpd/EcalClusterWithNoSpd"}; 
-//ToolSvc.PhotonClusterSelect.MinEnergy = 0;
-//ToolSvc.PhotonClusterSelect.MaxDigits = 99;
+SinglePhotonRec.EcalClusterWithPrs.MinEnergy = 10*MeV ;
+SinglePhotonRec.SpdNOT.SelectorTools =  { "CaloSelectNeutralClusterWithSpd/EcalClusterWithNoSpd"}; 
+//SinglePhotonRec.PhotonClusterSelect.MinEnergy = 0;
+//SinglePhotonRec.PhotonClusterSelect.MaxDigits = 99;
 
 
 //-------------------------------------------
@@ -18,10 +18,10 @@ ToolSvc.SpdNOT.SelectorTools =  { "CaloSelectNeutralClusterWithSpd/EcalClusterWi
 ElectronRec.SelectionTools  +=  { 
   //"CaloSelectCluster/ElectronClusterSelect",
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",  
-  "CaloSelectNeutralClusterWithSpd/EcalClusterWithSpd"
+  "CaloSelectChargedClusterWithSpd/EcalClusterWithSpd"
 };
-//ToolSvc.ElectronClusterSelect.MinEnergy = 0;
-//ToolSvc.ElectronClusterSelect.MaxDigits = 99;
+//ElectronRec.ElectronClusterSelect.MinEnergy = 0;
+//ElectronRec.ElectronClusterSelect.MaxDigits = 99;
 
 
 

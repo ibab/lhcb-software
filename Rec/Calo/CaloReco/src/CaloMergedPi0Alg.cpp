@@ -1,4 +1,4 @@
-// $Id: CaloMergedPi0Alg.cpp,v 1.26 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CaloMergedPi0Alg.cpp,v 1.27 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -22,6 +22,7 @@
 #include "Event/CaloHypo.h"
 #include "Event/CaloPosition.h"
 #include "CaloUtils/CaloDataFunctor.h"
+#include "CaloUtils/CaloAlgUtils.h"
 #include "Event/CellID.h"
 // ============================================================================
 #include "Kernel/CaloCellID.h"
@@ -113,13 +114,12 @@ CaloMergedPi0Alg::CaloMergedPi0Alg( const std::string& name    ,
   declareProperty ( "CreateSplitClustersOnly"    , m_createClusterOnly = false) ;
 
 
-  if ( "HLT"==context() )
-  {
-    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
-    m_outputData = LHCb::CaloHypoLocation::MergedPi0sHlt;
-    m_nameOfSplitPhotons = LHCb::CaloHypoLocation::SplitPhotonsHlt;
-    m_nameOfSplitClusters = LHCb::CaloClusterLocation::EcalSplitHlt;
-  }
+  // default context-dependent locations
+  m_inputData  = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , context()  );
+  m_outputData = LHCb::CaloAlgUtils::CaloHypoLocation("MergedPi0s", context() );
+  m_nameOfSplitPhotons  = LHCb::CaloAlgUtils::CaloHypoLocation("SplitPhotons", context() );
+  m_nameOfSplitClusters = LHCb::CaloAlgUtils::CaloSplitClusterLocation(context() );
+
   
   setProperty ( "PropertiesPrint" , true ) ;
   

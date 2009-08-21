@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.6 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -28,6 +28,7 @@
 // ============================================================================
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloTrackAlg.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // Local 
 // ============================================================================

@@ -20,6 +20,7 @@
 // CaloUtils
 #include "CaloUtils/ClusterFunctors.h"
 #include "CaloUtils/Calo2Track.h"
+#include "CaloUtils/CaloAlgUtils.h"
 /// local
 #include "CaloPhotonEstimatorTool.h"
 
@@ -105,11 +106,10 @@ CaloPhotonEstimatorTool::CaloPhotonEstimatorTool(const std::string& type,
   declareProperty("ShapSpdSignal"    ,m_signalShapeSpdData);
   declareProperty("ShapBackground"   ,m_backgrShapeData);
   declareProperty("ShapSpdBackground",m_backgrShapeSpdData);
-
   declareProperty("Extrapolation"    ,m_extrapol);
 
-
-  if("HLT"==context())m_tableLocation = LHCb::CaloIdLocation::ClusterMatchHlt;  
+  using namespace LHCb::CaloAlgUtils;
+  m_tableLocation = CaloIdLocation( "ClusterMatch" , context() );
 
 }
 // ============================================================================

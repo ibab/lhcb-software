@@ -1,4 +1,4 @@
-// $Id: EcalChi22ID.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
+// $Id: EcalChi22ID.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,15 +23,9 @@ protected:
     ISvcLocator*       pSvc ) 
     :  CaloChi22ID ( name , pSvc ) 
   {
-    if( "HLT" == context() ){
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::ElectronMatchHlt ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalChi2Hlt      ) ;
-    }
-    else{
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::ElectronMatch ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::EcalChi2      ) ;
-    }
-    
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty( "Input"  , CaloIdLocation( "ElectronMatch" ,  context() ) ) ;
+    _setProperty( "Output" , CaloIdLocation( "EcalChi2"      ,  context() ) ) ;    
 
     // @todo it must be in agrement with "Threshold" for ElectonMatchAlg 
     _setProperty ( "CutOff" , "10000"  ) ; //  

@@ -1,4 +1,4 @@
-// $Id: Track2PrsEAlg.cpp,v 1.5 2009-08-05 17:35:34 ibelyaev Exp $
+// $Id: Track2PrsEAlg.cpp,v 1.6 2009-08-21 16:49:46 odescham Exp $
 // ============================================================================
 // GaudiKernel
 // ============================================================================
@@ -26,14 +26,10 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrack2IDAlg( name , pSvc ) 
   {
-    if("HLT"==context()){
-      _setProperty ( "Output" , LHCb::CaloIdLocation::PrsEHlt   ) ;
-      _setProperty ( "Filter" , LHCb::CaloIdLocation::InPrsHlt  ) ;
-    }
-    else{
-      _setProperty ( "Output" , LHCb::CaloIdLocation::PrsE   ) ;
-      _setProperty ( "Filter" , LHCb::CaloIdLocation::InPrs  ) ;
-    }
+
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Output" , CaloIdLocation( "PrsE" , context() )  ) ;
+    _setProperty ( "Filter" , CaloIdLocation( "InPrs", context() )  ) ;
   
     _setProperty ( "Tool"   , "PrsEnergyForTrack/PrsE"   ) ;
   } 

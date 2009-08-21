@@ -1,4 +1,4 @@
-// $Id: CaloID2DLL.h,v 1.4 2007-08-24 21:25:18 odescham Exp $
+// $Id: CaloID2DLL.h,v 1.5 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOID2DLL_H 
 #define CALOPIDS_CALOID2DLL_H 1
@@ -30,6 +30,7 @@
 // ============================================================================
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloTrackAlg.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 #include "ToString.h"
 #include "ToVector.h"

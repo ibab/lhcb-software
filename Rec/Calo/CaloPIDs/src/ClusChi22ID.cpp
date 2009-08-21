@@ -1,8 +1,11 @@
-// $Id: ClusChi22ID.cpp,v 1.6 2008-06-30 15:37:34 odescham Exp $
+// $Id: ClusChi22ID.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.6  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.5  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -42,15 +45,9 @@ protected:
     :  CaloChi22ID ( name , pSvc ) 
   {
 
-    if("HLT" == context() ){
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::ClusterMatchHlt ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2Hlt     ) ;
-    }else{
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::ClusterMatch ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::ClusChi2     ) ;
-    }
-  
-
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Input"  , CaloIdLocation( "ClusterMatch" ,context() ) ) ;
+    _setProperty ( "Output" , CaloIdLocation( "ClusChi2"     ,context() ) ) ;
 
     // @todo it must be in agrement with "Threshold" for PhotonMatchAlg 
     _setProperty ( "CutOff" , "1000"  ) ; //  

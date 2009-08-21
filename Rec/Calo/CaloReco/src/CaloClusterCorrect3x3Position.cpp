@@ -1,4 +1,4 @@
-// $Id: CaloClusterCorrect3x3Position.cpp,v 1.11 2008-09-22 01:41:23 odescham Exp $
+// $Id: CaloClusterCorrect3x3Position.cpp,v 1.12 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
@@ -17,8 +17,10 @@
 // CaloEvent 
 #include "Event/CaloCluster.h"
 #include "Event/CaloHypo.h"
-#include "CaloUtils/CaloDataFunctor.h"
 #include "Event/CaloPosition.h"
+// CaloUtils
+#include "CaloUtils/CaloDataFunctor.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // Kernel
 #include "Kernel/CaloCellID.h"
 // local
@@ -57,19 +59,10 @@ CaloClusterCorrect3x3Position::CaloClusterCorrect3x3Position
   declareProperty ( "Detector"          , m_detData      = DeCalorimeterLocation::Ecal ) ;  
 
 
-  // set default data as a function of detector
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  std::string det = name.substr( index, 4 ); 
-  if(det == "Ecal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
-    m_detData   = DeCalorimeterLocation::Ecal;
-  }
-  else if(det == "Hcal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
-    m_detData   = DeCalorimeterLocation::Hcal;
-  }
+  // set default data as a function of detector & context
+  m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
+
 };
 
 // ============================================================================

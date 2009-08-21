@@ -1,8 +1,11 @@
-// $Id: CaloChi22ID.cpp,v 1.3 2008-06-30 15:37:34 odescham Exp $
+// $Id: CaloChi22ID.cpp,v 1.4 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.2  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -32,7 +35,7 @@ CaloChi22ID::CaloChi22ID( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : CaloTrackAlg ( name , pSvcLocator )
   //
-  , m_tracks ( 1 , LHCb::TrackLocation::Default )
+  , m_tracks ()
   //
   , m_input  () 
   , m_output () 
@@ -42,12 +45,9 @@ CaloChi22ID::CaloChi22ID( const std::string& name,
   declareProperty ( "Input"  , m_input  ) ;
   declareProperty ( "Output" , m_output ) ;
   declareProperty ( "CutOff" , m_large  ) ;
-
-  if( "HLT" == context() ){
-    m_tracks.clear();
-    //    m_tracks.push_back(  "Hlt/Track/ForwardCLEANED" );
-    m_tracks.push_back(  LHCb::TrackLocation::HltForward );
-  }
+  // context-dependent default track container 
+  m_tracks.clear();
+  m_tracks.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
 } ;
 // ============================================================================
 /// algorithm execution 

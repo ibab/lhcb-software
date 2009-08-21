@@ -1,4 +1,4 @@
-// $Id: CaloChi22ID.h,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: CaloChi22ID.h,v 1.5 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOCHI22ID_H 
 #define CALOPIDS_CALOCHI22ID_H 1
@@ -25,6 +25,7 @@
 // ============================================================================
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloTrackAlg.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 /** @class CaloChi22ID CaloChi22ID.h
  *  

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.69 2009-08-05 17:38:29 ibelyaev Exp $
+# $Id: requirements,v 1.70 2009-08-21 16:48:10 odescham Exp $
 # =============================================================================
 package            CaloReco
 version            v5r0
@@ -19,6 +19,5 @@ apply_pattern      install_python_modules
 apply_pattern      component_library library=CaloReco
 # =============================================================================
 
-# =============================================================================
-# The END 
-# =============================================================================
+# Set the default path for Brunel options.
+set CALORECOOPTS ${CALORECOROOT}/options

@@ -1,42 +1,30 @@
-// $Id:
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1  2006/05/30 09:41:59  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.2  2005/11/07 12:12:40  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.1  2003/04/11 09:33:33  ibelyaev
-//  add new E-,S- and L-corrections from Olivier Deschamps
-//
-//
-// ============================================================================
-// ============================================================================
-/** @file 
- *  Configuration of S-correction
- *
- */
-// ============================================================================
-ToolSvc.SCorrection.CorrectionLevel={ 
-  true,    // Asinh Sshape 
-  true,    // Residual   asymmetries
-  true     // L/R &  B/U asymmetries 
-} ;
-// ============================================================================
-// Asinh Sshaping
-// Main Parameter                  Outer   Middle   Inner 
-ToolSvc.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ;
-// Residual Sshape
-ToolSvc.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865};
-ToolSvc.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
-ToolSvc.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
-// L/R & B/U Asymmetries
-ToolSvc.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928};
-ToolSvc.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
-ToolSvc.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
-// ============================================================================
-// The End 
-// ============================================================================
+
+
+
+// ==== Electrons
+ElectronRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
+ElectronRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
+ElectronRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
+ElectronRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
+ElectronRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
+ElectronRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
+ElectronRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
+
+// ==== SinglePhotons
+SinglePhotonRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
+SinglePhotonRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
+SinglePhotonRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
+SinglePhotonRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
+SinglePhotonRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
+SinglePhotonRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
+SinglePhotonRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
+
+// ==== PhotonFromMerged
+PhotonFromMergedRec.SCorrection.Par_Asinh={ 0.102 , 0.129 ,  0.144 } ; // Main Parameter                  Outer   Middle   Inner 
+PhotonFromMergedRec.SCorrection.Par_ResOut={ -0.47496E-03,0.44911,-0.34187E-01,-9.0335, 0.46190,53.041,-1.2801     ,-97.865}; // Residual Sshape
+PhotonFromMergedRec.SCorrection.Par_ResMid={ -0.97712E-05,0.33898, 0.14566E-01,-5.9958,-0.13533,32.711, 0.33460E-01,-58.743};
+PhotonFromMergedRec.SCorrection.Par_ResInn={ -0.14401E-03,0.29037, 0.28848E-01,-5.1697,-0.34664,26.885, 0.99928    ,-45.032};
+PhotonFromMergedRec.SCorrection.Par_AsOut={ 0.24742E-01,0.11487E-01,-0.32640,-0.29386E-01,0.11472E-01,0.35928}; // L/R & B/U Asymmetries
+PhotonFromMergedRec.SCorrection.Par_AsMid={ 0.28587E-01,0.11557E-01,-0.31548,-0.28587E-01,0.11557E-01,0.31548};
+PhotonFromMergedRec.SCorrection.Par_AsInn={ 0.19870E-01,0.38043E-02,-0.21436,-0.19870E-01,0.38043E-02,0.21436};
+

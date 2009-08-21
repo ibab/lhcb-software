@@ -1,6 +1,6 @@
-// $Id: CaloTrackMatchAlg.cpp,v 1.3 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloTrackMatchAlg.cpp,v 1.4 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -21,7 +21,7 @@ CaloTrackMatchAlg::CaloTrackMatchAlg
 ( const std::string& name , 
   ISvcLocator*       pSvc ) 
   : CaloTrackAlg ( name , pSvc ) 
-  , m_tracks    ( 1 , LHCb::TrackLocation::Default )
+  , m_tracks    ()
   , m_calos     ()
   , m_output    () 
   , m_toolName  () 
@@ -36,12 +36,9 @@ CaloTrackMatchAlg::CaloTrackMatchAlg
   declareProperty ( "Tool"      , m_toolName  ) ;
   declareProperty ( "Filter"    , m_filter    ) ;
   declareProperty ( "Threshold" , m_threshold ) ;
-
-  if( "HLT" == context() ){
-    m_tracks.clear();
-    //m_tracks.push_back( "Hlt/Track/ForwardCLEANED" );
-    m_tracks.push_back(  LHCb::TrackLocation::HltForward );
-  }  
+  // context-dependent default track container 
+  m_tracks.clear();
+  m_tracks.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
 }
 // ============================================================================
 /// standard algorithm itinialization

@@ -1,8 +1,11 @@
-// $Id: PhotonMatchAlg.cpp,v 1.5 2009-08-05 17:35:34 ibelyaev Exp $
+// $Id: PhotonMatchAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/08/05 17:35:34  ibelyaev
+//  add CaloPIDs configurables
+//
 // Revision 1.4  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -59,6 +62,14 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrackMatchAlg ( name , pSvc ) 
   {
+
+    
+    using namespace LHCb::CaloAlgUtils;
+    Inputs inputs = Inputs( 1 , CaloClusterLocation( "Ecal", context() ) );
+    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+    _setProperty ( "Output"    , CaloIdLocation( "ClusterMatch" , context() ) );
+    _setProperty ( "Filter"    , CaloIdLocation( "InEcal"    , context() ) );
+
 
     if( "HLT" == context() ){
       Inputs inputs = Inputs ( 1 , LHCb::CaloClusterLocation::EcalHlt    ) ;

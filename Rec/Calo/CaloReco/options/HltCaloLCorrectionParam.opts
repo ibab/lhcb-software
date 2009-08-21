@@ -1,0 +1,31 @@
+
+// ====== Electrons
+//                                Inner    Middle   Outer          
+HltElectronRec.LCorrection.Par_Al1= { 17.936 , 19.053 , 22.305 } ;
+HltElectronRec.LCorrection.Par_Al2= {  1.15  ,  1.53  ,  2.04  } ;
+HltElectronRec.LCorrection.Par_Al3= { 0.0392 , 0.455  , 0.0281 } ;
+HltElectronRec.LCorrection.Par_Be1= { 54.54  , 60.87  , 58.04  } ;
+HltElectronRec.LCorrection.Par_Be2= {  4.02  ,  4.15  ,  4.38  } ;
+HltElectronRec.LCorrection.Par_Be3= { 0.0308 , 0.0597 , 0.0247 } ;
+HltElectronRec.LCorrection.Par_z0= { 12566. } ;
+
+
+// ====== SinglePhoton
+//                                Inner    Middle   Outer          
+HltSinglePhotonRec.LCorrection.Par_Al1= { 17.936 , 19.053 , 22.305 } ;
+HltSinglePhotonRec.LCorrection.Par_Al2= {  1.15  ,  1.53  ,  2.04  } ;
+HltSinglePhotonRec.LCorrection.Par_Al3= { 0.0392 , 0.455  , 0.0281 } ;
+HltSinglePhotonRec.LCorrection.Par_Be1= { 54.54  , 60.87  , 58.04  } ;
+HltSinglePhotonRec.LCorrection.Par_Be2= {  4.02  ,  4.15  ,  4.38  } ;
+HltSinglePhotonRec.LCorrection.Par_Be3= { 0.0308 , 0.0597 , 0.0247 } ;
+HltSinglePhotonRec.LCorrection.Par_z0= { 12566. } ;
+
+// ====== PhotonFromMerged
+//                                Inner    Middle   Outer          
+HltPhotonFromMergedRec.LCorrection.Par_Al1= { 17.936 , 19.053 , 22.305 } ;
+HltPhotonFromMergedRec.LCorrection.Par_Al2= {  1.15  ,  1.53  ,  2.04  } ;
+HltPhotonFromMergedRec.LCorrection.Par_Al3= { 0.0392 , 0.455  , 0.0281 } ;
+HltPhotonFromMergedRec.LCorrection.Par_Be1= { 54.54  , 60.87  , 58.04  } ;
+HltPhotonFromMergedRec.LCorrection.Par_Be2= {  4.02  ,  4.15  ,  4.38  } ;
+HltPhotonFromMergedRec.LCorrection.Par_Be3= { 0.0308 , 0.0597 , 0.0247 } ;
+HltPhotonFromMergedRec.LCorrection.Par_z0= { 12566. } ;

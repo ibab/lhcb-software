@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.6 2009-08-05 17:35:33 ibelyaev Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -36,13 +36,9 @@ InCaloAcceptanceAlg::InCaloAcceptanceAlg
   declareProperty ( "Inputs"      , m_inputs   ) ;
   declareProperty ( "Output"      , m_output   ) ;
   declareProperty ( "Tool"        , m_toolName ) ;
-  //
-  if( "HLT" == context() )
-  {
-    m_inputs.clear();
-    m_inputs.push_back(  LHCb::TrackLocation::HltForward );
-    //m_inputs.push_back( "Hlt/Track/ForwardCLEANED" );
-  }
+  // context-dependent default track container 
+  m_inputs.clear();
+  m_inputs.push_back(  LHCb::CaloAlgUtils::TrackLocation( context() ) );
 }
 // ============================================================================
 // algorithm initialization 

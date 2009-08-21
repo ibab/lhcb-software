@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.150 2009-08-13 16:04:42 jonrob Exp $
+! $Id: release.notes,v 1.151 2009-08-21 16:48:10 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-21 - Olivier Deschamps
+
+  - adapt old syntax .opts to change in CaloReco (public->private tool)
+  - implement generic context-dependent TES I/O
 
 ! 2009-08-13 - Chris Jones
  - Add missing #include <memory> for std::auto_ptr

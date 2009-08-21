@@ -37,8 +37,7 @@ HltCaloTrackMatch.Members +=     { "GaudiSequencer/HltCaloAcceptance",
 //------ Acceptance Filters
 
 /// Special online setting : use fast extrapolator for first alg.
-HltInSPD.Tool = "InSpdAcceptance/HltInSpd:PUBLIC";
-ToolSvc.HltInSpd.Extrapolator = "TrackHerabExtrapolator";
+HltInSPD.InSpd.Extrapolator = "TrackHerabExtrapolator";
 
 HltCaloAcceptance.Members = { "InSpdAcceptanceAlg/HltInSPD" ,
                               "InPrsAcceptanceAlg/HltInPRS" ,
@@ -60,11 +59,10 @@ HltCaloRec.Members += {"CaloMergedPi0Alg/HltMergedPi0Rec",
 #include "$CALORECOOPTS/HltPhotonFromMergedRec.opts"
 #include "$CALORECOOPTS/HltSinglePhotonRec.opts" 
 #include "$CALORECOOPTS/HltElectronRec.opts" 
-#include "$CALORECOOPTS/HltClusterSelection.opts" 
 // Configure Tools
-#include "$CALORECOOPTS/CaloECorrectionParam.opts"  
-#include "$CALORECOOPTS/CaloSCorrectionParam.opts"  
-#include "$CALORECOOPTS/CaloLCorrectionParam.opts"
+#include "$CALORECOOPTS/HltCaloECorrectionParam.opts"  
+#include "$CALORECOOPTS/HltCaloSCorrectionParam.opts"  
+#include "$CALORECOOPTS/HltCaloLCorrectionParam.opts"
 
 //------- Track- charged/neutral cluster 3D matching for electron/bremStrahlung evaluation
 HltCaloPIDs.Members +=    { 		"GaudiSequencer/HltCaloMatch",

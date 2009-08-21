@@ -1,8 +1,11 @@
-// $Id: HcalPIDmuAlg.cpp,v 1.4 2008-06-30 15:37:34 odescham Exp $
+// $Id: HcalPIDmuAlg.cpp,v 1.5 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/06/30 15:37:34  odescham
+// prepare for HLT processing
+//
 // Revision 1.3  2007/08/24 21:25:18  odescham
 // fix uncheck. StatusCodes
 //
@@ -36,14 +39,12 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloID2DLL ( name , pSvc ) 
   {
-    if("HLT"==context()){
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::HcalEHlt  ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::HcalPIDmuHlt  ) ;
-    }else{
-      _setProperty ( "Input"  , LHCb::CaloIdLocation::HcalE  ) ;
-      _setProperty ( "Output" , LHCb::CaloIdLocation::HcalPIDmu  ) ;
-    }
-    
+
+
+
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Input"  , CaloIdLocation( "HcalE"     , context() ) ) ;
+    _setProperty ( "Output" , CaloIdLocation( "HcalPIDmu" , context() ) ) ;
 
     _setProperty ( "nVlong" ,   Gaudi::Utils::toString( 10 * Gaudi::Units::GeV ) );
     _setProperty ( "nVdown" ,   Gaudi::Utils::toString( 10 * Gaudi::Units::GeV ) );

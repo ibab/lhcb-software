@@ -5,9 +5,9 @@ SinglePhotonRec.SelectionTools   = {
   "CaloSelectCluster/PhotonClusterSelect",
   "CaloSelectNeutralClusterWithTracks/NeutralCluster"
 } ;
-ToolSvc.NeutralCluster.MinChi2 = 4 ;
-ToolSvc.PhotonClusterSelect.MinEnergy = 0;
-//ToolSvc.PhotonClusterSelect.MaxDigits = 99;
+SinglePhotonRec.NeutralCluster.MinChi2 = 4 ;
+SinglePhotonRec.PhotonClusterSelect.MinEnergy = 0;
+//SinglePhotonRec.PhotonClusterSelect.MaxDigits = 99;
 
 
 //-------------------------------------------
@@ -16,13 +16,13 @@ ToolSvc.PhotonClusterSelect.MinEnergy = 0;
 ElectronRec.SelectionTools           =  {  
   "CaloSelectCluster/ElectronClusterSelect",
   "CaloSelectorNOT/ChargedCluster",
-  "CaloSelectNeutralClusterWithSpd/ClusterWithSpd",
+  "CaloSelectChargedClusterWithSpd/ClusterWithSpd",
   "CaloSelectClusterWithPrs/ClusterWithPrs"
 };
 
-ToolSvc.ChargedCluster.SelectorTools =  { "CaloSelectNeutralClusterWithTracks/NotNeutralCluster"} ;
-ToolSvc.ClusterWithPrs.MinEnergy = 10.*MeV;
-ToolSvc.NotNeutralCluster.MinChi2 = 25 ;
-ToolSvc.ElectronClusterSelect.MinEnergy = 0;
-//ToolSvc.ElectronClusterSelect.MaxDigits = 99;
+ElectronRec.ChargedCluster.SelectorTools =  { "CaloSelectNeutralClusterWithTracks/NotNeutralCluster"} ;
+ElectronRec.ChargedCluster.NotNeutralCluster.MinChi2 = 25 ;
+ElectronRec.ClusterWithPrs.MinEnergy = 10.*MeV;
+ElectronRec.ElectronClusterSelect.MinEnergy = 0;
+//ElectronRec.ElectronClusterSelect.MaxDigits = 99;
 

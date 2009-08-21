@@ -1,8 +1,11 @@
-// $Id: CaloHypoAlg.h,v 1.4 2008-06-30 15:36:33 odescham Exp $
+// $Id: CaloHypoAlg.h,v 1.5 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2008/06/30 15:36:33  odescham
+// prepare for HLT processing
+//
 // Revision 1.3  2006/05/30 09:42:02  odescham
 // first release of the CaloReco migration
 //
@@ -109,7 +112,7 @@ private:
   /// list of tools 
   Tools   m_tools ;
   std::string m_inputData;
-
+  std::string m_type;
 };
 // ============================================================================
 #endif // CaloHypoAlg_H

@@ -1,36 +1,5 @@
-// $Id: PhotonFromMergedRec.opts,v 1.3 2008-06-30 15:36:33 odescham Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2006/10/27 16:49:34  odescham
-// Preliminary DC06 ECorrections
-//
-// Revision 1.1  2006/05/30 09:42:00  odescham
-// first release of the CaloReco migration
-//
-// Revision 1.3  2005/11/07 12:12:41  odescham
-// v3r0 : adapt to the new Track Event Model
-//
-// Revision 1.2  2004/03/17 16:32:20  ibelyaev
-//  add new (04) Photon calibrations from Olivier Deschamps
-//
-// Revision 1.2 2002/11/13 20:46:44  odescham
-// - parameters in option file
-// - new parameters tuned for DC04
-//
-// ============================================================================
-
-// ============================================================================
-/** @file
- *  Options file to run CaloPhotonFromMergedAlg "PhotonFromMergedRec" 
- *  @author Olivier Deschamps
- */
-// ============================================================================
-
-PhotonFromMergedRec.InputData =   "Rec/Calo/SplitPhotons"        ;
-//PhotonFromMergedRec.Tools    += { "CaloExtraDigits/SpdExtraG"   };   // Spd Digit 
-//PhotonFromMergedRec.Tools    += { "CaloExtraDigits/PrsExtraG"   };   // Prs Digit
+//PhotonFromMergedRec.InputData =   "Rec/Calo/SplitPhotons"        ;
+PhotonFromMergedRec.HypoType = "SplitPhotons";
 PhotonFromMergedRec.Tools    += { "CaloECorrection/ECorrection" };   // Ecorrection
 PhotonFromMergedRec.Tools    += { "CaloSCorrection/SCorrection" };   // Scorrection
 PhotonFromMergedRec.Tools    += { "CaloLCorrection/LCorrection" };   // Lcorrection

@@ -1,8 +1,11 @@
-// $Id: ElectronMatchAlg.cpp,v 1.5 2009-08-05 17:35:33 ibelyaev Exp $
+// $Id: ElectronMatchAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2009/08/05 17:35:33  ibelyaev
+//  add CaloPIDs configurables
+//
 // Revision 1.4  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -61,17 +64,12 @@ protected:
     : CaloTrackMatchAlg ( name , pSvc ) 
   {    
 
-    if( "HLT"==context() ){
-      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::ElectronsHlt    ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )      ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatchHlt ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcalHlt        ) ;
-   }else{
-      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Electrons   ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::ElectronMatch ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InEcal        ) ;
-   }
+    using namespace LHCb::CaloAlgUtils;
+    Inputs inputs = Inputs( 1 , CaloHypoLocation( "Electrons", context() ) );
+    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+    _setProperty ( "Output"    , CaloIdLocation( "ElectronMatch" , context() ) );
+    _setProperty ( "Filter"    , CaloIdLocation( "InEcal"    , context() ) );
+
     //
     _setProperty ( "Tool"      , "CaloElectronMatch/ElectronMatch" ) ;
     _setProperty ( "Threshold" , "10000"                             ) ;

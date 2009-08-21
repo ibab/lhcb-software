@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.71 2009-08-10 12:53:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.72 2009-08-21 16:49:45 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2009-08-21 - Olivier Deschamps
+  - implement generic context-dependent TES I/O
 
 ! 2009-08-10 - Vanya BELYAEV
 

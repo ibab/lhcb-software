@@ -1,4 +1,4 @@
-// $Id: CellularAutomatonAlg.cpp,v 1.6 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CellularAutomatonAlg.cpp,v 1.7 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,6 +24,7 @@
 // CaloUtils 
 // ============================================================================
 #include "CaloUtils/ClusterFunctors.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -61,22 +62,9 @@ CellularAutomatonAlg::CellularAutomatonAlg
   // Tool name
   declareProperty("Tool"      , m_toolName = "CaloClusterizationTool");    
   // set default data as a function of detector
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  std::string det = name.substr( index, 4 );
-  if ( det == "Ecal" )
-  {
-    m_inputData=   LHCb::CaloDigitLocation::Ecal;
-    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
-      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
-    m_detData= DeCalorimeterLocation::Ecal;
-  }
-  else if ( det == "Hcal")
-  {
-    m_inputData=   LHCb::CaloDigitLocation::Hcal;
-    m_outputData = ("HLT"==context() || "Hlt" == context()) ? 
-      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
-    m_detData= DeCalorimeterLocation::Hcal;
-  }
+  m_detData    = LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_inputData  = LHCb::CaloAlgUtils::CaloDigitLocation( name , context() );
+  m_outputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 }
 // ============================================================================
 // Destructor

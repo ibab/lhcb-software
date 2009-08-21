@@ -1,4 +1,4 @@
-// $Id: BremMatchAlg.cpp,v 1.9 2009-08-05 17:35:33 ibelyaev Exp $
+// $Id: BremMatchAlg.cpp,v 1.10 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -43,19 +43,13 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrackMatchAlg ( name , pSvc ) 
   {
-    if( "HLT" == context() ){
-      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::PhotonsHlt   ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatchHlt  ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBremHlt     ) ;
-    }
-    else{
-      Inputs inputs = Inputs( 1 , LHCb::CaloHypoLocation::Photons     ) ;
-      _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
-      _setProperty ( "Output"    , LHCb::CaloIdLocation::BremMatch     ) ;
-      _setProperty ( "Filter"    , LHCb::CaloIdLocation::InBrem        ) ;
-    }
-    
+
+    using namespace LHCb::CaloAlgUtils;
+    Inputs inputs = Inputs( 1 , CaloHypoLocation( "Photons", context() ) );
+    _setProperty ( "Calos"     , Gaudi::Utils::toString ( inputs )   ) ;
+    _setProperty ( "Output"    , CaloIdLocation( "BremMatch" , context() ) );
+    _setProperty ( "Filter"    , CaloIdLocation( "InBrem"    , context() ) );
+
     _setProperty ( "Tool"      , "CaloBremMatch/BremMatch"    ) ;
     setProperty ( "Threshold" , 10000                               ).ignore() ;
     // track types:

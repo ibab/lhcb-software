@@ -1,4 +1,4 @@
-// $Id: CaloECorrection.cpp,v 1.8 2009-08-05 17:38:29 ibelyaev Exp $
+// $Id: CaloECorrection.cpp,v 1.9 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // from Gaudi
@@ -75,6 +75,7 @@ CaloECorrection::CaloECorrection
   declareProperty    ( "CorrPrs"        , Beta   ) ;
   declareProperty    ( "GlobalFactor"   , GlobalFactor ) ;
   declareProperty    ( "CorrectionLevel", Level ) ;
+  Level.push_back ( true);
   Level.push_back ( true);
   Level.push_back ( true);
   Level.push_back ( true);

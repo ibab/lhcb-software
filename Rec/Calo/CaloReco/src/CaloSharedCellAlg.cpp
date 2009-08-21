@@ -1,4 +1,4 @@
-// $Id: CaloSharedCellAlg.cpp,v 1.9 2009-06-22 13:06:32 cattanem Exp $ 
+// $Id: CaloSharedCellAlg.cpp,v 1.10 2009-08-21 16:48:11 odescham Exp $ 
 // ===========================================================================
 // Include files
 // from GaudiKernel
@@ -15,6 +15,7 @@
 #include "CaloUtils/Digit2ClustersConnector.h"
 #include "CaloUtils/ClusterFunctors.h"
 #include "CaloUtils/SharedCells.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // local
 #include "CaloSharedCellAlg.h"
 
@@ -64,19 +65,8 @@ CaloSharedCellAlg::CaloSharedCellAlg( const std::string& name,
 
 
   // set default data as a function of detector
-  int index = name.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
-  std::string det = name.substr( index, 4 ); 
-  if(det == "Ecal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::EcalHlt : LHCb::CaloClusterLocation::Ecal;
-    m_detData   = DeCalorimeterLocation::Ecal;
-  }
-  else if(det == "Hcal"){
-    m_inputData = ("HLT"==context() || "Hlt"==context()) ? 
-      LHCb::CaloClusterLocation::HcalHlt : LHCb::CaloClusterLocation::Hcal;
-    m_detData   = DeCalorimeterLocation::Hcal;
-  }
-
+  m_detData= LHCb::CaloAlgUtils::DeCaloLocation( name ) ;
+  m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( name , context() );
 
 };
 

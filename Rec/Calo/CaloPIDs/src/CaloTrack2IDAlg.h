@@ -1,4 +1,4 @@
-// $Id: CaloTrack2IDAlg.h,v 1.2 2007-03-02 15:22:07 cattanem Exp $
+// $Id: CaloTrack2IDAlg.h,v 1.3 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_CALOTRACK2IDALG_H 
 #define CALOPIDS_CALOTRACK2IDALG_H 1
@@ -17,6 +17,7 @@
 // ============================================================================
 #include "CaloUtils/Calo2Track.h"
 #include "CaloUtils/CaloTrackAlg.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // Local
 // ============================================================================

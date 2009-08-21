@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.42 2009-08-05 17:35:32 ibelyaev Exp $
+# $Id: requirements,v 1.43 2009-08-21 16:49:45 odescham Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -30,6 +30,5 @@ library           CaloPIDs    ../src/*.cpp
 apply_pattern     install_python_modules
 apply_pattern     component_library library=CaloPIDs
 
-# =============================================================================
-# The END 
-# =============================================================================
+# Set the default path for Brunel options.
+set CALOPIDSOPTS ${CALOPIDSROOT}/options

@@ -1,4 +1,4 @@
-// $Id: CaloSinglePhotonAlg.cpp,v 1.16 2009-08-05 17:38:30 ibelyaev Exp $
+// $Id: CaloSinglePhotonAlg.cpp,v 1.17 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -28,6 +28,7 @@
 // ============================================================================
 #include "CaloInterfaces/ICaloClusterSelector.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
+#include  "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -121,11 +122,11 @@ CaloSinglePhotonAlg::CaloSinglePhotonAlg
   declareProperty ( "OutputData"        , m_outputData     ) ;  
   declareProperty ( "Detector"          , m_detData      ) ;  
   
-  if( "HLT"==context() )
-  {
-    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
-    m_outputData= LHCb::CaloHypoLocation::PhotonsHlt;
-  } 
+
+ // Default context-dependent locations
+  m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal", context() );
+  m_outputData= LHCb::CaloAlgUtils::CaloHypoLocation(  "Photons", context() );
+  m_detData   = LHCb::CaloAlgUtils::DeCaloLocation("Ecal");
 
   setProperty ( "PropertiesPrint" , true ) ;
   

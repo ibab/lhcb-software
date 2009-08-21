@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.16 2009-08-05 17:38:29 ibelyaev Exp $
+// $Id: CaloElectronAlg.cpp,v 1.17 2009-08-21 16:48:11 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -24,6 +24,7 @@
 // ============================================================================
 #include "CaloInterfaces/ICaloClusterSelector.h"
 #include "CaloInterfaces/ICaloHypoTool.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -108,12 +109,12 @@ CaloElectronAlg::CaloElectronAlg
   declareProperty ( "OutputData"       , m_outputData            ) ;  
   declareProperty ( "Detector"         , m_detData               ) ;  
   
-  if("HLT"==context())
-  {
-    m_inputData = LHCb::CaloClusterLocation::EcalHlt;
-    m_outputData= LHCb::CaloHypoLocation::ElectronsHlt;
-  }  
+  // Default context-dependent locations
+  m_inputData = LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal", context() );
+  m_outputData= LHCb::CaloAlgUtils::CaloHypoLocation(  "Electrons", context() );
+  m_detData   = LHCb::CaloAlgUtils::DeCaloLocation("Ecal");
   
+
   setProperty ( "PropertiesPrint" , true ) ;
   
 }
@@ -359,11 +360,4 @@ CaloElectronAlg::execute()
   
   return StatusCode::SUCCESS;
 }
-
-// ============================================================================
-// The END 
-// ============================================================================
-
-
-
 

@@ -1,4 +1,4 @@
-// $Id: Track2HcalEAlg.cpp,v 1.5 2009-08-05 17:35:34 ibelyaev Exp $
+// $Id: Track2HcalEAlg.cpp,v 1.6 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // Local
 // ============================================================================
@@ -26,14 +26,11 @@ protected:
     ISvcLocator*       pSvc ) 
     : CaloTrack2IDAlg( name , pSvc ) 
   {
-    if("HLT"==context()){
-      _setProperty ( "Output" , LHCb::CaloIdLocation::HcalEHlt   ) ;
-      _setProperty ( "Filter" , LHCb::CaloIdLocation::InHcalHlt  ) ;
-    }
-    else{
-      _setProperty ( "Output" , LHCb::CaloIdLocation::HcalE   ) ;
-      _setProperty ( "Filter" , LHCb::CaloIdLocation::InHcal  ) ;
-    }
+
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Output" , CaloIdLocation( "HcalE" , context() )  ) ;
+    _setProperty ( "Filter" , CaloIdLocation( "InHcal", context() )  ) ;
+    
     _setProperty ( "Tool"   , "HcalEnergyForTrack/HcalE"  ) ;
   } 
   /// virtual protected destructor 

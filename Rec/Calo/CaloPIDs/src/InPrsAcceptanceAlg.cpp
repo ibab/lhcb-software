@@ -1,8 +1,11 @@
-// $Id: InPrsAcceptanceAlg.cpp,v 1.4 2009-08-05 17:35:34 ibelyaev Exp $
+// $Id: InPrsAcceptanceAlg.cpp,v 1.5 2009-08-21 16:49:45 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $, version $Revsion:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/08/05 17:35:34  ibelyaev
+//  add CaloPIDs configurables
+//
 // Revision 1.3  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -37,10 +40,10 @@ protected:
     ISvcLocator*       pSvc ) 
     : InCaloAcceptanceAlg ( name , pSvc ) 
   {
-    if( "HLT" == context() )
-    { _setProperty ( "Output" , LHCb::CaloIdLocation::InPrsHlt  ) ; }
-    else
-    { _setProperty ( "Output" , LHCb::CaloIdLocation::InPrs     ) ; }
+
+    using namespace LHCb::CaloAlgUtils;
+    _setProperty ( "Output" , CaloIdLocation("InPrs" , context() ) ) ;
+
     //
     _setProperty ( "Tool"   , "InPrsAcceptance/InPrs" ) ;
     // track types:
