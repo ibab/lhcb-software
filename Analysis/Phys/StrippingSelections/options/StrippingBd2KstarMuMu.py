@@ -40,7 +40,7 @@ Strip_loose_Bd2KstarMuMu.DaughtersCuts = {
     'K*(892)0':  ("(BPVVDZ>-50*mm) & "+
                   "(INTREE((ABSID=='pi+') & ((PIDpi-PIDmu)>-10) & ((PIDpi-PIDK)>-10))) &"+
                   "(INTREE((ABSID=='K+') & ((PIDK-PIDmu)>-10) & ((PIDK-PIDpi)>-5)))" ),
-    'J/psi(1S)' : "(2 == NINTREE(((PIDmu-PIDpi)>-10) & ((PIDmu-PIDK)>-10) & (MIPCHI2DV(PRIMARY)>0)) )"
+    'J/psi(1S)' : "(2 == NINTREE((ABSID=='mu+') & ((PIDmu-PIDpi)>-10) & ((PIDmu-PIDK)>-10) & (MIPCHI2DV(PRIMARY)>0)) )"
     }
 Strip_loose_Bd2KstarMuMu.CombinationCut = "(ADAMASS('B0')<300*MeV)"
 Strip_loose_Bd2KstarMuMu.MotherCut=( "(MIPDV(PRIMARY)<0.08*mm) & (MIPCHI2DV(PRIMARY) < 150) & (PT>300*MeV) & (BPVDIRA>0.9998) & "+

@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-08-21 - Rob Lambert
+ - Fixed a bug in the BsKstarMuMu Stripping selection.
+
 ! 2009-08-17 - Anton Poluektov
  - Added Bs2PhiPhi line by Sebastian Schleich
 
