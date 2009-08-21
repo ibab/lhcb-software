@@ -19,6 +19,19 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-08-21 - Patrick Koppenburg
+ - Remove Bs2DsDs : DST not available anymore
+ - Add options/DVTestHlt2Bd2DstarMu.py
+ - Update data used in the following : 
+   . options/DVTestHlt2B2HH.py
+   . options/DVTestHlt2Bs2DsH.py
+   . options/DVTestHlt2Bs2JpsiPhi.py
+   . options/DVTestHlt2Bs2PhiGamma.py
+   . options/DVTestHlt2Bs2PhiPhi.py
+   . options/DVTestHlt2Bu2D0K_KsHH.py
+   . options/DVTestHlt2Bu2eeK.py
+   . options/DVTestHlt2Z0.py
+
 ! 2009-08-19 - Patrick Koppenburg
  - Remove Bu2MuMuK. Add track info to Tuple
 
