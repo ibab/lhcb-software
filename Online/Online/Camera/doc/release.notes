@@ -6,6 +6,10 @@
 
 =============== v1r7 ===============
 
+! 2009-08-21 - Gareth Rogers
+ - Fixed commentCamera.sh so it used CameraCommand.exe instead of CameraComment.exe
+   which no longer exists.
+
 ! 2009-08-19 - Gareth Rogers
  - Fixed a bug in the StartCameraServer.sh and StartCameraWebServer.sh where
    they were not using the Camera_release variable as the $ was missing.
