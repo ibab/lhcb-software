@@ -1,14 +1,9 @@
-!$Id: release.notes,v 1.25 2009-08-21 12:03:59 jpalac Exp $
+!$Id: release.notes,v 1.26 2009-08-21 12:33:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
-
-! 2009-08-21 - Juan PALACIOS
- - cmt/requirements
-  . Use GaudiConf explicitely. Cures mystery compilation problem.
-  . Increase version to v1r4p1
 
 !========================== AnalysisConf v1r4 2009-08-11 ====================
 
