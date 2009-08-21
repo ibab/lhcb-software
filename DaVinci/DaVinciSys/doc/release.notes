@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r1p1>2009-08-21 DaVinci v24r1p1 Hlt1 nad Calo patch</A></H1><PRE>
+
+Same as v24r1p1, but patching HltL0Conf and CaloAssociators.
+
 </PRE><H1><A NAME=v24r1>2009-08-12 DaVinci v24r1 MC09 development release</A></H1><PRE>
 
 Based on Phys v8r8, Analysis v3r8, Rec v7r5, HLT v6r6, Lbcom v7r5, LHCb v27r5, Gaudi v21r3
