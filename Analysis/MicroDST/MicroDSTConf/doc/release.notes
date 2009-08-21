@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.21 2009-08-19 18:30:25 jpalac Exp $
+!$Id: release.notes,v 1.22 2009-08-21 15:56:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-21 - Juan PALACIOS
+ - cmt/requirements
+  . Use Event/EventAssoc
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Modifications to allow copying many P->PV relations tables with or without
+    copying of the PVs.
 
 ! 2009-08-18 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
