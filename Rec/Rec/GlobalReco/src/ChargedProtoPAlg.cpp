@@ -4,7 +4,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.73 2009-08-14 15:50:55 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.74 2009-08-21 17:08:03 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -61,22 +61,6 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_EcalChi2Table ( NULL ),
     m_nEvts         ( 0    )
 {
-  // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_richPath   = LHCb::RichPIDLocation::Offline;
-    m_muonPath   = LHCb::MuonPIDLocation::Offline;
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-    m_trSelType  = "DelegatingTrackSelector";
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
-  {
-    m_richPath   = LHCb::RichPIDLocation::HLT;
-    m_tracksPath = LHCb::TrackLocation::HltForward;
-    m_muonPath   = LHCb::MuonPIDLocation::Hlt;
-    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
-    m_trSelType  = "TrackSelector";
-  }
 
   // track selector type
   declareProperty( "TrackSelectorType", m_trSelType );
@@ -96,11 +80,82 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
   declareProperty("UseCaloHcalPID", m_HcalPID   =   true  );
   declareProperty("UseCaloBremPID", m_BremPID   =   true  );
 
+  // caloPID tables
+  declareProperty("InputInEcalLocation"        , m_inEcalPath = ""       );
+  declareProperty("InputInBremLocation"        , m_inBremPath = ""       );
+  declareProperty("InputInSpdLocation"         , m_inSpdPath = ""        );
+  declareProperty("InputInPrsLocation"         , m_inPrsPath = ""        );
+  declareProperty("InputInHcalLocation"        , m_inHcalPath = ""       );
+  declareProperty("InputElectronMatchLocation" , m_electronMatchPath = "");
+  declareProperty("InputBremMatchLocation"     , m_bremMatchPath = ""    );
+  declareProperty("InputClusterMatchLocation"  , m_clusterMatchPath = "" );
+  declareProperty("InputEcalChi2Location"      , m_ecalChi2Path=""       );
+  declareProperty("InputBremChi2Location"      , m_bremChi2Path=""       );
+  declareProperty("InputEcalELocation"         , m_ecalEPath=""          );
+  declareProperty("InputSpdELocation"          , m_spdEPath=""           );
+  declareProperty("InputPrsELocation"          , m_prsEPath=""           );
+  declareProperty("InputHcalELocation"         , m_hcalEPath=""          );
+  declareProperty("InputClusterChi2Location"   , m_clusterChi2Path=""    );
+  declareProperty("InputEcalPIDeLocation"      , m_ecalPIDePath=""       );
+  declareProperty("InputHcalPIDeLocation"      , m_hcalPIDePath=""       );
+  declareProperty("InputBremPIDeLocation"      , m_bremPIDePath=""       );
+  declareProperty("InputPrsPIDeLocation"       , m_prsPIDePath=""        );
+  declareProperty("InputEcalPIDmuLocation"     , m_ecalPIDmuPath=""      );
+  declareProperty("InputHcalPIDmuLocation"     , m_hcalPIDmuPath=""      );
+
+
+  // Calo tables default location from context()
+  std::string flag = context();
+  using namespace LHCb::Calo2Track;
+  using namespace LHCb::CaloIdLocation;
+  m_inEcalPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InEcal       , InEcalHlt       );
+  m_inBremPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InBrem       , InBremHlt       );
+  m_inSpdPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , InSpd        , InSpdHlt        );
+  m_inPrsPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , InPrs        , InPrsHlt        );
+  m_inHcalPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InHcal       , InHcalHlt       );
+  m_electronMatchPath =  LHCb::CaloAlgUtils::PathFromContext( flag , ElectronMatch, ElectronMatchHlt);
+  m_bremMatchPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , BremMatch    , BremMatchHlt    );
+  m_clusterMatchPath  =  LHCb::CaloAlgUtils::PathFromContext( flag , ClusterMatch , ClusterMatchHlt );
+  m_ecalChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalChi2     , EcalChi2Hlt     );
+  m_bremChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( flag , BremChi2     , BremChi2Hlt     );
+  m_clusterChi2Path   =  LHCb::CaloAlgUtils::PathFromContext( flag , ClusChi2     , ClusChi2Hlt     );
+  m_ecalEPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalE        , EcalEHlt        );
+  m_spdEPath          =  LHCb::CaloAlgUtils::PathFromContext( flag , SpdE         , SpdEHlt         );
+  m_prsEPath          =  LHCb::CaloAlgUtils::PathFromContext( flag , PrsE         , PrsEHlt         );
+  m_hcalEPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalE        , HcalEHlt        );
+  m_ecalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalPIDe     , EcalPIDeHlt     );
+  m_hcalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalPIDe     , HcalPIDeHlt     );
+  m_bremPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , BremPIDe     , BremPIDeHlt     );
+  m_prsPIDePath       =  LHCb::CaloAlgUtils::PathFromContext( flag , PrsPIDe      , PrsPIDeHlt      );
+  m_ecalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalPIDmu    , EcalPIDmuHlt    );
+  m_hcalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalPIDmu    , HcalPIDmuHlt    );
+  
+  /* @todo : same rule for default specific location for Rich/Muon PID + Track input + output ProtoP  ? Let's Chris decide.
+  m_richPath   = PathFromContext( flag , LHCb::RichPIDLocation::Offline, LHCb::RichPIDLocation::HLT );
+  m_muonPath   = PathFromContext( flag , LHCb::MuonPIDLocation::Offline, LHCb::MuonPIDLocation::HLT );
+  m_tracksPath = PathFromContext( flag , TrackLocation::Default        , LHCb::TrackLocation::HltForward);
+  m_protoPath  = PathFromContext( flag , LHCb::ProtoParticleLocation::Charged, LHCb::ProtoParticleLocation::HltCharged);
+  */
+
+  // context specific locations
+  if      ( context() == "Offline" )
+  {
+    m_richPath   = LHCb::RichPIDLocation::Offline;
+    m_muonPath   = LHCb::MuonPIDLocation::Offline;
+    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
+    m_trSelType  = "DelegatingTrackSelector";
+  }
+  else if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_richPath   = LHCb::RichPIDLocation::HLT;
+    m_tracksPath = LHCb::TrackLocation::HltForward;
+    m_muonPath   = LHCb::MuonPIDLocation::Hlt;
+    m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+    m_trSelType  = "TrackSelector";
+  }
+
   // output data
   declareProperty( "OutputProtoParticleLocation", m_protoPath );
-  // non standard Hlt location
-  declareProperty( "NonStandardHltLocation", m_hltLocation = "" );
-
 }
 
 //=============================================================================
@@ -814,9 +869,7 @@ bool ChargedProtoPAlg::getMuonData()
 //=============================================================================
 // Loads the Calo Ecal data
 //=============================================================================
-bool ChargedProtoPAlg::getEcalData()
-{
-  using namespace LHCb::Calo2Track;
+bool ChargedProtoPAlg::getEcalData(){
 
   bool sc1=false;
   bool sc2=false;
@@ -827,28 +880,14 @@ bool ChargedProtoPAlg::getEcalData()
   bool sc7=false;
   bool sc8=false;
 
-  if("HLT"==context() || "Hlt" == context())
-  {
-    sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcalHlt);
-    sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatchHlt);
-    sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatchHlt);
-    sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2Hlt);
-    sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalEHlt);
-    sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2Hlt);
-    sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDeHlt);
-    sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmuHlt);
-  }
-  else
-  {
-    sc1 = loadCaloTable(m_InEcalTable,CaloIdLocation::InEcal);
-    sc2 = loadCaloTable(m_elecTrTable,CaloIdLocation::ElectronMatch);
-    sc3 = loadCaloTable(m_clusTrTable,CaloIdLocation::ClusterMatch);
-    sc4 = loadCaloTable(m_EcalChi2Table,CaloIdLocation::EcalChi2);
-    sc5 = loadCaloTable(m_EcalETable,CaloIdLocation::EcalE);
-    sc6 = loadCaloTable(m_ClusChi2Table,CaloIdLocation::ClusChi2);
-    sc7 = loadCaloTable(m_dlleEcalTable,CaloIdLocation::EcalPIDe);
-    sc8 = loadCaloTable(m_dllmuEcalTable,CaloIdLocation::EcalPIDmu);
-  }
+  sc1 = loadCaloTable(m_InEcalTable  , m_inEcalPath       );
+  sc2 = loadCaloTable(m_elecTrTable  , m_electronMatchPath);
+  sc3 = loadCaloTable(m_clusTrTable  , m_clusterMatchPath );
+  sc4 = loadCaloTable(m_EcalChi2Table, m_ecalChi2Path);
+  sc5 = loadCaloTable(m_EcalETable   , m_ecalEPath);
+  sc6 = loadCaloTable(m_ClusChi2Table, m_clusterChi2Path);
+  sc7 = loadCaloTable(m_dlleEcalTable, m_ecalPIDePath);
+  sc8 = loadCaloTable(m_dllmuEcalTable,m_ecalPIDmuPath);
 
   const bool sc  = sc1 && sc2 && sc3 && sc4 && sc5 && sc6 && sc7 && sc8;
   if ( sc ) debug() << "Ecal PID SUCCESSFULLY LOADED" << endmsg;
@@ -861,24 +900,15 @@ bool ChargedProtoPAlg::getEcalData()
 //=============================================================================
 bool ChargedProtoPAlg::getBremData()
 {
-  using namespace LHCb::Calo2Track;
 
   bool sc1=false;
   bool sc2=false;
   bool sc3=false;
   bool sc4=false;
-  if("HLT"==context() || "Hlt" == context()){
-    sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBremHlt);
-    sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatchHlt);
-    sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2Hlt);
-    sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDeHlt);
-  }
-  else{
-    sc1 = loadCaloTable(m_InBremTable,CaloIdLocation::InBrem);
-    sc2 = loadCaloTable(m_bremTrTable,CaloIdLocation::BremMatch);
-    sc3 = loadCaloTable(m_BremChi2Table,CaloIdLocation::BremChi2);
-    sc4 = loadCaloTable(m_dlleBremTable,CaloIdLocation::BremPIDe);
-  }
+  sc1 = loadCaloTable(m_InBremTable  , m_inBremPath);
+  sc2 = loadCaloTable(m_bremTrTable  , m_bremMatchPath);
+  sc3 = loadCaloTable(m_BremChi2Table, m_bremChi2Path);
+  sc4 = loadCaloTable(m_dlleBremTable, m_bremPIDePath);
 
   bool sc  = sc1 && sc2 && sc3 && sc4;
   if ( sc ) debug() << "BREM PID SUCCESSFULLY LOADED" << endmsg;
@@ -891,19 +921,11 @@ bool ChargedProtoPAlg::getBremData()
 //=============================================================================
 bool ChargedProtoPAlg::getSpdData()
 {
-  using namespace LHCb::Calo2Track;
 
   bool sc1=false;
   bool sc2=false;
-  if("HLT"==context() || "Hlt" == context()){
-    sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpdHlt);
-    sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdEHlt);
-  }
-  else{
-    sc1 = loadCaloTable(m_InSpdTable,CaloIdLocation::InSpd);
-    sc2 = loadCaloTable(m_SpdETable,CaloIdLocation::SpdE);
-  }
-
+  sc1 = loadCaloTable(m_InSpdTable , m_inSpdPath);
+  sc2 = loadCaloTable(m_SpdETable  , m_spdEPath );  
   const bool sc  = sc1 && sc2;
 
   if ( sc ) debug() << "SPD PID SUCCESSFULLY LOADED" << endmsg;
@@ -916,22 +938,14 @@ bool ChargedProtoPAlg::getSpdData()
 //=============================================================================
 bool ChargedProtoPAlg::getPrsData()
 {
-  using namespace LHCb::Calo2Track;
 
   bool sc1=false;
   bool sc2=false;
   bool sc3=false;
-  if("HLT"==context() || "Hlt" == context()){
-    sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrsHlt);
-    sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsEHlt);
-    sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDeHlt);
-  }
-  else{
-    sc1 = loadCaloTable(m_InPrsTable,CaloIdLocation::InPrs);
-    sc2 = loadCaloTable(m_PrsETable,CaloIdLocation::PrsE);
-    sc3 = loadCaloTable(m_dllePrsTable,CaloIdLocation::PrsPIDe);
-  }
-
+  sc1 = loadCaloTable(m_InPrsTable  , m_inPrsPath);
+  sc2 = loadCaloTable(m_PrsETable   , m_prsEPath);
+  sc3 = loadCaloTable(m_dllePrsTable, m_prsPIDePath);
+  
   const bool sc  = sc1 && sc2 && sc3;
 
   if ( sc ) debug() << "PRS PID SUCCESSFULLY LOADED" << endmsg;
@@ -944,25 +958,16 @@ bool ChargedProtoPAlg::getPrsData()
 //=============================================================================
 bool ChargedProtoPAlg::getHcalData()
 {
-  using namespace LHCb::Calo2Track;
 
   bool sc1=false;
   bool sc2=false;
   bool sc3=false;
   bool sc4=false;
-  if("HLT"==context() || "Hlt" == context()){
-    sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcalHlt);
-    sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalEHlt);
-    sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDeHlt);
-    sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmuHlt);
-  }
-  else{
-    sc1 = loadCaloTable(m_InHcalTable,CaloIdLocation::InHcal);
-    sc2 = loadCaloTable(m_HcalETable,CaloIdLocation::HcalE);
-    sc3 = loadCaloTable(m_dlleHcalTable,CaloIdLocation::HcalPIDe);
-    sc4 = loadCaloTable(m_dllmuHcalTable,CaloIdLocation::HcalPIDmu);
-  }
-
+  sc1 = loadCaloTable(m_InHcalTable   , m_inHcalPath);
+  sc2 = loadCaloTable(m_HcalETable    , m_hcalEPath);
+  sc3 = loadCaloTable(m_dlleHcalTable , m_hcalPIDePath);
+  sc4 = loadCaloTable(m_dllmuHcalTable, m_hcalPIDmuPath);
+  
 
   const bool sc  = sc1 && sc2 && sc3 && sc4;
 

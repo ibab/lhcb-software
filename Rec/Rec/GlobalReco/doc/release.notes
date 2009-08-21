@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+
+! 2009-08-21 - Olivier Deschamps
+  - implement generic context-dependent TES I/O (remove NonStandardHltLocation)
+
+
 ! 2009-08-14 - Patrick Koppenburg
  - ChargedProtoPAlg : add a NonStandardHltLocation for Hlt
 

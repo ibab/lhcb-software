@@ -4,7 +4,7 @@
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.31 2009-08-14 15:50:55 pkoppenb Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.32 2009-08-21 17:08:03 odescham Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -27,6 +27,7 @@
 #include "CaloUtils/Calo2Track.h"
 #include "Event/CaloDataFunctor.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloUtils/CaloAlgUtils.h"
 
 // Relations
 #include "Relations/IRelation.h"
@@ -154,25 +155,14 @@ private: // methods
 
   /// Loads a CALO relations table
   template < typename TYPE >
-  inline bool loadCaloTable( TYPE *& table, const std::string & loc ) const
-  {
-    std::string location = loc ;
-    if (""!=m_hltLocation && "Hlt"!=m_hltLocation){
-      unsigned int pos = location.find("Hlt");
-      if (pos>=location.size()) Exception("Did not find Hlt in "+location);
-      location.replace(pos,3,m_hltLocation) ;
-      if (msgLevel(MSG::VERBOSE)) verbose() << loc << " -> " << location << endmsg ;
-    }
-    
+  inline bool loadCaloTable( TYPE *& table, const std::string & location ) const{
     const bool ok = exist<TYPE>(location);
-    if ( !ok )
-    {
+    if ( !ok ){
       table = NULL;
       Warning("No CALO "+System::typeinfoName(typeid(TYPE))+
               " table at '"+location+"'", StatusCode::SUCCESS ).ignore();
     }
-    else
-    {
+    else {
       table = get<TYPE>( location );
     }
     return ok;
@@ -189,6 +179,27 @@ private: // data
   std::string m_protoPath;    ///< Location in TES of output ProtoParticles
   bool m_PrsPID,m_SpdPID,m_EcalPID,m_HcalPID,m_BremPID; ///< Calo PIDs
   bool m_richPID, m_muonPID, m_veloPID;///< PIDs
+  std::string m_inEcalPath ;
+  std::string m_inBremPath ;
+  std::string m_inSpdPath  ;
+  std::string m_inPrsPath  ;
+  std::string m_inHcalPath ;
+  std::string m_electronMatchPath ;
+  std::string m_bremMatchPath ;
+  std::string m_clusterMatchPath ;
+  std::string m_ecalChi2Path ;
+  std::string m_bremChi2Path ;
+  std::string m_ecalEPath ;
+  std::string m_spdEPath ;
+  std::string m_prsEPath ;
+  std::string m_hcalEPath ;
+  std::string m_clusterChi2Path ;
+  std::string m_ecalPIDePath ;
+  std::string m_hcalPIDePath ;
+  std::string m_bremPIDePath ;
+  std::string m_prsPIDePath ;
+  std::string m_ecalPIDmuPath ;
+  std::string m_hcalPIDmuPath ;
 
   LHCb::ProtoParticles * m_protos; ///< Pointer to current ProtoParticle container
 
@@ -242,10 +253,6 @@ private: // data
 
   /// Total number of tracks considered and selected
   TrackMap m_nTracks;
-
-  /// non standard hlt location
-  std::string m_hltLocation ;
-  
 };
 
 #endif // GLOBALRECO_CHARGEDPROTOPALG_H

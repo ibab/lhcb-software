@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.h,v 1.7 2009-08-03 09:10:29 ibelyaev Exp $
+// $Id: NeutralProtoPAlg.h,v 1.8 2009-08-21 17:08:03 odescham Exp $
 // ============================================================================
 #ifndef GLOBALRECO_NEUTRALPROTOPALG_H 
 #define GLOBALRECO_NEUTRALPROTOPALG_H 1
@@ -18,6 +18,7 @@
 // ============================================================================
 #include "CaloInterfaces/ICaloHypoLikelihood.h"
 #include "CaloUtils/ClusterFunctors.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // from Gaudi
 // ============================================================================
@@ -83,7 +84,7 @@ protected:
     { m_photonID = tool< ICaloHypoLikelihood>( m_photonIDType ,  m_photonIDName ) ; }
     return m_photonID ;  
   }  
-  /// use"light" node? ( suitable fo rcliabration purposes)
+  /// use"light" mode? ( suitable fo recalibration purposes)
   inline bool lightMode() const { return m_light_mode ; }
   // ==========================================================================
 private:// method

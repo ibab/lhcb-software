@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.18 2009-08-03 09:10:29 ibelyaev Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.19 2009-08-21 17:08:03 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -39,52 +39,44 @@ NeutralProtoPAlg::NeutralProtoPAlg
 ( const std::string& name,
   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_hyposLocations    ()
-  , m_matchLocation     ( LHCb::CaloIdLocation::ClusterMatch )
-  , m_spdprsType        ( "CaloSingleGammaTool")
-  , m_spdprsName        ("SpdPrsID"   )
-  , m_spdprs            ( 0           )
-  , m_photonIDType      ( "CaloPhotonEstimatorTool")
-  , m_photonIDName      ( "PhotonPID"  )
-  , m_photonID          ( 0            )
-  , m_caloTrMatch_bad   (  1.e+6 )
-  , m_caloDepositID_bad ( -1.e+6 )
-  , m_showerShape_bad   ( -1.e+6 )
-  , m_clusterMass_bad   ( -1.e+6 )
-  , m_photonID_bad      ( -1.e+6 )
-  , m_calo              ( DeCalorimeterLocation:: Ecal )
-  , m_light_mode        ( false )
-{
-  m_hyposLocations.push_back( LHCb::CaloHypoLocation::Photons      );
-  m_hyposLocations.push_back( LHCb::CaloHypoLocation::SplitPhotons );
-  m_hyposLocations.push_back( LHCb::CaloHypoLocation::MergedPi0s   );
-
+    , m_hyposLocations    ()
+    , m_matchLocation     ()
+    , m_spdprsType        ( "CaloSingleGammaTool")
+    , m_spdprsName        ("SpdPrsID"   )
+    , m_spdprs            ( 0           )
+    , m_photonIDType      ( "CaloPhotonEstimatorTool")
+    , m_photonIDName      ( "PhotonPID"  )
+    , m_photonID          ( 0            )
+    , m_caloTrMatch_bad   (  1.e+6 )
+    , m_caloDepositID_bad ( -1.e+6 )
+    , m_showerShape_bad   ( -1.e+6 )
+    , m_clusterMass_bad   ( -1.e+6 )
+    , m_photonID_bad      ( -1.e+6 )
+    , m_calo              ( DeCalorimeterLocation:: Ecal )
+    , m_light_mode        ( false ){
+  
   // declare the properties
   declareProperty ( "HyposLocations"        , m_hyposLocations   ) ;
   declareProperty ( "ClusterMatchLocation"  , m_matchLocation    ) ;
-  
-  declareProperty ( "ProtoParticleLocation",
-                    m_protoLocation =LHCb::ProtoParticleLocation::Neutrals ) ;
-  
+  declareProperty ( "ProtoParticleLocation" ,  m_protoLocation   ) ;
   declareProperty ( "SpdPrsIDType"   , m_spdprsType   ) ;
-  
   declareProperty ( "SpdPrsIDName"   , m_spdprsName   ) ;
   declareProperty ( "PhotonIDType"   , m_photonIDType ) ;
   declareProperty ( "PhotonIDName"   , m_photonIDName ) ;
+  declareProperty ( "LightMode"      , m_light_mode , 
+                    "Use 'light' mode and donto colelct all information, useful for Calibration" ) ;  
   
-  declareProperty
-    ( "LightMode" , m_light_mode , 
-      "Use 'light' mode and donto colelct all information, useful for Calibration" ) ;
-  
-  if ( "HLT"==context() || "Hlt"==context())
-  {
-    m_matchLocation = LHCb::CaloIdLocation::ClusterMatchHlt;
-    m_hyposLocations.clear();
-    m_hyposLocations.push_back( LHCb::CaloHypoLocation::PhotonsHlt      );
-    m_hyposLocations.push_back( LHCb::CaloHypoLocation::SplitPhotonsHlt );
-    m_hyposLocations.push_back( LHCb::CaloHypoLocation::MergedPi0sHlt   );
-    m_protoLocation = LHCb::ProtoParticleLocation::HltNeutrals;
-  }
+  // default location from context()
+  std::string flag = context();
+  using namespace LHCb::Calo2Track;
+  using namespace LHCb::CaloIdLocation;
+  using namespace LHCb::CaloHypoLocation;
+  m_matchLocation = LHCb::CaloAlgUtils::PathFromContext( flag , ClusterMatch , ClusterMatchHlt );
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , Photons      , PhotonsHlt      ) );
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , SplitPhotons , SplitPhotonsHlt ) );
+  m_hyposLocations.push_back( LHCb::CaloAlgUtils::PathFromContext( flag , MergedPi0s   , MergedPi0sHlt   ) );
+  m_protoLocation = LHCb::CaloAlgUtils::PathFromContext( flag , LHCb::ProtoParticleLocation::Neutrals, 
+                                                      LHCb::ProtoParticleLocation::HltNeutrals);
 }
 // ============================================================================
 // Destructor
@@ -93,52 +85,44 @@ NeutralProtoPAlg::~NeutralProtoPAlg() {}
 // ============================================================================
 // Initialization
 // ============================================================================
-StatusCode NeutralProtoPAlg::initialize() 
-{
+StatusCode NeutralProtoPAlg::initialize(){
   const StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   debug() << "==> Initialize" << endmsg;
   
-  for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ;
+  for ( std::vector<std::string>::const_iterator location = m_hyposLocations.begin() ; 
         m_hyposLocations.end() != location ; ++location )
-  {
     info() << " Hypothesis loaded from " << *location << endmsg;
-  }
+  
   //
-  if ( lightMode() ) 
-  { info() << "Neutral protoparticles will be created in 'Light' Mode" << endmsg ; }  
+  if ( lightMode() )
+    info() << "Neutral protoparticles will be created in 'Light' Mode" << endmsg ;
 
   return sc;
 }
 // ============================================================================
 // Main execution
 // ============================================================================
-StatusCode NeutralProtoPAlg::execute()
-{
+StatusCode NeutralProtoPAlg::execute(){
   
   // create and register the output container
   LHCb::ProtoParticles* protos = NULL;
-  if ( exist<LHCb::ProtoParticles>(m_protoLocation) )
-  {
+  if ( exist<LHCb::ProtoParticles>(m_protoLocation) ){
     // get existing contianer, clear, and reuse
-    Warning( "Existing ProtoParticle container at " + m_protoLocation + 
-             " found -> Will replace", StatusCode::SUCCESS );
+    Warning( "Existing ProtoParticle container at " + m_protoLocation + " found -> Will replace", StatusCode::SUCCESS );
     protos = get<LHCb::ProtoParticles>(m_protoLocation);
     protos->clear();
   }
-  else
-  {
+  else{
     protos = new LHCb::ProtoParticles();
     put( protos , m_protoLocation ) ;
   }
   
   // get the relation table
   const LHCb::Calo2Track::IClusTrTable* table =  0 ;
-  if ( !lightMode() )
-  {
-    if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation ))  
-    {
+  if ( !lightMode() ){
+    if ( !exist<LHCb::Calo2Track::IClusTrTable>( m_matchLocation )){
       return Warning ( "No matching table at '"+ m_matchLocation + "'" ,StatusCode::SUCCESS )  ;
     }
     table = get<LHCb::Calo2Track::IClusTrTable> ( m_matchLocation ) ;
@@ -150,32 +134,30 @@ StatusCode NeutralProtoPAlg::execute()
         m_hyposLocations.end() != location ; ++location ) {
     
     // Load the CaloHypo objects if the container exists
-    if ( !exist<LHCb::CaloHypos>( *location ))  
-    {
+    if ( !exist<LHCb::CaloHypos>( *location )){
       Warning ( "No CaloHypo at '" + (*location) + "'").ignore() ;
       continue;
     }
     const LHCb::CaloHypos* hypos = get<LHCb::CaloHypos>( *location );
-    if ( msgLevel(MSG::DEBUG) )
-    {
+    if ( msgLevel(MSG::DEBUG) ) {
       debug() << "CaloHypo loaded at " << *location  
               << " (# " << hypos->size()<<")"<< endmsg;
     }
+    int count = 0 ;
     for ( LHCb::CaloHypos::const_iterator ihypo = hypos->begin() ;
-          hypos->end() != ihypo  ; ++ihypo )  
-    {
+          hypos->end() != ihypo  ; ++ihypo ){
       const LHCb::CaloHypo* hypo = *ihypo ;
       if( 0 == hypo ) { continue ; }
       
       //
+      count++;
       LHCb::ProtoParticle* proto = new LHCb::ProtoParticle() ;
       protos->insert( proto ) ;
       
       // fill protoparticle
       proto-> addToCalo( hypo ) ;
       
-      if ( !lightMode() ) 
-      {
+      if ( !lightMode() ){
         //
         if ( 0 != table ) { proto -> addInfo ( LHCb::ProtoParticle::CaloTrMatch     , caloTrMatch  ( hypo , table ) ) ; }
         //
@@ -189,13 +171,10 @@ StatusCode NeutralProtoPAlg::execute()
         proto -> addInfo ( LHCb::ProtoParticle::CaloNeutralEcal , CaloEcal ( hypo ) );
       }
       
-      if ( msgLevel(MSG::VERBOSE) ) 
-      {
+      if ( msgLevel(MSG::VERBOSE) ){
         MsgStream& log = verbose() ;
-        
         log << "Neutral ProtoParticle created " << (*(proto->calo().begin() ))-> hypothesis() << endmsg;
-        if ( !lightMode() ) 
-        {
+        if ( !lightMode() ){
           log << "Estimator Chi2    = " << proto -> info(LHCb::ProtoParticle::CaloTrMatch ,-1.) << endmsg;
           log << "Estimator Deposit = " << proto -> info(LHCb::ProtoParticle::CaloDepositID ,-1.) << endmsg;
           log << "Estimator ShShape = " << proto -> info(LHCb::ProtoParticle::ShowerShape,-1.) << endmsg;
@@ -207,15 +186,13 @@ StatusCode NeutralProtoPAlg::execute()
         }
       }
     } // loop over CaloHypos
+    counter( *location ) += count;
   } // loop over HyposLocations
   
-  if ( msgLevel(MSG::DEBUG) ) 
-  { 
+  if ( msgLevel(MSG::DEBUG) ){ 
     debug() << "# Neutral ProtoParticles created : " << protos -> size() << endmsg;
   }
-  
   counter ("#proto") += protos->size() ;
-  
   return StatusCode::SUCCESS;
 }
 // ============================================================================
@@ -240,13 +217,11 @@ StatusCode NeutralProtoPAlg::finalize()
 //=============================================================================
 double NeutralProtoPAlg::caloTrMatch
 ( const LHCb::CaloHypo*                 hypo  , 
-  const LHCb::Calo2Track::IClusTrTable* table )  const
-{
+  const LHCb::Calo2Track::IClusTrTable* table )  const{
   
   // select the first Ecal cluster
   const LHCb::CaloHypo::Clusters& clusters = hypo->clusters();
-  LHCb::CaloHypo::Clusters::const_iterator cluster =
-    std::find_if( clusters.begin() , clusters.end() , m_calo );
+  LHCb::CaloHypo::Clusters::const_iterator cluster = std::find_if( clusters.begin() , clusters.end() , m_calo );
   if ( clusters.end() == cluster ) { return m_caloTrMatch_bad; }
   
   // get to all related tracks
