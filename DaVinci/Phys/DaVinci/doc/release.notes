@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.369 2009-08-12 07:49:49 jpalac Exp $
+! $Id: release.notes,v 1.370 2009-08-24 13:09:25 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-08-24 - Patrick Koppenburg
+ - Remove useless Lbappinit import
+ - v24r2
 
 !========================== DaVinci v24r1 2009-08-12 ===================
 
