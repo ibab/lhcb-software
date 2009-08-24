@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -45,7 +45,7 @@ _type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
                          , Hlt2B2PhiXLinesConf
                          , Hlt2XGammaLinesConf
                          , Hlt2B2HHLinesConf
-                         , Hlt2B2LLXLinesConf
+#                         , Hlt2B2LLXLinesConf                         # DO NOT RUN UNTIL CALO IS FIXED
                          , Hlt2DisplVerticesLinesConf ]
                , 'COMM': [ Hlt2CommissioningLinesConf ]
               }

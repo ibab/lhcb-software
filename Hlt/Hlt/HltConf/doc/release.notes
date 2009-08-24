@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.321 2009-08-20 21:03:49 graven Exp $ 
+! $Id: release.notes,v 1.322 2009-08-24 10:09:39 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-24 - Patrick Koppenburg
+ - Don't run B->LLK until calo is fixed
 
 ! 2009-08-19 - Gerhard Raven
  - add routing bits for (Non)RandomODIN
