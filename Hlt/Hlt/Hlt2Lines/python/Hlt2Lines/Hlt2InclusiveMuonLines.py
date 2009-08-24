@@ -19,9 +19,6 @@
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line
-from HltLine.HltLine import Hlt2Member
-from HltLine.HltLine import bindMembers
 
 
 class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
@@ -44,6 +41,9 @@ class Hlt2InclusiveMuonLinesConf(HltLinesConfigurableUser) :
     
     
     def __apply_configuration__(self) :
+        from HltLine.HltLine import Hlt2Line
+        from HltLine.HltLine import Hlt2Member
+        from HltLine.HltLine import bindMembers
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop

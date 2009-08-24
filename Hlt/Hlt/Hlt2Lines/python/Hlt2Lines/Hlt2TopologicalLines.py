@@ -47,10 +47,6 @@
 ## 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line
-from HltLine.HltLine import Hlt2Member
-from HltLine.HltLine import bindMembers
-from Configurables import HltANNSvc
 
 class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
@@ -167,6 +163,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
 
     def updateHltANNSvc(self,line) :
+        from Configurables import HltANNSvc
         lineName = 'Hlt2' + line + 'Decision'
         id = self._scale(lineName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { lineName : id } )
@@ -181,6 +178,9 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         return False
 
     def __apply_configuration__(self) :
+        from HltLine.HltLine import Hlt2Line
+        from HltLine.HltLine import Hlt2Member
+        from HltLine.HltLine import bindMembers
         from Configurables import FilterDesktop,CombineParticles
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles

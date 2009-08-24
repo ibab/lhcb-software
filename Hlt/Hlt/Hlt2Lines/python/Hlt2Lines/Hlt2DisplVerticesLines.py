@@ -28,7 +28,6 @@
 
 from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line
 import GaudiKernel.SystemOfUnits as units
 
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
@@ -44,6 +43,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     def __apply_configuration__(self) :
         
+        from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
         from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices
         from Hlt2SharedParticles.BasicParticles import NoCutsPions

@@ -12,7 +12,6 @@
 #
 ##
 from Gaudi.Configuration import *
-from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
@@ -66,6 +65,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
     
 
     def __apply_configuration__(self) :
+        from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import DiMuon
         from Configurables import FilterDesktop

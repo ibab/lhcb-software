@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.52 2009-08-18 14:27:37 pkoppenb Exp $
+$Id: release.notes,v 1.53 2009-08-24 21:29:03 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-24 - Gerhard Raven
+ - move imports around to prevent 'early import'
 
 ! 2009-08-18 - Patrick Koppenburg
  - B2LLK : Use TFKaons

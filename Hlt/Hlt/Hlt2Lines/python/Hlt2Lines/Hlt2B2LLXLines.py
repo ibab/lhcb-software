@@ -8,8 +8,6 @@
 ##
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-from HltLine.HltLine import Hlt2Line
-from HltLine.HltLine import Hlt2Member
 
 class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
     """
@@ -54,6 +52,8 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         """
         The thing that defines it all
         """
+        from HltLine.HltLine import Hlt2Line
+        from HltLine.HltLine import Hlt2Member
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
