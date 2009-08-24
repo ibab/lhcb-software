@@ -11,7 +11,7 @@ from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2PID, Hlt2CaloReco
+from Configurables import Hlt2PID, GaudiSequencer
 from GaudiKernel.SystemOfUnits import MeV
 ##########################################################################
 # Make the pions
@@ -79,7 +79,15 @@ NeutralProtoMaker = Hlt2PID().hlt2NeutralProtos()
 #
 # Calo reco
 #
-Hlt2CaloRecoSeq = Hlt2CaloReco().hlt2Calo()   # todo can I get that from Hlt2.py ?
+# Hlt2CaloRecoSeq = Hlt2CaloReco().hlt2Calo()   # todo can I get that from Hlt2.py ?
+Hlt2CaloRecoSeq = GaudiSequencer("Hlt2CaloRecoSeq")
+Hlt2CaloRecoSeq.Context = "HLT"
+from Configurables import HltCaloRecoConf, HltCaloPIDsConf
+caloReco = HltCaloRecoConf("HltCaloReco")
+caloReco.Sequence = Hlt2CaloRecoSeq
+caloPID  = HltCaloPIDsConf("HltCaloPIDs")
+caloPID.Sequence = Hlt2CaloRecoSeq
+
 ##########################################################################
 #
 # Muon reco
@@ -95,6 +103,7 @@ Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()
 # for use in Hlt2 by adding:
 #
 # from Hlt2SharedParticles.BasicParticles import Muons
+# @todo : Charged protos will be split
 #
 
 __all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons',

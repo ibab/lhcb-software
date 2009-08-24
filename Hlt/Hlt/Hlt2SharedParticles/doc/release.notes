@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.45 2009-08-18 14:26:07 pkoppenb Exp $
+d$Id: release.notes,v 1.46 2009-08-24 12:12:43 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-08-24 - Patrick Koppenburg
+ - Use CaloReco and CaloPIDs configurables. Remove Hlt2CaloReco.py
+   -> This kills TFElectrons again. Wait for Vanya and Olivier to provide
+      a way of using TF tracks.
 
 ! 2009-08-18 - Patrick Koppenburg
  - Add TFKaons and Pions. This is a bit of an overkill. It requires CaloReco to do pions.

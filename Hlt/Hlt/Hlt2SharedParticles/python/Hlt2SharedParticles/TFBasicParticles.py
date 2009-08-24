@@ -11,7 +11,7 @@ from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
-from Configurables import Hlt2PID, Hlt2CaloReco
+from Configurables import Hlt2PID
 from GaudiKernel.SystemOfUnits import MeV
 #
 prefix = "HltTF"
@@ -72,13 +72,13 @@ TFChargedProtoMaker = Hlt2TFPID.hlt2ChargedProtos( )
 ##########################################################################
 #
 # Calo reco
-# Need another instance of Hlt2CaloReco
+# @todo need CaloReco to be able to deal with other type of tracks
 #
-Hlt2TFCaloReco = Hlt2CaloReco('Hlt2TFCaloReco')
-Hlt2TFCaloReco.Prefix = prefix
-Hlt2TFCaloReco.Hlt2Tracks = TFTracks
-#
-Hlt2TFCaloRecoSeq = Hlt2TFCaloReco.hlt2Calo()   # todo can I get that from Hlt2.py ?
+# Hlt2TFCaloReco = Hlt2CaloReco('Hlt2TFCaloReco')
+# Hlt2TFCaloReco.Prefix = prefix
+# Hlt2TFCaloReco.Hlt2Tracks = TFTracks
+##
+# Hlt2TFCaloRecoSeq = Hlt2TFCaloReco.hlt2Calo()   # todo can I get that from Hlt2.py ?
 ##########################################################################
 #
 # Muon reco 
@@ -99,14 +99,15 @@ SeqHlt2TFParticlesForTopo = GaudiSequencer('SeqHlt2TFParticlesForTopo') # the se
 
 __all__ = ( 'TFMuons', 'TFElectrons', 'TFKaons', 'TFPions', 'TFChargedProtos' )
 
-TFChargedProtos = bindMembers( None, [ SeqHlt2TFParticlesForTopo, Hlt2TFCaloRecoSeq,
+TFChargedProtos = bindMembers( None, [ SeqHlt2TFParticlesForTopo,
                                        Hlt2TFMuonIDSeq, TFChargedProtoMaker ] )
 
 #
 # @todo : A bit stupid to require calo reco for this
+# @todo : Charged protos will be split
 #
 TFKaons         = bindMembers( None, [ TFChargedProtos, Hlt2TFKaons ] )
 TFPions         = bindMembers( None, [ TFChargedProtos, Hlt2TFPions ] )
 TFMuons         = bindMembers( None, [ TFChargedProtos, Hlt2TFMuons ] )
-TFElectrons     = bindMembers( None, [ TFChargedProtos, Hlt2TFElectrons ] )
+TFElectrons     = bindMembers( None, [ TFChargedProtos, Hlt2TFElectrons ] )  
 
