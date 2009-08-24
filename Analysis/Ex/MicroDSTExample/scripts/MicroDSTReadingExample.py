@@ -191,12 +191,14 @@ refitPropTimeResLoop = Functors.ContainerLoop( refitTauResPlotter )
 while ( nextEvent() ) :
     nEvents+=1
     PVs = evtSvc[pvLocation]
-    nPrimaryVertices += PVs.size()
-    safeFill( nPVPlot, PVs.size() )
+    if PVs :
+        nPrimaryVertices += PVs.size()
+        safeFill( nPVPlot, PVs.size() )
+        for PV in PVs : safeFill(vertexZ, PV.position().z() )
     mcParts = evtSvc[mcParticlePath]
     if mcParts : nMCEvents += 1
     
-    for PV in PVs : safeFill(vertexZ, PV.position().z() )
+
     
     particles = evtSvc[particlePath]
     flavTags = evtSvc[flavTagPath]
