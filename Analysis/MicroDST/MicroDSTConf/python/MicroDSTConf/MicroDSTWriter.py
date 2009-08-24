@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.13 2009-08-21 15:55:38 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.14 2009-08-24 16:40:26 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -139,8 +139,11 @@ class MicroDSTWriter(BaseDSTWriter) :
         return [cloner]
 
     def _copyPVRelations(self, sel) :
-        # loop over related PV locations and copy each table.
-        # If no PV copying, keep original PV
+        """
+        loop over related PV locations and copy each table.
+        If no PV copying, keep original PV, but only if no PV re-fitting
+        has been performed. If it has, then copy the PV too.
+        """
         cloners = []
         if self.getProp('CopyParticles') :
             for loc, copyPV in self.getProp("CopyPVRelations").iteritems() :
@@ -148,7 +151,12 @@ class MicroDSTWriter(BaseDSTWriter) :
                 fullLoc = self.mainLocation(sel) + "/" + loc
                 cloner = self._copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc )
                 if copyPV == False :
-                    cloner.ClonerType = "NONE"
+                    alg = sel.algorithm()
+                    refitPVs = False
+                    if alg.properties().has_key('ReFitPVs') :
+                        refitPVs =  alg.ReFitPVs
+                    if not refitPVs :
+                        cloner.ClonerType = "NONE"
                 cloners += [cloner]
         return cloners
     
