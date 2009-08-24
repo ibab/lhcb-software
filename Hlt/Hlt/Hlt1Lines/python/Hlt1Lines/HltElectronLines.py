@@ -21,7 +21,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import bindMembers
         from HltLine.HltLine import Hlt1Tool   as Tool
-        from Hlt1Lines.HltL0Candidates import converL0Candidates
+        from Hlt1Lines.HltL0Candidates import convertL0Candidates
         from Configurables import HltTrackUpgradeTool
         from Configurables import L0ConfirmWithT
         from HltLine.HltReco import RZVelo, Velo, PV2D

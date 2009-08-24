@@ -148,6 +148,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
                                      )
 
 
+        from HltLine.HltLine import Hlt1Line   as Line
         return Line ( 'Lumi'+BXType
                     , prescale = self.prescale
                     , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
