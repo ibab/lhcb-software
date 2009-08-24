@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.24 2009-08-13 20:57:07 graven Exp $
+# $Id: Hlt1.py,v 1.25 2009-08-24 21:26:39 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,35 +14,34 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.24 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-from HltLine.HltLine     import addHlt1Prop
 from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
-from Hlt1Lines.HltL0Lines       import HltL0LinesConf
 from Hlt1Lines.HltLumiLines     import HltLumiLinesConf
+from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
+from Hlt1Lines.HltL0Lines       import HltL0LinesConf
+from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
+from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
 from Hlt1Lines.HltMuonLines     import HltMuonLinesConf
 from Hlt1Lines.HltHadronLines   import HltHadronLinesConf
-from Hlt1Lines.HltElectronLines import HltElectronLinesConf
 from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
-from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
-from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
+from Hlt1Lines.HltElectronLines import HltElectronLinesConf
 
 global _type2conf
 _type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was considered bad)
-              , 'LU' : HltLumiLinesConf
-              , 'BG' : HltBeamGasLinesConf
-              , 'L0' : HltL0LinesConf
-              , 'VE' : HltVeloLinesConf
-              , 'XP' : HltExpressLinesConf
-              , 'MU' : HltMuonLinesConf
-              , 'HA' : HltHadronLinesConf
-              , 'PH' : HltPhotonLinesConf
-              , 'EL' : HltElectronLinesConf
-              }
+             , 'LU' : HltLumiLinesConf
+             , 'BG' : HltBeamGasLinesConf
+             , 'L0' : HltL0LinesConf
+             , 'VE' : HltVeloLinesConf
+             , 'XP' : HltExpressLinesConf
+             , 'MU' : HltMuonLinesConf
+             , 'HA' : HltHadronLinesConf
+             , 'PH' : HltPhotonLinesConf
+             , 'EL' : HltElectronLinesConf
+             }
 
 def hlt1TypeDecoder(hlttype) :
       trans = { 'Hlt1' : 'PA+LU+L0+VE+XP+MU+HA+PH+EL'  }
@@ -91,10 +90,11 @@ class Hlt1Conf(LHCbConfigurableUser):
       self.confType() 
          
       # add a few thing to our printout
+      from HltLine.HltLine     import addHlt1Prop
       addHlt1Prop([ 'RoutingBits', 'Accept', 'FilterDescriptor'
-                    , 'Code', 'InputLocations'
-                    , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
-                    , 'OutputSelection','Context' ])
+                  , 'Code', 'InputLocations'
+                  , 'DaughtersCuts', 'CombinationCut', 'MotherCut', 'DecayDescriptor'
+                  , 'OutputSelection','Context' ])
       
       importOptions('$HLTCONFROOT/options/HltInit.py')
       

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.111 2009-08-20 21:03:49 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.112 2009-08-24 21:26:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -10,10 +10,6 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltANNSvc 
-from HltLine.HltLine     import hlt1Lines
-from HltLine.HltLine     import hlt2Lines
-from HltLine.HltLine     import hlt1Selections
-from HltLine.HltLine     import hlt1Decisions
 from Hlt1                import Hlt1Conf, hlt1TypeDecoder
 from Hlt2                import Hlt2Conf, hlt2TypeDecoder
 from Effective_Nominal   import Effective_Nominal 
@@ -187,6 +183,7 @@ class HltConf(LHCbConfigurableUser):
         """
         ## and persist some vertices...
         ## uhhh... need to pick only those in ActiveHlt1Lines...
+        from HltLine.HltLine     import hlt1Selections
         vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
         from Configurables import HltVertexReportsMaker
         HltVertexReportsMaker().VertexSelections = vertices
@@ -211,6 +208,7 @@ class HltConf(LHCbConfigurableUser):
         ### TODO: what about shared selections??? (which appear with multiple indices!)
         ###       but which have names not prefixed by the line name
         ### Make sure that the ANN Svc has everything it will need
+        from HltLine.HltLine     import hlt1Selections
         missing = [ i for i in sorted(set(hlt1Selections()['All']) - set(HltANNSvc().Hlt1SelectionID.keys())) if not i.startswith('TES:') ]
         missingDecisions  = [ i for i in missing if i.endswith('Decision') ]
         extraDecisions = dict(zip( missingDecisions , range( 1000,  1000 + len(missingDecisions) ) ))
@@ -234,6 +232,7 @@ class HltConf(LHCbConfigurableUser):
                 if id :
                     log.debug( i.index() )
                     for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
+                        from HltLine.HltLine     import hlt1Selections
                         if key in hlt1Selections()['All'] :
                             # TODO: see if the selection is unique to this line...
                             cur = HltANNSvc().Hlt1SelectionID[ key ] if key in HltANNSvc().Hlt1SelectionID else  None
@@ -304,6 +303,7 @@ class HltConf(LHCbConfigurableUser):
                 x = getattr(c,p)
                 if list is not type(x) : x = [ x ]
                 for i in x : _disableHistograms(i,filter) 
+        from HltLine.HltLine     import hlt1Lines, hlt2Lines
         if   self.getProp('HistogrammingLevel') == 'None' : 
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable() )
         elif self.getProp('HistogrammingLevel') == 'Line' : 
@@ -318,6 +318,8 @@ class HltConf(LHCbConfigurableUser):
         Add the configured lines into the Hlt1 and Hlt2 sequencers,
         provided there is no reason not to do so...
         """
+        from HltLine.HltLine     import hlt1Lines
+        from HltLine.HltLine     import hlt2Lines
 
         activeLines = []
         sets = self.settings()
