@@ -427,10 +427,11 @@ def getHltTypes( release, cas = ConfigAccessSvc() ) :
     return set( [ i['hlttype']  for i in info.itervalues() if i['release']==release ] )
 def getTCKs( release, hlttype, cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if v['release']==release and v['hlttype']==hlttype] 
+    pred = lambda x : x['release'] == release and x['hlttype'] == hlttype and x['TCK']!='<NONE>'
+    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if pred(v) ]
 def getTCKList( cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    return [ '0x%08x'%v['TCK']  for v in info.itervalues() ]
+    return [ '0x%08x'%v['TCK']  for v in info.itervalues() if v['TCK'] != '<NONE>']
 def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
     for p in ['RoutingBits','routingBitDefinitions'] :
