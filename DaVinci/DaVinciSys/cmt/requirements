@@ -1,15 +1,12 @@
 package DaVinciSys
-version v24r1p1
+version v24r2
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v24r1p1 Phys  
-use  HltL0Conf                  v2r10   Hlt
-use  HltSelChecker              v8r7    Hlt
-use  CaloAssociators            v6r8p1  Calo
+use  DaVinci                 	v24r2 Phys  
 
 alias DaVinciTests "cmt qmtest_run"
 
