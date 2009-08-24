@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-08-24 - Gerhard Raven
+ - add getTCKList
+
 ! 2009-08-20 - Gerhard Raven
  - remove fixTCKdirPermission which now lives in HltTCK
 
