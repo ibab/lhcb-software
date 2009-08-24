@@ -183,7 +183,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
         //here we need to check for m_partName[1] (only 1 partition at a time in EFF), not the nodename
         //if (serviceName.find("/" + m_nodeName) == std::string::npos) {
 	msg << MSG::DEBUG << "checking for partitionname in servicename " << endreq;
-	msg << MSG::DEBUG << "m_partName.size " <<    m_partName.size() << " partname "<< m_partName[0] << endreq;	
+	msg << MSG::DEBUG << "m_partName.size " <<    m_partName.size() << " partname "<< m_partName[0] << " serviceName " << serviceName << endreq;	
 	if (serviceName.find("/" + m_partName[0]) == std::string::npos) {	
           msg << MSG::DEBUG << "REFUSED because partition name not found in servicename" << endreq;
           continue;
@@ -205,7 +205,7 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
     }
 
     if (s_Saver == m_serviceOwner) { // savers do not save MonRate
-       if ((svctype.compare(s_pfixMonRate) == 0) ||(svctype.compare(s_pfixMonStatEntity)==svctype)) {
+       if ((svctype.compare(s_pfixMonRate) == 0) ||(svctype.compare(s_pfixMonStatEntity)==0)) {
         msg << MSG::DEBUG << "REFUSED because Savers do not Save MonRate or MonStatEntity!" << endreq;
         continue; 
       } 
