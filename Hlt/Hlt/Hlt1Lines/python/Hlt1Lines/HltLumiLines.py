@@ -6,8 +6,6 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import Hlt1Member as Member
 
 from Hlt1Lines.LumiCounterDefinition import LumiCounterDefinitionConf
 from Configurables import ( LumiCountVertices,
@@ -92,8 +90,8 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
-                if debugOPL <= INFO:
-                    print '# INFO   : HltLumiLines::HistoMaker:', BXType, key, threshold, bins
+                if debugOPL <= DEBUG:
+                    print '# DEBUG   : HltLumiLines::HistoMaker:', BXType, key, threshold, bins
                 
 
         # populate reco sequence if needed
@@ -161,6 +159,8 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
         '''
         creates parallel HLT1 Lines for each beam crossing type
         '''
+        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import Hlt1Member as Member
         self.setOtherProps(LumiCounterDefinitionConf(),["FullReco"])
 
         counters = LumiCounterDefinitionConf().defineCounters()

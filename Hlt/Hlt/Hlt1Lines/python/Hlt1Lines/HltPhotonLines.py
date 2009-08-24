@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.8 2009-08-18 13:40:43 witekma Exp $
+# $Id: HltPhotonLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,17 +12,11 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
 # =============================================================================
 
 
-from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import Hlt1Member as Member
-from HltLine.HltLine import Hlt1Tool   as Tool
-from HltLine.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
-from Hlt1Lines.HltL0Candidates import *
 
 #//---------------------------
 #// HLT Photon Alley
@@ -38,6 +32,11 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                }
 
    def __apply_configuration__(self):
+        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import Hlt1Member as Member
+        from HltLine.HltLine import Hlt1Tool   as Tool
+        from HltLine.HltLine import hlt1Lines, addHlt1Prop, rmHlt1Prop 
+        from Hlt1Lines.HltL0Candidates import convertL0Candidates
         from Configurables import HltTrackFunctionFactory
         from Configurables import HltAntiEleConf
         from Configurables import L0ConfirmWithT
@@ -111,6 +110,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                         , Member ('VM2', 'PhoTra'
                                , InputSelection1 = '%TFPhoton'
                                , InputSelection2 = '%TFForward'
+                               , OutputSelection = '%Decision'
                                )
                         ]
               , postscale = self.postscale
@@ -126,6 +126,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                         , Member ('VM2', 'PhoTra'
                                , InputSelection1 = '%TFPhoton'
                                , InputSelection2 = '%TFForward'
+                               , OutputSelection = '%Decision'
                                )
                         ]
               , postscale = self.postscale

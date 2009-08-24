@@ -1,5 +1,4 @@
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line as Line
 #
 # Define lines that define the XPress stream
 #
@@ -12,6 +11,7 @@ class HltExpressLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) : 
         from Configurables import Tf__PatVeloAlignTrackFilter as PatVeloAlignTrackFilter
+        from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
         Line( 'AlignVelo' # do _not_ start with Velo, as those are assumed to be closing lines...
             , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"

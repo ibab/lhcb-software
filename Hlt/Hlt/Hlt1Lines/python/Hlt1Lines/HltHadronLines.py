@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.7 2009-08-10 13:34:32 graven Exp $
+# $Id: HltHadronLines.py,v 1.8 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,19 +11,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import bindMembers
-from HltLine.HltLine import Hlt1Member as Member
-from HltLine.HltLine import Hlt1Tool   as Tool
-from HltLine.HltLine import hlt1Lines  
-from Hlt1Lines.HltL0Candidates import *
-from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 
 def histosfilter(name,xlower=0.,xup=100.,nbins=100):
     """ return the dictonary with the booking of the histograms associated to a filter
@@ -70,6 +63,12 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                 }
     
     def __apply_configuration__(self) : 
+        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import bindMembers
+        from HltLine.HltLine import Hlt1Member as Member
+        from HltLine.HltLine import Hlt1Tool   as Tool
+        from HltLine.HltLine import hlt1Lines  
+        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltLine.HltReco import RZVelo, PV2D
 
         ## alias to get the slot associated to a name
@@ -86,6 +85,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
             IPCut = _cut(type+"HadMain_IPCut")
             PTCut = _cut(type+"HadMain_PTCut")
             # get the L0 candidates (all or L0)
+            from Hlt1Lines.HltL0Candidates import convertL0Candidates
             conf = [convertL0Candidates(candidates)]
             if (type == "Soft"):
                 conf.append(

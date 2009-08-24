@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.11 2009-08-21 09:16:52 graven Exp $
+# $Id: HltVeloLines.py,v 1.12 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,15 +9,13 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 #
 # VELO (closing procedure) specific HLT trigger lines
 #
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import Hlt1Member as Member
 
 class HltVeloLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Prescale'                   : { 'Hlt1Velo(.Side|TrTr)' : 0.0001 } 
@@ -28,6 +26,8 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                }
 
    def __apply_configuration__(self):
+        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import Hlt1Member as Member
         # from Configurables import DecodeVeloRawBuffer
         from Configurables import VeloClusterFilter
         from Configurables import Tf__DefaultVeloRHitManager as DefaultVeloRHitManager

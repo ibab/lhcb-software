@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.8 2009-08-05 14:10:41 pkoppenb Exp $
+# $Id: HltBeamGasLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,20 +11,13 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
-from HltLine.HltLine import Hlt1Line   as Line
 
-#from Configurables import DecodeVeloRawBuffer
-#from Configurables import Tf__PatVeloRTracking
-#from Configurables import BeamGasTrigCheckL0TracksBXType
-#from Configurables import BeamGasTrigExtractClusters
-#from Configurables import BeamGasTrigClusterCut
-#from Configurables import BeamGasTrigVertexCut
 
 class HltBeamGasLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
@@ -49,56 +42,57 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
         ''' Configure the Hlt Line for the case of beam-gas 
             interaction in a beam1/2 - empty crossing '''
 
-	lineName = "emptyName"
-	if whichBeam == 'Beam1' : lineName = "BeamGas1"
-	if whichBeam == 'Beam2' : lineName = "BeamGas2"
+        lineName = "emptyName"
+        if whichBeam == 'Beam1' : lineName = "BeamGas1"
+        if whichBeam == 'Beam2' : lineName = "BeamGas2"
 	
-	ODINRequirement = "ODIN_BXTYP == LHCb.ODIN." + whichBeam	
+        ODINRequirement = "ODIN_BXTYP == LHCb.ODIN." + whichBeam	
 
-	L0DURequirement = "L0_CHANNEL('" + self.getProp('L0Channel' + whichBeam) + "')"
-	algoList = []	
+        L0DURequirement = "L0_CHANNEL('" + self.getProp('L0Channel' + whichBeam) + "')"
+        algoList = []	
 	
-	'''
-	### Can this alg be totally replaced:
-	### a) BXType   b) L0Decision   c) N RZ tracks	    
-	algCheckL0 = BeamGasTrigCheckL0TracksBXType(   'CheckL0' + whichBeam
-                                		     , ChechBXType     = False
-						     , CheckL0Decision = False 
-						     , CheckTracks     = False  )
-
-	### here we can add different z-ranges for beam1 and beam2
-	algRTracking = Tf__PatVeloRTracking(   'HltRecoRZVelo_' + lineName
-	                        	     , OutputTracksName = "Hlt/Track/RZVeloBeamGasOnly"
-					     , ZVertexMin  = self.getProp('ZVertexMin')
-					     , ZVertexMax  = self.getProp('ZVertexMax')
-					     , OutputLevel = INFO  )	    						   
-
-
-	### Question (for Vanya?):
-	### In the "LINES" framework Do we have a cut on the N of Tracks in a certain container?
-	algVtxCut = BeamGasTrigVertexCut(   'BeamGasTrigVertexCut_' + lineName
-	                		  , RZTracksInputLocation = algRTracking.OutputTracksName
-	                		  , MaxBinValueCut     = 5
-	                		  , HistoBinWidth      = 10
-	                		  , ZExclusionRangeLow = 0.
-					  , ZExclusionRangeUp  = 0.  
-					  , OutputLevel        = INFO
-					  , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
-					  #, OutputSelectionName = ... #By default = name of the algorithm
-					)   
-
-
-	algoList.append( algCheckL0   )
-	algoList.append( algRTracking )
-	algoList.append( algVtxCut    )
         '''
-
-	return Line( lineName
-	           ,prescale = self.prescale
-                   ,ODIN  = ODINRequirement
-		   ,L0DU  = L0DURequirement 
-		   ,algos = algoList
-		   ,postscale = self.postscale )
+        ### Can this alg be totally replaced:
+        ### a) BXType   b) L0Decision   c) N RZ tracks	    
+        algCheckL0 = BeamGasTrigCheckL0TracksBXType(   'CheckL0' + whichBeam
+                                     		     , ChechBXType     = False
+        					     , CheckL0Decision = False 
+        					     , CheckTracks     = False  )
+        
+        ### here we can add different z-ranges for beam1 and beam2
+        algRTracking = Tf__PatVeloRTracking(   'HltRecoRZVelo_' + lineName
+                                	     , OutputTracksName = "Hlt/Track/RZVeloBeamGasOnly"
+        				     , ZVertexMin  = self.getProp('ZVertexMin')
+        				     , ZVertexMax  = self.getProp('ZVertexMax')
+        				     , OutputLevel = INFO  )	    						   
+        
+        
+        ### Question (for Vanya?):
+        ### In the "LINES" framework Do we have a cut on the N of Tracks in a certain container?
+        algVtxCut = BeamGasTrigVertexCut(   'BeamGasTrigVertexCut_' + lineName
+                        		  , RZTracksInputLocation = algRTracking.OutputTracksName
+                        		  , MaxBinValueCut     = 5
+                        		  , HistoBinWidth      = 10
+                        		  , ZExclusionRangeLow = 0.
+        				  , ZExclusionRangeUp  = 0.  
+        				  , OutputLevel        = INFO
+        				  , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
+        				  #, OutputSelectionName = ... #By default = name of the algorithm
+        				)   
+        
+        
+        algoList.append( algCheckL0   )
+        algoList.append( algRTracking )
+        algoList.append( algVtxCut    )
+        '''
+ 
+        from HltLine.HltLine import Hlt1Line   as Line
+        return Line( lineName
+                   , prescale = self.prescale
+                   , ODIN  = ODINRequirement
+                    , L0DU  = L0DURequirement 
+                   , algos = algoList
+                   , postscale = self.postscale )
 		   
     def __create_beam_crossing_line__(self) :
 	''' Configure the Hlt Line for the case of beam-gas 
@@ -165,6 +159,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 
         '''
 
+        from HltLine.HltLine import Hlt1Line   as Line
         return Line( lineName
                    ,prescale = self.prescale
                    ,ODIN  = ODINRequirement

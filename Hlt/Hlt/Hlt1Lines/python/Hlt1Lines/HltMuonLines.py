@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.12 2009-08-10 16:16:54 pkoppenb Exp $
+# $Id: HltMuonLines.py,v 1.13 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,18 +14,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import Hlt1Member as Member
-from HltLine.HltLine import bindMembers
-from HltLine.HltLine import Hlt1Tool   as Tool
-from Hlt1Lines.HltL0Candidates import *
-from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 
 
 class HltMuonLinesConf(HltLinesConfigurableUser) :
@@ -87,6 +81,12 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) : 
         from Configurables import HltMuonRec
+        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import Hlt1Member as Member
+        from HltLine.HltLine import bindMembers
+        from HltLine.HltLine import Hlt1Tool   as Tool
+        from Hlt1Lines.HltL0Candidates import *
+        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltLine.HltReco import RZVelo, PV2D, Velo
 
         # It already Prepare the muon segments with proper error calling the tool MuonSeedTool

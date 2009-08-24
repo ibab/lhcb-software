@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.8 2009-08-14 08:38:52 graven Exp $
+# $Id: HltCommissioningLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
@@ -11,12 +11,10 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
-from HltLine.HltLine import Hlt1Line   as Line
-from HltLine.HltLine import Hlt1Member as Member
 
 
 class HltCommissioningLinesConf(HltLinesConfigurableUser):
@@ -27,6 +25,7 @@ class HltCommissioningLinesConf(HltLinesConfigurableUser):
                               }
                }
    def __apply_configuration__(self):
+        from HltLine.HltLine import Hlt1Line   as Line
         Line('NonRandomODIN' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
             , prescale = self.prescale
             , postscale = self.postscale

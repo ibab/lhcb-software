@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.33 2009-08-21 08:14:37 graven Exp $
+! $Id: release.notes,v 1.34 2009-08-24 20:04:56 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-24 - Gerhard Raven
+ - move import statements from global scope into local scope
+   to avoid 'early import'
 
 ! 2009-08-21 - Gerhard Raven
  - improve daisy-chaining of logic & input/output in velo lines
