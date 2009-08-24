@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.22 2009-08-21 15:56:23 jpalac Exp $
+!$Id: release.notes,v 1.23 2009-08-24 16:40:47 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-24 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Copy re-fitted related vertices when CopyPVs has been set to false. The
+    re-fitted PVs are not onthe DST so they need to be copied!
 
 ! 2009-08-21 - Juan PALACIOS
  - cmt/requirements
