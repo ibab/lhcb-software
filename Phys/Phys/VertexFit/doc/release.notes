@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.171 2009-08-19 15:52:11 ibelyaev Exp $
+! $Id: release.notes,v 1.172 2009-08-24 13:44:17 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-08-24 - Patrick Koppenburg
+ - TrgParticleMaker : add 
+  declareInterface<IParticleCombiner>(this);
+  declareInterface<IParticleReFitter>(this);
 
 ! 2009-08-19 - Vanya BELYAEV
  - OfflineVertexFitter, 

@@ -1,4 +1,4 @@
-// $Id: TrgVertexFitter.cpp,v 1.28 2009-08-19 15:52:11 ibelyaev Exp $
+// $Id: TrgVertexFitter.cpp,v 1.29 2009-08-24 13:44:17 pkoppenb Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -49,6 +49,8 @@ TrgVertexFitter::TrgVertexFitter( const std::string& type,
   ,m_stuffer()
 {
   declareInterface<IVertexFit>(this);
+  declareInterface<IParticleCombiner>(this);
+  declareInterface<IParticleReFitter>(this);
   declareProperty("useDaughters", m_useDaughters = true);
   declareProperty("Epsilon", m_epsilon = 1.e-16 );
 }
