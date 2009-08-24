@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.29 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -28,6 +28,8 @@ from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 from Configurables import Hlt2PID
+from CaloReco.Configuration   import HltCaloRecoConf 
+from CaloPIDs.Configuration   import HltCaloPIDsConf
 
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -61,7 +63,7 @@ def hlt2TypeDecoder(hlttype) :
 
 
 class Hlt2Conf(LHCbConfigurableUser):
-    __used_configurables__ = [ Hlt2PID ]
+    __used_configurables__ = [ Hlt2PID, HltCaloRecoConf, HltCaloPIDsConf ]
     for (k,v) in _type2conf.iteritems() : __used_configurables__.extend( v )
     __slots__ = {
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
@@ -144,7 +146,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         from HltLine.HltReco import HltRecoSequence
         Hlt2.Members += [ HltRecoSequence ]
         HltRecoSequence.Members += [ self.hlt2Tracks() ] # charged
-
 ###################################################################################
 #
 # Charged Particle making
@@ -202,6 +203,26 @@ class Hlt2Conf(LHCbConfigurableUser):
       
 ###################################################################################
 #
+# Calo, used much later
+#
+    def configureCalo(self):
+        """
+        Configure calo sequences
+        """   
+        Hlt2CaloSeq = GaudiSequencer("Hlt2CaloSeq")
+        Hlt2CaloSeq.Context = "HLT"
+        Hlt2CaloRecoSeq = GaudiSequencer("Hlt2CaloRecoSeq")
+        Hlt2CaloRecoSeq.Context = "HLT"
+        Hlt2CaloPIDsSeq = GaudiSequencer("Hlt2CaloPIDsSeq")
+        Hlt2CaloPIDsSeq.Context = "HLT"
+        Hlt2CaloSeq.Members = [ Hlt2CaloRecoSeq, Hlt2CaloPIDsSeq ]
+        caloReco = HltCaloRecoConf(Sequence           = Hlt2CaloRecoSeq,
+                                   Context            = "HLT")
+        caloPID  = HltCaloPIDsConf(Sequence           = Hlt2CaloPIDsSeq,
+                                   Context            = "HLT")
+        
+###################################################################################
+#
 # Main configuration
 #
     def __apply_configuration__(self):
@@ -215,6 +236,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         # reco
         self.hlt2Reconstruction(Hlt2)
         importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
+        # set Hlt2 PID
+        self.configureCalo()
         # set Hlt2 PID
         self.configurePID()
         # lines

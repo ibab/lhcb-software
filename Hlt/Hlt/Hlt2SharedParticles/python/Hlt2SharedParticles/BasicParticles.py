@@ -6,6 +6,10 @@
 #  @date 2008-07-15
 #
 ##
+# =============================================================================
+__author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+# =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
@@ -77,16 +81,9 @@ ChargedProtoMaker = Hlt2PID().hlt2ChargedProtos( )
 NeutralProtoMaker = Hlt2PID().hlt2NeutralProtos()
 ##########################################################################
 #
-# Calo reco
+# Calo reco (initialised in HltConf.Hlt2)
 #
-# Hlt2CaloRecoSeq = Hlt2CaloReco().hlt2Calo()   # todo can I get that from Hlt2.py ?
-Hlt2CaloRecoSeq = GaudiSequencer("Hlt2CaloRecoSeq")
-Hlt2CaloRecoSeq.Context = "HLT"
-from Configurables import HltCaloRecoConf, HltCaloPIDsConf
-caloReco = HltCaloRecoConf("HltCaloReco")
-caloReco.Sequence = Hlt2CaloRecoSeq
-caloPID  = HltCaloPIDsConf("HltCaloPIDs")
-caloPID.Sequence = Hlt2CaloRecoSeq
+Hlt2CaloSeq = GaudiSequencer("Hlt2CaloSeq")
 
 ##########################################################################
 #
@@ -109,8 +106,8 @@ Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()
 __all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons',
             'ChargedProtos', 'NeutralProtos' )
 
-ChargedProtos = bindMembers( None, [ Hlt2CaloRecoSeq, Hlt2MuonIDSeq, ChargedProtoMaker ] )
-NeutralProtos = bindMembers( None, [ Hlt2CaloRecoSeq, NeutralProtoMaker ] )
+ChargedProtos = bindMembers( None, [ Hlt2CaloSeq, Hlt2MuonIDSeq, ChargedProtoMaker ] )
+NeutralProtos = bindMembers( None, [ Hlt2CaloSeq, NeutralProtoMaker ] )
 
 NoCutsPions   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsPions ] )
 NoCutsKaons   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsKaons ] )
