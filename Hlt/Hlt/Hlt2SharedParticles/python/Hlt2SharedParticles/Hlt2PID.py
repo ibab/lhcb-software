@@ -8,11 +8,10 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from HltLine.HltLine import bindMembers
 from RichRecSys.Configuration import RichRecSysConf
 ###################################################################################
 #
@@ -43,6 +42,7 @@ class Hlt2PID(LHCbConfigurableUser):
         HltMuonIDAlg.MuonIDLocation = prefix+"/Muon/MuonPID"    # output
         HltMuonIDAlg.MuonTrackLocation = prefix+"/Track/Muon"
         
+        from HltLine.HltLine import bindMembers
         return bindMembers ( None, [ MuonRec(), HltMuonIDAlg ] )
     
     
@@ -103,4 +103,5 @@ class Hlt2PID(LHCbConfigurableUser):
         Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg(prefix+'ChargedProtoCombDLL')
         Hlt2ChargedProtoCombDLL.ProtoParticleLocation = protos 
 
+        from HltLine.HltLine import bindMembers
         return bindMembers ( None, [ Hlt2ChargedProtoPAlg, Hlt2ChargedProtoCombDLL ] )
