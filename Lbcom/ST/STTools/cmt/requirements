@@ -17,6 +17,7 @@ use GaudiAlg    v*
 use GaudiKernel v*
 use LinkerEvent       v*   Event
 use MCEvent          v* Event
+use STTELL1Event     v* ST
 
 #============================================================================
 # Component library building rule

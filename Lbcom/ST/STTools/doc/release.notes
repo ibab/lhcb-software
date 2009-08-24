@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-08-21  M Needham
+ - Add STRawADCInfo tool
+
 ! 2009-08-08 M Needham
  - Add APE to STOnlinePosition
 
