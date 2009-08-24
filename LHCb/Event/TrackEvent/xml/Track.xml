@@ -212,9 +212,7 @@
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), 
-                    m_likelihood(0), m_ghostProbability(0),  
-                    m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       </constructor>
 
   <constructor 
@@ -224,9 +222,7 @@
                     std::vector&lt;LHCb::LHCbID&gt; ids,
                     const LHCb::State&amp; aState"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), 
-                    m_likelihood(0), m_ghostProbability(0), 
-                    m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       <code>
       addToStates(aState);
       setHistory(history);
@@ -241,9 +237,7 @@
 	argList  = "const LHCb::Track::History&amp; history, const LHCb::Track::Types&amp; trackType,
                     const LHCb::Track::PatRecStatus&amp; patStatus"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), 
-                    m_likelihood(0), m_ghostProbability(0), 
-                    m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
       <code>
       setHistory(history);
       setType(trackType);
@@ -276,14 +270,14 @@
         type   = 'double'
         name   = 'likelihood'
         desc   = 'Likelihood variable'
-        init   = '-999'
+        init   = '999'
         access = 'PROTECTED' />
 
        <attribute
         type   = 'double'
         name   = 'ghostProbability'
         desc   = 'ghost probability variable'
-        init   = '-999'
+        init   = '999'
         access = 'PROTECTED' />
 
       <attribute

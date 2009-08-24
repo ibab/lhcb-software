@@ -4,7 +4,10 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
-- modify Track.xml (add hit pattern, remove some unused extra info members)
+ - set default values for likelihood and ghost probability to unphysical values
+
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+ - modify Track.xml (add hit pattern, remove some unused extra info members)
 
 !======================= TrackEvent v4r22 2009-07-13 =========================
 ! 2009-07-10 - Wouter Hulsbergen
