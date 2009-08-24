@@ -1,4 +1,4 @@
-// $Id: Fidel.cpp,v 1.12 2008-09-29 11:33:50 graven Exp $ // Include files
+// $Id: Fidel.cpp,v 1.13 2009-08-24 10:23:54 pkoppenb Exp $ // Include files
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/ToolFactory.h"
@@ -187,7 +187,7 @@ StatusCode Fidel::execute() {
       LHCb::Particle BCand(m_MothID);
       LHCb::Vertex BCandVertex;
       
-      StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCand,BCandVertex);      
+      StatusCode fit = vertexFitter()->fit(*(*ip1),*(*ip2),BCandVertex,BCand);      
       if(!fit) {      
         if (msgLevel(MSG::DEBUG)) debug()<<"Fit error"<<endmsg;
         continue;        
