@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.14 2009-06-22 09:17:27 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.15 2009-08-25 10:21:19 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -34,7 +34,7 @@ OMAMessage::OMAMessage( std::string& HistName,
     OCIStmt *stmt=NULL;
     m_StmtMethod = "OMAMessage::OMAMessage";
     text anaMess[VSIZE_ANAMSG]="";
-    if ( OCI_SUCCESS == prepareOCIStatement(stmt, "SELECT ANAMESSAGE FROM ANALYSIS WHERE AID=:1") ) {
+    if ( OCI_SUCCESS == prepareOCIStatement(stmt, "SELECT ANAMESSAGE FROM ANALYSIS WHERE AID=:1 and ANAMESSAGE is not NULL") ) {
       myOCIBindInt(stmt,":1", anaID);
     myOCIDefineString(stmt, 1, anaMess , VSIZE_ANAMSG);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {

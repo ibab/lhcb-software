@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.5 2009-06-16 17:39:23 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.6 2009-08-25 10:21:19 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -8,6 +8,8 @@
 
 /** @class OMAMessage OMAMessage.h OMAlib/OMAMessage.h
  *  
+ *  warning/alarm message from automatic analysis 
+ *  on online monitoring histograms
  *
  *  @author Giacomo GRAZIANI
  *  @date   2008-08-14
