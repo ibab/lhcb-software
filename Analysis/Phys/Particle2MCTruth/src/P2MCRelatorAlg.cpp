@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.cpp,v 1.2 2009-04-16 16:00:25 jpalac Exp $
+// $Id: P2MCRelatorAlg.cpp,v 1.3 2009-08-25 13:21:28 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -24,13 +24,14 @@ P2MCRelatorAlg::P2MCRelatorAlg( const std::string& name,
                                 ISvcLocator* pSvcLocator)
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
-  m_particleLocation(""),
+  m_particleLocations(),
   m_mcpLocation(LHCb::MCParticleLocation::Default),
   m_p2mcp(0),
   m_p2mcpType("MCMatchObjP2MCRelator"),
   m_table()
 {
-  declareProperty("ParticleLocation", m_particleLocation);
+  m_particleLocations.clear();
+  declareProperty("ParticleLocations", m_particleLocations);
   declareProperty("MCParticleLocation", m_mcpLocation);
   declareProperty("IP2MCP", m_p2mcpType);
 }
@@ -59,17 +60,35 @@ StatusCode P2MCRelatorAlg::initialize() {
 StatusCode P2MCRelatorAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  const LHCb::Particle::Container* particles = 
-    get<LHCb::Particle::Container>( m_particleLocation );
-  m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
-  m_table.clear();
-  i_particleLoop( particles->begin(), particles->end() );
-  m_table.i_sort();
-  Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
-  const std::string outputLocation = 
-    trunkLocation(m_particleLocation) + "/P2MCPRelations";
-  put(table, outputLocation);
 
+  m_mcParticles = get<LHCb::MCParticle::Container>( m_mcpLocation );
+  if (0==m_mcParticles) {
+    return Warning("Found no MCParticles in "+ m_mcpLocation, 
+                   10, StatusCode::SUCCESS);
+  }
+  typedef std::vector<std::string> StringVector;
+  StringVector::const_iterator _begin = m_particleLocations.begin();
+  StringVector::const_iterator _end = m_particleLocations.end();
+  
+  for (StringVector::const_iterator iLoc = _begin; iLoc!=_end; ++iLoc) {
+
+    const LHCb::Particle::Container* particles = 
+      get<LHCb::Particle::Container>( *iLoc );
+    m_table.clear();
+    if (0!=particles) {
+      i_particleLoop( particles->begin(), particles->end() );
+      m_table.i_sort();
+    } else {
+      Warning("Found no Particles in "+ *iLoc,
+              10, StatusCode::SUCCESS).ignore();
+    }
+    Particle2MCParticle::Table* table = new Particle2MCParticle::Table(m_table);
+    const std::string outputLocation = 
+    trunkLocation(*iLoc) + "/P2MCPRelations";
+
+    put(table, outputLocation);
+  }
+  
   return StatusCode::SUCCESS;
 }
 //=============================================================================

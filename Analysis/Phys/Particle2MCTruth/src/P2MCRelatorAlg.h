@@ -1,4 +1,4 @@
-// $Id: P2MCRelatorAlg.h,v 1.3 2009-06-26 13:28:22 jpalac Exp $
+// $Id: P2MCRelatorAlg.h,v 1.4 2009-08-25 13:21:28 jpalac Exp $
 #ifndef P2MCRELATORALG_H 
 #define P2MCRELATORALG_H 1
 
@@ -19,7 +19,7 @@
  *
  *  <b> Properties</b>
  *
- *  ParticleLocation: TES location of input LHCb::Particles
+ *  ParticleLocations: TES location of input LHCb::Particles
  *
  *  MCParticleLocation: TES location of input LHCb::Particles. Default: LHCb::MCParticleLocation::Default
  *
@@ -32,7 +32,7 @@
  *  @code
  *  from Configurables import P2MCRelatorAlg
  *  p2mc = P2MCRelatorAlg()
- *  p2mc.ParticleLocation = "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"
+ *  p2mc.ParticleLocations = ["Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles"]
  *  # Add it to a selection sequence
  *  seq = GaudiSequencer('SeqDC06selBd2Jpsi2MuMu_Kst2KPi')
  *  seq.Members += [p2mc]
@@ -71,14 +71,13 @@ private:
       const SmartRefVector<LHCb::Particle>& daughters = (*it)->daughters();
       i_particleLoop(daughters.begin(), daughters.end() );
     }
-    
   }
   
   std::string trunkLocation(const std::string& location) const;
 
 private:
 
-  std::string m_particleLocation;
+  std::vector<std::string> m_particleLocations;
   std::string m_mcpLocation;
   IP2MCP* m_p2mcp;
   std::string m_p2mcpType;
