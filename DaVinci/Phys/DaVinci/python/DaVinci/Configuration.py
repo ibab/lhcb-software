@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.70 2009-08-24 13:09:25 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.71 2009-08-25 14:52:50 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -79,6 +79,33 @@ class DaVinci(LHCbConfigurableUser) :
     moniSeq = GaudiSequencer("MonitoringSequence")
 
 ################################################################################
+# Check Options are OK
+#
+    def checkOptions(self):
+        """
+        Checks options. Changes a few if needed.
+        """
+        dataType = self.getProp("DataType")
+        if dataType not in [ "DC06", "2008", "2009", "MC09" ]:
+            raise TypeError( "Invalid dataType '%s'"%dataType )
+        inputType = self.getProp( "InputType" ).upper()
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+            raise TypeError( "Invalid inputType '%s'"%inputType )
+        # DST packing, not for  DC06
+#        if ( self.getProp("DataType") == "DC06" ):
+#            self.setProp('PackType', 'NONE') 
+        if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI")):
+            redo = self.getProp("RedoMCLinks")
+            if ( self.getProp("DataType")=="DC06" ) and ( not redo ):
+                log.warning("Redoing MC links enforced with DC06")
+                redo = True
+                self.setProp("RedoMCLinks",True) 
+            if (inputType == "RDST")  and (redo) :
+                log.warning("Re-doing MC links not possible for RDST")
+                self.setProp("RedoMCLinks", False )
+                
+
+################################################################################
 # Configure slaves
 #
     def configureSubPackages(self):
@@ -118,15 +145,6 @@ class DaVinci(LHCbConfigurableUser) :
             physinit = PhysConf().initSequence()         # PhysConf initSequence
             init.Members += [ physinit ]
             # Analysis
-            if ( self.getProp("Simulation") ):
-                redo = self.getProp("RedoMCLinks")
-                if ( self.getProp("DataType")=="DC06" ) and ( not redo ):
-                    log.warning("Redoing MC links enforced with DC06")
-                    redo = True
-                    self.setProp("RedoMCLinks",True) 
-                if (inputType == "RDST")  and (redo) :
-                    log.warning("Re-doing MC links not possible for RDST")
-                    self.setProp("RedoMCLinks", False )
             AnalysisConf().RedoMCLinks = self.getProp("RedoMCLinks") 
             analysisinit = AnalysisConf().initSequence()
             init.Members += [ analysisinit ]
@@ -142,6 +160,7 @@ class DaVinci(LHCbConfigurableUser) :
             HltConf().DataType = self.getProp("DataType")                                      
             HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
             HltConf().HltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+            HltConf().WithMC =  self.getProp("Simulation")                                       
             if ( self.getProp("HltThresholdSettings") != '' ):
                 HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")                                      
             from Configurables import GaudiSequencer
@@ -173,23 +192,6 @@ class DaVinci(LHCbConfigurableUser) :
             L0Conf().setProp( "DataType", self.getProp("DataType"))
             log.info("Will run L0")
         
-################################################################################
-# Check Options are OK
-#
-    def checkOptions(self):
-        """
-        Does nothing but checking that all is fine
-        """
-        dataType = self.getProp("DataType")
-        if dataType not in [ "DC06", "2008", "2009", "MC09" ]:
-            raise TypeError( "Invalid dataType '%s'"%dataType )
-        inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
-            raise TypeError( "Invalid inputType '%s'"%inputType )
-        # DST packing, not for  DC06
-#        if ( self.getProp("DataType") == "DC06" ):
-#            self.setProp('PackType', 'NONE') 
-
 ################################################################################
 # @todo Stolen from Brunel. Could be common to all apps?
 #
