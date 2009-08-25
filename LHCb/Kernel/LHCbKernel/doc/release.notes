@@ -4,11 +4,15 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-08-25 - Chris Jones
+ - Update printout string conversion of Rich::Side to say A or C side for 
+   RICH2 (request from hardware experts).
+
 ! 2009-08-21 - Olivier Deschamps
-- CaloCellCode.h : add missing include
+ - CaloCellCode.h : add missing include
 
 ! 2009-08-11 - Stephanie Hansmann-Menzemer
-- adapt to change in HitPattern class
+ - adapt to change in HitPattern class
 
 ! 2009-08-08 M Needham
  - Add functionality to ITNames to TTNames 
