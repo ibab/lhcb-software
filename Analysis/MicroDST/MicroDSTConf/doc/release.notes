@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.23 2009-08-24 16:40:47 jpalac Exp $
+!$Id: release.notes,v 1.24 2009-08-25 13:44:59 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-25 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Allow many input locations -> many output locations on same stream.
 
 ! 2009-08-24 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
