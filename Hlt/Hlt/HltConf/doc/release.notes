@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.325 2009-08-25 10:23:48 graven Exp $ 
+! $Id: release.notes,v 1.326 2009-08-25 14:50:56 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-25 - Patrick Koppenburg
+ - Configuration and Hlt2 : New slot WithMC = False
+   . Do MC truth only when True (set by DaVinci if Simulation = True )
+ - Remove MC truth options that don't work
+ - Comment out not yet working Calo !! TEMPORARY !!
 
 ! 2009-08-25 - Gerhard Raven
  - add an option which allows to skip creation of Hlt rawbanks on Hlt1-rejected events

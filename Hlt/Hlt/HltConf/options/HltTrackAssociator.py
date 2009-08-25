@@ -23,12 +23,12 @@ TrackAssociator("HltTFAssociator").TracksInContainer = "Hlt/Track/TFForwardForTo
 #
 # temporary stuff to be fixed
 #
-from Gaudi.Configuration import *
-from Configurables import P2MCPFromProtoP
-ToolSvc().addTool(P2MCPFromProtoP)
-ToolSvc().P2MCPFromProtoP.Locations += [ "Relations/HltTF/ProtoP/Charged" ]
-#ToolSvc().P2MCPFromProtoP.OutputLevel = 1
+# from Gaudi.Configuration import *
+# from Configurables import P2MCPFromProtoP
+# ToolSvc().addTool(P2MCPFromProtoP)
+# ToolSvc().P2MCPFromProtoP.Locations += [ "Relations/HltTF/ProtoP/Charged" ]
+# #ToolSvc().P2MCPFromProtoP.OutputLevel = 1
 
-from Configurables import ChargedPP2MC
-ChargedPP2MC().InputData += [ "HltTF/ProtoP/Charged" ]
-#ChargedPP2MC().OutputLevel = 1
+# from Configurables import ChargedPP2MC
+# ChargedPP2MC().InputData += [ "HltTF/ProtoP/Charged" ]
+# #ChargedPP2MC().OutputLevel = 1

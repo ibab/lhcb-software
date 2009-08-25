@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.30 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -66,11 +66,12 @@ class Hlt2Conf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt2PID, HltCaloRecoConf, HltCaloPIDsConf ]
     for (k,v) in _type2conf.iteritems() : __used_configurables__.extend( v )
     __slots__ = {
-         "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-       , "Hlt2Type"                   : ''  # Explicitly set by HltConf.Configuration
-       , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
-       , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
-       , "Hlt2Tracks"                 : "Hlt/Track/Long"
+           "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
+         , "Hlt2Type"                   : ''  # Explicitly set by HltConf.Configuration
+         , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
+         , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
+         , "Hlt2Tracks"                 : "Hlt/Track/Long"
+         , "WithMC"                     : False 
          }
 
 ###################################################################################
@@ -163,7 +164,8 @@ class Hlt2Conf(LHCbConfigurableUser):
         #
         # MC truth associated tracks
         #
-        SeqHlt2Charged.Members += [ Sequence('SeqTrueSignalTracks') ] #  debug
+        if (self.getProp('WithMC')):
+              SeqHlt2Charged.Members += [ Sequence('SeqTrueSignalTracks') ] #  debug
         #
         # Hacking of errors
         #
@@ -240,9 +242,10 @@ class Hlt2Conf(LHCbConfigurableUser):
         self.hlt2Requirements(Hlt2)        
         # reco
         self.hlt2Reconstruction(Hlt2)
-        importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
+        if self.getProp('WithMC'):
+              importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
         # set Hlt2 PID
-        self.configureCalo()
+# FIXME #        self.configureCalo()
         # set Hlt2 PID
         self.configurePID()
         # lines

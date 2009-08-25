@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.113 2009-08-25 10:23:48 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.114 2009-08-25 14:50:56 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -37,6 +37,7 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
                                                           # (only matters if EnablelumiEventWriting = True)
+                , "WithMC"                       : False 
                 }
 
     __settings__ = None 
@@ -131,6 +132,7 @@ class HltConf(LHCbConfigurableUser):
             Hlt2Conf()
             Hlt2Conf().ThresholdSettings = ThresholdSettings
             Hlt2Conf().Hlt2Type = hlt2type
+            Hlt2Conf().WithMC = self.getProp("WithMC")
 
         if hlttype and hlttype not in [ '', 'NONE' ]:
             raise AttributeError, "unknown HltType fragment '%s'"%hlttype
