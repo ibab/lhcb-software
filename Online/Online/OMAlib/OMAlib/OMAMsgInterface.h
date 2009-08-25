@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.14 2009-06-11 15:17:31 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.15 2009-08-25 10:25:37 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -13,12 +13,14 @@
 
 #include <string>
 #include <vector>
+#include <fstream>
+#include <map>
 #include "OMAlib/OMAEnv.h"
 #include "OnlineHistDB/OMAMessage.h"
 class MsgStream;
 class TH1;
 class OnlineHistDB;
-
+class DimService;
 
 class OMAMsgInterface : public OMAEnv 
 {
@@ -46,6 +48,9 @@ public:
   inline void setAnaName(std::string &name) {m_anaName = name;}
 protected:
   void checkWritePermissions();
+  void openLog();
+  void closeLog();
+  void startMessagePublishing();
   void loadMessages();
   void updateMessages();
   void setMsgStream(MsgStream* ms) { m_outs=ms;}  
@@ -53,11 +58,22 @@ protected:
   std::string m_taskname;
   std::string m_anaName;
   int m_anaid;  
+
   bool m_msgInit;
+  bool m_textLog;
+  bool m_doPublish;
+  std::string m_textLogName;
+  std::ofstream m_logOut;
 private:
+  void sendLine(std::string line, 
+                OMAMessage::OMAMsgLevel level);
   bool raiseAlarm(OMAMessage& message);
   bool lowerAlarm(OMAMessage& message);
+  void publishMessage(OMAMessage* &msg);
+  void unpublishMessage(OMAMessage* &msg);
   MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;
+  std::map<OMAMessage*, DimService*> m_dimMessages;
+  int m_iMsg;
 };
 #endif // OMALIB_OMAMSGINTERFACE_H

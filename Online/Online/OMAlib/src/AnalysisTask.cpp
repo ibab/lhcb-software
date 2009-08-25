@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.17 2009-06-11 15:55:18 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.18 2009-08-25 10:25:38 ggiacomo Exp $
 
 
 // from Gaudi
@@ -31,6 +31,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputFiles"   , m_inputFiles);
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "Partition"    , m_partition = "LHCb" );
+  declareProperty ( "TextLog"      , m_textLogName = "");
   //
   declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");
 }
@@ -49,19 +50,31 @@ StatusCode AnalysisTask::initialize() {
   setMsgStream(&(always()));
   // add the partition name to the analysis task identifier
   m_anaTaskname = m_anaTaskname+"_"+m_partition;
+  
+  if ( ! m_inputFiles.empty() ) {
+    // swith off message dim publishing for offline mode
+    m_doPublish = false;
+  }
 
   // use HistDB if requested
   openDBSession();
 
-  if( "default" != m_myRefRoot) 
+  if( "default" != m_myRefRoot) {
     setRefRoot(m_myRefRoot);
+  }
+
+  if (! m_textLogName.empty()) {
+    m_textLog=true;
+    openLog();
+  }
+
 
   // special for RICH IFB algorithm
   std::string richalg("IfbMonitor");
   ( dynamic_cast<OMAIfbMonitor*>(getAlg(richalg)) )->setOutputDir(m_RICHClDir);
 
   if ( ! m_inputFiles.empty() ) {
-    // single shot: analyze these files now 
+    // offline mode: analyze these files and exit
     std::vector<std::string>::iterator iF;
     std::string task =  m_inputTasks.empty() ? "any" : m_inputTasks[0];
     for(iF =  m_inputFiles.begin() ; iF != m_inputFiles.end() ; iF++) {
@@ -74,6 +87,7 @@ StatusCode AnalysisTask::initialize() {
     closeDBSession();
   }
   else {
+    startMessagePublishing();
     std::vector<std::string>::iterator iF;
     if(m_inputTasks.size()>0) {
       if (m_inputTasks[0]=="any") 
@@ -112,6 +126,7 @@ StatusCode AnalysisTask::execute() {
 
 
 StatusCode AnalysisTask::finalize() {
+  closeLog();
   return GaudiHistoAlg::finalize();  
 }
 

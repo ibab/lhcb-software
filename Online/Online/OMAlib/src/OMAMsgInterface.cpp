@@ -1,9 +1,9 @@
-// $Id: OMAMsgInterface.cpp,v 1.19 2009-06-16 17:39:49 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.20 2009-08-25 10:25:38 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
 #include "GaudiKernel/MsgStream.h"
-
+#include <dim/dis.hxx>
 //-----------------------------------------------------------------------------
 // Implementation file for class : OMAMsgInterface
 // 2008-02-29 : Giacomo Graziani
@@ -12,7 +12,8 @@
 OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB , 
                                   std::string Name) : 
   OMAEnv(HistDB, Name), m_savesetName("") , m_taskname(""), 
-  m_anaName(""), m_anaid(0), m_msgInit(false), m_outs(NULL)
+  m_anaName(""), m_anaid(0), m_msgInit(false), m_textLog(false),
+  m_doPublish(true), m_textLogName(""), m_outs(NULL), m_iMsg(0)
 {
   checkWritePermissions();
   m_MessageStore.clear();
@@ -23,8 +24,12 @@ OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB ,
 OMAMsgInterface::~OMAMsgInterface() 
 {
   std::vector<OMAMessage*>::iterator iM;
-  for (iM=m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
+  for (iM = m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
     delete (*iM);
+  }
+  std::map<OMAMessage*, DimService*>::iterator iS;
+  for (iS = m_dimMessages.begin(); iS != m_dimMessages.end(); iS++) {
+    delete (*iS).second ;
   }
 } 
 
@@ -50,6 +55,7 @@ void OMAMsgInterface::loadMessages() {
     m_histDB->getMessages(messID, m_anaTaskname);
     for (std::vector<int>::iterator im= messID.begin() ; im !=  messID.end() ; im++) {
       OMAMessage* lmsg = new OMAMessage(*im, *m_histDB);
+      publishMessage(lmsg);
       if(false == lmsg->isAbort() ) {
         m_MessageStore.push_back( lmsg );
       }
@@ -62,6 +68,27 @@ void OMAMsgInterface::loadMessages() {
         " existing messages for analysis " <<m_anaTaskname << endmsg;
     }
     m_msgInit = true;
+  }
+
+}
+
+void OMAMsgInterface::openLog() {
+  if (m_textLog) {
+    m_logOut.open(m_textLogName.c_str(), std::ios::app);
+  }
+}
+
+void OMAMsgInterface::closeLog() {
+  if (m_textLog) {
+    m_logOut.close();
+  }
+}
+
+void OMAMsgInterface:: startMessagePublishing() {
+  if(m_doPublish) {
+    std::string ServerName="OMA_"+m_anaTaskname;
+    DimServer::start(ServerName.c_str());
+    DimServer::autoStartOn();
   }
 }
 
@@ -91,6 +118,7 @@ void OMAMsgInterface::refreshMessageList(std::string& TaskName) {
       if( false == (*iM)->confirmed()) {
         kept=false;
         lowerAlarm( (**iM) );
+        unpublishMessage(*iM);
         if (m_histDB->canwrite())
           (*iM)->remove();
         delete (*iM);
@@ -144,6 +172,7 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
                            m_savesetName, m_anaName,
                            message, level);
     m_MessageStore.push_back( msg );
+    publishMessage(msg);
   }
   if (msg) {
     if (m_histDB) {
@@ -158,34 +187,71 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
 }
 
 
+void OMAMsgInterface::sendLine(std::string line, 
+                               OMAMessage::OMAMsgLevel level) {
+  // send alarm messages to MsgService
+  (*m_outs) << (MSG::Level) level << line << endmsg;
+  // if required, send also to ascii log file
+  if (m_textLog) {
+    m_logOut << line << std::endl;
+  }
+}
+
 
 bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
-  (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
+  sendLine( "===================================================================", message.level());
   char* time = message.humanTime();
 #ifndef _WIN32
   std::remove(time, time+strlen(time)+1,'\n');
 #endif
-  (*m_outs) << (MSG::Level) message.level() << "********     "<<time <<endmsg;
-  (*m_outs) << (MSG::Level) message.level() << message.levelString() <<" from Analysis Task "<<
-    m_anaTaskname <<"  in analysis "<<    message.ananame() <<endmsg;
+  sendLine( "********     "+std::string(time) , message.level() );
+  sendLine( std::string(message.levelString()) + " from Analysis Task "+
+            m_anaTaskname +"  in analysis " +    message.ananame() , message.level() );
   if(!message.hIdentifier().empty())
-    (*m_outs) << (MSG::Level) message.level() << "      on histogram " 
-              << message.hIdentifier()<<endmsg;
-  (*m_outs) << (MSG::Level) message.level() <<   "      from saveset "<<message.saveSet()<<endmsg;
-  (*m_outs) << (MSG::Level) message.level() <<  message.msgtext() <<endmsg;
-  (*m_outs) << (MSG::Level) message.level() << "==================================================================="<<endmsg;
+    sendLine( "      on histogram " + message.hIdentifier(), message.level() );
+  sendLine(   "      from saveset " + message.saveSet(), message.level() );
+  sendLine(  message.msgtext() , message.level() );
+  sendLine( "===================================================================", message.level() );
+
   return true;
 }
 
 
 
-
 bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
-  (*m_outs) << MSG::INFO <<  "===================== Analysis Task "<<
-    m_anaTaskname <<"  analysis "<<  message.ananame() <<endmsg;
+  sendLine( "===================================================================", OMAMessage::INFO);
+  char* time = message.humanTime();
+#ifndef _WIN32
+  std::remove(time, time+strlen(time)+1,'\n');
+#endif
+  sendLine( "********     "+std::string(time) , OMAMessage::INFO );
+  sendLine( "===================== Analysis Task " +
+            m_anaTaskname + "  analysis " + message.ananame(), OMAMessage::INFO);
   if(!message.hIdentifier().empty())
-    (*m_outs) << (MSG::Level) message.level() << "   on histogram "<<message.hIdentifier()<<endmsg;
-  (*m_outs) << MSG::INFO << message.levelString() << " has gone" <<endmsg;
-  (*m_outs)  <<  MSG::INFO <<"==================================================================="<<endmsg;
+    sendLine("   on histogram " + message.hIdentifier(),  OMAMessage::INFO);
+  sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
+  sendLine("===================================================================", OMAMessage::INFO );
   return true;
+}
+
+void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
+  if (m_doPublish) {
+    std::stringstream svcName;
+    svcName << "OMA_" << m_anaTaskname << "_Message" << m_iMsg;
+    char* mtext = const_cast<char*>(msg->msgtext());
+    DimService* dimSvc = new DimService(svcName.str().c_str(),
+                                        mtext);
+    m_dimMessages[msg] = dimSvc;
+    m_iMsg++;
+  }
+}
+
+void OMAMsgInterface::unpublishMessage(OMAMessage* &msg) {
+  if (m_doPublish) {
+    DimService* svc = m_dimMessages[msg];
+    if (svc) {
+      m_dimMessages.erase(msg);
+      delete svc;
+    }
+  }
 }

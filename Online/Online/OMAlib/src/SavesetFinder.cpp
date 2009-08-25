@@ -1,4 +1,4 @@
-// $Id: SavesetFinder.cpp,v 1.9 2009-06-09 17:34:10 ggiacomo Exp $
+// $Id: SavesetFinder.cpp,v 1.10 2009-08-25 10:25:38 ggiacomo Exp $
 
 #include "OMAlib/SavesetFinder.h"
 #include "OMAlib/AnalysisTask.h"
@@ -16,17 +16,18 @@ SavesetFinder::SavesetFinder(AnalysisTask* Ana,
 void SavesetFinder::infoHandler() {
   std::string saveset( getString() );
   if( saveset.find("SAVESETLOCATION") == std::string::npos &&
-      saveset.find("Zombie") == std::string::npos) {
-    if (saveset.size() >0  && saveset != m_lastSaveset) {
-      m_analysis->openDBSession();
-      m_analysis->info() << "calling analyze for task "<<m_taskname <<
-        " on saveset "<<saveset << endreq;
-      m_analysis->resetMessages(m_taskname);
-      m_analysis->analyze( saveset, m_taskname );
-      m_analysis->refreshMessageList(m_taskname);
-      m_lastSaveset = saveset;
-      m_analysis->closeDBSession();
-    }
+      saveset.find("Zombie") == std::string::npos &&
+      saveset.size() >0  && 
+      saveset != m_lastSaveset) {
+    // new saveset to be analyzed
+    m_analysis->openDBSession();
+    m_analysis->info() << "calling analyze for task "<<m_taskname <<
+      " on saveset "<<saveset << endreq;
+    m_analysis->resetMessages(m_taskname);
+    m_analysis->analyze( saveset, m_taskname );
+    m_analysis->refreshMessageList(m_taskname);
+    m_lastSaveset = saveset;
+    m_analysis->closeDBSession();
   }
 }
 
