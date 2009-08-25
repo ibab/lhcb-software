@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.7 2009-07-30 13:59:17 jpalac Exp $
+#$Id: requirements,v 1.8 2009-08-25 13:20:13 jpalac Exp $
 #============================================================================
 # Created    : 2009-03-04
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           Particle2MCTruth
-version           v2r2
+version           v2r3
 
 #============================================================================
 # Structure, i.e. directories to process. 
