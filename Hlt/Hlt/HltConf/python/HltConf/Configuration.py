@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.112 2009-08-24 21:26:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.113 2009-08-25 10:23:48 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -34,6 +34,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltVtxReports"          : True
                 , "EnableHltRoutingBits"         : True
                 , "EnableLumiEventWriting"       : False
+                , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
                                                           # (only matters if EnablelumiEventWriting = True)
                 }
@@ -376,14 +377,16 @@ class HltConf(LHCbConfigurableUser):
             self.ActiveHlt1Lines = [ 'Hlt1NonRandomODIN','Hlt1RandomODIN','Hlt1Tell1Error'] 
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
+        from Configurables import HltLine
         _list = ( ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
+                , ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
+                , ( "SkipHltRawBankOnRejectedEvents", [ lambda : HltLine('Hlt1Global') ] )
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
                 , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )
-                , ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
                 )
         
-        End = Sequence( 'HltEndSequence', IgnoreFilterPassed = True )
+        End = Sequence( 'HltEndSequence' )
         EndMembers = End.Members
         # make sure we only instantiate if we actually use it...
         for i in [ v for (k,v) in _list if self.getProp(k) ] :
