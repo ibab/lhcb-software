@@ -20,6 +20,7 @@ from Configurables import EventTuple, TupleToolSelResults
 from Configurables import DaVinci, DaVinciWriteDst
 from StrippingConf.StrippingLine import StrippingLine
 from StrippingConf.StrippingLine import strippingLines
+from StrippingConf.StrippingStream import StrippingStream
 
 class StrippingConf( LHCbConfigurableUser ):
 #    __used_configurables__ = [ DaVinci, DaVinciWriteDst ]
@@ -31,7 +32,8 @@ class StrippingConf( LHCbConfigurableUser ):
 		    "OutputType"	: "ETC", # Output type. Can be either "ETC" or "DST"
 		    "DSTPrefix"		: "",    # Prefix for DST streams
 		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py", # Main options file to import
-		    "StreamFile"	: {}
+		    "StreamFile"	: {}, 
+		    "StreamList"	: []
                 }
 
 #
@@ -46,16 +48,10 @@ class StrippingConf( LHCbConfigurableUser ):
     						   (not streamsList or i.stream() in streamsList )) ]
 	return lines
 #
-# Return the list of all active streams. Active streams are those for which 
-# at least one active line exists. 
+# Return the list of all active StrippingStreams. 
 #
     def activeStreams (self) : 
-        linesList = self.activeLines()
-        streams = []
-        for i in linesList : 
-    	    if i.stream() not in streams :
-    		streams.append(i.stream())
-	return streams
+	return self.StreamList
 
 #
 # Configuration method
@@ -67,11 +63,27 @@ class StrippingConf( LHCbConfigurableUser ):
 #       Import main options file (descriptions of all lines)
         importOptions(self.getProp('MainOptions'))
 
-#       Attach configurables of all active stripping lines to sequencer
-
+#	Create a list of active stream names
         lines = self.activeLines()
-	streams = self.activeStreams()
+        streams = []
+        for line in lines : 
+    	    if line.stream() not in streams : 
+    		streams.append(line.stream())
+    		log.info("StrippingConf: New active stream : "+line.stream())
 
+#	Create streams
+	self.StreamList = []
+    	for streamName in streams : 
+    	    self.StreamList.append(StrippingStream(name = streamName))
+    	    log.info("StrippingConf: Created stream : "+streamName)
+
+#	Append lines to streams
+	for line in lines : 
+	    for stream in self.StreamList :
+		if line.stream() == stream.name() :
+		    stream.appendLine(line)
+		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream())
+        
 	output = (self.getProp('OutputType')).upper()
 
         if output not in [ "ETC", "DST", "NONE" ]:
@@ -81,12 +93,6 @@ class StrippingConf( LHCbConfigurableUser ):
 
 #           The user wants to write ETC. 
 #           Selections of all active stripping lines will go there. 
-
-# 	    Sequencer that will run all selections independently 
-#            (thus IgnoreFilterPassed = TRUE)
-
-	    strippingSeq = GaudiSequencer("StrippingSequencer")
-	    strippingSeq.IgnoreFilterPassed = TRUE
 
 	    tag = EventTuple("TagCreator")
 	    tag.EvtColsProduce = True
@@ -98,28 +104,19 @@ class StrippingConf( LHCbConfigurableUser ):
 #           the sequencer will give up running the rest of algorithms after it found 
 #           the one with positive decision. 
 
-	    globalSeq = GaudiSequencer("StrippingGlobal")
-	    globalSeq.ModeOR = TRUE
-	    tag.TupleToolSelResults.Selections += ["StrippingGlobal"]
+	    strippingSeq = GaudiSequencer("StrippingGlobal")
+	    strippingSeq.ModeOR = True
+	    strippingSeq.ShortCircuit = True
+	    tag.TupleToolSelResults.Selections += [ "StrippingGlobal" ]
 
-# 	    Define sequencers for stream selections
-	    for stream in streams : 
-		streamSeq = GaudiSequencer("StrippingStream"+stream)
-		streamSeq.ModeOR = TRUE
-		tag.TupleToolSelResults.Selections += [ "StrippingStream"+stream ]
-
-#           Cycle through all selections are append them to sequencers
-	    for i in lines : 
-		tag.TupleToolSelResults.Selections += [ i.name() ] 
-		strippingSeq.Members += [ i.configurable() ] 
-		stream = i.stream();
-		GaudiSequencer("StrippingStream"+stream).Members += [ i.configurable() ]
-		globalSeq.Members += [ i.configurable() ]
-		log.info("Line "+i.name()+" : Output selection - "+i.outputSelection())
-
-	    strippingSeq.Members += [ globalSeq ]
-	    for stream in streams : 
-	        strippingSeq.Members += [ GaudiSequencer("StrippingStream"+stream) ]
+	    for stream in self.activeStreams() : 
+		tag.TupleToolSelResults.Selections += [ stream.sequencer().name() ]
+		log.info("StrippingConf: Stream "+stream.name()+" sequencer is "+stream.sequencer().name())
+		strippingSeq.Members += [ stream.sequencer() ]
+		for line in stream.lines() : 
+		    tag.TupleToolSelResults.Selections += [ line.name() ]
+		    log.info("StrippingConf: added selection "+line.name())
+		print stream.outputLocations()
 
 	    DaVinci().appendToMainSequence( [ strippingSeq ] )
 	    DaVinci().appendToMainSequence( [ tag ] )
@@ -132,38 +129,23 @@ class StrippingConf( LHCbConfigurableUser ):
 	    dstPrefix = self.getProp("DSTPrefix")
 	    streamFile = self.getProp("StreamFile")
 	    
-	    log.info(streams)
-	    for i in streams : 
+	    for stream in self.activeStreams() : 
 	    
-		if i not in streamFile : 
-		    log.info("Output file for stream "+i+" not defined. Using default. ")
-		    dstName = dstPrefix + i + ".dst"
+		if stream.name() not in streamFile : 
+		    log.info("Output file for stream "+stream.name()+" not defined. Using default. ")
+		    dstName = dstPrefix + stream.name() + ".dst"
 		else :
-		    dstName = dstPrefix + streamFile[i]
+		    dstName = dstPrefix + streamFile[stream.name()]
 
-		seq = GaudiSequencer("StreamSequencer"+i)
-		
-		# Check if the file is already assigned to another stream
-		if dstName in DaVinciWriteDst().DstFiles : 
-		    log.info("Stream "+i+" will be written to already existing file "+dstName)
-		    seq = DaVinciWriteDst().DstFiles[ dstName ]    # Use already defined sequencer
-
-		else :
-
-		    log.info("Stream "+i+" will be written to the new file "+dstName)
-		    seq.ModeOR = 1    # Event is selected if at least one selection in the stream is True
-		    DaVinciWriteDst().DstFiles[ dstName ] = seq
-
-		for line in lines : 
-		    if line.stream() == i :
-			seq.Members += [ line.configurable() ]
+		DaVinciWriteDst().DstFiles[ dstName ] = stream.sequencer()
 
 	if output == "NONE" : 
 
-	    seq = GaudiSequencer("StreamSequencer")
-	    seq.IgnoreFilterPassed = TRUE
-	    for i in lines : 
-		seq.Members += [ i.configurable() ] 
+	    strippingSeq = GaudiSequencer("StrippingGlobal")
+	    strippingSeq.ModeOR = True
+	    strippingSeq.ShortCircuit = True
 
-	    DaVinci().appendToMainSequence( [ seq ] )
-	    
+	    for stream in self.activeStreams() : 
+		strippingSeq.Members += stream.sequencer()
+
+	    DaVinci().appendToMainSequence( [ strippingSeq ] )

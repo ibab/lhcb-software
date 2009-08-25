@@ -49,6 +49,9 @@ def strippingLines () :
     return tuple(_stripping_lines__)
 
 def _add_to_stripping_lines_( line ) :
+    for i in _stripping_lines__ : 
+	if i.name() == line.name() : 
+	    raise AttributeError, " StrippingLine  '%s' is already defined!" % line.name()
     _stripping_lines__.append ( line ) 
 
 # Own slots of StrippingLine
