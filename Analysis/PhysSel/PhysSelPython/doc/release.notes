@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.8 2009-08-21 12:08:46 jpalac Exp $
+!$Id: release.notes,v 1.9 2009-08-25 13:39:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-08-25 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . add outputLocations() method to SelectionSequence. For compatibility with
+    StrippingStream class. Returns single-entry list with "Phys/"+ algName()
+ - cmt/requirements
+  . Increase version to v2r1
 
 ! 2009-08-21 - Juan PALACIOS
  - cmt/requirements
