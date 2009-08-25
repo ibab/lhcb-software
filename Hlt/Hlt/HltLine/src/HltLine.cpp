@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.8 2009-08-12 20:32:48 graven Exp $
+// $Id: HltLine.cpp,v 1.9 2009-08-25 11:53:19 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -257,9 +257,9 @@ StatusCode HltLine::initialize() {
 
   //== and the counters
   m_acceptCounter = &counter("#accept");
-  declareInfo("COUNTER_TO_RATE[#accept]",m_acceptCounter,std::string("Events accepted by ") + m_decision);
+  declareInfo("COUNTER_TO_RATE[#accept]",*m_acceptCounter,std::string("Events accepted by ") + m_decision);
   m_errorCounter = &counter("#errors"); // do not export to DIM -- we have a histogram for this..
-  //declareInfo("#errors",&counter("#errors"),std::string("Errors seen by ") + m_decision);
+  //declareInfo("#errors",counter("#errors"),std::string("Errors seen by ") + m_decision);
   m_slowCounter = &counter("#slow events");// do not export to DIM -- we have a histogram for this..
 
   m_nAcceptOnError = 0;
