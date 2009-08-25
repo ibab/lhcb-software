@@ -30,7 +30,7 @@ class StrippingStream ( object ) :
     def name   ( self ) :
         return self.Name
 
-    def sequencer ( self ) : 
+    def sequence ( self ) : 
 	return self.Seq
 
     def lines (self) : 

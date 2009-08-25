@@ -110,9 +110,9 @@ class StrippingConf( LHCbConfigurableUser ):
 	    tag.TupleToolSelResults.Selections += [ "StrippingGlobal" ]
 
 	    for stream in self.activeStreams() : 
-		tag.TupleToolSelResults.Selections += [ stream.sequencer().name() ]
-		log.info("StrippingConf: Stream "+stream.name()+" sequencer is "+stream.sequencer().name())
-		strippingSeq.Members += [ stream.sequencer() ]
+		tag.TupleToolSelResults.Selections += [ stream.sequence().name() ]
+		log.info("StrippingConf: Stream "+stream.name()+" sequencer is "+stream.sequence().name())
+		strippingSeq.Members += [ stream.sequence() ]
 		for line in stream.lines() : 
 		    tag.TupleToolSelResults.Selections += [ line.name() ]
 		    log.info("StrippingConf: added selection "+line.name())
@@ -137,7 +137,7 @@ class StrippingConf( LHCbConfigurableUser ):
 		else :
 		    dstName = dstPrefix + streamFile[stream.name()]
 
-		DaVinciWriteDst().DstFiles[ dstName ] = stream.sequencer()
+		DaVinciWriteDst().DstFiles[ dstName ] = stream.sequence()
 
 	if output == "NONE" : 
 
@@ -146,6 +146,6 @@ class StrippingConf( LHCbConfigurableUser ):
 	    strippingSeq.ShortCircuit = True
 
 	    for stream in self.activeStreams() : 
-		strippingSeq.Members += stream.sequencer()
+		strippingSeq.Members += stream.sequence()
 
 	    DaVinci().appendToMainSequence( [ strippingSeq ] )
