@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.14 2009-08-24 16:40:26 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.15 2009-08-25 13:44:49 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -52,9 +52,12 @@ class MicroDSTWriter(BaseDSTWriter) :
     def _personaliseName(self, sel, name) :
         return name + "_" + sel.name()
 
-    def mainLocation(self, sel) :
-        return 'Phys/' + sel.algName()
-
+    def dataLocations(self, sel, extension) :
+        loc = []
+        for output in sel.outputLocations() :
+            loc += [output+"/"+extension]
+        return loc
+    
     def setOutputPrefix(self, alg) :
         alg.OutputPrefix = self.getProp('OutputPrefix')
     
@@ -78,7 +81,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                                    ProtoParticleCloner )
         cloner = CopyParticles(self._personaliseName(sel,
                                                      'CopyParticles'))
-        cloner.InputLocation = self.mainLocation(sel)+"/Particles"
+        cloner.InputLocations = self.dataLocations(sel,"Particles")
         cloner.OutputLevel=4
         if self.getProp("CopyProtoParticles") == False :
             cloner.addTool(ParticleCloner, name="ParticleCloner")
@@ -86,10 +89,10 @@ class MicroDSTWriter(BaseDSTWriter) :
         self.setOutputPrefix(cloner)
         return [cloner]
 
-    def _copyP2PVRelations(self, sel, name, location) :
+    def _copyP2PVRelations(self, sel, name, locations) :
         from Configurables import CopyParticle2PVRelations
         cloner = CopyParticle2PVRelations(self._personaliseName(sel,name))
-        cloner.InputLocation = location
+        cloner.InputLocations = locations
         cloner.OutputLevel=4
         self.setOutputPrefix(cloner)
         return cloner
@@ -111,7 +114,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         # first, get matches MCParticles for selected candidates.
         # This will make a relations table in mainLocation+"/P2MCPRelations"
         p2mcRelator = P2MCRelatorAlg(self._personaliseName(sel,'P2MCRel'))
-        p2mcRelator.ParticleLocation = self.mainLocation(sel)+'/Particles'
+        p2mcRelator.ParticleLocations = self.dataLocations(sel,'Particles')
         p2mcRelator.OutputLevel=4
         # Now copy relations table + matched MCParticles to MicroDST
         cloner = CopyParticle2MCRelations(self._personaliseName(sel,
@@ -119,7 +122,8 @@ class MicroDSTWriter(BaseDSTWriter) :
         cloner.addTool(MCParticleCloner)
         cloner.MCParticleCloner.addTool(MCVertexCloner,
                                              name = 'ICloneMCVertex')
-        cloner.InputLocation = self.mainLocation(sel)+"/P2MCPRelations"
+        cloner.InputLocations = self.dataLocations(sel,"P2MCPRelations")
+        cloner.OutputLevel = 4
         self.setOutputPrefix(cloner)
         return [p2mcRelator, cloner]
 
@@ -131,12 +135,11 @@ class MicroDSTWriter(BaseDSTWriter) :
         BTagAlgo.InputLocations=[self.mainLocation(sel)]
         BTagLocation = self.mainLocation(sel)+"/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
-        sel.sequence().Members += [BTagAlgo]
         cloner = CopyFlavourTag(self._personaliseName(sel,
                                                       "CopyFlavourTag"))
         cloner.InputLocation = BTagLocation
         self.setOutputPrefix(cloner)
-        return [cloner]
+        return [BTagAlgo, cloner]
 
     def _copyPVRelations(self, sel) :
         """
@@ -148,7 +151,7 @@ class MicroDSTWriter(BaseDSTWriter) :
         if self.getProp('CopyParticles') :
             for loc, copyPV in self.getProp("CopyPVRelations").iteritems() :
                 print "Copy PV relations ", loc
-                fullLoc = self.mainLocation(sel) + "/" + loc
+                fullLoc = self.dataLocations(sel, loc)
                 cloner = self._copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc )
                 if copyPV == False :
                     alg = sel.algorithm()
