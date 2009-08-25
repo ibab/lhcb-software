@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.4 2009-08-19 18:20:42 jpalac Exp $
+#$Id: Wrappers.py,v 1.5 2009-08-25 13:37:17 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 """
@@ -129,6 +129,9 @@ class SelectionSequence(LHCbConfigurableUser) :
 
     def algName(self) :
         return self.algorithm().name()
+
+    def outputLocations(self) :
+        return ['Phys/' + self.algName()]
 
     def buildSelectionList(self, selections) :
         for sel in selections :
