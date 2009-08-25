@@ -13,11 +13,25 @@ int main(int /* argc */, char ** argv)
  #endif
 
   if (argv[1] == NULL)
-    cerr << "usage: warn <host> <ID/Level/Text>"<<endl;
+    cerr << "usage: warn <host>:<port> <ID/Level/Text> (where :<port> is optional. Defaults to 12345.)"<<endl;
   if (argv[2] == NULL)
-    cerr << "usage: warn <host> <ID/Level/Text>"<<endl;
+    cerr << "usage: warn <host>:<port> <ID/Level/Text> (where :<port> is optional. Defaults to 12345.)"<<endl;
 
-  client c(argv[1],12345);
+  // Start by initialising name to host:port and we will split it with string operations later.
+  std::string name(argv[1]);
+  std::string port;
+  // The delimiter between the host and port is a colon.
+  // Need to find this to split them. If we don't find
+  // a colon then we will default to 12345, which is CAMERA's
+  // default inport.
+  std::size_t pos = name.find(":");
+  if (pos != string::npos){
+    port = name.substr(pos+1);
+    name = name.substr(0,pos);
+  }
+  if (port == "") port = "12345";
+  std::cerr << "Connecting to "<<name<<" "<<port<<std::endl;
+  client c(name.c_str(),atoi(port.c_str()));
 
   out.reset();
 

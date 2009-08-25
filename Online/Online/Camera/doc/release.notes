@@ -6,6 +6,10 @@
 
 =============== v1r7 ===============
 
+! 2009-08-25 - Gareth Rogers
+ - Modified sendcmd.exe so it now takes either host or host:port as the first argument.
+ - Modified commentCamera.sh to use the default inport 12345 not the default output 123456.
+
 ! 2009-08-21 - Gareth Rogers
  - Fixed commentCamera.sh so it used CameraCommand.exe instead of CameraComment.exe
    which no longer exists.
