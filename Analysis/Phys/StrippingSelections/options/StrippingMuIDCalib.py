@@ -1,11 +1,9 @@
 ## #####################################################################
-# A stripping selection for D*+ -> D0(Kpi) pi+
+# A stripping selection for muon identification calibration trough
+# the study of J/psi(1S) -> mu+ mu- and Lambda to p pi decays
 #
-# This is a relatively tight, high purity selection that does not use PID
-# information.  It is intended for RICH calibration.
-#
-# @author Andrew Powell and Patrick Spradlin
-# @date 2009-June-24
+# @authors S.Furcas, G.Lanfranchi, M.Palutan, A.Sarti 
+# @date 2009-July-30
 # 
 ## #####################################################################
 from Gaudi.Configuration import *
@@ -49,7 +47,6 @@ LambdaCombine = StrippingMember( CombineParticles
                                  )
 
 # Define the line
-
 # ############################################################
 lm_line = StrippingLine('LambdaNoPID'
                         , prescale = 0.0005
