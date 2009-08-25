@@ -41,24 +41,22 @@ int main(int argc , char ** argv)
     std::cerr << "Connecting to "<<nam<<" "<<port<<std::endl;
     client c(nam.c_str(),atoi(port.c_str()));
     
-
-    c.Connect();
-
-
-    //  c.wait();
-    char buf[3];
-    c.rd(buf,3);
-    if (strncmp(buf,"GO",2) ==0)
-      {
-	c.wr(msg.c_str(),msg.length());
-	c.wr("\n",1);
-	
+    if (0!=c.m_healthy) {
+      if (1 == c.Connect()) {
+        //  c.wait();
+        char buf[3];
+        c.rd(buf,3);
+        if (strncmp(buf,"GO",2) ==0)
+        {
+          c.wr(msg.c_str(),msg.length());
+          c.wr("\n",1);
+        }
+        else {
+          printf("Server unavailable. try again\n");
+        }
       }
-    else {
-      printf("Server unavailable. try again\n");
+      c.shut_close();
     }
-    c.shut_close();
-    
   }
   return 0;
 }
