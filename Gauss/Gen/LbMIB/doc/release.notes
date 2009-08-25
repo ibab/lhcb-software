@@ -5,7 +5,18 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v3r3p1 2009-08-11 =========================
+!=========================== LbMIB v3r4 2009-08-11 =========================
+! 2009-08-25 - Magnus Lieng
+ - Fixed linear read bug
+   .TimeCorrSource.cpp
+ - Added option TimeOfFile to be used to indicate the time a MIB file 
+   represent. This used to be 1 sec per definition.
+   .TimeCorrSource.cpp
+   .TimeCorrSource.h
+   .TimeCorr-Example.opts
+ - Changes to output on finalize
+   .TimeCorrSource.cpp
+
 ! 2009-08-11 - Magnus Lieng
  - Fixed timing issue
    .TimeCorrSource.cpp

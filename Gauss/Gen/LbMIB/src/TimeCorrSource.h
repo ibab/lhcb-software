@@ -70,6 +70,7 @@ private:
 
   /// Scaling factors
   double m_scalingFactor;
+  double m_timeOfFile;
   double m_bunchFreq;
   double m_luminosity;
   double m_beamEnergy;

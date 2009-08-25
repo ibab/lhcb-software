@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.3 2009-08-11 12:37:35 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.4 2009-08-25 11:54:19 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -49,6 +49,7 @@ TimeCorrSource::TimeCorrSource(const std::string& type,
 
   // Scaling factors
   declareProperty("ScalingFactor", m_scalingFactor = 1.0);
+  declareProperty("TimeOfFile", m_timeOfFile = 1.0);
   declareProperty("BunchFrequency", m_bunchFreq = 31.6*1000000);
   declareProperty("BeamEnergy", m_beamEnergy = 7.0*Gaudi::Units::TeV);
 
@@ -131,7 +132,7 @@ StatusCode TimeCorrSource::initialize() {
   }
 
   sc = m_poissonGenerator.initialize( rSvc,
-       Rndm::Poisson( m_sumOfWeights * m_scalingFactor / m_bunchFreq ) ) ;
+       Rndm::Poisson( m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile ) ) ;
   if ( ! sc.isSuccess() ) {
     return Error( "Cannot initialize Poisson generator", sc ) ;
   }
@@ -302,22 +303,24 @@ StatusCode TimeCorrSource::finalize() {
   info() << " Used as input file " << m_pSourceFile << endmsg;
   info() << " With interface plane at z = " << m_zOrigin/Gaudi::Units::m << " m" 
          << " and with direction dz = " << m_dz << endmsg;
-  info() << " The particles were generated at z = " << m_zOrigin/Gaudi::Units::m 
+  info() << " The particles were generated at z = " << m_zGen/Gaudi::Units::m 
          << " m" << endmsg;
   if( m_pPerEvt == -1 ) {
-    info() << "  using weight to find number of particles in event" << endmsg;
-    info() << "  Sum(weights) in file is " << m_sumOfWeights 
-           << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
-    info() << "  Events are generate per bunch with frequency " << m_bunchFreq
-           << " and scaling factor " << m_scalingFactor << endmsg;
-    info() << "  === Sum(weights) for generated event is "
-           <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq << endmsg;
+    info() << "Using weight to find number of particles in event" << endmsg;
+    info() << "Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
+    info() << "The file represents " << m_timeOfFile << " seconds" << endmsg; 
+    info() << "The resulting weights is" << m_sumOfWeights / m_timeOfFile 
+           << "Hz (i.e. per 1 sec of LHC running)" << endmsg;
+    info() << "Events are generate per bunch with frequency " << m_bunchFreq
+           << "and scaling factor " << m_scalingFactor << endmsg;
+    info() << " === Average num of MIB per generated event is "
+           <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile << endmsg;
   } else {
-    info() << "forcing " << m_pPerEvt << " to be generated in each event" 
+    info() << "Forcing " << m_pPerEvt << " to be generated in each event" 
            << endmsg;
   }
   if( m_fileOffset == -1 ) {
-    info() << "and choosing envelope method to chose particles" << endmsg;
+    info() << "and choosing envelope method to select particles" << endmsg;
   } else {
     info() << "picking particles from file starting from particle number "
            << m_fileOffset << endmsg;
@@ -576,6 +579,7 @@ StatusCode TimeCorrSource::getInt( int &firstPart, int &nParts ){
   firstPart = (int)locFirstPart;
   nParts = (int)locNumParts;
   verbose() << "Chose entry: " << m_fileOffset << endmsg;
+  m_fileOffset++;
 
   return StatusCode::SUCCESS;
 }

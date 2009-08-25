@@ -87,6 +87,10 @@ MIBackground.TimeCorrSource.EnvelopeSize = 10;
 //MIBackground.TimeCorrSource.ScalingFactor = 1.0;      
 //MIBackground.TimeCorrSource.BunchFrequency = 31600000;
 
+// In tha case of input files that represent something else than 1 sec
+// it is possible to indicate the amount of time it does represent (in sec).
+//MIBackground.TimeCorrSource.TimeOfFile = 1.0;
+
 // Histogramming (Defalt = false)
 //MIBackground.TimeCorrSource.GenerationHist = false;  
 
