@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.74 2009-08-21 13:56:37 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.75 2009-08-25 11:26:04 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -71,6 +71,8 @@ class Moore(LHCbConfigurableUser):
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "EnableDataOnDemand": False
         , "EnableTimer" :       True
+        , 'EnableLumiEventWriting': True
+        , 'SkipHltRawBankOnRejectedEvents' : True
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , "RunOnline" : False
@@ -89,8 +91,6 @@ class Moore(LHCbConfigurableUser):
             importOptions('$STDOPTS/DecodeRawEvent.py')
 
     def _configureOnline(self) :
-        from Configurables import LoKiSvc
-        LoKiSvc().Welcome = False
 
         import OnlineEnv 
         self.setProp('UseTCK', True)
@@ -189,6 +189,7 @@ class Moore(LHCbConfigurableUser):
 
         # Set the location of the Online conditions
         from Configurables import MagneticFieldSvc
+        # make sure we don't pick up small variations of the read current
         MagneticFieldSvc().UseSetCurrent = True
         from Configurables import RunChangeHandlerSvc
         rch = RunChangeHandlerSvc()
@@ -303,7 +304,10 @@ class Moore(LHCbConfigurableUser):
 
     def _config_with_hltconf(self):
         hltConf = HltConf()
-        self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
+        self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType'
+                                      , 'ThresholdSettings','EnableLumiEventWriting'
+                                      , 'SkipHltRawBankOnRejectedEvents'
+                                      ])
 
     def _config_with_tck(self):
         if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
@@ -322,6 +326,8 @@ class Moore(LHCbConfigurableUser):
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
+        from Configurables import LoKiSvc
+        LoKiSvc().Welcome = False
         # verify mutually exclusive settings:
         #  eg.  Online vs. any L0 setting
         #       Online vs. generateConfig
@@ -359,7 +365,6 @@ class Moore(LHCbConfigurableUser):
         app.DDDBtag   = self.getProp('DDDBtag')
         # Get the event time (for CondDb) from ODIN 
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
-        # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
         ApplicationMgr().HistogramPersistency = 'ROOT'
         self._outputLevel()

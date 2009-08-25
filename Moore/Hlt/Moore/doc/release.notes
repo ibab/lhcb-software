@@ -2,6 +2,8 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-08-25 - Gerhard Raven
+ - add SkipHltRawBankOnRejectedEvents property
 
 ! 2009-08-21 - Gerhard Raven
  - fix one TAE bug (not the last one though...)
