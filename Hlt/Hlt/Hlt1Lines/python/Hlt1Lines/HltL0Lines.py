@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.4 2009-08-24 20:04:56 graven Exp $
+# $Id: HltL0Lines.py,v 1.5 2009-08-25 06:33:46 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -24,7 +24,7 @@ class HltL0LinesConf(HltLinesConfigurableUser) :
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
         from HltLine.HltLine     import hlt1Lines
-        from Hlt1Lines.HltL0Candidates import *
+        from Hlt1Lines.HltL0Candidates import convertL0Candidates
         channels = self.getProp('L0Channels')
         if not channels : channels = L0Channels()
         for channel in channels :
