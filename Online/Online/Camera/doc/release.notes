@@ -9,6 +9,12 @@
 ! 2009-08-25 - Gareth Rogers
  - Modified sendcmd.exe so it now takes either host or host:port as the first argument.
  - Modified commentCamera.sh to use the default inport 12345 not the default output 123456.
+ - camswitch.C can now handle not being able to connect to the server without crashing.
+ - newCameraLog.sh has been added. This will change the name of the warnings.out file
+   being used.
+ - commentCamera.sh, newCameraLog.sh and newDataDirectory.sh all now take host:port as
+   an optional final argument, :port is optional. They use localhost:12345 by default
+   and 12345 for the port if omitted. Documentation of these files has been updated.
 
 ! 2009-08-21 - Gareth Rogers
  - Fixed commentCamera.sh so it used CameraCommand.exe instead of CameraComment.exe
