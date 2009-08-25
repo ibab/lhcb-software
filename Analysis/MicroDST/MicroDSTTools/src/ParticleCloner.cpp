@@ -1,4 +1,4 @@
-// $Id: ParticleCloner.cpp,v 1.6 2009-07-30 10:03:01 jpalac Exp $
+// $Id: ParticleCloner.cpp,v 1.7 2009-08-25 07:02:03 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -96,9 +96,10 @@ LHCb::Particle* ParticleCloner::clone(const LHCb::Particle* particle)
 
   if (m_ppCloner) {
     particleClone->setProto( (*m_ppCloner)( particle->proto() ) );
-  } else {
-    particleClone->setProto(SmartRef<LHCb::ProtoParticle>(particle->proto()));
-  }
+  } 
+//   else {
+//     particleClone->setProto(SmartRef<LHCb::ProtoParticle>(particle->proto()));
+//   }
 
   return particleClone;
   
