@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.3 2009-08-11 09:43:13 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.4 2009-08-26 16:16:59 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -30,8 +30,8 @@ class BaseDSTWriter(ConfigurableUser) :
     def selectionSequences(self) :
         return self.getProp('SelectionSequences')
 
-    def streamName(self, sel) :
-        return 'OStream' + sel.name()
+    def streamName(self, name) :
+        return 'OStream' + name
 
     def outputStreamType(self) :
         from Configurables import InputCopyStream
@@ -39,37 +39,39 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def extendStream(self, stream) :
         # do nothing
-        return
+        return []
 
     def fileExtension(self) :
         return ".dst"
 
-    def outputFileName(self, sel) :
-        dstName = self.getProp('OutputFilePrefix')+sel.name()+self.fileExtension()
+    def outputFileName(self, name) :
+        dstName = self.getProp('OutputFilePrefix')+name+self.fileExtension()
         return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC'"
     
-    def _initOutputStreams(self, sel) :
-        stream = self.outputStreamType()( self.streamName(sel) )
-        stream.Output = self.outputFileName(sel)
+    def _initOutputStreams(self, name) :
+        stream = self.outputStreamType()( self.streamName(name) )
+        stream.Output = self.outputFileName(name)
         self.extendStream(stream)
         
-    def outputStream(self, sel) :
-        return self.outputStreamType()( self.streamName(sel) )
+    def outputStream(self, name) :
+        return self.outputStreamType()( self.streamName(name) )
 
     def extendSequence(self, sel) :
         return
     
-    def addOutputStream(self, sel) :
-        outStream = self.outputStream(sel)
+    def addOutputStream(self, seq) :
+        outStream = self.outputStream(seq.name())
         if outStream != None :
-            sel.sequence().Members += [self.outputStream(sel)]
+            seq.Members += [self.outputStream(seq.name())]
 
     def __apply_configuration__(self) :
         """
         BaseDSTWriter configuration
         """
+        log.info("Configuring BaseDSTWriter")
         for sel in self.selectionSequences() :
-            self._initOutputStreams(sel)
-            self.extendSequence(sel)
-            self.addOutputStream(sel)
-            self.sequence().Members += [ sel.sequence() ]
+            seq = GaudiSequencer("Seq"+sel.name(), Members = [sel.sequence()])
+            self._initOutputStreams(seq.name())
+            seq.Members += self.extendSequence(sel)
+            self.addOutputStream(seq)
+            self.sequence().Members += [ seq ]
