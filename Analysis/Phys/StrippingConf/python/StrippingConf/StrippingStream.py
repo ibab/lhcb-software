@@ -5,40 +5,37 @@
 #
 
 __all__ = ( 
-	    'StrippingStream',
+	    'StrippingStream'
 	  )
 
-from copy import deepcopy 
+from GaudiConf.Configuration import *
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
+from Configurables import LHCbConfigurableUser
 
-class StrippingStream ( object ) :
+class StrippingStream ( LHCbConfigurableUser ) :
 
-    __slots__ = ( 'Seq', 'Lines','Name')
+    __slots__ = { "Lines" : [] }
 
-    def __init__ ( self       ,    
-                   name  = '' ) :
-        self.Name  = deepcopy ( name  )
-        self.Seq = GaudiSequencer("StrippingStream"+self.Name)
-        self.Seq.ModeOR = True
-        self.Seq.ShortCircuit = False
-        self.Lines = []
+    def __apply_configuration__ ( self ) :
+        log.info("Configuring StrippingStream " + self.name() )
 
-    def appendLine (self, line) : 
-	self.Seq.Members += [ line.configurable() ]
-	self.Lines.append(line)
+    def appendLine (self, line) :
+	self.sequence().Members += [ line.configurable() ]
+	self.lines().append(line)
 
-    def name   ( self ) :
-        return self.Name
 
+    def lines( self ) :
+        return self.getProp('Lines')
+    
     def sequence ( self ) : 
-	return self.Seq
+	return GaudiSequencer("StrippingStream"+self.name(),
+                              ModeOR = True,
+                              ShortCircuit = False)
 
-    def lines (self) : 
-	return self.Lines
 
     def outputLocations (self) : 
 	outputList = []
-	for i in self.Lines :
+	for i in self.lines() :
 	    output = i.outputSelection()
-	    outputList.append("/Phys/"+output)
+	    outputList.append("Phys/"+output)
 	return outputList
