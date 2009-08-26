@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.11 2009-05-13 15:37:21 jblouw Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.12 2009-08-26 19:58:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -70,6 +70,7 @@ def setupOnline():
   sel = Online.mbmSelector(input='Events',type='ONE',decode=False)
   app.EvtSel  = sel
   app.Runable = Online.evtRunable(mep)
+  app.Runable.NumErrorToStop = 1;
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
 

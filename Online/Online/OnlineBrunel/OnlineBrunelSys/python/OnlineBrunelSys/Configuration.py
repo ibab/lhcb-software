@@ -1,7 +1,7 @@
 """
       High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.2 2009-01-16 14:26:10 frankb Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-08-26 19:58:55 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -36,7 +36,7 @@ class Serialisation(ConfigurableUser):
       serial.RequireAlgs += ['Reco']
       serial.OutputLevel = lvl
       # Now append
-      writer = Online.evtMerger(buffer=buf,name=nam,location=loc,routing=0x10)
+      writer = Online.evtMerger(buffer=buf,name=nam,location=loc,routing=0x100)
       app.OutStream.append(writer)
 
     def __apply_configuration__(self):

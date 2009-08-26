@@ -24,7 +24,7 @@ sleep 4
 #
 $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${UTGID} $gaudi_run libOnlineKernel.so mbm_mon"&
 #
-start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Output',True,False,'./mdfOutput.dat')"
+#start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Output',True,False,'./mdfOutput.dat')"
 #
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
 start_Brunel
