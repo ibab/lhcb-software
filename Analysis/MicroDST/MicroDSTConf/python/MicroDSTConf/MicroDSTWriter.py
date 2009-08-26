@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.16 2009-08-26 07:51:05 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.17 2009-08-26 16:23:25 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -154,12 +154,13 @@ class MicroDSTWriter(BaseDSTWriter) :
                 fullLoc = self.dataLocations(sel, loc)
                 cloner = self._copyP2PVRelations(sel,"CopyP2PV_"+loc, fullLoc )
                 if copyPV == False :
-                    alg = sel.algorithm()
-                    refitPVs = False
-                    if alg.properties().has_key('ReFitPVs') :
-                        refitPVs =  alg.getProp('ReFitPVs')
-                    if not refitPVs :
-                        cloner.ClonerType = "NONE"
+                    if sel.properties().has_key('algorithm') :
+                        alg = sel.algorithm()
+                        refitPVs = False
+                        if alg.properties().has_key('ReFitPVs') :
+                            refitPVs =  alg.getProp('ReFitPVs')
+                        if not refitPVs :
+                            cloner.ClonerType = "NONE"
                 cloners += [cloner]
         return cloners
     
@@ -196,6 +197,7 @@ class MicroDSTWriter(BaseDSTWriter) :
             clonerList+=self._copyMCInfo(sel)
         if len(self.getProp("CopyPVRelations")) > 0 :
             clonerList+=self._copyPVRelations(sel)
-        sel.sequence().Members += clonerList
+        print self.name(), ": Extra sequence members ", clonerList 
+        return clonerList
 
-        print self.name(), ": Extended sequence is now", sel.sequence().Members
+

@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.24 2009-08-25 13:44:59 jpalac Exp $
+!$Id: release.notes,v 1.25 2009-08-26 16:23:39 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-08-26 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . extendSequence returns list of algorithms to add to sequence instead of
+    adding them to an input sequence.
 
 ! 2009-08-25 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
