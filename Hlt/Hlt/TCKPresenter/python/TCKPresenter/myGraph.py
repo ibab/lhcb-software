@@ -52,6 +52,7 @@ alley_s_p                  = myConst.alley_s_p
 
 class myGraph:
 
+     right   = 'http://plus501/subst_temp.py/right?File='
      server  = 'http://plus501/subst_temp.py/online?File='
      offline = 'http://plus501/TCKs/'
 
@@ -105,10 +106,10 @@ class myGraph:
           ## start the graph with a standard beginning 
           str = graph_start()
           ## as usual we will have one node which representes the in rate.
-          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', NODE_RARE)
+          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', '', NODE_RARE)
           ## create all the nodes (in this case the systems). They are all physics nodes
           for system in systems:
-               str = str + '\n' + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', NODE_PHYSICS)
+               str = str + '\n' + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition','', NODE_PHYSICS)
           ## connect them with edges so we get a sequential graph.     
           for system_index in range(len(systems)-1):
                str = str + '\n'+ render_dir_edge(systems[system_index], systems[system_index+1])
@@ -130,7 +131,7 @@ class myGraph:
           ## as usual we will have one node which representes the in rate.
           ## create all the nodes (in this case the systems). They are all physics nodes
           for system in systems:
-               str = str + '\n' + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', NODE_PHYSICS_WITHOUTRATE)
+               str = str + '\n' + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', '', NODE_PHYSICS_WITHOUTRATE)
           ## connect them with edges so we get a sequential graph.   
           for system_index in range(len(systems)-1):
                str = str + '\n'+ render_dir_edge(systems[system_index], systems[system_index+1])
@@ -152,15 +153,15 @@ class myGraph:
           ## start as usual, is basically always the same start of a funtion.
           str = graph_start()
           ## in rate as well as teh first higher stages of the graph are produced as nodes.
-          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', NODE_RARE)
-          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', NODE_RARE)
-          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', NODE_PHYSICS)
+          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', '', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', '', NODE_PHYSICS)
           ## the HLT1 will be treated differently to the other systems
           ## especially because many things are hardcoded here.
           if system == 'Hlt1':
                ## Global is a special case
                str = str + create_label('Hlt1Global', 'Global', LABEL_PLAIN1)
-               str = str + create_node('Lumi', 'Lumi', self.server+'Hlt_Hlt1_Lumi'+'$tck_partition', alley_type["Lumi"])
+               str = str + create_node('Lumi', 'Lumi', self.server+'Hlt_Hlt1_Lumi'+'$tck_partition',self.right+'$tck_partition;Image=', alley_type["Lumi"])
                str = str + create_label('Hlt1IgnoringLumi', 'IgnoringLumi', LABEL_PLAIN2)
                ## the alleys are hardcoded (myConstants)
                alleys = create_level_2_instances(system)
@@ -168,9 +169,9 @@ class myGraph:
                for alley in alleys:
                     ## Here are the different alleys and there types
                     if alley != "Lumi":
-                         str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition', alley_type[alley])
+                         str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition',self.right+'$tck_partition;Image=', alley_type[alley])
                     if alley=='Electron':
-                         str = str + create_node('Muon', 'Muon', '', NODE_RARE)
+                         str = str + create_node('Muon', 'Muon', '', '', NODE_RARE)
                str = str + "}}"
                for alley in create_level_2_instances(system):
                     if alley.find('Muon') != -1:
@@ -191,13 +192,13 @@ class myGraph:
           create_level_4_instances = self.create_level_4_instances
           linelist = self.linelist
           str = graph_start()
-          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', '', NODE_RARE)
           ## basic is with rate, offline without
-          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', NODE_PHYSICS_WITHOUTRATE)
+          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', '', NODE_PHYSICS_WITHOUTRATE)
           ## The structures for the other systems then Hlt1 are not yet implemented.
           if system == 'Hlt1':
                str = str + create_label('Hlt1Global', 'Global', LABEL_PLAIN1)
-               str = str + create_node('Lumi', 'Lumi', self.offline+TCK+'/offline/extended_Hlt_Hlt1_Lumi'+'.xhtml', alley_type_withoutrate["Lumi"])
+               str = str + create_node('Lumi', 'Lumi', self.offline+TCK+'/offline/extended_Hlt_Hlt1_Lumi'+'.xhtml', self.server+'$tck_partition;Image=', alley_type_withoutrate["Lumi"])
                str = str + create_label('Hlt1IgnoringLumi', 'IgnoringLumi', LABEL_PLAIN2)
                ## the alleys are hardcoded (myConstants)
                alleys = create_level_2_instances(system)
@@ -205,9 +206,9 @@ class myGraph:
                for alley in alleys:
                     ## Here are the different alleys and there types
                     if alley != "Lumi":
-                         str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', alley_type_withoutrate[alley])
+                         str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', '', alley_type_withoutrate[alley])
                     if alley=='Electron':
-                         str = str + create_node('Muon', 'Muon', '', NODE_RARE)
+                         str = str + create_node('Muon', 'Muon', '', '', NODE_RARE)
                str = str + "}}"
                for alley in create_level_2_instances(system):
                     if alley.find('Muon') != -1:
@@ -232,12 +233,12 @@ class myGraph:
           str = graph_start()
           lines  = create_level_3_instances(system, alley)
           dlines = derivelinenames(alley_realname[alley], lines)
-          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', NODE_RARE)
-          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', NODE_RARE)
-          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', NODE_RARE)
-          str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition', alley_type[alley])
+          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', '', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition', self.right+'$tck_partition;Image=', alley_type[alley])
           for i in range(len(lines)):
-               str = str + create_node(lines[i], dlines[i], self.server+'Hlt_'+system+'_'+alley+'_'+lines[i]+'$tck_partition', NODE_PHYSICS)
+               str = str + create_node(lines[i], dlines[i], self.server+'Hlt_'+system+'_'+alley+'_'+lines[i]+'$tck_partition', self.right+'$tck_partition;Image=', NODE_PHYSICS)
           for i in range(len(lines)):  
                str = str + '\n'+ render_dir_edge(alley, lines[i])
           str = str + '\n'+ render_dir_edge('Hlt', system) 
@@ -256,11 +257,11 @@ class myGraph:
           str = graph_start()
           lines  = create_level_3_instances(system, alley)
           dlines = derivelinenames(alley_realname[alley], lines)
-          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', NODE_RARE)
-          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', NODE_RARE)
-          str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', alley_type_withoutrate[alley])
+          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', '', NODE_RARE)
+          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', '', NODE_RARE)
+          str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', '', alley_type_withoutrate[alley])
           for i in range(len(lines)):
-               str = str + create_node(lines[i], dlines[i], self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'_'+lines[i]+'.xhtml', NODE_PHYSICS_WITHOUTRATE)
+               str = str + create_node(lines[i], dlines[i], self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'_'+lines[i]+'.xhtml', '', NODE_PHYSICS_WITHOUTRATE)
           for i in range(len(lines)):  
                str = str + '\n'+ render_dir_edge(alley, lines[i])
           str = str + '\n'+ render_dir_edge('Hlt', system) 
@@ -290,11 +291,11 @@ class myGraph:
           cutlist = getProperties(TCK, line, 'Code|FilterDesc|AcceptFraction')
           cuttemp=''
           ## the first sequence of higher level nodes (alleys, lines, systems).
-          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', NODE_RARE)
-          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', NODE_RARE)
-          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', NODE_RARE)
-          str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition', NODE_RARE)
-          str = str + create_node(line, derivelinename(alley_realname[alley],line), self.server+'Hlt_'+system+'_'+alley+'_'+line+'$tck_partition', NODE_PHYSICS)
+          str = str + '\n' + create_node('in_rate', 'in=$in_rate', '', '', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.server+'Hlt'+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(system, system, self.server+'Hlt_'+system+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(alley, alley, self.server+'Hlt_'+system+'_'+alley+'$tck_partition', '', NODE_RARE)
+          str = str + create_node(line, derivelinename(alley_realname[alley],line), self.server+'Hlt_'+system+'_'+alley+'_'+line+'$tck_partition', self.right+'$tck_partition;Image=', NODE_PHYSICS)
           ## will be a list of starting points for the subgraphes (filtersequences).
           mode_node=[]
           str = str + '\n'+ render_dir_edge('Hlt', system)  
@@ -312,14 +313,14 @@ class myGraph:
                     for cut in cutlist:####################
                          if cut[0].find(tls[n]) != -1:#####
                               cuttemp = cut[1]#############
-                    str = str + create_node(tls[n], dtln[n], '', NODE_SCALERLIKE, cuttemp)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_SCALERLIKE, cuttemp)
                     cuttemp=''
                ## find a PostScaler and find out about the post scale
                elif tls[n].find('PostScaler')!=-1:
                     for cut in cutlist:####################
                          if cut[0].find(tls[n]) != -1:#####
                               cuttemp = cut[1]#############
-                    str = str + create_node(tls[n], dtln[n], '', NODE_SCALERLIKE, cuttemp)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_SCALERLIKE, cuttemp)
                     cuttemp=''
                ## if a filter sequence is found, it is important to keep the index in the list in mind
                ## to be able to put the following nodes in the subgraph.
@@ -327,18 +328,18 @@ class myGraph:
                     mode_node.append(n)
                ## if nothing of this is the case, just plot a plain node.
                else:
-                    str = str + create_node(tls[n], dtln[n], '', NODE_PLAIN)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_PLAIN)
           ## printing of the subgraphs as a filtersequence.
           for m_n in mode_node:
                newtls  = successors(tls[m_n], linelist, 1)
                newdtln = derivelinenames(line, newtls)
                #str = str + 'subgraph cluster%d { style="filled"; color="#fffff0"; label="Filter-Sequence"' % m_n
-               str = str + create_node(tls[m_n], dtln[m_n], '', NODE_PLAIN)
+               str = str + create_node(tls[m_n], dtln[m_n], '', '', NODE_PLAIN)
                for n in range(len(newtls)):
                     for cut in cutlist:####################
                          if cut[0].find(newtls[n]) != -1:###
                               cuttemp = cutlayout(cut[1])####
-                    str = str + '\n' + create_node(newtls[n], newdtln[n], '', NODE_CUT, cuttemp)
+                    str = str + '\n' + create_node(newtls[n], newdtln[n], '', '', NODE_CUT, cuttemp)
                     if cuttemp != '':
                          cut_instances.append(newtls[n])
                     cuttemp=''
@@ -364,11 +365,11 @@ class myGraph:
           dtln = derivelinenames(line, tls)
           dln  = derivelinenames(line, succ)
           str  = graph_start()
-          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', NODE_RARE)
-          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', NODE_RARE)
-          str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', NODE_RARE)
+          str = str + create_node('Hlt', 'Hlt', self.offline+TCK+'/offline/extended_Hlt'+'.xhtml', '', NODE_RARE)
+          str = str + create_node(system, system, self.offline+TCK+'/offline/extended_Hlt_'+system+'.xhtml', '', NODE_RARE)
+          str = str + create_node(alley, alley, self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'.xhtml', '', NODE_RARE)
           ## lines are allways from the type physics
-          str = str + create_node(line, derivelinename(alley_realname[alley],line), self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'_'+line+'.xhtml',NODE_PHYSICS_WITHOUTRATE)
+          str = str + create_node(line, derivelinename(alley_realname[alley],line), self.offline+TCK+'/offline/extended_Hlt_'+system+'_'+alley+'_'+line+'.xhtml', '', NODE_PHYSICS_WITHOUTRATE)
           mode_node=[]
           str = str + '\n'+ render_dir_edge('Hlt', system)  
           str = str + '\n'+ render_dir_edge(system, alley)
@@ -383,28 +384,28 @@ class myGraph:
                     for cut in cutlist:################ 
                          if cut[0].find(tls[n]) != -1:#
                               cuttemp = cut[1]#########
-                    str = str + create_node(tls[n], dtln[n], '', NODE_SCALERLIKE, cuttemp)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_SCALERLIKE, cuttemp)
                     cuttemp=''
                elif tls[n].find('PostScaler')!=-1:
                     for cut in cutlist:################
                          if cut[0].find(tls[n]) != -1:#
                               cuttemp = cut[1]#########
-                    str = str + create_node(tls[n], dtln[n], '', NODE_SCALERLIKE, cuttemp)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_SCALERLIKE, cuttemp)
                     cuttemp=''
                elif tls[n].find('FilterSequence')!=-1:
                     mode_node.append(n)
                else:
-                    str = str + create_node(tls[n], dtln[n], '', NODE_PLAIN)
+                    str = str + create_node(tls[n], dtln[n], '', '', NODE_PLAIN)
           for m_n in mode_node:
                newtls  = successors(tls[m_n], linelist, 1)
                newdtln = derivelinenames(line, newtls)
                #str = str + 'subgraph cluster%d { style="filled"; color="#fffff0"; label="Filter-Sequence"' % m_n
-               str = str + create_node(tls[m_n], dtln[m_n], '', NODE_PLAIN)
+               str = str + create_node(tls[m_n], dtln[m_n], '', '', NODE_PLAIN)
                for n in range(len(newtls)):
                     for cut in cutlist:###################
                          if cut[0].find(newtls[n]) != -1:#
                               cuttemp = cutlayout(cut[1])#
-                    str = str + '\n' + create_node(newtls[n], newdtln[n], '', NODE_CUT_WITHOUTRATE, cuttemp)
+                    str = str + '\n' + create_node(newtls[n], newdtln[n], '', '', NODE_CUT_WITHOUTRATE, cuttemp)
                     if cuttemp != '':
                          cut_instances.append(newtls[n])
                     cuttemp=''

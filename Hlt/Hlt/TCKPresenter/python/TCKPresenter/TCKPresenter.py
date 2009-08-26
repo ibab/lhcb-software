@@ -15,11 +15,6 @@
 ## which creates the graphes.
 import dotcreater
 import sys
-import index_creater
-
-## renaming of the function to use shorter names.
-create_dotfiles = dotcreater.create
-create_indexfile = index_creater.create
 
 ## read in the TCK as a parameter and look if enough parameters
 ## are given. the programm will use the path to write the html pages in
@@ -29,9 +24,7 @@ if len(sys.argv) == 3:
     Path = sys.argv[2]
     
     ## create the html pages for the given TCK in the given directory
-    create_dotfiles(TCK, Path)
-    ## create the indexfile which holds the TCKs content
-    create_indexfile(Path)
+    dotcreater.create(TCK, Path)
 
 else:
     print 'the parameter signature is wrong. should be like "python TCKPresenter.py 0x803b0000 /afs/cern.ch/user/k/kneumann/tcktestpage/"'

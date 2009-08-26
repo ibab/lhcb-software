@@ -10,7 +10,6 @@
 ## scripts. Utils is used to get the informations about the given TCK. The graphs are
 ## created with the pydot interface
 import os
-import time
 import myGraph
 import myString
 from TCKUtils.utils import *
@@ -23,12 +22,9 @@ import pydot
 
 ## renaming of the function to use shorter names.
 replacer_to_code          = myString.replacer_to_code
-
+     
 ## the main function of the dotcreater script to create the svg files.
 def create(TCK, Path):
-
-    ## start the time measurement to know how long it runs for a given TCK.
-    time1 = time.clock()
 
     ## read in the algorithms for a given TCK and build out of these information the xhtml pages 
     print 'get Algorithms for the TCK: ', TCK
@@ -58,7 +54,8 @@ def create(TCK, Path):
     create_level_3_instances     = myG.create_level_3_instances
     create_level_3_graph_basic   = myG.create_level_3_graph_basic
     create_level_3_graph_offline = myG.create_level_3_graph_offline
-    
+
+    # level 4 instances not needed because we don't go deeper
     create_level_4_graph_basic   = myG.create_level_4_graph_basic
     create_level_4_graph_offline = myG.create_level_4_graph_offline
 
@@ -70,21 +67,17 @@ def create(TCK, Path):
     print 'make directories'
     if not os.path.exists(Path + TCK + '/'):
         os.mkdir(Path + TCK + '/')
-    if not os.path.exists(Path + TCK + '/online/'):    
-        os.mkdir(Path + TCK + '/online/')
     if not os.path.exists(Path + TCK + '/offline/'):
         os.mkdir(Path + TCK + '/offline/')
     if not os.path.exists(Path + TCK + '/basic/'):
         os.mkdir(Path + TCK + '/basic/')
-    ## if not os.path.exists(Path + TCK + '/png/'):
-    ##     os.mkdir(Path + TCK + '/png/')
     print 'finished make directories'
 
     ## To write a template file in addition to the svg structure, makes it easier for the script which is supposed to fill in the
     ## rates to do its job. The template file contains all the basic structure svg files in the directory and the cuts.
     ## There is a hierachical structure in the template which suggests the graph structure as well.
-    TemplateHandle  = open(Path + TCK + '/basic/template', 'w')
     TemplateContent = ''
+    TemplateDump = ''
 
     ## Level 1: The 'systems' for the TCK, mainly divided into Hlt1, Hlt2 and the HltEndSequence.
     ## Level 2: Contains for every 'system' the alleys in Hlt hardcoded.
@@ -126,6 +119,7 @@ def create(TCK, Path):
             ## add the instances in the template and read in the next instances one level deeper.
             ## go one in the deeper levels as usual. And write out the files.
             TemplateContent       = TemplateContent + '      ' + level_2_instance + '\n'
+            TemplateDump += "Partition_Adder_1/GauchoJob/MonitorSvc/monRate/" + level_2_instance  + "AlleyAccepts\n"
             level_3_instances     = create_level_3_instances(level_1_instance, level_2_instance)
             level_3_graph_basic   = create_level_3_graph_basic(level_1_instance, level_2_instance, TCK)
             level_3_graph_offline = create_level_3_graph_offline(level_1_instance, level_2_instance, TCK)
@@ -137,6 +131,7 @@ def create(TCK, Path):
             for level_3_instance in level_3_instances:      #level_3_instance is a line
                 ## no level_4_instances are needed
                 TemplateContent       = TemplateContent + '         ' + level_3_instance + '\n'
+                TemplateDump += "Partition_Adder_1/GauchoJob/MonitorSvc/monRate/Hlt1" + level_3_instance  + "DecisionLineAccepts\n"
                 level_4_temp_basic    = create_level_4_graph_basic(level_1_instance, level_2_instance, level_3_instance, TCK)
                 ## attention:tuple of instances and graph
                 level_4_temp_offline  = create_level_4_graph_offline(level_1_instance, level_2_instance, level_3_instance, TCK)
@@ -152,10 +147,11 @@ def create(TCK, Path):
                 for level_4_instance in level_4_instances:
                     TemplateContent   = TemplateContent + '            ' + level_4_instance + '\n'
 
-    TemplateHandle.write(TemplateContent)
-    TemplateHandle.close()
-    time2 = time.clock()
-
-    print time2-time1
+    TemplateHandle_Content = open(Path + TCK + '/basic/template', 'w')                
+    TemplateHandle_Content.write(TemplateContent)
+    TemplateHandle_Content.close()
+    TemplateHandle_Dump = open(Path + TCK + '/basic/dump', 'w')                
+    TemplateHandle_Dump.write(TemplateDump)
+    TemplateHandle_Dump.close()
 
 

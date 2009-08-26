@@ -27,37 +27,43 @@ REPLACE_RULES              = myConst.REPLACE_RULES
 
 ## makes a nice and understandable representation for the cuts
 def cutlayout(cut):
-    retstr=''
-    sublist = cut.split(' , ')
-    newlist = []
-    for sublistelement in sublist:
-        sublistelement = sublistelement.replace('[ ', '')
-        sublistelement = sublistelement.replace(' ]', '')
-        sublistelement = sublistelement.replace("'", '')
-        newlist.append(formatter(sublistelement))
-    retstr = newlist[0]
-    for nl in newlist[1:len(newlist)]:
-        retstr = retstr + ' , ' + nl
-    return retstr
+    try:
+        retstr=''
+        sublist = cut.split(' , ')
+        newlist = []
+        for sublistelement in sublist:
+            sublistelement = sublistelement.replace('[ ', '')
+            sublistelement = sublistelement.replace(' ]', '')
+            sublistelement = sublistelement.replace("'", '')
+            newlist.append(formatter(sublistelement))
+        retstr = newlist[0]
+        for nl in newlist[1:len(newlist)]:
+            retstr = retstr + ' , ' + nl
+        return retstr
+    except:
+        return cut
 
 ## produces a nice and understandable representation for the cuts as well as cutlayout
 def formatter(str):
-    retstr = ''
-    strlist = str.split(',')
-    
-    if strlist[1] == '>':
-        retstr = strlist[0] + ' &gt; ' + strlist[2]
-    elif strlist[1] == '<':
-        retstr = strlist[0] + ' &lt; ' + strlist[2]
-    elif strlist[1] == '||>':
-        retstr = '|' + strlist[0] + '|' + ' &gt; ' + strlist[2]
-    elif strlist[1] == '||<':
-        retstr = '|' + strlist[0] + '|' + ' &lt;' + strlist[2]
-    elif strlist[1] == '||[]':
-        retstr = '|' + strlist[0] + '|' + ' &isin; ' + '['+strlist[2]+', '+strlist[3]+']'
-    elif strlist[1] == '[]':
-        retstr = strlist[0] + ' &isin; ' + '['+strlist[2]+', '+strlist[3]+']'
-    return retstr
+    try:
+        retstr = ''
+        strlist = str.split(',')
+
+        if strlist[1] == '>':
+            retstr = strlist[0] + ' &gt; ' + strlist[2]
+        elif strlist[1] == '<':
+            retstr = strlist[0] + ' &lt; ' + strlist[2]
+        elif strlist[1] == '||>':
+            retstr = '|' + strlist[0] + '|' + ' &gt; ' + strlist[2]
+        elif strlist[1] == '||<':
+            retstr = '|' + strlist[0] + '|' + ' &lt;' + strlist[2]
+        elif strlist[1] == '||[]':
+            retstr = '|' + strlist[0] + '|' + ' &isin; ' + '['+strlist[2]+', '+strlist[3]+']'
+        elif strlist[1] == '[]':
+            retstr = strlist[0] + ' &isin; ' + '['+strlist[2]+', '+strlist[3]+']'
+        return retstr
+    except:
+        return str
 
 ## the choosen standard way to start graphs in a dot file
 def graph_start():
@@ -80,21 +86,24 @@ def create_label(name, label, type):
     return str
 
 ## creates a string for a node which will be used in the dot representation for a node.
-def create_node(name, label, url, type, cut=''):
+def create_node(name, label, url, url2, type, cut=''):
     for rr in REPLACE_RULES:
         label = label.replace(rr[1],rr[2])
 
     ## if no url is given no hyperlink will appear
-    str = name + '[label=<<TABLE HREF="'+url+'" BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="'+type[7]+'">'
-    str = str + '<TR><TD BGCOLOR="'+type[3]+'" BORDER="'+type[2]+'"><FONT POINT-SIZE="'+type[4]+'">'+label+'</FONT></TD></TR>'
+    str = name + '[label=<<TABLE BORDER="0" CELLBORDER="1" CELLSPACING="0" CELLPADDING="'+type[7]+'">'
+    str = str + '<TR><TD HREF="'+url+'" BGCOLOR="'+type[3]+'" BORDER="'+type[2]+'"><FONT POINT-SIZE="'+type[4]+'">'+label+'</FONT></TD></TR>'
     if type[0] == 'y':
         str = str + '<TR><TD BGCOLOR="'+type[1]+'" CELLPADDING="1"></TD></TR><TR><TD BGCOLOR="'+type[3]+'" CELLPADDING="1"></TD></TR>'
     if cut!='':
         str = str + '<TR><TD BORDER="0"><FONT POINT-SIZE="'+type[5]+'">'+cut+'</FONT></TD></TR>'
         if type == NODE_CUT:
-            str = str + '<TR><TD BORDER="0"><FONT POINT-SIZE="'+type[5]+'">cut= $'+name+'_out </FONT></TD></TR>'
+            str = str + '<TR><TD HREF="'+name+'" BORDER="0"><FONT POINT-SIZE="'+type[5]+'">cut= $'+name+'_out </FONT></TD></TR>'
     if type[6]!='':
-        str = str + '<TR><TD BORDER="0"><FONT POINT-SIZE="'+type[5]+'">'+type[6]+'= $'+name+'_'+type[6]+' </FONT></TD></TR>'
+        if url2 != '':
+            str = str + '<TR><TD target="rightframe" HREF="'+url2+name+'" BORDER="0"><FONT POINT-SIZE="'+type[5]+'">'+type[6]+'= $'+name+'_'+type[6]+' </FONT></TD></TR>'
+        else:
+            str = str + '<TR><TD BORDER="0"><FONT POINT-SIZE="'+type[5]+'">'+type[6]+'= $'+name+'_'+type[6]+' </FONT></TD></TR>'
     str = str + '</TABLE>>]'
     return str
 
