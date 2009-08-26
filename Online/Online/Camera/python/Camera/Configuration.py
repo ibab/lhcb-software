@@ -35,6 +35,8 @@ class Camera(LHCbConfigurableUser):
                              servers are tried in order.
                              If this list is empty or None is passed then the CAMERA
                              tool will be disabled.
+                             An empty string will connect to the default CAMERA server
+                             127.0.0.1:12345
                          """
         }
     
@@ -57,12 +59,17 @@ class Camera(LHCbConfigurableUser):
                 names = []
                 ports = []
                 for server in servers:
-                    name, port = server.split(':')
-                    names.append(name)
-                    ports.append(int(port))
+                    try:
+                        name, port = server.split(':')
+                        names.append(name)
+                        ports.append(int(port))
+                    except ValueError:
+                        log.error("Couldn't determine the server name and port from '"+server+"'. Is it in the form 'server:port'?")
                 # Need to define the primary port to use.
-                camera.ServerName = names[0]
-                camera.ServerPort = ports[0]
+                if 0 is not len(names):
+                    camera.ServerName = names[0]
+                if 0 is not len(ports):
+                    camera.ServerPort = ports[0]
                 # Append the full list of servers.
                 camera.ServerNames = names
                 camera.ServerPorts = ports
