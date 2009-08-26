@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.18 2009-08-25 10:25:38 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.19 2009-08-26 16:14:22 ggiacomo Exp $
 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode AnalysisTask::initialize() {
   if ( sc.isFailure() ) return sc;  
   setMsgStream(&(always()));
   // add the partition name to the analysis task identifier
-  m_anaTaskname = m_anaTaskname+"_"+m_partition;
+  m_anaTaskname = m_anaTaskname+"/"+m_partition;
   
   if ( ! m_inputFiles.empty() ) {
     // swith off message dim publishing for offline mode

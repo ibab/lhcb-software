@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.20 2009-08-25 10:25:38 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.21 2009-08-26 16:14:22 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -86,7 +86,7 @@ void OMAMsgInterface::closeLog() {
 
 void OMAMsgInterface:: startMessagePublishing() {
   if(m_doPublish) {
-    std::string ServerName="OMA_"+m_anaTaskname;
+    std::string ServerName="/OMA/"+m_anaTaskname;
     DimServer::start(ServerName.c_str());
     DimServer::autoStartOn();
   }
@@ -236,11 +236,19 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
 
 void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
   if (m_doPublish) {
-    std::stringstream svcName;
-    svcName << "OMA_" << m_anaTaskname << "_Message" << m_iMsg;
-    char* mtext = const_cast<char*>(msg->msgtext());
+    char* time = msg->humanTime();
+#ifndef _WIN32
+    std::remove(time, time+strlen(time)+1,'\n');
+#endif
+    std::stringstream svcName, svcContent;
+    svcName << "/OMA/" << m_anaTaskname << "/Message" << m_iMsg;
+    svcContent << time << " " << msg->levelString() << " from Analysis Task "
+               << m_anaTaskname << " analysis " << msg->ananame().data() << ":\n";
+    svcContent << msg->msgtext();
+    m_msgLinks.push_back( svcContent.str() );
+    char * ptr = const_cast<char*>(m_msgLinks[m_iMsg].c_str());
     DimService* dimSvc = new DimService(svcName.str().c_str(),
-                                        mtext);
+                                        ptr );
     m_dimMessages[msg] = dimSvc;
     m_iMsg++;
   }

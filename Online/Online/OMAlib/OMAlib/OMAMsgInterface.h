@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.15 2009-08-25 10:25:37 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.16 2009-08-26 16:14:22 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -74,6 +74,7 @@ private:
   MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;
   std::map<OMAMessage*, DimService*> m_dimMessages;
+  std::vector<std::string> m_msgLinks;
   int m_iMsg;
 };
 #endif // OMALIB_OMAMSGINTERFACE_H
