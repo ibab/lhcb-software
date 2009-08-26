@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.15 2009-08-25 13:44:49 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.16 2009-08-26 07:51:05 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -157,7 +157,7 @@ class MicroDSTWriter(BaseDSTWriter) :
                     alg = sel.algorithm()
                     refitPVs = False
                     if alg.properties().has_key('ReFitPVs') :
-                        refitPVs =  alg.ReFitPVs
+                        refitPVs =  alg.getProp('ReFitPVs')
                     if not refitPVs :
                         cloner.ClonerType = "NONE"
                 cloners += [cloner]
