@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.14 2009-06-26 13:01:05 wouter Exp $
+// $Id: TrackCloneFinder.cpp,v 1.15 2009-08-26 09:04:04 gkrocker Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -42,10 +42,10 @@ TrackCloneFinder::TrackCloneFinder( const std::string& type,
   //close. 
   //TODO: The Value of this parameters is currently determined iteratively
   //and may bot be optimal. This has to be investigated further.
-  declareProperty("VeloXSeparation",	    m_xseparationV = 0.5);
-  declareProperty("VeloYSeparation",	    m_yseparationV = 0.5);
-  declareProperty("VeloTXSeparation",	    m_txseparationV = 4e-3);
-  declareProperty("VeloTYSeparation",	    m_tyseparationV = 4e-3);
+  declareProperty("VeloXSeparation",	    m_xseparationV = 100);
+  declareProperty("VeloYSeparation",	    m_yseparationV = 100);
+  declareProperty("VeloTXSeparation",	    m_txseparationV = 3e-2);
+  declareProperty("VeloTYSeparation",	    m_tyseparationV = 2e-2);
 
 }
 

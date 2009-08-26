@@ -3,6 +3,11 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+
+! 2009-08-26 Georg Krocker
+ - in TrackCloneFinder retuned cuts for fast clone finding to match the 
+   performance of the full clone killing
+
 ! 2009-08-05 Stephanie Hansmann-Menzemer
  - adapt to changes in Track.xml class
 
