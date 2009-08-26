@@ -20,6 +20,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSelChecker v8r7 2009-08-21 ===================
+! 2009-08-26 - Patrick Koppenburg
+ - Add file for MC09 Charm thresholds testing
+
 ! 2009-08-21 - Patrick Koppenburg
  - Remove Bs2DsDs : DST not available anymore
  - Add options/DVTestHlt2Bd2DstarMu.py
