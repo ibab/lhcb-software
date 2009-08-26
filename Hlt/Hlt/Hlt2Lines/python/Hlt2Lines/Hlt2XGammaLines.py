@@ -26,10 +26,6 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
                    ,'photonPT'            : 2600     # MeV
                    ,'PhiVCHI2'            : 25       # dimensionless
                    ,'KstVCHI2'            : 16       # dimensionless
-                   
-                   , 'IncludeLines' :['Hlt2KstGamma',
-                                      'Hlt2PhiGamma'
-                                      ]
                    }
     
     

@@ -34,13 +34,16 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                                      , 'Hlt2Bu2MuMuKJpsi'     :  1 # 0.1  # J/psi peak
                                      , 'Hlt2Bu2MuMuKHighMass' :  1 # 0.2  # high mass band
                                      }
-                ,  'BFlightCHI2'        : 1   # 50        # adimentional 
-                ,  'BDIRA'              : 0.5 # 0.9998    # adimentional
-                ,  'BIPCHI2'            : 100 # 25        # adimentional  
-                ,  'BVertexCHI2'        : 100 # 3         # adimentional
-                ,  'LeptonPT'           : 0   # 1000      # MeV 
-                ,  'KaonIPCHI2'         : 0   # 4         # adimentional
-                ,  'KaonPT'             : 0   # 1400      # MeV 
+                ,  'BFlightCHI2'        : 100       # adimentional 
+                ,  'BDIRA'              : 0.9997    # adimentional
+                ,  'BIPCHI2'            : 25        # adimentional  
+                ,  'BVertexCHI2'        : 16        # adimentional
+                ,  'DiLeptonPT'         : 0         # MeV (not used)
+                ,  'DiLeptonFDCHI2'     : 16        # adimentional
+                ,  'DiLeptonIPCHI2'     : 9         # adimentional
+                ,  'LeptonPT'           : 1000      # MeV 
+                ,  'KaonIPCHI2'         : 4         # adimentional
+                ,  'KaonPT'             : 1400      # MeV 
                 ,  'JpsiMassWindow'     : 500       # MeV (J/psi box mass window)
                 ,  'HighMassBLowerMass' : 5400      # MeV (Lower bound of high-mass box)
                 ,  'SignalBUpperMass'   : 5500      # MeV (Higher bound of signal box)
@@ -71,10 +74,10 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
         leptoncut = "(PT> %(LeptonPT)s *MeV)" % self.getProps()
         #
         ### dilepton mass cut 
-        llmasscut   = "(AM < %(SignalBUpperMass)s *MeV)" % self.getProps()
+        llcombcut   = "(AM < %(SignalBUpperMass)s *MeV) & (APT < %(DiLeptonPT)s)" % self.getProps()
         #
         ### dilepton cut (VFASPF(VCHI2/VDOF)<9)
-        llcut   = "(VFASPF(VCHI2/VDOF)<9)" 
+        llcut   = "(VFASPF(VCHI2/VDOF)<9) & (BPVVDCHI2> %(DiLeptonFDCHI2)s ) & (BPVIPCHI2() > %(DiLeptonIPCHI2)s )"  % self.getProps()
         # 
         ### B mass cuts : Hard-coded as we _need_ the full B mass window for the final fit. Nobody dare touch that!
         combcut = "(ADAMASS('B0')<600*MeV)"
@@ -92,7 +95,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , "EE"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
                               , DecayDescriptor = "J/psi(1S) -> e+ e-"
                               , DaughtersCuts = { "e-" : leptoncut }
-                              , CombinationCut = llmasscut
+                              , CombinationCut = llcombcut
                               , MotherCut = llcut
                               , InputLocations = [ TFElectrons ]
                               )
@@ -107,7 +110,7 @@ class Hlt2B2LLXLinesConf(HltLinesConfigurableUser) :
                               , "MM"                                           # name -- to be bound to the line name: Hlt2LineNameFilter
                               , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
                               , DaughtersCuts = { "mu-" : leptoncut }
-                              , CombinationCut = llmasscut
+                              , CombinationCut = llcombcut
                               , MotherCut = llcut
                               , InputLocations = [ TFMuons ]
                               )

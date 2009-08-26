@@ -42,11 +42,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                           ,'Hlt2IncPhiRobust'     : 1.0
                                           ,'Hlt2IncPhiTF'         : 1.0
                                           }
-                  ,'IncludeLines'       : {'IncPhi'           : True
-                                          ,'IncPhiSidebands'  : True
-                                          ,'IncPhiRobust'     : True
-                                          ,'IncPhiTF'         : True
-                                          }
                   ,'HltANNSvcID'        : {'IncPhi'           : 50000
                                           ,'IncPhiSidebands'  : 50003
                                           ,'IncPhiRobust'     : 50001

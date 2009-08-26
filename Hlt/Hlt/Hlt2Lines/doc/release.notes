@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.53 2009-08-24 21:29:03 graven Exp $
+$Id: release.notes,v 1.54 2009-08-26 08:53:38 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-08-26 - Patrick Koppenburg
+ - No need to IncludeLines anymore. Done in HltConf thresholds
 
 ! 2009-08-24 - Gerhard Raven
  - move imports around to prevent 'early import'
