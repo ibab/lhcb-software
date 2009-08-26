@@ -148,7 +148,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi complete line
         ############################################################################
 
-        if self.getProp('IncludeLines')['IncPhi']:
           line = Hlt2Line('IncPhi'
                           , prescale = self.prescale
                           , algos = [ GoodKaons, 
@@ -167,49 +166,47 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi robust only line
         ############################################################################
         
-        if self.getProp('IncludeLines')['IncPhiRobust']:
-          line = Hlt2Line('IncPhiRobust'
-                          , prescale = self.prescale
-                          , algos = [ GoodKaons, 
-                                      Hlt2InclusivePhi]
-                          , postscale = self.postscale
-                          , PV = True
-                          )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : self.getProp('HltANNSvcID')['IncPhiRobust'] } )
-
+        line = Hlt2Line('IncPhiRobust'
+                        , prescale = self.prescale
+                        , algos = [ GoodKaons, 
+                                    Hlt2InclusivePhi]
+                        , postscale = self.postscale
+                        , PV = True
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : self.getProp('HltANNSvcID')['IncPhiRobust'] } )
+        
 
         ############################################################################
         #    Inclusive Phi robust and TF line
         ############################################################################
 
-        if self.getProp('IncludeLines')['IncPhiTF']:
-          line = Hlt2Line('IncPhiTrackFit'
-                          , prescale = self.prescale
-                          , algos = [ GoodKaons, 
-                                      Hlt2InclusivePhi, 
-                                      GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                      Hlt2InclusivePhiTF]
-                          , postscale = self.postscale
-                          , PV = True
+        line = Hlt2Line('IncPhiTrackFit'
+                        , prescale = self.prescale
+                        , algos = [ GoodKaons, 
+                                    Hlt2InclusivePhi, 
+                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
+                                    Hlt2InclusivePhiTF]
+                        , postscale = self.postscale
+                        , PV = True
                           )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
-
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
+        
 
         ############################################################################
         #    Inclusive Phi complete line for mass sidebands
         ############################################################################
 
-        if self.getProp('IncludeLines')['IncPhiSidebands']:
-          line = Hlt2Line('IncPhiSidebands'
-                          , prescale = self.prescale
-                          , algos = [ GoodKaons, 
-                                      Hlt2InclusivePhiSB, 
-                                      GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                      Hlt2InclusivePhiTFSB,
-                                      GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
+        line = Hlt2Line('IncPhiSidebands'
+                        , prescale = self.prescale
+                        , algos = [ GoodKaons, 
+                                    Hlt2InclusivePhiSB, 
+                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
+                                    Hlt2InclusivePhiTFSB,
+                                    GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
                                       Hlt2InclusivePhiRichSB]
-                          , postscale = self.postscale
+                        , postscale = self.postscale
                           , PV = True
-                          )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
           
+        
