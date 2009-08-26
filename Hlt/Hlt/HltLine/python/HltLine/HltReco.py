@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.6 2009-08-14 10:22:09 graven Exp $
+# $Id: HltReco.py,v 1.7 2009-08-26 08:37:45 gkrocker Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -55,7 +55,7 @@ RunCloneKiller = False
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
-from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking
+from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine import bindMembers
@@ -80,6 +80,12 @@ patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
                                    , OutputTracksName = "Hlt/Track/Velo" )
+
+Tf__PatVeloSpaceTracking("HltRecoVelo").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
+Tf__PatVeloSpaceTracking("HltRecoVelo").PatVeloSpaceTool.MarkClustersUsed=True
+
+recoVeloGeneral = Tf__PatVeloGeneralTracking('HltRecoVeloGeneral'
+                                   , OutputTracksLocation = "Hlt/Track/Velo" )
 
 #### Forward Tracking
 recoForward = PatForward( 'HltRecoForward'
@@ -197,7 +203,8 @@ recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = Tru
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
                                   ,  Members =
                                   [  recoRZVeloSequence
-				                  ,  recoVelo
+		                  ,  recoVelo
+				  ,  recoVeloGeneral
 #                                  ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
 				  ] )
 

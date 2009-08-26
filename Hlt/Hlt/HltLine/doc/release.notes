@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.28 2009-08-25 11:53:19 graven Exp $
+! $Id: release.notes,v 1.29 2009-08-26 08:37:45 gkrocker Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-08-26 - Georg Krocker
+ - Added PatVeloGeneral to the default Hlt2 reconstruction sequence
 
 ! 2009-08-25 - Gerhard Raven
  - fix for StatEntities in declareInfo
