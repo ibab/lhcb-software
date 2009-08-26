@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.54 2009-08-26 08:53:38 pkoppenb Exp $
+$Id: release.notes,v 1.55 2009-08-26 13:35:41 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -14,7 +14,7 @@ $Id: release.notes,v 1.54 2009-08-26 08:53:38 pkoppenb Exp $
 ! 2009-08-18 - Patrick Koppenburg
  - B2LLK : Use TFKaons
 
-! 2009-08-17 - Patrick Koppenburg
+! 2009-08-17 - Gerhard Raven
  - add a line which switches (at a low rate)  HltSelReportsMaker to debug mode
    (needs HltCommon, HltRawData graven_20090817)
 
