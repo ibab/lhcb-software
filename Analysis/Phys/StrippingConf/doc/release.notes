@@ -1,9 +1,23 @@
-!$Id: release.notes,v 1.15 2009-08-11 14:01:04 jpalac Exp $
+!$Id: release.notes,v 1.16 2009-08-26 16:46:21 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-08-26 - Juan Palacios
+ - python/StrippingConf/StrippingStream.py
+  . Class StrippingLine is now an LHCbConfigurableUser. 
+  . Simplify code.
+  . Fix bug in outputLocations: "/Phys" -> "Phys"
+ - python/StrippongConf/Configuration.py
+  . StreamList replaced by a GaudiSequencer's Members field. This seems to be
+    the only way to pass a list of configurables to another configurable safely.
+  . OutputType='DST' does nothing except printing an warning. DST writing now
+    handled by SelDSTWriter.
+
+ - cmt/requirements
+  . Increase version to v1r4
 
 !========================== StrippingConf v1r3 2009-08-11 ===================
 
