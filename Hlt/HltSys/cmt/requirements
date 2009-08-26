@@ -31,6 +31,7 @@ use HltRawData          v2r0    Hlt   # Tomasz Skwarnicki
 # And now for something completely different
 use HltPython	        v1r17   Hlt   # Jose Angel Hernando-Morata
 use TCKUtils            v1r3    Hlt   # Gerhard Raven
+use TCKPresenter        v0r0    Hlt   # Klaus Neumann
 
 #=======================================================
 # HLT2 packages
