@@ -19,7 +19,7 @@ class PhiHigh_Nominal :
     @date 2009-08-05
     """
     
-    __all__ = ( 'ActiveLines', 'Thresholds' )
+    __all__ = ( 'ActiveHlt2Lines', 'Thresholds' )
     
     def Thresholds(self) :
         """
@@ -30,7 +30,7 @@ class PhiHigh_Nominal :
     
         return { Hlt2InclusivePhiLinesConf : { } }
     
-    def ActiveLines(self) :
+    def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
@@ -49,7 +49,7 @@ class PhiLow_Nominal :
     @date 2009-08-05
     """
     
-    __all__ = ( 'ActiveLines', 'Thresholds' )
+    __all__ = ( 'ActiveHlt2Lines', 'Thresholds' )
     
     def Thresholds(self) :
         """
@@ -64,7 +64,7 @@ class PhiLow_Nominal :
                                                  , 'TFKaonIPS'     : 9
                                                  } }
     
-    def ActiveLines(self) :
+    def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """

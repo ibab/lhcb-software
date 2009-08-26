@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.327 2009-08-26 13:00:21 pkoppenb Exp $ 
+! $Id: release.notes,v 1.328 2009-08-26 14:41:02 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,8 @@
 
 ! 2009-08-26 - Patrick Koppenburg
  - Add Hlt1 Thresholds for 2010 Charm
+ - Split ActiveLines into ActiveHlt1 and ActiveHlt2Lines, to allow easy 
+   prototyping of either level.
 
 ! 2009-08-25 - Patrick Koppenburg
  - Configuration and Hlt2 : New slot WithMC = False

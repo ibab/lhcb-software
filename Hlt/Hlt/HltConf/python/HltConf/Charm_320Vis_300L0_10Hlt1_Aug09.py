@@ -8,6 +8,8 @@ class Charm_320Vis_300L0_10Hlt1_Aug09 :
     @date 2009-08-26
     """
     
+    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds' )
+    
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
@@ -60,7 +62,14 @@ class Charm_320Vis_300L0_10Hlt1_Aug09 :
                                          }
                  }
     
-    def ActiveLines(self) :
+    def ActiveHlt2Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        return [] 
+
+        
+    def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """

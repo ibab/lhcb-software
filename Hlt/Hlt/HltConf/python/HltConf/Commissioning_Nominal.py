@@ -8,10 +8,10 @@ class Commissioning_Nominal :
     @date 2009-08-11
     """
     
-    __all__ = ( 'ActiveLines' )
+    __all__ = ( 'ActiveHlt2Lines' )
     
     
-    def ActiveLines(self) :
+    def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """

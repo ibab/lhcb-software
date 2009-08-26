@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.114 2009-08-25 14:50:56 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.115 2009-08-26 14:41:02 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -324,14 +324,16 @@ class HltConf(LHCbConfigurableUser):
         from HltLine.HltLine     import hlt1Lines
         from HltLine.HltLine     import hlt2Lines
 
-        activeLines = []
+        activeHlt1Lines = []
+        activeHlt2Lines = []
         sets = self.settings()
         if ( sets != None ):
-            activeLines = sets.ActiveLines()
+            activeHlt1Lines = sets.ActiveHlt1Lines()
+            activeHlt2Lines = sets.ActiveHlt2Lines()
 
 #        for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
         
-        lines1 = [ i for i in hlt1Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt1Global' ] ) ]
+        lines1 = [ i for i in hlt1Lines() if ( not activeHlt1Lines or i.name() in activeHlt1Lines + [ 'Hlt1Global' ] ) ]
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
         log.info( '# List of configured Hlt1Lines not added to Hlt1 : ' + str(set(hlt1Lines())-set(lines1)) )
@@ -339,7 +341,7 @@ class HltConf(LHCbConfigurableUser):
 
 #        for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
         
-        lines2 = [ i for i in hlt2Lines() if ( not activeLines or i.name() in activeLines + [ 'Hlt2Global' ]) ]
+        lines2 = [ i for i in hlt2Lines() if ( not activeHlt2Lines or i.name() in activeHlt2Lines + [ 'Hlt2Global' ]) ]
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )

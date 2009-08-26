@@ -8,7 +8,7 @@ class Charming_Nominal :
     @date 2009-08-06
     """
     
-    __all__ = ( 'ActiveLines', 'Thresholds' )
+    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds' )
     
     def Thresholds(self) :
         """
@@ -38,41 +38,49 @@ class Charming_Nominal :
                                                }
                     })
         #
-        # presently muon line rates are controlled by ActiveLines below
+        # presently muon line rates are controlled by ActiveHlt2Lines below
         #
         return d 
     
 ######################################################################################################
     #
-    # Active Lines
+    # Active Hlt1 Lines
     #
-    def ActiveLines(self) :
+    def ActiveHlt1Lines(self) :
+        """
+        Returns a list of active Hlt1 lines: take them from  Hlt1_Nominal
+        """
+        from Hlt1_Nominal import Hlt1_Nominal
+        return Hlt1_Nominal().ActiveHlt1Lines()
+    
+######################################################################################################
+    #
+    # Active Hlt2 Lines
+    #
+    def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines
         """
         
-        from Hlt1_Nominal import Hlt1_Nominal
-        
-        list = Hlt1_Nominal().ActiveLines()
        
 ##
 ## topo : leave out 4-body lines
 ##
-        list.extend( [ 'Hlt2Topo2BodySA',
-                       #'Hlt2Topo4BodySA',
-                       'Hlt2Topo3BodySA',
-                       #'Hlt2TopoTF4BodySA',
-                       'Hlt2TopoTF3BodySA',
-                       'Hlt2TopoTF2BodySA',
-                       #'Hlt2TopoTF4BodyReq4Yes',
-                       #'Hlt2TopoTF4BodyReq3Yes',
-                       #'Hlt2TopoTF4BodyReq2Yes',
-                       #'Hlt2TopoTF3BodyReq4Yes',
-                       'Hlt2TopoTF3BodyReq3Yes',
-                       'Hlt2TopoTF3BodyReq2Yes',
-                       #'Hlt2TopoTF2BodyReq4Yes',
-                       'Hlt2TopoTF2BodyReq3Yes',
-                       'Hlt2TopoTF2BodyReq2Yes' ] )
+        list = [ 'Hlt2Topo2BodySA',
+                 #'Hlt2Topo4BodySA',
+                 'Hlt2Topo3BodySA',
+                 #'Hlt2TopoTF4BodySA',
+                 'Hlt2TopoTF3BodySA',
+                 'Hlt2TopoTF2BodySA',
+                 #'Hlt2TopoTF4BodyReq4Yes',
+                 #'Hlt2TopoTF4BodyReq3Yes',
+                 #'Hlt2TopoTF4BodyReq2Yes',
+                 #'Hlt2TopoTF3BodyReq4Yes',
+                 'Hlt2TopoTF3BodyReq3Yes',
+                 'Hlt2TopoTF3BodyReq2Yes',
+                 #'Hlt2TopoTF2BodyReq4Yes',
+                 'Hlt2TopoTF2BodyReq3Yes',
+                 'Hlt2TopoTF2BodyReq2Yes' ] 
 ##
 ## charm : leave out 4-body lines
 ##
@@ -104,12 +112,12 @@ class Charming_Nominal :
 ## exclusive : whole list
 ##
         from Exclusive_Nominal import Exclusive_Nominal
-        list.extend( Exclusive_Nominal().ActiveLines() )
+        list.extend( Exclusive_Nominal().ActiveHlt2Lines() )
 ##
 ## commissioning : whole list
 ##
         from Commissioning_Nominal import Commissioning_Nominal
-        list.extend( Commissioning_Nominal().ActiveLines() )
+        list.extend( Commissioning_Nominal().ActiveHlt2Lines() )
         
         return list
     

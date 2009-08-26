@@ -1,4 +1,3 @@
-
 class Hlt1_Nominal :
     """
     Threshold settings for Hlt1 in nominal conditions
@@ -8,7 +7,7 @@ class Hlt1_Nominal :
     @author P.Koppenburg, M. Gandelman, G.Raven
     @date 2009-08-05
     """
-    __all__ = ( 'ActiveLines', 'Thresholds' )
+    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds' )
     
     def Thresholds(self) :
         """
@@ -60,7 +59,14 @@ class Hlt1_Nominal :
                                         }
                  }
     
-    def ActiveLines(self) :
+    def ActiveHlt2Lines(self) :
+        """
+        Returns a list of active lines
+        """
+        return []
+
+        
+    def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """
