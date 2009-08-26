@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.13 2009-08-24 20:04:56 graven Exp $
+# $Id: HltMuonLines.py,v 1.14 2009-08-26 08:55:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 
@@ -85,7 +85,7 @@ class HltMuonLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Member as Member
         from HltLine.HltLine import bindMembers
         from HltLine.HltLine import Hlt1Tool   as Tool
-        from Hlt1Lines.HltL0Candidates import *
+        from Hlt1Lines.HltL0Candidates import convertL0Candidates
         from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
         from HltLine.HltReco import RZVelo, PV2D, Velo
 
