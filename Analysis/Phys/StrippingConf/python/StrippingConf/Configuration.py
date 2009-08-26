@@ -100,13 +100,10 @@ class StrippingConf( LHCbConfigurableUser ):
 	    tag.addTool(TupleToolSelResults)
 
 #           Sequencer for the global selection (logical OR of all selections)
-#           We need this in addition to StrippingSequencer because in ModeOR=TRUE 
-#           the sequencer will give up running the rest of algorithms after it found 
-#           the one with positive decision. 
 
 	    strippingSeq = GaudiSequencer("StrippingGlobal")
 	    strippingSeq.ModeOR = True
-	    strippingSeq.ShortCircuit = True
+	    strippingSeq.ShortCircuit = False
 	    tag.TupleToolSelResults.Selections += [ "StrippingGlobal" ]
 
 	    for stream in self.activeStreams() : 
@@ -143,9 +140,9 @@ class StrippingConf( LHCbConfigurableUser ):
 
 	    strippingSeq = GaudiSequencer("StrippingGlobal")
 	    strippingSeq.ModeOR = True
-	    strippingSeq.ShortCircuit = True
+	    strippingSeq.ShortCircuit = False
 
 	    for stream in self.activeStreams() : 
-		strippingSeq.Members += stream.sequence()
+		strippingSeq.Members += [ stream.sequence() ] 
 
 	    DaVinci().appendToMainSequence( [ strippingSeq ] )
