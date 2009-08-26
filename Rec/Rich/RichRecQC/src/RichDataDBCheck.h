@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.h,v 1.1 2008-10-15 12:40:54 jonrob Exp $
+ *  $Id: RichDataDBCheck.h,v 1.2 2009-08-26 10:01:05 rogers Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -58,13 +58,15 @@ namespace Rich
       /// Compare two pieces of information
       template < class TYPE >
       inline void compare( const std::string & type,
+                           const Rich::DAQ::Level0ID l0id,
                            const TYPE & t1,
                            const TYPE & t2 ) const
       {
         if ( t1 != t2 )
         {
           std::ostringstream mess;
-          mess << type << " mismatch : " << t1 << " " << t2;
+          mess << "HPD L0ID " << l0id;
+          mess << " " << type << " mismatch : " << t1 << " " << t2;
           Error( mess.str(), StatusCode::FAILURE, 999 );
         }
       }

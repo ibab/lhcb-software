@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.5 2009-06-03 09:20:26 jonrob Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.6 2009-08-26 10:01:05 rogers Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -99,9 +99,9 @@ StatusCode DataDBCheck::execute()
           const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
           const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
           // compare to that in the data itself
-          compare( "Level1HardwareID", l1HardID,                db_l1HardID );
-          compare( "Level1Input",      l1Input,                 db_l1Input  );
-          compare( "Level0ID",         hpdInfo.header().l0ID(), db_l0ID     );
+          compare( "Level1HardwareID", hpdInfo.header().l0ID(), l1HardID,                db_l1HardID );
+          compare( "Level1Input",      hpdInfo.header().l0ID(), l1Input,                 db_l1Input  );
+          compare( "Level0ID",         hpdInfo.header().l0ID(), hpdInfo.header().l0ID(), db_l0ID     );
         }
         catch ( const GaudiException & excpt )
         {
