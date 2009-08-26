@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.26 2009-08-21 12:33:40 jpalac Exp $
+!$Id: release.notes,v 1.27 2009-08-26 16:17:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-08-26 - Juan PALACIOS
+ - python/AnalysisConf/BaseMicroDSTWriter.py
+  . Do not extend original sequences. Create new sequence for each selection,
+    add the selection sequence first, then the writing stuff. This way we can
+    preserve the logic of the original selection's GaudiSequencer without
+    writing out every event when in OR mode.
 
 !========================== AnalysisConf v1r4 2009-08-11 ====================
 
