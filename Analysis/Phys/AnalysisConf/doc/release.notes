@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.27 2009-08-26 16:17:24 jpalac Exp $
+!$Id: release.notes,v 1.28 2009-08-26 16:19:05 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
@@ -11,6 +11,8 @@
     add the selection sequence first, then the writing stuff. This way we can
     preserve the logic of the original selection's GaudiSequencer without
     writing out every event when in OR mode.
+ - cmt/requirements
+  . Increase version to v1r5
 
 !========================== AnalysisConf v1r4 2009-08-11 ====================
 
