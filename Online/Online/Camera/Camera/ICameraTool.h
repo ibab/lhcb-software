@@ -1,4 +1,4 @@
-// $Id: ICameraTool.h,v 1.1.1.1 2009-02-02 11:45:34 rogers Exp $
+// $Id: ICameraTool.h,v 1.2 2009-08-26 10:50:11 rogers Exp $
 #ifndef RICHKERNEL_ICAMERATOOL_H 
 #define RICHKERNEL_ICAMERATOOL_H 1
 
@@ -11,6 +11,7 @@
 #include "GaudiKernel/IHistogramSvc.h"
 
 // Forward declarations
+#include <iosfwd>
 class TH1D;
 class TH2D;
 
@@ -28,8 +29,10 @@ class ICameraTool : virtual public IAlgTool {
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICameraTool; }
   
-  virtual int SendAndClear(int l,const std::string& who,const std::string& what)=0;
-  virtual int SendAndClearTS(int l,const std::string& who,const std::string& what)=0; 
+  enum MessageLevel { NONE, INFO, WARNING, ERROR };
+
+  virtual int SendAndClear(MessageLevel l,const std::string& who,const std::string& what)=0;
+  virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)=0; 
 
   virtual int Append(TH2D * H,const char *opts=NULL)=0;
   virtual int Append(TH1D * H,const char *opts=NULL)=0;
@@ -41,4 +44,7 @@ class ICameraTool : virtual public IAlgTool {
   virtual int Append(const std::string & C)=0;
 
 };
+
+std::ostream& operator<<(std::ostream &, ICameraTool::MessageLevel);
+
 #endif // RICHKERNEL_ICAMERATOOL_H

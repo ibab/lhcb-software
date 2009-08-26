@@ -1,21 +1,21 @@
-// $Id: CameraTool.h,v 1.3 2009-06-01 10:00:07 rogers Exp $
+// $Id: CameraTool.h,v 1.4 2009-08-26 10:50:11 rogers Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
 // Include files
+// Interface
+#include "Camera/ICameraTool.h"
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
-#include "Camera/ICameraTool.h"            // Interface
+#include "GaudiKernel/ToolFactory.h"
 
 // CAMERA.
 #include "container.h"
 
-// from Gaudi
-#include "GaudiKernel/ToolFactory.h"
+// from std
+#include <string>
 #include <vector>
-
-//#include "AIDA/IHistogram1D.h"
-//#include "GaudiUtils/Aida2ROOT.h"
 
 // Forward declarations
 class client;
@@ -62,7 +62,7 @@ public:
    * \param  what One line message summary to send, briefly describing reason for the message.
    * \return int Returns 1.
    */
-  int SendAndClear(int l,const std::string& who,const std::string& what);
+  int SendAndClear(MessageLevel l,const std::string& who,const std::string& what);
 
   /*!
    * Wrapper for the SendAndClear function, it additionally sends a time stamp with the message.
@@ -73,7 +73,7 @@ public:
    * \param  what One line message summary to send, briefly describing reason for the message.
    * \return int Returns 1.
    */
-  int SendAndClearTS(int l,const std::string& who,const std::string& what);
+  int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what);
 
   /*!
    * Adds a ROOT 2D histogram of doubles to be sent by CAMERA.
