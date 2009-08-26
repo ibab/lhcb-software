@@ -148,19 +148,19 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         #    Inclusive Phi complete line
         ############################################################################
 
-          line = Hlt2Line('IncPhi'
-                          , prescale = self.prescale
-                          , algos = [ GoodKaons, 
-                                      Hlt2InclusivePhi, 
-                                      GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
-                                      Hlt2InclusivePhiTF,
-                                      GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
-                                      Hlt2InclusivePhiRich]
-                          , postscale = self.postscale
-                          , PV = True
-                          )
-          HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
-
+        line = Hlt2Line('IncPhi'
+                        , prescale = self.prescale
+                        , algos = [ GoodKaons, 
+                                    Hlt2InclusivePhi, 
+                                    GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
+                                    Hlt2InclusivePhiTF,
+                                    GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
+                                    Hlt2InclusivePhiRich]
+                        , postscale = self.postscale
+                        , PV = True
+                        )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
+        
  
         ############################################################################
         #    Inclusive Phi robust only line
