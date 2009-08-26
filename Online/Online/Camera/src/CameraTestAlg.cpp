@@ -1,4 +1,4 @@
-// $Id: CameraTestAlg.cpp,v 1.1.1.1 2009-02-02 11:45:34 rogers Exp $
+// $Id: CameraTestAlg.cpp,v 1.2 2009-08-26 10:49:34 rogers Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode CameraTestAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   cam = tool<ICameraTool>("CameraTool");
-  cam->SendAndClear(1,name().c_str(),"Initialized");
+  cam->SendAndClear(ICameraTool::INFO,name().c_str(),"Initialized");
 
   m_evt   = 0;
   Hflat   = new TH1D ("H","H",10,-1,1);
@@ -127,7 +127,7 @@ StatusCode CameraTestAlg::execute() {
 
     cam->Append(H2d2,"SURF");
 
-    cam->SendAndClearTS(1,"CameraTestAlg","Updated Histograms sent");
+    cam->SendAndClearTS(ICameraTool::INFO,"CameraTestAlg","Updated Histograms sent");
     
 
   

@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.5 2009-06-01 10:00:08 rogers Exp $
+// $Id: CameraTool.cpp,v 1.6 2009-08-26 10:49:34 rogers Exp $
 // Include files
 
 // local
@@ -11,6 +11,8 @@
 
 // boost
 #include "boost/lexical_cast.hpp"
+
+#include <sstream>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : CameraTool
@@ -107,7 +109,7 @@ StatusCode CameraTool::finalize()
 
 //=============================================================================
 
-int CameraTool::SendAndClear(int l,const std::string& who,const std::string& what)
+int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::string& what)
 {
 
   std::stringstream ss;
@@ -189,7 +191,7 @@ int CameraTool::SendAndClear(int l,const std::string& who,const std::string& wha
 }
 
 
-int CameraTool::SendAndClearTS(int l,const std::string& who,const std::string& what)
+int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)
 { 
   m_out.add("TEXT","Time of report: ");
   time_t t = time(NULL);
@@ -342,3 +344,26 @@ int CameraTool::Append(TH2D * H, const char * opts)
   }// if(m_dosend)
   return 1;
 }
+
+
+std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) {
+  switch (l) {
+  case ICameraTool::NONE:
+    os << 0;
+    break;
+  case ICameraTool::INFO:
+    os << 1;
+    break;
+  case ICameraTool::WARNING:
+    os << 2;
+    break;
+  case ICameraTool::ERROR:
+    os << 3;
+    break;
+    // Use the None case for default.
+  default:
+    os << 0;
+    break;
+  }// switch(1)
+  return os;
+}//operator<<(std::ostream &, ICameraTool::MessageLevel)
