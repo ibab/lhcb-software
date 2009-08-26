@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.326 2009-08-25 14:50:56 pkoppenb Exp $ 
+! $Id: release.notes,v 1.327 2009-08-26 13:00:21 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-26 - Patrick Koppenburg
+ - Add Hlt1 Thresholds for 2010 Charm
 
 ! 2009-08-25 - Patrick Koppenburg
  - Configuration and Hlt2 : New slot WithMC = False
