@@ -6,9 +6,16 @@
 
 =============== v1r7 ===============
 
+! 2009-08-26 - Gareth Rogers
+ - Configurable now better handles the case where an invalid host:port string is
+   passed. It also can accept an empty string, in which case the hardcoded default
+   in the CameraTool is used.
+ - Added a MessageLevel enum to ICameraTool and have updated the interfaces and
+   implementations derived from this to use this.
+
 ! 2009-08-25 - Gareth Rogers
  - Modified sendcmd.exe so it now takes either host or host:port as the first argument.
- - Modified commentCamera.sh to use the default inport 12345 not the default output 123456.
+ - Modified commentCamera.sh to use the default inport 12345 not the default output 12346.
  - camswitch.C can now handle not being able to connect to the server without crashing.
  - newCameraLog.sh has been added. This will change the name of the warnings.out file
    being used.
