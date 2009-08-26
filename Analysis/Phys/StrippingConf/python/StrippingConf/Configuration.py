@@ -33,7 +33,6 @@ class StrippingConf( LHCbConfigurableUser ):
 		    "DSTPrefix"		: "",    # Prefix for DST streams
 		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py", # Main options file to import
 		    "StreamFile"	: {}, 
-		    "StreamList"	: []
                 }
 
 #
@@ -50,8 +49,10 @@ class StrippingConf( LHCbConfigurableUser ):
 #
 # Return the list of all active StrippingStreams. 
 #
-    def activeStreams (self) : 
-	return self.StreamList
+    def activeStreams (self) :
+        return GaudiSequencer(self.name()+"ActiveStreams",
+                              ModeOR = True,
+                              ShortCircuit = False).Members
 
 #
 # Configuration method
@@ -72,14 +73,13 @@ class StrippingConf( LHCbConfigurableUser ):
     		log.info("StrippingConf: New active stream : "+line.stream())
 
 #	Create streams
-	self.StreamList = []
     	for streamName in streams : 
-    	    self.StreamList.append(StrippingStream(name = streamName))
+    	    self.activeStreams().append(StrippingStream(streamName))
     	    log.info("StrippingConf: Created stream : "+streamName)
 
 #	Append lines to streams
 	for line in lines : 
-	    for stream in self.StreamList :
+	    for stream in self.activeStreams() :
 		if line.stream() == stream.name() :
 		    stream.appendLine(line)
 		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream())
@@ -119,23 +119,8 @@ class StrippingConf( LHCbConfigurableUser ):
 	    DaVinci().appendToMainSequence( [ tag ] )
 	
 	if output == "DST" : 
-
-#           The user wants to write DST. 
-#           Selections of all active stripping lines will go into separate DST for each stream. 
-
-	    dstPrefix = self.getProp("DSTPrefix")
-	    streamFile = self.getProp("StreamFile")
-	    
-	    for stream in self.activeStreams() : 
-	    
-		if stream.name() not in streamFile : 
-		    log.info("Output file for stream "+stream.name()+" not defined. Using default. ")
-		    dstName = dstPrefix + stream.name() + ".dst"
-		else :
-		    dstName = dstPrefix + streamFile[stream.name()]
-
-		DaVinciWriteDst().DstFiles[ dstName ] = stream.sequence()
-
+            log.warning("DST writing now handled externally by SelDSTWriter. No action taken.")
+            
 	if output == "NONE" : 
 
 	    strippingSeq = GaudiSequencer("StrippingGlobal")
