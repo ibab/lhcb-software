@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.h,v 1.2 2009-07-01 14:35:52 ocallot Exp $
+// $Id: NewVeloSpaceTool.h,v 1.3 2009-08-26 11:44:21 ocallot Exp $
 #ifndef NEWVELOSPACETOOL_H
 #define NEWVELOSPACETOOL_H 1
 
@@ -16,6 +16,8 @@
 #include "PatVeloPhiHitManager.h"
 #include "PatKernel/IPatDebugTool.h"
 #include "PatKernel/IPatDebugTrackTool.h"
+
+#include "GaudiAlg/ISequencerTimerTool.h"
 
 /** @class NewVeloSpaceTool NewVeloSpaceTool.h
  *
@@ -59,12 +61,13 @@ protected:
 
   template<class TYPE> void printCoord( const TYPE* hit, std::string title ) {
     info() << "  " << title
-           << format( " sensor %3d z%7.1f strip%5d coord%10.5f phi%10.5f size%2d inter%5.2f used%2d ",
+           << format( " sensor %3d z%7.1f strip%5d coord%10.5f phi%10.5f size%2d inter%5.2f high%2d used%2d ",
                       hit->sensorNumber(), hit->z(), hit->hit()->strip(),
                       hit->hit()->coordHalfBox(),
                       hit->referencePhi(),
                       hit->hit()->cluster().pseudoSize(),
                       hit->hit()->cluster().interStripFraction(),
+                      hit->hit()->cluster().highThreshold(),
                       hit->hit()->isUsed() );
     LHCb::LHCbID myId =  hit->hit()->lhcbID();
     if ( 0 != m_debugTool ) m_debugTool->printKey( info(), myId );
@@ -89,6 +92,9 @@ protected:
                              int& firstPhiSensor, int& lastPhiSensor, int& step );
   
   void mergeClones( std::vector<NewSpaceTrack>& tracks );
+
+  bool NewVeloSpaceTool::addClustersToTrack ( std::vector<Tf::PatVeloPhiHit*>& hitList,
+                                              NewSpaceTrack& candidate );
   
 private:
   std::string m_debugToolName;
@@ -101,13 +107,17 @@ private:
 
   double      m_phiAngularTol;        /// Angular tolerance to define the phi range
   double      m_phiMatchZone;         /// Size of the zone in phi for candidate search
-  double      m_phiMatchZoneSlope;    /// Dependance in dz of the matchzone value.
+  double      m_phiBigZone;           /// Size of the zone in phi for recovery of unused
   double      m_fractionFound;        /// Minimal fraction of Phi hits in tested sensors
   double      m_stepError;            /// Multiple scattering weight
   double      m_forwardStepError;     /// Multiple scattering weight in forward fit
   int         m_fullErrorPoints;      /// Number of points after wich MS is used
-  double      m_maxChi2PerHit;        /// Maximum chi2 per hit
+  double      m_maxChi2PerHit;        /// Maximum chi2 per hit in the fit
+  double      m_maxChi2ToAdd;         /// Maximum chi2 per hit to add extra coordinates
   double      m_fractionForMerge;     /// Fraction of shared hits to detect clones.
+  double      m_deltaQuality;         /// Allowed quality difference for final track selection
+  double      m_fractionForDouble;    /// Fraction of high threshold hits to detect a double charged track
+  double      m_maxQFactor;           /// Maximal value of teh quality of a track.
 
   DeVelo*                        m_velo; ///< Ponter to DeVelo object to get sensor numbers
   Tf::PatVeloPhiHitManager*      m_phiHitManager;
@@ -118,5 +128,15 @@ private:
   IPatDebugTrackTool*            m_debugTrackTool;
   bool                           m_isDebug;
   bool                           m_isVerbose;
+
+  bool                           m_measureTime;
+  ISequencerTimerTool*           m_timer;
+  int                            m_totalTime;
+  int                            m_convertTime;
+  int                            m_prepareTime;
+  int                            m_mainTime;
+  int                            m_unusedTime;
+  int                            m_storeTime;
+
 };
 #endif // NEWVELOSPACETOOL_H

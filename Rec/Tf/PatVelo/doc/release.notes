@@ -4,6 +4,25 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-08-26 - Olivier Callot
+ - Update NewVeloSpaceTracking to get better efficiency with still low ghosts
+   To run in the standard context, one need to set 
+     Tf__PatVeloSpaceTracking("PatVeloSpaceTracking").SpaceToolName = "NewVeloSpaceTool";
+     NewVeloSpaceTool( "PatVeloSpaceTracking.NewVeloSpaceTool" ).FractionForDouble = 1000
+
+ - New algorithm VeloUpdateHighThreshold to update the High threshold bit of the lite
+   clusters according to the charge of the whole clusters. This implies that the Velo
+   sequence shoudl start with  
+       DecodeVeloRawBuffer(),  
+       DecodeVeloRawBuffer( "DecodeVeloClusters" ),
+       VeloUpdateHighThreshold(),
+   so that one can use the high threshold to distinguish single from double charge
+   With NewVeloSpaceTracking, remove the option 'FractionForDouble' inidcated earlier
+   and add the following options
+       Tf__PatVeloRTracking( "PatVeloRTracking" ).highChargeFract = 0.
+       Tf__PatVeloTrackTool( "ToolSvc.PatVeloTrackTool" ).highChargeFract = 0.
+   The efficiency increases by 0.2%.
+
 ! 2009-07-29 - David Hutchcroft
  - Changed default name of PatVelo hit managers for PatVeloFitLHCbIDs
 

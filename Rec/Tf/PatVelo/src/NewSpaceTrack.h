@@ -1,4 +1,4 @@
-// $Id: NewSpaceTrack.h,v 1.1 2009-04-01 08:11:45 ocallot Exp $
+// $Id: NewSpaceTrack.h,v 1.2 2009-08-26 11:44:21 ocallot Exp $
 #ifndef NEWSPACETRACK_H 
 #define NEWSPACETRACK_H 1
 
@@ -51,20 +51,21 @@ public:
   int nbUnused() const { return m_nbUnused; }
 
   double qFactor() {
-    if ( 100 < m_qFactor ) return m_qFactor;
+    if ( -100 < m_qFactor ) return m_qFactor;
     m_qFactor = 0.;
     for ( std::vector<Tf::PatVeloPhiHit*>::const_iterator itH = m_hits.begin(); 
           m_hits.end() != itH ; ++itH ) {
       m_qFactor += dist2( *itH );
     }
     m_qFactor = m_qFactor / ( m_hits.size() - 2 );
-    m_qFactor = m_qFactor + .5 * ( m_hits.size() - m_nbUnused );
+    m_qFactor = m_qFactor + ( m_hits.size() - m_nbUnused );
     return m_qFactor;
   }
 
   void setValid( bool valid )   { m_valid = valid; }
   bool isValid() const { return m_valid; }
-  
+
+  double averagePhi() const { return m_averagePhi; }
 protected:
 
 private:
@@ -82,7 +83,6 @@ private:
   double m_tx;
   double m_y0;
   double m_ty;
-  double m_z0;
 
   double m_sPhi;
   double m_averagePhi;
