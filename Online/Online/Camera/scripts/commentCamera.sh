@@ -12,7 +12,8 @@
 #
 if [ -z "$2" ]; then
   SERVER=localhost:12345
-  CameraCommand.exe $SERVER $USER/0/"$1"
+  CameraCommand.exe $USER/0/"$1" $SERVER 
 else
-  CameraCommand.exe $2 $USER/0/"$1"
+  CameraCommand.exe $USER/0/"$1" $2
 fi
+
