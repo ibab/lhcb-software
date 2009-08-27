@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r5 2009-08-27 ====================
+
 ! 2009-08-21 - Rob Lambert
  - Fixed a bug in the BsKstarMuMu Stripping selection.
 
