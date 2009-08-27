@@ -5,7 +5,7 @@
  *  Header file for RichSmartID conversion utilities
  *
  *  CVS Log :-
- *  $Id: RichSmartIDCnv.h,v 1.10 2009-08-07 00:39:32 ryoung Exp $
+ *  $Id: RichSmartIDCnv.h,v 1.11 2009-08-27 19:12:07 rogers Exp $
  *
  *  @author Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date   05/02/2008
@@ -95,7 +95,7 @@ namespace Rich
     inline Rich::SmartIDGlobalOrdering::PixelMode pixelMode() const { return m_mode; }
 
   private:
-
+    
     /** Number of HPD columns per HPD panel.
      *
      *  Note here 'column' is used in the RICH sense. I.e. a column is vertical
@@ -145,6 +145,46 @@ namespace Rich
     int _hpdCol() const;
 
   public:
+
+    /// Returns the minimum HPD x-coordinate on a panel.
+    inline int minHPDX() const
+    {
+      return ( 0 );
+    }
+
+    /// Returns the maximum HPD x-coordinate on a panel.
+    inline int maxHPDX() const
+    {
+      return ( ( Rich::Rich1 == smartID().rich() && Rich::bottom == smartID().panel() ) ?
+               ( _nHPDsPerCol() ) :
+               ( _nHPDCols() ) );
+    }
+
+    /// Returns the total number of HPDs on the x-axis.
+    inline int totalHPDX() const
+    {
+      return maxHPDX() - minHPDX();
+    }
+
+    /// Returns the minimum HPD y-coordinate on a panel.
+    inline int minHPDY() const
+    {
+      return ( 0 );
+    }
+
+    /// Returns the minimum HPD y-coordinate on a panel.
+    inline int maxHPDY() const
+    {
+      return ( ( Rich::Rich1 == smartID().rich() && Rich::bottom == smartID().panel() ) ?
+               ( _nHPDCols() ) :
+               ( _nHPDsPerCol() ) );
+    }
+
+    /// Returns the total number of HPDs on the y-axis.
+    inline int totalHPDY() const
+    {
+      return maxHPDY() - minHPDY();
+    }
 
     /// Returns the minimum 'local' pixel x-coordinate
     inline int minLocalPixelX() const
