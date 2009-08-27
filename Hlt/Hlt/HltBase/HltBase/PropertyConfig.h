@@ -74,14 +74,14 @@ public:
     const std::string& kind() const    { return m_kind;}
     const Properties& properties() const { return m_properties;}
 
-    PropertyConfig update(const std::string& key, const std::string& value ) const;
-    PropertyConfig update(const std::string& keyAndValue) const;
+    PropertyConfig copyAndModify(const std::string& key, const std::string& value ) const;
+    PropertyConfig copyAndModify(const std::string& keyAndValue) const;
 
     template <typename T>
-    PropertyConfig update(const std::pair<T,T>& keyAndValue) const { return update(keyAndValue.first,keyAndValue.second);}
+    PropertyConfig copyAndModify(const std::pair<T,T>& keyAndValue) const { return copyAndModify(keyAndValue.first,keyAndValue.second);}
     
     template <typename T>
-    PropertyConfig update(T begin, T end) const { PropertyConfig ret(*this); while (begin!=end) ret=this->update(*begin++); return ret;}
+    PropertyConfig copyAndModify(T begin, T end) const { PropertyConfig ret(*this); while (begin!=end) ret=ret.copyAndModify(*begin++); return ret;}
 
     std::ostream& print(std::ostream& os) const;
     std::istream& read(std::istream& is);
@@ -92,9 +92,7 @@ private:
     Properties   m_properties;
     std::string  m_type,m_name,m_kind;
     mutable digest_type  m_digest;
-    void updateCache() const { m_digest = digest_type::compute(*this); }
+    void updateCache() const;
     void initProperties( const IProperty& obj );
 };
-
-
 #endif

@@ -18,7 +18,16 @@ void PropertyConfig::initProperties(const IProperty& obj) {
     m_digest = digest_type::createInvalid();
 }
 
-PropertyConfig PropertyConfig::update(const std::string& key, const std::string& value ) const
+void 
+PropertyConfig::updateCache() const 
+{ 
+    // type, name and kind MUST be filled for a valid object...
+    if (!m_type.empty() && !m_name.empty() && !m_kind.empty() )  {
+        m_digest = digest_type::compute(*this); 
+    }
+}
+
+PropertyConfig PropertyConfig::copyAndModify(const std::string& key, const std::string& value ) const
 {
     PropertyConfig::Properties update = properties();
     PropertyConfig::Properties::iterator i = find_if( update.begin(),  
@@ -33,14 +42,13 @@ PropertyConfig PropertyConfig::update(const std::string& key, const std::string&
     return PropertyConfig(*this, update);
 }
 
-PropertyConfig PropertyConfig::update(const std::string& keyAndValue) const
+PropertyConfig PropertyConfig::copyAndModify(const std::string& keyAndValue) const
 {
     string::size_type c = keyAndValue.find(':');
     if (c == string::npos ) { 
-        cerr << "could not split keyAndValue: " << keyAndValue << endl;
         return PropertyConfig(); 
     }
-    return update(keyAndValue.substr(0,c),keyAndValue.substr(c+1,string::npos));
+    return copyAndModify(keyAndValue.substr(0,c),keyAndValue.substr(c+1,string::npos));
 }
 
 istream& PropertyConfig::read(istream& is) {

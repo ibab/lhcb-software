@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-08-27 - Gerhard Raven
+ - replace PropertyConfig::update by better named PropertyConfig::copyAndModify
+   as it does not touch the original instance... 
+
 !========================== HltBase v6r6 2009-08-11 =====================
 ! 2009-08-11 - Gerhard Raven
  - replace PropertyConfig::clone by copy-ctor (no need for 'clone')
