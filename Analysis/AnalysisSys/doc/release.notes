@@ -3,6 +3,15 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r9>2009-08-27 Analysis v3r9 </A></H1><PRE>
+
+ - Based on LHCb v27r5 and Gaudi v21r3
+
+  Changes to allow copying of full particle decay trees plus additional related
+  objects to selection DSTs and stripping DSTs. Required changes to MicroDST,
+  Stripping PhysSelPython, and Analysis core components and configurables.
+  Unified syntax for writing MicroDST, selection and stripping DST.
+
 </PRE><H1><A NAME=v3r8>2009-08-12 Analysis v3r8 </A></H1><PRE>
 
  - Based on LHCb v27r5 and Gaudi v21r3

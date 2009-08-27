@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.120 2009-08-12 12:17:32 jpalac Exp $
+# $Id: requirements,v 1.121 2009-08-27 09:48:10 jpalac Exp $
 package AnalysisSys
-version v3r8
+version v3r9
 
 branches doc cmt
 
 
 ####################################################################
 
-use  AnalysisConf               v1r4     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r5     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v6r1     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v8r8     Phys   # Marco Musy
@@ -20,7 +20,7 @@ use  DstCalibSel                v1r1     Rich   # Andrew Powell
 ####################################################################
 use  DaVinciMCTools     	v9r21    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p4   Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r2     Phys   # Juan Palacios
+use  Particle2MCTruth           v2r3     Phys   # Juan Palacios
 use  VertexFitCheck             v1r3p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
 use  FlavourTaggingChecker      v3r7     Phys   # Marco Musy
@@ -28,12 +28,12 @@ use  ParticleMakerChecker       v1r3p1   Phys   # Chris Jones
 use  DecayTreeTuple             v2r4     Phys   # Rob Lambert
 ####################################################################
 #
-use PhysSelPython               v2r0     PhysSel
+use PhysSelPython               v2r1     PhysSel
 use AnalysisPython              v1r2     Phys
 #
 # Stripping
 #
-use StrippingConf               v1r3     Phys   # Anton Poluektov
+use StrippingConf               v1r4     Phys   # Anton Poluektov
 use StrippingSelections         v1r4     Phys   # Anton Poluektov
 
 ####################################################################
@@ -41,11 +41,11 @@ use StrippingSelections         v1r4     Phys   # Anton Poluektov
 # use $(use_LoKiJets)
 
 ####################################################################
-use  MicroDSTBase        	v1r5    MicroDST          # Juan Palacios
+use  MicroDSTBase        	v1r6    MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r3    MicroDST          # Juan Palacios
-use  MicroDSTTools      	v1r5    MicroDST          # Juan Palacios
+use  MicroDSTTools      	v1r5p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r7    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r4    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r5    MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
