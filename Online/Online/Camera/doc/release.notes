@@ -11,7 +11,7 @@
    handle a space separated list of host:port and the same command will be sent
    to all.
  - Made camswitch.C more resilent to errors with connecting to the CAMERA server.
-
+ - Swapped the arguments to commentCamera.sh to match the updates to CameraCommand.exe.
 
 ! 2009-08-26 - Gareth Rogers
  - Configurable now better handles the case where an invalid host:port string is
