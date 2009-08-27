@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.121 2009-08-27 09:48:10 jpalac Exp $
+# $Id: requirements,v 1.122 2009-08-27 13:27:45 jpalac Exp $
 package AnalysisSys
 version v3r9
 
@@ -34,7 +34,7 @@ use AnalysisPython              v1r2     Phys
 # Stripping
 #
 use StrippingConf               v1r4     Phys   # Anton Poluektov
-use StrippingSelections         v1r4     Phys   # Anton Poluektov
+use StrippingSelections         v1r5     Phys   # Anton Poluektov
 
 ####################################################################
 # macro use_LoKiJets "LoKiJets            v4r0    Phys" WIN32 ""
