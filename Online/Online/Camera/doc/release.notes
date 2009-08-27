@@ -7,6 +7,13 @@
 =============== v1r7 ===============
 
 ! 2009-08-26 - Gareth Rogers
+ - Swapped the order of the command line arguments for sendcmd.C. It can now
+   handle a space separated list of host:port and the same command will be sent
+   to all.
+ - Made camswitch.C more resilent to errors with connecting to the CAMERA server.
+
+
+! 2009-08-26 - Gareth Rogers
  - Configurable now better handles the case where an invalid host:port string is
    passed. It also can accept an empty string, in which case the hardcoded default
    in the CameraTool is used.
