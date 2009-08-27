@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.237 2009-08-10 12:12:05 jonrob Exp $
+! $Id: release.notes,v 1.238 2009-08-27 19:14:42 rogers Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-08-27 - Gareth Rogers
+ - Added functions to give the dimensions of the a RICH panel in x and y.
 
 ! 2009-08-10 - Chris Jones
  - Move Linker library source files to src/lib/ directory
