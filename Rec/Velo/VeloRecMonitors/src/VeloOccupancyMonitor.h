@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.h,v 1.2 2009-08-19 09:04:38 keaveney Exp $
+// $Id: VeloOccupancyMonitor.h,v 1.3 2009-08-27 13:16:02 krinnert Exp $
 #ifndef VELORECMONITORS_VELOOCCUPANCYMONITOR_H 
 #define VELORECMONITORS_VELOOCCUPANCYMONITOR_H 1
 
@@ -12,6 +12,9 @@
 #include "Event/VeloCluster.h"
 
 #include "DetDesc/Condition.h"
+
+#include "VetraKernel/ITELL1SensorMap.h"
+#include "VetraKernel/ITimeStampProvider.h"
 
 #include "VeloMonitorBase.h"
 
@@ -45,7 +48,9 @@ namespace Velo
   private:
 
     // Retrieve the VeloClusters
-    StatusCode veloClusters();
+    void veloClusters();
+    // Retrieve the ODIN bank
+    void getOdinBank();
 
     // Monitor the VeloClusters
     void monitorOccupancy();
@@ -70,6 +75,10 @@ namespace Velo
    
     std::map<unsigned int, Condition> m_conditions; 
     
+    // tools
+    Velo::ITELL1SensorMap* m_tell1Map;
+    Velo::ITimeStampProvider* m_timeStamps;
+    
     // Job options
     std::string m_clusterCont;
     unsigned int m_occupancyResetFreq;	
@@ -77,6 +86,7 @@ namespace Velo
     std::string m_xmlDir;
     std::string m_paramName;
     double m_highOccCut;
+    bool m_useOdin;
     
   };
 }

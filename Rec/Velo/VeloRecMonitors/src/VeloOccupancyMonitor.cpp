@@ -1,9 +1,12 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.2 2009-08-19 09:04:38 keaveney Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.3 2009-08-27 13:16:02 krinnert Exp $
 // Include files 
 // -------------
 
 #include <string>
 #include <fstream>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 /// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -51,6 +54,7 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
   declareProperty( "XMLDirectory", m_xmlDir = "." );
   declareProperty( "ParamName", m_paramName = "strip_mask" );
   declareProperty( "HighOccCut", m_highOccCut = 1.0 );
+  declareProperty( "UseOdin", m_useOdin = true );
 
 }
 
@@ -66,6 +70,13 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
 
   StatusCode sc = VeloMonitorBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
+
+
+  // get tools needed for writing XML files
+  if ( m_writeXML ) {
+    m_tell1Map   = tool<Velo::ITELL1SensorMap>("Velo::LivDBTELL1SensorMap","Tell1Map");
+    m_timeStamps = tool<Velo::ITimeStampProvider>("Velo::TimeStamps","TimeStamps");
+  }
 
   m_nstrips = 180224;
 
@@ -90,7 +101,7 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
       maxSensNum = (*si)->sensorNumber();
     }
   }
-  
+
 
   m_stripOccupancyHistPerSensor.resize(maxSensNum+1,0);
   m_channelOccupancyHistPerSensor.resize(maxSensNum+1,0);
@@ -103,8 +114,8 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
     std::string name = "h_veloOccVsBunchId_"+side;
     std::string title= "Percentage Velo Occupancy vs LHC bunch-ID ("+side+")";
     h_veloOccVsBunchId[lr] = bookProfile1D(name,title,-0.5,3563.5,3564);
-   
-      }
+
+  }
 
 
   for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
@@ -177,11 +188,34 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 
   // create conditions and write them to XML, if requested
   if ( m_writeXML ) {
-    std::string fileNameBase = m_xmlDir + "/strip_mask_sensor_";
+    int status;
+    struct stat statbuf;
+    
+    mode_t perm = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
+    umask(~perm);
+          
+    if ( -1 == stat(m_xmlDir.c_str(),&statbuf) ) {
+      if ( -1 == mkdir(m_xmlDir.c_str(), perm) ) {
+        error() << "Could not create directory '" << m_xmlDir << "'." << endmsg;
+        return StatusCode::FAILURE;
+      }
+    }
+   
+    std::string tsDir = m_xmlDir + "/" + m_timeStamps->initTime();
+    if ( -1 == stat(tsDir.c_str(),&statbuf) ) {
+      if ( -1 == mkdir(tsDir.c_str(), perm) ) {
+        error() << "Could not create directory '" << tsDir << "'." << endmsg;
+        return StatusCode::FAILURE;
+      }
+    }
+
+    
+    std::string fileNameBase = tsDir + "/strip_mask_tell1_";
     for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
         si != m_veloDet->sensorsEnd();
         ++si ) {
       unsigned int sensorNumber = (*si)->sensorNumber();
+      unsigned int tell1Number = m_tell1Map->sensorToTell1(sensorNumber);
 
       std::vector<int> masks(2048,0);
       TH1D* occHist = m_channelOccupancyHistPerSensor[sensorNumber];
@@ -191,46 +225,58 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
           masks[Velo::chipChannelToTell1Channel(chipChannel)] = 1;
         }
       }
-      
+
       Condition sensorCond;
       sensorCond.addParam(m_paramName, masks);
-      
-      std::string sensorNumberStr = boost::lexical_cast<std::string>(sensorNumber);
-      std::string fileName = fileNameBase + sensorNumberStr + ".xml";
-      std::string condName = "VeloSensor" + sensorNumberStr;
+
+      std::string tell1NumberStr = boost::lexical_cast<std::string>(tell1Number);
+      std::string fileName = fileNameBase + tell1NumberStr + ".xml";
+      std::string condName = "VeloTELL1Board" + tell1NumberStr;
       std::ofstream xmlFile(fileName.c_str());
       xmlFile << sensorCond.toXml(condName, true) << std::endl;
       xmlFile.close();
-        
+
     }
   }
-  
+
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }
 
 //=============================================================================
 // Retrieve the VeloClusters
 //=============================================================================
-StatusCode Velo::VeloOccupancyMonitor::veloClusters() {
-   if ( m_debugLevel )
+void Velo::VeloOccupancyMonitor::veloClusters() {
+
+  if ( m_debugLevel )
     debug() << "Retrieving VeloClusters from " << m_clusterCont << endmsg;
-   
-    if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default))
-        debug() << "The ODIN bank is not found"<< endmsg;
-    m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
-   
-    if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-      debug() << "No VeloClusters found for this event !" << endmsg;
-      return StatusCode::FAILURE;
-  }
-  else {
+
+  m_clusters = 0;
+  if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
+    warning() << "No VeloClusters found for this event!" << endmsg;
+  } else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
-  
-     if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
-    << m_clusters->size() <<endmsg;
+
+    if ( m_debugLevel ) debug() << "  -> number of clusters found in TES: "
+      << m_clusters->size() <<endmsg;
   }
 
-  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Retrieve the ODIN bank
+//=============================================================================
+void Velo::VeloOccupancyMonitor::getOdinBank() {
+  
+  if ( m_debugLevel )
+    warning() << "Retrieving ODIN bank from " << LHCb::ODINLocation::Default << endmsg;
+
+  m_odin = 0;
+  if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
+    info() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
+  } else {
+    m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
+  }
+
 }
 
 //=============================================================================
@@ -240,12 +286,16 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
   // Retrieve the VeloClusters
   // -------------------------
-  StatusCode sc = veloClusters();
-  if( sc.isFailure() ) return;
+  veloClusters();
+  if( 0 == m_clusters ) return; // no clusters in this event
+
+  if ( m_useOdin ) {
+    getOdinBank();
+  }
 
   for(int i=0; i<2; i++){
     m_nClusters[i]=0;
-     }
+  }
 
   // Loop over the VeloClusters
   LHCb::VeloClusters::const_iterator itVC;
@@ -259,9 +309,9 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
 
     for(unsigned int isRight=0;isRight<2;isRight++){
       if(isRight != veloSensor->isRight()) continue;
-    m_nClusters[isRight]++;
+      m_nClusters[isRight]++;
     }
-   
+
     // Produce occupancy plots
     // -----------------------
     TH1D* occHist = 0;
@@ -272,12 +322,15 @@ void Velo::VeloOccupancyMonitor::monitorOccupancy() {
     occHist->SetBinContent(stripNumber+1,occ*100.0);
     occHistCh->SetBinContent(chipChannel+1,occ*100.0); 
   }//end clusters loop
-    
 
-  for(int t=0; t<2; t++){
-    m_percOcc = ((m_nClusters[t])/(m_nstrips));  
-  h_veloOccVsBunchId[t]->fill(m_odin->bunchId(),m_percOcc*100.0);
- }
+
+  // these are only available when the ODIN bank is present
+  if ( m_useOdin && 0 != m_odin ) {
+    for(int t=0; t<2; t++){
+      m_percOcc = ((m_nClusters[t])/(m_nstrips));  
+      h_veloOccVsBunchId[t]->fill(m_odin->bunchId(),m_percOcc*100.0);
+    }
+  }
 
   // Produce occupancy spectra
   // -------------------------
