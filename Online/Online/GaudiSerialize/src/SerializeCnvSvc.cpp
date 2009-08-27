@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.9 2009-08-27 20:38:06 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.10 2009-08-27 20:50:33 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -383,21 +383,24 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
     pair<char*,int> d = pAraw->data();
 
     decodeRawBanks(d.first,d.first+d.second,banks);
-    for(vector<RawBank*>::const_iterator k, e=banks.end(), i=banks.begin(); i != e; ++i)  {
+    for(vector<RawBank*>::const_iterator k, e=banks.end(), b=banks.begin(), i=b; i != e; ++i)  {
       const char* b_nam = (*i)->begin<char>();
-      if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
+      if ( (*i)->type()     != RawBank::GaudiSerialize ) continue;
       if ( (*i)->version()  != 1 ) continue;
       if ( id == b_nam )     { //  We only want banks with version()=1
 	RawBank *readBank = *i;
-        for (len=0, k=banks.begin(); k != e; ++k)  {
+        for (len=0, k=b; k != e; ++k)  {
 	  // Banks with the same sourceID() correspond to the same DataObject and need to be concatenated
 	  if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
 	  if ( (*k)->sourceID() != readBank->sourceID() ) continue;
           if ( (*k)->version() <= 1 ) continue;
 	  len += (*k)->size();
         }
+	if ( 0 == len ) {
+	  return error("read> Cannot read object "+id+" -- No data banks were found.");
+	}
 	p = q = new char[len];
-        for( k=banks.begin(); k != e; ++k)  {
+        for( k=b; k != e; ++k)  {
 	  if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
 	  if ( (*k)->sourceID() != readBank->sourceID() ) continue;
           if ( (*k)->version() <= 1 ) continue;
@@ -425,7 +428,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
           // Now register addresses and the leaves of the object
 	  // We have stored the full registry identifier in the beginning of the TBuffer
 	  // We also rely on the fact that ROOT does not add magic in front of the TBuffer
-          for( k=banks.begin(); k!=banks.end(); ++k)  {
+          for( k=b; k != e; ++k)  {
 	    if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
             if ( (*k)->version()  != 1 ) continue;
 	    if ( (*k) != readBank )   {
@@ -446,7 +449,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
           refpObj = pObj.release();
           return S_OK;
         }
-        return error("read> Cannot read object "+id);
+        return error("read> Cannot read object "+id+" -- Data serialization failed!");
       }
     }
     return error("read> Cannot read object "+id);
