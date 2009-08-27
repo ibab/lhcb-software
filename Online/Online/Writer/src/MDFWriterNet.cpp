@@ -205,7 +205,7 @@ StatusCode MDFWriterNet::initialize(void)
   } 
   // initialize named message queue
   // The message queue is shared between several MDFWriterNet (one per partition ID in activity) 
-  if((m_mq = mq_open("/writerqueue", O_RDWR, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
+  if((m_mq = mq_open("/writerqueue", O_RDWR | O_NONBLOCK, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
       *m_log << MSG::ERROR
              << "Could not establish connection to message queue: "
              << errno
@@ -241,7 +241,7 @@ StatusCode MDFWriterNet::initialize(void)
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
   }
 
-  *m_log << " Writer " << getpid() << " Initialized." << endmsg;
+  *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
 
