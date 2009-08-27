@@ -170,5 +170,19 @@ namespace LHCb
 	}
 	return rc ;
     }
-}
 
+
+    bool HitPattern::operator==(const HitPattern& hitPat) const{
+    
+      return (m_veloRA == hitPat.veloRA() &&
+	      m_veloRC == hitPat.veloRC() &&
+	      m_veloPhiA == hitPat.veloPhiA() &&
+	      m_veloPhiC == hitPat.veloPhiC() &&
+	      m_ot1stMonoLayer == hitPat.ot1stMonoLayer() &&
+	      m_ot2ndMonoLayer == hitPat.ot2ndMonoLayer() &&
+	      m_itAC == hitPat.itAC() &&
+	      m_itTopBottom == hitPat.itTopBottom() &&
+	      m_tt == hitPat.tt() &&
+	      m_muon == hitPat.muon() );
+  }
+}

@@ -207,6 +207,14 @@
          </code>
        </method>
 
+      <method
+         type    = 'bool'
+         name    = 'operator=='
+         argList = 'const HitPattern hitPat'
+         const   = 'TRUE'
+         desc    = 'comparison equality'>
+       </method>
+
      <attribute
         type      = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
         name      = 'veloRA'
