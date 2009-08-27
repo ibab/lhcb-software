@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.34 2009-08-24 20:04:56 graven Exp $
+! $Id: release.notes,v 1.35 2009-08-27 15:28:17 phopchev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
-! 2009-08-24 - Gerhard Raven
+! 2009-08-27 - Plamen Hopchev
+ - changes in HltBeamGasLines: 
+     Activate (uncomment) the configuration of the BeamGas Alley 
+     Change the ODIN BXType to Beam1(2) instead of SingleBeamLeft(Right)      
+     Put priority = 200 for both the beam-empty and the beam-beam Lines
+
+!  2009-08-24 - Gerhard Raven
  - move import statements from global scope into local scope
    to avoid 'early import'
 

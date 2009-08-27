@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.10 2009-08-27 15:28:17 phopchev Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -11,19 +11,15 @@
 """
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__author__  = "Plamen Hopchev phopchev@cern.ch"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 
-
 class HltBeamGasLinesConf(HltLinesConfigurableUser) :
-    #--------------------------------
-    #
-    # For the moment set up to select a single hadron Et candidate in the calorimeter
-    # matching with a velo track, and with a minimum Pt
 
     # steering variables
     __slots__ = { 
@@ -44,29 +40,26 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 
         lineName = "emptyName"
         if whichBeam == 'Beam1' : lineName = "BeamGas1"
-        if whichBeam == 'Beam2' : lineName = "BeamGas2"
-	
-        ODINRequirement = "ODIN_BXTYP == LHCb.ODIN." + whichBeam	
-
+        if whichBeam == 'Beam2' : lineName = "BeamGas2"	
+        ODINRequirement = "ODIN_BXTYP == LHCb.ODIN." + whichBeam
         L0DURequirement = "L0_CHANNEL('" + self.getProp('L0Channel' + whichBeam) + "')"
         algoList = []	
 	
-        '''
-        ### Can this alg be totally replaced:
-        ### a) BXType   b) L0Decision   c) N RZ tracks	    
+        
+        ### Algorithm to check BXType, L0Decision and N of RZ tracks
+	### Only the N of RZ tracks to be added as Line internal check
+	### and this algo can be removed
         algCheckL0 = BeamGasTrigCheckL0TracksBXType(   'CheckL0' + whichBeam
                                      		     , ChechBXType     = False
         					     , CheckL0Decision = False 
-        					     , CheckTracks     = False  )
+        					     , CheckTracks     = True   )
         
         ### here we can add different z-ranges for beam1 and beam2
         algRTracking = Tf__PatVeloRTracking(   'HltRecoRZVelo_' + lineName
                                 	     , OutputTracksName = "Hlt/Track/RZVeloBeamGasOnly"
         				     , ZVertexMin  = self.getProp('ZVertexMin')
         				     , ZVertexMax  = self.getProp('ZVertexMax')
-        				     , OutputLevel = INFO  )	    						   
-        
-        
+        				     , OutputLevel = INFO  )	    						                   
         ### Question (for Vanya?):
         ### In the "LINES" framework Do we have a cut on the N of Tracks in a certain container?
         algVtxCut = BeamGasTrigVertexCut(   'BeamGasTrigVertexCut_' + lineName
@@ -79,18 +72,18 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
         				  , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
         				  #, OutputSelectionName = ... #By default = name of the algorithm
         				)   
-        
-        
+                
         algoList.append( algCheckL0   )
         algoList.append( algRTracking )
         algoList.append( algVtxCut    )
-        '''
+        
  
-        from HltLine.HltLine import Hlt1Line   as Line
+        from HltLine.HltLine import Hlt1Line as Line
         return Line( lineName
+	           , priority = 200
                    , prescale = self.prescale
                    , ODIN  = ODINRequirement
-                    , L0DU  = L0DURequirement 
+                   , L0DU  = L0DURequirement 
                    , algos = algoList
                    , postscale = self.postscale )
 		   
@@ -103,7 +96,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	L0DURequirement = "L0_CHANNEL('" + self.getProp('L0ChannelBeamCrossing') + "')"
 	algoList = []
 
-        '''  
+          
 	### Reconstruct RZ Tracks Manually 
 	algDecodeVelo = DecodeVeloRawBuffer()  
 
@@ -131,11 +124,13 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                    , ZVertexMax  = self.getProp('ZVertexMax')
                    , OutputLevel = INFO )
 
-        DefaultVeloRHitManager( "SecondDefaultVeloRHitManager"
-                                , LiteClusterLocation = "Raw/Velo/UnusedRLiteClusters" )
-        PatVeloRHitManager("SecondPatVeloRHitManager"
-                             , DefaultHitManagerName= "SecondDefaultVeloRHitManager" )
-                                                                                                                                                         
+        ### To be checked if these two instantiations are needed ???
+        DefaultVeloRHitManager( "SecondDefaultVeloRHitManager", 
+	                        LiteClusterLocation = "Raw/Velo/UnusedRLiteClusters" )
+
+        PatVeloRHitManager( "SecondPatVeloRHitManager", 
+	                    DefaultHitManagerName= "SecondDefaultVeloRHitManager" )
+
 
 	algVtxCut = BeamGasTrigVertexCut(   'BeamGasTrigVertexCut_BeamCrossing'
 	                		  , RZTracksInputLocation = algRTracking2.OutputTracksName
@@ -157,15 +152,16 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 	algoList.append( algRTracking2   )
 	algoList.append( algVtxCut       )
 
-        '''
+        
 
         from HltLine.HltLine import Hlt1Line   as Line
         return Line( lineName
-                   ,prescale = self.prescale
-                   ,ODIN  = ODINRequirement
-		   ,L0DU  = L0DURequirement 
-		   ,algos = algoList
-		   ,postscale = self.postscale )
+		   , priority = 200
+                   , prescale = self.prescale
+                   , ODIN  = ODINRequirement
+		   , L0DU  = L0DURequirement 
+		   , algos = algoList
+		   , postscale = self.postscale )
 		  
     
     def __apply_configuration__(self) : 
