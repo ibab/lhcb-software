@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteSelDST.py,v 1.3 2009-08-18 10:24:37 jpalac Exp $
+# $Id: DaVinci-WriteSelDST.py,v 1.4 2009-08-27 14:18:44 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -19,6 +19,7 @@ from Configurables import DaVinci, SelDSTWriter
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+"""
 #
 # Get a J/psi
 #
@@ -35,6 +36,9 @@ SelJpsi = Selection('SelJpsi',
                     RequiredSelections = [MyLooseJpsi])
 
 SeqJpsi = SelectionSequence('SeqJpsi', TopSelection = SelJpsi)
+"""
+from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
+SeqBs = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
 det = DeterministicPrescaler("Prescale_Jpsi")
 det.AcceptFraction = 0.5                    # take 50%
@@ -46,15 +50,30 @@ printDec.InputLocations = [ "MyJpsi" ]
 # seq will bee passed to DaVinci(). You do not need to pass it yourself.
 # The second line allows to save particles (not yet 100% functional)
 #
-dstWriter = SelDSTWriter("JpsiDST",
-                         SelectionSequences = [SeqJpsi],
+dstWriter = SelDSTWriter("BsDST",
+                         SelectionSequences = [SeqBs],
                          SaveCandidates = True,
-                         CopyProtoParticles = False )
+                         CopyMCTruth = True,
+                         CopyProtoParticles = False,
+                         CopyPVRelations ={"Particle2VertexRelations":False})
 ##############################################################################
-DaVinci().EvtMax = 100
-DaVinci().PrintFreq = 1
+DaVinci().EvtMax = 500
+DaVinci().PrintFreq = 10
 DaVinci().UserAlgorithms = [ dstWriter.sequence(), printDec  ]
 # DaVinci().SkipEvents = 0
-DaVinci().DataType = "MC09" # Default is "MC09"
+DaVinci().DataType = "DC06" # Default is "MC09"
 # DaVinci().Simulation   = False
+
+DaVinci().Input =  [
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000003_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000004_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
+
 ##############################################################################
