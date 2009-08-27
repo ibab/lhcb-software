@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.cpp,v 1.2 2008-04-04 15:18:27 cattanem Exp $
+// $Id: PatLHCbID2MCParticle.cpp,v 1.3 2009-08-27 07:48:50 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -31,9 +31,7 @@ DECLARE_ALGORITHM_FACTORY( PatLHCbID2MCParticle );
 PatLHCbID2MCParticle::PatLHCbID2MCParticle( const std::string& name,
                                             ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator ),
-    m_othitcreator("Tf::OTHitCreator"),
-    m_ithitcreator("Tf::STHitCreator<Tf::IT>/Tf::ITHitCreator"),
-    m_tthitcreator("Tf::STHitCreator<Tf::TT>/Tf::TTHitCreator")
+    m_othitcreator("Tf::OTHitCreator")
 {
   m_targetName = "Pat/LHCbID";
   declareProperty( "TargetName", m_targetName );
@@ -57,9 +55,7 @@ StatusCode PatLHCbID2MCParticle::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   if (m_linkOT) m_othitcreator.retrieve().ignore();
-  if (m_linkIT) m_ithitcreator.retrieve().ignore();
-  if (m_linkTT) m_tthitcreator.retrieve().ignore();
-
+ 
   return StatusCode::SUCCESS;
 };
 
@@ -145,29 +141,31 @@ StatusCode PatLHCbID2MCParticle::execute() {
   if (m_linkTT) {
     LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
       ttLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::TTClusters );
-    STHitRange tthits = m_tthitcreator->hits();
 
-    for (STHitRange::const_iterator itTTH = tthits.begin();
-        itTTH < tthits.end();itTTH++){
+    const LHCb::STCluster::Container* cont = 
+      get<LHCb::STCluster::Container>(LHCb::STClusterLocation::TTClusters);
+ 
 
+    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
+	  iclus != cont->end(); ++iclus) {
+      
       m_partList.clear();
-      LHCb::LHCbID lId = (*itTTH)->lhcbID();
-      if ( lId.isST() ) {
-        int id = lId.stID();
-        if ( isVerbose )  verbose() << format( "   ITChannelID %8x ", id );
-        part = ttLink.first( id );
-        while ( 0 != part ) {
-          if ( isVerbose ) verbose() << " " << part->key();
-          addToList( part );
-          part = ttLink.next();
-        }
-        if ( isVerbose ) verbose() << endreq;
-        id++;
+      LHCb::LHCbID lId = LHCb::LHCbID((*iclus)->channelID());
+      int size   = (*iclus)->size();
+      int id = lId.stID();
+
+      for ( int nn = 0; size > nn; ++nn ) {
+	part = ttLink.first( id );
+	while ( 0 != part ) {
+	    addToList( part );
+	    part = ttLink.next( );
+	}
+	id++;
       }
-      for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = m_partList.begin();
-          m_partList.end() != itP; ++itP ) {
-        lhcbLink.link( lId.lhcbID(), *itP );
-      }
+       for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = m_partList.begin();
+	     m_partList.end() != itP; ++itP ) {
+	 lhcbLink.link( lId.lhcbID(), *itP );
+       }
     }
   }
 
@@ -175,27 +173,29 @@ StatusCode PatLHCbID2MCParticle::execute() {
   if (m_linkIT) {
     LinkedTo<LHCb::MCParticle,LHCb::STCluster> 
       itLink( evtSvc(), msgSvc(),LHCb::STClusterLocation::ITClusters );
+ 
+    const LHCb::STCluster::Container* cont = 
+      get<LHCb::STCluster::Container>(LHCb::STClusterLocation::ITClusters);
+ 
+    for(  LHCb::STCluster::Container::const_iterator iclus = cont->begin();
+	  iclus != cont->end(); ++iclus) {
 
-    STHitRange ithits = m_ithitcreator->hits();
-    for (STHitRange::const_iterator itSTH = ithits.begin();
-        itSTH < ithits.end();itSTH++){
       m_partList.clear();
-      LHCb::LHCbID lId = (*itSTH)->lhcbID();
-      int size   = (*itSTH)->size();
+      LHCb::LHCbID lId = LHCb::LHCbID((*iclus)->channelID());
+      int size   = (*iclus)->size();
+      
       int id = lId.stID();
+      
       for ( int nn = 0; size > nn; ++nn ) {
-        if ( isVerbose )  verbose() << format( "   ITChannelID %8x ", id );
-        part = itLink.first( id );
+	part = itLink.first( id );
         while ( 0 != part ) {
-          if ( isVerbose ) verbose() << " " << part->key();
-          addToList( part );
+	    addToList( part );
           part = itLink.next();
         }
-        if ( isVerbose ) verbose() << endreq;
-        id++;
+	id++;
       }
       for ( std::vector<const LHCb::MCParticle*>::const_iterator itP = 
-          m_partList.begin();m_partList.end() != itP; ++itP ) {
+	      m_partList.begin();m_partList.end() != itP; ++itP ) {
         lhcbLink.link( lId.lhcbID(), *itP );
       }
     }

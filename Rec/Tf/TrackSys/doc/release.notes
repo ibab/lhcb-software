@@ -3,6 +3,9 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2009-08-27 - Stephanie Hansmann-Menzemer
+- add algorithm needed for hit efficiency to track checking sequence
+
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
 - add cleaning of track extra info in pattern reco sequence
 

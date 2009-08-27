@@ -3,6 +3,8 @@
 ! Responsible : Olivier Callot
 ! Purpose     : Checker for pattern recognition
 !-----------------------------------------------------------------------------
+! 2009-08-27 - Stephanie Hansmann-Menzemer
+- Replace TfHits by LiteClusters in PatLHCbID2MCParticle
 
 !========================== PatChecker v3r4p2 2009-07-28 =====================
 ! 2009-07-28 - Marco Cattaneo

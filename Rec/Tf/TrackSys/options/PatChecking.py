@@ -4,7 +4,7 @@ from GaudiKernel.SystemOfUnits import mm
 
 from Configurables import ( TrackAssociator, TrackResChecker,
                             TrackEffChecker, TrackSelector, MCReconstructible,
-                            MCParticleSelector, PrimaryVertexChecker)
+                            MCParticleSelector, PrimaryVertexChecker, PatLHCbID2MCParticle)
                             
 
 if not TrackSys().veloOpen():
@@ -14,7 +14,8 @@ GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocVelo"),
                                               TrackAssociator("AssocVeloTT"),
                                               TrackAssociator("AssocForward"),
                                               TrackAssociator("AssocTTrack"),
-                                              TrackAssociator("AssocMatch") ]
+                                              TrackAssociator("AssocMatch"),
+                                              PatLHCbID2MCParticle("PatLHCbID2MCParticle")]
 if not TrackSys().veloOpen() :
    GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream")]
 

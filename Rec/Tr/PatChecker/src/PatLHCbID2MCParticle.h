@@ -1,4 +1,4 @@
-// $Id: PatLHCbID2MCParticle.h,v 1.1.1.1 2007-10-09 18:41:19 smenzeme Exp $
+// $Id: PatLHCbID2MCParticle.h,v 1.2 2009-08-27 07:48:50 smenzeme Exp $
 #ifndef PATLHCBID2MCPARTICLE_H 
 #define PATLHCBID2MCPARTICLE_H 1
 
@@ -54,8 +54,6 @@
     std::string m_targetName;
     std::vector<const LHCb::MCParticle*> m_partList;
     ToolHandle<Tf::IOTHitCreator> m_othitcreator;
-    ToolHandle<Tf::IITHitCreator> m_ithitcreator;
-    ToolHandle<Tf::ITTHitCreator> m_tthitcreator;
     bool m_linkOT;
     bool m_linkIT;
     bool m_linkTT;
