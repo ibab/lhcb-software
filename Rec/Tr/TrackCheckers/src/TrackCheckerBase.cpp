@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.10 2009-07-10 11:33:57 cattanem Exp $
+// $Id: TrackCheckerBase.cpp,v 1.11 2009-08-27 07:54:36 smenzeme Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -164,6 +164,20 @@ const LHCb::MCParticle* TrackCheckerBase::mcTruth(const LHCb::Track* aTrack) con
   return particle;
 }
 
+bool TrackCheckerBase::bAncestorWithReconstructibleDaughters(const LHCb::MCParticle* mcPart) const
+{
+  // loop back and see if there is a B in the history
+  bool fromB = false;
+  const LHCb::MCParticle* mother = mcPart->mother();
+  while ( mother !=0 && fromB == false) {
+    fromB = mother->particleID().hasBottom();
+    if (fromB && !allDaughtersReconstructible(mother))
+	return false;
+    mother = mother->mother();
+  } // loop
+  return fromB;
+}
+
 bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const
 {
   // loop back and see if there is a B in the history
@@ -175,7 +189,6 @@ bool TrackCheckerBase::bAncestor(const LHCb::MCParticle* mcPart) const
   } // loop
   return fromB;
 }
-
 
 bool TrackCheckerBase::ksLambdaAncestor(const LHCb::MCParticle* mcPart) const
 {
@@ -190,6 +203,39 @@ bool TrackCheckerBase::ksLambdaAncestor(const LHCb::MCParticle* mcPart) const
   } // loop
   return fromKsL;
 }
+
+ bool TrackCheckerBase::allDaughtersReconstructible(const LHCb::MCParticle* mcPart) const
+{
+  const SmartRefVector<LHCb::MCVertex> &vtx = mcPart->endVertices();
+
+  for(SmartRefVector<LHCb::MCVertex>::const_iterator i=vtx.begin();i!=vtx.end();++i){
+    const SmartRefVector<LHCb::MCParticle> &ch = (*i)->products();
+    for(SmartRefVector<LHCb::MCParticle>::const_iterator j=ch.begin();
+	j!=ch.end();++j){
+      
+      if ((fabs((*j)->particleID().pid())==321 ||
+	  fabs((*j)->particleID().pid())==211 ||
+	  fabs((*j)->particleID().pid())==13  ||
+          fabs((*j)->particleID().pid())==11  ||
+	  fabs((*j)->particleID().pid())==2212)){
+	if ( !selected(*j) && 
+	     (*j)->mother()->particleID().pid()!=22 &&
+	     (*j)->mother()->particleID().pid()!=-99000000 &&
+	     (*j)->mother()->particleID().pid()!=130 &&
+	     (*j)->mother()->particleID().pid()!=310 &&
+	     (*j)->mother()->particleID().pid()!=3122){
+	  return false;
+	}
+      }
+      else
+	if(!allDaughtersReconstructible(*j))                              
+	  return false;
+    }
+  }
+    
+  return true;
+}
+
 
 
 StatusCode TrackCheckerBase::finalize()

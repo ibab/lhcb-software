@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.17 2009-07-10 11:33:57 cattanem Exp $
+// $Id: TrackEffChecker.cpp,v 1.18 2009-08-27 07:54:36 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -6,6 +6,9 @@
 #include "Event/Track.h"
 #include "Event/State.h"
 #include "Event/GhostTrackInfo.h"
+
+// Linker
+#include "Linker/AllLinks.h"
 
 // Gaudi
 #include "GaudiKernel/SystemOfUnits.h"
@@ -48,6 +51,21 @@ StatusCode TrackEffChecker::initialize()
 //=============================================================================
 StatusCode TrackEffChecker::execute()
 {
+
+  AllLinks<LHCb::MCParticle,ContainedObject> allIds( evtSvc(), msgSvc(), "Pat/LHCbID" );
+  m_linkedIds.clear();
+  LHCb::MCParticle* part = allIds.first();
+  while ( NULL != part ) {
+    unsigned int minSize = part->key();
+    while ( m_linkedIds.size() <= minSize ) {
+      std::vector<int> dum;
+      m_linkedIds.push_back( dum );
+    }
+    m_linkedIds[part->key()].push_back( allIds.key() );
+    part = allIds.next();
+  }
+
+
 
   if (initializeEvent().isFailure()){
     return Error("Failed to initialize event", StatusCode::FAILURE);
@@ -128,6 +146,15 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
 
 void TrackEffChecker::effInfo(){
 
+  double efficiency       = 0;
+  double efficiencyG5     = 0;
+  double efficiencyB      = 0;
+  double efficiencyG5B    = 0;
+  double efficiencyBAll   = 0;
+  double efficiencyG5BAll = 0;
+  double efficiencyKsL   = 0;
+  double efficiencyG5KsL  = 0;
+
   unsigned int nToFind = 0u;
   unsigned int nFound = 0u;
   unsigned int nToFindG5 = 0u;
@@ -136,7 +163,12 @@ void TrackEffChecker::effInfo(){
   unsigned int nToFindB = 0u;
   unsigned int nFoundB = 0u;
   unsigned int nToFindG5B = 0u;
-  unsigned int nFoundG5B = 0u; 
+  unsigned int nFoundG5B = 0u;  
+
+  unsigned int nToFindBAll = 0u;
+  unsigned int nFoundBAll = 0u;
+  unsigned int nToFindG5BAll = 0u;
+  unsigned int nFoundG5BAll = 0u; 
 
   unsigned int nToFindKsL = 0u;
   unsigned int nFoundKsL = 0u;
@@ -149,31 +181,84 @@ void TrackEffChecker::effInfo(){
 
     bool reconstructible = false;
     bool reconstructibleB = false;
+    bool reconstructibleBAll = false;
     bool reconstructibleKsL = false;
 
     if (m_tracksRefContainer != "") {
       TrackCheckerBase::LinkInfo info = reconstructedInRefContainer(*iterP);
-      reconstructible = (info.track!=0 && info.track->type() == LHCb::Track::Long);
+      reconstructible = (info.track!=0 && (info.track->type() == LHCb::Track::Long || !m_requireLong));
     } else
       reconstructible = selected(*iterP);
      
+    reconstructibleBAll = reconstructible && bAncestorWithReconstructibleDaughters(*iterP);
+  
     reconstructibleB = reconstructible && bAncestor(*iterP);
-   
+
+      
     reconstructibleKsL = reconstructible && ksLambdaAncestor(*iterP);
+
    
     if (reconstructible == true){ 
 
+      double nTrue = 0;
+
       TrackCheckerBase::LinkInfo info = reconstructed(*iterP);
+     
+      if (info.track !=0) {
+	
+	std::vector<LHCb::LHCbID> ids;
+	if ( m_linkedIds.size() > (unsigned int) (*iterP)->key() ) {
+	  for ( std::vector<int>::const_iterator itIm = m_linkedIds[(*iterP)->key()].begin();
+		m_linkedIds[(*iterP)->key()].end() != itIm; ++itIm ) {
+	    LHCb::LHCbID temp;
+	    temp.setDetectorType( (*itIm) >> 28 );  // create LHCbId from int. Clumsy !
+	    temp.setID( (*itIm) );
+	    ids.push_back( temp );
+	  }
+	}
+	
+	for ( std::vector<LHCb::LHCbID>::const_iterator itId = ids.begin();
+	      ids.end() != itId; ++itId ) {
+	  
+	  if ( (*itId).isVelo() ) {
+	    if ( info.track->type() == LHCb::Track::Ttrack || info.track->type() == LHCb::Track::Downstream ) continue;
+	    bool isPhi = (*itId).veloID().isPhiType();
+	    if ( isPhi && info.track->type() == LHCb::Track::VeloR ) continue;
+	    nTrue += 1.;
+	  } else if ( (*itId).isOT() ) {
+	    if ( info.track->type() != LHCb::Track::Upstream &&
+		 info.track->type() != LHCb::Track::VeloR &&
+		 info.track->type() != LHCb::Track::Velo ) nTrue += 1.;
+	  } else if ( (*itId).isST() ) {
+	    if ( (*itId).stID().isTT() ) {
+	    if ( info.track->type() != LHCb::Track::Ttrack &&
+		 info.track->type() != LHCb::Track::VeloR &&
+		 info.track->type() != LHCb::Track::Velo ) nTrue += 1.;
+	    } else {
+	      if ( info.track->type() != LHCb::Track::Upstream &&
+		   info.track->type() != LHCb::Track::VeloR &&
+		   info.track->type() != LHCb::Track::Velo ) nTrue += 1.;
+	    }
+	  }
+	}
+      }
+
 
       plots("mcSelected", *iterP);
       ++nToFind;
       if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	++nToFindG5;
-
+      
       if (reconstructibleB){
 	++nToFindB;
 	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
 	  ++nToFindG5B;
+      }
+
+       if (reconstructibleBAll){
+	++nToFindBAll;
+	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	  ++nToFindG5BAll;
       }
 
       if (reconstructibleKsL) {
@@ -184,8 +269,12 @@ void TrackEffChecker::effInfo(){
       
       if (info.track != 0 && (info.track->type() == LHCb::Track::Long || !m_requireLong)) {
 	++nFound;
-	if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	efficiency += info.purity * info.track->lhcbIDs().size()/nTrue;
+	
+	if ((*iterP)->p() > 5*Gaudi::Units::GeV){
 	  ++nFoundG5;
+	  efficiencyG5 += info.purity * info.track->lhcbIDs().size()/nTrue;;
+	}
 	
 	plots("selected",info.track);
 	plots("mcSelectedAndRec", *iterP);
@@ -202,8 +291,11 @@ void TrackEffChecker::effInfo(){
 
 	  if (info.track != 0 && (info.track->type() == LHCb::Track::Long || !m_requireLong)) {
 	    ++nFoundB;
-	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	    efficiencyB += info.purity * info.track->lhcbIDs().size()/nTrue;
+	    if ((*iterP)->p() > 5*Gaudi::Units::GeV){
 	      ++nFoundG5B;
+	      efficiencyG5B += info.purity * info.track->lhcbIDs().size()/nTrue;
+	    }
 	
 	    plot(info.purity, "hitpurityB",-0.01, 1.01, 51);
 	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
@@ -214,14 +306,38 @@ void TrackEffChecker::effInfo(){
 	      counter("nCloneG5B") += info.clone;
 	      
 	  }
+	}	
+
+	if (reconstructibleBAll){
+
+	  if (info.track != 0 && (info.track->type() == LHCb::Track::Long || !m_requireLong)) {
+	    ++nFoundBAll;
+	    efficiencyBAll += info.purity * info.track->lhcbIDs().size()/nTrue;
+	    if ((*iterP)->p() > 5*Gaudi::Units::GeV){
+	      ++nFoundG5BAll;
+	      efficiencyG5BAll += info.purity * info.track->lhcbIDs().size()/nTrue;
+	    }
+
+	    plot(info.purity, "hitpurityBAll",-0.01, 1.01, 51);
+	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	      plot(info.purity, "hitpurityG5BAll",-0.01, 1.01, 51);
+	    
+	    counter("nCloneBAll") += info.clone;
+	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	      counter("nCloneG5BAll") += info.clone * info.track->lhcbIDs().size()/nTrue;      
+	  }
 	}
 	 
 	if (reconstructibleKsL){
 	  
 	  if (info.track != 0 && (info.track->type() == LHCb::Track::Long || !m_requireLong)) {
 	    ++nFoundKsL;
-	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
+	    efficiencyKsL += info.purity * info.track->lhcbIDs().size()/nTrue;
+
+	    if ((*iterP)->p() > 5*Gaudi::Units::GeV){
 	      ++nFoundG5KsL;
+	      efficiencyG5KsL += info.purity * info.track->lhcbIDs().size()/nTrue;
+	    }
 	    
 	    plot(info.purity, "hitpurityKsL",-0.01, 1.01, 51);
 	    if ((*iterP)->p() > 5*Gaudi::Units::GeV)
@@ -241,16 +357,30 @@ void TrackEffChecker::effInfo(){
   counter("nToFind") += nToFind;
   counter("nFound") += nFound; 
   counter("nToFindB") += nToFindB;
-  counter("nFoundB") += nFoundB;  
+  counter("nFoundB") += nFoundB;   
+  counter("nToFindBAll") += nToFindBAll;
+  counter("nFoundBAll") += nFoundBAll;  
   counter("nToFindKsL") += nToFindKsL;
   counter("nFoundKsL") += nFoundKsL;
 
   counter("nToFindG5") += nToFindG5;
   counter("nFoundG5") += nFoundG5;  
   counter("nToFindG5B") += nToFindG5B;
-  counter("nFoundG5B") += nFoundG5B;
+  counter("nFoundG5B") += nFoundG5B; 
+  counter("nToFindG5BAll") += nToFindG5BAll;
+  counter("nFoundG5BAll") += nFoundG5BAll;
   counter("nToFindG5KsL") += nToFindG5KsL;
   counter("nFoundG5KsL") += nFoundG5KsL;
+
+  counter("efficiency") += efficiency;
+  counter("efficiencyG5") += efficiencyG5; 
+  counter("efficiencyB") += efficiencyB;
+  counter("efficiencyG5B") += efficiencyG5B; 
+  counter("efficiencyBAll") += efficiencyBAll;
+  counter("efficiencyG5BAll") += efficiencyG5BAll; 
+  counter("efficiencyKsL") += efficiencyKsL;
+  counter("efficiencyG5KsL") += efficiencyG5KsL;
+
 
   // event efficiency 
   if (nToFind !=0u)
@@ -261,6 +391,10 @@ void TrackEffChecker::effInfo(){
     plot(nFoundB/double(nToFindB),"effB", -0.01, 1.01, 51);
   if (nToFindG5B != 0u)
     plot(nFoundG5B/double(nToFindG5B),"effG5B", -0.01, 1.01, 51); 
+  if (nToFindBAll !=0u)
+    plot(nFoundBAll/double(nToFindBAll),"effBAll", -0.01, 1.01, 51);
+  if (nToFindG5BAll != 0u)
+    plot(nFoundG5BAll/double(nToFindG5BAll),"effG5BAll", -0.01, 1.01, 51);
   if (nToFindKsL !=0u)
     plot(nFoundKsL/double(nToFindKsL),"effKsL", -0.01, 1.01, 51);
   if (nToFindG5KsL != 0u)
@@ -371,11 +505,20 @@ StatusCode TrackEffChecker::finalize(){
   double purG5B = 0;
   if (hist != 0) purG5B = hist->mean(); 
 
+  histName = "hitpurityBAll";
+  hist = histo1D(histName);
+  double purBAll = 0;
+  if (hist != 0) purBAll = hist->mean();
+
+  histName = "hitpurityG5BAll";
+  hist = histo1D(histName);
+  double purG5BAll = 0;
+  if (hist != 0) purG5BAll = hist->mean(); 
+
   histName = "hitpurityKsL";
   hist = histo1D(histName);
   double purKsL = 0;
   if (hist != 0) purKsL = hist->mean();
-
 
   histName = "hitpurityG5KsL";
   hist = histo1D(histName);
@@ -387,8 +530,14 @@ StatusCode TrackEffChecker::finalize(){
 
   const double tEffG5 = counter("nToFindG5").flag() == 0 ? 0.0 :
                         double(counter("nFoundG5").flag())
-                      /double(counter("nToFindG5").flag());
+                      /double(counter("nToFindG5").flag()); 
 
+  const double hEff = double(counter("efficiency").flag())
+                      /double(counter("nFound").flag());
+
+  const double hEffG5 = counter("nFoundG5").flag() == 0 ? 0.0 :
+                        double(counter("efficiencyG5").flag())
+                      /double(counter("nFoundG5").flag());
   
   const double tCloneG5 = counter("nToFindG5").flag() == 0 ? 0.0 :
                           double(counter("nCloneG5").flag())
@@ -398,7 +547,6 @@ StatusCode TrackEffChecker::finalize(){
                          double(counter("nClone").flag())
                         /double(counter("nToFind").flag());
 
-
   const double tEffB = counter("nToFindB").flag() == 0 ? 0.0 :
                         double(counter("nFoundB").flag())
                       /double(counter("nToFindB").flag());
@@ -407,6 +555,12 @@ StatusCode TrackEffChecker::finalize(){
                         double(counter("nFoundG5B").flag())
                       /double(counter("nToFindG5B").flag());
 
+  const double hEffB = double(counter("efficiencyB").flag())
+                      /double(counter("nFoundB").flag());
+
+  const double hEffG5B = counter("nFoundG5B").flag() == 0 ? 0.0 :
+                        double(counter("efficiencyG5B").flag())
+                      /double(counter("nFoundG5B").flag());
   
   const double tCloneG5B = counter("nToFindG5B").flag() == 0 ? 0.0 :
                           double(counter("nCloneG5B").flag())
@@ -414,12 +568,32 @@ StatusCode TrackEffChecker::finalize(){
 
   const double tCloneB  = counter("nToFindB").flag() == 0 ? 0.0 :
                          double(counter("nCloneB").flag())
-                        /double(counter("nToFindB").flag());
+                        /double(counter("nToFindB").flag()); 
 
+  const double tEffBAll = counter("nToFindBAll").flag() == 0 ? 0.0 :
+                        double(counter("nFoundBAll").flag())
+                      /double(counter("nToFindBAll").flag());
 
+  const double tEffG5BAll = counter("nToFindG5BAll").flag() == 0 ? 0.0 :
+                        double(counter("nFoundG5BAll").flag())
+                      /double(counter("nToFindG5BAll").flag()); 
+
+  const double hEffBAll = double(counter("efficiencyBAll").flag())
+                           /double(counter("nFoundBAll").flag());
   
+  const double hEffG5BAll = counter("nFoundG5BAll").flag() == 0 ? 0.0 :
+                        double(counter("efficiencyG5BAll").flag())
+                      /double(counter("nFoundG5BAll").flag());
 
- const double tEffKsL = counter("nToFindKsL").flag() == 0 ? 0.0 :
+  const double tCloneG5BAll = counter("nToFindG5BAll").flag() == 0 ? 0.0 :
+                          double(counter("nCloneG5BAll").flag())
+                      /double(counter("nToFindG5BAll").flag());  
+
+  const double tCloneBAll = counter("nToFindBAll").flag() == 0 ? 0.0 :
+                        double(counter("nCloneBAll").flag())
+                        /double(counter("nToFindBAll").flag());
+
+  const double tEffKsL = counter("nToFindKsL").flag() == 0 ? 0.0 :
                         double(counter("nFoundKsL").flag())
                       /double(counter("nToFindKsL").flag());
 
@@ -427,6 +601,13 @@ StatusCode TrackEffChecker::finalize(){
                         double(counter("nFoundG5KsL").flag())
                       /double(counter("nToFindG5KsL").flag());
 
+  const double hEffKsL = counter("nFoundKsL").flag() == 0 ? 0.0 :
+                        double(counter("efficiencyKsL").flag())
+                      /double(counter("nFoundKsL").flag());
+
+  const double hEffG5KsL = counter("nFoundG5KsL").flag() == 0 ? 0.0 :
+                        double(counter("efficiencyG5KsL").flag())
+                      /double(counter("nFoundG5KsL").flag());
   
   const double tCloneG5KsL = counter("nToFindG5KsL").flag() == 0 ? 0.0 :
                           double(counter("nCloneG5KsL").flag())
@@ -441,36 +622,46 @@ StatusCode TrackEffChecker::finalize(){
 
 
   
-  info() << "             **************         " 
+  info() << "             **************            " 
          << format( "       %8.0f tracks including %8.0f ghosts [%5.1f %%] Event average %5.1f  ****",
                     double(counter("nTrack").flag()), double(counter("nGhost").flag()), tGhost*100, eGhost*100) << endmsg;
 
-  info() << "     all  long                 "
-	 << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		    double(counter("nFound").flag()), double(counter("nToFind").flag()), tEff*100, tClone*100, pur*100) << endmsg;
+  info() << "     all  long                         "
+	 << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		    double(counter("nFound").flag()), double(counter("nToFind").flag()), tEff*100, tClone*100, pur*100, hEff*100 ) << endmsg;
   
-  info() << "     long, p > 5 GeV           "
-         << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		    double(counter("nFoundG5").flag()), double(counter("nToFindG5").flag()), tEffG5*100, tCloneG5*100, purG5*100) << endmsg;
+  info() << "     long, p > 5 GeV                   "
+         << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiecy",
+		    double(counter("nFoundG5").flag()), double(counter("nToFindG5").flag()), tEffG5*100, tCloneG5*100, purG5*100, hEffG5*100) << endmsg;
 
   if (counter("nToFindB").flag() > 0){
-    info() << "     all  long B daughers      "
-	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundB").flag()), double(counter("nToFindB").flag()), tEffB*100, tCloneB*100, purB*100) << endmsg;
+  info() << "     all  long B daughers              "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundB").flag()), double(counter("nToFindB").flag()), tEffB*100, tCloneB*100, purB*100, hEffB*100) << endmsg;
     
-    info() << "   long B daughters, p > 5 GeV "
-	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundG5B").flag()), double(counter("nToFindG5B").flag()), tEffG5B*100, tCloneG5B*100, purG5B*100) << endmsg;
+  info() << "   long B daughters, p > 5 GeV         "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundG5B").flag()), double(counter("nToFindG5B").flag()), tEffG5B*100, tCloneG5B*100, purG5B*100, hEffG5B*100) << endmsg;
+  }
+
+  if (counter("nToFindBAll").flag() > 0){
+  info() << "     all  long good B daughers         "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundBAll").flag()), double(counter("nToFindBAll").flag()), tEffBAll*100, tCloneBAll*100, purBAll*100, hEffBAll*100) << endmsg;
+    
+  info() << "   long good B daughters , p > 5 GeV   "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundG5BAll").flag()), double(counter("nToFindG5BAll").flag()), tEffG5BAll*100, tCloneG5BAll*100, purG5BAll*100, hEffG5BAll*100) << endmsg;
   }
   
   if (counter ("nToFindKsL").flag() > 0) {
-    info() << "     all  long  Ks/Lambda      "
-	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundKsL").flag()), double(counter("nToFindKsL").flag()), tEffKsL*100, tCloneKsL*100, purKsL*100) << endmsg;
+  info() << "     all  long  Ks/Lambda              "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundKsL").flag()), double(counter("nToFindKsL").flag()), tEffKsL*100, tCloneKsL*100, purKsL*100, hEffKsL*100) << endmsg;
     
-    info() << "   long Ks/Lambda, p > 5 GeV   "
-	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity",
-		      double(counter("nFoundG5KsL").flag()), double(counter("nToFindG5KsL").flag()), tEffG5KsL*100, tCloneG5KsL*100, purG5KsL*100) << endmsg;
+  info() << "   long Ks/Lambda, p > 5 GeV           "
+	   << format( " :     %8.0f from %8.0f [%5.1f %%]; %5.1f %% clones; %5.1f %% hit purity; %5.1f %% hit efficiency",
+		      double(counter("nFoundG5KsL").flag()), double(counter("nToFindG5KsL").flag()), tEffG5KsL*100, tCloneG5KsL*100, purG5KsL*100, hEffG5KsL*100) << endmsg;
   }
 
 

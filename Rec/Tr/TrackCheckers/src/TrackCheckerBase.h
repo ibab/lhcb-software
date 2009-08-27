@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.h,v 1.8 2009-07-02 13:20:49 smenzeme Exp $
+// $Id: TrackCheckerBase.h,v 1.9 2009-08-27 07:54:36 smenzeme Exp $
 #ifndef TRACKCHECKERBASE_H
 #define TRACKCHECKERBASE_H 1
  
@@ -172,6 +172,16 @@ class TrackCheckerBase : public GaudiHistoAlg {
   */
   bool ksLambdaAncestor(const LHCb::MCParticle* mcPart) const;
 
+
+  /** are all stable daughters of this particle reconstructible?
+   * @param  mcPart MC particle
+   * @return bool true/false
+   */
+
+  bool allDaughtersReconstructible(const LHCb::MCParticle* mcPart) const;
+
+  bool bAncestorWithReconstructibleDaughters(const LHCb::MCParticle* mcPart) const;
+  
   const std::string& tracksInContainer() { return m_tracksInContainer ; }
 
 

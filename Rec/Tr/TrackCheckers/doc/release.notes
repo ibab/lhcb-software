@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
+! 2009-08-27 - Stephanie Hansmann-Menzemer
+- add "good" B daughter effiency and hit efficiency to TrackEffChecker output
+
 ! 2009-08-04 - Stephanie Hansmann-Menzemer
  - addapt to changes in LHCb::Track class
 

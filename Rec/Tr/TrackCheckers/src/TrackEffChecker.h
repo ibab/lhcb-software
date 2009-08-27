@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.h,v 1.6 2009-07-02 13:20:49 smenzeme Exp $
+// $Id: TrackEffChecker.h,v 1.7 2009-08-27 07:54:36 smenzeme Exp $
 #ifndef TRACKEFFCHECKER_H
 #define TRACKEFFCHECKER_H 1
  
@@ -40,6 +40,8 @@ class TrackEffChecker : public TrackCheckerBase {
   virtual StatusCode finalize();
   
  private:
+
+  std::vector< std::vector<int> > m_linkedIds;
   
   bool m_requireLong;
 
