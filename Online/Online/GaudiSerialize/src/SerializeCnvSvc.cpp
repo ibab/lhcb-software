@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.7 2009-05-13 19:57:45 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.8 2009-08-27 15:48:26 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -250,9 +250,11 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
         const char* start = rawBuffer.Buffer();
         const char* end = start+rawBuffer.Length();
         int bnk_count = 0;
+	RawBank* bank = raw->createBank(object_counter, RawBank::GaudiSerialize, ++bnk_count, loc.length()+1, loc.c_str());
+	raw->adoptBank(bank,true);
         while(start<end) {
           int bnk_len = end-start > 32*1024 ? 32*1024 : end-start;
-          RawBank* bank = raw->createBank(object_counter, RawBank::GaudiSerialize, ++bnk_count, bnk_len, start);
+          bank = raw->createBank(object_counter, RawBank::GaudiSerialize, ++bnk_count, bnk_len, start);
           raw->adoptBank(bank,true);
           start += bnk_len;
         }
@@ -342,7 +344,7 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
   if ( pA ) {
     MsgStream log(msgSvc(), name());
     size_t len;
-    char text[4096], *p;
+    char text[4096], *p, *q;
     long class_id = 0;
     vector<RawBank*> banks;
     IRegistry* pReg = pA->registry();
@@ -352,22 +354,24 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
 
     decodeRawBanks(d.first,d.first+d.second,banks);
     for(vector<RawBank*>::const_iterator k, i=banks.begin(); i!=banks.end();++i)  {
-      if ( (*i)->version() == 0 && id == (*i)->begin<char>() ) { //We only want banks with version()=0
+      const char* b_nam = (*i)->begin<char>();
+      if ( (*i)->version() == 1 && id == b_nam ) { //  We only want banks with version()=1
 	RawBank *readBank = *i;
         for (len=0, k=banks.begin(); k!=banks.end(); ++k)  {
 	  // Banks with the same sourceID() correspond to the same DataObject and need to be concatenated
-          if ( (*k)->sourceID() == readBank->sourceID() )
+          if ( (*k)->sourceID() == readBank->sourceID() && (*i)->version() > 1 )
             len += (*k)->size();
         }
-	//  The TBuffer is filled with as many banks as necessary. The memory is adopted by the TBuffer!
-        TBufferFile buffer(TBuffer::kRead,len,p=new char[len],kTRUE); 
+	p = q = new char[len];
         for( k=banks.begin(); k!=banks.end(); ++k)  {
-          if ( (*k)->sourceID() == readBank->sourceID() ) {
+          if ( (*k)->sourceID() == readBank->sourceID() && (*i)->version() > 1 ) {
             ::memcpy(p,(*k)->begin<char>(),(*k)->size());
             p += (*k)->size();
           }
         }
 
+	//  The TBuffer is filled with as many banks as necessary. The memory is adopted by the TBuffer!
+        TBufferFile buffer(TBuffer::kRead,len,q,kTRUE); 
         buffer.ReadString(text,sizeof(text));
         buffer >> class_id;
         buffer.ReadString(text,sizeof(text));
