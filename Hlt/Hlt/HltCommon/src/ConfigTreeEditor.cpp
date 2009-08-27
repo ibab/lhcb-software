@@ -206,7 +206,7 @@ public:
 
    template <typename T>
    bool updateLeaf(const T& key2value) { // T::value_type must be pair<string,string>, representing (key,value)
-           PropertyConfig update = m_leaf->update(key2value.begin(),key2value.end());
+           PropertyConfig update = m_leaf->copyAndModify(key2value.begin(),key2value.end());
            if (!update.digest().valid()) return false;
            m_ownedLeaf.reset( new PropertyConfig(update));
            m_leaf = m_ownedLeaf.get();

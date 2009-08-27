@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.23 2009-08-10 14:42:58 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.24 2009-08-27 14:41:16 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -51,20 +51,28 @@ namespace {
                     // resolve references
                     // this is done in order to support the online use case, where we have options
                     // of the form foo.something = @OnlineEnv.somethingElse
-                    // Note: values are substituted when seen, so there is a possibility that they are 
-                    //       substituted just prior to the reference changing -- this is not the case
-                    //       in the online scenario, as the reference comes from PVSS...
+                    // WARNING: values are substituted when seen, so there is a possibility that they are 
+                    //          substituted just prior to the reference changing -- this is not the case
+                    //          in the online scenario, as the reference come from 'static' items, _not_ 
+                    //          configured through this service!!!
+                    // NOTE: if the reference is not found, optionally, a default, can be specified.
+                    //       eg.  foo.something = @OnlineEnv.somethingelse@somedefault
                    if (!prop.second.empty() && prop.second[0]=='@') {
-                       std::string::size_type dot = prop.second.find_first_of('.');
-                       if (dot==std::string::npos) {
+                       static boost::regex pattern("^@([^\\.]+)\\.([^@]+)(@.+)?$");
+                       boost::smatch what;
+                       if (!boost::regex_match(s,what,prop.second) ) { 
                             throw GaudiException(prop.second,"badly formatted reference property ", StatusCode::FAILURE);
                        }
-                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(prop.second.substr(1,dot-1)),
-                                                                                                 prop.second.substr(dot+1));
-                       if (refProp==0) {
+                       std::string value;
+                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(what[1],what[2]));
+                       if (refProp!=0) {
+                            value = refProp->toString()
+                       } else if (what[3].first!=what[3].second) {
+                           value = string(what[3]).substr(1);
+                       } else {
                            throw GaudiException(prop.second,"failed to find reference property ", StatusCode::FAILURE);
                        }
-                       m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,refProp->toString()));
+                       m_jos->addPropertyToCatalogue(m_name, StringProperty(prop.first,value));
                        // Q: we do not chase references (to references, to ... ) -- should we?
                        // A: no, as the JobOptionsSvc parser substitutes values, so what we get back from
                        //    the jos NEVER has references in it...
@@ -386,7 +394,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
             continue;
         }
         if ( m_configPushed[config->name()] != *i ) { 
-             debug() << " " << config->name() 
+             if (msgLevel(MSG::DEBUG)) debug() << " " << config->name() 
                       << " current: " <<  m_configPushed[config->name()]  
                       << " requested: " << *i << endmsg;
             *newConfigs = config;
@@ -405,7 +413,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const 
 {
-    info() << " configuring using " << configID << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << " configuring using " << configID << endmsg;
     if (!configID.valid()) return StatusCode::FAILURE;
     setTopAlgs(configID); // do this last instead of first?
     vector<const PropertyConfig*> configs;
@@ -413,7 +421,7 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
     if (sc.isFailure()) return sc;
     for (vector<const PropertyConfig*>::const_iterator i = configs.begin(); i!=configs.end();++i) {
         string name = (*i)->name();
-        debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
+        if (msgLevel(MSG::DEBUG)) debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
 
         for_each(map.begin(),
@@ -455,7 +463,7 @@ PropertyConfigSvc::findTopKind(const ConfigTreeNode::digest_type& configID,
     // we (should) have a leaf ! get it and use it!!!
     const PropertyConfig *config = resolvePropertyConfig(id);
     if ( config == 0 ) {
-        debug() << " could not find " << id << endmsg;
+        if (msgLevel(MSG::DEBUG)) debug() << " could not find " << id << endmsg;
         error() << " could not find a configuration ID" << endmsg;
         return StatusCode::FAILURE;
     }
@@ -578,8 +586,10 @@ PropertyConfigSvc::validateConfig(const ConfigTreeNode::digest_type& ref) const 
            // DO NOTHING
        }
    } 
-   for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
-        debug() << j->first << " -> " << j->second << endl;
+   if (msgLevel(MSG::DEBUG)) {
+       for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
+            debug() << j->first << " -> " << j->second << endl;
+       }
    }
    return StatusCode::SUCCESS;
 }
@@ -615,7 +625,7 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
 {
    PropertyConfigMap_t::const_iterator i = m_configs.find(ref);
    if (i!=m_configs.end()) {
-        debug() << "already have an entry for id " << ref << endl;
+        if (msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    boost::optional<PropertyConfig> config = m_accessSvc->readPropertyConfig(ref);
@@ -642,10 +652,10 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& 
 const ConfigTreeNode* 
 PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const
 {
-   debug() << " resolving nodeRef " << ref << endmsg;
+   if (msgLevel(MSG::DEBUG)) debug() << " resolving nodeRef " << ref << endmsg;
    ConfigTreeNodeMap_t::const_iterator i = m_nodes.find(ref);
    if (i!=m_nodes.end()) {
-        debug() << "already have an entry for id " << ref << endl;
+        if (msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    assert(m_accessSvc!=0);

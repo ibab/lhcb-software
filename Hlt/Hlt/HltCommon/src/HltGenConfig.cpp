@@ -1,4 +1,4 @@
-// $Id: HltGenConfig.cpp,v 1.15 2009-08-10 14:42:58 graven Exp $
+// $Id: HltGenConfig.cpp,v 1.16 2009-08-27 14:41:16 graven Exp $
 // Include files 
 #include <algorithm>
 #include "boost/assign/list_of.hpp"
@@ -30,9 +30,11 @@ using namespace std;
 using boost::assign::list_of;
 namespace bl = boost::lambda;
 
-ostream& operator<<(std::ostream& os,const Gaudi::Utils::TypeNameString& x)  {
-        return x.haveType()? (os << x.type() << '/' << x.name() )
-                           : (os << x.name() );
+namespace {
+    ostream& operator<<(std::ostream& os,const Gaudi::Utils::TypeNameString& x)  {
+            return x.haveType() ? (os << x.type() << '/' << x.name() )
+                                : (os << x.name() );
+    }
 }
 
 //-----------------------------------------------------------------------------
@@ -139,7 +141,12 @@ HltGenConfig::generateConfig(const INamedInterface& obj) const
     // check whether there is a modification request for this component...
     std::map<std::string, std::vector<std::string> >::const_iterator overrule = m_overrule.find( obj.name() ) ;
     if (overrule != m_overrule.end()) {
-        currentConfig.update(overrule->second.begin(), overrule->second.end());
+        warning() << " applying overrule to " << obj.name() << " : " << *overrule << endmsg;
+        currentConfig = currentConfig.copyAndModify(overrule->second.begin(), overrule->second.end());
+        if (!currentConfig.digest().valid()) {
+            error() << " overruling of " << obj.name() << " : " << *overrule << " failed" << endmsg;
+            return ConfigTreeNode::digest_type::createInvalid();
+        }
     }
     PropertyConfig::digest_type propRef = m_accessSvc->writePropertyConfig( currentConfig );
     if (propRef.invalid()){  
