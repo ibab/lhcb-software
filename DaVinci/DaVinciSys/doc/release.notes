@@ -5,7 +5,15 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v24r1p1>2009-08-21 DaVinci v24r1p1 Hlt1 nad Calo patch</A></H1><PRE>
 
-Same as v24r1p1, but patching HltL0Conf and CaloAssociators.
+Same as v24r1 except for Analysis v3r9 and patched HltL0Conf and CaloAssociators.
+
+Highlights:
+   * Copying of full particle decay trees plus additional related
+     objects to selection DSTs and stripping DSTs. Required changes to 
+     MicroDST, Stripping PhysSelPython, and Analysis core components and 
+     configurables.
+   * Unified syntax for writing MicroDST, selection and stripping DST.
+   * Patches to HltL0Conf and CaloAssociators.
 
 </PRE><H1><A NAME=v24r1>2009-08-12 DaVinci v24r1 MC09 development release</A></H1><PRE>
 
