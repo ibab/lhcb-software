@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.3 2009-08-27 13:16:02 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.4 2009-08-27 13:23:51 krinnert Exp $
 // Include files 
 // -------------
 
@@ -188,7 +188,6 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 
   // create conditions and write them to XML, if requested
   if ( m_writeXML ) {
-    int status;
     struct stat statbuf;
     
     mode_t perm = S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH;
