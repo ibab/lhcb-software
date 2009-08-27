@@ -23,7 +23,18 @@ namespace LHCb
 		    // bitsets.
 		    station += 2*(1-type/2) ;
 		    type     = type%2 ;
-		    m_velo[side+2*type].set(station) ;
+		 
+		    switch( side+2*type ) {
+		    case 0:
+		      m_veloRA.set(station) ;
+		    case 1:
+		      m_veloRC.set(station) ; 
+		    case 2:
+		      m_veloPhiA.set(station) ;
+		    case 3:
+		      m_veloPhiC.set(station) ;
+		      
+		    }
 		}
 		break ;
 		case LHCbID::TT:
@@ -37,10 +48,10 @@ namespace LHCb
 		{
 		    LHCb::STChannelID stid = id->stID() ;
 		    unsigned int uniquelayer = (stid.station()-1)*4 + stid.layer()-1 ;
-		    unsigned int region = 0;
 		    if (stid.detRegion() == 1 || stid.detRegion() == 2)
-			region = 1;
-		    m_it[region].set(uniquelayer) ;
+		      m_itTopBottom.set(uniquelayer) ;
+		    else
+		      m_itAC.set(uniquelayer);
 		}
 		break ;
 		case LHCbID::OT:
@@ -48,13 +59,16 @@ namespace LHCb
 		    LHCb::OTChannelID otid = id->otID() ;
 		    unsigned int uniquelayer = (otid.station()-1)*4 + otid.layer() ;
 		    
-		    
-		    unsigned int monolayer = 0;
 		    if ((otid.quarter()==0 || otid.quarter()==2) && otid.module()==9)
-		      monolayer =  (otid.straw()-1)/32;
+		      if (otid.straw() > 32)
+			m_ot1stMonoLayer.set(uniquelayer);
+		      else
+			m_ot2ndMonoLayer.set(uniquelayer);
 		    else
-		      monolayer =  (otid.straw()-1)/64;
-		    m_ot[monolayer].set(uniquelayer);
+		      if (otid.straw() > 64)
+			m_ot1stMonoLayer.set(uniquelayer);
+		      else
+			m_ot2ndMonoLayer.set(uniquelayer);
 		}
 		break ;
 		case LHCbID::Muon:
@@ -72,21 +86,21 @@ namespace LHCb
     
     std::ostream& HitPattern::fillStream(std::ostream& s) const
     {
-	s << "veloRA:             " << m_velo[VeloRA] << std::endl
-	  << "veloRC:             " << m_velo[VeloRC] << std::endl
-	  << "veloPhiA:           " << m_velo[VeloPhiA] << std::endl
-	  << "veloPhiC:           " << m_velo[VeloPhiC] << std::endl
+	s << "veloRA:             " << m_veloRA << std::endl
+	  << "veloRC:             " << m_veloRC << std::endl
+	  << "veloPhiA:           " << m_veloPhiA << std::endl
+	  << "veloPhiC:           " << m_veloPhiC << std::endl
 	  << "TT:                 " << m_tt << std::endl
-	  << "IT-top-bottom:      " << m_it[ITTopBottom] << std::endl
-	  << "IT-AC:              " << m_it[ITAC] << std::endl
-	  << "OT-1st-mono-layer:  " << m_ot[OT1stMonoLayer] << std::endl
-	  << "OT-2nd-mono-layer:  " << m_ot[OT2ndMonoLayer] << std::endl
+	  << "IT-top-bottom:      " << m_itTopBottom << std::endl
+	  << "IT-AC:              " << m_itAC << std::endl
+	  << "OT-1st-mono-layer:  " << m_ot1stMonoLayer << std::endl
+	  << "OT-2nd-mono-layer:  " << m_ot2ndMonoLayer << std::endl
 	  << "Muon:     " << m_muon << std::endl ;
 	return s ;
     }
     
     // collapses the T layer pattern to a station pattern
-    inline std::bitset<3> hitStations( const std::bitset<HitPattern::NumT>& layers ) 
+    inline std::bitset<3> hitStations( const std::bitset<LHCb::HitPattern::NumT>& layers ) 
     {
 	unsigned long pat = layers.to_ulong() ;
 	std::bitset<3> rc ;
@@ -113,12 +127,12 @@ namespace LHCb
     }
     
     size_t HitPattern::numVeloStationsOverlap() const {
-	return (( m_velo[VeloRA] | m_velo[VeloPhiA] ) & 
-		( m_velo[VeloRC] | m_velo[VeloPhiC] )).count() ;
+	return (( m_veloRA | m_veloPhiA ) & 
+		( m_veloRC | m_veloPhiC )).count() ;
     } 
     
     size_t HitPattern::numITStationsOverlap() const {
-	return ( hitStations( m_it[ITAC] ) & hitStations( m_it[ITTopBottom] ) ).count() ;
+	return ( hitStations( m_itAC ) & hitStations( m_itTopBottom ) ).count() ;
     }
     
     size_t HitPattern::numITOTStationsOverlap() const {
@@ -126,8 +140,8 @@ namespace LHCb
     }
     
     size_t HitPattern::numVeloHoles() const {
-	std::bitset<NumVelo> veloPhi = m_velo[VeloPhiA] | m_velo[VeloPhiC] ;
-	std::bitset<NumVelo> veloR   = m_velo[VeloRA] | m_velo[VeloRC] ;
+	std::bitset<NumVelo> veloPhi = m_veloPhiA | m_veloPhiC ;
+	std::bitset<NumVelo> veloR   = m_veloRA | m_veloRC ;
 	std::bitset<NumVelo> velo = veloPhi | veloR ;
 	size_t rc(0) ;
 	if( velo.any() ) {
@@ -145,8 +159,8 @@ namespace LHCb
     
     size_t HitPattern::numTHoles() const {
 	std::bitset<NumT> layers = 
-	    m_it[ITAC] | m_it[ITTopBottom] |
-	    m_ot[OT1stMonoLayer] | m_ot[OT2ndMonoLayer];
+	    m_itAC | m_itTopBottom |
+	    m_ot1stMonoLayer | m_ot2ndMonoLayer;
 	size_t rc(0) ;
 	if(layers.any()) {
 	    int firstbit = firstbitset(layers) ;

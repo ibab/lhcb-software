@@ -1,0 +1,295 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+  <package name="LHCbKernel">
+
+    <class
+       name   = "HitPattern"
+       desc   = "pattern of hits used on tracks"
+       author = "Stephanie Hansmann-Menzemer"
+       virtual= "FALSE" >
+          
+       <import name="Kernel/LHCbID"/> 
+       <import name = "bitset"  std = "TRUE" />
+       <import name = "vector"  std = "TRUE" />       
+       
+       <enum
+          desc   = "number of detector layers/regions"
+          name   = "Number"
+          value  = "NumVelo=23,NumTT=4,NumT=12, NumMuon=5"
+          access = 'PUBLIC'
+       />
+ 
+
+
+       <constructor
+          desc     = 'Constructor from LHCbIDs'
+          argList  = 'std::vector&lt;LHCbID&gt; ids'          >
+       </constructor>
+
+
+       <constructor
+          desc = "Default Constructor">
+       </constructor>
+
+       <method 
+          name    = "fillStream" 
+          desc    = "Print this HitPattern"
+          type    = "std::ostream&amp;" 
+          virtual = "FALSE" 
+          const   = "TRUE">
+          <arg 
+            type = "std::ostream" 
+            name = "s"/>
+      </method>
+
+
+        <method
+         type    = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+         name    = 'it'
+         const   = 'TRUE'
+        desc    = 'it layer pattern'>
+         <code>
+            return (m_itAC | m_itTopBottom);
+         </code>
+       </method>
+ 
+       <method
+         type    = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+         name    = 'ot'
+         const   = 'TRUE'
+         desc    = 'ot layer pattern'>
+         <code>
+            return (m_ot1stMonoLayer | m_ot2ndMonoLayer);
+         </code>
+       </method> 
+
+     <method
+         type    = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
+         name    = 'velo'
+         const   = 'TRUE'
+         desc    = 'velo layer pattern'>
+         <code>
+            return (m_veloRA | m_veloRC | m_veloPhiA | m_veloPhiC );
+         </code>
+       </method> 
+
+
+
+      <method
+         type    = 'size_t'
+         name    = 'numVeloR'
+         const   = 'TRUE'
+         desc    = 'number of velo R hits'>
+         <code>
+            return (m_veloRA.count() + m_veloRC.count());
+         </code>
+       </method> 
+
+       <method
+         type    = 'size_t'
+         name    = 'numVeloPhi'
+         const   = 'TRUE'
+         desc    = 'number of velo phi hits'>
+         <code>
+            return (m_veloPhiA.count() + m_veloPhiC.count());
+         </code>
+       </method>
+
+        <method
+         type    = 'size_t'
+         name    = 'numOTHits'
+         const   = 'TRUE'
+         desc    = 'number of OT hits, both monolayers'>
+         <code>
+            return (m_ot1stMonoLayer.count() + m_ot2ndMonoLayer.count());
+         </code>
+       </method> 
+
+       <method
+         type    = 'size_t'
+         name    = 'numITHits'
+         const   = 'TRUE'
+         desc    = 'number of IT hits'>
+         <code>
+            return (m_itAC.count() + m_itTopBottom.count());
+         </code>
+       </method>
+
+        <method
+         type    = 'size_t'
+         name    = 'numTTHits'
+         const   = 'TRUE'
+         desc    = 'number of TT hits'>
+         <code>
+            return (m_tt.count());
+         </code>
+       </method>
+
+       <method
+         type    = 'size_t'
+         name    = 'numVeloStations'
+         const   = 'TRUE'
+         desc    = 'number of velo stations with one R or phi hit'>
+         <code>
+            return (velo().count());
+         </code>
+       </method>
+        
+       <method
+         type    = 'size_t'
+         name    = 'numVeloStationsOverlap'
+         const   = 'TRUE'
+         desc    = 'number of velo stations with one R or phi hit on both A and C side'>
+       </method>
+
+       
+       <method
+         type    = 'size_t'
+         name    = 'numITStationsOverlap'
+         const   = 'TRUE'
+         desc    = 'number of it stations with hit in more than one box'>
+       </method>
+
+       <method
+         type    = 'size_t'
+         name    = 'numITOTStationsOverlap'
+         const   = 'TRUE'
+         desc    = 'number of T stations with hits in both IT and OT'>
+       </method>
+
+        <method
+         type    = 'size_t'
+         name    = 'numVeloHoles'
+         const   = 'TRUE'
+         desc    = 'number of holes in velo (layer) pattern'>
+       </method>
+
+        <method
+         type    = 'size_t'
+         name    = 'numTLayers'
+         const   = 'TRUE'
+         desc    = 'number of T layers'>
+         <code>
+            return ((ot() | it()).count());
+         </code>
+       </method>
+
+        <method
+         type    = 'size_t'
+         name    = 'numTHoles'
+         const   = 'TRUE'
+         desc    = 'number of holes in T (layer) pattern'>
+       </method>
+
+
+        <method
+         type    = 'void'
+         name    = 'reset'
+         const   = 'FALSE'
+         desc    = 'reset bit maps'>
+         <code>
+           m_veloRA.reset();  
+           m_veloRC.reset(); 
+           m_veloPhiA.reset();  
+           m_veloPhiC.reset();
+	
+	   m_tt.reset();
+		  
+	   m_itAC.reset();
+           m_itTopBottom.reset();
+
+	   m_ot1stMonoLayer.reset();
+           m_ot2ndMonoLayer.reset();	   
+	
+	   m_muon.reset();
+   
+         </code>
+       </method>
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
+        name      = 'veloRA'
+        desc      = 'Velo R hit pattern on detector A side'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />   
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
+        name      = 'veloRC'
+        desc      = 'Velo R hit pattern on detector C side'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE' 
+        getMeth   = 'TRUE' />   
+
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
+        name      = 'veloPhiA'
+        desc      = 'Velo Phi hit pattern on detector A side'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />   
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumVelo&gt;'
+        name      = 'veloPhiC'
+        desc      = 'Velo Phi hit pattern on detector C side'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE' 
+        getMeth   = 'TRUE' />     
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+        name      = 'ot1stMonoLayer'
+        desc      = 'ot hit pattern in 1st monolayer'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />   
+
+    <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+        name      = 'ot2ndMonoLayer'
+        desc      = 'ot hit pattern in 2nd monolayer'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />   
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+        name      = 'itAC'
+        desc      = 'it bit pattern in A and C side boxes'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE' 
+        getMeth   = 'TRUE' />   
+
+    <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumT&gt;'
+        name      = 'itTopBottom'
+        desc      = 'it bit pattern in top and bottom boxes'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE' 
+        getMeth   = 'TRUE' /> 
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumTT&gt;'
+        name      = 'tt'
+        desc      = 'tt bit pattern'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />  
+
+     <attribute
+        type      = 'std::bitset&lt;LHCb::HitPattern::NumMuon&gt;'
+        name      = 'muon'
+        desc      = 'muon bit pattern'
+        access    = 'PRIVATE'
+        setMeth   = 'TRUE'
+        getMeth   = 'TRUE' />
+
+      
+
+    </class>
+  </package>
+</gdd>
