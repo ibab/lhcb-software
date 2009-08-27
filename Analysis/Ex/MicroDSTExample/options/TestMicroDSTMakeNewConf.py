@@ -7,7 +7,7 @@ from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
 conf = MicroDSTWriter("MicroDST0")
-conf.OutputFilePrefix = "MyTest5"
+conf.OutputFilePrefix = "Juan"
 conf.CopyProtoParticles = False
 conf.SelectionSequences = [selSequence]
 conf.CopyL0DUReport = False
@@ -16,9 +16,8 @@ conf.CopyMCTruth = True
 conf.CopyBTags = False
 microDST0Seq = conf.sequence()
 
-from MicroDSTExample.Selections import Phi2KK
-
 '''
+from MicroDSTExample.Selections import Phi2KK
 conf1 = MicroDSTWriter("MicroDST1")
 conf1.MicroDSTFile = "MyTestMDST1_MC_newConfWithAlgo2.mdst"
 #con1f.MicroDSTSelectionAlg = selSequence.topAlgName()

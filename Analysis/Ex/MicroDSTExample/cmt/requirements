@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.19 2009-08-09 16:40:53 jpalac Exp $
+#$Id: requirements,v 1.20 2009-08-27 07:32:09 jpalac Exp $
 #============================================================================
 # Created    : 2008-09-23
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           MicroDSTExample
-version           v2r9
+version           v2r9p1
 
 #============================================================================
 # Structure, i.e. directories to process. 

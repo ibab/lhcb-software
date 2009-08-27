@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.42 2009-08-11 14:11:26 jpalac Exp $
+!$Id: release.notes,v 1.43 2009-08-27 07:32:09 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r9p1 2009-08-27 ================
+
+! 2009-08-26 - Juan PALACIOS
+ - cmt/requirements
+  . Increase to v2r9p1
+ - scripts/MicroDSTReadingExample.py
+  . More protection against non-existing containers. Default location is now
+    /Event/MicroDST
 
 !======================= Ex/MicroDSTExample v2r9 2009-08-11 ==================
 
