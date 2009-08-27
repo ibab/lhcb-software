@@ -1,0 +1,4 @@
+b ../src/RawDataCnvSvc.cpp:193
+dir /sw/lib/lhcb/ONLINE/ONLINE_v4r27/Online/GaudiSerialize/src
+dir /sw/lib/lhcb/LHCB/LHCB_v27r5/DAQ/MDF/src
+b ../src/SerializeCnvSvc.cpp:342

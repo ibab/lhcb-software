@@ -1,4 +1,4 @@
-// $Id: SerializeCnvSvc.cpp,v 1.8 2009-08-27 15:48:26 frankb Exp $
+// $Id: SerializeCnvSvc.cpp,v 1.9 2009-08-27 20:38:06 frankb Exp $
 //====================================================================
 //	SerializeCnvSvc implementation
 //--------------------------------------------------------------------
@@ -266,13 +266,44 @@ StatusCode  SerializeCnvSvc::commitOutput(CSTR dsn, bool doCommit) {
       //
       SmartDataPtr<RawEvent> raw_org(dataProvider(),RawEventLocation::Default);
       if ( raw_org ) {
-	const vector<RawBank*>& odin=raw_org->banks(RawBank::ODIN);
-	if ( !odin.empty() ) {
-	  unsigned int trMask[] = {~0,~0,~0,0x10};
+	bool hdr_filled = false;
+	MDFHeader* hdr, *hdr0;
+	typedef vector<RawBank*> _V;
+	unsigned int trMask[4] = {~0,~0,~0,0x100};  /// !!! MAGIC Number 0x100 for reconstructed events in routing
+	const _V& hdr_banks=raw_org->banks(RawBank::DAQ);
+	const _V& odin=raw_org->banks(RawBank::ODIN);
+	// Get proper trigger mask for new MDF header
+	size_t len = rawEventLength(raw.get());
+
+	RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
+	for(_V::const_iterator j=hdr_banks.begin(); j != hdr_banks.end(); ++j)  {
+	  RawBank* b = *j;
+	  if ( b->version() == DAQ_STATUS_BANK )  {
+	    hdr0 = (MDFHeader*)b->data();
+	    hdr = (MDFHeader*)hdrBank->data();
+	    hdr->setChecksum(0);
+	    hdr->setCompression(0);
+	    hdr->setHeaderVersion(3);
+	    hdr->setSpare(0);
+	    hdr->setDataType(MDFHeader::BODY_TYPE_BANKS);
+	    hdr->setSubheaderLength(sizeof(MDFHeader::Header1));
+	    hdr->setSize(len);
+	    MDFHeader::SubHeader h  = hdr->subHeader();
+	    MDFHeader::SubHeader h0 = hdr0->subHeader();
+	    ::memcpy(trMask,h0.H1->triggerMask(),3*sizeof(trMask[0]));
+	    h.H1->setTriggerMask(trMask);
+	    h.H1->setRunNumber(h0.H1->runNumber());
+	    h.H1->setOrbitNumber(h0.H1->orbitNumber());
+	    h.H1->setBunchID(h0.H1->bunchID());
+	    raw->adoptBank(hdrBank, true);
+	    hdr_filled = true;
+	    break;
+	  }
+	}
+	// Fill information from ODIN bank if no MDF header bank was found!
+	if ( !hdr_filled && !odin.empty() ) {
 	  const OnlineRunInfo* odin_bank=odin[0]->begin<OnlineRunInfo>();
-	  size_t len = rawEventLength(raw.get());
-	  RawBank* hdrBank = raw->createBank(0, RawBank::DAQ, DAQ_STATUS_BANK, sizeof(MDFHeader)+sizeof(MDFHeader::Header1), 0);
-	  MDFHeader* hdr = (MDFHeader*)hdrBank->data();
+	  hdr = (MDFHeader*)hdrBank->data();
 	  hdr->setChecksum(0);
 	  hdr->setCompression(0);
 	  hdr->setHeaderVersion(3);
@@ -342,7 +373,6 @@ SerializeCnvSvc::writeObject(DataObject* pObj, IOpaqueAddress*& refpAddr)  {
 StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)  {
   refpObj = 0;
   if ( pA ) {
-    MsgStream log(msgSvc(), name());
     size_t len;
     char text[4096], *p, *q;
     long class_id = 0;
@@ -353,21 +383,26 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
     pair<char*,int> d = pAraw->data();
 
     decodeRawBanks(d.first,d.first+d.second,banks);
-    for(vector<RawBank*>::const_iterator k, i=banks.begin(); i!=banks.end();++i)  {
+    for(vector<RawBank*>::const_iterator k, e=banks.end(), i=banks.begin(); i != e; ++i)  {
       const char* b_nam = (*i)->begin<char>();
-      if ( (*i)->version() == 1 && id == b_nam ) { //  We only want banks with version()=1
+      if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
+      if ( (*i)->version()  != 1 ) continue;
+      if ( id == b_nam )     { //  We only want banks with version()=1
 	RawBank *readBank = *i;
-        for (len=0, k=banks.begin(); k!=banks.end(); ++k)  {
+        for (len=0, k=banks.begin(); k != e; ++k)  {
 	  // Banks with the same sourceID() correspond to the same DataObject and need to be concatenated
-          if ( (*k)->sourceID() == readBank->sourceID() && (*i)->version() > 1 )
-            len += (*k)->size();
+	  if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
+	  if ( (*k)->sourceID() != readBank->sourceID() ) continue;
+          if ( (*k)->version() <= 1 ) continue;
+	  len += (*k)->size();
         }
 	p = q = new char[len];
-        for( k=banks.begin(); k!=banks.end(); ++k)  {
-          if ( (*k)->sourceID() == readBank->sourceID() && (*i)->version() > 1 ) {
-            ::memcpy(p,(*k)->begin<char>(),(*k)->size());
-            p += (*k)->size();
-          }
+        for( k=banks.begin(); k != e; ++k)  {
+	  if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
+	  if ( (*k)->sourceID() != readBank->sourceID() ) continue;
+          if ( (*k)->version() <= 1 ) continue;
+	  ::memcpy(p,(*k)->begin<char>(),(*k)->size());
+	  p += (*k)->size();
         }
 
 	//  The TBuffer is filled with as many banks as necessary. The memory is adopted by the TBuffer!
@@ -391,7 +426,9 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
 	  // We have stored the full registry identifier in the beginning of the TBuffer
 	  // We also rely on the fact that ROOT does not add magic in front of the TBuffer
           for( k=banks.begin(); k!=banks.end(); ++k)  {
-            if ( (*k)->version() == 0 && (*k) != readBank ) {
+	    if ( (*k)->type()     != RawBank::GaudiSerialize ) continue;
+            if ( (*k)->version()  != 1 ) continue;
+	    if ( (*k) != readBank )   {
               p = (*k)->begin<char>();
               if ( 0 == ::strncmp(p,id.c_str(),id.length()) ) {
                 p += id.length();
@@ -412,8 +449,9 @@ StatusCode SerializeCnvSvc::readObject(IOpaqueAddress* pA, DataObject*& refpObj)
         return error("read> Cannot read object "+id);
       }
     }
+    return error("read> Cannot read object "+id);
   }
-  return error("read> Cannot read object "+pA->registry()->identifier()+" ");
+  return error("read> Cannot read object -- no valid object address present ");
 }
 
 // Small routine to issue exceptions
