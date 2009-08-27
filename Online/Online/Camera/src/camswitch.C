@@ -12,11 +12,11 @@ int main(int argc , char ** argv)
  #endif
 
   if (argv[1] == NULL){
-    cerr << "usage: camswitch name host ..."<<endl;
+    cerr << "usage: " << argv[0] << " <directory name> <host:port> ... \nA space separated list of host:port can be given and port is optional. Defaults to 12345"<<endl;
     exit(1);
   }
   if ((std::string)argv[1] == "-h"){
-    cerr << "usage: camswitch name host ..."<<endl;
+    cerr << "usage: " << argv[0] << " <directory name> <host:port> ... \nA space separated list of host:port can be given and port is optional. Defaults to 12345"<<endl;
     exit(0);
   }
 
