@@ -1,4 +1,4 @@
-// $Id: PropertyConfigSvc.cpp,v 1.24 2009-08-27 14:41:16 graven Exp $
+// $Id: PropertyConfigSvc.cpp,v 1.25 2009-08-27 14:51:52 graven Exp $
 // Include files 
 
 #include <sstream>
@@ -9,6 +9,7 @@
 #include "boost/filesystem/convenience.hpp"
 #include "boost/lambda/lambda.hpp"
 #include "boost/lambda/bind.hpp"
+#include "boost/regex.hpp"
 
 // from Gaudi
 #include "GaudiKernel/System.h"
@@ -60,13 +61,13 @@ namespace {
                    if (!prop.second.empty() && prop.second[0]=='@') {
                        static boost::regex pattern("^@([^\\.]+)\\.([^@]+)(@.+)?$");
                        boost::smatch what;
-                       if (!boost::regex_match(s,what,prop.second) ) { 
+                       if (!boost::regex_match(prop.second,what,pattern) ) { 
                             throw GaudiException(prop.second,"badly formatted reference property ", StatusCode::FAILURE);
                        }
                        std::string value;
-                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(what[1],what[2]));
+                       const Property * refProp = Gaudi::Utils::getProperty( m_jos->getProperties(string(what[1])),string(what[2]));
                        if (refProp!=0) {
-                            value = refProp->toString()
+                            value = refProp->toString();
                        } else if (what[3].first!=what[3].second) {
                            value = string(what[3]).substr(1);
                        } else {
@@ -394,7 +395,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
             continue;
         }
         if ( m_configPushed[config->name()] != *i ) { 
-             if (msgLevel(MSG::DEBUG)) debug() << " " << config->name() 
+             debug() << " " << config->name() 
                       << " current: " <<  m_configPushed[config->name()]  
                       << " requested: " << *i << endmsg;
             *newConfigs = config;
@@ -413,7 +414,7 @@ PropertyConfigSvc::outOfSyncConfigs(const ConfigTreeNode::digest_type& configID,
 StatusCode 
 PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool callSetProperties) const 
 {
-    if (msgLevel(MSG::DEBUG)) debug() << " configuring using " << configID << endmsg;
+    debug() << " configuring using " << configID << endmsg;
     if (!configID.valid()) return StatusCode::FAILURE;
     setTopAlgs(configID); // do this last instead of first?
     vector<const PropertyConfig*> configs;
@@ -421,7 +422,7 @@ PropertyConfigSvc::configure(const ConfigTreeNode::digest_type& configID, bool c
     if (sc.isFailure()) return sc;
     for (vector<const PropertyConfig*>::const_iterator i = configs.begin(); i!=configs.end();++i) {
         string name = (*i)->name();
-        if (msgLevel(MSG::DEBUG)) debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
+        debug() << " configuring " << name << " using " << (*i)->digest() << endmsg;
         const PropertyConfig::Properties& map = (*i)->properties();
 
         for_each(map.begin(),
@@ -463,7 +464,7 @@ PropertyConfigSvc::findTopKind(const ConfigTreeNode::digest_type& configID,
     // we (should) have a leaf ! get it and use it!!!
     const PropertyConfig *config = resolvePropertyConfig(id);
     if ( config == 0 ) {
-        if (msgLevel(MSG::DEBUG)) debug() << " could not find " << id << endmsg;
+        debug() << " could not find " << id << endmsg;
         error() << " could not find a configuration ID" << endmsg;
         return StatusCode::FAILURE;
     }
@@ -586,10 +587,8 @@ PropertyConfigSvc::validateConfig(const ConfigTreeNode::digest_type& ref) const 
            // DO NOTHING
        }
    } 
-   if (msgLevel(MSG::DEBUG)) {
-       for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
-            debug() << j->first << " -> " << j->second << endl;
-       }
+   for (map<string,PropertyConfig::digest_type>::const_iterator j = inv.begin(); j!= inv.end(); ++j) {
+        debug() << j->first << " -> " << j->second << endl;
    }
    return StatusCode::SUCCESS;
 }
@@ -625,7 +624,7 @@ PropertyConfigSvc::resolvePropertyConfig(const PropertyConfig::digest_type& ref)
 {
    PropertyConfigMap_t::const_iterator i = m_configs.find(ref);
    if (i!=m_configs.end()) {
-        if (msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
+        debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    boost::optional<PropertyConfig> config = m_accessSvc->readPropertyConfig(ref);
@@ -652,10 +651,10 @@ PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNodeAlias::alias_type& 
 const ConfigTreeNode* 
 PropertyConfigSvc::resolveConfigTreeNode(const ConfigTreeNode::digest_type& ref) const
 {
-   if (msgLevel(MSG::DEBUG)) debug() << " resolving nodeRef " << ref << endmsg;
+   debug() << " resolving nodeRef " << ref << endmsg;
    ConfigTreeNodeMap_t::const_iterator i = m_nodes.find(ref);
    if (i!=m_nodes.end()) {
-        if (msgLevel(MSG::DEBUG)) debug() << "already have an entry for id " << ref << endl;
+        debug() << "already have an entry for id " << ref << endl;
         return &(i->second);
    }
    assert(m_accessSvc!=0);
