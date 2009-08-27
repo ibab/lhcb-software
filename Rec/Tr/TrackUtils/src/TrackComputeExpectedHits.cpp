@@ -52,13 +52,17 @@ StatusCode TrackComputeExpectedHits::execute(){
     LHCb::Track* aTrack = *(iterT);
 
     std::bitset<23> velo[4];
-    m_veloExpectation->expectedInfo(*aTrack, velo);
+    m_veloExpectation->expectedInfo(*aTrack,velo);
     m_ttExpectation->collect(*aTrack, ids);
     m_itExpectation->collect(*aTrack, ids);
     m_otExpectation->collect(*aTrack, ids);
     
     LHCb::HitPattern hitPattern = LHCb::HitPattern(ids);
-    hitPattern.setVelo(velo);
+    hitPattern.setVeloRA(velo[0]);
+    hitPattern.setVeloRC(velo[1]); 
+    hitPattern.setVeloPhiA(velo[2]);
+    hitPattern.setVeloPhiC(velo[3]);
+    
 
     (*iterT)->setExpectedHitPattern(hitPattern);
 
