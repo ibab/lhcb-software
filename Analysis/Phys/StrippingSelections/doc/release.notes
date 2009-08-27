@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-08-27 Alessio Sarti
+ - Added the Lambda LL line + modified some cuts (accordingly to new
+   optimization). Prescaling now set to 1 (easy to change once strategy is finalized)
+   still missing Ks veto and M2 hit filtering
+
 !===================== StrippingSelections v1r5 2009-08-27 ====================
 
 ! 2009-08-21 - Rob Lambert
