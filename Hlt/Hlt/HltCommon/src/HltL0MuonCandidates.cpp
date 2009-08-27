@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.11 2009-08-06 06:55:53 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.12 2009-08-27 14:41:47 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -66,7 +66,7 @@ StatusCode HltL0MuonCandidates::initialize() {
   counter("#accept");
   counter("#input");
   counter("#candidates accepted");
-  //declareInfo("#accept",&counter("#accept"),std::string("Events accepted by ") + name());
+  //declareInfo("#accept",counter("#accept"),std::string("Events accepted by ") + name());
   //declareInfo("#input",&counter("#input"),std::string("Candidates seen by ") + name());
   //declareInfo("#candidates accepted",&counter("#candidates accepted"),std::string("Candidates accepted by ") + name());
   m_pt    = book("Pt");

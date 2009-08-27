@@ -1,4 +1,4 @@
-// $Id: HltIncidentFilter.cpp,v 1.6 2009-08-06 06:55:53 graven Exp $
+// $Id: HltIncidentFilter.cpp,v 1.7 2009-08-27 14:41:47 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,7 @@ StatusCode HltIncidentFilter::initialize() {
   incidentSvc->addListener(this,s_incident,int(0),rethrow,oneShot);
   incidentSvc->addListener(this,"EndEvent",int(0),rethrow,oneShot);
 
-  declareInfo("#accept",&counter("#accept"),std::string("Events accepted / Incidents recieved by ") + name());
+  declareInfo("#accept",counter("#accept"),std::string("Events accepted / Incidents recieved by ") + name());
 
   return StatusCode::SUCCESS;
 };

@@ -1,4 +1,4 @@
-// $Id: HltCopySelection.cpp,v 1.4 2009-08-06 06:55:53 graven Exp $
+// $Id: HltCopySelection.cpp,v 1.5 2009-08-27 14:42:09 graven Exp $
 // Include files 
 #include <algorithm>
 #include <iterator>
@@ -53,7 +53,7 @@ HltCopySelection<T>::initialize() {
   m_selection.retrieveSelections();
   m_selection.registerSelection();
   counter("#input");
-  // declareInfo("#input",&counter("#input"),std::string("Candidates seen by ") + name());
+  // declareInfo("#input",counter("#input"),std::string("Candidates seen by ") + name());
   return sc;
 }
 
