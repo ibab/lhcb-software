@@ -298,7 +298,7 @@ double Integrate::doIntegral(const gsl_function& F) const{
 	double error = 0;
 
 	const int nDivisions = 100;
-	const double accuracyGoal = 1e-5;
+	const double accuracyGoal = 1e-4;
 
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 
