@@ -4,7 +4,7 @@
  *  Implementation file for RICH base class : ST::CommonBase
  *
  *  CVS Log :-
- *  $Id: STCommonBase.icpp,v 1.11 2009-07-06 17:27:35 mtobin Exp $
+ *  $Id: STCommonBase.icpp,v 1.12 2009-08-28 14:32:52 jvantilb Exp $
  *
  *  @author Matthew Needham    Matthew.Needham@cern.ch
  *  @date   2008-11-10
@@ -43,7 +43,7 @@ StatusCode ST::CommonBase<PBASE>::initialize()
 
   // Printout from initialize
   if ( this -> msgLevel(MSG::DEBUG) )
-    this -> debug() << "Initialize" << endreq;
+    this -> debug() << "Initialize" << endmsg;
   flip(); // flip all that needs to be flipped
   
   if (m_forcedInit == true){
@@ -64,7 +64,7 @@ StatusCode ST::CommonBase<PBASE>::finalize()
 {
   // Printout from finalization
   if ( this -> msgLevel(MSG::DEBUG) )
-    this -> debug() << "Finalize" << endreq;
+    this -> debug() << "Finalize" << endmsg;
 
   // Finalise base class and return
   return PBASE::finalize();
@@ -99,7 +99,8 @@ inline DeSTDetector* ST::CommonBase<PBASE>::tracker() const {
 #include "STDet/DeSTSector.h"
 
 template <class PBASE> 
-inline DeSTSector* ST::CommonBase<PBASE>::findSector(const LHCb::STChannelID& aChannel) const{
+inline DeSTSector* ST::CommonBase<PBASE>::findSector(const LHCb::STChannelID& 
+                                                     aChannel) const{
 
   DeSTSector* sector = tracker()->findSector(aChannel);
   if (sector == 0) throw GaudiException( "No sector found",

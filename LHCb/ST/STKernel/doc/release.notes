@@ -1,15 +1,17 @@
-! $Id: release.notes,v 1.74 2009-08-21 17:13:28 mneedham Exp $
+! $Id: release.notes,v 1.75 2009-08-28 14:32:52 jvantilb Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+! 2009-08-26 - Jeroen Van Tilburg
+ - Changes to TTDetectorPlot: add beam pipe and allow for finer binning. 
 
 ! 2009-08-21 M Needham
  - Add STXMLUtils functions
 
 !2009-08-20 M Needham
  - Add ISTRawADCInfo interface
- - Add method to Beetle representation to decompose to beetle/strip
- 
+ - Add method to Beetle representation to decompose to beetle/strip 
 
 ! 2009-08-08 M Needham
  - Add TTDetectorPlot class

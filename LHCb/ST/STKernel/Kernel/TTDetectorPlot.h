@@ -28,7 +28,8 @@ public:
       int endBinY;
     } Bins;
 
-    TTDetectorPlot(const std::string& name, const std::string& title);
+    TTDetectorPlot(const std::string& name, const std::string& title,
+                   const unsigned int xBinsPerSector = 1u);
 
     ~TTDetectorPlot();
 

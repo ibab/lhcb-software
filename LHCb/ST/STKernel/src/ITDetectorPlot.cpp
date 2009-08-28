@@ -17,14 +17,14 @@ ITDetectorPlot::Bins ITDetectorPlot::toBins(const LHCb::STChannelID& chanID) con
    // method to return the bins in x and y 
     
    const unsigned int station( chanID.station() );
-   const  unsigned int box( chanID.detRegion() );
+   const unsigned int box( chanID.detRegion() );
    const unsigned int layer( chanID.layer() ); 
    const unsigned int sector( chanID.sector() );
 
    Bins theBins;
  
-   theBins.yBin = 16. * (station - 1);
-   theBins.xBin = 0.;
+   theBins.yBin = 16 * (station - 1);
+   theBins.xBin = 0;
 
    if (box == 3 || box == 4) {
      theBins.xBin = 4 - sector;
@@ -32,7 +32,7 @@ ITDetectorPlot::Bins ITDetectorPlot::toBins(const LHCb::STChannelID& chanID) con
        theBins.yBin += 4 + layer;
      }   
      else {
-	theBins.yBin += 12 + layer;
+       theBins.yBin += 12 + layer;
      }
    } // top or bottom box
    else if (box == 1) {
