@@ -9,7 +9,7 @@
 findReferenceBlock("""
 Tuple                                                       SUCCESS Number of counters : 2
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |      1000 |          8 |( 0.800000 +- 0.281709 )%|   -------   |   -------   |
+ |*"#accept"                                       |      1000 |        262 |(  26.2000 +- 1.39053  )%|   -------   |   -------   |
  | "Event"                                         |      1000 |       1000 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
 EventTuple                                                  SUCCESS Booked 1 N-Tuples and 0 Event Tag Collections
 EventTuple                                                  SUCCESS List of booked N-Tuples in directory "FILE1/EventTuple"
