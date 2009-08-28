@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.371 2009-08-25 14:52:50 pkoppenb Exp $
+! $Id: release.notes,v 1.372 2009-08-28 13:58:25 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,13 +9,13 @@
 !
 !-----------------------------------------------------------------------------
 
-! 2009-08-25 - Patrick Koppenburg
- - Set HltConf().WithMC to self.Simulation()
+!========================== DaVinci v24r1p1 2009-08-28 ===================
 
-! 2009-08-24 - Patrick Koppenburg
- - Remove useless Lbappinit import
- - v24r2
+! 2009-08-28 - Juan PALACIOS
+ - SelDSTWriter
+  . Give it more sensible default parameters. Add some documentation.
 
+!========================== DaVinci v24r1p1 2009-08-21 ===================
 !========================== DaVinci v24r1 2009-08-12 ===================
 
 ! 2009-08-12 - Juan PALACIOS
