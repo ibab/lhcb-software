@@ -124,7 +124,7 @@ void QCDFactorisation::init(){
 		const double brBToXsGamma = constrain.getBrBToXsGamma();
 		std::cout << "BR(B_d->X_s\\gamma) is: " << brBToXsGamma <<std::endl;
 		const double brBToXsll = constrain.getBrBToXsll();
-		std::cout << "BR(B_d->X_s\\mu\\mu)_[1,6] is: " << brBToXsll <<std::endl;
+		std::cout << "BR(B_d->X_s\\l^+\\l^-)_[1,6] is: " << brBToXsll <<std::endl;
 		const double sBToKStarGamma = constrain.getSBToKStarGamma();
 		std::cout << "S(B_d->K*gamma) is: " << sBToKStarGamma << std::endl;
 		const std::pair<double, double> s4Zero = constrain.getS4Zero();
