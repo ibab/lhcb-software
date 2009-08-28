@@ -27,5 +27,5 @@ if len(sys.argv) == 3:
     dotcreater.create(TCK, Path)
 
 else:
-    print 'the parameter signature is wrong. should be like "python TCKPresenter.py 0x803b0000 /afs/cern.ch/user/k/kneumann/tcktestpage/"'
+    print 'the parameter signature is wrong. should be like "python TCKPresenter.py 0x803b0000 /afs/cern.ch/user/k/kneumann/tcktestpage/ 0"'
 
