@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.8 2009-07-07 06:44:57 cattanem Exp $
+// $Id: STClusterMonitor.cpp,v 1.9 2009-08-28 14:34:06 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -14,12 +14,13 @@
 #include "Kernel/TTNames.h"
 #include "Kernel/ITNames.h"
 #include "Kernel/ISTSignalToNoiseTool.h"
-
+#include "Kernel/TTDetectorPlot.h"
+#include "Kernel/STDAQDefinitions.h"
 
 #include "STDet/DeSTDetector.h"
 #include "STDet/DeSTSector.h"
-#include "STDet/DeSTSensor.h"
-#include "Kernel/Trajectory.h"
+#include "STDet/DeTTSector.h"
+
 // from Boost
 #include <boost/assign/list_of.hpp>
 
@@ -46,12 +47,14 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   : ST::HistoAlgBase ( name , pSvcLocator )
 {
   // Input location for clusters...
-  declareSTConfigProperty("ClusterLocation", m_clusterLocation, LHCb::STClusterLocation::TTClusters);
+  declareSTConfigProperty("ClusterLocation", m_clusterLocation, 
+                          LHCb::STClusterLocation::TTClusters);
 
   /// Use signal to noise tool
   declareProperty("SignalToNoise", m_stn=false );
   // Signal to noise
-  declareProperty("SignalToNoiseTool",m_sigNoiseToolName = "STSignalToNoiseTool");
+  declareProperty("SignalToNoiseTool",
+                  m_sigNoiseToolName="STSignalToNoiseTool");
 
   /// Plots per service box
   declareProperty( "ByServiceBox", m_plotBySvcBox=false );
@@ -98,10 +101,11 @@ StatusCode ST::STClusterMonitor::initialize() {
 
   // sig to noise tool
   if(m_stn) m_sigNoiseTool = tool<ISTSignalToNoiseTool>( m_sigNoiseToolName,
-                                                         m_sigNoiseToolName + detType());
+                                               m_sigNoiseToolName + detType());
 
   // Get the tell1 mapping from source ID to tell1 number
-  m_nTELL1s = (this->readoutTool())->SourceIDToTELLNumberMap().size();
+  m_nTELL1s = readoutTool()->nBoard();
+
   // Store number of clusters/TELL1 (48 Tell1s, 1->48)
   m_nClustersPerTELL1.resize(m_nTELL1s,0);
 
@@ -146,7 +150,8 @@ void ST::STClusterMonitor::monitorClusters() {
     LHCb::STClusters::const_iterator itClus;
     // Loop over clusters
     const unsigned int nClusters = clusters->size();
-    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation << " is " << nClusters << endmsg;
+    if(m_debug) debug() << "Number of clusters in " << m_clusterLocation 
+                        << " is " << nClusters << endmsg;
 
     m_1d_nClusters->fill(nClusters);
     if(100  < nClusters) {
@@ -162,14 +167,17 @@ void ST::STClusterMonitor::monitorClusters() {
     // Fill histogram for number of clusters/TELL1
     std::vector<unsigned int>::const_iterator itClPerTELL1;
     unsigned int TELL1=1;
-    for(itClPerTELL1 = m_nClustersPerTELL1.begin(); itClPerTELL1 != m_nClustersPerTELL1.end(); ++itClPerTELL1, ++TELL1) {
-      if(m_verbose) verbose() << "TELL1: " << TELL1 << ",clusters: " << (*itClPerTELL1) << endmsg;
+    for(itClPerTELL1 = m_nClustersPerTELL1.begin(); 
+        itClPerTELL1 != m_nClustersPerTELL1.end(); ++itClPerTELL1, ++TELL1) {
+      if(m_verbose) verbose() << "TELL1: " << TELL1 << ",clusters: " 
+                              << (*itClPerTELL1) << endmsg;
       unsigned int nClusters = (*itClPerTELL1);
       if(0 < nClusters) 
         m_2d_nClustersVsTELL1->fill(TELL1, nClusters);
     }
     m_nClustersPerTELL1.clear();
-  } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS, 50).ignore(); // End of cluster exists
+  } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS,
+                 50).ignore(); // End of cluster exists
 }
 
 //==============================================================================
@@ -178,32 +186,41 @@ void ST::STClusterMonitor::monitorClusters() {
 void ST::STClusterMonitor::bookHistograms() {
   // filled in monitor clusters
   m_1d_nClusters = book1D("Number of clusters",-10.,10010.,501);
-  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 90.,10010., 496);
-  m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, -5.,505., 51);
+  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 90.,10010., 
+                                 496);
+  m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
+                                 m_nTELL1s+0.5, m_nTELL1s, -5.,505., 51);
 
   // filled in fillHistograms
-  m_2d_ClusterSizeVsTELL1 = book2D("Cluster Size vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, 0.5, 4.5, 4);
+  m_2d_ClusterSizeVsTELL1 = book2D("Cluster Size vs TELL1", 0.5, 
+                                   m_nTELL1s+0.5, m_nTELL1s, 0.5, 4.5, 4);
   if(m_stn) {
-    m_2d_STNVsTELL1 = book2D("Signal to Noise vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, -2.5, 102.5, 21);
+    m_2d_STNVsTELL1 = book2D("Signal to Noise vs TELL1", 0.5, 
+                             m_nTELL1s+0.5, m_nTELL1s, -2.5, 102.5, 21);
   }
-  m_2d_ChargeVsTELL1 = book2D("Cluster Charge vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, -5., 205., 21);
+  m_2d_ChargeVsTELL1 = book2D("Cluster Charge vs TELL1", 0.5, 
+                              m_nTELL1s+0.5, m_nTELL1s, -5., 205., 21);
   if(m_plotByPort) {
-    m_2d_ClustersPerPortVsTELL1 = book2D("Clusters per port vs TELL1", 0.5, m_nTELL1s+0.5, m_nTELL1s, -0.5, 95.5, 96);
+    m_2d_ClustersPerPortVsTELL1 = book2D("Clusters per port vs TELL1", 0.5,
+                                     m_nTELL1s+0.5, m_nTELL1s, -0.5, 95.5, 96);
   }
 
   m_1d_totalCharge = book1D("Cluster ADC Values", -1.5, 301.5, 101);
   if(detType() == "TT" || m_plotBySvcBox) {
     /// list of service boxes  
-    std::vector<std::string>::const_iterator itSvcBoxes=(this->readoutTool())->serviceBoxes().begin();
-    for(;itSvcBoxes != (this->readoutTool())->serviceBoxes().end(); ++itSvcBoxes) {
+    std::vector<std::string>::const_iterator itSvcBoxes = 
+      readoutTool()->serviceBoxes().begin();
+    for( ; itSvcBoxes != readoutTool()->serviceBoxes().end(); ++itSvcBoxes) {
       std::string svcBox=(*itSvcBoxes);
       if(detType() == "TT") {
         std::string quadrant = svcBox.substr(0,2);
         if(m_1ds_chargeByServiceBox[quadrant] == 0)
-          m_1ds_chargeByServiceBox[quadrant] = book1D("Cluster ADC Values "+quadrant, -1.5, 301.5, 101);
+          m_1ds_chargeByServiceBox[quadrant] = book1D("Cluster ADC Values "+
+                                                      quadrant,-1.5,301.5,101);
       }
       if(m_plotBySvcBox)
-        m_1ds_chargeByServiceBox[svcBox] = book1D("Cluster ADC Values "+svcBox, -1.5, 301.5, 101);
+        m_1ds_chargeByServiceBox[svcBox] = book1D("Cluster ADC Values "+svcBox,
+                                                  -1.5, 301.5, 101);
     } // End of service box loop
   } // End of service box condition
 
@@ -218,7 +235,8 @@ void ST::STClusterMonitor::bookHistograms() {
     for( ; itNames != names.end(); ++itNames ){
       //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
-      m_1ds_chargeByDetRegion[region] = book1D("Cluster ADC Values "+region, -1.5, 301.5, 101);
+      m_1ds_chargeByDetRegion[region] = book1D("Cluster ADC Values "+region, 
+                                               -1.5, 301.5, 101);
     };
 //   if(m_plotByDetRegion) {
 //     id1DCharge += " "+cluster->detRegionName();
@@ -248,18 +266,20 @@ void ST::STClusterMonitor::fillHistograms(const LHCb::STCluster* cluster){
   // Always fill histograms per readout quadrant for TT
   // Get service box and set up histogram IDs
   m_1d_totalCharge->fill(totalCharge);
-  std::string svcBox = (this->readoutTool())->serviceBox(cluster->firstChannel());
+  std::string svcBox = readoutTool()->serviceBox(cluster->firstChannel());
   if(detType() == "TT") {
     std::string quadrant = svcBox.substr(0,2);
     m_1ds_chargeByServiceBox[quadrant]->fill(totalCharge);
   }
   if(m_plotBySvcBox) m_1ds_chargeByServiceBox[svcBox]->fill(totalCharge);
-  if(m_plotByDetRegion) m_1ds_chargeByDetRegion[cluster->detRegionName()]->fill(totalCharge);
+  if(m_plotByDetRegion) m_1ds_chargeByDetRegion[cluster->detRegionName()]
+                          ->fill(totalCharge);
 }
 //==============================================================================
 /// Fill more detailed histograms
 //==============================================================================
-void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster* cluster) {
+void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster* 
+                                                  cluster) {
   // high threshold
   plot(cluster->highThreshold(),"High threshold","High threshold",-0.5,1.5,2);
 
@@ -271,51 +291,52 @@ void ST::STClusterMonitor::fillDetailedHistograms(const LHCb::STCluster* cluster
 
   // histogram by station
   const int station = cluster->station();
-  plot1D(station, "Number of clusters per station", "Number of clusters per station", -0.5, 4.5, 5);
+  plot1D(station, "Number of clusters per station", 
+         "Number of clusters per station", -0.5, 4.5, 5);
  
   // by layer
   const int layer = cluster->layer();
-  plot((double)(10*station+layer), "Number of clusters per layer", "Number of clusters per layer", -0.5, 40.5, 41);
+  plot((double)(10*station+layer), "Number of clusters per layer", 
+       "Number of clusters per layer", -0.5, 40.5, 41);
 
   const double neighbourSum = cluster->neighbourSum();
-  plot1D(cluster->pseudoSize(), "Pseudo size of cluster", "Pseudo size of cluster",-0.5, 10.5,11); 
+  plot1D(cluster->pseudoSize(), "Pseudo size of cluster", 
+         "Pseudo size of cluster",-0.5, 10.5,11); 
 
   const double totalCharge = cluster->totalCharge();
-  plot1D(neighbourSum/totalCharge,"Relative neighbour sum","Relative neighbour sum", -1.02, 1.02, 51);
+  plot1D(neighbourSum/totalCharge,"Relative neighbour sum",
+         "Relative neighbour sum", -1.02, 1.02, 51);
 
   const unsigned int clusterSize = cluster->size();
   if(3 > clusterSize) {
-    plot1D(neighbourSum,"Neighbour sum (1- and 2-strip clusters)","Neighbour sum (1- and 2-strip clusters)",-16.5, 26.5, 43);
-    plot1D(neighbourSum/totalCharge, "Relative neighbour sum (1- and 2-strip clusters)",
+    plot1D(neighbourSum,"Neighbour sum (1- and 2-strip clusters)",
+           "Neighbour sum (1- and 2-strip clusters)",-16.5, 26.5, 43);
+    plot1D(neighbourSum/totalCharge, 
+           "Relative neighbour sum (1- and 2-strip clusters)",
            "Relative neighbour sum (1- and 2-strip clusters)", -1.02, 1.02, 51);
   }
   // charge and S/N
   plot1D(totalCharge,cluster->layerName()+"/Charge", "Charge",-0.5, 500.5, 501);
-  if(m_stn) plot1D(m_sigNoiseTool->signalToNoise(cluster),cluster->layerName()+"/Signal to noise","S/N",0., 100., 100);
+  if(m_stn) plot1D( m_sigNoiseTool->signalToNoise(cluster),
+                    cluster->layerName()+"/Signal to noise","S/N",0., 100.,100);
 }
 //==============================================================================
 /// Fill histograms of hitmaps
 //==============================================================================
 void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {  
   if(detType()=="TT"){// Cluster maps for TT
-    std::string idMap = "Cluster map for "+cluster->layerName();
-    const DeSTSector* aSector = (this->tracker())->findSector(cluster->channelID());
-    std::auto_ptr<LHCb::Trajectory> tmpTraj = aSector->trajectory(cluster->channelID() , cluster->interStripFraction() ); 
-    Gaudi::XYZPoint begin= tmpTraj->beginPoint();
-    Gaudi::XYZPoint end  = tmpTraj->endPoint();
-    Gaudi::XYZPoint middle = begin + (end-begin)/2;
-    
-    // Loop over all sensors in a sector to get the y-centre
-    const DeSTSector::Sensors sensors = aSector->sensors();
-    DeSTSector::Sensors::const_iterator iSensor = sensors.begin();
-    for( ; iSensor != sensors.end(); ++iSensor ) {
-      double y = (*iSensor)->globalCentre().y();
-      double sensorHeight = (*iSensor)->activeHeight();
-      // Fill the Hitmap (twice, due to the binning)
-      plot2D(middle.x(), y+0.25*sensorHeight, idMap, idMap, -850., 850., 
-             -8*sensorHeight, 8*sensorHeight, 170, 32);
-      plot2D(middle.x(), y-0.25*sensorHeight, idMap, idMap, -850., 850., 
-             -8*sensorHeight, 8*sensorHeight, 170, 32);
+    const unsigned int nBinsPerSector = 16u; // equals ports per sector in TT
+    std::string idMap = detType()+" cluster map";
+    const DeSTSector* aSector = tracker()->findSector(cluster->channelID());
+    const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(aSector);
+    ST::TTDetectorPlot hitMap(idMap, idMap, nBinsPerSector);
+    ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
+    double port = (cluster->channelID().strip()-1.0)/STDAQ::nstrips;
+    double xBin = bins.xBin + port/nBinsPerSector - 0.5;
+    for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
+      plot2D(xBin, yBin, hitMap.name(), hitMap.title(), 
+             hitMap.minBinX(), hitMap.maxBinX(), hitMap.minBinY(), 
+             hitMap.maxBinY(), hitMap.nBinX(), hitMap.nBinY() );
     }
 
   } else if( detType() == "IT" ) {// Cluster map for IT
@@ -344,6 +365,6 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
     distToOriginx=84-((channel.sector()-1)*384+channel.strip()-1)/32;
     const int iXcoord = originx+distToOriginx;
     const int iYcoord= channel.layer()+originy;
-    plot2D(iXcoord,iYcoord, "Cluster Map", "Cluster Map", 1., 253., 1., 39., 252, 1);
+    plot2D(iXcoord,iYcoord, "Cluster Map", "Cluster Map", 1.,253.,1.,39.,252,1);
   }
 }
