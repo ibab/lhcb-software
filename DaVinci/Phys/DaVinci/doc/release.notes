@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.372 2009-08-28 13:58:25 jpalac Exp $
+! $Id: release.notes,v 1.373 2009-08-28 13:59:51 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,13 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-08-25 - Patrick Koppenburg
+ - Set HltConf().WithMC to self.Simulation()
+
+! 2009-08-24 - Patrick Koppenburg
+ - Remove useless Lbappinit import
+ - v24r2
 
 !========================== DaVinci v24r1p1 2009-08-28 ===================
 
