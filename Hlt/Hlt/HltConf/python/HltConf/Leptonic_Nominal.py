@@ -55,7 +55,7 @@ class Leptonic_Nominal :
     
 ######################################################################################################
         
-     def ActiveHlt2Lines(self) :
+    def ActiveHlt2Lines(self) :
         """
         Returns a list of active lines 
         """
