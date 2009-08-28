@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.22 2009-08-05 19:56:28 graven Exp $
+#$Id: requirements,v 1.23 2009-08-28 12:12:22 graven Exp $
 #============================================================================
 # Created    : 2008-01-21
 # Maintainer : Bruno Souza de Paula	 
@@ -36,4 +36,3 @@ library          HltGlobalMonitor ../src/*.cpp -import=LCG_Interfaces/AIDA
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=HltGlobalMonitor
-

@@ -58,8 +58,7 @@ private:
   template <typename T> T* fetch(const std::string& location) {
        T* t =  this->exist<T>( location ) ?  this->get<T>( location ) 
                                            :  (T*)0;
-       if (t == 0 && this->msgLevel(MSG::WARNING) ) this->warning() << " could not retrieve " 
-                                                                    << location << endmsg;
+       if (t == 0 && this->msgLevel(MSG::WARNING) ) Warning( " could not retrieve "  + location,StatusCode::SUCCESS,10) ;
        return t;
     };
 
