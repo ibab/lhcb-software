@@ -73,11 +73,11 @@ class bindMembers (object) :
             if m not in members : members += [ m ]
         return members
 
-    def _default_handler_( self, line, alg ) :
-        # if not known, blindly copy -- not much else we can do
-        self._members += [ alg ]
-        # try to guess where the output goes...
-        if hasattr ( type(alg) , 'OutputSelection' ) :
+    def _getOutputLocation (self, alg) :
+        if type(alg) is GaudiSequencer : 
+    	    for i in alg.Members : 
+    		self._getOutputLocation( i )
+        elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputsel = alg.OutputSelection 
         elif hasattr ( type(alg) , 'OutputLocation' ) :
@@ -85,6 +85,12 @@ class bindMembers (object) :
                 self._outputsel = alg.OutputLocation 
         else :
             self._outputsel = alg.name()
+
+    def _default_handler_( self, line, alg ) :
+        # if not known, blindly copy -- not much else we can do
+        self._members += [ alg ]
+        # try to guess where the output goes...
+        self._getOutputLocation(alg)
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
@@ -94,12 +100,10 @@ class bindMembers (object) :
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
         # self._outputsel = alg.outputSelection()
 
-
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
         alg = alg.createConfigurable( line, **alg.Args )
         return self._default_handler_( line,  alg )
-
 
     def __init__( self, line, algos ) :
         self._members = []

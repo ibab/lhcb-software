@@ -82,7 +82,7 @@ class StrippingConf( LHCbConfigurableUser ):
 	    for stream in self.activeStreams() :
 		if line.stream() == stream.name() :
 		    stream.appendLine(line)
-		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream())
+		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream()+", output="+line.outputSelection())
         
 	output = (self.getProp('OutputType')).upper()
 

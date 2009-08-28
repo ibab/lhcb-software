@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.17 2009-08-27 09:31:04 jpalac Exp $
+!$Id: release.notes,v 1.18 2009-08-28 17:46:29 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-08-27 - Anton Poluektov
+  
+  - The output location for a line with the GaudiSequencer as the last stage 
+    was deterimned incorreclty in bindMembers. Caused crash while writing DST. Fixed. 
 
 !========================== StrippingConf v1r4 2009-08-27 ===================
 
