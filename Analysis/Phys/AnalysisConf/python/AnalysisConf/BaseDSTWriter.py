@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.4 2009-08-26 16:16:59 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.5 2009-08-28 13:32:34 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,13 +14,13 @@ class BaseDSTWriter(ConfigurableUser) :
     contents of the input DST file.
     """
     __slots__ = {
-        "OutputFilePrefix"           : ""
+        "OutputFileSuffix"           : ""
         , "SelectionSequences"       : []
         }
 
     _propertyDocDct = {  
-        "OutputFilePrefix"             : """ Write name of output MicroDST file. Default 'MicroDST.dst'"""
-        , "SelectionSequences" : """ Name of PhysSlePython.SelectionSequence that defines the selection"""
+        "OutputFileSuffix"             : """Add to name of output DST file. Default ''"""
+        , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
         }
 
     def sequence(self) :
@@ -45,7 +45,8 @@ class BaseDSTWriter(ConfigurableUser) :
         return ".dst"
 
     def outputFileName(self, name) :
-        dstName = self.getProp('OutputFilePrefix')+name+self.fileExtension()
+        if name == "" : name = 'Output'
+        dstName = name+"_"+self.getProp('OutputFileSuffix')+self.fileExtension()
         return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC'"
     
     def _initOutputStreams(self, name) :
