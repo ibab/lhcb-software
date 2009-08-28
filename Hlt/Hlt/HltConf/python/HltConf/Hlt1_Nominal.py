@@ -57,6 +57,8 @@ class Hlt1_Nominal :
                                         , 'MuTrackPoint'       : 0.4
                                         , 'MuTrackTrChi2'      : 10 
                                         }
+                 , HltExpressLinesConf : {  'Prescale' : { '.*' : 1.0  } # TODO: Fixme
+                                         }
                  }
     
     def ActiveHlt2Lines(self) :
@@ -102,6 +104,9 @@ class Hlt1_Nominal :
                  'Hlt1LumiBeamCrossing',
                  'Hlt1LumiBeam1',
                  'Hlt1LumiBeam2',
+                 'Hlt1BeamGas1',
+                 'Hlt1BeamGas2',
+                 'Hlt1BeamGasCrossing',
                  'Hlt1L0Muon',
                  'Hlt1L0DiMuon',
                  'Hlt1L0Muon,lowMult',

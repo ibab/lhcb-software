@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.25 2009-08-24 21:26:39 graven Exp $
+# $Id: Hlt1.py,v 1.26 2009-08-28 11:45:06 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.25 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.26 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -44,7 +44,7 @@ _type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was con
              }
 
 def hlt1TypeDecoder(hlttype) :
-      trans = { 'Hlt1' : 'PA+LU+L0+VE+XP+MU+HA+PH+EL'  }
+      trans = { 'Hlt1' : 'PA+LU+L0+BG+VE+XP+MU+HA+PH+EL'  }
       for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
       # split hlttype in known and unknown bits
       known   = [ i for i in hlttype.split('+') if i in _type2conf.keys() ]
