@@ -44,26 +44,34 @@
 #include "EvtGenBase/EvtVectorParticle.hh"
 #include "EvtGenBase/EvtDiLog.hh"
 
+//for controlling the error handling
+#include "gsl/gsl_errno.h"
+
 
 qcd::IPhysicsModel* EvtBToKStarllDurham07::_model = 0;
 QCDFactorisation* EvtBToKStarllDurham07::_calculator = 0;
 double EvtBToKStarllDurham07::_poleSize = 0;
 
-double EvtBToKStarllDurham07::_lowq2Cut = 0.5;
-double EvtBToKStarllDurham07::_highq2Cut = 18;
+double EvtBToKStarllDurham07::_lowq2Cut = 1.0;
+double EvtBToKStarllDurham07::_highq2Cut = 12;
 bdkszmm::PARAMETERIZATIONS EvtBToKStarllDurham07::_ffModel = bdkszmm::BALL07PRIVATE;
 bool EvtBToKStarllDurham07::_calcConstraints = false;
+bool EvtBToKStarllDurham07::_writeProbProfile = false;
 
 //strings to be parsed from the decay file
 const std::string EvtBToKStarllDurham07::constraintsCommand = "calcConstraints";
 const std::string EvtBToKStarllDurham07::formFactorCommand = "formFactorModel";
+const std::string EvtBToKStarllDurham07::probablityProfileCommand = "writeProbProfile";
 const std::string EvtBToKStarllDurham07::highq2CutCommand = "highq2Cut";
 const std::string EvtBToKStarllDurham07::lowq2CutCommand = "lowq2Cut";
 const std::string EvtBToKStarllDurham07::modelCommand = "physicsModel";
 
+
 EvtBToKStarllDurham07::EvtBToKStarllDurham07():
 	EvtDecayAmp::EvtDecayAmp()
 {
+	//disable the GSL default error handling
+	gsl_set_error_handler_off();
 }
 
 EvtDecayBase* EvtBToKStarllDurham07::clone(){
@@ -167,6 +175,8 @@ void EvtBToKStarllDurham07::initProbMax(){
 	report(INFO, "EvtGen")	<< "Initialising the decay model with lowq2Cut(" << _lowq2Cut << "),highq2Cut("
 							<< _highq2Cut << ")" << std::endl; 
 	
+	std::vector<std::pair<double,double> > q2values;
+
 	for (massiter=0; massiter<3; massiter++) {
 
 		mass[0] = EvtPDL::getMeanMass(meson);
@@ -267,6 +277,10 @@ void EvtBToKStarllDurham07::initProbMax(){
 				}
 
 			}
+			//store the probablity if we are going to write it out
+			if(_writeProbProfile){
+				q2values.push_back(std::make_pair(q2, prob));
+			}
 
 			if (i==0) {
 				maxpole=prob;
@@ -291,6 +305,23 @@ void EvtBToKStarllDurham07::initProbMax(){
 	root_part->deleteTree();
 
 	poleSize=0.04*(maxpole/maxfoundprob)*4*(mass[1]*mass[1]);
+
+	//write out a file showing the probability profile if requested
+	//this can be used for choosing q2cuts to get the MC efficiency up
+	if(_writeProbProfile){
+		
+		std::ostringstream os;
+		os << "Prob_Profile_" << _model->getModelName() << ".dat";
+		const std::string outFile = os.str();
+		std::ofstream outputdata(outFile.c_str());
+
+		for (std::vector<std::pair<double,double> >::iterator it = q2values.begin(); it
+		!= q2values.end(); ++it) {
+			outputdata << it->first << "\t" << it->second << std::endl;
+		}
+		outputdata.close();
+	}
+
 	maxfoundprob *=1.15;
 	
 	report(INFO,"EvtGen") << "maximum probability : " << maxfoundprob << "minimum probability : " << minfoundprob << std::endl;
@@ -410,6 +441,13 @@ void EvtBToKStarllDurham07::handleCommand(const std::string& key, const std::str
 		std::istringstream in(value);
 		in >> val;
 		_calcConstraints = val;
+
+	} else if (key == probablityProfileCommand) {
+		//write out a probablity profile for testing
+		bool val = false;
+		std::istringstream in(value);
+		in >> val;
+		_writeProbProfile = val;
 
 	}else if (key == qcd::GenericModel::modelCommand) {
 		//the model parameters are set in the main command method

@@ -34,6 +34,7 @@ public:
 
 	static const std::string constraintsCommand;
 	static const std::string formFactorCommand;
+	static const std::string probablityProfileCommand;
 	static const std::string highq2CutCommand;
 	static const std::string lowq2CutCommand;
 	static const std::string modelCommand;
@@ -53,6 +54,7 @@ private:
 	static double _highq2Cut;
 	static bdkszmm::PARAMETERIZATIONS _ffModel;
 	static bool _calcConstraints;
+	static bool _writeProbProfile;
 	
 protected:
 	
