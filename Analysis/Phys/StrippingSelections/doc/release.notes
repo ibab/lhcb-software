@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-08-27 V Gligorov
+ - Rewrote the topological stripping selection to avoid clashes with the trigger code.
+   The topological stripping is now detached from the trigger; it will be reattached once
+   the common parts of the Hlt/Stripping line code are merged.  
+
 ! 2009-08-27 Alessio Sarti
  - Added the Lambda LL line + modified some cuts (accordingly to new
    optimization). Prescaling now set to 1 (easy to change once strategy is finalized)
