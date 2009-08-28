@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.29 2009-08-27 09:29:58 jpalac Exp $
+!$Id: release.notes,v 1.30 2009-08-28 13:34:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-08-28 - Juan PALACIOS
+ - python/AnalysisConf/BaseMicroDSTWriter.py
+  . replace OutputFilePrefix by OutputFileSuffix. The file will be named 
+    Something_OutputFileSuffix.dst
+ - cmt/requirements
+  . Increase version to v1r6
 
 !========================== AnalysisConf v1r5 2009-08-27 ====================
 
