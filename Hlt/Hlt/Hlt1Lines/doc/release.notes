@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.35 2009-08-27 15:28:17 phopchev Exp $
+! $Id: release.notes,v 1.36 2009-08-28 11:43:19 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-28 - Gerhard Raven
+ - changes in HltBeamGasLines:
+    - run RZVelo 'sometimes' explicitly in HltBeamGasLines
+    - add some explicit prescale factors
 
 ! 2009-08-27 - Plamen Hopchev
  - changes in HltBeamGasLines: 
