@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.7 2009-08-26 16:48:37 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.8 2009-08-28 13:50:54 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -15,20 +15,22 @@ class SelDSTWriter(MicroDSTWriter) :
     Write a DST for a single selection sequence. Writes out the entire
     contents of the input DST file, plus extra items from the TES.
     """
-    __slots__ = { "SaveCandidates" : False,
-                  "CopyODIN"       : False,
-                  "CopyRecHeader"  : False,
-                  "CopyPVs"        : False,
-                  "CopyBTags"      : False,
-                  "OutputPrefix"   : "Sel"
+    __slots__ = { "SaveCandidates"     : True,
+                  "CopyODIN"           : False,
+                  "CopyRecHeader"      : False,
+                  "CopyPVs"            : False,
+                  "CopyProtoParticles" : False,
+                  "CopyBTags"          : False,
+                  "CopyPVRelations"    : {"Particle2VertexRelations":False},
+                  "OutputPrefix"       : "Sel"
                   }
 
-    _propertyDocDct = {"SaveCandidates" : """Copy candidate decay tree""",
-                       "CopyODIN" : """Copy ODIN bank into /Event/OutputPrefix """,
+    _propertyDocDct = {"SaveCandidates" : """Copy candidate decay tree. Default: True.""",
+                       "CopyODIN" : """Copy ODIN bank into /Event/OutputPrefix. Default: False. """,
                        "CopyRecHeader" : """Copy RecHeader bank into /Event/OutputPrefix """,
-                       "CopyPVs" : """ Copy primary vertices bank into /Event/OutputPrefix """,
-                       "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix """,
-                       "OutputPrefix" : """ Prefix of TES location of candidates output: /Event/OutputPrefix/xxxx"""}
+                       "CopyPVs" : """ Copy primary vertices bank into /Event/OutputPrefix. Default: False. """,
+                       "CopyBTags" : """ Copy FlavourTags bank into /Event/OutputPrefix. Default: False. """,
+                       "OutputPrefix" : """ Prefix of TES location of candidates output: /Event/OutputPrefix/xxxx. Default 'Sel'."""}
 
     def outputStreamType(self) :
         from Configurables import InputCopyStream
