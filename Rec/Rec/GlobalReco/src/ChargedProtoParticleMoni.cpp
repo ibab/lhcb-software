@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMoni
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMoni.cpp,v 1.3 2009-08-29 21:26:19 jonrob Exp $
+ * $Id: ChargedProtoParticleMoni.cpp,v 1.4 2009-08-29 21:28:12 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -100,7 +100,7 @@ StatusCode ChargedProtoParticleMoni::execute()
     // Does this track have a proto (uses same ey convention) ?
     LHCb::ProtoParticle * proto = protos->object((*iTrack)->key());
     profile1D( (*iTrack)->p(), 100.0 * (int)(NULL != proto),
-               "Track Selection Eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% Tracks with ProtoParticles V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Proceeed with tracks with ProtoParticles
     if ( !proto ) continue;
