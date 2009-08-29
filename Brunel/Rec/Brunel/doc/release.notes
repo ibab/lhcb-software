@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-08-29 - Chris Jones
+ - Add ProtoParticle monitor sequence.
+
 ! 2009-08-05 - Chris Jones
  - Allow RICH expert histograms to be enabled when running without MC
 

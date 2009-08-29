@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.90 2009-08-05 14:33:26 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.91 2009-08-29 20:41:45 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -24,11 +24,11 @@ class Brunel(LHCbConfigurableUser):
     DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
     
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST"] 
-    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT","PROTO"]
+    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST","PROTO"] 
+    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
-    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr"]
+    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","PROTO"]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ "ProcessPhase/Init",
                         "ProcessPhase/Reco",
@@ -446,7 +446,11 @@ class Brunel(LHCbConfigurableUser):
             GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
                                                        ST__STClusterMonitor("ITClusterMonitor")]
             ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
-            ST__STClusterMonitor("ITClusterMonitor").DetType = "IT" 
+            ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
+
+        if "PROTO" in moniSeq :
+            from Configurables import ChargedProtoParticleMoni
+            GaudiSequencer( "MoniPROTOSeq" ).Members += [ChargedProtoParticleMoni("ChargedProtoPMoni")]
 
         # Histograms filled only in real data case
         if not withMC:
