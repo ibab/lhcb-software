@@ -1,5 +1,5 @@
 package MooreSys
-version v7r3
+version v7r4
 
 branches doc cmt
 
@@ -7,22 +7,9 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v7r3    Hlt
-
-### Temporarily here...
-use L0Muon               v8r5p1 L0
-use Hlt2SharedParticles     v2r0    Hlt
-use Hlt1Lines               v1r2p1  Hlt
-use Hlt2Lines               v1r5    Hlt
-use HltCommon               v5r8p4  Hlt
-use HltLine                 v1r4    Hlt
+use  Moore                  v7r4    Hlt
 use HltGlobalMonitor    v2r6    Hlt
-
-use HltConf                 v4r1    Hlt
 use TCKUtils                v1r3    Hlt
-
-
-
 
 
 
