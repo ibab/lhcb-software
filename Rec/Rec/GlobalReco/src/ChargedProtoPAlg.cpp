@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.cpp
  *
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.74 2009-08-21 17:08:03 odescham Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.75 2009-08-29 20:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -105,36 +106,35 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
 
 
   // Calo tables default location from context()
-  std::string flag = context();
   using namespace LHCb::Calo2Track;
   using namespace LHCb::CaloIdLocation;
-  m_inEcalPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InEcal       , InEcalHlt       );
-  m_inBremPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InBrem       , InBremHlt       );
-  m_inSpdPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , InSpd        , InSpdHlt        );
-  m_inPrsPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , InPrs        , InPrsHlt        );
-  m_inHcalPath        =  LHCb::CaloAlgUtils::PathFromContext( flag , InHcal       , InHcalHlt       );
-  m_electronMatchPath =  LHCb::CaloAlgUtils::PathFromContext( flag , ElectronMatch, ElectronMatchHlt);
-  m_bremMatchPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , BremMatch    , BremMatchHlt    );
-  m_clusterMatchPath  =  LHCb::CaloAlgUtils::PathFromContext( flag , ClusterMatch , ClusterMatchHlt );
-  m_ecalChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalChi2     , EcalChi2Hlt     );
-  m_bremChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( flag , BremChi2     , BremChi2Hlt     );
-  m_clusterChi2Path   =  LHCb::CaloAlgUtils::PathFromContext( flag , ClusChi2     , ClusChi2Hlt     );
-  m_ecalEPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalE        , EcalEHlt        );
-  m_spdEPath          =  LHCb::CaloAlgUtils::PathFromContext( flag , SpdE         , SpdEHlt         );
-  m_prsEPath          =  LHCb::CaloAlgUtils::PathFromContext( flag , PrsE         , PrsEHlt         );
-  m_hcalEPath         =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalE        , HcalEHlt        );
-  m_ecalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalPIDe     , EcalPIDeHlt     );
-  m_hcalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalPIDe     , HcalPIDeHlt     );
-  m_bremPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( flag , BremPIDe     , BremPIDeHlt     );
-  m_prsPIDePath       =  LHCb::CaloAlgUtils::PathFromContext( flag , PrsPIDe      , PrsPIDeHlt      );
-  m_ecalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , EcalPIDmu    , EcalPIDmuHlt    );
-  m_hcalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( flag , HcalPIDmu    , HcalPIDmuHlt    );
+  m_inEcalPath        =  LHCb::CaloAlgUtils::PathFromContext( context() , InEcal       , InEcalHlt       );
+  m_inBremPath        =  LHCb::CaloAlgUtils::PathFromContext( context() , InBrem       , InBremHlt       );
+  m_inSpdPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , InSpd        , InSpdHlt        );
+  m_inPrsPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , InPrs        , InPrsHlt        );
+  m_inHcalPath        =  LHCb::CaloAlgUtils::PathFromContext( context() , InHcal       , InHcalHlt       );
+  m_electronMatchPath =  LHCb::CaloAlgUtils::PathFromContext( context() , ElectronMatch, ElectronMatchHlt);
+  m_bremMatchPath     =  LHCb::CaloAlgUtils::PathFromContext( context() , BremMatch    , BremMatchHlt    );
+  m_clusterMatchPath  =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusterMatch , ClusterMatchHlt );
+  m_ecalChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalChi2     , EcalChi2Hlt     );
+  m_bremChi2Path      =  LHCb::CaloAlgUtils::PathFromContext( context() , BremChi2     , BremChi2Hlt     );
+  m_clusterChi2Path   =  LHCb::CaloAlgUtils::PathFromContext( context() , ClusChi2     , ClusChi2Hlt     );
+  m_ecalEPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalE        , EcalEHlt        );
+  m_spdEPath          =  LHCb::CaloAlgUtils::PathFromContext( context() , SpdE         , SpdEHlt         );
+  m_prsEPath          =  LHCb::CaloAlgUtils::PathFromContext( context() , PrsE         , PrsEHlt         );
+  m_hcalEPath         =  LHCb::CaloAlgUtils::PathFromContext( context() , HcalE        , HcalEHlt        );
+  m_ecalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDe     , EcalPIDeHlt     );
+  m_hcalPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( context() , HcalPIDe     , HcalPIDeHlt     );
+  m_bremPIDePath      =  LHCb::CaloAlgUtils::PathFromContext( context() , BremPIDe     , BremPIDeHlt     );
+  m_prsPIDePath       =  LHCb::CaloAlgUtils::PathFromContext( context() , PrsPIDe      , PrsPIDeHlt      );
+  m_ecalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( context() , EcalPIDmu    , EcalPIDmuHlt    );
+  m_hcalPIDmuPath     =  LHCb::CaloAlgUtils::PathFromContext( context() , HcalPIDmu    , HcalPIDmuHlt    );
   
   /* @todo : same rule for default specific location for Rich/Muon PID + Track input + output ProtoP  ? Let's Chris decide.
-  m_richPath   = PathFromContext( flag , LHCb::RichPIDLocation::Offline, LHCb::RichPIDLocation::HLT );
-  m_muonPath   = PathFromContext( flag , LHCb::MuonPIDLocation::Offline, LHCb::MuonPIDLocation::HLT );
-  m_tracksPath = PathFromContext( flag , TrackLocation::Default        , LHCb::TrackLocation::HltForward);
-  m_protoPath  = PathFromContext( flag , LHCb::ProtoParticleLocation::Charged, LHCb::ProtoParticleLocation::HltCharged);
+  m_richPath   = PathFromContext( context() , LHCb::RichPIDLocation::Offline, LHCb::RichPIDLocation::HLT );
+  m_muonPath   = PathFromContext( context() , LHCb::MuonPIDLocation::Offline, LHCb::MuonPIDLocation::HLT );
+  m_tracksPath = PathFromContext( context() , TrackLocation::Default        , LHCb::TrackLocation::HltForward);
+  m_protoPath  = PathFromContext( context() , LHCb::ProtoParticleLocation::Charged, LHCb::ProtoParticleLocation::HltCharged);
   */
 
   // context specific locations
@@ -354,7 +354,7 @@ StatusCode ChargedProtoPAlg::execute()
             hasECALInfo || hasBREMInfo || hasSPDInfo || hasPRSInfo || hasHCALInfo ) )
     {
       // NO PID was added, so add a flag confirming this to the proto
-      proto->addInfo(ProtoParticle::NoPID,1);
+      // proto->addInfo(ProtoParticle::NoPID,1); // CRJ : Removed from ProtoParticle class.
     }
 
     if ( msgLevel(MSG::VERBOSE) )
@@ -581,6 +581,7 @@ bool ChargedProtoPAlg::addBrem( LHCb::ProtoParticle * proto ) const
         hRange = m_bremTrTable ->relations ( proto->track() ) ;
         if ( !hRange.empty() )
         {
+
           proto->addToCalo ( hRange.front().to() );
           proto->addInfo(ProtoParticle::CaloNeutralSpd, CaloSpd( hRange.front().to() ));
           proto->addInfo(ProtoParticle::CaloNeutralPrs, CaloPrs( hRange.front().to() ));

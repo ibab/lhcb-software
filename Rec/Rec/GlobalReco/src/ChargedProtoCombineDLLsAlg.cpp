@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.19 2009-07-30 12:16:52 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.20 2009-08-29 20:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -28,12 +28,12 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoCombineDLLsAlg );
 ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator )
-    , m_protoPath(LHCb::ProtoParticleLocation::Charged)
-    , m_elCombDll(0xFFFF)
-    , m_muCombDll(0xFFFF)
-    , m_prCombDll(0xFFFF)
-    , m_piCombDll(0xFFFF)
-    , m_kaCombDll(0xFFFF)
+  , m_protoPath(LHCb::ProtoParticleLocation::Charged)
+  , m_elCombDll(0xFFFF)
+  , m_muCombDll(0xFFFF)
+  , m_prCombDll(0xFFFF)
+  , m_piCombDll(0xFFFF)
+  , m_kaCombDll(0xFFFF)
 {
 
   // context specific locations
@@ -45,7 +45,7 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
   {
     m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
   }
-  
+
   // Job Options
   declareProperty( "ProtoParticleLocation", m_protoPath );
 
@@ -137,47 +137,50 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
         iP != protos->end(); ++iP )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << "Creating Combined DLLs for ProtoParticle " << (*iP)->key() 
+      verbose() << "Creating Combined DLLs for ProtoParticle " << (*iP)->key()
                 << endmsg;
 
-    // Does this ProtoParticle have any PID information ?
-    if ( !(*iP)->hasInfo(LHCb::ProtoParticle::NoPID) )
+    // Remove any current Combined DLL information
+    (*iP)->removeCombinedInfo();
+
+    bool hasPIDinfo(false);
+
+    // Combined DLL data object for this proto
+    CombinedLL combDLL(0);
+
+    // Add any RICH info
+    hasPIDinfo |= addRich(*iP,combDLL);
+
+    // Add any MUON info
+    hasPIDinfo |= addMuon(*iP,combDLL);
+
+    // Add any CALO info
+    hasPIDinfo |= addCalo(*iP,combDLL);
+
+    if ( hasPIDinfo )
     {
-
-      // Combined DLL data object for this proto
-      CombinedLL combDLL(0);
-
-      // Add any RICH info
-      addRich(*iP,combDLL);
-
-      // Add any MUON info
-      addMuon(*iP,combDLL);
-
-      // Add any CALO info
-      addCalo(*iP,combDLL);
-
       // Store the final combined DLL values into the ProtoParticle
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLe,  combDLL.elDLL-combDLL.piDLL );
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLmu, combDLL.muDLL-combDLL.piDLL );
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLpi, 0 ); // by definition
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLk,  combDLL.kaDLL-combDLL.piDLL );
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLp,  combDLL.prDLL-combDLL.piDLL );
-
-    } // Has PID info
+    }
 
   } // loop over protos
 
   return StatusCode::SUCCESS;
 }
 
-void
+bool
 ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
 {
-  // Add RICH Dll information. Default, for when not available is 0
-  if ( m_maskTechnique["RICH"] && proto->hasInfo(LHCb::ProtoParticle::RichPIDStatus) )
+  // Add RICH Dll information.
+  const bool ok = ( m_maskTechnique["RICH"] && proto->hasInfo(LHCb::ProtoParticle::RichPIDStatus) );
+  if ( ok )
   {
     // Apply renormalisation of RICH el and mu DLL values
-    // Eventually, should make these tunable job options .... 
+    // Eventually, should make these tunable job options ....
     if( 0 != m_elCombDll ) combDLL.elDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLe,0)/40.0  );
     if( 0 != m_muCombDll ) combDLL.muDLL += 7.0*tanh( proto->info(LHCb::ProtoParticle::RichDLLmu,0)/5.0 );
     if( 0 != m_piCombDll ) combDLL.piDLL += proto->info ( LHCb::ProtoParticle::RichDLLpi , 0 );
@@ -185,12 +188,14 @@ ChargedProtoCombineDLLsAlg::addRich( LHCb::ProtoParticle * proto, CombinedLL & c
     if( 0 != m_prCombDll ) combDLL.prDLL += proto->info ( LHCb::ProtoParticle::RichDLLp  , 0 );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding RICH info " << combDLL << endmsg;
   }
+  return ok;
 }
 
-void
+bool
 ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
 {
-  if ( m_maskTechnique["MUON"] && proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus) )
+  const bool ok = ( m_maskTechnique["MUON"] && proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus) );
+  if ( ok )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
     if( 0 != m_muCombDll ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::MuonMuLL, 0 );
@@ -199,38 +204,46 @@ ChargedProtoCombineDLLsAlg::addMuon( LHCb::ProtoParticle * proto, CombinedLL & c
     if( 0 != m_prCombDll ) combDLL.prDLL += proto->info ( LHCb::ProtoParticle::MuonBkgLL,0 );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding MUON info " << combDLL << endmsg;
   }
+  return ok;
 }
 
-void
+bool
 ChargedProtoCombineDLLsAlg::addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL )
 {
-  if ( m_maskTechnique["ECAL"] && ( proto->hasInfo(LHCb::ProtoParticle::EcalPIDe) || 
+  bool ok = false;
+  if ( m_maskTechnique["ECAL"] && ( proto->hasInfo(LHCb::ProtoParticle::EcalPIDe) ||
                                     proto->hasInfo(LHCb::ProtoParticle::EcalPIDmu) ) )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::EcalPIDe, 0  );
     if( 0 != m_muCombDll ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::EcalPIDmu, 0 );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding ECAL info " << combDLL << endmsg;
+    ok = true;
   }
 
-  if ( m_maskTechnique["HCAL"] && ( proto->hasInfo(LHCb::ProtoParticle::HcalPIDe) || 
+  if ( m_maskTechnique["HCAL"] && ( proto->hasInfo(LHCb::ProtoParticle::HcalPIDe) ||
                                     proto->hasInfo(LHCb::ProtoParticle::HcalPIDmu) ) )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::HcalPIDe, 0  );
     if( 0 != m_muCombDll ) combDLL.muDLL += proto->info ( LHCb::ProtoParticle::HcalPIDmu, 0 );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding HCAL info " << combDLL << endmsg;
+    ok = true;
   }
 
   if ( m_maskTechnique["PRS"] && proto->hasInfo(LHCb::ProtoParticle::PrsPIDe) )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::PrsPIDe , 0  );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding PRS  info " << combDLL << endmsg;
+    ok = true;
   }
 
   if ( m_maskTechnique["BREM"] && proto->hasInfo(LHCb::ProtoParticle::BremPIDe) )
   {
     if( 0 != m_elCombDll ) combDLL.elDLL += proto->info ( LHCb::ProtoParticle::BremPIDe, 0  );
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " -> Adding BREM info " << combDLL << endmsg;
+    ok = true;
   }
+
+  return ok;
 }
 
 //=============================================================================

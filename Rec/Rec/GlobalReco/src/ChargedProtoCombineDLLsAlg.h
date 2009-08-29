@@ -5,7 +5,7 @@
  * Header file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.h,v 1.6 2007-09-29 21:16:13 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.h,v 1.7 2009-08-29 20:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -90,13 +90,13 @@ private: // utility classes
 private: // methods
 
   /// Add the Rich DLL information to the combined DLL
-  void addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addRich( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
   /// Add the Muon DLL information to the combined DLL
-  void addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addMuon( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
   /// Add the Calo DLL information to the combined DLL
-  void addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
+  bool addCalo( LHCb::ProtoParticle * proto, CombinedLL & combDLL );
 
 private: // data
 

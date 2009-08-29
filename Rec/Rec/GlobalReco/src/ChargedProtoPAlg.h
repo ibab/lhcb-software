@@ -1,10 +1,11 @@
+
 //-----------------------------------------------------------------------------
 /** @file ChargedProtoPAlg.h
  *
  * Header file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.h,v 1.32 2009-08-21 17:08:03 odescham Exp $
+ * $Id: ChargedProtoPAlg.h,v 1.33 2009-08-29 20:37:18 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -155,7 +156,8 @@ private: // methods
 
   /// Loads a CALO relations table
   template < typename TYPE >
-  inline bool loadCaloTable( TYPE *& table, const std::string & location ) const{
+  inline bool loadCaloTable( TYPE *& table, const std::string & location ) const
+  {
     const bool ok = exist<TYPE>(location);
     if ( !ok ){
       table = NULL;
@@ -222,7 +224,7 @@ private: // data
 
   /// mapping type from Track to MuonPID data objects
   typedef std::map<const LHCb::Track *, const LHCb::MuonPID *> TrackToMuonPID;
-  /// mapping from Track to RichPID data objects
+  /// mapping from Track to MuonPID data objects
   TrackToMuonPID m_muonMap;
 
   // Track->Calo (Cluster/Hypo/Id/Acc) relation tables

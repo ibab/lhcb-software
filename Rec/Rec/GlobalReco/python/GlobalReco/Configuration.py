@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.6 2009-07-06 15:54:52 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-08-29 20:37:18 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -47,32 +47,67 @@ class GlobalRecoConf(LHCbConfigurableUser):
 
         if not self.isPropertySet("RecoSequencer") :
             raise RuntimeError("ERROR : PROTO Sequencer not set")
-
-        from Configurables import ( ChargedProtoPAlg, ChargedProtoCombineDLLsAlg,
-                                    NeutralProtoPAlg, DelegatingTrackSelector )
         
         seq = self.getProp("RecoSequencer")
         seq.Context = self.getProp("Context")
 
-        # Charged Proto particles
-        charged = ChargedProtoPAlg()
+        # Charged Proto particles (OLD)
+        #from Configurables import ( ChargedProtoPAlg, ChargedProtoCombineDLLsAlg,
+        #                            DelegatingTrackSelector )
+        #charged = ChargedProtoPAlg()
+        #charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
+        #tracktypes = self.getProp("TrackTypes")
+        #charged.TrackSelector.TrackTypes = tracktypes
+        #for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
+        # Fill the Combined DLL information in the charged protoparticles
+        #combine = ChargedProtoCombineDLLsAlg()
+        #seq.Members += [ charged,combine ]
+
+        # Charged Proto particles (NEW)
+        from Configurables import ( GaudiSequencer,
+                                    ChargedProtoParticleMaker,
+                                    ChargedProtoParticleAddRichInfo,
+                                    ChargedProtoParticleAddMuonInfo,
+                                    ChargedProtoParticleAddEcalInfo,
+                                    ChargedProtoParticleAddBremInfo,
+                                    ChargedProtoParticleAddHcalInfo,
+                                    ChargedProtoParticleAddPrsInfo,
+                                    ChargedProtoParticleAddSpdInfo,
+                                    ChargedProtoParticleAddVeloInfo,
+                                    ChargedProtoCombineDLLsAlg,
+                                    DelegatingTrackSelector )
+        cseq = GaudiSequencer("ChargedProtoParticles")
+        seq.Members += [cseq]
+        # Make Charged ProtoParticles
+        charged = ChargedProtoParticleMaker("ChargedProtoPMaker")
         charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
         tracktypes = self.getProp("TrackTypes")
         charged.TrackSelector.TrackTypes = tracktypes
         for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
-        
+        # Add PID information
+        rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
+        muon = ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")
+        ecal = ChargedProtoParticleAddEcalInfo("ChargedProtoPAddEcal")
+        brem = ChargedProtoParticleAddBremInfo("ChargedProtoPAddBrem")
+        hcal = ChargedProtoParticleAddHcalInfo("ChargedProtoPAddHcal")
+        prs  = ChargedProtoParticleAddPrsInfo("ChargedProtoPAddPrs")
+        spd  = ChargedProtoParticleAddSpdInfo("ChargedProtoPAddSpd")
+        velo = ChargedProtoParticleAddVeloInfo("ChargedProtoPAddVeloDEDX")
         # Fill the Combined DLL information in the charged protoparticles
-        combine = ChargedProtoCombineDLLsAlg()
+        combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
+        # Fill the sequence
+        cseq.Members += [ charged,rich,muon,ecal,brem,hcal,prs,spd,velo,combine ]
         
         # Neutrals
-        neutral = NeutralProtoPAlg()
-
+        from Configurables import NeutralProtoPAlg
+        nseq = GaudiSequencer("NeutralProtoParticles")
+        seq.Members += [nseq]
+        neutral = NeutralProtoPAlg("NeutralProtoPMaker")
+        nseq.Members += [ neutral ]
+        
         # Set output levels
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
             charged.OutputLevel = level
             combine.OutputLevel = level
             neutral.OutputLevel = level
-
-        # Add to sequencer
-        seq.Members += [ charged,combine,neutral ]

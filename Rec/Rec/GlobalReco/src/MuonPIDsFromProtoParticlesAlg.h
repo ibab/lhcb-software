@@ -5,15 +5,15 @@
  * Header file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.3 2007-07-13 15:25:24 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.h,v 1.4 2009-08-29 20:37:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
  */
 //-----------------------------------------------------------------------------
 
-#ifndef GLOBALRECO_RICHPIDSFROMPROTOPARTICLESALG_H 
-#define GLOBALRECO_RICHPIDSFROMPROTOPARTICLESALG_H 1
+#ifndef GLOBALRECO_MuonPIDsFromProtoParticlesAlg_H 
+#define GLOBALRECO_MuonPIDsFromProtoParticlesAlg_H 1
 
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
@@ -59,4 +59,4 @@ private:
 
 };
 
-#endif // GLOBALRECO_RICHPIDSFROMPROTOPARTICLESALG_H
+#endif // GLOBALRECO_MuonPIDsFromProtoParticlesAlg_H

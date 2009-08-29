@@ -4,10 +4,24 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-08-29 - Chris Jones
+ - Reorganisation of charged ProtoParticle algorithms for greater 
+   flexibility :-
+   + New algorithm with creates ProtoParticles from Tracks, but no longer
+     adds any PID information
+   + One algorithm per PID information to be added to the ProtoParticles. 
+     Seperating these tasks from the main ProtoParticle creator allows PID
+     information to be added at a later date (e.g. in the HLT).
+   + Each PID algorithm now makes sure to first purge any existingg 
+     information from the ProtoParticles before adding any new values.
+   + python Configurable is updated to use the new algorithms (used by Brunel)
+   + New Monitor algorithm (used in Brunel).
+   + Old algorithms remain for temporary compatibility whilst users
+     move over to the new algorithms. Will be removed in a future release.
+   + Requires update to ProtoParticle class in Event/RecEvent.
 
 ! 2009-08-21 - Olivier Deschamps
   - implement generic context-dependent TES I/O (remove NonStandardHltLocation)
-
 
 ! 2009-08-14 - Patrick Koppenburg
  - ChargedProtoPAlg : add a NonStandardHltLocation for Hlt
