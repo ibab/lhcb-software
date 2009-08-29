@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMoni
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMoni.cpp,v 1.2 2009-08-29 21:15:43 jonrob Exp $
+ * $Id: ChargedProtoParticleMoni.cpp,v 1.3 2009-08-29 21:26:19 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -99,12 +99,12 @@ StatusCode ChargedProtoParticleMoni::execute()
 
     // Does this track have a proto (uses same ey convention) ?
     LHCb::ProtoParticle * proto = protos->object((*iTrack)->key());
-    if ( !proto ) continue;
-
-    // Count tracks with a ProtoParticle
-    ++tally.selTracks;
     profile1D( (*iTrack)->p(), 100.0 * (int)(NULL != proto),
                "Track Selection Eff. V Momentum", 0*GeV, 100*GeV, 100 );
+
+    // Proceeed with tracks with ProtoParticles
+    if ( !proto ) continue;
+    ++tally.selTracks;
 
     // Printout ProtoParticles
     if ( msgLevel(MSG::VERBOSE) ) { verbose() << *proto << endmsg; }
@@ -113,49 +113,49 @@ StatusCode ChargedProtoParticleMoni::execute()
     const bool hasRICH = proto->hasInfo(LHCb::ProtoParticle::RichPIDStatus);
     if ( hasRICH ) { ++tally.richTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasRICH,
-               "ProtoParticle RICH eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with RICH info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Muon INFO
     const bool hasMUON = proto->hasInfo(LHCb::ProtoParticle::MuonPIDStatus);
     if ( hasMUON ) { ++tally.muonTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasMUON,
-               "ProtoParticle MUON eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with MUON info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // ECAL info
     const bool hasECAL = proto->hasInfo(LHCb::ProtoParticle::InAccEcal);
     if ( hasECAL ) { ++tally.ecalTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasECAL,
-               "ProtoParticle ECAL eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with CALO-ECAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Brem info
     const bool hasBREM = proto->hasInfo(LHCb::ProtoParticle::InAccBrem);
     if ( hasBREM ) { ++tally.bremTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasBREM,
-               "ProtoParticle BREM eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with CALO-BREM info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Spd info
     const bool hasSPD = proto->hasInfo(LHCb::ProtoParticle::InAccSpd);
     if ( hasSPD ) { ++tally.spdTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasSPD,
-               "ProtoParticle SPD eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with CALO-SPD info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // PRS info
     const bool hasPRS = proto->hasInfo(LHCb::ProtoParticle::InAccPrs);
     if ( hasPRS ) { ++tally.prsTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasPRS,
-               "ProtoParticle PRS eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with CALO-PRS info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Hcal info
     const bool hasHCAL = proto->hasInfo(LHCb::ProtoParticle::InAccHcal);
     if ( hasHCAL ) { ++tally.hcalTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasHCAL,
-               "ProtoParticle HCAL eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with CALO-HCAL info V Momentum", 0*GeV, 100*GeV, 100 );
 
     // Add Velo dE/dx info
     const bool hasDEDX = proto->hasInfo(LHCb::ProtoParticle::VeloCharge);
     if ( hasDEDX ) { ++tally.velodEdxTracks; }
     profile1D( (*iTrack)->p(), 100.0 * (int)hasDEDX,
-               "ProtoParticle VELO dE/dx eff. V Momentum", 0*GeV, 100*GeV, 100 );
+               "% ProtoParticles with VELO dE/dx info V Momentum", 0*GeV, 100*GeV, 100 );
 
   }
 
