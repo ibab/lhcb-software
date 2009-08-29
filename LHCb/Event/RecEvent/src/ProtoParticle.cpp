@@ -1,144 +1,9 @@
-// $Id: ProtoParticle.cpp,v 1.4 2007-04-19 15:52:40 cattanem Exp $
+// $Id: ProtoParticle.cpp,v 1.5 2009-08-29 20:30:18 jonrob Exp $
 
 // local
 #include "Event/ProtoParticle.h"
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : ProtoParticle
-//                                 derived from class ContainedObject
-//
-// 2002-07-08 : Gloria Corti
-// 2005-07-25 : P. Koppenburg
-//-----------------------------------------------------------------------------
-
-//=============================================================================
-// Copy constructor
-//=============================================================================
-//LHCb::ProtoParticle::ProtoParticle(const LHCb::ProtoParticle& proto)
-// : KeyedObject<int>()
-//  , m_extraInfo( proto.extraInfo() )
-//  , m_calo( proto.calo() )
-//  , m_track( proto.track() )
-//  , m_richPID( proto.richPID() )
-//  , m_muonPID( proto.muonPID() )
-//{ }
-
-//=============================================================================
-// Clone 
-//=============================================================================
-//LHCb::ProtoParticle* LHCb::ProtoParticle::clone() const
-//{
-//  return new LHCb::ProtoParticle(*this);
-//}
-
-//=============================================================================
-// Assignment operator
-//=============================================================================
-//LHCb::ProtoParticle& 
-//LHCb::ProtoParticle::operator = ( const LHCb::ProtoParticle& orig ) 
-//{ 
-// // protect against self assignement
-// if ( this != &orig ) 
-//  {
-//    m_extraInfo = orig.extraInfo();
-//    m_calo      = orig.calo(); 
-//    m_track     = orig.track();
-//    m_richPID   = orig.richPID();
-//    m_muonPID   = orig.muonPID();
-//  }
-//  return *this;
-//}
-
-//=============================================================================
-/** Check the presence of the information associated with 
- *  a given key
- *  
- *  @code
- * 
- *  const ProtoParticle* p = ... ;
- *
- *  ProtoParticle::Key key = ... ; 
- *  bool hasKey = p->hasInfo( key ) ;
- *
- *  @endcode 
- *  @param    key key to be checked 
- *  @return  'true' if there is informaiton with the 'key', 
- *           'false' otherwise
- */
-bool LHCb::ProtoParticle::hasInfo ( const int key ) const
-{ return m_extraInfo.end() != m_extraInfo.find( key ) ; }
-
-//=============================================================================
-/** add/replace new information , associated with the key
- *  
- *  @code
- * 
- *  ProtoParticle* p = ... ;
- *
- *  ProtoParticle::Key  key   = ... ; 
- *  ProtoParticle::Info info  = ... ;
- * 
- *  bool inserted = p->addInfo( key , info ) ;
- *
- *  @endcode 
- * 
- *  @param key key for the information
- *  @param info information to be associated with the key
- *  @return 'true' if information is inserted, 
- *         'false' if the previous information has been replaced 
- */
-bool  LHCb::ProtoParticle::addInfo ( const int key, const double info )
-{ return m_extraInfo.insert( key , info ).second ;}
-
-//=============================================================================
-/** extract the information associated with the given key 
- *  If there is no such infomration the default value will 
- *  be returned 
- * 
- *  @code
- * 
- *  const ProtoParticle* p = ... ;
- *
- *  ProtoParticle::Key  key   = ... ; 
- *
- *  // extract the information
- *  ProtoParticle::Info info = p->info( key, -999 ) ;
- * 
- *  @endcode 
- *
- *  @param key key for the information
- *  @param def the default value to be returned 
- *         in the case of missing info
- *  @return information associated with the key if there 
- *          is such information, the default value otherwise 
- */
-double LHCb::ProtoParticle::info( const int key, const double def ) const 
-{
-  ExtraInfo::iterator i = m_extraInfo.find( key ) ;
-  return m_extraInfo.end() == i ? def : i->second ;
-}
-
-//=============================================================================
-/** erase the information associated with the given key
- *
- *  @code
- * 
- *  ProtoParticle* p = ... ;
- *
- *  ProtoParticle::Key  key   = ... ; 
- * 
- *  int erased = p->eraseInfo( key ) ;
- *
- *  @endcode 
- * 
- *  @param key key for the information
- *  @return return number of erased elements 
- */
-LHCb::ProtoParticle::ExtraInfo::size_type 
-LHCb::ProtoParticle::eraseInfo( const int key )
-{ 
-  return m_extraInfo.erase( key ) ; 
-}
 
 // fillstream method
 std::ostream& LHCb::ProtoParticle::fillStream(std::ostream& s) const
@@ -154,3 +19,143 @@ std::ostream& LHCb::ProtoParticle::fillStream(std::ostream& s) const
   s << std::endl << " }";
   return s;
 }
+
+// Remove all Combined DLL information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCombinedInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLe  );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLmu );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLpi );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLk  );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLp  );
+  return erased;
+}
+
+// Remove all RICH information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeRichInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLe );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLmu );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLpi );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLk );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichDLLp );
+  erased += this->eraseInfo( LHCb::ProtoParticle::RichPIDStatus );
+  // Set RichPID pointer to NULL
+  this->setRichPID(NULL);
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all MUON information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeMuonInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo( LHCb::ProtoParticle::InAccMuon );
+  erased += this->eraseInfo( LHCb::ProtoParticle::MuonMuLL );
+  erased += this->eraseInfo( LHCb::ProtoParticle::MuonBkgLL );
+  erased += this->eraseInfo( LHCb::ProtoParticle::MuonNShared );
+  erased += this->eraseInfo( LHCb::ProtoParticle::MuonPIDStatus );
+  // Set MuonPID pointer to NULL
+  this->setMuonPID(NULL);
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all CALO-ECAL information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCaloEcalInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo( LHCb::ProtoParticle::InAccEcal );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloTrajectoryL );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloChargedSpd );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloChargedPrs );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloChargedEcal );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloElectronMatch );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloTrMatch );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloEcalE );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloEcalChi2 );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloClusChi2 );
+  erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDe );
+  erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDmu );
+  this->clearCalo();
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all CALO-BREM information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCaloBremInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo( LHCb::ProtoParticle::InAccBrem );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralSpd );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralPrs );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralEcal );
+  erased += this->eraseInfo( LHCb::ProtoParticle::CaloBremMatch );
+  this->clearCalo();
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all CALO-SPD information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCaloSpdInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo(LHCb::ProtoParticle::InAccSpd);
+  erased += this->eraseInfo(LHCb::ProtoParticle::CaloSpdE);
+  this->clearCalo();
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all CALO-PRS information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCaloPrsInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo(LHCb::ProtoParticle::InAccPrs);
+  erased += this->eraseInfo(LHCb::ProtoParticle::CaloPrsE);
+  erased += this->eraseInfo(LHCb::ProtoParticle::PrsPIDe);
+  this->clearCalo();
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all CALO-HCAL information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeCaloHcalInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo(LHCb::ProtoParticle::InAccHcal);
+  erased += this->eraseInfo(LHCb::ProtoParticle::CaloHcalE);
+  erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDe);
+  erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDmu);
+  this->clearCalo();
+  // Invalidate Combined DLL information since information has changed
+  this->removeCombinedInfo();
+  return erased;
+}
+
+// Remove all VELO information stored in this ProtoParticle
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::removeVeloInfo()
+{
+  LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
+  erased += this->eraseInfo(LHCb::ProtoParticle::VeloCharge);
+  return erased;
+}
+
+

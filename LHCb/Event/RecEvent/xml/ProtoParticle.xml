@@ -38,8 +38,6 @@
         name="additionalInfo"
         access="PUBLIC" >
 
-        <enumval name="NoPID"     value="0"    desc="No particle ID information is available"/>
-
         <enumval name="RichDLLe"       value="100"  desc="The RICH delta log likelihood value for the electron hypothesis"/>
         <enumval name="RichDLLmu"      value="101"  desc="The RICH delta log likelihood value for the muon hypothesis"/>
         <enumval name="RichDLLpi"      value="102"  desc="The RICH delta log likelihood value for the pion hypothesis"/>
@@ -185,30 +183,43 @@
         const   = "TRUE"
         desc    = "Does this protoparticle have information for the specified key"
         argList = "const int key"
-        type    = "bool"
-       />
+        type    = "bool" >
+        <code>
+          return m_extraInfo.end() != m_extraInfo.find( key ) ;
+        </code>
+       </method>
 
        <method
         name    = "addInfo"
         desc    = "Add or replace new information, associated with the specified key"
         argList = "const int key, const double info"
-        type    = "bool"
-       />
+        type    = "bool" >
+        <code>
+          return m_extraInfo.insert( key , info ).second ;
+        </code>
+       </method>
 
        <method
         name    = "info"
         desc    = "Extract the information associated with the specified key. If there is no such information the default value will be returned."
         argList = "const int key, const double def"
         type    = "double"
-        const   = "TRUE"
-       />
+        const   = "TRUE" >
+        <code>
+           ExtraInfo::const_iterator i = m_extraInfo.find( key ) ;
+           return m_extraInfo.end() == i ? def : i->second ;
+        </code>
+       </method>
 
        <method
         name    = "eraseInfo"
         desc    = "Erase the information associated with the specified key"
         argList = "const int key"
-        type    = "ProtoParticle::ExtraInfo::size_type"
-       />
+        type    = "LHCb::ProtoParticle::ExtraInfo::size_type" >
+        <code>
+          return m_extraInfo.erase( key ) ; 
+        </code>
+       </method>
 
        <method
         name    = "charge"
@@ -229,6 +240,78 @@
          <arg 
            type = "std::ostream" 
            name = "s"/>
+       </method>
+
+       <method 
+         name    = "removeCombinedInfo" 
+         desc    = "Remove all Combined DLL PID information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeRichInfo" 
+         desc    = "Remove all RICH information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeMuonInfo" 
+         desc    = "Remove all MUON information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeCaloEcalInfo" 
+         desc    = "Remove all CALO-ECAL information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeCaloBremInfo" 
+         desc    = "Remove all CALO-BREM information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeCaloSpdInfo" 
+         desc    = "Remove all CALO-SPD information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeCaloPrsInfo" 
+         desc    = "Remove all CALO-PRS information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeCaloHcalInfo" 
+         desc    = "Remove all CALO-HCAL information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
+       </method>
+
+       <method 
+         name    = "removeVeloInfo" 
+         desc    = "Remove all VELO (dE/dx) information stored in this ProtoParticle"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
        </method>
 
     </class>
