@@ -38,6 +38,8 @@
         name="additionalInfo"
         access="PUBLIC" >
 
+        <enumval name="NoPID"          value="0"    desc="Undefined PID Variable"/>
+
         <enumval name="RichDLLe"       value="100"  desc="The RICH delta log likelihood value for the electron hypothesis"/>
         <enumval name="RichDLLmu"      value="101"  desc="The RICH delta log likelihood value for the muon hypothesis"/>
         <enumval name="RichDLLpi"      value="102"  desc="The RICH delta log likelihood value for the pion hypothesis"/>
