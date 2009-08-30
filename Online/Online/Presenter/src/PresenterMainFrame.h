@@ -177,6 +177,9 @@ class PresenterMainFrame : public TGMainFrame
     
     void setReferencePath(const std::string & referencePath);
     void setSavesetPath(const std::string & savesetPath);
+    void setImagePath(const std::string & imagePath);
+    void setDumpFormat(const std::string & dumpFormat);    
+    void setPartition(const std::string & partition);
 
     void setKnownDatabases(const std::string & databasesCfg,
                            const std::string & dbCredentials);
@@ -347,7 +350,7 @@ class PresenterMainFrame : public TGMainFrame
 
     std::string rw_timePoint;
     std::string rw_pastDuration;
-
+    
   private:
 
     static const bool s_previousPageToHistory = false;
@@ -361,6 +364,8 @@ class PresenterMainFrame : public TGMainFrame
     std::string       m_currentPageName;
     std::string       m_referencePath;
     std::string       m_savesetPath;
+    std::string       m_imagePath;
+    std::string       m_dumpFormat;
     std::string       m_savesetFileName;
     DimBrowser*       m_dimBrowser;
     Archive*          m_archive;
