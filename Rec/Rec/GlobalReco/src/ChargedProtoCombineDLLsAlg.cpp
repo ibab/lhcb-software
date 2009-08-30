@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.20 2009-08-29 20:37:18 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.21 2009-08-30 22:14:20 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -165,6 +165,10 @@ StatusCode ChargedProtoCombineDLLsAlg::execute()
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLpi, 0 ); // by definition
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLk,  combDLL.kaDLL-combDLL.piDLL );
       (*iP)->addInfo( LHCb::ProtoParticle::CombDLLp,  combDLL.prDLL-combDLL.piDLL );
+    }
+    else
+    { 
+      (*iP)->addInfo( LHCb::ProtoParticle::NoPID, 1 );
     }
 
   } // loop over protos
