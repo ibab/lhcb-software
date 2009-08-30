@@ -131,6 +131,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   
   if (m_isEFF) {
     m_taskName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
+  // just get the last name of the histo, without the "/" hierarchy levels    
   }
   
   histogramUrlMatchGroup->Delete();
@@ -143,4 +144,16 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_identifier =  m_taskName + s_slash + m_algorithmName +
                     s_slash + m_histogramName;    
   }
+  if (m_isEFF) {
+  m_lastName = m_histogramName.substr(m_histogramName.find_last_of(s_slash, std::string::npos), m_histogramName.length());  
+
+  TString fileName(m_lastName);
+  fileName.ReplaceAll("_", "_001_");
+  fileName.ReplaceAll(",", "_002_");
+  fileName.ReplaceAll(">", "_003_");
+  fileName.ReplaceAll("<", "_004_");
+  fileName.ReplaceAll("&", "_005_");
+  m_fileName = fileName;
+  }
+  
 }

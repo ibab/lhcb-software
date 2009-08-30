@@ -24,6 +24,8 @@ class HistogramIdentifier
     bool isFromHistogramSet() const {return m_isFromHistogramSet; };
     std::string histogramSetName() const { return m_setName; };
     std::string histogramName() const { return m_histogramName; };
+    std::string lastName() const { return m_lastName; };
+    std::string fileName() const { return m_fileName; };
     bool isPlausible() const { return m_isPlausible; };
     bool isDimFormat() const { return m_isDimFormat; };
     bool isEFF() const { return m_isEFF; };
@@ -45,6 +47,8 @@ class HistogramIdentifier
     bool m_isEFF;
     std::string m_setName;
     std::string m_histogramName;
+    std::string m_lastName;
+    std::string m_fileName;
     bool m_isPlausible;
     bool m_isDimFormat;
     std::string m_gauchocommentBeat;
