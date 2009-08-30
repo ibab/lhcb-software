@@ -6,18 +6,22 @@
 
 #include <TSystem.h>
 #include <TSysEvtHandler.h>
-#include <TROOT.h>
 #include <TApplication.h>
 #include <TStyle.h>
 #include <TString.h>
 #include <TPRegexp.h>
 
-#include "presenter.h"
+//#include "presenter.h"
 #include "PresenterMainFrame.h"
 #include "OnlineHistDB/OnlineHistDBEnv.h"
+//#include "OnlineHistDB/OnlineHistogram.h"
+//#include "ParallelWait.h"
 #include "OMAlib/OMAlib.h"
-
-#include "../icons/presenter32.xpm"
+//#include "HistogramIdentifier.h"
+//#include "dim/dic.hxx"
+//#include "OnlineHistDB/OnlineHistDB.h"
+//#include "OMAlib/OMAlib.h"
+//#include "DbRootHist.h"
 
 #include <boost/program_options.hpp>
 #include <boost/filesystem.hpp>
@@ -60,22 +64,18 @@ if (!setenv(environmentVariable, value, 1)) {
 
 int main(int argc, char* argv[])
 {
-  
   TApplication presenterApp("Presenter", NULL, NULL);
   gROOT->Reset("a");
   gSystem->ResetSignal(kSigBus, true);
   gSystem->ResetSignal(kSigSegmentationViolation, true);
   gSystem->ResetSignal(kSigIllegalInstruction, true);
   gSystem->ResetSignal(kSigFloatingException, true);
-  if (gROOT->IsBatch()) {
-    std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;
-    exit(EXIT_FAILURE);
-  }
+
+  pres::MsgLevel messageLevelCli;
+  std::string histdir("./");
   
   int windowWidth(1000);
-  int windowHeight(600);
-
-  std::string histdir("./");
+  int windowHeight(600);  
   
   const char* histdirEnv = getenv(s_histdir.c_str());
   if (NULL != histdirEnv) {
@@ -119,7 +119,7 @@ int main(int argc, char* argv[])
     options_description config("Configuration (=default)");
     config.add_options()
       ("mode,M", value<std::string>()->default_value("online"),
-       "starting operation mode:\n" "online, history or \n" "editor-online editor-offline")
+       "starting operation mode:\n" "online, history \n" "editor-online editor-offline \n or batch")
       ("login", value<std::string>()->default_value("read-only"),
        "\"no\" when not to login to histogram\n" "database on startup\n"
        "read-only or read-write")
@@ -138,6 +138,10 @@ int main(int argc, char* argv[])
       ("logbook-settings,L", value<std::string>(), "logbook configuration")
       ("hide-alarm-list,A", value<bool>(), "hide alarm list")
       ("config-file,C", value<std::string>(), "configuration file")
+      ("key-file,K", value<std::string>(), "TCK list file")
+      ("image-path,I", value<std::string>()->default_value(gSystem->TempDirectory()), "image dump directory")
+      ("partition,P", value<std::string>()->default_value(s_lhcbPartionName.Data()), "partition name")
+      ("dump-format,F", value<std::string>()->default_value("png"), "dump format")
     ;
 
     // program argument -> histo list
@@ -224,31 +228,68 @@ int main(int argc, char* argv[])
     } else {
         setSystemEnvironment(s_dimDnsNodeEnv.c_str(), "127.0.0.1");
     }
-    
+    if (startupSettings.count("window-width")) {
+      windowWidth = startupSettings["window-width"].as<int>();
+    }
+    if (startupSettings.count("window-height")) {
+      windowHeight = startupSettings["window-height"].as<int>();
+    }
+
     PresenterMainFrame presenterMainFrame("LHCb Online Presenter",
-                                          savesetPath,
-                                          referencePath,
-                                          10, 10,
-                                          windowWidth,
-                                          windowHeight);
-    presenterMainFrame.SetIconPixmap((char**)presenter32);
+                                savesetPath,
+                                referencePath,
+                                10, 10,
+                                windowWidth,
+                                windowHeight);
+
+    if (startupSettings.count("mode")) {
+      if ("online" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(Init);  
+        presenterMainFrame.setPresenterMode(Online);
+      } else if ("history" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(Init);
+        presenterMainFrame.setPresenterMode(History);
+      } else if ("editor-online" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(Init);        
+        presenterMainFrame.setPresenterMode(EditorOnline);
+      } else if ("editor-offline" == startupSettings["mode"].as<std::string>()) {
+        presenterMainFrame.setPresenterMode(Init);        
+        presenterMainFrame.setPresenterMode(EditorOffline);        
+      } else if ("batch" == startupSettings["mode"].as<std::string>()) {        
+        presenterMainFrame.setPresenterMode(Batch);        
+      } else {
+        std::cout << "warning: invalid mode setting, defaulting to Online" << std::endl;
+        presenterMainFrame.setPresenterMode(Init);    
+        presenterMainFrame.setPresenterMode(Online);
+      }
+    } else {
+      presenterMainFrame.setPresenterMode(Init);      
+      presenterMainFrame.setPresenterMode(Online);
+    }
 
     if (startupSettings.count("verbosity")) {
       if ("silent" == startupSettings["verbosity"].as<std::string>()) {
-        presenterMainFrame.setVerbosity(Silent);
+        messageLevelCli = Silent;
       } else if ("verbose" == startupSettings["verbosity"].as<std::string>()) {
-        presenterMainFrame.setVerbosity(Verbose);
+        messageLevelCli = Verbose;        
       } else if ("debug" == startupSettings["verbosity"].as<std::string>()) {
-        presenterMainFrame.setVerbosity(Debug);
+        messageLevelCli = Debug;        
       }
     } else {
-      presenterMainFrame.setVerbosity(Silent);
+      messageLevelCli = Silent;
     }
+    presenterMainFrame.setVerbosity(messageLevelCli);
+    
+    if (startupSettings.count("partition")) {
+      presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
+    }    
     
     presenterMainFrame.setKnownDatabases(startupSettings["databases"].as<std::string>(),
                                          startupSettings["database-credentials"].as<std::string>());
-                                             
-    if (startupSettings.count("login")) {
+
+//TODO: remove batch escape when DB                                             
+      if (startupSettings.count("login") &&
+        ("batch" != startupSettings["mode"].as<std::string>())) {
       if ("no" == startupSettings["login"].as<std::string>()) {
         presenterMainFrame.setDatabaseMode(LoggedOut);
       } else if ("read-write" == startupSettings["login"].as<std::string>()) {
@@ -259,25 +300,12 @@ int main(int argc, char* argv[])
         std::cout << "warning: invalid database login setting, defaulting to ReadOnly" << std::endl;
         presenterMainFrame.setDatabaseMode(ReadOnly);
       }
-    } else {
+    } else if ("batch" != startupSettings["mode"].as<std::string>()) {
       presenterMainFrame.setDatabaseMode(ReadOnly);
-    }
-    if (startupSettings.count("mode")) {
-      if ("online" == startupSettings["mode"].as<std::string>()) {
-        presenterMainFrame.setPresenterMode(Online);
-      } else if ("history" == startupSettings["mode"].as<std::string>()) {
-        presenterMainFrame.setPresenterMode(History);
-      } else if ("editor-online" == startupSettings["mode"].as<std::string>()) {
-        presenterMainFrame.setPresenterMode(EditorOnline);
-      } else if ("editor-offline" == startupSettings["mode"].as<std::string>()) {
-        presenterMainFrame.setPresenterMode(EditorOffline);        
-      } else {
-        std::cout << "warning: invalid mode setting, defaulting to Online" << std::endl;
-        presenterMainFrame.setPresenterMode(Online);
-      }
     } else {
-      presenterMainFrame.setPresenterMode(Online);
+      presenterMainFrame.setDatabaseMode(LoggedOut);
     }
+
     
     if (startupSettings.count("logbook-settings")) {
       presenterMainFrame.setLogbookConfig(startupSettings["logbook-settings"].as<std::string>());
@@ -292,9 +320,58 @@ int main(int argc, char* argv[])
       presenterMainFrame.setStartupHistograms(startupSettings["startup-histograms"].as< std::vector<std::string> >());
     }
 
-    presenterApp.Run();
-    exit(EXIT_SUCCESS);
+    if (startupSettings.count("image-path")) {
+      if (!exists(path(savesetPath))) {
+        std::cout << "error: image-path doesn't exist" << std::endl;
+        exit(EXIT_FAILURE);
+      } else {
+        presenterMainFrame.setImagePath(startupSettings["image-path"].as<std::string>());
+      }
+    }
 
+    if (startupSettings.count("dump-format")) {
+      if ("png" == startupSettings["dump-format"].as<std::string>() ||
+          "root" == startupSettings["dump-format"].as<std::string>() ||
+          "eps" == startupSettings["dump-format"].as<std::string>() ||
+          "svg" == startupSettings["dump-format"].as<std::string>() ||
+          "pdf" == startupSettings["dump-format"].as<std::string>() ||
+          "C" == startupSettings["dump-format"].as<std::string>()  ) {
+        presenterMainFrame.setDumpFormat(startupSettings["dump-format"].as<std::string>());
+      } 
+    }
+
+    if ((Batch != presenterMainFrame.presenterMode())) {
+      if (gROOT->IsBatch()) {
+        std::cout << "error: LHCb Presenter cannot run in batch mode." << std::endl;
+        exit(EXIT_FAILURE);
+      }
+      presenterApp.Run();
+    } else {
+      if (startupSettings.count("key-file")) {
+        std::ifstream keyFile(startupSettings["key-file"].as<std::string>().c_str(), std::ios::in);
+        if(!keyFile.is_open()) {
+          std::cout << "Please provide a file listing of the services to dump" << std::endl;
+          exit(EXIT_FAILURE);  
+        }
+        std::string serviceID;
+        std::vector<std::string> startupHistograms;
+        while (getline(keyFile, serviceID)) {
+          if (!serviceID.empty()) {
+            serviceID = serviceID.substr(serviceID.find_first_of(s_underscore),
+                                         serviceID.length());
+            serviceID = presenterMainFrame.currentPartition() + serviceID;
+            std::string* histo = new std::string(serviceID);
+            startupHistograms.push_back(*histo);
+          }
+        }
+        keyFile.close();
+        presenterMainFrame.setPresenterMode(Init);
+        presenterMainFrame.setStartupHistograms(startupHistograms); 
+      }
+      presenterMainFrame.startPageRefresh();
+      presenterApp.Run();
+    }
+  exit(EXIT_SUCCESS);
   } catch(std::exception& e) {
     std::cout << e.what() << std::endl;
     exit(EXIT_FAILURE);
