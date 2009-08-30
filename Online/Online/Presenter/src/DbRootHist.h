@@ -135,6 +135,7 @@ class DbRootHist : public HistogramIdentifier
   private:
     TPad* m_drawPattern;
     DimInfo*  m_gauchocommentDimInfo;
+//    bool m_usingGauchocommentDimInfo;
     // TODO: have a stack of offset for bracketing
     // state of histo @ clr/rst
     TH1*  m_offsetHistogram;
