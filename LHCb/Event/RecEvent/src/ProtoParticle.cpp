@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.5 2009-08-29 20:30:18 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.6 2009-08-30 22:19:07 jonrob Exp $
 
 // local
 #include "Event/ProtoParticle.h"
@@ -30,6 +30,7 @@ LHCb::ProtoParticle::removeCombinedInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLpi );
   erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLk  );
   erased += this->eraseInfo( LHCb::ProtoParticle::CombDLLp  );
+  erased += this->eraseInfo( LHCb::ProtoParticle::NoPID     );
   return erased;
 }
 
