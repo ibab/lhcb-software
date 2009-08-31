@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.7 2009-07-09 09:44:16 cattanem Exp $
+// $Id: CompareTrack.cpp,v 1.8 2009-08-31 15:33:06 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -62,8 +62,17 @@ StatusCode CompareTrack::execute() {
     if ( 0   < abs( oTrack->nDoF() - tTrack->nDoF() ) ) isOK = false;
     if ( oTrack->flags() != tTrack->flags() )              isOK = false;
     if ( oTrack->lhcbIDs().size() != tTrack->lhcbIDs().size() ) isOK = false;
-     unsigned int kk;
-     for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
+    if ( 1.e-7 < fabs( (oTrack->likelihood() - tTrack->likelihood() )/ tTrack->likelihood() ) ) isOK = false;
+    if ( 1.e-7 < fabs( (oTrack->ghostProbability()-tTrack->ghostProbability())/
+                       tTrack->ghostProbability()) ) isOK = false;
+    if ( oTrack->expectedHitPattern().veloRA()   != tTrack->expectedHitPattern().veloRA()   ) isOK = false;
+    if ( oTrack->expectedHitPattern().veloRC()   != tTrack->expectedHitPattern().veloRC()   ) isOK = false;
+    if ( oTrack->expectedHitPattern().veloPhiA() != tTrack->expectedHitPattern().veloPhiA() ) isOK = false;
+    if ( oTrack->expectedHitPattern().veloPhiC() != tTrack->expectedHitPattern().veloPhiC() ) isOK = false;
+    if ( oTrack->expectedHitPattern().ot1stMonoLayer() != tTrack->expectedHitPattern().ot1stMonoLayer() ) isOK = false;
+    if ( oTrack->expectedHitPattern().ot2ndMonoLayer() != tTrack->expectedHitPattern().ot2ndMonoLayer() ) isOK = false;
+    unsigned int kk;
+    for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
       if ( oTrack->lhcbIDs()[kk].lhcbID() != tTrack->lhcbIDs()[kk].lhcbID() )     isOK = false;
     }
     LHCb::Track::ExtraInfo oExtra = oTrack->extraInfo();
@@ -82,12 +91,19 @@ StatusCode CompareTrack::execute() {
       info() << "===== Track key " << oTrack->key() << endmsg;
       info() << format( "Old   chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
                         oTrack->chi2PerDoF(), oTrack->nDoF(), oTrack->flags(), 
-                        oTrack->lhcbIDs().size(), oExtra.size(), oTrack->nStates() )
+                        oTrack->lhcbIDs().size(), oExtra.size(), oTrack->nStates() );
+      info() << format( " Likelihood %10.6f ghostProba %10.8f",
+                        oTrack->likelihood(), oTrack->ghostProbability() )
              << endmsg;
       info() << format( "Test  chi2 %10.4f  nDoF %6i flags %8x nLhcbID %4d nExtra %4d  nStates %4d",
                         tTrack->chi2PerDoF(), tTrack->nDoF(), tTrack->flags(), 
-                        tTrack->lhcbIDs().size(), tExtra.size(), tTrack->nStates() )
+                        tTrack->lhcbIDs().size(), tExtra.size(), tTrack->nStates() );
+      info() << format( " Likelihood %10.6f ghostProba %10.8f",
+                        tTrack->likelihood(), tTrack->ghostProbability() )
              << endmsg;
+      info() << "Old  HitPattern " << endmsg << oTrack->expectedHitPattern() << endmsg;
+      info() << "Test HitPattern " << endmsg << tTrack->expectedHitPattern() << endmsg;
+      
       for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
         info() << format( "   old ID %8x   new %8x", 
                           oTrack->lhcbIDs()[kk].lhcbID(), 

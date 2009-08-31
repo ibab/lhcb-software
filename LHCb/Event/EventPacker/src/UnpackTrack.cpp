@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.9 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackTrack.cpp,v 1.10 2009-08-31 15:33:06 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -58,6 +58,27 @@ StatusCode UnpackTrack::execute() {
     track->setChi2PerDoF( pack.fltPacked( src.chi2PerDoF ) );
     track->setNDoF(       src.nDoF );
     track->setFlags(      src.flags );
+    if ( dst->version() > 2 ) {
+      track->setLikelihood(       src.likelihood );
+      track->setGhostProbability( src.ghostProba );
+      LHCb::HitPattern temp;
+      temp.setVeloRA  ( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloRA) );
+      temp.setVeloRC  ( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloRC) );
+      temp.setVeloPhiA( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloPA) );
+      temp.setVeloPhiC( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloPA) );
+
+      temp.setTt(  std::bitset<LHCb::HitPattern::NumTT>( src.patternST & 15 ) );
+
+      temp.setItAC(        std::bitset<LHCb::HitPattern::NumT>( (src.patternST >>  4)  & 0xFFF ) );
+      temp.setItTopBottom( std::bitset<LHCb::HitPattern::NumT>( (src.patternST >> 16)  & 0xFFF ) );
+
+      temp.setOt1stMonoLayer( std::bitset<LHCb::HitPattern::NumT>( (src.patternOTMuon      )  & 0xFFF ) );
+      temp.setOt2ndMonoLayer( std::bitset<LHCb::HitPattern::NumT>( (src.patternOTMuon >> 12)  & 0xFFF ) );
+
+      temp.setMuon( std::bitset<LHCb::HitPattern::NumMuon>( (src.patternOTMuon >> 24)  & 0xF ) );
+
+      track->setExpectedHitPattern( temp );
+    }
     std::vector<LHCb::LHCbID> lhcbids(  src.lastId - src.firstId  ) ;
     std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;
     for ( int kId = src.firstId; src.lastId > kId; ++kId, ++lhcbit ) {
@@ -77,6 +98,23 @@ StatusCode UnpackTrack::execute() {
     for ( int kEx = src.firstExtra; src.lastExtra > kEx; ++kEx ) {
       std::pair<int,int> info = *(dst->beginExtra()+kEx);
       track->addInfo( info.first, pack.fltPacked( info.second ) );
+    }
+    //== Cleanup extraInfo and set likelihood/ghostProbability for old data
+    if ( dst->version() <= 2 ) {
+      track->eraseInfo(LHCb::Track::PatQuality);
+      track->eraseInfo(LHCb::Track::Cand1stQPat);
+      track->eraseInfo(LHCb::Track::Cand2ndQPat);
+      track->eraseInfo(LHCb::Track::NCandCommonHits);
+      track->eraseInfo(LHCb::Track::Cand1stChi2Mat);
+      track->eraseInfo(LHCb::Track::Cand2ndChi2Mat); 
+      track->eraseInfo(LHCb::Track::MatchChi2);
+      track->eraseInfo(LHCb::Track::TsaLikelihood); 
+      track->eraseInfo(LHCb::Track::nPRVeloRZExpect);
+      track->eraseInfo(LHCb::Track::nPRVelo3DExpect);
+      track->setLikelihood(       track->info(   1, 999) );        // was the key of likelihood...
+      track->setGhostProbability( track->info( 102, 999) );        // was the key of ghost probability
+      track->eraseInfo(   1 );
+      track->eraseInfo( 102 );
     }
   }
   return StatusCode::SUCCESS;

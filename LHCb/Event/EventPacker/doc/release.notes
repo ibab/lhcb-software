@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-08-31 - Olivier Callot
+ - First attempt to adapt to the new Track. Handling HitPattern is a pain!
+
 !============================ EventPacker v1r6 2009-07-13 ====================
 ! 2009-07-09 - Marco Cattaneo
  - Add DumpTracks algorithm, previously in Ex/IOExample

@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.8 2009-07-09 09:44:16 cattanem Exp $
+// $Id: ReadPackedDst.cpp,v 1.9 2009-08-31 15:33:06 ocallot Exp $
 // Include files
 
 // from Gaudi
@@ -212,10 +212,20 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
   unsigned int nObj    = *m_data++;
   int blobNb           = *m_data++;
   m_size -= 3;
+  unsigned int extraSize = 0;
   if ( nObj * sizeof( CLASS) != totSize ) {
-    warning() << "getFromBlob: Tot " << totSize << " nObj " << nObj << " size " << sizeof( CLASS ) << endmsg;
+    if ( totSize > nObj * sizeof( CLASS ) ) {
+      if ( ( totSize / nObj ) * nObj == totSize ) {       // extra words per object...
+        extraSize = ( totSize / nObj ) - sizeof( CLASS );
+      }
+    }
+    if ( 0 == extraSize ) {
+      warning() << "getFromBlob: Total " << totSize << " nObj " << nObj 
+                << " of size " << sizeof( CLASS ) << " = " << nObj * sizeof( CLASS) 
+                << " *** DOES NOT MATCH ***" << endmsg;
+    }
   }
-  debug() << "totSize " << totSize << " nObj " << nObj << " blobNb " << blobNb << endmsg;
+  debug() << "totSize " << totSize << " nObj " << nObj << " extraSize " << extraSize << " blobNb " << blobNb << endmsg;
 
   //== First restore a big vector of int in case the data is split into several blobs
   std::vector<int> tempVect( totSize/4 );  // size in bytes
@@ -244,6 +254,7 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
   }
 
   //== Now copy to the target vector, changing lines to columns...
+  //== and padding with 0 the extra size.
 
   unsigned int objSize = sizeof( CLASS )/4;
   vect.resize( nObj );
@@ -253,6 +264,11 @@ template <class CLASS> void ReadPackedDst::getFromBlob( std::vector<CLASS>& vect
     for ( unsigned int k = 0 ; objSize > k ; ++k ) {
       *vectPt++ =  *(temp + l + nObj * k );
     }
+    if ( 0 < extraSize ) {
+      for ( unsigned int k = 0 ; extraSize > k ; ++k ) {
+        *vectPt++ =  0;
+      }
+    }  
   }
 }
 
