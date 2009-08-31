@@ -63,7 +63,7 @@ use CaloPIDs            v5r0    Calo
 use CaloReco            v5r0    Calo
 use GlobalReco          v6r25   Rec
 # From LBCOM:
-use CaloTool            v5r10   Calo
+use CaloTools           v5r10   Calo
 
 
 
