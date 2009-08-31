@@ -4,7 +4,6 @@
 // Include files
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/RndmGenerators.h"
-#include "GaudiKernel/RndmGenerators.h"
 // boost
 #include "boost/lexical_cast.hpp"
 #include<time.h>
@@ -19,7 +18,6 @@
 */
 
 // Forward declarations
-class MonStatEntity;
 class MonVectorI;
 class MonVectorD;
 
@@ -36,6 +34,7 @@ private:
   
   long counter1;
   int  counter2;
+
   bool aboveRef;
   double efficiency1;
   float  efficiency2;
@@ -60,9 +59,6 @@ private:
   
   time_t time_old,time_new;
   
-  // new MonObjects into rates test
-  
-  MonStatEntity statEntity;
   
   MonVectorI monVectorInt;
   std::vector<int> m_vectInt;
@@ -77,8 +73,11 @@ private:
   int nbinEntries;
   double sumOfWeights;
   double sumOfSquaredWeights;
+  StatEntity m_eventsCounter;
   
   int sleepTime;
 };
+
+	
 
 #endif    // EXAMPLEGAUCHO_GAUDIEXAMPLE_H

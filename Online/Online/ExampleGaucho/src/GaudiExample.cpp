@@ -1,4 +1,4 @@
-// $Id: GaudiExample.cpp,v 1.15 2009-08-06 13:01:30 evh Exp $
+// $Id: GaudiExample.cpp,v 1.16 2009-08-31 13:04:43 evh Exp $
 
 // Include files
 #include "GaudiKernel/AlgFactory.h"
@@ -39,7 +39,7 @@ DECLARE_ALGORITHM_FACTORY(GaudiExample)
   //------------------------------------------------------------------------------
   GaudiExample::GaudiExample(const std::string& name, ISvcLocator* ploc)
     : GaudiHistoAlg(name, ploc)
-      ,statEntity(msgSvc(), name,0) 
+    //  ,statEntity(msgSvc(), name,0) 
       ,monVectorInt(msgSvc(), name,0)
       ,monVectorDouble(msgSvc(), name,0)
       
@@ -72,7 +72,7 @@ StatusCode GaudiExample::initialize() {
   index.second = 0;
   ix.first = 0.;
   ix.second = 0;
-  
+  m_eventsCounter = counter("#events");
   oldStatus=new char[20];
   
   // For histos debugging
@@ -87,6 +87,8 @@ StatusCode GaudiExample::initialize() {
   declareInfo("counter1",counter1,"All events");
   
   declareInfo("counter2",counter2,"Event of type 1");
+  declareInfo("COUNTER_TO_RATE[#events]",m_eventsCounter,"Events accepted");
+  declareInfo("#test",counter("#test"),"test");
   
   // msg << MSG::INFO << "Test: Try to publish info with a name already used. Not possible" << endreq;
   declareInfo("counter2",counter2,"Event type 1");
@@ -111,7 +113,6 @@ StatusCode GaudiExample::initialize() {
   // IMonitorSvc has no declareInfo methods for MonObjects. 
   // But we publish MonObjects using the obsolete declareInfo for void *
   // notice that the second and four arguments are obsoletes
-  declareInfo("xyStatistics", "", &statEntity, 0, "xy statistics (StatEntity)");
   monVectorInt.setValue(m_vectInt);
   declareInfo("vectorInts", "", &monVectorInt, 0, "std::vector of ints"); 
   monVectorDouble.setValue(m_vectDouble);
@@ -160,10 +161,12 @@ StatusCode GaudiExample::execute() {
   msg << MSG::DEBUG << "execute method...." << endreq;
   
   int eventtype;
-  counter1++;
-  count_rate_1++;
-  count_rate_2++;
-  count_rate_2++;
+  counter1=counter1+3;
+  count_rate_1=count_rate_1+3;
+  count_rate_2=count_rate_2+2;
+  counter("#events")++;
+  counter("#test")=counter("#test")+2;
+
   time(&time_new);
   msg << MSG::DEBUG << "Current event: " << counter1 << " Current time: " <<
     time_new << endreq;
@@ -243,9 +246,7 @@ StatusCode GaudiExample::execute() {
      }
     }
     
-    
-    
-    
+   
     position.first = random1()*400;
     position.second = random1()*300;
     IHistogram2D * my2Dhisto = plot2D(position.first, position.second, 
@@ -298,9 +299,6 @@ StatusCode GaudiExample::execute() {
   ix.first = random1()*50;
   ix.second  =  (int)(ix.first);
   
-  statEntity.fill(position.first, position.second, 1.0);
-  // Print content from statEntity MonObject to check
-  if(MSG::DEBUG == msgSvc()->outputLevel(name())) statEntity.print();
   
   if (counter1 % 50 == 0) {
     efficiency2=float(counter2)/(time_new-time_old);
@@ -325,6 +323,7 @@ StatusCode GaudiExample::execute() {
   monVectorInt.setValue(m_vectInt);
   // Print content from monVectorInt to check
   if(MSG::DEBUG == msgSvc()->outputLevel(name())) monVectorInt.print();
+
   
   //  delay
   mysleep(sleepTime);
@@ -364,3 +363,4 @@ StatusCode GaudiExample::finalize() {
        << " error " << my1Dhprof->binError(AIDA::IAxis::OVERFLOW_BIN) << endreq;
   return StatusCode::SUCCESS;
 }
+
