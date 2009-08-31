@@ -24,7 +24,7 @@ TTDetectorPlot::Bins TTDetectorPlot::toBins(const DeTTSector* theSector) const {
    const LHCb::STChannelID chan = theSector->elementID();
    const unsigned int station = chan.station();
    const unsigned int theCol = theSector->column(); 
-   station == 1 ? theBins.xBin = theCol - 8: theBins.xBin =  theCol - 9 ;
+   station == 1 ? theBins.xBin = 8 - theCol : theBins.xBin = 9 - theCol ;
 
    // now get the overall bin in y
    theBins.beginBinY = (34 * (2*(station-1u)+chan.layer()-1u)) + 2; 

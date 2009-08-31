@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.75 2009-08-28 14:32:52 jvantilb Exp $
+! $Id: release.notes,v 1.76 2009-08-31 08:24:33 jvantilb Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-! 2009-08-26 - Jeroen Van Tilburg
+! 2009-08-31 - Jeroen van Tilburg
+ - TTDetectorPlot: invert A and C side to comply with offline and IT plot.
+
+! 2009-08-26 - Jeroen van Tilburg
  - Changes to TTDetectorPlot: add beam pipe and allow for finer binning. 
 
 ! 2009-08-21 M Needham
