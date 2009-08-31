@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.328 2009-08-26 14:41:02 pkoppenb Exp $ 
+! $Id: release.notes,v 1.329 2009-08-31 10:03:28 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v4r3 2009-08-31 ===================
+! 2009-08-28 - Gerhard Raven
+ - activate BeamGas lines, add BG to Hlt1
 
 ! 2009-08-26 - Patrick Koppenburg
  - Add Hlt1 Thresholds for 2010 Charm

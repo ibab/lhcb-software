@@ -86,7 +86,6 @@ class Effective_Nominal :
         """
         Returns a list of active lines
         """
-        from Hlt1_Nominal import Hlt1_Nominal
         list = [ 'Hlt2Topo2BodySA',
                  'Hlt2Topo4BodySA',
                  'Hlt2Topo3BodySA',
@@ -148,6 +147,3 @@ class Effective_Nominal :
         from Commissioning_Nominal import Commissioning_Nominal
         list.extend( Commissioning_Nominal().ActiveHlt2Lines() )
         return list
-    
-    
-    

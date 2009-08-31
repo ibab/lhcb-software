@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.115 2009-08-26 14:41:02 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.116 2009-08-31 10:03:28 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -78,7 +78,7 @@ class HltConf(LHCbConfigurableUser):
             thresClass = self.settingsForDataType( self.getProp('DataType') )
         else :
             # bootstrap (it does not like string replacement...)
-            exec "from HltConf."+self.getProp('ThresholdSettings')+" import "+self.getProp('ThresholdSettings') 
+            exec "from HltConf."+thresName+" import "+thresName
             thresClass = eval(thresName+"()")                # the class
         return thresClass
         
@@ -221,7 +221,7 @@ class HltConf(LHCbConfigurableUser):
         extraSelections = dict(zip( missingSelections , range(11000, 11000 + len(missingSelections) ) ))
         HltANNSvc().Hlt1SelectionID.update( extraSelections )
         log.info( '# added ' + str(len(missingSelections)) + ' selections to HltANNSvc' )
-        log.info( '# added ' + str(len(missingDecisions)) + ' decisions to HltANNSvc'  )
+        log.info( '# added ' + str(len(missingDecisions))  +  ' decisions to HltANNSvc' )
 
         if False :
             for i in hlt1Lines() :
@@ -331,7 +331,7 @@ class HltConf(LHCbConfigurableUser):
             activeHlt1Lines = sets.ActiveHlt1Lines()
             activeHlt2Lines = sets.ActiveHlt2Lines()
 
-#        for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
+        # for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeHlt1Lines
         
         lines1 = [ i for i in hlt1Lines() if ( not activeHlt1Lines or i.name() in activeHlt1Lines + [ 'Hlt1Global' ] ) ]
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
@@ -339,7 +339,7 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# List of configured Hlt1Lines not added to Hlt1 : ' + str(set(hlt1Lines())-set(lines1)) )
         Sequence('Hlt1').Members = [ i.configurable() for i in lines1 ]
 
-#        for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeLines
+        # for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeHlt2Lines
         
         lines2 = [ i for i in hlt2Lines() if ( not activeHlt2Lines or i.name() in activeHlt2Lines + [ 'Hlt2Global' ]) ]
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )

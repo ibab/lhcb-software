@@ -1,4 +1,6 @@
-class Effective_FEST :
+## Inherit active lines
+from HltConf.Effective_Nominal import Effective_Nominal
+class Effective_FEST ( Effective_Nominal ) :
     """
     Threshold settings for Hlt1 and 2 in nominal conditions (Effective/FEST)
     
@@ -8,60 +10,24 @@ class Effective_FEST :
     @date 2009-08-06
     """
     
-    __all__ = ( 'ActiveHlt1Lines', 'ActiveHlt2Lines', 'Thresholds' )
-    
     def Thresholds(self) :
         """
-        Returns a dictionary of cuts
+        Returns a dictionary of thresholds
         """
         
         from Hlt1Lines.HltVeloLines import HltVeloLinesConf
         from Hlt1Lines.HltCommissioningLines import HltCommissioningLinesConf
         from Hlt1Lines.HltExpressLines import HltExpressLinesConf
         
-        from Effective_Nominal import Effective_Nominal
-        d = Effective_Nominal().Thresholds()
+        d = Effective_Nominal.Thresholds(self)
         
-        d.update(  { HltVeloLinesConf : { 'Prescale' : { '.*'            : 1 } }
-                   , HltExpressLinesConf : { 'Prescale' : { 'Hlt1XPress'    : 0.0025
-                                                          , 'Hlt1AlignVelo' : 1 } }
-                   , HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN'    : 1 
-                                                                , 'Hlt1RandomODIN'     : 1 # @OnlineEnv.AcceptRate
-                                                                , 'Hlt1Tell1Error' : 0
-                                                                  }
-                                                     }
-                     }
-                   )
+        d.update(  { HltVeloLinesConf          : { 'Prescale' : { '.*'                : 1 } }
+                   , HltExpressLinesConf       : { 'Prescale' : { 'Hlt1XPress'        : 0.0025
+                                                                , 'Hlt1AlignVelo'     : 1 } }
+                   , HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN' : 1 
+                                                                , 'Hlt1RandomODIN'    : 1 # @OnlineEnv.AcceptRate
+                                                                , 'Hlt1Tell1Error'    : 0 } }
+                   }
+                )
         
         return d
-    
-######################################################################################################
-    #
-    # Active Lines
-    #
-    
-    def ActiveHlt1Lines(self) :
-        """
-        Returns a list of active lines 
-        """
-        
-        from Effective_Nominal import Effective_Nominal
-        list = Effective_Nominal().ActiveHlt1Lines()
-        
-        return list
-    
-######################################################################################################
-    #
-    # Active Lines
-    #
-    
-    def ActiveHlt2Lines(self) :
-        """
-        Returns a list of active lines 
-        """
-        
-        from Effective_Nominal import Effective_Nominal
-        list = Effective_Nominal().ActiveHlt2Lines()
-        
-        return list
-    
