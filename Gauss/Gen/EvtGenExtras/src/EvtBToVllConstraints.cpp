@@ -156,24 +156,20 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		static EvtComplex get_F_1_9(const double sh, const double mu){
-		
-			const double mc1 = constants::mc/constants::mb;
+			
+			const double mc1 = constants::mc/constants::mbp;
 			const double Lc = log(mc1);
 			const double Ls = getLS0(sh);
-			const double Lm = log(mu/constants::mb);
-			const EvtComplex IPi(0,constants::Pi);
-
+			const double Lm = log(mu/constants::mbp);
 			return QCDFactorisation::inner::get_F_1_9(Lc,Lm,Ls,mc1,sh);
 		};
 		
 		static EvtComplex get_F_2_9(const double sh, const double mu){
-				
-			const double mc1 = constants::mc/constants::mb;
+			
+			const double mc1 = constants::mc/constants::mbp;
 			const double Lc = log(mc1);
 			const double Ls = getLS0(sh);
-			const double Lm = log(mu/constants::mb);
-			const EvtComplex IPi(0,constants::Pi);
-
+			const double Lm = log(mu/constants::mbp);
 			return QCDFactorisation::inner::get_F_2_9(Lc,Lm,Ls,mc1,sh);
 		};
 		
@@ -200,11 +196,10 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		EvtComplex getC9new(const double sh, const double mu) const{
-			const double mbp = qcd::mb_pole(constants::mb);
 			return -(qcd::alpha_s(constants::mb,nfl)*(C100*get_F_1_9(sh,mu) + C200*get_F_2_9(sh,mu) + 
 			         (*C)(8)*get_F_8_9(sh,mu)))/(4.*constants::Pi) + 
-			         (1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi)*
-			         ((*C)(9) + qcd::Y(mbp*mbp*sh,*C));
+			         (1 + ((qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi))*
+			         ((*C)(9) + qcd::Y(constants::mbp*constants::mbp*sh,*C));
 		};
 		
 		EvtComplex getC10new(const double sh, const double) const{
@@ -212,27 +207,29 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		EvtComplex getU(const double sh, const double mu) const{
-			const double mbp = qcd::mb_pole(constants::mb);
-			const double mlh = constants::mmu/mbp; 
+			const double mlh = constants::mmu/constants::mbp; 
+			return (3*Power(constants::mbp,2)*(1 - (4*Power(mlh,2))/sh)*sh*
+				      (Power(Abs((*C)(11)),2) + Power(Abs((*C)(12)),2)))/2. + 
+				   6*Power(mlh,2)*(-Power(Abs(getC10new(sh,mu)),2) + 
+				      Power(Abs(getC9new(sh,mu)),2) + Power(Abs((*CR)(9)),2) - 
+				      Power(Abs((*CR)(10)),2)) + 
+				   (1 + (2*Power(mlh,2)*(1 - sh))/sh + 2*sh)*
+				    (Power(Abs(getC10new(sh,mu)),2) + Power(Abs(getC9new(sh,mu)),2) + 
+				      Power(Abs((*CR)(9)),2) + Power(Abs((*CR)(10)),2)) + 
+				   6*constants::mbp*mlh*Re((*C)(11)*getC10new(sh,mu)) + 
+				   (1 + (2*Power(mlh,2))/sh)*
+				    ((4*(2 + sh)*Power(Abs(getC7new(sh,mu)),2))/sh + 
+				      12*Re(getC7new(sh,mu)*Conjugate(getC9new(sh,mu)) + 
+				    		  (*C)(7)*Conjugate((*CR)(9))));
 			
-			return (3*Power(constants::mb, 2)*(1 - (4*Power(mlh, 2))/sh)*sh
-					* (Power(Abs((*C)(11)), 2) + Power(Abs((*C)(12)), 2)))/2. + 6*Power(
-					mlh, 2)*(-Power(Abs(getC10new(sh,mu)), 2) + Power(Abs(getC9new(sh,mu)),
-					2) + Power(Abs((*CR)(9)), 2) - Power(Abs((*CR)(10)), 2)) + (1
-					+ (2*Power(mlh, 2)*(1 - sh))/sh + 2*sh)* (Power(
-					Abs(getC10new(sh,mu)), 2) + Power(Abs(getC9new(sh,mu)), 2) + Power(
-					Abs((*CR)(9)), 2) + Power(Abs((*CR)(10)), 2)) + 6
-					*constants::mb*mlh*Re((*C)(11)*getC10new(sh,mu)) + (1 + (2*Power(mlh,
-					2))/sh)* ((4*(2 + sh)*Power(Abs(getC7new(sh,mu)), 2))/sh + 12
-					*Re(getC7new(sh,mu)*Conjugate(getC9new(sh,mu)) + (*CR)(7)
-							*Conjugate((*CR)(9))));
+			
 		};
 		
 		double getDiffDecayRate(const double sh) const{
-			const double mlh = constants::mmu/constants::mb;
+			const double mlh = constants::mmu/constants::mbp;
 			return real((Power(constants::alphaEM,2)*Sqrt(1 - (4*Power(mlh,2))/sh)*Power(1 - sh,2)*
 				     getU(sh,C->getScaleValue())*Power(Abs(constants::Vtb*constants::Vts),2))/(4.*Power(constants::Pi,2)*Power(Abs(constants::Vcb),2)*
-				    		 f(constants::mc/constants::mb)*kappa(constants::mc/constants::mb)));
+				    		 f(constants::mc/constants::mbp)*kappa(constants::mc/constants::mbp)));
 		};
 		
 		//form dictated by gsl_function
@@ -256,6 +253,22 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 
 	utils u(C,CR);
 	
+#if 0	
+	std::cout << "U[3.0,mb]: " << u.getU(3.0,constants::mb) << std::endl;//V
+	std::cout << "C7new[3.0,mb]: " << u.getC7new(3.0,constants::mb) << std::endl;//V
+	std::cout << "C9new[3.0,mb]: " << u.getC9new(3.0,constants::mb) << std::endl;//V
+	std::cout << "C10new[3.0,mb]: " << u.getC10new(3.0,constants::mb) << std::endl;//V
+	std::cout << "mbp: " << constants::mbp << std::endl;//V
+	std::cout << "Y1[mbp*mbp*3.0]: " << qcd::Y(constants::mbp*constants::mbp*3.0,*C) << std::endl;//V
+	std::cout << "F19[3.0]: " << u.get_F_1_9(3.0, constants::mb) << std::endl;//V
+	std::cout << "F29[3.0]: " << u.get_F_2_9(3.0, constants::mb) << std::endl;//V
+	std::cout << "F89[3.0]: " << u.get_F_8_9(3.0, constants::mb) << std::endl;//V
+	std::cout << "omega9[3.0]: " << utils::omega9(3.0) << std::endl;//V
+	std::cout << "Cb1[9]: " << (*C)(9) << std::endl;//V
+	std::cout << "Ceff1[8]: " << (*C)(8) << std::endl;//V
+	std::cout << "DiffDecayRate[3.0]: " << u.getDiffDecayRate(3.0) << std::endl;//V
+#endif	
+	
 	double result = 0;
 	double error = 0;
 	const int nDivisions = 100;
@@ -265,8 +278,8 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 	F.function = &utils::integralFunction;
 	F.params = &u;
 
-	const double sMin = 1/(constants::mb*constants::mb);
-	const double sMax = 6/(constants::mb*constants::mb);
+	const double sMin = 1/(constants::mbp*constants::mbp);
+	const double sMax = 6/(constants::mbp*constants::mbp);
 	
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 	const int intCode = gsl_integration_qag(&F, sMin, sMax, 0, accuracyGoal,

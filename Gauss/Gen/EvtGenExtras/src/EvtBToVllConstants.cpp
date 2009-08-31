@@ -1,5 +1,6 @@
 #include "EvtGenModels/EvtBToVllConstants.hh"
 #include "EvtGenBase/EvtMathematicaFn.hh"
+#include "EvtGenModels/EvtBToVllQCDUtils.hh"
 
 //general
 const double constants::E = 2.7182818284590452354;
@@ -19,6 +20,7 @@ const double constants::Lqcd = 0.220;//GeV +-0.04 -> nF = 5
 const int constants::Nc = 3;
 const double constants::mB = 5.27953;//GeV
 const double constants::mb = 4.52;//GeV
+const double constants::mbp = qcd::mb_pole(constants::mb);
 const double constants::mc = 1.6;//GeV
 const double constants::mmu = 0.10566;//GeV
 const double constants::mKstar = 0.896;//GeV
