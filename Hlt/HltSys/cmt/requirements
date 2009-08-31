@@ -41,12 +41,13 @@ use TCKPresenter        v0r0    Hlt   # Klaus Neumann
 use Hlt2Lines           v1r5p1  Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
 use HltSelections       v9r5    Hlt   # Patrick Koppenburg
 use Hlt2SharedParticles v2r1    Hlt   # Patrick Koppenburg/Gerhard Raven
-use Fidel               v1r3p1  Phys  # Sara Furcas    
 use HltKshort           v2r0    Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
 use HltDisplVertices    v1r1    Hlt   # Neil Gauvin
 
 use HltSelChecker       v8r6    Hlt   # Patrick Koppenburg
+
+use Fidel               v1r3p1  Phys  # Sara Furcas    
 
 
 #=============================================================
@@ -54,7 +55,7 @@ use HltSelChecker       v8r6    Hlt   # Patrick Koppenburg
 #=============================================================
 
 use LoKiTrigger         v9r5   Phys   # Vanya Belyaev
-use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
+use TisTosTobbing       v3r4   Phys   # Tomasz Skwarnicki  
 
 #=============================================================
 # Stuff added really temporarily...
