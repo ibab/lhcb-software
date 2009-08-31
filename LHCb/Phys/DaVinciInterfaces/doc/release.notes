@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-08-31 - Juan Palacios
+ - IPhysDesktop now uses unweighted P->PV tables
+ - Adapt to changes in Particle2Vertex typedefs.
+
 ! 2009-08-19 - Vanya BELYAEV
 
  - IVertexFit.h
