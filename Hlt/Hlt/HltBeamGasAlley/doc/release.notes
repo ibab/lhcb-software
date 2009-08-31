@@ -4,6 +4,7 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+!========================== HltBeamGasAlley v2r2 2009-08-31 ===================
 ! 2009-08-31 Gerhard Raven
  - fix warnings in nightly build
 
