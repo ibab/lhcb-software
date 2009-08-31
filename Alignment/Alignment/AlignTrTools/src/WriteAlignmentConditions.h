@@ -1,4 +1,4 @@
-// $Id: WriteAlignmentConditions.h,v 1.6 2009-07-06 14:27:05 wouter Exp $
+// $Id: WriteAlignmentConditions.h,v 1.7 2009-08-31 12:23:45 mneedham Exp $
 #ifndef WriteAlignmentConditions_H
 #define WriteAlignmentConditions_H 1
 
@@ -59,6 +59,12 @@ private:
   std::ofstream m_outputFile;
   unsigned int m_precision;
   std::vector<unsigned int> m_depths;
+
+  std::string m_author;
+  std::string m_desc;
+  std::string m_tag;
+
 };
+
 
 #endif // WriteAlignment conditions

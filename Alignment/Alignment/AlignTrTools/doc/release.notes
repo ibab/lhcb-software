@@ -7,6 +7,9 @@ Purpose: LHCb Alignment Tools
 </PRE><H1><A NAME=v4r3>2009-07-06 AlignTrTools v4r3 </A></H1><PRE>
 - tagged this package for Alignment v4r2 release
 
+! 2009-08-31 M Needham
+ - Add comment tag to WriteAlignmentConditions 
+
 ! 2009-07-09 - Wouter Hulsbergen
  - adapted to migration to TrackKernel
 

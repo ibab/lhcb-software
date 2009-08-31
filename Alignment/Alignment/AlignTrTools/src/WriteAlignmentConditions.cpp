@@ -1,8 +1,11 @@
-// $Id: WriteAlignmentConditions.cpp,v 1.7 2009-07-06 14:27:05 wouter Exp $
+// $Id: WriteAlignmentConditions.cpp,v 1.8 2009-08-31 12:23:45 mneedham Exp $
 
 // std
 #include <fcntl.h>
 #include <errno.h>
+#include <sstream>
+#include <iostream>
+
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -14,6 +17,7 @@
 // local
 #include "WriteAlignmentConditions.h"
 
+#include "Kernel/STXMLUtils.h"
 
 DECLARE_ALGORITHM_FACTORY( WriteAlignmentConditions );
 
@@ -35,6 +39,10 @@ WriteAlignmentConditions::WriteAlignmentConditions( const std::string& name,
   declareProperty("outputFile",m_outputFileName = "alignment.xml");
   declareProperty("depths", m_depths );
   declareProperty("precision", m_precision = 16u);
+  declareProperty("author", m_author = "Joe Bloggs");
+  declareProperty("tag", m_tag = "Unknown");
+  declareProperty("desc", m_desc = "blahblah");
+
 }
 
 WriteAlignmentConditions::~WriteAlignmentConditions()
@@ -126,6 +134,12 @@ StatusCode WriteAlignmentConditions::write(const std::string& filename)
   const Condition* aCon = det->geometry()->alignmentCondition();
   if (aCon) {
     outputFile << header(aCon->toXml("", true, m_precision)) << std::endl;
+
+    // add some comments describing the file
+    std::ostringstream comment;
+    ST::XMLUtils::fullComment(comment,m_author, m_tag, m_desc);
+    outputFile << comment.str() << std::endl;
+
     children(det, outputFile, 0);
     outputFile << footer() << std::endl;
   }

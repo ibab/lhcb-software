@@ -19,6 +19,8 @@ include_path      none
 #============================================================================
 use   GSL             v*     LCG_Interfaces
 
+use   STKernel        v*    ST
+
 use   GaudiAlg        v*
 use   LHCbKernel      v*     Kernel
 use   LHCbMath        v*     Kernel
