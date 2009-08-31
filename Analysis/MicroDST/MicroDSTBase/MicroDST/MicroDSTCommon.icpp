@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.10 2009-08-20 07:50:37 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.11 2009-08-31 13:07:07 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -63,7 +63,8 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
   this->verbose() << "now store container for location " << from << endmsg;
 
   if (!exist<T>(from)) {
-    this->debug() << "Container location does not exist" << endmsg;
+    this->Warning("Container location "+ from+"does not exist",
+                  StatusCode::FAILURE, 10).ignore()
     return 0;    
   } else {
     const T* data = this->get<T>( from );
@@ -179,8 +180,8 @@ template <class T>
 const T* MicroDSTCommon<PBASE>::getInputContainer( const std::string& location ) 
 {
   if (!exist<T>(location)) {
-    this->Error("Container location "+location+" does not exist",
-                StatusCode::FAILURE, 10).ignore();
+    this->Warning("Container location "+location+" does not exist",
+                  StatusCode::FAILURE, 10).ignore();
     return 0;    
   } else {
     return this->get<T>( location );
