@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.10 2009-06-16 17:39:49 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/OMAlib/OMAalg.h,v 1.11 2009-08-31 17:24:05 ggiacomo Exp $
 #ifndef OMALIB_OMAALG_H
 #define OMALIB_OMAALG_H 1
 /** @class  OMAalg OMAalg.h OMAlib/OMAalg.h
@@ -12,6 +12,7 @@
 #include <TH1.h>
 
 class OMAlib;
+class OnlineHistogram;
 
 class OMAalg 
 {
@@ -30,6 +31,7 @@ class OMAalg
   inline bool needRef() { return m_needRef; }
   virtual bool checkStats(TH1* h,
                           unsigned int anaID);
+  void setOnlineHistogram(OnlineHistogram *h) {m_oh=h;}
 
  protected:
   inline void setType(AlgType type) {m_type = type;}
@@ -58,11 +60,11 @@ class OMAalg
   std::string m_doc;
   OMAlib* m_omaEnv;
   bool m_needRef;
+  OnlineHistogram* m_oh;
  private:
    // private dummy copy constructor and assignment operator 
   OMAalg(const OMAalg&) {}
   OMAalg & operator= (const OMAalg&) {return *this;}
-
 };
 
 class OMACheckAlg : public OMAalg

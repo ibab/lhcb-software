@@ -1,4 +1,4 @@
-// $Id: OMAalg.cpp,v 1.8 2009-06-16 17:39:49 ggiacomo Exp $
+// $Id: OMAalg.cpp,v 1.9 2009-08-31 17:24:06 ggiacomo Exp $
 #include "OMAlib/OMAalg.h"
 #include "OMAlib/OMAlib.h"
 #include <TH1.h>
@@ -8,7 +8,8 @@ OMAalg::OMAalg(std::string Name, OMAlib* OMAenv)
     m_type(CHECK),
     m_npars(0),
     m_omaEnv(OMAenv),
-    m_needRef(false)
+    m_needRef(false),
+    m_oh(NULL)
 {
   m_parnames.clear(); 
   m_parDefValues.clear(); 

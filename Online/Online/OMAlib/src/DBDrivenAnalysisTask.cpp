@@ -1,4 +1,4 @@
-// $Id: DBDrivenAnalysisTask.cpp,v 1.14 2009-06-17 13:15:44 ggiacomo Exp $
+// $Id: DBDrivenAnalysisTask.cpp,v 1.15 2009-08-31 17:24:06 ggiacomo Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "OMAlib/DBDrivenAnalysisTask.h"
 #include "OnlineHistDB/OnlineHistDB.h"
@@ -82,6 +82,7 @@ StatusCode DBDrivenAnalysisTask::analyze(std::string& SaveSet,
                   // check if we have statistics first, then exec the algorithm
                   if ( cka->checkStats(rooth,
                                       anaIDs[iana]) ) {
+                    cka->setOnlineHistogram(*ih);
                     cka->exec(*(rooth),
                               warningThr,
                               alarmThr,

@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.21 2009-08-26 16:14:22 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.22 2009-08-31 17:24:06 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -172,7 +172,6 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
                            m_savesetName, m_anaName,
                            message, level);
     m_MessageStore.push_back( msg );
-    publishMessage(msg);
   }
   if (msg) {
     if (m_histDB) {
@@ -183,6 +182,10 @@ void OMAMsgInterface::raiseMessage(OMAMessage::OMAMsgLevel level,
   }
   if (msg && send ) {
     raiseAlarm( (*msg) );
+    if (!newMsg) {
+      unpublishMessage(msg);
+    }
+    publishMessage(msg);
   }
 }
 
@@ -206,8 +209,10 @@ bool OMAMsgInterface::raiseAlarm(OMAMessage& message) {
 #endif
   sendLine( "********     "+std::string(time) , message.level() );
   sendLine( std::string(message.levelString()) + " from Analysis Task "+
-            m_anaTaskname +"  in analysis " +    message.ananame() , message.level() );
-  if(!message.hIdentifier().empty())
+            m_anaTaskname, message.level() );
+  if (! message.ananame().empty()) 
+    sendLine("    in analysis " +  message.ananame() , message.level() ); 
+  if (! message.hIdentifier().empty())
     sendLine( "      on histogram " + message.hIdentifier(), message.level() );
   sendLine(   "      from saveset " + message.saveSet(), message.level() );
   sendLine(  message.msgtext() , message.level() );
@@ -226,7 +231,9 @@ bool OMAMsgInterface::lowerAlarm(OMAMessage& message) {
 #endif
   sendLine( "********     "+std::string(time) , OMAMessage::INFO );
   sendLine( "===================== Analysis Task " +
-            m_anaTaskname + "  analysis " + message.ananame(), OMAMessage::INFO);
+            m_anaTaskname, OMAMessage::INFO);
+  if (! message.ananame().empty()) 
+    sendLine("    in analysis " +  message.ananame() , OMAMessage::INFO ); 
   if(!message.hIdentifier().empty())
     sendLine("   on histogram " + message.hIdentifier(),  OMAMessage::INFO);
   sendLine( std::string(message.levelString()) + " has gone" , OMAMessage::INFO);
@@ -243,7 +250,12 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
     std::stringstream svcName, svcContent;
     svcName << "/OMA/" << m_anaTaskname << "/Message" << m_iMsg;
     svcContent << time << " " << msg->levelString() << " from Analysis Task "
-               << m_anaTaskname << " analysis " << msg->ananame().data() << ":\n";
+               << m_anaTaskname;
+    if (! msg->ananame().empty()) 
+      svcContent << " analysis " << msg->ananame().data();
+    if (! msg->hIdentifier().empty())
+      svcContent << " on histogram " << msg->hIdentifier().data();
+    svcContent << ":\n";
     svcContent << msg->msgtext();
     m_msgLinks.push_back( svcContent.str() );
     char * ptr = const_cast<char*>(m_msgLinks[m_iMsg].c_str());

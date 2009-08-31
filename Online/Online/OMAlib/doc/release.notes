@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.29 2009-08-25 10:25:37 ggiacomo Exp $
+! $Id: release.notes,v 1.30 2009-08-31 17:24:05 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
 
-! 20090825 v2r8 
+! 20090831 v2r8 
 - add possibility to send alarm messages to a ascii log file (in addition to MsgService output)
 - publish messages also as DIM services
+- improve CheckDeadBins algorithm 
 
 ! 20090616 v2r7 
 - don't lower alarms if low statistics
