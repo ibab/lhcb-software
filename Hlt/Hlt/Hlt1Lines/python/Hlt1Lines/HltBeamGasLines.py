@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.11 2009-08-28 11:43:19 graven Exp $
+# $Id: HltBeamGasLines.py,v 1.12 2009-08-31 17:12:54 phopchev Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -12,7 +12,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -29,67 +29,85 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                 , 'ZVertexMax'              :  1500.
                 , 'BGVtxExclRangeMin'       : -265.
                 , 'BGVtxExclRangeMax'       :  265.
-                , 'ForcedRZVeloFraction'     : 0.001
-                , 'Prescale'                : { '.*' : 0.000005 }
-                } 
+                , 'ForcedRZVeloFraction'    : 0.001
+                #, 'Prescale'                : { '.*' : 0.000005 }
+                , 'Prescale'                : { 'Hlt1BeamGas1' :                    0.1
+		                              , 'Hlt1BeamGas2' :                    0.1
+					      , 'Hlt1BeamGasCrossing' :             0.01
+					      , 'Hlt1BeamGasCrossingForcedRZReco' : 0.0001
+					      }
+		} 
+
 
     def __performRZVelo( self ) :
         from HltLine.HltReco import RZVelo
         from Configurables import DeterministicPrescaler as Scaler
-        from Configurables import BeamGasTrigCheckL0TracksBXType
+
         return [ GaudiSequencer( 'BeamGasRZVeloSequencer'
-                               , Members = [ Scaler('BeamGasRZVeloPrescaler',AcceptFraction = self.getProp('ForcedRZVeloFraction') )
+                               , Members = [ Scaler('BeamGasRZVeloPrescaler', AcceptFraction = self.getProp('ForcedRZVeloFraction') )
                                            ] + RZVelo.members()
-                               , IgnoreFilterPassed = True )
-               #First need to have a 'TrEXISTS' predicate...
-               #algCheckRZVelo = VoidFilter('RequireRZVelo' , Code = "TrSOURCE('Hlt/Track/RZVelo') >> (TrSIZE > 0 )"
-               , BeamGasTrigCheckL0TracksBXType('Hlt1BeamGasRequireRZVelo'
-                                , ChechBXType = False
-                                , CheckL0Decision = False
-                                , CheckTracks = True
-                                , PVRTTracksLocation = 'Hlt/Track/RZVelo' )
-               ]
+                               , IgnoreFilterPassed = True )            
+              ]
+
+            
 
 
     def __create_beam_empty_line__(self, whichBeam) :
         ''' Configure the Hlt Line for the case of beam-gas 
-            interaction in a beam1/2 - empty crossing '''
+            interaction in a beam1/2 - empty crossing.
+	    Here we expect that nothing has been executed yet,
+	    so we do our 'own' RZ Tracking first. '''
 
         name = { 'Beam1': 'BeamGas1', 'Beam2' : 'BeamGas2' }[ whichBeam ]
-        
-        ### here we can add different z-ranges for beam1 and beam2
+        	
+	from Configurables import DecodeVeloRawBuffer
+	algDecodeVelo = DecodeVeloRawBuffer( 'Hlt1%sDecodeVelo' % name )
+	
+        ## here we can add different z-ranges for the beam1 and beam2 crossings
         from Configurables import Tf__PatVeloRTracking
-        algRTracking = Tf__PatVeloRTracking( 'Hlt1BeamGasRZVelo' 
+        algRZTracking = Tf__PatVeloRTracking( 'Hlt1%sRZTracking' % name 
                                            , OutputTracksName = "Hlt/Track/RZVeloBeamGas"
                                            , ZVertexMin  = self.getProp('ZVertexMin')
                                            , ZVertexMax  = self.getProp('ZVertexMax') )
         ## last algorithm should have name of line, plus 'Decision'
         from Configurables import BeamGasTrigVertexCut
         algVtxCut = BeamGasTrigVertexCut( 'Hlt1%sDecision' % name
-                                        , RZTracksInputLocation = algRTracking.OutputTracksName
+                                        , RZTracksInputLocation = algRZTracking.OutputTracksName
                                         , MaxBinValueCut     = 5
                                         , HistoBinWidth      = 10
                                         , ZExclusionRangeLow = 0.
                                         , ZExclusionRangeUp  = 0.  
                                         , MinCandidates      = 1 #Should be > 0 and <= MaxBinValueCut+1 (by default = 1)
-                                        )   
-        
+                                        )           
  
         from HltLine.HltLine import Hlt1Line as Line
         return Line( name
-	               , priority = 200
+	           , priority = 200
                    , prescale = self.prescale
                    , ODIN  = "ODIN_BXTYP == LHCb.ODIN.%s" % whichBeam
                    , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel' + whichBeam)
-                   , algos =  self.__performRZVelo() + [ algRTracking, algVtxCut ]
+                   , algos = [ algDecodeVelo, algRZTracking, algVtxCut ]
                    , postscale = self.postscale )
 		   
-    def __create_beam_crossing_line__(self) :
-	''' Configure the Hlt Line for the case of beam-gas 
-            interaction overlapped with a pp collision '''
-
+    def __create_beam_crossing_lines__(self) :
+	''' Configure the Hlt Lines for the case of beam-gas interaction 
+	    overlapped with a pp collision. The first line runs only if 
+	    the RZVelo tracks are already reconstructed. The second line
+	    (ForcedRZReco) has RZVelo in its sequence, so runs it if needed.
+        '''
+	
         lineName = "BeamGasCrossing"
+	
+	### To check the existence of tracks !!!
+        #First need to have a 'TrEXISTS' predicate...
+        #algCheckRZVelo = VoidFilter('RequireRZVelo' , Code = "TrSOURCE('Hlt/Track/RZVelo') >> (TrSIZE > 0)"
 
+        from Configurables import BeamGasTrigCheckL0TracksBXType
+	algCheckTracks = BeamGasTrigCheckL0TracksBXType( ChechBXType     = False
+	                                               , CheckL0Decision = False
+						       , CheckTracks     = True
+                                                       )
+						       
         from Configurables import BeamGasTrigClusterCut
         algClusterCut = BeamGasTrigClusterCut( SensorsBegin = 22
                                              , SensorsEnd   = 39
@@ -116,7 +134,7 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                                             )
 
         from Configurables import BeamGasTrigVertexCut
-        algVtxCut = BeamGasTrigVertexCut(   'Hlt1%sDecision' + lineName 
+        algVtxCut = BeamGasTrigVertexCut(   'Hlt1%sDecision' % lineName 
                                         , RZTracksInputLocation = algRTracking2.OutputTracksName
                                         , MaxBinValueCut     = 5
                                         , HistoBinWidth      = 10
@@ -126,17 +144,26 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                                         #, OutputSelectionName = ... #By default = name of the algorithm
                                         )
 
-        from HltLine.HltLine import Hlt1Line   as Line
-        return Line( lineName
-                   , priority = 200 
-                   , prescale = self.prescale
-                   , ODIN  = "ODIN_BXTYP == LHCb.ODIN.BeamCrossing"
-                   , L0DU  = "L0_CHANNEL('%s')" %  self.getProp('L0ChannelBeamCrossing')
-                   , algos = self.__performRZVelo() + [ algClusterCut, algExtractClust, algRTracking2, algVtxCut ]
-                   , postscale = self.postscale )
-		  
-    
+       	bgTrigAlgos = [ algClusterCut, algExtractClust, algRTracking2, algVtxCut ]
+	
+	from HltLine.HltLine import Hlt1Line as Line
+        line_beamCrossing = Line( lineName
+                		, priority = 200 
+                		, prescale = self.prescale
+                		, ODIN  = "ODIN_BXTYP == LHCb.ODIN.BeamCrossing"
+                		, L0DU  = "L0_CHANNEL('%s')" %  self.getProp('L0ChannelBeamCrossing')
+                		, algos = [ algCheckTracks ] + bgTrigAlgos
+                		, postscale = self.postscale )
+
+        line_beamCrossingForcedRZReco = line_beamCrossing.clone( lineName+"ForcedRZReco"
+							       , algos = self.__performRZVelo() + bgTrigAlgos )
+			    
+					    		  
+        return line_beamCrossing, line_beamCrossingForcedRZReco
+        
     def __apply_configuration__(self) : 
         self.__create_beam_empty_line__('Beam1')
         self.__create_beam_empty_line__('Beam2')
-        self.__create_beam_crossing_line__()
+        self.__create_beam_crossing_lines__()
+	
+	

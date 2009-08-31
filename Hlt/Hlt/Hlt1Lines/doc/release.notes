@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.37 2009-08-31 10:07:03 graven Exp $
+! $Id: release.notes,v 1.38 2009-08-31 17:12:54 phopchev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-28 - Plamen Hopchev
+ - in HltBeamGasLines: add fourth Hlt Line Hlt1BeamGasCrossingForcedRZReco
 
 !========================== Hlt1Lines v1r5 2009-08-31 ===================
 ! 2009-08-28 - Gerhard Raven
