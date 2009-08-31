@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.7 2009-08-11 14:06:59 smenzeme Exp $
+// $Id: TrackMonitorNT.cpp,v 1.8 2009-08-31 08:07:41 smenzeme Exp $
 // Include files 
 
 // from Gaudi
@@ -318,7 +318,7 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
   theTuple->column("numTHoles",hitpattern.numTHoles()) ;
   theTuple->column("numTLayers",hitpattern.numTLayers()) ;
   theTuple->column("numVeloStations",hitpattern.numVeloStations()) ;
-  theTuple->column("numVeloClusters",hitpattern.numVeloClusters()) ;
+  theTuple->column("numVeloClusters",hitpattern.numVeloR()+hitpattern.numVeloPhi()) ;
   
   theTuple->write();
 }

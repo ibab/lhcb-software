@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.16 2009-08-11 14:06:59 smenzeme Exp $
+// $Id: TrackMonitor.cpp,v 1.17 2009-08-31 08:07:41 smenzeme Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -287,8 +287,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     }
 
     // compare to what we expected
-    if (track.expectedHitPattern().numVeloClusters() > 0){
-      plot(nVeloHits - track.expectedHitPattern().numVeloClusters(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+    if (track.expectedHitPattern().numVeloR()+track.expectedHitPattern().numVeloPhi() > 0){
+      plot(nVeloHits - track.expectedHitPattern().numVeloR()-track.expectedHitPattern().numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
     }
 
     const LHCb::Track::ExtraInfo& info = track.extraInfo();
