@@ -1,19 +1,16 @@
-! $Id: release.notes,v 1.128 2009-08-21 16:44:59 odescham Exp $
+! $Id: release.notes,v 1.129 2009-08-31 09:05:40 graven Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r6 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps 
   - new functor : CaloAlgUtils (allows to consistently define context-dependent TES I/O)
 
-
 ! 2009-08-05 - Vanya BELYAEV
-
  - CaloDataFunctor
-
       remove duplicated functors 
       add isLocalMax 
-
  - CaloNeighbours - helpe function to get proper neighbours 
  - cmt/requirements 
     version increment to v8r6 
