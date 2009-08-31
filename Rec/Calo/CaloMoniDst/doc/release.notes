@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.49 2009-08-11 11:26:42 ibelyaev Exp $ 
+! $Id: release.notes,v 1.50 2009-08-31 16:45:58 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-31 - Olivier Deschamps
+ - fix bug in CaloMoniAlg (SplitAreas/m_split property/member already exists in inherited Calo2DView)
 
 ! 2009-08-11 - Vanya BELYAEV
 

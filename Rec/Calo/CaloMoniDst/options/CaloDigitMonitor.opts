@@ -7,3 +7,8 @@ CaloDigitMon.Members   += {   "CaloDigitMonitor/EcalDigitMon",
 //EcalDigitMon.EnergyFilter  = 500.*MeV;
 //HcalDigitMon.EnergyFilter  = 500.*MeV;
 //PrsDigitMon.EnergyFilter   = 50.*MeV;
+
+
+EcalDigitMon.SplitAreas = true;
+//EcalDigitMon.SplitAreas = true;
+EcalDigitMon.OutputLevel = 2;
