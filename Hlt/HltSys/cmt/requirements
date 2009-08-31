@@ -1,5 +1,5 @@
 package HltSys
-version v6r6
+version v6r7
 
 branches cmt doc 
 
@@ -55,6 +55,23 @@ use HltSelChecker       v8r6    Hlt   # Patrick Koppenburg
 
 use LoKiTrigger         v9r5   Phys   # Vanya Belyaev
 use TisTosTobbing       v3r3   Phys   # Tomasz Skwarnicki  
+
+#=============================================================
+# Stuff added really temporarily...
+#=============================================================
+# From LHCB:
+use CaloInterfaces      v7r14   Calo
+use CaloKernel          v6r0    Calo
+use CaloUtils           v8r6    Calo
+use LHCbKernel          v11r6   Kernel
+# From REC:
+use CaloPIDs            v5r0    Calo
+use CaloReco            v5r0    Calo
+use GlobalReco          v6r25   Rec
+# From LBCOM:
+use CaloTool            v5r10   Calo
+
+
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
