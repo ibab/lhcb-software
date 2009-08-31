@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r10 2009-08-31 ===================
 ! 2009-08-27 - Gerhard Raven
  - add overrule capability when generating configurations, 
    add optional default for reference properties (if reference AWOL)
