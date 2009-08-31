@@ -1,14 +1,13 @@
-! $Id: release.notes,v 1.130 2009-08-31 13:12:58 odescham Exp $
+! $Id: release.notes,v 1.131 2009-08-31 13:31:27 graven Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
 
+!========================== CaloUtils v8r6 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps 
   - change rule for detector name extraction in CaloAlgUtils (find substring wherever in the instance name instead of first digits)
 
-
-!========================== CaloUtils v8r6 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps 
   - new functor : CaloAlgUtils (allows to consistently define context-dependent TES I/O)
 
