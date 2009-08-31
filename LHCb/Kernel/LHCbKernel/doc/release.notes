@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-08-31 - Gerhard Raven
+ - tag v11r6, and increment version to v11r7
+
 ! 2009-08-25 - Chris Jones
  - Update printout string conversion of Rich::Side to say A or C side for 
    RICH2 (request from hardware experts).
