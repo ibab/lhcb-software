@@ -13,7 +13,6 @@
 #include "Gaucho/MonPairII.h"
 #include "Gaucho/MonPairDI.h"
 #include "Gaucho/MonProfile.h"
-#include "Gaucho/MonHitMap2D.h"
 #include "Gaucho/MonStatEntity.h"
 #include "Gaucho/MonVectorI.h"
 #include "Gaucho/MonVectorD.h"
