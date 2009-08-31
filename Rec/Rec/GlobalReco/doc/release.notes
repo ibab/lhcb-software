@@ -20,6 +20,7 @@
      move over to the new algorithms. Will be removed in a future release.
    + Requires update to ProtoParticle class in Event/RecEvent.
 
+!========================== GlobalReco v6r25 2009-08-31 ======================
 ! 2009-08-21 - Olivier Deschamps
   - implement generic context-dependent TES I/O (remove NonStandardHltLocation)
 
