@@ -1,4 +1,4 @@
-// $Id: DecayFinder.h,v 1.14 2007-10-25 17:17:04 jpalac Exp $
+// $Id: DecayFinder.h,v 1.15 2009-08-31 13:06:41 ibelyaev Exp $
 #ifndef TOOLS_DECAYFINDER_H 
 #define TOOLS_DECAYFINDER_H 1
 
@@ -15,8 +15,9 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IDecayFinder.h"
 
-
-class IParticlePropertySvc;
+// ============================================================================
+namespace LHCb { class IParticlePropertySvc; }
+// ============================================================================
 class IDataProviderSvc;
 struct yy_buffer_state;
 
@@ -171,13 +172,15 @@ private:
   class ParticleMatcher
   {
   public:
-    ParticleMatcher( IParticlePropertySvc *ppSvc );
+    //
+    ParticleMatcher( const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( ParticleMatcher &copy );
-    ParticleMatcher( std::string *name, IParticlePropertySvc *ppSvc );
+    ParticleMatcher( std::string *name, 
+                     const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
-                     IParticlePropertySvc *ppSvc );
+                     const LHCb::IParticlePropertySvc *ppSvc );
     ParticleMatcher( Quantums quantum, Relations relation, double value,
-                     IParticlePropertySvc *ppSvc );
+                     const LHCb::IParticlePropertySvc *ppSvc );
     bool test( const LHCb::Particle *part, 
                LHCb::Particle::ConstVector *collect=NULL );
     void setLift( void ) { lift = true; }
@@ -216,20 +219,21 @@ private:
     bool noscillate;
     bool inverse;
     bool stable;
-    IParticlePropertySvc *m_ppSvc;
+    const LHCb::IParticlePropertySvc *m_ppSvc;
   };
 
   /// The opaque representation of the decay chain.
   class Descriptor
   {
   public:
-    Descriptor( IParticlePropertySvc *ppSvc, double resonnanceThreshold );
+    Descriptor( const LHCb::IParticlePropertySvc *ppSvc, double resonnanceThreshold );
     Descriptor( Descriptor &copy );
-    Descriptor( ParticleMatcher *mother, IParticlePropertySvc *ppSvc,
+    Descriptor( ParticleMatcher *mother, 
+                const LHCb::IParticlePropertySvc *ppSvc,
                 double resonnanceThreshold );
-
+    
     ~Descriptor();
-
+    
     template<class Iter> bool test( const Iter first, const Iter last,
                                     const LHCb::Particle*& previous_result ) {
       Iter start;
@@ -301,8 +305,9 @@ private:
     bool skipResonnance;
     bool elipsis;
     double m_resThreshold;
-    IParticlePropertySvc *m_ppSvc;
-
+    
+    const LHCb::IParticlePropertySvc *m_ppSvc;
+    
     Descriptor *alternate;
   };
 
@@ -314,8 +319,8 @@ private:
   private:
     std::string msg;
   };
-
-  IParticlePropertySvc *m_ppSvc;
+  
+  const LHCb::IParticlePropertySvc *m_ppSvc;
   IDataProviderSvc *m_EDS;
   std::string m_source;
   Descriptor *m_decay;

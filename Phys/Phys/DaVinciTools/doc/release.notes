@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.459 2009-08-18 14:35:49 jpalac Exp $
+! $Id: release.notes,v 1.460 2009-08-31 13:06:41 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-31 - Vanya BELYAEV
+
+ - DecayFinder.h/cpp :
+
+     replace IParticlePropertySvc -> LHCb::IParticlePropertySvc 
+     replace  ParticleProperty    -> LHCb:: ParticleProperty
+
 
 ! 2009-08-18 - Juan PALACIOS
  - src/Genericarticle2PVRelator.h

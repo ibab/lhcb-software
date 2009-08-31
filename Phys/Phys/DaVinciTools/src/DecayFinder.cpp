@@ -1,4 +1,4 @@
-// $Id: DecayFinder.cpp,v 1.22 2008-03-27 11:03:10 pkoppenb Exp $
+// $Id: DecayFinder.cpp,v 1.23 2009-08-31 13:06:41 ibelyaev Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -7,9 +7,11 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/GaudiException.h"
-#include "GaudiKernel/IParticlePropertySvc.h"
-#include "GaudiKernel/ParticleProperty.h"
 #include "Event/Particle.h"
+
+
+#include "Kernel/IParticlePropertySvc.h"
+#include "Kernel/ParticleProperty.h"
 
 // local
 #include "DecayFinder.h"
@@ -17,9 +19,12 @@
 using namespace Gaudi::Units;
 
 //-----------------------------------------------------------------------------
-// Implementation file for class : DecayFinder
-//
-// 23/04/2002 : Olivier Dormond
+/** @file 
+ *  Implementation file for class DecayFinder
+ *
+ *  @date 23/04/2002 
+ *  @author Olivier Dormond
+ */
 //-----------------------------------------------------------------------------
 
 // Declaration of the Tool Factory
@@ -67,11 +72,11 @@ StatusCode DecayFinder::initialize()
 
   if( serviceLocator() ) {
     StatusCode sc = StatusCode::FAILURE;
-    sc = serviceLocator()->service("ParticlePropertySvc",m_ppSvc);
+    sc = serviceLocator()->service("LHCb::ParticlePropertySvc",m_ppSvc);
     if (!sc) return sc ;
   }
   if( !m_ppSvc ) {
-    throw GaudiException( "ParticlePropertySvc not found",
+    throw GaudiException( "LHCb::ParticlePropertySvc not found",
                           "DecayFinderException",
                           StatusCode::FAILURE );
   }
@@ -314,8 +319,9 @@ void DecayFinder::decaySubTrees(
   m_decay->test(head, NULL, &subtrees);
 }
 
-DecayFinder::Descriptor::Descriptor( IParticlePropertySvc *ppSvc,
-                                     double rThre)
+DecayFinder::Descriptor::Descriptor
+( const LHCb::IParticlePropertySvc *ppSvc,
+  double rThre)
   : mother(0), daughters(0), skipResonnance(false),
     elipsis(false), m_resThreshold(rThre), m_ppSvc(ppSvc), alternate(0)
 {}
@@ -336,9 +342,10 @@ DecayFinder::Descriptor::Descriptor( Descriptor &copy )
   m_ppSvc = copy.m_ppSvc;
 }
 
-DecayFinder::Descriptor::Descriptor( ParticleMatcher *m,
-                                     IParticlePropertySvc *ppSvc,
-                                     double rThre)
+DecayFinder::Descriptor::Descriptor
+( ParticleMatcher *m,
+  const LHCb::IParticlePropertySvc *ppSvc,
+  double rThre)
   : mother(m), daughters(0), skipResonnance(false),
     elipsis(false), m_resThreshold(rThre), m_ppSvc(ppSvc), alternate(0)
 {}
@@ -485,16 +492,16 @@ void DecayFinder::Descriptor::addDaughter( Descriptor *daughter )
   daughters.insert( d, daughter );
 }
 
-void DecayFinder::Descriptor::addNonResonnantDaughters(
-                                                       std::list<const LHCb::Particle*> &parts,
-                                                       const LHCb::Particle *part )
+void DecayFinder::Descriptor::addNonResonnantDaughters
+( std::list<const LHCb::Particle*> &parts,
+  const LHCb::Particle *part )
 {
   SmartRefVector<LHCb::Particle>::const_iterator d;
   for ( d = part->daughters().begin();
         d != part->daughters().end(); d++ )
   {
-    ParticleProperty *pp =
-      m_ppSvc->findByStdHepID( (*d)->particleID().pid() );
+    const LHCb::ParticleProperty *pp = m_ppSvc->find ( (*d)->particleID() );
+    //m_ppSvc->findByStdHepID( (*d)->particleID().pid() );
     if( pp->lifetime() >= m_resThreshold )
       parts.push_front(*d);
     else
@@ -509,8 +516,8 @@ void DecayFinder::Descriptor::filterResonnances( std::list<const LHCb::Particle*
   std::list<const LHCb::Particle*>::iterator npi;
   for( pi=parts.begin(); pi!=parts.end(); pi = npi )
   {
-    ParticleProperty *pp = 
-      m_ppSvc->findByStdHepID( (*pi)->particleID().pid() );
+    const LHCb::ParticleProperty *pp = m_ppSvc->find ( (*pi)->particleID() );
+    // m_ppSvc->findByStdHepID( (*pi)->particleID().pid() );
     if( pp->lifetime() < m_resThreshold )
     {
       const LHCb::Particle *part = *pi;
@@ -533,7 +540,8 @@ void DecayFinder::Descriptor::conjugate( void )
     (*d)->conjugate();
 }
 
-DecayFinder::ParticleMatcher::ParticleMatcher( IParticlePropertySvc *ppSvc )
+DecayFinder::ParticleMatcher::ParticleMatcher
+( const LHCb::IParticlePropertySvc *ppSvc )
   : type(notest), lift(false), empty_f(false), qmark(false), conjugate(false),
     oscillate(false), noscillate(false), inverse(false), stable(false),
     m_ppSvc(ppSvc)
@@ -572,21 +580,24 @@ DecayFinder::ParticleMatcher::ParticleMatcher( ParticleMatcher &copy )
   }
 }
 
-DecayFinder::ParticleMatcher::ParticleMatcher( std::string *name,
-                                               IParticlePropertySvc *ppSvc )
+DecayFinder::ParticleMatcher::ParticleMatcher
+( std::string *name,
+  const LHCb::IParticlePropertySvc *ppSvc )
   : type(id), lift(false), empty_f(false), qmark(false), conjugate(false),
     oscillate(false), noscillate(false), inverse(false), stable(false),
     m_ppSvc(ppSvc)
 {
-  ParticleProperty *pp = m_ppSvc->find(*name);
+  const LHCb::ParticleProperty *pp = m_ppSvc->find(*name);
   if( pp )
-    parms.stdHepID = pp->jetsetID();
+    parms.stdHepID = pp->particleID().pid();
+  //parms.stdHepID = pp->jetsetID();
   else
     throw DescriptorError(std::string("Unknown particle '")+*name+"'");
 }
 
-DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
-                                               IParticlePropertySvc *ppSvc )
+DecayFinder::ParticleMatcher::ParticleMatcher
+( Quarks q1, Quarks q2, Quarks q3,
+  const LHCb::IParticlePropertySvc *ppSvc )
   : type(quark), lift(false), empty_f(false), qmark(false), conjugate(false),
     oscillate(false), noscillate(false), inverse(false), stable(false),
     m_ppSvc(ppSvc)
@@ -596,8 +607,9 @@ DecayFinder::ParticleMatcher::ParticleMatcher( Quarks q1, Quarks q2, Quarks q3,
   parms.quarks.q3 = q3;
 }
 
-DecayFinder::ParticleMatcher::ParticleMatcher( Quantums q,Relations r,double d,
-                                               IParticlePropertySvc *ppSvc )
+DecayFinder::ParticleMatcher::ParticleMatcher
+( Quantums q,Relations r,double d,
+  const LHCb::IParticlePropertySvc *ppSvc )
   : type(quantum), lift(false), empty_f(false), qmark(false), conjugate(false),
     oscillate(false), noscillate(false), inverse(false), stable(false),
     m_ppSvc(ppSvc)
@@ -622,7 +634,8 @@ std::string DecayFinder::ParticleMatcher::describe( void )
     result += "## MUST NOT COMPILE ##";
     break;
   case id:
-    result += m_ppSvc->findByStdHepID(parms.stdHepID)->particle();
+    result += m_ppSvc->find( LHCb::ParticleID( parms.stdHepID ) )->particle();
+    // result += m_ppSvc->findByStdHepID(parms.stdHepID)->particle();
     break;
   case quark:
     result += "<X";
