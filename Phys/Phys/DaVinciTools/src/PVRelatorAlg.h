@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.h,v 1.7 2009-06-26 13:24:50 jpalac Exp $
+// $Id: PVRelatorAlg.h,v 1.8 2009-08-31 20:48:31 jpalac Exp $
 #ifndef PVRELATORALG_H 
 #define PVRELATORALG_H 1
 
@@ -15,7 +15,7 @@ class IRelatedPVFinder;
  *  A simple GaudiAlgorithm that takes as input the TES location of some
  *  LHCb::Particles, plus the TES location of some LHCb::RecVertices <b>or</b>
  *  the TES location of an LHCb::Particle->LHCb::VertexBase weighted relations 
- *  table(Particle2Vertex::Table), and uses an IRelatedPVFinder to create sorted 
+ *  table(Particle2Vertex::WTable), and uses an IRelatedPVFinder to create sorted 
  *  Particle->PV relations or to re-sort the input relations if a relations table 
  *  has given as input.
  *  The sorting is done according to the logic of the implementation of the
@@ -29,11 +29,11 @@ class IRelatedPVFinder;
  *  <b>PrimaryVertexInputLocation</b> : TES location of input LHCb::RecVertices. 
  *  Default: LHCb::RecVertexLocation::Primary
  *
- *  <b>P2PVRelationsInputLocation</b> : TES location of input Particle2Vertex::Table. 
+ *  <b>P2PVRelationsInputLocation</b> : TES location of input Particle2Vertex::WTable. 
  *  Default: "".
  *
  *  <b>P2PVRelationsOutputLocation</b> : TES location of the output 
- *  Particle2Vertex::Table with the newly sorted relations. Default "".
+ *  Particle2Vertex::WTable with the newly sorted relations. Default "".
  *  Must be set by user.
  *
  *  Besides the properties that <b>must</b> be set, there are two extra 
@@ -41,11 +41,11 @@ class IRelatedPVFinder;
  *  can be set if <b>P2PVRelationsInputLocation<b> is set. This will result in 
  *  the initalize() method returning a StatusCode::FAILURE.
  *
- *  <b>Example</b>: Create a Particle2Vertex::Table relating LHCb::Particles from
+ *  <b>Example</b>: Create a Particle2Vertex::WTable relating LHCb::Particles from
  *  "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/Particles" to default primary vertices and 
  *  put it in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2DefaultPVRelations". Create 
- *  another Particle2Vertex::Table relating LHCb::Particles to re-fitted PVs 
- *  starting from a Particle2Vertex::Table in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations" 
+ *  another Particle2Vertex::WTable relating LHCb::Particles to re-fitted PVs 
+ *  starting from a Particle2Vertex::WTable in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVRelations" 
  *  and put it in "Phys/DC06selBd2Jpsi2MuMu_Kst2KPi/P2ReFitPVSortedRelations"
  *
  *  @code
@@ -89,9 +89,9 @@ private:
     return (exist<T>( location )) ? get<T>( location ) : 0 ;
   }
 
-  Particle2Vertex::Table* table() const;
+  Particle2Vertex::WTable* table() const;
   
-  Particle2Vertex::Table* tableFromTable() const;
+  Particle2Vertex::WTable* tableFromTable() const;
 
 private:
 

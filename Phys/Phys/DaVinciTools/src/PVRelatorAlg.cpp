@@ -1,4 +1,4 @@
-// $Id: PVRelatorAlg.cpp,v 1.9 2009-07-14 15:44:43 jpalac Exp $
+// $Id: PVRelatorAlg.cpp,v 1.10 2009-08-31 20:48:31 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -92,7 +92,7 @@ StatusCode PVRelatorAlg::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  Particle2Vertex::Table* table = (m_useTable) ? this->tableFromTable() : this->table();
+  Particle2Vertex::WTable* table = (m_useTable) ? this->tableFromTable() : this->table();
   
   if (0!=table) {
     if ( msgLevel(MSG::VERBOSE) ) {
@@ -109,18 +109,18 @@ StatusCode PVRelatorAlg::execute() {
   return StatusCode::SUCCESS;
 }
 //=============================================================================
-Particle2Vertex::Table* PVRelatorAlg::table() const
+Particle2Vertex::WTable* PVRelatorAlg::table() const
 {
 
   typedef LHCb::Particle::Container Particles;
   typedef LHCb::RecVertex::Container Vertices;
-  typedef Particle2Vertex::LightTable RelTable;  
+  typedef Particle2Vertex::LightWTable RelTable;  
 
   const Particles* particles = i_get<Particles>(m_particleInputLocation);
 
   const Vertices* vertices = i_get<Vertices>(m_PVInputLocation);
 
-  Particle2Vertex::Table* table = new Particle2Vertex::Table();
+  Particle2Vertex::WTable* table = new Particle2Vertex::WTable();
 
   if (0==particles || 0==vertices) return table;
 
@@ -136,14 +136,14 @@ Particle2Vertex::Table* PVRelatorAlg::table() const
  
 }
 //=============================================================================
-Particle2Vertex::Table* PVRelatorAlg::tableFromTable() const
+Particle2Vertex::WTable* PVRelatorAlg::tableFromTable() const
 {
   typedef LHCb::Particle::ConstVector Particles;
   typedef LHCb::VertexBase::ConstVector Vertices;
   typedef LHCb::RecVertex::ConstVector PVs;
-  typedef Particle2Vertex::LightTable RelTable;
-  typedef Particle2Vertex::Table Table;
-  typedef Particle2Vertex::Table::InvType InvTable;
+  typedef Particle2Vertex::LightWTable RelTable;
+  typedef Particle2Vertex::WTable Table;
+  typedef Particle2Vertex::WTable::InvType InvTable;
   
   const Table* inputTable = i_get<Table>(m_P2PVInputLocation);
 
