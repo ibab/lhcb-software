@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.55 2009-08-18 14:46:10 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.56 2009-08-31 16:34:50 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -12,6 +12,7 @@
 #include "Kernel/IOnOffline.h"
 #include "Kernel/IRelatedPVFinder.h"
 #include "Kernel/DaVinciFun.h"
+#include "Kernel/DaVinciGuards.h"
 // ============================================================================
 /** @file
  *  The implementation for class DVAlgorithm
@@ -353,6 +354,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
       return 0;
     }
     LHCb::RecVertex::ConstVector reFittedPVs;
+    DaVinci::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
     for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
          iPV != PVs->end(); ++iPV) {
       LHCb::RecVertex* reFittedPV = new LHCb::RecVertex(**iPV);
@@ -367,30 +369,31 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
                                           << " re-fitted PVs" 
                                           << endmsg;
 
-    const Particle2Vertex::LightTable table = finder->relatedPVs(p, reFittedPVs);
-    const Particle2Vertex::Range range = table.relations(p);
-    if (msgLevel(MSG::VERBOSE)) verbose() << "have " << range.size()
-                                          << " related, re-fitted PVs" 
-                                          << endmsg;    
-    const LHCb::RecVertex* pv = DaVinci::bestRecVertex(range);
+    const LHCb::VertexBase* vb = finder->relatedPV(p, reFittedPVs);
+
+    if (0==vb) {
+      Warning("IRelatedPVFinder found no best vertex",
+              StatusCode::FAILURE, 10).ignore();
+      return 0;
+    }
+    
+    const LHCb::RecVertex*  pv = dynamic_cast<const LHCb::RecVertex*>(vb) ;
+
     if (0==pv) {
-      Warning("VertexBase -> RecVertex dynamic cast failed",StatusCode::FAILURE, 10).ignore();
+      Warning("VertexBase -> RecVertex dynamic cast failed",
+              StatusCode::FAILURE, 10).ignore();
       return 0;
     } else {
       const LHCb::RecVertex* returnPV = desktop()->keep(pv);
-      // clear container
-      for (LHCb::RecVertex::ConstVector::const_iterator iObj = reFittedPVs.begin();
-           iObj != reFittedPVs.end(); ++iObj) delete *iObj;
-      reFittedPVs.clear();
       return returnPV;
     }
   } else { // no PV re-fit
     if (msgLevel(MSG::VERBOSE)) verbose() << "Getting related PV from finder" << endmsg;
-    const Particle2Vertex::LightTable table = finder->relatedPVs(p, *PVs);
-    const Particle2Vertex::Range range = table.relations(p);
-    const LHCb::VertexBase* pv = DaVinci::bestVertexBase(range);
+    const LHCb::VertexBase* pv  = finder->relatedPV(p, *PVs);
+
     if (0!=pv) {
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" << pv << endmsg;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Returning related vertex\n" 
+                                            << pv << endmsg;
     } else {
       if (msgLevel(MSG::VERBOSE)) verbose() << "no related PV found" << endmsg;
     }
@@ -406,12 +409,8 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
     error() << "input particle is NULL" << endmsg;
     return 0;
   }
-  const Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(part);
-  if (msgLevel(MSG::VERBOSE)) {
-    verbose() << "getRelatedPV! Got range with size " << endmsg;
-    verbose() << p2pvRange.size() << endmsg;
-  }
-  if (p2pvRange.empty()) {
+
+  if (!hasStoredRelatedPV(part) ) {
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "particle2Vertices empty. Calling calculateRelatedPV" 
                 << endmsg;
@@ -430,6 +429,12 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
 
   const Particle2Vertex::Range range = desktop()->particle2Vertices(part);
   return DaVinci::bestVertexBase(range);
+}
+// ============================================================================
+bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
+{
+  const Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(particle);
+  return !p2pvRange.empty();
 }
 // ============================================================================
 StatusCode DVAlgorithm::fillSelResult () {

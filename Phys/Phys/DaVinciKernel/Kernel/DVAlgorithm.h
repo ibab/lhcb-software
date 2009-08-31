@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.40 2009-07-22 11:39:17 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.41 2009-08-31 16:34:50 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -200,12 +200,11 @@ public:
    *
    **/
   inline void relateWithOverwrite(const LHCb::Particle*   part, 
-                                  const LHCb::VertexBase* vert,
-                                  const double weight=1.) const
+                                  const LHCb::VertexBase* vert) const
   {
     if (0==part || 0== vert ) return;
     (this->desktop()->Particle2VertexRelations().i_removeFrom(part)).ignore();
-    this->desktop()->relate(part, vert, weight);
+    this->desktop()->relate(part, vert);
   }
   
   
@@ -584,6 +583,10 @@ protected:
   
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
+
+private:
+
+  bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
   
 private:
   /// Decay description (Property)
