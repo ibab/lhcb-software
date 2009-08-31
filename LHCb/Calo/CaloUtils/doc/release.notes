@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.129 2009-08-31 09:05:40 graven Exp $
+! $Id: release.notes,v 1.130 2009-08-31 13:12:58 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+
+! 2009-08-21 - Olivier Deschamps 
+  - change rule for detector name extraction in CaloAlgUtils (find substring wherever in the instance name instead of first digits)
+
 
 !========================== CaloUtils v8r6 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps 

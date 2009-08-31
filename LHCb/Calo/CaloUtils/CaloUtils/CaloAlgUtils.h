@@ -6,14 +6,16 @@
 namespace LHCb{
   namespace CaloAlgUtils{
     inline std::string CaloNameFromAlg( std::string algName ){
-      int index = algName.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
       std::string name = "";
-      std::string uAlg( algName );
-      std::transform( algName.begin() , algName.end() , uAlg.begin () , ::toupper ) ;
-      if( uAlg.substr( index, 4 )      == "ECAL" ) name = "Ecal";
-      else if( uAlg.substr( index, 4 ) == "HCAL" ) name = "Hcal";
-      else if ( uAlg.substr(index,3)   == "PRS"  ) name = "Prs";
-      else if ( uAlg.substr(index,3)   == "SPD"  ) name = "Spd";
+      // find tool name separator if any
+      int index = algName.find_last_of(".") +1 ; // return 0 if '.' not found --> OK !!
+      std::string inst = algName.substr(index,std::string::npos);
+      std::string uInst( inst );
+      std::transform( inst.begin() , inst.end() , uInst.begin () , ::toupper ) ;
+      if( uInst.rfind( "ECAL" )      != std::string::npos ) name = "Ecal";
+      else if( uInst.rfind( "HCAL" ) != std::string::npos ) name = "Hcal";
+      else if ( uInst.rfind( "PRS" ) != std::string::npos ) name = "Prs";
+      else if ( uInst.rfind( "SPD" ) != std::string::npos ) name = "Spd";
       return name ;
     }
 
