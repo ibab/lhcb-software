@@ -28,7 +28,7 @@ then
         echo "Now building configuration: $CMTCONFIG "
         if test $quiet = 1; 
 	then
-            export QUIET=1
+            export QUIET;
 	fi;
         if test $clean = 1; 
 	then
@@ -40,13 +40,14 @@ then
 	fi;
         if test $nobuild = 1;
         then 
-           echo "Do not build ..... ${i}"
+           echo "Do not build ..... ${i}";
            continue;
         fi;
         if test -e build_${CMTCONFIG}.log; then $show rm -f build_${CMTCONFIG}.log; fi;
         if test -e build_${CMTCONFIG}.log.tmp; then $show rm -f build_${CMTCONFIG}.log.tmp; fi;
 	$show ${CMTROOT}/${CMTBIN}/cmt.exe broadcast cmt make -j 8 >build_${CMTCONFIG}.log.tmp 2>&1;
         $show cat build_${CMTCONFIG}.log.tmp \
+	    | grep -v "#CMT---> " \
 	    | grep -v "${CMTCONFIG}.make ok" \
 	    | grep -v "CMTCONFIG=${CMTCONFIG}" \
 	    | grep -v "Makefile.header" \

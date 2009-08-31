@@ -5,19 +5,25 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r27</A></H1><PRE>
-     New version v4r24 built against LHCb v27r4 and GAUDI v21r1.
+</PRE><H1><A NAME=v4r28>2009-06-29 OnlineSys v4r28</A></H1><PRE>
+     New version v4r28 built against LHCb v27r5.
+     Updates for GaudiOnline, GaudiSerialize, Writer,
+     OMAlib, OnlineHistDB, InsertDB, 
+     Gaucho, ExampleGaucho.
+
+</PRE><H1><A NAME=v4r27>2009-06-29 OnlineSys v4r27</A></H1><PRE>
+     New version v4r27 built against LHCb v27r4 and GAUDI v21r1.
      Updates for GaudiOnline, Gaucho, and Writer.
 
-</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r26</A></H1><PRE>
-     New version v4r24 built against LHCb v27r3 and GAUDI v21r1.
+</PRE><H1><A NAME=v4r26>2009-06-29 OnlineSys v4r26</A></H1><PRE>
+     New version v4r26 built against LHCb v27r3 and GAUDI v21r1.
      Updates for OnlineTasks, GaudiOnline, Dim (v19r2) Camera, Gaucho, 
      OnlineHistDb, OMAlib, HistDbPython, PyDim and Writer.
 
-</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r25</A></H1><PRE>
-     New version v4r24 built against LHCb v27r3 and GAUDI v21r1.
+</PRE><H1><A NAME=v4r25>2009-06-29 OnlineSys v4r25</A></H1><PRE>
+     New version v4r25 built against LHCb v27r3 and GAUDI v21r1.
 
-</PRE><H1><A NAME=v4r23>2009-06-29 OnlineSys v4r24</A></H1><PRE>
+</PRE><H1><A NAME=v4r24>2009-06-29 OnlineSys v4r24</A></H1><PRE>
      New version v4r24 built against LHCb v27r2 and GAUDI v21r1.
      Update OnlineTasks to v1r24 and GaudiOnline v2r30.
 
