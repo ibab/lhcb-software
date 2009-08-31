@@ -1,4 +1,4 @@
-// $Id: IRelatedPVFinder.h,v 1.5 2009-08-17 08:04:22 jpalac Exp $
+// $Id: IRelatedPVFinder.h,v 1.6 2009-08-31 20:33:39 jpalac Exp $
 #ifndef KERNEL_IRELATEDPVFINDER_H 
 #define KERNEL_IRELATEDPVFINDER_H 1
 
@@ -42,8 +42,8 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
-                                                       const LHCb::RecVertex::Container& PVs) const =0;
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
+                                                        const LHCb::RecVertex::Container& PVs) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
    * vector of const LHCb::RecVertex pointers
@@ -56,7 +56,7 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
                                                        const LHCb::RecVertex::ConstVector& PVs) const =0;
 
   /**
@@ -71,7 +71,7 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
                                                        const LHCb::VertexBase::Container& PVs) const =0;
   /**
    * Return a range of weighted relations between an LHCb::Particle and a
@@ -85,7 +85,7 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
                                                        const LHCb::VertexBase::ConstVector& PVs) const =0;
 
   /**
@@ -103,7 +103,7 @@ public:
    *
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
-  virtual const Particle2Vertex::LightTable relatedPVs(const LHCb::Particle* particle,
+  virtual const Particle2Vertex::LightWTable relatedPVs(const LHCb::Particle* particle,
                                                        const std::string& PVLocation) const =0;
 
 

@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.2 2009-08-04 09:45:31 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.3 2009-08-31 20:33:39 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -94,8 +94,8 @@ public:
   virtual Particle2Vertex::LightTable& Particle2VertexRelations() = 0;
 
   /// Store relations over-writing previously existing ones
-  virtual void overWriteRelations(Particle2Vertex::Range::const_iterator begin,
-                                  Particle2Vertex::Range::const_iterator end) = 0;
+  virtual void overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
+                                  Particle2Vertex::Table::Range::const_iterator end) = 0;
 
   /// Keep for future use: Register the new particles in the Desktop, 
   /// pass ownership, return pointer to new particle
@@ -146,15 +146,10 @@ public:
   
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
-                      const LHCb::VertexBase* vert,
-                      const double weight=1.) = 0;
+                      const LHCb::VertexBase* vert ) = 0;
 
-  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
-  virtual double weight(const LHCb::Particle* part, 
-                        const LHCb::VertexBase* vert ) const = 0;
-  
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
-  virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const = 0;
+  virtual Particle2Vertex::Table::Range particle2Vertices(const LHCb::Particle* part ) const = 0;
 
   /// Clean desktop
   virtual StatusCode cleanDesktop() = 0;
