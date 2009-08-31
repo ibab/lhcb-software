@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-08-31 - Kurt Rinnert
+ - add preprocessor flag -DVETRA if cmt flag VETRA_root is active to allow for
+   specialised code that can't be compiled under Brunel dependencies.
+ - use the above flag in the occupancy monitor to mask dependencies on
+   VetraKernel and VeloTell1Tools when not compiling in Vetra.
+
 ! 2009-08-27 - Kurt Rinnert
  - occupancy monitor: now uses the new TELL1 map and time stamp tools when
    writing strip mask XML files. More graceful handling of missing input

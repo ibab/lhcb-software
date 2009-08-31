@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.4 2009-08-27 13:23:51 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.5 2009-08-31 13:16:06 krinnert Exp $
 // Include files 
 // -------------
 
@@ -47,13 +47,14 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
   : Velo::VeloMonitorBase ( name , pSvcLocator )
   , m_occupancyDenom(0)
 {
-
-  declareProperty( "VeloClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
-  declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
+#ifdef VETRA
   declareProperty( "WriteXML", m_writeXML = false );
   declareProperty( "XMLDirectory", m_xmlDir = "." );
   declareProperty( "ParamName", m_paramName = "strip_mask" );
   declareProperty( "HighOccCut", m_highOccCut = 1.0 );
+#endif // VETRA
+  declareProperty( "VeloClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
+  declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
   declareProperty( "UseOdin", m_useOdin = true );
 
 }
@@ -72,11 +73,13 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   if ( sc.isFailure() ) return sc;
 
 
+#ifdef VETRA
   // get tools needed for writing XML files
   if ( m_writeXML ) {
     m_tell1Map   = tool<Velo::ITELL1SensorMap>("Velo::LivDBTELL1SensorMap","Tell1Map");
     m_timeStamps = tool<Velo::ITimeStampProvider>("Velo::TimeStamps","TimeStamps");
   }
+#endif // VETRA
 
   m_nstrips = 180224;
 
@@ -185,7 +188,7 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 
   if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
 
-
+#ifdef VETRA
   // create conditions and write them to XML, if requested
   if ( m_writeXML ) {
     struct stat statbuf;
@@ -208,6 +211,8 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
       }
     }
 
+
+    std::ofstream txtFile("masked_channels.txt");
     
     std::string fileNameBase = tsDir + "/strip_mask_tell1_";
     for ( std::vector<DeVeloSensor*>::const_iterator si = m_veloDet->sensorsBegin();
@@ -221,6 +226,7 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
       for ( unsigned int chipChannel = 0; chipChannel < 2048; ++chipChannel ) {
         double occ = occHist->GetBinContent(chipChannel+1);
         if ( occ > m_highOccCut ) {
+          txtFile << "sensor number, chip channel --> " << sensorNumber << "\t" << chipChannel << std::endl;
           masks[Velo::chipChannelToTell1Channel(chipChannel)] = 1;
         }
       }
@@ -236,8 +242,10 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
       xmlFile.close();
 
     }
+    txtFile.close();
   }
-
+#endif // VETRA
+  
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }
 
@@ -267,11 +275,11 @@ void Velo::VeloOccupancyMonitor::veloClusters() {
 void Velo::VeloOccupancyMonitor::getOdinBank() {
   
   if ( m_debugLevel )
-    warning() << "Retrieving ODIN bank from " << LHCb::ODINLocation::Default << endmsg;
+    debug() << "Retrieving ODIN bank from " << LHCb::ODINLocation::Default << endmsg;
 
   m_odin = 0;
   if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
-    info() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
+    warning() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
   } else {
     m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }
