@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2009-08-05 17:26:05 ibelyaev Exp $
+! $Id: release.notes,v 1.45 2009-08-31 09:04:09 graven Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,6 +7,7 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
+!======================= CaloKernel v6r0 2009-08-31 ===========================
 ! 2009-08-05 - Vanya BELYAEV
 
  - prepare for Calo configurables 
