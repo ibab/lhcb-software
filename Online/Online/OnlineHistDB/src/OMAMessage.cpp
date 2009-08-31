@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.15 2009-08-25 10:21:19 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.16 2009-08-31 17:26:30 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -23,7 +23,7 @@ OMAMessage::OMAMessage( std::string& HistName,
   OnlineHistDBEnv(env),  m_dbsession(&env), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
   m_taskName(TaskName), m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
   m_msgtext(Text), m_msgtext_null(0), m_level(Level),
-  m_anaid(anaID), m_ananame(AnalysisName), m_time(0),
+  m_anaid(anaID), m_ananame(AnalysisName), m_time(0), m_anaComment(""),
   m_isAbort(false), m_confirmed(true), m_dbsync(false)
 {
   m_histo_null = m_histo.empty() ? 1 : 0;
@@ -38,8 +38,8 @@ OMAMessage::OMAMessage( std::string& HistName,
       myOCIBindInt(stmt,":1", anaID);
     myOCIDefineString(stmt, 1, anaMess , VSIZE_ANAMSG);
     if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-      std::string aM = (char *) anaMess;
-      m_msgtext = aM + ". " + Text;
+      m_anaComment = (char *) anaMess;
+      setText(Text);
     }
     releaseOCIStatement(stmt);
   }

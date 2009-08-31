@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.6 2009-08-25 10:21:19 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.7 2009-08-31 17:26:30 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -59,7 +59,9 @@ public:
     if (Level != m_level) { m_level = Level; m_dbsync=false;}
   }
   inline const char* msgtext() { return m_msgtext.data(); }
-  inline void setText(std::string& Text) { m_msgtext = Text; m_dbsync=false;}
+  inline void setText(std::string& Text) { 
+    m_msgtext = m_anaComment + " " + Text; 
+    m_dbsync=false;}
   
   const char* levelString();
   void setLevelFromString(const char* slevel);
@@ -102,6 +104,7 @@ private:
   std::string m_ananame;
   sb2 m_ananame_null;
   int m_time;
+  std::string m_anaComment;
 
   bool m_isAbort;
   bool m_confirmed;
