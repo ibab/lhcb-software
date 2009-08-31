@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r9>2009-08-31 Phys v8r9 </A></H1><PRE>
+
+###############################################################################
+#                                  PHYS v8r9                                  #
+###############################################################################
+
+ - Based on LHCb v27r5 and Gaudi v21r3
+
+   Same as v8r8 but including some packages to be released in LHCb v27r6.
+   Necessary to compile against these.
+
 </PRE><H1><A NAME=v8r8>2009-08-12 Phys v8r8 </A></H1><PRE>
 
 ###############################################################################
