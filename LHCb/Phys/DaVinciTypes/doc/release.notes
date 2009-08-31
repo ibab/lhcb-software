@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.1.1.1 2009-08-04 07:22:39 jpalac Exp $
+!$Id: release.notes,v 1.2 2009-08-31 20:26:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
 ! Responsible : Juan Palacios
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
+
+! 2009-08-31 - Juan Palacios
+ - Kernel/Particle2Vertex.h
+  . Weighted and unweighted tables. Remove some typedefs.
 
 ! 2009-08-04 - Juan Palacios
  - First import of package, includes Kernel/Particle2Vertex.h, imported from

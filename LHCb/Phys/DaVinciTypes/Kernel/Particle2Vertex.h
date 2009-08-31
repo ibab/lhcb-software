@@ -1,4 +1,4 @@
-// $Id: Particle2Vertex.h,v 1.1.1.1 2009-08-04 07:22:39 jpalac Exp $
+// $Id: Particle2Vertex.h,v 1.2 2009-08-31 20:26:31 jpalac Exp $
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 
@@ -7,6 +7,8 @@
 #include "Event/Particle.h"
 #include "Relations/RelationWeighted.h"
 #include "Relations/RelationWeighted1D.h"
+#include "Relations/Relation.h"
+#include "Relations/Relation1D.h"
 /** @namespace Particle2Vertex Particle2Vertex.h Kernel/Particle2Vertex.h
  *  
  * Namespace containing types corresponding to the Particle -> VertexBase 
@@ -18,19 +20,23 @@
 namespace Particle2Vertex {
   typedef double                                          WeightType ;
   typedef LHCb::RelationWeighted1D<LHCb::Particle, 
-                                   LHCb::VertexBase, 
-                                   WeightType>            Table      ;
+                                   LHCb::VertexBase,
+                                   WeightType>            WTable      ;
 
   typedef Relations::RelationWeighted<LHCb::Particle, 
-                                      LHCb::VertexBase, 
-                                      WeightType>         LightTable ;
-  typedef Table::Range                                    Range      ;
+                                      LHCb::VertexBase,
+                                      WeightType>         LightWTable ;
+
+  typedef WTable::IBase::TypeTraits::Entry                 WRelation   ;
+  typedef WTable::IBase::TypeTraits::Entries               WRelations  ;
+
+  typedef LHCb::Relation1D<LHCb::Particle, 
+                           LHCb::VertexBase>              Table      ;
+
+  typedef Relations::Relation<LHCb::Particle, 
+                              LHCb::VertexBase>           LightTable ;
   typedef Table::IBase::TypeTraits::Entry                 Relation   ;
   typedef Table::IBase::TypeTraits::Entries               Relations  ;
-  typedef Table::To                                       To         ;
-  typedef Table::From                                     From       ;
-  typedef WeightType                                      Weight     ;
-
 
 }
 #endif // KERNEL_PARTICLE2VERTEX_H
