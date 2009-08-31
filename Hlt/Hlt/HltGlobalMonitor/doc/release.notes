@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.47 2009-08-28 12:12:22 graven Exp $
+!$Id: release.notes,v 1.48 2009-08-31 10:17:49 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
 
+!========================== HltGlobalMonitor v2r6p1 2009-08-31 ===================
 ! 2009-08-28 - Gerhard Raven
  - kill some warnings after 10 occurences
 
