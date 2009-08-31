@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.62 2009-08-10 11:52:36 ibelyaev Exp $
+! $Id: release.notes,v 1.63 2009-08-31 09:01:17 graven Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloInterfaces v7r14 2009-09-31 ====================
 ! 2009-08-10 - Vanya BELYAEV
 
  - more polishing of interfaces 
