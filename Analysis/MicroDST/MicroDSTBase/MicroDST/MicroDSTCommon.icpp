@@ -1,4 +1,4 @@
-// $Id: MicroDSTCommon.icpp,v 1.12 2009-08-31 13:15:12 jpalac Exp $
+// $Id: MicroDSTCommon.icpp,v 1.13 2009-08-31 13:21:21 jpalac Exp $
 //-----------------------------------------------------------------------------
 // Implementation file for templated methods of class : MicroDSTCommon
 //
@@ -64,7 +64,7 @@ const T* MicroDSTCommon<PBASE>::copyKeyedContainer( const std::string& from,
 
   if (!exist<T>(from)) {
     this->Warning("Container location "+ from+"does not exist",
-                  StatusCode::FAILURE, 1).ignore()
+                  StatusCode::FAILURE, 1).ignore();
     return 0;    
   } else {
     const T* data = this->get<T>( from );
