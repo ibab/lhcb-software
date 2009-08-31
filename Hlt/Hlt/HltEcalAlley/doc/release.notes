@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v2r0 2009-08-31 ===================
 ! 2009-08-18 - Mariusz Witek
 - new version of alley with ECAL partial decoding and fast clusterization
 
