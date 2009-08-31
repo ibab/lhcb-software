@@ -16,3 +16,4 @@ MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
 
 // define the subset of useful monitoring histos for DQ
 #include "$CALOMONIDSTOPTS/CaloDQ.opts"
+

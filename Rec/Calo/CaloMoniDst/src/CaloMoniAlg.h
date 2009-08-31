@@ -191,7 +191,7 @@ protected:
   double m_massFilterMax;
   std::vector<std::string> m_histoList;
   std::vector<std::string> m_removeHisto;
-  bool m_split;
+  //  bool m_split;
   std::vector<std::string> m_areas;
   unsigned int m_nAreas;
   unsigned int m_count;
