@@ -1,4 +1,4 @@
-// $Id: NewVeloSpaceTool.h,v 1.3 2009-08-26 11:44:21 ocallot Exp $
+// $Id: NewVeloSpaceTool.h,v 1.4 2009-08-31 11:27:15 ocallot Exp $
 #ifndef NEWVELOSPACETOOL_H
 #define NEWVELOSPACETOOL_H 1
 
@@ -93,8 +93,8 @@ protected:
   
   void mergeClones( std::vector<NewSpaceTrack>& tracks );
 
-  bool NewVeloSpaceTool::addClustersToTrack ( std::vector<Tf::PatVeloPhiHit*>& hitList,
-                                              NewSpaceTrack& candidate );
+  bool addClustersToTrack ( std::vector<Tf::PatVeloPhiHit*>& hitList,
+                            NewSpaceTrack& candidate );
   
 private:
   std::string m_debugToolName;

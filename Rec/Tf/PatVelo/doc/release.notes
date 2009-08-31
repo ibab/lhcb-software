@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-08-31 - Olivier Callot
+ - Fix extra class name prefix in NewVeloSpaceTool.h
+
 ! 2009-08-26 - Olivier Callot
  - Update NewVeloSpaceTracking to get better efficiency with still low ghosts
    To run in the standard context, one need to set 
