@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.460 2009-08-31 13:06:41 ibelyaev Exp $
+! $Id: release.notes,v 1.461 2009-08-31 20:51:22 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-08-31 - Juan PALACIOS
+ - PhysDesktop
+  . Now uses unweighted P->PV relations tables. Only one relation per Particle.
+ - GenericParticle2PVRelator, PVRelatorAlg
+  . Adapt to changes in Particle2Vertex typedefs.
 
 ! 2009-08-31 - Vanya BELYAEV
 
