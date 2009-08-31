@@ -3,6 +3,7 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v6r7 2009-08-31 =====================
 ! 2009-08-27 - Gerhard Raven
  - replace PropertyConfig::update by better named PropertyConfig::copyAndModify
    as it does not touch the original instance... 
