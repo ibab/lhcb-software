@@ -271,8 +271,8 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 	
 	double result = 0;
 	double error = 0;
-	const int nDivisions = 100;
-	const double accuracyGoal = 1e-4;
+	const int nDivisions = 200;
+	const double accuracyGoal = 1e-6;
 
 	gsl_function F;
 	F.function = &utils::integralFunction;
