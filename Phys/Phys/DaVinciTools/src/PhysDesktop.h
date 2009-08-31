@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.37 2009-07-27 09:55:16 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.38 2009-08-31 20:48:11 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -131,17 +131,10 @@ public:
 
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
-                      const LHCb::VertexBase* vert,
-                      const double weight=1.);
-
-
-  /// Obtain the weight relating an LHCb::Particle and an LHCb::VertexBase
-  virtual double weight(const LHCb::Particle*   part, 
-                        const LHCb::VertexBase* vert ) const;
-  
+                      const LHCb::VertexBase* vert );
 
   /// Obtain a range of weighted LHCb::VertexBase related to an LHCb::Particle
-  virtual Particle2Vertex::Range particle2Vertices(const LHCb::Particle* part ) const;
+  virtual Particle2Vertex::Table::Range particle2Vertices(const LHCb::Particle* part ) const;
 
   virtual const std::string& primaryVertexLocation() const 
   { 
@@ -196,7 +189,7 @@ private:
     return m_p2VtxTable; 
   }
 
-  inline Particle2Vertex::Range i_particle2Vertices(const LHCb::Particle* part ) const 
+  inline Particle2Vertex::Table::Range i_particle2Vertices(const LHCb::Particle* part ) const 
   {
     return i_p2PVTable().i_relations(part);
   }
@@ -236,8 +229,8 @@ private:
    * @author Juan Palacios juan.palacios@nikhef.nl
    */
 
-  virtual void overWriteRelations(Particle2Vertex::Range::const_iterator begin,
-                                  Particle2Vertex::Range::const_iterator end);
+  virtual void overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
+                                  Particle2Vertex::Table::Range::const_iterator end);
 
   /**
    *

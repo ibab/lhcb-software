@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.70 2009-08-13 09:03:48 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.71 2009-08-31 20:48:11 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -295,15 +295,15 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
 
   // copy relations directly from table to avoid triggering any new P->PV 
   // relations calculation
-  Particle2Vertex::Range range = i_p2PVTable().i_relations(keptP);
+  Particle2Vertex::Table::Range range = i_p2PVTable().i_relations(keptP);
 
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
   }
-  for ( Particle2Vertex::Range::const_iterator i = range.begin();
+  for ( Particle2Vertex::Table::Range::const_iterator i = range.begin();
         i != range.end();
         ++i) {
-    i_p2PVTable().i_relate(newP, i->to(), i->weight() );
+    i_p2PVTable().i_relate(newP, i->to() );
   }
   
   // Link to outgoing particles is followed through the keep(LHCb::Vertex)
@@ -468,12 +468,12 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   /// @todo One might accept saving a relation for an already saved particle (?)
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
   for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
-    Particle2Vertex::Range r = i_p2PVTable().i_relations(*p);
-    for ( Particle2Vertex::Range::const_iterator i = r.begin() ; i!= r.end() ; ++i){
-      table->relate(*p,i->to(),i->weight());
+    Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
+    for ( Particle2Vertex::Table::Range::const_iterator i = r.begin() ; i!= r.end() ; ++i){
+      table->relate( *p,i->to() );
       if (msgLevel(MSG::VERBOSE)) verbose() << "Saving a " << (*p)->key() << " " 
                                             << (*p)->particleID().pid() << " related to " 
-                                            <<  i->to()->position() << " at " << i->weight() << endmsg ;
+                                            <<  i->to()->position() << endmsg ;
     }
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" << endmsg ;
@@ -540,36 +540,34 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
     cloned.push_back(clone);
     if (msgLevel(MSG::VERBOSE)) printOut("Cloning", (*i));
     // now clone the relations too
-    const Particle2Vertex::Range r = i_p2PVTable().i_relations(*i);
+    const Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*i);
     if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees cloning " 
                                           << r.size() 
                                           << " relations" << endmsg;
 
-    for ( Particle2Vertex::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
-      tmpTable.i_push(clone,j->to(),j->weight());
+    for ( Particle2Vertex::Table::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
+      tmpTable.i_push(clone,j->to());
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << "Cloning relation between P\n"
                   << *clone 
                   << "\and PV " << *(j->to())
-                  << "\nwith weight " << j->weight()
                   << endmsg;
       }
     }
   } // particle loop
 
-  const Particle2Vertex::Range tmpRange = tmpTable.i_relations();
+  const Particle2Vertex::Table::Range tmpRange = tmpTable.i_relations();
   if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees copying " 
                                         << tmpRange.size() << " relations" 
                                         << endmsg;
   
-  for (Particle2Vertex::Range::const_iterator j = tmpRange.begin();
+  for (Particle2Vertex::Table::Range::const_iterator j = tmpRange.begin();
        j!=tmpRange.end(); ++j) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Cloning relation between P\n"
                                           << *(j->from()) 
                                           << "\nand PV " << *(j->to())
-                                          << "\nwith weight " << j->weight()
                                           << endmsg;
-    i_p2PVTable().i_relate(j->from(), j->to(), j->weight());
+    i_p2PVTable().i_relate(j->from(), j->to());
   }
 
   return saveTrees(cloned);
@@ -728,7 +726,7 @@ StatusCode PhysDesktop::getInputRelations(std::vector<std::string>::const_iterat
       const Particle2Vertex::Table* table = 
         get<Particle2Vertex::Table>(location);
       if (0!=table) {
-        const Particle2Vertex::Range all = table->relations();
+        const Particle2Vertex::Table::Range all = table->relations();
         overWriteRelations(all.begin(), all.end());
       } else {
         Info("NULL Particle2Vertex::Table* at "+location+" under "+rootInTES());
@@ -807,25 +805,15 @@ const IRelatedPVFinder* PhysDesktop::relatedPVFinder() const
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
-                         const LHCb::VertexBase* vert,
-                         const double weight)
+                         const LHCb::VertexBase* vert)
 {
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Relating with weight " << weight 
-                                        << " size: " <<  i_p2PVTable().i_relations(part).size() << endmsg ;
-  i_p2PVTable().i_relate(part, vert, weight);
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Related  with weight " << weight 
-                                        << " size: " <<  i_p2PVTable().i_relations(part).size() << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Relating with  size: " 
+                                        <<  i_p2PVTable().i_relations(part).size() << endmsg ;
+  i_p2PVTable().i_relate(part, vert );
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Related  with size: " <<  i_p2PVTable().i_relations(part).size() << endmsg ;
 }
 //=============================================================================
-double PhysDesktop::weight(const LHCb::Particle*   part, 
-                           const LHCb::VertexBase* vert ) const 
-{
-  const Particle2Vertex::Range range = particle2Vertices(part);
-  Particle2Vertex::Range::iterator ifind = DaVinci::findPos(range, vert);
-  return (range.end() == ifind ) ? 0. : ifind->weight();
-}
-//=============================================================================
-Particle2Vertex::Range
+Particle2Vertex::Table::Range
 PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
 {
   
@@ -842,15 +830,19 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part) {
 
   const std::string pvLocation = primaryVertexLocation();
 
-  const Particle2Vertex::LightTable rel = m_pvRelator->relatedPVs(part,
-                                                                  pvLocation);
+  const Particle2Vertex::LightWTable rel = m_pvRelator->relatedPVs(part,
+                                                                   pvLocation);
 
   
 
-  for (Particle2Vertex::Range::const_iterator iRel = rel.i_relations(part).begin();
-       iRel != rel.i_relations(part).end();
+  //  i_p2PVTable().merge(rel.i_relations());
+  
+  const Particle2Vertex::LightWTable::Range range = rel.i_relations();
+  
+  for (Particle2Vertex::WTable::Range::const_iterator iRel = range.begin();
+       iRel != range.end();
        ++iRel) {
-    i_p2PVTable().i_relate(part, iRel->to(), iRel->weight());
+    i_p2PVTable().i_relate(part, iRel->to());
   }
 
   if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::storeRelationsInTable stored " 
@@ -858,17 +850,16 @@ void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part) {
                                         << endmsg;
 }
 //=============================================================================
-void PhysDesktop::overWriteRelations(Particle2Vertex::Range::const_iterator begin,
-                                     Particle2Vertex::Range::const_iterator end)
+void PhysDesktop::overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
+                                     Particle2Vertex::Table::Range::const_iterator end)
 {
   verbose() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
-  for ( Particle2Vertex::Range::const_iterator i = begin ; i!= end ; ++i){
+  for ( Particle2Vertex::Table::Range::const_iterator i = begin ; i!= end ; ++i){
     ( i_p2PVTable().i_removeFrom(i->from()) ).ignore();
-    (i_p2PVTable().i_relate(i->from(),i->to(),i->weight())).ignore() ;
+    (i_p2PVTable().i_relate(i->from(),i->to())).ignore() ;
     if (msgLevel(MSG::VERBOSE)) {
       verbose() << "Reading a " << i->from()->particleID().pid() 
-                << " related to " <<  i->to()->position() 
-                << " at " << i->weight() << endmsg ;
+                << " related to " <<  i->to()->position() << endmsg ;
     }
   }
 }
