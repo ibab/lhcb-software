@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.41 2009-08-12 21:39:19 graven Exp $
+! $Id: release.notes,v 1.42 2009-08-31 09:49:57 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r4 2009-08-31 ===================
 ! 2009-08-12 - Gerhard Raven
  - replace globbing with regex matching, print warning if a bare '*' is
    found. 
