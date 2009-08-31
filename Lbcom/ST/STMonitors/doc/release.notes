@@ -4,6 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-08-31 - Jeroen Van Tilburg
+ - TT cluster map in STClusterMonitor: invert A and C side to comply with 
+   offline and IT plot.
+
 ! 2009-08-28 - Jeroen Van Tilburg
  - Changed TT cluster map in STClusterMonitor: uses now the TTDetectorPlot from
    STKernel.

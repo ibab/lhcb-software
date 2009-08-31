@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.9 2009-08-28 14:34:06 jvantilb Exp $
+// $Id: STClusterMonitor.cpp,v 1.10 2009-08-31 08:28:15 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -331,12 +331,14 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
     const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(aSector);
     ST::TTDetectorPlot hitMap(idMap, idMap, nBinsPerSector);
     ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
-    double port = (cluster->channelID().strip()-1.0)/STDAQ::nstrips;
-    double xBin = bins.xBin + port/nBinsPerSector - 0.5;
+    int port = (cluster->channelID().strip()-1.0)/STDAQ::nstrips;
+    double xBin = bins.xBin - double(port+1)/nBinsPerSector + 0.5;
+    // Hack to make real x-y distribution plot (not occupancy)
+    int nBins = bins.endBinY - bins.beginBinY;
     for( int yBin = bins.beginBinY; yBin != bins.endBinY; ++yBin ) {
       plot2D(xBin, yBin, hitMap.name(), hitMap.title(), 
              hitMap.minBinX(), hitMap.maxBinX(), hitMap.minBinY(), 
-             hitMap.maxBinY(), hitMap.nBinX(), hitMap.nBinY() );
+             hitMap.maxBinY(), hitMap.nBinX(), hitMap.nBinY(), 1./nBins );
     }
 
   } else if( detType() == "IT" ) {// Cluster map for IT
