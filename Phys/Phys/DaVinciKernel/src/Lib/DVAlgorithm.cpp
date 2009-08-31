@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.56 2009-08-31 16:34:50 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.57 2009-08-31 20:43:20 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -427,13 +427,13 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
     }
   }
 
-  const Particle2Vertex::Range range = desktop()->particle2Vertices(part);
+  const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(part);
   return DaVinci::bestVertexBase(range);
 }
 // ============================================================================
 bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
 {
-  const Particle2Vertex::Range p2pvRange = desktop()->particle2Vertices(particle);
+  const Particle2Vertex::Table::Range p2pvRange = desktop()->particle2Vertices(particle);
   return !p2pvRange.empty();
 }
 // ============================================================================

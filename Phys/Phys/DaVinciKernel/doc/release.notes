@@ -1,8 +1,14 @@
-!$Id: release.notes,v 1.319 2009-08-19 11:54:04 ibelyaev Exp $
+!$Id: release.notes,v 1.320 2009-08-31 20:43:20 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-08-31 - Juan PALACIOS
+ - DVAlgorithm
+  . Use single, unweighted relations.
+ - Add Kernel/DaVinciGuards.h with guard to delete entries in a container of
+   newed pointers.
 
 ! 2009-08-19 - Vanya BELYAEV
  - Kernel/DecayTree.h

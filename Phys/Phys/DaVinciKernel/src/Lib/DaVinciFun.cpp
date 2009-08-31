@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.cpp,v 1.2 2009-08-04 10:12:26 jpalac Exp $
+// $Id: DaVinciFun.cpp,v 1.3 2009-08-31 20:43:20 jpalac Exp $
 // Include files 
 // Gaudi
 #include "GaudiKernel/SmartIF.h"
@@ -15,25 +15,13 @@
 namespace DaVinci 
 {
   
-  /// Find the position of an LHCb::VertexBase inside a range
-  Particle2Vertex::Range::iterator findPos(const Particle2Vertex::Range& range, 
-                                           const LHCb::VertexBase* to )
-  {
-    for (Particle2Vertex::Range::iterator r = range.begin(); 
-         range.end()!=r; 
-         ++r) {
-      if ( to == r->to() ) { return r; }  
-    }
-    return range.end();
-  }
-
-  const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Range& range) 
+  const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Table::Range& range) 
   {
     if (range.empty()) return 0;
     return range.back().to();
   }
 
-  const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Range& range) 
+  const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Table::Range& range) 
   {
     if (range.empty()) return 0;
     return dynamic_cast<const LHCb::RecVertex*>( range.back().to() );

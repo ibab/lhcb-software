@@ -1,4 +1,4 @@
-// $Id: DaVinciFun.h,v 1.7 2009-08-04 10:12:26 jpalac Exp $
+// $Id: DaVinciFun.h,v 1.8 2009-08-31 20:43:20 jpalac Exp $
 #ifndef KERNEL_DAVINCIFUN_H 
 #define KERNEL_DAVINCIFUN_H 1
 
@@ -56,13 +56,9 @@ namespace DaVinci {
     return iCount;
   }
 
-  /// Find the position of an LHCb::VertexBase inside a range
-  Particle2Vertex::Range::iterator findPos(const Particle2Vertex::Range& range, 
-                                           const LHCb::VertexBase* to );
-  
-  const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Range& range);
+  const LHCb::VertexBase* bestVertexBase(const Particle2Vertex::Table::Range& range);
 
-  const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Range& range);
+  const LHCb::RecVertex* bestRecVertex(const Particle2Vertex::Table::Range& range);
 
 
   /** @namespace DaVinci::P2VVAngles Kernel/DaVinciFun.h
