@@ -76,8 +76,8 @@ StatusCode BeamGasTrigVertexCut::execute() {
   else { error() << "Can't find input tracks" << endmsg; return StatusCode::SUCCESS; }  
   debug() << "Number of tracks in the BG Tracks Container = " << BGtracks->size() << endmsg;
     
-  float z, r, t;  
-  float z_r0 = 0.;
+  double z, r, t;  
+  double z_r0 = 0.;
   
   // Fill the vector with the tracks z position at r=0
   for ( LHCb::Tracks::const_iterator itT = BGtracks->begin(); BGtracks->end() != itT ; ++itT ) 

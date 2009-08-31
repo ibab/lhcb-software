@@ -19,17 +19,17 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
  private:
-  std::string       m_RZTracksLocation;  ///< Name of container with input RZ Tracks 
-  float		     m_histoZMin;	  ///< Lower limit of the z_r0 histo
-  float		     m_histoZMax;	  ///< Upper limit of the z_r0 histo
+  std::string    m_RZTracksLocation;  ///< Name of container with input RZ Tracks 
+  double		 m_histoZMin;	  ///< Lower limit of the z_r0 histo
+  double		 m_histoZMax;	  ///< Upper limit of the z_r0 histo
   int		     m_nBins;             ///< N of bins of the z_r0 histo  
-  int                m_binWidth;          ///< bin-width of the z_r0 histo
-  int		     m_maxCut;            ///< value of the max-bin that triggers the event
+  int            m_binWidth;          ///< bin-width of the z_r0 histo
+  unsigned		 m_maxCut;            ///< value of the max-bin that triggers the event
   
-  float		     m_zExclusionRangeLow;  ///< We don't plot z_r0 of tracks ...
-  float		     m_zExclusionRangeUp;   ///< ... extrapolating to this (lumi) region
-  unsigned           m_trigEventsZnegative;
-  unsigned           m_trigEventsZpositive;
+  double		 m_zExclusionRangeLow;  ///< We don't plot z_r0 of tracks ...
+  double		 m_zExclusionRangeUp;   ///< ... extrapolating to this (lumi) region
+  unsigned       m_trigEventsZnegative;
+  unsigned       m_trigEventsZpositive;
   
   std::string       m_outputSelectionName;  
   Hlt::TSelection<LHCb::Track>* m_trackSelection;
