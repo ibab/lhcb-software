@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r11 2009-08-31 ===================
 ! 2009-08-20 - Jaap Panman
  - LumiAnalyser: more diagnostics - BX rates to DIM
 
