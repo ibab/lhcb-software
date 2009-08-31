@@ -53,7 +53,7 @@ public:
   int SensorId( int );
   std::string binary ( unsigned int );
   void inizializePUcontainer( PuTell1::DataTable PUcontainerBee );
-  void Fill( unsigned int wordIt, int word_Tot, unsigned int* data_Ptr, int step, PuTell1::DataTable PUcontainerBee );
+  void Fill( unsigned int wordIt, unsigned int word_Tot, unsigned int* data_Ptr, int step, PuTell1::DataTable PUcontainerBee );
  
 protected:
 
