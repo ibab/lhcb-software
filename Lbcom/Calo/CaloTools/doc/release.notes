@@ -1,16 +1,16 @@
-! $Id: release.notes,v 1.71 2009-08-10 11:55:13 ibelyaev Exp $
+! $Id: release.notes,v 1.72 2009-08-31 09:32:39 graven Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2009-08-05 - Stephanie Hansmann-Menzemer
+- remove filling of track-extra info, according to changes in Track.xml class
+
+!========================== CaloTools v5r10 2009-08-31 =========================
 ! 2009-08-10 - Vanya BELYAEV
 
  - Calo2Calo & CaloGetter 
-
     fix the problem of mandatory "update" 
-
-! 2009-08-05 - Stephanie Hansmann-Menzemer
-- remove filling of track-extra info, according to changes in Track.xml class
 
 ! 2009-08-05 - Vanya BELYAEV
  - fix the signature 
