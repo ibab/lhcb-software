@@ -2,13 +2,7 @@
 #define TRACKHERABEXTRAPOLATOR_H 1
 
 // Include files
-#include "TrackExtrapolator.h"
-
-// Forward declarations
-class IMagneticFieldSvc;
-
-
-#include <string>
+#include "TrackFieldExtrapolatorBase.h"
 
 /** @class TrackHerabExtrapolator TrackHerabExtrapolator.h "TrackHerabExtrapolator.h"
  *
@@ -23,7 +17,7 @@ class IMagneticFieldSvc;
  *  @date   22-04-2000
  */
 
-class TrackHerabExtrapolator: public TrackExtrapolator
+class TrackHerabExtrapolator: public TrackFieldExtrapolatorBase
 {
 
 public:
@@ -123,11 +117,6 @@ private:
   double             m_qpCurls;    ///< Maximum curvature
   double             m_stepMin;    ///<
   double             m_stepMinRK5; ///<
-
-
-  std::string m_fieldSvc; // field service name
-  IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
-
 };
 
 #endif // TRACKHERABEXTRAPOLATOR_H
