@@ -1,6 +1,6 @@
-#$Id: requirements,v 1.195 2009-09-01 06:30:04 jpalac Exp $
+#$Id: requirements,v 1.196 2009-09-01 06:30:46 jpalac Exp $
 package PhysSys
-version v8r9
+version v8r10
 
 branches doc cmt
 
