@@ -1,10 +1,13 @@
-!$Id: release.notes,v 1.321 2009-09-01 16:08:28 jpalac Exp $
+!$Id: release.notes,v 1.322 2009-09-01 16:10:28 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
 ! 2009-09-01 - Juan PALACIOS
+ - Kernel/RelationOneToOne.h
+  . Wrapper for 1D unweighted relations table. Mimicks one-to-one table.
+
  - src/Lib/DVAlgorithm.cpp
   . Use CleanDesktopGuard.
  - Kernel/DaVinciGuards.h
