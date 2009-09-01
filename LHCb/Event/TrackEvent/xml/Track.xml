@@ -51,7 +51,6 @@
       <import name='GaudiKernel/Plane3DTypes' />
       <import name='GaudiKernel/GenericMatrixTypes' />
       <import name="GaudiKernel/VectorMap"/>
-      <import name="Kernel/HitPattern"/>
 
       <enum
         name   = 'History'
@@ -279,12 +278,6 @@
         desc   = 'ghost probability variable'
         init   = '999'
         access = 'PROTECTED' />
-
-      <attribute
-       type = 'LHCb::HitPattern '
-       name = 'expectedHitPattern'
-       desc = 'Expected hits in the tracking stations'
-       access = 'PROTECTED' />
     
      <attribute
        type    = 'bitfield'

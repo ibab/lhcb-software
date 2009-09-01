@@ -3,6 +3,9 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+! 2009-09-01 - Stephanie Hansmann-Menzemer
+ - remove expected hit pattern from track class
+
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
  - set default values for likelihood and ghost probability to unphysical values
 
