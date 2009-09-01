@@ -1,4 +1,4 @@
-// $Id: RichRingReconParam.h,v 1.3 2009-06-05 17:21:32 jonrob Exp $
+// $Id: RichRingReconParam.h,v 1.4 2009-09-01 17:15:14 seaso Exp $
 #ifndef RICHRINGRECONPARAM_H
 #define RICHRINGRECONPARAM_H 1
 
@@ -52,6 +52,14 @@ namespace Rich
         //  bool WriteOutAuxiliaryDebugHisto()  {    return m_WriteOutAuxiliaryDebugHisto;}
         // std::string RichDebugAuxHistoFileName()  {    return m_RichDebugAuxHistoFileName;}
 
+        double MinTrackMomentumSelectInAerogel() {return m_MinTrackMomentumSelectInAerogel;}
+        
+          
+        double MinTrackMomentumSelectInRich1Gas(){return m_MinTrackMomentumSelectInRich1Gas;}
+        
+        double MinTrackMomentumSelectInRich2Gas(){return m_MinTrackMomentumSelectInRich2Gas;}
+        
+
         StatusCode  initialize();
 
 
@@ -80,7 +88,10 @@ namespace Rich
         int  m_MaxNumTrackSegmentsInR1gas;
         int  m_MaxNumTrackSegmentsInR2gas;
 
-
+        double m_MinTrackMomentumSelectInAerogel;
+        double m_MinTrackMomentumSelectInRich1Gas;
+        double m_MinTrackMomentumSelectInRich2Gas;
+        
 
 
 

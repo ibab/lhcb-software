@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.5 2009-07-30 11:22:55 jonrob Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.6 2009-09-01 17:15:14 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,8 @@ RichTargetDataConfigAlg::RichTargetDataConfigAlg( const std::string& name,
   : RichRingRecAlgBase ( name , pSvcLocator ),
     m_trSelector        ( NULL )   
 {
+  declareProperty("SelectOnlyTracksAboveMomentumThreshold", m_selectTracksAboveMomentumThreshold=true);
+  declareProperty("SelectOnlySaturatedTracksForRings",  m_selectSaturatedTracksForRings = false );
 
 }
 //=============================================================================
@@ -42,8 +44,7 @@ StatusCode RichTargetDataConfigAlg::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   acquireTool( "TrackSelector",       m_trSelector, this );  
-  declareProperty("SelectOnlyTracksAboveMomentumThreshold", m_selectTracksAboveMomentumThreshold=true);
-
+  
  
   return StatusCode::SUCCESS;
 }
@@ -159,14 +160,18 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
       if(tkMomz >0.0 ) { // avoid tracks going backwards
        aNumtk++;
 
+
        bool SelectedforMom=true;
        if(m_selectTracksAboveMomentumThreshold) { // select only those tracks above a momentum threshold
+
           int irad=1;
           if(rad == Rich::Aerogel ) {
             irad=0;
           }else if ( rad== Rich::Rich2Gas ){
             irad=2;
           }
+
+
           if(rt()->RConst()->RichParticleCherenkovThreshold(irad,0) > tkTotMom ) {
            // test on the threshold for the first particle type
             SelectedforMom=false;
@@ -175,9 +180,17 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
 
           
        } // end test for Momentum threshold
+
+       bool SelectedforSat=true;
+       if(m_selectSaturatedTracksForRings) { // select only saturated tracks
+         if( ( rad == Rich::Aerogel) && ( rt()->RParam()->MinTrackMomentumSelectInAerogel() > tkTotMom ))   SelectedforSat=false;
+         if( ( rad == Rich::Rich1Gas) && ( rt()->RParam()->MinTrackMomentumSelectInRich1Gas() > tkTotMom )) SelectedforSat=false;
+         if( ( rad == Rich::Rich2Gas) && ( rt()->RParam()->MinTrackMomentumSelectInRich2Gas() > tkTotMom )) SelectedforSat=false;
+         
+       }
        
 
-       if( SelectedforMom ) {
+       if( SelectedforMom && SelectedforSat ) {
 
 
          const Gaudi::XYZPoint & pdPointLocal = segment->pdPanelHitPointLocal();  

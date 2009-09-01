@@ -1,4 +1,4 @@
-// $Id: IRichRingReconParam.h,v 1.3 2009-06-05 17:21:33 jonrob Exp $
+// $Id: IRichRingReconParam.h,v 1.4 2009-09-01 17:15:14 seaso Exp $
 #ifndef RICHRINGREC_IRICHRINGRECONPARAM_H
 #define RICHRINGREC_IRICHRINGRECONPARAM_H 1
 
@@ -45,7 +45,10 @@ namespace Rich
         virtual int MaxNumTrackSegmentsInAerogel() =0;
         virtual int MaxNumTrackSegmentsInR1gas() =0;
         virtual int MaxNumTrackSegmentsInR2gas() =0;
-
+        virtual double MinTrackMomentumSelectInAerogel() =0;
+        virtual double MinTrackMomentumSelectInRich1Gas() =0;
+        virtual double MinTrackMomentumSelectInRich2Gas() =0;
+        
 
         //  virtual bool WriteOutAuxiliaryDebugHisto()=0;
         // virtual std::string RichDebugAuxHistoFileName()=0;
