@@ -20,7 +20,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackEventCloneKiller, TrackPrepareVelo,
                             TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
-                            TrackComputeExpectedHits, TrackEraseExtraInfo
+                            TrackEraseExtraInfo
                            )
 
 ## Start TransportSvc, needed by track fit
@@ -211,8 +211,8 @@ if len(extraInfos) > 0 :
       trackClones.Members += [ cloneTable, cloneCleaner ]
 
    ## Add expected hit information   
-   if "ExpectedHits" in extraInfos :
-      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackComputeExpectedHits() ]
+   #if "ExpectedHits" in extraInfos :
+   #   GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackComputeExpectedHits() ]
 
    ## Add the likelihood information
    if "TrackLikelihood" in extraInfos :

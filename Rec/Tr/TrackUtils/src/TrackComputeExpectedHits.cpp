@@ -11,6 +11,7 @@
 
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IVeloExpectation.h"
+#include "Kernel/HitPattern.h"
 
 using namespace LHCb;
 
@@ -25,8 +26,7 @@ TrackComputeExpectedHits::TrackComputeExpectedHits(const std::string& name,
     
 }
 
-TrackComputeExpectedHits::~TrackComputeExpectedHits()
-{
+TrackComputeExpectedHits::~TrackComputeExpectedHits() {
   // destructor
 }
 
@@ -64,7 +64,7 @@ StatusCode TrackComputeExpectedHits::execute(){
     hitPattern.setVeloPhiC(velo[3]);
     
 
-    (*iterT)->setExpectedHitPattern(hitPattern);
+    //    (*iterT)->setExpectedHitPattern(hitPattern);
 
   } // iterT
    

@@ -15,7 +15,6 @@
 
 class IHitExpectation;
 class IVeloExpectation;
-class DeOTDetector;
 
 class TrackComputeExpectedHits: public GaudiAlgorithm {
 
@@ -40,7 +39,6 @@ private:
   IHitExpectation* m_itExpectation;
   IHitExpectation* m_otExpectation;
 
-  DeOTDetector* m_otDet;
 
  
 };

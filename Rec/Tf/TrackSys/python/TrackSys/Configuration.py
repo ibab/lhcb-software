@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2009-08-06 18:15:26 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-09-01 13:51:41 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -31,7 +31,7 @@ class TrackSys(LHCbConfigurableUser):
     ## Default track pattern recognition algorithms to run
     DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run
-    DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability","ExpectedHits"]
+    DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
 
     ## @brief Check the options are sane etc.
     def defineOptions(self):

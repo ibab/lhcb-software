@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.17 2009-08-31 08:07:41 smenzeme Exp $
+// $Id: TrackMonitor.cpp,v 1.18 2009-09-01 13:54:55 smenzeme Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -10,6 +10,8 @@
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
 #include "Kernel/HitPattern.h"
+#include "TrackInterfaces/IHitExpectation.h"
+#include "TrackInterfaces/IVeloExpectation.h"
 
 // Det
 #include "STDet/DeSTDetector.h"
@@ -59,7 +61,12 @@ StatusCode TrackMonitor::initialize()
   StatusCode sc = TrackMonitorBase::initialize();
   if ( sc.isFailure() ) { return sc; }
   m_veloDet = getDet<DeVelo>(  DeVeloLocation::Default ) ;
-    
+     
+  m_veloExpectation = tool<IVeloExpectation>("VeloExpectation");
+  m_ttExpectation = tool<IHitExpectation>("TTHitExpectation");
+  m_itExpectation = tool<IHitExpectation>("ITHitExpectation");
+  m_otExpectation = tool<IHitExpectation>("OTHitExpectation");
+  
   return StatusCode::SUCCESS;
 }
 
@@ -271,24 +278,41 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
            type+"/qoperrorAtLast", "10log(qop error) at last measurement",-8,0);
     }
     
+    
+    std::vector<LHCb::LHCbID > ids;
+    std::bitset<23> velo[4];
+    m_veloExpectation->expectedInfo(track, velo);
+    m_ttExpectation->collect(track, ids);
+    m_itExpectation->collect(track, ids);
+    m_otExpectation->collect(track, ids);
+    
+    LHCb::HitPattern expHitPattern = LHCb::HitPattern(ids);
+    expHitPattern.setVelo(velo);
+
+
     // compare to what we expected
-    if (track.expectedHitPattern().numOTHits() > 0 ){
-      plot(nOTHits  - track.expectedHitPattern().numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
+    if (expHitPattern.numOTHits() > 0 ){
+      plot(nOTHits  - expHitPattern.numOTHits(), type+"/OTmissed", "# OT missed",  -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
-    if (track.expectedHitPattern().numITHits() > 0){
-      plot(nITHits  - track.expectedHitPattern().numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
+    if (expHitPattern.numITHits() > 0){
+      plot(nITHits  - expHitPattern.numITHits(), type+"/ITmissed", "# IT missed",  -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
-    if (track.expectedHitPattern().numTTHits() > 0){
-      plot(nTTHits - track.expectedHitPattern().numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
+    if (expHitPattern.numTTHits() > 0){
+      plot(nTTHits - expHitPattern.numTTHits(), type+"/TTmissed","# TT missed" , -10.5, 10.5 ,21);
     }
 
     // compare to what we expected
+<<<<<<< TrackMonitor.cpp
+    if (expHitPattern.numVeloClusters() > 0){
+      plot(nVeloHits - expHitPattern.numVeloClusters(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+=======
     if (track.expectedHitPattern().numVeloR()+track.expectedHitPattern().numVeloPhi() > 0){
       plot(nVeloHits - track.expectedHitPattern().numVeloR()-track.expectedHitPattern().numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
+>>>>>>> 1.17
     }
 
     const LHCb::Track::ExtraInfo& info = track.extraInfo();

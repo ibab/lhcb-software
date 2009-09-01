@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.h,v 1.5 2009-08-11 14:06:59 smenzeme Exp $
+// $Id: TrackMonitor.h,v 1.6 2009-09-01 13:54:55 smenzeme Exp $
 #ifndef TRACKMONITOR_H
 #define TRACKMONITOR_H 1
  
@@ -13,6 +13,8 @@ namespace LHCb {
 }
 class DeVelo ;
 class DeOTDetector ;
+class IHitExpectation;
+class IVeloExpectation;
 
 /** @class TrackMonitor TrackMonitor.h "TrackCheckers/TrackMonitor"
  * 
@@ -50,6 +52,12 @@ class TrackMonitor : public TrackMonitorBase {
   double m_yMax;
 
   const DeVelo*        m_veloDet ;
+  
+  IVeloExpectation* m_veloExpectation;
+  IHitExpectation* m_ttExpectation;
+  IHitExpectation* m_itExpectation;
+  IHitExpectation* m_otExpectation;
+
 
 };
 

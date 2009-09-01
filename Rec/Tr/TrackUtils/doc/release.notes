@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
+! 2009-09-01 - Stephanie Hansmann-Menzemer
+- HitPattern is not anymore member of Track class, adapt ComputeExpectedTrackInfo
+
 ! 2009-08-27 - Stephanie Hansmann-Menzemer
 - Adapt to another change in HitPattern class 
 

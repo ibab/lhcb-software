@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.18 2009-08-27 07:54:36 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.19 2009-09-01 14:01:31 smenzeme Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -525,14 +525,16 @@ StatusCode TrackEffChecker::finalize(){
   double purG5KsL = 0;
   if (hist != 0) purG5KsL = hist->mean();
 
-  const double tEff = double(counter("nFound").flag())
+  const double tEff = counter("nToFind").flag() == 0 ? 0.0 :
+                      double(counter("nFound").flag())
                       /double(counter("nToFind").flag());
 
   const double tEffG5 = counter("nToFindG5").flag() == 0 ? 0.0 :
                         double(counter("nFoundG5").flag())
                       /double(counter("nToFindG5").flag()); 
 
-  const double hEff = double(counter("efficiency").flag())
+  const double hEff = counter("nFound").flag() == 0 ? 0.0 :
+                      double(counter("efficiency").flag())
                       /double(counter("nFound").flag());
 
   const double hEffG5 = counter("nFoundG5").flag() == 0 ? 0.0 :
@@ -555,7 +557,8 @@ StatusCode TrackEffChecker::finalize(){
                         double(counter("nFoundG5B").flag())
                       /double(counter("nToFindG5B").flag());
 
-  const double hEffB = double(counter("efficiencyB").flag())
+  const double hEffB = counter("nFoundB").flag() == 0 ? 0.0 :
+                       double(counter("efficiencyB").flag())
                       /double(counter("nFoundB").flag());
 
   const double hEffG5B = counter("nFoundG5B").flag() == 0 ? 0.0 :
@@ -578,7 +581,8 @@ StatusCode TrackEffChecker::finalize(){
                         double(counter("nFoundG5BAll").flag())
                       /double(counter("nToFindG5BAll").flag()); 
 
-  const double hEffBAll = double(counter("efficiencyBAll").flag())
+  const double hEffBAll =  counter("nFoundBAll").flag() == 0 ? 0.0 :
+                           double(counter("efficiencyBAll").flag())
                            /double(counter("nFoundBAll").flag());
   
   const double hEffG5BAll = counter("nFoundG5BAll").flag() == 0 ? 0.0 :
