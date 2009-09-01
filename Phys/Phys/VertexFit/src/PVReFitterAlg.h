@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.12 2009-07-20 20:16:02 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.13 2009-09-01 06:20:09 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -94,7 +94,7 @@ private:
   std::string m_particle2VertexRelationsOutputLocation;
   std::string m_vertexOutputLocation;
 
-  Particle2Vertex::Table m_p2VtxTable;
+  Particle2Vertex::WTable m_p2VtxTable;
   
 };
 #endif // PVREFITTERALG_H

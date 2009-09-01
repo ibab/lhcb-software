@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.13 2008-11-24 13:26:24 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.14 2009-09-01 06:20:09 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -134,7 +134,7 @@ StatusCode PVReFitterAlg::execute() {
 
   put(vertexContainer, m_vertexOutputLocation);  
 
-  Particle2Vertex::Table* newTable = new Particle2Vertex::Table();
+  Particle2Vertex::WTable* newTable = new Particle2Vertex::WTable();
 
   verbose() << "Storing Particle->Refitted Vtx relations table in "
             << m_particle2VertexRelationsOutputLocation << endmsg;
@@ -187,7 +187,7 @@ StatusCode PVReFitterAlg::execute() {
   }
 
 
-  if (exist<Particle2Vertex::Table>(m_particle2VertexRelationsOutputLocation) )
+  if (exist<Particle2Vertex::WTable>(m_particle2VertexRelationsOutputLocation) )
   {  
     verbose() << "CHECK: table is at " 
               << m_particle2VertexRelationsOutputLocation << endmsg;
