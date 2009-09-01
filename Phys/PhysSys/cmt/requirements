@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.194 2009-08-31 13:41:33 jpalac Exp $
+#$Id: requirements,v 1.195 2009-09-01 06:30:04 jpalac Exp $
 package PhysSys
 version v8r9
 
@@ -16,12 +16,6 @@ use  VertexFit			v5r7     Phys   # Yuehong Xie
 use  LoKiFitters                v2r1p1   Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r4p1   Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
-
-# Temporary packages from LHCb v27r6
-use CaloInterfaces              v7r14    Calo
-use CaloKernel                  v6r0     Calo
-use CaloUtils                   v8r6     Calo
-use LHCbKernel                 v11r6     Kernel
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
