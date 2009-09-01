@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.173 2009-08-24 13:45:03 pkoppenb Exp $
+! $Id: release.notes,v 1.174 2009-09-01 06:20:29 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-09-01 - Juan PALACIOS
+ - PVRefitterAlg
+  . Adapt to change in Particle2Vertex typedefs: Table -> WTable
 
 ! 2009-08-24 - Patrick Koppenburg
  - TrgParticleMaker : add 
