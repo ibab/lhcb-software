@@ -1,4 +1,4 @@
-// $Id: STEfficiency.cpp,v 1.4 2009-08-20 08:18:46 mneedham Exp $
+// $Id: STEfficiency.cpp,v 1.5 2009-09-01 13:26:31 mneedham Exp $
 // Include files 
 
 // from Gaudi
@@ -297,7 +297,8 @@ StatusCode STEfficiency::finalize()
   unsigned int i; unsigned int presentCut = 0u;
 
   //  double totExpected = 0; double totFound = 0;
-  double nExpected, nFound, err, eff;
+  double nExpected, nFound, err;
+  double eff  = 999.0;
 
   ITDetectorPlot prop( "EffciencyPlot", "EfficiencyPlot" );
 
@@ -374,7 +375,8 @@ StatusCode STEfficiency::finalize()
     } // iterS
       
   // total efficency
-  double teff = 100 * m_totalFound/m_totalExpected;
+  double teff = 999;
+  if (m_totalExpected == 0u) teff = 100 * m_totalFound/m_totalExpected;
   double terror = sqrt( eff * (100. - eff) / m_totalExpected );
   info() << "Total Eff " << teff <<  " +/- " << terror << endmsg; 
   
