@@ -20,9 +20,9 @@ AssocDownstream.TracksInContainer = "Rec/Track/Downstream";
 
 CheckPatSeq.Members  += { "TrackResChecker" };
 TrackResChecker.SplitByType = true;
-//TrackResChecker.MCSelector.rejectElectrons = true;
-//TrackResChecker.MCSelector.rejectInteractions = true;
-//TrackResChecker.MCSelector.zInteraction = 9400.;
+TrackResChecker.Selector.Selector.rejectElectrons = true;
+TrackResChecker.Selector.Selector.rejectInteractions = true;
+TrackResChecker.Selector.Selector.zInteraction = 9400.;
 TrackResChecker.FullDetail = false;
 TrackResChecker.HistoPrint = false;
 
