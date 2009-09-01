@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Monitor.py,v 1.1 2009-08-05 17:40:24 ibelyaev Exp $
+# $Id: Monitor.py,v 1.2 2009-09-01 11:11:20 ibelyaev Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Monitoring
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Monitoring
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'digitsMoni'     , 
@@ -25,16 +25,6 @@ __all__ = (
 from Gaudi.Configuration  import *
 
 from Configurables        import   GaudiSequencer
-from Configurables        import ( CaloDigitMonitor        ,
-                                   CaloClusterMonitor      , 
-                                   CaloHypoMonitor         ,
-                                   CaloPi0Monitor          ,
-                                   CaloClusterMatchMonitor ,
-                                   CaloHypoMatchMonitor    ,
-                                   CaloEMuMonitor          ,
-                                   SpdMonitor              ,
-                                   CaloEFlowAlg            )
-
 from CaloKernel.ConfUtils import ( getAlgo        ,
                                    setTheProperty ) 
 
@@ -49,6 +39,9 @@ def digitsMoni ( context ) :
     Prepare digit monitoring
     
     """
+    from Configurables import  ( CaloDigitMonitor ,
+                                 SpdMonitor       ) 
+    
     alg = getAlgo ( GaudiSequencer   , 
                     "CaloDigitsMoni" ,
                     context          )
@@ -83,7 +76,8 @@ def eflowMoni ( context ) :
     """
     Define Energy flow omnitoring 
     """
-
+    
+    from Configurables import  CaloEFlowAlg
     
     seq = getAlgo ( GaudiSequencer  , 
                     'CaloEFlowMoni' ,
@@ -113,6 +107,9 @@ def clustersMoni ( context ) :
     Prepare clusters monitoring
     
     """
+    
+    from Configurables import  CaloClusterMonitor
+    
     alg = getAlgo ( GaudiSequencer     , 
                     "CaloClustersMoni" ,
                     context            )
@@ -138,12 +135,15 @@ def clustersMoni ( context ) :
 
 
 # =============================================================================
-## prepare cluster monitoring
+## prepare hypo monitoring
 def hyposMoni ( context ) :
     """    
     Prepare hypo monitoring
     
     """
+    
+    from Configurables import  CaloHypoMonitor
+
     alg = getAlgo ( GaudiSequencer    , 
                     "CaloHyposMoni"   ,
                     context           )
@@ -193,6 +193,8 @@ def pi0sMoni ( context ) :
     
     """
     
+    from Configurables import  CaloPi0Monitor
+
     alg = getAlgo  ( CaloPi0Monitor   ,
                      'ResolvedPi0Mon' ,
                      context          )
@@ -211,7 +213,11 @@ def pidsMoni ( context ) :
     """
     Define CaloPIDs monitoring
     """
-
+    
+    from Configurables import ( CaloClusterMatchMonitor ,
+                                CaloHypoMatchMonitor    ,
+                                CaloEMuMonitor          ) 
+    
     alg = getAlgo ( GaudiSequencer ,
                     'CaloPIDsMoni' ,
                     context        )

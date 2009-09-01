@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.22 2009-08-05 17:40:24 ibelyaev Exp $ 
+# $Id: requirements,v 1.23 2009-09-01 11:11:20 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2004-10-25
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
@@ -21,13 +21,12 @@ use TrackEvent      v*    Event
 use TrackInterfaces v*    Tr
 #
 use DaVinciMCKernel v*    Phys
-#use PartProp        v*    Kernel
-#use GaudiAlg        v*
-#use GaudiUtils      v*
 
 use Boost           v*    LCG_Interfaces
 use GSL             v*    LCG_Interfaces
 use AIDA            v*    LCG_Interfaces
+
+
 
 # =============== constituents ===============================================
 library           CaloMoniDst   *.cpp
