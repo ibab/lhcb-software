@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.74 2009-09-01 16:14:47 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.75 2009-09-01 16:31:19 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -118,7 +118,7 @@ StatusCode PhysDesktop::initialize()
 {
 
   StatusCode sc = GaudiTool::initialize() ;
-  if (!sc) return Warning( "Failed to initialize base class GaudiTool", sc );
+  if (sc.isFailure()) return Warning( "Failed to initialize base class GaudiTool", sc );
   if (msgLevel(MSG::DEBUG)) debug() << ">>>   PhysDesktop::initialize() " << endmsg;
 
   // check it is not global
@@ -651,7 +651,6 @@ StatusCode PhysDesktop::getParticles(){
     // Retrieve the particles:
     std::string location = (*iloc)+"/Particles";
     if ( !exist<LHCb::Particles>( location ) ){ 
-      //            return Error("No particles at location "+location); 
       Info("No particles at location "+location
               +((rootInTES().size()>0)?(" under "+rootInTES()):"") );
       continue ;
@@ -753,7 +752,7 @@ StatusCode PhysDesktop::getPrimaryVertices() {
   if ( !exist<LHCb::RecVertices>( primaryVertexLocation() ) ) {
     m_primVerts = 0 ;
     Info ("No PV container at "+primaryVertexLocation());
-    return StatusCode::SUCCESS ;
+    return StatusCode::SUCCESS;
   }
 
   m_primVerts = get<LHCb::RecVertices>( primaryVertexLocation() );
@@ -766,7 +765,8 @@ StatusCode PhysDesktop::getPrimaryVertices() {
 //=============================================================================
 void PhysDesktop::imposeOutputLocation(const std::string& outputLocationString){
   if (outputLocationString != m_outputLocn) {
-    Warning( "Non-standard output location imposed: "+ outputLocationString, StatusCode::SUCCESS , 1);
+    Warning( "Non-standard output location imposed: "+ outputLocationString, 
+             StatusCode::SUCCESS , 1).ignore();
     m_outputLocn = outputLocationString;
   }
   return;
@@ -792,7 +792,8 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
   verbose() << "PhysDesktop::relatedVertex" << endmsg;
 
   const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==dva) Error("Couldn't get parent DVAlgorithm", StatusCode::FAILURE).ignore();
+  if (0==dva) Error("Couldn't get parent DVAlgorithm", 
+                    StatusCode::FAILURE).ignore();
   return (0!=dva) ? dva->getRelatedPV(part) : 0 ;
 
 
