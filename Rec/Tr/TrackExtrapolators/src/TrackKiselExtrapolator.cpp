@@ -1,4 +1,4 @@
-// $Id: TrackKiselExtrapolator.cpp,v 1.14 2008-02-08 07:52:43 cattanem Exp $
+// $Id: TrackKiselExtrapolator.cpp,v 1.15 2009-09-01 20:48:14 wouter Exp $
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
@@ -25,33 +25,13 @@ DECLARE_TOOL_FACTORY( TrackKiselExtrapolator );
 TrackKiselExtrapolator::TrackKiselExtrapolator(const std::string& type,
                                                const std::string& name,
                                                const IInterface* parent):
-  TrackExtrapolator(type, name, parent)
+  TrackFieldExtrapolatorBase(type, name, parent),
+  m_B(3)
 {
-
   declareProperty("order", m_order = 3);
-  declareProperty("FieldSvc", m_fieldSvc = "MagneticFieldSvc");
-  m_B.resize(3);
-  
   declareInterface<ITrackExtrapolator>( this );
 }
 
-StatusCode TrackKiselExtrapolator::initialize() {
-  // initialize
-  StatusCode sc = GaudiTool::initialize();
-  if (sc.isFailure()){
-    return Error("Failed to initialize", sc);
-  }
-
-  m_pIMF = svc<IMagneticFieldSvc>(m_fieldSvc,true);
-
-  // First query, to load the field map
-  debug() << "Load field map" << endreq;
-  XYZPoint P( 0., 0., 0. );
-  XYZVector vec;
-  m_pIMF->fieldVector( P, vec ).ignore();
-
-  return StatusCode::SUCCESS;
-}
 
 
 /// TrackKiselExtrapolator destructor.
@@ -69,7 +49,7 @@ StatusCode TrackKiselExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+  if( std::abs(dz) < TrackParameters::propagationTolerance ) { 
     if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
     return StatusCode::SUCCESS ;
@@ -282,9 +262,9 @@ void TrackKiselExtrapolator::integrateField( const Gaudi::XYZPoint& p0,
                                              double siii[3][3][3], double Siii[3][3][3]){
   double dz = p2.z() - p0.z();
 
-  m_pIMF->fieldVector( p0, m_B[0] ).ignore();
-  m_pIMF->fieldVector( p1, m_B[1] ).ignore();
-  m_pIMF->fieldVector( p2, m_B[2] ).ignore();    
+  m_B[0] = fieldVector(p0) ;
+  m_B[1] = fieldVector(p1) ;
+  m_B[2] = fieldVector(p2) ;
 
   // no other way...
   double B[3][3];
@@ -373,7 +353,7 @@ void TrackKiselExtrapolator::extrapolateAnalytic( const double T_in[], // input 
   getCoefficients( tx, ty, A1, B1, A2, B2, A3, B3 );
 
   double t2   = 1. + tx*tx + ty*ty;
-  double t    = sqrt( t2 );
+  double t    = std::sqrt( t2 );
   double h    = qp_in*Gaudi::Units::c_light;
   double ht = h*t;
   
@@ -384,9 +364,9 @@ void TrackKiselExtrapolator::extrapolateAnalytic( const double T_in[], // input 
   XYZPoint r2 = XYZPoint( T_in[0] + T_in[2]*dz,T_in[1] + T_in[3]*dz, z_out );
   XYZPoint r1 = r0 + 0.5*(r2-r0);
 
-  m_pIMF->fieldVector( r0, m_B[0] ).ignore();
-  m_pIMF->fieldVector( r1, m_B[1] ).ignore();
-  m_pIMF->fieldVector( r2, m_B[2] ).ignore();
+  m_B[0] = fieldVector( r0 ) ;
+  m_B[1] = fieldVector( r1 ) ;
+  m_B[2] = fieldVector( r2 ) ;
 
   double Sy = (7*m_B[0].y() + 6*m_B[1].y()-m_B[2].y() )*dz*dz/96.;
   r1.SetX(T_in[0] + 0.5*tx*dz + ht*Sy*A1[0][1]);

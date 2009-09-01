@@ -2,11 +2,8 @@
 #define TRACKKISELEXTRAPOLATOR_H 1
 
 // Include files
-#include "TrackExtrapolator.h"
+#include "TrackFieldExtrapolatorBase.h"
 #include <vector>
-
-// Forward declarations
-class IMagneticFieldSvc;
 
 /** @class TrackKiselExtrapolator TrackKiselExtrapolator.h
  *
@@ -19,7 +16,7 @@ class IMagneticFieldSvc;
  *  @date   02-06-2006
  */
 
-class TrackKiselExtrapolator: public TrackExtrapolator
+class TrackKiselExtrapolator: public TrackFieldExtrapolatorBase
 {
 
 public:
@@ -30,9 +27,6 @@ public:
 
   /// destructor
   virtual ~TrackKiselExtrapolator();
-
-  /// initialize
-  virtual StatusCode initialize();
 
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL
@@ -65,10 +59,6 @@ private:
 
   Gaudi::XYZPoint           m_point;  ///< to compute the field
   std::vector<Gaudi::XYZVector>  m_B;      ///< returned field
-
-  std::string m_fieldSvc; /// field service name
-  IMagneticFieldSvc* m_pIMF;   ///< Pointer to the magnetic field service
-
 };
 
 #endif // TRACKKISELEXTRAPOLATOR_H
