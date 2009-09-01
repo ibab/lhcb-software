@@ -15,7 +15,13 @@ from Configurables       import HltSelReportsMaker
 #Moore().generateConfig = True
 #Moore().configLabel = 'PA accept=1'
 
+<<<<<<< FEST.py
+Moore().HltType = 'Hlt1'
+Moore().ThresholdSettings = 'FEST'
+
+=======
 Moore().HltType = 'PA+Hlt1'
+>>>>>>> 1.9
 Moore().Verbose = True
 
 # FEST specific options...
@@ -39,7 +45,7 @@ Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.m
 #Moore().outputFile = '/tmp/foo.mdf'
 
 EventSelector().PrintFreq = 100
-Moore().EvtMax = 100000
+Moore().EvtMax = 10000
 
 Moore().DDDBtag   = "default"
 Moore().CondDBtag = "default"
