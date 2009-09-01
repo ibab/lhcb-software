@@ -3,7 +3,9 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
-
+! 2009-09-01 - Sajan Easo
+  - Added an extra option to activate for saturated tracks only
+    for the RichTargetDataConfigAlg. This would speed up the cpu.
 ! 2009-07-30 - Chris Jones
  - Replace all endreq with endmsg
 
