@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PIDs.py,v 1.1 2009-08-05 17:35:32 ibelyaev Exp $
+# $Id: PIDs.py,v 1.2 2009-09-01 11:28:12 ibelyaev Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter PID
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,38 +11,11 @@ The major building blocks of Calorimeter PID
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 from Gaudi.Configuration  import *
 
 from Configurables        import    GaudiSequencer
-
-from Configurables        import ( InSpdAcceptance     ,
-                                   InSpdAcceptanceAlg  ,
-                                   InPrsAcceptance     ,
-                                   InPrsAcceptanceAlg  ,
-                                   InEcalAcceptance    ,
-                                   InEcalAcceptanceAlg ,
-                                   InBremAcceptance    ,
-                                   InBremAcceptanceAlg , 
-                                   InHcalAcceptance    ,
-                                   InHcalAcceptanceAlg ) 
-from Configurables        import ( Track2SpdEAlg       ,
-                                   Track2PrsEAlg       ,
-                                   Track2EcalEAlg      ,
-                                   Track2HcalEAlg      )
-from Configurables        import ( EcalChi22ID         ,
-                                   BremChi22ID         ,
-                                   ClusChi22ID         ,
-                                   PrsPIDeAlg          ,
-                                   EcalPIDeAlg         ,
-                                   BremPIDeAlg         ,
-                                   HcalPIDeAlg         ,
-                                   EcalPIDmuAlg        ,
-                                   HcalPIDmuAlg        )
-from Configurables        import ( PhotonMatchAlg      ,
-                                   ElectronMatchAlg    ,
-                                   BremMatchAlg        )
 
 from CaloKernel.ConfUtils import ( hltContext          ,
                                    getAlgo             ,
@@ -57,12 +30,17 @@ def inEcalAcc ( context , enableRecoOnDemand ) :
     define 'inEcalAcceptance' algorithm
     
     """
+
+    from Configurables import  ( InEcalAcceptance    , 
+                                 InEcalAcceptanceAlg ) 
+    
     ## check if the track is in Ecal acceptance 
     inEcal = getAlgo ( InEcalAcceptanceAlg  ,
                        'InECAL'             ,
                        context              ,
                        "Rec/Calo/InAccEcal" ,
                        enableRecoOnDemand   )
+    
     if hltContext ( context ) :
         inEcal.addTool ( InEcalAcceptance , 'InECAL' )
         tool = inEcal.InECAL
@@ -79,6 +57,9 @@ def trackMatch ( context , enableRecoOnDemand ) :
     Define the minimal track match sequnce for photon reconstruction
 
     """
+
+    from Configurables import PhotonMatchAlg      
+    
 
     ## check if the track is in Ecal acceptance 
     inEcal = inEcalAcc ( context , enableRecoOnDemand ) 
@@ -109,6 +90,36 @@ def caloPIDs ( context , enableRecoOnDemand ) :
     """
     Define various Calo PIDs evaluation
     """
+    
+    from Configurables import ( InSpdAcceptance     ,
+                                InSpdAcceptanceAlg  ,
+                                InPrsAcceptance     ,
+                                InPrsAcceptanceAlg  ,
+                                InEcalAcceptance    ,
+                                InEcalAcceptanceAlg ,
+                                InBremAcceptance    ,
+                                InBremAcceptanceAlg , 
+                                InHcalAcceptance    ,
+                                InHcalAcceptanceAlg ) 
+    
+    from Configurables import ( ElectronMatchAlg    ,
+                                BremMatchAlg        )    
+    
+    from Configurables import ( Track2SpdEAlg       ,
+                                Track2PrsEAlg       ,
+                                Track2EcalEAlg      ,
+                                Track2HcalEAlg      )
+    
+    
+    from Configurables import ( EcalChi22ID         ,
+                                BremChi22ID         ,
+                                ClusChi22ID         ,
+                                PrsPIDeAlg          ,
+                                EcalPIDeAlg         ,
+                                BremPIDeAlg         ,
+                                HcalPIDeAlg         ,
+                                EcalPIDmuAlg        ,
+                                HcalPIDmuAlg        )
     
     inSPD = getAlgo ( InSpdAcceptanceAlg    ,
                       'InSPD'               , 
@@ -169,6 +180,7 @@ def caloPIDs ( context , enableRecoOnDemand ) :
                          context         )
 
     cluster  = trackMatch ( context , enableRecoOnDemand )
+
     
     electron = getAlgo ( ElectronMatchAlg         ,
                          "ElectronMatch"          ,
@@ -190,7 +202,7 @@ def caloPIDs ( context , enableRecoOnDemand ) :
     energy = getAlgo ( GaudiSequencer ,
                        'CaloEnergy'   ,
                        context        )
-
+    
     spdE   = getAlgo ( Track2SpdEAlg      ,
                        'SpdE'             , 
                        context            ,
