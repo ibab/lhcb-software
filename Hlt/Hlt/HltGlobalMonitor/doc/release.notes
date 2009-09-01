@@ -1,13 +1,12 @@
-!$Id: release.notes,v 1.49 2009-09-01 11:12:30 kvervink Exp $
+!$Id: release.notes,v 1.50 2009-09-01 18:51:19 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
 
+!========================== HltGlobalMonitor v2r6p1 2009-09-02 ===================
 ! 2009-09-01 - Kim Vervink
  - remove some more pointers for the Monrates.
-
-!========================== HltGlobalMonitor v2r6p1 2009-08-31 ===================
 
 ! 2009-08-28 - Gerhard Raven
  - kill some warnings after 10 occurences
