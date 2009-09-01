@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.43 2009-01-26 12:58:07 cattanem Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.44 2009-09-01 15:09:44 wouter Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -8,7 +8,6 @@
 
 #include "MagneticFieldSvc.h"
 #include "MagnetCondLocations.h"
-#include "IMagFieldTool.h"
 
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -41,13 +40,8 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
                                                          m_scaleUpPtr(0),
                                                          m_scaleDownPtr(0),
                                                          m_currentPtr(0),
-                                                         m_fieldTool(0),
-                                                         m_DC06FieldUp(0),
-                                                         m_DC06FieldDown(0),
-                                                         m_RealFieldUp(0),
-                                                         m_RealFieldDown(0),
                                                          m_updMgrSvc(0),
-                                                         m_toolSvc(0)
+							 m_magFieldGridReader(*msgSvc())
 {
 
   m_constFieldVector.push_back( 0. );
@@ -77,15 +71,6 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
   declareProperty( "UseConstantField",    m_useConstField = false );
   declareProperty( "ConstantFieldVector", m_constFieldVector );
 
-  // Obsolete properties, will be removed soon, do not use!
-  declareProperty( "UseRealMap",    m_useRealMap   = false );
-  declareProperty( "FieldMapFile",  m_filename     = "" );
-  declareProperty( "FieldMapFileQ1",m_qfilename[0] = "" );
-  declareProperty( "FieldMapFileQ2",m_qfilename[1] = "" );
-  declareProperty( "FieldMapFileQ3",m_qfilename[2] = "" );
-  declareProperty( "FieldMapFileQ4",m_qfilename[3] = "" );
-  declareProperty( "CondPath", m_condPath = "" );
-  
 }
 //=============================================================================
 // Standard destructor
@@ -104,45 +89,16 @@ StatusCode MagneticFieldSvc::initialize()
   StatusCode status = Service::initialize();
   if( status.isFailure() ) return status;
 
-  // Backward compatibility of old options
-  if( m_filename != "" || m_qfilename[0] != "" || m_qfilename[1] != ""
-                       || m_qfilename[2] != "" || m_qfilename[3] != "") {
-    if( m_mapFileNames.size() > 0 ) {
-      log << MSG::ERROR << "Both old and new style FieldMapFile options set, don't know what to do!" << endmsg;
-      return StatusCode::FAILURE;
-    }
-    else if( m_filename != "" && m_qfilename[0] == "" && m_qfilename[1] == ""
-                              && m_qfilename[2] == "" && m_qfilename[3] == "") {
-      log << MSG::WARNING << "Using obsolete DC06 option FieldMapFile, please change to FieldMapFiles" << endmsg;
-      m_mapFileNames.push_back( m_filename );
-    }
-    else if( m_filename == "" && m_qfilename[0] != "" && m_qfilename[1] != ""
-                              && m_qfilename[2] != "" && m_qfilename[3] != "") {
-      log << MSG::WARNING << "Using obsolete real map options FieldMapFileQ*, please change to FieldMapFiles" << endmsg;
-      m_mapFileNames.push_back( m_qfilename[0] );
-      m_mapFileNames.push_back( m_qfilename[1] );
-      m_mapFileNames.push_back( m_qfilename[2] );
-      m_mapFileNames.push_back( m_qfilename[3] );
-    }
-    else {
-      log << MSG::ERROR << "Using invalid combination of FieldMapFile and FieldMapfileQ* options" << endmsg;
-      return StatusCode::FAILURE;
-    }
-  }
-  if( m_condPath != "" )
-    log << MSG::WARNING << "Obsolete property CondPath given but has no effect" << endmsg;
-
-  // Tool service, for access to the Field map tool(s)
-  status = service("ToolSvc", m_toolSvc );
-  if ( status.isFailure() ) {
-    log << MSG::ERROR << "Cannot find the ToolSvc" << endmsg;
-    return status;
-  }
-
   if( m_useConstField ) {
     // Constant field requested, do not use any field map
     log << MSG::WARNING << "using constant magnetic field with field vector "
         << m_constFieldVector << " (Tesla)" << endmsg;
+    
+    m_magFieldGridReader.fillConstantField( Gaudi::XYZVector(m_constFieldVector[0] * Gaudi::Units::tesla,
+							     m_constFieldVector[1] * Gaudi::Units::tesla,
+							     m_constFieldVector[2] * Gaudi::Units::tesla),
+					    m_magFieldGrid ) ;
+    
     return StatusCode::SUCCESS;
   }
   
@@ -162,14 +118,7 @@ StatusCode MagneticFieldSvc::initialize()
 //=============================================================================
 StatusCode MagneticFieldSvc::finalize()
 {
-  StatusCode sc = StatusCode::SUCCESS;
-  // release the used tools
-  if ( m_DC06FieldUp   ) { sc = sc && m_toolSvc->releaseTool(m_DC06FieldUp);   }
-  if ( m_DC06FieldDown ) { sc = sc && m_toolSvc->releaseTool(m_DC06FieldDown); }
-  if ( m_RealFieldUp   ) { sc = sc && m_toolSvc->releaseTool(m_RealFieldUp);   }
-  if ( m_RealFieldDown ) { sc = sc && m_toolSvc->releaseTool(m_RealFieldDown); }
-  // base clase finalize
-  return sc && Service::finalize();
+  return Service::finalize();
 }
 
 //=============================================================================
@@ -261,10 +210,14 @@ StatusCode MagneticFieldSvc::initializeWithoutCondDB()
     log << MSG::DEBUG << "Scale factor set to default = " << m_scaleFactor << endmsg;
   }
   m_scaleFromOptions = true;
+  m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
+
+  // update the field
+  StatusCode sc = m_mapFileNames.size() == 1 ?
+    m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+    m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
   
-  // Value of polarity irrelevant when using options
-  // Parse the file via the appropriate tool
-  return updateTool( 1 );
+  return sc ;
 }
 
 //=============================================================================
@@ -285,24 +238,6 @@ StatusCode MagneticFieldSvc::queryInterface( const InterfaceID& riid,
   return Service::queryInterface(riid,ppvInterface);
 }
 
-//=============================================================================
-// FieldVector: find the magnetic field value at a given point in space
-//=============================================================================
-StatusCode MagneticFieldSvc::fieldVector(const Gaudi::XYZPoint&  r,
-                                               Gaudi::XYZVector& bf ) const {
-
-  if( m_useConstField ) {
-    bf.SetXYZ( m_constFieldVector[0]*Gaudi::Units::tesla,
-               m_constFieldVector[1]*Gaudi::Units::tesla,
-               m_constFieldVector[2]*Gaudi::Units::tesla );
-    return StatusCode::SUCCESS;
-  }
-
-  // Forward request to the tool
-  m_fieldTool->fieldVector( r, bf );
-  return StatusCode::SUCCESS;
-  
-}
 
 //=============================================================================
 StatusCode MagneticFieldSvc::i_updateConditions() 
@@ -332,11 +267,12 @@ StatusCode MagneticFieldSvc::i_updateConditions()
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
   
     m_scaleFactor = coeffs[0] + ( coeffs[1]*(current/m_nominalCurrent) );
+    m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
   }
    
   // Update the field map file
+  StatusCode sc ;
   if( !m_mapFromOptions ) {
-    m_mapFileNames.clear();
     
     // ******* Check I have the correct convention!!
     std::vector<std::string> files;
@@ -344,100 +280,24 @@ StatusCode MagneticFieldSvc::i_updateConditions()
       files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
     else
       files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");
+    
+    // append the path
+    for ( std::vector<std::string>::iterator iF = files.begin(); iF != files.end(); ++iF ) 
+      *iF = m_mapFilePath + *iF ;
 
-    for ( std::vector<std::string>::const_iterator iF = files.begin(); iF != files.end(); ++iF ) {
-      m_mapFileNames.push_back( m_mapFilePath + *iF );
+    // test the cache
+    if(  m_mapFileNames != files ) {
+      // update the cache
+      m_mapFileNames = files ;
+      // update the field
+      sc = m_mapFileNames.size() == 1 ?
+	m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+	m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
     }
   }
   
   log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
   log << MSG::DEBUG << "Scale factor updated: "    << m_scaleFactor << endmsg;
-
-  // Finally update the appropriate tool
-  return updateTool( polarity );
+  return sc ;
 }
 
-//=============================================================================
-StatusCode MagneticFieldSvc::updateTool( int polarity )
-//=============================================================================
-{
-  // Depending on the polarity and the type of field map, update the tool
-  MsgStream log(msgSvc(), name());
-
-  if( polarity == 0 ) {
-    polarity = 1;
-    log << MSG::INFO << "Polarity not set, using default = 1 (UP) " << endmsg;
-  }
-
-  if(  m_mapFileNames.size() == 1 ) {
-    // DC06 case
-    if( polarity > 0 ) {
-      if( 0 == m_DC06FieldUp ) {
-        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldToolDC06",
-                                                 "MagToolDC06Up",
-                                                 m_DC06FieldUp, this );
-        if( sc.isFailure() ) {
-          log << MSG::ERROR << "Could not retrieve MagToolDC06Up" << endmsg;
-          return sc;
-        }
-      }
-      m_fieldTool = m_DC06FieldUp;
-    }
-    else {
-      if( 0 == m_DC06FieldDown ) {
-        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldToolDC06",
-                                                 "MagToolDC06Down",
-                                                 m_DC06FieldDown, this );
-        if( sc.isFailure() ) {
-          log << MSG::ERROR << "Could not retrieve MagToolDC06Down" << endmsg;
-          return sc;
-        }
-      }
-      m_fieldTool = m_DC06FieldDown;
-    }
-  }
-  else if( m_mapFileNames.size() == 4 ) {
-    // Real map case
-    if( polarity > 0 ) {
-      if( 0 == m_RealFieldUp ) {
-        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldTool",
-                                                 "MagToolRealUp",
-                                                 m_RealFieldUp, this );
-        if( sc.isFailure() ) {
-          log << MSG::ERROR << "Could not retrieve MagToolRealUp" << endmsg;
-          return sc;
-        }
-      }
-      m_fieldTool = m_RealFieldUp;
-    }
-    else {
-      if( 0 == m_RealFieldDown ) {
-        StatusCode sc = m_toolSvc->retrieveTool( "MagFieldTool",
-                                                 "MagToolRealDown",
-                                                 m_RealFieldDown, this );
-        if( sc.isFailure() ) {
-          log << MSG::ERROR << "Could not retrieve MagToolRealDown" << endmsg;
-          return sc;
-        }
-      }
-      m_fieldTool = m_RealFieldDown;
-    }
-  }
-  else {
-    log << MSG::ERROR 
-        << "Wrong number of field map files, don't know what to do" << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  if ( !m_fieldTool ) 
-  {
-    log << MSG::ERROR
-        << "Null FieldTool pointer | polarity = " << polarity
-        << ", # FieldMap Files = " << m_mapFileNames.size() 
-        << endmsg;
-    return StatusCode::FAILURE;
-  }
-
-  // Update the Tool
-  return m_fieldTool->updateMap( m_mapFileNames, m_scaleFactor );
-}

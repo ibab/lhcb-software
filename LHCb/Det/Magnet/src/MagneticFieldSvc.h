@@ -1,10 +1,13 @@
-// $Id: MagneticFieldSvc.h,v 1.27 2009-01-26 12:45:44 cattanem Exp $
+// $Id: MagneticFieldSvc.h,v 1.28 2009-09-01 15:09:44 wouter Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
 // Include files
 #include "Kernel/ILHCbMagnetSvc.h"
 #include "DetDesc/Condition.h"
+#include "DetDesc/MagneticFieldGrid.h"
+
+#include "MagneticFieldGridReader.h"
 
 #include "GaudiKernel/Vector3DTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
@@ -64,20 +67,36 @@ public:
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                  Gaudi::XYZVector& fvec ) const;
-  
-  bool   useRealMap() const; ///< True is using real map
-  double scaleFactor() const { return m_scaleFactor; } ///< accessor to m_scaleFactor
+                                  Gaudi::XYZVector& fvec ) const {
+    fvec = m_magFieldGrid.fieldVector(xyz) ; 
+    return StatusCode::SUCCESS ;
+  }
 
+  /** Implementation of IMagneticFieldSvc interface.
+   * @param[in]  xyz Point at which magnetic field vector will be given
+   * @return fvec Magnectic field vector.
+   */
+  virtual Gaudi::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const {
+    return m_magFieldGrid.fieldVector(xyz) ; 
+  }
+
+  /// Returns the field grid
+  virtual const LHCb::MagneticFieldGrid* fieldGrid() const {
+    return &m_magFieldGrid ; 
+  }
+
+  bool   useRealMap() const; ///< True is using real map
+  
+  /// For consistence, always return the scale factor that is in the grid
+  double scaleFactor() const { return m_magFieldGrid.scaleFactor() ; }
+  
 private:
 
   /// Allow SvcFactory to instantiate the service.
   friend class SvcFactory<MagneticFieldSvc>;
   StatusCode initializeWithCondDB();    ///< default get magnet data from CondDB
   StatusCode initializeWithoutCondDB(); ///< alternative get magnet data from job options
-
   StatusCode i_updateConditions();       ///< Reads from conditions
-  StatusCode updateTool( int polarity ); ///< Steers conditions to appropriate tool
 
   // Properties to configure the service
   bool m_UseConditions;      ///< Get data from CondDB or options. Default CondDB
@@ -95,6 +114,7 @@ private:
   double                   m_scaleFactor;  ///< Field scaling factor
 
   // Private data
+    
   bool m_mapFromOptions;        ///< Set if not using condDB for field map.
   bool m_scaleFromOptions;      ///< Set if not using condDB for scale factor.
   
@@ -104,20 +124,10 @@ private:
   Condition* m_scaleDownPtr;    ///< Pointer to ScaleDown condition
   Condition* m_currentPtr;      ///< Pointer to Measured or Set condition
 
-  IMagFieldTool* m_fieldTool;     ///< Pointer to current map handling tool
-  IMagFieldTool* m_DC06FieldUp;   ///< Pointer to tool handling "Up" DC06 map
-  IMagFieldTool* m_DC06FieldDown; ///< Pointer to tool handling "Down" DC06 map
-  IMagFieldTool* m_RealFieldUp;   ///< Pointer to tool handling "Up" Real map
-  IMagFieldTool* m_RealFieldDown; ///< Pointer to tool handling "Down" Real map
-
   IUpdateManagerSvc* m_updMgrSvc; ///< Pointer to UpdateManagerSvc
-  IToolSvc*          m_toolSvc;   ///< Pointer to ToolSvc
 
-  // Following are obsolete, will be removed soon
-  bool m_useRealMap; ///< OBSOLETE: To use the real map for data
-  std::string m_filename; ///< OBSOLETE: Magnetic field file name
-  std::string m_qfilename[4]; ///< OBSOLETE: True Magnetic field file names (one for each quadrant
-  std::string m_condPath; ///< OBSOLETE Path to access the field conditions from the database.
+  MagneticFieldGridReader m_magFieldGridReader ;
+  LHCb::MagneticFieldGrid m_magFieldGrid ;
 
 };
 
