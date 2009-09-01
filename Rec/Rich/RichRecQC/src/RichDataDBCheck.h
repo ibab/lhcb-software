@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.h,v 1.2 2009-08-26 10:01:05 rogers Exp $
+ *  $Id: RichDataDBCheck.h,v 1.3 2009-09-01 16:09:32 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -33,8 +33,7 @@ namespace Rich
     //-----------------------------------------------------------------------------
     /** @class DataDBCheck RichDataDBCheck.h
      *
-     *  Simple monitor to compare the decoded data against the information
-     *  In the DB (DeRichSystem).
+     *  Simple monitor to check for consistency errors in the data and the database.
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   2008-10-14
@@ -66,10 +65,30 @@ namespace Rich
         {
           std::ostringstream mess;
           mess << "HPD L0ID " << l0id;
-          mess << " " << type << " mismatch : " << t1 << " " << t2;
-          Error( mess.str(), StatusCode::FAILURE, 999 );
+          mess << " " << type << " mismatch : data=" << t1 << " DB=" << t2;
+          Error( mess.str(), StatusCode::FAILURE, m_nErrorMess );
         }
       }
+
+    private:
+
+      /// L0ID information
+      class L0IDInfo
+      {
+      public:
+        /// Default Constructor
+        L0IDInfo() { }
+        /// Constructor from data values
+        L0IDInfo( const Rich::DAQ::Level1HardwareID _l1HardID,
+                  const Rich::DAQ::Level1Input      _l1Input )
+          : l1HardID(_l1HardID), l1Input(_l1Input) { }
+      public:
+        Rich::DAQ::Level1HardwareID l1HardID;
+        Rich::DAQ::Level1Input      l1Input;
+      };
+
+      /// Information per L0ID
+      typedef Rich::Map< Rich::DAQ::Level0ID, L0IDInfo > L0IDInfoCount;
 
     private:
 
@@ -80,6 +99,9 @@ namespace Rich
       const DeRichSystem * m_RichSys;
 
       std::vector<std::string> m_taeEvents; ///< The TAE location(s) to monitor
+
+      /// Number of Error instances to print before supression
+      unsigned int m_nErrorMess;
 
     };
 

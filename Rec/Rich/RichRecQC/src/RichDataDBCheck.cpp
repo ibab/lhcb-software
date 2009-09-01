@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::DataDBCheck
  *
  *  CVS Log :-
- *  $Id: RichDataDBCheck.cpp,v 1.6 2009-08-26 10:01:05 rogers Exp $
+ *  $Id: RichDataDBCheck.cpp,v 1.7 2009-09-01 16:09:32 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -36,6 +36,7 @@ DataDBCheck::DataDBCheck( const std::string& name,
     m_taeEvents        ( 1, "" )
 {
   declareProperty( "RawEventLocations", m_taeEvents );
+  declareProperty( "NumErrorMess",      m_nErrorMess = 10 );
 }
 
 //=============================================================================
@@ -69,6 +70,9 @@ StatusCode DataDBCheck::execute()
   // get the raw data
   const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(m_taeEvents);
 
+  L0IDInfoCount l0Count;
+
+  // Loop over data
   for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
         iL1Map != l1Map.end(); ++iL1Map )
   {
@@ -87,6 +91,7 @@ StatusCode DataDBCheck::execute()
         const Rich::DAQ::HPDInfo & hpdInfo           = iHPDMap->second;
         const LHCb::RichSmartID  & hpdID             = hpdInfo.hpdID();
         const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
+        const Rich::DAQ::Level0ID l0ID               = hpdInfo.header().l0ID();      
 
         // Only do the DB check on valid data
         if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
@@ -94,14 +99,33 @@ StatusCode DataDBCheck::execute()
         // use a try block in case of DB lookup errors
         try
         {
+
           // look up information from DB for this HPD
           const Rich::DAQ::Level1HardwareID db_l1HardID = m_RichSys->level1HardwareID(hpdID);
           const Rich::DAQ::Level1Input      db_l1Input  = m_RichSys->level1InputNum(hpdID);
           const Rich::DAQ::Level0ID         db_l0ID     = m_RichSys->level0ID(hpdID);
+
           // compare to that in the data itself
-          compare( "Level1HardwareID", hpdInfo.header().l0ID(), l1HardID,                db_l1HardID );
-          compare( "Level1Input",      hpdInfo.header().l0ID(), l1Input,                 db_l1Input  );
-          compare( "Level0ID",         hpdInfo.header().l0ID(), hpdInfo.header().l0ID(), db_l0ID     );
+          compare( "Level1HardwareID", l0ID, l1HardID,                db_l1HardID );
+          compare( "Level1Input",      l0ID, l1Input,                 db_l1Input  );
+          compare( "Level0ID",         l0ID, hpdInfo.header().l0ID(), db_l0ID     );
+
+          // Is this L0ID already in the map... If so this is an error.
+          L0IDInfoCount::const_iterator iID = l0Count.find(l0ID);
+          if ( iID != l0Count.end() )
+          {
+            std::ostringstream mess;
+            mess << "HPD L0ID " << l0ID << " appears twice in the data. [ L1HardwareID=" << iID->second.l1HardID
+                 << " Input=" <<  iID->second.l1Input
+                 << " ] and [ L1HardwareID=" <<  l1HardID << " Input=" << l1Input << "]";
+            Error( mess.str(), StatusCode::FAILURE, m_nErrorMess );
+          }
+          else
+          {
+            // Add to L0ID data map
+            l0Count[l0ID] = L0IDInfo(l1HardID,l1Input);
+          }
+
         }
         catch ( const GaudiException & excpt )
         {

@@ -3,6 +3,11 @@
 ! Responsible : Chris Jones
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
+
+! 2009-09-01 - Chris Jones
+ - Extend the data consistency checking algorithm to check for the same HPD 
+   L0ID appearing twice in the data.
+
 ! 2009-08-26 - Gareth Rogers
  - Message printed if values are found to be different now includes the
    HPD L0 ID.
