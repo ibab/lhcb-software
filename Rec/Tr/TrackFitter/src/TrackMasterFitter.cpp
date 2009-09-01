@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.69 2009-07-16 10:58:34 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.70 2009-09-01 09:38:13 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -220,7 +220,10 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
             << " stateVector = " << seed.stateVector()
             << " covariance  = " << seed.covariance() << endmsg;
   
-  // Iterate the track fit for linearisation
+  // Iterate the track fit for linearisation. Be careful with chi2
+  // convergence here: The first iteration might not be using OT
+  // drifttimes in which case the chi2 can actually go up in the 2nd
+  // iteration.
   int iter = 1;
   bool converged = false ;
   for ( ; iter <= m_numFitIter && !converged ; ++iter ) {   
