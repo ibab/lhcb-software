@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.71 2009-08-31 20:48:11 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.72 2009-09-01 08:00:25 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -467,16 +467,16 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   // PK: save only the ones new to Desktop
   /// @todo One might accept saving a relation for an already saved particle (?)
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
+
   for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
-    Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
-    for ( Particle2Vertex::Table::Range::const_iterator i = r.begin() ; i!= r.end() ; ++i){
-      table->relate( *p,i->to() );
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Saving a " << (*p)->key() << " " 
-                                            << (*p)->particleID().pid() << " related to " 
-                                            <<  i->to()->position() << endmsg ;
-    }
+    table->merge( i_p2PVTable().i_relations(*p) );
   }
-  if (msgLevel(MSG::DEBUG)) debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" << endmsg ;
+
+  if (msgLevel(MSG::DEBUG)) {
+    debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" 
+            << endmsg ;
+  }
+  
   const std::string location(m_outputLocn+"/Particle2VertexRelations");
   put(table, location);
   return ;
@@ -546,7 +546,7 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
                                           << " relations" << endmsg;
 
     for ( Particle2Vertex::Table::Range::const_iterator j = r.begin() ; j!= r.end() ; ++j){
-      tmpTable.i_push(clone,j->to());
+      tmpTable.i_relate(clone,j->to());
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << "Cloning relation between P\n"
                   << *clone 
@@ -560,15 +560,7 @@ StatusCode PhysDesktop::cloneTrees( const LHCb::Particle::ConstVector& pToSave )
   if (msgLevel(MSG::VERBOSE)) verbose() << "cloneTrees copying " 
                                         << tmpRange.size() << " relations" 
                                         << endmsg;
-  
-  for (Particle2Vertex::Table::Range::const_iterator j = tmpRange.begin();
-       j!=tmpRange.end(); ++j) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Cloning relation between P\n"
-                                          << *(j->from()) 
-                                          << "\nand PV " << *(j->to())
-                                          << endmsg;
-    i_p2PVTable().i_relate(j->from(), j->to());
-  }
+  i_p2PVTable().merge(tmpRange);
 
   return saveTrees(cloned);
 
@@ -821,33 +813,6 @@ PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
                                         <<  i_p2PVTable().i_relations(part).empty() 
                                         << " .size() " << i_p2PVTable().i_relations(part).size()<< endmsg ;
   return i_p2PVTable().i_relations(part);
-}
-//=============================================================================
-void PhysDesktop::storeRelationsInTable(const LHCb::Particle* part) {
-
-
-  if ( ! particle2Vertices(part).empty() ) return;
-
-  const std::string pvLocation = primaryVertexLocation();
-
-  const Particle2Vertex::LightWTable rel = m_pvRelator->relatedPVs(part,
-                                                                   pvLocation);
-
-  
-
-  //  i_p2PVTable().merge(rel.i_relations());
-  
-  const Particle2Vertex::LightWTable::Range range = rel.i_relations();
-  
-  for (Particle2Vertex::WTable::Range::const_iterator iRel = range.begin();
-       iRel != range.end();
-       ++iRel) {
-    i_p2PVTable().i_relate(part, iRel->to());
-  }
-
-  if (msgLevel(MSG::VERBOSE)) verbose() << "PhysDesktop::storeRelationsInTable stored " 
-                                        << i_p2PVTable().i_relations(part).size() << " relations" 
-                                        << endmsg;
 }
 //=============================================================================
 void PhysDesktop::overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,

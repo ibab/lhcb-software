@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.38 2009-08-31 20:48:11 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.39 2009-09-01 08:00:25 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -216,8 +216,6 @@ private:
              << " par= " << (0!=V->parent())  << endmsg ;
     return;
   }
-
-  void storeRelationsInTable(const LHCb::Particle* part);
 
   /**
    * 
