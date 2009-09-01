@@ -32,31 +32,14 @@ TrackParabolicExtrapolator::TrackParabolicExtrapolator
 ( const std::string& type,
   const std::string& name,
   const IInterface* parent )
-  : TrackExtrapolator(type, name, parent) {
-
-  declareProperty("FieldSvc", m_fieldSvc = "MagneticFieldSvc");
+  : TrackFieldExtrapolatorBase(type, name, parent) 
+{
 }
 
 //=============================================================================
 // TrackParabolicExtrapolator destructor.
 //=============================================================================
 TrackParabolicExtrapolator::~TrackParabolicExtrapolator() {}
-
-//=============================================================================
-// Initialization
-//=============================================================================
-StatusCode TrackParabolicExtrapolator::initialize()
-{
-  StatusCode sc = GaudiTool::initialize();
-  if ( sc.isFailure() )
-    {
-      return Error("Failed to initialize", sc);
-    }
-  
-  m_pIMF = svc<IMagneticFieldSvc>(m_fieldSvc, true);
- 
-  return StatusCode::SUCCESS;
-}
 
 //=============================================================================
 // Propagate a state vector from zOld to zNew
@@ -70,7 +53,7 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 {
   // Bail out if already at destination
   const double dz = zNew - zOld;
-  if( fabs(dz) < TrackParameters::propagationTolerance ) { 
+  if( std::abs(dz) < TrackParameters::propagationTolerance ) { 
     if( msgLevel( MSG::DEBUG ) ) debug() << "already at required z position" << endreq;
     // Reset the transport matrix
     if( transMat ) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
@@ -81,14 +64,14 @@ StatusCode TrackParabolicExtrapolator::propagate( Gaudi::TrackVector& stateVec,
   const double xMid = stateVec[0] + (0.5*stateVec[2]*dz);
   const double yMid = stateVec[1] + (0.5*stateVec[3]*dz);
   XYZPoint P( xMid, yMid, zOld+(0.5*dz) );
-  m_pIMF -> fieldVector( P, m_B ).ignore();
+  m_B = fieldVector( P ) ;
 
   // to save some typing...
   const double Tx   = stateVec[2];
   const double Ty   = stateVec[3];
   const double nTx2 = 1.0+Tx*Tx;
   const double nTy2 = 1.0+Ty*Ty;
-  const double norm = sqrt( nTx2 + nTy2 - 1.0 );
+  const double norm = std::sqrt( nTx2 + nTy2 - 1.0 );
 
   // calculate the A factors 
   m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
@@ -125,7 +108,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   if( diff.R() < TrackParameters::propagationTolerance ) { return StatusCode::SUCCESS; }
   
   XYZPoint midP = P + 0.5*diff;
-  m_pIMF -> fieldVector( midP, m_B ).ignore();
+  m_B = fieldVector( midP ) ;
 
   // The distance between the reference point and a point on the parabola
   // can be minimized by taking the derivative wrt Z and equal that to zero.
@@ -135,7 +118,7 @@ StatusCode TrackParabolicExtrapolator::propagate( State& state,
   double Ty   = state.ty();
   double nTx2 = 1.0+Tx*Tx;
   double nTy2 = 1.0+Ty*Ty;
-  double norm = sqrt( nTx2 + nTy2 - 1.0 );
+  double norm = std::sqrt( nTx2 + nTy2 - 1.0 );
   m_ax = norm*( Ty*(Tx*m_B.x()+m_B.z())-(nTx2*m_B.y()));
   m_ay = norm*(-Tx*(Ty*m_B.y()+m_B.z())+(nTy2*m_B.x()));
   double varA  = 0.5*m_ax*state.qOverP()*eplus*c_light;
@@ -181,14 +164,15 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
                                                         Gaudi::TrackVector& stateVec,
                                                         Gaudi::TrackMatrix& transMat )
 {
-  // Reset the transport matrix
-  transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
+  // Reset the transport matrix. It turns out that this is so expensive
+  // in gcc 3.4 that we better just set the elements explicitely, below.
+  // transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );
   
   // to save some typing...
   double Tx = stateVec[2];
   double Ty = stateVec[3];
   double norm2 = 1. + Tx*Tx + Ty*Ty;
-  double norm = sqrt( norm2 );
+  double norm = std::sqrt( norm2 );
 
   //calculate derivatives of Ax, Ay
   double dAx_dTx = (Tx*m_ax/norm2) + norm*(Ty*m_B.x()-(2.*Tx*m_B.y())); 
@@ -200,21 +184,34 @@ void TrackParabolicExtrapolator::updateTransportMatrix( const double dz,
   double fac  = eplus*c_light*dz;
   double fact = fac*stateVec[4];
 
+  transMat(0,0) = 1 ;
+  transMat(0,1) = 0 ; 
   transMat(0,2) = dz + 0.5 * dAx_dTx * fact*dz;
   transMat(0,3) = 0.5 * dAx_dTy * fact*dz;
   transMat(0,4) = 0.5 * m_ax * fac*dz;
   
+  transMat(1,0) = 0 ;
+  transMat(1,1) = 1 ;
   transMat(1,2) = 0.5 * dAy_dTx * fact*dz;
   transMat(1,3) = dz + 0.5 * dAy_dTy * fact*dz;
   transMat(1,4) = 0.5 * m_ay * fac*dz;
   
+  transMat(2,0) = 0 ;
+  transMat(2,1) = 0 ;
   transMat(2,2) = 1.0 + dAx_dTx * fact;
   transMat(2,3) = dAx_dTy * fact;
   transMat(2,4) = m_ax * fac;
   
+  transMat(3,0) = 0 ;
+  transMat(3,1) = 0 ;
   transMat(3,2) = dAy_dTx * fact;
   transMat(3,3) = 1.0 + dAy_dTy * fact;
   transMat(3,4) = m_ay * fac;
-  
-  return;
+
+  transMat(4,0) = 0 ;
+  transMat(4,1) = 0 ;
+  transMat(4,2) = 0 ;
+  transMat(4,3) = 0 ;
+  transMat(4,4) = 1 ;
+
 };

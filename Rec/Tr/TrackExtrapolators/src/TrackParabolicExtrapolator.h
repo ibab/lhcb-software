@@ -2,8 +2,7 @@
 #define TRACKPARABOLICEXTRAPOLATOR_H 1
 
 // Include files
-#include "TrackExtrapolator.h"
-
+#include "TrackFieldExtrapolatorBase.h"
 #include <string>
 
 // Forward declaration
@@ -24,7 +23,7 @@ class IMagneticFieldSvc;
  *  @date   22-04-2000
  */
 
-class TrackParabolicExtrapolator: public TrackExtrapolator 
+class TrackParabolicExtrapolator: public TrackFieldExtrapolatorBase
 {
 
 public:
@@ -36,9 +35,6 @@ public:
   /// Destructor
   virtual ~TrackParabolicExtrapolator();
   
-  /// initialize
-  StatusCode initialize();
-
   /// Propagate a state vector from zOld to zNew
   /// Transport matrix is calulated when transMat pointer is not NULL
   StatusCode propagate( Gaudi::TrackVector& stateVec,
@@ -58,13 +54,10 @@ protected:
   virtual void updateTransportMatrix( const double dz,
                                       Gaudi::TrackVector& stateVec,
                                       Gaudi::TrackMatrix& transMat );
-
+  
   double             m_ax;
   double             m_ay;
   Gaudi::XYZVector   m_B;
-
-  std::string m_fieldSvc;
-  IMagneticFieldSvc* m_pIMF; ///< Pointer to the magnetic field service
 
 };
 
