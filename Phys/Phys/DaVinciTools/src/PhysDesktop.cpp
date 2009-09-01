@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.73 2009-09-01 12:39:46 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.74 2009-09-01 16:14:47 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -601,8 +601,6 @@ void PhysDesktop::findAllTree( const LHCb::Particle* part,
 StatusCode PhysDesktop::getEventInput(){
 
   if (msgLevel(MSG::VERBOSE)) verbose() << ">>> Hello from getEventInput " << endmsg;
-//   if (msgLevel(MSG::VERBOSE)) verbose() << "Initial size of local containers (P,PV,SV) = " << m_parts.size()
-//                                         << ", " << m_primVerts->size() << ", " <<  m_secVerts.size()<< endmsg;
 
   if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
