@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.10 2009-08-31 15:33:06 ocallot Exp $
+// $Id: UnpackTrack.cpp,v 1.11 2009-09-01 15:17:43 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -61,23 +61,6 @@ StatusCode UnpackTrack::execute() {
     if ( dst->version() > 2 ) {
       track->setLikelihood(       src.likelihood );
       track->setGhostProbability( src.ghostProba );
-      LHCb::HitPattern temp;
-      temp.setVeloRA  ( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloRA) );
-      temp.setVeloRC  ( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloRC) );
-      temp.setVeloPhiA( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloPA) );
-      temp.setVeloPhiC( std::bitset<LHCb::HitPattern::NumVelo>(src.patternVeloPA) );
-
-      temp.setTt(  std::bitset<LHCb::HitPattern::NumTT>( src.patternST & 15 ) );
-
-      temp.setItAC(        std::bitset<LHCb::HitPattern::NumT>( (src.patternST >>  4)  & 0xFFF ) );
-      temp.setItTopBottom( std::bitset<LHCb::HitPattern::NumT>( (src.patternST >> 16)  & 0xFFF ) );
-
-      temp.setOt1stMonoLayer( std::bitset<LHCb::HitPattern::NumT>( (src.patternOTMuon      )  & 0xFFF ) );
-      temp.setOt2ndMonoLayer( std::bitset<LHCb::HitPattern::NumT>( (src.patternOTMuon >> 12)  & 0xFFF ) );
-
-      temp.setMuon( std::bitset<LHCb::HitPattern::NumMuon>( (src.patternOTMuon >> 24)  & 0xF ) );
-
-      track->setExpectedHitPattern( temp );
     }
     std::vector<LHCb::LHCbID> lhcbids(  src.lastId - src.firstId  ) ;
     std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;

@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.8 2009-08-31 15:33:06 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.9 2009-09-01 15:17:43 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -65,12 +65,6 @@ StatusCode CompareTrack::execute() {
     if ( 1.e-7 < fabs( (oTrack->likelihood() - tTrack->likelihood() )/ tTrack->likelihood() ) ) isOK = false;
     if ( 1.e-7 < fabs( (oTrack->ghostProbability()-tTrack->ghostProbability())/
                        tTrack->ghostProbability()) ) isOK = false;
-    if ( oTrack->expectedHitPattern().veloRA()   != tTrack->expectedHitPattern().veloRA()   ) isOK = false;
-    if ( oTrack->expectedHitPattern().veloRC()   != tTrack->expectedHitPattern().veloRC()   ) isOK = false;
-    if ( oTrack->expectedHitPattern().veloPhiA() != tTrack->expectedHitPattern().veloPhiA() ) isOK = false;
-    if ( oTrack->expectedHitPattern().veloPhiC() != tTrack->expectedHitPattern().veloPhiC() ) isOK = false;
-    if ( oTrack->expectedHitPattern().ot1stMonoLayer() != tTrack->expectedHitPattern().ot1stMonoLayer() ) isOK = false;
-    if ( oTrack->expectedHitPattern().ot2ndMonoLayer() != tTrack->expectedHitPattern().ot2ndMonoLayer() ) isOK = false;
     unsigned int kk;
     for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
       if ( oTrack->lhcbIDs()[kk].lhcbID() != tTrack->lhcbIDs()[kk].lhcbID() )     isOK = false;
@@ -101,9 +95,6 @@ StatusCode CompareTrack::execute() {
       info() << format( " Likelihood %10.6f ghostProba %10.8f",
                         tTrack->likelihood(), tTrack->ghostProbability() )
              << endmsg;
-      info() << "Old  HitPattern " << endmsg << oTrack->expectedHitPattern() << endmsg;
-      info() << "Test HitPattern " << endmsg << tTrack->expectedHitPattern() << endmsg;
-      
       for ( kk = 0 ; oTrack->lhcbIDs().size() != kk ; ++kk ) {
         info() << format( "   old ID %8x   new %8x", 
                           oTrack->lhcbIDs()[kk].lhcbID(), 

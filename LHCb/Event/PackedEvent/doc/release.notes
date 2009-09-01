@@ -4,6 +4,9 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-09-01 - Olivier Callot
+ - Remove HitPattern from PackedTrack
+
 ! 2009-08-31 - Olivier Callot
  - Changes in PackedTrack due to changes in Track.
 

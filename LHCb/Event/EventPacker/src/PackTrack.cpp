@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.9 2009-08-31 15:33:06 ocallot Exp $
+// $Id: PackTrack.cpp,v 1.10 2009-09-01 15:17:43 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -57,18 +57,6 @@ StatusCode PackTrack::execute() {
     newTrk.flags      = track->flags();
     newTrk.likelihood = pack.fltPacked( track->likelihood() );
     newTrk.ghostProba = pack.fltPacked( track->ghostProbability() );
-    newTrk.patternVeloRA = track->expectedHitPattern( ).veloRA().to_ulong();
-    newTrk.patternVeloRC = track->expectedHitPattern( ).veloRC().to_ulong();
-    newTrk.patternVeloPA = track->expectedHitPattern( ).veloPhiA().to_ulong();
-    newTrk.patternVeloPC = track->expectedHitPattern( ).veloPhiC().to_ulong();
-    int ttPat  = track->expectedHitPattern( ).tt().to_ulong();
-    int it1Pat = track->expectedHitPattern( ).itAC().to_ulong();
-    int it2Pat = track->expectedHitPattern( ).itTopBottom().to_ulong();
-    newTrk.patternST = ttPat | ( it1Pat << 4 ) | ( it2Pat << 16 );
-    int ot1Pat = track->expectedHitPattern( ).ot1stMonoLayer().to_ulong();
-    int ot2Pat = track->expectedHitPattern( ).ot2ndMonoLayer().to_ulong();
-    int muonPat = track->expectedHitPattern( ).muon().to_ulong();
-    newTrk.patternOTMuon = ot1Pat | ( ot2Pat << 12 ) | ( muonPat << 24 );
     
     //== Store the LHCbID as int 
     newTrk.firstId    = out->sizeId();

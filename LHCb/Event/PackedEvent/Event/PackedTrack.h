@@ -1,4 +1,4 @@
-// $Id: PackedTrack.h,v 1.6 2009-08-31 15:33:36 ocallot Exp $
+// $Id: PackedTrack.h,v 1.7 2009-09-01 15:17:25 ocallot Exp $
 #ifndef EVENT_PACKEDTRACK_H 
 #define EVENT_PACHEDTRACK_H 1
 
@@ -26,10 +26,7 @@ namespace LHCb {
       firstId( c.firstId ), lastId (c.lastId ),
       firstState( c.firstState ), lastState( c.lastState ),
       firstExtra( c.firstExtra ), lastExtra( c.lastExtra ),
-      likelihood( c.likelihood ), ghostProba( c.ghostProba ),
-      patternVeloRA( c.patternVeloRA), patternVeloRC( c.patternVeloRC),
-      patternVeloPA( c.patternVeloPA), patternVeloPC( c.patternVeloPC),
-      patternST( c.patternST), patternOTMuon( c.patternOTMuon)
+      likelihood( c.likelihood ), ghostProba( c.ghostProba )
       {};
   
     int key;
@@ -45,12 +42,6 @@ namespace LHCb {
     //== Added for version 3, August 2009
     int likelihood;
     int ghostProba;
-    int patternVeloRA;  // these 6 words are to expand the HitPattern class...
-    int patternVeloRC;
-    int patternVeloPA;
-    int patternVeloPC;
-    int patternST;
-    int patternOTMuon;
 
     //== Note that Nodes and Measurements on Track are transient only, an thus never stored.
   };

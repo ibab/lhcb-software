@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-09-01 - Olivier Callot
+ - Remove HitPattern as it is removed form Track
+
 ! 2009-08-31 - Olivier Callot
  - First attempt to adapt to the new Track. Handling HitPattern is a pain!
 
