@@ -1,12 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.120 2009-08-10 11:41:27 ishapova Exp $
+! $Id: release.notes,v 1.121 2009-09-01 20:05:06 ishapova Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2009-09-01 - Illya Shapoval
+ - Modified function in ReleaseNotes class for local tag homogeneity case detection 
+   in the release_notes.xml file.
+ - Modified addNote function to contain functionality for merging homogeneous
+   local tags entries in the release_notes.xml file.
+ - Improved addGlobalTag function.
+
 ! 2009-08-03 - Illya Shapoval
- - Added function to ReleaseNotes class for global tag duplication case detection 
+ - Added function to ReleaseNotes class for global tag homogeneity case detection 
    in the release_notes.xml file.
  - Modified addGlobalTag function to contain functionality for merging homogeneous
    global tags entries in the release_notes.xml file.
