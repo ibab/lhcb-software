@@ -1,6 +1,6 @@
-// $Id: NodeGrammarTest.cpp,v 1.2 2009-05-23 15:54:19 ibelyaev Exp $
+// $Id: NodeGrammarTest.cpp,v 1.3 2009-09-01 09:02:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -45,6 +45,8 @@ int main()
   particles.push_back ( "D0"  ) ;
   particles.push_back ( "D+"  ) ;
   particles.push_back ( "D-"  ) ;
+  particles.push_back ( "chi_10"    ) ;
+  particles.push_back ( "~chi_10"   ) ;
   particles.push_back ( "X(3872)+"  ) ;
   particles.push_back ( "X(3872)~+" ) ;
 

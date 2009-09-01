@@ -1,6 +1,6 @@
-// $Id: NodeGrammar.h,v 1.3 2009-06-02 16:47:34 ibelyaev Exp $
+// $Id: NodeGrammar.h,v 1.4 2009-09-01 09:02:43 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 // ============================================================================
 #ifndef LOKI_NODEGRAMMAR_H 
 #define LOKI_NODEGRAMMAR_H 1
@@ -142,10 +142,12 @@ namespace Decays
           expression  =
             // boolean operation 
             operation [ expression.node = arg1 ] |
-            // negation:
-            ( str_p("~") >> expression[ expression.node = construct_<Not> ( arg1 ) ]       ) | 
+            // negation 1 :
+            ( str_p("!") >>        expression[ expression.node = construct_<Not> ( arg1 ) ]        ) | 
+            // negation 2 :
+            ( str_p("~") >> '(' >> expression[ expression.node = construct_<Not> ( arg1 ) ] >> ')' ) | 
             // allow extra "()"
-            ( str_p("(") >> expression[ expression.node =                   arg1   ] >> ')') |
+            ( str_p("(") >>        expression[ expression.node =                   arg1   ] >> ')' ) |
             // simple atomic expression 
             atomic    [ expression.node = arg1 ] ;
           

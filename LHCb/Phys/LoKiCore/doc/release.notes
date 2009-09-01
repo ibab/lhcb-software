@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.152 2009-08-11 18:19:25 ibelyaev Exp $ 
+! $Id: release.notes,v 1.153 2009-09-01 09:02:43 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,21 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-08-31 - Vanya BELYAEV
+
+ - NodeGrammar:
+
+     1. introduce the negation using "!" operator:
+
+          e.g.:  !pi+
+
+     2. negation with "~" oeprator possibel only if the node enclosed in round brackets:
+
+          e.g.  ~(pi+)
+
+   It is done to avoid the ambiguity due to  neutralinos: "~chi_10" 
+
 
 ! 2009-08-11 - Vanya BELYAEV
 
