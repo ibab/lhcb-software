@@ -4,6 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2009-09-01 - Wouter Hulsbergen
+ - magnetic field grid is now stored in class
+ DetDesc/MagneticFieldGrid. new utility 'MagneticFieldGridReader'
+ reads the field from a file (thereby replacing the IMagFieldTools)
+
 !====================== Magnet v5r3 2009-06-16 ===============================
 ! 2009-06-12 - Marco Cattaneo
  - Fix a gcc43 compilation warning in MultipleMagneticFieldSvc.cpp
