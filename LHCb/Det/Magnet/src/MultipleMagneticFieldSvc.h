@@ -56,12 +56,23 @@ public:
    * @return StatusCode SUCCESS if calculation was performed.
    */
   virtual StatusCode fieldVector( const Gaudi::XYZPoint&  xyz, 
-                                        Gaudi::XYZVector& fvec ) const;
+				  Gaudi::XYZVector& fvec ) const;
+  
+  /** Implementation of IMagneticFieldSvc interface.
+   * @param[in]  xyz Point at which magnetic field vector will be given
+   * @return fvec Magnectic field vector.
+   */
+  virtual ROOT::Math::XYZVector fieldVector( const Gaudi::XYZPoint&  xyz ) const {
+    ROOT::Math::XYZVector bf ;
+    fieldVector(xyz,bf).ignore() ;
+    return bf ;
+  }
 
   // These should be incorperated in a better way...
   bool   useRealMap() const; ///< True is using real map
   double scaleFactor() const; ///< accessor to m_scaleFactor
-  
+  const LHCb::MagneticFieldGrid* fieldGrid() const { return 0 ; }
+
 private:
 
   /// Allow SvcFactory to instantiate the service.
