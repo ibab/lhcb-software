@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.72 2009-09-01 08:00:25 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.73 2009-09-01 12:39:46 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -287,6 +287,9 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   // Create new particle on the heap
   LHCb::Particle* newP = new LHCb::Particle(*keptP);
 
+  // Put in the desktop container
+  m_parts.push_back(newP);
+
   // Check if link to endProducts exist and set it
   if( 0 != keptP->endVertex() ) {
     const LHCb::Vertex* newV = keep( keptP->endVertex() );
@@ -310,8 +313,6 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   // Link to originators will be correct because they are in the heap
   // so their pointer is valid
 
-  // Put in the desktop container
-  m_parts.push_back(newP);
   return newP;
 
 }
@@ -335,6 +336,9 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
 
   // Create new vertex on the heap
   LHCb::Vertex* newV = new LHCb::Vertex(*keptV);
+  // Put in the desktop container
+  m_secVerts.push_back(newV);
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
 
   newV->clearOutgoingParticles();
@@ -348,9 +352,9 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
     newV->addToOutgoingParticles(newP);
   }
 
-  // Put in the desktop container
+
   if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
-  m_secVerts.push_back(newV);
+
   return newV;
 
 }
@@ -374,11 +378,12 @@ const LHCb::RecVertex* PhysDesktop::keep( const LHCb::RecVertex* keptV ){
 
   // Create new vertex on the heap
   LHCb::RecVertex* newV = new LHCb::RecVertex(*keptV);
+  // Put in the desktop container
+  m_refitPVs.push_back(newV);
+
   if (msgLevel(MSG::VERBOSE)) verbose() << "   -> Create new and keep " << endmsg ;
 
-  // Put in the desktop container
-  //  if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
-  m_refitPVs.push_back(newV);
+
   return newV;
 
 }
@@ -389,8 +394,10 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save Particles to TES " << endmsg;
 
   LHCb::Particles* particlesToSave = new LHCb::Particles();
-  LHCb::RecVertex::ConstVector verticesToSave;
   const std::string location( m_outputLocn+"/Particles");
+  put(particlesToSave,location);
+
+  LHCb::RecVertex::ConstVector verticesToSave;
 
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
@@ -409,7 +416,6 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
                                         << " new particles in " << location << " from " << pToSave.size()
                                         << " total particles in desktop " << endmsg;
 
-  put(particlesToSave,location);
   // now save re-fitted vertices
   if (msgLevel(MSG::VERBOSE)) verbose() << "Passing " << verticesToSave.size()
                                         << " to saveReFittedPVs" << endmsg;
@@ -424,6 +430,11 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 {
 
   LHCb::Vertices* verticesToSave = new LHCb::Vertices();
+
+  const std::string location(m_outputLocn+"/Vertices");
+
+  put(verticesToSave,location);
+
   for( v_iter iver = vToSave.begin(); iver != vToSave.end(); iver++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if( !DaVinci::inTES(*iver) ) {
@@ -431,19 +442,20 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
     }
   }
 
-  const std::string location(m_outputLocn+"/Vertices");
-
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
                                         << " new vertices in " << location << " from " << vToSave.size()
                                         << " vertices in desktop " << endmsg;
-
-  put(verticesToSave,location);
   
 }
 //=============================================================================
 void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
 {
   LHCb::RecVertices* verticesToSave = new LHCb::RecVertex::Container();
+
+  const std::string location(m_outputLocn+"/_RefitPVs");
+
+  put(verticesToSave,location);
+
   for(rv_iter iver = vToSave.begin(); 
       iver != vToSave.end(); ++iver ) {
     // Check if this was already in a Gaudi container (hence in TES)
@@ -452,14 +464,10 @@ void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
     }
   }
 
-  const std::string location(m_outputLocn+"/_RefitPVs");
-
   if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << verticesToSave->size()
                                         << " new vertices in " << location 
                                         << " from " << vToSave.size()
                                         << " vertices in desktop " << endmsg;
-
-  put(verticesToSave,location);
   
 }
 //=============================================================================
@@ -467,6 +475,10 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   // PK: save only the ones new to Desktop
   /// @todo One might accept saving a relation for an already saved particle (?)
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
+
+  const std::string location(m_outputLocn+"/Particle2VertexRelations");
+
+  put(table, location);
 
   for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
     table->merge( i_p2PVTable().i_relations(*p) );
@@ -476,9 +488,7 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
     debug() << "Saving table to " << m_outputLocn+"/Particle2VertexRelations" 
             << endmsg ;
   }
-  
-  const std::string location(m_outputLocn+"/Particle2VertexRelations");
-  put(table, location);
+
   return ;
 }
 //=============================================================================
