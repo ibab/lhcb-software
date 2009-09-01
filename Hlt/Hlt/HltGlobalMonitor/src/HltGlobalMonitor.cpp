@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.42 2009-08-28 12:12:22 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.43 2009-09-01 11:10:45 kvervink Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -165,11 +165,11 @@ StatusCode HltGlobalMonitor::initialize() {
   
   m_gpstimesec=0;
 
-  declareInfo("COUNTER_TO_RATE[L0Accept]",&counter("L0Accept"),"L0Accept");
+  declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
-  declareInfo("#eventsHLT",&counter("#events"),"Events hlt1 input");
-  declareInfo("#acceptHLT",&counter("#accept"),"Events hlt1 accepted");
+  declareInfo("#eventsHLT",counter("#events"),"Events hlt1 input");
+  declareInfo("#acceptHLT",counter("#accept"),"Events hlt1 accepted");
 
   //klo1
   for (unsigned i=0; i!=m_GroupLabels.size();++i) {
