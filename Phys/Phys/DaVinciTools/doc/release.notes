@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.461 2009-08-31 20:51:22 jpalac Exp $
+! $Id: release.notes,v 1.462 2009-09-01 08:00:45 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-01 - Juan PALACIOS
+ - PhysDesktop
+  . Simplify some manipulaitons of relations tables.
 
 ! 2009-08-31 - Juan PALACIOS
  - PhysDesktop
