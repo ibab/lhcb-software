@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2009-09-01 Wouter Hulsbergen
+ - OTProjector will not use drifttime if ambiguity is zero (unitialized)
+
 !====================== TrackProjectors v2r23 2009-07-14 =====================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file TrackProjectors_dll.cpp

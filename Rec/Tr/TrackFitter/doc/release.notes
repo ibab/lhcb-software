@@ -2,6 +2,13 @@
 ! Package     : Tr/TrackFitter
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
+
+
+! 2009-09-01 Wouter Hulsbergen
+ - Prefit iteration is now implicit in fit: as long as ambiguity of OT hit is not set, 
+   it will not use the drifttime. Adapted number of iterations of normal fit to take 
+   this into account.
+
 ! 2009-08-17 Stephanie Hansmann-Menzemer
  - Fix typo in DoF in Configurables.py
 
