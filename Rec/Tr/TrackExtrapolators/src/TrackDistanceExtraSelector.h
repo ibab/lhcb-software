@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.h,v 1.4 2006-05-17 06:42:52 mneedham Exp $
+// $Id: TrackDistanceExtraSelector.h,v 1.5 2009-09-01 20:07:11 wouter Exp $
 #ifndef TrackDistanceExtraSelector_H
 #define TrackDistanceExtraSelector_H 1
 
@@ -34,19 +34,13 @@ public:
                                       const double zEnd ) const;
 
  private:
-  /// Extrapolators...
   double m_shortDist;
-
-  ITrackExtrapolator* m_shortFieldExtrapolator;
-  ITrackExtrapolator* m_longFieldExtrapolator; 
- /// extrapolator to use for short transport in mag field
-  std::string m_shortFieldExtrapolatorName;
-  std::string m_shortFieldExtrapolatorType;
- 
+  ITrackExtrapolator* m_shortDistanceExtrapolator;
+  ITrackExtrapolator* m_longDistanceExtrapolator; 
+  /// extrapolator to use for short transport in mag field
+  std::string m_shortDistanceExtrapolatorType;
   /// extrapolator to use for long transport in mag field
-  std::string m_longFieldExtrapolatorName;
-  std::string m_longFieldExtrapolatorType;
-
+  std::string m_longDistanceExtrapolatorType;
 };
 
 #endif // TrackDistanceExtraSelector_H

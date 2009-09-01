@@ -1,4 +1,4 @@
-// $Id: TrackDistanceExtraSelector.cpp,v 1.5 2006-05-31 12:50:57 erodrigu Exp $
+// $Id: TrackDistanceExtraSelector.cpp,v 1.6 2009-09-01 20:07:11 wouter Exp $
 
 // Include files
 
@@ -24,17 +24,13 @@ TrackDistanceExtraSelector::TrackDistanceExtraSelector(const std::string& type,
   GaudiTool(type, name, parent)
 {
   declareInterface<ITrackExtraSelector>( this );
-
+  
   declareProperty( "shortDist"
                    , m_shortDist = 100.0*Gaudi::Units::mm );
-  declareProperty( "ShortFieldExtrapolatorName",
-                   m_shortFieldExtrapolatorName = "TrackParabolicExtrapolator" );
-  declareProperty( "LongFieldExtrapolatorName",
-                   m_longFieldExtrapolatorName  = "TrackHerabExtrapolator" );
-  declareProperty( "ShortFieldExtrapolatorType",
-                   m_shortFieldExtrapolatorType = "TrackParabolicExtrapolator" );
-  declareProperty( "LongFieldExtrapolatorType",
-                   m_longFieldExtrapolatorType  = "TrackHerabExtrapolator" ); 
+  declareProperty( "ShortDistanceExtrapolatorType",
+                   m_shortDistanceExtrapolatorType = "TrackParabolicExtrapolator" );
+  declareProperty( "LongDistanceExtrapolatorType",
+                   m_longDistanceExtrapolatorType  = "TrackHerabExtrapolator" ); 
 }
 
 //=============================================================================
@@ -50,15 +46,17 @@ StatusCode TrackDistanceExtraSelector::initialize()
   // initialize
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return Error( "Failed to initialize", sc );
-
+  
   // request a short distance magnetic field extrapolator
-  m_shortFieldExtrapolator = tool<ITrackExtrapolator>( m_shortFieldExtrapolatorType,
-                                                       m_shortFieldExtrapolatorName );
-
+  m_shortDistanceExtrapolator = tool<ITrackExtrapolator>( m_shortDistanceExtrapolatorType,
+							  "ShortDistanceExtrapolator", this ) ;
   // request extrapolator for going short distances in magnetic field
-  m_longFieldExtrapolator = tool<ITrackExtrapolator>( m_longFieldExtrapolatorType,
-                                                      m_longFieldExtrapolatorName );
-
+  m_longDistanceExtrapolator = tool<ITrackExtrapolator>( m_longDistanceExtrapolatorType,
+							 "LongDistanceExtrapolator", this );
+  
+  info() << "Short distance extrapolator: " << m_shortDistanceExtrapolator->type() << endreq ;
+  info() << "Long distance extrapolator: " << m_longDistanceExtrapolator->type() << endreq ;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -68,8 +66,8 @@ StatusCode TrackDistanceExtraSelector::initialize()
 ITrackExtrapolator* TrackDistanceExtraSelector::select( const double zStart,
                                                         const double zEnd ) const
 {
-  return ( fabs(zEnd-zStart) < m_shortDist ?
-           m_shortFieldExtrapolator : m_longFieldExtrapolator );
+  return ( std::abs(zEnd-zStart) < m_shortDist ?
+           m_shortDistanceExtrapolator : m_longDistanceExtrapolator );
 }
 
 //=============================================================================
