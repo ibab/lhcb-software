@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.2 2009-08-10 12:55:39 ibelyaev Exp $
+# $Id: Reconstruction.py,v 1.3 2009-09-01 11:44:59 ibelyaev Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'digitsReco'     , 
@@ -23,34 +23,6 @@ __all__ = (
 from Gaudi.Configuration import *
 
 from Configurables import GaudiSequencer
-from Configurables import CellularAutomatonAlg
-from Configurables import CaloSharedCellAlg
-from Configurables import CaloClusterCovarianceAlg
-
-from Configurables import CaloSinglePhotonAlg
-from Configurables import CaloElectronAlg
-
-from Configurables import CaloSelectCluster
-from Configurables import CaloSelectClusterWithPrs
-from Configurables import CaloSelectNeutralClusterWithTracks
-from Configurables import CaloSelectNeutralClusterWithSpd 
-from Configurables import CaloSelectChargedClusterWithSpd 
-from Configurables import CaloSelectorNOT
-
-from Configurables import CaloExtraDigits
-from Configurables import CaloECorrection
-from Configurables import CaloSCorrection
-from Configurables import CaloLCorrection
-
-from Configurables import PhotonMatchAlg
-from Configurables import CaloHypoAlg
-from Configurables import CaloMergedPi0Alg 
-
-from Configurables import ( CaloZSupAlg       ,
-                            CaloDigitsFromRaw ,
-                            CaloGetterInit    ) 
-
-
 
 from GaudiKernel.SystemOfUnits import MeV, GeV
 
@@ -73,6 +45,11 @@ def digitsReco  ( context , enableRecoOnDemand ) :
     """
     Prepare the digits for the recontruction
     """
+    
+    from Configurables import ( CaloZSupAlg       ,
+                                CaloDigitsFromRaw ,
+                                CaloGetterInit    ) 
+    
     alg = GaudiSequencer (
         'CaloDigits'      ,
         Context = context ,
@@ -96,6 +73,11 @@ def clusterReco ( context , enableRecoOnDemand ) :
     """
     Define the recontruction of Ecal Clusters
     """
+
+    from Configurables import ( CellularAutomatonAlg     ,
+                                CaloSharedCellAlg        ,
+                                CaloClusterCovarianceAlg ) 
+    
     alg = getAlgo ( GaudiSequencer          , 
                     "ClusterReco"           ,
                     context                 ,
@@ -131,6 +113,23 @@ def photonReco ( context , enableRecoOnDemand , useTracks ) :
     """
     Define the recontruction of Single Photon Hypo
     """
+    
+    from Configurables import   CaloSinglePhotonAlg                
+    from Configurables import   CaloHypoAlg 
+    
+    from Configurables import ( CaloSelectCluster                  , 
+                                CaloSelectClusterWithPrs           ,
+                                CaloSelectNeutralClusterWithTracks , 
+                                CaloSelectNeutralClusterWithSpd    ,
+                                CaloSelectChargedClusterWithSpd    , 
+                                CaloSelectorNOT                    )
+    
+    from Configurables import ( CaloExtraDigits ,
+                                CaloECorrection , 
+                                CaloSCorrection , 
+                                CaloLCorrection ) 
+    
+
     alg = getAlgo ( CaloSinglePhotonAlg  ,
                     "SinglePhotonRec"    ,
                     context              ,
@@ -210,6 +209,24 @@ def electronReco ( context , enableRecoOnDemand ) :
     """
     Define the reconstruction of
     """
+
+    from Configurables import   CaloElectronAlg                
+    from Configurables import   CaloHypoAlg 
+    
+    from Configurables import ( CaloSelectCluster                  , 
+                                CaloSelectClusterWithPrs           ,
+                                CaloSelectNeutralClusterWithTracks , 
+                                CaloSelectNeutralClusterWithSpd    ,
+                                CaloSelectChargedClusterWithSpd    , 
+                                CaloSelectorNOT                    )
+    
+    from Configurables import ( CaloExtraDigits ,
+                                CaloECorrection , 
+                                CaloSCorrection , 
+                                CaloLCorrection ) 
+    
+
+
     alg = None
     if hltContext ( context ) :
         alg = getAlgo ( CaloElectronAlg      ,
@@ -294,7 +311,15 @@ def mergedPi0Reco ( context , enableRecoOnDemand ) :
     """
     Define the recontruction of Merged Pi0s
     """
-    
+
+    from Configurables import   CaloMergedPi0Alg 
+    from Configurables import   CaloHypoAlg 
+
+    from Configurables import ( CaloExtraDigits ,
+                                CaloECorrection , 
+                                CaloSCorrection , 
+                                CaloLCorrection ) 
+        
     pi0 = getAlgo ( CaloMergedPi0Alg      ,
                     'MergedPi0Rec'        ,
                     context               )
