@@ -1,6 +1,9 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+! 2009-09-01 - Kurt Rinnert
+ - fixed compilation warnings in Tell1 clusterization
+
 ! 2008-08-06 - Tomasz Szumlak
  - add a bunch of algorithms to implement Tell1 clusterization process
    in LHCb simulation stream

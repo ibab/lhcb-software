@@ -1,4 +1,4 @@
-// $Id: SimTell1ZSProcessEngine.h,v 1.1 2009-08-10 08:48:02 szumlat Exp $
+// $Id: SimTell1ZSProcessEngine.h,v 1.2 2009-09-01 11:35:38 krinnert Exp $
 #ifndef SIMTELL1ZSPROCESSENGINE_H 
 #define SIMTELL1ZSPROCESSENGINE_H 1
 
@@ -30,7 +30,7 @@ class SimTell1ZSProcessEngine: public SimTell1Engine{
     int velo_clusterization_process(int *zs_line,int *zs_h_line,
         int *zs_l_line, VeloTELL1::u_int16_t *cluster,
         VeloTELL1::u_int8_t *adc_list,
-        int *pp_clus_cnt, int *pp_adc_cnt,
+        unsigned int *pp_clus_cnt, int *pp_adc_cnt,
         VeloTELL1::u_int32_t pp_max_clusters,
         VeloTELL1::u_int8_t sum, VeloTELL1::u_int16_t strip_start,
         int boundary_strip);

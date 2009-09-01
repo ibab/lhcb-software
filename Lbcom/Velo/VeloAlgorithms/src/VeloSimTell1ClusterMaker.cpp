@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.1 2009-08-10 08:48:02 szumlat Exp $
+// $Id: VeloSimTell1ClusterMaker.cpp,v 1.2 2009-09-01 11:35:38 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -270,10 +270,10 @@ StatusCode VeloSimTell1ClusterMaker::runClusterMaker()
     // input data for clusterization
     if(sens->isReadOut()){
       VeloTELL1::sdataVec data=(*sensIt)->data();
-      if(sens->isR()||sens->isPileUp()&&m_dbConfig==VeloTELL1::STATIC){
+      if( (sens->isR() || sens->isPileUp()) && (m_dbConfig==VeloTELL1::STATIC) ){
         // processing R sensor set start strip sequence for R
         m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsR);
-      }else if(sens->isPhi()&&m_dbConfig==VeloTELL1::STATIC){
+      }else if( sens->isPhi() && (m_dbConfig==VeloTELL1::STATIC) ){
         // processing Phi sensor
         m_zsEngines[tell1]->setBoundaryStrips(m_boundaryStripsPhi);
       }

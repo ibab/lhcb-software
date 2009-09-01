@@ -1,4 +1,4 @@
-// $Id: SimTell1ZSProcessEngine.cpp,v 1.1 2009-08-10 08:48:01 szumlat Exp $
+// $Id: SimTell1ZSProcessEngine.cpp,v 1.2 2009-09-01 11:35:38 krinnert Exp $
 // Include files 
 #include <cstring>
 
@@ -62,7 +62,8 @@ int SimTell1ZSProcessEngine::velo_zs_process(int zs_enable,
 	int boundary_strip=0;
 	
 	
-	int pp_clus_cnt, pp_adc_cnt;
+	unsigned int pp_clus_cnt;
+	int pp_adc_cnt;
   
 	(*clus_numb)= 0;
 	(*adc_numb) =0;
@@ -129,7 +130,7 @@ int SimTell1ZSProcessEngine::velo_clusterization_process(int *zs_line,
     int *zs_l_line,
     VeloTELL1::u_int16_t *cluster,
     VeloTELL1::u_int8_t *adc_list,
-    int *pp_clus_cnt,
+    unsigned int *pp_clus_cnt,
     int *pp_adc_cnt,
     VeloTELL1::u_int32_t pp_max_clusters,
     VeloTELL1::u_int8_t sum,
