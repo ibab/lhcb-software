@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.57 2009-08-31 20:43:20 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.58 2009-09-01 16:08:28 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -293,6 +293,8 @@ StatusCode DVAlgorithm::sysExecute ()
   // setup sentry/guard
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
+  DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
+
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
@@ -302,7 +304,7 @@ StatusCode DVAlgorithm::sysExecute ()
   if ( sc.isFailure() ) return sc;
   
   if ( !m_setFilterCalled ) 
-  { Warning ( "SetFilterPassed not called for this event!" ) ; }
+  { Warning ( "SetFilterPassed not called for this event!" ).ignore() ; }
   
   /// count number of "effective filters"  
   counter("#accept") += filterPassed() ;
@@ -320,9 +322,6 @@ StatusCode DVAlgorithm::sysExecute ()
   { sc = desktop()->writeEmptyContainerIfNeeded(); }
   else 
   { verbose() << "Avoiding mandatory output" << endmsg ; }
-
-  sc = desktop()->cleanDesktop();
-  if (msgLevel(MSG::VERBOSE) && sc) verbose() << "Happily cleaned Desktop" << endmsg ;
 
   return sc ;
 }
@@ -354,7 +353,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
       return 0;
     }
     LHCb::RecVertex::ConstVector reFittedPVs;
-    DaVinci::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
+    DaVinci::Guards::PointerContainerGuard<LHCb::RecVertex::ConstVector> guard(reFittedPVs);
     for (LHCb::RecVertex::Container::const_iterator iPV = PVs->begin();
          iPV != PVs->end(); ++iPV) {
       LHCb::RecVertex* reFittedPV = new LHCb::RecVertex(**iPV);

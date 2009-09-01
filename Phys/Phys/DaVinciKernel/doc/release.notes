@@ -1,8 +1,18 @@
-!$Id: release.notes,v 1.320 2009-08-31 20:43:20 jpalac Exp $
+!$Id: release.notes,v 1.321 2009-09-01 16:08:28 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-09-01 - Juan PALACIOS
+ - src/Lib/DVAlgorithm.cpp
+  . Use CleanDesktopGuard.
+ - Kernel/DaVinciGuards.h
+  . Add CleanDesktopGuard. Calls PhysDekstop's cleanDesktop method from 
+    destructor.
+  . Make all constructors explicit.
+  . Add OrphanPointerContainerGuard, which only deletes pointers if they 
+    are not on the TES.
 
 ! 2009-08-31 - Juan PALACIOS
  - DVAlgorithm
