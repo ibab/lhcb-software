@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.10 2009-08-31 08:28:15 jvantilb Exp $
+// $Id: STClusterMonitor.cpp,v 1.11 2009-09-01 16:26:08 jvantilb Exp $
 // Include files 
 
 // from Gaudi
@@ -331,7 +331,7 @@ void ST::STClusterMonitor::fillHitMaps(const LHCb::STCluster* cluster) {
     const DeTTSector* ttSector = dynamic_cast<const DeTTSector* >(aSector);
     ST::TTDetectorPlot hitMap(idMap, idMap, nBinsPerSector);
     ST::TTDetectorPlot::Bins bins = hitMap.toBins(ttSector);
-    int port = (cluster->channelID().strip()-1.0)/STDAQ::nstrips;
+    int port = (cluster->channelID().strip()-1)/STDAQ::nstrips;
     double xBin = bins.xBin - double(port+1)/nBinsPerSector + 0.5;
     // Hack to make real x-y distribution plot (not occupancy)
     int nBins = bins.endBinY - bins.beginBinY;
