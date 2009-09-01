@@ -150,7 +150,6 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
 def ConfiguredFitSeed( Name = "FitSeed",
                        TracksInContainer = "Rec/Track/Seed" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.NumberFitIterations = 2
     eventfitter.Fitter.StateAtBeamLine = False
     eventfitter.Fitter.ErrorP = [0.04, 5e-08]
     return eventfitter
@@ -158,19 +157,16 @@ def ConfiguredFitSeed( Name = "FitSeed",
 def ConfiguredFitForward( Name = "FitForward",
                          TracksInContainer = "Rec/Track/Forward" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
 def ConfiguredFitMatch( Name = "FitMatch",
                         TracksInContainer = "Rec/Track/Match" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
  
 def ConfiguredFitDownstream( Name = "FitDownstream",
                              TracksInContainer = "Rec/Track/Downstream" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.NumberFitIterations = 2
     return eventfitter
 
 def ConfiguredPreFitForward( Name = "PreFitForward",
