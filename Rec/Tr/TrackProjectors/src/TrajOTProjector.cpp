@@ -48,11 +48,17 @@ StatusCode TrajOTProjector::project( const StateVector& statevector,
 StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector, 
                                      const OTMeasurement& meas )
 {
+  // a zero ambiguity may indicate that we should not use the drifttime
+  bool useDriftTime = m_useDriftTime && (!m_skipDriftTimeZeroAmbiguity || meas.ambiguity() != 0) ;
+
+  // call the standard tracjectory-doca projector
   StatusCode sc = TrackProjector::project( statevector, meas ) ;
+
   // set the ambiguity "on the fly"
-  (const_cast<OTMeasurement&>(meas)).setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
-  
-  if (m_useDriftTime) {
+  if( m_updateAmbiguity )
+    (const_cast<OTMeasurement&>(meas)).setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
+
+  if (useDriftTime) {
     if(m_fitDriftTime) {
       const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
       double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
@@ -82,6 +88,7 @@ StatusCode TrajOTProjector::initialize()
   StatusCode sc = TrackProjector::initialize();
   info() << "Use drifttime           = " << m_useDriftTime << endreq ;
   info() << "Fit drifttime residuals = " << m_fitDriftTime << endreq ;
+  info() << "SkipDriftTimeZeroAmbiguity= " << m_skipDriftTimeZeroAmbiguity << endreq ;
   return sc;
 }
 
@@ -97,6 +104,8 @@ TrajOTProjector::TrajOTProjector( const std::string& type,
   m_tolerance = 0.001 ;
   declareProperty( "UseDrift", m_useDriftTime = true );
   declareProperty( "FitDriftTime", m_fitDriftTime = false );
+  declareProperty( "UpdateAmbiguity", m_updateAmbiguity = true ) ;
+  declareProperty( "SkipDriftTimeZeroAmbiguity", m_skipDriftTimeZeroAmbiguity = true );
 }
 
 //-----------------------------------------------------------------------------

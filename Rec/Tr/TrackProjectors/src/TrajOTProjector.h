@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.15 2008-10-03 13:59:55 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.16 2009-09-01 09:36:51 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -47,5 +47,7 @@ protected:
 private:
   bool m_useDriftTime ;  ///< Use measured drift time 
   bool m_fitDriftTime ;  ///< Fit drift times residuals instead of 'distance' residuals
+  bool m_updateAmbiguity ;
+  bool m_skipDriftTimeZeroAmbiguity ;
 };
 #endif // TRACKPROJECTORS_TRAJOTPROJECTOR_H
