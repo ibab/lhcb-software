@@ -6,7 +6,7 @@ set list_arg = ""
 set dirac_dev = ""
 
 #if ($narg != 0) then
-while ($nar <= $narg) 
+while ($nar <= $narg)
   if ( "$argv[${nar}]" == "-d" ) then
      @ nar = ${nar} + 1
      set version = $argv[${nar}]
@@ -27,12 +27,18 @@ while ($nar <= $narg)
      exit 0
   else if ("$argv[${nar}]" == "-p") then
      set list_arg = "$list_arg -p"
-     @ nar = ${nar} + 1
+     if ($nar <= $narg) then
+       @ nar = ${nar} + 1
+     endif
   else if ("$argv[${nar}]" == "--dev") then
      set dirac_dev = " --dev"
-     @ nar = ${nar} + 1
+     if ($nar <= $narg) then
+       @ nar = ${nar} + 1
+     endif
   else
-     @ nar = ${nar} + 1
+     if ($nar <= $narg) then
+       @ nar = ${nar} + 1
+     endif
   endif
 end
 
