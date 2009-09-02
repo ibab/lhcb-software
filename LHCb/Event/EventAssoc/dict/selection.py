@@ -24,6 +24,7 @@ if "__main__" == __name__ :
     classes += [ Rels.Rel1D ( 'LHCb::Track'                               , 'float'  ) ]
     classes += [ Rels.RelW1D( 'LHCb::MCParticle'    , 'LHCb::CaloCluster' , 'float'  ) ]
     classes += [ Rels.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double' ) ]
+    classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'LHCb::VertexBase'             ) ]
 
     # $DAVINCIMCKERNELROOT/Kernel/HepMC2MC.h:
     classes += [ Rels.Rel2D  ( 'HepMC::GenParticle*' , 'LHCb::MCParticle'   ) ]
