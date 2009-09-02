@@ -21,7 +21,7 @@ def setThresholds(ThresholdSettings,confs):
         # default, it wasn't set explicitly, and we overrule it...
         if hasattr(conf,k) and conf.getProp(k) != conf.getDefaultProperty(k) :
                 from Gaudi.Configuration import log
-                log.warning('%s.%s has explictly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
+                log.warning('%s.%s has explicitly been set, NOT using requested predefined threshold %s, but keeping explicit value: %s '%(conf.name(),k,str(v),getattr(conf,k)))
         else :
             if ( type(v) == dict ): # special case for dictionaries (needed in topo)
                 val = conf.getProp(k)
