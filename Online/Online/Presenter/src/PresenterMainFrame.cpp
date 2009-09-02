@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include <TApplication.h>
+#include <TError.h>
 #include <TDirectory.h>
 #include <TFile.h>
 #include <TCanvas.h>
@@ -78,6 +79,7 @@
 #include "ParallelWait.h"
 #include "ReferencePicker.h"
 #include "IntervalPicker.h"
+#include "../icons/presenter32.xpm"
 #include "icons.h"
 
 using namespace pres;
@@ -97,7 +99,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   currentTime(NULL),
   global_timePoint("20081126T160921"),
   global_pastDuration("00:05:00"),
-  global_stepSize("00:15:00"),
+  global_stepSize("00:15:00"),  
   m_verbosity(Silent),
   m_logBookConfig(""),  
   m_historyMode(s_timeInterval),
@@ -109,11 +111,12 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
 //  m_currentMonitoringInstance(""),
   m_referencePath(referencePath),
   m_savesetPath(savesetPath),
+  m_imagePath(gSystem->TempDirectory()),
   m_savesetFileName(""),
   m_archive(NULL),
   m_intervalPicker(NULL),
   m_presenterMode(History),
-  m_prevPresenterMode(History),
+  m_prevPresenterMode(History),  
   m_databaseMode(LoggedOut),
   m_pageRefreshTimer(NULL),
   m_clockTimer(NULL),
@@ -146,7 +149,6 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_benchmark(NULL),
   m_deadTasksOnPage(0)
 {
-
   m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
   
@@ -188,34 +190,34 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_knownOnlinePartitionList = new TList();
   m_knownHistoryPartitionList = new TList();
 
-  buildGUI();
-  
-  Resize(width, height);
   if (m_verbosity >= Verbose) {
     std::cout << "refRoot: "  << m_referencePath << std::endl
               << "savesetRoot: "  << m_savesetPath << std::endl;
   }
 
   m_dimBrowser = new DimBrowser();
-  if (0 == m_dimBrowser->getServers()) { // memleak? dim_thr.c:167, dim_thr.c:388, dic.c:640, dic.c:595,diccpp.cxx:296, dic.hxx:299, diccpp.cxx:635)
+  char *dimFormat;
+  char *dimService;
+  m_dimBrowser->getServices(s_Dim_Dns_Version_Number.c_str());
+  if (0 == m_dimBrowser->getNextService(dimService, dimFormat)) {
     m_message = "Sorry, no DIM server found.";
     if (m_verbosity >= Verbose) {
       std::cout << m_message << std::endl;
     }
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
-    new TGMsgBox(fClient->GetRoot(), this, "DIM Error", m_message.c_str(),
-                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+//    m_mainStatusBar->SetText(m_message.c_str(), 2);
+//  if (Batch != m_presenterMode) {
+//      new TGMsgBox(fClient->GetRoot(), this, "DIM Error", m_message.c_str(),
+//                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+//    }
   } else {
-//      refreshHistogramSvcList(s_withoutTree);      
-    m_mainStatusBar->SetText("Ok.");
+      refreshHistogramSvcList(s_withoutTree);
+//    if (Batch != m_presenterMode) {      
+//      m_mainStatusBar->SetText("Ok.");
+//    }
   }
 
   m_archive = new Archive(this, m_savesetPath, m_referencePath);
-  if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
-  m_intervalPicker = new IntervalPicker(this);
-  partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->GetSelected());
-  m_prevPresenterMode = m_presenterMode;
-  m_presenterMode = Online;  
+  if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }  
 }
 
 PresenterMainFrame::~PresenterMainFrame()
@@ -280,1021 +282,1040 @@ PresenterMainFrame::~PresenterMainFrame()
 }
 void PresenterMainFrame::buildGUI()
 {
-  SetCleanup(kDeepCleanup);
-  TGPicturePool* picpool = gClient->GetResourcePool()->GetPicturePool();
-  // set minimun size
-  // SetWMSizeHints(400 + 200, 370+50, 2000, 1000, 1, 1);
-  m_fileText = new TGHotString("&File");
-  m_filePrint = new TGHotString("Save/&Print Page to File...");
-    m_fileNew = new TGHotString("&Create Page");
-    m_fileSaveText = new TGHotString("&Save Page to Database...");
-    m_fileLoginText = new TGHotString("&Login to Database...");
-    m_fileLogoutText = new TGHotString("Log&out...");
-    m_fileQuitText = new TGHotString("&Quit");
-
-  m_editText = new TGHotString("&Edit");
-    m_editAutoLayoutText = new TGHotString("Automatic Histogram &Layout");
-    m_editHistogramPropertiesText = new TGHotString("&Histogram Properties...");
-    m_editRemoveHistoText = new TGHotString("&Delete Histogram from Page");
-    m_editPickReferenceHistogramText = new TGHotString("Set &Reference Histogram...");
-    m_editSaveSelectedHistogramAsReferenceText = new TGHotString("&Save as Reference Histogram");
-    m_editPagePropertiesText = new TGHotString("&Page Properties...");
-
-  m_viewText = new TGHotString("&View");
-    m_viewStartRefreshText = new TGHotString("Start page &refresh");
-    m_viewStopRefreshText = new TGHotString("&Stop page refresh");
-    m_viewToggleHistoryPlotsText = new TGHotString("&History plots");
-    m_viewToggleReferenceOverlayText = new TGHotString("&Overlay reference");
-    m_viewToggleFastHitMapDrawText = new TGHotString("&Fast hitmap draw");
-    m_viewAlarmListText = new TGHotString("Show &alarm list");
-    m_viewInspectHistoText = new TGHotString("&Inspect histogram");
-    m_viewHistogramDescriptionText = new TGHotString("Histogram &description");
-    m_viewInspectPageText  = new TGHotString("Inspect &page");
-    m_viewClearHistosText = new TGHotString("&Clear histograms");
-    m_viewUnDockPageText = new TGHotString("&Undock Page");
-    m_viewDockAllText = new TGHotString("&Dock All");
-
-  m_toolText = new TGHotString("&Tools");
-    m_toolMode = new TGHotString("&Mode");
-    m_toolPageEditorOnline = new TGHotString("Page Editor Online");
-    m_toolPageEditorOffline  = new TGHotString("Page Editor Offline");
-    m_toolOnline = new TGHotString("&Online");
-    m_toolOffline = new TGHotString("&History mode");
-//    m_toolSetUtgidTaskText = new TGHotString("Set &UTGID for Task...");
-    m_toolSetDimDnsText = new TGHotString("Set &DIM DNS...");
-    m_toolFullBenchmarkText = new TGHotString("Benchmark all pages");
-
-  m_helpText = new TGHotString("&Help");
-    m_helpContentsText = new TGHotString("&Contents");
-    m_helpAboutText = new TGHotString("&About");
-
-  // list tree
-  m_openedFolderIcon = picpool->GetPicture("folderOpen16",(char**)folderOpen16);
-  m_closedFolderIcon = picpool->GetPicture("folder16",(char**)folder16);
-
-  //gVirtualX CreatePictureFromData(Drawable_t id, char** data, Pixmap_t& pict, Pixmap_t& pict_mask, PictureAttributes_t& attr)
-
-  // Histo alarms
-  m_iconAlarm = picpool->GetPicture("mb_stop_s",(char**)mb_stop_s);
-  m_iconWarning = picpool->GetPicture("mb_exclamation_s",(char**)mb_exclamation_s);
-  m_iconInfo = picpool->GetPicture("mb_asterisk_s",(char**)mb_asterisk_s);
-  m_iconAnalysisAlarm = gClient->GetPicture("ps_t.xpm");
-
-  m_databaseSourceIcon =  picpool->GetPicture("databaseSource16",
-                                              (char**)databaseSource16);
-  m_dimOnline16 =  picpool->GetPicture("dimOnline16",(char**)dimOnline16);
-  m_iconROOT = gClient->GetPicture("root_t.xpm");
-
-  m_iconH1D = gClient->GetPicture("h1_t.xpm");
-  m_iconH2D = gClient->GetPicture("h2_t.xpm");
-  m_iconProfile = gClient->GetPicture("profile_t.xpm");
-  m_iconCounter = gClient->GetPicture("c_src_t.xpm");
-  m_iconPage = gClient->GetPicture("bld_paste_into.png");
-  m_iconQuestion = gClient->GetPicture("mdi_help.xpm");
-
-  m_iconTask = gClient->GetPicture("tmacro_t.xpm");
-  m_iconAlgorithm = gClient->GetPicture("expression_t.xpm");
-  //m_iconSet = gClient->GetPicture("pack-empty.xpm");
-  m_iconSet = gClient->GetPicture("pack-empty_t.xpm");
-  m_iconLevel = gClient->GetPicture("bld_vbox.png");
+//  if (Batch == m_presenterMode &&
+//      0 == editorCanvas) {
+//    editorCanvas = new TCanvas("c", "c", GetWidth(), GetHeight());
+//    editorCanvas->cd();
+//    gStyle->SetOptStat("ne");
+//  } else 
+  if ((EditorOnline == m_presenterMode) ||
+         (EditorOffline == m_presenterMode) ||
+         (Online == m_presenterMode) ||
+         (History == m_presenterMode) ) {
+    SetCleanup(kDeepCleanup);
+    TGPicturePool* picpool = gClient->GetResourcePool()->GetPicturePool();
+    SetIconPixmap((char**)presenter32);
+    // set minimun size
+    // SetWMSizeHints(400 + 200, 370+50, 2000, 1000, 1, 1);
+    m_fileText = new TGHotString("&File");
+    m_filePrint = new TGHotString("Save/&Print Page to File...");
+      m_fileNew = new TGHotString("&Create Page");
+      m_fileSaveText = new TGHotString("&Save Page to Database...");
+      m_fileLoginText = new TGHotString("&Login to Database...");
+      m_fileLogoutText = new TGHotString("Log&out...");
+      m_fileQuitText = new TGHotString("&Quit");
   
-  m_stockNewFormula =  picpool->GetPicture("stock_new_formula_xpm", (char**)stock_new_formula_xpm);
-
-  // File menu
-  m_fileMenu = new TGPopupMenu(fClient->GetRoot());
-  m_fileMenu->AddEntry(m_fileNew, CLEAR_PAGE_COMMAND);
-  m_fileMenu->AddSeparator();
-  m_fileMenu->AddEntry(m_fileSaveText, SAVE_PAGE_TO_DB_COMMAND);
-  m_fileMenu->AddEntry(m_filePrint, SAVE_PAGE_TO_FILE_COMMAND);
-  m_fileMenu->AddSeparator();
-  m_fileMenu->AddEntry(m_fileLoginText, LOGIN_COMMAND);
-  m_fileMenu->AddEntry(m_fileLogoutText, LOGOUT_COMMAND);
-  m_fileMenu->AddSeparator();
-  m_fileMenu->AddEntry(m_fileQuitText, EXIT_COMMAND);
-  m_fileMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                      this, "handleCommand(Command)");
-//m_fileMenu->DisableEntry(SAVE_PAGE_TO_FILE_COMMAND);
-
-  // Edit menu
-  m_editMenu = new TGPopupMenu(fClient->GetRoot());
-  m_editMenu->AddEntry(m_editAutoLayoutText, AUTO_LAYOUT_COMMAND);
-  m_editMenu->AddEntry(m_editHistogramPropertiesText, EDIT_HISTO_COMMAND);
-  m_editMenu->AddEntry(m_editRemoveHistoText,
-                       REMOVE_HISTO_FROM_CANVAS_COMMAND);
-  m_editMenu->AddEntry(m_editPickReferenceHistogramText,
-                       PICK_REFERENCE_HISTO_COMMAND);
-  m_editMenu->AddEntry(m_editSaveSelectedHistogramAsReferenceText,
-                       SAVE_AS_REFERENCE_HISTO_COMMAND); 
-  m_editMenu->AddEntry(m_editPagePropertiesText,
-                       EDIT_PAGE_PROPERTIES_COMMAND);
-  m_editMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                      this, "handleCommand(Command)");
-m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
-m_editMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
-m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
-
-  // View menu
-  m_viewMenu = new TGPopupMenu(fClient->GetRoot());
-  m_viewMenu->AddEntry(m_viewInspectHistoText, INSPECT_HISTO_COMMAND);
-  m_viewMenu->AddEntry(m_viewHistogramDescriptionText, HISTOGRAM_DESCRIPTION_COMMAND);
-  m_viewMenu->AddEntry(m_viewInspectPageText, INSPECT_PAGE_COMMAND);
-  m_viewMenu->AddEntry(m_viewStartRefreshText, START_COMMAND);
-  m_viewMenu->AddEntry(m_viewStopRefreshText, STOP_COMMAND);
-  m_viewMenu->DisableEntry(STOP_COMMAND);
-  m_viewMenu->AddEntry(m_viewToggleHistoryPlotsText,
-                       HISTORY_PLOTS_COMMAND);
-  m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
-  m_viewMenu->AddEntry(m_viewToggleReferenceOverlayText,
-                       OVERLAY_REFERENCE_HISTO_COMMAND);
-  m_viewMenu->AddEntry(m_viewToggleFastHitMapDrawText,
-                       FAST_HITMAP_DRAW_COMMAND);                       
-                       
-  m_viewMenu->UnCheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-  m_viewMenu->UnCheckEntry(FAST_HITMAP_DRAW_COMMAND);  
-  m_viewMenu->AddEntry(m_viewClearHistosText, CLEAR_HISTOS_COMMAND);
-  m_viewMenu->UnCheckEntry(CLEAR_HISTOS_COMMAND);
-  m_viewMenu->AddSeparator();
-  m_viewMenu->AddEntry(m_viewAlarmListText, SHOW_ALARM_LIST_COMMAND);
-  m_viewMenu->CheckEntry(SHOW_ALARM_LIST_COMMAND);
-  m_viewMenu->AddEntry(m_viewUnDockPageText, UNDOCK_PAGE_COMMAND);
-  m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
-  m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                      this, "handleCommand(Command)");
-m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
-m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
-
-  // Mode menu
-  m_toolMenu = new TGPopupMenu(fClient->GetRoot());
-  m_toolMenu->AddEntry(m_toolPageEditorOnline, PAGE_EDITOR_ONLINE_MODE_COMMAND);
-  m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
-  m_toolMenu->AddEntry(m_toolPageEditorOffline, PAGE_EDITOR_OFFLINE_MODE_COMMAND);
-  m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);  
-  m_toolMenu->AddEntry(m_toolOnline, ONLINE_MODE_COMMAND);
-  m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
-  m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
-  m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
-  m_toolMenu->AddSeparator();
-  m_toolMenu->AddEntry(m_toolFullBenchmarkText, FULL_BENCHMARK_COMMAND);
-//  m_toolMenu->AddSeparator();
-//  m_toolMenu->AddEntry(m_toolSetDimDnsText, SET_DIM_DNS_COMMAND);
-  m_toolMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                      this, "handleCommand(Command)");
-//m_toolMenu->DisableEntry(ONLINE_MODE_COMMAND);
-//m_toolMenu->DisableEntry(OFFLINE_MODE_COMMAND);
-//m_toolMenu->DisableEntry(SET_UTGID_TASK_COMMAND);
-//m_toolMenu->DisableEntry(SET_DIM_DNS_COMMAND);
-
-  // Help menu
-  m_helpMenu = new TGPopupMenu(fClient->GetRoot());
-//  m_helpMenu->AddEntry(m_helpContentsText, HELP_CONTENTS_COMMAND);
-  m_helpMenu->AddEntry(m_helpAboutText, HELP_ABOUT_COMMAND);
-  m_helpMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                      this, "handleCommand(Command)");
-// m_helpMenu->DisableEntry(HELP_CONTENTS_COMMAND);
-
-  m_menuDock = new TGDockableFrame(this);
-    m_menuDock->SetWindowName("LHCb Presenter Menu");
-
-  m_toolBarDock = new TGDockableFrame(this);
-    m_toolBarDock->SetWindowName("LHCb Presenter Toolbar");
-
-  TGLayoutHints* menuBarLayout = new TGLayoutHints(kLHintsTop |
-                                                   kLHintsExpandX);
-  TGLayoutHints* menuBarItemLayout = new TGLayoutHints(kLHintsTop |
-                                                       kLHintsLeft,
-                                                       0, 4, 0, 0);
-  TGLayoutHints* menuBarHelpLayout = new TGLayoutHints(kLHintsTop |
-                                                       kLHintsRight);
-  m_menuBar = new TGMenuBar(m_menuDock, 1, 1, kHorizontalFrame);
-  m_menuBar->AddPopup(m_fileText, m_fileMenu, menuBarItemLayout);
-  m_menuBar->AddPopup(m_editText, m_editMenu, menuBarItemLayout);
-  m_menuBar->AddPopup(m_viewText, m_viewMenu, menuBarItemLayout);
-  m_menuBar->AddPopup(m_toolText, m_toolMenu, menuBarItemLayout);
-  m_menuBar->AddPopup(m_helpText, m_helpMenu, menuBarHelpLayout);
-
-  m_menuDock->EnableUndock(false);
-  m_menuDock->EnableHide(true);
-
-  m_toolBarDock->EnableUndock(true);
-  m_toolBarDock->EnableHide(true);
-
-  m_menuDock->AddFrame(m_menuBar, menuBarLayout);
-  m_menuDock->AddFrame(new TGHorizontal3DLine(this), menuBarLayout);
-
-  // Toolbar
-  m_toolBar = new TGToolBar(m_toolBarDock, 60, 20, kHorizontalFrame);
-//  m_toolbarElement = new ToolBarData_t();
-
-  const TGPicture* previousPage = picpool->GetPicture("tb_back.xpm");
-  m_previousPageSaveButton = new TGPictureButton(m_toolBar, previousPage,
-                                          LOAD_PREVIOUS_PAGE_COMMAND);
-  m_previousPageSaveButton->SetToolTipText("Load previous page");
-  m_previousPageSaveButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_previousPageSaveButton, 0);
-  m_previousPageSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
-                             "loadPreviousPage()");
-
-  const TGPicture* nextPage = picpool->GetPicture("tb_forw.xpm");
-  m_nextPageButton = new TGPictureButton(m_toolBar, nextPage,
-                                         LOAD_NEXT_PAGE_COMMAND);
-  m_nextPageButton->SetToolTipText("Load next page");
-  m_nextPageButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_nextPageButton, 0);
-  m_nextPageButton->Connect("Clicked()", "PresenterMainFrame", this,
-                             "loadNextPage()");
-                             
-
-  const TGPicture* printpic = picpool->GetPicture("ed_print.png");
-  m_printSaveButton = new TGPictureButton(m_toolBar, printpic,
-                                          SAVE_PAGE_TO_FILE_COMMAND);
-  m_printSaveButton->SetToolTipText("Print/Save page");
-  m_printSaveButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_printSaveButton, 8);
-  m_printSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
-                             "savePageToFile()");
-  // Log
-  const TGPicture* reportButton16pic =  picpool->GetPicture("tree_t.xpm");
-  m_reportButton = new TGPictureButton(m_toolBar,
-                                       reportButton16pic,
-                                       REPORT_COMMAND);
-  m_reportButton->SetToolTipText("Report to Log");
-  m_reportButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_reportButton, 0);
-  m_reportButton->Connect("Clicked()", "PresenterMainFrame",
-                                      this, "reportToLog()");
-                             
-
-  // New page
-  const TGPicture* newPage16pic = picpool->GetPicture("newPage16",
-                                                      (char**)newPage16);
-  m_newPageButton = new TGPictureButton(m_toolBar, newPage16pic,
-                                        CLEAR_PAGE_COMMAND);
-  m_newPageButton->SetToolTipText("New page");
-  m_newPageButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_newPageButton, 8);
-  m_newPageButton->Connect("Clicked()", "PresenterMainFrame", this,
-                           "removeHistogramsFromPage()");
-
-  // Save page
-  const TGPicture* savePageToDb16pic = picpool->GetPicture("savePageToDb16",
-                                                           (char**)savePageToDb16);
-  m_savePageToDatabaseButton = new TGPictureButton(m_toolBar,
-                                                   savePageToDb16pic,
-                                                   SAVE_PAGE_TO_DB_COMMAND);
-  m_savePageToDatabaseButton->SetToolTipText("Save page to Database");
-  m_savePageToDatabaseButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_savePageToDatabaseButton, 0);
-  m_savePageToDatabaseButton->SetState(kButtonDisabled);
-  m_savePageToDatabaseButton->Connect("Clicked()", "PresenterMainFrame",
-                                      this, "savePageToHistogramDB()");                                                                       
-
-  // Auto n x n layout
-  const TGPicture* automaticLayout16pic = picpool->GetPicture("automaticLayout16",
-                                                              (char**)automaticLayout16);
-  m_autoCanvasLayoutButton = new TGPictureButton(m_toolBar, automaticLayout16pic,
-                                                 AUTO_LAYOUT_COMMAND);
-  m_autoCanvasLayoutButton->SetToolTipText("Auto n x n histogram tiling layout");
-  m_autoCanvasLayoutButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_autoCanvasLayoutButton, 8);
-  m_autoCanvasLayoutButton->SetState(kButtonDisabled);
-  m_autoCanvasLayoutButton->Connect("Clicked()", "PresenterMainFrame",
-                                    this, "autoCanvasLayout()");
-
-  // Login
-  const TGPicture* connectpic = picpool->GetPicture("connect.xpm");
-  m_loginButton = new TGPictureButton(m_toolBar, connectpic, LOGIN_COMMAND);
-  m_loginButton->SetToolTipText("Login");
-  m_loginButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_loginButton, 8);
-  m_loginButton->Connect("Clicked()", "PresenterMainFrame", this,
-                         "loginToHistogramDB()");
-  // Logout
-  const TGPicture* disconnectpic = picpool->GetPicture("disconnect.xpm");
-  m_logoutButton = new TGPictureButton(m_toolBar, disconnectpic,
-                                       LOGOUT_COMMAND);
-  m_logoutButton->SetToolTipText("Logout");
-  m_logoutButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_logoutButton, 0);
-  m_logoutButton->SetState(kButtonDisabled);
-  m_logoutButton->Connect("Clicked()", "PresenterMainFrame", this,
-                          "logoutFromHistogramDB()");
-  // Start
-  const TGPicture* ed_executepic = picpool->GetPicture("ed_execute.png");
-  m_startRefreshButton = new TGPictureButton(m_toolBar, ed_executepic,
-                                             START_COMMAND);
-  m_startRefreshButton->SetToolTipText("Start");
-  m_startRefreshButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_startRefreshButton, 8);
-  m_startRefreshButton->Connect("Clicked()", "PresenterMainFrame", this,
-                                "startPageRefresh()");
-  // Stop
-  const TGPicture* ed_interruptpic = picpool->GetPicture("ed_interrupt.png");
-  m_stopRefreshButton = new TGPictureButton(m_toolBar, ed_interruptpic,
-                                            START_COMMAND);
-  m_stopRefreshButton->SetToolTipText("Stop");
-  m_stopRefreshButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_stopRefreshButton, 0);
-  m_stopRefreshButton->SetState(kButtonDisabled);
-  m_stopRefreshButton->Connect("Clicked()", "PresenterMainFrame", this,
-                               "stopPageRefresh()");
-
-  // Clear Histos
-  const TGPicture* clear16pic = picpool->GetPicture("clear16", (char**)clear16);
-  m_clearHistoButton = new TGPictureButton(m_toolBar, clear16pic,
-                                           CLEAR_HISTOS_COMMAND);
-  m_clearHistoButton->SetToolTipText("Clear histograms");
-  m_clearHistoButton->AllowStayDown(true);
-  m_toolBar->AddButton(this, m_clearHistoButton, 0);
-  m_clearHistoButton->Connect("Clicked()", "PresenterMainFrame", this,
-                              "clearHistos()");
-  // SetToggleButton(Bool_t)                              
-
-  //UTGID selector (partition)
-//  m_partitionSelectorPopupMenu = new TGPopupMenu(gClient->GetRoot());
-//  m_partitionSelectorPopupMenu->AddEntry("refresh list", M_RefreshKnownPartitions);
-  // Create a split button, the menu is adopted.
-  m_partitionSelectorComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
-   
-//  m_partitionSelectorQuickButton = new TGSplitButton(m_toolBar,
-//                                                new TGHotString("lhcb"),
-//                                                m_partitionSelectorPopupMenu);
-  m_toolBar->AddFrame(new TGLabel(m_toolBar,"Partition: ") , 
-                      new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
-  m_toolBar->AddFrame(m_partitionSelectorComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));
-  m_partitionSelectorComboBox->AddEntry("refresh list", 0);
-  m_partitionSelectorComboBox->Select(0, false);
-  m_partitionSelectorComboBox->Resize(122,22);
-// (m_partitionSelectorComboBox->GetTextEntry())->SetToolTipText("Partition selector", 300);
+    m_editText = new TGHotString("&Edit");
+      m_editAutoLayoutText = new TGHotString("Automatic Histogram &Layout");
+      m_editHistogramPropertiesText = new TGHotString("&Histogram Properties...");
+      m_editRemoveHistoText = new TGHotString("&Delete Histogram from Page");
+      m_editPickReferenceHistogramText = new TGHotString("Set &Reference Histogram...");
+      m_editSaveSelectedHistogramAsReferenceText = new TGHotString("&Save as Reference Histogram");
+      m_editPagePropertiesText = new TGHotString("&Page Properties...");
   
-//  m_toolBar->AddButton(this, (TGPictureButton*)m_partitionSelectorQuickButton, 8);
-  m_partitionSelectorComboBox->Connect("Selected(int)", "PresenterMainFrame",
-                                       this, "partitionSelectorComboBoxHandler(int)");
-
-  //History mode
-
-//  m_partitionSelectorQuickButton = new TGSplitButton(m_toolBar,
-//                                                new TGHotString("lhcb"),
-//                                                m_partitionSelectorPopupMenu);
-
+    m_viewText = new TGHotString("&View");
+      m_viewStartRefreshText = new TGHotString("Start page &refresh");
+      m_viewStopRefreshText = new TGHotString("&Stop page refresh");
+      m_viewToggleHistoryPlotsText = new TGHotString("&History plots");
+      m_viewToggleReferenceOverlayText = new TGHotString("&Overlay reference");
+      m_viewToggleFastHitMapDrawText = new TGHotString("&Fast hitmap draw");
+      m_viewAlarmListText = new TGHotString("Show &alarm list");
+      m_viewInspectHistoText = new TGHotString("&Inspect histogram");
+      m_viewHistogramDescriptionText = new TGHotString("Histogram &description");
+      m_viewInspectPageText  = new TGHotString("Inspect &page");
+      m_viewClearHistosText = new TGHotString("&Clear histograms");
+      m_viewUnDockPageText = new TGHotString("&Undock Page");
+      m_viewDockAllText = new TGHotString("&Dock All");
+  
+    m_toolText = new TGHotString("&Tools");
+      m_toolMode = new TGHotString("&Mode");
+      m_toolPageEditorOnline = new TGHotString("Page Editor Online");
+      m_toolPageEditorOffline  = new TGHotString("Page Editor Offline");
+      m_toolOnline = new TGHotString("&Online");
+      m_toolOffline = new TGHotString("&History mode");
+  //    m_toolSetUtgidTaskText = new TGHotString("Set &UTGID for Task...");
+      m_toolSetDimDnsText = new TGHotString("Set &DIM DNS...");
+      m_toolFullBenchmarkText = new TGHotString("Benchmark all pages");
+  
+    m_helpText = new TGHotString("&Help");
+      m_helpContentsText = new TGHotString("&Contents");
+      m_helpAboutText = new TGHotString("&About");
+  
+    // list tree
+    m_openedFolderIcon = picpool->GetPicture("folderOpen16",(char**)folderOpen16);
+    m_closedFolderIcon = picpool->GetPicture("folder16",(char**)folder16);
+  
+    //gVirtualX CreatePictureFromData(Drawable_t id, char** data, Pixmap_t& pict, Pixmap_t& pict_mask, PictureAttributes_t& attr)
+  
+    // Histo alarms
+    m_iconAlarm = picpool->GetPicture("mb_stop_s",(char**)mb_stop_s);
+    m_iconWarning = picpool->GetPicture("mb_exclamation_s",(char**)mb_exclamation_s);
+    m_iconInfo = picpool->GetPicture("mb_asterisk_s",(char**)mb_asterisk_s);
+    m_iconAnalysisAlarm = gClient->GetPicture("ps_t.xpm");
+  
+    m_databaseSourceIcon =  picpool->GetPicture("databaseSource16",
+                                                (char**)databaseSource16);
+    m_dimOnline16 =  picpool->GetPicture("dimOnline16",(char**)dimOnline16);
+    m_iconROOT = gClient->GetPicture("root_t.xpm");
+  
+    m_iconH1D = gClient->GetPicture("h1_t.xpm");
+    m_iconH2D = gClient->GetPicture("h2_t.xpm");
+    m_iconProfile = gClient->GetPicture("profile_t.xpm");
+    m_iconCounter = gClient->GetPicture("c_src_t.xpm");
+    m_iconPage = gClient->GetPicture("bld_paste_into.png");
+    m_iconQuestion = gClient->GetPicture("mdi_help.xpm");
+  
+    m_iconTask = gClient->GetPicture("tmacro_t.xpm");
+    m_iconAlgorithm = gClient->GetPicture("expression_t.xpm");
+    //m_iconSet = gClient->GetPicture("pack-empty.xpm");
+    m_iconSet = gClient->GetPicture("pack-empty_t.xpm");
+    m_iconLevel = gClient->GetPicture("bld_vbox.png");
+    
+    m_stockNewFormula =  picpool->GetPicture("stock_new_formula_xpm", (char**)stock_new_formula_xpm);
+  
+    // File menu
+    m_fileMenu = new TGPopupMenu(fClient->GetRoot());
+    m_fileMenu->AddEntry(m_fileNew, CLEAR_PAGE_COMMAND);
+    m_fileMenu->AddSeparator();
+    m_fileMenu->AddEntry(m_fileSaveText, SAVE_PAGE_TO_DB_COMMAND);
+    m_fileMenu->AddEntry(m_filePrint, SAVE_PAGE_TO_FILE_COMMAND);
+    m_fileMenu->AddSeparator();
+    m_fileMenu->AddEntry(m_fileLoginText, LOGIN_COMMAND);
+    m_fileMenu->AddEntry(m_fileLogoutText, LOGOUT_COMMAND);
+    m_fileMenu->AddSeparator();
+    m_fileMenu->AddEntry(m_fileQuitText, EXIT_COMMAND);
+    m_fileMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                        this, "handleCommand(Command)");
+  //m_fileMenu->DisableEntry(SAVE_PAGE_TO_FILE_COMMAND);
+  
+    // Edit menu
+    m_editMenu = new TGPopupMenu(fClient->GetRoot());
+    m_editMenu->AddEntry(m_editAutoLayoutText, AUTO_LAYOUT_COMMAND);
+    m_editMenu->AddEntry(m_editHistogramPropertiesText, EDIT_HISTO_COMMAND);
+    m_editMenu->AddEntry(m_editRemoveHistoText,
+                         REMOVE_HISTO_FROM_CANVAS_COMMAND);
+    m_editMenu->AddEntry(m_editPickReferenceHistogramText,
+                         PICK_REFERENCE_HISTO_COMMAND);
+    m_editMenu->AddEntry(m_editSaveSelectedHistogramAsReferenceText,
+                         SAVE_AS_REFERENCE_HISTO_COMMAND); 
+    m_editMenu->AddEntry(m_editPagePropertiesText,
+                         EDIT_PAGE_PROPERTIES_COMMAND);
+    m_editMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                        this, "handleCommand(Command)");
+  m_editMenu->DisableEntry(PICK_REFERENCE_HISTO_COMMAND);
+  m_editMenu->DisableEntry(SAVE_AS_REFERENCE_HISTO_COMMAND);
+  m_editMenu->DisableEntry(EDIT_PAGE_PROPERTIES_COMMAND);
+  
+    // View menu
+    m_viewMenu = new TGPopupMenu(fClient->GetRoot());
+    m_viewMenu->AddEntry(m_viewInspectHistoText, INSPECT_HISTO_COMMAND);
+    m_viewMenu->AddEntry(m_viewHistogramDescriptionText, HISTOGRAM_DESCRIPTION_COMMAND);
+    m_viewMenu->AddEntry(m_viewInspectPageText, INSPECT_PAGE_COMMAND);
+    m_viewMenu->AddEntry(m_viewStartRefreshText, START_COMMAND);
+    m_viewMenu->AddEntry(m_viewStopRefreshText, STOP_COMMAND);
+    m_viewMenu->DisableEntry(STOP_COMMAND);
+    m_viewMenu->AddEntry(m_viewToggleHistoryPlotsText,
+                         HISTORY_PLOTS_COMMAND);
+    m_viewMenu->UnCheckEntry(HISTORY_PLOTS_COMMAND);
+    m_viewMenu->AddEntry(m_viewToggleReferenceOverlayText,
+                         OVERLAY_REFERENCE_HISTO_COMMAND);
+    m_viewMenu->AddEntry(m_viewToggleFastHitMapDrawText,
+                         FAST_HITMAP_DRAW_COMMAND);                       
+                         
+    m_viewMenu->UnCheckEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
+    m_viewMenu->UnCheckEntry(FAST_HITMAP_DRAW_COMMAND);  
+    m_viewMenu->AddEntry(m_viewClearHistosText, CLEAR_HISTOS_COMMAND);
+    m_viewMenu->UnCheckEntry(CLEAR_HISTOS_COMMAND);
+    m_viewMenu->AddSeparator();
+    m_viewMenu->AddEntry(m_viewAlarmListText, SHOW_ALARM_LIST_COMMAND);
+    m_viewMenu->CheckEntry(SHOW_ALARM_LIST_COMMAND);
+    m_viewMenu->AddEntry(m_viewUnDockPageText, UNDOCK_PAGE_COMMAND);
+    m_viewMenu->AddEntry(m_viewDockAllText, DOCK_ALL_COMMAND);
+    m_viewMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                        this, "handleCommand(Command)");
+  m_viewMenu->DisableEntry(HISTORY_PLOTS_COMMAND);
+  m_viewMenu->DisableEntry(OVERLAY_REFERENCE_HISTO_COMMAND);
+  
+    // Mode menu
+    m_toolMenu = new TGPopupMenu(fClient->GetRoot());
+    m_toolMenu->AddEntry(m_toolPageEditorOnline, PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->CheckEntry(PAGE_EDITOR_ONLINE_MODE_COMMAND);
+    m_toolMenu->AddEntry(m_toolPageEditorOffline, PAGE_EDITOR_OFFLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(PAGE_EDITOR_OFFLINE_MODE_COMMAND);  
+    m_toolMenu->AddEntry(m_toolOnline, ONLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(ONLINE_MODE_COMMAND);
+    m_toolMenu->AddEntry(m_toolOffline, OFFLINE_MODE_COMMAND);
+    m_toolMenu->UnCheckEntry(OFFLINE_MODE_COMMAND);
+    m_toolMenu->AddSeparator();
+    m_toolMenu->AddEntry(m_toolFullBenchmarkText, FULL_BENCHMARK_COMMAND);
+  //  m_toolMenu->AddSeparator();
+  //  m_toolMenu->AddEntry(m_toolSetDimDnsText, SET_DIM_DNS_COMMAND);
+    m_toolMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                        this, "handleCommand(Command)");
+  //m_toolMenu->DisableEntry(ONLINE_MODE_COMMAND);
+  //m_toolMenu->DisableEntry(OFFLINE_MODE_COMMAND);
+  //m_toolMenu->DisableEntry(SET_UTGID_TASK_COMMAND);
+  //m_toolMenu->DisableEntry(SET_DIM_DNS_COMMAND);
+  
+    // Help menu
+    m_helpMenu = new TGPopupMenu(fClient->GetRoot());
+  //  m_helpMenu->AddEntry(m_helpContentsText, HELP_CONTENTS_COMMAND);
+    m_helpMenu->AddEntry(m_helpAboutText, HELP_ABOUT_COMMAND);
+    m_helpMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                        this, "handleCommand(Command)");
+  // m_helpMenu->DisableEntry(HELP_CONTENTS_COMMAND);
+  
+    m_menuDock = new TGDockableFrame(this);
+      m_menuDock->SetWindowName("LHCb Presenter Menu");
+  
+    m_toolBarDock = new TGDockableFrame(this);
+      m_toolBarDock->SetWindowName("LHCb Presenter Toolbar");
+  
+    TGLayoutHints* menuBarLayout = new TGLayoutHints(kLHintsTop |
+                                                     kLHintsExpandX);
+    TGLayoutHints* menuBarItemLayout = new TGLayoutHints(kLHintsTop |
+                                                         kLHintsLeft,
+                                                         0, 4, 0, 0);
+    TGLayoutHints* menuBarHelpLayout = new TGLayoutHints(kLHintsTop |
+                                                         kLHintsRight);
+    m_menuBar = new TGMenuBar(m_menuDock, 1, 1, kHorizontalFrame);
+    m_menuBar->AddPopup(m_fileText, m_fileMenu, menuBarItemLayout);
+    m_menuBar->AddPopup(m_editText, m_editMenu, menuBarItemLayout);
+    m_menuBar->AddPopup(m_viewText, m_viewMenu, menuBarItemLayout);
+    m_menuBar->AddPopup(m_toolText, m_toolMenu, menuBarItemLayout);
+    m_menuBar->AddPopup(m_helpText, m_helpMenu, menuBarHelpLayout);
+  
+    m_menuDock->EnableUndock(false);
+    m_menuDock->EnableHide(true);
+  
+    m_toolBarDock->EnableUndock(true);
+    m_toolBarDock->EnableHide(true);
+  
+    m_menuDock->AddFrame(m_menuBar, menuBarLayout);
+    m_menuDock->AddFrame(new TGHorizontal3DLine(this), menuBarLayout);
+  
+    // Toolbar
+    m_toolBar = new TGToolBar(m_toolBarDock, 60, 20, kHorizontalFrame);
+  //  m_toolbarElement = new ToolBarData_t();
+  
+    const TGPicture* previousPage = picpool->GetPicture("tb_back.xpm");
+    m_previousPageSaveButton = new TGPictureButton(m_toolBar, previousPage,
+                                            LOAD_PREVIOUS_PAGE_COMMAND);
+    m_previousPageSaveButton->SetToolTipText("Load previous page");
+    m_previousPageSaveButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_previousPageSaveButton, 0);
+    m_previousPageSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
+                               "loadPreviousPage()");
+  
+    const TGPicture* nextPage = picpool->GetPicture("tb_forw.xpm");
+    m_nextPageButton = new TGPictureButton(m_toolBar, nextPage,
+                                           LOAD_NEXT_PAGE_COMMAND);
+    m_nextPageButton->SetToolTipText("Load next page");
+    m_nextPageButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_nextPageButton, 0);
+    m_nextPageButton->Connect("Clicked()", "PresenterMainFrame", this,
+                               "loadNextPage()");
+                               
+  
+    const TGPicture* printpic = picpool->GetPicture("ed_print.png");
+    m_printSaveButton = new TGPictureButton(m_toolBar, printpic,
+                                            SAVE_PAGE_TO_FILE_COMMAND);
+    m_printSaveButton->SetToolTipText("Print/Save page");
+    m_printSaveButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_printSaveButton, 8);
+    m_printSaveButton->Connect("Clicked()", "PresenterMainFrame", this,
+                               "savePageToFile()");
+    // Log
+    const TGPicture* reportButton16pic =  picpool->GetPicture("tree_t.xpm");
+    m_reportButton = new TGPictureButton(m_toolBar,
+                                         reportButton16pic,
+                                         REPORT_COMMAND);
+    m_reportButton->SetToolTipText("Report to Log");
+    m_reportButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_reportButton, 0);
+    m_reportButton->Connect("Clicked()", "PresenterMainFrame",
+                                        this, "reportToLog()");
+                               
+  
+    // New page
+    const TGPicture* newPage16pic = picpool->GetPicture("newPage16",
+                                                        (char**)newPage16);
+    m_newPageButton = new TGPictureButton(m_toolBar, newPage16pic,
+                                          CLEAR_PAGE_COMMAND);
+    m_newPageButton->SetToolTipText("New page");
+    m_newPageButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_newPageButton, 8);
+    m_newPageButton->Connect("Clicked()", "PresenterMainFrame", this,
+                             "removeHistogramsFromPage()");
+  
+    // Save page
+    const TGPicture* savePageToDb16pic = picpool->GetPicture("savePageToDb16",
+                                                             (char**)savePageToDb16);
+    m_savePageToDatabaseButton = new TGPictureButton(m_toolBar,
+                                                     savePageToDb16pic,
+                                                     SAVE_PAGE_TO_DB_COMMAND);
+    m_savePageToDatabaseButton->SetToolTipText("Save page to Database");
+    m_savePageToDatabaseButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_savePageToDatabaseButton, 0);
+    m_savePageToDatabaseButton->SetState(kButtonDisabled);
+    m_savePageToDatabaseButton->Connect("Clicked()", "PresenterMainFrame",
+                                        this, "savePageToHistogramDB()");                                                                       
+  
+    // Auto n x n layout
+    const TGPicture* automaticLayout16pic = picpool->GetPicture("automaticLayout16",
+                                                                (char**)automaticLayout16);
+    m_autoCanvasLayoutButton = new TGPictureButton(m_toolBar, automaticLayout16pic,
+                                                   AUTO_LAYOUT_COMMAND);
+    m_autoCanvasLayoutButton->SetToolTipText("Auto n x n histogram tiling layout");
+    m_autoCanvasLayoutButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_autoCanvasLayoutButton, 8);
+    m_autoCanvasLayoutButton->SetState(kButtonDisabled);
+    m_autoCanvasLayoutButton->Connect("Clicked()", "PresenterMainFrame",
+                                      this, "autoCanvasLayout()");
+  
+    // Login
+    const TGPicture* connectpic = picpool->GetPicture("connect.xpm");
+    m_loginButton = new TGPictureButton(m_toolBar, connectpic, LOGIN_COMMAND);
+    m_loginButton->SetToolTipText("Login");
+    m_loginButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_loginButton, 8);
+    m_loginButton->Connect("Clicked()", "PresenterMainFrame", this,
+                           "loginToHistogramDB()");
+    // Logout
+    const TGPicture* disconnectpic = picpool->GetPicture("disconnect.xpm");
+    m_logoutButton = new TGPictureButton(m_toolBar, disconnectpic,
+                                         LOGOUT_COMMAND);
+    m_logoutButton->SetToolTipText("Logout");
+    m_logoutButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_logoutButton, 0);
+    m_logoutButton->SetState(kButtonDisabled);
+    m_logoutButton->Connect("Clicked()", "PresenterMainFrame", this,
+                            "logoutFromHistogramDB()");
+    // Start
+    const TGPicture* ed_executepic = picpool->GetPicture("ed_execute.png");
+    m_startRefreshButton = new TGPictureButton(m_toolBar, ed_executepic,
+                                               START_COMMAND);
+    m_startRefreshButton->SetToolTipText("Start");
+    m_startRefreshButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_startRefreshButton, 8);
+    m_startRefreshButton->Connect("Clicked()", "PresenterMainFrame", this,
+                                  "startPageRefresh()");
+    // Stop
+    const TGPicture* ed_interruptpic = picpool->GetPicture("ed_interrupt.png");
+    m_stopRefreshButton = new TGPictureButton(m_toolBar, ed_interruptpic,
+                                              START_COMMAND);
+    m_stopRefreshButton->SetToolTipText("Stop");
+    m_stopRefreshButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_stopRefreshButton, 0);
+    m_stopRefreshButton->SetState(kButtonDisabled);
+    m_stopRefreshButton->Connect("Clicked()", "PresenterMainFrame", this,
+                                 "stopPageRefresh()");
+  
+    // Clear Histos
+    const TGPicture* clear16pic = picpool->GetPicture("clear16", (char**)clear16);
+    m_clearHistoButton = new TGPictureButton(m_toolBar, clear16pic,
+                                             CLEAR_HISTOS_COMMAND);
+    m_clearHistoButton->SetToolTipText("Clear histograms");
+    m_clearHistoButton->AllowStayDown(true);
+    m_toolBar->AddButton(this, m_clearHistoButton, 0);
+    m_clearHistoButton->Connect("Clicked()", "PresenterMainFrame", this,
+                                "clearHistos()");
+    // SetToggleButton(Bool_t)                              
+  
+    //UTGID selector (partition)
+  //  m_partitionSelectorPopupMenu = new TGPopupMenu(gClient->GetRoot());
+  //  m_partitionSelectorPopupMenu->AddEntry("refresh list", M_RefreshKnownPartitions);
+    // Create a split button, the menu is adopted.
+    m_partitionSelectorComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
+     
+  //  m_partitionSelectorQuickButton = new TGSplitButton(m_toolBar,
+  //                                                new TGHotString("lhcb"),
+  //                                                m_partitionSelectorPopupMenu);
+    m_toolBar->AddFrame(new TGLabel(m_toolBar,"Partition: ") , 
+                        new TGLayoutHints(kLHintsCenterY, 2,2,2,2));
+    m_toolBar->AddFrame(m_partitionSelectorComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));
+    m_partitionSelectorComboBox->AddEntry("refresh list", 0);
+    m_partitionSelectorComboBox->Select(0, false);
+    m_partitionSelectorComboBox->Resize(122,22);
+  // (m_partitionSelectorComboBox->GetTextEntry())->SetToolTipText("Partition selector", 300);
+    
+  //  m_toolBar->AddButton(this, (TGPictureButton*)m_partitionSelectorQuickButton, 8);
+    m_partitionSelectorComboBox->Connect("Selected(int)", "PresenterMainFrame",
+                                         this, "partitionSelectorComboBoxHandler(int)");
+  
+    //History mode
+  
+  //  m_partitionSelectorQuickButton = new TGSplitButton(m_toolBar,
+  //                                                new TGHotString("lhcb"),
+  //                                                m_partitionSelectorPopupMenu);
   
     
-//  m_presetTimePopupMenu = new TGPopupMenu(gClient->GetRoot());
+      
+  //  m_presetTimePopupMenu = new TGPopupMenu(gClient->GetRoot());
+    
+    m_toolBar->AddFrame(new TGLabel(m_toolBar,"Time: ") , 
+                        new TGLayoutHints(kLHintsCenterY, 2,2,2,2));  
+    
+    const TGPicture* arrow_left = picpool->GetPicture("arrow_left.xpm");
+    m_previousIntervalButton = new TGPictureButton(m_toolBar, arrow_left,
+                                               M_Previous_Interval);
+    m_previousIntervalButton->SetToolTipText("Previous interval");
+    m_previousIntervalButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_previousIntervalButton, 8);
+    m_previousIntervalButton->Connect("Clicked()", "PresenterMainFrame", this,
+                                  "previousInterval()");
   
-  m_toolBar->AddFrame(new TGLabel(m_toolBar,"Time: ") , 
-                      new TGLayoutHints(kLHintsCenterY, 2,2,2,2));  
+    const TGPicture* arrow_right = picpool->GetPicture("arrow_right.xpm");
+    m_nextIntervalButton = new TGPictureButton(m_toolBar, arrow_right,
+                                               M_Next_Interval);
+    m_nextIntervalButton->SetToolTipText("Next interval");
+    m_nextIntervalButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_nextIntervalButton, 0);
+    m_nextIntervalButton->Connect("Clicked()", "PresenterMainFrame", this,
+                                  "nextInterval()");                                
   
-  const TGPicture* arrow_left = picpool->GetPicture("arrow_left.xpm");
-  m_previousIntervalButton = new TGPictureButton(m_toolBar, arrow_left,
-                                             M_Previous_Interval);
-  m_previousIntervalButton->SetToolTipText("Previous interval");
-  m_previousIntervalButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_previousIntervalButton, 8);
-  m_previousIntervalButton->Connect("Clicked()", "PresenterMainFrame", this,
-                                "previousInterval()");
-
-  const TGPicture* arrow_right = picpool->GetPicture("arrow_right.xpm");
-  m_nextIntervalButton = new TGPictureButton(m_toolBar, arrow_right,
-                                             M_Next_Interval);
-  m_nextIntervalButton->SetToolTipText("Next interval");
-  m_nextIntervalButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_nextIntervalButton, 0);
-  m_nextIntervalButton->Connect("Clicked()", "PresenterMainFrame", this,
-                                "nextInterval()");                                
-
-  // Create a split button, the menu is adopted.
-//  m_historyIntervalQuickButton = new TGSplitButton(m_toolBar,
-//                                                   new TGHotString("Last &Options"),
-//                                                   m_presetTimePopupMenu);
-//  m_toolBar->AddButton(this, (TGPictureButton*)m_historyIntervalQuickButton, 8);
-//  m_historyIntervalQuickButton->Connect("ItemClicked(Int_t)", "PresenterMainFrame",
-//                                        this, "handleCommand(Command)");
-//  m_historyIntervalQuickButton->SetState(kButtonDisabled);
-
-  // History plots
-  m_historyPlotsButton= new TGPictureButton(m_toolBar, m_stockNewFormula,
-                                             HISTORY_PLOTS_COMMAND);
-  m_historyPlotsButton->SetToolTipText("Toggle history plot merge or trend mode");
-  m_historyPlotsButton->AllowStayDown(true);
-  m_toolBar->AddButton(this, m_historyPlotsButton, 8);
-  m_historyPlotsButton->Connect("Clicked()", "PresenterMainFrame",
-                                this, "toggleHistoryPlots()");
-  m_historyPlotsButton->SetState(kButtonDisabled);
-  // SetToggleButton(Bool_t)
-
-  m_historyIntervalComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
-  m_toolBar->AddFrame(new TGLabel(m_toolBar,"History using: ") ,
-                      new TGLayoutHints(kLHintsCenterY, 2,2,2,2));  
-  m_toolBar->AddFrame(m_historyIntervalComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));  
-  m_historyIntervalComboBox->SetEnabled(false);
-//  (m_historyIntervalComboBox->GetTextEntry())->SetToolTipText("History time interval", 300);    
-  m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
-  m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
-//  m_historyIntervalComboBox->AddSeparator();  
-  m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
-  m_historyIntervalComboBox->AddEntry("last 1 hour", M_LAST_1_HOURS);
-  m_historyIntervalComboBox->Select(M_LAST_1_HOURS, false);
-  m_historyIntervalComboBox->AddEntry("last 8 hours", M_LAST_8_HOURS);
-  m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
-  m_historyIntervalComboBox->Resize(112,22);
-  m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
-                                     this, "handleCommand(Command)");  
-
-
-  // Reference
-  const TGPicture* f2_tpic = picpool->GetPicture("f2_t.xpm");
-  m_overlayReferenceHistoButton = new TGPictureButton(m_toolBar, f2_tpic,
-                                             OVERLAY_REFERENCE_HISTO_COMMAND);
-  m_overlayReferenceHistoButton->SetToolTipText("Overlay with reference");
-  m_overlayReferenceHistoButton->AllowStayDown(true);
-  m_toolBar->AddButton(this, m_overlayReferenceHistoButton, 8);
-  m_overlayReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
-                                         this, "toggleReferenceOverlay()");
-  m_overlayReferenceHistoButton->SetState(kButtonDisabled);
-  // SetToggleButton(Bool_t) 
-
-  // Set reference
-  const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
-  m_pickReferenceHistoButton = new TGPictureButton(m_toolBar, f1_tpic,
-                                                  PICK_REFERENCE_HISTO_COMMAND);
-  m_pickReferenceHistoButton->SetToolTipText("Pick reference histogram");
-  m_pickReferenceHistoButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_pickReferenceHistoButton, 0);
-  m_pickReferenceHistoButton->SetState(kButtonDisabled);
-  m_pickReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
-                                      this, "pickReferenceHistogram()");
-//  m_pickReferenceHistoButton->SetState(kButtonDisabled);
-
-  // Clone Histo
-  const TGPicture* inspectHistogram16pic = picpool->GetPicture("inspectHistogram16",
-                                                               (char**)inspectHistogram16);
-  m_inspectHistoButton = new TGPictureButton(m_toolBar, inspectHistogram16pic,
-                                             INSPECT_HISTO_COMMAND);
-  m_inspectHistoButton->SetToolTipText("Inspect histogram");
-  m_inspectHistoButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_inspectHistoButton, 8);
-  m_inspectHistoButton->Connect("Clicked()", "PresenterMainFrame",
-                                this, "inspectHistogram()");
-
-  // Histo Description
-  const TGPicture* histogramDescription16pic = picpool->GetPicture("about.xpm");
-  m_histogramDescriptionButton = new TGPictureButton(m_toolBar, histogramDescription16pic,
-                                             HISTOGRAM_DESCRIPTION_COMMAND);
-  m_histogramDescriptionButton->SetToolTipText("Histogram description");
-  m_histogramDescriptionButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_histogramDescriptionButton, 0);
-  m_histogramDescriptionButton->Connect("Clicked()", "PresenterMainFrame",
-                                this, "histogramDescription()");
-                                                                
-
-  // Edit Histogram properties
-  const TGPicture* editProperties16pic = picpool->GetPicture("editProperties16",
-                                                             (char**)editProperties16);
-  m_editHistoButton = new TGPictureButton(m_toolBar, editProperties16pic,
-                                          EDIT_HISTO_COMMAND);
-  m_editHistoButton->SetToolTipText("Edit histogram properties");
-  m_editHistoButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_editHistoButton, 0);
-  m_editHistoButton->Connect("Clicked()", "PresenterMainFrame",
-                             this, "editHistogramProperties()");
-
-  // Delete histo from Canvas
-  const TGPicture* editDelete16pic = picpool->GetPicture("editDelete16",
-                                                         (char**)editDelete16);
-  m_deleteHistoFromCanvasButton = new TGPictureButton(m_toolBar,
-                                                      editDelete16pic,
-                                                      REMOVE_HISTO_FROM_CANVAS_COMMAND);
-  m_deleteHistoFromCanvasButton->SetToolTipText("Remove selected histogram from page");
-  m_deleteHistoFromCanvasButton->AllowStayDown(false);
-  m_toolBar->AddButton(this, m_deleteHistoFromCanvasButton, 8);
-  m_deleteHistoFromCanvasButton->Connect("Clicked()", "PresenterMainFrame",
-                                         this, "deleteSelectedHistoFromCanvas()");
-
-  m_toolBarDock->AddFrame(m_toolBar,
-                          new TGLayoutHints(kLHintsTop |
-                                            kLHintsExpandX,
-                                            0, 0, 0, 0));
-
-  m_mainHorizontalFrame = new TGHorizontalFrame(this, 544, 498,
-                                                kHorizontalFrame |
-                                                kLHintsExpandX |
-                                                kLHintsExpandY);
+    // Create a split button, the menu is adopted.
+  //  m_historyIntervalQuickButton = new TGSplitButton(m_toolBar,
+  //                                                   new TGHotString("Last &Options"),
+  //                                                   m_presetTimePopupMenu);
+  //  m_toolBar->AddButton(this, (TGPictureButton*)m_historyIntervalQuickButton, 8);
+  //  m_historyIntervalQuickButton->Connect("ItemClicked(Int_t)", "PresenterMainFrame",
+  //                                        this, "handleCommand(Command)");
+  //  m_historyIntervalQuickButton->SetState(kButtonDisabled);
   
-  m_leftMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 200, 494,
-                                           kVerticalFrame | kFixedWidth |
-                                           kLHintsExpandX);
-                                           
-    TGVSplitter* leftVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame,2, 2);
-    leftVerticalSplitter->SetFrame(m_leftMiscFrame, true);
-                                           
-
-    m_databasePagesDock = new TGDockableFrame(m_leftMiscFrame);
-    m_databasePagesDock->SetWindowName("Database Page Browser");
-    m_databasePagesDock->EnableUndock(true);
-    m_databasePagesDock->EnableHide(true);
-    m_databasePagesDock->Resize(220, 494);
-    m_leftMiscFrame->AddFrame(m_databasePagesDock,
-                               new TGLayoutHints(kLHintsLeft |
-                                                 kLHintsTop |
-                                                 kLHintsExpandX |
-                                                 kLHintsExpandY,
-                                                 0, 0, 0, 0));    
-
-    TGGroupFrame* databasePagesGroupFrame = new TGGroupFrame(m_databasePagesDock,
-                                                             TGString("Database Page Browser"),
+    // History plots
+    m_historyPlotsButton= new TGPictureButton(m_toolBar, m_stockNewFormula,
+                                               HISTORY_PLOTS_COMMAND);
+    m_historyPlotsButton->SetToolTipText("Toggle history plot merge or trend mode");
+    m_historyPlotsButton->AllowStayDown(true);
+    m_toolBar->AddButton(this, m_historyPlotsButton, 8);
+    m_historyPlotsButton->Connect("Clicked()", "PresenterMainFrame",
+                                  this, "toggleHistoryPlots()");
+    m_historyPlotsButton->SetState(kButtonDisabled);
+    // SetToggleButton(Bool_t)
+  
+    m_historyIntervalComboBox = new TGComboBox(m_toolBar, -1,kHorizontalFrame | kSunkenFrame | kDoubleBorder | kOwnBackground);
+    m_toolBar->AddFrame(new TGLabel(m_toolBar,"History using: ") ,
+                        new TGLayoutHints(kLHintsCenterY, 2,2,2,2));  
+    m_toolBar->AddFrame(m_historyIntervalComboBox , new TGLayoutHints(kLHintsCenterY,2,2,2,2));  
+    m_historyIntervalComboBox->SetEnabled(false);
+  //  (m_historyIntervalComboBox->GetTextEntry())->SetToolTipText("History time interval", 300);    
+    m_historyIntervalComboBox->AddEntry("preset file", M_Last_File);
+    m_historyIntervalComboBox->AddEntry("set file", M_File_Picker);
+  //  m_historyIntervalComboBox->AddSeparator();  
+    m_historyIntervalComboBox->AddEntry("preset interval", M_Last_Interval);
+    m_historyIntervalComboBox->AddEntry("last 1 hour", M_LAST_1_HOURS);
+    m_historyIntervalComboBox->Select(M_LAST_1_HOURS, false);
+    m_historyIntervalComboBox->AddEntry("last 8 hours", M_LAST_8_HOURS);
+    m_historyIntervalComboBox->AddEntry("set interval", M_IntervalPicker);
+    m_historyIntervalComboBox->Resize(112,22);
+    m_historyIntervalComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
+                                       this, "handleCommand(Command)");  
+  
+  
+    // Reference
+    const TGPicture* f2_tpic = picpool->GetPicture("f2_t.xpm");
+    m_overlayReferenceHistoButton = new TGPictureButton(m_toolBar, f2_tpic,
+                                               OVERLAY_REFERENCE_HISTO_COMMAND);
+    m_overlayReferenceHistoButton->SetToolTipText("Overlay with reference");
+    m_overlayReferenceHistoButton->AllowStayDown(true);
+    m_toolBar->AddButton(this, m_overlayReferenceHistoButton, 8);
+    m_overlayReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
+                                           this, "toggleReferenceOverlay()");
+    m_overlayReferenceHistoButton->SetState(kButtonDisabled);
+    // SetToggleButton(Bool_t) 
+  
+    // Set reference
+    const TGPicture* f1_tpic = picpool->GetPicture("f1_t.xpm");
+    m_pickReferenceHistoButton = new TGPictureButton(m_toolBar, f1_tpic,
+                                                    PICK_REFERENCE_HISTO_COMMAND);
+    m_pickReferenceHistoButton->SetToolTipText("Pick reference histogram");
+    m_pickReferenceHistoButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_pickReferenceHistoButton, 0);
+    m_pickReferenceHistoButton->SetState(kButtonDisabled);
+    m_pickReferenceHistoButton->Connect("Clicked()", "PresenterMainFrame",
+                                        this, "pickReferenceHistogram()");
+  //  m_pickReferenceHistoButton->SetState(kButtonDisabled);
+  
+    // Clone Histo
+    const TGPicture* inspectHistogram16pic = picpool->GetPicture("inspectHistogram16",
+                                                                 (char**)inspectHistogram16);
+    m_inspectHistoButton = new TGPictureButton(m_toolBar, inspectHistogram16pic,
+                                               INSPECT_HISTO_COMMAND);
+    m_inspectHistoButton->SetToolTipText("Inspect histogram");
+    m_inspectHistoButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_inspectHistoButton, 8);
+    m_inspectHistoButton->Connect("Clicked()", "PresenterMainFrame",
+                                  this, "inspectHistogram()");
+  
+    // Histo Description
+    const TGPicture* histogramDescription16pic = picpool->GetPicture("about.xpm");
+    m_histogramDescriptionButton = new TGPictureButton(m_toolBar, histogramDescription16pic,
+                                               HISTOGRAM_DESCRIPTION_COMMAND);
+    m_histogramDescriptionButton->SetToolTipText("Histogram description");
+    m_histogramDescriptionButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_histogramDescriptionButton, 0);
+    m_histogramDescriptionButton->Connect("Clicked()", "PresenterMainFrame",
+                                  this, "histogramDescription()");
+                                                                  
+  
+    // Edit Histogram properties
+    const TGPicture* editProperties16pic = picpool->GetPicture("editProperties16",
+                                                               (char**)editProperties16);
+    m_editHistoButton = new TGPictureButton(m_toolBar, editProperties16pic,
+                                            EDIT_HISTO_COMMAND);
+    m_editHistoButton->SetToolTipText("Edit histogram properties");
+    m_editHistoButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_editHistoButton, 0);
+    m_editHistoButton->Connect("Clicked()", "PresenterMainFrame",
+                               this, "editHistogramProperties()");
+  
+    // Delete histo from Canvas
+    const TGPicture* editDelete16pic = picpool->GetPicture("editDelete16",
+                                                           (char**)editDelete16);
+    m_deleteHistoFromCanvasButton = new TGPictureButton(m_toolBar,
+                                                        editDelete16pic,
+                                                        REMOVE_HISTO_FROM_CANVAS_COMMAND);
+    m_deleteHistoFromCanvasButton->SetToolTipText("Remove selected histogram from page");
+    m_deleteHistoFromCanvasButton->AllowStayDown(false);
+    m_toolBar->AddButton(this, m_deleteHistoFromCanvasButton, 8);
+    m_deleteHistoFromCanvasButton->Connect("Clicked()", "PresenterMainFrame",
+                                           this, "deleteSelectedHistoFromCanvas()");
+  
+    m_toolBarDock->AddFrame(m_toolBar,
+                            new TGLayoutHints(kLHintsTop |
+                                              kLHintsExpandX,
+                                              0, 0, 0, 0));
+  
+    m_mainHorizontalFrame = new TGHorizontalFrame(this, 544, 498,
+                                                  kHorizontalFrame |
+                                                  kLHintsExpandX |
+                                                  kLHintsExpandY);
+    
+    m_leftMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 200, 494,
+                                             kVerticalFrame | kFixedWidth |
+                                             kLHintsExpandX);
+                                             
+      TGVSplitter* leftVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame,2, 2);
+      leftVerticalSplitter->SetFrame(m_leftMiscFrame, true);
+                                             
+  
+      m_databasePagesDock = new TGDockableFrame(m_leftMiscFrame);
+      m_databasePagesDock->SetWindowName("Database Page Browser");
+      m_databasePagesDock->EnableUndock(true);
+      m_databasePagesDock->EnableHide(true);
+      m_databasePagesDock->Resize(220, 494);
+      m_leftMiscFrame->AddFrame(m_databasePagesDock,
+                                 new TGLayoutHints(kLHintsLeft |
+                                                   kLHintsTop |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY,
+                                                   0, 0, 0, 0));    
+  
+      TGGroupFrame* databasePagesGroupFrame = new TGGroupFrame(m_databasePagesDock,
+                                                               TGString("Database Page Browser"),
+                                                               kVerticalFrame |
+                                                               kFixedHeight);
+      m_databasePagesDock->AddFrame(databasePagesGroupFrame,
+                                 new TGLayoutHints(kLHintsTop |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY,
+                                                   0, 0, 0, 0));
+  
+      TGCanvas* fCanvas652 = new TGCanvas(databasePagesGroupFrame, 220, 243);
+      m_pagesFromHistoDBViewPort = fCanvas652->GetViewPort();
+  
+      // list tree
+      m_pagesFromHistoDBListTree = new TGListTree(fCanvas652, kHorizontalFrame);
+      m_pagesFromHistoDBListTree->AddRoot("Pages");
+      m_pagesFromHistoDBListTree->SetCheckMode(TGListTree::kRecursive);
+      (m_pagesFromHistoDBListTree->GetFirstItem())->SetPictures(m_databaseSourceIcon,
+                                                                m_databaseSourceIcon);
+      m_pagesFromHistoDBListTree->Connect(
+        "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+        this, "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+  
+      m_pagesFromHistoDBViewPort->AddFrame(m_pagesFromHistoDBListTree);
+      m_pagesFromHistoDBListTree->SetLayoutManager(
+        new TGHorizontalLayout(m_pagesFromHistoDBListTree));
+      m_pagesFromHistoDBListTree->MapSubwindows();
+      fCanvas652->SetContainer(m_pagesFromHistoDBListTree);
+      fCanvas652->MapSubwindows();
+      databasePagesGroupFrame->AddFrame(fCanvas652,
+                                        new TGLayoutHints(kLHintsRight |
+                                                          kLHintsBottom |
+                                                          kLHintsExpandX |
+                                                          kLHintsExpandY,
+                                                          0, 0, 0, 0));
+  
+      m_pagesContextMenu = new TGPopupMenu(fClient->GetRoot());
+      m_pagesContextMenu->AddEntry("Load Page", M_LoadPage_COMMAND);
+      m_pagesContextMenu->AddSeparator();
+      m_pagesContextMenu->AddEntry("Delete Page", M_DeletePage_COMMAND);
+      m_pagesContextMenu->AddEntry("Delete Folder", M_DeleteFolder_COMMAND);
+      m_pagesContextMenu->AddSeparator();
+      m_pagesContextMenu->AddEntry("Refresh", M_RefreshDBPagesListTree_COMMAND);
+      m_pagesContextMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
+                                  this, "handleCommand(Command)");
+  
+  // -------------------------
+  
+  
+      m_databaseAlarmsDock = new TGDockableFrame(m_leftMiscFrame);
+      m_databaseAlarmsDock->SetWindowName("Histogram Alarms");
+      m_databaseAlarmsDock->EnableUndock(true);
+      m_databaseAlarmsDock->EnableHide(true);
+      m_databaseAlarmsDock->Resize(220, 494);
+      m_leftMiscFrame->AddFrame(m_databaseAlarmsDock,
+                                 new TGLayoutHints(kLHintsLeft |
+                                                   kLHintsTop |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY,
+                                                   0, 0, 0, 0));    
+  
+    m_leftDatabaseAlarmFrame = new TGVerticalFrame(m_databaseAlarmsDock,
+                                                                      220, 100,
+                                                                      kVerticalFrame |
+                                                                      kFixedWidth);
+  
+    TGGroupFrame* databaseAlarmGroupFrame = new TGGroupFrame(m_leftDatabaseAlarmFrame,
+                                                                 TGString("Histograms in Alarm"),
+                                                                 kVerticalFrame |
+                                                                 kFixedWidth);
+  
+        m_leftDatabaseAlarmFrame->AddFrame(databaseAlarmGroupFrame,
+                                             new TGLayoutHints(kLHintsTop |
+                                                               kLHintsExpandX |
+                                                               kLHintsExpandY,
+                                                               0, 0, 0, 0));
+  
+        m_databaseAlarmsDock->AddFrame(m_leftDatabaseAlarmFrame,
+                                           new TGLayoutHints(kLHintsTop |
+                                                             kLHintsExpandX |
+                                                             kLHintsExpandY,
+                                                             0, 0, 0, 0));
+          // Alarm sort box
+          m_alarmDBFilterComboBox = new TGComboBox(databaseAlarmGroupFrame, -1,
+                                                   kHorizontalFrame | kDoubleBorder |
+                                                   kSunkenFrame | kOwnBackground);
+          m_alarmDBFilterComboBox->AddEntry("Severity",
+                                            HistogramsWithAnalysis); //#3 //Alarm, Warning, Info
+          m_alarmDBFilterComboBox->AddEntry("Analysis Task", Tasks); // #1
+  //        m_alarmDBFilterComboBox->AddEntry("Time", FoldersAndPages); // #0 // Time
+          m_alarmDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
+          // @enum FilterCriteria
+          m_alarmDBFilterComboBox->Resize(149, 22);
+          m_alarmDBFilterComboBox->Select(Tasks);
+  //        m_alarmDBFilterComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
+  //                                         this, "refreshHistoDBListTree()");
+          databaseAlarmGroupFrame->AddFrame(m_alarmDBFilterComboBox,
+                                                new TGLayoutHints(kLHintsLeft |
+                                                                  kLHintsTop |
+                                                                  kLHintsExpandX,
+                                                                  0, 0, 0, 0));
+          // canvas widget
+          m_alarmDBCanvas = new TGCanvas(databaseAlarmGroupFrame, 124, 460);
+  
+          // canvas viewport
+          m_alarmDBCanvasViewPort = m_alarmDBCanvas->GetViewPort();
+  
+          // list tree
+          m_alarmHistogramTreeList = new TGListTree(m_alarmDBCanvas,
+                                                       kHorizontalFrame);
+          m_alarmHistogramTreeList->AddRoot("Alarms");
+          (m_alarmHistogramTreeList->GetFirstItem())->SetPictures(m_iconAnalysisAlarm, m_iconAnalysisAlarm);
+          m_alarmHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
+          m_alarmHistogramTreeList->Connect(
+            "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+            this, "clickedAlarmTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+  
+          m_alarmDBContextMenu = new TGPopupMenu(fClient->GetRoot());
+  //        m_alarmDBContextMenu->AddEntry("Add checked histogram(s) to Page",
+  //                                       M_AddDBHistoToPage_COMMAND);
+  //        m_alarmDBContextMenu->AddEntry("Add checked to Page as One",
+  //                                       M_AddDBHistoToPageAsOne_COMMAND);                                          
+  //        m_alarmDBContextMenu->AddEntry("Set properties of checked histogram(s)",
+  //                                       M_SetHistoPropertiesInDB_COMMAND);
+  //        m_alarmDBContextMenu->AddEntry("Delete checked histogram(s)",
+  //                                       M_DeleteDBHisto_COMMAND);
+  //        m_alarmDBContextMenu->AddSeparator();
+  //        m_alarmDBContextMenu->AddEntry("Collsapse all children",
+  //                                       M_DBHistoCollapseAllChildren_COMMAND);
+  //        m_alarmDBContextMenu->AddSeparator();
+          m_alarmDBContextMenu->AddEntry("Refresh", M_RefreshAlarmDBListTree_COMMAND);
+          m_alarmDBContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
+                                        this, "handleCommand(Command)");
+  //m_alarmDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
+  
+          m_alarmDBCanvasViewPort->AddFrame(m_alarmHistogramTreeList);
+          m_alarmHistogramTreeList->SetLayoutManager(
+            new TGHorizontalLayout(m_alarmHistogramTreeList));
+          m_alarmHistogramTreeList->MapSubwindows();
+          m_alarmDBCanvas->SetContainer(m_alarmHistogramTreeList);
+          m_alarmDBCanvas->MapSubwindows();
+          databaseAlarmGroupFrame->AddFrame(m_alarmDBCanvas,
+                                                new TGLayoutHints(kLHintsLeft |
+                                                                  kLHintsTop |
+                                                                  kLHintsExpandX |
+                                                                  kLHintsExpandY,
+                                                                  0, 0, 0, 0));
+  // -------------------------
+  
+    m_pageDock = new TGDockableFrame(m_mainHorizontalFrame);
+    m_pageDock->SetWindowName("LHCb Presenter Page");
+    m_pageDock->EnableUndock(true);
+    m_pageDock->EnableHide(false);
+    m_pageDock->Resize(600, 494);
+    m_pageDock->Connect("Docked()", "PresenterMainFrame",
+                        this, "enablePageUndocking()");
+    m_pageDock->Connect("Undocked()", "PresenterMainFrame",
+                        this, "disablePageUndocking()");
+    // centralFrame
+    TGVerticalFrame* centralPageFrame = new TGVerticalFrame(m_pageDock,
+                                                            600, 494,
+                                                            kVerticalFrame);
+    m_pageDock->AddFrame(centralPageFrame,
+                         new TGLayoutHints(kLHintsLeft | kLHintsTop |
+                                           kLHintsExpandX | kLHintsExpandY,
+                                           0, 0, 0, 0));
+    int partsTop[] = {75, 25};
+    m_statusBarTop = new TGStatusBar(centralPageFrame, 50, 10, kVerticalFrame);
+    m_statusBarTop->SetParts(partsTop, 2);
+    m_statusBarTop->Draw3DCorner(false);
+    centralPageFrame->AddFrame(m_statusBarTop, new TGLayoutHints(kLHintsTop |
+                                                                 kLHintsExpandX,
+                                                                 0, 0, 0, 0));
+  
+    // embedded canvas
+    editorEmbCanvas = new TRootEmbeddedCanvas(0, centralPageFrame, 600, 494);
+    int wm_editorEmbCanvas = editorEmbCanvas->GetCanvasWindowId();
+    editorEmbCanvas->SetBit(kNoContextMenu);
+    editorCanvas = new TCanvas("editor canvas", 600, 494, wm_editorEmbCanvas);
+    editorCanvas->Connect("ProcessedEvent(Int_t, Int_t, Int_t, TObject*)",
+                          "PresenterMainFrame", this,
+                          "EventInfo(Int_t, Int_t, Int_t, TObject*)");
+  //  editorCanvas->SetGrid();
+    editorCanvas->SetBit(kNoContextMenu);
+  
+  //  editorCanvas->SetFixedAspectRatio(true);
+    editorEmbCanvas->AdoptCanvas(editorCanvas);
+    centralPageFrame->AddFrame(editorEmbCanvas, new TGLayoutHints(kLHintsRight |
+                                                                  kLHintsTop |
+                                                                  kLHintsExpandX |
+                                                                  kLHintsExpandY,
+                                                                  0, 0, 0, 0));
+  // Info dock
+    m_mainCanvasInfoDock = new TGDockableFrame(centralPageFrame);
+  //  m_pageDock->SetWindowName("LHCb Presenter Page");
+    m_mainCanvasInfoDock->SetWindowName("LHCb Presenter Information");
+  
+    m_mainCanvasInfoDock->EnableUndock(true);
+    m_mainCanvasInfoDock->EnableHide(true);
+    m_mainCanvasInfoDock->Resize(600, 90);
+  
+  
+    TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
+                                                             TGString("Page Comments"),
                                                              kVerticalFrame |
                                                              kFixedHeight);
-    m_databasePagesDock->AddFrame(databasePagesGroupFrame,
+    m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
                                new TGLayoutHints(kLHintsTop |
-                                                 kLHintsExpandX |
+                                                 kLHintsExpandX|
                                                  kLHintsExpandY,
                                                  0, 0, 0, 0));
-
-    TGCanvas* fCanvas652 = new TGCanvas(databasePagesGroupFrame, 220, 243);
-    m_pagesFromHistoDBViewPort = fCanvas652->GetViewPort();
-
-    // list tree
-    m_pagesFromHistoDBListTree = new TGListTree(fCanvas652, kHorizontalFrame);
-    m_pagesFromHistoDBListTree->AddRoot("Pages");
-    m_pagesFromHistoDBListTree->SetCheckMode(TGListTree::kRecursive);
-    (m_pagesFromHistoDBListTree->GetFirstItem())->SetPictures(m_databaseSourceIcon,
-                                                              m_databaseSourceIcon);
-    m_pagesFromHistoDBListTree->Connect(
-      "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-      this, "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-
-    m_pagesFromHistoDBViewPort->AddFrame(m_pagesFromHistoDBListTree);
-    m_pagesFromHistoDBListTree->SetLayoutManager(
-      new TGHorizontalLayout(m_pagesFromHistoDBListTree));
-    m_pagesFromHistoDBListTree->MapSubwindows();
-    fCanvas652->SetContainer(m_pagesFromHistoDBListTree);
-    fCanvas652->MapSubwindows();
-    databasePagesGroupFrame->AddFrame(fCanvas652,
-                                      new TGLayoutHints(kLHintsRight |
-                                                        kLHintsBottom |
-                                                        kLHintsExpandX |
-                                                        kLHintsExpandY,
-                                                        0, 0, 0, 0));
-
-    m_pagesContextMenu = new TGPopupMenu(fClient->GetRoot());
-    m_pagesContextMenu->AddEntry("Load Page", M_LoadPage_COMMAND);
-    m_pagesContextMenu->AddSeparator();
-    m_pagesContextMenu->AddEntry("Delete Page", M_DeletePage_COMMAND);
-    m_pagesContextMenu->AddEntry("Delete Folder", M_DeleteFolder_COMMAND);
-    m_pagesContextMenu->AddSeparator();
-    m_pagesContextMenu->AddEntry("Refresh", M_RefreshDBPagesListTree_COMMAND);
-    m_pagesContextMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
-                                this, "handleCommand(Command)");
-
-// -------------------------
-
-
-    m_databaseAlarmsDock = new TGDockableFrame(m_leftMiscFrame);
-    m_databaseAlarmsDock->SetWindowName("Histogram Alarms");
-    m_databaseAlarmsDock->EnableUndock(true);
-    m_databaseAlarmsDock->EnableHide(true);
-    m_databaseAlarmsDock->Resize(220, 494);
-    m_leftMiscFrame->AddFrame(m_databaseAlarmsDock,
-                               new TGLayoutHints(kLHintsLeft |
+  
+  //  TGCanvas* fCanvas652 = new TGCanvas(mainCanvasInfoGroupFrame, 220, 243);
+    
+  
+    centralPageFrame->AddFrame(m_mainCanvasInfoDock,
+                               new TGLayoutHints(kLHintsRight |
                                                  kLHintsTop |
-                                                 kLHintsExpandX |
-                                                 kLHintsExpandY,
-                                                 0, 0, 0, 0));    
-
-  m_leftDatabaseAlarmFrame = new TGVerticalFrame(m_databaseAlarmsDock,
-                                                                    220, 100,
-                                                                    kVerticalFrame |
-                                                                    kFixedWidth);
-
-  TGGroupFrame* databaseAlarmGroupFrame = new TGGroupFrame(m_leftDatabaseAlarmFrame,
-                                                               TGString("Histograms in Alarm"),
-                                                               kVerticalFrame |
-                                                               kFixedWidth);
-
-      m_leftDatabaseAlarmFrame->AddFrame(databaseAlarmGroupFrame,
+                                                 kLHintsExpandX,
+                                                 0, 0, 0, 0));
+  
+  
+  
+  
+  
+  //    TGTab* fTab515 = new TGTab(m_mainCanvasInfoDock, 600, 90);
+      // container of "Page Description"
+  //    TGCompositeFrame* fCompositeFrame518;
+  //    fCompositeFrame518 = fTab515->AddTab("Page Description");
+  //    fCompositeFrame518->SetLayoutManager(new TGVerticalLayout(fCompositeFrame518));
+  //    fCompositeFrame518->SetLayoutBroken(true);
+  //    TGTextEdit* fTextEdit523 = new TGTextEdit(fCompositeFrame518, 600, 80);
+  
+  //   TGTextEdit *fTextEdit515 = new TGTextEdit(fMainFrame648,486,62);
+  //   fTextEdit515->LoadFile("TxtEdit515");
+  //   fMainFrame648->AddFrame(fTextEdit515, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,2,2,2,2));
+  //   fTextEdit515->MoveResize(2,2,486,62);
+  
+  
+      m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, 80);
+      //fTextEdit523->LoadFile("TxtEdit523");
+      mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,2,2,2,2));
+  //    fTextEdit523->Layout();
+                                                                   
+  //    fTextEdit523->MoveResize(2, 2, 600, 80);
+      // container of "Tab2"
+  //    TGCompositeFrame* fCompositeFrame520;
+  //    fCompositeFrame520 = fTab515->AddTab("Message Log");
+  //    //fCompositeFrame520->SetLayoutManager(new TGVerticalLayout(fCompositeFrame520));
+  //    fCompositeFrame520->SetLayoutBroken(true);
+  //    TGTextEdit* fTextEdit542 = new TGTextEdit(fCompositeFrame520, 400, 95);
+  //    //fTextEdit542->LoadFile("TxtEdit542");
+  //    fCompositeFrame520->AddFrame(fTextEdit542,
+  //                                 new TGLayoutHints(kLHintsLeft |
+  //                                                   kLHintsBottom |
+  //                                                   kLHintsExpandX,
+  //                                                   2, 2, 2, 2));
+  //    //fTextEdit542->MoveResize(0, 0, 290, 77);
+  //    fTab515->SetTab(1);
+  //    fTab515->Resize(fTab515->GetDefaultSize());
+  //    m_mainCanvasInfoDock->AddFrame(fTab515, new TGLayoutHints(kLHintsRight |
+  //                                                              kLHintsTop |
+  //                                                              kLHintsExpandX,
+  //                                                              2, 2, 2, 2));
+      //fTab515->MoveResize(64, 40, 296, 104);
+  
+    m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
+                                           kVerticalFrame | kFixedWidth |
+                                           kLHintsExpandX);
+  //                                         | kLHintsExpandX); // kFixedWidth
+  
+      m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 2, 2);
+      m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, false);
+  
+      m_dimBrowserDock = new TGDockableFrame(m_rightMiscFrame);
+      m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
+      m_dimBrowserDock->EnableUndock(true);
+      m_dimBrowserDock->EnableHide(false);
+      m_dimBrowserDock->Resize(220, 494);
+      m_rightMiscFrame->AddFrame(m_dimBrowserDock,
+                                 new TGLayoutHints(kLHintsRight |
+                                                   kLHintsTop |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY,
+                                                   0, 0, 0, 0));
+  
+      m_histoSvcBrowserGroupFrame = new TGGroupFrame(m_dimBrowserDock,
+                                              TGString("DIM Histogram Browser"),
+                                              kVerticalFrame | kFixedHeight);
+      m_dimBrowserDock->AddFrame(m_histoSvcBrowserGroupFrame,
+                                 new TGLayoutHints(kLHintsTop |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY,
+                                                   0, 0, 0, 0));
+  
+      m_dimSvcListTreeContainterCanvas = new TGCanvas(m_histoSvcBrowserGroupFrame,
+                                                      220, 100);
+      TGViewPort* fViewPort664 = m_dimSvcListTreeContainterCanvas->GetViewPort();
+      m_histoSvcListTree = new TGListTree(m_dimSvcListTreeContainterCanvas,
+                                        kHorizontalFrame);
+    //  m_histoSvcListTree->SetAutoCheckBoxPic(false); ROOT v5.16(?)...
+      m_histoSvcListTree->AddRoot("DIM");
+      (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
+                                                      m_dimOnline16);
+      m_histoSvcListTree->SetCheckMode(TGListTree::kRecursive);                                                    
+      m_histoSvcListTree->Connect(
+        "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+        this, "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+  
+      fViewPort664->AddFrame(m_histoSvcListTree);
+      m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout(
+                                           m_histoSvcListTree));
+      m_histoSvcListTree->MapSubwindows();
+      m_dimSvcListTreeContainterCanvas->SetContainer(m_histoSvcListTree);
+      m_dimSvcListTreeContainterCanvas->MapSubwindows();
+      m_histoSvcBrowserGroupFrame->AddFrame(m_dimSvcListTreeContainterCanvas,
+        new TGLayoutHints(kLHintsRight | kLHintsTop |
+                          kLHintsExpandX | kLHintsExpandY,
+                          0, 0, 0, 0));
+  
+      m_histoSvcTreeContextMenu = new TGPopupMenu(fClient->GetRoot());
+      m_histoSvcTreeContextMenu->AddEntry("Add checked to Database",
+                                 M_AddHistoToDB_COMMAND);
+      m_histoSvcTreeContextMenu->AddEntry("Add checked to Page",
+                                 M_AddHistoToPage_COMMAND);                            
+      m_histoSvcTreeContextMenu->AddSeparator();
+  //    m_histoSvcTreeContextMenu->AddEntry("Resubscribe to checked",
+  //                               M_SetDimSourceFromTree);
+      m_histoSvcTreeContextMenu->AddSeparator();
+      m_histoSvcTreeContextMenu->AddEntry("Collsapse all children",
+                                 M_DimCollapseAllChildren_COMMAND);
+      m_histoSvcTreeContextMenu->AddSeparator();
+      m_histoSvcTreeContextMenu->AddEntry("Refresh", M_RefreshHistoSvcListTree);
+      m_histoSvcTreeContextMenu->Connect("Activated(Int_t)","PresenterMainFrame", this,
+                                "handleCommand(Command)");
+  
+      m_databaseHistogramsDock = new TGDockableFrame(m_rightMiscFrame);
+      m_databaseHistogramsDock->SetWindowName("Histograms in Database");
+      m_databaseHistogramsDock->EnableUndock(true);
+      m_databaseHistogramsDock->EnableHide(false);
+      m_databaseHistogramsDock->Resize(220, 100);
+      m_rightMiscFrame->AddFrame(m_databaseHistogramsDock,
+                                 new TGLayoutHints(kLHintsRight |
+                                                   kLHintsBottom |
+                                                   kLHintsExpandX |
+                                                   kLHintsExpandY |
+                                                   kFixedWidth,
+                                                   0, 0, 0, 0));
+        // databaseHistogramFrame
+    TGVerticalFrame* leftDatabaseHistogramFrame = new TGVerticalFrame(m_databaseHistogramsDock,
+                                                                      220, 100,
+                                                                      kVerticalFrame |
+                                                                      kFixedWidth);
+  //TGGroupFrame* leftDatabaseHistogramFrame = new TGGroupFrame(m_databaseHistogramsDock, kVerticalFrame | kFixedWidth);
+    TGGroupFrame* databaseHistogramGroupFrame = new TGGroupFrame(leftDatabaseHistogramFrame,
+                                                                 TGString("Histograms in Database"),
+                                                                 kVerticalFrame |
+                                                                 kFixedWidth);
+  //TGGroupFrame(m_databaseHistogramsDock, TGString("Histogram Database"), kVerticalFrame | kFixedWidth);
+  
+        leftDatabaseHistogramFrame->AddFrame(databaseHistogramGroupFrame,
+                                             new TGLayoutHints(kLHintsTop |
+                                                               kLHintsExpandX |
+                                                               kLHintsExpandY,
+                                                               0, 0, 0, 0));
+  
+        m_databaseHistogramsDock->AddFrame(leftDatabaseHistogramFrame,
                                            new TGLayoutHints(kLHintsTop |
                                                              kLHintsExpandX |
                                                              kLHintsExpandY,
                                                              0, 0, 0, 0));
-
-      m_databaseAlarmsDock->AddFrame(m_leftDatabaseAlarmFrame,
-                                         new TGLayoutHints(kLHintsTop |
-                                                           kLHintsExpandX |
-                                                           kLHintsExpandY,
-                                                           0, 0, 0, 0));
-        // Alarm sort box
-        m_alarmDBFilterComboBox = new TGComboBox(databaseAlarmGroupFrame, -1,
-                                                 kHorizontalFrame | kDoubleBorder |
-                                                 kSunkenFrame | kOwnBackground);
-        m_alarmDBFilterComboBox->AddEntry("Severity",
-                                          HistogramsWithAnalysis); //#3 //Alarm, Warning, Info
-        m_alarmDBFilterComboBox->AddEntry("Analysis Task", Tasks); // #1
-//        m_alarmDBFilterComboBox->AddEntry("Time", FoldersAndPages); // #0 // Time
-        m_alarmDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
-        // @enum FilterCriteria
-        m_alarmDBFilterComboBox->Resize(149, 22);
-        m_alarmDBFilterComboBox->Select(Tasks);
-//        m_alarmDBFilterComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
-//                                         this, "refreshHistoDBListTree()");
-        databaseAlarmGroupFrame->AddFrame(m_alarmDBFilterComboBox,
-                                              new TGLayoutHints(kLHintsLeft |
-                                                                kLHintsTop |
-                                                                kLHintsExpandX,
-                                                                0, 0, 0, 0));
-        // canvas widget
-        m_alarmDBCanvas = new TGCanvas(databaseAlarmGroupFrame, 124, 460);
-
-        // canvas viewport
-        m_alarmDBCanvasViewPort = m_alarmDBCanvas->GetViewPort();
-
-        // list tree
-        m_alarmHistogramTreeList = new TGListTree(m_alarmDBCanvas,
-                                                     kHorizontalFrame);
-        m_alarmHistogramTreeList->AddRoot("Alarms");
-        (m_alarmHistogramTreeList->GetFirstItem())->SetPictures(m_iconAnalysisAlarm, m_iconAnalysisAlarm);
-        m_alarmHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
-        m_alarmHistogramTreeList->Connect(
-          "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-          this, "clickedAlarmTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-
-        m_alarmDBContextMenu = new TGPopupMenu(fClient->GetRoot());
-//        m_alarmDBContextMenu->AddEntry("Add checked histogram(s) to Page",
-//                                       M_AddDBHistoToPage_COMMAND);
-//        m_alarmDBContextMenu->AddEntry("Add checked to Page as One",
-//                                       M_AddDBHistoToPageAsOne_COMMAND);                                          
-//        m_alarmDBContextMenu->AddEntry("Set properties of checked histogram(s)",
-//                                       M_SetHistoPropertiesInDB_COMMAND);
-//        m_alarmDBContextMenu->AddEntry("Delete checked histogram(s)",
-//                                       M_DeleteDBHisto_COMMAND);
-//        m_alarmDBContextMenu->AddSeparator();
-//        m_alarmDBContextMenu->AddEntry("Collsapse all children",
-//                                       M_DBHistoCollapseAllChildren_COMMAND);
-//        m_alarmDBContextMenu->AddSeparator();
-        m_alarmDBContextMenu->AddEntry("Refresh", M_RefreshAlarmDBListTree_COMMAND);
-        m_alarmDBContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
-                                      this, "handleCommand(Command)");
-//m_alarmDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
-
-        m_alarmDBCanvasViewPort->AddFrame(m_alarmHistogramTreeList);
-        m_alarmHistogramTreeList->SetLayoutManager(
-          new TGHorizontalLayout(m_alarmHistogramTreeList));
-        m_alarmHistogramTreeList->MapSubwindows();
-        m_alarmDBCanvas->SetContainer(m_alarmHistogramTreeList);
-        m_alarmDBCanvas->MapSubwindows();
-        databaseAlarmGroupFrame->AddFrame(m_alarmDBCanvas,
-                                              new TGLayoutHints(kLHintsLeft |
-                                                                kLHintsTop |
-                                                                kLHintsExpandX |
-                                                                kLHintsExpandY,
-                                                                0, 0, 0, 0));
-// -------------------------
-
-  m_pageDock = new TGDockableFrame(m_mainHorizontalFrame);
-  m_pageDock->SetWindowName("LHCb Presenter Page");
-  m_pageDock->EnableUndock(true);
-  m_pageDock->EnableHide(false);
-  m_pageDock->Resize(600, 494);
-  m_pageDock->Connect("Docked()", "PresenterMainFrame",
-                      this, "enablePageUndocking()");
-  m_pageDock->Connect("Undocked()", "PresenterMainFrame",
-                      this, "disablePageUndocking()");
-  // centralFrame
-  TGVerticalFrame* centralPageFrame = new TGVerticalFrame(m_pageDock,
-                                                          600, 494,
-                                                          kVerticalFrame);
-  m_pageDock->AddFrame(centralPageFrame,
-                       new TGLayoutHints(kLHintsLeft | kLHintsTop |
-                                         kLHintsExpandX | kLHintsExpandY,
-                                         0, 0, 0, 0));
-  int partsTop[] = {75, 25};
-  m_statusBarTop = new TGStatusBar(centralPageFrame, 50, 10, kVerticalFrame);
-  m_statusBarTop->SetParts(partsTop, 2);
-  m_statusBarTop->Draw3DCorner(false);
-  centralPageFrame->AddFrame(m_statusBarTop, new TGLayoutHints(kLHintsTop |
-                                                               kLHintsExpandX,
-                                                               0, 0, 0, 0));
-
-  // embedded canvas
-  editorEmbCanvas = new TRootEmbeddedCanvas(0, centralPageFrame, 600, 494);
-  int wm_editorEmbCanvas = editorEmbCanvas->GetCanvasWindowId();
-  editorEmbCanvas->SetBit(kNoContextMenu);
-  editorCanvas = new TCanvas("editor canvas", 600, 494, wm_editorEmbCanvas);
-  editorCanvas->Connect("ProcessedEvent(Int_t, Int_t, Int_t, TObject*)",
-                        "PresenterMainFrame", this,
-                        "EventInfo(Int_t, Int_t, Int_t, TObject*)");
-//  editorCanvas->SetGrid();
-  editorCanvas->SetBit(kNoContextMenu);
-
-//  editorCanvas->SetFixedAspectRatio(true);
-  editorEmbCanvas->AdoptCanvas(editorCanvas);
-  centralPageFrame->AddFrame(editorEmbCanvas, new TGLayoutHints(kLHintsRight |
-                                                                kLHintsTop |
-                                                                kLHintsExpandX |
-                                                                kLHintsExpandY,
-                                                                0, 0, 0, 0));
-// Info dock
-  m_mainCanvasInfoDock = new TGDockableFrame(centralPageFrame);
-//  m_pageDock->SetWindowName("LHCb Presenter Page");
-  m_mainCanvasInfoDock->SetWindowName("LHCb Presenter Information");
-
-  m_mainCanvasInfoDock->EnableUndock(true);
-  m_mainCanvasInfoDock->EnableHide(true);
-  m_mainCanvasInfoDock->Resize(600, 90);
-
-
-  TGGroupFrame* mainCanvasInfoGroupFrame = new TGGroupFrame(m_mainCanvasInfoDock,
-                                                           TGString("Page Comments"),
-                                                           kVerticalFrame |
-                                                           kFixedHeight);
-  m_mainCanvasInfoDock->AddFrame(mainCanvasInfoGroupFrame,
-                             new TGLayoutHints(kLHintsTop |
-                                               kLHintsExpandX|
-                                               kLHintsExpandY,
-                                               0, 0, 0, 0));
-
-//  TGCanvas* fCanvas652 = new TGCanvas(mainCanvasInfoGroupFrame, 220, 243);
+          // Database histogram filter box
+          m_histoDBFilterComboBox = new TGComboBox(databaseHistogramGroupFrame, -1,
+                                                   kHorizontalFrame | kDoubleBorder |
+                                                   kSunkenFrame | kOwnBackground);
+          m_histoDBFilterComboBox->AddEntry("Folder/Page", FoldersAndPages); // #0
+          m_histoDBFilterComboBox->AddEntry("Tasks/Algorithm", Tasks); // #1
+          m_histoDBFilterComboBox->AddEntry("Subsystems", Subsystems); // #2
+          m_histoDBFilterComboBox->AddEntry("With auto analysis",
+                                            HistogramsWithAnalysis); //#3
+          m_histoDBFilterComboBox->AddEntry("Produced by analysis",
+                                            AnalysisHistograms); //#4
+          m_histoDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
+          // @enum FilterCriteria
+          m_histoDBFilterComboBox->Resize(149, 22);
+          m_histoDBFilterComboBox->Select(Tasks);
+          m_histoDBFilterComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
+                                           this, "refreshHistoDBListTree()");
+          databaseHistogramGroupFrame->AddFrame(m_histoDBFilterComboBox,
+                                                new TGLayoutHints(kLHintsLeft |
+                                                                  kLHintsTop |
+                                                                  kLHintsExpandX,
+                                                                  0, 0, 0, 0));
+          // canvas widget
+          m_histoDBCanvas = new TGCanvas(databaseHistogramGroupFrame, 124, 460);
+  
+          // canvas viewport
+          m_histoDBCanvasViewPort = m_histoDBCanvas->GetViewPort();
+  
+          // list tree
+          m_databaseHistogramTreeList = new TGListTree(m_histoDBCanvas,
+                                                       kHorizontalFrame);
+          m_databaseHistogramTreeList->AddRoot("Histograms");
+          m_databaseHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
+          m_databaseHistogramTreeList->Connect(
+            "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
+            this, "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+  
+          m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
+          m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
+                                         M_AddDBHistoToPage_COMMAND);
+          m_histoDBContextMenu->AddEntry("Add checked to Page as One",
+                                         M_AddDBHistoToPageAsOne_COMMAND);                                          
+          m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)",
+                                         M_SetHistoPropertiesInDB_COMMAND);
+          m_histoDBContextMenu->AddEntry("Delete checked histogram(s)",
+                                         M_DeleteDBHisto_COMMAND);
+          m_histoDBContextMenu->AddSeparator();
+          m_histoDBContextMenu->AddEntry("Collsapse all children",
+                                         M_DBHistoCollapseAllChildren_COMMAND);
+          m_histoDBContextMenu->AddSeparator();
+          m_histoDBContextMenu->AddEntry("Refresh",
+            M_RefreshHistoDBListTree_COMMAND);
+          m_histoDBContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
+                                        this, "handleCommand(Command)");
+  //m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
+  
+          m_histoDBCanvasViewPort->AddFrame(m_databaseHistogramTreeList);
+          m_databaseHistogramTreeList->SetLayoutManager(
+            new TGHorizontalLayout(m_databaseHistogramTreeList));
+          m_databaseHistogramTreeList->MapSubwindows();
+          m_histoDBCanvas->SetContainer(m_databaseHistogramTreeList);
+          m_histoDBCanvas->MapSubwindows();
+          databaseHistogramGroupFrame->AddFrame(m_histoDBCanvas,
+                                                new TGLayoutHints(kLHintsLeft |
+                                                                  kLHintsTop |
+                                                                  kLHintsExpandX |
+                                                                  kLHintsExpandY,
+                                                                  0, 0, 0, 0));
+  
+                                                    
+    m_mainHorizontalFrame->AddFrame(m_leftMiscFrame,
+                                    new TGLayoutHints(kLHintsLeft |
+                                                      kLHintsExpandY,
+                                                      0, 0, 0, 0));                                                    
+  
+  //  m_mainHorizontalFrame->AddFrame(m_databasePagesDock,
+  //                                  new TGLayoutHints(kLHintsLeft |
+  //                                                    kLHintsExpandY,
+  //                                                    0, 0, 0, 0));
+  
+    m_mainHorizontalFrame->AddFrame(leftVerticalSplitter,
+                                    new TGLayoutHints(kLHintsLeft |
+                                                      kLHintsExpandY));
+    m_mainHorizontalFrame->AddFrame(m_pageDock,
+                                    new TGLayoutHints(kLHintsLeft |
+                                                      kLHintsExpandX |
+                                                      kLHintsExpandY,
+                                                      0, 0, 0, 0));
+                                                      
+    m_mainHorizontalFrame->AddFrame(m_rightMiscFrame,
+                                    new TGLayoutHints(kLHintsRight |
+                                                      kLHintsExpandY,
+                                                      0, 0, 0, 0));
+  
+    m_mainHorizontalFrame->AddFrame(m_rightVerticalSplitter,
+                                    new TGLayoutHints(kLHintsRight |
+                                                      kLHintsExpandY));
+  
+    int parts[] = {35, 25, 40};
+    m_mainStatusBar = new TGStatusBar(this, 50, 10, kVerticalFrame);
+      m_mainStatusBar->SetParts(parts, 3);
+      m_mainStatusBar->SetText("Launching Presenter...", 2);
+  
+    AddFrame(m_menuDock, new TGLayoutHints(kLHintsExpandX, 0, 0, 1, 0));
+    AddFrame(m_toolBarDock, new TGLayoutHints(kLHintsExpandX, 0, 0, 1, 0));
+    AddFrame(m_mainHorizontalFrame, new TGLayoutHints(kLHintsExpandX |
+                                                      kLHintsExpandY));
+    AddFrame(m_mainStatusBar, new TGLayoutHints(kLHintsBottom | kLHintsExpandX,
+                                                0, 0, 0, 0));
+    m_menuDock->MapWindow();
+    m_toolBarDock->MapWindow();
+    m_databaseHistogramsDock->MapWindow();
+    m_pageDock->MapWindow();
+    m_dimBrowserDock->MapWindow();
+    m_databasePagesDock->MapWindow();
+  //  m_mainCanvasInfoDock->MapWindow();
   
 
-  centralPageFrame->AddFrame(m_mainCanvasInfoDock,
-                             new TGLayoutHints(kLHintsRight |
-                                               kLHintsTop |
-                                               kLHintsExpandX,
-                                               0, 0, 0, 0));
-
-
-
-
-
-//    TGTab* fTab515 = new TGTab(m_mainCanvasInfoDock, 600, 90);
-    // container of "Page Description"
-//    TGCompositeFrame* fCompositeFrame518;
-//    fCompositeFrame518 = fTab515->AddTab("Page Description");
-//    fCompositeFrame518->SetLayoutManager(new TGVerticalLayout(fCompositeFrame518));
-//    fCompositeFrame518->SetLayoutBroken(true);
-//    TGTextEdit* fTextEdit523 = new TGTextEdit(fCompositeFrame518, 600, 80);
-
-//   TGTextEdit *fTextEdit515 = new TGTextEdit(fMainFrame648,486,62);
-//   fTextEdit515->LoadFile("TxtEdit515");
-//   fMainFrame648->AddFrame(fTextEdit515, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX,2,2,2,2));
-//   fTextEdit515->MoveResize(2,2,486,62);
-
-
-    m_pageDescriptionView = new TGTextView(mainCanvasInfoGroupFrame, 600, 80);
-    //fTextEdit523->LoadFile("TxtEdit523");
-    mainCanvasInfoGroupFrame->AddFrame(m_pageDescriptionView, new TGLayoutHints(kLHintsLeft | kLHintsTop | kLHintsExpandX | kLHintsExpandY,2,2,2,2));
-//    fTextEdit523->Layout();
-                                                                 
-//    fTextEdit523->MoveResize(2, 2, 600, 80);
-    // container of "Tab2"
-//    TGCompositeFrame* fCompositeFrame520;
-//    fCompositeFrame520 = fTab515->AddTab("Message Log");
-//    //fCompositeFrame520->SetLayoutManager(new TGVerticalLayout(fCompositeFrame520));
-//    fCompositeFrame520->SetLayoutBroken(true);
-//    TGTextEdit* fTextEdit542 = new TGTextEdit(fCompositeFrame520, 400, 95);
-//    //fTextEdit542->LoadFile("TxtEdit542");
-//    fCompositeFrame520->AddFrame(fTextEdit542,
-//                                 new TGLayoutHints(kLHintsLeft |
-//                                                   kLHintsBottom |
-//                                                   kLHintsExpandX,
-//                                                   2, 2, 2, 2));
-//    //fTextEdit542->MoveResize(0, 0, 290, 77);
-//    fTab515->SetTab(1);
-//    fTab515->Resize(fTab515->GetDefaultSize());
-//    m_mainCanvasInfoDock->AddFrame(fTab515, new TGLayoutHints(kLHintsRight |
-//                                                              kLHintsTop |
-//                                                              kLHintsExpandX,
-//                                                              2, 2, 2, 2));
-    //fTab515->MoveResize(64, 40, 296, 104);
-
-  m_rightMiscFrame = new TGVerticalFrame(m_mainHorizontalFrame, 220, 494,
-                                         kVerticalFrame | kFixedWidth |
-                                         kLHintsExpandX);
-//                                         | kLHintsExpandX); // kFixedWidth
-
-    m_rightVerticalSplitter = new TGVSplitter(m_mainHorizontalFrame, 2, 2);
-    m_rightVerticalSplitter->SetFrame(m_rightMiscFrame, false);
-
-    m_dimBrowserDock = new TGDockableFrame(m_rightMiscFrame);
-    m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
-    m_dimBrowserDock->EnableUndock(true);
-    m_dimBrowserDock->EnableHide(false);
-    m_dimBrowserDock->Resize(220, 494);
-    m_rightMiscFrame->AddFrame(m_dimBrowserDock,
-                               new TGLayoutHints(kLHintsRight |
-                                                 kLHintsTop |
-                                                 kLHintsExpandX |
-                                                 kLHintsExpandY,
-                                                 0, 0, 0, 0));
-
-    m_histoSvcBrowserGroupFrame = new TGGroupFrame(m_dimBrowserDock,
-                                            TGString("DIM Histogram Browser"),
-                                            kVerticalFrame | kFixedHeight);
-    m_dimBrowserDock->AddFrame(m_histoSvcBrowserGroupFrame,
-                               new TGLayoutHints(kLHintsTop |
-                                                 kLHintsExpandX |
-                                                 kLHintsExpandY,
-                                                 0, 0, 0, 0));
-
-    m_dimSvcListTreeContainterCanvas = new TGCanvas(m_histoSvcBrowserGroupFrame,
-                                                    220, 100);
-    TGViewPort* fViewPort664 = m_dimSvcListTreeContainterCanvas->GetViewPort();
-    m_histoSvcListTree = new TGListTree(m_dimSvcListTreeContainterCanvas,
-                                      kHorizontalFrame);
-  //  m_histoSvcListTree->SetAutoCheckBoxPic(false); ROOT v5.16(?)...
-    m_histoSvcListTree->AddRoot("DIM");
-    (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
-                                                    m_dimOnline16);
-    m_histoSvcListTree->SetCheckMode(TGListTree::kRecursive);                                                    
-    m_histoSvcListTree->Connect(
-      "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-      this, "clickedHistoSvcTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-
-    fViewPort664->AddFrame(m_histoSvcListTree);
-    m_histoSvcListTree->SetLayoutManager(new TGHorizontalLayout(
-                                         m_histoSvcListTree));
-    m_histoSvcListTree->MapSubwindows();
-    m_dimSvcListTreeContainterCanvas->SetContainer(m_histoSvcListTree);
-    m_dimSvcListTreeContainterCanvas->MapSubwindows();
-    m_histoSvcBrowserGroupFrame->AddFrame(m_dimSvcListTreeContainterCanvas,
-      new TGLayoutHints(kLHintsRight | kLHintsTop |
-                        kLHintsExpandX | kLHintsExpandY,
-                        0, 0, 0, 0));
-
-    m_histoSvcTreeContextMenu = new TGPopupMenu(fClient->GetRoot());
-    m_histoSvcTreeContextMenu->AddEntry("Add checked to Database",
-                               M_AddHistoToDB_COMMAND);
-    m_histoSvcTreeContextMenu->AddEntry("Add checked to Page",
-                               M_AddHistoToPage_COMMAND);                            
-    m_histoSvcTreeContextMenu->AddSeparator();
-//    m_histoSvcTreeContextMenu->AddEntry("Resubscribe to checked",
-//                               M_SetDimSourceFromTree);
-    m_histoSvcTreeContextMenu->AddSeparator();
-    m_histoSvcTreeContextMenu->AddEntry("Collsapse all children",
-                               M_DimCollapseAllChildren_COMMAND);
-    m_histoSvcTreeContextMenu->AddSeparator();
-    m_histoSvcTreeContextMenu->AddEntry("Refresh", M_RefreshHistoSvcListTree);
-    m_histoSvcTreeContextMenu->Connect("Activated(Int_t)","PresenterMainFrame", this,
-                              "handleCommand(Command)");
-
-    m_databaseHistogramsDock = new TGDockableFrame(m_rightMiscFrame);
-    m_databaseHistogramsDock->SetWindowName("Histograms in Database");
-    m_databaseHistogramsDock->EnableUndock(true);
-    m_databaseHistogramsDock->EnableHide(false);
-    m_databaseHistogramsDock->Resize(220, 100);
-    m_rightMiscFrame->AddFrame(m_databaseHistogramsDock,
-                               new TGLayoutHints(kLHintsRight |
-                                                 kLHintsBottom |
-                                                 kLHintsExpandX |
-                                                 kLHintsExpandY |
-                                                 kFixedWidth,
-                                                 0, 0, 0, 0));
-      // databaseHistogramFrame
-  TGVerticalFrame* leftDatabaseHistogramFrame = new TGVerticalFrame(m_databaseHistogramsDock,
-                                                                    220, 100,
-                                                                    kVerticalFrame |
-                                                                    kFixedWidth);
-//TGGroupFrame* leftDatabaseHistogramFrame = new TGGroupFrame(m_databaseHistogramsDock, kVerticalFrame | kFixedWidth);
-  TGGroupFrame* databaseHistogramGroupFrame = new TGGroupFrame(leftDatabaseHistogramFrame,
-                                                               TGString("Histograms in Database"),
-                                                               kVerticalFrame |
-                                                               kFixedWidth);
-//TGGroupFrame(m_databaseHistogramsDock, TGString("Histogram Database"), kVerticalFrame | kFixedWidth);
-
-      leftDatabaseHistogramFrame->AddFrame(databaseHistogramGroupFrame,
-                                           new TGLayoutHints(kLHintsTop |
-                                                             kLHintsExpandX |
-                                                             kLHintsExpandY,
-                                                             0, 0, 0, 0));
-
-      m_databaseHistogramsDock->AddFrame(leftDatabaseHistogramFrame,
-                                         new TGLayoutHints(kLHintsTop |
-                                                           kLHintsExpandX |
-                                                           kLHintsExpandY,
-                                                           0, 0, 0, 0));
-        // Database histogram filter box
-        m_histoDBFilterComboBox = new TGComboBox(databaseHistogramGroupFrame, -1,
-                                                 kHorizontalFrame | kDoubleBorder |
-                                                 kSunkenFrame | kOwnBackground);
-        m_histoDBFilterComboBox->AddEntry("Folder/Page", FoldersAndPages); // #0
-        m_histoDBFilterComboBox->AddEntry("Tasks/Algorithm", Tasks); // #1
-        m_histoDBFilterComboBox->AddEntry("Subsystems", Subsystems); // #2
-        m_histoDBFilterComboBox->AddEntry("With auto analysis",
-                                          HistogramsWithAnalysis); //#3
-        m_histoDBFilterComboBox->AddEntry("Produced by analysis",
-                                          AnalysisHistograms); //#4
-        m_histoDBFilterComboBox->AddEntry("Full list", AllHistograms); // #5
-        // @enum FilterCriteria
-        m_histoDBFilterComboBox->Resize(149, 22);
-        m_histoDBFilterComboBox->Select(Tasks);
-        m_histoDBFilterComboBox->Connect("Selected(Int_t)", "PresenterMainFrame",
-                                         this, "refreshHistoDBListTree()");
-        databaseHistogramGroupFrame->AddFrame(m_histoDBFilterComboBox,
-                                              new TGLayoutHints(kLHintsLeft |
-                                                                kLHintsTop |
-                                                                kLHintsExpandX,
-                                                                0, 0, 0, 0));
-        // canvas widget
-        m_histoDBCanvas = new TGCanvas(databaseHistogramGroupFrame, 124, 460);
-
-        // canvas viewport
-        m_histoDBCanvasViewPort = m_histoDBCanvas->GetViewPort();
-
-        // list tree
-        m_databaseHistogramTreeList = new TGListTree(m_histoDBCanvas,
-                                                     kHorizontalFrame);
-        m_databaseHistogramTreeList->AddRoot("Histograms");
-        m_databaseHistogramTreeList->SetCheckMode(TGListTree::kRecursive);
-        m_databaseHistogramTreeList->Connect(
-          "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-          this, "clickedHistoDBTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
-
-        m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
-        m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
-                                       M_AddDBHistoToPage_COMMAND);
-        m_histoDBContextMenu->AddEntry("Add checked to Page as One",
-                                       M_AddDBHistoToPageAsOne_COMMAND);                                          
-        m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)",
-                                       M_SetHistoPropertiesInDB_COMMAND);
-        m_histoDBContextMenu->AddEntry("Delete checked histogram(s)",
-                                       M_DeleteDBHisto_COMMAND);
-        m_histoDBContextMenu->AddSeparator();
-        m_histoDBContextMenu->AddEntry("Collsapse all children",
-                                       M_DBHistoCollapseAllChildren_COMMAND);
-        m_histoDBContextMenu->AddSeparator();
-        m_histoDBContextMenu->AddEntry("Refresh",
-          M_RefreshHistoDBListTree_COMMAND);
-        m_histoDBContextMenu->Connect("Activated(Int_t)","PresenterMainFrame",
-                                      this, "handleCommand(Command)");
-//m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
-
-        m_histoDBCanvasViewPort->AddFrame(m_databaseHistogramTreeList);
-        m_databaseHistogramTreeList->SetLayoutManager(
-          new TGHorizontalLayout(m_databaseHistogramTreeList));
-        m_databaseHistogramTreeList->MapSubwindows();
-        m_histoDBCanvas->SetContainer(m_databaseHistogramTreeList);
-        m_histoDBCanvas->MapSubwindows();
-        databaseHistogramGroupFrame->AddFrame(m_histoDBCanvas,
-                                              new TGLayoutHints(kLHintsLeft |
-                                                                kLHintsTop |
-                                                                kLHintsExpandX |
-                                                                kLHintsExpandY,
-                                                                0, 0, 0, 0));
-
-                                                  
-  m_mainHorizontalFrame->AddFrame(m_leftMiscFrame,
-                                  new TGLayoutHints(kLHintsLeft |
-                                                    kLHintsExpandY,
-                                                    0, 0, 0, 0));                                                    
-
-//  m_mainHorizontalFrame->AddFrame(m_databasePagesDock,
-//                                  new TGLayoutHints(kLHintsLeft |
-//                                                    kLHintsExpandY,
-//                                                    0, 0, 0, 0));
-
-  m_mainHorizontalFrame->AddFrame(leftVerticalSplitter,
-                                  new TGLayoutHints(kLHintsLeft |
-                                                    kLHintsExpandY));
-  m_mainHorizontalFrame->AddFrame(m_pageDock,
-                                  new TGLayoutHints(kLHintsLeft |
-                                                    kLHintsExpandX |
-                                                    kLHintsExpandY,
-                                                    0, 0, 0, 0));
-                                                    
-  m_mainHorizontalFrame->AddFrame(m_rightMiscFrame,
-                                  new TGLayoutHints(kLHintsRight |
-                                                    kLHintsExpandY,
-                                                    0, 0, 0, 0));
-
-  m_mainHorizontalFrame->AddFrame(m_rightVerticalSplitter,
-                                  new TGLayoutHints(kLHintsRight |
-                                                    kLHintsExpandY));
-
-  int parts[] = {35, 25, 40};
-  m_mainStatusBar = new TGStatusBar(this, 50, 10, kVerticalFrame);
-    m_mainStatusBar->SetParts(parts, 3);
-    m_mainStatusBar->SetText("Launching Presenter...", 2);
-
-  AddFrame(m_menuDock, new TGLayoutHints(kLHintsExpandX, 0, 0, 1, 0));
-  AddFrame(m_toolBarDock, new TGLayoutHints(kLHintsExpandX, 0, 0, 1, 0));
-  AddFrame(m_mainHorizontalFrame, new TGLayoutHints(kLHintsExpandX |
-                                                    kLHintsExpandY));
-  AddFrame(m_mainStatusBar, new TGLayoutHints(kLHintsBottom | kLHintsExpandX,
-                                              0, 0, 0, 0));
-  m_menuDock->MapWindow();
-  m_toolBarDock->MapWindow();
-  m_databaseHistogramsDock->MapWindow();
-  m_pageDock->MapWindow();
-  m_dimBrowserDock->MapWindow();
-  m_databasePagesDock->MapWindow();
-//  m_mainCanvasInfoDock->MapWindow();
-
-  SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputPrimaryApplicationModal);
-  MapSubwindows();
-  MapWindow();
-  m_rightMiscFrame->UnmapWindow();
-  m_rightVerticalSplitter->UnmapWindow();
-//  m_databaseAlarmsDock->UndockContainer();
-  Resize();
-  DoRedraw();
+  m_intervalPicker = new IntervalPicker(this);
+  partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->GetSelected());
+  m_prevPresenterMode = m_presenterMode;
+  m_presenterMode = Online;  
+  
+  
+    SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputPrimaryApplicationModal);
+    MapSubwindows();
+    MapWindow();
+    m_rightMiscFrame->UnmapWindow();
+    m_rightVerticalSplitter->UnmapWindow();
+  //  m_databaseAlarmsDock->UndockContainer();
+    Resize();
+    DoRedraw();
+  }
 }
 void PresenterMainFrame::CloseWindow()
 {
@@ -1483,7 +1504,7 @@ void PresenterMainFrame::handleCommand(Command cmd)
       m_nextIntervalButton->SetState(kButtonDisabled);
       m_currentPageName = selectedPageFromDbTree();
       if (!m_currentPageName.empty()) {
-      	loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
+        loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
       }
     }
       break;
@@ -1550,6 +1571,9 @@ void PresenterMainFrame::handleCommand(Command cmd)
 void PresenterMainFrame::setVerbosity(const pres::MsgLevel & verbosity)
 {
   m_verbosity = verbosity;
+  if (Silent == m_verbosity) {
+    gErrorIgnoreLevel = 1001;
+  }
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }
 }
 
@@ -1606,9 +1630,29 @@ void PresenterMainFrame::setSavesetPath(const std::string & savesetPath) {
     }
   }
 }
+void PresenterMainFrame::setImagePath(const std::string & imagePath) {
+  m_imagePath = imagePath;
+}
+void PresenterMainFrame::setDumpFormat(const std::string & dumpFormat) {
+  m_dumpFormat = dumpFormat;
+}
+void PresenterMainFrame::setPartition(const std::string & partition) {
+  m_currentPartition = partition;
+}
+
 void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode)
 {
   switch (presenterMode) {
+    case Init:
+      buildGUI();
+      break;
+    case Batch:
+      gROOT->SetBatch();
+      m_presenterMode = Batch;
+      editorCanvas = new TCanvas("c", "c", GetWidth(), GetHeight());
+      editorCanvas->cd();
+      gStyle->SetOptStat("ne");
+      break;              
     case Online:
       m_prevPresenterMode = m_presenterMode;
       m_presenterMode = Online;
@@ -1634,7 +1678,9 @@ void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode)
       }
       break;
   }
-  reconfigureGUI();
+  if (Batch != m_presenterMode) {
+    reconfigureGUI();
+  }
 }
 
 void PresenterMainFrame::setKnownDatabases(const std::string & databasesCfg,
@@ -1737,7 +1783,8 @@ void PresenterMainFrame::savePageToFile()
                                       "PostScript",   "*.ps",
                                       0,              0 };
   
-  static TString dir(gSystem->TempDirectory()); //HomeDirectory(const char* userName = 0)
+  
+  static TString dir(m_imagePath); //HomeDirectory(const char* userName = 0)
   static Int_t typeidx = 0;
   static Bool_t overwr = kFALSE;
   TGFileInfo fi;
@@ -1821,7 +1868,9 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
     }
     histogramListIt++;
   }
-  autoCanvasLayout();
+  if (Batch != m_presenterMode) {
+    autoCanvasLayout();
+  }
 }
 bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
                                               const std::string & dbUsername,
@@ -1853,10 +1902,12 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       if (0 != m_archive) { m_archive->setAnalysisLib(m_analysisLib); }
 
       m_dbName = dbName;
-      m_mainStatusBar->SetText(dbUsername.c_str(), 2);
-
       m_message = "Successfully connected to OnlineHistDB.";
-      m_mainStatusBar->SetText(m_message.c_str(), 2);
+      
+      if (Batch != m_presenterMode) {
+        m_mainStatusBar->SetText(dbUsername.c_str(), 2);
+        m_mainStatusBar->SetText(m_message.c_str(), 2);
+      }
 
       if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 
@@ -1879,45 +1930,51 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       }
     } catch (std::string sqlException) {
       // TODO: add error logging backend - MsgStream?
-      m_mainStatusBar->SetText(sqlException.c_str(), 2);
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-      new TGMsgBox(fClient->GetRoot(), this, "Login Error",
-                   Form("Could not connect to the OnlineHistDB server:\n\n%s\n"
-                        "This program cannot function correctly",
-                        sqlException.c_str()),
-                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      if (Batch != m_presenterMode) {
+        m_mainStatusBar->SetText(sqlException.c_str(), 2);
+        new TGMsgBox(fClient->GetRoot(), this, "Login Error",
+                     Form("Could not connect to the OnlineHistDB server:\n\n%s\n"
+                          "This program cannot function correctly",
+                          sqlException.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      }
 
       //  TODO: disable/hideHistogramDatabaseTools();
       if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
       m_databaseMode = LoggedOut;
     }
   } else {
-    new TGMsgBox(fClient->GetRoot(), this, "Login Error",
-                   Form("Could not connect to the OnlineHistDB server:\n"
-                        "Please enter valid credentials."),
-                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Login Error",
+                     Form("Could not connect to the OnlineHistDB server:\n"
+                          "Please enter valid credentials."),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
   }
   return isConnectedToHistogramDB();
 }
 void PresenterMainFrame::loginToHistogramDB()
 {
 // TODO: map/unmap WaitForUnmap(TGWindow* w)
-  fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
-                                   m_knownDatabases, m_knownDbCredentials));
-
-  //  histoDBFilterComboBox->HideFrame();
-//  reconfigureGUI();
-  //  TODO: refactor refresh* methods to use only 1 DB readout...
-//  refreshPagesDBListTree();
-//  refreshHistoDBListTree();
-
-  reconfigureGUI();
-  removeHistogramsFromPage();
+  if (Batch != m_presenterMode) {
+    fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
+                                     m_knownDatabases, m_knownDbCredentials));
+  
+    //  histoDBFilterComboBox->HideFrame();
+  //  reconfigureGUI();
+    //  TODO: refactor refresh* methods to use only 1 DB readout...
+  //  refreshPagesDBListTree();
+  //  refreshHistoDBListTree();
+  
+    reconfigureGUI();
+    removeHistogramsFromPage();
+  }
 }
 void PresenterMainFrame::logoutFromHistogramDB()
 {
-  if (0 != m_histogramDB && isConnectedToHistogramDB()) {
+  if (0 != m_histogramDB && isConnectedToHistogramDB() &&
+      Batch != m_presenterMode) {
     new TGMsgBox(fClient->GetRoot(), this, "Logout from Database",
                  "Do you really want to logout from Database?",
                  kMBIconQuestion, kMBYes | kMBNo, &m_msgBoxReturnCode);
@@ -1934,25 +1991,27 @@ void PresenterMainFrame::logoutFromHistogramDB()
 
 //  removeHistogramsFromPage();
   m_message = "Disconnected from histogramDB";
-  m_mainStatusBar->SetText(m_message.c_str(), 2);
+  if (Batch != m_presenterMode) {  
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
+    reconfigureGUI();
+    removeHistogramsFromPage();
+  }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
-
-  reconfigureGUI();
-
   //  TODO: refactor refresh* methods to use only 1 DB readout...
-  removeHistogramsFromPage();
 }
 void PresenterMainFrame::startPageRefresh()
 {
   if (false == m_loadingPage) {
-    m_message = "Refresh started.";
-    m_mainStatusBar->SetText(m_message.c_str(), 2);
-    if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
-  
-    m_stopRefreshButton->SetState(kButtonUp);
-    m_viewMenu->EnableEntry(STOP_COMMAND);
-    m_startRefreshButton->SetState(kButtonDisabled);
-    m_viewMenu->DisableEntry(START_COMMAND);
+    if (Batch != m_presenterMode) {
+      m_message = "Refresh started.";
+      m_mainStatusBar->SetText(m_message.c_str(), 2);
+      if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
+    
+      m_stopRefreshButton->SetState(kButtonUp);
+      m_viewMenu->EnableEntry(STOP_COMMAND);
+      m_startRefreshButton->SetState(kButtonDisabled);
+      m_viewMenu->DisableEntry(START_COMMAND);
+    }    
   
     enablePageRefresh();
     m_pageRefreshTimer->TurnOn();
@@ -2043,24 +2102,26 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
       }
     } catch (std::string sqlException) {
         // TODO: add error logging backend
-        m_mainStatusBar->SetText(sqlException.c_str());
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-            Form("OnlineHistDB server:\n\n%s\n",
-                 sqlException.c_str()),
-            kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        if (Batch != m_presenterMode) {
+          m_mainStatusBar->SetText(sqlException.c_str());
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+              Form("OnlineHistDB server:\n\n%s\n",
+                   sqlException.c_str()),
+              kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
     }
 //    treeRoot->SetOpen(!treeRoot->IsOpen());
     listView->MapWindow();
   } else if (!isConnectedToHistogramDB()) {
     m_message = "Alarms not read from Database.";
   }
-  m_mainStatusBar->SetText(m_message.c_str(), 2);
+  if (Batch != m_presenterMode) {  
+    m_mainStatusBar->SetText(m_message.c_str(), 2);
+    fClient->NeedRedraw(listView);
+  }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
 //  sortTreeChildrenItems(listView, listView->GetFirstItem());
-  fClient->NeedRedraw(listView);
-        
 };
 
 void PresenterMainFrame::listHistogramsFromHistogramDB(TGListTree* listView,
@@ -2198,21 +2259,25 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
     } catch (std::string sqlException) {
         // TODO: add error logging backend
-        m_mainStatusBar->SetText(sqlException.c_str());
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-            Form("OnlineHistDB server:\n\n%s\n",
-                 sqlException.c_str()),
-            kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        if (Batch != m_presenterMode) {
+          m_mainStatusBar->SetText(sqlException.c_str());
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+              Form("OnlineHistDB server:\n\n%s\n",
+                   sqlException.c_str()),
+              kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
     }
   } else if (!isConnectedToHistogramDB()) {
     m_message = "Histograms not read from Database.";
   }
-  m_mainStatusBar->SetText(m_message.c_str(), 2);
+  if (Batch != m_presenterMode) {
+    m_mainStatusBar->SetText(m_message.c_str(), 2);
+    sortTreeChildrenItems(listView, listView->GetFirstItem());
+    fClient->NeedRedraw(listView);
+  }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
-  sortTreeChildrenItems(listView, listView->GetFirstItem());
-  fClient->NeedRedraw(listView);
+
 }
 void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
   TGListTreeItem* node, std::vector<std::string>*  histogramList,
@@ -2333,7 +2398,7 @@ void PresenterMainFrame::printBenchmark(const std::string &timer)
             << int(dbHistosOnPage.size()) << ",";
   std::vector<DbRootHist*>::iterator timer_dbHistosOnPageIt = dbHistosOnPage.begin();
   while( timer_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
-  	std::cout << (*timer_dbHistosOnPageIt)->identifier() << "," 
+    std::cout << (*timer_dbHistosOnPageIt)->identifier() << "," 
               << int(((*timer_dbHistosOnPageIt)->rootHistogram)->GetEntries()) << ","
               << m_benchmark->GetRealTime((*timer_dbHistosOnPageIt)->identifier().c_str()) << ",";
     timer_dbHistosOnPageIt++;
@@ -2564,7 +2629,9 @@ void PresenterMainFrame::deleteTreeChildrenItemsUserDataChildren(TGListTreeItem*
 }
 void PresenterMainFrame::setStatusBarText(const char* text, int slice)
 {
-  m_mainStatusBar->SetText(text, slice);
+  if (Batch != m_presenterMode) {
+    m_mainStatusBar->SetText(text, slice);
+  }
 }
 void PresenterMainFrame::editHistogramProperties()
 {
@@ -2640,9 +2707,11 @@ void PresenterMainFrame::histogramDescription()
       hd->Popup();
     }
   } else {
-    new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
-                 "Description Unavailable, not logged in!",
-                 kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Description Unavailable",
+                   "Description Unavailable, not logged in!",
+                   kMBIconExclamation, kMBClose, &m_msgBoxReturnCode);
+    }
   } 
 }
 void PresenterMainFrame::inspectPage()
@@ -2952,237 +3021,287 @@ void PresenterMainFrame::refreshPagesDBListTree() {
                       s_withoutHistograms);
 }
 void PresenterMainFrame::refreshHistogramSvcList(bool tree) {
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
-  if (m_refreshingPage) {
-    stopPageRefresh();
-    m_resumePageRefreshAfterLoading = true;
-  }
-
-  m_knownHistogramServices.clear();
-  m_histogramTypes.clear();
-
-  if (Online == m_presenterMode || EditorOnline == m_presenterMode) {
-    
-    m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
-    m_histoSvcBrowserGroupFrame->SetTitle("DIM Histogram Browser");    
-    
-    m_candidateDimServices.clear();
-    m_knownOnlinePartitionList->Delete();
-    
-    char *dimService; 
-    char *dimFormat;
-    int dimType;
-  
-  // két lekérdezés: Mon* és /gauchocomment, majd szűrni és isPlaus
-  //TODO: put known Mon prefixes into a list and cycle through...
-
-    std::string serviceType = s_Mon;
-    serviceType.append("*");
-    m_dimBrowser->getServices(serviceType.c_str());
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
-      TString dimMon(dimService);        
-      if (dimMon.BeginsWith(s_pfixMonH1D.c_str()) ||
-          dimMon.BeginsWith(s_pfixMonH2D.c_str()) ||
-          dimMon.BeginsWith(s_pfixMonProfile.c_str())) {
-        m_candidateDimServices.push_back(std::string(dimService));
-      }
+if (Batch != m_presenterMode) {
+  gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
+    if (m_refreshingPage) {
+      stopPageRefresh();
+      m_resumePageRefreshAfterLoading = true;
     }
-
-    m_dimBrowser->getServices("*/gauchocomment");
-    TObjArray* dimCNTMatchGroup = 0;
-    DimBrowser* dimBrowser = new DimBrowser();
-    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) { 
-      TString dimCNT(dimService);
-      dimCNT.Remove(dimCNT.Length() - s_gauchocomment.length(),s_gauchocomment.length());
-
-      if (false == dimCNT.BeginsWith(s_H1D.c_str()) &&
-          false == dimCNT.BeginsWith(s_H2D.c_str()) &&
-          false == dimCNT.BeginsWith(s_P1D.c_str()) &&
-          false == dimCNT.BeginsWith(s_HPD.c_str()) &&
-          false == dimCNT.BeginsWith(s_P2D.c_str()) ) {
-
-    dimBrowser->getServices(dimCNT.Data());
-    if ((dimType = dimBrowser->getNextService(dimService, dimFormat))) {    
-      dimCNTMatchGroup = s_DimCNTRegexp.MatchS(dimFormat);
-      if (false == dimCNTMatchGroup->IsEmpty()) {
-        dimCNT.Prepend(s_slash.c_str());
-        dimCNT.Prepend(s_CNT.c_str());
-        m_candidateDimServices.push_back(std::string(dimCNT.Data()));
-      }
-    }       
-      }
-      if (dimCNTMatchGroup) {
-        dimCNTMatchGroup->Delete();
-        delete dimCNTMatchGroup;
-        dimCNTMatchGroup = 0;
-      }      
-    }
-    if (dimBrowser) {delete dimBrowser; dimBrowser = NULL;}
-        
-    if (0 != m_histoSvcListTree && 0 != m_dimBrowser) {
-      const int nDimServers = m_dimBrowser->getServers();
-      
-      if (m_verbosity >= Verbose) {
-        std::cout << "nDimServers:\t" << nDimServers << std::endl;
-      }
   
-      TString dimServerName;
-      TString dimServerNodeName;
-      TString dimServiceName;
-      TString statusMessage;
+    m_knownHistogramServices.clear();
+    m_histogramTypes.clear();
   
-      // If some servers found, discover what services are available
-      if (nDimServers > 0) {
-        const char* dimDnsServerNode = DimClient::getDnsNode();
-  
-        if (m_verbosity >= Verbose) {
-          std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
-        }
-  
-        setStatusBarText(dimDnsServerNode, 2);
-        if (s_withTree == tree) {
-          TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
-          m_histoSvcListTree->RenameItem(node, dimDnsServerNode);
-          
-          (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
-                                                            m_dimOnline16);
-          
-          
-          deleteTreeChildrenItemsUserData(node);
-          m_histoSvcListTree->DeleteChildren(node);          
-        }
-  
-        m_candidateDimServicesIt = m_candidateDimServices.begin();
-        while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
-          TString dimServiceTS = TString(*m_candidateDimServicesIt);
-              HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
-              if (histogramService.isPlausible()) {
-                std::string candidateDimService(*m_candidateDimServicesIt);
-                if (s_withTree == tree) {          
-                  if (s_CNT == histogramService.histogramType()) {
-                    candidateDimService = candidateDimService.erase(0, s_CNT.length()).erase(0, s_slash.length());
-                  }
-                  
-                  m_knownHistogramServices.push_back(candidateDimService);
-                  m_histogramTypes.push_back(histogramService.histogramType());
-                }
-                if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
-                  TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
-                  if (!histogramService.isEFF() ||
-                      (histogramService.isEFF() &&
-                      false == partitionName->GetString().BeginsWith(s_hltNodePrefix.c_str()))) {                    
-                    m_knownOnlinePartitionList->Add(partitionName);
-                  }
-                }
-              if (m_verbosity >= Verbose) {
-                std::cout << "\t\t\t|_ " << candidateDimService << std::endl;
-              }
-            } else {
-              new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
-                Form("The DIM servicename\n%s\n does not appear to follow the" \
-                  "convention\nPlease use the following format:\n" \
-                  "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
-                  "normally has the following format:\n" \
-                  "partition_node_taskname_instance", dimService),
-                kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-            }
-          ++m_candidateDimServicesIt;
-        }
-//        partitionSelectorComboBoxHandler(0);       
-      }
-    } else {
-      if (s_withTree == tree) {
-        m_histoSvcListTree->RenameItem(m_histoSvcListTree->GetFirstItem(), "No DIM");
-      }
-      if (m_verbosity >= Verbose) {
-        std::cout << "Sorry, no DIM server found." << std::endl;
-      }
-      new TGMsgBox(fClient->GetRoot(), this, "DIM Error",
-                   "Sorry, no DIM server found", kMBIconExclamation,
-                   kMBOk, &m_msgBoxReturnCode);
-    }
-  } else if (EditorOffline == m_presenterMode) {
-    if (s_withTree == tree && !m_savesetFileName.empty()) {
+    if (Online == m_presenterMode || EditorOnline == m_presenterMode) {
       
-      m_dimBrowserDock->SetWindowName("ROOT Histogram Browser");
-      m_histoSvcBrowserGroupFrame->SetTitle("ROOT Histogram Browser");
-            
-      TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
-      m_histoSvcListTree->RenameItem(node, m_savesetFileName.c_str());
+      m_dimBrowserDock->SetWindowName("DIM Histogram Browser");
+      m_histoSvcBrowserGroupFrame->SetTitle("DIM Histogram Browser");    
       
-      (m_histoSvcListTree->GetFirstItem())->SetPictures(m_iconROOT, m_iconROOT);
+      m_candidateDimServices.clear();
+      m_knownOnlinePartitionList->Delete();
       
-      deleteTreeChildrenItemsUserData(node);
-      m_histoSvcListTree->DeleteChildren(node);
-      
-      TFile rootFile(m_savesetFileName.c_str());
-      
-      if (rootFile.IsZombie()) {
-        new TGMsgBox(fClient->GetRoot(), this, "File Error",
-                     "Sorry, file specified not found", kMBIconExclamation,
-                     kMBOk, &m_msgBoxReturnCode);
-      } else {        
-        std::string taskName(m_archive->taskNameFromFile(std::string(rootFile.GetName())));
-        pres::SavesetType savesetType = pres::OfflineFile;                
-        TObjArray* fileNameMatchGroup = 0;
-        
-        fileNameMatchGroup = s_fileDateRegexp.MatchS(rootFile.GetName());
-        if (false == fileNameMatchGroup->IsEmpty()) {
-          savesetType = pres::OnlineFile;
-          if (fileNameMatchGroup) {
-            fileNameMatchGroup->Delete();
-            delete fileNameMatchGroup;
-            fileNameMatchGroup = 0;
-          } 
+      char *dimService; 
+      char *dimFormat;
+      int dimType;
+    
+      std::string serviceType = s_Mon;
+//      serviceType.append("*");
+      m_dimBrowser->getServices(serviceType.c_str());
+      while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
+        TString dimMon(dimService);        
+        if (dimMon.BeginsWith(s_pfixMonH1D.c_str()) ||
+            dimMon.BeginsWith(s_pfixMonH2D.c_str()) ||
+            dimMon.BeginsWith(s_pfixMonProfile.c_str())) {
+          m_candidateDimServices.push_back(std::string(dimService));
         } else {
-          if (fileNameMatchGroup) {
-            fileNameMatchGroup->Delete();
-            delete fileNameMatchGroup;
-            fileNameMatchGroup = 0;
+          TObjArray* dimHltCntMatchGroup = 0;
+          dimHltCntMatchGroup = s_DimHltCntRegexp.MatchS(dimFormat);
+          if ((true == dimMon.Contains(s_adder.c_str())) &&
+              (true == dimMon.Contains(s_eff_monRate.c_str())) &&
+              (false == dimHltCntMatchGroup->IsEmpty())) {
+            if (false == dimMon.BeginsWith(s_CNT.c_str())) {
+              dimMon.Prepend(s_slash.c_str());
+              dimMon.Prepend(s_CNT.c_str());
+            }
+            HistogramIdentifier histogramIdentifier = HistogramIdentifier(dimMon.Data());
+            if (histogramIdentifier.isPlausible() && 
+              s_CNT != histogramIdentifier.histogramUTGID()) {
+              m_candidateDimServices.push_back(std::string(dimMon.Data()));
+            } else {
+            }
           }
-          fileNameMatchGroup = s_offlineJobRegexp.MatchS(rootFile.GetName());        
+          if (dimHltCntMatchGroup) {
+            dimHltCntMatchGroup->Delete();
+            delete dimHltCntMatchGroup;
+            dimHltCntMatchGroup = 0;        
+          }
+        }           
+      }
+      
+      serviceType = "*" + s_adder + "*";
+      m_dimBrowser->getServices(serviceType.c_str());
+      while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
+        TString dimMon(dimService);        
+          TObjArray* dimHltCntMatchGroup = 0;          
+          dimHltCntMatchGroup = s_DimHltCntRegexp.MatchS(dimFormat);
+          if ((true == dimMon.Contains(s_adder.c_str())) &&
+              (true == dimMon.Contains(s_eff_monRate.c_str())) &&
+              (false == dimHltCntMatchGroup->IsEmpty())) {
+            if (false == dimMon.BeginsWith(s_CNT.c_str())) {
+              dimMon.Prepend(s_slash.c_str());
+              dimMon.Prepend(s_CNT.c_str());
+            }
+            HistogramIdentifier histogramIdentifier = HistogramIdentifier(dimMon.Data());
+            if (histogramIdentifier.isPlausible() && 
+              s_CNT != histogramIdentifier.histogramUTGID()) {
+              m_candidateDimServices.push_back(std::string(dimMon.Data()));
+            }
+          }
+          if (dimHltCntMatchGroup) {
+            dimHltCntMatchGroup->Delete();
+            delete dimHltCntMatchGroup;
+            dimHltCntMatchGroup = 0;        
+          }        
+      }      
+//      m_dimBrowser->getServices("*/gauchocomment");
+//      TObjArray* dimCNTMatchGroup = 0;
+//      DimBrowser* dimBrowser = new DimBrowser();
+//      while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) { 
+//        TString dimCNT(dimService);
+//        dimCNT.Remove(dimCNT.Length() - s_gauchocomment.length(),s_gauchocomment.length());
+//  
+//        if (false == dimCNT.BeginsWith(s_H1D.c_str()) &&
+//            false == dimCNT.BeginsWith(s_H2D.c_str()) &&
+//            false == dimCNT.BeginsWith(s_P1D.c_str()) &&
+//            false == dimCNT.BeginsWith(s_HPD.c_str()) &&
+//            false == dimCNT.BeginsWith(s_P2D.c_str()) ) {
+//  
+//      dimBrowser->getServices(dimCNT.Data());
+//      if ((dimType = dimBrowser->getNextService(dimService, dimFormat))) {    
+//        dimCNTMatchGroup = s_DimCNTRegexp.MatchS(dimFormat);
+//        if (false == dimCNTMatchGroup->IsEmpty()) {
+//          dimCNT.Prepend(s_slash.c_str());
+//          dimCNT.Prepend(s_CNT.c_str());
+//          m_candidateDimServices.push_back(std::string(dimCNT.Data()));
+//        }
+//      }       
+//        }
+//        if (dimCNTMatchGroup) {
+//          dimCNTMatchGroup->Delete();
+//          delete dimCNTMatchGroup;
+//          dimCNTMatchGroup = 0;
+//        }      
+//      }
+//      if (dimBrowser) {delete dimBrowser; dimBrowser = NULL;}
+          
+      if (0 != m_histoSvcListTree && 0 != m_dimBrowser) {
+        const int nDimServers = m_dimBrowser->getServers();
+        
+        if (m_verbosity >= Verbose) {
+          std::cout << "nDimServers:\t" << nDimServers << std::endl;
+        }
+    
+        TString dimServerName;
+        TString dimServerNodeName;
+        TString dimServiceName;
+        TString statusMessage;
+    
+        // If some servers found, discover what services are available
+        if (nDimServers > 0) {
+          const char* dimDnsServerNode = DimClient::getDnsNode();
+    
+          if (m_verbosity >= Verbose) {
+            std::cout << std::endl << "DNS: " << dimDnsServerNode << std::endl;
+          }
+    
+          setStatusBarText(dimDnsServerNode, 2);
+          if (s_withTree == tree) {
+            TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
+            m_histoSvcListTree->RenameItem(node, dimDnsServerNode);
+            
+            (m_histoSvcListTree->GetFirstItem())->SetPictures(m_dimOnline16,
+                                                              m_dimOnline16);
+            
+            
+            deleteTreeChildrenItemsUserData(node);
+            m_histoSvcListTree->DeleteChildren(node);          
+          }
+    
+          m_candidateDimServicesIt = m_candidateDimServices.begin();
+          while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
+            TString dimServiceTS = TString(*m_candidateDimServicesIt);
+                HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
+                if (histogramService.isPlausible()) {
+                  std::string candidateDimService(*m_candidateDimServicesIt);
+                  if (s_withTree == tree) {          
+                    if (s_CNT == histogramService.histogramType()) {
+                      candidateDimService = candidateDimService.erase(0, s_CNT.length()).erase(0, s_slash.length());
+                    }
+                    
+                    m_knownHistogramServices.push_back(candidateDimService);
+                    m_histogramTypes.push_back(histogramService.histogramType());
+                  }
+                  if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
+                    TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
+                    if (!histogramService.isEFF() ||
+                        (histogramService.isEFF() &&
+                        false == partitionName->GetString().BeginsWith(s_hltNodePrefix.c_str()))) {                    
+                      m_knownOnlinePartitionList->Add(partitionName);
+                    }
+                  }
+                if (m_verbosity >= Verbose) {
+                  std::cout << "\t\t\t|_ " << candidateDimService << std::endl;
+                }
+              } else {
+                if (Batch != m_presenterMode) {
+                  new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
+                    Form("The DIM servicename\n%s\n does not appear to follow the" \
+                      "convention\nPlease use the following format:\n" \
+                      "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
+                      "normally has the following format:\n" \
+                      "partition_node_taskname_instance", dimService),
+                    kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+                }
+              }
+            ++m_candidateDimServicesIt;
+          }
+  //        partitionSelectorComboBoxHandler(0);       
+        }
+      } else {
+        if (s_withTree == tree) {
+          m_histoSvcListTree->RenameItem(m_histoSvcListTree->GetFirstItem(), "No DIM");
+        }
+        if (m_verbosity >= Verbose) {
+          std::cout << "Sorry, no DIM server found." << std::endl;
+        }
+        if (Batch != m_presenterMode) {
+          new TGMsgBox(fClient->GetRoot(), this, "DIM Error",
+                       "Sorry, no DIM server found", kMBIconExclamation,
+                       kMBOk, &m_msgBoxReturnCode);
+        }
+      }
+    } else if (EditorOffline == m_presenterMode) {
+      if (s_withTree == tree && !m_savesetFileName.empty()) {
+        
+        m_dimBrowserDock->SetWindowName("ROOT Histogram Browser");
+        m_histoSvcBrowserGroupFrame->SetTitle("ROOT Histogram Browser");
+              
+        TGListTreeItem* node = m_histoSvcListTree->GetFirstItem();
+        m_histoSvcListTree->RenameItem(node, m_savesetFileName.c_str());
+        
+        (m_histoSvcListTree->GetFirstItem())->SetPictures(m_iconROOT, m_iconROOT);
+        
+        deleteTreeChildrenItemsUserData(node);
+        m_histoSvcListTree->DeleteChildren(node);
+        
+        TFile rootFile(m_savesetFileName.c_str());
+        
+        if (rootFile.IsZombie() && (Batch != m_presenterMode)) {
+          new TGMsgBox(fClient->GetRoot(), this, "File Error",
+                       "Sorry, file specified not found", kMBIconExclamation,
+                       kMBOk, &m_msgBoxReturnCode);
+        } else {        
+          std::string taskName(m_archive->taskNameFromFile(std::string(rootFile.GetName())));
+          pres::SavesetType savesetType = pres::OfflineFile;                
+          TObjArray* fileNameMatchGroup = 0;
+          
+          fileNameMatchGroup = s_fileDateRegexp.MatchS(rootFile.GetName());
           if (false == fileNameMatchGroup->IsEmpty()) {
-            savesetType = pres::OfflineFile;
+            savesetType = pres::OnlineFile;
             if (fileNameMatchGroup) {
               fileNameMatchGroup->Delete();
               delete fileNameMatchGroup;
               fileNameMatchGroup = 0;
-            }
+            } 
           } else {
             if (fileNameMatchGroup) {
               fileNameMatchGroup->Delete();
               delete fileNameMatchGroup;
               fileNameMatchGroup = 0;
             }
-            fileNameMatchGroup = s_fileRunRegexp.MatchS(rootFile.GetName());        
+            fileNameMatchGroup = s_offlineJobRegexp.MatchS(rootFile.GetName());        
             if (false == fileNameMatchGroup->IsEmpty()) {
-              savesetType = pres::OnlineFile;
-            }
-            if (fileNameMatchGroup) {
-              fileNameMatchGroup->Delete();
-              delete fileNameMatchGroup;
-              fileNameMatchGroup = 0;
+              savesetType = pres::OfflineFile;
+              if (fileNameMatchGroup) {
+                fileNameMatchGroup->Delete();
+                delete fileNameMatchGroup;
+                fileNameMatchGroup = 0;
+              }
+            } else {
+              if (fileNameMatchGroup) {
+                fileNameMatchGroup->Delete();
+                delete fileNameMatchGroup;
+                fileNameMatchGroup = 0;
+              }
+              fileNameMatchGroup = s_fileRunRegexp.MatchS(rootFile.GetName());        
+              if (false == fileNameMatchGroup->IsEmpty()) {
+                savesetType = pres::OnlineFile;
+              }
+              if (fileNameMatchGroup) {
+                fileNameMatchGroup->Delete();
+                delete fileNameMatchGroup;
+                fileNameMatchGroup = 0;
+              }
             }
           }
+          listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
+                                 m_knownHistogramServices, m_histogramTypes,
+                                 taskName, savesetType);        
         }
-        listRootHistogramsFrom(dynamic_cast<TDirectory*>(&rootFile),
-                               m_knownHistogramServices, m_histogramTypes,
-                               taskName, savesetType);        
+        rootFile.Close();       
       }
-      rootFile.Close();       
     }
+    if (s_withTree == tree) {
+      fillTreeNodeWithHistograms(m_histoSvcListTree,
+                                 m_histoSvcListTree->GetFirstItem(),
+                                 &m_knownHistogramServices,
+                                 &m_histogramTypes);        
+      sortTreeChildrenItems(m_histoSvcListTree, m_histoSvcListTree->GetFirstItem());
+      fClient->NeedRedraw(m_histoSvcListTree);   
+    }     
+    Resize();DoRedraw(); // wtf would trigger a redraw???
+    if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }  
+  gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   }
-  if (s_withTree == tree) {
-    fillTreeNodeWithHistograms(m_histoSvcListTree,
-                               m_histoSvcListTree->GetFirstItem(),
-                               &m_knownHistogramServices,
-                               &m_histogramTypes);        
-    sortTreeChildrenItems(m_histoSvcListTree, m_histoSvcListTree->GetFirstItem());
-    fClient->NeedRedraw(m_histoSvcListTree);   
-  }     
-  Resize();DoRedraw(); // wtf would trigger a redraw???
-  if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }  
-gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 }
 void PresenterMainFrame::partitionSelectorComboBoxHandler(int partitionNumber)
 {
@@ -3332,11 +3451,12 @@ void PresenterMainFrame::addHistoToHistoDB()
     } catch (std::string sqlException) {
       // TODO: add error logging backend
       if (m_verbosity >= Verbose) { std::cout << sqlException; }
-
-      new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                   Form("OnlineHistDB server:\n\n%s\n",
-                        sqlException.c_str()),
-                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      if (Batch != m_presenterMode) {
+        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                     Form("OnlineHistDB server:\n\n%s\n",
+                          sqlException.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      }
     }
     currentNode = currentNode->GetNextSibling();
   }
@@ -3348,11 +3468,12 @@ void PresenterMainFrame::addHistoToHistoDB()
   } catch (std::string sqlException) {
     // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
-
-    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                 Form("OnlineHistDB server:\n\n%s\n",
-                      sqlException.c_str()),
-                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                   Form("OnlineHistDB server:\n\n%s\n",
+                        sqlException.c_str()),
+                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
   }
   list->Delete();
   delete list;
@@ -3365,7 +3486,7 @@ void PresenterMainFrame::addHistoToHistoDB()
   enableAutoCanvasLayoutBtn();
 }
 void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool overlapMode)
-{
+{  
   HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
   if (histogramID.isDimFormat()) {
   }  
@@ -3401,14 +3522,16 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
     }                   
     if ((History == m_presenterMode) || (EditorOffline == m_presenterMode)) {
       dimBrowser = NULL;
-    } else if ((Online == m_presenterMode) || (EditorOnline == m_presenterMode)) {
+    } else if ((Online == m_presenterMode) || 
+               (EditorOnline == m_presenterMode) ||
+               (Batch == m_presenterMode)) {
       dimBrowser = m_dimBrowser;
       if (false == isConnectedToHistogramDB()) {
         currentPartition = histogramID.m_histogramUrl();
       }
     }
 
-// TODO: merge this with loadSelectedPage()      
+// TODO: merge this with loadSelectedPage()
     DbRootHist* dbRootHist = getHistogram(this,
                                           histogramID.histogramIdentifier(),
                                           currentPartition,
@@ -3486,8 +3609,13 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
         dbRootHist->hostingPad = targetPad;        
       }
   }
-  dbHistosOnPage.push_back(dbRootHist);
-  paintHist(dbRootHist, targetPad);
+  dbHistosOnPage.push_back(dbRootHist);  
+  if (Batch != m_presenterMode) {
+    paintHist(dbRootHist, targetPad);
+  } else {
+     dbRootHist->rootHistogram->SetLineStyle(1);
+     dbRootHist->rootHistogram->SetLineWidth(1);
+  }
 }
 void PresenterMainFrame::addDimHistosToPage()
 {
@@ -3546,11 +3674,12 @@ void PresenterMainFrame::addDbHistoToPage(bool overlapMode)
   } catch (std::string sqlException) {
     // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
-
-    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                 Form("OnlineHistDB server:\n\n%s\n",
-                       sqlException.c_str()),
-                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                   Form("OnlineHistDB server:\n\n%s\n",
+                         sqlException.c_str()),
+                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
   }
 
   m_databaseHistogramTreeList->CheckAllChildren(m_databaseHistogramTreeList->GetFirstItem(),
@@ -3633,13 +3762,15 @@ std::string PresenterMainFrame::convDimToHistoID(const std::string & dimSvcName)
   if (histogram.isDimFormat()) {
     return histogram.histogramIdentifier();
   } else {
-    new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
-                 Form("The DIM servicename\n%s\n does not appear to follow the" \
-                   "convention\nPlease use the following format:\n" \
-                   "HnD/UTGID/Algorithmname/Histogramname\n where the UTGID " \
-                   "normally has the following format:\n node00101_taskname_1 " \
-                   "or simply taskname, without \"_\"", dimSvcName.c_str()),
-                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {    
+        new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
+                     Form("The DIM servicename\n%s\n does not appear to follow the" \
+                       "convention\nPlease use the following format:\n" \
+                       "HnD/UTGID/Algorithmname/Histogramname\n where the UTGID " \
+                       "normally has the following format:\n node00101_taskname_1 " \
+                       "or simply taskname, without \"_\"", dimSvcName.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
     return 0;
   }
 }
@@ -3705,7 +3836,8 @@ void PresenterMainFrame::saveSelectedHistogramAsReference()
 {
   DbRootHist* histogram = selectedDbRootHistogram();
   
-  if (0 != histogram && 0 != m_archive) {
+  if (0 != histogram && 0 != m_archive &&
+      (Batch != m_presenterMode)) {
     new TGMsgBox(fClient->GetRoot(), this, "Save as Reference Histogram",
                  "Are you sure to save selected histogram as a reference?",
                  kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
@@ -3803,21 +3935,24 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
   } catch (std::string sqlException) {
     // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
-
-    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-        Form("OnlineHistDB server:\n\n%s\n",
-             sqlException.c_str()),
-             kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+          Form("OnlineHistDB server:\n\n%s\n",
+               sqlException.c_str()),
+               kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
   }
 //  refreshHistoDBListTree();
 }
 void PresenterMainFrame::deleteSelectedHistoFromDB() {
-  new TGMsgBox(fClient->GetRoot(), this, "Delete histogram",
-               "Are you sure to delete selected histogram from the database?",
-               kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
-  switch (m_msgBoxReturnCode) {
-    case kMBNo:
-      return;
+  if (Batch != m_presenterMode) {
+    new TGMsgBox(fClient->GetRoot(), this, "Delete histogram",
+                 "Are you sure to delete selected histogram from the database?",
+                 kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
+    switch (m_msgBoxReturnCode) {
+      case kMBNo:
+        return;
+    }
   }
   try {
     if (0 != m_histogramDB) {
@@ -3857,10 +3992,12 @@ void PresenterMainFrame::deleteSelectedHistoFromDB() {
   } catch (std::string sqlException) {
     // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
-    new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                 Form("OnlineHistDB server:\n\n%s\n",
-                      sqlException.c_str()),
-                 kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    if (Batch != m_presenterMode) {
+      new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                   Form("OnlineHistDB server:\n\n%s\n",
+                        sqlException.c_str()),
+                   kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+    }
   }
   refreshHistoDBListTree();
 }
@@ -4122,11 +4259,12 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("Could not save the page to OnlineHistDB:\n\n%s\n",
-                          sqlException.c_str()),
-                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        if (Batch != m_presenterMode) {
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                       Form("Could not save the page to OnlineHistDB:\n\n%s\n",
+                            sqlException.c_str()),
+                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
       }
       
 //    stopBenchmark(pageName);
@@ -4159,12 +4297,14 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 }
 void PresenterMainFrame::deleteSelectedPageFromDB()
 {
-  new TGMsgBox(fClient->GetRoot(), this, "Delete Page",
-               "Are you sure to delete selected page from the database?",
-               kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
-  switch (m_msgBoxReturnCode) {
-    case kMBNo:
-      return;
+  if (Batch != m_presenterMode) {
+    new TGMsgBox(fClient->GetRoot(), this, "Delete Page",
+                 "Are you sure to delete selected page from the database?",
+                 kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
+    switch (m_msgBoxReturnCode) {
+      case kMBNo:
+        return;
+    }
   }
 
   if (canWriteToHistogramDB()) {
@@ -4184,11 +4324,12 @@ void PresenterMainFrame::deleteSelectedPageFromDB()
         // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("Could not delete the page to OnlineHistDB:\n\n%s\n",
-                          sqlException.c_str()),
-                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        if (Batch != m_presenterMode) {
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                       Form("Could not delete the page to OnlineHistDB:\n\n%s\n",
+                            sqlException.c_str()),
+                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
       }
     }
   }
@@ -4225,11 +4366,12 @@ void PresenterMainFrame::deleteSelectedFolderFromDB()
         // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-
-        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("Could delete the page to OnlineHistDB:\n\n%s\n",
-                          sqlException.c_str()),
-                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        if (Batch != m_presenterMode) {
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                       Form("Could delete the page to OnlineHistDB:\n\n%s\n",
+                            sqlException.c_str()),
+                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
       }
     }
   }
@@ -4336,7 +4478,8 @@ void PresenterMainFrame::deleteSelectedHistoFromCanvas()
       }
       if (false == foundSelectedHisto) { del_dbHistosOnPageIt++; }
     }
-    if (foundSelectedHisto) {
+    if (foundSelectedHisto &&
+        (Batch != m_presenterMode) ) {
       new TGMsgBox(fClient->GetRoot(), this, "Remove Histogram",
                    "Are you sure to remove selected histogram from the page?",
                    kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
@@ -4385,7 +4528,8 @@ DbRootHist* PresenterMainFrame::selectedDbRootHistogram()
       }   
     }
     
-    if (0 == dbRootHist) {
+    if (0 == dbRootHist && 
+        (Batch != m_presenterMode)) {
     new TGMsgBox(fClient->GetRoot(), this, "Histogram Selection",
                  "Please select a histogram with the middle mouse button",
                  kMBIconStop, kMBOk, &m_msgBoxReturnCode);
@@ -4398,7 +4542,9 @@ void PresenterMainFrame::refreshClock()
 {
   if (currentTime) {
     currentTime->Set();
-    m_statusBarTop->SetText(currentTime->AsSQLString(), 1);
+    if (Batch != m_presenterMode) {
+      m_statusBarTop->SetText(currentTime->AsSQLString(), 1);
+    }
   }
 }
 void PresenterMainFrame::previousInterval()
@@ -4447,7 +4593,29 @@ void PresenterMainFrame::refreshPage()
   //TODO: reuse pw if available from pageload
   ParallelWait parallelWait(this);
   parallelWait.refreshHistograms(&dbHistosOnPage);
-  editorCanvas->Update();
+  if (Batch != m_presenterMode) {
+    editorCanvas->Update();
+  } else if (Batch == m_presenterMode) {
+    std::vector<DbRootHist*>::iterator dump_dbHistosOnPageIt;
+    dump_dbHistosOnPageIt = dbHistosOnPage.begin();
+    while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
+//      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(*dump_dbHistosOnPageIt)->fileName());
+      std::string plotName(m_currentPartition);
+      plotName.append(" ").append(currentTime->AsSQLString());
+      (*dump_dbHistosOnPageIt)->rootHistogram->SetName(plotName.c_str());
+      (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
+      editorCanvas->Modified();
+      gPad->Modified();
+      editorCanvas->Update();
+//      std::string dumpDirectory(startupSettings["image-path"].as<std::string>());
+//      std::string dumpDirectory("/home/psomogyi/afs/cmtuser/Online_v4r26/Online/Presenter/cmt");
+      std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;      
+      editorCanvas->SaveAs(dumpFile.c_str());
+//      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";      
+//      editorCanvas->SaveAs(dumpFile.c_str());                  
+      dump_dbHistosOnPageIt++;
+    }
+  }
 }
 void PresenterMainFrame::enableHistogramClearing()
 {
@@ -4496,7 +4664,9 @@ void PresenterMainFrame::disableReferenceOverlay()
 void PresenterMainFrame::enablePageRefresh()
 {
   if (false == m_loadingPage) {
-    editorCanvas->SetEditable(false);
+    if (Batch != m_presenterMode) {
+      editorCanvas->SetEditable(false);
+    }
     std::vector<DbRootHist*>::iterator enableRefresh_dbHistosOnPageIt;
     enableRefresh_dbHistosOnPageIt = dbHistosOnPage.begin();
     while (enableRefresh_dbHistosOnPageIt != dbHistosOnPage.end()) {
@@ -4508,7 +4678,10 @@ void PresenterMainFrame::enablePageRefresh()
 void PresenterMainFrame::disablePageRefresh()
 {
   m_refreshingPage = false;
-  editorCanvas->SetEditable(true);
+  if (Batch != m_presenterMode &&
+      editorCanvas) {
+    editorCanvas->SetEditable(true);
+  }
   std::vector<DbRootHist*>::iterator disableRefresh_dbHistosOnPageIt;
   disableRefresh_dbHistosOnPageIt = dbHistosOnPage.begin();
   while (disableRefresh_dbHistosOnPageIt != dbHistosOnPage.end()) {
@@ -4614,7 +4787,9 @@ void PresenterMainFrame::about()
                std::string("DB Reference histograms directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->refRoot() << std::endl <<
                std::string("DB Savesets directory: ") << dynamic_cast<OnlineHistDBEnv*>(m_histogramDB)->savesetsRoot() << std::endl;
   }
-  new TGMsgBox(fClient->GetRoot(), this, "LHCb Presenter",
-               Form("%s", config.str().c_str()),
-               kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+  if (Batch != m_presenterMode) {
+    new TGMsgBox(fClient->GetRoot(), this, "LHCb Presenter",
+                 Form("%s", config.str().c_str()),
+                 kMBIconAsterisk, kMBOk, &m_msgBoxReturnCode);
+  }
 }

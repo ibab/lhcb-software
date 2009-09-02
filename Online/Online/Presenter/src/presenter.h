@@ -4,6 +4,7 @@
 #include <string>
 #include <TPRegexp.h>
 #include <TString.h>
+#include <TROOT.h>
 
 #ifdef _WIN32
  #define NOMSG
@@ -12,7 +13,7 @@
 
 void setSystemEnvironment(const char* environmentVariable, const char* value);
 
-static const std::string s_presenterVersion("v0r20");
+static const std::string s_presenterVersion("v0r21");
 // environment variable for archive mount point (i.e. prefix to paths)
 static const std::string s_configToken(";");
 
@@ -25,6 +26,7 @@ static const std::string s_histdir("HISTDIR");
 static const std::string s_referencePath("HISTREFPATH");
 static const std::string s_savesetPath("HISTSAVESETSPATH");
 static const std::string s_dimDnsNodeEnv("DIM_DNS_NODE");
+static const std::string s_Dim_Dns_Version_Number("DIS_DNS/VERSION_NUMBER");
 static const std::string s_tnsAdminEnv("TNS_ADMIN");
 
 // 4 slots+signals: cint hates namespaces
@@ -64,7 +66,9 @@ namespace pres
     Online = 0,
     History = 1,
     EditorOnline = 2,
-    EditorOffline = 3
+    EditorOffline = 3,
+    Batch = 4,
+    Init = 5
   };
   
   enum SavesetType {
@@ -115,6 +119,7 @@ namespace pres
   static const std::string s_DimDouble("D");
 
   static TPRegexp s_DimCNTRegexp("^([ILFD])(?:(:\\d+))?");
+  static TPRegexp s_DimHltCntRegexp("^D:2;C");
 
   static const std::string s_hltNodePrefix("HLT");
   static const std::string s_PAGE("PAGE");
@@ -132,6 +137,7 @@ namespace pres
   static const std::string s_INFO("INFO");
   
   static const std::string s_adder("Adder");
+  static const std::string s_eff_monRate("monRate");
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
@@ -160,8 +166,8 @@ namespace pres
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 // so let's process the UTGID separately:
 // TODO: make this lazier...
-  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
 
   static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
   static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
@@ -183,7 +189,7 @@ namespace pres
 //  Brunel_FULL_45055_00004636_00001229_1_Hist.root
 
 //  static TPRegexp s_offlineJobRegexp("^([^_]+)_(Ex)?_?(\\d+)_(\\d+)_?(\\d+)?_?(\\d+)?_?(Hist)?\\.root$");
-  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci)_.+\\.root$"); 
+  static TPRegexp s_offlineJobRegexp("^(Brunel|DaVinci|Boole|Gauss)_.+\\.root$"); 
 
   // Tunables:
   static const int s_estimatedDimServiceCount = 1000;
@@ -204,5 +210,6 @@ namespace pres
   
   static const std::string s_Now("Now");
   static const std::string s_startupFile("startupFile");
+    
 }
 #endif /*PRESENTER_H_*/

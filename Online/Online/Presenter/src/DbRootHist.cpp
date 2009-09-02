@@ -10,6 +10,7 @@
 #include <TStyle.h>
 #include <TSystem.h>
 #include <TMath.h>
+#include <TObjArray.h>
 
 #include <TFile.h>
 #include <TPaveStats.h>
@@ -56,6 +57,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   hostingPad(NULL),
   m_drawPattern(NULL),
 //  histogramImage(NULL),
+//  m_usingGauchocommentDimInfo(false);
   m_gauchocommentDimInfo(NULL),
   m_offsetHistogram(NULL),
   m_trendTimeScale(s_pageRefreshRate/1000),
@@ -335,11 +337,9 @@ void DbRootHist::initHistogram()
 
     HistogramIdentifier histogramIdentifier(m_dimServiceName);
     m_histogramType = histogramIdentifier.histogramType();
-
     if (s_P1D == m_histogramType || s_HPD == m_histogramType ||
         s_H2D == m_histogramType || s_H1D == m_histogramType ||
         s_CNT == m_histogramType ) {
-
       if( m_dimServiceName.size() > 0 ) {
         if (m_dimInfo) { delete m_dimInfo; m_dimInfo = 0; }
         m_dimInfo = new DimInfo(m_dimServiceName.c_str(), m_refreshTime, (float)-1.0);
@@ -439,10 +439,24 @@ void DbRootHist::initHistogram()
                                        m_histoRootTitle.Data(),
                                        nBins, xMin, xMax);
             }
-          } else if (s_CNT == m_histogramType) {
+          } else if (s_CNT == m_histogramType &&
+                     isEFF()) {
+            int cnt_size = m_dimInfo->getSize()/sizeof(char);
+            while (cnt_size <= 0) {
+              gSystem->Sleep(m_waitTime);
+              cnt_size = m_dimInfo->getSize()/sizeof(char);
+            }
+            char* cnt_comment  = (char*) m_dimInfo->getData();
+            std::stringstream cntCommentStream;    
+            for (int ptr = 2*sizeof(double); ptr < cnt_size; ++ptr ){
+              cntCommentStream << (char)cnt_comment[ptr];               
+            }
+            cntCommentStream << std::endl;
+            m_histoRootTitle = TString(Form("%s",
+                                         cntCommentStream.str().c_str()));                                        
              gStyle->SetTimeOffset(m_offsetTime.Convert());
              if (!rootHistogram) {
-              rootHistogram = new TH1F(m_histoRootName.Data(),m_histoRootTitle.Data(),
+              rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
                                        10, 0, 10 * m_trendTimeScale);
              }
              rootHistogram->GetXaxis()->SetTimeDisplay(1);
@@ -728,8 +742,11 @@ void DbRootHist::fillHistogram()
       }
 //    m_toRefresh = false;
    } else if (s_CNT == m_histogramType) {
+
+// // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/Counternumber1 (D:2;C)
+    
     boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-    int dimContent = 0;
+    double dimContent = 0;
      if (rootLock && m_dimInfo) {
        // wait until data has arrived
        int m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
@@ -737,9 +754,16 @@ void DbRootHist::fillHistogram()
          gSystem->Sleep(m_waitTime);
          m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
        }
-       if (-1.0 != m_dimInfo->getInt() && rootHistogram && !m_isEmptyHisto) {
-        dimContent = m_dimInfo->getInt();
-       }    
+        if (m_isEFF && 
+            (-1.0 != *(float*) m_dimInfo->getData()) &&
+            rootHistogram && !m_isEmptyHisto) {
+          double* histoDimData;
+          histoDimData = (double*) m_dimInfo->getData();
+          dimContent   = (double) histoDimData[0];
+        } else if (-1.0 != m_dimInfo->getDouble() &&
+                   rootHistogram && !m_isEmptyHisto) {
+          dimContent = m_dimInfo->getDouble();
+        }
        rootHistogram->SetBinContent(m_trendBin, dimContent);
        m_trendBin++;
      }
@@ -789,14 +813,14 @@ void DbRootHist::fillHistogram()
           }
         }
       }
-      if (s_pfixMonH2D == m_histogramType) {
+      if (s_pfixMonH2D == m_histogramType) { //  || s_CNT == m_histogramType
         if ((TH2D::Class() == rootHistogram->IsA()) &&
             m_histogramImage) {
           m_histogramImage->SetImage((const Double_t *)((TH2D*)rootHistogram)->GetArray(), ((TH2D*)rootHistogram)->GetNbinsX() + 2,
                       ((TH2D*)rootHistogram)->GetNbinsY() + 2, m_prettyPalette); //  gWebImagePalette, gHistImagePalette
         }
       }      
-      if (hostingPad) { hostingPad->Modified(); }    
+      if (hostingPad) { hostingPad->Modified(); }  
   
 } else if (m_isAnaHist && m_anaSources.size()>0)  {
     std::vector<TH1*> sources(m_anaSources.size());
@@ -1555,14 +1579,20 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
     dimServiceNameQueryBegining = dimServiceType + s_slash +
                                   m_partition +
                                   s_underscore + "*";
-  } else {
+  } else if (!dimServiceType.empty()) {
     dimServiceNameQueryBegining = dimServiceType + s_slash + "*";    
+  } else {
+    dimServiceNameQueryBegining = "*";    
   }
+  
+  
   boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
   if (dimLock && oraLock && m_onlineHistogram &&  m_session) {
     bool botherDimBrowser(true);
-    std::string taskName(m_onlineHistogram->task()); 
+    std::string taskName(m_onlineHistogram->task());
+//TODO: GauchoJob/Adder confusion    
+    if (taskName == "GauchoJob") {taskName = "Adder";} 
     std::vector<std::string*>::iterator lookForTasksNotRunningIt;
     if (0 < m_tasksNotRunning->size()) {
       for (lookForTasksNotRunningIt = m_tasksNotRunning->begin();
@@ -1585,7 +1615,10 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
            
           if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
             HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
-            if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
+//TODO: GauchoJob/Adder confusion            
+            std::string identifier =  ("GauchoJob" == m_onlineHistogram->task()? "Adder" : m_onlineHistogram->task() ) + s_slash + m_onlineHistogram->algorithm() +
+                    s_slash + m_onlineHistogram->hname();    
+            if (0 == (histogramCandidate.histogramIdentifier().compare(identifier))) {          
               dimServiceName = dimServiceCandidate;
               break;
             } else {
@@ -1634,6 +1667,11 @@ if (0 != m_onlineHistogram) {
     if (dimServiceName.empty()) {
       dimServiceName = findDimServiceName(s_H1D);          
     }
+  } else if (0 == m_onlineHistogram->hstype().compare(s_CNT)) {
+    dimServiceName = findDimServiceName(std::string(""));
+//    if (dimServiceName.empty()) {
+//      dimServiceName = findDimServiceName(s_H1D);          
+//    }
   }
 
   if (!dimServiceName.empty()){
