@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !====================== Magnet v5r4 2009-09-02 ===============================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file Magnet_dll.cpp
+
 ! 2009-09-01 - Wouter Hulsbergen
  - Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
    New utility 'MagneticFieldGridReader' reads the field from a file (thereby
