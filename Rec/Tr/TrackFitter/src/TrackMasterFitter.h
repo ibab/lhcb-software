@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.23 2009-07-10 11:55:14 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.24 2009-09-02 15:28:45 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -102,11 +102,12 @@ private:
   int m_numOutlierIter;             ///< max number of outliers to be removed
   bool m_useSeedStateErrors; ///< use errors of the seed state
   
-  double m_errorX2;                 ///< Error^2 on x
-  double m_errorY2;                 ///< Error^2 on y
-  double m_errorTx2;                ///< Error^2 on slope x
-  double m_errorTy2;                ///< Error^2 on slope y
-  std::vector<double> m_errorP;     ///< Error on dp/p
+  double m_errorX ;                 ///< Seed error on x
+  double m_errorY ;                 ///< Seed error on y
+  double m_errorTx ;                ///< Seed error on slope x
+  double m_errorTy ;                ///< Seed error on slope y
+  std::vector<double> m_errorQoP ;  ///< Seed error on QoP
+
   bool m_makeNodes;
   bool m_makeMeasurements;
   bool m_updateTransport ;          ///< Update the transport matrices between iterations

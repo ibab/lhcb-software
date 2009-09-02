@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.70 2009-09-01 09:38:13 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.71 2009-09-02 15:28:45 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -74,11 +74,11 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   
   declareProperty( "UseSeedStateErrors", m_useSeedStateErrors = false );
 
-  declareProperty( "ErrorX2"        , m_errorX2 =  400.0*Gaudi::Units::mm2 );
-  declareProperty( "ErrorY2"        , m_errorY2 =  400.0*Gaudi::Units::mm2 );
-  declareProperty( "ErrorTx2"       , m_errorTx2 = 0.01                     );
-  declareProperty( "ErrorTy2"       , m_errorTy2 = 0.01                     );
-  declareProperty( "ErrorP"         , m_errorP = boost::assign::list_of(0.0)(0.001) );
+  declareProperty( "ErrorX"         , m_errorX  = 20.0*Gaudi::Units::mm );
+  declareProperty( "ErrorY"         , m_errorY  = 20.0*Gaudi::Units::mm );
+  declareProperty( "ErrorTx"        , m_errorTx = 0.1                    );
+  declareProperty( "ErrorTy"        , m_errorTy = 0.1                    );
+  declareProperty( "ErrorQoP"       , m_errorQoP = boost::assign::list_of(0.0)(0.001) );
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
@@ -169,56 +169,37 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( sc.isFailure() )
       return failure( "unable to make nodes from the measurements" );
   }
-
+  
+  // create a covariance matrix to seed the Kalman fit
+  State& seed = track.nodes().front()->state() ;
+  TrackSymMatrix seedCov ; // Set off-diagonal elements to zero
   if (m_useSeedStateErrors) {
-    State st = track.firstState();
-    debug() << " state 0 at z" << st.z() 
-            << " vector " << st.stateVector() << "\n"
-            << " covariance " << st.covariance() << endreq;
-    State state0(track.firstState());
+    State state0 = track.firstState();
     double z1 = track.nodes().front()->state().z();
     m_extrapolator->propagate(state0,z1);
-    m_errorX2 = state0.errX2();
-    m_errorY2 = state0.errY2();
-    m_errorTx2 = state0.errTx2();
-    m_errorTy2 = state0.errTy2();
-    m_errorP[0] = state0.errQOverP2();
-    m_errorP[1] = 0.;
-    debug() << " state0 at z " << z1 
-            << " vector " << state0.stateVector() << "\n"
-            << " covariance " << state0.covariance() << endreq;
-  }
-
-  
-  // Check that the number of measurements is enough
-  State& seed = track.nodes().front()->state() ;
-  if (!m_useSeedStateErrors) {  
-    if ( nNodesWithMeasurement( track ) < seed.nParameters() ) {
-      debug() << "Track has " << track.nMeasurements() 
-              << " measurements. Fitting a " << seed.nParameters() 
-              << "D-state" << endmsg;
+    seedCov = state0.covariance() ;
+    if ( m_debugLevel )
+      debug() << " state0 at z " << z1 
+	      << " vector " << state0.stateVector() << "\n"
+	      << " covariance " << state0.covariance() << endreq;
+  } else {
+    // check that there are enough nodes with measurements
+    if ( nNodesWithMeasurement( track ) < 5 ) {
+      debug() << "Track has insufficient measurements for track fit: " << track.nMeasurements() 
+              << endmsg ;
       return failure("Insufficient measurements to fit the State");
     }
+    seedCov(0,0) = m_errorX*m_errorX ;
+    seedCov(1,1) = m_errorY*m_errorY ;
+    seedCov(2,2) = m_errorTx*m_errorTx ;
+    seedCov(3,3) = m_errorTy*m_errorTy ;
+    seedCov(4,4) = gsl_pow_2( m_errorQoP[0] * seed.qOverP() ) + gsl_pow_2(m_errorQoP[1]);   
   }
-  
-
-  // create a covariance matrix to seed the Kalman fit
-  TrackSymMatrix seedCov ; // Set off-diagonal elements to zero
-  seedCov(0,0) = m_errorX2;
-  seedCov(1,1) = m_errorY2;
-  seedCov(2,2) = m_errorTx2;
-  seedCov(3,3) = m_errorTy2;
-  // error is like A^2/p^2 + B^2
-  seedCov(4,4) = gsl_pow_2( m_errorP[0] * seed.qOverP() ) + gsl_pow_2(m_errorP[1]);  
-
-  if (m_useSeedStateErrors) seedCov(4,4) =  m_errorP[0];
-  // reset the covariance of the first state
-  seed.covariance() = seedCov ;
   
   if ( m_debugLevel )
     debug() << "SeedState: z = " << seed.z()
-            << " stateVector = " << seed.stateVector()
-            << " covariance  = " << seed.covariance() << endmsg;
+	    << " stateVector = " << seed.stateVector()
+	    << " covariance  = " << seedCov << endmsg;
   
   // Iterate the track fit for linearisation. Be careful with chi2
   // convergence here: The first iteration might not be using OT
@@ -236,10 +217,9 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
     
-    
     // reset the covariance of the first state
     seed.covariance() = seedCov ;
-
+    
     double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
     
