@@ -10,7 +10,6 @@ patVTT.InputUsedTracksNames = ["Rec/Track/Forward","Rec/Track/Match"]
 
 
 patVTT.addTool(ConfiguredMasterFitter( "Fitter"))
-patVTT.Fitter.ErrorP            = [1.2, 5e-8]
 patVTT.Fitter.NumberFitIterations = 1
 patVTT.Fitter.MaxNumberOutliers = 1
 patVTT.Fitter.Extrapolator.ExtraSelector = "TrackSimpleExtraSelector"
