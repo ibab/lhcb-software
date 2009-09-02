@@ -69,10 +69,12 @@ StatusCode TrajOTCosmicsProjector::project( const LHCb::StateVector& statevector
     // ugly const-cast to update the measurement's time-of-flight
     (const_cast< LHCb::OTMeasurement&>(meas)).setDeltaTimeOfFlight( tof + eventt0 ) ;
 
+    // need to test ambiguity before calling projector!-(
+    bool usedrifttime = useDriftTime() && (!skipDriftTimeZeroAmbiguity() || meas.ambiguity() != 0) ;
     // call the standard projector (which uses the time-of-flight)
     sc = TrajOTProjector::project( statevector, meas ) ;
     // update the projection matrix with the derivative to event-t0.
-    if( useDriftTime() && m_fitEventT0 ) {
+    if( usedrifttime && m_fitEventT0 ) {
       if ( fitDriftTime() ) {
 	m_H(0,4) = 1 ;
       } else {

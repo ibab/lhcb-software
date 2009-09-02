@@ -1,4 +1,4 @@
-// $Id: TrajOTProjector.h,v 1.16 2009-09-01 09:36:51 wouter Exp $
+// $Id: TrajOTProjector.h,v 1.17 2009-09-02 15:38:57 wouter Exp $
 #ifndef TRAJOTPROJECTOR_H 
 #define TRAJOTPROJECTOR_H 1
 
@@ -43,6 +43,7 @@ public:
 protected:
   StatusCode project( const LHCb::StateVector& state, const LHCb::OTMeasurement& meas );
   bool useDriftTime() const { return m_useDriftTime ; }
+  bool skipDriftTimeZeroAmbiguity() const { return m_skipDriftTimeZeroAmbiguity ; }
   bool fitDriftTime() const { return m_fitDriftTime ; }
 private:
   bool m_useDriftTime ;  ///< Use measured drift time 

@@ -49,16 +49,16 @@ StatusCode TrajOTProjector::project( const LHCb::StateVector& statevector,
                                      const OTMeasurement& meas )
 {
   // a zero ambiguity may indicate that we should not use the drifttime
-  bool useDriftTime = m_useDriftTime && (!m_skipDriftTimeZeroAmbiguity || meas.ambiguity() != 0) ;
+  bool usedrifttime = useDriftTime() && (!skipDriftTimeZeroAmbiguity() || meas.ambiguity() != 0) ;
 
   // call the standard tracjectory-doca projector
   StatusCode sc = TrackProjector::project( statevector, meas ) ;
-
+  
   // set the ambiguity "on the fly"
   if( m_updateAmbiguity )
     (const_cast<OTMeasurement&>(meas)).setAmbiguity( m_doca > 0 ? 1 : -1 ) ;
-
-  if (useDriftTime) {
+  
+  if (usedrifttime) {
     if(m_fitDriftTime) {
       const OTDet::RtRelation& rtr = meas.module().rtRelation() ;
       double radius = std::min( rtr.rmax(), std::abs(m_doca) ) ;
