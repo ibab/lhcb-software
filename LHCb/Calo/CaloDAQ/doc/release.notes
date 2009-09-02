@@ -6,6 +6,8 @@
 
 !========================== CaloDAQ v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
+ - Remove CaloReCreateMCLinks.cpp (moved to CaloAssociators)
+ - Remove MCEvent dependency (no longer needed after above change)
  - Replace all endreq by endmsg
  - Remove hack for Gaudi v21r1 to link dictionary on Windows 
  - Remove obsolete file CaloDAQ_dll.cpp
