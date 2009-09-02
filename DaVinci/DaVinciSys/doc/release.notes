@@ -3,9 +3,13 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
-</PRE><H1><A NAME=v24r1p1>2009-08-21 DaVinci v24r1p1 Hlt1 nad Calo patch</A></H1><PRE>
+</PRE><H1><A NAME=v24r2>2009-09-02 DaVinci v24r2 Rushed FEST version</A></H1><PRE>
 
-Same as v24r1 except for Analysis v3r9 and patched HltL0Conf and CaloAssociators.
+Largely the same as v24r1 except for Analysis v3r9 and Hlt v6r7. Used patched 
+HltL0Conf and CaloAssociators and Calo packages. Phys v8r9 has been built in 
+order to link to new versions of use CaloInterfaces, CaloKernel, CaloUtils,
+and LHCbKernel
+
 
 Highlights:
    * Copying of full particle decay trees plus additional related
