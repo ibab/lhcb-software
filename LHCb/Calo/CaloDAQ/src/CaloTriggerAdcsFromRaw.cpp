@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.21 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.22 2009-09-02 12:22:13 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
     m_errorType = LHCb::RawBank::HcalPackedError;
   } else {
     error() << "Unknown detector name '" << m_detectorName 
-            << "'. Set it by option 'DetectorName', should be Ecal or Hcal" << endreq;
+            << "'. Set it by option 'DetectorName', should be Ecal or Hcal" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -125,7 +125,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
   int sourceID  ;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    debug() << "The banks container is empty"<< endreq;
+    debug() << "The banks container is empty"<< endmsg;
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -137,14 +137,14 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        debug() << "Error when decoding bank " << s.str()<< " -> incomplete data - May be corrupted"<< endreq;
+        debug() << "Error when decoding bank " << s.str()<< " -> incomplete data - May be corrupted"<< endmsg;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endreq;
+    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endmsg;
   }
   return m_data ;
 }
@@ -173,7 +173,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
   if(0 == size)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Empty );
 
   if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
-                                      << "version " << version << " size " << size << endreq;
+                                      << "version " << version << " size " << size << endmsg;
   
   // -----------------------------------------------
   // skip detector specific header line 
@@ -208,7 +208,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
                   << " |  FeBoard : " << m_calo->cardNumber(id1)
                   << " |  CaloCell " << id1
                   << " |  valid ? " << m_calo->valid(id1)
-                  << " |  ADC value = " << adc1 << endreq;
+                  << " |  ADC value = " << adc1 << endmsg;
       }
 
       LHCb::CaloCellID id2( ++lastID );
@@ -227,7 +227,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
                   << " |  FeBoard : " << m_calo->cardNumber(id2)
                   << " |  CaloCell " << id2
                   << " |  valid ? " << m_calo->valid(id2)
-                  << " |  ADC value = " << adc2 << endreq;
+                  << " |  ADC value = " << adc2 << endmsg;
       }
       
     }
@@ -237,7 +237,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
-                                        << feCards << " in Tell1 bank " << sourceID << endreq;
+                                        << feCards << " in Tell1 bank " << sourceID << endmsg;
     int lenAdc   = 0;
     int lenTrig  = 0;
 
@@ -299,7 +299,7 @@ bool CaloTriggerAdcsFromRaw::getData ( LHCb::RawBank* bank ){
                         << " |  Channel : " << bitNum
                         << " |  CaloCell " << id
                         << " |  valid ? " << m_calo->valid(id)
-                        << " |  ADC value = " << adc << endreq;
+                        << " |  ADC value = " << adc << endmsg;
             }
             
             if ( 0 != id.index() ) {

@@ -1,4 +1,4 @@
-// $Id: CompareCaloDigits.cpp,v 1.7 2007-01-12 10:42:57 cattanem Exp $
+// $Id: CompareCaloDigits.cpp,v 1.8 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // STL
@@ -83,11 +83,11 @@ void CompareCaloDigits::compareContainers ( LHCb::CaloDigits* dig1,
     error() << "Incoherent size : " << dig1->registry()->identifier() 
             << " : " << dig1->size() << " and " 
             << dig2->registry()->identifier() << " : " << dig2->size() 
-            << endreq;
+            << endmsg;
   } else {
     debug() << "Comparing " << dig1->name()
             << " and " << dig2->name()
-            << " both sizes = " << dig2->size() << endreq;
+            << " both sizes = " << dig2->size() << endmsg;
   }
   
   LHCb::CaloDigits::const_iterator it1, it2;

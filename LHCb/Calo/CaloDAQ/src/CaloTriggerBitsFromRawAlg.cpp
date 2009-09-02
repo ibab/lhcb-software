@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.8 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloTriggerBitsFromRawAlg.cpp,v 1.9 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -84,7 +84,7 @@ StatusCode CaloTriggerBitsFromRawAlg::execute() {
     LHCb::L0PrsSpdHit* l0Bit = new LHCb::L0PrsSpdHit( *iCell );
     newL0Bits->insert( l0Bit ) ;
   };
-  debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endreq;
+  debug() << " L0PrsSpdHits container size " << newL0Bits->size() << endmsg;
   return StatusCode::SUCCESS;
 }
 

@@ -1,32 +1,4 @@
-// $Id: CaloReCreateMCLinks.cpp,v 1.10 2009-04-06 15:45:03 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.10 $
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.9  2008/01/25 13:08:36  odescham
-// add Hcal as default in RecreateMCLinks
-//
-// Revision 1.8  2007/08/27 14:03:50  odescham
-// clean unchecked StatusCode
-//
-// Revision 1.7  2006/12/14 10:33:17  ranjard
-// v3r0 - use InstallArea and fix CaloReCreateMCLinks.cpp to use new Gaudi
-//
-// Revision 1.6  2006/02/23 14:03:40  ibelyaev
-//  change the default configuration of CaloReCreateMCLinks
-//
-// Revision 1.5  2005/12/20 13:35:28  ocallot
-// Fixes due to fault CaloEvent release
-//
-// Revision 1.4  2005/12/19 19:29:14  ocallot
-// First adaptation to LHCb v20
-//
-// Revision 1.3  2005/05/12 06:44:32  cattanem
-// downgrade Error to Warning
-//
-// Revision 1.2  2005/05/11 18:04:09  ibelyaev
-//  add new property 'IgnoreMode' for CaloReCreateMCLinks
-// 
+// $Id: CaloReCreateMCLinks.cpp,v 1.11 2009-09-02 12:22:13 cattanem Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -186,7 +158,7 @@ StatusCode CaloReCreateMCLinks::execute()
     { 
       debug () << " Set MClinks between containers '" 
                << addr1 << "' and '"
-               << addr2 << "'" << endreq ;
+               << addr2 << "'" << endmsg ;
     }
     //
     // set MC link

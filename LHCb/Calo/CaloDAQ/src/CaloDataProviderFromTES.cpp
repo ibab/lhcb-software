@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.3 2009-06-19 08:35:36 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.4 2009-09-02 12:22:12 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -74,7 +74,7 @@ StatusCode CaloDataProviderFromTES::initialize ( ) {
   } else if ( "Spd" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs ); // Prs FE for SPD
   } else {
-    error() << "Unknown detector name " << m_detectorName << endreq;
+    error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -96,7 +96,7 @@ StatusCode CaloDataProviderFromTES::initialize ( ) {
   m_adcs.reserve( nCells + nPins  );
   m_digits.reserve( nCells );
   clear();
-  debug() << " Initialisation OK" << endreq;
+  debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -105,12 +105,12 @@ bool CaloDataProviderFromTES::getBanks( ) {
   if( fromDigit() ){
     if( exist<LHCb::CaloDigits>(m_loc) ){
       m_digCont = get<LHCb::CaloDigits>(m_loc);
-      if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_digCont->size() << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_digCont->size() << endmsg;
     }else return false;
   }else if( fromAdc() ){
     if( exist<LHCb::CaloAdcs>(m_loc) ){
       m_adcCont = get<LHCb::CaloAdcs>(m_loc);
-      if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_adcCont->size() << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_adcCont->size() << endmsg;
     }else return false;
   }
   return true;

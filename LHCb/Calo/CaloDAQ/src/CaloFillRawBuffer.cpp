@@ -1,4 +1,4 @@
-// $Id: CaloFillRawBuffer.cpp,v 1.16 2007-12-06 09:31:24 odescham Exp $
+// $Id: CaloFillRawBuffer.cpp,v 1.17 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -76,7 +76,7 @@ StatusCode CaloFillRawBuffer::initialize() {
     }
     info() << "Processing " << m_calo->nCards() 
            << " FE-Cards and " << m_calo->nTell1s() << " TELL1"
-           << endreq;
+           << endmsg;
 
   }
   
@@ -92,7 +92,7 @@ StatusCode CaloFillRawBuffer::initialize() {
     m_dataSize.push_back( 0. );
   }
 
-  info() << "Data coding type " << m_dataCodingType << endreq;
+  info() << "Data coding type " << m_dataCodingType << endmsg;
 
   if ( 2 < m_dataCodingType || 0 >= m_dataCodingType ) {
     Error( "Invalid Data coding type", StatusCode::FAILURE );
@@ -149,31 +149,31 @@ StatusCode CaloFillRawBuffer::execute() {
       debug() << format( "%2d:%4d+%4d ", kk, m_banks[kk].size(),
                          m_trigBanks[kk].size() );
     }
-    debug() << endreq << "Total Data bank size " << totDataSize
-            << " + trigger " << totTrigSize << endreq;
+    debug() << endmsg << "Total Data bank size " << totDataSize
+            << " + trigger " << totTrigSize << endmsg;
   }
 
   if ( MSG::VERBOSE >= msgLevel() ) {
     for ( unsigned int kk = 0; m_banks.size() > kk; kk++ ) {
-      verbose() << "DATA bank : " << kk << endreq;
+      verbose() << "DATA bank : " << kk << endmsg;
       int kl = 0;
       std::vector<unsigned int>::const_iterator itW;
       
       for ( itW = m_banks[kk].begin(); m_banks[kk].end() != itW; itW++ ){
         verbose() << format ( " %8x %11d   ", (*itW), (*itW) );
         kl++;
-        if ( 0 == kl%4 ) verbose() << endreq;
+        if ( 0 == kl%4 ) verbose() << endmsg;
       }
       
-      verbose() << endreq <<  "TRIGGER bank size=" << m_trigBanks[kk].size() << "  "
-                << endreq;
+      verbose() << endmsg <<  "TRIGGER bank size=" << m_trigBanks[kk].size() << "  "
+                << endmsg;
       kl = 0;
       for ( itW = m_trigBanks[kk].begin(); m_trigBanks[kk].end() != itW; itW++ ){
         verbose() << format ( " %8x ", (*itW) );
         kl++;
-        if ( 0 == kl%8 ) verbose() << endreq;
+        if ( 0 == kl%8 ) verbose() << endmsg;
       }
-      verbose() << endreq;
+      verbose() << endmsg;
     }
   }
  
@@ -199,7 +199,7 @@ StatusCode CaloFillRawBuffer::finalize() {
     }
     meanSize /= m_dataSize.size();
     info() << format ( "  Mean bank size %7.1f, maximum size %7.1f", 
-                       meanSize, maxSize ) << endreq;
+                       meanSize, maxSize ) << endmsg;
   }  
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
@@ -316,7 +316,7 @@ void CaloFillRawBuffer::fillPackedBank ( ) {
       if ( msgLevel( MSG::DEBUG ) ) {
         debug() << format( "Tell1 %2d card %3d pattern %8x patTrig %8x size Adc %2d Trig %2d",
                            kTell1, cardNum, pattern, patTrig, sizeAdc, sizeTrig )
-                << endreq;
+                << endmsg;
       }
     }
   }
@@ -346,7 +346,7 @@ void CaloFillRawBuffer::fillTriggerBank ( ) {
     }
     
     if ( MSG::VERBOSE >= msgLevel() ) {
-      verbose() << id << format( "trigValue %3d word %8x ", (*itT)->adc(), word) << endreq;
+      verbose() << id << format( "trigValue %3d word %8x ", (*itT)->adc(), word) << endmsg;
     }
     prevIndx = 0;
   }

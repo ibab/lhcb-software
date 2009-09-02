@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.25 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.26 2009-09-02 12:22:13 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -113,7 +113,7 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
   int sourceID     ;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    debug() << "The banks container is empty" << endreq;
+    debug() << "The banks container is empty" << endmsg;
   }else{    
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -125,14 +125,14 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        debug() << "Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted" << endreq;
+        debug() << "Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted" << endmsg;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endreq;
+    debug() << "rawBank sourceID : " << s.str() << " has not been found"<<endmsg;
   }
   return m_data;
 }
@@ -161,7 +161,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
   if(0 == size)m_status.addStatus( sourceID, LHCb::RawBankReadoutStatus::Empty);
 
   if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
-                                      << " version " << version << " size " << size << endreq;
+                                      << " version " << version << " size " << size << endmsg;
   
 
 
@@ -196,7 +196,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                     << " |  FeBoard : " << m_calo->cardNumber(id)
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
-                    << " |  Prs/Spd  = " << (prsData & 1) << "/" << (spdData & 1) << endreq;
+                    << " |  Prs/Spd  = " << (prsData & 1) << "/" << (spdData & 1) << endmsg;
           }
           spdData = spdData >> 1;
           prsData = prsData >> 1;
@@ -218,7 +218,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                     << " |  FeBoard : " << m_calo->cardNumber( prsId )
                     << " |  CaloCell " << prsId
                     << " |  valid ? " << m_calo->valid( prsId )
-                    << " |  Prs/Spd  = " << (item&1) << "/" << (item&2) << endreq;
+                    << " |  Prs/Spd  = " << (item&1) << "/" << (item&2) << endmsg;
         }
         
         
@@ -240,7 +240,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
-                                        << feCards << " in Tell1 bank " << sourceID << endreq;
+                                        << feCards << " in Tell1 bank " << sourceID << endmsg;
     
     int offset   = 0;
     int lenAdc   = 0;
@@ -255,13 +255,13 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
       if ( msgLevel( MSG::DEBUG) ) {
         debug() << format( "  Header data %8x size %4d lenAdc%3d lenTrig%3d",
                            word, size, lenAdc, lenTrig )
-                << endreq;
+                << endmsg;
       }
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl(ctrl,sourceID);
       
-      if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endreq;      
+      if ( msgLevel( MSG::DEBUG) )debug() << "Read FE-board ["<< code << "] linked to TELL1 bank " << sourceID << endmsg;      
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector
@@ -309,7 +309,7 @@ bool CaloTriggerBitsFromRaw::getData(  LHCb::RawBank* bank ) {
                     << " |  Channel : " << num
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
-                    << " |  Prs/Spd  = " << isPrs << "/" << isSpd << endreq;
+                    << " |  Prs/Spd  = " << isPrs << "/" << isSpd << endmsg;
         }
 
 

@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.15 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.16 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -112,13 +112,13 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
      m_outputType == "ADC"  ||  m_outputType == "CALOADC"  || 
      m_outputType == "BOTH")m_adcOnTES = true;
   if( !m_adcOnTES && !m_digitOnTES ){
-    error()<< "CaloDigitsFromRaw configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endreq;
+    error()<< "CaloDigitsFromRaw configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endmsg;
     return StatusCode::FAILURE;
   }
   if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
-                            << rootInTES() + m_outputDigits << endreq;
+                            << rootInTES() + m_outputDigits << endmsg;
   if( m_adcOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES at "
-                          << rootInTES() + m_outputADCs << endreq;
+                          << rootInTES() + m_outputADCs << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -127,7 +127,7 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
 //=============================================================================
 StatusCode CaloDigitsFromRaw::execute() {
 
-  debug() << "==> Execute" << endreq;
+  debug() << "==> Execute" << endmsg;
 
   if       ( 0 == m_detectorNum ) {
     convertSpd ( 3.2 * Gaudi::Units::MeV );
@@ -155,7 +155,7 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endreq;
+    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endmsg;
   }
 
   if(m_adcOnTES){
@@ -166,7 +166,7 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( *itD, 1 );
       adcs->insert( adc );
     }
-    debug() <<  m_outputADCs << " CaloAdc container size " << adcs->size() << endreq;
+    debug() <<  m_outputADCs << " CaloAdc container size " << adcs->size() << endmsg;
   }
 } 
 
@@ -187,11 +187,11 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
           allDigits.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = (*itD).clone();
       digits->insert( dig );
-      verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endreq;
+      verbose() << "ID " << dig->cellID() << " energy " << dig->e() << endmsg;
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endreq;
+    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endmsg;
 
   }
   
@@ -204,9 +204,9 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
           allAdcs.end() != itA; ++itA ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
       adcs->insert(adc);
-      verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endreq;
+      verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endmsg;
     }
-    debug() << " CaloAdc container '"  << m_outputADCs  << "' -> size = " << adcs->size() << endreq;
+    debug() << " CaloAdc container '"  << m_outputADCs  << "' -> size = " << adcs->size() << endmsg;
 
 
     // PinDiode ADC (possibly in a different container)
@@ -224,10 +224,10 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
             allPinAdcs.end() != itA; ++itA ) {
         LHCb::CaloAdc* pinAdc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
         pinAdcs->insert( pinAdc );
-        verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endreq;
+        verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endmsg;
       }
       debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName 
-              << "' -> size = " << pinAdcs->size() << endreq;
+              << "' -> size = " << pinAdcs->size() << endmsg;
     }
   }
 }

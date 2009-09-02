@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.25 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.26 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
     m_shortType  = LHCb::RawBank::PrsE;
     m_errorType = LHCb::RawBank::PrsPackedError;
   } else {
-    error() << "Unknown detector name " << m_detectorName << endreq;
+    error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -71,7 +71,7 @@ StatusCode CaloEnergyFromRaw::initialize ( ) {
   m_pinData.reserve( nPins );
   m_data.reserve( nCells );
   m_digits.reserve( nCells );
-  debug() << "Got detector element for " << m_detectorName << endreq;
+  debug() << "Got detector element for " << m_detectorName << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -146,7 +146,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   bool found   = false;
   if(m_getRaw)getCaloBanksFromRaw();
   if( NULL == m_banks || 0 == m_banks->size() ){
-    debug() << "The banks container is empty"<< endreq;
+    debug() << "The banks container is empty"<< endmsg;
   }else{
     for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
          itB != m_banks->end() ; ++itB ) {
@@ -161,14 +161,14 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
       if( !decoded ){
         std::stringstream s("");
         s<< sourceID;
-        debug() <<"Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted"<< endreq;
+        debug() <<"Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted"<< endmsg;
       }
     } 
   }
   if( !found ){
     std::stringstream s("");
     s<< source;
-    debug() <<"rawBank sourceID : " << s.str() << " has not been found"<<endreq;
+    debug() <<"rawBank sourceID : " << s.str() << " has not been found"<<endmsg;
   }
   
   return m_data ;
@@ -225,7 +225,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
 
 
   if ( msgLevel( MSG::DEBUG) )debug() << "Decode bank " << bank << " source " << sourceID 
-                                      << " version " << version << " size " << size << endreq;  
+                                      << " version " << version << " size " << size << endmsg;  
 
 
   if(0 == size)m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Empty );
@@ -242,7 +242,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
   if ( 1 > version || 3 < version ) {
     warning() << "Bank type " << bank->type() << " sourceID " << sourceID 
               << " has version " << version 
-              << " which is not supported" << endreq;
+              << " which is not supported" << endmsg;
 
   } else if ( 1 == version ) {
     //******************************************************************
@@ -261,7 +261,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
                   << " |  FeBoard : " << m_calo->cardNumber(cellId)
                   << " |  CaloCell " << cellId
                   << " |  valid ? " << m_calo->valid(cellId)
-                  << " |  ADC value = " << adc << endreq;
+                  << " |  ADC value = " << adc << endmsg;
       }
 
       if ( 0 != cellId.index() ) {
@@ -284,7 +284,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
     if(msgLevel(MSG::DEBUG))debug() << nCards << " FE-Cards are expected to be readout : " 
-                                    << feCards << " in Tell1 bank " << sourceID << endreq;
+                                    << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
       // Skip 
@@ -364,7 +364,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
                     << " |  Channel : " << bitNum
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
-                    << " |  ADC value = " << adc << endreq;
+                    << " |  ADC value = " << adc << endmsg;
         }
         
         //== Keep only valid cells
@@ -390,7 +390,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
     std::vector<int> feCards = m_calo->tell1ToCards( sourceID );
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )debug() << nCards << " FE-Cards are expected to be readout : " 
-                                        << feCards << " in Tell1 bank " << sourceID << endreq;
+                                        << feCards << " in Tell1 bank " << sourceID << endmsg;
     int prevCard = -1;
     while( 0 != size ) {
       // Skip
@@ -454,7 +454,7 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
                     << " |  Channel : " << num
                     << " |  CaloCell " << id
                     << " |  valid ? " << m_calo->valid(id)
-                    << " |  ADC value = " << adc << endreq;
+                    << " |  ADC value = " << adc << endmsg;
         }
 
 

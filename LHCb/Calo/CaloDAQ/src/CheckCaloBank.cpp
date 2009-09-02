@@ -56,11 +56,11 @@ StatusCode CheckCaloBank::initialize() {
   if( sc.isFailure() ) return sc;  
 
   if( "Prs" != m_typ && "Ecal" != m_typ && "Hcal" != m_typ ){
-    error() << "Undefined Calo type : " << m_typ << endreq;    
+    error() << "Undefined Calo type : " << m_typ << endmsg;    
     return StatusCode::FAILURE;
   }else{
-    info() << " Check the 0-suppressed banks exist for " << m_typ << endreq;
-    info() << " if not (MC) re-create them from packed bank and delete packed " << endreq;
+    info() << " Check the 0-suppressed banks exist for " << m_typ << endmsg;
+    info() << " if not (MC) re-create them from packed bank and delete packed " << endmsg;
   }
   return StatusCode::SUCCESS;
 };
@@ -75,17 +75,17 @@ StatusCode CheckCaloBank::execute() {
   bool trig = ( 0 == (rawEvt->banks( m_trig )).size() ) ?  false : true ;
   bool bank = ( 0 == (rawEvt->banks( m_bank )).size() ) ?  false : true ;
   
-  debug() << "TYPE of Calo Bank to be checked : " << m_typ << " " << trig << " " << bank <<endreq;
+  debug() << "TYPE of Calo Bank to be checked : " << m_typ << " " << trig << " " << bank <<endmsg;
   if(trig ||  bank ){
-    debug() << " Calo Banks with 'compressed' format exist - Do nothing" << endreq;
+    debug() << " Calo Banks with 'compressed' format exist - Do nothing" << endmsg;
   }else{
-    debug() << " Calo Banks with 'compressed' format DOESN'T exist - Will be created from PACKED banks" << endreq;
+    debug() << " Calo Banks with 'compressed' format DOESN'T exist - Will be created from PACKED banks" << endmsg;
   }
   
   if(trig && bank)setFilterPassed(false);// no need to rebuilt 'compressed' bank
   else if(!trig && !bank)setFilterPassed(true); // re-Built compressed banks and (delete packed bank)
   else {
-    warning() << " Compressed bank incomplete !! Do nothing" << endreq;    
+    warning() << " Compressed bank incomplete !! Do nothing" << endmsg;    
     setFilterPassed(false);
   }
   

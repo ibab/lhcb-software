@@ -66,7 +66,7 @@ StatusCode CaloDataProvider::initialize ( ) {
     m_shortType  = LHCb::RawBank::PrsTrig;
     m_errorType = LHCb::RawBank::PrsPackedError;
   } else {
-    error() << "Unknown detector name " << m_detectorName << endreq;
+    error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
   
@@ -76,7 +76,7 @@ StatusCode CaloDataProvider::initialize ( ) {
   m_adcs.reserve( nCells + nPins  );
   m_digits.reserve( nCells );
   clear();
-  debug() << " Initialisation OK" << endreq;
+  debug() << " Initialisation OK" << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -254,7 +254,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
 
   if ( msgLevel( MSG::DEBUG) )
     debug() << "Decode bank " << bank << " source " << sourceID 
-            << " version " << version << " size " << size << endreq;
+            << " version " << version << " size " << size << endmsg;
 
   // -----------------------------------------------
   // skip detector specific header line 
@@ -269,7 +269,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
   if ( 1 > version || 3 < version ) {
     warning() << "Bank type " << bank->type() << " sourceID " << sourceID 
               << " has version " << version 
-              << " which is not supported" << endreq;
+              << " which is not supported" << endmsg;
 
   } else if ( 1 == version ) {
     //******************************************************************
@@ -286,7 +286,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                           << " |  FeBoard : " << m_calo->cardNumber(cellId)
                                           << " |  CaloCell " << cellId
                                           << " |  valid ? " << m_calo->valid(cellId)
-                                          << " |  ADC value = " << adc << endreq;
+                                          << " |  ADC value = " << adc << endmsg;
       
       if ( 0 != cellId.index() ){
         LHCb::CaloAdc temp(cellId,adc);
@@ -306,7 +306,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )
       debug() << nCards << " FE-Cards are expected to be readout : " 
-              << feCards << " in Tell1 sourceID : " << sourceID << endreq;
+              << feCards << " in Tell1 sourceID : " << sourceID << endmsg;
     
     int prevCard = -1;
     while( 0 != size ) {
@@ -385,7 +385,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                                << " |  Channel : " << bitNum
                                                << " |  CaloCell " << id
                                                << " |  valid ? " << m_calo->valid(id)
-                                               << " |  ADC value = " << adc << endreq;
+                                               << " |  ADC value = " << adc << endmsg;
         
         
         //== Keep only valid cells
@@ -407,7 +407,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )
       debug() << nCards << " FE-Cards are expected to be readout : " 
-              << feCards << " in Tell1 bank sourceID " << sourceID << endreq;
+              << feCards << " in Tell1 bank sourceID " << sourceID << endmsg;
     
     int prevCard = -1;
     while( 0 != size ) {
@@ -471,7 +471,7 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                             << " |  Channel : " << num
                                             << " |  CaloCell " << id
                                             << " |  valid ? " << m_calo->valid(id)
-                                            << " |  ADC value = " << adc << endreq;
+                                            << " |  ADC value = " << adc << endmsg;
 
 
         if ( 0 != id.index() ){
@@ -508,7 +508,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
 
   if ( msgLevel( MSG::DEBUG) )
     debug() << "Decode Prs bank " << bank << " source " << sourceID 
-            << " version " << version << " size " << size << endreq;
+            << " version " << version << " size " << size << endmsg;
 
 
   // -----------------------------------------------
@@ -549,7 +549,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
                                               << " |  CaloCell " << id
                                               << " |  valid ? " << m_calo->valid(id)
                                               << " |  Prs/Spd  = " << (prsData & 1) << "/" << (spdData & 1) 
-                                              << endreq;
+                                              << endmsg;
 
           spdData = spdData >> 1;
           prsData = prsData >> 1;
@@ -571,7 +571,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
                                             << " |  CaloCell " << prsId
                                             << " |  valid ? " << m_calo->valid( prsId )
                                             << " |  Prs/Spd  = " << (item&1) << "/" << (item&2) 
-                                            << endreq;
+                                            << endmsg;
         
         
         if ( 0 != (item & 2) ) {
@@ -592,7 +592,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
     int nCards = feCards.size();
     if ( msgLevel( MSG::DEBUG) )
       debug() << nCards << " FE-Cards are expected to be readout : " 
-              << feCards << " in Tell1 bank sourceID : " << sourceID << endreq;
+              << feCards << " in Tell1 bank sourceID : " << sourceID << endmsg;
 
     int offset   = 0;
     int lenAdc   = 0;
@@ -607,14 +607,14 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
       if ( msgLevel( MSG::DEBUG) ) {
         debug() << format( "  Header data %8x size %4d lenAdc%3d lenTrig%3d",
                            word, size, lenAdc, lenTrig )
-                << endreq;
+                << endmsg;
       }
       int code  = (word >>14 ) & 0x1FF;
       int ctrl    = (word >> 23) &  0x1FF;
       checkCtrl( ctrl,sourceID );
 
       if ( msgLevel( MSG::DEBUG) )
-        debug() << "Read FE-board ["<< code << "] linked to TELL1 bank sourceID : " << sourceID << endreq;      
+        debug() << "Read FE-board ["<< code << "] linked to TELL1 bank sourceID : " << sourceID << endmsg;      
       // access chanID via condDB
       std::vector<LHCb::CaloCellID> chanID  ;
       // look for the FE-Card in the Tell1->cards vector
@@ -661,7 +661,7 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
                                             << " |  CaloCell " << id
                                             << " |  valid ? " << m_calo->valid(id)
                                             << " |  Prs/Spd  = " << isPrs << "/" << isSpd 
-                                            << endreq;
+                                            << endmsg;
         
 
 

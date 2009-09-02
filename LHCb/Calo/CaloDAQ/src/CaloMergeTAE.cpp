@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.cpp,v 1.3 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloMergeTAE.cpp,v 1.4 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -76,7 +76,7 @@ StatusCode CaloMergeTAE::initialize() {
     m_locDigit     = LHCb::CaloDigitLocation::Spd;
     m_locAdc     = LHCb::CaloAdcLocation::Spd;
   } else {
-    error() << "Unknown detector name " << m_detectorName << endreq;
+    error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
   //
@@ -98,7 +98,7 @@ StatusCode CaloMergeTAE::initialize() {
     Error("Unknown data type " + m_data).ignore();
     return StatusCode::FAILURE;
   }  
-  info() << "Will merge " << m_data << " from " << m_slots << " into " << loc << endreq;
+  info() << "Will merge " << m_data << " from " << m_slots << " into " << loc << endmsg;
   return StatusCode::SUCCESS; 
 }
 
@@ -166,7 +166,7 @@ void CaloMergeTAE::mergeDigits(){
     if(  sum > m_threshold ){
       LHCb::CaloDigit* newDigit = new LHCb::CaloDigit(id, sum);
       newDigits->insert( newDigit);
-      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endreq;
+      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endmsg;
     }
 
   }
@@ -209,7 +209,7 @@ void CaloMergeTAE::mergeAdcs(){
     if(  (double) sum > m_threshold ){
       LHCb::CaloAdc* newAdc = new LHCb::CaloAdc(id, sum);
       newAdcs->insert( newAdc );
-      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endreq;
+      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endmsg;
     }
 
   }

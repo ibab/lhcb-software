@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.34 2009-06-18 21:07:26 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.35 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -57,18 +57,18 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );
   }else  {
-    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endreq;
+    if(m_first)debug()<<"WARNING : rawEvent not found at location  (message will be suppressed)'" <<rootInTES()<< m_raw <<endmsg;
     m_first=false;
     return false;
   }
       
   m_packed =false;
   if( !m_packedIsDefault){
-    if ( msgLevel( MSG::DEBUG) )debug() << "Banks of short type are requested as default" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Banks of short type are requested as default" << endmsg;
     m_banks= &rawEvt->banks(  m_shortType );
     m_status = LHCb::RawBankReadoutStatus( m_shortType);
   }else{
-    if ( msgLevel( MSG::DEBUG) )debug() << "Banks of paked type are requested as default" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Banks of paked type are requested as default" << endmsg;
     m_banks= &rawEvt->banks(  m_packedType );
     m_status = LHCb::RawBankReadoutStatus( m_packedType);
   }
@@ -76,31 +76,31 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
   
   if ( 0 == m_banks || 0 == m_banks->size() ) {
     if( !m_packedIsDefault){      
-      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has not been found ... try packed type" << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has not been found ... try packed type" << endmsg;
       m_banks = &rawEvt->banks( m_packedType );
       m_status = LHCb::RawBankReadoutStatus( m_packedType);
     }else{
-      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has not been found ... try short type" << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has not been found ... try short type" << endmsg;
       m_banks = &rawEvt->banks( m_shortType );
       m_status = LHCb::RawBankReadoutStatus( m_shortType);
     }    
     
     if ( 0 == m_banks || 0 == m_banks->size() ){
-      if ( msgLevel( MSG::DEBUG) )debug() << "WARNING : None of short and packed banks have been found "<<endreq;
+      if ( msgLevel( MSG::DEBUG) )debug() << "WARNING : None of short and packed banks have been found "<<endmsg;
       return false;
     }else{
       if( !m_packedIsDefault){      
-        if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has been found" << endreq;
+        if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has been found" << endmsg;
         m_packed = true;
       }else{
-        if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has found" << endreq;
+        if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has found" << endmsg;
       }
     }
   }else{
     if( !m_packedIsDefault){      
-      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has been found" << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of short type has been found" << endmsg;
     }else{
-      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has found" << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug()<< " Requested banks of packed type has found" << endmsg;
       m_packed =true;
     }
   }
@@ -150,12 +150,12 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 bool CaloReadoutTool::checkCards(int nCards, std::vector<int> feCards ){
   bool check = true;
   if ( msgLevel( MSG::DEBUG) )debug() << nCards-feCards.size() 
-                                      << "FE-Cards have been read among the " << nCards << " expected"<< endreq; 
+                                      << "FE-Cards have been read among the " << nCards << " expected"<< endmsg; 
   if( 0 != feCards.size() ){
     for(unsigned int iFe = 0 ; iFe <  feCards.size();++iFe){ 
       if ( msgLevel( MSG::DEBUG) )debug() << " Unread FE-Cards : " << m_calo->cardCode( feCards[iFe] ) 
                                           << "  - Is it a PinDiode readout FE-Card ? " 
-                                          << m_calo->isPinCard( feCards[iFe] ) << endreq;
+                                          << m_calo->isPinCard( feCards[iFe] ) << endmsg;
       if ( !m_calo->isPinCard( feCards[iFe] ) ){
         std::stringstream s("");
         s << m_calo->cardCode( feCards[iFe] )  ;
@@ -179,7 +179,7 @@ int CaloReadoutTool::findCardbyCode(std::vector<int> feCards , int code){
       int crate  = m_calo->cardParam( feCards[ iFe ] ).crate();
       int slot   = m_calo->cardParam( feCards[ iFe ] ).slot();
       if ( msgLevel( MSG::DEBUG) )debug() <<" FE-Card [code : " << code << " | crate : " << crate << " slot : " << slot 
-                                          << "] has been found with (num : " << feCards[iFe] <<")  in condDB" << endreq;
+                                          << "] has been found with (num : " << feCards[iFe] <<")  in condDB" << endmsg;
       return iFe;
       break;
     }        
@@ -204,7 +204,7 @@ void CaloReadoutTool::putStatusOnTES(){
     std::stringstream type("");
     type << LHCb::RawBank::typeName(m_status.key()) ;
     
-    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endmsg;
     if( status->status() != m_status.status() ){
       Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();
@@ -218,10 +218,10 @@ void CaloReadoutTool::putStatusOnTES(){
 
 void CaloReadoutTool::checkCtrl(int ctrl,int sourceID){
 
-  if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endreq;
+  if ( msgLevel( MSG::DEBUG) )debug()<< "Control word :" << ctrl << endmsg;
   
   if( 0 != (0x1& ctrl) || 0 != (0x20& ctrl) || 0 != (0x40& ctrl)){
-    if(msgLevel(MSG::DEBUG))debug() << "Tell1 error bits have been detected in data" << endreq;
+    if(msgLevel(MSG::DEBUG))debug() << "Tell1 error bits have been detected in data" << endmsg;
     if( 0 != (0x1  & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Error );
     if( 0 != (0x20 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Sync  );      
     if( 0 != (0x40 & ctrl))m_status.addStatus(sourceID,LHCb::RawBankReadoutStatus::Tell1Link  );

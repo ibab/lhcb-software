@@ -1,4 +1,4 @@
-// $Id: CaloAdcFromRaw.cpp,v 1.1 2009-08-17 12:11:15 odescham Exp $
+// $Id: CaloAdcFromRaw.cpp,v 1.2 2009-09-02 12:22:12 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -110,7 +110,7 @@ StatusCode CaloAdcFromRaw::execute() {
     put( outs , m_location);
     CaloVector<LHCb::CaloAdc>& adcs = m_data->adcs();
 
-    debug() << " #ADCS " << adcs.size() << endreq;
+    debug() << " #ADCS " << adcs.size() << endmsg;
     for(CaloVector<LHCb::CaloAdc>::iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
       LHCb::CaloAdc adc = *iadc;
       LHCb::CaloCellID id = adc.cellID();
@@ -129,7 +129,7 @@ StatusCode CaloAdcFromRaw::execute() {
       LHCb::CaloAdc* out = new LHCb::CaloAdc( id, value);
       if ( msgLevel( MSG::DEBUG) )
         debug() << "Inserting : " << id << " adc = " << value << "  =  " << adc.adc() << " / " << calib 
-                << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endreq;
+                << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
       outs->insert(out);
     }    
   }
@@ -155,7 +155,7 @@ StatusCode CaloAdcFromRaw::execute() {
       LHCb::L0CaloAdc* out = new LHCb::L0CaloAdc( id, value);
       if ( msgLevel( MSG::DEBUG) )
         debug() << "Inserting : " << id << " l0adc = " << value << "  =  " << adc.adc() << " / " << calib 
-                << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endreq;
+                << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
       outs->insert(out);
     }
   }
@@ -176,7 +176,7 @@ StatusCode CaloAdcFromRaw::execute() {
         LHCb::L0PrsSpdHit* out = new LHCb::L0PrsSpdHit( id );
         if ( msgLevel( MSG::DEBUG) )
           debug() << "Inserting : " << id << " bit = " << value 
-                  << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endreq;
+                  << "  (dead channel ? " << m_calo->isDead( id ) << ")" << endmsg;
         outs->insert(out);
       }
     }

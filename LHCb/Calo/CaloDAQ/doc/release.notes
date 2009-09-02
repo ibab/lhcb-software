@@ -1,14 +1,17 @@
 !-----------------------------------------------------------------------------
 ! Package     : Calo/CaloDAQ
-! Responsible : Olivier Callot
+! Responsible : Olivier Deschamps
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r13 2009-09-02 =========================
+! 2009-09-02 - Marco Cattaneo
+ - Replace all endreq by endmsg
+ - Remove hack for Gaudi v21r1 to link dictionary on Windows 
 
 ! 2009-09-17 - Olivier Deschamps
  - new algorithm : CaloAdcFromRaw produces ADC from rawBanks with possible mis-calibration
  - fix Calo(L0)DataProvider for 'partial' decoding in case of single 'offline' bank
-
 
 !========================== CaloDAQ v4r12 2009-06-29 =========================
 ! 2009-06-19 - Olivier Deschamps

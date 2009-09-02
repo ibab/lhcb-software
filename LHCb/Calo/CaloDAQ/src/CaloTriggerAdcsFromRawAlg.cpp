@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.9 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.10 2009-09-02 12:22:13 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialize" <<  endreq;  
+  debug() << "==> Initialize" <<  endmsg;  
   m_l0AdcTool = tool<ICaloTriggerAdcsFromRaw>( m_toolType , m_toolName, this);
   return StatusCode::SUCCESS;
 }
@@ -81,7 +81,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
     newL0Adcs->insert( adc ) ;
   }
   debug() << " L0CaloAdcs container" << m_outputData 
-          <<" size " << newL0Adcs->size() << endreq;
+          <<" size " << newL0Adcs->size() << endmsg;
   
   //*** get the PinDiode data and fill the output container
   // MUST BE AFTER STANDARD ADCs
@@ -95,7 +95,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
       newL0PinAdcs->insert( pinAdc ) ;
     }
     debug() << " PinDiode : L0CaloAdcs container " << m_pinContainer 
-            << " size " << newL0Adcs->size() << endreq;
+            << " size " << newL0Adcs->size() << endmsg;
   }
 
 

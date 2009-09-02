@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.13 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloZSupAlg.cpp,v 1.14 2009-09-02 12:22:13 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -88,18 +88,18 @@ StatusCode CaloZSupAlg::initialize() {
      m_outputType == "ADC"  ||  m_outputType == "CALOADC"  || 
      m_outputType == "BOTH")m_adcOnTES = true;
   if( !m_adcOnTES && !m_digitOnTES ){
-    error() << "CaloZSupAlg configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endreq;
+    error() << "CaloZSupAlg configured to produce ** NO ** output (outputType = '" << m_outputType <<"')" << endmsg;
     return StatusCode::FAILURE;
   }  
   if( m_digitOnTES )debug() <<  "CaloZSupAlg will produce CaloDigits on TES" 
                             << rootInTES() + m_outputDigitData
-                            << endreq;
+                            << endmsg;
   if( m_adcOnTES )debug() <<  "CaloZSupAlg will produce CaloAdcs on TES" 
                           << rootInTES() + m_outputADCData 
-                          << endreq;
+                          << endmsg;
   
   // Retrieve the calorimeter we are working with.
-  debug() << " get DeCalorimeter from " << m_detectorName << endreq;
+  debug() << " get DeCalorimeter from " << m_detectorName << endmsg;
   m_calo = getDet<DeCalorimeter>( m_detectorName );  
   m_numberOfCells = m_calo->numberOfCells();
   m_pedShift      = m_calo->pedestalShift();
@@ -109,7 +109,7 @@ StatusCode CaloZSupAlg::initialize() {
        "1D" != m_zsupMethod && 
        "2D" != m_zsupMethod) {
     error() << "Unknown Z-sup mode" << m_zsupMethod
-            << " (must be NO,1D or 2D)" << endreq;
+            << " (must be NO,1D or 2D)" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -118,13 +118,13 @@ StatusCode CaloZSupAlg::initialize() {
   if ( "NO" == m_zsupMethod ) {
     if( -1000 != m_zsupThreshold ) {
       info() << " Threshold is reset from "<< m_zsupThreshold
-             << " to " << -1000 << endreq; }
+             << " to " << -1000 << endmsg; }
     m_zsupThreshold = -1000 ; // no threshold at all !
   }
 
   info() << "Calorimeter has " <<  m_numberOfCells
          << " cells. Zsup method "  << m_zsupMethod 
-         << " Threshold " << m_zsupThreshold << endreq;
+         << " Threshold " << m_zsupThreshold << endmsg;
 
   m_adcTool = tool<ICaloEnergyFromRaw>( m_inputToolType , m_inputToolName,this);
 
@@ -143,9 +143,9 @@ StatusCode CaloZSupAlg::execute() {
   //*** some trivial printout
 
   if ( isDebug && m_adcOnTES) debug() << "Perform zero suppression - return CaloAdcs on TES at "
-                                      << rootInTES() + m_outputADCData << endreq;
+                                      << rootInTES() + m_outputADCData << endmsg;
   if ( isDebug && m_digitOnTES) debug() << "Perform zero suppression - return CaloDigits on TES at "
-                                      << rootInTES() + m_outputDigitData << endreq;
+                                      << rootInTES() + m_outputDigitData << endmsg;
 
 
   //*** get the input data
@@ -169,7 +169,7 @@ StatusCode CaloZSupAlg::execute() {
 
   
   if ( isDebug ) debug() << "Processing " << adcs.size() 
-                         << " Digits." << endreq;
+                         << " Digits." << endmsg;
 
   enum {
     DefaultFlag   ,
@@ -193,7 +193,7 @@ StatusCode CaloZSupAlg::execute() {
         verbose() << id 
                 << format( " Energy adc %4d", digAdc );
         if (  m_zsupThreshold <= digAdc ) debug() << " seed";
-        verbose() << endreq;
+        verbose() << endmsg;
       }
       
       caloFlags[index] = SeedFlag ;
@@ -231,19 +231,19 @@ StatusCode CaloZSupAlg::execute() {
     
     if( isVerbose ) {
       if ( NeighborFlag == caloFlags[index] ) {
-        verbose() << id << " added as Neighbor." << endreq;
+        verbose() << id << " added as Neighbor." << endmsg;
       } else {
-        verbose() << id << " added as Seed.    " << endreq;
+        verbose() << id << " added as Seed.    " << endmsg;
       }
     }    
   }
   if(m_adcOnTES){
     if(isDebug)debug() << format( "Have stored %5d CaloAdcs.", newAdcs->size() ) 
-            << endreq;
+            << endmsg;
   }
   if(m_digitOnTES){
     if(isDebug)debug() << format( "Have stored %5d CaloDigits.", newDigits->size() ) 
-            << endreq;
+            << endmsg;
   }
 
 
