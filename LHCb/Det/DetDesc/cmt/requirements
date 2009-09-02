@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.122 2009-09-01 14:50:39 wouter Exp $ 
+# $Id: requirements,v 1.123 2009-09-02 12:38:52 cattanem Exp $ 
 # =============================================================================
 package       DetDesc
 version       v18r15
@@ -27,22 +27,15 @@ apply_pattern     reflex_dictionary                                 \
                   selectionfile=$(DETDESCROOT)/dict/DetDescDict.xml \
                   options="-U__MINGW32__"
 
-macro_append ROOT_linkopts " -lMathCore " \
-             WIN32 " libMathCore.lib "
-macro_append ROOT_linkopts "" \
-             ROOT_GE_5_19&WIN32 " libGenVector.lib " \
-             ROOT_GE_5_19 " -lGenVector "
+macro_append ROOT_linkopts " -lMathCore -lGenVector " \
+             WIN32 " libMathCore.lib libGenVector.lib "
 
 private
 # Note: libgslcblas is needed by libgsl, but the link is missing.
 macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
                     Darwin "" \
-                     WIN32 "" \
-          slc3_ia32_gcc323 "" \
-      slc3_ia32_gcc323_dbg ""
+                     WIN32 ""
 macro_append GSL_linkopts " -Wl,--as-needed " \
                     Darwin "" \
-                     WIN32 "" \
-          slc3_ia32_gcc323 "" \
-      slc3_ia32_gcc323_dbg ""
+                     WIN32 ""
 end_private
