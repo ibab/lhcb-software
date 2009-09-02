@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.430 2009-09-02 06:29:20 jpalac Exp $
+# $Id: requirements,v 1.431 2009-09-02 06:57:42 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
@@ -46,7 +46,7 @@ use HltSys      v*
 #-- Lbcom
 use LbcomSys    v*
 
-#-- Rec
+#-- Rec =========================================================================
 #use RecSys      v*
 use CaloMoniDst          v3r9    Calo # Olivier Deschamps
 use CaloReco             v5r0   Calo # Olivier Deschamps
@@ -100,6 +100,7 @@ use RichRecSys           v3r21   Rich # Chris Jones
 use RichRecTemplateRings v1r0    Rich # Sajan Easo
 use RichRecTools         v4r9    Rich # Chris Jones
 use VeloRecMonitors      v1r11   Velo # Malcom John, Eduardo Rodrigues
+#================ End of RecSys packages ========================================
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

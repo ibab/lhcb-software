@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.373 2009-08-28 13:59:51 jpalac Exp $
+! $Id: release.notes,v 1.374 2009-09-02 06:57:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,12 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v24r2 2009-09-02 =====================
+
+! 2009-09-02 - Juan PALACIOS
+ - Pick up the whole of RecSys packages explicitly tu use some updated versions
+   of some Calo packages
 
 ! 2009-08-25 - Patrick Koppenburg
  - Set HltConf().WithMC to self.Simulation()
@@ -22,7 +28,6 @@
  - SelDSTWriter
   . Give it more sensible default parameters. Add some documentation.
 
-!========================== DaVinci v24r1p1 2009-08-21 ===================
 !========================== DaVinci v24r1 2009-08-12 ===================
 
 ! 2009-08-12 - Juan PALACIOS
