@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.61 2009-08-12 15:54:07 ibelyaev Exp $ 
+! $Id: release.notes,v 1.62 2009-09-02 16:13:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiPhysMC v8r4 2009-09-02 ========================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiPhysMC_dll.cpp
 
 ! 2009-08-12 - Vanya BELYAEV
 
