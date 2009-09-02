@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.112 2009-08-13 11:27:40 ibelyaev Exp $ 
+! $Id: release.notes,v 1.113 2009-09-02 16:11:25 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! ========================== LoKiPhys v8r9 2009-09-02 =========================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiPhys_dll.cpp
 
 ! 2009-08-13 - Vanya BELYAEV
 
