@@ -4,6 +4,9 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-09-02 - Chris Jones
+ - Add hot pixel finder
+
 ! 2009-09-01 - Chris Jones
  - Extend the data consistency checking algorithm to check for the same HPD 
    L0ID appearing twice in the data.

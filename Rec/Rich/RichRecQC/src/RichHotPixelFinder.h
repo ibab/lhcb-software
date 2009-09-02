@@ -1,33 +1,30 @@
 
 //-----------------------------------------------------------------------------
-/** @file RichRawDataSize.h
+/** @file RichHotPixelFinder.h
  *
- *  Header file for tool : Rich::DAQ::RawDataSize
+ *  Header file for tool : Rich::DAQ::HotPixelFinder
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.h,v 1.4 2009-09-02 16:24:36 jonrob Exp $
+ *  $Id: RichHotPixelFinder.h,v 1.1 2009-09-02 16:24:36 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
  */
 //-----------------------------------------------------------------------------
 
-#ifndef RICHRECQC_RichRawDataSize_H
-#define RICHRECQC_RichRawDataSize_H 1
+#ifndef RICHRECQC_RichHotPixelFinder_H
+#define RICHRECQC_RichHotPixelFinder_H 1
 
 // STL
 #include <sstream>
 
 // RichKernel
-#include "RichKernel/RichHistoAlgBase.h"
+#include "RichKernel/RichAlgBase.h"
 #include "RichKernel/IRichRawBufferToSmartIDsTool.h"
-#include "RichKernel/RichMap.h"
+#include "RichKernel/RichHashMap.h"
 
 // RichDet
 #include "RichDet/DeRichSystem.h"
-
-// Event model
-#include "Event/RawEvent.h"
 
 namespace Rich
 {
@@ -35,36 +32,37 @@ namespace Rich
   {
 
     //-----------------------------------------------------------------------------
-    /** @class RawDataSize RichRawDataSize.h
+    /** @class HotPixelFinder RichHotPixelFinder.h
      *
-     *  Simple monitor to monitor the raw data sizes for the RICH
+     *  Simple monitor to look for hot HPD pixels
      *
      *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
      *  @date   2008-10-14
      */
     //-----------------------------------------------------------------------------
-    class RawDataSize : public Rich::HistoAlgBase
+    class HotPixelFinder : public Rich::AlgBase
     {
 
     public:
 
       /// Standard constructor
-      RawDataSize( const std::string& name, ISvcLocator* pSvcLocator );
+      HotPixelFinder( const std::string& name, ISvcLocator* pSvcLocator );
 
-      virtual ~RawDataSize( ); ///< Destructor
+      virtual ~HotPixelFinder( ); ///< Destructor
 
       virtual StatusCode initialize(); ///< Algorithm initialization
       virtual StatusCode execute();    ///< Algorithm execution
-
-    protected:
-
-      /// Pre-Book all (non-MC) histograms
-      virtual StatusCode prebookHistograms();
+      virtual StatusCode finalize();   ///< Algorithm finalization
 
     private:
 
       /// Process an individual TAE event
       StatusCode processTAEEvent( const std::string & taeEvent );
+
+    private:
+
+      /// Hit count map
+      typedef Rich::HashMap<LHCb::RichSmartID,unsigned int> HitCountMap;
 
     private:
 
@@ -77,12 +75,21 @@ namespace Rich
       ///< The TAE location(s) to monitor
       std::vector<std::string> m_taeEvents;
 
-      /// Flag to turn on filling of the individual HPD plots
-      bool m_hpdPlots;
+      /// Number of events to look for hot pixels over
+      unsigned int m_nEventsForAverage;
+
+      /// Count hits per channel in current event sample
+      HitCountMap m_hitCount;
+
+      /// Count of number of events since last search for hot pixels
+      unsigned int m_nEvts;
+
+      /// pixel event occupancy to consider a pixel as hot
+      double m_hotOcc;
 
     };
 
   }
 }
 
-#endif // RICHRECQC_RichRawDataSize_H
+#endif // RICHRECQC_RichHotPixelFinder_H
