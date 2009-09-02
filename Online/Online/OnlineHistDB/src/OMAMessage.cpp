@@ -1,4 +1,4 @@
-// $Id: OMAMessage.cpp,v 1.16 2009-08-31 17:26:30 ggiacomo Exp $
+// $Id: OMAMessage.cpp,v 1.17 2009-09-02 14:24:42 ggiacomo Exp $
 #include <time.h>
 #include "OnlineHistDB/OMAMessage.h"
 using namespace std;
@@ -31,18 +31,9 @@ OMAMessage::OMAMessage( std::string& HistName,
   m_ananame_null = m_ananame.empty() ? 1 : 0; 
   if (anaID) {
     // add specific analysis message (if defined) to message text
-    OCIStmt *stmt=NULL;
-    m_StmtMethod = "OMAMessage::OMAMessage";
-    text anaMess[VSIZE_ANAMSG]="";
-    if ( OCI_SUCCESS == prepareOCIStatement(stmt, "SELECT ANAMESSAGE FROM ANALYSIS WHERE AID=:1 and ANAMESSAGE is not NULL") ) {
-      myOCIBindInt(stmt,":1", anaID);
-    myOCIDefineString(stmt, 1, anaMess , VSIZE_ANAMSG);
-    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
-      m_anaComment = (char *) anaMess;
+    if ( getAnaComment(anaID) ) {
       setText(Text);
     }
-    releaseOCIStatement(stmt);
-  }
   }
 }
 
@@ -57,7 +48,7 @@ OMAMessage::OMAMessage( std::string& HistName,
   OnlineHistDBEnv(), m_dbsession(NULL), m_ID(0), m_histo(HistName), m_saveSet(SaveSet),
   m_taskName(TaskName),  m_anaTaskName(AnaTaskName), m_anaTaskName_null(0),
   m_msgtext(Text), m_msgtext_null(0), m_level(Level),
-  m_anaid(0), m_ananame(AnalysisName), m_time(0),
+  m_anaid(0), m_ananame(AnalysisName), m_time(0), m_anaComment(""),
   m_isAbort(false), m_confirmed(true), m_dbsync(false)
 {
   m_histo_null = m_histo.empty() ? 1 : 0;
@@ -68,13 +59,33 @@ OMAMessage::OMAMessage( std::string& HistName,
 // constructor from DB
 OMAMessage::OMAMessage( int ID,
                         OnlineHistDB &env) : 
-  OnlineHistDBEnv(env), m_dbsession(&env), m_ID(ID), m_isAbort(true),
+  OnlineHistDBEnv(env), m_dbsession(&env), m_ID(ID), m_anaComment(""), m_isAbort(true),
   m_confirmed(true), m_dbsync(false)
 {
   load();
 }
 
 OMAMessage::~OMAMessage() {} 
+
+
+bool OMAMessage::getAnaComment(int& anaID) {
+  // get specific analysis message (if defined) to message text
+  bool out=false;
+  OCIStmt *stmt=NULL;
+  m_StmtMethod = "OMAMessage::getAnaComment";
+  text anaMess[VSIZE_ANAMSG]="";
+  if ( OCI_SUCCESS == prepareOCIStatement(stmt, "SELECT ANAMESSAGE FROM ANALYSIS WHERE AID=:1 and ANAMESSAGE is not NULL") ) {
+    myOCIBindInt(stmt,":1", anaID);
+    myOCIDefineString(stmt, 1, anaMess , VSIZE_ANAMSG);
+    if (OCI_SUCCESS == myOCIStmtExecute(stmt)) {
+      m_anaComment = (char *) anaMess;
+      out=true;
+    }
+    releaseOCIStatement(stmt);
+  }
+  return out;
+}
+
 
 void OMAMessage::load() {
   if( NULL == m_envhp) return; // no HistDB
@@ -118,6 +129,7 @@ void OMAMessage::load() {
         m_ananame = m_ananame_null ? "" : std::string((const char *) ANANAME);
         m_dbsync=true;
         m_isAbort=false;
+        getAnaComment(m_anaid);
       }
     }
     releaseOCITaggedStatement(stmt, "MSGLOAD");

@@ -1,4 +1,4 @@
-// $Id: OMAMessage.h,v 1.7 2009-08-31 17:26:30 ggiacomo Exp $
+// $Id: OMAMessage.h,v 1.8 2009-09-02 14:24:42 ggiacomo Exp $
 #ifndef OMALIB_OMAMESSAGE_H 
 #define OMALIB_OMAMESSAGE_H 1
 
@@ -88,6 +88,7 @@ public:
   void updateEnv(OnlineHistDB* newSession);
 
 private:
+  bool getAnaComment(int& anaID);
   OnlineHistDB* m_dbsession;
   int m_ID;
   std::string m_histo;

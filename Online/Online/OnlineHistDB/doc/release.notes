@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.47 2009-08-31 17:26:30 ggiacomo Exp $
+! $Id: release.notes,v 1.48 2009-09-02 14:24:42 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
 ! user manual in pdf format is available at /afs/cern.ch/user/g/ggrazian/www/lhcb/histdbdoc.pdf
 ! or using makedoc script in this folder
 !
+
+! 20090902
+- another fix for Analysis specific messages
 
 ! 20090831 v5r5
 - minor fix for Analysis specific messages
