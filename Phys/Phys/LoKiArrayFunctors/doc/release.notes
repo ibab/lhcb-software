@@ -1,23 +1,22 @@
-$Id: release.notes,v 1.43 2009-08-20 09:22:50 ibelyaev Exp $ 
+$Id: release.notes,v 1.44 2009-09-02 16:04:39 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
-! 2009-08-20 - Vanya BELYAEV
+!========================== LoKiArrayFunctors v8r5 2009-09-02 =================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiArrayFunctors_dll.cpp
 
+! 2009-08-20 - Vanya BELYAEV
  - fix for changed IVertexFit interface 
 
-
 ! 2009-08-18 - Vanya BELYAEV
-
  - HybridFilterCriterion
-
       fix for removed FilterCriterionBase 
  
  - cmt/requirements
-     
       version increment to v8r5 
 
 !========================== LoKiArrayFunctors v8r4 2009-05-25 ===================
