@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.18 2009-09-01 13:54:55 smenzeme Exp $
+// $Id: TrackMonitor.cpp,v 1.19 2009-09-02 14:21:10 smenzeme Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -287,7 +287,10 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     m_otExpectation->collect(track, ids);
     
     LHCb::HitPattern expHitPattern = LHCb::HitPattern(ids);
-    expHitPattern.setVelo(velo);
+    expHitPattern.setVeloRA(velo[0]);
+    expHitPattern.setVeloRC(velo[1]); 
+    expHitPattern.setVeloPhiA(velo[2]);
+    expHitPattern.setVeloPhiC(velo[3]);
 
 
     // compare to what we expected
@@ -306,13 +309,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     }
 
     // compare to what we expected
-<<<<<<< TrackMonitor.cpp
-    if (expHitPattern.numVeloClusters() > 0){
-      plot(nVeloHits - expHitPattern.numVeloClusters(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
-=======
-    if (track.expectedHitPattern().numVeloR()+track.expectedHitPattern().numVeloPhi() > 0){
-      plot(nVeloHits - track.expectedHitPattern().numVeloR()-track.expectedHitPattern().numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
->>>>>>> 1.17
+    if (expHitPattern.numVeloR() + expHitPattern.numVeloPhi() > 0){
+      plot(nVeloHits - expHitPattern.numVeloR() - expHitPattern.numVeloPhi(), type+"/Velomissed","# Velo missed" ,-10.5, 10.5 ,21);
     }
 
     const LHCb::Track::ExtraInfo& info = track.extraInfo();
