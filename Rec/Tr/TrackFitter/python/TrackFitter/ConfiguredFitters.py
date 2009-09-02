@@ -27,13 +27,14 @@ def ConfiguredMasterFitter( Name,
         fitter = TrackMasterFitter(Name)
         
     # add the tools that need to be modified
-    fitter.addTool( TrackMasterExtrapolator(), name = "Extrapolator" )
-    fitter.addTool( TrackKalmanFilter(), name = "NodeFitter" )
+    fitter.addTool( TrackMasterExtrapolator, name = "Extrapolator" )
+    fitter.addTool( TrackKalmanFilter, name = "NodeFitter" )
 
     # set up the material locator
     if SimplifiedGeometry:
-        fitter.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
-        fitter.Extrapolator.addTool(SimplifiedMaterialLocator(), name="MaterialLocator")
+        fitter.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+        fitter.Extrapolator.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
+        
     # not yet used for DC09 production    
     # else:
     #    fitter.addTool(DetailedMaterialLocator(), name="MaterialLocator")
@@ -45,7 +46,7 @@ def ConfiguredMasterFitter( Name,
         
     # special settings for field-off
     if FieldOff:
-        fitter.Extrapolator.addTool(TrackSimpleExtraSelector(), name="ExtraSelector")
+        fitter.Extrapolator.addTool(TrackSimpleExtraSelector, name="ExtraSelector")
         fitter.Extrapolator.ExtraSelector.ExtrapolatorName = "TrackLinearExtrapolator"
         fitter.Extrapolator.ApplyEnergyLossCorr = False
         fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
@@ -139,7 +140,6 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
                          TracksInContainer = "Rec/Track/VeloTT" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.NumberFitIterations = 2
-    eventfitter.Fitter.ErrorP = [1.2, 5e-07]
     eventfitter.Fitter.MaxNumberOutliers = 1
     eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
     # Make the nodes even though this is a refit, to add StateAtBeamLine
@@ -151,7 +151,7 @@ def ConfiguredFitSeed( Name = "FitSeed",
                        TracksInContainer = "Rec/Track/Seed" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     eventfitter.Fitter.StateAtBeamLine = False
-    eventfitter.Fitter.ErrorP = [0.04, 5e-08]
+    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
     return eventfitter
 
 def ConfiguredFitForward( Name = "FitForward",
@@ -182,7 +182,8 @@ def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
     eventfitter = ConfiguredPrefitter(Name,TracksInContainer)
     return eventfitter
 
-def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True  ):
+def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True,
+                          ForceUseDriftTime = True ):
     fitter = ConfiguredMasterFitter(Name,
                                     FieldOff=FieldOff,
                                     SimplifiedGeometry = True,
@@ -192,20 +193,28 @@ def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters =
     fitter.AddDefaultReferenceNodes = False
     fitter.NodeFitter.BiDirectionalFit = False
     fitter.NodeFitter.Smooth = False
+    if ForceUseDriftTime:
+        from Configurables import TrajOTProjector, TrackProjectorSelector
+        otprojector = TrajOTProjector('OTFastFitProjector')
+        otprojector.SkipDriftTimeZeroAmbiguity = False
+        fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
+        fitter.NodeFitter.Projector.OT = otprojector
+        
     # at some point, need to switch to analytic evaluation
     # TrackHerabExtrapolator().extrapolatorID = 4
     return fitter
 
-def ConfiguredFastEventFitter( Name, TracksInContainer ):
+def ConfiguredFastEventFitter( Name, TracksInContainer,
+                               ForceUseDriftTime = True ):
     eventfitter = TrackEventFitter(Name)
     eventfitter.TracksInContainer = TracksInContainer
     fittername = Name + ".Fitter"
-    eventfitter.addTool( ConfiguredFastFitter( Name = fittername ), name = "Fitter")
+    eventfitter.addTool( ConfiguredFastFitter( Name = fittername, ForceUseDriftTime = ForceUseDriftTime ), name = "Fitter")
     return eventfitter
 
 def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter = ConfiguredFastFitter( Name, TracksInContainer,FieldOff=True )
-    eventfitter.Fitter.addTool( MeasurementProvider(), name = 'MeasProvider')
+    eventfitter.Fitter.addTool( MeasurementProvider, name = 'MeasProvider')
     eventfitter.Fitter.MeasProvider.IgnoreIT = True
     eventfitter.Fitter.MeasProvider.IgnoreOT = True
     eventfitter.Fitter.MeasProvider.IgnoreTT = True
