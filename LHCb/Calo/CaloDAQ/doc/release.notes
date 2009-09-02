@@ -8,6 +8,7 @@
 ! 2009-09-02 - Marco Cattaneo
  - Replace all endreq by endmsg
  - Remove hack for Gaudi v21r1 to link dictionary on Windows 
+ - Remove obsolete file CaloDAQ_dll.cpp
 
 ! 2009-09-17 - Olivier Deschamps
  - new algorithm : CaloAdcFromRaw produces ADC from rawBanks with possible mis-calibration
