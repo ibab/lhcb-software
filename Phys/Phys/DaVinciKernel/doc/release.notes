@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.322 2009-09-01 16:10:28 jpalac Exp $
+!$Id: release.notes,v 1.323 2009-09-02 15:55:17 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v8r1 2009-09-02 =====================
 ! 2009-09-01 - Juan PALACIOS
  - Kernel/RelationOneToOne.h
   . Wrapper for 1D unweighted relations table. Mimicks one-to-one table.
