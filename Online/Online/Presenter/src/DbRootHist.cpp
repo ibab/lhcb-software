@@ -328,7 +328,11 @@ void DbRootHist::initHistogram()
     HistogramIdentifier histogramIdentifier1(m_dimServiceName);
     std::string histType(histogramIdentifier1.histogramType());
       m_dimServiceName.erase(0, m_dimServiceName.find(s_underscore));
-      m_dimServiceName = histType + s_slash + m_partition + m_dimServiceName;
+      if (s_CNT != histType) {
+        m_dimServiceName = histType + s_slash + m_partition + m_dimServiceName;
+      } else {
+        m_dimServiceName = m_partition + m_dimServiceName;
+      }
       
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName w partition: " << m_dimServiceName << std::endl;
@@ -481,7 +485,7 @@ void DbRootHist::initHistogram()
           m_retryInit = 0;          
           
           if (m_verbosity >= Verbose) {
-            std::cout << "Using dimServiceName from DB." << std::endl;
+            std::cout << "GauchoDimInfoMonObjectPresenter: Using dimServiceName from DB." << std::endl;
           } 
       
           TString histoRootName;
@@ -743,6 +747,7 @@ void DbRootHist::fillHistogram()
 //    m_toRefresh = false;
    } else if (s_CNT == m_histogramType) {
 
+// This will only work with a callback: reading on the DIM buffer gives stale values
 // // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/Counternumber1 (D:2;C)
     
     boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
@@ -1580,7 +1585,7 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
                                   m_partition +
                                   s_underscore + "*";
   } else if (!dimServiceType.empty()) {
-    dimServiceNameQueryBegining = dimServiceType + s_slash + "*";    
+    dimServiceNameQueryBegining = "*" + s_eff_monRate + "*";    
   } else {
     dimServiceNameQueryBegining = "*";    
   }
@@ -1679,6 +1684,9 @@ if (0 != m_onlineHistogram) {
       std::cout << std::endl << "assembled current Dim service name: "
                 << dimServiceName << std::endl << std::endl;
     }  
+   if (0 == m_onlineHistogram->hstype().compare(s_CNT)) {
+    dimServiceName = m_dimServiceName.erase(0, s_CNT.length()+1);
+   }
     setIdentifiersFromDim(dimServiceName);
 
 

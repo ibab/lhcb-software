@@ -242,6 +242,9 @@ int main(int argc, char* argv[])
                                 windowWidth,
                                 windowHeight);
 
+    presenterMainFrame.setKnownDatabases(startupSettings["databases"].as<std::string>(),
+                                         startupSettings["database-credentials"].as<std::string>());
+
     if (startupSettings.count("mode")) {
       if ("online" == startupSettings["mode"].as<std::string>()) {
         presenterMainFrame.setPresenterMode(Init);  
@@ -283,9 +286,7 @@ int main(int argc, char* argv[])
     if (startupSettings.count("partition")) {
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
     }    
-    
-    presenterMainFrame.setKnownDatabases(startupSettings["databases"].as<std::string>(),
-                                         startupSettings["database-credentials"].as<std::string>());
+
 
 //TODO: remove batch escape when DB                                             
       if (startupSettings.count("login") &&

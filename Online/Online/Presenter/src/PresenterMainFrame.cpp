@@ -3077,7 +3077,7 @@ if (Batch != m_presenterMode) {
         }           
       }
       
-      serviceType = "*" + s_adder + "*";
+      serviceType = "*" + s_eff_monRate + "*";
       m_dimBrowser->getServices(serviceType.c_str());
       while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
         TString dimMon(dimService);        
