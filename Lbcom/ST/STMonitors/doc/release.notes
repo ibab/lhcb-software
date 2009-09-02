@@ -4,6 +4,16 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-09-02 - Mark Tobin
+ - Changed IT Cluster map in STClusterMonitor to use ITDetector from STKernel.
+ - Modified binning for ADC distributions
+ - Add plot of ODIN BCID to STClusterMonitor, plus add cut on this number to
+ pick up only 1 BCID
+ - Reduced number of times that warning is printed when cluster location is
+ missing. 
+ - Added plots of ADCs in service box for 1,2,3,4 strip clusters to detailed
+ histograms in STClusterMonitor 
+
 ! 2009-08-31 - Jeroen Van Tilburg
  - TT cluster map in STClusterMonitor: invert A and C side to comply with 
    offline and IT plot.

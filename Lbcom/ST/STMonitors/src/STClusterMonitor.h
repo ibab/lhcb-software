@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.4 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.5 2009-09-02 17:03:30 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -83,12 +83,18 @@ namespace ST
     AIDA::IHistogram2D* m_2d_ChargeVsTELL1;///< Cluster Charge vs TELL1
     AIDA::IHistogram2D* m_2d_ClustersPerPortVsTELL1;///< Clusters per port vs TELL1
 
-    AIDA::IHistogram1D* m_1d_totalCharge;
-    // Plots by service box
+    AIDA::IHistogram1D* m_1d_totalCharge;///< Total charge in cluster
+
+    /// Plots by service box
     std::map<std::string, AIDA::IHistogram1D*> m_1ds_chargeByServiceBox;
-    // Plots by detector region
+    /// Plots by detector region
     std::map<std::string, AIDA::IHistogram1D*> m_1ds_chargeByDetRegion;
 
+    /// Hitmaps
+    AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
+
+    /// Cut on BCID
+    unsigned int m_BCID;
   };
 } // End of ST namespace
 #endif // STCLUSTERMONITOR_H
