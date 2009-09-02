@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.75 2009-08-19 13:37:13 ibelyaev Exp $ 
+! $Id: release.notes,v 1.76 2009-09-02 16:09:51 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,10 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 !
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiMC v8r7 2009-09-02 ============================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/Components/LoKiMC_dll.cpp
 
 ! 2009-08-19 - Vanya BELYAEV
 
