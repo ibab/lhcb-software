@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r7 2009-09-02 ====================
 ! 2009-09-01 - Olivier Callot
  - Remove HitPattern as it is removed form Track
 
