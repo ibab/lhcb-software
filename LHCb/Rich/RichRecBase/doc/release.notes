@@ -4,6 +4,7 @@
 ! Purpose     : Base package for RICH Reconstruction Packages
 !-----------------------------------------------------------------------------
 
+!===================== RichRecBase v3r25 2009-09-02 ==========================
 ! 2009-07-31 - Chris Jones
  - Add protected method to pixel creator base class to allow derived classes
    access to the geometry tool.
