@@ -4,10 +4,11 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+!====================== Magnet v5r4 2009-09-02 ===============================
 ! 2009-09-01 - Wouter Hulsbergen
- - magnetic field grid is now stored in class
- DetDesc/MagneticFieldGrid. new utility 'MagneticFieldGridReader'
- reads the field from a file (thereby replacing the IMagFieldTools)
+ - Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
+   New utility 'MagneticFieldGridReader' reads the field from a file (thereby
+   replacing the IMagFieldTools)
 
 !====================== Magnet v5r3 2009-06-16 ===============================
 ! 2009-06-12 - Marco Cattaneo
