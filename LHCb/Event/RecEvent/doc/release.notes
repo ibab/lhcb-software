@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.126 2009-08-30 22:04:14 jonrob Exp $
+! $Id: release.notes,v 1.127 2009-09-02 13:45:25 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r22 2009-09-02 =========================
 ! 2009-08-29 - Chris Jones
  - Update ProtoParticle class :-
   + Add new methods to purge particular sub-detector PID information.
