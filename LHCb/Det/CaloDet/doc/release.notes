@@ -1,19 +1,16 @@
-! $Id: release.notes,v 1.107 2009-07-31 16:12:52 ibelyaev Exp $ 
+! $Id: release.notes,v 1.108 2009-09-02 12:31:43 cattanem Exp $ 
 ! =============================================================================
 ! Package         : CaloDet   
 ! Package manager : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!======================== CaloDet v10r3 2009-09-02 ============================
 ! 2009-07-31 - Vanya BELYAEV
-
  - add the accessor to calorimeter index
-
         int DeCalorimeter::index () const ;
 
   - cmt/requirements 
-   
         version increment to v10r3 
-
 
 !======================== CaloDet v10r2 2009-05-07 ============================
 ! 2009-05-05 Olivier Deschamps
