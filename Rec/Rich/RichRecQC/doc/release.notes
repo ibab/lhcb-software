@@ -6,6 +6,9 @@
 
 ! 2009-09-02 - Chris Jones
  - Add hot pixel finder
+ - Disable sending messages about mis-matches in raw data size between
+   RawEvent and decoded data structures, until I understand the origin of 
+   the warnings in real data ...
 
 ! 2009-09-01 - Chris Jones
  - Extend the data consistency checking algorithm to check for the same HPD 

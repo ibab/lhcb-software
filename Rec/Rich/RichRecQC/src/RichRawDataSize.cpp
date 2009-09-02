@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::RawDataSize
  *
  *  CVS Log :-
- *  $Id: RichRawDataSize.cpp,v 1.9 2009-09-02 16:24:36 jonrob Exp $
+ *  $Id: RichRawDataSize.cpp,v 1.10 2009-09-02 17:08:49 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -125,6 +125,11 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
     // get the decoded data for this tae event
     const Rich::DAQ::L1Map & l1Map = m_SmartIDDecoder->allRichSmartIDs(taeEvent);
 
+    // abort checks if bad HPD detected, as in this case difficult to make sure
+    // the test is valid
+    bool abortSizeCheck = false;
+
+    // loop over decoded data
     for ( Rich::DAQ::L1Map::const_iterator iL1Map = l1Map.begin();
           iL1Map != l1Map.end(); ++iL1Map )
     {
@@ -148,18 +153,19 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
           const Rich::DAQ::HPDInfo::Header & hpdHeader = hpdInfo.header();
           const Rich::DAQ::HPDInfo::Footer & hpdFooter = hpdInfo.footer();
 
-          // Only use valid data
-          if ( hpdHeader.inhibit() || !hpdID.isValid() ) continue;
-
-          // number of data words for this HPD
-          const unsigned int nHPDwords = ( hpdHeader.nDataWords()   +
-                                           hpdHeader.nHeaderWords() +
-                                           hpdFooter.nFooterWords() );
+          // Only use valid HPD blocks to include data size 
+          const bool hpdOK = !hpdHeader.inhibit() && hpdID.isValid();
+          if ( !hpdOK ) abortSizeCheck = true;
+          
+          // words for this HPD
+          const unsigned int nHPDwords = ( hpdHeader.nHeaderWords() +
+                                           hpdFooter.nFooterWords() +
+                                           hpdHeader.nDataWords()   );
 
           // count words per L1 board
           nL1Words += nHPDwords;
 
-          if ( m_hpdPlots )
+          if ( hpdOK && m_hpdPlots )
           {
             // use a try block in case of DB lookup errors
             try
@@ -186,13 +192,15 @@ StatusCode RawDataSize::processTAEEvent( const std::string & taeEvent )
       ID << "L1s/L1HardwareID" << l1HardID;
       richHisto1D( ID.str() ) -> fill ( nL1Words );
 
+      // Disable until better understood
       // Compare to the value obtained direct from the RawEvent(s)
-      if ( nL1Words != l1SizeMap[l1HardID] )
-      {
-        std::ostringstream mess;
-        mess << "L1 raw data size mis-match for L1HardwareID " << l1HardID;
-        Error( mess.str() ).ignore();
-      }
+      //if ( !abortSizeCheck && (nL1Words != l1SizeMap[l1HardID]) )
+      //{
+      //  std::ostringstream mess;
+      //  mess << "L1 raw data size mis-match for L1HardwareID " << l1HardID;
+      //  Error( mess.str() ).ignore();
+      //  error() << mess.str() << " " << nL1Words << " " << l1SizeMap[l1HardID] << endmsg;
+      //}
 
     } // loop over L1 boards
 
