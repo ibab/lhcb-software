@@ -27,17 +27,23 @@ while ($nar <= $narg)
      exit 0
   else if ("$argv[${nar}]" == "-p") then
      set list_arg = "$list_arg -p"
-     if ($nar <= $narg) then
+     if ($nar < $narg) then
        @ nar = ${nar} + 1
+     else
+       break
      endif
   else if ("$argv[${nar}]" == "--dev") then
      set dirac_dev = " --dev"
-     if ($nar <= $narg) then
+     if ($nar < $narg) then
        @ nar = ${nar} + 1
+     else
+       break
      endif
   else
-     if ($nar <= $narg) then
+     if ($nar < $narg) then
        @ nar = ${nar} + 1
+     else
+       break
      endif
   endif
 end
