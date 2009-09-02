@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.177 2009-09-02 12:55:10 cattanem Exp $
+!$Id: release.notes,v 1.178 2009-09-02 13:06:59 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
 !======================== STDet v4r13 2009-09-02 =========================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file STDet_dll.cpp
+
 ! 2009-08-08 M Needham 
  - Add isStereo method to DeSTSector
  - Clean up noise methods in DeSTSector   
