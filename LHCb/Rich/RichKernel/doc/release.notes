@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.238 2009-08-27 19:14:42 rogers Exp $
+! $Id: release.notes,v 1.239 2009-09-02 16:15:40 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+!====================== RichKernel v7r26 2009-09-02 ====================
+! 2009-09-02 - Marco Cattaneo
+ - Remove obsolete file src/component/RichKernel_dll.cpp
 
 ! 2009-08-27 - Gareth Rogers
  - Added functions to give the dimensions of the a RICH panel in x and y.
