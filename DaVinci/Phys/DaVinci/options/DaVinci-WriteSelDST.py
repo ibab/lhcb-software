@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteSelDST.py,v 1.4 2009-08-27 14:18:44 jpalac Exp $
+# $Id: DaVinci-WriteSelDST.py,v 1.5 2009-09-02 15:18:33 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -19,7 +19,7 @@ from Configurables import DaVinci, SelDSTWriter
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-"""
+
 #
 # Get a J/psi
 #
@@ -36,30 +36,24 @@ SelJpsi = Selection('SelJpsi',
                     RequiredSelections = [MyLooseJpsi])
 
 SeqJpsi = SelectionSequence('SeqJpsi', TopSelection = SelJpsi)
-"""
-from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
-SeqBs = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
-det = DeterministicPrescaler("Prescale_Jpsi")
-det.AcceptFraction = 0.5                    # take 50%
-printDec = PrintDecayTree("Print_Jpsi")
-printDec.InputLocations = [ "MyJpsi" ]
-#seq.Members += [ det, jpsi, printDec ]
+#from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
+#SeqBs = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
+
 #
 # This the bit that declares the sequence to the Dst writer
 # seq will bee passed to DaVinci(). You do not need to pass it yourself.
 # The second line allows to save particles (not yet 100% functional)
 #
-dstWriter = SelDSTWriter("BsDST",
-                         SelectionSequences = [SeqBs],
+dstWriter = SelDSTWriter("JpsiDSTWriter",
+                         SelectionSequences = [SeqJpsi],
                          SaveCandidates = True,
                          CopyMCTruth = True,
-                         CopyProtoParticles = False,
-                         CopyPVRelations ={"Particle2VertexRelations":False})
+                         OutputFileSuffix = "Test")
 ##############################################################################
 DaVinci().EvtMax = 500
 DaVinci().PrintFreq = 10
-DaVinci().UserAlgorithms = [ dstWriter.sequence(), printDec  ]
+DaVinci().UserAlgorithms = [ dstWriter.sequence()  ]
 # DaVinci().SkipEvents = 0
 DaVinci().DataType = "DC06" # Default is "MC09"
 # DaVinci().Simulation   = False
