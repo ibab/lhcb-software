@@ -1,6 +1,4 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.7 2009-08-10 13:33:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.8 2009-09-02 13:31:31 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -182,7 +180,7 @@ StatusCode CaloDigit2MCLinks2Table::execute    ()
   
   if ( msgLevel ( MSG::DEBUG ) ) 
   { debug() << "Number of MC-links #" 
-            << table->relations().size() << endreq ; }
+            << table->relations().size() << endmsg ; }
   
   counter( "#CD2MC links") += table->relations().size() ;
   

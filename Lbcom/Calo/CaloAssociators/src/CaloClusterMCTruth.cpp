@@ -1,6 +1,4 @@
-// $Id: CaloClusterMCTruth.cpp,v 1.10 2009-08-10 13:33:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ 
+// $Id: CaloClusterMCTruth.cpp,v 1.11 2009-09-02 13:31:31 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -231,7 +229,7 @@ StatusCode CaloClusterMCTruth::execute    ()
   if ( msgLevel ( MSG::DEBUG )  )  
   { 
     debug() << " Number of established relations are #"
-            << table->relations().size() << endreq ; 
+            << table->relations().size() << endmsg ; 
   }
   
   // count number of links 

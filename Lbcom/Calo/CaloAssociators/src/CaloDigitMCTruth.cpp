@@ -1,6 +1,4 @@
-// $Id: CaloDigitMCTruth.cpp,v 1.12 2009-07-25 01:06:47 odescham Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.12 $
+// $Id: CaloDigitMCTruth.cpp,v 1.13 2009-09-02 13:31:31 cattanem Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -129,8 +127,8 @@ protected:
 
     StatusCode sc = setProperty     ( "StatPrint" , "true"     ) ;
     sc.isSuccess() ?
-      debug() << "StatPrint set to 'true' " << endreq :
-      warning()<<"Setting StatPrint FAILED" << endreq;
+      debug() << "StatPrint set to 'true' " << endmsg :
+      warning()<<"Setting StatPrint FAILED" << endmsg;
 
   };
   /// virtual destructor (protected)
@@ -237,8 +235,8 @@ StatusCode CaloDigitMCTruth::execute    ()
     // build the history
     history( digit ).ignore();
     //StatusCode _sc = history( digit ) ;
-    //debug() << "code is " << _sc.getCode() << endreq;
-    //if(_sc.isFailure())warning() << "history FAILED" << endreq;
+    //debug() << "code is " << _sc.getCode() << endmsg;
+    //if(_sc.isFailure())warning() << "history FAILED" << endmsg;
 
     // copy history map into the separate container 
     CaloMCMap map2( map1 ) ;
@@ -250,7 +248,7 @@ StatusCode CaloDigitMCTruth::execute    ()
         const LHCb::MCParticle* particle = entry -> first  ;
         const double            energy   = entry -> second ;
         StatusCode up = updateCaloMCMap ( particle , energy , map2 ) ; 
-        if(up.isFailure())warning() <<"updateCaloMCMap FAILED " << endreq;
+        if(up.isFailure())warning() <<"updateCaloMCMap FAILED " << endmsg;
       }
     }
     
@@ -291,7 +289,7 @@ StatusCode CaloDigitMCTruth::execute    ()
   if ( 0 == nLinks ) { counter("Evts w/o links") += 1; }
   
   if ( msgLevel ( MSG::DEBUG ) ) 
-  { debug() << "Number of MC-links #" << nLinks << endreq ; }
+  { debug() << "Number of MC-links #" << nLinks << endmsg ; }
   
   return StatusCode::SUCCESS ;
   
