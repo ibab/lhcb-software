@@ -3,6 +3,12 @@
 ! Responsible : M.Needham, W.Hulsbergen
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
+
+!======================= TrackEvent v5r0 2009-09-02 ==========================
+! 2009-09-02 - Marco Cattaneo
+ - put back the unused extra info members, with an obsoleted name, to allow
+   their usage in old data
+
 ! 2009-09-01 - Stephanie Hansmann-Menzemer
  - remove expected hit pattern from track class
 

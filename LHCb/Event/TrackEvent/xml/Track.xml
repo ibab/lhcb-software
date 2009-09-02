@@ -153,12 +153,17 @@
         access = "PUBLIC" >
 
         <enumval name = "AdditionalInfoUnknown" value = "0" desc=""/>
+        <enumval name = "DC06Likelihood" value = "1" desc="The Likelihood the track is real. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
         <enumval name = "PatQuality" value = "2" desc="Quality variable from PatForward Tracking"/>
 	<enumval name = "Cand1stQPat"      value = "3"  desc=" Quality of the first candidate"/>
 	<enumval name = "Cand2ndQPat"      value = "4"  desc=" Quality of the second candidate"/>
         <enumval name = "NCandCommonHits"  value = "5"  desc=" NCand with common hits"/>
         <enumval name = "Cand1stChi2Mat"   value = "6"  desc=" Chi2 of the first candidate"/>
         <enumval name = "Cand2ndChi2Mat"   value = "7"  desc=" Chi2 of the second candidate"/>
+        <enumval name = "DC06nExpectedVelo" value = "10" desc="number of expected Velo hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
+        <enumval name = "DC06nExpectedTT" value = "11" desc="number of expected TT hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
+        <enumval name = "DC06nExpectedIT" value = "12" desc="number of expected IT hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
+        <enumval name = "DC06nExpectedOT" value = "13" desc="number of expected OT hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
         <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFit)"/>
         <enumval name = "FitVeloNDoF"  value = "18" desc="NDoF of the velo segment chisq"/>
@@ -167,9 +172,19 @@
         <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
 	<enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
+        <enumval name = "DC06GhostProbability" value = "102" desc=" gives the NN ghost probability. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
         <enumval name = "nPRVeloRZExpect" value = "103" desc="Number of expected Velo clusters from VELO RZ pattern recognition"/>
         <enumval name = "nPRVelo3DExpect" value = "104" desc="Number of expected Velo clusters from VELO 3D pattern recognition"/>
         
+        <enumval name = "AdditionalInfo201"  value = "201" desc="OBSOLETE, may exist in some 2008/09 files"/>
+        <enumval name = "AdditionalInfo202"  value = "202" desc="OBSOLETE, may exist in some 2008/09 files"/>
+
+        <enumval name = "AdditionalInfo300"  value = "300" desc="OBSOLETE, may exist in some 2009 files"/>
+        <enumval name = "AdditionalInfo301"  value = "301" desc="OBSOLETE, may exist in some 2009 files"/>
+        <enumval name = "AdditionalInfo302"  value = "302" desc="OBSOLETE, may exist in some 2009 files"/>
+        <enumval name = "AdditionalInfo303"  value = "303" desc="OBSOLETE, may exist in some 2009 files"/>
+        <enumval name = "AdditionalInfo304"  value = "304" desc="OBSOLETE, may exist in some 2009 files"/>
+
        </enum>
 
    <typedef
