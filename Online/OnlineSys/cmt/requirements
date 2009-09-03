@@ -48,5 +48,8 @@ use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
 use Writer            v1r18    Online
 
+# Declare this as a container package
+apply_pattern container_package
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
