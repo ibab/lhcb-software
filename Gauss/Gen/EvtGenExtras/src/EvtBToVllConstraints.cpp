@@ -17,7 +17,7 @@ void debug_handler(const char* reason, const char* file, int line, int gsl_errno
 }
 
 EvtBToVllConstraints::EvtBToVllConstraints(const QCDFactorisation& _fact):
-		fact(_fact){
+		fact(_fact),q2min(1.0),q2max(6.0){
 	
 	qcd::WCPtrNaked C = fact.parameters->C_mb.get();
 	qcd::WCPtrNaked CR = fact.parameters->CR_mb.get();
@@ -271,15 +271,15 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 	
 	double result = 0;
 	double error = 0;
-	const int nDivisions = 200;
-	const double accuracyGoal = 1e-6;
+	const int nDivisions = 100;
+	const double accuracyGoal = 1e-3;
 
 	gsl_function F;
 	F.function = &utils::integralFunction;
 	F.params = &u;
 
-	const double sMin = 1/(constants::mbp*constants::mbp);
-	const double sMax = 6/(constants::mbp*constants::mbp);
+	const double sMin = q2min/(constants::mbp*constants::mbp);
+	const double sMax = q2max/(constants::mbp*constants::mbp);
 	
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 	const int intCode = gsl_integration_qag(&F, sMin, sMax, 0, accuracyGoal,
@@ -494,7 +494,26 @@ const double EvtBToVllConstraints::getJ5(const double q2) const{
 const double EvtBToVllConstraints::getJ6(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
-	return obs.getS(EvtBToVllBasisCoeffs::I6); 
+	return obs.getS(EvtBToVllBasisCoeffs::I6);
+}
+
+const double EvtBToVllConstraints::getAFB(const double q2) const{
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	//eqn 5.7 of Altmannhofer et al (2008)
+	return (3/8.)*((2*obs.getS(EvtBToVllBasisCoeffs::I6s) + obs.getS(EvtBToVllBasisCoeffs::I6c)));
+}
+const double EvtBToVllConstraints::getFL(const double q2) const{
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	//eqn 5.9 of Altmannhofer et al (2008)
+	return -obs.getS(EvtBToVllBasisCoeffs::I2c);
+}
+const double EvtBToVllConstraints::getGamma(const double q2) const{
+	EvtBToVllObservable obs(*this);
+	obs.initParams(q2);
+	//eqn 5.3 of Altmannhofer et al (2008)
+	return obs.getDGamma();
 }
 
 
@@ -567,6 +586,56 @@ const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
     return findZero(&F);
 }
 
+const double EvtBToVllConstraints::getAFBIntegral() const{
+	
+	//hack to get const correctness 
+	class afb_utils{
+	public:
+		afb_utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const afb_utils* c = (afb_utils*)params;
+			const double result = c->calc->getAFB(q2);
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	afb_utils u(this);
+	
+    gsl_function F;
+    F.function = &afb_utils::getValue;
+    F.params = &u;
+    //compare to Belle result
+    return findRateIntegral(&F,q2min,q2max);
+	
+	
+}
+const double EvtBToVllConstraints::getFLIntegral() const{
+	
+	//hack to get const correctness 
+	class fl_utils{
+	public:
+		fl_utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const fl_utils* c = (fl_utils*)params;
+			const double result = c->calc->getFL(q2);
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	fl_utils u(this);
+	
+    gsl_function F;
+    F.function = &fl_utils::getValue;
+    F.params = &u;
+    //compare to Belle result
+    return findRateIntegral(&F,q2min,q2max);
+	
+}
+
 const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F) const{
 	
 	//slight hack: recover from errors by setting result to an error value
@@ -614,4 +683,75 @@ const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const doubl
 	
 	gsl_deriv_central(F, zero, 0.2, &result, &abserr);
 	return result;
+}
+
+const double EvtBToVllConstraints::findRateIntegral(gsl_function* F, const double q2min, const double q2max) const{
+	
+	//hack to get const correctness 
+	class rate_utils{
+	public:
+		rate_utils(const EvtBToVllConstraints* _calc, gsl_function* _F):
+			calc(_calc),F(_F){
+		}
+		static double getGammaValue(const double q2, void* params){
+			const rate_utils* c = (rate_utils*)params;
+			const double result = c->calc->getGamma(q2);
+			return result;
+		}
+		static double getRateValue(const double q2, void* params){
+			const rate_utils* c = (rate_utils*)params;
+			const double value = c->F->function(q2,c->F->params);
+			const double result = c->calc->getGamma(q2)*value;
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+		const gsl_function* F;
+	};
+	rate_utils u(this,F);
+	
+	//first find the total width
+    gsl_function F_rate;
+    F_rate.function = &rate_utils::getGammaValue;
+    F_rate.params = &u;
+	
+	double result = 0;
+	double error = 0;
+	const int nDivisions = 100;
+	const double accuracyGoal = 1e-2;
+
+	//the rate integral is the same every time, so only count once
+	gsl_integration_workspace* w = 0;
+		
+	w = gsl_integration_workspace_alloc(nDivisions);
+	const int intCode_rate = gsl_integration_qag(&F_rate, q2min, q2max, accuracyGoal, accuracyGoal,
+			nDivisions, GSL_INTEG_GAUSS61, w, &result, &error);
+	if (intCode_rate != 0) {
+		report(WARNING,"EvtGen") << "Total Width: Numerical integration did not return cleanly."
+		<< std::endl;
+		report(WARNING,"EvtGen") << "Return code of the integration was " << intCode_rate
+		<< std::endl;
+		report(WARNING,"EvtGen") << "Result: " << result << " Error: " << error << std::endl;
+	}
+	const double rateIntegral_1_6 = result;
+	gsl_integration_workspace_free(w);
+	
+	//now the observable
+    gsl_function F_obs;
+    F_obs.function = &rate_utils::getRateValue;
+    F_obs.params = &u;
+	
+	w = gsl_integration_workspace_alloc(nDivisions);
+	const int intCode_obs = gsl_integration_qag(&F_obs, q2min, q2max, accuracyGoal, accuracyGoal,
+			nDivisions, GSL_INTEG_GAUSS61, w, &result, &error);
+	if (intCode_obs != 0) {
+		report(WARNING,"EvtGen") << "Numerical integration did not return cleanly."
+				<< std::endl;
+		report(WARNING,"EvtGen") << "Return code of the integration was " << intCode_obs
+				<< std::endl;
+		report(WARNING,"EvtGen") << "Result: " << result << " Error: " << error << std::endl;
+	}
+	gsl_integration_workspace_free(w);
+	return result/rateIntegral_1_6;
+	
 }

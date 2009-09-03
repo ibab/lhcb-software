@@ -30,6 +30,8 @@ public:
 	const std::pair<double, double> getS4Zero() const;
 	const std::pair<double, double> getS5Zero() const;
 	const std::pair<double, double> getS6Zero() const;
+	const double getAFBIntegral() const;
+	const double getFLIntegral() const;
 
 private:
 
@@ -67,6 +69,9 @@ private:
 	EvtComplex CQ1;
 	EvtComplex CQ2;
 	
+	const double q2min;
+	const double q2max;
+	
 	//useful functions for calculating the K* spin amplitudes
 	inline double getBeta(const double q2) const;
 	inline double getLambda(const double q2) const;
@@ -75,8 +80,13 @@ private:
 	const double getJ4(const double q2) const;
 	const double getJ5(const double q2) const;
 	const double getJ6(const double q2) const;
+	const double getAFB(const double q2) const;
+	const double getFL(const double q2) const;
+	const double getGamma(const double q2) const;
+	
 	const std::pair<double, double> findZero(gsl_function* F) const;
 	const double findZeroGradient(gsl_function* F, const double zero) const;
+	const double findRateIntegral(gsl_function* F, const double q2min, const double q2max) const;
 	
 };
 
