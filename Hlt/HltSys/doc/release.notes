@@ -5,6 +5,8 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+ - Added the pattern container_package.
+
 </PRE><H1><A NAME=v6r7>2009-08-31 HltSys v6r7</A></H1><PRE>
  - import (temporarily) Calo reco updates
  - WARNING: TisTosTobbing now does regex instead of globbing!
