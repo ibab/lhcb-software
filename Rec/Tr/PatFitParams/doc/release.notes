@@ -4,6 +4,10 @@
 ! Purpose     : Fit MC tracks to compute the PatForward parameters
 !-----------------------------------------------------------------------------
 
+!======================== PatFitParams v4r0 2009-09-03 =======================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/PatFitParams_dll.cpp
+ 
 ! 2009-08-19 - Olivier Callot
  - Adapt to python configurable so that it is easy to run:
    after havind setup Brunel, just do gaudirun.py ../options/FitParams.py
