@@ -3,12 +3,15 @@
 # Maintainer : Nicola Chiapolini
 # =============================================================================
 package             HistDBPython
-branches            cmt doc src 
+branches            cmt doc src python 
 
 use OnlineHistDB    v* Online
 apply_pattern       library_path
 
 private
 use GaudiAlg        v* 
+use GaudiConf       v*   -no_auto_imports
+
 library             HistDBPython ../src/*.cpp
-apply_pattern linker_library library=HistDBPython
+#apply_pattern linker_library library=HistDBPython
+apply_pattern component_library library=HistDBPython
