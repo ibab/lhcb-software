@@ -1,4 +1,4 @@
-// $Id: MCMatcher.h,v 1.2 2009-08-12 15:54:07 ibelyaev Exp $
+// $Id: MCMatcher.h,v 1.3 2009-09-03 13:50:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCMATCHER_H 
 #define LOKI_MCMATCHER_H 1
@@ -65,6 +65,9 @@ namespace LoKi
                       const std::string& location3  ) ;
       /// constructor from protopartcile  matching flag
       MCMatcherBase ( const ProtoPMatch& protoMatch ) ;                
+      // ======================================================================      
+      /// virtual destructor
+      virtual ~MCMatcherBase() ;
       // ======================================================================      
     protected:
       // ======================================================================

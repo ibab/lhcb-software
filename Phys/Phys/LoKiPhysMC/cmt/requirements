@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.38 2009-08-11 18:26:59 ibelyaev Exp $ 
+# $Id: requirements,v 1.39 2009-09-03 13:50:41 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2006-03-11
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu 
 # ============================================================================
 package           LoKiPhysMC
-version           v8r4
+version           v8r5
 
 # =============== structure ==================================================
 branches          cmt doc src dict python LoKi

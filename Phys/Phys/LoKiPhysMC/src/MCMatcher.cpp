@@ -1,4 +1,4 @@
-// $Id: MCMatcher.cpp,v 1.2 2009-08-12 15:54:07 ibelyaev Exp $
+// $Id: MCMatcher.cpp,v 1.3 2009-09-03 13:50:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -62,7 +62,7 @@ namespace
   }
   // ==========================================================================
   /// invalid decay
-  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid s_INVALID ;
+  const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid s_INVALID     ;
   // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
@@ -140,6 +140,16 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
   }
 }
 // ============================================================================
+// destructor
+// ============================================================================
+LoKi::PhysMCParticles::MCMatcherBase::~MCMatcherBase()
+{
+  clearAll() ; 
+  //
+  LoKi::MCMatchObj* _m = match() ;
+  if ( 0 != _m && 1 > _m->refCount () ) { _m->release() ; }
+}
+// ============================================================================
 // clear all storages 
 // ============================================================================
 void LoKi::PhysMCParticles::MCMatcherBase::clearAll () const 
@@ -155,14 +165,15 @@ void LoKi::PhysMCParticles::MCMatcherBase::clearAll () const
 StatusCode LoKi::PhysMCParticles::MCMatcherBase::load() const  // load the data 
 {
   
-  if ( !match().validPointer() ) 
+  if ( !match() ) 
   {
     // get GaudiAlgorithm 
     if ( 0 == alg () ) { setAlg ( _getAlg ( lokiSvc () ) ) ; }
     Assert ( 0 != alg () , "GaudiAlgorithm* points to NULL" ) ;
     LoKi::IReporter* rep = alg() ->tool<LoKi::IReporter>
       ( "LoKi::Reporter/" + this -> printOut () , alg () ) ;
-    setMatch ( new MCMatchObj ( this -> printOut () , rep ) ) ;
+    LoKi::MCMatchObj* _m = new MCMatchObj ( this -> printOut () , rep )  ;
+    setMatch ( _m ) ;
   }
   
   /// clear all storages 
@@ -196,7 +207,8 @@ StatusCode LoKi::PhysMCParticles::MCMatcherBase::load() const  // load the data
     m_alg->get<LHCb::MCParticle::Container> ( LHCb::MCParticleLocation::Default ) ;
   
   /// load Monte Carlo particles 
-  getMCParticles ( *mcparticles ).ignore() ;
+  StatusCode sc = getMCParticles ( *mcparticles ) ;
+  if ( sc.isSuccess() ) { setEvent() ; }
   
   if ( empty() ) 
   { return Warning( "load(): No MC-Particles are selected" , 
@@ -473,7 +485,8 @@ void LoKi::PhysMCParticles::MCTreeMatch::getFinder ( const std::string& decay )
 {
   // get GaudiAlgorithm 
   if ( 0 == alg () ) { setAlg ( _getAlg ( lokiSvc () ) ) ; }
-  Assert ( 0 != alg() , "GaudiAlgorithm* points to NULL" ) ;
+  //
+  Assert ( 0 != alg() , "Context: GaudiAlgorithm* points to NULL" ) ;
   // get the factory:
   Decays::IMCDecay* factory = 
     alg()->tool<Decays::IMCDecay>( "LoKi::MCDecay" , alg () ) ;
@@ -481,8 +494,8 @@ void LoKi::PhysMCParticles::MCTreeMatch::getFinder ( const std::string& decay )
   m_finder = Finder ( factory->tree ( decay ) ) ;
   //
   checkFinder ( ) ;
-
-}// ============================================================================
+}
+// ============================================================================
 // MANDATORY: the only one essential method 
 // ============================================================================
 LoKi::PhysMCParticles::MCTreeMatch::result_type 

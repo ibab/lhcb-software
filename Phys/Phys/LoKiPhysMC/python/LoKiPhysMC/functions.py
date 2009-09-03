@@ -69,7 +69,7 @@ def mcMatch ( obj , *args ) :
     
     """
     from PartProp.Nodes    import iNode
-    from PartProp.Nodes    import iMCTree
+    from LoKiMC.decorators import iMCTree
     from LoKiMC.decorators import MCCuts
     #
     if   issubclass ( obj.__class__ , str     )  :
