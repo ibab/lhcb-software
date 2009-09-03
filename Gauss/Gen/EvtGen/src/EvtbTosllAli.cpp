@@ -49,7 +49,8 @@ EvtDecayBase* EvtbTosllAli::clone(){
 
 void EvtbTosllAli::decay( EvtParticle *p ){
 
-  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),_poleSize,1,2));
+  setWeight(p->initializePhaseSpace(getNDaug(),getDaugs(),false,
+                                    _poleSize,1,2));
 
   _calcamp->CalcAmp(p,_amp2,_aliffmodel);
   

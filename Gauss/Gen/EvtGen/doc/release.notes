@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-09-03 - Patrick Robbe
+ - EvtbTosllAli.cpp, EvtbTosllBall.cpp: correct bug in use of
+   initializePhaseSpace function (missing 3rd argument)
+
 ! 2009-08-14 - Patrick Robbe
  - EvtModelReg: reactivate direct CPV model
 
