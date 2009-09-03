@@ -5,7 +5,7 @@
  * Implemenrtation file for algorithm ChargedProtoParticleTupleAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.5 2008-12-17 18:02:48 jonrob Exp $
+ * $Id: ChargedProtoParticleTupleAlg.cpp,v 1.6 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-11-15
@@ -30,18 +30,18 @@ ChargedProtoParticleTupleAlg::
 ChargedProtoParticleTupleAlg( const std::string& name,
                               ISvcLocator* pSvcLocator )
   : GaudiTupleAlg ( name , pSvcLocator ),
-    m_protoPath   ( LHCb::ProtoParticleLocation::Charged ),
     m_truth       ( NULL )
 {
   // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_protoPath = LHCb::ProtoParticleLocation::Charged;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
   }
+  else
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::Charged;
+  }
+
   // Job Options
   declareProperty( "ProtoParticleLocation", m_protoPath );
 }

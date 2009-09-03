@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddEcalInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddEcalInfo.cpp,v 1.1 2009-08-29 20:37:18 jonrob Exp $
+ * $Id: ChargedProtoParticleAddEcalInfo.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -62,13 +62,13 @@ ChargedProtoParticleAddEcalInfo( const std::string& name,
   declareProperty("InputEcalPIDmuLocation"     , m_ecalPIDmuPath      );
 
   // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+  }
+  else
+  {
+    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
   }
 
   // ProtoParticles

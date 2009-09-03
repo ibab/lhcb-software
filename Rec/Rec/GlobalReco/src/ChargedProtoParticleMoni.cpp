@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMoni
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMoni.cpp,v 1.4 2009-08-29 21:28:12 jonrob Exp $
+ * $Id: ChargedProtoParticleMoni.cpp,v 1.5 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -29,22 +29,21 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMoni );
 ChargedProtoParticleMoni::ChargedProtoParticleMoni( const std::string& name,
                                                     ISvcLocator* pSvcLocator )
   : GaudiHistoAlg  ( name , pSvcLocator ),
-    m_protoPath    ( LHCb::ProtoParticleLocation::Charged ),
-    m_tracksPath   ( LHCb::TrackLocation::Default ),
     m_nEvts        ( 0 )
 {
   // histo base dir
   setProperty ( "HistoTopDir", "PROTO/" );
 
   // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_tracksPath = LHCb::TrackLocation::HltForward;
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
+  }
+  else
+  {
+    m_tracksPath = LHCb::TrackLocation::Default;
+    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
   }
 
   // Input data

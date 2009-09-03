@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.10 2009-07-30 12:16:52 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.11 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -33,9 +33,21 @@ MuonPIDsFromProtoParticlesAlg::MuonPIDsFromProtoParticlesAlg( const std::string&
                                                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputProtoParticles", m_protoPloc  = ProtoParticleLocation::Charged );
-  declareProperty( "OutputMuonPIDs",      m_muonPIDloc = MuonPIDLocation::Default       );
-  declareProperty( "InputMuonTracks",     m_muonTrackLoc = TrackLocation::Muon          );
+  if ( context() == "HLT" || context() == "Hlt" )
+  {
+    m_protoPloc  = ProtoParticleLocation::HltCharged;
+    m_muonPIDloc = MuonPIDLocation::Hlt;
+    m_muonTrackLoc = TrackLocation::Muon; // CRJ : What for HLT ???
+  }
+  else
+  {
+    m_protoPloc    = ProtoParticleLocation::Charged;
+    m_muonPIDloc   = MuonPIDLocation::Default;
+    m_muonTrackLoc = TrackLocation::Muon;
+  } 
+  declareProperty( "InputProtoParticles", m_protoPloc    );
+  declareProperty( "OutputMuonPIDs",      m_muonPIDloc   );
+  declareProperty( "InputMuonTracks",     m_muonTrackLoc );
 }
 
 //=============================================================================

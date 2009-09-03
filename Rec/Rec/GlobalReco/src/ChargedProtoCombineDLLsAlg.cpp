@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoCombineDLLsAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.21 2009-08-30 22:14:20 jonrob Exp $
+ * $Id: ChargedProtoCombineDLLsAlg.cpp,v 1.22 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 15/11/2006
@@ -28,7 +28,6 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoCombineDLLsAlg );
 ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
                                                         ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_protoPath(LHCb::ProtoParticleLocation::Charged)
   , m_elCombDll(0xFFFF)
   , m_muCombDll(0xFFFF)
   , m_prCombDll(0xFFFF)
@@ -37,13 +36,13 @@ ChargedProtoCombineDLLsAlg::ChargedProtoCombineDLLsAlg( const std::string& name,
 {
 
   // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_protoPath = LHCb::ProtoParticleLocation::Charged;
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_protoPath = LHCb::ProtoParticleLocation::HltCharged;
+  }
+  else
+  {
+    m_protoPath = LHCb::ProtoParticleLocation::Charged;
   }
 
   // Job Options

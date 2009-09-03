@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleMaker
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleMaker.cpp,v 1.1 2009-08-29 20:37:19 jonrob Exp $
+ * $Id: ChargedProtoParticleMaker.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -27,23 +27,21 @@ DECLARE_ALGORITHM_FACTORY( ChargedProtoParticleMaker );
 //=============================================================================
 ChargedProtoParticleMaker::ChargedProtoParticleMaker( const std::string& name,
                                                       ISvcLocator* pSvcLocator )
-  : GaudiAlgorithm ( name , pSvcLocator ),
-    m_protoPath    ( LHCb::ProtoParticleLocation::Charged ),
-    m_tracksPath   ( LHCb::TrackLocation::Default )
+  : GaudiAlgorithm ( name , pSvcLocator )
 {
 
   // context specific locations
-  if      ( context() == "Offline" )
-  {
-    m_tracksPath = LHCb::TrackLocation::Default;
-    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
-    m_trSelType  = "DelegatingTrackSelector";
-  }
-  else if ( context() == "HLT" || context() == "Hlt" )
+  if ( context() == "HLT" || context() == "Hlt" )
   {
     m_tracksPath = LHCb::TrackLocation::HltForward;
     m_protoPath  = LHCb::ProtoParticleLocation::HltCharged;
     m_trSelType  = "TrackSelector";
+  }
+  else
+  {
+    m_tracksPath = LHCb::TrackLocation::Default;
+    m_protoPath  = LHCb::ProtoParticleLocation::Charged;
+    m_trSelType  = "DelegatingTrackSelector";
   }
 
   // track selector type

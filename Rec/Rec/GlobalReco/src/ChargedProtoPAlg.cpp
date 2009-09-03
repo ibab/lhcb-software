@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.75 2009-08-29 20:37:18 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.76 2009-09-03 11:09:22 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -39,9 +39,9 @@ ChargedProtoPAlg::ChargedProtoPAlg( const std::string& name,
     m_trSel        ( NULL ),
     m_velodEdx     ( NULL ),
     m_electron     ( NULL ),
-    m_clusTrTable ( NULL ),
-    m_elecTrTable ( NULL ),
-    m_bremTrTable ( NULL ),
+    m_clusTrTable  ( NULL ),
+    m_elecTrTable  ( NULL ),
+    m_bremTrTable  ( NULL ),
     m_dlleEcalTable ( NULL ),
     m_dllePrsTable  ( NULL ),
     m_dlleHcalTable ( NULL ),

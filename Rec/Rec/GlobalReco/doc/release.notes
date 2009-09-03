@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-09-03 - Chris Jones
+ - Make sure default TES locations are always set, even when context() is not
+   set.
+
 ! 2009-08-29 - Chris Jones
  - Reorganisation of charged ProtoParticle algorithms for greater 
    flexibility :-
