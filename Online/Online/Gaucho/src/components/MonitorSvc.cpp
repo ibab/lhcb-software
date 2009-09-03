@@ -221,9 +221,8 @@ void MonitorSvc::declareInfo(const std::string& name, const int&  var,
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-      msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
+      msg << MSG::INFO << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       
-      //m_monRate->addCounter(newName, desc, (double&) var);
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
@@ -272,11 +271,11 @@ void MonitorSvc::declareInfo(const std::string& name, const long&  var,
         if (dimSvcName.second.compare("") == 0) return;
     //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
     //    m_monRate->print();
-    //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
+        msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-  //    msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
+      msg << MSG::INFO << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       
       m_monRate->addCounter(newName, desc, (double&) var);
     }
@@ -326,12 +325,12 @@ void MonitorSvc::declareInfo(const std::string& name, const double& var,
         std::pair<std::string, std::string> dimSvcName = registerDimSvc("monRate", "MonR/", this, false);
         if (dimSvcName.second.compare("") == 0) return;
     //    msg << MSG::DEBUG << "Printing MonRate " << endreq;
-        m_monRate->print();
-    //    msg << MSG::DEBUG << "Creating DimServiceMonObject for MonRate " << endreq;
+     //   m_monRate->print();
+        msg << MSG::INFO << "Creating DimServiceMonObject for MonRate " << endreq;
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
         m_monRateDeclared = true;
       }
-     // msg << MSG::DEBUG << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
+      msg << MSG::INFO << "Adding Counter to MonRate"<< newName << ", with description: " << desc << endreq; 
       m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
@@ -453,6 +452,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
                              const std::string& desc, const IInterface* owner) 
 {
   MsgStream msg(msgSvc(),"MonitorSvc");
+   msg << MSG::INFO << "StatEntity Counter "<< name << " being declared." << endreq; 
   if (name.find("COUNTER_TO_RATE") != std::string::npos) {
     std::string newName = extract("COUNTER_TO_RATE", name);
     if ( 0 == m_disableMonRate) {
@@ -463,9 +463,11 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
         if (dimSvcName.second.compare("") == 0) return;
         m_monRate->print();
         m_dimSrv[dimSvcName.first]=new DimServiceMonObject(dimSvcName.second, m_monRate);
+	msg << MSG::INFO << "New DimService: " + dimSvcName.second << endreq;
         m_monRateDeclared = true;
       }
-        m_monRate->addCounter(newName, desc, var);
+        msg << MSG::INFO << "Adding  Counter to MonRate"<< newName << endreq; 
+	m_monRate->addCounter(newName, desc, var);
     }
     else msg << MSG::INFO << "Counter "<< newName << " can not be declared because MonRate process is disabled." << endreq; 
     return;
@@ -542,7 +544,7 @@ void MonitorSvc::declareMonRateComplement( int& runNumber, unsigned int& tck, in
 
   if ( 0 == m_disableMonRate) {
     m_monRate->addComplement(&runNumber, &tck, &cycleNumber, &deltaT, &offsetTimeFirstEvInRun, &offsetTimeLastEvInCycle, &offsetGpsTimeLastEvInCycle);
-    m_monRate->print();
+   // m_monRate->print();
   }
   else  msg << MSG::INFO << "Complement of MonRate was not declared because MonRate process is disabled." << endreq; 
 

@@ -163,6 +163,7 @@ StatusCode UpdateAndReset::initialize() {
   m_timeStart = GauchoTimer::currentTime();
 
   m_runNumber = currentRunNumber().first.first;
+  m_triggerConfigurationKey = currentTCK();
   m_cycleNumber = currentCycleNumber(m_timeStart).first;
   m_timeFirstEvInRun = m_timeStart;
   m_offsetTimeFirstEvInRun = offsetToBoundary(m_cycleNumber, m_timeFirstEvInRun, true);
@@ -171,9 +172,8 @@ StatusCode UpdateAndReset::initialize() {
   m_runStatus = s_statusNoUpdated;
   m_cycleStatus = s_statusNoUpdated;
 
-  if (0==m_disableMonRate)
-  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
-  return StatusCode::SUCCESS;
+  if (0==m_disableMonRate)  m_pGauchoMonitorSvc->declareMonRateComplement(m_runNumber, m_triggerConfigurationKey, m_cycleNumber, m_deltaTCycle, m_offsetTimeFirstEvInRun, m_offsetTimeLastEvInCycle, m_offsetGpsTimeLastEvInCycle);
+   return StatusCode::SUCCESS;
 }
 
 void UpdateAndReset::timerHandler()
@@ -255,6 +255,7 @@ void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be cal
   if (runNumber.first.first!=0) updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
   m_runStatus = s_statusUpdated;
   retrieveRunNumber(runNumber.first.first, runNumber.first.second);
+  m_triggerConfigurationKey=currentTCK();
 }
 
 //------------------------------------------------------------------------------
@@ -304,7 +305,6 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //      msg << MSG::DEBUG<< "Getting RunNumber. " <<endreq;
       runNumber = odin->runNumber();
       gpsTime = odin->gpsTime();
-      triggerConfigurationKey = odin->triggerConfigurationKey();
  //     msg << MSG::DEBUG<< "runNumber from ODIN is. " <<endreq;
     }
     else
@@ -320,11 +320,33 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
      changed = true;
   }   
   m_runNumber = runNumber;
-  m_triggerConfigurationKey = triggerConfigurationKey;
   std::pair<int, ulonglong> runNumberGpsTime = std::pair<int, ulonglong>(runNumber, gpsTime);
   
   // return std::pair<int, bool>(runNumber,changed);
   return std::pair<std::pair<int, ulonglong>, bool>(runNumberGpsTime, changed);
+}
+//------------------------------------------------------------------------------
+
+unsigned int UpdateAndReset::currentTCK() {
+//------------------------------------------------------------------------------
+  MsgStream msg( msgSvc(), name() );
+  unsigned int triggerConfigurationKey=0;
+
+  //msg << MSG::DEBUG<< "Reading ODIN Bank. " <<endreq;
+
+  if (0 == m_disableReadOdin) {
+    if (exist<LHCb::ODIN> ( LHCb::ODINLocation::Default)) {
+      LHCb::ODIN* odin = get<LHCb::ODIN> (LHCb::ODINLocation::Default);
+      triggerConfigurationKey = odin->triggerConfigurationKey();
+    }
+    else
+    {
+      msg << MSG::DEBUG<< "ODIN Bank doesn't exist. " <<endreq;	
+    }
+  }
+  else {
+  }
+  return triggerConfigurationKey;
 }
 
 //------------------------------------------------------------------------------
