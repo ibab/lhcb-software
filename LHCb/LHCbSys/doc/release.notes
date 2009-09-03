@@ -8,6 +8,7 @@
 - Packages added:    DaVinciTypes      - typedefs for Phys project.
 
 - Fix DoxyLHCbApps.cfg for new location of ROOT project in LCG release area
+- Add container_package pattern
 
 </PRE><H1><A NAME=v27r5>2009-07-30 LHCbSys v27r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LCG_56b
