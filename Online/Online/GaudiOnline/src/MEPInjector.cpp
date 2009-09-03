@@ -82,6 +82,8 @@ using MBM::Requirement;
 DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb, MEPInjector)
 using namespace LHCb;
 
+
+#define MAXSZBK		     20000
 #define MEPEVENTOFFSET		 4
 #define IPHDRSZ			20
 #define MEPHDRSZ	        12
@@ -400,8 +402,8 @@ StatusCode MEPInjector::initialize() {
             continue; 
         }
         u_int32_t tell1id = MEPRxSys::IPStringToBits(*ite);
-        void *memory = extendBuffer(&(m_MapStreamBuffers[tell1id]), m_PackingFactor * 5000 );
-        bzero(memory, m_PackingFactor * 5000);
+        void *memory = extendBuffer(&(m_MapStreamBuffers[tell1id]), m_PackingFactor * MAXSZBK ); //XXX new size not tested
+        bzero(memory, m_PackingFactor * MAXSZBK);
         m_MapTell1MEPs[tell1id] = new(memory) MEPEvent(0);
         m_MapTell1MEPs[tell1id]->setSize(0);   
        
@@ -967,6 +969,8 @@ StatusCode MEPInjector::readEvent() {
                 
                 mh->m_l0ID = m_L0ID;
             }
+           
+            //XXX Check if mh->m_totLen + len fits in the buffer, else save current mep, make a copy, and extend buffer by packing factor - current nb event in mep
             mh->m_nEvt = nbEv+1;
             
             // Sets the Fragment header, care, multi banks per fragments ... 
