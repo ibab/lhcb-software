@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STCheckers v2r14 2009-09-03 ======================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/STCheckers_dll.cpp
+
 ! 2009-08-08 M Needham
  - Add plots to STPerformanceMonitor
 
