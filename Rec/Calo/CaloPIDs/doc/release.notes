@@ -1,18 +1,18 @@
-! $Id: release.notes,v 1.74 2009-09-01 11:28:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.75 2009-09-03 16:21:13 cattanem Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
 
+!========================== CaloPIDs v5r1 2009-09-03 =========================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/CaloPIDs_dll.cpp
+
 ! 2009-09-01 - Vanya BELYAEV
-
  - suppress warnings for consigurables 
-
  - cmt/requirements 
-
       version increment to v5r1 
-
 
 !========================== CaloPIDs v5r0 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps
