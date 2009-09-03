@@ -48,10 +48,10 @@ use TsaAlgorithms        v3r12   Tf   # Matt Needham
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
 use NNTools              v1r6    Tr   # Adrian Perieanu
 use PatChecker           v3r5    Tr   # Olivier Callot, David Hutchcroft
-use PatFitParams         v3r2p3  Tr   # Olivier Callot
+use PatFitParams         v4r0    Tr   # Olivier Callot
 use TrackAssociators     v2r6    Tr   # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers        v4r7    Tr   # Eduardo Rodrigues
-use TrackExtrapolators   v2r22   Tr   # Eduardo Rodrigues
+use TrackCheckers        v4r8    Tr   # Eduardo Rodrigues
+use TrackExtrapolators   v2r23   Tr   # Eduardo Rodrigues
 use TrackFitEvent        v4r0    Tr   # Eduardo Rodrigues
 use TrackFitter          v2r37   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r18   Tr   # Eduardo Rodrigues
