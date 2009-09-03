@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.13 2009-08-31 20:48:31 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.14 2009-09-03 07:13:33 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -165,10 +165,15 @@ private:
                                     Iter begin,
                                     Iter end ) const
   {
+
+    if ( 0== end-begin ) return 0;
+
     typedef typename std::iterator_traits<Iter>::value_type PV;
     typedef std::pair<PV, double> WeightedPV;
     typedef std::vector< WeightedPV > WeightedPVs;
+
     WeightedPVs weightedPVs;
+
     Iter iPV = begin;
     for ( ; iPV != end; ++iPV) {
       const double wt = BestLogic::weight(particle, *iPV, m_distCalculator);
@@ -191,7 +196,7 @@ private:
   {
     inline bool operator() (const T& pv0, const T& pv1) 
     {
-      return pv0.second > pv1.second;
+      return pv0.second < pv1.second;
     }
     
   };
