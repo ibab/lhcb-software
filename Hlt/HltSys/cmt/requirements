@@ -54,6 +54,7 @@ use TisTosTobbing       v3r4   Phys   # Tomasz Skwarnicki
 # Stuff added really temporarily...
 #=============================================================
 # From LHCB:
+use CaloDAQ             v4r12p1   Calo
 use CaloInterfaces      v7r14   Calo
 use CaloKernel          v6r0    Calo
 use CaloUtils           v8r6    Calo
