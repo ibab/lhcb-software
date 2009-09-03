@@ -3,10 +3,12 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+
+!======================= TsaAlgorithms v3r12 2009-09-03 =====================
 ! 2009-08-04 - Stephanie Hansmann-Menzemer
  - ITGenericTracking: remove filling of LHCb::Track::nExpectedIT
 
-======================= TsaAlgorithms v3r11 2009-07-14 =====================
+!======================= TsaAlgorithms v3r11 2009-07-14 =====================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file TsaAlgorithms_dll.cpp
 
@@ -17,7 +19,7 @@
  - Tune tuning for MC09. Ghost rate reduced by ~1 % for few per mille loss
    in efficiency. See talk in tracking workshop on July 10 
 
-======================= TsaAlgorithms v3r10 2009-05-08 =====================
+!======================= TsaAlgorithms v3r10 2009-05-08 =====================
 ! 2009-05-07 - Louis Nicolas
  - Add "assumedMomentum" property to ITGenericTracking
 
