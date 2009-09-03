@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.90 2009-09-03 16:54:43 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.91 2009-09-03 17:32:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -106,9 +106,9 @@ StatusCode RawDataFormatTool::initialize()
   incSvc()->addListener( this, IncidentType::EndEvent   );
 
   // Do we have pixels to suppress ?
-  info() << name() << " Hot Pixel list to suppress : " << m_hotChannels << endmsg;
   if ( !m_hotChannels.empty() )
   {
+    info() << name() << " Hot Pixel list to suppress : " << m_hotChannels << endmsg;
     m_pixelsToSuppress = true;
     for ( HotPixelListType::const_iterator iC = m_hotChannels.begin();
           iC != m_hotChannels.end(); ++iC )
