@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.8 2009-08-28 13:50:54 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.9 2009-09-03 08:32:59 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -47,6 +47,7 @@ class SelDSTWriter(MicroDSTWriter) :
         return ".dst"
 
     def extendSequence(self, sel) :
+        seqExtension = []
         if self.getProp("SaveCandidates") :
-            return MicroDSTWriter.extendSequence(self, sel)
-
+            seqExtension+= MicroDSTWriter.extendSequence(self, sel)
+        return seqExtension
