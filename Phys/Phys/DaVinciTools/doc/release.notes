@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.465 2009-09-03 13:52:38 ibelyaev Exp $
+! $Id: release.notes,v 1.466 2009-09-03 15:18:41 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-03 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Avoid all computations when only one PV is present.
 
 ! 2009-09-03 - Vanya BELYAEV
 
