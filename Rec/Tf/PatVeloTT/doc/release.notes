@@ -4,8 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== PatVeloTT v3r8 2009-09-03 ========================
 ! 2009-09-02 - Wouter Hulsbergen
- - Adapt to another change in configuring the fit. Next step is really to move this configuration to TrackFitter :-(
+ - Adapt to another change in configuring the fit. 
+   Next step is really to move this configuration to TrackFitter :-(
 
 !========================== PatVeloTT v3r7 2009-07-28 ========================
 ! 2009-07-28 - Marco Cattaneo
