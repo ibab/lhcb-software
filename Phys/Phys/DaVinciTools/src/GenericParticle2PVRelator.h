@@ -1,4 +1,4 @@
-// $Id: GenericParticle2PVRelator.h,v 1.14 2009-09-03 07:13:33 jpalac Exp $
+// $Id: GenericParticle2PVRelator.h,v 1.15 2009-09-03 15:18:19 jpalac Exp $
 #ifndef GENERICPARTICLE2PVRELATOR_H 
 #define GENERICPARTICLE2PVRELATOR_H 1
 
@@ -165,8 +165,9 @@ private:
                                     Iter begin,
                                     Iter end ) const
   {
-
-    if ( 0== end-begin ) return 0;
+    const size_t nPVs = end-begin;
+    if ( 1 == nPVs ) return *begin;
+    if ( 0 == nPVs ) return 0;
 
     typedef typename std::iterator_traits<Iter>::value_type PV;
     typedef std::pair<PV, double> WeightedPV;
