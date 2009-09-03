@@ -59,10 +59,10 @@ qcd::WCPtr qcd::LHTPhysicsModel::getLeftNewPhysicsDeltasMW() const{
 qcd::WCPtr qcd::UEDPhysicsModel::getLeftNewPhysicsDeltasMW() const{
 		
 	qcd::WCPtr C = getZeroWCs();
-	(*C)(7) = 0.06541790520887969;
-	(*C)(8) = 0.020571257990120217;
-	(*C)(9) = 0.04872196248083271;
-	(*C)(10) = -0.6090245310104092;
+	(*C)(7) = 0.008556503668868952;
+	(*C)(8) = 0.03294389846399369;
+	(*C)(9) = 0.009507910468826578;
+	(*C)(10) = -0.1188488808603323;
 	return C;
 }
 
