@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.103 2009-07-30 16:33:43 ibelyaev Exp $ 
+# $Id: requirements,v 1.104 2009-09-03 14:46:54 marcocle Exp $ 
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -18,6 +18,9 @@ use           BenderTutor    v12r0   Tutorial
 
 # =========== template of user module/scriot ==================================
 use           BenderUser     v12r0    Phys 
+
+# Declare this as a container package
+apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
