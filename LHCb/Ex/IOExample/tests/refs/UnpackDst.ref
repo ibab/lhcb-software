@@ -1,5 +1,5 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
+# --> Including file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -20,27 +20,29 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
+# <-- End of file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/UnpackDst.py'
 # applying configuration of DstConf
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.3 $
-                                          running on lxbuild135.cern.ch on Wed Apr 15 09:27:53 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.4 $
+                                          running on lxbuild135.cern.ch on Thu Sep  3 05:30:44 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
-Note: (file "(tmpfile)", line 2) File "set" already loaded
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
-DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 33
+DumpTracks          DEBUG could not locate CounterSummarySvc, no counter summary will be made
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 35
 DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
 DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
 DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 DumpTracks          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+DumpTracks          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
 DumpTracks          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 DumpTracks          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
@@ -91,7 +93,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 4.89984
  nDoF       : 39
- extraInfo : [ Likelihood=-154.79  PatQuality=4.64498  Cand1stQPat=4.64498  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=20  nExpectedTT=5  nExpectedOT=22  FitVeloChi2=10.0039  FitVeloNDoF=15  FitTChi2=90.9622  FitTNDoF=14  FitMatchChi2=75.9181  GhostProbability=0.254679 ]
+ extraInfo : [ DC06nExpectedVelo=20  DC06nExpectedTT=5  DC06nExpectedOT=22  FitVeloChi2=10.0039  FitVeloNDoF=15  FitTChi2=90.9622  FitTNDoF=14  FitMatchChi2=75.9181 ]
  p  : 3460.66
  pt : 155.228
  3 states at z = -39.004 990 9450  :-
@@ -139,7 +141,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.935291
  nDoF       : 29
- extraInfo : [ Likelihood=-4.49186  PatQuality=2.53872  Cand1stQPat=2.53872  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=20  nExpectedTT=4  nExpectedIT=11  FitVeloChi2=12.3773  FitVeloNDoF=15  FitTChi2=6.40283  FitTNDoF=5  FitMatchChi2=4.50672  GhostProbability=0.00254767 ]
+ extraInfo : [ DC06nExpectedVelo=20  DC06nExpectedTT=4  DC06nExpectedIT=11  FitVeloChi2=12.3773  FitVeloNDoF=15  FitTChi2=6.40283  FitTNDoF=5  FitMatchChi2=4.50672 ]
  p  : 7649.62
  pt : 303.061
  3 states at z = -45.9971 990 9450  :-
@@ -187,7 +189,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.02832
  nDoF       : 35
- extraInfo : [ Likelihood=-9.21191  PatQuality=2.88846  Cand1stQPat=2.88846  Cand2ndQPat=1.92921  NCandCommonHits=1  nExpectedVelo=18  nExpectedTT=4  nExpectedIT=8  nExpectedOT=15  FitVeloChi2=18.2748  FitVeloNDoF=13  FitTChi2=10.6225  FitTNDoF=13  FitMatchChi2=4.13185  GhostProbability=0.00667315 ]
+ extraInfo : [ DC06nExpectedVelo=18  DC06nExpectedTT=4  DC06nExpectedIT=8  DC06nExpectedOT=15  FitVeloChi2=18.2748  FitVeloNDoF=13  FitTChi2=10.6225  FitTNDoF=13  FitMatchChi2=4.13185 ]
  p  : 7425.25
  pt : 258.905
  3 states at z = -47.1622 990 9450  :-
@@ -235,7 +237,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.03978
  nDoF       : 35
- extraInfo : [ Likelihood=-9.22707  PatQuality=0.869149  Cand1stQPat=0.869149  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=18  nExpectedTT=4  nExpectedOT=23  FitVeloChi2=14.1324  FitVeloNDoF=13  FitTChi2=12.3336  FitTNDoF=14  FitMatchChi2=6.33147  GhostProbability=0.000893916 ]
+ extraInfo : [ DC06nExpectedVelo=18  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=14.1324  FitVeloNDoF=13  FitTChi2=12.3336  FitTNDoF=14  FitMatchChi2=6.33147 ]
  p  : 15989
  pt : 1036.86
  3 states at z = -43.1663 990 9450  :-
@@ -283,7 +285,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.610751
  nDoF       : 38
- extraInfo : [ Likelihood=-9.64157  PatQuality=0.690662  Cand1stQPat=0.690662  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=18  nExpectedTT=4  nExpectedOT=23  FitVeloChi2=13.0686  FitVeloNDoF=13  FitTChi2=8.23313  FitTNDoF=17  FitMatchChi2=1.37235  GhostProbability=0.00110555 ]
+ extraInfo : [ DC06nExpectedVelo=18  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=13.0686  FitVeloNDoF=13  FitTChi2=8.23313  FitTNDoF=17  FitMatchChi2=1.37235 ]
  p  : 31773
  pt : 3228.37
  3 states at z = -42.7324 990 9450  :-
@@ -333,7 +335,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.888564
  nDoF       : 43
- extraInfo : [ Likelihood=-3.63047  PatQuality=0.450244  Cand1stQPat=0.450244  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=23  nExpectedTT=4  nExpectedOT=23  FitVeloChi2=12.3905  FitVeloNDoF=17  FitTChi2=16.8824  FitTNDoF=17  FitMatchChi2=2.70383  GhostProbability=0.000460386 ]
+ extraInfo : [ DC06nExpectedVelo=23  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=12.3905  FitVeloNDoF=17  FitTChi2=16.8824  FitTNDoF=17  FitMatchChi2=2.70383 ]
  p  : 44321.5
  pt : 2016.7
  3 states at z = -18.2692 990 9450  :-
@@ -381,7 +383,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.627813
  nDoF       : 37
- extraInfo : [ Likelihood=-2.7367  PatQuality=0.910794  Cand1stQPat=0.910794  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=16  nExpectedTT=4  nExpectedOT=21  FitVeloChi2=9.6749  FitVeloNDoF=11  FitTChi2=8.54935  FitTNDoF=17  FitMatchChi2=4.50755  GhostProbability=0.0013771 ]
+ extraInfo : [ DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedOT=21  FitVeloChi2=9.6749  FitVeloNDoF=11  FitTChi2=8.54935  FitTNDoF=17  FitMatchChi2=4.50755 ]
  p  : 23486.3
  pt : 3286.63
  3 states at z = -14.8212 990 9450  :-
@@ -429,7 +431,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 2.41986
  nDoF       : 25
- extraInfo : [ Likelihood=-12.3305  PatQuality=3.52031  Cand1stQPat=3.52031  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=16  nExpectedTT=4  nExpectedIT=0  FitVeloChi2=14.9131  FitVeloNDoF=11  FitTChi2=5.85283  FitTNDoF=5  FitMatchChi2=31.653  GhostProbability=0.435019 ]
+ extraInfo : [ DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedIT=0  FitVeloChi2=14.9131  FitVeloNDoF=11  FitTChi2=5.85283  FitTNDoF=5  FitMatchChi2=31.653 ]
  p  : 3778.35
  pt : 342.106
  3 states at z = -17.2539 990 9450  :-
@@ -477,7 +479,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.34111
  nDoF       : 38
- extraInfo : [ Likelihood=-6.84229  PatQuality=1.66352  Cand1stQPat=1.66352  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=16  nExpectedTT=4  nExpectedIT=4  nExpectedOT=20  FitVeloChi2=11.9117  FitVeloNDoF=11  FitTChi2=30.3894  FitTNDoF=18  FitMatchChi2=5.51588  GhostProbability=0.00790418 ]
+ extraInfo : [ DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedIT=4  DC06nExpectedOT=20  FitVeloChi2=11.9117  FitVeloNDoF=11  FitTChi2=30.3894  FitTNDoF=18  FitMatchChi2=5.51588 ]
  p  : 10942.5
  pt : 420.944
  3 states at z = -14.1166 990 9450  :-
@@ -525,7 +527,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.967189
  nDoF       : 35
- extraInfo : [ Likelihood=-3.937  PatQuality=5.24924  Cand1stQPat=5.24924  Cand2ndQPat=9.23174  NCandCommonHits=1  nExpectedVelo=14  nExpectedTT=4  nExpectedOT=24  FitVeloChi2=5.62637  FitVeloNDoF=9  FitTChi2=21.6089  FitTNDoF=17  FitMatchChi2=6.19117  GhostProbability=0.0234384 ]
+ extraInfo : [ DC06nExpectedVelo=14  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=5.62637  FitVeloNDoF=9  FitTChi2=21.6089  FitTNDoF=17  FitMatchChi2=6.19117 ]
  p  : 4660.47
  pt : 686.491
  3 states at z = -16.8205 990 9450  :-
@@ -575,7 +577,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.23922
  nDoF       : 35
- extraInfo : [ Likelihood=-6.96545  PatQuality=2.12341  Cand1stQPat=2.12341  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=15  nExpectedTT=4  nExpectedOT=22  FitVeloChi2=2.34616  FitVeloNDoF=9  FitTChi2=17.5468  FitTNDoF=17  FitMatchChi2=19.4059  GhostProbability=0.00535483 ]
+ extraInfo : [ DC06nExpectedVelo=15  DC06nExpectedTT=4  DC06nExpectedOT=22  FitVeloChi2=2.34616  FitVeloNDoF=9  FitTChi2=17.5468  FitTNDoF=17  FitMatchChi2=19.4059 ]
  p  : 15093
  pt : 637.81
  3 states at z = 55.8163 990 9450  :-
@@ -623,7 +625,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.00746
  nDoF       : 36
- extraInfo : [ Likelihood=-3.42138  PatQuality=2.42504  Cand1stQPat=2.42504  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=16  nExpectedTT=4  nExpectedOT=20  FitVeloChi2=4.70132  FitVeloNDoF=11  FitTChi2=18.9058  FitTNDoF=16  FitMatchChi2=10.5592  GhostProbability=0.00227348 ]
+ extraInfo : [ DC06nExpectedVelo=16  DC06nExpectedTT=4  DC06nExpectedOT=20  FitVeloChi2=4.70132  FitVeloNDoF=11  FitTChi2=18.9058  FitTNDoF=16  FitMatchChi2=10.5592 ]
  p  : 4764.32
  pt : 290.785
  3 states at z = 36.5055 990 9450  :-
@@ -671,7 +673,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.0835
  nDoF       : 18
- extraInfo : [ Likelihood=-18.0519  PatQuality=2.24118  Cand1stQPat=2.24118  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=12  nExpectedTT=4  nExpectedOT=11  FitVeloChi2=9.60794  FitVeloNDoF=7  FitTChi2=4.82402  FitTNDoF=6  FitMatchChi2=5.07111  GhostProbability=0.206084 ]
+ extraInfo : [ DC06nExpectedVelo=12  DC06nExpectedTT=4  DC06nExpectedOT=11  FitVeloChi2=9.60794  FitVeloNDoF=7  FitTChi2=4.82402  FitTNDoF=6  FitMatchChi2=5.07111 ]
  p  : 5174.16
  pt : 598.052
  3 states at z = 35.9755 990 9450  :-
@@ -719,7 +721,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.983904
  nDoF       : 31
- extraInfo : [ Likelihood=-4.22332  PatQuality=0.968237  Cand1stQPat=0.968237  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=12  nExpectedTT=4  nExpectedOT=21  FitVeloChi2=7.49542  FitVeloNDoF=7  FitTChi2=15.5854  FitTNDoF=15  FitMatchChi2=2.60181  GhostProbability=0.00130618 ]
+ extraInfo : [ DC06nExpectedVelo=12  DC06nExpectedTT=4  DC06nExpectedOT=21  FitVeloChi2=7.49542  FitVeloNDoF=7  FitTChi2=15.5854  FitTNDoF=15  FitMatchChi2=2.60181 ]
  p  : 25973.9
  pt : 3358.98
  3 states at z = 61.8055 990 9450  :-
@@ -767,7 +769,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.978816
  nDoF       : 33
- extraInfo : [ Likelihood=-3.99988  PatQuality=3.7096  Cand1stQPat=3.7096  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=12  nExpectedTT=3  nExpectedOT=24  FitVeloChi2=5.42368  FitVeloNDoF=7  FitTChi2=21.7346  FitTNDoF=18  FitMatchChi2=4.38938  GhostProbability=0.00660602 ]
+ extraInfo : [ DC06nExpectedVelo=12  DC06nExpectedTT=3  DC06nExpectedOT=24  FitVeloChi2=5.42368  FitVeloNDoF=7  FitTChi2=21.7346  FitTNDoF=18  FitMatchChi2=4.38938 ]
  p  : 4244.95
  pt : 420.393
  3 states at z = 34.1067 990 9450  :-
@@ -817,7 +819,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.897696
  nDoF       : 44
- extraInfo : [ Likelihood=-4.43184  PatQuality=2.40221  Cand1stQPat=2.40221  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=24  nExpectedTT=4  nExpectedOT=22  FitVeloChi2=19.5171  FitVeloNDoF=19  FitTChi2=11.9744  FitTNDoF=16  FitMatchChi2=6.65787  GhostProbability=0.00101048 ]
+ extraInfo : [ DC06nExpectedVelo=24  DC06nExpectedTT=4  DC06nExpectedOT=22  FitVeloChi2=19.5171  FitVeloNDoF=19  FitTChi2=11.9744  FitTNDoF=16  FitMatchChi2=6.65787 ]
  p  : 6219.02
  pt : 309.851
  3 states at z = -61.8442 990 9450  :-
@@ -865,7 +867,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.1914
  nDoF       : 44
- extraInfo : [ Likelihood=-9.74646  PatQuality=1.27507  Cand1stQPat=1.27507  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=22  nExpectedTT=4  nExpectedIT=4  nExpectedOT=23  FitVeloChi2=15.0307  FitVeloNDoF=16  FitTChi2=21.5224  FitTNDoF=19  FitMatchChi2=15.1695  GhostProbability=0.000872578 ]
+ extraInfo : [ DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedIT=4  DC06nExpectedOT=23  FitVeloChi2=15.0307  FitVeloNDoF=16  FitTChi2=21.5224  FitTNDoF=19  FitMatchChi2=15.1695 ]
  p  : 11077.2
  pt : 458.521
  3 states at z = -62.1576 990 9450  :-
@@ -913,7 +915,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 7.00075
  nDoF       : 24
- extraInfo : [ Likelihood=-183.162  PatQuality=3.52724  Cand1stQPat=3.52724  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=17  nExpectedTT=4  nExpectedOT=20  FitVeloChi2=77.7958  FitVeloNDoF=9  FitTChi2=30.4515  FitTNDoF=10  FitMatchChi2=59.7708  GhostProbability=0.925058 ]
+ extraInfo : [ DC06nExpectedVelo=17  DC06nExpectedTT=4  DC06nExpectedOT=20  FitVeloChi2=77.7958  FitVeloNDoF=9  FitTChi2=30.4515  FitTNDoF=10  FitMatchChi2=59.7708 ]
  p  : 7297.91
  pt : 563.964
  3 states at z = -46.7007 990 9450  :-
@@ -961,7 +963,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.30297
  nDoF       : 37
- extraInfo : [ Likelihood=-4.96073  PatQuality=8.31207  Cand1stQPat=8.31207  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=19  nExpectedTT=4  nExpectedIT=8  nExpectedOT=12  FitVeloChi2=24.6106  FitVeloNDoF=14  FitTChi2=9.00892  FitTNDoF=14  FitMatchChi2=10.1181  GhostProbability=0.00402413 ]
+ extraInfo : [ DC06nExpectedVelo=19  DC06nExpectedTT=4  DC06nExpectedIT=8  DC06nExpectedOT=12  FitVeloChi2=24.6106  FitVeloNDoF=14  FitTChi2=9.00892  FitTNDoF=14  FitMatchChi2=10.1181 ]
  p  : 3427.14
  pt : 387.326
  3 states at z = -61.553 990 9450  :-
@@ -1009,7 +1011,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.794302
  nDoF       : 41
- extraInfo : [ Likelihood=-4.1686  PatQuality=6.21326  Cand1stQPat=6.21326  Cand2ndQPat=0  NCandCommonHits=2  nExpectedVelo=19  nExpectedTT=4  nExpectedOT=24  FitVeloChi2=17.3412  FitVeloNDoF=14  FitTChi2=13.8325  FitTNDoF=18  FitMatchChi2=0.959759  GhostProbability=0.161974 ]
+ extraInfo : [ DC06nExpectedVelo=19  DC06nExpectedTT=4  DC06nExpectedOT=24  FitVeloChi2=17.3412  FitVeloNDoF=14  FitTChi2=13.8325  FitTNDoF=18  FitMatchChi2=0.959759 ]
  p  : 2274.59
  pt : 270.115
  3 states at z = -62.7463 990 9450  :-
@@ -1059,7 +1061,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.836425
  nDoF       : 41
- extraInfo : [ Likelihood=-3.0427  PatQuality=2.43865  Cand1stQPat=2.43865  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=22  nExpectedTT=4  nExpectedOT=22  FitVeloChi2=10.9315  FitVeloNDoF=16  FitTChi2=12.8416  FitTNDoF=16  FitMatchChi2=8.91459  GhostProbability=0.00164162 ]
+ extraInfo : [ DC06nExpectedVelo=22  DC06nExpectedTT=4  DC06nExpectedOT=22  FitVeloChi2=10.9315  FitVeloNDoF=16  FitTChi2=12.8416  FitTNDoF=16  FitMatchChi2=8.91459 ]
  p  : 4824.13
  pt : 251.548
  3 states at z = -46.656 990 9450  :-
@@ -1107,7 +1109,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.619916
  nDoF       : 34
- extraInfo : [ Likelihood=-5.74484  PatQuality=0.597634  Cand1stQPat=0.597634  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=19  nExpectedTT=4  nExpectedOT=20  FitVeloChi2=3.95672  FitVeloNDoF=11  FitTChi2=7.82489  FitTNDoF=14  FitMatchChi2=5.67114  GhostProbability=0.00149517 ]
+ extraInfo : [ DC06nExpectedVelo=19  DC06nExpectedTT=4  DC06nExpectedOT=20  FitVeloChi2=3.95672  FitVeloNDoF=11  FitTChi2=7.82489  FitTNDoF=14  FitMatchChi2=5.67114 ]
  p  : 26669.1
  pt : 1443.04
  3 states at z = -5.8474 990 9450  :-
@@ -1155,7 +1157,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.566181
  nDoF       : 36
- extraInfo : [ Likelihood=-1.84849  PatQuality=0.569095  Cand1stQPat=0.569095  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=18  nExpectedTT=4  nExpectedOT=22  FitVeloChi2=8.74057  FitVeloNDoF=12  FitTChi2=9.12674  FitTNDoF=16  FitMatchChi2=0.790045  GhostProbability=0.00116289 ]
+ extraInfo : [ DC06nExpectedVelo=18  DC06nExpectedTT=4  DC06nExpectedOT=22  FitVeloChi2=8.74057  FitVeloNDoF=12  FitTChi2=9.12674  FitTNDoF=16  FitMatchChi2=0.790045 ]
  p  : 22655.7
  pt : 1453.14
  3 states at z = -5.7082 990 9450  :-
@@ -1203,7 +1205,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.911194
  nDoF       : 33
- extraInfo : [ Likelihood=-8.5576  PatQuality=5.86098  Cand1stQPat=5.86098  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=11  nExpectedTT=4  nExpectedOT=23  FitVeloChi2=10.1193  FitVeloNDoF=6  FitTChi2=15.1573  FitTNDoF=18  FitMatchChi2=2.15899  GhostProbability=0.00310422 ]
+ extraInfo : [ DC06nExpectedVelo=11  DC06nExpectedTT=4  DC06nExpectedOT=23  FitVeloChi2=10.1193  FitVeloNDoF=6  FitTChi2=15.1573  FitTNDoF=18  FitMatchChi2=2.15899 ]
  p  : 4210.08
  pt : 809.758
  3 states at z = -5.5191 990 9450  :-
@@ -1251,7 +1253,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.621039
  nDoF       : 30
- extraInfo : [ Likelihood=-21.8012  PatQuality=7.57488  Cand1stQPat=7.57488  Cand2ndQPat=0  NCandCommonHits=1  nExpectedVelo=12  nExpectedTT=4  nExpectedOT=30  FitVeloChi2=1.463  FitVeloNDoF=5  FitTChi2=13.0756  FitTNDoF=17  FitMatchChi2=3.83771  GhostProbability=0.0102534 ]
+ extraInfo : [ DC06nExpectedVelo=12  DC06nExpectedTT=4  DC06nExpectedOT=30  FitVeloChi2=1.463  FitVeloNDoF=5  FitTChi2=13.0756  FitTNDoF=17  FitMatchChi2=3.83771 ]
  p  : 1517.19
  pt : 316.468
  3 states at z = -5.8231 990 9450  :-

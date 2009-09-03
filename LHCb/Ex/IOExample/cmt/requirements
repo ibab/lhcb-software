@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.41 2009-07-15 15:53:58 cattanem Exp $
+# $Id: requirements,v 1.42 2009-09-03 07:06:20 cattanem Exp $
 package IOExample
-version v3r1
+version v3r2
 
 branches doc options cmt
 include_path none

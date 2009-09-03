@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.47 2009-07-28 07:49:22 cattanem Exp $
+! $Id: release.notes,v 1.48 2009-09-03 07:06:20 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
+
+!====================== IOExample v3r2 2009-07-28 ==============================
+! 2009-09-03 - Marco Cattaneo
+ - Update QMTest references for changes to Track.xml and introduction of Gaudi
+   CounterSummarySvc
 
 !====================== IOExample v3r1 2009-07-28 ==============================
 ! 2009-07-15 - Marco Cattaneo

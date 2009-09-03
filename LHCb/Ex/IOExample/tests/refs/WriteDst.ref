@@ -1,11 +1,11 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+# --> Including file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 # ApplicationMgr.HistogramPersistency = "NONE";
 # ApplicationMgr.EvtMax = 5;
 # EventSelector.PrintFreq = 1;
 # ApplicationMgr.TopAlg = { "DumpTracks" };
 # DumpTracks.OutputLevel = 2;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -26,31 +26,33 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
+# <-- End of file '/build/nightlies/lhcb3/Thu/Gaudi/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/options/PoolDst.opts'
 # EventSelector.Input   = {  "DATAFILE='PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='REC'";
 # ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolDst.opts'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
+# <-- End of file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/options/PoolDst.opts'
+# <-- End of file '/build/nightlies/lhcb3/Thu/LHCb/LHCB_HEAD/Ex/IOExample/tests/options/WriteDst.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.8 $
-                                          running on lxbuild135.cern.ch on Wed Apr 15 09:27:23 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.9 $
+                                          running on lxbuild135.cern.ch on Thu Sep  3 05:30:01 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
-Note: (file "(tmpfile)", line 2) File "set" already loaded
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Property update for OutputLevel : new value = 2
 DumpTracks          DEBUG Initialize base class GaudiCommon<Algorithm>
-DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 33
+DumpTracks          DEBUG could not locate CounterSummarySvc, no counter summary will be made
+DumpTracks          DEBUG List of ALL properties of DumpTracks/DumpTracks  #properties = 35
 DumpTracks          DEBUG Property ['Name': Value] =  'TracksLocation':Rec/Track/Best
 DumpTracks          DEBUG Property ['Name': Value] =  'NumberOfObjectsToPrint':5
 DumpTracks          DEBUG Property ['Name': Value] =  'RequireObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'VetoObjects':[  ]
 DumpTracks          DEBUG Property ['Name': Value] =  'RegisterForContextService':True
 DumpTracks          DEBUG Property ['Name': Value] =  'ContextService':AlgContextSvc
+DumpTracks          DEBUG Property ['Name': Value] =  'StatEntityList':[  ]
+DumpTracks          DEBUG Property ['Name': Value] =  'CounterList':[ '.*' ]
 DumpTracks          DEBUG Property ['Name': Value] =  'UseEfficiencyRowFormat':True
 DumpTracks          DEBUG Property ['Name': Value] =  'EfficiencyRowFormat': |*%|-48.48s|%|50t||%|10d| |%|11.5g| |(%|#9.6g| +- %|-#9.6g|)%%|   -------   |   -------   |
 DumpTracks          DEBUG Property ['Name': Value] =  'RegularRowFormat': | %|-48.48s|%|50t||%|10d| |%|11.7g| |%|#11.5g| |%|#11.5g| |%|#12.5g| |%|#12.5g| |
@@ -103,7 +105,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.640914
  nDoF       : 22
- extraInfo : [ Likelihood=-3.30964  nExpectedVelo=23  nExpectedTT=4  FitVeloChi2=13.2415  FitVeloNDoF=18 ]
+ extraInfo : [ DC06Likelihood=-3.30964  DC06nExpectedVelo=23  DC06nExpectedTT=4  FitVeloChi2=13.2415  FitVeloNDoF=18 ]
  p  : 16838.2
  pt : 845.69
  2 states at z = -69.8359 990  :-
@@ -140,7 +142,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.831923
  nDoF       : 15
- extraInfo : [ Likelihood=-3.39077  nExpectedVelo=18  nExpectedTT=4  FitVeloChi2=9.46555  FitVeloNDoF=13 ]
+ extraInfo : [ DC06Likelihood=-3.39077  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=9.46555  FitVeloNDoF=13 ]
  p  : 1408.64
  pt : 175.11
  2 states at z = -67.7196 990  :-
@@ -177,7 +179,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 2.81205
  nDoF       : 15
- extraInfo : [ Likelihood=-10.7575  nExpectedVelo=17  nExpectedTT=4  FitVeloChi2=36.3623  FitVeloNDoF=11 ]
+ extraInfo : [ DC06Likelihood=-10.7575  DC06nExpectedVelo=17  DC06nExpectedTT=4  FitVeloChi2=36.3623  FitVeloNDoF=11 ]
  p  : 6421.88
  pt : 854.871
  2 states at z = -68.1998 990  :-
@@ -214,7 +216,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.26304
  nDoF       : 16
- extraInfo : [ Likelihood=-8.11972  nExpectedVelo=18  nExpectedTT=4  FitVeloChi2=11.9012  FitVeloNDoF=12 ]
+ extraInfo : [ DC06Likelihood=-8.11972  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=11.9012  FitVeloNDoF=12 ]
  p  : 1884.05
  pt : 223.792
  2 states at z = -67.7356 990  :-
@@ -251,7 +253,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.680838
  nDoF       : 11
- extraInfo : [ Likelihood=-2.44255  nExpectedVelo=12  nExpectedTT=4  FitVeloChi2=3.97554  FitVeloNDoF=7 ]
+ extraInfo : [ DC06Likelihood=-2.44255  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=3.97554  FitVeloNDoF=7 ]
  p  : 2491.61
  pt : 512.362
  2 states at z = -67.2273 990  :-
@@ -279,7 +281,7 @@ DumpTracks          DEBUG *** Track ***
    1.93804e-06-1.76318e-06-5.40157e-10-1.63494e-09 4.09036e-09 ]
 
 
-IODataManager        INFO Referring to dataset PoolDst.root by its file ID:88D16CE2-8E29-DE11-BE7C-001E4F3D8360
+IODataManager        INFO Referring to dataset PoolDst.root by its file ID:48D5BC13-3A98-DE11-A9A1-001E4F3D8360
 RootDBase.open    SUCCESS PoolDst.root File version:52200
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 DumpTracks          DEBUG The object of type 'KeyedContainer<LHCb::Track,Containers::KeyedObjectManager<Containers::hashmap> >*' has been retrieved from TS at address 'Rec/Track/Best'
@@ -293,7 +295,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 7.30927
  nDoF       : 10
- extraInfo : [ Likelihood=-31.0271  nExpectedVelo=14  nExpectedTT=4  FitVeloChi2=5.22944  FitVeloNDoF=8 ]
+ extraInfo : [ DC06Likelihood=-31.0271  DC06nExpectedVelo=14  DC06nExpectedTT=4  FitVeloChi2=5.22944  FitVeloNDoF=8 ]
  p  : 5998.68
  pt : 385.508
  2 states at z = 42.2075 990  :-
@@ -330,7 +332,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.766032
  nDoF       : 10
- extraInfo : [ Likelihood=-2.49349  nExpectedVelo=12  nExpectedTT=4  FitVeloChi2=4.73083  FitVeloNDoF=6 ]
+ extraInfo : [ DC06Likelihood=-2.49349  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=4.73083  FitVeloNDoF=6 ]
  p  : 2083.35
  pt : 390.325
  2 states at z = 42.3487 990  :-
@@ -367,7 +369,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.272109
  nDoF       : 7
- extraInfo : [ Likelihood=-0.957213  nExpectedVelo=10  nExpectedTT=3  FitVeloChi2=1.11343  FitVeloNDoF=4 ]
+ extraInfo : [ DC06Likelihood=-0.957213  DC06nExpectedVelo=10  DC06nExpectedTT=3  FitVeloChi2=1.11343  FitVeloNDoF=4 ]
  p  : 922.531
  pt : 201.905
  2 states at z = 42.6189 990  :-
@@ -404,7 +406,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.743572
  nDoF       : 8
- extraInfo : [ Likelihood=-5.24007  nExpectedVelo=10  nExpectedTT=4  FitVeloChi2=3.60059  FitVeloNDoF=4 ]
+ extraInfo : [ DC06Likelihood=-5.24007  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.60059  FitVeloNDoF=4 ]
  p  : 1582.42
  pt : 72.7032
  2 states at z = 146.768 990  :-
@@ -441,7 +443,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 2.90648
  nDoF       : 5
- extraInfo : [ Likelihood=-7.70697  nExpectedVelo=8  nExpectedTT=4  FitVeloChi2=3.53853  FitVeloNDoF=2 ]
+ extraInfo : [ DC06Likelihood=-7.70697  DC06nExpectedVelo=8  DC06nExpectedTT=4  FitVeloChi2=3.53853  FitVeloNDoF=2 ]
  p  : 1307.62
  pt : 47.1622
  2 states at z = 108.911 990  :-
@@ -481,7 +483,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.16028
  nDoF       : 12
- extraInfo : [ Likelihood=-4.67793  nExpectedVelo=14  nExpectedTT=4  FitVeloChi2=8.80703  FitVeloNDoF=8 ]
+ extraInfo : [ DC06Likelihood=-4.67793  DC06nExpectedVelo=14  DC06nExpectedTT=4  FitVeloChi2=8.80703  FitVeloNDoF=8 ]
  p  : 3216.79
  pt : 441.786
  2 states at z = 6.85568 990  :-
@@ -518,7 +520,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.46491
  nDoF       : 11
- extraInfo : [ Likelihood=-4.07916  nExpectedVelo=12  nExpectedTT=4  FitVeloChi2=11.9362  FitVeloNDoF=7 ]
+ extraInfo : [ DC06Likelihood=-4.07916  DC06nExpectedVelo=12  DC06nExpectedTT=4  FitVeloChi2=11.9362  FitVeloNDoF=7 ]
  p  : 9502.57
  pt : 327.79
  2 states at z = 10.6089 990  :-
@@ -555,7 +557,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.586745
  nDoF       : 9
- extraInfo : [ Likelihood=-1.2578  nExpectedVelo=10  nExpectedTT=4  FitVeloChi2=2.9621  FitVeloNDoF=5 ]
+ extraInfo : [ DC06Likelihood=-1.2578  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=2.9621  FitVeloNDoF=5 ]
  p  : 35708.5
  pt : 817.611
  2 states at z = 10.576 990  :-
@@ -592,7 +594,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.778512
  nDoF       : 6
- extraInfo : [ Likelihood=-4.74975  nExpectedVelo=10  nExpectedTT=4  FitVeloChi2=3.31399  FitVeloNDoF=2 ]
+ extraInfo : [ DC06Likelihood=-4.74975  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.31399  FitVeloNDoF=2 ]
  p  : 777.525
  pt : 29.9643
  2 states at z = 55.5385 990  :-
@@ -629,7 +631,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.35663
  nDoF       : 7
- extraInfo : [ Likelihood=-6.14791  nExpectedVelo=10  nExpectedTT=4  FitVeloChi2=3.77445  FitVeloNDoF=4 ]
+ extraInfo : [ DC06Likelihood=-6.14791  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=3.77445  FitVeloNDoF=4 ]
  p  : 5624.28
  pt : 1263.94
  2 states at z = 105.635 990  :-
@@ -669,7 +671,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.572613
  nDoF       : 20
- extraInfo : [ Likelihood=-11.6612  nExpectedVelo=22  nExpectedTT=6  FitVeloChi2=7.87189  FitVeloNDoF=17 ]
+ extraInfo : [ DC06Likelihood=-11.6612  DC06nExpectedVelo=22  DC06nExpectedTT=6  FitVeloChi2=7.87189  FitVeloNDoF=17 ]
  p  : 3098.23
  pt : 166.417
  2 states at z = -14.6686 990  :-
@@ -706,7 +708,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.718868
  nDoF       : 13
- extraInfo : [ Likelihood=-2.32056  nExpectedVelo=13  nExpectedTT=5  FitVeloChi2=4.18864  FitVeloNDoF=8 ]
+ extraInfo : [ DC06Likelihood=-2.32056  DC06nExpectedVelo=13  DC06nExpectedTT=5  FitVeloChi2=4.18864  FitVeloNDoF=8 ]
  p  : 3063.61
  pt : 480.15
  2 states at z = -14.8021 990  :-
@@ -743,7 +745,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.85349
  nDoF       : 7
- extraInfo : [ Likelihood=-6.01955  nExpectedVelo=11  nExpectedTT=4  FitVeloChi2=4.10522  FitVeloNDoF=5 ]
+ extraInfo : [ DC06Likelihood=-6.01955  DC06nExpectedVelo=11  DC06nExpectedTT=4  FitVeloChi2=4.10522  FitVeloNDoF=5 ]
  p  : 729.418
  pt : 113.828
  2 states at z = -18.9247 990  :-
@@ -780,7 +782,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.281353
  nDoF       : 7
- extraInfo : [ Likelihood=-5.69138  nExpectedVelo=10  nExpectedTT=4  FitVeloChi2=1.63915  FitVeloNDoF=4 ]
+ extraInfo : [ DC06Likelihood=-5.69138  DC06nExpectedVelo=10  DC06nExpectedTT=4  FitVeloChi2=1.63915  FitVeloNDoF=4 ]
  p  : 936.571
  pt : 24.3503
  2 states at z = -20.0535 990  :-
@@ -817,7 +819,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 2.09375
  nDoF       : 6
- extraInfo : [ Likelihood=-3.90353  nExpectedVelo=8  nExpectedTT=4  FitVeloChi2=3.12275  FitVeloNDoF=2 ]
+ extraInfo : [ DC06Likelihood=-3.90353  DC06nExpectedVelo=8  DC06nExpectedTT=4  FitVeloChi2=3.12275  FitVeloNDoF=2 ]
  p  : 2930.27
  pt : 60.9219
  2 states at z = 97.1947 990  :-
@@ -857,7 +859,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.740099
  nDoF       : 20
- extraInfo : [ Likelihood=-1.98037  nExpectedVelo=22  nExpectedTT=4  FitVeloChi2=13.131  FitVeloNDoF=16 ]
+ extraInfo : [ DC06Likelihood=-1.98037  DC06nExpectedVelo=22  DC06nExpectedTT=4  FitVeloChi2=13.131  FitVeloNDoF=16 ]
  p  : 3418.77
  pt : 167.689
  2 states at z = -41.8089 990  :-
@@ -894,7 +896,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 5.91196
  nDoF       : 10
- extraInfo : [ Likelihood=-30.6204  nExpectedVelo=17  nExpectedTT=4  FitVeloChi2=18.526  FitVeloNDoF=6 ]
+ extraInfo : [ DC06Likelihood=-30.6204  DC06nExpectedVelo=17  DC06nExpectedTT=4  FitVeloChi2=18.526  FitVeloNDoF=6 ]
  p  : 1372.74
  pt : 90.8333
  2 states at z = -32.9874 990  :-
@@ -931,7 +933,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.37111
  nDoF       : 12
- extraInfo : [ Likelihood=-9.07298  nExpectedVelo=18  nExpectedTT=4  FitVeloChi2=15.4413  FitVeloNDoF=9 ]
+ extraInfo : [ DC06Likelihood=-9.07298  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=15.4413  FitVeloNDoF=9 ]
  p  : 2717.38
  pt : 334.177
  2 states at z = -37.6614 990  :-
@@ -968,7 +970,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 0.608055
  nDoF       : 15
- extraInfo : [ Likelihood=-1.5501  nExpectedVelo=18  nExpectedTT=4  FitVeloChi2=3.34895  FitVeloNDoF=12 ]
+ extraInfo : [ DC06Likelihood=-1.5501  DC06nExpectedVelo=18  DC06nExpectedTT=4  FitVeloChi2=3.34895  FitVeloNDoF=12 ]
  p  : 1750.33
  pt : 131.425
  2 states at z = -32.8632 990  :-
@@ -1005,7 +1007,7 @@ DumpTracks          DEBUG *** Track ***
  # meas   : 0
  chi2PerDoF : 1.17248
  nDoF       : 17
- extraInfo : [ Likelihood=-2.90906  nExpectedVelo=16  nExpectedTT=6  FitVeloChi2=6.73445  FitVeloNDoF=11 ]
+ extraInfo : [ DC06Likelihood=-2.90906  DC06nExpectedVelo=16  DC06nExpectedTT=6  FitVeloChi2=6.73445  FitVeloNDoF=11 ]
  p  : 44577.2
  pt : 1604.59
  2 states at z = -39.2633 990  :-
@@ -1042,7 +1044,7 @@ DumpTracks          DEBUG Releasing service 'AlgContextSvc'
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:88D16CE2-8E29-DE11-BE7C-001E4F3D8360[PoolDst.root]
+PoolRootTreeEvt...   INFO Disconnected data IO:48D5BC13-3A98-DE11-A9A1-001E4F3D8360[PoolDst.root]
 PoolRootTreeEvt...   INFO Disconnected data IO:CAA89D27-E42D-DC11-B844-003048836626[rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
