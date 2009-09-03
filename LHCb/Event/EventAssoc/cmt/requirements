@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.30 2009-09-02 17:23:33 jpalac Exp $
+# $Id: requirements,v 1.31 2009-09-03 07:18:04 cattanem Exp $
 # =============================================================================
 # Created    : 19/12/2003
 # =============================================================================
@@ -26,7 +26,3 @@ apply_pattern     reflex_dictionary                              \
                   headerfiles=$(EVENTASSOCROOT)/dict/selection.h \
                   selectionfile=../dict/selection.xml            \
                   options="-U__MINGW32__"
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
