@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.9 2009-08-11 15:13:17 hmdegaud Exp $
+# $Id: GetPack.py,v 1.10 2009-09-03 08:30:15 kkruzele Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -51,7 +51,7 @@ class RepositoryInfo(object):
 
 ## Subversion specific implementation of RepositoryInfo
 class SVNReposInfo(RepositoryInfo):
-    __protocols__ = ["svn", "svn+ssh", "file", "https"]
+    __protocols__ = ["svn", "svn+ssh", "file", "https", "http"]
     def __str__(self):
         # prepare url template
         if self.user:
@@ -76,7 +76,7 @@ class CVSReposInfo(RepositoryInfo):
 ## List of known repositories
 #  @todo: temporarily here, but should be moved.
 __repositories__ = { "gaudi": { "ssh":       SVNReposInfo("svn+ssh", "svn.cern.ch", "/reps/gaudi"),
-                                "anonymous": SVNReposInfo("https", "svnweb.cern.ch", "/guest/gaudi") },
+                                "anonymous": SVNReposInfo("http", "svnweb.cern.ch", "/guest/gaudi") },
                      "lhcb":  { "kerberos":   CVSReposInfo("gserver", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "kserver":   CVSReposInfo("kserver", "isscvs.cern.ch", "/local/reps/lhcb"),
                                 "ssh":       CVSReposInfo("ext", "isscvs.cern.ch", "/local/reps/lhcb"),
@@ -100,7 +100,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.9 2009-08-11 15:13:17 hmdegaud Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.10 2009-09-03 08:30:15 kkruzele Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -340,7 +340,7 @@ class GetPack(Script):
             versions = rep.listVersions(project, isProject = True)
             if not versions:
                 raise RuntimeError("No version found for project '%s'" % project)
-            
+
             if version:
                 if version not in versions:
                     vers = None # temporary variable
@@ -394,7 +394,7 @@ class GetPack(Script):
                 # add user-defined repositories
                 i = 0
                 for rep in self.options.user_svn:
-                    # FIXME: need some error checking 
+                    # FIXME: need some error checking
                     protocol, rest = splittype(rep)
                     rest, path = splithost(rest)
                     user, host = splituser(rest)
@@ -402,7 +402,7 @@ class GetPack(Script):
                     i += 1
                 i = 0
                 for rep in self.options.user_cvs:
-                    # FIXME: need some error checking 
+                    # FIXME: need some error checking
                     dummy, protocol, rest, path = rep.split(":")
                     user, host = splituser(rest)
                     repositories["user_cvs_%d" % i] = CVSReposInfo(protocol, host, path, user)

@@ -349,7 +349,7 @@ class SubversionCmd(RevisionControlSystem):
     """
     CVS implementation of RevisionControlSystem.
     """
-    __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https|file)://(?:([\w.]+)@)?([\w.]*)(/[\w./]+)*")
+    __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https?|file)://(?:([\w.]+)@)?([\w.]*)(/[\w./]+)*")
     SVN_PROTOCOL = 1
     SVN_USER     = 2
     SVN_HOST     = 3
@@ -476,9 +476,9 @@ class SubversionCmd(RevisionControlSystem):
         else:
             # normal case
             sub_cmd = "checkout"
-        
+
         _svn(sub_cmd, src, dst, stdout = None, stderr = None)
-        
+
         if not vers_dir and not project:
             # create version.cmt file
             self._create_vers_cmt(os.path.join(dest, module), version)
