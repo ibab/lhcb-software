@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.72 2009-08-31 09:32:39 graven Exp $
+! $Id: release.notes,v 1.73 2009-09-03 09:28:41 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloTools v5r11 2009-09-03 =========================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/CaloTools_dll.cpp
+
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
-- remove filling of track-extra info, according to changes in Track.xml class
+ - remove filling of track-extra info, according to changes in Track.xml class
 
 !========================== CaloTools v5r10 2009-08-31 =========================
 ! 2009-08-10 - Vanya BELYAEV
-
  - Calo2Calo & CaloGetter 
     fix the problem of mandatory "update" 
 
