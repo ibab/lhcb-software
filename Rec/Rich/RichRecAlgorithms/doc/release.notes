@@ -4,6 +4,10 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+!===================== RichRecAlgorithms v2r16p1 2009-09-03 ==================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/RichRecAlgorithms_dll.cpp
+
 ! 2009-07-30 - Chris Jones
  - Replace all endreq with endmsg
 
