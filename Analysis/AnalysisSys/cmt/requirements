@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.126 2009-09-03 12:56:14 jpalac Exp $
+# $Id: requirements,v 1.127 2009-09-03 14:46:54 marcocle Exp $
 package AnalysisSys
 version v3r9
 
@@ -51,6 +51,9 @@ use  MicroDSTConf               v2r5    MicroDST          # Juan Palacios
 use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r9p1    Ex                # Juan Palacios
+
+# Declare this as a container package
+apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
