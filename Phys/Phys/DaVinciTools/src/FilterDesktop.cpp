@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.6 2008-10-01 13:23:38 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.7 2009-09-03 13:52:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,6 +6,7 @@
 // ============================================================================
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/StatEntity.h"
+#include "GaudiKernel/IAlgContextSvc.h"
 // ============================================================================
 // DaVinci Kernel
 // ============================================================================
@@ -78,10 +79,20 @@ public:
     if ( sc.isFailure () ) { return sc ; }                          // RETURN 
     // ensure the proper initialization of LoKi service 
     svc<IService> ( "LoKiSvc" ) ;
+    
+    // (re)lock the context again:  
+    
+    // register for the algorithm context service 
+    IAlgContextSvc* ctx = 0 ;
+    if ( registerContext() ) { ctx = contextSvc() ; }  
+    // setup sentry/guard
+    Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
+    
     // decode the cut:  
     sc = updateMajor () ;
     if ( sc.isFailure () ) 
     { return Error ("The error from updateMajor" , sc ) ; }
+    
     // take care about the histos
     sc = updateHistos () ;
     if ( sc.isFailure () ) 

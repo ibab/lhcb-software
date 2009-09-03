@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.464 2009-09-03 07:13:40 jpalac Exp $
+! $Id: release.notes,v 1.465 2009-09-03 13:52:38 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-03 - Vanya BELYAEV
+
+ - CombineParticles & FilterDesktop 
+
+   add missing context lock for initialize method
+
+      (many thanks to Giovanni Sabatino!)
+
 
 ! 2009-09-01 - Juan PALACIOS
  - src/GenericParticle2PVRelator.h

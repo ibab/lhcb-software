@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.33 2009-08-13 10:48:16 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.34 2009-09-03 13:52:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,6 +11,7 @@
 // ============================================================================
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IAlgContextSvc.h"
 // ============================================================================
 // DaVinciKernel
 // ============================================================================
@@ -629,10 +630,16 @@ StatusCode CombineParticles::initialize ()  // standard initialization
   // check for LoKi service 
   svc<IService> ( "LoKiSvc" , true ) ;
   
-  
   // subscribe the incident
   incSvc() -> addListener ( this , IncidentType::BeginEvent ) ;
   
+  // (re)lock the context again:  
+  
+  // register for the algorithm context service 
+  IAlgContextSvc* ctx = 0 ;
+  if ( registerContext() ) { ctx = contextSvc() ; }  
+  // setup sentry/guard
+  Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
   // the actual tuning/decoding 
   sc = updateMajor () ;
