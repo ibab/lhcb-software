@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.6 2009-07-31 19:56:56 marcocle Exp $
+# $Id: Makefile,v 1.7 2009-09-03 13:39:07 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -22,11 +22,7 @@ unescape_slash = $(subst _slash_,/,$(1))
 #  Note: The command "cmt show groups" does not work in old versions of CMT
 cmt_version := $(shell cmt version)
 ifeq ($(cmt_version),v1r20p20090520)
-ifdef CMTUSERCONTEXT
 groups = all `(cmt show groups)`
-else
-groups = all `(cd $*/cmt ; cmt show groups)`
-endif
 else
 groups = all all_groups
 endif
@@ -113,7 +109,6 @@ else
 endif
 	@$(call build_banner,$*)
 	@date > $*/cmt/build.$(CMTCONFIG).log
-ifdef CMTUSERCONTEXT
 	@+cd $*/cmt ; \
 	for group in $(groups) ; do \
 		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
@@ -121,14 +116,6 @@ ifdef CMTUSERCONTEXT
 		date >> build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
 	done
-else
-	@for group in $(groups) ; do \
-		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
-		$(MAKE) -C $*/cmt $$group 2>&1 | tee -a $*/cmt/build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
-		date >> $*/cmt/build.$(CMTCONFIG).log ; \
-		$(Package_failure_handler) \
-	done
-endif
 
 ifeq ($(cmt_version),v1r20p20090520)
 %_clean: %/cmt/Makefile %/cmt/version.cmt

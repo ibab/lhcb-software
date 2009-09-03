@@ -1,3 +1,8 @@
+2009-09-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: unified the behavior with and without CMTUSERCONTEXT
+	(always go to the package directory instead of calling "make -C").
+
 2009-08-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/File.py: added a few tuned utilities
