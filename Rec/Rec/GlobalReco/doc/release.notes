@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r26 2009-09-03 ======================
 ! 2009-09-03 - Chris Jones
  - Make sure default TES locations are always set, even when context() is not
    set.
