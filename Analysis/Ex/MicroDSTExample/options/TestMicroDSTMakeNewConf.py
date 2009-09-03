@@ -7,7 +7,7 @@ from MicroDSTExample.Selections import SeqBs2Jpsi2MuMuPhi2KK
 selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 
 conf = MicroDSTWriter("MicroDST0")
-conf.OutputFilePrefix = "Juan"
+conf.OutputFileSuffix = "Test"
 conf.CopyProtoParticles = False
 conf.SelectionSequences = [selSequence]
 conf.CopyL0DUReport = False
@@ -50,7 +50,7 @@ conf.P2PVRelationsSuffix = "P2ReFitPVSortedRelations"
 
 dv = DaVinci()
 dv.DataType = 'DC06'
-dv.EvtMax = 100
+dv.EvtMax = 1000
 dv.UserAlgorithms = [microDST0Seq]
 dv.Input =  [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
