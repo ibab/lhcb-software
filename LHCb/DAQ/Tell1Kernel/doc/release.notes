@@ -1,6 +1,8 @@
 ! package DAQ/Tell1Kernel
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
+
+!====================== Tell1Kernel v1r7 2009-09-03 ======================
 ! 2009-08-10 - Tomasz Szumlak
  - add BitReader helper class - needed for checking the raw bank encoding
    in Tell1 cluster maker algorithm
