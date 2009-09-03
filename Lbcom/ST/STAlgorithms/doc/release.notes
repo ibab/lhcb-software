@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r9 2009-09-03 ========================
 ! 2009-08-21 M Needham
  - Modify WriteSTStatusConditions to use STXMLUtils 
 
