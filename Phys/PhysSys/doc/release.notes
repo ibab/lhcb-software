@@ -3,6 +3,8 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+- Added the pattern container_package.
+
 </PRE><H1><A NAME=v8r9>2009-08-31 Phys v8r9 </A></H1><PRE>
 
 ###############################################################################

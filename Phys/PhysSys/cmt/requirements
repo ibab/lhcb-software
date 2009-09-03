@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.196 2009-09-01 06:30:46 jpalac Exp $
+#$Id: requirements,v 1.197 2009-09-03 14:46:55 marcocle Exp $
 package PhysSys
 version v8r10
 
@@ -16,6 +16,9 @@ use  VertexFit			v5r7     Phys   # Yuehong Xie
 use  LoKiFitters                v2r1p1   Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r4p1   Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
+
+# Declare this as a container package
+apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
