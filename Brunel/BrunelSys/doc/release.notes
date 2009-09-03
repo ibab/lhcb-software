@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-09-03 - Marco Clemencic
+ - Added the pattern container_package.
+
 ! 2009-07-31 - Marco Cattaneo
  - Update reference for:
    . fix to duplicate creation of PatVelo hit manager tools
