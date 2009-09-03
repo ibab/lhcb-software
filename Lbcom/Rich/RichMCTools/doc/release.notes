@@ -4,6 +4,7 @@
 ! Purpose     : Provides basic tools for RICH MC information
 !-----------------------------------------------------------------------------
 
+!========================== RichMCTools v3r13 2009-09-03 =====================
 ! 2009-08-18 - Chris Jones
  - Update MCTruthTool to support returning vector of MCRichHits associated to
    a given HPD (as identified by its RichSmartID).
