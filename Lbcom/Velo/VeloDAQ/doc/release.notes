@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r8 2009-09-03 =======================
 ! 2009-08-31 - Kurt Rinnert
  - fixed compiler warnings in DecodePileUpData
 
