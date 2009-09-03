@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+
+- Added the pattern container_package.
+
 ! 2009-08-10 - Vanya BELYAEV
 
  - python/RecSys/Configuration.py

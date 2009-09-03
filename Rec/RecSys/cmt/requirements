@@ -86,5 +86,8 @@ use VeloRecMonitors      v1r11   Velo # Malcom John, Eduardo Rodrigues
 # Setup Python Configurables
 apply_pattern install_python_modules
 
+# Declare this as a container package
+apply_pattern container_package
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
