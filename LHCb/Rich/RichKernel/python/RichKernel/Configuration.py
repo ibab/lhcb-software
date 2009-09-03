@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2009-07-31 12:02:36 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-09-03 16:51:02 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -339,12 +339,23 @@ class RichTools(RichConfigurableUser):
         from Configurables import ( Rich__DAQ__RawDataFormatTool,
                                     Rich__DAQ__RawBufferToSmartIDsTool )
         smarts  = Rich__DAQ__RawBufferToSmartIDsTool("ToolSvc.RichSmartIDDecoder")
-        decoder = Rich__DAQ__RawDataFormatTool("RawDecoder")
         self.setOutputLevel(smarts)
-        smarts.addTool(decoder)
+        smarts.addTool( Rich__DAQ__RawDataFormatTool, name = "RawDecoder" )
         return smarts
 
     ## @brief Raw Event encode/decode tool
     def rawDecoder(self):
         return self.smartIDTool().RawDecoder
         
+
+# ----------------------------------------------------------------------------------
+
+## @class RichTools
+#  Configuration object that stores the TAE structure
+#  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
+#  @date   01/09/2009
+class RichTAEStruture(RichConfigurableUser):
+
+    ## The default settings
+    __slots__ = { "RawEventLocations" : [ "" ] }
+

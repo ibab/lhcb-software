@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.239 2009-09-02 16:15:40 cattanem Exp $
+! $Id: release.notes,v 1.240 2009-09-03 16:51:02 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-09-03 - Chris Jones
+ - Bug fix in RawDecoder python Configuration in RichTools()
 
 !====================== RichKernel v7r26 2009-09-02 ====================
 ! 2009-09-02 - Marco Cattaneo
