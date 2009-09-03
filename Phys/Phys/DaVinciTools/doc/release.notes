@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.463 2009-09-01 12:40:10 jpalac Exp $
+! $Id: release.notes,v 1.464 2009-09-03 07:13:40 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
+! 2009-09-01 - Juan PALACIOS
+ - src/GenericParticle2PVRelator.h
+  . Add safety for when no PVs are passed.
+  . Fix logic: max_element was getting min_element.
 
 ! 2009-09-01 - Juan PALACIOS
  - PhysDesktop
