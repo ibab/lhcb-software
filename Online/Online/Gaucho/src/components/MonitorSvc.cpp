@@ -455,6 +455,8 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
    msg << MSG::INFO << "StatEntity Counter "<< name << " being declared." << endreq; 
   if (name.find("COUNTER_TO_RATE") != std::string::npos) {
     std::string newName = extract("COUNTER_TO_RATE", name);
+    //make newName unique!
+    newName = infoOwnerName(owner) +"/"+ newName;
     if ( 0 == m_disableMonRate) {
       if (!m_monRateDeclared) {
         if (!registerName("monRate", this)) return;
