@@ -4,6 +4,10 @@
 ! Purpose     : Stereographic tools
 !-----------------------------------------------------------------------------
 
+!======================= RichRecStereoTools v1r6p1 2009-09-03 ================
+! 2009-09-03 Marco Cattaneo
+ - Remove obsolete file src/RichRecStereoTools_dll.cpp
+
 ! 2009-07-30 - Chris Jones
  - Replace all endreq with endmsg
 
