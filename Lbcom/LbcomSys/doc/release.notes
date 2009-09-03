@@ -6,6 +6,9 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-09-03 - Marco Cattaneo
+ - Add apply_pattern container_package
+
 </PRE><H1><A NAME=v7r5>2009-07-30 LbcomSys v7r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r5
 
