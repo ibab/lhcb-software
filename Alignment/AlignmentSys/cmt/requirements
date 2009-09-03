@@ -27,6 +27,9 @@ use Escher		v4r3	Alignment # Johan Blouw
 use OTCalibration	v1r0	Calibration # Wouter Hulsbergen
 
 
+# Declare this as a container package
+apply_pattern container_package
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
