@@ -91,6 +91,9 @@ use SimChecks           v1r0      Sim
 # Allow to run the QMTests  
 apply_pattern QMTest
 
+# Declare this as a container package
+apply_pattern container_package
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
