@@ -14,5 +14,8 @@ alias DaVinciTests "cmt qmtest_run"
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
 
+# Declare this as a container package
+apply_pattern container_package
+
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
