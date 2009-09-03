@@ -531,7 +531,7 @@ void MonProfile::print(){
   msg <<MSG::INFO<<"*************************************"<<endreq;
   msg <<MSG::INFO<<"BinSum:"<<endreq;
   for (int i = 0; i < (nbinsx+2) ; ++i){
-    if (i==6)    msg << " cycle nr " << (int) binSum[i]<<" ";
+    if (i==7)    msg << " cycle nr " << (int) binSum[i]<<" ";
     else msg <<  binSum[i]<<" ";
   }
   msg << endreq;
