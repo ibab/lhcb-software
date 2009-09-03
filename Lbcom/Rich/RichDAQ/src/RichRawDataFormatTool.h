@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.38 2009-06-11 19:45:19 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.39 2009-09-03 16:54:43 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -18,6 +18,7 @@
 // STD
 #include <sstream>
 #include <memory>
+#include <set>
 
 // Boost
 #include "boost/lexical_cast.hpp"
@@ -34,6 +35,7 @@
 
 // Kernel
 #include "RichKernel/RichStatDivFunctor.h"
+#include "RichKernel/RichHashMap.h"
 
 // Interfaces
 #include "RichKernel/IRichRawDataFormatTool.h"
@@ -346,6 +348,22 @@ namespace Rich
        *  integrity checks (default is on) */
       bool m_purgeHPDsFailIntegrity;
 
+      typedef std::vector<LHCb::RichSmartID::KeyType> HotPixelListType;
+
+      /** Software suppression of hot channels. List of RichSmartIDs (as unsigned ints) 
+       * to suppress in the data.
+       */
+      HotPixelListType m_hotChannels;
+
+      /// Boolean to indicate if there are any pixels that need suppressing
+      bool m_pixelsToSuppress;
+
+      /// Type for Storage of pixels to mask for each HPD
+      typedef Rich::HashMap< LHCb::RichSmartID, std::set<LHCb::RichSmartID> > HPDHotPixels;
+
+      /// Storage of pixels to mask for each HPD
+      HPDHotPixels m_hotPixels;
+
     };
 
     inline void RawDataFormatTool::InitEvent()
@@ -406,7 +424,6 @@ namespace Rich
         os << "  " << isBitOn( word, iCol );
       }
     }
-
 
   }
 }

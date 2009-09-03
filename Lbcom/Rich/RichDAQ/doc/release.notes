@@ -4,6 +4,11 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+! 2009-09-03 - Chris Jones
+ - Add software suppression of (hot) pixels to raw decoder tool. Currently
+   hot pixel list is passed via options (empty by default) but eventually
+   could come from the Conditions DB if needed.
+
 !========================== RichDAQ v3r25 2009-09-03 =========================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file RichDAQ_dll.cpp

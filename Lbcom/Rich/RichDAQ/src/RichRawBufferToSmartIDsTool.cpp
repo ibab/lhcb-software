@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::DAQ::RawBufferToSmartIDsTool
  *
  * CVS Log :-
- * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.28 2009-07-30 12:09:56 jonrob Exp $
+ * $Id: RichRawBufferToSmartIDsTool.cpp,v 1.29 2009-09-03 16:54:43 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -93,7 +93,6 @@ const LHCb::RichSmartID::Vector & RawBufferToSmartIDsTool::dummyVector() const
 {
   // dummy vector for cases where nothing is found or created
   static LHCb::RichSmartID::Vector dummy_vector;
-  dummy_vector.clear();
   return dummy_vector;
 }
 

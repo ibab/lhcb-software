@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.89 2009-08-07 12:15:09 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.90 2009-09-03 16:54:43 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -40,26 +40,28 @@ RawDataFormatTool::RawDataFormatTool( const std::string& type,
     m_timeTool      ( NULL                 ),
     m_evtCount      ( 0                    ),
     m_hasBeenCalled ( false                ),
-    m_richIsActive  ( Rich::NRiches, true  )
+    m_richIsActive  ( Rich::NRiches, true  ),
+    m_pixelsToSuppress ( false )
 {
   // interface
   declareInterface<IRawDataFormatTool>(this);
 
   // job opts
-  declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut = 96 );
-  declareProperty( "PrintSummary",       m_summary   = true  );
-  declareProperty( "MaxHPDOccupancy",    m_maxHPDOc = 999999 );
-  declareProperty( "DumpRawBanks",       m_dumpBanks          = false );
-  declareProperty( "UseZeroSuppression", m_zeroSupp           = true  );
-  declareProperty( "UseExtendedFormat",  m_extendedFormat     = false );
-  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = false );
-  declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true  );
-  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true  );
-  declareProperty( "CheckBXIDs",         m_checkBxIDs         = true  );
-  declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false );
-  declareProperty( "VerboseErrors",      m_verboseErrors      = false );
-  declareProperty( "ActiveRICHes",       m_richIsActive               );
+  declareProperty( "ZeroSuppressHitCut", m_zeroSuppresCut     = 96     );
+  declareProperty( "PrintSummary",       m_summary            = true   );
+  declareProperty( "MaxHPDOccupancy",    m_maxHPDOc           = 999999 );
+  declareProperty( "DumpRawBanks",       m_dumpBanks          = false  );
+  declareProperty( "UseZeroSuppression", m_zeroSupp           = true   );
+  declareProperty( "UseExtendedFormat",  m_extendedFormat     = false  );
+  declareProperty( "DecodeUsingODIN",    m_decodeUseOdin      = false  );
+  declareProperty( "CheckDataIntegrity", m_checkDataIntegrity = true   );
+  declareProperty( "CheckEventIDs",      m_checkEventsIDs     = true   );
+  declareProperty( "CheckBXIDs",         m_checkBxIDs         = true   );
+  declareProperty( "UseFakeHPDID",       m_useFakeHPDID       = false  );
+  declareProperty( "VerboseErrors",      m_verboseErrors      = false  );
+  declareProperty( "ActiveRICHes",       m_richIsActive                );
   declareProperty( "PurgeHPDsFailIntegrityTest", m_purgeHPDsFailIntegrity = true );
+  declareProperty( "HotPixelsToMask",    m_hotChannels                 );
 }
 
 // Destructor
@@ -102,6 +104,19 @@ StatusCode RawDataFormatTool::initialize()
   // Setup incident services
   incSvc()->addListener( this, IncidentType::BeginEvent );
   incSvc()->addListener( this, IncidentType::EndEvent   );
+
+  // Do we have pixels to suppress ?
+  info() << name() << " Hot Pixel list to suppress : " << m_hotChannels << endmsg;
+  if ( !m_hotChannels.empty() )
+  {
+    m_pixelsToSuppress = true;
+    for ( HotPixelListType::const_iterator iC = m_hotChannels.begin();
+          iC != m_hotChannels.end(); ++iC )
+    {
+      const LHCb::RichSmartID channel(*iC);
+      m_hotPixels[channel.hpdID()].insert(channel);
+    }
+  }
 
   return sc;
 }
@@ -802,7 +817,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       ingressWord.activeHPDInputs(inputs);
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << "  Found " << inputs.size() << " HPDs with data blocks" << endmsg;
+        debug() << "  Found " << inputs.size() << " HPDs with data blocks : " << inputs << endmsg;
       }
 
       // Check the Ingress supression flag
@@ -810,7 +825,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
       {
         std::ostringstream mess;
         mess << "L1 board " << L1ID << " : Ingress " << ingressWord
-             << " is suppressed : " << inputs.size() << " Active HPDs";
+             << " is HARDWARE suppressed : " << inputs.size() << " Active HPDs";
         Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
       }
       else
@@ -832,7 +847,7 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
           {
             std::ostringstream mess;
             mess << "L1 board " << L1ID << " : Ingress "
-                 << ingressWord.ingressID() << " HPD " << *iHPD << " is suppressed";
+                 << ingressWord.ingressID() << " HPD " << *iHPD << " is HARDWARE suppressed";
             Warning( mess.str(), StatusCode::SUCCESS, 1 ).ignore();
           }
 
@@ -942,6 +957,40 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                 {
                   ++nHPDbanks;
                   decodedHits += hpdHitCount;
+
+                  // clean out hot pixels enabled at all ?
+                  if ( m_pixelsToSuppress )
+                  {
+                    // Does this HPD have some pixels to suppress
+                    HPDHotPixels::const_iterator iHPDSup = m_hotPixels.find(hpdID);
+                    if ( iHPDSup != m_hotPixels.end() )
+                    {
+                      // temporary copy of original hit channels
+                      const LHCb::RichSmartID::Vector oldids = newids;
+
+                      // clear hits before suppression
+                      newids.clear();
+                      
+                      // loop over original hits and save only those not supressed
+                      for ( LHCb::RichSmartID::Vector::const_iterator iID = oldids.begin();
+                            iID != oldids.end(); ++iID )
+                      {
+                        if ( iHPDSup->second.find(*iID) == iHPDSup->second.end() )
+                        { 
+                          // not suppressed, so keep
+                          newids.push_back(*iID);
+                        }
+                        else
+                        {
+                          std::ostringstream mess;
+                          mess << "Channel " << *iID << " is software SUPPRESSED";
+                          Warning( mess.str(), StatusCode::SUCCESS );
+                        }
+                      }
+                      
+                    }
+                  }
+
                 }
                 else
                 {
