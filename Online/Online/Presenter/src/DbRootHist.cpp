@@ -37,6 +37,8 @@
 #include "Gaucho/MonH1D.h"
 #include "Gaucho/MonH2D.h"
 
+#include "MonRateRace.h"
+
 using namespace pres;
 
 DbRootHist::DbRootHist(const std::string & identifier,
@@ -89,6 +91,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_dimServiceName(dimServiceName),
   m_dimInfo(NULL),
   m_dimInfoMonObject(NULL),
+  m_monRateRace(NULL),
   m_verbosity(verbosity),
   m_dimBrowser(DimBr),
   m_partition(dimServiceName),
@@ -147,6 +150,7 @@ DbRootHist::~DbRootHist()
   if (hostingPad && !m_isOverlap) { delete hostingPad; hostingPad = NULL; }
   if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
   if (m_dimInfoMonObject) { delete m_dimInfoMonObject; m_dimInfoMonObject = NULL; }
+  if (m_monRateRace) { delete m_monRateRace; m_monRateRace = NULL; }
   if (m_titpave) {delete m_titpave; m_titpave = NULL; }
   if (m_statpave) {delete m_statpave; m_statpave = NULL; }
   if (m_prettyPalette) {delete m_prettyPalette; m_prettyPalette = NULL; }
@@ -445,19 +449,12 @@ void DbRootHist::initHistogram()
             }
           } else if (s_CNT == m_histogramType &&
                      isEFF()) {
-            int cnt_size = m_dimInfo->getSize()/sizeof(char);
-            while (cnt_size <= 0) {
-              gSystem->Sleep(m_waitTime);
-              cnt_size = m_dimInfo->getSize()/sizeof(char);
-            }
-            char* cnt_comment  = (char*) m_dimInfo->getData();
-            std::stringstream cntCommentStream;    
-            for (int ptr = 2*sizeof(double); ptr < cnt_size; ++ptr ){
-              cntCommentStream << (char)cnt_comment[ptr];               
-            }
-            cntCommentStream << std::endl;
+            m_monRateRace = new MonRateRace(m_dimServiceName);
+  boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
+  if (dimLock) {            
             m_histoRootTitle = TString(Form("%s",
-                                         cntCommentStream.str().c_str()));                                        
+                                         (m_monRateRace->title()).c_str()));
+  }                                        
              gStyle->SetTimeOffset(m_offsetTime.Convert());
              if (!rootHistogram) {
               rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
@@ -744,34 +741,21 @@ void DbRootHist::fillHistogram()
       }
     }
       }
-//    m_toRefresh = false;
    } else if (s_CNT == m_histogramType) {
-
-// This will only work with a callback: reading on the DIM buffer gives stale values
-// // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/Counternumber1 (D:2;C)
-    
-    boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-    double dimContent = 0;
-     if (rootLock && m_dimInfo) {
-       // wait until data has arrived
-       int m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
-       while (m_serviceSize <= 0) {
-         gSystem->Sleep(m_waitTime);
-         m_serviceSize = m_dimInfo->getSize()/sizeof(dimContent);
-       }
-        if (m_isEFF && 
-            (-1.0 != *(float*) m_dimInfo->getData()) &&
+      double dimContent = 0;
+        if (m_isEFF &&
             rootHistogram && !m_isEmptyHisto) {
-          double* histoDimData;
-          histoDimData = (double*) m_dimInfo->getData();
-          dimContent   = (double) histoDimData[0];
-        } else if (-1.0 != m_dimInfo->getDouble() &&
-                   rootHistogram && !m_isEmptyHisto) {
-          dimContent = m_dimInfo->getDouble();
+          boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
+          boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+          if (rootLock && dimLock) {             
+            dimContent = m_monRateRace->currentValue();
+            m_histoRootTitle = TString(Form("%s",
+                                       (m_monRateRace->title()).c_str()));            
+          }          
         }
+       rootHistogram->SetTitle(m_histoRootTitle.Data());  
        rootHistogram->SetBinContent(m_trendBin, dimContent);
        m_trendBin++;
-     }
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {

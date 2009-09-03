@@ -4,6 +4,11 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r21 2009-09-02 =============
+2009-09-02
++ create trendplots from MonRates in batch
++ added trendplots in GUI
+
 !============ Presenter v0r20 2009-06-16 =============
 2009-06-16
 + create entry to logbook

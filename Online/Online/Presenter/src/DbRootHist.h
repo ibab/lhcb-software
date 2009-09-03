@@ -20,6 +20,7 @@ class TImagePalette;
 class TText;
 class DimInfo;
 class DimInfoMonObject;
+class MonRateRace;
 class TPave;
 //class TPad;
 class DimBrowser;
@@ -188,7 +189,8 @@ class DbRootHist : public HistogramIdentifier
     std::string m_dataType;
     std::string m_dimServiceName;
     DimInfo* m_dimInfo;
-    DimInfoMonObject* m_dimInfoMonObject;    
+    DimInfoMonObject* m_dimInfoMonObject;
+    MonRateRace* m_monRateRace;
     pres::MsgLevel m_verbosity;
     DimBrowser*       m_dimBrowser;
     std::string m_partition;
