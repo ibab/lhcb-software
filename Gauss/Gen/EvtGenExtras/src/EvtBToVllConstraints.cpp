@@ -128,7 +128,11 @@ double EvtBToVllConstraints::getSBToKStarGamma() const{
 
 	return Re(SBtoKStarGamma);
 }
-	
+
+const double EvtBdToXsllParameters::mb = 4.72;
+const double EvtBdToXsllParameters::mbp = qcd::mb_pole(mb);
+const double EvtBdToXsllParameters::mc = 1.5;
+
 double EvtBToVllConstraints::getBrBToXsll() const{
 	
 	class utils{
@@ -150,26 +154,26 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		
 		static EvtComplex omega7(const double sh, const double mu){
 			return (-2*Power(constants::Pi,2))/9. - (16 - 11*sh - 17*Power(sh,2))/
-		    (18.*(1 - sh)*(2 + sh)) - (8*Log(mu/constants::mb))/3. - ((8 + sh)*Log(1 - sh))/(3.*(2 + sh)) - 
+		    (18.*(1 - sh)*(2 + sh)) - (8*Log(mu/EvtBdToXsllParameters::mb))/3. - ((8 + sh)*Log(1 - sh))/(3.*(2 + sh)) - 
 		   (2*sh*(2 - 2*sh - Power(sh,2))*Log(sh))/(3.*Power(1 - sh,2)*(2 + sh)) - 
 		   (2*Log(1 - sh)*Log(sh))/9. - (4*PolyLog(2,sh))/3.;
 		};
 		
 		static EvtComplex get_F_1_9(const double sh, const double mu){
 			
-			const double mc1 = constants::mc/constants::mbp;
+			const double mc1 = EvtBdToXsllParameters::mc/EvtBdToXsllParameters::mbp;
 			const double Lc = log(mc1);
 			const double Ls = getLS0(sh);
-			const double Lm = log(mu/constants::mbp);
+			const double Lm = log(mu/EvtBdToXsllParameters::mbp);
 			return QCDFactorisation::inner::get_F_1_9(Lc,Lm,Ls,mc1,sh);
 		};
 		
 		static EvtComplex get_F_2_9(const double sh, const double mu){
 			
-			const double mc1 = constants::mc/constants::mbp;
+			const double mc1 = EvtBdToXsllParameters::mc/EvtBdToXsllParameters::mbp;
 			const double Lc = log(mc1);
 			const double Ls = getLS0(sh);
-			const double Lm = log(mu/constants::mbp);
+			const double Lm = log(mu/EvtBdToXsllParameters::mbp);
 			return QCDFactorisation::inner::get_F_2_9(Lc,Lm,Ls,mc1,sh);
 		};
 		
@@ -188,27 +192,28 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		
 		EvtComplex kappa(const EvtComplex zz) const{
 			return 1 - (2*(1.5 + (-7.75 + Power(constants::Pi,2))*Power(1 - zz,2))*
-				      qcd::alpha_s(constants::mb,nfl))/(3.*constants::Pi);
+				      qcd::alpha_s(EvtBdToXsllParameters::mb,nfl))/(3.*constants::Pi);
 		};
 		
 		EvtComplex getC7new(const double sh, const double mu) const{
-			return (*C)(7)*(1 + (qcd::alpha_s(constants::mb,nfl)*omega7(sh,mu))/constants::Pi);
+			return (*C)(7)*(1 + (qcd::alpha_s(mu,nfl)*omega7(sh,mu))/constants::Pi);
 		};
 		
 		EvtComplex getC9new(const double sh, const double mu) const{
-			return -(qcd::alpha_s(constants::mb,nfl)*(C100*get_F_1_9(sh,mu) + C200*get_F_2_9(sh,mu) + 
+			return -(qcd::alpha_s(mu,nfl)*(C100*get_F_1_9(sh,mu) + C200*get_F_2_9(sh,mu) + 
 			         (*C)(8)*get_F_8_9(sh,mu)))/(4.*constants::Pi) + 
-			         (1 + ((qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi))*
-			         ((*C)(9) + qcd::Y(constants::mbp*constants::mbp*sh,*C));
+			         (1 + ((qcd::alpha_s(mu,nfl)*omega9(sh))/constants::Pi))*
+			         ((*C)(9) + qcd::Y(EvtBdToXsllParameters::mbp*EvtBdToXsllParameters::mbp*sh,*C,
+			        		 EvtBdToXsllParameters::mb, EvtBdToXsllParameters::mc));
 		};
 		
-		EvtComplex getC10new(const double sh, const double) const{
-			return (*C)(10)*(1 + (qcd::alpha_s(constants::mb,nfl)*omega9(sh))/constants::Pi);
+		EvtComplex getC10new(const double sh, const double mu) const{
+			return (*C)(10)*(1 + (qcd::alpha_s(mu,nfl)*omega9(sh))/constants::Pi);
 		};
 		
 		EvtComplex getU(const double sh, const double mu) const{
-			const double mlh = constants::mmu/constants::mbp; 
-			return (3*Power(constants::mbp,2)*(1 - (4*Power(mlh,2))/sh)*sh*
+			const double mlh = constants::mmu/EvtBdToXsllParameters::mbp; 
+			return (3*Power(EvtBdToXsllParameters::mbp,2)*(1 - (4*Power(mlh,2))/sh)*sh*
 				      (Power(Abs((*C)(11)),2) + Power(Abs((*C)(12)),2)))/2. + 
 				   6*Power(mlh,2)*(-Power(Abs(getC10new(sh,mu)),2) + 
 				      Power(Abs(getC9new(sh,mu)),2) + Power(Abs((*CR)(9)),2) - 
@@ -216,7 +221,7 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 				   (1 + (2*Power(mlh,2)*(1 - sh))/sh + 2*sh)*
 				    (Power(Abs(getC10new(sh,mu)),2) + Power(Abs(getC9new(sh,mu)),2) + 
 				      Power(Abs((*CR)(9)),2) + Power(Abs((*CR)(10)),2)) + 
-				   6*constants::mbp*mlh*Re((*C)(11)*getC10new(sh,mu)) + 
+				   6*EvtBdToXsllParameters::mbp*mlh*Re((*C)(11)*getC10new(sh,mu)) + 
 				   (1 + (2*Power(mlh,2))/sh)*
 				    ((4*(2 + sh)*Power(Abs(getC7new(sh,mu)),2))/sh + 
 				      12*Re(getC7new(sh,mu)*Conjugate(getC9new(sh,mu)) + 
@@ -226,10 +231,10 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 		};
 		
 		double getDiffDecayRate(const double sh) const{
-			const double mlh = constants::mmu/constants::mbp;
+			const double mlh = constants::mmu/EvtBdToXsllParameters::mbp;
 			return real((Power(constants::alphaEM,2)*Sqrt(1 - (4*Power(mlh,2))/sh)*Power(1 - sh,2)*
 				     getU(sh,C->getScaleValue())*Power(Abs(constants::Vtb*constants::Vts),2))/(4.*Power(constants::Pi,2)*Power(Abs(constants::Vcb),2)*
-				    		 f(constants::mc/constants::mbp)*kappa(constants::mc/constants::mbp)));
+				    		 f(EvtBdToXsllParameters::mc/EvtBdToXsllParameters::mbp)*kappa(EvtBdToXsllParameters::mc/EvtBdToXsllParameters::mbp)));
 		};
 		
 		//form dictated by gsl_function
@@ -253,33 +258,38 @@ double EvtBToVllConstraints::getBrBToXsll() const{
 
 	utils u(C,CR);
 	
-#if 0	
-	std::cout << "U[3.0,mb]: " << u.getU(3.0,constants::mb) << std::endl;//V
-	std::cout << "C7new[3.0,mb]: " << u.getC7new(3.0,constants::mb) << std::endl;//V
-	std::cout << "C9new[3.0,mb]: " << u.getC9new(3.0,constants::mb) << std::endl;//V
-	std::cout << "C10new[3.0,mb]: " << u.getC10new(3.0,constants::mb) << std::endl;//V
-	std::cout << "mbp: " << constants::mbp << std::endl;//V
-	std::cout << "Y1[mbp*mbp*3.0]: " << qcd::Y(constants::mbp*constants::mbp*3.0,*C) << std::endl;//V
-	std::cout << "F19[3.0]: " << u.get_F_1_9(3.0, constants::mb) << std::endl;//V
-	std::cout << "F29[3.0]: " << u.get_F_2_9(3.0, constants::mb) << std::endl;//V
-	std::cout << "F89[3.0]: " << u.get_F_8_9(3.0, constants::mb) << std::endl;//V
-	std::cout << "omega9[3.0]: " << utils::omega9(3.0) << std::endl;//V
-	std::cout << "Cb1[9]: " << (*C)(9) << std::endl;//V
-	std::cout << "Ceff1[8]: " << (*C)(8) << std::endl;//V
-	std::cout << "DiffDecayRate[3.0]: " << u.getDiffDecayRate(3.0) << std::endl;//V
+#if 0
+	const double mu = C->getScaleValue();
+	const int nfl = 5;
+	std::cout << "U[3.0,mb]: " << u.getU(3.0,constants::mb) << std::endl;
+	std::cout << "C7new[3.0,mb]: " << u.getC7new(3.0,C->getScaleValue()) << std::endl;
+	std::cout << "C9new[3.0,mb]: " << u.getC9new(3.0,C->getScaleValue()) << std::endl;
+	std::cout << "C10new[3.0,mb]: " << u.getC10new(3.0,C->getScaleValue()) << std::endl;
+	std::cout << "mbp: " << EvtBdToXsllParameters::mbp << std::endl;
+	std::cout << "Y1[mbp*mbp*3.0]: " << qcd::Y(EvtBdToXsllParameters::mbp*EvtBdToXsllParameters::mbp*3.0,*C,EvtBdToXsllParameters::mb, EvtBdToXsllParameters::mc) << std::endl;//V
+	std::cout << "F19[3.0]: " << u.get_F_1_9(3.0,constants::mb) << std::endl;
+	std::cout << "F29[3.0]: " << u.get_F_2_9(3.0,constants::mb) << std::endl;
+	std::cout << "F89[3.0]: " << u.get_F_8_9(3.0,constants::mb) << std::endl;
+	std::cout << "omega9[3.0]: " << utils::omega9(3.0) << std::endl;
+	std::cout << "omega7[3.0]: " << utils::omega7(3.0,mu) << std::endl;
+	std::cout << "Cb1[9]: " << (*C)(9) << std::endl;
+	std::cout << "Ceff1[8]: " << (*C)(8) << std::endl;
+	std::cout << "DiffDecayRate[3.0]: " << u.getDiffDecayRate(3.0) << std::endl;
+	std::cout << "mu: " << mu << std::endl;//V
+	std::cout << "alphas[mu,nfl]: " << qcd::alpha_s(mu,nfl) << std::endl; 
 #endif	
 	
 	double result = 0;
 	double error = 0;
-	const int nDivisions = 100;
-	const double accuracyGoal = 1e-3;
+	const int nDivisions = 200;
+	const double accuracyGoal = 1e-6;
 
 	gsl_function F;
 	F.function = &utils::integralFunction;
 	F.params = &u;
 
-	const double sMin = q2min/(constants::mbp*constants::mbp);
-	const double sMax = q2max/(constants::mbp*constants::mbp);
+	const double sMin = q2min/(EvtBdToXsllParameters::mbp*EvtBdToXsllParameters::mbp);
+	const double sMax = q2max/(EvtBdToXsllParameters::mbp*EvtBdToXsllParameters::mbp);
 	
 	gsl_integration_workspace* w = gsl_integration_workspace_alloc(nDivisions);
 	const int intCode = gsl_integration_qag(&F, sMin, sMax, 0, accuracyGoal,

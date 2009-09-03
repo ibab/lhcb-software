@@ -1,4 +1,3 @@
-#include "EvtGenModels/EvtBToVllConstants.hh"
 #include "EvtGenBase/EvtMathematicaFn.hh"
 #include "EvtGenModels/EvtBToVllQCDUtils.hh"
 
@@ -68,11 +67,11 @@ EvtComplex qcd::h(const double& s, const double& mq, const double& mu){
 }
 
 //Used for C9_eff
-EvtComplex qcd::Y(const double& s, const WilsonCoefficients<EvtComplex>& C){
+EvtComplex qcd::Y(const double& s, const WilsonCoefficients<EvtComplex>& C, const double mb, const double mc){
 	const double mu = C.getScaleValue();
 	//eqn 10 of hep-ph/0106067
-	const double mbp = mb_pole(constants::mb);
-	return (h(s,constants::mc, mu)*( (3*C(1)) + C(2) + (3*C(3)) + C(4) + (3*C(5)) + C(6))) - 
+	const double mbp = mb_pole(mb);
+	return (h(s,mc, mu)*( (3*C(1)) + C(2) + (3*C(3)) + C(4) + (3*C(5)) + C(6))) - 
 		(0.5*h(s,mbp,mu)*((4*(C(3) + C(4))) + (3*C(5)) + C(6))) - (0.5*h(s,0.0,mu)*(C(3) + (3*C(4)))) + 
 		((2/9.)*(((2/3.)*C(3)) + (2*C(4)) + ((16/3.)*C(5)) ));
 	

@@ -12,6 +12,15 @@
 extern int GSL_ERROR_HANDLER_CALLED;//nastly global variable
 void debug_handler(const char* reason, const char* file, int line, int gsl_errno);
 
+struct EvtBdToXsllParameters{
+public:
+	//values used just for this calculation
+	static const double mb;
+	static const double mbp;
+	static const double mc;
+};
+
+
 class EvtBToVllConstraints{
 
 public:	
