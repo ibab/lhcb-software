@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v1r6 2009-09-03 ==========================
 ! 2009-09-03 - Mark Tobin
  - Modified STSummaryMonitor and STErrorMonitor to always book histograms 
  used in Summary tab of Histogram presenter.
