@@ -4,6 +4,9 @@
 !--------------------------------------------------------------------------
 
 !=========================  VeloDAQ v4r8 2009-09-03 =======================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file src/VeloDAQ_dll.cpp
+
 ! 2009-08-31 - Kurt Rinnert
  - fixed compiler warnings in DecodePileUpData
 
