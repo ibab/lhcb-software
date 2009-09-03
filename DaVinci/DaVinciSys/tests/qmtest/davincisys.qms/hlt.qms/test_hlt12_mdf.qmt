@@ -10,14 +10,14 @@
 findReferenceBlock("""
 Hlt1Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |     10000 |       9108 |(  91.0800 +- 0.285032 )%|   -------   |   -------   |
+ |*"#accept"                                       |     10000 |       9096 |(  90.9600 +- 0.286754 )%|   -------   |   -------   |
  | "#errors"                                       |     10000 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
 Hlt2Global                                                  SUCCESS Number of counters : 3
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |       140 |          2 |(  1.42857 +- 1.00291  )%|   -------   |   -------   |
- | "#errors"                                       |       140 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
+ |*"#accept"                                       |       128 |         52 |(  40.6250 +- 4.34104  )%|   -------   |   -------   |
+ | "#errors"                                       |       128 |          0 |     0.0000 |     0.0000 |      0.0000 |      0.0000 |
 """,  signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>

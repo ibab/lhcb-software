@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-Effective.py,v 1.1 2009-08-10 15:08:02 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-Effective.py,v 1.2 2009-09-03 10:38:04 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -19,7 +19,7 @@ importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = 500                         # Number of events
+DaVinci().EvtMax = 200                         # Number of events
 DaVinci().SkipEvents = 0                       # Events to skip
 DaVinci().PrintFreq  = 100                     # Print frequency
 DaVinci().DataType = "DC06"                    # Default is "DC06"
