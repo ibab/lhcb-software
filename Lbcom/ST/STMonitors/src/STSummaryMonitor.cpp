@@ -1,4 +1,4 @@
-// $Id: STSummaryMonitor.cpp,v 1.2 2009-03-25 09:39:15 jvantilb Exp $
+// $Id: STSummaryMonitor.cpp,v 1.3 2009-09-03 10:23:14 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,6 +9,9 @@
 
 // STTELL1Event
 #include "Event/STSummary.h"
+
+// AIDA
+#include "AIDA/IHistogram1D.h"
 
 // local
 #include "STSummaryMonitor.h"
@@ -45,7 +48,12 @@ StatusCode STSummaryMonitor::initialize()
   // Initialize ST::HistoAlgBase
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;  
-  
+
+  // Book histograms
+  m_1d_pcn = book1D("pcn", "PCN distribution", 0, m_pipeLineSize, m_pipeLineSize );
+  m_1d_errors = book1D("errors", "Error Info in Summary", 0., c_nErrorBins, c_nErrorBins);
+  m_1d_dataSize = book1D("dataSize", "Data size (kB) per event", 0, 500 , 250);
+
   return StatusCode::SUCCESS;
 }
 
@@ -64,32 +72,24 @@ StatusCode STSummaryMonitor::execute()
   // Filling the histograms
   
   // Fill PCN histogram
-  plot1D( summary->pcn(), "pcn", "PCN distribution", 0, m_pipeLineSize, 
-          m_pipeLineSize );
+  m_1d_pcn->fill( summary->pcn() );
   
   // Fill error summary histogram
-  std::string errorHistoID    = "errors";
-  std::string errorHistoTitle = "Error Info in Summary";
   if( !(summary->pcnSynch()) ) {
-    plot1D( c_binIDaSynch, errorHistoID, errorHistoTitle, 
-            0, c_nErrorBins, c_nErrorBins );
+    m_1d_errors->fill( c_binIDaSynch );
   }
   if( (summary->corruptedBanks()).size() > 0 ) {
-    plot1D( c_binIDcorrupted, errorHistoID, errorHistoTitle, 
-            0, c_nErrorBins, c_nErrorBins);
+    m_1d_errors->fill( c_binIDcorrupted );
   }
   if ( !m_suppressMissing && (summary->missingBanks()).size() > 0 ) {
-    plot1D( c_binIDmissing, errorHistoID, errorHistoTitle, 
-            0, c_nErrorBins, c_nErrorBins );
+    m_1d_errors->fill( c_binIDmissing );
   }
   if ( !m_suppressRecovered && (summary->recoveredBanks()).size() > 0 ) {
-    plot1D( c_binIDrecovered, errorHistoID, errorHistoTitle, 
-            0, c_nErrorBins, c_nErrorBins );
+    m_1d_errors->fill( c_binIDrecovered );
   }
 
   // Fill data size histogram
-  plot1D( summary->rawBufferSize()/1024, "dataSize", "Data size (kB) per event",
-          0, 500 , 250);
+  m_1d_dataSize->fill( summary->rawBufferSize()/1024 );
   
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.12 2009-09-02 17:03:30 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.13 2009-09-03 10:23:14 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -126,7 +126,7 @@ StatusCode ST::STClusterMonitor::initialize() {
 //=============================================================================
 StatusCode ST::STClusterMonitor::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  if(m_debug) debug() << "==> Execute" << endmsg;
   counter("Number of events") += 1; 
 
   //  std::cout << "Counter: " << counter("Number of events").nEntries() << std::endl;
@@ -142,7 +142,7 @@ StatusCode ST::STClusterMonitor::execute() {
 //=============================================================================
 StatusCode ST::STClusterMonitor::finalize() {
 
-  debug() << "==> Finalize" << endmsg;
+  if(m_debug) debug() << "==> Finalize" << endmsg;
 
   return ST::HistoAlgBase::finalize(); 
 }
@@ -161,6 +161,7 @@ void ST::STClusterMonitor::monitorClusters() {
   //  std::cout << counter("Number of events").nEntries() << ": BCID: " << BCID << std::endl;
 
   // Check location exists
+  if(m_debug) debug() << "monitorClusters" << endmsg;
   if(exist<LHCb::STClusters>(m_clusterLocation)){
     m_nClustersPerTELL1.resize(m_nTELL1s,0);
     LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.6 2009-08-04 13:52:39 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.7 2009-09-03 10:23:14 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,9 @@
 
 // Boost
 #include "boost/lexical_cast.hpp"
+
+// AIDA
+#include "AIDA/IHistogram1D.h"
 
 // local
 #include "STErrorMonitor.h"
@@ -55,6 +58,9 @@ StatusCode STErrorMonitor::initialize()
   // Get the maximum number of Tell1s to determine number of histogram bin
   m_maxTell1s = (this->readoutTool())->SourceIDToTELLNumberMap().size();
 
+  // Book histogram
+  m_1d_errorBanks = book1D("Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
+
   return StatusCode::SUCCESS;
 }
 
@@ -82,7 +88,7 @@ StatusCode STErrorMonitor::execute()
     unsigned int tellNum = (this->readoutTool())->SourceIDToTELLNumber(sourceID);
     
     // Plot the number of error banks versus sequential tell number
-    plot1D(tellNum, "Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
+    m_1d_errorBanks->fill(tellNum);
 
     if ( !m_expertHisto ) continue;
 

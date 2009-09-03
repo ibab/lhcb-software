@@ -1,4 +1,4 @@
-// $Id: STSummaryMonitor.h,v 1.2 2009-03-25 09:39:15 jvantilb Exp $
+// $Id: STSummaryMonitor.h,v 1.3 2009-09-03 10:23:14 mtobin Exp $
 #ifndef STSummaryMonitor_H
 #define STSummaryMonitor_H 1
 
@@ -62,6 +62,11 @@ private:
 
   /// Length of the beetle pipeline
   int m_pipeLineSize;
+
+  // Book histograms for online monitoring
+  AIDA::IHistogram1D* m_1d_pcn;
+  AIDA::IHistogram1D* m_1d_errors;
+  AIDA::IHistogram1D* m_1d_dataSize;
 
 };
 
