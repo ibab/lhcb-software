@@ -4,6 +4,10 @@
 ! Purpose     : Package simulating the RICH DAQ system and data format
 !-----------------------------------------------------------------------------
 
+!========================== RichDAQ v3r25 2009-09-03 =========================
+! 2009-09-03 - Marco Cattaneo
+ - Remove obsolete file RichDAQ_dll.cpp
+
 ! 2009-08-07 - Chris Jones
  - Fix decoding bug for Alice ZS data.
 
