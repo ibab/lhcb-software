@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+!======================= PackedEvent v3r6 2009-09-03 =========================
+! 2009-09-03 - Marco Cattaneo
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
+
 ! 2009-09-01 - Olivier Callot
  - Remove HitPattern from PackedTrack
 
