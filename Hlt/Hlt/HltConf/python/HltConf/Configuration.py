@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.116 2009-08-31 10:03:28 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.117 2009-09-03 11:15:42 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -34,6 +34,7 @@ class HltConf(LHCbConfigurableUser):
                 , "EnableHltVtxReports"          : True
                 , "EnableHltRoutingBits"         : True
                 , "EnableLumiEventWriting"       : False
+                , 'RequireL0ForEndSequence'     : True
                 , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
                                                           # (only matters if EnablelumiEventWriting = True)
@@ -403,6 +404,11 @@ class HltConf(LHCbConfigurableUser):
                                       , bankKiller( BankTypes=[ 'ODIN','HltLumiSummary','HltRoutingBits','DAQ' ],  DefaultIsKill=True )
                                       ])
                           ] 
+        if self.getProp( 'RequireL0ForEndSequence') :
+            from Configurables import LoKi__L0Filter    as L0Filter
+            from HltLine.HltDecodeRaw import DecodeL0DU
+            L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION" )])
+            EndMembers.insert(0,  L0accept )
 ##################################################################################
     def __apply_configuration__(self):
         """

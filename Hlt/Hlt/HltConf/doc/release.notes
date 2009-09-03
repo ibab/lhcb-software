@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.332 2009-09-03 09:43:31 graven Exp $ 
+! $Id: release.notes,v 1.333 2009-09-03 11:15:42 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v4r3 2009-09-03 ===================
+! 2009-09-03 - Gerhard Raven
+ - add by default an L0 filter to endsequence & and add option to 
+   bypass this
+
 ! 2009-09-03 - Gerhard Raven
  - re-enable calo reconstruction in Hlt2, move v4r3 tag
 
