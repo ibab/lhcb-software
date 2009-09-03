@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.125 2009-09-02 15:16:06 jpalac Exp $
+# $Id: requirements,v 1.126 2009-09-03 12:56:14 jpalac Exp $
 package AnalysisSys
 version v3r9
 
@@ -29,7 +29,7 @@ use  DecayTreeTuple             v2r4     Phys   # Rob Lambert
 ####################################################################
 #
 use PhysSelPython               v2r1     PhysSel
-use AnalysisPython              v1r2     Phys
+use AnalysisPython              v1r2p1   Phys
 #
 # Stripping
 #
