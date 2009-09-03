@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -245,7 +245,7 @@ class Hlt2Conf(LHCbConfigurableUser):
         if self.getProp('WithMC'):
               importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
         # set Hlt2 PID
-# FIXME #        self.configureCalo()
+        self.configureCalo()
         # set Hlt2 PID
         self.configurePID()
         # lines

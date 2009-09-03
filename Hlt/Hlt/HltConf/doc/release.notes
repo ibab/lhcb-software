@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.331 2009-09-02 13:52:50 pkoppenb Exp $ 
+! $Id: release.notes,v 1.332 2009-09-03 09:43:31 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v4r3 2009-09-03 ===================
+! 2009-09-03 - Gerhard Raven
+ - re-enable calo reconstruction in Hlt2, move v4r3 tag
+
 ! 2009-09-02 - Patrick Koppenburg
  - Fix typo in warning in ThresholdUtils
 
-!========================== HltConf v4r3 2009-08-31 ===================
 ! 2009-08-31 - Plamen Hopchev
  - in HltInit.py add the Hlt1BeamGasCrossingForcedRZRecoDecision 
 
