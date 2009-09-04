@@ -7,7 +7,6 @@ branches doc cmt
 # Don't forget DaVinci itself
 #=======================================================
 use  DaVinci                 	v24r2   Phys  
-use  CaloAssociators            v6r8p1  Calo
 
 alias DaVinciTests "cmt qmtest_run"
 
