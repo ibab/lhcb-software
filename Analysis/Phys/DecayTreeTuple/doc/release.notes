@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-09-04 - Rob Lambert
+ - TupleToolAngles bugfix. bug 55236
+   Angles now calculated with respect to mother.
+   To revert to old behavior set WRTMother=False
+
 ! 2009-08-20 - Vanya BELYAEV
 
  -  src/TupleToolVtxIsoln.cpp

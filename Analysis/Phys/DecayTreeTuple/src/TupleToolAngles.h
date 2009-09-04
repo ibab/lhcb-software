@@ -1,4 +1,4 @@
-// $Id: TupleToolAngles.h,v 1.2 2009-02-17 18:07:31 pkoppenb Exp $
+// $Id: TupleToolAngles.h,v 1.3 2009-09-04 12:28:43 rlambert Exp $
 #ifndef TUPLETOOLANGLES_H 
 #define TUPLETOOLANGLES_H 1
 
@@ -15,11 +15,14 @@
  *  Fill MC Particle with decay angle in mother frame
  *
  * - head_CosTheta : angle in mother's frame
+ * - if WRTMother is false, will calculate angle in frame of top of tree
  * 
  * \sa MCTupleToolAngles, DecayTreeTuple, MCDecayTreeTuple
  * 
  *  @author Patrick Koppenburg
  *  @date   2009-01-21
+ *  @author R. Lambert
+ *  @date   2009-09-04
  */
 
 class TupleToolAngles : public GaudiTool, virtual public IParticleTupleTool {
@@ -40,6 +43,11 @@ protected:
 
 private:
 #include "Theta.icpp"
+
+  const LHCb::Particle* findMother( const LHCb::Particle* top
+                              , const Particle* P ) const ;
+  
+  bool m_wrtMother;
 private:
 
 };

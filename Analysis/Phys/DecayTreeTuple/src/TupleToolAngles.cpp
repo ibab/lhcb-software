@@ -1,4 +1,4 @@
-// $Id: TupleToolAngles.cpp,v 1.3 2009-02-17 18:07:31 pkoppenb Exp $
+// $Id: TupleToolAngles.cpp,v 1.4 2009-09-04 12:28:43 rlambert Exp $
 // Include files 
 #include "gsl/gsl_sys.h"
 
@@ -32,9 +32,12 @@ DECLARE_TOOL_FACTORY( TupleToolAngles );
 TupleToolAngles::TupleToolAngles( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_wrtMother(0)
 {
   declareInterface<IParticleTupleTool>(this);
+  declareProperty("WRTMother",m_wrtMother=true,
+		  "Turn false to fill angles with respect to top of tree");
 }
 //=============================================================================
 // Destructor
@@ -52,13 +55,14 @@ StatusCode TupleToolAngles::initialize(){
 //=============================================================================
 // Fill
 //=============================================================================
-StatusCode TupleToolAngles::fill( const LHCb::Particle* mother
+StatusCode TupleToolAngles::fill( const LHCb::Particle* top
                                      , const LHCb::Particle* part
                                      , const std::string& head
                                      , Tuples::Tuple& tuple ){
   
   bool test = true;
-
+  const LHCb::Particle* mother=top;
+  if(m_wrtMother) mother=findMother(top,part);
   if ( 0==part || 0==mother || part==mother ) return StatusCode::SUCCESS ;
   double cosT = cosTheta(mother->momentum(), part->momentum() );
   // fill the tuple:
@@ -67,4 +71,32 @@ StatusCode TupleToolAngles::fill( const LHCb::Particle* mother
                                      << part->particleID().pid() << " " << part->momentum() << endmsg ;
   return StatusCode(test) ;
   
+}
+//=============================================================================
+// Fill
+//=============================================================================
+
+const LHCb::Particle* TupleToolAngles::findMother( const LHCb::Particle* top
+						 , const Particle* P ) const 
+{
+  if( top == P || top->isBasicParticle() ) return 0;
+
+  const SmartRefVector< LHCb::Particle >& dau = top->daughters ();
+  if( dau.empty() ) return 0;
+
+  SmartRefVector< LHCb::Particle >::const_iterator it;
+  for( it = dau.begin(); dau.end()!=it; ++it ){
+    if( P == *it ){ // I found the daughter
+      return top;
+    }
+  }
+  
+  // vertex not yet found, get deeper in the decay:
+  for( it = dau.begin(); dau.end()!=it; ++it ){
+    if( P != *it && !(*it)->isBasicParticle() ){
+      const LHCb::Particle* tm = findMother( *it, P );
+      if( tm ) return tm;
+    }
+  }
+  return 0;
 }
