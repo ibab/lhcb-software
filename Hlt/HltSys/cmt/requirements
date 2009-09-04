@@ -1,5 +1,5 @@
 package HltSys
-version v6r7
+version v6r8
 
 branches cmt doc 
 
@@ -49,24 +49,6 @@ use Fidel               v1r3p1  Phys  # Sara Furcas
 
 use LoKiTrigger         v9r5   Phys   # Vanya Belyaev
 use TisTosTobbing       v3r4   Phys   # Tomasz Skwarnicki  
-
-#=============================================================
-# Stuff added really temporarily...
-#=============================================================
-# From LHCB:
-use CaloDAQ             v4r12p1   Calo
-use CaloInterfaces      v7r14   Calo
-use CaloKernel          v6r0    Calo
-use CaloUtils           v8r6    Calo
-use LHCbKernel          v11r6   Kernel
-# From REC:
-use CaloPIDs            v5r0    Calo
-use CaloReco            v5r0    Calo
-use GlobalReco          v6r25   Rec
-# From LBCOM:
-use CaloTools           v5r10   Calo
-
-
 
 # Declare this as a container package
 apply_pattern container_package
