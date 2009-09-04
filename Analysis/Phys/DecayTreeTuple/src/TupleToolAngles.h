@@ -1,4 +1,4 @@
-// $Id: TupleToolAngles.h,v 1.3 2009-09-04 12:28:43 rlambert Exp $
+// $Id: TupleToolAngles.h,v 1.4 2009-09-04 12:40:11 rlambert Exp $
 #ifndef TUPLETOOLANGLES_H 
 #define TUPLETOOLANGLES_H 1
 
@@ -45,7 +45,7 @@ private:
 #include "Theta.icpp"
 
   const LHCb::Particle* findMother( const LHCb::Particle* top
-                              , const Particle* P ) const ;
+                              , const LHCb::Particle* P ) const ;
   
   bool m_wrtMother;
 private:
