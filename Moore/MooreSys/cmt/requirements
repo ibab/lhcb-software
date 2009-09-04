@@ -8,8 +8,6 @@ branches doc cmt
 #=======================================================
 
 use  Moore                  v7r4    Hlt
-use HltGlobalMonitor    v2r6    Hlt
-use TCKUtils                v1r3    Hlt
 
 
 
