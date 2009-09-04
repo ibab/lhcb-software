@@ -5,7 +5,7 @@
  *  Header file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.h,v 1.4 2008-08-27 15:08:16 jonrob Exp $
+ *  $Id: RichRecEventSelectionAlg.h,v 1.5 2009-09-04 10:36:24 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   10/01/2003
@@ -56,17 +56,19 @@ namespace Rich
 
     private:
 
-      int m_minPixels; ///< Minimum number of RICH pixels
-      
-      int m_minRings;  ///< Minimum number of rings
-
-      int m_minTracks; ///< Minimum number of tracks
-
       std::string m_ringLoc; ///< Location of RichRecRings in TES
 
-      unsigned int m_minHPDsWithHits; ///< The minimum number of HPDs to have more that 'MinHPDHits' in them
-      
+      unsigned int m_minPixels; ///< Minimum number of RICH pixels
+      unsigned int m_minRings;  ///< Minimum number of rings
+      unsigned int m_minTracks; ///< Minimum number of tracks
+      unsigned int m_minHPDsWithHits; ///< The minimum number of HPDs to have more that 'MinHPDHits' in them      
       unsigned int m_minHPDHits; ///< The minimum number of hits to have in at least 'MinHPDsWithHits' HPDs
+
+      unsigned int m_maxPixels; ///< Maximum number of RICH pixels
+      unsigned int m_maxRings;  ///< Maximum number of rings
+      unsigned int m_maxTracks; ///< Maximum number of tracks
+      unsigned int m_maxHPDsWithHits; ///< The maximum number of HPDs to have more that 'MinHPDHits' in them
+      unsigned int m_maxHPDHits; ///< The maximum number of hits to have in at least 'MinHPDsWithHits' HPDs
 
     };
 

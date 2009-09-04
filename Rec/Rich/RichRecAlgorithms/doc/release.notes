@@ -4,6 +4,9 @@
 ! Purpose     : Common reconstruction algorithms for the RICH
 !-----------------------------------------------------------------------------
 
+! 2009-09-04 - Chris Jones
+ - Improve event selection algorithm by including both Min and Max cuts
+
 !===================== RichRecAlgorithms v2r16p1 2009-09-03 ==================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichRecAlgorithms_dll.cpp

@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : Rich::Rec::EventSelectionAlg
  *
  *  CVS Log :-
- *  $Id: RichRecEventSelectionAlg.cpp,v 1.6 2008-10-16 09:42:35 cattanem Exp $
+ *  $Id: RichRecEventSelectionAlg.cpp,v 1.7 2009-09-04 10:36:24 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -23,12 +23,18 @@ using namespace Rich::Rec;
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( EventSelectionAlg );
 
+namespace
+{
+  static const unsigned int s_large_number = 999999;
+}
+
 // Standard constructor, initializes variables
 EventSelectionAlg::EventSelectionAlg( const std::string& name,
                                       ISvcLocator* pSvcLocator )
   : Rich::Rec::AlgBase ( name, pSvcLocator )
 {
-  declareProperty( "MinPixels", m_minPixels = 10,
+
+  declareProperty( "MinPixels", m_minPixels = 0,
                    "The minimum number of total RICH hits" );
   declareProperty( "MinRings",  m_minRings  = 0,
                    "The minimum number of rings at the given TES location" );
@@ -38,6 +44,18 @@ EventSelectionAlg::EventSelectionAlg( const std::string& name,
                    "The minimum number of HPDs to have more that 'MinHPDHits' in them" );
   declareProperty( "MinHPDHits", m_minHPDHits = 0,
                    "The minimum number of hits to have in at least 'MinHPDsWithHits' HPDs");
+
+  declareProperty( "MaxPixels", m_maxPixels = s_large_number,
+                   "The maximum number of total RICH hits" );
+  declareProperty( "MaxRings",  m_maxRings  = s_large_number,
+                   "The maximum number of rings at the given TES location" );
+  declareProperty( "MaxTracks", m_maxTracks = s_large_number,
+                   "The maximum number of tracks"  );
+  declareProperty( "MaxHPDsWithHits",  m_maxHPDsWithHits = s_large_number,
+                   "The maximum number of HPDs to have more that 'MinHPDHits' in them" );
+  declareProperty( "MaxHPDHits", m_maxHPDHits = s_large_number,
+                   "The maximum number of hits to have in at least 'MinHPDsWithHits' HPDs");
+
   declareProperty( "RingLocation", m_ringLoc = "Rec/Rich/Markov/RingsIsolated",
                    "The TES location in which to count the number of ring objects" );
 }
@@ -55,8 +73,10 @@ StatusCode EventSelectionAlg::execute()
   {
     if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
     // enough hits overall ?
-    OK = ( (int)richPixels()->size() >= m_minPixels );
-    if ( OK && m_minHPDsWithHits > 0 )
+    const unsigned int nPixTotal = richPixels()->size();
+    OK = ( nPixTotal >= m_minPixels && nPixTotal <= m_maxPixels );
+    // hits per HPD
+    if ( OK && ( m_minHPDsWithHits > 0 || m_minHPDsWithHits < s_large_number ) )
     {
       Rich::Map<LHCb::RichSmartID,unsigned int> hpdCount;
       std::set<LHCb::RichSmartID> selectedHPDs;
@@ -65,14 +85,17 @@ StatusCode EventSelectionAlg::execute()
             iP != richPixels()->end(); ++iP )
       {
         // count hits in each HPD
-        if ( ++hpdCount[(*iP)->hpd()] > m_minHPDHits ) selectedHPDs.insert((*iP)->hpd());
+        unsigned int & count = ++hpdCount[(*iP)->hpd()];
+        if ( count > m_minHPDHits && 
+             count < m_maxHPDHits  ) selectedHPDs.insert((*iP)->hpd());
       }
-      OK = ( selectedHPDs.size() >= m_minHPDsWithHits );
+      OK = ( selectedHPDs.size() >= m_minHPDsWithHits && 
+             selectedHPDs.size() <= m_maxHPDsWithHits );
     }
   }
 
   // rings
-  if ( OK && m_minRings > 0 )
+  if ( OK && ( m_minRings > 0 || m_maxRings < s_large_number ) )
   {
     if ( !exist<LHCb::RichRecRings>(m_ringLoc) )
     {
@@ -84,19 +107,19 @@ StatusCode EventSelectionAlg::execute()
       // get the rings
       const LHCb::RichRecRings * rings = get<LHCb::RichRecRings>(m_ringLoc);
       // enough rings ?
-      OK = ( (int)rings->size() >= m_minRings );
+      OK = ( rings->size() >= m_minRings && rings->size() <= m_maxRings );
     }
   }
 
   // tracks
-  if ( OK && m_minTracks > 0 )
+  if ( OK && ( m_minTracks > 0 || m_maxTracks < s_large_number ) )
   {
     if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
     // enough tracks ?
-    OK = ( (int)richTracks()->size() >= m_minTracks );
+    OK = ( richTracks()->size() >= m_minTracks && richTracks()->size() <= m_maxTracks );
   }
 
-  // set if this events is selected
+  // set if this events is selected or not
   setFilterPassed(OK);
 
   return StatusCode::SUCCESS;
