@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.44 2009-09-01 15:09:44 wouter Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.45 2009-09-04 12:15:02 wouter Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -297,7 +297,7 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   }
   
   log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
-  log << MSG::DEBUG << "Scale factor updated: "    << m_scaleFactor << endmsg;
+  log << MSG::INFO << "Map scaled by factor "    << m_scaleFactor << endmsg;
   return sc ;
 }
 

@@ -21,7 +21,7 @@ struct GridQuadrant
   
 
 MagneticFieldGridReader::MagneticFieldGridReader(IMessageSvc& msgsvc)
-  : m_msg( &msgsvc, "MagneticFieldGridReader" )
+  : m_msg( &msgsvc, "MagneticFieldSvc" )
 {
 }
 
@@ -146,7 +146,7 @@ void MagneticFieldGridReader::fillGridFromQuadrants( GridQuadrant* quadrants,
   grid.m_min_FL[1] = - ((Nyquad-1) * grid.m_Dxyz[1]) ;
   grid.m_min_FL[2] = quadrants[0].zOffset ;
   
-  m_msg << MSG::INFO  
+  m_msg << MSG::DEBUG 
 	<< "Field grid , nbins x,y,z  : (" << grid.m_Nxyz[0] << "," << grid.m_Nxyz[1] << "," <<  grid.m_Nxyz[2] << ")" << std::endl
 	<< "dx, xmin, xmax: "
 	<< "(" << grid.m_Dxyz[0] << "," << grid.m_min_FL[0] << "," << grid.m_min_FL[0] + (grid.m_Nxyz[0]-1) * grid.m_Dxyz[0] << ")" << std::endl 
