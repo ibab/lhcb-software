@@ -158,7 +158,8 @@ bool DimInfoMonObject::loadMonObject(){
 }
 
 MonObject *DimInfoMonObject::monObject() {
-  return m_monObject;
+ if (m_monObject) return m_monObject;
+ else return 0;
 }
 
 

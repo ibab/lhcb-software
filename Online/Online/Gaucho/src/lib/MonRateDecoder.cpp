@@ -46,6 +46,7 @@ MonRateDecoder::~MonRateDecoder(){
   }
   if (procexists) delete m_dimSvcNumberOfProcess;
   if (countexists) delete m_dimSvcNumberOfCounters;
+  if (TCKexists) delete m_dimSvcTCK;
   m_dimSvcRate.clear();
 }
 
