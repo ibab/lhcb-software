@@ -3,6 +3,8 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+! 2009-09-04 - Alessio sarti
+ - Added Inclusive Jpsi selection presented by b G.Lanfranchi last stripping meeting.
 
 ! 2009-09-01 - Anton Poluektov
  - Added StrippingBu2hhh selection by Jussara Miranda and StrippingBd2JpsiKSBiased

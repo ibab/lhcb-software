@@ -42,6 +42,7 @@ importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingRICHLambdaNoPID.py")
 
 # Muon ID calibration selection
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingMuIDCalib.py")
+importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingJpsiInc.py")
 
 # LiMing's Bs -> Jpsi f0 selection
 importOptions( "$STRIPPINGSELECTIONSROOT/options/StrippingBs2Jpsif0.py")
