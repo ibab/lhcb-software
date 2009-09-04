@@ -22,5 +22,5 @@ StripBu2hhh.MotherCut = "(BPVTRGPOINTINGWPT<.12)&(VFASPF(VCHI2)<7) & (BPVVD>6) &
 line = StrippingLine('Bu2hhhLine'
                , prescale = 1
                ,  algos = [ StripBu2hhh ]
-               ,  stream = 'BExclusive'
+               ,  stream = 'Hadron'
                )

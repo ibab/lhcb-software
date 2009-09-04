@@ -61,5 +61,5 @@ Bd2JpsiKstDetRobust.MotherCut = "(MIPDV(PRIMARY)<0.06*mm)"
 Bd2JpsiKstDetRobustLine = StrippingLine('Bd2JpsiKstDetRobustLine'
                , prescale = 1
                , algos = [DetachedRobustDiMuon, RobustTightMassKst2Kpi, Bd2JpsiKstDetRobust]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )

@@ -1,8 +1,8 @@
-# $Id: StrippingBd2DstarMuNu.py,v 1.2 2009-07-30 14:41:34 gcowan Exp $
+# $Id: StrippingBd2DstarMuNu.py,v 1.3 2009-09-04 16:02:55 poluekt Exp $
 
 __author__ = 'Greig Cowan, Marta Calvi'
 __date__ = '30/07/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bd->Dstar mu nu stripping selection using LoKi::Hybrid and python
@@ -79,5 +79,5 @@ Bd2DstarMu.MotherCut = "  (VFASPF(VCHI2) < 15.)"\
 Bd2DstarMuLine = StrippingLine('Bd2DstarMuNuLine'
                , prescale = 1
                , algos = [Bd2DstarMu]
-               , stream = 'BExclusive'
+               , stream = 'Dstar'
                )

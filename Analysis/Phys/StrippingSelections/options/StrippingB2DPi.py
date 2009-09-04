@@ -178,7 +178,7 @@ line = StrippingLine('B2DX'
                , prescale = 1.0
                ,  algos = [ B2DXStrippingNumTracksGEC, B2DXStrippingSequence ]
                #,  algos = [ B2DXStrippingSequence ]
-               ,  stream = 'BExclusive'
+               ,  stream = 'Hadron'
                , postscale = 0.05
                )
 
@@ -186,5 +186,5 @@ line = StrippingLine('B2DXSignal'
                , prescale = 1.
                #,  algos = [ B2DXSignalStrippingSequence ]
                ,  algos = [ B2DXStrippingNumTracksGEC, B2DXSignalStrippingSequence ]
-               ,  stream = 'BExclusive'
+               ,  stream = 'Hadron'
                )

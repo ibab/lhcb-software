@@ -67,7 +67,7 @@ filter_Bd2KstarMuMu_10Hz.Code=( "(INTREE((ABSID=='K+') & (TRCHI2DOF < 36))) & "+
 Bd2KstarMuMu_10Hz_line = StrippingLine('Bd2KstarMuMu_10Hz'
                , prescale = 1
                , algos = [ Strip_loose_Bd2KstarMuMu, filter_Bd2KstarMuMu_10Hz ]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )
 #
 # Filter the Bd for the ~2Hz stripping selection

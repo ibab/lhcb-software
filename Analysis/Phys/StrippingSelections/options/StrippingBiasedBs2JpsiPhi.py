@@ -48,6 +48,6 @@ BiasedBs2JpsiPhi.MotherCut = "(VFASPF(VCHI2/VDOF) < 15) & (BPVDIRA>0.9995) & (BP
 Bs2JpsiPhiBiasedLine = StrippingLine('Bs2JpsiPhiBiasedLine'
                                      , prescale = 1
                                      , algos = [JpsiFilter,Phi2KK ,BiasedBs2JpsiPhi ]
-                                     , stream = 'BExclusive'
+                                     , stream = 'Bmuon'
                                      )
 

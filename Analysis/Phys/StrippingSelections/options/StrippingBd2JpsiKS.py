@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.3 2009-06-02 13:59:13 poluekt Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.4 2009-09-04 16:02:55 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bd->JpsiKS stripping selection using LoKi::Hybrid and python
@@ -62,5 +62,5 @@ Bd2JpsiKS.MotherCut = "(VFASPF(VCHI2/VDOF) < 15.) & (BPVIPCHI2() < 25.)"
 Bd2JpsiKSLine = StrippingLine('Bd2JpsiKSLine'
                , prescale = 1
                , algos = [KSLLForBd2Jpsi2MuMuKS, KSDDForBd2Jpsi2MuMuKS, Bd2JpsiKS]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )

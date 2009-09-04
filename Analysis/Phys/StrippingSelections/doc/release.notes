@@ -3,6 +3,13 @@
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2009-09-04 - Anton Poluektov
+ - Modifications for MC09 processing
+   * Rearranged streams (currently 5 streams: Hadron, Bmuon, Jpsi, Dstar, Lambda)
+   * 0.1 prescale factor for topo selection
+   * tests/TestStrippingDST.py - job for DST writing
+
 ! 2009-09-04 - Alessio sarti
  - Added Inclusive Jpsi selection presented by b G.Lanfranchi last stripping meeting.
 

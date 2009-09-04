@@ -46,5 +46,5 @@ Bd2JpsiKstDet.MotherCut = "(MIPCHI2DV(PRIMARY)<25)"
 Bd2JpsiKstDetLine = StrippingLine('Bd2JpsiKstDetLine'
                , prescale = 1
                , algos = [Bd2JpsiKstDet]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )

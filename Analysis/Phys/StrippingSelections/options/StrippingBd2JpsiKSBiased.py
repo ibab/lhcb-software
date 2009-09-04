@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKSBiased.py,v 1.1 2009-09-01 11:41:11 poluekt Exp $
+# $Id: StrippingBd2JpsiKSBiased.py,v 1.2 2009-09-04 16:02:55 poluekt Exp $
 
 __author__ = 'Fernando Rodrigues'
 __date__ = '28/08/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiKS biased stripping selection using LoKi::Hybrid and python
@@ -67,5 +67,5 @@ Bd2JpsiKSBiased.MotherCut = "(BPVDIRA>0.999)"
 Bd2JpsiKSBiasedLine = StrippingLine('Bd2JpsiKSBiasedLine'
                , prescale = 1
                , algos = [JpsiForBd2Jpsi2MuMuKS, KSLLForBd2Jpsi2MuMuKS, KSDDForBd2Jpsi2MuMuKS, Bd2JpsiKSBiased]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )

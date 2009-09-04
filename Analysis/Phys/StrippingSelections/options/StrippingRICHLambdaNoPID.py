@@ -1,5 +1,5 @@
 ## #####################################################################
-# $Id: StrippingRICHLambdaNoPID.py,v 1.1 2009-08-04 23:39:23 spradlin Exp $
+# $Id: StrippingRICHLambdaNoPID.py,v 1.2 2009-09-04 16:02:55 poluekt Exp $
 #
 # A stripping selection for Lambda0 -> p+ pi-
 #
@@ -34,5 +34,5 @@ RICHLambdaCombine = StrippingMember( CombineParticles
 lm_line = StrippingLine('RICHLambdaNoPID'
                         , prescale = 0.05 #For ~100 Hz -TBC
                         , algos = [ RICHLambdaCombine ]
-                        , stream = 'Dstar'
+                        , stream = 'Lambda'
                         )

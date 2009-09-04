@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKstar.py,v 1.5 2009-06-29 07:39:51 gcowan Exp $
+# $Id: StrippingBd2JpsiKstar.py,v 1.6 2009-09-04 16:02:55 poluekt Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.5 $'
+__version__ = '$Revision: 1.6 $'
 
 '''
 Bd->JpsiK* stripping selection using LoKi::Hybrid and python
@@ -48,5 +48,5 @@ Bd2JpsiKst.MotherCut = "(VFASPF(VCHI2/VDOF) < 5.) & (BPVIPCHI2() < 25.) & (PT > 
 Bd2JpsiKstLine = StrippingLine('Bd2JpsiKstLine'
                , prescale = 1
                , algos = [StdUnbiasedKst2Kpi, Bd2JpsiKst]
-               , stream = 'BExclusive'
+               , stream = 'Bmuon'
                )

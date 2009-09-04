@@ -21,5 +21,5 @@ PreselB2Charged2Body.MotherCut = "(BPVIP()<0.06) & (BPVVDSIGN>1.8) & (INTREE ( (
 line = StrippingLine('B2Charged2Body'
                , prescale = 1
                ,  algos = [ PreselB2Charged2Body ]
-               ,  stream = 'BExclusive'
+               ,  stream = 'Hadron'
                )

@@ -2,7 +2,7 @@
 
 __author__ = 'Susan Haines'
 __date__ = '20/08/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bu->D0(KSPiPi)K stripping selection using LoKi::Hybrid and python
@@ -124,11 +124,11 @@ Bu2D0K_D02KSPiPi_KSLL_Line = StrippingLine('Bu2D0K_D02KSPiPi_KSLL'
                , prescale = 1
                , algos = [KSLLForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSLL, Bu2D0K_KSLL]
                , postscale = 1
-               , stream = 'BExclusive'
+               , stream = 'Hadron'
                )
 Bu2D0K_D02KSPiPi_KSDD_Line = StrippingLine('Bu2D0K_D02KSPiPi_KSDD'
                , prescale = 1
                , algos = [KSDDForBu2D0K_D02KSPiPi, DForBu2D0K_D02KSPiPi_KSDD, Bu2D0K_KSDD]
                , postscale = 1
-               , stream = 'BExclusive'
+               , stream = 'Hadron'
                )

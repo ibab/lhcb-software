@@ -116,9 +116,10 @@ TopoStrippingTFSequence.Members += [TopoStrippingTF3BodySeq]
 TopoStrippingTFSequence.ModeOR = 1
 #Finally the line itself
 line = StrippingLine('TopologicalLine'
-               , prescale = 1.
+#               , prescale = 1.
+               , prescale = 0.1
                , algos = [StrippingKillTooManyTopoIP,TopoStrippingSequence,TopoStrippingTFSequence]
-               , stream = 'Topological'
+               , stream = 'Hadron'
                )
 '''importOptions('$HLTSELECTIONSROOT/options/Hlt2LineTopoTF2BodyDEV.py')
 importOptions('$HLTSELECTIONSROOT/options/Hlt2LineTopoTF3BodyDEV.py')

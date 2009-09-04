@@ -6,8 +6,7 @@
 #
 
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer
-from StrippingConf.StrippingLine import StrippingLine, strippingLines
+from StrippingConf.StrippingLine import StrippingLine
 from StrippingConf.Configuration import StrippingConf
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
@@ -30,16 +29,15 @@ StrippingConf().OutputType = "ETC"                    # Can be either "ETC" or "
 
 from Configurables import DaVinci, DaVinciWriteDst
 
-DaVinci().EvtMax = 5000                        # Number of events
-DaVinci().DataType = "DC06"                    # Default is "DC06"
+DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().DataType = "2008"                    # Default is "DC06"
 DaVinci().Simulation   = True                  # It is MC
 DaVinci().ETCFile = "etc.root"
-DaVinci().Simulation   = True
 DaVinci().HistogramFile = "TestStripping.root"
 
 #
 # Import input DST files (B->JpsiMuMu inclusive)
 #
-#importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
-importOptions("$STRIPPINGSELECTIONSROOT/tests/dc06_minbias.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/dc06_minbias.py")
 # importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-MinimumBiasDst.py")

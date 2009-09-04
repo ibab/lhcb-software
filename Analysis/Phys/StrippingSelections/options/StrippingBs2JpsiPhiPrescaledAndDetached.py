@@ -1,11 +1,11 @@
-# $Id: StrippingBs2JpsiPhiPrescaledAndDetached.py,v 1.1 2009-06-23 23:07:32 gcowan Exp $
+# $Id: StrippingBs2JpsiPhiPrescaledAndDetached.py,v 1.2 2009-09-04 16:02:55 poluekt Exp $
 
 '''
 Bs -> J/psi Phi prescaled and detached stripping selection
 '''
 __author__ = "Greig Cowan"
 __date__ = "2009-06-22"
-__version__ = "$Revision: 1.1 $"
+__version__ = "$Revision: 1.2 $"
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
@@ -39,7 +39,7 @@ line = StrippingLine("Bs2JpsiPhiPrescaledLine"
                      , prescale = 1.
                      , postscale = 0.1
                      , algos = [phiFilter, BsCombine]
-                     , stream = "BExclusive" 
+                     , stream = "Bmuon" 
 		    )
 
 # Now do the detached
