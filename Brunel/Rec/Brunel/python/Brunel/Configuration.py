@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.91 2009-08-29 20:41:45 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.92 2009-09-04 10:52:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf )
+                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf, CaloMoniDstConf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -18,7 +18,7 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf, CaloMoniDstConf ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
@@ -28,7 +28,7 @@ class Brunel(LHCbConfigurableUser):
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
-    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","PROTO"]
+    KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ "ProcessPhase/Init",
                         "ProcessPhase/Reco",
@@ -426,7 +426,9 @@ class Brunel(LHCbConfigurableUser):
 
         # Histograms filled both in real and simulated data cases
         if "CALO" in moniSeq :
-            importOptions('$CALOMONIDSTOPTS/CaloMonitor.opts')
+            from Configurables import GaudiSequencer
+            seq = GaudiSequencer( "MoniCALOSeq")
+            caloMoni = CaloMoniDstConf( Sequence = seq, Context = 'Offline' )
 
         if "VELO" in moniSeq :
             importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')

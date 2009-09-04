@@ -7,6 +7,8 @@ Purpose: LHCb reconstruction program
  - Changes to Configurable:
    . Add ProtoParticle monitor sequence.
    . Allow RICH expert histograms to be enabled when running without MC
+   . Use CaloMoniDstConf configurable for Calo monitoring
+   . Add CALO to KnownExpertCheckSubdets
 
  - Changes to references to reflect changes in Brunel v35r6 output:
    . fix to duplicate creation of PatVelo hit manager tools
