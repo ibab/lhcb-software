@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.40 2009-09-02 16:24:36 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.41 2009-09-04 10:38:12 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -56,8 +56,9 @@ class RichRecQCConf(RichConfigurableUser):
        ,"HistoProduce"  : True
        ,"WithMC"        : False # set to True to use MC truth
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+       ,"EventCuts"     : { }   # Event selection cuts for monitoring. Default no cuts
         }
-
+                
     ## Set the histogram and ntuple producing options
     def setHistosTupleOpts(self,mon):
         if "NTupleProduce" in mon.properties() :
@@ -119,6 +120,15 @@ class RichRecQCConf(RichConfigurableUser):
         msgSvc = getConfigurable("MessageSvc")
         msgSvc.setFatal += [ "LinkedTo::MC/Rich/Hits2MCRichOpticalPhotons",
                              "LinkedTo::MC/Particles2MCRichTracks" ]
+
+        # Event selection ?
+        if self.isPropertySet("EventCuts") :
+            from Configurables import Rich__Rec__EventSelectionAlg
+            evtSel = Rich__Rec__EventSelectionAlg("RichMoniEventSel")
+            sequence.Members += [evtSel]
+            for name,cut in self.getProp("EventCuts").iteritems() :
+                evtSel.setProp("Min"+name,cut[0])
+                evtSel.setProp("Max"+name,cut[1])
 
         # Expert Monitoring
         if self.getProp("ExpertHistos") :

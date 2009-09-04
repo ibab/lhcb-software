@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-09-04 - Chris Jones
+ - Add option to monitoring Configurable to apply custom selection of events 
+   used by the monitoring algorithms.
+
 !======================= RichRecQC v2r33 2009-09-03 ==========================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichRecQC_dll.cpp
