@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.41 2009-09-04 10:38:12 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.42 2009-09-04 14:32:39 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -206,8 +206,9 @@ class RichRecQCConf(RichConfigurableUser):
     ## standalone ring finder monitors
     def ringsMoni(self,type,sequence):
 
-        from Configurables import Rich__Rec__MC__TracklessRingMoni
-
+        from Configurables import ( Rich__Rec__MC__TracklessRingMoni,                            
+                                    Rich__Rec__RingPeakSearch )
+        
         # Activate histos in the finder algs themselves
         if self.getProp("ExpertHistos") :
             if type == "Markov" :
@@ -234,6 +235,17 @@ class RichRecQCConf(RichConfigurableUser):
         isoMoni.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
         sequence.Members += [isoMoni]
 
+        # Ring peak search
+        allSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchAll")
+        allSearch.RingLocation = "Rec/Rich/"+type+"/RingsAll"
+        sequence.Members += [allSearch]
+        bestSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchBest")
+        bestSearch.RingLocation = "Rec/Rich/"+type+"/RingsBest"
+        sequence.Members += [bestSearch]
+        isoSearch = self.createMonitor(Rich__Rec__RingPeakSearch,type+"RingPeakSearchIsolated")
+        isoSearch.RingLocation = "Rec/Rich/"+type+"/RingsIsolated"
+        sequence.Members += [isoSearch]
+        
     ## Pixel performance monitors
     def pixelPerf(self,sequence):
 
