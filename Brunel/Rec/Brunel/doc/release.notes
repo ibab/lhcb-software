@@ -3,18 +3,25 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-08-29 - Chris Jones
- - Add ProtoParticle monitor sequence.
+</PRE><H1><A NAME=v35r6>2009-09-07 Brunel v35r6</A></H1><PRE>
+ - Changes to Configurable:
+   . Add ProtoParticle monitor sequence.
+   . Allow RICH expert histograms to be enabled when running without MC
 
-! 2009-08-05 - Chris Jones
- - Allow RICH expert histograms to be enabled when running without MC
-
-! 2009-07-31 - Marco Cattaneo
- - Exclude printout of MuonID version from QMTest log file comparisons
- - Update references for:
+ - Changes to references to reflect changes in Brunel v35r6 output:
    . fix to duplicate creation of PatVelo hit manager tools
    . all Rich monitors booked at initialisation
- - Increment version to v35r6
+   . MagneticFieldSvc now uses a MagneticFieldGrid object
+   . Reorganisation of Track fitting and extrapolation
+   . Changes to ExtraInfo handling on tracks
+   . Reorganisation of Calo sequences in new Calo configurable
+   . Reorganisation of ProtoParticle sequence
+   . Addition of RichHotPixels monitor
+   . Addition of ProtoParticle monitor sequence.
+   . New STClusterMonitor histograms
+
+ - Changes to tests:
+   . Exclude printout of MuonID version from QMTest log file comparisons
 
 </PRE><H1><A NAME=v35r5>2009-07-30 Brunel v35r5</A></H1><PRE>
  - Changes to requirements
