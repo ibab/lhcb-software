@@ -4591,29 +4591,37 @@ void PresenterMainFrame::refreshPage()
     std::cout << "refreshing." << std::endl;
   }
   //TODO: reuse pw if available from pageload
-  ParallelWait parallelWait(this);
-  parallelWait.refreshHistograms(&dbHistosOnPage);
   if (Batch != m_presenterMode) {
+    ParallelWait parallelWait(this);
+    parallelWait.refreshHistograms(&dbHistosOnPage);
     editorCanvas->Update();
   } else if (Batch == m_presenterMode) {
+    
     std::vector<DbRootHist*>::iterator dump_dbHistosOnPageIt;
     dump_dbHistosOnPageIt = dbHistosOnPage.begin();
     while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
 //      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(*dump_dbHistosOnPageIt)->fileName());
+    if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
+      (*dump_dbHistosOnPageIt)->fillHistogram();
+      (*dump_dbHistosOnPageIt)->normalizeReference();
+    }
+    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
       std::string plotName(m_currentPartition);
-      plotName.append(" ").append(currentTime->AsSQLString());
-      (*dump_dbHistosOnPageIt)->rootHistogram->SetName(plotName.c_str());
-      (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
-      editorCanvas->Modified();
-      gPad->Modified();
-      editorCanvas->Update();
-//      std::string dumpDirectory(startupSettings["image-path"].as<std::string>());
-//      std::string dumpDirectory("/home/psomogyi/afs/cmtuser/Online_v4r26/Online/Presenter/cmt");
-      std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;      
-      editorCanvas->SaveAs(dumpFile.c_str());
-//      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";      
-//      editorCanvas->SaveAs(dumpFile.c_str());                  
-      dump_dbHistosOnPageIt++;
+        plotName.append(" ").append(currentTime->AsSQLString());
+//        (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
+        (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
+        editorCanvas->Modified();
+        gPad->Modified();
+        editorCanvas->Update();
+  //      std::string dumpDirectory(startupSettings["image-path"].as<std::string>());
+  //      std::string dumpDirectory("/home/psomogyi/afs/cmtuser/Online_v4r26/Online/Presenter/cmt");
+        std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;      
+//        editorCanvas->SaveAs(dumpFile.c_str());     
+// (*dump_dbHistosOnPageIt)->rootHistogram->Dump();
+//      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";
+      }      
+//      editorCanvas->SaveAs(dumpFile.c_str());    
+      dump_dbHistosOnPageIt++;              
     }
   }
 }

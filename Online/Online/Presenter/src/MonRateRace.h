@@ -14,10 +14,12 @@ public:
   void infoHandler();
   double currentValue(); // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
   std::string title(); // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
+  bool rateInitialised() { return m_initialised;}
 private:
   double m_value;
   std::string m_title;
   boost::mutex* m_infoHandlerMutex;
+  bool m_initialised;
   
 };
 

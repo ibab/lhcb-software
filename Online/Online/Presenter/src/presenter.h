@@ -120,6 +120,7 @@ namespace pres
 
   static TPRegexp s_DimCNTRegexp("^([ILFD])(?:(:\\d+))?");
   static TPRegexp s_DimHltCntRegexp("^D:2;C");
+  static TPRegexp s_DimHltTckRegexp("^I:1;C");
 
   static const std::string s_hltNodePrefix("HLT");
   static const std::string s_PAGE("PAGE");
@@ -138,6 +139,8 @@ namespace pres
   
   static const std::string s_adder("Adder");
   static const std::string s_eff_monRate("monRate");
+  static const std::string s_eff_TCK("TCK");
+  static const std::string s_eff_init("Initialising...");
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$
