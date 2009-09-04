@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.73 2009-09-03 09:28:41 cattanem Exp $
+! $Id: release.notes,v 1.74 2009-09-04 14:45:33 dgolubko Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-09-04 - Dmitry Golubkov
+ - cmt/requirements version increment to v5r12
+ - release.notes : fix the order of the comments 2009-08-02
+ - L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
 
 !========================== CaloTools v5r11 2009-09-03 =========================
 ! 2009-09-03 - Marco Cattaneo
@@ -18,17 +23,16 @@
 ! 2009-08-05 - Vanya BELYAEV
  - fix the signature 
 
+! 2009-08-02 - Dmitry GOLUBKOV
+ - L0Calo2CaloTool.cpp: method to return CaloClusters around the CaloCellID
+
 ! 2009-07-31 - Dmitry Golubkov
  - L0Calo2CaloTool.cpp - fix compilation warnings on slc4
-
 
 ! 2009-07-29 - Dmitry GOLUBKOV
  - Add a new tool to get a list of CaloClusters for the input L0CaloCandidate(s)
   L0Calo2CaloTool.cpp, L0Calo2CaloTool.h
  - cmt/requirements verison increment to v5r10
-
-! 2009-08-02 - Dmitry GOLUBKOV
- - L0Calo2CaloTool.cpp: method to return CaloClusters around the CaloCellID
 
 !========================== CaloTools v5r9 2009-06-03 =========================
 ! 2009-06-03 - Marco Cattaneo

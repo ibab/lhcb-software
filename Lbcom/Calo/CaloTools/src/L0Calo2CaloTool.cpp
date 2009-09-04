@@ -335,13 +335,13 @@ void L0Calo2CaloTool::collectTell1s
                 << " dr =" << dr << ":" << m_calo->cellCenter( dr ) << endmsg;
   
     if ( m_calo->valid(ul) ) cell_list.insert( ul );
-    else error() << "ul cell " << ul << " invalid" << endmsg;
+    else debug() << "ul cell " << ul << " invalid" << endmsg;
 
     if ( m_calo->valid(ur) ) cell_list.insert( ur );
-    else error() << "ur cell " << ur << " invalid" << endmsg;
+    else debug() << "ur cell " << ur << " invalid" << endmsg;
 
     if ( m_calo->valid(dr) ) cell_list.insert( dr );
-    else error() << "dr cell " << dr << " invalid" << endmsg;
+    else debug() << "dr cell " << dr << " invalid" << endmsg;
 
     // ------------------------------------------------------------------------
     // look Cell neigbours -- code adapted from the CaloClusterization tool
