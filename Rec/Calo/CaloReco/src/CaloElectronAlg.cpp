@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.17 2009-08-21 16:48:11 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.18 2009-09-04 07:57:09 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -156,7 +156,7 @@ StatusCode CaloElectronAlg::initialize()
       m_corrections.push_back( correction );
     }
     if ( m_corrections.empty() ) 
-    { Warning ( "No Hypo    Correction(1) tools are specified!" ) ; }
+    { info() << "No Hypo    Correction(1) tools are specified!" << endmsg ; }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames.begin() ;
@@ -167,7 +167,7 @@ StatusCode CaloElectronAlg::initialize()
       m_hypotools.push_back(  hypotool  );
     }
     if ( m_hypotools.empty() ) 
-    { Warning ( "No Hypo    Processing(1) tools are specified!" ) ; }
+    { info() << "No Hypo    Processing(1) tools are specified!"  << endmsg ; }
   }
   { // locate correction tools
     for( Names::const_iterator item = m_correctionsTypeNames2.begin() ;
@@ -178,7 +178,7 @@ StatusCode CaloElectronAlg::initialize()
       m_corrections2.push_back( correction );
     }
     if ( m_corrections2.empty() ) 
-    { Warning ( "No Hypo    Correction(2) tools are specified!" ) ; }
+    { info() << "No Hypo    Correction(2) tools are specified!"  << endmsg ; }
   }
   { // locate other hypo  tools
     for( Names::const_iterator item = m_hypotoolsTypeNames2.begin() ;
@@ -189,7 +189,7 @@ StatusCode CaloElectronAlg::initialize()
       m_hypotools2.push_back(  hypotool  );
     }
     if ( m_hypotools2.empty() ) 
-    { Warning ( "No Hypo    Processing(2) tools are specified!" ) ; }
+    { info() << "No Hypo    Processing(2) tools are specified!" << endmsg  ; }
   }
   
   ///
