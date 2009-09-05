@@ -6,6 +6,16 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-09-05 - Vanya BELYAEV
+
+ - SVEctorWithErorr 
+
+    add functions to get the correlation coefficient and correlation matrix 
+
+ - cmt/requirements 
+
+    version increment to v3r13 
+
 !========================= LHCbMath v3r12 2009-09-02 =========================
 ! 2009-08-19 - Vanya BELYAEV
  - ValueWithError

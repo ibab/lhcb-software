@@ -1,4 +1,4 @@
-// $Id: SVectorWithError.h,v 1.1 2009-06-13 18:30:12 ibelyaev Exp $
+// $Id: SVectorWithError.h,v 1.2 2009-09-05 18:01:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_SVECTORWITHERROR_H 
 #define LHCBMATH_SVECTORWITHERROR_H 1
@@ -112,16 +112,34 @@ namespace Gaudi
       inline SCALAR& cov2  ( unsigned int i , 
                              unsigned int j )        { return m_cov2  ( i , j ) ; }      
       // ======================================================================
+    public: // correlations 
+      // ======================================================================
+      /** get the correlation coefficient between "i" and "j"
+       *  for invalid setup , return large negative value 
+       *  @param i the first index 
+       *  @param j the second index 
+       *  @return correlation coefficient 
+       */
+      inline SCALAR  corr  ( unsigned int i  , unsigned int j  ) const ;
+      /** get the full correlation matrix 
+       *  @return false for invalid setup 
+       */
+      inline bool    corr  ( Covariance& corrm ) const ;
+      // ======================================================================
     public: // setters 
       // ======================================================================
       void setValue      ( const Value&      v ) { m_value = v ; }
       void setCovariance ( const Covariance& c ) { m_cov2  = c ; }
+      void setCov2       ( const Covariance& c ) { m_cov2  = c ; }
       // ======================================================================
       template <class B>
       void setValue       ( const ROOT::Math::VecExpr<B,SCALAR,N>&  v ) 
       { m_value = v ; }
       template <class B, class R>
       void setCovariance  ( const ROOT::Math::Expr<B,SCALAR,N,N,R>& c ) 
+      { m_cov2 = c ; }
+      template <class B, class R>
+      void setCov2        ( const ROOT::Math::Expr<B,SCALAR,N,N,R>& c ) 
       { m_cov2 = c ; }
       // ======================================================================
     public: // cast:

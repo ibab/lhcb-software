@@ -1,4 +1,4 @@
-// $Id: SVectorWithError.icpp,v 1.1 2009-06-13 18:30:12 ibelyaev Exp $
+// $Id: SVectorWithError.icpp,v 1.2 2009-09-05 18:01:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_SVECTORWITHERROR_ICPP 
 #define LHCBMATH_SVECTORWITHERROR_ICPP 1
@@ -15,6 +15,7 @@
 #include "LHCbMath/SVectorWithError.h"
 #include "LHCbMath/SymPosDefMatrixInverter.h"
 #include "LHCbMath/MatrixInversion.h"
+#include "LHCbMath/MatrixUtils.h"
 // ============================================================================
 /** @file 
  *  The implementation file for class Gaudi::Math::SVectorWithError
@@ -132,6 +133,60 @@ Gaudi::Math::SVectorWithError<N,SCALAR>::fillStream ( std::ostream& s ) const
   }
   return s << " )" ;
 } 
+// ============================================================================
+/*  get the correlation coefficient between "i" and "j"
+ *  for invalid setup , return large negative value 
+ *  @param i the first index 
+ *  @param j the second index 
+ *  @return correlation coefficient 
+ */
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline SCALAR Gaudi::Math::SVectorWithError<N,SCALAR>::corr 
+( unsigned int i , 
+  unsigned int j ) const 
+{
+  static const SCALAR s_bad = -10000 ;
+  //
+  const SCALAR sii = cov2( i , i ) ;
+  const SCALAR sjj = cov2( j , j ) ;
+  //
+  if ( 0 >= sii || 0 >= sjj ) { return s_bad ; }                      // RETURN  
+  //
+  return cov2( i , j ) / std::sqrt ( sii * sjj ) ;                    // RETURN 
+}
+// ============================================================================
+/*  get the full correlation matrix 
+ *  @return false for invalid setup 
+ */
+// ============================================================================
+template <unsigned int N, class SCALAR>
+inline bool Gaudi::Math::SVectorWithError<N,SCALAR>::corr 
+( typename Gaudi::Math::SVectorWithError<N,SCALAR>::Covariance& corrm ) const
+{
+  bool OK = true ;
+  //
+  for ( unsigned int i = 0 ; i < N && OK ; ++i ) 
+  {
+    corrm ( i , i ) = 1 ;
+    //
+    const SCALAR sii = cov2 ( i , i ) ;
+    if   ( 0 >= sii ) { OK = false ; break ; }                       // BREAK
+    //
+    for ( unsigned int j =  i + 1 ; j < N && OK ; ++j ) 
+    {
+      const SCALAR sjj = cov2 ( j , j ) ;
+      if ( 0 >= sjj ) { OK = false ; break ; }                        // BREAK
+      //
+      corrm ( i , j ) = cov2 (i , j ) / std::sqrt ( sii * sjj ) ;   
+      //
+    }
+  }
+  //
+  if ( !OK ) { Gaudi::Math::setToUnit ( corrm , -1. ) ; }
+  //
+  return OK ;
+}
 // ============================================================================
 // The END 
 // ============================================================================

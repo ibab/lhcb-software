@@ -1,4 +1,4 @@
-// $Id: withErrors.cpp,v 1.1 2009-06-13 18:30:13 ibelyaev Exp $
+// $Id: withErrors.cpp,v 1.2 2009-09-05 18:01:46 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -50,6 +50,16 @@ int main ()
     << " c21:    " << Gaudi::Math::chi2(v1,d4)  << std::endl 
     << " c22:    " << Gaudi::Math::chi2(d4,v1)  << std::endl 
     << " c23:    " << Gaudi::Math::chi2(d1,d4)  << std::endl ;
+
+  
+  m1(1,2) = 1 ;
+  d1.setCov2 ( m1 ) ;
+
+  /// get the correlation matrix : 
+  if ( d1.corr ( m1 ) ) 
+  { std::cout << " correlation matrix : " << m1 << std::endl ; }
+  else 
+  { std::cout << "no valid correlation matrix for " << d1.cov2() << std::endl ; }
   
 }
 // ============================================================================
