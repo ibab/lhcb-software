@@ -1,4 +1,4 @@
-// $Id: TrackSeedT0Alg.cpp,v 1.1.1.1 2009-04-21 10:57:19 jblouw Exp $
+// $Id: TrackSeedT0Alg.cpp,v 1.2 2009-09-06 20:54:43 wouter Exp $
 // Include files
 #include <GaudiAlg/GaudiHistoAlg.h>
 
@@ -76,6 +76,11 @@ StatusCode TrackSeedT0Alg::initialize()
    StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
    if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
+   if( m_useCaloTiming ) {
+     error() << "Cannot use calo timing at the moment, because need to migrate to CaloTool. (wdh 2009/09/06)." << endreq ;
+     return StatusCode::FAILURE ; 
+   }
+
    if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
    return StatusCode::SUCCESS;
 }
@@ -110,7 +115,8 @@ StatusCode TrackSeedT0Alg::execute()
    //if( m_useCaloTiming ) {
    const LHCb::Track* calotrack = getCaloTrack(); 
    if( calotrack ) {
-     calt0 = calotrack->info(LHCb::Track::CaloTimeInfo, 0);
+     //calt0 = calotrack->info(LHCb::Track::CaloTimeInfo, 0);
+     calt0 = 0 ;
      calz0 = calotrack->firstState().z() ;
      debug() << "Seeding track with calo t0=" << calt0 << " z0=" << calz0 << endmsg ;
    } else {
