@@ -1,4 +1,4 @@
-// $Id: TupleToolP2VV.cpp,v 1.3 2008-07-03 13:59:46 pkoppenb Exp $
+// $Id: TupleToolP2VV.cpp,v 1.4 2009-09-06 16:58:27 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -54,7 +54,12 @@ StatusCode TupleToolP2VV::initialize( ) {
   debug() << "m_calc " << m_calculator << endmsg;
   
   if (!sc) return sc;
+  
   m_angleTool  = tool<IP2VVPartAngleCalculator>(m_calculator,this);
+  if( !m_angleTool ){
+    Error("Unable to retrieve the IP2VVPartAngleCalculator tool");
+    return StatusCode::FAILURE;
+  }
   return sc;
 }
 
@@ -69,8 +74,9 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
   if( P ){
     
     if ( m_helicity ){
-      double thetaL, thetaK, phi;
-      
+      double thetaL = -1000.;
+      double thetaK = -1000.;
+      double phi = -1000.;
       
       StatusCode sc_hel = m_angleTool->calculateAngles( P, thetaL, thetaK, phi);
       
@@ -79,15 +85,15 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
 					<< " K: "<< thetaK
 					<< " phi: " << phi << endmsg ;
       
-      
-      if ( !sc_hel ) return sc_hel;
       test &= tuple->column( head+"_ThetaL", thetaL );
       test &= tuple->column( head+"_ThetaK", thetaK );
       test &= tuple->column( head+"_Phi",    phi  );
     }
     
     if ( m_trans ){
-      double Theta_tr, Phi_tr, Theta_V ;
+      double Theta_tr = -1000.;
+      double Phi_tr = -1000.;
+      double Theta_V = -1000.;
       
       StatusCode sc_tr = m_angleTool->calculateTransversityAngles( P, 
 								   Theta_tr, 
@@ -100,9 +106,6 @@ StatusCode TupleToolP2VV::fill( const LHCb::Particle*
 					<< " Theta_phi_tr: " << Theta_V 
 					<< endmsg ;
       
-      
-      
-      if ( !sc_tr ) return sc_tr;
       test &= tuple->column( head+"_ThetaTr", Theta_tr );
       test &= tuple->column( head+"_PhiTr", Phi_tr );
       test &= tuple->column( head+"_ThetaVtr", Theta_V  );
