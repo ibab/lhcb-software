@@ -1,4 +1,4 @@
-// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.5 2009-08-04 10:24:56 gcowan Exp $
+// $Id: Bs2JpsiPhiAngleCalculator.cpp,v 1.6 2009-09-06 17:02:11 gcowan Exp $
 // Include files 
 
 // from Gaudi
@@ -50,7 +50,10 @@ StatusCode Bs2JpsiPhiAngleCalculator::initialize() {
                                     << endmsg ;
   
   m_descendants = tool<IParticleDescendants>("ParticleDescendants ",this);
-
+  if ( !m_descendants ){
+    Error("Unable to retrieve the IParticleDescendants tool");
+    return StatusCode::FAILURE;
+  }
   return sc ;
 }
 
@@ -80,6 +83,7 @@ StatusCode Bs2JpsiPhiAngleCalculator::calculateAngles(
            idaughter = descendants.begin() ;
         idaughter != descendants.end(); ++idaughter ){
     
+    if ( !(*idaughter) ) return StatusCode::FAILURE; 
     id = (*idaughter)->particleID() ;
 
     //if ( id.isLepton() ){
@@ -115,7 +119,7 @@ StatusCode Bs2JpsiPhiAngleCalculator::calculateAngles(
                                                    , particleKaonMinus->momentum()
                                                    , particleLeptonPlus->momentum()
                                                    , particleLeptonMinus->momentum());
-  
+ 
   return StatusCode::SUCCESS ;
 }
 
@@ -143,7 +147,8 @@ StatusCode Bs2JpsiPhiAngleCalculator::calculateTransversityAngles(
   for ( LHCb::Particle::ConstVector::const_iterator 
            idaughter = descendants.begin() ;
         idaughter != descendants.end(); ++idaughter ){
-    
+
+    if ( !(*idaughter) ) return StatusCode::FAILURE;
     id = (*idaughter)->particleID() ;
 
     //if ( id.isLepton() ){
@@ -200,6 +205,7 @@ double Bs2JpsiPhiAngleCalculator::calculatePhi( const LHCb::Particle* particle)
            descendants.begin() ;
         idaughter != descendants.end(); ++idaughter ){
     
+    if ( !(*idaughter) ) return StatusCode::FAILURE;
     id = (*idaughter)->particleID() ;
 
     if ( id.isLepton() ){
@@ -242,7 +248,8 @@ const LHCb::Particle* particle )
   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
            descendants.begin() ;
         idaughter != descendants.end(); ++idaughter ){
-    
+
+     if ( !(*idaughter) ) return StatusCode::FAILURE;
      LHCb::ParticleID id = (*idaughter)->particleID() ;
 
      if ( id.isLepton() ){
@@ -277,7 +284,8 @@ double Bs2JpsiPhiAngleCalculator::calculateThetaK(
   for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
            descendants.begin() ;
         idaughter != descendants.end(); ++idaughter ){
-    
+
+     if ( !(*idaughter) ) return StatusCode::FAILURE;   
      LHCb::ParticleID id = (*idaughter)->particleID() ;
 
      if ( 321 == id.abspid() ) {
@@ -315,6 +323,7 @@ double Bs2JpsiPhiAngleCalculator::calculateTransThetaTr(
             descendants.begin() ;
          idaughter != descendants.end(); ++idaughter ){
     
+      if ( !(*idaughter) ) return StatusCode::FAILURE;
       id = (*idaughter)->particleID() ;
 
       if ( id.isLepton() ){
@@ -358,7 +367,8 @@ double Bs2JpsiPhiAngleCalculator::calculateTransPhiTr(
    for ( LHCb::Particle::ConstVector::const_iterator idaughter = 
             descendants.begin() ;
          idaughter != descendants.end(); ++idaughter ){
-    
+
+      if ( !(*idaughter) ) return StatusCode::FAILURE;
       id = (*idaughter)->particleID() ;
 
       if ( id.isLepton() ){
@@ -402,6 +412,7 @@ double Bs2JpsiPhiAngleCalculator::calculateTransThetaV(
             descendants.begin() ;
          idaughter != descendants.end(); ++idaughter ){
     
+      if ( !(*idaughter) ) return StatusCode::FAILURE;
       id = (*idaughter)->particleID() ;
 
       if ( 321 == id.abspid() ) {
