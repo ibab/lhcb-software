@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.1.1.1 2009-04-21 10:57:19 jblouw Exp $
+! $Id: release.notes,v 1.2 2009-09-06 20:55:16 wouter Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2009-09-06 Wouter Hulsbergen
+  - cosmics analysis: Calo time is no longer stored in calo track segment, so
+    I disabled using calo timing. This can be restored with a bit of work.
+ 
 ! 2009-04-21 Johan Blouw
   - imported this package into alignment software project as 
     Calibration/OTCAlibration v1r0
