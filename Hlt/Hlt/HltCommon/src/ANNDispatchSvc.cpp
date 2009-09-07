@@ -1,4 +1,3 @@
-
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IPropertyConfigSvc.h"
 
@@ -18,7 +17,9 @@ using std::vector;
 using std::string;
 using boost::optional;
 
-class ANNDispatchSvc : public Service
+using namespace LHCb;
+
+class ANNDispatchSvc : public Service 
                      , virtual public IANNSvc 
                      , virtual public IIncidentListener {
 
@@ -65,6 +66,9 @@ private:
   mutable PropertyConfig::digest_type m_currentDigest;
 };
 
+#include "GaudiKernel/SvcFactory.h"
+DECLARE_SERVICE_FACTORY( ANNDispatchSvc );
+
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -77,18 +81,31 @@ ANNDispatchSvc::ANNDispatchSvc( const string& name, ISvcLocator* pSvcLocator)
   , m_uptodate(false)
 {
    declareProperty("IANNSvcInstance",m_instanceName = "HltANNSvc");
+   declareProperty("IPropertyConfigSvcInstance",m_propertyConfigSvcName = "PropertyConfigSvc");
 }
 
 StatusCode
 ANNDispatchSvc::initialize(  )
 {
-  if (!service("EventDataSvc", m_evtSvc).isSuccess()) return StatusCode::FAILURE;
+  if (!service("EventDataSvc", m_evtSvc).isSuccess()) { 
+    fatal() << "ANNDispatchSvc failed to get the EventDataSvc." << endmsg;
+    return StatusCode::FAILURE;
+  }
   // grab IncidentSvc
-  if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) return StatusCode::FAILURE;
+  if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) {
+    fatal() << "ANNDispatchSvc failed to get the IncidentSvc." << endmsg;
+    return StatusCode::FAILURE;
+  }
   // grab IConfigAccessSvc
-  if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) return StatusCode::FAILURE;
+  if (!service( m_propertyConfigSvcName, m_propertyConfigSvc).isSuccess()) {
+    fatal() << "ANNDispatchSvc failed to get the IConfigAccessSvc." << endmsg;
+    return StatusCode::FAILURE;
+  }
   // grab IANNSvc
-  if (!service( m_instanceName, m_child).isSuccess()) return StatusCode::FAILURE;
+  if (!service( m_instanceName, m_child).isSuccess()) {
+    fatal() << "ANNDispatchSvc failed to get the IANNSvc." << endmsg;
+    return StatusCode::FAILURE;
+  }
 
   // add listener for beginEvent... (should be beginRun, but that doesn't seem to be fired...)
   bool rethrow = false;
