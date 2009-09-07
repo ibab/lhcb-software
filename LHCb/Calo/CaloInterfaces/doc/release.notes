@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.63 2009-08-31 09:01:17 graven Exp $
+! $Id: release.notes,v 1.64 2009-09-07 15:54:53 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
@@ -12,10 +12,6 @@
 ! 2009-08-05 - Vanya BELYAEV
 
  - some polishing of interfaces
-
- - cmt/requirements
-
-    version increment to v8r0
 
 ! 2009-08-02 - Dmitry GOLUBKOV
  - IL0Calo2Calo.h tool added new virtual method
