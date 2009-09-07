@@ -6,8 +6,80 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
-! 2009-09-03 - Marco Cattaneo
- - Add apply_pattern container_package
+</PRE><H1><A NAME=v7r6>2009-09-07 LbcomSys v7r6</A></H1><PRE>
+This version uses Gaudi v21r4 and LHCb v28r0
+
+- Packages modified: CaloAssociators v6r9, CaloTools v5r11, HltDAQ v1r0p1,
+    RichAlgorithms v1r1p1, RichDAQ v3r25, RichMCMonitors v1r7p1,
+    RichMCTools v3r13, RichTools v2r27p1, STAlgorithms v3r9, STCheckers v2r14,
+    STMonitors v1r6, STTools v3r12, VeloAlgorithms v4r9, VeloDAQ v4r8
+
+- In LbcomSys v7r6
+  . Add apply_pattern container_package
+
+- In CaloAssociators v6r9
+  . Add CaloReCreateMCLinks.cpp (moved from CaloDAQ)
+  . Introduce new configuation: python/CaloAssociators/MCTruthOnDemand.py
+  . Make sure that a request to the data-on-demand service for 
+    Relations/Raw/Calo/Digits first creates digits, without relying on a cascade 
+    from the data-on-demand service
+
+- In CaloTools v5r11
+  . Remove filling of track-extra info, according to changes in Track.xml class
+
+- In HltDAQ v1r0p1
+  . Bug fix in HltLumiWriter
+
+- In RichDAQ v3r25
+  . Fix decoding bug for Alice ZS data.
+
+- In RichMCTools v3r13
+  . Update MCTruthTool to support returning vector of MCRichHits associated to
+    a given HPD (as identified by its RichSmartID).
+
+- In STAlgorithms v3r9
+  . Modify WriteSTStatusConditions to use STXMLUtils 
+
+- In STCheckers v2r14
+  . Add plots to STPerformanceMonitor
+
+- In STMonitors v1r6
+  . Modified STSummaryMonitor and STErrorMonitor to always book histograms 
+    used in Summary tab of Histogram presenter.
+  . Changes to STClusterMonitor:
+    o IT Cluster map uses ITDetector from STKernel.
+    o Modified binning for ADC distributions
+    o Add plot of ODIN BCID, plus add cut on this number to pick up only 1 BCID
+    o Reduced number of times that warning is printed when cluster location is
+      missing. 
+    o Added plots of ADCs in service box for 1,2,3,4 strip clusters to detailed
+      histograms
+    o TT cluster map: 
+      + invert A and C side to comply with offline and IT plot.
+      + now uses the TTDetectorPlot from STKernel.
+  . Modified STNZSMonitor to book histograms at initialize stage.
+  . Modified STNZSMonitor code after profiling to improve speed
+
+- In STTools v3r12
+  . Add STRawADCInfo tool
+  . Add APE to STOnlinePosition
+
+- In VeloAlgorithms v4r9
+  . Add VeloSimTell1ClusterMaker,SimTell1ZSProcessEngine,VeloTell1DataProcessor:
+    algorithms to implement Tell1 clusterization process in LHCb simulation
+    stream
+  . Add Digitizer, compareSensor: helper classes for Tell1 clusterization
+
+- In VeloDAQ v4r8
+  . Added DecodePileUpData, to decode PileUp banks (binary), both NZS and ZS.
+
+- In CaloAssociators v6r9, RichAlgorithms v1r1p1, RichDAQ v3r25
+     RichMCMonitors v1r7p1, RichMCTools v3r13, RichTools v2r27p1, STMonitors v1r6
+  . Replace endreq by endmsg
+
+-In CaloTools v5r11, RichAlgorithms v1r1p1, RichDAQ v3r25, RichMCMonitors v1r7p1,
+    RichTools v2r27p1, STCheckers v2r14, VeloAlgorithms v4r9, VeloDAQ v4r8
+ . Remove obsolete file src/<package>_dll.cpp
 
 </PRE><H1><A NAME=v7r5>2009-07-30 LbcomSys v7r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r5
