@@ -69,11 +69,11 @@ if len(sys.argv)>2:
             line = 'export %s="%s"'%(name,value)
         if input!=line : f.write('#ORIG:# %s\n'%input)
         f.write(line+'\n')        
-    print 'checking for tcmalloc'
-    tcmalloc = os.path.expandvars('$LCG_release_area/tcmalloc/1.3/$CMTCONFIG/lib/libtcmalloc_minimal.so')
-    if os.path.isfile(tcmalloc) :
-        f.write('#Added TCMALLOC\n')
-        f.write('export LD_PRELOAD=%s\n'%tcmalloc)
+    #print 'checking for tcmalloc'
+    #tcmalloc = os.path.expandvars('$LCG_release_area/tcmalloc/1.3/$CMTCONFIG/lib/libtcmalloc_minimal.so')
+    #if os.path.isfile(tcmalloc) :
+    #    f.write('#Added TCMALLOC\n')
+    #    f.write('export LD_PRELOAD=%s\n'%tcmalloc)
 
     f.close()
 

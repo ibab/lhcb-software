@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.76 2009-08-26 23:29:42 snies Exp $"
+__version__ = "$Id: Configuration.py,v 1.77 2009-09-07 09:49:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -61,7 +61,7 @@ class Moore(LHCbConfigurableUser):
         , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "CheckOdin"  :       False  # use TCK from ODIN
         , "InitialTCK" :'0x80560000'  # which configuration to use during initialize
-        , "prefetchConfigDir" :'MOORE_v7r3'  # which configurations to prefetch.
+        , "prefetchConfigDir" :'MOORE_v7r4'  # which configurations to prefetch.
         , "generateConfig" :   False # whether or not to generate a configuration
         , "configLabel" :      ''    # label for generated configuration
         , "configAlgorithms" : ['Hlt']    # which algorithms to configure (automatically including their children!)...

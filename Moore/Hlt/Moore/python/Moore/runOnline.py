@@ -10,14 +10,18 @@ InstallRootLoggingHandler(level = logging.CRITICAL)
 
 def start() :
     from Moore.Configuration import Moore
+    import OnlineEnv 
 
     Moore().RunOnline = True
     # TODO: record these tags somewhere...
-    #Moore().CondDBtag = 'sim-20090402-vc-md100'
-    #Moore().DDDBtag   = 'sim-20090402-vc-md100'
+    if OnlineEnv.PartitionName == 'FEST' :
+    	Moore().CondDBtag = 'MC09-20090602'
+    	Moore().DDDBtag   = 'sim-20090402-vc-md100'
+    else : # TODO: make these very specific tags, not default!
+    	Moore().CondDBtag = 'default'
+    	Moore().DDDBtag   = 'default'
     
     # Forward all attributes of 'OnlineEnv' to the job options service...
-    import OnlineEnv 
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric
     c = ConfigurableGeneric("OnlineEnv")
     #[ setattr(c,k,v) for (k,v) in OnlineEnv.__dict__.items() if k not in OnlineConfig.__dict__ ]
