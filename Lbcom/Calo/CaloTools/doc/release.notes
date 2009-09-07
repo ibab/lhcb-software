@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.74 2009-09-04 14:45:33 dgolubko Exp $
+! $Id: release.notes,v 1.75 2009-09-07 09:22:55 graven Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
@@ -14,6 +14,10 @@
 
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
  - remove filling of track-extra info, according to changes in Track.xml class
+
+!========================== CaloTools v5r10p1 2009-09-07 =========================
+! 2009-09-04 - Dmitry Golubkov
+ - L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
 
 !========================== CaloTools v5r10 2009-08-31 =========================
 ! 2009-08-10 - Vanya BELYAEV
