@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-09-07 - Gareth Rogers
+ - commentCamera.sh now takes multiple CAMERA server in the form host:port host:port ...
+   after the comment. All are options and defaults to localhost:12346.
+
 =============== v1r7 ===============
 
 ! 2009-08-26 - Gareth Rogers
