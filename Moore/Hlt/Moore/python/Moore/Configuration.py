@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.78 2009-09-07 09:51:26 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.79 2009-09-07 09:57:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -70,11 +70,13 @@ class Moore(LHCbConfigurableUser):
         , "TCKpersistency" :   'tarfile' # which method to use for TCK data? valid is 'file','tarfile' and 'sqlite' 
         , "EnableAuditor" :    [ ]  # put here eg . [ NameAuditor(), ChronoAuditor(), MemoryAuditor() ]
         , "EnableDataOnDemand": False
+        , "EnableLumiEventWriting"       : True
         , "EnableTimer" :       True
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
         , 'SkipHltRawBankOnRejectedEvents' : True
+        , 'HistogrammingLevel' : 'Line'
         , "RunOnline" : False
         }   
                 
@@ -315,6 +317,8 @@ class Moore(LHCbConfigurableUser):
                             , 'L0TCK','DataType','Verbose'
                             , 'RequireL0ForEndSequence'
                             , 'SkipHltRawBankOnRejectedEvents'
+                            , 'HistogrammingLevel' 
+                            , "EnableLumiEventWriting"
                             ]
                           )
 
