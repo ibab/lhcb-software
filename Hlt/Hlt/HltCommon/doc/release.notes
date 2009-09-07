@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-09-07 - Gerhard Raven
+ - move TCK normalization (zero L0 part if signbit set) into TCKrep
+! 2009-09-07 - Vladimir Gligorov
+ - fixes for DispatchANNSvc
+
 !========================== HltCommon v5r10 2009-08-31 ===================
 ! 2009-08-27 - Gerhard Raven
  - add overrule capability when generating configurations, 

@@ -147,7 +147,7 @@ void ANNDispatchSvc::faultHandler() const {
     }
     unsigned int TCK = odin->triggerConfigurationKey();
     if (TCK!=m_currentTCK || !m_currentDigest.valid()) {
-        TCKrep tck(TCK);
+        TCKrep tck(TCK); tck.normalize();
         ConfigTreeNodeAlias::alias_type alias( std::string("TCK/") +  tck.str()  );
         // grab properties of child from config database...
         const ConfigTreeNode* tree = m_propertyConfigSvc->resolveConfigTreeNode(alias);
