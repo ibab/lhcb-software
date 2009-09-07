@@ -152,12 +152,16 @@ def run(slotName, minusj=None, platforms=None):
             platformlist = slot.getPlatforms()
         else:
             platformlist = platforms.split()
+        if slot.getRenice() > 0:
+            reniceString = 'nice --adjustment=+%s ' % str(slot.getRenice())
+        else:
+            reniceString = ''
         while platformlist:
             tmp = False
             for x in platformlist:
                 if sum([int(os.path.exists(q)) for q in slot.waitForFlag(x)])==len(slot.waitForFlag(x)):
                 #if os.path.exists(slot.waitForFlag(x)):
-                    os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + ' --platforms ' + x)
+                    os.system(reniceString + 'python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + slotName + ' --platforms ' + x)
                     platformlist.remove(x)
                     tmp = True
                     break
@@ -581,6 +585,8 @@ def make(slotName, projectName, minusj):
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show tags')
     configuration.system('echo "' + '*'*80 + '"')
+    configuration.system('printenv | sort')
+    configuration.system('echo "' + '*'*80 + '"')
 
     if systemType == 'windows':
         makeCmd = '%s make' % (cmtCommand)
@@ -597,6 +603,10 @@ def make(slotName, projectName, minusj):
                 usedistcc = '-j'
             else:
                 usedistcc = ''
+            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:
+                os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
+            else:
+                os.environ['CMTEXTRATAGS'] = 'no-pyzip'
             configuration.system('make %s -k -l%d > make.%s.log' % (usedistcc, minusj, os.environ['CMTCONFIG']) )
             os.chdir(generatePath(slot, project, 'TAG', projectName))
             logFiles = []
@@ -618,7 +628,9 @@ def make(slotName, projectName, minusj):
         makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
         if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
         if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
-            makeCmd = 'CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+            makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+        else:
+            makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
         cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
         fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
         configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')

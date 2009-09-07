@@ -1,3 +1,8 @@
+2009-09-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: renice option, 'no-pyzip' by default
+	in CMTEXTRATAGS of make action, even if not specified in configuration
+
 2009-09-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/rcs.py:
