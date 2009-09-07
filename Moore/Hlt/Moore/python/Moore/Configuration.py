@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.77 2009-09-07 09:49:27 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.78 2009-09-07 09:51:26 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -23,15 +23,15 @@ from  ctypes import c_uint
 ## HistogramPersistencySvc().OutputFile = 'Moore_minbias.root'
 
 def _ext(name) : 
-    x =  path.splitext(name)[-1].lstrip('.')
-    if x.upper() == 'MDF' : x = 'RAW'
+    x =  path.splitext(name)[-1].lstrip('.').upper()
+    if x == 'MDF' : x = 'RAW'
     return x
 
 def _datafmt(pfn) : 
-        fmt = { 'RAW' : "DATAFILE='PFN:%s' SVC='LHCb::MDFSelector'"
-              , 'DST' : "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='READ'" 
-              }
-        return fmt[ _ext(pfn).upper() ] % pfn
+    fmt = { 'RAW' : "DATAFILE='PFN:%s' SVC='LHCb::MDFSelector'"
+          , 'DST' : "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='READ'" 
+          }
+    return fmt[ _ext(pfn) ] % pfn
 
 # canonicalize tck  -- eats integer + string, returns canonical string
 def _tck(x) :
@@ -73,6 +73,8 @@ class Moore(LHCbConfigurableUser):
         , "EnableTimer" :       True
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
+        , 'RequireL0ForEndSequence'     : False
+        , 'SkipHltRawBankOnRejectedEvents' : True
         , "RunOnline" : False
         }   
                 
@@ -308,7 +310,13 @@ class Moore(LHCbConfigurableUser):
 
     def _config_with_hltconf(self):
         hltConf = HltConf()
-        self.setOtherProps( hltConf,  [ 'HltType','Verbose','L0TCK','DataType','ThresholdSettings'])
+        self.setOtherProps( hltConf,  
+                            [ 'HltType','ThresholdSettings'
+                            , 'L0TCK','DataType','Verbose'
+                            , 'RequireL0ForEndSequence'
+                            , 'SkipHltRawBankOnRejectedEvents'
+                            ]
+                          )
 
     def _config_with_tck(self):
         if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
