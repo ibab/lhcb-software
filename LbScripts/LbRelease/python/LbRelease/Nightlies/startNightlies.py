@@ -26,8 +26,7 @@ from LbRelease.Nightlies.functions import config, get, install, test, clean, cle
 from LbUtils.Script import Script
 
 def usage():
-    ret  = 'usage: startNightlies run slotName [j_value [platform1 [platform2 [...]]]]'
-    ret += linesep + '       startNightlies runparallel slotName [-j_value]'
+    ret  = 'usage: startNightlies run slotName j_value l_value [platform1 [platform2 [...]]]'
     ret += linesep + '       clean slotName'
     ret += linesep + '       cleanAFS slotName (be careful!)'
     ret += linesep + __doc__
@@ -48,15 +47,11 @@ class StartNightliesScript(Script):
             clean(self.args[1])
         elif self.args[0] == 'cleanAFS':
             cleanAFSSpace(self.args[1])
-        elif self.args[0] == 'run':
-            if len(self.args) >= 4:
-                platforms = " ".join([self.args[x] for x in range(3,len(self.args))])
-                run(self.args[1], self.args[2], platforms)
-            elif len(self.args) == 3: run(self.args[1], self.args[2])
-            elif len(self.args) == 2: run(self.args[1])
-        elif self.args[0] == 'runparallel':
-            if len(self.args) == 3: runparallel(self.args[1], self.args[2])
-            elif len(self.args) == 2: runparallel(self.args[1])
+        elif self.args[0] == 'run' and len(self.args) >= 5:
+                platss = " ".join([self.args[x] for x in range(4,len(self.args))])
+                run(slotName=self.args[1], minusj=self.args[2], minusl=self.args[3], platforms=platss)
+        elif self.args[0] == 'run' and len(self.args) == 4:
+            run(slotName=self.args[1], minusj=self.args[2], minusl=self.args[3])
         else:
             print usage()
             raise SystemExit

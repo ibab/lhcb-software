@@ -107,14 +107,16 @@ class runThread(Thread):
     def run(self):
         os.system('python ' + os.path.join(os.environ['LCG_NIGHTLIES_SCRIPTDIR'], 'doBuild.py') + ' --slots ' + self.slotName + ' --platforms ' + self.platform)
 
-def run(slotName, minusj=None, platforms=None):
+def run(slotName, minusj=None, minusl=None, platforms=None):
     """ bootstrap function. Starts the LHCb Nightlies for the given <slotName>
 
         If <minusj> option is passed to the function, LCG Nightlies "builders" will be generated with -j compiler option.
         If <platforms> list is given, Nightlies will be launched only for selected platforms (platforms need to be defined in configuration.xml anyway).
     """
-    if minusj == None: minusj = 0
-    else: minusj = int(minusj)
+    if minusj == None or minusl == None: raise
+    minusj = int(minusj)
+    minusl = float(minusl)
+
     os.environ['LCG_NIGHTLIES_XMLCONFIGCOPIES'] = configurationHistoryPath
     generalConfig, slotList = configuration.readConf(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'))
     slot = configuration.findSlot(slotName, slotList)
@@ -139,7 +141,7 @@ def run(slotName, minusj=None, platforms=None):
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x]))
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.lower()]))
             shutil.copytree(bTCx, os.path.sep.join([slot.buildersDir(), x.upper()]))
-        generateBuilders(slot, buildersToGenerate, minusj)
+        generateBuilders(slot, buildersToGenerate, minusj, minusl)
         releasePath = slot.releaseDir()
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):
             shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), os.path.join(releasePath,'configuration.xml'))
@@ -377,11 +379,12 @@ def changedPackageName(c):
     else: cha = cha[1]
     return cha
 
-def generateBuilders(slot, projectNames, minusj):
-    """ generateBuilders(destinationPath, projectNames, minusj)
+def generateBuilders(slot, projectNames, minusj, minusl):
+    """ generateBuilders(destinationPath, projectNames, minusj, minusl)
 
         Creates a set of files and directory structure to act as LCG Nightlies "builders" for each of the project given in the <projectNames> list.
         <minusj> parameter sets the value of "-j" for compiler.
+        <minusl> parameter sets the value of "-l" for compiler.
     """
     destPath = os.path.abspath(slot.buildersDir())
     lbLinux = ''
@@ -404,15 +407,16 @@ action pkg_get "cmt show tags ; mkdir -p logs ; %(launcher)s get %(packageName)s
        WIN32 " ( if not exist logs mkdir logs ) && %(launcher)s get %(packageName)s "
 action pkg_config " %(launcher)s config %(packageName)s 2>&1" \
        WIN32 " %(launcher)s config %(packageName)s"
-action pkg_make " %(lbLinux)s %(launcher)s make %(packageName)s %(processes)d 2>&1 ; exit 0" \
-       WIN32 " %(lbWin)s %(launcher)s make %(packageName)s %(processes)d 2>&1 "
+action pkg_make " %(lbLinux)s %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 ; exit 0" \
+       WIN32 " %(lbWin)s %(launcher)s make %(packageName)s %(minusjvalue)d %(minuslvalue)d 2>&1 "
 action pkg_install " %(launcher)s install %(packageName)s 2>&1" \
        WIN32 " %(launcher)s install %(packageName)s 2>&1 "
 action pkg_test " %(launcher)s test %(packageName)s 2>&1" \
        WIN32 " "
     """ % { "launcher" : "runpy LbRelease.Nightlies.actionLauncher",
             "packageName" : p,
-            "processes": max(0,minusj),
+            "minusjvalue": max(0,minusj),
+            "minuslvalue": max(0,minusl),
             "lbLinux" : lbLinux,
             "lbWin" : lbWin }
             f.write(lines)
@@ -546,30 +550,36 @@ def install(slotName, projectName):
         copyLocal(os.path.join(slot.buildDir(), projectName.upper(), project.getTag()), os.path.join(releasePath, projectName.upper(), project.getTag()))
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 
-def make(slotName, projectName, minusj):
-    """ make(slotName, projectName, minusj)
+def make(slotName, projectName, minusj, minusl):
+    """ make(slotName, projectName, minusj, minusl)
 
         action function. Starts cmt "make" action (launched from LCG Nightlies "builder").
     """
     if minusj > 1: minusjcmd = ' -j' + str(minusj)
     else: minusjcmd = ''
+    if minusl > 0: minuslcmd = ' -l' + str(minusj)
+    else: minuslcmd = ''
     disableLCG_NIGHTLIES_BUILD()
     setCMTEXTRATAGS(slotName)
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
-    configuration.system('echo "################# START OF MAKE #######################"')
+
+    # removing rubbish from log file
+    os.system('echo "DEBUG (removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
+    os.chdir(generatePath(slot, project, 'TAG', projectName))
+    logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
+    logFileToBeRemoved.close()
+
     changeEnvVariables()
 
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
     configuration.system('echo "' + '*'*80 + '"')
-    configuration.system('echo "LCG Nightlies:    '+os.path.dirname(configuration.__file__)+'"')
-    configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "'+ time.strftime('%c', time.localtime()) +'"')
+    configuration.system('echo "LCG Nightlies:    '+os.path.dirname(configuration.__file__)+'"')
     configuration.system('echo "SITEROOT:         '+os.environ.get('SITEROOT','')+'"')
     configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
     configuration.system('echo "CMTPROJECTPATH:   '+os.environ.get('CMTPROJECTPATH','')+'"')
     configuration.system('echo "CMTCONFIG:        '+os.environ.get('CMTCONFIG','')+'"')
-    configuration.system('echo "CMTROOT:          '+os.environ.get('CMTROOT','')+'"')
     configuration.system('echo "CMTPATH:          '+os.environ.get('CMTPATH','')+'"')
     configuration.system('echo "CMTEXTRATAGS:     '+os.environ.get('CMTEXTRATAGS','')+'"')
     configuration.system('echo "LD_LIBRARY_PATH:  '+os.environ.get('LD_LIBRARY_PATH','')+'"')
@@ -607,7 +617,7 @@ def make(slotName, projectName, minusj):
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
             else:
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            configuration.system('make %s -k -l%d > make.%s.log' % (usedistcc, minusj, os.environ['CMTCONFIG']) )
+            configuration.system('make %s -k -j%d -l%d > make.%s.log' % (usedistcc, minusj, minusl, os.environ['CMTCONFIG']) )
             os.chdir(generatePath(slot, project, 'TAG', projectName))
             logFiles = []
             for r, d, f in os.walk("."):

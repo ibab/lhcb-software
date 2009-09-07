@@ -1,7 +1,12 @@
 2009-09-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
-	* python/LbRelease/Nightlies/functions.py: renice option, 'no-pyzip' by default
-	in CMTEXTRATAGS of make action, even if not specified in configuration
+	* python/LbRelease/Nightlies/actionLauncher.py:
+	* python/LbRelease/Nightlies/startNightlies.py:
+	* python/LbRelease/Nightlies/functions.py: there are now 3 obligatory
+	parameters for 'run' action of startNightlies: run slotName j l [platforms]
+	which are: j=max number of jobs to run simultaneously, l=maximum load
+	renice option, 'no-pyzip' by default in CMTEXTRATAGS of make action,
+	even if not specified in configuration
 
 2009-09-03  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
