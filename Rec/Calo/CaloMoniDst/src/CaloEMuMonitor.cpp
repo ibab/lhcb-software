@@ -1,4 +1,4 @@
-// $Id: CaloEMuMonitor.cpp,v 1.5 2009-07-30 08:44:14 dgolubko Exp $
+// $Id: CaloEMuMonitor.cpp,v 1.6 2009-09-07 10:40:25 dgolubko Exp $
 // Include files
 
 // from Gaudi
@@ -323,7 +323,7 @@ StatusCode CaloEMuMonitor::finalize()
   if (m_var) delete m_var;
   m_var = NULL;
 
-  return StatusCode::SUCCESS;
+  return CaloMoniAlg::finalize();
 }
 /** check- calculate mean, rms, relative overflow, etc. and
  *  compare with the reference parameters, generate warnins or

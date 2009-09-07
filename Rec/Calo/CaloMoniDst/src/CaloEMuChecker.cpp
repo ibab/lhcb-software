@@ -1,4 +1,4 @@
-// $Id: CaloEMuChecker.cpp,v 1.2 2009-06-03 13:07:23 cattanem Exp $
+// $Id: CaloEMuChecker.cpp,v 1.3 2009-09-07 10:40:25 dgolubko Exp $
 // Include files
 
 // from Gaudi
@@ -188,13 +188,11 @@ void CaloEMuChecker::fillMonitoringHistograms()
  *  error messages if the difference exceeds NSigmaThreshold's  */
 StatusCode CaloEMuChecker::finalize()
 {
-  CaloEMuMonitor::finalize();
-
   // cleanup
   if( m_track2MCLink ) delete m_track2MCLink;
   m_track2MCLink = NULL;
 
-  return StatusCode::SUCCESS;
+  return CaloEMuMonitor::finalize();
 }
 /** apply PID-related cuts to select/reject muon candidate ProtoParticle's for histogramming
  *

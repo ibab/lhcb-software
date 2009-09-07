@@ -1,4 +1,4 @@
-// $Id: CaloPIDsChecker.cpp,v 1.7 2009-04-24 13:44:08 cattanem Exp $
+// $Id: CaloPIDsChecker.cpp,v 1.8 2009-09-07 10:40:25 dgolubko Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -322,8 +322,13 @@ StatusCode CaloPIDsChecker::divide( AIDA::IHistogram1D *hh1
   }
   
   const double content = hh3->sumBinHeights();
-  info() << "'" << hh3->title()   << "' = "
-         << (content/count)*100 << "[%]" << endmsg;
+  if ( 0 != count ){
+    info() << "'" << hh3->title()   << "' = "
+           << (content/count)*100 << "[%]" << endmsg;
+  }else{
+    info() << "'" << hh1->title()
+           << "' contains no filled bins - histogram ratio undefined" << endmsg;
+  }
   
   return StatusCode::SUCCESS;
 }
