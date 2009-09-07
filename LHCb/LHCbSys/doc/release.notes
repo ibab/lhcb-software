@@ -5,10 +5,235 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v28r0>2009-09-07 LHCbSys v28r0</A></H1><PRE>
+This version uses Gaudi v21r4 and LCG_56c
+
 - Packages added:    DaVinciTypes      - typedefs for Phys project.
 
-- Fix DoxyLHCbApps.cfg for new location of ROOT project in LCG release area
-- Add container_package pattern
+- Packages modified: CaloDAQ v4r13, CaloInterfaces v7r14, CaloKernel v6r0,
+    CaloUtils v8r6, Tell1Kernel v1r7, CaloDet v10r3, DDDB v1r21, DetDesc v18r15,
+    Magnet v5r4, RichDet v12r1p1, STDet v4r13, EventAssoc v4r7, EventPacker v1r7,
+    L0Event v17r7p1, PackedEvent v3r6, RecEvent v2r22, TrackEvent v5r0,
+    IOExample v3r2, LHCbKernel v11r7, LHCbMath v3r12, DaVinciInterfaces v1r1,
+    DaVinciKernel v8r1, LoKiArrayFunctors v8r5, LoKiCore v9r4, LoKiGen v8r7,
+    LoKiMC v8r7, LoKiPhys v8r9, LoKiPhysMC v8r4, RichKernel v7r26,
+    RichRecBase v3r25, STKernel v1r17, CondDBUI v2r22, TrackInterfaces v4r7
+
+- In LHCbSys v28r0:
+  . Fix DoxyLHCbApps.cfg for new location of ROOT project in LCG release area
+  . Add container_package pattern
+
+- In CaloDAQ v4r13
+  . Add CaloAdcFromRaw: produces ADC from rawBanks with possible mis-calibration
+  . Fix Calo(L0)DataProvider for 'partial' decoding in case of single 'offline'
+    bank
+  . Remove CaloReCreateMCLinks.cpp (moved to CaloAssociators)
+  . Remove MCEvent dependency (no longer needed after above change)
+
+- In CaloInterfaces v7r14
+  . Some polishing of interfaces
+  . IL0Calo2Calo.h: Added new virtual method
+
+- In CaloKernel v6r0
+  . Add helper modules with utilities for implementation of Calo-configurables 
+
+- In CaloUtils v8r6
+  . New functor CaloAlgUtils: to consistently define context-dependent TES I/O
+  . CaloDataFunctor: Remove duplicated functors 
+                     Add isLocalMax 
+  . CaloNeighbours: helper function to get proper neighbours 
+
+- In Tell1Kernel v1r7
+  . Add BitReader helper class: needed for checking the raw bank encoding
+                                in Tell1 cluster maker algorithm
+
+  . Add Tell1Kernel/PUTell1Core.h
+
+- In CaloDet v10r3
+  . Add accessor to calorimeter index: int DeCalorimeter::index () const ;
+
+- In DDDB v1r21
+  . Changed default tags for 2009 data (needs SQLDDDB v5r11 or later):
+    o head-20090902         for DDDB
+    o head-20090902         for LHCBCOND
+    o sim-20090902-vc-md100 for SIMCOND
+  . Changed default tags for DC06 data:
+    o DC06-20090902         for DDDB
+    o DC06-20081002         for LHCBCOND (same as before)
+
+- In DetDesc v18r15
+  . In requirements, removed support for slc3 and for Root < 5.19
+  . Added MagneticFieldGrid class
+
+- In Magnet v5r4
+  . Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
+  . New utility 'MagneticFieldGridReader' reads the field from a file (thereby
+    replacing the IMagFieldTools)
+
+- In STDet v4r13
+  . DeSTSector: added isStereo method
+                cleaned up noise methods
+  . DeSTDetector: added methods to return disabled sectors and beetles
+
+- In EventAssoc v4r7
+  . Added dictionary for  LHCb::Relation1D<LHCb::Particle, LHCb::VertexBase>
+
+- In EventPacker v1r7, PackedEvent v3r6
+  . Adapted to changes in Track.xml
+
+- In L0Event v17r7p1
+  . Added missing include file 
+
+- In RecEvent v2r22
+  . Updated ProtoParticle class :
+    o Add new methods to purge particular sub-detector PID information.
+    o inline a few methods for speed.
+
+- In TrackEvent v5r0
+  . Modify Track.xml:
+    o Add members for likelihood and ghost probability
+      (initialised to unphysical values)
+    o Remove obsolete ExtraInfo enums (actually, rename them with an obsoleted
+      name to allow their usage in old data)
+
+- In IOExample v3r2
+  . Updated QMTest references for changes to Track.xml and introduction of Gaudi
+    CounterSummarySvc
+
+- In LHCbKernel v11r6, v11r7
+  . Added access to field grid in ILHCbMagnetSvc
+  . Updated printout string conversion of Rich::Side to say A or C side for RICH2
+  . Added functionality to ITNames to TTNames 
+  . Modified HitPattern class to count OT monolayers separately, merge IT AC and
+    IT TopBottom in one bitmap
+  . CaloCellCode.h : added missing include
+  . Added a typedef CaloCellID::Vector 
+  . Added the function CaloCellID::__hash__  to enable the usage of this object
+    as key for Python dictionaries
+
+- In LHCbMath v3r12
+  . ValueWithError:
+    1. add the constructor from (value.error)-pair 
+    2. add the conversion to  (value,error)-pair 
+
+- In DaVinciInterfaces v1r1
+  . IPhysDesktop now uses unweighted P->PV tables
+  . IVertexFit.h: changed signature of methods to resolve the ambiguities for
+                  python usage of IVertexFit interface
+    1. for all methods, WIHTOUT creation of "mother" particle, 
+       the vertex is the first argument ( "fit vertex" ) 
+    2. for all methdos with creaton of "mother" particle, 
+       the mother particle is the last argument , after vertex 
+  . Kernel/IRelatedPVFinder.h: add methods returning single "best" related
+                               VertexBase for a given particle.
+  . Kernel/IOnOffLine.h : add method  "particleCombinerType" to get the default
+    (context-dependent) type for IParticleCombiner tool.
+  . Remove IRelatedPV (Obsolete)
+  . All interfaces now use GAUDI_API.
+  . Remove all src/Lib/*.cpp files 
+  . Move Kernel/Particle2Vertex.h to Phys/DaVinciTypes/Kernel, adapt to changes
+    in Particle2Vertex typedefs.
+  . Add dependency on Phys/DaVinciTypes
+
+- In DaVinciKernel v8r1
+  . Kernel/RelationOneToOne.h: Wrapper for 1D unweighted relations table.
+    Mimicks one-to-one table.
+  . Add Kernel/DaVinciGuards.h:
+    o Guard to delete entries in a container of newed pointers.
+    o CleanDesktopGuard. Calls PhysDesktop's cleanDesktop method from destructor.
+  . Make all constructors explicit.
+  . Add OrphanPointerContainerGuard, which only deletes pointers if they 
+    are not on the TES.
+  . Added Kernel/BestPV.h: Defines functor DaVinci::BestPV. 
+  . DVAlgorithm:
+    o Use single, unweighted relations.
+    o Use CleanDesktopGuard.
+    o Do not attempt to set PhysDesktop's P2PVInputLocations if locations empty.
+    o Remove the default value of ParticleCombiners. Now the default value
+      (if not specified explicitly) is picked up from IOnOffLineTool 
+    o getRelatedPV method uses DaVinci::BestPV to get the best PV for a given
+      particle
+  . Kernel/DecayTree.h: moved here from Phys/DecayTreeFitter package (where it
+    was called DecayTreeFitter::Tree)
+  . Remove FilterCriterionBase class. Moved to Phys/DaVinciFilters.
+  . Romoved Kernel/Particle2VertexAsct.h: Obsolete and not used anywhere.
+  . Added src/Lib/DaVinciFun.cpp: has implementations of non-template methods in
+    DaVinci and DaVInci::P2VVAngles
+  . Added DaVinci::P2VVAngles:: namespace to DaVinciFun.h. To be used for 
+    calculating helicity and transversity angles in P2VV decays like Bs2JpsiPhi.
+    These only deal with kinematics and first boost all decay products to the B
+    rest frame before proceeding with the calculation.
+
+- In LoKiArrayFunctors v8r5
+  . Fix for changed IVertexFit interface 
+  . Fix for removed FilterCriterionBase 
+
+- In LoKiCore v9r4
+  . NodeGrammar:
+    1. introduce the negation using "!" operator, e.g.:  !pi+
+    2. negation with "~" operator possible only if the node enclosed in round
+       brackets, e.g.  ~(pi+)
+  . small polishing for typedefs
+
+- In LoKiMC v8r7
+  . DecTree( MCDECTREE ): allow extraction of marked elements, 
+    however it can be rather slow
+
+- In LoKiPhys v8r9
+  . Substitute assertions by error messages for BPV*LT* functors 
+
+- In LoKiPhysMC v8r4
+  . add more context symnols: MCMATCH, MCSELMATCH, MCNODEMATCH, MCTREEMATCH
+  . Add the helper function mcMatch 
+
+- In LoKiGen v8r7, LoKiMC v8r7, LoKiPhys v8r9
+  . Add useful typedefs
+
+- In RichKernel v7r26
+  . Added functions to give the dimensions of the a RICH panel in x and y.
+  . Move Linker library source files to src/lib/ directory
+  . Slight simplification of the booking methods in RichHistoBase.icpp
+  . globalPixelX() and globalPixelY() in RichSmartIDCnv.h updated to display 
+	  correct hitmaps
+  . Remove ICameraTool.h - Now part of Online/Camera
+  . Add new pixelCreator type "AllMCRichHits" to RichTools() Configurable.
+  . Add hash functions for Rich::DAQ::HPDCopyNumber in RichDAQDefinitions.h
+
+- In RichRecBase v3r25
+  . Add protected method to pixel creator base class to allow derived classes
+    access to the geometry tool.
+
+- In STKernel v1r17
+  . Add STXMLUtils functions
+  . Add ISTRawADCInfo interface
+  . Add method to Beetle representation to decompose to beetle/strip 
+  . Add TTDetectorPlot class
+  . Add pragmas to avoid warning from windows for alg base classes 
+
+- In CondDBUI v2r22
+  . Modified function in ReleaseNotes class for local tag homogeneity case
+    detection in the release_notes.xml file.
+  . Modified addNote function to contain functionality for merging homogeneous
+    local tags entries in the release_notes.xml file.
+  . Improved addGlobalTag function.
+  . Added function to ReleaseNotes class for global tag homogeneity case
+    detection in the release_notes.xml file.
+  . Modified addGlobalTag function to contain functionality for merging
+    homogeneous global tags entries in the release_notes.xml file.
+
+- In TrackInterfaces v4r7
+  . Add collect method to IVeloExpectation interface
+
+- In CaloDAQ v4r13, RichDet v12r1p1, RichKernel v7r26, RichRecBase v3r25
+  . Replaced all endreq by endmsg
+
+- In CaloDAQ v4r13, EventAssoc v4r7, PackedEvent v3r6
+  . Removed hack for Gaudi v21r1 to link dictionary on Windows 
+
+- In CaloDAQ v4r13, Magnet v5r4, RichDet v12r1p1, STDet v4r13,
+     LoKiArrayFunctors v8r5, LoKiCore v9r4, LoKiGen v8r7, LoKiMC v8r7,
+     LoKiPhys v8r9, LoKiPhysMC v8r4, RichKernel v7r26
+  . Removed obsolete file <package>_dll.cpp
 
 </PRE><H1><A NAME=v27r5>2009-07-30 LHCbSys v27r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LCG_56b
