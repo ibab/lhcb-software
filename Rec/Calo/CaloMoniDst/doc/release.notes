@@ -1,16 +1,15 @@
-! $Id: release.notes,v 1.53 2009-09-07 10:40:25 dgolubko Exp $ 
+! $Id: release.notes,v 1.54 2009-09-07 11:43:29 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+!========================== CaloMoniDst v4r0 2009-09-07 =======================
 ! 2009-09-07 - Dmitry GOLUBKOV
  - CaloEMuMonitor, CaloEMuChecker: add proper calls to the base-class finalize()
  - CaloPIDsChecker.cpp : fix division by zero in divide()
- - cmt/requirements: version incremented to v4r1
 
-!========================== CaloMoniDst v4r0 2009-09-03 =======================
 ! 2009-09-01 - Vanya BELYAEV
  - fix warnings in configurables 
 
