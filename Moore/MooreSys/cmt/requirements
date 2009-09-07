@@ -10,6 +10,8 @@ branches doc cmt
 use  Moore                  v7r4    Hlt
 
 
+# temporarily
+use CaloTools 			v5r10p1 Calo
 
 
 # Declare this as a container package
