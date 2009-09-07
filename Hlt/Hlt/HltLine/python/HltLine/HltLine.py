@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.9 2009-08-14 10:20:55 graven Exp $ 
+# $Id: HltLine.py,v 1.10 2009-09-07 13:04:51 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1222,8 +1222,7 @@ class Hlt2Line(object):
     @date   2009-03-25   
     """
 
-    from HltReco import PV3D
-    _PVAlgorithms = PV3D.members()
+    _PVAlgorithms = None
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1261,6 +1260,9 @@ class Hlt2Line(object):
         
         """
         if PV not in [ True, False ] : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
+        if not _PVAlgorithms : 
+            from HltReco import PV3D
+            _PVAlgorithms = PV3D.members()
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )

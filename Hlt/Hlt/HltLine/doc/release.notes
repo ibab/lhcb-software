@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.30 2009-08-31 10:05:32 graven Exp $
+! $Id: release.notes,v 1.31 2009-09-07 13:04:51 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-09-07 - Gerhard Raven
+ - delay import of HltReco in HltLine to avoid circular dependency
+   at import time between the import of HltReco and HltDecodeRaw
+
 
 !========================== HltLine v1r6 2009-08-31 ===================
 ! 2009-08-26 - Georg Krocker
