@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.75 2009-09-01 16:31:19 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.76 2009-09-08 14:04:17 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -399,15 +399,23 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
 
   LHCb::RecVertex::ConstVector verticesToSave;
 
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Going to save " 
+              << pToSave.size() << " particles" << endmsg;
+  }
+  
   for( p_iter icand = pToSave.begin(); icand != pToSave.end(); icand++ ) {
     // Check if this was already in a Gaudi container (hence in TES)
     if (  !DaVinci::inTES(*icand) ) {
       if (msgLevel(MSG::VERBOSE)) printOut("  Saving", (*icand));
       particlesToSave->insert((LHCb::Particle*)*icand); // convert to non-const
       // store the related PV and the table. All relaitons and PVs should
-      // already be "kept"
-      const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(i_relatedVertexFromTable(*icand));
-      if (0!=pv) verticesToSave.push_back(pv);
+      // already be "kept". On;y do it if PV is not in TES.
+      const LHCb::VertexBase* vb = i_relatedVertexFromTable(*icand);
+      if ( !DaVinci::inTES(vb) ) {
+        const LHCb::RecVertex* pv =  dynamic_cast<const LHCb::RecVertex*>(vb);
+        if (0!=pv) verticesToSave.push_back(pv);
+      }
     } else {
       if (msgLevel(MSG::VERBOSE)) printOut("Skipping", (*icand));
     }
@@ -422,6 +430,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   saveRefittedPVs(verticesToSave);
   // now save relations table
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
+
   saveP2PVRelations(pToSave);
  
 }
@@ -450,6 +459,10 @@ void PhysDesktop::saveVertices(const LHCb::Vertex::ConstVector& vToSave) const
 //=============================================================================
 void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) const
 {
+  if ( vToSave.empty() ) return;
+
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Saving " << vToSave.size() 
+                                        << " Re-fitted PVs" << endmsg;
   LHCb::RecVertices* verticesToSave = new LHCb::RecVertex::Container();
 
   const std::string location(m_outputLocn+"/_RefitPVs");
@@ -481,7 +494,9 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
   put(table, location);
 
   for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
-    table->merge( i_p2PVTable().i_relations(*p) );
+    Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
+    Particle2Vertex::Table::Range::const_iterator i = r.begin() ;
+    for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
   }
 
   if (msgLevel(MSG::DEBUG)) {
