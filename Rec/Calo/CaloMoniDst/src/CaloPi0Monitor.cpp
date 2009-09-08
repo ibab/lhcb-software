@@ -1,6 +1,6 @@
-// $Id: CaloPi0Monitor.cpp,v 1.9 2009-08-05 17:40:24 ibelyaev Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.10 2009-09-08 15:34:28 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -57,6 +57,7 @@ public:
     hBook1( "2", "pi0 energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );
     hBook1( "3", "pi0 et     " + inputData()       , m_etMin  , m_etMax , m_etBin );
     hBook1( "4", "pi0 Mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "5", "pi0 background mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -124,12 +125,26 @@ StatusCode CaloPi0Monitor::execute()
       if(momentum2.pt() < m_ptPhoton)continue;
       Gaudi::LorentzVector v2( momentum2.momentum() );
       Gaudi::LorentzVector pi0( v1 + v2 );
-      const double mass = pi0.mass() ;
-      const double e = pi0.e();
-      const double et = pi0.pt();
-      if( e < m_eFilter)continue;
-      if( et< m_etFilter)continue;
-      if( mass<m_massFilterMin || mass>m_massFilterMax)continue;
+      // background shape from (x,y)->(-x,-y) symmetrized g2
+      Gaudi::LorentzVector v2Sym( v2 );
+      v2Sym.SetPx( -v2.Px() );
+      v2Sym.SetPy( -v2.Py() );
+      Gaudi::LorentzVector bkg( v1 + v2Sym );
+      bool isBkg = false;
+      if( bkg.e() > m_eFilter &&
+          bkg.pt() > m_etFilter &&
+          bkg.mass() > m_massFilterMin &&
+          bkg.mass() < m_massFilterMax ) isBkg = true;
+      bool isPi0 = false;
+      if( pi0.e() > m_eFilter &&
+          pi0.pt() > m_etFilter &&
+          pi0.mass() > m_massFilterMin &&
+          pi0.mass() < m_massFilterMax ) isPi0 = true;
+      
+      
+      if( !isPi0 && !isBkg)continue;
+
+      // Get cellIDs
       LHCb::CaloCellID id1 = LHCb::CaloCellID();
       LHCb::CaloCellID id2 = LHCb::CaloCellID();
       if ( (*g1)->clusters().size() > 0 ){
@@ -141,12 +156,17 @@ StatusCode CaloPi0Monitor::execute()
         id2 = (*cluster).seed();      
       }
       LHCb::CaloCellID id = (id1.area() == id2.area() ) ? id1 : LHCb::CaloCellID();
-      count(id);
-      hFill1(id, "2", e   );
-      hFill1(id, "3", et  );
-      hFill1(id, "4", mass);      
+      if( isPi0 ){
+        count(id);
+        hFill1(id, "2", pi0.e()   );
+        hFill1(id, "3", pi0.pt()  );
+        hFill1(id, "4", pi0.mass());      
+      }
+      if( isBkg ){ 
+        hFill1(id, "5", bkg.mass());      
+      }
     }
-  }
+  }  
   fillCounters("1");
   return StatusCode::SUCCESS;
 }

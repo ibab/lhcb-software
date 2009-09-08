@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.7 2009-08-31 16:45:58 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.8 2009-09-08 15:34:28 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,7 +26,8 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
       , m_inputData( "" ) // no default value
       , m_inputs()        // no default value
       , m_detData( "" )   // no default value
-      , m_nAreas(){
+      , m_nAreas()
+{
 
   declareProperty( "Input",    m_inputData );
   declareProperty( "Inputs",   m_inputs );
@@ -67,6 +68,10 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   //  declareProperty( "splitAreas"          , m_split=false);
   declareProperty( "listOfAreas"         , m_areas); // list of areas to be split
   
+
+  m_removeHisto.clear();
+  m_histoList.clear();
+
   m_histoList.push_back( "All" );
   StatusCode sc=setProperty( "HistoTopDir", "CaloMoniDst/" );
   sc.isSuccess() ? 

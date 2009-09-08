@@ -59,6 +59,7 @@ public:
     }
   }
   inline void fillCounters(std::string unit){
+    //info() << "filling " << unit << " " << m_count <<  endmsg  ;
     fill(h1[unit], m_count , 1);
     if( m_split ){
       for(unsigned int i = 0;i != m_nAreas;++i){
@@ -129,6 +130,8 @@ public:
         GaudiAlg::HistoID id(area + "/" + hid);
         fill(h1[id],value,w);
       }
+      //info() << "filling " << hid << " " << cellID << " " << value << " " << w << endmsg  ;
+      
       fill(h1[hid],value,w);
     }else{
       fill(h1[hid],value,w);
@@ -150,8 +153,10 @@ public:
 protected:
   //
   // Histogram Map
-  GaudiUtils::HashMap< const std::string, AIDA::IHistogram1D * > h1;
-  GaudiUtils::HashMap< const std::string, AIDA::IHistogram2D * > h2;
+  //std::map< const std::string, AIDA::IHistogram1D * > h1;
+  //std::map< const std::string, AIDA::IHistogram2D * > h2;
+  GaudiUtils::HashMap< std::string, AIDA::IHistogram1D * > h1;
+  GaudiUtils::HashMap< std::string, AIDA::IHistogram2D * > h2;
   //
 private:
   // address/location/name in Transient Store of input data container
