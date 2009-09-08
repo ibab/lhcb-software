@@ -16,6 +16,7 @@ use HltTracking         v4r2    Hlt   # Jose Angel Hernando-Morata
 use HltEcalAlley        v2r0    Hlt   # Mariusz Witek
 use HltMuon             v3r5    Hlt   # Alessia Satta          
 use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
+use HltCosmics          v*      Hlt   # Stephan Nies
 use HltL0Conf           v2r10   Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato  
 use HltRecChecker	v1r10	Hlt   # Jose Angel Hernando-Morata
