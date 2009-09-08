@@ -1,0 +1,28 @@
+#============================================================================
+# Created    : 2009-09-08
+# Maintainer : Stephan Nies 
+#============================================================================
+package           HltCosmics
+version           v0r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src
+include_path      none
+
+# Used packages
+#============================================================================
+
+use HltBase             v*    Hlt
+use OTDAQ		v*    OT
+use GaudiKernel         v*    
+
+#============================================================================
+# Component library building rule
+#============================================================================
+library          HltCosmics    ../src/*.cpp
+
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=HltCosmics

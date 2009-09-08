@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Hlt/HltCosmics
+! Responsible : Stephan Nies 
+! Purpose     : Cosmic run specific algorithms and tools
+!----------------------------------------------------------------------------
+
+!========================== HltCosmics v1r0 2009-09-08 ===================
+! 2009-09-08 - Stephan Nies 
+ - first release of the HltCosmics Line 
+
