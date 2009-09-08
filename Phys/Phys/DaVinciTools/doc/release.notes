@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.467 2009-09-06 17:01:36 gcowan Exp $
+! $Id: release.notes,v 1.468 2009-09-08 14:04:26 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-08 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . Some more optimisations to saving or related PVs and saving of P->PV relaitons.
 
 ! 2009-09-06 - Greig Cowan
  - Minor fixes to Bs2JpsiPhiAngleCalculator to check pointers before 
