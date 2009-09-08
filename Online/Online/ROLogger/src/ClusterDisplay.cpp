@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.8 2008-11-13 12:15:00 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.9 2009-09-08 17:50:38 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.8 2008-11-13 12:15:00 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.9 2009-09-08 17:50:38 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -27,6 +27,19 @@ using namespace ROLogger;
 using namespace std;
 
 static int s_NumList[] = {1,10,50,100,200,300,500,1000,5000,10000};
+static const char* s_MsgList[] = {"*",
+				  "*MEPRx*",
+				  "*GauchoJob_0*",
+				  "*GauchoJob_1*",
+				  "*GauchoJob_2*",
+				  "*GauchoJob_3*",
+				  "*GauchoJob_4*",
+				  "*GauchoJob_5*",
+				  "*GauchoJob_6*",
+				  "*GauchoJob_7*",
+				  "*EvtProd*",
+				  "*EvtHolder*"
+};
 
 /// Standard constructor with object setup through parameters
 ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const string& name, const Nodes& nodes) 
@@ -39,10 +52,13 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
   ::strcpy(m_wildMessage,"*");
   ::upic_open_detached_menu(m_id,0,0,"Error logger",m_name.c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
+  m_nodeList = new char*[m_nodes.size()+1];
+  m_nodeList[0] = "*";
   if ( !m_nodes.empty() ) {
     ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
     for(Nodes::const_iterator n=m_nodes.begin(); n!=m_nodes.end(); ++n, ++cnt) {
       if ( (*n).find(name) != string::npos ) {
+	m_nodeList[cnt+1] = (char*)(*n).c_str();
         ::upic_add_command(cnt+1, (*n).c_str(),"");
       }
     }
@@ -53,9 +69,9 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
   if ( !m_nodes.empty() ) {
     ::upic_add_command(CMD_FARM_HISTORY,"Show all histories","");
   }
-  ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,0,0,0);
+  ::upic_set_param(m_wildNode,1,"A16",m_wildNode,0,0,m_nodeList,m_nodes.size()+1,0);
   ::upic_add_command(CMD_WILD_NODE,   "Node match:           ^^^^^^^^^^^^^^^","");
-  ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,0,0,0);
+  ::upic_set_param(m_wildMessage,1,"A16",m_wildMessage,0,0,s_MsgList,sizeof(s_MsgList)/sizeof(s_MsgList[0]),0);
   ::upic_add_command(CMD_WILD_MESSAGE,"...and match message: ^^^^^^^^^^^^^^^","");
   ::upic_add_comment(CMD_COM5,        "-----------------------------------------------","");
   ::upic_add_command(CMD_CLOSE,       "Close","");
@@ -68,6 +84,7 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
 ClusterDisplay::~ClusterDisplay() {
   UpiSensor::instance().remove(this,m_id);
   ::upic_delete_menu(m_id);
+  if ( m_nodeList ) delete [] m_nodeList;
 }
 
 /// Show history according to node and message pattern match
