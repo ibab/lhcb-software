@@ -6,14 +6,164 @@ Purpose: LHCb reconstruction packages.
          by one or more LHCb applications. 
 
 
-- Added the pattern container_package.
+</PRE><H1><A NAME=v7r6>2009-09-08 RecSys v7r6</A></H1><PRE>
+This version uses Gaudi v21r4 and LHCb v28r0
 
-! 2009-08-10 - Vanya BELYAEV
+- Packages modified: CaloMoniDst v4r0, CaloPIDs v5r1, CaloReco v5r1, MuonID v7r2,
+    GlobalReco v6r26, RichGlobalPID v3r10p3, RichMarkovRingFinder v2r8p1,
+    RichPIDMerge v2r7p1, RichRecAlgorithms v2r16p1, RichRecMCAlgorithms v1r3p2,
+    RichRecMCTools v2r25, RichRecMonitors v2r23p1, RichRecPhotonTools v1r6p1,
+    RichRecQC v2r33, RichRecStereoTools v1r6p1, RichRecTemplateRings v1r1,
+    RichRecTools v4r9p1, RichRecTrackTools v1r14, PatVelo v3r17, PatVeloTT v3r8,
+    TrackSys v4r25, TsaAlgorithms v3r12, NNTools v1r6, PatChecker v3r5,
+    PatFitParams v4r0, TrackCheckers v4r8, TrackExtrapolators v2r23,
+    TrackFitter v2r37, TrackMonitors v1r13, TrackProjectors v2r24,
+    TrackTools v3r21, TrackUtils v1r29, VeloRecMonitors v2r1
 
- - python/RecSys/Configuration.py
+- In RecSys v7r6:
+  . In Configuration.py: added usage of CaloReco & CaloPIDs configurables 
+  . In requirements: added apply_pattern container_package.
 
-    add usage of CaloReco & CaloPIDs configurables 
+- In CaloMoniDst v4r0
+  . Add proper configurable 
+  . CaloEMuMonitor.cpp add protection when no charged ProtoParticle
+  . CaloEMuMonitor, CaloEMuChecker: add proper calls to the base-class finalize()
+  . CaloPIDsChecker.cpp : fix division by zero in divide()
+  . Fix bug in CaloMoniAlg (SplitAreas/m_split property/member already exists
+    in inherited Calo2DView
 
+- In CaloPIDs v5r0, v5r1
+  . Add configurables 
+  . Implement generic context-dependent TES I/O
+
+- In CaloReco v5r0, v5r1
+  . Add proper configurables for calorimeter recontruction 
+  . Adapt old syntax .opts to change in CaloReco (public->private tool)
+  . Implement generic context-dependent TES I/O
+  . Add missing #include <memory> for std::auto_ptr
+
+- In MuonID v7r2
+  . Change python ConfiguredMuonIDs to prevent the use of pickle
+  . Change in MuonIDAlg to update the printing of the version
+
+- In GlobalReco v6r25, v6r26
+  . Reorganisation of charged ProtoParticle algorithms for greater 
+    flexibility :-
+    + New algorithm with creates ProtoParticles from Tracks, but no longer
+      adds any PID information
+    + One algorithm per PID information to be added to the ProtoParticles. 
+      Seperating these tasks from the main ProtoParticle creator allows PID
+      information to be added at a later date (e.g. in the HLT).
+    + Each PID algorithm now makes sure to first purge any existingg 
+      information from the ProtoParticles before adding any new values.
+    + python Configurable is updated to use the new algorithms (used by Brunel)
+    + New Monitor algorithm (used in Brunel).
+  . Implement generic context-dependent TES I/O
+  . Make sure default TES locations are always set, even if context() is not set
+  . NeutralProtoPAlg: add "LightMode" flag to skip all "additional info"
+
+- In RichRecMCTools v2r25
+  . Add new pixel creator that creates a single RichRecPixel object for each and
+    every MCRichHit in the event.
+  . Fix minor bug in PixelCreatorFromCheatedRawBuffer where the radiator 
+    corrected local positions were not being updated with the new MC cheated 
+    information when available.
+
+- In RichRecQC v2r33
+  . Add hot pixel finder
+  . Disable sending messages about mis-matches in raw data size between
+    RawEvent and decoded data structures
+  . Extend the data consistency checking algorithm to HPD L0ID
+  . Adapt to changes in LHCb::Track 
+  . Add HPD hit monitor to expert checks.
+  . Update HPD hit monitor to make separate plots for ZS and non-ZS data.
+
+- In RichRecTemplateRings v1r1
+  . Added an extra option to activate for saturated tracks only for the
+    RichTargetDataConfigAlg. This would speed up the cpu.
+
+- In RichRecTrackTools v1r14, NNTools v1r6, TrackCheckers v4r8,
+     TrackMonitors v1r13, TrackTools v3r21
+  . Adapt to changes in Track.xml
+
+- In PatVelo v3r17
+  . Update NewVeloSpaceTracking to get better efficiency with still low ghosts
+  . New algorithm VeloUpdateHighThreshold to update the High threshold bit of the
+    lite clusters according to the charge of the whole clusters. See release 
+    notes for usage. The efficiency increases by 0.2% 
+  . Changed default name of PatVelo hit managers for PatVeloFitLHCbIDs
+
+- In PatVeloTT v3r8
+  . Adapt to another change in configuring the fit
+
+- In TrackSys v4r25
+  . Add cleaning of track extra info in pattern reco sequence
+  . Add algorithm needed for hit efficiency to track checking sequence
+  . Remove explicit prefits
+
+- In TsaAlgorithms v3r12
+  . ITGenericTracking: remove filling of LHCb::Track::nExpectedIT
+
+- In PatChecker v3r5
+  . Replace TfHits by LiteClusters in PatLHCbID2MCParticle
+
+- In PatFitParams v4r0
+  . Adapt to python configurable so that it is easy to run:
+    after having setup Brunel, just do gaudirun.py ../options/FitParams.py
+  . Change output of the fit algorithms to produce python options
+
+- In TrackCheckers v4r8
+  . Protect output in TrackEffChecker against nan
+  . Add "good" B daughter effiency and hit efficiency to TrackEffChecker output
+
+- In TrackExtrapolators v2r23
+  . Add base class TrackFieldExtrapolatorBase and adapted relevant extrapolators
+  . Remove TrackLongExtraSelector; fixed properties of TrackDistanceExtraSelector
+  . Fixed bug in TrackHerabExtrapolator introduced in v2r20.
+
+- In TrackFitter v2r37
+  . Prefit iteration is now implicit in fit: as long as ambiguity of OT hit is 
+    not set, it will not use the drifttime. Adapted number of iterations of 
+    normal fit to take this into account.
+  . Correct DOF to 4 in case of field off  
+
+- In TrackMonitors v1r13
+  . Adapt to changes in HitPattern
+  . Tidy up STEfficiency algorithm
+
+- In TrackProjectors v2r24
+  . OTProjector will not use drifttime if ambiguity is zero (unitialized)
+
+- In TrackTools v3r21
+  . In TrackCloneFinder retuned cuts for fast clone finding to match the 
+    performance of the full clone killing
+
+- In TrackUtils v1r29
+  . Add algorithm to fill expected hit information
+  . Add algorithm to clean track extra info
+
+- In VeloRecMonitors v2r1
+  . Add preprocessor flag -DVETRA if cmt flag VETRA_root is active to allow for
+    specialised code that can't be compiled under Brunel dependencies.
+  . Use the above flag in the occupancy monitor to mask dependencies on
+    VetraKernel and VeloTell1Tools when not compiling in Vetra.
+  . Occupancy monitor: now uses the new TELL1 map and time stamp tools when
+    writing strip mask XML files. More graceful handling of missing input
+    containers. Usage of ODIN bank can be switched off. 
+
+- In CaloPIDs v5r1, RichGlobalPID v3r10p3, RichPIDMerge v2r7p1,
+     RichRecAlgorithms v2r16p1, RichRecMCAlgorithms v1r3p2, 
+     RichRecMonitors v2r23p1, RichRecPhotonTools v1r6p1, RichRecQC v2r33,
+     RichRecStereoTools v1r6p1, RichRecTemplateRings v1r1, RichRecTools v4r9p1,
+     NNTools v1r6, PatFitParams v4r0
+  . Remove obsolete file src/<package>_dll.cpp
+
+- In GlobalReco v6r25, RichGlobalPID v3r10p3, RichMarkovRingFinder v2r8p1,
+     RichPIDMerge v2r7p1, RichRecAlgorithms v2r16p1, RichRecMCAlgorithms v1r3p2,
+     RichRecMCTools v2r25, RichRecMonitors v2r23p1, RichRecPhotonTools v1r6p1,
+     RichRecQC v2r33, RichRecStereoTools v1r6p1, RichRecTemplateRings v1r1,
+     RichRecTools v4r9p1, RichRecTrackTools v1r14
+  . Replace all endreq with endmsg
 
 </PRE><H1><A NAME=v7r5>2009-07-30 RecSys v7r5</A></H1><PRE>
 This version uses Gaudi v21r3 and LHCb v27r5.
