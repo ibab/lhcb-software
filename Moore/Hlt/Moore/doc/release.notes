@@ -2,6 +2,9 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-09-08 - Gerhard Raven
+ - make DB snapshots work
+
 ! 2009-09-07 - Gerhard Raven
  - remove TCMALLOC use for the time being,
  - add explicit database tags for FEST

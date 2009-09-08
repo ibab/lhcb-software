@@ -15,11 +15,15 @@ def start() :
     Moore().RunOnline = True
     # TODO: record these tags somewhere...
     if OnlineEnv.PartitionName == 'FEST' :
-    	Moore().CondDBtag = 'MC09-20090602'
-    	Moore().DDDBtag   = 'sim-20090402-vc-md100'
+       Moore().Simulation = True
+       Moore().DDDBtag   = 'MC09-20090602'
+       Moore().CondDBtag = 'sim-20090402-vc-md100'
+       Moore().UseSnapshotOnline = True
     else : # TODO: make these very specific tags, not default!
-    	Moore().CondDBtag = 'default'
-    	Moore().DDDBtag   = 'default'
+       Moore().Simulation = False
+       Moore().CondDBtag = 'head-20090713'
+       Moore().DDDBtag   = 'head-20090713'
+       Moore().UseSnapshotOnline = True
     
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric

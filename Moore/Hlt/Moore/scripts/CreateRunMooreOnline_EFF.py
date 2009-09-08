@@ -61,7 +61,7 @@ if len(sys.argv)>2:
         if m :
             (name,value) = m.groups()
             if name == 'LD_LIBRARY_PATH':
-                value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
+                # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
                 value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
             if name == 'PYTHONPATH' : 
                 value = StripPath(value,lambda x: not re.search('Hlt/HltPython/python',x))

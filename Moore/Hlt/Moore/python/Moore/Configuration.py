@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.81 2009-09-07 12:40:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.82 2009-09-08 16:15:14 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -78,6 +78,7 @@ class Moore(LHCbConfigurableUser):
         , 'SkipHltRawBankOnRejectedEvents' : True
         , 'HistogrammingLevel' : 'Line'
         , "RunOnline" : False
+        , "UseSnapshotOnline" : True
         }   
                 
 
@@ -145,7 +146,7 @@ class Moore(LHCbConfigurableUser):
         from Configurables import AuditorSvc
         AuditorSvc().Auditors = []
         self._configureOnlineMessageSvc()
-        # self._configureOnlineDB()
+        if self.getProp('UseSnapshotOnline') : self._configureOnlineDB()
 
     def _configureOnlineMessageSvc(self):
         # setup the message service
@@ -173,9 +174,9 @@ class Moore(LHCbConfigurableUser):
 
         tag = { "DDDB":     self.getProp('DDDBtag')   # "head-20090112",
               , "LHCBCOND": self.getProp('CondDBtag') # "head-20090112" 
+              , "SIMCOND" : self.getProp('CondDBtag') 
+              , "ONLINE"  : 'fake'
               }
-        for (k,v) in tag.iteritems() :
-            if v is 'default' : raise keyError('must specify an explicit %s tag'%k)
 
         baseloc = "/group/online/hlt/conditions"
 
@@ -184,17 +185,21 @@ class Moore(LHCbConfigurableUser):
         # hack to allow us to chance connectionstrings...
         conddb.UseOracle = True
         # Set alternative connection strings and tags
-        for part in [ "DDDB", "LHCBCOND" ]:
+        # if simulation is False, we use DDDB, LHCBCOND and ONLINE
+        #                  True          DDDB, SIMCOND
+        # (see Det/DetCond's configurable... )
+        dbPartitions = { False : [ "DDDB", "LHCBCOND" , "ONLINE" ]
+                       , True :  [ "DDDB", "SIMCOND" ]
+                       }
+        for part in dbPartitions[ self.getProp('Simulation') ] :
+            if tag[part] is 'default' : raise KeyError('must specify an explicit %s tag'%part)
             conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
                                                                                                            "part": part,
                                                                                                            "tag":  tag[part]}
             # always use HEAD -- blindly trust the snapshot to be
             # right (this is faster, but less safe)
-            conddb.Tags[part] = 'HEAD'
-        part = "ONLINE"
-        conddb.PartitionConnectionString[part] = "sqlite_file:%(dir)s/%(part)s_%(tag)s.db/%(part)s" % {"dir":  baseloc,
-                                                                                                       "part": part,
-                                                                                                       "tag":  "fake"}
+            # conddb.Tags[part] = 'HEAD'
+            conddb.Tags[part] = tag[part]
 
         # Set the location of the Online conditions
         from Configurables import MagneticFieldSvc
@@ -362,7 +367,6 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('InitialTCK', OnlineEnv.InitialTCK )
                 self.setProp('CheckOdin',True)
             if OnlineEnv.PartitionName == 'FEST' :
-                # This is a bad hack which is probably incompatible with the use of snapshots...
                 self.setProp('Simulation',True)
 
 
