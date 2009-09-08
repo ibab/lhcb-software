@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.333 2009-09-03 11:15:42 graven Exp $ 
+! $Id: release.notes,v 1.334 2009-09-08 15:31:05 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-08 - Chris Jones
+ - Suppress the checking of the ProcStatus object by the RICH HLT 
+   reconstruction (Does not exist online).
 
 !========================== HltConf v4r3 2009-09-03 ===================
 ! 2009-09-03 - Gerhard Raven

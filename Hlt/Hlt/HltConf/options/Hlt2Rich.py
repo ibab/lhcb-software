@@ -14,6 +14,9 @@ richConf.setProp("RecoSequencer",richseq)
 richConf.Context   = "HLT"
 richConf.PidConfig = "FastGlobal"
 
+# Don't bother checking ProcStatus online
+richConf.CheckProcStatus = False
+
 # Initial pixels tracks and photons
 richConf.InitPixels  = True
 richConf.InitTracks  = True
