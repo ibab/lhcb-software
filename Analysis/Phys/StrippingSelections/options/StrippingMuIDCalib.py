@@ -72,7 +72,7 @@ LambdaLLCombine = StrippingMember( CombineParticles
 # ############################################################
 lm_line = StrippingLine('LambdaLLNoPID'
                         , prescale = 1.
-                        , algos = [ LambdaDDCombine ]
+                        , algos = [ LambdaLLCombine ]
                         , stream = 'Lambda'
                     )
 
