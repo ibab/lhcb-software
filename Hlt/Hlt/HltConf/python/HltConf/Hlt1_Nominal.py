@@ -128,6 +128,7 @@ class Hlt1_Nominal :
                  'Hlt1NonRandomODIN',
                  'Hlt1RandomODIN',
                  'Hlt1Tell1Error' ,
-                 'Hlt1Incident']
+                 'Hlt1Incident',
+                 'Hlt1OTCosmic']
     
     
