@@ -1,14 +1,20 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.17 2009-08-26 16:23:25 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.18 2009-09-08 16:35:15 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
 import GaudiPython
-GaudiPython.loaddict('libEventAssocDict')
+
+import sys
+
+if sys.platform != "win32" :
+    GaudiPython.loaddict('libEventAssocDict')
+else :
+    GaudiPython.loaddict('EventAssocDict')
 
 from AnalysisConf.BaseDSTWriter import BaseDSTWriter
 
