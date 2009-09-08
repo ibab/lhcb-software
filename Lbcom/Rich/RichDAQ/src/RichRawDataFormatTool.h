@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::DAQ::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.h,v 1.39 2009-09-03 16:54:43 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.h,v 1.40 2009-09-08 12:30:51 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-12-18
@@ -264,6 +264,10 @@ namespace Rich
 
       /// Returns a default data map
       const Rich::DAQ::L1Map & dummyMap() const;
+
+      /// Suppress hot pixels
+      void suppressHotPixels( const LHCb::RichSmartID& hpdID,
+                              LHCb::RichSmartID::Vector & newids ) const;
 
     private: // data
 

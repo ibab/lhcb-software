@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.92 2009-09-06 14:19:35 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.93 2009-09-08 12:30:51 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -959,38 +959,8 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
                   ++nHPDbanks;
                   decodedHits += hpdHitCount;
 
-                  // clean out hot pixels enabled at all ?
-                  if ( m_pixelsToSuppress )
-                  {
-                    // Does this HPD have some pixels to suppress
-                    HPDHotPixels::const_iterator iHPDSup = m_hotPixels.find(hpdID);
-                    if ( iHPDSup != m_hotPixels.end() )
-                    {
-                      // temporary copy of original hit channels
-                      const LHCb::RichSmartID::Vector oldids = newids;
-
-                      // clear hits before suppression
-                      newids.clear();
-                      
-                      // loop over original hits and save only those not supressed
-                      for ( LHCb::RichSmartID::Vector::const_iterator iID = oldids.begin();
-                            iID != oldids.end(); ++iID )
-                      {
-                        if ( iHPDSup->second.find(*iID) == iHPDSup->second.end() )
-                        { 
-                          // not suppressed, so keep
-                          newids.push_back(*iID);
-                        }
-                        else
-                        {
-                          std::ostringstream mess;
-                          mess << "Channel " << *iID << " is software SUPPRESSED";
-                          Warning( mess.str(), StatusCode::SUCCESS );
-                        }
-                      }
-                      
-                    }
-                  }
+                  // suppress hot pixels
+                  suppressHotPixels(hpdID,newids);
 
                 }
                 else
@@ -1064,6 +1034,46 @@ void RawDataFormatTool::decodeToSmartIDs_2007( const LHCb::RawBank & bank,
     debug() << " : Size " << boost::format("%4i") % (bank.size()/4) << " words : Version "
             << version << endmsg;
   }
+
+}
+
+void RawDataFormatTool::suppressHotPixels( const LHCb::RichSmartID& hpdID,
+                                           LHCb::RichSmartID::Vector & newids ) const
+{
+  // clean out hot pixels enabled at all ?
+  if ( m_pixelsToSuppress )
+  {
+    // Does this HPD have some pixels to suppress
+    HPDHotPixels::const_iterator iHPDSup = m_hotPixels.find(hpdID);
+    if ( iHPDSup != m_hotPixels.end() )
+    {
+      // temporary copy of original hit channels
+      const LHCb::RichSmartID::Vector oldids = newids;
+
+      // clear hits before suppression
+      newids.clear();
+
+      // loop over original hits and save only those not supressed
+      for ( LHCb::RichSmartID::Vector::const_iterator iID = oldids.begin();
+            iID != oldids.end(); ++iID )
+      {
+        if ( iHPDSup->second.find(*iID) == iHPDSup->second.end() )
+        {
+          // not suppressed, so keep
+          newids.push_back(*iID);
+        }
+        else
+        {
+          std::ostringstream mess;
+          mess << "Channel " << *iID << " is software SUPPRESSED";
+          Warning( mess.str(), StatusCode::SUCCESS );
+        }
+
+      } // loop over pixels
+
+    } // this HPD has pixels to suppress
+
+  } // hot pixel suppression enabled
 
 }
 
