@@ -1,30 +1,11 @@
 #include "ROMon/FarmDisplay.h"
 #include "SCR/MouseSensor.h"
-#include "CPP/TimeSensor.h"
 #include "CPP/IocSensor.h"
-#include "CPP/Event.h"
-#include "RTL/rtl.h"
-#include "RTL/Lock.h"
-#include "RTL/strdef.h"
 #include "SCR/scr.h"
-#include "WT/wtdef.h"
 extern "C" {
 #include "dic.h"
 }
 
-// C++ include files
-#include <set>
-#include <limits>
-#include <cstdio>
-#include <cstdlib>
-#include <cstdarg>
-#include <fstream>
-#include <iostream>
-#include <algorithm>
-
-#ifdef _WIN32
-#define vsnprintf _vsnprintf
-#endif
 using namespace ROMon;
 using namespace SCR;
 using namespace std;
@@ -133,6 +114,7 @@ void CtrlFarmSubDisplay::update(const void* address) {
 
 /// DIM command service callback
 void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
+  bool twoline = false;
   char txt[128];
   string val;
   Cluster& c = m_cluster;
@@ -162,7 +144,11 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     val = " "+(n.name == m_name ? n.name : n.name.substr(n.name.length()-2));
     ::scrc_put_chars(m_display,val.c_str(),col,line,pos,0);
     pos += val.length();
-    if ( pos>DISP_WIDTH-3 ) ++line, pos=1;
+    if ( pos>DISP_WIDTH-3 )  {
+      ++line;
+      pos=1;
+      twoline=true;
+    }
   }
   col = (c.status=="ALIVE") ? NORMAL|BOLD : (c.status=="MIXED") ? COL_WARNING : COL_ALARM;
   ::sprintf(txt,"%-40s",c.time.c_str());
@@ -197,8 +183,11 @@ void CtrlFarmSubDisplay::updateContent(XML::TaskSupervisorParser& ts) {
     ::scrc_put_chars(m_display,"Connectivity bad - Please check.",NORMAL,4,1,1);    
     ::scrc_set_border(m_display,m_title.c_str(),col);
   }
-  else {
+  else if ( !twoline )  {
     ::scrc_put_chars(m_display,"No obvious error detected.",NORMAL|GREEN,4,1,1);    
+    ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
+  }
+  else  {
     ::scrc_set_border(m_display,m_title.c_str(),NORMAL|BOLD);
   }
 }

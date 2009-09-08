@@ -10,6 +10,7 @@
    <Node name="hlta1007"   type="HLTWorker"/>
    <Node name="hlta1008"   type="HLTWorker"/>
    <Node name="hlta1009"   type="HLTWorker"/>
+   <Node name="hlta1010"   type="HLTWorker"/>
    <Node name="hlta1011"   type="HLTWorker"/>
    <Node name="hlta10"   type="HLTControl"/>
   </NodeList>

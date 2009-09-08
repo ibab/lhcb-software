@@ -104,7 +104,7 @@ MonitoringSubDisplay::~MonitoringSubDisplay() {
 void MonitoringSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
-  ::sprintf(txt,"%-7s%9s%4s%4s%9s%4s%4s",
+  ::sprintf(txt,"%-7s%9s%4s%5s%9s%4s%4s",
             "","Events","Cl","Sl","Output","Cl","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
@@ -293,27 +293,27 @@ void MonitoringSubDisplay::updateContent(const Nodeset& ns) {
   m_totWorker = tot_prod[1];
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
-    ::sprintf(txt,"%9s%4s%4s%17s","--","--","--","");
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,txt,NORMAL,2,8,1);
 
   if ( tot_prod[1] != 0 && tot_prod[2] != 0 ) {
-    ::sprintf(txt,"%-7s%9s%4s%4s%9s%4s%4s","","Events","Cl","Sl","Output","Cl","Sl");
+    ::sprintf(txt,"%-7s%9s%4s%5s%9s%4s%4s","","Events","Cl","Sl","Output","Cl","Sl");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
-    ::sprintf(txt,"%9d%4d%4d%9d%4d%4d",
+    ::sprintf(txt,"%9d%4d%5d%9d%4d%4d",
 	      tot_prod[1],num_cl[1],num_sl[1],
 	      tot_prod[2],num_cl[2],num_sl[2]);
   }
   else if ( tot_prod[1] != 0 ) {
-    ::sprintf(txt,"%-7s%9s%4s%4s%17s","","Events","Cl","Sl","");
+    ::sprintf(txt,"%-7s%9s%4s%5s%17s","","Events","Cl","Sl","");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
-    ::sprintf(txt,"%9d%4d%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"  No Output streams");
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"  No Output streams");
   }
   else {
-    ::sprintf(txt,"%-7s%9s%4s%4s%17s","","Events","Cl","Sl","");
+    ::sprintf(txt,"%-7s%9s%4s%5s%17s","","Events","Cl","Sl","");
     ::scrc_put_chars(m_display,txt,INVERSE,1,1,1);
-    ::sprintf(txt,"%9s%4s%4s%17s","--","--","--","");
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   }
   ::scrc_put_chars(m_display,txt,NORMAL,3,8,1);
   IocSensor::instance().send(m_parent,CMD_CHECK,this);

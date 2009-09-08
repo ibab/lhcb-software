@@ -1,4 +1,4 @@
-// $Id: ProcessDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Id: ProcessDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/ProcessDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -145,7 +145,7 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
       else if ( m_flag == 4 )
 	::scrc_put_chars(m_display,"The display shows DRIVER tasks",NORMAL,++line,10,1);
       ::sprintf(txt,"      %-32s %-6s %-5s %5s %5s %6s %6s %7s %7s %6s %3s   %s",
-		"UTGID","Owner","State","PID","PPID","Mem[%]","VM[kB]","RSS[kB]","Stk[kB]","CPU[%]","Thr","Started");
+		"UTGID","Owner","State","PID","PPID","Mem[%]","VM[MB]","RSS[MB]","Stk[kB]","CPU[%]","Thr","Started");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,1);
       for(_P::const_iterator ip=procs.begin(); ip!=procs.end(); ip=procs.next(ip)) {
 	const Process& p = *ip;
@@ -178,12 +178,12 @@ void ProcessDisplay::updateContent(const ProcFarm& pf) {
 	  ::strncpy(text,p.cmd,sizeof(text));
 	  text[27] = 0;
 	  text[26]=text[25]=text[24]='.';
-	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.0f %7.0f %7.0f %6.2f %3d   %s",
-		    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.stack,p.cpu,p.threads,tmb);
+	  ::sprintf(txt,"%3d: %3s:%-28s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d   %s",
+		    ++cnt, p.utgid,text,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
 	}
 	else {
-	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.0f %7.0f %7.0f %6.2f %3d   %s",
-		    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize,p.rss,p.stack,p.cpu,p.threads,tmb);
+	  ::sprintf(txt,"%3d: %-32s %-10s %c %5d %5d %6.3f %6.1f %7.1f %7.0f %6.1f %3d   %s",
+		    ++cnt, p.utgid,p.owner,state,p.pid,p.ppid,p.mem,p.vsize/1024.,p.rss/1024.,p.stack,p.cpu,p.threads,tmb);
 	}
 	::scrc_put_chars(m_display,txt,NORMAL,++line,2,1);
       }

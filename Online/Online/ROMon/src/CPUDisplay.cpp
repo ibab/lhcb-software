@@ -1,4 +1,4 @@
-// $Id: CPUDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Id: CPUDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/CPUDisplay.cpp,v 1.2 2009-09-08 15:59:18 frankb Exp $
 
 // Framework include files
 #include "ROMon/TaskSupervisor.h"
@@ -60,6 +60,7 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
   char txt[255], text[64];
   int cnt = 0;
   int line = 1;
+  bool found = false;
   time_t t1 = f.time;
   ::strftime(text,sizeof(text),"%H:%M:%S",::localtime(&t1));
   ::sprintf(txt,"      CPU farm:%s %s  [%d nodes]",f.name,text,f.nodes.size());
@@ -78,7 +79,10 @@ void CPUDisplay::updateContent(const CPUfarm& f) {
     ::sprintf(txt,"      Average values: %9s %9.3f %9.3f %9.3f %10.3f %9.3f %9.3f %9.0f",
               "",avg.user,avg.system,avg.idle,avg.iowait,avg.IRQ,avg.softIRQ,avg.nice);
     ::scrc_put_chars(m_display,txt,NORMAL,++line,3,1);
-    if ( strcasecmp(m_node.c_str(),cs.name) != 0 ) continue;
+
+    if ( strcasecmp(m_node.c_str(),cs.name) != 0 && !found ) continue;
+    // No does not look that good.... 
+    //found = true;
     ::sprintf(txt,"        %9s %5s %9s %9s %9s %9s %10s %9s %9s %9s",
               "Clock","Cache","Mips","User[%]","System[%]","Idle[%]","IO wait[%]","IRQ","SoftIRQ","Nice");
     ::scrc_put_chars(m_display,txt,BOLD,++line,1,1);

@@ -103,7 +103,7 @@ FarmSubDisplay::~FarmSubDisplay() {
 void FarmSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
-  ::sprintf(txt,"%-4s%9s %3s%10s %2s%4s%9s%4s",
+  ::sprintf(txt,"%-4s%9s %3s%10s %2s%4s%9s%5s",
             "","MEP","Sl","EVENT","Cl","Sl","SEND","Sl");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   //::scrc_put_chars(m_display,txt,col|BOLD,1,1,1);
@@ -337,20 +337,20 @@ void FarmSubDisplay::updateContent(const Nodeset& ns) {
   m_totSent   = evt_prod[2];
 
   if ( evt_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%10d%3d%4d%9d%4d",
+    ::sprintf(txt,"%9d%4d%10d%3d%4d%9d%5d",
               evt_prod[0],used_slots[0],
               evt_prod[1],buf_clients[1],used_slots[1],
               evt_prod[2],used_slots[2]);
   else
-    ::sprintf(txt,"%9s%4s%10s%7s%9s%4s","--","--","--","--","--","--");
+    ::sprintf(txt,"%9s%4s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,2,5,1);
   if ( min_prod[0] != INT_max )
-    ::sprintf(txt,"%9d%4d%10d%7d%9d%4d",
+    ::sprintf(txt,"%9d%4d%10d%7d%9d%5d",
               min_prod[0],min_slots[0],
               min_prod[1],min_slots[1],
               min_prod[2],min_slots[2]);
   else
-    ::sprintf(txt,"%9s%4s%10s%7s%9s%4s","--","--","--","--","--","--");
+    ::sprintf(txt,"%9s%4s%10s%7s%9s%5s","--","--","--","--","--","--");
   ::scrc_put_chars(m_display,txt,NORMAL,3,5,1);
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }

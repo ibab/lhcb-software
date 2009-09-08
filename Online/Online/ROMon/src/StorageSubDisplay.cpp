@@ -104,7 +104,7 @@ StorageSubDisplay::~StorageSubDisplay() {
 void StorageSubDisplay::init(bool bad) {
   int col = bad ? INVERSE|RED : NORMAL;
   char txt[128];
-  ::sprintf(txt,"%-13s%9s%4s%4s%9s%4s%4s",
+  ::sprintf(txt,"%-13s%9s%4s%5s%9s%4s%4s",
             "","Events","Cl","Sl","","","");
   ::scrc_put_chars(m_display,txt,col|INVERSE,1,1,1);
   ::scrc_put_chars(m_display," ",col,2,1,1);
@@ -271,15 +271,15 @@ void StorageSubDisplay::updateContent(const Nodeset& ns) {
   m_totSent = tot_prod[1];
 
   if ( tot_prod[0] != 0 )
-    ::sprintf(txt,"%9d%4d%4d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[0],num_cl[0],num_sl[0],"");
   else
-    ::sprintf(txt,"%9s%4s%4s%17s","--","--","--","");
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,txt,NORMAL,2,14,1);
 
   if ( tot_prod[1] != 0 )
-    ::sprintf(txt,"%9d%4d%4d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
+    ::sprintf(txt,"%9d%4d%5d%17s",tot_prod[1],num_cl[1],num_sl[1],"");
   else
-    ::sprintf(txt,"%9s%4s%4s%17s","--","--","--","");
+    ::sprintf(txt,"%9s%4s%5s%17s","--","--","--","");
   ::scrc_put_chars(m_display,txt,NORMAL,3,14,1);
   IocSensor::instance().send(m_parent,CMD_CHECK,this);
 }
