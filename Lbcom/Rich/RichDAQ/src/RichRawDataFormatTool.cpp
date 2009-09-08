@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.93 2009-09-08 12:30:51 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.94 2009-09-08 14:57:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -108,14 +108,14 @@ StatusCode RawDataFormatTool::initialize()
   // Do we have pixels to suppress ?
   if ( !m_hotChannels.empty() )
   {
-    info() << " Hot HPD pixel list to suppress :-" << endmsg;
+    info() << "Hot HPD pixel list to suppress :-" << endmsg;
     m_pixelsToSuppress = true;
     for ( HotPixelListType::const_iterator iC = m_hotChannels.begin();
           iC != m_hotChannels.end(); ++iC )
     {
       const LHCb::RichSmartID channel(*iC);
       m_hotPixels[channel.hpdID()].insert(channel);
-      info() << "  " << channel << endmsg;
+      info() << " " << channel << " (" << channel.key() << ")" << endmsg;
     }
   }
 
