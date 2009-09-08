@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.15 2008-11-11 15:23:15 lnicolas Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.16 2009-09-08 07:40:29 wouter Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -44,6 +44,10 @@ DECLARE_ALGORITHM_FACTORY ( AlignTrackMonitor );
 AlignTrackMonitor::AlignTrackMonitor ( const std::string& name,
                                        ISvcLocator* pSvcLocator ):
   GaudiHistoAlg ( name, pSvcLocator ),
+  m_extrapolator("TrackParabolicExtrapolator"),
+  m_itHitExpectation("ITHitExpectation"),
+  m_otHitExpectation("OTHitExpectation"),
+
   m_otTracker ( 0 ),
   m_itTracker ( 0 ) {
 
@@ -93,8 +97,10 @@ StatusCode AlignTrackMonitor::initialize ( ) {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
   if ( sc.isFailure() ) return Error( "Failed to initialize" );
 
-  // The extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
+  // Get tools
+  m_extrapolator.retrieve().ignore() ;
+  m_itHitExpectation.retrieve().ignore() ;
+  m_otHitExpectation.retrieve().ignore() ;
 
   // Get The Magnetic Field
   m_pIMF = svc<IMagneticFieldSvc>( "MagneticFieldSvc",true );
@@ -395,8 +401,8 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   //**********************************************************************
   // Number of Holes
   //**********************************************************************
-  unsigned int itExpHits = (unsigned int)aTrack->info(LHCb::Track::nExpectedIT, 0);
-  unsigned int otExpHits = (unsigned int)aTrack->info(LHCb::Track::nExpectedOT, 0);
+  unsigned int itExpHits = m_itHitExpectation->nExpected(*aTrack); 
+  unsigned int otExpHits = m_otHitExpectation->nExpected(*aTrack); 
   unsigned int expHits = itExpHits + otExpHits;
   if ( expHits < m_nITHits + m_nOTHits ) expHits = m_nITHits + m_nOTHits;
   m_nHoles = expHits - (m_nITHits + m_nOTHits);

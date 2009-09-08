@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.9 2008-07-17 13:54:39 lnicolas Exp $
+// $Id: AlignTrackMonitor.h,v 1.10 2009-09-08 07:40:29 wouter Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -16,6 +16,7 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // Linkers
 #include "Linker/LinkerTool.h"
@@ -27,6 +28,11 @@
 #include "Event/VeloCluster.h"
 #include "Event/OTTime.h"
 #include "Event/FitNode.h"
+
+// Interface
+#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/IHitExpectation.h"
+
 //===========================================================================
 
 //===========================================================================
@@ -114,7 +120,10 @@ private:
   int m_nStrips;
   //======================================================================
 
-  ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
+  ToolHandle<ITrackExtrapolator> m_extrapolator; // Interface to track extrapolator
+  ToolHandle<IHitExpectation> m_itHitExpectation ;
+  ToolHandle<IHitExpectation> m_otHitExpectation ;
+
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
   DeOTDetector* m_otTracker;           ///< Pointer to the OT XML geom
   DeITDetector* m_itTracker;           ///< Pointer to the IT XML geom

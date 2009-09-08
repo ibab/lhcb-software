@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.cpp,v 1.9 2009-07-09 19:47:57 wouter Exp $
+// $Id: AlignSaveTuple.cpp,v 1.10 2009-09-08 07:40:29 wouter Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -44,7 +44,11 @@ AlignSaveTuple::AlignSaveTuple ( const std::string& name,
                                        ISvcLocator* pSvcLocator ):
   GaudiTupleAlg ( name, pSvcLocator ),
   m_otTracker ( 0 ),
-  m_itTracker ( 0 ) {
+  m_itTracker ( 0 ),
+  m_extrapolator("TrackParabolicExtrapolator"),
+  m_itHitExpectation("ITHitExpectation"),
+  m_otHitExpectation("OTHitExpectation")
+ {
   
   // Reserving space for some vectors
   m_closeHits.reserve  ( 1000 );
@@ -101,7 +105,9 @@ StatusCode AlignSaveTuple::initialize ( ) {
   if ( sc.isFailure() ) return Error( "Failed to initialize" );
 
   // The extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
+  m_extrapolator.retrieve().ignore() ;
+  m_itHitExpectation.retrieve().ignore() ;
+  m_otHitExpectation.retrieve().ignore() ;
 
   // Retrieve the ghost classification tool
   m_ghostClassification = tool<ITrackGhostClassification>( m_ghostToolName,
@@ -517,8 +523,8 @@ AlignSaveTuple::fillVariables ( const LHCb::Track* aTrack,
   //**********************************************************************
   // Number of Holes
   //**********************************************************************
-  int itExpHits = (int)aTrack->info(LHCb::Track::nExpectedIT, 0);
-  int otExpHits = (int)aTrack->info(LHCb::Track::nExpectedOT, 0);
+  int itExpHits = m_itHitExpectation->nExpected(*aTrack); 
+  int otExpHits = m_otHitExpectation->nExpected(*aTrack); 
   int expHits = itExpHits + otExpHits;
   if ( expHits < m_nITHits + m_nOTHits ) expHits = m_nITHits + m_nOTHits;
   m_nHoles = expHits - (m_nITHits + m_nOTHits);

@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.cpp,v 1.19 2009-07-08 09:24:31 wouter Exp $
+// $Id: AlignSelTool.cpp,v 1.20 2009-09-08 07:40:29 wouter Exp $
 // Include files 
 
 // local
@@ -30,6 +30,8 @@ AlignSelTool::AlignSelTool ( const std::string& type,
                              const std::string& name,
                              const IInterface* parent ):
   GaudiTool      ( type, name , parent ),
+  m_itHitExpectation("ITHitExpectation"),
+  m_otHitExpectation("OTHitExpectation"),
   m_configured   ( false               ),
 
   // Initializing the variables one might cut on
@@ -104,8 +106,9 @@ StatusCode AlignSelTool::initialize ( ) {
   if ( !m_uniformDist.initialize( randSvc, Rndm::Flat(0.,0.5) ) )
     return Error ( "Failed to initialize Flat Random distribution!" );
 
-  // Get parabolic extrapolator
-  m_extrapolator = tool<ITrackExtrapolator>( "TrackFastParabolicExtrapolator" );
+  // Get tools
+  m_itHitExpectation.retrieve().ignore() ;
+  m_otHitExpectation.retrieve().ignore() ;
 
   // Get OT geometry
   DeOTDetector* otTracker = getDet<DeOTDetector>( DeOTDetectorLocation::Default );
@@ -319,9 +322,9 @@ int AlignSelTool::getAllVariables ( const LHCb::Track& aTrack ) const {
   }
 
   // Holes
-  if ( c_maxNHoles < abs(defValue) ) {
-    int itExpHits = (int)aTrack.info(LHCb::Track::nExpectedIT, 0);
-    int otExpHits = (int)aTrack.info(LHCb::Track::nExpectedOT, 0);
+  if ( c_maxNHoles < abs(defValue) ) {  
+    int itExpHits = m_itHitExpectation->nExpected(aTrack); 
+    int otExpHits = m_otHitExpectation->nExpected(aTrack); 
     int expHits = itExpHits + otExpHits;
     if ( expHits < nITHits + nOTHits ) expHits = nITHits + nOTHits;
     m_nHoles = expHits - (nITHits + nOTHits);

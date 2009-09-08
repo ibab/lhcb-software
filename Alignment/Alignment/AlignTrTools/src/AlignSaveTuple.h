@@ -1,4 +1,4 @@
-// $Id: AlignSaveTuple.h,v 1.7 2008-11-11 15:23:15 lnicolas Exp $
+// $Id: AlignSaveTuple.h,v 1.8 2009-09-08 07:40:29 wouter Exp $
 #ifndef _AlignSaveTuple_H_
 #define _AlignSaveTuple_H_
 
@@ -16,10 +16,15 @@
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // Linkers
 #include "Linker/LinkerTool.h"
 #include "Linker/LinkedTo.h"
+
+// Tools
+#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/IHitExpectation.h"
 
 // Event
 #include "Event/MCParticle.h"
@@ -130,7 +135,9 @@ private:
   std::string m_ghostToolName;
   //======================================================================
 
-  ITrackExtrapolator* m_extrapolator; ///< Interface to track extrapolator
+  ToolHandle<ITrackExtrapolator> m_extrapolator; // Interface to track extrapolator
+  ToolHandle<IHitExpectation> m_itHitExpectation ;
+  ToolHandle<IHitExpectation> m_otHitExpectation ;
   IMagneticFieldSvc* m_pIMF; ///< Pointer to the magn. field service
   ITrackGhostClassification* m_ghostClassification;  ///< Pointer to ghost tool 
 

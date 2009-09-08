@@ -1,4 +1,4 @@
-// $Id: AlignSelTool.h,v 1.13 2009-05-12 19:55:01 wouter Exp $
+// $Id: AlignSelTool.h,v 1.14 2009-09-08 07:40:29 wouter Exp $
 #ifndef ALIGNTRTOOLS_ALIGNSELTOOL_H 
 #define ALIGNTRTOOLS_ALIGNSELTOOL_H 1
 
@@ -13,10 +13,11 @@
 
 #include "GaudiKernel/IRndmGenSvc.h"
 #include "GaudiKernel/RndmGenerators.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // Interface
 #include "TrackInterfaces/ITrackSelector.h"
-#include "TrackInterfaces/ITrackExtrapolator.h"
+#include "TrackInterfaces/IHitExpectation.h"
 
 // Event
 #include "Event/Track.h"
@@ -67,7 +68,8 @@ private:
 
   mutable Rndm::Numbers m_uniformDist; // Random numbers generator
 
-  ITrackExtrapolator* m_extrapolator; // Interface to track extrapolator
+  ToolHandle<IHitExpectation> m_itHitExpectation ;
+  ToolHandle<IHitExpectation> m_otHitExpectation ;
 
   //===========================================================================
   // Incident listener
