@@ -34,9 +34,6 @@ library          VeloRecMonitors    ../src/*.cpp
 #============================================================================
 apply_pattern    component_library library=VeloRecMonitors
 
-macro_append pp_cppflags "" \
-              VETRA_root " -DVETRA"
-
 macro_append ROOT_linkopts " -lHist -lGpad -lGraf" \
                      WIN32 " libHist.lib libGpad.lib libGraf.lib" \
                     osx104 " -lHist -lMatrix -lGpad -lGraf"

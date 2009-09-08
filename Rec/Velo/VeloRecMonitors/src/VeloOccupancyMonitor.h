@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.h,v 1.4 2009-08-31 13:16:06 krinnert Exp $
+// $Id: VeloOccupancyMonitor.h,v 1.5 2009-09-08 16:26:22 krinnert Exp $
 #ifndef VELORECMONITORS_VELOOCCUPANCYMONITOR_H 
 #define VELORECMONITORS_VELOOCCUPANCYMONITOR_H 1
 
@@ -13,10 +13,8 @@
 
 #include "DetDesc/Condition.h"
 
-#ifdef VETRA
-#include "VetraKernel/ITELL1SensorMap.h"
-#include "VetraKernel/ITimeStampProvider.h"
-#endif // VETRA
+#include "Tell1Kernel/ITELL1SensorMap.h"
+#include "Tell1Kernel/ITimeStampProvider.h"
 
 #include "VeloMonitorBase.h"
 
@@ -77,7 +75,6 @@ namespace Velo
    
     std::map<unsigned int, Condition> m_conditions; 
     
-#ifdef VETRA
     // tools
     Velo::ITELL1SensorMap* m_tell1Map;
     Velo::ITimeStampProvider* m_timeStamps;
@@ -87,7 +84,6 @@ namespace Velo
     std::string m_xmlDir;
     std::string m_paramName;
     double m_highOccCut;
-#endif // VETRA
     
     // Job options
     std::string m_clusterCont;

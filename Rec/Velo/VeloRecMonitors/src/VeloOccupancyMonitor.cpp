@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.5 2009-08-31 13:16:06 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.6 2009-09-08 16:26:22 krinnert Exp $
 // Include files 
 // -------------
 
@@ -47,12 +47,10 @@ Velo::VeloOccupancyMonitor::VeloOccupancyMonitor( const std::string& name,
   : Velo::VeloMonitorBase ( name , pSvcLocator )
   , m_occupancyDenom(0)
 {
-#ifdef VETRA
   declareProperty( "WriteXML", m_writeXML = false );
   declareProperty( "XMLDirectory", m_xmlDir = "." );
   declareProperty( "ParamName", m_paramName = "strip_mask" );
   declareProperty( "HighOccCut", m_highOccCut = 1.0 );
-#endif // VETRA
   declareProperty( "VeloClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "OccupancyResetFrequency", m_occupancyResetFreq=10000 );
   declareProperty( "UseOdin", m_useOdin = true );
@@ -73,13 +71,11 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
   if ( sc.isFailure() ) return sc;
 
 
-#ifdef VETRA
   // get tools needed for writing XML files
   if ( m_writeXML ) {
     m_tell1Map   = tool<Velo::ITELL1SensorMap>("Velo::LivDBTELL1SensorMap","Tell1Map");
     m_timeStamps = tool<Velo::ITimeStampProvider>("Velo::TimeStamps","TimeStamps");
   }
-#endif // VETRA
 
   m_nstrips = 180224;
 
@@ -188,7 +184,6 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 
   if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
 
-#ifdef VETRA
   // create conditions and write them to XML, if requested
   if ( m_writeXML ) {
     struct stat statbuf;
@@ -244,7 +239,6 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
     }
     txtFile.close();
   }
-#endif // VETRA
   
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }

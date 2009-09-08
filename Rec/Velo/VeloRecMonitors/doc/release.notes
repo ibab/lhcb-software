@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-09-08 - Kurt Rinnert
+ - adapted to new locations of tool interfaces. Reverted cmt hack to hide tool
+   usage in standard build because no longer needed.
+
 !======================= VeloRecMonitors v2r1 2009-09-03 =====================
 ! 2009-08-31 - Kurt Rinnert
  - add preprocessor flag -DVETRA if cmt flag VETRA_root is active to allow for
@@ -26,7 +30,7 @@
  - added optional output of strip mask condition XML to occupancy monitoring.
 
 !======================= VeloRecMonitors v1r11 2009-07-28 ====================
-!2009-07-27 Silvia Borghi
+!2009-07-27 - Silvia Borghi
 - VeloTrackMonitor
   - change the plot of phi coordinate of the plot, one histogram per half,
     transform phi coordinate for the C side in the range -90,90.
