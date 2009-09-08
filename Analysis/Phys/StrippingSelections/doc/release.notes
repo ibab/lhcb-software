@@ -6,6 +6,10 @@
 
 !===================== StrippingSelections v1r6 2009-09-08 ====================
 
+! 2009-09-08 - Juan Palacios for Alessio Sarti
+ - options/StrippingMuIDCalib.py
+  . Fixed typo in LL lambda selection
+
 ! 2009-09-04 - Anton Poluektov
  - Modifications for MC09 processing
    * Rearranged streams (currently 5 streams: Hadron, Bmuon, Jpsi, Dstar, Lambda)
