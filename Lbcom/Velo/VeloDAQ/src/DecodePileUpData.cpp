@@ -12,8 +12,6 @@
 // local
 #include "DecodePileUpData.h"
 
-using namespace LHCb;
-using namespace VeloTELL1;
 
 //----------------------------------------------------------------------------------
 // Implementation file for class : DecodePileUpData
@@ -113,7 +111,7 @@ StatusCode DecodePileUpData::getRawEvent() {
   {
     error() << "==> There is no RawEvent at: " 
       << m_rawEventLoc   << endmsg;
-    VeloClusters* clusters = new LHCb::VeloClusters();
+    LHCb::VeloClusters* clusters = new LHCb::VeloClusters();
     put(clusters,m_PUClusterLocation);    
     return ( StatusCode::SUCCESS );
   }
@@ -168,7 +166,7 @@ StatusCode DecodePileUpData::decodePileUpBinary( const std::vector<LHCb::RawBank
 
     // fill in the data container
     unsigned int head = PuTell1::HEADERS_PER_SECTION; // skip the first 2 words (header) of the section
-    unsigned int wordTot = (aBank->size() / (2 * sizeof(uint32_t)));
+    unsigned int wordTot = (aBank->size() / (8 * sizeof(char)));
     Fill( head, wordTot, dataPtr, PuTell1::WORDS_PER_SECTION, m_PUcontainerBee );
 
   } // loop on PU banks
@@ -439,12 +437,12 @@ void DecodePileUpData::Fill( unsigned int wordIt, unsigned int word_Tot, unsigne
 
 //============================================================================
 
-StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleData, int sens, int bee,  VeloClusters * clusters ) 
+StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleData, int sens, int bee,  LHCb::VeloClusters * clusters ) 
 {
   unsigned int maskBee = 1;
   unsigned int inBee = OneBeetleData.dataWord;
 
-  // VeloChannelID parameters
+  // LHCb::VeloChannelID parameters
   unsigned int sensorNum;
   unsigned int stripNum;
   unsigned int fracStrip = 0;
@@ -466,15 +464,15 @@ StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleDat
         //flipped
         stripNum = ( PuTell1::STRIPS_PER_CHANNEL )*( PuTell1::NUMBITS-1-i ) + bee*( PuTell1::STRIPS_PER_BEETLE );  
       }
-      VeloChannelID vcid( sensorNum, stripNum );
-      VeloLiteCluster lc( fracStrip, pseudoSize, hasHighThre, vcid );
-      VeloCluster::ADCVector adcs;
+      LHCb::VeloChannelID vcid( sensorNum, stripNum );
+      LHCb::VeloLiteCluster lc( fracStrip, pseudoSize, hasHighThre, vcid );
+      LHCb::VeloCluster::ADCVector adcs;
       adcs.reserve(1);
       adcs.push_back( std::pair<int,unsigned int> (static_cast<int>( stripNum ), static_cast<unsigned int>( 1.)) );
       // now append new cluster
       clusters->insert( new LHCb::VeloCluster(lc,adcs), vcid );
 
-      debug() 	<< "findPileUpHitsBee : VeloLiteCluster lc(" << fracStrip << ", " << pseudoSize << ", " << hasHighThre << ", with channelId strip "
+      debug() 	<< "findPileUpHitsBee : LHCb::VeloLiteCluster lc(" << fracStrip << ", " << pseudoSize << ", " << hasHighThre << ", with channelId strip "
         << (lc.channelID()).strip() << endmsg;
       debug() << "******************** clusters size is " << clusters->size() << ")*********************************" << endmsg;
 
@@ -497,12 +495,12 @@ StatusCode DecodePileUpData::findPileUpHitsBee( PuTell1::dataObject OneBeetleDat
 
 //==============================================================================
 
-StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetleData, int sens, int bee,  VeloClusters * clustersNZS ) 
+StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetleData, int sens, int bee,  LHCb::VeloClusters * clustersNZS ) 
 {
   unsigned int maskBee = 1;
   unsigned int inBee = OneBeetleData.dataWord;
 
-  // VeloChannelID parameters
+  // LHCb::VeloChannelID parameters
   unsigned int sensorNum;
   unsigned int stripNum;
   unsigned int fracStrip = 0;
@@ -524,16 +522,16 @@ StatusCode DecodePileUpData::findPileUpHitsBeeNZS( PuTell1::dataObject OneBeetle
         stripNum = ( PuTell1::STRIPS_PER_CHANNEL )*( PuTell1::NUMBITS-1-i) + bee*( PuTell1::STRIPS_PER_BEETLE );  
       }
 
-      VeloChannelID vcid( sensorNum, stripNum );
-      VeloLiteCluster lc( fracStrip, pseudoSize, hasHighThre,
-          VeloChannelID(sensorNum, stripNum) );
-      VeloCluster::ADCVector adcs;
+      LHCb::VeloChannelID vcid( sensorNum, stripNum );
+      LHCb::VeloLiteCluster lc( fracStrip, pseudoSize, hasHighThre,
+          LHCb::VeloChannelID(sensorNum, stripNum) );
+      LHCb::VeloCluster::ADCVector adcs;
       adcs.reserve(1);
       adcs.push_back( std::pair<int,unsigned int> (static_cast<int>( stripNum ), static_cast<unsigned int>( 1.)) );
       // got all we need, now append new cluster
       clustersNZS->insert( new LHCb::VeloCluster(lc,adcs), vcid );
 
-      debug() 	<< "findPileUpHitsBeeNZS : VeloLiteCluster lc(" << fracStrip << ", " 
+      debug() 	<< "findPileUpHitsBeeNZS : LHCb::VeloLiteCluster lc(" << fracStrip << ", " 
         << pseudoSize << ", " << hasHighThre << ", with channelId strip "
         << (lc.channelID()).strip() << endmsg;
       debug() 	<< "******************** clustersNZS size is " << clustersNZS->size() 

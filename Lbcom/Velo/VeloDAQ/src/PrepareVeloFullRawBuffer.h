@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.h,v 1.4 2008-08-26 09:42:55 szumlat Exp $
+// $Id: PrepareVeloFullRawBuffer.h,v 1.5 2009-09-09 10:32:28 krinnert Exp $
 #ifndef PREPAREVELOFULLRAWBUFFER_H 
 #define PREPAREVELOFULLRAWBUFFER_H 1
 
@@ -38,7 +38,6 @@ namespace LHCb
 }
 
 using namespace VeloTELL1;
-using namespace LHCb;
 
 class PrepareVeloFullRawBuffer : public GaudiTupleAlg {
 public: 

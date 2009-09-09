@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.h,v 1.3 2008-03-17 14:26:10 krinnert Exp $
+// $Id: DecodeVeloFullRawBuffer.h,v 1.4 2009-09-09 10:32:28 krinnert Exp $
 #ifndef DECODEVELOFULLRAWBUFFER_H 
 #define DECODEVELOFULLRAWBUFFER_H 1
 
@@ -22,7 +22,6 @@
  */
 
 using namespace VeloTELL1;
-using namespace LHCb;
 
 class DecodeVeloFullRawBuffer : public GaudiAlgorithm {
 public: 
@@ -67,9 +66,9 @@ private:
   VeloFullBanks* m_veloADCs;
   VeloFullBanks* m_veloPeds;
   // decoded data for futher processing
-  VeloTELL1Datas* m_decodedADC;
-  VeloTELL1Datas* m_decodedPed;
-  VeloTELL1Datas* m_decodedHeader;
+  LHCb::VeloTELL1Datas* m_decodedADC;
+  LHCb::VeloTELL1Datas* m_decodedPed;
+  LHCb::VeloTELL1Datas* m_decodedHeader;
   EvtInfos* m_evtInfo;
   // flags
   bool m_adcDataPresent;

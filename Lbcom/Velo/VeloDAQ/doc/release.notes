@@ -3,6 +3,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-09-09 - Kurt Rinnert
+ - work around for missing C99 standard header on Windows(TM)
+ - removed unnecessary and potentially confusing 'using' directives for
+   namespace LHCb
+
 !=========================  VeloDAQ v4r8 2009-09-03 =======================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/VeloDAQ_dll.cpp

@@ -1,4 +1,4 @@
-// $Id: DecodeVeloFullRawBuffer.cpp,v 1.5 2009-03-12 14:38:50 szumlat Exp $
+// $Id: DecodeVeloFullRawBuffer.cpp,v 1.6 2009-09-09 10:32:28 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -31,9 +31,9 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
 : GaudiAlgorithm ( name , pSvcLocator ),
   m_veloADCLocation ( VeloFullBankLocation::Default ),
   m_veloPedLocation ( VeloFullBankLocation::Pedestals ),
-  m_decodedADCLocation ( VeloTELL1DataLocation::ADCs ),
-  m_decodedPedLocation ( VeloTELL1DataLocation::Pedestals ),
-  m_decodedHeaderLocation ( VeloTELL1DataLocation::Headers ),
+  m_decodedADCLocation ( LHCb::VeloTELL1DataLocation::ADCs ),
+  m_decodedPedLocation ( LHCb::VeloTELL1DataLocation::Pedestals ),
+  m_decodedHeaderLocation ( LHCb::VeloTELL1DataLocation::Headers ),
   m_evtInfoLocation ( EvtInfoLocation::Default ),
   m_veloADCs ( 0 ),
   m_veloPeds ( 0 ),
@@ -58,11 +58,11 @@ DecodeVeloFullRawBuffer::DecodeVeloFullRawBuffer( const std::string& name,
   declareProperty("PedestalLocation",
                   m_veloPedLocation=VeloFullBankLocation::Pedestals );
   declareProperty("DecodedADCLocation",
-                  m_decodedADCLocation=VeloTELL1DataLocation::ADCs );
+                  m_decodedADCLocation=LHCb::VeloTELL1DataLocation::ADCs );
   declareProperty("DecodedPedestalLocation",
-                  m_decodedPedLocation=VeloTELL1DataLocation::Pedestals );
+                  m_decodedPedLocation=LHCb::VeloTELL1DataLocation::Pedestals );
   declareProperty("DecodedHeaderLocation",
-                  m_decodedHeaderLocation=VeloTELL1DataLocation::Headers );
+                  m_decodedHeaderLocation=LHCb::VeloTELL1DataLocation::Headers );
   declareProperty("EventInfoLocation", 
                   m_evtInfoLocation=EvtInfoLocation::Default );
   declareProperty("SectorCorrection", m_sectorCorrection=true);
@@ -150,8 +150,8 @@ StatusCode DecodeVeloFullRawBuffer::getData()
         << ", size of data container (number of read-out TELL1s): "
         << m_veloADCs->size() <<endmsg;  
     // create container for decoded data
-    m_decodedADC=new VeloTELL1Datas();
-    m_decodedHeader=new VeloTELL1Datas();
+    m_decodedADC=new LHCb::VeloTELL1Datas();
+    m_decodedHeader=new LHCb::VeloTELL1Datas();
     m_evtInfo=new EvtInfos();
     //
     setADCDataFlag();
@@ -168,7 +168,7 @@ StatusCode DecodeVeloFullRawBuffer::getData()
       << ", size of pedestals container (number of read-out TELL1s): "
       << m_veloPeds->size() <<endmsg;  
     // create container for decoded Ped
-    m_decodedPed=new VeloTELL1Datas();
+    m_decodedPed=new LHCb::VeloTELL1Datas();
     setPedDataFlag();
   }
   //
@@ -218,8 +218,8 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
       m_ADCDecoder.decode(*sensIt,m_signADC);
       m_HeaderDecoder.decode(*sensIt,m_signHeader);
       //
-      VeloTELL1Data* adcData=new VeloTELL1Data((*sensIt)->key(), VeloFull);
-      VeloTELL1Data* headerData=new VeloTELL1Data((*sensIt)->key(), VeloHeader);
+      LHCb::VeloTELL1Data* adcData=new LHCb::VeloTELL1Data((*sensIt)->key(), VeloFull);
+      LHCb::VeloTELL1Data* headerData=new LHCb::VeloTELL1Data((*sensIt)->key(), VeloHeader);
       EvtInfo* anInfo=new EvtInfo((*sensIt)->key());
       // data coming from TELL1 board is unsigned int
       // for the subsequent algorithms we required signed
@@ -232,7 +232,7 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
 
       if(m_sectorCorrection){ // need to correct for wrong cabling 
         int counter=0;
-        for(scdatIt iT=m_signADC.begin(); iT!=m_signADC.end(); ++iT){	
+        for(scdatIt iT=m_signADC.begin(); iT!=m_signADC.end(); ++iT){ 
           int channelposition=counter;
           channelposition = m_cableOrder[channelposition/512]*512 + channelposition % 512;
 
@@ -270,14 +270,14 @@ StatusCode DecodeVeloFullRawBuffer::decodeData()
   if(pedDataFlag()){
     for(sensIt=m_veloPeds->begin(); sensIt!=m_veloPeds->end(); sensIt++){
       m_PedDecoder.decode(*sensIt, m_signPed);
-      VeloTELL1Data* pedData=new VeloTELL1Data((*sensIt)->key(), VeloPedestal);
+      LHCb::VeloTELL1Data* pedData=new LHCb::VeloTELL1Data((*sensIt)->key(), VeloPedestal);
 
       if(true==m_sectorCorrection){ // need to correct for wrong cabling
         int counter=0;
         for(scdatIt iT=m_signPed.begin(); iT!=m_signPed.end(); iT++){
           int channelposition=counter;
           channelposition = m_cableOrder[channelposition/512]*512 + channelposition % 512;
-          if (m_isDebug) debug() << "Ped bank: " << channelposition << " "  <<(*iT) << endmsg;	
+          if (m_isDebug) debug() << "Ped bank: " << channelposition << " "  <<(*iT) << endmsg;  
           m_signPedReordered[channelposition]=static_cast<signed int>(*iT);
           counter++;
         }
@@ -304,9 +304,9 @@ void DecodeVeloFullRawBuffer::sortAndWriteDecodedData()
   if(adcDataFlag()){
     // sort the output containers by key (TELL1 number)
     std::stable_sort(m_decodedADC->begin(), m_decodedADC->end(),
-        VeloEventFunctor::Less_by_key<VeloTELL1Data*>());
+        VeloEventFunctor::Less_by_key<LHCb::VeloTELL1Data*>());
     std::stable_sort(m_decodedHeader->begin(), m_decodedHeader->end(),
-        VeloEventFunctor::Less_by_key<VeloTELL1Data*>());
+        VeloEventFunctor::Less_by_key<LHCb::VeloTELL1Data*>());
     std::stable_sort(m_evtInfo->begin(), m_evtInfo->end(),
         VeloEventFunctor::Less_by_key<EvtInfo*>());
     // put the data to TES
@@ -317,7 +317,7 @@ void DecodeVeloFullRawBuffer::sortAndWriteDecodedData()
   if(pedDataFlag()){
     // sort decoded pedestals
     std::stable_sort(m_decodedPed->begin(), m_decodedPed->end(),
-        VeloEventFunctor::Less_by_key<VeloTELL1Data*>());
+        VeloEventFunctor::Less_by_key<LHCb::VeloTELL1Data*>());
     // put decoded peds in TES
     put(m_decodedPed, decPedName());
   }

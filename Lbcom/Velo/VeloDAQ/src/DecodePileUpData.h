@@ -22,7 +22,6 @@ namespace LHCb
   class RawEvent;
   class RawBank;
 }
-using namespace LHCb;
 // -----------------------------------
 
 namespace PuTell1
