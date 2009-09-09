@@ -128,7 +128,8 @@ void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineH
 void refreshHisto(DbRootHist* dbHistoOnPage)
 {
 
-	if (false == dbHistoOnPage->isEmptyHisto()) {
+	if (false == dbHistoOnPage->isEmptyHisto() &&
+      false == gROOT->IsInterrupted()) {
 		dbHistoOnPage->fillHistogram();
 		dbHistoOnPage->normalizeReference();
 //	} else {

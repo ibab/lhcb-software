@@ -336,6 +336,8 @@ int main(int argc, char* argv[])
           "eps" == startupSettings["dump-format"].as<std::string>() ||
           "svg" == startupSettings["dump-format"].as<std::string>() ||
           "pdf" == startupSettings["dump-format"].as<std::string>() ||
+          "gif" == startupSettings["dump-format"].as<std::string>() ||
+          "ps" == startupSettings["dump-format"].as<std::string>() ||
           "C" == startupSettings["dump-format"].as<std::string>()  ) {
         presenterMainFrame.setDumpFormat(startupSettings["dump-format"].as<std::string>());
       } 
