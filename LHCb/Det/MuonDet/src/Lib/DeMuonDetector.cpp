@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.46 2009-04-09 09:54:10 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.47 2009-09-09 12:59:56 cattanem Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -165,7 +165,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
   double x = myPoint.x();  double y = myPoint.y(); double z = myPoint.z();
 
   //Returning the most likely chamber
-  m_chamberLayout->chamberMostLikely(x,y,station,chamberNumber,regNum);
+  m_chamberLayout->chamberMostLikely((float)x,(float)y,station,chamberNumber,regNum);
 
   if(regNum>=0&&chamberNumber>=0){
     
@@ -201,7 +201,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
         y_sgn<<std::endl;    
       
       std::vector<int> regs; std::vector<int> myChams;
-      m_chamberLayout->returnChambers(station, x_ref,y_ref,
+      m_chamberLayout->returnChambers(station, (float)x_ref,(float)y_ref,
 				      x_sgn,y_sgn,regs, myChams);
       
       std::vector<int>::iterator aChamber;
@@ -693,7 +693,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
       myFE.setLayer(gapCnt/2);
 
       for(int iDm = 0; iDm<4; iDm++){  
-        myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
+        myVec.at(iDm) = (float)(iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx);
         //Added resolution effect
         if(fabs(myVec.at(iDm)) < 0.0001) myVec.at(iDm) = 0;
       }
@@ -812,9 +812,9 @@ void DeMuonDetector::fillGeoInfo()
           double dx = box->xHalfLength();
           double dy = box->yHalfLength();
           double dz = box->zHalfLength();
-          m_sensitiveAreaX[station*4+region]=2*dx;
-          m_sensitiveAreaY[station*4+region]=2*dy;
-          m_sensitiveAreaZ[station*4+region]=2*dz;
+          m_sensitiveAreaX[station*4+region]=(float)(2.*dx);
+          m_sensitiveAreaY[station*4+region]=(float)(2.*dy);
+          m_sensitiveAreaZ[station*4+region]=(float)(2.*dz);
           area=4*dx*dy;
           m_areaChamber[station*4+region]=area;          
           for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){

@@ -1,4 +1,4 @@
-// $Id: MuonChamberGrid.cpp,v 1.14 2008-09-01 20:19:09 asatta Exp $
+// $Id: MuonChamberGrid.cpp,v 1.15 2009-09-09 12:59:56 cattanem Exp $
 // Include files 
 
 // local
@@ -294,10 +294,10 @@ MuonChamberGrid::listOfPhysChannels(double x_enter,double y_enter,
           myY = (retLenght(Yloop,y_rdout) + retLenght(Yloop+1,y_rdout))/2;
         }
         
-        myBoundary.at(0) = myX - retLenght(Xloop,x_rdout);
-        myBoundary.at(1) = myY - retLenght(Yloop,y_rdout);		
-        myBoundary.at(2) = retLenght(Xloop+1,x_rdout) - myX;
-        myBoundary.at(3) = retLenght(Yloop+1,y_rdout) - myY;
+        myBoundary.at(0) = (float)(myX - retLenght(Xloop,x_rdout));
+        myBoundary.at(1) = (float)(myY - retLenght(Yloop,y_rdout));		
+        myBoundary.at(2) = (float)(retLenght(Xloop+1,x_rdout) - myX);
+        myBoundary.at(3) = (float)(retLenght(Yloop+1,y_rdout) - myY);
         
         MuonFrontEndID* inputPointer = new  MuonFrontEndID;
         

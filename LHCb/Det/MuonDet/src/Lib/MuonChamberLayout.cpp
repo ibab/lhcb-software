@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.32 2009-04-09 09:54:10 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.33 2009-09-09 12:59:56 cattanem Exp $
 // Include files 
 
 // Gaudi
@@ -305,8 +305,7 @@ void MuonChamberLayout::chamberXY(int sx, int sy, int shx, int shy,
             MsgStream log(m_msgSvc, "MuonChamberLayout");
             log<<MSG::DEBUG<<" Third call "<<endreq;
           }
-          
-          chamberXY(fx,fy,0,-m_cgY.at(reg),reg-1,chamberNumber);
+          chamberXY(fx,fy,0,0-m_cgY.at(reg),reg-1,chamberNumber);
         } else {
           if(debug){
             MsgStream log(m_msgSvc, "MuonChamberLayout");
@@ -562,8 +561,8 @@ void MuonChamberLayout::gridPosition(float x, float y, int iS, int &idx,
 }
 
 void MuonChamberLayout::setGridStep(){
-  float dimX[5] = {240,301.363,325.155,348.947,372.739};
-  float dimY[5] = {200,251.136,270.962,290.789,310.615};
+  float dimX[5] = {240.f,301.363f,325.155f,348.947f,372.739f};
+  float dimY[5] = {200.f,251.136f,270.962f,290.789f,310.615f};
   for(int iDum = 0; iDum<5; iDum++) {
     m_xS.push_back(dimX[iDum]);  m_yS.push_back(dimY[iDum]);
   }
@@ -707,7 +706,7 @@ std::vector<DeMuonChamber*>  MuonChamberLayout::fillChambersVector(IDataProvider
 
           double myX = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).x();
           double myY = (deChmb->geometry())->toGlobal(Gaudi::XYZPoint(0,0,0)).y();
-          gridPosition(myX,myY,iS,idx,idy,reg);
+          gridPosition((float)myX,(float)myY,iS,idx,idy,reg);
           
           int enc = idx+4*m_cgX.at(reg)*idy+m_offSet.at(reg);
           m_chamberGrid.at(enc) = deChmb->chamberNumber();

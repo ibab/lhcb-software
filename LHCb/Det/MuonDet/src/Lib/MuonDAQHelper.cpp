@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.9 2008-10-21 09:10:50 asatta Exp $
+// $Id: MuonDAQHelper.cpp,v 1.10 2009-09-09 12:59:56 cattanem Exp $
 // Include files 
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -315,10 +315,8 @@ StatusCode MuonDAQHelper::initTELL1Maps()
               unsigned int  layoutY=TSMap->gridYLayout(layout);            
               digitOffSetX=layoutX*TSGridX;
               digitOffSetY=layoutY*TSGridY;
-              unsigned int digitX=abs(digitOffSetX)+
-                TSMap->gridXOutputChannel(i);
-              unsigned int digitY=abs(digitOffSetY)+
-                TSMap->gridYOutputChannel(i);
+              unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
+              unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
               MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
               MuonTileID muontile(station,lay,region,
                                   quadrant,digitX,digitY);
@@ -427,10 +425,8 @@ StatusCode MuonDAQHelper::initODEMaps()
               unsigned int  layoutY=TSMap->gridYLayout(layout);            
               digitOffSetX=layoutX*TSGridX;
               digitOffSetY=layoutY*TSGridY;
-              unsigned int digitX=abs(digitOffSetX)+
-                TSMap->gridXOutputChannel(i);
-              unsigned int digitY=abs(digitOffSetY)+
-                TSMap->gridYOutputChannel(i);
+              unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
+              unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
               MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
               MuonTileID muontile(station,lay,region,
                                   quadrant,digitX,digitY);
@@ -639,15 +635,15 @@ StatusCode MuonDAQHelper::initializeLUTCrossing()
             unsigned int  layoutY=TSMap->gridYLayout(layout);
             digitOffSetX=layoutX*TSGridX;
             digitOffSetY=layoutY*TSGridY; 
-            unsigned int digitX=abs(digitOffSetX)+TSMap->gridXOutputChannel(i);
-            unsigned int digitY=abs(digitOffSetY)+TSMap->gridYOutputChannel(i);
+            unsigned int digitX=digitOffSetX+TSMap->gridXOutputChannel(i);
+            unsigned int digitY=digitOffSetY+TSMap->gridYOutputChannel(i);
             MuonLayout lay(TSLayoutX*layoutX,TSLayoutY*layoutY);
             MuonTileID muontile(station,lay,region,
                                 quadrant,digitX,digitY);
             digitInTS.push_back(muontile);
 
-            unsigned int wrongDigitX=abs(digitOffSetX)+FirstTSMap->gridXOutputChannel(i);
-            unsigned int wrongDigitY=abs(digitOffSetY)+FirstTSMap->gridYOutputChannel(i);
+            unsigned int wrongDigitX=digitOffSetX+FirstTSMap->gridXOutputChannel(i);
+            unsigned int wrongDigitY=digitOffSetY+FirstTSMap->gridYOutputChannel(i);
             
             MuonTileID wrongmuontile(station,lay,region,
                                 quadrant,wrongDigitX,wrongDigitY);
