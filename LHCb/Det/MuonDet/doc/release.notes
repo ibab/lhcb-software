@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.132 2009-09-09 12:59:56 cattanem Exp $
+! $Id: release.notes,v 1.133 2009-09-09 13:06:34 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
@@ -6,6 +6,7 @@
 !========================= MuonDet v8r5p2 2009-09-09 ========================
 ! 2009-07-08 - Marco Cattaneo
  - Fix Windows a compilation error and several warnings
+ - Remove obsolete file src/components/MuonDet_dll.cpp
 
 !========================= MuonDet v8r5p1 2009-07-13 ========================
 ! 2009-07-08 - Marco Cattaneo
