@@ -1,4 +1,4 @@
-// $Id: TrackCheckerBase.cpp,v 1.11 2009-08-27 07:54:36 smenzeme Exp $
+// $Id: TrackCheckerBase.cpp,v 1.12 2009-09-09 14:32:55 cattanem Exp $
 // Include files 
 #include "TrackCheckerBase.h"
 #include "Event/Track.h"
@@ -213,11 +213,11 @@ bool TrackCheckerBase::ksLambdaAncestor(const LHCb::MCParticle* mcPart) const
     for(SmartRefVector<LHCb::MCParticle>::const_iterator j=ch.begin();
 	j!=ch.end();++j){
       
-      if ((fabs((*j)->particleID().pid())==321 ||
-	  fabs((*j)->particleID().pid())==211 ||
-	  fabs((*j)->particleID().pid())==13  ||
-          fabs((*j)->particleID().pid())==11  ||
-	  fabs((*j)->particleID().pid())==2212)){
+      if ((abs((*j)->particleID().pid())==321 ||
+	       abs((*j)->particleID().pid())==211 ||
+	       abs((*j)->particleID().pid())==13  ||
+           abs((*j)->particleID().pid())==11  ||
+	       abs((*j)->particleID().pid())==2212)){
 	if ( !selected(*j) && 
 	     (*j)->mother()->particleID().pid()!=22 &&
 	     (*j)->mother()->particleID().pid()!=-99000000 &&

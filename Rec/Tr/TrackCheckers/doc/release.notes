@@ -4,7 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
-!======================= TrackCheckers v4r8 2009-09-03 =======================
+!======================= TrackCheckers v4r8 2009-09-09 =======================
+! 2009-09-09 - Marco Cattaneo
+ - Fix (again!) compilation on Windows (use abs(int) instead of fabs(int))
+
 ! 2009-09-01 - Stephanie Hansmann-Menzemer
  - protect output in TrackEffChecker against nan
 
