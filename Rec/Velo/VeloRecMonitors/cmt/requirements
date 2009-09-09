@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           VeloRecMonitors
-version           v2r1
+version           v2r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -20,6 +20,8 @@ use  GaudiAlg     v*
 use  VeloDet         v*   Det
 use  DigiEvent       v*   Event
 use  TrackEvent      v*   Event
+use  L0Event         v*   Event
+use  HltEvent        v*   Event
 use  TrackFitEvent   v*   Tr
 
 include_path      none

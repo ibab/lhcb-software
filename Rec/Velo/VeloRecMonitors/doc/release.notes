@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Marco Cattaneo
+ - added missing dependency on L0Event and HltEvent
+
 ! 2009-09-09 - Kurt Rinnert
  - masked out XML writing feature in VeloOccupancyMonitor on Windows(TM)
 
