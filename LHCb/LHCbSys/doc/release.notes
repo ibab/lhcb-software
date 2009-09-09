@@ -236,7 +236,7 @@ This version uses Gaudi v21r4 and LCG_56c
 
 - In CaloDAQ v4r13, Magnet v5r4, RichDet v12r1p1, STDet v4r13,
      LoKiArrayFunctors v8r5, LoKiCore v9r4, LoKiGen v8r7, LoKiMC v8r7,
-     LoKiPhys v8r9, LoKiPhysMC v8r4, RichKernel v7r26
+     LoKiPhys v8r9, LoKiPhysMC v8r4, RichKernel v7r26, MuonDet v8r5p2
   . Removed obsolete file <package>_dll.cpp
 
 </PRE><H1><A NAME=v27r5>2009-07-30 LHCbSys v27r5</A></H1><PRE>
