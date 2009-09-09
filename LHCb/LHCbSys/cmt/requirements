@@ -34,7 +34,7 @@ use DetDescChecks         v4r11   Det     # Marco Clemencic, Ivan Belyaev
 use DetDescCnv            v4r9    Det     # Marco Clemencic, Juan Palacios
 use DetDescSvc            v2r3p1  Det     # Marco Clemencic, Matt Needham
 use Magnet                v5r4    Det     # Adlene Hicheur
-use MuonDet               v8r5p1  Det     # Alessia Satta, Alessio Sarti
+use MuonDet               v8r5p2  Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r2    Det     # Jan Amoraal
 use RichDet               v12r1p1 Det     # Chris Jones
 use STDet                 v4r13   Det     # Jeroen van Tilburg, Matt Needham

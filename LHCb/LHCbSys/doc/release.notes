@@ -5,7 +5,7 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v28r0>2009-09-07 LHCbSys v28r0</A></H1><PRE>
+</PRE><H1><A NAME=v28r0>2009-09-09 LHCbSys v28r0</A></H1><PRE>
 This version uses Gaudi v21r4 and LCG_56c
 
 - Packages added:    DaVinciTypes      - typedefs for Phys project.
@@ -17,7 +17,8 @@ This version uses Gaudi v21r4 and LCG_56c
     IOExample v3r2, LHCbKernel v11r7, LHCbMath v3r12, DaVinciInterfaces v1r1,
     DaVinciKernel v8r1, LoKiArrayFunctors v8r5, LoKiCore v9r4, LoKiGen v8r7,
     LoKiMC v8r7, LoKiPhys v8r9, LoKiPhysMC v8r4, RichKernel v7r26,
-    RichRecBase v3r25, STKernel v1r17, CondDBUI v2r22, TrackInterfaces v4r7
+    RichRecBase v3r25, STKernel v1r17, CondDBUI v2r22, TrackInterfaces v4r7,
+    MuonDet v8r5p2
 
 - In LHCbSys v28r0:
   . Fix DoxyLHCbApps.cfg for new location of ROOT project in LCG release area
@@ -70,6 +71,9 @@ This version uses Gaudi v21r4 and LCG_56c
   . New utility 'MagneticFieldGridReader' reads the field from a file (thereby
     replacing the IMagFieldTools)
 
+- In MuonDet v8r5p2
+  . Fix compilation error and warnings on Windows
+  
 - In STDet v4r13
   . DeSTSector: added isStereo method
                 cleaned up noise methods
