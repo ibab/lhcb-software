@@ -4,6 +4,9 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Kurt Rinnert
+ - protected Linux-only include in LivDBTELL1SensorMap on Windows
+
 ! 2009-09-08 - Kurt Rinnert
  - added tool implementations previously residing in VeloTELL1Tools
  - added new tool providing PVSS TELL1 names

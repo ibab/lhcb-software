@@ -1,10 +1,11 @@
-// $Id: LivDBTELL1SensorMap.cpp,v 1.1 2009-09-08 16:22:39 krinnert Exp $
+// $Id: LivDBTELL1SensorMap.cpp,v 1.2 2009-09-09 08:22:48 krinnert Exp $
 #include <sstream>
 
 #include <stdlib.h>
 #include <sys/types.h>
+#ifndef WIN32
 #include <unistd.h>
-
+#endif // !WIN32
 #include "GaudiKernel/ToolFactory.h" 
 
 #include "VeloDet/DeVelo.h"
@@ -52,7 +53,7 @@ namespace Velo
     // PU sensor are not yet in the data base.  If not configured by the users,
     // use the mapping as of 2009-08-11.
     if ( m_puTell1List.empty() || 4 != m_puTell1List.size() ) {
-      info() << "PU TELL1 list not configured or wrong size.  Will use default mapping [128,129,130,131] -> [21,414,22,26]. DB will always override!" << endmsg;
+      info() << "PU TELL1 list not configured or wrong size.  Will use default mapping [128,129,130,131] -> [21,414,22,26]. DB or user file will always override!" << endmsg;
       m_tell1ToSensor[21]  = 128;
       m_tell1ToSensor[414] = 129;
       m_tell1ToSensor[22]  = 130;
@@ -75,17 +76,18 @@ namespace Velo
     std::string mapFileName(m_initFromFile);
 
     // only try to access the DB when no map file was specified
+    // and we are not on Windows(TM)
     if ( m_initFromFile.empty() )  {
 
       // Get the mappings from the Liverpool DB.
       // This involves establishing an http connection and the creation
       // of a temporary file. In case this fails, the job will fail
       // as well.
+#ifndef WIN32
       if ( !m_httpProxy.empty() ) {
         setenv("http_proxy", m_httpProxy.c_str(), 1);
       }
 
-#ifndef WIN32
       unsigned int pid = static_cast<unsigned int>(getpid());
       std::ostringstream pidStr;
       pidStr << pid;
