@@ -3,7 +3,7 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-</PRE><H1><A NAME=v35r6>2009-09-07 Brunel v35r6</A></H1><PRE>
+</PRE><H1><A NAME=v35r6>2009-09-09 Brunel v35r6</A></H1><PRE>
  - Changes to Configurable:
    . Add ProtoParticle monitor sequence.
    . Allow RICH expert histograms to be enabled when running without MC
@@ -24,6 +24,8 @@ Purpose: LHCb reconstruction program
 
  - Changes to tests:
    . Exclude printout of MuonID version from QMTest log file comparisons
+   . Move exclusion of transport service exceptions from individual tests to
+     BrunelExclusions.py
 
 </PRE><H1><A NAME=v35r5>2009-07-30 Brunel v35r5</A></H1><PRE>
  - Changes to requirements
