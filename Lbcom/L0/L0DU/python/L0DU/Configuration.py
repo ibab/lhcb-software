@@ -108,12 +108,14 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [ GaudiSequencer("L0DUBankSwap") ]
                 log.warning("\n  \tEXISTING L0 BANKS WILL BE REMOVED AND REPLACED BY EMULATED BANKS\n\n")
 
-            if self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw"):
+            if (self.getProp("DecodeL0") or self.getProp("MonitorL0") \
+                   or self.getProp("FilterL0FromRaw") or self.getProp("DecodeL0DU") ) \
+                   and not (self.getProp("SimulateL0") or self.getProp("EmulateL0") ) :
                 # import the file only once, to avoid multiple inclusion warning
                 importOptions("$L0DUROOT/options/L0Sequence.opts")
 
             if self.getProp("SimulateL0"):
-                importOptions("$L0DUROOT/options/Boole.opts")
+                importOptions("$L0DUROOT/options/Boole.opts") # includes L0Sequence.opts
                 seq.Members+= [GaudiSequencer("L0SimulationSeq") ]
 
             if self.getProp("DecodeL0DU"):
@@ -123,7 +125,7 @@ class L0Conf(LHCbConfigurableUser) :
                 seq.Members+= [ GaudiSequencer("L0FromRawSeq") ]
 
             if self.getProp("EmulateL0"):
-                importOptions("$L0DUROOT/options/L0EmulatorSeq.opts")
+                importOptions("$L0DUROOT/options/L0EmulatorSeq.opts") # includes L0Sequence.opts
                 seq.Members+= [ GaudiSequencer("L0EmulationSeq") ]
 
             if self.getProp("MonitorL0"):
@@ -155,7 +157,10 @@ class L0Conf(LHCbConfigurableUser) :
         if self.isPropertySet("MoniSequencer"):
             seq=self.getProp("MoniSequencer")
             seq.Members+= [ GaudiSequencer("L0MoniSeq") ]
-            if not (self.getProp("SimulateL0") or self.getProp("DecodeL0") or self.getProp("MonitorL0") or self.getProp("FilterL0FromRaw")):
+            if not ( self.isPropertySet("L0Sequencer") and \
+                     ( self.getProp("DecodeL0") or self.getProp("MonitorL0") \
+                       or self.getProp("FilterL0FromRaw") or self.getProp("DecodeL0DU")
+                       or self.getProp("SimulateL0") or self.getProp("EmulateL0") ) ):
                 # import the file only once, to avoid multiple inclusion warning
                 importOptions("$L0DUROOT/options/L0Sequence.opts")
 

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.164 2009-07-28 09:55:22 cattanem Exp $
+! $Id: release.notes,v 1.165 2009-09-09 16:45:21 jucogan Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-09-09 - Julien Cogan
+ - Fix bug in L0Conf (pointed out by Gerhard Raven) : 
+   import of L0Sequence.opts was missing when using DecodeL0DU flag 
 
 !========================== L0DU v8r18 2009-07-28 =========================
 ! 2009-07-28 - Marco Cattaneo
