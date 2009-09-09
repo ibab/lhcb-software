@@ -4,6 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Olivier Callot
+ - New algorithm NewVeloRTracking with 1/3 the ghost rate and slightly higher
+   efficiency than PatVeloRTracking with same speed.
+
 !========================== PatVelo v3r17 2009-09-03 =========================
 ! 2009-08-31 - Olivier Callot
  - Fix extra class name prefix in NewVeloSpaceTool.h
