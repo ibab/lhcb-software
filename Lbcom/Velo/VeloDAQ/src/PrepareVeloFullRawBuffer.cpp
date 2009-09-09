@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.6 2009-06-05 12:02:41 krinnert Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.7 2009-09-09 12:52:01 kakiba Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -31,22 +31,22 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_rawEvent ( 0 ),
+//    m_rawEventLoc ( LHCb::RawEventLocation::Default ),
     m_data ( ),
     m_ped ( ),
     m_numberOfSensors ( 0 ),
     m_sensors ( ),
     m_veloADCData ( 0 ),
     m_veloPedestals ( 0 ),
+//    m_veloADCDataContainer ( VeloFullBankLocation::Default ),
+    m_veloPedestalsContainer ( VeloFullBankLocation::Pedestals ),
     m_adcBankPresent ( false ),
     m_pedBankPresent ( false )
 {
-  declareProperty("RunWithODIN", m_runWithODIN=true);
-  declareProperty("RawEventLoc",
-                  m_rawEventLoc=LHCb::RawEventLocation::Default);
-  declareProperty("ADCLoc",
-                  m_veloADCDataContainer=VeloFullBankLocation::Default);
-  declareProperty("PedLoc",
-                  m_veloPedestalsContainer=VeloFullBankLocation::Pedestals);
+  declareProperty("RunWithODIN", m_runWithODIN=true); 
+  declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("ADCLocation", m_veloADCDataContainer=VeloFullBankLocation::Default);
+ 
 }
 //=============================================================================
 // Destructor
@@ -88,7 +88,7 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
       resetMemory();
     }
   }else{
-    return ( StatusCode::SUCCESS );
+    return ( StatusCode::SUCCESS);
   }
   //
   debug()<< " end of execute" <<endmsg;
@@ -110,14 +110,14 @@ StatusCode PrepareVeloFullRawBuffer::getRawEvent()
   debug()<< "--------------------" <<endmsg;
   //
   if(!exist<LHCb::RawEvent>(m_rawEventLoc)){
-    info()<< " ==> There is no RawEvent at: "
-           << m_rawEventLoc <<endmsg;
+    error()<< " ==> There is no RawEvent at: "
+           <<  m_rawEventLoc  <<endmsg;
     return ( StatusCode::FAILURE );
   }else{  
     // get the RawEvent from default TES location
     m_rawEvent=get<LHCb::RawEvent>(m_rawEventLoc);
     debug()<< " ==> The RawEvent has been read-in from location: "
-           << m_rawEventLoc <<endmsg;  
+           << m_rawEventLoc  <<endmsg;  
   }
   //
   return ( StatusCode::SUCCESS );
