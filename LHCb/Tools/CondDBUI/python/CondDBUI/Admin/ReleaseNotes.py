@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.8 2009-09-01 20:05:06 ishapova Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.9 2009-09-09 12:24:28 ishapova Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -137,8 +137,10 @@ class ReleaseNotes(object):
                         homogenEntry = element
                         self.log.info('Homogeneous entry with tag name "%s" is found to be used in the CondDB for %d partition(s): %s' % (tag,counter,partitionList))
                         self.log.info('Merging will be done in release notes for homogeneous entries for patch "%s" ...' % patch)
-                    else: homogenEntry = False
-            else: break
+                    else: homogenEntry = None
+            else:
+                homogenEntry = None
+                break
                                              
         return homogenEntry
                 

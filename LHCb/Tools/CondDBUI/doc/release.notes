@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.122 2009-09-03 07:10:26 cattanem Exp $
+! $Id: release.notes,v 1.123 2009-09-09 12:24:28 ishapova Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-09-09 - Illya Shapoval
+ - Fixed the bug in an analysis method of the ReleaseNotes class for dealing with
+   release_notes.xml content.
 
 !===================== Tools/CondDBUI v2r22 2009-09-03 ========================
 ! 2009-09-01 - Illya Shapoval
