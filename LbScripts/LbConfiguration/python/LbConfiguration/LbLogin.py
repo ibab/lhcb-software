@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.49 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.50 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -509,6 +509,7 @@ class LbLoginScript(Script):
                 ev["DIM_release_area"] = ev["CONTRIBDIR"]
                 ev["XMLRPC_release_area"] = ev["CONTRIBDIR"]
                 ev["LCG_release_area"] = _multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
+                ev["LCG_external_area"] = _multiPathJoin(opts.mysiteroot, os.path.join("lcg" ,"external"))
                 ev["LHCBRELEASES"] = _multiPathJoin(opts.mysiteroot, "lhcb")
                 ev["GAUDISOFT"] = ev["LHCBRELEASES"]
                 ev["LHCBPROJECTPATH"] = os.pathsep.join([ev["LHCBRELEASES"],ev["LCG_release_area"]])
@@ -520,6 +521,7 @@ class LbLoginScript(Script):
                 ev["DIM_release_area"] = os.path.join(ev["LHCBHOME"], "online", "control")
                 ev["XMLRPC_release_area"] = os.path.join(ev["LHCBHOME"], "project", "web", "online" )
                 ev["LCG_release_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "app", "releases" )
+                ev["LCG_external_area"] = os.path.join(ev["SITEROOT"], "sw", "lcg", "external" )
                 ev["SOFTWARE"] = os.path.join(ev["LHCBHOME"], "software" )
                 ev["LHCBRELEASES"] = os.path.join(ev["SOFTWARE"], "releases")
                 ev["GAUDISOFT"] = os.path.join(ev["SITEROOT"], "sw", "Gaudi", "releases")
