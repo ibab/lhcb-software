@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Kurt Rinnert
+ - masked out XML writing feature in VeloOccupancyMonitor on Windows(TM)
+
 ! 2009-09-08 - Kurt Rinnert
  - adapted to new locations of tool interfaces. Reverted cmt hack to hide tool
    usage in standard build because no longer needed.

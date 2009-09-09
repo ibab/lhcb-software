@@ -1,12 +1,14 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.6 2009-09-08 16:26:22 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.7 2009-09-09 13:04:01 krinnert Exp $
 // Include files 
 // -------------
 
 #include <string>
 #include <fstream>
 
+#ifndef WIN32
 #include <sys/types.h>
 #include <sys/stat.h>
+#endif // !WIN32
 
 /// from Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -73,8 +75,12 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
 
   // get tools needed for writing XML files
   if ( m_writeXML ) {
+#ifndef WIN32
     m_tell1Map   = tool<Velo::ITELL1SensorMap>("Velo::LivDBTELL1SensorMap","Tell1Map");
     m_timeStamps = tool<Velo::ITimeStampProvider>("Velo::TimeStamps","TimeStamps");
+#else
+    info() << "Writing strip mask XML files is not supported on Windows!" << endmsg;
+#endif // !WIN32
   }
 
   m_nstrips = 180224;
@@ -184,7 +190,9 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
 
   if ( m_debugLevel ) debug() << "==> Finalize" << endmsg;
 
-  // create conditions and write them to XML, if requested
+  // create conditions and write them to XML, if requested.
+  // not supported on Windows.
+#ifndef WIN32
   if ( m_writeXML ) {
     struct stat statbuf;
     
@@ -205,7 +213,6 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
         return StatusCode::FAILURE;
       }
     }
-
 
     std::ofstream txtFile("masked_channels.txt");
     
@@ -239,6 +246,7 @@ StatusCode Velo::VeloOccupancyMonitor::finalize() {
     }
     txtFile.close();
   }
+#endif // !WIN32
   
   return VeloMonitorBase::finalize(); // must be called after all other actions
 }
