@@ -10,7 +10,7 @@
 # then that will be taken as the host.
 #
 if [ -z "$2" ]; then
-  SERVER=localhost:12345
+  SERVER=localhost:45123
   CameraSwitch.exe $1 $SERVER
 else
   CameraSwitch.exe $1 $2

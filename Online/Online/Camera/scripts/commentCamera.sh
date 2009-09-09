@@ -13,7 +13,7 @@
 # as the host.
 #
 if [ -z "$2" ]; then
-  SERVER=localhost:12345
+  SERVER=localhost:45123
   CameraCommand.exe $USER/0/"$1" $SERVER 
 else
   CameraCommand.exe $USER/0/"$1" $2

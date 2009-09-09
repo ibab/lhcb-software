@@ -8,7 +8,7 @@
 # command line argument then that will be taken as the host.
 #
 if [ -z "$1" ]; then
-  SERVER=localhost:12345
+  SERVER=localhost:45123
   CameraCommand.exe $SERVER COMMAND/0/switch\ warnings_`date +%y%m%d%H%M`.out
   $CAMERAROOT/scripts/commentCamera.sh "New logfile opened: warnings_`date +%y%m%d%H%M`.out" $SERVER
 else

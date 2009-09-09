@@ -5,9 +5,19 @@
 export CAMCACHE=/tmp/cam/camcache
 mkdir -p $CAMCACHE/data
 
-#ssh -L 12346:127.0.0.1:12346 lxplus.cern.ch ssh -L 12346:hlte0403:12346 lbgw
+# ssh -L 45124:127.0.0.1:45124 lxplus.cern.ch ssh -L 45124:plus:45124 lbgw
 
 #Takes two arguments:
-#$1 - name of the computer running the CAMERA server.
-#$2 - the CAMERA warning file to open. This is optional and defaults to warnings.out.
-CameraGui.exe $1 $2 &#127.0.0.1 #warnings.out 
+#$1 - name(s) of the computer running the CAMERA server. In the form
+#       host:port[,host:port,host:port]. If no name is given then
+#       localhost:45124 is used.
+#$2 - the CAMERA warning file to open. This is optional and if no server
+#       is specified then the warning file must not be specified either.
+if [ -z "$1" ]; then
+  SERVER=localhost:45124
+  CameraGui.exe $SERVER $2 &
+else
+  CameraGui.exe $1 $2 &
+fi
+
+

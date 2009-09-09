@@ -15,4 +15,4 @@ CameraWebServer.exe -C $CAMERAROOT/scripts/etc/CameraWebServer.conf > $CAMDIR/lo
 CameraServer.exe -C $CAMERAROOT/scripts/etc/CameraServer.conf > $CAMDIR/log/CameraServer.log 2>&1 &
 
 # Creates a new directory within the data 
-$CAMERAROOT/scripts/newDataDirectory.sh `date +%y%m%d%H%M`
+source $CAMERAROOT/scripts/newDataDirectory.sh `date +%y%m%d%H%M`
