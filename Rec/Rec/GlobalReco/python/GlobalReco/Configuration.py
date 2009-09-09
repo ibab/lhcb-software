@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.7 2009-08-29 20:37:18 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.8 2009-09-09 13:53:26 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -109,5 +109,13 @@ class GlobalRecoConf(LHCbConfigurableUser):
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
             charged.OutputLevel = level
+            rich.OutputLevel = level
+            muon.OutputLevel = level
+            ecal.OutputLevel = level
+            brem.OutputLevel = level
+            hcal.OutputLevel = level
+            prs.OutputLevel = level
+            spd.OutputLevel = level
+            velo.OutputLevel = level
             combine.OutputLevel = level
             neutral.OutputLevel = level

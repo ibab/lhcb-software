@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Chris Jones
+ - Fix python Configurable to properly set output level for all algorithms
+
 !========================== GlobalReco v6r26 2009-09-03 ======================
 ! 2009-09-03 - Chris Jones
  - Make sure default TES locations are always set, even when context() is not
