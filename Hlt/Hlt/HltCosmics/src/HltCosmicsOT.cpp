@@ -1,4 +1,4 @@
-// $Id: HltCosmicsOT.cpp,v 1.1.1.1 2009-09-08 16:12:28 snies Exp $
+// $Id: HltCosmicsOT.cpp,v 1.2 2009-09-09 14:22:12 jpalac Exp $
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/AlgFactory.h"
 
@@ -31,7 +31,7 @@ DECLARE_ALGORITHM_FACTORY( HltCosmicsOT );
     declareProperty("OTDecoderName", m_otdecodername = "OTRawBankDecoder");
     declareProperty("MinNumberOfHits", m_minhits = 6);
     declareProperty("TolStraws", m_tolstraws = 3);
-    m_selections.declarePropties();
+    m_selections.declareProperties();
 }
 
 //=============================================================================
