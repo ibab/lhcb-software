@@ -67,7 +67,7 @@ private:
   AIDA::IHistogram1D* m_L0Input;
   AIDA::IHistogram1D* m_L0Hlt1Accept;
   AIDA::IHistogram1D* m_L0Hlt2Accept;
-  std::vector<double> m_allAcc,m_allCall,m_allAlleyAcc,m_allAlleyCall; //klo
+  std::vector<StatEntity*> m_alley;
   AIDA::IHistogram1D* m_hlt1alley;
   AIDA::IHistogram1D* m_hltNAcc;
   AIDA::IHistogram1D* m_hltInclusive;

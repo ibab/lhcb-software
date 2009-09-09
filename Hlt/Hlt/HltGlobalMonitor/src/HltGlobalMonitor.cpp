@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.43 2009-09-01 11:10:45 kvervink Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.44 2009-09-09 08:29:32 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -153,13 +153,6 @@ StatusCode HltGlobalMonitor::initialize() {
   m_hltTime  = book1D("time per event dist", -1000.0, 1000.0, 2000 );
   setAxisLabels( m_hltTime, "time/event", "events");
 
-  for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
-     m_allAcc.push_back(0);
-     declareInfo("COUNTER_TO_RATE["+*i+" Acc]",  m_allAcc.back(),  "Hlt1 "+*i+" Line Accepts");
-     m_allCall.push_back(0);
-     declareInfo("COUNTER_TO_RATE["+*i+" Call]", m_allCall.back(), "Hlt1 "+*i+" Line Calls");
-  }
-
   declareInfo("COUNTER_TO_RATE[virtmem]", m_virtmem, "Virtual memory");
   declareInfo("COUNTER_TO_RATE[elapsed time]", (double)m_time, "Elapsed time");
   
@@ -168,17 +161,10 @@ StatusCode HltGlobalMonitor::initialize() {
   declareInfo("COUNTER_TO_RATE[L0Accept]",counter("L0Accept"),"L0Accept");
   declareInfo("COUNTER_TO_RATE[GpsTimeoflast]",m_gpstimesec,"Gps time of last event");
 
-  declareInfo("#eventsHLT",counter("#events"),"Events hlt1 input");
-  declareInfo("#acceptHLT",counter("#accept"),"Events hlt1 accepted");
-
-  //klo1
   for (unsigned i=0; i!=m_GroupLabels.size();++i) {
-    m_allAlleyAcc.push_back(0);
-    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Acc]", m_allAlleyAcc.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Accepts");
-    m_allAlleyCall.push_back(0);
-    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+" Call]", m_allAlleyCall.back(), "Hlt1 "+m_GroupLabels.at(i)+" Alley Calls");
+    m_alley.push_back(&counter(m_GroupLabels.at(i)));
+    declareInfo("COUNTER_TO_RATE["+m_GroupLabels.at(i)+"]", *m_alley.back(),m_GroupLabels.at(i)+" Alley");
   }
-  //klo2
 
   return StatusCode::SUCCESS;
 };
@@ -277,28 +263,18 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
     }
   }
 
-  //klo1
   for (unsigned i=0; i<m_GroupLabels.size();i++) {
-    m_allAlleyCall[i]++;
-    m_allAlleyAcc[i] += ( nAccAlley[i] > 0 );
+    m_alley[i] += ( nAccAlley[i] > 0 );
   }
-  //klo2
 
-  counter("#accept") += ( nAcc > 0 );
 
   fill( m_hltNAcc, nAcc, 1.0);  //by how many lines did 1 event get accepted?
  
   for (size_t i = 0; i<reps.size();++i) {
-
-    ++m_allCall[i];
     fill( m_hltInclusive, i, reps[i].second->decision());
     //info() << "second try labels line" << i << "name = " << reps[i].first << endreq;
-    
     if (!reps[i].second->decision()) continue;
-    ++m_allAcc[i];
-   
     if (nAcc==1) fill( m_hltExclusive, i, reps[i].second->decision() );
-
     for (size_t j = 0; j<reps.size(); ++j) {
       fill(m_hltCorrelations,i,j,reps[j].second->decision());
     }
