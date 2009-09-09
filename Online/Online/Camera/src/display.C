@@ -355,7 +355,7 @@ void InfoWindow::display(int x,int y)
   // fMainFrame892 = new MyFrame(gClient->GetRoot(),10,10,kMainFrame | kVerticalFrame);
 
   fMainFrame892 = this;//new MyFrame;
-
+  fMainFrame892->SetWindowName("CAMERA");//cpb set the window title
   fMainFrame892->SetLayoutBroken(kTRUE);
   fMainFrame892->DontCallClose();
   //fMainFrame892->Connect("CloseWindow()","InfoWindow",this,"DoClose()");

@@ -85,6 +85,8 @@ private:
   TGListBox *fListBox816;
 
   TGTextButton *fTextButton515;
+  TGTextButton *fTextButtonDump;
+
   TGNumberEntry *fNumberEntry670;
   TGLabel *fLabel746;
  
@@ -100,8 +102,8 @@ private:
   void selectErr();
   void selectRun();
   void clearlist(){allpairs.clear();UpdateRight();}
-
-
+  void dumpmsg();
+  
   void selectInfo();
   void selectleft();
   void selectright();

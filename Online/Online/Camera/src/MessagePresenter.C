@@ -374,7 +374,10 @@ void MessagePresenter::addwarning(std::string msg,int ref){
   sstr = msg;
   string::size_type position1 = sstr.find("/");
   //cout <<sstr.substr(0,position1).c_str()<<" "<< sstr.substr(position1+1).c_str()<<" "<<i<<endl;
-
+  if (position1 == std::string::npos){ // cpb sanity check!
+    std::cerr << "Malformed message: "<<msg<<"="<<sstr<<std::endl; 
+    return; 
+  }
   std::string key = sstr.substr(0,position1);
   std::string val = sstr.substr(position1+1);
   std::string level =  sstr.substr(position1+1,1);
@@ -451,7 +454,12 @@ void MessagePresenter::addwarning(std::string msg,int ref){
 int MessagePresenter::GetXtra(std::string str , std::string & cachedfile){
 
   std::string::size_type position1 = str.find("/");
-
+  
+  if (position1 == std::string::npos){ // cpb format check
+    std::cerr << "No / in message"<<std::endl;
+    return 0;
+  }
+  
   std::string add = str.substr(0,position1);
   std::string file = str.substr(position1+1);
 
@@ -618,6 +626,7 @@ void MessagePresenter::setup(){
   fTextButton514->Connect("Clicked()","MessagePresenter",this,"selectErr()");
 
   fTextButton515->Connect("Clicked()","MessagePresenter",this,"clearlist()");
+  fTextButtonDump->Connect("Clicked()","MessagePresenter",this,"dumpmsg()");
 
 
   fListBox816->Connect("Selected(Int_t)","MessagePresenter",this,"selectleft()");;
@@ -676,6 +685,33 @@ void MessagePresenter::selectleft(){
 
 }
 
+void MessagePresenter::dumpmsg(){
+  Int_t i =  fListBox863->GetSelected();
+  if (i<0) return;
+  
+  //std::cerr << iwAlive <<std::endl;
+  
+  if (iwAlive>1){// also print png
+    //iw ->print();
+    if (iw->canvas() !=NULL)
+      iw->canvas()->Print("canvas.png");
+    if (iw->textedit() !=NULL){
+      iw->textedit()->SaveFile("details.txt");
+    }
+  }
+  
+  //  std::cerr << "Dumping to msg.txt and canvas.png"<<std::endl;
+  
+  //  std::cout << fListBox863->GetEntry(i)->GetTitle()<<std::endl;
+
+  FILE * F = fopen("msg.txt","w");
+  if (F!=NULL){
+    
+    fprintf(F,"%s\n", fListBox863->GetEntry(i)->GetTitle());
+    fclose(F);
+  }
+  std::cout<<"Done dumping files"<<std::endl;
+}
 
 void MessagePresenter::selectright(){
 
@@ -716,6 +752,7 @@ void MessagePresenter::Layout(){
   fstopped->MoveResize(500,2,90,17);
 
   fTextButton515->MoveResize(400,2,90,20);
+  fTextButtonDump->MoveResize(600,2,90,20);
   fLabel746->MoveResize(200,2,60,20);
   fNumberEntry670->MoveResize(260,2,120,20);
 
@@ -758,7 +795,14 @@ void MessagePresenter::display(){
   fTextButton515->Resize(90,24);
   fTextButton515->SetToolTipText("Remove all entries from the list");
   fMainFrame1933->AddFrame(fTextButton515, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+
   fTextButton515->MoveResize(400,2,90,20);
+  fTextButtonDump = new TGTextButton(fMainFrame1933,"Print Msg");
+  fTextButtonDump->SetTextJustify(36);
+  fTextButtonDump->Resize(90,24);
+  fTextButtonDump->SetToolTipText("Remove all entries from the list");
+  fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
+  fTextButtonDump->MoveResize(600,2,90,20);
   //   TGNumberEntry *
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));

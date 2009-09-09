@@ -46,6 +46,7 @@ public:
   long int MessageCnt;
   time_t lastSwitch;
 
+  pthread_mutex_t switchmtx; // cpb mutex for switching directories
   pthread_mutex_t locmtx;
   pthread_mutex_t mtx;
   pthread_mutex_t Fmtx;
@@ -94,6 +95,7 @@ public:
  
   
   int  Fswitch(const char *n, int num = 0){
+    MessageCnt = 0; // cpb reset Cnt first thing
     int re =0;
     std::string newl;
     stringstream ss;
@@ -109,7 +111,7 @@ public:
     time_t t = time(NULL);
     std::cerr <<"Switching  to "<<newl<<" at "<<ctime(&t)<<std::endl;
       // make a new location    
-    MessageCnt = 0;
+    // MessageCnt = 0; // cpb done earlier
     lastSwitch = time (NULL);
 	  
     if (mkdir(newl.c_str(),S_IRUSR|S_IWUSR|S_IXUSR|S_IRGRP|S_IWGRP|S_IXGRP|S_IROTH|S_IXOTH)<0){
@@ -273,7 +275,7 @@ public:
     lastName = "";
     lastSwitch = time(NULL);
     MessageCnt = 0;
-    
+    pthread_mutex_init(&switchmtx,NULL); // cpb init the switch mutex
     pthread_mutex_init(&locmtx,NULL);
     pthread_mutex_init(&mtx,NULL);
     pthread_mutex_init(&Fmtx,NULL);
@@ -287,6 +289,7 @@ private:
   unsigned long int dirnum;
   
   char buf[3000];
+  char bufm[3000]; // cpb static bufer for directory name
   char tempf[1024];
   int u;
   outstack * os;

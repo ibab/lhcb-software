@@ -35,46 +35,53 @@ void * getnsave::start(){
     //if so interpret it
     if (strncmp(cl.message.c_str(),"status",6)==0){
       os->addline(CONFIG_STR().c_str());
-      return NULL;
+      // return NULL; //cpb later
     }
     if (strncmp(cl.message.c_str(),"switch",6)==0){
-      char * buf = (char *)malloc(cl.message.size());
-      if (buf !=NULL){
-        if ( sscanf(cl.message.c_str(),"%*s %s",buf) ==1){
-          //std::string s = ldir+"/"+(std::string)buf;
-          if (os->Fswitch(buf)<0){
-            os->addline("SERVER/3/OutStack::Fswitch failed");
-          }
-        }
-        else {
+      std::cerr<<"Manual switch initiated using directory "<<std::endl; // cpb new manual switching block
+      
+      if ( sscanf(cl.message.c_str(),"%*s %s",bufm) ==1){
+	//std::string s = ldir+"/"+(std::string)buf;
+	std::cerr<<bufm<<std::endl;
+	pthread_mutex_lock(&(os->switchmtx));
+	if (os->Fswitch(bufm)<0){
+	  os->addline("SERVER/3/OutStack::Fswitch failed");
+	  std::cerr << "Manual switch failed." <<std::endl;
+	}
+	pthread_mutex_unlock(&(os->switchmtx));
+      }
+      else {
           os->addline("SERVER/3/sscanf failed");;
-          return NULL;
-        }
       }
-      else{
-        os->addline("SERVER/3/malloc failed");
-        return NULL;
-      }
-      return NULL;
     }
     // std::cerr <<"unknown command: "<<cl.message<<std::endl;
+    char nbuf[2049];
+    int re=0;
+    int outn = getrest(nbuf,2048,&re);
+    if (re>0){
+      while(re>0){
+	re =0;
+	outn = getrest(nbuf,511,&re);
+      }
+    } 
     return NULL;
-    //broadcast result
+    // cpb end of new switching block
   }
-
+  pthread_mutex_lock(&(os->switchmtx));
   if ((os->MaxTime >0 ) && ((time(NULL) - os->lastSwitch) > os->MaxTime)) {
     (os->DirNum)++;
     std::cerr <<"More than "<<os->MaxTime<< " seconds since last switch."<<std::endl;
     os->Fswitch(os->lastName.c_str(),os->DirNum);
   }
+  pthread_mutex_unlock(&(os->switchmtx));
   
- 
+  pthread_mutex_lock(&(os->switchmtx));
   if ( (os->MaxFiles >0) && (os->MessageCnt>=os->MaxFiles)) {
     (os->DirNum)++;
     std::cerr <<"More than "<<os->MaxFiles<< " files since last switch."<<std::endl;
     os->Fswitch(os->lastName.c_str(),os->DirNum);
   }
-
+  pthread_mutex_unlock(&(os->switchmtx));
 
   char nbuf[2049];
 

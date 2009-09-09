@@ -146,13 +146,16 @@ public:
   void display(int x=600,int y=700);
   
   TCanvas * canvas();
-  
+  TGTextEdit * textedit(){return fTextEdit532;}
   void print(const char * name = ""){
     if (*alive ==2){
       if (name[0] == '\0') 
         canvas()->Print("canvas.png");
       else
         canvas()->Print(name);
+    }
+    if (fTextEdit532!=NULL){
+      fTextEdit532->SaveFile("details.txt");
     }
   }
   

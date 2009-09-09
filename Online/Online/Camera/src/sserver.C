@@ -533,8 +533,8 @@ void * OutThread(void *){
   WarnOut S(op);
 
   //S.settimeout(1,0);
-
-  S.Listen();
+  if (S.Listen()<0) exit(1); /// cpb exit on fail
+  //  S.Listen();
 
   return 0;
 }
@@ -608,7 +608,8 @@ int main(int argc, char ** argv){
 
   WarnIn S(ip);
   S.settimeout(1,00000);
-  S.Listen();
+  if (S.Listen()<0) exit(1); // cpb exit on fail
+  //S.Listen();
 
   return 0;
 }
