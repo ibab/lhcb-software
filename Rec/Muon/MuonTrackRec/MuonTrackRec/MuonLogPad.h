@@ -1,4 +1,4 @@
-// $Id: MuonLogPad.h,v 1.2 2009-05-13 10:59:47 ggiacomo Exp $
+// $Id: MuonLogPad.h,v 1.3 2009-09-09 09:21:54 ggiacomo Exp $
 #ifndef MUONLOGPAD_H 
 #define MUONLOGPAD_H 1
 
@@ -51,9 +51,10 @@ class MuonLogPad {
   
 
   // public member functions
-  typedef enum { NOX=0, XONEFE=1, XTWOFE=2} LogPadType;
-  /// returns the type of logical pad (uncrossed or crossed with 1 or 2 FE channels)
+  typedef enum { NOX=0, XONEFE=1, XTWOFE=2, UNPAIRED=3} LogPadType;
+  /// returns the type of logical pad (uncrossed, crossed with 1 or 2 FE channels, or unpaired log. channel)
   inline LogPadType type() {
+    if (!m_truepad) return UNPAIRED;
     LogPadType t=XONEFE;
     if (m_tile->station() == 0 || 
         (m_tile->station()>2 && m_tile->region()==0) ) {
@@ -97,11 +98,12 @@ class MuonLogPad {
   {
     return m_dtime;
   }
-  /// true if this is a logical channel that should be crossed 
+  /// true if this is the crossing of two logical channels
   inline bool crossed() 
   {
     return m_crossed;
   }
+  /// true if it's a real logical pad (if false, it's an unpaired logical channel)
   inline bool truepad() 
   {
     return m_truepad;
