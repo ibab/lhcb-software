@@ -1,8 +1,8 @@
-// $Id: MisalignmentParser.cpp,v 1.3 2009-07-08 09:09:22 wouter Exp $
+// $Id: MisalignmentParser.cpp,v 1.4 2009-09-09 14:07:44 jblouw Exp $
 
 #include "MisalignmentParser.h"
 
-MisalignmentParser::MisalignmentParser(const std::string& optionFileName)
+MisalignmentParser::MisalignmentParser(const std::string& optionFileName) 
 {
   ifstream options(optionFileName.c_str(), std::ios::in);
 

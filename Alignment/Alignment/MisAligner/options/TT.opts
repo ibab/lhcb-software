@@ -1,0 +1,6 @@
+/dd/Structure/LHCb/BeforeMagnetRegion/TT/TT[a,b]/TT[a,b]XLayer  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/BeforeMagnetRegion/TT/TTa/TTaULayer  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+/dd/Structure/LHCb/BeforeMagnetRegion/TT/TTb/TTbVLayer  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+#/dd/Structure/LHCb/BeforeMagnetRegion/TT/TTbXlayer  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+#/dd/Structure/LHCb/BeforeMagnetRegion/TT/TTbVlayer  shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.01), GAUSS(0.0, 0.01), GAUSS(0.0, 0.01)]
+#/dd/Structure/LHCb/BeforeMagnetRegion/TT/.* shift=[GAUSS(0.0, 1.0),0.0,0.0] rotate=[GAUSS(0.0, 0.001), GAUSS(0.0, 0.001), GAUSS(0.0, 0.001)]

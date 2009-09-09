@@ -7,6 +7,8 @@ Purpose: LHCb Alignment packages.
 	 Misalignment paramaters will be stored in xml files which then have to
 	 uploaded to the conditions data base by hand, using the tools in Det/ConddbUI
 
+- 09/09/2009: Johan Blouw: fixed options files for TT & Velo misalignments
+
 </PRE><H1><A NAME=v1r1>2009-04-03 MisAligner v1r1</A></H1><PRE>
 - 03/04/2009: Johan Blouw: tag v1r1 for Alignment_v4r1
 

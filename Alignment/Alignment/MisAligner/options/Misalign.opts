@@ -28,25 +28,35 @@ ApplicationMgr.DLLs += {
 MisAlignMainSeq.Members += {"GaudiSequencer/Misalign"};
 Misalign.MeasureTime = true;
 Misalign.Members += {"MisAlignAlg"
-//		   , "WriteAlignmentConditions/WriteIT"
-		   , "WriteAlignmentConditions/WriteOT"
 		   , "WriteAlignmentConditions/WriteVelo"
+//		   , "WriteAlignmentConditions/WriteTT"
+//		   , "WriteAlignmentConditions/WriteIT"
+//		   , "WriteAlignmentConditions/WriteOT"
 			};
+
+MisAlignAlg.OutputLevel = 3;
+
 MisAlignAlg.OTMisalignment_file = "../options/OT.opts";
 MisAlignAlg.ITMisalignment_file = "../options/IT.opts";
 MisAlignAlg.TTMisalignment_file = "../options/TT.opts";
 MisAlignAlg.VeLoMisalignment_file = "../options/VELO.opts";
-//MisAlignAlg.Detectors += {"OT","IT", "Velo"};
-MisAlignAlg.Detectors += {"Velo", "OT"};
-WriteIT.topElement = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
-WriteIT.depths = {0,1,2,3,4,5,6,7};
-WriteIT.outputFile = "IT_1.xml";
-WriteOT.topElement = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
-WriteOT.depths = {0,1,2,3,4};
-WriteOT.outputFile = "OT_1.xml";
+MisAlignAlg.Detectors += {"Velo"};
+
 WriteVelo.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo";
 WriteVelo.depths = {0,1,2,3,4,5,6,7};
 WriteVelo.outputFile = "VELO_1.xml";
+
+WriteTT.topElement = "/dd/Structure/LHCb/BeforeMagnetRegion/TT";
+WriteTT.depths = {0,1,2,3,4,5,6,7};
+WriteTT.outputFile = "TT_1.xml";
+
+WriteIT.topElement = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT";
+WriteIT.depths = {0,1,2,3,4,5,6,7};
+WriteIT.outputFile = "IT_1.xml";
+
+WriteOT.topElement = "/dd/Structure/LHCb/AfterMagnetRegion/T/OT";
+WriteOT.depths = {0,1,2,3,4};
+WriteOT.outputFile = "OT_1.xml";
 
 
 #include "$DDDBROOT/options/DDDB.opts"
@@ -58,34 +68,43 @@ CondDBDispatcherSvc.MainAccessSvc = "CondDBAccessSvc/DDDB";
 CondDBDispatcherSvc.Alternatives = {
                                 "/Conditions/OT": "CondDBAccessSvc/OTCOND"
                                 ,"/Conditions/IT": "CondDBAccessSvc/ITCOND"
+                                ,"/Conditions/TT": "CondDBAccessSvc/TTCOND"
                                 ,"/Conditions/Velo": "CondDBAccessSvc/VELOCOND"
                                 ,"/Conditions": "CondDBAccessSvc/LHCBCOND"
 };
+//DDDB.DefaultTAG = "DC06-repro0710";
 DDDB.DefaultTAG = "DC06-20081002";
-//CONDLayers.Layers = { "CondDBAccessSvc/LHCBCOND"};
-//OTLayers.Layers = { "CondDBAccessSvc/OTCOND"};
-//ITLayers.Layers = { "CondDBAccessSvc/ITCOND"};
-//VELOLayers.Layers = { "CondDBAccessSvc/VELOCOND"};
 LHCBCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+//LHCBCOND.DefaultTag = "DC06-repro0710";
 LHCBCOND.DefaultTag = "DC06-20081002";
 LHCBCOND.ConnectionTimeOut = 0;
+//
 OTCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+//OTCOND.DefaultTag = "DC06-repro0710";
 OTCOND.DefaultTag = "DC06-20081002";
-//OTCOND.DefaultTag = "OT_IT_SYS_03";
 OTCOND.ConnectionTimeOut = 0;
+//
 ITCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+//ITCOND.DefaultTag = "DC06-repro0710";
 ITCOND.DefaultTag = "DC06-20081002";
-//ITCOND.DefaultTag = "OT_IT_SYS_03";
 ITCOND.ConnectionTimeOut = 0;
+//
+TTCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+//ITCOND.DefaultTag = "DC06-repro0710";
+TTCOND.DefaultTag = "DC06-20081002";
+TTCOND.ConnectionTimeOut = 0;
+//
 VELOCOND.ConnectionString = "sqlite_file:$SQLDDDBROOT/db/LHCBCOND.db/LHCBCOND";
+//VELOCOND.DefaultTag = "DC06-repro0710";
 VELOCOND.DefaultTag = "DC06-20081002";
+VELOCOND.ConnectionTimeOut = 0;
 
 ApplicationMgr.EvtMax = 1;
 //ApplicationMgr.EvtMax = 0;
 
 EventSelector.Input   = {
-"DATAFILE='PFN:/work/blouw/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-//"DATAFILE='PFN:/castor/cern.ch/user/j/jblouw/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+//"DATAFILE='PFN:/data/data/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:/castor/cern.ch/user/j/jblouw/FieldOff_450GeV.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/home/he/blouw/cmtuser/Alignment_v2r3/Alignment/Escher/v2r2/data/prova_v32r2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG3_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'",
 //"DATAFILE='PFN:/data/work/maciuc/Brunel_PG4_Boff.dst' TYP='POOL_ROOTTREE' OPT='READ'"

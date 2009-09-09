@@ -1,4 +1,4 @@
-// $Id: MisalignmentParser.h,v 1.2 2009-04-03 12:10:38 jblouw Exp $
+// $Id: MisalignmentParser.h,v 1.3 2009-09-09 14:07:44 jblouw Exp $
 #ifndef INCLUDE_MISALIGNMENTPARSER_H
 #define INCLUDE_MISALIGNMENTPARSER_H 1
 
@@ -45,6 +45,7 @@ class MisalignmentParser {
 
     /// Standard Constructor
     MisalignmentParser(const std::string& optionFileName);
+
 
     virtual ~MisalignmentParser(); ///< Destructor
 

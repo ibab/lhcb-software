@@ -4,7 +4,7 @@
  * Implementation file for Alignment algorithm : MisAlignAlg
  *
  *  CVS Log :-
- *  $Id: MisAlignAlg.cpp,v 1.1 2009-02-21 22:21:17 jblouw Exp $
+ *  $Id: MisAlignAlg.cpp,v 1.2 2009-09-09 14:07:44 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   18/07/2008
@@ -69,6 +69,7 @@ StatusCode MisAlignAlg::CacheDetElements( std::vector<std::string> &detectors  )
   info() << "Number of detectors to be mis-aligned: " << detectors.end() - detectors.begin() << endreq;
   StatusCode sc;
   for (  t_i = detectors.begin(); t_i != detectors.end(); ++t_i ) {
+    info() << "Trying Detector " << *t_i << endl;
     if ( *t_i == "TT" ) {
       info() << "Get the TT geometry info" << endreq;
       parse = new MisalignmentParser( m_TTfile );
@@ -122,6 +123,7 @@ StatusCode MisAlignAlg::CacheDetElements( std::vector<std::string> &detectors  )
 
 
 void MisAlignAlg::Config( IDetectorElement *det ) {
+  debug() << "Going for det element " << det->name() << endl;
   MisalignmentParser::AlignmentParameters ap = 
     parse->getAlignmentParameters( det->name() );
   if ( ap->isMisaligned() ) {
@@ -138,7 +140,7 @@ void MisAlignAlg::Config( IDetectorElement *det ) {
     info() << "Misaligning det element: " << det->name() << endreq;
     info() << "            translation : " << translation << endreq;
     info() << "               rotation : " << rotation << endreq;
-  }
+  } 
   IDetectorElement::IDEContainer::iterator i = det->childBegin();
   for ( ; i < det->childEnd(); i++ ) {
     Config( *i );
