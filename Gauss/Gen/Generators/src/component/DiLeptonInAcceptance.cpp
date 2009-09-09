@@ -1,4 +1,4 @@
-// $Id: DiLeptonInAcceptance.cpp,v 1.3 2009-08-10 13:15:56 tblake Exp $
+// $Id: DiLeptonInAcceptance.cpp,v 1.4 2009-09-09 17:01:57 tblake Exp $
 // Include files 
 
 // from Gaudi
@@ -130,7 +130,7 @@ bool DiLeptonInAcceptance::studyFullEvent( LHCb::HepMCEvents * theEvents ,
       HepMC::FourVector sum ;
       sum.setPx( (*iterOne) -> momentum().px() + (*iterTwo)->momentum().px() ) ;
       sum.setPy( (*iterOne) -> momentum().py() + (*iterTwo)->momentum().py() ) ;
-      sum.setPz( (*iterOne) -> momentum().px() + (*iterTwo)->momentum().pz() ) ;
+      sum.setPz( (*iterOne) -> momentum().pz() + (*iterTwo)->momentum().pz() ) ;
       sum.setE ( (*iterOne) -> momentum().e()  + (*iterTwo)->momentum().e() ) ;
       dimuonMass = sum.m();
       
