@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.77 2009-09-02 16:19:38 cattanem Exp $
+! $Id: release.notes,v 1.78 2009-09-09 12:18:54 cattanem Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
-!====================== STKernel v1r17 2009-09-02 ===========================
+!====================== STKernel v1r17 2009-09-09 ===========================
+! 2009-09-09 Marco Cattaneo
+ - requirements: Add missing linkopts for Boost on Windows
+ 
 ! 2009-08-31 - Jeroen van Tilburg
  - TTDetectorPlot: invert A and C side to comply with offline and IT plot.
 

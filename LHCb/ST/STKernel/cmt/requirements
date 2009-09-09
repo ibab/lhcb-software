@@ -27,4 +27,5 @@ apply_pattern reflex_dictionary                                      \
               selectionfile=$(STKERNELROOT)/dict/STKernelDict.xml    \
               options="-U__MINGW32__ -DBOOST_DISABLE_ASSERTS"
 
-
+private
+macro_append STKernelLib_use_linkopts " $(Boost_linkopts_date_time) "
