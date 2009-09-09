@@ -4,6 +4,24 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Gareth Rogers
+ - Update of source code containing bug fixes for:
+   Switching glitches -- A new mutex lock to serialise the automatic switching
+   should prevent the weird directory names.
+   Strange GUI entries -- Same patch should avoid those.
+   Some other slight refinements in the server.
+   GUI -- extra window now has a title.
+          A Print Msg button has been added. It dumps the selected error to
+          ./msg.txt. If the extra window is open the canvas is printed to
+          canvas.png, only png for now. The extra text is saved to details.txt.
+
+! 2009-09-09 - Gareth Rogers
+ - newDataDirectory.sh is now source'd in runCameraServer.sh as there have
+   been problems with it not having executable permissions.
+ - Changed the default ports to be inport:45123 and outport:45124. This moves
+   them into the dynamic range and out of the registered ports range. Scripts
+   changed to reflect this.
+
 ! 2009-09-07 - Gareth Rogers
  - commentCamera.sh now takes multiple CAMERA server in the form host:port host:port ...
    after the comment. All are options and defaults to localhost:12346.
