@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-09-10 - Tomasz Skwarnicki
+ - adopt TupleToolTISTOS to new way of wild character matching in trigger names
+
 ! 2009-09-06 - Greig Cowan
  - Minor bug fixes to TupleToolP2VV to check pointers before dereferencing.
 
