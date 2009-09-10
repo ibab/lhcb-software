@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.3 2009-07-09 13:48:57 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.4 2009-09-10 08:57:34 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -60,10 +60,16 @@ public:
 				  int region) =0;
   virtual int nPadX(int s) =0;
   virtual int nPadY(int s) =0;
+  virtual int nPadXvy(int s, int r) =0;
+  virtual int nPadYvx(int s, int r) =0;
   virtual float padSizeX(int station,			    
                          int region)  =0;
   virtual float padSizeY(int station,			    
                          int region)  =0;
+  virtual float padSizeXvy(int station,			    
+			   int region)  =0;
+  virtual float padSizeYvx(int station,			    
+			   int region)  =0;
   virtual LHCb::MuonTileID* tileFromLogCh(unsigned int q, 
                                           unsigned int s, 
                                           unsigned int r, 
