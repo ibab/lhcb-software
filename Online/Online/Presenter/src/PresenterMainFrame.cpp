@@ -4640,7 +4640,7 @@ void PresenterMainFrame::refreshPage()
 
 //      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";
       }  else {
-std::cout << "rate not initialised " << std::endl;      
+// std::cout << "rate not initialised " << std::endl;      
       } 
 //      editorCanvas->SaveAs(dumpFile.c_str());    
       dump_dbHistosOnPageIt++;              

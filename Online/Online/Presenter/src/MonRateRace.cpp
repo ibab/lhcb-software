@@ -127,12 +127,18 @@ void MonRateRace::infoHandler()
     cntCommentStream.str("");  
     
     double* histoDimData = 0;
-     histoDimData = (double*) getData();
-     m_value   = (double) histoDimData[0];
+     histoDimData = static_cast<double*>(getData());
+
+     m_value   = static_cast<double>(histoDimData[0]);     
+     if ((std::numeric_limits<double>::min() < m_value) &&
+         (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308 
+     m_initialised = true;
+     } else {
+      m_value = std::numeric_limits<double>::min();
+      m_initialised = false;      
+     }
 
 // TODO: track infoHandler() invocation: 2nd trigger should be Ok.
-std::cout << "infoHandler() called." << std::endl;
-     m_initialised = true;
      
      infoHandlerLock.unlock();
   } else {
