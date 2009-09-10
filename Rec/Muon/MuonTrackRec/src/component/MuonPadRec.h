@@ -1,4 +1,4 @@
-// $Id: MuonPadRec.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonPadRec.h,v 1.2 2009-09-10 13:20:54 ggiacomo Exp $
 #ifndef MUONPADREC_H 
 #define MUONPADREC_H 1
 
@@ -44,15 +44,8 @@ private:
 
   void clearPads();
 
-  StatusCode addCoordsNoMap(std::vector<MuonLogHit*> &hits,
-                            const int & station,
-                            const int & region);
-  StatusCode addCoordsCrossingMap(std::vector<MuonLogHit*> &hits,
-                                  const int & station,
-                                  const int & region);
-  StatusCode makeStripLayouts(int station, int region, 
-                              MuonLayout &layout1,
-                              MuonLayout &layout2);
+  StatusCode addCoordsNoMap(std::vector<MuonLogHit*> &hits);
+  StatusCode addCoordsCrossingMap(std::vector<MuonLogHit*> &hits);
   StatusCode removeDoubleHits(std::vector<MuonLogHit*> &hits);
 };
 #endif // MUONPADREC_H
