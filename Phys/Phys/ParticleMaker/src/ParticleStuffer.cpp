@@ -1,4 +1,4 @@
-// $Id: ParticleStuffer.cpp,v 1.11 2007-11-27 16:46:15 pkoppenb Exp $
+// $Id: ParticleStuffer.cpp,v 1.12 2009-09-10 17:06:39 jonrob Exp $
 // Include files 
 
 // 
@@ -50,7 +50,7 @@ StatusCode ParticleStuffer::initialize() {
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
   m_pTransporter = tool<IParticleTransporter>(m_transporterType, this);
 
-  return StatusCode::SUCCESS;
+  return sc;
   
 }
 //=============================================================================

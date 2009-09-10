@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.101 2009-08-14 11:35:30 pkoppenb Exp $ 
+! $Id: release.notes,v 1.102 2009-09-10 17:06:39 jonrob Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2009-09-10 - Chris Jones
+ - Protect verbose and debug messages within tests for
+   the appropriate message levels
 
 ! 2009-08-14 - Patrick Koppenburg
  - Raise an exception when ProtoParticles are not present. This
