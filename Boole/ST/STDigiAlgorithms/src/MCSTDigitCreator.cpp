@@ -1,4 +1,4 @@
-// $Id: MCSTDigitCreator.cpp,v 1.2 2008-10-22 14:44:05 mneedham Exp $
+// $Id: MCSTDigitCreator.cpp,v 1.3 2009-09-10 06:49:19 tskwarni Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -21,11 +21,11 @@ MCSTDigitCreator::MCSTDigitCreator(const std::string& name,
 {
   // MCSTDigitCreator constructor
 
-  m_inputLocation = MCSTDepositLocation::TTDeposits;
-  m_outputLocation = MCSTDigitLocation::TTDigits; 
+  declareSTConfigProperty("InputLocation" , m_inputLocation,
+		  MCSTDepositLocation::TTDeposits);
+  declareSTConfigProperty("OutputLocation" , m_outputLocation,
+		  MCSTDigitLocation::TTDigits);
 
-  addToFlipList(&m_inputLocation);
-  addToFlipList(&m_outputLocation);
 }
 
 MCSTDigitCreator::~MCSTDigitCreator()
