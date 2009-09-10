@@ -132,6 +132,7 @@ class DbRootHist : public HistogramIdentifier
     void setHistoryTrendPlotMode(bool mode) { m_historyTrendPlotMode = mode; }
     bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }
     void resetRetryInit() {m_retryInit = 2;}
+    bool rateInitialised() { return m_rateInitialised;}
 
   private:
     TPad* m_drawPattern;
@@ -140,7 +141,7 @@ class DbRootHist : public HistogramIdentifier
     // TODO: have a stack of offset for bracketing
     // state of histo @ clr/rst
     TH1*  m_offsetHistogram;
-    float m_trendTimeScale;
+    int m_trendTimeScale;
     TDatime m_offsetTime;
     int m_trendBin;
 
@@ -199,6 +200,8 @@ class DbRootHist : public HistogramIdentifier
     TPave* m_statpave;
 
     bool m_historyTrendPlotMode; 
+    
+    bool m_rateInitialised;
 
     bool m_isOverlap;
 

@@ -1,3 +1,14 @@
+//Warning in <TColor::Number2Pixel>: color with index 5544 not defined
+
+//  Error in <TClass::New>: cannot create object of class TH1
+//  monRate: Number of processes publishing via this 
+//   dimContent: 1
+//  monRate: Counter number 2 dimContent: 2.80182
+//  pure virtual method called
+//  terminate called without an active exception
+//  RTL:Handled signal: 6 [SIGABRT] Old action:(nil)
+
+
 //  Program received signal SIGSEGV, Segmentation fault.
 //  [Switching to Thread 0xb0e12b90 (LWP 13025)]
 //  0xb6b68b9e in TH1::LabelsInflate (this=0x8e13248, ax=0xb6d284e8 "X") at hist/hist/src/TH1.cxx:4154

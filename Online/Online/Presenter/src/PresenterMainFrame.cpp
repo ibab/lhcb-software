@@ -55,6 +55,7 @@
 #include <TObjString.h>
 #include <TStyle.h>
 #include <TSystem.h>
+#include <TROOT.h>
 #include <TThread.h>
 #include <TTimer.h>
 #include <TGFileDialog.h>
@@ -1649,9 +1650,10 @@ void PresenterMainFrame::setPresenterMode(const PresenterMode & presenterMode)
     case Batch:
       gROOT->SetBatch();
       m_presenterMode = Batch;
-      editorCanvas = new TCanvas("c", "c", GetWidth(), GetHeight());
+      editorCanvas = new TCanvas("c", "c", 300, 300);
       editorCanvas->cd();
-      gStyle->SetOptStat("ne");
+//      gStyle->SetOptStat("m");
+      gStyle->SetOptStat(0);
       break;              
     case Online:
       m_prevPresenterMode = m_presenterMode;
@@ -4588,38 +4590,58 @@ void PresenterMainFrame::nextInterval()
 void PresenterMainFrame::refreshPage()
 {
   if (m_verbosity >= Verbose) {
-    std::cout << "refreshing." << std::endl;
+//    std::cout << "refreshing." << std::endl;
   }
   //TODO: reuse pw if available from pageload
   if (Batch != m_presenterMode) {
-    ParallelWait parallelWait(this);
-    parallelWait.refreshHistograms(&dbHistosOnPage);
-    editorCanvas->Update();
+      ParallelWait parallelWait(this);
+      parallelWait.refreshHistograms(&dbHistosOnPage);
+    if (! gROOT->IsInterrupted()) {      
+      editorCanvas->Update();
+    }
   } else if (Batch == m_presenterMode) {
+    
+//  <HEAD>
+//  <META HTTP-EQUIV=REFRESH CONTENT=5> // CONTENT=5 means wait for 5 seconds to reload the page.
+//  </HEAD>    
     
     std::vector<DbRootHist*>::iterator dump_dbHistosOnPageIt;
     dump_dbHistosOnPageIt = dbHistosOnPage.begin();
+    editorCanvas->cd();
     while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
+//      if (gROOT->IsInterrupted()) {        
+//        break;
+//      }
+      
 //      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(*dump_dbHistosOnPageIt)->fileName());
     if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
       (*dump_dbHistosOnPageIt)->fillHistogram();
       (*dump_dbHistosOnPageIt)->normalizeReference();
     }
     if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
+//      editorCanvas->Clear();
       std::string plotName(m_currentPartition);
         plotName.append(" ").append(currentTime->AsSQLString());
-//        (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
+        (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
+        
         (*dump_dbHistosOnPageIt)->rootHistogram->Draw();
-        editorCanvas->Modified();
-        gPad->Modified();
+        gPad->Modified(); 
+        editorCanvas->Modified(); 
         editorCanvas->Update();
   //      std::string dumpDirectory(startupSettings["image-path"].as<std::string>());
   //      std::string dumpDirectory("/home/psomogyi/afs/cmtuser/Online_v4r26/Online/Presenter/cmt");
-        std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;      
-//        editorCanvas->SaveAs(dumpFile.c_str());     
+        std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;
+// std::cout << plotName << " " << dumpFile << std::endl;
+
 // (*dump_dbHistosOnPageIt)->rootHistogram->Dump();
+  if (! gROOT->IsInterrupted()) {
+        editorCanvas->SaveAs(dumpFile.c_str());
+  }     
+
 //      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";
-      }      
+      }  else {
+std::cout << "rate not initialised " << std::endl;      
+      } 
 //      editorCanvas->SaveAs(dumpFile.c_str());    
       dump_dbHistosOnPageIt++;              
     }

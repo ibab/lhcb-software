@@ -98,6 +98,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_titpave(NULL),
   m_statpave(NULL),
   m_historyTrendPlotMode(false),
+  m_rateInitialised(false),
   m_isOverlap(false),
   m_oraMutex(&oraMutex),
   m_dimMutex(&dimMutex),
@@ -450,17 +451,14 @@ void DbRootHist::initHistogram()
           } else if (s_CNT == m_histogramType &&
                      isEFF()) {
             m_monRateRace = new MonRateRace(m_dimServiceName);
-  boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
-  if (dimLock) {            
-            m_histoRootTitle = TString(Form("%s",
-                                         (m_monRateRace->title()).c_str()));
-  }                                        
-             gStyle->SetTimeOffset(m_offsetTime.Convert());
+            m_trendTimeScale = 100 * m_trendTimeScale;
              if (!rootHistogram) {
-              rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
-                                       10, 0, 10 * m_trendTimeScale);
+              rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
+                                       m_trendTimeScale, 0, m_trendTimeScale);
+              rootHistogram->SetBinContent(m_trendTimeScale,0);
              }
-             rootHistogram->GetXaxis()->SetTimeDisplay(1);
+//             rootHistogram->GetXaxis()->SetTimeOffset(m_offsetTime.Convert());
+//             rootHistogram->GetXaxis()->SetTimeDisplay(1);
           }
         } else {
           // cannot get sources from DIM
@@ -743,19 +741,26 @@ void DbRootHist::fillHistogram()
       }
    } else if (s_CNT == m_histogramType) {
       double dimContent = 0;
-        if (m_isEFF &&
+        if (m_isEFF && m_monRateRace &&  
+            (true == m_monRateRace->rateInitialised()) &&
             rootHistogram && !m_isEmptyHisto) {
-          boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
-          boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
-          if (rootLock && dimLock) {             
+            m_rateInitialised = true;
             dimContent = m_monRateRace->currentValue();
             m_histoRootTitle = TString(Form("%s",
-                                       (m_monRateRace->title()).c_str()));            
-          }          
+                                       (m_monRateRace->title()).c_str()));
+            rootHistogram->SetTitle(m_histoRootTitle.Data());
+// std::cout << "monRate: " << m_histoRootTitle.Data() << " dimContent: " << dimContent << std::endl;
+   int i = 0;
+   int  nbins = m_trendTimeScale;
+   double stats[5]={0,0,0,0,0};
+   rootHistogram->PutStats(stats); // reset mean value, etc   
+   for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+   for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
+//   rootHistogram->SetBinContent(100 * m_trendTimeScale,dimContent);
+      
+//            rootHistogram->SetBinContent(m_trendBin, dimContent);
+//            m_trendBin++;
         }
-       rootHistogram->SetTitle(m_histoRootTitle.Data());  
-       rootHistogram->SetBinContent(m_trendBin, dimContent);
-       m_trendBin++;
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
