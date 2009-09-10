@@ -451,14 +451,27 @@ void DbRootHist::initHistogram()
           } else if (s_CNT == m_histogramType &&
                      isEFF()) {
             m_monRateRace = new MonRateRace(m_dimServiceName);
-            m_trendTimeScale = 100 * m_trendTimeScale;
+   
+// OK(
+//            m_trendTimeScale = 100 * m_trendTimeScale;
+//             if (!rootHistogram) {
+//              rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
+//                                       m_trendTimeScale, 0, m_trendTimeScale);
+//              rootHistogram->SetBinContent(m_trendTimeScale,0);
+//             }
+// OK)
+
+// rtp(
+             gStyle->SetTimeOffset(m_offsetTime.Convert());
              if (!rootHistogram) {
-              rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
-                                       m_trendTimeScale, 0, m_trendTimeScale);
-              rootHistogram->SetBinContent(m_trendTimeScale,0);
+              rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
+                                       10, 0, 10 * m_trendTimeScale);
              }
-//             rootHistogram->GetXaxis()->SetTimeOffset(m_offsetTime.Convert());
-//             rootHistogram->GetXaxis()->SetTimeDisplay(1);
+             rootHistogram->GetXaxis()->SetTimeDisplay(1);
+// rtp)
+             
+//      .       rootHistogram->GetXaxis()->SetTimeOffset(m_offsetTime.Convert());
+//      .       rootHistogram->GetXaxis()->SetTimeDisplay(1);
           }
         } else {
           // cannot get sources from DIM
@@ -750,16 +763,20 @@ void DbRootHist::fillHistogram()
                                        (m_monRateRace->title()).c_str()));
             rootHistogram->SetTitle(m_histoRootTitle.Data());
 // std::cout << "monRate: " << m_histoRootTitle.Data() << " dimContent: " << dimContent << std::endl;
-   int i = 0;
-   int  nbins = m_trendTimeScale;
-   double stats[5]={0,0,0,0,0};
-   rootHistogram->PutStats(stats); // reset mean value, etc   
-   for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-   for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
-//   rootHistogram->SetBinContent(100 * m_trendTimeScale,dimContent);
-      
-//            rootHistogram->SetBinContent(m_trendBin, dimContent);
-//            m_trendBin++;
+
+// OK(
+//   int i = 0;
+//   int  nbins = m_trendTimeScale;
+//   double stats[5]={0,0,0,0,0};
+//   rootHistogram->PutStats(stats); // reset mean value, etc   
+//   for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+//   for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
+// OK)
+   
+// rtp(   
+          rootHistogram->SetBinContent(m_trendBin, dimContent);
+          m_trendBin++;
+// rtp)    
         }
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
