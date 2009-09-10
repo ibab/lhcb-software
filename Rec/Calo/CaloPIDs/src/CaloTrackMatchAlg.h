@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.7 2009-08-21 16:49:45 odescham Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.8 2009-09-10 10:47:05 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -165,7 +165,7 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   } // end of loop over tarck containers
   
   const size_t nTracks = tracks.size() ;
-  if ( 0 == nTracks ) { Warning("No good tracks have been selected").ignore() ; }
+  if ( 0 == nTracks ) { debug() << "No good tracks have been selected" << endmsg; }
   
   // get the matching tool 
   ICaloTrackMatch* matcher = match() ;
@@ -174,6 +174,10 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
   size_t nOverflow = 0 ;
   // loop over cluster containers 
   for ( Inputs::const_iterator ic = m_calos.begin() ; m_calos.end() != ic ; ++ic){
+    if( !exist<Calos>(*ic) ){
+      debug() << " Container " << *ic << " has not been found " << endmsg;
+      continue;
+    }
     const Calos* c = get<Calos> ( *ic ) ;
     // loop over all calos
     for ( typename Calos::const_iterator icalo = c->begin() ; 

@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptanceAlg.cpp,v 1.7 2009-08-21 16:49:45 odescham Exp $
+// $Id: InCaloAcceptanceAlg.cpp,v 1.8 2009-09-10 10:47:05 odescham Exp $
 // ============================================================================
 // Boost 
 // ============================================================================
@@ -95,7 +95,7 @@ StatusCode InCaloAcceptanceAlg::execute()
     }
   } 
   
-  if ( 0 == nTracks ) { Warning("No good tracks have been selected").ignore() ; }
+  if ( 0 == nTracks ) { debug() <<  "No good tracks have been selected" << endmsg ; }
   // MANDATORY: i_sort after i_push
   table -> i_sort () ;
   
@@ -109,6 +109,3 @@ StatusCode InCaloAcceptanceAlg::execute()
   
   return StatusCode::SUCCESS ;
 }
-// ============================================================================
-// The END 
-// ============================================================================

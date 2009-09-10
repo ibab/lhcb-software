@@ -1,4 +1,4 @@
-// $Id: InCaloAcceptanceAlg.h,v 1.3 2009-08-21 16:49:45 odescham Exp $
+// $Id: InCaloAcceptanceAlg.h,v 1.4 2009-09-10 10:47:05 odescham Exp $
 // ============================================================================
 #ifndef CALOPIDS_INCALOACCEPTANCEALG_H 
 #define CALOPIDS_INCALOACCEPTANCEALG_H 1
@@ -75,8 +75,6 @@ protected:
      !Relations::IsConvertible<const T1*,const void*>::same)
 // ============================================================================
 
-// ============================================================================
-/// The END  
 // ============================================================================
 #endif // CALOPIDS_INCALOACCEPTANCEALG_H
 // ============================================================================

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.75 2009-09-03 16:21:13 cattanem Exp $ 
+! $Id: release.notes,v 1.76 2009-09-10 10:47:05 odescham Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2009-09-03 - Marco Cattaneo
+ - reduce InCaloAcceptance/CaloTrackMatchAlg verbosity when no good tracks found (warning->debug)
+ - add protection against missing inputs
 
 !========================== CaloPIDs v5r1 2009-09-03 =========================
 ! 2009-09-03 - Marco Cattaneo

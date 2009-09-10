@@ -1,8 +1,11 @@
-// $Id: CaloChi22ID.cpp,v 1.4 2009-08-21 16:49:45 odescham Exp $
+// $Id: CaloChi22ID.cpp,v 1.5 2009-09-10 10:47:05 odescham Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/08/21 16:49:45  odescham
+// implement generic context-dependent TES I/O
+//
 // Revision 1.3  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -57,6 +60,8 @@ StatusCode CaloChi22ID::execute()
   typedef LHCb::Calo2Track::ITrHypoTable      TABLEI ;
   typedef LHCb::Relation1D<LHCb::Track,float> Table  ;
   // get the input table 
+  // get the input data 
+  if( !exist<TABLEI>(m_input))return Warning(" Input missing '" + m_input + "'",StatusCode::SUCCESS);
   const TABLEI* input = get<TABLEI>( m_input ) ;
   // create and register the output table 
   Table* output = new Table ( input->relations().size() + 10 ) ;

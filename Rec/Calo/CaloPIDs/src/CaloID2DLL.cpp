@@ -1,8 +1,11 @@
-// $Id: CaloID2DLL.cpp,v 1.7 2008-10-20 09:22:36 odescham Exp $
+// $Id: CaloID2DLL.cpp,v 1.8 2009-09-10 10:47:05 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.7 $
+// CVS tag $Name: not supported by cvs2svn $ , verison $Revision: 1.8 $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2008/10/20 09:22:36  odescham
+// fix unitialized member
+//
 // Revision 1.6  2008/06/30 15:37:34  odescham
 // prepare for HLT processing
 //
@@ -149,6 +152,8 @@ StatusCode CaloID2DLL::execute()
   BOOST_STATIC_ASSERT(INHERITS(Table,ITable));
   
   // get the input data 
+  if( !exist<ITable>(m_input))return Warning(" Input missing '" + m_input + "'",StatusCode::SUCCESS);
+
   const ITable* input = get<ITable>( m_input ) ;
   ITable::Range links = input->relations() ;
   

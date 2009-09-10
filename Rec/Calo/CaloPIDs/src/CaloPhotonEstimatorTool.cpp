@@ -348,6 +348,9 @@ double CaloPhotonEstimatorTool::likelihood(const LHCb::CaloHypo* hypo )  const
 
   /// Chi2
   double chi2;
+  // get the input data 
+  if( !exist<LHCb::Calo2Track::IClusTrTable>(m_tableLocation))
+    return Warning(" Input missing '" + m_tableLocation + "'",StatusCode::SUCCESS);
   m_table = get<LHCb::Calo2Track::IClusTrTable>( m_tableLocation ) ; 
   const LHCb::Calo2Track::IClusTrTable::Range range = m_table -> relations ( cluster ) ;
   if( range.empty() )  { chi2=1.e+6; }            // bad match -> large value !
