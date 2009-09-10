@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.27 2009-09-08 16:50:15 snies Exp $
+# $Id: Hlt1.py,v 1.28 2009-09-10 15:45:01 snies Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.27 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.28 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -43,7 +43,7 @@ _type2conf = { 'PA' : HltCommissioningLinesConf # PA for 'PAss-thru' (PT was con
              , 'HA' : HltHadronLinesConf
              , 'PH' : HltPhotonLinesConf
              , 'EL' : HltElectronLinesConf
-	     , 'CO' : HltCosmicLinesConf
+             , 'CO' : HltCosmicLinesConf
              }
 
 def hlt1TypeDecoder(hlttype) :
