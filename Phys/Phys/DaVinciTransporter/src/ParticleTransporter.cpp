@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.22 2009-07-27 16:43:10 jpalac Exp $
+// $Id: ParticleTransporter.cpp,v 1.23 2009-09-10 17:06:12 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -73,19 +73,23 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
                                           const double zNew,
                                           LHCb::Particle& transParticle){
   StatusCode sc = StatusCode::SUCCESS;
-  debug() << "Transport PID " << P->particleID().pid() 
-          << " p " << P->momentum() << " from " 
-          << P->referencePoint()  << " to " << zNew << endmsg ;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Transport PID " << P->particleID().pid() 
+            << " p " << P->momentum() << " from " 
+            << P->referencePoint()  << " to " << zNew << endmsg ;
   
   // avoid some "extra" self-assignements:
   if ( &transParticle != P ) { transParticle = LHCb::Particle(*P) ; }
 
   if ( ! (P->isBasicParticle()) ) {
-    verbose() << "Using DaVinci::Transporter::transportComposite" << endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Using DaVinci::Transporter::transportComposite" << endmsg;
     sc = DaVinci::Transporter::transportComposite(P, zNew, transParticle);
     if (!sc) return sc;
   } else if (P->charge()==0. ) {
-    verbose() << "Using DaVinci::Transporter::transportNeutralBasic" << endmsg;
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Using DaVinci::Transporter::transportNeutralBasic" << endmsg;
     sc = DaVinci::Transporter::transportNeutralBasic(P, zNew, transParticle);
     if (!sc) return sc;
   } else {
@@ -150,8 +154,11 @@ ParticleTransporter::transportChargedBasic(const LHCb::Particle* P,
 
   if (!sc) return sc;
 
-  verbose() << "Extrapolated state is" << endmsg;
-  verbose() << s << endmsg ;
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "Extrapolated state is" << endmsg;
+    verbose() << s << endmsg ;
+  }
 
   sc = m_particle2State->state2Particle(s,transParticle);
   
@@ -164,12 +171,18 @@ ParticleTransporter::checkParticle(const LHCb::Particle& transParticle)
 {
   
   if ( lfin(transParticle.momentum().E() )){
-    verbose() << "Obtained Particle " 
-              << transParticle.particleID().pid() << endmsg;
-    verbose() << transParticle << endmsg ;  
-    debug() << "Transported " << transParticle.particleID().pid() 
-            << " " << transParticle.momentum() << " to " 
-            << transParticle.referencePoint() << endmsg ;
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Obtained Particle " 
+                << transParticle.particleID().pid() << endmsg;
+      verbose() << transParticle << endmsg ;
+    }
+    if ( msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Transported " << transParticle.particleID().pid() 
+              << " " << transParticle.momentum() << " to " 
+              << transParticle.referencePoint() << endmsg ;
+    }
   } else {
     Warning("Transported Particle gets infinite momentum. Check Track states used.");
     return StatusCode::FAILURE ;
@@ -190,14 +203,19 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double zNew
     // Particles from MCParticles
     if (0==P->proto()){
       ParticleProperty *pp = m_ppSvc->findByPythiaID(P->particleID().pid());
-      if (0!=pp) Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
-                         StatusCode::SUCCESS) ;
-      else err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. " 
+      if (0!=pp) { Warning(pp->particle()+" has no proto nor endVertex. Assuming it's from MC.", 
+                           StatusCode::SUCCESS) ;
+      }
+      else
+      {
+        err() << "Particle with unknown PID " << P->particleID().pid() << " has no endVertex. " 
                  <<  "Assuming it's from MC" << endmsg ;
+      }
       sc = m_particle2State->particle2State(*P,s);
     } else if (m_eID==P->particleID().abspid()){
       // Electrons. We don't want to lose Bremsstrahlung correction
-      verbose() << "Special treatment for electrons" << endmsg ;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "Special treatment for electrons" << endmsg ;
       sc = m_particle2State->particle2State(*P,s);
     } else if (0==P->proto()->track()){
       // Charged protopraticle without track -> error
@@ -206,7 +224,8 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double zNew
     } else {
       // That's fine
       s = P->proto()->track()->closestState(zNew);
-      if (msgLevel(MSG::DEBUG)) {
+      if (msgLevel(MSG::DEBUG)) 
+      {
         debug() << "Getting state closest to " << zNew << " at "
                 << s.position().z() << " : " << s.stateVector() << endmsg ;
         debug() << "Track has " << P->proto()->track()->nStates() << ". First at "
@@ -217,7 +236,9 @@ StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double zNew
   } else { // make a state
     return m_particle2State->particle2State(*P,s);
   }
-  verbose() << "Got state: \n" << s << endmsg ;
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Got state: \n" << s << endmsg ;
 
   return sc ;
 }  
