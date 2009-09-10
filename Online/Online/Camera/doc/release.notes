@@ -4,6 +4,8 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r8 ===============
+
 ! 2009-09-09 - Gareth Rogers
  - Update of source code containing bug fixes for:
    Switching glitches -- A new mutex lock to serialise the automatic switching
