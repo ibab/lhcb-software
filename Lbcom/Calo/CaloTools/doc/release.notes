@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.75 2009-09-07 09:22:55 graven Exp $
+! $Id: release.notes,v 1.76 2009-09-11 16:52:27 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-10-11 - Olivier Deschamps
+ - CalOGetterTool.cpp : make use of CaloAlgUtils.h to define context-dependent TES I/O 
 
 ! 2009-09-04 - Dmitry Golubkov
  - cmt/requirements version increment to v5r12

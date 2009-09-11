@@ -1,4 +1,4 @@
-// $Id: CaloHypo2Calo.cpp,v 1.6 2009-05-19 13:48:22 cattanem Exp $
+// $Id: CaloHypo2Calo.cpp,v 1.7 2009-09-11 16:52:27 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -60,16 +60,19 @@ StatusCode CaloHypo2Calo::initialize(){
 
 //=============================================================================
 const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromHypo, std::string toCalo){
-  LHCb::CaloHypo::Clusters clusters = fromHypo.clusters();
 
+  if ( msgLevel( MSG::DEBUG) ) debug() << "Matching CaloHypo to " << toCalo << " hypo energy = " << fromHypo.e() << endmsg;
 
+  LHCb::CaloHypo::Clusters clusters = fromHypo.clusters();    
+
+  
   // get the smallest cluster (i.e. for merged photons)
   LHCb::CaloCluster* cluster = 0;
   unsigned int minSize = 999999;
   for(LHCb::CaloHypo::Clusters::iterator icl = clusters.begin();icl!=clusters.end();++icl){
     if( (*(*icl)).entries().size() < minSize)cluster = *icl;
   }
-
+  
   if(cluster == 0){
     Error("No valid cluster!").ignore() ;
     return m_cells;
@@ -78,6 +81,7 @@ const std::vector<LHCb::CaloCellID>& CaloHypo2Calo::cellIDs(LHCb::CaloHypo fromH
   LHCb::CaloCellID seedID = cluster->seed();
   std::string fromCalo = CaloCellCode::CaloNameFromNum( seedID.calo() );
   if( toCalo != m_toCalo || fromCalo != m_fromCalo)setCalos(fromCalo,toCalo);
+  if ( msgLevel( MSG::DEBUG) ) debug() << "Cluster seed " << seedID << " " << m_fromDet->cellCenter( seedID ) << endmsg;
 
   if(m_whole){
     return Calo2Calo::cellIDs( *cluster, toCalo);

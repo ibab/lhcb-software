@@ -1,4 +1,4 @@
-// $Id: CaloGetterTool.cpp,v 1.4 2009-08-10 11:55:13 ibelyaev Exp $
+// $Id: CaloGetterTool.cpp,v 1.5 2009-09-11 16:52:27 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -7,6 +7,7 @@
 #include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/Incident.h" 
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -28,8 +29,7 @@ CaloGetterTool::CaloGetterTool
 ( const std::string& type,
   const std::string& name,
   const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-{
+  : GaudiTool ( type, name , parent ){
   declareInterface<ICaloGetterTool>(this);
   declareProperty ( "GetDigits"        , m_digiUpd = true  ) ;
   declareProperty ( "GetClusters"      , m_clusUpd = false ) ;
@@ -39,39 +39,25 @@ CaloGetterTool::CaloGetterTool
   declareProperty ( "ClusterLocations" , m_clusLoc ) ;
   declareProperty ( "HypoLocations"    , m_hypoLoc ) ;
   
+  std::string flag = context();
+  if( std::string::npos != name.find ("HLT") || 
+      std::string::npos != name.find ("Hlt") )flag="Hlt";
+
   // digits
-  m_digiLoc.push_back( LHCb::CaloDigitLocation::Ecal ) ;
-  m_digiLoc.push_back( LHCb::CaloDigitLocation::Hcal ) ;
-  m_digiLoc.push_back( LHCb::CaloDigitLocation::Prs  ) ;
-  m_digiLoc.push_back( LHCb::CaloDigitLocation::Spd  ) ;
+  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Ecal" , flag ) ) ;
+  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Hcal" , flag ) ) ;
+  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Prs"  , flag ) ) ;
+  m_digiLoc.push_back( LHCb::CaloAlgUtils::CaloDigitLocation( "Spd"  , flag ) ) ;
   
-  if( "HLT" == context ()                    || 
-      "Hlt" == context ()                    || 
-      std::string::npos != name.find ("HLT") || 
-      std::string::npos != name.find ("Hlt") )
-  {
-    // clusters
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::EcalHlt );
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::EcalSplitHlt );
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::HcalHlt );
-    // hypos
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::PhotonsHlt      );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::ElectronsHlt    );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::MergedPi0sHlt   );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::SplitPhotonsHlt );
-  }
-  else
-  {
-    // clusters
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::Ecal );
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::EcalSplit );
-    m_clusLoc.push_back( LHCb::CaloClusterLocation::Hcal );
-    // hypos
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::Photons      );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::Electrons    );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::MergedPi0s   );
-    m_hypoLoc.push_back( LHCb::CaloHypoLocation::SplitPhotons );
-  }
+  m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Ecal" , flag ) ) ;
+  m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloClusterLocation( "Hcal" , flag ) ) ;
+  m_clusLoc.push_back( LHCb::CaloAlgUtils::CaloSplitClusterLocation( flag ) ) ;
+
+  m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("Photons"      , flag ) );
+  m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("Electrons"    , flag ) );
+  m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("SplitPhotons" , flag ) );
+  m_hypoLoc.push_back( LHCb::CaloAlgUtils::CaloHypoLocation("MergedPi0s"   , flag ) );
+
   // ==========================================================================
 }
 // ============================================================================
@@ -280,9 +266,6 @@ void CaloGetterTool::update()
     }    
   }
 }
-// ============================================================================
-// The END 
-// ============================================================================
 
 
  
