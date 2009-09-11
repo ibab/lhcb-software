@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.12 2009-08-31 17:12:54 phopchev Exp $
+# $Id: HltBeamGasLines.py,v 1.13 2009-09-11 13:38:56 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
@@ -12,7 +12,7 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -60,8 +60,6 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
 
         name = { 'Beam1': 'BeamGas1', 'Beam2' : 'BeamGas2' }[ whichBeam ]
         	
-	from Configurables import DecodeVeloRawBuffer
-	algDecodeVelo = DecodeVeloRawBuffer( 'Hlt1%sDecodeVelo' % name )
 	
         ## here we can add different z-ranges for the beam1 and beam2 crossings
         from Configurables import Tf__PatVeloRTracking
@@ -81,12 +79,13 @@ class HltBeamGasLinesConf(HltLinesConfigurableUser) :
                                         )           
  
         from HltLine.HltLine import Hlt1Line as Line
+        from HltLine.HltReco import DecodeVELO
         return Line( name
 	           , priority = 200
                    , prescale = self.prescale
                    , ODIN  = "ODIN_BXTYP == LHCb.ODIN.%s" % whichBeam
                    , L0DU  = "L0_CHANNEL('%s')" % self.getProp('L0Channel' + whichBeam)
-                   , algos = [ algDecodeVelo, algRZTracking, algVtxCut ]
+                   , algos = [ DecodeVELO, algRZTracking, algVtxCut ]
                    , postscale = self.postscale )
 		   
     def __create_beam_crossing_lines__(self) :

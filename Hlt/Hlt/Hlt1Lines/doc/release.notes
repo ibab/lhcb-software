@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.38 2009-08-31 17:12:54 phopchev Exp $
+! $Id: release.notes,v 1.39 2009-09-11 13:38:56 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-08-11 - Gerhard Raven
+ - make sure beamgas lines uses the same VELO decoding as everyone else
 
 ! 2009-08-28 - Plamen Hopchev
  - in HltBeamGasLines: add fourth Hlt Line Hlt1BeamGasCrossingForcedRZReco
