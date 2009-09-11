@@ -11,11 +11,12 @@ int main(int /* argc */, char** /* argv */) {  return 1; }
 
 #include <iostream>
 
-
 using namespace std;
 
-int mapToChar(map<string, map<string, string> > * from, char * to, int maxlength);
 
+/** converts writer message queues to DIM services...
+ *  @author David Svantesson
+ */
 int main(int /* argc */, char** /* argv */) {
     
 
@@ -69,24 +70,18 @@ int main(int /* argc */, char** /* argv */) {
     fflush(stdout);
     size_t max_msg_size = attr.mq_msgsize;
 
-    int openmaxlength = 3000;         			//Initial length of string sent to DIM for open files
-    map<string, map<string, string> > filelist;         //list of all open files. Each file have a map of properties
-    char * openfiles = new char[openmaxlength];		//All current open files as a string to be sent 
-    char closedfile[300] = "";                   	//most recent closed file
-    sprintf(closedfile,"test$1%crec$2",DELIMITER);
+    char message[1000] = "";                   	//current sent message
+    //sprintf(message,"test$1%crec$2",DELIMITER);
    
     // setup DIM-services 
     string hostname = getenv("HOST");
     char servicename[100];
     sprintf(servicename,"%s_Writerstat",hostname.c_str());	
     DimServer::start(servicename);
-    sprintf(servicename,"%s_Writerstat/Open",hostname.c_str());	
-    DimService pubOpenFiles(servicename, openfiles);
-    sprintf(servicename,"%s_Writerstat/Closed",hostname.c_str());	
-    DimService pubClosedFile(servicename, closedfile);
+    sprintf(servicename,"%s_Writerstat/mq",hostname.c_str());	
+    DimService pubMQ(servicename, message);
 
-    pubOpenFiles.updateService();
-    pubClosedFile.updateService();
+    pubMQ.updateService();
 
     Writers* writers = new Writers();
     list<CommandHandler*> commandHandlers;
@@ -126,40 +121,23 @@ int main(int /* argc */, char** /* argv */) {
             continue;
         } else {
 	    // Handle command received. 
-            if (cmd->name == "log") {
+            if (cmd->name == "openfile") {
+		// openfile$filename   (no bytes written from start)
+		snprintf(message,1000, "openfile%c%s",DELIMITER,(mt->param2).c_str());
+		pubMQ.updateService(); //send message
+		fprintf(fp,"\n File open update. Opened file: %s ", cmd->param2.c_str());
+	    }
+	    else if (cmd->name == "log") {
 		// Update logged parameters
-                string filename = cmd->param2;
-                string paramname = cmd->param3;
-		string paramvalue = cmd->param4;
-                filelist[filename][paramname] = paramvalue;
-              
-		int response;	
-		do {
-		    response = mapToChar(&filelist,openfiles,openmaxlength);
-		    if (response == -1) {
-			// ERROR
-			fprintf(fp, "Fatal. Error converting property map to char");
-    			fclose(fp);
-    			free(buf);
-    			exit(EXIT_FAILURE);
-		    }
-		    if (response==-9) {
-			// Our string buffer is too short, doubles length.
-			fprintf(fp, "Increasing statistics string buffer for open files. Previous length: %i",openmaxlength);
-                        openmaxlength *= 2; // double length
-			delete[] openfiles;
-			openfiles = new char[openmaxlength];
-		    }
-		} while (response==-9);
+		// log$filename$bytesWritten$events$lumiEvents
+                snprintf(message,1000, "log%c%s%c%s%c%s%c%s", DELIMITER, (cmd->param2).c_str(), DELIMITER, (cmd->param4).c_str(), DELIMITER, (cmd->param6).c_str(), DELIMITER, (cmd->param8).c_str());
 		// Update DIM service		
-		pubOpenFiles.updateService(openfiles);
+		pubMQ.updateService(); //send message
 	    }
  	    else if (cmd->name == "closefile") {
-		// remove file from list of open files and send final file statistics
-                filelist.erase(filelist.find(cmd->param2));
-		// filename$paramname$paramvalue$pn$pv$pn$pv
-                snprintf(closedfile,300, "%s%c%s%c%s%c%s%c%s%c%s%c%s", (cmd->param2).c_str(), DELIMITER, (cmd->param3).c_str(), DELIMITER, (cmd->param4).c_str(), DELIMITER, (cmd->param5).c_str(), DELIMITER, (cmd->param6).c_str(), DELIMITER, (cmd->param7).c_str(), DELIMITER, (cmd->param8).c_str());
-		pubClosedFile.updateService(); // Send update notice, string closedfile is sent
+		// closefile$filename$bytesWritten$events$lumievents
+                snprintf(message,1000, "closefile%c%s%c%s%c%s%c%s", DELIMITER, (cmd->param2).c_str(), DELIMITER, (cmd->param4).c_str(), DELIMITER, (cmd->param6).c_str(), DELIMITER, (cmd->param8).c_str());
+		pubMQ.updateService(); // Send update notice
 		
                 fprintf(fp,"\n File closed update. Closed file: %s ", cmd->param2.c_str());
             }
@@ -214,36 +192,6 @@ int main(int /* argc */, char** /* argv */) {
     exit(EXIT_SUCCESS);
 }
 
-/** Convert map<string (filename), map<string (key), string (value)> > to a string: filename|/path/to/file|key|value|key|value|...|filename|/path/to/file2|...
- *
- * return: 
- * 0 OK
- * -1 Error (sprintf)
- * -9 char length (to) is too short.
- *
- */
-int mapToChar(map<string, map<string, string> > * from, char * to, int maxlength) 
-{
 
-    int temppos = 0;
-    int response;
-    map<string, map<string, string> >::iterator itm;
-    map<string, string>::iterator it;
-    for (itm = from->begin(); itm != from->end(); ++itm) {
-        response = snprintf( to + temppos, maxlength-temppos, "filename%c%s%c", DELIMITER,(*itm).first.c_str(),DELIMITER);
-	if (response < 1) return -1;
-	if (response > (maxlength-temppos)) return -9; 
-        temppos += response;
-	it = (*itm).second.begin();
-        for (it = itm->second.begin(); it != itm->second.end(); ++it) {
-            response = snprintf( to + temppos, maxlength-temppos, "%s%c%s%c",(*it).first.c_str(),DELIMITER,(*it).second.c_str(),DELIMITER); 
-            if (response < 1) return -1;
-            if (response > (maxlength-temppos)) return -9;
-	    temppos += response;
-        }
-    }
-
-    return 0;
-}
 
 #endif
