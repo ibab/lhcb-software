@@ -1,8 +1,0 @@
-!-----------------------------------------------------------------------------
-! Package     : Gaudi/XMLSummary
-! Responsible : Rob Lambert
-! Purpose     : Hold code for manipulating XML, and writing a summary in Gaudi
-!-----------------------------------------------------------------------------
-
-! 2009-07-07 - Rob Lambert
- - Created the package and began to populate
