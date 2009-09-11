@@ -31,7 +31,9 @@ class HistogramIdentifier
     bool isEFF() const { return m_isEFF; };
     std::string gauchocommentBeat() const { return m_gauchocommentBeat; };
     std::string gauchocommentEric() const { return m_gauchocommentEric; };
-    std::string m_histogramUrl() const { return m_histogramUrlTS.Data(); };
+    std::string histogramUrl() const { return m_histogramUrlTS.Data(); };
+    std::string dbDimServiceName() const { return m_dbDimServiceName; };
+    int dbHistogramType() const { return m_dbHistogramType; };
 
   protected:
     TString m_histogramUrlTS;
@@ -53,6 +55,8 @@ class HistogramIdentifier
     bool m_isDimFormat;
     std::string m_gauchocommentBeat;
     std::string m_gauchocommentEric;
+    std::string m_dbDimServiceName;
+    int m_dbHistogramType;
 };
 
 #endif /*HISTOGRAMIDENTIFIER_H_*/

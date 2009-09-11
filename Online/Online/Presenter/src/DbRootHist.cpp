@@ -435,7 +435,7 @@ void DbRootHist::initHistogram()
                                        nBins, xMin, xMax);
             }
           } else if (s_CNT == m_histogramType &&
-                     isEFF() && m_presenterApp) {
+                     m_presenterApp) {
             m_monRateRace = new MonRateRace(m_dimServiceName);
             if (( (Online == m_presenterApp->presenterMode()) ||
                   (EditorOnline == m_presenterApp->presenterMode())
@@ -445,7 +445,7 @@ void DbRootHist::initHistogram()
                 rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
                                          m_trendTimeScale, 0, m_trendTimeScale);
 // X axis off, timestamp instead                                         
-                rootHistogram->SetBinContent(m_trendTimeScale,0);
+                rootHistogram->SetBinContent(m_trendTimeScale,0);                
               }
             } else if ( (Batch == m_presenterApp->presenterMode()) ) {
               gStyle->SetTimeOffset(m_offsetTime.Convert());
@@ -748,7 +748,7 @@ void DbRootHist::fillHistogram()
       }
    } else if (s_CNT == m_histogramType) {
       double dimContent = 0;
-      if (m_isEFF && m_monRateRace &&  
+      if (m_monRateRace &&  
           (true == m_monRateRace->rateInitialised()) &&
           rootHistogram && !m_isEmptyHisto) {
         m_rateInitialised = true;
@@ -1580,14 +1580,16 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   std::string dimServiceName("");
   std::string dimServiceNameQueryBegining("");
 
-  if (!m_partition.empty()) {
+  if (s_CNT != dimServiceType &&
+      !m_partition.empty()) {
     dimServiceNameQueryBegining = dimServiceType + s_slash +
                                   m_partition +
-                                  s_underscore + "*";
-  } else if (!dimServiceType.empty()) {
-    dimServiceNameQueryBegining = "*" + s_eff_monRate + "*";    
+                                  s_underscore + s_DimWildcard;
+  } else if (s_CNT == dimServiceType &&
+             !m_partition.empty() ) {
+    dimServiceNameQueryBegining = m_partition + s_underscore + m_taskName + s_DimWildcard;    
   } else {
-    dimServiceNameQueryBegining = "*";    
+    dimServiceNameQueryBegining = s_DimWildcard;    
   }
   
   
@@ -1596,8 +1598,6 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   if (dimLock && oraLock && m_onlineHistogram &&  m_session) {
     bool botherDimBrowser(true);
     std::string taskName(m_onlineHistogram->task());
-//TODO: GauchoJob/Adder confusion    
-    if (taskName == "GauchoJob") {taskName = "Adder";} 
     std::vector<std::string*>::iterator lookForTasksNotRunningIt;
     if (0 < m_tasksNotRunning->size()) {
       for (lookForTasksNotRunningIt = m_tasksNotRunning->begin();
@@ -1619,11 +1619,8 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
           TString dimServiceTS(dimServiceCandidate);
            
           if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
-            HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
-//TODO: GauchoJob/Adder confusion            
-            std::string identifier =  ("GauchoJob" == m_onlineHistogram->task()? "Adder" : m_onlineHistogram->task() ) + s_slash + m_onlineHistogram->algorithm() +
-                    s_slash + m_onlineHistogram->hname();    
-            if (0 == (histogramCandidate.histogramIdentifier().compare(identifier))) {          
+            HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate); 
+            if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
               dimServiceName = dimServiceCandidate;
               break;
             } else {
@@ -1673,7 +1670,7 @@ if (0 != m_onlineHistogram) {
       dimServiceName = findDimServiceName(s_H1D);          
     }
   } else if (0 == m_onlineHistogram->hstype().compare(s_CNT)) {
-    dimServiceName = findDimServiceName(std::string(""));
+    dimServiceName = findDimServiceName(s_CNT);
 //    if (dimServiceName.empty()) {
 //      dimServiceName = findDimServiceName(s_H1D);          
 //    }
@@ -1684,9 +1681,6 @@ if (0 != m_onlineHistogram) {
       std::cout << std::endl << "assembled current Dim service name: "
                 << dimServiceName << std::endl << std::endl;
     }  
-   if (0 == m_onlineHistogram->hstype().compare(s_CNT)) {
-    dimServiceName = m_dimServiceName.erase(0, s_CNT.length()+1);
-   }
     setIdentifiersFromDim(dimServiceName);
 
 

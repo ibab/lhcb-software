@@ -26,7 +26,8 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
   m_isPlausible(false),
   m_isDimFormat(false),
   m_gauchocommentBeat(""),
-  m_gauchocommentEric("")
+  m_gauchocommentEric(""),
+  m_dbDimServiceName("")
 {
   setIdentifiersFromDim(m_histogramUrlTS.Data());
 }
@@ -70,45 +71,31 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     TObjArray* histogramUTGIDMatchGroup = s_histogramUTGIDRegexp.MatchS(m_histogramUTGID);
 
     if (!histogramUTGIDMatchGroup->IsEmpty()) {
-      m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
-        GetString()).Data();
-      m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
-        GetString()).Data();
-      m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(4))->
-        GetString()).Data();
-      m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(5))->
-        GetString()).Data();
-      histogramUTGIDMatchGroup->Delete();
-      delete histogramUTGIDMatchGroup;
-    } else { // TPRegexp handles IsEmpty strictly...
-      histogramUTGIDMatchGroup->Delete();
-      delete histogramUTGIDMatchGroup;
-      TObjArray* histogramUTGIDMatchGroup = s_histogramUTGIDRegexpEFF.MatchS(m_histogramUTGID);      
-      if (!histogramUTGIDMatchGroup->IsEmpty()) {        
-        m_partitionName = "";        
-        m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
-          GetString()).Data();          
+      m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
+                        GetString()).Data();
+      if ( 4 == histogramUTGIDMatchGroup->GetLast() ) {
+        m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(4))->
+                             GetString()).Data();
+        m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
+                     GetString()).Data();
+        m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
+                     GetString()).Data();
+      } else if ( 3 == histogramUTGIDMatchGroup->GetLast()) {
+        m_isEFF = true;
+        m_nodeName = "";
         m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
-          GetString()).Data();                    
-        if (s_adder == m_taskName) {
-          m_isEFF = true;
-          matchOffset = 1;
-          histogramUrlMatchGroup->Delete();          
-          delete histogramUrlMatchGroup;
-          histogramUrlMatchGroup = s_histogramUrlRegexpEFF.MatchS(m_histogramUrlTS);
-          m_partitionName = (((TObjString *)histogramUTGIDMatchGroup->At(1))->
-            GetString()).Data();          
-        }
-        m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
-          GetString()).Data();
-      } else {        
-        m_taskName = m_histogramUTGID;        
-      }    
+                     GetString()).Data();
+      } else {
+        m_taskName = m_histogramUTGID;
+      }
+    }
+    if (histogramUTGIDMatchGroup) {
       histogramUTGIDMatchGroup->Delete();
-      delete histogramUTGIDMatchGroup;      
+      delete histogramUTGIDMatchGroup;
     }
     m_algorithmName = (((TObjString *)histogramUrlMatchGroup->At(3 + matchOffset))->
       GetString()).Data();
+      
     TString setSwitch = ((TObjString *)histogramUrlMatchGroup->At(6 + matchOffset))->
       GetString();
 
@@ -131,12 +118,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_gauchocommentBeat = newDimServiceName + s_gauchocomment;
     m_gauchocommentEric = newDimServiceName.substr(m_histogramType.length() + 1,
                                                    newDimServiceName.length())
-                          + s_gauchocomment;
-  }
-  
-  if (m_isEFF) {
-    m_taskName = (((TObjString *)histogramUrlMatchGroup->At(3))->GetString()).Data();
-  // just get the last name of the histo, without the "/" hierarchy levels    
+                                                   + s_gauchocomment;
   }
   
   histogramUrlMatchGroup->Delete();
@@ -149,11 +131,26 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_identifier =  m_taskName + s_slash + m_algorithmName +
                     s_slash + m_histogramName;    
   }
-  if (m_isEFF) {
-    m_lastName = m_histogramName.substr((m_histogramName.find_last_of(s_slash,
-                                        std::string::npos)-std::string::npos),
-                                        m_histogramName.length());  
   
+  m_dbDimServiceName = m_histogramType + s_slash + m_identifier;
+  
+//   typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;  
+  if (s_H1D == m_histogramType) {
+    m_dbHistogramType = 0;
+  } else if (s_H2D == m_histogramType) {
+    m_dbHistogramType = 1;
+  } else if ( (s_P1D == m_histogramType) ||
+              (s_HPD == m_histogramType) ) {
+    m_dbHistogramType = 2;
+  } else if (s_CNT == m_histogramType) {
+    m_dbHistogramType = 4;
+  } 
+
+  m_lastName = m_histogramName.substr((m_histogramName.find_last_of(s_slash,
+                                      std::string::npos)-std::string::npos),
+                                      m_histogramName.length());  
+  
+  if (m_isEFF) {
     TString fileName(m_lastName);
     fileName.ReplaceAll("_", "_001_");
     fileName.ReplaceAll(",", "_002_");

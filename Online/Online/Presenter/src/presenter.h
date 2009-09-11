@@ -118,7 +118,7 @@ namespace pres
   static const std::string s_DimFloat("F");
   static const std::string s_DimDouble("D");
 
-  static TPRegexp s_DimCNTRegexp("^([ILFD])(?:(:\\d+))?");
+//  static TPRegexp s_DimCNTRegexp("^([ILFD])(?:(:\\d+))?");
   static TPRegexp s_DimHltCntRegexp("^D:2;C");
   static TPRegexp s_DimHltTckRegexp("^I:1;C");
 
@@ -139,6 +139,7 @@ namespace pres
   
   static const std::string s_adder("Adder");
   static const std::string s_eff_monRate("monRate");
+  static const std::string s_eff_MonitorSvc("MonitorSvc");
   static const std::string s_eff_TCK("TCK");
   static const std::string s_eff_init("Initialising...");
   // boost::filesystem::slash
@@ -164,16 +165,26 @@ namespace pres
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10002
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10003
 //  H2D/LHCb_MONA0805_L0CaloDAQMon_00/L0CaloEmulatorMonitoring/L0CaloEmulatorMonitoring/10004
+//  Partition_Adder_1/GauchoJob/MonitorSvc/monRate/Hlt1Hlt1L0GlobalPi0DecisionLineAccepts
 
 // I guess TPRegexp wrapper is buggy: other pcre-s can match the pattern below (-1 match is OK):
 //  static TPRegexp s_histogramUrlRegexp("^(H1D|H2D|P1D|HPD|P2D)?/?([^/_]+)_([^/_]+)_([^/]+)_([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-// so let's process the UTGID separately:
+// so let's process the UTGID separately: ^([^_/]+)_([^_/]+)_([^_/]+)_?([^_/]+)?$
 // TODO: make this lazier...
-  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
-  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+// OK
+//  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+//  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+//  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
+//  static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
 
-  static TPRegexp s_histogramUTGIDRegexp("^(([^/_]+)_)([^/_]+)_([^/]+)_([^/]+)$");
-  static TPRegexp s_histogramUTGIDRegexpEFF("^([^/_]+)_([^/]+)_([^/]+)$");
+  static TPRegexp s_histogramUrlRegexpEFF("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");                                                                                                    
+  static TPRegexp s_histogramUrlRegexp("^(MonP1|MonH1D|MonH2D|H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/]+)/([^/]+)/(([^_]+)(_\\$)?(.*))$");
+  
+//  RICH1_Adder_1
+//  HLTA0101_Adder_1
+//  LHCb_MONA0805_L0CaloDAQMon_00  
+  static TPRegexp s_histogramUTGIDRegexp("^([^_/]+)_([^_/]+)_([^_/]+)_?([^_/]+)?$");  
+  
   static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
   static TPRegexp s_fileRunRegexp("^(.+)-run(\\d+)\\.root$");
   

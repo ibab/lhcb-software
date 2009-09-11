@@ -3054,55 +3054,32 @@ if (Batch != m_presenterMode) {
             dimMon.BeginsWith(s_pfixMonH2D.c_str()) ||
             dimMon.BeginsWith(s_pfixMonProfile.c_str())) {
           m_candidateDimServices.push_back(std::string(dimService));
-        } else {
-          TObjArray* dimHltCntMatchGroup = 0;
-          dimHltCntMatchGroup = s_DimHltCntRegexp.MatchS(dimFormat);
-          if ((true == dimMon.Contains(s_adder.c_str())) &&
-              (true == dimMon.Contains(s_eff_monRate.c_str())) &&
-              (false == dimHltCntMatchGroup->IsEmpty())) {
-            if (false == dimMon.BeginsWith(s_CNT.c_str())) {
-              dimMon.Prepend(s_slash.c_str());
-              dimMon.Prepend(s_CNT.c_str());
-            }
-            HistogramIdentifier histogramIdentifier = HistogramIdentifier(dimMon.Data());
-            if (histogramIdentifier.isPlausible() && 
-              s_CNT != histogramIdentifier.histogramUTGID()) {
-              m_candidateDimServices.push_back(std::string(dimMon.Data()));
-            } else {
-            }
-          }
-          if (dimHltCntMatchGroup) {
-            dimHltCntMatchGroup->Delete();
-            delete dimHltCntMatchGroup;
-            dimHltCntMatchGroup = 0;        
-          }
-        }           
+        }   
       }
       
       serviceType = "*" + s_eff_monRate + "*";
       m_dimBrowser->getServices(serviceType.c_str());
       while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
-        TString dimMon(dimService);        
-          TObjArray* dimHltCntMatchGroup = 0;          
-          dimHltCntMatchGroup = s_DimHltCntRegexp.MatchS(dimFormat);
-          if ((true == dimMon.Contains(s_adder.c_str())) &&
-              (true == dimMon.Contains(s_eff_monRate.c_str())) &&
-              (false == dimHltCntMatchGroup->IsEmpty())) {
-            if (false == dimMon.BeginsWith(s_CNT.c_str())) {
-              dimMon.Prepend(s_slash.c_str());
-              dimMon.Prepend(s_CNT.c_str());
-            }
-            HistogramIdentifier histogramIdentifier = HistogramIdentifier(dimMon.Data());
-            if (histogramIdentifier.isPlausible() && 
-              s_CNT != histogramIdentifier.histogramUTGID()) {
-              m_candidateDimServices.push_back(std::string(dimMon.Data()));
-            }
+        TString dimMon(dimService);
+        TObjArray* dimHltCntMatchGroup = 0;
+        dimHltCntMatchGroup = s_DimHltCntRegexp.MatchS(dimFormat);
+        if ((true == dimMon.Contains(s_adder.c_str())) &&
+            (true == dimMon.Contains(s_eff_monRate.c_str())) &&
+            (false == dimHltCntMatchGroup->IsEmpty())) {
+          if (false == dimMon.BeginsWith(s_CNT.c_str())) {
+            dimMon.Prepend(s_slash.c_str());
+            dimMon.Prepend(s_CNT.c_str());
           }
-          if (dimHltCntMatchGroup) {
-            dimHltCntMatchGroup->Delete();
-            delete dimHltCntMatchGroup;
-            dimHltCntMatchGroup = 0;        
-          }        
+          HistogramIdentifier histogramIdentifier = HistogramIdentifier(dimMon.Data());
+          if (histogramIdentifier.isPlausible()) {
+            m_candidateDimServices.push_back(dimMon.Data());
+          }
+        }
+        if (dimHltCntMatchGroup) {
+          dimHltCntMatchGroup->Delete();
+          delete dimHltCntMatchGroup;
+          dimHltCntMatchGroup = 0;        
+        }
       }      
 //      m_dimBrowser->getServices("*/gauchocomment");
 //      TObjArray* dimCNTMatchGroup = 0;
@@ -3171,39 +3148,35 @@ if (Batch != m_presenterMode) {
           m_candidateDimServicesIt = m_candidateDimServices.begin();
           while (m_candidateDimServicesIt != m_candidateDimServices.end()) {
             TString dimServiceTS = TString(*m_candidateDimServicesIt);
-                HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
-                if (histogramService.isPlausible()) {
-                  std::string candidateDimService(*m_candidateDimServicesIt);
-                  if (s_withTree == tree) {          
-                    if (s_CNT == histogramService.histogramType()) {
-                      candidateDimService = candidateDimService.erase(0, s_CNT.length()).erase(0, s_slash.length());
-                    }
-                    
-                    m_knownHistogramServices.push_back(candidateDimService);
-                    m_histogramTypes.push_back(histogramService.histogramType());
-                  }
-                  if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
-                    TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
-                    if (!histogramService.isEFF() ||
-                        (histogramService.isEFF() &&
-                        false == partitionName->GetString().BeginsWith(s_hltNodePrefix.c_str()))) {                    
-                      m_knownOnlinePartitionList->Add(partitionName);
-                    }
-                  }
-                if (m_verbosity >= Verbose) {
-                  std::cout << "\t\t\t|_ " << candidateDimService << std::endl;
+            HistogramIdentifier histogramService = HistogramIdentifier(*m_candidateDimServicesIt);
+            if (histogramService.isPlausible()) {
+              std::string candidateDimService(*m_candidateDimServicesIt);
+              if (s_withTree == tree) {          
+                if (s_CNT == histogramService.histogramType()) {
+                  candidateDimService = candidateDimService.erase(0, s_CNT.length()).erase(0, s_slash.length());
                 }
-              } else {
-                if (Batch != m_presenterMode) {
-                  new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
-                    Form("The DIM servicename\n%s\n does not appear to follow the" \
-                      "convention\nPlease use the following format:\n" \
-                      "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
-                      "normally has the following format:\n" \
-                      "partition_node_taskname_instance", dimService),
-                    kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-                }
+                
+                m_knownHistogramServices.push_back(candidateDimService);
+                m_histogramTypes.push_back(histogramService.histogramType());
               }
+              if (!m_knownOnlinePartitionList->FindObject(histogramService.partitionName().c_str())) {
+                TObjString* partitionName = new TObjString(histogramService.partitionName().c_str());
+                m_knownOnlinePartitionList->Add(partitionName);
+              }
+              if (m_verbosity >= Verbose) {
+                std::cout << "\t\t\t|_ " << candidateDimService << std::endl;
+              }
+            } else {
+              if (Batch != m_presenterMode) {
+                new TGMsgBox(fClient->GetRoot(), this, "DIM Service name error",
+                  Form("The DIM servicename\n%s\n does not appear to follow the" \
+                    "convention\nPlease use the following format:\n" \
+                    "TYP/UTGID/Algorithmname/Histogramname\n where the UTGID " \
+                    "normally has the following format:\n" \
+                    "partition_node_taskname_instance", dimService),
+                  kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+              }
+            }
             ++m_candidateDimServicesIt;
           }
   //        partitionSelectorComboBoxHandler(0);       
@@ -3444,11 +3417,10 @@ void PresenterMainFrame::addHistoToHistoDB()
         TString histoName = *static_cast<TString*>(currentNode->GetUserData());
         
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
-        if (s_CNT == histogramService.histogramType()) {
-          histoName.Prepend(s_slash.c_str());
-          histoName.Prepend(s_CNT.c_str());
-        }
-        m_histogramDB->declareHistByServiceName(std::string(histoName));
+        m_histogramDB->declareHistogram(histogramService.taskName(),
+                                        histogramService.algorithmName(),
+                                        histogramService.histogramName(),
+                                        (OnlineHistDBEnv::HistType)histogramService.dbHistogramType());
       }
     } catch (std::string sqlException) {
       // TODO: add error logging backend
@@ -3490,8 +3462,6 @@ void PresenterMainFrame::addHistoToHistoDB()
 void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool overlapMode)
 {  
   HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
-  if (histogramID.isDimFormat()) {
-  }  
     int newHistoInstance = 0;
     // see if the histogram object exists already
     std::vector<DbRootHist*>::iterator inst_dbHistosOnPageIt;
@@ -3517,7 +3487,9 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
     
     if (isConnectedToHistogramDB()) {
       histogramDB = m_histogramDB;
-      onlineHistogram = m_histogramDB->getHistogram(histogramID.histogramIdentifier());
+//      onlineHistogram = m_histogramDB->getHistogram(histogramID.histogramIdentifier());
+      onlineHistogram = m_histogramDB->getHistogram(histogramUrl);
+
     } else {
       histogramDB = NULL;
       onlineHistogram = NULL;
@@ -3529,13 +3501,15 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
                (Batch == m_presenterMode)) {
       dimBrowser = m_dimBrowser;
       if (false == isConnectedToHistogramDB()) {
-        currentPartition = histogramID.m_histogramUrl();
+//        currentPartition = histogramID.histogramUrl();
+        currentPartition = histogramUrl;
       }
     }
 
 // TODO: merge this with loadSelectedPage()
     DbRootHist* dbRootHist = getHistogram(this,
-                                          histogramID.histogramIdentifier(),
+//                                          histogramID.histogramIdentifier(),
+                                          histogramUrl,
                                           currentPartition,
                                           2, newHistoInstance,
                                           m_histogramDB,
@@ -3660,7 +3634,7 @@ void PresenterMainFrame::addDbHistoToPage(bool overlapMode)
     if (0 != m_histogramDB) {
       TGListTree* list = new TGListTree();
       checkedTreeItems(list, m_databaseHistogramTreeList);
-      TGListTreeItem* currentNode = list->GetFirstItem();
+      TGListTreeItem* currentNode = list->GetFirstItem();      
       if (0 != currentNode) {
         addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), s_separate);
         currentNode = currentNode->GetNextSibling();        

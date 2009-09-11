@@ -180,11 +180,7 @@ int main(int argc, char* argv[])
       std::cout << "Usage: presenter.exe [options] [histogram id(s)]..." << std::endl
        << visible << std::endl
        << "histogram id(s) should be DIM servicenames" << std::endl
-       << std::endl
-       << "For bug reporting instructions, please see:" << std::endl
-       << "<URL:http://lhcb-online.web.cern.ch/lhcb-online/dataquality/default.html>." << std::endl
-       << "For Presenter specific bug reporting instructions, please see:" << std::endl
-       << "<URL:http://lhcb-online.web.cern.ch/lhcb-online/dataquality/presenter/default.htm>." << std::endl;
+       << std::endl;
       exit(EXIT_SUCCESS);
     }
 
