@@ -411,6 +411,15 @@ void MDFWriterNet::closeFile(File *currFile)
   
   // log closing of file
   if(m_mq_available) {
+<<<<<<< MDFWriterNet.cpp
+//      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
+      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%u%c%s%u%c%s%u",  
+          DELIMITER, getpid(), 
+          DELIMITER, currFile->getMonitor()->m_name, 
+          DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
+          DELIMITER, "events=", currFile->getEvents(), 
+          DELIMITER, "lumiEvents=", currFile->getLumiEvents()) + 1;
+=======
 //      size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s",  DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name) + 1;
 
       size_t msg_size = snprintf(NULL, 0, "closefile%c%i%c%s%c%s%zd%c%s%u%c%s%u",  
@@ -420,7 +429,17 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, "events=", currFile->getEvents(), 
           DELIMITER, "lumiEvents=", currFile->getLumiEvents()) + 1;
 
+>>>>>>> 1.49
       char* msg = (char*) malloc(msg_size);
+<<<<<<< MDFWriterNet.cpp
+//      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
+      snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%u%c%s%u%c%s%u", 
+          DELIMITER, getpid(), 
+          DELIMITER, currFile->getMonitor()->m_name, 
+          DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
+          DELIMITER, "events=", currFile->getEvents(), 
+          DELIMITER, "lumiEvents=", currFile->getLumiEvents());
+=======
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
       snprintf(msg, msg_size, "closefile%c%i%c%s%c%s%zd%c%s%u%c%s%u", 
           DELIMITER, getpid(), 
@@ -428,6 +447,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
           DELIMITER, "lumiEvents=", currFile->getLumiEvents());
+>>>>>>> 1.49
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::ERROR
                  << "Could not send message"
@@ -545,15 +565,20 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
  
   // after every MB send statistics
   if (m_mq_available && totalBytesWritten % 1048576 <= 1000) {
-      size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%zu",  
+      size_t msg_size = snprintf(NULL, 0, "log%c%i%c%s%c%s%u%c%s%u%c%s%u",  
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
-      DELIMITER, "bytesWritten=", totalBytesWritten) + 1;
+      DELIMITER, "bytesWritten=", totalBytesWritten,
+      DELIMITER, "events=", m_currFile->getEvents(), 
+      DELIMITER, "lumiEvents=", m_currFile->getLumiEvents()) + 1;
       char* msg = (char*) malloc(msg_size);
-      snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu", 
+      snprintf(msg, msg_size, "log%c%i%c%s%c%s%u%c%s%u%c%s%u", 
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
-      DELIMITER, "bytesWritten=", totalBytesWritten);
+      DELIMITER, "bytesWritten=", totalBytesWritten,
+      DELIMITER, "events=", m_currFile->getEvents(), 
+      DELIMITER, "lumiEvents=", m_currFile->getLumiEvents());
+
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::ERROR
                  << "Could not send message"
