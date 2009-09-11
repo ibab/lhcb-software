@@ -24,7 +24,7 @@ boost::recursive_mutex dimMutex;
 boost::recursive_mutex rootMutex;
 
 
-DbRootHist* getHistogram(PresenterMainFrame * /* gui */, 
+DbRootHist* getHistogram(PresenterMainFrame * presenter, 
                          const std::string & identifier,
                          const std::string & currentPartition,
                          int refreshTime,
@@ -37,23 +37,28 @@ DbRootHist* getHistogram(PresenterMainFrame * /* gui */,
 {
   std::vector<std::string*> tasksNotRunning;
   DbRootHist* dbRootHist = new DbRootHist(identifier,
-                                currentPartition,
-                                refreshTime, instance,
-                                histogramDB, analysisLib,
-                                onlineHist,
-                                verbosity,
-                                dimBrowser,oraMutex,
-                                dimMutex,
-                                tasksNotRunning,
-                                rootMutex);
+                                          currentPartition,
+                                          refreshTime, instance,
+                                          histogramDB, analysisLib,
+                                          onlineHist,
+                                          verbosity,
+                                          dimBrowser,oraMutex,
+                                          dimMutex,
+                                          tasksNotRunning,
+                                          rootMutex);
+  if (0 != presenter) {
+    dbRootHist->setPresenter(presenter);
+    dbRootHist->initHistogram();
+    dbRootHist->setTH1FromDB();
+  }
   
-//    if (0 != gui &&
-//        0 != gui->archive() &&
-//        ((History == gui->presenterMode()) ||
-//         (EditorOffline == gui->presenterMode() && gui->canWriteToHistogramDB()))) {
-//      gui->archive()->fillHistogram(dbRootHist,
-//                               gui->rw_timePoint,
-//                               gui->rw_pastDuration);
+//    if (0 != presenter &&
+//        0 != presenter->archive() &&
+//        ((History == presenter->presenterMode()) ||
+//         (EditorOffline == presenter->presenterMode() && presenter->canWriteToHistogramDB()))) {
+//      presenter->archive()->fillHistogram(dbRootHist,
+//                               presenter->rw_timePoint,
+//                               presenter->rw_pastDuration);
 //   }
                       
   std::vector<std::string*>::const_iterator tasksNotRunningIt;
@@ -64,35 +69,35 @@ DbRootHist* getHistogram(PresenterMainFrame * /* gui */,
   return dbRootHist;
 }
 
-void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage,
+void getHistogramsFromLists(PresenterMainFrame * presenter, OnlineHistoOnPage* onlineHistosOnPage,
               std::vector<DbRootHist*> * dbHistosOnPage,
               std::vector<std::string*> & m_tasksNotRunning)
 {
 	  DbRootHist* dbRootHist;
-	  if((History == gui->presenterMode()) || (EditorOffline == gui->presenterMode())) { // no need for DIM
+	  if((History == presenter->presenterMode()) || (EditorOffline == presenter->presenterMode())) { // no need for DIM
 	    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
 	                                std::string(""),
 	                                2, onlineHistosOnPage->instance,
-	                                gui->histogramDB(), gui->analysisLib(),
+	                                presenter->histogramDB(), presenter->analysisLib(),
 	                                onlineHistosOnPage->histo,
-	                                gui->verbosity(),
+	                                presenter->verbosity(),
 	                                NULL,
 	                                oraMutex,
 	                                dimMutex,
                                   m_tasksNotRunning,
                                   rootMutex);
-	  } else if((Online == gui->presenterMode()) || (EditorOnline == gui->presenterMode())) {
+	  } else if((Online == presenter->presenterMode()) || (EditorOnline == presenter->presenterMode())) {
 	    DimBrowser* dimBrowser = NULL;
 	    std::string currentPartition("");
 
-	    dimBrowser = gui->dimBrowser();
-	    currentPartition = gui->currentPartition();
+	    dimBrowser = presenter->dimBrowser();
+	    currentPartition = presenter->currentPartition();
 	    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
 	                                currentPartition,
 	                                2, onlineHistosOnPage->instance,
-	                                gui->histogramDB(), gui->analysisLib(),
+	                                presenter->histogramDB(), presenter->analysisLib(),
 	                                onlineHistosOnPage->histo,
-	                                gui->verbosity(),
+	                                presenter->verbosity(),
 	                                dimBrowser,
 	                                oraMutex,
 	                                dimMutex,
@@ -103,19 +108,25 @@ void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineH
 //	      m_tasksNotRunning.push_back(onlineHistosOnPage->histo->task());
 //	    } 
 	  }
+  
+    if (0 != presenter) {
+      dbRootHist->setPresenter(presenter);
+      dbRootHist->initHistogram();
+      dbRootHist->setTH1FromDB();
+    }    
 	
-	  if (0 != gui->archive() &&
-	      ((History == gui->presenterMode()) ||
-	       (EditorOffline == gui->presenterMode() && gui->canWriteToHistogramDB()))) {
+	  if (0 != presenter->archive() &&
+	      ((History == presenter->presenterMode()) ||
+	       (EditorOffline == presenter->presenterMode() && presenter->canWriteToHistogramDB()))) {
    boost::recursive_mutex::scoped_lock lock(rootMutex);
    if (lock) {
-      gui->archive()->fillHistogram(dbRootHist,
-                               gui->rw_timePoint,
-                               gui->rw_pastDuration);
+      presenter->archive()->fillHistogram(dbRootHist,
+                               presenter->rw_timePoint,
+                               presenter->rw_pastDuration);
    }
 
 	//              if (dbRootHist && dbRootHist->isEmptyHisto()) {
-//	      gui->setResumeRefreshAfterLoading(false);
+//	      presenter->setResumeRefreshAfterLoading(false);
 	//              }                                       
 	  }
 //	  dbHistosOnPage->push_back(dbRootHist);
@@ -144,8 +155,8 @@ void refreshHisto(DbRootHist* dbHistoOnPage)
 	}
 }
 
-ParallelWait::ParallelWait(PresenterMainFrame* gui):
-  m_gui(gui)
+ParallelWait::ParallelWait(PresenterMainFrame* presenter):
+  m_presenterApp(presenter)
 {
 }
 ParallelWait::~ParallelWait()
@@ -169,7 +180,7 @@ void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*> * online
 	while (m_onlineHistosOnPageIt != onlineHistosOnPage->end()) {
 //            startBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
     thrds.create_thread(boost::bind(&getHistogramsFromLists,
-			    													m_gui,
+			    													m_presenterApp,
 			    													*m_onlineHistosOnPageIt,
 			    													dbHistosOnPage,
                                     m_tasksNotRunning));

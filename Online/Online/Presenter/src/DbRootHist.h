@@ -25,6 +25,7 @@ class TPave;
 //class TPad;
 class DimBrowser;
 class vector;
+class PresenterMainFrame;
 
 
 enum ReferenceVisibility {
@@ -130,6 +131,9 @@ class DbRootHist : public HistogramIdentifier
     void referenceHistogram(ReferenceVisibility visibilty);
     void setReferenceOption(std::string refOption) { m_refOption = refOption; }
     void setHistoryTrendPlotMode(bool mode) { m_historyTrendPlotMode = mode; }
+    void setPresenter(PresenterMainFrame* presenter) { m_presenterApp = presenter;}
+    PresenterMainFrame* presenter() { return m_presenterApp; }
+    
     bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }
     void resetRetryInit() {m_retryInit = 2;}
     bool rateInitialised() { return m_rateInitialised;}
@@ -218,6 +222,8 @@ class DbRootHist : public HistogramIdentifier
     bool updateDBOption(std::string opt, void* value, bool isDefault);
     std::string findDimServiceName(const std::string & dimServiceType);
     std::string assembleCurrentDimServiceName();
+    
+    PresenterMainFrame* m_presenterApp;
 };
 
 #endif // DBROOTHIST_H

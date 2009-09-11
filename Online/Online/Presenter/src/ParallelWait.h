@@ -10,7 +10,7 @@ class OnlineHistoOnPage;
 class dbHistosOnPage;
 class PresenterMainFrame;
 
-DbRootHist* getHistogram(PresenterMainFrame * gui, 
+DbRootHist* getHistogram(PresenterMainFrame * presenter, 
                          const std::string & identifier,
                          const std::string & dimServiceName,
                          int refreshTime,
@@ -20,12 +20,12 @@ DbRootHist* getHistogram(PresenterMainFrame * gui,
                          OnlineHistogram* onlineHist,
                          pres::MsgLevel verbosity,
                          DimBrowser* dimBrowser);
-void getHistogramsFromLists(PresenterMainFrame * gui, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage);
+void getHistogramsFromLists(PresenterMainFrame * presenter, OnlineHistoOnPage* onlineHistosOnPage, std::vector<DbRootHist*> * dbHistosOnPage);
 
 class ParallelWait
 {
 public:
-	ParallelWait(PresenterMainFrame* gui);
+	ParallelWait(PresenterMainFrame* presenter);
 	virtual ~ParallelWait();								 
 void loadHistograms(const std::vector<OnlineHistoOnPage*> * onlineHistosOnPage,
                     std::vector<DbRootHist*> * dbHistosOnPage);
@@ -33,7 +33,7 @@ void refreshHistograms(std::vector<DbRootHist*> * dbHistosOnPage);
 private:
   std::vector<std::string*> m_tasksNotRunning;
   std::vector<OnlineHistoOnPage*>::const_iterator m_onlineHistosOnPageIt;
-  PresenterMainFrame* m_gui;
+  PresenterMainFrame* m_presenterApp;
 };
 
 #endif /*PARALLELWAIT_H_*/

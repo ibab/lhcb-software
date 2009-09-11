@@ -98,7 +98,6 @@
 
 
 #include "MonRateRace.h"
-#include "TSystem.h"
 
 boost::mutex infoHandlerMutex;
 
@@ -117,35 +116,33 @@ void MonRateRace::infoHandler()
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
   if (infoHandlerLock) {    
     char* cnt_comment  = 0;
-    cnt_comment = (char*) getData();
+    cnt_comment = static_cast<char*>(getData());
     std::stringstream cntCommentStream;     
     for (int ptr = 2*sizeof(double); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
-      cntCommentStream << (char)cnt_comment[ptr];               
+      cntCommentStream << static_cast<char>(cnt_comment[ptr]);               
     }
     cntCommentStream << std::endl;  
-    m_title = cntCommentStream.str();
-    cntCommentStream.str("");  
+//    m_title = cntCommentStream.str();  
     
     double* histoDimData = 0;
-     histoDimData = static_cast<double*>(getData());
+      histoDimData = static_cast<double*>(getData());
 
-     m_value   = static_cast<double>(histoDimData[0]);     
-     if ((std::numeric_limits<double>::min() < m_value) &&
-         (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308 
-     m_initialised = true;
+      m_value   = static_cast<double>(histoDimData[0]);     
+      if ((std::numeric_limits<double>::min() < m_value) &&
+         (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308
+        m_title = cntCommentStream.str();          
+        m_initialised = true;
      } else {
-      m_value = std::numeric_limits<double>::min();
-      m_initialised = false;      
+        m_value = std::numeric_limits<double>::min();
+        m_initialised = false;      
      }
-
-// TODO: track infoHandler() invocation: 2nd trigger should be Ok.
-     
+     cntCommentStream.str("");
      infoHandlerLock.unlock();
   } else {
      m_initialised = false;    
   }
 }
-double MonRateRace::currentValue() // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
+double MonRateRace::currentValue()
 {
   double returnValue = 0.0;
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
@@ -157,18 +154,17 @@ double MonRateRace::currentValue() // boost::recursive_mutex & dimMutex, boost::
   }
   return returnValue;
 }
-std::string MonRateRace::title() // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
+std::string MonRateRace::title()
 {
   std::string returnTitle("No luck");
-    boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
+  boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
   if (infoHandlerLock && m_initialised) {
     returnTitle = m_title;
     infoHandlerLock.unlock();    
   } else {
     returnTitle = "No luck";
   }
-    return returnTitle;  
-  
+  return returnTitle;  
 }
 
 MonRateRace::~MonRateRace()

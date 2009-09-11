@@ -29,6 +29,7 @@
 #include <math.h>
 
 #include "presenter.h"
+#include "PresenterMainFrame.h"
 #include "DbRootHist.h"
 
 #include "Gaucho/DimInfoMonObject.h"
@@ -103,7 +104,8 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_oraMutex(&oraMutex),
   m_dimMutex(&dimMutex),
   m_tasksNotRunning(&tasksNotRunning),
-  m_rootMutex(&rootMutex)
+  m_rootMutex(&rootMutex),
+  m_presenterApp(NULL)
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
@@ -120,26 +122,6 @@ DbRootHist::DbRootHist(const std::string & identifier,
     if (onlineHist) { setOnlineHistogram(onlineHist); }
     else { connectToDB(histogramDB, "_NONE_", 1); }
   }
-
-//  if( false == m_isAnaHist) {
-//    if(m_dimBrowser) {
-//      m_dimServiceName = assembleCurrentDimServiceName();
-//    }
-//  }
-  
-  initHistogram();
-  if (m_verbosity >= Verbose && m_isEmptyHisto) {
-    std::cout << "Histogram " << m_identifier << " empty after Init" << std::endl;
-  }
-  if (false == m_isEmptyHisto) {
-    fillHistogram();
-    if (m_verbosity >= Verbose && m_isEmptyHisto) {
-      std::cout << "Histogram " << m_identifier << " empty after Fill" << std::endl;
-    }
-  } else {
-    beEmptyHisto(); 
-  }
-      setTH1FromDB();
 }
 DbRootHist::~DbRootHist()
 {
@@ -181,7 +163,7 @@ void DbRootHist::loadAnaSources()
       bool sourcesOK = true;
       for (unsigned int i=0; i< m_sourcenames.size(); ++i) {
         OnlineHistogram* histo = dbSession()->getHistogram(m_sourcenames[i]);
-        m_anaSources.push_back(new DbRootHist(m_sourcenames[i],
+        DbRootHist* anaHisto = new DbRootHist(m_sourcenames[i],
                                               m_dimServiceName,
                                               m_refreshTime,
                                               999,
@@ -193,7 +175,10 @@ void DbRootHist::loadAnaSources()
                                               *m_oraMutex,
                                               *m_dimMutex,
                                               *m_tasksNotRunning,
-                                              *m_rootMutex));
+                                              *m_rootMutex);
+        anaHisto->initHistogram();
+        anaHisto->setTH1FromDB();                                              
+        m_anaSources.push_back(anaHisto);
         if (NULL == m_anaSources[i]->rootHistogram) { sourcesOK = false; }
       }
       m_anaLoaded = true;
@@ -449,31 +434,28 @@ void DbRootHist::initHistogram()
                                        nBins, xMin, xMax);
             }
           } else if (s_CNT == m_histogramType &&
-                     isEFF()) {
+                     isEFF() && m_presenterApp) {
             m_monRateRace = new MonRateRace(m_dimServiceName);
-   
-// OK(
-//            m_trendTimeScale = 100 * m_trendTimeScale;
-//             if (!rootHistogram) {
-//              rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
-//                                       m_trendTimeScale, 0, m_trendTimeScale);
-//              rootHistogram->SetBinContent(m_trendTimeScale,0);
-//             }
-// OK)
-
-// rtp(
-             gStyle->SetTimeOffset(m_offsetTime.Convert());
-             if (!rootHistogram) {
-              rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
-                                       10, 0, 10 * m_trendTimeScale);
-             }
-             rootHistogram->GetXaxis()->SetTimeDisplay(1);
-// rtp)
-             
-//      .       rootHistogram->GetXaxis()->SetTimeOffset(m_offsetTime.Convert());
-//      .       rootHistogram->GetXaxis()->SetTimeDisplay(1);
-          }
-        } else {
+            if (( (Online == m_presenterApp->presenterMode()) ||
+                  (EditorOnline == m_presenterApp->presenterMode())
+                ) ) {
+              m_trendTimeScale = 100 * m_trendTimeScale;
+              if (!rootHistogram) {
+                rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
+                                         m_trendTimeScale, 0, m_trendTimeScale);
+// X axis off, timestamp instead                                         
+                rootHistogram->SetBinContent(m_trendTimeScale,0);
+              }
+            } else if ( (Batch == m_presenterApp->presenterMode()) ) {
+              gStyle->SetTimeOffset(m_offsetTime.Convert());
+              if (!rootHistogram) {
+                rootHistogram = new TH1D(m_histoRootName.Data(),m_histoRootTitle.Data(),
+                                         10, 0, 10 * m_trendTimeScale);
+              }
+              rootHistogram->GetXaxis()->SetTimeDisplay(1);
+              }
+            }
+          } else {
           // cannot get sources from DIM
           if (m_retryInit == 1) { beEmptyHisto(); }
         }
@@ -605,6 +587,17 @@ void DbRootHist::initHistogram()
   } else if (rootHistogram) {
     rootHistogram->SetBit(kNoContextMenu);
   }
+  if (m_verbosity >= Verbose && m_isEmptyHisto) {
+    std::cout << "Histogram " << m_identifier << " empty after Init" << std::endl;
+  }
+  if (false == m_isEmptyHisto) {
+    fillHistogram();
+    if (m_verbosity >= Verbose && m_isEmptyHisto) {
+      std::cout << "Histogram " << m_identifier << " empty after Fill" << std::endl;
+    }
+  } else {
+    beEmptyHisto(); 
+  }  
 }
 void DbRootHist::beEmptyHisto()
 {
@@ -754,30 +747,29 @@ void DbRootHist::fillHistogram()
       }
    } else if (s_CNT == m_histogramType) {
       double dimContent = 0;
-        if (m_isEFF && m_monRateRace &&  
-            (true == m_monRateRace->rateInitialised()) &&
-            rootHistogram && !m_isEmptyHisto) {
-            m_rateInitialised = true;
-            dimContent = m_monRateRace->currentValue();
-            m_histoRootTitle = TString(Form("%s",
-                                       (m_monRateRace->title()).c_str()));
-            rootHistogram->SetTitle(m_histoRootTitle.Data());
-// std::cout << "monRate: " << m_histoRootTitle.Data() << " dimContent: " << dimContent << std::endl;
-
-// OK(
-//   int i = 0;
-//   int  nbins = m_trendTimeScale;
-//   double stats[5]={0,0,0,0,0};
-//   rootHistogram->PutStats(stats); // reset mean value, etc   
-//   for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-//   for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
-// OK)
-   
-// rtp(   
-          rootHistogram->SetBinContent(m_trendBin, dimContent);
-          m_trendBin++;
-// rtp)    
+      if (m_isEFF && m_monRateRace &&  
+          (true == m_monRateRace->rateInitialised()) &&
+          rootHistogram && !m_isEmptyHisto) {
+        m_rateInitialised = true;
+        dimContent = m_monRateRace->currentValue();
+        m_histoRootTitle = TString(Form("%s",
+                                   (m_monRateRace->title()).c_str()));
+        rootHistogram->SetTitle(m_histoRootTitle.Data());
+        if (m_presenterApp && 
+            ( (Online == m_presenterApp->presenterMode()) ||
+              (EditorOnline == m_presenterApp->presenterMode())
+            ) ) {
+           int i = 0;
+           int  nbins = m_trendTimeScale;
+           double stats[5]={0,0,0,0,0};
+           rootHistogram->PutStats(stats); // reset mean value, etc   
+           for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+           for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
+        } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
+            rootHistogram->SetBinContent(m_trendBin, dimContent);
+            m_trendBin++;              
         }
+      }
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
@@ -1495,6 +1487,8 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
    TPad *padsav = (TPad*)gPad;
 //   gPad =   editorCanvas->cd();
    TObject *obj; //, *clone;
+
+// ST: Check for text...   
 
    dynamic_cast<TAttLine*>(m_drawPattern)->Copy((TAttLine&)*pad);
    dynamic_cast<TAttFill*>(m_drawPattern)->Copy((TAttFill&)*pad);

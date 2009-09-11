@@ -4609,17 +4609,11 @@ void PresenterMainFrame::refreshPage()
     dump_dbHistosOnPageIt = dbHistosOnPage.begin();
     editorCanvas->cd();
     while (dump_dbHistosOnPageIt != dbHistosOnPage.end()) {
-//      if (gROOT->IsInterrupted()) {        
-//        break;
-//      }
-      
-//      (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(*dump_dbHistosOnPageIt)->fileName());
     if (false == (*dump_dbHistosOnPageIt)->isEmptyHisto()) {
       (*dump_dbHistosOnPageIt)->fillHistogram();
       (*dump_dbHistosOnPageIt)->normalizeReference();
     }
     if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
-//      editorCanvas->Clear();
       std::string plotName(m_currentPartition);
         plotName.append(" ").append(currentTime->AsSQLString());
         (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
@@ -4628,21 +4622,18 @@ void PresenterMainFrame::refreshPage()
         gPad->Modified(); 
         editorCanvas->Modified(); 
         editorCanvas->Update();
-  //      std::string dumpDirectory(startupSettings["image-path"].as<std::string>());
-  //      std::string dumpDirectory("/home/psomogyi/afs/cmtuser/Online_v4r26/Online/Presenter/cmt");
-        std::string dumpFile = m_imagePath + s_slash + (*dump_dbHistosOnPageIt)->fileName() + "." + m_dumpFormat;
-// std::cout << plotName << " " << dumpFile << std::endl;
-
-// (*dump_dbHistosOnPageIt)->rootHistogram->Dump();
-  if (! gROOT->IsInterrupted()) {
-        editorCanvas->SaveAs(dumpFile.c_str());
-  }     
-
-//      dumpFile = dumpDirectory + s_slash + fileName.Data() + ".root";
+        std::string dumpFile = m_imagePath + s_slash +
+                               (*dump_dbHistosOnPageIt)->fileName() +
+                               "." + m_dumpFormat;
+        if (! gROOT->IsInterrupted()) {
+          editorCanvas->SaveAs(dumpFile.c_str());
+        }
       }  else {
-// std::cout << "rate not initialised " << std::endl;      
-      } 
-//      editorCanvas->SaveAs(dumpFile.c_str());    
+        if (m_verbosity >= Verbose) {
+          std::cout << (*dump_dbHistosOnPageIt)->fileName() <<
+                       " rate not initialised." << std::endl;
+        }      
+      }    
       dump_dbHistosOnPageIt++;              
     }
   }
