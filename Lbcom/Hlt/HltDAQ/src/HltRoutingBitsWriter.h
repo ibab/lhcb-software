@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltRoutingBitsWriter.h,v 1.2 2009-09-11 09:28:39 graven Exp $
 #ifndef HLTCOMMON_HLTROUTINGBITSWRITER_H 
 #define HLTCOMMON_HLTROUTINGBITSWRITER_H 1
 
@@ -28,8 +28,12 @@ private:
   StatusCode decode();
 
   enum { nBits = 3*sizeof(unsigned int)*8 };
-  boost::array<LoKi::Types::HLT_Cut*,nBits> m_evaluators;
-  void zeroEvaluators() { std::fill(m_evaluators.begin(),m_evaluators.end(),(LoKi::Types::HLT_Cut*)0); }
+  struct eval_t {
+    LoKi::Types::HLT_Cut *predicate;
+    StatEntity *counter;
+  } ;
+  boost::array<eval_t,nBits> m_evaluators;
+  void zeroEvaluators(bool skipDelete=false);
  
   std::string m_location;
 

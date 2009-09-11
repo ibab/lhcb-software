@@ -1,8 +1,9 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.2 2009-09-11 09:28:39 graven Exp $
 // Include files 
 // from Boost
-#include "boost/lambda/lambda.hpp"
-#include "boost/lambda/construct.hpp"
+#include "boost/foreach.hpp"
+#include <boost/format.hpp>
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "Event/RawEvent.h" 
@@ -24,20 +25,18 @@
 DECLARE_ALGORITHM_FACTORY( HltRoutingBitsWriter );
 
 StatusCode HltRoutingBitsWriter::decode() {
-    std::for_each(m_evaluators.begin(),m_evaluators.end(),boost::lambda::delete_ptr());
     zeroEvaluators();
     LoKi::Hybrid::IHltFactory* factory = tool<LoKi::Hybrid::IHltFactory>( "LoKi::Hybrid::HltFactory" ) ;
 
     typedef std::map<unsigned int,std::string>::const_iterator iter_t;
     for (iter_t i=m_bits.begin();i!=m_bits.end();++i) {
         if ( i->first>nBits ) return StatusCode::FAILURE;
-        if (i->second.empty()) { 
-            m_evaluators[i->first] = 0;
-        } else {
+        if (!i->second.empty()) { 
             LoKi::Types::HLT_Cut cut( LoKi::BasicFunctors<const LHCb::HltDecReports*>::BooleanConstant( false ) );
             StatusCode sc = factory->get( i->second, cut, m_preambulo );
             if (sc.isFailure()) return sc;
-            m_evaluators[i->first] = cut.clone();
+            m_evaluators[i->first].predicate = cut.clone();
+            m_evaluators[i->first].counter   = &counter(boost::str(  boost::format("%02d:%s") % i->first % i->second) );
         }
     }
     this->release(factory);
@@ -46,6 +45,14 @@ StatusCode HltRoutingBitsWriter::decode() {
     return StatusCode::SUCCESS;
 }
 
+void HltRoutingBitsWriter::zeroEvaluators(bool skipDelete) 
+{ 
+    BOOST_FOREACH( eval_t& eval , m_evaluators ) {
+        if (!skipDelete) { delete eval.predicate; }
+        eval.predicate = 0;
+        eval.counter = 0;
+    }
+}
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
@@ -55,7 +62,7 @@ HltRoutingBitsWriter::HltRoutingBitsWriter( const std::string& name,
   , m_bits_updated(false)
   , m_preambulo_updated(false)
 {
-  zeroEvaluators();
+  zeroEvaluators(true);
   declareProperty("DecReportsLocation", m_location = LHCb::HltDecReportsLocation::Default);
   declareProperty("RoutingBits", m_bits) ->declareUpdateHandler( &HltRoutingBitsWriter::updateBits, this );
   declareProperty("Preambulo", m_preambulo_)->declareUpdateHandler(&HltRoutingBitsWriter::updatePreambulo , this);
@@ -123,9 +130,10 @@ StatusCode HltRoutingBitsWriter::execute() {
   for (unsigned j=0;j<3;++j) {
     unsigned int& w = bits[j];
     for (unsigned i=0;i<32;++i) {
-        LoKi::Types::HLT_Cut* eval = m_evaluators[ j*32+i ];
+        LoKi::Types::HLT_Cut* eval = m_evaluators[ j*32+i ].predicate;
         if ( eval == 0 ) continue;
         bool result = (*eval)(hdr);
+        *(m_evaluators[ j*32+i ].counter) += result;
         // always() << " " << j*32+i << " " << *eval << " = " << (result?"pass":"fail") << endmsg;
         if ( result ) w |= (0x01UL << i); 
     }

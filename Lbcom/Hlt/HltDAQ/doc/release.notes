@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-09-11 - Gerhard Raven
+ - add counter for each routing bit
+
 !========================== HltDAQ v1r0p1 2009-08-20 ===========================
 ! 2009-08-20 - Jaap Panman
  - bug fix in HltLumiWriter
