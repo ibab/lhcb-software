@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.44 2009-09-09 08:29:32 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.45 2009-09-11 15:01:58 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -115,7 +115,7 @@ StatusCode HltGlobalMonitor::initialize() {
   std::vector<std::string> labels;
   for (std::vector<std::string>::const_iterator i = m_Hlt1Lines.begin(); i!=m_Hlt1Lines.end();++i) {
       std::string s = *i;
-      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision");
+      std::vector<std::string> strip = boost::assign::list_of<std::string>("Hlt1")("Decision"); //TODO: replace with regex with capture
       for (std::vector<std::string>::const_iterator j = strip.begin();j!=strip.end();++j) {
      	std::string::size_type k =  s.find(*j);
      	if (k != std::string::npos) s.erase(k,k+j->size());
@@ -123,10 +123,8 @@ StatusCode HltGlobalMonitor::initialize() {
       labels.push_back(s);  
 }
 
-  m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5,
-                             m_Hlt1Lines.size()+1);
-  m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5,
-                             m_Hlt1Lines.size());
+  m_hltNAcc         = book1D("# positive HltLines ", -0.5,m_Hlt1Lines.size()+0.5, m_Hlt1Lines.size()+1);
+  m_hltInclusive    = book1D("HltLines Inclusive",   -0.5,m_Hlt1Lines.size()-0.5, m_Hlt1Lines.size());
 
   if (!setBinLabels( m_hltInclusive,  labels )) {
     error() << "failed to set binlables on inclusive hist" << endmsg;
@@ -264,7 +262,7 @@ void HltGlobalMonitor::monitorHLT(const LHCb::ODIN*,
   }
 
   for (unsigned i=0; i<m_GroupLabels.size();i++) {
-    m_alley[i] += ( nAccAlley[i] > 0 );
+    *m_alley[i] += ( nAccAlley[i] > 0 );
   }
 
 
