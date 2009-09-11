@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-09-11 - Rob Lambert
+ - Added support for obtaining the MemoryMaximum
+ - Tested with filling output OK!
+
+! 2009-09-11 - Rob Lambert
  - First working version, ready for upload
 
 ! 2009-09-04 - Rob Lambert

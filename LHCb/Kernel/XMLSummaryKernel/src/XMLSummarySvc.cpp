@@ -5,6 +5,7 @@
 #include "GaudiKernel/IIncidentSvc.h"
 #include "GaudiUtils/RegEx.h"
 #include "GaudiUtils/IIODataManager.h"
+#include "GaudiKernel/Memory.h"
 //#include "GaudiUtils/IODataManager.h"
 //With regex libraries
 
@@ -248,12 +249,16 @@ void XMLSummarySvc::handle( const Incident& incident )
 		      chr(GUID.c_str()),
 		      chr(status.c_str()),
 		      double(addevents));
+  fillUsage();
   m_handled++;
 
   if ( incident.type()==IncidentType::EndInputFile
        || incident.type()==IncidentType::FailInputFile )
     {
-      PyObject_CallMethod(m_summary, chr("set_step"), chr("s"), chr("execute"));
+      PyObject_CallMethod(m_summary, 
+                          chr("set_step"), 
+                          chr("s"), 
+                          chr("execute"));
       writeXML();
       printXML();
     }
@@ -439,3 +444,16 @@ std::string XMLSummarySvc::AFN2name(const std::string & filename)
 
 }
 
+StatusCode XMLSummarySvc::fillUsage()
+{
+  MsgStream log( msgSvc(), name() );
+  int mem = System::virtualMemoryPeak();
+  //log << MSG::VERBOSE << mem << endmsg;
+  PyObject_CallMethod(m_summary, chr("fill_memory"),
+                      chr("d,s"),
+                      double(mem),
+                      chr("KB")
+                      );
+  return StatusCode::SUCCESS;
+}
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */

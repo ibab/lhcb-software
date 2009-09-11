@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.1.1.1 2009-09-11 09:56:32 rlambert Exp $
+# $Id: summary.py,v 1.2 2009-09-11 15:27:21 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -243,6 +243,23 @@ class Summary(VTree):
         cnt=self.__buildcounter__(name, flag, True, nEntries, flag2, min, max)
         return self.fill_VTree_counter(cnt)
 
+    def fill_memory(self, memory, unit='b'):
+        '''Method to fill the memory usage information'''
+        usage=self.usage()[0]
+        astat=usage.children(tag='stat', attrib={'useOf':'MemoryMaximum'})
+        if not astat or len(astat)==0:
+            astat=self.__schema__.create_default('stat')
+            astat.useOf('MemoryMaximum')
+            astat.unit(unit)
+            astat.value(memory)
+            usage.add(astat)
+        else:
+            astat=astat[0]
+            if astat.unit() != unit:
+                raise AttributeError, 'I cannot compare two MemoryMaxima when they have different units!'+ (astat.unit())+unit
+            if astat.value()<memory:
+                astat.value(memory)
+    
 def Merge(summaries, schema=__default_schema__):
     '''Merge a list of summaries, return a new summary
     summaries can be a list of xml files to be parsed, or a list of summary objects'''
@@ -287,8 +304,10 @@ def Merge(summaries, schema=__default_schema__):
                 flag=step
                 break
     merged.step()[0].value(flag)
-    #merge input/output, simple counters
+    #merge input/output, simple counters, usage
     for asummary in sum_objects:
+        for stat in asummary.usage()[0].stat():
+            merged.fill_memory(stat.value(),stat.unit())
         for file in asummary.input()[0].file():
             merged.fill_input(file.name(), file.GUID(), file.status(), file.value())
         for file in asummary.output()[0].file():

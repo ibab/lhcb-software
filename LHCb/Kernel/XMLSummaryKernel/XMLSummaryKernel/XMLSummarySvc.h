@@ -123,6 +123,9 @@ private:
   ///counters are filled in the finalise method, using these internal functions
   StatusCode fillcounters();
   StatusCode fillcounter(const NameStatTypePair & count);
+  
+  ///fill in the virtual memory usage
+  StatusCode fillUsage();
 
   ///shorcut to prepare the incident service
   StatusCode prepareIncSvc();
