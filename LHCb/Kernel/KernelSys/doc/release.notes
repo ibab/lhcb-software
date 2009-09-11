@@ -4,6 +4,9 @@
 ! Purpose     : collect Kernel packages
 !-----------------------------------------------------------------------------
 
+! 2009-09-11 - Rob Lambert
+ - Added dependency on XMLSummaryKernel
+
 !======================== KernelSys v12r0 2009-02-18 =========================
 ! 2009-02-18 - Marco Cattaneo
  - Remove explicit versions from requirements
