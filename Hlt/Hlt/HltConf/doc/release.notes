@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.335 2009-09-08 16:50:15 snies Exp $ 
+! $Id: release.notes,v 1.336 2009-09-11 13:48:57 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-11 - Gerhard Raven
+ - routing bits before monitoring instead of after
+ - add a few routing bits for some groups of Hlt1 lines
 
 ! 2009-09-08 - Stephan Nies
  - added HltCosmicLine (also needs latest Hlt1Line)

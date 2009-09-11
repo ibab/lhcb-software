@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.117 2009-09-03 11:15:42 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.118 2009-09-11 13:48:57 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -162,14 +162,21 @@ class HltConf(LHCbConfigurableUser):
 
         ### NOTE: any change in the _meaning_ of any of the following needs to be 
         ###       communicated with online, to insure the events are still properly
-        ###       routed!!!
+        ###       routed!!! (this goes esp. for [32,36]!!!)
         routingBits = { 32 : "HLT_PASS('Hlt1Global')"
                       , 33 : "HLT_PASS_SUBSTR('Hlt1Lumi')" 
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"  
                       , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
-                      , 37 : "HLT_PASS('Hlt1RandomDecision','Hlt1RandomODINDecision')"
-                      , 38 : "HLT_PASS('Hlt1PhysicsDecision','Hlt1NonRandomODINDecision')"
+                      , 37 : "HLT_PASS('Hlt1RandomODINDecision')"
+                      , 38 : "HLT_PASS('Hlt1NonRandomODINDecision')"
+                      , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
+                      , 40 : "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
+                      , 41 : "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
+                      , 42 : "HLT_PASS_RE('Hlt1.*DiMuon.*Decision')"
+                      , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
+                      , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
+                      , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -383,8 +390,8 @@ class HltConf(LHCbConfigurableUser):
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import HltLine
-        _list = ( ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
-                , ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
+        _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
+                , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : HltLine('Hlt1Global') ] )
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
