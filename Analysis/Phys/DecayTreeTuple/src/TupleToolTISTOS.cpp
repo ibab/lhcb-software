@@ -11,7 +11,7 @@
 // local
 #include "TupleToolTISTOS.h"
 
-#include "Event/HltSummary.h"
+#include "Event/HltDecReports.h"
 
 using namespace LHCb;
 
@@ -66,10 +66,16 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
   bool tis = 0;
   bool tos = 0;
   
+
   if( P ){
     
     if (P->isBasicParticle()) return StatusCode::SUCCESS;
 
+    const LHCb::HltDecReports* decReports =0;
+    if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
+      decReports = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
+    }
+  
     m_TriggerTisTosTool->setOfflineInput(*P);
 
     m_TriggerTisTosTool->setTriggerInput("Hlt1L0.*Decision");
@@ -84,6 +90,8 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     tuple->column( head+"L0Global"+"_TOS", tos);
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      // to clean-up the list make sure it is present in decision report 
+      if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
       // need to overwrite Hlt1L0XXXDecision 
       decision = m_TriggerTisTosTool->hltSelectionObjectSummaries(*s).size()!=0;      
@@ -103,6 +111,8 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      // to clean-up the list make sure it is present in decision report 
+      if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       tuple->column( head+*s+"_Dec", decision);
       tuple->column( head+*s+"_TIS", tis);
@@ -119,6 +129,8 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      // to clean-up the list make sure it is present in decision report 
+      if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
       tuple->column( head+*s+"_Dec", decision);
       tuple->column( head+*s+"_TIS", tis);

@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-09-11 - Tomasz Skwarnicki
+ - clean-up the list of individual triggers in TupleToolTISTOS by checking 
+   for their presence in HltDecReport 
+
 ! 2009-09-10 - Tomasz Skwarnicki
  - adopt TupleToolTISTOS to new way of wild character matching in trigger names
 
