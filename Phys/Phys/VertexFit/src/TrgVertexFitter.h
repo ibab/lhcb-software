@@ -1,8 +1,10 @@
-// $Id: TrgVertexFitter.h,v 1.10 2009-08-19 15:52:11 ibelyaev Exp $
+// $Id: TrgVertexFitter.h,v 1.11 2009-09-11 17:15:09 jonrob Exp $
 #ifndef TRGVERTEXFITTER_H 
 #define TRGVERTEXFITTER_H 1
 
-// Include files
+// STL
+#include <cmath>
+
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IVertexFit.h"            // Interface
@@ -16,13 +18,18 @@
  *  @author Hugo Ruiz Perez
  *  @date   2005-01-31
  */
-class TrgVertexFitter : public GaudiTool, virtual public IVertexFit {
+class TrgVertexFitter : public GaudiTool, 
+                        virtual public IVertexFit 
+{
+
 public: 
+
   /// Standard constructor
   TrgVertexFitter( const std::string& type, 
                    const std::string& name,
                    const IInterface* parent);
 
+  /// Tool initialisation
   StatusCode initialize();
 
   /// Method to fit a vertex 
@@ -36,7 +43,6 @@ public:
                   LHCb::Particle& ) const ; 
 
   virtual ~TrgVertexFitter( ); ///< Destructor
-
 
   StatusCode reFit( LHCb::Particle& particle ) const;
   
@@ -53,6 +59,7 @@ public:
                     LHCb::Vertex& v) const;
 
 private:
+
   /// do the fit
   StatusCode doFit( const LHCb::Particle::ConstVector& partsToFit,  
                     LHCb::Vertex& V) const ;
@@ -73,7 +80,8 @@ private:
                                     double& vZ, 
                                     LHCb::Vertex& V) const ;
   /// is it a resonance?
-  bool isResonance(const LHCb::Particle& P) const {
+  bool isResonance(const LHCb::Particle& P) const 
+  {
     if ( P.daughters().empty() ) return false ;
     const int pid = abs(P.particleID().pid()) ;
     return (!( pid==3122 || pid==3222 || pid==310 || // s
@@ -92,8 +100,11 @@ private:
                        bool& fitNeeded) const ;
   
   /// neutrals
-  bool classifyNeutrals( const LHCb::Particle* P, LHCb::Particle::ConstVector& container)const{
-    if(m_pi0ID ==  P->particleID().pid() || m_photonID == P->particleID().pid() ){
+  bool classifyNeutrals( const LHCb::Particle* P, 
+                         LHCb::Particle::ConstVector& container)const
+  {
+    if ( m_pi0ID ==  P->particleID().pid() || m_photonID == P->particleID().pid() )
+    {
       container.push_back(P);
       if (msgLevel(MSG::VERBOSE)) verbose() <<  "Particle skipped in the fitting : " 
                                             << P->particleID().pid() << endmsg;

@@ -1,4 +1,4 @@
-// $Id: Particle2State.cpp,v 1.2 2009-09-10 17:06:39 jonrob Exp $
+// $Id: Particle2State.cpp,v 1.3 2009-09-11 17:14:21 jonrob Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,8 @@ Particle2State::~Particle2State() {}
 /// Fill Particle from a state
 //=============================================================================
 StatusCode Particle2State::state2Particle( const LHCb::State& state,
-                                           LHCb::Particle& particle ) const {
+                                           LHCb::Particle& particle ) const 
+{
 
   if (0 == particle.charge()) {
     return Error("Neutral particle given as input to state2Particle");
@@ -55,71 +56,71 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "New particle " << particle.particleID().pid() << endmsg ;
 
-
   // point on the track and error
   particle.setReferencePoint( state.position() ) ;
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "    Ref Point is " << particle.referencePoint() << endmsg ;
 
   // momentum
-  const Gaudi::XYZVector mom = state.momentum();
+  const Gaudi::XYZVector & mom = state.momentum();
   const double mass = particle.measuredMass();
-  const double e = sqrt( state.p()*state.p()+mass*mass );
-  particle.setMomentum(  Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
+  const double e = std::sqrt( state.p()*state.p()+mass*mass );
+  particle.setMomentum( Gaudi::XYZTVector(mom.X(),mom.Y(),mom.Z(),e) ) ;
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "    Momentum is " << particle.momentum() << endmsg ;
 
   // error
-  Gaudi::Matrix5x5 Jacob = stateJacobian(particle.charge(),mom);
-  if (!Jacob.Invert()){
+  Gaudi::Matrix5x5 Jacob;
+  stateJacobian(particle.charge(),mom,Jacob);
+  if (!Jacob.Invert())
+  {
     err() << "Could not invert jacobian \n" << Jacob
           << "\n for particle " << particle.particleID().pid() << endmsg;
     return StatusCode::FAILURE;
   }
 
-  ROOT::Math::SMatrix<double, 7, 5> Jacob7;
+  ROOT::Math::SMatrix<double,7,5> Jacob7;
   Jacob7.Place_at(Jacob.Sub<Matrix2x5>( 0, 0 ), 0, 0 );
   Jacob7.Place_at(Jacob.Sub<Matrix3x5>( 2, 0 ), 3, 0 );
   const double q2p = state.qOverP();
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "    E=  " << e << " q/P = " << q2p << endmsg ;
   Jacob7(6,4) = -1./e/q2p/q2p/q2p;
+
+  const Gaudi::SymMatrix7x7 cov =
+    ROOT::Math::Similarity<double,7,5>( Jacob7, state.covariance() );
 
   if ( msgLevel(MSG::VERBOSE) )
   {
+    verbose() << "    E=  " << e << " q/P = " << q2p << endmsg ;
     verbose() << "    Jacob 7 is : \n" << Jacob7 << endmsg ;
     verbose() << "    state.covariance() is \n" << state.covariance() << endmsg ;
-  }
-
-  const Gaudi::SymMatrix7x7 cov =
-    ROOT::Math::Similarity<double,7,5>(Jacob7, state.covariance() );
-
-  if ( msgLevel(MSG::VERBOSE) )
     verbose() << "    Gets cov \n" << cov << endmsg ;
+  } 
+
+  // CRJ : const casts used here to allow direct manipulation of the Particle matrices
+  //       avoiding the need for local temporaries. Ugly but speeds up the HLT so close
+  //       our eyes and live with it ...
 
   // error on position
-  Gaudi::SymMatrix3x3 errPos;
+  Gaudi::SymMatrix3x3& errPos = *(const_cast<Gaudi::SymMatrix3x3*>(&(particle.posCovMatrix())));
   errPos.Place_at(cov.Sub<Gaudi::SymMatrix3x3>( 0, 0 ), 0, 0 );
-  particle.setPosCovMatrix( errPos  ) ;
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "    Position Covariance Matrix is \n"
-              << particle.posCovMatrix() << endmsg ;
 
   // error on momentum
-  Gaudi::SymMatrix4x4 errMom;
+  Gaudi::SymMatrix4x4& errMom = *(const_cast<Gaudi::SymMatrix4x4*>(&(particle.momCovMatrix())));
   errMom.Place_at(cov.Sub<Gaudi::SymMatrix4x4>( 3, 3 ), 0, 0 );
-  particle.setMomCovMatrix(errMom);
-  if ( msgLevel(MSG::VERBOSE) )
-    verbose() << "    Momentum Covariance Marix is \n"
-              << particle.momCovMatrix() << endmsg ;
 
   // correlation
-  Gaudi::Matrix4x3 errPosMom;
+  Gaudi::Matrix4x3& errPosMom = *(const_cast<Gaudi::Matrix4x3*>(&(particle.posMomCovMatrix())));
   errPosMom.Place_at(cov.Sub<Gaudi::Matrix4x3>( 3, 0 ), 0, 0 );
-  particle.setPosMomCovMatrix(errPosMom);
+
   if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "    Position Covariance Matrix is \n"
+              << particle.posCovMatrix() << endmsg ;
+    verbose() << "    Momentum Covariance Marix is \n"
+              << particle.momCovMatrix() << endmsg ;
     verbose() << "    Position x Momentum Covariance Matrix is \n"
               << particle.posMomCovMatrix() << endmsg ;
+  }
 
   return StatusCode::SUCCESS ;
 
@@ -127,8 +128,9 @@ StatusCode Particle2State::state2Particle( const LHCb::State& state,
 //=============================================================================
 // make a state from a Particle
 //=============================================================================
-StatusCode Particle2State::particle2State(const LHCb::Particle& part,
-                                          LHCb::State& s) const {
+StatusCode Particle2State::particle2State( const LHCb::Particle& part,
+                                           LHCb::State& s ) const 
+{
 
   if ( msgLevel(MSG::VERBOSE) )
   {
@@ -176,8 +178,8 @@ StatusCode Particle2State::particle2State(const LHCb::Particle& part,
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Getting \n" << cov5DtmpSym << "\n"<< endmsg ;
   // 5x5 Jacobian
-  const Gaudi::Matrix5x5 Jacob = stateJacobian( part.charge(),
-                                                part.momentum().Vect());
+  Gaudi::Matrix5x5 Jacob;
+  stateJacobian( part.charge(), part.momentum().Vect(), Jacob );
 
   const Gaudi::SymMatrix5x5 cov =
     ROOT::Math::Similarity<double,5,5>(Jacob, cov5DtmpSym);
@@ -192,21 +194,21 @@ StatusCode Particle2State::particle2State(const LHCb::Particle& part,
 //=============================================================================
 /// Get jacobian
 //=============================================================================
-Gaudi::Matrix5x5 Particle2State::stateJacobian(int charge,
-                                               const Gaudi::XYZVector& Momentum) const
+void Particle2State::stateJacobian( const int charge,
+                                    const Gaudi::XYZVector& Momentum,
+                                    Gaudi::Matrix5x5& Jacob ) const
 {
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Making Jacobian with " << charge << " " << Momentum << endmsg ;
 
-  Gaudi::Matrix5x5 Jacob ;
   // the variables
   const double Px = Momentum.X() ;
   const double Py = Momentum.Y() ;
   const double Pz = Momentum.Z() ;
   const double P  = Momentum.R() ;
 
-  //  const double Tx = Momentum.X()/Momentum.Z();   // Tx = Px/Pz
-  //  const double Ty = Momentum.Y()/Momentum.Z();   // Ty = Py/Pz
+  // const double Tx = Momentum.X()/Momentum.Z();   // Tx = Px/Pz
+  // const double Ty = Momentum.Y()/Momentum.Z();   // Ty = Py/Pz
   // const double o  = part->charge()/part->p();                    // o = charge/sqrt(Px^2+Py^2+Pz^2)
 
   // unit matrix in the top left corner
@@ -225,14 +227,13 @@ Gaudi::Matrix5x5 Particle2State::stateJacobian(int charge,
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "Returning Jacobian\n" << Jacob << endmsg ;
-
-  return Jacob;
-
 }
+
 //=============================================================================
 /// Test the tool
 //=============================================================================
-StatusCode Particle2State::test(const LHCb::Particle& p ) const {
+StatusCode Particle2State::test(const LHCb::Particle& p ) const 
+{
   info() << "Testing with Particle \n" << p << "\n" << endmsg;
   LHCb::State s ;
   StatusCode sc = particle2State( p, s );
@@ -250,7 +251,8 @@ StatusCode Particle2State::test(const LHCb::Particle& p ) const {
 //=============================================================================
 /// Test the tool
 //=============================================================================
-StatusCode Particle2State::test(const LHCb::State& s ) const {
+StatusCode Particle2State::test(const LHCb::State& s ) const 
+{
   info() << "Testing with State \n" << s << "\n" << endmsg;
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "This does not work: \n" << s.posMomCovariance() << "\n"<< endmsg ;

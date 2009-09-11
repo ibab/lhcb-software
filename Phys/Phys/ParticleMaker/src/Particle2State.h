@@ -1,4 +1,4 @@
-// $Id: Particle2State.h,v 1.1 2009-04-22 08:53:28 pkoppenb Exp $
+// $Id: Particle2State.h,v 1.2 2009-09-11 17:14:21 jonrob Exp $
 #ifndef PARTICLE2STATE_H 
 #define PARTICLE2STATE_H 1
 
@@ -36,16 +36,17 @@ public:
                              LHCb::State& state ) const ;
 
   /// test 
-  StatusCode test( const LHCb::Particle& particle ) const  ;
+  StatusCode test( const LHCb::Particle& particle ) const ;
+ 
   /// test 
-  StatusCode test( const LHCb::State& state ) const  ;
-
-protected:
+  StatusCode test( const LHCb::State& state ) const ;
 
 private:
+
   /// Get Jacobian for Tx,Ty,q/P -> Px,Py,Pz transformation
-  Gaudi::Matrix5x5 stateJacobian(int charge, 
-                                 const Gaudi::XYZVector&) const ;
+  void stateJacobian(const int charge, 
+                     const Gaudi::XYZVector& Momentum,
+                     Gaudi::Matrix5x5& Jacob ) const ;
 
 };
 #endif // PARTICLE2STATE_H
