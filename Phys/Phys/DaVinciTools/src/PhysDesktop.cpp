@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.76 2009-09-08 14:04:17 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.77 2009-09-11 17:13:17 jonrob Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -165,6 +165,10 @@ StatusCode PhysDesktop::initialize()
     }
   }
 
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);
+
   // check that output location is set to *SOME* value
   if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
@@ -263,12 +267,6 @@ StatusCode PhysDesktop::cleanDesktop(){
 }
 
 //=============================================================================
-// Finalize
-//=============================================================================
-StatusCode PhysDesktop::finalize(){
-  return GaudiTool::finalize() ;
-}
-//=============================================================================
 // Register a new particle in the Desktop
 //=============================================================================
 const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
@@ -303,16 +301,16 @@ const LHCb::Particle* PhysDesktop::keep( const LHCb::Particle* keptP ){
   if (msgLevel(MSG::VERBOSE)) {
     verbose() << "keeping " << range.size() << " P->PV relations" << endmsg;
   }
+
   for ( Particle2Vertex::Table::Range::const_iterator i = range.begin();
         i != range.end();
         ++i) {
-    i_p2PVTable().i_relate(newP, i->to() );
+    i_p2PVTable().i_relate( newP, i->to() );
   }
-  
+
   // Link to outgoing particles is followed through the keep(LHCb::Vertex)
   // Link to originators will be correct because they are in the heap
   // so their pointer is valid
-
   return newP;
 
 }
@@ -351,7 +349,6 @@ const LHCb::Vertex* PhysDesktop::keep( const LHCb::Vertex* keptV ){
     const LHCb::Particle* newP = keep( *ip );
     newV->addToOutgoingParticles(newP);
   }
-
 
   if (msgLevel(MSG::VERBOSE)) printOut("New vertex in desktop", newV);
 
@@ -804,14 +801,18 @@ StatusCode PhysDesktop::writeEmptyContainerIfNeeded(){
 //=============================================================================
 const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) const {
 
-  verbose() << "PhysDesktop::relatedVertex" << endmsg;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "PhysDesktop::relatedVertex" << endmsg;
 
-  const DVAlgorithm* dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==dva) Error("Couldn't get parent DVAlgorithm", 
-                    StatusCode::FAILURE).ignore();
-  return (0!=dva) ? dva->getRelatedPV(part) : 0 ;
+  //m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  //if (0==m_dva) Error("Couldn't get parent DVAlgorithm", 
+  //                    StatusCode::FAILURE).ignore();
+  //return (0!=m_dva) ? m_dva->getRelatedPV(part) : 0 ;
 
+  // cached during initialize()
+  return m_dva->getRelatedPV(part);
 
+  //return m_dva->calculateRelatedPV(part);
 
 }
 //=============================================================================
@@ -842,7 +843,8 @@ PhysDesktop::particle2Vertices(const LHCb::Particle* part ) const
 void PhysDesktop::overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
                                      Particle2Vertex::Table::Range::const_iterator end)
 {
-  verbose() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
+  if (msgLevel(MSG::VERBOSE))
+    verbose() << "overWriteRelations: Storing " << end-begin << " P->PV relations" << endmsg;
   for ( Particle2Vertex::Table::Range::const_iterator i = begin ; i!= end ; ++i){
     ( i_p2PVTable().i_removeFrom(i->from()) ).ignore();
     (i_p2PVTable().i_relate(i->from(),i->to())).ignore() ;

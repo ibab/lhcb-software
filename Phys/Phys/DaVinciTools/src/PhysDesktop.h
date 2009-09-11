@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.39 2009-09-01 08:00:25 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.40 2009-09-11 17:13:17 jonrob Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -13,6 +13,7 @@
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/DaVinciFun.h"
+#include "Kernel/DVAlgorithm.h"
 // Forward declarations
 class IDataProviderSvc;
 class IOnOffline;
@@ -44,8 +45,6 @@ public:
   //  virtual void handle(const Incident&);
   
   virtual StatusCode initialize();
-  
-  virtual StatusCode finalize();
 
   /// set InputLocations (for DVAlgorithm)
   virtual StatusCode setInputLocations(const std::vector<std::string> & ) ;
@@ -286,6 +285,8 @@ private: // data
   /// instance by setting RelatedPVFinderName to RelatedPVFinder/MyFinder and then configuring
   /// ToolSvc.MyFinder.
   std::string m_pvRelatorName ; 
+
+  mutable const DVAlgorithm* m_dva;
 
   /// shortcut instead of printing warnings
   void inline Info(const std::string& mess, const StatusCode sc = StatusCode::SUCCESS, 

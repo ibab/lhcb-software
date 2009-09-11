@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.h,v 1.10 2006-05-10 19:15:14 jpalac Exp $
+// $Id: CheckOverlap.h,v 1.11 2009-09-11 17:13:17 jonrob Exp $
 #ifndef CHECKOVERLAP_H 
 #define CHECKOVERLAP_H 1
 
@@ -27,14 +27,21 @@ class IParticlePropertySvc ;
  *  @date   28/06/2002
  */
 class CheckOverlap : public GaudiTool,
-                     virtual public ICheckOverlap {
+                     virtual public ICheckOverlap 
+{
+
 public:
+
   /// Standard constructor
   CheckOverlap( const std::string& type, 
                 const std::string& name,
                 const IInterface* parent);
+
   ///< Destructor
-  virtual ~CheckOverlap( ) { };
+  virtual ~CheckOverlap( ) { }
+
+public:
+
   //===========================================================================
   /// Check for duplicate use of a protoparticle to produce particles.
   /// Argument: parts is a vector of pointers to particles.
@@ -82,10 +89,10 @@ public:
   /// any particle in vector. Removes found particles from vector.
   StatusCode removeOverlap( LHCb::Particle::Vector& ) ;
 
-protected:
+private:
   
-  StatusCode addOrigins( const LHCb::Particle::ConstVector&, 
-                         std::vector<const LHCb::ProtoParticle*>&);
+  bool addOrigins( const LHCb::Particle::ConstVector&, 
+                   std::vector<const LHCb::ProtoParticle*>&);
 
   /// Only look at protoparticles
   bool searchOverlap( std::vector<const LHCb::ProtoParticle* > & proto );
