@@ -1,0 +1,21 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/XMLSummaryKernel
+! Responsible : Rob Lambert
+! Purpose     : Holds code for writing an XML-based summary in Gaudi
+!-----------------------------------------------------------------------------
+
+! 2009-09-11 - Rob Lambert
+ - First working version, ready for upload
+
+! 2009-09-04 - Rob Lambert
+ - XMLSummaryKernel:
+     Newly defined incidents added.
+     Relies on changes in Gaudi patch #3222
+
+! 2009-09-03 - Rob Lambert
+ - Separated into:
+     XMLSummaryBase => holds the xml and python
+     XMLSummaryKernel => holds the gaudi code
+
+! 2009-07-07 - Rob Lambert
+ - Created the package and began to populate
