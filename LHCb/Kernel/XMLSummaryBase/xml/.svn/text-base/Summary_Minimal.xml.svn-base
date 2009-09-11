@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<summary version="1.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="XMLSummary.xsd">
+  <success>false</success>
+  <step>none</step>
+  <usage/>
+  <input/>
+  <output/>
+  <counters/>
+  <lumiCounters/>
+</summary>

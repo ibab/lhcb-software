@@ -1,0 +1,16 @@
+!-----------------------------------------------------------------------------
+! Package     : Kernel/XMLSummaryBase
+! Responsible : Rob Lambert
+! Purpose     : Holds the bare minumum code for manipulating XML
+!-----------------------------------------------------------------------------
+
+! 2009-09-04 - Rob Lambert
+ - XMLSummaryBase complete and tested
+
+! 2009-09-03 - Rob Lambert
+ - Separated into:
+     XMLSummaryBase => holds the xml and python
+     XMLSummaryKernel => holds the gaudi code
+
+! 2009-07-07 - Rob Lambert
+ - Created the package and began to populate

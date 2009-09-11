@@ -1,0 +1,38 @@
+# $Id: requirements,v 1.1.1.1 2009-09-11 09:56:33 rlambert Exp $
+# Created    : 07/07/2009
+# Maintainer : R. Lambert
+#
+
+#============================================================================
+package XMLSummaryBase 
+version v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python test xml
+
+# Packages needed to compile and link the application
+#use GaudiConf          v*                   -no_auto_imports
+#use GaudiKernel        v*
+#use GaudiPolicy        v*
+#use GaudiAlg	       v*
+
+# Packages needed to resolve external dependencies at run time
+#use Python             v*    LCG_Interfaces -no_auto_imports
+
+# The rest are needed only to set up environment variables for job options
+
+# From GAUDI project
+#use GaudiSvc           v*                   -no_auto_imports
+
+private
+use GaudiPolicy        v*
+#private use statement such that this package will not overpolute the environment
+#use GaudiKernel        v*
+
+#library XMLSummaryBase *.cpp -import=Python
+
+# define link options
+#============================================================================
+#
+apply_pattern install_python_modules

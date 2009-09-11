@@ -1,0 +1,36 @@
+# $Id: requirements.svn-base,v 1.1.1.1 2009-09-11 09:56:33 rlambert Exp $
+# Created    : 07/07/2009
+# Maintainer : R. Lambert
+#
+
+#============================================================================
+package XMLSummary 
+version v1r0
+
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python src test xml XMLSummary
+
+# Packages needed to compile and link the application
+use GaudiConf          v*                   -no_auto_imports
+use GaudiKernel        v*
+use GaudiAlg	       v*
+
+# Packages needed to resolve external dependencies at run time
+use Python             v*    LCG_Interfaces -no_auto_imports
+
+# The rest are needed only to set up environment variables for job options
+
+# From GAUDI project
+use GaudiSvc           v*                   -no_auto_imports
+#use GaudiPoolDb        v*                   -no_auto_imports
+#use GaudiPython        v*                   -no_auto_imports
+
+library XMLSummary *.cpp -import=Python
+
+# define link options
+#============================================================================
+#
+apply_pattern component_library library=XMLSummary
+apply_pattern install_python_modules
+apply_pattern install_more_includes more=XMLSummary
