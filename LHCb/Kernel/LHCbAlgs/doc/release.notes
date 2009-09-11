@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-09-09 - Rob Lambert
+ - Added EventCountAlg, which has a nameable counter()
+   This will presumably replace EventCountHisto with the
+   XMLSummarySvc for most users.
+
 !======================== LHCbAlgs v2r28 2009-07-13 ==========================
 ! 2009-07-13 - Marco Cattaneo
  - Remove obsolete file LHCbAlgs_dll.cpp

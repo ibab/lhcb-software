@@ -1,0 +1,92 @@
+// $Id: EventCountAlg.cpp,v 1.1 2009-09-11 09:21:43 rlambert Exp $
+// Include files 
+
+// from Gaudi
+#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/AlgFactory.h"
+
+// local
+#include "EventCountAlg.h"
+
+//-----------------------------------------------------------------------------
+// Implementation file for class : EventCountAlg
+//
+// 2007-01-08 : Robert Lambert
+//-----------------------------------------------------------------------------
+
+// Declaration of the Algorithm Factory
+DECLARE_ALGORITHM_FACTORY( EventCountAlg );
+
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+EventCountAlg::EventCountAlg( const std::string& name,
+                      ISvcLocator* pSvcLocator)
+  : GaudiAlgorithm ( name , pSvcLocator )
+  , m_nExecuted              ( 0 )
+  , m_nHandled           ( 0 )
+  , m_incSvc(0)
+{
+
+  //declare the filename to write. If the string is empty, no file will be written
+  declareProperty("CounterName",m_counterName="efficiency");
+  declareProperty("StatEntityList",m_statEntityList=std::vector<std::string>(1,".*"));
+
+}
+//=============================================================================
+// Destructor
+//=============================================================================
+EventCountAlg::~EventCountAlg() {} 
+
+//=============================================================================
+// Initialization
+//=============================================================================
+StatusCode EventCountAlg::initialize() {
+  
+  StatusCode sc = GaudiAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc;
+  
+  //prepare the incident service
+  sc=service("IncidentSvc", m_incSvc, false);
+  if(!sc.isSuccess() || m_incSvc== NULL) return StatusCode::FAILURE;
+  m_incSvc->addListener( this, IncidentType::BeginEvent);
+  
+  debug() << "==> Initialize" << endmsg;
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Main execution
+//=============================================================================
+StatusCode EventCountAlg::execute() {
+
+  //debug() << "==> Execute" << endmsg;
+
+  // code goes here  
+
+  m_nExecuted++;
+
+  setFilterPassed(true);   // Mandatory. Set to true if event is accepted.
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+//  Finalize
+//=============================================================================
+StatusCode EventCountAlg::finalize() {
+
+  debug() << "==> Finalize" << endmsg;
+  //create the statEntity
+  //                                                     entries    flag          flag2      min, max
+  StatEntity anent(
+                   m_nHandled, m_nExecuted, 
+                   m_nExecuted, int(m_nHandled>m_nExecuted),
+                   int(bool(m_nExecuted)));
+  counter(m_counterName)= anent;
+  
+  return GaudiAlgorithm::finalize();
+}
+
+//=============================================================================
