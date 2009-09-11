@@ -429,6 +429,7 @@ void DbRootHist::initHistogram()
     //      float* sumWTPerBin;
     //      float* sumWT2PerBin;
             if (!rootHistogram) {
+               m_histoRootTitle = lastName();
               rootHistogram = new TH1F(m_histoRootName.Data(),
                                        m_histoRootTitle.Data(),
                                        nBins, xMin, xMax);
@@ -752,8 +753,9 @@ void DbRootHist::fillHistogram()
           rootHistogram && !m_isEmptyHisto) {
         m_rateInitialised = true;
         dimContent = m_monRateRace->currentValue();
-        m_histoRootTitle = TString(Form("%s",
-                                   (m_monRateRace->title()).c_str()));
+//        m_histoRootTitle = TString(Form("%s",
+//                                   (m_monRateRace->title()).c_str()));
+        m_histoRootTitle = lastName();
         rootHistogram->SetTitle(m_histoRootTitle.Data());
         if (m_presenterApp && 
             ( (Online == m_presenterApp->presenterMode()) ||
@@ -1441,8 +1443,6 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
                   //gHistImagePalette
       m_histogramImage->Draw();
 //      m_histogramImage->DrawText(m_textTitle, 0, 0);
-
-      
 //      pad->SetTitle(m_histoRootTitle);
     } else {
       std::string opt =  m_isOverlap ? "SAME" : "";
