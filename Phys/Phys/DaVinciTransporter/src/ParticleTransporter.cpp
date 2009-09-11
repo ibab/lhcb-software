@@ -1,4 +1,4 @@
-// $Id: ParticleTransporter.cpp,v 1.23 2009-09-10 17:06:12 jonrob Exp $
+// $Id: ParticleTransporter.cpp,v 1.24 2009-09-11 17:14:05 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -34,10 +34,10 @@ ParticleTransporter::ParticleTransporter( const std::string& type,
   , m_eID(0)
 {
   declareInterface<IParticleTransporter>(this);
-
   declareProperty("TrackExtrapolator", 
                   m_trackExtrapolatorName = "TrackParabolicExtrapolator");
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -46,22 +46,25 @@ ParticleTransporter::~ParticleTransporter() {}
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode ParticleTransporter::initialize(){
+StatusCode ParticleTransporter::initialize()
+{
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   
-  if ( m_trackExtrapolatorName != "" ){
+  if ( m_trackExtrapolatorName != "" )
+  {
     debug() << "Using the " << m_trackExtrapolatorName 
             << " tool to extrapolate particles from tracks" << endmsg;
     m_trackExtrapolator = tool<ITrackExtrapolator>(m_trackExtrapolatorName,this);
-  } else warning() << "No TrackExtrapolator given for tracks" << endmsg ;
+  } 
+  else { warning() << "No TrackExtrapolator given for tracks" << endmsg ; }
 
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
 
   m_particle2State = tool<IParticle2State>("Particle2State"); // not private
 
   // a complicated way of getting 11
-  ParticleProperty* pe = m_ppSvc->find("e-");
+  const ParticleProperty * pe = m_ppSvc->find("e-");
   m_eID = abs(pe->jetsetID());
 
   return sc;
@@ -71,7 +74,8 @@ StatusCode ParticleTransporter::initialize(){
 //=============================================================================
 StatusCode ParticleTransporter::transport(const LHCb::Particle* P, 
                                           const double zNew,
-                                          LHCb::Particle& transParticle){
+                                          LHCb::Particle& transParticle)
+{
   StatusCode sc = StatusCode::SUCCESS;
 
   if ( msgLevel(MSG::DEBUG) )
@@ -104,7 +108,8 @@ StatusCode ParticleTransporter::transport(const LHCb::Particle* P,
 //=============================================================================
 StatusCode ParticleTransporter::transportAndProject(const LHCb::Particle* P, 
                                                     const double zNew,
-                                                    LHCb::Particle& transParticle){
+                                                    LHCb::Particle& transParticle)
+{
   StatusCode sc = StatusCode::SUCCESS;
   
   // avoid some "extra" self-assignements:
@@ -193,7 +198,10 @@ ParticleTransporter::checkParticle(const LHCb::Particle& transParticle)
 //=============================================================================
 // get a state from a Particle
 //=============================================================================
-StatusCode ParticleTransporter::state(const LHCb::Particle* P, const double zNew, LHCb::State& s) const { 
+StatusCode ParticleTransporter::state(const LHCb::Particle* P, 
+                                      const double zNew, 
+                                      LHCb::State& s) const 
+{ 
   // charged basic: no need to make 
   verbose() << "Starting from Particle \n " << *P << endmsg ;
 
