@@ -4,6 +4,7 @@
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
 
+!========================= GaussRICH v9r5 2009-09-11 =========================
 ! 2009-07-17 - Chris Jones
  - Update the algorithms that create the various output data outputs to no
    longer rely on the implicit ordering of the RichG4Hits to assoicate them
