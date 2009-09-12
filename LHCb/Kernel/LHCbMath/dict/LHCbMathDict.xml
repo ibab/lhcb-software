@@ -19,4 +19,16 @@
   <class name = "Gaudi::Math::Point3DWithError"  />
   <class name = "Gaudi::Math::Vector3DWithError" />
   <class name = "Gaudi::Math::LorentzVectorWithError" />
+  <class pattern = "Gaudi::Math::SVectorWithError*" />
+
+<exclusion>
+  <class name = "ROOT::Math::SVector&lt;double,3&gt;"     />
+  <class name = "ROOT::Math::SVector&lt;double,4&gt;"     />
+  <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Value"       />
+  <class name = "Gaudi::Math::SVectorWithError&lt;3,double&gt;::Covariance"  />
+  <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Value"       />
+  <class name = "Gaudi::Math::SVectorWithError&lt;4,double&gt;::Covariance"  />
+</exclusion> 
+
+
 </lcgdict>

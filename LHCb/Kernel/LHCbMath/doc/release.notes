@@ -6,6 +6,16 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-09-12 - Vanya BELYAEV
+
+ - more polishing for *WithErrorClasses 
+
+ - add python/LHCbMath/Types.py helper module to load few 
+
+    important classes, like  Gaudi.XYZPoint, etc... 
+    the classes also "Decorated" on-flight 
+
+
 ! 2009-09-05 - Vanya BELYAEV
 
  - SVEctorWithErorr 

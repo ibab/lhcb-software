@@ -1,4 +1,4 @@
-// $Id: LorentzVectorWithError.h,v 1.2 2009-06-13 18:30:12 ibelyaev Exp $
+// $Id: LorentzVectorWithError.h,v 1.3 2009-09-12 19:29:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_LORENTZVECTORWITHERROR_H 
 #define LHCBMATH_LORENTZVECTORWITHERROR_H 1
@@ -9,6 +9,11 @@
 // ============================================================================
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/Vector4DTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
+// ============================================================================
+// LHCbMath
+// ============================================================================
+#include "LHCbMath/SVectorWithError.h"
 // ============================================================================
 /** @file 
  *  Collection of useful objects with associated "covarinaces".
@@ -40,10 +45,29 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
-      /// constructor for lorent vector and convariance
+      /// the actual type of generic 4-vector 
+      typedef Gaudi::Vector4                                       Vector     ;
+      /// the actual type of vector with errors  
+      typedef Gaudi::Math::SVectorWithError<4,double>              VectorE    ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// constructor from lorentz vector and covariance
       LorentzVectorWithError 
       ( const Vector4D&   value  = Vector4D   () , 
         const Covariance& cov2   = Covariance () ) ;  
+      // ======================================================================
+      /// constructor from lorentz vector and covariance
+      LorentzVectorWithError 
+      ( const Covariance& cov2                   , 
+        const Vector4D&   value  = Vector4D   () ) ;
+      /// constructor from generic vector and covariance
+      LorentzVectorWithError 
+      ( const Vector&     value                  , 
+        const Covariance& cov2   = Covariance () ) ;  
+      /// constructor from generic vector and covariance
+      LorentzVectorWithError 
+      ( const VectorE&     value                 ) ;
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================
@@ -64,6 +88,9 @@ namespace Gaudi
       void setValue      ( const Vector4D&   v ) { setVector4d ( v ) ; }
       void setCovariance ( const Covariance& c ) { m_cov2      = c   ; }      
       // ======================================================================
+      void setValue      ( const VectorE&    v ) ;
+      void setValue      ( const Vector&     v ) ;
+      // ======================================================================
     public: // finally it is just a point + covariance 
       // ======================================================================
       operator const Covariance& () const { return cov2  () ; }        
@@ -72,9 +99,13 @@ namespace Gaudi
     public: // operators 
       // ======================================================================
       LorentzVectorWithError& operator+= ( const LorentzVectorWithError& right ) ;
-      LorentzVectorWithError& operator-= ( const LorentzVectorWithError& right ) ;
       LorentzVectorWithError& operator+= ( const Vector4D&               right ) ;
+      LorentzVectorWithError& operator+= ( const VectorE&                right ) ;
+      LorentzVectorWithError& operator+= ( const Vector&                 right ) ;
+      LorentzVectorWithError& operator-= ( const LorentzVectorWithError& right ) ;
       LorentzVectorWithError& operator-= ( const Vector4D&               right ) ;
+      LorentzVectorWithError& operator-= ( const VectorE&                right ) ;
+      LorentzVectorWithError& operator-= ( const Vector&                 right ) ;
       // ======================================================================
     public: // scaling
       // ======================================================================
@@ -85,10 +116,23 @@ namespace Gaudi
       // ====================================================================== 
     public:
       // ======================================================================
+      /// get generic vector 
+      void    asVector ( VectorE& data ) const ;
+      /// get generic vector 
+      void    asVector ( Vector&  data ) const ;
+      /// convert to generic vector with errors:
+      VectorE asVector () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// evaluate chi2 distance 
       double chi2 ( const LorentzVectorWithError& right )  const ;
       /// evaluate chi2 distance 
       double chi2 ( const Vector4D&               right )  const ;      
+      /// evaluate chi2 distance 
+      double chi2 ( const VectorE&                right )  const ;      
+      /// evaluate chi2 distance 
+      double chi2 ( const Vector&                 right )  const ;      
       // ======================================================================
     public:
       // ======================================================================
@@ -111,6 +155,13 @@ namespace Gaudi
       LorentzVectorWithError __radd__  ( const Vector4D&               right ) const 
       { return __add__ ( right ) ; }  
       LorentzVectorWithError __rsub__  ( const Vector4D&               right ) const ;
+      // ======================================================================
+      LorentzVectorWithError& __imul__   ( const double v ) ;
+      LorentzVectorWithError& __idiv__   ( const double v ) ;
+      LorentzVectorWithError  __mul__    ( const double v ) const ;
+      LorentzVectorWithError  __div__    ( const double v ) const ;
+      LorentzVectorWithError  __rmul__   ( const double v ) const 
+      { return __mul__ ( v ) ; }
       // ======================================================================
     public:
       // ======================================================================
@@ -150,6 +201,41 @@ namespace Gaudi
     operator- 
     ( const Gaudi::LorentzVector&   b , 
       const LorentzVectorWithError& a ) { return a.__rsub__ ( b ) ; }
+    // ========================================================================
+    inline LorentzVectorWithError
+    operator* 
+    ( const LorentzVectorWithError& a ,
+      const double                  b ) { return a.__mul__ ( b ) ; }
+    inline LorentzVectorWithError
+    operator/ 
+    ( const LorentzVectorWithError& a ,
+      const double                  b ) { return a.__div__ ( b ) ; }
+    inline LorentzVectorWithError
+    operator* 
+    ( const double                  b , 
+      const LorentzVectorWithError& a ) { return a.__mul__ ( b ) ; }
+    // ========================================================================
+    inline double chi2 
+    ( const LorentzVectorWithError& a , 
+      const LorentzVectorWithError& b ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const LorentzVectorWithError& a , 
+      const Gaudi::LorentzVector&   b ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const Gaudi::LorentzVector&   b ,
+      const LorentzVectorWithError& a ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const LorentzVectorWithError&          a , 
+      const LorentzVectorWithError::VectorE& b ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const LorentzVectorWithError::VectorE& b , 
+      const LorentzVectorWithError&          a ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const LorentzVectorWithError&          a , 
+      const LorentzVectorWithError::Vector&  b ) { return a.chi2  ( b ) ; }
+    inline double chi2 
+    ( const LorentzVectorWithError::Vector&  b , 
+      const LorentzVectorWithError&          a ) { return a.chi2  ( b ) ; }                         
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

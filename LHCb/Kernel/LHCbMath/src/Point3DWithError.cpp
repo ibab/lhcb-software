@@ -1,4 +1,4 @@
-// $Id: Point3DWithError.cpp,v 1.2 2009-06-13 18:30:12 ibelyaev Exp $
+// $Id: Point3DWithError.cpp,v 1.3 2009-09-12 19:29:27 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -27,6 +27,32 @@ Gaudi::Math::Point3DWithError::Point3DWithError
   const Gaudi::Math::Point3DWithError::Covariance& matrix ) 
   : Gaudi::XYZPoint ( point ) 
   , m_cov2  ( matrix ) 
+{}
+// ============================================================================
+// constructor form the point and covariance matrix
+// ============================================================================
+Gaudi::Math::Point3DWithError::Point3DWithError 
+( const Gaudi::Math::Point3DWithError::Covariance& matrix ,
+  const Gaudi::Math::Point3DWithError::Point3D&    point  )
+  : Gaudi::XYZPoint ( point ) 
+  , m_cov2  ( matrix ) 
+{}
+// ============================================================================
+// constructor form the point and covariance matrix
+// ============================================================================
+Gaudi::Math::Point3DWithError::Point3DWithError 
+( const Gaudi::Math::Point3DWithError::Vector&     point  ,
+  const Gaudi::Math::Point3DWithError::Covariance& matrix ) 
+  : Gaudi::XYZPoint ( point[0] , point[1] , point[2] ) 
+  , m_cov2  ( matrix ) 
+{}
+// ============================================================================
+// constructor form the point and covariance matrix
+// ============================================================================
+Gaudi::Math::Point3DWithError::Point3DWithError 
+( const Gaudi::Math::Point3DWithError::VectorE&    point  )
+  : Gaudi::XYZPoint ( point.value(0) , point.value(1) , point.value(2) ) 
+  , m_cov2  ( point.cov2() ) 
 {}
 // ============================================================================
 Gaudi::Math::Point3DWithError& 
@@ -60,6 +86,44 @@ Gaudi::Math::Point3DWithError::operator-=
 ( const Gaudi::Math::Point3DWithError::Vector3D& right ) 
 {
   point () -= right;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError& 
+Gaudi::Math::Point3DWithError::operator+= 
+( const Gaudi::Math::Point3DWithError::VectorE& right ) 
+{
+  using namespace Gaudi::Math::Operators ;
+  setPoint ( point () + right.value() ) ;
+  m_cov2   += right.cov2() ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError& 
+Gaudi::Math::Point3DWithError::operator-= 
+( const Gaudi::Math::Point3DWithError::VectorE& right ) 
+{
+  using namespace Gaudi::Math::Operators ;
+  setPoint ( point () - right.value() ) ;
+  m_cov2   += right.cov2() ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError& 
+Gaudi::Math::Point3DWithError::operator+= 
+( const Gaudi::Math::Point3DWithError::Vector& right ) 
+{
+  using namespace Gaudi::Math::Operators ;
+  setPoint ( point () + right ) ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError& 
+Gaudi::Math::Point3DWithError::operator-= 
+( const Gaudi::Math::Point3DWithError::Vector& right ) 
+{
+  using namespace Gaudi::Math::Operators ;
+  setPoint ( point () - right ) ;
   return *this ;
 }
 // ============================================================================
@@ -108,6 +172,43 @@ double Gaudi::Math::Point3DWithError::chi2
   return Gaudi::Math::Similarity ( point() - right , s_cov2 ) ;
 }
 // ============================================================================
+// chi2 distance 
+// ============================================================================
+double Gaudi::Math::Point3DWithError::chi2 
+( const Gaudi::Math::Point3DWithError::Vector& right ) const 
+{
+  Covariance s_cov2 ( cov2() ) ;
+  // use Manuel's inverter:
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                        // RETURN  
+  /// calculate chi2 
+  //
+  Vector vct   ;
+  Gaudi::Math::geo2LA ( point() , vct ) ;
+  vct -= right ;
+  //
+  return ROOT::Math::Similarity ( vct , s_cov2 ) ;
+}
+// ============================================================================
+// chi2 distance 
+// ============================================================================
+double Gaudi::Math::Point3DWithError::chi2 
+( const Gaudi::Math::Point3DWithError::VectorE& right ) const 
+{
+  Covariance s_cov2 ( cov2() ) ;
+  s_cov2 += right.cov2() ;
+  // use Manuel's inverter:
+  const bool ok = Gaudi::Math::invertPosDefSymMatrix ( s_cov2 ) ;
+  if  ( !ok ) { return -1 ; }                                       // RETURN  
+  /// calculate chi2 
+  //
+  Vector vct ;
+  Gaudi::Math::geo2LA ( point() , vct ) ;
+  vct -= right.value() ;
+  //
+  return ROOT::Math::Similarity ( vct , s_cov2 ) ;
+}
+// ============================================================================
 // printout 
 // ============================================================================
 namespace 
@@ -119,10 +220,10 @@ namespace
 std::ostream& 
 Gaudi::Math::Point3DWithError::fillStream ( std::ostream& s ) const // printout 
 {
-  return s << "(" 
-           << X () << "+-" << err ( m_cov2(0,0) ) << ","
-           << Y () << "+-" << err ( m_cov2(1,1) ) << ","
-           << Z () << "+-" << err ( m_cov2(2,2) ) << ")";
+  return s << "( " 
+           << X () << " +- " << err ( m_cov2(0,0) ) << " , "
+           << Y () << " +- " << err ( m_cov2(1,1) ) << " , "
+           << Z () << " +- " << err ( m_cov2(2,2) ) << " )";
 }  
 // ============================================================================
 // conversion to the string 
@@ -190,6 +291,82 @@ Gaudi::Math::Point3DWithError::__rsub__
 { return Gaudi::Math::Vector3DWithError ( right - point() , cov2() ) ; }
 // ============================================================================
 
+
+// ============================================================================
+void Gaudi::Math::Point3DWithError::asVector 
+( Gaudi::Math::Point3DWithError::Vector& data ) const 
+{ Gaudi::Math::geo2LA ( point() , data ) ; }
+// ============================================================================
+void Gaudi::Math::Point3DWithError::asVector 
+( Gaudi::Math::Point3DWithError::VectorE& data ) const 
+{
+  Gaudi::Math::geo2LA ( point() , data.value() ) ; 
+  data.setCov2 ( cov2() ) ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError::VectorE 
+Gaudi::Math::Point3DWithError::asVector () const 
+{
+  Gaudi::Math::Point3DWithError::VectorE data ;
+  
+  Gaudi::Math::geo2LA ( point() , data.value() ) ; 
+  data.setCov2 ( cov2() ) ;
+
+  return data ;
+}
+// ============================================================================
+
+// ============================================================================
+void Gaudi::Math::Point3DWithError::setValue
+( const Gaudi::Math::Point3DWithError::VectorE& v ) 
+{
+  Gaudi::Math::la2geo ( v.value() , point() ) ;
+  m_cov2 = v.cov2() ;
+}
+// ============================================================================
+void Gaudi::Math::Point3DWithError::setValue 
+( const Gaudi::Math::Point3DWithError::Vector& v ) 
+{ 
+  Gaudi::Math::la2geo ( v , point() ) ; 
+}
+// ============================================================================
+
+
+// ============================================================================
+Gaudi::Math::Point3DWithError&
+Gaudi::Math::Point3DWithError::__imul__ ( const double v ) 
+{
+  point() *= v ;
+  m_cov2  *= (v*v) ;
+  return *this ;
+}
+// ============================================================================
+Gaudi::Math::Point3DWithError&
+Gaudi::Math::Point3DWithError::__idiv__ ( const double v ) 
+{
+  point() /= v ;
+  m_cov2  /= (v*v) ;
+  return *this ;
+}
+// ============================================================================
+
+// ============================================================================
+Gaudi::Math::Point3DWithError 
+Gaudi::Math::Point3DWithError::__mul__ ( const double v ) const 
+{
+  Gaudi::Math::Point3DWithError tmp (*this) ;
+  return ( tmp *= v ) ;
+}
+// ============================================================================
+
+// ============================================================================
+Gaudi::Math::Point3DWithError 
+Gaudi::Math::Point3DWithError::__div__ ( const double v ) const 
+{
+  Gaudi::Math::Point3DWithError tmp (*this) ;
+  return ( tmp /= v ) ;
+}
+// ============================================================================
 
 
 

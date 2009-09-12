@@ -1,4 +1,4 @@
-// $Id: MatrixTransforms.h,v 1.6 2009-07-10 07:56:30 wouter Exp $
+// $Id: MatrixTransforms.h,v 1.7 2009-09-12 19:29:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_MATRIXTRANSFORMS_H 
 #define LHCBMATH_MATRIXTRANSFORMS_H 1
@@ -395,6 +395,58 @@ namespace Gaudi
       const ROOT::Math::LorentzVector<C>&                            delta  ) 
     { return Similarity ( delta , matrix ) ; } 
     // ========================================================================
+    /** increment  Position-Vector with 3-component linear vector 
+     *  
+     *  @code 
+     *
+     *  Gaudi::XYZPoint     v1 = ... ;
+     *  const Gaudi::Vector3       v2 = ... ;
+     *  
+     *  // update vector with LA vector:
+     *  Gaudi::Math::add ( v1 , v2 ) ;
+     *
+     *  @endcode 
+     *  
+     *  @param v1 (input/output) LorentzVector to be updated 
+     *  @param v2 (input) Linear Algebra vector, to be added to LorentzVector 
+     *  @return the updated LorenzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C, class T>
+    inline 
+    const ROOT::Math::PositionVector3D<C>& 
+    add 
+    ( ROOT::Math::PositionVector3D<C>& v1 , const ROOT::Math::SVector<T,3> & v2 ) 
+    { return v1 += ROOT::Math::PositionVector3D<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) ) ; }
+    // ========================================================================
+    /** increment  Displacement-Vector with 3-component linear vector 
+     *  
+     *  @code 
+     *
+     *  Gaudi::XYZVector v1 = ... ;
+     *  const Gaudi::Vector3       v2 = ... ;
+     *  
+     *  // update vector with LA vector:
+     *  Gaudi::Math::add ( v1 , v2 ) ;
+     *
+     *  @endcode 
+     *  
+     *  @param v1 (input/output) LorentzVector to be updated 
+     *  @param v2 (input) Linear Algebra vector, to be added to LorentzVector 
+     *  @return the updated LorenzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C, class T>
+    inline 
+    const ROOT::Math::DisplacementVector3D<C>& 
+    add 
+    ( ROOT::Math::DisplacementVector3D<C>& v1 , const ROOT::Math::SVector<T,3> & v2 ) 
+    { return v1 += ROOT::Math::DisplacementVector3D<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) ) ; }
+    // ========================================================================
     /** increment  LorentzVector with 4-component linear vector 
      *  
      *  @code 
@@ -421,6 +473,84 @@ namespace Gaudi
     { return v1 += ROOT::Math::LorentzVector<C>
         ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) , v2 ( 3 ) ) ; }
     // ========================================================================    
+    /** decrement  Position-Vector with 3-component linear vector 
+     *  
+     *  @code 
+     *
+     *  Gaudi::XYZPoint     v1 = ... ;
+     *  const Gaudi::Vector3       v2 = ... ;
+     *  
+     *  // update vector with LA vector:
+     *  Gaudi::Math::sub ( v1 , v2 ) ;
+     *
+     *  @endcode 
+     *  
+     *  @param v1 (input/output) LorentzVector to be updated 
+     *  @param v2 (input) Linear Algebra vector, to be subtracted 3D-point
+     *  @return the updated LorenzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C, class T>
+    inline 
+    const ROOT::Math::PositionVector3D<C>& 
+    sub 
+    ( ROOT::Math::PositionVector3D<C>& v1 , const ROOT::Math::SVector<T,3> & v2 ) 
+    { return v1 -= ROOT::Math::PositionVector3D<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) ) ; }
+    // ========================================================================
+    /** decrement  Displacement-Vector with 3-component linear vector 
+     *  
+     *  @code 
+     *
+     *  Gaudi::XYZVector v1 = ... ;
+     *  const Gaudi::Vector3       v2 = ... ;
+     *  
+     *  // update vector with LA vector:
+     *  Gaudi::Math::sub ( v1 , v2 ) ;
+     *
+     *  @endcode 
+     *  
+     *  @param v1 (input/output) LorentzVector to be updated 
+     *  @param v2 (input) Linear Algebra vector, to be subtracted from Vector 
+     *  @return the updated LorenzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C, class T>
+    inline 
+    const ROOT::Math::DisplacementVector3D<C>& 
+    sub 
+    ( ROOT::Math::DisplacementVector3D<C>& v1 , const ROOT::Math::SVector<T,3> & v2 ) 
+    { return v1 -= ROOT::Math::DisplacementVector3D<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) ) ; }
+    // ========================================================================
+    /** decrement  LorentzVector with 4-component linear vector 
+     *  
+     *  @code 
+     *
+     *  Gaudi::LorentzVector v1 = ... ;
+     *  const Gaudi::Vector4       v2 = ... ;
+     *  
+     *  // update Lorentz vector with LA vector:
+     *  Gaudi::Math::sub ( v1 , v2 ) ;
+     *
+     *  @endcode 
+     *  
+     *  @param v1 (input/output) LorentzVector to be updated 
+     *  @param v2 (input) Linear Algebra vector, to be subtracted from  LorentzVector 
+     *  @return the updated LorenzVector 
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2006-05-24
+     */
+    template <class C, class T>
+    inline 
+    const ROOT::Math::LorentzVector<C>& 
+    sub 
+    ( ROOT::Math::LorentzVector<C>& v1 , const ROOT::Math::SVector<T,4> & v2 ) 
+    { return v1 -= ROOT::Math::LorentzVector<C>
+        ( v2 ( 0 )  , v2 ( 1 )  , v2 ( 2 ) , v2 ( 3 ) ) ; }
+    // ========================================================================    
     /** increment the symmetric matrix with "symmetrized" part of other matrix
      * 
      *  @code 
@@ -429,7 +559,7 @@ namespace Gaudi
      *  const Gaudi::Matrix3x3    other  = ... ;
      * 
      *  // update "matrix" with the upper triangular part of "other"
-     *  Gaudi::Math::add ( matrix , other ) ;
+     *  Gaudi::Math::sub ( matrix , other ) ;
      *
      *  @endcode 
      * 
@@ -896,7 +1026,7 @@ namespace Gaudi
       ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
         const ROOT::Math::SVector<T,3>&            v2 )
       {
-        ROOT::Math::PositionVector3D<C> result  ;
+        ROOT::Math::DisplacementVector3D<C> result  ;
         result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
                         p1 . Y () + v2 ( 1 ) ,
                         p1 . Z () + v2 ( 2 ) ) ;
@@ -910,7 +1040,7 @@ namespace Gaudi
       ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
         const ROOT::Math::VecExpr<B,T,3>&          v2 )
       {
-        ROOT::Math::PositionVector3D<C> result  ;
+        ROOT::Math::DisplacementVector3D<C> result  ;
         result.SetXYZ(  p1 . X () + v2 ( 0 ) , 
                         p1 . Y () + v2 ( 1 ) ,
                         p1 . Z () + v2 ( 2 ) ) ;
@@ -1154,8 +1284,7 @@ namespace Gaudi
              p1 . Y () - v2 ( 1 ) ,
              p1 . Z () - v2 ( 2 ) ) ;
         return result ;
-      }
-      
+      }      
       // ========================================================================
       /** subtraction of 3D-vector and the linear algebra vector 
        *
@@ -1182,7 +1311,7 @@ namespace Gaudi
       ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
         const ROOT::Math::SVector<T,3>&            v2 )
       {
-        ROOT::Math::PositionVector3D<C> result  ;
+        ROOT::Math::DisplacementVector3D<C> result  ;
         result.SetXYZ
           (  p1 . X () - v2 ( 0 ) , 
              p1 . Y () - v2 ( 1 ) ,
@@ -1197,7 +1326,7 @@ namespace Gaudi
       ( const ROOT::Math::DisplacementVector3D<C>& p1 ,
         const ROOT::Math::VecExpr<B,T,3>&          v2 )
       {
-        ROOT::Math::PositionVector3D<C> result  ;
+        ROOT::Math::DisplacementVector3D<C> result  ;
         result.SetXYZ
           (  p1 . X () - v2 ( 0 ) , 
              p1 . Y () - v2 ( 1 ) ,

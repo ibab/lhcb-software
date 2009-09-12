@@ -1,4 +1,4 @@
-// $Id: Point3DWithError.h,v 1.3 2009-06-13 18:30:12 ibelyaev Exp $
+// $Id: Point3DWithError.h,v 1.4 2009-09-12 19:29:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_POINT3DWITHERROR_H 
 #define LHCBMATH_POINT3DWITHERROR_H 1
@@ -10,10 +10,12 @@
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/GenericVectorTypes.h"
 // ============================================================================
 // LHCbMath
 // ============================================================================
 #include "LHCbMath/Vector3DWithError.h"
+#include "LHCbMath/SVectorWithError.h"
 // ============================================================================
 /** @file 
  *  Collection of useful objects with associated "covarinaces".
@@ -44,6 +46,13 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// the actual type of generic 3-vector 
+      typedef Gaudi::Vector3                                       Vector     ;
+      /// the actual type of vector with errors  
+      typedef Gaudi::Math::SVectorWithError<3,double>              VectorE    ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// the actual type of the Vector 
       typedef Gaudi::XYZVector                                     Vector3D   ;
       // ======================================================================
@@ -53,6 +62,17 @@ namespace Gaudi
       Point3DWithError 
       ( const Point3D&    point  = Point3D    () , 
         const Covariance& matrix = Covariance () ) ;
+      /// constructor from the point and covariance matrix 
+      Point3DWithError 
+      ( const Covariance& matrix                 ,
+        const Point3D&    point  = Point3D    () ) ;
+      /// constructor from generic vector and covariance matrix 
+      Point3DWithError 
+      ( const Vector&     point                  , 
+        const Covariance& matrix = Covariance () ) ;
+      /// constructor from generic vector with error 
+      Point3DWithError 
+      ( const VectorE&    point                  ) ;
       // ======================================================================
     public: // trivial accessors 
       // ======================================================================
@@ -72,8 +92,13 @@ namespace Gaudi
       void setPoint3d    ( const Point3D&    v ) { setPoint3D ( v ) ; }
       void setPoint      ( const Point3D&    v ) { setPoint3D ( v ) ; }
       // ======================================================================
+      void setPoint      ( const Vector&     v ) { setValue   ( v ) ; }
+      // ======================================================================
       void setValue      ( const Point3D&    v ) { setPoint3D ( v ) ; }
       void setCovariance ( const Covariance& c ) { m_cov2     = c   ; }      
+      // ======================================================================
+      void setValue      ( const VectorE&    v ) ;
+      void setValue      ( const Vector&     v ) ;
       // ======================================================================
     public: // finally it is just a point + covariance 
       // ======================================================================
@@ -83,9 +108,13 @@ namespace Gaudi
     public: // operators 
       // ======================================================================
       Point3DWithError& operator+= ( const Vector3DWithError& right ) ;
-      Point3DWithError& operator-= ( const Vector3DWithError& right ) ;
       Point3DWithError& operator+= ( const Vector3D&          right ) ;
+      Point3DWithError& operator+= ( const VectorE&           right ) ; 
+      Point3DWithError& operator+= ( const Vector&            right ) ;
+      Point3DWithError& operator-= ( const Vector3DWithError& right ) ;
       Point3DWithError& operator-= ( const Vector3D&          right ) ;
+      Point3DWithError& operator-= ( const VectorE&           right ) ; 
+      Point3DWithError& operator-= ( const Vector&            right ) ;
       // ======================================================================
     public: // scaling
       // ======================================================================
@@ -96,10 +125,23 @@ namespace Gaudi
       // ======================================================================
     public:
       // ======================================================================
+      /// get generic vector 
+      void    asVector ( Vector&  data ) const ;
+      /// get generic vector 
+      void    asVector ( VectorE& data ) const ;
+      /// convert to generic vector with errors:
+      VectorE asVector () const ;
+      // ======================================================================
+    public:
+      // ======================================================================
       /// evaluate chi2 distance 
       double chi2 ( const Point3DWithError& right )  const ;
       /// evaluate chi2 distance 
       double chi2 ( const Point3D&          right )  const ;      
+      /// evaluate chi2 distance 
+      double chi2 ( const VectorE&          right )  const ;      
+      /// evaluate chi2 distance 
+      double chi2 ( const Vector&           right )  const ;      
       // ======================================================================
     public: // helper functions for Python
       // ======================================================================
@@ -113,6 +155,16 @@ namespace Gaudi
       Point3DWithError  __radd__  ( const Gaudi::XYZVector&  right ) const 
       { return __add__ ( right ) ; }
       Vector3DWithError __rsub__  ( const Gaudi::XYZPoint&   right ) const ;
+      // =====================================================================
+    public:
+      // =====================================================================
+      Point3DWithError& __imul__  ( const double v ) ;
+      Point3DWithError& __idiv__  ( const double v ) ;
+      // =====================================================================
+      Point3DWithError  __mul__   ( const double v ) const ;
+      Point3DWithError  __div__   ( const double v ) const ;
+      Point3DWithError  __rmul__  ( const double v ) const 
+      { return __mul__ ( v ) ; }
       // =====================================================================
     public:
       // ======================================================================
@@ -147,6 +199,16 @@ namespace Gaudi
     ( const Gaudi::XYZVector&  b , 
       const Point3DWithError&  a ) { return a + b  ; }
     // ========================================================================
+    inline Point3DWithError operator*
+    ( const Point3DWithError&  a ,
+      const double             b ) { return a.__mul__ ( b ) ; }
+    inline Point3DWithError operator/
+    ( const Point3DWithError&  a ,
+      const double             b ) { return a.__div__ ( b ) ; }
+    inline Point3DWithError operator*
+    ( const double             b , 
+      const Point3DWithError&  a ) { return a.__mul__ ( b ) ; }
+    // ========================================================================
     inline double chi2 
     ( const Point3DWithError& a , 
       const Point3DWithError& b ) { return a.chi2 ( b ) ; }  
@@ -156,6 +218,18 @@ namespace Gaudi
     inline double chi2 
     ( const Gaudi::XYZPoint&  b ,
       const Point3DWithError& a ) { return a.chi2 ( b ) ; }  
+    inline double chi2 
+    ( const Point3DWithError&          a , 
+      const Point3DWithError::VectorE& b ) { return a.chi2 ( b ) ; }  
+    inline double chi2 
+    ( const Point3DWithError::VectorE& b ,
+      const Point3DWithError&          a ) { return a.chi2 ( b ) ; }  
+    inline double chi2 
+    ( const Point3DWithError&          a , 
+      const Point3DWithError::Vector&  b ) { return a.chi2 ( b ) ; }  
+    inline double chi2 
+    ( const Point3DWithError::Vector&  b ,
+      const Point3DWithError&          a ) { return a.chi2 ( b ) ; }  
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
   // ==========================================================================

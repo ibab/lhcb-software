@@ -1,4 +1,4 @@
-// $Id: LHCbMathDict.h,v 1.7 2009-06-12 14:57:18 ibelyaev Exp $
+// $Id: LHCbMathDict.h,v 1.8 2009-09-12 19:29:26 ibelyaev Exp $
 #ifndef DICT_LHCBMATHDICT_H 
 #define DICT_LHCBMATHDICT_H 1
 
@@ -141,6 +141,9 @@ namespace
     Gaudi::Math::MD5       __mathMD5;
     std::vector<Gaudi::Math::MD5>       __stdvector_mathMD5;
     std::list<Gaudi::Math::MD5>       __stdlist_mathMD5;
+
+    Gaudi::Math::SVectorWithError<3,double> __sv3 ;
+    Gaudi::Math::SVectorWithError<4,double> __sv4 ;
     
   };
 }
