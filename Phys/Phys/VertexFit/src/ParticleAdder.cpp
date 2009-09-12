@@ -1,7 +1,7 @@
 // Include files 
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 
 
 #include "Event/Vertex.h"
@@ -43,58 +43,56 @@ ParticleAdder::ParticleAdder( const std::string& type,
 ParticleAdder::~ParticleAdder() {};
 
 //=============================================================================
-// Initialize
-//=============================================================================
-StatusCode ParticleAdder::initialize(){
-  return GaudiTool::initialize();
-};
-
-//=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode ParticleAdder::fit
-( const LHCb::Particle::ConstVector& parts, 
-  LHCb::Vertex&   V , 
+( const LHCb::Particle::ConstVector& parts,
+  LHCb::Vertex&   V ,
   LHCb::Particle& P ) const
 {
-  debug() << "start ParticleAdder fit " <<endreq;
-  debug() << "using " << parts.size() <<" particles" <<endreq;
- 
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "start ParticleAdder fit " <<endreq;
+    debug() << "using " << parts.size() <<" particles" <<endreq;
+  }
+
   P.clearDaughters();
   V.clearOutgoingParticles();
   V.setChi2(0.0);
   V.setNDoF(0);
   P.setEndVertex( &V );
 
-
-  for(Particle::ConstVector::const_iterator iterP = parts.begin(); iterP != parts.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = parts.begin();
+      iterP != parts.end(); ++iterP)
+  {
     P.addToDaughters(*iterP);
     V.addToOutgoingParticles(*iterP);
   }
-  const SmartRefVector<LHCb::Particle>&  daughters = P.daughters();
 
-
+  const SmartRefVector<LHCb::Particle>& daughters = P.daughters();
   Gaudi::LorentzVector momentum;
   Gaudi::SymMatrix4x4  matrix;
-  for(SmartRefVector<LHCb::Particle>::const_iterator id = daughters.begin(); id !=daughters.end() ;++id){
+  for(SmartRefVector<LHCb::Particle>::const_iterator id = daughters.begin();
+      id !=daughters.end() ;++id)
+  {
     const LHCb::Particle* daughter = *id;
     momentum += daughter->momentum();
     matrix   += daughter->momCovMatrix();
-  }  
+  }
   P.setMomentum( momentum );
-  P.setMomCovMatrix( matrix);  
+  P.setMomCovMatrix( matrix );
   P.setMeasuredMass( P.momentum().M() );
 
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
-StatusCode ParticleAdder::fit 
+StatusCode ParticleAdder::fit
 ( LHCb::Vertex& V ,
   const LHCb::Particle::ConstVector& parts ) const
-{  
+{
   LHCb::Particle tPart;
   return fit(parts, V , tPart );
 }
@@ -104,22 +102,22 @@ StatusCode ParticleAdder::reFit( LHCb::Particle& particle ) const {
   return fit( particle.daughtersVector(), *vertex , particle ) ;
 }
 //=============================================================================
-StatusCode ParticleAdder::add(const LHCb::Particle*, 
-               LHCb::Vertex& ) const {
+StatusCode ParticleAdder::add(const LHCb::Particle*,
+                              LHCb::Vertex& ) const {
   Error("add is to be implemented for ParticleAdder");
   return StatusCode::FAILURE;
 }
 //=============================================================================
-StatusCode ParticleAdder::remove(const LHCb::Particle*, 
+StatusCode ParticleAdder::remove(const LHCb::Particle*,
                                  LHCb::Vertex& ) const {
   Error("remove is to be implemented for ParticleAdder");
   return StatusCode::FAILURE;
 }
 //=============================================================================
 StatusCode ParticleAdder::combine
-( const LHCb::Particle::ConstVector& daughter, 
-  LHCb::Particle&                    mother  , 
-  LHCb::Vertex&                      vertex  ) const 
+( const LHCb::Particle::ConstVector& daughter,
+  LHCb::Particle&                    mother  ,
+  LHCb::Vertex&                      vertex  ) const
 {
   return fit ( daughter , vertex , mother ) ;
 }

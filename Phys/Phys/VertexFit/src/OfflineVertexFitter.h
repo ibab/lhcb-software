@@ -1,5 +1,5 @@
 
-#ifndef OFFLINEVERTEXFITTER_H 
+#ifndef OFFLINEVERTEXFITTER_H
 #define OFFLINEVERTEXFITTER_H 1
 
 // Include files
@@ -9,72 +9,77 @@
 
 using namespace LHCb;
 
-typedef ROOT::Math::SMatrix<double, 10, 10,
-                            ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
-
-typedef ROOT::Math::SMatrix<double, 12, 12,
-                            ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
-
-typedef ROOT::Math::SMatrix<double, 13, 13,
-                            ROOT::Math::MatRepSym<double,13> > SymMatrix13x13;
-
-typedef ROOT::Math::SMatrix<double, 14, 14,
-                            ROOT::Math::MatRepSym<double,14> > SymMatrix14x14;
-
-
 /** @class OfflineVertexFitter OfflineVertexFitter.h
- *  
+ *
  *  reimplementation of the KFFitTool to comply with
  *  the new interface IVertexFit.h
  *
  *  @author Yuehong Xie
  *  @date   2006-03-15
  */
-class OfflineVertexFitter : public GaudiTool, virtual public IVertexFit {
-public: 
+class OfflineVertexFitter : public GaudiTool,
+                            virtual public IVertexFit
+{
+
+private:
+
+  typedef ROOT::Math::SMatrix<double, 10, 10,
+                              ROOT::Math::MatRepSym<double,10> > SymMatrix10x10;
+
+  typedef ROOT::Math::SMatrix<double, 12, 12,
+                              ROOT::Math::MatRepSym<double,12> > SymMatrix12x12;
+
+  typedef ROOT::Math::SMatrix<double, 13, 13,
+                              ROOT::Math::MatRepSym<double,13> > SymMatrix13x13;
+
+  typedef ROOT::Math::SMatrix<double, 14, 14,
+                              ROOT::Math::MatRepSym<double,14> > SymMatrix14x14;
+
+public:
+
   /// Standard constructor
-  OfflineVertexFitter( const std::string& type, 
+  OfflineVertexFitter( const std::string& type,
                        const std::string& name,
                        const IInterface* parent);
 
   StatusCode initialize();
 
-  /// Method to fit a vertex 
-  StatusCode fit( LHCb::Vertex& ,  
-                  const LHCb::Particle::ConstVector& ) const ;  
+  /// Method to fit a vertex
+  StatusCode fit( LHCb::Vertex& ,
+                  const LHCb::Particle::ConstVector& ) const ;
 
   /// Method to fit a vertex returning a Particle (that should already know its PID)
   StatusCode fit
-  ( const LHCb::Particle::ConstVector&,  
-    LHCb::Vertex&   , 
-    LHCb::Particle& ) const ; 
-  
+  ( const LHCb::Particle::ConstVector&,
+    LHCb::Vertex&   ,
+    LHCb::Particle& ) const ;
+
   virtual ~OfflineVertexFitter( ); ///< Destructor
 
 
-  StatusCode reFit( LHCb::Particle& particle ) const 
+  StatusCode reFit( LHCb::Particle& particle ) const
   {
     LHCb::Vertex* vertex = particle.endVertex() ;
     return fit( particle.daughtersVector(),
                 *vertex  , particle ) ;
   }
-  
+
   StatusCode combine
-  ( const LHCb::Particle::ConstVector& daughter, 
-    LHCb::Particle&                    mother  , 
-    LHCb::Vertex&                      vertex  ) const 
+  ( const LHCb::Particle::ConstVector& daughter,
+    LHCb::Particle&                    mother  ,
+    LHCb::Vertex&                      vertex  ) const
   {
     return fit ( daughter , vertex , mother ) ;
   }
-  
-  
-  StatusCode add(const LHCb::Particle*, 
+
+
+  StatusCode add(const LHCb::Particle*,
                  LHCb::Vertex& ) const {
     Error("add is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
   }
 
-  StatusCode remove(const LHCb::Particle*, 
+  StatusCode remove(const LHCb::Particle*,
                     LHCb::Vertex& ) const {
     Error("remove is not implemented for OffLineVertexFitter");
     return StatusCode::FAILURE;
@@ -83,14 +88,14 @@ public:
 
 private:
 
-  bool isResonance(const LHCb::Particle*) const; 
+  bool isResonance(const LHCb::Particle*) const;
   bool isMergedPi0(const LHCb::Particle*) const;
   bool isVertexed(const LHCb::Particle*) const;
   int countTraj(const LHCb::Particle*) const;
   bool isPhotonPair(const LHCb::Particle*) const;
   bool isPurePhotonDecay(const LHCb::Particle*) const;
 
-  StatusCode classify(const LHCb::Particle*, 
+  StatusCode classify(const LHCb::Particle*,
                       LHCb::Particle::ConstVector &,
                       LHCb::Particle::ConstVector &,
                       LHCb::Particle::ConstVector &,
@@ -101,22 +106,22 @@ private:
                      LHCb::Particle::ConstVector&,
                      LHCb::Particle::ConstVector& ) const;
 
-  StatusCode addVertexed(LHCb::Particle&, 
+  StatusCode addVertexed(LHCb::Particle&,
                          const LHCb::Particle *) const;
 
-  StatusCode addFlying(LHCb::Particle&, 
+  StatusCode addFlying(LHCb::Particle&,
                        const LHCb::Particle *) const;
 
-  StatusCode addPhoton(LHCb::Particle&, 
+  StatusCode addPhoton(LHCb::Particle&,
                        const LHCb::Particle *) const;
 
   StatusCode addMergedPi0(LHCb::Particle&,
-                       const LHCb::Particle *) const;
+                          const LHCb::Particle *) const;
 
-  StatusCode addPhotonPair(LHCb::Particle&, 
+  StatusCode addPhotonPair(LHCb::Particle&,
                            const LHCb::Particle *) const;
 
-  StatusCode updateParticle(LHCb::Particle& part,  
+  StatusCode updateParticle(LHCb::Particle& part,
                             const Gaudi::Vector7& V7,
                             const Gaudi::SymMatrix7x7& C7,
                             const double chi2,
@@ -128,19 +133,19 @@ private:
                        double& chi2,
                        int& NDoF) const;
 
-  void convertE2M(const Gaudi::Vector7& V7, 
+  void convertE2M(const Gaudi::Vector7& V7,
                   const Gaudi::SymMatrix7x7& C7,
-                  Gaudi::Vector7& Vm7, 
+                  Gaudi::Vector7& Vm7,
                   Gaudi::SymMatrix7x7& Cm7) const;
 
 
-  void convertM2E(const Gaudi::Vector7& Vm7, 
+  void convertM2E(const Gaudi::Vector7& Vm7,
                   const Gaudi::SymMatrix7x7& Cm7,
-                  Gaudi::Vector7& V7, 
+                  Gaudi::Vector7& V7,
                   Gaudi::SymMatrix7x7& C7) const;
 
 
-  StatusCode fitTwo(const LHCb::Particle* dau1, 
+  StatusCode fitTwo(const LHCb::Particle* dau1,
                     const LHCb::Particle* dau2,
                     Gaudi::Vector7& V7,
                     Gaudi::SymMatrix7x7& C7,
@@ -149,33 +154,33 @@ private:
   double getZEstimate (const LHCb::Particle* part1,
                        const LHCb::Particle* part2) const;
 
-  StatusCode constrainMass(Gaudi::Vector7& V7, 
-                           Gaudi::SymMatrix7x7& C7, 
+  StatusCode constrainMass(Gaudi::Vector7& V7,
+                           Gaudi::SymMatrix7x7& C7,
                            double& nominalMass) const;
 
-  bool requireMassConstraint(const LHCb::Particle*, 
+  bool requireMassConstraint(const LHCb::Particle*,
                              double& nominalMass) const;
 
-  StatusCode getPhotonParameter(const LHCb::Particle& part, 
+  StatusCode getPhotonParameter(const LHCb::Particle& part,
                                 double& zg,
-                                Gaudi::Vector3& para , 
+                                Gaudi::Vector3& para ,
                                 Gaudi::SymMatrix3x3& cov ) const;
 
   StatusCode getMergedPi0Parameter(const LHCb::Particle& part,
-                                double& zg1,
-                                Gaudi::Vector3& para1 ,
-                                Gaudi::SymMatrix3x3& cov1,
-                                double& zg2,
-                                Gaudi::Vector3& para2 ,
-                                Gaudi::SymMatrix3x3& cov2 ) const;
+                                   double& zg1,
+                                   Gaudi::Vector3& para1 ,
+                                   Gaudi::SymMatrix3x3& cov1,
+                                   double& zg2,
+                                   Gaudi::Vector3& para2 ,
+                                   Gaudi::SymMatrix3x3& cov2 ) const;
 
   void addToDaughters( LHCb::Particle&, const LHCb::Particle::ConstVector& ) const ; // add to particle daughters
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle::ConstVector& ) const ; // add to vertex particles
   void addToOutgoingParticles( LHCb::Vertex&, const LHCb::Particle* ) const ; // add to vertex particles
-  
- 
+
+
 private:
-      
+
   int m_photonID; ///< Photon particle ID
   int m_pi0ID; ///< Pi0 particle ID
 

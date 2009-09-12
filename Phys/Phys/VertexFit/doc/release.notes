@@ -1,12 +1,11 @@
-! $Id: release.notes,v 1.175 2009-09-11 17:15:09 jonrob Exp $
+! $Id: release.notes,v 1.176 2009-09-12 16:51:07 jonrob Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
 
 ! 2009-09-11 - Chris Jones
- - Speed improvements to TrgVertexFitter identified during profiling with
-   valgrind.
+ - Speed improvements to identified during profiling with valgrind.
 
 ! 2009-09-01 - Juan PALACIOS
  - PVRefitterAlg

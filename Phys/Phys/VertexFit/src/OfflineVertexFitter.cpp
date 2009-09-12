@@ -1,16 +1,16 @@
-// $Id: OfflineVertexFitter.cpp,v 1.37 2009-08-19 15:52:11 ibelyaev Exp $
-// Include files 
+// $Id: OfflineVertexFitter.cpp,v 1.38 2009-09-12 16:51:07 jonrob Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/DeclareFactoryEntries.h" 
-#include "GaudiKernel/PhysicalConstants.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/PhysicalConstants.h"
 
 
 #include "Event/Vertex.h"
 #include "Event/Particle.h"
 
-#include "Kernel/IParticleTransporter.h" 
-#include "Kernel/IParticleStuffer.h" 
+#include "Kernel/IParticleTransporter.h"
+#include "Kernel/IParticleStuffer.h"
 
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
@@ -37,10 +37,10 @@ OfflineVertexFitter::OfflineVertexFitter( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_photonID(22)
-    , m_pi0ID(111)
-    , m_transporter()
-    , m_transporterName ("ParticleTransporter:PUBLIC")
+  , m_photonID(22)
+  , m_pi0ID(111)
+  , m_transporter()
+  , m_transporterName ("ParticleTransporter:PUBLIC")
 {
   declareInterface<IVertexFit>       (this);
   declareInterface<IParticleCombiner>(this);
@@ -63,34 +63,35 @@ OfflineVertexFitter::~OfflineVertexFitter() {};
 //=============================================================================
 // Initialize
 //=============================================================================
-StatusCode OfflineVertexFitter::initialize(){
-  StatusCode sc = GaudiTool::initialize();
+StatusCode OfflineVertexFitter::initialize()
+{
+  const StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
+
   m_transporter = tool<IParticleTransporter>(m_transporterName, this);
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc");
 
-  ParticleProperty* partProp;
+  const ParticleProperty* partProp;
   partProp = m_ppSvc->find( "gamma" );
   m_photonID = (*partProp).jetsetID();
-
-  partProp = m_ppSvc->find( "pi0" ); 
+  partProp = m_ppSvc->find( "pi0" );
   m_pi0ID  = (*partProp).jetsetID();
 
   return sc;
-};
+}
 
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode OfflineVertexFitter::fit
-( const LHCb::Particle::ConstVector& parts, 
-  LHCb::Vertex&   V , 
+( const LHCb::Particle::ConstVector& parts,
+  LHCb::Vertex&   V ,
   LHCb::Particle& P ) const
 {
   // xieyh
   if (msgLevel(MSG::DEBUG)) debug() << "start fit " <<endmsg;
   if (msgLevel(MSG::DEBUG)) debug() << "using " << parts.size() <<" particles" <<endmsg;
- 
+
   P.clearDaughters();
   V.clearOutgoingParticles();
   V.setChi2(0.0);
@@ -112,19 +113,25 @@ StatusCode OfflineVertexFitter::fit
 
   if (msgLevel(MSG::DEBUG)) debug() << "starting classifying particles to fit " <<endmsg;
 
-  for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart ) {
+  for ( Particle::ConstVector::const_iterator iPart=parts.begin(); iPart!=parts.end(); ++iPart )
+  {
     const Particle* parPointer = *iPart;
-    verbose() << parPointer->particleID().pid() << " at " 
-              << parPointer->referencePoint() 
-              << " with " << parPointer->momentum() << endmsg ;
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << parPointer->particleID().pid() << " at "
+                << parPointer->referencePoint()
+                << " with " << parPointer->momentum() << endmsg ;
+    }
     sc = classify(parPointer, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
-    if(sc.isFailure()) {
+    if(sc.isFailure())
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to classify a particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
-  
-  if ( msgLevel(MSG::DEBUG )){  
+
+  if ( msgLevel(MSG::DEBUG ))
+  {
     debug() << "classfication result " <<endmsg;
     debug() << "flying particles " << FlyingParticles.size() <<endmsg;
     debug() << "vertexed particles " << VertexedParticles.size() <<endmsg;
@@ -132,14 +139,14 @@ StatusCode OfflineVertexFitter::fit
     debug() << "merged pi0s " << MergedPi0s.size() <<endmsg;
     debug() << "photon pairs " << PhotonPairs.size() <<endmsg;
   }
-    
+
   // add to particle and vertex
   addToDaughters( P, parts );
   /* Done when each one is used
-  addToOutgoingParticles( V, FlyingParticles );
-  addToOutgoingParticles( V, VertexedParticles );  
-  addToOutgoingParticles( V, Photons );  
-  addToOutgoingParticles( V, PhotonPairs );  
+     addToOutgoingParticles( V, FlyingParticles );
+     addToOutgoingParticles( V, VertexedParticles );
+     addToOutgoingParticles( V, Photons );
+     addToOutgoingParticles( V, PhotonPairs );
   */
 
   sc = seeding(P, FlyingParticles, VertexedParticles);
@@ -148,85 +155,99 @@ StatusCode OfflineVertexFitter::fit
     return StatusCode::FAILURE;
   }
 
-  for(Particle::ConstVector::const_iterator iterP = VertexedParticles.begin(); iterP != VertexedParticles.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = VertexedParticles.begin(); 
+      iterP != VertexedParticles.end(); ++iterP) 
+  {
     const Particle* daughter = *iterP;
     sc = addVertexed(P, daughter);
-    if(sc.isFailure()) {
+    if(sc.isFailure()) 
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a vertexed particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  for(Particle::ConstVector::const_iterator iterP = FlyingParticles.begin(); iterP != FlyingParticles.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = FlyingParticles.begin();
+      iterP != FlyingParticles.end(); ++iterP) 
+  {
     const Particle* daughter = *iterP;
     sc = addFlying(P, daughter);
-    if(sc.isFailure()) {
+    if(sc.isFailure()) 
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a flying particle" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  for(Particle::ConstVector::const_iterator iterP = Photons.begin(); iterP != Photons.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = Photons.begin(); 
+      iterP != Photons.end(); ++iterP)
+  {
     const Particle* daughter = *iterP;
     sc = addPhoton(P, daughter);
-    if(sc.isFailure()) {
+    if(sc.isFailure()) 
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a photon" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  for(Particle::ConstVector::const_iterator iterP = MergedPi0s.begin(); iterP != MergedPi0s.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = MergedPi0s.begin();
+      iterP != MergedPi0s.end(); ++iterP) 
+  {
     const Particle* daughter = *iterP;
     sc = addMergedPi0(P, daughter);
-    if(sc.isFailure()) {
+    if(sc.isFailure())
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a merged pi0" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-
-  for(Particle::ConstVector::const_iterator iterP = PhotonPairs.begin(); iterP != PhotonPairs.end(); iterP++) {
+  for(Particle::ConstVector::const_iterator iterP = PhotonPairs.begin(); 
+      iterP != PhotonPairs.end(); ++iterP)
+  {
     const Particle* daughter = *iterP;
     sc = addPhotonPair(P, daughter);
-    if(sc.isFailure()) {
+    if(sc.isFailure()) 
+    {
       if (msgLevel(MSG::DEBUG)) debug() << "Fail to add a photon pair" << endmsg;
       return StatusCode::FAILURE;
     }
   }
 
-  if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size()) 
+  if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size())
     Warning("Did not use exactly particle daughters to fit vertex. Probably nothing to worry about.",
             StatusCode::SUCCESS,2).ignore();
 
-  if ( msgLevel( MSG::DEBUG )){
+  if ( msgLevel( MSG::DEBUG ))
+  {
     debug() << "############## Fitted a vertex for a " << P.particleID().pid() ;
     if ( P.daughters().size() !=  P.endVertex()->outgoingParticles().size()) debug() << " and got different sizes !";
     debug() << " P= " << P.momentum() << endmsg ;
     debug() <<  P.daughters().size() << " Particle daughters are :" << endmsg ;
-    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.daughters().begin() ; 
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.daughters().begin() ;
           iterP!=P.daughters().end() ; ++iterP){
       debug() << "       " << (*iterP)->particleID().pid() << " " << (*iterP)->momentum() << " " << endmsg ;
     }
-    debug() << P.endVertex()->outgoingParticles().size() << " Vertex outgoing particles are :" ; 
-    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.endVertex()->outgoingParticles().begin() ; 
+    debug() << P.endVertex()->outgoingParticles().size() << " Vertex outgoing particles are :" ;
+    for ( SmartRefVector< LHCb::Particle >::const_iterator iterP = P.endVertex()->outgoingParticles().begin() ;
           iterP!=P.endVertex()->outgoingParticles().end() ; ++iterP){
       debug() << " " << (*iterP)->particleID().pid() ;
     }
     debug() << endmsg ;
     debug() << "Vertex chi2 is " << V.chi2() << " with " << V.nDoF() << " DoF" << endmsg  ;
   }
-  
 
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Fit the vertex from a vector of Particles
 //=============================================================================
 StatusCode OfflineVertexFitter::fit
-( LHCb::Vertex& V , 
+( LHCb::Vertex& V ,
   const LHCb::Particle::ConstVector& parts ) const
-{  
+{
   LHCb::Particle tPart;
   return fit(parts, V , tPart );
 }
@@ -234,48 +255,44 @@ StatusCode OfflineVertexFitter::fit
 //==================================================================
 //  method to determine if a particle is a resonance
 //==================================================================
-
-bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const {
-
-  const int id( part->particleID().pid() );  
+bool OfflineVertexFitter::isResonance(const LHCb::Particle* part) const 
+{
+  const int id( part->particleID().pid() );
   ParticleProperty*  partProp = m_ppSvc->findByStdHepID(id );
-  return partProp->lifetime() < 1.e-6*nanosecond ? true : false;
-      
+  return partProp->lifetime() < 1.e-6*nanosecond ;
 }
 
 //==================================================================
 //  method to determine if a particle is a merged pi0
 //==================================================================
-
-bool OfflineVertexFitter::isMergedPi0(const LHCb::Particle* part) const {
-
-  bool ans = false;
-  if( part->isBasicParticle() && part->particleID().pid()==m_pi0ID ) ans = true;
-  return ans;
-
+bool OfflineVertexFitter::isMergedPi0(const LHCb::Particle* part) const 
+{
+  return ( part->isBasicParticle() && part->particleID().pid() == m_pi0ID );
 }
 
 
 //==================================================================
-//  method to determine if a particle has a reconstructed vertex 
+//  method to determine if a particle has a reconstructed vertex
 //==================================================================
-
-bool OfflineVertexFitter::isVertexed(const LHCb::Particle* part) const{
+bool OfflineVertexFitter::isVertexed(const LHCb::Particle* part) const
+{
   const int nflying=countTraj(part);
-  return (nflying>=2) ? true : false;
+  return ( nflying >= 2 );
 }
 
 //==================================================================
 //  method to determine if a particle has non-photon final decay
 //  products or not
 //==================================================================
-bool OfflineVertexFitter::isPurePhotonDecay(const LHCb::Particle* part) const{
-  Particle::ConstVector Prods =part->daughtersVector();
-
-  for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
-     const Particle* daughter = *iProd;
-     if( daughter->particleID().pid()!=m_photonID &&
-         !isPurePhotonDecay(daughter) ) return false;
+bool OfflineVertexFitter::isPurePhotonDecay(const LHCb::Particle* part) const
+{
+  const Particle::ConstVector& Prods =part->daughtersVector();
+  for ( Particle::ConstVector::const_iterator iProd=Prods.begin();
+        iProd!=Prods.end(); ++iProd ) 
+  {
+    const Particle* daughter = *iProd;
+    if( daughter->particleID().pid()!=m_photonID &&
+        !isPurePhotonDecay(daughter) ) return false;
   }
   return true;
 }
@@ -283,13 +300,15 @@ bool OfflineVertexFitter::isPurePhotonDecay(const LHCb::Particle* part) const{
 //==================================================================
 //  method to determine if a particle decays to gamma gamma
 //==================================================================
-bool OfflineVertexFitter::isPhotonPair(const LHCb::Particle* part)  const{
-  Particle::ConstVector Prods =part->daughtersVector();
-
-  if(Prods.size()!=2) return false;                          
-  for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
-     const Particle* daughter = *iProd;
-     if( daughter->particleID().pid()!=m_photonID ) return false;
+bool OfflineVertexFitter::isPhotonPair(const LHCb::Particle* part)  const
+{
+  const Particle::ConstVector & Prods = part->daughtersVector();
+  if(Prods.size()!=2) return false;
+  for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); 
+        iProd!=Prods.end(); ++iProd ) 
+  {
+    const Particle* daughter = *iProd;
+    if( daughter->particleID().pid()!=m_photonID ) return false;
   }
 
   return true;
@@ -312,33 +331,52 @@ StatusCode OfflineVertexFitter::classify(const LHCb::Particle* part,
 {
   StatusCode sc = StatusCode::SUCCESS;
 
-  const int id=part->particleID().pid();
+  const int id = part->particleID().pid();
 
-  if(part->isBasicParticle()) {
-    if(id==m_photonID) Photons.push_back(part);
-    else if(isMergedPi0(part)) MergedPi0s.push_back(part);
-    else FlyingParticles.push_back(part);
-  } else {
-    if(!isResonance(part)) {
-       FlyingParticles.push_back(part);
-    } else {
-      if(isVertexed(part)) {
-        if(m_useResonanceVertex) VertexedParticles.push_back(part);
-        else {
-          Particle::ConstVector Prods = part->daughtersVector();
-          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
+  if(part->isBasicParticle()) 
+  {
+    if      (id==m_photonID)    { Photons.push_back(part); }
+    else if (isMergedPi0(part)) { MergedPi0s.push_back(part); }
+    else                        { FlyingParticles.push_back(part); }
+  } 
+  else 
+  {
+    if(!isResonance(part)) 
+    {
+      FlyingParticles.push_back(part);
+    } 
+    else 
+    {
+      if(isVertexed(part)) 
+      {
+        if (m_useResonanceVertex) 
+        {
+          VertexedParticles.push_back(part);
+        }
+        else 
+        {
+          const Particle::ConstVector& Prods = part->daughtersVector();
+          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd )
+          {
             const Particle* daughter = *iProd;
             sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
             if(sc.isFailure()) return sc;
           }
         }
-      } else {
-        if(isPhotonPair(part)) PhotonPairs.push_back(part);
-        else {
-          Particle::ConstVector Prods =part->daughtersVector();
-          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
+      } 
+      else 
+      {
+        if (isPhotonPair(part))
+        {
+          PhotonPairs.push_back(part);
+        }
+        else 
+        {
+          const Particle::ConstVector & Prods = part->daughtersVector();
+          for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd )
+          {
             const Particle* daughter = *iProd;
-            sc=classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
+            sc = classify(daughter, FlyingParticles, VertexedParticles, Photons, MergedPi0s, PhotonPairs);
             if(sc.isFailure()) return sc;
           }
         }
@@ -361,7 +399,8 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
 
   if(VertexedParticles.size()<1 && FlyingParticles.size()<2) return StatusCode::FAILURE;
 
-  if(VertexedParticles.size()>0) {
+  if(VertexedParticles.size()>0)
+  {
     const LHCb::Particle* vertpart = VertexedParticles.back();
     VertexedParticles.pop_back();
     addToOutgoingParticles(*(part.endVertex()),vertpart);
@@ -377,15 +416,17 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
       sc=constrainMass(V7, C7, nominalMass);
       if(sc.isFailure()) return StatusCode::FAILURE;
     }
-//     //don't include resonance veretx chi2 and NDoF!
-//     chi2 = 0.;
-//     NDoF = 0;
+    //     //don't include resonance veretx chi2 and NDoF!
+    //     chi2 = 0.;
+    //     NDoF = 0;
     sc = updateParticle(part, V7, C7, chi2, NDoF);
 
-  } else if (FlyingParticles.size()>1) {
+  }
+  else if (FlyingParticles.size()>1) 
+  {
 
     const LHCb::Particle* flypart1 = FlyingParticles.back();
-    FlyingParticles.pop_back();  
+    FlyingParticles.pop_back();
     addToOutgoingParticles(*(part.endVertex()),flypart1);
     const LHCb::Particle* flypart2 = FlyingParticles.back();
     FlyingParticles.pop_back();
@@ -407,10 +448,11 @@ StatusCode OfflineVertexFitter::seeding(LHCb::Particle& part,
 }
 
 //==================================================================
-//  method to add a flying particle 
+//  method to add a flying particle
 //==================================================================
-StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part, 
-                                          const LHCb::Particle* dau) const {
+StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
+                                          const LHCb::Particle* dau) const 
+{
   StatusCode sc = StatusCode::SUCCESS;
 
   Gaudi::Vector7 V7;
@@ -430,11 +472,11 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 
   LHCb::Particle transParticleDau;
   sc = m_transporter->transportAndProject(dau, z2, transParticleDau);
-  if( sc.isFailure ()) {
+  if( sc.isFailure ()) 
+  {
     debug() << "transport of dau failed in addFlying(" << endmsg;
     return sc;
   }
-
 
   Gaudi::Vector7 daupara;
   Gaudi::SymMatrix7x7 daucov;
@@ -442,24 +484,27 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   int dauNDoF = 0;
   getParticleInfo(transParticleDau, daupara, daucov, dauchi2, dauNDoF);
 
-  if(constrainMDau) {
+  if(constrainMDau) 
+  {
     sc=constrainMass(daupara, daucov, nominalMassDau);
     if(sc.isFailure()) return StatusCode::FAILURE;
-  }  
+  }
 
   Gaudi::Vector7 daumpara;
   Gaudi::SymMatrix7x7 daumcov;
   convertE2M(daupara,daucov, daumpara, daumcov);
   const int id1=abs(dau->particleID().pid());
-  if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
+  if(id1==11||id1==13||id1==211||id1==321||id1==2212) 
+  {
     for(int k=0; k<=6; k++) daumcov(6,k)=0.0;
   }
 
   //temporary fix for MCParticleMaker
-  //for(int i=0;i<=6;i++) daumcov(6,i)=0.0; 
+  //for(int i=0;i<=6;i++) daumcov(6,i)=0.0;
 
   ROOT::Math::SVector<double, 13> X;
-  for(int i=0;i<7;i++) {
+  for(int i=0;i<7;i++) 
+  {
     X[i]=Vm7[i];
   }
   X[7]=daumpara[0];
@@ -470,10 +515,12 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   X[12]=daumpara[6];
 
   Gaudi::SymMatrix6x6 newcovdau;
-  for(int l1=0;l1<6;l1++) {
+  for(int l1=0;l1<6;l1++) 
+  {
     int n1=l1;
     if(n1>=2) n1++;
-    for(int l2=0;l2<=l1;l2++) {
+    for(int l2=0;l2<=l1;l2++) 
+    {
       int n2=l2;
       if(n2>=2) n2++;
       newcovdau(l1,l2)=daumcov(n1,n2);
@@ -481,18 +528,24 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   }
 
   SymMatrix13x13 Cx;
-  for(int l1=0; l1<7; l1++) {
-    for(int l2=0; l2<=l1; l2++) {
+  for(int l1=0; l1<7; l1++)
+  {
+    for(int l2=0; l2<=l1; l2++) 
+    {
       Cx(l1,l2)=Cm7(l1,l2);
     }
   }
-  for(int l1=7; l1<13; l1++) {
-    for(int l2=7; l2<=l1; l2++) {
+  for(int l1=7; l1<13; l1++) 
+  {
+    for(int l2=7; l2<=l1; l2++) 
+    {
       Cx(l1,l2)=newcovdau(l1-7,l2-7);
     }
   }
-  for(int l1=7; l1<13; l1++) {
-    for(int l2=0; l2<7; l2++) {
+  for(int l1=7; l1<13; l1++) 
+  {
+    for(int l2=0; l2<7; l2++) 
+    {
       Cx(l1,l2)=0.0;
     }
   }
@@ -507,9 +560,12 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
   double chi2PreviousFit=9999.;
   double chi2Fit=999.;
 
-  while(!converged && iter< m_maxIter)  {
+  while(!converged && iter< m_maxIter)  
+  {
     iter++;
-    verbose() << ":-) Iteration   " << iter << endmsg;
+  
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << ":-) Iteration   " << iter << endmsg;
 
     //f(0)=(x2-x1)*pz2-(z2-z1)*px2
     //f(1)=(y2-y1)*pz2-(z2-z1)*py2
@@ -524,7 +580,7 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
     D(0,1) = 0.0;
     D(0,2) = vfit[9];
     D(0,3) = 0.0;
-    D(0,4) = 0.0;    
+    D(0,4) = 0.0;
     D(0,5) = 0.0;
     D(0,6) = 0.0;
     D(0,7) = vfit[11];
@@ -579,9 +635,9 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
     }
 
   } // end chi2 minimization iteration
-  
+
   if(!converged)  return StatusCode::FAILURE;
- 
+
   Gaudi::Vector7 V7new;
 
   double chi2new = chi2 + chi2Fit ;
@@ -627,9 +683,9 @@ StatusCode OfflineVertexFitter::addFlying(LHCb::Particle& part,
 }
 
 //==================================================================
-//  method to add a vertexed particle 
+//  method to add a vertexed particle
 //==================================================================
-StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part, 
+StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
                                             const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -679,7 +735,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
     for(int l2=0;l2<7;l2++) Cx(l1+7,l2)=0.0;
   }
 
-  // x1,y1,z1, px1,py1,pz1,m1, x2,y2,z2,px1,py1,pz1,m2 
+  // x1,y1,z1, px1,py1,pz1,m1, x2,y2,z2,px1,py1,pz1,m2
   ROOT::Math::SVector<double, 14> vfit=X;
   SymMatrix14x14 cfit = Cx;
 
@@ -746,7 +802,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
   }  // end chi2 minimization iteration
 
   if(!converged)  return StatusCode::FAILURE;
-  
+
   Gaudi::Vector7 V7new;
 
   double chi2new = chi2 + chi2Fit ;
@@ -793,7 +849,7 @@ StatusCode OfflineVertexFitter::addVertexed(LHCb::Particle& part,
 //==================================================================
 //  method to add a photon
 //==================================================================
-StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part, 
+StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
                                           const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -837,18 +893,18 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 
   SymMatrix10x10 Cold;
 
-  for(int l1=0; l1<=6; l1++) 
+  for(int l1=0; l1<=6; l1++)
     for (int l2=0; l2<=l1; l2++) Cold(l1,l2) = C7(l1,l2);
 
   for(int l1=0; l1<=2; l1++)
     for (int l2=0; l2<=l1; l2++) Cold(l1+7,l2+7) = gammacov(l1,l2);
 
-  for(int l1=7; l1<=9;l1++) 
+  for(int l1=7; l1<=9;l1++)
     for(int l2=0; l2<7; l2++) Cold(l1,l2)=0.0;
-  
+
   ROOT::Math::SMatrix<double, 7, 10> JA;
   for(int i=0; i<7 ;i++) JA(i,i)=1.;
-  
+
   JA(3,0) = eg*(dx*dx/r/r/r-1./r);
   JA(3,1) = eg*(dx*dy/r/r/r);
   JA(3,2) = eg*(dx*dz/r/r/r);
@@ -883,7 +939,7 @@ StatusCode OfflineVertexFitter::addPhoton(LHCb::Particle& part,
 //==================================================================
 //  method to add a photon pair
 //==================================================================
-StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part, 
+StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
                                               const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -893,17 +949,17 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   int NDoF = 0;
   getParticleInfo(part, V7, C7, chi2, NDoF);
 
- //get "pair" daughters
+  //get "pair" daughters
   const Particle* gamma1 =0;
-  const Particle* gamma2 =0;  
+  const Particle* gamma2 =0;
   Particle::ConstVector Prods =dau->daughtersVector();
   int ig=0;
   for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
-     const Particle* daughter = *iProd;
-     if( daughter->particleID().pid()!=m_photonID ) return StatusCode::FAILURE;
-     ig++;
-     if(ig==1) gamma1 = daughter;
-     else gamma2 = daughter;     
+    const Particle* daughter = *iProd;
+    if( daughter->particleID().pid()!=m_photonID ) return StatusCode::FAILURE;
+    ig++;
+    if(ig==1) gamma1 = daughter;
+    else gamma2 = daughter;
   }
   if(ig!=2) return StatusCode::FAILURE;
 
@@ -948,7 +1004,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   const double pyg2= eg2*dy2/r2;
   const double pzg2= eg2*dz2/r2;
 
-  const double mpair= sqrt((eg1+eg2)*(eg1+eg2)-(pxg1+pxg2)*(pxg1+pxg2)-(pyg1+pyg2)*(pyg1+pyg2)-(pzg1+pzg2)*(pzg1+pzg2));
+  const double mpair= std::sqrt((eg1+eg2)*(eg1+eg2)-(pxg1+pxg2)*(pxg1+pxg2)-(pyg1+pyg2)*(pyg1+pyg2)-(pzg1+pzg2)*(pzg1+pzg2));
 
   Vnew[0]= V7[0];
   Vnew[1]= V7[1];
@@ -978,7 +1034,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 
   ROOT::Math::SMatrix<double, 8, 13> JA;
   for(int i=0;i<7;i++) JA(i,i)=1.;
-  
+
   const double dinvr1_dx1=-1./(r1*r1)*(-dx1/r1);
   const double dinvr1_dy1=-1./(r1*r1)*(-dy1/r1);
   const double dinvr1_dz1=-1./(r1*r1)*(-dz1/r1);
@@ -1062,11 +1118,11 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
   JA(6,12)=1.;
 
   JA(7,0)=-(pxg1+pxg2)/mpair*dpxg1_dx1 -(pyg1+pyg2)/mpair*dpyg1_dx1 -(pzg1+pzg2)/mpair*dpzg1_dx1
-          -(pxg1+pxg2)/mpair*dpxg2_dx1 -(pyg1+pyg2)/mpair*dpyg2_dx1 -(pzg1+pzg2)/mpair*dpzg2_dx1;
+    -(pxg1+pxg2)/mpair*dpxg2_dx1 -(pyg1+pyg2)/mpair*dpyg2_dx1 -(pzg1+pzg2)/mpair*dpzg2_dx1;
   JA(7,1)=-(pxg1+pxg2)/mpair*dpxg1_dy1 -(pyg1+pyg2)/mpair*dpyg1_dy1 -(pzg1+pzg2)/mpair*dpzg1_dy1
-          -(pxg1+pxg2)/mpair*dpxg2_dy1 -(pyg1+pyg2)/mpair*dpyg2_dy1 -(pzg1+pzg2)/mpair*dpzg2_dy1;
+    -(pxg1+pxg2)/mpair*dpxg2_dy1 -(pyg1+pyg2)/mpair*dpyg2_dy1 -(pzg1+pzg2)/mpair*dpzg2_dy1;
   JA(7,2)=-(pxg1+pxg2)/mpair*dpxg1_dz1 -(pyg1+pyg2)/mpair*dpyg1_dz1 -(pzg1+pzg2)/mpair*dpzg1_dz1
-          -(pxg1+pxg2)/mpair*dpxg2_dz1 -(pyg1+pyg2)/mpair*dpyg2_dz1 -(pzg1+pzg2)/mpair*dpzg2_dz1;
+    -(pxg1+pxg2)/mpair*dpxg2_dz1 -(pyg1+pyg2)/mpair*dpyg2_dz1 -(pzg1+pzg2)/mpair*dpzg2_dz1;
 
   JA(7,7)=-(pxg1+pxg2)/mpair*dpxg1_dxg1 -(pyg1+pyg2)/mpair*dpyg1_dxg1 -(pzg1+pzg2)/mpair*dpzg1_dxg1;
   JA(7,8)=-(pxg1+pxg2)/mpair*dpxg1_dyg1 -(pyg1+pyg2)/mpair*dpyg1_dyg1 -(pzg1+pzg2)/mpair*dpzg1_dyg1;
@@ -1122,7 +1178,7 @@ StatusCode OfflineVertexFitter::addPhotonPair(LHCb::Particle& part,
 //==================================================================
 //  method to add a meregd pi0
 //==================================================================
-StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part, 
+StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
                                              const LHCb::Particle * dau) const {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -1197,7 +1253,7 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
 
   ROOT::Math::SMatrix<double, 8, 13> JA;
   for(int i=0;i<7;i++) JA(i,i)=1.;
-  
+
   const double dinvr1_dx1=-1./(r1*r1)*(-dx1/r1);
   const double dinvr1_dy1=-1./(r1*r1)*(-dy1/r1);
   const double dinvr1_dz1=-1./(r1*r1)*(-dz1/r1);
@@ -1281,11 +1337,11 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
   JA(6,12)=1.;
 
   JA(7,0)=-(pxg1+pxg2)/mpair*dpxg1_dx1 -(pyg1+pyg2)/mpair*dpyg1_dx1 -(pzg1+pzg2)/mpair*dpzg1_dx1
-          -(pxg1+pxg2)/mpair*dpxg2_dx1 -(pyg1+pyg2)/mpair*dpyg2_dx1 -(pzg1+pzg2)/mpair*dpzg2_dx1;
+    -(pxg1+pxg2)/mpair*dpxg2_dx1 -(pyg1+pyg2)/mpair*dpyg2_dx1 -(pzg1+pzg2)/mpair*dpzg2_dx1;
   JA(7,1)=-(pxg1+pxg2)/mpair*dpxg1_dy1 -(pyg1+pyg2)/mpair*dpyg1_dy1 -(pzg1+pzg2)/mpair*dpzg1_dy1
-          -(pxg1+pxg2)/mpair*dpxg2_dy1 -(pyg1+pyg2)/mpair*dpyg2_dy1 -(pzg1+pzg2)/mpair*dpzg2_dy1;
+    -(pxg1+pxg2)/mpair*dpxg2_dy1 -(pyg1+pyg2)/mpair*dpyg2_dy1 -(pzg1+pzg2)/mpair*dpzg2_dy1;
   JA(7,2)=-(pxg1+pxg2)/mpair*dpxg1_dz1 -(pyg1+pyg2)/mpair*dpyg1_dz1 -(pzg1+pzg2)/mpair*dpzg1_dz1
-          -(pxg1+pxg2)/mpair*dpxg2_dz1 -(pyg1+pyg2)/mpair*dpyg2_dz1 -(pzg1+pzg2)/mpair*dpzg2_dz1;
+    -(pxg1+pxg2)/mpair*dpxg2_dz1 -(pyg1+pyg2)/mpair*dpyg2_dz1 -(pzg1+pzg2)/mpair*dpzg2_dz1;
 
   JA(7,7)=-(pxg1+pxg2)/mpair*dpxg1_dxg1 -(pyg1+pyg2)/mpair*dpyg1_dxg1 -(pzg1+pzg2)/mpair*dpzg1_dxg1;
   JA(7,8)=-(pxg1+pxg2)/mpair*dpxg1_dyg1 -(pyg1+pyg2)/mpair*dpyg1_dyg1 -(pzg1+pzg2)/mpair*dpzg1_dyg1;
@@ -1340,11 +1396,12 @@ StatusCode OfflineVertexFitter::addMergedPi0(LHCb::Particle& part,
 //=============================================================================
 // Fit two flying particles
 //=============================================================================
-StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1, 
+StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
                                        const LHCb::Particle* dau2,
                                        Gaudi::Vector7& V7,
                                        Gaudi::SymMatrix7x7& C7,
-                                       double& chi2) const {
+                                       double& chi2) const 
+{
 
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -1356,33 +1413,36 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
   double zfit=getZEstimate(dau1,dau2);
   double zPreviousFit=-999999.;
-//  zfit=300.;
+  //  zfit=300.;
 
   int iterTransport=0;
 
   while(fabs(zPreviousFit-zfit)>m_maxDeltaZ && iterTransport< m_maxIter)
   {
-    verbose() << "Fit z position is now " << zfit << endmsg;
+
+    if ( msgLevel(MSG::VERBOSE) )
+      verbose() << "Fit z position is now " << zfit << endmsg;
+
     zPreviousFit=zfit;
-    iterTransport++;
+    ++iterTransport;
 
     LHCb::Particle transParticle1;
-    sc = m_transporter->transportAndProject(dau1, 
-                                            zPreviousFit, 
+    sc = m_transporter->transportAndProject(dau1,
+                                            zPreviousFit,
                                             transParticle1);
-     if( sc.isFailure ()) {
-       debug() << "transport of dau1 failed in fitTwo!" << endmsg;
-       return sc;
-     }
+    if( sc.isFailure ()) {
+      debug() << "transport of dau1 failed in fitTwo!" << endmsg;
+      return sc;
+    }
 
     LHCb::Particle transParticle2;
-    sc = m_transporter->transportAndProject(dau2, 
-                                            zPreviousFit, 
+    sc = m_transporter->transportAndProject(dau2,
+                                            zPreviousFit,
                                             transParticle2);
-     if( sc.isFailure ()) {
-       debug() << "transport of dau2 failed in fitTwo!" << endmsg;
-       return sc;
-     }
+    if( sc.isFailure ()) {
+      debug() << "transport of dau2 failed in fitTwo!" << endmsg;
+      return sc;
+    }
 
     Gaudi::Vector7 dau1para;
     Gaudi::SymMatrix7x7 dau1cov;
@@ -1395,7 +1455,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     }
     Gaudi::Vector7 dau1mpara;
     Gaudi::SymMatrix7x7 dau1mcov;
-//    dau1cov=dau1->covMatrix()  ;  // trick
+    //    dau1cov=dau1->covMatrix()  ;  // trick
     convertE2M(dau1para,dau1cov, dau1mpara, dau1mcov);
     const int id1=abs(dau1->particleID().pid());
     if(id1==11||id1==13||id1==211||id1==321||id1==2212) {
@@ -1413,7 +1473,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     }
     Gaudi::Vector7 dau2mpara;
     Gaudi::SymMatrix7x7 dau2mcov;
-//    dau2cov=dau2->covMatrix()  ;  // trick
+    //    dau2cov=dau2->covMatrix()  ;  // trick
     convertE2M(dau2para,dau2cov, dau2mpara, dau2mcov);
     const int id2=abs(dau2->particleID().pid());
     if(id2==11||id2==13||id2==211||id2==321||id2==2212) {
@@ -1474,14 +1534,17 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
 
     while(!converged && iter< m_maxIter)  {
       iter++;
-      verbose() << ":-) Iteration   " << iter << endmsg;
+      
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << ":-) Iteration   " << iter << endmsg;
 
       //f=(x2-x1)*(py2*pz1-py1*pz2)-(y2-y1)*(px2*pz1-px1*pz2)
       ROOT::Math::SVector<double, 1> f;
       f(0)=(vfit(6)-vfit(0))*(vfit(9)*vfit(4)-vfit(3)*vfit(10))-
-           (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
+        (vfit(7)-vfit(1))*(vfit(8)*vfit(4)-vfit(2)*vfit(10));
 
-      verbose() << "constraint values   " << f(0) << endmsg;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << "constraint values   " << f(0) << endmsg;
 
       //D is the derivative matrix
       ROOT::Math::SMatrix<double, 1, 12> D;
@@ -1498,28 +1561,29 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       D(0,10)=-(vfit(6)-vfit(0))*vfit(3)+(vfit(7)-vfit(1))*vfit(2);
       D(0,11)=0.0;
 
-      ROOT::Math::SVector<double, 1> d = f - D*vfit;
+      const ROOT::Math::SVector<double, 1> d = f - D*vfit;
 
       Gaudi::SymMatrix1x1 VD=ROOT::Math::Similarity<double,1,12>(D, Cx);
 
       if(!VD.Invert()) {
-        debug() << "could not invert matrix VD in fitTwo! " <<endmsg;
+        if ( msgLevel(MSG::DEBUG) )
+          debug() << "could not invert matrix VD in fitTwo! " <<endmsg;
         return StatusCode::FAILURE;
-      } 
+      }
 
-      ROOT::Math::SVector<double, 1> alpha=D*X+d;
+      const ROOT::Math::SVector<double, 1> alpha=D*X+d;
 
-      ROOT::Math::SVector<double, 1> lambda=VD*alpha;
+      const ROOT::Math::SVector<double, 1> lambda=VD*alpha;
 
-      ROOT::Math::SMatrix<double, 12,1> DT = ROOT::Math::Transpose(D);
-      vfit=X-Cx*DT*lambda;      
+      const ROOT::Math::SMatrix<double, 12,1> DT = ROOT::Math::Transpose(D);
+      vfit=X-Cx*DT*lambda;
 
-      SymMatrix12x12 delataC1=ROOT::Math::Similarity<double,12,1>(DT, VD);
-   
-      SymMatrix12x12 delataC2=ROOT::Math::Similarity<double,12,12>(Cx, delataC1);
+      const SymMatrix12x12 delataC1=ROOT::Math::Similarity<double,12,1>(DT, VD);
+
+      const SymMatrix12x12 delataC2=ROOT::Math::Similarity<double,12,12>(Cx, delataC1);
 
       cfit=Cx -delataC2;
- 
+
       chi2=ROOT::Math::Dot(alpha,lambda);
       //chi2+= 2*ROOT::Math::Dot(lambda,f);
 
@@ -1530,7 +1594,7 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
       }
 
     } // end chi2 minimization iteration
-    
+
     if(!converged)  return StatusCode::FAILURE;
 
     V7(0)=vfit(0)-vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
@@ -1539,50 +1603,50 @@ StatusCode OfflineVertexFitter::fitTwo(const LHCb::Particle* dau1,
     V7(3)=vfit(2)+vfit(8);
     V7(4)=vfit(3)+vfit(9);
     V7(5)=vfit(4)+vfit(10);
-    double e1=sqrt(vfit(2)*vfit(2)+vfit(3)*vfit(3)+vfit(4)*vfit(4)+vfit(5)*vfit(5));
-    double e2=sqrt(vfit(8)*vfit(8)+vfit(9)*vfit(9)+vfit(10)*vfit(10)+vfit(11)*vfit(11));
+    const double e1=std::sqrt(vfit(2)*vfit(2)+vfit(3)*vfit(3)+vfit(4)*vfit(4)+vfit(5)*vfit(5));
+    const double e2=std::sqrt(vfit(8)*vfit(8)+vfit(9)*vfit(9)+vfit(10)*vfit(10)+vfit(11)*vfit(11));
     V7(6)=e1+e2;
 
     ROOT::Math::SMatrix<double, 7, 12> JA;
     JA(0,0)=1.+vfit(2)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
-    JA(0,2)=-(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10)) 
-            -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
+    JA(0,2)=-(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+      -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
     JA(0,4)=vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
     JA(0,6)=-vfit(2)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
     JA(0,8)=vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
     JA(0,10)=-vfit(2)*(vfit(6)-vfit(0))/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-             -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-              /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
+      -vfit(2)*(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
 
     JA(1,1)=1.+vfit(3)*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10));
     JA(1,3)=-(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-            -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-             /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(10);
+      -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+      /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(10);
     JA(1,4)=vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-            /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(9);
+      /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(9);
     JA(1,7)=-vfit(3)*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10));
     JA(1,9)=vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-            /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(4);
+      /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(4);
     JA(1,10)=-vfit(3)*(vfit(7)-vfit(1))/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-             -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
-              /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(3);
- 
+      -vfit(3)*(vfit(7)-vfit(1))*vfit(10)/(vfit(9)*vfit(4)-vfit(3)*vfit(10))
+      /(vfit(9)*vfit(4)-vfit(3)*vfit(10))*vfit(3);
+
     JA(2,0)=vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
     JA(2,2)=-(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(10);
     JA(2,4)=-(vfit(6)-vfit(0))*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-           +(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-            /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
+      +(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(8);
     JA(2,6)=-vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10));
     JA(2,8)=(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(4);
     JA(2,10)=-(vfit(6)-vfit(0))*vfit(4)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-            -(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
-             /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
-    
+      -(vfit(6)-vfit(0))*vfit(4)*vfit(10)/(vfit(8)*vfit(4)-vfit(2)*vfit(10))
+      /(vfit(8)*vfit(4)-vfit(2)*vfit(10))*vfit(2);
+
     JA(3,2)=1.;
     JA(3,8)=1.;
 
@@ -1627,7 +1691,7 @@ int OfflineVertexFitter::countTraj(const LHCb::Particle* part) const {
     if(!isResonance(part)) {
       nt++;
     } else {
-      Particle::ConstVector Prods =part->daughtersVector();
+      const Particle::ConstVector& Prods =part->daughtersVector();
       for ( Particle::ConstVector::const_iterator iProd=Prods.begin(); iProd!=Prods.end(); ++iProd ) {
         const Particle* daughter = *iProd;
         nt+=countTraj(daughter);
@@ -1643,15 +1707,15 @@ int OfflineVertexFitter::countTraj(const LHCb::Particle* part) const {
 StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
                                                const Gaudi::Vector7& V7,
                                                const Gaudi::SymMatrix7x7& C7,
-                                               const double chi2, 
-                                               const int NDoF) const 
+                                               const double chi2,
+                                               const int NDoF) const
 {
   StatusCode sc = StatusCode::SUCCESS;
- 
+
   const Gaudi::XYZPoint refPoint(V7[0], V7[1], V7[2]);
 
 
-  // @todo JPP check LorentzVector constructors vis a vis CLHEP ones! 
+  // @todo JPP check LorentzVector constructors vis a vis CLHEP ones!
   const Gaudi::LorentzVector lmom(V7[3], V7[4], V7[5], V7[6]);
 
   // JPP this is the translation.
@@ -1661,7 +1725,7 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
 
 
   Gaudi::Vector7 Vm7;
-  Gaudi::SymMatrix7x7 Cm7; 
+  Gaudi::SymMatrix7x7 Cm7;
 
   convertE2M(V7,C7,Vm7,Cm7);
 
@@ -1679,7 +1743,7 @@ StatusCode OfflineVertexFitter::updateParticle(LHCb::Particle& part,
     tmpvert->setCovMatrix(posCov);
   }
 
-  part.setReferencePoint(refPoint);  
+  part.setReferencePoint(refPoint);
   part.setPosCovMatrix(posCov);
   part.setMomentum(lmom);
   part.setMomCovMatrix(momCov);
@@ -1698,10 +1762,10 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
                                           Gaudi::Vector7& V7,
                                           Gaudi::SymMatrix7x7& C7,
                                           double& chi2,
-                                          int& NDoF) const 
+                                          int& NDoF) const
 {
   const LHCb::Vertex* tmpvert = part.endVertex();
-                                                                                
+
   Gaudi::XYZPoint refPoint= part.referencePoint();
   Gaudi::LorentzVector lmom= part.momentum();
 
@@ -1714,7 +1778,8 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
   V7(5)=lmom.Z();
   V7(6)=lmom.T();
 
-  verbose() << "A " << part.particleID().pid() << " has V " << V7 << endmsg ;
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "A " << part.particleID().pid() << " has V " << V7 << endmsg ;
 
   C7 = part.covMatrix();
 
@@ -1730,64 +1795,64 @@ void OfflineVertexFitter::getParticleInfo(const LHCb::Particle& part,
 //=============================================================================
 // conversion of of vector and matrix from energy basis to mass basis
 //=============================================================================
-void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7, 
+void OfflineVertexFitter::convertE2M(const Gaudi::Vector7& V7,
                                      const Gaudi::SymMatrix7x7& C7,
-                                     Gaudi::Vector7& Vm7, 
+                                     Gaudi::Vector7& Vm7,
                                      Gaudi::SymMatrix7x7& Cm7) const
 {
-    Gaudi::Matrix7x7 Te2m = ROOT::Math::SMatrixIdentity();
-    
-    double px     = V7[3];
-    double py     = V7[4];
-    double pz     = V7[5];
-    double energy = V7[6];
-    double mass=sqrt(energy*energy-px*px-py*py-pz*pz);
+  Gaudi::Matrix7x7 Te2m = ROOT::Math::SMatrixIdentity();
 
-    Te2m(6,3) = -px/mass;
-    Te2m(6,4) = -py/mass;
-    Te2m(6,5) = -pz/mass;
-    Te2m(6,6) = energy/mass;
+  double px     = V7[3];
+  double py     = V7[4];
+  double pz     = V7[5];
+  double energy = V7[6];
+  double mass=std::sqrt(energy*energy-px*px-py*py-pz*pz);
 
-    // JPP translation
-    Cm7 = ROOT::Math::Similarity<double,7,7>(Te2m, C7);
-    
-    Vm7=V7;
-    Vm7[6]= mass;
+  Te2m(6,3) = -px/mass;
+  Te2m(6,4) = -py/mass;
+  Te2m(6,5) = -pz/mass;
+  Te2m(6,6) = energy/mass;
+
+  // JPP translation
+  Cm7 = ROOT::Math::Similarity<double,7,7>(Te2m, C7);
+
+  Vm7=V7;
+  Vm7[6]= mass;
 }
 
 //=============================================================================
 // conversion of of vector and matrix from mass basis to energy basis
 //=============================================================================
-void OfflineVertexFitter::convertM2E(const Gaudi::Vector7& Vm7, 
+void OfflineVertexFitter::convertM2E(const Gaudi::Vector7& Vm7,
                                      const Gaudi::SymMatrix7x7& Cm7,
-                                     Gaudi::Vector7& V7, 
+                                     Gaudi::Vector7& V7,
                                      Gaudi::SymMatrix7x7& C7) const
 {
-    Gaudi::Matrix7x7 Tm2e = ROOT::Math::SMatrixIdentity();
+  Gaudi::Matrix7x7 Tm2e = ROOT::Math::SMatrixIdentity();
 
-    double px   = Vm7[3];
-    double py   = Vm7[4];
-    double pz   = Vm7[5];
-    double mass = Vm7[6];
-    double energy=sqrt(mass*mass+px*px+py*py+pz*pz);
+  double px   = Vm7[3];
+  double py   = Vm7[4];
+  double pz   = Vm7[5];
+  double mass = Vm7[6];
+  double energy=std::sqrt(mass*mass+px*px+py*py+pz*pz);
 
-    Tm2e(6,3)=px/energy;
-    Tm2e(6,4)=py/energy;
-    Tm2e(6,5)=pz/energy;
-    Tm2e(6,6)=mass/energy;
+  Tm2e(6,3)=px/energy;
+  Tm2e(6,4)=py/energy;
+  Tm2e(6,5)=pz/energy;
+  Tm2e(6,6)=mass/energy;
 
-    // JPP translation
-    C7 = ROOT::Math::Similarity<double,7,7>( Tm2e, Cm7);
-    V7=Vm7;
-    V7(6)= energy;
+  // JPP translation
+  C7 = ROOT::Math::Similarity<double,7,7>( Tm2e, Cm7);
+  V7=Vm7;
+  V7(6)= energy;
 }
 
 
 //=============================================================================
 // applying the mass constraint and updating the 7x7 matrix
 //=============================================================================
-StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7, 
-                                              Gaudi::SymMatrix7x7& C7, 
+StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7,
+                                              Gaudi::SymMatrix7x7& C7,
                                               double& nominalMass) const
 {
 
@@ -1800,28 +1865,28 @@ StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7,
 
 
   if(Cm(6,6)!=0.0) {
-// need translation
-/*
-    HepMatrix DD(1,7,0);
-    HepVector dd(1,0);
-    
-    DD(1,7)=1.;
-    dd[0]=-nominalMass;
-    HepSymMatrix Cd=Cm.similarity(DD); // return 1x1?
-    int er=0;
-    Cd.invert(er);
-    if (er!=0) {
-       debug() << "could not invert matrix Cd in constrainMass" << endmsg;
-       return StatusCode::FAILURE;
-    }
-    Vm-= Cm*DD.T()*Cd*(DD*Vm+dd);
-    HepSymMatrix delatCm1=Cd.similarityT(DD); // return 7x7? Should do.
-    HepSymMatrix delatCm2=delatCm1.similarity(Cm);
+    // need translation
+    /*
+      HepMatrix DD(1,7,0);
+      HepVector dd(1,0);
 
-    Cm-= delatCm2;
-*/
+      DD(1,7)=1.;
+      dd[0]=-nominalMass;
+      HepSymMatrix Cd=Cm.similarity(DD); // return 1x1?
+      int er=0;
+      Cd.invert(er);
+      if (er!=0) {
+      debug() << "could not invert matrix Cd in constrainMass" << endmsg;
+      return StatusCode::FAILURE;
+      }
+      Vm-= Cm*DD.T()*Cd*(DD*Vm+dd);
+      HepSymMatrix delatCm1=Cd.similarityT(DD); // return 7x7? Should do.
+      HepSymMatrix delatCm2=delatCm1.similarity(Cm);
 
-// JPP Translation
+      Cm-= delatCm2;
+    */
+
+    // JPP Translation
 
     ROOT::Math::SMatrix<double,1,7> DD;
     Gaudi::Vector1 dd;
@@ -1830,14 +1895,14 @@ StatusCode OfflineVertexFitter::constrainMass(Gaudi::Vector7& V7,
     dd[0] = -nominalMass;
     Gaudi::SymMatrix1x1 Cd = ROOT::Math::Similarity<double, 1, 7>(DD,Cm);
     if ( !Cd.Invert() ) {
-      debug() << "could not invert matrix Cd in constrainMass" << endmsg;
+      if ( msgLevel(MSG::DEBUG) )
+        debug() << "could not invert matrix Cd in constrainMass" << endmsg;
       return StatusCode::FAILURE;
     }
     Vm -= Cm*ROOT::Math::Transpose(DD)*Cd*(DD*Vm+dd);
 
-    Gaudi::SymMatrix7x7 deltaCm1=ROOT::Math::SimilarityT<double,1,7>(DD,Cd);
-
-    Gaudi::SymMatrix7x7 deltaCm2=ROOT::Math::Similarity<double,7,7>(Cm,deltaCm1);
+    const Gaudi::SymMatrix7x7 deltaCm1=ROOT::Math::SimilarityT<double,1,7>(DD,Cd);
+    const Gaudi::SymMatrix7x7 deltaCm2=ROOT::Math::Similarity<double,7,7>(Cm,deltaCm1);
     Cm -= deltaCm2;
   }
 
@@ -1880,11 +1945,11 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
   double tx1=part1->slopes().X();
   double ty1=part1->slopes().Y();
   double tx2=part2->slopes().X();
-  double ty2=part2->slopes().Y();                 
+  double ty2=part2->slopes().Y();
   const Gaudi::XYZPoint pos1=part1->referencePoint();
   double x1= pos1.x();
   double y1= pos1.y();
-  double z1= pos1.z();                                                                      
+  double z1= pos1.z();
   const Gaudi::XYZPoint pos2=part2->referencePoint();
   double x2= pos2.x();
   double y2= pos2.y();
@@ -1893,7 +1958,7 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
   //return (y2-y1+ty1*z1-ty2*z2)/(ty1-ty2);
   double  sumSquaredSlopes = tx1*tx1 + ty1*ty1+ tx2*tx2 + ty2*ty2;
   double  sumCrossedProduct = tx1*(x1-tx1*z1) + ty1*(y1-ty1*z1) +
-                              tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
+    tx2*(x2-tx2*z2) + ty2*(y2-ty2*z2);
 
   double sumX=x1-tx1*z1 + x2-tx2*z2;
   double sumY=y1-ty1*z1 + y2-ty2*z2;
@@ -1919,7 +1984,7 @@ double OfflineVertexFitter::getZEstimate(const LHCb::Particle* part1,
 StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
                                                    double& zg,
                                                    Gaudi::Vector3& para ,
-                                                   Gaudi::SymMatrix3x3& cov ) const 
+                                                   Gaudi::SymMatrix3x3& cov ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 
@@ -1955,8 +2020,12 @@ StatusCode OfflineVertexFitter::getPhotonParameter(const LHCb::Particle& photon,
   para(1)=pos->y();
   para(2)=pos->e();
   cov=pos -> covariance();
-  verbose() <<"Photon parameters: " <<para<<endmsg;
-  verbose() <<"Photon cov : " <<cov<<endmsg;
+
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() <<"Photon parameters: " <<para<<endmsg;
+    verbose() <<"Photon cov : " <<cov<<endmsg;
+  }
 
   return sc;
 }
@@ -2036,11 +2105,15 @@ StatusCode OfflineVertexFitter::getMergedPi0Parameter(const LHCb::Particle& pi0,
 //=============================================================================
 //add To particle Daughters
 //=============================================================================
-void OfflineVertexFitter::addToDaughters( LHCb::Particle& P, const LHCb::Particle::ConstVector& Parts) const{
-  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); iterP++) {
+void OfflineVertexFitter::addToDaughters( LHCb::Particle& P, 
+                                          const LHCb::Particle::ConstVector& Parts) const
+{
+  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); ++iterP)
+  {
     P.addToDaughters(*iterP);
-    if ( msgLevel(MSG::VERBOSE )){ 
-      verbose() << "Added a  " << (*iterP)->particleID().pid() << " to particle. Size now " 
+    if ( msgLevel(MSG::VERBOSE ))
+    {
+      verbose() << "Added a  " << (*iterP)->particleID().pid() << " to particle. Size now "
                 << P.daughters().size() << endmsg ;
     }
   }
@@ -2050,26 +2123,24 @@ void OfflineVertexFitter::addToDaughters( LHCb::Particle& P, const LHCb::Particl
 //=============================================================================
 //add To vertex outgoing particles
 //=============================================================================
-void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V, 
-                                                  const LHCb::Particle::ConstVector& Parts) const{
-  
-  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); iterP++) {
+void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V,
+                                                  const LHCb::Particle::ConstVector& Parts) const
+{
+  for(Particle::ConstVector::const_iterator iterP = Parts.begin(); iterP != Parts.end(); ++iterP) 
+  {
     addToOutgoingParticles(V,*iterP);
   }
-  return ;
-  
 }
 //=============================================================================
 //add To vertex outgoing particles
 //=============================================================================
-void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V, 
-                                                  const LHCb::Particle* P) const{
-  
+void OfflineVertexFitter::addToOutgoingParticles( LHCb::Vertex& V,
+                                                  const LHCb::Particle* P) const
+{
   V.addToOutgoingParticles(P);
-  if ( msgLevel(MSG::VERBOSE )){ 
-    verbose() << "Added a  " << P->particleID().pid() << " to vertex. Size now " 
+  if ( msgLevel(MSG::VERBOSE ))
+  {
+    verbose() << "Added a  " << P->particleID().pid() << " to vertex. Size now "
               << V.outgoingParticles().size() << endmsg ;
   }
-  return ;
-  
 }
