@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -38,9 +38,12 @@ class Hlt2PID(LHCbConfigurableUser):
         from Configurables import MuonRec, MuonIDAlg
         cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
         HltMuonIDAlg = cm.configureMuonIDAlg(prefix+"MuonIDAlg")
-        HltMuonIDAlg.TrackLocation = self.getProp("Hlt2Tracks") 
-        HltMuonIDAlg.MuonIDLocation = prefix+"/Muon/MuonPID"    # output
+        HltMuonIDAlg.TrackLocation     = self.getProp("Hlt2Tracks") 
+        HltMuonIDAlg.MuonIDLocation    = prefix+"/Muon/MuonPID"    # output
         HltMuonIDAlg.MuonTrackLocation = prefix+"/Track/Muon"
+        # CRJ : Disable FindQuality in HLT since it increases CPU time for MuonID by
+        #       a factor 3-4
+        HltMuonIDAlg.FindQuality = False
         
         from HltLine.HltLine import bindMembers
         return bindMembers ( None, [ MuonRec(), HltMuonIDAlg ] )
