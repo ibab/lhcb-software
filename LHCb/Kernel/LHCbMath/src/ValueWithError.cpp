@@ -1,4 +1,4 @@
-// $Id: ValueWithError.cpp,v 1.3 2009-09-12 19:29:27 ibelyaev Exp $
+// $Id: ValueWithError.cpp,v 1.4 2009-09-13 18:58:07 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -37,8 +37,18 @@ Gaudi::Math::ValueWithError::ValueWithError
 Gaudi::Math::ValueWithError::ValueWithError
 ( const std::pair<double,double>& value ) 
   : m_value ( value.first ) 
-  , m_cov2  ( value.second * value.second ) 
-{}  
+  , m_cov2  () 
+{
+  setError ( value.second ) ;
+}
+// ============================================================================
+// set the error 
+// ============================================================================
+void Gaudi::Math::ValueWithError::setError ( const double e ) 
+{ 
+  m_cov2  = e * e ;
+  if ( 0 > e ) { m_cov2 = -m_cov2 ; }
+} 
 // ============================================================================
 // get the error 
 // ============================================================================
@@ -145,7 +155,7 @@ Gaudi::Math::ValueWithError::operator-() const                        // unary-
 // ============================================================================
 std::ostream& 
 Gaudi::Math::ValueWithError::fillStream ( std::ostream& s ) const 
-{ return s << "(" << m_value << " +- " << error() << ")" ; }
+{ return s << "( " << m_value << " +- " << error() << " )" ; }
 // ============================================================================
 // conversion to string
 // ============================================================================
@@ -265,7 +275,130 @@ Gaudi::Math::ValueWithError::__rdiv__ ( const double right ) const
   ValueWithError tmp ( right ) ;
   return tmp /= (*this) ;
 }
+// ============================================================================
+
+// ============================================================================
+// Boost.Bind
+// ============================================================================
+#include "boost/bind.hpp"
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Parsers.h"
+#include "GaudiKernel/Grammars.h"
+// ============================================================================
+namespace Gaudi
+{
+  // ==========================================================================
+  namespace Parsers 
+  {
+    // ========================================================================
+    /** @class ValueWithErrorGrammar  
+     *
+     *  The valid represenation of value with error are:
+     *     "( 34 +- 10 )" , "( 34 , 10 )" , "34"  
+     *
+     *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-13
+     */
+    class ValueWithErrorGrammar 
+      : public grammar
+    <
+      ValueWithErrorGrammar,
+      ClosureGrammar<Gaudi::Math::ValueWithError>::context_t
+    >
+    {
+    public:
+      // ======================================================================
+      typedef RealGrammar<double>                               ValueGrammarT ;
+      typedef Gaudi::Math::ValueWithError                             ResultT ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// callback. Action when we match first value
+      void matchValue  ( const ValueGrammarT::ResultT v ) const
+      { this->val().setValue ( v ) ; }
+      /// callback. Action when we match second value
+      void matchError  ( const ValueGrammarT::ResultT e ) const 
+      { this->val().setError ( e ) ; }
+      // ======================================================================
+    public:
+      // ============================================================
+      template <typename ScannerT>
+      struct definition
+      {
+        //
+        definition ( ValueWithErrorGrammar const &self)
+        {
+          vale = 
+            ( 
+             str_p("(") 
+             >> grvalue [boost::bind(&ValueWithErrorGrammar::matchValue,&self,_1)]
+             >> !( ( str_p( "+-" ) | ',' | ';' ) 
+                   >> grvalue [boost::bind(&ValueWithErrorGrammar::matchError,&self,_1)]) 
+             >> ')' 
+             ) | grvalue [boost::bind(&ValueWithErrorGrammar::matchValue,&self,_1)] ;
+        }
+        // 
+        rule<ScannerT> const& start() const { return vale; }
+        rule<ScannerT> vale;
+        ValueGrammarT  grvalue ;
+      } ;
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                          end of namespace Gaudi::Parsers 
+  // ==========================================================================
+} //                                                     end of namespace Gaudi
+// ============================================================================
+
+  
+
+
+
+
+
 // =============================================================================
+/*  parse the input string into the result 
+ *  @param result (output) the result 
+ *  @param input  (input) input string
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-09-13
+ */     
+// =============================================================================
+StatusCode Gaudi::Parsers::parse 
+( Gaudi::Math::ValueWithError& result , 
+  const std::string&           input  ) 
+{
+  ValueWithErrorGrammar gr ;
+  
+  return parse
+    ( input.begin () , 
+      input.end   () ,
+      gr[var(result)=arg1] , 
+      SkipperGrammar()).full;
+}
+// =============================================================================
+/* parse the input string into the result 
+ *  @param result (output) the result 
+ *  @param input  (input) input string
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-09-13
+ */     
+// =============================================================================
+StatusCode Gaudi::Parsers::parse 
+( std::vector<Gaudi::Math::ValueWithError>& result , 
+  const std::string&                        input  ) 
+{
+  VectorGrammar<ValueWithErrorGrammar> gr ;
+  
+  return parse ( input.begin () , 
+                 input.end   () , 
+                 gr[var(result)=arg1],
+                 SkipperGrammar()).full;
+}
+// =============================================================================
+
 
 
 // =============================================================================

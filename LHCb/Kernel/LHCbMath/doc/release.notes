@@ -6,6 +6,13 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-09-13 - Vanya BELYAEV
+
+ - add the parsing functions to ValueWithError and 
+   std::vector<ValueWithError> classes, thus allowing their usage 
+   as proeprteis for Gaudi components 
+ 
+
 ! 2009-09-12 - Vanya BELYAEV
 
  - more polishing for *WithErrorClasses 

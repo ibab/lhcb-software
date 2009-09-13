@@ -1,4 +1,4 @@
-// $Id: ValueWithError.h,v 1.3 2009-08-19 14:32:33 ibelyaev Exp $
+// $Id: ValueWithError.h,v 1.4 2009-09-13 18:58:07 ibelyaev Exp $
 // ============================================================================
 #ifndef LHCBMATH_ERRORS_H 
 #define LHCBMATH_ERRORS_H 1
@@ -9,6 +9,12 @@
 // ============================================================================
 #include <iosfwd>
 #include <utility>
+#include <vector>
+#include <string>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/StatusCode.h"
 // ============================================================================
 /** @file 
  *  Collection fo useful objects with associated "covarinaces".
@@ -55,14 +61,20 @@ namespace Gaudi
       double cov2       () const { return m_cov2  ; }
       /// get the covariance 
       double covariance () const { return m_cov2  ; }
-      /// get the error 
+      /** get the error 
+       *  @attention negative erorr is returned for invalid covariance 
+       *  @return the error estimate 
+       */
       double error      () const ;
       // ======================================================================
     public: // setters 
       // ======================================================================
       void setValue      ( const double v ) { m_value = v      ; }
       void setCovariance ( const double c ) { m_cov2  = c      ; }
-      void setError      ( const double e ) { m_cov2  = e * e  ; }
+      /** set the error 
+       *  @attention invalid covariance is set for negative error 
+       */
+      void setError      ( const double e ) ; 
       // ======================================================================
     public: // finally it is just a value 
       // ======================================================================
@@ -232,6 +244,40 @@ namespace Gaudi
       const ValueWithError& a ) { return a.chi2 ( b ) ; }
     // ========================================================================
   } //                                             end of namespace Gaudi::Math 
+  // ==========================================================================
+  namespace Parsers 
+  {
+    // ========================================================================
+    /** parse the input string into the result 
+     * 
+     *  The valid representations:
+     *
+     *     -   value 
+     *     - ( value ) 
+     *     - ( value ,  error ) 
+     *     - ( value +- error ) 
+     *     - ( value ;  error ) 
+     *
+     *  @param result (output) the result 
+     *  @param input  (input) input string
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-13
+     */     
+    GAUDI_API StatusCode 
+    parse ( Gaudi::Math::ValueWithError& result , 
+            const std::string&           input  ) ;
+    // ========================================================================
+    /** parse the input string into the result 
+     *  @param result (output) the result 
+     *  @param input  (input) input string
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-13
+     */     
+    GAUDI_API StatusCode 
+    parse ( std::vector<Gaudi::Math::ValueWithError>& result , 
+            const std::string&                        input  ) ;
+    // ========================================================================
+  } //                                          end of namespace Gaudi::Parsers 
   // ==========================================================================
 } //                                                    end of namespace  Gaudi
 // ============================================================================
