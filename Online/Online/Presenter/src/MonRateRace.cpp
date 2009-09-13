@@ -96,16 +96,16 @@
 //  #12 0x0811b1da in PresenterMainFrame::refreshPage (this=0xbff1aa78) at ../src/PresenterMainFrame.cpp:4619
 //  #13 0x08093d5c in G__cintBootstrapDict_560_0_45 (result7=0x8f05124, funcname=0x0, libp=0x8f0517c, hash=0) at /afs/cern.ch/user/p/psomogyi/cmtuser/Online_v4r28/Online/Presenter/slc4_ia32_gcc34_dbg/dict/cintBootstrapDict.cpp:1369
 
-
 #include "MonRateRace.h"
+#include "presenter.h"
 
 boost::mutex infoHandlerMutex;
 
 MonRateRace::MonRateRace(const std::string & serviceName) :
-  DimInfo(serviceName.c_str(), -1, this),
-  m_value(0.1),
-  m_title(serviceName),
-  m_initialised(false)
+  DimInfo(serviceName.c_str(), (double)std::numeric_limits<double>::min(), this),
+  m_value(0.0),
+  m_title(pres::s_eff_init),
+  m_rateIsValid(false)
 {
   m_infoHandlerMutex = new boost::mutex();
 //  serviceName -> isRate  vs. isTCK // dim buffer content
@@ -125,30 +125,47 @@ void MonRateRace::infoHandler()
 //    m_title = cntCommentStream.str();  
     
     double* histoDimData = 0;
-      histoDimData = static_cast<double*>(getData());
+    histoDimData = static_cast<double*>(getData());
 
-      m_value   = static_cast<double>(histoDimData[0]);     
+    if (std::numeric_limits<double>::min() == static_cast<double>(*histoDimData)) {
+      m_value = 0.0;
+      m_rateIsValid = false;
+      m_title = pres::s_eff_init;
+    } else {    
+      m_value = static_cast<double>(histoDimData[0]);     
       if ((std::numeric_limits<double>::min() < m_value) &&
-         (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308
-        m_title = cntCommentStream.str();          
-        m_initialised = true;
-     } else {
-        m_value = std::numeric_limits<double>::min();
-        m_initialised = false;      
-     }
-     cntCommentStream.str("");
-     infoHandlerLock.unlock();
+          (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308
+         m_title = cntCommentStream.str();          
+         m_rateIsValid = true;
+       } else { // something else...
+         m_value = 0.0;
+         m_title = pres::s_eff_init;
+         m_rateIsValid = false;      
+       }
+       cntCommentStream.str("");
+       infoHandlerLock.unlock();
+    }
   } else {
-     m_initialised = false;    
+    m_value = 0.0;
+    m_title = pres::s_eff_init;
+    m_rateIsValid = false;    
+  }
+}
+bool MonRateRace::isRateValid() {
+  boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
+  if (infoHandlerLock) {
+   return m_rateIsValid;
+  } else {
+    return false;
   }
 }
 double MonRateRace::currentValue()
 {
   double returnValue = 0.0;
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
-  if (infoHandlerLock && m_initialised) {
-   returnValue = m_value;
-   infoHandlerLock.unlock();    
+  if (infoHandlerLock && m_rateIsValid) {
+    returnValue = m_value;
+    infoHandlerLock.unlock();    
   } else {
     returnValue = 0.0;
   }
@@ -156,13 +173,14 @@ double MonRateRace::currentValue()
 }
 std::string MonRateRace::title()
 {
-  std::string returnTitle("No luck");
+  std::string returnTitle(pres::s_eff_init);
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
-  if (infoHandlerLock && m_initialised) {
+  if (infoHandlerLock && m_rateIsValid &&
+      pres::s_eff_init != m_title) {
     returnTitle = m_title;
     infoHandlerLock.unlock();    
   } else {
-    returnTitle = "No luck";
+    returnTitle = pres::s_eff_init;
   }
   return returnTitle;  
 }
