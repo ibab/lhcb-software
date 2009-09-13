@@ -1,4 +1,4 @@
-// $Id: L0MuonAlg.cpp,v 1.24 2009-07-16 08:44:52 graven Exp $
+// $Id: L0MuonAlg.cpp,v 1.25 2009-09-13 10:57:32 jonrob Exp $
 #include <algorithm>
 #include <math.h>
 #include <set>
@@ -9,7 +9,7 @@
 // Gaudi interfaces
 #include "GaudiKernel/IChronoStatSvc.h"
 
-// Gaudi factories for algorithms 
+// Gaudi factories for algorithms
 #include "GaudiKernel/AlgFactory.h"
 
 // from Event
@@ -27,11 +27,11 @@
 DECLARE_ALGORITHM_FACTORY( L0MuonAlg );
 
 L0MuonAlg::L0MuonAlg(const std::string& name,
-                                         ISvcLocator* pSvcLocator) 
+                     ISvcLocator* pSvcLocator)
   :GaudiAlgorithm(name, pSvcLocator)
- 
+
 {
-  
+
   std::vector<int> time_slots;
   //  for (int i=-7;i<=7;++i) time_slots.push_back(i);
   time_slots.push_back(0);
@@ -63,10 +63,10 @@ L0MuonAlg::L0MuonAlg(const std::string& name,
   declareProperty("DebugMode"      , m_debug       = false );
 
   // Default for Boole :
-  declareProperty("StoreInBuffer"  , m_storeBank        = true);  
-  declareProperty("WriteOnTES"     , m_writeOnTES       = false);  
-  declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);  
-  declareProperty("InputSource"    , m_inputSource = 0);  
+  declareProperty("StoreInBuffer"  , m_storeBank        = true);
+  declareProperty("WriteOnTES"     , m_writeOnTES       = false);
+  declareProperty("WriteL0ProcData", m_writeL0ProcData  = true);
+  declareProperty("InputSource"    , m_inputSource = 0);
   declareProperty("Version"        , m_version     = 2 );
   declareProperty("DAQMode"        , m_mode  = 1 );
   declareProperty("Compression"    , m_compression = true );
@@ -84,7 +84,7 @@ StatusCode L0MuonAlg::initialize()
 
   // Set the layouts used to fill the OLs
   setLayouts();
-  
+
   // Instanciate the MuonTrigger Units and Registers
   L0Muon::RegisterFactory::selectInstance(0);
 
@@ -101,9 +101,9 @@ StatusCode L0MuonAlg::initialize()
     m_muontriggerunit->setDebugMode();
     info() <<  "MuonTrigger debug mode "<< endmsg;
   }
-  
+
   // Set properties
-  // Set the properties of the MuonTriggerUnit 
+  // Set the properties of the MuonTriggerUnit
   m_muontriggerunit->setProperties(l0MuonProperties());
 
   // Initialize
@@ -112,13 +112,13 @@ StatusCode L0MuonAlg::initialize()
   svc->chronoStop("L0MuonTrigger Initialize");
   svc->chronoDelta("L0MuonTrigger Initialize",IChronoStatSvc::KERNEL);
   svc->chronoPrint("L0MuonTrigger Initialize");
-  
+
   // L0MuonOutputs tool
   m_outputTool =  tool<L0MuonOutputs>( "L0MuonOutputs" , "OutputTool" , this );
 
   m_totEvent = 0;
 
-  return StatusCode::SUCCESS;			  					  		      
+  return StatusCode::SUCCESS;
 }
 
 
@@ -131,8 +131,9 @@ StatusCode L0MuonAlg::execute()
     debug() << "-----------------------------------------------------------------" << endreq;
     debug() << "-- Start execution:" << endreq;
   }
-  IChronoStatSvc * svc = chronoSvc();
-  svc->chronoStart("L0MuonTrigger Execute");
+
+  //IChronoStatSvc * svc = chronoSvc();
+  //svc->chronoStart("L0MuonTrigger Execute");
 
   //debug() << "Chrono service started" << endreq;
   StatusCode sc;
@@ -143,18 +144,18 @@ StatusCode L0MuonAlg::execute()
     sc = setProperty("RootInTes",timeSlot(*it_ts));
     if( sc.isFailure() ) return Error( "Unable to set RootInTES property of L0MuonAlg", sc );
     //    info()<<"RootInTES "<<rootInTES()<<endmsg;
-    
+
     if (!exist<LHCb::RawEvent>( LHCb::RawEventLocation::Default )) continue;
-    
-    // 
+
+    //
     sc = m_outputTool->setProperty( "RootInTES", rootInTES() );
     if ( sc.isFailure() ) continue;// error printed already by GaudiAlgorithm
 
-    //debug() << "Read data from digits ..." << endreq; 
+    //debug() << "Read data from digits ..." << endreq;
     sc = fillOLsfromDigits();
     if( sc.isFailure() ) {
       return Error( "Failed to load OLs", sc);
-    }  
+    }
 
     // Preexecution phase: data exchange between PUs
     if( msgLevel(MSG::DEBUG) ) debug() << "Preexecute of MuonKernel units ..." << endreq;
@@ -164,50 +165,49 @@ StatusCode L0MuonAlg::execute()
     if( msgLevel(MSG::DEBUG) ) debug() << "Execution of MuonKernel units ..." << endreq;
     m_muontriggerunit->execute();
 
-    // Specify the version parameters to the output tool 
+    // Specify the version parameters to the output tool
     m_outputTool->setVersion(m_version, m_mode, m_compression);
-    
-    // Fill the Raw Event container 
+
+    // Fill the Raw Event container
     if ( m_storeBank ) {
       if( msgLevel(MSG::DEBUG) ) debug() << "Fill RawEvent ..." << endreq;
       sc = m_outputTool->writeRawBanks();
-      if ( sc.isFailure() ) return sc;  
-    } 
-  
+      if ( sc.isFailure() ) return sc;
+    }
+
     // Write on TES
     if ( m_writeOnTES) {
       if( msgLevel(MSG::DEBUG) ) debug() << "Write on TES ..." << endreq;
       sc = m_outputTool->writeOnTES();
-      if ( sc.isFailure() ) return sc;  
+      if ( sc.isFailure() ) return sc;
     }
 
     // Fill the container for the L0DU (L0ProcessorData)
     if ( m_writeL0ProcData) {
       if( msgLevel(MSG::DEBUG) ) debug() << "Fill L0ProcessorData ..." << endreq;
       sc = m_outputTool->writeL0ProcessorData();
-      if ( sc.isFailure() ) return sc;  
+      if ( sc.isFailure() ) return sc;
     }
-  
+
     // Postexecution phase: reset registers
     if( msgLevel(MSG::DEBUG) ) debug() << "Postexecution of MuonKernel units ..." << endreq;
     m_muontriggerunit->postexecute();
 
   } // End of loop over time slots
-  
-  svc->chronoStop("L0MuonTrigger Execute");
-  svc->chronoDelta("L0MuonTrigger Execute", IChronoStatSvc::KERNEL);
+
+  //svc->chronoStop("L0MuonTrigger Execute");
+  //svc->chronoDelta("L0MuonTrigger Execute", IChronoStatSvc::KERNEL);
   //if( MSG::DEBUG >= log.level() ) svc->chronoPrint("L0MuonTrigger Execute");
-  
-  
+
+
   ++m_totEvent;
-  
+
   if( msgLevel(MSG::DEBUG) ){
     debug() << "-- Execution done." << endreq;
     debug() << "-----------------------------------------------------------------" << endreq;
   }
-  
+
   return StatusCode::SUCCESS;
-  
 }
 
 
@@ -265,7 +265,7 @@ void L0MuonAlg::setLayouts()
                               MuonStationLayout(MuonLayout(0,0),
                                                 MuonLayout(4,2),
                                                 MuonLayout(2,2),
-                                                MuonLayout(2,2)));	
+                                                MuonLayout(2,2)));
 
 
   m_stripH =MuonSystemLayout(MuonStationLayout(MuonLayout(0,0)),
@@ -339,7 +339,7 @@ std::map<std::string,L0Muon::Property>  L0MuonAlg::l0MuonProperties()
 
   properties["ignoreM2"]       = m_ignoreM2 ? L0Muon::Property("1") : L0Muon::Property("0");
 
-  
+
   sprintf(buf,"%d",m_version);
   prop=buf;
   properties["procVersion"]    = L0Muon::Property(prop);;
@@ -360,17 +360,17 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
   L0Muon::RegisterFactory* rfactory = L0Muon::RegisterFactory::instance();
 
   std::vector<LHCb::MuonTileID> ddigits;
-  
+
   if (m_inputSource>0) {
     // Read the data from the L0Muon itself (must have been already decoded from raw)
     if (  exist<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default) ) {
-      
+
       if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  Getting hits from L0Muon itself"<<endmsg;
-      
+
       LHCb::L0MuonDatas* pdatas = get<LHCb::L0MuonDatas>( LHCb::L0MuonDataLocation::Default);
       LHCb::L0MuonDatas::const_iterator itdata;
       for (itdata = pdatas->begin() ; itdata!=pdatas->end() ; ++itdata){
-        LHCb::MuonTileID mkey = (*itdata)->key();    
+        LHCb::MuonTileID mkey = (*itdata)->key();
         std::vector<LHCb::MuonTileID> ols = (*itdata)->ols();
         if (ols.size()>0) {
           if( msgLevel(MSG::VERBOSE) ) verbose()  <<"fillOLsfromDigits:    PU: "
@@ -380,31 +380,31 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
             ddigits.push_back(*itol);
           }
         }
-        
+
       }
-      
+
     }
-    
-  } 
+
+  }
   else if (exist<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit ) )
   {
-    // Read the MuonDigits from the TES (Boole); 
+    // Read the MuonDigits from the TES (Boole);
     if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  Getting hits from muon digits"<<m_muonBuffer<<endmsg;
-    LHCb::MuonDigits* digits = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );  
+    LHCb::MuonDigits* digits = get<LHCb::MuonDigits>( LHCb::MuonDigitLocation::MuonDigit );
     LHCb::MuonDigits::const_iterator did;
-    for( did = digits->begin() ; did != digits->end() ; did++ ){  
+    for( did = digits->begin() ; did != digits->end() ; did++ ){
       LHCb::MuonTileID mkey = (*did)->key();
-      ddigits.push_back(mkey);    
+      ddigits.push_back(mkey);
     }
-  } 
-  else 
+  }
+  else
   {
     // Use the MuonRawBufer tool to produce the MuonDigits from the raw buffer (DaVinci)
     if( msgLevel(MSG::DEBUG) ) debug() << "Getting hits from Muon Raw buffer "<<m_muonBuffer<<endmsg;
     if(!m_muonBuffer) {
       // First call: initialize the pointer to the Muon Raw Buffer Interface
       m_muonBuffer=tool<IMuonRawBuffer>("MuonRawBuffer","MuonRaw", this);
-      if(!m_muonBuffer) {    
+      if(!m_muonBuffer) {
         error() << "No pointer to muon raw buffer interface tool"<<m_muonBuffer<<endmsg;
         return StatusCode::FAILURE;
       }
@@ -417,7 +417,7 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
     } else {
       return Error( "Unable to locate IProperty interface of MuonRawBuffer" );
     }
-    
+
     if (m_inputSource<0) {
       std::vector<std::pair<LHCb::MuonTileID,unsigned int> >  tileAndTDC;
       m_muonBuffer->getNZSupp(tileAndTDC);
@@ -430,12 +430,12 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       StatusCode sc = m_muonBuffer->getTile(ddigits);
       if( sc.isFailure() ) return Error( "Unable to get the tiles from the MuonRawBuffer", sc );
     }
-    
+
     m_muonBuffer->forceReset();
-  }  
-  
+  }
+
   if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  ddigits.size()= "<<ddigits.size()<<endmsg;
-  
+
   std::vector<LHCb::MuonTileID>::const_iterator id;
   for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
     LHCb::MuonTileID mkey = *id;
@@ -443,68 +443,68 @@ StatusCode L0MuonAlg::fillOLsfromDigits()
       verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString()<<endmsg;
     }
   }
-  
-  
+
+
   if (m_forceM3) {// -- Force M3
     if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  FORCING M3 TO 1 "<<endmsg;
     std::vector<LHCb::MuonTileID> m3StripV=m_stripV.stationLayout(2).tiles(2); // stripV in M3 Q3
     std::vector<LHCb::MuonTileID> m3StripH=m_stripH.stationLayout(2).tiles(2); // stripH in M3 Q3
     std::vector<LHCb::MuonTileID>::iterator itstrip;
-    for (itstrip=m3StripV.begin();itstrip<m3StripV.end();++itstrip) itstrip->setStation(2); 
-    for (itstrip=m3StripH.begin();itstrip<m3StripH.end();++itstrip) itstrip->setStation(2); 
+    for (itstrip=m3StripV.begin();itstrip<m3StripV.end();++itstrip) itstrip->setStation(2);
+    for (itstrip=m3StripH.begin();itstrip<m3StripH.end();++itstrip) itstrip->setStation(2);
     ddigits.insert(ddigits.begin(),m3StripV.begin(),m3StripV.end());
     ddigits.insert(ddigits.begin(),m3StripH.begin(),m3StripH.end());
     if( msgLevel(MSG::DEBUG) ) debug() << "fillOLsfromDigits:  ddigits.size()= "<<ddigits.size()<<endmsg;
-  }// -- force M3 done  
-  
+  }// -- force M3 done
+
   for( id = ddigits.begin() ; id != ddigits.end() ; id++ ){
-    
+
     LHCb::MuonTileID mkey = *id;
-    
+
     if (!mkey.isValid()) continue;
-    
+
     if( msgLevel(MSG::VERBOSE) ) verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString()
                                            <<" is valid ?"<<mkey.isValid()<<endmsg;
-    
+
     if (m_ignoreM1 && mkey.station()==0) continue;
     if (m_ignoreM2 && mkey.station()==1) continue;
-    
-    int sta = mkey.station(); 
+
+    int sta = mkey.station();
     LHCb::MuonTileID olID = m_ollayout.contains(mkey);
-    
+
     if( msgLevel(MSG::VERBOSE) ) verbose() << "fillOLsfromDigits:     olID: "<<olID.toString()<<endmsg;
-    
+
     char bufnm[1024];
     sprintf(bufnm,"(Q%d,R%d,%d,%d)",
-            olID.quarter(),olID.region(),olID.nX(),olID.nY());           
+            olID.quarter(),olID.region(),olID.nX(),olID.nY());
     char buf[4096];
     sprintf(buf,"OL_%d_%s",sta,bufnm);
-    
+
     //       if( msgLevel(MSG::DEBUG) )debug() << "fillOLsfromDigits:     buf: "<<buf<<endmsg;
-    
+
     if( msgLevel(MSG::VERBOSE) ) {
       verbose() << "fillOLsfromDigits:     mkey: "<<mkey.toString();
       verbose() << " olID: "<<olID.toString();
       verbose() << " buf: "<<buf<<endmsg;
     }
-    
-    
+
+
     L0Muon::TileRegister* pReg = rfactory->createTileRegister(buf,0);
     if( msgLevel(MSG::VERBOSE) ) {
       verbose() << "fillOLsfromDigits:     pReg "<<pReg<<endmsg;
     }
     pReg->setTile(mkey);
-    
+
     if( msgLevel(MSG::VERBOSE) ) {
       verbose() << "fillOLsfromDigits:     OK "<<endmsg;
     }
   }
-  
+
   if( msgLevel(MSG::VERBOSE) ) {
     verbose() << "fillOLsfromDigits:     DONE "<<endmsg;
   }
-    
-  if (m_debug) rfactory->dump();  
-    
+
+  if (m_debug) rfactory->dump();
+
   return StatusCode::SUCCESS;
 }
