@@ -39,6 +39,7 @@ enum FilterCriteria
   AnalysisHistograms = 4,
   AllHistograms = 5
 };
+ 
 
 namespace pres
 {
@@ -74,16 +75,24 @@ namespace pres
   enum SavesetType {
     OnlineFile = 0,
     OfflineFile = 1,
-  };  
+  };
+  
+  enum EffServiceType {
+    MonRate = 0,
+    TCKinfo = 1,
+  };
+  
+  enum ServicePlotMode {
+    separate = 0,
+    overlap = 1,
+    invisible = 2
+  };
 
   static const bool s_withHistograms    = true;
   static const bool s_withoutHistograms = false;
   
   static const bool s_withTree          = true;
   static const bool s_withoutTree       = false;
-
-  static const bool s_overlapping       = true;
-  static const bool s_separate          = false;
 
   static const bool s_checkTreeItems    = true;
   static const bool s_uncheckTreeItems  = false;
@@ -97,7 +106,7 @@ namespace pres
   static const std::string s_P1D("P1D");
   static const std::string s_HPD("HPD"); // legacy compat == P1D
   static const std::string s_P2D("P2D");
-  static const std::string s_CNT("CNT");
+  static const std::string s_CNT("CNT");  
   
   static const std::string s_DimWildcard("*");
   static const std::string s_Mon("Mon");

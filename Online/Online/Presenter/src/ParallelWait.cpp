@@ -200,12 +200,17 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*> * dbHistosOnPage)
   m_tasksNotRunning.clear();
     
   boost::thread_group thrds;
-  
+
   std::vector<DbRootHist*>::iterator refresh_dbHistosOnPageIt;
   refresh_dbHistosOnPageIt = dbHistosOnPage->begin();
   while (refresh_dbHistosOnPageIt != dbHistosOnPage->end()) {
+    if ( (pres::TCKinfo == (*refresh_dbHistosOnPageIt)->effServiceType()) &&
+         (Batch != m_presenterApp->presenterMode()) ) {
+        m_presenterApp->setStatusBarText(((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle(), 2);
+      }
     thrds.create_thread(boost::bind(&refreshHisto,
-			    													*refresh_dbHistosOnPageIt));
+			    													*refresh_dbHistosOnPageIt));                
+                                    
     refresh_dbHistosOnPageIt++;
   }
   

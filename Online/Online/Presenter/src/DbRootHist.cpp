@@ -104,7 +104,8 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_dimMutex(&dimMutex),
   m_tasksNotRunning(&tasksNotRunning),
   m_rootMutex(&rootMutex),
-  m_presenterApp(NULL)
+  m_presenterApp(NULL),
+  m_effServiceType(MonRate)
 {
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
@@ -297,7 +298,6 @@ void DbRootHist::disableClear()
 }
 void DbRootHist::initHistogram()
 {
-  
   if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = NULL;}
   if (rootHistogram) { delete rootHistogram; rootHistogram = NULL; }
   if (m_reference) { delete  m_reference; m_reference = NULL; }
@@ -435,7 +435,17 @@ void DbRootHist::initHistogram()
             }
           } else if (s_CNT == m_histogramType &&
                      m_presenterApp) {
-            m_monRateRace = new MonRateRace(m_dimServiceName);
+            TString dimServiceTS(m_dimServiceName);
+            
+            // could be in MonRateRace?
+            if (true == dimServiceTS.EndsWith(s_eff_TCK.c_str())) {
+              m_effServiceType = TCKinfo;               
+              m_monRateRace = new MonRateRace(m_dimServiceName, TCKinfo);
+            } else {
+              m_effServiceType = MonRate;
+              m_monRateRace = new MonRateRace(m_dimServiceName, MonRate);      
+            }
+            
             if (( (Online == m_presenterApp->presenterMode()) ||
                   (EditorOnline == m_presenterApp->presenterMode())
                 ) ) {
@@ -747,45 +757,53 @@ void DbRootHist::fillHistogram()
       }
    } else if (s_CNT == m_histogramType &&
               rootHistogram && !m_isEmptyHisto) {
-      double dimContent = 0;
-      if (m_monRateRace &&  
-          (true == m_monRateRace->isRateValid()) ) {
-        dimContent = m_monRateRace->currentValue();
+      if (MonRate == m_monRateRace->effServiceType()) {
+        double dimContent = 0;
+        if (m_monRateRace &&  
+            (true == m_monRateRace->isRateValid()) ) {
+          dimContent = m_monRateRace->currentValue();
+  //        m_histoRootTitle = lastName();        
+          m_histoRootTitle = TString(Form("%s",
+                                     (m_monRateRace->title()).c_str()));
+          rootHistogram->SetTitle(m_histoRootTitle.Data());
+          if (m_presenterApp && 
+              ( (Online == m_presenterApp->presenterMode()) ||
+                (EditorOnline == m_presenterApp->presenterMode())
+              ) ) {
+             int i = 0;
+             int  nbins = m_trendTimeScale;
+             double stats[5]={0,0,0,0,0};
+             rootHistogram->PutStats(stats); // reset mean value, etc   
+             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
+          } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
+              rootHistogram->SetBinContent(m_trendBin, dimContent);
+              m_trendBin++;              
+          }
+        } else if (m_monRateRace &&  
+                   false == m_monRateRace->isRateValid())  { // Invalid data, just shift histo
+          if (m_presenterApp && 
+              ( (Online == m_presenterApp->presenterMode()) ||
+                (EditorOnline == m_presenterApp->presenterMode())
+              ) ) {
+             int i = 0;
+             int  nbins = m_trendTimeScale;
+             double stats[5]={0,0,0,0,0};
+             rootHistogram->PutStats(stats); // reset mean value, etc   
+             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i, 0.0);
+          } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
+              rootHistogram->SetBinContent(m_trendBin, 0.0);
+              m_trendBin++;              
+          }
+        }
+      } else if (TCKinfo == m_monRateRace->effServiceType() &&
+                 m_monRateRace &&  
+                 (true == m_monRateRace->isRateValid())) {
         m_histoRootTitle = TString(Form("%s",
-                                   (m_monRateRace->title()).c_str()));
-//        m_histoRootTitle = lastName();
+                           (m_monRateRace->title()).c_str()));
         rootHistogram->SetTitle(m_histoRootTitle.Data());
-        if (m_presenterApp && 
-            ( (Online == m_presenterApp->presenterMode()) ||
-              (EditorOnline == m_presenterApp->presenterMode())
-            ) ) {
-           int i = 0;
-           int  nbins = m_trendTimeScale;
-           double stats[5]={0,0,0,0,0};
-           rootHistogram->PutStats(stats); // reset mean value, etc   
-           for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-           for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
-        } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
-            rootHistogram->SetBinContent(m_trendBin, dimContent);
-            m_trendBin++;              
-        }
-      } else if (m_monRateRace &&  
-                 false == m_monRateRace->isRateValid())  { // Invalid data, just shift histo
-        if (m_presenterApp && 
-            ( (Online == m_presenterApp->presenterMode()) ||
-              (EditorOnline == m_presenterApp->presenterMode())
-            ) ) {
-           int i = 0;
-           int  nbins = m_trendTimeScale;
-           double stats[5]={0,0,0,0,0};
-           rootHistogram->PutStats(stats); // reset mean value, etc   
-           for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-           for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i, 0.0);
-        } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
-            rootHistogram->SetBinContent(m_trendBin, 0.0);
-            m_trendBin++;              
-        }
-      }   
+      } 
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {
@@ -1656,6 +1674,10 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
     }
   }
   return dimServiceName;
+}
+
+void DbRootHist::setOverlapMode(pres::ServicePlotMode overlapMode) {
+  overlapMode ? m_isOverlap = overlap : m_isOverlap = separate;
 }
 
 std::string DbRootHist::assembleCurrentDimServiceName() {

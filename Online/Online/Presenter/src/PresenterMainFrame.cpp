@@ -148,7 +148,8 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   m_folderItemsIt(NULL),
   m_folderItem(NULL),
   m_benchmark(NULL),
-  m_deadTasksOnPage(0)
+  m_deadTasksOnPage(0),
+  m_trackingTCK(false)
 {
   m_benchmark = new TBenchmark();
   SetCleanup(kDeepCleanup);
@@ -1449,10 +1450,10 @@ void PresenterMainFrame::handleCommand(Command cmd)
       partitionSelectorComboBoxHandler(m_partitionSelectorComboBox->GetSelected());
       break;
     case M_AddDBHistoToPage_COMMAND:
-        addDbHistoToPage(s_separate);
+        addDbHistoToPage(separate);
       break;
     case M_AddDBHistoToPageAsOne_COMMAND:
-        addDbHistoToPage(s_overlapping);
+        addDbHistoToPage(overlap);
       break;      
     case M_DBHistoCollapseAllChildren_COMMAND:
       dbHistoCollapseAllChildren();
@@ -1865,11 +1866,12 @@ void PresenterMainFrame::setStartupHistograms(const std::vector<std::string> & h
     } else {
       HistogramIdentifier histogram = HistogramIdentifier(*histogramListIt);
       if (histogram.isDimFormat()) {      
-        addHistoToPage(*histogramListIt, s_separate);
+        addHistoToPage(*histogramListIt, separate);
       }
     }
     histogramListIt++;
   }
+
   if (Batch != m_presenterMode) {
     autoCanvasLayout();
   }
@@ -3459,7 +3461,7 @@ void PresenterMainFrame::addHistoToHistoDB()
 //  Resize();DoRedraw(); // wtf would trigger a redraw???
   enableAutoCanvasLayoutBtn();
 }
-void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool overlapMode)
+void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::ServicePlotMode overlapMode)
 {  
   HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
     int newHistoInstance = 0;
@@ -3485,45 +3487,39 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
     DimBrowser* dimBrowser = NULL;
     std::string currentPartition(m_currentPartition);
     
-    if (isConnectedToHistogramDB()) {
-      histogramDB = m_histogramDB;
-//      onlineHistogram = m_histogramDB->getHistogram(histogramID.histogramIdentifier());
+    if (isConnectedToHistogramDB() &&
+        (invisible != overlapMode) ) {
+      histogramDB = m_histogramDB;      
       onlineHistogram = m_histogramDB->getHistogram(histogramUrl);
-
     } else {
       histogramDB = NULL;
       onlineHistogram = NULL;
-    }                   
+    }              
     if ((History == m_presenterMode) || (EditorOffline == m_presenterMode)) {
       dimBrowser = NULL;
     } else if ((Online == m_presenterMode) || 
                (EditorOnline == m_presenterMode) ||
                (Batch == m_presenterMode)) {
       dimBrowser = m_dimBrowser;
-      if (false == isConnectedToHistogramDB()) {
-//        currentPartition = histogramID.histogramUrl();
+      if ( (false == isConnectedToHistogramDB()) ||
+           (invisible == overlapMode)) {
         currentPartition = histogramUrl;
       }
     }
 
 // TODO: merge this with loadSelectedPage()
     DbRootHist* dbRootHist = getHistogram(this,
-//                                          histogramID.histogramIdentifier(),
                                           histogramUrl,
                                           currentPartition,
                                           2, newHistoInstance,
-                                          m_histogramDB,
+                                          histogramDB,
                                           analysisLib(),
                                           onlineHistogram,
                                           m_verbosity,
                                           dimBrowser);
-                 
-     if (s_overlapping == overlapMode) {
-      dbRootHist->setOverlapMode(s_overlapping);
-     } else {
-      dbRootHist->setOverlapMode(s_separate);
-     }
-    
+                                          
+     dbRootHist->setOverlapMode(overlapMode);
+     
      if ((0 != m_archive) && isConnectedToHistogramDB() &&
           (false == m_savesetFileName.empty()) &&
           ((History == m_presenterMode) || (EditorOffline == m_presenterMode))) {
@@ -3532,7 +3528,8 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
                                  m_savesetFileName);
       }
                                               
-  if (false == isConnectedToHistogramDB()) {
+  if ( (false == isConnectedToHistogramDB())  &&
+       (invisible != overlapMode) ) {
     // Set Properties
     TString paintDrawXLabel = bulkHistoOptions.m_xLabel;
     TString paintDrawYLabel = bulkHistoOptions.m_yLabel;
@@ -3572,7 +3569,7 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
   }
   TPad* targetPad = NULL;
   DbRootHist* prevDbRootHist = NULL;
-  if (s_overlapping == overlapMode &&
+  if (overlap == overlapMode &&
       false == dbHistosOnPage.empty() &&
       true == isConnectedToHistogramDB()) {
       std::vector<DbRootHist*>::iterator pad_dbHistosOnPageIt;
@@ -3586,7 +3583,8 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl, bool ov
       }
   }
   dbHistosOnPage.push_back(dbRootHist);  
-  if (Batch != m_presenterMode) {
+  if ( (Batch != m_presenterMode) &&
+       (invisible != overlapMode) ) {
     paintHist(dbRootHist, targetPad);
   } else {
      dbRootHist->rootHistogram->SetLineStyle(1);
@@ -3613,7 +3611,7 @@ void PresenterMainFrame::addDimHistosToPage()
   currentNode = list->GetFirstItem();
 
   while (0 != currentNode) {
-    addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), s_separate);
+    addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), separate);
     currentNode = currentNode->GetNextSibling();
   }
   list->Delete();
@@ -3627,7 +3625,7 @@ void PresenterMainFrame::addDimHistosToPage()
   editorCanvas->Update();
   enableAutoCanvasLayoutBtn();
 }
-void PresenterMainFrame::addDbHistoToPage(bool overlapMode)
+void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode)
 {
   disableAutoCanvasLayoutBtn();
   try {
@@ -3636,7 +3634,7 @@ void PresenterMainFrame::addDbHistoToPage(bool overlapMode)
       checkedTreeItems(list, m_databaseHistogramTreeList);
       TGListTreeItem* currentNode = list->GetFirstItem();      
       if (0 != currentNode) {
-        addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), s_separate);
+        addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), separate);
         currentNode = currentNode->GetNextSibling();        
         while (0 != currentNode) {        
           addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), overlapMode);
@@ -4023,7 +4021,7 @@ void PresenterMainFrame::loadSelectedAlarmFromDB(int msgId)
     m_savesetFileName = message.saveSet();
     m_prevPresenterMode = m_presenterMode; 
     m_presenterMode = History;
-    addHistoToPage(message.hIdentifier(), s_separate);
+    addHistoToPage(message.hIdentifier(), separate);
     autoCanvasLayout();
     
     m_presenterMode = m_prevPresenterMode;
@@ -4077,6 +4075,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     }
     if (m_clearedHistos) { clearHistos(); }
 
+    m_trackingTCK = false;
     m_loadingPage = true;
 
     disableAutoCanvasLayoutBtn();
@@ -4170,7 +4169,10 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 //          m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
           std::vector<DbRootHist*>::iterator drawHist_dbHistosOnPageIt;
           drawHist_dbHistosOnPageIt = dbHistosOnPage.begin();
-          while (drawHist_dbHistosOnPageIt != dbHistosOnPage.end()) {  
+          while (drawHist_dbHistosOnPageIt != dbHistosOnPage.end()) {
+
+// HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK
+//           
             if (m_verbosity >= Verbose) {
               std::cout << "db identifier "
                         << ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->identifier()
@@ -4225,8 +4227,17 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
         while( drawOpt_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
+           if ( (MonRate == (*drawOpt_dbHistosOnPageIt)->effServiceType()) &&
+                (false == m_trackingTCK) ) {
+              m_trackingTCK = true;
+           }
            drawOpt_dbHistosOnPageIt++;
         }
+
+// TODO: // str. broken
+  if (m_trackingTCK) {
+    addHistoToPage("HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK", invisible);
+  }          
         editorCanvas->Update();        
 
         }

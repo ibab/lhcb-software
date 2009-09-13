@@ -13,7 +13,7 @@
 // timers
 // main canvas?
 // savesetpath, referencepath
-// Current TCK
+// Current TCK : m_trackingTCK
 // current Timepoints
 // current partition
 // about versions

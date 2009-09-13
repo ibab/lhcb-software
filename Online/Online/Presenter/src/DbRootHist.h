@@ -91,9 +91,9 @@ class DbRootHist : public HistogramIdentifier
     void draw(TCanvas* editorCanvas, double xlow, double ylow, double xup, double yup, bool fastHitMapDraw, TPad* overlayOnPad=NULL);
 //    void    setHostingPad(int xlow, int ylow, int xup, int yup);
     // H2Ds are rendered as images
-    /// true if histogram is drawn on top of another one
+    /// true if histogram is drawn on top of another one  
     bool isOverlap() {return m_isOverlap;}
-    void setOverlapMode(bool overlapMode) {overlapMode ? m_isOverlap = pres::s_overlapping : m_isOverlap = pres::s_separate;}
+    void setOverlapMode(pres::ServicePlotMode overlapMode);
 
     /// histogram identifier
     std::string identifier()  { return m_identifier;}
@@ -136,6 +136,8 @@ class DbRootHist : public HistogramIdentifier
     
     bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }
     void resetRetryInit() {m_retryInit = 2;}
+    
+    pres::EffServiceType effServiceType() { return m_effServiceType; }
 
   private:
     TPad* m_drawPattern;
@@ -221,6 +223,8 @@ class DbRootHist : public HistogramIdentifier
     std::string assembleCurrentDimServiceName();
     
     PresenterMainFrame* m_presenterApp;
+
+    pres::EffServiceType m_effServiceType;    
 };
 
 #endif // DBROOTHIST_H
