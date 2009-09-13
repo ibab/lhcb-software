@@ -3,7 +3,16 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
-
+! 2009-09-13 - Sajan Easo
+ - In order to be compatible with the recent G4.9.2, in RichG4Cerenkov.cc
+   and RichG4OpRayleigh.cc, the names of some G4 methods 
+   with '..PhotonMomentum' are changed to '..PhotonEnergy'. 
+   These changes are backward incompatible.
+   These modifications fix the compilation problems seen recently 
+   from using the new G4.
+ - In order to be compatible with recent Gaudi, ITime.h is changed to
+   Time.h in the include statements in some of the cpp files in RichAnalysis
+   are Misc subdirectories.
 !========================= GaussRICH v9r5 2009-09-11 =========================
 ! 2009-07-17 - Chris Jones
  - Update the algorithms that create the various output data outputs to no
