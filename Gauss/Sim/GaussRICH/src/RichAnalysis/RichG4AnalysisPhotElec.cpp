@@ -1,4 +1,4 @@
-// $Id: RichG4AnalysisPhotElec.cpp,v 1.4 2009-07-03 11:59:49 seaso Exp $
+// $Id: RichG4AnalysisPhotElec.cpp,v 1.5 2009-09-13 13:07:18 seaso Exp $
 // Include files
 
 
@@ -25,7 +25,7 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/ITime.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"

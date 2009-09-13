@@ -12,7 +12,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SmartDataPtr.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/ITime.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/INTupleSvc.h"
 

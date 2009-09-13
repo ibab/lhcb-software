@@ -24,7 +24,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4Cerenkov.cc,v 1.14 2009-04-24 14:57:25 seaso Exp $
+// $Id: RichG4Cerenkov.cc,v 1.15 2009-09-13 13:07:18 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 ////////////////////////////////////////////////////////////////////////
@@ -240,11 +240,12 @@ RichG4Cerenkov::PostStepDoIt(const G4Track& aTrack, const G4Step& aStep)
 	
 	////////////////////////////////////////////////////////////////
 
-	G4double Pmin = Rindex->GetMinPhotonMomentum();
-	G4double Pmax = Rindex->GetMaxPhotonMomentum();
+  // following two lines  modified in Sept 10-2009 using G4.9.2 
+	// G4double Pmin = Rindex->GetMinPhotonMomentum(); // for versions until G4.9.1
+	//G4double Pmax = Rindex->GetMaxPhotonMomentum();  // for versions until G4.9.1
 
-  //	G4double Pmin = Rindex->GetMinPhotonEnergy(); //for the future G4 versions after 4.9.1
-	//G4double Pmax = Rindex->GetMaxPhotonEnergy();   //for the future G4 versions after 4.9.1 
+  G4double Pmin = Rindex->GetMinPhotonEnergy(); //for the  G4 versions after 4.9.1
+	G4double Pmax = Rindex->GetMaxPhotonEnergy();   //for the  G4 versions after 4.9.1 
 
 	G4double dp = Pmax - Pmin;
 
@@ -435,11 +436,11 @@ void RichG4Cerenkov::BuildThePhysicsTable()
 
 			 // Create first (photon energy, Cerenkov Integral)
 			 // pair  
-
-			 G4double currentPM = theRefractionIndexVector->
-			 			 GetPhotonMomentum();
-       //			 G4double currentPM = theRefractionIndexVector->
-			 //			 GetPhotonEnergy();  // for future  G4 versions after G4.9.1
+       // following line modified on Sept-10-2009. 
+			 //G4double currentPM = theRefractionIndexVector->
+			 //			 GetPhotonMomentum(); // for versions until G4.9.1
+       			 G4double currentPM = theRefractionIndexVector->
+			 			 GetPhotonEnergy();  // for G4 versions after G4.9.1
 
 			 G4double currentCAI = 0.0;
 
@@ -459,11 +460,11 @@ void RichG4Cerenkov::BuildThePhysicsTable()
 			 {
 				currentRI=theRefractionIndexVector->	
 						GetProperty();
-
-				currentPM = theRefractionIndexVector->
-						GetPhotonMomentum();
-        //				currentPM = theRefractionIndexVector->
-        //			GetPhotonEnergy(); for future G4 versions after G4.9.1
+        // following line modified on Sept-10-2009 
+				//currentPM = theRefractionIndexVector->
+				//		GetPhotonMomentum(); // for versions until G4.9.1
+        currentPM = theRefractionIndexVector->
+                  GetPhotonEnergy(); // for G4 versions after G4.9.1
 
 				currentCAI = 0.5*(1.0/(prevRI*prevRI) +
 					          1.0/(currentRI*currentRI));
@@ -589,12 +590,12 @@ RichG4Cerenkov::GetAverageNumberOfPhotons(const G4double charge,
 
         if(!(CerenkovAngleIntegrals->IsFilledVectorExist()))return 0.0;
 
-	// Min and Max photon energies 
-	G4double Pmin = Rindex->GetMinPhotonMomentum();
-	G4double Pmax = Rindex->GetMaxPhotonMomentum();
+	// Min and Max photon energies . Following  lines modified on Sept-10-2009
+	// G4double Pmin = Rindex->GetMinPhotonMomentum(); // for versions until G4.9.1
+	// G4double Pmax = Rindex->GetMaxPhotonMomentum(); // for versins until G4.9.1
 
-  //	G4double Pmin = Rindex->GetMinPhotonEnergy(); // for future G4 versions after G4.9.1
-  //	G4double Pmax = Rindex->GetMaxPhotonEnergy(); // for future G4 versions after G4.9.1
+  	G4double Pmin = Rindex->GetMinPhotonEnergy(); // for  G4 versions after G4.9.1
+    G4double Pmax = Rindex->GetMaxPhotonEnergy(); // for G4 versions after G4.9.1
 
 	// Min and Max Refraction Indices 
 	G4double nMin = Rindex->GetMinProperty();	
@@ -626,8 +627,9 @@ RichG4Cerenkov::GetAverageNumberOfPhotons(const G4double charge,
 	// the GetValue() method of G4PhysicsVector.  
 
 	else {
-    //		Pmin = Rindex->GetPhotonEnergy(BetaInverse); // for future G4 versions after G4.9.1
-		Pmin = Rindex->GetPhotonMomentum(BetaInverse);
+    // following line modified on Sept10 - 2009
+    Pmin = Rindex->GetPhotonEnergy(BetaInverse); // for G4 versions after G4.9.1
+		//Pmin = Rindex->GetPhotonMomentum(BetaInverse);// until G4.9.1
 		dp = Pmax - Pmin;
 
 		// need boolean for current implementation of G4PhysicsVector

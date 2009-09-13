@@ -1,4 +1,4 @@
-// $Id: RichG4StepAnalysis5.cpp,v 1.10 2008-04-25 11:55:08 seaso Exp $
+// $Id: RichG4StepAnalysis5.cpp,v 1.11 2009-09-13 13:07:18 seaso Exp $
 // Include files 
 
 #include "G4Track.hh"
@@ -13,7 +13,7 @@
 #include "GaudiKernel/Kernel.h"
 #include "GaudiKernel/IDataProviderSvc.h"
 #include "GaudiKernel/IValidity.h"
-#include "GaudiKernel/ITime.h"
+#include "GaudiKernel/Time.h"
 #include "GaudiKernel/IRegistry.h"
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/DataObject.h"

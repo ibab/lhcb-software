@@ -21,7 +21,7 @@
 // ********************************************************************
 //
 //
-// $Id: RichG4OpRayleigh.cc,v 1.10 2008-01-21 16:53:44 seaso Exp $
+// $Id: RichG4OpRayleigh.cc,v 1.11 2009-09-13 13:07:18 seaso Exp $
 // GEANT4 tag $Name: not supported by cvs2svn $
 //
 // 
@@ -302,7 +302,7 @@ G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
         const G4DynamicParticle* aParticle = aTrack.GetDynamicParticle();
         const G4Material* aMaterial = aTrack.GetMaterial();
 
-        G4double thePhotonMomentum = aParticle->GetTotalMomentum();
+        G4double thePhotonEnergy = aParticle->GetTotalEnergy();
 
         G4double AttenuationLength = DBL_MAX;
 
@@ -312,7 +312,7 @@ G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
 
            AttenuationLength =
                 (*thePhysicsTable)(aMaterial->GetIndex())->
-                           GetValue(thePhotonMomentum, isOutRange);
+                           GetValue(thePhotonEnergy, isOutRange);
         }
         else {
 
@@ -324,7 +324,7 @@ G4double RichG4OpRayleigh::GetMeanFreePath(const G4Track& aTrack,
                    aMaterialPropertyTable->GetProperty("RAYLEIGH");
              if(AttenuationLengthVector){
                AttenuationLength = AttenuationLengthVector ->
-                                    GetProperty(thePhotonMomentum);
+                                    GetProperty(thePhotonEnergy);
              }
              else{
 //               G4cout << "No Rayleigh scattering length specified" << G4endl;
@@ -378,15 +378,19 @@ RichG4OpRayleigh::RayleighAttenuationLengthGenerator(G4MaterialPropertiesTable *
            Rindex->ResetIterator();
 
            while (++(*Rindex)) {
-
-                e = (Rindex->GetPhotonMomentum());
+             //   Following line modified on Sept10-2009     
+             //e = (Rindex->GetPhotonMomentum()); // until G4.9.1
+             e = (Rindex->GetPhotonEnergy()); // after G4.9.1 
 
                 refraction_index = Rindex->GetProperty();
                 refsq = refraction_index*refraction_index;
                 xlambda = h_Planck*c_light/e;
 
 	        if (verboseLevel>0) {
-        	        G4cout << Rindex->GetPhotonMomentum() << " MeV\t";
+            // following line modified to be compatible with G4.9.2
+            // onwards on Sept10-2009.  
+            //    G4cout << Rindex->GetPhotonMomentum() << " MeV\t";
+        	        G4cout << Rindex->GetPhotonEnergy() << " MeV\t";
                 	G4cout << xlambda << " mm\t";
 		}
 
@@ -401,7 +405,9 @@ RichG4OpRayleigh::RayleighAttenuationLengthGenerator(G4MaterialPropertiesTable *
 	                G4cout << Dist << " mm" << G4endl;
 		}
                 RayleighScatteringLengths->
-			InsertValues(Rindex->GetPhotonMomentum(), Dist);
+			InsertValues(Rindex->GetPhotonEnergy(), Dist);
+     //			InsertValues(Rindex->GetPhotonMomentum(), Dist);
+     // The line above modified to be compatible with G4.9.2 onwards.  
            }
 
         }
