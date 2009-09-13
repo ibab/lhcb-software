@@ -99,7 +99,6 @@ DbRootHist::DbRootHist(const std::string & identifier,
   m_titpave(NULL),
   m_statpave(NULL),
   m_historyTrendPlotMode(false),
-  m_rateInitialised(false),
   m_isOverlap(false),
   m_oraMutex(&oraMutex),
   m_dimMutex(&dimMutex),
@@ -445,7 +444,7 @@ void DbRootHist::initHistogram()
                 rootHistogram = new TH1D(m_histoRootName.Data(),s_eff_init.c_str(),
                                          m_trendTimeScale, 0, m_trendTimeScale);
 // X axis off, timestamp instead                                         
-                rootHistogram->SetBinContent(m_trendTimeScale,0);                
+//                rootHistogram->SetBinContent(m_trendTimeScale,0);                
               }
             } else if ( (Batch == m_presenterApp->presenterMode()) ) {
               gStyle->SetTimeOffset(m_offsetTime.Convert());
@@ -746,16 +745,15 @@ void DbRootHist::fillHistogram()
       }
     }
       }
-   } else if (s_CNT == m_histogramType) {
+   } else if (s_CNT == m_histogramType &&
+              rootHistogram && !m_isEmptyHisto) {
       double dimContent = 0;
       if (m_monRateRace &&  
-          (true == m_monRateRace->rateInitialised()) &&
-          rootHistogram && !m_isEmptyHisto) {
-        m_rateInitialised = true;
+          (true == m_monRateRace->isRateValid()) ) {
         dimContent = m_monRateRace->currentValue();
-//        m_histoRootTitle = TString(Form("%s",
-//                                   (m_monRateRace->title()).c_str()));
-        m_histoRootTitle = lastName();
+        m_histoRootTitle = TString(Form("%s",
+                                   (m_monRateRace->title()).c_str()));
+//        m_histoRootTitle = lastName();
         rootHistogram->SetTitle(m_histoRootTitle.Data());
         if (m_presenterApp && 
             ( (Online == m_presenterApp->presenterMode()) ||
@@ -771,7 +769,23 @@ void DbRootHist::fillHistogram()
             rootHistogram->SetBinContent(m_trendBin, dimContent);
             m_trendBin++;              
         }
-      }
+      } else if (m_monRateRace &&  
+                 false == m_monRateRace->isRateValid())  { // Invalid data, just shift histo
+        if (m_presenterApp && 
+            ( (Online == m_presenterApp->presenterMode()) ||
+              (EditorOnline == m_presenterApp->presenterMode())
+            ) ) {
+           int i = 0;
+           int  nbins = m_trendTimeScale;
+           double stats[5]={0,0,0,0,0};
+           rootHistogram->PutStats(stats); // reset mean value, etc   
+           for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
+           for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i, 0.0);
+        } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
+            rootHistogram->SetBinContent(m_trendBin, 0.0);
+            m_trendBin++;              
+        }
+      }   
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
                 || s_pfixMonH2D == m_histogramType) {
      if (m_dimInfoMonObject && m_dimInfoMonObject->loadMonObject()) {

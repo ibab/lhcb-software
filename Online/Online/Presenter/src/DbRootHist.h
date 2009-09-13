@@ -136,7 +136,6 @@ class DbRootHist : public HistogramIdentifier
     
     bool isHistoryTrendPlotMode() { return m_historyTrendPlotMode; }
     void resetRetryInit() {m_retryInit = 2;}
-    bool rateInitialised() { return m_rateInitialised;}
 
   private:
     TPad* m_drawPattern;
@@ -204,8 +203,6 @@ class DbRootHist : public HistogramIdentifier
     TPave* m_statpave;
 
     bool m_historyTrendPlotMode; 
-    
-    bool m_rateInitialised;
 
     bool m_isOverlap;
 

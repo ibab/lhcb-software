@@ -5,7 +5,6 @@
 #include "dic.hxx"
 #include <boost/thread/mutex.hpp>
 
-
 class MonRateRace: public DimInfo
 {
 public:
@@ -14,12 +13,12 @@ public:
   void infoHandler();
   double currentValue(); // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
   std::string title(); // boost::recursive_mutex & dimMutex, boost::recursive_mutex & rootMutex
-  bool rateInitialised() { return m_initialised;}
+  bool isRateValid();
 private:
   double m_value;
   std::string m_title;
   boost::mutex* m_infoHandlerMutex;
-  bool m_initialised;
+  bool m_rateIsValid;
   
 };
 

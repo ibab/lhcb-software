@@ -1224,7 +1224,7 @@ void PresenterMainFrame::buildGUI()
           m_histoDBContextMenu = new TGPopupMenu(fClient->GetRoot());
           m_histoDBContextMenu->AddEntry("Add checked histogram(s) to Page",
                                          M_AddDBHistoToPage_COMMAND);
-          m_histoDBContextMenu->AddEntry("Add checked to Page as One",
+          m_histoDBContextMenu->AddEntry("Add checked to Page in overlap",
                                          M_AddDBHistoToPageAsOne_COMMAND);                                          
           m_histoDBContextMenu->AddEntry("Set properties of checked histogram(s)",
                                          M_SetHistoPropertiesInDB_COMMAND);
@@ -4587,7 +4587,7 @@ void PresenterMainFrame::refreshPage()
       (*dump_dbHistosOnPageIt)->fillHistogram();
       (*dump_dbHistosOnPageIt)->normalizeReference();
     }
-    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
+//    if (true == (*dump_dbHistosOnPageIt)->rateInitialised()) {
       std::string plotName(m_currentPartition);
         plotName.append(" ").append(currentTime->AsSQLString());
         (*dump_dbHistosOnPageIt)->rootHistogram->SetTitle(plotName.c_str());
@@ -4602,12 +4602,12 @@ void PresenterMainFrame::refreshPage()
         if (! gROOT->IsInterrupted()) {
           editorCanvas->SaveAs(dumpFile.c_str());
         }
-      }  else {
-        if (m_verbosity >= Verbose) {
-          std::cout << (*dump_dbHistosOnPageIt)->fileName() <<
-                       " rate not initialised." << std::endl;
-        }      
-      }    
+//      }  else {
+//        if (m_verbosity >= Verbose) {
+//          std::cout << (*dump_dbHistosOnPageIt)->fileName() <<
+//                       " rate not initialised." << std::endl;
+//        }      
+//      }    
       dump_dbHistosOnPageIt++;              
     }
   }
