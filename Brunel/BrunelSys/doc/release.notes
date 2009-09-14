@@ -3,6 +3,11 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-09-14 - Marco Cattaneo
+ - Update reference for new Rich ring search monitor (RichRecQC v2r34)
+ - Update reference for fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
+ - Increment version to v35r7
+
 </PRE><H1><A NAME=v35r6>2009-09-14 Brunel v35r6</A></H1><PRE>
 This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6, Rec v7r6
  and SQLDDDB v5r11, ParamFiles v8r1, FieldMap v5r2, AppConfig v3r*
