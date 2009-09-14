@@ -4,6 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Silvia MIGLIORANZI
+ - GaussStat.py (which analyze the Gauss log files and produce statistics
+   tables for both generator and simulation) was added under the "scripts"
+   directory. The requirements file was updated adding the line:
+   apply_pattern install_scripts
+
 ! 2009-08-04 - Silvia Miglioranzi
  - Updated QMTests (and corresponding ref files) using the new Gauss v37r3 
    settings:
