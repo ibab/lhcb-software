@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Rob Lambert
+ - Added qmtest, test the basic python
+
 ! 2009-09-11 - Rob Lambert
  - Added support for MemoryMaximum
  - Tested for input files, OK
