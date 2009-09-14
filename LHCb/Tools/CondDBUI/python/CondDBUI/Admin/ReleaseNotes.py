@@ -2,7 +2,7 @@
 Utilities to interact with XML ReleaseNotes. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: ReleaseNotes.py,v 1.9 2009-09-09 12:24:28 ishapova Exp $"
+__version__ = "$Id: ReleaseNotes.py,v 1.10 2009-09-14 15:56:58 ishapova Exp $"
 
 # exported symbols
 __all__ = [ "ReleaseNotes" ]
@@ -165,7 +165,8 @@ class ReleaseNotes(object):
         elif homogenEntry:
             note = homogenEntry
             descr_ChildElem = note.find(str(_xel("description")))
-            homogenEntry.remove(descr_ChildElem) 
+            if descr_ChildElem:
+                note.remove(descr_ChildElem) 
         
         # Attaching sub-sub-elements to new sub-element or element of a new local tag entry
         for part in partitions:
@@ -198,11 +199,14 @@ class ReleaseNotes(object):
         if forceNewGT or not homogenEntry:
             global_tag = self._makeEntry("global_tag", contributor, date)
             ET.SubElement(global_tag,_xel("tag")).text = tag
-            self._setDescription(global_tag, description, patch)
             # Adding new global tag entry element to the root element of release_notes.xml tree
             self._prependEntry(global_tag)
         elif homogenEntry:
             global_tag = homogenEntry
+            descr_ChildElem = global_tag.find(str(_xel("description")))
+            if descr_ChildElem:
+                global_tag.remove(descr_ChildElem)
+            
         
         # Attaching sub-sub-elements to new sub-element or element of a new global tag entry
         for part in partitions:
@@ -212,7 +216,9 @@ class ReleaseNotes(object):
             ET.SubElement(part_el,_xel("base")).text = base_tag
             tags = list(tags)
             for t in tags:
-                ET.SubElement(part_el,_xel("tag")).text = t      
+                ET.SubElement(part_el,_xel("tag")).text = t
+        
+        self._setDescription(global_tag, description, patch)     
         
     def write(self, filename = None , encoding = "utf-8"):
         if filename is None:
