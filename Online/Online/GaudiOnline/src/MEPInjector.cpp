@@ -838,7 +838,7 @@ StatusCode MEPInjector::readEvent() {
  
             /// Check bank integrity.
             if (hdr->totalSize() == 0 || hdr->magic() != 0xCBCB ) {
-                ERRMSG(msgLog, "Severe error in fragment");
+                msgLog << MSG::ERROR << WHERE << "Severe error in fragment" << endmsg;
                 return StatusCode::FAILURE;  
 	    }
             ++nbBks; 
@@ -1619,7 +1619,7 @@ StatusCode MEPInjector::sendMEP(int tell1IP, MEPEvent * me) {
     msgLog << MSG::DEBUG << WHERE << endmsg;
 
     if(me->size() == 0) { 
-        msgLog << MSG::WARNING << WHERE << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
+        msgLog << MSG::DEBUG << WHERE << " Empty MEP for Tell1 " << MEPRxSys::dotted_addr(tell1IP) << endmsg;
         return StatusCode::SUCCESS; //no data to send
     }
     me->setSize(0);

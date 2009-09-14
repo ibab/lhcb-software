@@ -49,7 +49,7 @@ class ISvcLocator;
  */
 namespace LHCb  {
 
-#define WHERE "File: " << __FILE__ << "[" << __LINE__ << "] " << __FUNCTION__ << "() :"
+#define WHERE "File: " << __FILE__ << "[" << __LINE__ << "] " << __FUNCTION__ << "() : "
 
 #define TWOMB 2097152
 #define MDFHDRSZ 48 //12 word of 32 bits, or 4 bytes
@@ -90,7 +90,8 @@ namespace LHCb  {
   
     bool m_LoopOverFiles; /* Once all files have been read, starts from beginning */          
 
-    unsigned int m_CurFile; /* Current file descriptor */ 
+    unsigned int m_CurFile; /* Current file descriptor */
+    unsigned int m_NbEvtFromFile; /* Number of event read from the file */ 
 
     int m_SliceLen;   /* Length of the slice read, most of the time 2MB except when last slice of the file */   
     int m_CurEvtLen;  /* Length of the current event */
