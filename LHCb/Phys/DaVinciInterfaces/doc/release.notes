@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Juan PALACIOS
+ - Kernel/IPhysDesktop.h
+  . Add new methods to control use of P->PV relation tables.
+
 !===================== DaVinciInterfaces v1r1 2009-09-02 =====================
 ! 2009-08-31 - Juan Palacios
  - IPhysDesktop now uses unweighted P->PV tables
