@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.51 2009-09-09 08:29:32 graven Exp $
+!$Id: release.notes,v 1.52 2009-09-14 07:24:03 graven Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
 
-!========================== HltGlobalMonitor v2r6p2 2009-09-09 ===================
+!========================== HltGlobalMonitor v2r6p2 2009-09-14 ===================
+! 2009-09-14 - Gerhard Raven
+ - fix another counter problem
+
 ! 2009-09-09 - Gerhard Raven
  - clean up redundant counters + use StatEntity where possible
 
