@@ -364,10 +364,10 @@ void BaseServiceMap::deleteDimService(const std::string &serviceName){
   }
   msg << MSG::DEBUG << " erasing published MonObject from map" <<endreq;
   delete m_dimSrv[groupName].second; 
- // m_dimSrv[groupName].second = 0;
+  m_dimSrv[groupName].second = 0;
   msg << MSG::DEBUG << " erasing DimService " << groupName << " from map" <<endreq;  
   delete m_dimSrv[groupName].first; 
- // m_dimSrv[groupName].first = 0; 
+  m_dimSrv[groupName].first = 0; 
   m_dimSrv.erase(groupName);
 }
 

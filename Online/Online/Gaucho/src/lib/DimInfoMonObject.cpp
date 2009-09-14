@@ -45,7 +45,7 @@ DimInfoMonObject::~DimInfoMonObject() {
 
 void DimInfoMonObject::infoHandler() 
 { // This is not inherited from DimInfo
-  if (m_monObject==0) createMonObject();
+  if (!m_monObject) createMonObject();
   else loadMonObject();
 }
 
@@ -53,6 +53,10 @@ bool DimInfoMonObject::createMonObject() {
   MsgStream msg(msgSvc(), name());
   if (m_monObject) {delete m_monObject; m_monObject = 0;}
   
+    if (!m_dimInfo) {
+    msg << MSG::WARNING << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
+    return false;
+  }
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   while ( tmpStringSize <= 0 ) {
     //gSystem->Sleep(m_waitTime);
@@ -63,6 +67,7 @@ bool DimInfoMonObject::createMonObject() {
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
   MonObject *monObjectBase;
+  
   
   char* c;
   try {
@@ -109,6 +114,11 @@ bool DimInfoMonObject::createMonObject() {
 bool DimInfoMonObject::loadMonObject(){
   MsgStream msg(msgSvc(), name());
   
+  if (!m_dimInfo) {
+    msg << MSG::WARNING << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
+    return false;
+  }
+  
   if (!m_monObject) {
     msg << MSG::WARNING << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
     return false;
@@ -146,7 +156,7 @@ bool DimInfoMonObject::loadMonObject(){
   }
   catch (const std::exception &ex){
     msg << MSG::WARNING << "std::exception: " << ex.what() << endreq;
-    msg << MSG::WARNING << "check that the server and client are running in the same plataform: 64 or 32 bits." << endreq;
+    msg << MSG::WARNING << "DimInfo->getData() failed."<< endreq;
     return false;
   }  
   catch (...){
@@ -158,8 +168,7 @@ bool DimInfoMonObject::loadMonObject(){
 }
 
 MonObject *DimInfoMonObject::monObject() {
- if (m_monObject) return m_monObject;
- else return 0;
+  return m_monObject;
 }
 
 

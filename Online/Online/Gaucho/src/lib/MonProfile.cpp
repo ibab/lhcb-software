@@ -246,6 +246,8 @@ void MonProfile::loadObject(){
 
 void MonProfile::splitObject(){
   MsgStream msg = createMsgStream();
+  //need some protection here
+//  if (m_profile ==0) return;
   FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
   
   int nbinsxOld = 0;

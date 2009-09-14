@@ -30,7 +30,6 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_numCounters = m_counterMap.size();
 //     msg <<MSG::INFO<<"m_numCounters: " << m_numCounters << endreq;
     m_profile = new TProfile("profile","MonRate Profile", m_maxNumCounters+8, 0, m_maxNumCounters+8);
-//    m_profile = new TProfile("profile","MonRate Profile", m_numCounters+8, 0, m_numCounters+8);
     m_profile->Fill(0.50, *m_offsetTimeFirstEvInRun, 1.00);
     m_profile->Fill(1.50, *m_offsetTimeLastEvInCycle, 1.00);
     m_profile->Fill(2.50, *m_offsetGpsTimeLastEvInCycle, 1.00);
@@ -39,6 +38,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     m_profile->Fill(5.50, (double) (*m_triggerConfigurationKey), 1.00);
     m_profile->Fill(6.50, (double) (*m_cycleNumber), 1.00);
     m_profile->Fill(7.50, (double) (*m_deltaT), 1.00);
+
     
     msg <<MSG::DEBUG<<"bin[1]=" << (*m_offsetTimeFirstEvInRun) << ", OffsetTimeFirstEvInRun" << endreq;    
     msg <<MSG::DEBUG<<"bin[2]=" << (*m_offsetTimeLastEvInCycle) << ", OffsetTimeLastEvInCycle" << endreq;
@@ -48,6 +48,8 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
     msg <<MSG::DEBUG<<"bin[6]=" << (*m_triggerConfigurationKey) << ", TCK" << endreq;
     msg <<MSG::DEBUG<<"bin[7]=" << (*m_cycleNumber) << ", CycleNumber" << endreq;
     msg <<MSG::DEBUG<<"bin[8]=" << (*m_deltaT) << ", deltaT" << endreq; 
+    
+       
     int i = 9;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
         
@@ -97,7 +99,7 @@ void MonRate::save(boost::archive::binary_oarchive & ar, const unsigned int vers
         
     i = 9;
     for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); m_counterMapIt++) {
-      //msg <<MSG::INFO<<"description: " << (*(m_counterMapIt->second.second)).c_str() << endreq;
+      msg <<MSG::DEBUG<<"label description: " << (*(m_counterMapIt->second.first)).c_str() << endreq;
       m_profile->GetXaxis()->SetBinLabel(i, (*(m_counterMapIt->second.first)).c_str());
       i++;
     }
@@ -176,7 +178,7 @@ void MonRate::reset(){
 void MonRate::print(){
   //MonObject::print();
   MonProfile::print();
-/*  MsgStream msgStream = createMsgStream();
+  MsgStream msgStream = createMsgStream();
   msgStream << MSG::INFO << "*************************************"<<endreq;
   msgStream << MSG::INFO << " runNumber: "<<  runNumber() << endreq;
   msgStream << MSG::INFO << " TCK: "<<  triggerConfigurationKey() << endreq;
@@ -189,8 +191,10 @@ void MonRate::print(){
   msgStream << MSG::INFO << m_typeName << " counter size :"<< m_counterMap.size() << endreq;
   msgStream << MSG::INFO << m_typeName << " values :" << endreq;
   
-  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)
-    msgStream << MSG::INFO << " counter: "<<  m_counterMapIt->first << ", value: " << (*m_counterMapIt->second.first) << ", description: "<< (*m_counterMapIt->second.second) << endreq;
-  msgStream << MSG::INFO << "*************************************"<<endreq;*/
+  
+  for (m_counterMapIt = m_counterMap.begin(); m_counterMapIt != m_counterMap.end(); ++m_counterMapIt)  {
+    msgStream << MSG::INFO << " counter: "<<  m_counterMapIt->first  << endreq;  
+  }
+   msgStream << MSG::INFO << "*************************************"<<endreq;
 }
 

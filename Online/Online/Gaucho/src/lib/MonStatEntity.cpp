@@ -23,7 +23,7 @@ MonObject(msgSvc, source, version)
 }
 
 MonStatEntity::~MonStatEntity(){
-  delete m_StatEntity;
+  if (m_StatEntity!=0) delete m_StatEntity;
 }
 
 void MonStatEntity::save(boost::archive::binary_oarchive & ar, const unsigned int version){
@@ -47,7 +47,7 @@ std::string MonStatEntity::format() {
 
 void MonStatEntity::setMonStatEntity(const StatEntity& se) {
   MsgStream msg = createMsgStream();
-  msg <<MSG::INFO<<"Setting MonStatEntity." << endreq;
+  msg <<MSG::DEBUG<<"Setting MonStatEntity." << endreq;
    m_StatEntity = (StatEntity *)&se;
    splitObject();
 }
@@ -97,6 +97,7 @@ void MonStatEntity::load2(boost::archive::binary_iarchive  & ar){
   
 void MonStatEntity::combine(MonObject* S){
   MsgStream msg = createMsgStream();
+ // msg <<MSG::DEBUG<<"Trying to combine StatEntities "<<this->typeName() <<" and "<<S->typeName()  << endreq;
   if (S->typeName() != this->typeName()){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<S->typeName() << " failed." << endreq;
     return;

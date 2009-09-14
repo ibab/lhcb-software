@@ -96,7 +96,6 @@ void MonRateDecoder::update(MonRate *monRate) {
   std::string numberOfProcessSvcName =  m_monRateSvcName.substr(s_pfixMonRate.length()+1, 
                                                     m_monRateSvcName.length() - s_pfixMonRate.length()+1) +
                                                                  "/NUMBER_OF_PROCESSES";
-//  m_dimSvcNumberOfProcess = new DimService(numberOfProcessSvcName.c_str(), m_newNumEntries);
    msg << MSG::DEBUG << "MonRateDecoder update m_numprocessedData.value: "<< m_numprocessesData.value << endreq;
   
   
@@ -120,7 +119,7 @@ void MonRateDecoder::update(MonRate *monRate) {
   std::string TCKSvcName =  m_monRateSvcName.substr(s_pfixMonRate.length()+1, 
                                                     m_monRateSvcName.length() - s_pfixMonRate.length()+1) +
                                                                  "/TCK";
-//  m_dimSvcNumberOfProcess = new DimService(numberOfProcessSvcName.c_str(), m_newNumEntries);
+
    msg << MSG::DEBUG << "MonRateDecoder update m_TCKData.value: "<< m_TCKData.value << endreq;
   
   
@@ -135,9 +134,6 @@ void MonRateDecoder::update(MonRate *monRate) {
   else  m_dimSvcTCK->updateService((void*)&m_TCKData, TCKdataSize);
   
   
-  
-  
-
   Data m_numcountersData;
   //need to add 1 for the number of processes service
   m_numcountersData.value = m_oldNumCounters+1;
