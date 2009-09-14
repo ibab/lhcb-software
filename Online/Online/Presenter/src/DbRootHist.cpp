@@ -1638,11 +1638,10 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
         while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
           std::string dimServiceCandidate(dimService);
           TString dimServiceTS(dimServiceCandidate);
-           
           if (false == dimServiceTS.EndsWith(s_gauchocomment.c_str())) {
-            HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate); 
+            HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate);
             if (0 == (histogramCandidate.histogramIdentifier().compare(m_onlineHistogram->identifier()))) {          
-              dimServiceName = dimServiceCandidate;
+              dimServiceName = dimServiceCandidate;              
               break;
             } else {
           std::string* deadTaskName = new std::string(taskName); // memleak?

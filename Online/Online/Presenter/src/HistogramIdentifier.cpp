@@ -76,9 +76,9 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
       if ( 4 == histogramUTGIDMatchGroup->GetLast() ) {
         m_instanceOnNode = (((TObjString *)histogramUTGIDMatchGroup->At(4))->
                              GetString()).Data();
-        m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
+        m_nodeName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
                      GetString()).Data();
-        m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(3))->
+        m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
                      GetString()).Data();
       } else if ( 3 == histogramUTGIDMatchGroup->GetLast()) {
         m_isEFF = true;
