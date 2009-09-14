@@ -144,39 +144,23 @@ StatusCode AdderSvc::initialize() {
 
 void AdderSvc::startUp(){
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "*******************************************" << endreq;
-  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
   msg << MSG::DEBUG << "**************STARTUP PROCESS**************" << endreq;
   m_processMgr->createInfoServers();
   m_processMgr->createTimerProcess();
   msg << MSG::DEBUG << "Activing PostEvent to StartTimer............." << endreq;
   IocSensor::instance().send(this, s_startTimer, this); //start Timer*/
-  msg << MSG::DEBUG << "*******************************************" << endreq;
 }
 
 void AdderSvc::shutDown(){
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "*******************************************" << endreq;
   msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*************SHUTDOWN PROCESS**************" << endreq;
-  msg << MSG::DEBUG << "*******************************************" << endreq;
   m_enablePostEvents = false;
   m_processMgr->dimTimerProcess()->stop();
   m_processMgr->destroyTimerProcess();
   m_processMgr->destroyInfoServers();
   m_processMgr->destroyInfoServices();
   m_enablePostEvents = true;
-  msg << MSG::DEBUG << "*******************************************" << endreq;
-  msg << MSG::DEBUG << "*******************************************" << endreq;
-  msg << MSG::DEBUG << "*******************************************" << endreq;
-}
+ }
 
 void AdderSvc::handle(const Event&  ev) {
   MsgStream msg(msgSvc(), name());
@@ -227,7 +211,7 @@ void AdderSvc::handle(const Event&  ev) {
 
     std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->updateMap(serverMap);
-    m_processMgr->serviceMap()->printMap();
+//    m_processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
@@ -239,7 +223,7 @@ void AdderSvc::handle(const Event&  ev) {
     std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->setServiceSet(serviceSet);
     m_processMgr->serviceMap()->updateMap(serverMap);
-    m_processMgr->serviceMap()->printMap();
+ //   m_processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
@@ -262,8 +246,8 @@ void AdderSvc::handle(const Incident& inc) {
 
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
- // need to make sure we have all events in some other way 
- // m_processMgr->serviceMap()->add();
+//  m_processMgr->serviceMap()->add();
+  shutDown();
   m_enablePostEvents = false;
   msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
   if (m_processMgr) {delete m_processMgr; m_processMgr=0;}

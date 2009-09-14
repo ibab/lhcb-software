@@ -484,6 +484,7 @@ void MonitorSvc::declareInfo(const std::string& name, const StatEntity& var,
   prefix = monObject->dimPrefix() + "/";
   
   ((MonStatEntity*) monObject)->setMonStatEntity(var);
+  
   if (!registerName(name, owner)) return;
   std::pair<std::string, std::string> dimSvcName = registerDimSvc(name, prefix, owner, false);
   if (dimSvcName.second.compare("") == 0) return;

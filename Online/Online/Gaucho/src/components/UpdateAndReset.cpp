@@ -292,6 +292,7 @@ std::pair<std::pair<int, ulonglong>, bool> UpdateAndReset::currentRunNumber() {
 //------------------------------------------------------------------------------
   MsgStream msg( msgSvc(), name() );
   int runNumber=0;
+  unsigned int triggerConfigurationKey=0;
   ulonglong gpsTime = GauchoTimer::currentTime();
   bool changed = false;
 

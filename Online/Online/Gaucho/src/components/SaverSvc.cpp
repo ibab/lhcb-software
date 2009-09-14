@@ -260,7 +260,7 @@ void SaverSvc::handle(const Event&  ev) {
     std::map<std::string, bool, std::less<std::string> > serverMap = data->second;*/
     
     processMgr->serviceMap()->updateMap(serverMap);
-    processMgr->serviceMap()->printMap();
+//    processMgr->serviceMap()->printMap();
     msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
     
   }
