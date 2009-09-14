@@ -17,8 +17,7 @@ apply_pattern reflex_dictionary dictionary=UPI \
                                 imports=OnlineKernel
 
 macro_append UPI_reflex_options " -D__GCCXML -DSCREEN "
-# Gnerate dictionary rootmap file
-apply_pattern declare_python_modules files=*.py
+apply_pattern install_python_modules 
 
 private
 use Python v* LCG_Interfaces -no_auto_imports
