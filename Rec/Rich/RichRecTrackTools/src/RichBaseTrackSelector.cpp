@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.7 2009-08-06 18:10:57 smenzeme Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.8 2009-09-14 10:04:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -152,7 +152,7 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut " 
+      verbose() << " -> P " << p << " failed cut "
                 << m_minPCut << " -> " << m_maxPCut
                 << endmsg;
     return false;
@@ -163,7 +163,7 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut " 
+      verbose() << " -> Pt " << pt << " failed cut "
                 << m_minPtCut << " -> " << m_maxPtCut
                 << endmsg;
     return false;
@@ -203,22 +203,23 @@ BaseTrackSelector::trackSelected( const LHCb::Track * track ) const
 
   // Likelihood
   if ( m_likelihoodCutEnabled )
+  {
+    if ( track->likelihood() < 99 && // check against default value in Track class. Accept in this case.
+         ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL ) )
     {
-      
-      if ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL )
-	{
-	  if ( msgLevel(MSG::VERBOSE) )
-	    verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
-		      << m_minLL << " -> " << m_maxLL
-		      << endmsg;
-	  return false;
+      if ( msgLevel(MSG::VERBOSE) )
+        verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
+                  << m_minLL << " -> " << m_maxLL
+                  << endmsg;
+      return false;
     }
   }
 
   // GhostProbability
   if ( m_ghostProbCutEnabled )
   {
-   if ( track->ghostProbability() < m_minGhostProb || track->ghostProbability() > m_maxGhostProb )
+    if ( track->ghostProbability() < 99 && // check against default value in Track class. Accept in this case.
+         ( track->ghostProbability() < m_minGhostProb || track->ghostProbability() > m_maxGhostProb ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
@@ -249,7 +250,7 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   if ( p < m_minPCut || p > m_maxPCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> P " << p << " failed cut " 
+      verbose() << " -> P " << p << " failed cut "
                 << m_minPCut << " -> " << m_maxPCut
                 << endmsg;
     return false;
@@ -260,7 +261,7 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   if ( pt < m_minPtCut || pt > m_maxPtCut )
   {
     if ( msgLevel(MSG::VERBOSE) )
-      verbose() << " -> Pt " << pt << " failed cut " 
+      verbose() << " -> Pt " << pt << " failed cut "
                 << m_minPtCut << " -> " << m_maxPtCut
                 << endmsg;
     return false;

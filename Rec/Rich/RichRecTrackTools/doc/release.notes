@@ -4,6 +4,10 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Chris Jones
+ - Fix track selector to select tracks that have default likelihood or
+   ghost probability values (999) (e.g. in the HLT).
+
 !======================== RichRecTrackTools v1r14 2009-09-03 =================
 ! 2009-08-05 - Stephanie Hansmann-Menzemer
  - addapt track selector to changes in Track.xml
