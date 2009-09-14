@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Rob Lambert
+ - Added qmtests
+
 ! 2009-09-11 - Rob Lambert
  - Added support for obtaining the MemoryMaximum
  - Tested with filling output OK!

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<success>True</success>
+	<step>finalize</step>
+	<usage>
+		<stat unit="KB" useOf="MemoryMaximum">585244.0</stat>
+	</usage>
+	<input>
+		<file GUID="CAA89D27-E42D-DC11-B844-003048836626" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">5</file>
+	</input>
+	<output>
+		<file GUID="38CF00F6-0CA1-DE11-AA34-003048D2BF22" name="PFN:PoolDst.root" status="full">5</file>
+	</output>
+	<counters>
+		<counter name="CounterSummarySvc/handled">12</counter>
+		<statEntity format="Flag Entries Flag2" max="1.0" min="0.0" name="TestCounter/efficiency">5.0 5.0 5.0</statEntity>
+	</counters>
+	<lumiCounters />
+</summary>

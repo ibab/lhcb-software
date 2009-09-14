@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2009-09-11 10:52:12 rlambert Exp $
+# $Id: requirements,v 1.2 2009-09-14 13:11:56 rlambert Exp $
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
 #
@@ -9,7 +9,7 @@ version v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options XMLSummaryKernel
+branches          cmt doc src options tests XMLSummaryKernel
 
 # Packages needed to compile and link the application
 use GaudiConf          v*                   -no_auto_imports
@@ -34,3 +34,4 @@ library XMLSummaryKernel *.cpp -import=Python
 apply_pattern component_library library=XMLSummaryKernel
 #apply_pattern install_python_modules
 apply_pattern install_more_includes more=XMLSummaryKernel
+apply_pattern QMTest

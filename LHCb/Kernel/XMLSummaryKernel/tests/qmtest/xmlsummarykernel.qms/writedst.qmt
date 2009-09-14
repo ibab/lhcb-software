@@ -1,0 +1,65 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="args"><set><text>../../options/test-XMLSummary.py</text></set></argument>
+  <argument name="validator"><text>
+import re
+########################################
+#check the produced file, and the stdout
+########################################
+f=open('../refs/summary.xml')
+refblock=f.read().split('\n')
+sum=None
+try:
+  sum=open('summary.xml')
+except IOError:
+  causes.append('XMLsummary missing')
+  result['xmlsummarykernel.writedst']=result.Quote('XMLsummary missing')
+sumblock=sum.read().split('\n')
+########################################
+#loop over the reference file
+########################################
+for l in refblock:
+  ########################################
+  #allow mem to change
+  ######################################## 
+  if 'MemoryMaximum' in l:
+    pass
+    #do something special
+    restr=l[:l.find('&gt;')+1]+'.*'+l[l.find('&lt;',l.find('&gt;')):]
+    for r in sumblock:
+      if 'MemoryMaximum' in r:
+        if not re.search(restr,r):
+          causes.append('XMLsummary MemoryMaximum error')
+          result['xmlsummarykernel.writedst']=result.Quote(restr)
+    if not re.search(restr,stdout):
+      causes.append('XMLsummary MemoryMaximum error')
+      result['xmlsummarykernel.writedst']=result.Quote(restr)
+  ########################################
+  #allow GUID of file to change
+  ########################################
+  elif 'PoolDst' in l:
+    pass
+    #do something special
+    restr=l[:l.find('&quot;')+1]+'.*-.*-.*-.*-.*'+l[l.find('&quot;',l.find('&quot;')+1):]
+    for r in sumblock:
+      if 'PoolDst' in r:
+        if not re.search(restr,r):
+          causes.append('XMLsummary output file error')
+          result['xmlsummarykernel.writedst']=result.Quote(restr)
+    if not re.search(restr,stdout):
+      causes.append('XMLsummary output file error')
+      result['xmlsummarykernel.writedst']=result.Quote(restr) 
+  ########################################
+  #do not allow any other omissions
+  ########################################
+  else:
+    if l not in sumblock:
+      causes.append('XMLsummary content error')
+      result['xmlsummarykernel.writedst']=result.Quote(l)
+    if stdout.find(l)==-1:
+      causes.append('XMLsummary printout error')
+      result['xmlsummarykernel.writedst']=result.Quote(l)
+
+</text></argument>
+</extension>

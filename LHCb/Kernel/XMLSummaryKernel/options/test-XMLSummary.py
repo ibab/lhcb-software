@@ -1,21 +1,42 @@
 # Test, will read and write a Dst file
 # Will fill some counters, and output the summary.xml
+# These options are mostly copied from $IOEXAMPLEROOT/tests/options/WriteDst.opts
 from Gaudi.Configuration import *
 
-from Configurables import GaudiSequencer, EventCountAlg
+from Configurables import EventCountAlg
 from Configurables import XMLSummarySvc
 from Configurables import LHCbApp
 
-#Run this other example, which reads/copies a DST
-importOptions("$IOEXAMPLEROOT/tests/options/WriteDst.opts")
+#---------------------------------------------------------------------------
+# Setup read and write of a POOL dst file
+#---------------------------------------------------------------------------
+ApplicationMgr().HistogramPersistency = "NONE";
+ApplicationMgr().EvtMax = 5;
+EventSelector().PrintFreq = 1;
 
-xmlsummary=XMLSummarySvc("CounterSummarySvc")
-xmlsummary.OutputLevel=1
+# Set up the OutputStream that copies an event data file
+ApplicationMgr().OutStream += ["InputCopyStream/InputCopyStream"]
+
+# Set up POOL persistency
+importOptions( "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts" )
+
+#Define the input file
+importOptions( "$XMLSUMMARYKERNELROOT/options/PoolDst.opts")
+
+#---------------------------------------------------------------------------
+# Add a counting algorithm
+#---------------------------------------------------------------------------
 
 EvtAlg=EventCountAlg("TestCounter")
 
 ApplicationMgr().TopAlg+=[EvtAlg]
 
+#---------------------------------------------------------------------------
+# Setup XMLSummarySvc
+#---------------------------------------------------------------------------
+
+xmlsummary=XMLSummarySvc("CounterSummarySvc")
+xmlsummary.OutputLevel=1
 
 LHCbApp().XMLSummary="summary.xml"
 LHCbApp().DataType="DC06"
