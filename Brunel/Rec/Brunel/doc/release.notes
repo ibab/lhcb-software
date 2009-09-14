@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-09-14 - Marco Cattaneo
+ - Update references for new Rich ring search monitor (RichRecQC v2r34)
+ - Update references for fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
+ - Update references for reduced CaloPIDs verbosity (CaloMoniDst v5r2)
+ - Increment version to v35r7
+
 </PRE><H1><A NAME=v35r6>2009-09-09 Brunel v35r6</A></H1><PRE>
  - Changes to Configurable:
    . Add ProtoParticle monitor sequence.
