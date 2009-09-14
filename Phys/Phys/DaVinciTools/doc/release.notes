@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.470 2009-09-14 07:02:26 jpalac Exp $
+! $Id: release.notes,v 1.471 2009-09-14 16:23:57 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v19r2 2009-09-14 ===================
+
+! 2009-09-14 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v19r2
 
 ! 2009-09-14 - Juan PALACIOS
  - src/PhysDesktop.*
