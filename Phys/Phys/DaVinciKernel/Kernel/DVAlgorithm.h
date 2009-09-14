@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.41 2009-08-31 16:34:50 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.42 2009-09-14 15:54:06 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -160,6 +160,22 @@ public:
 
   /**
    *
+   *
+   *
+   **/
+  inline const LHCb::VertexBase* bestPV(const LHCb::Particle* p) const 
+  {
+    return useP2PV() ? _getRelatedPV(p) : calculateRelatedPV(p);
+  }
+
+  inline const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const 
+  {
+    return useP2PV() ? _getRelatedPV(p) : calculateRelatedPV(p);
+  }
+  
+
+  /**
+   *
    * Calculate the best related PV for a particle and return it to the user
    * If property "ReFitPVs" is set to true, this triggers a re-fit of the PVs
    * after removing tracks coming from the particle in question. If not, then 
@@ -185,7 +201,7 @@ public:
    * @date 10/02/2009
    * 
    **/
-  const LHCb::VertexBase* getRelatedPV(const LHCb::Particle* p) const;
+  const LHCb::VertexBase* _getRelatedPV(const LHCb::Particle* p) const;
 
   /**
    *
@@ -587,6 +603,22 @@ protected:
 private:
 
   bool hasStoredRelatedPV(const LHCb::Particle* particle) const;
+
+  inline bool multiPV() const 
+  {
+    return m_multiPV;
+  }
+  
+  inline bool refitPVs() const 
+  {
+    return m_refitPVs;
+  }
+  
+
+  inline bool useP2PV() const 
+  {
+    return m_refitPVs ? true : ( !multiPV() ? false : m_useP2PV );
+  }
   
 private:
   /// Decay description (Property)
@@ -607,9 +639,19 @@ private:
   /// Number of passing events
   int m_countFilterPassed ;
 
-  /// Re-fit PVs
+  /// Re-fit PVs. Default: false.
   bool m_refitPVs;
+
+  /// Do we have more than one PV in the event?
+  bool m_multiPV;
   
+  /// Do we want to use the Particle -> PV relations? Default: true.
+  bool m_useP2PV;
+
+  /// Do we want to write the Particle -> PV relations table to the TES?
+  /// Default: true
+  bool m_writeP2PV;
+
   /// Switch PreloadTools to false no to preload any tools.
   /// This will have the effect that they will be loaded on demand, when needed,
   /// at any event. This option is thus only recommended for use of DVAlgorithm

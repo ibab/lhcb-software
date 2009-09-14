@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.58 2009-09-01 16:08:28 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.59 2009-09-14 15:54:07 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -25,59 +25,72 @@ DVAlgorithm::DVAlgorithm
   ISvcLocator* pSvcLocator ) 
   : GaudiTupleAlg ( name , pSvcLocator )
   //
-  , m_desktop               ( 0 )
-  , m_desktopName           ( "PhysDesktop" )
+    , m_desktop               ( 0 )
+    , m_desktopName           ( "PhysDesktop" )
   // 
-  , m_vertexFitNames        () 
-  , m_vertexFits            () 
+    , m_vertexFitNames        () 
+    , m_vertexFits            () 
   //
-  , m_geomToolNames         () 
-  , m_geomTools             () 
+    , m_geomToolNames         () 
+    , m_geomTools             () 
   //
-  , m_filterNames           () 
-  , m_filters               () 
+    , m_filterNames           () 
+    , m_filters               () 
   //
-  , m_particleCombinerNames ()
-  , m_particleCombiners     ()
+    , m_particleCombinerNames ()
+    , m_particleCombiners     ()
   // 
-  , m_particleReFitterNames ()
-  , m_particleReFitters     ()
+    , m_particleReFitterNames ()
+    , m_particleReFitters     ()
   //
-  , m_massFitterNames       ()
-  , m_massFitters           ()
+    , m_massFitterNames       ()
+    , m_massFitters           ()
   //
-  , m_massVertexFitterNames ()
-  , m_massVertexFitters     ()
+    , m_massVertexFitterNames ()
+    , m_massVertexFitters     ()
   //
-  , m_lifetimeFitterNames   ()
-  , m_lifetimeFitters       ()
+    , m_lifetimeFitterNames   ()
+    , m_lifetimeFitters       ()
   //
-  , m_directionFitterNames  ()
-  , m_directionFitters      ()
+    , m_directionFitterNames  ()
+    , m_directionFitters      ()
     //
-  , m_distanceCalculatorNames  ()
-  , m_distanceCalculators      ()
+    , m_distanceCalculatorNames  ()
+    , m_distanceCalculators      ()
   //
-  , m_checkOverlapName      ( "CheckOverlap" ) 
-  , m_checkOverlap          ( 0 )
-  , m_taggingToolName       ( "BTaggingTool" )
-  , m_taggingTool           ( 0 )
-  , m_descendants           ( 0 )
-  , m_descendantsName       ("ParticleDescendants")
-  , m_writeSelResultName    ( "WriteSelResult" )
-  , m_writeSelResult        ( 0 )
-  , m_ppSvc                 ( 0 )
-  , m_setFilterCalled       ( false )
-  , m_countFilterWrite      ( 0 )
-  , m_countFilterPassed     ( 0 )
-  , m_refitPVs              ( false )
+    , m_checkOverlapName      ( "CheckOverlap" ) 
+    , m_checkOverlap          ( 0 )
+    , m_taggingToolName       ( "BTaggingTool" )
+    , m_taggingTool           ( 0 )
+    , m_descendants           ( 0 )
+    , m_descendantsName       ("ParticleDescendants")
+    , m_writeSelResultName    ( "WriteSelResult" )
+    , m_writeSelResult        ( 0 )
+    , m_ppSvc                 ( 0 )
+    , m_setFilterCalled       ( false )
+    , m_countFilterWrite      ( 0 )
+    , m_countFilterPassed     ( 0 )
+    , m_refitPVs              ( false )
+    , m_multiPV               ( false )
+    , m_useP2PV               ( true  )
+    , m_writeP2PV             ( false  )
 {
   m_inputLocations.clear() ;
-  declareProperty( "InputLocations", m_inputLocations, "Input Locations forwarded to PhysDesktop" );
+  declareProperty( "InputLocations", 
+                   m_inputLocations, 
+                   "Input Locations forwarded to PhysDesktop" );
 
   m_p2PVInputLocations.clear() ;
-  declareProperty( "P2PVInputLocations", m_p2PVInputLocations, 
+  declareProperty( "P2PVInputLocations", 
+                   m_p2PVInputLocations, 
                    "Particle -> PV Relations Input Locations forwarded to PhysDesktop" );
+
+  declareProperty("UseP2PVRelations", m_useP2PV,
+                  "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
+
+  declareProperty("WriteP2PVRelations", m_writeP2PV, 
+                  "Write out P->PV relations table to TES. Default: true");
+
   // 
   m_vertexFitNames [ "Offline"       ] = "OfflineVertexFitter" ;
   m_vertexFitNames [ "Trigger"       ] = "TrgVertexFitter"     ;
@@ -215,7 +228,9 @@ StatusCode DVAlgorithm::initialize ()
     if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with P->PV locations " << endmsg;
     desktop()->setP2PVInputLocations(m_p2PVInputLocations);
   }
-      
+   
+  desktop()->setWriteP2PV( m_writeP2PV );
+
   if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
   return sc;
@@ -295,10 +310,16 @@ StatusCode DVAlgorithm::sysExecute ()
 
   DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
 
+  desktop()->setUsingP2PV(this->useP2PV());
+
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
   
+  const LHCb::RecVertices* pvs = desktop()->primaryVertices();
+  
+  m_multiPV = 0!=pvs ? pvs->size() > 1 : false;
+
   // execute the algorithm 
   sc = this->Algorithm::sysExecute();
   if ( sc.isFailure() ) return sc;
@@ -336,6 +357,7 @@ void DVAlgorithm::setFilterPassed  (  bool    state  )
 // ============================================================================
 const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p) const
 {
+  //  always() << "ATTENTION! called calculateRelatedPV!" << endmsg;
   if (msgLevel(MSG::VERBOSE)) verbose() << "DVAlgorithm::calculateRelatedPV" << endmsg;
   const IRelatedPVFinder* finder = this->relatedPVFinder();
   const LHCb::RecVertex::Container* PVs = this->primaryVertices();
@@ -344,7 +366,7 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     return 0;
   }
   // re-fit vertices, then look for the best one.
-  if (m_refitPVs) {
+  if ( refitPVs() ) {
     if (msgLevel(MSG::VERBOSE)) verbose() << "Re-fitting " 
                                           << PVs->size() << " PVs"<< endmsg;
     const IPVReFitter* fitter = primaryVertexReFitter();
@@ -396,14 +418,15 @@ const LHCb::VertexBase* DVAlgorithm::calculateRelatedPV(const LHCb::Particle* p)
     } else {
       if (msgLevel(MSG::VERBOSE)) verbose() << "no related PV found" << endmsg;
     }
-    return pv;
+     return pv;
   }
   
 }
 // ============================================================================
-const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) const
+const LHCb::VertexBase* DVAlgorithm::_getRelatedPV(const LHCb::Particle* part) const
 {
-  if (msgLevel(MSG::VERBOSE)) verbose() << "getRelatedPV! Getting range" << endmsg;
+  //  always() << "ATTENTION! called getRelatedPV!" << endmsg;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "_getRelatedPV! Getting range" << endmsg;
   if (0==part) {
     error() << "input particle is NULL" << endmsg;
     return 0;
@@ -420,14 +443,16 @@ const LHCb::VertexBase* DVAlgorithm::getRelatedPV(const LHCb::Particle* part) co
         verbose() << "Found related vertex. Relating it" << endmsg;
       }
       relateWithOverwrite(part, pv);
+      return pv;
     } else {
       Warning("Found no related vertex", StatusCode::FAILURE, 10).ignore();
       return 0;
     }
+  } else {
+    const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(part);
+    return DaVinci::bestVertexBase(range);
   }
-
-  const Particle2Vertex::Table::Range range = desktop()->particle2Vertices(part);
-  return DaVinci::bestVertexBase(range);
+  
 }
 // ============================================================================
 bool DVAlgorithm::hasStoredRelatedPV(const LHCb::Particle* particle) const
