@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Rob Lambert
+ - Fixed compiler warnings in EventCountAlg
+
 ! 2009-09-09 - Rob Lambert
  - Added EventCountAlg, which has a nameable counter()
    This will presumably replace EventCountHisto with the

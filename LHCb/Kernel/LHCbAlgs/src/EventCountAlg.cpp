@@ -1,4 +1,4 @@
-// $Id: EventCountAlg.cpp,v 1.1 2009-09-11 09:21:43 rlambert Exp $
+// $Id: EventCountAlg.cpp,v 1.2 2009-09-14 08:27:12 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -24,13 +24,15 @@ DECLARE_ALGORITHM_FACTORY( EventCountAlg );
 EventCountAlg::EventCountAlg( const std::string& name,
                       ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_nExecuted              ( 0 )
-  , m_nHandled           ( 0 )
-  , m_incSvc(0)
+  , m_nHandled    ( 0 )
+  , m_nExecuted   ( 0 )
+  , m_counterName ( "" )
+  , m_incSvc      (0)
 {
 
   //declare the filename to write. If the string is empty, no file will be written
   declareProperty("CounterName",m_counterName="efficiency");
+  //I know this is a stat entity, make sure it's written as such
   declareProperty("StatEntityList",m_statEntityList=std::vector<std::string>(1,".*"));
 
 }
