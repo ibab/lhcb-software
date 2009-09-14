@@ -3,14 +3,72 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-! 2009-09-03 - Marco Clemencic
- - Added the pattern container_package.
+</PRE><H1><A NAME=v35r6>2009-09-14 Brunel v35r6</A></H1><PRE>
+This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6, Rec v7r6
+ and SQLDDDB v5r11, ParamFiles v8r1, FieldMap v5r2, AppConfig v3r*
 
-! 2009-07-31 - Marco Cattaneo
- - Update reference for:
-   . fix to duplicate creation of PatVelo hit manager tools
-   . all Rich monitors booked at initialisation
- - Increment version to v35r6
+This is a development version for changes subsequent to the 2009 MC production. 
+Output requires DaVinci v24r3 or later
+
+ - Changes to configuration:
+   . Reorganisation of charged ProtoParticle algorithms for greater flexibility:-
+     + New algorithm creates ProtoParticles from Tracks, but no longer adds any
+       PID information
+     + One algorithm per PID information to be added to the ProtoParticles.
+     (GlobalReco v6r26, RecEvent v2r22)
+   . Introduction of configurables for Calo, and reorganisation of Calo sequences
+     (CaloKernel v6r0, RecSys v7r6, CaloPIDs v5r0, CaloReco v5r0)
+
+ - Persistency changes:
+   . Changes to Track class: add members for likelihood and ghost probability,
+     remove obsolete ExtraInfo enums. Backward compatibility for MC09 data is
+     preserved by the EventPacker. Backward compatible also when reading DC06
+     data, but access to obsoleted ExtraInfo items requires changing code to use
+     the obsoleted enums. (TrackEvent v5r0, EventPacker v1r7, PackedEvent v3r6,
+     CaloTools v5r11, RichRecQC v2r33, RichRecTrackTools v1r14, NNTools v1r6,
+     TrackCheckers v4r8, TrackMonitors v1r13, TrackTools v3r21)
+   . ExtraInfo is removed at the end of the tracking sequence and not written
+     to output (TrackSys v4r25, TrackUtils v1r29)
+
+ - New tuning:
+   . Added support for zipped InstallArea/python directories on the PYTHONPATH,
+     speeds up the python configuration part of the initialisation (Gaudi v21r4)
+   . New default DB tags for 2009 data: head-20090902 for DDDB and LHCBCOND,
+     sim-20090902-vc-md100 for SIMCOND. Fixes rotation of Rich1 HPDs, updates IT
+     dead strip+noise files, fixes material for track fit (SQLDDDB v5r11, v5r10)
+   . MagneticFieldSvc now uses a MagneticFieldGrid object, reduces virtual
+     function calls of track fit (Magnet v5r4, DetDesc v18r15, LHCbKernel v11r7)
+   . All Rich monitors booked at initialisation, speeds up filling by removing
+     hash table lookup at each plot call (RichKernel v7r26)
+   . Track fit now initialises itself, does not try to use OT drift times in
+     first iteration. Removes need for explicit prefits
+     (TrackSys v4r25, PatVeloTT v3r8, TrackFitter v2r37, TrackProjectors v2r24)
+
+ - Bug fixes:
+   . Fix to duplicate creation of PatVelo hit manager tools (PatVelo v3r17)
+   . Protect output in TrackEffChecker against nan (TrackCheckers v4r8)
+   . Fixed bug in TrackHerabExtrapolator introduced in Brunel v33r2
+     (TrackExtrapolators v2r23)
+   . Correct DOF to 4 in case of field off (TrackFitter v2r3)
+
+ - New packaging
+   . Restructuring of TrackExtrapolators classes (TrackExtrapolators v2r23)
+
+ - Monitoring changes
+   . Addition of RichHotPixels monitor (RichRecQC v2r33)
+   . Reduce verbosity of Rich raw data monitors (RichRecQC v2r33)
+   . Changes to STClusterMonitor histograms (STMonitors v1r6)
+   . Add ProtoParticle monitor sequence (GlobalReco v6r26)
+   . Allow RICH expert histograms to be enabled when running without MC
+   . Calo monitoring now uses CaloMoniDstConf configurable (CaloMoniDst v4r0)
+   . Add CALO to KnownExpertCheckSubdets
+   . Add "good" B daughter effiency and hit efficiency to TrackEffChecker output
+     (TrackCheckers v4r8)
+
+ - Changes to tests:
+   . Exclude printout of MuonID version from QMTest log file comparisons
+   . Move exclusion of transport service exceptions from individual tests to
+     BrunelExclusions.py
 
 </PRE><H1><A NAME=v35r5>2009-07-30 Brunel v35r5</A></H1><PRE>
 This version uses projects Gaudi v21r3, LHCb v27r5, Lbcom v7r5, Rec v7r5
