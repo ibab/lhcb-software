@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.6 2009-08-24 21:29:03 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.7 2009-09-14 12:24:04 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -20,7 +20,7 @@ from HltLine.HltLinesConfigurableUser import *
 class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt2PassThrough'  : 0.0001 
-                              , 'Hlt2Forward'      : 0.0001
+                              , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                               , 'Hlt2DebugEvent'   : 0.0001
                               }
                }
@@ -41,7 +41,6 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
         Line('Forward', prescale = self.prescale, postscale = self.postscale
             , algos = [ HltCopyTrackSelection( 'Hlt2ForwardDecision' 
                                              , InputSelection = 'TES:/Hlt/Track/Long' # carefull! needs info from HltLine.HltReco!!
-
                                              )
                       ]
             , PV = False

@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.57 2009-08-31 09:58:02 graven Exp $
+$Id: release.notes,v 1.58 2009-09-14 12:24:04 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-09-14 - Gerhard Raven
+ - disable Hlt2Forward until we can check output container presence without
+   introducing large penalties on other lines
 
 !========================== Hlt2Lines v1r6 2009-08-31 ===================
 ! 2009-08-26 - Patrick Koppenburg
