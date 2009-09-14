@@ -1,0 +1,55 @@
+##-----------------------------------------------------------------------------##
+# Valgrind error suppression file for python (e.g. for gaudirun.py)
+# See also http://svn.python.org/projects/python/trunk/Misc/valgrind-python.supp
+##-----------------------------------------------------------------------------##
+
+{
+  Invalid read of size 4
+  Memcheck:Addr4
+  fun:PyObject_Free
+}
+{
+  Invalid read of size 8
+  Memcheck:Addr8
+  fun:PyObject_Free
+}
+{
+  Use of uninitialised value of size 4
+  Memcheck:Value4
+  fun:PyObject_Free
+}
+{
+  Use of uninitialised value of size 8
+  Memcheck:Value8
+  fun:PyObject_Free
+}
+{
+  Conditional jump or move depends on uninitialised value(s)
+  Memcheck:Cond
+  fun:PyObject_Free
+}
+{
+  Invalid read of size 4
+  Memcheck:Addr4
+  fun:PyObject_Realloc
+}
+{
+  Invalid read of size 8
+  Memcheck:Addr8
+  fun:PyObject_Realloc
+}
+{
+  Use of uninitialised value of size 4
+  Memcheck:Value4
+  fun:PyObject_Realloc
+}
+{
+  Use of uninitialised value of size 8
+  Memcheck:Value8
+  fun:PyObject_Realloc
+}
+{
+  Conditional jump or move depends on uninitialised value(s)
+  Memcheck:Cond
+  fun:PyObject_Realloc
+}

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.163 2009-07-28 07:52:36 cattanem Exp $
+! $Id: release.notes,v 1.164 2009-09-14 17:17:36 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-09-14 - Marco Cattaneo
+ - Add options/valgrind-python.supp, suppression file for valgrind errors from
+   python, e.g. when executing gaudirun.py
 
 !======================== GaudiConf v12r8 2009-07-28 ========================
 ! 2009-07-14 - Marco Cattaneo
