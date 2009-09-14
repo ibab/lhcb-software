@@ -1,13 +1,14 @@
 ! =============================================================================
-! $Id: release.notes,v 1.124 2009-09-14 15:56:58 ishapova Exp $
+! $Id: release.notes,v 1.125 2009-09-14 16:02:33 ishapova Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
 ! 2009-09-14 - Illya Shapoval
- - The script for adding the global tag to the db is unified to standard CondDBUI 
-   form and functionality, and added to the CondDBUI package.
+ - The script for adding the global tag to the db is unified to standard 
+   CondDBUI form and functionality, and added to the CondDBUI package as 
+   CondDBAdmin_GlobalTag.py.
 
 ! 2009-09-09 - Illya Shapoval
  - Fixed the bug in an analysis method of the ReleaseNotes class for dealing with
