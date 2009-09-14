@@ -119,6 +119,8 @@ path_remove    PATH  "" Linux&Vis "/david/"
 path_append    PATH  "" Linux&Vis "$(DAVID_HOME)/$(LCG_system)/bin"
 
 #===========================================================================
+apply_pattern install_scripts
+
 #== Install configurable
 apply_pattern install_python_modules
 
