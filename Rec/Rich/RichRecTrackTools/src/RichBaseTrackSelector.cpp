@@ -5,7 +5,7 @@
  *  Implementation file for RICH reconstruction tool : Rich::Rec::BaseTrackSelector
  *
  *  CVS Log :-
- *  $Id: RichBaseTrackSelector.cpp,v 1.8 2009-09-14 10:04:05 jonrob Exp $
+ *  $Id: RichBaseTrackSelector.cpp,v 1.9 2009-09-14 10:42:03 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   12/08/2006
@@ -302,7 +302,8 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   // Likelihood
   if ( m_likelihoodCutEnabled )
   {
-    if ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL )
+    if ( track->likelihood() < 99 && // check against default value in Track class. Accept in this case.
+         ( track->likelihood() < m_minLL || track->likelihood() > m_maxLL ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Track Likelihood " << track->likelihood() << " failed cut "
@@ -315,8 +316,9 @@ BaseTrackSelector::trackSelected( const LHCb::RichRecTrack * track ) const
   // Ghost Prob
   if ( m_ghostProbCutEnabled )
   {
-    if ( track->ghostProbability() < m_minGhostProb ||
-         track->ghostProbability() > m_maxGhostProb )
+    if ( track->ghostProbability() < 99 && // check against default value in Track class. Accept in this case.
+         ( track->ghostProbability() < m_minGhostProb ||
+           track->ghostProbability() > m_maxGhostProb ) )
     {
       if ( msgLevel(MSG::VERBOSE) )
         verbose() << " -> Track GhostProbability " << track->ghostProbability() << " failed cut "
