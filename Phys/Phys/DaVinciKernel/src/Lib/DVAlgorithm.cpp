@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.59 2009-09-14 15:54:07 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.60 2009-09-14 16:29:04 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -73,7 +73,7 @@ DVAlgorithm::DVAlgorithm
     , m_refitPVs              ( false )
     , m_multiPV               ( false )
     , m_useP2PV               ( true  )
-    , m_writeP2PV             ( false  )
+    , m_writeP2PV             ( true  )
 {
   m_inputLocations.clear() ;
   declareProperty( "InputLocations", 
