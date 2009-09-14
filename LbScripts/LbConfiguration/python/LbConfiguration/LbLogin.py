@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.51 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.52 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -109,6 +109,10 @@ def _setCMTVersion_cb(option, opt_str, value, parser):
 
 def _noPython_cb(option, opt_str, value, parser):
     parser.values.get_python = False
+    parser.values.use_cache = False
+
+def _userAreaScripts_cb(option, opt_str, value, parser):
+    parser.values.user_area_scripts = True
     parser.values.use_cache = False
 
 class LbLoginScript(Script):
@@ -248,10 +252,10 @@ class LbLoginScript(Script):
                           dest="strip_path",
                           action="store_true",
                           help="activate the cleanup of invalid entries in pathes [default: %default]")
-        parser.set_defaults(scripts_user_area=False)
-        parser.add_option("--scripts-user-area",
-                          dest="scripts_user_area",
-                          action="store_true",
+        parser.set_defaults(user_area_scripts=False)
+        parser.add_option("--user-area-scripts",
+                          action="callback",
+                          callback = _userAreaScripts_cb,
                           help="Enable the usage of the user release area for the setup of the scripts. Use with care. [default: %default]")
 
 #-----------------------------------------------------------------------------------
@@ -861,7 +865,7 @@ class LbLoginScript(Script):
                 setupprojargs.append("--debug")
             if opts.loglevel=="CRITICAL" :
                 setupprojargs.append("--silent")
-            if not opts.scripts_user_area :
+            if not opts.user_area_scripts :
                 setupprojargs.append("--no-user-area")
             setupprojargs.append("--disable-CASTOR")
             setupprojargs.append("--no-touch-logfile")
