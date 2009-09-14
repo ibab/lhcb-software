@@ -247,7 +247,7 @@ void AdderSvc::handle(const Incident& inc) {
 StatusCode AdderSvc::finalize() {
   MsgStream msg(msgSvc(), name());
 //  m_processMgr->serviceMap()->add();
-  shutDown();
+//  shutDown();
   m_enablePostEvents = false;
   msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
   if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
