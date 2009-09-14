@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.469 2009-09-11 17:13:17 jonrob Exp $
+! $Id: release.notes,v 1.470 2009-09-14 07:02:26 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-14 - Juan PALACIOS
+ - src/PhysDesktop.*
+  . Some cleanups.
 
 ! 2009-09-11 - Chris Jones
  - Various minor speed improvements to PhysDesktop and CheckOverlap
