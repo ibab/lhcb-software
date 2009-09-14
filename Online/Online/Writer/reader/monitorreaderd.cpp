@@ -123,7 +123,7 @@ int main(int /* argc */, char** /* argv */) {
 	    // Handle command received. 
             if (cmd->name == "openfile") {
 		// openfile$filename   (no bytes written from start)
-		snprintf(message,1000, "openfile%c%s",DELIMITER,(mt->param2).c_str());
+		snprintf(message,1000, "openfile%c%s",DELIMITER,(cmd->param2).c_str());
 		pubMQ.updateService(); //send message
 		fprintf(fp,"\n File open update. Opened file: %s ", cmd->param2.c_str());
 	    }
