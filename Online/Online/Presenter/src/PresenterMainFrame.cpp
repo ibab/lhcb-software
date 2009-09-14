@@ -3049,7 +3049,7 @@ if (Batch != m_presenterMode) {
       int dimType;
     
       std::string serviceType = s_Mon;
-//      serviceType.append("*");
+      serviceType.append(s_DimWildcard);
       m_dimBrowser->getServices(serviceType.c_str());
       while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
         TString dimMon(dimService);        
@@ -3060,7 +3060,7 @@ if (Batch != m_presenterMode) {
         }   
       }
       
-      serviceType = "*" + s_eff_monRate + "*";
+      serviceType = s_DimWildcard + s_eff_monRate + s_DimWildcard;
       m_dimBrowser->getServices(serviceType.c_str());
       while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {    
         TString dimMon(dimService);
@@ -3463,7 +3463,7 @@ void PresenterMainFrame::addHistoToHistoDB()
   enableAutoCanvasLayoutBtn();
 }
 void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::ServicePlotMode overlapMode)
-{  
+{
   HistogramIdentifier histogramID = HistogramIdentifier(histogramUrl);
     int newHistoInstance = 0;
     // see if the histogram object exists already

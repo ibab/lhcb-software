@@ -160,3 +160,4 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_fileName = fileName;
   }
 }
+
