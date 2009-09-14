@@ -110,22 +110,43 @@ DbRootHist::DbRootHist(const std::string & identifier,
   // Prevent ROOT booking
   TH1::AddDirectory(kFALSE);
   m_prettyPalette = new TImagePalette(1,0);
-//  m_textTitle = new TText(5, 5, "");
 
+  TString dimMon(identifier);
+  if (dimMon.BeginsWith(s_adder.c_str()) &&
+      dimMon.EndsWith(s_eff_TCK.c_str())) {
+    m_effServiceType = TCKinfo;
+    char *dimService; 
+    char *dimFormat;
+    int dimType;
+    std::string query = dimServiceName + s_underscore + s_adder + s_DimWildcard;
+    m_dimBrowser->getServices(query.c_str());
+    while((dimType = m_dimBrowser->getNextService(dimService, dimFormat))) {
+      std::string dimServiceCandidate(dimService);
+      TString dimServiceTS(dimServiceCandidate);
+       
+      if (true) { //eFFRegexp
+        HistogramIdentifier histogramCandidate = HistogramIdentifier(dimServiceCandidate); 
+        if (0 == (histogramCandidate.histogramIdentifier().compare(identifier))) {          
+          m_dimServiceName = dimServiceCandidate;
+          break;  
+        }
+      }
+    }
+  }
+  
   // if dimBrowser is specified, retrieve dim service name from partition name
-  if(m_dimBrowser && (!histogramDB)) {
+  if (m_dimBrowser && (!histogramDB) && (TCKinfo != m_effServiceType)) {
 //    m_partition = dimServiceName;
     m_partition = partitionName();
   }
   
-  if (histogramDB) {
+  if (histogramDB && (TCKinfo != m_effServiceType)) {
     if (onlineHist) { setOnlineHistogram(onlineHist); }
     else { connectToDB(histogramDB, "_NONE_", 1); }
   }
 }
 DbRootHist::~DbRootHist()
 {
-//  m_toRefresh = false;
   if (m_offsetHistogram) { delete m_offsetHistogram; m_offsetHistogram = NULL;}
   if (rootHistogram) { delete rootHistogram; rootHistogram = NULL; }
   if (m_reference) { delete  m_reference; m_reference = NULL; }
@@ -136,8 +157,7 @@ DbRootHist::~DbRootHist()
   if (m_monRateRace) { delete m_monRateRace; m_monRateRace = NULL; }
   if (m_titpave) {delete m_titpave; m_titpave = NULL; }
   if (m_statpave) {delete m_statpave; m_statpave = NULL; }
-  if (m_prettyPalette) {delete m_prettyPalette; m_prettyPalette = NULL; }
-//  if (m_textTitle) {delete m_textTitle; m_textTitle = NULL; }  
+  if (m_prettyPalette) {delete m_prettyPalette; m_prettyPalette = NULL; }  
   
   cleanAnaSources();
 }
@@ -193,46 +213,7 @@ void DbRootHist::loadAnaSources()
     m_reference = NULL;
   }
 }
-void DbRootHist::setDimServiceName(std::string newDimServiceName)
-{
-  HistogramIdentifier histogramIdentifier(newDimServiceName);
-  if (0 == histogramIdentifier.histogramIdentifier().compare(m_identifier) &&
-      0 == histogramIdentifier.histogramSetName().compare(m_setName) &&
-      0 == histogramIdentifier.histogramType().compare(m_histogramType)) {
-    setIdentifiersFromDim(newDimServiceName);
 
-    if (s_pfixMonProfile != m_histogramType &&
-        s_pfixMonH1D != m_histogramType &&
-        s_pfixMonH2D != m_histogramType) {  
-
-      if (m_dimInfo) { delete m_dimInfo; m_dimInfo = NULL; }
-      m_dimInfo = new DimInfo(newDimServiceName.c_str(), m_refreshTime,
-                            (float)-1.0);
-    } else {
-      if (m_dimInfoMonObject) {
-        delete m_dimInfoMonObject;
-        m_dimInfoMonObject = NULL;
-      }
-      m_dimInfoMonObject = new DimInfoMonObject(newDimServiceName.c_str(),
-                                                m_refreshTime, "GauchoDimInfoMonObjectPresenter");
-    }
-
-    m_dimServiceName = newDimServiceName;
-    if (m_verbosity >= Verbose) {
-      std::cout << "DimInfo dimServiceName: " << newDimServiceName << std::endl;
-    }
-    if (m_dimInfo || m_dimInfoMonObject) {
-      initHistogram();
-      if (false == m_isEmptyHisto) {
-        fillHistogram();
-        setTH1FromDB();
-      }
-    } else {
-      beEmptyHisto();
-    }
-  } else { //TODO: TMsg warning
-  }
-}
 void DbRootHist::enableEdit()
 {
   if (hostingPad) {
@@ -307,8 +288,10 @@ void DbRootHist::initHistogram()
     
     // sed partition   
     if (m_onlineHistogram && m_session && (m_retryInit > 1)) {
-      m_dimServiceName = m_onlineHistogram->dimServiceName();
-      
+      if (TCKinfo != m_effServiceType) {
+        m_dimServiceName = m_onlineHistogram->dimServiceName();
+      }
+
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;
       }      
@@ -326,15 +309,22 @@ void DbRootHist::initHistogram()
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName w partition: " << m_dimServiceName << std::endl;
       }            
-    }    
-
+    }
     HistogramIdentifier histogramIdentifier(m_dimServiceName);
     m_histogramType = histogramIdentifier.histogramType();
+
+// _addFromDim?    
+     if ( (m_histogramType.empty()) && (TCKinfo == effServiceType())) {
+       m_histogramType = s_CNT;
+     }
     if (s_P1D == m_histogramType || s_HPD == m_histogramType ||
         s_H2D == m_histogramType || s_H1D == m_histogramType ||
         s_CNT == m_histogramType ) {
       if( m_dimServiceName.size() > 0 ) {
         if (m_dimInfo) { delete m_dimInfo; m_dimInfo = 0; }
+        if ( (s_CNT == m_histogramType) && (TCKinfo != effServiceType())) {              
+         m_dimServiceName = findDimServiceName(s_CNT);
+        }
         m_dimInfo = new DimInfo(m_dimServiceName.c_str(), m_refreshTime, (float)-1.0);
       }       
 // || s_P2D == m_histogramType          
@@ -1623,7 +1613,6 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
   } else {
     dimServiceNameQueryBegining = s_DimWildcard;    
   }
-  
   
   boost::recursive_mutex::scoped_lock dimLock(*m_dimMutex);
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);

@@ -1,4 +1,3 @@
-// Separate file/class to prevent CINT crushing onto Boost headers via LinkDef.
 #include <vector>
 #include <boost/thread/thread.hpp>
 #include <boost/thread/mutex.hpp>
@@ -49,9 +48,10 @@ DbRootHist* getHistogram(PresenterMainFrame * presenter,
   if (0 != presenter) {
     dbRootHist->setPresenter(presenter);
     dbRootHist->initHistogram();
-    dbRootHist->setTH1FromDB();
+// _addFromDim?    
+    if (histogramDB) { dbRootHist->setTH1FromDB();}
   }
-  
+
 //    if (0 != presenter &&
 //        0 != presenter->archive() &&
 //        ((History == presenter->presenterMode()) ||

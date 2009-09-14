@@ -111,6 +111,7 @@ MonRateRace::MonRateRace(const std::string & serviceName, pres::EffServiceType s
 {
   m_infoHandlerMutex = new boost::mutex();
 //  serviceName -> isRate  vs. isTCK // dim buffer content
+// valid title test: last N callbacks give the same result? -> gate validRate too
 }
 
 void MonRateRace::infoHandler()
@@ -172,6 +173,8 @@ bool MonRateRace::isRateValid() {
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
   if (infoHandlerLock) {
    return m_rateIsValid;
+  } else {
+    return false;
   }
 }
 double MonRateRace::currentValue()

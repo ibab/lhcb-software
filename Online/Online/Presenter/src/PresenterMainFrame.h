@@ -305,7 +305,7 @@ class PresenterMainFrame : public TGMainFrame
     void addDimHistosToPage();
     void addDbHistoToPage(pres::ServicePlotMode overlapMode);
     void addHistoToPage(const std::string& histogramUrl, pres::ServicePlotMode overlapMode);
-    void setHistogramDimSource(bool tree);
+//    void setHistogramDimSource(bool tree);
     void dimCollapseAllChildren();
 
     void setHistogramPropertiesInDB();
@@ -551,7 +551,7 @@ class PresenterMainFrame : public TGMainFrame
 
     TBenchmark* m_benchmark;
     int m_deadTasksOnPage;
-    bool m_trackingTCK;
+    std::string m_currentTCK;
     std::vector<std::string> m_histoTimerName;
     
     std::string convDimToHistoID(const std::string & dimSvcName);

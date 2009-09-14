@@ -10,7 +10,6 @@
 
 #include <boost/thread/recursive_mutex.hpp>
 
-
 #include <TH1.h>
 #include <TPad.h>
 #include <TDatime.h>
@@ -79,7 +78,6 @@ class DbRootHist : public HistogramIdentifier
     std::string histoRootName() {return std::string(m_histoRootName.Data());}
 //    std::string hstype() { return m_hstype; }
     int instance() { return m_instance; }
-    void setDimServiceName(std::string newDimServiceName);
     bool isAnaHist() { return m_isAnaHist;}
     const std::vector<DbRootHist*> *anaSources() {return &m_anaSources;}
     std::string& creationAlgorithm() { return m_creationAlgorithm;}
