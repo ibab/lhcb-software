@@ -37,9 +37,9 @@ Moore().Simulation = True
 Moore().DataType   = '2009'
 #Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
 
-#SNIES: since the file below doesn't exist anymore, i pointed to my private copy  
 #Moore().inputFiles = [ 'castor:/castor/cern.ch/grid/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
-Moore().inputFiles = [ 'castor:/castor/cern.ch/user/s/snies/mdf/00003083_%08d_1.mdf'%f for f in range(1,3) ]
+#Moore().inputFiles = [ 'castor:/castor/cern.ch/user/s/snies/mdf/00003083_%08d_1.mdf'%f for f in range(1,3) ]
+Moore().inputFiles = [ 'castor:/castor/cern.ch/user/d/dijkstra/Stripped-L0-MC09/Sim03Reco02-Mbias_%d.mdf'%f for f in range(1,5) ]  
 
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 1000
