@@ -62,6 +62,7 @@ endif
 source /afs/cern.ch/lhcb/group/rich/vol4/jonrob/scripts/new-valgrind.csh
 SetupProject Brunel $Bversion
 
+
 # Go to working directory
 cd $WORKDIR
 
@@ -75,16 +76,16 @@ endif
 
 set SuppFile = "$MYJOBROOT/job/Brunel.supp"
 
-# Flatten the options and force 5 events only
-gaudirun.py -n -v -o ./valgrind.opts $options
-echo "ApplicationMgr.EvtMax = 5;" >> valgrind.opts
+# Create top level options and force 5 events
+echo "from Brunel.Configuration import *" >&! valgrind-opts.py
+echo "Brunel().EvtMax=5" >> valgrind-opts.py
 
 # == run the excutable ================================
 
-valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile Gaudi.exe ./valgrind.opts >&! memcheck.log
+valgrind --tool=memcheck --demangle=no --error-limit=no --leak-check=yes --num-callers=40 --suppressions=$ROOTSYS/etc/valgrind-root.supp --suppressions=$STDOPTS/valgrind-python.supp --suppressions=$STDOPTS/Gaudi.supp --suppressions=$SuppFile python `which gaudirun.py` valgrind-opts.py $options >&! memcheck.log
 
 # == job is finished: remove temporary files ==========
-rm valgrind.opts
+rm valgrind-opts.py
 if ($?LS_SUBCWD) then
 # if in batch copy output files to user directories
   ls *.* >! RETURN

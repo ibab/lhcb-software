@@ -4,6 +4,8 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 ! 2009-09-14 - Marco Cattaneo
+ - Adapt valgrind.job to use gaudirun.py, uses python suppressions file from
+   STDOPTS (needs GaudiConf from v12r9)
  - Update references for new Rich ring search monitor (RichRecQC v2r34)
  - Update references for fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
  - Update references for reduced CaloPIDs verbosity (CaloMoniDst v5r2)
