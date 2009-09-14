@@ -17,7 +17,7 @@ use HltDAQ			v1r0p2  Hlt
 
 
 # Declare this as a container package
-# apply_pattern container_package
+apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
