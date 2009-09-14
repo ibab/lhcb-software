@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.50 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.51 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -248,6 +248,11 @@ class LbLoginScript(Script):
                           dest="strip_path",
                           action="store_true",
                           help="activate the cleanup of invalid entries in pathes [default: %default]")
+        parser.set_defaults(scripts_user_area=False)
+        parser.add_option("--scripts-user-area",
+                          dest="scripts_user_area",
+                          action="store_true",
+                          help="Enable the usage of the user release area for the setup of the scripts. Use with care. [default: %default]")
 
 #-----------------------------------------------------------------------------------
 
@@ -630,6 +635,26 @@ class LbLoginScript(Script):
             if opts.cmtsite == "LOCAL" :
                 opts.mysiteroot = os.pathsep.join(opts.sharedarea.split(os.pathsep))
 
+    def getLocalCompilers(self, platform, binary):
+        compilers = []
+        ev = self._env
+        if sys.platform != "win32" :
+            if platform == "amd64" :
+                platform = "x86_64"
+            if platform == "ia32" :
+                platform = "i686"
+            if "gcc" in os.listdir(ev["LCG_external_area"]) :
+                gccmainloc = os.path.join(ev["LCG_external_area"], "gcc")
+                for v in os.listdir(gccmainloc) :
+                    gccversloc = os.path.join(gccmainloc, v)
+                    for p in os.listdir(gccversloc) :
+                        if p.find("%s-%s" % (binary, platform)) != -1 :
+                            compilers.append(os.path.join(gccversloc, p))
+        return compilers
+
+    def selectCompiler(self, platform, binary):
+        local_compilers = self.getLocalCompilers(platform, binary)
+
     def getNativePlatformComponents(self):
         platform = None 
         binary = None
@@ -836,7 +861,8 @@ class LbLoginScript(Script):
                 setupprojargs.append("--debug")
             if opts.loglevel=="CRITICAL" :
                 setupprojargs.append("--silent")
-            setupprojargs.append("--no-user-area")
+            if not opts.scripts_user_area :
+                setupprojargs.append("--no-user-area")
             setupprojargs.append("--disable-CASTOR")
             setupprojargs.append("--no-touch-logfile")
             if self.output_name :
@@ -937,7 +963,8 @@ class LbLoginScript(Script):
         self.Manifest(debug)
 
         self._write_script(self._env.gen_script(opts.targetshell)
-                           +self._aliases.gen_script(opts.targetshell)+self._extra)
+                           + self._aliases.gen_script(opts.targetshell)
+                           + self._extra)
 
 
         self.setupLbScripts()

@@ -1,3 +1,8 @@
+2009-09-14  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: added the option "--scripts-user-area". This enables
+	The possibility to use the user release area for the setup of the scripts. Use with care.
+
 2009-09-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the variable LCG_external_area.
