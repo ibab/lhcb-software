@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2009-09-14 - Rob Lambert
+ - Added dependency on Kernel/XMLSummaryKernel
+
 </PRE><H1><A NAME=v28r0>2009-09-09 LHCbSys v28r0</A></H1><PRE>
 This version uses Gaudi v21r4 and LCG_56c
 
