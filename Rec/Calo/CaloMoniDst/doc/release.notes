@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.55 2009-09-08 15:34:28 odescham Exp $ 
+! $Id: release.notes,v 1.56 2009-09-14 13:23:53 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+
+! 2009-09-14 - Olivier Deschamps
+ - CaloPi0Monitor : 
+     - selection of non-converted photons
+     - isolation criteria
+     - Add background subtracted histo 
 
 ! 2009-09-08 - Olivier Deschamps
  - Add background histo in resolved pi0 monitor

@@ -1,39 +1,20 @@
-// $Id: CaloPi0Monitor.cpp,v 1.10 2009-09-08 15:34:28 odescham Exp $
+// $Id: CaloPi0Monitor.cpp,v 1.11 2009-09-14 13:23:53 odescham Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 // Include files
 // ============================================================================
-// STD & STL 
-// ============================================================================
 #include <vector>
-// ============================================================================
-// Event
-// ============================================================================
 #include "Event/CaloHypo.h"
-// ============================================================================
-// CaloUtils
-// ============================================================================
 #include "CaloUtils/CaloMomentum.h"
-// ============================================================================
-// local
-// ============================================================================
+#include "CaloDet/DeCalorimeter.h"
 #include "CaloMoniAlg.h"
+#include "CaloInterfaces/ICaloHypo2Calo.h"
 // ============================================================================
 
 /** @class CaloPi0Monitor CaloPi0Monitor.cpp
  *
  *  Simple pi0 monitoring algorithm
- *  It produces 7 histograms:
- *  <ol>
- *  <li> "Raw" mass distribution of 2 photons </li>
- *  <li> Mass distribution of 2 photons after     Pt cut for each photon </li>
- *  <li> Mass distribution of 2 photons after 0.5*Pt cut for each photon </li>
- *  <li> Mass distribution of 2 photons after 2.0*Pt cut for each photon </li>
- *  <li> Mass distribution of 2 photons after     Pt cut for combination </li>
- *  <li> Mass distribution of 2 photons after 0.5*Pt cut for combination </li>
- *  <li> Mass distribution of 2 photons after 2.0*Pt cut for combination </li>
- *  </ol>
  *
  *  @see   CaloMoniAlg
  *  @see GaudiHistoAlg
@@ -57,7 +38,12 @@ public:
     hBook1( "2", "pi0 energy " + inputData()       , m_energyMin  , m_energyMax , m_energyBin );
     hBook1( "3", "pi0 et     " + inputData()       , m_etMin  , m_etMax , m_etBin );
     hBook1( "4", "pi0 Mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
-    hBook1( "5", "pi0 background mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "5", "gg combinatorial background" + inputData()       , m_massMin  , m_massMax , m_massBin );
+    hBook1( "6", "bkg-substracted pi0 mass   " + inputData()       , m_massMin  , m_massMax , m_massBin );
+    m_calo = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal);
+    // get tool
+    m_toSpd = tool<ICaloHypo2Calo> ( "CaloHypo2Calo", "CaloHypo2Spd" , this );
+    m_toSpd->setCalos( "Ecal" ,"Spd");
     return StatusCode::SUCCESS;
   }
   virtual StatusCode execute();
@@ -69,10 +55,13 @@ protected:
    */
   CaloPi0Monitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){ 
-    declareProperty( "PhotonPtFilter", m_ptPhoton = 250 * Gaudi::Units::MeV );
+    declareProperty( "PhotonPtFilter"   , m_ptPhoton = 250 * Gaudi::Units::MeV );
+    declareProperty( "IsolationFilter"  , m_isol = 4 );
+    declareProperty( "AllowConverted"   , m_conv = false);
     m_multMax = 150;
+    m_massFilterMin = m_massMin;
+    m_massFilterMax = m_massMax;
     addToInputs( LHCb::CaloHypoLocation::Photons );
-
   }
   /// destructor (virtual and protected)
   virtual ~CaloPi0Monitor() {}
@@ -85,7 +74,12 @@ private:
   CaloPi0Monitor &operator=( const CaloPi0Monitor& );
 private:
   double m_ptPhoton;
+  double m_isol;
+  DeCalorimeter* m_calo;
+  ICaloHypo2Calo* m_toSpd ;   
+  bool m_conv;
 };
+
 
 DECLARE_ALGORITHM_FACTORY( CaloPi0Monitor );
 
@@ -115,21 +109,27 @@ StatusCode CaloPi0Monitor::execute()
   initCounters();
   for( photon g1 = photons.begin(); photons.end() != g1; ++g1 ){
     if ( 0 == *g1 ) continue;
+    if( !m_conv && m_toSpd->multiplicity ( *(*g1) , "Spd"  ) > 0 )continue;
     LHCb::CaloMomentum momentum1( *g1 );
     if(momentum1.pt() < m_ptPhoton)continue;
     Gaudi::LorentzVector v1( momentum1.momentum() );
+    Gaudi::XYZPoint p1( (*g1)->position()->x() , (*g1)->position()->y() , (*g1)->position()->z() );
+
 // loop over the second photon
     for( photon g2 = g1 + 1; photons.end() != g2; ++g2 ){
       if ( 0 == *g2 ) continue;
       LHCb::CaloMomentum momentum2( *g2 );
       if(momentum2.pt() < m_ptPhoton)continue;
+      if( !m_conv && m_toSpd->multiplicity ( *(*g2) , "Spd"  ) > 0 )continue;
       Gaudi::LorentzVector v2( momentum2.momentum() );
       Gaudi::LorentzVector pi0( v1 + v2 );
+      Gaudi::XYZPoint p2( (*g2)->position()->x() , (*g2)->position()->y() , (*g2)->position()->z() );
       // background shape from (x,y)->(-x,-y) symmetrized g2
       Gaudi::LorentzVector v2Sym( v2 );
       v2Sym.SetPx( -v2.Px() );
       v2Sym.SetPy( -v2.Py() );
       Gaudi::LorentzVector bkg( v1 + v2Sym );
+      Gaudi::XYZPoint p2Sym( -(*g2)->position()->x() , -(*g2)->position()->y() , (*g2)->position()->z() );
       bool isBkg = false;
       if( bkg.e() > m_eFilter &&
           bkg.pt() > m_etFilter &&
@@ -149,21 +149,37 @@ StatusCode CaloPi0Monitor::execute()
       LHCb::CaloCellID id2 = LHCb::CaloCellID();
       if ( (*g1)->clusters().size() > 0 ){
         SmartRef<LHCb::CaloCluster> cluster= *((*g1)->clusters().begin());
-        id1 = (*cluster).seed();      
+        if( cluster != 0 )id1 = (*cluster).seed();      
       }
       if ( (*g2)->clusters().size() > 0 ){
         SmartRef<LHCb::CaloCluster> cluster= *((*g2)->clusters().begin());
-        id2 = (*cluster).seed();      
+        if( cluster != 0)id2 = (*cluster).seed();      
       }
+
+      // define pi0 area
       LHCb::CaloCellID id = (id1.area() == id2.area() ) ? id1 : LHCb::CaloCellID();
-      if( isPi0 ){
+
+      // isolation criteria
+
+      Gaudi::XYZVector vec    = p2 - p1;
+      Gaudi::XYZVector vecSym = p2Sym - p1;
+      double cSize = m_calo->cellSize( id1 );
+      if( m_calo->cellSize( id2 ) >  cSize ) cSize = m_calo->cellSize( id2 );
+      double isol = (cSize > 0) ?  vec.Rho() / cSize : 0;
+      double isolSym = (cSize > 0) ?  vecSym.Rho() / cSize : 0;
+
+
+
+      if( isPi0 && isol > m_isol){
         count(id);
         hFill1(id, "2", pi0.e()   );
         hFill1(id, "3", pi0.pt()  );
         hFill1(id, "4", pi0.mass());      
+        hFill1(id, "6", pi0.mass(), 1.);      
       }
-      if( isBkg ){ 
+      if( isBkg && isolSym > m_isol){ 
         hFill1(id, "5", bkg.mass());      
+        hFill1(id, "6", bkg.mass(), -1.);      
       }
     }
   }  
