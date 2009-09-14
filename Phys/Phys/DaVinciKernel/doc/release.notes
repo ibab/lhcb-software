@@ -1,8 +1,16 @@
-!$Id: release.notes,v 1.323 2009-09-02 15:55:17 cattanem Exp $
+!$Id: release.notes,v 1.324 2009-09-14 15:54:27 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-09-14 - Juan PALACIOS
+ - DVAlgorithm
+  . Add properties UseP2PVRelations and WriteP2PVRelations.
+  . getRelatedPV now uses P->PV relations according to whether there is PV
+    re-fitting, UseP2PVRelations is true, or the event has a single PV.
+ - Kernel/BestPV.h
+  . Call DVAlgorithm::bestPV
 
 !======================== DaVinciKernel v8r1 2009-09-02 =====================
 ! 2009-09-01 - Juan PALACIOS
