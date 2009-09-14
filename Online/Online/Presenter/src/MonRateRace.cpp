@@ -97,15 +97,17 @@
 //  #13 0x08093d5c in G__cintBootstrapDict_560_0_45 (result7=0x8f05124, funcname=0x0, libp=0x8f0517c, hash=0) at /afs/cern.ch/user/p/psomogyi/cmtuser/Online_v4r28/Online/Presenter/slc4_ia32_gcc34_dbg/dict/cintBootstrapDict.cpp:1369
 
 #include "MonRateRace.h"
-#include "presenter.h"
+#include <boost/algorithm/string/predicate.hpp>
+#include <boost/algorithm/string/classification.hpp>
 
 boost::mutex infoHandlerMutex;
 
-MonRateRace::MonRateRace(const std::string & serviceName) :
+MonRateRace::MonRateRace(const std::string & serviceName, pres::EffServiceType serviceType) :
   DimInfo(serviceName.c_str(), (double)std::numeric_limits<double>::min(), this),
   m_value(0.0),
   m_title(pres::s_eff_init),
-  m_rateIsValid(false)
+  m_rateIsValid(false),
+  m_serviceType(serviceType)
 {
   m_infoHandlerMutex = new boost::mutex();
 //  serviceName -> isRate  vs. isTCK // dim buffer content
@@ -114,49 +116,62 @@ MonRateRace::MonRateRace(const std::string & serviceName) :
 void MonRateRace::infoHandler()
 { 
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
-  if (infoHandlerLock) {    
-    char* cnt_comment  = 0;
-    cnt_comment = static_cast<char*>(getData());
-    std::stringstream cntCommentStream;     
-    for (int ptr = 2*sizeof(double); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
-      cntCommentStream << static_cast<char>(cnt_comment[ptr]);               
+  if (infoHandlerLock) {
+    if (pres::MonRate == m_serviceType) {   
+      char* cnt_comment  = 0;
+      cnt_comment = static_cast<char*>(getData());
+      std::stringstream cntCommentStream;     
+      for (int ptr = 2*sizeof(double); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
+        cntCommentStream << static_cast<char>(cnt_comment[ptr]);               
+      }
+      cntCommentStream << std::endl;  
+      
+      double* histoDimData = 0;
+      histoDimData = static_cast<double*>(getData());
+  
+      if (std::numeric_limits<double>::min() == static_cast<double>(*histoDimData)) {
+        m_value = 0.0;
+        m_rateIsValid = false;
+        m_title = pres::s_eff_init;
+      } else {    
+        m_value = static_cast<double>(histoDimData[0]);     
+        if ((std::numeric_limits<double>::min() < m_value) &&
+            (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308
+          m_title = cntCommentStream.str();
+          if ( boost::all( m_title.c_str(), boost::is_print()) ) {
+            m_rateIsValid = true;
+          } else {
+            m_rateIsValid = false;
+          }           
+         } else { // something else...
+           m_value = 0.0;
+           m_title = pres::s_eff_init;
+           m_rateIsValid = false;      
+         }
+      }
+      cntCommentStream.str("");
+    } else if (pres::TCKinfo == m_serviceType) {
+      char* tckNickname  = 0;
+      tckNickname = static_cast<char*>(getData());
+      std::stringstream cntTckNickname;     
+      for (int ptr = sizeof(int); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
+        cntTckNickname << static_cast<char>(tckNickname[ptr]);               
+      }
+      cntTckNickname << std::endl;
+      m_title = cntTckNickname.str();
+      if ( boost::all( m_title.c_str(), boost::is_print()) ) {
+        m_rateIsValid = true;
+      } else {
+        m_rateIsValid = false;
+      }
+      cntTckNickname.str("");
     }
-    cntCommentStream << std::endl;  
-//    m_title = cntCommentStream.str();  
-    
-    double* histoDimData = 0;
-    histoDimData = static_cast<double*>(getData());
-
-    if (std::numeric_limits<double>::min() == static_cast<double>(*histoDimData)) {
-      m_value = 0.0;
-      m_rateIsValid = false;
-      m_title = pres::s_eff_init;
-    } else {    
-      m_value = static_cast<double>(histoDimData[0]);     
-      if ((std::numeric_limits<double>::min() < m_value) &&
-          (std::numeric_limits<double>::max() > m_value) ) { // 2.2e-308 to 1.8e308
-         m_title = cntCommentStream.str();          
-         m_rateIsValid = true;
-       } else { // something else...
-         m_value = 0.0;
-         m_title = pres::s_eff_init;
-         m_rateIsValid = false;      
-       }
-       cntCommentStream.str("");
-       infoHandlerLock.unlock();
-    }
-  } else {
-    m_value = 0.0;
-    m_title = pres::s_eff_init;
-    m_rateIsValid = false;    
   }
 }
 bool MonRateRace::isRateValid() {
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
   if (infoHandlerLock) {
    return m_rateIsValid;
-  } else {
-    return false;
   }
 }
 double MonRateRace::currentValue()
@@ -166,8 +181,6 @@ double MonRateRace::currentValue()
   if (infoHandlerLock && m_rateIsValid) {
     returnValue = m_value;
     infoHandlerLock.unlock();    
-  } else {
-    returnValue = 0.0;
   }
   return returnValue;
 }
@@ -179,9 +192,7 @@ std::string MonRateRace::title()
       pres::s_eff_init != m_title) {
     returnTitle = m_title;
     infoHandlerLock.unlock();    
-  } else {
-    returnTitle = pres::s_eff_init;
-  }
+  }  
   return returnTitle;  
 }
 

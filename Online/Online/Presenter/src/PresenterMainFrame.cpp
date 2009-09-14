@@ -3517,7 +3517,7 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
                                           onlineHistogram,
                                           m_verbosity,
                                           dimBrowser);
-                                          
+
      dbRootHist->setOverlapMode(overlapMode);
      
      if ((0 != m_archive) && isConnectedToHistogramDB() &&

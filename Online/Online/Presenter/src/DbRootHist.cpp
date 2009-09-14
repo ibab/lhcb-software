@@ -1677,7 +1677,11 @@ std::string DbRootHist::findDimServiceName(const std::string & dimServiceType) {
 }
 
 void DbRootHist::setOverlapMode(pres::ServicePlotMode overlapMode) {
-  overlapMode ? m_isOverlap = overlap : m_isOverlap = separate;
+  if (separate == overlapMode) {
+    m_isOverlap = false;
+  } else if (overlap ==  overlapMode) {
+    m_isOverlap = true;
+  }
 }
 
 std::string DbRootHist::assembleCurrentDimServiceName() {
