@@ -1,3 +1,10 @@
+2009-09-14  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: make generates documentation
+	after the build is done if docs flag for the project is set in the slot;
+	build is skipped if already finished for this platform, fix for CMTEXTRATAGS
+	on Windows
+
 2009-09-07  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/actionLauncher.py:

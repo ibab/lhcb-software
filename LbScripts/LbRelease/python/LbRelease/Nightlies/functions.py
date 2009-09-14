@@ -550,6 +550,27 @@ def install(slotName, projectName):
         copyLocal(os.path.join(slot.buildDir(), projectName.upper(), project.getTag()), os.path.join(releasePath, projectName.upper(), project.getTag()))
         if not os.path.exists(os.path.join(releasePath, 'configuration.xml')):  shutil.copy2(os.path.join(os.environ['LCG_XMLCONFIGDIR'], 'configuration.xml'), releasePath)
 
+def docs(slotName, projectName):
+    """ docs(slotName, projectName)
+
+        action function.
+    """
+    disableLCG_NIGHTLIES_BUILD()
+    setCMTEXTRATAGS(slotName)
+    slot, project = getSlotAndProject(slotName, projectName)
+    setCmtProjectPath(slot)
+    changeEnvVariables()
+    if not project.getDocsFlag(): return
+    else:
+        time.sleep(2)
+        configuration.system('echo "Doxygen start: '+ time.strftime('%c', time.localtime()) +'"')
+        os.chdir(generatePath(slot, project, 'TAG', projectName))
+        if projectName.upper() == 'GAUDI': containerName = 'GaudiRelease'
+        else: containerName =  projectNamesDict[projectName.upper()] + 'Sys'
+        configuration.system('make container=%s docs > ./docs.log' % containerName)
+        configuration.system('echo "' + '*'*80 + '"')
+        configuration.system('echo "Doxygen finished: '+ time.strftime('%c', time.localtime()) +'"')
+
 def make(slotName, projectName, minusj, minusl):
     """ make(slotName, projectName, minusj, minusl)
 
@@ -565,10 +586,15 @@ def make(slotName, projectName, minusj, minusl):
     setCmtProjectPath(slot)
 
     # removing rubbish from log file
-    os.system('echo "DEBUG (removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
+    os.system('echo "(removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
     os.chdir(generatePath(slot, project, 'TAG', projectName))
     logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
     logFileToBeRemoved.close()
+
+    if os.path.exists(os.sep.join([generatePath(slot, project, 'TAG', projectName), 'build.'+os.environ.get('CMTCONFIG','')+'.done'])):
+        configuration.system('echo "Build already done for ' + os.environ.get('CMTCONFIG', '') + '. Skipped."')
+        docs(slotName, projectName)
+        return
 
     changeEnvVariables()
 
@@ -586,6 +612,7 @@ def make(slotName, projectName, minusj, minusl):
     configuration.system('echo "LIB:              '+os.environ.get('LIB','')+'"')
     configuration.system('echo "INCLUDE:          '+os.environ.get('INCLUDE','')+'"')
     configuration.system('echo "PATH:             '+os.environ.get('PATH','')+'"')
+    configuration.system('echo "LBUTILSROOT:      '+os.environ.get('LBUTILSROOT','')+'"')
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('cmt show macro LCG_releases')
     configuration.system('echo "' + '*'*80 + '"')
@@ -601,7 +628,7 @@ def make(slotName, projectName, minusj, minusl):
     if systemType == 'windows':
         makeCmd = '%s make' % (cmtCommand)
         if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # append
-            makeCmd += 'CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+            makeCmd += ' CMTEXTRATAGS=%(CMTEXTRATAGS)s ' % os.environ
         cmtCmdForBroadcast = '%s all_groups' % (makeCmd,)
         fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
         configuration.system(fullCmd)
@@ -632,22 +659,24 @@ def make(slotName, projectName, minusj, minusl):
                 print "Logfile:", x[1]
                 print "-"*80
                 print file(x[1], 'r').read()
-            print '*'*80
-            print 'Build finished:', time.strftime('%c', time.localtime())
-            return
-        makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
-        if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
-        if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
-            makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
         else:
-            makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
-        cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
-        fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
-        configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
-        configuration.system(fullCmd)
-
+            makeCmd = '%s make %s' % (cmtCommand, minusjcmd)
+            if slot.getQuickMode() is not None : makeCmd += ' QUICK=' + str(slot.getQuickMode())  # append
+            if 'CMTEXTRATAGS' in os.environ and len(os.environ['CMTEXTRATAGS'])>0:                # prepend
+                makeCmd = 'CMTEXTRATAGS=no-pyzip,%(CMTEXTRATAGS)s ' % os.environ + makeCmd
+            else:
+                makeCmd = 'CMTEXTRATAGS=no-pyzip ' + makeCmd
+            cmtCmdForBroadcast = '%s all ; %s tests' % (makeCmd, makeCmd)
+            fullCmd = '%s br - "%s"' % (cmtCommand, cmtCmdForBroadcast)
+            configuration.system('echo "COMMAND: ' + fullCmd.replace('"','\\"') + '"')
+            configuration.system(fullCmd)
     configuration.system('echo "' + '*'*80 + '"')
     configuration.system('echo "Build finished: '+ time.strftime('%c', time.localtime()) +'"')
+
+    os.chdir(generatePath(slot, project, 'TAG', projectName))
+    buildFlagFile = open('./build.'+os.environ.get('CMTCONFIG','')+'.done', 'w')
+
+    docs(slotName, projectName)
 
 def test(slotName, projectName):
     """ test(slotName, projectName)
