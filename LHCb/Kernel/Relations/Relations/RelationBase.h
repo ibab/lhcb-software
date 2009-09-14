@@ -1,9 +1,4 @@
-// $Id: RelationBase.h,v 1.13 2009-04-24 15:26:46 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.13 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-//
+// $Id: RelationBase.h,v 1.14 2009-09-14 14:02:09 ibelyaev Exp $
 // ============================================================================
 #ifndef RELATIONS_RELATIONBASE_H 
 #define RELATIONS_RELATIONBASE_H 1
@@ -26,10 +21,10 @@
 #include "Relations/IRelation.h"
 #include "Relations/Reserve.h"
 // ============================================================================
-
 namespace Relations
 {
-  /** @class RelationBase RelationBase.h Relations/RelationBase.h
+  // ==========================================================================
+  /** @class RelationBase Relations/RelationBase.h
    *  
    *  Implementation of ordinary unidirectional relation 
    *
@@ -112,7 +107,7 @@ namespace Relations
         ( m_entries.begin () , m_entries.end   () , entry , _less_ ) ;
       // the relation does exist ! 
       if( m_entries.end () != it && !_less_( entry , *it ) ) 
-      { return StatusCode::FAILURE; }
+      { return StatusCode ( StatusCode::FAILURE , true ) ; }
       // insert new relation !
       m_entries.insert( it , entry ) ;
       return StatusCode::SUCCESS ;
@@ -127,7 +122,7 @@ namespace Relations
         ( m_entries.begin() , m_entries.end  () , ent , _less ) ;
       // the relation does not exist ! 
       if( m_entries.end() == it || _less( ent , *it ) ) 
-      { return StatusCode::FAILURE ; }
+      { return StatusCode ( StatusCode::FAILURE , true ) ; }
       // remove existing relation     
       m_entries.erase( it );
       return StatusCode::SUCCESS ; 
@@ -138,7 +133,8 @@ namespace Relations
       // look for all existing relations from the given object  
       IP ip  = i_relations( object ) ;
       // there are no relations 
-      if ( ip.second == ip.first ) { return StatusCode::FAILURE ; }// RETURN !!!
+      if ( ip.second == ip.first ) 
+      { return StatusCode ( StatusCode::FAILURE , true ) ; }// RETURN !!!
       // erase relations 
       m_entries.erase( ip.first , ip.second ) ;
       return StatusCode::SUCCESS ;
@@ -153,7 +149,8 @@ namespace Relations
       iterator it = std::remove_if ( m_entries.begin () , m_entries.end () , 
                                      std::bind2nd( Equal() , entry ) ) ;
       // no relations are found!
-      if( m_entries.end() == it ) { return StatusCode::FAILURE ; }// RETURN !!!
+      if( m_entries.end() == it ) 
+      { return StatusCode ( StatusCode::FAILURE , true ) ; }// RETURN !!!
       // erase the relations 
       m_entries.erase( it , m_entries.end() ) ;
       return StatusCode::SUCCESS ;
@@ -232,14 +229,57 @@ namespace Relations
     RelationBase& merge ( const Range& range ) 
     {
       if ( range.empty() ) { return *this ; }
-      Entries tmp ( m_entries.size() + range.size() ) ;
-      std::merge 
-        ( m_entries . begin () , 
-          m_entries . end   () , 
-          range     . begin () , 
-          range     . end   () , 
-          tmp       . begin () , Less() ) ;
-      m_entries = tmp ;
+      //
+      switch ( range.size() )
+      {
+      case 1 :
+        //
+        i_add ( range[0] ) . ignore () ;
+        break ;                                 // BREAK 
+        //
+      case 2 : 
+        //
+        i_add ( range[0] ) . ignore () ;
+        i_add ( range[1] ) . ignore () ;
+        break ;                                 // BREAK 
+        //
+      case 3 : 
+        //
+        i_add ( range[0] ) . ignore () ;
+        i_add ( range[1] ) . ignore () ;
+        i_add ( range[2] ) . ignore () ;
+        break ;                                 // BREAK 
+        //
+      case 4 : 
+        //
+        i_add ( range[0] ) . ignore () ;
+        i_add ( range[1] ) . ignore () ;
+        i_add ( range[2] ) . ignore () ;
+        i_add ( range[3] ) . ignore () ;
+        break ;                                 // BREAK 
+        //
+      default: 
+        //
+        if ( range.size() > 0.1 * m_entries.size() ) 
+        {
+          Entries tmp ( m_entries.size() + range.size() ) ;
+          std::merge 
+            ( m_entries . begin () , 
+              m_entries . end   () , 
+              range     . begin () , 
+              range     . end   () , 
+              tmp       . begin () , Less() ) ;
+          // use std::swap instead of assignement 
+          std::swap ( m_entries , tmp ) ;
+        }
+        else
+        {
+          for ( typename Range::iterator ientry = range.begin() ; 
+                range.end() != ientry ; ++ientry ) 
+          { this->i_add ( *ientry ).ignore() ; }
+        }
+      }                                    // end of swich
+      //
       return *this ;              
     }
     // ========================================================================
@@ -252,13 +292,54 @@ namespace Relations
       if ( range.empty() ) { return *this ; }                       // RETURN 
       // invert all relations    
       i_reserve ( m_entries.size() + range.size()  ) .ignore () ;
-      for ( typename IInverse::iterator entry = range.begin() ; 
-            range.end() != entry ; ++entry ) 
-      { i_push ( entry->to() , entry->from() ) ;  }
-      /// final sorting of the container
-      i_sort () ;
+      //
+      switch ( range.size() ) 
+      {
+      case 1 : 
+        //
+        i_relate ( range[0].to () , range[0].from () ) . ignore () ;
+        break ;
+        //
+      case 2 : 
+        //
+        i_relate ( range[0].to () , range[0].from () ) . ignore () ;
+        i_relate ( range[1].to () , range[1].from () ) . ignore () ;
+        break ;
+        //
+      case 3 : 
+        //
+        i_relate ( range[0].to () , range[0].from () ) . ignore () ;
+        i_relate ( range[1].to () , range[1].from () ) . ignore () ;
+        i_relate ( range[2].to () , range[2].from () ) . ignore () ;
+        break ;
+        //
+      case 4 : 
+        //
+        i_relate ( range[0].to () , range[0].from () ) . ignore () ;
+        i_relate ( range[1].to () , range[1].from () ) . ignore () ;
+        i_relate ( range[2].to () , range[2].from () ) . ignore () ;
+        i_relate ( range[3].to () , range[3].from () ) . ignore () ;
+        break ;
+        //
+      default: 
+        //
+        if ( range.size() > 0.1 * m_entries.size()  ) 
+        {
+          for ( typename IInverse::iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
+          { i_push   ( entry->to() , entry->from() ) ; }
+          i_sort () ; 
+        }
+        else 
+        {
+          for ( typename IInverse::iterator entry = range.begin() ; range.end() != entry ; ++entry ) 
+          { i_relate   ( entry->to() , entry->from() ) . ignore() ; }
+        }
+        //
+      }
+      //
       return *this ;                                                 // RETURN 
     }
+    // ========================================================================
     /** add *SORTED* range into the relation table 
      *  @see std::merge 
      *  @param range the range to be added 
