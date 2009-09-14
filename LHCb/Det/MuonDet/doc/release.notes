@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.133 2009-09-09 13:06:34 cattanem Exp $
+! $Id: release.notes,v 1.134 2009-09-14 08:58:35 jonrob Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2009-09-11 - Chris Jones
+ - Cache MsgStream objects for speed
 
 !========================= MuonDet v8r5p2 2009-09-09 ========================
 ! 2009-07-08 - Marco Cattaneo

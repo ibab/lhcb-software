@@ -1,8 +1,8 @@
-// $Id: MuonChamberLayout.h,v 1.3 2009-04-09 09:54:10 asatta Exp $
+// $Id: MuonChamberLayout.h,v 1.4 2009-09-14 08:58:36 jonrob Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
-// Include files
+#include "GaudiKernel/MsgStream.h"
 
 //From Muon
 #include "MuonDet/DeMuonChamber.h"
@@ -199,9 +199,17 @@ public:
   ///get the chamber number (vector) from the twelfth-chamber tile
   std::vector<unsigned int> Twelfth2ChamberNum(const LHCb::MuonTileID& tile);
   
-protected:
+private:
+
+  /// Access to Msgstream object
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream(m_msgSvc,name());
+    return *m_msgStream;
+  }
 
 private:
+  mutable MsgStream * m_msgStream;
   IMessageSvc* m_msgSvc ;
   //Chambers
   std::vector<int> m_offSet;

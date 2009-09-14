@@ -1,8 +1,9 @@
-// $Id: DeMuonRegion.h,v 1.10 2007-11-28 08:00:21 cattanem Exp $
+// $Id: DeMuonRegion.h,v 1.11 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONREGION_H
 #define MUONDET_DEMUONREGION_H 1
 
+#include "GaudiKernel/MsgStream.h"
 
 // Include files
 #include "DetDesc/DetectorElement.h"
@@ -39,8 +40,18 @@ public:
 
   StatusCode initialize();
 
+private:
+
+  /// Access to Msgstream object
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream(msgSvc(),name());
+    return *m_msgStream;
+  }
 
 private:
+
+  mutable MsgStream * m_msgStream;
 
 };
 

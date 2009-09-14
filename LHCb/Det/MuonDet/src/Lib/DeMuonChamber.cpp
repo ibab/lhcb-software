@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.15 2007-10-17 11:24:04 asatta Exp $
+// $Id: DeMuonChamber.cpp,v 1.16 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -23,7 +23,8 @@
 
 /// Standard Constructors
 DeMuonChamber::DeMuonChamber()
-  : m_StationNumber(0), 
+  : m_msgStream(NULL),
+    m_StationNumber(0), 
     m_RegionNumber(0),
     m_ChamberNumber(0)
 {
@@ -33,7 +34,8 @@ DeMuonChamber::DeMuonChamber()
 DeMuonChamber::DeMuonChamber( int nStation,
                               int nRegion,
                               int nChamber)
-  : m_StationNumber(nStation), 
+  : m_msgStream(NULL),
+    m_StationNumber(nStation), 
     m_RegionNumber(nRegion),
     m_ChamberNumber(nChamber) 
 {
@@ -42,16 +44,14 @@ DeMuonChamber::DeMuonChamber( int nStation,
 /// Standard Destructor
 DeMuonChamber::~DeMuonChamber()
 {
+  delete m_msgStream; m_msgStream = NULL;
 }
-
 
 StatusCode DeMuonChamber::initialize()  
 {
-  MsgStream msg( msgSvc(), name() );
-
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
   int sta(0),reg(0),chm(0); 
@@ -80,7 +80,7 @@ StatusCode DeMuonChamber::initialize()
 
   // for now with MWPCs and RPCs this is a good formula
   setGridName(m_chmbGrid);
-  //msg<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endreq;
+  //msgStream()<<MSG::INFO<<" test ale "<<name <<" "<<sta<<" "<<reg<<" "<<chm<<endreq;
   return sc;
 }
 

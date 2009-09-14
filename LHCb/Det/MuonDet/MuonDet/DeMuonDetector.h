@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.h,v 1.32 2009-04-09 09:54:10 asatta Exp $
+// $Id: DeMuonDetector.h,v 1.33 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 #ifndef MUONDET_DEMUONDETECTOR_H
 #define MUONDET_DEMUONDETECTOR_H 1
@@ -283,6 +283,17 @@ public:
   };
 
 private:
+
+  /// Access to Msgstream object
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream(msgSvc(),name());
+    return *m_msgStream;
+  }
+
+private:
+
+  mutable MsgStream * m_msgStream;
 
   //My data provider
   IDataProviderSvc* m_detSvc;

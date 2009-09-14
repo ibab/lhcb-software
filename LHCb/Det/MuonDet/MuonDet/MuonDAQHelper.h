@@ -1,19 +1,22 @@
-// $Id: MuonDAQHelper.h,v 1.6 2008-07-15 11:45:29 asatta Exp $
+// $Id: MuonDAQHelper.h,v 1.7 2009-09-14 08:58:35 jonrob Exp $
 #ifndef MUONDET_MUONDAQHELPER_H 
 #define MUONDET_MUONDAQHELPER_H 1
 #include <string>
 #include <vector>
 
+#include "GaudiKernel/MsgStream.h"
 
 // Include files
 class IDataProviderSvc;
 class IMessageSvc;
+
 #include "MuonDet/MuonL1Board.h"
 #include "MuonDet/MuonStationCabling.h"
 #include "MuonDet/MuonODEBoard.h"
 //#include "MuonDet/MuonODEData.h"
 #include "MuonDet/MuonTSMap.h"
 #include "Kernel/MuonTileID.h"
+
 /** @class MuonDAQHelper MuonDAQHelper.h MuonDet/MuonDAQHelper.h
  *  
  *
@@ -120,9 +123,18 @@ public:
   }
   unsigned int getODENumberInQuadrant(std::string ODEName);
   
-protected:
+private:
+
+  /// Access to Msgstream object
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream(m_msgSvc, "MuonDAQHelper");
+    return *m_msgStream;
+  }
 
 private:
+
+  mutable MsgStream * m_msgStream;
   IDataProviderSvc* m_detSvc ;
   IMessageSvc* m_msgSvc ;
   friend class DeMuonDetector;

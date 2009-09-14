@@ -1,4 +1,4 @@
-// $Id: DeMuonGasGap.cpp,v 1.14 2008-04-02 11:47:48 asatta Exp $
+// $Id: DeMuonGasGap.cpp,v 1.15 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -15,6 +15,7 @@
  */
 
 DeMuonGasGap::DeMuonGasGap() :
+  m_msgStream(NULL),
   m_StationNumber(0),
   m_RegionNumber(0),
   m_ChamberNumber(0),
@@ -24,6 +25,7 @@ DeMuonGasGap::DeMuonGasGap() :
 
 DeMuonGasGap::DeMuonGasGap(int nStation, int nRegion, 
                            int nChamber, int nGasGap) :
+  m_msgStream(NULL),
   m_StationNumber(nStation),
   m_RegionNumber(nRegion),
   m_ChamberNumber(nChamber),
@@ -33,16 +35,15 @@ DeMuonGasGap::DeMuonGasGap(int nStation, int nRegion,
 
 DeMuonGasGap::~DeMuonGasGap()
 {
+  delete m_msgStream; m_msgStream = NULL;
 }
 
 
 StatusCode DeMuonGasGap::initialize()  
 {
-  MsgStream msg( msgSvc(), name() );
-
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
 
@@ -71,7 +72,7 @@ StatusCode DeMuonGasGap::initialize()
   this->setChamberNumber(chm-1);
   this->setGasGapNumber(gap-1);
 
-  //  msg << MSG::INFO << "Gap INFO? " << name<<" "<<sta <<" "<< reg<<" "<< chm<<" "<<gap<<endreq;
+  //  msgStream() << MSG::INFO << "Gap INFO? " << name<<" "<<sta <<" "<< reg<<" "<< chm<<" "<<gap<<endreq;
 
   return sc;
 }

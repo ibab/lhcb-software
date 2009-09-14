@@ -1,4 +1,4 @@
-// $Id: DeMuonRegion.cpp,v 1.10 2007-02-28 18:33:18 marcocle Exp $
+// $Id: DeMuonRegion.cpp,v 1.11 2009-09-14 08:58:36 jonrob Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -15,22 +15,21 @@
  */
 
 /// Standard Constructor
-DeMuonRegion::DeMuonRegion()
+DeMuonRegion::DeMuonRegion() : m_msgStream(NULL)
 {
 }
 
 /// Standard Destructor
 DeMuonRegion::~DeMuonRegion()
 {
+  delete m_msgStream; m_msgStream = NULL;
 }
   
 StatusCode DeMuonRegion::initialize()  
 {
-  MsgStream msg( msgSvc(), name() );
-
   StatusCode sc = DetectorElement::initialize();
   if( sc.isFailure() ) { 
-    msg << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
+    msgStream() << MSG::ERROR << "Failure to initialize DetectorElement" << endreq;
     return sc ; 
   }
 

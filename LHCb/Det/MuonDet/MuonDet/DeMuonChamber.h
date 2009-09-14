@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.8 2007-06-08 15:34:00 asatta Exp $
+// $Id: DeMuonChamber.h,v 1.9 2009-09-14 08:58:35 jonrob Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -11,6 +11,8 @@
 // Include files
 #include <vector>
 #include <string>
+
+#include "GaudiKernel/MsgStream.h"
 
 #include "DetDesc/DetectorElement.h"
 #include "MuonDet/MuonNamespace.h"
@@ -92,6 +94,17 @@ public:
   }
 
 private:
+
+  /// Access to Msgstream object
+  inline MsgStream & msgStream() const
+  {
+    if ( !m_msgStream ) m_msgStream = new MsgStream(msgSvc(),name());
+    return *m_msgStream;
+  }
+
+private:
+
+  mutable MsgStream * m_msgStream;
 
   /// Chamber Grid
   std::string m_chmbGrid;
