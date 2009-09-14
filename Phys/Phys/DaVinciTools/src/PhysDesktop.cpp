@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.77 2009-09-11 17:13:17 jonrob Exp $
+// $Id: PhysDesktop.cpp,v 1.78 2009-09-14 06:57:08 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -803,11 +803,6 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
 
   if ( msgLevel(MSG::VERBOSE) )
     verbose() << "PhysDesktop::relatedVertex" << endmsg;
-
-  //m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  //if (0==m_dva) Error("Couldn't get parent DVAlgorithm", 
-  //                    StatusCode::FAILURE).ignore();
-  //return (0!=m_dva) ? m_dva->getRelatedPV(part) : 0 ;
 
   // cached during initialize()
   return m_dva->getRelatedPV(part);
