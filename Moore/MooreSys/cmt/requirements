@@ -12,11 +12,12 @@ use  Moore                  v7r4    Hlt
 
 # temporarily
 use CaloTools 			v5r10p1 Calo
-use HltLine  			v1r6p1  Hlt
+use HltGlobalMonitor		v2r6p2	Hlt
+use HltDAQ			v1r0p2  Hlt
 
 
 # Declare this as a container package
-apply_pattern container_package
+# apply_pattern container_package
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize

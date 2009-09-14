@@ -4,6 +4,8 @@ Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
 
+</PRE><H1><A NAME=v7r4>2009-09-14 Moore v7r4</A></H1><PRE>
+Based on Hlt v6r7, Phys v8r8, Lbcom v7r5, Rec v7r5 en Online v4r28.
 - Added the pattern container_package.
 
 </PRE><H1><A NAME=v7r3>2009-08-04 Moore v7r3</A></H1><PRE>
