@@ -84,7 +84,7 @@ void EvtBToKStarllDurham07::decay( EvtParticle *parent ){
 	/**
 	 * set the MC weight and decay the particle
 	 */
-	setWeight(parent->initializePhaseSpace(getNDaug(),getDaugs(),getPoleSize(),1,2));
+	setWeight(parent->initializePhaseSpace(getNDaug(),getDaugs(),false,getPoleSize(),1,2));
 	_calculator->getAmp(parent,_amp2);
 }
 
