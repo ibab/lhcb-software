@@ -1,4 +1,4 @@
-// $Id: BestPV.h,v 1.2 2009-08-05 15:30:39 jpalac Exp $
+// $Id: BestPV.h,v 1.3 2009-09-14 15:54:18 jpalac Exp $
 #ifndef KERNEL_BESTPV_H 
 #define KERNEL_BESTPV_H 1
 
@@ -18,7 +18,7 @@ namespace DaVinci {
  *  
  *  Functor that calls back to the parent DVAlgorithm in order
  *  to get the "best" PV for a given LHCb::Particle. Calls 
- *  DVAlgorithm::getRelatedPV(const LHCb::Particle*).
+ *  DVAlgorithm::bestPV(const LHCb::Particle*).
  *
  *  <b>Conditions</b>
  *
@@ -61,7 +61,7 @@ namespace DaVinci {
  *     void MyTool::doSomething()
  *     {
  *        const LHCb::Particle* p = ....
- *        const LHCb::VerrtexBase* bestPV = m_bestPV(p);
+ *        const LHCb::VertexBase* bestPV = m_bestPV(p);
  *     }
  *
  *
@@ -85,7 +85,7 @@ namespace DaVinci {
       if (!m_dvAlg) {
         m_dvAlg = Gaudi::Utils::getDVAlgorithm(m_parent.contextSvc());
       }
-      return (m_dvAlg) ? m_dvAlg->getRelatedPV(particle) : 0; 
+      return (m_dvAlg) ? m_dvAlg->bestPV(particle) : 0; 
     }
 
   private :
