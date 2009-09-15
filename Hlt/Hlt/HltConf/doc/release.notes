@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.337 2009-09-15 12:42:25 graven Exp $ 
+! $Id: release.notes,v 1.338 2009-09-15 12:45:33 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-09-15 - Gerhard Raven
+ - add some missing photon lines
 
 ! 2009-09-11 - Gerhard Raven
  - routing bits before monitoring instead of after
