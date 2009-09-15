@@ -7,14 +7,14 @@
 #include "$STDOPTS/LHCbApplication.opts"
 
 //Pool persitency
-#include "$STDOPTS/DstDicts.opts"
+//#include "$STDOPTS/DstDicts.opts"
 
 //*********************************
 // Instantiate Escher phases
 //*******************************
 ApplicationMgr.TopAlg += { "GaudiSequencer/MisAlignMainSeq"};
 MisAlignMainSeq.MeasureTime = true ;
-MisAlignMainSeq.Members += { "LbAppInit/Misaligner" };
+MisAlignMainSeq.Members += { "LbApp/Misaligner" };
 ApplicationMgr.AppName = "Misaligner";
 Misaligner.OutputLevel = 3;
 MessageSvc.OutputLevel = 3;

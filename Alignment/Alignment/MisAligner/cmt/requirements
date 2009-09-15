@@ -31,7 +31,7 @@ use GaudiPython        v*                   -no_auto_imports
 use GaudiAlg		v*			-no_auto_imports
 
 # Databases
-use DDDB               v*  Det            -no_auto_imports
+use DDDB               v*   Det            -no_auto_imports
 use FieldMap           v*                 -no_auto_imports
 
 
@@ -75,3 +75,10 @@ apply_pattern application_path
 
 # Set the default path for Escher options.
 set Misaligner ${MISALIGNERROOT}/options
+
+# ========================= Install configurable ============================
+apply_pattern install_python_modules
+
+# ==========  Export application name and version to gaudirun.py ============
+apply_pattern GaudiApp
+

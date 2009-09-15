@@ -4,7 +4,7 @@
  * Implementation file for Alignment algorithm : MisAlignAlg
  *
  *  CVS Log :-
- *  $Id: MisAlignAlg.cpp,v 1.2 2009-09-09 14:07:44 jblouw Exp $
+ *  $Id: MisAlignAlg.cpp,v 1.3 2009-09-15 15:08:55 jblouw Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   18/07/2008
@@ -59,7 +59,6 @@ StatusCode MisAlignAlg::execute() {
 
 
 StatusCode MisAlignAlg::finalize() {
-
   return StatusCode::SUCCESS;
 }
 
