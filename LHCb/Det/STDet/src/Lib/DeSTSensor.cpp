@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.cpp,v 1.6 2009-05-08 16:57:06 jvantilb Exp $
+// $Id: DeSTSensor.cpp,v 1.7 2009-09-15 11:36:37 jvantilb Exp $
 #include "STDet/DeSTSensor.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -136,9 +136,9 @@ bool DeSTSensor::localInActive( const Gaudi::XYZPoint& point,
 {
   const double u = point.x();
   const double v = point.y();
-  return ((u + tol.X()) <(m_uMaxLocal+(0.5*m_pitch)) &&
-          (u - tol.X())>(m_uMinLocal-(0.5*m_pitch)) &&
-          ((v + tol.Y())<m_vMaxLocal) &&((v-tol.Y()) > m_vMinLocal));
+  return ((u - tol.X()) <(m_uMaxLocal+(0.5*m_pitch)) &&
+          (u + tol.X())>(m_uMinLocal-(0.5*m_pitch)) &&
+          ((v - tol.Y())<m_vMaxLocal) && ((v + tol.Y()) > m_vMinLocal));
 }
 
 

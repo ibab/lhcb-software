@@ -1,7 +1,12 @@
-!$Id: release.notes,v 1.178 2009-09-02 13:06:59 cattanem Exp $
+!$Id: release.notes,v 1.179 2009-09-15 11:36:37 jvantilb Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2009-09-15 - Jeroen van Tilburg
+ - Change sign of tolerance in DeSTSensor::localInActive such that it is more
+   intuitive. Note that with negative numbers you have the same behaviour as
+   before.
 
 !======================== STDet v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
