@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.2 2009-09-11 15:27:21 rlambert Exp $
+# $Id: summary.py,v 1.3 2009-09-15 14:29:52 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -82,6 +82,9 @@ class Summary(VTree):
         if len(alist1.keys())==0:
             alist1=None
         if filename is not None:
+            if "lfn:" not in filename.lower():
+                if "pfn:" not in filename.lower():
+                    filename="PFN:"+filename
             alist2['name']=filename
         if len(alist2.keys())==0:
             alist1=None
@@ -113,7 +116,10 @@ class Summary(VTree):
                 
         #because it's a reference I can do this:
         if status is not None:
-            if status=='fail':
+            if open_file.attrib('status')=='fail':
+                pass
+                #a fail is a fail
+            elif status=='fail':
                 #a fail is a fail
                 open_file.attrib('status',status)
             elif open_file.attrib('status')=='mult':
@@ -122,6 +128,10 @@ class Summary(VTree):
             elif open_file.attrib('status')=='full':# and status!='full':
                 #more than one lot of this file!
                 open_file.attrib('status','mult')
+            elif status=='none':
+                #none is default, don't overwrite anything
+                pass
+                #open_file.attrib('status',status)
             else:
                 open_file.attrib('status',status)
         

@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2009-09-15 - Rob Lambert
+ - fixed a bug in the parsing which would erase "failed" statuses
+
 ! 2009-09-14 - Rob Lambert
  - Added qmtest, test the basic python
 
