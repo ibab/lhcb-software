@@ -66,6 +66,7 @@ HltANNSvc().Hlt1SelectionID = {
     # Hlt1MuTrack.*Decision
     "Hlt1MuTrackDecision"                   :  150,
     "Hlt1MuTrack4JPsiDecision"              :  151,
+    "Hlt1MuTrackFitMuDecision"              :  152,
     # HA Hl1(Single,Di)Hadron.*Decision
     "Hlt1SingleHadronDecision"              :  200,
     "Hlt1DiHadronDecision"                  :  201,
