@@ -182,6 +182,10 @@ void XMLSummarySvc::addCounter(
 
 void XMLSummarySvc::handle( const Incident& incident )
 {
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
+
+
   MsgStream log( msgSvc(), name() );
   if(incident.type()!=IncidentType::EndEvent) 
     log << MSG::VERBOSE << incident.type() << ":" << incident.source() << endmsg;
@@ -263,7 +267,11 @@ void XMLSummarySvc::handle( const Incident& incident )
       printXML();
     }
 
+#endif //GAUDI_FILE_INCIDENTS
+  
   return;
+
+  
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * */
@@ -368,15 +376,20 @@ StatusCode XMLSummarySvc::prepareIncSvc()
   StatusCode sc=service("IncidentSvc", m_incSvc, false);
   if(!sc.isSuccess() || m_incSvc== NULL) return StatusCode::FAILURE;
 
+  m_incSvc->addListener( this, IncidentType::EndEvent);
+
+  //check extended file incidents are defined
+#ifdef GAUDI_FILE_INCIDENTS
   m_incSvc->addListener( this, IncidentType::BeginInputFile);
   m_incSvc->addListener( this, IncidentType::BeginOutputFile);
-  m_incSvc->addListener( this, IncidentType::EndEvent);
   m_incSvc->addListener( this, IncidentType::WroteToOutputFile);
   m_incSvc->addListener( this, IncidentType::FailedOutputFile);
   m_incSvc->addListener( this, IncidentType::FailInputFile);
   m_incSvc->addListener( this, IncidentType::EndOutputFile);
   m_incSvc->addListener( this, IncidentType::EndInputFile);
-  
+
+#endif //GAUDI_FILE_INCIDENTS
+
   MsgStream log( msgSvc(), name() );
   log << MSG::DEBUG << "registered with incSvc" << endmsg;
   
