@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.472 2009-09-15 07:22:13 jpalac Exp $
+! $Id: release.notes,v 1.473 2009-09-15 09:58:00 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
 
 ! 2009-09-15 - Juan PALACIOS
+ - src.PhysDesktop.cpp
+  . Implement building and saving of P->PV relations table when it has
+    not been used internally.
  - cmt/requirements
   . Increase version to v19r3
  - PhysDesktop
