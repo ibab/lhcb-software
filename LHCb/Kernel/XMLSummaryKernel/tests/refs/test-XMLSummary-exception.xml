@@ -4,17 +4,18 @@
 	<success>True</success>
 	<step>finalize</step>
 	<usage>
-		<stat unit="KB" useOf="MemoryMaximum">578368.0</stat>
+		<stat unit="KB" useOf="MemoryMaximum">578408.0</stat>
 	</usage>
 	<input>
+		<file GUID="" name="PFN:YouCannotOpenMe.dst" status="fail">0</file>
 		<file GUID="CAA89D27-E42D-DC11-B844-003048836626" name="PFN:rfio:/castor/cern.ch/user/c/cattanem/Brunel/v32r1/00001820_00000001_5.dst" status="part">3</file>
 	</input>
 	<output>
-		<file GUID="C2116D16-F4A1-DE11-8CF3-003048D2BF22" name="PFN:PoolDst.root" status="full">3</file>
+		<file GUID="BAD3CAEC-00A2-DE11-BCEB-003048D2BF22" name="PFN:PoolDst.root" status="full">3</file>
 	</output>
 	<counters>
 		<counter name="Counter/executed">4</counter>
-		<counter name="CounterSummarySvc/handled">8</counter>
+		<counter name="CounterSummarySvc/handled">11</counter>
 	</counters>
 	<lumiCounters />
 </summary>

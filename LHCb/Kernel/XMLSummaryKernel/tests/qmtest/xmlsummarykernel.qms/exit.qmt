@@ -14,7 +14,7 @@ try:
   sum=open('summary.xml')
 except IOError:
   causes.append('XMLsummary missing')
-  result['xmlsummarykernel.writedst']=result.Quote('XMLsummary missing')
+  result['xmlsummarykernel.exit']=result.Quote('XMLsummary missing')
 sumblock=sum.read().split('\n')
 ########################################
 #loop over the reference file
@@ -31,10 +31,10 @@ for l in refblock:
       if 'MemoryMaximum' in r:
         if not re.search(restr,r):
           causes.append('XMLsummary MemoryMaximum error')
-          result['xmlsummarykernel.writedst']=result.Quote(restr)
+          result['xmlsummarykernel.exit']=result.Quote(restr)
     if not re.search(restr,stdout):
       causes.append('XMLsummary MemoryMaximum error')
-      result['xmlsummarykernel.writedst']=result.Quote(restr)
+      result['xmlsummarykernel.exit']=result.Quote(restr)
   ########################################
   #allow GUID of file to change
   ########################################
@@ -46,20 +46,20 @@ for l in refblock:
       if 'PoolDst' in r:
         if not re.search(restr,r):
           causes.append('XMLsummary output file error')
-          result['xmlsummarykernel.writedst']=result.Quote(restr)
+          result['xmlsummarykernel.exit']=result.Quote(restr)
     if not re.search(restr,stdout):
       causes.append('XMLsummary output file error')
-      result['xmlsummarykernel.writedst']=result.Quote(restr) 
+      result['xmlsummarykernel.exit']=result.Quote(restr) 
   ########################################
   #do not allow any other omissions
   ########################################
   else:
     if l not in sumblock:
       causes.append('XMLsummary content error')
-      result['xmlsummarykernel.writedst']=result.Quote(l)
+      result['xmlsummarykernel.exit']=result.Quote(l)
     if stdout.find(l)==-1:
       causes.append('XMLsummary printout error')
-      result['xmlsummarykernel.writedst']=result.Quote(l)
+      result['xmlsummarykernel.exit']=result.Quote(l)
 
 </text></argument>
 </extension>
