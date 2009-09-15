@@ -29,6 +29,7 @@ then
         if test $quiet = 1; 
 	then
             export QUIET;
+	    unset VERBOSE;
 	fi;
         if test $clean = 1; 
 	then
