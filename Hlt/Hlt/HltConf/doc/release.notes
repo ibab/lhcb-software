@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.336 2009-09-11 13:48:57 graven Exp $ 
+! $Id: release.notes,v 1.337 2009-09-15 12:42:25 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-15 - Gerhard Raven
 
 ! 2009-09-11 - Gerhard Raven
  - routing bits before monitoring instead of after

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.118 2009-09-11 13:48:57 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.119 2009-09-15 12:42:25 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -279,7 +279,7 @@ class HltConf(LHCbConfigurableUser):
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("Lumi"       , "Hlt1Lumi.*Decision"),
                                   ("Global"     , ".*Global.*"),
-                                  ("PA"         , "Hlt1(Random|Physics|Tell1Error)Decision"),
+                                  ("PA"         , "Hlt1((Non?)Random|Tell1Error)Decision"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
 

@@ -73,6 +73,10 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1PhotonDecision"                    :  300,
     "Hlt1PhoFromEleDecision"                :  301,
     "Hlt1PhotonFromEleDecision"             :  302,
+    "Hlt1PhotonTrackDecision"               :  303,
+    "Hlt1PhotonFromEleTrackDecision"        :  304,
+    "Hlt1PhotonDiTrackDecision"             :  305,
+    "Hlt1PhotonFromEleDiTrackDecision"      :  306,
     # EL
     "Hlt1SingleElectronDecision"            :  400,
     "Hlt1ElectronFromPi0TrackNoIPDecision"  :  401,
