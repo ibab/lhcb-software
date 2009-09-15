@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.41 2009-09-14 06:57:08 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.42 2009-09-15 07:21:07 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -252,7 +252,36 @@ private:
                          std::vector<std::string>::iterator end);
   
 
+  inline bool writeP2PV() const 
+  {
+    return m_writeP2PV;
+  }
+  
+  inline bool usingP2PV() const 
+  {
+    return m_usingP2PV;
+  }
+
+public:
+  virtual void setWriteP2PV(const bool& writeP2PV) 
+  {
+    m_writeP2PV = writeP2PV;
+  }
+
+  virtual void setUsingP2PV(const bool& usingP2PV) 
+  {
+    m_usingP2PV = usingP2PV;
+  }
+  
+
 private: // data
+
+
+  /// Do we want to write the Particle -> PV relations table to the TES?
+  bool m_writeP2PV;
+
+  /// Are we using the Particle -> PV relations table internally?
+  bool m_usingP2PV;
 
   /// TES pathname for Primary Vertices 
   std::string m_primVtxLocn;

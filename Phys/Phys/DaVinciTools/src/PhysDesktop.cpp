@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.78 2009-09-14 06:57:08 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.79 2009-09-15 07:21:07 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -83,6 +83,8 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent ),
+    m_writeP2PV(true),
+    m_usingP2PV(true),
     m_primVtxLocn(""),
     m_outputLocn     (),
     m_OnOffline      (0),
@@ -107,7 +109,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
 
   // instance of PV relator
   declareProperty( "RelatedPVFinderName", m_pvRelatorName );
-
 
 } ;
 
@@ -428,7 +429,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   // now save relations table
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
 
-  saveP2PVRelations(pToSave);
+  if ( writeP2PV() ) saveP2PVRelations(pToSave);
  
 }
 //=============================================================================
@@ -490,10 +491,16 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
 
   put(table, location);
 
-  for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
-    Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
-    Particle2Vertex::Table::Range::const_iterator i = r.begin() ;
-    for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
+  if ( usingP2PV() ) { // relations should be in table
+
+    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
+      Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
+      Particle2Vertex::Table::Range::const_iterator i = r.begin() ;
+      for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
+    }
+  } else {
+    Warning("Attempting to write P->PV table while not using P2PV. Not implemented!", 
+            StatusCode::SUCCESS, 1).ignore();
   }
 
   if (msgLevel(MSG::DEBUG)) {
@@ -632,6 +639,7 @@ StatusCode PhysDesktop::getEventInput(){
     } else if (m_primVerts->empty()) {
       Info( "Empty primary vertex container at "+primaryVertexLocation() ) ;      
     }
+    
   }
 
   // Retrieve Particles & Vertices from all previous processing
@@ -805,7 +813,7 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
     verbose() << "PhysDesktop::relatedVertex" << endmsg;
 
   // cached during initialize()
-  return m_dva->getRelatedPV(part);
+  return m_dva->bestPV(part);
 
   //return m_dva->calculateRelatedPV(part);
 
