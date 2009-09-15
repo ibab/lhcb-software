@@ -22,6 +22,7 @@ use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
 use ProcessorKernel       v5r3p1  L0      # Andrei Tsaregorodtsev, Julien Cogan
 use Relations             v5r8    Kernel  # Ivan Belyaev
 use XMLSummaryKernel      v1r0    Kernel  # Rob Lambert
+use XMLSummaryBase        v1r0    Kernel  # Rob Lambert
 
 # Detector description
 use DetSys                v17r0   Det     # Marco Cattaneo

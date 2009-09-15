@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2009-09-15 - Rob Lambert
+ - Added dependency on Kernel/XMLSummaryBase
+
 ! 2009-09-14 - Rob Lambert
  - Added dependency on Kernel/XMLSummaryKernel
 
