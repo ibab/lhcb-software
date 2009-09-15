@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.5 2009-08-28 13:32:34 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.6 2009-09-15 13:22:15 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -11,16 +11,18 @@ from GaudiConf.Configuration import *
 class BaseDSTWriter(ConfigurableUser) :
     """
     Write a DST for a single selection sequence. Writes out the entire
-    contents of the input DST file.
+    contents of the input DST file, plus optional extra items from the TES.
     """
     __slots__ = {
         "OutputFileSuffix"           : ""
         , "SelectionSequences"       : []
+        , "ExtraItems"               : []
         }
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default ''"""
         , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
+        , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         }
 
     def sequence(self) :
@@ -41,6 +43,13 @@ class BaseDSTWriter(ConfigurableUser) :
         # do nothing
         return []
 
+    def _extendStream(self, stream) :
+        # Add ExtraItems
+        extras = []
+        extras +=  self.getProp('ExtraItems')
+        stream.OptItemList = extras
+
+
     def fileExtension(self) :
         return ".dst"
 
@@ -52,6 +61,7 @@ class BaseDSTWriter(ConfigurableUser) :
     def _initOutputStreams(self, name) :
         stream = self.outputStreamType()( self.streamName(name) )
         stream.Output = self.outputFileName(name)
+        self._extendStream(stream)
         self.extendStream(stream)
         
     def outputStream(self, name) :
