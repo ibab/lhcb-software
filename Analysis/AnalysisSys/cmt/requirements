@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.127 2009-09-03 14:46:54 marcocle Exp $
+# $Id: requirements,v 1.128 2009-09-15 13:38:36 jpalac Exp $
 package AnalysisSys
-version v3r9
+version v3r10
 
 branches doc cmt
 
 
 ####################################################################
 
-use  AnalysisConf               v1r6     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r7     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 use  CommonParticles            v6r1     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v8r8     Phys   # Marco Musy
@@ -45,7 +45,7 @@ use  MicroDSTBase        	v1r6p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r3    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r5p1  MicroDST          # Juan Palacios
 use  MicroDSTAlgorithm   	v3r7    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r5    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r5p1  MicroDST          # Juan Palacios
 
 ####################################################################
 use Analysis            	v8r2p1  Tutorial          # P. Koppenburg
