@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.18 2009-09-08 16:35:15 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.19 2009-09-15 13:30:40 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -50,7 +50,7 @@ class MicroDSTWriter(BaseDSTWriter) :
     
     def extendStream(self, stream) :
         location = self.getProp("OutputPrefix")
-        stream.OptItemList = ["/Event/"+ location +"#99"]
+        stream.OptItemList += ["/Event/"+ location +"#99"]
 
     def fileExtension(self) :
         return ".mdst"
