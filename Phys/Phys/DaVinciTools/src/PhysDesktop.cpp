@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.79 2009-09-15 07:21:07 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.80 2009-09-15 09:57:51 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -493,14 +493,18 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
 
   if ( usingP2PV() ) { // relations should be in table
 
-    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p){
+    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
       Particle2Vertex::Table::Range r = i_p2PVTable().i_relations(*p);
       Particle2Vertex::Table::Range::const_iterator i = r.begin() ;
       for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
     }
   } else {
-    Warning("Attempting to write P->PV table while not using P2PV. Not implemented!", 
+    Warning("Recalculating P->PV table since not using P->PV internally", 
             StatusCode::SUCCESS, 1).ignore();
+    for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
+      const LHCb::VertexBase* pv = m_dva->_getRelatedPV(*p);
+      if ( 0 != pv ) table->relate( *p, pv );
+    }
   }
 
   if (msgLevel(MSG::DEBUG)) {
