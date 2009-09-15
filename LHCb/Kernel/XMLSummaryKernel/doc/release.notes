@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-15 - Rob Lambert
+ - Added options file required for qmtest
+
 ! 2009-09-14 - Rob Lambert
  - Added qmtests
 
