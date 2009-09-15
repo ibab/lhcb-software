@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-09-15 - Kurt Rinnert
+ - fixed wrong property in online options for occupancy monitor
+ - added PVSS TELL1 names to histogram titles in occupancy monitor
+
 ! 2009-09-09 - Marco Cattaneo
  - added missing dependency on L0Event and HltEvent
 

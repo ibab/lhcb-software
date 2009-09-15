@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.7 2009-09-09 13:04:01 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.8 2009-09-15 11:39:50 krinnert Exp $
 // Include files 
 // -------------
 
@@ -83,6 +83,9 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
 #endif // !WIN32
   }
 
+  // access to PVSS TELL1 names
+  m_pvssTell1Names = tool<Velo::IPvssTell1Names>("Velo::PvssTell1Names","PvssTell1Names");
+  
   m_nstrips = 180224;
 
   // try to find TAE sample name in algo instance name (for histo titles)
@@ -130,17 +133,19 @@ StatusCode Velo::VeloOccupancyMonitor::initialize() {
 
     boost::format fmtName ( "OccPerStripSens%d" ) ;
     fmtName % s;
-    boost::format fmtTitle ( "Strip Occupancy, Sensor %d, " ) ;
+    boost::format fmtTitle ( "Strip Occupancy, Sensor %d (" ) ;
     fmtTitle % s;
+    std::string title = fmtTitle.str() + m_pvssTell1Names->pvssName(s) + ") " + m_tae;
 
-    m_stripOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), fmtTitle.str()+m_tae, -0.5, 2047.5, 2048)); 
+    m_stripOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtName.str(), title, -0.5, 2047.5, 2048)); 
 
     boost::format fmtNameCh ( "OccPerChannelSens%d" ) ;
     fmtNameCh % s;
-    boost::format fmtTitleCh ( "Channel Occupancy, Sensor %d, " ) ;
+    boost::format fmtTitleCh ( "Channel Occupancy, Sensor %d (" ) ;
     fmtTitleCh % s;
+    std::string titleCh = fmtTitleCh.str() + m_pvssTell1Names->pvssName(s) + ") " + m_tae;
 
-    m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), fmtTitleCh.str()+m_tae, -0.5, 2047.5, 2048)); 
+    m_channelOccupancyHistPerSensor[s] = Gaudi::Utils::Aida2ROOT::aida2root(book1D(fmtNameCh.str(), titleCh, -0.5, 2047.5, 2048)); 
   }
   m_histOccSpectAll = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectAll", "Occupancy Spectrum", -0.5, 100.5, 202)); 
   m_histOccSpectLow = Gaudi::Utils::Aida2ROOT::aida2root(book1D("OccSpectMaxLow", "Occupancy Spectrum", -0.5, 20.5, 210));

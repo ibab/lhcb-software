@@ -31,6 +31,8 @@ MoniVELOSeq.Members += {   "Velo::VeloClusterMonitor/VCMPrev7"
                          , "Velo::VeloSamplingMonitor/VSM"
 };
 
+VOCCDefault.PerSensorPlots = true;
+
 VCMPrev7.VeloClusterLocation = "Raw/Velo/Prev7/Clusters";
 VCMPrev6.VeloClusterLocation = "Raw/Velo/Prev6/Clusters";
 VCMPrev5.VeloClusterLocation = "Raw/Velo/Prev5/Clusters";
@@ -46,20 +48,36 @@ VCMNext5.VeloClusterLocation = "Raw/Velo/Next5/Clusters";
 VCMNext6.VeloClusterLocation = "Raw/Velo/Next6/Clusters";
 VCMNext7.VeloClusterLocation = "Raw/Velo/Next7/Clusters";
 
-VOCCPrev7.VeloOccupancyLocation = "Raw/Velo/Prev7/Clusters";
-VOCCPrev6.VeloOccupancyLocation = "Raw/Velo/Prev6/Clusters";
-VOCCPrev5.VeloOccupancyLocation = "Raw/Velo/Prev5/Clusters";
-VOCCPrev4.VeloOccupancyLocation = "Raw/Velo/Prev4/Clusters";
-VOCCPrev3.VeloOccupancyLocation = "Raw/Velo/Prev3/Clusters";
-VOCCPrev2.VeloOccupancyLocation = "Raw/Velo/Prev2/Clusters";
-VOCCPrev1.VeloOccupancyLocation = "Raw/Velo/Prev1/Clusters";
-VOCCNext1.VeloOccupancyLocation = "Raw/Velo/Next1/Clusters";
-VOCCNext2.VeloOccupancyLocation = "Raw/Velo/Next2/Clusters";
-VOCCNext3.VeloOccupancyLocation = "Raw/Velo/Next3/Clusters";
-VOCCNext4.VeloOccupancyLocation = "Raw/Velo/Next4/Clusters";
-VOCCNext5.VeloOccupancyLocation = "Raw/Velo/Next5/Clusters";
-VOCCNext6.VeloOccupancyLocation = "Raw/Velo/Next6/Clusters";
-VOCCNext7.VeloOccupancyLocation = "Raw/Velo/Next7/Clusters";
+VOCCPrev7.VeloClusterLocation = "Raw/Velo/Prev7/Clusters";
+VOCCPrev6.VeloClusterLocation = "Raw/Velo/Prev6/Clusters";
+VOCCPrev5.VeloClusterLocation = "Raw/Velo/Prev5/Clusters";
+VOCCPrev4.VeloClusterLocation = "Raw/Velo/Prev4/Clusters";
+VOCCPrev3.VeloClusterLocation = "Raw/Velo/Prev3/Clusters";
+VOCCPrev2.VeloClusterLocation = "Raw/Velo/Prev2/Clusters";
+VOCCPrev1.VeloClusterLocation = "Raw/Velo/Prev1/Clusters";
+VOCCNext1.VeloClusterLocation = "Raw/Velo/Next1/Clusters";
+VOCCNext2.VeloClusterLocation = "Raw/Velo/Next2/Clusters";
+VOCCNext3.VeloClusterLocation = "Raw/Velo/Next3/Clusters";
+VOCCNext4.VeloClusterLocation = "Raw/Velo/Next4/Clusters";
+VOCCNext5.VeloClusterLocation = "Raw/Velo/Next5/Clusters";
+VOCCNext6.VeloClusterLocation = "Raw/Velo/Next6/Clusters";
+VOCCNext7.VeloClusterLocation = "Raw/Velo/Next7/Clusters";
+
+VOCCDefault.UseOdin = false;
+VOCCPrev7.UseOdin = false;
+VOCCPrev6.UseOdin = false;
+VOCCPrev5.UseOdin = false;
+VOCCPrev4.UseOdin = false;
+VOCCPrev3.UseOdin = false;
+VOCCPrev2.UseOdin = false;
+VOCCPrev1.UseOdin = false;
+VOCCNext1.UseOdin = false;
+VOCCNext2.UseOdin = false;
+VOCCNext3.UseOdin = false;
+VOCCNext4.UseOdin = false;
+VOCCNext5.UseOdin = false;
+VOCCNext6.UseOdin = false;
+VOCCNext7.UseOdin = false;
 
 //VCMPrev7.OutputLevel = 2;
 //VCMNext1.OutputLevel = 2;

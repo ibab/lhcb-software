@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.h,v 1.5 2009-09-08 16:26:22 krinnert Exp $
+// $Id: VeloOccupancyMonitor.h,v 1.6 2009-09-15 11:39:50 krinnert Exp $
 #ifndef VELORECMONITORS_VELOOCCUPANCYMONITOR_H 
 #define VELORECMONITORS_VELOOCCUPANCYMONITOR_H 1
 
@@ -15,6 +15,7 @@
 
 #include "Tell1Kernel/ITELL1SensorMap.h"
 #include "Tell1Kernel/ITimeStampProvider.h"
+#include "Tell1Kernel/IPvssTell1Names.h"
 
 #include "VeloMonitorBase.h"
 
@@ -78,6 +79,7 @@ namespace Velo
     // tools
     Velo::ITELL1SensorMap* m_tell1Map;
     Velo::ITimeStampProvider* m_timeStamps;
+    Velo::IPvssTell1Names* m_pvssTell1Names;
 
     // Job options
     bool m_writeXML;
