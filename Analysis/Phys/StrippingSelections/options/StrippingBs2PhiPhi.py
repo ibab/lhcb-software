@@ -1,11 +1,11 @@
-# $Id: StrippingBs2PhiPhi.py,v 1.2 2009-09-04 16:02:55 poluekt Exp $
+# $Id: StrippingBs2PhiPhi.py,v 1.3 2009-09-15 18:02:49 schleich Exp $
 
 __author__ = 'Sebastian Schleich'
 __date__ = '06/08/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
-Bs->PhiPhi stripping selection
+Bs->PhiPhi stripping selection test
 '''
 
 from Gaudi.Configuration import *
