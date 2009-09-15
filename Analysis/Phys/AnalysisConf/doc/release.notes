@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.31 2009-08-28 13:35:03 jpalac Exp $
+!$Id: release.notes,v 1.32 2009-09-15 13:22:29 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-09-15 - Juan PALACIOS
+ - python/AnalysisConf/BaseDSTWriter.py
+  . Add ExtraItems property, with TES location of extra objects to be saved
+    to DST.
+ - cmt/requirements
+  . Increase version to v1r7
 
 !========================== AnalysisConf v1r6 2009-08-28 ====================
 
