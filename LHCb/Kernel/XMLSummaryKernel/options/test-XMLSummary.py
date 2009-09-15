@@ -37,6 +37,7 @@ ApplicationMgr().TopAlg+=[EvtAlg]
 
 xmlsummary=XMLSummarySvc("CounterSummarySvc")
 xmlsummary.OutputLevel=1
+xmlsummary.UpdateFreq=1
 
 LHCbApp().XMLSummary="summary.xml"
 LHCbApp().DataType="DC06"

@@ -44,6 +44,16 @@ template <class TYPE> class SvcFactory;
  *   LHCbApp().XMLSummary="summary.xml"
  *  @endcode
  *
+ *  options CounterList, StatEntityList
+ *  options xmlfile, xsdfile
+ *  options UpdateFreq
+ *
+ *  The file xmlfile is written:
+ *    at initialisation/finalisation
+ *    at beginning/ending/failing an input file
+ *    at the first call to handle
+ *    once every UpdateFreq calls to handle
+ *
  *  @author Robert Lambert
  *  @date   2009-09-11
  */
@@ -119,6 +129,10 @@ private:
   NameStatList m_addedCounters; 
 
   std::string m_filename; ///the current open filename
+ 
+  ///force writeout of the file every x incidents, set by property UpdateFreq
+  int m_freq;
+  
 
   ///counters are filled in the finalise method, using these internal functions
   StatusCode fillcounters();

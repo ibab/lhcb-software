@@ -41,6 +41,7 @@ XMLSummarySvc::XMLSummarySvc(const std::string& name, ISvcLocator* svc )
     m_handled(),
     m_addedCounters(0),
     m_filename(""),
+    m_freq(-1),
     m_fidMap()
 {
 
@@ -56,6 +57,7 @@ XMLSummarySvc::XMLSummarySvc(const std::string& name, ISvcLocator* svc )
   //These counters must be passed, "declared", by their algorithms. RegularExpressions are allowed
   declareProperty("StatEntityList",
                   m_statEntityList=std::vector<std::string>(1,".*"));
+  declareProperty("UpdateFreq",m_freq=500);
   
 }
 
@@ -211,6 +213,7 @@ void XMLSummarySvc::handle( const Incident& incident )
   else if(incident.type()==IncidentType::EndInputFile)
     {
       status="full";
+      filename=m_filename=incident.source();//TODO ..something;  
     }
   else if(incident.type()==IncidentType::EndOutputFile)
     {
@@ -257,7 +260,10 @@ void XMLSummarySvc::handle( const Incident& incident )
   m_handled++;
 
   if ( incident.type()==IncidentType::EndInputFile
-       || incident.type()==IncidentType::FailInputFile )
+       || incident.type()==IncidentType::FailInputFile 
+       || incident.type()==IncidentType::BeginInputFile
+       || m_handled.flag()==1
+       || (m_freq>0 && int(m_handled.flag())%m_freq ==0) )
     {
       PyObject_CallMethod(m_summary, 
                           chr("set_step"), 

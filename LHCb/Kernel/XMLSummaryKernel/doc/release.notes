@@ -9,6 +9,7 @@
  - Added check for preproc GAUDI_FILE_INCIDENTS
    this will allow backwards-compatibility with
    Gaudi v21r4. Requires gaudi patch #3240
+ - Added tests for exceptions, failures, and exits
 
 ! 2009-09-14 - Rob Lambert
  - Added qmtests
