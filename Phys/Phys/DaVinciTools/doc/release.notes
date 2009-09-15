@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.471 2009-09-14 16:23:57 jpalac Exp $
+! $Id: release.notes,v 1.472 2009-09-15 07:22:13 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v19r3
+ - PhysDesktop
+  . Implememt new functions controlling use and writing of Particle->PV
+    relations tables.
 
 !========================== DaVinciTools v19r2 2009-09-14 ===================
 
