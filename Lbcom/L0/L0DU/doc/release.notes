@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.165 2009-09-09 16:45:21 jucogan Exp $
+! $Id: release.notes,v 1.166 2009-09-16 16:09:27 odescham Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
+
+! 2009-09-14 - Olivier Deschamps
+ - L0DURawBankMonitor : adapt to change in CaloDAQ (call to CaloDataProvider::getBanks no longer needed)
 
 ! 2009-09-09 - Julien Cogan
  - Fix bug in L0Conf (pointed out by Gerhard Raven) : 
