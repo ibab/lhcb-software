@@ -11,15 +11,14 @@ if [ -z $DIM_DNS_NODE ]; then
 fi
 
 #${GAUDIKERNELROOT}/../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/MEPInjector.opts
-
-rm /dev/shm/*
-#cd /home/online/ONLINE/Online_v4r20/Online/OnlineTasks/job
-
+#cd /home/online/ONLINE/Online_v4r28/Online/OnlineTasks/job
 path=${0%/*}
 cd $path
+
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
 
 . ./setupOnline.sh $1
 
-exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class1Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/MEPInjector.opts&
+exec -a ${UTGID} ${gaudi_exe} -tasktype=LHCb::Class2Task -main=${GAUDIONLINEROOT}/options/Main.opts -opt=${ONLINETASKSROOT}/options/ReaderSvc3.opts&
+

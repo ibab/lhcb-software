@@ -10,9 +10,14 @@ if [ -z $DIM_DNS_NODE ]; then
         exit 1
 fi
 
-#${GAUDIKERNELROOT}/../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/MEPInjector.opts
+#${GAUDIKERNELROOT}/../InstallArea/$CMTCONFIG/bin/Gaudi.exe ../options/ReaderSvc0.opts
 
-cd /home/online/ONLINE/Online_v4r20dev/Online/OnlineTasks/job
+#cd /home/online/ONLINE/Online_v4r20dev/Online/OnlineTasks/job
+
+
+path=${0%/*}
+cd $path
+
 
 HOST=$(hostname --short | awk '{ print toupper($1) }')
 
