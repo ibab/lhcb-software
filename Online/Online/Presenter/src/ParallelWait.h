@@ -10,7 +10,7 @@ class OnlineHistoOnPage;
 class dbHistosOnPage;
 class PresenterMainFrame;
 
-DbRootHist* getHistogram(PresenterMainFrame * presenter, 
+DbRootHist* getPageHistogram(PresenterMainFrame * presenter, 
                          const std::string & identifier,
                          const std::string & dimServiceName,
                          int refreshTime,

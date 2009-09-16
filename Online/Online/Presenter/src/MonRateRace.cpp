@@ -123,10 +123,12 @@ void MonRateRace::infoHandler()
       cnt_comment = static_cast<char*>(getData());
       std::stringstream cntCommentStream;     
       for (int ptr = 2*sizeof(double); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
-        cntCommentStream << static_cast<char>(cnt_comment[ptr]);               
+        cntCommentStream << static_cast<char>(cnt_comment[ptr]);
+          if ( boost::all( cntCommentStream.str().c_str(), boost::is_print()) ) {
+          } else {
+          } 
+
       }
-      cntCommentStream << std::endl;  
-      
       double* histoDimData = 0;
       histoDimData = static_cast<double*>(getData());
   
@@ -158,7 +160,6 @@ void MonRateRace::infoHandler()
       for (int ptr = sizeof(int); ptr < (int)(getSize()/sizeof(char)); ++ptr ){
         cntTckNickname << static_cast<char>(tckNickname[ptr]);               
       }
-      cntTckNickname << std::endl;
       m_title = cntTckNickname.str();
       if ( boost::all( m_title.c_str(), boost::is_print()) ) {
         m_rateIsValid = true;

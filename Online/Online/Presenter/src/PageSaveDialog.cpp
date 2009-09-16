@@ -184,25 +184,27 @@ void PageSaveDialog::ok()
       page->removeAllHistograms();
       double xlow, ylow, xup, yup;
 
-      m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
       // first, save owners of pads (not overlaps)
-      while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
-        if( (*m_DbHistosOnPageIt)->isOverlap()) {
-          thereAreOverlaps = true;
-        }
-        else {
-          if ((*m_DbHistosOnPageIt)->hostingPad) {
-            ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
-            OnlineHistogram* onlineHistogram =  
-              page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
-                                 (float)xlow , (float)ylow, (float)xup, (float)yup);
-            if (0 != onlineHistogram) {
-              (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+      for (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+           m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
+           m_DbHistosOnPageIt++) {
+        if(TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) {
+          if( (*m_DbHistosOnPageIt)->isOverlap()) {
+            thereAreOverlaps = true;
+          }
+          else {
+            if ((*m_DbHistosOnPageIt)->hostingPad) {
+              ((*m_DbHistosOnPageIt)->hostingPad)->GetPadPar(xlow, ylow, xup, yup);
+              OnlineHistogram* onlineHistogram =  
+                page->addHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
+                                   (float)xlow , (float)ylow, (float)xup, (float)yup);
+              if (0 != onlineHistogram) {
+                (*m_DbHistosOnPageIt)->setOnlineHistogram(onlineHistogram);
+              }
+              padOwner[(*m_DbHistosOnPageIt)->hostingPad] = (*m_DbHistosOnPageIt)->onlineHistogram();          
             }
-            padOwner[(*m_DbHistosOnPageIt)->hostingPad] = (*m_DbHistosOnPageIt)->onlineHistogram();          
           }
         }
-        m_DbHistosOnPageIt++;
       }
       page->setPatternFile(patternFile);
 
@@ -213,7 +215,8 @@ void PageSaveDialog::ok()
           for (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
                m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
                m_DbHistosOnPageIt++) {
-            if( (*m_DbHistosOnPageIt)->isOverlap()) {
+            if( (*m_DbHistosOnPageIt)->isOverlap() &&
+                (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
               OnlineHistogram* onlineHistogram =
                 page->addOverlapHistogram((*m_DbHistosOnPageIt)->onlineHistogram(),
                                           padOwner[(*m_DbHistosOnPageIt)->hostingPad],
@@ -227,15 +230,17 @@ void PageSaveDialog::ok()
         }
 
         // now save current ROOT display options of histograms on page
-        m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
-        while (m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end()) {
-          if((*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name()) {
+        
+        for  (m_DbHistosOnPageIt = m_mainFrame->dbHistosOnPage.begin();
+              m_DbHistosOnPageIt != m_mainFrame->dbHistosOnPage.end();
+              m_DbHistosOnPageIt++) {        
+          if( (*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name() &&
+              (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
 // TODO: get rid of ->cd() because it stealthily diverts gPad
 // TODO: should rather use hostingPad internally: no args
             (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
-          m_DbHistosOnPageIt++;
         }
       }
       page->setDoc(pageDescription);

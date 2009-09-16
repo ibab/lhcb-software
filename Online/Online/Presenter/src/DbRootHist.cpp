@@ -142,7 +142,7 @@ DbRootHist::DbRootHist(const std::string & identifier,
   
   if (histogramDB && (TCKinfo != m_effServiceType)) {
     if (onlineHist) { setOnlineHistogram(onlineHist); }
-    else { connectToDB(histogramDB, "_NONE_", 1); }
+    else { connectToDB(histogramDB, "_NONE_", m_instance); }
   }
 }
 DbRootHist::~DbRootHist()
@@ -327,7 +327,8 @@ void DbRootHist::initHistogram()
         }
         m_dimInfo = new DimInfo(m_dimServiceName.c_str(), m_refreshTime, (float)-1.0);
       }       
-// || s_P2D == m_histogramType          
+// || s_P2D == m_histogramType
+//  if (!Mon, !CNT -> no gauchocommentDimInfo, only CCPC type )          
       if (m_dimInfo) {
         beRegularHisto();
         std::string noGauchocomment = "No gauchocomment";
@@ -761,11 +762,12 @@ void DbRootHist::fillHistogram()
                 (EditorOnline == m_presenterApp->presenterMode())
               ) ) {
              int i = 0;
-             int  nbins = m_trendTimeScale;
+             int  nbins = rootHistogram->GetNbinsX();;
              double stats[5]={0,0,0,0,0};
              rootHistogram->PutStats(stats); // reset mean value, etc   
-             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
+             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));
+             rootHistogram->SetBinContent(i,dimContent);   
+//             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i,dimContent);
           } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
               rootHistogram->SetBinContent(m_trendBin, dimContent);
               m_trendBin++;              
@@ -777,11 +779,12 @@ void DbRootHist::fillHistogram()
                 (EditorOnline == m_presenterApp->presenterMode())
               ) ) {
              int i = 0;
-             int  nbins = m_trendTimeScale;
+             int  nbins = rootHistogram->GetNbinsX();
              double stats[5]={0,0,0,0,0};
              rootHistogram->PutStats(stats); // reset mean value, etc   
-             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));   
-             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i, 0.0);
+             for (i=1;i<=nbins-1;i++) rootHistogram->SetBinContent(i,rootHistogram->GetBinContent(i+1));
+             rootHistogram->SetBinContent(nbins, 0.0);   
+//             for (i=nbins-1;i<=nbins;i++) rootHistogram->SetBinContent(i, 0.0);
           } else if (m_presenterApp && Batch == m_presenterApp->presenterMode()) {
               rootHistogram->SetBinContent(m_trendBin, 0.0);
               m_trendBin++;              
@@ -918,7 +921,8 @@ void DbRootHist::setTH1FromDB()
 {
   if (m_historyTrendPlotMode) return;
   boost::recursive_mutex::scoped_lock oraLock(*m_oraMutex);
-  if (oraLock && m_onlineHistogram && rootHistogram) {
+  boost::recursive_mutex::scoped_lock rootLock(*m_rootMutex);
+  if (oraLock && rootLock && m_onlineHistogram && rootHistogram) {
     //m_onlineHistogram->dump(); //DEBUG
     int iopt = 0;
     float fopt = 0.0;

@@ -3482,16 +3482,19 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
     //TODO: ? limit
     if (newHistoInstance > 998) { newHistoInstance = 0; }
     newHistoInstance++;
-
     OnlineHistDB*  histogramDB = NULL;
     OnlineHistogram* onlineHistogram = NULL;
     DimBrowser* dimBrowser = NULL;
     std::string currentPartition(m_currentPartition);
     
     if (isConnectedToHistogramDB() &&
-        (invisible != overlapMode) ) {
-      histogramDB = m_histogramDB;      
-      onlineHistogram = m_histogramDB->getHistogram(histogramUrl);
+        (invisible != overlapMode) ){
+      histogramDB = m_histogramDB;
+      TString dimMon(histogramUrl);
+      if (false == (dimMon.BeginsWith(s_adder.c_str()) &&
+                    dimMon.EndsWith(s_eff_TCK.c_str()))) {
+        onlineHistogram = m_histogramDB->getHistogram(dimMon.Data());
+      }
     } else {
       histogramDB = NULL;
       onlineHistogram = NULL;
@@ -3508,7 +3511,7 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
     }
 
 // TODO: merge this with loadSelectedPage()
-    DbRootHist* dbRootHist = getHistogram(this,
+    DbRootHist* dbRootHist = getPageHistogram(this,
                                           histogramUrl,
                                           currentPartition,
                                           2, newHistoInstance,
@@ -3585,7 +3588,8 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
   if ( (Batch != m_presenterMode) &&
        (invisible != overlapMode) ) {
     paintHist(dbRootHist, targetPad);
-  } else {
+  } else if ( (invisible != overlapMode) &&
+              (Batch == m_presenterMode) ){
      dbRootHist->rootHistogram->SetLineStyle(1);
      dbRootHist->rootHistogram->SetLineWidth(1);
   }
@@ -4124,17 +4128,18 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
 //          m_onlineHistosOnPageIt = m_onlineHistosOnPage.begin();
           std::vector<DbRootHist*>::iterator drawHist_dbHistosOnPageIt;
-          drawHist_dbHistosOnPageIt = dbHistosOnPage.begin();
-
-
-//     if (gSystem->ProcessEvents()) break; -> handle fast pageload clicks?          
-          while (drawHist_dbHistosOnPageIt != dbHistosOnPage.end()) {
+//     if (gSystem->ProcessEvents()) break; -> handle fast pageload clicks?
+                   
+          for (drawHist_dbHistosOnPageIt = dbHistosOnPage.begin();
+               drawHist_dbHistosOnPageIt != dbHistosOnPage.end();
+               drawHist_dbHistosOnPageIt++) {
 
 // HLTA0101_Adder_1/GauchoJob/MonitorSvc/monRate/TCK
 //           
 
             if ( (m_verbosity >= Verbose) &&
-                 (*drawHist_dbHistosOnPageIt)->onlineHistogram()) {
+                 (*drawHist_dbHistosOnPageIt) &&
+                 (*drawHist_dbHistosOnPageIt)->onlineHistogram() ) {
               std::cout << "db identifier "
                         << ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->identifier()
                         << std::endl << "\tdb task "
@@ -4183,7 +4188,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 //          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());          
           // TODO: merge the 2 // below
 //          m_onlineHistosOnPageIt++;
-          drawHist_dbHistosOnPageIt++;
           }
           
           m_pageDescriptionView->Clear();
@@ -4194,8 +4198,10 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
   // reliable random crashes when below invoked... via TH painter (timing dependent?)
         editorCanvas->Update();
         std::vector<DbRootHist*>::iterator drawOpt_dbHistosOnPageIt;
-        drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
-        while( drawOpt_dbHistosOnPageIt !=  dbHistosOnPage.end() ) {
+        
+        for (drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
+             drawOpt_dbHistosOnPageIt != dbHistosOnPage.end();
+             drawOpt_dbHistosOnPageIt++) {
            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
            if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
                 (true == m_currentTCK.empty()) ) {
@@ -4207,7 +4213,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                                s_slash + s_eff_TCK;
               }
            }
-           drawOpt_dbHistosOnPageIt++;
         }
 
 // TODO: // str. broken
