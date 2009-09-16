@@ -4,6 +4,24 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-09-16 - Gloria CORTI
+ - Introduce new properties in Gauss() configurable
+   . Output     : string to specify the type of output, it can be 'NONE' or
+                  'SIM' (default 'SIM'), allowing to not write an event data
+                  file
+   . Production : string to specify type of generation, it can be 'PHYS', 
+                  'PGUN' or 'MIB' (default 'PHYS') allowing to reactivate
+                  ParticleGun and MIBackground algorithm instead of Generation
+                  in Generator phase
+ - Clean up a little the configurable for Histogram options (only 'NONE' and
+   'DEFAULT' are allowed for the moment
+ - Use isPropertySet() to check if the name of the file catalog is set in 
+   options file as a default value exist in the list and value set in Gauss()
+   was not taken
+ - Use version of DecFiles v19r* as modification for particle guns and mib
+   compatible with Gauss v37r4 have been introduced and previous version cannot
+   be used for these event types
+
 ! 2009-09-14 - Silvia MIGLIORANZI
  - GaussStat.py (which analyze the Gauss log files and produce statistics
    tables for both generator and simulation) was added under the "scripts"

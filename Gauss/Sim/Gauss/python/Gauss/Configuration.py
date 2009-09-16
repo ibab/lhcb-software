@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.11 2009-07-29 16:15:13 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-09-16 18:05:16 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -58,7 +58,7 @@ class Gauss(LHCbConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "Histograms"        : "Default"
+        "Histograms"        : "DEFAULT"
        ,"DatasetName"       : "Gauss"
        ,"SpilloverPaths"    : []
        ,"PhysicsList"       : "LHEP"
@@ -73,18 +73,21 @@ class Gauss(LHCbConfigurableUser):
        ,"CrossingRate"      : 11.245*SystemOfUnits.kilohertz
        ,"Luminosity"        : 0.116*(10**30)/(SystemOfUnits.cm2*SystemOfUnits.s)
        ,"TotalCrossSection" : 97.2*SystemOfUnits.millibarn
+       ,"Output"            : 'SIM'
+       ,"Production"        : 'PHYS'
       }
     
     _propertyDocDct = { 
-        'Histograms'     : """ Type of histograms: ['None','Default'] """
+        'Histograms'     : """ Type of histograms: ['NONE','DEFAULT'] """
        ,'DatasetName'    : """ String used to build output file names """
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
        ,'PhysicsList'    : """ Name of physics list to be passed ['LHEP','QGSP'] """
        ,'GenStandAlone'  : """ Flag to indicate that only generator phase is run"""
+       ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
+       ,'Production'     : """ Generation type : ['PHYS', 'PGUN', 'MIB' (default 'PHYS')"""
        }
-
-    KnownHistOptions = ["","None","Default"]
-
+    KnownHistOptions = ['NONE','DEFAULT']
+    
     ##
     ## Helper functions for spill-over
     def slot_( self, slot ):
@@ -194,12 +197,12 @@ class Gauss(LHCbConfigurableUser):
         # May be needed by some options
         importOptions("$STDOPTS/PreloadUnits.opts")
 
-        #self.setOtherProps(LHCbApp(),["EvtMax"])
         
     ##
     def outputName(self):
         """
-        Build a name for the output file, based in input options
+        Build a name for the output file, based on input options.
+        Combines DatasetName, EventType, Number of events and Date
         """
         import time
         outputName = self.getProp("DatasetName")
@@ -233,6 +236,12 @@ class Gauss(LHCbConfigurableUser):
         self.setOutputContent( SpillOverSlots )
 
         #
+        knownOptions = ['NONE','SIM']
+        output = self.getProp("Output").upper()
+        if output == 'NONE':
+            log.warning("No event data output produced")
+            return
+
         writerName = "GaussTape"
         simWriter = OutputStream( writerName, Preload=False )
         if not simWriter.isPropertySet( "Output" ):
@@ -240,8 +249,10 @@ class Gauss(LHCbConfigurableUser):
         simWriter.RequireAlgs.append( 'GaussSequencer' )
 
         ApplicationMgr().OutStream = [ simWriter ]
-        if not FileCatalog().Catalogs:
+        if not FileCatalog().isPropertySet("Catalogs"):
             FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
+
+            
 
 
 
@@ -278,15 +289,19 @@ class Gauss(LHCbConfigurableUser):
         from Configurables import RootHistCnv__PersSvc
         RootHistCnv__PersSvc('RootHistCnv').ForceAlphaIds = True
 
-        histOpt = self.getProp("Histograms").capitalize()
+        histOpt = self.getProp("Histograms").upper()
         if histOpt not in self.KnownHistOptions:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
             # HistogramPersistency needed to read in histogram for calorimeter
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
 
+        # If not saving histograms do not set the name of the file
+        if ( histOpt == 'NONE') :
+            log.warning("No histograms produced")
+            return
+        
         # Use a default histogram file name if not already set
-        #   eventually do what is in example Gauss-Job.py with date and event type
         if not HistogramPersistencySvc().isPropertySet( "OutputFile" ):
             histosName = self.getProp("DatasetName")
             histosName = self.outputName() + '-histos.root'
@@ -328,10 +343,23 @@ class Gauss(LHCbConfigurableUser):
                     genInit.FirstEventNumber = genInitT0.FirstEventNumber
 
 
-            genProc = Generation("Generation"+slot, 
-                                 GenHeaderLocation = TESNode+"Gen/Header" ,
-                                 HepMCEventLocation = TESNode+"Gen/HepMCEvents" , 
-                                 GenCollisionLocation = TESNode+"Gen/Collisions" )
+            genProc = 0
+            genType = self.getProp("Production").upper()
+            from Configurables import ParticleGun, MIBackground
+            KnownGenTypes = ['PHYS','PGUN','MIB']
+            if genType not in KnownGenTypes:
+                raise RuntimeError("Unknown Generation type '%s'"%genType)
+            if genType == 'PHYS':
+                genProc = Generation("Generation"+slot) 
+            elif genType == 'PGUN':
+                genProc = ParticleGun("ParticleGun"+slot)
+            else:
+                genProc = MIBackground("MIBackground"+slot)
+
+            genProc.GenHeaderLocation = TESNode+"Gen/Header"
+            genProc.HepMCEventLocation = TESNode+"Gen/HepMCEvents" 
+            genProc.GenCollisionLocation = TESNode+"Gen/Collisions"
+
             if slot != '':
                 genProc.PileUpTool = 'FixedLuminosityForSpillOver' 
 
@@ -342,11 +370,6 @@ class Gauss(LHCbConfigurableUser):
     ##
     def configureMoni( self, SpillOverSlots ):
 
-        histOpt = self.getProp("Histograms").capitalize()
-        if ( histOpt == 'None') :
-            log.warning("No histograms produced")
-            return
-        
         # Monitors for the generator:
         for slot in SpillOverSlots:
 
@@ -358,10 +381,10 @@ class Gauss(LHCbConfigurableUser):
             genMoniSeq.Members += [
                 GenMonitorAlg( "GenMonitorAlg"+slot, HistoProduce=True,
                                Input = TESLocation ) ]
-            if histOpt == 'Debug':
-                genMoniSeq.Members += [ DumpHepMC( "DumpHepMC"+slot,
-                                                   OutputLevel=1,
-                                                   Addresses = [TESLocation] ) ]
+#            if moniOpt == 'Debug':
+#                genMoniSeq.Members += [ DumpHepMC( "DumpHepMC"+slot,
+#                                                   OutputLevel=1,
+#                                                   Addresses = [TESLocation] ) ]
 
 
         # Monitors for the MCTruth
@@ -394,8 +417,8 @@ class Gauss(LHCbConfigurableUser):
             TESNode = "/Event/"+self.slot_(slot)+"MC/"
 
             # Monitors for the detectors
-            if histOpt == 'Debug':
-                checkHits.OutputLevel = DEBUG
+            #if moniOpt == 'Debug':
+            #    checkHits.OutputLevel = DEBUG
 
             checkHits.VeloHits   = TESNode + 'Velo/Hits'
             checkHits.PuVetoHits = TESNode + 'PuVeto/Hits'
@@ -491,9 +514,9 @@ class Gauss(LHCbConfigurableUser):
             detMoniSeq.Members += [
                 MuonMultipleScatteringChecker( "MuonMultipleScatteringChecker"+ slot )]
 
-        if histOpt == 'Expert':
-            # For the moment do nothing
-            log.Warning("Not yet implemented")
+        #if histOpt == 'Expert':
+        #    # For the moment do nothing
+        #    log.Warning("Not yet implemented")
 
 
         importOptions("$GAUSSRICHROOT/options/RichAnalysis.opts")
