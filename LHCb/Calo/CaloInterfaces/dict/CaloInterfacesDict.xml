@@ -1,6 +1,7 @@
 <lcgdict>
 
   <class name    = "ICalo2Calo"               />
+  <class name    = "ICalo2MCTool"             />
   <class name    = "ICaloClusterization"      />
   <class name    = "ICaloClusterSelector"     />
   <class name    = "ICaloClusterTool"         />
