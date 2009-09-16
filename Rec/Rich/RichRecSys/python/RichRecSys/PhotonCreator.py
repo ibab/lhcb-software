@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.8 2009-05-21 17:25:15 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.9 2009-09-16 13:37:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -22,7 +22,13 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         "Context": "Offline" # The context within which to run
        ,"Radiators":  [] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SelectionMode" : ""
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
+
+## @brief Set OutputLevel 
+    def setOutputLevel(self,conponent):
+        if self.isPropertySet("OutputLevel") :
+            conponent.OutputLevel = self.getProp("OutputLevel")
 
     ## Initialize 
     def initialize(self):
@@ -42,8 +48,10 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
         
         # -----------------------------------------------------------------------
         # Photon maker
-
         creator = RichTools().photonCreator()
+
+        # OutputLevel
+        self.setOutputLevel(creator)
 
         # -----------------------------------------------------------------------
         # Photon predictor (a.k.a. pre-selection)

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: SegmentCreator.py,v 1.4 2008-11-14 17:14:05 jonrob Exp $"
+__version__ = "$Id: SegmentCreator.py,v 1.5 2009-09-16 13:37:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -20,8 +20,9 @@ class RichSegmentCreatorConf(RichConfigurableUser):
 
     ## Steering options
     __slots__ = {
-        "Context": "Offline"  # The context within which to run
-       ,"EnergyBins": None
+        "Context" : "Offline"  # The context within which to run
+       ,"EnergyBins"  : None
+       ,"OutputLevel" : INFO    # The output level to set all algorithms and tools to use
         }
 
     ## Initialize 
@@ -31,7 +32,6 @@ class RichSegmentCreatorConf(RichConfigurableUser):
                                               "HLT"     : [ 2, 2, 2 ] } )
 
     ## @brief Apply the configuration
-    #
     def applyConf(self):
         
         context = self.getProp("Context")
@@ -41,3 +41,6 @@ class RichSegmentCreatorConf(RichConfigurableUser):
         segCreator = Rich__Rec__SegmentCreator( "ToolSvc."+context+"_"+nickname )
 
         segCreator.EnergyBins = self.getProp("EnergyBins")
+
+        if self.isPropertySet("OutputLevel") :
+            segCreator.OutputLevel = self.getProp("OutputLevel")

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.7 2009-05-15 09:33:29 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.8 2009-09-16 13:37:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -28,7 +28,13 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"Radiators": [True,True,True] # The radiators to use (Aerogel/Rich1Gas/Rich2Gas)
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
+
+    ## @brief Set OutputLevel 
+    def setOutputLevel(self,conponent):
+        if self.isPropertySet("OutputLevel") :
+            conponent.OutputLevel = self.getProp("OutputLevel")
 
     ## @brief Apply the configuration
     #
@@ -36,13 +42,16 @@ class RichTrackCreatorConfig(RichConfigurableUser):
 
         # segments
         segConf = RichSegmentCreatorConf()
-        self.setOtherProps(segConf,["Context"])
+        self.setOtherProp(segConf,"Context")
 
         # Configure the tracking tools
         nickname = "RichTrackCreator"
         
         # Track creator
         trackCr = RichTools().trackCreator(nickname)
+
+        # OutputLevel
+        self.setOutputLevel(trackCr)
 
         # Input tracks
         intracks = self.getProp("InputTracksLocation")

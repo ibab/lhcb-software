@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PixelCreator.py,v 1.7 2009-02-21 14:34:46 jonrob Exp $"
+__version__ = "$Id: PixelCreator.py,v 1.8 2009-09-16 13:37:28 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -29,7 +29,13 @@ class RichPixelCreatorConfig(RichConfigurableUser):
        ,"UseClustersAsPixels": [ False, False ] # Use clusters as the raw pixel objects
        ,"MaxHotPixelClusterSize": [ 10, 8 ] # Max size of clusters for HotClusters pixel cleaning (RICH1,RICH2)
        ,"BookKeeping": False
+       ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
         }
+
+    ## @brief Set OutputLevel 
+    def setOutputLevel(self,conponent):
+        if self.isPropertySet("OutputLevel") :
+            conponent.OutputLevel = self.getProp("OutputLevel")
 
     ## @brief Check the configuration is OK
     #
@@ -49,6 +55,9 @@ class RichPixelCreatorConfig(RichConfigurableUser):
         pixmaker = RichTools().pixelCreator()
         pixmaker.UseDetectors  = self.getProp("Detectors")
         pixmaker.DoBookKeeping = self.getProp("BookKeeping")
+
+        # OutputLevel
+        self.setOutputLevel(pixmaker)
 
         # pixel cleaning
         # -------------------------------------------------------------------------------------------

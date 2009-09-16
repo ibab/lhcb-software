@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-09-16 - Chris Jones
+ - Improvements to how the OutputLevel level property is propagated to other
+   python Configurables and used
+
 !====================== RichRecSys v3r21 2009-06-30 ==========================
 ! 2009-06-25 - Chris Jones
  - Add OutputLevel property to RichRecSysConf Configurable that can be used
