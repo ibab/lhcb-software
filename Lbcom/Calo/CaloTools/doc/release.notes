@@ -1,9 +1,24 @@
-! $Id: release.notes,v 1.76 2009-09-11 16:52:27 odescham Exp $
+! $Id: release.notes,v 1.77 2009-09-16 16:07:06 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-! 2009-10-11 - Olivier Deschamps
+! 2009-09-15 - Olivier Deschamps
+  - new tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation (interface CaloInterfaces/ICalo2MCTool.h)
+      - preliminary (incomplete) version of the tool
+  - use Relations in requirements
+
+! 2009-09-14 - Olivier Deschamps
+  - adapt to change in CaloDAQ/CaloReadoutTool (->CaloCosmicsTool & CaloGetterTool & L0Calo2CaloTool)
+
+! 2009-09-11 - Olivier Deschamps
+ - Calo2Calo.cpp : 
+   - make use of CaloAlgUtils.h to define context-dependent TES I/O 
+   - caloGetterTool : public -> private tool
+   - use caloGetterTool in isLocMax(id) method
+
+
+! 2009-09-11 - Olivier Deschamps
  - CalOGetterTool.cpp : make use of CaloAlgUtils.h to define context-dependent TES I/O 
 
 ! 2009-09-04 - Dmitry Golubkov

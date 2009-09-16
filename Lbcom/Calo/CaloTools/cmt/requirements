@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.32 2009-09-07 09:23:13 graven Exp $
+# $Id: requirements,v 1.33 2009-09-16 16:07:06 odescham Exp $
 # =============================================================================
 # Created    : 2008-05-08
 # Maintainer : Olivier Deschamps odescham@in2p3.fr
@@ -19,6 +19,7 @@ use RecEvent         v*      Event
 use TrackEvent       v*      Event
 use LHCbMath         v*      Kernel
 use LHCbKernel       v*      Kernel
+use Relations	     v*      Kernel
 
 # ================= constituents: linker library ==============================
 library             CaloTools *.cpp

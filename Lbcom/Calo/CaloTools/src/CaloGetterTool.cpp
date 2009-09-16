@@ -1,4 +1,4 @@
-// $Id: CaloGetterTool.cpp,v 1.5 2009-09-11 16:52:27 odescham Exp $
+// $Id: CaloGetterTool.cpp,v 1.6 2009-09-16 16:07:07 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -34,7 +34,7 @@ CaloGetterTool::CaloGetterTool
   declareProperty ( "GetDigits"        , m_digiUpd = true  ) ;
   declareProperty ( "GetClusters"      , m_clusUpd = false ) ;
   declareProperty ( "GetHypos"         , m_hypoUpd = false ) ;
-  declareProperty ( "GetProviders"     , m_provUpd = false ) ;
+  //declareProperty ( "GetProviders"     , m_provUpd = false ) ;
   declareProperty ( "DigitLocations"   , m_digiLoc ) ;
   declareProperty ( "ClusterLocations" , m_clusLoc ) ;
   declareProperty ( "HypoLocations"    , m_hypoLoc ) ;
@@ -256,15 +256,16 @@ void CaloGetterTool::update()
     }
   }  
   // provider
-  if( m_provUpd)
-  {
-    for(std::map<std::string,ICaloDataProvider*>::iterator ip = m_provider.begin();m_provider.end()!=ip;++ip)
-    {
-      const std::string& det = ip->first;
-      ICaloDataProvider* provider = ip->second;
-      m_prov[det] = provider->getBanks();
-    }    
-  }
+  //  if( m_provUpd)
+  // {
+  //  for(std::map<std::string,ICaloDataProvider*>::iterator ip = m_provider.begin();m_provider.end()!=ip;++ip)
+  //  {
+  //    const std::string& det = ip->first;
+  //    ICaloDataProvider* provider = ip->second;
+  //    m_prov[det] = provider->getBanks();
+  //  }    
+  //  }
+
 }
 
 

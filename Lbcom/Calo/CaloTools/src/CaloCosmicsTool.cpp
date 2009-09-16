@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.8 2009-05-19 13:48:22 cattanem Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.9 2009-09-16 16:07:07 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -247,7 +247,7 @@ StatusCode CaloCosmicsTool::getBanks(){
 
   // get rawBank from TES
   for(std::vector<std::string>::iterator islot = m_slots.begin(); islot != m_slots.end() ;  ++islot){
-    if(!m_daqs[*islot]->getBanks()) return StatusCode::FAILURE;
+    if(!m_daqs[*islot]->ok()) return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
 }

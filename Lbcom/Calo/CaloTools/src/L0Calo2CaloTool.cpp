@@ -233,9 +233,10 @@ const LHCb::CaloDigits* L0Calo2CaloTool::makeDigits
   const unsigned int       level  ) const
 {
   bool read = exist<LHCb::CaloDigits>( m_digitLocation );
-  if ( msgLevel(MSG::VERBOSE) ) verbose() << "0: data at " << m_digitLocation << " does" << ( read ? "" : " NOT") << " exist" << endmsg;
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << "0: data at " << m_digitLocation 
+                                          << " does" << ( read ? "" : " NOT") << " exist" << endmsg;
   if ( !read ){
-    m_dataProviderTool->getBanks();
+    //m_dataProviderTool->getBanks();
     m_decodedSources.clear();
   }
 

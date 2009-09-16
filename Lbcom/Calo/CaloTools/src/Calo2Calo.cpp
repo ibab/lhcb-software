@@ -1,4 +1,4 @@
-// $Id: Calo2Calo.cpp,v 1.8 2009-08-10 11:55:13 ibelyaev Exp $
+// $Id: Calo2Calo.cpp,v 1.9 2009-09-16 16:07:06 odescham Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -11,6 +11,7 @@
 // CaloUtils
 // ============================================================================
 #include "CaloUtils/CaloDataFunctor.h"
+#include "CaloUtils/CaloAlgUtils.h"
 // ============================================================================
 // local
 // ============================================================================
@@ -59,13 +60,13 @@ StatusCode Calo2Calo::initialize()
   debug() << "Initialize Calo2Calo tool " << endmsg;
   
   // get getter tool
-  m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName);
+  m_getter = tool<ICaloGetterTool>("CaloGetterTool",m_getterName,this);
 
   // CaloDigit locations
-  m_loc["Ecal"]= LHCb::CaloDigitLocation::Ecal;
-  m_loc["Hcal"]= LHCb::CaloDigitLocation::Hcal;
-  m_loc["Prs"]= LHCb::CaloDigitLocation::Prs;
-  m_loc["Spd"]= LHCb::CaloDigitLocation::Spd;
+  m_loc["Ecal"]=  LHCb::CaloAlgUtils::CaloDigitLocation( "Ecal" , context() );
+  m_loc["Hcal"]=  LHCb::CaloAlgUtils::CaloDigitLocation( "Hcal" , context() );
+  m_loc["Prs"] =  LHCb::CaloAlgUtils::CaloDigitLocation( "Prs"  , context() );
+  m_loc["Spd"] =  LHCb::CaloAlgUtils::CaloDigitLocation( "Spd"  , context() );
   // DeCalorimeter* pointers
   m_det["Ecal"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
   m_det["Hcal"]=getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
@@ -288,10 +289,7 @@ bool Calo2Calo::isLocalMax ( const LHCb::CaloDigit& digit)
   const LHCb::CaloCellID& id = digit.cellID();
   std::string    calo = CaloCellCode::CaloNameFromNum( id.calo() );
   DeCalorimeter* det  = m_det[ calo ];
-  const LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( m_loc[ calo ] );
+  const LHCb::CaloDigits* digits = m_getter->digits( m_loc[ calo ] ); 
   //
   return LHCb::CaloDataFunctor::isLocalMax ( &digit , det , digits ) ;
 }
-// ============================================================================
-// the END 
-// ============================================================================
