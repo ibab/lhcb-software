@@ -13,7 +13,8 @@ ToolSvc.CaloGetter.Context = "HLT";
 // almost the same as in Brunel : just change the instance name and the default locations + CaloDigits on-Demand
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
 
-HltRecoCALOSeq.Members +=     { 	"CaloGetterInit/CaloDigitGetter",
+HltRecoCALOSeq.Members +=     { 	
+  //"CaloGetterInit/CaloDigitGetter", // NO LONGER NEEDED
                                   "GaudiSequencer/HltCaloClusters",
                                   "GaudiSequencer/HltCaloTrackMatch" ,
                                   "GaudiSequencer/HltCaloRec",

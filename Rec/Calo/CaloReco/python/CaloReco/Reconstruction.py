@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.3 2009-09-01 11:44:59 ibelyaev Exp $
+# $Id: Reconstruction.py,v 1.4 2009-09-16 16:13:29 odescham Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'digitsReco'     , 
@@ -47,8 +47,9 @@ def digitsReco  ( context , enableRecoOnDemand ) :
     """
     
     from Configurables import ( CaloZSupAlg       ,
-                                CaloDigitsFromRaw ,
-                                CaloGetterInit    ) 
+                                CaloDigitsFromRaw 
+#                                ,CaloGetterInit # NO LONGER NEEDED
+                                ) 
     
     alg = GaudiSequencer (
         'CaloDigits'      ,
@@ -57,8 +58,8 @@ def digitsReco  ( context , enableRecoOnDemand ) :
         CaloZSupAlg       ( "EcalZSup"        ) ,
         CaloZSupAlg       ( "HcalZSup"        ) ,
         CaloDigitsFromRaw ( "PrsFromRaw"      ) ,
-        CaloDigitsFromRaw ( "SpdFromRaw"      ) ,
-        CaloGetterInit    ( "CaloDigitGetter" ) 
+        CaloDigitsFromRaw ( "SpdFromRaw"      ) 
+#        ,CaloGetterInit    ( "CaloDigitGetter" ) # NO LONGER NEEDED
         ]
         )
     setTheProperty ( alg , 'Context' , context )

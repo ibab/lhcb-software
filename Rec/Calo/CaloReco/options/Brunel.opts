@@ -1,6 +1,6 @@
-// $Id: Brunel.opts,v 1.26 2009-04-17 11:44:53 odescham Exp $ 
+// $Id: Brunel.opts,v 1.27 2009-09-16 16:13:28 odescham Exp $ 
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.26 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.27 $ 
 // ============================================================================
 
 /** @file
@@ -12,7 +12,7 @@
 
 // The main stream :
 RecoCALOSeq.Members +=     { 	"GaudiSequencer/CaloDigits" ,
-                              "CaloGetterInit/CaloDigitGetter",
+                              //"CaloGetterInit/CaloDigitGetter", // NO LONGER NEEDED
                               "GaudiSequencer/CaloClusters",
                               "GaudiSequencer/CaloTrackMatch" ,
                               "GaudiSequencer/CaloRec",
