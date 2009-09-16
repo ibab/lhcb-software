@@ -1,6 +1,6 @@
 // 
 // SliceReaderSvc.opts
-// $Id: MEPInjector.opts,v 1.14 2009-09-16 06:40:28 garnierj Exp $
+// $Id: MEPInjectorTest.opts,v 1.1 2009-09-16 06:40:29 garnierj Exp $
 //#include "$ONLINETASKSROOT/options/OnlineEnvironment.opts"
 #include "/group/online/dataflow/options/FEST/Injector_Info.opts"
 ApplicationMgr.HistogramPersistency  = "NONE";
