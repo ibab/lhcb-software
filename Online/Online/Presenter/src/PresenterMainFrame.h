@@ -180,6 +180,9 @@ class PresenterMainFrame : public TGMainFrame
     void setImagePath(const std::string & imagePath);
     void setDumpFormat(const std::string & dumpFormat);    
     void setPartition(const std::string & partition);
+    std::string currentTCK() { return m_currentTCK; }
+    void setTCK(std::string TCK) { m_currentTCK = TCK; }
+    
 
     void setKnownDatabases(const std::string & databasesCfg,
                            const std::string & dbCredentials);

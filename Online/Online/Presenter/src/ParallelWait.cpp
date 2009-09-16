@@ -220,6 +220,7 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
   while (refresh_dbHistosOnPageIt != dbHistosOnPage->end()) {
     if ( (pres::TCKinfo == (*refresh_dbHistosOnPageIt)->effServiceType()) &&
          (Batch != m_presenterApp->presenterMode()) ) {
+        m_presenterApp->setTCK(((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle());
         m_presenterApp->setStatusBarText(((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle(), 2);
       }
     thrds.create_thread(boost::bind(&refreshHisto,

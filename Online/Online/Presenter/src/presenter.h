@@ -151,6 +151,7 @@ namespace pres
   static const std::string s_eff_MonitorSvc("MonitorSvc");
   static const std::string s_eff_TCK("TCK");
   static const std::string s_eff_init("Initialising...");
+  static const std::string s_default_tck("default");
   // boost::filesystem::slash
 
 // ^(H1D|H2D|P1D|HPD|P2D|CNT)?/?([^/_]+_)?([^/_]*)(_[^/]*)?/([^/]*)/(([^_]*)(_\\$)?(.*))$

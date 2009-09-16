@@ -3571,15 +3571,16 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
   }
   TPad* targetPad = NULL;
   DbRootHist* prevDbRootHist = NULL;
-  if (overlap == overlapMode &&
-      false == dbHistosOnPage.empty() &&
-      true == isConnectedToHistogramDB()) {
+  if ( (overlap == overlapMode) &&
+       (false == dbHistosOnPage.empty()) &&
+       (true == isConnectedToHistogramDB()) ) {
       std::vector<DbRootHist*>::iterator pad_dbHistosOnPageIt;
       pad_dbHistosOnPageIt = dbHistosOnPage.end();
       pad_dbHistosOnPageIt--;
       prevDbRootHist = *pad_dbHistosOnPageIt;
-      if (NULL != prevDbRootHist &&
-          NULL != prevDbRootHist->hostingPad) {
+      if ( (NULL != prevDbRootHist) &&
+           (NULL != prevDbRootHist->hostingPad) &&
+           (pres::MonRate != prevDbRootHist->effServiceType()) ) {
         targetPad = prevDbRootHist->hostingPad;
         dbRootHist->hostingPad = targetPad;        
       }

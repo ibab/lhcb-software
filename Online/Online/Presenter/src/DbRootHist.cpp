@@ -1573,7 +1573,16 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
         s_NoReference != m_refOption &&
         rootHistogram->GetDimension() == 1 &&
         Show == visibility) {
-      TH1* ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
+      TH1* ref = NULL;
+      if (m_presenterApp) {
+        std::string tck(s_default_tck);
+        if (s_eff_init != m_presenterApp->currentTCK()) {
+          tck = m_presenterApp->currentTCK();
+        }
+        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram, 1, tck);
+      } else {
+        ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);
+      }
       if (ref) {
         if (m_reference) { delete m_reference; m_reference = 0; }
         m_reference = ref;
