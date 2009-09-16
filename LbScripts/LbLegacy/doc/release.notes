@@ -1,3 +1,8 @@
+2009-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: Added the --nofixperm option to prevent 
+	the fixing of the permissions. This could improve the installation time on windows. 
+
 2009-08-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: implemented retry loop for the 

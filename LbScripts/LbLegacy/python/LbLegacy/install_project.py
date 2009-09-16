@@ -209,6 +209,8 @@
  090819 - use absolute patch for the local distribution.htm file
         - put security around the usage of fixLinks. 
  090821 - implemented retry loop for the software retrieval.
+ 090916 - Added the --nofixperm option to prevent the fixing of the permissions. This
+          could improve the installation time on windows 
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -221,7 +223,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '090821'
+script_version = '090916'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r2"
@@ -276,6 +278,7 @@ md5_check = True
 nb_retries = 3
 check_only = False
 overwrite_mode = False
+fix_perm = True
 
 #----------------------------------------------------------------------------------
 def usage() :
@@ -551,7 +554,8 @@ def createTmpDirectory():
         log.info( '     %s exists' % getTmpDirectory() )
         destroyTmpDirectory()
     os.mkdir(getTmpDirectory())
-    changePermissions(getTmpDirectory(), recursive=True)
+    if fix_perm :
+        changePermissions(getTmpDirectory(), recursive=True)
     log.info( '     %s created' % getTmpDirectory() )
 
 def destroyTmpDirectory():
@@ -632,7 +636,8 @@ def createDir(here , logname):
                 else :
                     os.mkdir(os.path.join(dir,'DBASE'))
                     os.mkdir(os.path.join(dir,'PARAM'))
-            changePermissions(dir, recursive=True)
+            if fix_perm :
+                changePermissions(dir, recursive=True)
         if dir == "tmp" :
             createTmpDirectory()
     if os.path.isdir(os.path.join(here,cmtconfig)):
@@ -1191,7 +1196,8 @@ def getProjectTar(tar_list, already_present_list=None):
                                 if not os.path.exists(tdir) :
                                     os.makedirs(tdir)
                                 shutil.copytree(os.path.join(extradir, f), os.path.join('EXTRAPACKAGES', f))
-                                changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
+                                if fix_perm :
+                                    changePermissions(os.path.join('EXTRAPACKAGES',f),recursive=True)
                                 shutil.rmtree(extradir, ignore_errors=True)
                     if pack_ver[0] == "LBSCRIPTS" :
                         genlogscript = os.path.join(pack_ver[3],"InstallArea", "scripts", "generateLogin")
@@ -1248,7 +1254,8 @@ def getMySelf():
     if os.path.exists("latest_install_project.py") :
         os.remove("latest_install_project.py")
     getFile(url_dist,'install_project.py')
-    changePermissions('latest_install_project.py', recursive=False)
+    if fix_perm :
+        changePermissions('latest_install_project.py', recursive=False)
     latest_line = readString(new_install,'script_version')
     latest_version = latest_line.split("'")[1]
     if script_version < latest_version :
@@ -1293,7 +1300,8 @@ def getBootScripts():
             removeAll(this_bootscripts_dir)
             sys.exit('getBootScripts: Exiting ...')
         else :
-            changePermissions(this_bootscripts_dir, recursive=True)
+            if fix_perm :
+                changePermissions(this_bootscripts_dir, recursive=True)
             sys.path.insert(0, os.path.join(this_bootscripts_dir, "LBSCRIPTS", "LBSCRIPTS_%s" % lbscripts_version, "InstallArea", "python"))
             log.debug("sys.path is %s" % os.pathsep.join(sys.path))
     import LbLegacy as lbl
@@ -1923,7 +1931,8 @@ def unTarFileInTmp(filename, targetlocation, overwrite=False, offset=None):
     os.chdir(getTmpDirectory())
     rc = untarFile(filename)
     thisdir = os.getcwd()
-    changePermissions(thisdir, recursive=True)
+    if fix_perm :
+        changePermissions(thisdir, recursive=True)
     walkdir = thisdir
     if offset :
         walkdir = os.path.join(walkdir, offset)
@@ -2031,7 +2040,9 @@ def untarFile(file):
             retcode = 1
             return retcode
         else:
-            str = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
+            str = 'tar --extract --ungzip --touch --backup=simple --file %s' % filename
+            if fix_perm :
+                str = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
             try:
                 for l in tarFileList(filename) :
                     if os.path.isfile(l) :
@@ -2113,7 +2124,7 @@ def main():
     global debug_flag, full_flag, list_flag, remove_flag
     global cmtversion, md5_check, grid_version, nb_retries
     global setup_script, check_only, overwrite_mode
-    global _retry_time
+    global _retry_time, fix_perm
 # get arguments
     pname =' '
     pversion = ' '
@@ -2128,7 +2139,7 @@ def main():
             ['help','debug','full','list','remove','binary=',
              'project=','version=','cmtversion=','nocheck',
              'retry=','grid=','setup-script=','check', 'overwrite',
-             'compatversion=', 'retrytime='])
+             'compatversion=', 'retrytime=', 'nofixperm'])
 
     except getopt.GetoptError:
         help()
@@ -2170,6 +2181,8 @@ def main():
             setup_script = value
         if key == '--check':
             check_only = True
+        if key == '--nofixperm':
+            fix_perm = False
         if key == '--overwrite':
             overwrite_mode = True
 
@@ -2189,7 +2202,7 @@ def main():
         console.setLevel(logging.INFO)
     thelog.addHandler(console)
 
-    if not check_only :
+    if not check_only and fix_perm:
         changePermissions('install_project.py', recursive=False)
 
 # check pversion
