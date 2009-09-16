@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.4 2009-09-02 12:22:12 cattanem Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.5 2009-09-16 16:02:46 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -60,10 +60,21 @@ CaloDataProviderFromTES::CaloDataProviderFromTES( const std::string& type,
 CaloDataProviderFromTES::~CaloDataProviderFromTES() {} 
 
 //=============================================================================
+StatusCode CaloDataProviderFromTES::finalize ( ) {
+     IIncidentSvc* inc = incSvc() ;
+     if ( 0 != inc ) { inc -> removeListener  ( this ) ; }
+     return GaudiTool::finalize();
+}
+
 StatusCode CaloDataProviderFromTES::initialize ( ) {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize " << name() << endmsg;
+
+  // fill incident listener
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
+
 
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
@@ -102,6 +113,7 @@ StatusCode CaloDataProviderFromTES::initialize ( ) {
 
 //-------------------------------------
 bool CaloDataProviderFromTES::getBanks( ) {  
+  m_ok = false;
   if( fromDigit() ){
     if( exist<LHCb::CaloDigits>(m_loc) ){
       m_digCont = get<LHCb::CaloDigits>(m_loc);
@@ -113,7 +125,8 @@ bool CaloDataProviderFromTES::getBanks( ) {
       if ( msgLevel( MSG::DEBUG) )debug() << "Found container " << m_loc << " Content size " << m_adcCont->size() << endmsg;
     }else return false;
   }
-  return true;
+  m_ok = true;
+  return m_ok;
 }
 
 //-------------------------------------

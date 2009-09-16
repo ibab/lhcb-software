@@ -1,4 +1,4 @@
-// $Id: ICaloReadoutTool.h,v 1.2 2007-12-06 09:31:24 odescham Exp $
+// $Id: ICaloReadoutTool.h,v 1.3 2009-09-16 16:02:46 odescham Exp $
 #ifndef CALODAQ_ICALOREADOUTTOOL_H 
 #define CALODAQ_ICALOREADOUTTOOL_H 1
 
@@ -11,7 +11,7 @@
 #include "Event/RawEvent.h"
 #include "Event/RawBankReadoutStatus.h"
 
-static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 2, 0 );
+static const InterfaceID IID_ICaloReadoutTool ( "ICaloReadoutTool", 3, 0 );
 
 /** @class ICaloReadoutTool ICaloReadoutTool.h CaloDAQ/ICaloReadoutTool.h
  *  
@@ -35,6 +35,7 @@ public:
   virtual void cleanData(int feb)=0;
   virtual LHCb::RawBankReadoutStatus status()=0;
   virtual void putStatusOnTES()=0;
+  virtual bool ok()=0;
   
 protected:
 

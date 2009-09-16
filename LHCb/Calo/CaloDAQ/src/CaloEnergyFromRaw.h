@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.10 2009-04-06 15:45:03 odescham Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.11 2009-09-16 16:02:46 odescham Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -24,6 +24,7 @@ public:
   virtual ~CaloEnergyFromRaw( ); ///< Destructor
 
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
 
   virtual std::vector<LHCb::CaloAdc>& adcs( );// decode all banks
   virtual std::vector<LHCb::CaloAdc>& adcs( LHCb::RawBank* bank ); // decode a single bank

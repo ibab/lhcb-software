@@ -4,6 +4,13 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-09-16 - Olivier Deschamps
+ - CaloReadoutTool : 
+    - implement BeginEvent update via IncidentService : the getBanks() method no longer need to be externally invoked at each event
+    - implement initialize()/finalize() method
+    - adapt all iheriting readout tools accordingly
+
+
 !========================== CaloDAQ v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
  - Remove CaloReCreateMCLinks.cpp (moved to CaloAssociators)

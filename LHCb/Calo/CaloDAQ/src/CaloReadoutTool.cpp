@@ -1,9 +1,8 @@
-// $Id: CaloReadoutTool.cpp,v 1.35 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloReadoutTool.cpp,v 1.36 2009-09-16 16:02:46 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
-
 // local
 #include "CaloReadoutTool.h"
 
@@ -35,6 +34,7 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
   declareProperty( "PackedIsDefault", m_packedIsDefault = false);
   declareProperty( "DetectorSpecificHeader", m_extraHeader = false);
   declareProperty( "CleanWhenCorruption", m_cleanCorrupted = false);
+  declareProperty( "RawLocation", m_raw = LHCb::RawEventLocation::Default);
   m_getRaw = true;
 }
 //=============================================================================
@@ -45,14 +45,31 @@ CaloReadoutTool::~CaloReadoutTool() {}
 //=========================================================================
 //  Get required CaloBanks (short or packed format) - Fill m_banks
 //=========================================================================
-bool CaloReadoutTool::getCaloBanksFromRaw( ) {
+StatusCode CaloReadoutTool::initialize(){
+     StatusCode sc = GaudiTool::initialize();
+     if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+     debug() << "==> Initialize " << name() << endmsg;
+     IIncidentSvc* inc = incSvc() ;
+     if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
+     return sc;
+}
+StatusCode CaloReadoutTool::finalize(){
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc ) { inc -> removeListener  ( this ) ; }
+  return GaudiTool::finalize();
+}
 
   
+
+
+bool CaloReadoutTool::getCaloBanksFromRaw( ) {
+
+
   m_readSources.clear();
 
   m_banks = NULL;
   LHCb::RawEvent* rawEvt = NULL ;
-  m_raw = LHCb::RawEventLocation::Default;
+  //  m_raw = LHCb::RawEventLocation::Default;
   if ( msgLevel( MSG::DEBUG) )debug() << "raw location :: " << rootInTES() + m_raw << endmsg;  
   if( exist<LHCb::RawEvent>( m_raw ) ){
     rawEvt= get<LHCb::RawEvent>( m_raw );

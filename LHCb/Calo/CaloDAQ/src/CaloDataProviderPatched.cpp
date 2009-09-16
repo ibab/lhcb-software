@@ -45,8 +45,11 @@ CaloDataProviderPatched::~CaloDataProviderPatched() {};
 //=========================================================================
 //  Initialisation, according to the name -> detector
 //=========================================================================
+StatusCode CaloDataProviderPatched::finalize ( ) {
+  return CaloReadoutTool::finalize();
+}
 StatusCode CaloDataProviderPatched::initialize ( ) {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   debug() << "==> Initialize " << name() << endmsg;
 

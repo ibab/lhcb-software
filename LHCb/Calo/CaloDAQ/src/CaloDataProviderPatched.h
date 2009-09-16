@@ -26,6 +26,7 @@ public:
   virtual ~CaloDataProviderPatched( ); ///< Destructor
 
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
   virtual int    adc(LHCb::CaloCellID id);
   virtual double digit(LHCb::CaloCellID id);
   virtual unsigned int nTell1s(){return m_tell1s;};

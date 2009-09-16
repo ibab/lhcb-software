@@ -25,6 +25,7 @@ public:
   virtual ~CaloDataProvider( ); ///< Destructor
 
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
   virtual void clear();
   virtual void cleanData(int feb);
   virtual int    adc(LHCb::CaloCellID id);

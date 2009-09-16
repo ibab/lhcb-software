@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.26 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.27 2009-09-16 16:02:46 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -37,8 +37,12 @@ CaloTriggerBitsFromRaw::~CaloTriggerBitsFromRaw() {};
 //=========================================================================
 //  Initialisation
 //=========================================================================
+StatusCode CaloTriggerBitsFromRaw::finalize ( ) {
+  return CaloReadoutTool::finalize(); 
+}
+
 StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
+  StatusCode sc = CaloReadoutTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
 
   debug() << "==> Initialize " << name() << endmsg;

@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.7 2007-12-06 09:31:25 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.8 2009-09-16 16:02:46 odescham Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -25,6 +25,7 @@ public:
   virtual ~CaloTriggerBitsFromRaw( ); ///< Destructor
 
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
 
   virtual LHCb::Calo::FiredCells& prsCells( ); // get prs FiredCells
   virtual LHCb::Calo::FiredCells& spdCells( ); // get spd FiredCells

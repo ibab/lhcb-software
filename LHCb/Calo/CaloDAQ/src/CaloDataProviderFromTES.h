@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.3 2009-06-18 21:07:26 odescham Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.4 2009-09-16 16:02:46 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H 
 #define CALODATAPROVIDERFROMTES_H 1
 
@@ -6,6 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloDAQ/ICaloDataProvider.h"            // Interface
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Incident.h" 
 #include "CaloDet/DeCalorimeter.h"
 
 /** @class CaloDataProviderFromTES CaloDataProviderFromTES.h
@@ -14,7 +17,11 @@
  *  @author Olivier Deschamps
  *  @date   2008-08-22
  */
-class CaloDataProviderFromTES : public GaudiTool, virtual public ICaloDataProvider {
+class CaloDataProviderFromTES 
+  : public GaudiTool
+    , virtual public ICaloDataProvider 
+    , virtual public IIncidentListener{
+
 public: 
   /// Standard constructor
   CaloDataProviderFromTES( const std::string& type, 
@@ -24,7 +31,17 @@ public:
   virtual ~CaloDataProviderFromTES( ); ///< Destructor
 
 
+
   virtual StatusCode initialize();
+  virtual StatusCode finalize();
+  // =========================================================================
+  /// Inform that a new incident has occurred
+  virtual void handle(const Incident& /* inc */ ) { 
+    counter("IncidentSvc get ADC containers") += 1;
+    getBanks() ; 
+  }
+  // =========================================================================
+  
   virtual int    adc(LHCb::CaloCellID id);
   virtual double digit(LHCb::CaloCellID id);
   virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
@@ -34,6 +51,9 @@ public:
   virtual void clear();
   virtual void cleanData(int feb);
   virtual bool getBanks();
+  bool ok(){return m_ok;};
+
+  
   //
   std::string _rootInTES(){return rootInTES(); };
   StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);}; 
@@ -76,7 +96,6 @@ private:
   LHCb::RawBank::BankType m_packedType;
   LHCb::RawBank::BankType m_shortType;
   LHCb::RawBank::BankType m_errorType;
-  bool m_getRaw;
   std::string m_raw;
   bool m_extraHeader;
   bool m_packed;
@@ -92,7 +111,7 @@ private:
   
   LHCb::CaloDigits* m_digCont;
   LHCb::CaloAdcs* m_adcCont;
-
+  bool m_ok;
 
 };
 #endif // CALODATAPROVIDERFROMTES_H
