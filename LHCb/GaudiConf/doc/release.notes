@@ -1,8 +1,16 @@
-! $Id: release.notes,v 1.164 2009-09-14 17:17:36 cattanem Exp $
+! $Id: release.notes,v 1.165 2009-09-16 08:00:18 rlambert Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-09-11 - Rob Lambert
+ - In Configurable.py, LHCbApp:
+    - added configuration of an XMLSummarySvc
+      LHCbApp().XMLSummary
+      default behaviour is to neither create
+      nor fill a summary service/file
+
+=======
 ! 2009-09-14 - Marco Cattaneo
  - Add options/valgrind-python.supp, suppression file for valgrind errors from
    python, e.g. when executing gaudirun.py
