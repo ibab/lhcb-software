@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.165 2009-09-16 08:00:18 rlambert Exp $
+! $Id: release.notes,v 1.166 2009-09-16 08:01:41 rlambert Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
@@ -10,7 +10,6 @@
       default behaviour is to neither create
       nor fill a summary service/file
 
-=======
 ! 2009-09-14 - Marco Cattaneo
  - Add options/valgrind-python.supp, suppression file for valgrind errors from
    python, e.g. when executing gaudirun.py
