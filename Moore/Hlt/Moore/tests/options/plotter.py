@@ -52,6 +52,10 @@ def render(data, xlabel, ylabel):
     ymax = max(ymax, y)
   xrange = xmax - xmin
   yrange = ymax - ymin
+  if xrange == 0:
+    xrange = 1
+  if yrange == 0:
+    yrange = 1
   xscale = float(xwidth)  / xrange
   yscale = float(yheight) / yrange
   points_string = ""
