@@ -1,0 +1,47 @@
+//ApplicationMgr.TopAlg += {"GaudiSequencer/CaloBanksBack2Online"};
+
+CaloBanksBack2Online.Members = {"GaudiSequencer/PrsBanksBack2Online",
+                                "GaudiSequencer/EcalBanksBack2Online",
+                                "GaudiSequencer/HcalBanksBack2Online"};
+CaloBanksBack2Online.IgnoreFilterPassed = true; // the 3 sequences have to run independantly
+
+EcalBanksBack2Online.Members = { "CaloDigitsFromRaw/EcalADCs",                // ... Ecal CaloAdcs from offline bank
+                                 "CaloTriggerAdcsFromRawAlg/EcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                                 "CaloFillRawBuffer/EcalFillRawBuffer",       // ... Fill online RawBank::EcalPacked
+                                 "bankKiller/RemoveEcalBanks"};               // ... and remove offline bank
+
+HcalBanksBack2Online.Members = { "CaloDigitsFromRaw/HcalADCs",                      // ... Ecal CaloAdcs from offline bank
+                                 "CaloTriggerAdcsFromRawAlg/HcalTrigFromRaw", // ... Ecal L0CaloAdcs from packed bank
+                                 "CaloFillRawBuffer/HcalFillRawBuffer",       // ... Fill online RawBank::HcalPacked 
+                                 "bankKiller/RemoveHcalBanks"};         // ... and remove offline  bank
+
+PrsBanksBack2Online.Members = { "CaloDigitsFromRaw/PrsADCs",                   // ... Prs CaloAdcs from packed bank
+                                "CaloTriggerBitsFromRawAlg/PrsL0Bit",          // ... Prs L0PrsSpdHit from packed bank
+                                "CaloTriggerBitsFromRawAlg/SpdL0Bit",          // ... Spd L0PrsSpdHit from packed bank
+                                "CaloFillPrsSpdRawBuffer/PrsSpdFillRawBuffer", // ... Fill online RawBank::PrsPacked
+                                "bankKiller/RemovePrsBanks"};            // ... and remove offline bank
+ 
+// Extract (0-suppressed) ADCs from offline-format RawBank
+EcalADCs.OutputType ="ADCs";
+HcalADCs.OutputType ="ADCs";
+PrsADCs.OutputType="ADCs";
+
+// Put EHCal (0-suppressed) ADCs in non zero-suppressed adc container 
+EcalADCs.AdcsContainer = "Raw/Ecal/FullAdcs";
+HcalADCs.AdcsContainer = "Raw/Hcal/FullAdcs";
+
+// Create online-format banks in RawEvent
+EcalFillRawBuffer.DataCodingType = 2;
+HcalFillRawBuffer.DataCodingType = 2;
+PrsSpdFillRawBuffer.DataCodingType  = 3;
+
+// Remove offline-format banks from RawEvent
+RemoveEcalBanks.bankTypes ={ "EcalE" , "EcalTrig" };
+RemoveHcalBanks.bankTypes ={ "HcalE" , "HcalTrig" };
+RemovePrsBanks.bankTypes  ={ "PrsE"  , "PrsTrig"  };
+
+
+//CaloBanksBack2Online.MeasureTime=true;
+
+
+
