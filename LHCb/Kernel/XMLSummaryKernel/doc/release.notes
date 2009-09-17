@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-17 - Rob Lambert
+ - Added minimal options file to run the summary
+
 ! 2009-09-15 - Rob Lambert
  - Added options file required for qmtest
  - Added check for preproc GAUDI_FILE_INCIDENTS
