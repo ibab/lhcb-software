@@ -1,64 +1,64 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.7 2009-08-13 20:53:17 graven Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.8 2009-09-17 16:06:10 gcowan Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
-    def __apply_configuration__(self) :
-        from Configurables import HltANNSvc
-        ###
-        #    ID 50320 -  selection for Bd -> J/psi Ks, lifetime biased with Ks->LL
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBd2JpsiMuMuKsLLBiased.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLBiasedDecision" : 50320 } )
-        ###
-        #    ID 50330 -  selection for Bd -> J/psi Ks, lifetime biased with Ks->DD
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBd2JpsiMuMuKsDDBiased.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDBiasedDecision" : 50330 } )
-        ###
-        #    ID 50340 -  selection for Bd -> J/psi Ks, lifetime unbiased with Ks->LL
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBd2JpsiMuMuKsLLUnbiased.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLUnbiasedDecision" : 50340 } )
-        ###
-        #    ID 50350 -  selection for Bd -> J/psi Ks, lifetime unbiased with Ks->DD
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineBd2JpsiMuMuKsDDUnbiased.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDUnbiasedDecision" : 50350 } )
-        ###
-        #    ID 50050 - B -> J/psi(mumu)X
-        ##
-        importOptions( "$HLTSELECTIONSROOT/options/Hlt2LineB2JpsiX_MuMu.py")
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2JpsiX_MuMuDecision" : 50050 } )
-
-
-#####################################################################################
-__author__ = "Tristan du Pree and Greig Cowan"
-__date__ = "2009-06-18"
-
-
-class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
-    '''
-    Prescaled and detached selection for Bs -> J/psi Phi
-    '''
-
     __slots__ = {'BsLifetimeCut': 0.15 # ps
-                 ,'Prescale'    : {'Hlt2Bs2JpsiPhiPrescaled' : 0.1
-                                   ,'Hlt2Bs2JpsiPhiDetached' : 1. }
-                 ,'Postscale'   : {'Hlt2Bs2JpsiPhiPrescaled' : 1.
-                                   ,'Hlt2Bs2JpsiPhiDetached' : 1.} 
+                 ,'Prescale'    : { 'Hlt2Bs2JpsiPhiPrescaled' : 1.
+                                   ,'Hlt2Bs2JpsiPhiDetached' : 1.
+				   ,'Hlt2Bs2JpsiPhi' : 0.05
+                                   ,'Hlt2Bs2JpsiPhiSignal' : 1.
+				   ,'Hlt2Bu2JpsiK' : 0.05
+                                   ,'Hlt2Bu2JpsiKSignal' : 1.
+                                    ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsLLUnbiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsDDBiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsDDUnbiased' : 1.
+                                   ,'Hlt2B2JpsiX_MuMu' : 1.
+                                    }
+                 ,'Postscale'   : { 'Hlt2Bs2JpsiPhiPrescaled' : 0.1
+                                   ,'Hlt2Bs2JpsiPhiDetached' : 1.
+                 		   ,'Hlt2Bs2JpsiPhi' : 1.
+                                   ,'Hlt2Bs2JpsiPhiSignal' : 1.
+                  		   ,'Hlt2Bu2JpsiK' : 1.
+                                   ,'Hlt2Bu2JpsiKSignal' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsLLUnbiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsDDBiased' : 1.
+                                   ,'Hlt2Bd2JpsiMuMuKsDDUnbiased' : 1.
+                                   ,'Hlt2B2JpsiX_MuMu' : 1.
+                                    }
                  }
-
+    
     def __apply_configuration__(self) :
+	self.__makeHlt2Bs2JpsiPhiPrescaledAndDetachedLines()
+        self.__makeHlt2Bs2JpsiPhiLines()
+        self.__makeHlt2Bd2JpsiKstarLines()
+        self.__makeHlt2Bu2JpsiKLines()
+    	self.__makeHlt2Bd2JpsiMuMuKsLLBiasedLines()
+    	self.__makeHlt2Bd2JpsiMuMuKsLLUnbiasedLines()
+    	self.__makeHlt2Bd2JpsiMuMuKsDDBiasedLines()
+    	self.__makeHlt2Bd2JpsiMuMuKsDDUnbiasedLines()	
+	self.__makeHlt2B2JpsiX_MuMuLines()
+
+    def __makeHlt2Bs2JpsiPhiPrescaledAndDetachedLines(self):
+        '''
+        Prescaled and detached selection for Bs -> J/psi Phi
+        
+        @author Greig Cowan
+        @author Tristan du Pree
+        @date 2009-05-19
+        '''
+    
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.BasicParticles import Muons, NoCutsKaons
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiPrescaledDecision" : 50375 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDetachedDecision" : 50376 } )
-
+        
         # Make the J/psi
         # We should use the HltSharedParticles for this, but they are not quite what
         # we want. Discussion required.
@@ -76,7 +76,7 @@ class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
                                  , InputLocations = [NoCutsKaons]
                                  , MotherCut = "(M<1100*MeV) & (PT>500*MeV)"
                                  )
-
+        
         # Make the Bs
         BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<14) & (VFASPF(VCHI2)<20)"
         BsCombine = Hlt2Member( CombineParticles
@@ -104,23 +104,16 @@ class Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf(HltLinesConfigurableUser) :
                    , PV = True
                    )
 
-#####################################################################################
-__author__ = "Geraldine Conti, Adlene Hicheur"
-__date__ = "2009-07-19"
 
+    def __makeHlt2Bs2JpsiPhiLines(self):
+        '''
+        Prescaled Bs -> J/psi Phi selection
 
-class Hlt2Bs2JpsiPhiLinesConf(HltLinesConfigurableUser) :
-    '''
-    Prescaled Bs -> J/psi Phi selection 
-    '''
-
-    __slots__ = { 'Prescale'    : { 'Hlt2Bs2JpsiPhi' : 0.05
-                                   ,'Hlt2Bs2JpsiPhiSignal' : 1.}
-                 ,'Postscale'   : { 'Hlt2Bs2JpsiPhi' : 1.
-                                   ,'Hlt2Bs2JpsiPhiSignal' : 1.} 
-                 }
-
-    def __apply_configuration__(self) :
+        @author Geraldine Conti
+        @author Adlene Hicheur
+        @date 2009-07-19
+        '''
+    
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
@@ -128,7 +121,7 @@ class Hlt2Bs2JpsiPhiLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDecision" : 50370 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiSignalDecision" : 50371 } )
-
+    
         # Make the phi
         PhiCombine = Hlt2Member( CombineParticles
                                  , "PhiCombine"
@@ -146,39 +139,31 @@ class Hlt2Bs2JpsiPhiLinesConf(HltLinesConfigurableUser) :
                                 , CombinationCut = "(ADAMASS('B_s0')<300*MeV)"
                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<6)"
                                 )
-       
+        
         line = Hlt2Line('Bs2JpsiPhi'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, PhiCombine, BsCombine]
                         , PV = False
                         )
-
+        
         # Now do the Signal selection
         line.clone('Bs2JpsiPhiSignal'
                    , prescale = self.prescale
                    , postscale = self.postscale
                    , BsCombine = {"CombinationCut" :  "(ADAMASS('B_s0')<100*MeV)"}
                    )
+        
 
-
-#####################################################################################
-__author__ = "Geraldine Conti, Adlene Hicheur"
-__date__ = "2009-07-19"
-
-
-class Hlt2Bd2JpsiKstarLinesConf(HltLinesConfigurableUser) :
-    '''
-    Prescaled Bd -> J/psi K* selection 
-    '''
-
-    __slots__ = { 'Prescale'    : { 'Hlt2Bd2JpsiKstar' : 0.05
-                                   ,'Hlt2Bd2JpsiKstarSignal' : 1.}
-                 ,'Postscale'   : { 'Hlt2Bd2JpsiKstar' : 1.
-                                   ,'Hlt2Bd2JpsiKstarSignal' : 1.} 
-                 }
-
-    def __apply_configuration__(self) :
+    def __makeHlt2Bd2JpsiKstarLines(self):
+        '''
+        Prescaled Bd -> J/psi K* selection 
+        
+        @author Geraldine Conti
+        @author Adlene Hicheur
+        @date 2009-07-19
+        '''
+        
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
@@ -186,17 +171,16 @@ class Hlt2Bd2JpsiKstarLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiKstarDecision" : 50360 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiKstarSignalDecision" : 50361 } )
-
-
+        
         # Make the Kstar
         KstarCombine = Hlt2Member( CombineParticles
-                                 , "KstarCombine"
-                                 , DecayDescriptor = "K*(892)0 -> K+ pi-"
-                                 , InputLocations = [NoCutsKaons, NoCutsPions]
-                                 , CombinationCut = "(ADAMASS('K*(892)0')<120*MeV) & (APT>1000*MeV)"
-                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
-                                 )
-
+                                   , "KstarCombine"
+                                   , DecayDescriptor = "K*(892)0 -> K+ pi-"
+                                   , InputLocations = [NoCutsKaons, NoCutsPions]
+                                   , CombinationCut = "(ADAMASS('K*(892)0')<120*MeV) & (APT>1000*MeV)"
+                                   , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
+                                   )
+        
         # Make the Bd
         BdCombine = Hlt2Member( CombineParticles
                                 , "BdCombine"
@@ -205,39 +189,30 @@ class Hlt2Bd2JpsiKstarLinesConf(HltLinesConfigurableUser) :
                                 , CombinationCut = "(ADAMASS('B0')<300*MeV)"
                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<6) & (PT>2000*MeV)"
                                 )
-       
+        
         line = Hlt2Line('Bd2JpsiKstar'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, NoCutsPions, KstarCombine, BdCombine]
                         , PV = False
                         )
-
+        
         # Now do the Signal selection
         line.clone('Bd2JpsiKstarSignal'
                    , prescale = self.prescale
                    , postscale = self.postscale
                    , BdCombine = {"CombinationCut" :  "(ADAMASS('B0')<100*MeV)"}
                    )
-
-
-#####################################################################################
-__author__ = "Geraldine Conti, Adlene Hicheur"
-__date__ = "2009-07-19"
-
-
-class Hlt2Bu2JpsiKLinesConf(HltLinesConfigurableUser) :
-    '''
-    Prescaled Bu -> J/psi K* selection 
-    '''
-
-    __slots__ = { 'Prescale'    : { 'Hlt2Bu2JpsiK' : 0.05
-                                   ,'Hlt2Bu2JpsiKSignal' : 1.}
-                 ,'Postscale'   : { 'Hlt2Bu2JpsiK' : 1.
-                                   ,'Hlt2Bu2JpsiKSignal' : 1.} 
-                 }
-
-    def __apply_configuration__(self) :
+        
+    def __makeHlt2Bu2JpsiKLines(self):
+        '''
+        Prescaled Bu -> J/psi K selection 
+        
+        @author Geraldine Conti
+        @author Adlene Hicheur
+        @date 2009-07-19
+        '''
+        
         from HltLine.HltLine import Hlt2Line, Hlt2Member
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
@@ -245,8 +220,7 @@ class Hlt2Bu2JpsiKLinesConf(HltLinesConfigurableUser) :
         from Configurables import CombineParticles
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2JpsiKDecision" : 50380 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2JpsiKSignalDecision" : 50381 } )
-
-
+        
         # Make the Bu
         BuCombine = Hlt2Member( CombineParticles
                                 , "BuCombine"
@@ -256,14 +230,14 @@ class Hlt2Bu2JpsiKLinesConf(HltLinesConfigurableUser) :
                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<6)"
                                 , DaughtersCuts = {"K+" : "(PT>1300*MeV)"}
                                 )
-       
+        
         line = Hlt2Line('Bu2JpsiK'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, BuCombine]
                         , PV = False
                         )
-
+    
         # Now do the Signal selection
         line.clone('Bu2JpsiKSignal'
                    , prescale = self.prescale
@@ -271,4 +245,195 @@ class Hlt2Bu2JpsiKLinesConf(HltLinesConfigurableUser) :
                    , BuCombine = {"CombinationCut" :  "(ADAMASS('B+')<100*MeV)"}
                    )
 
+    def __makeHlt2Bd2JpsiMuMuKsLLBiasedLines(self):
+        '''
+	@author S Amato
+	@author C Gobel
+	@author F Rodrigues
+	'''
+	from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
+        from Hlt2SharedParticles.Ks import KsLL
+        from Configurables import CombineParticles, FilterDesktop
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLBiasedDecision" : 50320 } )
+        
+        filterJpsi = Hlt2Member( FilterDesktop # type
+                                 , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                                 #,Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.5*GeV) & (BPVVDCHI2 > 4) "
+                                 , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (BPVVDCHI2>7)  "
+                                 , InputLocations = [ Jpsi2MuMu ]
+                                 )
 
+        filterKS = Hlt2Member( FilterDesktop # type
+                               , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , Code = "VFASPF(VCHI2/VDOF)<16 "
+                               , InputLocations = [ KsLL ]
+                               )
+
+        combineB = Hlt2Member( CombineParticles # type
+                               , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , DecayDescriptor = "B0 -> J/psi(1S) KS0"
+                               , CombinationCut = "(ADAMASS('B0')<300*MeV)"
+                               , MotherCut = "(VFASPF(VCHI2/VDOF)<55) & (BPVIPCHI2()< 50) "
+                               , InputLocations = ['%FilterJpsi','%FilterKS' ]
+                               )
+
+        line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
+		        , prescale = self.prescale
+                   	, postscale = self.postscale	
+                        , algos = [   Jpsi2MuMu, filterJpsi
+                                       , KsLL,      filterKS
+                                       , combineB
+                                       ]
+                        , PV = True
+                        )
+
+
+    def __makeHlt2Bd2JpsiMuMuKsLLUnbiasedLines(self):
+        '''
+        @author S Amato
+        @author C Gobel
+        @author F Rodrigues
+        '''
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
+        from Hlt2SharedParticles.Ks import KsLL
+        from Configurables import CombineParticles, FilterDesktop
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsLLUnbiasedDecision" : 50340 } )
+        
+        filterJpsi = Hlt2Member( FilterDesktop # type
+                                 , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                                 , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.8*GeV)"
+                                 , InputLocations = [ Jpsi2MuMu ]
+                                 )
+        
+        filterKS = Hlt2Member( FilterDesktop # type
+                               , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , Code = "(PT > 1.0*GeV)"
+                               , InputLocations = [ KsLL ]
+                               )
+        
+        combineB = Hlt2Member( CombineParticles # type
+                               , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , DecayDescriptor = "B0 -> J/psi(1S) KS0"
+                               , CombinationCut = "(ADAMASS('B0')<300*MeV)"
+                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2/VDOF)<25)"
+                               , InputLocations = ['%FilterJpsi','%FilterKS' ]
+                               )
+        
+        line = Hlt2Line('Bd2JpsiMuMuKsLLUnbiased'
+                        , prescale = self.prescale
+                   	, postscale = self.postscale
+			,  algos = [   Jpsi2MuMu , filterJpsi
+                                       , KsLL,       filterKS
+                                       , combineB
+                                       ]
+                        , PV = False
+                        )
+
+    def __makeHlt2Bd2JpsiMuMuKsDDBiasedLines(self):
+        '''
+        @author S Amato
+        @author C Gobel
+        @author F Rodrigues
+        '''
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
+        from Hlt2SharedParticles.V0 import KsDD
+        from Configurables import GaudiSequencer,  FilterDesktop
+        from Configurables import CombineParticles
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDBiasedDecision" : 50330 } )
+
+        filterJpsi = Hlt2Member( FilterDesktop # type
+                                 , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                                 , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (BPVVDCHI2>7)  "
+                                 , InputLocations = [ Jpsi2MuMu ]
+                                 )
+
+        combineB = Hlt2Member( CombineParticles # type
+                               , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , DecayDescriptor = "B0 -> J/psi(1S) KS0"
+                               , CombinationCut = "(ADAMASS('B0')<300*MeV)"
+                               , MotherCut = "(VFASPF(VCHI2/VDOF)<25) & (BPVIPCHI2()< 45)"
+                               , InputLocations = ['%FilterJpsi',KsDD ]
+                               )
+        line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
+                        , prescale = self.prescale
+                   	, postscale = self.postscale
+                        ,  algos = [   Jpsi2MuMu , filterJpsi
+                                       , KsDD
+                                       , combineB
+                                       ]
+                        , PV = True
+                        )
+
+    def __makeHlt2Bd2JpsiMuMuKsDDUnbiasedLines(self):
+        '''
+        @author S Amato
+        @author C Gobel
+        @author F Rodrigues
+        '''
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
+        from Hlt2SharedParticles.V0 import KsDD
+        from Configurables import GaudiSequencer, FilterDesktop
+        from Configurables import CombineParticles
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiMuMuKsDDUnbiasedDecision" : 50350 } )
+
+        filterJpsi = Hlt2Member( FilterDesktop # type
+                                 , "FilterJpsi"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                                 , Code = "(MM>3037*MeV) & (MM<3157*MeV) & (MINTREE('mu-'==ABSID,PT)>0.8*GeV)"
+                                 , InputLocations = [ Jpsi2MuMu ]
+                                 )
+
+        filterKS = Hlt2Member( FilterDesktop # type
+                               , "FilterKS"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , Code = "(PT > 0.8*GeV)"
+                               , InputLocations = [KsDD ]
+                               )
+
+        combineB = Hlt2Member( CombineParticles # type
+                               , "CombineB"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                               , DecayDescriptor = "B0 -> J/psi(1S) KS0"
+                               , CombinationCut = "(ADAMASS('B0')<300*MeV)"
+                               , MotherCut = "(PT>0.3*GeV) & (VFASPF(VCHI2/VDOF)<20) & (BPVIPCHI2()< 30)"
+                               , InputLocations = [filterJpsi,filterKS ]
+                               )
+
+        line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
+                   	, prescale = self.prescale
+                   	, postscale = self.postscale
+                        ,  algos = [   Jpsi2MuMu, filterJpsi
+                                       , KsDD, filterKS
+                                       , combineB
+                                       ]
+                        , PV = False
+                        )
+
+    def __makeHlt2B2JpsiX_MuMuLines(self):
+        '''
+        @author P Koppenburg
+        '''
+        from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from Configurables import HltANNSvc
+        from Hlt2SharedParticles.DiMuon import DiMuon
+        from Configurables import FilterDesktop
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2JpsiX_MuMuDecision" : 50050 } )
+
+        filter = Hlt2Member( FilterDesktop # type
+                             , "Filter"      # name -- to be bound to the line name: Hlt2LineNameFilter
+                             , Code = "(ADMASS('J/psi(1S)')<50*MeV) & (MINTREE('mu-'==ABSID,PT)>1.5*GeV)"
+                             , InputLocations = [ DiMuon ]
+                             )
+        # @todo Add some IP cuts                   
+
+        Hlt2Line('B2JpsiX_MuMu' 
+		   	, prescale = self.prescale
+                   	, postscale = self.postscale
+		   	, algos = [ DiMuon , filter ]
+			, PV = False
+			)

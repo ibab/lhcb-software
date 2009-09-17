@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.58 2009-09-14 12:24:04 graven Exp $
+$Id: release.notes,v 1.59 2009-09-17 16:06:31 gcowan Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-09-17 - Greig Cowan
+ - Modified Hlt2B2JpsiX.py such that all lines are under control of single 
+   configurable. Lines that were imported from $HLTSELECTIONS now appear as
+   member functions of the configurable.
 
 ! 2009-09-14 - Gerhard Raven
  - disable Hlt2Forward until we can check output container presence without
