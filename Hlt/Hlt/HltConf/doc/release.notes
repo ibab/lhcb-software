@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.338 2009-09-15 12:45:33 graven Exp $ 
+! $Id: release.notes,v 1.339 2009-09-17 16:10:25 gcowan Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-17 - Greig Cowan
+ - Removed reference to specific JpsiX configurables which are now under control
+   of Hlt2B2JpsiXLines configurable. 
 
 ! 2009-09-15 - Gerhard Raven
  - add some missing photon lines

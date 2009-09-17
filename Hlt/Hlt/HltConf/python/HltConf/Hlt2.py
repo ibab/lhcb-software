@@ -6,17 +6,13 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import GaudiSequencer as Sequence
 from Hlt2Lines.Hlt2B2DXLines            import Hlt2B2DXLinesConf
 from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2B2JpsiXLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf 
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bs2JpsiPhiLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bd2JpsiKstarLinesConf
-from Hlt2Lines.Hlt2B2JpsiXLines         import Hlt2Bu2JpsiKLinesConf
 from Hlt2Lines.Hlt2B2PhiXLines          import Hlt2B2PhiXLinesConf
 from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
@@ -36,11 +32,7 @@ _type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
               , 'LEPT' : [ Hlt2InclusiveDiMuonLinesConf
                          , Hlt2InclusiveMuonLinesConf ]
               , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
-              , 'EXCL' : [ Hlt2Bs2JpsiPhiPrescaledAndDetachedLinesConf # TODO: should be moved into B2JpsiXLines
-                         , Hlt2Bs2JpsiPhiLinesConf                     # TODO: should be moved into B2JpsiXLines
-                         , Hlt2Bd2JpsiKstarLinesConf                   # TODO: should be moved into B2JpsiXLines
-                         , Hlt2Bu2JpsiKLinesConf                       # TODO: should be moved into B2JpsiXLines
-                         , Hlt2B2JpsiXLinesConf
+              , 'EXCL' : [ Hlt2B2JpsiXLinesConf
                          , Hlt2B2PhiXLinesConf
                          , Hlt2XGammaLinesConf
                          , Hlt2B2HHLinesConf
