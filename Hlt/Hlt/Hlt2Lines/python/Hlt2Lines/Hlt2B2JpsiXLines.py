@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.8 2009-09-17 16:06:10 gcowan Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.9 2009-09-17 17:47:01 gcowan Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -10,9 +10,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
 				   ,'Hlt2Bs2JpsiPhi' : 0.05
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
-				   ,'Hlt2Bu2JpsiK' : 0.05
+				   ,'Hlt2Bd2JpsiKstar' : 0.05
+                                   ,'Hlt2Bd2JpsiKstarSignal' : 1.
+       				   ,'Hlt2Bu2JpsiK' : 0.05
                                    ,'Hlt2Bu2JpsiKSignal' : 1.
-                                    ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
+	                           ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsLLUnbiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsDDBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsDDUnbiased' : 1.
@@ -22,6 +24,8 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
                  		   ,'Hlt2Bs2JpsiPhi' : 1.
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
+				   ,'Hlt2Bd2JpsiKstar' : 1.
+                                   ,'Hlt2Bd2JpsiKstarSignal' : 1.
                   		   ,'Hlt2Bu2JpsiK' : 1.
                                    ,'Hlt2Bu2JpsiKSignal' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
