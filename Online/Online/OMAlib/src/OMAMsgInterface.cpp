@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.22 2009-08-31 17:24:06 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.23 2009-09-17 17:54:16 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -248,7 +248,8 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
     std::remove(time, time+strlen(time)+1,'\n');
 #endif
     std::stringstream svcName, svcContent;
-    svcName << "/OMA/" << m_anaTaskname << "/Message" << m_iMsg;
+    svcName << "/OMA/" << m_anaTaskname << "/" << msg->levelString() <<
+      "/Message" << m_iMsg;
     svcContent << time << " " << msg->levelString() << " from Analysis Task "
                << m_anaTaskname;
     if (! msg->ananame().empty()) 
