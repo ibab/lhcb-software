@@ -1,4 +1,4 @@
-// $Id: NeutralProtoPAlg.cpp,v 1.19 2009-08-21 17:08:03 odescham Exp $
+// $Id: NeutralProtoPAlg.cpp,v 1.20 2009-09-17 21:08:47 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -108,7 +108,8 @@ StatusCode NeutralProtoPAlg::execute(){
   
   // create and register the output container
   LHCb::ProtoParticles* protos = NULL;
-  if ( exist<LHCb::ProtoParticles>(m_protoLocation) ){
+  if ( !lightMode() && exist<LHCb::ProtoParticles>(m_protoLocation) )
+  {
     // get existing contianer, clear, and reuse
     Warning( "Existing ProtoParticle container at " + m_protoLocation + " found -> Will replace", StatusCode::SUCCESS );
     protos = get<LHCb::ProtoParticles>(m_protoLocation);
