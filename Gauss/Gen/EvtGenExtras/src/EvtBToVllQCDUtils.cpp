@@ -2,6 +2,8 @@
 #include "EvtGenModels/EvtBToVllQCDUtils.hh"
 
 #include <cmath>
+#include <ctime>
+#include <iostream>
 
 using qcd::alpha_s;
 using qcd::B0;
@@ -86,5 +88,10 @@ double qcd::xt(const int& nfl){
 			pow(1 + ((-alpha_s(constants::mt,nfl) + alpha_s(constants::MW,nfl))*
 					(gam1/(2.*B0(nfl)) - (gam0*B1(nfl))/(2.*pow(B0(nfl),2))))/(4.*constants::Pi),2))/(constants::MW*constants::MW);
 	return xt;
+}
+
+void qcd::printTime(const std::string& msg){
+	time_t tm = time(NULL);
+	std::cout << msg << ": " << ctime(&tm);
 }
 

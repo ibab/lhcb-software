@@ -5,6 +5,8 @@
 #include "EvtGenModels/EvtBToVllConstants.hh"
 #include "EvtGenModels/EvtBToVllWC.hh"
 
+#include <string>
+
 /**
  * Usefull and hopefully general QCD related functions.
  */
@@ -21,6 +23,7 @@ EvtComplex h(const double& s, const double& mq, const double& mu);
 EvtComplex Y(const double& s, const WilsonCoefficients<EvtComplex>& C,
 		const double mb = constants::mb, const double mc = constants::mc);
 double xt(const int& nfl);
+void printTime(const std::string& msg);
 }
 
 #endif /*QCDUTILS_HH_*/
