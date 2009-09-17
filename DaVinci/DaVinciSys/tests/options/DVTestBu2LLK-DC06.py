@@ -1,4 +1,4 @@
-## $Id: DVTestBu2LLK-DC06.py,v 1.1 2009-08-04 13:34:34 pkoppenb Exp $
+## $Id: DVTestBu2LLK-DC06.py,v 1.2 2009-09-17 12:09:11 jpalac Exp $
 ## ============================================================================
 ## CVS tag $Name: not supported by cvs2svn $
 ## ============================================================================
@@ -22,7 +22,12 @@ from Configurables import AlgorithmCorrelationsAlg, AlgorithmCorrelations
 TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
-TestCorrelations.Algorithms = [ "Bu2LLK09_DiLepton", "Presel09Bu2LLK", "Sel09Bu2LLK" ]
+TestCorrelations.Algorithms = [ "StdLooseElectrons",
+                                "StdLooseMuons",
+                                "Bu2LLK09_DiLepton",
+                                "StdLooseKaons",
+                                "Presel09Bu2LLK",
+                                "Sel09Bu2LLK" ]
 ###
 # Selection
 ###

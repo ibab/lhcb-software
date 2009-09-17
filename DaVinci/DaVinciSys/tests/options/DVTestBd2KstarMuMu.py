@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.10 2009-08-06 09:04:24 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.11 2009-09-17 12:09:11 jpalac Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -33,8 +33,12 @@ from Configurables import AlgorithmCorrelationsAlg, AlgorithmCorrelations
 TestCorrelations = AlgorithmCorrelationsAlg("TestCorrelations")
 TestCorrelations.addTool(AlgorithmCorrelations())
 TestCorrelations.AlgorithmCorrelations.OnlyNonZero = False
-TestCorrelations.Algorithms = ["FilterTrueTracks", 
-                               "StdLooseDiMuon", "StdLooseDetachedKst2Kpi", 
+TestCorrelations.Algorithms = ["FilterTrueTracks",
+                               "StdLooseMuons",
+                               "StdLooseDiMuon",
+                               "StdNoPIDsKaons",
+                               "StdNoPIDsPions",
+                               "StdLooseDetachedKst2Kpi", 
                                "Strip_loose_Bd2KstarMuMu",
                                "filter_Bd2KstarMuMu_10Hz" ]
 ###
