@@ -1,4 +1,4 @@
-// $Id: CheckOverlap.cpp,v 1.17 2009-09-11 17:13:17 jonrob Exp $
+// $Id: CheckOverlap.cpp,v 1.18 2009-09-17 07:24:13 jpalac Exp $
 
 // Include files
 
@@ -106,7 +106,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(2)" << endmsg ;
   if (!particle1 || !particle2) Exception("Null pointer");
-  static LHCb::Particle::ConstVector parts(2,NULL) ;
+  static LHCb::Particle::ConstVector parts(2) ;
   parts[0] = particle1;
   parts[1] = particle2;
   static std::vector<const LHCb::ProtoParticle* > proto(0);
@@ -120,7 +120,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(3)" << endmsg ;
   if (!particle1 || !particle2 || !particle3) Exception("Null pointer");
-  static LHCb::Particle::ConstVector parts(3,NULL) ;
+  static LHCb::Particle::ConstVector parts(3) ;
   parts[0] = particle1 ;
   parts[1] = particle2 ;
   parts[2] = particle3 ;
@@ -136,7 +136,7 @@ bool CheckOverlap::foundOverlap( const LHCb::Particle* particle1,
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "foundOverlap(4)" << endmsg ;
   if (!particle1 || !particle2 || !particle3|| !particle4 ) Exception("Null pointer");
-  static LHCb::Particle::ConstVector parts(4,NULL) ;
+  static LHCb::Particle::ConstVector parts(4) ;
   parts[0] = particle1 ;
   parts[1] = particle2 ;
   parts[2] = particle3 ;
