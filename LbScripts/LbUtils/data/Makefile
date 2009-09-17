@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.7 2009-09-03 13:39:07 marcocle Exp $
+# $Id: Makefile,v 1.8 2009-09-17 08:47:33 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -112,7 +112,7 @@ endif
 	@+cd $*/cmt ; \
 	for group in $(groups) ; do \
 		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
-		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS \
+		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS ; \
 		date >> build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
 	done

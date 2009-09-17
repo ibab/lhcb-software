@@ -1,3 +1,7 @@
+2009-09-17  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: fixed a bug preventing Package_failure_policy to work.
+
 2009-09-03  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: unified the behavior with and without CMTUSERCONTEXT
