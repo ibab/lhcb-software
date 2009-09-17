@@ -1,9 +1,19 @@
-! $Id: release.notes,v 1.33 2009-07-28 07:57:45 cattanem Exp $ 
+! $Id: release.notes,v 1.34 2009-09-17 10:01:06 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/PartProp
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-17 - Vanya Belyaev
+
+ - python/PartProp/Nodes.py
+
+     fix for invald class name 
+
+ - cmt/requirements 
+    
+     version increment to v1r5 
 
 !======================== PartProp v1r4 2009-07-28 ============================
 ! 2009-07-18 - Vanya BELYAEV

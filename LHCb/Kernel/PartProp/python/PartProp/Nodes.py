@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Nodes.py,v 1.8 2009-06-03 08:32:30 ibelyaev Exp $ 
+# $Id: Nodes.py,v 1.9 2009-09-17 10:01:06 ibelyaev Exp $ 
 # =============================================================================
 ## @file PartProp/Nodes.py
 #  Simple "decorator for nodes"
@@ -12,7 +12,7 @@ Simple 'decorator for nodes'
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl" 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $"
 # =============================================================================
 
 import PyCintex
@@ -285,7 +285,7 @@ Light         = Decays.Nodes.Light             # type
 Heavy         = Decays.Nodes.Heavy             # type 
 Symbol        = Decays.Nodes.Symbol            # type 
 
-NodeList      = Decays.Nodes.NodeList
+NodeList      = Decays.NodeList
 
 
 if '__main__' == __name__ :
