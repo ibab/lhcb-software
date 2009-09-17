@@ -1,4 +1,4 @@
-// $Id: L0Filter.cpp,v 1.4 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0Filter.cpp,v 1.5 2009-09-17 12:14:50 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -49,9 +49,9 @@ StatusCode L0Filter::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   if( "Timing" == m_trig){
-    info() << "Will require that L0DU 'Timing Trigger Bit' is fired " << endreq;
+    info() << "Will require that L0DU 'Timing Trigger Bit' is fired " << endmsg;
   }else if( "Force" == m_trig) { 
-    info() << "Will require that the L0DU 'Force Bit' is fired " << endreq;
+    info() << "Will require that the L0DU 'Force Bit' is fired " << endmsg;
   }else if( "L0" == m_trig){
     info() << "Will require that any " ;
     if ( !m_l0channels.empty()) {
@@ -64,10 +64,10 @@ StatusCode L0Filter::initialize() {
     info() << "L0 channel(s) is passed" << endmsg ;
   }
   else{
-    error() << "The 'TriggerBit' property must be either : " << endreq;
-    error() << "   - 'L0'     : standard L0DU decision " <<endreq;
-    error() << "   - 'Timing' : L0DU timing trigger bit decision" <<endreq;
-    error() << "   - 'Force'  : L0DU force bit decision " <<endreq;
+    error() << "The 'TriggerBit' property must be either : " << endmsg;
+    error() << "   - 'L0'     : standard L0DU decision " <<endmsg;
+    error() << "   - 'Timing' : L0DU timing trigger bit decision" <<endmsg;
+    error() << "   - 'Force'  : L0DU force bit decision " <<endmsg;
     return StatusCode::FAILURE;
   }
   return StatusCode::SUCCESS;
@@ -130,7 +130,7 @@ StatusCode L0Filter::execute() {
 StatusCode L0Filter::finalize() {
 
   debug() << "==> Finalize" << endmsg;
-  info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endreq;
+  info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endmsg;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 

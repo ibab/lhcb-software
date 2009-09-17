@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.cpp,v 1.22 2009-04-20 09:48:33 odescham Exp $
+// $Id: L0DUFromRawTool.cpp,v 1.23 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -53,7 +53,7 @@ L0DUFromRawTool::~L0DUFromRawTool() {}
 
 //=============================================================================
 StatusCode L0DUFromRawTool::initialize(){
-  debug() << "Initialize" << endreq;
+  debug() << "Initialize" << endmsg;
   StatusCode sc = GaudiTool::initialize();
    if(sc.isFailure())return sc;
 
@@ -74,13 +74,13 @@ StatusCode L0DUFromRawTool::initialize(){
 
   if( m_force >= 0 ){
     warning() << " ========> WARNING : TCK WILL BE FORCED TO : " << format("0x%04X", m_force) 
-              << " YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING " << endreq;
+              << " YOU ARE ASSUMMED TO KNOW WHAT YOU ARE DOING " << endmsg;
   }
   if( m_sumSize >= 0 ){
-    warning() << " ========> WARNING : Number of summary report is FORCED TO : " << m_sumSize << endreq;
+    warning() << " ========> WARNING : Number of summary report is FORCED TO : " << m_sumSize << endmsg;
   }
   if( m_muonNoZsup ){
-    warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endreq;
+    warning() << " ========> WARNING : Muons are assumed to be non zero-suppressed : " << endmsg;
   }
 
 
@@ -129,7 +129,7 @@ bool L0DUFromRawTool::getL0DUBanksFromRaw( ){
   }
   
    if ( msgLevel( MSG::DEBUG) )
-     debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endreq; // should be == 1 for L0DU
+     debug() << "Number of L0DU bank(s) found : " << m_banks->size() << endmsg; // should be == 1 for L0DU
   if( 0 == m_banks->size() ) {
     if(m_warn)Warning("READOUTSTATUS : no L0DU bank found in rawEvent",StatusCode::SUCCESS).ignore();
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Missing);
@@ -188,9 +188,9 @@ bool L0DUFromRawTool::decoding(int ibank){
 
 
   if ( msgLevel( MSG::DEBUG) ){
-    debug() << " <============= Start decoding bank =============>" << endreq;
+    debug() << " <============= Start decoding bank =============>" << endmsg;
     debug() << "Decoding bank : " << bank << " Source : " << m_source << " Version : " 
-            << m_vsn << " Size " << m_size << " (bytes) " << endreq;
+            << m_vsn << " Size " << m_size << " (bytes) " << endmsg;
   }
 
   // Version 0 : preliminary version used for DC06 simulated data
@@ -205,7 +205,7 @@ bool L0DUFromRawTool::decoding(int ibank){
         Warning( msg.str() , StatusCode::SUCCESS).ignore();
       }else{
         msg << " consistent with assumed TCK : " << format("0x%04X", m_tck) ;
-        debug() << msg.str() << endreq;
+        debug() << msg.str() << endmsg;
       }
       m_tck = (unsigned int) m_force;    
     }    
@@ -214,7 +214,7 @@ bool L0DUFromRawTool::decoding(int ibank){
 
     unsigned int word;
     word = *m_data;
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", word)<< endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", word)<< endmsg;
     m_report.setDecision( (bool) (word & 0x1) );
     m_report.setChannelsDecisionSummary( word >> 1 );
     if( !nextData() )return false;
@@ -243,7 +243,7 @@ bool L0DUFromRawTool::decoding(int ibank){
       tck << format("0x%04X", m_tck);
       if(m_warning)Warning("L0DU bank version = 0 --> the TCK value is forced to " + tck.str(),StatusCode::SUCCESS).ignore();
     } 
-    if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Loading configuration" << endmsg;
 
     config = m_confTool->config( m_tck );
 
@@ -255,13 +255,13 @@ bool L0DUFromRawTool::decoding(int ibank){
     }else{      
       m_report.setConfiguration(config);
     }    
-    if ( msgLevel( MSG::DEBUG) )debug() << "L0DU bank version 0 decoded" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "L0DU bank version 0 decoded" << endmsg;
   }
   // Version 1 : complete RawBank as described in EDMS 868071
   //---------------------------------------------------------
   else if(m_vsn == 1){  
 
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", *m_data)<< endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "first data word = " << format("0x%04X", *m_data)<< endmsg;
     // global header
     unsigned int itc      = (*m_data & 0x00000003)  >> 0;
     unsigned int iec      = (*m_data & 0x0000000C)  >> 2;
@@ -282,7 +282,7 @@ bool L0DUFromRawTool::decoding(int ibank){
         Warning( msg.str() , StatusCode::SUCCESS).ignore();
       }else{
         msg << " consistent with TCK in data : " << format("0x%04X", m_tck) ;
-        debug() << msg.str() << endreq;
+        debug() << msg.str() << endmsg;
       }
       m_tck = (unsigned int) m_force;    
     }
@@ -295,13 +295,13 @@ bool L0DUFromRawTool::decoding(int ibank){
     }
 
     if ( msgLevel( MSG::DEBUG) ){
-      debug() << "-- Global header " << endreq;
-      debug() << "   -> TCK = " << m_tck << " [" << format("0x%04X", m_tck) << "]"   <<endreq;
-      debug() << "   -> L0DU Status : " << m_status  << " [" <<  format("0x%04X", m_status) << "]"   <<endreq;
-      debug() << "   -> Firmware version : " << m_pgaVsn << " [" <<  format("0x%04X", m_pgaVsn) << "]" <<endreq;
+      debug() << "-- Global header " << endmsg;
+      debug() << "   -> TCK = " << m_tck << " [" << format("0x%04X", m_tck) << "]"   <<endmsg;
+      debug() << "   -> L0DU Status : " << m_status  << " [" <<  format("0x%04X", m_status) << "]"   <<endmsg;
+      debug() << "   -> Firmware version : " << m_pgaVsn << " [" <<  format("0x%04X", m_pgaVsn) << "]" <<endmsg;
       debug() << "   -> Number of Condition & Channel summaries are : " << iec << " / " << itc << " respectively " ;
       if(m_sumSize>0) debug() << " (FORCED BY USER) " ;                        
-      debug() <<endreq;
+      debug() <<endmsg;
     }
     
     //---------------------------------
@@ -346,13 +346,13 @@ bool L0DUFromRawTool::decoding(int ibank){
     
     unsigned int pga3Size = 4 * ( 4 + ( int((nmu+3)/4) ) + ( int((nmu+1)/2) ) );
     if ( msgLevel( MSG::DEBUG) ){
-      debug() << "-- PGA3 header -------------------------- "  << endreq;
-      debug() << "   -> BCID : " <<  m_bcid3  <<  " [" << format("0x%04X",  m_bcid3) << "]"   <<endreq;
-      debug() << "   -> Processors status : "  << pga3Status  <<  " [" << format("0x%04X",  pga3Status) << "]"   <<endreq;
+      debug() << "-- PGA3 header -------------------------- "  << endmsg;
+      debug() << "   -> BCID : " <<  m_bcid3  <<  " [" << format("0x%04X",  m_bcid3) << "]"   <<endmsg;
+      debug() << "   -> Processors status : "  << pga3Status  <<  " [" << format("0x%04X",  pga3Status) << "]"   <<endmsg;
       debug() << "   -> Number of L0Muon in bank (0-sup) : " << nmu     ;
       if( m_muonNoZsup ) debug() << " (FORCED TO BE NON ZeroSuppressed BY USER) " ;
-      debug() << endreq;
-      debug() << "   -> PGA3 block expected size : "<< pga3Size  << " (bytes) " <<endreq;
+      debug() << endmsg;
+      debug() << "   -> PGA3 block expected size : "<< pga3Size  << " (bytes) " <<endmsg;
     }
     
     
@@ -374,10 +374,10 @@ bool L0DUFromRawTool::decoding(int ibank){
     dataMap("Muon3(Add)",(*m_data & 0x0000FFFF)  >> 0  );
     m_muCleanPattern             = (*m_data & 0x00FF0000)  >>16;
     if ( msgLevel( MSG::VERBOSE) ){
-      verbose() << "-- PGA3 block -------------------------- " << endreq;
+      verbose() << "-- PGA3 block -------------------------- " << endmsg;
       verbose() << "   ... L0Muon processed data decoded  - Muon cleaning pattern = " 
                 << m_muCleanPattern <<  " [" << format("0x%04X",  m_muCleanPattern) << "] ..."   
-                <<endreq;
+                <<endmsg;
     }
     
     // PGA3 Input data
@@ -433,7 +433,7 @@ bool L0DUFromRawTool::decoding(int ibank){
       }
     }
     
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... L0Muon input data decoded  ( " << nmu << " ) ..." << endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... L0Muon input data decoded  ( " << nmu << " ) ..." << endmsg;
     
     // PGA2-block header
     if( !nextData() )return false;
@@ -447,15 +447,15 @@ bool L0DUFromRawTool::decoding(int ibank){
     unsigned int ttb       = (m_rsda >> 14) & 1;
     
     if ( msgLevel( MSG::DEBUG) ){
-      debug() << "-- PGA2 header -------------------------- " << endreq;
-      debug() << "   -> RSDA : " <<  m_rsda << " [" << format("0x%04X",  m_rsda) << "]"   << endreq;
-      debug() << "   -> BCID : "<< m_bcid2 << " [" << format("0x%04X",  m_bcid2) << "]"   << endreq; 
-      debug() << "   -> Decision : " << decision << endreq;
-      debug() << "   -> TTB : " << ttb  << "  FB : " << fb << endreq;
-      debug() << "   -> Processor Status : "  << pga2Status << " [" << format("0x%04X",  pga2Status) << "]"   << endreq;
-      debug() << "   -> Number of Previous/Next BX : " << nm << "/" << np << endreq;
+      debug() << "-- PGA2 header -------------------------- " << endmsg;
+      debug() << "   -> RSDA : " <<  m_rsda << " [" << format("0x%04X",  m_rsda) << "]"   << endmsg;
+      debug() << "   -> BCID : "<< m_bcid2 << " [" << format("0x%04X",  m_bcid2) << "]"   << endmsg; 
+      debug() << "   -> Decision : " << decision << endmsg;
+      debug() << "   -> TTB : " << ttb  << "  FB : " << fb << endmsg;
+      debug() << "   -> Processor Status : "  << pga2Status << " [" << format("0x%04X",  pga2Status) << "]"   << endmsg;
+      debug() << "   -> Number of Previous/Next BX : " << nm << "/" << np << endmsg;
     }
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "-- PGA2 block -------------------------- " << endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "-- PGA2 block -------------------------- " << endmsg;
 
     // update L0DUReport
     m_report.setDecision( (bool) decision );
@@ -476,17 +476,17 @@ bool L0DUFromRawTool::decoding(int ibank){
     
     unsigned int pga2Size = 4 * ( 7 + iec + 2*itc +  (itc+iec)*(nm+np) 
                                   + (int( (nm+1)/2) + int ((np+1)/2)));
-    if ( msgLevel( MSG::DEBUG) )debug() << "   -> PGA2 bloc size should be " << pga2Size << " (bytes)" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "   -> PGA2 bloc size should be " << pga2Size << " (bytes)" << endmsg;
     unsigned int allSize = 4 + pga2Size + pga3Size;
     if(m_size == allSize){
       if ( msgLevel( MSG::DEBUG) )debug() << "   -> The total expected size (header + PGA2 + PGA3) " << allSize 
-                                          << " matches the actual bank size ________________ <** OK **> " <<endreq;
+                                          << " matches the actual bank size ________________ <** OK **> " <<endmsg;
     }else{
       std::stringstream msg("");
       msg << "READOUTSTATUS : the total expected size "  
           << " does NOT match the bank size __________________  <** POSSIBLE DATA CORRUPTION **>";
       if ( msgLevel( MSG::DEBUG) )
-        debug() << " Expected size : " << allSize << " Actual size : " << m_size << " DO NOT MATCH" << endreq;
+        debug() << " Expected size : " << allSize << " Actual size : " << m_size << " DO NOT MATCH" << endmsg;
       Error(msg.str() , StatusCode::SUCCESS).ignore(); 
       m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Corrupted ); 
     }
@@ -494,11 +494,11 @@ bool L0DUFromRawTool::decoding(int ibank){
     if ( (0x7F & m_bcid2) == m_bcid3){
       if ( msgLevel( MSG::DEBUG) )debug() 
         << "   -> The PGA3 and PGA2 data are aligned _____________________________________ <** OK **> " 
-        << endreq;
+        << endmsg;
     }else{
       if(m_warn)Warning("   -> The PGA3 and PGA2 data are NOT aligned ",StatusCode::SUCCESS).ignore();
       if ( msgLevel( MSG::DEBUG) )
-        debug() << " BCIDs PGA2(LSB)/PGA3= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endreq;
+        debug() << " BCIDs PGA2(LSB)/PGA3= " << (m_bcid2 & 0x7F) << " /"  << m_bcid3 << " NOT ALIGNED " << endmsg;
     }
     
     
@@ -512,23 +512,23 @@ bool L0DUFromRawTool::decoding(int ibank){
       if( !nextData() )return false;
       m_tcs[std::make_pair(0,i)] = *m_data;
       if ( msgLevel( MSG::VERBOSE) )verbose() << "   ->  Channel PreDecision summary[BX=0, Word=" << i << "] = "
-                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
     }
     for(unsigned int i = 0 ; i < itc ; i++){
       if( !nextData() )return false;
       m_cds[std::make_pair(0,i)]=*m_data;
       if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> Channel Decision summary[BX=0, Word=" << i << "] = "
-                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
     }
     for(unsigned int i = 0 ; i < iec ; i++){
       if( !nextData() )return false;
       m_ecs[std::make_pair(0,i)]=*m_data;
       if ( msgLevel( MSG::VERBOSE) )verbose() << "   ->  Elementary condition summary[BX=0, Word=" << i << "] = " 
-                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq; 
+                                              << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg; 
     }
 
     
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... PGA2 decision processing decoded ..." <<endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... PGA2 decision processing decoded ..." <<endmsg;
     
     //PGA2 input data
     if( !nextData() )return false;
@@ -536,7 +536,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     encode("Sum(Et)"        , sumEt0                         , L0DUBase::Sum::Et  );
     m_sumEt[0] = sumEt0;
 
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[BX=0] = "<< m_sumEt[0] << endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[BX=0] = "<< m_sumEt[0] << endmsg;
 
     encode("Spd(Mult)",(*m_data & 0x0FFFC000 ) >> 14         , L0DUBase::Spd::Mult    );
     encode("PU(MoreInfo)",(*m_data & 0xF0000000 ) >> 28      , L0DUBase::PileUp::MoreInfo  );
@@ -566,7 +566,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     encode("PUPeak1(Add)" ,(*m_data & 0x00FF0000 ) >> 16     , L0DUBase::PileUp::Peak1Pos );
     encode("PUPeak2(Add)" ,(*m_data & 0xFF000000 ) >> 24     , L0DUBase::PileUp::Peak2Pos );
     
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... L0Calo & L0PileUp input data decoded ..." <<endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "   ... L0Calo & L0PileUp input data decoded ..." <<endmsg;
     
     
     // Previous/Next BX
@@ -575,16 +575,16 @@ bool L0DUFromRawTool::decoding(int ibank){
         if( !nextData() )return false;
         m_cds[std::make_pair(-im,i)] = *m_data;
         if( msgLevel( MSG::VERBOSE) )verbose() << "   -> Trigger Channel Summary[BX="<< -im << ", Word=" <<i << "] = " 
-                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
       }
       for(unsigned int i = 0 ; i < iec ; i++){
         if( !nextData() )return false;
         m_ecs[std::make_pair(-im,i)] = *m_data;
         if ( msgLevel( MSG::VERBOSE) )verbose() << "   -> Elementary Condition Summary[BX="<< -im << ", Word=" <<i << "] = " 
-                  << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                  << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
       }
     }
-    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX summaries decoded ..." << endreq;  
+    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX summaries decoded ..." << endmsg;  
     
     
     // SumEt
@@ -592,12 +592,12 @@ bool L0DUFromRawTool::decoding(int ibank){
       int odd = (nm-im)%2;
       if(odd == 0 &&  !nextData() )return false;
       m_sumEt[-im]= (*m_data >> 16*odd) & 0x3FFF ;
-      if( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[Bx=" << -im << "] = " <<  m_sumEt[-im] << endreq;
+      if( msgLevel( MSG::VERBOSE) )verbose() << "   -> SumEt[Bx=" << -im << "] = " <<  m_sumEt[-im] << endmsg;
     }
      dataMap("Sum(Et,Prev2)",m_sumEt[-2]);
      dataMap("Sum(Et,Prev1)",m_sumEt[-1]);
 
-    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX sumET decoded ... " << endreq;
+    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " previous BX sumET decoded ... " << endmsg;
 
     
     for(int ip = 0 ; ip < np ; ip++){
@@ -605,42 +605,42 @@ bool L0DUFromRawTool::decoding(int ibank){
         if( !nextData() )return false;
         m_cds[std::make_pair(ip+1,i)] = *m_data;
         if( msgLevel( MSG::VERBOSE) )verbose() << "   -> Trigger Channel Summary[BX="<< ip+1 << ", Word=" <<i << "] = " 
-                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
       }
       for(unsigned int i = 0 ; i < iec ; i++){
         if( !nextData() )return false;
         m_ecs[std::make_pair(ip+1,i)] = *m_data;
         if( msgLevel( MSG::VERBOSE) )verbose() << "   -> Elementary Condition Summary[BX="<< ip+1 << ", Word=" <<i << "] = "
-                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endreq;
+                                               << *m_data << " [0x" << format("0x%04X",  *m_data) << "]"  <<endmsg;
       }
     }
-    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " <<  np << " next BX summaries decoded ..." << endreq;  
+    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " <<  np << " next BX summaries decoded ..." << endmsg;  
     
     for(int ip = 0 ; ip < np ; ip++){
       int odd = ip%2;
       if(odd == 0 &&  !nextData() )return false;
       m_sumEt[ip+1]                        = (*m_data >> 16*odd) & 0x3FFF ;
-      if( msgLevel( MSG::VERBOSE) )verbose() << " SumEt[Bx=" << ip+1 << "] = " <<  m_sumEt[ip+1] << endreq;
+      if( msgLevel( MSG::VERBOSE) )verbose() << " SumEt[Bx=" << ip+1 << "] = " <<  m_sumEt[ip+1] << endmsg;
     }
-    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " next BX sumET decoded ..." << endreq;
+    if( msgLevel( MSG::VERBOSE) )verbose() << "   ... " << nm << " next BX sumET decoded ..." << endmsg;
      dataMap("Sum(Et,Next1)",m_sumEt[1]);
      dataMap("Sum(Et,Next2)",m_sumEt[2]);
 
     // check the size 
-    if( msgLevel( MSG::VERBOSE) )verbose() << " <============= Decoding completed successfuly =============>" << endreq;
+    if( msgLevel( MSG::VERBOSE) )verbose() << " <============= Decoding completed successfuly =============>" << endmsg;
     
     // Print all data values extracted from rawBank
     if ( msgLevel( MSG::VERBOSE) ){
       for(std::map<std::string, unsigned int>::iterator imap = m_dataMap.begin();
           imap!=m_dataMap.end();imap++){
-        verbose() << "   --> Data " << (*imap).first << " = " <<  (*imap).second << endreq;
+        verbose() << "   --> Data " << (*imap).first << " = " <<  (*imap).second << endmsg;
       }
     }
     
     // -----------------------------------------------
     // BUILDING output (L0ProcessorData & L0Report)
     // -----------------------------------------------
-    if ( msgLevel( MSG::VERBOSE) )verbose() << " ... fill processor Data ..." <<endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << " ... fill processor Data ..." <<endmsg;
     // encode BCIDs from input data in rawBank
     if(m_encode)fillBCIDData();
     //  emulate the config for later usage (monitoring) 
@@ -648,14 +648,14 @@ bool L0DUFromRawTool::decoding(int ibank){
       if(NULL != config)m_emuTool->process(config , m_processorDatas).ignore();
     }
     // Fill report with the consecutive BXs info
-    if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << " ... filling L0DU Report with consecutive BXs ..." << endmsg;
     m_report.setChannelsDecisionSummaries( m_cds );
     m_report.setConditionsValueSummaries(  m_ecs );
     m_report.setChannelsPreDecisionSummaries( m_tcs );  
     m_report.setSumEt( m_sumEt );    
     if ( msgLevel( MSG::VERBOSE) )verbose() 
       << " <==== Building output (emulated ProcessorData & L0DUReport) completed successfuly ====>" 
-      << endreq;
+      << endmsg;
     
     //---------------------------------------------------------
     // End of coding version = 1
@@ -663,7 +663,7 @@ bool L0DUFromRawTool::decoding(int ibank){
     
   }  else{
     Error(" Unknown bank version ",StatusCode::SUCCESS).ignore();
-    if ( msgLevel( MSG::DEBUG) )debug() << " Unknown bank version : " << m_vsn << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << " Unknown bank version : " << m_vsn << endmsg;
     m_roStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted);
     return false;
   }
@@ -736,7 +736,7 @@ void L0DUFromRawTool::putStatusOnTES(){
     std::stringstream type("");
     type << LHCb::RawBank::typeName(m_roStatus.key()) ;
     
-    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endreq;
+    if ( msgLevel( MSG::DEBUG) )debug() << "Status for bankType " <<  type.str()  << " already exists" << endmsg;
     if( status->status() != m_roStatus.status() ){
       Warning("Status for bankType " +  type.str() + " already exists  with different status value -> merge both"
               , StatusCode::SUCCESS).ignore();

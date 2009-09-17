@@ -1,4 +1,4 @@
-// $Id: L0DURawBankMonitor.cpp,v 1.15 2009-09-16 16:09:27 odescham Exp $
+// $Id: L0DURawBankMonitor.cpp,v 1.16 2009-09-17 12:14:50 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -272,13 +272,13 @@ StatusCode L0DURawBankMonitor::execute() {
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxPGAShift , 1 );
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- PGA2/3 BXID misaligned -- "
                         ,StatusCode::SUCCESS).ignore();
-      debug() << "BCID L0DU/PGA3 : " <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endreq;
+      debug() << "BCID L0DU/PGA3 : " <<  (0x7F &m_fromRaw->bcid().first) << " / " << m_fromRaw->bcid().second<< endmsg;
     }
     if( odBX != m_fromRaw->bcid().first){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::BxOdinShift , 1 );
       if(m_warn)Warning("Status::Warning : L0DU bank monitor summary : -- ODIN/L0DU BXID misaligned -- "
                         ,StatusCode::SUCCESS).ignore();
-      debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endreq;
+      debug() << "BCID L0DU/ODIN : " <<  m_fromRaw->bcid().first << " / " << odBX << endmsg;
     }
     if( (m_fromRaw->status() & 0x1) ){
       fill( histo1D(toHistoID("Status/Summary/1")), L0DUBase::L0DUError::Tell1 , 1 );
@@ -476,7 +476,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   for(LHCb::L0DUChannel::Map::iterator it = channels.begin();it!=channels.end();it++){
     int id = ((*it).second)->id() ;
     if( report.channelPreDecision( id ) != ((*it).second)->emulate()->emulatedPreDecision() ){
-      debug() << "Emulator check error for channel " << (*it).first << endreq;
+      debug() << "Emulator check error for channel " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Channels/" + one.str(),
               "L0DU channels preDecision emulator check (" + txt + ")" ,-1. ,(double) cBin  , cBin+1);
       check = false;
@@ -488,7 +488,7 @@ bool L0DURawBankMonitor::emulatorCheck(LHCb::L0DUConfig* config, int unit, std::
   for(LHCb::L0DUElementaryCondition::Map::iterator it = conditions.begin();it!=conditions.end();it++){
     int id = ((*it).second)->id() ;
     if( report.conditionValue( id ) != ((*it).second)->emulatedValue() ){
-      debug() << "Emulator check error for condition " << (*it).first << endreq;
+      debug() << "Emulator check error for condition " << (*it).first << endmsg;
       plot1D( (double) id ,"Status/L0DU/EmulatorCheck/Conditions/" + two.str(), 
               "L0DU conditions value emulator check (" + txt + ")",-1. ,(double) ecBin  , ecBin+1);
       check = false;

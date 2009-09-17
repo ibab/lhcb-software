@@ -1,4 +1,4 @@
-// $Id: L0DUReportMonitor.cpp,v 1.21 2009-03-06 21:41:35 cattanem Exp $
+// $Id: L0DUReportMonitor.cpp,v 1.22 2009-09-17 12:14:50 odescham Exp $
 // Include files 
 #include <cmath>
 // from Gaudi
@@ -147,18 +147,18 @@ StatusCode L0DUReportMonitor::execute() {
     if(m_prevTCK != -1){
       if( !m_split){
         Warning("New configuration tck found : reset all histos",StatusCode::SUCCESS).ignore();
-        debug() << "New configuration : " << tck << " (previous was : " << m_prevTCK << ")" <<endreq;
-        debug() << "Reset all histograms (number of histos : " << totalNumberOfHistos() << ")" << endreq;
+        debug() << "New configuration : " << tck << " (previous was : " << m_prevTCK << ")" <<endmsg;
+        debug() << "Reset all histograms (number of histos : " << totalNumberOfHistos() << ")" << endmsg;
         // reset all 1D histos
         const Histo1DMapTitle& h1d = histo1DMapTitle();
         for(Histo1DMapTitle::const_iterator id = h1d.begin() ; id != h1d.end() ; id++){
-          debug() << "Reset 1D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endreq;
+          debug() << "Reset 1D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
           if(NULL != (*id).second)(*id).second->reset();
         }
         // reset all 2D histos
         const Histo2DMapTitle& h2d = histo2DMapTitle();
         for(Histo2DMapTitle::const_iterator id = h2d.begin() ; id != h2d.end() ; id++){
-          debug() << "Reset 2D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endreq;
+          debug() << "Reset 2D histo [title = '" << (*id).first << "'," << (*id).second<<"]" << endmsg;
           if(NULL != (*id).second)(*id).second->reset(); 
         }
       } 
@@ -680,10 +680,10 @@ StatusCode L0DUReportMonitor::finalize() {
 
 
   
-  info() << "======================================================================== " <<endreq;
-  info() << " L0DUReport Monitoring ran on " << m_evtCntMap.size() <<" Configuration(s) " << endreq;
-  info() << "======================================================================== "  << endreq;
-  info() << " " << endreq;
+  info() << "======================================================================== " <<endmsg;
+  info() << " L0DUReport Monitoring ran on " << m_evtCntMap.size() <<" Configuration(s) " << endmsg;
+  info() << "======================================================================== "  << endmsg;
+  info() << " " << endmsg;
   for(std::map<unsigned int,LHCb::L0DUConfig*>::iterator it = m_configs.begin(); it != m_configs.end(); it++){
     unsigned int tck = (*it).first;
     LHCb::L0DUConfig* config =(*it).second;
@@ -701,33 +701,33 @@ StatusCode L0DUReportMonitor::finalize() {
     double rate =  100.* m_decCnt / m_evtCnt ;
     double eRate = 100.* sqrt(m_decCnt)/m_evtCnt;
     
-    info() << "   **************************************************** " << endreq;    
-    info() << "   ***  Trigger Configuration Key : "  << format("0x%04X", tck)  << " (" << tck << ")"<<  endreq;
-    info() << "   ***  Recipe name : '" << config->recipe() << "'" << endreq;
-    info() << "   ***  short description : '" << config->definition() << "'" << endreq;
-    info() << "   **************************************************** " << endreq;    
-    debug() << "       The complete algorithm description is : " << endreq;
-    debug() << config->description() << endreq;
-    info() << " " << endreq;
+    info() << "   **************************************************** " << endmsg;    
+    info() << "   ***  Trigger Configuration Key : "  << format("0x%04X", tck)  << " (" << tck << ")"<<  endmsg;
+    info() << "   ***  Recipe name : '" << config->recipe() << "'" << endmsg;
+    info() << "   ***  short description : '" << config->definition() << "'" << endmsg;
+    info() << "   **************************************************** " << endmsg;    
+    debug() << "       The complete algorithm description is : " << endmsg;
+    debug() << config->description() << endmsg;
+    info() << " " << endmsg;
 
-    info() << "   ------------------------------------------------------------------- " <<endreq;
-    info() << "   -- L0 Performance on " << m_evtCnt << " events" << endreq;  
-    info() << "   ------------------------------------------------------------------- " <<endreq;
+    info() << "   ------------------------------------------------------------------- " <<endmsg;
+    info() << "   -- L0 Performance on " << m_evtCnt << " events" << endmsg;  
+    info() << "   ------------------------------------------------------------------- " <<endmsg;
     info() << "              *  Accepted L0          : " 
            << format( " %8.0f events :  rate = ( %6.2f +- %6.2f) %% ", m_decCnt, rate, eRate ) 
-           << endreq;
+           << endmsg;
 
     if( m_trigCnt.size() != 0){
-      info() << "   ------------------------ TRIGGERS --------------------------------- " <<endreq;
+      info() << "   ------------------------ TRIGGERS --------------------------------- " <<endmsg;
       for(CounterMap::iterator it =  m_trigRate.begin(); m_trigRate.end()!=it ; it++){
         std::string name = (*it).first;
         info() << "   * Trigger set : " 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
-                        name.c_str(), m_trigCnt[name], m_trigRate[name] , m_trigRelRate[name]) << endreq;
+                        name.c_str(), m_trigCnt[name], m_trigRate[name] , m_trigRelRate[name]) << endmsg;
       }
     }
     
-    info() << "   ------------------------ CHANNELS --------------------------------- " <<endreq;
+    info() << "   ------------------------ CHANNELS --------------------------------- " <<endmsg;
     for(CounterMap::iterator ic =  m_chanRate.begin(); m_chanRate.end()!=ic ; ic++){
       std::string name = (*ic).first;
       LHCb::L0DUChannel::Map channels = config->channels();
@@ -737,22 +737,22 @@ StatusCode L0DUReportMonitor::finalize() {
         status ="   ENABLED    ";
         info() << "   * " << status << " channel : " 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%  (rel. rate =  %6.2f %% ) ", 
-                        name.c_str(), m_chanCnt[name], m_chanRate[name] , m_chanRelRate[name]) << endreq;
+                        name.c_str(), m_chanCnt[name], m_chanRate[name] , m_chanRelRate[name]) << endmsg;
       }else{
         info() << "   * " << status << " channel : " 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%   ", 
-                        name.c_str(), m_chanCnt[name], m_chanRate[name]) << endreq;
+                        name.c_str(), m_chanCnt[name], m_chanRate[name]) << endmsg;
       }
     }
 
-    info() << "   ------------------------ CONDITIONS ------------------------------ " <<endreq;
+    info() << "   ------------------------ CONDITIONS ------------------------------ " <<endmsg;
     for(CounterMap::iterator ic =  m_condRate.begin(); m_condRate.end()!=ic ; ic++){
       std::string name = (*ic).first;
     info() << "   *  Elementary Condition  " 
              << format( "%20s :  %8.0f events : rate = %6.2f  %%   ", 
-                        name.c_str(), m_condCnt[name], m_condRate[name]) << endreq;
+                        name.c_str(), m_condCnt[name], m_condRate[name]) << endmsg;
     }
-    info() << "======================================================================== " <<endreq;
+    info() << "======================================================================== " <<endmsg;
   }
    return GaudiHistoAlg::finalize();  // must be called after all other actions
 }

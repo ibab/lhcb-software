@@ -1,4 +1,4 @@
-// $Id: L0Pattern.cpp,v 1.1 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0Pattern.cpp,v 1.2 2009-09-17 12:14:50 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -49,7 +49,7 @@ StatusCode L0Pattern::initialize() {
   StatusCode sc = GaudiTupleAlg::initialize() ;
   if( sc.isFailure() ) 
   { return Error("Could not initialize base class CaudiAlgorithm",sc);}
-  info() << "==> Initialize" << endreq;
+  info() << "==> Initialize" << endmsg;
   
   // get the tools
   m_fromRaw   = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool , this );
@@ -60,8 +60,8 @@ StatusCode L0Pattern::initialize() {
   for(std::vector<std::string>::iterator it = m_list.begin() ; it != m_list.end() ; it++){
     for(std::vector<std::string>::iterator jt = it+1  ; jt != m_list.end() ; jt++){
       if( (*it) == (*jt) ){
-        warning() << "The requested TCK " << *it << " appears twice in the TCKList " << endreq;
-        warning() << "Emulator may give wrong result due to  downscaling - please clean the list ..." << endreq;
+        warning() << "The requested TCK " << *it << " appears twice in the TCKList " << endmsg;
+        warning() << "Emulator may give wrong result due to  downscaling - please clean the list ..." << endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -172,7 +172,7 @@ StatusCode L0Pattern::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0Pattern::finalize() {
-  info() << "==> Finalize" << endreq;
+  info() << "==> Finalize" << endmsg;
   return GaudiTupleAlg::finalize() ;
 }
 

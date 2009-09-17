@@ -1,4 +1,4 @@
-// $Id: L0DUMultiConfigProvider.cpp,v 1.3 2008-03-27 16:32:13 odescham Exp $
+// $Id: L0DUMultiConfigProvider.cpp,v 1.4 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 #include<iostream>
@@ -51,7 +51,7 @@ L0DUMultiConfigProvider::~L0DUMultiConfigProvider() {}
 // Initialize is the main method
 //=============================================================================
 StatusCode L0DUMultiConfigProvider::initialize(){
-  debug() << "Initialize L0DUMultiConfigProvider" << endreq;
+  debug() << "Initialize L0DUMultiConfigProvider" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
 
@@ -60,13 +60,13 @@ StatusCode L0DUMultiConfigProvider::initialize(){
   for( std::vector<std::string>::iterator itck = m_list.begin() ; itck != m_list.end() ; ++itck){
 
     if( "0x" != (*itck).substr( 0, 2 ) ){
-      error() << "TCK value " << *itck << " MUST be registered in hexadecimal format '0x" << *itck << "'" << endreq;
+      error() << "TCK value " << *itck << " MUST be registered in hexadecimal format '0x" << *itck << "'" << endmsg;
       return StatusCode::FAILURE;
     }
 
     for( std::vector<std::string>::iterator jtck = itck+1 ; jtck != m_list.end() ; ++jtck){
       if( *itck == *jtck){
-        error() << "The Trigger Configuration Key " << *itck << " is not unique " << endreq;
+        error() << "The Trigger Configuration Key " << *itck << " is not unique " << endmsg;
         return StatusCode::FAILURE;
       }
     }
@@ -95,7 +95,7 @@ StatusCode L0DUMultiConfigProvider::finalize(){
 LHCb::L0DUConfig*  L0DUMultiConfigProvider::config( long tck ){
 
   if(tck < 0 || tck > 0xFFFF){
-    warning() << "requested TCK " << tck << "is not a 16 bit word" << endreq;
+    warning() << "requested TCK " << tck << "is not a 16 bit word" << endmsg;
     return NULL;
   } 
 
@@ -124,7 +124,7 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ){
 
   std::stringstream s("");
   s <<  "TCK_" << tck ;
-  debug() << "Loading L0DUConfigProvider : " << s.str() << endreq;
+  debug() << "Loading L0DUConfigProvider : " << s.str() << endmsg;
   m_provider = tool<IL0DUConfigProvider>("L0DUConfigProvider" , s.str(),this );
 
 
@@ -134,20 +134,20 @@ LHCb::L0DUConfig*  L0DUMultiConfigProvider::loadConfig( std::string tck ){
   std::istringstream is( stck.c_str() );
   is >> std::hex >> itck;
 
-  debug() << "TCK = '"<<tck <<"' -> decimal value = " << itck << endreq ;
+  debug() << "TCK = '"<<tck <<"' -> decimal value = " << itck << endmsg ;
 
   LHCb::L0DUConfig* config = m_provider->config( itck );
 
   if( NULL == config ){
     error() << "Failed to load configuration for TCK = " << tck 
-            << " ... return empty LODUConfig" << endreq;
+            << " ... return empty LODUConfig" << endmsg;
     return config;
   }
 
   m_configs.insert( config);
   
   //m_provider->release(); 
-  //debug() << "L0DUConfigProvider " << tck << " released " << endreq;
+  //debug() << "L0DUConfigProvider " << tck << " released " << endmsg;
 
   return  config;
 }

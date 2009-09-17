@@ -1,4 +1,4 @@
-// $Id: L0ProcessorDataDecoder.cpp,v 1.3 2007-12-21 09:17:01 odescham Exp $
+// $Id: L0ProcessorDataDecoder.cpp,v 1.4 2009-09-17 12:14:50 odescham Exp $
 // ============================================================================
 
 // from Gaudi
@@ -30,7 +30,7 @@ L0ProcessorDataDecoder::L0ProcessorDataDecoder
 // ============================================================================
 StatusCode L0ProcessorDataDecoder::initialize () 
 {
-  debug() << "Initialize L0ProcessorDataDecoder" << endreq;
+  debug() << "Initialize L0ProcessorDataDecoder" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
   m_condDB = tool<IL0CondDBProvider>("L0CondDBProvider");
@@ -41,7 +41,7 @@ StatusCode L0ProcessorDataDecoder::initialize ()
 
 StatusCode L0ProcessorDataDecoder::finalize () 
 {
-  debug() << "release L0ProcessoDataDecoder" << endreq;
+  debug() << "release L0ProcessoDataDecoder" << endmsg;
   delete m_dataContainer;
   return GaudiTool::finalize();
 };
@@ -60,7 +60,7 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<LHCb::L0ProcessorDat
   for(std::vector<LHCb::L0ProcessorDatas*>::iterator it=datass.begin();datass.end()!=it;it++){
     LHCb::L0ProcessorDatas* datas = *it;
     if(NULL == datas){
-      warning() << "Data container points to NULL " << endreq;
+      warning() << "Data container points to NULL " << endmsg;
       m_ok = false;
       break;
     }
@@ -83,18 +83,18 @@ bool L0ProcessorDataDecoder::setL0ProcessorData(std::vector<std::string> dataLoc
   m_ok=true;
   for(std::vector<std::string>::iterator it=dataLocs.begin();dataLocs.end()!=it;it++){
     if( !exist<LHCb::L0ProcessorDatas>( *it ) ){
-      warning() << "L0ProcessorData container not found at " << *it << endreq;
+      warning() << "L0ProcessorData container not found at " << *it << endmsg;
       m_ok=false;
       break;
     }
-    verbose() << "inserting data from " << *it << endreq;
+    verbose() << "inserting data from " << *it << endmsg;
     
     LHCb::L0ProcessorDatas* datas = get<LHCb::L0ProcessorDatas>( *it ) ;
     for(LHCb::L0ProcessorDatas::iterator itt=datas->begin();datas->end()!=itt;itt++){
           m_dataContainer->insert(*itt);
     } 
   } 
-  verbose() << "ALL DATA INSERTED" << endreq;
+  verbose() << "ALL DATA INSERTED" << endmsg;
   return m_ok;
 } 
 
@@ -119,7 +119,7 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
 
   LHCb::L0ProcessorData* fiber = m_dataContainer->object( base[ L0DUBase::Index::Fiber ]  )  ;
   if( 0 == fiber ){ 
-    warning() << "Fiber "<< base[ L0DUBase::Index::Fiber ] <<" not found " << endreq;
+    warning() << "Fiber "<< base[ L0DUBase::Index::Fiber ] <<" not found " << endmsg;
     m_ok=false;
     return 0;
   }
@@ -129,7 +129,7 @@ unsigned long L0ProcessorDataDecoder::digit( const unsigned int base[L0DUBase::I
   if( L0DUBase::Fiber::Empty != base[ L0DUBase::Index::Fiber2 ]  ) {
     LHCb::L0ProcessorData* fiber2= m_dataContainer->object( base[ L0DUBase::Index::Fiber2 ]  )  ;
     if( 0 == fiber2 ){ 
-      error() << "Data ( " << base << " ) not found in the container " << endreq;
+      error() << "Data ( " << base << " ) not found in the container " << endmsg;
       m_ok=false;
       return 0;
     }

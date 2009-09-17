@@ -1,4 +1,4 @@
-// $Id: L0DUAlg.cpp,v 1.9 2009-03-05 15:32:45 odescham Exp $
+// $Id: L0DUAlg.cpp,v 1.10 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -72,11 +72,11 @@ StatusCode L0DUAlg::initialize() {
 
   //---------------------------
   if(m_tck == ""){
-    error() << "The Trigger Configuration Key is undefined" << endreq;
+    error() << "The Trigger Configuration Key is undefined" << endmsg;
     return StatusCode::FAILURE;
   }
   if( "0x" != m_tck.substr( 0, 2 ) ){
-    error() << "The requested TCK value " << m_tck << " MUST be in hexadecimal format '0x" << m_tck << "'" << endreq;
+    error() << "The requested TCK value " << m_tck << " MUST be in hexadecimal format '0x" << m_tck << "'" << endmsg;
     return StatusCode::FAILURE;
   }
 
@@ -93,14 +93,14 @@ StatusCode L0DUAlg::initialize() {
   std::istringstream is( m_tck.c_str() );
   is >> std::hex >> itck;
   m_confTool = tool<IL0DUConfigProvider>("L0DUMultiConfigProvider" , m_configName );
-  debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endreq;
+  debug() << " loading the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
   m_config   = m_confTool->config( itck );
   if( NULL == m_config){
-    error() << " Unable to load the configuration for TCK = " << m_tck << " /  " << itck << endreq;
+    error() << " Unable to load the configuration for TCK = " << m_tck << " /  " << itck << endmsg;
     return StatusCode::FAILURE;
   }
 
-  info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endreq;
+  info()<< "The L0DUConfig (TCK=" << m_tck << ") have been succesfully loaded" << endmsg;
   return sc;
 };
 
@@ -112,7 +112,7 @@ StatusCode L0DUAlg::execute() {
 
 
   // process the emulator
-  debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endreq;
+  debug() << "Emulator processing ( Data = " << m_dataLocations << ", TCK = " << m_tck << " )" <<endmsg;
   StatusCode sc = m_emulator->process(m_config, m_dataLocations );
   if(sc.isFailure()){
     Error("Cannot process the emulator").ignore();
@@ -121,14 +121,14 @@ StatusCode L0DUAlg::execute() {
   
   // push Report and Config on TES
   if(m_writeOnTES){
-    debug() <<"Push L0DUReport on TES" << endreq;
+    debug() <<"Push L0DUReport on TES" << endmsg;
     LHCb::L0DUReport* report = new LHCb::L0DUReport(m_emulator->emulatedReport());
     put (report   ,  m_reportLocation );//non-const
   }
   
   //push bank in RawBuffer
   if(m_fillRaw){
-    debug() << "Insert RawBank in rawEvent" << endreq;
+    debug() << "Insert RawBank in rawEvent" << endmsg;
     const std::vector<unsigned int> block = m_emulator->bank(m_rawVsn);
     LHCb::RawEvent* raw = getOrCreate<LHCb::RawEvent,LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     raw->addBank(m_rawSrcID , m_rawBankType , m_rawVsn , block);
@@ -141,7 +141,7 @@ StatusCode L0DUAlg::execute() {
 //  Finalize
 //=============================================================================
 StatusCode L0DUAlg::finalize() {
-  debug()<< "==> Finalize" << endreq;
+  debug()<< "==> Finalize" << endmsg;
   return GaudiAlgorithm::finalize();
 }
 

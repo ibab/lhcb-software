@@ -1,4 +1,4 @@
-// $Id: L0DUConfigProvider.h,v 1.6 2009-07-24 16:50:21 odescham Exp $
+// $Id: L0DUConfigProvider.h,v 1.7 2009-09-17 12:14:49 odescham Exp $
 #ifndef L0DUCONFIGPROVIDER_H 
 #define L0DUCONFIGPROVIDER_H 1
 
@@ -36,9 +36,9 @@ public:
   LHCb::L0DUConfig*  config(long tck){
     if( tck != m_tckopts)warning() << "The requested TCK " << tck  
                                    <<" is not consistent with the options definition " 
-                                   << m_tckopts << " CHECK your options ! " << endreq;
+                                   << m_tckopts << " CHECK your options ! " << endmsg;
     if(tck < 0 || tck > 0xFFFF){
-      warning() << "requested TCK is not a 16 bit word" << endreq;
+      warning() << "requested TCK is not a 16 bit word" << endmsg;
       return NULL;
     }
     return m_configs.object(tck); 

@@ -1,4 +1,4 @@
-// $Id: L0TCKfilter.cpp,v 1.1 2008-03-27 16:32:14 odescham Exp $
+// $Id: L0TCKfilter.cpp,v 1.2 2009-09-17 12:14:50 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,11 +71,11 @@ StatusCode L0TCKfilter::execute() {
     }
     if( *it == ttck.str() ){
       setFilterPassed(true);
-      debug() << "accepted TCK = " << ttck.str() << " -> set FilterPassed to true" << endreq;
+      debug() << "accepted TCK = " << ttck.str() << " -> set FilterPassed to true" << endmsg;
       return StatusCode::SUCCESS;
     }
   }
-  debug() << "rejected TCK = " << ttck.str() << " -> set FilterPassed to false" << endreq;
+  debug() << "rejected TCK = " << ttck.str() << " -> set FilterPassed to false" << endmsg;
       
   return StatusCode::SUCCESS;
 }

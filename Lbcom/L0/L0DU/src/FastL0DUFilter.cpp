@@ -1,4 +1,4 @@
-// $Id: FastL0DUFilter.cpp,v 1.1 2008-12-08 18:03:28 odescham Exp $
+// $Id: FastL0DUFilter.cpp,v 1.2 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -116,17 +116,17 @@ StatusCode FastL0DUFilter::execute() {
     bool decision = m_useDecInBank ? dec : newdec;
     
     if ( msgLevel( MSG::DEBUG) ){
-      debug() << " decision : " << decision << endreq;      
-      debug() << " SumEt  : " << sumEt << " Threshold : " << m_sumCut << endreq;
-      debug() << " SpdMult: " << spdMult << " Threshold : " << m_spdCut << endreq;
-      debug() << " el(Et) : " << elEt  << " Threshold : " << m_elCut << endreq;
-      debug() << " ha(Et) : " << haEt  << " Threshold : " << m_haCut << endreq; 
-      debug() << " mu(Pt) : " << muPt  << " Threshold : " << m_muCut << endreq; 
+      debug() << " decision : " << decision << endmsg;      
+      debug() << " SumEt  : " << sumEt << " Threshold : " << m_sumCut << endmsg;
+      debug() << " SpdMult: " << spdMult << " Threshold : " << m_spdCut << endmsg;
+      debug() << " el(Et) : " << elEt  << " Threshold : " << m_elCut << endmsg;
+      debug() << " ha(Et) : " << haEt  << " Threshold : " << m_haCut << endmsg; 
+      debug() << " mu(Pt) : " << muPt  << " Threshold : " << m_muCut << endmsg; 
     }
     if ( decision  ){
       setFilterPassed(true);
       m_sel++;
-      if ( msgLevel( MSG::DEBUG) )debug() << " ----> ACCEPT EVENT " << endreq;
+      if ( msgLevel( MSG::DEBUG) )debug() << " ----> ACCEPT EVENT " << endmsg;
     }
   }
   
@@ -140,7 +140,7 @@ StatusCode FastL0DUFilter::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endreq;
+  info() << "Filtering : " << m_sel << " events among " << m_count << " processed " << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }

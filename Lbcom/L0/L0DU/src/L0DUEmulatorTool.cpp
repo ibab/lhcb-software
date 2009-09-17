@@ -1,4 +1,4 @@
-// $Id: L0DUEmulatorTool.cpp,v 1.10 2009-07-27 14:12:04 odescham Exp $
+// $Id: L0DUEmulatorTool.cpp,v 1.11 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -46,7 +46,7 @@ L0DUEmulatorTool::~L0DUEmulatorTool() {}
 //=============================================================================
 
 StatusCode L0DUEmulatorTool::initialize(){
-  debug() << "Initialize  L0EmulatorTool" << endreq;
+  debug() << "Initialize  L0EmulatorTool" << endmsg;
   StatusCode sc = GaudiTool::initialize();
   if(sc.isFailure())return sc;
   // get tools
@@ -146,7 +146,7 @@ StatusCode L0DUEmulatorTool::fillData(){
       m_muHighest.push_back(imax);
     }
   }
-  if( msgLevel(MSG::VERBOSE))verbose() << "Muon sorted " << endreq;
+  if( msgLevel(MSG::VERBOSE))verbose() << "Muon sorted " << endmsg;
 
   int dimuon = 0;
 
@@ -194,7 +194,7 @@ StatusCode L0DUEmulatorTool::fillData(){
     dataMap["Muon"+num.str()+"(Sgn)"]->setOperand(sgn , sgScale , sgMax);
   }
   dataMap["DiMuon(Pt)"]->setOperand( dimuon , ptScale , ptMax*2+1);  
-  if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endreq;
+  if( msgLevel(MSG::VERBOSE))verbose() << "DiMuon OK " << endmsg;
 
   // -------------------------------------
   // Data processing of user-defined data
@@ -225,10 +225,10 @@ StatusCode L0DUEmulatorTool::fillData(){
   }       
               
   if( msgLevel(MSG::VERBOSE)) {
-    verbose() << "User-defined data filled " << endreq;
-    verbose() << " ---> data summary " << endreq;
+    verbose() << "User-defined data filled " << endmsg;
+    verbose() << " ---> data summary " << endmsg;
     for( LHCb::L0DUElementaryData::Map::iterator idata = dataMap.begin();idata != dataMap.end() ; idata++){
-      verbose() << "Data :  " << ((*idata).second)->summary() <<endreq;
+      verbose() << "Data :  " << ((*idata).second)->summary() <<endmsg;
     }
   }
   
@@ -240,7 +240,7 @@ void L0DUEmulatorTool::setDataValue(LHCb::L0DUElementaryData* l0Data,
                                     const unsigned int  base[L0DUBase::Index::Size]){
   l0Data->setOperand( digit( base ) , scale(base) , max(base)  );
   if( msgLevel(MSG::VERBOSE))
-    verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endreq;
+    verbose() << "Set Data digit " << l0Data->name() << " << " <<digit(base) << " : scale to MeV = " << scale(base) << endmsg;
 }
 //===========================================================================================================
 StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0DUElementaryData::Map dataMap   ){  
@@ -262,7 +262,7 @@ StatusCode  L0DUEmulatorTool::dataTree(LHCb::L0DUElementaryData* data, LHCb::L0D
     data->setSaturation( preData->saturation() + data->saturation() );
     // check the scale is the same for the other operands
     if( scale != preData->scale() ){ 
-      error() << "Cannot combine data with different scales in the compound data "<< *iop << endreq;
+      error() << "Cannot combine data with different scales in the compound data "<< *iop << endmsg;
       return StatusCode::FAILURE;
     }
     scale = preData->scale();
@@ -276,8 +276,8 @@ StatusCode L0DUEmulatorTool::processing(){
     //
   if( msgLevel(MSG::VERBOSE)) {
     m_config->emulate();  // process the actual emulation when summary is requested - if not will be done on-Demand
-    verbose() << "End of processing ... summary : " << endreq;
-    verbose() << m_config->summary() << endreq;
+    verbose() << "End of processing ... summary : " << endmsg;
+    verbose() << m_config->summary() << endmsg;
   }
   //
   return StatusCode::SUCCESS;
@@ -289,7 +289,7 @@ const LHCb::L0DUReport L0DUEmulatorTool::emulatedReport(){
 
   m_config->emulate();  
   if( !m_config->emulated() ){
-    error() << " Report is requested but the emulator has not been processed ... return empty report" << endreq;
+    error() << " Report is requested but the emulator has not been processed ... return empty report" << endmsg;
     return m_report;
   }
   
@@ -339,7 +339,7 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
 
   emulatedReport(); // emulate the report
   if( !m_config->emulated() ){
-    error() << " rawBank is requested but the emulator has not been processed ... return empty bank" << endreq;
+    error() << " rawBank is requested but the emulator has not been processed ... return empty bank" << endmsg;
     return l0Block;
   }
   
@@ -486,7 +486,7 @@ const std::vector<unsigned int> L0DUEmulatorTool::bank(unsigned int version){
     
   }
   else{
-    warning() << "L0DU RawBank version " << version << " is not defined " << endreq;
+    warning() << "L0DU RawBank version " << version << " is not defined " << endmsg;
   }
   return l0Block;
 }

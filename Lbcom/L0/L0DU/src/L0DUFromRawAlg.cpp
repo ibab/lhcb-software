@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawAlg.cpp,v 1.7 2009-04-19 23:00:43 odescham Exp $
+// $Id: L0DUFromRawAlg.cpp,v 1.8 2009-09-17 12:14:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -104,26 +104,26 @@ StatusCode L0DUFromRawAlg::execute() {
   // print out (CHECKS)
   if( msgLevel( MSG::DEBUG)){
     if( m_fromRaw->report().configuration() != NULL ){
-      debug() << "Bank size : " << m_fromRaw->size() << " (bytes) " << endreq;
+      debug() << "Bank size : " << m_fromRaw->size() << " (bytes) " << endmsg;
       LHCb::L0DUChannel::Map& channels = m_fromRaw->report().configuration()->channels();
       debug() << "________________ Trigger decision from raw ____________________ L0-yes = " 
-              << m_fromRaw->report().decision() << endreq;
-      verbose() << "Rebuilt decision from summary : " << m_fromRaw->report().decisionFromSummary() << endreq;
+              << m_fromRaw->report().decision() << endmsg;
+      verbose() << "Rebuilt decision from summary : " << m_fromRaw->report().decisionFromSummary() << endmsg;
       for(LHCb::L0DUChannel::Map::iterator it = channels.begin();channels.end()!=it;it++){
         std::string name = ((*it).second)->name();
-        verbose() << "Channel Decision " << name << " : " << m_fromRaw->report().channelDecisionByName( name ) << endreq;
+        verbose() << "Channel Decision " << name << " : " << m_fromRaw->report().channelDecisionByName( name ) << endmsg;
       }
       LHCb::L0DUElementaryCondition::Map& conds = m_fromRaw->report().configuration()->conditions();
       for(LHCb::L0DUElementaryCondition::Map::iterator it = conds.begin();conds.end()!=it;it++){
         std::string name = ((*it).second)->name();
-        verbose() << "Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endreq;
+        verbose() << "Condition Value " << name << " : " << m_fromRaw->report().conditionValueByName( name ) << endmsg;
       }
       // This works only with L0DU rawBank version > 0
       if(m_fromRaw->version() != 0){
         bool emul = m_fromRaw->report().configuration()->emulatedDecision ();
         debug() << "_________________ EMULATION using data from raw_________________ L0-yes = " << emul ;      
-        if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endreq;
-        verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endreq;
+        if( !emul) debug() << "(Downscaled ? " << m_fromRaw->report().configuration()->isDownscaled() << ") " << endmsg;
+        verbose() << m_fromRaw->report().configuration()->emulate()->summary()  << endmsg;
       }
     }
   }
@@ -141,12 +141,12 @@ StatusCode L0DUFromRawAlg::finalize() {
   debug() << "==> Finalize" << endmsg;
 
   //
-  info() << " - ------------------------------------------------------------------" << endreq;
-  info() << " - ========> Final summary of L0DUFromRawAlg" << endreq;
-  info() << " - Total number of events processed           : " << m_evt << endreq;
+  info() << " - ------------------------------------------------------------------" << endmsg;
+  info() << " - ========> Final summary of L0DUFromRawAlg" << endmsg;
+  info() << " - Total number of events processed           : " << m_evt << endmsg;
   info() << " - Average bank size : " << (double) m_size/ (double) m_evt 
-         << " (bytes)  | min= " << m_sizeMin << "  | max= " << m_sizeMax <<endreq;
-  info() << " - ------------------------------------------------------------------" << endreq;
+         << " (bytes)  | min= " << m_sizeMin << "  | max= " << m_sizeMax <<endmsg;
+  info() << " - ------------------------------------------------------------------" << endmsg;
 
 
 

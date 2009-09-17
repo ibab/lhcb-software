@@ -1,4 +1,4 @@
-// $Id: L0DUFromRawTool.h,v 1.12 2009-04-20 09:48:33 odescham Exp $
+// $Id: L0DUFromRawTool.h,v 1.13 2009-09-17 12:14:49 odescham Exp $
 #ifndef L0DUFROMRAWTOOL_H 
 #define L0DUFROMRAWTOOL_H 1
 
@@ -133,7 +133,7 @@ inline bool L0DUFromRawTool::nextData(){
     m_roStatus.addStatus( m_source , LHCb::RawBankReadoutStatus::Incomplete);
     return false;
   }else{
-    if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endreq;
+    if ( msgLevel( MSG::VERBOSE) )verbose() << "data = " <<  format("0x%04X", *m_data) << endmsg;
   }
   return true;
 }
