@@ -4,6 +4,30 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!======================= Gauss v37r3p1 2009-09-18 ============================
+! 2009-09-18 - Gloria CORTI
+ - Replace the use of the package Gen/ParticleGuns with Gen/LbPGuns and 
+   activate it. Reactivate Gen/LbMIB package.
+
+ - Replace options with corresponding python configurations
+	 . REPLACED: BeamScintillators.opts by BeamScintillators.py
+               BCMSimulation.opts by BcmSim.py
+               CaloOnly.opts by CaloOnly.py
+ - New options to switch on the geometry just upstream of the VELO (Beam pipe
+   and BCM and depending of database tag BLS or scintillator planes) and the
+   beam line upstream (the dipole compensators and beam pipe in RB84).
+   They are included in BcmSim.py, BeamScintillators.py and BlsSim.py
+   . BeforeVeloGeometry.py - NEW
+   . UpstreamGeometry.py   - NEW
+ - New options to switch on the simulation of the Beam Loss Scintillators 
+   (BLS). A local tag is used for MC09 compatible geometry.
+   . BlsSim.py - NEW
+ - GaussVis.opts works if given to gaudirun.py as post-options
+ - New options to switch off the simulation of the RICHes: geometry and 
+   associated physics processes. It will still write the RICH hits and other
+   data containers in the SIM file
+   . RICHesOff.py
+
 ! 2009-09-16 - Gloria CORTI
  - Introduce new properties in Gauss() configurable
    . Output     : string to specify the type of output, it can be 'NONE' or
@@ -49,7 +73,7 @@
    to:
    if not FileCatalog().Catalogs:
     FileCatalog().Catalogs = [ "xmlcatalog_file:NewCatalog.xml" ]
--  Update of QMTest gauss-mc09.qmt (and corresponding ref files).
+ -  Update of QMTest gauss-mc09.qmt (and corresponding ref files).
 
 ! 2009-07-23 - Silvia Miglioranzi
  - Updated QMtest (gauss-mc09.qmt) using the new Gauss v37r3 settings. Updated 
