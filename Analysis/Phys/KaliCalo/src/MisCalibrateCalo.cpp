@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.1 2009-07-31 13:51:02 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.2 2009-09-18 09:55:11 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -74,11 +74,11 @@ namespace Kali
   public:
     // =========================================================================
     /// standard initialization 
-    virtual StatusCode intialize () ;                 // standard initialization 
+    virtual StatusCode initialize () ;                 // standard initialization 
     /// execution 
-    virtual StatusCode execute   () ;                 //               execution 
+    virtual StatusCode execute    () ;                 //               execution 
     /// standard finalization 
-    virtual StatusCode finalize  () ;                 //   standard finalization
+    virtual StatusCode finalize   () ;                 //   standard finalization
     // =========================================================================
   protected:
     // =========================================================================
@@ -144,6 +144,28 @@ Kali::MisCalibrateCalo::MisCalibrateCalo
   , m_pmap  () 
   , m_table () 
 {
+  // 
+  if      ( std::string::npos != name.find ( "Ecal" ) ) 
+  {
+    m_location = LHCb::CaloDigitLocation ::Ecal ;
+    m_caloName = DeCalorimeterLocation   ::Ecal ;  
+  }
+  else if ( std::string::npos != name.find ( "Hcal" ) ) 
+  {
+    m_location = LHCb::CaloDigitLocation ::Hcal ;
+    m_caloName = DeCalorimeterLocation   ::Hcal ;  
+  }
+  else if ( std::string::npos != name.find ( "Spd"  ) ) 
+  {
+    m_location = LHCb::CaloDigitLocation ::Spd  ;
+    m_caloName = DeCalorimeterLocation   ::Spd  ;  
+  }
+  else if ( std::string::npos != name.find ( "Prs"  ) ) 
+  {
+    m_location = LHCb::CaloDigitLocation ::Prs  ;
+    m_caloName = DeCalorimeterLocation   ::Prs  ;  
+  }
+  //
   declareProperty 
     ( "Digits"        , m_location  ,
       "TES address of digits to be (mis)cailbrated" );
@@ -158,7 +180,7 @@ Kali::MisCalibrateCalo::MisCalibrateCalo
 // =============================================================================
 // standard initialization 
 // =============================================================================
-StatusCode Kali::MisCalibrateCalo::intialize ()       // standard initialization 
+StatusCode Kali::MisCalibrateCalo::initialize ()      // standard initialization 
 {
   StatusCode sc = GaudiAlgorithm::initialize () ;
   if ( sc.isFailure() ) { return sc ; }                                // RETURN 
@@ -197,13 +219,14 @@ StatusCode Kali::MisCalibrateCalo::execute   ()                     // execution
     const double scale = ifind->second ;
     //
     digit->setE ( digit->e() * scale ) ;
-    cnt += ( scale - 1 ) ;
+    //
+    if ( msgLevel ( MSG::DEBUG ) ) { cnt += ( scale - 1 ) ; }
   }
   //
   return StatusCode::SUCCESS ;
 }
 // =============================================================================
-// update the table of coenfficients 
+// update the table of cofficients 
 // =============================================================================
 StatusCode Kali::MisCalibrateCalo::updateTable
 ( const Kali::MisCalibrateCalo::PMap& pmap ) 

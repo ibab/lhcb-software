@@ -1,8 +1,11 @@
-// $Id: Pi0Calibr.cpp,v 1.2 2009-07-31 13:51:02 ibelyaev Exp $
+// $Id: Pi0Calibr.cpp,v 1.3 2009-09-18 09:55:11 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.2  2009/07/31 13:51:02  ibelyaev
+//  resurrect the package for MC09
+//
 // Revision 1.1.1.1  2005/05/31 13:03:31  ibelyaev
 // New package: Collection of algorithms for "physics" Calorimeter calibration
 // 
@@ -85,6 +88,31 @@ namespace
     }
     return energy ;
   }
+  // ==========================================================================  
+  template <class FROM> 
+  inline double seedEnergyFrom 
+  ( const LHCb::Particle* gamma , 
+    const FROM&           from  ) 
+  {
+    if ( 0 == gamma ) { return -1 * Gaudi::Units::TeV ; }
+    const LHCb::CaloHypo*    h = hypo    ( gamma ) ;
+    if ( 0 == h     ) { return -1 * Gaudi::Units::TeV ; }
+    const LHCb::CaloCluster* c = cluster ( gamma ) ;
+    if ( 0 == c     ) { return -1 * Gaudi::Units::TeV ; }
+    //
+    double energy = 0 ;
+    typedef LHCb::CaloHypo::Digits Digits ;
+    const Digits& digits = h->digits() ;
+    for ( Digits::const_iterator idigit = digits.begin() ; 
+          digits.end() != idigit ; ++idigit ) 
+    {
+      const LHCb::CaloDigit* digit = *idigit ;
+      if ( 0 == digit    ) { continue ; }
+      if ( c->seed().index() != digit->cellID().index() ) { continue ; }
+      if ( from( digit ) ) { energy += digit->e() ; }
+    }
+    return energy ;
+  }
   // ==========================================================================
   inline size_t getDigits 
   ( const LHCb::CaloCluster*          cluster , 
@@ -150,17 +178,26 @@ LOKI_ALGORITHM ( Kali_Pi0 )
   // get all photons with 
   Range gamma = select ( "g" , ( "gamma" == ID ) && ( PT > 300 * MeV ) ) ;
   
+  counter("#gamma") += gamma.size() ;
+
   Tuple tuple = nTuple ( " PI0 tuple " ) ;
   
   typedef std::set<const LHCb::CaloDigit*> SET ;
   SET digits ;
   
-  AIDA::IHistogram1D* h = book ( "mpi0" , 0 , 250 , 250 ) ;
+  AIDA::IHistogram1D* h1 = book ( "mpi0-0"       , 0 , 250 , 250 ) ;
+  AIDA::IHistogram1D* h2 = book ( "mpi0-1-pt"    , 0 , 250 , 250 ) ;
+  AIDA::IHistogram1D* h3 = book ( "mpi0-2-spd-1" , 0 , 250 , 250 ) ;
+  AIDA::IHistogram1D* h4 = book ( "mpi0-3-spd-2" , 0 , 250 , 250 ) ;
   
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 ) 
   {
+
+    
     const double m12 = pi0->mass ( 1 , 2 ) ;
+
     if ( m12 > 250 * MeV ) { continue ; }  // CONTINUE
+
     
     const LHCb::Particle* g1 = pi0(1) ;
     if ( 0 == g1         ) { continue ; }  // CONTINUE 
@@ -168,14 +205,23 @@ LOKI_ALGORITHM ( Kali_Pi0 )
     const LHCb::Particle* g2 = pi0(2) ;
     if ( 0 == g2         ) { continue ; }  // CONTINUE
     
+    if ( 0 != h1 ) { h1 -> fill ( m12 ) ; }
+    
     LoKi::LorentzVector p12 = pi0->p(1,2) ;
     if ( 800 * Gaudi::Units::MeV > p12.Pt() ) { continue ; }
     
-    double spd1e = energyFrom ( g1 , spd ) / GeV ;
-    if ( 0 < spd1e ) { continue ; }
+    if ( 0 != h2 ) { h2 -> fill ( m12 ) ; }
     
-    double spd2e = energyFrom ( g2 , spd ) / GeV ;
+    //double spd1e = energyFrom ( g1 , spd ) / GeV ;
+    double spd1e = seedEnergyFrom ( g1 , spd ) / GeV ;
+    
+    if ( 0 < spd1e ) { continue ; }
+    if ( 0 != h3 ) { h3 -> fill ( m12 ) ; }
+    
+    double spd2e = seedEnergyFrom ( g2 , spd ) / GeV ;
     if ( 0 < spd2e ) { continue ; }
+    if ( 0 != h4 ) { h4 -> fill ( m12 ) ; }
+    
     
     double prs1e = energyFrom ( g1 , prs ) / GeV ;
     double prs2e = energyFrom ( g2 , prs ) / GeV ;
@@ -187,8 +233,7 @@ LOKI_ALGORITHM ( Kali_Pi0 )
       std::swap ( prs1e , prs2e ) ; 
     }
     
-    // fill the histogram 
-    if ( 0 != h ) { h->fill ( m12 ) ; }
+    // fill N-tuple
     
     tuple -> column ( "spd2" , spd2e ) ;
     
