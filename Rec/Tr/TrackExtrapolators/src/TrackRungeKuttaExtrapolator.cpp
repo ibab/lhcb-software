@@ -233,6 +233,9 @@ TrackRungeKuttaExtrapolator::TrackRungeKuttaExtrapolator(const std::string& type
   declareProperty( "RKScheme", m_rkscheme = "CashKarp" ) ;
   declareProperty( "CorrectNumSteps", m_correctNumSteps = false ) ;
   declareProperty( "NumericalJacobian", m_numericalJacobian = false ) ;
+  declareProperty( "MaxSlope"     , m_maxSlope      = 10. );
+  declareProperty( "MaxCurvature", m_maxCurvature = 1/Gaudi::Units::m );
+  
 }
 
 StatusCode
@@ -325,29 +328,30 @@ TrackRungeKuttaExtrapolator::propagate( Gaudi::TrackVector& state,
     ? extrapolateNumericalJacobian( rkstate, zout, *jacobian) 
     : extrapolate( rkstate, zout, jacobian) ;
   
-  // translate the state back
-  state(0) = rkstate.x() ;
-  state(1) = rkstate.y() ;
-  state(2) = rkstate.tx() ;
-  state(3) = rkstate.ty() ;
-  //   debug() << "zin, zout, result: " 
-  // 	 << zin << " " << zout << " " << state << endreq ;
+  if( success ) {
+    // translate the state back
+    state(0) = rkstate.x() ;
+    state(1) = rkstate.y() ;
+    state(2) = rkstate.tx() ;
+    state(3) = rkstate.ty() ;
+    //   debug() << "zin, zout, result: " 
+    // 	 << zin << " " << zout << " " << state << endreq ;
 
-  if( transMat ) {
-    *transMat = Gaudi::TrackMatrix() ;
-    (*transMat)(0,0) = 1 ;
-    (*transMat)(1,1) = 1 ;
-    (*transMat)(4,4) = 1 ;
-    for( size_t irow=0; irow<4; ++irow)
-      for( size_t icol=0; icol<3; ++icol) 
-	(*transMat)(irow,icol+2) = (*jacobian).matrix(irow,icol) ;
-    for( size_t irow=0; irow<4; ++irow)
-      (*transMat)(irow,4) *= Gaudi::Units::c_light ;
-    
-    delete jacobian ;
-  }
-  if( !success ) {
-    error() << "RungeKuttaExtrapolator failed" << endreq ;
+    if( transMat ) {
+      *transMat = Gaudi::TrackMatrix() ;
+      (*transMat)(0,0) = 1 ;
+      (*transMat)(1,1) = 1 ;
+      (*transMat)(4,4) = 1 ;
+      for( size_t irow=0; irow<4; ++irow)
+	for( size_t icol=0; icol<3; ++icol) 
+	  (*transMat)(irow,icol+2) = (*jacobian).matrix(irow,icol) ;
+      for( size_t irow=0; irow<4; ++irow)
+	(*transMat)(irow,4) *= Gaudi::Units::c_light ;
+      
+      delete jacobian ;
+    }
+  } else {
+    error() << "RungeKuttaExtrapolator failed." << endreq ;
   }
   
   return success ? StatusCode::SUCCESS : StatusCode::FAILURE ;
@@ -385,7 +389,8 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
   RKTrackVector err, totalErr ;
   RKState       prevstate ;
   RKStatistics  stats ;
-  while( std::abs(state.z - zout) > TrackParameters::propagationTolerance ) {
+  bool rc = true ;
+  while( rc && std::abs(state.z - zout) > TrackParameters::propagationTolerance ) {
     
     // make a single range-kutta step
     prevstate = state ;
@@ -459,6 +464,15 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
     if( absstep - direction * (zout - state.z) > 0 ) {
       absstep = std::abs(zout - state.z) ;
       laststep = true ;
+    } 
+
+    // final check: bail out for vertical or looping tracks
+    if( std::abs( state.tx() ) > m_maxSlope || std::abs( state.ty() ) > m_maxSlope ) {
+      Warning("State has very large slope, probably curling. Bailing out.").ignore() ;
+      rc = false ;
+    } else if( std::abs(state.qop * rkcache.stage[0].Bfield.y() ) > m_maxCurvature ) {
+      Warning("State has too small curvature radius. Bailing out.").ignore() ;
+      rc = false ;
     }
   }
 
@@ -466,7 +480,7 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
   m_stats = stats ;
   m_totalstats += stats ;
   
-  return true ;
+  return rc ;
 }
 
 

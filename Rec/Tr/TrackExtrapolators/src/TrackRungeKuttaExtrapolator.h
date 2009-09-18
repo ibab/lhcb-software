@@ -91,6 +91,8 @@ private:
   size_t m_maxNumRKSteps ;
   bool   m_correctNumSteps ;
   bool m_numericalJacobian ;
+  double m_maxSlope ;
+  double m_maxCurvature ;
 
   // parameters of the runge-kutta (depend on rk-scheme)
   double* m_a ;
