@@ -1,4 +1,4 @@
-// $Id: MIBackground.cpp,v 1.1 2007-08-17 12:54:14 gcorti Exp $
+// $Id: MIBackground.cpp,v 1.2 2009-09-18 14:52:22 gcorti Exp $
 // Include files
  
 // from Gaudi
@@ -37,11 +37,11 @@ MIBackground::MIBackground(const std::string& name,
   : GaudiAlgorithm(name, pSvcLocator)
 {
   // TS locations
-  declareProperty("HepMCEvents", 
+  declareProperty("HepMCEventLocation", 
                   m_eventLoc = LHCb::HepMCEventLocation::Default );
-  declareProperty("GenHeader", 
+  declareProperty("GenHeaderLocation", 
                   m_headerLoc = LHCb::GenHeaderLocation::Default );
-  declareProperty("GenCollisions", 
+  declareProperty("GenCollisionLocation", 
                   m_collLoc = LHCb::GenCollisionLocation::Default );
 
 
