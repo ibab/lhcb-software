@@ -205,7 +205,7 @@ var FSMItem = function(item_name, logger, is_child)  {
   }
 
   element.setState = function(name) {
-    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Icons/Modes/'+name+'.gif">';
+    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif">';
     return this;
   }
 

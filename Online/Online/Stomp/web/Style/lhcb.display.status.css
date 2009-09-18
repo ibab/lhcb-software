@@ -1,7 +1,10 @@
 /* <style type="text/css"> */
 
+/***********************************************************************************/
+/*                                                                                 */
 /* The 3 main widgets of the RunStatus display: envelope, status and logger window */
-
+/*                                                                                 */
+/***********************************************************************************/
 .RunStatus  {
     width:            820px;
     background-color: #CCCCCC;
@@ -33,6 +36,17 @@
     border:           solid;
     border-width:     1px;
     text-align:       left;
+}
+
+.RunStatusHeader  {
+    color:            #000000;
+    background-color: #CCCCCC;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        20px;
+    font-weight:      bold;
+    text-decoration:  none;
+    text-align:       center;
 }
 
 /* The 3 main widgets of the FSM display: envelope, status and logger window */
@@ -142,47 +156,13 @@ StatusText:
     border:           none;
 }
 
-/* Other helpers  */
-.StatusPlain	{
-    color: #000000;
-    background-color: #CCCCCC;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
-    font-weight:      bold;
-    line-height:      20px;
-    text-decoration:  none;
-    text-align:       left;
-    border:           none;
-    border-width:     0px;
-}
-.StatusText	{
-    color: #000000;
-    background-color: #CCCCCC;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
-    font-weight:      bold;
-    line-height:      20px;
-    text-decoration:  underline;
-    text-align:       left;
-    border:           none;
-    border-width:     0px;
-}
 
-.DisplayButton	{
-    color:            #000000;
-    background-color: #EEEEEE;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       center;
-    text-decoration:  none;
-    border:           solid;
-    border-width:     1px;
-    height:           24px;
-}
+/*=================================================================================
 
+       Property table layout
 
-/* Property table layout  */
+=================================================================================*/
+
 .PropertyTable	{
     color:            #000000;
     background-color: #CCCCCC;
@@ -222,100 +202,6 @@ StatusText:
     line-height:      4px;
     border:           none;
     border-width:     0px;
-}
-
-/*   FSM states a la JCOP */
-
-.FwDEAD   {
-    color: #000000;
-    background-color:#CCCCCC;
-    font-family:  Arial, Helvetica, sans-serif;
-    font-size:    12px;
-    font-weight:  bold;
-    line-height:  16px;
-    border:       dotted;
-    border-width: 1px;
-    text-decoration: none;
-    width:        135px;
-}
-
-.FwStateAttention1
-{
-    color: #000000;
-    background-color:#F1F166;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none;
-    width:        135px;
-}
-.FwStateAttention2
-{
-    color: #000000;
-    background-color:#FF9900;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none;
-    width:        135px;
-}
-.FwStateAttention3
-{
-    color: #000000;
-    background-color:#FF0000;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none;
-    width:        135px;
-}
-.FwStateOKNotPhysics
-{
-    color: #000000;
-    background-color:#0099FF;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none;
-    width:        135px;
-}
-.FwStateOKPhysics
-{
-    color: #000000;
-    background-color:#00CC99;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none;
-    width:        135px;
-}
-.FwLock
-{
-    color: #000000;
-    background-color:#DDDDDD;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 12px;
-    width: 12px;
-    border: dotted;
-    border-width:1px;
-    text-decoration: none
 }
 
 /* </STYLE>  */

@@ -1,0 +1,122 @@
+/*=================================================================================
+
+      Cluster display styles
+
+=================================================================================*/
+
+.NodeTable	{
+    color:            #000000;
+    background-color: #CCCCCC;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    border-spacing:   0px;
+    text-align:       center;
+    width:            750px;
+    height:           0%;
+}
+
+.ClusterTable	{
+    color:            #000000;
+    background-color: #CCCCCC;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    border-spacing:   0px;
+    text-align:       center;
+/*    width:            750px; */
+    height:           0%;
+}
+
+.ClusterSubdisplay	{
+    color:            #000000;
+    background-color: #DDDDDD;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    border-spacing:   0px;
+    text-align:       center;
+    height:           0%;
+    width:            250px;
+}
+.ClusterSubdisplayNodes	{
+    color:            #000000;
+    background-color: #DDDDDD;
+    border:           none;
+    border-spacing:   0px;
+    text-align:       center;
+    width:            100%;
+}
+
+
+.NodeTableHeader	{
+    color:            #000000;
+    background-color: #CCCCCC;
+    border-spacing:   5px;
+    text-align:       center;
+    width:            100%;
+}
+
+
+.SubfarmItemLabel  {
+    background-color: #AAAAAA;
+    color:            #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+}
+
+.SubfarmItem  {
+    background-color: #AAAAAA;
+    color:            #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      normal;
+}
+
+.SubfarmItemHeader  {
+    background-color: #F1F166;
+    color:            #000000;
+    border:           solid;
+    border-width:     1px;
+    text-align:       left;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+}
+
+.NodeItem  {
+    background-color: #CCCCCC;
+    color:            #000000;
+    border:           solid;
+    border-width:     0px;
+    border-color:     #000000;
+    text-align:       left;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        8px;
+    font-weight:      normal;
+}
+
+.OK  {
+    background-color: #00CC99;
+    color:            #000000;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        10px;
+    font-weight:      bold;
+}
+
+.NOTOK  {
+    background-color: #FF0000;
+    color:            #000000;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        10px;
+    font-weight:      bold;
+}

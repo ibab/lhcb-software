@@ -1,0 +1,25 @@
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; CHARSET=iso-8859-1">
+<HTML>
+  <TITLE>LHCb Online status displays</TITLE>
+  <HEAD>
+    <BASE href="http://frankm.web.cern.ch/frankm/test/Online/Stomp/web/">
+  </HEAD>
+  <SCRIPT language="JavaScript">
+    var g_fWarnOnLogOff = false;
+    function WarnOnLogOff() {
+      if (g_fWarnOnLogOff) {
+        alert("Thank you for using the LHCb online web.\n\nhttp://lhcb.cern.ch");
+      }
+    }
+  </SCRIPT>
+  <FRAMESET OnUnload="WarnOnLogOff()" framespacing="1" cols="150,*">
+    <FRAME name="navigation" src="html/lhcb.static.htm?type=navbar" marginheight="0" marginwidth="0" scrolling="auto" border="1"/>
+    <FRAME name="viewer" src="html/News.htm" scrolling="auto"/>
+    <NOFRAMES>
+      <BODY>
+      <P>This page uses frames, but your browser doesn't support them.</P>
+      <P>Sorry, you cannot access this page.</P>
+      </BODY>
+    </NOFRAMES>
+  </FRAMESET>     
+</HTML>

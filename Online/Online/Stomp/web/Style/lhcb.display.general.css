@@ -1,0 +1,256 @@
+/* <style type="text/css"> */
+
+.NewsPage  {
+    background-color: #FFFFFF;
+    color:            #000000;
+    border:           none;
+    border-color:     #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+}
+
+.NavigationBar  {
+    background-color: #666666;
+    color:            #FFFFFF;
+    border:           none;
+    border-color:     #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       center;
+    text-decoration:  none;
+}
+/***********************************************************************************/
+/*                                                                                 */
+/* Generic LHCb Monitoring display styles.                                         */
+/*                                                                                 */
+/***********************************************************************************/
+.MonitorPage  {
+    background-color: #CCCCCC;
+    color:            #000000;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+}
+
+.MonitorPanel  {
+    background-color: #CCCCCC;
+    color:            #000000;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+}
+
+.MonitorBigHeader  {
+    color:            #000000;
+    background-color: #CCCCCC;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        20px;
+    font-weight:      bold;
+    text-decoration:  none;
+}
+
+.MonitorTinyHeader  {
+    color:            #000000;
+    background-color: #CCCCCC;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        10px;
+    font-weight:      bold;
+    text-decoration:  none;
+}
+
+.MonitorTableData  {
+    color:            #000000;
+    background-color: #EEEEEE;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           none;
+}
+
+.MonitorTableDataLeft  {
+    color:            #000000;
+    background-color: #EEEEEE;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           none;
+}
+
+.MonitorTableDataRight  {
+    color:            #000000;
+    background-color: #EEEEEE;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       right;
+    text-decoration:  none;
+    border:           none;
+}
+
+.MonitorTableDataCenter  {
+    color:            #000000;
+    background-color: #EEEEEE;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       center;
+    text-decoration:  none;
+    border:           none;
+}
+
+.MonitorData  {
+    color:            #000000;
+    background-color: #EEEEEE;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+
+.MonitorDataHeader  {
+    color:            #000000;
+    background-color: #DDDDDD;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+
+.MonitorDataHeaderRED  {
+    color:            #000000;
+    background-color: #FFBBBB;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+
+.MonitorDataHeaderCenter  {
+    color:            #000000;
+    background-color: #DDDDDD;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       center;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+
+.MonitorDataHeaderRight  {
+    color:            #000000;
+    background-color: #DDDDDD;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       right;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+}
+
+.MonitorSubHeader  {
+    color:            #000000;
+    background-color: #00BBFF;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+    border:           solid;
+    border-width:     1px;
+    border-color:     #000000;
+    text-decoration:  none;
+}
+
+/***********************************************************************************/
+/*                                                                                 */
+/* Other helper styles                                                             */
+/*                                                                                 */
+/***********************************************************************************/
+.StatusPlain	{
+    color: #000000;
+    background-color: #CCCCCC;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+    line-height:      20px;
+    text-decoration:  none;
+    text-align:       left;
+    border:           none;
+    border-width:     0px;
+}
+
+.StatusText	{
+    color: #000000;
+    background-color: #CCCCCC;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        16px;
+    font-weight:      bold;
+    line-height:      20px;
+    text-decoration:  underline;
+    text-align:       left;
+    border:           none;
+    border-width:     0px;
+}
+
+.DisplayButton	{
+    color:            #000000;
+    background-color: #EEEEEE;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        12px;
+    font-weight:      bold;
+    text-align:       center;
+    text-decoration:  none;
+    border:           solid;
+    border-width:     1px;
+    height:           24px;
+}
+
+.StatusLogger   {
+    background-color: #EEEEEE;
+    overflow-x:       scroll;
+    overflow-y:       scroll;
+    width:            802px;
+    height:           250px;
+    border:           solid;
+    border-width:     1px;
+    text-align:       left;
+}
+
+/* </STYLE>  */

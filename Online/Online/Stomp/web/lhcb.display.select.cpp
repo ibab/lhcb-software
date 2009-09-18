@@ -6,26 +6,32 @@ var _loadScript = function(name)
 var _loadStatic = function(name)
 {  document.write('<SCRIPT language="JavaScript" src="'+name+'"></SCRIPT>');   }
 
-var TCPSocket = Orbited.TCPSocket; 
-_loadStatic('/static/protocols/stomp/stomp.js');
-_loadScript('lhcb.display.data.cpp');
-
 function _loadFile(filename, filetype)   {
   // this somehow does not work!!!!
-  
   if (filetype=="cpp"){ //if filename is a external JavaScript file
     var fileref=document.createElement('script');
     fileref.setAttribute("type","text/javascript");
-    fileref.setAttribute("src", _fileBase+'/'+filename+'.cpp');
+    fileref.setAttribute("src", _fileBase+'/'+filename+'.'+filetype);
+  }
+  else if (filetype=="js"){ //if filename is a external JavaScript file
+    var fileref=document.createElement('script');
+    fileref.setAttribute("type","text/javascript");
+    fileref.setAttribute("src", _fileBase+'/'+filename+'.'+filetype);
   }
   else if (filetype=="css"){ //if filename is an external CSS file
     var fileref=document.createElement("link");
     fileref.setAttribute("rel", "stylesheet");
     fileref.setAttribute("type", "text/css");
-    fileref.setAttribute("href", _fileBase+'/'+filename+'.css');
+    fileref.setAttribute("href", _fileBase+'/Style/'+filename+'.css');
   }
   if (typeof fileref!="undefined")
     document.getElementsByTagName("head")[0].appendChild(fileref);
+}
+
+if ( _stomp_in_use )  {
+  TCPSocket = Orbited.TCPSocket;
+  _loadStatic('/static/protocols/stomp/stomp.js');
+  _loadScript('lhcb.display.data.cpp');
 }
 
 var display_type = function()   {
@@ -34,6 +40,7 @@ var display_type = function()   {
   this.body = null;
   var url = document.location.toString();
   var pars = url.split('?');
+
   this.header = function() {
     var msg = 'The URL\n'+url+'\nis not a valid display URL!\n';
     alert(msg);
