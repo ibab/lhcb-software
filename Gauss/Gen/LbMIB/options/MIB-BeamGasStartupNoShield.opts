@@ -1,4 +1,4 @@
-// $Id: MIB-BeamGasStartupNoShield.opts,v 1.1 2008-05-05 14:18:16 mlieng Exp $
+// $Id: MIB-BeamGasStartupNoShield.opts,v 1.2 2009-09-18 14:56:02 gcorti Exp $
 
 /** @file
  *
@@ -10,11 +10,13 @@
  *
  */
   
-ApplicationMgr.DLLs += { "LbMIB" };
 
-Generator.Members -= { "GaudiSequencer/GenMonitor" };
-Generator.Members += { "MIBackground" };
-Generator.Members += { "GaudiSequencer/GenMonitor"  };
+//// The following few lines works for up to Gauss v37r2 (uncomment to use 
+// in that case). With Gauss() configurable (v37r4 and higher) they should 
+// be left commented. 
+// Generator.Members -= { "GaudiSequencer/GenMonitor" };
+// Generator.Members += { "MIBackground" };
+// Generator.Members += { "GaudiSequencer/GenMonitor"  };
 
 MIBackground.MIBSources  = { "CollimatorSource/BGStartupNoShieldBeam1Muons" };
 MIBackground.BGStartupNoShieldBeam1Muons.ParticleSourceFile = "$MIBDATAROOT/data/B1-Beta10-Startup.mu.data";

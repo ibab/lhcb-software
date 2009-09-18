@@ -1,4 +1,4 @@
-// $Id: MIB-Example.opts,v 1.4 2007-10-02 09:26:04 gcorti Exp $
+// $Id: MIB-Example.opts,v 1.5 2009-09-18 14:56:02 gcorti Exp $
 
 /** @file
  *
@@ -10,12 +10,13 @@
  *
  */
 
-ApplicationMgr.DLLs += { "LbMIB" };
-
-Generator.Members -= { "GaudiSequencer/GenMonitor" };
-Generator.Members += { "MIBackground" };
-Generator.Members += { "GaudiSequencer/GenMonitor" };
-Generator.Members -= { "Generation" };  // Comment to merge with other events
+// The following few lines works for up to Gauss v37r2 (uncomment to use 
+// in that case). With Gauss() configurable (v37r4 and higher) they should 
+// be left commented. 
+//Generator.Members -= { "GaudiSequencer/GenMonitor" };
+//Generator.Members += { "MIBackground" };
+//Generator.Members += { "GaudiSequencer/GenMonitor" };
+//Generator.Members -= { "Generation" };  // Comment to merge with other events
 
 // Event Information:
 //---------------------------------------------------------------------------

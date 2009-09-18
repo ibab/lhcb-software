@@ -1,4 +1,4 @@
-// $Id: MIB-StagedShield.opts,v 1.2 2007-08-17 12:54:14 gcorti Exp $
+// $Id: MIB-StagedShield.opts,v 1.3 2009-09-18 14:56:02 gcorti Exp $
 
 /** @file
  *
@@ -10,11 +10,12 @@
  *
  */
   
-ApplicationMgr.DLLs += { "LbMIB" };
-
-Generator.Members -= { "GaudiSequencer/GenMonitor" };
-Generator.Members += { "MIBackground" };
-Generator.Members += { "GaudiSequencer/GenMonitor"  };
+// The following few lines works for up to Gauss v37r2 (uncomment to use 
+// in that case). With Gauss() configurable (v37r4 and higher) they should 
+// be left commented. 
+//Generator.Members -= { "GaudiSequencer/GenMonitor" };
+//Generator.Members += { "MIBackground" };
+//Generator.Members += { "GaudiSequencer/GenMonitor"  };
 
 MIBackground.MIBSources  = { "CollimatorSource/TCTVStagedShieldMuons" };
 MIBackground.TCTVStagedShieldMuons.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.staged_shield.mu.data";
