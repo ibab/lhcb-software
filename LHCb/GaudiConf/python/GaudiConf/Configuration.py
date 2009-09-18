@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.23 2009-09-16 08:00:18 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2009-09-18 08:36:22 rlambert Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
@@ -37,7 +37,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,'XMLSummary'   : """ Add an XML summary file, default None """
        }
     
-    __used_configurables__ = [ DDDBConf, XMLSummarySvc ]
+    __used_configurables__ = [ DDDBConf ]
     
     def knownMonitors(self):
         return ["SC", "FPE"]
@@ -103,6 +103,7 @@ class LHCbApp(LHCbConfigurableUser):
     def defineXMLSum(self):
         if hasattr( self, "XMLSummary" ):
             if self.getProp("XMLSummary") is None: return
+            from Configurables import ( XMLSummarySvc )
             xmlSum=XMLSummarySvc("CounterSummarySvc")
             xmlSum.xmlfile=self.getProp("XMLSummary")
             ApplicationMgr().ExtSvc+=[ xmlSum ]
