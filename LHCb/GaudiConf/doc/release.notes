@@ -1,10 +1,12 @@
-! $Id: release.notes,v 1.167 2009-09-18 08:36:21 rlambert Exp $
+! $Id: release.notes,v 1.168 2009-09-18 13:59:36 rlambert Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
 ! 2009-09-18 - Rob Lambert
- - Edited COnfigurable.py to avoid circular dependency on XMLSummarySvc
+ - Edited Configurable.py to avoid circular dependency on XMLSummarySvc
+   Behaviour deligated to XMLSummary configurable in XMLSummaryKernel
+ - Added explicit requirement on XMLSummaryKernel in requirements
 
 ! 2009-09-11 - Rob Lambert
  - In Configurable.py, LHCbApp:

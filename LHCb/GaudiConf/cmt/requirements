@@ -7,6 +7,7 @@ include_path none
 use GaudiPolicy v*
 use LHCbKernel  v* Kernel # for LHCbConfigurableUser inheritance
 use DDDB        v* Det    # needed by configurable
+use XMLSummaryKernel   v* Kernel    # needed for inheritance
 
 ignore_pattern package_stamps
 

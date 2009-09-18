@@ -1,14 +1,14 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.24 2009-09-18 08:36:22 rlambert Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2009-09-18 13:59:36 rlambert Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from os import environ
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from Configurables import ( DDDBConf )
-from Configurables import ( XMLSummarySvc )
+from Configurables import ( XMLSummary )
 
 class LHCbApp(LHCbConfigurableUser):
     __slots__ = {
@@ -37,7 +37,7 @@ class LHCbApp(LHCbConfigurableUser):
        ,'XMLSummary'   : """ Add an XML summary file, default None """
        }
     
-    __used_configurables__ = [ DDDBConf ]
+    __used_configurables__ = [ DDDBConf, XMLSummary ]
     
     def knownMonitors(self):
         return ["SC", "FPE"]
@@ -102,12 +102,8 @@ class LHCbApp(LHCbConfigurableUser):
     
     def defineXMLSum(self):
         if hasattr( self, "XMLSummary" ):
-            if self.getProp("XMLSummary") is None: return
-            from Configurables import ( XMLSummarySvc )
-            xmlSum=XMLSummarySvc("CounterSummarySvc")
-            xmlSum.xmlfile=self.getProp("XMLSummary")
-            ApplicationMgr().ExtSvc+=[ xmlSum ]
-    
+            self.setOtherProps( XMLSummary(), ["XMLSummary" ] )
+            
     def defineOutput(self):
         # Message service
         msgSvc = getConfigurable("MessageSvc")
