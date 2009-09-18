@@ -4,6 +4,10 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-09-18 - Olivier Deschamps
+ - CaloReadoutTool : fix problem with IncidentSvc handling for getBanks() (problem in Boole when RawBanks does not exist at BeginEvent)
+
+
 ! 2009-09-16 - Olivier Deschamps
  - CaloReadoutTool : 
     - implement BeginEvent update via IncidentService : the getBanks() method no longer need to be externally invoked at each event

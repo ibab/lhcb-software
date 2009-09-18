@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.27 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.28 2009-09-18 13:16:18 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -115,7 +115,7 @@ LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int source ) 
   bool decoded = false;
   bool found   = false;
   int sourceID     ;
-  if(m_getRaw)getCaloBanksFromRaw();
+  if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
     debug() << "The banks container is empty" << endmsg;
   }else{    

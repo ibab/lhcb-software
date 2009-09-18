@@ -170,6 +170,7 @@ bool CaloL0DataProvider::decodeCell(LHCb::CaloCellID id ){
 bool CaloL0DataProvider::decodeTell1 (int source) {
   bool decoded = false;
   bool found  = false;
+  if( m_getRaw )getBanks();
   if(NULL == m_banks) return false;
   int sourceID  ;
 

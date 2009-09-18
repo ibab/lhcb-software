@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.8 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.9 2009-09-18 13:16:18 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -66,9 +66,7 @@ public:
 
   // =========================================================================
   /// Inform that a new incident has occurred
-  virtual void handle(const Incident& /* inc */ ) { 
-    getBanks() ; 
-  }
+  virtual void handle(const Incident& /* inc */ ) { m_getRaw = true ; }
   // =========================================================================
 
 protected:

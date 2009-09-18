@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.23 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.24 2009-09-18 13:16:18 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -128,7 +128,7 @@ std::vector<LHCb::L0CaloAdc>& CaloTriggerAdcsFromRaw::adcs (int source ) {
   bool decoded = false;
   bool found   = false;
   int sourceID  ;
-  if(m_getRaw)getCaloBanksFromRaw();
+  if(m_getRaw)getBanks();
   if( NULL == m_banks || 0 == m_banks->size() ){
     debug() << "The banks container is empty"<< endmsg;
   }else{
