@@ -6,6 +6,7 @@
 
 ! 2009-09-18 - Rob Lambert
  - Refined requirements file to avoid circular dependencies
+ - Wrote new configurable to manage the behaviour, XMLSummary()
 
 ! 2009-09-17 - Rob Lambert
  - Added minimal options file to run the summary

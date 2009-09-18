@@ -1,6 +1,6 @@
 # Minimum option to add the XMLSummary to your job
 from Gaudi.Configuration import *
 
-from Configurables import XMLSummary
+from Configurables import LHCbApp
 
-XMLSummary().XMLSummary="summary.xml"
+LHCbApp().XMLSummary="summary.xml"

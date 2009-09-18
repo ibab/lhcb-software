@@ -5,7 +5,8 @@ from Gaudi.Configuration import *
 
 from Configurables import EventCountAlg
 from Configurables import XMLSummarySvc
-from Configurables import LHCbApp
+from XMLSummaryKernel.Configuration import XMLSummary
+#from Configurables import LHCbApp
 
 #---------------------------------------------------------------------------
 # Setup read and write of a POOL dst file
@@ -39,6 +40,6 @@ xmlsummary=XMLSummarySvc("CounterSummarySvc")
 xmlsummary.OutputLevel=1
 xmlsummary.UpdateFreq=1
 
-LHCbApp().XMLSummary="summary.xml"
-LHCbApp().DataType="DC06"
-LHCbApp().Simulation=True
+XMLSummary().XMLSummary="summary.xml"
+#LHCbApp().DataType="DC06"
+#LHCbApp().Simulation=True
