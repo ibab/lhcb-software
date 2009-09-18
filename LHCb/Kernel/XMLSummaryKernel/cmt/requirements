@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.2 2009-09-14 13:11:56 rlambert Exp $
+# $Id: requirements,v 1.3 2009-09-18 08:25:50 rlambert Exp $
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
 #
@@ -12,19 +12,17 @@ version v1r0
 branches          cmt doc src options tests XMLSummaryKernel
 
 # Packages needed to compile and link the application
-use GaudiConf          v*                   -no_auto_imports
+use XMLSummaryBase     v* Kernel
 use GaudiKernel        v*
 use GaudiUtils        v*
-use XMLSummaryBase     v* Kernel
-#use GaudiAlg	       v*
+#use GaudiSvc           v*                   -no_auto_imports
 
 # Packages needed to resolve external dependencies at run time
-use Python             v*    LCG_Interfaces -no_auto_imports
+private
+  use GaudiConf          v*                   -no_auto_imports
+  use Python             v*    LCG_Interfaces -no_auto_imports
+end_private
 
-# The rest are needed only to set up environment variables for job options
-
-# From GAUDI project
-use GaudiSvc           v*                   -no_auto_imports
 
 library XMLSummaryKernel *.cpp -import=Python
 

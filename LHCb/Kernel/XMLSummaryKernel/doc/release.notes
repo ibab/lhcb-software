@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-18 - Rob Lambert
+ - Refined requirements file to avoid circular dependencies
+
 ! 2009-09-17 - Rob Lambert
  - Added minimal options file to run the summary
 
