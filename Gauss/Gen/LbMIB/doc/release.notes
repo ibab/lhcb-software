@@ -5,7 +5,26 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v3r4 2009-08-11 =========================
+!=========================== LbMIB v3r4 2009-09-18 =========================
+! 2009-09-18 - Gloria CORTI
+ - Make option name of location of TES to read and write the same as for
+   the Generation and ParticleGun algorithms to make it easier in Gauss()
+   configurable to set them
+     HepMCEvents -> HepMCEventLocation,
+     GenHeader -> GenHeaderLocation
+     GenCollisions -> GenCollisionLocation
+   . MIBackgroud.cpp
+ - Comment out sequencing to make options work with Gauss() configurable
+   as available in Gauss v37r4. With previous version they will need to 
+   be uncommented.
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+   . TimeCorr-Example.opts
+ - New python option to be included ALWAYS in production when generating
+   MIB events by setting appropriate property of Gauss()
+   . MIB.py
+
 ! 2009-08-25 - Magnus Lieng
  - Fixed linear read bug
    .TimeCorrSource.cpp
