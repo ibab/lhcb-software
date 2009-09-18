@@ -10,10 +10,12 @@ function traverseDOMTree(targetDocument, currentElement, depth)   {
       var tagCL = currentElement.getAttribute("className");
       var tagLEN = currentElement.getAttribute("length");
       var tagWID = currentElement.getAttribute("width");
+      var tagNAM = currentElement.getAttribute("name");
       if (tagID)  str = str + ' id="'+tagID+'"';
       if (tagCL)  str = str + ' class="'+tagCL+'"';
       if (tagLEN) str = str + ' length="'+tagLEN+'"';
       if (tagWID) str = str + ' width="'+tagWID+'"';
+      if (tagNAM) str = str + ' name="'+tagNAM+'"';
       str = str + "&gt;";
       targetDocument.writeln(str);
     }

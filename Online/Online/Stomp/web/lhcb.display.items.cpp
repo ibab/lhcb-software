@@ -11,6 +11,14 @@ function detector_header(part)
 function lhcb_online_picture() 
 { return '<IMG SRC="http://lhcb-online.web.cern.ch/lhcb-online/elog/images/lhcb-online-logo.PNG" HEIGHT="50"></IMG>';   }
 
+function setWindowTitle(title) {
+  try {
+    top.document.title = title;
+  }
+  catch(error) {
+  }
+}
+
 var Spacer = function() {
   var td = document.createElement('td');
   td.innerHTML = '&nbsp;';
@@ -122,20 +130,30 @@ var StyledItem = function(item_name, class_name, fmt)  {
    */
   element.display = function(data)  {
     var fmt = this.format;
-    var item_data;
+    var item_value, item_data;
     if ( fmt != null ) {
       if ( data[0] == 21 )        // Integer
-	item_data = sprintf(fmt,parseInt(data[1]));
+	item_data = parseInt(data[1]);
       else if ( data[0] == 22 )   // Float
-	item_data = sprintf(fmt,parseFloat(data[1]));
+	item_data = parseFloat(data[1]);
       else if ( data[0] == 25 )   // String
-	item_data = sprintf(fmt,parseFloat(data[1]));
+	item_data = data[1];
       else
 	item_data = data[1];
     }
     else {
       item_data = data[1];
     }
+    if ( this.conversion != null )   {
+      item_data = this.conversion(item_data);
+    }
+    if ( fmt != null ) {
+      item_data = sprintf(fmt,item_data);
+    }
+    if ( ''+item_data == 'undefined' ) {
+      item_data = '&lt;undefined&gt;';
+    }
+
     this.innerHTML = item_data;
     this.className = this.className;
     if ( _DisplayDebug>1 ) alert('StyledItem.display:'+item_data);
@@ -187,7 +205,7 @@ var FSMItem = function(item_name, logger, is_child)  {
   }
 
   element.setState = function(name) {
-    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Icons/Modes/'+name+'.bmp">';
+    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Icons/Modes/'+name+'.gif">';
     return this;
   }
 
@@ -480,7 +498,7 @@ var PropertyTable = function(data_provider, logger, num_cols, desc_class, value_
     var fill    = document.createElement('tr');
 
     this._logger.debug('PropertyTable.build: start to build table with '+this.items.length+' items');
-    for (var i=0; i < this.items.length; ++i)  {
+    for (var i=0, len=this.items.length; i < len; ++i)  {
       var n = this.items[i];
       if ( ncols>=this.cols ) {
         this._logger.debug('PropertyTable.build: new row');
@@ -500,6 +518,28 @@ var PropertyTable = function(data_provider, logger, num_cols, desc_class, value_
     this.body.appendChild(desc);
     this.body.appendChild(data);
     this.body.appendChild(fill);
+    return this.subscribe();
+  }
+
+  table.build_horizontal = function() {
+    this._logger.debug('PropertyTable.build: start to build table with '+this.items.length+' items');
+    for (var i=0; i < this.items.length; ++i)  {
+      var n = this.items[i];
+      var row   = document.createElement('tr');
+      this.body.appendChild(row);
+      if ( n.colSpan > 1 )  {
+	row.appendChild(n.description);
+	n.description.colSpan = 2;
+	row   = document.createElement('tr');
+	this.body.appendChild(row);
+	row.appendChild(n);
+	n.colSpan = 2;
+      }
+      else {
+	row.appendChild(n.description);
+	row.appendChild(n);
+      }
+    }
     return this.subscribe();
   }
 
@@ -644,8 +684,6 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.add(prefix+'general.runNumber',          'Run number',1);
     prop.add(prefix+'general.runType',            'Run type',1);
 
-    prop.add(prefix+'Trigger.TCKLabel',           'Trigger configuration (TCK)',2);
-
     prop.add(prefix+'general.runStartTime',       'Run start time',1);
     prop.add(prefix+'general.runStopTime',        'Run duration',1);
 
@@ -664,7 +702,9 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
     prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
 
-    prop.build();
+    prop.add(prefix+'Trigger.TCKLabel',           'Trigger configuration (TCK)',2);
+
+    prop.build_horizontal();
     this.run_properties.appendChild(this.runPropertyDisplay);
 
     this.fsmDisplay = FSMDisplay(this._provider,this._logger,null);

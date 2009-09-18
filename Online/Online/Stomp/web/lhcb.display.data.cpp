@@ -54,9 +54,9 @@ var OutputLogger = function(parent, len, level, style)  {
   this.showMessages = function() {
     if ( this.output != null && this.lines.length > 0 ) {
       var message = '';
-      for(var i=this.curr; i>=0; --i)
+      for(var i=this.curr+1; i<this.lines.length; ++i)
         message += '&rarr; ' + this.lines[i] + '<br>';
-      for(var i=this.lines.length-1; i>this.curr; --i)
+      for(var i=0; i<=this.curr; ++i)
         message += '&rarr; ' + this.lines[i] + '<br>';
       this.output.innerHTML = message;
       this.output.scrollTop = this.output.scrollHeight
@@ -225,20 +225,34 @@ var ElementItem = function(provider, name, fmt, element)   {
   
   /// Default callback for dataprovider on feeeding data
   e.set = function(data) {
+    var item_data = 'Unknown';
     if ( this._format != null ) {
       if ( data[0] == 21 )        // Integer
 	item_data = sprintf(this._format,parseInt(data[1]));
       else if ( data[0] == 22 )   // Float
 	item_data = sprintf(this._format,parseFloat(data[1]));
       else if ( data[0] == 25 )   // String
-	item_data = sprintf(this._format,parseFloat(data[1]));
+	item_data = sprintf(this._format,data[1]);
       else
 	item_data = data[1];
     }
     else {
       item_data = data[1];
     }
-    this._element.innerHTML = item_data;
+    this.innerHTML = item_data;
+  }
+  return e;
+}
+
+var RawItem = function(provider, name, fmt, element)   {
+  e = element;
+  e._name  = name;
+  provider.subscribe(e._name,e);
+  
+  /// Default callback for dataprovider on feeeding data
+  e.set = function(data) {
+    var s = ''+data;
+    this.innerHTML = s.replace("<", "&lt;", "g").replace(">", "&gt;", "g").replace(" ", "&nbsp;", "g").replace("\n", "<br>", "g");
   }
   return e;
 }
@@ -255,10 +269,12 @@ var DataProvider = function(logger)  {
   this.calls.length = 0;
   this.logger = logger;
   this.isConnected = false;
+  this.topic = '/topic/home';
   _dataProvider = this;
 
   // set up stomp client.
   var stomp = new STOMPClient();
+  this.logger.info("Created STOMP client....");
   this.service = stomp;
 
   stomp.onopen = function() {
@@ -267,8 +283,20 @@ var DataProvider = function(logger)  {
 
   stomp.onclose = function(code) {
     _dataProvider.isConnected = false;
-    _dataProvider.logger.info("Transport closed (code: " + code + ")");
-  };
+    if ( code == 18 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", SECURITY_ERR)");
+    }
+    else if ( code == 101 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", NETWORK_ERR)");
+      _dataProvider.logger.info("Transport closed "+window.location);
+    }
+    else if ( code == 102 ) {
+      _dataProvider.logger.info("Transport closed (code: " + code + ", ABORT_ERR)");
+    }
+    else {
+      _dataProvider.logger.info("Transport closed (code: " + code + ")"); 
+    }
+ };
 
   stomp.onerror = function(error) {
     _dataProvider.logger.error("onerror: " + error);
@@ -291,7 +319,7 @@ var DataProvider = function(logger)  {
     if ( v.length >= 2 ) {
       var itm = v[1];
       var data = v.slice(2);
-      // _dataProvider.logger.debug('DataProvider: Update data item['+itm+'] = '+data);
+      //_dataProvider.logger.info('DataProvider: Update data item['+itm+'] = '+data);
       var o = _dataProvider.items[itm];
       var len = o.length;
       for(var i=0; i<len; ++i) {
@@ -302,6 +330,7 @@ var DataProvider = function(logger)  {
 	  alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
 	}
       }
+      _dataProvider.logger.info("Update item: [" +frame.body.length+' bytes] '+ itm);
       return;
     }
     _dataProvider.logger.error('onmessage: retrieved data with invalid item number');    
@@ -312,7 +341,9 @@ var DataProvider = function(logger)  {
    *  @return  Reference to self
    */
   this.start = function() {
+    this.logger.info("Connecting STOMP client....");
     this.service.connect('localhost', 61613, 'guest', 'guest');
+    this.logger.info("Connecting STOMP client....Done");
   }
 
   /** Disconnect from stomp channel
@@ -348,7 +379,7 @@ var DataProvider = function(logger)  {
     if ( _dataProvider.isConnected )   {
       var msg = 'SUBSCRIBE:'+this.calls[len];
       this.service.subscribe(this.calls[len],{exchange:''});
-      this.service.send(msg,'/topic/home',{exchange:''});
+      this.service.send(msg,this.topic,{exchange:''});
     }
     return this;
   }
@@ -398,7 +429,7 @@ var DataProvider = function(logger)  {
   this.update = function() {
     for (var i=0; i < this.calls.length; ++i)  {
       var msg = 'SUBSCRIBE:'+this.calls[i];
-      this.service.send(msg,'/topic/home',{exchange:''});
+      this.service.send(msg,this.topic,{exchange:''});
       this.logger.verbose('DataProvider: Connect data item:'+msg);
     }
     return this;
@@ -440,6 +471,7 @@ lhcb.setup = function(show_log) {
 
   lhcb.data.logger   = new OutputLogger(lhcb.logWindow, -1, LOG_INFO, 'RunStatusLogger');
   lhcb.data.provider = new DataProvider(lhcb.data.logger);
+  lhcb.data.provider.topic = '/topic/farm';
   lhcb.data.stomp    = new Object();
   lhcb.data.stomp.scanDocument = function() {
     var elts = document.getElementsByTagName('STOMP');
@@ -453,6 +485,16 @@ lhcb.setup = function(show_log) {
       items[i] = ElementItem(provider,item,fmt,e.parentNode);
     }
     lhcb.data.items = items;
+    elts = document.getElementsByTagName('DIM');
+    var raw_items = new Array();
+    raw_items.length = elts.length;
+    for (var i=0; i<elts.length;++i) {
+      var e = elts[i];
+      var item = e.getAttribute('data');
+      var fmt  = e.getAttribute('format');
+      raw_items[i] = RawItem(provider,item,fmt,e.parentNode);
+    }
+    lhcb.data.raw_items = raw_items;
     provider.start();
   }
   return lhcb;
