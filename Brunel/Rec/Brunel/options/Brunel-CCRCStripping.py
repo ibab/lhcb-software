@@ -8,9 +8,10 @@
 ##############################################################################
 
 from Configurables import Brunel
-
 Brunel().InputType  = "ETC"
-Brunel().NoWarnings = True
+
+from GaudiKernel.Constants import *
+Brunel().OutputLevel = WARNING
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in DC06-Files.py

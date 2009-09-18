@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.92 2009-09-04 10:52:32 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.93 2009-09-18 15:43:22 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -297,8 +297,10 @@ class Brunel(LHCbConfigurableUser):
             InitReprocSeq.Members.append( "EventNodeKiller" )
             EventNodeKiller().Nodes = [ "pRec", "Rec", "Raw", "Link/Rec" ]
 
-        # Read ETC selection results into TES for writing to DST
         if inputType == "ETC":
+            from Configurables import  TagCollectionSvc
+            ApplicationMgr().ExtSvc  += [ TagCollectionSvc("EvtTupleSvc") ]
+            # Read ETC selection results into TES for writing to DST
             IODataManager().AgeLimit += 1
 
         if inputType in [ "MDF", "RDST", "ETC" ]:

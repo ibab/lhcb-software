@@ -1,18 +1,18 @@
 ##############################################################################
-# File for running Brunel in DC06 stripping workflow, starting from strip ETC
+# File for running Brunel on real data in MC09 stripping workflow (No MC truth)
+# starting from strip ETC
 # Syntax is:
-#   gaudirun.py Brunel-DC06Stripping.py <someDataFiles>.py
+#   gaudirun.py Brunel-MC09Stripping.py <someDataFiles>.py
 ##############################################################################
 
 from Configurables import Brunel
-
-Brunel().DataType   = "DC06"
-Brunel().InputType  = "ETC"
-Brunel().WithMC     = True
-
 from GaudiKernel.Constants import *
+
+Brunel().InputType   = "ETC"
+Brunel().Simulation  = "True"
+Brunel().DataType    = "MC09"
 Brunel().OutputLevel = WARNING
 
 ##############################################################################
-# I/O datasets are defined in a separate file, see examples in DC06-Files.py
+# I/O datasets are defined in a separate file, see examples in MC09-Files.py
 ##############################################################################

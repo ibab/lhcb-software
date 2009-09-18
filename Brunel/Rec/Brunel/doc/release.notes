@@ -5,6 +5,13 @@ Purpose: LHCb reconstruction program
 
 ! 2009-09-18 - Marco Cattaneo
  - Update references for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
+ - In example options, replace usage of obsolete Brunel().NoWarnings option with
+   Brunel().OutputLevel
+ - Add options/2009-FEST-Data.py, and corresponding brunel-fest09.qmt test, to
+   test a datafile containing lumi events
+ - Add options/Brunel-MC09Stripping.py and brunel-mc09-stripping.qmt test, to 
+   test reconstruction of MC09 stripping FETC
+ - Fix Configurable for ETC input (was missing definition of EvtTupleSvc)
 
 ! 2009-09-14 - Marco Cattaneo
  - Adapt valgrind.job to use gaudirun.py, uses python suppressions file from

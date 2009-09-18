@@ -8,7 +8,9 @@
 from Configurables import Brunel
 
 Brunel().OutputType = "RDST"
-Brunel().NoWarnings = True
+
+from GaudiKernel.Constants import *
+Brunel().OutputLevel = WARNING
 
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in 2008-Files.py
