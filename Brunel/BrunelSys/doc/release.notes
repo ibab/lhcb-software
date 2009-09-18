@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-09-18 - Marco Cattaneo
+ - Update reference for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
+
 ! 2009-09-14 - Marco Cattaneo
  - Update reference for new Rich ring search monitor (RichRecQC v2r34)
  - Update reference for fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
