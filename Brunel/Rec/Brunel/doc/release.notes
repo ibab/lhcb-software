@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-09-18 - Marco Cattaneo
+ - Update references for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
+
 ! 2009-09-14 - Marco Cattaneo
  - Adapt valgrind.job to use gaudirun.py, uses python suppressions file from
    STDOPTS (needs GaudiConf from v12r9)
