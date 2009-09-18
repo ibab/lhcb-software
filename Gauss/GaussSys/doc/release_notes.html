@@ -3,6 +3,208 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+
+!=============================================================================
+</PRE><H1><A NAME="v37r4">2009-09-18 - GaussSys v37r4</A></H1><PRE>
+<H2><A NAME="Note">MC09 version. Bug fix for B->K*ee model (BTOSLLBALL)
+   and new features.   
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   LHCb v26r3 (and Gaudi v20r4)
+   <b>AppConfig v3r* (latest v3r0)</b>,
+   DecFiles v19r* (<b>latest v19r0</b>), 
+   ParamFiles v8r0, 
+   SQLDDDB v5r* (<b>latest v5r11</b>), FieldMap v5r* (latest v5r3),
+   pythia6 418.2, photos 215.2, lhapdf 5.3.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.09 (via LCG_Interfaces)
+   Geant4 v91r3 (based on geant4.9.1.p03) and Geant4Files v91r0
+   XmlVis v1r11,
+   herwig 6.510.2, jimmy 4.31.2 (via LCG_GeneratorsInterfaces),
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 107.1,
+   bcvegpy (LHCb build)
+</A></H3>
+
+! 2009-09-18 - Gloria Corti
+ - Replace Gen/ParticleGuns with Gen/LbPGuns to have naming consistent
+   for all type of generators and allow standardization in production system
+   and switch it back on. LbPGuns v1r0 is identical in contents to ParticleGuns
+   v7r1.
+ - Switch back on Gen/LbMIB as now is it possible to use Gauss() to generate
+   these and the particle guns events.
+
+! 2009-08-04 - Silvia Miglioranzi
+ - Updated QMtest (gausssys.qmt) using the new Gauss v37r3 settings. Updated
+   the corresponding reference files.
+
+!======================= Gauss v37r3p1 2009-09-18 ============================
+! 2009-09-18 - Gloria CORTI
+ - Replace the use of the package Gen/ParticleGuns with Gen/LbPGuns and
+   activate it. Reactivate Gen/LbMIB package.
+
+ - Replace options with corresponding python configurations
+         . REPLACED: BeamScintillators.opts by BeamScintillators.py
+               BCMSimulation.opts by BcmSim.py
+               CaloOnly.opts by CaloOnly.py
+ - New options to switch on the geometry just upstream of the VELO (Beam pipe
+   and BCM and depending of database tag BLS or scintillator planes) and the
+   beam line upstream (the dipole compensators and beam pipe in RB84).
+   They are included in BcmSim.py, BeamScintillators.py and BlsSim.py
+   . BeforeVeloGeometry.py - NEW
+   . UpstreamGeometry.py   - NEW
+ - New options to switch on the simulation of the Beam Loss Scintillators
+   (BLS). A local tag is used for MC09 compatible geometry.
+   . BlsSim.py - NEW
+ - GaussVis.opts works if given to gaudirun.py as post-options
+ - New options to switch off the simulation of the RICHes: geometry and
+   associated physics processes. It will still write the RICH hits and other
+   data containers in the SIM file
+   . RICHesOff.py
+
+! 2009-09-16 - Gloria CORTI
+ - Introduce new properties in Gauss() configurable
+   . Output     : string to specify the type of output, it can be 'NONE' or
+                  'SIM' (default 'SIM'), allowing to not write an event data
+                  file
+   . Production : string to specify type of generation, it can be 'PHYS',
+                  'PGUN' or 'MIB' (default 'PHYS') allowing to reactivate
+                  ParticleGun and MIBackground algorithm instead of Generation
+                  in Generator phase
+ - Clean up a little the configurable for Histogram options (only 'NONE' and
+   'DEFAULT' are allowed for the moment
+ - Use isPropertySet() to check if the name of the file catalog is set in
+   options file as a default value exist in the list and value set in Gauss()
+   was not taken
+ - Use version of DecFiles v19r* as modification for particle guns and mib
+   compatible with Gauss v37r4 have been introduced and previous version cannot
+   be used for these event types
+
+! 2009-09-14 - Silvia MIGLIORANZI
+ - GaussStat.py (which analyze the Gauss log files and produce statistics
+   tables for both generator and simulation) was added under the "scripts"
+   directory. The requirements file was updated adding the line:
+   apply_pattern install_scripts
+
+! 2009-08-04 - Silvia Miglioranzi
+ - Updated QMTests (and corresponding ref files) using the new Gauss v37r3
+   settings:
+   - gauss-gen-mc09-14103000.qmt
+   - gauss-gen-mc09-22112000.qmt
+   - gauss-gen-mc09-42112000.qmt
+   - gauss-gen-mc09-60001008.qmt
+
+! 2009-08-02 - Silvia Miglioranzi
+ - Updated QMtests (gauss-gen-mc09.qmt, gauss-gen-mc09-10000000.qmt) using the
+   new Gauss v37r3 settings. Reference files for the different platforms were
+   updated.
+
+!========================== EvtGen v11r4 2009-09-18 ==========================
+! 2009-09-03 - Patrick Robbe
+ - EvtbTosllAli.cpp, EvtbTosllBall.cpp: correct bug in use of
+   initializePhaseSpace function (missing 3rd argument)
+
+! 2009-08-14 - Patrick Robbe
+ - EvtModelReg: reactivate direct CPV model
+
+!====================== Generators v10r3 2009-09-18 ==========================
+! 2009-09-09 - Thomas BLAKE
+ - DiLeptonInAcceptance.cpp: Fix bug in mass calculation
+
+! 2009-08-10 - Thomas BLAKE
+ - DiLeptonInAcceptance.cpp: Updated code to allow for same sign combinations.
+
+
+!========================= LbPythia v8r4 2009-09-18 ==========================
+! 2009-09-18 - Gloria CORTI
+ - Introduce new options in python to allow the production to pick up options
+   in a consistent way
+   . Pythia.py
+
+! 2009-08-03 - Neal Gauvin (Gueissaz)
+  - PythiaLSP has been updated with new options on the daughters of the LSP.
+    Note : it can be used not only for Susy particles, but for any particles.
+           For instance, keep t decays with both b and W in acceptance.
+  - ParticlesInAcceptance : same as PythiaLSP, but FullGenEventCutTool version
+    Useful for requiring 4 b in acceptance, in the full event, including 
+    pile-up
+
+!=========================== LbMIB v3r4 2009-09-18 =========================
+! 2009-09-18 - Gloria CORTI
+ - Make option name of location of TES to read and write the same as for
+   the Generation and ParticleGun algorithms to make it easier in Gauss()
+   configurable to set them
+     HepMCEvents -> HepMCEventLocation,
+     GenHeader -> GenHeaderLocation
+     GenCollisions -> GenCollisionLocation
+   . MIBackgroud.cpp
+ - Comment out sequencing to make options work with Gauss() configurable
+   as available in Gauss v37r4. With previous version they will need to
+   be uncommented.
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+   . TimeCorr-Example.opts
+ - New python option to be included ALWAYS in production when generating
+   MIB events by setting appropriate property of Gauss()
+   . MIB.py
+
+! 2009-08-25 - Magnus Lieng
+ - Fixed linear read bug
+   .TimeCorrSource.cpp
+ - Added option TimeOfFile to be used to indicate the time a MIB file
+   represent. This used to be 1 sec per definition.
+   .TimeCorrSource.cpp
+   .TimeCorrSource.h
+   .TimeCorr-Example.opts
+ - Changes to output on finalize
+   .TimeCorrSource.cpp
+
+! 2009-08-11 - Magnus Lieng
+ - Fixed timing issue
+   .TimeCorrSource.cpp
+
+!======================= ParticleGuns v1r0 2009-09-18 =======================
+! 2009-09-18 - Gloria CORTI
+ - 'Rename' of the package ParticleGuns into LbPGuns to make it consistent
+   with all othe generators and allow consistent way of selecting the options
+   in the production system.
+   The include of the IParticleGun.h is now taken from LbPGuns and a new
+   file Pguns.py to be included for event types with this generator is
+   provided: it sets the appropriate options in Gauss() to execute the
+   ParticleGun algorithm.
+   The release notes of ParticleGuns are kept here for historical reasons.
+
+!======================= ParticleGuns v7r1 2009-09-16 =======================
+! 2009-09-02 - Giulia Manca
+-  Updated the CosmicGun generator to generate particle through a
+         vertical surface, with the correct angular and momentum distribution.
+         Also updated the CosmicGun option file to allow generation in a larger
+         volume. Tested with Gauss v37r2.
+
+! 2009-07-15 - Chris Jones
+ - Extend the Cosmic generator tool to allow the trajectories of the cosmics
+   to be defined by points in two planes, as well as the original point in a
+   single plane and direction. Useful for generating events for the RICH1
+   cosmic trigger which consists of two scintillator planes upstream and
+   downstream of RICH1. The options file Rich1Cosmics.opts shows an example
+   configuration.
+
+!======================== VisSvc v5r5 2009-08-25 =============================
+! 2009-08-25 - Thomas Ruf
+ - requirements, match to new CMT version
+
+!======================== VisSvc v5r4 2009-06-04 =============================
+
+! 2009-06-03 - Chris Jones
+ - Fix gcc 4.3 warnings
+ - Remove obsolete load file
+
+!========================= GenTests v1r4 2009-09-18 ==========================
+! 2009-05-15 - Patrick Robbe
+ - Move to python options
+
+!=============================================================================
 </PRE><H1><A NAME="v37r3p1">2009-07-29 - GaussSys v37r3p1</A></H1><PRE>
 <H2><A NAME="Note">MC09 version. Bug fix for setting catalog in production.
    Otherwise identical to v37r3.
@@ -23,10 +225,6 @@ Purpose: LHCb Simulation program
    pythia8 107.1,
    bcvegpy (LHCb build)
 </A></H3>
-
-! 2009-08-04 - Silvia Miglioranzi
- - Updated QMtest (gausssys.qmt) using the new Gauss v37r3 settings. Updated
-   the corresponding reference files.
 
 !======================= Gauss v37r3p1 2009-07-29 ============================
 ! 2009-07-29 - Silvia Miglioranzi
