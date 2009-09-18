@@ -3,7 +3,7 @@
 # Maintainer : Patrick Robbe
 #============================================================================
 package     EvtGen
-version     v11r3
+version     v11r4
  
 # Structure, i.e. directories to process. 
 #============================================================================
