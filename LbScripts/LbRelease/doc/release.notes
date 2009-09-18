@@ -1,3 +1,17 @@
+2009-09-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/rcs.py:
+	  - fixed some pylint warnings
+	  - modified to support the version 2.0 of the SVN repository organization
+	    (https://twiki.cern.ch/twiki/bin/view/Gaudi/GaudiSVNRepository)
+	* python/LbRelease/GetPack.py:
+	  - fixed some pylint warnings
+	  - fixed a problem in the ordering of the version including "-pre" tags
+	  - added a --exclude option to disable a repository (for test or when
+	    a server is down)
+	  - added support for project names with regular case in the repository
+	    (allowed in version 2.0 of the SVN repository organization)
+
 2009-09-14  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
 
 	* python/LbRelease/Nightlies/functions.py: make generates documentation

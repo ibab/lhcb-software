@@ -232,7 +232,7 @@ class CVS(RevisionControlSystem):
         Get the list of modules in the repository and separate them in projects
         and packages.
         """
-        out, err = _cvs("-d", self.repository, "checkout", "-s")
+        out, _err = _cvs("-d", self.repository, "checkout", "-s")
         modules = [ l.split()
                     for l in out.splitlines()
                     if not l.startswith(" ") ]
@@ -287,7 +287,7 @@ class CVS(RevisionControlSystem):
         if isProject:
             file_to_check = self.__project_version_check_file__
 
-        out, err = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
+        out, _err = _cvs("-d", self.repository, "rlog", module_dir + file_to_check)
         # extract the list of tags
         tags = []
         outl = out.splitlines()
@@ -344,10 +344,18 @@ class CVS(RevisionControlSystem):
     def __str__(self):
         return "CVS repository at %s" % self.repository
 
+def splitlines(text):
+    """
+    Split a text in lines removing empty lines and lines starting with "#".
+    """
+    return [ l
+             for l in [ l.strip() for l in text.splitlines() ]
+             if l and l[0] != "#" ]
+
 _svn = lambda *args, **kwargs: apply(_call_command, ("svn",) + args, kwargs)
 class SubversionCmd(RevisionControlSystem):
     """
-    CVS implementation of RevisionControlSystem.
+    SVN implementation of RevisionControlSystem.
     """
     __repository_rexp__ = re.compile(r"(svn(?:\+ssh)?|https?|file)://(?:([\w.]+)@)?([\w.]*)(/[\w./]+)*")
     SVN_PROTOCOL = 1
@@ -365,8 +373,11 @@ class SubversionCmd(RevisionControlSystem):
         self.protocol, self.user, self.host, self.path = \
             self.__repository_rexp__.match(repository).groups()
         # cache of module names and versions
-        self._modules = {}
+        self._modules = None # will be a dictionary
         self._packages = None
+        self._repositoryVersion = None
+        self._ls_cache = {}
+        self.forceScan = False
 
     @classmethod
     def canHandle(cls, repository):
@@ -383,47 +394,251 @@ class SubversionCmd(RevisionControlSystem):
                 ( ( m.group(cls.SVN_PROTOCOL) == "file" and not m.group(cls.SVN_HOST) ) or \
                   ( m.group(cls.SVN_PROTOCOL) != "file" and m.group(cls.SVN_HOST) ) )
         return valid
-
+    
     def _ls(self, path):
         """
-        List the content of a directory in the repository.
+        List the content of a directory or a list of directories in the repository.
         """
-        out, err = _svn("ls", "/".join([self.repository, path]))
-        # @TODO add error-checking
-        return out.splitlines()
+        # Strip the leading and trailing "/" for consistency
+        path = path.strip("/")
+        # Rationalize "//" for consistency
+        while "//" in path:
+            path = path.replace("//", "/")
+        if path not in self._ls_cache:
+            out, _err = _svn("ls", "/".join([self.repository, path]))
+            # @TODO add error-checking
+            self._ls_cache[path] = out.splitlines()
+        return self._ls_cache[path]
+
+    def _exists(self, path):
+        """
+        Function provided for readability.
+        """
+        return self._ls(path)
+
+    def _walk(self, path = ""):
+        entries = self._ls(path)
+        dirs = []
+        files = []
+        for l in entries:
+            if l.endswith("/"):
+                dirs.append(l[:-1])
+            else:
+                files.append(l)
+        yield path[:], dirs, files
+        for d in dirs:
+            for w in self._walk("/".join([path, d])):
+                yield w
+    
+    def _find(self, left, right = "", levels = 1, exists_only = False):
+        """
+        Return a list of valid values of x for x such that
+        (left + '/' + x + '/' right) exists.
+        The parameter levels is used to select the depth of the recursion (how
+        many levels must be included in x).
+        If the parameter exists_only is set to True, the function returns only
+        the first match, for the cases where only a match is requested and not
+        the complete list.  
+        """
+        if not left.endswith("/"):
+            left += "/"
+        # Take only the directories
+        candidates = filter(lambda x: x.endswith("/"), self._ls(left))
+        if levels > 1:
+            matches = []
+            for c in candidates:
+                for m in self._find(left + c, right, levels - 1, exists_only):
+                    matches.append(c + m)
+                    if exists_only:
+                        # we need only one successful match
+                        return matches
+        else:
+            if right:
+                matches = []
+                for x in candidates:
+                    if self._exists(left + x + right):
+                        matches.append(x)
+                        if exists_only:
+                            # we need only one successful match
+                            return matches
+            else:
+                # no need to check for exists_only because we cannot do less than "ls"
+                matches = candidates
+        return matches 
+    
+    def _propGet(self, property, path = None):
+        """
+        Returns the value of the requested property for the specified path.
+        If no path is specified, the root of the repository is used.
+        """
+        if path:
+            if path[0] == "/": del path[0] # we need relative path
+            path = "/".join([self.repository, path])
+        else:
+            path = self.repository
+        out, _err = _svn("propget", property, path)
+        return out
+
+    @property
+    def repositoryVersion(self):
+        """
+        Return the version of the repository structuring as a tuple.
+        """
+        if self._repositoryVersion is None:
+            rv = self._propGet("version")
+            if rv:
+                self._repositoryVersion = tuple(rv.strip().split("."))
+            else:
+                self._repositoryVersion = (1,0)
+        return self._repositoryVersion
 
     def _getModulesFromProp(self):
         """
         Return the content of the modules property of the 'packages' directory as a list.
         """
-        out, err = _svn("propget", "modules", "/".join([self.repository, "packages"]))
-        return [ m for m in out.splitlines() if m ]
+        modules = {}
+        
+        if self.forceScan: # do not check the content of the property
+            return modules
+        
+        if self.repositoryVersion < (2,0):
+            out = self._propGet("modules", "packages")
+            for m in out.splitlines():
+                if m:
+                    modules[m] = None
+        else:
+            for l in splitlines(self._propGet("packages", "")):
+                package, project = l.split()[:2]
+                modules[package] = project
+        return modules
 
     def _scanModules(self):
         """
-        Scan the directory structure under 'packages' to find modules.
+        Scan the directory structure to find modules.
         """
         # full scan of the repository (inefficient)
-        modules = []
-        dirs = [ l for l in self._ls("packages") if l.endswith("/") ]
-        while dirs:
-            d = dirs.pop(0)
-            subdirs = [ l for l in self._ls("packages/" + d) if l.endswith("/") ]
-            if "trunk/" in subdirs:
-                modules.append(d[:-1])
-            else:
-                for sd in subdirs:
-                    dirs.append(d+sd)
+        modules = {}
+        if self.repositoryVersion < (2,0):
+            for path, dirs, _files in self._walk("packages"):
+                if "trunk" in dirs:
+                    dirs[:] = [] # do not recurse further
+                    modules["/".join(path.split("/")[1:])] = ()
+        else:
+            # In repository >= 2.0 the packages are distributed in the various
+            # projects and, if dropped from the release, only in the tags directory
+            #
+            # ProjectA/trunk/PackageA1 
+            #               /PackageA2
+            #         /tags/PackageA0/vXrY 
+            # ProjectB/trunk/PackageB1 
+            #               /PackageB2 
+            #               /Hat/PackageB3 
+            #         /tags/Hat/PackageB0/vXrY
+            #
+            # The only sensible way to locate the packages is to loop in all the
+            # trunk/tags/branches directories, identifying them by the presence
+            # of "cmt/requirements". A possible way of optimizing the process
+            # can be:
+            #  - first look into _all_ the trunks directories (less noise)
+            #  - try all tags and branches directories, skipping already
+            #    discovered packages and stopping at the first positive match.
+            #  - we can put ranges to the depth of the scanning, something like:
+            #     - "Proj/trunk/<pack>/cmt/requirements"
+            #     - "Proj/trunk/<hat>/<pack>/cmt/requirements"
+            #     - "Proj/tags/<pack>/v*/cmt/requirements"
+            #     - "Proj/tags/<hat>/<pack>/v*/cmt/requirements"
+            # It should be decided if the projects tags and packages tags have
+            # to be in the same directory or not.
+            for p in self.projects:
+                P = p.upper() + '/'
+                # look in the trunk for normal packages 
+                for m in self._find("/".join([p,"trunk"]), "cmt/requirements", levels = 1):
+                    modules[m] = p
+                # and packages with hat
+                for h in [ h
+                           for h in self._ls("/".join([p,"trunk"]))
+                           if h.endswith("/") and h not in modules ]:
+                    for m in self._find("/".join([p,"trunk",h]), "cmt/requirements", levels = 1):
+                        modules[m] = p
+                # look in the tags directories for dismissed packages
+                # FIXME: branches not supported
+                #for d in ["tags", "branches"]:
+                for d in ["tags"]:
+                    # first level candidates:
+                    #   directories in Proj/tags, not included in modules and that have at least
+                    #   one */cmt/requirements inside
+                    for m in [ c
+                               for c in self._ls("/".join([p,d]))
+                               if c.endswith("/") and c != P and c not in modules and 
+                                   self._find("/".join([p,d,c]), "cmt/requirements",
+                                              levels = 1, exists_only = True)]:
+                        modules[m] = p
+                    # second level candidates:
+                    #  in each hat (directory in Proj/tags no included in modules and different from "PROJECT/")
+                    for h in [ h
+                               for h in self._ls("/".join([p,d]))
+                               if h.endswith("/") and h != P and h not in modules ]:
+                        for m in [ c
+                                   for c in [ h+c for c in self._ls("/".join([p,d,h]))]
+                                   if c.endswith("/") and c not in modules and 
+                                       self._find("/".join([p,d,c]), "cmt/requirements",
+                                                  levels = 1, exists_only = True)]:
+                            modules[m] = p
+            # FIXME: We should look for packages in the projects tags too
+            
+            # remove trailing "/" from keys
+            tmp = {}
+            for m in modules:
+                tmp[m[:-1]] = modules[m]
+            modules = tmp
         return modules
 
+    @property
+    def modules(self):
+        if self._modules is None:
+            # if _getModulesFromProp is empty, try _scanModules
+            self._modules = self._getModulesFromProp() or self._scanModules()
+        return self._modules
+        
     def _retrievePackages(self):
-        # if _getModulesFromProp is empty, try _scanModules
-        return self._getModulesFromProp() or self._scanModules()
-
+        # Delegate to the modules property
+        packs = self.modules.keys()
+        packs.sort()
+        return packs
+        
     def _retrieveProjects(self):
-        # if _getModulesFromProp is empty, try _scanModules
-        return [ l[:-1] for l in self._ls("projects") if l.endswith("/") ]
-
+        if self.repositoryVersion < (2,0):
+            return [ l[:-1] for l in self._ls("projects") if l.endswith("/") ]
+        else:
+            # In repository >= 2.0 the projects are at the top level of
+            # the repository... How to store other informations? Like "docs", "www"...
+            # Probably we should take an approach similar to the one of packages:
+            # register the list of projects in a top-level property, with the
+            # possibility of scanning the repository (using "cmt/project.cmt"
+            # as signature, may be both in trunk and tags)
+            
+            # First try to read the "projects" property if not disabled
+            if not self.forceScan:
+                projects = splitlines(self._propGet("projects", ""))
+                if projects:
+                    return projects
+            
+            # all the projects that have an "active" development
+            projects = self._find("", "trunk/cmt/project.cmt")
+            
+            # projects that exist only in tags or branches:
+            candidates = [ p
+                           for p in self._ls("")
+                           if p.endswith("/") and p not in projects ]
+            for c in candidates:
+                # FIXME: branches not supported
+                #if self._find(c + "tags/" + c, "cmt/project.cmt", exists_only = True) or \
+                #    self._find(c + "branches/" + c, "cmt/project.cmt", exists_only = True):
+                if self._find(c + "tags/" + c.upper(), "cmt/project.cmt", exists_only = True):
+                    projects.append(c)
+            # Return a list with the trailing "/" stripped
+            return [ p[:-1] for p in projects ]
+    
     def _topLevel(self, isProject = False):
         if isProject:
             return "projects"
@@ -434,9 +649,37 @@ class SubversionCmd(RevisionControlSystem):
         """
         Extract from the repository the list of symbolic names for the module.
         """
-        return [ l[:-1]
-                 for l in self._ls("%s/%s/tags" % (self._topLevel(isProject), module))
-                 if l.endswith("/") ]
+        if self.repositoryVersion < (2,0):
+            return [ l[:-1]
+                     for l in self._ls("%s/%s/tags" % (self._topLevel(isProject), module))
+                     if l.endswith("/") ]
+        else:
+            if isProject:
+                p = module
+                P = p.upper()
+                P_ = P + "_"
+                vers= []
+                for v in [ l[:-1]
+                          # FIXME: branches not supported
+                          #for l in self._ls("/".join([p,"tags",P])) + self._ls("/".join([p,"branches",P]))
+                          for l in self._ls("/".join([p,"tags",P]))
+                          if l.endswith("/") ]:
+                    if v.startswith(P_):
+                        v = v[len(P_):]
+                    vers.append(v)
+                return vers
+            else:
+                versions = set()
+                if module in self.modules:
+                    proj = self.modules[module]
+                    versions.update(self._find("/".join([proj,"tags",module])))
+                    # FIXME: branches not supported
+                    #versions.update(self._find("/".join([proj,"branches",module])))
+                    # FIXME: the project tags for the packages are not supported (yet) by GetPack.py
+                    #versions.update(self._find("/".join([proj,"tags",proj.upper()]), module))
+                    #versions.update(self._find("/".join([proj,"branches",proj.upper()]), module))
+                versions = [ v[:-1] for v in versions ] # remove trailing "/" and convert to list
+                return versions
 
     def checkout(self, module, version = "head", dest = None, vers_dir = False, project = False):
         """
@@ -456,19 +699,45 @@ class SubversionCmd(RevisionControlSystem):
         else:
             dest = "." # If not specified, use local directory
 
-        if version.lower() != "head":
-            src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
+        if self.repositoryVersion < (2,0):
+            if version.lower() != "head":
+                src = "/".join([self.repository, self._topLevel(project), module, "tags", version])
+            else:
+                src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
+    
+            if project:
+                version = "%s_%s" % (module, version)
+    
+            dst = os.path.join(dest, module)
+            if vers_dir:
+                dst = os.path.join(dst, version)
+            if project: # projects in SVN _are_ the content of the "cmt" directory
+                dst = os.path.join(dst, "cmt")
         else:
-            src = "/".join([self.repository, self._topLevel(project), module, "trunk"])
-
-        if project:
-            version = "%s_%s" % (module, version)
-
-        dst = os.path.join(dest, module)
-        if vers_dir:
-            dst = os.path.join(dst, version)
-        if project: # projects in SVN _are_ the content of the "cmt" directory
-            dst = os.path.join(dst, "cmt")
+            if project:
+                root = module
+                module = module.upper()
+                versiondir = "%s_%s" % (module, version)
+            else:
+                versiondir = version
+                root = self.modules[module]
+            
+            src = [self.repository, root]
+            if version.lower() == "head":
+                src.append("trunk")
+                if not project:
+                    src.append(module)
+            else:
+                src += ["tags", module, versiondir]
+            if project: # for projects we check-out only the cmt directory
+                src.append("cmt")
+            src = "/".join(src)
+    
+            dst = os.path.join(dest, module)
+            if vers_dir:
+                dst = os.path.join(dst, versiondir)
+            if project: # for projects we check-out only the cmt directory
+                dst = os.path.join(dst, "cmt")
 
         if os.path.isdir(os.path.join(dst,".svn")): # looks like a SVN working copy
             # try with "switch"

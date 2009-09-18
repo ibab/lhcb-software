@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.10 2009-09-03 08:30:15 kkruzele Exp $
+# $Id: GetPack.py,v 1.11 2009-09-18 10:48:28 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -16,8 +16,12 @@ class LHCbVersionFilter(object):
         if m:
             # groups gives something like ("1","2","3") or ("1","2",None)
             # and we need to convert it to numbers to sort them
-            return tuple([ int(n or "0") # this returns 0 if n is empty or None
-                           for n in m.groups() ])
+            values = [ int(n or "0") # this returns 0 if n is empty or None
+                       for n in m.groups() ]
+            if not '-pre' in version:
+                # this ensures that "-pre" versions are less important that actual tags
+                values[3] = 99999
+            return tuple(values)
         return None
 rcs.setVersionFilter(LHCbVersionFilter())
 
@@ -100,7 +104,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.10 2009-09-03 08:30:15 kkruzele Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.11 2009-09-18 10:48:28 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -149,7 +153,7 @@ class GetPack(Script):
                                help = "use versioned subdirectories for the packages")
         self.parser.add_option("--user",
                                help = "username to use to connect to the repositories. "
-                                      "By default, the user is not explicitely used "
+                                      "By default, the user is not explicitly used "
                                       "unless a user name is specified with the "
                                       "environment variable GETPACK_USER.")
         self.parser.add_option("-P", "--project", action = "store_true",
@@ -158,6 +162,9 @@ class GetPack(Script):
                                help = "never ask the user if in doubt, but skip the package")
         self.parser.add_option("--no-config", action = "store_true",
                                help = "prevents executing cmt config for each package")
+        self.parser.add_option("-x", "--exclude", action = "append",
+                               metavar = "REPOSITORY",
+                               help = "exclude a default repository %s" % __repositories__.keys())
         self.parser.add_option("--user-svn", action = "append",
                                metavar = "URL",
                                help = "add a custom subversion repository to the known ones")
@@ -171,6 +178,7 @@ class GetPack(Script):
                                  user_svn = [],
                                  user_cvs = [],
                                  no_pre = False,
+                                 exclude = [],
                                  )
         if "GETPACK_USER" in os.environ:
             self.parser.set_defaults(user = os.environ["GETPACK_USER"])
@@ -215,7 +223,7 @@ class GetPack(Script):
                         page = pages - 1
                     if page == pages - 1:
                         default_ans = 'p'
-                elif ans in ['p', 'prev', 'previuos']:
+                elif ans in ['p', 'prev', 'previous']:
                     page -= 1
                     default_ans = ans
                     if page < 0:
@@ -262,13 +270,13 @@ class GetPack(Script):
             self.log.info("Executing 'cmt config' in '%s'", cwd)
             #proc = Popen(["cmt", "config"], cwd = cwd, stdout = PIPE, stderr = PIPE)
             proc = Popen(["cmt config"], cwd = cwd, shell = True, stdout = PIPE, stderr = PIPE)
-            out, err = proc.communicate()
+            proc.communicate()
             ## @todo: check for success of 'cmt config'
             if sys.platform.startswith("win"):
                 self.log.info("Executing 'cmt build vsnet' in '%s'", cwd)
                 #proc = Popen(["cmt", "build", "vsnet"], cwd = cwd, stdout = PIPE, stderr = PIPE)
                 proc = Popen(["cmt build vsnet"], shell = True, cwd = cwd, stdout = PIPE, stderr = PIPE)
-                out, err = proc.communicate()
+                proc.communicate()
                 ## @todo: check for success of 'cmt build vsnet'
         else:
             self.log.warning("Cannot find requirements file, 'cmt config' skipped.")
@@ -366,6 +374,7 @@ class GetPack(Script):
             version = version.upper()
         self.log.info("Checking out %s %s (from '%s')" % (project, version, rep.repository))
         rep.checkout(project, version, vers_dir = True, project = True)
+        project = project.upper()
         pkgdir =  os.path.join(project, "%s_%s" % (project, version))
         return (project, version, pkgdir)
 
@@ -377,6 +386,8 @@ class GetPack(Script):
             # filter the requested protocols for the know repositories
             repositories = {}
             for rep in __repositories__:
+                if rep in self.options.exclude:
+                    continue # skip excluded repositories
                 reps = __repositories__[rep]
                 if self.options.protocol in reps:
                     repositories[rep] = reps[self.options.protocol]
@@ -458,11 +469,15 @@ class GetPack(Script):
                     return 1
                 repos = { rep: self.repositories[rep] }
 
-            # Collect the list of packages
+            # Collect the list of projects
             self._projects = {}
             for rep in repos:
                 self.log.debug("Retrieving projects list from '%s'", rep)
                 for p in repos[rep].listProjects():
+                    if p == "packages":
+                        # Ignore the special "fake" project "packages" (introduced in
+                        # the SVN repository version 2.0)
+                        continue
                     if p in self._projects:
                         self._projects[p].append(rep)
                     else:
@@ -504,10 +519,8 @@ class GetPack(Script):
                     self.parser.error("requires maximum 2 arguments")
             else:
                 self.parser.error("project name is required")
-            # LHCb projects have uppercase names
-            self.project_name = self.project_name.upper()
             # I want to use the bare version number and not the conventional one
-            if self.project_version and self.project_version.startswith(self.project_name + "_"):
+            if self.project_version and self.project_version.startswith(self.project_name.upper() + "_"):
                 self.project_version = self.project_version[len(self.project_name)+1:]
         else:
             # getpack.py [-u] package [version]
@@ -559,7 +572,7 @@ Select the project
             self.log.debug("Executing 'cmt show uses' in '%s'", pkgdir)
             #proc = Popen(["cmt", "show", "uses"], cwd = pkgdir, stdout = PIPE, stderr = PIPE)
             proc = Popen(["cmt show uses"], shell = True, cwd = pkgdir, stdout = PIPE, stderr = PIPE)
-            out, err = proc.communicate()
+            out, _err = proc.communicate()
 
             for l in out.splitlines():
                 m = self.show_uses_regexp.match(l)
@@ -626,12 +639,21 @@ Select the project
                 print "\t%s\t%s" % (p, skipped_packages[p])
 
     def getproject(self):
-        if self.project_name and self.project_name not in self.projects:
-            self.log.error("Unknown project '%s'!", self.project_name)
-            self.project_name = None
+        if self.project_name:
+            # Check if the project is known using a case insensitive comparison
+            found = False
+            for known_proj in self.projects:
+                if self.project_name.upper() == known_proj.upper():
+                    # ensure that we use the right case when talking to the repository
+                    self.project_name = known_proj
+                    found = True
+                    break # no reason to continue looping
+            if not found:
+                self.log.error("Unknown project '%s'!", self.project_name)
+                self.project_name = None
         if self.project_name is None:
             self.project_name = self.askProject()
-
+        
         proj = self.checkoutProject(self.project_name, self.project_version)
         if not sys.platform.startswith("win"): # create a project Makefile for the checked out project
             createProjectMakefile(os.path.join(proj[2], "Makefile"))
