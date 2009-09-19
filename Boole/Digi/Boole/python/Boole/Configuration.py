@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.53 2009-07-15 16:30:59 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.54 2009-09-19 23:52:21 tskwarni Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -65,7 +65,7 @@ class Boole(LHCbConfigurableUser):
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
-       ,'DataType'     : """ Data type. Default '2008' """
+       ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
        ,'Monitors'     : """ List of monitors to execute """
@@ -185,14 +185,21 @@ class Boole(LHCbConfigurableUser):
     def configureDigiVELO(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
         if tae == "":
-            from Configurables import VeloSim
+            from Configurables import (VeloSim,VeloDataProcessor,
+                                       VeloClusterMaker,PrepareVeloRawBuffer)
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
             importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
-            seq.Members += [ "VeloDataProcessor" ]
-            seq.Members += [ "VeloClusterMaker" ]
-            seq.Members += [ "PrepareVeloRawBuffer" ]
+            seq.Members += [ VeloDataProcessor("VeloDataProcessor") ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import VeloSpillSubtraction                
+                seq.Members += [ VeloSim("VeloSimPrev") ]
+                seq.Members += [ VeloDataProcessor("VeloDataProcessorPrev") ]
+                seq.Members += [ VeloSpillSubtraction() ]
+                importOptions("$BOOLEUMCROOT/options/VeloSimPrev.opts")
+            seq.Members += [ VeloClusterMaker("VeloClusterMaker") ]
+            seq.Members += [ PrepareVeloRawBuffer("PrepareVeloRawBuffer") ]
         else:
             raise RuntimeError("TAE not implemented for VELO")
 
@@ -211,6 +218,17 @@ class Boole(LHCbConfigurableUser):
             seq.Members += [ MCSTDepositCreator("MC%sDepositCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STDigitCreator("%sDigitCreator%s"%(det,tae),DetType=det) ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import STSpilloverSubtraction
+                if det == "IT":
+                    importOptions("$BOOLEUMCROOT/options/itDigiPrev.opts")
+                elif det == "TT":
+                    importOptions("$BOOLEUMCROOT/options/ttDigiPrev.opts")
+                else:
+                    raise RuntimeError("Unknown ST detector '%s'"%det)
+                seq.Members += [ MCSTDigitCreator("MC%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
+                seq.Members += [ STDigitCreator("%sDigitCreator%sPrev"%(det,tae),DetType=det) ]
+                seq.Members += [ STSpilloverSubtraction("%sSpilloverSubtraction%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClusterCreator("%sClusterCreator%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClusterKiller("%sClusterKiller%s"%(det,tae),DetType=det) ]
             seq.Members += [ STClustersToRawBankAlg("create%sRawBuffer%s"%(det,tae),DetType=det) ]
@@ -221,8 +239,13 @@ class Boole(LHCbConfigurableUser):
         # Outer Tracker digitisation
         from Configurables import MCOTDepositCreator, MCOTTimeCreator, OTFillRawBuffer
         seq.Members += [ MCOTDepositCreator("MCOTDepositCreator%s"%tae) ]
-        seq.Members += [ MCOTTimeCreator("MCOTTimeCreator%s"%tae) ]
+        mcOTTimeCreator = MCOTTimeCreator("MCOTTimeCreator%s"%tae)
+        seq.Members += [ mcOTTimeCreator ]
+        if self.getProp("DataType") == "Upgrade" :
+            # 3=75ns (default) 2=50ns 
+            mcOTTimeCreator.numberOfBX = 2
         seq.Members += [ OTFillRawBuffer("OTFillRawBuffer%s"%tae) ]
+        
 
     def configureDigiRICH(self, seq, tae ):
         if tae == "":
@@ -573,6 +596,9 @@ class Boole(LHCbConfigurableUser):
             from Configurables import  VeloSimMoni,VeloDigit2MCHitLinker,VeloDigiMoni,VeloRawClustersMoni
             GaudiSequencer("MoniVELOSeq").Members += [ VeloSimMoni(), VeloDigit2MCHitLinker(),
                                                        VeloDigiMoni(), VeloRawClustersMoni()  ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import VeloMonitorSpilloverSubtr
+                GaudiSequencer("MoniVELOSeq").Members += [ VeloMonitorSpilloverSubtr() ]
 
         if "IT" in moniDets or "TT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,
@@ -593,6 +619,9 @@ class Boole(LHCbConfigurableUser):
             effCheck.MCParticleSelector.betaGammaMin = 1.0
             GaudiSequencer("MoniITSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
                                                      mcp2MCHit, effCheck ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import STSpilloverSubtrMonitor
+                GaudiSequencer("MoniITSeq").Members += [ STSpilloverSubtrMonitor("ITSpilloverSubtrMonitor",DetType="IT") ]
             if histOpt == "Expert":
                 mcDepMoni.FullDetail   = True
                 mcDigitMoni.FullDetail = True
@@ -613,6 +642,9 @@ class Boole(LHCbConfigurableUser):
             effCheck.MCParticleSelector.betaGammaMin = 1.0
             GaudiSequencer("MoniTTSeq").Members += [ mcDepMoni, mcDigitMoni, digitMoni, clusMoni,
                                                      mcp2MCHit, effCheck ]
+            if self.getProp("DataType") == "Upgrade" :
+                from Configurables import STSpilloverSubtrMonitor
+                GaudiSequencer("MoniTTSeq").Members += [ STSpilloverSubtrMonitor("TTSpilloverSubtrMonitor",DetType="TT") ]
             if histOpt == "Expert":
                 mcDepMoni.FullDetail   = True
                 mcDigitMoni.FullDetail = True

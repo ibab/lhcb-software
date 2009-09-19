@@ -3,6 +3,16 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Changes to Configurable:
+   . Introduce new DataType 'Upgrade' for upgrade simulations
+       modify Velo,ST sequences to do spillover subtraction
+       shorten OT integration gate to 50ns 
+ - Changes to requirements:
+	 . Add dependence on Digi/BooleUMC with upgrade specific algorithms and options
+
+ - Changes to options:
+   . Add Boole-Upgrade-WithTruth.py -NoTruth.py referencing AppConfig Upgrade options
+
 </PRE><H1><A NAME=v19r6>2009-09-07 Boole v19r6</A></H1><PRE>
  - Changes to references to reflect changes in Boole v19r6 output:
    . New STClusterMonitor histograms

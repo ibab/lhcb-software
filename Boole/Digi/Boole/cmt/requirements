@@ -1,5 +1,5 @@
 package Boole
-version v19r6
+version v19r7
 
 branches doc cmt job options
 
@@ -50,6 +50,7 @@ use RichDigiQC         v*    Rich   -no_auto_imports
 use RichMCAssociators  v*    Rich   -no_auto_imports
 use RichDigiSys        v*    Rich   -no_auto_imports
 use STDigiAlgorithms   v*    ST     -no_auto_imports
+use BooleUMC           v*    Digi   -no_auto_imports
 
 # ========================= Install configurable ============================
 apply_pattern install_python_modules
