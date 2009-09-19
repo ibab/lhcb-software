@@ -1,0 +1,38 @@
+#============================================================================
+# Created    : 2009-09-11
+# Maintainer : Tomasz Skwarnicki
+#============================================================================
+package           BooleUMC
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc src options
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+# use   Package      v1r*    Hat
+
+use GSL                 v*    LCG_Interfaces
+use GaudiKernel         v*
+use GaudiAlg            v*
+use GaudiGSL            v*
+use STDet               v*    Det
+use VeloDet             v*    Det
+use DigiEvent           v*    Event
+use MCEvent             v*    Event
+use MCInterfaces        v*    Kernel
+use LHCbMath            v*    Kernel
+use STKernel            v*    ST
+
+include_path      none
+#============================================================================
+# Component library building rule
+#============================================================================
+library          BooleUMC    ../src/*.cpp 
+#============================================================================
+# define component library link options
+#============================================================================
+apply_pattern    component_library library=BooleUMC

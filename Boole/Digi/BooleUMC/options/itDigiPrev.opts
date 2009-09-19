@@ -1,0 +1,20 @@
+// options for spillover suppression in upgrade simulations
+// Tomasz Skwarnicki 2009/09/11 
+
+MCITDepositCreator.SamplesVector = {"/","/Prev/"};
+MCITDepositCreator.SampleTimes = { 0.0, -25.0 };
+
+MCITDigitCreatorPrev.InputLocation = "Prev/MC/IT/Deposits";
+MCITDigitCreatorPrev.OutputLocation = "Prev/MC/IT/Digits";
+ITDigitCreatorPrev.InputLocation = "Prev/MC/IT/Digits";
+ITDigitCreatorPrev.OutputLocation = "Prev/Raw/IT/Digits";
+
+// subtract only if previous charge larger than this (set to very large value to switch any suppression off)
+ITSpilloverSubtraction.PrevChargeCut = 8.5;
+// fraction of previous charge to be subtracted from the current
+ITSpilloverSubtraction.SpilloverFraction = 0.25;
+// set current charge to zero (i.e. kill the hit) if previous above this
+ITSpilloverSubtraction.ChargeSaturationCut = 126.5;
+
+// set always charge to zero instead of subtraction
+//ITSpilloverSubtraction.SpilloverFraction = -10.0;

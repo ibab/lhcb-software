@@ -1,0 +1,63 @@
+// options for spillover suppression in upgrade simulations
+// Tomasz Skwarnicki 2009/09/11 
+
+//-> ------------------- this part is like $VELOSIMULATIONROOT/options/VeloSim.opts
+VeloSimPrev.InputContainers = { "MC/Velo/Hits"
+ ,"Prev/MC/Velo/Hits", "PrevPrev/MC/Velo/Hits", 
+  "Next/MC/Velo/Hits" };
+VeloSimPrev.InputContainerToLink = "MC/Velo/Hits";
+//->    This is essential change for "Prev" (can't move sampling time, thus move bunch crossing time)
+VeloSimPrev.InputTimeOffsets = { 25*ns, 0*ns, -25*ns, 50*ns };
+VeloSimPrev.OutputContainers = { "Prev/MC/Velo/FE" };
+//->
+VeloSimPrev.SimNoisePileUp = false;
+VeloSimPrev.PulseShapePeakTime = 44.;
+VeloSimPrev.OffPeakSamplingTime = 6.;
+
+// Note times here are relative to the pulse shape peaking time (~44ns)
+// so used time  = 44 + sample time offset + bunch offset - time of flight
+// shapes correspond to vfp = 150 vfs = 550
+VeloSimPrev.SiTimeTool.times = {
+   -1.0 ,    0.0 ,    3.0 ,    4.0 ,    7.0 ,   10.0 ,   13.0 ,
+   16.0 ,   19.0 ,   25.0 ,   28.0 ,   29.0 ,   32.0 ,   35.0 ,
+   38.0 ,   41.0 ,   44.0 ,   50.0 ,   53.0 ,   57.0 ,
+   60.0 ,   63.0 ,   66.0 ,   69.0 ,   75.0 ,   78.0 ,   79.0 ,
+   82.0 ,   85.0 ,   88.0 ,   91.0 ,   94.0 ,  100.0 ,  103.0 ,
+  104.0 ,  107.0 ,  110.0 ,  113.0 ,  116.0 ,  119.0 ,  125.0 ,
+  128.0 ,  129.0 ,  132.0 ,  135.0 ,  138.0 ,  141.0 ,  144.0 ,
+  145.0 };
+// fraction of signal seen in amplifier for this time offset
+// setup so that if sample time offset = 0 and TOF = |z/c| value = 1.0
+VeloSimPrev.SiTimeTool.values = {
+  0.000 , -0.010 , -0.008 , -0.009 , -0.013 , -0.011 , -0.007 ,
+  0.008 ,  0.051 ,  0.241 ,  0.435 ,  0.506 ,  0.678 ,  0.798 ,
+  0.903 ,  0.983 ,  1.000 ,  0.973 ,  0.932 ,  0.867 ,
+  0.782 ,  0.706 ,  0.587 ,  0.471 ,  0.253 ,  0.176 ,  0.158 ,
+  0.093 ,  0.036 , -0.009 , -0.044 , -0.068 , -0.102 , -0.096 ,
+ -0.096 , -0.093 , -0.090 , -0.082 , -0.070 , -0.064 , -0.041 ,
+ -0.034 , -0.035 , -0.028 , -0.024 , -0.021 , -0.017 , -0.013 ,
+  0.000 };
+
+//-> ------------------ spillover suppression for upgrade simulations
+
+VeloDataProcessorPrev.InputContainer = "Prev/MC/Velo/FE";
+VeloDataProcessorPrev.OutputVeloDigit = "Prev/Raw/Velo/Digits";
+
+//-> ------------------- 
+
+// subtract only if previous charge larger than this 
+// (set to very large value to switch any suppression off)
+VeloSpillSubtraction.PrevChargeCut = 5.5;
+// fraction of previous charge to be subtracted from the current
+VeloSpillSubtraction.SpilloverFraction = 0.225;
+// kill the current hit if previous above this
+VeloSpillSubtraction.ChargeSaturationCut = 126.5;
+// kill the current hit if after subtraction charge below this
+VeloSpillSubtraction.ChargeCut = 5.5;
+
+// always kill the current hit if previous above the cut
+//VeloSpillSubtraction.SpilloverFraction = -10.0;
+
+
+//-> -------------------------------------------------------------
+
