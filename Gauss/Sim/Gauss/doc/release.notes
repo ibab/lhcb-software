@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-09-19 - Gloria CORTI
+ - Fix options for gauss-gen-mc09-14143011.qmt to use GenStandAlone.py instead
+   of .opts as it no longer exists.
+
 !======================= Gauss v37r3p1 2009-09-18 ============================
 ! 2009-09-18 - Gloria CORTI
  - Replace the use of the package Gen/ParticleGuns with Gen/LbPGuns and 
