@@ -21,7 +21,7 @@ class DDDBConf(ConfigurableUser):
                    }
     _propertyDocDct = { 
                        'DbRoot' : """ Root file of the detector description """,
-                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009","2008","MC09","DC06"] """,
+                       'DataType' : """ Symbolic name for the data type. Allowed values: ["2009","2008","MC09","DC06","Upgrade"] """,
                        'Simulation' : """ Boolean flag to select the simulation or real-data configuration """,
                        }
     
@@ -87,7 +87,7 @@ class DDDBConf(ConfigurableUser):
             raise ValueError("Invalid value %r for property DetDesc().DataType."
                              " (allowed: %r)"% (dataType,
                                                 self.__data_types_handlers__.keys()))
-        if dataType in [ "DC06", "MC09" ]:
+        if dataType in [ "DC06", "MC09", "Upgrade" ]:
             sim = self.getProp("Simulation")
             if not sim:
                 log.info("%s data is _always_ simulation", dataType )
@@ -138,6 +138,16 @@ class DDDBConf(ConfigurableUser):
         self.__set_tag__(["DDDB"], "MC09-20090602")
         self.__set_tag__(["SIMCOND"], "MC09-20090402-vc-md100")
     
+    def __Upgrade_conf__(self):
+        """
+        Default configuration for Upgrade MonteCarlo production and analysis
+        """
+        # Set the tags
+        self.__set_tag__(["DDDB"], "mul-20090917")
+        self.__set_tag__(["SIMCOND"], "MC09-20090402-vc-md100")
+        # Need also to change connection string to DDDB
+        CondDB().PartitionConnectionString = { "DDDB":"sqlite_file:$SQLITEDBPATH/DDDB_upgrade.db/DDDB"}
+    
     def __DC06_conf__(self):
         """
         Default configuration for DC06 MonteCarlo production and analysis
@@ -167,4 +177,5 @@ class DDDBConf(ConfigurableUser):
     __data_types_handlers__ =  { "2009": __2009_conf__,
                                  "2008": __2008_conf__,
                                  "MC09": __MC09_conf__,
+                                 "Upgrade": __Upgrade_conf__,
                                  "DC06": __DC06_conf__ }
