@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-09-19 - Patrick Robbe for Marwa Jahjah Hussein
+ - EvtLambdaB2LambdaV.h/.cpp: correct decay model
+
 !========================== EvtGen v11r4 2009-09-18 ==========================
 ! 2009-09-03 - Patrick Robbe
  - EvtbTosllAli.cpp, EvtbTosllBall.cpp: correct bug in use of
