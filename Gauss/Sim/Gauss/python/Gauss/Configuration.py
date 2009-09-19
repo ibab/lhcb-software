@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.12 2009-09-16 18:05:16 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-09-19 22:46:02 tskwarni Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -60,6 +60,7 @@ class Gauss(LHCbConfigurableUser):
     __slots__ = {
         "Histograms"        : "DEFAULT"
        ,"DatasetName"       : "Gauss"
+       ,"DataType"          : ""
        ,"SpilloverPaths"    : []
        ,"PhysicsList"       : "LHEP"
        ,"GenStandAlone"     : False
@@ -80,6 +81,7 @@ class Gauss(LHCbConfigurableUser):
     _propertyDocDct = { 
         'Histograms'     : """ Type of histograms: ['NONE','DEFAULT'] """
        ,'DatasetName'    : """ String used to build output file names """
+       ,"DataType"       : """ Must specify 'Upgrade' for upgrade simulations, otherwise not used """
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
        ,'PhysicsList'    : """ Name of physics list to be passed ['LHEP','QGSP'] """
        ,'GenStandAlone'  : """ Flag to indicate that only generator phase is run"""
@@ -454,19 +456,28 @@ class Gauss(LHCbConfigurableUser):
             itHitMoni = MCHitMonitor( "ITHitMonitor" + slot )
             detMoniSeq.Members += [ itHitMoni ]
             itHitMoni.mcPathString = TESNode + "IT/Hits"
-            itHitMoni.zStations = [ 7780.0*SystemOfUnits.mm,
-                                    8460.0*SystemOfUnits.mm,
-                                    9115.0*SystemOfUnits.mm ]
+            if self.getProp("DataType") == "Upgrade" :
+                itHitMoni.zStations = [ 8015.0*SystemOfUnits.mm,
+                                        8697.0*SystemOfUnits.mm,
+                                        9363.0*SystemOfUnits.mm ]
+            else :
+                itHitMoni.zStations = [ 7780.0*SystemOfUnits.mm,
+                                        8460.0*SystemOfUnits.mm,
+                                        9115.0*SystemOfUnits.mm ]
             itHitMoni.xMax = 100.*SystemOfUnits.cm 
             itHitMoni.yMax = 100.*SystemOfUnits.cm 
 
             otHitMoni = MCHitMonitor( "OTHitMonitor" + slot )
             detMoniSeq.Members += [ otHitMoni ]
             otHitMoni.mcPathString = TESNode + "OT/Hits"
-            otHitMoni.zStations = [ 7938.0*SystemOfUnits.mm,
-                                    8625.0*SystemOfUnits.mm,
-                                    9315.0*SystemOfUnits.mm ]
-
+            if self.getProp("DataType") == "Upgrade" :
+                otHitMoni.zStations = [ 7672.0*SystemOfUnits.mm,
+                                        8354.0*SystemOfUnits.mm,
+                                        9039.0*SystemOfUnits.mm ]
+            else :
+                otHitMoni.zStations = [ 7938.0*SystemOfUnits.mm,
+                                        8625.0*SystemOfUnits.mm,
+                                        9315.0*SystemOfUnits.mm ]                
             spdmoni = MCCaloMonitor( "SpdMonitor" + slot,
                                      OutputLevel = 4,
                                      Detector = "Spd",
