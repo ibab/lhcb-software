@@ -4,6 +4,49 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2008-09-17 - Patrick Robbe for Nikolai Nikitin
+ - Add new classes for the description of rare semileptonic B-mesons decays.
+   . Class EvtbTosllWilsCoeffNLO - for calculation of the Wilson coefficients
+     in the NLO approach at MSbar substruction scheme, including mu-dependence and
+     contribution of the J/psi and psi' resonances, for Standart Model.
+   . Class EvtbTosllFFNew - for calculation of the transition form factors for
+     B -> P and B -> V in framework of the dispersion relation of the quark model
+     (see paper D.Melikhov, B.Stech, PRD62, 014006 (2000)).
+   . Class EvtbTosllAmpNew - for calculation of the decay amplitudes of the rare
+     semileptonic B-mesons decays using the Wilson coefficients from class
+     EvtbTosllWilsCoeffNLO, form factors from class EvtbTosllFFNew and CKM-matrix
+     elements in Wolfenstein parametrization with accuracy O(lambda^4).
+ - These classes may help to make the generation of the following rare semileptonic
+   B-mesons decays (l denotes e, mu and tau):
+   . B+ -> K+ l+l-
+   . B0 -> K0 l+l-
+   . B+ -> pi+ l+l-
+   . B0 -> pi0 l+l-
+   . B0 -> eta  l+l-
+   . B0 -> eta' l+l-
+   . Bs0 -> eta  l+l-
+   . Bs0 -> eta' l+l-
+   . B+ -> K*+ l+l-
+   . B0 -> K*0 l+l-
+   . B+ -> rho+ l+l-
+   . B0 -> rho0 l+l-
+   . Bs0 -> phi l+l-
+   . Bs0 -> anti-K*0 l+l-
+ - Modify code to use this new files:
+   . EvtGenModels/EvtbTosllAmpNew.hh
+   . EvtGenModels/EvtbTosllScalarAmpNew.hh
+   . EvtGenModels/EvtbTosllVectorAmpNew.hh
+   . EvtGenModels/EvtbTosllWilsCoeffNLO.hh
+   . EvtGenModels/EvtbTosllFFNew.hh
+   . EvtGenModels/EvtbTosllMS.hh
+   . EvtGenModels/EvtbTosllMSFF.hh
+   . src/EvtbTosllScalarAmpNew.cpp
+   . src/EvtbTosllVectorAmpNew.cpp
+   . src/EvtbTosllWilsCoeffNLO.cpp
+   . src/EvtbTosllMS.cpp
+   . src/EvtbTosllMSFF.cpp
+   . src/EvtModelReg.cpp
+
 !======================= EvtGenExtras v2r0 2009-04-06 ========================
 ! 2009-03-16 - Patrick Robbe
  - Fixes for new EvtGen version
