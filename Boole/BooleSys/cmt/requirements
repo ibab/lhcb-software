@@ -1,5 +1,5 @@
 package BooleSys
-version v19r6
+version v19r7
 
 branches cmt doc
  
@@ -8,8 +8,9 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v19r6   Digi  # Marco Cattaneo
+use Boole               v19r7   Digi  # Marco Cattaneo
 use DigiAlg             v4r17   Digi  # Marco Cattaneo
+use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
 # Calorimeter
 use CaloMoniDigi        v2r4    Calo  # Olivier Deschamps
@@ -30,7 +31,7 @@ use RichMCAssociators   v2r7    Rich  # Chris Jones
 use RichReadout         v2r12   Rich  # Chris Jones
 
 # Silicon Tracker
-use STDigiAlgorithms    v1r6p1  ST    # Matt Needham
+use STDigiAlgorithms    v1r7    ST    # Matt Needham
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
