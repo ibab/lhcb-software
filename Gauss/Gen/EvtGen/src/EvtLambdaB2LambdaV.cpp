@@ -1,16 +1,23 @@
 #include "EvtGenModels/EvtLambdaB2LambdaV.hh"
 #include "EvtGenBase/EvtRandom.hh"
+#include "EvtGenBase/EvtPatches.hh"
+#include <stdlib.h>
+#include <fstream>
+#include <stdio.h>
+#include <string>
+#include "EvtGenBase/EvtGenKine.hh"
+#include "EvtGenBase/EvtParticle.hh"
+#include "EvtGenBase/EvtPDL.hh"
+#include "EvtGenBase/EvtReport.hh"
 
+using std::fstream ;
 //************************************************************************
 //*                                                                      *
 //*                      Class EvtLambdaB2LambdaV                        *
 //*                                                                      *
 //************************************************************************
+//DECLARE_ALGORITHM_FACTORY( EvtLambdaB2LambdaV );
 
-
-//------------------------------------------------------------------------
-// Constructor
-//------------------------------------------------------------------------
 EvtLambdaB2LambdaV::EvtLambdaB2LambdaV()
 {
   //set facility name
@@ -157,7 +164,7 @@ void EvtLambdaB2LambdaV::init()
 
   //fix dynamics parameters
   B = (double) getArg(0);
-  C = EvtComplex(0.0,0.0);
+  C = EvtComplex((sqrt(2.)/2.),(sqrt(2.)/2.));
   switch(Vtype)
   {
     case VID::JPSI :             A = 0.490; break;
@@ -170,6 +177,10 @@ void EvtLambdaB2LambdaV::init()
   report(DEBUG,fname.c_str())<<"   - lambda asymmetry A = "<<A<<std::endl;
   report(DEBUG,fname.c_str())<<"   - lambdab polarisation B = "<<B<<std::endl;
   report(DEBUG,fname.c_str())<<"   - lambdab density matrix rho+- C = "<<C<<std::endl;
+ 
+  
+
+
 }
 
 
@@ -203,23 +214,106 @@ void EvtLambdaB2LambdaV::decay( EvtParticle *lambdab)
   double E_V      = (MASS_LAMBDAB*MASS_LAMBDAB + MASS_V*MASS_V - MASS_LAMBDA*MASS_LAMBDA)
                     /(2*MASS_LAMBDAB);
   double P = sqrt(E_lambda*E_lambda-lambda->mass()*lambda->mass());
-  EvtVector4R q_lambda (E_lambda,
-                        P*sin(theta)*cos(phi),
-                        P*sin(theta)*sin(phi),
-                        P*cos(theta));
-  EvtVector4R q_V      (E_V,
-                        -P*sin(theta)*cos(phi),
-                        -P*sin(theta)*sin(phi),
-                        -P*cos(theta));
+ 
 
+
+
+  EvtVector4R P_lambdab=lambdab->getP4();
+
+    double px = P_lambdab.get(1);
+    double py = P_lambdab.get(2);
+    double pz = P_lambdab.get(3);
+    double E  = P_lambdab.get(0);
+    report(INFO,fname.c_str())<<"E of lambdab:  "<< P_lambdab.get(0)<<std::endl;
+    report(INFO,fname.c_str())<<"E of lambdab:  "<< E<<std::endl;
+  
+
+    EvtVector4R q_lambdab2 (E,
+                            ((1/(sqrt(pow(px,2)+pow(py,2))))*((px*(px))+(py*(py)))),
+                            ((1/(sqrt(pow(px,2)+pow(py,2))))*(-((py)*(px))+(px*(py)))),
+                            (pz));
+
+    EvtVector4R q_lambdab3 (E,
+                            q_lambdab2.get(3),
+                            q_lambdab2.get(1),
+                            q_lambdab2.get(2));
+
+    
+    EvtVector4R q_lambda0 (E_lambda,
+                           P*sin(theta)*cos(phi),
+                           P*sin(theta)*sin(phi),
+                           P*cos(theta) );
+
+    EvtVector4R q_V0      (E_V,
+                           -P*sin(theta)*cos(phi),
+                           -P*sin(theta)*sin(phi),
+                           -P*cos(theta) );
+
+    
+    EvtVector4R q_lambda1 (E_lambda,
+                           q_lambda0.get(2),
+                           q_lambda0.get(3),
+                           q_lambda0.get(1) );
+
+    EvtVector4R q_V1      (E_V,
+                           q_V0.get(2),
+                           q_V0.get(3),
+                           q_V0.get(1) );
+   
+     EvtVector4R q_lambda (E_lambda,
+                          ((1/(sqrt(pow(px,2)+pow(py,2))))*((px*(q_lambda1.get(1))) - (py*(q_lambda1.get(2))))),
+                          ((1/(sqrt(pow(px,2)+pow(py,2))))*((py*(q_lambda1.get(1))) + (px*(q_lambda1.get(2))))),
+                          (q_lambda1.get(3)));
+    
+    
+    EvtVector4R q_V     (E_V,
+                          ((1/(sqrt(pow(px,2)+pow(py,2))))*((px*(q_V1.get(1))) - (py*(q_V1.get(2))))),
+                          ((1/(sqrt(pow(px,2)+pow(py,2))))*((py*(q_V1.get(1))) + (px*(q_V1.get(2))))),
+                          (q_V1.get(3)));
+  
+
+
+  
+   EvtVector4R P_lambda=lambda->getP4();
+   EvtVector4R P_V=V->getP4();
+   report(INFO,fname.c_str())<<" LambdaB  px: "<<px<<std::endl;
+   report(INFO,fname.c_str())<<" LambdaB  py: "<<py<<std::endl;
+   report(INFO,fname.c_str())<<" LambdaB  pz: "<<pz<<std::endl;
+   report(INFO,fname.c_str())<<" LambdaB  E: "<<E<<std::endl;
+  
+   report(INFO,fname.c_str())<<" Lambdab3  E:  "<<q_lambdab3.get(0)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 0 px:  "<<q_lambda0.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 0 py:  "<<q_lambda0.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 0 pz:  "<<q_lambda0.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 0 E:  "<<q_lambda0.get(0)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 1 px:  "<<q_lambda1.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 1 py:  "<<q_lambda1.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 1 pz:  "<<q_lambda1.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda 1 E:  "<<q_lambda1.get(0)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda  px:  "<<q_lambda.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda  py:  "<<q_lambda.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda  pz:  "<<q_lambda.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" Lambda  E:  "<<q_lambda0.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" V 0 px:  "<<q_V0.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" V 0 py:  "<<q_V0.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" V 0 pz:  "<<q_V0.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" V 0 E:  "<<q_V0.get(0)<<std::endl;
+   report(INFO,fname.c_str())<<" V 1 px:  "<<q_V1.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" V 1 py:  "<<q_V1.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" V 1 pz:  "<<q_V1.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" V 1 E:  "<<q_V1.get(0)<<std::endl;
+   report(INFO,fname.c_str())<<" V  px:  "<<q_V.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" V  py:  "<<q_V.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" V  pz:  "<<q_V.get(3)<<std::endl;
+   report(INFO,fname.c_str())<<" V  E:  "<<q_V0.get(3)<<std::endl;
   //set quadrivectors to particles
   lambda ->init(getDaugs()[0],q_lambda);
   V      ->init(getDaugs()[1],q_V     );
    
   //computate pdf
   double pdf = 1 + A*B*cos(theta) + 2*A*real(C*EvtComplex(cos(phi),sin(phi)))*sin(theta);
+ 
   report(DEBUG,fname.c_str())<<" LambdaB decay pdf value : "<<pdf<<std::endl;
-
   //set probability
   setProb(pdf);
   
@@ -340,7 +434,7 @@ double EvtLambdaB2LambdaV::getVMass(double MASS_LAMBDAB, double MASS_LAMBDA)
 // Constructor
 //------------------------------------------------------------------------
 EvtLambda2PPiForLambdaB2LambdaV::EvtLambda2PPiForLambdaB2LambdaV()
-{
+{ 
   //set facility name
   fname="EvtGen.EvtLambda2PPiForLambdaB2LambdaV";  
 }
@@ -506,6 +600,7 @@ void EvtLambda2PPiForLambdaB2LambdaV::init()
     case VID::RHO_OMEGA_MIXING : B = -0.21;  D = EvtComplex(0.31,0.0); break;
     default :                    B = 0;      D = EvtComplex(0,0);      break;
   }
+ 
 
   report(DEBUG,fname.c_str())<<" Lambda decay parameters : "<<std::endl;
   report(DEBUG,fname.c_str())<<"   - proton asymmetry A = "<<A<<std::endl;
@@ -544,29 +639,197 @@ void EvtLambda2PPiForLambdaB2LambdaV::decay( EvtParticle *lambda )
   double E_pion   = (MASS_LAMBDA*MASS_LAMBDA + MASS_PION*MASS_PION - MASS_PROTON*MASS_PROTON)
                     /(2*MASS_LAMBDA);           
   double P = sqrt(E_proton*E_proton-proton->mass()*proton->mass());
-  EvtVector4R q_proton (E_proton,
+  
+  EvtVector4R P_lambda=lambda->getP4();
+  EvtParticle *Mother_lambda=lambda->getParent();
+  EvtVector4R lambdab=Mother_lambda->getP4();
+ 
+
+   
+  double E_lambda =P_lambda.get(0);
+  double px_M     =lambdab.get(1);
+  double py_M     =lambdab.get(2);
+  double pz_M     =lambdab.get(3);
+  double E_M     =lambdab.get(0);
+ 
+  EvtVector4R q_lambdab2 (E_M,
+                            ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(px_M))+(py_M*(py_M)))),
+                            ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*(-((py_M)*(px_M))+(px_M*(py_M)))),
+                            (pz_M));
+
+  EvtVector4R q_lambdab3 (E_M,
+                            q_lambdab2.get(3),
+                            q_lambdab2.get(1),
+                            q_lambdab2.get(2));
+
+  
+
+  EvtVector4R q_lambda1 (E_lambda,
+                         ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(P_lambda.get(1))) + (py_M*(P_lambda.get(2))))),
+                         ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*(-(py_M*(P_lambda.get(1))) + (px_M*(P_lambda.get(2))))),
+                         P_lambda.get(3));
+
+  EvtVector4R q_lambda2 (E_lambda,
+                         q_lambda1.get(3),
+                         q_lambda1.get(1),
+                         q_lambda1.get(2));
+
+  
+
+ 
+
+   double px=q_lambda2.get(1);
+  double py=q_lambda2.get(2);
+  double pz=q_lambda2.get(3);
+   
+
+   
+   
+    EvtVector4R q_lambda4 (q_lambda2.get(0),
+                          ((1/(sqrt(pow(q_lambda2.get(1),2) + pow(q_lambda2.get(2),2) + pow(q_lambda2.get(3),2))))* (1/(sqrt(pow(q_lambda2.get(1),2) + pow(q_lambda2.get(2),2))))*((q_lambda2.get(1))*(q_lambda2.get(1))*(q_lambda2.get(3))+((q_lambda2.get(2))*(q_lambda2.get(2))*(q_lambda2.get(3))) - ((q_lambda2.get(3))*(pow(q_lambda2.get(1),2) + pow(q_lambda2.get(2),2))))),
+                          ((((q_lambda2.get(2))*(q_lambda2.get(1)))-((q_lambda2.get(1))*(q_lambda2.get(2))))/(sqrt(pow(q_lambda2.get(1),2) + pow(q_lambda2.get(2),2)))),
+                          (((1/sqrt(pow(q_lambda2.get(1),2) + pow(q_lambda2.get(2),2) + pow(q_lambda2.get(3),2)))*( ((q_lambda2.get(1))*(q_lambda2.get(1))) +((q_lambda2.get(2))*(q_lambda2.get(2))) +   ((q_lambda2.get(3))*(q_lambda2.get(3)))))) );
+
+
+
+
+   EvtVector4R q_proton1 (E_proton,
                         P*sin(theta)*cos(phi),
                         P*sin(theta)*sin(phi),
                         P*cos(theta));
-  EvtVector4R q_pion   (E_pion,
+   EvtVector4R q_pion1   (E_pion,
                         -P*sin(theta)*cos(phi),
                         -P*sin(theta)*sin(phi),
                         -P*cos(theta));
+             
+
+   EvtVector4R q_proton3     (E_proton,
+                       ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*((q_proton1.get(1))*(px)*(pz) - ((q_proton1.get(2))*(py)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) + (((q_proton1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(px)))),
+                       (((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2)))))* (1/(sqrt(pow(px,2) + pow(py,2))))*(((q_proton1.get(1)))*(py)*(pz) + ((q_proton1.get(2))*(px)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) + (((q_proton1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(py)))) ,
+                        (((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2)))))*((-(q_proton1.get(1)))*((sqrt(pow(px,2) + pow(py,2)))) + ((q_proton1.get(3))*(pz)))));
+
+ EvtVector4R q_pion3     (E_pion,
+                         ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*((q_pion1.get(1))*(px)*(pz) - ((q_pion1.get(2))*(py)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) + (((q_pion1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(px)))),
+                         (((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2)))))* (1/(sqrt(pow(px,2) + pow(py,2))))*((q_pion1.get(1))*(py)*(pz) + ((q_pion1.get(2))*(px)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) + (((q_pion1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(py)))) ,
+                         ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))*((-(q_pion1.get(1)))*((sqrt(pow(px,2) + pow(py,2)))) + ((q_pion1.get(3))*(pz)))));
+
+ EvtVector4R q_proton5 (q_proton3.get(0),
+                        (q_proton3.get(2)),
+                        (q_proton3.get(3)),
+                        (q_proton3.get(1)));
+ 
+ EvtVector4R q_pion5      (q_pion3.get(0),
+                           (q_pion3.get(2)),
+                           (q_pion3.get(3)),
+                           (q_pion3.get(1)));
+ 
+ EvtVector4R q_proton          (q_proton5.get(0),
+                                ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(q_proton5.get(1)))-(py_M*(q_proton5.get(2))))),
+                                ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((py_M*(q_proton5.get(1)))+(px_M*(q_proton5.get(2))))),
+                                (q_proton5.get(3)));
+ 
+ 
+ EvtVector4R q_pion      (q_pion5.get(0),
+                          ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(q_pion5.get(1)))-(py_M*(q_pion5.get(2))))),
+                          ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((py_M*(q_pion5.get(1)))+(px_M*(q_pion5.get(2))))),
+                          (q_pion5.get(3)));
+
+report(INFO,fname.c_str())<<" Lambdab  px: "<<px_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  py: "<<py_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  pz: "<<pz_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  E: "<<E_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  px:  "<<q_lambdab2.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  py:  "<<q_lambdab2.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  pz:  "<<q_lambdab2.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  E:   "<<q_lambdab2.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  px:  "<<q_lambdab3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  py:  "<<q_lambdab3.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  pz:  "<<q_lambdab3.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  E:   "<<q_lambdab3.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 0  px:  "<<P_lambda.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 0  py:  "<<P_lambda.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 0  pz:  "<<P_lambda.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 0  E:   "<<P_lambda.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 1  px:  "<<q_lambda1.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 1  py:  "<<q_lambda1.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 1  pz:  "<<q_lambda1.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 1  E:   "<<q_lambda1.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 2  px:  "<<q_lambda2.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 2  py:  "<<q_lambda2.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 2  pz:  "<<q_lambda2.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambda 2  E:   "<<q_lambda2.get(0)<<std::endl;
+
+report(INFO,fname.c_str())<<" Lambda  px: "<<px<<std::endl;
+report(INFO,fname.c_str())<<" Lambda  py: "<<py<<std::endl;
+report(INFO,fname.c_str())<<" Lambda  pz: "<<pz<<std::endl;
+
+ report(INFO,fname.c_str())<<" pion 1 px:  "<<q_pion1.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" pion 1 py:  "<<q_pion1.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" pion 1 pz:  "<<q_pion1.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" pion 1 E:   "<<q_pion1.get(0)<<std::endl;
+ 
+report(INFO,fname.c_str())<<" pion 3 px:  "<<q_pion3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" pion 3 px:  "<<q_pion3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" pion 3 py:  "<<q_pion3.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" pion 3 pz:  "<<q_pion3.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" pion 3 E:   "<<q_pion3.get(0)<<std::endl;
+
+report(INFO,fname.c_str())<<" pion 5 px:  "<<q_pion5.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" pion 5 py:  "<<q_pion5.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" pion 5 pz:  "<<q_pion5.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" pion 5 E:   "<<q_pion5.get(0)<<std::endl;
+
+
+
+ report(INFO,fname.c_str())<<" proton 1  px:  "<<q_proton1.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 1  py:  "<<q_proton1.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 1  pz:  "<<q_proton1.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 1  E:   "<<q_proton1.get(0)<<std::endl;
+
+report(INFO,fname.c_str())<<" proton 3  px:  "<<q_proton3.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 3  py:  "<<q_proton3.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 3  pz:  "<<q_proton3.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 3  E:   "<<q_proton3.get(0)<<std::endl;
+ 
+report(INFO,fname.c_str())<<" proton 5  px:  "<<q_proton5.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 5  py:  "<<q_proton5.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 5  pz:  "<<q_proton5.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" proton 5  E:   "<<q_proton5.get(0)<<std::endl;
+
+
+report(INFO,fname.c_str())<<" proton  px:  "<<q_proton.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" proton  py:  "<<q_proton.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<"proton  pz:  "<<q_proton.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" pion px:  "<<q_pion.get(1)<<std::endl;
+   report(INFO,fname.c_str())<<" pion py:  "<<q_pion.get(2)<<std::endl;
+   report(INFO,fname.c_str())<<" pion pz:  "<<q_pion.get(3)<<std::endl;
+   
+
+   
+  
+   
+  ;
+
+
+
+
+
+
+ ///////////*******NEW********//////////////////////
 
   //set quadrivectors to particles
   proton->init(getDaugs()[0],q_proton);
   pion  ->init(getDaugs()[1],q_pion  );
  
   //computate pdf
-  double pdf = 1 + A*B*cos(theta) - EvtConst::pi/2.0*C*A*real(D*EvtComplex(cos(phi),sin(phi)))*sin(theta);
+  //double pdf = 1 + A*B*cos(theta) - EvtConst::pi/2.0*C*A*real(D*EvtComplex(cos(phi),sin(phi)))*sin(theta);
+  double pdf = 1 + A*B*cos(theta) + 2*A*real(D*EvtComplex(cos(phi),sin(phi)))*sin(theta);
   report(DEBUG,fname.c_str())<<" Lambda decay pdf value : "<<pdf<<std::endl;
-
   //set probability
   setProb(pdf);
 
   return;
 }
-
 
 
 
@@ -743,9 +1006,9 @@ void EvtV2VpVmForLambdaB2LambdaV::init()
 
   report(DEBUG,fname.c_str())<<" V decay parameters : "<<std::endl;
   report(DEBUG,fname.c_str())<<"   - V density matrix rho00 A = "<<A<<std::endl;
+  
+
 }
-
-
 
 //------------------------------------------------------------------------
 // Method 'decay'
@@ -784,14 +1047,159 @@ void EvtV2VpVmForLambdaB2LambdaV::decay( EvtParticle *V )
   double E_Vm = (MASS_V*MASS_V + MASS_VM*MASS_VM - MASS_VP*MASS_VP)
                  /(2*MASS_V);
   double P = sqrt(E_Vp*E_Vp-Vp->mass()*Vp->mass());
-  EvtVector4R q_Vp     (E_Vp,
+ 
+  EvtVector4R P_V=V->getP4();
+  EvtParticle *Mother_V=V->getParent();
+  EvtVector4R lambdab=Mother_V->getP4();
+
+  
+  double E_V=(P_V.get(0));
+   double px_M=lambdab.get(1);
+   double py_M=lambdab.get(2);
+   double pz_M=lambdab.get(3);
+   double E_M=lambdab.get(0);
+
+   EvtVector4R q_lambdab2 (E_M,
+                            ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(px_M))+(py_M*(py_M)))),
+                            ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*(-((py_M)*(px_M))+(px_M*(py_M)))),
+                            (pz_M));
+
+  EvtVector4R q_lambdab3 (E_M,
+                            q_lambdab2.get(3),
+                            q_lambdab2.get(1),
+                            q_lambdab2.get(2));
+   
+
+ EvtVector4R q_V1 (E_V,
+                         ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(P_V.get(1))) + (py_M*(P_V.get(2))))),
+                         ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*(-(py_M*(P_V.get(1))) + (px_M*(P_V.get(2))))),
+                         P_V.get(3));
+
+  EvtVector4R q_V2 (E_V,
+                         q_V1.get(3),
+                         q_V1.get(1),
+                         q_V1.get(2));
+
+  
+
+     double px= -(q_V2.get(1));
+  double py=-(q_V2.get(2));
+  double pz=-(q_V2.get(3));
+   
+
+
+
+  EvtVector4R q_V4 (q_V2.get(0),
+                          ((1/(sqrt(pow(q_V2.get(1),2) + pow(q_V2.get(2),2) + pow(q_V2.get(3),2))))* (1/(sqrt(pow(q_V2.get(1),2) + pow(q_V2.get(2),2))))*((q_V2.get(1))*(q_V2.get(1))*(q_V2.get(3))+((q_V2.get(2))*(q_V2.get(2))*(q_V2.get(3))) - ((q_V2.get(3))*(pow(q_V2.get(1),2) + pow(q_V2.get(2),2))))),
+                          ((((q_V2.get(2))*(q_V2.get(1)))-((q_V2.get(1))*(q_V2.get(2))))/(sqrt(pow(q_V2.get(1),2) + pow(q_V2.get(2),2)))),
+                          (((1/sqrt(pow(q_V2.get(1),2) + pow(q_V2.get(2),2) + pow(q_V2.get(3),2)))*( ((q_V2.get(1))*(q_V2.get(1))) +((q_V2.get(2))*(q_V2.get(2))) +   ((q_V2.get(3))*(q_V2.get(3)))))) );
+
+
+ 
+   EvtVector4R q_Vp1     (E_Vp,
                         P*sin(theta)*cos(phi),
                         P*sin(theta)*sin(phi),
                         P*cos(theta));
-  EvtVector4R q_Vm     (E_Vm,
+   EvtVector4R q_Vm1     (E_Vm,
                         -P*sin(theta)*cos(phi),
                         -P*sin(theta)*sin(phi),
                         -P*cos(theta));
+  
+    EvtVector4R q_Vp3     (q_Vp1.get(0),
+                       ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*((q_Vp1.get(1))*(px)*(pz)+((q_Vp1.get(2))*(py)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) - (((q_Vp1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(px)))),
+                       ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*(((q_Vp1.get(1)))*(py)*(pz) - ((q_Vp1.get(2))*(px)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) - (((q_Vp1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(py)))) ,
+                        ((-(1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2)))))*((q_Vp1.get(1))*((sqrt(pow(px,2) + pow(py,2)))) + ((q_Vp1.get(3))*(pz)))));
+   
+   EvtVector4R q_Vm3     (q_Vm1.get(0),
+                          ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*((q_Vm1.get(1))*(px)*(pz)+((q_Vm1.get(2))*(py)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) - (((q_Vm1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(px)))),
+                          ((1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))* (1/(sqrt(pow(px,2) + pow(py,2))))*(((q_Vm1.get(1)))*(py)*(pz) - ((q_Vm1.get(2))*(px)*((sqrt(pow(px,2) + pow(py,2) + pow(pz,2))))) - (((q_Vm1.get(3)))*(sqrt(pow(px,2) + pow(py,2)))*(py)))) ,
+                          ((-(1/(sqrt(pow(px,2) + pow(py,2) + pow(pz,2)))))*((q_Vm1.get(1))*((sqrt(pow(px,2) + pow(py,2)))) + ((q_Vm1.get(3))*(pz)))));
+
+
+
+
+
+ 
+ EvtVector4R q_Vp5 (q_Vp3.get(0),
+                        (q_Vp3.get(2)),
+                        (q_Vp3.get(3)),
+                        (q_Vp3.get(1)));
+ 
+   EvtVector4R q_Vm5      (q_Vm3.get(0),
+                           (q_Vm3.get(2)),
+                           (q_Vm3.get(3)),
+                           (q_Vm3.get(1)));
+ 
+ 
+ EvtVector4R q_Vp          (q_Vp5.get(0),
+                                ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(q_Vp5.get(1)))-(py_M*(q_Vp5.get(2))))),
+                                ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((py_M*(q_Vp5.get(1)))+(px_M*(q_Vp5.get(2))))),
+                                (q_Vp5.get(3)));
+ 
+ 
+ EvtVector4R q_Vm      (q_Vm5.get(0),
+                          ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((px_M*(q_Vm5.get(1)))-(py_M*(q_Vm5.get(2))))),
+                          ((1/(sqrt(pow(px_M,2)+pow(py_M,2))))*((py_M*(q_Vm5.get(1)))+(px_M*(q_Vm5.get(2))))),
+                          (q_Vm5.get(3)));
+
+  report(INFO,fname.c_str())<<" Lambdab  px: "<<px_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  py: "<<py_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  pz: "<<pz_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab  E: "<<E_M<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  px:  "<<q_lambdab2.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  py:  "<<q_lambdab2.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  pz:  "<<q_lambdab2.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab2  E:   "<<q_lambdab2.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  px:  "<<q_lambdab3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  py:  "<<q_lambdab3.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  pz:  "<<q_lambdab3.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Lambdab3  E:   "<<q_lambdab3.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" V 0  px:  "<<P_V.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" V 0  py:  "<<P_V.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" V 0  pz:  "<<P_V.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" V 0  E:   "<<P_V.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" V 1  px:  "<<q_V1.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" V 1  py:  "<<q_V1.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" V 1  pz:  "<<q_V1.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" V 1  E:   "<<q_V1.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" V 2  px:  "<<q_V2.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" V 2  py:  "<<q_V2.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" V 2  pz:  "<<q_V2.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" V 2  E:   "<<q_V2.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" V  px: "<<px<<std::endl;
+report(INFO,fname.c_str())<<" V  py: "<<py<<std::endl;
+report(INFO,fname.c_str())<<" V  pz: "<<pz<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 1 px:  "<<q_Vm1.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 1 py:  "<<q_Vm1.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 1 pz:  "<<q_Vm1.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 1 E:   "<<q_Vm1.get(0)<<std::endl; 
+report(INFO,fname.c_str())<<" Vm 3 px:  "<<q_Vm3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 3 px:  "<<q_Vm3.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 3 py:  "<<q_Vm3.get(2)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 3 pz:  "<<q_Vm3.get(3)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 3 E:   "<<q_Vm3.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 5 px:  "<<q_Vm5.get(1)<<std::endl;
+report(INFO,fname.c_str())<<" Vm 5 py:  "<<q_Vm5.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 5 pz:  "<<q_Vm5.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm 5 E:   "<<q_Vm5.get(0)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 1  px:  "<<q_Vp1.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 1  py:  "<<q_Vp1.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 1  pz:  "<<q_Vp1.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 1  E:   "<<q_Vp1.get(0)<<std::endl;
+report(INFO,fname.c_str())<<" Vp 3  px:  "<<q_Vp3.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 3  py:  "<<q_Vp3.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 3  pz:  "<<q_Vp3.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 3  E:   "<<q_Vp3.get(0)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 5  px:  "<<q_Vp5.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 5  py:  "<<q_Vp5.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 5  pz:  "<<q_Vp5.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp 5  E:   "<<q_Vp5.get(0)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp  px:  "<<q_Vp.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vp  py:  "<<q_Vp.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<"Vp  pz:  "<<q_Vp.get(3)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm px:  "<<q_Vm.get(1)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm py:  "<<q_Vm.get(2)<<std::endl;
+ report(INFO,fname.c_str())<<" Vm pz:  "<<q_Vm.get(3)<<std::endl;
 
   //set quadrivectors to particles
   Vp->init(getDaugs()[0],q_Vp);
@@ -802,12 +1210,13 @@ void EvtV2VpVmForLambdaB2LambdaV::decay( EvtParticle *V )
   if (Vtype==VID::JPSI)
   {
     //leptonic case
-    pdf = (1-3*A)*cos(theta)*cos(theta) + (1+A);
+     pdf = (1-3*A)*cos(theta)*cos(theta) + (1+A);
   }
   else
   {
     //hadronic case
     pdf = (3*A-1)*cos(theta)*cos(theta) + (1-A);
+   
   }
   report(DEBUG,fname.c_str())<<" V decay pdf value : "<<pdf<<std::endl;
 

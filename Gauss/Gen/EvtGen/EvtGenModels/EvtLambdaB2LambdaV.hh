@@ -47,7 +47,7 @@ namespace VID
 // -------- = 1 + A*B*cos(theta) + 2*A*Re(C*exp(i*phi))*sin(theta)
 // d(Omega)
 //
-// with A (real)    : lambda  helicity asymmetry parameter
+// with A (real)    : lambdaB  helicity asymmetry parameter
 //      B (real)    : lambdaB polarisation
 //      C (complex) : lambdaB density matrix element rho+-
 //
@@ -67,7 +67,7 @@ public:
   void init();
   void initProbMax();
   void decay(EvtParticle *lambdab);
-
+ 
 private:
 
   //class name for report method
@@ -102,10 +102,10 @@ private:
 // DECAY : Lambda -> p + pi-
 //
 // d(Sigma)
-// -------- = 1 + A*B*cos(theta) - Pi/2*C*A*Re(D*exp(i*phi))*sin(theta)
+// -------- = 1 + A*B*cos(theta) + 2*A*Re(D*exp(i*phi))*sin(theta)
 // d(Omega)
 //
-// with A (real)    : proton asymmetry parameter
+// with A (real)    : lambda asymmetry parameter
 //      B (real)    : lambda polarisation
 //      C (real)    : lambdaB polarisation
 //      D (complex) : lambda density matrix element rho+-
@@ -188,8 +188,7 @@ private:
   std::string fname;
 
   //meson vector identity 
-  VID::VectorMesonType Vtype; 
-  
+  VID::VectorMesonType Vtype;
   //decay dynamics parameters 
   double A;
 };
