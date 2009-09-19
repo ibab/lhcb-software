@@ -4,6 +4,10 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-19 - Marco Cottaneo
+ - Cleaned up configurable
+ - Removed unnecessary XmlSummaryKernel_dll.cpp file
+
 ! 2009-09-18 - Rob Lambert
  - Refined requirements file to avoid circular dependencies
  - Wrote new configurable to manage the behaviour, XMLSummary()
