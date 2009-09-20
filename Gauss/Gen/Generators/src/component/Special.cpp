@@ -1,4 +1,4 @@
-// $Id: Special.cpp,v 1.12 2008-07-20 17:19:32 robbep Exp $
+// $Id: Special.cpp,v 1.13 2009-09-20 17:53:02 robbep Exp $
 // Include files 
 
 // local
@@ -51,6 +51,7 @@ Special::~Special( ) { ; }
 //=============================================================================
 StatusCode Special::initialize( ) {
   info() << "Generating Special events." << endmsg ;
+  StatusCode sc = ExternalGenerator::initialize( ) ;
 
   // Switch off LHA print out first
   if ( msgLevel( MSG::DEBUG ) ) {
@@ -60,14 +61,10 @@ StatusCode Special::initialize( ) {
     LhaPdf::lhacontrol().setlhaparm( 19 , "SILENT" ) ;
   }
   
-  if ( "" != m_pileUpProductionToolName ) 
-    m_pileUpProductionTool = 
-      tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
-
   m_pileUpEventsVector.clear() ;
   m_pileUpCollisionsVector.clear() ;
 
-  return ExternalGenerator::initialize( ) ;
+  return sc ;
 }
 
 //=============================================================================
@@ -167,6 +164,16 @@ void Special::printCounters( ) const {
 // Generate PileUp Minimum Bias interactions
 //=============================================================================
 void Special::generatePileUp() {
+
+  if ( 0 == m_pileUpProductionTool ) {
+    if ( "" != m_pileUpProductionToolName ) 
+      m_pileUpProductionTool = 
+        tool< IProductionTool >( m_pileUpProductionToolName , this ) ;
+  }
+
+  if ( 0 == m_pileUpProductionTool ) 
+    fatal() << "No pile up production tool defined !" << endreq ;    
+
   // initialize the production tool for pile up generation
   m_pileUpProductionTool -> initializeGenerator() ;
   
