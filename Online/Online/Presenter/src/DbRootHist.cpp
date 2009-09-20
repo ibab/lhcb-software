@@ -1569,16 +1569,17 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
   if (rootLock && rootHistogram &&
       s_H2D != m_histogramType &&
       s_pfixMonH2D != m_histogramType) {
+
     if (0 == m_reference &&
         s_NoReference != m_refOption &&
         rootHistogram->GetDimension() == 1 &&
         Show == visibility) {
       TH1* ref = NULL;
-      if (m_presenterApp) {
-        std::string tck(s_default_tck);
-        if (s_eff_init != m_presenterApp->currentTCK()) {
-          tck = m_presenterApp->currentTCK();
-        }
+      std::string tck(s_default_tck);
+      if (m_presenterApp &&
+          (s_eff_init != m_presenterApp->currentTCK()) &&
+          (!(m_presenterApp->currentTCK()).empty()) ) {
+        tck = m_presenterApp->currentTCK();
         ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram, 1, tck);
       } else {
         ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram);

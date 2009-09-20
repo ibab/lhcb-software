@@ -2733,7 +2733,6 @@ void PresenterMainFrame::inspectPage()
 void PresenterMainFrame::reconfigureGUI()
 {
   removeHistogramsFromPage();
-  
   if (isConnectedToHistogramDB()) {
     refreshPagesDBListTree();
     listAlarmsFromHistogramDB(m_alarmHistogramTreeList, AllHistograms);

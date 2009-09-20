@@ -21,7 +21,7 @@ const Double_t refValue1 = 1.5;
 TH1D* h1 = new TH1D("Counternumber1","GauchoJob/MonitorSvc/monRate/Counternumber1",nbins,0,nbins);
 Int_t i;
 for (i=1 ; i < nbins; i++) {
-  h1->SetBinContent(refValue1, 1);
+  h1->SetBinContent(refValue1, i);
 }   
 refFile->Write();
 delete refFile;
