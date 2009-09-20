@@ -76,45 +76,45 @@ void getHistogramsFromLists(PresenterMainFrame * presenter,
                             std::vector<DbRootHist*> * dbHistosOnPage,
                             std::vector<std::string*> & m_tasksNotRunning)
 {
-	  DbRootHist* dbRootHist;
-	  if( (History == presenter->presenterMode()) || 
-        (EditorOffline == presenter->presenterMode())) { // no need for DIM
-	    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
-	                                std::string(""),
-	                                2, onlineHistosOnPage->instance,
-	                                presenter->histogramDB(),
-                                  presenter->analysisLib(),
-	                                onlineHistosOnPage->histo,
-	                                presenter->verbosity(),
-	                                NULL,
-	                                oraMutex,
-	                                dimMutex,
-                                  m_tasksNotRunning,
-                                  rootMutex);
-	  } else if( (Online == presenter->presenterMode()) ||
-               (EditorOnline == presenter->presenterMode())) {
-	    DimBrowser* dimBrowser = NULL;
-//	    std::string currentPartition("");
+          DbRootHist* dbRootHist;
+          if( (History == presenter->presenterMode()) ||
+              (EditorOffline == presenter->presenterMode())) { // no need for DIM
+            dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
+                                        std::string(""),
+                                        2, onlineHistosOnPage->instance,
+                                        presenter->histogramDB(),
+                                        presenter->analysisLib(),
+                                        onlineHistosOnPage->histo,
+                                        presenter->verbosity(),
+                                        NULL,
+                                        oraMutex,
+                                        dimMutex,
+                                        m_tasksNotRunning,
+                                        rootMutex);
+          } else if( (Online == presenter->presenterMode()) ||
+                     (EditorOnline == presenter->presenterMode())) {
+            DimBrowser* dimBrowser = NULL;
+//          std::string currentPartition("");
 
-	    dimBrowser = presenter->dimBrowser();
-//	    currentPartition = presenter->currentPartition();
-	    dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
-	                                presenter->currentPartition(),
-	                                2, onlineHistosOnPage->instance,
-	                                presenter->histogramDB(),
-                                  presenter->analysisLib(),
-	                                onlineHistosOnPage->histo,
-	                                presenter->verbosity(),
-	                                dimBrowser,
-	                                oraMutex,
-	                                dimMutex,
-                                  m_tasksNotRunning,
-                                  rootMutex);
-	                            
-//	    if (dbRootHist->isEmptyHisto()) {
-//	      m_tasksNotRunning.push_back(onlineHistosOnPage->histo->task());
-//	    } 
-	  }
+            dimBrowser = presenter->dimBrowser();
+//          currentPartition = presenter->currentPartition();
+            dbRootHist = new DbRootHist(onlineHistosOnPage->histo->identifier(),
+                                        presenter->currentPartition(),
+                                        2, onlineHistosOnPage->instance,
+                                        presenter->histogramDB(),
+                                        presenter->analysisLib(),
+                                        onlineHistosOnPage->histo,
+                                        presenter->verbosity(),
+                                        dimBrowser,
+                                        oraMutex,
+                                        dimMutex,
+                                        m_tasksNotRunning,
+                                        rootMutex);
+
+//          if (dbRootHist->isEmptyHisto()) {
+//            m_tasksNotRunning.push_back(onlineHistosOnPage->histo->task());
+//          }
+          }
 
    boost::recursive_mutex::scoped_lock lock(rootMutex);
    if (lock) {
@@ -122,43 +122,42 @@ void getHistogramsFromLists(PresenterMainFrame * presenter,
        dbRootHist->setPresenter(presenter);
        dbRootHist->initHistogram();
        dbRootHist->setTH1FromDB();
-    }
-	  if (0 != presenter->archive() &&
-	      ( (History == presenter->presenterMode()) ||
-  	      (EditorOffline == presenter->presenterMode() &&
-          presenter->canWriteToHistogramDB())) ) {
-      presenter->archive()->fillHistogram(dbRootHist,
-                               presenter->rw_timePoint,
-                               presenter->rw_pastDuration);
-    }
-
-	//              if (dbRootHist && dbRootHist->isEmptyHisto()) {
-//	      presenter->setResumeRefreshAfterLoading(false);
-	//              }                                       
-	 }
-//	  dbHistosOnPage->push_back(dbRootHist);
+     }
+     if (0 != presenter->archive() &&
+         ( (History == presenter->presenterMode()) ||
+           (EditorOffline == presenter->presenterMode() &&
+       presenter->canWriteToHistogramDB())) ) {
+       presenter->archive()->fillHistogram(dbRootHist,
+                                           presenter->rw_timePoint,
+                                           presenter->rw_pastDuration);
+     }
+//              if (dbRootHist && dbRootHist->isEmptyHisto()) {
+//                presenter->setResumeRefreshAfterLoading(false);
+//              }
+   }
+//        dbHistosOnPage->push_back(dbRootHist);
    boost::mutex::scoped_lock listLock(listMutex);
    if (listLock) {
-	   dbHistosOnPage->push_back(dbRootHist);
+     dbHistosOnPage->push_back(dbRootHist);
    }
 }
 
 void refreshHisto(DbRootHist* dbHistoOnPage)
 {
 
-	if (false == gROOT->IsInterrupted()) { // false == dbHistoOnPage->isEmptyHisto() &&
-		dbHistoOnPage->fillHistogram();
-		dbHistoOnPage->normalizeReference();
-//	} else {
+  if (false == gROOT->IsInterrupted()) { // false == dbHistoOnPage->isEmptyHisto() &&
+    dbHistoOnPage->fillHistogram();
+    dbHistoOnPage->normalizeReference();
+//      } else {
 //    dbHistoOnPage->beRegularHisto();
 //    dbHistoOnPage->resetRetryInit();
 //    dbHistoOnPage->initHistogram();
-//		if (false == dbHistoOnPage->isEmptyHisto()) {
-//			dbHistoOnPage->fillHistogram();
-//		  dbHistoOnPage->setTH1FromDB();
+//              if (false == dbHistoOnPage->isEmptyHisto()) {
+//                      dbHistoOnPage->fillHistogram();
+//                dbHistoOnPage->setTH1FromDB();
 //      dbHistoOnPage->normalizeReference();
-//		}
-	}
+//              }
+  }
 }
 
 ParallelWait::ParallelWait(PresenterMainFrame* presenter):
@@ -177,32 +176,30 @@ ParallelWait::~ParallelWait()
 }
 
 void ParallelWait::loadHistograms(const std::vector<OnlineHistoOnPage*>* onlineHistosOnPage,
-				      									  std::vector<DbRootHist*> * dbHistosOnPage) {
-
-
+                                  std::vector<DbRootHist*> * dbHistosOnPage) {
 //  TThread::Lock();
-	m_onlineHistosOnPageIt = onlineHistosOnPage->begin();
-	
+        m_onlineHistosOnPageIt = onlineHistosOnPage->begin();
+
 //  int num_threads = onlineHistosOnPage->nhs=();
   boost::thread_group thrds;
 
-//	m_tasksNotRunning.clear();
-	while (m_onlineHistosOnPageIt != onlineHistosOnPage->end()) {
+//      m_tasksNotRunning.clear();
+  while (m_onlineHistosOnPageIt != onlineHistosOnPage->end()) {
 //            startBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
     thrds.create_thread(boost::bind(&getHistogramsFromLists,
-			    													m_presenterApp,
-			    													*m_onlineHistosOnPageIt,
-			    													dbHistosOnPage,
+                                    m_presenterApp,
+                                    *m_onlineHistosOnPageIt,
+                                    dbHistosOnPage,
                                     m_tasksNotRunning));
-	  m_onlineHistosOnPageIt++;
-	}
-  thrds.join_all();	
-//	TThread::UnLock();
+          m_onlineHistosOnPageIt++;
+  }
+  thrds.join_all();
+//      TThread::UnLock();
 
 }
 
 void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
-{	
+{
 //  TThread::Lock();
 
   std::vector<std::string*>::const_iterator m_tasksNotRunningIt;
@@ -224,12 +221,12 @@ void ParallelWait::refreshHistograms(std::vector<DbRootHist*>* dbHistosOnPage)
         m_presenterApp->setStatusBarText(((*refresh_dbHistosOnPageIt)->rootHistogram)->GetTitle(), 2);
       }
     thrds.create_thread(boost::bind(&refreshHisto,
-			    													*refresh_dbHistosOnPageIt));                
+                                    *refresh_dbHistosOnPageIt));
                                     
     refresh_dbHistosOnPageIt++;
   }
   
-  thrds.join_all();	
+  thrds.join_all();
   
 //  TThread::UnLock();    
 }

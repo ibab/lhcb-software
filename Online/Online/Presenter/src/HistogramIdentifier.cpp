@@ -6,6 +6,7 @@
 
 #include "presenter.h"
 #include "HistogramIdentifier.h"
+#include "Gaucho/MonObject.h"
 
 using namespace pres;
 
@@ -27,7 +28,8 @@ HistogramIdentifier::HistogramIdentifier(const std::string & histogramUrl):
   m_isDimFormat(false),
   m_gauchocommentBeat(""),
   m_gauchocommentEric(""),
-  m_dbDimServiceName("")
+  m_dbDimServiceName(""),
+  m_dbHistogramType(0)
 {
   setIdentifiersFromDim(m_histogramUrlTS.Data());
 }
@@ -135,12 +137,17 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   m_dbDimServiceName = m_histogramType + s_slash + m_identifier;
   
 //   typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;  
-  if (s_H1D == m_histogramType) {
+  if ( (s_H1D == m_histogramType) ||
+       (s_pfixMonH1D == m_histogramType) ||
+       (s_pfixMonH1F == m_histogramType)) {
     m_dbHistogramType = 0;
-  } else if (s_H2D == m_histogramType) {
+  } else if ( (s_H2D == m_histogramType) ||
+              (s_pfixMonH2D == m_histogramType) ||
+              (s_pfixMonH2F == m_histogramType) ) {
     m_dbHistogramType = 1;
   } else if ( (s_P1D == m_histogramType) ||
-              (s_HPD == m_histogramType) ) {
+              (s_HPD == m_histogramType) ||
+              (s_pfixMonProfile == m_histogramType) ) {
     m_dbHistogramType = 2;
   } else if (s_CNT == m_histogramType) {
     m_dbHistogramType = 4;

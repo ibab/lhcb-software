@@ -1574,11 +1574,25 @@ void DbRootHist::referenceHistogram(ReferenceVisibility visibility)
         (s_NoReference != m_refOption) &&
         (rootHistogram->GetDimension() == 1) &&
         (Show == visibility)) {
+
+      std::string subdet("");
+      if (m_onlineHistogram && m_session) {
+        OnlineHistTask histTask(*(dynamic_cast<OnlineHistDBEnv*>(m_session)), m_onlineHistogram->task());
+        if (-1 < histTask.ndet()) {
+          for (int i = 0; i < histTask.ndet(); i++) {
+            if (s_hltNodePrefix == histTask.det(i)) {
+              subdet = s_hltNodePrefix;
+              break;
+            }
+          }
+        }
+      }
       TH1* ref = NULL;
       std::string tck(s_default_tck);
       if (m_presenterApp &&
           (s_eff_init != m_presenterApp->currentTCK()) &&
-          (!(m_presenterApp->currentTCK()).empty()) ) {
+          (!(m_presenterApp->currentTCK()).empty()) &&
+          (s_hltNodePrefix == subdet) ) {
         tck = m_presenterApp->currentTCK();
         ref = (TH1*)m_analysisLib->getReference(m_onlineHistogram, 1, tck);
       } else {

@@ -3419,18 +3419,24 @@ void PresenterMainFrame::addHistoToHistoDB()
   TGListTree* list = new TGListTree();
   checkedTreeItems(list, m_histoSvcListTree);
 
+//  m_histogramDB->declareSubSystem("HLT");
+//  m_histogramDB->declareTask("Adder","HLT");
+//  m_histogramDB->declareTask("GauchoJob","HLT");
+//  m_histogramDB->declareTask("Moore","HLT");
+
   TGListTreeItem* currentNode;
   currentNode = list->GetFirstItem();
   while (0 != currentNode) {
     try {
-      if (0 != m_histogramDB) {        
+      if (0 != m_histogramDB) {
+
         TString histoName = *static_cast<TString*>(currentNode->GetUserData());
-        
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
+
         m_histogramDB->declareHistogram(histogramService.taskName(),
                                         histogramService.algorithmName(),
                                         histogramService.histogramName(),
-                                        (OnlineHistDBEnv::HistType)histogramService.dbHistogramType());
+                                        ((OnlineHistDBEnv::HistType)histogramService.dbHistogramType()));
       }
     } catch (std::string sqlException) {
       // TODO: add error logging backend
@@ -3446,6 +3452,7 @@ void PresenterMainFrame::addHistoToHistoDB()
   }
   try {
     if (0 != m_histogramDB) {
+
       m_histogramDB->commit();
       refreshHistoDBListTree();
     }
