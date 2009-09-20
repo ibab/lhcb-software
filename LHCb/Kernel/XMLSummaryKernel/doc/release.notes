@@ -5,8 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-09-19 - Marco Cottaneo
- - Cleaned up configurable
- - Removed unnecessary XmlSummaryKernel_dll.cpp file
+ - Cleaned up configurable, removed LHCbKernel dependency
+ - Removed unnecessary XMLSummaryKernel_dll.cpp file
+ - Removed XMLSummaryKernel directory, component library includes should not
+   be public
 
 ! 2009-09-18 - Rob Lambert
  - Refined requirements file to avoid circular dependencies

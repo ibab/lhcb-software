@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.4 2009-09-18 14:02:42 rlambert Exp $
+# $Id: requirements,v 1.5 2009-09-20 12:38:39 cattanem Exp $
 # Created    : 07/07/2009
 # Maintainer : R. Lambert
 #
@@ -9,7 +9,7 @@ version v1r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options python tests XMLSummaryKernel
+branches          cmt doc src options python tests
 
 # Packages needed to compile and link the application
 use XMLSummaryBase     v* Kernel
@@ -29,8 +29,6 @@ library XMLSummaryKernel *.cpp -import=Python
 #============================================================================
 #
 
-macro XMLSummaryKernelUserModules "XMLSummaryKernel.Configuration"
 apply_pattern component_library library=XMLSummaryKernel
 apply_pattern install_python_modules
-apply_pattern install_more_includes more=XMLSummaryKernel
 apply_pattern QMTest

@@ -1,4 +1,4 @@
-#include "XMLSummaryKernel/XMLSummarySvc.h"
+#include "XMLSummarySvc.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/IIncidentListener.h"

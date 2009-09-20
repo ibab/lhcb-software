@@ -1,13 +1,12 @@
 """
 Configuration of the XMLSummarySvc
 """
-__version__ = "$Id: Configuration.py,v 1.2 2009-09-19 13:57:30 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.3 2009-09-20 12:38:39 cattanem Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
 
-class XMLSummary(LHCbConfigurableUser):
+class XMLSummary(ConfigurableUser):
     __slots__ = {
         "XMLSummary"   : None
         }
