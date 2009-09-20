@@ -75,7 +75,7 @@ int main(int argc, char* argv[])
   std::string histdir("./");
   
   int windowWidth(1000);
-  int windowHeight(600);  
+  int windowHeight(600);
   
   const char* histdirEnv = getenv(s_histdir.c_str());
   if (NULL != histdirEnv) {

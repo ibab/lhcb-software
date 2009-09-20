@@ -100,7 +100,9 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
   currentTime(NULL),
   global_timePoint("20081126T160921"),
   global_pastDuration("00:05:00"),
-  global_stepSize("00:15:00"),  
+  global_stepSize("00:15:00"),
+  m_initWidth(width),
+  m_initHeight(height),
   m_verbosity(Silent),
   m_logBookConfig(""),  
   m_historyMode(s_timeInterval),
@@ -220,6 +222,7 @@ PresenterMainFrame::PresenterMainFrame(const char* name,
 
   m_archive = new Archive(this, m_savesetPath, m_referencePath);
   if (0 != m_archive) { m_archive->setVerbosity(m_verbosity); }  
+
 }
 
 PresenterMainFrame::~PresenterMainFrame()
@@ -289,7 +292,7 @@ void PresenterMainFrame::buildGUI()
 //    editorCanvas = new TCanvas("c", "c", GetWidth(), GetHeight());
 //    editorCanvas->cd();
 //    gStyle->SetOptStat("ne");
-//  } else 
+//  } else
   if ((EditorOnline == m_presenterMode) ||
          (EditorOffline == m_presenterMode) ||
          (Online == m_presenterMode) ||
@@ -1315,7 +1318,7 @@ void PresenterMainFrame::buildGUI()
     m_rightMiscFrame->UnmapWindow();
     m_rightVerticalSplitter->UnmapWindow();
   //  m_databaseAlarmsDock->UndockContainer();
-    Resize();
+    this->Resize(m_initWidth, m_initHeight);
     DoRedraw();
   }
 }
@@ -2733,6 +2736,10 @@ void PresenterMainFrame::inspectPage()
 void PresenterMainFrame::reconfigureGUI()
 {
   removeHistogramsFromPage();
+  UInt_t current_width  = 0;
+  UInt_t current_height = 0;
+  current_width = this->GetWidth();
+  current_height = this->GetHeight();
   if (isConnectedToHistogramDB()) {
     refreshPagesDBListTree();
     listAlarmsFromHistogramDB(m_alarmHistogramTreeList, AllHistograms);
@@ -2941,7 +2948,8 @@ void PresenterMainFrame::reconfigureGUI()
 
 //  partitionSelectorComboBoxHandler(0);
   fClient->NeedRedraw(this);
-  Resize();DoRedraw(); // wtf would trigger a redraw???
+  this->Resize(current_width,current_height);
+  DoRedraw(); // wtf would trigger a redraw???
 //  DoRedraw();
 }
 void PresenterMainFrame::hideDBTools()

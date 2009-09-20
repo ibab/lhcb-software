@@ -355,7 +355,8 @@ class PresenterMainFrame : public TGMainFrame
     std::string rw_pastDuration;
     
   private:
-
+    UInt_t            m_initWidth;
+    UInt_t            m_initHeight;
     static const bool s_previousPageToHistory = false;
     static const bool s_noPageHistory = true;
     pres::MsgLevel    m_verbosity;
