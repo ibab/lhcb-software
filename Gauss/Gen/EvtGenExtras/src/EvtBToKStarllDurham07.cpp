@@ -52,8 +52,8 @@ qcd::IPhysicsModel* EvtBToKStarllDurham07::_model = 0;
 QCDFactorisation* EvtBToKStarllDurham07::_calculator = 0;
 double EvtBToKStarllDurham07::_poleSize = 0;
 
-double EvtBToKStarllDurham07::_lowq2Cut = 1.0;
-double EvtBToKStarllDurham07::_highq2Cut = 12;
+double EvtBToKStarllDurham07::_lowq2Cut = 0.5;
+double EvtBToKStarllDurham07::_highq2Cut = 17;
 bdkszmm::PARAMETERIZATIONS EvtBToKStarllDurham07::_ffModel = bdkszmm::BALL07PRIVATE;
 bool EvtBToKStarllDurham07::_calcConstraints = false;
 bool EvtBToKStarllDurham07::_writeProbProfile = false;
