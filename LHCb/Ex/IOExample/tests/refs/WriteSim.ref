@@ -1,9 +1,9 @@
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteSim.opts'
+# --> Including file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/WriteSim.opts'
 # ApplicationMgr.HistogramPersistency = "NONE";
 # ApplicationMgr.EvtMax = 5;
 # EventSelector.PrintFreq = 1;
 # ApplicationMgr.OutStream += {"InputCopyStream/InputCopyStream"};
-# --> Including file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Mon/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -24,35 +24,34 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/lcg/app/nightlies/dev/Wed/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
-# --> Including file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolSim.opts'
-# EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"};
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb3/Mon/GAUDI/GAUDI_HEAD/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/build/cattanem/Boole_HEAD/Ex/IOExample/options/PoolSim.opts'
+# EventSelector.Input   = {"DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim' TYP='POOL_ROOTTREE' OPT='READ'"};
 # InputCopyStream.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
 # ApplicationMgr.Dlls += { "HepMCBack" };
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/options/PoolSim.opts'
-# <-- End of file '/build/cattanem/Brunel_HEAD/Ex/IOExample/tests/options/WriteSim.opts'
+# <-- End of file '/build/cattanem/Boole_HEAD/Ex/IOExample/options/PoolSim.opts'
+# <-- End of file '/build/cattanem/Boole_HEAD/Ex/IOExample/tests/options/WriteSim.opts'
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to ApplicationMgr $Revision: 1.6 $
-                                          running on lxbuild135.cern.ch on Wed Apr 15 09:27:38 2009
+                                                   Welcome to ApplicationMgr $Revision: 1.7 $
+                                          running on lxbuild120.cern.ch on Mon Sep 21 19:45:08 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Successfully loaded modules : HepMCBack
 ApplicationMgr       INFO Application Manager Configured successfully
-Note: (file "(tmpfile)", line 2) File "set" already loaded
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 InputCopyStream      INFO Data source: EventDataSvc output: DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'
-EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'
+EventSelector        INFO Stream:EventSelector.DataStreamTool_1 Def:DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim' TYP='POOL_ROOTTREE' OPT='READ'
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 HistogramPersis...WARNING Histograms saving not required.
 ApplicationMgr       INFO Application Manager Initialized successfully
 ApplicationMgr       INFO Application Manager Started successfully
-RootDBase.open    SUCCESS castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim File version:51304
-RootDBase.open    SUCCESS castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim File version:51304
-PoolRootTreeEvt...   INFO No Records /FileRecords present in:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0
+RootDBase.open    SUCCESS castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim File version:51800
+RootDBase.open    SUCCESS castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim File version:51800
+PoolRootTreeEvt...   INFO No Records /FileRecords present in:4298ECD3-A723-DE11-BD72-000CF1F44509
 EventSelector     SUCCESS Reading Event record 1. Record number within stream 1: 1
-IODataManager        INFO Referring to dataset PoolSim.root by its file ID:689F65EB-8E29-DE11-80C1-001E4F3D8360
+IODataManager        INFO Referring to dataset PoolSim.root by its file ID:AAED1284-D6A6-DE11-9FA2-0030487C5E0E
 RootDBase.open    SUCCESS PoolSim.root File version:52200
 EventSelector     SUCCESS Reading Event record 2. Record number within stream 1: 2
 EventSelector     SUCCESS Reading Event record 3. Record number within stream 1: 3
@@ -62,7 +61,7 @@ ApplicationMgr       INFO Application Manager Stopped successfully
 InputCopyStream      INFO Events output: 5
 EventLoopMgr         INFO Histograms converted successfully according to request.
 ToolSvc              INFO Removing all tools created by ToolSvc
-PoolRootTreeEvt...   INFO Disconnected data IO:689F65EB-8E29-DE11-80C1-001E4F3D8360[PoolSim.root]
-PoolRootTreeEvt...   INFO Disconnected data IO:70737DCB-49D9-DB11-A9D4-0002B3B0DEA0[castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim]
+PoolRootTreeEvt...   INFO Disconnected data IO:4298ECD3-A723-DE11-BD72-000CF1F44509[castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim]
+PoolRootTreeEvt...   INFO Disconnected data IO:AAED1284-D6A6-DE11-9FA2-0030487C5E0E[PoolSim.root]
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully

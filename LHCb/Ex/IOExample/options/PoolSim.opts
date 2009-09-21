@@ -1,6 +1,6 @@
 // Options to read POOL .sim file and make a copy
 EventSelector.Input   = {
-"DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001820/SIM/0000/00001820_00000001_1.sim' TYP='POOL_ROOTTREE' OPT='READ'"
+"DATAFILE='PFN:castor:/castor/cern.ch/user/g/gcorti/Gauss/2009/v37r0/30000000-100ev-20090407-MC09.sim' TYP='POOL_ROOTTREE' OPT='READ'"
 };
 
 InputCopyStream.Output = "DATAFILE='PFN:PoolSim.root' TYP='POOL_ROOTTREE' OPT='REC'";
