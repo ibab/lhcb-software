@@ -1,4 +1,4 @@
-// $Id: ICalo2MCTool.h,v 1.1 2009-09-17 08:22:29 odescham Exp $
+// $Id: ICalo2MCTool.h,v 1.2 2009-09-21 10:17:34 odescham Exp $
 #ifndef ICALO2MCTOOL_H 
 #define ICALO2MCTOOL_H 1
 
@@ -15,11 +15,12 @@ namespace LHCb{
   class CaloHypo;
   class ProtoParticle;
   class Particle;
+  class MCParticle;
 }
 
 
 
-static const InterfaceID IID_ICalo2MCTool ( "ICalo2MCTool", 1, 0 );
+static const InterfaceID IID_ICalo2MCTool ( "ICalo2MCTool", 2, 0 );
 
 /** @class ICalo2MCTool ICalo2MCTool.h
  *  
@@ -39,7 +40,14 @@ public:
   virtual ICalo2MCTool* from(const LHCb::CaloHypo*      hypo     )=0;
   virtual ICalo2MCTool* from(const LHCb::ProtoParticle* proto    )=0;
   virtual ICalo2MCTool* from(const LHCb::Particle*      particle )=0;
-  
+  virtual StatusCode  _setProperty(const std::string& p,const std::string& v)=0;
+  // getters
+  virtual const LHCb::MCParticle* bestMC() = 0;
+  virtual const LHCb::MCParticle* maxMC() = 0;
+  virtual const LHCb::MCParticle* findMC(std::string name, double threshold = 0 ) = 0;
+  virtual double weight(const LHCb::MCParticle*)  = 0;
+  virtual double quality(const LHCb::MCParticle*) = 0;
+  virtual std::string descriptor() = 0;
 
 protected:
 
