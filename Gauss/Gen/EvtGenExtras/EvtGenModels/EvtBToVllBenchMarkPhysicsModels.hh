@@ -23,14 +23,6 @@ protected:
 	qcd::WCPtr getZeroWCs() const;
 };
 
-class NegC7PhysicsModel : public SMPhysicsModel {
-public:	
-	std::string getModelName() const{
-		return "NegC7_Model";
-	}
-	qcd::WCPtr getLeftWilsonCoefficientsMW() const;
-};
-
 class LHTPhysicsModel : public SMPhysicsModel {
 public:	
 	std::string getModelName() const{

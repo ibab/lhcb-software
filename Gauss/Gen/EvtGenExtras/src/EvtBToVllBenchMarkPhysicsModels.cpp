@@ -39,14 +39,6 @@ qcd::WCPtr qcd::SMPhysicsModel::getLeftWilsonCoefficientsMW() const{
 	return qcd::WCPtr(C);
 }
 
-qcd::WCPtr qcd::NegC7PhysicsModel::getLeftWilsonCoefficientsMW() const{
-	qcd::SMPhysicsModel* model = new qcd::SMPhysicsModel;
-	qcd::WCPtr C = model->getLeftWilsonCoefficientsMW();
-	(*C)(7) = -(*C)(7);//set C7 to be -ve of what it is in SM
-	delete model;
-	return C;
-}
-
 qcd::WCPtr qcd::LHTPhysicsModel::getLeftNewPhysicsDeltasMW() const{
 		
 	qcd::WCPtr C = getZeroWCs();

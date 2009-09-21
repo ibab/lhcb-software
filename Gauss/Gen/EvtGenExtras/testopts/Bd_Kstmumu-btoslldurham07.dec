@@ -1,4 +1,4 @@
-# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.5 2009-08-31 15:50:26 wreece Exp $
+# $Id: Bd_Kstmumu-btoslldurham07.dec,v 1.6 2009-09-21 13:32:31 wreece Exp $
 #
 # This is the decay file for the decay B0 -> MU+ MU- K*0(-> K+ PI-)
 #
@@ -18,10 +18,10 @@ Alias      MyK*0       K*0
 Alias      Myanti-K*0  anti-K*0
 ChargeConj Myanti-K*0  MyK*0
 #
+#BTOKSTARLLDURHAM07_MODEL calcConstraints(1)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(FBMSSM_Model)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(GMSSM_Model)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(LHT_Model)
-#BTOKSTARLLDURHAM07_MODEL physicsModel(NegC7_Model)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(Standard_Model)
 #BTOKSTARLLDURHAM07_MODEL physicsModel(UED_Model)
 

@@ -470,7 +470,6 @@ void EvtBToKStarllDurham07::handleModelCommand(const std::string& modelName){
 	models.push_back(new qcd::FBMSSMPhysicsModel);
 	models.push_back(new qcd::GMSSMPhysicsModel);
 	models.push_back(new qcd::LHTPhysicsModel);
-	models.push_back(new qcd::NegC7PhysicsModel);
 	models.push_back(new qcd::SMPhysicsModel);
 	models.push_back(new qcd::UEDPhysicsModel);
 
