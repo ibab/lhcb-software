@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Fix reference for fix to EventDataSvc reference counting
+
 - Add first Upgrade Monte Carlo version
   
 - Added the pattern container_package.
