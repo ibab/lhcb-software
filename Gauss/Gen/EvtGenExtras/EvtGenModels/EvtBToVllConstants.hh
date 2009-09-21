@@ -38,6 +38,7 @@ public:
 	static const double mb;//GeV
 	static const double mbp;//GeV
 	static const double mc;//GeV
+	static const double mme;//GeV
 	static const double mmu;//GeV
 	static const double mKstar;//GeV
 	static const double ms;//GeV

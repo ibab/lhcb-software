@@ -44,6 +44,7 @@ qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC7(const qcd::WilsonType C7h, cons
 		return C7h;
 	}
 	case MU_MB:
+	case MU_MBP:
 	{
 		const qcd::WilsonType result = 0.6277390019256378*C7h + 0.10032280455435938*C8h;
 		DEBUGPRINT("RunC71: ", result);
@@ -74,6 +75,7 @@ qcd::WilsonType qcd::EvtBToVllEvolveWC10D::runC8(const qcd::WilsonType C8h, cons
 		return C8h;
 	}
 	case MU_MB:
+	case MU_MBP:
 	{
 		const qcd::WilsonType result = 0.6653600536335226*C8h;
 		DEBUGPRINT("RunC81: ", result);
@@ -368,8 +370,9 @@ qcd::EvtBToVllEvolveWC10D::result_type qcd::EvtBToVllEvolveWC10D::operator()(con
 	DEBUGPRINT("Cb[10]: ", (CmL(10)/as1));
 
 	//now the right handed terms - we neglect CR(1-6) as they will be v. small
-	(*CR_barred)(7) = (constants::ms/constants::mb)*(*C_barred)(7) + runC7(CR(7),CR(8),scale);
-	(*CR_barred)(8) = (constants::ms/constants::mb)*(*C_barred)(8) + runC8(CR(8),scale);
+	const double mb_scale = (scale == MU_MBP) ? WilsonCoefficients<WilsonType>::getScaleValue(scale) : constants::mb;
+	(*CR_barred)(7) = (constants::ms/mb_scale)*(*C_barred)(7) + runC7(CR(7),CR(8),scale);
+	(*CR_barred)(8) = (constants::ms/mb_scale)*(*C_barred)(8) + runC8(CR(8),scale);
 	(*CR_barred)(9) = CR(9);
 	(*CR_barred)(10) = CR(10);
 

@@ -6,6 +6,7 @@
 #include "CLHEP/Matrix/Vector.h"
 #include "EvtGenBase/EvtComplex.hh"
 #include "EvtGenModels/EvtBToVllConstants.hh"
+#include "EvtGenModels/EvtBToVllPoleMass.hh"
 
 #include <algorithm>
 #include <cassert>
@@ -20,7 +21,7 @@ typedef CLHEP::HepMatrix Matrix;
 typedef CLHEP::HepVector Vector;
 typedef EvtComplex WilsonType;
 
-enum Scale {MU_MW = 0, MU_MB = 1, MU_H = 3};
+enum Scale {MU_MW = 0, MU_MB = 1, MU_H = 3, MU_MBP = 4};
 
 
 /**
@@ -134,6 +135,9 @@ double WilsonCoefficients<T>::getScaleValue(const Scale _scale){
 		return constants::mu_mw;
 	case MU_MB:
 		return constants::mu_mb;
+	case MU_MBP:
+		//value of mbp when evaluated at the pole mass scale
+		return qcd::mb_pole(constants::mb, constants::mbp);//value at scale mbp
 	case MU_H:
 		return constants::mu_h;
 	default:

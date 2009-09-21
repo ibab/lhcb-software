@@ -130,7 +130,7 @@ private:
 
 protected:
 	
-	virtual const qcd::IPhysicsModel& getModel(){
+	virtual const qcd::IPhysicsModel& getModel() const{
 		return model;
 	}
 	

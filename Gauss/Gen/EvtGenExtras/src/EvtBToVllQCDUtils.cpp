@@ -42,9 +42,10 @@ double qcd::as1(const double mu, const int nflav){
 	return alpha_s(mu, nflav)/(4*constants::Pi);
 }
 
-double qcd::mb_pole(const double mb){
+double qcd::mb_pole(const double mb, const double scale){
+	const double _scale = (scale < 0) ? mb : scale;//use mb for unphysical negative scales
 	//see eqn 45 of Beneke
-	return mb + ((4*alpha_s(mb,5))/(3*constants::Pi)*constants::muf);
+	return mb + ((4*alpha_s(_scale,5))/(3*constants::Pi)*constants::muf);
 }
 
 EvtComplex qcd::h(const double& s, const double& mq, const double& mu){

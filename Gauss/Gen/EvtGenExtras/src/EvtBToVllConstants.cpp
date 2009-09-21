@@ -22,6 +22,7 @@ const double constants::mB = 5.27953;//GeV
 const double constants::mb = 4.52;//GeV
 const double constants::mbp = qcd::mb_pole(constants::mb);
 const double constants::mc = 1.6;//GeV
+const double constants::mme = 0.000511;//GeV
 const double constants::mmu = 0.10566;//GeV
 const double constants::mKstar = 0.896;//GeV
 const double constants::ms = 0.104;//GeV

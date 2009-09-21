@@ -86,9 +86,9 @@ void QCDFactorisation::init(){
 	report(INFO,"EvtGen") << " Form-factor model is \"" << ffModel->getName() << "\"." << std::endl;
 
 	//find the WCs at mu = mb
-	qcd::WCPtr  C_mw = model.getLeftWilsonCoefficientsMW();
-	qcd::WCPtr  CNP_mw = model.getLeftNewPhysicsDeltasMW();
-	qcd::WCPtr  CR_mw = model.getRightWilsonCoefficientsMW();
+	qcd::WCPtr  C_mw = getModel().getLeftWilsonCoefficientsMW();
+	qcd::WCPtr  CNP_mw = getModel().getLeftNewPhysicsDeltasMW();
+	qcd::WCPtr  CR_mw = getModel().getRightWilsonCoefficientsMW();
 
 	qcd::EvtBToVllEvolveWC10D evolveMb(*C_mw,*CNP_mw,*CR_mw);
 	std::auto_ptr<qcd::WilsonPair> _mb(evolveMb(qcd::MU_MB));
@@ -104,7 +104,7 @@ void QCDFactorisation::init(){
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb()->getOperatorBasis());
 	assert(C_mw->getOperatorBasis() == parameters->getC_mb3()->getOperatorBasis());
 
-	report(INFO,"EvtGen") << "Using physics model: " << model.getModelName() << std::endl;
+	report(INFO,"EvtGen") << "Using physics model: " << getModel().getModelName() << std::endl;
 	report(INFO,"EvtGen") << "Meson: " << parameters->flavourString() << std::endl;
 	report(INFO,"EvtGen") << "Left-handed Wilson coefficients are: " << std::endl;
 	report(INFO,"EvtGen") << "\t(m_W): " << (*C_mw) <<std::endl;
