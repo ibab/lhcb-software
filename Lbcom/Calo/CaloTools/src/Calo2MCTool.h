@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.h,v 1.1 2009-09-16 16:07:07 odescham Exp $
+// $Id: Calo2MCTool.h,v 1.2 2009-09-21 10:16:52 odescham Exp $
 #ifndef CALO2MCTOOL_H 
 #define CALO2MCTOOL_H 1
 
@@ -28,7 +28,24 @@
  *  @date   2009-07-27
  */
 class Calo2MCTool : public GaudiTool, virtual public ICalo2MCTool {
+
 public: 
+  // category enum
+  
+  enum MCCategory  {
+    /* Single cluster/hypo categories */
+    UnMatched           = 0,
+    Photon              = 1,
+    BremStrahlung       = 2,
+    Electron            = 3,
+    ConvertedPhoton     = 4,
+    MergedPi0           = 5, 
+    ChargedHadron       = 6,
+    NeutralHadron       = 7,
+    Spillover           = 8
+  };
+  
+
   /// Standard constructor
   Calo2MCTool( const std::string& type, 
                const std::string& name,
@@ -38,26 +55,37 @@ public:
   virtual ~Calo2MCTool( ); ///< Destructor
 
   //
-  ICalo2MCTool* from(const LHCb::CaloDigit*     digit    ){  return this;}  
-  ICalo2MCTool* from(const LHCb::CaloCluster*   cluster  );
-  ICalo2MCTool* from(const LHCb::CaloHypo*      hypo     ){  return this;}  
-  ICalo2MCTool* from(const LHCb::ProtoParticle* proto    ){  return this;}  
-  ICalo2MCTool* from(const LHCb::Particle*      particle ){  return this;}  
+  virtual ICalo2MCTool* from(const LHCb::CaloDigit*     digit    );
+  virtual ICalo2MCTool* from(const LHCb::CaloCluster*   cluster  );
+  virtual ICalo2MCTool* from(const LHCb::CaloHypo*      hypo     );
+  virtual ICalo2MCTool* from(const LHCb::ProtoParticle* proto    );
+  virtual ICalo2MCTool* from(const LHCb::Particle*      particle );
+  virtual StatusCode  _setProperty(const std::string& p,const std::string& v){return  setProperty(p,v);};
+  virtual const LHCb::MCParticle* bestMC();
+  virtual const LHCb::MCParticle* maxMC();
+  virtual double weight(const LHCb::MCParticle*);
+  virtual const LHCb::MCParticle* findMC(std::string name, double threshold = 0 );
+  virtual double quality(const LHCb::MCParticle*);
+  virtual std::string descriptor();
 
-
+  // TO BE INTERFACED :
+  int MCCategory(){return m_category;};
+  ICalo2MCTool* fragment(unsigned int i);
+  unsigned int numberOfFragments(){return m_nFrag;}    
+  //ostream << category
+  // clusters()
+  // hypos()
+  // protos()
 protected:
 
 private:
   StatusCode process();
+  void addCluster(const LHCb::CaloCluster* cluster);
+  void addHypo(const LHCb::CaloHypo* hypo);
+  void addProto(const LHCb::ProtoParticle* proto, const LHCb::Particle* parent = NULL);
   void clear();
   void mcDigest();
   void mcTree(const LHCb::MCParticle* part, std::vector<const LHCb::MCParticle*>& tree , std::string& sTree);
-  double weight(const LHCb::MCParticle*);
-  double quality(const LHCb::MCParticle*);
-  const LHCb::MCParticle* findMC(std::string name, double threshold = 0 );
-  std::string descriptor();
-  const LHCb::MCParticle* bestMC();
-  const LHCb::MCParticle* maxMC();
   CaloMCTools::CaloMCMap  mcMap();
   
   
@@ -68,16 +96,33 @@ private:
   std::vector<const LHCb::CaloHypo*>      m_hypos;
   std::vector<const LHCb::ProtoParticle*> m_protos;
   std::vector<const LHCb::Particle*>      m_parts;
+  LHCb::CaloDigit* m_digit;
+  LHCb::CaloCluster* m_cluster;
+  LHCb::CaloHypo* m_hypo;
+  LHCb::ProtoParticle* m_proto;
+  LHCb::Particle* m_part;
   CaloMCTools::CaloMCMap m_mcMap;
   //
   std::string m_cluster2MCLoc;
   std::string m_digit2MCLoc;
+  std::string m_hypo2MCLoc;
   LHCb::Calo2MC::IClusterTable* m_cluster2MC ;
-  LHCb::Calo2MC::IDigitTable* m_digit2MC ;
+  //LHCb::Calo2MC::IHypoTable*    m_hypo2MC ;
+  LHCb::Calo2MC::IDigitTable*   m_digit2MC ;
   double m_sum;
   const LHCb::MCParticle* m_maxMC;
   const LHCb::MCParticle* m_bestMC;
   std::map<std::string,std::vector<const LHCb::MCParticle*> > m_treeMap;
   LHCb::IParticlePropertySvc* m_ppsvc;
+  
+  // 
+  bool m_hypo2Cluster;
+  bool m_cluster2Digit;
+  bool m_merged2Split;
+  int m_sFilter;
+  int m_category;
+  int m_depth;
+  unsigned int m_nFrag;
+  ICalo2MCTool* m_tool;
 };
 #endif // CALO2MCTOOL_H

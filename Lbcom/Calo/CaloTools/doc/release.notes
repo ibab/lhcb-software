@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.77 2009-09-16 16:07:06 odescham Exp $
+! $Id: release.notes,v 1.78 2009-09-21 10:16:52 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+
+! 2009-09-21 - Olivier Deschamps
+  -  improve Calo2MCTool.{cpp,h} : not yet complete but usable 
 
 ! 2009-09-15 - Olivier Deschamps
   - new tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation (interface CaloInterfaces/ICalo2MCTool.h)

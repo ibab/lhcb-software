@@ -1,10 +1,11 @@
-// $Id: Calo2MCTool.cpp,v 1.1 2009-09-16 16:07:06 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.2 2009-09-21 10:16:52 odescham Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 // from LHCb
 #include "Relations/RelationWeighted1D.h"
+#include "CaloUtils/CaloParticle.h"
 // local
 #include "Calo2MCTool.h"
 
@@ -28,9 +29,13 @@ Calo2MCTool::Calo2MCTool( const std::string& type,
 {
   declareInterface<ICalo2MCTool>(this);
 
+  declareProperty ( "Hypo2MCTable"    , m_hypo2MCLoc ) ;
   declareProperty ( "Cluster2MCTable" , m_cluster2MCLoc ) ;
   declareProperty ( "Digit2MCTable"   , m_digit2MCLoc = "Relations/" + LHCb::CaloDigitLocation::Default ) ;
-
+  declareProperty ( "Cluster2Digits"  , m_cluster2Digit = false  );
+  declareProperty ( "Hypo2Cluster"    , m_hypo2Cluster  = true   ); // Direct hypo->MC relation table does not exists
+  declareProperty ( "Merged2Split"    , m_merged2Split  = false  );
+  declareProperty ( "DigitStatusFilter"  , m_sFilter    = LHCb::CaloDigitStatus::UseForEnergy       ) ;
   // cluster2MC table location depends on context()
 
   std::string out( context() );
@@ -56,28 +61,273 @@ StatusCode Calo2MCTool::initialize(){
   if (sc.isFailure()) return Error("Failed to initialize", sc);
   m_ppsvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true);
   if( m_ppsvc == NULL )return StatusCode::FAILURE;
+
+  //
+  if( !m_hypo2Cluster ){
+    warning() << "Hypo->MC relation table not yet exists  - use Hypo->Cluster->MC relation" << endmsg;
+    m_hypo2Cluster = true;
+  }
+  
+  // init
+  m_digit   = NULL; 
+  m_cluster = NULL;
+  m_hypo    = NULL;
+  m_proto   = NULL;
+  m_part    = NULL;
+  m_digit2MC= NULL;
+  m_cluster2MC=NULL;
+  m_category = 0 ;
+  m_depth    = -1 ;
+  //m_hypo2MC = NULL;
+  // get fragment tool and propagate properties
+  m_tool = tool<ICalo2MCTool>("Calo2MCTool/CaloFragment2MCTool"); // CAUTION : THE TOOL CANNOT BE PRIVATE !!
+  m_tool->_setProperty ( "Hypo2MCTable"    , m_hypo2MCLoc    ) ;
+  m_tool->_setProperty ( "Cluster2MCTable" , m_cluster2MCLoc ) ;
+  m_tool->_setProperty ( "Digit2MCTable"   , m_digit2MCLoc   ) ;
+  m_tool->_setProperty ( "Cluster2Digits"  , Gaudi::Utils::toString( m_cluster2Digit ) );
+  m_tool->_setProperty ( "Hypo2Cluster"    , Gaudi::Utils::toString( m_hypo2Cluster  ) ); 
+  m_tool->_setProperty ( "Merged2Split"    , Gaudi::Utils::toString( m_merged2Split  ) );
+  m_tool->_setProperty ( "DigitStatusFilter"  , Gaudi::Utils::toString( m_sFilter    ) ) ;
+  
+  // 
+  clear();
   return StatusCode::SUCCESS;
 }
 
 
 
+
+/*-------------------------- from Part to MC  ------------------------*/
+// associate single particle
+ICalo2MCTool* Calo2MCTool::from(const LHCb::Particle*   part  ){
+  clear();
+  m_depth = 4; // particle level
+  if( part == NULL )return this;
+  if( part == m_part)return this; // process only if needed
+
+  // check the particle is full calorimetric (using caloParticle functionalities)
+  LHCb::CaloParticle cPart = LHCb::CaloParticle( (LHCb::Particle*) part );
+  if( !cPart.isCalo() ){
+    Warning("Cannot associate non calorimetric particle to MC").ignore();
+    return this;
+  }
+
+  // register final state particles 
+  m_parts = cPart.caloEndTree();
+
+
+  // particle->protoparticle cascade (mandatory)
+  m_depth=3; // protoparticle level
+  for(LHCb::Particle::ConstVector::const_iterator ip = m_parts.begin() ; m_parts.end() != ip ; ip ++ ){
+    const LHCb::Particle* fs = * ip;
+    const LHCb::ProtoParticle* proto = fs->proto();
+    if( NULL == proto){
+      Warning("ProtoParticle point to NULL (should not)").ignore();
+      continue;
+    }
+    addProto( proto , fs );
+  }
+ StatusCode sc = process();
+  if ( sc.isFailure() )Warning("Processing Calo2MCTool from Particle failed").ignore();
+  return this;
+}
+
+
+/*-------------------------- from Proto to MC  ------------------------*/
+// Accumulate protos->hypo()s [->clusters]
+void Calo2MCTool::addProto(const LHCb::ProtoParticle* proto, const LHCb::Particle* parent ){ 
+  if( NULL == proto)return;
+
+  // register proto if not yet done
+  bool ok = true;
+  for(std::vector<const LHCb::ProtoParticle*>::const_iterator ip = m_protos.begin() ; ip != m_protos.end() ; ip++){
+    if( *ip == proto){ok = false;break;}
+  }
+  if(ok)m_protos.push_back( proto ) ;
+  if(!ok)debug() << "ProtoParticle appears twice in the same decay chain" << endreq;
+
+
+  // proto->hypo cascade (mandatory)
+  m_depth = 2; // hypo level
+  const SmartRefVector<LHCb::CaloHypo> hypos = proto->calo();  
+  if( hypos.empty() )return;
+  // special treatment for Bremstrahlung electrons 
+  bool brem = false ;
+  bool charged = false;
+  if( NULL != proto-> track() ){   /* charged part->proto */
+    charged = true;
+    if( NULL != parent)
+      if( fabs(parent->momentum().P() != proto->track()->firstState().p())> 1E-4 ){ /* bremstrahlung corrected particle */
+      brem = true;
+    }
+  }
+  for(SmartRefVector<LHCb::CaloHypo>::const_iterator it = hypos.begin(); it != hypos.end() ; ++it){
+    const LHCb::CaloHypo* hypo = *it;
+    if ( !charged 
+         || (charged && hypo->hypothesis() == LHCb::CaloHypo::EmCharged )
+         || (charged && brem && hypo->hypothesis() == LHCb::CaloHypo::Photon ) )addHypo( hypo );
+  } 
+}
+
+// associate single protoParticle
+ICalo2MCTool* Calo2MCTool::from(const LHCb::ProtoParticle*   proto  ){
+  clear();
+  m_depth = 3; // proto level
+  if( proto == NULL )return this;
+  if( proto == m_proto)return this; // process only if needed
+  m_proto = (LHCb::ProtoParticle*) proto;
+  addProto( proto );
+  StatusCode sc = process();
+  if ( sc.isFailure() )Warning("Processing Calo2MCTool from ProtoParticle failed").ignore();
+  return this;
+}
+
+
+/*-------------------------- from Hypo to MC  ------------------------*/
+// Accumulate hypos [->clusters]
+void Calo2MCTool::addHypo(const LHCb::CaloHypo* hypo){ 
+  if( hypo == NULL )return;
+
+  // register hypo if not yet done
+  bool ok = true;
+  for(std::vector<const LHCb::CaloHypo*>::const_iterator ih = m_hypos.begin() ; ih != m_hypos.end() ; ih++){
+    if( *ih == hypo){ok = false;break;}
+  }
+  if(ok)m_hypos.push_back( hypo ) ;
+  if(!ok)debug() << "CaloHypo appears twice in the same decay chain" << endreq;
+ 
+  // hypo->cluster cascade if requested
+  if( m_hypo2Cluster ){
+    m_depth = 1; // cluster level
+    const SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
+    if( clusters.empty() )return;
+    const LHCb::CaloCluster* cluster =
+      ( clusters.size() > 1 && hypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0 ) ?
+      *(clusters.begin() + 1 ) : *(clusters.begin()); //@ToDO use cluster::Type (when defined)
+    if( cluster )return ;
+    if( clusters.size() !=1 && hypo->hypothesis() != LHCb::CaloHypo::PhotonFromMergedPi0 )counter("ill-defined CaloHypo") += 1;
+    addCluster( cluster );
+  }
+  return;
+}
+// associate single hypo
+ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloHypo*   hypo  ){
+  clear();
+  m_depth = 2; // hypo level
+  if( hypo == NULL )return this;
+  if( hypo == m_hypo)return this; // process only if needed
+  m_hypo = (LHCb::CaloHypo*) hypo;
+  // special case for MergedPi0
+  if( hypo->hypothesis() == LHCb::CaloHypo::Pi0Merged && m_merged2Split){
+    SmartRefVector<LHCb::CaloHypo> hyps = hypo->hypos();
+    if( hyps.empty() )return this;
+    LHCb::CaloHypo* hyp1 = *(hyps.begin());
+    LHCb::CaloHypo* hyp2 = *(hyps.begin()+1);
+    addHypo( hyp1 ); // splitPhoton1
+    addHypo( hyp2 ); // splitPhoton2
+  }
+  else{
+    addHypo( hypo ); // mother CaloHypo
+  }
+  StatusCode sc = process();
+  if ( sc.isFailure() )Warning("Processing Calo2MCTool from CaloHypo failed").ignore();
+  return this;
+}
+
+/*-------------------------- from Cluster to MC  ------------------------*/
+// Accumulate clusters [->digits]
+void Calo2MCTool::addCluster(const LHCb::CaloCluster*   cluster  ){
+  if( cluster == NULL )return;
+
+  // register cluster (if not yet done)
+  bool ok = true;
+  for(std::vector<const LHCb::CaloCluster*>::const_iterator ic = m_clusters.begin() ; ic != m_clusters.end() ; ic++){
+    if( *ic == cluster){ ok = false; break;}
+  }
+  
+  if(ok) m_clusters.push_back( cluster ) ;
+  if(!ok) debug() << "Warning : CaloCluster appears twice in the same decay chain" << endmsg;
+
+  // cluster->digit cascade if requested
+  if(m_cluster2Digit){
+    m_depth = 0;    
+    const std::vector<LHCb::CaloClusterEntry>& entries = cluster->entries() ;
+    for( std::vector<LHCb::CaloClusterEntry>::const_iterator ie = entries.begin();ie!=entries.end();++ie){
+      LHCb::CaloClusterEntry entry = *ie;
+      if ( m_sFilter >= 0 && ( entry.status() & m_sFilter) == 0 ){ continue ; }
+      LHCb::CaloDigit* digit = entry.digit();
+      if( NULL == digit )continue;
+    // check digit is not yet registered 
+      bool ok = true;
+      for(std::vector<const LHCb::CaloDigit*>::const_iterator id = m_digits.begin() ; id != m_digits.end() ; id++){
+        if( *id == digit){ ok = false; break;}
+      }
+      if(ok)m_digits.push_back( digit );
+    }
+  } 
+  return;
+}
+// associate single cluster
 ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloCluster*   cluster  ){
   clear();
-  m_clusters.push_back( cluster ) ;
+  m_depth = 1;// cluster level
+  if( cluster == NULL )return this;
+  if( cluster == m_cluster)return this; // process only if needed
+  m_cluster = (LHCb::CaloCluster*) cluster;
+  //
+  addCluster( cluster );
+  //
   StatusCode sc = process();
-  if ( sc.isFailure() )Warning("Processing Calo2MCTool from cluster failed").ignore();
+  if ( sc.isFailure() )Warning("Processing Calo2MCTool from CaloCluster failed").ignore();
   return this; 
 }  
 
+/*-------------------------- from Digit to MC  ------------------------*/
+// associate single digit
+ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloDigit*   digit  ){
+  clear();
+  m_depth = 0; // digit level
+  if( digit == NULL )return this;
+  if( digit == m_digit)return this; // process only if needed
+  m_digit = (LHCb::CaloDigit*) digit;
+  m_digits.push_back( digit ) ;
+  StatusCode sc = process();
+  if ( sc.isFailure() )Warning("Processing Calo2MCTool from CaloDigit failed").ignore();
+  return this; 
+}  
+
+/*-------------------------- Generic processing ------------------------*/
 StatusCode Calo2MCTool::process(){
 
   m_sum = 0;
 
-  if( !m_clusters.empty() ){
+  if( m_depth == 2 ){
+    return Error("DIRECT HYPO->MC RELATION IS NOT YET ALLOWED",StatusCode::FAILURE);
+    /*  
+        // HYPO -> MC TABLE PRODUCTION DOES NO EXISITS
+        if( exist<LHCb::Calo2MC::IHypoTable>(m_hypo2MCLoc ) )
+        m_hypo2MC  = get<LHCb::Calo2MC::IHypoTable>( m_hypo2MCLoc );
+        if( 0 == m_hypo2MC ) 
+        return Warning(" Hypo <-> MC relation table not found at " + m_hypo2MCLoc , StatusCode::FAILURE);
+        // 2 - built (particle,weight) map
+        for( std::vector<const LHCb::CaloHypo*>::const_iterator ih = m_hypos.begin() ; ih != m_hypos.end() ; ih++){
+        const LHCb::CaloHypo* hypo = *ih;
+        if( hypo == NULL )continue;
+        LHCb::Calo2MC::IHypoTable::Range hypo2MCRange = m_hypo2MC->relations( hypo );
+        for( LHCb::Calo2MC::IHypoTable::Range::const_iterator ir = hypo2MCRange.begin();hypo2MCRange.end()!=ir;ir++){
+        const LHCb::MCParticle* mcpart = ir->to();
+        m_mcMap[mcpart] += ir->weight();
+        }
+        m_sum += hypo->e();
+        }
+    */
+  } 
+  else if( m_depth == 1 ){
     // process clusters matching
     // 1 - get cluster->MC table
     //if( 0 == m_cluster2MC )
-    m_cluster2MC  = get<LHCb::Calo2MC::IClusterTable>( m_cluster2MCLoc );
+    if( exist<LHCb::Calo2MC::IClusterTable>(m_cluster2MCLoc ) )
+      m_cluster2MC  = get<LHCb::Calo2MC::IClusterTable>( m_cluster2MCLoc );
     if( 0 == m_cluster2MC ) 
       return Warning(" Cluster <-> MC relation table not found at " + m_cluster2MCLoc , StatusCode::FAILURE);
     
@@ -91,13 +341,14 @@ StatusCode Calo2MCTool::process(){
         m_mcMap[mcpart] += ir->weight();
       }
       m_sum += cluster->e();
-      info() << "SUM CLUSTERS ENERGY " << m_sum << endreq;
-    }
-  }else if( !m_digits.empty() ){
+    }  
+  }
+  else if( m_depth = 0 ){
     // process digits matching    
     // 1 - get digit->MC table
     //if( 0 == m_digit2MC )
-    m_digit2MC  = get<LHCb::Calo2MC::DigitTable>( m_digit2MCLoc );
+    if( exist<LHCb::Calo2MC::IDigitTable>(m_digit2MCLoc ) )
+      m_digit2MC  = get<LHCb::Calo2MC::DigitTable>( m_digit2MCLoc );
     if( 0 == m_digit2MC ) 
       return Warning(" Digit <-> MC relation table not found at " + m_digit2MCLoc , StatusCode::FAILURE);
     // 2 - built (particle,weight) map
@@ -108,15 +359,14 @@ StatusCode Calo2MCTool::process(){
         const LHCb::MCParticle* mcpart = ir->to();
         m_mcMap[mcpart] += ir->weight();
       }
-      m_sum += digit->e();
+      m_sum += digit->e(); // frac ??
     }
   }else{
-    return StatusCode::FAILURE;
+    counter("Undefined calo chain level") += 1;
+    return StatusCode::SUCCESS;
   }
   mcDigest();
-
-  info() << descriptor() << endmsg;
-
+  verbose() << descriptor() << endmsg;
   return StatusCode::SUCCESS;
 }
 
@@ -128,12 +378,11 @@ void Calo2MCTool::clear(){
   m_hypos.clear();
   m_protos.clear();
   m_parts.clear();
+  m_nFrag = 0;
 }
   
 
 void Calo2MCTool::mcDigest(){
-
-  info() << "DIGEST" << endmsg;
 
   double mcMax = 0.;
   double mcBest = 0.;
@@ -166,10 +415,6 @@ void Calo2MCTool::mcDigest(){
     
 
   } // end loop over MCParticles
-
-  info() << "MAX/BEST " << weight( m_maxMC ) << "/" << quality( m_bestMC) << endmsg;
-
-
   // build MC tree
   // 1- get related MC particle (seed) without any descendant listed in the related mcParticles 
   std::vector<const LHCb::MCParticle*> seeds;
@@ -186,8 +431,6 @@ void Calo2MCTool::mcDigest(){
     }
     if( nProd == 0) seeds.push_back( mcPart );
   }
-  
-
   // 2- build the seed upstream tree
   for( std::vector<const LHCb::MCParticle*>::const_iterator is = seeds.begin() ; is!= seeds.end() ; is++){
     const LHCb::MCParticle* seed = *is;
@@ -197,7 +440,7 @@ void Calo2MCTool::mcDigest(){
     std::stringstream frac("");
     std::stringstream qual("");
     frac << format(" %6.1f %% from : ", weight( seed ) *100. );
-    qual << " ( " << format(" %6.1f %% of the MC particle energy in calo",
+    qual << " ( " << format(" %6.1f %% of the MC particle energy contributing",
                             (weight( seed ) == 0)?0: quality(seed) /weight( seed )*100.) << " )";
     sTree = frac.str() + sTree + qual.str(); 
     m_treeMap[ sTree ] = tree;
@@ -207,9 +450,11 @@ void Calo2MCTool::mcDigest(){
 
 
 void Calo2MCTool::mcTree(const LHCb::MCParticle* part, std::vector<const LHCb::MCParticle*>& tree , std::string& sTree){
+  if( NULL == part)return;
   tree.push_back( part );
   const LHCb::ParticleProperty* prop = m_ppsvc->find( part->particleID() );
-  sTree = prop->name() +  sTree;
+  std::string p = ( NULL != prop) ? prop->name() : "??";
+  sTree = p + sTree;
   if( part->mother() != NULL){
     sTree = " -> " + sTree;
     mcTree( part->mother() , tree, sTree );
@@ -237,8 +482,9 @@ std::string Calo2MCTool::descriptor(){
   if( !m_clusters.empty() ) ss << "to " << m_clusters.size() << " cluster(s) ------- " << std::endl;
   ss  << "     ---- Total calo energy deposit : " << m_sum << " MeV " << std::endl;
   for( std::map<std::string,std::vector<const LHCb::MCParticle*> >::iterator im = m_treeMap.begin() ; m_treeMap.end()!=im;im++){
-    ss  << "        -- " << (*im).first << std::endl;
+    ss  << "        -- " << (*im).first << std::endl; 
   }
+  ss << "      -------------------------------- "; 
   return ss.str();
 }
 
@@ -272,5 +518,30 @@ CaloMCTools::CaloMCMap  Calo2MCTool::mcMap(){
 //int Calo2MCTool::mcCategory(){
 //}
 
+
+ICalo2MCTool* Calo2MCTool::fragment(unsigned int i){
+  m_nFrag = 0;
+  /* CaloHypo level */
+  if( m_depth == 2 ){
+    m_nFrag = m_hypos.size();
+    if( i >= m_nFrag)return NULL;
+    if(m_nFrag == 1)return this;
+    return m_tool->from( m_hypos[i] );
+  /* CaloCluster level */
+  }else if( m_depth == 1 ){
+    m_nFrag = m_clusters.size();
+    if( i >= m_nFrag)return NULL;
+    if(m_nFrag == 1)return this;
+    return m_tool->from( m_clusters[i] );
+  }
+  /* CaloDigit level */
+  else if( m_depth == 0 ){
+    m_nFrag = m_digits.size();
+    if( i >= m_nFrag)return NULL;
+    if(m_nFrag == 1)return this;
+    return m_tool->from( m_digits[i] );
+  }
+  return NULL;
+}
 
 
