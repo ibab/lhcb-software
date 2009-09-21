@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.6 2009-09-15 13:22:15 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.7 2009-09-21 08:24:02 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -14,13 +14,13 @@ class BaseDSTWriter(ConfigurableUser) :
     contents of the input DST file, plus optional extra items from the TES.
     """
     __slots__ = {
-        "OutputFileSuffix"           : ""
+        "OutputFileSuffix"           : "Sel"
         , "SelectionSequences"       : []
         , "ExtraItems"               : []
         }
 
     _propertyDocDct = {  
-        "OutputFileSuffix"             : """Add to name of output DST file. Default ''"""
+        "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
         , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         }
@@ -55,7 +55,7 @@ class BaseDSTWriter(ConfigurableUser) :
 
     def outputFileName(self, name) :
         if name == "" : name = 'Output'
-        dstName = name+"_"+self.getProp('OutputFileSuffix')+self.fileExtension()
+        dstName = self.getProp('OutputFileSuffix')+name+self.fileExtension()
         return "DATAFILE='" + dstName + "' TYP='POOL_ROOTTREE' OPT='REC'"
     
     def _initOutputStreams(self, name) :
@@ -81,7 +81,7 @@ class BaseDSTWriter(ConfigurableUser) :
         """
         log.info("Configuring BaseDSTWriter")
         for sel in self.selectionSequences() :
-            seq = GaudiSequencer("Seq"+sel.name(), Members = [sel.sequence()])
+            seq = GaudiSequencer("."+sel.name(), Members = [sel.sequence()])
             self._initOutputStreams(seq.name())
             seq.Members += self.extendSequence(sel)
             self.addOutputStream(seq)
