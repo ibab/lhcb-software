@@ -18,10 +18,13 @@ TDirectory *algo3= algo2->mkdir("monRate");
 
 const Int_t nbins = 200;
 const Double_t refValue1 = 1.5;
+const Double_t refValue2 = 2.3;
 TH1D* h1 = new TH1D("Counternumber1","GauchoJob/MonitorSvc/monRate/Counternumber1",nbins,0,nbins);
+TH1D* h2 = new TH1D("Counternumber2","GauchoJob/MonitorSvc/monRate/Counternumber2",nbins,0,nbins);
 Int_t i;
 for (i=1 ; i < nbins; i++) {
-  h1->SetBinContent(refValue1, i);
+  h1->SetBinContent(i, refValue1);
+  h2->SetBinContent(i, refValue2);
 }   
 refFile->Write();
 delete refFile;
