@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::RawDataFormatTool
  *
  *  CVS Log :-
- *  $Id: RichRawDataFormatTool.cpp,v 1.94 2009-09-08 14:57:48 jonrob Exp $
+ *  $Id: RichRawDataFormatTool.cpp,v 1.95 2009-09-22 11:22:16 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date 2004-12-18
@@ -1064,8 +1064,14 @@ void RawDataFormatTool::suppressHotPixels( const LHCb::RichSmartID& hpdID,
         }
         else
         {
+          // Get detector info
+          const Rich::DAQ::Level0ID l0ID           = m_richSys->level0ID(hpdID);
+          const Rich::DAQ::Level1HardwareID l1ID   = m_richSys->level1HardwareID(hpdID);
+          const Rich::DAQ::Level1Input l1Input     = m_richSys->level1InputNum(hpdID);
+          // Print warning
           std::ostringstream mess;
-          mess << "Channel " << *iID << " is software SUPPRESSED";
+          mess << "L1HardID=" << l1ID << " L1Input=" << l1Input 
+               << " L0ID=" << l0ID << " " << *iID << " is software SUPPRESSED";
           Warning( mess.str(), StatusCode::SUCCESS );
         }
 
