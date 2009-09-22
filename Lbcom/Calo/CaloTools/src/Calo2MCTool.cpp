@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.cpp,v 1.3 2009-09-22 09:36:45 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.4 2009-09-22 14:18:59 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,7 @@ void Calo2MCTool::addProto(const LHCb::ProtoParticle* proto, const LHCb::Particl
   if( NULL != proto-> track() ){   /* charged part->proto */
     charged = true;
     if( NULL != parent)
-      if( fabs(parent->momentum().P() != proto->track()->firstState().p())> 1E-4 ){ /* bremstrahlung corrected particle */
+      if( fabs(parent->momentum().P() - proto->track()->firstState().p())> 1E-4 ){ /* bremstrahlung corrected particle */
       brem = true;
     }
   }
