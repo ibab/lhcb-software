@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r22 2009-09-22 ============================
 ! 2009-09-16 - Tomasz Skwarnicki
  - Introduce "Upgrade" DataType 
    . set DDDB tag for the first Minimal Upgrade Layout release (mul-20091917) 
