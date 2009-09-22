@@ -4,6 +4,7 @@
 ! Purpose     : Upgrade Monte Carlo additions needed to run Boole
 !-----------------------------------------------------------------------------
 
+!========================== BooleUMC v1r0 2009-09-22 =========================
 ! 2009-09-11 - Tomasz Skwarnicki
  - inital version containing algorithms for spillover suppression in Velo & ST
    including monitoring 
