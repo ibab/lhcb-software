@@ -4,6 +4,7 @@
 ! Purpose     : Algorithms for ST Digitization
 !-----------------------------------------------------------------------------
 
+!========================= STDigiAlgorithms v1r7 2009-09-22 ==================
 ! 2009-09-10 - Tomasz Skwarnicki
  - make input/output locations of MCSTDigiCreator setable properties 
   (needed for upgrade simulations)
