@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.cpp,v 1.2 2009-09-21 10:16:52 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.3 2009-09-22 09:36:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -343,7 +343,7 @@ StatusCode Calo2MCTool::process(){
       m_sum += cluster->e();
     }  
   }
-  else if( m_depth = 0 ){
+  else if( m_depth == 0 ){
     // process digits matching    
     // 1 - get digit->MC table
     //if( 0 == m_digit2MC )
