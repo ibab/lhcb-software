@@ -106,6 +106,7 @@ private:
     Double_t dx;
     Double_t dy;
     Double_t dt;
+    Double_t weight;
     Double_t sumOfWeights;
   };
   
@@ -114,31 +115,18 @@ private:
   int m_dz;                          ///< Z particle direction 
   
   /// Histograms
-  AIDA::IHistogram2D* m_xyDistInput;
-  AIDA::IHistogram1D* m_eKinInput;
-  AIDA::IHistogram1D* m_logEKinInput;
-  AIDA::IHistogram1D* m_thetaInput;
-
   AIDA::IHistogram2D* m_xyDistGen;
   AIDA::IHistogram2D* m_pxVSrGen;
   AIDA::IHistogram2D* m_pyVSrGen;
   AIDA::IHistogram2D* m_pzVSrGen;
   AIDA::IHistogram1D* m_absPGen;
   AIDA::IHistogram1D* m_thetaGen;
+  AIDA::IHistogram1D* m_timeGen;
 
-  AIDA::IHistogram2D* m_xyDistGenWeight;
-  AIDA::IHistogram2D* m_pxVSrGenWeight;
-  AIDA::IHistogram2D* m_pyVSrGenWeight;
-  AIDA::IHistogram2D* m_pzVSrGenWeight;
-  AIDA::IHistogram1D* m_absPGenWeight;
-  AIDA::IHistogram1D* m_thetaGenWeight;
 
   IParticlePropertySvc* m_ppSvc;   ///< Pointer to Particle Property Service
 
 protected:
-
-  /// Get Random Particle
-  //StatusCode getRandPart(ParticleData* target);
 
   /// Get Random Interaction
   StatusCode getRandInt( int &firstPart, int &nParts );
@@ -147,7 +135,7 @@ protected:
   StatusCode getInt( int &firstPart, int &nParts );
 
   /// Get Sequencial Particle
-  StatusCode getPart(ParticleData* target, int i);
+  StatusCode getPart(ParticleData* target, int i, int &nPart);
 
 };   
 

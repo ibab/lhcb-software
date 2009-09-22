@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.4 2009-08-25 11:54:19 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.5 2009-09-22 16:42:21 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -236,9 +236,13 @@ StatusCode TimeCorrSource::generateParticle( HepMC::GenEvent* evt, int i, int& n
 
   // Generate particle
   ParticleData* rawPart = new ParticleData();
-  StatusCode sc = getPart( rawPart, i );
-  if( sc.isSuccess() ) {
-    numPart = numPart + 1;
+  int nPart = 0;
+  StatusCode sc = getPart( rawPart, i, nPart );
+  if( sc.isSuccess() && nPart>0 ) {
+    verbose() << "Particle generated from particle entry " << i << endmsg;
+    counter("NParticles") += nPart;
+    numPart = numPart + nPart;
+
     // Find Vertex and four momentum
     const HepMC::FourVector vtx = getVertex( rawPart->ekin*Gaudi::Units::GeV, 
                                              rawPart->pid, 
@@ -254,31 +258,36 @@ StatusCode TimeCorrSource::generateParticle( HepMC::GenEvent* evt, int i, int& n
     // Make vertex
     HepMC::GenVertex* mcvtx;
     mcvtx = new HepMC::GenVertex( vtx );
+
+    // Add to event
     evt -> add_vertex( mcvtx );
-    info() << "Numpart is " << numPart << endmsg; 
+    debug() << "Numpart is " << numPart << endmsg; 
     if ( 0 == evt -> signal_process_vertex() ){
-      info() << "Set signal process." << endmsg;
+      verbose() << "Set signal process." << endmsg;
       evt -> set_signal_process_vertex( mcvtx ) ;
     }
-  
-    // Make the spesific particle
-    mcvtx->add_particle_out( new HepMC::GenParticle( fourMom,
-                                                     rawPart->pid, 
-                                                     LHCb::HepMCEvent::StableInProdGen ) );
 
+    // Add particle(s) 
+    for( int j=0; j<nPart; j++){
+      mcvtx->add_particle_out( new HepMC::GenParticle( fourMom,
+                                                       rawPart->pid,
+                                                       LHCb::HepMCEvent::StableInProdGen ) );
+    }
+  
     // Generate plots (x and y are in cm)
     if( m_genHist ){
       double r = sqrt( rawPart->x*rawPart->x + rawPart->y*rawPart->y );
-      m_xyDistGen->fill( rawPart->x/Gaudi::Units::cm, rawPart->y/Gaudi::Units::cm );
-      m_pxVSrGen->fill( r/Gaudi::Units::cm, fourMom.px()/Gaudi::Units::GeV );
-      m_pyVSrGen->fill( r/Gaudi::Units::cm, fourMom.py()/Gaudi::Units::GeV );
-      m_pzVSrGen->fill( r/Gaudi::Units::cm, fourMom.pz()/Gaudi::Units::GeV );
+      m_xyDistGen->fill( rawPart->x/Gaudi::Units::cm, rawPart->y/Gaudi::Units::cm, nPart );
+      m_pxVSrGen->fill( r/Gaudi::Units::cm, fourMom.px()/Gaudi::Units::GeV, nPart );
+      m_pyVSrGen->fill( r/Gaudi::Units::cm, fourMom.py()/Gaudi::Units::GeV, nPart );
+      m_pzVSrGen->fill( r/Gaudi::Units::cm, fourMom.pz()/Gaudi::Units::GeV, nPart );
       m_absPGen->fill( ( rawPart->dx==0 && rawPart->dy==0 ? fourMom.pz() : 
                        ( rawPart->dx!=0 ? fourMom.px()/rawPart->dx : 
-                         fourMom.py()/rawPart->dy ) )/Gaudi::Units::GeV );
+                         fourMom.py()/rawPart->dy ) )/Gaudi::Units::GeV, nPart );
       m_thetaGen->fill( ( fourMom.pz()==0 ? Gaudi::Units::pi/2 : 
                           atan(sqrt(fourMom.px()*fourMom.px()+fourMom.py()*fourMom.py())/
-                          fourMom.pz()) )/Gaudi::Units::degree );
+                          fourMom.pz()) )/Gaudi::Units::degree, nPart );
+      m_timeGen->fill( vtx.t()/Gaudi::Units::ns, nPart );
     }
   }
   
@@ -306,23 +315,23 @@ StatusCode TimeCorrSource::finalize() {
   info() << " The particles were generated at z = " << m_zGen/Gaudi::Units::m 
          << " m" << endmsg;
   if( m_pPerEvt == -1 ) {
-    info() << "Using weight to find number of particles in event" << endmsg;
-    info() << "Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
-    info() << "The file represents " << m_timeOfFile << " seconds" << endmsg; 
-    info() << "The resulting weights is" << m_sumOfWeights / m_timeOfFile 
-           << "Hz (i.e. per 1 sec of LHC running)" << endmsg;
-    info() << "Events are generate per bunch with frequency " << m_bunchFreq
-           << "and scaling factor " << m_scalingFactor << endmsg;
-    info() << " === Average num of MIB per generated event is "
+    info() << " Using weight to find number of particles in event" << endmsg;
+    info() << " Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
+    info() << " The file represents " << m_timeOfFile << " seconds" << endmsg; 
+    info() << " The resulting weights is " << m_sumOfWeights / m_timeOfFile 
+           << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
+    info() << " Events are generate per bunch with frequency " << m_bunchFreq
+           << " Hz and scaling factor " << m_scalingFactor << endmsg;
+    info() << "  === Average num of MIB events per generated event is "
            <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile << endmsg;
   } else {
-    info() << "Forcing " << m_pPerEvt << " to be generated in each event" 
+    info() << " Forcing " << m_pPerEvt << " to be generated in each event" 
            << endmsg;
   }
   if( m_fileOffset == -1 ) {
-    info() << "and choosing envelope method to select particles" << endmsg;
+    info() << " Choosing MIB events randomly" << endmsg;
   } else {
-    info() << "picking particles from file starting from particle number "
+    info() << " Picking MIB events from file starting from number "
            << m_fileOffset << endmsg;
   }
   
@@ -359,7 +368,7 @@ StatusCode TimeCorrSource::createEnvelopes() {
          << m_sumOfWeights << endmsg;
   info() << "Envelopes will consume " 
          << floor(double(sizeof(double)*m_envelopeHolders.size()/1024)) 
-         << "kB memory" << endmsg;
+         << " kB memory" << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -374,6 +383,7 @@ StatusCode TimeCorrSource::bookHistos() {
 
   debug() << "bookHistos" << endmsg;
 
+  // Generated particles histograms
   m_xyDistGen = book2D( 200, "Generated: XY distribution of particle origin (cm)", 
                         -500., 500., 200, -500., 500., 200 );
   m_pxVSrGen  = book2D( 201, "Generated: Px vs r at particle origin (cm)(GeV)", 
@@ -385,6 +395,7 @@ StatusCode TimeCorrSource::bookHistos() {
   m_absPGen   = book1D( 204, "Generated: Momentum of particles (GeV)", 0., 100., 200 );
   m_thetaGen  = book1D( 205, "Generated: Angular distribution of particles (degree)", 
                         0., 360., 180 );
+  m_timeGen   = book1D( 206, "Generated: Generation time of particles (ns)", -25., 75., 100 );
 
   return StatusCode::SUCCESS;
 }
@@ -452,15 +463,12 @@ HepMC::FourVector TimeCorrSource::getVertex(double ekin, int pid,
   double protonAtIntPlaneClock = m_zOrigin*sqrt(1/(1-1/pow(1+m_beamEnergy/pMass,2)))/Gaudi::Units::c_light;
 
   // Time at which the paticle has to start from the interface plane
-  double partAtIntPlaneClock = dt - protonAtIntPlaneClock;
+  double partAtIntPlaneClock = dt + protonAtIntPlaneClock;
 
   // Time at which the particle has to start. (If generation point an interface plane are not the same.)
   double partAtGenClock = partAtIntPlaneClock + (m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz);
   
   const HepMC::FourVector vtx( x, y, m_zGen, partAtGenClock); 
-  //const HepMC::FourVector vtx( x, y, z,
-  //                             z*sqrt(1/(1-1/pow(1+ekin/mass,2)))/
-  //                             (Gaudi::Units::c_light*dz) );
   
   return vtx;
 }
@@ -588,10 +596,9 @@ StatusCode TimeCorrSource::getInt( int &firstPart, int &nParts ){
 //===========================================================================
 // Get sequencial particle
 //===========================================================================
-StatusCode TimeCorrSource::getPart( ParticleData* target, int i ){
+StatusCode TimeCorrSource::getPart( ParticleData* target, int i, int &nPart ){
 
   verbose() << "getPart " << endmsg;
-  Double_t weight;
   
   // Get particle
   m_partTree->SetBranchAddress("PartPdgId",&(target->pid));
@@ -601,17 +608,16 @@ StatusCode TimeCorrSource::getPart( ParticleData* target, int i ){
   m_partTree->SetBranchAddress("PartDx",&(target->dx));
   m_partTree->SetBranchAddress("PartDy",&(target->dy));
   m_partTree->SetBranchAddress("PartDt",&(target->dt));
-  m_partTree->SetBranchAddress("PartW",&weight);
+  m_partTree->SetBranchAddress("PartW",&(target->weight));
   m_partTree->GetEntry(i);
   
-  if ( weight >= m_flatGenerator() ){
-    verbose() << "Particle generated from particle entry " << i << endmsg;
-    counter("NParticles") += 1;
-    return StatusCode::SUCCESS;
+  if ( target->weight - int(target->weight) >= m_flatGenerator() ){
+    nPart = int(target->weight)+1;
   }
   else {
-    return StatusCode::FAILURE;
+    nPart = int(target->weight);
   }
+  return StatusCode::SUCCESS;
 }
 
  

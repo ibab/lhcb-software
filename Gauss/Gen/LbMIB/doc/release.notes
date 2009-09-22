@@ -5,7 +5,17 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v3r4 2009-09-18 =========================
+!=========================== LbMIB v3r4 2009-09-22 =========================
+! 2009-09-22 - Magnus LIENG
+ - Fixed timing issue and added time of generation histogram
+   . TimeCorrSource.cpp
+   . TimeCorrSource.h
+ - Added support for partricle weights > 1. If PartW = x.y then the particle 
+   is generated x times and has a 0.y chance of being generated a x+1'th time.
+   In general weights <= 1 preferred.
+   . TimeCorrSource.cpp
+   . TimeCorrSource.h
+
 ! 2009-09-18 - Gloria CORTI
  - Make option name of location of TES to read and write the same as for
    the Generation and ParticleGun algorithms to make it easier in Gauss()
