@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: PhotonCreator.py,v 1.9 2009-09-16 13:37:28 jonrob Exp $"
+__version__ = "$Id: PhotonCreator.py,v 1.10 2009-09-22 11:19:39 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -82,6 +82,9 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # ================================================================
             # No # sigma cut
             creator.Predictor.NSigma         = [ 99999, 99999, 99999 ]
+            # Min and max search window for track centre - hit seperation
+            creator.Predictor.MinTrackROI    = [ 0,     0,     0     ]
+            creator.Predictor.MaxTrackROI    = [ 99999, 99999, 99999 ]
             # ================================================================
 
             # ================================================================
@@ -89,6 +92,8 @@ class RichPhotonCreatorConfig(RichConfigurableUser):
             # ================================================================
             # No # sigma cut
             creator.NSigma                   = [ 99999, 99999, 99999 ]
+            # Any probability
+            creator.MinPhotonProbability     = [ 0,     0,     0     ]
             # ================================================================
         
         elif selMode == "All" :
