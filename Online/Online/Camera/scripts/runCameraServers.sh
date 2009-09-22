@@ -14,5 +14,8 @@ mkdir -p $CAMDIR/log
 CameraWebServer.exe -C $CAMERAROOT/scripts/etc/CameraWebServer.conf > $CAMDIR/log/CameraWebServer.log 2>&1 &
 CameraServer.exe -C $CAMERAROOT/scripts/etc/CameraServer.conf > $CAMDIR/log/CameraServer.log 2>&1 &
 
+# Wait until the process is finished
+sleep 2
 # Creates a new directory within the data 
-source $CAMERAROOT/scripts/newDataDirectory.sh `date +%y%m%d%H%M`
+SERVER="localhost:12345"
+source $CAMERAROOT/scripts/newDataDirectory.sh `date +%y%m%d%H%M` $SERVER
