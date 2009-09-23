@@ -4,9 +4,9 @@ import AlignTrTools.Configuration
 #tac = AlignTrTools.Configuration.AligTrTools()
 TAConfig().addTool(Centipede)
 TAConfig().MillepedeTool = "Centipede"
-art = AlignTrTools.Configuration.AlignTrTools()
-art.Tools = ["Derivatives"]
-art.__apply_configuration__()
+#art = AlignTrTools.Configuration.AlignTrTools()
+#art.Tools = ["Derivatives"]
+#art.__apply_configuration__()
 TAConfig().DerivativeTool = "Derivatives"
 TAConfig().MeasurementProvider = "MuonMeasurementProvider"
 TAConfig().nTrackModelParameters = 4
