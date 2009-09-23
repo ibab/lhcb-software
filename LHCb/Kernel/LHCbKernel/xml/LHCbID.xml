@@ -15,13 +15,14 @@
        <import name="Kernel/RichSmartID"/>
        <import name="Kernel/CaloCellID"/>
        <import name="Kernel/MuonTileID"/>
+       <import name="Kernel/VeloPixChannelID"/>
 
        &StlVector;
 
        <enum
           desc   = "types of sub-detector channel ID"
           name   = "channelIDype"
-          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon"
+          value  = "Velo=1, TT, IT, OT, Rich, Calo, Muon, VeloPix"
           access = 'PUBLIC'
        />
 
@@ -120,6 +121,56 @@ m_lhcbID = (Velo &lt;&lt; detectorTypeBits) +
          desc  = "return the VeloChannelID">
 	 <code>
 return ( isVelo() ? LHCb::VeloChannelID(m_lhcbID &amp; IDMask) : LHCb::VeloChannelID(0xF0000000));
+         </code>
+       </method>
+
+       <constructor 
+         desc  = "Constructor from VeloPixChannelID, VeloPix corresponding to pixel solution for upgrade" >
+          <arg const="TRUE" name="chanID" type="VeloPixChannelID" />
+          <code>
+m_lhcbID = (VeloPix &lt;&lt; detectorTypeBits) +
+           chanID;
+          </code>
+       </constructor>
+
+       <method
+         type  = "bool"
+         name  = "isVeloPix"
+         const = 'TRUE'
+         desc  = "return true if this is a VeloPix identifier">
+         <code>
+  return (VeloPix == detectorType());
+         </code>
+       </method>
+
+       <method
+         type  = "bool"
+         name  = "isVeloPixX"
+         const = 'TRUE'
+         desc  = "return true if this is a VeloPix X identifier">
+         <code>
+  return (isVeloPix() ? velopixID().isXType(): false);
+         </code>
+       </method>
+       
+       <method
+         type  = "bool"
+         name  = "isVeloPixY"
+         const = 'TRUE'
+         desc  = "return true if this is a VeloPix Y identifier">
+         <code>
+  return (isVeloPix() ? velopixID().isYType(): false);
+         </code>
+       </method>
+     
+
+       <method
+         type  = "LHCb::VeloPixChannelID"
+         name  = "velopixID"
+         const = 'TRUE'
+         desc  = "return the VeloPixChannelID">
+	 <code>
+return ( isVeloPix() ? LHCb::VeloPixChannelID(m_lhcbID &amp; IDMask) : LHCb::VeloPixChannelID(0xF0000000));
          </code>
        </method>
 

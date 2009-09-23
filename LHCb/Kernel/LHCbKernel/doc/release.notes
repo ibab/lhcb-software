@@ -4,6 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-09-23 - Victor Coco
+ - Added VeloPixChannelID for upgrade simulation. xml/VeloPixChannelID.xml
+   and src/VeloPixChannelID.cpp are new files, while some declaration have
+   been added to xml/LHCbID.xml, dict/LHCbKernelDict.h 
+   and xml/lcgdict/lcg_selection.xml
+
 !===================== LHCbKernel v11r7 2009-09-02 ======================
 ! 2009-09-01 - Wouter Hulsbergen
  - Added acces to field grid in ILHCbMagnetSvc
