@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-23 - Rob Lambert
+ - Added a couple of info messages
+
 ! 2009-09-19 - Marco Cottaneo
  - Cleaned up configurable, removed LHCbKernel dependency
  - Removed unnecessary XMLSummaryKernel_dll.cpp file

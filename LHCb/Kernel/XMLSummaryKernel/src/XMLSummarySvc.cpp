@@ -121,8 +121,8 @@ XMLSummarySvc::initialize()
 			);
   }
   //output the file, and write to the stdout
-  writeXML(MSG::INFO).ignore();
   printXML(MSG::DEBUG).ignore();
+  writeXML(MSG::INFO).ignore();
 
 
   log << MSG::DEBUG << "initialized successfully" << endmsg;
@@ -145,10 +145,12 @@ XMLSummarySvc::finalize()
 
   //write collected counters
   PyObject_CallMethod(m_summary, chr("set_step"), chr("s,i"), chr("finalize"), 1);
+  log << MSG::INFO << "filling counters..." << endmsg;
   fillcounters().ignore();
-  writeXML(MSG::INFO).ignore();
+  log << MSG::INFO << "counters filled OK" << endmsg;
   printXML(MSG::DEBUG).ignore();
-	
+  writeXML(MSG::INFO).ignore();
+  
   return Service::finalize();
 
 }
@@ -269,8 +271,8 @@ void XMLSummarySvc::handle( const Incident& incident )
                           chr("set_step"), 
                           chr("s"), 
                           chr("execute"));
-      writeXML();
       printXML();
+      writeXML();
     }
 
 #endif //GAUDI_FILE_INCIDENTS
@@ -288,17 +290,17 @@ StatusCode XMLSummarySvc::fillcounters()
   //fill all counters, in correct order
   Gaudi::CounterSummary::SaveType saveType=Gaudi::CounterSummary::SaveSimpleCounter;
   while(true)
+  {
+    for (NameStatList::const_iterator i=m_addedCounters.begin();
+         i!=m_addedCounters.end(); i++)
     {
-      for (NameStatList::const_iterator i=m_addedCounters.begin();
-	   i!=m_addedCounters.end(); i++)
-	{
-	  if(saveType!=i->second) continue;
-	  fillcounter(*i).ignore();
-	}
-      
-      if(saveType==Gaudi::CounterSummary::SaveAlwaysStatEntity) break;
-      saveType=Gaudi::CounterSummary::SaveType(saveType+1);
+      if(saveType!=i->second) continue;
+      fillcounter(*i).ignore();
     }
+      
+    if(saveType==Gaudi::CounterSummary::SaveAlwaysStatEntity) break;
+    saveType=Gaudi::CounterSummary::SaveType(saveType+1);
+  }
   
   return StatusCode::SUCCESS;
 }
@@ -333,9 +335,11 @@ StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
       break;
     }
   //not supposed to write this one out
+  //MsgStream log( msgSvc(), name() );
   if(!check) return StatusCode::SUCCESS;
   if(stat_ent)
     {
+      //log << MSG::VERBOSE << "making stat entity " << endmsg;
       PyObject_CallMethod(m_summary, chr(type_name.c_str()),
 			  chr("s,d,d,d,d,d"),
 			  chr(count.first.first.c_str()),
@@ -345,13 +349,16 @@ StatusCode XMLSummarySvc::fillcounter(const NameStatTypePair & count)
 			  double(count.first.second.flagMin()),
 			  double(count.first.second.flagMax())
 			  );
+      //printXML(MSG::VERBOSE).ignore();
       return StatusCode::SUCCESS;
     }
+  //log << MSG::VERBOSE << "making stimple counter "  << endmsg;
   PyObject_CallMethod(m_summary, chr(type_name.c_str()),
 		      chr("s,d"),
 		      chr(count.first.first.c_str()),
 		      double(count.first.second.flag())
 		      );
+  //printXML(MSG::VERBOSE).ignore();
 	
   return StatusCode::SUCCESS;
 }
