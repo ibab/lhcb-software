@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-09-23 - Rob Lambert
+ - Significant changes for speed optimisation
+ - benchmark tests ~10s to fill 1000 statEntity counters
+ - benchmark tests ~5s  to fill 1000 simple counters
+ - divided qmtests into two parts, more unit-style tests
+
+! 2009-09-23 - Rob Lambert
  - optimised the filling of counters/files, reducing the time overhead
  - benchmark tests ~20s to fill 1000 statEntity counters
  - benchmark tests ~15s to fill 1000 simple counters

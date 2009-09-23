@@ -1,32 +1,9 @@
 schema parsed
-default OK
-test example xml (1) OK
-rubbish value was prevented by the schema
-rubbish child was prevented by the schema
-helper class successful
-test example xml (2) OK
-merge OK
-<?xml version="1.0" encoding="UTF-8"?>
-
-<summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-	<success>True</success>
-	<step>finalize</step>
-	<usage>
-		<stat unit="b" useOf="MemoryMaximum">1024.0</stat>
-	</usage>
-	<input>
-		<file GUID="0000-0000-0000-0000" name="PFN:/path/inputfile.dst" status="mult">1000</file>
-	</input>
-	<output>
-		<file GUID="" name="PFN:/path/outputfile.dst" status="part">1000</file>
-	</output>
-	<counters>
-		<counter name="UserAlg/UserEventCounter">1000</counter>
-		<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">1000.0 1000.0 1000.0</statEntity>
-	</counters>
-	<lumiCounters>
-		<lumiCounter name="LumiAlg/EmptyEvents">2000000</lumiCounter>
-		<lumiStatEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">80100.0 1000.0 5000002.0</lumiStatEntity>
-	</lumiCounters>
-</summary>
-
+created default OK
+parsed example xml OK
+assigning rubbish value was prevented by the schema
+adding rubbish child was prevented by the schema
+adding child of the wrong type was prevented by the schema
+referencing rubbish attribute was prevented by the schema
+assigning rubbish attribute was prevented by the schema
+get/setter tests complete

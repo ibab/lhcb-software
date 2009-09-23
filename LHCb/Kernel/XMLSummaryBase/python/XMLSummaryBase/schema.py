@@ -41,7 +41,7 @@ VTree:
     will throw a NameError, ValueError, TypeError or AttributeError 
 '''
 
-id = '$Id: schema.py,v 1.2 2009-09-23 07:42:45 rlambert Exp $'
+id = '$Id: schema.py,v 1.3 2009-09-23 13:00:56 rlambert Exp $'
 
 __author__ = 'Rob Lambert'
 __date__ = id.split()[3]
@@ -75,9 +75,9 @@ class VTree(object):
         From an etree element, and a schema the validated object will be formed
         mother is a pointer to the mother element of the tree, to keep track of the level
         check signifies if a recursive check against the schema is required'''
-        docstr='''
-    This particular VTree is for the tag '###TAG###'
-    which means it gets the extra methods:'''
+    #    docstr='''
+    #This particular VTree is for the tag '###TAG###'
+    #which means it gets the extra methods:'''
         #the schema object is validated against
         self.__schema__=schema
         #the validated object
@@ -86,20 +86,19 @@ class VTree(object):
         if check:
             if not self.__schema__.__check__(element):
                 raise ValueError, "cannot validate element"
-                return VTree(None,self.__schema__,False)
-        self.__doc__=self.__doc__+docstr.replace('###TAG###', self.tag())
+        #self.__doc__=self.__doc__+docstr.replace('###TAG###', self.tag())
         ##auto generate methods for defined children and attribs
-        for key in self.attrib().keys():
-            try:
-                dstr="self.###ATTRIB###".replace("###ATTRIB###",key)
-                exec dstr
-            except (NameError, AttributeError, ValueError, SyntaxError): pass
-        for child in self.__schema__.Tag_children(self.tag()):
-            try:
-                dstr="self.###ATTRIB###".replace("###ATTRIB###",child)
-                exec dstr
-            except (NameError, AttributeError, ValueError, SyntaxError): pass
-        ##except all pre-thought of exceptions here... to avoid errors in init!
+        #for key in self.attrib().keys():
+        #    try:
+        #        dstr="self.###ATTRIB###".replace("###ATTRIB###",key)
+        #        exec dstr
+        #    except (NameError, AttributeError, ValueError, SyntaxError): pass
+        #for child in self.__schema__.Tag_children(self.tag()):
+        #    try:
+        #        dstr="self.###ATTRIB###".replace("###ATTRIB###",child)
+        #        exec dstr
+        #    except (NameError, AttributeError, ValueError, SyntaxError): pass
+        #except all pre-thought of exceptions here... to avoid errors in init!
     def __children__(self):
         '''list the existing children'''
         list=[]
@@ -167,43 +166,43 @@ class VTree(object):
                 
         return True
     
-    def __getattr__(self, name):
-        '''append a get/set method with the name of the attribute'''
-        docstr=""
-        dstr='''class tmp_###ATTRIB###:
-    def __init__(self,V):
-        self.V=V''' 
-        type=None
-        if name in self.attrib().keys():
-            docstr='''
-        ###ATTRIB###(value=None), to get/set '###ATTRIB###' '''
-            dstr=dstr+'''
-    def value(self, value=None):
-        "shorcut to set/get ###ATTRIB###, sum.attrib('###ATTRIB###', value)" 
-        return self.V.attrib('###ATTRIB###',value)'''
-        elif name in self.__schema__.Tag_children(self.tag()):
-            docstr='''
-        ###ATTRIB###(attrib=None, value=None), to get a list of '###ATTRIB###' children'''
-            dstr=dstr+'''
-    def value(self, attrib=None, value=None):
-        "shorcut to get ###ATTRIB###, sum.children('###ATTRIB###', attrib, value)" 
-        return self.V.children('###ATTRIB###',attrib,value)'''
-        else:
-            raise AttributeError, name + ' is not a valid attribute or child'
-        
-        docstr=docstr.replace('###ATTRIB###',name)
-        dstr=dstr.replace('###ATTRIB###',name)
-        #print dstr
-        exec dstr
-        dstr="self.###ATTRIB###=tmp_###ATTRIB###(self).value".replace('###ATTRIB###',name)
-        #print dstr
-        exec dstr
-        dstr="ret=self.###ATTRIB###".replace('###ATTRIB###',name)
-        #print dstr
-        exec dstr
-        #only increase the docstring if the process completes OK
-        self.__doc__+=docstr
-        return ret
+    #def __getattr__(self, name):
+    #    '''append a get/set method with the name of the attribute'''
+    #    docstr=""
+    #    dstr='''class tmp_###ATTRIB###:
+    #def __init__(self,V):
+    #    self.V=V''' 
+    #    type=None
+    #    if name in self.attrib().keys():
+    #        docstr='''
+    #    ###ATTRIB###(value=None), to get/set '###ATTRIB###' '''
+    #        dstr=dstr+'''
+    #def value(self, value=None):
+    #    "shorcut to set/get ###ATTRIB###, sum.attrib('###ATTRIB###', value)" 
+    #    return self.V.attrib('###ATTRIB###',value)'''
+    #    elif name in self.__schema__.Tag_children(self.tag()):
+    #        docstr='''
+    #    ###ATTRIB###(attrib=None, value=None), to get a list of '###ATTRIB###' children'''
+    #        dstr=dstr+'''
+    #def value(self, attrib=None, value=None):
+    #    "shorcut to get ###ATTRIB###, sum.children('###ATTRIB###', attrib, value)" 
+    #    return self.V.children('###ATTRIB###',attrib,value)'''
+    #    else:
+    #        raise AttributeError, name + ' is not a valid attribute or child'
+    #    
+    #    docstr=docstr.replace('###ATTRIB###',name)
+    #    dstr=dstr.replace('###ATTRIB###',name)
+    #    #print dstr
+    #    exec dstr
+    #    dstr="self.###ATTRIB###=tmp_###ATTRIB###(self).value".replace('###ATTRIB###',name)
+    #    #print dstr
+    #    exec dstr
+    #    dstr="ret=self.###ATTRIB###".replace('###ATTRIB###',name)
+    #    #print dstr
+    #    exec dstr
+    #    #only increase the docstring if the process completes OK
+    #    self.__doc__+=docstr
+    #    return ret
         
     def __append_element__(self, child):
         '''internal method to append validated elements'''
@@ -317,7 +316,7 @@ class VTree(object):
         if 'VTree' in child.__str__():
             return self.__append_element__(child)
         else:
-            return self.__append_element__.append(self.__schema__.create_default(name))
+            return self.__append_element__(self.__schema__.create_default(name))
     
     def value(self, val=None):
         '''return the existing value, or None
@@ -326,7 +325,7 @@ class VTree(object):
         #return the value
         #print 'in value using', self.__element__.text
         if val is None:
-            if not self.__element__.text:
+            if self.__element__.text is None:
                 return None
             if len(self.__element__.text.rstrip().lstrip())==0:
                 return None
@@ -409,6 +408,11 @@ class VTree(object):
         for c in ele.getchildren():
             def_e.append(self.__clone_element__(c))
         return def_e
+    
+    #def __internal_clone__(self):
+    #    '''return a clone of this element, with the same schema'''
+    #    e2=self.__clone_element__(self.__element__)
+    #    self.__element__==e2
         
     def clone(self):
         '''return a clone of this element, with the same schema'''
@@ -422,7 +426,7 @@ class Schema(object):
     print a parsed schema to see its content
     inconsistent or erroneous schema will throw a NameError, TypeError or AttributeError '''
     #cached default elements
-    __def_cache__={}
+    #__def_cache__={}
     def __init__(self, schemafile, ns='xs', root=''):
         '''constructor. 
         schemafile is the name of the file containing the schema, usually an xsd file
@@ -720,132 +724,62 @@ class Schema(object):
     def __checkcast__(self, atype,test):
         '''internal method, can this value be cast to the type of the tag?'''
         #print 'checking cast of', test ,'to', atype
-        if 'string' in atype:
-            try:
-                str(test)
-                return True
-            except ValueError: pass
-        a=False
-        if 'unsigned' in atype: a=True
-        
-        if 'double' in atype.lower():
-            #print 'checking double'
-            try:
-                if a: abs(float(test))
-                else: float(test)
-                #print 'returning true'
-                return True
-            except ValueError: pass
-        elif 'float' in atype.lower():
-            #print 'checking float'
-            try:
-                if a:
-                    abs(float(test))
-                else:
-                    float(test)
-                return True
-            except ValueError: pass
-        elif 'long' in atype.lower():
-            #print 'checking long'
-            try:
-                if a:
-                    abs(long(test))
-                else:
-                    long(test)
-                return True
-            except ValueError: pass
-        elif 'integer' in atype.lower():
-            #print 'checking integer'
-            try:
-                if a:
-                    abs(int(test))
-                else:
-                    int(test)
-                return True
-            except ValueError: pass
-
-        elif 'boolean' in atype.lower():
-            #print 'checking bool'
-            if 'str' in str(type(test)):
-                if test.lower()=='true' or test.lower()=='false':
-                    return True
-            try:
-                bool(float(test))
-                return True
-            except ValueError: pass
-            try:
-                (float(test)!=0)
-                return True
-            except ValueError: pass
-        
-        return False
+        try:
+            self.__cast__(atype,test)
+            return True
+        except ValueError, TypeError:
+            return False
     
     def __cast__(self, atype,test):
         '''internal method cast to the type of the tag'''
         #print 'cast of', test ,'to', atype
         if 'string' in atype:
-            try:
-                return str(test)
-            except ValueError: 
-                return None
+            return str(test)
+        
         a=False
         if 'unsigned' in atype: a=True
-
+        
         if 'double' in atype.lower():
             #print 'checking double'
-            try:
-                if a:
-                    return abs(float(test))
-                else:
-                    return float(test)
-            except ValueError:  
-                return None
+            if a:
+                return abs(float(test))
+            else:
+                return float(test)
+        
         elif 'float' in atype.lower():
             #print 'checking float'
-            try:
-                if a:
-                    return abs(float(test))
-                else:
-                    return float(test)
-            except ValueError: 
-                return None
+            if a:
+                return abs(float(test))
+            else:
+                return float(test)
+            
         elif 'long' in atype.lower():
             #print 'checking long'
-            try:
-                if a:
-                    return abs(long(test))
-                else:
-                    return long(test)
-            except ValueError:
-                return None
+            if a:
+                return abs(long(test))
+            else:
+                return long(test)
+            
         elif 'integer' in atype.lower():
             #print 'checking integer'
-            try:
-                if a:
-                    return abs(int(test))
-                else:
-                    return int(test)
-            except ValueError: 
-                return None
-
+            if a:
+                return abs(int(test))
+            else:
+                return int(test)
+                
         elif 'boolean' in atype.lower():
             #print 'checking bool'
-            if 'str' in str(type(test)):
+            if type('')==type(test):
                 if test.lower()=='true':
                     return True
                 elif test.lower()=='false':
                     return False
-            try:
                 return bool(float(test))
-            except ValueError: 
-                return None
-            try:
-                return bool(float(test)!=0)
-            except ValueError: 
-                return None
+            return bool(float(test)!=0)
         
-        
+        raise TypeError, 'do not no how to convert to type', atype
         return None
+    
     def __list2str__(self,list):
         '''internal method cast a list to a string separated by spaces'''
         rets=''
@@ -969,6 +903,7 @@ class Schema(object):
         
         if (level==0) and (tag in self.__def_cache__.keys()):
             #return a clone
+            #self.__def_cache__[tag].__internal_clone__()
             return self.__def_cache__[tag].clone()
         
         def_e=__ElementTree__.Element(tag)
@@ -1127,9 +1062,9 @@ class Schema(object):
             #print 'casting', val 
             ret=[]
             for aval in nval:
-                if self.__checkcast__(types,aval):
+                try:
                     ret.append(self.__cast__(types,aval))
-                else: 
+                except ValueError: 
                     raise ValueError, 'This list does not accept '+str(type(aval))+' values'
         
         elif self.Tag_isUnion(tag):
@@ -1137,14 +1072,20 @@ class Schema(object):
             if types!=str(type([])):
                 types=[types]
             for atype in types:
-                if self.__checkcast__(atype,val):
-                    ret=self.__cast__(atype,aval)
+                try:
+                    r1=self.__cast__(atype,aval)
+                    ret=r1
+                    break
+                except ValueError:
+                    continue
         else:
             #print 'basic type'
             if type(types)==type([]):
                 types=types[0]
             ret=self.__cast__(types,val)
-
+        
+        if ret is None:
+            raise ValueError, 'This tag does not accept '+str(type(aval))+' values'
         return ret
     
     def Tag_castValue(self, tag,val):
@@ -1159,7 +1100,7 @@ class Schema(object):
         if self.Tag_hasEnumeration(tag):
             #print 'recognised enum'
             if ret not in self.Tag_enumeration(tag):
-                raise ValueError, 'This value not one of the enumerated list '+str(ret)
+                raise ValueError, 'This value is not one of the enumerated list '+str(ret)
             
         if ret is None:
             raise ValueError, 'This tag '+tag+' does not accept '+str(type(val))+' values'    

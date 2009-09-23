@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.4 2009-09-23 07:42:45 rlambert Exp $
+# $Id: summary.py,v 1.5 2009-09-23 13:00:56 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -48,7 +48,7 @@ class Summary(VTree):
     def __init__ ( self, schemafile=__default_schema__ ) :
         """ Constructor. Variables in schemafile are expanded """
         self.__schema__=Schema(schemafile)
-        self.__element__=self.__schema__.create_default('summary').__element__
+        self.__element__=self.__schema__.create_default(self.__schema__.root()).__element__
         self.__count_dict__={}
         self.__file_dict__={}
         VTree.__init__(self,self.__element__,self.__schema__,False)
@@ -89,6 +89,7 @@ class Summary(VTree):
         if open_file is None:
                 #file needs to be created
                 open_file=self.__schema__.create_default('file')
+                #print 'default created'
                 if (status==None): open_file.attrib('status','none')
                 else: open_file.attrib('status',status)
                 open_file.value(addevents)
@@ -97,8 +98,8 @@ class Summary(VTree):
                 #find the new file, or use the existing one
                 #if isOutput: mother=self.__schema__.Tag_mothers(tag)[1]
                 #else: files=self.children('input')[0]
-                files=self.input()[0]
-                if isOutput: files=self.output()[0]
+                files=self.children(tag='input')[0]
+                if isOutput: files=self.children(tag='output')[0]
                 
                 if filename is not None:
                     open_file.attrib('name',filename)
@@ -164,7 +165,7 @@ class Summary(VTree):
             return cnt
         #else it's a statEntity
         val=[]
-        for f in cnt.format():
+        for f in cnt.attrib('format'):
             if f=='Flag':
                 val.append(flag)
             elif f=='Flag2':
@@ -179,7 +180,7 @@ class Summary(VTree):
     
     def isFailure(self):
         """the opposite of isSuccess, negates what is stored by the success tag"""
-        return (self.success()[0].value()==False)
+        return (self.children(tag='success')[0].value()==False)
     
     def set_step( self, step="initialize", success=False ) :
         """ Set the step entry, and the success entry """
@@ -248,15 +249,15 @@ class Summary(VTree):
             return True
         #else be clever about the format
         val=cnt.value()
-        for i in range(len(cnt.format())):
-            for j in range(len(counter.format())):
-                if cnt.format()[i]==counter.format()[j]:
+        for i in range(len(cnt.attrib('format'))):
+            for j in range(len(counter.attrib('format'))):
+                if cnt.attrib('format')[i]==counter.attrib('format')[j]:
                     #all entries are additive
                     val[i]=val[i]+counter.value()[j]
                     break
         cnt.value(val)
-        if cnt.max()<counter.max(): cnt.max(counter.max())
-        if cnt.min()>counter.min(): cnt.min(counter.min())
+        if cnt.attrib('max')<counter.attrib('max'): cnt.attrib('max',counter.attrib('max'))
+        if cnt.attrib('min')>counter.attrib('min'): cnt.attrib('min',counter.attrib('min'))
         
     def fill_counter(self, name, flag, nEntries=None, flag2=None, min=None, max=None):
         ''' fill a basic or complex stat counter '''
@@ -270,18 +271,18 @@ class Summary(VTree):
 
     def fill_memory(self, memory, unit='b'):
         '''Method to fill the memory usage information'''
-        usage=self.usage()[0]
+        usage=self.children(tag='usage')[0]
         astat=usage.children(tag='stat', attrib={'useOf':'MemoryMaximum'})
         if not astat or len(astat)==0:
             astat=self.__schema__.create_default('stat')
-            astat.useOf('MemoryMaximum')
-            astat.unit(unit)
+            astat.attrib('useOf','MemoryMaximum')
+            astat.attrib('unit',unit)
             astat.value(memory)
             usage.add(astat)
         else:
             astat=astat[0]
-            if astat.unit() != unit:
-                raise AttributeError, 'I cannot compare two MemoryMaxima when they have different units!'+ (astat.unit())+unit
+            if astat.attrib('unit') != unit:
+                raise AttributeError, 'I cannot compare two MemoryMaxima when they have different units! '+ astat.attrib('unit')+ " " +unit
             if astat.value()<memory:
                 astat.value(memory)
     
@@ -289,22 +290,22 @@ class Summary(VTree):
         '''return a name:VTree dictionary of counters'''
         if recache or self.__count_dict__=={}:
             self.__count_dict__.clear()
-            for count in self.counters()[0].children():
-                self.__count_dict__[count.name()]=count
-            for count in self.lumiCounters()[0].children():
-                self.__count_dict__[count.name()]=count
+            for tag in ('counter', 'lumiCounter'):
+                for mother in self.__schema__.Tag_mothers(tag):
+                    for amother in self.children(tag=mother):
+                        for count in amother.children():
+                            self.__count_dict__[count.attrib('name')]=count
         return self.__count_dict__
     
     def file_dict(self, recache=False):
         '''return a name:VTree dictionary of all input and output files'''
         if recache or self.__file_dict__=={}:
             self.__file_dict__.clear()
-            for file in self.input()[0].children():
-                if(file.name()!=""): self.__file_dict__[file.name()]=file
-                if(file.GUID()!=""): self.__file_dict__[file.GUID()]=file
-            for file in self.output()[0].children():
-                if(file.name()!=""): self.__file_dict__[file.name()]=file
-                if(file.GUID()!=""): self.__file_dict__[file.GUID()]=file
+            for mother in self.__schema__.Tag_mothers('file'):
+                    for amother in self.children(tag=mother):
+                        for file in amother.children():
+                            if(file.attrib('name')!=""): self.__file_dict__[file.attrib('name')]=file
+                            if(file.attrib('GUID')!=""): self.__file_dict__[file.attrib('GUID')]=file
         return self.__file_dict__
     
 def Merge(summaries, schema=__default_schema__):
@@ -337,40 +338,41 @@ def Merge(summaries, schema=__default_schema__):
         if asummary.isFailure():
             flag =False
             break
-    merged.success()[0].value(flag)
+    merged.children('success')[0].value(flag)
     #merge step
     #enum will be in order
-    steps=merged.__schema__.Tag_enumeration(merged.step()[0].tag())
+    steps=merged.__schema__.Tag_enumeration(merged.children('step')[0].tag())
     flag=''
     for asummary in sum_objects:
-        if flag==asummary.step()[0].value(): continue
+        if flag==asummary.children('step')[0].value(): continue
         for step in steps:
             #retain the lowest possible step
             if flag==step: break
-            if step==asummary.step()[0].value(): 
+            if step==asummary.children('step')[0].value(): 
                 flag=step
                 break
-    merged.step()[0].value(flag)
+    merged.children('step')[0].value(flag)
     #merge input/output, simple counters, usage
     for asummary in sum_objects:
-        for stat in asummary.usage()[0].stat():
-            merged.fill_memory(stat.value(),stat.unit())
-        for file in asummary.input()[0].file():
-            merged.fill_input(file.name(), file.GUID(), file.status(), file.value())
-        for file in asummary.output()[0].file():
-            merged.fill_output(file.name(), file.GUID(), file.status(), file.value())
+        for stat in asummary.children('usage')[0].children('stat'):
+            merged.fill_memory(stat.value(),stat.attrib('unit'))
+        for file in asummary.children('input')[0].children():
+            merged.fill_input(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
+        for file in asummary.children('output')[0].children():
+            merged.fill_output(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
         #merge counters
-        for cnt in asummary.counters()[0].counter():
+        for cnt in asummary.children('counters')[0].children('counter'):
             merged.fill_VTree_counter(cnt.clone())
         #merge counters
-        for cnt in asummary.lumiCounters()[0].lumiCounter():
+        for cnt in asummary.children('lumiCounters')[0].children('lumiCounter'):
             merged.fill_VTree_counter(cnt.clone())
     #merge statCounters
     for asummary in sum_objects:
         #merge statCounters
-        for cnt in asummary.counters()[0].statEntity():
+        for cnt in asummary.children('counters')[0].children('statEntity'):
             merged.fill_VTree_counter(cnt.clone())
-        for cnt in asummary.lumiCounters()[0].lumiStatEntity():
+        #merge counters
+        for cnt in asummary.children('lumiCounters')[0].children('lumiStatEntity'):
             merged.fill_VTree_counter(cnt.clone())
     return merged
     

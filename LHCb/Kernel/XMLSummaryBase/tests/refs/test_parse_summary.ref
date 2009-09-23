@@ -1,0 +1,72 @@
+summary class successful
+parsed example xml OK
+<?xml version="1.0" encoding="UTF-8"?>
+
+<summary version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <success>true</success>
+  <step>finalize</step>
+  <usage>
+  	<stat unit="b" useOf="MemoryMaximum">1024.0</stat>
+  </usage>
+  
+  <input>
+  	<file GUID="0000-0000-0000-0000" name="PFN:/path/inputfile.dst" status="full">500</file>
+  </input>
+  <output>
+  	<file GUID="" name="PFN:/path/outputfile.dst" status="part">500</file>
+  </output>
+  
+  <counters>
+  	<counter name="UserAlg/UserEventCounter">500</counter>
+  	<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">500.0 500 500.0</statEntity>
+  </counters>
+  <lumiCounters>
+  	<lumiCounter name="LumiAlg/EmptyEvents">1000000</lumiCounter>
+  	<lumiStatEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">40050.0 500 2500001.0</lumiStatEntity>
+  </lumiCounters>
+  
+</summary>
+extra methods tested
+<?xml version="1.0" encoding="UTF-8"?>
+
+<summary version="1.0" xsi:noNamespaceSchemaLocation="XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <success>false</success>
+  <step>none</step>
+  <usage />
+  <input>
+  	<file GUID="" name="PFN:test/test.dst" status="none">2</file>
+  	<file GUID="" name="PFN:test/testoutput.dst" status="none">2</file>
+  </input>
+  <output />
+  <counters>
+  	<counter name="test/test">2</counter>
+  	<statEntity format="Flag Entries Flag2" max="100.0" min="0.0" name="test/testStat">200.0 200.0 200.0</statEntity>
+  </counters>
+  <lumiCounters />
+</summary>
+printing/writing tested
+merge OK
+<?xml version="1.0" encoding="UTF-8"?>
+
+<summary version="1.0" xsi:noNamespaceSchemaLocation="$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<success>True</success>
+	<step>finalize</step>
+	<usage>
+		<stat unit="b" useOf="MemoryMaximum">1024.0</stat>
+	</usage>
+	<input>
+		<file GUID="0000-0000-0000-0000" name="PFN:/path/inputfile.dst" status="mult">1000</file>
+	</input>
+	<output>
+		<file GUID="" name="PFN:/path/outputfile.dst" status="part">1000</file>
+	</output>
+	<counters>
+		<counter name="UserAlg/UserEventCounter">1000</counter>
+		<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">1000.0 1000.0 1000.0</statEntity>
+	</counters>
+	<lumiCounters>
+		<lumiCounter name="LumiAlg/EmptyEvents">2000000</lumiCounter>
+		<lumiStatEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">80100.0 1000.0 5000002.0</lumiStatEntity>
+	</lumiCounters>
+</summary>
+
