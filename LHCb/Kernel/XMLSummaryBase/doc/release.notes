@@ -6,8 +6,7 @@
 
 ! 2009-09-23 - Rob Lambert
  - Significant changes for speed optimisation
- - benchmark tests ~10s to fill 1000 statEntity counters
- - benchmark tests ~5s  to fill 1000 simple counters
+ - benchmark tests ~0.5s to fill 2000 statEntity counters
  - divided qmtests into two parts, more unit-style tests
 
 ! 2009-09-23 - Rob Lambert

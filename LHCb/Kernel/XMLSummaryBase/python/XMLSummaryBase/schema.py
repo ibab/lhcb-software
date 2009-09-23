@@ -41,7 +41,7 @@ VTree:
     will throw a NameError, ValueError, TypeError or AttributeError 
 '''
 
-id = '$Id: schema.py,v 1.3 2009-09-23 13:00:56 rlambert Exp $'
+id = '$Id: schema.py,v 1.4 2009-09-23 16:33:21 rlambert Exp $'
 
 __author__ = 'Rob Lambert'
 __date__ = id.split()[3]
@@ -440,6 +440,17 @@ class Schema(object):
         self.__root__=root
         self.__rootattribs__={}
         self.__def_cache__={}
+        self.__mother_cache__={}
+        self.__child_cache__={}
+        self.__attrib_cache__={}
+        self.__type_cache__={}
+        self.__enum_cache__={}
+        self.__fixed_cache__={}
+        self.__default_cache__={}
+        self.__whitespace_cache__={}
+        self.__union_cache__={}
+        self.__list_cache__={}
+        self.__seq_cache__={}
         self.__ns__=ns+':'
         self.__uri__="{http://www.w3.org/2001/XMLSchema}"
         #all known tags
@@ -1091,15 +1102,16 @@ class Schema(object):
     def Tag_castValue(self, tag,val):
         '''can I set this value to the tag?'''
         ret=self.__cast_from_tag__(tag,val)
-        
-        if self.Tag_isFixed(tag):
+
+        f=self.Tag_fixed(tag)
+        if f is not None:
             #print 'recognised fixed'
-            if ret != self.Tag_fixed(tag):
+            if ret != f:
                 raise ValueError, 'This value is fixed, and not equal to this one '+str(ret)
-            
-        if self.Tag_hasEnumeration(tag):
+        e=self.Tag_enumeration(tag)
+        if e is not None and len(e)>0:
             #print 'recognised enum'
-            if ret not in self.Tag_enumeration(tag):
+            if ret not in e:
                 raise ValueError, 'This value is not one of the enumerated list '+str(ret)
             
         if ret is None:
@@ -1110,15 +1122,28 @@ class Schema(object):
     
     def Tag_isSequence(self, tag):
         '''does this tag define a sequence?'''
-        return self.__compound__(tag,'sequence')
+        if tag in self.__seq_cache__.keys():
+            return self.__seq_cache__[tag]
+        ise=self.__compound__(tag,'sequence')
+        self.__seq_cache__[tag]=ise
+        return ise
     
     def Tag_isList(self, tag):
         '''does this tag take a list?'''
-        return self.__compound__(tag,'list')
+        if tag in self.__list_cache__.keys():
+            return self.__list_cache__[tag]
+        ile=self.__compound__(tag,'list')
+        self.__list_cache__[tag]=ile
+        return ile
+    
     
     def Tag_isUnion(self, tag):
         '''does this tag take a union?'''
-        return self.__compound__(tag,'union')
+        if tag in self.__union_cache__.keys():
+            return self.__union_cache__[tag]
+        iu=self.__compound__(tag,'union')
+        self.__union_cache__[tag]=iu
+        return iu
     
     def Tag_hasDefault(self,tag):
         '''is there a default value for this tag/attribute?'''
@@ -1126,24 +1151,43 @@ class Schema(object):
         
     def Tag_default(self, tag):
         '''get the default value for this tag/attribute'''
+        if tag in self.__default_cache__.keys():
+            return self.__default_cache__[tag]
         defa=self.__default__(tag)
         if defa is None:
+            self.__default_cache__[tag]=None
             return None
-        return self.Tag_castValue(tag,defa)
+        defa=self.Tag_castValue(tag,defa)
+        self.__default_cache__[tag]=defa
+        return defa
     
     def Tag_isFixed(self, tag):
         '''is there a fixed value for this tag/attribute?'''
+        if tag in self.__fixed_cache__.keys():
+            if self.__fixed_cache__[tag] is not None:
+                return True
+            return False
         return self.__hasConstraint__(tag,'fixed')
 
     def Tag_fixed(self, tag):
         '''what is the fixed value for this tag/attribute?'''
+        if tag in self.__fixed_cache__.keys():
+            return self.__fixed_cache__[tag]
         fix=self.__fixed__(tag)
         if fix is None:
+            self.__fixed_cache__[tag]=None
             return None
-        return self.Tag_castValue(tag,fix)
+        fix=self.Tag_castValue(tag,fix)
+        self.__fixed_cache__[tag]=fix
+        return fix
     
     def Tag_hasEnumeration(self, tag):
         '''are there Enumerated values for this tag/attribute?'''
+        if tag in self.__enum_cache__.keys():
+            if self.__enum_cache__[tag] is not None:
+                if len(self.__enum_cache__[tag]) > 0:
+                    return True
+            return False
         ele=self.__getele__(tag)
         if ele is None:
             if tag in self.__basetypes__:
@@ -1159,21 +1203,29 @@ class Schema(object):
     
     def Tag_enumeration(self, tag):
         '''return the Enumerated values for this tag/attribute?'''
+        if tag in self.__enum_cache__.keys():
+            return self.__enum_cache__[tag]
         enum=self.__enumeration__(tag)
         if enum is None:
+            self.__enum_cache__[tag]=None
             return None
         enums=[]
         for e in enum:
             enums.append(self.__cast_from_tag__(tag,e))
+        self.__enum_cache__[tag]=enums
         return enums
     
     def Tag_valueTypes(self,tag):
         '''what are the allowed value types for this tag/attribute?'''
+        if tag in self.__type_cache__.keys():
+            return self.__type_cache__[tag]
         if self.Tag_isSequence(tag):
+            self.__type_cache__[tag]=None
             return None
         ele=self.__getele__(tag)
         if ele is None:
             if tag in self.__basetypes__:
+                self.__type_cache__[tag]=tag
                 return tag
             raise NameError, str(tag)+' tag is not in the schema' 
         atype=self.__etype__(ele)
@@ -1182,13 +1234,18 @@ class Schema(object):
             valuetypes=[]
             for aatype in atype:
                 valuetypes.append(self.Tag_valueTypes(aatype))
+            self.__type_cache__[tag]=valuetypes
             return valuetypes
         if atype in self.__basetypes__:
+            self.__type_cache__[tag]=atype
             return atype
         for ttype in self.__types__:
             if atype==ttype:#ele.attrib['type']==ttype:
                 #print 'ready to go to', ttype
-                return self.Tag_valueTypes(atype)
+                nt=self.Tag_valueTypes(atype)
+                self.__type_cache__[tag]=nt
+                return nt
+        self.__type_cache__[tag]=None
         return None
     
     def Tag_isAttribRequired(self,tag,att):
@@ -1223,9 +1280,12 @@ class Schema(object):
     
     def Tag_whitespace(self,tag):
         '''how is whitespace handled for this object?'''
+        if tag in self.__whitespace_cache__.keys():
+            return self.__whitespace_cache__[tag]
         ele=self.__getele__(tag)
         if ele is None:
             if tag in self.__basetypes__:
+                self.__whitespace_cache__[tag]=None
                 return None
             raise NameError, str(tag)+' tag is not in the schema' 
         #print 'looking for tag'
@@ -1233,20 +1293,24 @@ class Schema(object):
             for ec in ele.getiterator(pref+'whiteSpace'):
                 #print 'iterating'
                 try:
+                    self.__whitespace_cache__[tag]=ec.attrib['value']
                     return ec.attrib['value']
                 except KeyError: pass
         for atype in self.__types__:
             if self.__etype__(ele)==atype:#ele.attrib['type']==atype:
-                return self.Tag_whitespace(atype)
-        
+                aw=self.Tag_whitespace(atype)
+                self.__whitespace_cache__[tag]=aw
+                return aw
+        self.__whitespace_cache__[tag]=None
         return None
     
     def Tag_hasAttrib(self,tag,att):
         '''is this an attribute of the tag?'''
-        
         if self.Tag_isRoot(tag) and att in self.__rootattribs__.keys():
             return True
-        elif att not in self.__attribs__:
+        if tag in self.__attrib_cache__.keys():
+            return (att in self.__attrib_cache__[tag])
+        if att not in self.__attribs__:
             return False
         
         ele=self.__getele__(tag,True,False,True)
@@ -1271,10 +1335,13 @@ class Schema(object):
     
     def Tag_attribs(self,tag):
         '''list all attributes for the tag'''
+        if tag in self.__attrib_cache__.keys():
+            return self.__attrib_cache__[tag]
         
         ele=self.__getele__(tag,True,False,True)
         if ele is None:
             if tag in self.__basetypes__:
+                self.__attrib_cache__[tag]=None
                 return None
             raise NameError, str(tag)+' tag is not in the schema' 
         #print 'looking for tag'
@@ -1295,14 +1362,20 @@ class Schema(object):
                 #print 'found daughter types'
                 atts+=self.Tag_attribs(atype)
                 #print 'appended', atts
+        self.__attrib_cache__[tag]=atts
         return atts
     
     def Tag_children(self, tag):
         '''list all possible children for the tag'''
+        if tag in self.__child_cache__.keys():
+            return self.__child_cache__[tag]
+        
         if not self.Tag_isSequence(tag):
+            self.__child_cache__[tag]=[]
             return []
         ele=self.__getele__(tag,True,False,True)
         if ele is None:
+            self.__child_cache__[tag]=[]
             return []
         child=[]
         for pref in [self.__ns__,self.__uri__]:
@@ -1316,14 +1389,18 @@ class Schema(object):
                     child.append(ec.attrib['name'])
                 except KeyError: continue
             if len(child):
+                self.__child_cache__[tag]=child
                 return child
         for atype in self.__types__:
             if self.__etype__(ele)==atype:#ele.attrib['type']==atype:
                 return self.Tag_children(atype)
+        self.__child_cache__[tag]=child
         return child
         
     def Tag_mothers(self, tag):
         '''list all possible mothers for the tag'''
+        if tag in self.__mother_cache__.keys():
+            return self.__mother_cache__[tag]
         mothers=[]
         if self.Tag_isRoot(tag): return None
         if tag not in self.__tags__:
@@ -1332,6 +1409,7 @@ class Schema(object):
         for mother in self.__tags__:
             if tag in self.Tag_children(mother):
                 mothers.append(mother)
+        self.__mother_cache__[tag]=mothers
         return mothers
     
     def Tag_nChild(self, tag, child):
