@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-09-23 - Juan PALACIOS
+ - cmt/requirements
+  . Add PhysSel/PhysSelPython
+  . Install python modules
+  . Increase version to v1r7
+ - Added Bs2JpsiPhi and Bs2JpsiPhiPrescaledAndDetached to StrippingSelections
+   python module
+
 !===================== StrippingSelections v1r6 2009-09-08 ====================
 
 ! 2009-09-08 - Juan Palacios for Alessio Sarti
