@@ -41,7 +41,7 @@ VTree:
     will throw a NameError, ValueError, TypeError or AttributeError 
 '''
 
-id = '$Id: schema.py,v 1.1.1.1 2009-09-11 09:56:32 rlambert Exp $'
+id = '$Id: schema.py,v 1.2 2009-09-23 07:42:45 rlambert Exp $'
 
 __author__ = 'Rob Lambert'
 __date__ = id.split()[3]
@@ -205,6 +205,33 @@ class VTree(object):
         self.__doc__+=docstr
         return ret
         
+    def __append_element__(self, child):
+        '''internal method to append validated elements'''
+        self.__element__.append(child.__element__)
+        
+        #set the level
+        #if there's text there, ignore!
+        if self.__element__.text is not None and self.__element__.text.strip()!='':
+            return True
+        #get the level from the mother
+        if self.__element__.text is None:
+            if (self.__mother__ is None or
+                self.__mother__.__element__.text is None or
+                self.__mother__.__element__.text.strip()!=''):
+                self.__element__.text='\n\t'
+                #self.__element__.tail='\n'
+            else:
+                self.__element__.text=self.__mother__.__element__.text+'\t'
+                #self.__element__.tail=self.__mother__.__element__.text
+        
+        #if there's text there, ignore!
+        #if self.__element__.text is None or self.__element__.text.strip()=='':
+        self.__element__.getchildren()[-1].tail=str(self.__element__.text)[:-1]
+        if len(self.__element__.getchildren())>1:
+            if self.__element__.text is None or self.__element__.text.strip()=='':
+                self.__element__.getchildren()[-2].tail=str(self.__element__.text)
+        return True
+    
     def dump(self):
         '''dump the object to the screen'''
         print self.xml()
@@ -242,12 +269,12 @@ class VTree(object):
         if att is None:
             list={}
             for c in self.__element__.attrib.keys():
-                list[c]=self.__schema__.Tag_castValue(c,self.__element__.attrib[c])
+                list[c]=self.__schema__.__cast_from_tag__(c,self.__element__.attrib[c])
             return list
         #print the given attrib
         if val is None:
             try:
-                return self.__schema__.Tag_castValue(att,self.__element__.attrib[att])
+                return self.__schema__.__cast_from_tag__(att,self.__element__.attrib[att])
             except KeyError:
                 raise AttributeError, self.tag()+" has no attribute " + att
                 return None
@@ -256,18 +283,18 @@ class VTree(object):
             raise AttributeError, self.tag()+" has no attribute " + att
             return False
         
-        elif self.__schema__.Tag_canHaveValue(att,val):
-            self.__element__.attrib[att]=str(self.__schema__.Tag_castValue(att,val))
-            if self.__schema__.Tag_whitespace(att)=='collapse':
-                self.__element__.attrib[att]=self.__element__.attrib[att].rstrip().lstrip()
-            return True
-        else:
-            raise ValueError, att+" cannot take a value " + str(val)
-            return False
+        #elif self.__schema__.Tag_canHaveValue(att,val):
+        self.__element__.attrib[att]=str(self.__schema__.Tag_castValue(att,val))
+        if self.__schema__.Tag_whitespace(att)=='collapse':
+            self.__element__.attrib[att]=self.__element__.attrib[att].rstrip().lstrip()
+        return True
+        #else:
+        #    raise ValueError, att+" cannot take a value " + str(val)
+        #    return False
     def addto(self, mother, child):
         '''Add the child to the first mother'''
         return self.find(mother)[0].add(child)
-        
+
     def add(self, child):
         '''add a child to the tree'''
         name=''
@@ -288,31 +315,9 @@ class VTree(object):
             raise TypeError, 'cannot add'+ name+ ' to ' + self.tag()+ ' as there are enough of this child already', name
             return False
         if 'VTree' in child.__str__():
-            self.__element__.append(child.__element__)
+            return self.__append_element__(child)
         else:
-            self.__element__.append(self.__schema__.create_default(name).__element__)
-        #set the level
-        #if there's text there, ignore!
-        if self.__element__.text is not None and self.__element__.text.strip()!='':
-            return True
-        #get the level from the mother
-        if self.__element__.text is None:
-            if (self.__mother__ is None or
-                self.__mother__.__element__.text is None or
-                self.__mother__.__element__.text.strip()!=''):
-                self.__element__.text='\n\t'
-                #self.__element__.tail='\n'
-            else:
-                self.__element__.text=self.__mother__.__element__.text+'\t'
-                #self.__element__.tail=self.__mother__.__element__.text
-        
-        #if there's text there, ignore!
-        #if self.__element__.text is None or self.__element__.text.strip()=='':
-        self.__element__.getchildren()[-1].tail=str(self.__element__.text)[:-1]
-        if len(self.__element__.getchildren())>1:
-            if self.__element__.text is None or self.__element__.text.strip()=='':
-                self.__element__.getchildren()[-2].tail=str(self.__element__.text)
-        return True
+            return self.__append_element__.append(self.__schema__.create_default(name))
     
     def value(self, val=None):
         '''return the existing value, or None
@@ -326,20 +331,21 @@ class VTree(object):
             if len(self.__element__.text.rstrip().lstrip())==0:
                 return None
             if self.__schema__.Tag_whitespace(self.tag())=='collapse':
-                return self.__schema__.Tag_castValue(self.tag(),self.__element__.text.rstrip().lstrip())
-            return self.__schema__.Tag_castValue(self.tag(),self.__element__.text)
+                return self.__schema__.__cast_from_tag__(self.tag(),self.__element__.text.rstrip().lstrip())
+            return self.__schema__.__cast_from_tag__(self.tag(),self.__element__.text)
         #set the value
-        if self.__schema__.Tag_canHaveValue(self.tag(),val):
-            v=self.__schema__.Tag_castValue(self.tag(),val)
-            if str(type([]))==str(type(v)):
-                v=self.__schema__.__list2str__(v)
-            self.__element__.text=str(v)
-            if self.__schema__.Tag_whitespace(self.tag())=='collapse':
-                self.__element__.text=self.__element__.text.rstrip().lstrip()
-            return True
-        else:
-            raise ValueError, self.tag()+" cannot take a value " + str(val)
-            return False
+        v=self.__schema__.Tag_castValue(self.tag(),val)
+        #if self.__schema__.Tag_canHaveValue(self.tag(),val):
+        #    v=self.__schema__.Tag_castValue(self.tag(),val)
+        if str(type([]))==str(type(v)):
+            v=self.__schema__.__list2str__(v)
+        self.__element__.text=str(v)
+        if self.__schema__.Tag_whitespace(self.tag())=='collapse':
+            self.__element__.text=self.__element__.text.rstrip().lstrip()
+        return True
+        #else:
+        #    raise ValueError, self.tag()+" cannot take a value " + str(val)
+        #    return False
     def tag(self):
         '''return the existing tag'''
         return ''+self.__element__.tag
@@ -395,6 +401,19 @@ class VTree(object):
             if self.__is__(child,tag,attrib,value):
                 list.append(VTree(child,self.__schema__,self,False))
         return list
+    
+    def __clone_element__(self, ele):
+        def_e=__ElementTree__.Element(ele.tag,ele.attrib)
+        def_e.text=ele.text
+        def_e.tail=ele.tail
+        for c in ele.getchildren():
+            def_e.append(self.__clone_element__(c))
+        return def_e
+        
+    def clone(self):
+        '''return a clone of this element, with the same schema'''
+        e2=self.__clone_element__(self.__element__)
+        return VTree(e2,self.__schema__,None,False)
 
 class Schema(object):
     '''details about the xml schema
@@ -402,6 +421,8 @@ class Schema(object):
     VTrees are created by the create_default(), parse() and validate() methods
     print a parsed schema to see its content
     inconsistent or erroneous schema will throw a NameError, TypeError or AttributeError '''
+    #cached default elements
+    __def_cache__={}
     def __init__(self, schemafile, ns='xs', root=''):
         '''constructor. 
         schemafile is the name of the file containing the schema, usually an xsd file
@@ -414,6 +435,7 @@ class Schema(object):
         self.__schemafile_short__=schemafile
         self.__root__=root
         self.__rootattribs__={}
+        self.__def_cache__={}
         self.__ns__=ns+':'
         self.__uri__="{http://www.w3.org/2001/XMLSchema}"
         #all known tags
@@ -938,14 +960,19 @@ class Schema(object):
     def validate(self,xmlfile):
         '''parse an xml document and validate against this schema'''
         return self.parse(xmlfile)
-                
+    
     def create_default(self, tag, level=0):
         '''return the default validated object from the schema'''
         if tag not in self.__tags__:
             raise NameError, 'This tag, ' + tag + ' is not in the schema'
             return None
+        
+        if (level==0) and (tag in self.__def_cache__.keys()):
+            #return a clone
+            return self.__def_cache__[tag].clone()
+        
         def_e=__ElementTree__.Element(tag)
-        #fill at   tributes
+        #fill attributes
         for att in self.Tag_attribs(tag):
             #print 'setting default for', att
             if self.Tag_isAttribRequired(tag,att):
@@ -993,7 +1020,11 @@ class Schema(object):
             def_e.attrib[self.__rootattribs__.keys()[1]]=self.__rootattribs__[self.__rootattribs__.keys()[1]]
             #for key in self.__rootattribs__.keys()[:2]:
             #    def_e.attrib[key]=self.__rootattribs__[key]
-        return VTree(def_e,self,None,False)
+        
+        retree=VTree(def_e,self,None,False)
+        if (level==0): self.__def_cache__[tag]=retree
+        
+        return retree.clone()
     
     def header(self):
         '''return the xml header'''
@@ -1053,45 +1084,15 @@ class Schema(object):
 
     def Tag_canHaveValue(self, tag,val):
         '''can I set this value to the tag?'''
-        if tag in self.__rootattribs__:
-            try:
-                str(val)
-                return True
-            except ValueError:
-                #raise ValueError, 'This tag cannot '+tag+' accept this value '
-                return False
-        if (tag not in self.__tags__ and
-            tag not in self.__attribs__ and
-            tag not in self.__types__):
-            raise NameError, 'This tag '+tag+' does not exist in the schema '
-            return False
-        if val is None:
-            return True
-        if type(val)==type('') and val=='':
-            return True
         try:
-            val=self.Tag_castValue(tag,val)
-        except ValueError:
-            return False
-        if val is None: return False
-        
-        if self.Tag_isFixed(tag):
-            #print 'recognised fixed'
-            if val == self.Tag_fixed(tag):
-                return True
+            self.Tag_castValue(tag,val)
+            return True
+        except ValueError, TypeError:
             return False
         
-        if self.Tag_hasEnumeration(tag):
-            #print 'recognised enum'
-            if val in self.Tag_enumeration(tag):
-                return True
-            return False
-        
-        return True        
-    
-    def Tag_castValue(self, tag,val):
-        '''can I set this value to the tag?'''
-        #print 'casting', val, 'to', tag, ' in CastValue'
+
+    def __cast_from_tag__(self, tag, val):
+        '''internal method for casting directly'''
         if tag in self.__rootattribs__:
             try:
                 return str(val)
@@ -1109,7 +1110,8 @@ class Schema(object):
             raise TypeError, 'No types defined for '+tag
             #print 'no types found!'
             return None
-        
+
+        ret=None
         if self.Tag_isList(tag):
             #print 'recognised list'
             if type(types)==type([]):
@@ -1129,25 +1131,40 @@ class Schema(object):
                     ret.append(self.__cast__(types,aval))
                 else: 
                     raise ValueError, 'This list does not accept '+str(type(aval))+' values'
-                    return None
-            
-            return ret
         
-        if self.Tag_isUnion(tag):
+        elif self.Tag_isUnion(tag):
             #print 'recognised union'
             if types!=str(type([])):
                 types=[types]
             for atype in types:
                 if self.__checkcast__(atype,val):
-                    return self.__cast__(atype,aval)
+                    ret=self.__cast__(atype,aval)
         else:
             #print 'basic type'
             if type(types)==type([]):
                 types=types[0]
-            return self.__cast__(types,val)
+            ret=self.__cast__(types,val)
+
+        return ret
+    
+    def Tag_castValue(self, tag,val):
+        '''can I set this value to the tag?'''
+        ret=self.__cast_from_tag__(tag,val)
         
-        raise ValueError, 'This tag '+tag+' does not accept '+str(type(val))+' values'    
-        return None        
+        if self.Tag_isFixed(tag):
+            #print 'recognised fixed'
+            if ret != self.Tag_fixed(tag):
+                raise ValueError, 'This value is fixed, and not equal to this one '+str(ret)
+            
+        if self.Tag_hasEnumeration(tag):
+            #print 'recognised enum'
+            if ret not in self.Tag_enumeration(tag):
+                raise ValueError, 'This value not one of the enumerated list '+str(ret)
+            
+        if ret is None:
+            raise ValueError, 'This tag '+tag+' does not accept '+str(type(val))+' values'    
+        else:
+            return ret
     
     
     def Tag_isSequence(self, tag):
@@ -1206,7 +1223,7 @@ class Schema(object):
             return None
         enums=[]
         for e in enum:
-            enums.append(self.Tag_castValue(tag,e))
+            enums.append(self.__cast_from_tag__(tag,e))
         return enums
     
     def Tag_valueTypes(self,tag):

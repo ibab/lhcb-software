@@ -15,10 +15,10 @@ merge OK
 		<stat unit="b" useOf="MemoryMaximum">1024.0</stat>
 	</usage>
 	<input>
-		<file GUID="0000-0000-0000-0000" name="PFN:/path/file.dst" status="mult">1000</file>
+		<file GUID="0000-0000-0000-0000" name="PFN:/path/inputfile.dst" status="mult">1000</file>
 	</input>
 	<output>
-		<file GUID="" name="PFN:/path/file.dst" status="part">1000</file>
+		<file GUID="" name="PFN:/path/outputfile.dst" status="part">1000</file>
 	</output>
 	<counters>
 		<counter name="UserAlg/UserEventCounter">1000</counter>

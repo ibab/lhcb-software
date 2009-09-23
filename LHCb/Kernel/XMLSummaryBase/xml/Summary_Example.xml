@@ -7,10 +7,10 @@
   </usage>
   
   <input>
-  	<file status="full" name="PFN:/path/file.dst" GUID="0000-0000-0000-0000">500</file>
+  	<file status="full" name="PFN:/path/inputfile.dst" GUID="0000-0000-0000-0000">500</file>
   </input>
   <output>
-  	<file status="part" name="PFN:/path/file.dst" GUID="">500</file>
+  	<file status="part" name="PFN:/path/outputfile.dst" GUID="">500</file>
   </output>
   
   <counters>
