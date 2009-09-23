@@ -14,8 +14,20 @@
   <class name = "IPrintDecayTreeTool"/>
   <class name = "IPV2MC"/>
   <class name = "MCAssociation"/>
+  <class name = "std::vector<MCAssociation>" />
 <!--
-  <class pattern = "Particle2MCParticle::*"/>
+  <class name = "Relations::Entry_<LHCb::Particle,LHCb::MCParticle>" />
+  <class name = "Relations::Relation<LHCb::Particle,LHCb::MCParticle>" />
+  <class name = "std::vector<Relations::Entry_<LHCb::Particle,LHCb::MCParticle> >" />
+  <class name = "Relations::Range_<std::vector<Relations::Entry_<LHCb::Particle,LHCb::MCParticle> > >" />
+  <class name = "Relations::RelationWeighted<LHCb::Particle,LHCb::MCParticle,double>" />
 -->
+
+  <class name = "LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>"
+	 id="7B880798-0000-0000-0000-000000000000" />
+  <class name = "LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>"/>
+
+
+
   <function pattern = "Particle2MCParticle::*"/>
 </lcgdict>
