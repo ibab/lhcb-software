@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.93 2009-09-23 06:06:30 jpalac Exp $
+! $Id: release.notes,v 1.94 2009-09-23 14:00:52 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+!====================== DaVinciMCKernel v4r0p1 2009-09-23 ====================
+
+! 2009-09-23 - Juan PALACIOS
+ - dict/DaVinciMCKernelDict.xml
+  . Add copy of LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle> dictionery
+    entry.
+  . Explicitly add other entries not in Event/EventAssoc.
 
 ! 2009-09-23 - Juan PALACIOS
  - cmt/requirements
