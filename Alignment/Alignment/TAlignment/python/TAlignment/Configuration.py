@@ -10,11 +10,13 @@ from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from DetCond.Configuration import *
 from TrackSys.Configuration import TrackSys
-from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
 
 class TAlignment( LHCbConfigurableUser ):
     INFO=3
     
+    __used_configurables__ = [ AlignTrTools ]
+
     __version__= "$Id: Configuration.py"
     __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
@@ -67,11 +69,18 @@ class TAlignment( LHCbConfigurableUser ):
             print "Adding ", ga.name(), " to sequence ", mainseq.name()
             mainseq.Members += [ga]
             importOptions("$TALIGNMENTROOT/options/GAlign.py")
+            self.setProp("WriteCondSubDetList", self.getProp("Detectors"))
+	    listOfCondToWrite = self.getProp( "WriteCondSubDetList" )
+            if listOfCondToWrite:
+               mainseq.Members.append( self.writeSeq( listOfCondToWrite ) )
+
+            
             if len( self.getProp("TrackLocation") ) == 0 :
                 raise RuntimeError("ERROR: no track container defined!")
             ga.InputContainer = self.getProp("TrackLocation")
             if len( ga.Detectors ) == 0:
                 ga.Detectors = self.getProp("Detectors")
+		
                 #           ga.propagateProperties()
                 #              importOptions("$ALIGNTRTOOLS/options/AlignTrTools.py")
                     
