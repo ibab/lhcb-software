@@ -1,4 +1,4 @@
-// $Id: ITrackExtrapolator.h,v 1.17 2007-08-22 11:38:52 ebos Exp $
+// $Id: ITrackExtrapolator.h,v 1.18 2009-09-24 14:46:14 wouter Exp $
 #ifndef TRACKINTERFACES_ITRACKEXTRAPOLATOR_H
 #define TRACKINTERFACES_ITRACKEXTRAPOLATOR_H 1
 
@@ -101,14 +101,14 @@ public:
   
   /// Propagate a track to within tolerance of a plane (default = 10 microns)
   virtual StatusCode propagate( const LHCb::Track& track,
-                                Gaudi::Plane3D& plane,
+                                const Gaudi::Plane3D& plane,
                                 LHCb::State& state,
                                 double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
   /// Propagate a state to within tolerance of a plane (default = 10 microns)
   virtual StatusCode propagate( LHCb::State& state,
-                                Gaudi::Plane3D& plane,
+                                const Gaudi::Plane3D& plane,
                                 double tolerance = 0.01,
                                 LHCb::ParticleID pid = LHCb::ParticleID(211) ) = 0;
 
