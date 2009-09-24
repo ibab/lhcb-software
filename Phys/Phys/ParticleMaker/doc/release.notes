@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.104 2009-09-11 19:31:47 jonrob Exp $ 
+! $Id: release.notes,v 1.105 2009-09-24 11:44:00 jpalac Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+!========================== ParticleMaker v5r3 2009-09-24 ===================
 
 ! 2009-09-11 - Chris Jones
  - Speed improvements identified during profiling with valgrind.
