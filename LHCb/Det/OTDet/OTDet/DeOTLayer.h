@@ -1,4 +1,4 @@
-// $Id: DeOTLayer.h,v 1.17 2007-07-23 09:59:04 cattanem Exp $
+// $Id: DeOTLayer.h,v 1.18 2009-09-24 11:45:32 wouter Exp $
 #ifndef OTDET_DEOTLAYER_H
 #define OTDET_DEOTLAYER_H 1
 
@@ -100,7 +100,7 @@ class DeOTLayer : public DetectorElement {
   /** plane corresponding to the layer 
   * @return the plane 
   */
-  Gaudi::Plane3D plane() const;
+  const Gaudi::Plane3D& plane() const;
   StatusCode cachePlane();
 
   /** flat vector of quarters
@@ -158,7 +158,7 @@ inline double DeOTLayer::angle() const {
   return m_stereoAngle;
 }
 
-inline Gaudi::Plane3D DeOTLayer::plane() const {
+inline const Gaudi::Plane3D& DeOTLayer::plane() const {
   return m_plane;
 }
 

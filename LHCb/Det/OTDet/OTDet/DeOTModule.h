@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.39 2008-10-23 09:16:28 janos Exp $
+// $Id: DeOTModule.h,v 1.40 2009-09-24 11:45:32 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -235,6 +235,14 @@ public:
                         const Gaudi::XYZPoint& aPoint, 
                         const double tx, const double ty) const;
   
+  /** Calculate the coordinate in the mono-layer plane in terms of the
+   * pitch. The z-coordinate is the middle of the mono-layer.
+   */
+  void monoLayerIntersection(int monolayer, 
+			     const Gaudi::XYZPoint& aPoint, 
+			     const double tx, const double ty,
+			     double& straw, double& yfrac) const ;
+  
   /** @return distance to electronics along the wire */
   double distanceAlongWire(const double xHit, 
                            const double yHit) const;
@@ -342,6 +350,9 @@ public:
        they know what their doing. !! */
   const Condition* statusCondition() const;
   
+  /// return pitch of straws in one mono layer
+  double xPitch() const { return m_xPitch ; }
+
   /// Private member methods
 private:
   
@@ -440,8 +451,8 @@ private :
   double m_dxdy ;                               ///< dx/dy along straw
   double m_dzdy ;                               ///< dx/dz along straw
   double m_dy[2] ;                              ///< difference in y coordinates of straw end points 
-  Gaudi::XYZVectorF m_dp0di ;                   ///< vector with change in straw position in units of pitch in y-line coordinates
-  Gaudi::XYZPointF  m_p0[2] ;                   ///< position of first straw in y-line coordinates
+  Gaudi::XYZVector m_dp0di ;                    ///< vector with change in straw position in units of pitch
+  Gaudi::XYZPoint  m_p0[2] ;                    ///< position of first straw
   double m_strawt0[MAXNUMCHAN] ;                ///< vector with t0 for every straw
   double m_strawdefaulttof[MAXNUMCHAN] ;        ///< vector with default tof correction for straw
   OTDet::RtRelation m_rtrelation ;              ///< rt-relation
@@ -703,10 +714,18 @@ inline void DeOTModule::trajectory(unsigned int aStraw,
   unsigned int tmpstraw = mono==0u ? aStraw-1u : aStraw - m_nStraws -1u ;
   dxdy    = m_dxdy ;
   dzdy    = m_dzdy ;
-  xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() ;
-  zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() ;
+  /*   xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() ; */
+  /*   zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() ; */
+  /*   ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ; */
+  /*   yend    = ybegin + m_dy[mono] ; */
+  
   ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ;
   yend    = ybegin + m_dy[mono] ;
+  xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() - ybegin * m_dxdy ;
+  zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() - ybegin * m_dzdy ;
+
+
+
 }
 
 inline double DeOTModule::driftRadius( double drifttime ) const {
