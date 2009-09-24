@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.339 2009-09-17 16:10:25 gcowan Exp $ 
+! $Id: release.notes,v 1.340 2009-09-24 10:28:20 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v4r4 2009-09-24 ===================
 
 ! 2009-09-17 - Greig Cowan
  - Removed reference to specific JpsiX configurables which are now under control
