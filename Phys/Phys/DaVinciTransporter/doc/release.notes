@@ -1,7 +1,9 @@
-! $Id: release.notes,v 1.64 2009-09-10 17:06:12 jonrob Exp $
+! $Id: release.notes,v 1.65 2009-09-24 11:42:21 jpalac Exp $
 ! Package     : DaVinciTransporter
 ! Responsible : P. Koppenburg, J. Palacios
 !==============================================================================
+
+!====================== DaVinciTransporter v3r9p1 2009-09-24 ==================
 
 ! 2009-09-10 - Chris Jones
  - Protect verbose and debug messages in ParticleTransporter within tests for
