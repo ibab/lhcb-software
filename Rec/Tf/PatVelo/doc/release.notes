@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-09-24 - Marco Gersabeck
+ - Fixed (largest?) memory leak in PatVeloTraversingTracking
+
 ! 2009-09-09 - Olivier Callot
  - New algorithm NewVeloRTracking with 1/3 the ghost rate and slightly higher
    efficiency than PatVeloRTracking with same speed.

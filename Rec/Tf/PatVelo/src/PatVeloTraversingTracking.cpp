@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.cpp,v 1.2 2009-08-03 09:10:39 mjohn Exp $
+// $Id: PatVeloTraversingTracking.cpp,v 1.3 2009-09-24 17:54:58 gersabec Exp $
 // Include files
 #include "PatVeloTraversingTracking.h"
 // from Gaudi
@@ -184,13 +184,16 @@ findTracks(double &distance,
 	traversingTrackCandidates.clear();
       }
     }
-    if(traversingTrackCandidates.size()!=0){
-      traversingTrackContainer.push_back(traversingTrackCandidates);
-    }
+  }
+  if(traversingTrackCandidates.size()!=0){
+    traversingTrackContainer.push_back(traversingTrackCandidates);
+    traversingTrackCandidates.clear();
   }
 
   /* STEP3: Calculate sigma (measure of deviation from parallel lines)
      for all combinations of tracks with small delta_theta */
+  std::vector< double > trackX;
+  std::vector <LHCb::Track*> IP_vector;
   std::vector< std::vector<LHCb::Track*> >::iterator it_container;
   for( it_container = traversingTrackContainer.begin();
        it_container != traversingTrackContainer.end(); ++it_container){
@@ -218,7 +221,7 @@ findTracks(double &distance,
 	xcorr= -1*m_distanceGuess/2;
       }
 
-      std::vector< double > trackX;
+      trackX.clear();
 
       // next candidate
       std::vector<LHCb::Track*>::iterator it_candidate1;
@@ -257,7 +260,7 @@ findTracks(double &distance,
 	}
 	sigma = sqrt(sigma/trackX.size());
 
-	std::vector <LHCb::Track*> IP_vector;
+	IP_vector.clear();
 	IP_vector.reserve(2);	
 	IP_vector.push_back(track0->clone());
 	IP_vector.push_back(track1->clone());
@@ -284,15 +287,17 @@ findTracks(double &distance,
 	      bestSigma = sigma;
 	    }
 
-	  } // closes 	  if(sigma<bestSigma){
+	  } // closes 	  if(sigma<bestSigma)
 
-	} // closes 	if(sigma<m_sigmaCut){
+	} // closes 	if(sigma<m_sigmaCut)
 
       } //closes loop over candidate1
 
     } //closes loop over candidate0
 
   } //closes loop over all candidates
+  trackX.clear();
+  IP_vector.clear();
 
   return;
 }
