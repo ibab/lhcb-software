@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-09-22 - Wouter Hulsbergen
+ - Added missing const to ITrackExtrapolator
+
 !====================== TrackInterfaces v4r7 2009-09-02 ======================
 ! 2009-08-05 Stephanie Hansmann-Menzemer
  - Add collect method to IVeloExpectation interface
