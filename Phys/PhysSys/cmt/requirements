@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.198 2009-09-18 15:48:36 jpalac Exp $
+#$Id: requirements,v 1.199 2009-09-24 11:56:29 jpalac Exp $
 package PhysSys
 version v8r10
 
@@ -9,12 +9,12 @@ branches doc cmt
 #===================================================================
 use  PhysConf                   v1r2   Phys   # Patrick Koppenburg, Juan Palacios
 use  ProtoParticleFilter        v1r4     Phys   # Chris Jones
-use  DaVinciTools       	v19r1    Phys   # Juan Palacios
-use  DaVinciTransporter 	v3r9     Phys   # Juan Palacios
-use  ParticleMaker      	v5r2     Phys   # Chris Jones
-use  VertexFit			v5r7     Phys   # Yuehong Xie
-use  LoKiFitters                v2r1p1   Phys   # Vanya Belyaev
-use  DecayTreeFitter            v1r4p1   Phys   # Wouter Hulsbergen
+use  DaVinciTools       	v19r2    Phys   # Juan Palacios
+use  DaVinciTransporter 	v3r9p1   Phys   # Juan Palacios
+use  ParticleMaker      	v5r3     Phys   # Chris Jones
+use  VertexFit			v6r0     Phys   # Yuehong Xie
+use  LoKiFitters                v2r2     Phys   # Vanya Belyaev
+use  DecayTreeFitter            v1r5   Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
 use  KaliCalo                   v2r0     Phys   # Vanya Belyaev
 # Declare this as a container package
