@@ -4,6 +4,10 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2009-09-02 - Juan PALACIOS
+ - dict/selection.*
+  . Add LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>
+
 !======================= EventAssoc v4r7 2009-09-03 ========================
 ! 2009-09-03 - Marco Cattaneo
  - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
