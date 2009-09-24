@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.241 2009-09-24 12:35:33 jonrob Exp $
+! $Id: release.notes,v 1.242 2009-09-24 13:03:57 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
@@ -6,6 +6,7 @@
 
 ! 2009-09-24 - Chris Jones
  - Fix uninitialised data members bug in Rich::Converter
+ - Hopefully fix linking problem on WIN32 with Panoramix
 
 ! 2009-09-03 - Chris Jones
  - Bug fix in RawDecoder python Configuration in RichTools()

@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: RichConverter_Imp.cpp,v 1.2 2009-09-24 13:03:57 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -22,22 +22,29 @@
 
 // print and count the error
 StatusCode Rich::Converter_Imp::Error( const std::string& Message ,
-                                       const StatusCode & Status ) const
+                                       const StatusCode   Status ) const
 {
   return this->Print( Message , MSG::ERROR  , Status  ) ;
 }
 
 // print and count the warning
 StatusCode Rich::Converter_Imp::Warning( const std::string& Message ,
-                                         const StatusCode & Status ) const
+                                         const StatusCode   Status ) const
 {
   return this->Print( Message , MSG::WARNING , Status ) ;
 }
 
+// print and count the warning
+StatusCode Rich::Converter_Imp::Info( const std::string& Message ,
+                                      const StatusCode   Status ) const
+{
+  return this->Print( Message , MSG::INFO , Status ) ;
+}
+
 // print the message
 StatusCode Rich::Converter_Imp::Print( const std::string& Message ,
-                                       const MSG::Level & level   ,
-                                       const StatusCode & Status ) const
+                                       const MSG::Level   level   ,
+                                       const StatusCode   Status  ) const
 {
   this->msgStream(level) << Message << endmsg ;
   return Status;
