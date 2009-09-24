@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.9 2009-07-08 12:58:58 cattanem Exp $
+ *  $Id: LineHit.h,v 1.10 2009-09-24 15:24:27 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -94,10 +94,7 @@ namespace Tf
 	return coord()/m_xAtYEq0 ; 
     }
 
-    /** is this hit in an X layer */
-    inline bool  isX () const { return (layer() == 0 || layer() == 3) ; }
-
-    /** Minimum y coordinate of line endpoints */
+      /** Minimum y coordinate of line endpoints */
     inline double yMin() const { return std::min(yBegin(),yEnd()) ; }
 
     /** Maximum y coordinate of line endpoints */
