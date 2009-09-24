@@ -1,16 +1,13 @@
 package DaVinciSys
-version v24r2p2
+version v24r3
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v24r2p2   Phys  
-use  StrippingSelections        v1r6      Phys
-use  CaloAssociators            v6r8p1    Calo
-use  AnalysisConf               v1r7      Phys
-use  MicroDSTConf               v2r5p1    MicroDST
+use  DaVinci                 	v24r3   Phys  
+#
 alias DaVinciTests "cmt qmtest_run"
 
 # Allow the generation of the SAM QMTest
