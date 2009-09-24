@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.20 2009-09-24 15:36:18 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.21 2009-09-24 16:04:19 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -129,13 +129,14 @@ class MicroDSTWriter(BaseDSTWriter) :
         return [p2mcRelator, cloner]
 
     def _copyBTaggingInfo(self, sel) :
-        from Configurables import BTagging, BTaggingTool
+        from Configurables import BTagging
         from Configurables import CopyFlavourTag
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging(self._personaliseName(sel,'BTagging'))
         BTagAlgo.InputLocations=self.dataLocations(sel,"")
         BTagLocation = "Phys/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
+        BTagAlgo.OutputLevel = 4
         cloner = CopyFlavourTag(self._personaliseName(sel,
                                                       "CopyFlavourTag"))
         cloner.InputLocation = BTagLocation
