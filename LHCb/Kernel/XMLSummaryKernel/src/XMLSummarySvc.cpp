@@ -229,7 +229,7 @@ void XMLSummarySvc::handle( const Incident& incident )
       filename=m_filename=incident.source();//TODO ..something;  
 
     }
-  else if(incident.type()==IncidentType::FailedOutputFile)
+  else if(incident.type()==IncidentType::FailOutputFile)
     {
       status="fail";
       method="fill_output";
@@ -396,7 +396,7 @@ StatusCode XMLSummarySvc::prepareIncSvc()
   m_incSvc->addListener( this, IncidentType::BeginInputFile);
   m_incSvc->addListener( this, IncidentType::BeginOutputFile);
   m_incSvc->addListener( this, IncidentType::WroteToOutputFile);
-  m_incSvc->addListener( this, IncidentType::FailedOutputFile);
+  m_incSvc->addListener( this, IncidentType::FailOutputFile);
   m_incSvc->addListener( this, IncidentType::FailInputFile);
   m_incSvc->addListener( this, IncidentType::EndOutputFile);
   m_incSvc->addListener( this, IncidentType::EndInputFile);

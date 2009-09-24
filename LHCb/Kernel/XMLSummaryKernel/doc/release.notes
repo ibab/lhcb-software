@@ -4,6 +4,9 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+! 2009-09-24 - Rob Lambert
+ - Updated to adopt the new FailOutputFile incident
+
 ! 2009-09-23 - Rob Lambert
  - Added a couple of info messages
 
