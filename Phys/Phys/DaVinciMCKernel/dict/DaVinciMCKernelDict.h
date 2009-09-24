@@ -1,4 +1,4 @@
-// $Id: DaVinciMCKernelDict.h,v 1.10 2009-04-08 12:34:13 jpalac Exp $
+// $Id: DaVinciMCKernelDict.h,v 1.11 2009-09-24 07:13:55 jpalac Exp $
 #ifndef DICT_DAVINCIMCKERNELDICT_H 
 #define DICT_DAVINCIMCKERNELDICT_H 1
 
@@ -26,6 +26,7 @@
 #include "Kernel/IPrintDecayTreeTool.h"
 #include "Kernel/IPV2MC.h"
 #include "Kernel/MCAssociation.h"
+#include "Kernel/Particle2MCParticle.h"
 namespace
 {
   std::vector<MCAssociation> __stdvector_MCAssoc;
