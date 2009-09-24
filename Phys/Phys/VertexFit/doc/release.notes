@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.176 2009-09-12 16:51:07 jonrob Exp $
+! $Id: release.notes,v 1.177 2009-09-24 11:46:30 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v6r0 2009-09-24 =================
 
 ! 2009-09-11 - Chris Jones
  - Speed improvements to identified during profiling with valgrind.
