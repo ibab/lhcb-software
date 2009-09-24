@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.124 2008-11-17 14:45:51 cattanem Exp $
+! $Id: release.notes,v 1.125 2009-09-24 12:04:49 wouter Exp $
 ! Package     : OTDet
 ! Responsible : Jeroen van Tilburg, Jacopo Nardulli, Jan Amoraal
 !--------------------------------------------------------------------------
+
+! 2009-09-24 - Wouter Hulsbergen
+ - Added method to compute intersection with monolayer plane in 'straw' coordinates.
 
 !========================== OTDet v8r2 2008-11-17 =========================
 ! 2008-10-28 - Marco Cattaneo

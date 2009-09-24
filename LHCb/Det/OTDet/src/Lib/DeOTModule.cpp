@@ -1,4 +1,4 @@
-// $Id: DeOTModule.cpp,v 1.42 2009-09-24 11:45:32 wouter Exp $
+// $Id: DeOTModule.cpp,v 1.43 2009-09-24 12:04:49 wouter Exp $
 // GaudiKernel
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
@@ -352,36 +352,10 @@ double DeOTModule::distanceToWire(const unsigned int aStraw,
   return (u-localUOfStraw(aStraw))*cosU;
 }
 
-// double DeOTModule::strawCoordinate(int monolayer, 
-// 				   const Gaudi::XYZPoint& aPoint, 
-// 				   const double tx, const double ty) const 
-// {
-//   // the is the most efficient I could come up with
-
-//   Gaudi::XYZVector dX = aPoint - m_p0[monolayer] ;
-//   double trackCrossWireX =   (ty*m_dzdy -      1) ;
-//   double trackCrossWireY = - (tx*m_dzdy - m_dxdy) ;
-  
-//   double a = trackCrossWireX * ( dX.x() - tx * dX.z() ) ;
-//   double b = trackCrossWireY * ( dX.y() - ty * dX.z() ) ;
-//   double c = trackCrossWireY * ( ty * m_dp0di.z() - m_dp0di.y() ) ;
-//   double d = trackCrossWireX * ( tx * m_dp0di.z() - m_dp0di.x() ) ;
-  
-//   return - (a + b) / (c + d ) ;
-// }
-
 void DeOTModule::monoLayerIntersection(int monolayer, 
 				       const Gaudi::XYZPoint& aPoint, 
 				       const double tx, const double ty,
 				       double& straw, double& yfrac) const {
-  // first we need to correct for an ugly problem: dp0di is not orthognal to the wire direction.
-//   Gaudi::XYZVector dp(  m_dp0di.x() + m_dp0di.y() * m_dxdy,
-// 			m_dp0di.y(),
-// 			m_dp0di.z() + m_dp0di.y() * m_dzdy ) ;
-//   // nor is 'm_p0' actually a point on the straw. I wish the trajectories were okay to use :-(
-//   Gaudi::XYZVector dX( aPoint.x() - m_p0[monolayer].x(),
-// 		       aPoint.y() ,
-// 		       aPoint.z() - m_p0[monolayer].z() ) ;
 
   const Gaudi::XYZVector& dp = m_dp0di ;
   Gaudi::XYZVector dX = aPoint - m_p0[monolayer] ;
@@ -400,28 +374,18 @@ void DeOTModule::monoLayerIntersection(int monolayer,
   // here we could still optimize something
   double eta = ( ( tx * dp.z() - dp.x() ) * u + dX.x() - tx * dX.z() ) / trackCrossWireY ;
   
-
-
-  // let's use an alternative computation
-//   {
-
-//     Gaudi::XYZVector q( m_dxdy, 1, m_dzdy) ;
-//     Gaudi::XYZVector n = q.Cross( dp ) ; //dp0di.Cross( q ) ;
-//     Gaudi::XYZVector t(tx,ty,1) ;
- 
-//     double dz = - dX.Dot(n) / t.Dot(n) ;
-//     Gaudi::XYZVector inplanevector = dX + dz * t ;
-//     double thisu   = inplanevector.Dot( dp )/dp.Mag2() ;
-//     double thiseta = inplanevector.Dot( q )/q.Mag2() ;
-//  //    std::cout << "u   : " << u   << " " << thisu << std::endl ;
-// //     std::cout << "eta : " << eta << " " << thiseta << std::endl ;
-// //     std::cout << "test: " << inplanevector.Dot( n) << std::endl ;
-// //     std::cout << "test2: " << inplanevector << " "
-// // 	      << thisu * dp + thiseta * q << std::endl ;
-//     std::cout << "test3: " << dp.Dot( q ) << std::endl ;
-//     eta = thiseta ;
-//     u   = thisu ;
-//   }
+  // cross check with this alternative computation
+  //   {
+  //     Gaudi::XYZVector q( m_dxdy, 1, m_dzdy) ;
+  //     Gaudi::XYZVector n = q.Cross( dp ) ;
+  //     Gaudi::XYZVector t(tx,ty,1) ;
+  //     double dz = - dX.Dot(n) / t.Dot(n) ;
+  //     Gaudi::XYZVector inplanevector = dX + dz * t ;
+  //     double thisu   = inplanevector.Dot( dp )/dp.Mag2() ;
+  //     double thiseta = inplanevector.Dot( q )/q.Mag2() ;
+  //     eta = thiseta ;
+  //     u   = thisu ;
+  //   }
 
   yfrac = eta / m_dy[monolayer] ;
   straw = u + 1 ;

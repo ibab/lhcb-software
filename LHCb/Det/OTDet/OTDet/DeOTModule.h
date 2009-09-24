@@ -1,4 +1,4 @@
-// $Id: DeOTModule.h,v 1.40 2009-09-24 11:45:32 wouter Exp $
+// $Id: DeOTModule.h,v 1.41 2009-09-24 12:04:48 wouter Exp $
 #ifndef OTDET_DEOTMODULE_H
 #define OTDET_DEOTMODULE_H 1
 
@@ -714,18 +714,10 @@ inline void DeOTModule::trajectory(unsigned int aStraw,
   unsigned int tmpstraw = mono==0u ? aStraw-1u : aStraw - m_nStraws -1u ;
   dxdy    = m_dxdy ;
   dzdy    = m_dzdy ;
-  /*   xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() ; */
-  /*   zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() ; */
-  /*   ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ; */
-  /*   yend    = ybegin + m_dy[mono] ; */
-  
   ybegin  = m_p0[mono].y() + tmpstraw * m_dp0di.y() ;
   yend    = ybegin + m_dy[mono] ;
   xAtYEq0 = m_p0[mono].x() + tmpstraw * m_dp0di.x() - ybegin * m_dxdy ;
   zAtYEq0 = m_p0[mono].z() + tmpstraw * m_dp0di.z() - ybegin * m_dzdy ;
-
-
-
 }
 
 inline double DeOTModule::driftRadius( double drifttime ) const {
