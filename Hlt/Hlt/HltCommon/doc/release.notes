@@ -4,6 +4,8 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r11 2009-09-24 ===================
+
 ! 2009-09-07 - Gerhard Raven
  - move TCK normalization (zero L0 part if signbit set) into TCKrep
 ! 2009-09-07 - Vladimir Gligorov
