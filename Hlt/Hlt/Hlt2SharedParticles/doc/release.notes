@@ -1,9 +1,11 @@
-d$Id: release.notes,v 1.49 2009-09-13 10:56:03 jonrob Exp $
+d$Id: release.notes,v 1.50 2009-09-24 11:08:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+!========================== Hlt2SharedParticles v2r3 2009-09-24 =============
 
 ! 2009-09-13 - Chris Jones
  - Set FindQuality=False in HLT Muon ID to save factor 3-4 in speed.
