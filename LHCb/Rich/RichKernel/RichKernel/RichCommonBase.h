@@ -5,7 +5,7 @@
  *  Header file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.h,v 1.16 2009-07-30 11:28:21 jonrob Exp $
+ *  $Id: RichCommonBase.h,v 1.17 2009-09-24 12:35:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -128,23 +128,27 @@ namespace Rich
 
       // Construct name
       const std::string fullname =
-        ( commonTool || parent ? iName : toolRegistry()->toolName(iName) );
+        ( commonTool || parent ? iName : this->toolRegistry()->toolName(iName) );
 
       // If not private tool - Check Context and OutputLevel option
       if ( !parent )
       {
-        if ( ! this -> setProperties(toolRegistry()->toolName(iName)) ) { return NULL; }
+        if ( ! this -> setProperties(this->toolRegistry()->toolName(iName)) ) { return NULL; }
       }
 
       // get tool
       pTool =
-        this -> template tool<TOOL>( toolRegistry()->toolType(nickName),
+        this -> template tool<TOOL>( this->toolRegistry()->toolType(nickName),
                                      fullname,
                                      parent );
-      if ( this -> msgLevel(MSG::DEBUG) )
+      if ( !pTool )
+      {
+        this->Exception( "Null Pointer returned by ToolSvc for "+fullname );
+      }
+      else if ( this -> msgLevel(MSG::DEBUG) )
       {
         this -> debug() << " Acquired tool '" << pTool->name()
-                        << "' of type '" << toolRegistry()->toolType(nickName) << "'" << endmsg;
+                        << "' of type '" << this->toolRegistry()->toolType(nickName) << "'" << endmsg;
       }
 
       // return the tool pointer
@@ -189,7 +193,7 @@ namespace Rich
         {
           this -> debug() << " Forced release for tool '" << pTool->name() << "'" << endmsg;
         }
-        release( pTool );
+        this -> release( pTool );
         pTool = NULL;
       }
       else

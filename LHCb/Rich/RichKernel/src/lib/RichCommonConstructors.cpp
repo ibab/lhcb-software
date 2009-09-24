@@ -5,7 +5,7 @@
  *  Implementation of templated constructors for Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonConstructors.cpp,v 1.1 2009-08-10 12:12:06 jonrob Exp $
+ *  $Id: RichCommonConstructors.cpp,v 1.2 2009-09-24 12:35:33 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2004-09-18
@@ -342,7 +342,11 @@ namespace Rich
   CommonBase< Rich::Converter_Imp >::CommonBase( long storage_type,
                                                  const CLID &class_type,
                                                  ISvcLocator *svc )
-    : Rich::Converter_Imp ( storage_type, class_type, svc )
+    : Rich::Converter_Imp ( storage_type, class_type, svc ),
+      m_toolReg           ( NULL                          ),
+      m_jos               ( NULL                          ),
+      m_regName           ( context().empty() ?
+                            "RichToolRegistry" : context()+"_RichToolRegistry" )
   {
     // to do ...
     // declareProperty ( "ToolRegistryName", m_regName );
