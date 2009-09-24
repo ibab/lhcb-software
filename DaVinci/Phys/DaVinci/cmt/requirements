@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.433 2009-09-21 09:10:27 jpalac Exp $
+# $Id: requirements,v 1.434 2009-09-24 06:53:14 jpalac Exp $
 # Created    : 07/02/2002
 # Maintainer : J. Palacios
 #
 
 #============================================================================
 package           DaVinci
-version           v24r2p2
+version           v24r3
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -47,60 +47,7 @@ use HltSys      v*
 use LbcomSys    v*
 
 #-- Rec =========================================================================
-#use RecSys      v*
-use CaloMoniDst          v3r9    Calo # Olivier Deschamps
-use CaloReco             v5r0   Calo # Olivier Deschamps
-use MuonID               v7r1    Muon # Erica Polycarpo, Miriam Gandelman
-use MuonPIDChecker       v4r0    Muon # Erica Polycarpo, Miriam Gandelman
-use GlobalReco           v6r25   Rec  # Chris Jones
-use LumiAlgs             v2r2    Rec  # Jaap Panman
-use RecAlgs              v1r8    Rec  # Marco Cattaneo
-use RecCheckers          v1r2    Rec  # Marco Cattaneo
-use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
-use RichRecMCTools       v2r24   Rich # Chris Jones
-use RichRecQC            v2r32   Rich # Chris Jones
-use RichRecTrackTools    v1r13   Rich # Chris Jones
-use CaloPIDs             v5r0    Calo # Victor Egorychev, Vanya Belyaev
-use PatVelo              v3r16   Tf   # David Hutchcroft
-use PatVeloTT            v3r7    Tf   # Mariusz Witek
-use TsaAlgorithms        v3r11   Tf   # Matt Needham
-use TrackMatching        v2r23   Tf   # Eduardo Rodrigues
-use NNTools              v1r5    Tr   # Adrian Perieanu
-use PatChecker           v3r4p2  Tr   # Olivier Callot, David Hutchcroft
-use PatFitParams         v3r2p3  Tr   # Olivier Callot
-use TrackAssociators     v2r6    Tr   # Eduardo Rodrigues, Edwin Bos
-use TrackCheckers        v4r7    Tr   # Eduardo Rodrigues
-use TrackExtrapolators   v2r22   Tr   # Eduardo Rodrigues
-use TrackFitEvent        v4r0    Tr   # Eduardo Rodrigues
-use TrackFitter          v2r36   Tr   # Eduardo Rodrigues
-use TrackIdealPR         v2r18   Tr   # Eduardo Rodrigues
-use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
-use TrackMonitors        v1r12   Tr   # Wouter Hulsbergen, Stephanie Menzemer
-use TrackProjectors      v2r23   Tr   # Wouter Hulsbergen
-use TrackTools           v3r20   Tr   # Eduardo Rodrigues
-use TrackUtils           v1r28   Tr   # Eduardo Rodrigues
-use TrackSys             v4r24   Tf   # Stephanie Hansmann-Menzemer 
-use PatAlgorithms        v3r22   Tf   # Stephanie Hansmann-Menzemer
-use TfTools              v1r7    Tf   # Stephanie Hansmann-Menzemer
-use TrackSeeding         v1r4p2  Tf   # Eduardo Rodrigues, Henk Jan Bulten
-use PatPV                v3r8    Tr   # Mariusz Witek
-use MuonTools            v5r0p1  Muon # Alessia Satta
-use MuonTrackAlign       v1r7p2  Muon # Silvia Pozzi
-use RichENNRingFinder    v1r1    Rich # Chris Jones + Ulrich Kerzel
-use RichGlobalPID        v3r10p2 Rich # Chris Jones
-use RichIFBAnalysis      v1r0    Rich # Ross Young, Chris Jones
-use RichMarkovRingFinder v2r8    Rich # Chris Jones
-use RichPIDMerge         v2r7    Rich # Chris Jones
-use RichRecAlgorithms    v2r16   Rich # Chris Jones
-use RichRecMCAlgorithms  v1r3p1  Rich # Chris Jones
-use RichRecMonitors      v2r23   Rich # Chris Jones
-use RichRecPhotonTools   v1r6    Rich # Chris Jones
-use RichRecStereoTools   v1r6    Rich # Chris Jones
-use RichRecSys           v3r21   Rich # Chris Jones
-use RichRecTemplateRings v1r0    Rich # Sajan Easo
-use RichRecTools         v4r9    Rich # Chris Jones
-use VeloRecMonitors      v1r11   Velo # Malcom John, Eduardo Rodrigues
-#================ End of RecSys packages ========================================
+use RecSys      v*
 
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
