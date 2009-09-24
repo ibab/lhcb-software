@@ -7,20 +7,20 @@ branches cmt doc
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v4r3    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltLine             v1r6    Hlt   # Vanya Belyaev, Gerhard Raven
-use Hlt1Lines           v1r5    Hlt   # Gerhard Raven
+use HltConf             v4r4    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLine             v1r6p1  Hlt   # Vanya Belyaev, Gerhard Raven
+use Hlt1Lines           v1r6    Hlt   # Gerhard Raven
 use HltBase             v6r7    Hlt   # Gerhard Raven
-use HltCommon           v5r10    Hlt   # Gerhard Raven
+use HltCommon           v5r11   Hlt   # Gerhard Raven
 use HltTracking         v4r2    Hlt   # Jose Angel Hernando-Morata
 use HltEcalAlley        v2r0    Hlt   # Mariusz Witek
 use HltMuon             v3r5    Hlt   # Alessia Satta          
 use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
-use HltCosmics          v*      Hlt   # Stephan Nies
+use HltCosmics          v1r0    Hlt   # Stephan Nies
 use HltL0Conf           v2r10   Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato  
 use HltRecChecker	v1r10	Hlt   # Jose Angel Hernando-Morata
-use HltGlobalMonitor	v2r6p1	Hlt   # Bruno de Paula
+use HltGlobalMonitor	v2r6p2	Hlt   # Bruno de Paula
 use HltLuminosity       v2r11   Hlt   # Jaap Panman
 use HltBeamGasAlley     v2r2    Hlt   # Plamen Hopchev
 use HltRawData          v2r1    Hlt   # Tomasz Skwarnicki
@@ -28,20 +28,20 @@ use HltRawData          v2r1    Hlt   # Tomasz Skwarnicki
 # And now for something completely different
 use HltPython	        v1r17   Hlt   # Jose Angel Hernando-Morata
 use TCKUtils            v1r4    Hlt   # Gerhard Raven
-use TCKPresenter        v1r0    Hlt   # Klaus Neumann
+use TCKPresenter        v1r1    Hlt   # Klaus Neumann
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use Hlt2Lines           v1r6    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
+use Hlt2Lines           v1r7    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
 use HltSelections       v9r6    Hlt   # Patrick Koppenburg
-use Hlt2SharedParticles v2r2    Hlt   # Patrick Koppenburg/Gerhard Raven
-use HltKshort           v2r0    Hlt   # Jaap Panman
+use Hlt2SharedParticles v2r3    Hlt   # Patrick Koppenburg/Gerhard Raven
+use HltKshort           v2r0p1  Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
 use HltDisplVertices    v1r1    Hlt   # Neil Gauvin
 use HltSelChecker       v8r7    Hlt   # Patrick Koppenburg
-use Fidel               v1r3p1  Phys  # Sara Furcas    
+use Fidel               v1r3p2  Phys  # Sara Furcas    
 
 
 #=============================================================
