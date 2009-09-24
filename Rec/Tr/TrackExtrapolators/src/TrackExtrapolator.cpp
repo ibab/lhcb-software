@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.25 2007-10-05 16:46:35 wouter Exp $
+// $Id: TrackExtrapolator.cpp,v 1.26 2009-09-24 15:35:27 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -9,6 +9,9 @@
 #include "Event/TrackParameters.h"
 
 #include <math.h>
+
+#include "LHCbMath/GeomFun.h"
+#include "LHCbMath/Line.h"
 
 using namespace LHCb;
 using namespace Gaudi;
@@ -156,7 +159,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
 // Propagate a track to within tolerance of a plane (default = 10 microns)
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( const Track& track,
-                                         Gaudi::Plane3D& plane,
+                                         const Gaudi::Plane3D& plane,
 					 LHCb::State& state,
                                          double tolerance,
                                          ParticleID pid )
@@ -175,32 +178,39 @@ StatusCode TrackExtrapolator::propagate( const Track& track,
 // Propagate a state to within tolerance of a plane (default = 10 microns)
 //=============================================================================
 StatusCode TrackExtrapolator::propagate( State& state,
-                                         Gaudi::Plane3D& plane,
+                                         const Gaudi::Plane3D& plane,
                                          double tolerance,
                                          ParticleID pid )
 {
-  StatusCode sc = StatusCode::FAILURE;
-
-  // the distance is signed!
-  double distance = fabs( plane.Distance( state.position() ) );
-  if( distance < tolerance ) { return StatusCode::SUCCESS; }
-
-  for( int iter = 0; iter < m_maxIter; ++iter ) {
-    distance = fabs( plane.Distance( state.position() ) );
-    XYZPoint inPlane( plane.ProjectOntoPlane( state.position() ) ); 
-    sc = propagate( state, inPlane.z(), pid );
-    if( sc.isFailure() ) {
-      error() << "Failed to propagate to z = " << inPlane.z() << endreq;
-      return sc;
+  StatusCode sc = StatusCode::FAILURE ;
+  Gaudi::XYZPoint intersect ;
+  int iter ;
+  double distance ;
+  for(  iter = 0; iter < m_maxIter; ++iter ) {
+    Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> line( state.position(), state.slopes() ) ;
+    double dz ;
+    bool success = Gaudi::Math::intersection( line, plane, intersect, dz) ;
+    if( !success ) {
+      error() << "State parallel to plane!" << endreq;
+      break ;
     }
+    distance = ( intersect - line.beginPoint()).R() ;
+    
     if( distance < tolerance ) {
-      debug() << "Success in iteration # " << iter << endreq; 
-      return StatusCode::SUCCESS;
+      sc = StatusCode::SUCCESS ;
+      break ;
+    } else {
+      double ztarget = state.z() + dz ;
+      sc = propagate( state, ztarget, pid );
+      if( sc.isFailure() ) {
+	error() << "Failed to propagate to z = " << ztarget << endreq;
+	break ;
+      }
     }
   }
-  if( sc.isFailure() ) {
+  
+  if( iter == m_maxIter )
     error() << "Failed to propagate to plane within tolerance." << endreq;
-  }
   
   return sc;
 }

@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2009-09-22 - Wouter Hulsbergen
+ - Added missing const to TrackExtrapolator functions with Plane3D and
+   small optimization for planes that are not perpendicular to z.
+
 !======================= TrackExtrapolators v2r23 2009-09-03 =================
 ! 2009-09-01 Wouter Hulsbergen
  - Added new base class TrackFieldExtrpolatorBase and adapted relevant extrapolators
