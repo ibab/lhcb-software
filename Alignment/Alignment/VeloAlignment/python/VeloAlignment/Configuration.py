@@ -13,10 +13,13 @@ from TrackSys.Configuration import TrackSys
 from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools )
 
 class VeloAlignment( LHCbConfigurableUser ):
+
+    #__used_configurables__ = [ AlignTrTools ]
+
     INFO=3
 
-    __version__="$Id: Configuration.py"
-    __author__= "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
+    __version__ = "$Id: Configuration.py"
+    __author__ = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
     __slots__ = {
           "Sequencer" : GaudiSequencer("VeloAlignmentSequencer")          # the sequencer to add algorithms to
@@ -27,7 +30,6 @@ class VeloAlignment( LHCbConfigurableUser ):
         }
 
 
-    __used_configurables__ = [ AlignTrTools ]
 
     def __apply_configuration__(self):
         print "******* calling ", self.name()

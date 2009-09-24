@@ -2,6 +2,10 @@
 ! Responsible : Silvia Borghi, Marco Gersabeck
 !=============================================================================
 
+!=============================================================================
+! 24/09/2009 Johan Blouw
+ - removed dependency of VeloAlignment/Configuration.py on AlignTrTools,
+   which caused a circular dependency, crashing gaudirun.py.
 !========================== VeloAlign v4r7 2009-07-27 ========================
  - 27/07/2009 - Johan Blouw
  - Tagged this package v4r7 for alignment release v4r3
