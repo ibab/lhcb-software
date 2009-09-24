@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: summary.py,v 1.5 2009-09-23 13:00:56 rlambert Exp $
+# $Id: summary.py,v 1.6 2009-09-24 09:28:48 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -9,14 +9,20 @@
 *        it can also be taken as an example of how to interact                *
 *        with the xml schema/VTree object                                     *
 *                                                                             * 
-*        This class may be expanded with getter functions later               *
+*        By necessity, the summary object hard-codes the name of several      *
+*        of the tags and attributes of the LHCb schema.                       * 
+*        This is required for merging and intelligent handling of the objects * 
 *                                                                             * 
 *                                                                             * 
 * Print: returns an xml string                                                * 
 * write: sends output to a file                                               * 
 * set_step: is used to set 'initialize'/'finalize' etc.                       * 
-* fillfile: used to add information about a file                              * 
-* fillcounter: used to create a counter in the xml                            * 
+* fill_file:    used to add information about a file                          * 
+* fill_counter: used to create a counter in the xml                           * 
+* fill_lumi:    used to create a counter to be stored under lumiCounters      * 
+* fill_memory:  used to add memory usage information                          * 
+* file_dict:    returns dictionary of input/output files by name and GUID     * 
+* count_dict:   returns dictionary of counters/lumiCounters by name           * 
 *******************************************************************************
 """
 # =============================================================================
@@ -33,6 +39,8 @@ except ImportError:
     #finally fail here if module cannot be found!
 
 __default_schema__='$XMLSUMMARYBASEROOT/xml/XMLSummary.xsd'
+__file_tag__ = 'file'
+__count_tag__= 'counter'
 
 # =============================================================================
 # Simple algorithm which manipulates with counters 
@@ -50,9 +58,67 @@ class Summary(VTree):
         self.__schema__=Schema(schemafile)
         self.__element__=self.__schema__.create_default(self.__schema__.root()).__element__
         self.__count_dict__={}
+        for mother in self.__schema__.Tag_mothers(__count_tag__):
+            self.__count_dict__[mother]={}
         self.__file_dict__={}
+        for mother in self.__schema__.Tag_mothers(__file_tag__):
+            self.__file_dict__[mother]={}
         VTree.__init__(self,self.__element__,self.__schema__,False)
+
+    def __file_exists__(self, GUID, filename, isOutput=False):
+        '''internal method, return the file if it already exists'''
+        mothers=self.__schema__.Tag_mothers(__file_tag__)
+        self.file_dict()
+        mother=mothers[0]
+        if isOutput: mother=mothers[1]
+        
+        #if it exists, return it
+        if (GUID is not None) and (GUID in self.__file_dict__[mother].keys()):
+            return self.__file_dict__[mother][GUID]
+        elif (filename is not None) and (filename in self.__file_dict__[mother].keys()):
+            return self.__file_dict__[mother][filename]
+
+        return None
     
+    def __file_merger__(self, destination, filename=None, GUID=None, status=None, addevents=0, isOutput=False):
+        '''merge two file objects'''
+        mothers=self.__schema__.Tag_mothers(__file_tag__)
+        mother=mothers[0]
+        if isOutput: mother=mothers[1]
+        
+        #update filename or GUID if only one is present
+        if (GUID is not None) and (filename is not None):
+            if ( destination.attrib('name')==""):
+                destination.attrib('name',filename)
+                self.__file_dict__[mother][filename]=destination
+            if ( destination.attrib('GUID')==""):
+                destination.attrib('GUID',GUID)
+                self.__file_dict__[mother][GUID]=destination
+        
+        #because it's a reference I can do this:
+        if status is not None:
+            if destination.attrib('status')=='fail':
+                pass
+                #a fail is a fail
+            elif status=='fail':
+                #a fail is a fail
+                destination.attrib('status',status)
+            elif destination.attrib('status')=='mult':
+                #mult is mult!
+                pass
+            elif destination.attrib('status')=='full':# and status!='full':
+                #more than one lot of this file!
+                destination.attrib('status','mult')
+            elif status=='none':
+                #none is default, don't overwrite anything
+                pass
+                #destination.attrib('status',status)
+            else:
+                destination.attrib('status',status)
+        #print 'at end of merge for file', filename, 'adding', addevents, 'to', destination.value()
+        #destination.value(destination.value()+addevents)
+        #print destination.value()
+        return destination.value(destination.value()+addevents)
                 
     def __fill_file__(self, filename=None, GUID=None, status=None, addevents=0, isOutput=False):
         '''Internal common method to fill the file processed information
@@ -69,91 +135,51 @@ class Summary(VTree):
         if filename is None and GUID is None:
             return False
         
+        mothers=self.__schema__.Tag_mothers(__file_tag__)
+        mother=mothers[0]
+        if isOutput: mother=mothers[1]
+        
         if filename is not None:
             if "LFN:" not in filename.upper():
                 if "PFN:" not in filename.upper():
                     filename="PFN:"+filename
-        if self.__file_dict__=={}: self.file_dict(True)
-        
-        open_file=None
+        open_file=self.__file_exists__(GUID,filename,isOutput)
 
         #hardcoded tag for file entry :S
-        tag='file'
         
-        #if it exists, merge it
-        if (GUID is not None) and (GUID in self.__file_dict__.keys()):
-            open_file=self.__file_dict__[GUID]
-        elif (filename is not None) and (filename in self.__file_dict__.keys()):
-            open_file=self.__file_dict__[filename]
-            
         if open_file is None:
                 #file needs to be created
-                open_file=self.__schema__.create_default('file')
+                open_file=self.__schema__.create_default(__file_tag__)
                 #print 'default created'
                 if (status==None): open_file.attrib('status','none')
                 else: open_file.attrib('status',status)
                 open_file.value(addevents)
-                #no hard coded structure apart from that
-                #mother=self.__schema__.Tag_mothers(tag)[0]
-                #find the new file, or use the existing one
-                #if isOutput: mother=self.__schema__.Tag_mothers(tag)[1]
-                #else: files=self.children('input')[0]
-                files=self.children(tag='input')[0]
-                if isOutput: files=self.children(tag='output')[0]
+                files=self.children('input')[0]
+                if isOutput: files=self.children('output')[0]
                 
                 if filename is not None:
                     open_file.attrib('name',filename)
-                    self.__file_dict__[filename]=open_file
+                    self.__file_dict__[mother][filename]=open_file
                 if GUID is not None:
                     open_file.attrib('GUID',GUID)
-                    self.__file_dict__[GUID]=open_file
+                    self.__file_dict__[mother][GUID]=open_file
                 files.__append_element__(open_file)
-                return
+                return True
         
-        #update filename or GUID if only one is present
-        if (GUID is not None) and (filename is not None):
-            if ( open_file.attrib('name')==""):
-                open_file.attrib('name',filename)
-                self.__file_dict__[filename]=open_file
-            if ( open_file.attrib('GUID')==""):
-                open_file.attrib('GUID',GUID)
-                self.__file_dict__[GUID]=open_file
-                
-        #because it's a reference I can do this:
-        if status is not None:
-            if open_file.attrib('status')=='fail':
-                pass
-                #a fail is a fail
-            elif status=='fail':
-                #a fail is a fail
-                open_file.attrib('status',status)
-            elif open_file.attrib('status')=='mult':
-                #mult is mult!
-                pass
-            elif open_file.attrib('status')=='full':# and status!='full':
-                #more than one lot of this file!
-                open_file.attrib('status','mult')
-            elif status=='none':
-                #none is default, don't overwrite anything
-                pass
-                #open_file.attrib('status',status)
-            else:
-                open_file.attrib('status',status)
-        #print 'at end of merge for file', filename, 'adding', addevents, 'to', open_file.value()
-        #open_file.value(open_file.value()+addevents)
-        #print open_file.value()
-        return open_file.value(open_file.value()+addevents)
+        return self.__file_merger__(open_file, filename,
+                            GUID,status,
+                            addevents, isOutput)
                   
-    def __buildcounter__(self, name, flag, isLumi=False, nEntries=None, flag2=None, min=None,  max=None):
+    def __buildcounter__(self, name, flag, nEntries=None, flag2=None, min=None,  max=None):
         '''method to build a VTree counter'''
         #pick the daughter to fill
-        type="counter"
+        type=__count_tag__
         attrib="name"
         
-        if isLumi:
-            if nEntries is not None: type="lumiStatEntity"
-            else: type="lumiCounter"
-        elif nEntries is not None:
+        #if isLumi:
+        #    if nEntries is not None: type="lumiStatEntity"
+        #    else: type="lumiCounter"
+        if nEntries is not None:
             type="statEntity"
         
         #create the xml object to fill
@@ -178,9 +204,36 @@ class Summary(VTree):
         
         return cnt
     
+    def fill_VTree_file(self, file, isOutput=False):
+        '''append or merge a vtree file into the tree'''
+
+        if file.attrib('name')!="":
+            if "LFN:" not in file.attrib('name').upper():
+                if "PFN:" not in file.attrib('name').upper():
+                    file.attrib('name',"PFN:"+file.attrib('name'))
+
+        filename=file.attrib('name')
+        GUID=file.attrib('GUID')
+        open_file=self.__file_exists__(file.attrib('GUID'),file.attrib('name'), isOutput)
+        
+        
+        #if it doesn't exist, just add it
+        if open_file is None:
+                files=self.children('input')[0]
+                if isOutput: files=self.children('output')[0]
+                
+                files.__append_element__(open_file)
+                return True
+
+        #else merge:
+        return self.__file_merger__(open_file, file.attrib('name'),
+                            file.attrib('GUID'),file.attrib('status'),
+                            file.value(), isOutput)
+        
+    
     def isFailure(self):
         """the opposite of isSuccess, negates what is stored by the success tag"""
-        return (self.children(tag='success')[0].value()==False)
+        return (self.children('success')[0].value()==False)
     
     def set_step( self, step="initialize", success=False ) :
         """ Set the step entry, and the success entry """
@@ -212,37 +265,41 @@ class Summary(VTree):
         the number of events is taken from addevents'''
         return self.__fill_file__(filename,GUID,status,addevents,False)
     
-    def fill_VTree_counter(self, counter):
+    def fill_VTree_counter(self, counter, isLumi=False):
         ''' fill a basic or complex stat counter, or lumi counter, from a VTree
         will merge the counter if it already exists.
         If you want to add, but not merge use the add method'''
         if 'VTree' not in str(type(counter)):
             raise TypeError, 'expected VTree, got '+str(type(counter))+' instead'
-        if counter.tag() not in ['statEntity', 'counter', 'lumiCounter', 'lumiStatEntity']:
+        if counter.tag() not in ['statEntity', __count_tag__]:
             raise TypeError, 'expected counter, got '+counter.tag()+' instead'
         mother=self.__schema__.Tag_mothers(counter.tag())[0]
+        if isLumi:
+            mother=self.__schema__.Tag_mothers(counter.tag())[1]
         
-        if self.__count_dict__=={}: self.counter_dict(True)
+        self.counter_dict(True)
         
         #hard coded, no way around it :S
         attrib='name'
         name=counter.attrib(attrib)
         
         #check if it exists. If not, just add it
-        if name not in self.__count_dict__.keys():
-            counters=self.children(tag=mother)[0]
+        #print self.__count_dict__
+        #print self.__count_dict__[mother]
+        if name not in self.__count_dict__[mother].keys():
+            counters=self.children(mother)[0]
             #counter=counter.clone()
             counters.__append_element__(counter)
             self.__count_dict__[name]=counter
             return True
         
-        counters=self.children(tag=mother)[0]
+        #counters=self.children(mother)[0]
         #check if it exists. If not, just add it
-        cnt=counters.children(tag=counter.tag(),attrib={attrib:name})
-        if cnt is None or len(cnt)==0:
-            counters.add(counter)
-            return True
-        cnt=self.__count_dict__[name]
+        #cnt=counters.children(counter.tag(),attrib={attrib:name})
+        #if cnt is None or len(cnt)==0:
+        #    counters.add(counter)
+        #    return True
+        cnt=self.__count_dict__[mother][name]
         #else, merge the two
         if 'statentity' not in counter.tag().lower():
             cnt.value(cnt.value()+counter.value())
@@ -261,18 +318,18 @@ class Summary(VTree):
         
     def fill_counter(self, name, flag, nEntries=None, flag2=None, min=None, max=None):
         ''' fill a basic or complex stat counter '''
-        cnt=self.__buildcounter__(name, flag, False, nEntries, flag2, min, max)
-        return self.fill_VTree_counter(cnt)
+        cnt=self.__buildcounter__(name, flag, nEntries, flag2, min, max)
+        return self.fill_VTree_counter(cnt, False)
     
     def fill_lumi(self, name, flag, nEntries=None, flag2=None, min=None, max=None):
         ''' fill a basic or complex Lumi stat counter '''
-        cnt=self.__buildcounter__(name, flag, True, nEntries, flag2, min, max)
-        return self.fill_VTree_counter(cnt)
+        cnt=self.__buildcounter__(name, flag, nEntries, flag2, min, max)
+        return self.fill_VTree_counter(cnt, True)
 
     def fill_memory(self, memory, unit='b'):
         '''Method to fill the memory usage information'''
-        usage=self.children(tag='usage')[0]
-        astat=usage.children(tag='stat', attrib={'useOf':'MemoryMaximum'})
+        usage=self.children('usage')[0]
+        astat=usage.children('stat', attrib={'useOf':'MemoryMaximum'})
         if not astat or len(astat)==0:
             astat=self.__schema__.create_default('stat')
             astat.attrib('useOf','MemoryMaximum')
@@ -288,24 +345,35 @@ class Summary(VTree):
     
     def counter_dict(self, recache=False):
         '''return a name:VTree dictionary of counters'''
-        if recache or self.__count_dict__=={}:
-            self.__count_dict__.clear()
-            for tag in ('counter', 'lumiCounter'):
-                for mother in self.__schema__.Tag_mothers(tag):
-                    for amother in self.children(tag=mother):
-                        for count in amother.children():
-                            self.__count_dict__[count.attrib('name')]=count
+        mothers=self.__schema__.Tag_mothers(__count_tag__)
+        empty=True
+        if self.__count_dict__!={}:
+            for mother in mothers:
+                if self.__count_dict__[mother]!={}:
+                    empty=False
+        if empty or recache:
+            for mother in mothers:
+                self.__count_dict__[mother].clear()
+                for amother in self.children(mother):
+                    for count in amother.children():
+                        self.__count_dict__[mother][count.attrib('name')]=count
         return self.__count_dict__
     
     def file_dict(self, recache=False):
         '''return a name:VTree dictionary of all input and output files'''
-        if recache or self.__file_dict__=={}:
-            self.__file_dict__.clear()
-            for mother in self.__schema__.Tag_mothers('file'):
-                    for amother in self.children(tag=mother):
-                        for file in amother.children():
-                            if(file.attrib('name')!=""): self.__file_dict__[file.attrib('name')]=file
-                            if(file.attrib('GUID')!=""): self.__file_dict__[file.attrib('GUID')]=file
+        mothers=self.__schema__.Tag_mothers(__file_tag__)
+        empty=True
+        if self.__file_dict__!={}:
+            for mother in mothers:
+                if self.__file_dict__[mother]!={}:
+                    empty=False
+        if empty or recache:
+            for mother in mothers:
+                self.__file_dict__[mother].clear()
+                for amother in self.children(mother):
+                    for file in amother.children():
+                        if(file.attrib('name')!=""): self.__file_dict__[mother][file.attrib('name')]=file
+                        if(file.attrib('GUID')!=""): self.__file_dict__[mother][file.attrib('GUID')]=file
         return self.__file_dict__
     
 def Merge(summaries, schema=__default_schema__):
@@ -361,19 +429,19 @@ def Merge(summaries, schema=__default_schema__):
         for file in asummary.children('output')[0].children():
             merged.fill_output(file.attrib('name'), file.attrib('GUID'), file.attrib('status'), file.value())
         #merge counters
-        for cnt in asummary.children('counters')[0].children('counter'):
+        for cnt in asummary.children('counters')[0].children(__count_tag__):
             merged.fill_VTree_counter(cnt.clone())
         #merge counters
-        for cnt in asummary.children('lumiCounters')[0].children('lumiCounter'):
-            merged.fill_VTree_counter(cnt.clone())
+        for cnt in asummary.children('lumiCounters')[0].children(__count_tag__):
+            merged.fill_VTree_counter(cnt.clone(),isLumi=True)
     #merge statCounters
     for asummary in sum_objects:
         #merge statCounters
         for cnt in asummary.children('counters')[0].children('statEntity'):
             merged.fill_VTree_counter(cnt.clone())
         #merge counters
-        for cnt in asummary.children('lumiCounters')[0].children('lumiStatEntity'):
-            merged.fill_VTree_counter(cnt.clone())
+        for cnt in asummary.children('lumiCounters')[0].children('statEntity'):
+            merged.fill_VTree_counter(cnt.clone(), isLumi=True)
     return merged
     
     

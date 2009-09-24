@@ -4,6 +4,9 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+! 2009-09-24 - Rob Lambert
+ - Minor polishing of schema, xml, and code, updated reference files
+
 ! 2009-09-23 - Rob Lambert
  - Significant changes for speed optimisation
  - benchmark tests ~0.5s to fill 2000 statEntity counters

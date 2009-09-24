@@ -154,14 +154,6 @@
     </xs:complexType>
     
 
-    <xs:complexType name="LumiCounts">
-    	<xs:sequence>
-    		<xs:element name="lumiCounter" type="Count"  minOccurs="0" maxOccurs="unbounded" default="0"/>
-    		<xs:element name="lumiStatEntity" type="StatCount"  minOccurs="0" maxOccurs="unbounded" default="0.0 0 0.0"/>
-    	</xs:sequence>
-    </xs:complexType>
-
-
 <!-- The summary type is the overall structure of the file -->
 
     <xs:complexType name="SummaryType">
@@ -171,8 +163,8 @@
     		<xs:element name="usage" 	type="Usage" 		minOccurs="1" 	maxOccurs="1" />
     		<xs:element name="input" 	type="FileCounts" 	minOccurs="1" 	maxOccurs="1" />
     		<xs:element name="output" 	type="FileCounts" 	minOccurs="1" 	maxOccurs="1" />
-    		<xs:element name="counters" type="Counts" 		minOccurs="1" 	maxOccurs="1" />
-    		<xs:element name="lumiCounters" type="LumiCounts" minOccurs="1" maxOccurs="1" />
+    		<xs:element name="counters"     type="Counts" 		minOccurs="1" 	maxOccurs="1" />
+    		<xs:element name="lumiCounters" type="Counts"           minOccurs="1"   maxOccurs="1" />
     	</xs:sequence>
     	<xs:attribute ref="version"  use="required"/>
     </xs:complexType>

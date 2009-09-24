@@ -19,9 +19,9 @@
   		format="Flag Entries Flag2" max="1.0" min="1.0">500.0 500 500.0</statEntity>
   </counters>
   <lumiCounters>
-  	<lumiCounter name="LumiAlg/EmptyEvents">1000000</lumiCounter>
-  	<lumiStatEntity name="LumiAlg/SomeComplicatedMeasurement"
-  		format="Flag Entries Flag2" max="1000.0" min="0.0">40050.0 500 2500001.0</lumiStatEntity>
+  	<counter name="LumiAlg/EmptyEvents">1000000</counter>
+  	<statEntity name="LumiAlg/SomeComplicatedMeasurement"
+  		format="Flag Entries Flag2" max="1000.0" min="0.0">40050.0 500 2500001.0</statEntity>
   </lumiCounters>
   
 </summary>

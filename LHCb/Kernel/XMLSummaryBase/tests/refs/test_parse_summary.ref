@@ -21,8 +21,8 @@ parsed example xml OK
   	<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">500.0 500 500.0</statEntity>
   </counters>
   <lumiCounters>
-  	<lumiCounter name="LumiAlg/EmptyEvents">1000000</lumiCounter>
-  	<lumiStatEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">40050.0 500 2500001.0</lumiStatEntity>
+  	<counter name="LumiAlg/EmptyEvents">1000000</counter>
+  	<statEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">40050.0 500 2500001.0</statEntity>
   </lumiCounters>
   
 </summary>
@@ -35,9 +35,10 @@ extra methods tested
   <usage />
   <input>
   	<file GUID="" name="PFN:test/test.dst" status="none">2</file>
-  	<file GUID="" name="PFN:test/testoutput.dst" status="none">2</file>
   </input>
-  <output />
+  <output>
+  	<file GUID="" name="PFN:test/testoutput.dst" status="none">2</file>
+  </output>
   <counters>
   	<counter name="test/test">2</counter>
   	<statEntity format="Flag Entries Flag2" max="100.0" min="0.0" name="test/testStat">200.0 200.0 200.0</statEntity>
@@ -65,8 +66,8 @@ merge OK
 		<statEntity format="Flag Entries Flag2" max="1.0" min="1.0" name="UserAlg/UserStatEntity">1000.0 1000.0 1000.0</statEntity>
 	</counters>
 	<lumiCounters>
-		<lumiCounter name="LumiAlg/EmptyEvents">2000000</lumiCounter>
-		<lumiStatEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">80100.0 1000.0 5000002.0</lumiStatEntity>
+		<counter name="LumiAlg/EmptyEvents">2000000</counter>
+		<statEntity format="Flag Entries Flag2" max="1000.0" min="0.0" name="LumiAlg/SomeComplicatedMeasurement">80100.0 1000.0 5000002.0</statEntity>
 	</lumiCounters>
 </summary>
 

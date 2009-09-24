@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test_parse_summary.py,v 1.1 2009-09-23 13:00:56 rlambert Exp $
+# $Id: test_parse_summary.py,v 1.2 2009-09-24 09:28:48 rlambert Exp $
 # =============================================================================
 """
 *******************************************************************************
@@ -42,8 +42,8 @@ sum1.fill_counter('test/testStat',100,100,100,0,0)
 sum1.fill_input('test/test.dst',addevents=1)
 sum1.fill_input('test/test.dst',addevents=1)
 
-sum1.fill_input('test/testoutput.dst',addevents=1)
-sum1.fill_input('test/testoutput.dst',addevents=1)
+sum1.fill_output('test/testoutput.dst',addevents=1)
+sum1.fill_output('test/testoutput.dst',addevents=1)
 
 print 'extra methods tested'
 sum1.dump()
