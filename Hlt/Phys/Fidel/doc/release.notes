@@ -1,8 +1,11 @@
+!$Id: release.notes,v 1.21 2009-09-24 11:14:21 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Fidel
 ! Responsible : Sara Furcas
 ! Purpose     : Fidel
 !-----------------------------------------------------------------------------
+
+!========================== Fidel v1r3p2 2009-9-24 ===================
 
 ! 2009-08-24 - Patrick Koppenburg
  - Reflect change of signature in IVertexFit interface
