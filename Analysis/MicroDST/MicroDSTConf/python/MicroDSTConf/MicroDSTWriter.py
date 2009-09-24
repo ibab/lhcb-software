@@ -1,20 +1,11 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.19 2009-09-15 13:30:40 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.20 2009-09-24 15:36:18 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-
-import GaudiPython
-
-import sys
-
-if sys.platform != "win32" :
-    GaudiPython.loaddict('libEventAssocDict')
-else :
-    GaudiPython.loaddict('EventAssocDict')
 
 from AnalysisConf.BaseDSTWriter import BaseDSTWriter
 
@@ -61,7 +52,11 @@ class MicroDSTWriter(BaseDSTWriter) :
     def dataLocations(self, sel, extension) :
         loc = []
         for output in sel.outputLocations() :
-            loc += [output+"/"+extension]
+            location = output+"/"+extension
+            location = location.replace("//", "/")
+            if location.endswith('/') :
+                 location = location[:len(location)-1]
+            loc += [location]
         return loc
     
     def setOutputPrefix(self, alg) :
@@ -138,8 +133,8 @@ class MicroDSTWriter(BaseDSTWriter) :
         from Configurables import CopyFlavourTag
         importOptions('$FLAVOURTAGGINGOPTS/BTaggingTool.py')
         BTagAlgo = BTagging(self._personaliseName(sel,'BTagging'))
-        BTagAlgo.InputLocations=[self.mainLocation(sel)]
-        BTagLocation = self.mainLocation(sel)+"/Tagging"
+        BTagAlgo.InputLocations=self.dataLocations(sel,"")
+        BTagLocation = "Phys/Tagging"
         BTagAlgo.TagOutputLocation = BTagLocation
         cloner = CopyFlavourTag(self._personaliseName(sel,
                                                       "CopyFlavourTag"))
