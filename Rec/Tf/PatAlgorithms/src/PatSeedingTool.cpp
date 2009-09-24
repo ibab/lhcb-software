@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.28 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatSeedingTool.cpp,v 1.29 2009-09-24 15:25:19 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -1083,7 +1083,7 @@ void PatSeedingTool::collectLowQualTracks(
     BOOST_FOREACH(PatFwdHit* hit, track.coords()) {
       hit->setSelected( true );
       hit->setIgnored( false );
-      if (! hit->hit()->isX()) {
+      if (hit->hit()->layer() == 1 || hit->hit()->layer() == 2) {
 	const double x = hit->hit()->xAtYEq0();
 	const double z = hit->hit()->zAtYEq0();
 	const double y = (track.xAtZ(z)- x) / hit->hit()->dxDy();
@@ -1120,7 +1120,7 @@ void PatSeedingTool::collectLowQualTracks(
 	// memory for std::vector's storage
 	boost::array<int, 3> nInStation = { {0, 0, 0} };
 	BOOST_FOREACH(const PatFwdHit* hit, track.coords()) {
-	  if ( hit->hit()->isX() ) continue;
+	  if ( hit->hit()->layer() == 0 || hit->hit()->layer() == 3 ) continue;
 	  if ( hit->isIgnored() ) continue;
 	  nInStation[ hit->hit()->station() ]++;
 	}

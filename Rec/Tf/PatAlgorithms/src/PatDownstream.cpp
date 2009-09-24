@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.8 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatDownstream.cpp,v 1.9 2009-09-24 15:25:19 smenzeme Exp $
 // Include files 
 
 // from boost
@@ -283,7 +283,7 @@ StatusCode PatDownstream::execute() {
             if ( xPredTol < fabs( pos - hit->x() ) ) continue;
             hit->hit()->setStatus( Tf::HitBase::UsedByPatDownstream, false );
             hit->setProjection( fabs( hit->x()-pos ) );
-            if ( hit->hit()->isX() ) {
+            if ( hit->hit()->layer()== hit->hit()->station() ){
               m_xHits.push_back( hit );
             } else {
               m_uvHits.push_back( hit );
@@ -583,7 +583,7 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       sx   += w * dist;
       sxz  += w * dist * dz;
       sxt  += w * dist * t ;
-      if ( ! hit->hit()->isX() ) nbUV++;
+      if ( hit->hit()->layer() != hit->hit()->station() ) nbUV++;
       if ( m_printing ) {
         info() << format( "   Plane %2d x %7.2f dist %6.3f ", 
                           hit->planeCode(), hit->x(), dist );

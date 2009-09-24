@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.8 2009-06-11 07:08:11 smenzeme Exp $
+// $Id: PatSeedFit.cpp,v 1.9 2009-09-24 15:25:19 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -142,7 +142,7 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
 
     BOOST_FOREACH( PatFwdHit* ihit, hits ) {
       ihit->setSelected(true) ;
-      if( ihit->hit()->isX() ) {
+      if( ihit->hit()->layer()==0 || ihit->hit()->layer()==3 ) {
 	n++;
           if( seedhits[0] == 0 ||
               ihit->hit()->zAtYEq0() < seedhits[0]->hit()->zAtYEq0() )
