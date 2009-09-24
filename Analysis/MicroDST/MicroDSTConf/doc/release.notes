@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.29 2009-09-15 13:32:46 jpalac Exp $
+!$Id: release.notes,v 1.30 2009-09-24 15:36:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-09-24 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Fix BTagging. Tags now written to ../Phys/Tagging.
+  . Remove loading of EventAssoc library with GaudiPython tools.
+ - cmt/requirements
+  . Increase version to v2r6
 
 !========================== MicroDSTConf v2r5p1 2009-09-15 ================
 
