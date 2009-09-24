@@ -1,6 +1,6 @@
-<!-- * $Id: selection.xml,v 1.16 2009-09-02 17:23:15 jpalac Exp $ 
+<!-- * $Id: selection.xml,v 1.17 2009-09-24 07:24:29 jpalac Exp $ 
      * ========================================================================
-     * $CVS tag:$, version $Revision: 1.16 $ 
+     * $CVS tag:$, version $Revision: 1.17 $ 
      * ========================================================================
 -->
 
@@ -8,7 +8,7 @@
      *
      * The basic selection file to build the Reflex dictionaries
      * @author jpalac 
-     * @date  2009-09-02 19:21:19.560499 
+     * @date  2009-09-24 09:20:15.570973 
      * ========================================================================
 --> 
 
@@ -54,6 +54,9 @@
 
     <class name="LHCb::RelationWeighted1D<LHCb::MCParticle,LHCb::CaloCluster,float>" 
            id="EE61581B-0000-0000-0000-000000000000" />
+
+    <class name="LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>" 
+           id="ED51D6FC-0000-0000-0000-000000000000" />
 
     <class name="LHCb::RelationWeighted1D<LHCb::Particle,LHCb::VertexBase,double>" 
            id="98D94C3F-0000-0000-0000-000000000000" />

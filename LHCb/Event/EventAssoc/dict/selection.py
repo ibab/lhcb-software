@@ -37,7 +37,8 @@ if "__main__" == __name__ :
     classes += [ Rels.RelW2D ('LHCb::Track'    , 'LHCb::MCParticle' ,'double' ) ]
     # $DAVINCIMCKERNELROOT/Kernel/RC2HepMC.h:
     classes += [ Rels.Rel2D  ('LHCb::Particle' , 'HepMC::GenParticle*' ) ]
-    # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h:
+    # $DAVINCIMCKERNELROOT/Kernel/Particle2MC.h, Particle2MCParticle.h:
+    classes += [ Rels.RelW1D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
     classes += [ Rels.RelW2D ('LHCb::Particle' , 'LHCb::MCParticle' ,'double' ) ]
     classes += [ Rels.Rel2D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
     classes += [ Rels.Rel1D  ('LHCb::Particle' , 'LHCb::MCParticle'           ) ]
