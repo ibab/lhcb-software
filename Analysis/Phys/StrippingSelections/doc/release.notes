@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-09-25 - Juan PALACIOS
+ - python/StrippingSelections/Bs2JpsiPhi*.py
+  . Fix some bugs, apply configuration of the Selections and SelectionSequences
+    so that everything works nicely.
+
 ! 2009-09-23 - Juan PALACIOS
  - cmt/requirements
   . Add PhysSel/PhysSelPython
