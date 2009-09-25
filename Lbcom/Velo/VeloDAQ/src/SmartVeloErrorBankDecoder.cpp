@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.4 2009-03-12 14:38:50 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.5 2009-09-25 13:23:49 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -192,11 +192,11 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
       }
       errorInfoData.push_back(anErrorInfo);
       // write optional part
+      evtInfo anInfo;
       if(secIT->second.second!=0){
         // error was sent for this fpga build evt info section
         // encode properly the evt section block
         sources.push_back(secIT->first);
-        evtInfo anInfo;
         ErrorBankIT begin=secIT->second.first-INIT_SHIFT;
         anInfo.push_back(*begin);
         anInfo.push_back(*(++begin));
@@ -208,8 +208,8 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
         for( ; begin!=end; ++begin){
           anInfo.push_back(*begin);
         }
-        evtInfoData.push_back(anInfo);
       }
+      evtInfoData.push_back(anInfo);
     }
     anEvtInfo.setEvtInfo(evtInfoData);
     err->setEvtInfoSection(anEvtInfo);

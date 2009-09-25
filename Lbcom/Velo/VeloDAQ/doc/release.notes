@@ -3,6 +3,14 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-09-25 - Kurt Rinnert
+ - bug fix in error bank decoder: there were no (empty) event infos inserted
+   for PPFPGAs w/o errors resulting in a creash when trying to access an info 
+   for a PPFPGA > number of PPFGA w/ errors. Of course the positions were also
+   wrong. The only cases handled correctly before the fix were: 
+   1. only errors in PPFPGA 0
+   2. errors in all PPFPGAs   
+
 !=========================  VeloDAQ v4r8 2009-09-09 =======================
 ! 2009-09-09 - Kurt Rinnert
  - work around for missing C99 standard header on Windows(TM)
