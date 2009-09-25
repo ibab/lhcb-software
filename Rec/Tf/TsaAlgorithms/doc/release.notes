@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-09-25 - Jeroen van Tilburg
+ - Added new algorithm: TTGenericTracking. See include file for documentation.
+
 !======================= TsaAlgorithms v3r12 2009-09-03 =====================
 ! 2009-08-04 - Stephanie Hansmann-Menzemer
  - ITGenericTracking: remove filling of LHCb::Track::nExpectedIT
