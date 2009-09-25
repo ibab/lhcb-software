@@ -1,4 +1,4 @@
-// $Id: FitNode.cpp,v 1.24 2009-07-10 11:30:28 wouter Exp $
+// $Id: FitNode.cpp,v 1.25 2009-09-25 09:04:35 wouter Exp $
 // Include files
 
 // local
@@ -33,7 +33,8 @@ FitNode::FitNode():
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
-  m_deltaChi2Backward(0)
+  m_deltaChi2Backward(0),
+  m_doca(0)
 {
   // FitNode default constructor
 }
@@ -45,7 +46,8 @@ FitNode::FitNode( double zPos, LHCb::State::Location location ):
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
-  m_deltaChi2Backward(0)
+  m_deltaChi2Backward(0),
+  m_doca(0)
 {
 }
 
@@ -56,7 +58,8 @@ FitNode::FitNode(Measurement& aMeas):
   m_transportIsSet(false),
   m_refResidual(0),
   m_deltaChi2Forward(0),
-  m_deltaChi2Backward(0)
+  m_deltaChi2Backward(0),
+  m_doca(0)
 {
 }
 

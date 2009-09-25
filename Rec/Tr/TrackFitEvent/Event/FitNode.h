@@ -1,4 +1,4 @@
-// $Id: FitNode.h,v 1.26 2009-07-10 11:30:28 wouter Exp $
+// $Id: FitNode.h,v 1.27 2009-09-25 09:04:35 wouter Exp $
 #ifndef TRACKFITEVENT_FITNODE_H
 #define TRACKFITEVENT_FITNODE_H 1
 
@@ -160,6 +160,11 @@ namespace LHCb
     /// get the poca vector
     const Gaudi::XYZVector& pocaVector() const { return m_pocaVector ; }
 
+    /// set the delta-energy
+    void setDoca( double e) { m_doca = e; }
+
+    /// get the delta-energy
+    double doca() const { return m_doca ; }
   private:
 
     Gaudi::TrackMatrix    m_transportMatrix;    ///< transport matrix for propagation from previous node to this one
@@ -174,6 +179,7 @@ namespace LHCb
     double                m_deltaChi2Backward;      ///< chisq contribution in backward filter (bi-directional fit only)
     Gaudi::TrackMatrix    m_smootherGainMatrix ;    ///< smoother gain matrix (smoothedfit only)
     Gaudi::XYZVector      m_pocaVector ;            ///< unit vector perpendicular to state and measurement
+    double                m_doca ;              ///< signed doca (of ref-traj). for ST/velo this is equal to minus (ref)residual
   };
 
 } // namespace LHCb
