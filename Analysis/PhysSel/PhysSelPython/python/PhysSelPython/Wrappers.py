@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.5 2009-08-25 13:37:17 jpalac Exp $
+#$Id: Wrappers.py,v 1.6 2009-09-25 15:16:18 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 """
@@ -37,6 +37,9 @@ class DataOnDemand(LHCbConfigurableUser) :
         }
     def algName(self) :
         return self.getProp('Location')
+
+    def outputLocation(self) :
+        return self.algName()
     
 class Selection(LHCbConfigurableUser) :
     """
@@ -87,6 +90,9 @@ class Selection(LHCbConfigurableUser) :
     def algName(self) :
         return self.algorithm().name()
 
+    def outputLocation(self) :
+        return self.algName()
+    
 class SelectionSequence(LHCbConfigurableUser) :
     """
     Wrapper class for offline selection sequence. Takes a Selection object
@@ -113,14 +119,20 @@ class SelectionSequence(LHCbConfigurableUser) :
         "TopSelection" : ""
         }
 
+    algos = []
+    
     def __apply_configuration__(self) :
         print "Adding Algo ", self.algorithm().name(),  " to ", self.sequence().name()
+        self.algos.insert(0, self.algorithm())
+        sel = self.topSelection()
+        sel.__apply_configuration__()
         self.sequence().Members.insert(0,self.algorithm())
         self.buildSelectionList( self.topSelection().RequiredSelections )
-
+        
     def topSelection(self) :
         return self.getProp('TopSelection')
 
+    
     def algorithm(self) :
         return self.topSelection().algorithm()
     
@@ -130,8 +142,11 @@ class SelectionSequence(LHCbConfigurableUser) :
     def algName(self) :
         return self.algorithm().name()
 
+    def outputLocation(self) :
+        return self.algName()
+
     def outputLocations(self) :
-        return ['Phys/' + self.algName()]
+        return [self.outputLocation()]
 
     def buildSelectionList(self, selections) :
         for sel in selections :
@@ -139,5 +154,7 @@ class SelectionSequence(LHCbConfigurableUser) :
             if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
+                self.algos.insert(0, sel.algorithm())
                 self.sequence().Members.insert( 0, sel.algorithm() )
+                sel.__apply_configuration__()
                 self.buildSelectionList( sel.requiredSelections() )
