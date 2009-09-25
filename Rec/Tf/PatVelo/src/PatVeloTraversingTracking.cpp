@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.cpp,v 1.3 2009-09-24 17:54:58 gersabec Exp $
+// $Id: PatVeloTraversingTracking.cpp,v 1.4 2009-09-25 16:45:35 gersabec Exp $
 // Include files
 #include "PatVeloTraversingTracking.h"
 // from Gaudi
@@ -109,9 +109,12 @@ StatusCode Tf::PatVeloTraversingTracking::execute() {
 			       -1+0.05,20+0.05,210);
     if(m_makeHistogram) m_halfDistance->fill(distance);
     saveTrackInTES(set.mergedTrack());
+    traversingTrackContainer.clear();
     setFilterPassed(true);
+    return StatusCode::SUCCESS;
   }
-
+ 
+  traversingTrackContainer.clear();
   setFilterPassed(false);
 
   return StatusCode::SUCCESS;
@@ -192,13 +195,13 @@ findTracks(double &distance,
 
   /* STEP3: Calculate sigma (measure of deviation from parallel lines)
      for all combinations of tracks with small delta_theta */
-  std::vector< double > trackX;
+  std::vector< double > trackX, trackY;
   std::vector <LHCb::Track*> IP_vector;
   std::vector< std::vector<LHCb::Track*> >::iterator it_container;
   for( it_container = traversingTrackContainer.begin();
        it_container != traversingTrackContainer.end(); ++it_container){
 
-    double bestSigma=1000000;
+    double bestSigmaX=1000000;
     std::vector<LHCb::Track*> candidates = *it_container;
     if(m_verboseLevel) verbose() << "Looping over candidates" << endmsg;
     // first candidate
@@ -209,8 +212,10 @@ findTracks(double &distance,
       LHCb::Track* track0 = *it_candidate0;
 
       double x0 = track0->position().x();
+      double y0 = track0->position().y();
       double z0 = track0->position().z();
       double tx0 = track0->slopes().x();
+      double ty0 = track0->slopes().y();
 
       int sensorID0 = track0->lhcbIDs()[0].veloID().sensor();
       bool track0half = m_veloDet->sensor(sensorID0)->isLeft();
@@ -222,6 +227,7 @@ findTracks(double &distance,
       }
 
       trackX.clear();
+      trackY.clear();
 
       // next candidate
       std::vector<LHCb::Track*>::iterator it_candidate1;
@@ -236,38 +242,52 @@ findTracks(double &distance,
 	if( track1half == track0half) continue;
 
 	double x1 = track1->position().x();
+	double y1 = track1->position().y();
 	double z1 = track1->position().z();
 	double tx1 = track1->slopes().x();
+	double ty1 = track1->slopes().y();
 
 	double average_z = (z0+z1)/2;
 
 	double average_x = 0;
+	double average_y = 0;
 	//Extrapolate track candidates to 5 points in z. 
 	//Calculate sigma to check how parallel the tracks are in X:
 	for(double Z=average_z-800;Z<=average_z+800;Z+=400){
 	  // unsigned dist in x between tracks at Z
 	  double X = fabs((x0+tx0*(Z-z0)) - (x1+tx1*(Z-z1)));
+	  double Y = fabs((y0+ty0*(Z-z0)) - (y1+ty1*(Z-z1)));
 	  trackX.push_back(X);
+	  trackY.push_back(Y);
 	  average_x +=X;
+	  average_y +=Y;
 	}
 
 	average_x /= trackX.size();
+	average_y /= trackY.size();
 
-	double sigma =  0;
+	double sigmaX =  0;
 	for(std::vector<double>::iterator iter=trackX.begin();
 	    iter!=trackX.end();++iter){
-	  sigma += pow(*iter - average_x,2);
+	  sigmaX += pow(*iter - average_x,2);
 	}
-	sigma = sqrt(sigma/trackX.size());
+	sigmaX = sqrt(sigmaX/trackX.size());
 
-	IP_vector.clear();
-	IP_vector.reserve(2);	
-	IP_vector.push_back(track0->clone());
-	IP_vector.push_back(track1->clone());
+	double sigmaY =  0;
+	for(std::vector<double>::iterator iter=trackY.begin();
+	    iter!=trackY.end();++iter){
+	  sigmaY += pow(*iter - average_y,2);
+	}
+	sigmaY = sqrt(sigmaY/trackY.size());
 
 	// If tracks are parallel (sigma < sigmaCut), 
 	// check if they come from the luminous region:
-	if( sigma < m_sigmaCut ){
+	if ( ( sigmaX < m_sigmaCut ) && ( sigmaY < m_sigmaCut ) ) {
+	  IP_vector.clear();
+	  IP_vector.reserve(2);	
+	  IP_vector.push_back(track0->clone());
+	  IP_vector.push_back(track1->clone());
+
 	  bool IPflag = false;
 	  for(std::vector<LHCb::Track* >::iterator IP_it = IP_vector.begin();
 	      IP_it!=IP_vector.end();++IP_it){
@@ -280,11 +300,11 @@ findTracks(double &distance,
 	    double IP = fabs(impactParameter(*IP_it));
 	    if(IP < m_IPCut){ IPflag=true; }
 	  }
-	  if(sigma<bestSigma){
+	  if(sigmaX<bestSigmaX){
 	    if(m_includeLR==true || (m_includeLR==false && IPflag==false)){
-	      set.Init(average_x,sigma,track0,track1);
+	      set.Init(average_x,sigmaX,track0,track1);
 	      distance = average_x;
-	      bestSigma = sigma;
+	      bestSigmaX = sigmaX;
 	    }
 
 	  } // closes 	  if(sigma<bestSigma)

@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-09-24 - Marco Gersabeck
+ - PatVeloTraversingTracking: Fixed another memory leak
+   Require that tracks match in y/ty as well
+
+! 2009-09-24 - Marco Gersabeck
  - Fixed (largest?) memory leak in PatVeloTraversingTracking
 
 ! 2009-09-09 - Olivier Callot
