@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.12 2009-09-24 15:25:19 smenzeme Exp $
+// $Id: PatSeedTool.cpp,v 1.13 2009-09-25 19:15:28 smenzeme Exp $
 // Include files
 
 #include <cmath>
@@ -81,7 +81,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	PatFwdFitLine line;
 	nStereo = 0;
 	BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
-	  if ( hit->hit()->layer()==0 || hit->hit()->layer()==3 ) continue;
+	  if ( hit->hit()->isX() ) continue;
 	  if ( !hit->isSelected() ) continue;
 	  line.addPoint( hit->z(),
 	     -track.distanceForFit( hit ) / hit->hit()->dxDy(),
@@ -123,11 +123,11 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
       end = track.coordEnd();
     for ( PatFwdHits::iterator itH = worst; end != itH; ++itH) {
       const PatFwdHit* hit = *itH;
-      if ( ignoreX && (hit->hit()->layer() == 0 || hit->hit()->layer() == 3) ) continue;
+      if ( ignoreX && hit->hit()->isX() ) continue;
       if ( !hit->isSelected() ) continue;
       const double chi2 = track.chi2Hit( hit );
       totChi2 += chi2;
-      (hit->hit()->layer()==0 || hit->hit()->layer()==3)?(++nDoF):(++nDoFS);
+      hit->hit()->isX()?(++nDoF):(++nDoFS);
       if ( highestChi2 < chi2 )
 	highestChi2 = chi2, worst = itH;
     }
@@ -144,7 +144,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 
     if ( highestChi2 > maxChi2 && maxChi2 > 0) {
       // remove worst outlier if above threshold
-      ((*worst)->hit()->layer()==0 || (*worst)->hit()->layer()==3)?(--nDoF):(--nDoFS);
+      (*worst)->hit()->isX()?(--nDoF):(--nDoFS);
       track.removeCoord( worst );
       if ( isDebug ) info() << " Remove hit and try again " << endmsg;
 
@@ -239,7 +239,7 @@ void PatSeedTool::fitInitialXProjection (
   boost::array<PatFwdHit*, 3> seeds;
   BOOST_FOREACH( PatFwdHit* hit, track.coords() ) {
     if ( hit->hit()->type() != Tf::RegionID::OT ) continue;
-    if ( hit->hit()->layer()==1 || hit->hit()->layer()==2 ) continue;
+    if ( !hit->hit()->isX() ) continue;
     if ( !hit->isSelected() ) continue;
     hit->setRlAmb( 0 );
     const int sta = hit->hit()->station();
@@ -274,7 +274,7 @@ void PatSeedTool::fitInitialXProjection (
     double totChi2 = 0.;
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
       if ( !hit->isSelected() ) continue;
-      if ( hit->hit()->layer()==1 || hit->hit()->layer()==2 ) continue;
+      if ( !hit->hit()->isX() ) continue;
       totChi2 += track.chi2Hit( hit );
     }
     if ( totChi2 < bestChi2 ) {
@@ -310,7 +310,7 @@ bool PatSeedTool::fitInitialStereoProjection (
   int nStereo = 0;
   PatFwdFitLine firstLine;
   BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
-    if ( hit->hit()->layer()==0 || hit->hit()->layer()==3 ) continue;
+    if ( hit->hit()->isX() ) continue;
     if ( !hit->isSelected() ) continue;
     firstLine.addPoint( hit->z(),
 	-track.distanceWithRL( hit ) / hit->hit()->dxDy(),

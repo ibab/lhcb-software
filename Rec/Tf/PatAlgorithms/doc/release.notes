@@ -3,6 +3,9 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-09-25 - Stephanie Hansmann-Menzemer
+ - redo changes from yesterday
+
 ! 2009-09-24 - Stephanie Hansmann-Menzemer
  - isX() not anylonger method of LineHit, adapt pattern reco algorithm accordingly 
 
