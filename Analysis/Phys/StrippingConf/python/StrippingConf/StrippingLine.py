@@ -92,6 +92,14 @@ class bindMembers (object) :
         # try to guess where the output goes...
         self._getOutputLocation(alg)
 
+    def _handle_SelectionSequence(self, line, alg) :
+        gaudiSeq = alg.sequence()
+        members = gaudiSeq.Members
+        for a in members :
+            self._members += [a]
+        loc = alg.outputLocations()[0]
+        self._outputsel = loc
+
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
         self._members  += alg.members()
@@ -267,7 +275,6 @@ class StrippingLine(object):
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         stream = deepcopy ( stream )
-        
         # 2) save all parameters (needed for the proper cloning)
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
