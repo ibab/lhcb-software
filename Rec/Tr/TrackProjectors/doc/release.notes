@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2009-09-25 Wouter Hulsbergen
+ - Fill new data member doca in FitNode
+
 !====================== TrackProjectors v2r24 2009-09-03 =====================
 ! 2009-09-01 Wouter Hulsbergen
  - OTProjector will not use drifttime if ambiguity is zero (unitialized)
