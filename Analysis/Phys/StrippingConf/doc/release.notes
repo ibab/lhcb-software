@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.19 2009-08-31 13:09:54 jpalac Exp $
+!$Id: release.notes,v 1.20 2009-09-25 15:30:40 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-08-31 - Juan PALACIOS
+ - python/StrippingConf/StrippingLine.py
+  . Add handler for SelectionSequence object.
+ - cmt/requirements
+  . Increase version to v1r5
 
 !========================== StrippingConf v1r4p1 2009-08-31 =================
 
