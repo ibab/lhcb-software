@@ -3,6 +3,9 @@
 ! Responsible : Stephanie Hansmann-Menzemer
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
+! 2009-09-25 - Stephanie Hansmann-Menzemer
+ - add isX() back again this time it works for all detectors  ...
+
 ! 2009-09-24 - Stephanie Hansmann-Menzemer
  - remove isX() method from LineHit.h
 

@@ -5,7 +5,7 @@
  *  Header file for track find class Tf::LineHit
  *
  *  CVS Log :-
- *  $Id: LineHit.h,v 1.10 2009-09-24 15:24:27 smenzeme Exp $
+ *  $Id: LineHit.h,v 1.11 2009-09-25 19:15:56 smenzeme Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-05-30
@@ -137,6 +137,9 @@ namespace Tf
 
     /** length of the line */
     inline double length() const { return fabs( (yEnd()-yBegin())*sqrt(1 + m_dxdy*m_dxdy + m_dzdy*m_dzdy )) ; }
+
+    inline bool isX() const { if (type()==RegionID::TT ) return (layer()==station());
+    else return (layer()==0 || layer()==3);}
 
   protected:
 
