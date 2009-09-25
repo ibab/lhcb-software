@@ -15,11 +15,5 @@
   <class name = "IPV2MC"/>
   <class name = "MCAssociation"/>
   <class name = "std::vector<MCAssociation>" />
-  <class name = "LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>"
-	 id="7B880798-0000-0000-0000-000000000000" />
-  <class name = "LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>"/>
-
-
-
   <function pattern = "Particle2MCParticle::*"/>
 </lcgdict>
