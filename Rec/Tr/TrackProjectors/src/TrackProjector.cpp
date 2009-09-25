@@ -1,4 +1,4 @@
-// $Id: TrackProjector.cpp,v 1.18 2009-07-08 14:44:46 wouter Exp $
+// $Id: TrackProjector.cpp,v 1.19 2009-09-25 09:08:31 wouter Exp $
 // Include files 
 
 // local
@@ -165,6 +165,7 @@ StatusCode TrackProjector::projectReference( LHCb::FitNode& node ) const
       node.setRefResidual( m_residual ) ;
       node.setErrMeasure( m_errMeasure ) ;
       node.setPocaVector( m_unitPocaVector ) ;
+      node.setDoca( m_doca ) ;
     }
   }
   return sc ;
