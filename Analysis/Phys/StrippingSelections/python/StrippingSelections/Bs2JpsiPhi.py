@@ -1,8 +1,8 @@
-# $Id: Bs2JpsiPhi.py,v 1.1 2009-09-23 14:57:05 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.2 2009-09-25 16:35:02 jpalac Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '23/09/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -16,7 +16,7 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 name = "Bs2JpsiPhi"
 
-_stdPhi2KK = DataOnDemand("stdPhi2KK", Location = "StdLoosePhi2KK")
+_stdPhi2KK = DataOnDemand("stdLoosePhi2KK", Location = "StdLoosePhi2KK")
 
 _phiFilter = FilterDesktop("PhiFilterFor"+name)
 _phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
@@ -28,8 +28,9 @@ _phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
 Phi =  Selection ("Phi2KKFor"+name,
                  Algorithm = _phiFilter,
                  RequiredSelections = [_stdPhi2KK])
+Phi.__apply_configuration__()
 
-Jpsi = DataOnDemand("stdJpsi2KK", Location = "StdLTUnbiasedJpsi2MuMu")
+Jpsi = DataOnDemand("stdLTUJpsi2MuMu", Location = "StdLTUnbiasedJpsi2MuMu")
 
 _Bs = CombineParticles(name,
                        DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
@@ -44,8 +45,10 @@ _Bs.OfflineVertexFitter.useResonanceVertex = False
 
 Bs = Selection ( "Sel"+name,
                  Algorithm = _Bs,
-                 RequiredSelections = [Phi, Jpsi])
+                 RequiredSelections = [Jpsi, Phi])
+Bs.__apply_configuration__()
 
 sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
+sequence.__apply_configuration__()
 
 __all__ = (name, Phi, Jpsi, Bs, sequence)
