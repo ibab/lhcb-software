@@ -1,4 +1,4 @@
-// $Id: Particles12.cpp,v 1.9 2009-02-11 12:41:49 ibelyaev Exp $
+// $Id: Particles12.cpp,v 1.10 2009-09-26 13:49:09 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -259,6 +259,42 @@ LoKi::Particles::IsMuon::operator()
 std::ostream& 
 LoKi::Particles::IsMuon::fillStream ( std::ostream& s ) const 
 { return s << "ISMUON" ; }
+// ============================================================================
+LoKi::Particles::IsMuonLoose::result_type 
+LoKi::Particles::IsMuonLoose::operator() 
+  ( LoKi::Particles::IsMuonLoose::argument p ) const
+{
+  //
+  if ( 0 == p ) 
+  {
+    Error ( " Invalid Particle, return 'false'" ) ;
+    return false ;                                    // RETURN 
+  }
+  // 
+  const LHCb::ProtoParticle* pp = p->proto() ;
+  //
+  if ( 0 == pp ) 
+  {
+    Error ( " Invalid ProtoParticle, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  const LHCb::MuonPID* mPID = pp->muonPID() ;
+  //
+  if ( 0 == mPID ) 
+  {
+    Error ( " Invalid MuonPID, return 'false'" ) ;
+    return false ;                                   // RETURN 
+  }
+  //
+  return mPID -> IsMuonLoose() ;                          // RETURN   
+} 
+// ============================================================================
+//  OPTIONAL: the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::IsMuonLoose::fillStream ( std::ostream& s ) const 
+{ return s << "ISMUONLOOSE" ; }
 // ============================================================================
 
 

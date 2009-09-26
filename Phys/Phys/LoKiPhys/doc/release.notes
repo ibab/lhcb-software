@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.113 2009-09-02 16:11:25 cattanem Exp $ 
+! $Id: release.notes,v 1.114 2009-09-26 13:49:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-26 - Vanya BELYAEV
+
+ - add ISMUONLOOE & ISLOOSEMUON for Alessio Sarti 
+
+ - cmt/requirements 
+
+    verison increment to v8r10 
+
 
 ! ========================== LoKiPhys v8r9 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo

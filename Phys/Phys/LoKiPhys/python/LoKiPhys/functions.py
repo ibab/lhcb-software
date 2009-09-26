@@ -185,8 +185,12 @@ WEIGHT   = LoKi.Particles.Weight           ()
 ISBASIC  = LoKi.Particles.IsBasic          () 
 ## @see LoKi::Cuts::ISMUON
 ISMUON   = LoKi.Particles.IsMuon           ()
+## @see LoKi::Cuts::ISMUONLOOSE
+ISMUONLOOSE = LoKi.Particles.IsMuonLoose   ()
+## @see LoKi::Cuts::ISLOOSEMUON
+ISLOOSEMUON = LoKi.Particles.IsMuonLoose   ()
 ## @see LoKi::Cuts::NDAUGS  
-NDAUGS   = LoKi.Particles.NumberOfDaughters  () 
+NDAUGS   = LoKi.Particles.NumberOfDaughters() 
 ## @see LoKi::Cuts::HASINFO
 HASINFO  = LoKi.Particles.HasInfo
 ## @see LoKi::Cuts::INFO

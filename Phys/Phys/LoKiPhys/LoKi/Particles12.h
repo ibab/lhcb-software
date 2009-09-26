@@ -1,4 +1,4 @@
-// $Id: Particles12.h,v 1.8 2009-02-11 12:41:49 ibelyaev Exp $
+// $Id: Particles12.h,v 1.9 2009-09-26 13:49:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES12_H 
 #define LOKI_PARTICLES12_H 1
@@ -217,7 +217,7 @@ namespace LoKi
      *  @see LHCb::Particle
      *  @see LHCb::ProtoParticle
      *  @see LHCb::MuonPID 
-     *  @see LoKi::CutsISMUON
+     *  @see LoKi::Cuts::ISMUON
      *
      *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
      *  @date 2007-02-25
@@ -234,6 +234,34 @@ namespace LoKi
       result_type operator() ( argument p ) const ;
       /// OPTIONAL: the specific printout 
       virtual std::ostream& fillStream( std::ostream& s ) const ;
+    } ;
+    // ========================================================================    
+    /** @class IsMuonLoose
+     *  The trivial predicate whith returns LHCb::MuonPID::isMuonLoose
+     *
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Cuts::ISMUONLOOSE
+     *  @see LoKi::Cuts::ISLOOSEMUON
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */
+    class IsMuonLoose
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~IsMuonLoose() {} ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  IsMuonLoose* clone() const { return new IsMuonLoose(*this); }
+      /// MANDATORY: the only one essential method 
+      result_type operator() ( argument p ) const ;
+      /// OPTIONAL: the specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class TrackHasInfo

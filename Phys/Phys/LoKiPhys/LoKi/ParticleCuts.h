@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.36 2009-04-24 12:49:05 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.37 2009-09-26 13:49:08 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -2635,6 +2635,27 @@ namespace LoKi
      */
     const EQUALTO                       ISLONG ( TRTYPE , LHCb::Track::Long ) ;
     // ========================================================================
+    /** @var ISLOOSEMUON
+     *  The simple evaluator of LHCb::MuonPID::IsMuonLoose
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISLOOSEMUON ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuonLoose
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */
+    const LoKi::Particles::IsMuonLoose                            ISLOOSEMUON ;
+    // ========================================================================
     /** @var ISMUONPID
      *  The simple evaluator of LHCb::MuonPID::isMuon
      *  
@@ -2655,6 +2676,48 @@ namespace LoKi
      *  @date 2007-02-25
      */
     const LoKi::Particles::IsMuon                                   ISMUONPID ;
+    // ========================================================================
+    /** @var ISMUON
+     *  The simple evaluator of LHCb::MuonPID::isMuon
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISMUON ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuon
+     *  
+     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+     *  @date 2007-02-25
+     */
+    const LoKi::Particles::IsMuon                                      ISMUON ;
+    // ========================================================================
+    /** @var ISMUONLOOSE
+     *  The simple evaluator of LHCb::MuonPID::IsMuonLoose
+     *  
+     *  @code 
+     *
+     *  const LHCb::Particle* p = ... ;
+     * 
+     *  bool muon = ISMUONLOOSE ( p ) ;
+     *
+     *  @endcode 
+     *     
+     *  @see LHCb::Particle
+     *  @see LHCb::ProtoParticle
+     *  @see LHCb::MuonPID 
+     *  @see LoKi::Particles::IsMuonLoose
+     *  
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-26
+     */
+    const LoKi::Particles::IsMuonLoose                            ISMUONLOOSE ;
     // ========================================================================
     /** @var ISTTRACK
      *  The trivial predicate whoch evalauted to true for particles, 
