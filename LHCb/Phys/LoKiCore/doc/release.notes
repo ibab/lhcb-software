@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.154 2009-09-02 16:06:36 cattanem Exp $ 
+! $Id: release.notes,v 1.155 2009-09-26 13:17:33 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -14,6 +14,20 @@
 !   A.Golutvin, P.Koppenburg have been used in the design.
 ! 
 ! -----------------------------------------------------------------------------
+
+! 2009-09-26 - Vanya BELYAEV
+
+ - python/LoKiCore/dcorators.py
+
+    fix for the chaneg in new Reflex/PyROOT:
+      now Refelx/PyROOT renames C++ methods "CLASS::__ne__" & "CLASS::__eq__" to 
+      Python "CLASS.__cpp_ne__" and "CLASS.__cpp_eq__" , andprovides its own 
+     "__ne__" and "__eq__" 
+
+ - cmt/requirements 
+
+     version increment to v9r5 
+
 
 ! =========================== LoKiCore v9r4 2009-09-02 ========================
 ! 2009-09-02 - Marco Cattaneo
