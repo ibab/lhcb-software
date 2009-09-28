@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-09-28 - Patrick Koppenburg for Aurélien Martens
+ - TupleToolPid : Pi0 ID is 111
+
 ! 2009-09-11 - Tomasz Skwarnicki
  - clean-up the list of individual triggers in TupleToolTISTOS by checking 
    for their presence in HltDecReport 
