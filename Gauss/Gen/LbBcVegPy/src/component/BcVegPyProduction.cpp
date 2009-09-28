@@ -1,4 +1,4 @@
-// $Id: BcVegPyProduction.cpp,v 1.4 2009-07-23 19:45:37 jhe Exp $
+// $Id: BcVegPyProduction.cpp,v 1.5 2009-09-28 19:40:14 jhe Exp $
 // Include files 
 
 // local
@@ -49,7 +49,6 @@ BcVegPyProduction::BcVegPyProduction( const std::string& type,
   m_defaultBcVegPySettings.push_back( "upcom pmbc 6.276");  
   //mass of B_c, note that pmBc=pmB+pmC
   m_defaultBcVegPySettings.push_back( "upcom ecm 14000.0");   //E.C.M. of LHC
-  // now it is updated in parameter.f, P(1,4)+P(2,4)
   m_defaultBcVegPySettings.push_back( "confine ptcut 0.0");
   m_defaultBcVegPySettings.push_back( "confine etacut 1000000000.0");
   m_defaultBcVegPySettings.push_back( "funtrans nq2 3"); 
@@ -70,7 +69,7 @@ BcVegPyProduction::BcVegPyProduction( const std::string& type,
   //should be fixed to 0
   m_defaultBcVegPySettings.push_back( "qqbar iqqbar 0");
   m_defaultBcVegPySettings.push_back( "qqbar iqcode 2");
-  m_defaultBcVegPySettings.push_back( "outpdf ioutpdf 1");     
+  m_defaultBcVegPySettings.push_back( "outpdf ioutpdf 0");     
   m_defaultBcVegPySettings.push_back( "outpdf ipdfnum 300");   
   //should be fixed to 300 for this version
   m_defaultBcVegPySettings.push_back( "coloct ioctet 0");

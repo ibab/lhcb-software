@@ -4,7 +4,7 @@ C...Messages commented; XSECUP(1) value corrected; 2007-05-09
 C...Modified by hejb, 2006-03-14
 C...*************************************************************************
 
-      SUBROUTINE BCVEGPY_UPINIT
+      SUBROUTINE BCVEGPY_UPINIT(IISET)
 
 C...Preamble: declarations.
       IMPLICIT DOUBLE PRECISION(A-H, O-Z)
@@ -110,6 +110,34 @@ C...3---Singlet 1p1; 4---Singlet 3p0; 5---Singlet 3p1; 6---Singlet 3p2.
 C....To store CROSSMAX and XBCSUM, IBCLIMIT
       COMMON/CRMABC/BCCRMA(8),XBCSUM,IBCLIMIT
 
+C-----------------------------------------------------------------------
+C  initilization of beam parameters and external process
+C-----------------------------------------------------------------------
+      IF( IISET.EQ.1 ) THEN
+C...Set up incoming beams. Tevotran
+        IF(NPDFU.EQ.1) THEN
+          IDBMUP(1) = 2212
+          IDBMUP(2) = -2212
+        END IF
+        
+C...Set up incoming beams. LHC
+        IF(NPDFU.EQ.2) THEN
+          IDBMUP(1) = 2212
+          IDBMUP(2) = 2212
+        END IF
+        
+        EBMUP(1)  = 0.5D0*ECM
+        EBMUP(2)  = 0.5D0*ECM
+        
+C...Set up the external process.
+        IDWTUP   = IDPP
+        NPRUP    = 1
+        LPRUP(1) = 1001
+        IDPRUP   = LPRUP(1)
+        
+        GOTO 999
+      END IF
+
 C...Comented by hejb
 C      CALL SETPARAMETER
 
@@ -146,6 +174,8 @@ C...For reading grid files for different center of mass energy
         ENERGYNAME='10TeV/'
       ELSE IF( ABS(ECM-8000).LE.1. )THEN
         ENERGYNAME='8TeV/'
+      ELSE IF( ABS(ECM-7000).LE.1. )THEN
+        ENERGYNAME='7TeV/'        
       ELSE
         ENERGYNAME='***Not-Supported-Energy***/'
         WRITE(*,*) "***************************************************"
@@ -1145,26 +1175,6 @@ C...****************************************************************************
 C ...The above were cut from bcvegpy.for by hejb
 C...**************************************************************************************
 
-C...Set up incoming beams. Tevotran
-      IF(NPDFU.EQ.1) THEN
-         IDBMUP(1) = 2212
-         IDBMUP(2) = -2212
-      END IF
-
-C...Set up incoming beams. LHC
-      IF(NPDFU.EQ.2) THEN
-         IDBMUP(1) = 2212
-         IDBMUP(2) = 2212
-      END IF
-
-      EBMUP(1)  = 0.5D0*ECM
-      EBMUP(2)  = 0.5D0*ECM
-
-C...Set up the external process.
-      IDWTUP   = IDPP
-      NPRUP    = 1
-      LPRUP(1) = 1001
-      IDPRUP   = LPRUP(1)
 
 C...Set up g+g --> B_c + b + c~ : maximum cross section in pb. 
 C...Using the default XMAXUP(1)=0 to make PYEVNT accept almost 
@@ -1202,6 +1212,6 @@ C      END IF
 
 C********************************************
          
-      RETURN
+ 999  RETURN
       END
  

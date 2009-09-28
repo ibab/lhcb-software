@@ -62,9 +62,6 @@ C...STATES: 1---Singlet 1S0; 2---singlet 3s1; 7---octet 1s0; 8---octet 3s1;
 C...3---Singlet 1p1; 4---Singlet 3p0; 5---Singlet 3p1; 6---Singlet 3p2.
       COMMON/MIXEVNT/XBCSEC(8),IMIX,IMIXTYPE
 
-C... Get the center of mass energy from pythia beam parameter      
-      ECM = P(1,4) + P(2,4)
-
       PI = DACOS(-1.0D0)
 
       IF(IMIX.EQ.1)THEN
