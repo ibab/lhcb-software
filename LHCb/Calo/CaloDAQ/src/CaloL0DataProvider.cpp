@@ -92,6 +92,7 @@ StatusCode CaloL0DataProvider::initialize ( ) {
 void CaloL0DataProvider::clear( ) {
   m_adcs.clear();
   m_tell1s = 0;
+  m_readSources.clear();
 }
 
 
@@ -168,6 +169,7 @@ bool CaloL0DataProvider::decodeCell(LHCb::CaloCellID id ){
 }
 //-------------------------------------------------------
 bool CaloL0DataProvider::decodeTell1 (int source) {
+  if( source < 0)clear(); // re-init for full decoding
   bool decoded = false;
   bool found  = false;
   if( m_getRaw )getBanks();

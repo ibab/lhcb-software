@@ -96,6 +96,7 @@ void CaloDataProviderPatched::clear( ) {
   m_adcs.clear();
   m_digits.clear();
   m_tell1s = 0;
+  m_readSources.clear();
 }
 //-------------------------------------
 void CaloDataProviderPatched::cleanData(int feb ) {
@@ -206,6 +207,7 @@ bool CaloDataProviderPatched::decodeCell(LHCb::CaloCellID id ){
 }
 //-------------------------------------------------------
 bool CaloDataProviderPatched::decodeTell1 (int source) {
+  if( source < 0)clear(); // re-init for full decoding
   bool decoded = false;
   bool found  = false;
   if( m_getRaw )getBanks();

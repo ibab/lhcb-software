@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.5 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.6 2009-09-28 16:37:32 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -133,6 +133,7 @@ bool CaloDataProviderFromTES::getBanks( ) {
 void CaloDataProviderFromTES::clear( ) {
   m_adcs.clear();
   m_digits.clear();
+  m_readSources.clear();
 }
 void CaloDataProviderFromTES::cleanData(int feb ) {
   if(feb<0)return;
