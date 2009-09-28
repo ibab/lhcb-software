@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -44,7 +44,7 @@ class CaloRecoConf(LHCbConfigurableUser):
    ## define the slots
     __slots__ = {
         ##
-        "Context"              : "Offline"   # The context within which to run
+        "Context"              : "Offline"   # The context to run
         , "MeasureTime"        : True        # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
@@ -54,11 +54,27 @@ class CaloRecoConf(LHCbConfigurableUser):
                                    'Photons'    ,
                                    'MergedPi0s' ,
                                    'Electrons'  ] ##
-        , 'UseTracks'           : True       # use tracks 
-        , 'EnableRecoOnDemand'  : False      # enable Reco-On-Demand
+        , 'ForceDigits'         : True       # Force digits recontruction to be run with Clusters
+        , 'UseTracks'           : True       # Use Tracks as Neutrality Criteria 
+        , 'UseSpd'              : False      # Use Spd as Neutrailty Criteria
+        , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand
         ##
         }
-
+    ## documentation lines 
+    _propertyDocDct = {
+        ##
+        "Context"              : """ The context to run """
+        , "MeasureTime"        : """ Measure the time for sequencers """ 
+        , "OutputLevel"        : """ The global output level """ 
+        ##
+        , 'Sequence'           : """ The sequencer to add the CALO reconstruction algorithms to """
+        , 'RecList'            : """ The recontriuction sketch """
+        , 'ForceDigits'        : """ Force digits recontruction to be run with Clusters """ 
+        , 'UseTracks'          : """ Use Tracks as Neutrality criterion """ 
+        , 'UseSpd'             : """ Use Spd as Neutrality criterion """ 
+        , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand """ 
+        ##
+    }
 
     ## configure processing of Digits
     def digits   ( self ) :
@@ -78,7 +94,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         Configure reconstruction of Ecal Clusters
         """
         cmp = clusterReco   ( self.getProp('Context')             ,
-                              self.getProp('EnableRecoOnDemand' ) )
+                              self.getProp('EnableRecoOnDemand' ) ,
+                              self.getProp('ForceDigits'        ) )
         log.info ('Configured Ecal Clusters  Reco : %s ' % cmp.name()  )
         ##
         return cmp
@@ -90,7 +107,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         cmp = photonReco   ( self.getProp ( 'Context'           ) ,
                              self.getProp ( 'EnableRecoOnDemand') ,
-                             self.getProp ( 'UseTracks'         ) )
+                             self.getProp ( 'UseTracks'         ) ,
+                             self.getProp ( 'UseSpd'            ) )
         log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         ##
         return cmp
@@ -134,6 +152,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         self.checkConfiguration()
         
         log.info ('CaloRecoConf: Apply Calo Reco Configuration ')
+        log.info ( self )
 
         recList = self.getProp ( 'RecList') 
 
