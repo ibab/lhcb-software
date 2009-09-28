@@ -127,9 +127,9 @@ StatusCode BeamGasTrigVertexCut::execute() {
           r = (*itT)->firstState().x();
           t = (*itT)->firstState().tx();
           z_r0 = z - r/t;
-          if( std::fabs(z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1)) ) 
+          if( z_r0 > (firstEl-0.1) && z_r0 < (lastEl+0.1) ) 
           {  
-            m_trackSelection->push_back( *itT );         
+            m_trackSelection->push_back( *itT );
           }
         }
 	
