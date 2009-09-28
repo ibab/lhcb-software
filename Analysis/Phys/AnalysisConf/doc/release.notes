@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.34 2009-09-21 08:24:22 jpalac Exp $
+!$Id: release.notes,v 1.35 2009-09-28 08:08:13 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r8
+ - python/AnalysisConf/BaseDSTWriter.py
+  . Accept input locations that don't start with Phys. Controllable via 
+    property InputBranch.
 
 !========================== AnalysisConf v1r7 2009-09-21 ====================
 
