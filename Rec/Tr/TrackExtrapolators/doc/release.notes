@@ -3,8 +3,12 @@
 ! Responsible : Eduardo Rodrigues, Jose A. Hernando
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Wouter Hulsbergen
+ - Fixed division by zero in TrackRungeKuttaExtrapolator
+
 ! 2009-09-26 - Stephanie Hansmann-Menzemer
- - use Runge Kutta exptrapolator as default
+ - use Runge Kutta extrapolator as default
 
 ! 2009-09-22 - Wouter Hulsbergen
  - Added missing const to TrackExtrapolator functions with Plane3D and
