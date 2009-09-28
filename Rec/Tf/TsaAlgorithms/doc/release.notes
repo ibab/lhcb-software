@@ -4,6 +4,10 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-09-28 - Jeroen Van Tilburg
+ - Changed track type, location and history according to new types in Track.h
+   -> needs changes in TrackEvent.
+
 ! 2009-09-25 - Jeroen van Tilburg
  - Added new algorithm: TTGenericTracking. See include file for documentation.
 

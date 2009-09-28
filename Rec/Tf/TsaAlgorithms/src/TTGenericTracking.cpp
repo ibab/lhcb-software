@@ -1,4 +1,4 @@
-// $Id: TTGenericTracking.cpp,v 1.1 2009-09-25 16:39:14 jvantilb Exp $
+// $Id: TTGenericTracking.cpp,v 1.2 2009-09-28 13:37:45 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -39,7 +39,7 @@ TTGenericTracking::TTGenericTracking( const std::string& name,
 {
   // constructer
   declareProperty("InputData", m_clusterLocation=STClusterLocation::TTClusters);
-  declareProperty("OutputLocation", m_outputLocation = "Rec/Track/TT" );
+  declareProperty("OutputLocation", m_outputLocation  = TrackLocation::TT );
   declareProperty("MaxNumClusters", m_maxNumClusters  = 200      );
   declareProperty("ChargeCut",      m_chargeCut       = 15.0     );// ADC counts
   declareProperty("ToleranceY",     m_toleranceY      = 1.0 * mm );
@@ -253,7 +253,7 @@ void TTGenericTracking::findTTtracks(Tracks* tracks, STHits& hits )
           std::vector<LHCbID> ids = list_of((*iX1Hit)->lhcbID())
             ((*iUHit )->lhcbID())((*iVHit )->lhcbID())((*iX2Hit)->lhcbID());
           // Make a track
-          Track* track = new Track(Track::PatVeloTT, Track::Upstream, 
+          Track* track = new Track(Track::TTGeneric, Track::TT, 
                                    Track::PatRecIDs, ids, firstState );
           // Add state at start of RICH1
           if( m_addRich1State ) {
