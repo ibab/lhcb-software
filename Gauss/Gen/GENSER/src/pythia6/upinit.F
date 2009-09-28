@@ -1,4 +1,4 @@
-C $Id: upinit.F,v 1.1 2008-03-16 20:20:15 robbep Exp $ 
+C $Id: upinit.F,v 1.2 2009-09-28 12:39:36 robbep Exp $ 
 C*********************************************************************
  
 C...UPINIT
@@ -54,7 +54,7 @@ C...Else not implemented.
         CALL ACERMC_UPINIT( IISET )  
         GOTO 999
       ELSEIF ( PYTHIAGAUSSPROCESS .EQ. BCVEGPYPROCESS   ) THEN
-        IF ( IISET .EQ. 1 ) CALL BCVEGPY_UPINIT
+        IF ( IISET .EQ. 2 ) CALL BCVEGPY_UPINIT
         GOTO 999
       ELSEIF ( PYTHIAGAUSSPROCESS .EQ. LHEREADPROCESS   ) THEN
         IF ( IISET .EQ. 1 ) CALL LHEUPINIT
