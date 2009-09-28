@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.7 2009-09-21 08:24:02 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.8 2009-09-28 08:08:04 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -15,12 +15,14 @@ class BaseDSTWriter(ConfigurableUser) :
     """
     __slots__ = {
         "OutputFileSuffix"           : "Sel"
+        , "InputBranch"              : "Phys"
         , "SelectionSequences"       : []
         , "ExtraItems"               : []
         }
 
     _propertyDocDct = {  
         "OutputFileSuffix"             : """Add to name of output DST file. Default 'Sel'"""
+        , "InputBranch"        : """ Top branch of input TES location. Phys or Hlt. Default: 'Phys'."""
         , "SelectionSequences" : """ Name of SelectionSequence that defines the selection"""
         , "ExtraItems"         : """ Extra TES locations to be written. Default: []"""
         }
@@ -28,6 +30,9 @@ class BaseDSTWriter(ConfigurableUser) :
     def sequence(self) :
         return GaudiSequencer(self.name() + "MainSeq",
                               IgnoreFilterPassed = True)
+
+    def inputBranch(self) :
+        return self.getProp("InputBranch")
 
     def selectionSequences(self) :
         return self.getProp('SelectionSequences')
