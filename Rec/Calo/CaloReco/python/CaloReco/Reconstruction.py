@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.4 2009-09-16 16:13:29 odescham Exp $
+# $Id: Reconstruction.py,v 1.5 2009-09-28 12:51:53 jpalac Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'digitsReco'     , 
@@ -99,6 +99,7 @@ def clusterReco ( context , enableRecoOnDemand ) :
         covar.InputData  = 'Hlt/Calo/EcalClusters'
         
     alg.Members = [
+        digitsReco(context, enableRecoOnDemand),
         clust ,
         share ,
         covar 
