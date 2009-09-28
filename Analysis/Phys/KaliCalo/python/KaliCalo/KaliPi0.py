@@ -1,6 +1,6 @@
-#!/usr/bin/env gaudirun.py
+#!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.2 2009-09-18 09:55:11 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.3 2009-09-28 19:53:55 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -10,160 +10,42 @@
 """
 The basic configuration to (re)run Ecal pi0-calibration
 
-One reads the input data (presumably DST), (re)recontruct Calorimeter,
-and produces twomajor outputs:
+One reads the input data (presumably DST or fmDST),
+(re) recontruct Calorimeter, and produces two major outputs:
 
  -  root file with N-tuple for 'pi0-calibration'
  - 'femtoDST' which contains only 'interesting' digits
 
 Usage:
  
-  > gaudirun.py KaiPi0.py InputDataFiles.py
+  > gaudirun.py KaliPi0.py InputDataFiles.py
 
 Or (suitable for tests)
 
-  > ./KaliPi0.py
+  > python ./KaliPi0.py
 
+Or even:
+
+  > ./KaliPi0.py
 
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
+## the basic import
+from Gaudi.Configuration    import *
+from KaliCalo.Configuration import  KaliPi0Conf
 
-## the basic import 
-from Gaudi.Configuration import  *
 
-from Configurables import OutputStream, GaudiSequencer 
-
-## the major configuration:
-
-from Configurables import OffLineCaloRecoConf
-from Configurables import OffLineCaloPIDsConf
-
-OffLineCaloRecoConf (
-    EnableRecoOnDemand = True  ,
-    UseTracks          = False 
+kali = KaliPi0Conf (
+    ## example of the first pass 
+    FirstPass = True  ,
+    UseTracks = True  ,
+    UseSpd    = True
+    ## examle of the second pass 
+    # FirstPass = False ,FemtoDST  = 'out2'
     )
-
-OffLineCaloPIDsConf (
-    EnablePIDsOnDemand = True 
-    )
-
-## miscalibrate Ecal:
-from Configurables import Kali__MisCalibrateCalo
-
-misKali = Kali__MisCalibrateCalo (
-    "KaliEcal" ,
-    Coefficients = {
-    10   : 1.01  ,
-    1124 : 10.02 ,
-    1824 : 0.01  
-    }
-    )
-## specific features:
-from Configurables import NeutralProtoPAlg
-
-## use "light-mode" 
-proto = NeutralProtoPAlg (
-    LightMode = True ,
-    HyposLocations = [ 'Rec/Calo/Photons'] 
-    )
-
-## redefine a bit the rules for photon creation: 
-from Configurables import PhotonMakerAlg, PhotonMaker, PhysDesktop 
-
-## create the algorithm 
-maker =  PhotonMakerAlg (
-    'StdLooseAllPhotons'      ,
-    DecayDescriptor = 'Gamma' )
-
-maker.addTool ( PhotonMaker , name = 'PhotonMaker' )
-photon = maker.PhotonMaker
-photon.UseCaloTrMatch     = False
-photon.UseCaloDepositID   = False
-photon.UseShowerShape     = False
-photon.UsePhotonID        = False
-photon.ConvertedPhotons   = True 
-photon.UnconvertedPhotons = True 
-photon.PtCut              = 250 
-maker.addTool ( PhysDesktop )
-maker.PhysDesktop.InputPrimaryVertices = "None" ## important: it saves a lot of CPU time 
-
- 
-## "the main" algorithm 
-from Configurables import LoKi__Kali_Pi0 as Kali
-
-kali = Kali (
-    "Kali"             ,
-    NTupleLUN  = "PI0" ,
-    HistoPrint = True  ,
-    InputLocations = [ 'StdLooseAllPhotons' ]
-    )
-kali.addTool ( PhysDesktop )
-desktop = kali.PhysDesktop
-desktop.InputPrimaryVertices = "None"    ## important: it saves a lot of CPU time!
-
-kaliSeq  = GaudiSequencer  (
-    'KaliSeq',
-    Members = [
-    ## misKali  ,    ## (mis)calibrate Ecal 
-    proto    ,    ## (re)create Neutral ProtoParticles (implies also re-reconstruct Calo!)
-    maker    ,    ## (re)make photons 
-    kali     ]    ## analyse pi0 peak 
-    ) 
-
-from Configurables import DaVinci
-
-daVinci = DaVinci (
-    DataType       = 'MC09' , # default  
-    Simulation     = True   ,
-    HltType        = ''     ,
-    EvtMax         = 1000   ,
-    UserAlgorithms = [ kaliSeq ] 
-    ) 
-
-from Configurables import NTupleSvc, HistogramPersistencySvc
-HistogramPersistencySvc ( OutputFile = 'KaliPi0_Histos.root' ) 
-NTupleSvc ( Output = [ "PI0 DATAFILE='KaliPi0_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
-
-
-writer = OutputStream (
-    'WRITER', 
-    ItemList =  [
-    "/Event#1"            ,
-    "/Event/DAQ#1"        ,
-    "/Event/DAQ/ODIN#1"   ,
-    #
-    "/Event/Rec#1"        ,
-    "/Event/pRec#1"       ,
-    #
-    "/Event/Raw#1"        ,
-    "/Event/Raw/Spd#1"    ,
-    "/Event/Raw/Prs#1"    ,
-    "/Event/Raw/Ecal#1"   ,
-    "/Event/Raw/Hcal#1"   ,
-    "/Event/Raw/Spd/Digits#1"  ,
-    "/Event/Raw/Prs/Digits#1"  ,
-    "/Event/Raw/Ecal/Digits#1" ,
-    "/Event/Raw/Hcal/Digits#1" 
-    ] ,
-    Output = "DATAFILE='PFN:KaliPi0.fdst' TYP='POOL_ROOTTREE' OPT='REC'" ,
-    RequireAlgs = [ "Kali" ] 
-    )
-
-am = ApplicationMgr( OutStream = [ writer ] )
-
-
-## IMPORTANT: It saves a lot of CPU time!!!
-def  action ( ) :
-    
-    dvinit = getConfigurable('DaVinciInitSeq')
-    dvinit.Members = []
-
-    
-appendPostConfigAction ( action )
-    
 
 # =============================================================================
 ## the actual job steering 
@@ -173,7 +55,7 @@ if '__main__' == __name__ :
     print __author__
     print __version__
     
-    from Configurables import EventSelector
+    print kali
     
     #-- GAUDI jobOptions generated on Fri Jul 31 16:40:59 2009
     #-- Contains event types : 
@@ -282,17 +164,13 @@ if '__main__' == __name__ :
         )
     
     from GaudiPython.Bindings import AppMgr
-    
-    
+        
     gaudi = AppMgr()
-    
-    ##evtSel = gaudi.evtSel()
-    ##evtSel.open('output1.fdst')
-    
-    gaudi.run(1000)
 
     
-    
+    gaudi.run(5000)
+
+        
 # =============================================================================
 # The END 
 # =============================================================================

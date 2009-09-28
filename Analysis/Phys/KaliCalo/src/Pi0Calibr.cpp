@@ -1,14 +1,6 @@
-// $Id: Pi0Calibr.cpp,v 1.3 2009-09-18 09:55:11 ibelyaev Exp $
+// $Id: Pi0Calibr.cpp,v 1.4 2009-09-28 19:53:55 ibelyaev Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ , version $Revison:$
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.2  2009/07/31 13:51:02  ibelyaev
-//  resurrect the package for MC09
-//
-// Revision 1.1.1.1  2005/05/31 13:03:31  ibelyaev
-// New package: Collection of algorithms for "physics" Calorimeter calibration
-// 
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -165,7 +157,101 @@ namespace
   // ==========================================================================
 }
 // ============================================================================
-LOKI_ALGORITHM ( Kali_Pi0 ) 
+namespace Kali 
+{
+  // ==========================================================================
+  /** @class Pi0  
+   *  Simple algorithm for Calorimeter Cailbration using pi0 peak
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-09-28
+   */
+  class Pi0 : public LoKi::Algo
+  {
+    // ========================================================================
+    /// friend factory for instantiation 
+    friend class AlgFactory<Kali::Pi0> ;    // friend factory for instantiation 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// the proper initialization 
+    virtual StatusCode initialize () ;          //    the proper initialization 
+    /// the main 'execution' method 
+    virtual StatusCode analyse    () ;          //  the main 'execution' method 
+    // ========================================================================
+  protected:
+    // ========================================================================
+    /** standard constructor 
+     *  @param name (INPUT) the algorithm instance name 
+     *  @param pSvc (INPUT) the pointer to Service Locator 
+     */
+    Pi0 ( const std::string& name ,            //    the algorithm instance name 
+          ISvcLocator*       pSvc )            // the pointer to Service Locator 
+      : LoKi::Algo ( name , pSvc ) 
+      , m_destroy  ( true ) 
+    {
+      declareProperty
+        ( "Destroy" ,
+          m_destroy , 
+          "Destroy the content of TES containers" ) ->
+        declareUpdateHandler(&Pi0::updateDestroy, this ) ;
+    }
+    /// virtual & protected destructor 
+    virtual ~Pi0() {}
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled 
+    Pi0 () ;                            //  the default constructor is disabled      
+    /// the copy  constructor is disabled 
+    Pi0 ( const Pi0& ) ;                //     the copy constructor is disabled 
+    /// the assignement operator is disabled 
+    Pi0& operator=( const Pi0& ) ;      // the assignement operator is disabled 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /// Update handler for the property
+    void updateDestroy ( Property& /* p */ ) ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// Destroy TES containers ?
+    bool m_destroy ;                                // Destroy TES containers ?
+    // ========================================================================
+  } ;
+  // ==========================================================================
+} //                                                      end of namesapce Kali
+// ============================================================================
+// the proper initialization 
+// ============================================================================
+StatusCode Kali::Pi0::initialize ()             //    the proper initialization 
+{
+  StatusCode  sc = LoKi::Algo::initialize () ;
+  if ( sc.isFailure() ) { return sc ; }                        // RETURN 
+  //
+  if ( m_destroy )
+  { Warning ( "TES containers will be destroyed!" , StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "TES containers will be preserved!" , StatusCode::SUCCESS ) ; }
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// Update handler for the property
+// ============================================================================
+void Kali::Pi0::updateDestroy ( Property& /* p */ ) 
+{
+  if ( FSMState() < Gaudi::StateMachine::INITIALIZED ) { return ; }   // RETURN 
+  // 
+  if ( m_destroy )
+  { Warning ( "TES containers will be destroyed!" , StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "TES containers will be preserved!" , StatusCode::SUCCESS ) ; }
+  //
+}
+// ============================================================================
+// the only one essential method 
+// ============================================================================
+StatusCode Kali::Pi0::analyse    ()            // the only one essential method 
 {
   using namespace LoKi         ;
   using namespace LoKi::Types  ;
@@ -192,12 +278,10 @@ LOKI_ALGORITHM ( Kali_Pi0 )
   
   for ( Loop pi0 = loop( "g g" , "pi0" ) ; pi0 ; ++pi0 ) 
   {
-
     
     const double m12 = pi0->mass ( 1 , 2 ) ;
-
+    
     if ( m12 > 250 * MeV ) { continue ; }  // CONTINUE
-
     
     const LHCb::Particle* g1 = pi0(1) ;
     if ( 0 == g1         ) { continue ; }  // CONTINUE 
@@ -221,7 +305,6 @@ LOKI_ALGORITHM ( Kali_Pi0 )
     double spd2e = seedEnergyFrom ( g2 , spd ) / GeV ;
     if ( 0 < spd2e ) { continue ; }
     if ( 0 != h4 ) { h4 -> fill ( m12 ) ; }
-    
     
     double prs1e = energyFrom ( g1 , prs ) / GeV ;
     double prs2e = energyFrom ( g2 , prs ) / GeV ;
@@ -270,9 +353,15 @@ LOKI_ALGORITHM ( Kali_Pi0 )
   counter ( "#empty"  ) += digits.empty () ;
   
   setFilterPassed ( !digits.empty() ) ;
+
+  if  ( !m_destroy ) { return StatusCode::SUCCESS ; }    // RETURN 
+  
+  // ==========================================================================
+  // ATTENTION: Here we'll destroy containers in TES! 
+  // ==========================================================================
   
   typedef LHCb::CaloDigit::Container Digits ;
-
+  
   std::vector<Digits*> digs ;
   
   Digits* d1 = get<Digits> ( LHCb::CaloDigitLocation::Spd  ) ;
@@ -283,7 +372,7 @@ LOKI_ALGORITHM ( Kali_Pi0 )
   digs.push_back ( d3 ) ;
   Digits* d4 = get<Digits> ( LHCb::CaloDigitLocation::Hcal ) ;
   digs.push_back ( d4 ) ;
-
+  
   size_t size1 = 0 ;
   size_t size2 = 0 ;
   
@@ -317,6 +406,10 @@ LOKI_ALGORITHM ( Kali_Pi0 )
   
   return StatusCode::SUCCESS ;
 }
+// ============================================================================
+// The factory:
+// ============================================================================
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(Kali,Pi0)
 // ============================================================================
 // The END 
 // ============================================================================
