@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.35 2009-09-28 08:08:13 jpalac Exp $
+!$Id: release.notes,v 1.36 2009-09-28 11:13:22 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Juan PALACIOS
+ - Revert to v1r7. The selection, not the writer, should decide where the data 
+   is written to!
 
 ! 2009-09-28 - Juan PALACIOS
  - cmt/requirements
