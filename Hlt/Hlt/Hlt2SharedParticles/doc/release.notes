@@ -1,9 +1,14 @@
-d$Id: release.notes,v 1.50 2009-09-24 11:08:23 jpalac Exp $
+d$Id: release.notes,v 1.51 2009-09-28 14:44:54 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Patrick Koppenburg
+ - Replace ChargedProtoPAlg with ChargedProtoParticleMaker and other algorithms.
+   @todo : all that needs to be revised before we can use fitted tracks.
+ - v2r4
 
 !========================== Hlt2SharedParticles v2r3 2009-09-24 =============
 

@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -23,6 +23,7 @@ class Hlt2PID(LHCbConfigurableUser):
          "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
        , "Hlt2Tracks"                 : "Hlt/Track/Long"
        , "Prefix"                     : "Hlt"     # default prefix for all instance names (but common)
+       , "UseRICH"                    : False 
          }
 
 ###################################################################################
@@ -76,35 +77,54 @@ class Hlt2PID(LHCbConfigurableUser):
     #
     def hlt2ChargedProtos(self):
         """
-        charged protoparticles 
+        Charged protoparticles
+
+        @todo : do different things when rich is there. See GlobalReco
+        I don't think a prefix different to Hlt works.
         """
         prefix = self.getProp("Prefix")  
         protos = prefix+"/ProtoP/Charged"
         tracks = self.getProp("Hlt2Tracks") 
         
-        from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
-        SeqHlt2ChargedProtos = GaudiSequencer(prefix+"ChargedProtos", Context ="HLT")
+        from Configurables import ( ChargedProtoParticleMaker,
+                                    DelegatingTrackSelector,
+                                    ChargedProtoParticleAddRichInfo,
+                                    ChargedProtoParticleAddMuonInfo,
+                                    ChargedProtoParticleAddEcalInfo,
+                                    ChargedProtoParticleAddBremInfo,
+                                    ChargedProtoParticleAddHcalInfo,
+                                    ChargedProtoParticleAddPrsInfo,
+                                    ChargedProtoParticleAddSpdInfo,
+                                    ChargedProtoParticleAddVeloInfo,
+                                    ChargedProtoCombineDLLsAlg )
+#        SeqHlt2ChargedProtos = GaudiSequencer(prefix+"ChargedProtos", Context ="HLT")
+
+        charged = ChargedProtoParticleMaker(prefix+'ChargedProtoPAlg')
+        charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
+        charged.TrackSelector.TrackTypes = [ "Long" ]  # only long so far
+#        charged.TrackSelector.AcceptClones = False
         
-        Hlt2ChargedProtoPAlg = ChargedProtoPAlg(prefix+'ChargedProtoPAlg')
-        Hlt2ChargedProtoPAlg.InputTrackLocation = tracks
-        Hlt2ChargedProtoPAlg.OutputProtoParticleLocation = protos
-        Hlt2ChargedProtoPAlg.addTool( TrackSelector, name="TrackSelector")
-        Hlt2ChargedProtoPAlg.TrackSelector.AcceptClones = False
-        Hlt2ChargedProtoPAlg.InputMuonPIDLocation = prefix+"/Muon/MuonPID"
-        ## Calo PID
-        Hlt2ChargedProtoPAlg.UseCaloSpdPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloPrsPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloEcalPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloHcalPID = True 
-        Hlt2ChargedProtoPAlg.UseCaloBremPID = True 
-        ##Hlt2ChargedProtoPAlg.UseRichPID = False  // Protos will NOT have any RICH information - HltRichPIDsKaons will not work
-        Hlt2ChargedProtoPAlg.UseRichPID = True     ## Use this to add RICH info to the HLT protos, needed for HltRichPIDsKaons
-        Hlt2ChargedProtoPAlg.UseMuonPID = True 
-        Hlt2ChargedProtoPAlg.UseVeloPID = False
-        if (prefix!='Hlt'): Hlt2ChargedProtoPAlg.NonStandardHltLocation = prefix
+        charged.InputTrackLocation = tracks
+        charged.OutputProtoParticleLocation = protos
+        pidList = [ charged ]
         
-        Hlt2ChargedProtoCombDLL = ChargedProtoCombineDLLsAlg(prefix+'ChargedProtoCombDLL')
-        Hlt2ChargedProtoCombDLL.ProtoParticleLocation = protos 
+        # muon
+        # Add PID information
+        if ( self.getProp("UseRICH")):
+            rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
+            pidList += [ rich ]
+        muon = ChargedProtoParticleAddMuonInfo(prefix+"ChargedProtoPAddMuon")
+        muon.InputMuonPIDLocation = prefix+"/Muon/MuonPID"
+        ecal = ChargedProtoParticleAddEcalInfo(prefix+"ChargedProtoPAddEcal")
+        brem = ChargedProtoParticleAddBremInfo(prefix+"ChargedProtoPAddBrem")
+        hcal = ChargedProtoParticleAddHcalInfo(prefix+"ChargedProtoPAddHcal")
+        prs  = ChargedProtoParticleAddPrsInfo(prefix+"ChargedProtoPAddPrs")
+        spd  = ChargedProtoParticleAddSpdInfo(prefix+"ChargedProtoPAddSpd")
+        velo = ChargedProtoParticleAddVeloInfo(prefix+"ChargedProtoPAddVeloDEDX")
+        # Fill the Combined DLL information in the charged protoparticles
+        combine = ChargedProtoCombineDLLsAlg(prefix+"ChargedProtoPCombDLLs")
+        # Fill the sequence
+        pidList += [ muon,ecal,brem,hcal,prs,spd,velo,combine ]
 
         from HltLine.HltLine import bindMembers
-        return bindMembers ( None, [ Hlt2ChargedProtoPAlg, Hlt2ChargedProtoCombDLL ] )
+        return bindMembers ( None, pidList  )
