@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.31 2009-09-28 08:09:17 jpalac Exp $
+!$Id: release.notes,v 1.32 2009-09-28 11:16:00 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Remove last change. Let the selection tell the writer where the output
+    data are going to.
 
 ! 2009-09-28 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
