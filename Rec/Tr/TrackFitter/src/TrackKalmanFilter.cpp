@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.70 2009-08-08 10:33:47 mneedham Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.71 2009-09-28 13:40:34 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -65,7 +65,8 @@ StatusCode TrackKalmanFilter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector", "Projector", this );
+  m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector",
+                                                       "Projector", this );
 
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
@@ -77,7 +78,8 @@ StatusCode TrackKalmanFilter::initialize()
 //=========================================================================
 // Fit the nodes
 //=========================================================================
-StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const Gaudi::TrackSymMatrix& seedCov) const
+StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, 
+                                   const Gaudi::TrackSymMatrix& seedCov) const
 {
   StatusCode sc(StatusCode::SUCCESS, true); 
   
@@ -119,13 +121,13 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 
       // Filter step, only for non-outliers
       if( node.type() != LHCb::Node::Outlier) {
-	sc = filter( node, state );
-	if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 0 );
-	
-	// add the chisquare
-	chisq += node.chi2();
-	node.setDeltaChi2Forward( node.chi2() );
-	++ndof ;
+        sc = filter( node, state );
+        if ( sc.isFailure() ) return Warning( "Fit failure:unable to filter node", StatusCode::FAILURE, 0 );
+        
+        // add the chisquare
+        chisq += node.chi2();
+        node.setDeltaChi2Forward( node.chi2() );
+        ++ndof ;
       }
     } 
 
@@ -134,9 +136,15 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
 
   } // end of prediction and filter
 
+  // Check if the number of degrees of freedom is not below zero
+  if( ndof < 0 ) warning() << "Number of degrees of freedom below zero." 
+                           << endmsg;
+
   // Run the bidirectional fit
-  NodeRange::reverse_iterator rbegin = NodeRange::reverse_iterator(nodes.end()) ; // nodes.rbegin() ;<-- workaround for LoKi::Range_ bug
-  NodeRange::reverse_iterator rend = NodeRange::reverse_iterator(nodes.begin()) ;  // nodes.rend() ;
+  NodeRange::reverse_iterator rbegin = NodeRange::reverse_iterator(nodes.end());
+  // nodes.rbegin() ;<-- workaround for LoKi::Range_ bug
+  NodeRange::reverse_iterator rend = NodeRange::reverse_iterator(nodes.begin());
+  // nodes.rend() ;
   if ( m_biDirectionalFit ) {
 
     if( msgLevel( MSG::VERBOSE ) )
@@ -167,28 +175,28 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes, const G
       // filter, if there is a measuerment
       if ( node.hasMeasurement() && node.type() != LHCb::Node::Outlier ) {
         // Filter step
-	sc = filter( node, state );
-	if ( sc.isFailure() ) return Warning( "Fit Failure unable to filter node!",StatusCode::FAILURE, 1 );
-	
+        sc = filter( node, state );
+        if ( sc.isFailure() ) return Warning( "Fit Failure unable to filter node!",StatusCode::FAILURE, 1 );
+        
         // add the chisquare
         chisqreverse += node.chi2() ;
-	node.setDeltaChi2Backward( node.chi2() );
+        node.setDeltaChi2Backward( node.chi2() );
       }
       
       // save filtered state, but not for the first node. we also
       // don't smooth for the first state.
       if( irNode != rbegin ) {
 	
-	// Smoother step
-	if(m_smooth ) {
-	  // If this is the last reverse node, the smoothed state is just this state.
-	  if( *irNode == nodes.front() ) {
-	    node.setState( state );
-	  } else {
-	    sc = biSmooth( node );
-	    if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 0 );
-	  }
-	}
+        // Smoother step
+        if(m_smooth ) {
+          // If this is the last reverse node, the smoothed state is just this state.
+          if( *irNode == nodes.front() ) {
+            node.setState( state );
+          } else {
+            sc = biSmooth( node );
+            if ( sc.isFailure() ) return Warning( "Fit failure: unable to biSmooth node!",StatusCode::FAILURE, 0 );
+          }
+        }
       }
 
       // Whatever the logic before, make sure the residual matches the state
@@ -252,9 +260,9 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
   NodeContainer::iterator lastMeasurementNode = nodes.end() ;
   --lastMeasurementNode ;
   while( lastMeasurementNode!=firstMeasurementNode &&
-	 //(*lastMeasurementNode)->type()!=LHCb::Node::Outlier &&
-	 (*lastMeasurementNode)->type()!=LHCb::Node::HitOnTrack 
-	 ) --lastMeasurementNode ; 
+         //(*lastMeasurementNode)->type()!=LHCb::Node::Outlier &&
+         (*lastMeasurementNode)->type()!=LHCb::Node::HitOnTrack
+         ) --lastMeasurementNode ; 
   NodeContainer::iterator endMeasurementNode = lastMeasurementNode ; ++endMeasurementNode;
   
   // Do the fit for these nodes
@@ -267,10 +275,11 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
     FitNode* prevNode = dynamic_cast<FitNode*>(*firstMeasurementNode);
     LHCb::State state = prevNode->state() ;
     for( NodeContainer::reverse_iterator inode(firstMeasurementNode) ; 
-	 inode != nodes.rend() && sc.isSuccess() ; ++inode) {
+         inode != nodes.rend() && sc.isSuccess() ; ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode);
       sc = predictReverseFit( *prevNode, *node, state );
-      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
+      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" 
+                                    << endmsg ;
       node->setState(state) ;
       node->setPredictedStateForward( LHCb::State() );
       node->setPredictedStateBackward( LHCb::State() );
@@ -284,10 +293,11 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
     // Then the nodes at the end
     state = (*lastMeasurementNode)->state() ;
     for( NodeContainer::iterator inode(endMeasurementNode) ; 
-	 inode != nodes.end() && sc.isSuccess() ; ++inode) {
+         inode != nodes.end() && sc.isSuccess() ; ++inode) {
       FitNode* node = dynamic_cast<FitNode*>(*inode);
       sc = predict( *node, state );
-      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" << endreq ;
+      if(!sc.isSuccess()) warning() << "Unable to predict reverse fit node" 
+                                    << endmsg ;
       node->setState(state) ;
       node->setPredictedStateForward( LHCb::State() );
       node->setPredictedStateBackward( LHCb::State() );
@@ -374,7 +384,7 @@ StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
   if( !node.refIsSet() ) {
     sc = StatusCode::FAILURE ;
     Warning( "Node without reference", sc, 0 ).ignore();
-    debug() << "Node without reference. " << node.measurement().type() << endmsg;
+    debug() << "Node without reference. " << node.measurement().type() <<endmsg;
   } else {
     // project the reference state
     Measurement& meas = node.measurement();
@@ -387,7 +397,8 @@ StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
       sc = proj -> projectReference(node) ;
       if ( sc.isFailure() ) {
         Warning( "unable to project statevector", sc, 0 ).ignore();
-        debug() << "unable to project this statevector: " << node.refVector() << endmsg ;
+        debug() << "unable to project this statevector: " << node.refVector() 
+                << endmsg ;
       }
     }
   }
@@ -402,7 +413,8 @@ StatusCode TrackKalmanFilter::filter(FitNode& node, State& state) const
   // check z position
   Measurement& meas = node.measurement();
   if ( fabs(meas.z() - state.z()) > TrackParameters::propagationTolerance ) {
-    Warning( "Z positions of State and Measurement are not equal", StatusCode::FAILURE, 0 ).ignore();
+    Warning( "Z positions of State and Measurement are not equal", 
+             StatusCode::FAILURE, 0 ).ignore();
     debug() << "State at z=" << state.z() 
             << ", Measurement at z=" << meas.z() << endmsg;
   }
@@ -485,7 +497,8 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
   // smoother gain matrix
   TrackMatrix A ;
 
-  bool nonZeroNoise = nextNode.noiseMatrix()(2,2)>0 ||nextNode.noiseMatrix()(3,3)>0||nextNode.noiseMatrix()(4,4) > 0 ;
+  bool nonZeroNoise = nextNode.noiseMatrix()(2,2)>0 ||
+    nextNode.noiseMatrix()(3,3)>0||nextNode.noiseMatrix()(4,4) > 0 ;
   if(nonZeroNoise) {
 
     // invert the covariance matrix
@@ -522,8 +535,8 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
     std::ostringstream mess;
     mess << "Non-positive cov. matrix in smoother for z = "
          << thisNode.z() << std::endl
-	 << " thisNodeC = " << thisNodeC << std::endl
-	 << " noise = " << nextNode.noiseMatrix() << std::endl ;
+         << " thisNodeC = " << thisNodeC << std::endl
+         << " noise = " << nextNode.noiseMatrix() << std::endl ;
     Warning("Problems in smoothing",StatusCode::FAILURE,0).ignore();
     return failure( mess.str() );
   }
@@ -543,7 +556,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
   TrackSymMatrix R = filtStateC + predRevC ;
   TrackSymMatrix invR = R ;
   if ( !Gaudi::Math::invertPosDefSymMatrix( invR ) ) {
-    debug() << "unable to invert matrix in smoother" << invR << endreq ;
+    debug() << "unable to invert matrix in smoother" << invR << endmsg ;
     return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,0);
   }
 
@@ -578,8 +591,8 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
     double V = thisNode.errMeasure2();
     double HCH = Similarity( H, smoothedC )(0,0);
     if( HCH > V ) {
-      debug() << "Severe problem after smoother: smoothed error larger than measurement error"
-	      << V << " " << HCH << " " <<  endreq ;
+      debug() << "Severe problem after smoother: smoothed error larger than "
+              << "measurement error" << V << " " << HCH << " " <<  endmsg ;
       return Warning( "Smoothing error", StatusCode::FAILURE, 0 );
     }
   }

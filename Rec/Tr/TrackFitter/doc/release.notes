@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-09-28 - Jeroen van Tilburg
+ - Removed the lines in TrackMasterFitter that check for the number of
+   measurements. This is not strictly needed. Added a warning in
+   TrackKalmanFilter when ndof is below zero.
+
 !=========================== TrackFitter v2r37 2009-09-03 ===================
 ! 2009-09-01 Wouter Hulsbergen
  - Prefit iteration is now implicit in fit: as long as ambiguity of OT hit is not

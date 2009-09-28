@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.24 2009-09-02 15:28:45 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.25 2009-09-28 13:40:34 jvantilb Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -100,7 +100,7 @@ private:
   int m_numFitIter;                 ///< number of fit iterations to perform
   double m_chi2Outliers;            ///< chi2 of outliers to be removed
   int m_numOutlierIter;             ///< max number of outliers to be removed
-  bool m_useSeedStateErrors; ///< use errors of the seed state
+  bool m_useSeedStateErrors;        ///< use errors of the seed state
   
   double m_errorX ;                 ///< Seed error on x
   double m_errorY ;                 ///< Seed error on y
@@ -110,11 +110,11 @@ private:
 
   bool m_makeNodes;
   bool m_makeMeasurements;
-  bool m_updateTransport ;          ///< Update the transport matrices between iterations
-  double m_minMomentumForELossCorr ; ///< Minimum momentum used in correction for energy loss
-  bool m_applyMaterialCorrections ; ///< Apply material corrections
+  bool m_updateTransport ;            ///< Update the transport matrices between iterations
+  double m_minMomentumForELossCorr ;  ///< Minimum momentum used in correction for energy loss
+  bool m_applyMaterialCorrections ;   ///< Apply material corrections
   bool m_applyEnergyLossCorrections ; ///< Apply material corrections
-  double m_maxDeltaChi2Converged ; ///< Maximum change in chisquare for converged fit
+  double m_maxDeltaChi2Converged ;    ///< Maximum change in chisquare for converged fit
 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.71 2009-09-02 15:28:45 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.72 2009-09-28 13:40:34 jvantilb Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -145,7 +145,7 @@ StatusCode TrackMasterFitter::initialize()
 //=========================================================================
 StatusCode TrackMasterFitter::failure( const std::string& comment ) const 
 {
-  if ( m_debugLevel ) debug() << "TrackMasterFitter failure: " + comment << endreq ;
+  if ( m_debugLevel ) debug() << "TrackMasterFitter failure: " + comment << endmsg ;
   return Warning(comment,StatusCode::FAILURE,1) ;
 }
 
@@ -167,7 +167,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   } else {
     sc = updateRefVectors( track ) ;
     if ( sc.isFailure() )
-      return failure( "unable to make nodes from the measurements" );
+      return failure( "unable to update the ref vectors" );
   }
   
   // create a covariance matrix to seed the Kalman fit
@@ -181,14 +181,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     if ( m_debugLevel )
       debug() << " state0 at z " << z1 
 	      << " vector " << state0.stateVector() << "\n"
-	      << " covariance " << state0.covariance() << endreq;
+	      << " covariance " << state0.covariance() << endmsg;
   } else {
-    // check that there are enough nodes with measurements
-    if ( nNodesWithMeasurement( track ) < 5 ) {
-      debug() << "Track has insufficient measurements for track fit: " << track.nMeasurements() 
-              << endmsg ;
-      return failure("Insufficient measurements to fit the State");
-    }
     seedCov(0,0) = m_errorX*m_errorX ;
     seedCov(1,1) = m_errorY*m_errorY ;
     seedCov(2,2) = m_errorTx*m_errorTx ;
@@ -269,7 +263,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 
   if ( m_debugLevel && !track.states().empty() )
     debug() << "first state = " << track.firstState() << endmsg;
-  
+
   // fill extra info
   fillExtraInfo( track ) ;
 
@@ -463,17 +457,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
     track.setPatRecStatus( Track::PatRecMeas );
     if(m_debugLevel)
       debug() << "# LHCbIDs, Measurements = " << track.nLHCbIDs()
-	      << ", " << track.nMeasurements() << endreq;
+	      << ", " << track.nMeasurements() << endmsg;
   }
 
-
-  // check that there are sufficient measurements
-  if (!m_useSeedStateErrors)
-  {
-    if( track.nMeasurements() < track.firstState().nParameters() )
-      return Warning("Not enough measurements to fit track", StatusCode::FAILURE, 0);
-  }
-  
   // Create the nodes for the measurements.
   const std::vector<Measurement*>& measures = track.measurements();
   Track::NodeContainer& nodes = track.nodes();
