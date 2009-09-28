@@ -430,12 +430,15 @@ TrackRungeKuttaExtrapolator::extrapolate( RKState& state,
 	++stats.numfailedstep ;
       }
       
-      // adapt the stepsize if necessary
+      // adapt the stepsize if necessary. the powers come from num.recipees.
       double stepfactor(1) ;
       if( errorOverTolerance > 1 ) { // decrease step size
 	stepfactor = std::max( m_minStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.25 ) ) ;
       } else {                       // increase step size
-	stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.20 ) ) ;
+	if( errorOverTolerance > 0 ) 
+	  stepfactor = std::min( m_maxStepScale, m_safetyFactor * std::pow( 1 / errorOverTolerance , 0.20 ) ) ;
+	else 
+	  stepfactor = m_maxStepScale ;
 	++stats.numincreasedstep ;
       }
       absstep *= stepfactor ;
