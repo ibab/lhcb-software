@@ -1,7 +1,17 @@
-! $Id: release.notes,v 1.105 2009-09-24 11:44:00 jpalac Exp $ 
+! $Id: release.notes,v 1.106 2009-09-28 12:08:19 ibelyaev Exp $ 
 ! Package     : ParticleMaker
 ! Responsible : Chris Jones, J. Palacios, Olivier Deschamps
 !==============================================================================
+
+! 2009-09-28 - Vanya BELYAEV
+
+ - src/ParticleMakerBase.cpp 
+
+    avoid crash for OutputLevel=VERBOSE & disabled Primary Vertices  
+   
+ - cmt/requiremets 
+
+    version increment to v5r4  
 
 !========================== ParticleMaker v5r3 2009-09-24 ===================
 

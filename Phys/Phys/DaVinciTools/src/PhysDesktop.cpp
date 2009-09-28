@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.80 2009-09-15 09:57:51 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.81 2009-09-28 12:08:00 ibelyaev Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -82,15 +82,26 @@ namespace
 PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_writeP2PV(true),
-    m_usingP2PV(true),
-    m_primVtxLocn(""),
-    m_outputLocn     (),
-    m_OnOffline      (0),
-    m_p2VtxTable(),
-    m_pvRelator(0),
-    m_pvRelatorName("")
+  : GaudiTool ( type, name , parent )
+  , m_writeP2PV            (true)
+  , m_usingP2PV            (true)
+  , m_primVtxLocn          ()
+  , m_inputLocations       ()
+  , m_outputLocn           ()
+  , m_p2PVDefaultLocations ()
+  , m_p2PVInputLocations   ()
+  //
+  , m_parts     (   )
+  , m_secVerts  (   )
+  , m_refitPVs  (   )
+  , m_primVerts ( 0 )
+  //
+  , m_OnOffline     ( 0  )
+  , m_p2VtxTable    (    )
+  , m_pvRelator     ( 0  )
+  , m_pvRelatorName (    )
+  //
+  , m_dva ( 0 )
 {
 
   // Declaring implemented interfaces
@@ -195,13 +206,21 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 //=============================================================================
 // Provides a reference to its internal container of vertices
 //=============================================================================
-const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const {
+const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
+{
+  //
   verbose() << "Returning PVs!" << endmsg;
-  if (0!=m_primVerts) {
-    verbose() << "Size " << m_primVerts->size() << endmsg;
-  } else {
-    error() <<"NULL LHCb::RecVertex::Container*" << endmsg;
+  
+  if ( 0!= m_primVerts ) 
+  {
+    if ( msgLevel ( MSG::VERBOSE ) ) 
+    { verbose() << "Size " << m_primVerts->size() << endmsg;} 
+  } 
+  else if ( "None" != m_primVtxLocn ) 
+  {
+    error () <<"NULL LHCb::RecVertex::Container*" << endmsg;
   }
+  //
   return m_primVerts;
 }
 //=============================================================================
@@ -482,15 +501,26 @@ void PhysDesktop::saveRefittedPVs(const LHCb::RecVertex::ConstVector& vToSave) c
   
 }
 //=============================================================================
-void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave) const {
+void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave) const 
+{
   // PK: save only the ones new to Desktop
   /// @todo One might accept saving a relation for an already saved particle (?)
+  
+  // V.B.
+  
+  if ( 0 == m_primVerts && "None" == m_primVtxLocn )
+  {
+    if ( msgLevel ( MSG::DEBUG ) )
+    { debug() << " skip saveP2PVRelations: No Primary Vertices" << endmsg ; }
+    return ;
+  }
+  
   Particle2Vertex::Table* table = new Particle2Vertex::Table( pToSave.size() );
 
   const std::string location(m_outputLocn+"/Particle2VertexRelations");
 
   put(table, location);
-
+  
   if ( usingP2PV() ) { // relations should be in table
 
     for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {

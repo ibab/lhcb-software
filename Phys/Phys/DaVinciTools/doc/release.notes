@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.473 2009-09-15 09:58:00 jpalac Exp $
+! $Id: release.notes,v 1.474 2009-09-28 12:08:00 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-09-28 - Vanya BELYAEV
+
+ - few tweaks to allow the proepr usage of InputPrimaryVertices = "None"
+
 
 ! 2009-09-15 - Juan PALACIOS
  - src.PhysDesktop.cpp
