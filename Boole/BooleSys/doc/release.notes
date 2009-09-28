@@ -3,6 +3,8 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Fix reference for fix to EventDataSvc reference counting
+
 </PRE><H1><A NAME=v19r6>2009-09-28 Boole v19r6</A></H1><PRE>
 This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6
  and SQLDDDB v5r12, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
