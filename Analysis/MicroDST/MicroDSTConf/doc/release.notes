@@ -1,9 +1,14 @@
-!$Id: release.notes,v 1.30 2009-09-24 15:36:26 jpalac Exp $
+!$Id: release.notes,v 1.31 2009-09-28 08:09:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-09-28 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Accept input locations that don't start with Phys. Controllable via 
+    property InputBranch.
 
 ! 2009-09-24 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
