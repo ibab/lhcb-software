@@ -1,0 +1,26 @@
+# $Id: requirements,v 1.1.1.1 2009-09-28 16:11:25 jpalac Exp $
+# =============================================================================
+# Created    : 25/09/2009
+# Maintainer : J. Palacios
+# =============================================================================
+#
+# =============================================================================
+
+package           AnalysisDict
+version           v1r0
+
+#============================================================================
+branches          cmt doc dict
+
+# Used packages. 
+#============================================================================
+use  DaVinciMCKernel     v*  Phys
+
+# =============== LCG Dictionaries ============================================
+apply_pattern reflex_dictionary                                                 \
+              dictionary=DaVinciMCKernel                                        \
+              headerfiles=$(ANALYSISDICTROOT)/dict/AnalysisDict.h     \
+              selectionfile=$(ANALYSISDICTROOT)/dict/AnalysisDict.xml \
+              options="-U__MINGW32__"
+
+macro DaVinciMCKernelDict_use_linkopts $(use_linkopts)

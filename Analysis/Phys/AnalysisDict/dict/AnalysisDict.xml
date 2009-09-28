@@ -1,0 +1,26 @@
+<!--$Id: AnalysisDict.xml,v 1.1.1.1 2009-09-28 16:11:25 jpalac Exp $ -->
+<lcgdict>
+
+<!-- DaVinciMCKernel -->
+  <class name = "IBackgroundCategory"/>
+  <class name = "ICheatedLifetimeFitter"/>
+  <class name = "IDaVinciAssociatorsWrapper"/>
+  <class name = "IFilterMCParticles"/>
+  <class name = "IHepMC2MC"/>
+  <class name = "IMCParticleArrayFilter"/>
+  <class name = "IMC2Collision"/>
+  <class name = "IParticle2MCAssociator"/>
+  <class name = "IParticle2MCWeightedAssociator"/>
+  <class name = "IP2VVMCPartAngleCalculator"/>
+  <class name = "IPrintDecayTreeTool"/>
+  <class name = "IPV2MC"/>
+  <class name = "MCAssociation"/>
+  <class name = "std::vector<MCAssociation>" />
+  <class name = "LHCb::Relation1D<LHCb::Particle,LHCb::MCParticle>"
+	 id="7B880798-0000-0000-0000-000000000000" />
+  <class name = "LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>"/>
+
+
+
+  <function pattern = "Particle2MCParticle::*"/>
+</lcgdict>
