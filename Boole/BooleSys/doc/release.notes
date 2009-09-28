@@ -3,11 +3,40 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-- Fix reference for fix to EventDataSvc reference counting
+</PRE><H1><A NAME=v19r6>2009-09-28 Boole v19r6</A></H1><PRE>
+This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6
+ and SQLDDDB v5r12, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
 
-- Add first Upgrade Monte Carlo version
-  
-- Added the pattern container_package.
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+Also supports simulation of upgrade geometry, this requires
+SQLDDDB v5r12 or later, AppConfig v3r5 or later
+
+ - Changes to configuration
+   . Introduce new DataType 'Upgrade' for upgrade simulations
+     (Boole v19r6, BooleUMC v1r0, DDDB v1r22)
+     o modifies Velo,ST sequences to do spillover subtraction
+     o shortens OT integration gate to 50ns
+     o sets DDDB tag for the first Minimal Upgrade Layout release (mul-20091917)
+     
+ - Changes to options:
+   . Add Boole-Upgrade-WithTruth.py -NoTruth.py referencing AppConfig Upgrade
+     options
+
+ - New tuning:
+   . Added support for zipped InstallArea/python directories on the PYTHONPATH,
+     speeds up the python configuration part of the initialisation (Gaudi v21r4)
+   . New default DB tags for 2009 simulation: head-20090902 for DDDB,
+     sim-20090902-vc-md100 for SIMCOND. Fixes rotation of Rich1 HPDs, updates IT
+     dead strip+noise files (SQLDDDB v5r11, v5r10)
+
+ - Monitoring changes
+   . Changes to STClusterMonitor histograms (STMonitors v1r6)
+
+ - New packaging: 
+   . Added the pattern container_package to BooleSys/cmt/requirements
+	 . Add dependence on Digi/BooleUMC with upgrade specific algorithms and options
 
 </PRE><H1><A NAME=v19r5>2009-07-30 Boole v19r5</A></H1><PRE>
 This version uses projects Gaudi v21r3, LHCb v27r5, Lbcom v7r5
