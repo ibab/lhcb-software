@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2009-09-28 - Patrick Robbe
+ - Change UPINIT call to BCVEGPY (change of arguments)
+
 !========================== GENSER v5r1 2009-04-06 ===========================
 ! 2009-03-06 - Patrick Robbe
  - Add hijing subdirectoy to contain HIJING functions overwriten in Gauss
