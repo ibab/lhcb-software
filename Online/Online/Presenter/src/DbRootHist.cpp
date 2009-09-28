@@ -1542,8 +1542,9 @@ void DbRootHist::draw(TCanvas* editorCanvas, double xlow, double ylow, double xu
 
 void DbRootHist::normalizeReference()
 {
-  if (m_reference) {
+  if (m_reference && (m_histogramType != s_CNT)) {
     float normFactor = rootHistogram->GetNormFactor();
+
     // if GetNormFactor() >0, histogram is drawn normalized, just use the same normalization
     if (normFactor<0.1) {
       if (s_Entries == m_refOption) {

@@ -1,6 +1,7 @@
 // submit_elog(host_name, port, ssl, subdir, logbook, password,
 //             uname, upwd, reply, quote_on_reply, edit, suppress, encoding, attr_name, attrib, n_attr, text,
 //             attachment, buffer, att_size);
+// GauchoJob/GaudiExample/1Db0 -P HLTA0102
 
 #include <algorithm>
 #include <iostream>
@@ -3432,7 +3433,6 @@ void PresenterMainFrame::addHistoToHistoDB()
 
         TString histoName = *static_cast<TString*>(currentNode->GetUserData());
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
-
         m_histogramDB->declareHistogram(histogramService.taskName(),
                                         histogramService.algorithmName(),
                                         histogramService.histogramName(),
@@ -3570,8 +3570,8 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
         m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
         paintDrawOption = TString(m_drawOption + TString(" ") +
           bulkHistoOptions.m_genericRootDrawOption).Data();
-      } else if (s_P1D == dbRootHist->histogramType() ||
-          s_HPD == dbRootHist->histogramType()) {
+      } else if ( (s_P1D == dbRootHist->histogramType()) ||
+                  (s_HPD == dbRootHist->histogramType()) ) {
         m_drawOption = bulkHistoOptions.m_1DRootDrawOption;
         paintDrawOption = TString(m_drawOption + TString(" ") +
           bulkHistoOptions.m_genericRootDrawOption + TString(" E ")).Data();
@@ -3593,8 +3593,7 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
       pad_dbHistosOnPageIt--;
       prevDbRootHist = *pad_dbHistosOnPageIt;
       if ( (NULL != prevDbRootHist) &&
-           (NULL != prevDbRootHist->hostingPad) &&
-           (pres::MonRate != prevDbRootHist->effServiceType()) ) {
+           (NULL != prevDbRootHist->hostingPad) ) { // && (pres::MonRate != prevDbRootHist->effServiceType())
         targetPad = prevDbRootHist->hostingPad;
         dbRootHist->hostingPad = targetPad;        
       }
@@ -4051,7 +4050,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
     }
     if (m_clearedHistos) { clearHistos(); }
 
-    m_currentTCK = "";
+    std::string currentTCK_service = "";
 
     disableAutoCanvasLayoutBtn();
     removeHistogramsFromPage();
@@ -4154,7 +4153,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 
             if ( (m_verbosity >= Verbose) &&
                  (*drawHist_dbHistosOnPageIt) &&
-                 (*drawHist_dbHistosOnPageIt)->onlineHistogram() ) {
+                 (*drawHist_dbHistosOnPageIt)->onlineHistogram() &&
+                 (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType()) ) {
               std::cout << "db identifier "
                         << ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->identifier()
                         << std::endl << "\tdb task "
@@ -4171,7 +4171,10 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
             double xup(0.0);
             double yup(0.0);
                         
-            if ( (*drawHist_dbHistosOnPageIt) && (*drawHist_dbHistosOnPageIt)->onlineHistogram() ) {
+            if ( (*drawHist_dbHistosOnPageIt) &&
+                 ((*drawHist_dbHistosOnPageIt)->onlineHistogram()) &&
+                 ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage() &&
+                 (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType()) ) {
               xlow = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->xmin;
               ylow = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->ymin;
               xup  = ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->xmax;
@@ -4197,7 +4200,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                  "  Y " << ylow << " to " << yup <<std::endl;
              }
            }
-          if ( (*drawHist_dbHistosOnPageIt)) {
+          if ( (*drawHist_dbHistosOnPageIt) &&
+               (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType())) {
             (*drawHist_dbHistosOnPageIt)->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, overlayOnPad);
           }
 //          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());          
@@ -4217,12 +4221,15 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         for (drawOpt_dbHistosOnPageIt = dbHistosOnPage.begin();
              drawOpt_dbHistosOnPageIt != dbHistosOnPage.end();
              drawOpt_dbHistosOnPageIt++) {
-           (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
+          if ( TCKinfo != (*drawOpt_dbHistosOnPageIt)->effServiceType() ) {
+            (*drawOpt_dbHistosOnPageIt)->setDrawOptionsFromDB((*drawOpt_dbHistosOnPageIt)->hostingPad);
+
+          }
            if ( (s_CNT == (*drawOpt_dbHistosOnPageIt)->histogramType()) &&
-                (true == m_currentTCK.empty()) ) {
+                (true == currentTCK_service.empty()) ) {
               HistogramIdentifier histogramIdentifier = HistogramIdentifier((*drawOpt_dbHistosOnPageIt)->identifier());                  
               if (histogramIdentifier.isPlausible()) {
-                m_currentTCK = s_adder + histogramIdentifier.taskName() + s_slash + 
+                currentTCK_service = s_adder + histogramIdentifier.taskName() + s_slash + 
                                histogramIdentifier.algorithmName() + s_slash +
                                s_eff_MonitorSvc + s_slash + s_eff_monRate +
                                s_slash + s_eff_TCK;
@@ -4231,8 +4238,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         }
 
 // TODO: // str. broken
-  if (false == m_currentTCK.empty()) {
-    addHistoToPage(m_currentTCK, invisible);
+  if (false == currentTCK_service.empty()) {
+    addHistoToPage(currentTCK_service, invisible);
   }          
         editorCanvas->Update();        
 
