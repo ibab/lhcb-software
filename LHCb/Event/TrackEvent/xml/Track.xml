@@ -20,6 +20,7 @@
       <location name="Velo"       place="Rec/Track/Velo"/>
       <location name="Forward"    place="Rec/Track/Forward"/>
       <location name="VeloTT"     place="Rec/Track/VeloTT"/>
+      <location name="TT"         place="Rec/Track/TT"/>
       <location name="Match"      place="Rec/Track/Match"/>
       <location name="Downstream" place="Rec/Track/Downstream"/>
       <location name="Tsa"        place="Rec/Track/Tsa"/>
@@ -76,6 +77,7 @@
         <enumval name = "PatSeeding"     value="15" desc="track produced with the PatSeeding pattern recognition"/>
         <enumval name = "PatMatch"       value="16" desc="track produced with the PatMatch pattern recognition"/>
         <enumval name = "PatDownstream"  value="17" desc="track produced with the PatDownstream pattern recognition"/>
+        <enumval name = "TTGeneric"      value="18" desc="track produced with the TTGenericTracking algorithm"/>
       </enum>
 
       <enum
@@ -104,6 +106,7 @@
         <enumval name = "Ttrack"      desc="seed track"/>
         <enumval name = "Muon"        desc="muon track"/>
         <enumval name = "Calo"        desc="calo cosmics track"/>
+        <enumval name = "TT"          desc="TT track"/>
       </enum>
 
       <enum

@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-09-28 - Jeroen Van Tilburg
+ - Modified Track.xml to add history, type and location for TT tracks.
+
 !======================= TrackEvent v5r0 2009-09-02 ==========================
 ! 2009-09-02 - Marco Cattaneo
  - put back the unused extra info members, with an obsoleted name, to allow
