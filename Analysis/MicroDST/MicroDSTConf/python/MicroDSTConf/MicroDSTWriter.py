@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.21 2009-09-24 16:04:19 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.22 2009-09-28 08:01:56 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -51,8 +51,9 @@ class MicroDSTWriter(BaseDSTWriter) :
 
     def dataLocations(self, sel, extension) :
         loc = []
+        prefix = self.inputBranch()
         for output in sel.outputLocations() :
-            location = output+"/"+extension
+            location = prefix+"/"+output+"/"+extension
             location = location.replace("//", "/")
             if location.endswith('/') :
                  location = location[:len(location)-1]
