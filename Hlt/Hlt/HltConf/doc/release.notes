@@ -1,13 +1,18 @@
-! $Id: release.notes,v 1.342 2009-09-28 17:43:11 jpalac Exp $ 
+! $Id: release.notes,v 1.343 2009-09-28 19:37:01 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-!========================== HltConf v4r3p2 2009-09-26 =================
+!========================== HltConf v4r4 2009-09-24 ===================
+
+! 2009-09-17 - Greig Cowan
+ - Removed reference to specific JpsiX configurables which are now under control
+   of Hlt2B2JpsiXLines configurable. 
 
 ! 2009-09-15 - Gerhard Raven
+ - add some missing photon lines
 
 ! 2009-09-11 - Gerhard Raven
  - routing bits before monitoring instead of after
