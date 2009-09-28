@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.6 2009-09-25 15:16:18 jpalac Exp $
+#$Id: Wrappers.py,v 1.7 2009-09-28 11:34:19 jpalac Exp $
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 """
@@ -66,8 +66,9 @@ class Selection(LHCbConfigurableUser) :
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
     __slots__ = {
-        "Algorithm"           : ""   ,
-        "RequiredSelections"  : []
+        "Algorithm"           : "",
+        "RequiredSelections"  : [],
+        "OutputBranch" : "Phys"
         }
     
     def __apply_configuration__(self) :
@@ -91,7 +92,8 @@ class Selection(LHCbConfigurableUser) :
         return self.algorithm().name()
 
     def outputLocation(self) :
-        return self.algName()
+        branch = self.getProp('OutputBranch')
+        return branch + "/" + self.algName()
     
 class SelectionSequence(LHCbConfigurableUser) :
     """
@@ -143,7 +145,7 @@ class SelectionSequence(LHCbConfigurableUser) :
         return self.algorithm().name()
 
     def outputLocation(self) :
-        return self.algName()
+        return self.topSelection().outputLocation()
 
     def outputLocations(self) :
         return [self.outputLocation()]
