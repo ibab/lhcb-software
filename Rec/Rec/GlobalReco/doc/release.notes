@@ -4,15 +4,13 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-09-29 - Christopher Rob Jones
+ - Fix untested StatusCodes in Charged ProtoParticle tuple monitor.
+
 ! 2009-09-17 - Vanya BELYAEV 
-
  - src/NeutralProtoPAlg.cpp 
-
-    disable replace of container for "lightMode"  ( it result in HUGE gain in calibration 
-    mode, avoiding decoding of "old" & "packed" protoparticles)
-
-
-    
+    disable replace of container for "lightMode"  ( it result in HUGE gain 
+    in calibration mode, avoiding decoding of "old" & "packed" protoparticles)
 
 ! 2009-09-09 - Chris Jones
  - Fix python Configurable to properly set output level for all algorithms
