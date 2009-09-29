@@ -12,32 +12,17 @@ from Configurables       import HltSelReportsMaker
 
 
 # if you want to generate a configuration, uncomment the following lines:
-#Moore().generateConfig = True
-#Moore().configLabel = 'PA accept=1'
+Moore().generateConfig = True
+Moore().configLabel = 'ODINRandom accept=1, TELL1 Error accept=0'
 
-<<<<<<< FEST.py
-Moore().HltType = 'Hlt1'
-Moore().ThresholdSettings = 'FEST'
+Moore().HltType = 'Hlt1+Hlt2'
+Moore().ThresholdSettings = 'Effective_FEST'
 
-=======
-Moore().HltType = 'PA+Hlt1'
->>>>>>> 1.9
 Moore().Verbose = True
 
-# FEST specific options...
-Moore().ThresholdSettings = 'FEST'
-veto = [ 'TES:Trig/L0/FullCalo' ,   'TES:Trig/L0/MuonCtrl'
-       , 'TES:Hlt/Vertex/ASidePV3D','TES:Hlt/Vertex/CSidePV3D'
-       , 'TES:Hlt/Track/Long', 'TES:Hlt/Track/Forward',   'TES:Hlt/Track/RZVelo',    'TES:Hlt/Track/Velo'
-       , 'TES:Hlt/Vertex/PV2D' 
-       , 'TES:Hlt/Track/MuonSegmentForL0Single'
-       , 'RZVeloBW'
-       ]
-HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
-HltSelReportsMaker().DebugEventPeriod = 2000
-HltConf().LumiBankKillerAcceptFraction = 0.9999
-HltConf().HistogrammingLevel = 'Line'
 
+Moore().DDDBtag   = 'MC09-20090602'
+Moore().CondDBtag = 'sim-20090402-vc-md100'
 Moore().Simulation = True
 Moore().DataType   = '2009'
 Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.mdf'%f  for f in range(1,4) ]
@@ -46,8 +31,5 @@ Moore().inputFiles = [ '/data/bfys/lhcb/test/MDF/00003083/0000/00003083_%08d_1.m
 
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 10000
-
-Moore().DDDBtag   = "default"
-Moore().CondDBtag = "default"
 
 # Moore().RunOnline = True

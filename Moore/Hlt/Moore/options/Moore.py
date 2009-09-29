@@ -14,6 +14,7 @@ from Moore.Configuration import *
 #Moore().configLabel = 'NO prescale'
 
 Moore().HltType = 'Hlt1' # +Hlt2'
+Moore().HltThresholds = 'Effective_Nominal'
 Moore().Verbose = True
 
 #Moore().Simulation = False
@@ -43,9 +44,6 @@ Moore().inputFiles = [ 'castor:/castor/cern.ch/user/d/dijkstra/Stripped-L0-MC09/
 
 EventSelector().PrintFreq = 100
 Moore().EvtMax = 1000
-
-Moore().DDDBtag   = "default"
-Moore().CondDBtag = "default"
 
 # Moore().outputFile = '/tmp/foo.raw'
 

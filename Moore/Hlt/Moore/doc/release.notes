@@ -4,6 +4,7 @@ Purpose     : LHCb HLT application
 
 ! 2009-09-29 - Gerhard Raven
  - do not use runchange handler in PA setup
+ - update database tags in FEST.py
 
 !========================== Moore v7r4 2009-09-xx ===================
 ! 2009-09-08 - Gerhard Raven
