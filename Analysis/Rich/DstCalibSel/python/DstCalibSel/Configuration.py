@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.5 2009-09-29 14:20:23 nmangiaf Exp $"
+__version__ = "$Id: Configuration.py,v 1.6 2009-09-29 14:49:39 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -43,17 +43,15 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         #
         # 3) Filter K/Pi Tracks
         #
-        from Configurables import FilterDesktop, PhysDesktop
+        from Configurables import FilterDesktop
         trackfilterName = self.selName() + "TrackFilter"
         trackfilter = FilterDesktop(trackfilterName)
-        trackfilter.addTool( PhysDesktop )
         trackfilter.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsKaons" ]
         trackfilter.Code = "(PT > 0.3*GeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4)"
         testseq.Members += [ trackfilter ]
         ###############################################################
         pionfilterName = self.selName() + "PionFilter"
         pionfilter = FilterDesktop(pionfilterName)
-        pionfilter.addTool( PhysDesktop )
         pionfilter.InputLocations = [ "StdNoPIDsPions" ]
         pionfilter.Code = "(MIPCHI2DV(PRIMARY) > 9)"
         testseq.Members += [ pionfilter ]
@@ -64,7 +62,6 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         from Configurables import D02KPiNoPID
         d02kpiName = self.selName()+"_D0ToKPiNoPID"
         d02kpi = D02KPiNoPID(d02kpiName)
-        d02kpi.addTool( PhysDesktop )
         d02kpi.InputLocations = [ trackfilterName ]
         from GaudiKernel.SystemOfUnits import MeV
         d02kpi.D0MassWindow = 25.0*MeV
@@ -79,7 +76,6 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         #
         from Configurables import Dstar2D0Pi
         dstar2d0pi = Dstar2D0Pi(self.selName())
-        dstar2d0pi.addTool( PhysDesktop )
         dstar2d0pi.InputLocations = [pionfilterName,d02kpiName]
         dstar2d0pi.DstarMassWindow = 20.0*MeV
         dstar2d0pi.DstarVertexChi2Cut = 10
