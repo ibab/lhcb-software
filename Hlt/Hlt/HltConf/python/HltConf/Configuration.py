@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.119 2009-09-15 12:42:25 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.120 2009-09-29 13:02:47 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -208,7 +208,6 @@ class HltConf(LHCbConfigurableUser):
                , 'RZVeloBW'
                ]
         HltSelReportsMaker().SelectionMaxCandidatesDebug = dict( [ (i,0) for i in veto ] )
-        HltSelReportsMaker().DebugEventPeriod = 2000
 
 ##################################################################################
     def configureANNSelections(self) :
@@ -278,8 +277,8 @@ class HltConf(LHCbConfigurableUser):
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("Lumi"       , "Hlt1Lumi.*Decision"),
-                                  ("Global"     , ".*Global.*"),
                                   ("PA"         , "Hlt1((Non?)Random|Tell1Error)Decision"),
+                                  ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
 
@@ -300,8 +299,6 @@ class HltConf(LHCbConfigurableUser):
             if m and not decision_name in decision_group_map:
                 decision_group_map[decision_name]=pos
 
-
-        # set property (in C++: std::map< std::string, std::vector<std::string> > ) 
         HltGlobalMonitor().DecToGroup  = decision_group_map
         HltGlobalMonitor().GroupLabels = group_labels 
 
@@ -386,7 +383,6 @@ class HltConf(LHCbConfigurableUser):
             self.EnableHltSelReports = False
             self.EnableHltVtxReports = False
             self.EnableLumiEventWriting = False
-            self.ActiveHlt1Lines = [ 'Hlt1NonRandomODIN','Hlt1RandomODIN','Hlt1Tell1Error'] 
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import HltLine

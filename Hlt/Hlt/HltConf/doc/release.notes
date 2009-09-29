@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.343 2009-09-28 19:37:01 jpalac Exp $ 
+! $Id: release.notes,v 1.344 2009-09-29 13:02:47 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+!========================== HltConf v4r4p1 2009-09-29 ===================
+! 2009-09-19 - Gerhard Raven
+ - remove obsolete explicit use of ActiveLines if type = PA
 
 !========================== HltConf v4r4 2009-09-24 ===================
 
