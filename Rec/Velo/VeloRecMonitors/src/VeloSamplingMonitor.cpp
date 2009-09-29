@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.9 2009-06-24 08:54:31 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.10 2009-09-29 18:27:36 krinnert Exp $
 // Include files
 // -------------
 
@@ -39,6 +39,7 @@ Velo::VeloSamplingMonitor::VeloSamplingMonitor( const std::string& name,
                           ("Next4")("Next5")("Next6")("Next7");
   
   declareProperty( "SamplingLocations", m_samplingLocations );
+  declareProperty( "UseNZS", m_useNZS=true );
 }
 
 //=============================================================================
@@ -74,7 +75,9 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   m_hClusADCSampBot = book2D( histIDBase + "Bottom", histTitleBase + "Bottom", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   m_hClusADCSampBotC = book2D( histIDBase + "BottomC", histTitleBase + "Bottom, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   m_hClusADCSampBotA = book2D( histIDBase + "BottomA", histTitleBase + "Bottom, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index", -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
+  if ( m_useNZS ) {
+    m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index", -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
+  }
   
   m_histClusADCSampAll = Gaudi::Utils::Aida2ROOT::aida2root(
       book2D("ClusADCSampAll", "Cluster ADC vs. Sampling Index",-0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51)); 
@@ -111,12 +114,14 @@ StatusCode Velo::VeloSamplingMonitor::execute() {
 
   monitorTAEDiff();
   
-  for ( itL = m_samplingLocations.begin();
+  if ( m_useNZS ) {
+    for ( itL = m_samplingLocations.begin();
         itL != m_samplingLocations.end(); ++itL ) {
-    LHCb::VeloTELL1Datas* tell1Datas = veloTell1Data( (*itL) );
-    if( tell1Datas == 0 ) continue;
-    
-    monitorTell1Data( (*itL), tell1Datas );
+      LHCb::VeloTELL1Datas* tell1Datas = veloTell1Data( (*itL) );
+      if( tell1Datas == 0 ) continue;
+
+      monitorTell1Data( (*itL), tell1Datas );
+    }
   }
 
   return StatusCode::SUCCESS;

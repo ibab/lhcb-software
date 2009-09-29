@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.h,v 1.6 2009-06-23 12:49:26 krinnert Exp $
+// $Id: VeloSamplingMonitor.h,v 1.7 2009-09-29 18:27:36 krinnert Exp $
 #ifndef VELORECMONITORS_VELOSAMPLINGMONITOR_H 
 #define VELORECMONITORS_VELOSAMPLINGMONITOR_H 1
 
@@ -90,6 +90,7 @@ namespace Velo
   
     // Job options
     std::vector<std::string> m_samplingLocations;
+    bool m_useNZS;
 
   };
   
