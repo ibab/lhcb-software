@@ -1,4 +1,4 @@
-// $Id: BcVegPy.opts,v 1.4 2009-05-26 17:07:56 gcorti Exp $ 
+// $Id: BcVegPy.opts,v 1.5 2009-09-29 10:13:18 jhe Exp $ 
 
 /** @file 
  * 
@@ -14,6 +14,11 @@ ApplicationMgr.Dlls += { "LbBcVegPy" };
 
 Generation.SampleGenerationTool       = "Special";
 Generation.Special.ProductionTool = "BcVegPyProduction";
+Generation.Special.BcVegPyProduction.Commands += {
+  "pypars mstp 51 10042"
+  ,"pypars mstp 2 1"
+  ,"pydat1 mstu 111 1"
+};
 Generation.Special.BcVegPyProduction.BcVegPyCommands += {
   "mixevnt imix 1" ,
   "mixevnt imixtype 1" ,

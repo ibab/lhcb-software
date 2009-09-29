@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.14 2009-09-28 19:40:14 jhe Exp $
-! Package     : Gen/LbBcGen
+! $Id: release.notes,v 1.15 2009-09-29 10:13:18 jhe Exp $
+! Package     : Gen/LbBcVegPy
 ! Responsible : Patrick ROBBE
 !=====================================================================
 
 
 !===================== LbBcVegPy v3r0 2009-07-23 =====================
+! 2009-09-29 - Jibo He
+ - Specify Cteq6LL and leading order running alpha_s in BcVegPy.opts.
+
 ! 2009-09-28 - Jibo He
  - Update to use PDFs in LHAPDF (ioutpdf=0) by default.
    . src/BcVegPyProduction.cpp
