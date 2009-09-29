@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.1.1.1 2009-09-28 16:11:25 jpalac Exp $
+!$Id: release.notes,v 1.2 2009-09-29 12:50:48 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisDict
 ! Responsible : Juan PALACIOS
 ! Purpose     : For dictionaries that for whatever reason aren't in LHCb
 !-----------------------------------------------------------------------------
+
+!========================== AnalysisDict v1r0 2009-09-29 ===================
 
 ! 2009-09-28 - Juan PALACIOS
  - Fisrt import. Has a DaVinciMCKernelDict library without EventAssoc clash.
