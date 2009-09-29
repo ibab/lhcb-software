@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: JPsiMuMu.py,v 1.11 2009-07-06 16:02:19 jonrob Exp $"
+__version__ = "$Id: JPsiMuMu.py,v 1.12 2009-09-29 13:53:53 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -77,6 +77,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                             BackgroundCategory,
                             TupleToolTrigger,
                             TupleToolMCTruth,
+                            MCTupleToolKinematic,
                             TupleToolVtxIsoln,
                             TupleToolP2VV
                             )
@@ -102,7 +103,7 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                     , "TupleToolGeneration"
                     , "TupleToolMCTruth"
                     , "TupleToolMCBackgroundInfo"
-                    , "TupleToolMCHierarchy"
+                    , "MCTupleToolKinematic"
                     , "TupleToolPrimaries"
                     , "TupleToolVtxIsoln"      
                     , "TupleToolTrackInfo"
@@ -121,10 +122,10 @@ class JPsiMuMuConf(LHCbConfigurableUser) :
                 JPsiMuMuTree.addTool(TupleToolTrigger())
                 JPsiMuMuTree.TupleToolTrigger.VerboseL0 = True
                 JPsiMuMuTree.addTool(TupleToolMCTruth())
-                JPsiMuMuTree.TupleToolMCTruth.StoreAssociationNumbers = True
-                JPsiMuMuTree.TupleToolMCTruth.StoreKineticInfo = True
-                JPsiMuMuTree.TupleToolMCTruth.StoreVertexInfo = True
-                JPsiMuMuTree.TupleToolMCTruth.FillAngles = True
+                JPsiMuMuTree.addTool(MCTupleToolKinematic())
+                JPsiMuMuTree.MCTupleToolKinematic.StoreKineticInfo = True
+                JPsiMuMuTree.MCTupleToolKinematic.StoreVertexInfo = True
+               	JPsiMuMuTree.MCTupleToolKinematic.StorePropertimeInfo = False
                 JPsiMuMuTree.addTool(TupleToolVtxIsoln( OutputLevel = 6 ))
                 JPsiMuMuTree.TupleToolVtxIsoln.IP = 2.0
                 JPsiMuMuTree.TupleToolVtxIsoln.InputParticles = [ "Phys/StdLooseMuons"]
