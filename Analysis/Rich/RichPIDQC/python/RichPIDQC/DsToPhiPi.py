@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DsToPhiPi.py,v 1.8 2009-07-06 16:02:19 jonrob Exp $"
+__version__ = "$Id: DsToPhiPi.py,v 1.9 2009-09-29 16:38:27 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -82,13 +82,14 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
                     
         # Ntuple ?
         if self.getProp("MakeNTuple") :
-
+	#if 0:
             outputLevel = INFO
 
             from Configurables import ( DecayTreeTuple, TupleToolDecay, TupleToolMCTruth,
                                         TupleToolMCBackgroundInfo, TupleToolGeometry,
                                         TupleToolKinematic, TupleToolPrimaries,
-                                        TupleToolEventInfo, TupleToolMCHierarchy,
+                                        TupleToolEventInfo, MCTupleToolHierarchy,
+                                        MCTupleToolKinematic,
                                         TupleToolPid, TupleToolTrackInfo,
                                         TupleToolVtxIsoln, LoKi__Hybrid__TupleTool )
 
@@ -213,7 +214,6 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
                 ,"TupleToolGeometry"
                 ,"TupleToolKinematic"
                 ,"TupleToolMCBackgroundInfo"
-                ,"TupleToolMCHierarchy"
                 ,"TupleToolPid"
                 ,"TupleToolPrimaries"
                 ,"TupleToolTrackInfo"
@@ -233,15 +233,21 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             Tuple.addTool(TupleToolMCBackgroundInfo)
             Tuple.TupleToolMCBackgroundInfo.OutputLevel = outputLevel
             
-            Tuple.addTool(TupleToolMCHierarchy)
-            Tuple.TupleToolMCHierarchy.OutputLevel = outputLevel
+            Tuple.addTool(MCTupleToolHierarchy)
+            Tuple.MCTupleToolHierarchy.OutputLevel = outputLevel
             
             Tuple.addTool(TupleToolMCTruth)
-            Tuple.TupleToolMCTruth.FillAngles = False
-            Tuple.TupleToolMCTruth.StoreKineticInfo = True
-            Tuple.TupleToolMCTruth.StoreVertexInfo = True
-            Tuple.TupleToolMCTruth.StorePropertimeInfo = True
             Tuple.TupleToolMCTruth.OutputLevel = outputLevel
+            Tuple.TupleToolMCTruth.addTool(MCTupleToolKinematic())
+            Tuple.TupleToolMCTruth.addTool(MCTupleToolHierarchy())
+            Tuple.TupleToolMCTruth.ToolList = [
+                                               "MCTupleToolKinematic" , 
+                                               "MCTupleToolHierarchy" 
+                                              ]
+            Tuple.TupleToolMCTruth.MCTupleToolKinematic.StoreKineticInfo = True
+            Tuple.TupleToolMCTruth.MCTupleToolKinematic.StoreVertexInfo = True
+            Tuple.TupleToolMCTruth.MCTupleToolKinematic.StorePropertimeInfo = True
+	    Tuple.TupleToolMCTruth.MCTupleToolKinematic.OutputLevel = outputLevel
             
             Tuple.addTool(TupleToolPid)
             Tuple.TupleToolPid.OutputLevel = outputLevel
@@ -256,3 +262,9 @@ class DsToPhiPiConf(LHCbConfigurableUser) :
             Tuple.TupleToolVtxIsoln.OutputLevel = outputLevel
 
             seq.Members += [Tuple]
+
+	    Tuple.NTupleLUN = "DSPHIPI"
+
+            from Configurables import NTupleSvc
+            NTupleSvc().Output = ["DSPHIPI DATAFILE='DsToPhiPi.root'  TYP='ROOT'  OPT='NEW'"]
+
