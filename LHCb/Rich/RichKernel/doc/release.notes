@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.242 2009-09-24 13:03:57 jonrob Exp $
+! $Id: release.notes,v 1.243 2009-09-29 08:31:40 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-09-29 - Chris Jones
+ - Suppress a warning back down to debug, since it unexpectidly occurs
+   under normal conditions.
 
 ! 2009-09-24 - Chris Jones
  - Fix uninitialised data members bug in Rich::Converter

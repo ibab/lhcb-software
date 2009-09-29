@@ -5,7 +5,7 @@
  *  Implementation file for RICH base class : Rich::CommonBase
  *
  *  CVS Log :-
- *  $Id: RichCommonBase.icpp,v 1.2 2009-09-24 12:35:33 jonrob Exp $
+ *  $Id: RichCommonBase.icpp,v 1.3 2009-09-29 08:31:40 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2005-08-27
@@ -170,7 +170,8 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
           if ( NULL != sp )
           {
             if ( this -> msgLevel(MSG::VERBOSE) )
-            { this->verbose() << "  -> Found requested property" << *sp << " for " << name << endmsg; }
+            { this->verbose() << "  -> Found requested property" << *sp << " for " 
+                              << name << endmsg; }
             break;
           }
           else
@@ -186,13 +187,13 @@ Rich::CommonBase<PBASE>::my_getProperty( const std::string & name,
       }
       else
       {
-        this -> Warning( name+" has NULL property ..." ).ignore(); 
+        this -> Warning( "'"+name+"' has a NULL property ..." ).ignore(); 
       }
     } // loop over properties
   }
   else
   {
-    this->Warning( "NULL Properties vector found for '"+name+"'" ).ignore();
+    this->debug() << "NULL properties vector found for '" << name << "'" << endmsg;
   }
   return sp;
 }
