@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.4 2009-05-08 19:15:33 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-09-29 14:20:23 nmangiaf Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -47,14 +47,14 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         trackfilterName = self.selName() + "TrackFilter"
         trackfilter = FilterDesktop(trackfilterName)
         trackfilter.addTool( PhysDesktop )
-        trackfilter.PhysDesktop.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsKaons" ]
+        trackfilter.InputLocations = [ "StdNoPIDsPions", "StdNoPIDsKaons" ]
         trackfilter.Code = "(PT > 0.3*GeV) & (P > 2*GeV) & (MIPCHI2DV(PRIMARY) > 4)"
         testseq.Members += [ trackfilter ]
         ###############################################################
         pionfilterName = self.selName() + "PionFilter"
         pionfilter = FilterDesktop(pionfilterName)
         pionfilter.addTool( PhysDesktop )
-        pionfilter.PhysDesktop.InputLocations = [ "StdNoPIDsPions" ]
+        pionfilter.InputLocations = [ "StdNoPIDsPions" ]
         pionfilter.Code = "(MIPCHI2DV(PRIMARY) > 9)"
         testseq.Members += [ pionfilter ]
         ###############################################################
@@ -65,7 +65,7 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         d02kpiName = self.selName()+"_D0ToKPiNoPID"
         d02kpi = D02KPiNoPID(d02kpiName)
         d02kpi.addTool( PhysDesktop )
-        d02kpi.PhysDesktop.InputLocations = [ trackfilterName ]
+        d02kpi.InputLocations = [ trackfilterName ]
         from GaudiKernel.SystemOfUnits import MeV
         d02kpi.D0MassWindow = 25.0*MeV
         d02kpi.D0VertexChi2Cut = 10
@@ -80,7 +80,7 @@ class RichDstarToD0PiSelConf(LHCbConfigurableUser) :
         from Configurables import Dstar2D0Pi
         dstar2d0pi = Dstar2D0Pi(self.selName())
         dstar2d0pi.addTool( PhysDesktop )
-        dstar2d0pi.PhysDesktop.InputLocations = [pionfilterName,d02kpiName]
+        dstar2d0pi.InputLocations = [pionfilterName,d02kpiName]
         dstar2d0pi.DstarMassWindow = 20.0*MeV
         dstar2d0pi.DstarVertexChi2Cut = 10
         dstar2d0pi.DstarMinPtCut = 1250.0*MeV
