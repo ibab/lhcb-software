@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.82 2009-09-08 16:15:14 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.83 2009-09-29 11:37:21 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -210,6 +210,11 @@ class Moore(LHCbConfigurableUser):
                            "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
                            }
         ApplicationMgr().ExtSvc.append(rch)
+        # In case of PA, do something special to avoid accessing online.xml...
+        import OnlineEnv
+        if OnlineEnv.HLTType != 'PA' :
+            ApplicationMgr().ExtSvc.append(rch)
+
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
