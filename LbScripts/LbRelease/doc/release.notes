@@ -1,3 +1,8 @@
+2009-09-29  Joel Closier  <joel.closier@cern.ch>
+
+    * scripts/dirac2AFS:
+      - change shutil.move in shutil.copytree
+
 2009-09-18  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/rcs.py:
