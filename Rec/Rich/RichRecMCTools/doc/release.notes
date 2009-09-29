@@ -4,6 +4,9 @@
 ! Purpose     : Monte Carlo Utility tools for RICH reconstruction algorithms
 !------------------------------------------------------------------------------
 
+! 2009-09-29 - Christopher Rob Jones
+ - Fix untested StatusCodes
+
 !====================== RichRecMCTools v2r25 2009-09-03 =======================
 ! 2009-07-31 - Chris Jones
  - Add new pixel creator that creates a single RichRecPixel object for each and
