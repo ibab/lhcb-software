@@ -96,7 +96,7 @@ def installDirac( baseDir, cmtconfig, diracconfig, pyVers, build=False):
                             dest = os.path.join( baseDir, d)
                             if os.path.exists(dest):
                                 print "Moving",l,"to",dest
-                                shutil.move( l, os.path.join(dest,f))
+                                shutil.copytree( l, os.path.join(dest,f))
                                 keeptmp = False
 
     if keeptmp:
