@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.9 2009-09-18 13:16:18 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.10 2009-09-30 13:49:22 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -11,7 +11,6 @@
 // from LHCb
 #include "CaloDAQ/ICaloReadoutTool.h"
 #include "CaloDet/DeCalorimeter.h"
-
 
 
 
@@ -69,7 +68,8 @@ public:
   virtual void handle(const Incident& /* inc */ ) { m_getRaw = true ; }
   // =========================================================================
 
-protected:
+protected:  
+
   bool getCaloBanksFromRaw();
   int findCardbyCode(std::vector<int> feCards, int code );
   bool checkCards(int nCards, std::vector<int> feCards );

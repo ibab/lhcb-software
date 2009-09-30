@@ -96,6 +96,10 @@ void CaloDataProvider::clear( ) {
   m_digits.clear();
   m_tell1s = 0;
   m_readSources.clear();
+  m_minADC = LHCb::CaloAdc(LHCb::CaloCellID() , 3840);
+  m_minPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), 3840);  
+  m_maxADC = LHCb::CaloAdc(LHCb::CaloCellID() , -256);
+  m_maxPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), -256);  
 }
 //-------------------------------------
 void CaloDataProvider::cleanData(int feb ) {
@@ -296,8 +300,9 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
                                           << " |  ADC value = " << adc << endmsg;
       
       if ( 0 != cellId.index() ){
-        LHCb::CaloAdc temp(cellId,adc);
-        m_adcs.addEntry(temp  ,cellId );
+        //LHCb::CaloAdc temp(cellId,adc);
+        LHCb::CaloAdc temp = fillAdc( cellId , adc);
+        m_adcs.addEntry(temp  ,cellId );        
       }
       
       ++data;
@@ -397,7 +402,8 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
         
         //== Keep only valid cells
         if ( 0 != id.index() ){
-          LHCb::CaloAdc temp(id,adc);
+          LHCb::CaloAdc temp = fillAdc( id , adc);
+          //LHCb::CaloAdc temp(id,adc);
           m_adcs.addEntry( temp ,id );
         }        
       }
@@ -482,7 +488,8 @@ bool CaloDataProvider::decodeBank( LHCb::RawBank* bank ){
 
 
         if ( 0 != id.index() ){
-          LHCb::CaloAdc temp(id,adc);
+          LHCb::CaloAdc temp = fillAdc( id , adc);
+          //LHCb::CaloAdc temp(id,adc);
           m_adcs.addEntry( temp ,id );
         }
         
@@ -542,7 +549,8 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
 
           if ( spdData & 1 ){
             if ( 0 != spdId.index() ){
-              LHCb::CaloAdc temp(spdId,1);
+              //LHCb::CaloAdc temp(spdId,1);
+              LHCb::CaloAdc temp = fillAdc( spdId , 1);
               m_adcs.addEntry( temp ,spdId) ;
             } 
           }
@@ -584,7 +592,8 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         if ( 0 != (item & 2) ) {
           LHCb::CaloCellID id ( spdId );   // SPD
           if ( 0 != id.index() ){
-            LHCb::CaloAdc temp(id,1);
+            //LHCb::CaloAdc temp(id,1);
+            LHCb::CaloAdc temp = fillAdc( id , 1);
             m_adcs.addEntry( temp ,id);
           } 
         }
@@ -675,7 +684,8 @@ bool CaloDataProvider::decodePrsTriggerBank( LHCb::RawBank* bank ) {
         if ( 0 != isSpd ) {
           LHCb::CaloCellID spdId( 0, id.area(), id.row(), id.col() );
           if ( 0 != spdId.index() ){
-            LHCb::CaloAdc temp(spdId,1);
+            //LHCb::CaloAdc temp(spdId,1);
+            LHCb::CaloAdc temp = fillAdc( spdId , 1);
             m_adcs.addEntry( temp ,spdId);
           }   
         }

@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.6 2009-09-28 16:37:32 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.7 2009-09-30 13:49:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -134,6 +134,10 @@ void CaloDataProviderFromTES::clear( ) {
   m_adcs.clear();
   m_digits.clear();
   m_readSources.clear();
+  m_minADC = LHCb::CaloAdc(LHCb::CaloCellID() , 3840);
+  m_minPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), 3840);  
+  m_maxADC = LHCb::CaloAdc(LHCb::CaloCellID() , -256);
+  m_maxPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), -256);  
 }
 void CaloDataProviderFromTES::cleanData(int feb ) {
   if(feb<0)return;
@@ -208,15 +212,30 @@ CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(std::vector<int> source
       for(LHCb::CaloDigits::iterator idig = m_digCont->begin();idig!=m_digCont->end();idig++){
         LHCb::CaloCellID id = (*idig)->cellID();
         if( source != -1 && source != m_calo->cardToTell1 ( m_calo->cardNumber( id ) )) continue;
-        m_adcs.addEntry( LHCb::CaloAdc( id , adc(id) ) , id);
-      }
+        LHCb::CaloAdc cAdc(id ,adc(id) );
+        m_adcs.addEntry( cAdc , id);
+        if( id.area() != CaloCellCode::PinArea ){
+          if( cAdc.adc() < m_minADC.adc()  )m_minADC = cAdc ;
+          if( cAdc.adc() > m_maxADC.adc()  )m_maxADC = cAdc ;
+        }else{
+          if( cAdc.adc() < m_minPinADC.adc() )m_minPinADC = cAdc ;
+          if( cAdc.adc() > m_maxPinADC.adc() )m_maxPinADC = cAdc ;
+        }
+      }   
     }else if( fromAdc() ){
       if( NULL == m_adcCont )return m_adcs ;
       for(LHCb::CaloAdcs::iterator iadc = m_adcCont->begin();iadc!=m_adcCont->end();iadc++){
         LHCb::CaloCellID id = (*iadc)->cellID();
         if( source != -1 && source != m_calo->cardToTell1 ( m_calo->cardNumber( id ) )) continue;
         m_adcs.addEntry( *(*iadc) , id);
-      }
+        if( id.area() != CaloCellCode::PinArea ){
+          if( (*iadc)->adc() < m_minADC.adc()  )m_minADC = *(*iadc) ;
+            if( (*iadc)->adc() > m_maxADC.adc()  )m_maxADC = *(*iadc) ;
+        }else{
+          if( (*iadc)->adc() < m_minPinADC.adc() )m_minPinADC = *(*iadc) ;
+          if( (*iadc)->adc() > m_maxPinADC.adc() )m_maxPinADC = *(*iadc) ;
+        } 
+      } 
     }
   }
   return m_adcs;

@@ -13,7 +13,7 @@
 #include "Event/CaloDigit.h"
 #include "CaloKernel/CaloVector.h"
 
-static const InterfaceID IID_ICaloDataProvider ( "ICaloDataProvider", 2, 0 );
+static const InterfaceID IID_ICaloDataProvider ( "ICaloDataProvider", 3, 0 );
 
 /** @class ICaloDataProvider ICaloDataProvider.h CaloDAQ/ICaloDataProvider.h
  *  Interface to the tool for fast decoding of CaloBanks
@@ -35,8 +35,9 @@ public:
   virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1)=0;
   virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources)=0;
   virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources)=0;
-
-
+  typedef std::pair<LHCb::CaloAdc,LHCb::CaloAdc> CaloAdcPair;
+  virtual CaloAdcPair adcRange() = 0;
+  virtual CaloAdcPair pinRange() = 0;
 
 protected:
 

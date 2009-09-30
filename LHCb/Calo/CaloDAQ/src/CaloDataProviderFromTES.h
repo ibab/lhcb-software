@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.4 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.5 2009-09-30 13:49:21 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H 
 #define CALODATAPROVIDERFROMTES_H 1
 
@@ -51,6 +51,16 @@ public:
   virtual void clear();
   virtual void cleanData(int feb);
   virtual bool getBanks();
+  virtual ICaloDataProvider::CaloAdcPair adcRange(){
+    LHCb::CaloAdc min = (m_minADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minADC;
+    LHCb::CaloAdc max = (m_maxADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxADC;
+    return std::make_pair(min,max) ;
+  }
+  virtual ICaloDataProvider::CaloAdcPair pinRange(){ 
+    LHCb::CaloAdc min = (m_minPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minPinADC;
+    LHCb::CaloAdc max = (m_maxPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxPinADC;
+    return std::make_pair(min,max) ;
+  }
   bool ok(){return m_ok;};
 
   
@@ -112,6 +122,9 @@ private:
   LHCb::CaloDigits* m_digCont;
   LHCb::CaloAdcs* m_adcCont;
   bool m_ok;
-
+  LHCb::CaloAdc m_minADC;
+  LHCb::CaloAdc m_minPinADC;
+  LHCb::CaloAdc m_maxADC;
+  LHCb::CaloAdc m_maxPinADC;
 };
 #endif // CALODATAPROVIDERFROMTES_H

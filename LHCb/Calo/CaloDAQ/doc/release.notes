@@ -4,6 +4,14 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-09-30 - Olivier Deschamps
+ - ICaloDataProvider : new virtual methods adcRange() and pinRange() return min/max (pin)Adc in the decoded ADC list.
+  - increment ICaloDataProvider version
+  - adapt CaloDataProviderFromTES and CaloDataProvider
+  - remove CaloDataProviderPatched (obsolete)
+
+
+
 ! 2009-09-28 - Olivier Deschamps
  - Calo(L0)DataProvider(...).cpp : fix uncomplete initialization in clear()
 

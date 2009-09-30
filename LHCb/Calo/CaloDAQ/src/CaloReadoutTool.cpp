@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.37 2009-09-18 13:16:18 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.38 2009-09-30 13:49:21 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -66,7 +66,6 @@ bool CaloReadoutTool::getCaloBanksFromRaw( ) {
 
 
   m_readSources.clear();
-
   m_banks = NULL;
   LHCb::RawEvent* rawEvt = NULL ;
   //  m_raw = LHCb::RawEventLocation::Default;
