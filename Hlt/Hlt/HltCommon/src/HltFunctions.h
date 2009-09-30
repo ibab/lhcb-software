@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.19 2009-07-03 14:44:59 graven Exp $
+// $Id: HltFunctions.h,v 1.20 2009-09-30 13:52:29 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -18,6 +18,7 @@
 #include "HltBase/IBiFunctionTool.h"
 #include "Event/Node.h"
 #include "GaudiAlg/GaudiTool.h"
+#include <memory>
 
 namespace Hlt {  
 
@@ -30,16 +31,16 @@ namespace Hlt {
   {
   public:
     typedef zen::function<T> Function;
-    explicit SmartFunction(int ikey, const Function& f):key(ikey) 
-    {fun = f.clone();}
-    virtual ~SmartFunction() {delete fun;}
+    explicit SmartFunction(int ikey, const Function& f):m_key(ikey) , m_fun(f.clone())
+    {}
+    virtual ~SmartFunction() {}
     double operator() (const T& t) const {
-      double v = t.info(key,-1.e6); if (v != 1.e-6) v = (*fun)(t);
-      return v;
+        return ( t.hasInfo(m_key) ? t.info(m_key,-1e6) : (*m_fun)(t) );
     }
-    Function* clone() const {return new SmartFunction(key,*fun);}
-    int key;
-    Function* fun;
+    Function* clone() const {return new SmartFunction(m_key,*m_fun);}
+  private:
+    int m_key;
+    std::auto_ptr<Function> m_fun;
   };
   
   /* Info:    

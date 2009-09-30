@@ -6,7 +6,7 @@
 ! 2009-09-30 - Gerhard Raven
  - return error if config editor is asked to do the impossible
  - less verbose if no L0 candidates found...
-
+ - fix smart function
 !========================== HltCommon v5r11 2009-09-24 ===================
 
 ! 2009-09-07 - Gerhard Raven
