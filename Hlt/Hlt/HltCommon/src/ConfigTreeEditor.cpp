@@ -278,6 +278,10 @@ ConfigTreeEditor::updateAndWrite(const ConfigTreeNode::digest_type& in,
    map_t::const_iterator i = updates.begin();
    while ( i!=updates.end() ) {
          ConfigTree* node = tree.findNodeWithLeaf(i->first);
+         if (node==0) {
+            error() << " could not locate requested leaf with name " << i->first << endmsg; 
+            return ConfigTreeNode::digest_type::createInvalid();
+         }
          // grab entire range matching this one
          map_t::const_iterator j = updates.upper_bound(i->first);
          vector<pair<string,string> > mods;
