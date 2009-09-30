@@ -117,6 +117,14 @@ def release_project(pname,pversion,action=None, yes_mode=False):
     log.info (' ++++++++++++++++ %s - start mkproject.py version %s '%(day,script_version))
     log.info (' pname %s pversion %s action %s '%(pname,pversion,action))
 
+
+    if os.environ.has_key("CMTEXTRATAGS") :
+        tag_list = os.environ["CMTEXTRATAGS"].split(",")
+        tag_list.append("no-pyzip")
+        os.environ["CMTEXTRATAGS"] = ",".join(tag_list)
+    else :
+        os.environ["CMTEXTRATAGS"] = "no-pyzip"
+
 # set default strategy
     bstrategy = 'build_strategy without_installarea'
     sstrategy = 'setup_strategy root'

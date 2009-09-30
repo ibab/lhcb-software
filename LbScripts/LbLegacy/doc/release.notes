@@ -1,3 +1,7 @@
+2009-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/mkproject: added the "no-pyzip" value to the CMTEXTRATAGS list.
+
 2009-09-16  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: Added the --nofixperm option to prevent 
