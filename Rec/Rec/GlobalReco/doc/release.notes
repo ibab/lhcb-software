@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-09-30 - Chris Jones
+ - Suppressed PID disabled warning messages in ChargedProtoPAlg for HLT, until
+   the move other to the new algorithms, to reduce printout.
+
 ! 2009-09-29 - Christopher Rob Jones
  - Fix untested StatusCodes in Charged ProtoParticle tuple monitor.
 

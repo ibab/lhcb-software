@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoPAlg
  *
  * CVS Log :-
- * $Id: ChargedProtoPAlg.cpp,v 1.76 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoPAlg.cpp,v 1.77 2009-09-30 13:08:44 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -187,17 +187,17 @@ StatusCode ChargedProtoPAlg::initialize()
   }
 
   // disabled CALO warnings
-  if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS ).ignore();
-  if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS ).ignore();
-  if (!m_HcalPID) Warning( "HCAL PID has been disabled", StatusCode::SUCCESS ).ignore();
-  if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS ).ignore();
-  if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_EcalPID) Warning( "ECAL PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_PrsPID)  Warning( "PRS  PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_HcalPID) Warning( "HCAL PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_BremPID) Warning( "BREM PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_SpdPID)  Warning( "SPD  PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable RICH warnings
-  if (!m_richPID) Warning( "RICH PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_richPID) Warning( "RICH PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable MUON warnings
-  if (!m_muonPID) Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_muonPID) Warning( "MUON PID has been disabled", StatusCode::SUCCESS ).ignore();
   // disable VELO warnings
-  if (!m_veloPID) Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
+  //if (!m_veloPID) Warning( "VELO PID has been disabled", StatusCode::SUCCESS ).ignore();
 
   return sc;
 }
