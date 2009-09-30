@@ -3,6 +3,7 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+!========================== HltCommon v5r11p1 2009-09-30 ===================
 ! 2009-09-30 - Gerhard Raven
  - return error if config editor is asked to do the impossible
  - less verbose if no L0 candidates found...
