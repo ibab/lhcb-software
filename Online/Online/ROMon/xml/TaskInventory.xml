@@ -362,7 +362,6 @@
   <Task name="FEST_ErrorLog_0"/>
   <Task name="LHCb_ErrorLog_0"/>
   <ConnectionList name="Standard"/>
-  <Project name="HLTRATE"/>
 </NodeType>
 
 </TaskInventory>
