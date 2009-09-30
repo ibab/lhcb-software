@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.44 2009-09-01 11:28:12 ibelyaev Exp $
+# $Id: requirements,v 1.45 2009-09-30 11:31:54 graven Exp $
 # =============================================================================
 # Created    : 2006-05-28
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           CaloPIDs
-version           v5r1
+version           v5r1p1
 
 # =============== structure ===================================================
 branches          cmt doc src python
