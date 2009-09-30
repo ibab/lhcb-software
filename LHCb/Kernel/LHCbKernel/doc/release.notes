@@ -4,6 +4,27 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-09-29 - Vanya BELYAEV
+
+ - CaloCellCode:
+     1. replace C-arrays by boost::array
+     2. reimplement many functions 
+     3. add documentation lines 
+     4. remove redundant "static" fields 
+     5. improve the safety of the lines 
+
+ - CaloCellID:
+     1. move fillStream & bits mehtods into   cpp-file 
+     2. change the self-printout 
+     3. add "toString" method 
+     4. add constructors from strings 
+     5. make use of new methods form CaloCellCode namespace 
+
+ - CaloCellIDAsProperty 
+     add the possibility to use CaloCellID,
+     std::vector<CaloCellID> and 
+     std::map<CaloCellID,double> as properties for Gaudi components 
+  
 ! 2009-09-23 - Victor Coco
  - Added VeloPixChannelID for upgrade simulation. xml/VeloPixChannelID.xml
    and src/VeloPixChannelID.cpp are new files, while some declaration have

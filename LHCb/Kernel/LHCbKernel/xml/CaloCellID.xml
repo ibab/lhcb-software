@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.14 2009-08-04 20:41:39 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.15 2009-09-30 13:13:55 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -62,6 +62,44 @@
       setCol  ( Column ) ;
     </code> 
   </constructor>
+
+  <constructor
+    desc     = "Explicit constructor from Calo, Area, Row and Column"
+    argList  = "const std::string&amp; Calo, unsigned int Area, unsigned int Row, unsigned int Column "
+    initList = "m_all( 0 )"> 
+    <code>
+      setCalo ( Calo   ) ;
+      setArea ( Area   ) ;
+      setRow  ( Row    ) ;
+      setCol  ( Column ) ;
+    </code> 
+  </constructor>
+
+  <constructor
+    desc     = "Explicit constructor from Calo, Area, Row and Column"
+    argList  = "unsigned int Calo, const std::string&amp; Area, unsigned int Row, unsigned int Column "
+    initList = "m_all( 0 )"> 
+    <code>
+      setCalo ( Calo   ) ;
+      setArea ( calo () , Area   ) ;
+      setRow  ( Row    ) ;
+      setCol  ( Column ) ;
+    </code> 
+  </constructor>
+
+
+  <constructor
+    desc     = "Explicit constructor from Calo, Area, Row and Column"
+    argList  = "const std::string&amp; Calo, const std::string&amp; Area, unsigned int Row, unsigned int Column "
+    initList = "m_all( 0 )"> 
+    <code>
+      setCalo ( Calo   ) ;
+      setArea ( calo() , Area   ) ;
+      setRow  ( Row    ) ;
+      setCol  ( Column ) ;
+    </code> 
+  </constructor>
+
   
   <constructor
     desc     = "Explicit constructor from 32 bit representation"
@@ -164,11 +202,9 @@
     const   = "TRUE"
     access  = "PUBLIC" >
     <code>
-      return ( CaloCellCode::CaloAreaFromNum( calo(), area() ) == CaloCellCode::AreaName[CaloCellCode::PinArea] );
+      return CaloCellCode::isPinArea ( calo(), area() );
     </code>
   </method>
-
-
 
 
   <method
@@ -178,17 +214,6 @@
     virtual   = "FALSE"
     const     = "TRUE" >
     <arg name = "os" type = "std::ostream" inout = "BOTH" />
-    <code>
-      os &lt;&lt; "[" ;
-      /// corrupted ?!
-      if( 0 != rest() ) { os &lt;&lt; "?" &lt;&lt; std::setw(4) &lt;&lt; rest() &lt;&lt; "?," ; }  
-      return 
-      os 
-      &lt;&lt; CaloCellCode::CaloNameFromNum( calo() )   &lt;&lt; "," 
-      &lt;&lt; std::setw(1) &lt;&lt; CaloCellCode::CaloAreaFromNum( calo() , area () )   &lt;&lt; "," 
-      &lt;&lt; std::setw(2) &lt;&lt; row  () &lt;&lt; "," 
-      &lt;&lt; std::setw(2) &lt;&lt; col  () &lt;&lt; "]" ;  
-    </code>
   </method>
   
   <method
@@ -198,26 +223,6 @@
     const   = "TRUE"
     access  = "PUBLIC" >
     <arg name = "del" type = "char" inout = "INPUT" />
-    <code>
-      std::string  str("[");
-      const ContentType  one = 1;
-      for( int n  = ( 0 == rest() )? CaloCellCode::BitsAll - 1 : 
-      CaloCellCode::BitsTotal - 1 ; n &gt;= 0 ; --n  )
-      {
-      unsigned int pos = n;
-      bool isNull =   ( 0 == ( ( one &lt;&lt; pos ) &amp; contents() ) );     
-      str+= isNull ? '0' : '1';
-      if      ( 0                       == pos )   break      ;
-      if      ( 0                       == del )   continue   ;
-      if      ( CaloCellCode::ShiftRest == pos ) { str += del ; }
-      else if ( CaloCellCode::ShiftCalo == pos ) { str += del ; }
-      else if ( CaloCellCode::ShiftArea == pos ) { str += del ; }
-      else if ( CaloCellCode::ShiftRow  == pos ) { str += del ; }
-      else if ( CaloCellCode::ShiftCol  == pos ) { str += del ; }
-      else if ( CaloCellCode::ShiftAll  == pos ) { str += del ; }
-      }
-      return str += "]";
-    </code>
   </method>
   
   <method
@@ -231,7 +236,6 @@
     </code>
   </method>
   
-    
   <method
     desc      = "Update Calorimeter identifier"
     name      = "setCalo"
@@ -243,16 +247,14 @@
       return set( Calo  , CaloCellCode::ShiftCalo , CaloCellCode::MaskCalo ) ;
     </code>
   </method>
+
   <method
     desc      = "Update Calorimeter identifier"
     name      = "setCalo"
     type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PUBLIC" >
-    <arg name = "CaloName" type = "std::string" inout = "INPUT" />
-    <code>
-      return setCalo( CaloCellCode::CaloNumFromName( CaloName ) ) ;
-    </code>
+    <arg name = "CaloName" type = "const std::string" inout = "INPUT" />
   </method>
 
   <method
@@ -265,6 +267,16 @@
     <code>
       return set( Area  , CaloCellCode::ShiftArea , CaloCellCode::MaskArea ) ;
     </code>
+  </method>
+
+  <method
+    desc      = "Update Calorimeter Area identifier"
+    name      = "setArea"
+    type      = "LHCb::CaloCellID&amp;"
+    const     = "FALSE"
+    access    = "PRIVATE" >
+    <arg name = "Calo" type = "unsigned int"      inout = "INPUT" />
+    <arg name = "Area" type = "const std::string" inout = "INPUT" />
   </method>
 
   <method
@@ -310,14 +322,11 @@
     type      = "LHCb::CaloCellID&amp;"
     const     = "FALSE"
     access    = "PRIVATE" >
-    <arg name = "Value" type = "ContentType"  inout = "INPUT" />
-    <arg name = "Shift" type = "unsigned int" inout = "INPUT" />
-    <arg name = "Mask"  type = "unsigned int" inout = "INPUT" />
+    <arg name = "Value" type = "const ContentType"  inout = "INPUT" />
+    <arg name = "Shift" type = "unsigned int"       inout = "INPUT" />
+    <arg name = "Mask"  type = "unsigned int"       inout = "INPUT" />
     <code>
-      ContentType tmp1 , tmp2 ;
-      tmp1   = ( Value &lt;&lt; Shift ) &amp;  Mask ; 
-      tmp2   =  contents()              &amp; ~Mask ; 
-      m_all = ( tmp1 | tmp2 ) ;
+      m_all = CaloCellCode::setField ( contents() , Value , Shift , Mask ) ;
       return *this;
     </code>
   </method>
@@ -354,7 +363,15 @@
       return index() ; 
     </code>
   </method>
-  
+
+  <method
+    desc    = "convert to string representation"
+    name    = "toString"
+    type    = "std::string"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+  </method>
+        
   </class>
   </package>
 </gdd>
