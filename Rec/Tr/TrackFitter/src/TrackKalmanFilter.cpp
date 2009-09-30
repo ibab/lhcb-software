@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.71 2009-09-28 13:40:34 jvantilb Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.72 2009-09-30 14:05:08 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -137,8 +137,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
   } // end of prediction and filter
 
   // Check if the number of degrees of freedom is not below zero
-  if( ndof < 0 ) warning() << "Number of degrees of freedom below zero." 
-                           << endmsg;
+  if( ndof < 0 ) Warning( "Number of degrees of freedom below zero", StatusCode::SUCCESS, 0 ).ignore();
 
   // Run the bidirectional fit
   NodeRange::reverse_iterator rbegin = NodeRange::reverse_iterator(nodes.end());
