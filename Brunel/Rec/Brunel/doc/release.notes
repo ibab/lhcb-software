@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-09-30 - Marco Cattaneo
+ - Update references for:
+   . Introduction of Runge Kutta as default extrapolator
+     (TrackExtrapolators v2r24)
+   . Further change to Calo decoding sequence
+   . Fix untested StatusCodes (GlobalReco v6r27, RichRecMCTools v2r25p1)
+
 ! 2009-09-18 - Marco Cattaneo
  - Update references for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
  - In example options, replace usage of obsolete Brunel().NoWarnings option with
