@@ -1,4 +1,4 @@
-// $Id: CaloTrackMatchAlg.h,v 1.8 2009-09-10 10:47:05 odescham Exp $
+// $Id: CaloTrackMatchAlg.h,v 1.9 2009-09-30 10:29:14 odescham Exp $
 // ============================================================================
 #ifndef CALOTRACKMATCHALG_H 
 #define CALOTRACKMATCHALG_H 1
@@ -194,7 +194,8 @@ inline StatusCode CaloTrackMatchAlg::doTheJob ( TABLE* table ) const
         double chi2 = 0 ;
         StatusCode sc = matcher->match ( position ( calo ) , track , chi2 ) ;
         if ( sc.isFailure() ){ 
-          Warning ( "Failure from Tool::match, skip" , sc ).ignore() ;
+          debug() << "Failure from Tool::match, skip" << endmsg ;
+          counter("# ailure from Tool::match") += 1;
           continue ;                                            // CONTINUE 
         }
         if ( m_threshold < chi2  ) { ++nOverflow ; continue  ; } // CONTINUE 
