@@ -1,7 +1,7 @@
 <!-- 
-     * $Id: CaloUtils.xml,v 1.1 2009-05-19 08:21:26 ibelyaev Exp $ 
+     * $Id: CaloUtils.xml,v 1.2 2009-09-30 13:18:43 ibelyaev Exp $ 
      * ========================================================================
-     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+     * CVS tag:$Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
      * ======================================================================== 
      * @file
      * The seleciton file to build Reflex dictionaries for 
@@ -16,6 +16,11 @@
   
   <class name      = "LHCb::CaloMomentum" />
   <class name      = "LHCb::CaloParticle" />
+
+  <class    name   = "CaloCellCode::Cell2String" />
+  <function name   = "CaloCellCode::caloName"    />
+  <function name   = "CaloCellCode::caloNum"     />
+  <function name   = "CaloCellCode::caloArea"    />
 
   <exclusion>
 

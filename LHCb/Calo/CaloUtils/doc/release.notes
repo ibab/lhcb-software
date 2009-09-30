@@ -1,7 +1,25 @@
-! $Id: release.notes,v 1.131 2009-08-31 13:31:27 graven Exp $
+! $Id: release.notes,v 1.132 2009-09-30 13:18:43 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-09-30 - Vanya BELYAEV
+
+ - add possibiilty to use CaloCellID as property 
+
+   new files: 
+ 
+     CaloCellIDAsProperty.h/.cpp 
+
+ - add some python decoration:
+
+      >>> import GaudiUtils.CellID 
+
+   
+ 
+ - cmt/requirements 
+
+    version increment to v8r7 
 
 
 !========================== CaloUtils v8r6 2009-08-31 =========================

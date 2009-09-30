@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.16 2009-05-20 13:38:02 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.17 2009-09-30 13:18:43 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -237,7 +237,8 @@ int Calo2Dview::centre(int x , int area){
 
 std::string Calo2Dview::getUnit(std::string unit, int calo, int area){
   if(!m_split)return unit;
-  std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
+  //std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
+  std::string nArea = CaloCellCode::caloArea ( calo , area);
   int index = unit.find_last_of("/")+1 ;
   std::string pref = unit.substr(0,index);
   std::string suff = unit.substr(index,unit.length() );
@@ -246,7 +247,8 @@ std::string Calo2Dview::getUnit(std::string unit, int calo, int area){
 }
 std::string Calo2Dview::getTitle(std::string title, int calo, int area){
   if(!m_split)return title;
-  std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
+  // std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
+  std::string nArea = CaloCellCode::caloArea ( calo , area);
   std::string tit =  title + " (" +nArea + " area)";
   return tit ;
 }
