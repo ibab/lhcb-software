@@ -1,4 +1,4 @@
-// $Id: LumiCountHltTracks.cpp,v 1.8 2009-05-30 11:34:45 graven Exp $
+// $Id: LumiCountHltTracks.cpp,v 1.9 2009-09-30 07:24:56 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -11,6 +11,8 @@
 
 // local
 #include "LumiCountHltTracks.h"
+
+#include "boost/format.hpp"
 
 using namespace LHCb;
 
@@ -48,16 +50,16 @@ StatusCode LumiCountHltTracks::initialize() {
   StatusCode sc = HltBaseAlg::initialize();
   if (sc.isFailure()) return sc;
 
-  info() << "InputSelection         " << m_InputSelectionName  << endmsg;
-  info() << "CounterName            " << m_CounterName         << endmsg;
-  info() << "OutputContainer        " << m_OutputContainerName << endmsg;
+  debug() <<  "InputSelection: " << boost::format("%20s")%m_InputSelectionName  << " "
+         <<     "CounterName: " << boost::format("%20s")%m_CounterName         << " "
+         << "OutputContainer: " << boost::format("%20s")%m_OutputContainerName << endmsg;
 
   // ------------------------------------------
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    info() << m_CounterName << " key value: " << m_Counter << endmsg;
+    debug() << m_CounterName << " key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
 

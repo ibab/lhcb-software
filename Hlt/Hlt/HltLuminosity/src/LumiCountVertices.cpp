@@ -1,4 +1,4 @@
-// $Id: LumiCountVertices.cpp,v 1.6 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiCountVertices.cpp,v 1.7 2009-09-30 07:24:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,8 @@
 
 // local
 #include "LumiCountVertices.h"
+
+#include "boost/format.hpp"
 
 using namespace LHCb;
 
@@ -51,17 +53,16 @@ StatusCode LumiCountVertices::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  info() << "InputSelection         " << m_InputSelectionName  << endmsg;
-  info() << "CounterName            " << m_CounterName         << endmsg;
-  info() << "OutputContainer        " << m_OutputContainerName << endmsg;
-
+  debug() <<  "InputSelection: " << boost::format("%20s")%m_InputSelectionName  << " "
+         <<     "CounterName: " << boost::format("%20s")%m_CounterName         << " "
+         << "OutputContainer: " << boost::format("%20s")%m_OutputContainerName << endmsg;
 
   // ------------------------------------------
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     info() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    info() << m_CounterName << " key value: " << m_Counter << endmsg;
+    debug() << m_CounterName << " key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
  

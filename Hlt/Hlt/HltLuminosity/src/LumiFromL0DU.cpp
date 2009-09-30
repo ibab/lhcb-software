@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.7 2009-02-18 13:11:13 panmanj Exp $
+// $Id: LumiFromL0DU.cpp,v 1.8 2009-09-30 07:24:56 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -51,10 +51,10 @@ StatusCode LumiFromL0DU::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  info() << "InputSelection         " << m_InputSelectionName  << endmsg;
-  info() << "CounterName            " << m_CounterName         << endmsg;
-  info() << "ValueName              " << m_ValueName           << endmsg;
-  info() << "OutputContainer        " << m_OutputContainerName << endmsg;
+  debug() << "InputSelection:    " << m_InputSelectionName  << " "
+         << "CounterName:       " << m_CounterName         << " "
+         << "OutputContainer:   " << m_OutputContainerName << " "
+         << "ValueName:         " << m_ValueName           << endmsg;
 
 
   // get the L0 decoding tool
@@ -65,7 +65,7 @@ StatusCode LumiFromL0DU::initialize() {
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
     warning() << "LumiCounter not found with name: " << m_CounterName <<  endmsg;
   } else {
-    info() << "ExtraInfo key value: " << m_Counter << endmsg;
+    debug() << "ExtraInfo key value: " << m_Counter << endmsg;
   }
   // ------------------------------------------
  

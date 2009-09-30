@@ -1,4 +1,4 @@
-// $Id: LumiHistoCollector.cpp,v 1.6 2009-07-10 15:52:45 panmanj Exp $
+// $Id: LumiHistoCollector.cpp,v 1.7 2009-09-30 07:24:56 graven Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -128,7 +128,6 @@ void LumiHistoCollector::setupStore() {
   StatusCode sc2 = svclocator->service("HistogramDataSvc", m_histogramSvc, true);
 
   // simple method - using known paths
-  AIDA::IHistogram1D* theHisto;
   AIDA::IHistogram1D* mydataobject;
   // loop over requested histogram paths and retrieve them
   int countMaps = 0;
@@ -147,7 +146,7 @@ void LumiHistoCollector::setupStore() {
       std::string path = m_pathBase + bx + "/" + var;
       StatusCode sc=m_histogramSvc->retrieveObject(path, mydataobject);
       if (sc.isSuccess()) {
-        theHisto=dynamic_cast<AIDA::IHistogram1D*>(mydataobject);
+        AIDA::IHistogram1D* theHisto=mydataobject;
         (*hMap)[var]=theHisto;  // store in map
         double sumBins=theHisto->sumBinHeights();
         double mean=theHisto->mean();
