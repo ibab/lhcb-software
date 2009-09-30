@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.h,v 1.5 2009-09-30 07:48:53 jonrob Exp $
+ *  $Id: RichConverter_Imp.h,v 1.6 2009-09-30 08:25:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -230,6 +230,14 @@ namespace Rich
 
     /// print info message
     StatusCode Info      ( const std::string    & Message ,
+                           const StatusCode       Status  = StatusCode::SUCCESS ) const;
+
+    /// print debug message
+    StatusCode Debug     ( const std::string    & Message ,
+                           const StatusCode       Status  = StatusCode::SUCCESS ) const;
+
+    /// print verbose message
+    StatusCode Verbose   ( const std::string    & Message ,
                            const StatusCode       Status  = StatusCode::SUCCESS ) const;
 
     /// print the message

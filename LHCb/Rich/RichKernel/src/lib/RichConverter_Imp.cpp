@@ -5,7 +5,7 @@
  *  Implementation file for class : Rich::Converter_Imp
  *
  *  CVS Log :-
- *  $Id: RichConverter_Imp.cpp,v 1.2 2009-09-24 13:03:57 jonrob Exp $
+ *  $Id: RichConverter_Imp.cpp,v 1.3 2009-09-30 08:25:59 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2009-07-07
@@ -34,11 +34,25 @@ StatusCode Rich::Converter_Imp::Warning( const std::string& Message ,
   return this->Print( Message , MSG::WARNING , Status ) ;
 }
 
-// print and count the warning
+// print info message
 StatusCode Rich::Converter_Imp::Info( const std::string& Message ,
                                       const StatusCode   Status ) const
 {
   return this->Print( Message , MSG::INFO , Status ) ;
+}
+
+// print Debug message
+StatusCode Rich::Converter_Imp::Debug( const std::string& Message ,
+                                       const StatusCode   Status ) const
+{
+  return this->Print( Message , MSG::DEBUG , Status ) ;
+}
+
+// print verbose message
+StatusCode Rich::Converter_Imp::Verbose( const std::string& Message ,
+                                         const StatusCode   Status ) const
+{
+  return this->Print( Message , MSG::VERBOSE , Status ) ;
 }
 
 // print the message
