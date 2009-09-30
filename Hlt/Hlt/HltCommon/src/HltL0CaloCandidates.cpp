@@ -1,4 +1,4 @@
-// $Id: HltL0CaloCandidates.cpp,v 1.18 2009-08-27 14:41:47 graven Exp $
+// $Id: HltL0CaloCandidates.cpp,v 1.19 2009-09-30 09:15:14 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -149,8 +149,8 @@ StatusCode HltL0CaloCandidates::execute() {
   put(output,"Hlt/Track/"+m_selection.output()->id().str());
 
   if (cuts.empty()) {
-    warning() << " L0 channel " << m_l0Channel << " does not use any known type of l0CaloCandidate?? -- no candidates converted!" << endmsg;
-    return StatusCode::SUCCESS;
+    return Warning( " L0 channel " + m_l0Channel + " does not use any known type of l0CaloCandidate?? -- no candidates converted!" , 
+             StatusCode::SUCCESS, 1 );
   }
 
   double etMax = -1.;

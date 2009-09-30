@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.12 2009-08-27 14:41:47 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.13 2009-09-30 09:15:14 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -116,8 +116,8 @@ StatusCode HltL0MuonCandidates::execute() {
   put(muons, "Hlt/Track/"+m_selection.output()->id().str());
 
   if (cuts.empty() && m_l0Channel!="AllMuon") {
-    warning() << " L0 channel " << m_l0Channel << " does not use any known type of l0MuonCandidate?? -- no candidates converted!" << endmsg;
-    return StatusCode::SUCCESS;
+    return Warning( " L0 channel " + m_l0Channel + " does not use any known type of l0MuonCandidate?? -- no candidates converted!" , 
+             StatusCode::SUCCESS, 1 );
   }
 
   assert(cuts.size()==1 || (cuts.empty()&&m_l0Channel=="AllMuon"));
