@@ -51,13 +51,11 @@ if (!putenv(tmpEnvVar)) {
 }
 #else
 if (!setenv(environmentVariable, value, 1)) {
-//  return ok;
-//  return errno;
+
 }
 #endif
 }
 
-//TODO: ACLiC
 #define STANDALONE
 
 #ifdef STANDALONE
@@ -283,8 +281,6 @@ int main(int argc, char* argv[])
       presenterMainFrame.setPartition(startupSettings["partition"].as<std::string>());
     }    
 
-
-//TODO: remove batch escape when DB                                             
       if (startupSettings.count("login") &&
         ("batch" != startupSettings["mode"].as<std::string>())) {
       if ("no" == startupSettings["login"].as<std::string>()) {

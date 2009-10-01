@@ -102,7 +102,6 @@ void ReferencePicker::setSelectedAsRef()
           ReadWrite == m_mainFrame->databaseMode()) {
         std::string referenceEntry(selectedHisto->GetName());
         m_histogram->onlineHistogram()->getTask()->setReference(referenceEntry);
-  // TODO: read Combobox
   
         std::string referenceOption(dynamic_cast<TGTextLBEntry*>(m_normalizationSelector->GetSelectedEntry())->
                                                     GetText()->GetString());
@@ -111,7 +110,6 @@ void ReferencePicker::setSelectedAsRef()
         m_histogram->dbSession()->commit();
       }
     } catch (std::string sqlException) {
-      // TODO: add error logging backend
       if (m_verbosity >= Verbose) {
         std::cout << "Could not set reference histogram: " <<
         selectedHisto->GetName() << std::endl <<

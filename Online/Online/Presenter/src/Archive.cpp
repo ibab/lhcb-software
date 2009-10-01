@@ -373,12 +373,6 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   time_duration timeDuration(duration_from_string(durationTimeString));
   ptime startTime = endTime - timeDuration;
 
-// The proper way to do this:
-// 1. read savesetdir recursively, into boost::multi_index_container
-// 2. index on Taskname and sort on date
-// 3. this phase: jump to proper key, iterate next through timestamp until endTime
-// 4. inotify tells if the dirlisting needs to be refreshed.
-
   string taskNameFound;
   string fileTimeFound;
   ptime fileTime;
@@ -419,10 +413,7 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
   }
   return foundRootFiles;
 }
-//TH1* Archive::referenceHistogram(const string & /*referenceDbEntry*/)
-//{
-//  return 0;
-//}
+
 void Archive::saveAsReferenceHistogram(DbRootHist* histogram)
 {
   path referenceFilePath(m_referencePath/histogram->taskName());

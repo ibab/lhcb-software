@@ -231,7 +231,6 @@ void DbRootHist::disableEdit()
 }
 void DbRootHist::enableClear()
 {
-  // TODO: deal with errors and Reset & Add instead of delete/new
   if (rootHistogram) {
     if (!m_isAnaHist) {
       m_cleared = true;
@@ -295,8 +294,7 @@ void DbRootHist::initHistogram()
       if (m_verbosity >= Verbose) {
         std::cout << "dimServiceName from DB: " << m_dimServiceName << std::endl;
       }      
-// TODO: Reset Partition member from main GUI?
-// append empty partitions too, w/o _...            
+
     HistogramIdentifier histogramIdentifier1(m_dimServiceName);
     std::string histType(histogramIdentifier1.histogramType());
       m_dimServiceName.erase(0, m_dimServiceName.find(s_underscore));
@@ -638,7 +636,6 @@ void DbRootHist::beEmptyHisto()
 }
 void DbRootHist::fillHistogram()
 {
-  // TODO: rebin: nBins nBinsX nBinsY initHistogram
 //  if (!m_isAnaHist && m_toRefresh) {
   if (rootHistogram && s_CNT != m_histogramType) {
     rootHistogram->Reset();
@@ -1085,8 +1082,6 @@ void DbRootHist::setPadMarginsFromDB(TPad* &pad) {
   }
 }
 
-
-// TODO: should rather use hostingPad
 void DbRootHist::setDrawOptionsFromDB(TPad* &pad)
 {
 //  int curStat = gStyle->GetOptStat();
@@ -1241,7 +1236,7 @@ bool DbRootHist::updateDBOption(std::string opt, void* value, bool isDefault)
   }
   return out;
 }
-// TODO: should rather use hostingPad
+
 bool DbRootHist::saveTH1ToDB(TPad* pad)
 {
   bool out = false;

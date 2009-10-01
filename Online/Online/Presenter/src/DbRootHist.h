@@ -48,7 +48,7 @@ class DbRootHist : public HistogramIdentifier
                boost::recursive_mutex & dimMutex,
                std::vector<std::string*> & tasksNotRunning,
                boost::recursive_mutex & rootMutex);
-//TODO: add set drawing mode: image or hist: editor mode vs. viewer
+
     DbRootHist (const DbRootHist & );
     DbRootHist & operator= (const DbRootHist &);
 
@@ -60,7 +60,6 @@ class DbRootHist : public HistogramIdentifier
     void initHistogram();
 
     // Once we have our ROOT histos, this will be called to get new values
-    // TODO: if binning changes on the fly, reinit ...MonObj?
     void fillHistogram();
 
     // Enable / disable pad with SetEditable and move
@@ -141,8 +140,6 @@ class DbRootHist : public HistogramIdentifier
     TPad* m_drawPattern;
     DimInfo*  m_gauchocommentDimInfo;
 //    bool m_usingGauchocommentDimInfo;
-    // TODO: have a stack of offset for bracketing
-    // state of histo @ clr/rst
     TH1*  m_offsetHistogram;
     int m_trendTimeScale;
     TDatime m_offsetTime;

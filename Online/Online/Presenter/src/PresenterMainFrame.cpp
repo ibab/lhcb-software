@@ -76,7 +76,6 @@
 #include "LoginDialog.h"
 #include "PageSaveDialog.h"
 #include "HistoPropDialog.h"
-#include "SetDimDnsNodeDialog.h"
 #include "Archive.h"
 #include "ParallelWait.h"
 #include "ReferencePicker.h"
@@ -1331,7 +1330,6 @@ void PresenterMainFrame::CloseWindow()
 }
 void PresenterMainFrame::dockAllFrames()
 {
-  // TODO: FindObject IsA TGDockableFrame...
   m_pageDock->DockContainer();
 //  m_mainCanvasInfoDock->DockContainer();
   m_toolBarDock->DockContainer();
@@ -1827,7 +1825,6 @@ void PresenterMainFrame::savePageToFile()
 void PresenterMainFrame::savePageToHistogramDB()
 {
   if (ReadWrite == m_databaseMode) {
-// TODO: map/unmap WaitForUnmap(TGWindow* w)    
     fClient->WaitFor(new PageSaveDialog(this, 493, 339, m_verbosity));
 //  m_savePageToDatabaseButton->SetState(kButtonDisabled);
 
@@ -1924,7 +1921,6 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
       m_histogramDB->setExcLevel(AllExceptions);
       m_histogramDB->setDebug(m_verbosity);
 
-// TODO: move m_histogramDB setPaths fcts to Archive.
       if (!m_savesetPath.empty()) {
         if (0 != m_archive) { m_archive->setSavesetPath(m_savesetPath); }
       }
@@ -1938,7 +1934,6 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
         m_databaseMode = ReadOnly;
       }
     } catch (std::string sqlException) {
-      // TODO: add error logging backend - MsgStream?
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
       if (Batch != m_presenterMode) {
         m_mainStatusBar->SetText(sqlException.c_str(), 2);
@@ -1949,7 +1944,6 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
 
-      //  TODO: disable/hideHistogramDatabaseTools();
       if (0 != m_histogramDB) { delete m_histogramDB; m_histogramDB = NULL; }
       m_databaseMode = LoggedOut;
     }
@@ -1965,14 +1959,13 @@ bool PresenterMainFrame::connectToHistogramDB(const std::string & dbPassword,
 }
 void PresenterMainFrame::loginToHistogramDB()
 {
-// TODO: map/unmap WaitForUnmap(TGWindow* w)
+
   if (Batch != m_presenterMode) {
     fClient->WaitFor(new LoginDialog(this, 350, 310, m_databaseMode,
                                      m_knownDatabases, m_knownDbCredentials));
   
     //  histoDBFilterComboBox->HideFrame();
   //  reconfigureGUI();
-    //  TODO: refactor refresh* methods to use only 1 DB readout...
   //  refreshPagesDBListTree();
   //  refreshHistoDBListTree();
   
@@ -2006,7 +1999,6 @@ void PresenterMainFrame::logoutFromHistogramDB()
     removeHistogramsFromPage();
   }
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
-  //  TODO: refactor refresh* methods to use only 1 DB readout...
 }
 void PresenterMainFrame::startPageRefresh()
 {
@@ -2110,7 +2102,6 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
         }
       }
     } catch (std::string sqlException) {
-        // TODO: add error logging backend
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
         if (Batch != m_presenterMode) {
           m_mainStatusBar->SetText(sqlException.c_str());
@@ -2211,7 +2202,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                 std::string pageName = std::string(*m_pageIt).erase(0,
                                                    (*m_folderIt).length()+1);
                 m_pageNode = listView->AddItem(m_treeNode, pageName.c_str());
-                // TODO: memlost on new, root items lost?
                 m_pageNode->SetUserData(new TString(*m_pageIt));
                 listView->CheckItem(m_pageNode, false);
                 setTreeNodeIcon(m_pageNode, s_PAGE);
@@ -2267,7 +2257,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
 gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
     } catch (std::string sqlException) {
-        // TODO: add error logging backend
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
         if (Batch != m_presenterMode) {
           m_mainStatusBar->SetText(sqlException.c_str());
@@ -2390,8 +2379,6 @@ std::string PresenterMainFrame::histogramDBName()
 {
   return m_dbName;
 }
-// TODO: move all below to an eventual static helper class
-// TODO: void PresenterMainFrame::WaitCursor()
 
 void PresenterMainFrame::startBenchmark(const std::string &timer)
   { m_benchmark->Start(timer.c_str()) ; }
@@ -2662,7 +2649,6 @@ void PresenterMainFrame::editHistogramProperties()
 }
 void PresenterMainFrame::inspectHistogram()
 {
-  // TODO: draw rather ClonePad
   bool referenceOverlay(false);
   if (m_referencesOverlayed) {
     disableReferenceOverlay();
@@ -2950,7 +2936,7 @@ void PresenterMainFrame::reconfigureGUI()
 //  partitionSelectorComboBoxHandler(0);
   fClient->NeedRedraw(this);
   this->Resize(current_width,current_height);
-  DoRedraw(); // wtf would trigger a redraw???
+  DoRedraw();
 //  DoRedraw();
 }
 void PresenterMainFrame::hideDBTools()
@@ -3023,7 +3009,6 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
   enablePageLoading();
 }
 void PresenterMainFrame::refreshHistoDBListTree() {
-  //TODO: add threading(?!)...
   if (m_verbosity >= Verbose) { std::cout << m_message << std::endl; }
   listHistogramsFromHistogramDB(m_databaseHistogramTreeList,
     static_cast<FilterCriteria>(m_histoDBFilterComboBox->GetSelected()),
@@ -3284,7 +3269,7 @@ if (Batch != m_presenterMode) {
       sortTreeChildrenItems(m_histoSvcListTree, m_histoSvcListTree->GetFirstItem());
       fClient->NeedRedraw(m_histoSvcListTree);   
     }     
-    Resize();DoRedraw(); // wtf would trigger a redraw???
+    Resize();DoRedraw();
     if (m_resumePageRefreshAfterLoading) { startPageRefresh(); }  
   gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
   }
@@ -3439,7 +3424,6 @@ void PresenterMainFrame::addHistoToHistoDB()
                                         ((OnlineHistDBEnv::HistType)histogramService.dbHistogramType()));
       }
     } catch (std::string sqlException) {
-      // TODO: add error logging backend
       if (m_verbosity >= Verbose) { std::cout << sqlException; }
       if (Batch != m_presenterMode) {
         new TGMsgBox(fClient->GetRoot(), this, "Database Error",
@@ -3457,7 +3441,6 @@ void PresenterMainFrame::addHistoToHistoDB()
       refreshHistoDBListTree();
     }
   } catch (std::string sqlException) {
-    // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
     if (Batch != m_presenterMode) {
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
@@ -3473,7 +3456,7 @@ void PresenterMainFrame::addHistoToHistoDB()
   m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                      s_uncheckTreeItems);
 //  fClient->NeedRedraw(m_histoSvcListTree);
-//  Resize();DoRedraw(); // wtf would trigger a redraw???
+//  Resize();DoRedraw();
   enableAutoCanvasLayoutBtn();
 }
 void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::ServicePlotMode overlapMode)
@@ -3493,7 +3476,6 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
         break;
       }
     }
-    //TODO: ? limit
     if (newHistoInstance > 998) { newHistoInstance = 0; }
     newHistoInstance++;
     OnlineHistDB*  histogramDB = NULL;
@@ -3524,7 +3506,6 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
       }
     }
 
-// TODO: merge this with loadSelectedPage()
     DbRootHist* dbRootHist = getPageHistogram(this,
                                           histogramUrl,
                                           currentPartition,
@@ -3611,7 +3592,6 @@ void PresenterMainFrame::addHistoToPage(const std::string& histogramUrl,  pres::
 void PresenterMainFrame::addDimHistosToPage()
 {
   disableAutoCanvasLayoutBtn();
-  // TODO: add locking, exclusive, disable autolayout
   disableHistogramClearing();
   
   stopPageRefresh();
@@ -3637,7 +3617,7 @@ void PresenterMainFrame::addDimHistosToPage()
   m_histoSvcListTree->CheckAllChildren(m_histoSvcListTree->GetFirstItem(),
                                        s_uncheckTreeItems);
 //  fClient->NeedRedraw(m_histoSvcListTree);
-//  Resize();DoRedraw(); // wtf would trigger a redraw???
+//  Resize();DoRedraw();
 
   editorCanvas->Update();
   enableAutoCanvasLayoutBtn();
@@ -3664,7 +3644,6 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode)
       list = NULL;
     }
   } catch (std::string sqlException) {
-    // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
     if (Batch != m_presenterMode) {
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
@@ -3677,7 +3656,7 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode)
   m_databaseHistogramTreeList->CheckAllChildren(m_databaseHistogramTreeList->GetFirstItem(),
                                                 s_uncheckTreeItems);
 //  fClient->NeedRedraw(m_databaseHistogramTreeList);
-//  Resize();DoRedraw(); // wtf would trigger a redraw???
+//  Resize();DoRedraw();
   editorCanvas->Update();
   enableAutoCanvasLayoutBtn();
 }
@@ -3689,7 +3668,7 @@ void PresenterMainFrame::dimCollapseAllChildren()
     collapseTreeChildrenItems(m_histoSvcListTree,
                               m_histoSvcListTree->GetSelected());
     fClient->NeedRedraw(m_histoSvcListTree);
-//    Resize();DoRedraw(); // wtf would trigger a redraw???
+//    Resize();DoRedraw();
   }
 }
 void PresenterMainFrame::dbHistoCollapseAllChildren()
@@ -3699,7 +3678,7 @@ void PresenterMainFrame::dbHistoCollapseAllChildren()
     collapseTreeChildrenItems(m_databaseHistogramTreeList,
                               m_databaseHistogramTreeList->GetSelected());
     fClient->NeedRedraw(m_databaseHistogramTreeList);
-//    Resize();DoRedraw(); // wtf would trigger a redraw???
+//    Resize();DoRedraw();
   }
 }
 std::string PresenterMainFrame::convDimToHistoID(const std::string & dimSvcName)
@@ -3800,7 +3779,6 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
 {
   try {
     if (0 != m_histogramDB) {
-// TODO: map/unmap WaitForUnmap(TGWindow* w)   
       fClient->WaitFor(dynamic_cast<TGWindow*>(
                           new HistoPropDialog(this, 646, 435, m_verbosity)));
 
@@ -3879,7 +3857,6 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
       m_histogramDB->commit();
     }
   } catch (std::string sqlException) {
-    // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
     if (Batch != m_presenterMode) {
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
@@ -3936,7 +3913,6 @@ void PresenterMainFrame::deleteSelectedHistoFromDB() {
       m_histogramDB->commit();
     }
   } catch (std::string sqlException) {
-    // TODO: add error logging backend
     if (m_verbosity >= Verbose) { std::cout << sqlException; }
     if (Batch != m_presenterMode) {
       new TGMsgBox(fClient->GetRoot(), this, "Database Error",
@@ -4209,8 +4185,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType())) {
             (*drawHist_dbHistosOnPageIt)->draw(editorCanvas, xlow, ylow, xup, yup, m_fastHitMapDraw, overlayOnPad);
           }
-//          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());          
-          // TODO: merge the 2 // below
+//          stopBenchmark((*m_onlineHistosOnPageIt)->histo->identifier());
 //          m_onlineHistosOnPageIt++;
           }
           
@@ -4242,7 +4217,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
            }
         }
 
-// TODO: // str. broken
   if (false == currentTCK_service.empty()) {
     addHistoToPage(currentTCK_service, invisible);
   }          
@@ -4251,7 +4225,6 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         }
         
         } catch (std::string sqlException) {
-        // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
         if (Batch != m_presenterMode) {
@@ -4316,7 +4289,6 @@ void PresenterMainFrame::deleteSelectedPageFromDB()
           refreshPagesDBListTree();
         }
       } catch (std::string sqlException) {
-        // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
         if (Batch != m_presenterMode) {
@@ -4358,7 +4330,6 @@ void PresenterMainFrame::deleteSelectedFolderFromDB()
         m_histogramDB->commit();
         refreshPagesDBListTree();
       } catch (std::string sqlException) {
-        // TODO: add error logging backend - MsgStream?
         setStatusBarText(sqlException.c_str(), 2);
         if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
         if (Batch != m_presenterMode) {
@@ -4585,7 +4556,6 @@ void PresenterMainFrame::refreshPage()
   if (m_verbosity >= Verbose) {
 //    std::cout << "refreshing." << std::endl;
   }
-  //TODO: reuse pw if available from pageload
   if (Batch != m_presenterMode) {
       ParallelWait parallelWait(this);
       parallelWait.refreshHistograms(&dbHistosOnPage);

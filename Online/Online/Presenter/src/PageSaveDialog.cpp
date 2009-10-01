@@ -236,8 +236,7 @@ void PageSaveDialog::ok()
               m_DbHistosOnPageIt++) {        
           if( (*m_DbHistosOnPageIt)->onlineHistogram()->page() == page->name() &&
               (TCKinfo != (*m_DbHistosOnPageIt)->effServiceType()) ) {
-// TODO: get rid of ->cd() because it stealthily diverts gPad
-// TODO: should rather use hostingPad internally: no args
+
             (*m_DbHistosOnPageIt)->hostingPad->cd();
             (*m_DbHistosOnPageIt)->saveTH1ToDB((*m_DbHistosOnPageIt)->hostingPad);
           }
@@ -246,7 +245,6 @@ void PageSaveDialog::ok()
       page->setDoc(pageDescription);
       m_histogramDB->commit();
     } catch (std::string sqlException) {
-      // TODO: add error logging backend - MsgStream?
       m_mainFrame->setStatusBarText(sqlException.c_str(), 0);
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
 
