@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.cpp,v 1.2 2009-10-01 11:46:09 ibelyaev Exp $
+// $Id: CaloCellCode.cpp,v 1.3 2009-10-01 11:53:58 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -95,8 +95,10 @@ BOOST_STATIC_ASSERT ( CaloCellCode::SpdCalo  < CaloCellCode::CaloNums     &&
 
 BOOST_STATIC_ASSERT ( CaloCellCode::Outer    < CaloCellCode::CaloAreaNums && 
                       CaloCellCode::Middle   < CaloCellCode::CaloAreaNums && 
-                      CaloCellCode::Inner    < CaloCellCode::CaloAreaNums && 
-                      CaloCellCode::PinArea  < CaloCellCode::CaloAreaNums ) ;
+                      CaloCellCode::Inner    < CaloCellCode::CaloAreaNums );
+
+BOOST_STATIC_ASSERT ( (unsigned int) CaloCellCode::PinArea      < 
+                      (unsigned int) CaloCellCode::CaloAreaNums ) ;
 
 // ============================================================================
 /* get the area name from calorimeter index and number
