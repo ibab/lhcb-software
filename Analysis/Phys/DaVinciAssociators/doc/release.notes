@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.136 2009-08-19 14:53:58 pkoppenb Exp $
+! $Id: release.notes,v 1.137 2009-10-01 15:21:33 jpalac Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+!========================== DaVinciAssociators v9r3p5 2009-10-01 ==============
 
 ! 2009-08-18 - Patrick Koppenburg
  - Remove _dll 
