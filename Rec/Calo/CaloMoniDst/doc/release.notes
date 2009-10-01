@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.56 2009-09-14 13:23:53 odescham Exp $ 
+! $Id: release.notes,v 1.57 2009-10-01 11:31:19 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2009-10-01 - Vanya BELYAEV
+
+ - CaloMoniAlg.h 
+
+    minor fix for the recent modification in CaloCellCode functions 
 
 ! 2009-09-14 - Olivier Deschamps
  - CaloPi0Monitor : 

@@ -62,8 +62,10 @@ public:
     //info() << "filling " << unit << " " << m_count <<  endmsg  ;
     fill(h1[unit], m_count , 1);
     if( m_split ){
-      for(unsigned int i = 0;i != m_nAreas;++i){
-        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+      for(unsigned int i = 0;i != m_nAreas;++i)
+      {
+        //std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum ( m_detData ), i );
         if( !validArea( area )||  m_mcount[i] == 0)continue;
         GaudiAlg::HistoID id(area + "/"+unit);
         fill(h1[id], m_mcount[i] , 1);
@@ -78,7 +80,8 @@ public:
     if(!doHisto(hid))return;
     if(m_split){
       for(unsigned int i = 0;i != m_nAreas;++i){
-        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), i );
         if( !validArea( area ))continue;
         GaudiAlg::HistoID id(area + "/" + hid);
         std::string tit = titl + " (" + area + ")";
@@ -101,7 +104,8 @@ public:
     if(!doHisto(hid))return;
     if( m_split ){
       for(unsigned int i = 0;i != m_nAreas;++i){
-        std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), i );
+        std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), i );
         if( !validArea( area ))continue;
         GaudiAlg::HistoID id(area + "/" + hid);
         std::string tit = titl + " (" + area + ")";
@@ -125,7 +129,8 @@ public:
   inline void hFill1(LHCb::CaloCellID cellID , std::string hid, double value, double w=1. ){ 
     if(!doHisto(hid))return;
     if( m_split && !(cellID == LHCb::CaloCellID()) ) {
-      std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), cellID.area() );
       if( validArea( area ) ){
         GaudiAlg::HistoID id(area + "/" + hid);
         fill(h1[id],value,w);
@@ -140,7 +145,8 @@ public:
   inline void hFill2( LHCb::CaloCellID cellID , std::string hid, double x, double y, double w=1. ){ 
     if(!doHisto(hid))return;
     if( m_split && !(cellID == LHCb::CaloCellID()) ){
-      std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
+      std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum ( m_detData ), cellID.area() );
       if( validArea( area )  ){
         GaudiAlg::HistoID id(area + "/" + hid);
         fill(h2[id],x,y,w); 
