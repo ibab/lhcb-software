@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.52 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.53 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -652,12 +652,24 @@ class LbLoginScript(Script):
                 for v in os.listdir(gccmainloc) :
                     gccversloc = os.path.join(gccmainloc, v)
                     for p in os.listdir(gccversloc) :
-                        if p.find("%s-%s" % (binary, platform)) != -1 :
+                        if p.find(os.sep+"%s-%s" % (binary, platform)+os.sep) != -1 :
                             compilers.append(os.path.join(gccversloc, p))
         return compilers
 
     def selectCompiler(self, platform, binary):
+        log = logging.getLogger()
         local_compilers = self.getLocalCompilers(platform, binary)
+        selected_compilers = []
+        for c in local_compilers :
+            if platform == "slc5" :
+                if c.find(os.sep+"4.3") :
+                    selected_compilers.append(c)
+        if selected_compilers :
+            selected_compilers.sort()
+            selected_compilers.reverse()
+        if selected_compilers and platform == "slc5" :
+            log.debug("Found gcc 4.3 @ %s" % selected_compilers[0])
+        return selected_compilers
 
     def getNativePlatformComponents(self):
         platform = None 
@@ -671,40 +683,45 @@ class LbLoginScript(Script):
         if ev.has_key("OSTYPE") :
             if ev["OSTYPE"] == "linux" or ev["OSTYPE"] == "linux-gnu" :
                 islinux = True
-        if islinux and self.hasCommand("gcc"):
-            for l in os.popen("gcc --version") :
-                if l.find("gcc") != -1 :
-                    gcclist = l[:-1].split()[2]
-                    gcclist = gcclist.split(".")
-                    gccvers = int("".join(gcclist[:2]))
-                    if gccvers >= 34 :
-                        compdef = "gcc%s" % "".join(gcclist[:2])
-                    else :
-                        compdef = "gcc%s" % "".join(gcclist[:3])
-                    break
-            
-            hwdict = {"ia32" : ["i386"], "amd64" : ["x86_64"] }
-            nathw = os.popen("uname -i").read()[:-1]
-            for h in hwdict :
-                for l in hwdict[h] :
-                    if l == nathw :
-                        binary = h
+        if islinux :
+            if self.hasCommand("gcc"):
+                for l in os.popen("gcc --version") :
+                    if l.find("gcc") != -1 :
+                        gcclist = l[:-1].split()[2]
+                        gcclist = gcclist.split(".")
+                        gccvers = int("".join(gcclist[:2]))
+                        if gccvers >= 34 :
+                            compdef = "gcc%s" % "".join(gcclist[:2])
+                        else :
+                            compdef = "gcc%s" % "".join(gcclist[:3])
                         break
-            relfiles = [ "/etc/redhat-release" , "/etc/system-release" ]
-            nbre = re.compile("[0-9]")
-            for r in relfiles :
-                if os.path.exists(r) :
-                    firstl = open(r, "r").read()[:-1]
-                    distrib = firstl.split()[0]
-                    rhw = nbre.search(firstl).group()
-                    if distrib == "Scientific" :
-                        platform = "slc%s" % rhw
-                    elif distrib == "Fedora" :
-                        platform = "fc%s" % rhw
-                    else:
-                        platform = "rh%s" % rhw
-                    break
-            
+                
+                hwdict = {"ia32" : ["i386"], "amd64" : ["x86_64"] }
+                nathw = os.popen("uname -i").read()[:-1]
+                for h in hwdict :
+                    for l in hwdict[h] :
+                        if l == nathw :
+                            binary = h
+                            break
+                relfiles = [ "/etc/redhat-release" , "/etc/system-release" ]
+                nbre = re.compile("[0-9]")
+                for r in relfiles :
+                    if os.path.exists(r) :
+                        firstl = open(r, "r").read()[:-1]
+                        distrib = firstl.split()[0]
+                        rhw = nbre.search(firstl).group()
+                        if distrib == "Scientific" :
+                            platform = "slc%s" % rhw
+                        elif distrib == "Fedora" :
+                            platform = "fc%s" % rhw
+                        else:
+                            platform = "rh%s" % rhw
+                        break
+                if platform == "slc5" :
+                    compdef = "gcc43"
+                if platform == "slc3" :
+                    binary= "ia32"
+                    
         elif sys.platform.find("darwin") != -1 :
             for l in os.popen("gcc --version") :
                 if l.find("gcc") != -1 :
@@ -756,18 +773,11 @@ class LbLoginScript(Script):
         log = logging.getLogger()
         if opts.cmtconfig :
             self.binary, self.platform, self.compdef = self.getTargetPlatformComponents()
+            opts.use_nocache = False
             if not opts.no_compat and self.needsCompat() :
                 opts.no_compat = False
-                opts.use_cache = False
         else :
             self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
-            if self.platform == "slc5" :
-                if self.hasCommand("gcc43") :
-                    self.compdef = "gcc43"
-                elif self.hasCommand("gcc34") :
-                    self.compdef = "gcc34"
-            if self.platform == "slc3" :
-                self.binary = "ia32"
 
         if self.compdef == "gcc323" :
             if opts.cmtsite == "CERN":
@@ -788,6 +798,8 @@ class LbLoginScript(Script):
                     lpthlist.append(compiler_path)
                     ev["LD_LIBRARY_PATH"] = os.pathsep.join(lpthlist)
 
+        if self.platform == "slc5" and self.compdef == "gcc43" :
+            self.selectCompiler(self.platform, self.binary)
         
         ev["PYTHON_BINOFFSET"] = os.sep+"bin"
 
