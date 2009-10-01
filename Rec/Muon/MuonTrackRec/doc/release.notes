@@ -6,6 +6,9 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !-----------------------------------------------------------------------------
 
+! 20091001 - v1r4
+- add possibilioty to veto logical pads in option file
+
 ! 20090709 - v1r3
 - improve checks for incomplete events in IMuonHitDecode interface
 

@@ -1,4 +1,4 @@
-// $Id: MuonPadRec.cpp,v 1.2 2009-09-10 13:20:54 ggiacomo Exp $
+// $Id: MuonPadRec.cpp,v 1.3 2009-10-01 11:47:32 ggiacomo Exp $
 #include <vector>
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -28,11 +28,11 @@ DECLARE_TOOL_FACTORY( MuonPadRec );
 MuonPadRec::MuonPadRec( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
-  : GaudiTool ( type, name , parent ), 
+  : GaudiTool ( type, name , parent ), m_TileVeto(0),
      m_padsReconstructed(false)
 {
   declareInterface<IMuonPadRec>(this);
-
+  declareProperty( "TileVeto", m_TileVeto);          // array of long int
   m_pads.clear(); m_pads.reserve(1000);
 }
 
@@ -73,6 +73,11 @@ StatusCode 	MuonPadRec::initialize ()
   }  
   
   incSvc()->addListener( this, IncidentType::EndEvent );
+
+  std::vector<long int>::iterator iV;
+  for (iV=m_TileVeto.begin() ; iV!=m_TileVeto.end(); iV++) {
+    m_TileIsVetoed[*iV]=true;
+  }
 
   return StatusCode::SUCCESS ;
 }
@@ -142,10 +147,11 @@ StatusCode MuonPadRec::addCoordsNoMap(std::vector<MuonLogHit*> &hits){
       // make the coordinate to be added to coords
       debug()<<" LOGPAD OK nomap ODE "<< (*iD)->odeName() <<" ch "<< (*iD)->odeChannel()<<
         " tile "<<*((*iD)->tile())<< " time)="<< (*iD)->time() << endreq;
-      
-      MuonLogPad *current = new MuonLogPad(*iD);
-      current->settruepad();
-      m_pads.push_back(current);
+      if(!m_TileIsVetoed[(long int) (*iD)->tile()]) {
+        MuonLogPad *current = new MuonLogPad(*iD);
+        current->settruepad();
+        m_pads.push_back(current);
+      }
     }
   }
   return StatusCode::SUCCESS;
@@ -177,7 +183,7 @@ StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits){
     for( iTwo = typeTwos.begin() ; iTwo != typeTwos.end() ; iTwo++ ){
       // who said C++ did not make lovely transparent code?
       MuonTileID pad = (iOne->first->tile())->intercept(*(iTwo->first->tile()) );
-      if(pad.isValid()){ 
+      if(pad.isValid() &&  (!m_TileIsVetoed[(long int) pad]) ) {
         MuonLogPad *current = new MuonLogPad(iOne->first,iTwo->first);
         current->settruepad();
         debug() << " LOGPAD OK crossed ODE "<< iOne->first->odeName() 
@@ -187,7 +193,6 @@ StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits){
                   << *(iTwo->first->tile()) << " times="
                   << iOne->first->time()<< " and "
                   << iTwo->first->time()   <<      endreq;
-        
         m_pads.push_back(current);
         // set flags to used on iOne and iTwo
         iOne->second = true;

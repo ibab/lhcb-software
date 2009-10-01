@@ -1,7 +1,7 @@
-// $Id: MuonPadRec.h,v 1.2 2009-09-10 13:20:54 ggiacomo Exp $
+// $Id: MuonPadRec.h,v 1.3 2009-10-01 11:47:32 ggiacomo Exp $
 #ifndef MUONPADREC_H 
 #define MUONPADREC_H 1
-
+#include <map>
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "MuonTrackRec/IMuonPadRec.h"            // Interface
@@ -38,10 +38,11 @@ public:
   // from IIncidentListener
   virtual void handle ( const Incident& incident );    
 private:
+  std::vector<long int>  m_TileVeto;  
   std::vector<MuonLogPad*> m_pads;
   bool m_padsReconstructed;
   DeMuonDetector* m_muonDetector;
-
+  std::map<long int, bool> m_TileIsVetoed;
   void clearPads();
 
   StatusCode addCoordsNoMap(std::vector<MuonLogHit*> &hits);
