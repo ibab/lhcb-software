@@ -1,3 +1,7 @@
+2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v2r7
+
 2009-08-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/fragments/install.py: upgraded the last install.py from Gaudi. This includes 
