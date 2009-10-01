@@ -4154,6 +4154,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
             if ( (m_verbosity >= Verbose) &&
                  (*drawHist_dbHistosOnPageIt) &&
                  (*drawHist_dbHistosOnPageIt)->onlineHistogram() &&
+                 ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage() &&
                  (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType()) ) {
               std::cout << "db identifier "
                         << ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->identifier()
@@ -4163,7 +4164,11 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                         << ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->dimServiceName()
                         << std::endl;
             }
-            if (m_verbosity >= Debug) { ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->dump(); }
+            if ( (m_verbosity >= Debug) &&
+                 ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage() &&
+                 (TCKinfo != (*drawHist_dbHistosOnPageIt)->effServiceType())) {
+              ((*drawHist_dbHistosOnPageIt)->onlineHistogram())->onpage()->histo->dump();
+            }
             TPad* overlayOnPad = NULL;
   
             double xlow(0.0);

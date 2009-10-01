@@ -14,11 +14,13 @@ public:
 	virtual ~MonRateRace();
   void infoHandler();
   double currentValue();
+  int currentTCK();
   std::string title();
   bool isRateValid();
   pres::EffServiceType effServiceType() { return m_serviceType; }
 private:
   double m_value;
+  int    m_tck;
   std::string m_title;
   boost::mutex* m_infoHandlerMutex;
   bool m_rateIsValid;

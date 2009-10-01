@@ -64,9 +64,13 @@ public:
 //  TCanvas PresenterDraw::page(std::string pageName) -> list of histos... PresenterPage::
 //          PresenterDraw::releasePage(std::string pageName)
 //          PresenterDraw::releaseHistogram(std::string histogramID) -> list of histos TName;n
-//          PresenterDraw::cleanGarbage() -> gDirectory-> int ...na, ez alapból 0 TObject::GetUniqueID(), dbKey)
+//          PresenterDraw::cleanGarbage() -> gDirectory-> int ...na, ez alapbol 0 TObject::GetUniqueID(), dbKey)
 //                        TObject::SetUniqueID(UInt_t uid); UUID->GetInt
 
 //          PresenterDraw::refresh(TCanvas*|TPad*) // ownership... std::map( int TObject::GetUniqueID(), dbKey)
 //          PresenterDraw::references(show|hide) -> m_currentTCK
  
+// LoginDb dialog
+// PageSave dialog
+// SetReference dialog
+// IntervalPicker dialog

@@ -793,8 +793,8 @@ void DbRootHist::fillHistogram()
       } else if (TCKinfo == m_monRateRace->effServiceType() &&
                  m_monRateRace &&  
                  (true == m_monRateRace->isRateValid())) {
-        m_histoRootTitle = TString(Form("%s",
-                           (m_monRateRace->title()).c_str()));
+        m_histoRootTitle = TString(Form("%x",
+                           m_monRateRace->currentTCK()));
         rootHistogram->SetTitle(m_histoRootTitle.Data());
       } 
    } else if (s_pfixMonProfile == m_histogramType || s_pfixMonH1D == m_histogramType
