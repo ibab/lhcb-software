@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-01 - Juan PALACIOS
+ - python/StrippingSelections/Bs2JpsiPhiPrescaledAndDetached.py
+  . Removed and replaced by Bs2JpsiPhiDetached.py, Bs2JpsiPhiPrescaled.py
+
 ! 2009-09-25 - Juan PALACIOS
  - python/StrippingSelections/Bs2JpsiPhi*.py
   . Fix some bugs, apply configuration of the Selections and SelectionSequences
