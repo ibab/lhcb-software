@@ -1,10 +1,10 @@
-// $Id: Particle2MCAssociatorBase.h,v 1.22 2009-10-01 08:19:41 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.h,v 1.23 2009-10-01 09:15:35 jpalac Exp $
 #ifndef PARTICLE2MCASSOCIATORBASE_H 
 #define PARTICLE2MCASSOCIATORBASE_H 1
 
 // Include files
 // STL
-include <numeric>
+#include <numeric>
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 // LHCb
