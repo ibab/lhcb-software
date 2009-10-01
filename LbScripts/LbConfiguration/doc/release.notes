@@ -1,5 +1,9 @@
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r3
+
+2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbConfiguration/LbLogin.py: fixed the platform setting for slc5
 	* python/LbConfiguration/Project.py: added the Ganga project.
 
