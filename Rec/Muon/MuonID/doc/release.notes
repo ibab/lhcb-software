@@ -1,6 +1,11 @@
 ! Package     : MuonID
 ! Responsible : Erica Polycarpo, Miriam Gandelman
-!---------------------------------------------------------------------
+!-----------------------------------------------------------------------------
+
+! 2009-10-01 - Marco Cattaneo
+ - In ConfiguredMuonIDs.py, set DoF property of TrackKalmanFilter to 0, since
+   MuonID uses an external state as a constraint, worth '5 measurements'. 
+   Fixes warning in Brunel about negative nDOF
 
 !======================== MuonID v7r2 2009-09-03 =====================
 ! 2009-07-31 - Marco Cattaneo

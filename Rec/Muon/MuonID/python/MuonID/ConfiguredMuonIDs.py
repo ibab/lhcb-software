@@ -67,6 +67,10 @@ class ConfiguredMuonIDs():
     myfitter.NumberFitIterations = self.info.NumberFitIterations
     myfitter.StateAtBeamLine = self.info.StateAtBeamLine
     myfitter.AddDefaultReferenceNodes = self.info.AddDefaultReferenceNodes
+    ## Change TrackKalmanFilter default to avoid warning about negative nDOF
+    from Configurables import TrackKalmanFilter
+    myfitter.addTool(TrackKalmanFilter, name="NodeFitter")
+    myfitter.NodeFitter.DoF = 0
 
     return myfitter
 
