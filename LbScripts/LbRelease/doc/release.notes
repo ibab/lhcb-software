@@ -1,3 +1,7 @@
+2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of the version v2r13
+
 2009-09-29  Joel Closier  <joel.closier@cern.ch>
 
     * scripts/dirac2AFS:
