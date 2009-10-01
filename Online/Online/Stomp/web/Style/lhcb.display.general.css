@@ -240,6 +240,7 @@
     border:           solid;
     border-width:     1px;
     height:           24px;
+    cursor:           pointer;
 }
 
 .StatusLogger   {
@@ -251,6 +252,21 @@
     border:           solid;
     border-width:     1px;
     text-align:       left;
+}
+                  	  
+.tooltip {
+  font-size:           10px;
+  font-family:         Arial, Helvetica, sans-serif;
+  border:              solid 1px #666666; 
+  width:               270px; 
+  padding:             1px;
+  position:            absolute; 
+  z-index:             100;
+  visibility:          hidden; 
+  color:#333333; top:20px;
+  left:90px; 
+  background-color:#ffffcc;
+  layer-background-color:#ffffcc;
 }
 
 /* </STYLE>  */

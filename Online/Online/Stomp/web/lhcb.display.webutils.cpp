@@ -22,7 +22,7 @@ function make_header() {
           '<TH><B><A href="http://cern.ch/lhcb">LHCb</A> </B></TH>\n'+
           '<TH><B><A href="http://cern.ch/lhcb-comp">Computing</A> </B></TH>\n'+
           '<TH><B><A href="http://lhcb-online.web.cern.ch/lhcb-online">Online</A> </B></TH>\n'+
-          '<TH id="header_time_stamp">['+current_time()+']</TH>\n'+
+          '<TH id="header_time_stamp"></TH>\n'+
         '</TR>\n'+
       '</TABLE>\n'+
       '</DIV>\n'+
@@ -31,8 +31,13 @@ function make_header() {
 }
 
 function make_footer() {
-  var e = document.getElementByTagName('header_time_stamp');
+  var e = document.getElementById('header_time_stamp');
   if ( e ) {
+    var handler = function() {
+      document.getElementById('header_time_stamp').innerHTML = '['+Date().toString()+']';
+    }
+    handler();
+    setInterval(handler,2000);
   }
   document.write(
     '<DIV class=BOTTOMNAVIGATION><TABLE align=bottom><TR><TD><BR><BR>'+

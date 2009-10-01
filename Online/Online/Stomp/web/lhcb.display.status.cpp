@@ -1,3 +1,4 @@
+_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.data.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.listener.cpp');
@@ -60,12 +61,14 @@ var PartitionSelector = function(msg) {
   table.select.width = 135;
   table.select.appendChild(table.selectBox);
   table.row.appendChild(table.select);
+  tooltips.set(table.select,'Select the correct partition to initiate the display');
 
   table.change = document.createElement('td');
-  table.change.handler   = table;
-  table.change.innerHTML = 'Show';
-  table.change.className = 'DisplayButton';
-  table.change.onclick   = function() { this.handler.createDisplay();  }
+  table.change.handler     = table;
+  table.change.innerHTML   = 'Show';
+  table.change.className   = 'DisplayButton';
+  table.change.onclick     = function() { this.handler.createDisplay();  }
+  tooltips.set(table.change,'Click to invoke display for selected partition');
   table.row.appendChild(table.change);
 
   table.update = document.createElement('td');
@@ -73,6 +76,7 @@ var PartitionSelector = function(msg) {
   table.update.innerHTML = 'Update';
   table.update.className = 'DisplayButton';
   table.update.onclick   = function() { _dataProvider.update();  }
+  tooltips.set(table.update,'Click to update display');
   table.row.appendChild(table.update);
 
   table.body.appendChild(table.row);
@@ -94,6 +98,7 @@ var PartitionSelector = function(msg) {
     this.change.width = '10%';
     this.row.removeChild(this.select);
     this.row.removeChild(this.label);
+    tooltips.set(table.change,'Click to reload display');
     table.row.appendChild(table.update=document.createElement('td'));
   }
 
@@ -153,10 +158,12 @@ var status_unload = function()  {
 }
 
 var status_body = function()  {
-  var msg = the_displayObject['messages'];
-  var sys = the_displayObject['system'];
+  var msg  = the_displayObject['messages'];
+  var sys  = the_displayObject['system'];
   var body = document.getElementsByTagName('body')[0];
+  var tips = init_tooltips(body);
   var selector = new PartitionSelector(msg);
+
   body.appendChild(selector);
 
   //alert('status_body: system:'+sys+' msg:'+msg);

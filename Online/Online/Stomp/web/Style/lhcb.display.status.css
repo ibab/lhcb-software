@@ -118,6 +118,7 @@ StatusText:
     text-align:       center;
     width:            100%;
     height:           0%;
+    cursor:           default;
 }
 
 .FSMLabel	{
@@ -132,6 +133,7 @@ StatusText:
     border:           solid;
     border-width:     0px;
     width:            135px;
+    cursor:           pointer;
 }
 
 .FSMLabelHorizontal	{
@@ -146,6 +148,7 @@ StatusText:
     border:           solid;
     border-width:     0px;
     width:            135px;
+    cursor:           pointer;
 }
 
 .FSMSpacer	{
@@ -169,6 +172,7 @@ StatusText:
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
+    cursor:           default;
 }
 
 .PropertyTableItem  {

@@ -1,4 +1,4 @@
-_loadScript('lhcb.tools.cpp');
+_loadScriptAbs(_lhcbScriptBase,'lhcb.tools.cpp');
 
 var _dataProvider   = null;
 var _dataLogger     = null;

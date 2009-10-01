@@ -64,7 +64,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
       if ( set_data ) item.set(item.data);
     }
   }
-
+  
   this.handle_data = function(partition, sys_names, sys_states) {
     var disp = this._display;
     if ( !disp ) {
@@ -116,6 +116,13 @@ var DetectorListener = function(logger,provider,parent,msg) {
     var self = this.handler;
     var i = this.item;
     var url = self.url_base+'?type=fsm&system='+i.sysname;
+    var is_IE = _isInternetExplorer();
+    if ( is_IE )  {
+      alert('\nSorry, you are running\n\n'+navigator.appName+
+	    '.\n\nOpening child panels is not supported\n'+
+	    'since unexpected Javascript side-effects appear.');
+      return;
+    }
 
     if ( self._messages ) url += '&messages=1';
     url += '&state='+i.childState;

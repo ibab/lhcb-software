@@ -1,3 +1,4 @@
+_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadScript('lhcb.display.listener.cpp');
 _loadFile('lhcb.display.general','css');
@@ -57,7 +58,7 @@ FSMTable = function(partition,msg,state) {
   td.innerHTML = table._system;
   if ( table._state )  {
     td.innerHTML = td.innerHTML+' is '+table._state;
-    td.innerHTML = td.innerHTML+' <IMG SRC="'+_fileBase+'/Icons/Modes/'+table._state+'.bmp">';
+    td.innerHTML = td.innerHTML+' <IMG SRC="'+_fileBase+'/Images/Modes/'+table._state+'.bmp">';
   }
   td.className = 'StatusPlain';
   tr.appendChild(td);
@@ -93,10 +94,12 @@ fsm_unload = function()  {
 }
 
 fsm_body2 = function(body)  {
-  var sys = the_displayObject['system'];
-  var msg = the_displayObject['messages'];
+  var sys   = the_displayObject['system'];
+  var msg   = the_displayObject['messages'];
   var state = the_displayObject['state'];
+
   //alert('1 system:'+sys+' messages:'+msg+' state:'+state);
+  var tips  = init_tooltips(body);
   var selector = FSMTable(sys,msg,state);
   body.appendChild(selector);
   if ( msg == null ) {

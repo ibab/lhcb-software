@@ -120,7 +120,10 @@ var NavigationBar = function() {
       if ( item.style ) a.className = item.style;
       a.appendChild(item.img);
       a.appendChild(document.createElement('br'));
-      a.appendChild(document.createTextNode(item.text));      
+      a.appendChild(document.createTextNode(item.text));
+      //a.alt = item.img.alt;
+      //a.onMouseOut = function() { window.status=''; return true;}
+      //a.onMouseOver = function() { window.status=this.alt; return true;}
       td.appendChild(a);
       tr.appendChild(td);
       this.body.appendChild(tr);
@@ -177,6 +180,13 @@ var navbar_body = function()  {
 	     '../Images/LookFile_16x16.gif',
 	     '../Images/LookFile_32x32.gif');
 
+  navBar.add('FEST Run Status',
+	     'Show FEST run status display',
+	     'JavaScript:navBar.open_url("lhcb.display.htm?type=status&system=FEST")',
+	     'NavigationBar',
+	     '../Images/Options_16x16.gif',
+	     '../Images/Options_32x32.gif');
+
   navBar.add('Subdetector Run Status',
 	     'Show run status display with coice of detector',
 	     'JavaScript:navBar.open_url("lhcb.display.htm?type=status")',
@@ -190,21 +200,21 @@ var navbar_body = function()  {
 	     'NavigationBar',
 	     '../Images/LookProd_16x16.gif',
 	     '../Images/LookProd_32x32.gif');
-  /*
-  navBar.add('',
-	     '',
-	     'JavaScript:navBar.open_url("")',
+
+  navBar.add('HV Status',
+	     'Show LHCb HV status',
+	     'JavaScript:navBar.open_url("lhcb.display.htm?type=detstatus")',
 	     'NavigationBar',
 	     '../Images/Wizard_16x16.gif',
 	     '../Images/Wizard_32x32.gif');
 
-  navBar.add('',
-	     '',
-	     'JavaScript:navBar.open_url("")',
-	     'NavigationBar',
-	     '../Images/Options_16x16.gif',
-	     '../Images/Options_32x32.gif');
-  */
+  navBar.addSized('LHC Status',
+		  'LHC status around LHCb',
+		  'JavaScript:navBar.open_url("lhcb.display.htm?type=lhc")',
+		  'NavigationBar',
+		  '../Images/lhc-logo.gif',32,20,
+		  '../Images/lhc-logo.gif',64,48);
+  
   navBar.addSized('LHCb',
 		  'LHCb home page',
 		  'JavaScript:navBar.open_abs_url("http://lhcb.cern.ch")',
@@ -216,8 +226,8 @@ var navbar_body = function()  {
 		  'LHC collider home page',
 		  'JavaScript:navBar.open_abs_url("http://cern.ch/lhc")',
 		  'NavigationBar',
-		  'http://user.web.cern.ch/user/Welcome/LHCDipole.gif',32,32,
-		  'http://user.web.cern.ch/user/Welcome/LHCDipole.gif',48,48);
+		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',32,32,
+		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',48,48);
   
   navBar.addSized('CERN',
 		  'CERN home page',

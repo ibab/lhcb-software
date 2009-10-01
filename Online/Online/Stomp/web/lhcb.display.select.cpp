@@ -1,37 +1,42 @@
-var _fileBase = 'http://frankm.web.cern.ch/frankm/test/Online/Stomp/web';
+var _isInternetExplorer = function() 
+{  return navigator.appName == "Microsoft Internet Explorer"; }
 var _debugLoading = false;
 
-var _loadScript = function(name) 
-{  document.write('<SCRIPT language="JavaScript" src="'+_fileBase+'/'+name+'"></SCRIPT>');   }
+var _loadScriptAbs = function(base,name) 
+{  document.write('<SCRIPT language="JavaScript" src="'+base+'/'+name+'"></SCRIPT>');   }
+var _loadScript = function(name) { _loadScriptAbs(_fileBase,name); }
+
 var _loadStatic = function(name)
 {  document.write('<SCRIPT language="JavaScript" src="'+name+'"></SCRIPT>');   }
 
-function _loadFile(filename, filetype)   {
+function _loadFileAbs(base,filename, filetype)   {
   // this somehow does not work!!!!
   if (filetype=="cpp"){ //if filename is a external JavaScript file
     var fileref=document.createElement('script');
     fileref.setAttribute("type","text/javascript");
-    fileref.setAttribute("src", _fileBase+'/'+filename+'.'+filetype);
+    fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
   }
   else if (filetype=="js"){ //if filename is a external JavaScript file
     var fileref=document.createElement('script');
     fileref.setAttribute("type","text/javascript");
-    fileref.setAttribute("src", _fileBase+'/'+filename+'.'+filetype);
+    fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
   }
   else if (filetype=="css"){ //if filename is an external CSS file
     var fileref=document.createElement("link");
     fileref.setAttribute("rel", "stylesheet");
     fileref.setAttribute("type", "text/css");
-    fileref.setAttribute("href", _fileBase+'/Style/'+filename+'.css');
+    fileref.setAttribute("href", base+'/Style/'+filename+'.css');
   }
   if (typeof fileref!="undefined")
     document.getElementsByTagName("head")[0].appendChild(fileref);
 }
 
+function _loadFile(filename, filetype)   {  _loadFileAbs(_fileBase,filename,filetype); }
+
 if ( _stomp_in_use )  {
   TCPSocket = Orbited.TCPSocket;
   _loadStatic('/static/protocols/stomp/stomp.js');
-  _loadScript('lhcb.display.data.cpp');
+  _loadScriptAbs(_lhcbScriptBase,'lhcb.display.data.cpp');
 }
 
 var display_type = function()   {
@@ -58,7 +63,7 @@ var display_type = function()   {
     }
     this.url_base = pars[0];
     if ( this.type != null ) {
-      eval("this.header = function()     { _loadScript('lhcb.display."+this.type+".cpp'); }");
+      eval("this.header = function()     { _loadScriptAbs(_fileBase,'lhcb.display."+this.type+".cpp'); }");
       eval("this.body   = function()     { "+this.type+"_body(); }");
       eval("this.unload = function()     { "+this.type+"_unload(); }");
     }

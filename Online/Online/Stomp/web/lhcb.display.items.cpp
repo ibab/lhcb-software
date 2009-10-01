@@ -159,6 +159,16 @@ var StyledItem = function(item_name, class_name, fmt)  {
     if ( _DisplayDebug>1 ) alert('StyledItem.display:'+item_data);
     return this;
   }
+  /** Subscribe item to receive data from data provider object
+   *
+   *  @param      provider  Data provider object
+   *
+   *  @return On success reference to self, null otherwise
+   */
+  element.subscribe = function(provider) {
+    provider.subscribe(this.name,this);
+    return this;
+  }
   return element;
 }
 
@@ -182,6 +192,7 @@ var FSMItem = function(item_name, logger, is_child)  {
 
   element.innerHTML = 'Unknown';
   element.textAlign = 'center';
+  tooltips.set(element,'FSM state');
 
   element.lock.colSpan = 1;
   element.lock.innerHTML = '';
@@ -190,6 +201,8 @@ var FSMItem = function(item_name, logger, is_child)  {
   element.label.colSpan = 1;
   element.label.innerHTML = element.sysname;
   element.label.className = 'FSMLabel';
+  tooltips.set(element.label,'Click here to further explore the FSM object '+element.sysname);
+
   element._logger.debug('FSMItem.init:'+item_name+' -> '+element.name);
 
   element.setChildState = function(name) {
@@ -205,7 +218,7 @@ var FSMItem = function(item_name, logger, is_child)  {
   }
 
   element.setState = function(name) {
-    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif">';
+    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif" ALT="FSM object status">';
     return this;
   }
 
@@ -466,8 +479,11 @@ var PropertyTable = function(data_provider, logger, num_cols, desc_class, value_
     obj.colSpan     = span;
     obj.spacer      = Cell('',span,'PropertyTableSpacer');
     obj.description = Cell(description,span,this.desc_class);
+    tooltips.set(obj,'Current value of the property:"'+description+'"');
+    tooltips.set(obj.description,'Property description');
     this.items.push(obj);
-    this._logger.debug('PropertyTable.add: added '+name+' ['+description+'] '+this.items.length);
+    this._logger.debug('PropertyTable.add: added '+name+' ['+description+'] '+
+		       this.items.length);
     return obj;
   }
 

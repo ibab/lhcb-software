@@ -1,3 +1,4 @@
+_loadScript('lhcb.display.tooltips.cpp');
 _loadScript('lhcb.display.items.cpp');
 _loadFile('lhcb.display.general','css');
 
@@ -318,7 +319,7 @@ var Collimators = function(msg)   {
     tb.appendChild(this.heading);
 
     this.timerHandler = function() {
-      document.getElementById('current_time').innerHTML = (new Date()).toString();
+      document.getElementById('current_time').innerHTML = Date().toString();
     }
     setInterval(this.timerHandler,2000);
     
@@ -359,6 +360,8 @@ var collimators_unload = function()  {
 var collimators_body = function()  {
   var msg = the_displayObject['messages'];
   var body = document.getElementsByTagName('body')[0];
+  var tips  = init_tooltips(body);
+
   var selector;
 
   selector = Collimators(msg);
