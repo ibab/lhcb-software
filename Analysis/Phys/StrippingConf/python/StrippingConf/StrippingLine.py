@@ -61,10 +61,14 @@ class bindMembers (object) :
     """
     Simple class to represent a set of StrippingMembers which are bound to a line
     """
-    __slots__ = ('_members','_outputsel')
+    __slots__ = ('_members','_outputsel', '_outputloc')
 
     def outputSelection( self ) : 
         return self._outputsel
+
+    def outputLocation( self ) : 
+        return self._outputloc
+
 
     def members( self ) :         
         # remove (downstream) duplicates
@@ -79,12 +83,14 @@ class bindMembers (object) :
     		self._getOutputLocation( i )
         elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
-                self._outputsel = alg.OutputSelection 
+                self._outputsel = alg.OutputSelection
+                self._outputloc = alg.OutputSelection
         elif hasattr ( type(alg) , 'OutputLocation' ) :
             if hasattr ( alg , 'OutputLocation' ) :
-                self._outputsel = alg.OutputLocation 
+                self._outputloc = alg.OutputLocation 
         else :
             self._outputsel = alg.name()
+            self._outputloc = alg.name()
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
@@ -99,6 +105,7 @@ class bindMembers (object) :
             self._members += [a]
         loc = alg.outputLocations()[0]
         self._outputsel = loc
+        self._outputloc = loc
 
     # allow chaining of previously bound members...
     def _handle_bindMembers( self, line, alg ) :
@@ -106,7 +113,7 @@ class bindMembers (object) :
         # sometimes, we want to ignore this... 
         # add a flag to allow to skip this (when set to None?)
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
-        # self._outputsel = alg.outputSelection()
+        if alg.outputSelection() : self._outputloc = alg.outputLocation()
 
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
@@ -116,6 +123,7 @@ class bindMembers (object) :
     def __init__( self, line, algos ) :
         self._members = []
         self._outputsel = None
+        self._outputloc = None
         for alg in algos:
             # dispatch according to the type of alg...
             x = '_handle_' + type(alg).__name__
@@ -198,7 +206,7 @@ class StrippingMember ( object ) :
     def _InputLocations( self, line ) :
         _input = []
         for i in  self.InputLocations :
-            if type(i) is bindMembers : i = i.outputSelection() 
+            if type(i) is bindMembers : i = i.outputLocation() 
             if i[0] == '%' : i = 'Stripping' + line + i[1:]
             _input += [ i ]
         return _input
@@ -301,12 +309,12 @@ class StrippingLine(object):
         
         # most recent output selection
         self._outputsel = None
-
+        self._outputloc = None
         # bind members to line
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
-        
+        self._outputloc = _boundMembers.outputLocation()
         # if needed, check Primary Vertex before running all algos
         if checkPV : 
     	    check = CheckPV("checkPV");
@@ -369,6 +377,18 @@ class StrippingLine(object):
         if not self._outputsel :
             raise AttributeError, "The line %s does not define valid outputSelection " % self.subname()
         return self._outputsel
+
+    def outputLocation ( self ) :
+        """
+        Get the name of output TES location of the line
+
+        >>> line = ...
+        >>> selection = line.outputLocation()
+        
+        """
+        if not self._outputloc :
+            raise AttributeError, "The line %s does not define valid output " % self.subname()
+        return self._outputloc
 
     def clone ( self , name , **args ) :
         """
