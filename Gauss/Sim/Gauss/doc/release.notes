@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-10-01 - Jibo He
+ - change the BcVegPyData version in requirements file from "v1r*" to "v*" 
+
 ! 2009-09-19 - Tomasz Skwarnicki 
  - add DataType slot in Configuration.py to set Upgrade specific modifications
    change OT,IT positions
