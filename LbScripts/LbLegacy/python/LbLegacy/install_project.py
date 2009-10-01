@@ -337,7 +337,7 @@ def help() :
 #----------------------------------------------------------------------------------
 
 def initRandSeed():
-    random.seed("%d-%s" % (os.getpid(), socket.gethostname()))
+    random.seed("%d-%s" % (os.getpid(), socket.getfqdn()))
 
 _block_count = 0
 _block_size  = 0
@@ -605,43 +605,43 @@ def createDir(here , logname):
 
     this_time = time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
     log.info(" =========== Python %s %s " % (txt_python_version, this_time) )
-    for dir in subdir:
-        if os.path.isdir(os.path.join(here,dir)):
-            log.debug('%s exists in %s '%(dir,here))
+    for dirnm in subdir:
+        if os.path.isdir(os.path.join(here, dirnm)):
+            log.debug('%s exists in %s '%(dirnm, here))
         else:
-            os.mkdir(dir)
-            log.info('%s is created in %s '%(dir,here))
-            if dir == 'lcg':
-                os.mkdir(os.path.join(dir,'external'))
-                log.info('%s is created in %s ' % (os.path.join(dir,'external'),here))
-            if dir == 'lhcb':
+            os.mkdir(dirnm)
+            log.info('%s is created in %s '%(dirnm, here))
+            if dirnm == 'lcg':
+                os.mkdir(os.path.join(dirnm, 'external'))
+                log.info('%s is created in %s ' % (os.path.join(dirnm, 'external'), here))
+            if dirnm == 'lhcb':
                 if multiple_mysiteroot :
                     found_dbase = False
                     found_param = False
                     for b in lhcb_dir.split(os.pathsep)[1:] :
-                        if os.path.isdir(os.path.join(b,'DBASE')) :
+                        if os.path.isdir(os.path.join(b, 'DBASE')) :
                             found_dbase = True
-                        if os.path.isdir(os.path.join(b,'PARAM')) :
+                        if os.path.isdir(os.path.join(b, 'PARAM')) :
                             found_param = True
                     if not found_dbase :
-                        os.mkdir(os.path.join(dir,'DBASE'))
+                        os.mkdir(os.path.join(dirnm, 'DBASE'))
                     if not found_param :
-                        os.mkdir(os.path.join(dir,'PARAM'))
+                        os.mkdir(os.path.join(dirnm,'PARAM'))
                     if found_dbase or found_param :
-                        os.mkdir(os.path.join(dir,'EXTRAPACKAGES'))
-                        os.mkdir(os.path.join(dir, 'EXTRAPACKAGES', 'cmt'))
-                        f = open(os.path.join(dir,'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
+                        os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES'))
+                        os.mkdir(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt'))
+                        f = open(os.path.join(dirnm, 'EXTRAPACKAGES', 'cmt', 'project.cmt'), "w")
                         f.write("project EXTRAPACKAGES \n\n")
                         f.close()
                 else :
-                    os.mkdir(os.path.join(dir,'DBASE'))
-                    os.mkdir(os.path.join(dir,'PARAM'))
+                    os.mkdir(os.path.join(dirnm, 'DBASE'))
+                    os.mkdir(os.path.join(dirnm, 'PARAM'))
             if fix_perm :
-                changePermissions(dir, recursive=True)
-        if dir == "tmp" :
+                changePermissions(dirnm, recursive=True)
+        if dirnm == "tmp" :
             createTmpDirectory()
-    if os.path.isdir(os.path.join(here,cmtconfig)):
-        log.info('%s exists in %s '%(cmtconfig,here))
+    if os.path.isdir(os.path.join(here, cmtconfig)):
+        log.info('%s exists in %s '%(cmtconfig, here))
     else:
         os.mkdir(cmtconfig)
         log.info('%s is created in %s '%(cmtconfig,here))
@@ -727,7 +727,6 @@ def getCMT(version=0):
 
     os.chdir(here)
 
-    return cmtvers
 
 #
 #  download a file from the web site in targz_dir =================================
@@ -870,14 +869,14 @@ def getReferenceMD5(url, filen, dest):
         md5sum = line.split(" ")[0]
     return md5sum
 
-def checkMD5(url, file, dest):
+def checkMD5(url, filenm, dest):
     log = logging.getLogger()
     isok = False
-    log.info("Checking %s tar ball consistency ..." % file)
-    refmd5 = getReferenceMD5(url, file, dest)
+    log.info("Checking %s tar ball consistency ..." % filenm)
+    refmd5 = getReferenceMD5(url, filenm, dest)
     if debug_flag :
         log.info("   reference md5 sum is: %s" % refmd5)
-    compmd5 = calculateMD5(os.path.join(dest,file))
+    compmd5 = calculateMD5(os.path.join(dest,filenm))
     log.info("       local md5 sum is: %s" % compmd5)
     if refmd5 == compmd5 :
         isok = True
@@ -1367,20 +1366,20 @@ def removeProject(project,pvers):
         head = this_lhcb_dir
         VERSION = PROJECT+'_'+pvers
 
-        list = os.listdir(this_html_dir)
-        for file in list:
+        flist = os.listdir(this_html_dir)
+        for file in flist:
             if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1 :
                 os.remove(os.path.join(this_html_dir,file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
-        list = os.listdir(this_targz_dir)
-        for file in list:
+        flist = os.listdir(this_targz_dir)
+        for file in flist:
             if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
                 os.remove(os.path.join(this_targz_dir,file))
                 log.info('remove %s' % os.path.join(this_targz_dir, file))
 
-        list = os.listdir(this_log_dir)
-        for file in list:
+        flist = os.listdir(this_log_dir)
+        for file in flist:
             if file.find(VERSION+'.') != -1 or file.find(VERSION+'_') != -1:
                 os.remove(os.path.join(this_log_dir,file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
@@ -1393,20 +1392,20 @@ def removeProject(project,pvers):
             log.info('remove %s' % os.path.join(head, project+'Env', pvers))
     else:
         proj_vers = project+'_'+pvers
-        list = os.listdir(this_html_dir)
-        for file in list:
+        flist = os.listdir(this_html_dir)
+        for file in flist:
             if file.find(proj_vers) != -1 :
                 os.remove(os.path.join(this_html_dir,file))
                 log.info('remove %s' % os.path.join(this_html_dir, file))
 
-        list = os.listdir(this_targz_dir)
-        for file in list:
+        flist = os.listdir(this_targz_dir)
+        for file in flist:
             if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
                 os.remove(os.path.join(this_targz_dir,file))
                 log.info('remove %s \n' % os.path.join(this_targz_dir, file))
 
-        list = os.listdir(this_log_dir)
-        for file in list:
+        flist = os.listdir(this_log_dir)
+        for file in flist:
             if file.find(proj_vers+'.') != -1 or file.find(proj_vers+'_') != -1:
                 os.remove(os.path.join(this_log_dir,file))
                 log.info('remove %s' % os.path.join(this_log_dir, file))
@@ -1746,9 +1745,9 @@ def runInstall(pname,pversion,binary=''):
 # check binary name
     checkBinaryName(binary)
 
-    cmtvers = getCMT(cmtversion)
+    getCMT(cmtversion)
 
-    setLHCbEnv(cmtvers)
+    setLHCbEnv()
 
     if pname != 'LbScripts' :
         script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
@@ -1814,16 +1813,16 @@ def runInstall(pname,pversion,binary=''):
 #
 # set lhcb environment ====================================================
 #
-def setLHCbEnv(cmtvers):
+def setLHCbEnv():
     log = logging.getLogger()
     log.debug('set necessary environment variables')
 
-    str = getSourceCmd() + ' '+os.path.join(os.environ['CMTROOT'],'mgr','setup.' + getScriptExt() )
-    log.debug('str= %s ' % str)
+    strcmd = getSourceCmd() + ' '+os.path.join(os.environ['CMTROOT'],'mgr','setup.' + getScriptExt() )
+    log.debug('str= %s ' % strcmd)
     if sys.platform == 'win32':
-        os.system(str)
+        os.system(strcmd)
     else:
-        output = commands.getstatusoutput(str)[1]
+        output = commands.getstatusoutput(strcmd)[1]
         log.debug(output)
 
     if os.environ.has_key('LD_LIBRARY_PATH') == 1:
@@ -2040,17 +2039,17 @@ def untarFile(file):
             retcode = 1
             return retcode
         else:
-            str = 'tar --extract --ungzip --touch --backup=simple --file %s' % filename
+            strcmd = 'tar --extract --ungzip --touch --backup=simple --file %s' % filename
             if fix_perm :
-                str = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
+                strcmd = 'tar --extract --ungzip --touch --no-same-permissions --backup=simple --file %s' % filename
             try:
                 for l in tarFileList(filename) :
                     if os.path.isfile(l) :
                         os.remove(l)
-                status, tar_output = commands.getstatusoutput(str)
+                status, tar_output = commands.getstatusoutput(strcmd)
             except:
                 os.remove(filename)
-                log.warning( 'exception in: %s' % str)
+                log.warning( 'exception in: %s' % strcmd)
                 log.warning( '%s removed' % filename)
                 log.warning( 'tar command output:' )
                 for l in tar_output.split("\n") :
@@ -2065,7 +2064,7 @@ def untarFile(file):
                 return retcode
             else:
                 if status != 0:
-                    log.warning( 'error in: %s' % str)
+                    log.warning( 'error in: %s' % strcmd)
                     log.warning( 'return code %s' % status )
                     log.warning( 'tar command output:' )
                     for l in tar_output.split("\n") :
@@ -2091,7 +2090,6 @@ def untarFile(file):
 
 
 def checkBinaryName(binary):
-    global full_flag
     global make_flag
     import LbConfiguration.Platform
     if binary != ' ':

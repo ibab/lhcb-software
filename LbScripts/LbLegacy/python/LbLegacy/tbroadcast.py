@@ -1,3 +1,4 @@
+#@PydevCodeAnalysisIgnore
 #----------------------------------#
 # -- Author: V.Garonne
 # -- Mail: garonne@lal.in2p3.fr

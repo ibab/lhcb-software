@@ -1,3 +1,10 @@
+2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: replaced the call the gethostname with
+	getfqdn which is more general.
+	* python/LbLegacy/tbroadcast.py: removed the file from the PyDev analysis.
+	* scripts/mkproject: check if "no-pyzip" is already in CMTEXTRATAGS before adding it.
+
 2009-09-30  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkproject: added the "no-pyzip" value to the CMTEXTRATAGS list.

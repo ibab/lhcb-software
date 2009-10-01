@@ -120,7 +120,8 @@ def release_project(pname,pversion,action=None, yes_mode=False):
 
     if os.environ.has_key("CMTEXTRATAGS") :
         tag_list = os.environ["CMTEXTRATAGS"].split(",")
-        tag_list.append("no-pyzip")
+        if "no-pyzip" not in tag_list :
+            tag_list.append("no-pyzip")
         os.environ["CMTEXTRATAGS"] = ",".join(tag_list)
     else :
         os.environ["CMTEXTRATAGS"] = "no-pyzip"
