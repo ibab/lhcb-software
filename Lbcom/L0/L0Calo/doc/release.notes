@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.132 2009-06-17 06:26:18 cattanem Exp $
+! $Id: release.notes,v 1.133 2009-10-01 11:51:14 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-10-01 - Patrick Robbe
+ - L0CaloCompare.cpp: allows to do full monitoring on Hadron candidates
 
 !========================= L0Calo v9r21 2009-06-17 ========================
 ! 2009-06-04 - Patrick Robbe

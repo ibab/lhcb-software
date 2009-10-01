@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.8 2009-06-04 15:14:17 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.9 2009-10-01 11:51:14 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -167,9 +167,10 @@ StatusCode L0CaloCompare::execute() {
   }
 
   // First fill a map for each type ... for the reference L0 candidates
-  std::vector< std::map< int , LHCb::L0CaloCandidate * > > mapRef ;
+  typedef std::multimap< int , LHCb::L0CaloCandidate * > l0cmap ;
+  std::vector< l0cmap > mapRef ;
   mapRef.reserve( 5 ) ;
-  mapRef.resize( 5 , std::map< int , LHCb::L0CaloCandidate *>() ) ;
+  mapRef.resize( 5 , l0cmap() ) ;
 
   LHCb::L0CaloCandidate * SumEtRef = 0 ;  
   LHCb::L0CaloCandidate * SpdMultRef = 0 ; 
@@ -191,7 +192,8 @@ StatusCode L0CaloCompare::execute() {
     case L0DUBase::CaloType::Hadron:
       debug() << "Type= " << type << " cellID = " << caloCell 
               << " etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq;
-      (mapRef[type])[rawId] = *candRef ;
+      //      (mapRef[type])[rawId] = *candRef ;
+      mapRef[type].insert(std::pair<int,LHCb::L0CaloCandidate *>( rawId , *candRef ) ) ;
       break ;
     case L0DUBase::CaloType::SpdMult:
       debug() << " SpdMult : etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq ;
@@ -228,7 +230,7 @@ StatusCode L0CaloCompare::execute() {
     }  
   }
 
-  std::map< int , LHCb::L0CaloCandidate * >::iterator iterMap ;  
+  l0cmap::iterator iterMap ;  
   int etCodeCheck( 0 ) , etCodeRef( 0 ) ;
 
   for ( candCheck = candidatesCheck->begin() ; 
@@ -254,13 +256,19 @@ StatusCode L0CaloCompare::execute() {
         debug() << "          Ele L0cand not found ! " << endreq ; 
         fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , m_mapCompareTitle[ type ] ) ;
       } else {
-        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
-        etCodeRef = theCand -> etCode() ;
-        if ( etCodeCheck != etCodeRef ) 
-          debug() << " Same cell but different etCode : ref = " << etCodeRef  
-                  << " check = " << etCodeCheck << endreq ;
-        if ( etCodeCheck != etCodeRef ) 
+	//        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
+	std::pair< l0cmap::iterator , l0cmap::iterator > res = mapRef[ type ].equal_range( rawId ) ;
+	bool found = false ;
+	for ( iterMap = res.first ; iterMap != res.second ; ++iterMap ) {
+	  LHCb::L0CaloCandidate * theCand = (*iterMap).second ;
+	  etCodeRef = theCand -> etCode() ;
+	  if ( etCodeCheck == etCodeRef ) found = true ;
+	}
+	if ( ! found ) {
+	  debug() << " Same cell but different etCode : ref = " << etCodeRef  
+		  << " check = " << etCodeCheck << endreq ;
           fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , m_mapCompareTitle[ type ] ) ; 
+	}
       }
 
       break ;
