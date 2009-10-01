@@ -4,6 +4,12 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
+! 2009-10-01 - Vanya BELYAEV
+
+ - minor fix for the recent changes in CaloCellCode functions 
+ - cmt/requirements 
+   version increment to v3r1 
+
 !======================== CaloDigit v3r0 2009-05-13 ==========================
 ! 2009-05-05 - Olivier Deschamps
  - CaloDigitAlg :  get digitisation parameters from condDB (via DeCalorimeter)

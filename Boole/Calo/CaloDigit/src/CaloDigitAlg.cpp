@@ -1,4 +1,4 @@
-// $Id: CaloDigitAlg.cpp,v 1.28 2009-05-06 15:58:24 odescham Exp $
+// $Id: CaloDigitAlg.cpp,v 1.29 2009-10-01 11:36:11 ibelyaev Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -244,9 +244,12 @@ StatusCode CaloDigitAlg::initialize() {
   // Printout
   // --------
   info() << "----- Detector parameters (from condDB) ------------------" << endreq;
-  int icalo = CaloCellCode::CaloNumFromName( name() );;
-  for( unsigned int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea){
-    std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+  // int icalo = CaloCellCode::CaloNumFromName( name() );;
+  int icalo = CaloCellCode::caloNum ( name() );;
+  for( unsigned int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea)
+  {
+    // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+    std::string area = CaloCellCode::caloArea( icalo , iarea);
     info() << format("Nominal gain parameters for %8s region :  %5.1f + %5.1f x sin(theta)"
                      , area.c_str() , m_calo->maxEtInCenter(iarea), m_calo->maxEtSlope(iarea)) << endreq; 
   }
@@ -259,7 +262,8 @@ StatusCode CaloDigitAlg::initialize() {
   if ( "" != m_inputPrevData   ) info() << format( "Subtract %6.4f of previous BX ", m_fracPrev) << endreq;
   if(m_mip != 0)info() << format(" MIP deposit    : %6.2f MeV" , m_mip) << endreq;
   for( unsigned  int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea){
-    std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+    // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+    std::string area = CaloCellCode::caloArea( icalo , iarea);
       if( m_calo->numberOfPhotoElectrons(iarea) != 0)
         info() << format("Number of photo-electrons per MIP for %8s region :  %6.2f "
                          , area.c_str() , m_calo->numberOfPhotoElectrons(iarea) ) << endreq;
@@ -267,7 +271,8 @@ StatusCode CaloDigitAlg::initialize() {
   if(m_zSup)info() << format( "Zero-suppression threshold : %6.2f ADC ", m_zSupThreshold ) << endreq;
   info() << format( "L0 trigger suppression     : %6.2f ADC ", m_triggerThreshold ) << endreq;
   for( unsigned  int iarea = 0 ; iarea < m_calo->numberOfAreas() ; ++iarea){ 
-    std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+    // std::string area = CaloCellCode::CaloAreaFromNum( icalo , iarea);
+    std::string area = CaloCellCode::caloArea ( icalo , iarea);
     if( m_calo->l0EtCorrection(iarea) != 0)
       info() << format("L0 trigger ADC correction for %8s region :  %6.2f "
                        , area.c_str() , m_calo->l0EtCorrection(iarea) ) << endreq;
