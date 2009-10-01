@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction program
      (TrackExtrapolators v2r24)
    . Further change to Calo decoding sequence
    . Fix untested StatusCodes (GlobalReco v6r27, RichRecMCTools v2r25p1)
+   . Fix of nDoF in Muon fit (MuonID v7r2p1)
 
 ! 2009-09-18 - Marco Cattaneo
  - Update references for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
