@@ -1,4 +1,4 @@
-// $Id: TTGenericTracking.h,v 1.1 2009-09-25 16:39:14 jvantilb Exp $
+// $Id: TTGenericTracking.h,v 1.2 2009-10-01 13:31:26 jvantilb Exp $
 #ifndef TTGenericTracking_H
 #define TTGenericTracking_H 1
 
@@ -37,6 +37,10 @@
  *    set to 1000 (somewhat arbitrary).
  *  - <b>ChargeCut</b>: Cut on the total charge (in ADC counts) of the
  *    STClusters.
+ *  - <b>MergeNeighbours</b>: Boolean flag to merge neighbouring clusters.
+ *    Default set to true. Useful for steep tracks (cosmics) in case the cluster
+ *    size is large (>4). When set to true, the algorithm only considers the
+ *    cluster with the highest charge, thereby avoiding clone tracks.
  *  - <b>ToleranceY</b>: Tolerance for compatibility in y of the hit with the
  *    strip.
  *  - <b>DistCut</b>: Maximum distance in mm of the additional hits to the
@@ -97,6 +101,7 @@ private:
   std::string m_outputLocation;   ///< Location of the TT tracks
   unsigned int m_maxNumClusters;  ///< Cut on busy events
   double m_chargeCut;             ///< Cut on the total charge of the STClusters
+  bool m_mergeNeighbours;         ///< Flag to merge neighbouring clusters
   double m_toleranceY;            ///< Tolerance for hit compatibility in y
   double m_distCut;               ///< Cut on distance track to additional hits
   std::vector<double> m_winCenter;///< Central point (x,y,z) of allowed window

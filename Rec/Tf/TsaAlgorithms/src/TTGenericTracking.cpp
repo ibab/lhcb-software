@@ -1,4 +1,4 @@
-// $Id: TTGenericTracking.cpp,v 1.2 2009-09-28 13:37:45 jvantilb Exp $
+// $Id: TTGenericTracking.cpp,v 1.3 2009-10-01 13:31:26 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -42,6 +42,7 @@ TTGenericTracking::TTGenericTracking( const std::string& name,
   declareProperty("OutputLocation", m_outputLocation  = TrackLocation::TT );
   declareProperty("MaxNumClusters", m_maxNumClusters  = 200      );
   declareProperty("ChargeCut",      m_chargeCut       = 15.0     );// ADC counts
+  declareProperty("MergeNeighbours",m_mergeNeighbours = true     );
   declareProperty("ToleranceY",     m_toleranceY      = 1.0 * mm );
   declareProperty("DistCut",        m_distCut         = 1.0 * mm );
   declareProperty("WindowCenter",   m_winCenter       = list_of(0.0)(0.0)(0.0));
@@ -109,6 +110,18 @@ StatusCode TTGenericTracking::execute()
     // Ignore bad channels (e.g. broken bonds)
     const DeSTSector* aSector = m_tracker->findSector((*iter)->channelID()); 
     if( !aSector->isOKStrip((*iter)->channelID()) ) continue;
+
+    // Check if there is a neighbouring cluster that is bigger: if yes skip
+    if( m_mergeNeighbours ) {
+      STClusters::const_iterator prevIter = iter; --prevIter;
+      if( iter != clusterCont->begin() &&
+          (*iter)->firstChannel() - (*prevIter)->lastChannel() == 1 &&
+          (*prevIter)->totalCharge() > (*iter)->totalCharge() ) continue;
+      STClusters::const_iterator nextIter = iter; ++nextIter;
+      if( nextIter != clusterCont->end() &&
+          (*nextIter)->firstChannel() - (*iter)->lastChannel() == 1 &&
+          (*nextIter)->totalCharge() >= (*iter)->totalCharge() ) continue;
+    }
 
     // Create a Tf::STHit and add it to the container
     STHit* newHit = new STHit(*aSector,(*iter)->liteCluster());

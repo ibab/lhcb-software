@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-10-01 - Jeroen Van Tilburg
+ - Added option to merge large neighbouring clusters (>4 strips).
+
 ! 2009-09-28 - Jeroen Van Tilburg
  - Changed track type, location and history according to new types in Track.h
    -> needs changes in TrackEvent.
