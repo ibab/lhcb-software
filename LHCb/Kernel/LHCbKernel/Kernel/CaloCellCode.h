@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.10 2009-09-30 13:13:55 ibelyaev Exp $ 
+// $Id: CaloCellCode.h,v 1.11 2009-10-01 11:46:08 ibelyaev Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -204,11 +204,12 @@ namespace CaloCellCode
   inline int caloNum ( ITERATOR first , ITERATOR last ) 
   {
     typedef CALONAMES::const_iterator iterator ;
-    iterator begin = CaloNames.begin () ;
-    iterator end   = CaloNames.end   () ;
+    iterator begin   = CaloNames.begin () ;
+    iterator end     = CaloNames.end   () ;
+    std::size_t size = std::distance ( first , last ) ;
     for ( iterator current = begin ; current != end ; ++current ) 
     {
-      if ( current->size() <= ( last - first ) && 
+      if ( current->size() <= size && 
            last != std::search 
            ( first , last , current->begin() , current->end() ) ) 
       { return current - begin ; }                                  // RETURN 
@@ -299,6 +300,21 @@ namespace CaloCellCode
    */
    GAUDI_API 
    bool  isPinArea ( const int calo , const int area ) ;
+  // ==========================================================================
+  /** @enum CaloArea
+   *  The actual enumeration for the calorimeter areas 
+   *  @attention some code lines explicitly rely on the actual value of PinArea, 
+   *             therefore this symbol is the pubilc one.
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-09-28
+   */   
+  enum CaloArea 
+    { 
+      // ======================================================================
+      /// some code lines explicitly rely on the alue of PinArea
+      PinArea      = 3         // some code lines explicitly rely on this value 
+      // ======================================================================
+    } ;
   // ==========================================================================
 } //                                                end of namespace CaloCellID 
 // ============================================================================

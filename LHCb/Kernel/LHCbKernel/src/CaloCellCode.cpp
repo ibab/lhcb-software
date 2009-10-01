@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.cpp,v 1.1 2009-09-30 13:13:55 ibelyaev Exp $
+// $Id: CaloCellCode.cpp,v 1.2 2009-10-01 11:46:09 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -26,17 +26,16 @@ namespace CaloCellCode
    *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
    *  @date 2009-09-28
    */   
-  enum CaloArea 
+  enum CaloAreas
     { 
       Outer        = 0 ,
       Middle           ,  // NB: Inner for Hcal
-      Inner            ,
-      PinArea          , 
+      Inner            ,            
       /// total number of Calorimeter areas 
       CaloAreaNums = 4                     // total number of Calorimeter areas 
-    } ;
+   } ;
   // ==========================================================================
-}
+} //                        end of "the private part" of namespace CaloCellCode 
 // ============================================================================
 namespace 
 {

@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.15 2009-09-30 13:13:55 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.16 2009-10-01 11:46:09 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -371,7 +371,31 @@
     const   = "TRUE"
     access  = "PUBLIC" >
   </method>
-        
+
+
+  <method
+    desc    = "get the name of Calorimeter"
+    name    = "caloName"
+    type    = "const std::string&amp;"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return CaloCellCode::caloName ( calo() ) ;
+    </code>
+  </method>
+
+  <method
+    desc    = "get the name of Calorimeteter detector area"
+    name    = "areaName"
+    type    = "const std::string&amp;"
+    const   = "TRUE"
+    access  = "PUBLIC" >
+    <code>
+      return CaloCellCode::caloArea ( calo() , area() ) ;
+    </code>
+  </method>
+
+  
   </class>
   </package>
 </gdd>

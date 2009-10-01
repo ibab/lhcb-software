@@ -4,6 +4,17 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+
+! 2009-10-01 - Vanya  BELYAEV
+
+ - CaloCellID, add the methods 
+      1. caloName 
+      2. areaName 
+
+ - move back PidArea into pubilc header 
+   (there are some lines of code that explicitly relies 
+    on its numerical value) 
+
 ! 2009-09-29 - Vanya BELYAEV
 
  - CaloCellCode:
