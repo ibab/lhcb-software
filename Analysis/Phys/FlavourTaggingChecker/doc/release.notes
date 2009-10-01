@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.58 2009-08-24 12:23:12 pkoppenb Exp $
+! $Id: release.notes,v 1.59 2009-10-01 15:24:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+!========================== FlavourTaggingChecker v3r8 2009-10-01 ============
 
 ! 2009-08-24 - Patrick Koppenburg
  - Remove BTaggingAnalysis that doesn't compile anymore
