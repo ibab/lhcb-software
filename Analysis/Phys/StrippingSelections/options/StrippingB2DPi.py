@@ -73,8 +73,8 @@ KstarSignalcut = "(M > 0)" #Removed K* mass cuts for B->DKpi Dalitz analysis
                            #funny coding for now, clean all this up 
                            #this is also why we cannot use any common Kstar 
 
-Phicut = "(ADMASS('phi(1020)') < 100*MeV)"
-PhiSignalcut = "(ADMASS('phi(1020)') < 12*MeV)"
+Phicut = "(M > 0)"
+PhiSignalcut = "(M > 0)"
 
 Bcut = "((VFASPF(VCHI2/VDOF)<10)  & (BPVIPCHI2() < 36) & (BPVVDCHI2 > 4.) & (BPVDIRA > 0.9995))"
 Bcombcut = "((AM > 4800.*MeV) & (AM < 5900.*MeV))"

@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-01 J. Nardulli
+ - options/StrippingB2DPi.py
+   Removed the Phi Mass window. This is for consistency since the K* Mass Window 
+   has already been removed.
+
 ! 2009-10-01 - Juan PALACIOS
  - python/StrippingSelections/Bs2JpsiPhiPrescaledAndDetached.py
   . Removed and replaced by Bs2JpsiPhiDetached.py, Bs2JpsiPhiPrescaled.py
