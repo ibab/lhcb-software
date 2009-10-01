@@ -162,9 +162,18 @@ void MonRateRace::infoHandler()
       }
       m_title = cntTckNickname.str();
       if ( boost::all( m_title.c_str(), boost::is_print()) ) {
-        m_rateIsValid = true;
+
+        int* histoDimData = 0;
+        histoDimData = static_cast<int*>(getData());
+
+        m_tck = static_cast<int>(histoDimData[0]);
+//        if ((std::numeric_limits<int>::min() < m_tck) &&
+//            (std::numeric_limits<int>::max() > m_tck) ) {
+          m_rateIsValid = true;
+//        }
       } else {
         m_rateIsValid = false;
+        m_tck = 0;
       }
       cntTckNickname.str("");
     }
@@ -184,6 +193,16 @@ double MonRateRace::currentValue()
   boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
   if (infoHandlerLock && m_rateIsValid) {
     returnValue = m_value;
+    infoHandlerLock.unlock();    
+  }
+  return returnValue;
+}
+int MonRateRace::currentTCK()
+{
+  int returnValue = 0;
+  boost::unique_lock<boost::mutex> infoHandlerLock(*m_infoHandlerMutex);
+  if (infoHandlerLock && m_rateIsValid) {
+    returnValue = m_tck;
     infoHandlerLock.unlock();    
   }
   return returnValue;
