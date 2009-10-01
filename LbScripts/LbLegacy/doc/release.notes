@@ -1,5 +1,9 @@
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r3
+
+2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: replaced the call the gethostname with
 	getfqdn which is more general.
 	* python/LbLegacy/tbroadcast.py: removed the file from the PyDev analysis.

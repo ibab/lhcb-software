@@ -226,7 +226,7 @@ from shutil import rmtree
 script_version = '090916'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
-lbscripts_version = "v4r2"
+lbscripts_version = "v4r3"
 compat_version = "v1r2"
 #-----------------------------------------------------------------------------------
 
