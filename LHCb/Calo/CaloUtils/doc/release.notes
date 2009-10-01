@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.132 2009-09-30 13:18:43 ibelyaev Exp $
+! $Id: release.notes,v 1.133 2009-10-01 11:42:40 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-10-01 - Vanya BELYAEV
+
+ - SharedCells.h 
+
+    add misisng include <numeric> 
 
 ! 2009-09-30 - Vanya BELYAEV
 

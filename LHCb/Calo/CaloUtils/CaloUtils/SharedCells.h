@@ -1,24 +1,29 @@
-// $Id: SharedCells.h,v 1.7 2007-08-24 21:28:04 odescham Exp $ 
-// =========================================================================== 
+// $Id: SharedCells.h,v 1.8 2009-10-01 11:42:40 ibelyaev Exp $ 
+// ============================================================================
 #ifndef CALOUTILS_SHAREDCELLS_H 
 #define CALOUTILS_SHAREDCELLS_H 1
-/// =========================================================================== 
+// ============================================================================
+// Include files 
+// ============================================================================
+// STD & STL 
+// ============================================================================
 #include <cmath>
-// Include files
+#include <numeric>
+#include <algorithm>
+// ============================================================================
+// GaudiKernel
+// ============================================================================
 #include "GaudiKernel/Point3DTypes.h"
-
+// ============================================================================
 /** @namespace SharedCells SharedCells.h CaloUtils/SharedCells.h
  *
  *  set of inline functions used for CaloSharedCellAlg 
  *
  *  @author Vanya Belyaev Ivan Belyaev
  *  @date   04/07/2001
- */
-
-  
+ */  
 namespace SharedCells
 {
-
   //  =========================================================================
   /** Redistribute the energy proportional to a given weights 
    *  @param   List    a "list" of clusters for given cell 
@@ -44,9 +49,7 @@ namespace SharedCells
       }  
     ///
     return StatusCode::SUCCESS;
-  };
-  //  =========================================================================
-  
+  }
   //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to a total(summed)
@@ -88,9 +91,7 @@ namespace SharedCells
     if(!sc.isSuccess())return sc;
     /// make iteration  
     return SharedCells::summedEnergyAlgorithm( List , --NiT  ) ;  
-  };
-  //  =========================================================================
-  
+  }
   //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
@@ -136,9 +137,7 @@ namespace SharedCells
       }
     /// redistribute the  energy  
     return SharedCells::redistribute( List , weight );
-  };
-  //  =========================================================================
-  
+  }
   //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
@@ -202,10 +201,7 @@ namespace SharedCells
       }
     /// redistribute the energies  
     return SharedCells::redistribute( List , weight );
-  };
-  //  =========================================================================
-
-
+  }
   //  =========================================================================
   /** concrete method for redistribution of energy for shared cells. 
    *  It redistributes the energy proportionally to energies of seed cells  
@@ -272,12 +268,10 @@ namespace SharedCells
     /// make iterations 
     return 
       SharedCells::summedDistanceAlgorithm( List, Det , ID , size, --NiT ) ;
-  };
+  }
   //  =========================================================================
-
-
-}; ///< end of namespace 
- 
+} //                                               end of namespace SharedCells 
+// ============================================================================
 
 
 /// =========================================================================== 
