@@ -1,51 +1,34 @@
-# $Id: StrippingBs2JpsiPhiPrescaledAndDetached.py,v 1.2 2009-09-04 16:02:55 poluekt Exp $
+# $Id: StrippingBs2JpsiPhiPrescaledAndDetached.py,v 1.3 2009-10-01 14:52:23 jpalac Exp $
+
+__author__ = 'Juan Palacios'
+__date__ = '25/09/2009'
+__version__ = '$Revision: 1.3 $'
 
 '''
-Bs -> J/psi Phi prescaled and detached stripping selection
+Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
+configurables. PV refitting is done. Based on roadmap selection
+with loose PID cuts.
 '''
-__author__ = "Greig Cowan"
-__date__ = "2009-06-22"
-__version__ = "$Revision: 1.2 $"
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
-from Configurables import FilterDesktop, CombineParticles
 
-# Make the J/psi
-# CommonParticles now have this very basic J/psi
-#jPsiCuts = "(ADMASS('J/psi(1S)')<100*MeV)"
-#jPsiCombine = StrippingMember( CombineParticles
-#                               , "JpsiCombine"
-#                               , DecayDescriptor = "J/psi(1S) -> mu+ mu-"
-#                               , InputLocations = ["StdLooseMuons"]
-#                               , MotherCut = jPsiCuts
-#                               )
-
-# Filter the phi
-phiFilter = FilterDesktop("PhiFilter")
-phiFilter.InputLocations = ["StdLoosePhi2KK"]
-phiFilter.Code = "(PT>500*MeV)"
-
-# Make the Bs
-BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<14) & (VFASPF(VCHI2)<20)"
-BsCombine = StrippingMember( CombineParticles
-                             , "BsCombine"
-                             , DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc"
-                             , InputLocations = ["StdLooseJpsi2MuMu", "PhiFilter"]
-                             , MotherCut = BsCuts
-                             )
-
-line = StrippingLine("Bs2JpsiPhiPrescaledLine"
-                     , prescale = 1.
-                     , postscale = 0.1
-                     , algos = [phiFilter, BsCombine]
-                     , stream = "Bmuon" 
-		    )
-
+from StrippingSelections import Bs2JpsiPhiPrescaled, Bs2JpsiPhiDetached
+selSeqPresc = Bs2JpsiPhiPrescaled.sequence
+selSeqDet = Bs2JpsiPhiDetached.sequence
+############################################
+# Create StrippingLine with this selection #
+############################################
+prescLine = StrippingLine("Bs2JpsiPhiPrescaledLine"
+                          , prescale = 1.
+                          , postscale = 0.1
+                          , algos = [selSeqPresc]
+                          , stream = "Bmuon" 
+                          )
 # Now do the detached
-BsCutsDetached = BsCuts + "& (BPVLTIME()>0.15*ps)"
-line.clone("Bs2JpsiPhiDetachedLine"
-           , prescale = 1.
-           , postscale = 1.
-           , CombineParticlesBsCombine = {"MotherCut": BsCutsDetached}
-           )
+detLine = StrippingLine("Bs2JpsiPhiDetachedLine"
+                        , prescale = 1.
+                        , postscale = 1.
+                        , algos = [selSeqDet]
+                        , stream = "Bmuon" 
+                        )
