@@ -15,17 +15,17 @@ MoniVELOSeq.Members += {   "Velo::VeloClusterMonitor/VCMPrev7"
                          , "Velo::VeloClusterMonitor/VCMNext7"
 //                         , "Velo::VeloOccupancyMonitor/VOCCPrev7"
 //                         , "Velo::VeloOccupancyMonitor/VOCCPrev6"
-//                         , "Velo::VeloOccupancyMonitor/VOCCPrev5"
-//                         , "Velo::VeloOccupancyMonitor/VOCCPrev4"
-//                         , "Velo::VeloOccupancyMonitor/VOCCPrev3"
-//                         , "Velo::VeloOccupancyMonitor/VOCCPrev2"
+                         , "Velo::VeloOccupancyMonitor/VOCCPrev5"
+                         , "Velo::VeloOccupancyMonitor/VOCCPrev4"
+                         , "Velo::VeloOccupancyMonitor/VOCCPrev3"
+                         , "Velo::VeloOccupancyMonitor/VOCCPrev2"
                          , "Velo::VeloOccupancyMonitor/VOCCPrev1"
                          , "Velo::VeloOccupancyMonitor/VOCCDefault"
                          , "Velo::VeloOccupancyMonitor/VOCCNext1"
-//                         , "Velo::VeloOccupancyMonitor/VOCCNext2"
-//                         , "Velo::VeloOccupancyMonitor/VOCCNext3"
-//                         , "Velo::VeloOccupancyMonitor/VOCCNext4"
-//                         , "Velo::VeloOccupancyMonitor/VOCCNext5"
+                         , "Velo::VeloOccupancyMonitor/VOCCNext2"
+                         , "Velo::VeloOccupancyMonitor/VOCCNext3"
+                         , "Velo::VeloOccupancyMonitor/VOCCNext4"
+                         , "Velo::VeloOccupancyMonitor/VOCCNext5"
 //                         , "Velo::VeloOccupancyMonitor/VOCCNext6"
 //                         , "Velo::VeloOccupancyMonitor/VOCCNext7"
                          , "Velo::VeloSamplingMonitor/VSM"
@@ -67,50 +67,50 @@ VCMNext7.PropertiesPrint = false;
 
 //VOCCPrev7.VeloClusterLocation = "Raw/Velo/Prev7/Clusters";
 //VOCCPrev6.VeloClusterLocation = "Raw/Velo/Prev6/Clusters";
-//VOCCPrev5.VeloClusterLocation = "Raw/Velo/Prev5/Clusters";
-//VOCCPrev4.VeloClusterLocation = "Raw/Velo/Prev4/Clusters";
-//VOCCPrev3.VeloClusterLocation = "Raw/Velo/Prev3/Clusters";
-//VOCCPrev2.VeloClusterLocation = "Raw/Velo/Prev2/Clusters";
+VOCCPrev5.VeloClusterLocation = "Raw/Velo/Prev5/Clusters";
+VOCCPrev4.VeloClusterLocation = "Raw/Velo/Prev4/Clusters";
+VOCCPrev3.VeloClusterLocation = "Raw/Velo/Prev3/Clusters";
+VOCCPrev2.VeloClusterLocation = "Raw/Velo/Prev2/Clusters";
 VOCCPrev1.VeloClusterLocation = "Raw/Velo/Prev1/Clusters";
 VOCCNext1.VeloClusterLocation = "Raw/Velo/Next1/Clusters";
-//VOCCNext2.VeloClusterLocation = "Raw/Velo/Next2/Clusters";
-//VOCCNext3.VeloClusterLocation = "Raw/Velo/Next3/Clusters";
-//VOCCNext4.VeloClusterLocation = "Raw/Velo/Next4/Clusters";
-//VOCCNext5.VeloClusterLocation = "Raw/Velo/Next5/Clusters";
+VOCCNext2.VeloClusterLocation = "Raw/Velo/Next2/Clusters";
+VOCCNext3.VeloClusterLocation = "Raw/Velo/Next3/Clusters";
+VOCCNext4.VeloClusterLocation = "Raw/Velo/Next4/Clusters";
+VOCCNext5.VeloClusterLocation = "Raw/Velo/Next5/Clusters";
 //VOCCNext6.VeloClusterLocation = "Raw/Velo/Next6/Clusters";
 //VOCCNext7.VeloClusterLocation = "Raw/Velo/Next7/Clusters";
 
 VOCCDefault.UseOdin = false;
 //VOCCPrev7.UseOdin = false;
 //VOCCPrev6.UseOdin = false;
-//VOCCPrev5.UseOdin = false;
-//VOCCPrev4.UseOdin = false;
-//VOCCPrev3.UseOdin = false;
-//VOCCPrev2.UseOdin = false;
+VOCCPrev5.UseOdin = false;
+VOCCPrev4.UseOdin = false;
+VOCCPrev3.UseOdin = false;
+VOCCPrev2.UseOdin = false;
 VOCCPrev1.UseOdin = false;
 VOCCNext1.UseOdin = false;
-//VOCCNext2.UseOdin = false;
-//VOCCNext3.UseOdin = false;
-//VOCCNext4.UseOdin = false;
-//VOCCNext5.UseOdin = false;
+VOCCNext2.UseOdin = false;
+VOCCNext3.UseOdin = false;
+VOCCNext4.UseOdin = false;
+VOCCNext5.UseOdin = false;
 //VOCCNext6.UseOdin = false;
-VOCCNext7.UseOdin = false;
+//VOCCNext7.UseOdin = false;
 
 VOCCDefault.PropertiesPrint = false;
 //VOCCPrev7.PropertiesPrint = false;
 //VOCCPrev6.PropertiesPrint = false;
-//VOCCPrev5.PropertiesPrint = false;
-//VOCCPrev4.PropertiesPrint = false;
-//VOCCPrev3.PropertiesPrint = false;
-//VOCCPrev2.PropertiesPrint = false;
+VOCCPrev5.PropertiesPrint = false;
+VOCCPrev4.PropertiesPrint = false;
+VOCCPrev3.PropertiesPrint = false;
+VOCCPrev2.PropertiesPrint = false;
 VOCCPrev1.PropertiesPrint = false;
 VOCCNext1.PropertiesPrint = false;
-//VOCCNext2.PropertiesPrint = false;
-//VOCCNext3.PropertiesPrint = false;
-//VOCCNext4.PropertiesPrint = false;
-//VOCCNext5.PropertiesPrint = false;
+VOCCNext2.PropertiesPrint = false;
+VOCCNext3.PropertiesPrint = false;
+VOCCNext4.PropertiesPrint = false;
+VOCCNext5.PropertiesPrint = false;
 //VOCCNext6.PropertiesPrint = false;
-VOCCNext7.PropertiesPrint = false;
+//VOCCNext7.PropertiesPrint = false;
 
 //VCMPrev7.OutputLevel = 2;
 //VCMNext1.OutputLevel = 2;

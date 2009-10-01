@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-01 - Kurt Rinnert
+ - changed online monitoring options +/- 5 TAE instances of the occupancy
+   monitor. 
+
 ! 2009-09-29 - Kurt Rinnert
  - added property to sampling monitor that allows to disable NZS based plots.
  - online options now disable NZS plots in sampling monitor
