@@ -1,11 +1,24 @@
-! $Id: release.notes,v 1.5 2009-09-28 19:53:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.6 2009-10-01 13:01:57 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.5 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-10-01 - Vanya BELYAEV
+
+ - root/calib.f , calibr.kumac  
+  
+       old "TSelector" and kumac for N-tupel processing 
+
+     to be converted to ROOT 
+
+ - src/MisCailbrate 
+
+      make use of new parsing functions for CaloCellCode 
+    
 
 ! 2009-09-28 - Vanya Belyaev
 

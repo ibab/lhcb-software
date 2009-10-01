@@ -1,11 +1,16 @@
-// $Id: MisCalibrateCalo.cpp,v 1.2 2009-09-18 09:55:11 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.3 2009-10-01 13:01:57 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
 // GaudiKernel
 // =============================================================================
+#include "GaudiKernel/StatusCode.h"
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/HashMap.h"
+// ============================================================================
+// CaloUtils 
+// ============================================================================
+#include "CaloUtils/CaloCellIDAsProperty.h"
 // =============================================================================
 // GaudiAlg
 // =============================================================================
@@ -104,7 +109,8 @@ namespace Kali
   public:
     // =========================================================================
     /// property type 
-    typedef std::map<int,double>   PMap ;                       // property type 
+    // typedef std::map<int,double>   PMap ;                       // property type 
+    typedef std::map<LHCb::CaloCellID,double>   PMap ;          // property type 
     /// the actual table of calibration coefficents 
     typedef GaudiUtils::HashMap<LHCb::CaloCellID,double> Table ;
     // =========================================================================
@@ -242,9 +248,7 @@ StatusCode Kali::MisCalibrateCalo::updateTable
         pmap.end() != item ; ++item ) 
   {
     // get ID 
-    const unsigned int ID = item->first ;
-    // create CaloCellID 
-    LHCb::CaloCellID cellID ( ID ) ;
+    LHCb::CaloCellID cellID = item->first ;
     // redefine calo (if needed)
     if ( icalo != cellID.calo() ) 
     { 

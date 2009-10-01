@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.3 2009-09-28 19:53:55 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.4 2009-10-01 13:01:57 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,7 +31,7 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
@@ -42,7 +42,7 @@ kali = KaliPi0Conf (
     ## example of the first pass 
     FirstPass = True  ,
     UseTracks = True  ,
-    UseSpd    = True
+    UseSpd    = False 
     ## examle of the second pass 
     # FirstPass = False ,FemtoDST  = 'out2'
     )
@@ -166,7 +166,6 @@ if '__main__' == __name__ :
     from GaudiPython.Bindings import AppMgr
         
     gaudi = AppMgr()
-
     
     gaudi.run(5000)
 
