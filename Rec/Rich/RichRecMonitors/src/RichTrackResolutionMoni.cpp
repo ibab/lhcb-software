@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichTrackResolutionMoni
  *
  *  CVS Log :-
- *  $Id: RichTrackResolutionMoni.cpp,v 1.15 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichTrackResolutionMoni.cpp,v 1.16 2009-10-01 15:13:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -255,47 +255,51 @@ StatusCode TrackResolutionMoni::execute()
 
       // finally, write a tuple with all this info ...
 
+      StatusCode sc = StatusCode::SUCCESS;
+
       Tuple tuple = nTuple( hid(rad,"tkResTuple"), "TrackGeomTuple" );
 
       // entry point
-      tuple->column( "RecoXEntry" , entP.x() );
-      tuple->column( "RecoYEntry" , entP.y() );
-      tuple->column( "RecoZEntry" , entP.z() );
-      tuple->column( "McXEntry" , mcEntP.x() );
-      tuple->column( "McYEntry" , mcEntP.y() );
-      tuple->column( "McZEntry" , mcEntP.z() );
+      sc = sc && tuple->column( "RecoXEntry" , entP.x() );
+      sc = sc && tuple->column( "RecoYEntry" , entP.y() );
+      sc = sc && tuple->column( "RecoZEntry" , entP.z() );
+      sc = sc && tuple->column( "McXEntry" , mcEntP.x() );
+      sc = sc && tuple->column( "McYEntry" , mcEntP.y() );
+      sc = sc && tuple->column( "McZEntry" , mcEntP.z() );
 
       //exit point
-      tuple->column( "RecoXExit" , extP.x() );
-      tuple->column( "RecoYExit" , extP.y() );
-      tuple->column( "RecoZExit" , extP.z() );
-      tuple->column( "McXExit" , mcExtP.x() );
-      tuple->column( "McYExit" , mcExtP.y() );
-      tuple->column( "McZExit" , mcExtP.z() );
+      sc = sc && tuple->column( "RecoXExit" , extP.x() );
+      sc = sc && tuple->column( "RecoYExit" , extP.y() );
+      sc = sc && tuple->column( "RecoZExit" , extP.z() );
+      sc = sc && tuple->column( "McXExit" , mcExtP.x() );
+      sc = sc && tuple->column( "McYExit" , mcExtP.y() );
+      sc = sc && tuple->column( "McZExit" , mcExtP.z() );
 
       // entry slopes
-      tuple->column( "RecoTXEntry" , entV.x() );
-      tuple->column( "RecoTYEntry" , entV.y() );
-      tuple->column( "McTXEntry" , mcEntV.x() );
-      tuple->column( "McTYEntry" , mcEntV.y() );
+      sc = sc && tuple->column( "RecoTXEntry" , entV.x() );
+      sc = sc && tuple->column( "RecoTYEntry" , entV.y() );
+      sc = sc && tuple->column( "McTXEntry" , mcEntV.x() );
+      sc = sc && tuple->column( "McTYEntry" , mcEntV.y() );
 
       // exit slopes
-      tuple->column( "RecoTXExit" , extV.x() );
-      tuple->column( "RecoTYExit" , extV.y() );
-      tuple->column( "McTXExit" , mcExtV.x() );
-      tuple->column( "McTYExit" , mcExtV.y() );
+      sc = sc && tuple->column( "RecoTXExit" , extV.x() );
+      sc = sc && tuple->column( "RecoTYExit" , extV.y() );
+      sc = sc && tuple->column( "McTXExit" , mcExtV.x() );
+      sc = sc && tuple->column( "McTYExit" , mcExtV.y() );
 
       // momentum
-      tuple->column( "RecoVertPtot", recPvert );
-      tuple->column( "RecoPtotEntry", pEntry );
-      tuple->column( "RecoPtotExit",  pExit );
-      tuple->column( "McVertPtot",   mcPvert  );
-      tuple->column( "McPtotEntry", pMcEntry );
-      tuple->column( "McPtotExit",  pMcExit );
-      tuple->column( "EntryPerr", tkSeg.entryErrors().errP() );
-      tuple->column( "ExitPerr",  tkSeg.exitErrors().errP()  );
+      sc = sc && tuple->column( "RecoVertPtot", recPvert );
+      sc = sc && tuple->column( "RecoPtotEntry", pEntry );
+      sc = sc && tuple->column( "RecoPtotExit",  pExit );
+      sc = sc && tuple->column( "McVertPtot",   mcPvert  );
+      sc = sc && tuple->column( "McPtotEntry", pMcEntry );
+      sc = sc && tuple->column( "McPtotExit",  pMcExit );
+      sc = sc && tuple->column( "EntryPerr", tkSeg.entryErrors().errP() );
+      sc = sc && tuple->column( "ExitPerr",  tkSeg.exitErrors().errP()  );
 
-      tuple->write();
+      sc = sc && tuple->write();
+
+      if ( sc.isFailure() ) return sc;
 
     } // mc segment exists
 

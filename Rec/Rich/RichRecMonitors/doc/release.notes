@@ -4,6 +4,9 @@
 ! Purpose     : MC based detailed monitor algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-10-01 - Christopher Rob Jones
+ - Fix some untested StatusCodes in various ntupling methods.
+
 !====================== RichRecMonitors v2r23p1 2009-09-03 ===================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichRecMonitors_dll.cpp

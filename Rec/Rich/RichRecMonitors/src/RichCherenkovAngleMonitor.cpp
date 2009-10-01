@@ -5,7 +5,7 @@
  *  Implementation file for algorithm class : RichCherenkovAngleMonitor
  *
  *  CVS Log :-
- *  $Id: RichCherenkovAngleMonitor.cpp,v 1.19 2009-07-30 11:18:33 jonrob Exp $
+ *  $Id: RichCherenkovAngleMonitor.cpp,v 1.20 2009-10-01 15:13:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -245,13 +245,15 @@ StatusCode CherenkovAngleMonitor::execute()
             // make a tuple
 
           Tuple tuple = nTuple( hid(rad,"ckResTuple"), "CKTuple" ) ;
-          tuple->column( "RecoPtot", pTot );
-          tuple->column( "RecoCKtheta" , thetaRec );
-          tuple->column( "RecoCKphi" ,   phiRec );
-          tuple->column( "McCKtheta" , thetaMC );
-          tuple->column( "McCKphi" ,  phiMC );
-          tuple->column( "ExpCKtheta", thetaExpTrue );
-          tuple->write();
+          StatusCode sc = StatusCode::SUCCESS;
+          sc = sc && tuple->column( "RecoPtot", pTot );
+          sc = sc && tuple->column( "RecoCKtheta" , thetaRec );
+          sc = sc && tuple->column( "RecoCKphi" ,   phiRec );
+          sc = sc && tuple->column( "McCKtheta" , thetaMC );
+          sc = sc && tuple->column( "McCKphi" ,  phiMC );
+          sc = sc && tuple->column( "ExpCKtheta", thetaExpTrue );
+          sc = sc && tuple->write();
+          if ( sc.isFailure() ) return sc;
 
         }
         else // fake photon

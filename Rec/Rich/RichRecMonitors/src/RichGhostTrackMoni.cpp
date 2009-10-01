@@ -4,7 +4,7 @@
  *
  *  Implementation file for algorithm class : RichGhostTrackMoni
  *
- *  $Id: RichGhostTrackMoni.cpp,v 1.4 2009-05-22 15:50:08 jonrob Exp $
+ *  $Id: RichGhostTrackMoni.cpp,v 1.5 2009-10-01 15:13:09 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   05/04/2002
@@ -118,19 +118,23 @@ StatusCode GhostTrackMoni::execute()
       // fill a tuple with track info
       Tuple tuple = nTuple( "ghosts", "GhostTracksTuple" );
 
-      tuple->column( "IsGhost", (int)isGhost );
+      StatusCode sc = StatusCode::SUCCESS;
 
-      tuple->column( "RecoVertPtot", (*iT)->vertexMomentum() );
+      sc = sc && tuple->column( "IsGhost", (int)isGhost );
 
-      tuple->array( "NExpectAero",  nExpected.data(Rich::Aerogel).begin(),  nExpected.data(Rich::Aerogel).end()  );
-      tuple->array( "NExpectR1Gas", nExpected.data(Rich::Rich1Gas).begin(), nExpected.data(Rich::Rich1Gas).end() );
-      tuple->array( "NExpectR2Gas", nExpected.data(Rich::Rich2Gas).begin(), nExpected.data(Rich::Rich2Gas).end() );
+      sc = sc && tuple->column( "RecoVertPtot", (*iT)->vertexMomentum() );
 
-      tuple->array( "NRecAero",  nReco.data(Rich::Aerogel).begin(),  nReco.data(Rich::Aerogel).end()  );
-      tuple->array( "NRecR1Gas", nReco.data(Rich::Rich1Gas).begin(), nReco.data(Rich::Rich1Gas).end() );
-      tuple->array( "NRecR2Gas", nReco.data(Rich::Rich2Gas).begin(), nReco.data(Rich::Rich2Gas).end() );
+      sc = sc && tuple->array( "NExpectAero",  nExpected.data(Rich::Aerogel).begin(),  nExpected.data(Rich::Aerogel).end()  );
+      sc = sc && tuple->array( "NExpectR1Gas", nExpected.data(Rich::Rich1Gas).begin(), nExpected.data(Rich::Rich1Gas).end() );
+      sc = sc && tuple->array( "NExpectR2Gas", nExpected.data(Rich::Rich2Gas).begin(), nExpected.data(Rich::Rich2Gas).end() );
 
-      tuple->write();
+      sc = sc && tuple->array( "NRecAero",  nReco.data(Rich::Aerogel).begin(),  nReco.data(Rich::Aerogel).end()  );
+      sc = sc && tuple->array( "NRecR1Gas", nReco.data(Rich::Rich1Gas).begin(), nReco.data(Rich::Rich1Gas).end() );
+      sc = sc && tuple->array( "NRecR2Gas", nReco.data(Rich::Rich2Gas).begin(), nReco.data(Rich::Rich2Gas).end() );
+
+      sc = sc && tuple->write();
+
+      if ( sc.isFailure() ) return sc;
 
     }
 
