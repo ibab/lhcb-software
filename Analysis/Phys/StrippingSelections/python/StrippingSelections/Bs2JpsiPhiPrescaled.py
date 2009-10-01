@@ -2,7 +2,7 @@ from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
-name = "Bs2JpsiPhiPrescaledAndDetatched"
+name = "Bs2JpsiPhiPrescaled"
 
 _phiFilter = FilterDesktop("PhiFilterFor"+name)
 _phiFilter.Code = "(PT>500*MeV)"
