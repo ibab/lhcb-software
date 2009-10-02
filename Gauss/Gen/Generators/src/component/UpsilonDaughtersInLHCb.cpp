@@ -1,4 +1,4 @@
-// $Id: UpsilonDaughtersInLHCb.cpp,v 1.2 2009-04-23 16:44:17 robbep Exp $
+// $Id: UpsilonDaughtersInLHCb.cpp,v 1.3 2009-10-02 13:17:02 jhe Exp $
 // Include files 
 
 // local
@@ -79,12 +79,11 @@ StatusCode UpsilonDaughtersInLHCb::initialize( ) {
 //=============================================================================
 StatusCode UpsilonDaughtersInLHCb::finalize( ) {
 
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  if ( 0 != m_decayTool ) release( m_decayTool );
+
+  return GaudiTool::finalize();
 
 }
 

@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.155 2009-09-20 18:05:21 robbep Exp $
+! $Id: release.notes,v 1.156 2009-10-02 13:17:02 jhe Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Gen/Generators
 ! Responsible : Patrick ROBBE
 ! Purpose     : Common algorithms and tools for all production engines
 !-----------------------------------------------------------------------------
+
+! 2009-10-02 - Jibo He
+ - Correct the Initialize/Finalize (mis)balance for UpsilonDaughtersInLHCb.
 
 ! 2009-09-20 - Patrick Robbe
  - Special.cpp: fix initialization sequence for LHAPDF
