@@ -8,6 +8,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Marco Cattaneo
+ - Add src/DummyAnalysisAlg.{h,cpp} to allow building of a library from an
+   empty src directory.
+
 ! 2009-10-01 - Marco Cattaneo
  - Remove obsolete file Analysis_dll.cpp
 
