@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.38 2009-09-30 13:49:21 odescham Exp $
+// $Id: CaloReadoutTool.cpp,v 1.39 2009-10-02 19:20:40 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,6 @@ StatusCode CaloReadoutTool::finalize(){
 
 
 bool CaloReadoutTool::getCaloBanksFromRaw( ) {
-
 
   m_readSources.clear();
   m_banks = NULL;

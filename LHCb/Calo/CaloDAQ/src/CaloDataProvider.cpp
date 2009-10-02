@@ -100,6 +100,8 @@ void CaloDataProvider::clear( ) {
   m_minPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), 3840);  
   m_maxADC = LHCb::CaloAdc(LHCb::CaloCellID() , -256);
   m_maxPinADC = LHCb::CaloAdc(LHCb::CaloCellID(), -256);  
+  if ( msgLevel( MSG::DEBUG) )
+    debug() << "ALL DATA CLEARED" << endmsg;
 }
 //-------------------------------------
 void CaloDataProvider::cleanData(int feb ) {
@@ -164,6 +166,7 @@ CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(int source){
 //  Get data
 //==========
 double CaloDataProvider::digit (LHCb::CaloCellID id){
+  if( m_getRaw )getBanks();
   if( 0 >  m_digits.index(id) ){
     int temp = adc(id);
     if( 0 == temp && 0 >  m_adcs.index(id) ) return 0.; // 0-suppressed data or non-valid CellID
@@ -176,6 +179,7 @@ double CaloDataProvider::digit (LHCb::CaloCellID id){
 }
 //-------------------------------------------------------
 int CaloDataProvider::adc (LHCb::CaloCellID id){
+  if( m_getRaw )getBanks();
   bool ok=true;
   if( 0 >  m_adcs.index(id) )ok = decodeCell( id );
   if( 0 >  m_adcs.index(id) )return 0;// 0-suppressed data or non-valid CellID

@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.10 2009-09-30 13:49:22 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.11 2009-10-02 19:20:40 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -56,7 +56,9 @@ public:
     clear();
     m_banks = bank;
   };
-  virtual void clear(){return;}; // to be implemented in the parent tool
+  //actual implementation MUST BE in the parent tool
+  virtual void clear(){Warning("DUMMY CLEARING : THIS MESSAGE MUST NOT APPEAR").ignore() ; return;}; 
+  //
   virtual void cleanData(int ){return; } ;// to be implemented in the parent tool
   virtual LHCb::RawBankReadoutStatus status(){return m_status;};
   virtual void putStatusOnTES();

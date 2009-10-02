@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-02-30 - Olivier Deschamps
+  - Calo(L0)DataProvider : fix intialisation when (l0)Adc() method is called first
+
 ! 2009-09-30 - Olivier Deschamps
  - ICaloDataProvider : new virtual methods adcRange() and pinRange() return min/max (pin)Adc in the decoded ADC list.
   - increment ICaloDataProvider version
