@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.133 2009-10-01 11:42:40 ibelyaev Exp $
+! $Id: release.notes,v 1.134 2009-10-02 11:32:12 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-10-02 - Vanya BELYAEV
+
+ - attempt for "blind-fix" for compilaiton problme at lhcb6 slot 
 
 ! 2009-10-01 - Vanya BELYAEV
 
