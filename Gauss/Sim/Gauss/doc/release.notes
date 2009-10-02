@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Tomasz Skwarnicki
+ - update options/Gauss-Upgrade.py to follow the changes in AppConfig/options/Gauss
+
 ! 2009-10-01 - Jibo He
  - change the BcVegPyData version in requirements file from "v1r*" to "v*" 
 
