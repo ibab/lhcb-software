@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: MuID2BodyPlot.py,v 1.1 2009-05-29 14:03:22 asarti Exp $
+# $Id: MuID2BodyPlot.py,v 1.2 2009-10-02 12:52:12 pkoppenb Exp $
 #
 # Author Alessio Sarti <Alessio.Sarti@lnf.infn.it>
 #
@@ -97,7 +97,7 @@ MuIDLambdaPlot.YFOIParameter3 = [0.03, 0.02, 0.00, 0.09,
 MuIDLambdaPlot.distMuon  = [0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.64]
 
 MuIDLambdaPlot.distPion  = [11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.]
-muonIDm2BSeq_Lam.Members += [ MuIDLambdaPlot ]
+# doe not work # muonIDm2BSeq_Lam.Members += [ MuIDLambdaPlot ]
 
 
 MuIDJpsiPlot = MuID2BodyPlot("MuIDJpsiPlot")
@@ -164,7 +164,7 @@ MuIDJpsiPlot.distMuon  = [0.311, 1.349, 0.524, 0.0020, 17., 10.6, 0.04, 4.1, 1.6
 
 MuIDJpsiPlot.distPion  = [11., -12., 0.2029, -0.026, 0.06, 0.59, 0.008, -29., 41.]
 
-muonIDm2BSeq_Jps.Members += [ MuIDJpsiPlot ]
+# does not work on RDST# muonIDm2BSeq_Jps.Members += [ MuIDJpsiPlot ]
 
 ##############################################################################
 #

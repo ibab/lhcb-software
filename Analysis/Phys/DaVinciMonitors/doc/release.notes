@@ -4,6 +4,10 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Patrick Koppenburg
+ - Comment out Muon 2 Body monitoring that does not wok on RDST.
+ - v1r5p2
+
 !========================== DaVinciMonitors v1r5p1 2009-08-11 ================
 ! 2009-08-07 - Patrick Koppenburg
  - Remove PhysDesktop

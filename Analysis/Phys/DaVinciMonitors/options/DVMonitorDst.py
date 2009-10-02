@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.17 2009-05-14 11:32:54 jonrob Exp $
+# $Id: DVMonitorDst.py,v 1.18 2009-10-02 12:52:12 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -26,4 +26,4 @@ DaVinci().HistogramFile = "DVMonitors.root"
 DaVinci().EvtMax = 10000
 DaVinci().DataType = "2008" # Default is "DC06"
 DaVinci().Simulation = True
-
+DaVinci(0.InputType = "RDST"
