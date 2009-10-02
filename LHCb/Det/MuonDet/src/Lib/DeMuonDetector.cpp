@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.49 2009-10-02 13:24:19 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.50 2009-10-02 13:38:08 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -76,7 +76,7 @@ StatusCode DeMuonDetector::initialize()
   //fill geo info
   fillGeoInfo();
   fillGeoArray();
-msgStream()<<MSG::ERROR<<" ecco qui 111 "<<
+msgStream()<<MSG::VERBOSE<<" ecco qui 111 "<<
 m_stationBox[0][0]<<" "<<
 m_stationBox[0][1]<<" "<<
 m_stationBox[0][2]<<" "<<
@@ -102,11 +102,6 @@ m_stationBox[0][3]<<" "<<endreq;
 
   m_daqHelper.initSvc(dataSvc(),msgSvc());
   sc=m_daqHelper.initDAQMaps();
-msgStream()<<MSG::ERROR<<" ecco qui 222 "<<
-m_stationBox[0][0]<<" "<<
-m_stationBox[0][1]<<" "<<
-m_stationBox[0][2]<<" "<<
-m_stationBox[0][3]<<" "<<endreq;
 
   if(sc.isFailure())return sc;
 
@@ -249,7 +244,7 @@ if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
   }
 
   if(!isIn) {
-    msgStream() << MSG::INFO <<
+    msgStream() << MSG::DEBUG <<
       "Smart seek didn't work. Perform loop on all chambers :( !!! "
                 <<endreq;
     int msta(0),mreg(0),mchm(0);
@@ -1201,7 +1196,7 @@ if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZP
     m_stationBox[station][3]=maxY;
 
 
-    msgStream()<<MSG::INFO<<" station  inner "<<station<<" "<<
+    msgStream()<<MSG::VERBOSE<<" station  inner "<<station<<" "<<
       m_stationBox[station][0]<<
       " "<<m_stationBox[station][1]<<
       " station  outer "<<station<<" "<<
