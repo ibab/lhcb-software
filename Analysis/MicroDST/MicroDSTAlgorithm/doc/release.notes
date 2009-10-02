@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.86 2009-09-02 15:29:46 jpalac Exp $
+! $Id: release.notes,v 1.87 2009-10-02 09:09:03 jpalac Exp $
 !==============================================================================
 ! Package     : MicroDST/MicroDSTAlgorithm
 ! Responsible : Ulrich Kerzel, Juan Palacios
 !==============================================================================
+
+!========================== MicroDSTAlgorithm v3r8 2009-10-01 =================
 
 ! 2009-09-02 - Juan PALACIOS
  - CopyParticle2PVRelations now copies unweighted relations. 
