@@ -1,3 +1,4 @@
+!$Id: release.notes,v 1.86 2009-10-02 14:10:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,8 +9,13 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== Analysis v8r3 2009-10-02 =================
+
 ! 2009-10-02 - Juan PALACIOS
- - Add python modules for particle selections.
+ - Add python/DaVinci4:
+  . Bs2JpsiPhi.py: dummy file, to be filled by students.
+  . solutions/Bs2JpsiPhi.py: file with "correct" answer.
+
  - cmt/requirements
   . Increase vo v8r3 and add python modules.
 
