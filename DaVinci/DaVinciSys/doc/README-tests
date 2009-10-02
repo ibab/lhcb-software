@@ -12,6 +12,7 @@ cmt qmtest_run davincisys.preselections.test_dc06stripping >! dc06stripping &
 cmt qmtest_run davincisys.preselections.test_bu2llk_dc06 >! bu2llk_dc06 & 
 cmt qmtest_run davincisys.tag.test_tag >! tag & 
 cmt qmtest_run davincisys.io.test_dst >! dst &  
+cmt qmtest_run davincisys.io.test_rdst >! rdst &  
 cmt qmtest_run davincisys.preselections.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
 cmt qmtest_run davincisys.preselections.test_stripping >! stripping & 
 cmt qmtest_run davincisys.hlt.test_tistos >! tistos & 

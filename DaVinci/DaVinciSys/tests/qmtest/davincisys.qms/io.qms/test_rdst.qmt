@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="timeout"><integer>3600</integer></argument>
+<argument name="args"><set>
+  <text>../options/DVMonitorDst.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+LambdaMonitor     SUCCESS Number of counters : 9
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "# Lambda0 -> p+  pi- "                         |      1266 |          3 |  0.0023697 |   0.048622 |      0.0000 |      1.0000 |
+ | "# Lambda~0 -> p~-  pi+ "                       |      1266 |          3 |  0.0023697 |   0.048622 |      0.0000 |      1.0000 |
+ | "# p+"                                          |      1266 |       3404 |     2.6888 |     2.8414 |      0.0000 |      22.000 |
+ | "# pi+"                                         |      1266 |       3404 |     2.6888 |     2.8414 |      0.0000 |      22.000 |
+ | "# pi-"                                         |      1266 |       3745 |     2.9581 |     3.0331 |      0.0000 |      23.000 |
+ | "# p~-"                                         |      1266 |       3745 |     2.9581 |     3.0331 |      0.0000 |      23.000 |
+ | "# selected"                                    |      1266 |          6 |  0.0047393 |   0.068680 |      0.0000 |      1.0000 |
+ |*"#accept"                                       |      1266 |          6 |( 0.473934 +- 0.193024 )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
