@@ -54,7 +54,7 @@ particle2mcPath = selectionPath + '/P2MCPRelations'
 stdVertexAssocPath = selectionPath + '/Particle2VertexRelations'
 refitVertexAssocPath = selectionPath + '/P2ReFitPVSortedRelations'
 mcParticlePath = locationRoot+'/MC/Particles'
-flavTagPath = selectionPath + "/Tagging"
+flavTagPath = locationRoot + "/Phys/Tagging"
 pvLocation = locationRoot+"/Rec/Vertex/Primary"
 
 # configure the new Particle->MCPatricle associator tool MCMatchObjP2MCRelator
