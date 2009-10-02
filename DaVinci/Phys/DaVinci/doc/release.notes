@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.374 2009-09-02 06:57:42 jpalac Exp $
+! $Id: release.notes,v 1.375 2009-10-02 15:13:30 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+!========================== DaVinci v24r3 2009-10-02 =====================
+
+! 2009-10-02 - Juan PALACIOS
+ - job/DaVinci_Ganga.py
+  . increase version to v24r3
+ - options/DaVinci-WriteSelDST.py
+  . Fix input location of DataOnDemand instance.
 
 !========================== DaVinci v24r2 2009-09-02 =====================
 

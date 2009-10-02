@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteSelDST.py,v 1.5 2009-09-02 15:18:33 jpalac Exp $
+# $Id: DaVinci-WriteSelDST.py,v 1.6 2009-10-02 15:13:31 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -29,7 +29,7 @@ jpsi.Code = "ALL"
 from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
 
 MyLooseJpsi = DataOnDemand('DODStdLooseJpsi2MuMu',
-                           Location = 'StdLooseJpsi2MuMu')
+                           Location = 'Phys/StdLooseJpsi2MuMu')
 
 SelJpsi = Selection('SelJpsi',
                     Algorithm = jpsi,
