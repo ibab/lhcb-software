@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.81 2009-09-29 13:05:07 graven Exp $
+# $Id: requirements,v 1.82 2009-10-02 13:13:14 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -37,12 +37,15 @@ use LHCbAlgs           v*    Kernel         -no_auto_imports
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
+use  CaloUtils              v5r11p1   Calo
+use  CaloPIDs               v5r1p1 Calo
 use LbcomSys            v*        -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
+use HltCommon              v5r11p1   Hlt
 use HltConf		v4r4p1  Hlt	     -no_auto_imports
 use HltSys		v*	     -no_auto_imports
 
