@@ -4,7 +4,7 @@
  *  Implementation file for RICH reconstruction monitoring algorithm : Rich::Rec::MC::RecoQC
  *
  *  CVS Log :-
- *  $Id: RichRecoQC.cpp,v 1.50 2009-07-30 11:02:36 jonrob Exp $
+ *  $Id: RichRecoQC.cpp,v 1.51 2009-10-02 13:04:44 jonrob Exp $
  *
  *  @author Chris Jones       Christopher.Rob.Jones@cern.ch
  *  @date   2002-07-02
@@ -143,7 +143,8 @@ StatusCode RecoQC::execute()
   const bool mcRICHOK  = richRecMCTool()->pixelMCHistoryAvailable();
 
   // Iterate over segments
-  debug() << "Found " << richSegments()->size() << " segments" << endmsg;
+  if ( msgLevel(MSG::DEBUG) )
+  { debug() << "Found " << richSegments()->size() << " segments" << endmsg; }
   for ( LHCb::RichRecSegments::const_iterator iSeg = richSegments()->begin();
         iSeg != richSegments()->end(); ++iSeg )
   {
