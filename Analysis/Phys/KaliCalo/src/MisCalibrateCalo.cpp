@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.4 2009-10-02 10:35:29 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.5 2009-10-02 11:02:24 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -10,7 +10,7 @@
 // ============================================================================
 // CaloUtils 
 // ============================================================================
-//// #include "CaloUtils/CaloCellIDAsProperty.h"
+// #include "CaloUtils/CaloCellIDAsProperty.h"
 // =============================================================================
 // GaudiAlg
 // =============================================================================
@@ -110,7 +110,7 @@ namespace Kali
     // =========================================================================
     /// property type 
     typedef std::map<int,double>   PMap ;                       // property type 
-    /// typedef std::map<LHCb::CaloCellID,double>   PMap ;          // property type 
+    //  typedef std::map<LHCb::CaloCellID,double>   PMap ;          // property type 
     /// the actual table of calibration coefficents 
     typedef GaudiUtils::HashMap<LHCb::CaloCellID,double> Table ;
     // =========================================================================
