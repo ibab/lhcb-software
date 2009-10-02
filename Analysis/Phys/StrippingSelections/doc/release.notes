@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r7 2009-10-02 ====================
+
 ! 2009-10-01 J. Nardulli
  - options/StrippingB2DPi.py
    Removed the Phi Mass window. This is for consistency since the K* Mass Window 
