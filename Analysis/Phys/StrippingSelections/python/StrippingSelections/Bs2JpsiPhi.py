@@ -1,14 +1,16 @@
-# $Id: Bs2JpsiPhi.py,v 1.2 2009-09-25 16:35:02 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.3 2009-10-02 07:37:27 jpalac Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '23/09/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
 configurables. PV refitting is done. Based on roadmap selection
 with loose PID cuts.
 '''
+
+__all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
 
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
@@ -51,4 +53,4 @@ Bs.__apply_configuration__()
 sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
 sequence.__apply_configuration__()
 
-__all__ = (name, Phi, Jpsi, Bs, sequence)
+
