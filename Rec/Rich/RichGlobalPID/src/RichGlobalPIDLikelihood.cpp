@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::Likelihood
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDLikelihood.cpp,v 1.12 2009-07-30 11:06:48 jonrob Exp $
+ *  $Id: RichGlobalPIDLikelihood.cpp,v 1.13 2009-10-02 13:09:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -74,7 +74,7 @@ StatusCode Likelihood::execute()
     if ( msgLevel(MSG::DEBUG) )
       debug() << "Reconstructed " << richPhotons()->size() << " photon candidates" << endmsg;
     if ( richPhotons()->empty() )
-      return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS);
+      return Warning("No reconstructed photons -> Abort",StatusCode::SUCCESS,0);
   }
 
   // ------------------------------ General RICH reco stuff -------------------------------------
