@@ -1,8 +1,8 @@
-# $Id: Bs2JpsiPhi.py,v 1.3 2009-10-02 07:37:27 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.4 2009-10-02 08:28:44 jpalac Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '23/09/2009'
-__version__ = '$Revision: 1.3 $'
+__version__ = '$Revision: 1.4 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -18,7 +18,7 @@ from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 name = "Bs2JpsiPhi"
 
-_stdPhi2KK = DataOnDemand("stdLoosePhi2KK", Location = "StdLoosePhi2KK")
+_stdPhi2KK = DataOnDemand("stdLoosePhi2KK", Location = "Phys/StdLoosePhi2KK")
 
 _phiFilter = FilterDesktop("PhiFilterFor"+name)
 _phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \

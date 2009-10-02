@@ -1,8 +1,8 @@
-# $Id: Bs2JpsiPhiPrescaled.py,v 1.2 2009-10-02 07:37:27 jpalac Exp $
+# $Id: Bs2JpsiPhiPrescaled.py,v 1.3 2009-10-02 08:28:44 jpalac Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
 
@@ -15,14 +15,14 @@ name = "Bs2JpsiPhiPrescaled"
 _phiFilter = FilterDesktop("PhiFilterFor"+name)
 _phiFilter.Code = "(PT>500*MeV)"
 
-_stdPhi2KK = DataOnDemand("stdLoosePhi2KK", Location = "StdLoosePhi2KK")
+_stdPhi2KK = DataOnDemand("stdLoosePhi2KK", Location = "Phys/StdLoosePhi2KK")
 
 Phi = Selection ("PhiFor"+name,
                  Algorithm = _phiFilter,
                  RequiredSelections = [_stdPhi2KK])
 Phi.__apply_configuration__()
 
-Jpsi = DataOnDemand("stdLooseJpsi2MuMu", Location = "StdLooseJpsi2MuMu")
+Jpsi = DataOnDemand("stdLooseJpsi2MuMu", Location = "Phys/StdLooseJpsi2MuMu")
 
 _BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<14) & (VFASPF(VCHI2)<20)"
 _Bs = CombineParticles( name,
