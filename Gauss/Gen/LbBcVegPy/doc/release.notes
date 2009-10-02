@@ -1,10 +1,14 @@
-! $Id: release.notes,v 1.15 2009-09-29 10:13:18 jhe Exp $
+! $Id: release.notes,v 1.16 2009-10-02 13:08:08 jhe Exp $
 ! Package     : Gen/LbBcVegPy
 ! Responsible : Patrick ROBBE
 !=====================================================================
 
 
-!===================== LbBcVegPy v3r0 2009-07-23 =====================
+!===================== LbBcVegPy v3r0 2009-10-02 =====================
+! 2009-10-02 - Jibo He
+ - Correct the Initialize/Finalize (mis)balance of BcDaughtersInLHCb.
+   . src/component/BcDaughtersInLHCb.cpp
+
 ! 2009-09-29 - Jibo He
  - Specify Cteq6LL and leading order running alpha_s in BcVegPy.opts.
 

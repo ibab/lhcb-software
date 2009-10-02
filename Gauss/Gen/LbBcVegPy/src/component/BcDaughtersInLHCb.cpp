@@ -1,4 +1,4 @@
-// $Id: BcDaughtersInLHCb.cpp,v 1.3 2008-09-03 09:04:49 gcorti Exp $
+// $Id: BcDaughtersInLHCb.cpp,v 1.4 2009-10-02 13:08:08 jhe Exp $
 // Include files 
 
 // local
@@ -80,12 +80,11 @@ StatusCode BcDaughtersInLHCb::initialize( ) {
 //=============================================================================
 StatusCode BcDaughtersInLHCb::finalize( ) {
 
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiTool
-
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  return StatusCode::SUCCESS;
+  if ( 0 != m_decayTool ) release( m_decayTool );
+
+  return GaudiTool::finalize(); 
 
 }
 
