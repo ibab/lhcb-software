@@ -2,6 +2,11 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Xabier Cid Vidal
+ - In ConfiguredMuonIDs.py and all Muon_*, remove all the absolute path references, as these are not valid for Ganga and Dirac.
+ - In CLTool.cpp fix a bug appearing when only one momentum bin is applied
+ - In IsMuonCandidate.cpp fix a bug related to the units of the momentum
+
 ! 2009-10-01 - Marco Cattaneo
  - In ConfiguredMuonIDs.py, set DoF property of TrackKalmanFilter to 0, since
    MuonID uses an external state as a constraint, worth '5 measurements'. 

@@ -5,7 +5,6 @@ DEBUG=False
 DATA="2009"
 VERSION="def"
 
-PYMUONIDROOT = os.environ["MUONIDROOT"]+"/python/MuonID/"
 FILENAME = "M_"+DATA+"_"+VERSION
 FILENAMEDEF0 = "M_"+DATA+"_def"
 FILENAMEDEF1 = "M_DC06_def"
@@ -134,17 +133,17 @@ sname=FILENAME+"_chi2s"
 bname=FILENAME+"_chi2b"
 
 
-if os.path.exists(PYMUONIDROOT+sname+".py"): chi2Signal=loadModule.loadFromModule(sname)
-else:
+try: chi2Signal=loadModule.loadFromModule(sname)
+except:
     if DEBUG: print "# WARNING: chi2 signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_chi2s"+".py"): chi2Signal=loadModule.loadFromModule(FILENAMEDEF0+"_chi2s")
-    else: chi2Signal=loadModule.loadFromModule(FILENAMEDEF1+"_chi2s")
+    try: chi2Signal=loadModule.loadFromModule(FILENAMEDEF0+"_chi2s")
+    except: chi2Signal=loadModule.loadFromModule(FILENAMEDEF1+"_chi2s")
 
-if os.path.exists(PYMUONIDROOT+bname+".py"): chi2Bkg=loadModule.loadFromModule(bname)
-else:
+try: chi2Bkg=loadModule.loadFromModule(bname)
+except:
     if DEBUG: print "# WARNING: chi2 bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_chi2b"+".py"): chi2Bkg=loadModule.loadFromModule(FILENAMEDEF0+"_chi2b")
-    else: chi2Bkg=loadModule.loadFromModule(FILENAMEDEF1+"_chi2b")
+    try: chi2Bkg=loadModule.loadFromModule(FILENAMEDEF0+"_chi2b")
+    except: chi2Bkg=loadModule.loadFromModule(FILENAMEDEF1+"_chi2b")
 
 
 
@@ -156,19 +155,19 @@ sname=FILENAME+"_dists"
 bname=FILENAME+"_distb"
 
 
-if os.path.exists(PYMUONIDROOT+sname+".py"): distSignal=loadModule.loadFromModule(sname)
-else:
+try: distSignal=loadModule.loadFromModule(sname)
+except:
     if DEBUG: print "# WARNING: dist signal not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_dists"+".py"): distSignal=loadModule.loadFromModule(FILENAMEDEF0+"_dists")
-    else: distSignal=loadModule.loadFromModule(FILENAMEDEF1+"_dists")
+    try: distSignal=loadModule.loadFromModule(FILENAMEDEF0+"_dists")
+    except: distSignal=loadModule.loadFromModule(FILENAMEDEF1+"_dists")
 
 
 
-if os.path.exists(PYMUONIDROOT+bname+".py"): distBkg=loadModule.loadFromModule(bname)
-else:
+try: distBkg=loadModule.loadFromModule(bname)
+except:
     if DEBUG: print "# WARNING: dist bkg not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_distb"+".py"): distBkg=loadModule.loadFromModule(FILENAMEDEF0+"_distb")
-    else: distBkg=loadModule.loadFromModule(FILENAMEDEF1+"_distb")
+    try: distBkg=loadModule.loadFromModule(FILENAMEDEF0+"_distb")
+    except: distBkg=loadModule.loadFromModule(FILENAMEDEF1+"_distb")
 
 
 
@@ -178,22 +177,20 @@ mname=FILENAME+"_gamoms"
 pname=FILENAME+"_gaprobs"
 
 
-if os.path.exists(PYMUONIDROOT+mname+".py"): gamoms=loadModule.loadFromModule(mname)
-else:
+try: gamoms=loadModule.loadFromModule(mname)
+except:
     if DEBUG: print "# WARNING: get arrival moms not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_gamoms"+".py"): gamoms=loadModule.loadFromModule(FILENAMEDEF0+"_gamoms")
-    else: gamoms=loadModule.loadFromModule(FILENAMEDEF1+"_gamoms")
+    try: gamoms=loadModule.loadFromModule(FILENAMEDEF0+"_gamoms")
+    except: gamoms=loadModule.loadFromModule(FILENAMEDEF1+"_gamoms")
     
     
-if os.path.exists(PYMUONIDROOT+pname+".py"): gaprobs=loadModule.loadFromModule(pname)
-else:
+try: gaprobs=loadModule.loadFromModule(pname)
+except:
     if DEBUG: print "# WARNING: get arrival probs not available for DATA=%s,VERSION=%s. Loading default" %(DATA,VERSION)
-    if os.path.exists(PYMUONIDROOT+FILENAMEDEF0+"_gaprobs"+".py"): gaprobs=loadModule.loadFromModule(FILENAMEDEF0+"_gaprobs")
-    else: gaprobs=loadModule.loadFromModule(FILENAMEDEF1+"_gaprobs")
-    
+    try: gaprobs=loadModule.loadFromModule(FILENAMEDEF0+"_gaprobs")
+    except: gaprobs=loadModule.loadFromModule(FILENAMEDEF1+"_gaprobs")
 
-
-
+ 
 useFunct=False
 alpha=[1,0.0363897,-0.002133,0.000806432,0.0009]
 beta=[1,2333.89,2494.38,2837.2,4200]

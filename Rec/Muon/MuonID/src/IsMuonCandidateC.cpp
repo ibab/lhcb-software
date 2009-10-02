@@ -1,4 +1,4 @@
-// $Id: IsMuonCandidateC.cpp,v 1.4 2009-07-25 00:43:53 polye Exp $
+// $Id: IsMuonCandidateC.cpp,v 1.5 2009-10-02 18:23:50 jcidvida Exp $
 // Include files 
 
 // from Gaudi
@@ -35,12 +35,12 @@ IsMuonCandidateC::IsMuonCandidateC( const std::string& type,
   
   
   //Mom Range for IsMuon
-  declareProperty("MomRangeIsMuon",m_MomRangeIsMuon=boost::assign::list_of(3.)(6.)(10.));
+  declareProperty("MomRangeIsMuon",m_MomRangeIsMuon=boost::assign::list_of(3000.)(6000.)(10000.));
   
   //IsMuon used: 
-  //- 1 IsMuonSimple
-  //- 2 IsMuon
-  //- 3 IsMuonLoose
+  //- 1 IsMuonCandidate
+  //- 2 IsMuonLoose
+  //- 3 IsMuon
   declareProperty("IsMuonOpt",m_ismopt = 1);
   
   // Min number of hits for IsMuonSimple
@@ -49,8 +49,10 @@ IsMuonCandidateC::IsMuonCandidateC( const std::string& type,
 }
 
 StatusCode IsMuonCandidateC::initialize() {
+  if (msgLevel(MSG::DEBUG) ) debug()<<"MomRangeIsMuon="<<m_MomRangeIsMuon<<endmsg;
   return StatusCode::SUCCESS;
 }
+
 bool IsMuonCandidateC::IsMuonCandidate(const LHCb::Track& muTrack)
 {
   const std::vector<LHCb::LHCbID>& ids=muTrack.lhcbIDs();
@@ -110,9 +112,9 @@ bool IsMuonCandidateC::IsMuon(const std::vector<int>& stations,const double& p)
   const double pr1=m_MomRangeIsMuon[0];
   const double pr2=m_MomRangeIsMuon[1];
   const double pr3=m_MomRangeIsMuon[2];
-  
-  
-  double mom=p/Gaudi::Units::GeV;
+
+  //double mom=p/Gaudi::Units::GeV;
+  double mom=p;
   if (mom>pr1 && mom<pr2)
   {
     if (stInStations(1,stations) && stInStations(2,stations)) return true;
@@ -136,7 +138,8 @@ bool IsMuonCandidateC::IsMuon(const std::vector<int>& stations,const double& p)
 //common IsMuonLoose requirements from set of stations with hits in FOI  
 bool IsMuonCandidateC::IsMuonLoose(const std::vector<int>& stations,const double& p)
 {
-  double mom=p/Gaudi::Units::GeV;
+  //double mom=p/Gaudi::Units::GeV;
+  double mom=p;
   std::vector<int> vstations_rel1=boost::assign::list_of(1)(2)(3);
   std::vector<int> vstations_rel2=boost::assign::list_of(1)(2)(3)(4);
   

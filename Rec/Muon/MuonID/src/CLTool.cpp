@@ -1,4 +1,4 @@
-// $Id: CLTool.cpp,v 1.5 2009-07-25 00:43:53 polye Exp $
+// $Id: CLTool.cpp,v 1.6 2009-10-02 18:23:50 jcidvida Exp $
 // Include files 
 
 // from Gaudi
@@ -290,7 +290,7 @@ double CLTool::valFromUnif(double value, double mom, int p_r, std::string sig_bk
   bool single_case=false;
   
   // if overlap is applied between mom bins, find which ones to interpolate
-  if (m_overlap) 
+  if (m_overlap && (my_nrange>1)) 
   {
     double left_val1,left_val2,rel_val1,rel_val2;
     int ind1,ind2;

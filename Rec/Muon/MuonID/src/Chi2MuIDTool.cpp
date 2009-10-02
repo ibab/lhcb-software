@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.7 2009-07-25 00:43:53 polye Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.8 2009-10-02 18:23:50 jcidvida Exp $
 // Include files 
 
 // from Gaudi
@@ -506,8 +506,8 @@ void Chi2MuIDTool::addLHCbIDsToMuTrack(LHCb::Track& muTrack,double mom)
 //build states and search for hits. With this, calculate isMuon
 StatusCode Chi2MuIDTool::search(const LHCb::Track& seed, LHCb::Track& muTrack) {
   
-  StatusCode sc = StatusCode::SUCCESS;
-  StatusCode sc1=makeStates(seed);
+  StatusCode sc  = StatusCode::SUCCESS;
+  StatusCode sc1 = makeStates(seed);
   if (sc1.isFailure())
   {
     sc.setCode(202);

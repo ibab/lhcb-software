@@ -32,18 +32,14 @@ class ConfiguredMuonIDs():
     mod=[data+"_"+version,data+"_def","DC06_def"]
     mod = map(lambda x: "Muon_"+x,mod)
 
-    PYMUONIDROOT = os.environ["MUONIDROOT"]+"/python/MuonID/"
-    pname=[]
-    for m in mod: pname.append(PYMUONIDROOT+m+".py")
-
-    if self.debug: print "# \tpname -> ",pname
+    if self.debug: print "# \tmods -> ",mod
 
     ## check if modules exist and load them
-    if os.path.exists(pname[0]): exec("from MuonID import "+mod[0]+" as info")
-    else:
+    try: exec("from MuonID import "+mod[0]+" as info")
+    except:
       if debug: print "# WARNING: not available info for DATA=%s,VERSION=%s. Loading default" %(data,version)
-      if os.path.exists(pname[1]): exec("from MuonID import "+mod[1]+" as info")
-      else:  exec("from MuonID import "+mod[2]+" as info")
+      try: exec("from MuonID import "+mod[1]+" as info")
+      except:  exec("from MuonID import "+mod[2]+" as info")
 
     ## set final module with info to be laoded
     self.info=info
