@@ -3,6 +3,10 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r3>2009-10-02 DaVinci v24r3 </A></H1><PRE>
+
+Based on Phys v8r10, Analysis v3r10, Rec v7r6, HLT v6r8, Lbcom v7r6, LHCb v28r0, Gaudi v21r4
+
 - Added the pattern container_package.
 
 </PRE><H1><A NAME=v24r2>2009-09-02 DaVinci v24r2 Rushed FEST version</A></H1><PRE>
