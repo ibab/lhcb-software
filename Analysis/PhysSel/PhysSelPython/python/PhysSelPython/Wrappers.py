@@ -1,51 +1,57 @@
-#$Id: Wrappers.py,v 1.7 2009-09-28 11:34:19 jpalac Exp $
-from Gaudi.Configuration import *
-from Configurables import GaudiSequencer
+#$Id: Wrappers.py,v 1.8 2009-10-02 08:35:36 jpalac Exp $
+#$Tag: $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
-
    - Selection          Wraps a selection configurable and the selections it
                         requires
+   - DataonDemand       Wraps a string TES location to make it look like a Seleciton
    - SelectionSequence  Creates a sequence from a selection such that all the
                         sub-selections required are executed in the right order
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-from LHCbKernel.Configuration import *
+__all__ = ('DataOnDemand', 'Selection', 'SelectionSequence')
+
+from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
+from LHCbKernel.Configuration import *
 from Configurables import LHCbConfigurableUser
 
 class DataOnDemand(LHCbConfigurableUser) :
     """
     Simple wrapper for a Data-On-Demand location. Returns output location
-    via algName() method. Can be used as a Selection in RequiredSelections
-    field of other Selections.
+    via outputLocation() method. Can be used as a Selection in
+    RequiredSelections field of other Selections.
 
     Example: wrap StdLoosePions
 
     SelStdLoosePions = DataOnDemand('SelStdLoosePions',
-                                    Location = 'StdLoosePions')
+                                    Location = 'Phys/StdLoosePions')
     """
 
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
     __slots__ = {
-        "Algorithm"           : ""   ,
         "Location"            : ""   , 
         "RequiredSelections"  : []
         }
-    def algName(self) :
-        return self.getProp('Location')
 
     def outputLocation(self) :
-        return self.algName()
+        return self.getProp('Location')
+
+    def algName(self) :
+        loc = self.outputLocation()
+        loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
+        return loc
     
 class Selection(LHCbConfigurableUser) :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
     configurable plus a list of required selection configurables. It uses
     the required selections to set the InputLocations of the top selection.
+    Makes the output location of the data available via outputLocation(),
+    a concatenation of the OutputBranch and Algorithm's name.
 
     Example: selection for A -> B(bb), C(cc)
 
@@ -57,11 +63,13 @@ class Selection(LHCbConfigurableUser) :
     # respectively
     from B2bb import SelB
     from C2cc import SelC
-    # now create a Selection instance using the B and C selections:
+    # now create a Selection instance using the B and C selections.
+    # Output will go to 'Phys' + A2B2bbC2cc.name()
     from PhysSelPython.Wrappers import Selection
     SelA2B2bbC2cc = Selection('SelA2B2bbC2cc',
                               Algorithm = A2B2bbC2cc,
-                              RequiredSelections = [SelB, SelC]    
+                              RequiredSelections = [SelB, SelC],
+                              OutputBranch = 'Phys')
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
@@ -139,6 +147,7 @@ class SelectionSequence(LHCbConfigurableUser) :
         return self.topSelection().algorithm()
     
     def sequence(self) :
+        from Configurables import GaudiSequencer
         return GaudiSequencer("GaudiSeq"+self.name() )
 
     def algName(self) :
@@ -160,3 +169,6 @@ class SelectionSequence(LHCbConfigurableUser) :
                 self.sequence().Members.insert( 0, sel.algorithm() )
                 sel.__apply_configuration__()
                 self.buildSelectionList( sel.requiredSelections() )
+
+
+
