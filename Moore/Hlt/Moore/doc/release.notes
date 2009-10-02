@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v7r5 2009-10-02 ===================
+! 2009-10-02 - Gerhard Raven
+ - small adaptation of stripPath for zipped python
+
 ! 2009-09-29 - Gerhard Raven
  - do not use runchange handler in PA setup
  - update database tags in FEST.py

@@ -63,9 +63,10 @@ if len(sys.argv)>2:
             if name == 'LD_LIBRARY_PATH':
                 # value = StripPath(value,lambda x: not re.search('lcg/external/Grid',x))
                 value = StripPath(value,lambda x: ContainsFNmatch(x,['*.so']))
-            if name == 'PYTHONPATH' : 
-                value = StripPath(value,lambda x: not re.search('Hlt/HltPython/python',x))
-                value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
+            if name == 'PYTHONPATH' :  # TODO: deal with python.zip files...
+                value = StripPath(value)
+                #value = StripPath(value,lambda x: not re.search('Hlt/HltPython/python',x))
+                #value = StripPath(value,lambda x: ContainsFNmatch(x,['*.py','*.pyc']))
             line = 'export %s="%s"'%(name,value)
         if input!=line : f.write('#ORIG:# %s\n'%input)
         f.write(line+'\n')        
