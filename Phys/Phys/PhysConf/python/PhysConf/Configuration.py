@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.17 2009-09-02 16:42:06 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-10-02 12:55:50 pkoppenb Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -80,10 +80,10 @@ class PhysConf(LHCbConfigurableUser) :
             MuonIDSeq=cm.getMuonIDSeq()
             recalib.Members += [ MuonRec(), MuonIDSeq,
                                  ChargedProtoParticleAddMuonInfo(), ChargedProtoCombineDLLsAlg() ]
-        else:
+#        else: # @todo breaks
             # @todo Should use DoD Svc, but there are some problems
-            from Configurables import (MuonPIDsFromProtoParticlesAlg)
-            recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
+#            from Configurables import (MuonPIDsFromProtoParticlesAlg)
+#            recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
         from Configurables import (RichPIDsFromProtoParticlesAlg)
         recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
     

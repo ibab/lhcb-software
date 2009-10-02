@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.21 2009-09-24 12:04:12 jpalac Exp $
+!$Id: release.notes,v 1.22 2009-10-02 12:55:50 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2009-10-02 - Patrick Koppenburg
+ - Comment out muon recalibration on RDST that doesn't work anyway.
 
 !========================== PhysConf v1r3 2009-09-24 =========================
 
