@@ -1,4 +1,4 @@
-// $Id: MuonBackground.h,v 1.16 2009-04-01 12:56:55 cattanem Exp $
+// $Id: MuonBackground.h,v 1.17 2009-10-02 13:27:41 asatta Exp $
 #ifndef MUONBACKGROUND_H 
 #define MUONBACKGROUND_H 1
 
@@ -95,8 +95,8 @@ private:
   StatusCode calculateHitPosInGap(DeMuonChamber* pChamber,int gapNumber,
                               float xpos,float ypos,float xSlope,float ySlope,
                                float averageZ, Gaudi::XYZPoint& 
-entryGlobal,Gaudi::XYZPoint& exitGlobal,
-                               DeMuonGasGap*& p_Gap);
+entryGlobal,Gaudi::XYZPoint& exitGlobal);
+
   StatusCode calculateAverageGap(DeMuonChamber* pChamber,
                                  int gapNumberStart ,
                                  int  gapNumberStop ,float xpos,float ypos,

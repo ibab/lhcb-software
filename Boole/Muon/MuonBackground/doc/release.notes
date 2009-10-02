@@ -4,7 +4,9 @@
 ! Purpose     : Add various types of background in the muon system : 
 !               low energy components, flatspillover
 !-----------------------------------------------------------------------------
-
+! 2009-10-02 - Alessia Satta
+ - Update to be compatible with the MuonDet rtag asatta_20091002
+ 
 !====================== MuonBackground v2r9 2009-04-09 =======================
 ! 2009-03-31 - Marco Cattaneo
  - In MuonBackground, remove need to access SpilloverAlg to determine number

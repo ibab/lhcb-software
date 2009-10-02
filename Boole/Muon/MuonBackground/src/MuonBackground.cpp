@@ -1,4 +1,4 @@
-// $Id: MuonBackground.cpp,v 1.51 2009-04-01 12:56:55 cattanem Exp $
+// $Id: MuonBackground.cpp,v 1.52 2009-10-02 13:27:41 asatta Exp $
 // Include files 
 
 // from Gaudi
@@ -124,6 +124,7 @@ StatusCode MuonBackground::initialize() {
   m_partition=basegeometry.getPartitions();
   sc=initializeGeometry();
   if(sc.isFailure())return sc;
+  debug()<<m_maxDimension<<endreq;
   
  
   m_correlation.resize(m_maxDimension);
@@ -134,7 +135,7 @@ StatusCode MuonBackground::initialize() {
   m_logtimevsradial.resize(m_maxDimension);  
   m_lintimevsradial.resize(m_maxDimension);
   m_hitgap.resize(m_maxDimension);
- 
+  debug()<<" ready to initialize the parametrization "<<endreq;
   sc=initializeParametrization();
   if(sc.isFailure())return sc;
   m_flatDistribution =new Rndm::Numbers; 
@@ -351,19 +352,32 @@ StatusCode MuonBackground::initializeGeometry() {
     int reg=i-stat*4;
     gap=(gap>=(int)m_muonDetector->gapsInRegion(stat,reg))?
       gap:m_muonDetector->gapsInRegion(stat,reg);    
+    debug() << gap<<endreq;
+    
   }
   
   m_gaps=gap;
   m_maxDimension=m_gaps*m_stationNumber;
+  debug()<<m_gaps<<" "<<m_stationNumber<<endreq;
+  
+
+
+
+
+  
   //  containerOfFirstGapPosition.resize(m_stationNumber+1);
   int chamber=0;
   
   for(int station=0;station<5;station++){
     for(int region=0;region<4;region++){
       m_chamberInRegion[station*4+region]=chamber;
-      chamber=chamber+m_muonDetector->chamberInRegion(station,region);      
+      chamber=chamber+m_muonDetector->chamberInRegion(station,region);    
+      debug() <<" chamber "<<chamber<<endreq;
+      
     }    
   }
+  debug()<<"exit"<<endreq;
+  
   return StatusCode::SUCCESS;
 }
 
@@ -794,21 +808,37 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
       verbose()<<" hit "<<xpos<<" "<<ypos<<" "<<station<<" "<<
         chNumber<<" "<<regNumber<<endmsg;
       if(sc.isFailure()){
-        debug()<<" no gap found for muon hit" <<endreq;
+        debug()<<" no chamber found for muon hit" <<endreq;
       }else{
         sc=StatusCode::FAILURE;
         //check n ot only that hit is inside chamber but also gap...
          pChamber=dynamic_cast<DeMuonChamber*>(m_muonDetector->
            getChmbPtr(station,regNumber,chNumber));       
-         DeMuonGasGap*  p_Gap=NULL;     
-         IDetectorElement* ptemp= *(pChamber->childBegin());     
-         p_Gap=dynamic_cast<DeMuonGasGap*>(*(ptemp->childBegin()));         
-         IGeometryInfo* geoGap = (p_Gap)->geometry();
+ Gaudi::XYZPoint pToCheck=pChamber->geometry()->toGlobal(Gaudi::XYZPoint(0,0,0));
+debug()<<"to check "<<pToCheck<<endreq;
+         IPVolume* firstGap=pChamber->getFirstGasGap();
+         IPVolume* firstGapLayer=pChamber->getGasGapLayer(0);
          bool isIn=false;
+         
+         
+         Gaudi::XYZPoint pInMother=
+           firstGap->toMother(Gaudi::XYZPoint(0,0,0));
+         Gaudi::XYZPoint pInChamber=
+           firstGapLayer->toMother(pInMother);
+           debug()<< pInChamber<<" p in chamber "<<endreq; 
+         Gaudi::XYZPoint pInGlobal=(pChamber->geometry())->toGlobal(pInChamber);
+         //Gaudi::XYZPoint pInGlobal=(pChamber->geometry())->toGlobal(pInMother);
+         
+	 
          Gaudi::XYZPoint point(xpos,ypos,0);
-         point.SetZ(geoGap->toGlobal(Gaudi::XYZPoint(0,0,0)).z());          
-         isIn = geoGap->isInside(point);
+         debug()<< point<<" "<<pInGlobal.z()<<endreq;
+         point.SetZ(pInGlobal.z());          
+         Gaudi::XYZPoint pointInChamber=(pChamber->geometry())->toLocal(point);
+         Gaudi::XYZPoint pointInLayer=firstGapLayer->toLocal(pointInChamber);
+         
+         isIn = firstGap->isInside(pointInLayer);
          if(isIn)sc=StatusCode::SUCCESS;
+
           
       }
        if(sc.isFailure()){
@@ -891,15 +921,14 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         int gapNumber=gapHit[igap];        
         Gaudi::XYZPoint entryGlobal;        
         Gaudi::XYZPoint exitGlobal;        
-        DeMuonGasGap* p_Gap=NULL;
+        //        DeMuonGasGap* p_Gap=NULL;
         sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
                                 ySlope,averageZ,entryGlobal,
-                                exitGlobal,p_Gap);
+                                exitGlobal);
         debug()<<"status code of calhitpos "<<sc<<endreq;
         if(sc.isSuccess()){
-          unsigned int chamberTmp=(unsigned int)p_Gap->chamberNumber();
-          unsigned int regionTmp=(unsigned int)p_Gap->regionNumber();
-          debug()<<chamberTmp<<" "<<regionTmp<<endmsg;
+
+          debug()<<"found hit in chamber  "<<endmsg;
         }else{
           allHitsInsideCha=false;            
         }          
@@ -928,10 +957,10 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
         int gapNumber=gapHit[igap];
         Gaudi::XYZPoint entryGlobal;        
         Gaudi::XYZPoint exitGlobal;        
-        DeMuonGasGap* p_Gap=NULL;
+        
         StatusCode sc=calculateHitPosInGap(pChamber,gapNumber,xpos,ypos,xSlope,
                                            ySlope,averageZ,entryGlobal,
-                                           exitGlobal,p_Gap);
+                                           exitGlobal);
         if ( sc.isFailure() )return  sc;
         float x=(entryGlobal.x()+exitGlobal.x())/2.0F;
         float y=(entryGlobal.y()+exitGlobal.y())/2.0F;
@@ -948,7 +977,7 @@ StatusCode MuonBackground::createHit(LHCb::MCHits*
           pHit->setTime(timeBest+tofOfLight);  
         }
         debug()<<" mid point "<<x<<" "<<y<<" "<<z<<endreq;
-        debug()<<p_Gap<<endreq;
+        
         
         int sen=m_muonDetector->sensitiveVolumeID(Gaudi::XYZPoint(x,y,z));
         debug()<<" the volume ID is "<<sen<<endreq;     
@@ -1017,37 +1046,39 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
                                                 float ypos,float xSlope,
                                                 float ySlope,float zavegaps,
                                                 Gaudi::XYZPoint& entryGlobal,
-                                                Gaudi::XYZPoint& exitGlobal,
-                                                DeMuonGasGap*& p_Gap)
+                                                Gaudi::XYZPoint& exitGlobal)
 {
   //StatusCode sc=StatusCode::FAILURE;  
-  IDetectorElement::IDEContainer::iterator itGap;
-  int countGap=0;
-  p_Gap=NULL;
-  for(itGap=(pChamber)->childBegin(); itGap<(pChamber)->childEnd(); itGap++){
-    if(countGap==gapNumber){
-      p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
-      break;
-    }    
-    countGap++;    
-  }  
-  if(p_Gap!=NULL){
-    const ISolid* gapSolid=(p_Gap->geometry())->lvolume()->solid();
+//   IDetectorElement::IDEContainer::iterator itGap;
+//   int countGap=0;
+//   p_Gap=NULL;
+//   for(itGap=(pChamber)->childBegin(); itGap<(pChamber)->childEnd(); itGap++){
+//     if(countGap==gapNumber){
+//       p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
+//       break;
+//     }    
+//     countGap++;    
+//   } 
+    IPVolume* p_Gap=pChamber->getGasGap(gapNumber);
+  IPVolume* p_GapLayer=pChamber->getGasGapLayer(gapNumber);
+
+
+  if(p_Gap!=NULL){  
+    const ISolid* gapSolid=(p_Gap)->lvolume()->solid();
     const SolidBox* gapBox = dynamic_cast<const SolidBox *>(gapSolid);
     float zhalfgap= gapBox->zHalfLength() ;
     float xhalfgap= gapBox->xHalfLength() ;
     float yhalfgap= gapBox->yHalfLength() ;
 //    verbose()<<"half gap size "<<xhalfgap <<" "<<yhalfgap<<" "<<zhalfgap
 //           <<endmsg;    
-    Gaudi::XYZPoint gapcc=(p_Gap->geometry())->
-      toGlobal(Gaudi::XYZPoint(0,0,0));
     
 //    verbose()<<"glob gap pos "<<gapcc.x()<<" "<<gapcc.y()<<" "
 //                <<gapcc.z()<<endreq;
                 
-    
-    Gaudi::XYZPoint poslocal= 
-      (p_Gap->geometry())->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
+        Gaudi::XYZPoint loch=pChamber->geometry()->toLocal(Gaudi::XYZPoint(xpos,ypos,zavegaps));
+    Gaudi::XYZPoint logaslayer=p_GapLayer->toLocal(loch);
+    Gaudi::XYZPoint poslocal=p_Gap->toLocal(logaslayer);
+
     float zcenter=poslocal.z();
 //    verbose()<<" input data "<<xpos<<" "<<ypos<<" "<<gapNumber<<" "
 //          <<zavegaps<<" "<<endmsg;    
@@ -1111,10 +1142,18 @@ StatusCode MuonBackground::calculateHitPosInGap(DeMuonChamber* pChamber,
       //back to the global frame    
 //      verbose()<<xentry<<" "<<yentry<<" "<<zmin<<endreq;
 //      verbose()<<xexit<<" "<<yexit<<" "<<zmax<<endreq;      
-      entryGlobal=(p_Gap->geometry())->
-        toGlobal(Gaudi::XYZPoint(xentry,yentry,zmin));
-      exitGlobal=(p_Gap->geometry())->
-        toGlobal(Gaudi::XYZPoint(xexit,yexit,zmax));
+      Gaudi::XYZPoint entryInLayer=p_Gap->toMother(Gaudi::XYZPoint(xentry,yentry,zmin));
+      Gaudi::XYZPoint entryInCh=p_GapLayer->toMother(entryInLayer);
+    
+      entryGlobal=(pChamber->geometry())->
+	toGlobal(entryInCh);
+      Gaudi::XYZPoint exitInLayer=
+	p_Gap->toMother((Gaudi::XYZPoint(xexit,yexit,zmax)));
+      Gaudi::XYZPoint exitInCh=p_GapLayer->toMother(exitInLayer);
+
+      exitGlobal=(pChamber->geometry())->
+        toGlobal(exitInCh);
+
 //      verbose()<<"global "<<entryGlobal.x()<<" "<<entryGlobal.y()<<" "<<entryGlobal.z()<<endreq;
 //      verbose()<<"global "<<exitGlobal.x()<<" "<<exitGlobal.y()<<" "<<exitGlobal.z()<<endreq;
       
@@ -1134,33 +1173,37 @@ StatusCode MuonBackground::calculateAverageGap(DeMuonChamber* pChamber,
   StatusCode sc=StatusCode::SUCCESS;  
   IDetectorElement::IDEContainer::iterator itGap;
   int countGap=0;
-  DeMuonGasGap*  p_Gap=NULL;
+
   zaverage=0;  
-  for(itGap=(pChamber)->childBegin(); itGap<(pChamber)->childEnd(); itGap++){
-    if(countGap>=gapNumberStart&&countGap<=gapNumberStop){
-      p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
-      //get 3 points to build a plane for the gap center
-      Gaudi::XYZPoint point1=(p_Gap->geometry())->
-        toGlobal(Gaudi::XYZPoint(0,0,0));
-      Gaudi::XYZPoint point2=(p_Gap->geometry())->
-        toGlobal(Gaudi::XYZPoint(1,0,0));
-      Gaudi::XYZPoint point3=(p_Gap->geometry())->
-        toGlobal(Gaudi::XYZPoint(0,1,0));
-      Gaudi::Plane3D plane(point1,point2,point3);
-      float zInterceptThisPlane=0;      
-      Gaudi::XYZVector para=plane.Normal();
-      if(para.Z()!=0){
-        double a=para.X();
-        double b=para.Y();
-        double d=plane.HesseDistance();        
-        zInterceptThisPlane=-(a*xpos+b*ypos+d)/(para.Z());
-      }else zInterceptThisPlane=point1.z();      
-      zaverage=zaverage+ zInterceptThisPlane;
-    }    
-    countGap++;    
-  } 
+  for(int i=gapNumberStart;i<=gapNumberStop;i++){
+    IPVolume* pGapLayer=(pChamber)->getGasGapLayer(i);
+    IPVolume* pGap=(pChamber)->getGasGap(i);
+    //get 3 points to build a plane for the gap center
+    Gaudi::XYZPoint point1=pChamber->geometry()->
+      toGlobal(pGapLayer->
+	       toMother(pGap->toMother(Gaudi::XYZPoint(0,0,0))));
+    Gaudi::XYZPoint point2=pChamber->geometry()->
+      toGlobal(pGapLayer->
+	       toMother(pGap->toMother(Gaudi::XYZPoint(1,0,0))));
+    Gaudi::XYZPoint point3=pChamber->geometry()->
+      toGlobal(pGapLayer->
+	       toMother(pGap->toMother(Gaudi::XYZPoint(0,1,0))));
+    Gaudi::Plane3D plane(point1,point2,point3);
+    float zInterceptThisPlane=0;      
+    Gaudi::XYZVector para=plane.Normal();
+    if(para.Z()!=0){
+      double a=para.X();
+      double b=para.Y();
+      double d=plane.HesseDistance();        
+      zInterceptThisPlane=-(a*xpos+b*ypos+d)/(para.Z());
+    }else zInterceptThisPlane=point1.z();      
+    zaverage=zaverage+ zInterceptThisPlane;
+  }    
+  countGap++;    
+  
   zaverage=zaverage/(gapNumberStop-gapNumberStart+1);  
   return sc;
+
   
 }
 int MuonBackground::chamberOffset(int station,int region)
