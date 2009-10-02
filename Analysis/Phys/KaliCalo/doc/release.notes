@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.6 2009-10-01 13:01:57 ibelyaev Exp $ 
+! $Id: release.notes,v 1.7 2009-10-02 10:35:29 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.6 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.7 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+
+!========================== KaliCalo v2r1 2009-10-02 ==========================
+
+! 2009-10-02 - Vanya BELYAEV
+  
+ - tag the verison, compatible with LHC_v28r0 
+  
+  but for the configurables "new" CaloReco is required 
+
 
 ! 2009-10-01 - Vanya BELYAEV
 
