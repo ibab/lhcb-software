@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.50 2009-10-02 13:38:08 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.51 2009-10-02 13:50:32 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -127,11 +127,11 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
   Gaudi::XYZPoint myPointInChFrame=theChmb ->geometry()->toLocal(myPoint);
   //Set SC to failure until gap is found
   sc = StatusCode::FAILURE;
-  int gasGapNumber= theChmb->getGasGapNumber();
+  //  int gasGapNumber= theChmb->getGasGapNumber();
   //Is the chamber returned containing the hit?
   Gaudi::XYZPoint pointInGap;
   
-  IPVolume* gasVolume;
+  IPVolume* gasVolume=NULL;
   StatusCode scGap=  theChmb ->isPointInGasGap(myPointInChFrame,
 					       pointInGap,gapNumber,gasVolume);
   if(scGap.isSuccess()){
@@ -564,12 +564,12 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
                               ((my_entry.z()+my_exit.z())/2)));
   Gaudi::XYZPoint entryInCh= (myChPtr ->geometry())->toLocal(my_entry);
   Gaudi::XYZPoint exitInCh= (myChPtr ->geometry())->toLocal(my_exit);
-  int gapsInCh=myChPtr->getGasGapNumber();
+  //  int gapsInCh=myChPtr->getGasGapNumber();
   bool isIn = false;
-  int GapCnt=0;
+  // int GapCnt=0;
   Gaudi::XYZPoint pointInGap;
   int gapNumber=-1;
-  IPVolume* gasVolume;
+  IPVolume* gasVolume=NULL;
   StatusCode inGap=myChPtr-> isPointInGasGap(midInCh,pointInGap,gapNumber,gasVolume);
   if(inGap.isSuccess()){
     isIn=true;

@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.17 2009-10-02 13:24:19 asatta Exp $
+// $Id: DeMuonChamber.cpp,v 1.18 2009-10-02 13:50:32 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -176,7 +176,7 @@ StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi:
 
   StatusCode sc;
   int loopnumber=0;
-  IPVolume* nullPV=NULL;
+//  IPVolume* nullPV=NULL;
   ILVolume::PVolumes::const_iterator pvIterator;
   for (pvIterator=((geometry()->lvolume())->pvBegin());
        pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
