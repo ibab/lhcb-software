@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.15 2009-10-02 11:54:17 pkoppenb Exp $
+!$Id: release.notes,v 1.16 2009-10-02 12:39:26 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+!========================== RichPIDQC v1r2p3 2009-10-02 ======================
 
 ! 2009-10-02 - Patrick Koppenburg
  - Remove TINFO cut
