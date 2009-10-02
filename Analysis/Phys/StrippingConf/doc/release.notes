@@ -1,15 +1,18 @@
-!$Id: release.notes,v 1.21 2009-10-01 12:26:25 jpalac Exp $
+!$Id: release.notes,v 1.22 2009-10-02 09:21:04 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v1r5 2009-10-02 ===================
+
 ! 2009-10-01 - Juan PALACIOS
  - python/StrippingConf/StrippingLine.py
-  . Add concept of outputlocation() on top of outputSelection(). 
+  . Add concept of outputLocation() on top of outputSelection(). 
     outputLocation() gives a useful and explicit TES location for the output
-    of a StrippingLine or bindMembers.
+    of a StrippingLine or bindMembers. outputSelection() is the name of the 
+    algorithm writing the interesting data.
  - python/StrippingConf/StrippingStream.py
   . outputLocations() are now constructed by calling the outputLocation() 
     method of each member, instead of calling outputSelection() and pre-pending
