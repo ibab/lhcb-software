@@ -384,6 +384,17 @@ DR2      = LoKi.Particles.DeltaR2
 ## @see LoKi::Cuts::TRPCHI2 
 TRPCHI2  = LoKi.Particles.TrackChi2Prob ()
 
+## @see LoKi::Cuts::TRGHP
+TRGHP        = LoKi.Particles.GhostProbability ()
+## @see LoKi::Cuts::TRGHOSTPROB
+TRGHOSTPROB  = TRGHP 
+
+## @see LoKi::Cuts::TRLH
+TRLH         = LoKi.Particles.TrackLikelihood ()
+## @see LoKi::Cuts::TRGHOSTPROB
+TRLIKELIHOOD = TRLH 
+
+
 ## @see LoKi::Cuts::TRGPOINTING
 TRGPOINTING     = LoKi.Particles.TrgPointingScore 
 

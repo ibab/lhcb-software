@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.37 2009-09-26 13:49:08 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.38 2009-10-02 15:06:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -5681,6 +5681,26 @@ namespace LoKi
      */
     const EQUALTO                 TRDOWN ( TRTYPE , LHCb::Track::Downstream ) ;
     // ========================================================================
+    /** @var TRGHP
+     *  simple evaluator of "ghost probability"
+     *  @see LoKi::Particles::GhostProbability
+     *  @see LoKi::Cuts::TRGHOSTPROB
+     *  @see LHCb::Track::ghostProbabilty
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02 
+     */
+    const LoKi::Particles::GhostProbability                             TRGHP ;
+    // ========================================================================
+    /** @var TRGHOSTPROB
+     *  simple evaluator of "ghost probability"
+     *  @see LoKi::Particles::GhostProbability
+     *  @see LoKi::Cuts::TRGHP
+     *  @see LHCb::Track::ghostProbabilty
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02 
+     */
+    const LoKi::Particles::GhostProbability                        TGHOSTPROB ;
+    // ========================================================================
     /** @var TRHISTORY 
      *  The trivial function which evaluates LHCb::Track::history
      *
@@ -5733,6 +5753,26 @@ namespace LoKi
      *  @date 2006-02-23 
      */
     const EQUALTO                       TRLONG ( TRTYPE , LHCb::Track::Long ) ;
+    // ========================================================================
+    /** @var TRLH 
+     *  simple evaluator of "track likelihood"
+     *  @see LoKi::Particles::TrackLikelihood
+     *  @see LoKi::Cuts::TRLIKELIHOOD
+     *  @see LHCb::Track::likelihood
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02 
+     */
+    const LoKi::Particles::TrackLikelihood                               TRLH ;
+    // ========================================================================
+    /** @var TRLIKELIHOOD
+     *  simple evaluator of "track likelihood"
+     *  @see LoKi::Particles::TrackLikelihood
+     *  @see LoKi::Cuts::TRLH
+     *  @see LHCb::Track::likelihood
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02 
+     */
+    const LoKi::Particles::TrackLikelihood                       TRLIKELIHOOD ;
     // ========================================================================
     /** @var TRPCHI2 
      *  The trivial evaluato of \f$\chi^2\f$-probability for the track 

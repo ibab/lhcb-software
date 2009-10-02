@@ -1,4 +1,4 @@
-// $Id: Particles13.h,v 1.8 2008-04-10 18:42:02 ibelyaev Exp $
+// $Id: Particles13.h,v 1.9 2009-10-02 15:06:13 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES13_H 
 #define LOKI_PARTICLES13_H 1
@@ -277,8 +277,67 @@ namespace LoKi
       LoKi::Extract::Particle2Track m_track ;
     };
     // ========================================================================
-  }  // end of namespace Particles
-}  // end of namespace LoKi
+    /** @class GhostProbability 
+     *  The trivial function which evaluates "ghost probability"
+     *  @see LoKi::Cuts::TRGHOSTPROB
+     *  @see LoKi::Cuts::TRGP
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02
+     */
+    class GhostProbability 
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~GhostProbability() {}
+      /// MANDATORY: clone method ("vitual constructor")
+      virtual  GhostProbability* clone() const 
+      { return new GhostProbability(*this); }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// extractor of the track from the partice 
+      LoKi::Extract::Particle2Track m_track ;                // track extractor 
+      // ======================================================================
+    };
+    // ========================================================================
+    /** @class Track Likelihood
+     *  The trivial function which evaluates "track likelihood"
+     *  @see LoKi::Cuts::TRLIKELIHOOD
+     *  @see LoKi::Cuts::TRLH
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-10-02
+     */
+    class TrackLikelihood
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function
+    {
+    public:
+      // ======================================================================
+      /// MANDATORY: virtual destructor 
+      virtual ~TrackLikelihood() {}
+      /// MANDATORY: clone method ("vitual constructor")
+      virtual  TrackLikelihood* clone() const 
+      { return new TrackLikelihood(*this); }
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  the specific printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// extractor of the track from the partice 
+      LoKi::Extract::Particle2Track m_track ;                // track extractor 
+      // ======================================================================
+    };
+    // ========================================================================
+  } //                                         end of namespace LoKi::Particles
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.114 2009-09-26 13:49:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.115 2009-10-02 15:06:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-02 - Vanya BELYAEV
+
+ - New symbols for Chris & Co
+
+     1. "track ghost probablity"    LoKi::Particles::GhostProbability, 
+         TRGHP & TRGHOSTPROB 
+
+     2. "track likelihood"          LoKi::Particles::TrackLikelihood, 
+         TRLH  & TRLIKELIHOOD 
+
+
 
 ! 2009-09-26 - Vanya BELYAEV
 

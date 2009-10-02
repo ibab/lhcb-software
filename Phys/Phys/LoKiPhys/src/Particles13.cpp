@@ -1,4 +1,4 @@
-// $Id: Particles13.cpp,v 1.9 2008-04-10 18:42:02 ibelyaev Exp $
+// $Id: Particles13.cpp,v 1.10 2009-10-02 15:06:13 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -323,6 +323,70 @@ LoKi::Particles::TrackChi2Prob::fillStream ( std::ostream& s ) const
 
 
 
+
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::GhostProbability::result_type
+LoKi::Particles::GhostProbability::operator() 
+  ( LoKi::Particles::GhostProbability::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel;                    // RETURN 
+  }
+  // get the track:
+  const LHCb::Track* track = m_track ( p ) ;
+  //
+  if ( 0 == track ) 
+  {
+    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
+  }
+  //
+  return track->ghostProbability() ;
+}
+// ============================================================================
+// OPTIONAL:  the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::GhostProbability::fillStream ( std::ostream& s ) const 
+{ return s << "TRGHOSTPROB" ; } 
+// ============================================================================
+
+
+
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::TrackLikelihood::result_type
+LoKi::Particles::TrackLikelihood::operator() 
+  ( LoKi::Particles::TrackLikelihood::argument p ) const 
+{
+  if ( 0 == p ) 
+  {
+    Error ( " Argument is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel;                    // RETURN 
+  }
+  // get the track:
+  const LHCb::Track* track = m_track ( p ) ;
+  //
+  if ( 0 == track ) 
+  {
+    Error ( " Track    is invalid! return 'InvalidConfLevel'" ) ;
+    return LoKi::Constants::InvalidConfLevel ;                        // RETURN 
+  }
+  //
+  return track->likelihood() ;
+}
+// ============================================================================
+// OPTIONAL:  the specific printout 
+// ============================================================================
+std::ostream& 
+LoKi::Particles::TrackLikelihood::fillStream ( std::ostream& s ) const 
+{ return s << "TRLIKELIHOOD" ; } 
+// ============================================================================
 
 
 // ============================================================================
