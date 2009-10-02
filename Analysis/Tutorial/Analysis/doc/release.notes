@@ -8,6 +8,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Juan PALACIOS
+ - Add python modules for particle selections.
+ - cmt/requirements
+  . Increase vo v8r3 and add python modules.
+
 ! 2009-10-02 - Marco Cattaneo
  - Add src/DummyAnalysisAlg.{h,cpp} to allow building of a library from an
    empty src directory.
