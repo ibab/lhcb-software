@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-10-02 - Vanya BELYAEV
+
+ - add CaloCellID::hash method, change the output type  
+ - modify a little bit CaloCellIDHash.h file  
 
 ! 2009-10-01 - Vanya  BELYAEV
 

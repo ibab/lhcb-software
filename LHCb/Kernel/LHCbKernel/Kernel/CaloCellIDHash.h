@@ -1,4 +1,4 @@
-// $Id: CaloCellIDHash.h,v 1.1 2009-07-30 12:08:28 ibelyaev Exp $
+// $Id: CaloCellIDHash.h,v 1.2 2009-10-02 11:29:18 ibelyaev Exp $
 // ============================================================================
 #ifndef KERNEL_CALOCELLIDHASH_H 
 #define KERNEL_CALOCELLIDHASH_H 1
@@ -34,7 +34,7 @@ namespace LHCb
    *  @date   2009-07-30
    */
   inline std::size_t hash_value  ( const LHCb::CaloCellID& id ) 
-  { return id.__hash__ () ; }  
+  { return id.hash () ; }  
   // ==========================================================================
 } //                                                      end of namespace LHCb
 // ============================================================================

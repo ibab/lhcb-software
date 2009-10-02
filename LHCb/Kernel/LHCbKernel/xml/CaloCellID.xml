@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.16 2009-10-01 11:46:09 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.17 2009-10-02 11:29:18 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -356,7 +356,18 @@
   <method
     desc   = "hash-function for python"
     name   = "__hash__"
-    type   = "unsigned int"
+    type   = "std::size_t"
+    const  = "TRUE"
+    access = "PUBLIC" >
+    <code>
+      return hash() ; 
+    </code>
+  </method>
+
+  <method
+    desc   = "hash-function"
+    name   = "hash"
+    type   = "std::size_t"
     const  = "TRUE"
     access = "PUBLIC" >
     <code>
