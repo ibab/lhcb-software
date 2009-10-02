@@ -5,7 +5,7 @@
  *  Implementation file for tool base class : Rich::Rec::PhotonCreatorBase
  *
  *  CVS Log :-
- *  $Id: RichPhotonCreatorBase.cpp,v 1.29 2009-07-30 11:30:22 jonrob Exp $
+ *  $Id: RichPhotonCreatorBase.cpp,v 1.30 2009-10-02 18:58:46 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   20/05/2005
@@ -49,7 +49,7 @@ namespace Rich
       // Define the interface
       declareInterface<IPhotonCreator>(this);
 
-      // defaults                 Aero   R1Gas   R2Gas
+      // defaults                 Aero    R1Gas   R2Gas
       m_minCKtheta     = list_of (0.075) (0.005) (0.005) ;
       m_maxCKtheta     = list_of (0.290) (0.075) (0.035) ;
       m_minPhotonProb  = list_of (1e-15) (1e-15) (1e-15) ;
@@ -104,10 +104,10 @@ namespace Rich
 
       if ( deRich1->exists("HPDPanelDetElemLocations") )
       {
-        std::vector<std::string> r1PanelLoc = deRich1->paramVect<std::string>("HPDPanelDetElemLocations");
+        const std::vector<std::string> r1PanelLoc = deRich1->paramVect<std::string>("HPDPanelDetElemLocations");
         m_hpdPanels[Rich::Rich1][Rich::top]    = getDet<DeRichHPDPanel>(r1PanelLoc[0]);
         m_hpdPanels[Rich::Rich1][Rich::bottom] = getDet<DeRichHPDPanel>(r1PanelLoc[1]);
-        std::vector<std::string> r2PanelLoc = deRich2->paramVect<std::string>("HPDPanelDetElemLocations");
+        const std::vector<std::string> r2PanelLoc = deRich2->paramVect<std::string>("HPDPanelDetElemLocations");
         m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(r2PanelLoc[0]);
         m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(r2PanelLoc[1]);
       }
@@ -118,7 +118,6 @@ namespace Rich
         m_hpdPanels[Rich::Rich2][Rich::left]   = getDet<DeRichHPDPanel>(DeRichLocations::Rich2LeftPanel);
         m_hpdPanels[Rich::Rich2][Rich::right]  = getDet<DeRichHPDPanel>(DeRichLocations::Rich2RightPanel);
       }
-
 
       // Setup incident services
       incSvc()->addListener( this, IncidentType::BeginEvent );
