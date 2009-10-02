@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::TrackSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.37 2009-07-30 11:06:48 jonrob Exp $
+ *  $Id: RichGlobalPIDTrTrackSel.cpp,v 1.38 2009-10-02 13:04:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -89,7 +89,7 @@ StatusCode TrackSel::eventInit()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("Processing aborted -> Abort",StatusCode::SUCCESS);
+    return Warning("Processing aborted -> Abort",StatusCode::SUCCESS,0);
   }
 
   // Check the number of input raw tracks
@@ -98,7 +98,7 @@ StatusCode TrackSel::eventInit()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedTrTrackLimit );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("Max. number of input tracks exceeded -> Abort",StatusCode::SUCCESS);
+    return Warning("Maximum number of input tracks exceeded -> Abort",StatusCode::SUCCESS,0);
   }
 
   // Make sure RichRecTracks are available
@@ -108,14 +108,14 @@ StatusCode TrackSel::eventInit()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichTracks );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
+    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS,0);
   } 
   else if ( (int)richTracks()->size() > m_maxUsedTracks )
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedRichTrackLimit );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("Max. number of RICH tracks exceeded -> Abort",StatusCode::SUCCESS);
+    return Warning("Maximum number of RICH tracks exceeded -> Abort",StatusCode::SUCCESS,0);
   }
 
   return StatusCode::SUCCESS;
@@ -186,7 +186,7 @@ StatusCode TrackSel::execute()
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichTracks );
     richStatus()->setEventOK( false );
     deleteGPIDEvent();
-    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS);
+    return Warning("No tracks selected -> Abort",StatusCode::SUCCESS,0);
   }
 
   return sc;

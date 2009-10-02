@@ -5,7 +5,7 @@
  *  Implementation file for RICH Global PID algorithm class : Rich::Rec::GlobalPID::DigitSel
  *
  *  CVS Log :-
- *  $Id: RichGlobalPIDDigitSel.cpp,v 1.24 2009-07-30 11:06:48 jonrob Exp $
+ *  $Id: RichGlobalPIDDigitSel.cpp,v 1.25 2009-10-02 13:04:10 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/04/2002
@@ -28,10 +28,8 @@ DigitSel::DigitSel( const std::string& name,
                     ISvcLocator* pSvcLocator )
   : AlgBase ( name, pSvcLocator )
 {
-
   // Job options
   declareProperty( "MaxUsedPixels", m_maxUsedPixels = 8000 );
-
 }
 
 // Destructor
@@ -62,7 +60,7 @@ StatusCode DigitSel::execute()
   {
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ProcStatAbort );
     richStatus()->setEventOK( false );
-    return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS );
+    return Warning( "Processing aborted -> Abort", StatusCode::SUCCESS, 0 );
   }
 
   // Create all RichRecPixels
@@ -73,13 +71,13 @@ StatusCode DigitSel::execute()
   { // empty event ?
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::NoRichPixels );
     richStatus()->setEventOK( false );
-    return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS );
+    return Warning( "Event contains no pixels -> Abort", StatusCode::SUCCESS, 0 );
   }
   else if ( m_maxUsedPixels < (int)richPixels()->size() ) 
   { // too many pixels
     procStatus()->addAlgorithmStatus( gpidName(), Rich::Rec::ReachedPixelLimit );
     richStatus()->setEventOK( false );
-    return Warning( "Max. number of pixels exceeded -> Abort", StatusCode::SUCCESS );
+    return Warning( "Max. number of pixels exceeded -> Abort", StatusCode::SUCCESS, 0 );
   }
 
   // final printout of selected number of pixels

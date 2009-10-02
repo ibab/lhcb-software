@@ -4,6 +4,11 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+! 2009-10-02 - Chris Jones
+ - Suppress warning messages about empty track or pixel containers so 0 
+   instances are printed during processing. They are instead just summarised
+   at the end of the job.
+
 !======================= RichGlobalPID v3r10p3 2009-09-03 ====================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichGlobalPID_dll.cpp
