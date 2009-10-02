@@ -1,5 +1,5 @@
-#$Id: Wrappers.py,v 1.8 2009-10-02 08:35:36 jpalac Exp $
-#$Tag: $
+#$Id: Wrappers.py,v 1.9 2009-10-02 08:36:21 jpalac Exp $
+#$Revision: 1.9 $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
