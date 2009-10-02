@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.16 2009-09-14 08:58:35 jonrob Exp $
+// $Id: DeMuonChamber.cpp,v 1.17 2009-10-02 13:24:19 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -9,7 +9,7 @@
 
 // Include files
 #include "MuonDet/DeMuonChamber.h"
-
+#include "DetDesc/IGeometryInfo.h"
 //Detector descriptions
 #include "DetDesc/Condition.h"
 
@@ -84,3 +84,175 @@ StatusCode DeMuonChamber::initialize()
   return sc;
 }
 
+IPVolume* DeMuonChamber::getFirstGasGap(){
+  IPVolume* nullPV=NULL;
+  ILVolume::PVolumes::const_iterator pvIterator;
+//   std::cout<<" debug the ga "<<std::endl;
+//   std::cout<<" debug the ga "<<geometry()<<std::endl;
+//   std::cout<<" debug the gap "<<geometry()->lvolume()<<std::endl;
+//   std::cout<<" debug the gap "<<geometry()->lvolume()->pvBegin()<<std::endl;
+//   std::cout<<" debug the gap "<<geometry()->lvolume()->pvEnd()<<std::endl;
+
+  for (pvIterator=((geometry()->lvolume())->pvBegin());
+       pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
+    
+    const ILVolume*  geoCh=(*pvIterator)->lvolume();
+    std::string lvolname=geoCh->name();
+    size_t pos;
+    pos=lvolname.find_last_of("/");
+    std::string mystring=lvolname.substr(pos+1);
+ 
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    if(mystring=="lvGasGap"){
+      //loop un variys gap layer to get the real gas gap volume
+      ILVolume::PVolumes::const_iterator pvGapIterator;
+      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+	  return (*pvGapIterator);
+	}
+      }
+    }
+  }
+  return nullPV;
+}
+	
+IPVolume* DeMuonChamber::getGasGap(int number){
+  int loopnumber=0;
+  IPVolume* nullPV=NULL;
+  ILVolume::PVolumes::const_iterator pvIterator;
+  for (pvIterator=((geometry()->lvolume())->pvBegin());
+       pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
+    
+    const ILVolume*  geoCh=(*pvIterator)->lvolume();
+    std::string lvolname=geoCh->name();
+    size_t pos;
+    pos=lvolname.find_last_of("/");
+    std::string mystring=lvolname.substr(pos+1);
+    
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    if(mystring=="lvGasGap"){
+      //loop un variys gap layer to get the real gas gap volume
+      ILVolume::PVolumes::const_iterator pvGapIterator;
+      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+	  if(loopnumber==number) return (*pvGapIterator);
+	  loopnumber++;
+	 
+	}
+      }
+    }
+  }
+  return nullPV;
+}
+
+
+
+IPVolume* DeMuonChamber::getGasGapLayer(int number){
+  int loopnumber=0;
+  IPVolume* nullPV=NULL;
+  ILVolume::PVolumes::const_iterator pvIterator;
+  for (pvIterator=((geometry()->lvolume())->pvBegin());
+       pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
+    
+    const ILVolume*  geoCh=(*pvIterator)->lvolume();
+    std::string lvolname=geoCh->name();
+    size_t pos;
+    pos=lvolname.find_last_of("/");
+    std::string mystring=lvolname.substr(pos+1);
+    
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    if(mystring=="lvGasGap"){
+      if(loopnumber==number) return (*pvIterator);
+      loopnumber++;
+	 
+    }
+    
+  }
+  return nullPV;
+}
+	
+
+StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi::XYZPoint& pointInGap,int& number,IPVolume* gasVolume){
+
+  StatusCode sc;
+  int loopnumber=0;
+  IPVolume* nullPV=NULL;
+  ILVolume::PVolumes::const_iterator pvIterator;
+  for (pvIterator=((geometry()->lvolume())->pvBegin());
+       pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
+    
+    const ILVolume*  geoCh=(*pvIterator)->lvolume();
+    std::string lvolname=geoCh->name();
+    size_t pos;
+    pos=lvolname.find_last_of("/");
+    std::string mystring=lvolname.substr(pos+1);
+    
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    if(mystring=="lvGasGap"){
+      //loop un variys gap layer to get the real gas gap volume
+      ILVolume::PVolumes::const_iterator pvGapIterator;
+
+  
+      bool isIn = (*pvIterator)->isInside(pointInChamber);
+
+      if(isIn){
+	Gaudi::XYZPoint myPointInGasFrame=(*pvIterator)->toLocal(pointInChamber);
+	for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+	  if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+	    bool isInGap = (*pvGapIterator)->isInside(myPointInGasFrame);
+	    if(isInGap){ 	      
+	      pointInGap= (*pvGapIterator)->toLocal(myPointInGasFrame);
+	      gasVolume=(*pvGapIterator);
+	      number=loopnumber;
+	      return StatusCode::SUCCESS;
+	    }else{
+	      return StatusCode::FAILURE;
+	    }	    
+	  }
+	}
+      }
+      loopnumber++;
+    }
+  }
+
+  return StatusCode::FAILURE;
+
+}
+
+StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi::XYZPoint& pointInGap,IPVolume* gasVolume){
+  int number=0;
+  return isPointInGasGap(pointInChamber,pointInGap,number,gasVolume);
+}
+
+
+
+
+int DeMuonChamber::getGasGapNumber(){
+  int loopnumber=0;
+  //  IPVolume* nullPV=NULL;
+  ILVolume::PVolumes::const_iterator pvIterator;
+  for (pvIterator=((geometry()->lvolume())->pvBegin());
+       pvIterator!=(((geometry())->lvolume())->pvEnd());pvIterator++){
+    
+    const ILVolume*  geoCh=(*pvIterator)->lvolume();
+    std::string lvolname=geoCh->name();
+    size_t pos;
+    pos=lvolname.find_last_of("/");
+    std::string mystring=lvolname.substr(pos+1);
+    
+    //msg<<MSG::ERROR<<"test del nome "<<mystring<<endreq;
+    if(mystring=="lvGasGap"){
+      //loop un variys gap layer to get the real gas gap volume
+      ILVolume::PVolumes::const_iterator pvGapIterator;
+      for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+	if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+	 
+	  loopnumber++;
+	 
+	}
+      }
+    }
+  }
+  return loopnumber;
+}
+	

@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.h,v 1.9 2009-09-14 08:58:35 jonrob Exp $
+// $Id: DeMuonChamber.h,v 1.10 2009-10-02 13:24:19 asatta Exp $
 // ============================================================================
 // CVS tag $Name:
 // ============================================================================
@@ -16,6 +16,7 @@
 
 #include "DetDesc/DetectorElement.h"
 #include "MuonDet/MuonNamespace.h"
+#include "DetDesc/PVolume.h"
 
 /** @class DeMuonChamber DeMuonChamber.h MuonDet/DeMuonChamber.h
  *  
@@ -92,6 +93,17 @@ public:
   void setGridName(std::string grid){
     m_chmbGrid = grid;
   }
+
+  IPVolume* getFirstGasGap();
+  IPVolume* getGasGap(int number);
+  int getGasGapNumber();
+  StatusCode  isPointInGasGap(Gaudi::XYZPoint 
+  pointInChamber,Gaudi::XYZPoint&
+  pointInGap,IPVolume* gasVolume);
+  StatusCode  isPointInGasGap(Gaudi::XYZPoint 
+  pointInChamber,Gaudi::XYZPoint&
+  pointInGap,int& number,IPVolume* gasVolume);
+  IPVolume* getGasGapLayer(int number);
 
 private:
 

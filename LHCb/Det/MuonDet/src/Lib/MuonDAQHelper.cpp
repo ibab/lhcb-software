@@ -1,4 +1,4 @@
-// $Id: MuonDAQHelper.cpp,v 1.11 2009-09-14 08:58:36 jonrob Exp $
+// $Id: MuonDAQHelper.cpp,v 1.12 2009-10-02 13:24:19 asatta Exp $
 // Include files
 
 #include "GaudiKernel/SmartDataPtr.h"
@@ -231,7 +231,7 @@ StatusCode MuonDAQHelper::initDAQMaps()
   sc=initReverseMaps() ;
   msgStream()<<MSG::DEBUG<<" step 8 "<<endmsg;
   if(sc.isFailure())return sc;
-  sc=checkMapConsistency();
+  //  sc=checkMapConsistency();
   if(sc.isFailure()){
     msgStream()<<MSG::WARNING<<"Map Consistency check failed"<<endreq;
     return sc;

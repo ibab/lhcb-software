@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.48 2009-09-14 08:58:35 jonrob Exp $
+// $Id: DeMuonDetector.cpp,v 1.49 2009-10-02 13:24:19 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -76,7 +76,11 @@ StatusCode DeMuonDetector::initialize()
   //fill geo info
   fillGeoInfo();
   fillGeoArray();
-
+msgStream()<<MSG::ERROR<<" ecco qui 111 "<<
+m_stationBox[0][0]<<" "<<
+m_stationBox[0][1]<<" "<<
+m_stationBox[0][2]<<" "<<
+m_stationBox[0][3]<<" "<<endreq;
   //Initialize vectors containing Detector informations
   CountDetEls();
   //  delete tLay;
@@ -98,6 +102,12 @@ StatusCode DeMuonDetector::initialize()
 
   m_daqHelper.initSvc(dataSvc(),msgSvc());
   sc=m_daqHelper.initDAQMaps();
+msgStream()<<MSG::ERROR<<" ecco qui 222 "<<
+m_stationBox[0][0]<<" "<<
+m_stationBox[0][1]<<" "<<
+m_stationBox[0][2]<<" "<<
+m_stationBox[0][3]<<" "<<endreq;
+
   if(sc.isFailure())return sc;
 
   return sc;
@@ -117,36 +127,29 @@ StatusCode DeMuonDetector::Hit2GapNumber(Gaudi::XYZPoint myPoint,
   sc = Hit2ChamberNumber(myPoint,station,chamberNumber,regNum);
   if(sc.isFailure())return sc;
 
+  
   DeMuonChamber * theChmb = getChmbPtr(station,regNum,chamberNumber);
-
+  Gaudi::XYZPoint myPointInChFrame=theChmb ->geometry()->toLocal(myPoint);
   //Set SC to failure until gap is found
   sc = StatusCode::FAILURE;
-
+  int gasGapNumber= theChmb->getGasGapNumber();
   //Is the chamber returned containing the hit?
-  IDetectorElement::IDEContainer::iterator itGap= theChmb->childBegin();
-  for(itGap=theChmb->childBegin(); itGap<theChmb->childEnd(); itGap++){
-
-
-    //Check the Gas Volume
-    IDetectorElement::IDEContainer::iterator itGVol= (*itGap)->childBegin();
-    for(itGVol=(*itGap)->childBegin(); itGVol<(*itGap)->childEnd(); itGVol++){
-      IGeometryInfo* geoGVol = (*itGVol)->geometry();
-
-      isIn = geoGVol->isInside(myPoint);
-      if(isIn) {
-        DeMuonGasGap*  myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
-        gapNumber = myGap->gasGapNumber();
-        sc = StatusCode::SUCCESS;
-        break;
-      }
-    }
-    if(isIn) break;
+  Gaudi::XYZPoint pointInGap;
+  
+  IPVolume* gasVolume;
+  StatusCode scGap=  theChmb ->isPointInGasGap(myPointInChFrame,
+					       pointInGap,gapNumber,gasVolume);
+  if(scGap.isSuccess()){
+    isIn=true;
+    sc = StatusCode::SUCCESS;
   }
 
-  if(!isIn) {
+
+
+  if(!isIn) { 
     msgStream() << MSG::ERROR << "Gap not found! " <<endreq;
+    
   }
-
   return sc;
 }
 
@@ -162,7 +165,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
 
   //Returning the most likely chamber
   m_chamberLayout->chamberMostLikely((float)x,(float)y,station,chamberNumber,regNum);
-
+if(debug)std::cout<<chamberNumber<<" "<<regNum<<std::endl;
   if(regNum>=0&&chamberNumber>=0){
 
     //Providing all 3 numbers identifies a chamber
@@ -246,7 +249,7 @@ StatusCode DeMuonDetector::Hit2ChamberNumber(Gaudi::XYZPoint myPoint,
   }
 
   if(!isIn) {
-    msgStream() << MSG::DEBUG <<
+    msgStream() << MSG::INFO <<
       "Smart seek didn't work. Perform loop on all chambers :( !!! "
                 <<endreq;
     int msta(0),mreg(0),mchm(0);
@@ -538,7 +541,7 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
   int station = getStation(my_entry.z());
   int regNum1(0),chamberNumber1(0);
   int station1 = getStation(my_exit.z());
-
+  int gapCnt=0;
   if((region == -1) || (chamber == -1)) {
     //Hit entry
     Hit2ChamberNumber(my_entry,station,chamberNumber,regNum);
@@ -559,81 +562,61 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
   //Getting the chamber pointer.
   DeMuonChamber*  myChPtr =  getChmbPtr(station,regNum,chamberNumber) ;
-
+  Gaudi::XYZPoint midInCh= (myChPtr ->geometry())
+    ->toLocal(Gaudi::XYZPoint(
+                              ((my_entry.x()+my_exit.x())/2),
+                              ((my_entry.y()+my_exit.y())/2),
+                              ((my_entry.z()+my_exit.z())/2)));
+  Gaudi::XYZPoint entryInCh= (myChPtr ->geometry())->toLocal(my_entry);
+  Gaudi::XYZPoint exitInCh= (myChPtr ->geometry())->toLocal(my_exit);
+  int gapsInCh=myChPtr->getGasGapNumber();
   bool isIn = false;
-  //Getting a gap [gaps in same chamber have same dimensions]
-  DeMuonGasGap*  myGap = (DeMuonGasGap*) 0; int gapCnt(0);
-  IDetectorElement::IDEContainer::iterator itGap=myChPtr->childBegin();
-  for(itGap=myChPtr->childBegin(); itGap<myChPtr->childEnd(); itGap++){
-    myGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
-    Gaudi::XYZPoint aleq = myGap->geometry()->toGlobal(Gaudi::XYZPoint(0.0,0.0,0.0));
-    //    msgStream()<<MSG::INFO<<" test "<<aleq.x()<<" "<<aleq.y()<<" "<<aleq.z()<<endreq;
-
-    //Check the Gas Volume
-    IDetectorElement::IDEContainer::iterator itGVol= (*itGap)->childBegin();
-    for(itGVol=(*itGap)->childBegin(); itGVol<(*itGap)->childEnd(); itGVol++){
-      IGeometryInfo* geoGVol = (*itGVol)->geometry();
-
-
-      Gaudi::XYZPoint mid(((my_entry.x()+my_exit.x())/2),((my_entry.y()+my_exit.y())/2),((my_entry.z()+my_exit.z())/2));
-
-
-      isIn = geoGVol->isInside(mid);
-
-      Gaudi::XYZPoint aleqq = geoGVol->toGlobal(Gaudi::XYZPoint(0.0,0.0,0.0));
-      //      msgStream()<<MSG::INFO<<" test "<<aleqq.x()<<" "<<aleqq.y()<<" "<<aleqq.z()
-      //     <<endreq;
-      if(isIn) break;
-      //      msgStream()<<MSG::INFO<<" is in "<<isIn<<endreq;
-    }
-    if(isIn) break;
-
-    gapCnt++;
+  int GapCnt=0;
+  Gaudi::XYZPoint pointInGap;
+  int gapNumber=-1;
+  IPVolume* gasVolume;
+  StatusCode inGap=myChPtr-> isPointInGasGap(midInCh,pointInGap,gapNumber,gasVolume);
+  if(inGap.isSuccess()){
+    isIn=true;
+    gapCnt=gapNumber;
   }
 
-
-  //  if(!myGap) {
+ //  if(!myGap) {
   if(!isIn) {
-    msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endreq;
-    m_hitNotInGap++;
+  msgStream() << MSG::DEBUG <<"Could not find the gap. Returning a void list."<<endreq;
+    m_hitNotInGap++;	 
     return tmpPair;
   }
-
-  //Gap Geometry info
+  
+  //Gap Geometry info 
   //This is OK ONLY if you want to access x and y informations.
-  //Otherwise you need to go down to the volume of gas gap inside
-  IGeometryInfo*  geoCh=myGap->geometry();
+  //Otherwise you need to go down to the volume of gas gap inside 
+  IPVolume* gasLayer=myChPtr->getGasGapLayer(gapCnt);
+ 
 
-  //Retrieve the chamber box dimensions
+  //Retrieve the chamber box dimensions  
   const SolidBox *box = dynamic_cast<const SolidBox *>
-    (geoCh->lvolume()->solid());
+    (gasLayer->lvolume()->solid());
   double dx = box->xHalfLength();  double dy = box->yHalfLength();
 
 
-  //  msgStream()<<MSG::INFO<<" pre gap "<<gapCnt<<" "<<my_entry.x()<<" "<<
-  //  my_entry.y()<<" "<<my_entry.z()<<endreq;
-  //msgStream()<<MSG::INFO<<" pre gap "<<gapCnt<<" "<<my_exit.x()<<" "<<
-  //  my_exit.y()<<" "<<my_exit.z()<<endreq;
-
   //Refer the distances to Local system [should be the gap]
-  Gaudi::XYZPoint new_entry = geoCh->toLocal(my_entry);
-  Gaudi::XYZPoint new_exit  = geoCh->toLocal(my_exit);
+  Gaudi::XYZPoint new_entry = gasLayer->toLocal(entryInCh);
+  Gaudi::XYZPoint new_exit  = gasLayer->toLocal(exitInCh);
 
-  //msgStream()<<MSG::INFO<<" gap "<<gapCnt<<" "<<new_entry.x()<<" "<<
-  //  new_entry.y()<<" "<<new_entry.z()<<endreq;
-  //msgStream()<<MSG::INFO<<" gap "<<gapCnt<<" "<<new_exit.x()<<" "<<
-  //  new_exit.y()<<" "<<new_exit.z()<<endreq;
 
   Gaudi::XYZPoint LL(-dx,-dy,0);
   Gaudi::XYZPoint LR(dx,-dy,0);
   Gaudi::XYZPoint UL(dx,dy,0);
   //  Gaudi::XYZPoint UR(-dx,dy,0);
+  
 
-  Gaudi::XYZPoint lowerleft = geoCh->toGlobal(LL);
-  Gaudi::XYZPoint lowerright  = geoCh->toGlobal(LR);
-  Gaudi::XYZPoint upperleft = geoCh->toGlobal(UL);
+
+									
+  Gaudi::XYZPoint lowerleft =(myChPtr ->geometry())->toGlobal( gasLayer->toMother(LL));
+  Gaudi::XYZPoint lowerright  = (myChPtr ->geometry())->toGlobal(gasLayer->toMother(LR));
+  Gaudi::XYZPoint upperleft = (myChPtr ->geometry())->toGlobal( gasLayer->toMother(UL));
   //  Gaudi::XYZPoint upperright  = geoCh->toGlobal(UR);
-
 
   //Define relative dimensions
   double mod_xen(0), mod_yen(0), mod_xex(0), mod_yex(0);
@@ -644,26 +627,28 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
       mod_xex = (new_exit.x()+dx)/(2*dx);
       mod_yex = (new_exit.y()+dy)/(2*dy);
     }else if(lowerleft.x()<lowerright.x()&&(lowerleft.y()>upperleft.y())){
+
       mod_xen = (new_entry.x()+dx)/(2*dx);
       mod_yen = (-new_entry.y()+dy)/(2*dy);
       mod_xex = (new_exit.x()+dx)/(2*dx);
       mod_yex = (-new_exit.y()+dy)/(2*dy);
     }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()>upperleft.y())){
+
       mod_xen = (-new_entry.x()+dx)/(2*dx);
       mod_yen = (-new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
       mod_yex = (-new_exit.y()+dy)/(2*dy);
-      msgStream()<<MSG::INFO<<" Should never enter here "<<endreq;
+       msgStream()<<MSG::INFO<<" Should never enter here "<<endreq;
     }else if(lowerleft.x()>lowerright.x()&&(lowerleft.y()<upperleft.y())){
       mod_xen = (-new_entry.x()+dx)/(2*dx);
       mod_yen = (new_entry.y()+dy)/(2*dy);
       mod_xex = (-new_exit.x()+dx)/(2*dx);
-      mod_yex = (new_exit.y()+dy)/(2*dy);
+      mod_yex = (new_exit.y()+dy)/(2*dy);  
       msgStream()<<MSG::INFO<<" Should never enter here "<<endreq;
     }
   } else {
-    msgStream() << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<
-      endreq;
+  msgStream()  << MSG::ERROR <<"Null chamber dimensions. Returning a void list."<<
+      endreq; 
     return tmpPair;
   }
 
@@ -673,21 +658,21 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
 
   //Convert relative distances into absolute ones
   std::vector< std::pair<MuonFrontEndID, std::vector<float> > > myPair;
-  std::vector< std::pair< MuonFrontEndID,std::vector<float> > >::iterator
+  std::vector< std::pair< MuonFrontEndID,std::vector<float> > >::iterator 
     tmpPair_it;
   std::vector<float> myVec; MuonFrontEndID myFE;
   if(theGrid) {
     //Gets list of channels
-    tmpPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
 
+    tmpPair = theGrid->listOfPhysChannels(mod_xen,mod_yen,mod_xex,mod_yex);
     tmpPair_it = tmpPair.begin();
     for(tmpPair_it = tmpPair.begin();tmpPair_it<tmpPair.end(); tmpPair_it++){
       myFE  = tmpPair_it->first;
       myVec = tmpPair_it->second;
       myFE.setLayer(gapCnt/2);
 
-      for(int iDm = 0; iDm<4; iDm++){
-        myVec.at(iDm) = (float)(iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx);
+      for(int iDm = 0; iDm<4; iDm++){  
+        myVec.at(iDm) = iDm%2 ? myVec.at(iDm)*2*dy : myVec.at(iDm)*2*dx;
         //Added resolution effect
         if(fabs(myVec.at(iDm)) < 0.0001) myVec.at(iDm) = 0;
       }
@@ -695,7 +680,8 @@ DeMuonDetector::listOfPhysChannels(Gaudi::XYZPoint my_entry, Gaudi::XYZPoint my_
                        (myFE,myVec));
     }
   } else {
-    msgStream() << MSG::ERROR <<"No grid found. Returning a void list."<<endreq;
+      msgStream()<<  MSG::ERROR <<
+	"No grid found. Returning a void list."<<endreq; 
     return tmpPair;
   }
   return myPair;
@@ -724,34 +710,38 @@ StatusCode DeMuonDetector::getPCCenter(MuonFrontEndID fe,int chamber,
 
   DeMuonChamber*  myChPtr =  getChmbPtr(station,region,chamber) ;
 
-  DeMuonGasGap*  myGap = NULL;
-  IDetectorElement::IDEContainer::iterator itGap=myChPtr->childBegin();
-  myGap= dynamic_cast<DeMuonGasGap*>(*itGap);
-  //Gap Geometry info
-  IGeometryInfo*  geoCh=myGap->geometry();
-  //Retrieve the chamber box dimensions
+  IPVolume*  myGap=myChPtr-> getGasGapLayer(0);
+
   const SolidBox *box = dynamic_cast<const SolidBox *>
-    (geoCh->lvolume()->solid());
-  double dx = box->xHalfLength();
+    (myGap->lvolume()->solid());
+  double dx = box->xHalfLength();  
   double dy = box->yHalfLength();
-  Condition* aGrid =
-    myChPtr->condition(myChPtr->getGridName());
+  Condition* aGrid = 
+  myChPtr->condition(myChPtr->getGridName());
   MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(aGrid);
   double xcenter_norma=-1;
-  double ycenter_norma=-1;
+  double ycenter_norma=-1;  
   StatusCode sc=theGrid->getPCCenter(fe,xcenter_norma,ycenter_norma);
   if(sc.isFailure())return StatusCode::FAILURE;
   double xcenter_gap=xcenter_norma*2*dx-dx;
   double ycenter_gap=ycenter_norma*2*dy-dy;
-  //  unsigned int layer=fe.getLayer();
-  Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);
-  Gaudi::XYZPoint glob= geoCh->toGlobal(loc);
+
+  Gaudi::XYZPoint globChCenter= myChPtr->geometry()->toGlobal( Gaudi::XYZPoint(0,0,0));
+
+
+  Gaudi::XYZPoint loc(xcenter_gap,ycenter_gap,0);   
+
+  Gaudi::XYZPoint refInCh= myGap->toMother(loc);
+
+  Gaudi::XYZPoint glob= myChPtr->geometry()->toGlobal(refInCh);
+
+ 
   xcenter=glob.x();
   ycenter=glob.y();
   zcenter=glob.z();
   return StatusCode::SUCCESS;
-
 }
+
 
 StatusCode  DeMuonDetector::Chamber2Tile(int  chaNum, int station, int region,
                                          LHCb::MuonTileID& tile) const
@@ -789,36 +779,57 @@ void DeMuonDetector::fillGeoInfo()
         //        DeMuonRegion* reg=dynamic_cast<DeMuonRegion*> (*itRg);
         for(itCh=(*itRg)->childBegin(); itCh<(*itRg)->childEnd(); itCh++){
           DeMuonChamber* chPt=dynamic_cast<DeMuonChamber*> (*itCh);
-          IDetectorElement::IDEContainer::iterator itGap=(*itCh)->childBegin();
           int gaps=0;
           double area=0;
-          DeMuonGasGap*
-            myGap= dynamic_cast<DeMuonGasGap*>(*((*itCh)->childBegin()));
-          //Gap Geometry info
-          IGeometryInfo*  geoCh=myGap->geometry();
 
-          //Retrieve the chamber box dimensions
-          const SolidBox *box = dynamic_cast<const SolidBox *>
-            (geoCh->lvolume()->solid());
-          double dx = box->xHalfLength();
-          double dy = box->yHalfLength();
-          double dz = box->zHalfLength();
-          m_sensitiveAreaX[station*4+region]=(float)(2.*dx);
-          m_sensitiveAreaY[station*4+region]=(float)(2.*dy);
-          m_sensitiveAreaZ[station*4+region]=(float)(2.*dz);
-          area=4*dx*dy;
-          m_areaChamber[station*4+region]=area;
-          for(itGap=(*itCh)->childBegin(); itGap<(*itCh)->childEnd(); itGap++){
-            gaps++;
-          }
+          ILVolume::PVolumes::const_iterator pvIterator;
+          for (pvIterator=((((*itCh)->geometry())->lvolume())->pvBegin());
+               pvIterator!=((((*itCh)->geometry())->lvolume())->pvEnd());
+               pvIterator++){
+            
+            const ILVolume*  geoCh=(*pvIterator)->lvolume();
+            std::string lvolname=geoCh->name();
+            size_t pos;
+            pos=lvolname.find_last_of("/");
+            std::string mystring=lvolname.substr(pos+1);
+            
+	    
+            if(mystring=="lvGasGap"){
+	    
+              ILVolume::PVolumes::const_iterator pvGapIterator;
+              for (pvGapIterator=(geoCh->pvBegin());
+                   pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+                if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+                  if(debug)msgStream()<<MSG::ERROR<<
+                             " in quale gao siamo "<<
+                             (*pvGapIterator)->lvolume()->name()<<endreq;
+                  const ILVolume* geoGap=(*pvGapIterator)->lvolume();
+                  //Retrieve the chamber box dimensions  
+                  const SolidBox *box = dynamic_cast<const SolidBox *>
+                    (geoGap->solid());
+                  double dx = box->xHalfLength();
+                  double dy = box->yHalfLength();
+                  double dz = box->zHalfLength();
+                  m_sensitiveAreaX[station*4+region]=2*dx;
+                  m_sensitiveAreaY[station*4+region]=2*dy;
+                  m_sensitiveAreaZ[station*4+region]=2*dz;
+                  area=4*dx*dy;
+                  m_areaChamber[station*4+region]=area;
+                  gaps++;  
+                }
+              }
+            }
+          }          
+          
+          
           m_gapPerRegion[station*4+region]=gaps;
           m_gapPerFE[station*4+region]=gaps/2;
 
 
-
+          
           Condition* bGrid = (chPt)->condition(chPt->getGridName());
           MuonChamberGrid* theGrid = dynamic_cast<MuonChamberGrid*>(bGrid);
-
+          
           int nreadout=1;
           if(theGrid->getGrid2SizeY()>1)nreadout=2;
           m_readoutNumber[station*4+region]=nreadout;
@@ -1066,25 +1077,30 @@ void DeMuonDetector::fillGeoArray()
                                 layoutInner.yGrid());
         int chNumber=m_chamberLayout->getChamberNumber(chTile);
         DeMuonChamber* chP=getChmbPtr(station,0,chNumber);
-        DeMuonGasGap* myGap= dynamic_cast<DeMuonGasGap*>
-          (*(chP->childBegin()));
-        IGeometryInfo*  geoCh=myGap->geometry();
+        IPVolume* myGapVol=chP->getGasGapLayer(0);
 
-        //Retrieve the chamber box dimensions
+        IGeometryInfo*  geoCh=chP->geometry();
+        
+          //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
-          (geoCh->lvolume()->solid());
+          (myGapVol->lvolume()->solid());
         double dx = box->xHalfLength();
-        double dy = box->yHalfLength();
-        Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
-        Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
-        Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
-        Gaudi::XYZPoint glob4= geoCh->toGlobal(Gaudi::XYZPoint(dx,dy,0));
-        if(fabs(glob1.y())<minY)minY=fabs(glob1.y());
-        if(fabs(glob2.y())<minY)minY=fabs(glob2.y());
-        if(fabs(glob3.y())<minY)minY=fabs(glob3.y());
-        if(fabs(glob4.y())<minY)minY=fabs(glob4.y());
-      }
+        double dy = box->yHalfLength(); 
+        Gaudi::XYZPoint glob1= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)));
+        Gaudi::XYZPoint glob2= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,dy,0)));
+        Gaudi::XYZPoint glob3= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,-dy,0)));
+        Gaudi::XYZPoint glob4= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,dy,0)));
+	if(debug)msgStream()<<MSG::ERROR<< 
+myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0))<<endreq;
+	
+if(debug)msgStream()<<MSG::ERROR<<geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)))<<endreq;
+        if(fabs(glob1.y())<minY)minY=fabs(glob1.y());      
+        if(fabs(glob2.y())<minY)minY=fabs(glob2.y());      
+        if(fabs(glob3.y())<minY)minY=fabs(glob3.y());      
+        if(fabs(glob4.y())<minY)minY=fabs(glob4.y());      
+      }      
     }
+
 
     for(unsigned int ny=0;ny<layoutInner.yGrid();ny++){
       for(int qua=0;qua<4;qua++){
@@ -1092,25 +1108,28 @@ void DeMuonDetector::fillGeoArray()
                                 ny);
         int chNumber=m_chamberLayout->getChamberNumber(chTile);
         DeMuonChamber* chP=getChmbPtr(station,0,chNumber);
-        DeMuonGasGap* myGap= dynamic_cast<DeMuonGasGap*>
-          (*(chP->childBegin()));
-        IGeometryInfo*  geoCh=myGap->geometry();
-
-        //Retrieve the chamber box dimensions
+        IPVolume* myGapVol=chP->getGasGapLayer(0);
+        
+        
+        IGeometryInfo*  geoCh=chP->geometry();
+        
+        //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
-          (geoCh->lvolume()->solid());
+          (myGapVol->lvolume()->solid());
+        
         double dx = box->xHalfLength();
         double dy = box->yHalfLength();
-        Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
-        Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
-        Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
-        Gaudi::XYZPoint glob4= geoCh->toGlobal(Gaudi::XYZPoint(dx,dy,0));
-        if(fabs(glob1.x())<minX)minX=fabs(glob1.x());
-        if(fabs(glob2.x())<minX)minX=fabs(glob2.x());
-        if(fabs(glob3.x())<minX)minX=fabs(glob3.x());
-        if(fabs(glob4.x())<minX)minX=fabs(glob4.x());
-      }
+        Gaudi::XYZPoint glob1= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)));
+        Gaudi::XYZPoint glob2= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,dy,0)));
+        Gaudi::XYZPoint glob3= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,-dy,0)));
+        Gaudi::XYZPoint glob4= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,dy,0)));
+        if(fabs(glob1.x())<minX)minX=fabs(glob1.x());      
+        if(fabs(glob2.x())<minX)minX=fabs(glob2.x());      
+        if(fabs(glob3.x())<minX)minX=fabs(glob3.x());      
+        if(fabs(glob4.x())<minX)minX=fabs(glob4.x());      
+      }      
     }
+    
     m_stationBox[station][0]=minX;
     m_stationBox[station][1]=minY;
     //now the dimsnion of the outer parr...
@@ -1118,63 +1137,71 @@ void DeMuonDetector::fillGeoArray()
     double maxX=0;
     double maxY=0;
     for(unsigned int nx=0;nx<2*layoutOuter.xGrid();nx++){
-      for(int qua=0;qua<4;qua++){
+      for(int qua=0;qua<4;qua++){          
+
+
         LHCb::MuonTileID chTile(station,layoutOuter,3,qua,nx,
                                 2*layoutOuter.yGrid()-1);
-        int chNumber=m_chamberLayout->getChamberNumber(chTile);
-        if(debug)msgStream()<<MSG::INFO<<" chNumber "<<chNumber <<endreq;
+        int chNumber=m_chamberLayout->getChamberNumber(chTile);        
         DeMuonChamber* chP=getChmbPtr(station,3,chNumber);
-        DeMuonGasGap* myGap= dynamic_cast<DeMuonGasGap*>
-          (*(chP->childBegin()));
-        IGeometryInfo*  geoCh=myGap->geometry();
+        IPVolume* myGapVol=chP->getGasGapLayer(0);
 
-        //Retrieve the chamber box dimensions
+        
+        IGeometryInfo*  geoCh=chP->geometry();
+        
+          //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
-          (geoCh->lvolume()->solid());
+          (myGapVol->lvolume()->solid());
+
         double dx = box->xHalfLength();
         double dy = box->yHalfLength();
-        Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
-        Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
-        Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
-        Gaudi::XYZPoint glob4= geoCh->toGlobal(Gaudi::XYZPoint(dx,dy,0));
-        if(fabs(glob1.y())>maxY)maxY=fabs(glob1.y());
-        if(fabs(glob2.y())>maxY)maxY=fabs(glob2.y());
-        if(fabs(glob3.y())>maxY)maxY=fabs(glob3.y());
-        if(fabs(glob4.y())>maxY)maxY=fabs(glob4.y());
-      }
+        Gaudi::XYZPoint glob1= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)));
+        Gaudi::XYZPoint glob2= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,dy,0)));
+        Gaudi::XYZPoint glob3= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,-dy,0)));
+        Gaudi::XYZPoint glob4= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,dy,0)));
+        
+
+        if(fabs(glob1.y())>maxY)maxY=fabs(glob1.y());      
+        if(fabs(glob2.y())>maxY)maxY=fabs(glob2.y());      
+        if(fabs(glob3.y())>maxY)maxY=fabs(glob3.y());      
+        if(fabs(glob4.y())>maxY)maxY=fabs(glob4.y());      
+      }      
     }
 
     for(unsigned int ny=0;ny<2*layoutOuter.yGrid();ny++){
-      for(int qua=0;qua<4;qua++){
+      for(int qua=0;qua<4;qua++){          
         LHCb::MuonTileID chTile(station,layoutOuter,3,qua,
                                 2*layoutOuter.xGrid()-1,
                                 ny);
         int chNumber=m_chamberLayout->getChamberNumber(chTile);
         DeMuonChamber* chP=getChmbPtr(station,3,chNumber);
-        DeMuonGasGap* myGap= dynamic_cast<DeMuonGasGap*>
-          (*(chP->childBegin()));
-        IGeometryInfo*  geoCh=myGap->geometry();
+        IPVolume* myGapVol=chP->getGasGapLayer(0);
 
-        //Retrieve the chamber box dimensions
+        
+        IGeometryInfo*  geoCh=chP->geometry();
+        
+          //Retrieve the chamber box dimensions  
         const SolidBox *box = dynamic_cast<const SolidBox *>
-          (geoCh->lvolume()->solid());
+          (myGapVol->lvolume()->solid());
+
         double dx = box->xHalfLength();
         double dy = box->yHalfLength();
-        Gaudi::XYZPoint glob1= geoCh->toGlobal(Gaudi::XYZPoint(-dx,-dy,0));
-        Gaudi::XYZPoint glob2= geoCh->toGlobal(Gaudi::XYZPoint(-dx,dy,0));
-        Gaudi::XYZPoint glob3= geoCh->toGlobal(Gaudi::XYZPoint(dx,-dy,0));
-        Gaudi::XYZPoint glob4= geoCh->toGlobal(Gaudi::XYZPoint(dx,dy,0));
-        if(fabs(glob1.x())>maxX)maxX=fabs(glob1.x());
-        if(fabs(glob2.x())>maxX)maxX=fabs(glob2.x());
-        if(fabs(glob3.x())>maxX)maxX=fabs(glob3.x());
-        if(fabs(glob4.x())>maxX)maxX=fabs(glob4.x());
-      }
+        Gaudi::XYZPoint glob1= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,-dy,0)));
+        Gaudi::XYZPoint glob2= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(-dx,dy,0)));
+        Gaudi::XYZPoint glob3= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,-dy,0)));
+        Gaudi::XYZPoint glob4= geoCh->toGlobal(myGapVol->toMother(Gaudi::XYZPoint(dx,dy,0)));
+        if(fabs(glob1.x())>maxX)maxX=fabs(glob1.x());      
+        if(fabs(glob2.x())>maxX)maxX=fabs(glob2.x());      
+        if(fabs(glob3.x())>maxX)maxX=fabs(glob3.x());      
+        if(fabs(glob4.x())>maxX)maxX=fabs(glob4.x());      
+      }      
     }
+
     m_stationBox[station][2]=maxX;
     m_stationBox[station][3]=maxY;
 
 
-    msgStream()<<MSG::DEBUG<<" station  inner "<<station<<" "<<
+    msgStream()<<MSG::INFO<<" station  inner "<<station<<" "<<
       m_stationBox[station][0]<<
       " "<<m_stationBox[station][1]<<
       " station  outer "<<station<<" "<<

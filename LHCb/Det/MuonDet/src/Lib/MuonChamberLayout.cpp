@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.34 2009-09-14 08:58:36 jonrob Exp $
+// $Id: MuonChamberLayout.cpp,v 1.35 2009-10-02 13:24:19 asatta Exp $
 // Include files
 
 // Gaudi
@@ -356,7 +356,6 @@ void MuonChamberLayout::chamberMostLikely(float x,float y, int station,
 
   int myReg(-1);
   int fx(-1),fy(-1);
-  //  std::cout << "Chamber dimensions "<<m_xS.at(station)<<" "<< m_yS.at(station)<< std::endl;
   if(m_xS.at(station) && m_yS.at(station)) {
     gridPosition(x,y,station,fx,fy,myReg);
   } else {
@@ -1018,22 +1017,22 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     while(re >= 1) {encode += MaxRegions[re-1]; re--;}
   }
   muChamber = m_ChVec.at(encode);
-
+  
   double Dx(0.),Dy(0.),Dz(0.);
-
+  
   if( -1 == gapNum ){
-
+    
     //I'm intrested in the Chamber, not the gaps
     IGeometryInfo* cInfo = muChamber->geometry();
     Gaudi::Transform3D vTransForm = cInfo->toGlobalMatrix();
-
+    
     Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
     vTransForm.GetDecomposition(vrota,vtrans);
-
+    
     x = vtrans.x();
     y = vtrans.y();
     z = vtrans.z();
-
+    
     // get ILVolume pointer
     const ILVolume *logVol = cInfo->lvolume();
     // Get the solid
@@ -1046,8 +1045,8 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
       return StatusCode::FAILURE;
     }
 
-
-    const ISolid *GVso = (*(muChamber->childBegin()))->geometry()->lvolume()->solid();
+    
+    const ISolid *GVso = muChamber->getFirstGasGap()->lvolume()->solid();
     // check these really are boxes (they ought to be!)
     const SolidBox *GVbox = dynamic_cast<const SolidBox *>(GVso);
     if( !GVbox ){
@@ -1055,14 +1054,14 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
                   << endreq;
       return StatusCode::FAILURE;
     }
-
+    
     //Take the deltax and deltay from
     //Gas volume dimension
     Dx   = GVbox->xHalfLength();
     Dy   = GVbox->yHalfLength();
     //While take the deltaz from the whole chamber dimensions
     Dz   = box->zHalfLength();
-
+    
     Gaudi::XYZPoint cnt(0,0,0);
     Gaudi::XYZPoint crn(Dx,Dy,Dz);
     if(toGlob) {
@@ -1072,81 +1071,56 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
       deltax = Dx;      deltay = Dy;      deltaz = Dz;
     }
   } else {
-
+    
     // Going down to the needed gap
     // active volume is defined by the gas gaps, want first and last
-    IDetectorElement::IDEContainer::const_iterator itGap;
-    int gapIndex; bool FoundGap = false;
-    for(itGap = muChamber->childBegin(), gapIndex = 0;
-        itGap != muChamber->childEnd();
-        itGap++, gapIndex++){
+    IGeometryInfo* cInfo = muChamber->geometry();
+    IPVolume* gap=muChamber->getGasGap(gapNum);
+    IPVolume* gapLayer=muChamber->getGasGapLayer(gapNum);
+    bool FoundGap = false;
 
-      if(gapIndex == gapNum) {
-        DeMuonGasGap*  muGap =  dynamic_cast<DeMuonGasGap*>( *itGap ) ;
+    if( !gap ){
 
-        if( !muGap ){
-          msgStream() << MSG::ERROR << "Could not read gas gaps "
-                      << (*itGap)->name() << " from TDS" << endreq;
-          return StatusCode::FAILURE;
-        }
-
-        //Found the needed gap
-        FoundGap = true;
-        IGeometryInfo *gInfo =  muGap->geometry();
-
-        Gaudi::Transform3D vTransForm = gInfo->toGlobalMatrix();
-
-        Gaudi::XYZVector vtrans;    Gaudi::Rotation3D vrota;
-        vTransForm.GetDecomposition(vrota,vtrans);
-
-        x = vtrans.x();
-        y = vtrans.y();
-        z = vtrans.z();
-
-        // get ILVolume pointer
-        const ILVolume *logVol = gInfo->lvolume();
-        // Get the solid
-        const ISolid *solid = logVol->solid();
-        // check these really are boxes (they ought to be!)
-        const SolidBox *box = dynamic_cast<const SolidBox *>(solid);
-        if( !box ){
-          msgStream() << MSG::ERROR << "Could not cast gas gap solid to box"
-                      << endreq;
-          return StatusCode::FAILURE;
-        }
-
-        const ISolid *GVso = (*(muGap->childBegin()))->geometry()->lvolume()->solid();
-        // check these really are boxes (they ought to be!)
-        const SolidBox *GVbox = dynamic_cast<const SolidBox *>(GVso);
-        if( !GVbox ){
-          msgStream() << MSG::ERROR << "Could not cast gas gap solid to box"
-                      << endreq;
-          return StatusCode::FAILURE;
-        }
-
-        //Take the deltax and deltay from
-        //Gas volume dimension
-        Dx   = GVbox->xHalfLength();
-        Dy   = GVbox->yHalfLength();
-        //While take the deltaz from the whole chamber dimensions
-        Dz   = box->zHalfLength();
-
-        Gaudi::XYZPoint cnt(0,0,0);
-        Gaudi::XYZPoint crn(Dx,Dy,Dz);
-
-        if(toGlob) {
-          localToglobal(gInfo,cnt,crn,deltax,deltay,deltaz);
-        } else {
-          x = y = z = 0;
-          deltax = Dx;      deltay = Dy;      deltaz = Dz;
-        }
-      }
-    }
-    if(!FoundGap) {
-      msgStream() << MSG::ERROR << "Could not find the required gap: " << gapNum
+      msgStream() << MSG::ERROR << "Could not read gas gaps  from TDS" 
                   << endreq;
       return StatusCode::FAILURE;
     }
+
+    //Found the needed gap
+    //FoundGap = true;  
+    const ISolid *solid = gap->lvolume()->solid();
+    const SolidBox *box = dynamic_cast<const SolidBox *>(solid);
+    if( !box ){
+      msgStream() << MSG::ERROR << "Could not cast gas gap solid to box"
+                  << endreq;
+      return StatusCode::FAILURE;
+    }
+    
+    
+    
+    //Take the deltax and deltay from
+    //Gas volume dimension
+    Dx   = box->xHalfLength();
+    Dy   = box->yHalfLength();
+    //While take the deltaz from the whole chamber dimensions
+    Dz   = box->zHalfLength();
+
+    Gaudi::XYZPoint cnt(0,0,0);
+    Gaudi::XYZPoint crn(Dx,Dy,Dz);
+    
+    if(toGlob) {
+      Gaudi::XYZPoint pointInCh=gapLayer->toMother(Gaudi::XYZPoint(0,0,0));
+      Gaudi::XYZPoint pointInGlobal=muChamber->geometry()->toGlobal(pointInCh);
+      Gaudi::XYZPoint crnInCh=gapLayer->toMother(crn);
+      x=pointInGlobal.x();
+      y=pointInGlobal.y();
+      z=pointInGlobal.z();
+	
+      localToglobal(cInfo,pointInCh,crnInCh,deltax,deltay,deltaz);
+    } else {
+      x = y = z = 0;
+      deltax = Dx;      deltay = Dy;      deltaz = Dz;
+    }    
   }
   return StatusCode::SUCCESS;
 }
