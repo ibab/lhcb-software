@@ -1,4 +1,4 @@
-// $Id: MisCalibrateCalo.cpp,v 1.5 2009-10-02 11:02:24 ibelyaev Exp $
+// $Id: MisCalibrateCalo.cpp,v 1.6 2009-10-02 11:59:36 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -8,9 +8,13 @@
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/HashMap.h"
 // ============================================================================
+// LHcCbKernel
+// ============================================================================
+#include "Kernel/CaloCellIDHash.h"
+// ============================================================================
 // CaloUtils 
 // ============================================================================
-// #include "CaloUtils/CaloCellIDAsProperty.h"
+#include "CaloUtils/CaloCellIDAsProperty.h"
 // =============================================================================
 // GaudiAlg
 // =============================================================================
@@ -24,15 +28,6 @@
 // =============================================================================
 #include "CaloDet/DeCalorimeter.h"
 // =============================================================================
-namespace GaudiUtils
-{
-  // ==========================================================================
-  template <>
-  inline size_t Hash<LHCb::CaloCellID>::operator() 
-    ( const LHCb::CaloCellID& id ) const { return id.index() ; }   
-  // ==========================================================================
-}
-// =============================================================================
 /** @namespace Kali
  *  helper namespace to keep classes and functions for Calorimeter 
  *  Calibration
@@ -43,7 +38,7 @@ namespace Kali
 {
   // ===========================================================================
   /** @class MisCalibrateCalo
-   *  Helper class for (mis)claibration of Digits 
+   *  Helper class for (mis)calibration of Digits 
    *  It is very useful for varius (mis)calibration purposes.
    *
    *  (Mis)Calibration coefficients are defined througgh map-like property:

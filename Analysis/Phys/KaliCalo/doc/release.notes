@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.8 2009-10-02 11:02:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.9 2009-10-02 11:59:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.8 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.9 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-10-02 - Vanya BELYAEV
+
+ - MisCalibrate:
+
+     update for "new" LHCb  ( > v28r0 ) 
+
+ - cmt/requirmeents 
+
+     version increment to v2r2 
 
 !========================== KaliCalo v2r1 2009-10-02 ==========================
 
