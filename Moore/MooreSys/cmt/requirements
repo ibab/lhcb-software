@@ -9,7 +9,10 @@ branches doc cmt
 
 use  Moore                  v7r5    Hlt
 
+use  HltCommon              v5r11p1   Hlt
 use  HltConf                v4r4p1    Hlt
+use  CaloUtils              v5r11p1   Calo
+use  CaloPIDs	            v5r1p1 Calo
 
 # Declare this as a container package
 apply_pattern container_package
