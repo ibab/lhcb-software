@@ -2,6 +2,7 @@
 #include "ESequences.h"
 
 #include <cassert>
+#include <numeric>
 
 using namespace Gaudi;
 using namespace LHCb;
