@@ -12,6 +12,8 @@ void RichRegistry::cleanUp()
         i != theRegister.end(); ++i ) 
   {
     RichBase * const & ptr = *i;
-    if ( ptr ) { delete ptr; }
+    //std::cout << "Pointer cleanup " << ptr << std::endl;
+    delete ptr; 
   }
+  theRegister.clear();
 }

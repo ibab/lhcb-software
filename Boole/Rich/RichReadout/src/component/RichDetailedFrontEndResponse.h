@@ -5,7 +5,7 @@
  *  Header file for RICH digitisation algorithm : Rich::MC::Digi::DetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.h,v 1.10 2007-09-20 16:36:14 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.h,v 1.11 2009-10-04 19:58:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -94,7 +94,7 @@ namespace Rich
       private: // data
 
         const RichBase * actual_base;
-        RichRegistry theRegistry;
+        RichRegistry * theRegistry;
 
         samplecache_t tscache;
 

@@ -5,7 +5,7 @@
  *  Implementation file for RICH digitisation algorithm : RichDetailedFrontEndResponse
  *
  *  CVS Log :-
- *  $Id: RichDetailedFrontEndResponse.cpp,v 1.14 2008-01-30 16:59:16 jonrob Exp $
+ *  $Id: RichDetailedFrontEndResponse.cpp,v 1.15 2009-10-04 19:58:25 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @author Alex Howard   a.s.howard@ic.ac.uk
@@ -27,6 +27,7 @@ DetailedFrontEndResponse::DetailedFrontEndResponse( const std::string& name,
                                                     ISvcLocator* pSvcLocator)
   : RichAlgBase ( name, pSvcLocator ),
     actual_base ( NULL ),
+    theRegistry ( NULL ),
     m_timeShift ( Rich::NRiches )
 {
 
@@ -67,7 +68,8 @@ StatusCode DetailedFrontEndResponse::initialize()
   acquireTool( "RichSmartIDTool" , smartIDs, 0, true );
   const LHCb::RichSmartID::Vector & pixels = smartIDs->readoutChannelList();
   debug() << "Retrieved " << pixels.size() << " pixels in active list" << endreq;
-  actual_base = theRegistry.GetNewBase( pixels );
+  theRegistry = new RichRegistry();
+  actual_base = theRegistry->GetNewBase( pixels );
   if ( !actual_base )
   {
     return Error( "Failed to intialise pixel list" );
@@ -81,18 +83,19 @@ StatusCode DetailedFrontEndResponse::initialize()
   releaseTool( smartIDs );
 
   info() << "Time Calibration (Rich1/RICH2) = " << m_timeShift << endreq;
-
+ 
   return sc;
 }
 
 StatusCode DetailedFrontEndResponse::finalize()
 {
   // clean up
-  if ( actual_base ) delete actual_base;
+  delete actual_base;
+  //delete theRegistry; // CRJ :  Disabled since causes a crash. For Marco A. to fix ;)
 
   // finalise random number generators
   const StatusCode sc = ( m_gaussNoise.finalize() && m_gaussThreshold.finalize() );
-  if ( sc.isFailure() ) { Warning( "Failed to finalise random number generators" ); }
+  if ( sc.isFailure() ) { Warning( "Failed to finalise random number generators" ).ignore(); }
 
   // finalize base class
   return RichAlgBase::finalize();

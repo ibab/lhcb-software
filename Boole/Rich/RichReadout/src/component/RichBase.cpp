@@ -15,7 +15,7 @@ void RichBase::cleanUp()
   //  RichPixelProperties *& ptr = (*i).second;
   //  if ( ptr ) { delete ptr; ptr = NULL; }
   //}
-  m_activePixels.clear();
+  //m_activePixels.clear();
 }
 
 void RichBase::upDate( const LHCb::RichSmartID::Vector & pixelList ) 

@@ -94,6 +94,7 @@ namespace Rich
         RichPixelProperties* DecodeUniqueID(const LHCb::RichSmartID id) const;
 
         typedef Rich::HashMap< LHCb::RichSmartID::KeyType, RichPixelProperties*> activemap;
+        //typedef Rich::Map< LHCb::RichSmartID::KeyType, RichPixelProperties*> activemap;
 
         activemap::const_iterator begin() const;
 

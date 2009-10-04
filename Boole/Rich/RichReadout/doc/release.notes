@@ -4,6 +4,11 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+! 2009-10-04 - Chris Jones
+ - Work around for crash when RichDetailedFrontEndResponse is deleted.
+   'Solution' is to disable some clean up, so not a long term fix but just 
+    gets things running again with the latest Gaudi version in the nightlies.
+
 !======================== RichReadout v2r12 2009-02-24 =======================
 ! 2009-01-20 - Marco Cattaneo
  - Migrate to LHCb::ParticlePropertySvc

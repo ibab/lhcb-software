@@ -42,7 +42,7 @@ namespace Rich
 
       private: // data
 
-        typedef std::set<RichBase*,std::less<RichBase*> > RegisterMap;
+        typedef std::set< RichBase*, std::less<RichBase*> > RegisterMap;
         static RegisterMap theRegister;
 
       };
