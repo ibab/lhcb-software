@@ -1,4 +1,4 @@
-// $Id: VeloEffChecker.cpp,v 1.2 2008-03-28 14:33:52 cattanem Exp $
+// $Id: VeloEffChecker.cpp,v 1.3 2009-10-04 10:32:16 ibelyaev Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -90,22 +90,26 @@ StatusCode VeloEffChecker::finalize(){
 
   info() << " -------Efficiency %--------- " << endmsg;
 
-  const Histo2DMapNumID& histos = histo2DMapNumID();
-
+  const Histo2DMapID& histos = histo2DMapID();
+  
   double avg = 0;
   unsigned int n = 0;
   unsigned int missed = 0; 
-
-  for ( Histo2DMapNumID::const_iterator entry = histos.begin() ;
-        histos.end() != entry ; ++entry  ) {
+  
+  for ( Histo2DMapID::const_iterator entry = histos.begin() ;
+        histos.end() != entry ; ++entry  ) 
+  {
     // histogram ID
     AIDA::IHistogram2D* h  = entry->second ;
-    if (( 0 == h ) || (entry->first >= m_effOffset))  { continue ;}
-
+    if ( !entry->first.numeric() ) { continue ; }
+    const int id = entry->first.numericID() ;
+    if ( ( 0 == h ) || ( id >= m_effOffset ) )  { continue ;}
+    
     // find the eff histo...
-    Histo2DMapNumID::const_iterator effEntry = histos.find(entry->first + m_effOffset) ;
-
-    if (effEntry != histos.end()) {
+    Histo2DMapID::const_iterator effEntry = histos.find( id + m_effOffset) ;
+    
+    if (effEntry != histos.end()) 
+    {
       int nAcc = h->allEntries();
       int nFound = effEntry->second->allEntries();
       double eff = 100.0*(double)nFound/(double)nAcc;
@@ -119,10 +123,10 @@ StatusCode VeloEffChecker::finalize(){
       ++missed;
     }
   }
-
+  
   info() << " Avg: " << avg/n << " Missed " <<  missed << endmsg;  
   info() << " ---------------- " << endmsg;
-
+  
 
   return GaudiHistoAlg::finalize();
 }

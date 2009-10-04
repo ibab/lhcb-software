@@ -2,7 +2,7 @@
 # Maintainer : Chris Parkes & Tomasz Szumlak
 #
 package           VeloAlgorithms
-version           v4r9
+version           v4r10
 
 # Structure, i.e. directories to process. 
 #============================================================================
