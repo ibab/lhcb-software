@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: Bs2JpsiPhi.py,v 1.1 2009-10-02 14:09:26 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.2 2009-10-04 14:16:54 jpalac Exp $
 ########################################################################
 """
  Selection module for exercise 4
@@ -9,18 +9,18 @@
 """
 __author__ = ['Juan Palacios']
 __date__ = '02/10/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 # limit what we get with from Bs2JpsiPhi import *
 __all__ = ('name', 'Phi2KK', 'LooseJpsi2MuMu', 'Jpsi2MuMu', 'Bs2Jpsi', 'SeqBs2JpsiPhi')
-
+import GaudiKernel.SystemOfUnits as Units
 from Gaudi.Configuration import *
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 from PhysSelPython.Wrappers import Selection, SelectionSequence, DataOnDemand
 
 # loose muons Selection
 _muons = DataOnDemand('_stdLooseMuons',
-                      Location = 'Phys/StdLoosemuons')
+                      Location = 'Phys/StdLooseMuons')
 # J/Psi configurable
 _jpsi2mumu = CombineParticles("Jpsi2MuMu")
 _jpsi2mumu.DecayDescriptor = "J/psi(1S) -> mu+ mu-"
@@ -38,7 +38,7 @@ _jpsifilter = FilterDesktop("_JsiFilter",
 
 # Tighter J/Psi -> MuMu Selection
 Jpsi2MuMu = Selection("SelJpsi2MuMu",
-                      Algorithm = _jspifilter,
+                      Algorithm = _jpsifilter,
                       RequiredSelections = [LooseJpsi2MuMu])
 
 # loose kaons
@@ -50,9 +50,9 @@ _phi2kk = CombineParticles("Phi2KK",
                            CombinationCut = "ADAMASS('phi(1020)')<50" ,
                            MotherCut = "(VFASPF(VCHI2/VDOF)<100)")
 # Phi -> KK Selection
-Phi2KK =- Selection("SelPhi2KK",
-                    Algorithm = _phi2KK,
-                    RequiredSelections = [_stdPhi2KK])
+Phi2KK = Selection("SelPhi2KK",
+                   Algorithm = _phi2kk,
+                   RequiredSelections = [_stdPhi2KK])
 
 # Bs configurable
 _bs2jpsiphi = CombineParticles("Bs2JpsiPhi",
