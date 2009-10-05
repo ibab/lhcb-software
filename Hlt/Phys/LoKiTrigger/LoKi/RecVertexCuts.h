@@ -1,4 +1,4 @@
-// $Id: RecVertexCuts.h,v 1.2 2008-01-22 14:26:37 hernando Exp $
+// $Id: RecVertexCuts.h,v 1.3 2009-10-05 07:36:51 graven Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTEXCUTS_H 
 #define LOKI_RECVERTEXCUTS_H 1
@@ -63,18 +63,6 @@ namespace LoKi
      *  @date   2007-06-08
      */        
     const LoKi::RecVertices::FC                                         RVVFC ;
-    // ========================================================================
-    /** @var RVVFC2
-     *  
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::FC2
-     *  @see LoKi::RecVertices::FC2
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date   2007-06-08
-     */        
-    const LoKi::RecVertices::FC2                                       RVVFC2 ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
 } // end of namespace LoKi 

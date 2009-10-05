@@ -1,4 +1,4 @@
-// $Id: RecVertices.h,v 1.4 2008-01-22 14:26:37 hernando Exp $
+// $Id: RecVertices.h,v 1.5 2009-10-05 07:36:51 graven Exp $
 // ============================================================================
 #ifndef LOKI_RECVERTICES_H 
 #define LOKI_RECVERTICES_H 1
@@ -230,31 +230,6 @@ namespace LoKi
       /// OPTIONAL: the nice printout 
       virtual std::ostream& fillStream( std::ostream& s ) const 
       { return s << "RVVFC" ; }
-    } ; 
-    // ========================================================================
-    /** @class FC2
-     *
-     *  The actual lines are copied from the package Hlt/HltBase 
-     *   written by Jose Angel Hernando Morata
-     *
-     *  @see HltUtils::FC2
-     *  @see LoKi::Cuts::RVVFC2
-     *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-     *  @date 2007-08-13
-     */     
-    class FC2 
-      :  public LoKi::BasicFunctors<LoKi::TrackTypes::VertexPair>::Function
-    {
-    public :
-      /// MANDATORY: virtual destructor 
-      virtual ~FC2() {}
-      /// MANDATORY: clone method ("virtual constructor")  
-      virtual  FC2* clone() const { return new FC2(*this) ; }
-      /// MANDATORY: the only one essential method 
-      virtual result_type operator() ( argument a ) const ;
-      /// OPTIONAL: the nice printout 
-      virtual std::ostream& fillStream( std::ostream& s ) const 
-      { return s << "RVVFC2" ; }
     } ; 
     // ========================================================================
   } // end of namespace 

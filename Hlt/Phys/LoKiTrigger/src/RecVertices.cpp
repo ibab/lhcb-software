@@ -1,4 +1,4 @@
-// $Id: RecVertices.cpp,v 1.6 2009-05-09 19:33:47 ibelyaev Exp $
+// $Id: RecVertices.cpp,v 1.7 2009-10-05 07:36:51 graven Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -111,19 +111,6 @@ LoKi::RecVertices::FC::operator()
   const LHCb::RecVertex& v2 = a.second ;
   //
   return HltUtils::FC( v1 , v2 ) ;
-}
-// ============================================================================
-// MANDATORY: the only one essential method 
-// ============================================================================
-LoKi::RecVertices::FC2::result_type 
-LoKi::RecVertices::FC2::operator() 
-  ( LoKi::RecVertices::FC2::argument a ) const 
-{ 
-  // unpack argument:
-  const LHCb::RecVertex& v1 = a.first  ;
-  const LHCb::RecVertex& v2 = a.second ;
-  //
-  return HltUtils::FC2( v1 , v2 ) ;
 }
 // ============================================================================
 /*  constructor from the function, key and update-flag
