@@ -5,7 +5,7 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v3r4 2009-09-22 =========================
+!=========================== LbMIB v3r5 2009-09-22 =========================
 ! 2009-09-22 - Magnus LIENG
  - Fixed timing issue and added time of generation histogram
    . TimeCorrSource.cpp
@@ -16,6 +16,7 @@
    . TimeCorrSource.cpp
    . TimeCorrSource.h
 
+!=========================== LbMIB v3r4 2009-09-18 =========================
 ! 2009-09-18 - Gloria CORTI
  - Make option name of location of TES to read and write the same as for
    the Generation and ParticleGun algorithms to make it easier in Gauss()
