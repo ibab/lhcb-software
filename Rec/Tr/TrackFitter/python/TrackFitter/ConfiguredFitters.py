@@ -33,7 +33,11 @@ def ConfiguredMasterFitter( Name,
     fitter.addTool( TrackKalmanFilter, name = "NodeFitter" )
 
     # apply material corrections
-    fitter.ApplyMaterialCorrections = ApplyMaterialCorrections
+    if not ApplyMaterialCorrections:
+        fitter.ApplyMaterialCorrections = False
+        fitter.Extrapolator.ApplyMultScattCorr = False
+        fitter.Extrapolator.ApplyEnergyLossCorr = False
+        fitter.Extrapolator.ApplyElectronEnergyLossCorr = False
 
     # provide a state at the beamline
     fitter.StateAtBeamLine = StateAtBeamLine
@@ -225,10 +229,9 @@ def ConfiguredStraightLineFit( Name, TracksInContainer,
                                NoDriftTimes =  TrackSys().noDrifttimes()  ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
                                         FieldOff=True,
-                                        NoDriftTimes=NoDriftTimes)
-    eventfitter.Fitter.ApplyMaterialCorrections = False
-    eventfitter.Fitter.Extrapolator.ApplyMultScattCorr = False
-    eventfitter.Fitter.StateAtBeamLine = False
+                                        NoDriftTimes=NoDriftTimes,
+                                        StateAtBeamLine=False,
+                                        ApplyMaterialCorrections=False)
     eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 
