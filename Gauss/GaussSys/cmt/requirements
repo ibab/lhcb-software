@@ -1,5 +1,5 @@
 package GaussSys
-version v37r4
+version v37r5
 
 branches cmt doc
 
@@ -8,15 +8,15 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v37r4   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v37r5   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
-macro GENSER_use        "GENSER       v5r1    Gen"  WIN32 ""
-macro EvtGen_use        "EvtGen       v11r4   Gen"  WIN32 ""
-macro EvtGenExtras_use  "EvtGenExtras v2r0    Gen"  WIN32 ""
-macro Generators_use    "Generators   v10r3   Gen"  WIN32 ""
-macro LbPythia_use      "LbPythia     v8r4    Gen"  WIN32 ""
+macro GENSER_use        "GENSER       v5r2    Gen"  WIN32 ""
+macro EvtGen_use        "EvtGen       v11r5   Gen"  WIN32 ""
+macro EvtGenExtras_use  "EvtGenExtras v2r1    Gen"  WIN32 ""
+macro Generators_use    "Generators   v10r4   Gen"  WIN32 ""
+macro LbPythia_use      "LbPythia     v8r5    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
 use ${EvtGenExtras_use}
@@ -25,8 +25,8 @@ use ${LbPythia_use}
 
 # Generators packages: extensions to Pythia6
 macro LbAlpGen_use      "LbAlpGen     v1r0    Gen"  WIN32 ""
-macro BcVegPy_use       "BcVegPy      v1r1p3  Gen"  WIN32 ""
-macro LbBcVegPy_use     "LbBcVegPy    v2r1    Gen"  WIN32 ""
+macro BcVegPy_use       "BcVegPy      v2r0    Gen"  WIN32 ""
+macro LbBcVegPy_use     "LbBcVegPy    v3r0    Gen"  WIN32 ""
 macro LbHidValley_use   "LbHidValley  v2r2    Gen"  WIN32 ""
 #use ${LbAlpGen_use}
 use ${BcVegPy_use}
@@ -44,10 +44,10 @@ macro LbHijing_use      "LbHijing     v5r0    Gen"  WIN32 ""
 use ${LbHijing_use}
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v3r4      Gen
+use LbMIB               v3r5      Gen
 
 # Generators packages: LHCb particle gun generator: temporarly off on Win32
-macro LbPGuns_use       "LbPGuns v1r0    Gen"  WIN32 ""
+macro LbPGuns_use       "LbPGuns v1r1    Gen"  WIN32 ""
 use ${LbPGuns_use}
 
 # Simulation basic packages
@@ -95,3 +95,7 @@ apply_pattern container_package
 # Allow the generation of QMTest summary 
 apply_pattern QMTestSummarize
 
+#====================================================================
+#
+# Package for Upgrade generation: temporary for MC09
+use DDDB                v1r22     Det
