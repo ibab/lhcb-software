@@ -1,4 +1,4 @@
-// $Id: MaterialEvalGun.opts,v 1.1.1.1 2009-09-18 16:18:24 gcorti Exp $
+// $Id: MaterialEvalGun.opts,v 1.2 2009-10-05 13:56:38 gcorti Exp $
  
 /** @file
  *
@@ -24,11 +24,10 @@
  *
  */
  
-//- Steering of algorithms to execute, remove physics generation and resequence
-//- Monitor
-Generator.Members -= { "Generation", "GaudiSequencer/GenMonitor" };
-Generator.Members += { "ParticleGun", "GaudiSequencer/GenMonitor" };
+//Load units
+#include "$STDOPTS/PreloadUnits.opts"
 
+//- Pick the type of particle gun generator
 ParticleGun.ParticleGunTool = "MaterialEval" ;
 
 //- Control of the MaterialEvalGun

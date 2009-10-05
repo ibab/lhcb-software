@@ -2,9 +2,20 @@
 ! Package     : Gen/ParticleGuns
 ! Responsible : Gloria CORTI, Patrick ROBBE
 ! Purpose     : Holds code for generaion of particle guns
-!----------------------------------------------------------------------------
+!-----------------------------------------------------------------------------
 
-!======================= ParticleGuns v1r0 2009-09-18 =======================
+!========================== LbPGuns v1r1 2009-09-18 ==========================
+! 2009-10-05 - Gloria CORTI
+ - Adapt example options to Gauss configurable, hence remove sequencing.
+   . CosmicsGun.opts
+   . MaterialEvalGun.opts
+   . ParticleGun.opts
+   . Rich1Cosmics.opts (inconsistency with latest options)
+   . UpsilonGun.opts
+   RichPatternGun as it is an algorithm is not forseen and does not work
+   for the moment.
+
+!========================= LbPGuns v1r0 2009-09-18 ==========================
 ! 2009-09-18 - Gloria CORTI
  - 'Rename' of the package ParticleGuns into LbPGuns to make it consistent
    with all othe generators and allow consistent way of selecting the options
