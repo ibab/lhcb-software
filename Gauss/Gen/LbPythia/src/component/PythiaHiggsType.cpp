@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : PythiaHiggsType
 //
-// 2007-01-21 : Victor Coco,
+// 2009-Oct-1 : Neal Gauvin, Victor Coco
 //
 //-----------------------------------------------------------------------------
 
@@ -69,7 +69,7 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
   //MotherOfLepton is the list of particles from which the lepton comes
 	declareProperty( "MotherOfLepton" , m_motheroflepton) ; //default W and Z
 	
-  //Number of bquarks requiered to be in the acceptance
+  //Number of b quarks required to be in the acceptance
 	declareProperty( "NumberOfbquarks" , m_nbbquarks ) ; //max 2 b quarks -- 
   // 0(only with pzb>0), 1, 2  and -1(desactivated) default=1
 	// BECAREFULL NumberOfbquarks=0 will search b comming from mother 
@@ -77,6 +77,11 @@ PythiaHiggsType::PythiaHiggsType( const std::string & type ,
 
 	// MotherOfThebquarks define the mother of the b quarks
 	declareProperty( "MotherOfThebquarks" , m_motherofb_id) ; //default=Higgs H_10
+
+  //You should be able to substitute the b by another particle in this program.
+  //For example a mu
+	declareProperty( "SubstitutebBy" , m_subb = "No" );
+
 }
 
 //=============================================================================
@@ -105,11 +110,18 @@ StatusCode PythiaHiggsType::initialize() {
 
 	if ( ( 1 != m_nbbquarks ) && ( 2 != m_nbbquarks ) && ( 0 != m_nbbquarks ) && 
        ( -1 != m_nbbquarks ) ) {
-		fatal() << "The only choices for NumberOfbquarks property are 0, 1 or 2" 
+		fatal() << "The only choices for NumberOfbquarks property are -1,0,1 or 2"
             << endmsg;
 		return StatusCode::FAILURE;
 	}
   m_ppSvc = svc<IParticlePropertySvc>("ParticlePropertySvc", true);
+  m_motherofb_pid = abs( m_ppSvc->find( m_motherofb_id )->pdgID() );
+  if( m_subb == "No" ){
+    m_b_pid = abs( m_ppSvc->find("b" )->pdgID() );
+  } else {
+    m_b_pid = abs( m_ppSvc->find( m_subb )->pdgID() );
+  }
+
 	return sc ;
 }
 
@@ -117,12 +129,12 @@ StatusCode PythiaHiggsType::initialize() {
 // b quark tagging
 //=============================================================================
 bool PythiaHiggsType::Isb( const HepMC::GenParticle * p) const {
-  if ( abs(p->pdg_id())== abs( m_ppSvc->find("b" )->pdgID() )) {
-		HepMC::GenVertex * thePV =  p -> production_vertex() ;
+  if ( abs(p->pdg_id())== m_b_pid ) {
+		HepMC::GenVertex * thePV =  p->production_vertex() ;
 		HepMC::GenVertex::particle_iterator iter ;
-		for(iter = thePV -> particles_begin( HepMC::parents);
-        iter != thePV -> particles_end(HepMC::parents); ++iter){
-			if( abs( m_ppSvc->find( m_motherofb_id )->pdgID() ) == abs( (*iter)->pdg_id() )  ) return true;
+		for(iter = thePV->particles_begin( HepMC::parents);
+        iter != thePV->particles_end(HepMC::parents); ++iter){
+			if( abs( m_motherofb_pid ) == abs( (*iter)->pdg_id() )  ) return true;
 		}
 	}
 	return false;
@@ -172,6 +184,7 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
     if ( Isb( *(iterall) ) ) bList.push_back( *(iterall) ) ;
 	}
   
+  
 	const HepMC::GenParticle * theb1(0), *theb2(0);
 	std::list<const HepMC::GenParticle * >::iterator iterb = bList.begin() ;
 	if( 2<= bList.size() ) {
@@ -195,20 +208,13 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
     return false ;
   }
 
-	double pxb1,pyb1,pzb1,ppb1,thetab1;
-	double pxb2,pyb2,pzb2,ppb2,thetab2;
+	double pzb1,thetab1;
+	double pzb2,thetab2;
 	if( ( m_nbbquarks != -1 ) && ( bList.size() > 0 ) ) {
-		pxb1 = theb1 -> momentum() . px() * Gaudi::Units::GeV ;
-		pyb1 = theb1 -> momentum() . py() * Gaudi::Units::GeV ;
-		pzb1 = theb1 -> momentum() . pz() * Gaudi::Units::GeV ;
-		ppb1 = sqrt( pxb1*pxb1 + pyb1*pyb1 + pzb1*pzb1 ) ;
-		thetab1 = acos( fabs( pzb1 ) / ppb1 ) ;
-    
-		pxb2 = theb2 -> momentum() . px() * Gaudi::Units::GeV ;
-		pyb2 = theb2 -> momentum() . py() * Gaudi::Units::GeV ;
-		pzb2 = theb2 -> momentum() . pz() * Gaudi::Units::GeV ;
-		ppb2 = sqrt( pxb2*pxb2 + pyb2*pyb2 + pzb2*pzb2 ) ;
-		thetab2 = acos( fabs( pzb2 ) / ppb2 ) ;
+ 		pzb1 = theb1->momentum().pz() * Gaudi::Units::GeV ;
+    thetab1 = theb1->momentum().theta();
+ 		pzb2 = theb2->momentum().pz() * Gaudi::Units::GeV ;
+    thetab2 = theb2->momentum().theta();
 	}
 
 	if( ( 1== bList.size() ) && ( m_motherofb_id== "t" ) ) { 
@@ -226,26 +232,30 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
 	}
 
 	// Selection of the lepton
-	std::list< const HepMC::GenParticle * > LeptonList ;
+	std::vector< const HepMC::GenParticle * > LeptonList ;
 	for ( HepMC::GenEvent::particle_const_iterator iterall = 
           theEvent -> particles_begin() ;
         iterall!= theEvent -> particles_end() ; iterall++ ) {
     if ( IsLepton( *(iterall) ) ) LeptonList.push_back( *(iterall) ) ;
 	}
-  
+
   if( ( 0 == LeptonList.size() ) ) {
-    Warning( "No lepton in this event of requiered type with requiered mother (if mother was asked)!");
-    Warning( "You either produced events with no leptons, or put the wrong type of lepton, or of lepton mother" ) ;
+    if( msgLevel( MSG::DEBUG ) ){
+      debug()<<"No lepton in this event of requiered type "
+             <<"with requiered mother (if mother was asked)!"<< endmsg;   
+      debug()<<"You either produced events with no leptons, "
+             <<"or put the wrong type of lepton, or of lepton mother"<< endmsg;
+    }
     return false ;
   }
 
-	double pxl1,pyl1,pzl1,ppl1,ptl1,thetal1;
-	double pxl2,pyl2,pzl2,ppl2,ptl2,thetal2;
+	double pzl1,ptl1,thetal1;
+	double pzl2,ptl2,thetal2;
 	if ( m_nbLepton <= ( int ) LeptonList.size() ) {
 		const HepMC::GenParticle * theLepton1(0), *theLepton2(0);
-		std::list<const HepMC::GenParticle * >::iterator iterLepton = 
+		std::vector<const HepMC::GenParticle * >::iterator iterLepton = 
       LeptonList.begin() ;
-		if ( 2 == LeptonList.size() ) {
+		if ( 2 <= LeptonList.size() ) {
 			theLepton1 = *(iterLepton);
 			theLepton2 = *(++iterLepton);
 		}
@@ -254,19 +264,14 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
 			theLepton2 = *(iterLepton);
 		}
 
-		pxl1 = theLepton1 -> momentum() . px() ;
-		pyl1 = theLepton1 -> momentum() . py() ;
-		pzl1 = theLepton1 -> momentum() . pz() ;
-		ppl1 = sqrt( pxl1*pxl1 + pyl1*pyl1 + pzl1*pzl1 ) ;
-		ptl1 = sqrt( pxl1*pxl1 + pyl1*pyl1 ) ;
-		thetal1 = acos( fabs( pzl1 ) / ppl1 ) ;
 
-		pxl2 = theLepton2 -> momentum() . px() ;
-		pyl2 = theLepton2 -> momentum() . py() ;
-		pzl2 = theLepton2 -> momentum() . pz() ;
-		ppl2 = sqrt( pxl2*pxl2 + pyl2*pyl2 + pzl2*pzl2 ) ;
-		ptl2 = sqrt( pxl2*pxl2 + pyl2*pyl2 ) ;
-		thetal2 = acos( fabs( pzl2 ) / ppl2 ) ;
+
+ 		pzl1 = theLepton1->momentum().pz() ;
+    thetal1 = theLepton1->momentum().theta();
+    ptl1 = theLepton1->momentum().perp();
+ 		pzl2 = theLepton2->momentum().pz() ;
+    thetal2 = theLepton2->momentum().theta();
+    ptl2 = theLepton2->momentum().perp();
 
 		if ( 1 == LeptonList.size() ) {
 			thetal2= 100000;
@@ -356,26 +361,30 @@ bool PythiaHiggsType::applyCut( ParticleVector & /* theParticleVector */ ,
           && ( ( thetal2 <= m_thetaMax ) && ( pzl2 >= 0. )  && 
                ( ptl2 >= m_ptMin ) ) ) )// cut on 2b and 2 lepton
      ) {
-		debug()  << "Event passed with requierement of "
-             << m_nbLepton << " lepton and " 
-             << m_nbbquarks <<" bquarks" << endmsg ;
-		debug()  << " [thetab1 = " << thetab1<< "] [thetab2 = " << thetab2 
-             << "] " << "[pzb1 = " << pzb1 << "] [pzb2 = " << pzb2
-             << " [thetal1 = " << thetal1 << "] [pzl1 = " << pzl1 
-             << "] [ptl1 = " << ptl1 << "] [thetal2 = "
-             << thetal2 << "] [pzl2 = " << pzl2 << "] [ptl2 = " << ptl2 
-             << "]" << endmsg ;
-
+		if( msgLevel( MSG::DEBUG ) ){
+      debug()  << "Event passed with requierement of "
+               << m_nbLepton << " lepton and " 
+               << m_nbbquarks <<" bquarks" << endmsg ;
+      debug()  << " [thetab1 = " << thetab1<< "] [thetab2 = " << thetab2 
+               << "] " << "[pzb1 = " << pzb1 << "] [pzb2 = " << pzb2
+               << " [thetal1 = " << thetal1 << "] [pzl1 = " << pzl1 
+               << "] [ptl1 = " << ptl1 << "] [thetal2 = "
+               << thetal2 << "] [pzl2 = " << pzl2 << "] [ptl2 = " << ptl2 
+               << "]" << endmsg ;
+    }
 		return true;
+
 	} else {
-		debug() << "Event rejected with requierement of "<< m_nbLepton
-            << " lepton and " << m_nbbquarks << " bquarks" << endmsg ;
-		debug() << " [thetab1 = " << thetab1 << "] [thetab2 = " 
-            << thetab2 << "] " << "[pzb1 = " << pzb1 
-            << "] [pzb2 = " << pzb2 << " [thetal1 = "<< thetal1 
-            << "] [pzl1 = "<< pzl1 << "] [ptl1 = "<< ptl1 << "] [thetal2 = "
-            << thetal2 << "] [pzl2 = "<< pzl2 << "] [ptl2 = "<< ptl2 << "]" 
-            << endmsg ;
+    if( msgLevel( MSG::DEBUG ) ){
+      debug() << "Event rejected with requierement of "<< m_nbLepton
+              << " lepton and " << m_nbbquarks << " bquarks" << endmsg ;
+      debug() << " [thetab1 = " << thetab1 << "] [thetab2 = " 
+              << thetab2 << "] " << "[pzb1 = " << pzb1 
+              << "] [pzb2 = " << pzb2 << " [thetal1 = "<< thetal1 
+              << "] [pzl1 = "<< pzl1 << "] [ptl1 = "<< ptl1 << "] [thetal2 = "
+              << thetal2 << "] [pzl2 = "<< pzl2 << "] [ptl2 = "<< ptl2 << "]" 
+              << endmsg ;
+    }
 		return false;
 	}
 	return false ;

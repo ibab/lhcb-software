@@ -16,7 +16,7 @@
  *  minimal pt and comming (or not) from
  *  a W or Z boson
  *
- *  @author Victor Coco
+ *  @author Victor Coco, Neal Gauvin
  *  @date   2007-01-21
  */
 class PythiaHiggsType : public GaudiTool , virtual public IGenCutTool {
@@ -67,6 +67,12 @@ private:
 
   /// PDG id of the mother of the b quarks
   std::string m_motherofb_id;
+
+  /// Substitute of the b quark, if any reqested
+  std::string m_subb;
+
+  int m_motherofb_pid;
+  int m_b_pid;
 
   IParticlePropertySvc* m_ppSvc;
   

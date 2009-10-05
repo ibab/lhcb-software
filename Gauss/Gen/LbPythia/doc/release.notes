@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-09-02 - Neal Gauvin 
+  - PythiaHiggsType : new option for subsituting the b quark with any particle.
+
 !========================= LbPythia v8r4 2009-09-18 ==========================
 ! 2009-09-18 - Gloria CORTI
  - Introduce new options in python to allow the production to pick up options

@@ -1,4 +1,4 @@
-// $Id: PythiaHiggs.h,v 1.4 2007-02-26 16:44:19 robbep Exp $
+// $Id: PythiaHiggs.h,v 1.5 2009-10-05 06:18:58 ngueissa Exp $
 #ifndef LBPYTHIA_PYTHIAHIGGS_H 
 #define LBPYTHIA_PYTHIAHIGGS_H 1
 
@@ -31,5 +31,6 @@ class PythiaHiggs : public GaudiTool , virtual public IGenCutTool {
 
  private:
   double m_thetaMax ;
+  
 };
 #endif // COMPONENT_PYTHIAHIGGS_H
