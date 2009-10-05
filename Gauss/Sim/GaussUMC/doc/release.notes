@@ -1,0 +1,10 @@
+!-----------------------------------------------------------------------------
+! Package     : Sim/GaussUMC
+! Responsible : Victor Coco
+! Purpose     : Evry algorithm only needed for upgrade simulation in Gauss
+!               might take place in this package in order not to interact with 
+!               present detector simulation
+!-----------------------------------------------------------------------------
+
+! 2009-10-05 - Victor Coco
+ - initial version
