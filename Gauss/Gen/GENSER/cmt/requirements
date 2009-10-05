@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v5r1
+version v5r2
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -48,7 +48,7 @@ macro alpgen_name "alpgen"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "107.1"
+macro pythia8_native_version "107"
 macro_append pythia8_linkopts " -lhepmcinterface "
 
 

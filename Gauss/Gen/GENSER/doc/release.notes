@@ -4,6 +4,11 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+!========================== GENSER v5r2 2009-10-05 ===========================
+! 2009-10-05 - Gloria CORTI
+  - Fix consistency of HepMC used for Pythia8, by using version 107 instead
+    of 107.1
+
 ! 2009-09-28 - Patrick Robbe
  - Change UPINIT call to BCVEGPY (change of arguments)
 
