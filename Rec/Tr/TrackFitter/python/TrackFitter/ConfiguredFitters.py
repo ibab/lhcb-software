@@ -18,7 +18,9 @@ def ConfiguredMasterFitter( Name,
                             SimplifiedGeometry = TrackSys().simplifiedGeometry(),
                             NoDriftTimes       = TrackSys().noDrifttimes(),
                             KalmanSmoother     = TrackSys().kalmanSmoother(),
-                            LiteClusters       = False ):
+                            LiteClusters       = False,
+                            ApplyMaterialCorrections = True,
+                            StateAtBeamLine = True ):
     if isinstance(Name,TrackMasterFitter) :
         fitter = Name
     else :
@@ -30,6 +32,12 @@ def ConfiguredMasterFitter( Name,
     fitter.addTool( TrackMasterExtrapolator, name = "Extrapolator" )
     fitter.addTool( TrackKalmanFilter, name = "NodeFitter" )
 
+    # apply material corrections
+    fitter.ApplyMaterialCorrections = ApplyMaterialCorrections
+
+    # provide a state at the beamline
+    fitter.StateAtBeamLine = StateAtBeamLine
+    
     # set up the material locator
     if SimplifiedGeometry:
         fitter.addTool(SimplifiedMaterialLocator, name="MaterialLocator")
@@ -90,7 +98,9 @@ def ConfiguredEventFitter( Name,
                            SimplifiedGeometry = TrackSys().simplifiedGeometry(),
                            NoDriftTimes       = TrackSys().noDrifttimes(),
                            KalmanSmoother     = TrackSys().kalmanSmoother(),
-                           LiteClusters = False ):
+                           LiteClusters = False,
+                           ApplyMaterialCorrections = True,
+                           StateAtBeamLine = True ):
     # make sure the name is unique
     if allConfigurables.get( Name ) :
         raise ValueError, 'ConfiguredEventFitter: instance with name '+Name+' already exists'
@@ -104,7 +114,10 @@ def ConfiguredEventFitter( Name,
                                                  SimplifiedGeometry=SimplifiedGeometry,
                                                  NoDriftTimes=NoDriftTimes,
                                                  KalmanSmoother=KalmanSmoother,
-                                                 LiteClusters=LiteClusters ), name = "Fitter")
+                                                 LiteClusters=LiteClusters,
+                                                 ApplyMaterialCorrections=ApplyMaterialCorrections,
+                                                 StateAtBeamLine=StateAtBeamLine),
+                         name = "Fitter")
     return eventfitter
 
 def ConfiguredPrefitter( Name = "DefaultEventFitter",
@@ -119,7 +132,7 @@ def ConfiguredPrefitter( Name = "DefaultEventFitter",
                                         LiteClusters=LiteClusters)
     eventfitter.Fitter.NumberFitIterations = 1
     eventfitter.Fitter.MaxNumberOutliers = 0
-    eventfitter.Fitter.ErrorY2 = 10000
+    eventfitter.Fitter.ErrorY = 100
     return eventfitter
 
 def ConfiguredFitVelo( Name = "FitVelo",
@@ -167,19 +180,6 @@ def ConfiguredFitMatch( Name = "FitMatch",
 def ConfiguredFitDownstream( Name = "FitDownstream",
                              TracksInContainer = "Rec/Track/Downstream" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
-
-def ConfiguredPreFitForward( Name = "PreFitForward",
-                             TracksInContainer = "Rec/Track/Forward" ):
-    return ConfiguredPrefitter(Name,TracksInContainer)
-
-def ConfiguredPreFitMatch( Name = "PreFitMatch",
-                           TracksInContainer = "Rec/Track/Match" ):
-    return ConfiguredPrefitter(Name,TracksInContainer)
-
-def ConfiguredPreFitDownstream( Name = "PreFitDownstream",
-                                TracksInContainer = "Rec/Track/Downstream" ):
-    eventfitter = ConfiguredPrefitter(Name,TracksInContainer)
     return eventfitter
 
 def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True,
