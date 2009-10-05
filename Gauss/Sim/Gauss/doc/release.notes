@@ -4,8 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+
+!========================= Gauss v37r5 2009-10-05 ============================
+! 2009-10-05 - Gloria CORTI
+ - Force version number for BcVegPyData to be v2r* as required by new version
+   of the code
+
 ! 2009-10-02 - Tomasz Skwarnicki
- - update options/Gauss-Upgrade.py to follow the changes in AppConfig/options/Gauss
+ - update options/Gauss-Upgrade.py to follow the changes in 
+   AppConfig/options/Gauss
 
 ! 2009-10-01 - Jibo He
  - change the BcVegPyData version in requirements file from "v1r*" to "v*" 
@@ -19,7 +26,7 @@
  - Fix options for gauss-gen-mc09-14143011.qmt to use GenStandAlone.py instead
    of .opts as it no longer exists.
 
-!======================= Gauss v37r3p1 2009-09-18 ============================
+!========================= Gauss v37r4 2009-09-18 ============================
 ! 2009-09-18 - Gloria CORTI
  - Replace the use of the package Gen/ParticleGuns with Gen/LbPGuns and 
    activate it. Reactivate Gen/LbMIB package.
