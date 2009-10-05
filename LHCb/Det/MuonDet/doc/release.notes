@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.135 2009-10-02 13:24:19 asatta Exp $
+! $Id: release.notes,v 1.136 2009-10-05 10:15:01 asatta Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
+
+! 2009-10-05 - Alessia Satta
+ - Fix untested statuscode
 
 ! 2009-10-02 - Alessia Satta
  - Largely Modified to reduce the detector elements inside the chambers 

@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.cpp,v 1.35 2009-10-02 13:24:19 asatta Exp $
+// $Id: MuonChamberLayout.cpp,v 1.36 2009-10-05 10:15:01 asatta Exp $
 // Include files
 
 // Gaudi
@@ -1077,7 +1077,7 @@ StatusCode MuonChamberLayout::getXYZ(const int& station,
     IGeometryInfo* cInfo = muChamber->geometry();
     IPVolume* gap=muChamber->getGasGap(gapNum);
     IPVolume* gapLayer=muChamber->getGasGapLayer(gapNum);
-    bool FoundGap = false;
+    //    bool FoundGap = false;
 
     if( !gap ){
 

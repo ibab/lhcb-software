@@ -1,4 +1,4 @@
-// $Id: DeMuonDetector.cpp,v 1.51 2009-10-02 13:50:32 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.52 2009-10-05 10:15:01 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
@@ -805,9 +805,9 @@ void DeMuonDetector::fillGeoInfo()
                   double dx = box->xHalfLength();
                   double dy = box->yHalfLength();
                   double dz = box->zHalfLength();
-                  m_sensitiveAreaX[station*4+region]=2*dx;
-                  m_sensitiveAreaY[station*4+region]=2*dy;
-                  m_sensitiveAreaZ[station*4+region]=2*dz;
+                  m_sensitiveAreaX[station*4+region]=2*static_cast<float>(dx);
+                  m_sensitiveAreaY[station*4+region]=2*static_cast<float>(dy);
+                  m_sensitiveAreaZ[station*4+region]=2*static_cast<float>(dz);
                   area=4*dx*dy;
                   m_areaChamber[station*4+region]=area;
                   gaps++;  

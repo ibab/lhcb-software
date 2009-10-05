@@ -1,4 +1,4 @@
-// $Id: DeMuonChamber.cpp,v 1.18 2009-10-02 13:50:32 asatta Exp $
+// $Id: DeMuonChamber.cpp,v 1.19 2009-10-05 10:15:01 asatta Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
@@ -174,7 +174,7 @@ IPVolume* DeMuonChamber::getGasGapLayer(int number){
 
 StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi::XYZPoint& pointInGap,int& number,IPVolume* gasVolume){
 
-  StatusCode sc;
+ // StatusCode sc;
   int loopnumber=0;
 //  IPVolume* nullPV=NULL;
   ILVolume::PVolumes::const_iterator pvIterator;
@@ -196,20 +196,20 @@ StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi:
       bool isIn = (*pvIterator)->isInside(pointInChamber);
 
       if(isIn){
-	Gaudi::XYZPoint myPointInGasFrame=(*pvIterator)->toLocal(pointInChamber);
-	for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
-	  if(!((*pvGapIterator)->lvolume()->sdName().empty())){
-	    bool isInGap = (*pvGapIterator)->isInside(myPointInGasFrame);
-	    if(isInGap){ 	      
-	      pointInGap= (*pvGapIterator)->toLocal(myPointInGasFrame);
-	      gasVolume=(*pvGapIterator);
-	      number=loopnumber;
-	      return StatusCode::SUCCESS;
-	    }else{
-	      return StatusCode::FAILURE;
-	    }	    
-	  }
-	}
+        Gaudi::XYZPoint myPointInGasFrame=(*pvIterator)->toLocal(pointInChamber);
+        for (pvGapIterator=(geoCh->pvBegin());pvGapIterator!=(geoCh->pvEnd());pvGapIterator++){
+          if(!((*pvGapIterator)->lvolume()->sdName().empty())){
+            bool isInGap = (*pvGapIterator)->isInside(myPointInGasFrame);
+            if(isInGap){ 	      
+              pointInGap= (*pvGapIterator)->toLocal(myPointInGasFrame);
+              gasVolume=(*pvGapIterator);
+              number=loopnumber;
+              return StatusCode::SUCCESS;
+            }else{
+              return StatusCode::FAILURE;
+            }	    
+          }
+        }
       }
       loopnumber++;
     }
@@ -221,7 +221,7 @@ StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi:
 
 StatusCode  DeMuonChamber::isPointInGasGap(Gaudi::XYZPoint pointInChamber,Gaudi::XYZPoint& pointInGap,IPVolume* gasVolume){
   int number=0;
-  return isPointInGasGap(pointInChamber,pointInGap,number,gasVolume);
+return isPointInGasGap(pointInChamber,pointInGap,number,gasVolume);
 }
 
 
