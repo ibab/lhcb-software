@@ -64,6 +64,11 @@ class StrippingConf( LHCbConfigurableUser ):
 #       Import main options file (descriptions of all lines)
         importOptions(self.getProp('MainOptions'))
 
+	output = (self.getProp('OutputType')).upper()
+
+        if output not in [ "ETC", "SETC", "DST", "NONE" ]:
+            raise TypeError( "Invalid output type '%s'"%output )
+
 #	Create a list of active stream names
         lines = self.activeLines()
         streams = []
@@ -81,15 +86,13 @@ class StrippingConf( LHCbConfigurableUser ):
 	for line in lines : 
 	    for stream in self.activeStreams() :
 		if line.stream() == stream.name() :
-		    stream.appendLine(line)
-		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream()+", output="+line.outputSelection())
+		    if output == "SETC" : 
+			stream.appendTES(line)
+		    else : 
+			stream.appendLine(line)
+		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream()+", output="+line.outputLocation())
         
-	output = (self.getProp('OutputType')).upper()
-
-        if output not in [ "ETC", "DST", "NONE" ]:
-            raise TypeError( "Invalid output type '%s'"%output )
-
-	if output == "ETC" : 
+	if output == "ETC" or output == "SETC" : 
 
 #           The user wants to write ETC. 
 #           Selections of all active stripping lines will go there. 
@@ -111,8 +114,9 @@ class StrippingConf( LHCbConfigurableUser ):
 		log.info("StrippingConf: Stream "+stream.name()+" sequencer is "+stream.sequence().name())
 		strippingSeq.Members += [ stream.sequence() ]
 		for line in stream.lines() : 
-		    tag.TupleToolSelResults.Selections += [ line.name() ]
-		    log.info("StrippingConf: added selection "+line.name())
+		    sel = line.name()
+		    tag.TupleToolSelResults.Selections += [ sel ]
+		    log.info("StrippingConf: added selection "+sel)
 		print stream.outputLocations()
 
 	    DaVinci().appendToMainSequence( [ strippingSeq ] )

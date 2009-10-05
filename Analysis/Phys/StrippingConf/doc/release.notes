@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.22 2009-10-02 09:21:04 jpalac Exp $
+!$Id: release.notes,v 1.23 2009-10-05 14:16:08 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-10-05 - Anton POLUEKTOV
+
+ - Fixed missing "Phys/" in StrippingLine.outputLocation() used for DST writing in case of
+   "old" (i.e. not based on SelectionSequence) selections. 
+ - Added "SETC" output type. This does not run selections, but just checks the 
+   existence of the corresponding TES locations using TESCheck. To be used for tagger. 
 
 !========================== StrippingConf v1r5 2009-10-02 ===================
 

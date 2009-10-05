@@ -84,13 +84,13 @@ class bindMembers (object) :
         elif hasattr ( type(alg) , 'OutputSelection' ) :
             if hasattr ( alg , 'OutputSelection' ) :
                 self._outputsel = alg.OutputSelection
-                self._outputloc = alg.OutputSelection
+                self._outputloc = "Phys/"+alg.OutputSelection
         elif hasattr ( type(alg) , 'OutputLocation' ) :
             if hasattr ( alg , 'OutputLocation' ) :
                 self._outputloc = alg.OutputLocation 
         else :
             self._outputsel = alg.name()
-            self._outputloc = alg.name()
+            self._outputloc = "Phys/"+alg.name()
 
     def _default_handler_( self, line, alg ) :
         # if not known, blindly copy -- not much else we can do
@@ -113,7 +113,7 @@ class bindMembers (object) :
         # sometimes, we want to ignore this... 
         # add a flag to allow to skip this (when set to None?)
         if alg.outputSelection() : self._outputsel = alg.outputSelection()
-        if alg.outputSelection() : self._outputloc = alg.outputLocation()
+        if alg.outputLocation() : self._outputloc = alg.outputLocation()
 
     def _handle_StrippingMember( self, line, alg ) :
         if line == None: raise AttributeError, 'Must have a line name to bind to'
@@ -297,7 +297,29 @@ class StrippingLine(object):
         self._stream    = stream
         self._args      = args
 
+        line = self.subname()
+
+        # most recent output selection
+        self._outputsel = None
+        self._outputloc = None
+        # bind members to line
+        _boundMembers = bindMembers( line, algos )
+        _members = _boundMembers.members()
+        self._outputsel = _boundMembers.outputSelection()
+        self._outputloc = _boundMembers.outputLocation()
+        
+        # register into the local storage of all created Lines
+        _add_to_stripping_lines_( self ) 
+
+    def createConfigurable( self ) : 
         # check for forbidden attributes
+        
+        name    = self._name
+        args    = self._args
+        algos   = self._algos
+        checkPV = self._checkPV
+        HLT     = self._HLT
+
         mdict = {} 
         for key in args :
             if key in _protected_ :
@@ -307,14 +329,9 @@ class StrippingLine(object):
         #start to contruct the sequence        
         line = self.subname()
         
-        # most recent output selection
-        self._outputsel = None
-        self._outputloc = None
-        # bind members to line
         _boundMembers = bindMembers( line, algos )
         _members = _boundMembers.members()
-        self._outputsel = _boundMembers.outputSelection()
-        self._outputloc = _boundMembers.outputLocation()
+
         # if needed, check Primary Vertex before running all algos
         if checkPV : 
     	    check = CheckPV("checkPV");
@@ -338,8 +355,6 @@ class StrippingLine(object):
         print '# created Stripping Line configurable for', name, '\n'
         print self._configurable
 
-        # register into the local storage of all created Lines
-        _add_to_stripping_lines_( self ) 
 
     def subname   ( self ) :
         """ 'Sub-name' of the Stripping line  """ 
