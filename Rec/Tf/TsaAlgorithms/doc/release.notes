@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-10-05 - Jeroen Van Tilburg
+ - Fixed invalid iterator bug in TTGenericTracking::removeClones.
+
 ! 2009-10-01 - Jeroen Van Tilburg
  - Added option to merge large neighbouring clusters (>4 strips).
 
