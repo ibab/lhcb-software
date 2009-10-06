@@ -1,7 +1,7 @@
 #ifndef CALOMONIDST_CALOEMUMONITOR_H
 #define CALOMONIDST_CALOEMUMONITOR_H 1
 // ============================================================================
-// $Id: CaloEMuMonitor.h,v 1.4 2009-07-28 12:26:46 cattanem Exp $
+// $Id: CaloEMuMonitor.h,v 1.5 2009-10-06 12:22:48 cattanem Exp $
 // Include files
 // ============================================================================
 
@@ -47,7 +47,8 @@
 /** @file
  *
  *  Header file for class CaloEMuMonitor - another algorithm to monitor
- *  the quality of Calo Electron and Muon PID.
+ *  the quality of Calo Electron and Muon PID. See detailed description in
+ *  <a href="http://cdsweb.cern.ch/record/1209003">LHCb-INT-2009-022</a>
  *
  *  @author Dmitry Golubkov
  *  @date   2009-03-24  */

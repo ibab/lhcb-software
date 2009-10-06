@@ -1,14 +1,15 @@
-! $Id: release.notes,v 1.57 2009-10-01 11:31:19 ibelyaev Exp $ 
+! $Id: release.notes,v 1.58 2009-10-06 12:22:48 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
 
+! 2009-10-06 - Marco Cattaneo
+ - Add link to LHCb-INT-2009-022 note in CaloEMuMonitor.h doxygen header
+
 ! 2009-10-01 - Vanya BELYAEV
-
- - CaloMoniAlg.h 
-
+ - CaloMoniAlg.h :
     minor fix for the recent modification in CaloCellCode functions 
 
 ! 2009-09-14 - Olivier Deschamps
@@ -20,7 +21,6 @@
 ! 2009-09-08 - Olivier Deschamps
  - Add background histo in resolved pi0 monitor
  - Fix problem with HashMap<const string, IHistogram*> removing const !
-
 
 !========================== CaloMoniDst v4r0 2009-09-07 =======================
 ! 2009-09-07 - Dmitry GOLUBKOV
