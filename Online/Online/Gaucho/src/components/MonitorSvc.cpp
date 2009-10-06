@@ -581,7 +581,7 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   std::string dimSvcName ="";
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
   if ((utgidParts.size() == 4)&(dimPrefix=="")) {
-    dimSvcName = utgidParts[0] + "/"+dimName;
+    dimSvcName = utgidParts[0]+"_"+utgidParts[2] + "/"+dimName;
   }
   else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
   
