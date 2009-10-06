@@ -4,6 +4,13 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+
+! 2009-10-06 - Alessio sarti
+ - Refined the Jpsi and Lambda selections.
+   - Implemented the 'or-tag' for the muon candidates
+   - Added the Jpsi detached selection
+   - Refined the Lambda DD and LL selections
+
 !===================== StrippingSelections v1r7 2009-10-02 ====================
 
 ! 2009-10-01 J. Nardulli
