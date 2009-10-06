@@ -87,9 +87,6 @@ if TrackSys().fieldOff() : MagneticFieldSvc().ScaleFactor = 0
 ## get all the trackfitters
 from TrackFitter.ConfiguredFitters import *
 
-##get parameters for fast momentum estimate
-importOptions ("$TRACKTOOLSROOT/options/FastMomentumEstimate.opts")
-
 if "noDrifttimes" in TrackSys().getProp("ExpertTracking"):
    Tf__OTHitCreator("OTHitCreator").NoDriftTimes = True
 
