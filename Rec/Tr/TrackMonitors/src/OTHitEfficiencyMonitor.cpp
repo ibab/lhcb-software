@@ -11,6 +11,7 @@
 #include "OTDet/DeOTModule.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
 #include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram2D.h"
 
 #include "boost/lexical_cast.hpp"
 
@@ -21,6 +22,7 @@ namespace {
     AIDA::IProfile1D* m_receffvsdist ;
     AIDA::IProfile1D* m_effvsyfrac ;
     AIDA::IProfile1D* m_receffvsyfrac ;
+    AIDA::IHistogram2D* m_clustersize ;
     
     ModuleEfficiencyHistograms(GaudiHistoAlg& alg,  size_t moduleID ) {
       // construct a directory name
@@ -33,9 +35,12 @@ namespace {
 					   "hot efficiency versus distance in mono layer plane", -3, 3, 200) ;
       m_receffvsyfrac    = alg.bookProfile1D( modulename + "hoteffvsy", 
 					      "hot efficiency versus y-coordinate in mono layer plane", -0.1, 1.1, 24) ;
+      
+      m_clustersize = alg.book2D( modulename + "clustersize", 
+				  "clustersize versus slope", -1,1,20,-0.5,10.5,11) ;
     }
   } ;
-
+  
   struct ModuleHitMap
   {
     enum { MaxChan = 128} ;
@@ -78,7 +83,7 @@ private:
     return uniqueQuarter(channelID)*9 + channelID.module() - 1 ;
   }
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
-		       double strawpos[2], double yFrac[2] ) ;
+		      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) ;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) ;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,const LHCb::FitNode* nodeA,const LHCb::FitNode* nodeB) ;
   void fillEfficiency(const LHCb::Track& track) ;
@@ -204,8 +209,9 @@ StatusCode OTHitEfficiencyMonitor::execute()
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
-					  const DeOTModule& module,
-					  double strawpos[2], double yfrac[2]) 
+					     const DeOTModule& module,
+					     double strawpos[2], double yfrac[2],
+					     const LHCb::State& refstate)
 {
   // make a temporary structure that tells which hits are in this
   // module. if this takes time, then we should do it once per event
@@ -214,25 +220,19 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
   size_t nstraws = module.nChannels() ;
   ModuleEfficiencyHistograms* modulehist = m_moduleHistograms[module.elementID().module()-1] ;
 
+  // compute the direction in the local frame. this can be done a lot more efficient, but okay:
+  Gaudi::XYZVector localslopes = module.geometry()->toLocal( refstate.slopes() ) ;
+  double localTx = localslopes.x()/localslopes.z() ;
+
   for(size_t imono = 0; imono<2 ; ++imono ) {
     // find the hits in a +- 3 straw window
+    int monooffset = imono * nstraws/2 - 1 ;
     int minstraw = std::max(int(strawpos[imono]) - 2,1) ;
     int maxstraw = std::min(int(strawpos[imono]) + 3,int(nstraws/2)) ;
     for( int istraw = minstraw; istraw<=maxstraw; ++istraw) {
-      LHCb::OTChannelID channel = m_moduleHitMap[ uniquemodule ].hashit[ istraw + imono * nstraws/2 - 1] ;
+      LHCb::OTChannelID channel = m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
       bool foundhit = channel != 0 ;
       bool foundhot = foundhit && track.isOnTrack( LHCb::LHCbID( channel ) ) ;
-      if( foundhit && !foundhot ) {
-	// let's do a linear seacrh because we still have problem with
-	// roder of hits. I guess I just need to recompite PatSeeding.
-	foundhot = std::find( track.lhcbIDs().begin(), track.lhcbIDs().end(),  LHCb::LHCbID( channel )) != track.lhcbIDs().end() ;
-	for( LHCb::Track::LHCbIDContainer::const_iterator ihot = track.lhcbIDs().begin() ;
-	     ihot != track.lhcbIDs().end() && !foundhot; ++ihot )
-	  foundhot = ihot->isOT() && ihot->otID().uniqueStraw() == channel.uniqueStraw() ;
-	  // foundhot = ihot->channel().station() == channel.station() &&
-	// 	    ihot->channel().layer() == channel.layer() &&
-	// 	    ihot->channel().quarter() == channel.quarter() ;
-      }
       double dstraw = strawpos[imono] - istraw ;
       modulehist->m_effvsdist->fill(dstraw,foundhit) ;
       modulehist->m_receffvsdist->fill(dstraw,foundhot) ;
@@ -242,12 +242,24 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
 	m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
       }
     }
+    // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
+    int closeststraw = int( strawpos[imono] + 0.5 ) ;
+    if( 1<=closeststraw && closeststraw <=int(nstraws/2) ) {
+      size_t clustersize = 0 ;
+      for( int istraw = closeststraw; 
+	   istraw<=int(nstraws/2) && m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
+	   ++istraw) ++clustersize ;
+      for( int istraw = closeststraw-1; 
+	   istraw>=1 && m_moduleHitMap[ uniquemodule ].hashit[ istraw + monooffset ] ;
+	   --istraw) ++clustersize ;
+      modulehist->m_clustersize->fill( localTx, clustersize ) ;
+    }
   }
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
-					 const DeOTModule& module,
-					 const LHCb::State& state )
+					    const DeOTModule& module,
+					    const LHCb::State& state )
 {
   double strawpos[2], yfrac[2] ;
   for(size_t imono = 0 ; imono<2; ++imono) 
@@ -256,7 +268,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
 				  state.tx(),
 				  state.ty(),
 				  strawpos[imono], yfrac[imono] ) ;
-  fillEfficiency(track,module,strawpos,yfrac) ;
+  fillEfficiency(track,module,strawpos,yfrac,state) ;
 }
 
 void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
@@ -265,6 +277,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
 					 const LHCb::FitNode* nodeMonoB)
 {
   double strawpos[2], yfrac[2] ;
+  const LHCb::State* refstate(0) ;
 #define SAFEBUTSLOW
 #ifdef SAFEBUTSLOW
   // this is the expensive method of getting two unbiased straw positions:
@@ -277,14 +290,16 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
 				  states[imono].tx(),
 				  states[imono].ty(),
 				  strawpos[imono], yfrac[imono] ) ;
+  refstate = &(states[1]) ;
 #else
-  // but there is a second methos that is much faster. it is just slightly harder toget things right:
+  // but there is a second method that is much faster. it is just slightly harder toget things right:
   const LHCb::FitNode* nodes[2]={ 0,0};
   nodes[0] = nodeMonoA ;
   nodes[1] = nodeMonoB ;
   for(size_t imono=0; imono<2; ++imono) {
     const LHCb::FitNode* node = nodes[imono] ; 
-    const LHCb::State& state = node ? node->state() : nodes[ (imono+1)%2]->state() ;
+    const LHCb::State& state = node ? node->state() : nodes[(imono+1)%2]->state() ;
+    refstate = &state ;
     module.monoLayerIntersection( imono,
                                   state.position(),
                                   state.tx(),
@@ -304,7 +319,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track,
     }
   }
 #endif  
-  fillEfficiency(track,module,strawpos,yfrac) ;
+  fillEfficiency(track,module,strawpos,yfrac,*refstate) ;
 }
 
 
