@@ -5668,14 +5668,6 @@ DetailedMateria...   INFO Time User   : Tot= 3.65  [s] Ave/Min/Max= 12.7(+-  104
 ChronoStatSvc        INFO Time User   : Tot= 15.5  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
-StatusCodeSvc        INFO listing all unchecked return codes:
-StatusCodeSvc        INFO
-Num | Function                       | Source Library
-----+--------------------------------+------------------------------------------
-4434 | Rich::Rec::MC::CherenkovAngleMonitor::execute() | libRichRecMonitors.so
-144 | Rich::Rec::MC::GhostTrackMoni::execute() | libRichRecMonitors.so
-1400 | Rich::Rec::MC::TrackResolutionMoni::execute() | libRichRecMonitors.so
-
 ApplicationMgr       INFO Application Manager Finalized successfully
 ApplicationMgr       INFO Application Manager Terminated successfully
 Tuples::TupleObj WARNING  Create/Destroy      (mis)balance 'Tuple 'CKTuple'' Counts = 9

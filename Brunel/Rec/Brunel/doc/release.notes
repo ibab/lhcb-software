@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-06 - Marco Cattaneo
+ - Update references for:
+   . Reduced warnings (RichGlobalPID v3r10p4)
+   . Fix untested StatusCodes (RichRecMonitors v2r4)
+
 ! 2009-09-30 - Marco Cattaneo
  - Update references for:
    . Introduction of Runge Kutta as default extrapolator
