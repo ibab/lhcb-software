@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.55 2009-05-30 12:14:28 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.56 2009-10-06 18:05:30 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -98,7 +98,12 @@ StatusCode HltAlgorithm::beginExecute() {
   setFilterPassed(false);
 
   // we always process callbacks first...
-  BOOST_FOREACH( CallBack* i, m_callbacks ) i->process();
+  BOOST_FOREACH( CallBack* i, m_callbacks ) { 
+    StatusCode status = i->execute();
+    if (!status) {
+
+    }
+  }
   
   // assert if not done properly...
   Assert(m_outputSelection->decision()==false 
@@ -106,15 +111,24 @@ StatusCode HltAlgorithm::beginExecute() {
       && m_outputSelection->error()==false," output already touched???");
 
   bool ok = verifyInput();
-  if (produceHistos()) monitorInputs();
   
   return ok ? StatusCode::SUCCESS : StatusCode::FAILURE ;
 }
 
 StatusCode HltAlgorithm::endExecute() {
   //TODO: add flushbacks here...
-  setDecision();
-  if (produceHistos()) monitorOutput();
+  size_t n = m_outputSelection->size();
+  counter("#candidates accepted") += n ; 
+  if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
+  setDecision( m_outputSelection->decision() );
+
+  if (produceHistos()) {
+      for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
+           it != m_inputSelections.end(); ++it) {
+        fill(m_inputHistos[(*it)->id()],(*it)->size(),1.);
+      }
+      fill(m_outputHisto,m_outputSelection->size(),1.);
+  }
   
   debug() << " output candidates " << m_outputSelection->size() 
           << " decision " << m_outputSelection->decision() 
@@ -162,34 +176,6 @@ bool HltAlgorithm::verifyInput()
   return ok;
 }
 
-void HltAlgorithm::monitorInputs() 
-{
-  if (!produceHistos()) return;
-  for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
-       it != m_inputSelections.end(); ++it) {
-    fill(m_inputHistos[(*it)->id()],(*it)->size(),1.);
-  }
-  // verbose() << " end monitor inputs " <<endreq;
-}
-
-void HltAlgorithm::monitorOutput() {
-  if (!produceHistos()) return;
-  size_t nCandidates = m_outputSelection->size();
-  Assert( 0 != m_outputHisto," monitorOutput() no output histo ");
-  fill(m_outputHisto,nCandidates,1.);
-}
-
-//@TODO: 
-//@FIXME: 
-// in case we have candidates, the decision is taken by the algorithm from the selection,
-// but in case there are no candidates, we MUST call setDecision(bool) explicitly!!
-void HltAlgorithm::setDecision() {
-  Assert (0 != m_outputSelection," setDecision() no output selection! ");
-  size_t n = m_outputSelection->size();
-  counter("#candidates accepted") += n ; 
-  if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
-  setDecision( m_outputSelection->decision() );
-}
 
 void HltAlgorithm::setDecision(bool accept) {
   setFilterPassed(accept);
@@ -199,7 +185,7 @@ void HltAlgorithm::setDecision(bool accept) {
   // candidates, we never explicitly set 'false', and hence would otherwise
   // not set 'processed'
   m_outputSelection->setDecision(accept);
-  counter("#accept") += m_outputSelection->decision();
+  counter("#accept") += accept;
 }
 
 

@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.39 2009-05-30 12:14:28 graven Exp $
+// $Id: HltAlgorithm.h,v 1.40 2009-10-06 18:05:30 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -70,17 +70,6 @@ public:
 
 private:
 
-  // decision according with nCandidates and filter, or preset in the selection
-  void setDecision() ;
-
-private:
-
-  // monitor inputs, fill histograms with the candidates of input selections
-  void monitorInputs();
-
-  // monitor output, fill histogram with candidates of output selection
-  void monitorOutput();
-
   // force decision to the value of decision
   void setDecision(bool decision);
   //
@@ -111,7 +100,6 @@ private:
        return selection;
   }
 
-private:
   // must inputs be valid?
   bool m_requireInputsToBeValid;
 
@@ -123,7 +111,6 @@ private:
   //TODO: since this is not applicable to all algorithms, remove from base...
   size_t m_minNCandidates;
 
-private:
   // set this selection as output, to be monitor, and to decide if the 
   // event pass
   void setOutputSelection(Hlt::Selection* sel);
@@ -143,7 +130,7 @@ private:
 
   struct CallBack {
     virtual ~CallBack() {}
-    virtual void process() {}
+    virtual StatusCode execute()  = 0;
   };
 
   template<typename T>
@@ -152,12 +139,17 @@ private:
       TESSelectionCallBack(T &selection,HltAlgorithm &parent) : m_selection(selection),m_parent(parent) {
         assert(m_selection.id().str().substr(0,4)=="TES:");
       }
-      void process() {
+      StatusCode execute() {
         typedef typename T::candidate_type::Container  container_type;
+
+        // TODO: does not work, as fullTESLocation is private...
+        // container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
+        // if (obj==0) { }
         container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection.id().str().substr(4) );
         m_selection.clean(); //TODO: check if/why this is needed??
         m_selection.insert(m_selection.end(),obj->begin(),obj->end());
         m_selection.setDecision( !m_selection.empty() ); // force it processed...
+        return StatusCode::SUCCESS;
       }
   private:
       T&            m_selection;

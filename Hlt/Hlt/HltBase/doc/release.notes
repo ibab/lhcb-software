@@ -6,6 +6,8 @@
 ! 2009-10-06 - Gerhard Raven
  - use the fact that LHCbIDs on tracks are now sorted
  - remove some unused code
+ - re-use code from LHCbMath 
+ - consolidate code in HltAlgorithm
 
 !========================== HltBase v6r7 2009-08-31 =====================
 ! 2009-08-27 - Gerhard Raven

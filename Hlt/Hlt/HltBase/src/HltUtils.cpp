@@ -2,10 +2,11 @@
 
 #include <cassert>
 #include <numeric>
+#include "LHCbMath/GeomFun.h"
+#include "LHCbMath/Line.h"
 
 using namespace Gaudi;
 using namespace LHCb;
-
 
 void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
   
@@ -69,33 +70,11 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
 double HltUtils::impactParameter (const RecVertex& vertex, 
                                   const Track& track)
 {
-  const XYZPoint& pos = vertex.position();
-  double xv = pos.x();
-  double yv = pos.y();
-  double zv = pos.z();
-  
+  const XYZPoint& vtx = vertex.position();
   const State& state = track.firstState();
-  double xt = state.x();
-  double yt = state.y();
-  double zt = state.z();
-  double tx = state.tx();
-  double ty = state.ty();
 
-  xt = xt + tx*(zv-zt);
-  yt = yt + ty*(zv-zt);
-  zt = zv;
-  
-  double Dx = xt-xv;
-  double Dy = yt-yv;
-  double Dz = zt-zv;
-  
-  double dz = -(Dx*tx+Dy*ty+Dz)/(1+tx*tx+ty*ty);
-  double XX = Dx+tx*dz;
-  double YY = Dy+ty*dz;
-  double ZZ = Dz+   dz;
-  
-  double IP = sqrt(XX*XX+YY*YY+ZZ*ZZ);
-  return (ZZ<0) ? -IP : IP;
+  XYZVector vec = Gaudi::Math::closestPoint( vtx, Gaudi::Math::Line<XYZPoint,XYZVector>( state.position(), state.slopes() ) ) - vtx;
+  return vec.Z() < 0 ? -vec.R() : vec.R() ;
 }
 
 double HltUtils::IPError(const Track& track)
@@ -177,11 +156,9 @@ XYZVector HltUtils::closestDistance(const Track& track1,
   const State& state2 = track2.firstState();
   XYZPoint pos1(0.,0.,0.);
   XYZPoint pos2(0.,0.,0.);
-  XYZVector dir1(state1.tx(),state1.ty(),1.);
-  XYZVector dir2(state2.tx(),state2.ty(),1.);
-  XYZPoint  ori1(state1.x(),state1.y(),state1.z());
-  XYZPoint  ori2(state2.x(),state2.y(),state2.z());
-  bool ok = closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
+  bool ok = closestPoints(state1.position(),state1.slopes()
+                         ,state2.position(),state2.slopes()
+                         ,pos1,pos2);
   if (!ok) return XYZVector(0.,0.,1.e6);
   return pos1 - pos2;
 }
@@ -193,11 +170,9 @@ XYZPoint HltUtils::closestPoint(const Track& track1,
   
   XYZPoint pos1(0.,0.,0.);
   XYZPoint pos2(0.,0.,0.);
-  XYZVector dir1(state1.tx(),state1.ty(),1.);
-  XYZVector dir2(state2.tx(),state2.ty(),1.);
-  XYZPoint  ori1(state1.x(),state1.y(),state1.z());
-  XYZPoint  ori2(state2.x(),state2.y(),state2.z());
-  closestPoints(ori1,dir1,ori2,dir2,pos1,pos2);
+  closestPoints(state1.position(),state1.slopes()
+               ,state2.position(),state2.slopes()
+               ,pos1,pos2);
   return XYZPoint(0.5*(pos1.x()+pos2.x()),
                 0.5*(pos1.y()+pos2.y()),
                 0.5*(pos1.z()+pos2.z()));
