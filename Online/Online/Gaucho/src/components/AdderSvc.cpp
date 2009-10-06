@@ -66,7 +66,7 @@ StatusCode AdderSvc::initialize() {
      m_farm = "EFF";
      taskName = m_utgid.substr(first_us + 1, second_us - first_us - 1);
   }
-  msg << MSG::DEBUG << "m_nodeName " << m_nodeName << " m_farm " << m_farm << endreq;
+//  msg << MSG::DEBUG << "m_nodeName " << m_nodeName << " m_farm " << m_farm << endreq;
   if (m_nodeName.size() == 8) adderType = "First Level"; 
   else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)!="PART")||(m_farm=="MF"))) adderType = "Second Level"; 
   else if ((m_nodeName.size() == 6)&&((m_nodeName.substr(0,4)=="PART")||(m_farm=="MF"))) adderType = "Third Level"; 
@@ -168,54 +168,54 @@ void AdderSvc::handle(const Event&  ev) {
   if (!m_enablePostEvents) return;
     
   if (s_reconfigureAdder == ev.type) {
-    msg << MSG::DEBUG << " We are inside a PostEvent to reconfigure the Adder " << endreq;
-    msg << MSG::DEBUG << " ShuttingDown the Adder " << endreq;
+//    msg << MSG::DEBUG << " We are inside a PostEvent to reconfigure the Adder " << endreq;
+//    msg << MSG::DEBUG << " ShuttingDown the Adder " << endreq;
     shutDown();
-    msg << MSG::DEBUG << " StartingUp the Adder " << endreq;
+//    msg << MSG::DEBUG << " StartingUp the Adder " << endreq;
     startUp();
     m_reconfigured = true;
   }
   if(s_startTimer == ev.type) {
-    msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
+//    msg << MSG::DEBUG << " We are inside a PostEvent to Start the Timer " << endreq;
     m_processMgr->dimTimerProcess()->start(m_refreshTime);
-    msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
+//    msg << MSG::DEBUG << " End PostEvent to Start the Timer " << endreq;
   }
   else if(s_stopTimer == ev.type) {
-    msg << MSG::DEBUG << " We are inside a PostEvent to Sop the Timer " << endreq;
+//    msg << MSG::DEBUG << " We are inside a PostEvent to Sop the Timer " << endreq;
     m_processMgr->dimTimerProcess()->stop();
-    msg << MSG::DEBUG << " End PostEvent to Stop Timer " << endreq;
+//    msg << MSG::DEBUG << " End PostEvent to Stop Timer " << endreq;
   }
   else if(s_createInfoServices == ev.type ){
-    msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
-    msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
+ //   msg << MSG::DEBUG << " We are inside a PostEvent to Create the DimInfoServices " << endreq;
+ //   msg << MSG::DEBUG << "Choosing Server to get ServicesSet.........." << endreq;
 
     std::string serverChoosed;
     while (true) {
       m_processMgr->dimInfoServers()->chooseServer();
       serverChoosed = m_processMgr->dimInfoServers()->serverChoosed();
       if ("" != serverChoosed) {
-        msg << MSG::DEBUG << "Server choosen = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
+   //    msg << MSG::DEBUG << "Server choosen = " << m_processMgr->dimInfoServers()->serverChoosed() << endreq;
         break;
       }
     }
-    msg << MSG::DEBUG << "Before createInfoServices............." << endreq;
+//    msg << MSG::DEBUG << "Before createInfoServices............." << endreq;
     m_processMgr->createInfoServices(serverChoosed);
 
    // IocSensor::instance().send(this, s_updateServiceMap, ev.data); //start Timer*/
-    msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
+ //   msg << MSG::DEBUG << " End PostEvent to Create the DimInfoServices " << endreq;
   }
   else if(s_updateSvcMapFromInfoServer == ev.type) {
-    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
+//    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoServer " << endreq;
 //    std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >* data = (std::pair<ProcessMgr*, std::map<std::string, bool, std::less<std::string> > >*) ev.data;
 //    std::map<std::string, bool, std::less<std::string> > serverMap = data->second;
 
     std::map<std::string, bool, std::less<std::string> > serverMap = m_processMgr->dimInfoServers()->serverMap();
     m_processMgr->serviceMap()->updateMap(serverMap);
 //    m_processMgr->serviceMap()->printMap();
-    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
+//    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMap " << endreq;
   }
   else if(s_updateSvcMapFromInfoService == ev.type) {
-    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
+//    msg << MSG::DEBUG << " We are inside a PostEvent to UpdateServiceMapFromInfoService " << endreq;
    // std::pair<ProcessMgr*, std::set<std::string> >* data = (std::pair<ProcessMgr*, std::set<std::string> >*) ev.data;
    // std::set<std::string> serviceSet = data->second;
 
@@ -224,7 +224,7 @@ void AdderSvc::handle(const Event&  ev) {
     m_processMgr->serviceMap()->setServiceSet(serviceSet);
     m_processMgr->serviceMap()->updateMap(serverMap);
  //   m_processMgr->serviceMap()->printMap();
-    msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
+ //   msg << MSG::DEBUG << " End PostEvent to UpdateServiceMapFromInfoService " << endreq;
   }
 }
 
@@ -232,15 +232,15 @@ void AdderSvc::handle(const Event&  ev) {
 void AdderSvc::handle(const Incident& inc) {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << "******************************************************" << endreq;
-  msg << MSG::DEBUG << "******************************************************" << endreq;
-  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
-  msg << MSG::DEBUG << "******************************************************" << endreq;
-  msg << MSG::DEBUG << "******************************************************" << endreq;
+//  msg << MSG::DEBUG << "******************************************************" << endreq;
+//  msg << MSG::DEBUG << "******************************************************" << endreq;
+//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+//  msg << MSG::DEBUG << "******************************************************" << endreq;
+//  msg << MSG::DEBUG << "******************************************************" << endreq;
   IocSensor::instance().send(this, s_reconfigureAdder, this);
 }
 

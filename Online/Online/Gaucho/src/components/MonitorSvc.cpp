@@ -5,6 +5,7 @@
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiKernel/MsgStream.h"
 #include "Gaucho/DimServiceMonObject.h"
+#include "Gaucho/Misc.h"
 #include "Gaucho/MonObject.h"
 #include "Gaucho/MonInt.h"
 #include "Gaucho/MonDouble.h"
@@ -569,13 +570,21 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   if (isComment) dimName = dimName + "/gauchocomment";
   std::pair<DimServiceMapIt,bool> p = m_dimSrv.insert(DimServiceMap::value_type(dimName, 0));
 
+
+
   if (!p.second) {
     msg << MSG::ERROR << "Already existing " + dimName << endreq;
     return std::pair<std::string, std::string> ("", "");
   }
-
-  std::string dimSvcName = dimPrefix + m_utgid + "/"+dimName;
-
+  //when in monitoring farm, we replace the utgid by the partition name if dimPrefix=='' (counters only)
+  //
+  std::string dimSvcName ="";
+  std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
+  if ((utgidParts.size() == 4)&(dimPrefix=="")) {
+    dimSvcName = utgidParts[0] + "/"+dimName;
+  }
+  else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+  
   //msg << MSG::INFO << " register========>dimSvcName="<< dimSvcName << endreq;
 
   return std::pair<std::string, std::string> (dimName, dimSvcName);
@@ -737,10 +746,11 @@ void MonitorSvc::updateAll( bool endOfRun, const IInterface* owner)
     }
     std::set<std::string>::iterator infoNamesIt;
     msg << MSG::DEBUG << "updateAll: List of services published by " << ownerName << endreq;
-    for( infoNamesIt = (*infoNamesSet).begin();
-         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt)
+    for( infoNamesIt = (*infoNamesSet).begin(); 
+         infoNamesIt!=(*infoNamesSet).end();++infoNamesIt) {
       msg << MSG::DEBUG << (*infoNamesIt) << " ";
-    msg << MSG::DEBUG << endreq;
+      msg << MSG::DEBUG << endreq;
+    }
     for( infoNamesIt = (*infoNamesSet).begin();
          infoNamesIt!=(*infoNamesSet).end();++infoNamesIt){
       std::string dimName = (*infoNamesIt);
