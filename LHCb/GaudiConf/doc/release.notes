@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.168 2009-09-18 13:59:36 rlambert Exp $
+! $Id: release.notes,v 1.169 2009-10-06 15:49:13 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-10-06 - Marco Cattaneo
+ - In DstConf.py, do not set up DataOnDemand unpacking of Muon tracks if
+   DstType is RDST 
 
 ! 2009-09-18 - Rob Lambert
  - Edited Configurable.py to avoid circular dependency on XMLSummarySvc
@@ -10,10 +14,8 @@
 
 ! 2009-09-11 - Rob Lambert
  - In Configurable.py, LHCbApp:
-    - added configuration of an XMLSummarySvc
-      LHCbApp().XMLSummary
-      default behaviour is to neither create
-      nor fill a summary service/file
+   . Added configuration of an XMLSummarySvc LHCbApp().XMLSummary
+     Default behaviour is to neither create nor fill a summary service/file
 
 ! 2009-09-14 - Marco Cattaneo
  - Add options/valgrind-python.supp, suppression file for valgrind errors from

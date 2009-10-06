@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.13 2009-06-23 11:54:10 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.14 2009-10-06 15:49:13 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -252,9 +252,6 @@ class DstConf(ConfigurableUser):
         from Configurables import UnpackTrack, UnpackCaloHypo, UnpackProtoParticle, UnpackRecVertex, UnpackTwoProngVertex
 
         unpackTracks       = UnpackTrack()
-        unpackMuons        = UnpackTrack( name       = "UnpackMuons",
-                                          OutputName = "/Event/Rec/Track/Muon",
-                                          InputName  = "/Event/pRec/Track/Muon")
         unpackVertex       = UnpackRecVertex()
         unpackV0           = UnpackTwoProngVertex()
         unpackElectrons    = UnpackCaloHypo( name       = "UnpackElectrons",
@@ -286,6 +283,12 @@ class DstConf(ConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Neutrals" ]   = unpackNeutrals
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ]    = unpackVertex
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]         = unpackV0
+
+        # Muon tracks do not exist on RDST, do not try to unpack them
+        if self.getProp( "DstType" ).upper() != "RDST":
+            unpackMuons = UnpackTrack( name       = "UnpackMuons",
+                                       OutputName = "/Event/Rec/Track/Muon",
+                                       InputName  = "/Event/pRec/Track/Muon")
 
         # If simulation, set up also unpacking of MC Truth
         if self.getProp("SimType").capitalize() != "None":
