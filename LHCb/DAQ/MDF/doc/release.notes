@@ -6,6 +6,9 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+! 2009-10-04  Markus Frank
+ - update printout helper for new bank types
+
 !========================= MDF v3r19 2009-07-29 ==============================
 ! 2009-07-27  Markus Frank
  - Build MDF header bank using ODIN information if present.
