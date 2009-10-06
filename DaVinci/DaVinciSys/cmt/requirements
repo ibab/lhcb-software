@@ -1,13 +1,16 @@
 package DaVinciSys
-version v24r3
+version v24r3p1
 
 branches doc cmt
 
 #=======================================================
 # Don't forget DaVinci itself
 #=======================================================
-use  DaVinci                 	v24r3   Phys  
-#
+use  DaVinci                 	v24r3p1   Phys  
+# temporary
+use  StrippingConf              v1r6      Phys
+use  DaVinciMonitors            v1r5p2    Phys
+use  PhysConf                   v1r4      Phys
 
 # Declare this as a container package
 apply_pattern container_package
