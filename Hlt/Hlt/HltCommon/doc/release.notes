@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-10-06 - Gerhard Raven
+ - remove unused FC2
 !========================== HltCommon v5r11p1 2009-09-30 ===================
 ! 2009-09-30 - Gerhard Raven
  - return error if config editor is asked to do the impossible
