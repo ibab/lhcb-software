@@ -8,6 +8,11 @@ branches doc cmt
 #=======================================================
 use  DaVinci                 	v24r3   Phys  
 #
+
+# Declare this as a container package
+apply_pattern container_package
+
+
 alias DaVinciTests "cmt qmtest_run"
 
 # Allow the generation of the SAM QMTest
