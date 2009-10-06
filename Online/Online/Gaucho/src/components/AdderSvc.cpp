@@ -234,7 +234,7 @@ void AdderSvc::handle(const Incident& inc) {
   MsgStream msg(msgSvc(), name());
 //  msg << MSG::DEBUG << "******************************************************" << endreq;
 //  msg << MSG::DEBUG << "******************************************************" << endreq;
-//  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
+    msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
 //  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
 //  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
 //  msg << MSG::DEBUG << "Got incident " << inc.type() << " from " << inc.source() <<endreq;
