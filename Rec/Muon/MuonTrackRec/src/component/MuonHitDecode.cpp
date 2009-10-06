@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.cpp,v 1.2 2009-05-19 16:06:51 ggiacomo Exp $
+// $Id: MuonHitDecode.cpp,v 1.3 2009-10-06 17:16:22 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,7 @@ void MuonHitDecode::handle ( const Incident& incident )
 
 void MuonHitDecode::clearHits() 
 {
+  m_tiles.clear();
   std::vector<MuonLogHit*>::iterator ih;
   for (ih=m_hits.begin() ; ih != m_hits.end(); ih++) {
     delete (*ih);
@@ -61,7 +62,8 @@ StatusCode MuonHitDecode::initialize() {
   if(!m_recTool){
     error()<<"error retrieving the muon raw buffer decoding tool "<<endreq;
   }  
-  m_hits.clear(); m_hits.reserve(10000);
+  m_tiles.clear(); m_tiles.reserve(5000);
+  m_hits.clear(); m_hits.reserve(5000);
 
   incSvc()->addListener( this, IncidentType::EndEvent );
   return StatusCode::SUCCESS;
@@ -98,9 +100,9 @@ StatusCode MuonHitDecode::decodeRawData() {
       
       verbose()<<"time conversion: before "<<tprim
                <<" after"<<(*it).second<<endmsg;
-      
+      m_tiles.push_back((*it).first);
 
-      newhit = new MuonLogHit( &((*it).first) );
+      newhit = new MuonLogHit( &(m_tiles.back()) );
       long L1Number,link_number,ODE_number,ode_ch;
       m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first, 
                                                    L1Number,link_number,ODE_number,ode_ch);
@@ -118,6 +120,8 @@ StatusCode MuonHitDecode::decodeRawData() {
     debug()<<"Size of MuonLogHit container is: "<<m_hits.size()<<endreq;
     m_recTool->forceReset();
   }
+  
+
   tileAndTDC.clear();
   m_hitsDecoded = true;
   return sc;

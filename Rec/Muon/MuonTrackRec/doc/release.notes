@@ -6,6 +6,9 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !-----------------------------------------------------------------------------
 
+! 20091001 - v1r5
+- fix bug in MuonHitDecode
+
 ! 20091001 - v1r4
 - add possibilioty to veto logical pads in option file
 

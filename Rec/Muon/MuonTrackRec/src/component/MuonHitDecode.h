@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.4 2009-09-10 08:57:34 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.5 2009-10-06 17:16:22 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -87,6 +87,7 @@ private:
   void clearHits();
   IMuonRawBuffer* m_recTool;
   DeMuonDetector* m_muonDetector;
+  std::vector<LHCb::MuonTileID> m_tiles;
   std::vector<MuonLogHit*> m_hits;
   bool m_hitsDecoded;
   std::string nullstring;
