@@ -103,7 +103,7 @@ void MonStatEntity::combine(MonObject* S){
     return;
   }
   if (S->endOfRun() != this->endOfRun()){
-    msg <<MSG::WARNING<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
+  //  msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
     return;
   }
   add( ((MonStatEntity&)*S));

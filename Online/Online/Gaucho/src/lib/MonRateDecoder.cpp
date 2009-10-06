@@ -36,6 +36,7 @@ void MonRateDecoder::resetValues() {
   procexists=false;
   countexists=false;
   TCKexists=false;
+  RunNumberexists=false;
 
 }
 
@@ -47,6 +48,7 @@ MonRateDecoder::~MonRateDecoder(){
   if (procexists) delete m_dimSvcNumberOfProcess;
   if (countexists) delete m_dimSvcNumberOfCounters;
   if (TCKexists) delete m_dimSvcTCK;
+  if (RunNumberexists) delete m_dimSvcRunNumber;
   m_dimSvcRate.clear();
 }
 
@@ -133,6 +135,29 @@ void MonRateDecoder::update(MonRate *monRate) {
   } 
   else  m_dimSvcTCK->updateService((void*)&m_TCKData, TCKdataSize);
   
+  IData m_RunNumberData;
+  m_RunNumberData.value = m_newRunNumber;
+  strcpy(m_RunNumberData.comment, "\0");
+  std::string RunNumberComment="Current RunNumber";
+  int RunNumbercommentSize = Misc::min(MAX_CAR, RunNumberComment.length()+1);
+  strncpy(m_RunNumberData.comment, RunNumberComment.c_str(), RunNumbercommentSize);
+  int RunNumberdataSize = sizeof(unsigned int) + RunNumbercommentSize * sizeof(char);
+  std::string RunNumberSvcName =  m_monRateSvcName.substr(s_pfixMonRate.length()+1, 
+                                                    m_monRateSvcName.length() - s_pfixMonRate.length()+1) +
+                                                                 "/RunNumber";
+
+   msg << MSG::DEBUG << "MonRateDecoder update m_RunNumberData.value: "<< m_RunNumberData.value << endreq;
+  
+  
+  if (!RunNumberexists) {
+    static const std::string s_RunNumberFormat("I:1;C");
+    char * trmpFormat = new char[s_RunNumberFormat.length()+1];
+    strcpy(trmpFormat, s_RunNumberFormat.c_str());    
+    m_dimSvcRunNumber = new DimService(RunNumberSvcName.c_str(), trmpFormat, (void*)&m_RunNumberData,  RunNumberdataSize);
+    delete trmpFormat;
+    RunNumberexists=true;
+  } 
+  else  m_dimSvcRunNumber->updateService((void*)&m_RunNumberData, RunNumberdataSize);
   
   Data m_numcountersData;
   //need to add 1 for the number of processes service

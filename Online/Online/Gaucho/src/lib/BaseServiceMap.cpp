@@ -203,6 +203,7 @@ void BaseServiceMap::loadDimInfo(const std::string &serviceName, const std::stri
   int tries=0;
   while (!created) {
     created = m_dimInfo[groupName][elementName]->createMonObject();  
+    usleep(10);
     tries++;
     if (tries > maxtries) break;
   }

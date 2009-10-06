@@ -23,14 +23,14 @@ void DimServiceMonObject::updateService(bool endOfRun) {
 void DimServiceMonObject::setDataFromMonObject() {
   std::stringstream os;
   boost::archive::binary_oarchive oa(os);
-  m_monObject->save(oa, m_monObject->version());
   try {
+    m_monObject->save(oa, m_monObject->version());
     this->DimService::setData((void*)os.str().data(),os.str().length());
     this->DimService::updateService();
   }
   catch (...) {
     MsgStream msg(msgSvc(), name());
-    msg << MSG::WARNING << "Unable setdata to DimService " << endreq;
+    msg << MSG::WARNING << "Unable to setdata from DimServiceMonObject. " << endreq;
     try {
       Misc::printSerializedString(os.str().data(),os.str().size());
     }

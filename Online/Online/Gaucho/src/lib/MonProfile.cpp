@@ -155,7 +155,7 @@ void MonProfile::save3(boost::archive::binary_oarchive  & ar) {
 
 void MonProfile::setProfile(TProfile * tProfile){
   m_profile = tProfile;
-  splitObject();
+  if (m_profile != 0) splitObject();
 }
 
 TProfile* MonProfile::profile(){  
@@ -247,73 +247,82 @@ void MonProfile::loadObject(){
 void MonProfile::splitObject(){
   MsgStream msg = createMsgStream();
   //need some protection here
-//  if (m_profile ==0) return;
-  FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
+  try {
+     FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
   
-  int nbinsxOld = 0;
-  if (nbinsx != 0) nbinsxOld = nbinsx;
-  nbinsx = m_profile->GetNbinsX();
-  Xmin = m_profile->GetXaxis()->GetXmin();
-  Xmax = m_profile->GetXaxis()->GetXmax();
-  Ymin = m_profile->GetYmin();
-  Ymax = m_profile->GetYmax();
-  nEntries = (int) m_profile->GetEntries();
+     int nbinsxOld = 0;
+     if (nbinsx != 0) nbinsxOld = nbinsx;
+     nbinsx = m_profile->GetNbinsX();
+     Xmin = m_profile->GetXaxis()->GetXmin();
+     Xmax = m_profile->GetXaxis()->GetXmax();
+     Ymin = m_profile->GetYmin();
+     Ymax = m_profile->GetYmax();
+     nEntries = (int) m_profile->GetEntries();
 
-  const char *cName  = m_profile->GetName();
-  sName  = std::string(cName);
-  const char *cTitle  = m_profile->GetTitle();
-  sTitle  = std::string(cTitle);
+     const char *cName  = m_profile->GetName();
+     sName  = std::string(cName);
+     const char *cTitle  = m_profile->GetTitle();
+     sTitle  = std::string(cTitle);
 
-  MsgStream msgStream = createMsgStream();
-  if (binSum != 0) {
-    delete []binSum;
-  }
-  binSum = new double[(nbinsx+2)];
-  if (binEntries != 0) delete []binEntries;
-  binEntries = new double[(nbinsx+2)];
+     MsgStream msgStream = createMsgStream();
+//  if (binSum != 0) {
+//    delete []binSum;
+//  }
+     if (binSum==0) binSum = new double[(nbinsx+2)];
+//  if (binEntries != 0) delete []binEntries;
+     if (binEntries==0) binEntries = new double[(nbinsx+2)];
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
-  }
+     for (int i = 0; i < (nbinsx+2) ; ++i){
+       binEntries[i] = ((double) (m_profile->GetBinEntries(i))); 
+     }
 
-  for (int i = 0; i < (nbinsx+2) ; ++i){
-    binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
+     for (int i = 0; i < (nbinsx+2) ; ++i){
+       binSum[i] = ((double) (m_profile->GetBinContent(i)))*binEntries[i];
+      }
+
+     bBinLabelX = false;
+     for (int i = 1; i < (nbinsx+1) ; ++i){
+       std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
+       if (binLab.length() > 0 ){
+         bBinLabelX = true;
+         break;
+       }
+     }
+  
+     if (bBinLabelX){
+         binLabelX.clear();
+       for (int i = 1; i < (nbinsx+1) ; ++i){
+         binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));
+       }
+     }
+
+     m_fDimension = fot->fDimension;
+     m_fMaximum = fot->fMaximum;
+     m_fMinimum = fot->fMinimum;
+     m_fTsumw = fot->fTsumw;
+     m_fTsumw2 = fot->fTsumw2;
+     m_fTsumwx = fot->fTsumwx;
+     m_fTsumwx2 = fot->fTsumwx2;
+     m_fTsumwy = fot->fTsumwy;
+     m_fTsumwy2 = fot->fTsumwy2;
+     m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
+//  if (m_fSumw2 != 0) delete []m_fSumw2;
+     if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
+
+     for (int i=0;i<fot->fSumw2.GetSize();++i) {
+       m_fSumw2[i] = fot->fSumw2[i]; 
+     }
+     isLoaded = true;
    }
-
-  bBinLabelX = false;
-  for (int i = 1; i < (nbinsx+1) ; ++i){
-    std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
-    if (binLab.length() > 0 ){
-      bBinLabelX = true;
-      break;
-    }
-  }
-  
-  if (bBinLabelX){
-      binLabelX.clear();
-    for (int i = 1; i < (nbinsx+1) ; ++i){
-      binLabelX.push_back(m_profile->GetXaxis()->GetBinLabel(i));
-    }
-  }
-
-  m_fDimension = fot->fDimension;
-  m_fMaximum = fot->fMaximum;
-  m_fMinimum = fot->fMinimum;
-  m_fTsumw = fot->fTsumw;
-  m_fTsumw2 = fot->fTsumw2;
-  m_fTsumwx = fot->fTsumwx;
-  m_fTsumwx2 = fot->fTsumwx2;
-  m_fTsumwy = fot->fTsumwy;
-  m_fTsumwy2 = fot->fTsumwy2;
-  m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
-  if (m_fSumw2 != 0) delete []m_fSumw2;
-  m_fSumw2 = new double[m_fSumSize];
-
-  for (int i=0;i<fot->fSumw2.GetSize();++i) {
-    m_fSumw2[i] = fot->fSumw2[i]; 
-  }
-
-  isLoaded = true;
+  catch (const std::exception &ex){
+    msg << MSG::WARNING << "std::exception: " << ex.what() << ". MonProfile not loaded." << endreq;
+    isLoaded = false;
+    return;
+  }  
+  catch (...){
+    msg << MSG::WARNING << "unrecognized exception. MonProfile not loaded."<< endreq;
+    isLoaded = false;
+  }     
 }
 
 void MonProfile::combine(MonObject * H){
@@ -322,10 +331,11 @@ void MonProfile::combine(MonObject * H){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
-  //if (H->endOfRun() != this->endOfRun()){
+  if (H->endOfRun() != this->endOfRun()){
+  // don't add
   //  msg <<MSG::DEBUG<<"Trying to combine two objects with diferent endOfRun flag failed." << endreq;
-  //  return;
-  //}
+    return;
+  }
   if (!isLoaded){
     copyFrom(H);
     return;

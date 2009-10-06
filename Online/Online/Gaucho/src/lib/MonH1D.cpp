@@ -274,10 +274,10 @@ void MonH1D::combine(MonObject * H){
     msg <<MSG::ERROR<<"Trying to combine "<<this->typeName() <<" and "<<H->typeName() << " failed." << endreq;
     return;
   }
- // if (H->endOfRun() != this->endOfRun()){
+  if (H->endOfRun() != this->endOfRun()){
  //   msg <<MSG::DEBUG<<"Trying to combine two objects with different endOfRun flag failed." << endreq;
- //   return;
- // }
+    return;
+  }
   
   if (!isLoaded){
     copyFrom(H);

@@ -53,22 +53,21 @@ bool DimInfoMonObject::createMonObject() {
   MsgStream msg(msgSvc(), name());
   if (m_monObject) {delete m_monObject; m_monObject = 0;}
   
-    if (!m_dimInfo) {
+  if (!m_dimInfo) {
     msg << MSG::WARNING << "svcName : " << m_svcName << " has no DimInfo"<< endreq;
     return false;
   }
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   while ( tmpStringSize <= 0 ) {
     //gSystem->Sleep(m_waitTime);
-    usleep(10);
+    usleep(20);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
     //msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   }
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
   m_StringSize = tmpStringSize;
   MonObject *monObjectBase;
-  
-  
+    
   char* c;
   try {
     c = const_cast<char *>((const char*) m_dimInfo->getData());
@@ -123,12 +122,12 @@ bool DimInfoMonObject::loadMonObject(){
     msg << MSG::WARNING << "svcName : " << m_svcName << " has an uncreated MonObject"<< endreq;
     return false;
   }
-  m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
+ // m_monObject->reset(); // <================VERIFICAR ISSO AQUI (ACHO QUE E' DESNECESARIO)
 
   int tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   while ( tmpStringSize <= 0 ) {
     //gSystem->Sleep(m_waitTime);
-    usleep(10);
+    usleep(20);
     tmpStringSize = m_dimInfo->getSize()/sizeof(char);
   }
   msg << MSG::DEBUG << "size for service "<< m_svcName << " " << tmpStringSize << endreq;
