@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.23 2009-10-05 14:16:08 poluekt Exp $
+!$Id: release.notes,v 1.24 2009-10-06 08:20:19 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v1r6 2009-10-06 ===================
 ! 2009-10-05 - Anton POLUEKTOV
 
  - Fixed missing "Phys/" in StrippingLine.outputLocation() used for DST writing in case of
