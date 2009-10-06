@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.8 2009-07-23 11:27:35 siborghi Exp $
+// $Id: VeloTrackMonitor.h,v 1.9 2009-10-06 19:55:53 wouter Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -18,7 +18,6 @@
 //from TrackInterfaces
 #include "TrackInterfaces/IVeloClusterPosition.h"
 #include "TrackInterfaces/IVeloExpectation.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
 
 //from Gaudi
 #include "GaudiAlg/IHistoTool.h"
@@ -67,7 +66,6 @@ namespace Velo
     LHCb::VeloClusters* m_clusters;
     LHCb::VeloClusters*m_rawClusters;
    
-    IMeasurementProvider* m_measurementprovider;
     IVeloClusterPosition* m_clusterTool;
     IVeloExpectation* m_expectTool;
 

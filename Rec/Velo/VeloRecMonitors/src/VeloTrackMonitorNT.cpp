@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.1 2009-08-20 11:05:13 siborghi Exp $
+// $Id: VeloTrackMonitorNT.cpp,v 1.2 2009-10-06 19:55:53 wouter Exp $
 // Include files 
 
 
@@ -152,7 +152,7 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
   debug() << " z0="<<z0<<" z1="<<z1 <<endmsg;
   
   debug() << "Track node size="<<  track.nodes().size()<<endmsg;
-  debug() << "Track meas. size="<<  track.measurements().size()<<endmsg;
+  debug() << "Track lhcbids size="<<  track.lhcbIDs().size()<<endmsg;
 
   if( nVeloHits>0 ) {
     std::string names[] = { "VeloR","VeloPhi" } ;

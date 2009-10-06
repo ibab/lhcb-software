@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+
+! 2009-10-06 - Wouter Hulsbergen
+ - removed all references to Track::measurements since not needed and soon obsolete.
+
 ! 2009-10-01 - Kurt Rinnert
  - changed online monitoring options +/- 5 TAE instances of the occupancy
    monitor. 

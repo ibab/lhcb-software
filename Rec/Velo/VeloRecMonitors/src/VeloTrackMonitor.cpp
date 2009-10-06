@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.21 2009-07-29 08:57:18 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.22 2009-10-06 19:55:53 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -82,8 +82,6 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
-  m_measurementprovider  = tool<IMeasurementProvider>( "MeasurementProvider",
-                                                       "MeasProvider", this );
   m_clusterTool = tool<IVeloClusterPosition>( "VeloClusterPosition" );
   m_expectTool = tool<IVeloExpectation>( "VeloExpectation");
  
@@ -269,16 +267,6 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   for(itTrk=m_tracks->begin();itTrk!=m_tracks->end();itTrk++){
     LHCb::Track* track = (*itTrk);
     
-    //Call Measurement Provider
-    if(!track -> checkPatRecStatus(Track::PatRecMeas)){
-      if(m_debugLevel)debug() <<"No measurements found on tracks, calling measurement provider"<<endmsg;
-      StatusCode sc1 = m_measurementprovider->load(*track); 
-      if ( !( sc1.isSuccess() ) ) {
-        debug() << "Measurement provider could not be loaded" << endmsg;
-        return StatusCode::SUCCESS;
-      }
-    }
-
     //Skip the tracks without VELO(Velo, VeloR, Upstream and Long)hits
     if ( !track->hasVelo() ) {
       if (m_debugLevel) debug() <<"Track has no VELO hits, continuing with next track."<< endmsg;
@@ -425,14 +413,15 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     z_glob.assign(42,0);
        
     //Loop over measurements
-    const std::vector<LHCb::Measurement*>& measures = track->measurements(); 
-    std::vector<LHCb::Measurement*>::const_iterator it = measures.begin();
-    unsigned int n_measurements = measures.size();
+    const LHCb::Track::LHCbIDContainer& lhcbids = track->lhcbIDs() ;
+    unsigned int n_measurements = lhcbids.size();
     int charge = track->charge();    
-    for ( ; it != measures.end(); ++it ) {
+
+    for ( LHCb::Track::LHCbIDContainer::const_iterator it = lhcbids.begin() ; 
+	  it != lhcbids.end(); ++it ) {
  
       //Get ChannelID belonging to the Velo LHCbID from the measurements
-      LHCb::LHCbID id = (*it)->lhcbID();
+      LHCb::LHCbID id = (*it) ;
       if(!id.isVelo()) continue;
 
       LHCb::VeloChannelID vcID = id.veloID();
