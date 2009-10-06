@@ -1,5 +1,4 @@
 #include "HltBase/HltUtils.h"
-#include "ESequences.h"
 
 #include <cassert>
 #include <numeric>
@@ -9,7 +8,6 @@ using namespace LHCb;
 
 
 void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
-
   
   // setting ancestors
   otrack.addToAncestors(track);
@@ -27,24 +25,16 @@ void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
     otrack.addToStates(**it);
   
   // adding ids
-  const std::vector<LHCb::LHCbID>& ids = track.lhcbIDs();
-  for (std::vector<LHCb::LHCbID>::const_iterator it = ids.begin();
-       it != ids.end(); ++it) 
-    otrack.addToLhcbIDs(*it);
-  
-
+  otrack.addSortedToLhcbIDs( track.lhcbIDs() );
 }
 
-
-
-void Hlt::VertexCreator::operator() 
-  (const LHCb::Track& track1, const LHCb::Track& track2,
-   LHCb::RecVertex& ver) const {
-  // XYZVector dis = HltUtils::closestDistance(track1,track2);
+void Hlt::VertexCreator::operator() (const LHCb::Track& track1, 
+                                     const LHCb::Track& track2,
+                                     LHCb::RecVertex& ver) const 
+{
   ver.setPosition(HltUtils::closestPoint(track1,track2));
   ver.addToTracks(const_cast<Track*>(&track1));
   ver.addToTracks(const_cast<Track*>(&track2));
-  // std::cout << " vertex position " << pos << std::endl;
 }
 
 
@@ -114,17 +104,13 @@ double HltUtils::IPError(const Track& track)
   double invPt = 1. / track.firstState().pt();
   
   // units in mm
-  double m_par0x = 0.0214;
-  double m_par1x = -0.000801;
-  double m_par2x = 0.0108;
-  double m_par3x = -0.00122;
-  double m_par4x = 0.0000547;
-
-  double ipErr = m_par0x + m_par1x*invPt + m_par2x*pow(invPt,2) 
-    +  m_par3x*pow(invPt,3) + m_par4x*pow(invPt,4);
-
-  return ipErr;
+  double m_p0 =  0.0214;
+  double m_p1 = -0.000801;
+  double m_p2 =  0.0108;
+  double m_p3 = -0.00122;
+  double m_p4 =  0.0000547;
   
+  return  m_p0 + invPt*(m_p1 + invPt*(m_p2 + invPt*(m_p3 +invPt*m_p4)));
 }
 
 double HltUtils::impactParameter(const XYZPoint& vertex,
@@ -262,48 +248,18 @@ RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2)
 }
 
 
-double HltUtils::FC(const LHCb::RecVertex& vertex1, 
-                    const LHCb::RecVertex& vertex2) 
+double HltUtils::FC(const LHCb::RecVertex& v1, 
+                    const LHCb::RecVertex& v2) 
 {
-  double dx =  vertex1.position().x()-vertex2.position().x();
-  double dy =  vertex1.position().y()-vertex2.position().y();
-  double dz =  vertex1.position().z()-vertex2.position().z();
+  const Track& t1 = *(v1.tracks()[0]);
+  const Track& t2 = *(v1.tracks()[1]);
 
-  const Track& track1 = *(vertex1.tracks()[0]);
-  const Track& track2 = *(vertex1.tracks()[1]);
+  double pperp =     (  t1.momentum()+t2.momentum()         )
+               .Cross( (v1.position()-v2.position()).Unit() )
+               .R();
 
-  XYZVector dir(dx,dy,dz);
-  XYZVector p1 = track1.momentum();
-  XYZVector p2 = track2.momentum();
-  XYZVector p = p1+p2;
-
-  double dd = sqrt(dir.Dot(dir));
-  double pp = sqrt(p.Dot(p));  
-  double ctheta = dir.Dot(p)/(dd*pp);
-  double stheta = sqrt(1.-ctheta*ctheta);
-  
-  double ptp = pp*stheta;
-  double pt = track1.pt() + track2.pt();
-  
-  return ptp/(pt+ptp);
+  return pperp/(pperp+t1.pt() + t2.pt());
 }
-
-double HltUtils::FC2(const LHCb::RecVertex& vertex1, 
-                     const LHCb::RecVertex& vertex2) 
-{
-  assert(vertex1.tracks().size()>1);
-  const Track& track1 = *(vertex1.tracks()[0]);
-  const Track& track2 = *(vertex1.tracks()[1]);
-
-  XYZVector p = track1.momentum() + track2.momentum();
-  XYZVector udir = (vertex1.position() - vertex2.position()).unit();
-  XYZVector wdir = udir.Cross(udir.Cross(p.unit()));
-
-  double ptPerp = fabs(p.Dot(wdir));
-  double pt     = track1.pt() + track2.pt();
-  return  ptPerp/(ptPerp+pt);
-}
-
 
 double HltUtils::impactParameterError(double pt0) 
 {
@@ -335,11 +291,8 @@ double HltUtils::invariantMass(const LHCb::Track& track1,
 
 double HltUtils::matchIDsFraction(const LHCb::Track& tref,
                                   const LHCb::Track& track) {
-  // TODO: can we use std::set_intersection on lhcbIDs? 
-  //       i.e. are they sorted?
-  // They are starting in the LHCb v27r3...
   return (tref.lhcbIDs().empty()) ? 0. :
-             double(zen::count(tref.lhcbIDs(),track.lhcbIDs())) / 
+             double(tref.nCommonLhcbIDs( track) )/
              double(tref.lhcbIDs().size());
 }
 
@@ -355,21 +308,14 @@ double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
   const LHCb::Track& track2 = *(v.tracks()[1]);
   
   double r11 = HltUtils::matchIDsFraction(rtrack1,track1);
-  double r12 = HltUtils::matchIDsFraction(rtrack1,track2);
-
-  double r21 = HltUtils::matchIDsFraction(rtrack2,track1);
   double r22 = HltUtils::matchIDsFraction(rtrack2,track2);
-
   double f11 = r11+r22;
+  
+  double r12 = HltUtils::matchIDsFraction(rtrack1,track2);
+  double r21 = HltUtils::matchIDsFraction(rtrack2,track1);
   double f12 = r12+r21;
-
-  double f = f11>f12? f11 : f12;
   
-  // std::cout << " vmatching r11 r22 " <<r11<<", "<<r22 <<std::endl;
-//   std::cout << "           r12 r21 f " << r12 <<", " << r21 
-//             << " -> " << f << std::endl;
-  
-  return f;
+  return     f11>f12? f11 : f12;
 }
 
 

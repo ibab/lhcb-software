@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-10-06 - Gerhard Raven
+ - use the fact that LHCbIDs on tracks are now sorted
+ - remove some unused code
+
 !========================== HltBase v6r7 2009-08-31 =====================
 ! 2009-08-27 - Gerhard Raven
  - replace PropertyConfig::update by better named PropertyConfig::copyAndModify

@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.16 2009-04-28 07:03:37 graven Exp $
+// $Id: EFunctions.h,v 1.17 2009-10-06 08:01:56 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -93,8 +93,7 @@ namespace zen
     explicit abs_function(const Function& fun) : m_fun(fun.clone()) { }
     abs_function(const abs_function<T>& rhs) : m_fun(rhs.m_fun->clone()) { }
     virtual ~abs_function() {}
-    double operator() (const T& t) const 
-    {return fabs((*m_fun)(t));}
+    double operator() (const T& t) const {return fabs((*m_fun)(t));}
     abs_function<T>* clone() const {return new abs_function<T>(*m_fun);}
   private:
     std::auto_ptr<Function> m_fun;
@@ -107,10 +106,8 @@ namespace zen
     typedef zen::function<T> Function;
     typedef double (T::* ptr_memfun) () const;
     explicit binder_memberfunction(ptr_memfun pmf):m_pmf(pmf) {}
-    double operator() (const T& t) const
-    {return ((&t)->*m_pmf)();}
-    binder_memberfunction<T>* clone() const 
-    {return new binder_memberfunction<T>(m_pmf);}
+    double operator() (const T& t) const {return (t.*m_pmf)();}
+    binder_memberfunction<T>* clone() const {return new binder_memberfunction<T>(m_pmf);}
   private:
     ptr_memfun m_pmf;
   };
@@ -262,50 +259,7 @@ namespace zen
     abs_max* clone() const {return new abs_max();}
   };
 
-  class emin : public zen::bifilter<double,double> 
-  {
-  public:
-    bool operator() (const double& d, const double& d0) const
-    {return (d < d0);}
-    zen::emin* clone() const {return new zen::emin();}
-  };
-
-  class emax : public zen::bifilter<double,double> 
-  {
-  public:
-    bool operator() (const double& d, const double& d0) const
-    {return (d > d0);}
-    zen::emax* clone() const {return new zen::emax();}
-  };
-
-  template <class T1, class Container> 
-  class binder_min_function : public binder_function<T1,Container> {
-  public:
-    typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
-    explicit binder_min_function(const zen::bifunction<T1,T2>& f,
-                                 Container& cont) :
-      zen::binder_function<T1,Container>(f, cont, zen::emin() ) {};
-  };
-
-  template <class T1, class Container> 
-  class binder_max_function : public binder_function<T1,Container> {
-  public:
-    typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
-    explicit binder_max_function(const zen::bifunction<T1,T2>& f,
-                                 Container& cont):
-      zen::binder_function<T1,Container>(f, cont, zen::emax() ) {};
-  };
-
   // simple filters and functions
-
-  class identity : public zen::function<double>
-  {
-  public:
-    explicit identity(){}
-    double operator() (const double& d) const {return d;}
-    identity* clone() const {return new identity();}
-  };
-
 
   template <class T>
   class equal_to : public zen::filter<T> {

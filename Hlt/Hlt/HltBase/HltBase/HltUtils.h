@@ -98,10 +98,6 @@ namespace HltUtils
   double FC(const LHCb::RecVertex& svertex, 
             const LHCb::RecVertex& pvertex );
 
-  double FC2(const LHCb::RecVertex& svertex, 
-             const LHCb::RecVertex& pvertex );
-
-
   double VertexMinPT(const LHCb::RecVertex& vertex);
 
   double VertexMaxPT(const LHCb::RecVertex& vertex);
