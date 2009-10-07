@@ -18,7 +18,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             TrackMatchVeloSeed, PatDownstream, PatVeloTT,
                             TrackStateInitAlg,
                             TrackEventCloneKiller, TrackPrepareVelo,
-                            TrackAddLikelihood, TrackLikelihood, NeuralNetTmva, Tf__OTHitCreator,
+                            TrackAddLikelihood, TrackLikelihood, TrackAddNNGhostId, Tf__OTHitCreator,
                             TrackBuildCloneTable, TrackCloneCleaner, AlignMuonRec,
                             TrackEraseExtraInfo
                            )
@@ -218,10 +218,9 @@ if len(extraInfos) > 0 :
       trackAddLikelihood.TrackMatching_likTool.otEff = 0.9
       GaudiSequencer("TrackAddExtraInfoSeq").Members += [ trackAddLikelihood ]
 
-   ## ghost probability using TMVA package
+   ## ghost probability using a Neural Net
    if "GhostProbability" in extraInfos :
-      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ NeuralNetTmva() ]
-      importOptions ("$NNTOOLSROOT/options/NeuralNetTmva.opts")
+      GaudiSequencer("TrackAddExtraInfoSeq").Members += [ TrackAddNNGhostId() ]
 
 track.DetectorList += ["EraseExtraInformation"]
 
