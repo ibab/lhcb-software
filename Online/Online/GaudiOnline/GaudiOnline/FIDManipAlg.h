@@ -1,4 +1,4 @@
-// $Id: FIDManipAlg.h,v 1.3 2008-12-09 20:21:20 frankb Exp $
+// $Id: FIDManipAlg.h,v 1.4 2009-10-07 20:20:57 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -35,13 +35,15 @@ namespace LHCb {
   */
   class FIDManipAlg : public Algorithm, virtual public IIncidentListener {
   public:
-    enum Action { ADD=1, REMOVE, DUMP };
+    enum Action { ADD=1, REMOVE, DUMP, COPY, ADD2 };
 
   protected:
     /// Property: remove/add file id bank
     int          m_action;
     /// Property: Location of the raw event in the transient datastore
     std::string  m_location;
+    /// Property: Output location of the raw event in the transient datastore
+    std::string  m_outputLocation;
     /// Property: input data type
     int          m_type;
     /// Property: Debug flag

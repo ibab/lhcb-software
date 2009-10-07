@@ -6,15 +6,16 @@
  **/
 
 #include "GaudiKernel/DataObject.h"
-#define DAQ_FILEID_BANK 255
+#include "MDF/MDFHeader.h"
 
 namespace LHCb {
-  class FileIdInfo{
+
+  class FileIdInfo    {
   public:
-    int id, ip0,ip1;
+    int id, ip0,ip1,checksum;
     int l0, l1, l2;
     char pdata[1];
-    size_t sizeOf() {  return sizeof(FileIdInfo)+l0+l1+l2;  }
+    size_t sizeOf() const {  return sizeof(FileIdInfo)+l0+l1+l2;  }
     void reset();
     void setID(int data) { id = data; }
     void setpar(const std::string* data);

@@ -1,4 +1,4 @@
-// $Id: FIDManipulator.h,v 1.1 2008-12-05 19:28:09 frankb Exp $
+// $Id: FIDManipulator.h,v 1.2 2009-10-07 20:20:57 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -23,6 +23,7 @@ class IMessageSvc;
 namespace LHCb {
   // Forward declarations
   class RawBank;
+  class FileIdInfo;
 
   /** @class FIDManipulator FIDManipulator.h
   *  
@@ -54,6 +55,10 @@ namespace LHCb {
     void setDebug(bool val) { m_debug = val; }
     /// Add fileID bank
     StatusCode add(int id, const std::string& guid);
+    /// Copy fileID bank
+    StatusCode add(const FileIdInfo* info);
+    /// Update DST Address bank
+    StatusCode updateDstAddress(const FileIdInfo* info);
     /// Remove fileID bank
     StatusCode remove();
     /// Print FID bank content

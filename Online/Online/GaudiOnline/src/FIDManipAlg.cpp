@@ -6,6 +6,11 @@
 #include "GaudiOnline/FIDManipAlg.h"
 #include "GaudiOnline/FIDManipulator.h"
 
+#include "GaudiKernel/IDataProviderSvc.h" 
+#include "GaudiKernel/IOpaqueAddress.h" 
+#include "GaudiKernel/SmartDataPtr.h" 
+#include "GaudiKernel/IRegistry.h" 
+
 #include "GaudiKernel/AlgFactory.h" 
 using namespace LHCb;
 using namespace std;
@@ -17,12 +22,13 @@ DECLARE_ALGORITHM_FACTORY(FIDManipAlg);
 FIDManipAlg::FIDManipAlg(const string& nam, ISvcLocator* pSvc) 
   : Algorithm(nam,pSvc), m_printCnt(0), m_incidentSvc(0), m_fid(-1,"")
 {
-  declareProperty("Action",       m_action=DUMP);
-  declareProperty("BankLocation", m_location=RawEventLocation::Default);    
-  declareProperty("DataType",     m_type=MDFIO::MDF_RECORDS);
-  declareProperty("PrintFreq",    m_printFreq=100);
-  declareProperty("Debug",        m_debug=0);
-  declareProperty("Incident",     m_incidentName="NEW_INPUT_FID");
+  declareProperty("Action",        m_action=DUMP);
+  declareProperty("BankLocation",  m_location=RawEventLocation::Default);    
+  declareProperty("OutputLocation",m_outputLocation=RawEventLocation::Default);    
+  declareProperty("DataType",      m_type=MDFIO::MDF_RECORDS);
+  declareProperty("PrintFreq",     m_printFreq=100);
+  declareProperty("Debug",         m_debug=0);
+  declareProperty("Incident",      m_incidentName="NEW_INPUT_FID");
 }
 
 /// IInterface implementation : queryInterface
@@ -72,6 +78,31 @@ StatusCode FIDManipAlg::execute() {
   if ( m_debug ) manip.setDebug(m_debug);
 
   switch ( m_action )  {
+    case COPY: {
+      std::pair<LHCb::RawBank*,void*> p = manip.getBank();
+      if ( p.first ) {
+	FIDManipulator o_manip(m_outputLocation,MDFIO::MDF_NONE,msgSvc(),eventSvc());
+	FileIdInfo* info = p.first->begin<FileIdInfo>();
+	o_manip.updateDstAddress(info);
+	return o_manip.add(info);
+      }
+      return StatusCode::FAILURE;
+    }
+    case ADD2:      {
+      SmartDataPtr<DataObject> ptr(eventSvc(),m_location);
+      if ( ptr ) {
+	IRegistry*  reg = ptr->registry();
+	if ( reg )  {
+	  IOpaqueAddress* padd = reg->address();
+	  if ( padd ) {
+	    m_fid.first  = 1234;
+	    m_fid.second = padd->par()[0];
+	    return manip.add(m_fid.first,m_fid.second);
+	  }
+	}
+      }
+      return StatusCode::FAILURE;
+    }
     case ADD:      {
       return manip.add(m_fid.first,m_fid.second);
     }

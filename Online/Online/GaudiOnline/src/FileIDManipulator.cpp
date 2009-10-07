@@ -19,7 +19,7 @@ using namespace LHCb;
 using namespace Gaudi;
 
 /// Standard constructor
-FIDManipulator::FIDManipulator(const std::string& loc, int typ, IMessageSvc* m, IDataProviderSvc* d) 
+FIDManipulator::FIDManipulator(const string& loc, int typ, IMessageSvc* m, IDataProviderSvc* d) 
   : m_dp(d), m_msg(m), m_location(loc), m_type(typ)
 {
 }
@@ -98,8 +98,57 @@ pair<RawBank*,void*> FIDManipulator::getBank()  {
   return pair<RawBank*,void*>(0,0);
 }
 
+/// Update DST Address bank
+StatusCode FIDManipulator::updateDstAddress(const FileIdInfo* info) {
+  SmartDataPtr<RawEvent> raw(m_dp,m_location);
+  if ( raw )  {
+    vector<RawBank*> banks = raw->banks(RawBank::DstAddress);
+    for(vector<RawBank*>::iterator i=banks.begin(); i!=banks.end();++i) {
+      raw->removeBank(*i);
+    }
+    vector<unsigned int> data(info->sizeOf()+1);
+    unsigned int* dataPt = &data[0];
+    *dataPt++ = RawEvent::classID();
+    *dataPt++ = info->ip0;
+    *dataPt++ = info->ip1;
+    *dataPt++ = RAWDATA_StorageType;
+    char* charPt = (char*)dataPt;
+    strcpy( charPt, info->par0() );
+    charPt += info->l0;
+    strcpy( charPt, info->par1() );
+    charPt += info->l1;
+    int bLen = charPt - (char*)&data[0];
+    data.resize( (bLen+3)/4);
+    raw->addBank(0,RawBank::DstAddress,0,data);
+    return StatusCode::SUCCESS;
+  }
+  return error("Failed to retrieve event object at "+m_location);
+}
+
 /// Add fileID bank
-StatusCode FIDManipulator::add(int id, const std::string& guid)   {
+StatusCode FIDManipulator::add(const FileIdInfo* info)   {
+  SmartDataPtr<RawEvent> raw(m_dp,m_location);
+  if ( raw )  {
+    RawBank* b = 0;
+    FileIdInfo* i = 0;
+    size_t len = info->sizeOf();
+    switch(m_type)   {
+    case MDFIO::MDF_NONE:
+      // Normal behaviour: Simply add the new bank to the RawEvent structure
+      b = raw->createBank(0,RawBank::DAQ,DAQ_FILEID_BANK,len);
+      i = b->begin<FileIdInfo>();
+      ::memcpy(i,info,len);
+      raw->adoptBank(b,true);
+      return StatusCode::SUCCESS;
+    default:
+      break;
+    }
+  }
+  return error("Failed to retrieve event object at "+m_location);
+}
+
+/// Add fileID bank
+StatusCode FIDManipulator::add(int id, const string& guid)   {
   //
   // Add a new bank containing the information about the original file
   // to the raw event structure.
@@ -112,6 +161,7 @@ StatusCode FIDManipulator::add(int id, const std::string& guid)   {
     if ( reg )  {
       IOpaqueAddress* padd = reg->address();
       if ( padd ) {
+	int chk = 0;
         RawBank* b = 0, *tae = 0;
         RawDataAddress* pA = dynamic_cast<RawDataAddress*>(padd);
         RawEvent* raw = (RawEvent*)evt;
@@ -136,6 +186,7 @@ StatusCode FIDManipulator::add(int id, const std::string& guid)   {
               b->setVersion(DAQ_FILEID_BANK);
               b->setSourceID(0);
               b->setSize(len);
+	      chk = h->checkSum();
 	      // Total bank length
               len += b->hdrSize();
 	      // If TAE event: need to update TAE structure to include FID bank
@@ -162,6 +213,7 @@ StatusCode FIDManipulator::add(int id, const std::string& guid)   {
         }
         if ( b ) {
           FileIdInfo* i = b->begin<FileIdInfo>();
+	  i->checksum = chk;
 	  i->setID(id);
 	  i->setipar(padd->ipar());
 	  i->setpar(padd->par());
@@ -240,8 +292,9 @@ StatusCode FIDManipulator::print()  {
     log << MSG::INFO
 	<< "FID Bank: "
 	<< RawEventPrintout::bankHeader(res.first) << endmsg
-	<< "id:" << i->id << " ipar: " << setw(8) << i->ip0  << " / " << setw(8) << i->ip1
-	<< " par: "  << i->par0() << "/" << i->par1() << "/" << i->guid() << endmsg;
+	<< "id:" << i->id << " chk:" << hex << i->checksum << " ipar: " << setw(8) << hex << i->ip0  
+	<< " / " << hex << setw(8) << i->ip1
+	<< " par1: "  << i->par0() << " 2:" << i->par1() << " guid:" << i->guid() << endmsg;
     return StatusCode::SUCCESS;
   }
   return error("No FileID bank present in raw event at "+m_location);

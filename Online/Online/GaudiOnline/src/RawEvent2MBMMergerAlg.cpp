@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.9 2009-01-09 10:35:48 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.10 2009-10-07 20:20:58 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -8,6 +8,7 @@
 //  ====================================================================
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiOnline/MEPManager.h"
+#include "GaudiOnline/FileIdInfo.h"
 #include "Event/RawEvent.h"
 #include "Event/RawBank.h"
 #include "MDF/MDFWriter.h"
@@ -37,11 +38,14 @@ namespace LHCb  {
     Producer*     m_prod;
     /// Property: output buffer name
     string        m_bufferName;
+    /// Property: TES location with banks to find FID
+    string        m_fidLocation;
     /// Property: Word 4 of trigger mask (Routing bits)
     unsigned int  m_routingBits;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
-
+    /// Flag to add FID if required
+    int           m_addFID;
   public:
     /// Standard algorithm constructor
     RawEvent2MBMMergerAlg(const string& nam, ISvcLocator* pSvc)
@@ -49,6 +53,8 @@ namespace LHCb  {
     {
       declareProperty("Buffer",      m_bufferName="RESULT");
       declareProperty("RoutingBits", m_routingBits=NO_ROUTING);
+      declareProperty("AddFID",      m_addFID=0);
+      declareProperty("FIDLocation", m_fidLocation="/Event");
     }
     /// Standard Destructor
     virtual ~RawEvent2MBMMergerAlg()      {                                 }
@@ -228,6 +234,38 @@ namespace LHCb  {
 	  e.type       = EVENT_TYPE_EVENT;
 	  e.len        = len;
 	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
+
+
+	  if ( m_addFID )   {
+	    RawBank* fid_bank = 0;
+	    const FileIdInfo *src_info;
+	    FileIdInfo *fid_info;
+	    std::pair<const char*,int> buff = getDataFromAddress();
+	    if ( buff.first ) {
+	      const char *start = buff.first;
+	      const char *end = start+buff.second;
+	      while (start < end)  {
+		const RawBank* b = (RawBank*)start;
+		if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK )   {		  
+		  size_t fid_len = b->totalSize();
+		  fid_bank = (RawBank*)((char*)data + len);
+		  fid_info = fid_bank->begin<FileIdInfo>();
+		  src_info = b->begin<FileIdInfo>();
+		  ::memcpy((char*)data + len,start,fid_len);
+		  e.len += fid_len;
+		  fid_info->checksum = h->checkSum();
+		  h->setChecksum(0);
+		  h->setSize(h->size()+fid_len);
+		  break;
+		}
+		start += b->totalSize();
+	      }
+	    }
+	    if ( 0 == fid_bank ) {
+	      return error("Failed to access FID bank from input data!");
+	    }
+	  }
+
 	  int ret = m_prod->sendEvent();
 	  if ( MBM_NORMAL == ret )   {
 	    MsgStream log(msgSvc(),name());

@@ -105,6 +105,9 @@ def fidManip(name,action,datatype,location):
 def fidAddAlg(name='FidAdder',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
   return fidManip(name,1,datatype,location)
 #------------------------------------------------------------------------------------------------
+def fidAdd2Alg(name='FidAdder',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
+  return fidManip(name,5,datatype,location)
+#------------------------------------------------------------------------------------------------
 def fidRemoveAlg(name='FidRemover',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
   return fidManip(name,2,datatype,location)
 #------------------------------------------------------------------------------------------------
@@ -389,7 +392,7 @@ def mdf2mbmReproApp(partID, partName, buffers, input, partitionBuffers=True, rou
   merger               = evtMerger(buffer=buffers[0],name='MDF2MBM',location='DAQ/RawEvent',routing=routing,datatype=MDF_BANKS)
   # If the MDF record should be directly manipulated: Need to tweak FID algs and merger
   merger.DataType      = MDF_BANKS
-  add                  = fidAddAlg(location='/Event',datatype=MDF_BANKS)
+  add                  = fidAdd2Alg(location='/Event',datatype=MDF_BANKS)
   prt                  = fidPrintAlg(location='/Event',datatype=MDF_BANKS)
   # If all starts from the rawEvent:
   #add                  = fidAddAlg()

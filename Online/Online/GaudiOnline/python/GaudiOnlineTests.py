@@ -24,7 +24,7 @@ def runMBMRead(percent=1,print_freq=0.0001):
   return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
 #------------------------------------------------------------------------------------------------
 #def runMDF2MBM(buffers,input=["DATA='file:///daqarea/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
-def runMDF2MBM(buffers,input=["DATA='file:///dev/shm/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
+def runMDF2MBM(buffers,input=["DATA='file:///home/frankm/data/mepData_0.dat' SVC='LHCb::MDFSelector'"]):
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=True))
 def runMDF2MBMFile(buffers,fname,partitionBuffers=True):
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
