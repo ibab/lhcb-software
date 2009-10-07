@@ -102,6 +102,11 @@ def fidManip(name,action,datatype,location):
   manip.BankLocation      = location
   return manip
 #------------------------------------------------------------------------------------------------
+def dstAddressUpdate(name='FidAdder',location='/Event/DAQ/RawEvent',datatype=MDF_BANKS):
+  alg = fidManip(name,6,datatype,location)
+  alg.OutputLocation = '/Event/DAQ/DstEvent'
+  return alg
+#------------------------------------------------------------------------------------------------
 def fidAddAlg(name='FidAdder',location='/Event/DAQ/RawEvent',datatype=MDF_NONE):
   return fidManip(name,1,datatype,location)
 #------------------------------------------------------------------------------------------------

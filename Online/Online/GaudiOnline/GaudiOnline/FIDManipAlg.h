@@ -1,4 +1,4 @@
-// $Id: FIDManipAlg.h,v 1.4 2009-10-07 20:20:57 frankb Exp $
+// $Id: FIDManipAlg.h,v 1.5 2009-10-07 20:46:47 frankb Exp $
 // Include files 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Fileidmanipulator
@@ -35,7 +35,7 @@ namespace LHCb {
   */
   class FIDManipAlg : public Algorithm, virtual public IIncidentListener {
   public:
-    enum Action { ADD=1, REMOVE, DUMP, COPY, ADD2 };
+    enum Action { ADD=1, REMOVE, DUMP, COPY, ADD2, UPDATE_DST };
 
   protected:
     /// Property: remove/add file id bank

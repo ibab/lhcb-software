@@ -78,6 +78,15 @@ StatusCode FIDManipAlg::execute() {
   if ( m_debug ) manip.setDebug(m_debug);
 
   switch ( m_action )  {
+    case UPDATE_DST: {
+      std::pair<LHCb::RawBank*,void*> p = manip.getBank();
+      if ( p.first )   {
+	FIDManipulator o_manip(m_outputLocation,MDFIO::MDF_NONE,msgSvc(),eventSvc());
+	FileIdInfo* info = p.first->begin<FileIdInfo>();
+	return o_manip.updateDstAddress(info);
+      }
+      return StatusCode::FAILURE;
+    }
     case COPY: {
       std::pair<LHCb::RawBank*,void*> p = manip.getBank();
       if ( p.first ) {
