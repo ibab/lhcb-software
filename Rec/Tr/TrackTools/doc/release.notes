@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Johannes Albrecht
+ - Add TrackNNGhostId tool to compute the ghost probability using a standalone 
+   neural net
+
 ! 2009-10-06 - Marco Cattaneo
  - Remove obsolete file options/FastMomentumEstimate.opts
 
