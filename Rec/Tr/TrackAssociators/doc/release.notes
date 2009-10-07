@@ -4,6 +4,9 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+! 2009-10-07 - Wouter Hulsbergen
+ - Removed code that would omit outliers in comparison to MC since it was anyway broken.
+
 !===================== TrackAssociators v2r6 2008-04-04 ====================
 ! 2008-04-04 - Marco Cattaneo
  - Adapt to new OT linkers produced by Boole v15r0 (backward compatible change)
