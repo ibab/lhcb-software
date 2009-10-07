@@ -94,7 +94,7 @@ StatusCode UpdateAndReset::initialize() {
 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
-  msg << MSG::DEBUG << "Setting up DIM for UTGID " << m_utgid << endreq;
+//  msg << MSG::DEBUG << "Setting up DIM for UTGID " << m_utgid << endreq;
     
   sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
   if( sc.isSuccess() ) msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
@@ -136,22 +136,22 @@ StatusCode UpdateAndReset::initialize() {
   
 
   if (0 == m_desiredDeltaTCycle){
-    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
+//    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
     m_desiredDeltaTCycle = 10;
   }
     
   // In the begining the delayed values are the same as the current values.
-  msg << MSG::INFO << "This program will update data every " << m_desiredDeltaTCycle << " seconds !!!" << endreq;
+//  msg << MSG::INFO << "This program will update data every " << m_desiredDeltaTCycle << " seconds !!!" << endreq;
 
   if (1 == m_saveHistograms){
-    msg << MSG::INFO << "As you demand in your options file, this program will save data " << endreq;
+ //   msg << MSG::INFO << "As you demand in your options file, this program will save data " << endreq;
     div_t divresult = div (m_saverCycle, m_desiredDeltaTCycle);
     m_numCyclesToSave = divresult.quot;
     if (0 == divresult.rem ) {
-      msg << MSG::INFO << " every " << m_saverCycle << " seconds" << endreq;
+//      msg << MSG::INFO << " every " << m_saverCycle << " seconds" << endreq;
     } 
     else {
-      msg << MSG::INFO << " every " << divresult.quot * m_desiredDeltaTCycle << " seconds. Sorry !!!!, you ask for a Saver cycle of " << m_saverCycle << " but for implementation reasons it's not possible because the Saver cycle must be a multiple of the desiredDeltaTCycle, which is" <<  m_desiredDeltaTCycle << endreq;
+//      msg << MSG::INFO << " every " << divresult.quot * m_desiredDeltaTCycle << " seconds. Sorry !!!!, you ask for a Saver cycle of " << m_saverCycle << " but for implementation reasons it's not possible because the Saver cycle must be a multiple of the desiredDeltaTCycle, which is" <<  m_desiredDeltaTCycle << endreq;
       m_saverCycle = divresult.quot * m_desiredDeltaTCycle;
     } 
   }
@@ -224,7 +224,7 @@ StatusCode UpdateAndReset::execute() {
     m_firstExecute = false;
     DimTimer::start(m_timerCycle);
     m_firstCycleNumber = currentCycleNumber(GauchoTimer::currentTime()).first;
-    msg << MSG::INFO << "Trigger Configuration Key " << m_triggerConfigurationKey << endreq;
+//    msg << MSG::INFO << "Trigger Configuration Key " << m_triggerConfigurationKey << endreq;
   }
   return StatusCode::SUCCESS;
 }
@@ -247,11 +247,11 @@ void UpdateAndReset::verifyAndProcessCycleChange(bool isFromTimerHandler) {
 void UpdateAndReset::verifyAndProcessRunChange() { // this method can not be called from TimerHandler
   std::pair<std::pair<int, ulonglong>, bool> runNumber = currentRunNumber(); // if this is too late, we can not avoid two process calling it.
   MsgStream msg(msgSvc(), name());
-  msg << MSG::DEBUG << " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
+//  msg << MSG::DEBUG << " runnumber " << runNumber.first.first << " gps time " << runNumber.first.second << " runNumber.second " << runNumber.second << endreq;
   if (!runNumber.second) return;// false means that the runNumber wasn't changed
   if (s_statusNoUpdated != m_runStatus) return; // We update if the runStatus is different of ProcessingUpdate and Updated
 
-  msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
+//  msg << MSG::INFO << " The Run Number has changed then we UpdateAll and reset Histograms " << runNumber.first.first << endreq;
   m_runStatus = s_statusProcessingUpdate;
   //don't update the first time
   if (runNumber.first.first!=0) updateData(true, false); //1er param true means that the update was called because the runNumber changed and 2d false means no TimerHandler
@@ -406,35 +406,35 @@ double UpdateAndReset::offsetToBoundary(int cycleNumber, ulonglong time, bool in
 void UpdateAndReset::updateData(bool isRunNumberChanged, bool isFromTimerHandler) {
   MsgStream msg( msgSvc(), name() );
   ulonglong currentTime = GauchoTimer::currentTime();
-  msg << MSG::DEBUG << "**********************************************************************" << endreq;
-  msg << MSG::DEBUG << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;
-  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
-  msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
-  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
-  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
+//  msg << MSG::DEBUG << "**********************************************************************" << endreq;
+//  msg << MSG::DEBUG << "************Updating data " << (currentTime - m_timeStart) << " microseconds after start **********" << endreq;
+//  msg << MSG::DEBUG << "m_runNumber        = " << m_runNumber << endreq;
+//  msg << MSG::DEBUG << "m_cycleNumber      = " << m_cycleNumber << endreq;
+//  msg << MSG::DEBUG << "m_timeFirstEvInRun      = " << m_timeFirstEvInRun << endreq;
+//  msg << MSG::DEBUG << "m_offsetTimeFirstEvInRun      = " << m_offsetTimeFirstEvInRun << endreq;
   m_deltaTCycle = (double)currentTime - (double)m_timeLastEvInCycle;
-  msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
+//  msg << MSG::DEBUG << "m_deltaTCycle = " << m_deltaTCycle << " microseconds" << endreq;
   m_timeLastEvInCycle = currentTime;
   m_offsetTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_timeLastEvInCycle, false);
-  msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
+//  msg << MSG::DEBUG << "m_timeLastEvInCycle     = " << m_timeLastEvInCycle << endreq;
+//  msg << MSG::DEBUG << "m_offsetTimeLastEvInCycle     = " << m_offsetTimeLastEvInCycle << endreq;
+//  msg << MSG::DEBUG << "deltaT error = " << m_deltaTCycle - m_desiredDeltaTCycle*1000000 << " microseconds" << endreq;
   
   if (isFromTimerHandler) m_gpsTimeLastEvInCycle = currentTime; // we can not read ODIN from timerHandler
   else  m_gpsTimeLastEvInCycle = gpsTime();
     
   m_offsetGpsTimeLastEvInCycle = offsetToBoundary(m_cycleNumber, m_gpsTimeLastEvInCycle, false);
   
-  msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
-  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
+//  msg << MSG::DEBUG << "m_gpsTimeLastEvInCycle  = " << m_gpsTimeLastEvInCycle << endreq;
+//  msg << MSG::DEBUG << "m_offsetGpsTimeLastEvInCycle  = " << m_offsetGpsTimeLastEvInCycle << endreq;
+//  msg << MSG::DEBUG << "TimeLastEvent error = " << (m_timeLastEvInCycle - m_gpsTimeLastEvInCycle) << " microseconds runnumberchanged " << isRunNumberChanged << " disablupdatedata " << m_disableUpdateData << endreq;
  
   if (isRunNumberChanged) {
     if (0 == m_disableUpdateData) m_pGauchoMonitorSvc->updateAll(true); //the first parameter is the endOfRun flag
  //   else msg << MSG::DEBUG << "===============> Data was not updated because the UpdateData process is disabled." << endreq;
     if (0 == m_disableResetHistos) {
       if ( 1 == m_saveHistograms ) {
-         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
+//         msg << MSG::DEBUG << "==============> SAVING HISTOS BECAUSE FAST RUN CHANGE<=======================" << endreq;
          manageTESHistos(false, true, true, true);
       }
       else manageTESHistos(false, true, false, true);
@@ -468,7 +468,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   IRegistry* object = rootObject();
   int level = 0;
   std::vector<std::string> idList;
- // msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
+  msg << MSG::DEBUG << "managing histos list " << list << " reset " << reset << " save " << save << " endofrun " << isFromEndOfRun << endreq;
   TFile *f=0;
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
@@ -492,28 +492,28 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
    
 
-    msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
+ //   msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
   if (f!=0) {
     if(! f->IsZombie()) {
       histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);  
-      if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;    
+ //     if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;    
       if (save) {
         f->Close();
         delete f;f=0;
       }    
-      if ((list)&&(0 != idList.size())) {
+    /*  if ((list)&&(0 != idList.size())) {
         msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
         for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
           msg << MSG::INFO << "    " << (*it) << endreq;
         }
-      }
+      }*/
     }
     else {
       std::string errorTmpfile = "Error Saving Data => Zombie File..!!!!!"; 
       m_infoFileStatus.replace(0, m_infoFileStatus.length(), errorTmpfile);
-      msg << MSG::ERROR << "error opening file "<< m_infoFileStatus << ". Closing it." << endreq;
+      msg << MSG::DEBUG << "error opening file "<< m_infoFileStatus << ". Closing it." << endreq;
       if (f->IsOpen()) {f->Close();}
       delete f;f=0;
     }
@@ -535,25 +535,25 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
      // msg << MSG::DEBUG << "Looking for histos in object " << object->identifier() << ", level  " << level << endreq;
      SmartIF<IDataManagerSvc> dataManagerSvc(m_histogramSvc);
      if (!dataManagerSvc) {
-       msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
+//       msg << MSG::WARNING << "    Unable to go to the transient store. " << endreq;
        return;
      }
   
      StatusCode sc = dataManagerSvc->objectLeaves(object, leaves);
      if (sc.isFailure()) {
-        msg << MSG::WARNING << "    No histograms found on the transient store." << endreq;
+//        msg << MSG::WARNING << "    No histograms found on the transient store." << endreq;
         return;
      }   
       
     for ( it=leaves.begin(); it != leaves.end(); it++ ) {
        const std::string& id = (*it)->identifier();
        if (rootdir !=0) rootdir->cd();
-       msg << MSG::DEBUG << "    Object found: " << id << endreq;
+//       msg << MSG::DEBUG << "    Object found: " << id << endreq;
     
        DataObject* dataObject;
        sc = m_histogramSvc->retrieveObject(id, dataObject);
        if (sc.isFailure()) {
-         msg << MSG::WARNING << "Could not retrieve object from TES " << endreq;
+//         msg << MSG::WARNING << "Could not retrieve object from TES " << endreq;
          continue;
        }
 
@@ -563,10 +563,10 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
            TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
            std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
 	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
-           msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
-            << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
+          // msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
+          //  << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
          }
-         msg << MSG::DEBUG << "Resetting histogram" << endreq;
+        // msg << MSG::DEBUG << "Resetting histogram" << endreq;
          if (reset) histogram->reset();
          idList.push_back(id);
          continue;
@@ -604,7 +604,7 @@ IRegistry* UpdateAndReset::rootObject(){
   MsgStream msg( msgSvc(), name() );
   std::string  path;
   SmartDataPtr<DataObject> smartDataPtr(m_histogramSvc, path);
-  msg << MSG::DEBUG << "root identifier : " << smartDataPtr->registry()->identifier() << endreq;
+ // msg << MSG::DEBUG << "root identifier : " << smartDataPtr->registry()->identifier() << endreq;
   return smartDataPtr->registry();
 }
 
