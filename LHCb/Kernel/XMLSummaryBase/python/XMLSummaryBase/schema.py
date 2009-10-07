@@ -41,7 +41,7 @@ VTree:
     will throw a NameError, ValueError, TypeError or AttributeError 
 '''
 
-id = '$Id: schema.py,v 1.4 2009-09-23 16:33:21 rlambert Exp $'
+id = '$Id: schema.py,v 1.5 2009-10-07 13:51:18 rlambert Exp $'
 
 __author__ = 'Rob Lambert'
 __date__ = id.split()[3]
@@ -56,6 +56,7 @@ except ImportError:
             import ElementTree as __ElementTree__
             #finally fail here if module cannot be found!
 import os as __os__
+
 
 class VTree(object):
     '''a validated tree object
@@ -99,6 +100,20 @@ class VTree(object):
         #        exec dstr
         #    except (NameError, AttributeError, ValueError, SyntaxError): pass
         #except all pre-thought of exceptions here... to avoid errors in init!
+    def __reimport__(self):
+        global __os__
+        global __ElementTree__
+        
+        try:
+            from xml.etree import ElementTree as __ElementTree__
+        except ImportError:
+            try:
+                from etree import ElementTree as __ElementTree__
+            except ImportError:
+                import ElementTree as __ElementTree__
+            #finally fail here if module cannot be found!
+        import os as __os__
+        
     def __children__(self):
         '''list the existing children'''
         list=[]
@@ -230,12 +245,28 @@ class VTree(object):
             if self.__element__.text is None or self.__element__.text.strip()=='':
                 self.__element__.getchildren()[-2].tail=str(self.__element__.text)
         return True
+
+    def test(self):
+        '''tests that the object is OK'''
+        try:
+            if (__ElementTree__ is None or __os__ is None or
+                self.__schema__ is None or self.__element__ is None):
+                return False
+            self.__element__.text
+            return True
+        except:
+            return False
     
     def dump(self):
         '''dump the object to the screen'''
         print self.xml()
     def xml(self):
         '''dump the object to an xml string'''
+        if __os__ is None or __ElementTree__ is None:
+            self.__reimport__()
+            if __os__ is None or __ElementTree__ is None:
+                raise ImportError, "problem with modules!"
+                return False #not needed
         return self.__schema__.header()+'\n'+__ElementTree__.tostring(
             self.__element__).replace(
             'ns0:',self.__schema__.__ns__.rstrip(':')+'i:').replace(
@@ -245,10 +276,15 @@ class VTree(object):
         ''' write xml to a file'''
         if outfile is None: return False
         if outfile=="": return False
+        if __os__ is None or __ElementTree__ is None:
+            self.__reimport__()
+            if __os__ is None or __ElementTree__ is None:
+                raise ImportError, "problem with modules!"
+                return False #not needed
         outfile=__os__.path.expanduser(__os__.path.expandvars(outfile))
         if not self.__schema__.Tag_isRoot(self.tag()):
             raise IOError, "cannot output a file which doesn't have the root object"
-            return False
+            return False #not needed
         f=open(outfile,'w')
         if not f:
             raise IOError, 'Error opening file for writing'+str(outfile)
