@@ -1,4 +1,4 @@
-// $Id: GeomFun.icpp,v 1.11 2008-03-10 11:39:52 ibelyaev Exp $ 
+// $Id: GeomFun.icpp,v 1.12 2009-10-07 07:30:28 graven Exp $ 
 // ============================================================================
 // include files 
 // ============================================================================
@@ -116,7 +116,6 @@ inline bool Gaudi::Math::closestPointParams
  double&      mu0   , 
  double&      mu1   )   
 {  
-  if ( parallel(line0, line1) ) { return false ; }            // RETURN 
   /** 
    *  Let the points 
    * \f$\vec{\mathbf{v}}_0=\vec{\mathbf{p}}_0+\mu_0\vec{\mathbf{d}}_0\f$ 
@@ -154,7 +153,9 @@ inline bool Gaudi::Math::closestPointParams
   const double a11 = -line1.direction().Mag2() ;
   
   // the inverse determinant: 
-  const double detinv = 1.0 / ( a00 * a11 - a01 * a10 ) ;
+  const double det =  ( a00 * a11 - a01 * a10 ) ; // det = -sin^2(angle(line0.dir,line1.dir)) 
+  if (fabs(det)<1e-10) return false; // parallel
+  const double detinv = 1.0 / det;
   
   // rhs: 
   typename aLine::Vector p1_p0 = line1.beginPoint() - line0.beginPoint() ; 

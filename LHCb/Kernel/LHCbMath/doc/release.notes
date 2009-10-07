@@ -6,6 +6,9 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Gerhard Raven
+ - faster (but equivalent) check for parallel tracks in GeomFun.icpp
+
 ! 2009-09-13 - Vanya BELYAEV
 
  - add the parsing functions to ValueWithError and 
