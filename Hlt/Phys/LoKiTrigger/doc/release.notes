@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.51 2009-10-05 07:36:51 graven Exp $
+! $Id: release.notes,v 1.52 2009-10-07 06:47:01 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiTrigger
 ! Responsible : Vanya BELYAEV
 ! Purpose     : LoKi for HLT
 ! -----------------------------------------------------------------------------
+
+! 2009-10-07 - Gerhard Raven
+ - follow some more cleanup in HltBase
 
 ! 2009-10-05 - Gerhard Raven
  - remove FC2 based functor (FC2 will be removed)
