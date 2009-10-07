@@ -1,7 +1,7 @@
 """
 Configuration of the XMLSummarySvc
 """
-__version__ = "$Id: Configuration.py,v 1.3 2009-09-20 12:38:39 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.4 2009-10-07 13:49:17 rlambert Exp $"
 __author__  = "Rob Lambert"
 
 from Gaudi.Configuration import *
@@ -24,4 +24,9 @@ class XMLSummary(ConfigurableUser):
             ApplicationMgr().ExtSvc+=[ xmlSum ]
             if "Gaudi::IODataManager/IODataManager" not in ApplicationMgr().ExtSvc:
                 ApplicationMgr().ExtSvc+=[ "Gaudi::IODataManager/IODataManager" ]
+            for aSvc in ApplicationMgr().ExtSvc:
+                if "/FileCatalog" in aSvc:
+                    return
+            #only add the filecatalog if it doesn't exist
+            ApplicationMgr().ExtSvc+=[ "Gaudi::MultiFileCatalog/FileCatalog" ]
             

@@ -18,6 +18,10 @@ EventSelector().PrintFreq = 1;
 # Set up the OutputStream that copies an event data file
 ApplicationMgr().OutStream += ["InputCopyStream/InputCopyStream"]
 
+#ApplicationMgr().OutStream += ["InputCopyStream/FailCopyStream"]
+#FailCopyStream=InputCopyStream('FailCopyStream')
+#FailCopyStream.Output = "DATAFILE='PFN:PoolDst.root' TYP='POOL_ROOTTREE' OPT='READ'";
+
 # Set up POOL persistency
 importOptions( "$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts" )
 

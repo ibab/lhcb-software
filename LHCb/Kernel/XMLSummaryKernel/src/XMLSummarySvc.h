@@ -78,6 +78,10 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
+  virtual StatusCode stop();
+  
+  
+
   XMLSummarySvc( const std::string& name, ISvcLocator* svc );
   
   // ==========================================================================
@@ -124,6 +128,7 @@ private:
 
   PyObject * m_summary; ///the pointer to the python object
   StatEntity m_handled; ///simple counter of #handled events
+  StatEntity m_ended; ///simple counter of #begin-end
 
   ///the list of added counters
   NameStatList m_addedCounters; 
@@ -132,6 +137,13 @@ private:
  
   ///force writeout of the file every x incidents, set by property UpdateFreq
   int m_freq;
+  
+  ///has the xml object been configured? 
+  bool m_configured;
+  ///is the object still configured?
+  inline bool isConfigured() const;
+  ///has stop been called?
+  bool m_stopped;
   
 
   ///counters are filled in the finalise method, using these internal functions
@@ -148,10 +160,10 @@ private:
   StatusCode prepareXML();
   ///shorcut to write the summary
   StatusCode writeXML(MSG::Level lev=MSG::VERBOSE);
-  StatusCode printXML(MSG::Level lev=MSG::VERBOSE);
+  StatusCode printXML(MSG::Level lev=MSG::VERBOSE) const;
   
   std::string file2GUID(const std::string & filename);
-  std::string AFN2name(const std::string & filename);
+  std::string AFN2name(const std::string & filename) const;
   
   /// Map of FID to PFN
   typedef std::map<std::string, std::string> FidMap;

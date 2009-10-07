@@ -32,8 +32,6 @@ class Counter(GaudiAlgo) :
         executed += 1. 
 
         if executed.flag() > 3:
-            import sys
-            sys.exit(0)
             raise ValueError, 'Deliberately thrown error on the fourth event'
             return GaudiPython.FAILURE
         return SUCCESS
