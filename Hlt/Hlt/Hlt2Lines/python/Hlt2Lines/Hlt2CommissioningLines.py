@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.7 2009-09-14 12:24:04 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.8 2009-10-07 12:10:16 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -49,7 +49,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
         HltSelReportsMaker().DebugIncident = 'RequestDebugEvent'
         Line('DebugEvent', prescale = self.prescale, postscale = self.postscale
             , HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')" # do not want debug events on lumi-exclusive Hlt1 events...
-            , algos = [ HltIncidentGenerator('DebugEventDecision'
+            , algos = [ HltIncidentGenerator('Hlt2DebugEventDecision'
                                             , Incident = HltSelReportsMaker().DebugIncident
                                             )
                       ]
