@@ -151,8 +151,8 @@ StatusCode UpdateAndReset::initialize() {
 //      msg << MSG::INFO << " every " << m_saverCycle << " seconds" << endreq;
     } 
     else {
-//      msg << MSG::INFO << " every " << divresult.quot * m_desiredDeltaTCycle << " seconds. Sorry !!!!, you ask for a Saver cycle of " << m_saverCycle << " but for implementation reasons it's not possible because the Saver cycle must be a multiple of the desiredDeltaTCycle, which is" <<  m_desiredDeltaTCycle << endreq;
       m_saverCycle = divresult.quot * m_desiredDeltaTCycle;
+      msg << MSG::DEBUG << " saverCycle set to "  << m_saverCycle << endreq;
     } 
   }
   
