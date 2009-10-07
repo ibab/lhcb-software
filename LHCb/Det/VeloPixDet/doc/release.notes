@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Victor Coco
+ - modification of the way to identity the sensor type in DeVeloPix initialisation. Made it more general.
+
 ! 2009-09-17 - Victor Coco
  - initial version
 

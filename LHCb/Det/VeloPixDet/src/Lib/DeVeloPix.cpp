@@ -1,4 +1,4 @@
-// $Id: DeVeloPix.cpp,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: DeVeloPix.cpp,v 1.2 2009-10-07 07:43:41 cocov Exp $
 //
 // ============================================================================
 #define  VELOPIXDET_DEVELOPIX_CPP 1
@@ -96,7 +96,7 @@ StatusCode DeVeloPix::initialize() {
      if (maxSensorNumber < (*iDESensor)->sensorNumber())
        maxSensorNumber = (*iDESensor)->sensorNumber();
      // Frome the sensor type describe in DDDB determine which type of detector we implement in intialisation
-     if ((*iDESensor)->type() == "TIMEPIX") isSymetric = true;
+     if ((*iDESensor)->isSquare() ) isSymetric = true;
   }
   
   // ok, now we know the size of our pseudo map
