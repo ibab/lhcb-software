@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.cpp,v 1.6 2009-09-01 17:15:14 seaso Exp $
+// $Id: RichTargetDataConfigAlg.cpp,v 1.7 2009-10-07 09:50:10 seaso Exp $
 // Include files 
 
 // from Gaudi
@@ -29,7 +29,8 @@ RichTargetDataConfigAlg::RichTargetDataConfigAlg( const std::string& name,
 {
   declareProperty("SelectOnlyTracksAboveMomentumThreshold", m_selectTracksAboveMomentumThreshold=true);
   declareProperty("SelectOnlySaturatedTracksForRings",  m_selectSaturatedTracksForRings = false );
-
+  declareProperty("SelectAllTrackSegments",  m_selectAllSegments = false );
+  
 }
 //=============================================================================
 // Destructor
@@ -146,9 +147,11 @@ StatusCode RichTargetDataConfigAlg::AcquireTargetTrackInfo()
         iSeg != richSegments()->end(); ++iSeg )
   {
     LHCb::RichRecSegment * segment = *iSeg;
-
-    if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
-
+    if(!m_selectAllSegments ) {
+      
+      if ( !m_trSelector->trackSelected( segment->richRecTrack() ) ) continue;
+    }
+    
     const Gaudi::XYZPoint & pdPoint = segment->pdPanelHitPoint();  // track proj on hpd panel in global coord
 
     if( !((pdPoint.x() ==0.0) && ( pdPoint.y() == 0.0 )) ) {  // avoid unphysical track coord.

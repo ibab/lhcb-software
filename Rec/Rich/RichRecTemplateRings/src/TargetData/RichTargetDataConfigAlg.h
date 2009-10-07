@@ -1,4 +1,4 @@
-// $Id: RichTargetDataConfigAlg.h,v 1.4 2009-09-01 17:15:14 seaso Exp $
+// $Id: RichTargetDataConfigAlg.h,v 1.5 2009-10-07 09:50:10 seaso Exp $
 #ifndef RICHTARGETDATACONFIGALG_H
 #define RICHTARGETDATACONFIGALG_H 1
 
@@ -48,6 +48,7 @@ namespace Rich
         // minimum Cherenkov threshold.
         bool m_selectSaturatedTracksForRings;  // select only tracks which are saturated.
         // only a check on the momentum is made to test for saturation.
+        bool m_selectAllSegments;
         
 
       };
