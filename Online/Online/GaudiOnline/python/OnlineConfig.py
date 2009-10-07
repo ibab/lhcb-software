@@ -75,11 +75,11 @@ def diskWriter(output,input=MDF_BANKS,compress=0,genMD5=True,datatype=MDF_RECORD
   return alg
 
 #------------------------------------------------------------------------------------------------
-def evtSender(target,name='Sender'):
+def evtSender(target,name='Sender',input_type=MDF_NONE):
   sender                   = Configs.LHCb__SocketDataSender(name)
   sender.DataSink          = target
   sender.Compress          = 0
-  sender.InputDataType     = MDF_NONE
+  sender.InputDataType     = input_type
   sender.DataType          = MDF_BANKS
   return sender
   
@@ -278,7 +278,7 @@ def mepConverterApp(partID, partName, bursts=True, freq=0.):
   return _application('NONE',evtsel='NONE',extsvc=[monSvc,mepMgr,evtloop,runable],runable=runable,evtloop=evtloop)
 
 #------------------------------------------------------------------------------------------------
-def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,request=None,algs=[]):
+def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decode=False,request=None,algs=[],input_type=MDF_NONE):
   mepMgr               = mepManager(partID,partName,[buffer], partitionBuffers)
   runable              = evtRunable(mepMgr)
   evtSel               = mbmSelector(buffer,type=request,decode=decode)
@@ -286,7 +286,7 @@ def dataSenderApp(partID, partName, target, buffer, partitionBuffers=True, decod
   evtPers              = rawPersistencySvc()
   algs                 = algs
   if target is not None:
-    sender             = evtSender(target)
+    sender             = evtSender(target=target,input_type=input_type)
     algs.append(sender)
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 

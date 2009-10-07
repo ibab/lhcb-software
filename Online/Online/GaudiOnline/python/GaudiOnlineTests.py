@@ -13,6 +13,15 @@ def runSender(target):                       return _run(dataSenderApp(pid,pnam,
 # Typical sender with input from partitioned buffers, no MEP decoding.
 def runDataSender(target,buffer,req='ALL'):  return _run(dataSenderApp(pid,pnam,target,buffer,True,False,req))
 #------------------------------------------------------------------------------------------------
+# Reprocessing sender sender with input from partitioned buffers, no MEP decoding.
+def runReproSender(target,buffer,req='ALL'):
+  res = dataSenderApp(pid,pnam,target,buffer,True,False,req)
+  s = Configs.LHCb__SocketDataSender('Sender')
+  s.BankLocation = '/Event'
+  s.InputDataType = MDF_BANKS
+  s.DataType =  MDF_BANKS
+  return _run(res)
+#------------------------------------------------------------------------------------------------
 # Data receiver task; puts data into buffer 'buffer'
 def runReceiver(buffer='OUT'):               return _run(dataReceiverApp(pid,pnam,buffer,True))
 #------------------------------------------------------------------------------------------------
@@ -48,6 +57,9 @@ def runOutBuffer():
 #------------------------------------------------------------------------------------------------
 def runRecBuffer():
   return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=64 -u=64 -i=Events -c -s=8096 -e=64 -u=64 -i=Output -c',partitionBuffers=True))
+#------------------------------------------------------------------------------------------------
+def runRecBuffer2():
+  return _run(mbmInitApp(pid,pnam,flags='-s=8096 -e=10 -u=64 -i=Input -c -s=8096 -e=10 -u=64 -i=Output -c -s=8096 -e=10 -u=64 -i=Recv -c -s=8096 -e=5 -u=64 -i=Send -c ',partitionBuffers=True))
 #------------------------------------------------------------------------------------------------
 def runDiskWR(buffer, partitionBuffers, decode, output):
   return _run(diskWRApp(pid,pnam,buffer,partitionBuffers,decode,output))

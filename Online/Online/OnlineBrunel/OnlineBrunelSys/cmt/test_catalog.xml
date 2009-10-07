@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?>
+<!-- Edited By POOL -->
+<!DOCTYPE POOLFILECATALOG SYSTEM "InMemory">
+<POOLFILECATALOG>
+  <File ID="A010D1EC-6BB3-DE11-9269-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="MDF" name="file:///home/frankm/data/mepData_0.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+</POOLFILECATALOG>

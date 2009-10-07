@@ -2,6 +2,7 @@
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
+export Standalone_test=1
 #
 start_task()
 {
@@ -30,4 +31,5 @@ $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${U
 start_Brunel
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM(['Events'])"
 # start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBM2(['Events'])"
+# start_task Mdf2Mbm "import GaudiOnlineTests;GaudiOnlineTests.runMDF2MBMRepro(['Events'],'FID:A010D1EC-6BB3-DE11-9269-001EC9AD0A4E')"
 tail -n 5 ${0}
