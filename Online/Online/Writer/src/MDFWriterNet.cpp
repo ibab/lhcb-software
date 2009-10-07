@@ -350,7 +350,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     *m_log << MSG::ERROR
            << " Exception: "
            << e.what()
-           << "Could not get new file name!"
+           << "Could not get new file name! Check the RunDB XML_RPC server."
            <<  endmsg ;
     return currFile;       
   }
@@ -492,6 +492,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
              << endmsg;
       m_currFile = createAndOpenFile(runNumber);
       if(m_currFile == NULL) {
+          Incident incident(name(),"DAQ_CANCEL");
+          m_incidentSvc->fireIncident(incident); 
           return StatusCode::FAILURE;
       }    
       m_openFiles.addFile(m_currFile);
