@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Victor Coco
+ - Added dependency on Det/VeloPixDet (new package) for upgrade simulation
+
 ! 2009-09-15 - Rob Lambert
  - Added dependency on Kernel/XMLSummaryBase
 

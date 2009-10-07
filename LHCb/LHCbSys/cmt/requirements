@@ -41,6 +41,7 @@ use OTDet                 v8r2    Det     # Jan Amoraal
 use RichDet               v12r1p1 Det     # Chris Jones
 use STDet                 v4r13   Det     # Jeroen van Tilburg, Matt Needham
 use VeloDet               v13r8   Det     # Mark Tobin, Kurt Rinnert
+use VeloPixDet            v1r0    Det     # Victor Coco
 use XmlTools              v6r3    Tools   # Marco Clemencic
 
 # Event data model
