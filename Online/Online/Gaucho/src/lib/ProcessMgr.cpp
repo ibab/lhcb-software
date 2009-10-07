@@ -118,7 +118,7 @@ void ProcessMgr::setPartitionName(const std::string &partitionName)
   
 void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> &serviceSet) {
   
-  MsgStream msg(msgSvc(), name());
+  MsgStream msg(msgSvc(), "ProcessMgr");
 //  msg << MSG::DEBUG << "*************************************************************************"<< endreq;
 //  msg << MSG::DEBUG << "******Possible changes in ServiceSet. We will update the ServiceSet******"<< endreq;
  
