@@ -4,6 +4,11 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Johannes Albrecht
+ - RecoTracking.py: Use TrackAddNNGhostId instead of NeuralNetTmva to 
+   calculate ghost probability
+ - requirements: remove dependence on NNTools
+
 ! 2009-10-06 - Marco Cattaneo
  - Remove obsolete options files RecoTracking.opts, NoFieldTracking.opts
  - Remove from RecoTracking.py import of obsolete options file
