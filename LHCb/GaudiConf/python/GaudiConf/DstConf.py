@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.14 2009-10-06 15:49:13 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.15 2009-10-07 09:50:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -274,7 +274,6 @@ class DstConf(ConfigurableUser):
                                              InputName  = "/Event/pRec/ProtoP/Neutrals")
 
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]        = unpackTracks
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ]        = unpackMuons
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/Electrons" ]    = unpackElectrons
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/Photons" ]      = unpackPhotons
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/MergedPi0s" ]   = unpackMergedPi0s
@@ -289,6 +288,7 @@ class DstConf(ConfigurableUser):
             unpackMuons = UnpackTrack( name       = "UnpackMuons",
                                        OutputName = "/Event/Rec/Track/Muon",
                                        InputName  = "/Event/pRec/Track/Muon")
+            DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
 
         # If simulation, set up also unpacking of MC Truth
         if self.getProp("SimType").capitalize() != "None":
