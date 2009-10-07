@@ -8,27 +8,6 @@
 using namespace Gaudi;
 using namespace LHCb;
 
-void Hlt::TrackMerge(const LHCb::Track& track, LHCb::Track& otrack) {
-  
-  // setting ancestors
-  otrack.addToAncestors(track);
-
-  // adding info
-  const GaudiUtils::VectorMap<int,double>& info = track.extraInfo();
-  GaudiUtils::VectorMap<int,double>::const_iterator it = info.begin();
-  for (; it != info.end(); ++it)
-    otrack.addInfo(it->first,it->second);
-  
-  // adding states
-  const std::vector<LHCb::State*>& states = track.states();
-  for (std::vector<LHCb::State*>::const_iterator it = states.begin();
-       it != states.end(); ++it) 
-    otrack.addToStates(**it);
-  
-  // adding ids
-  otrack.addSortedToLhcbIDs( track.lhcbIDs() );
-}
-
 void Hlt::VertexCreator::operator() (const LHCb::Track& track1, 
                                      const LHCb::Track& track2,
                                      LHCb::RecVertex& ver) const 
@@ -66,17 +45,6 @@ double HltUtils::rImpactParameter(const RecVertex& vertex,
   return (ZZ<0)? -rIP : rIP;
 }
 
-
-double HltUtils::impactParameter (const RecVertex& vertex, 
-                                  const Track& track)
-{
-  const XYZPoint& vtx = vertex.position();
-  const State& state = track.firstState();
-
-  XYZVector vec = Gaudi::Math::closestPoint( vtx, Gaudi::Math::Line<XYZPoint,XYZVector>( state.position(), state.slopes() ) ) - vtx;
-  return vec.Z() < 0 ? -vec.R() : vec.R() ;
-}
-
 double HltUtils::IPError(const Track& track)
 {
   
@@ -92,148 +60,79 @@ double HltUtils::IPError(const Track& track)
   return  m_p0 + invPt*(m_p1 + invPt*(m_p2 + invPt*(m_p3 +invPt*m_p4)));
 }
 
-double HltUtils::impactParameter(const XYZPoint& vertex,
-                                 const XYZPoint& point,
-                                 const XYZVector& direction)
-{
-  XYZVector ipVector = impactParameterVector(vertex,point,direction);
-  return (ipVector.z() < 0) ? -ipVector.R() : ipVector.R();
+namespace {
+    bool xclosestPoints(const XYZPoint& ori1, const XYZVector& dir1,
+                        const XYZPoint& ori2, const XYZVector& dir2,
+                        XYZPoint& close1, XYZPoint& close2) {
+
+      //TODO new SMatrix
+      // Calculate the point between two tracks
+      // (closest distance to both tracks)
+      // code from Paul Bourke, 
+      // http://astronomy.swin.edu.au/~pbourke/geometry/lineline3d/
+
+      static const double eps(1.e-6);
+
+      close1 = XYZPoint(0.,0.,0.);
+      close2 = XYZPoint(0.,0.,0.);
+
+      XYZVector v0 = ori1 - ori2;
+      XYZVector v1 = dir1.unit();
+      XYZVector v2 = dir2.unit();
+
+      double d02 = v0.Dot(v2);
+      double d21 = v2.Dot(v1);
+      double d01 = v0.Dot(v1);
+      double d22 = v2.Dot(v2);
+      double d11 = v1.Dot(v1);
+
+      double denom = d11 * d22 - d21 * d21;
+      if (fabs(denom) < eps) return false;
+
+      double mu1 = (d02*d21 - d01*d22) / denom;
+      double mu2 = (d02 + d21 * mu1) / d22;
+
+      close1 = ori1 + mu1 * v1;
+      close2 = ori2 + mu2 * v2;
+
+      return true;
+    }
 }
 
 
-XYZVector HltUtils::impactParameterVector(const XYZPoint& vertex,
-                                        const XYZPoint& point,
-                                        const XYZVector& direction) {
-  XYZVector udir = direction.unit();
-  XYZVector distance = point - vertex;
-  return udir.Cross(distance.Cross(udir));
-}
 
-bool HltUtils::closestPoints(const XYZPoint& ori1, const XYZVector& dir1,
-                             const XYZPoint& ori2, const XYZVector& dir2,
-                             XYZPoint& close1, XYZPoint& close2) {
-  
-  //TODO new SMatrix
-  // Calculate the point between two tracks
-  // (closest distance to both tracks)
-  // code from Paul Bourke, 
-  // http://astronomy.swin.edu.au/~pbourke/geometry/lineline3d/
- 
-  double eps(1.e-6);
-  
-  close1 = XYZPoint(0.,0.,0.);
-  close2 = XYZPoint(0.,0.,0.);
-  
-  XYZVector v0 = ori1 - ori2;
-  XYZVector v1 = dir1.unit();
-  if (fabs(v1.x())  < eps && fabs(v1.y())  < eps && fabs(v1.z())  < eps)
-    return false;
-  XYZVector v2 = dir2.unit();
-  if (fabs(v2.x())  < eps && fabs(v2.y())  < eps && fabs(v2.z())  < eps)
-    return false;
-  
-  double d02 = v0.Dot(v2);
-  double d21 = v2.Dot(v1);
-  double d01 = v0.Dot(v1);
-  double d22 = v2.Dot(v2);
-  double d11 = v1.Dot(v1);
-  
-  double denom = d11 * d22 - d21 * d21;
-  if (fabs(denom) < eps) return false;
-  
-  double mu1 = (d02*d21 - d01*d22) / denom;
-  double mu2 = (d02 + d21 * mu1) / d22;
-  
-  close1 = ori1 + mu1 * v1;  
-  close2 = ori2 + mu2 * v2;
-  
-  return true;
-}
-
+//TODO: compare Gaudi::Math::closestPoints to original HltUtils::closestPoints
 XYZVector HltUtils::closestDistance(const Track& track1, 
-                                  const Track& track2) {
+                                    const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
   XYZPoint pos1(0.,0.,0.);
   XYZPoint pos2(0.,0.,0.);
-  bool ok = closestPoints(state1.position(),state1.slopes()
-                         ,state2.position(),state2.slopes()
-                         ,pos1,pos2);
+  bool ok = xclosestPoints(  state1.position(),state1.slopes()
+                          ,  state2.position(),state2.slopes()
+                          , pos1, pos2);
+//  bool ok = Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
+//                                      , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
+//                                      , pos1, pos2);
   if (!ok) return XYZVector(0.,0.,1.e6);
   return pos1 - pos2;
 }
 
 XYZPoint HltUtils::closestPoint(const Track& track1, 
-                              const Track& track2) {
+                                const Track& track2) {
   const State& state1 = track1.firstState();
   const State& state2 = track2.firstState();
-  
   XYZPoint pos1(0.,0.,0.);
   XYZPoint pos2(0.,0.,0.);
-  closestPoints(state1.position(),state1.slopes()
-               ,state2.position(),state2.slopes()
-               ,pos1,pos2);
+  bool ok = xclosestPoints(  state1.position(),state1.slopes()
+                          ,  state2.position(),state2.slopes()
+                          , pos1, pos2);
+  //bool ok = Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
+//                                      , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
+//                                      , pos1, pos2);
   return XYZPoint(0.5*(pos1.x()+pos2.x()),
-                0.5*(pos1.y()+pos2.y()),
-                0.5*(pos1.z()+pos2.z()));
-}
-
-RecVertex* HltUtils::newRecVertex(const Track& t1, const Track& t2) 
-{
-  XYZPoint x1=t1.position();
-  XYZVector p1=t1.momentum();
-  XYZPoint x2=t2.position();
-  XYZVector p2=t2.momentum();
-
-  RecVertex* sv = new RecVertex();
-  sv->addToTracks(&t1);
-  sv->addToTracks(&t2);
-  
-  double tol = 1.e-13;
-
-  p1=p1.unit();
-  p2=p2.unit();
-  
-  XYZVector v0=x1-x2;
-  double d02=v0.Dot(p2);
-  double d21=p2.Dot(p1);
-  double d01=v0.Dot(p1);
-  double d22=p2.Dot(p2);
-  double d11=p1.Dot(p1);
-  
-  double den=d11*d22-d21*d21;
-  if (fabs(den)<tol) {
-    sv->setPosition(XYZPoint(0,0,-8000));
-    return sv;
-  }
-  double num=d02*d21-d01*d22;
-  double mu1=num/den;
-  double mu2=(d02+d21*mu1)/d22;
-  XYZPoint sv1=(x1+mu1*p1);
-  XYZPoint sv2=(x2+mu2*p2);
-  XYZPoint center(0.5*(sv1.x()+sv2.x()),
-                0.5*(sv1.y()+sv2.y()),
-                0.5*(sv1.z()+sv2.z()));
-  sv->setPosition(center);
-  
-  v0=sv->position()-sv1;
-  d11=v0.Dot(v0);
-  sv->setChi2(d11);
-  return sv;
-}
-
-
-double HltUtils::FC(const LHCb::RecVertex& v1, 
-                    const LHCb::RecVertex& v2) 
-{
-  const Track& t1 = *(v1.tracks()[0]);
-  const Track& t2 = *(v1.tracks()[1]);
-
-  double pperp =     (  t1.momentum()+t2.momentum()         )
-               .Cross( (v1.position()-v2.position()).Unit() )
-               .R();
-
-  return pperp/(pperp+t1.pt() + t2.pt());
+                  0.5*(pos1.y()+pos2.y()),
+                  0.5*(pos1.z()+pos2.z()));
 }
 
 double HltUtils::impactParameterError(double pt0) 
@@ -247,29 +146,6 @@ double HltUtils::impactParameterError(double pt0)
   return Constant +(LogFactor*(log(pt)+LogOffset))*(pow(pt,Exponent));
 }
 
-double HltUtils::closestDistanceMod(const LHCb::Track& track1,
-                                    const LHCb::Track& track2) {
-  return closestDistance(track1,track2).R();
-} 
-
-
-double HltUtils::invariantMass(const LHCb::Track& track1,
-                               const LHCb::Track& track2,
-                               double mass1, double mass2) {
-  //TODO: is this the numerically most stable way of computing 
-  //      invariant masses?? (esp. if mass^2 << mom.mag2 ! )
-  double e = sqrt(mass1*mass1+track1.momentum().mag2())
-           + sqrt(mass2*mass2+track2.momentum().mag2());
-  return sqrt(e*e-(track1.momentum()+track2.momentum()).mag2());
-
-}
-
-double HltUtils::matchIDsFraction(const LHCb::Track& tref,
-                                  const LHCb::Track& track) {
-  return (tref.lhcbIDs().empty()) ? 0. :
-             double(tref.nCommonLhcbIDs( track) )/
-             double(tref.lhcbIDs().size());
-}
 
 double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
                                         const LHCb::RecVertex& v) 
@@ -293,24 +169,6 @@ double HltUtils::vertexMatchIDsFraction(const LHCb::RecVertex& vref,
   return     f11>f12? f11 : f12;
 }
 
-
-double HltUtils::deltaEta(const LHCb::Track& track1, 
-                          const LHCb::Track& track2) {
-  return track2.slopes().Eta() - track1.slopes().Eta();
-}
-
-
-double HltUtils::deltaPhi(const LHCb::Track& track1, 
-                          const LHCb::Track& track2) {
-  
-  return track2.slopes().Phi() -  track1.slopes().Phi();;
-}
-
-
-double HltUtils::deltaAngle(const LHCb::Track& track1, 
-                            const LHCb::Track& track2) {
-  return acos( track1.slopes().Unit().Dot(  track2.slopes().Unit()  ) );
-}
 
 namespace {
 struct maxPT {

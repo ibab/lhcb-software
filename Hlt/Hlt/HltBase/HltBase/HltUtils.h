@@ -3,47 +3,16 @@
 
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "LHCbMath/GeomFun.h"
+#include "LHCbMath/Line.h"
 
-//#include "Event/Track.h"
+#include "Event/Track.h"
 #include "Event/RecVertex.h"
 
 #include <algorithm>
 #include <functional>
 
-//forward declarations
-namespace LHCb {
-  class Track;
-};
-
-
 namespace Hlt {
-
-  /* merge two tracks (adds info, ids, states)
-   *
-   */
-  void TrackMerge(const LHCb::Track& track, LHCb::Track& otrack);
-  
-  template <class T>
-  void MergeInfo(const T& input, T& output) 
-  {
-    const GaudiUtils::VectorMap<int,double>& info = input.extraInfo();
-    GaudiUtils::VectorMap<int,double>::const_iterator it = info.begin();
-    for (; it != info.end(); ++it)
-      output.addInfo(it->first,it->second);
-  }
-
-  /* It fills the vertex using the 2 tracks
-   *
-   */
-  class VertexCreator 
-  {
-  public:
-    explicit VertexCreator() {}
-    void operator() (const LHCb::Track& track1,
-                     const LHCb::Track& track2,
-                     LHCb::RecVertex& ver) const;
-  };
-  
   /* Functor: to order tracks by decresing order of PT
    *
    */
@@ -57,6 +26,17 @@ namespace Hlt {
                             : (ptl > ptr) ;
 }
   };
+  /* It fills the vertex using the 2 tracks
+   *
+   */
+  class VertexCreator 
+  {
+  public:
+    explicit VertexCreator() {}
+    void operator() (const LHCb::Track& track1,
+                     const LHCb::Track& track2,
+                     LHCb::RecVertex& ver) const;
+  };
 }
 
 
@@ -68,42 +48,70 @@ namespace HltUtils
                           const LHCb::Track& track);
   
   //! return the impact parameter vector
-  double impactParameter(const LHCb::RecVertex& vertex,
-                         const LHCb::Track& track);
+  inline double impactParameter(const LHCb::RecVertex& vertex,
+                         const LHCb::Track& track) {
+      const Gaudi::XYZPoint& vtx = vertex.position();
+      const LHCb::State& state = track.firstState();
 
-  double invariantMass(const LHCb::Track&, const LHCb::Track&,
-                      double, double);
+      Gaudi::XYZVector vec =Gaudi::Math::closestPoint( vtx, Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>( state.position(), state.slopes() ) ) - vtx;
+      return vec.Z() < 0 ? -vec.R() : vec.R() ;
+  }
+
+  inline double invariantMass(const LHCb::Track& track1, const LHCb::Track& track2,
+                      double mass1, double mass2) {
+      //TODO: is this the numerically most stable way of computing 
+      //      invariant masses?? (esp. if mass^2 << mom.mag2 ! )
+      double e = sqrt(mass1*mass1+track1.momentum().mag2())
+               + sqrt(mass2*mass2+track2.momentum().mag2());
+      return sqrt(e*e-(track1.momentum()+track2.momentum()).mag2());
+  }
+
  
 
-  //! return the RecVertex made with this 2 tracks
-  //! WARNING NOTE: the caller get ownership of the LHCb::RecVertex and 
-  //                the responsability of deleting it!
-  LHCb::RecVertex* newRecVertex(const LHCb::Track& track1,
-                                    const LHCb::Track& track2);
 
   //! return the closest distance between the 2 tracks (first State)
   Gaudi::XYZVector closestDistance(const LHCb::Track& track1, 
-                          const LHCb::Track& track2);
+                                   const LHCb::Track& track2);
 
-  double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2);
+  inline double deltaEta(const LHCb::Track& track1, const LHCb::Track& track2) {
+    return track2.slopes().Eta() - track1.slopes().Eta();
+  }
 
-  double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2);
+  inline double deltaPhi(const LHCb::Track& track1, const LHCb::Track& track2) {
+    return track2.slopes().Phi() -  track1.slopes().Phi();;
+  }
 
-  double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2);
+  inline double deltaAngle(const LHCb::Track& track1, const LHCb::Track& track2) {
+    return acos( track1.slopes().Unit().Dot(  track2.slopes().Unit()  ) );
+  }
 
   //! retun the closest point between the 2 tracks (first State)
   Gaudi::XYZPoint closestPoint(const LHCb::Track& track1,
                       const LHCb::Track& track2);
 
-  double FC(const LHCb::RecVertex& svertex, 
-            const LHCb::RecVertex& pvertex );
+  inline double FC(const LHCb::RecVertex& svtx, 
+            const LHCb::RecVertex& pvtx )
+  {
+    const LHCb::Track& t1 = *(svtx.tracks()[0]);
+    const LHCb::Track& t2 = *(svtx.tracks()[1]);
+
+    double pperp =     (  t1.momentum()+t2.momentum()         )
+                 .Cross( (svtx.position()-pvtx.position()).Unit() )
+                 .R();
+
+    return pperp/(pperp+t1.pt() + t2.pt());
+  }
 
   double VertexMinPT(const LHCb::RecVertex& vertex);
 
   double VertexMaxPT(const LHCb::RecVertex& vertex);
 
-  double matchIDsFraction(const LHCb::Track& trackreference, 
-                          const LHCb::Track& track2);
+  inline double matchIDsFraction(const LHCb::Track& tref, 
+                          const LHCb::Track& track) {
+      return (tref.lhcbIDs().empty()) ? 0. :
+                 double(tref.nCommonLhcbIDs( track) )/
+                 double(tref.lhcbIDs().size());
+  }
 
   double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
                                 const LHCb::RecVertex& vertex);
@@ -113,8 +121,10 @@ namespace HltUtils
     return (matchIDsFraction(treference,track) > 0.70);    
   }
   
-  double closestDistanceMod(const LHCb::Track& track1,
-                            const LHCb::Track& track2);
+  inline double closestDistanceMod(const LHCb::Track& track1,
+                            const LHCb::Track& track2) {
+    return closestDistance(track1,track2).R();
+  } 
 
 
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
@@ -123,32 +133,27 @@ namespace HltUtils
   double vertexMatchIDsFraction(const LHCb::RecVertex& vreference, 
                                 const LHCb::RecVertex& vertex);
   
-//   bool matchIDs(const LHCb::Track& track1, const LHCb::Track& track2,
-//                 double minf = 0.75) {
-//     int n = ELoop::count(track1.lhcbIDs(),track2.lhcbIDs());
-//     int n0 = track1.lhcbIDs().size();
-//     double f = (n0>0?(1.*n)/(1.*n0):0);
-//     return f>minf;
-//   }
-
   double IPError(const LHCb::Track& track);
 
   //------------------------------------------------------------
 
   //! compute the impact parameter vector
-  Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
+  inline Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
                                 const Gaudi::XYZPoint& point,
-                                const Gaudi::XYZVector& direction);
+                                const Gaudi::XYZVector& direction) {
+      Gaudi::XYZVector d = direction.unit();
+      return d.Cross((point-vertex).Cross(d));
+  }
 
   //! return the modules of the impact parameter (signed)
-  double impactParameter(const Gaudi::XYZPoint& vertex,
+  inline double impactParameter(const Gaudi::XYZPoint& vertex,
                          const Gaudi::XYZPoint& point,
-                         const Gaudi::XYZVector& direction);
+                         const Gaudi::XYZVector& direction)
+    {
+      Gaudi::XYZVector ip = impactParameterVector(vertex,point,direction);
+      return (ip.z() < 0) ? -ip.R() : ip.R();
+    }
   
-  //! return points in rays 
-  bool closestPoints(const Gaudi::XYZPoint& ori1, const Gaudi::XYZVector& dir1,
-                     const Gaudi::XYZPoint& ori2, const Gaudi::XYZVector& dir2,
-                     Gaudi::XYZPoint& close1, Gaudi::XYZPoint& close2);
 
   //! old parameterization of Pt error
   double impactParameterError(double pt);
@@ -159,12 +164,12 @@ namespace HltUtils
   bool doShareM3(const LHCb::Track& track0, const LHCb::Track& track1);
 
   // calocellid tools
-	std::vector<LHCb::CaloCellID> get3x3CellIDs( const LHCb::CaloCellID& centercell );	
+  std::vector<LHCb::CaloCellID> get3x3CellIDs( const LHCb::CaloCellID& centercell );	
 	
-	std::vector<LHCb::CaloCellID> get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell );
+  std::vector<LHCb::CaloCellID> get2x2CellIDs( const LHCb::CaloCellID& bottomleftcell );
 	
-	bool matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
-					   const std::vector<LHCb::CaloCellID>& offcells );
+  bool matchCellIDs( const std::vector<LHCb::CaloCellID>& oncells, 
+                     const std::vector<LHCb::CaloCellID>& offcells );
 	
 
 };
