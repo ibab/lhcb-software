@@ -214,6 +214,7 @@ StatusCode UpdateAndReset::execute() {
 
   if (0 == m_disableChekInExecute){
     m_triggerConfigurationKey = currentTCK();
+    m_runNumber = currentRunNumber().first.first;
     verifyAndProcessRunChange();
     verifyAndProcessCycleChange(false);
   }
