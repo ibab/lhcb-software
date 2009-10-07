@@ -4,7 +4,7 @@
  *  Header file for algorithm class : Rich::Rec::MC::AlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.h,v 1.5 2009-02-12 21:52:56 papanest Exp $
+ *  $Id: RichAlignmentMonitor.h,v 1.6 2009-10-07 14:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis   a.papanestis@rl.ac.uk
  *  @date   2004-02-19
@@ -130,6 +130,8 @@ namespace Rich
         /// make plots for all HPDs ignoring the list
         bool m_plotAllHPDs;
 
+        // Nice titles for the two side histograms (up/down , A/C side)
+        std::vector<AIDA::IHistogram2D*> m_sideHistos;
       };
 
     }

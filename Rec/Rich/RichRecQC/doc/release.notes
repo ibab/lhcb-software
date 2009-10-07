@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Antonis Papanestis
+ - Book histograms during initialisation in the AlignmentMonitor
+ - Change default options to fill mirror histograms as well.
+
 ! 2009-09-04 - Chris Jones
  - Add option to monitoring Configurable to apply custom selection of events 
    used by the monitoring algorithms.

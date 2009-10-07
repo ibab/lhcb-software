@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.12 2009-07-30 11:02:36 jonrob Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.13 2009-10-07 14:56:25 papanest Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -91,6 +91,18 @@ StatusCode AlignmentMonitor::initialize()
   const RichHistoID hid;
 
   // prebook histograms
+  book1D( "Un_Amb", "Ambigious/Unambigious photons", -0.5, 1.5, 2 );
+  book1D( "deltaThetaAmb","Ch angle error (Ambiguous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+  book1D( "deltaThetaUnamb","Ch angle error (Unambigous photons)", -m_deltaThetaHistoRange, m_deltaThetaHistoRange);
+  book2D( "dThetavphiRecAll", "dTheta v phi All", 0.0, 2*Gaudi::Units::pi, 20,
+          -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 50);
+
+  m_sideHistos.push_back( book2D("dThetavphiRecSide0","dTheta v phi "+ Rich::text( m_rich, Rich::Side(0) ),
+                                 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+  m_sideHistos.push_back( book2D("dThetavphiRecSide1","dTheta v phi "+ Rich::text( m_rich, Rich::Side(1) ),
+                                 0.0, 2*Gaudi::Units::pi, 20, -m_deltaThetaHistoRange, m_deltaThetaHistoRange,50) );
+
+  // pre book mirror combinations
   /*
     Since the introduction of python-based configuration, elements of a vector
     like
@@ -311,12 +323,8 @@ StatusCode AlignmentMonitor::execute() {
       plot2D( phiRec, delTheta, "dThetavphiRecAll", "dTheta v phi All", 0.0,
               2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
 
-      if ( 0 == side )
-        plot2D( phiRec, delTheta, "dThetavphiRecSide0", "dTheta v phi Side 0", 0.0,
-                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
-      else
-        plot2D( phiRec, delTheta, "dThetavphiRecSide1", "dTheta v phi Side 1", 0.0,
-                2*Gaudi::Units::pi, -m_deltaThetaHistoRange, m_deltaThetaHistoRange, 20, 50);
+      // and a separate histogram for each side
+      fill( m_sideHistos[side], phiRec, delTheta, 1 );
 
       // for minimal histo output (online) stop here
       if ( !m_minimalHistoOutput )

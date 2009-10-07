@@ -1,5 +1,5 @@
 
-__version__ = "$Id: Alignment.py,v 1.10 2009-04-23 15:05:33 jonrob Exp $"
+__version__ = "$Id: Alignment.py,v 1.11 2009-10-07 14:56:25 papanest Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -23,7 +23,7 @@ class RichAlignmentConf(RichConfigurableUser):
         ,"NTupleProduce"    : True
         ,"HistoProduce"     : True
         ,"WithMC"           : False     # set to True to use MC truth
-        ,"HistoOutputLevel" : ["Minimal", "Minimal"] # options are: Minimal, OnlyPrebookedMirrors, Full
+        ,"HistoOutputLevel" : ["OnlyPrebookedMirrors", "OnlyPrebookedMirrors"] # options are: Minimal, OnlyPrebookedMirrors, Full
         }
 
     ## Apply the configuration
@@ -32,7 +32,7 @@ class RichAlignmentConf(RichConfigurableUser):
         if not self.isPropertySet("AlignmentSequencer") :
             raise RuntimeError("ERROR : Alignment Sequencer not set")
         sequence = self.getProp("AlignmentSequencer")
-        
+
         from Configurables import ( Rich__Rec__MC__AlignmentMonitor )
 
         # Mirror Alignment monitor for Rich1
@@ -66,7 +66,7 @@ class RichAlignmentConf(RichConfigurableUser):
                 RichAlignMoniR1.OnlyPrebookedMirrors = True
 
             # This list is of "popular" mirrors. A longer list is required for full alignment
-            # RichAlignMoniR1.PreBookHistos = ['0003','0106',  '0212','0309' ]
+            RichAlignMoniR1.PreBookHistos = ['0003','0106',  '0212','0309' ]
 
         # Mirror Alignment monitor for Rich2
         #-------------------------------------------------------------------------------
@@ -98,7 +98,7 @@ class RichAlignmentConf(RichConfigurableUser):
                 RichAlignMoniR2.MinimalHistoOutput = True
                 RichAlignMoniR2.OnlyPrebookedMirrors = True
 
-            RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008 ]
+            # RichAlignMoniR2.HPDList = [ 200107, 200108, 200007, 200008 ]
 
             # List of combinations of RICH2 spheric and flat mirror segments where
             # e.g. '2719' means spheric mirror No 27 and flat mirror No 19.
