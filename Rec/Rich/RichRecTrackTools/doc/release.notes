@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Wouter Hulsbergen
+ - replace measurements with nodes in FunctionalCKResForEcoTracks.
+
 ! 2009-09-14 - Chris Jones
  - Fix track selector to select tracks that have default likelihood or
    ghost probability values (999) (e.g. in the HLT).

@@ -4,7 +4,7 @@
  *
  *  Implementation file for tool : Rich::Rec::FunctionalCKResForRecoTracks
  *
- *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.5 2009-07-30 11:25:33 jonrob Exp $
+ *  $Id: RichFunctionalCKResForRecoTracks.cpp,v 1.6 2009-10-07 15:05:17 wouter Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   17/10/2004
@@ -14,6 +14,9 @@
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+// from TrackEvent
+#include "Event/Node.h"
 
 // local
 #include "RichFunctionalCKResForRecoTracks.h"
@@ -318,13 +321,14 @@ FunctionalCKResForRecoTracks::findLastMeasuredPoint( LHCb::RichRecSegment * segm
 
   // get z position of last measurement before start of track segment
   // a better search could perhaps be used here ?
-  const LHCb::Measurement * lastMeas = NULL;
-  for ( std::vector<LHCb::Measurement *>::const_iterator iM = tr->measurements().begin();
-        iM != tr->measurements().end(); ++iM )
-  {
-    if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
-    else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
-  }
+  const LHCb::Node * lastMeas = NULL;
+  const LHCb::Track::NodeContainer& nodes = tr->nodes() ;
+  for ( LHCb::Track::NodeContainer::const_iterator iM = nodes.begin();
+        iM != nodes.end(); ++iM )
+    if( (*iM)->type() == LHCb::Node::HitOnTrack ) {
+      if      ( (*iM)->z() < tkSeg.entryPoint().z() ) { lastMeas = *iM; }
+      else if ( (*iM)->z() > tkSeg.entryPoint().z() ) { break;          }
+    }
   if ( !lastMeas ) return false;
 
   // get the track position at this z
