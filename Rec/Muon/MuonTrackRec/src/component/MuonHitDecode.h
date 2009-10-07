@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.5 2009-10-06 17:16:22 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.6 2009-10-07 16:33:58 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -30,8 +30,6 @@ public:
   virtual int bankVersion() {return 0;}
   virtual void dumpRawBanks() {}
   virtual void dumpFrame(int Tell1, int ODE) { Tell1=ODE;}
-  virtual float tdc2ns(float TDCtime) {return 0.*TDCtime;}
-  virtual float tdc2ns_diff(float TDCdelta) {return 0.*TDCdelta;}
   virtual bool mappingIsOld() {return false;}
   virtual int l0id() {return 0;}
   virtual int bcn() {return 0;}
