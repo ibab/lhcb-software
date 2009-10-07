@@ -18,9 +18,9 @@ from Configurables import FilterDesktop
 from Configurables import LHCbConfigurableUser
 from Configurables import EventTuple, TupleToolSelResults
 from Configurables import DaVinci, DaVinciWriteDst
-from StrippingConf.StrippingLine import StrippingLine
-from StrippingConf.StrippingLine import strippingLines
-from StrippingConf.StrippingStream import StrippingStream
+from StrippingLine import StrippingLine
+from StrippingLine import strippingLines
+from StrippingStream import StrippingStream
 
 class StrippingConf( LHCbConfigurableUser ):
 #    __used_configurables__ = [ DaVinci, DaVinciWriteDst ]
