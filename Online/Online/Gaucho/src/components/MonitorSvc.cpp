@@ -576,12 +576,12 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
     msg << MSG::ERROR << "Already existing " + dimName << endreq;
     return std::pair<std::string, std::string> ("", "");
   }
-  //when in monitoring farm, we replace the utgid by the partition name if dimPrefix=='' (counters only)
-  //
+  //when in monitoring farm, we replace the nodename in the utgid by x if dimPrefix=='' (counters only)
+  //this is so that the trendtool stay subscribed to the same dimservice
   std::string dimSvcName ="";
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
   if ((utgidParts.size() == 4)&(dimPrefix=="")) {
-    dimSvcName = utgidParts[0]+"_"+utgidParts[2] + "/"+dimName;
+    dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;
   }
   else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
   
