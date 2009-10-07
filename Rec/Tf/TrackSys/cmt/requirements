@@ -40,7 +40,7 @@ use   PatAlgorithms        v*    Tf
 use   TrackMatching        v*    Tf
 use   PatVelo              v*    Tf
 use   PatVeloTT            v*    Tf
-use   NNTools              v*    Tr
+
 
 #============================================================================
 # Install the configurable
