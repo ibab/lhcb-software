@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-07 - Johannes Albrecht
+ - add initial relese of TrackAddNNGhostId algorithm
+
 !========================== TrackUtils v1r29 2009-09-03 ======================
 ! 2009-09-01 - Stephanie Hansmann-Menzemer
 - HitPattern is not anymore member of Track class, adapt ComputeExpectedTrackInfo
