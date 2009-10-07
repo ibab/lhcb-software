@@ -1,4 +1,4 @@
-// $Id: TrackAssociator.cpp,v 1.15 2008-04-04 15:17:45 cattanem Exp $
+// $Id: TrackAssociator.cpp,v 1.16 2009-10-07 21:15:14 wouter Exp $
 // Include files
 
 // local
@@ -154,37 +154,12 @@ StatusCode TrackAssociator::execute() {
     m_nSeed.clear();
     m_nMuon.clear();
     
-    static bool measRemoved;
-
-    // Distinguish between Pat and Fit tracks
-    if( tr->checkPatRecStatus(Track::PatRecMeas) ) {
-      // Fit track, check whether any measurements have been removed
-      if( tr->nMeasurementsRemoved() != 0 ) {
-        // Measurements removed, loop over subset of LHCbIDs
-        measRemoved = true;
-      }
-      // No removed measurements, loop over all LHCbIDs
-      else {
-        measRemoved = false;
-      }
-    }
-    else {
-      // Pat track, loop over all LHCbIDs
-      measRemoved = false;
-    }
-
     // Loop over the LHCbIDs of the Track
-    static bool accept;
     static int nMeas;
     nMeas = 0;
     for( std::vector<LHCbID>::const_iterator iId = tr->lhcbIDs().begin();
-         tr->lhcbIDs().end() != iId; ++iId ) {
-      accept = true;
-      // Skip if LHCbID corresponds to a removed Measurement
-      if( measRemoved ) {
-        accept = tr->isMeasurementOnTrack( *iId );
-      }
-      if( accept ) {
+         tr->lhcbIDs().end() != iId; ++iId ) 
+      {
         if( (*iId).isVelo() ) {
           ++nMeas;
           VeloChannelID vID = (*iId).veloID();
@@ -275,8 +250,7 @@ StatusCode TrackAssociator::execute() {
 	  }
 	}
       }
-    }
-
+    
     //== For ST match, count also parents hits if in VELO !
     // If the Track has total # Velo hits > 2 AND total # IT+OT hits > 2
     if( ( 2 < m_nTotVelo ) && ( 2 < m_nTotSeed ) ) {
