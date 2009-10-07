@@ -1,25 +1,17 @@
-"""
- GAUDI data cards generated on 7/18/07 2:01 PM
- For Event Type = 10000000 / Data type = DST 1
-     Configuration = DC06 - phys-v3-lumi2
-     DST 1 datasets produced by Brunel - v30r17
-     From FETC 1 datasets produced by DaVinci - v19r1
-     From RDST 1 datasets produced by Brunel - v30r15
-     Database version = v30r14
-     Cards content = physical-physical
-     
- Datasets replicated at CERN
- 4 dataset(s) - NbEvents = 2626
- 
-"""
+#-- GAUDI jobOptions generated on Wed Oct  7 14:32:43 2009
+#-- Contains event types : 
+#--   10000000 - 523 files - 938306 events - 585.68 GBytes
 
-from Gaudi.Configuration import EventSelector
 from Configurables import DaVinci
 DaVinci().DataType = "DC06"
-
-EventSelector().Input   = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002264_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002382_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002466_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v3-lumi2/00001883/DST/0000/00001883_00002627_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-    ]
+DaVinci().Input   = [
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000004_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000005_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000012_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000014_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000015_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000020_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000021_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000576_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000577_2.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000578_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]

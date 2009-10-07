@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.376 2009-10-06 08:26:20 pkoppenb Exp $
+! $Id: release.notes,v 1.377 2009-10-07 13:28:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,10 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-07 - Patrick Koppenburg
+ - Update DC06 BB data
+ - v24r4
 
 !========================== DaVinci v24r3p1 2009-10-06 =====================
 !========================== DaVinci v24r3 2009-10-02 =====================
