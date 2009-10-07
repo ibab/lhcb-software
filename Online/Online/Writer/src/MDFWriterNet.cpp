@@ -206,7 +206,7 @@ StatusCode MDFWriterNet::initialize(void)
   // initialize named message queue
   // The message queue is shared between several MDFWriterNet (one per partition ID in activity) 
   if((m_mq = mq_open("/writerqueue", O_RDWR | O_NONBLOCK, S_IRUSR|S_IWUSR, NULL)) == (mqd_t) -1)  {
-      *m_log << MSG::ERROR
+      *m_log << MSG::WARNING
              << "Could not establish connection to message queue: "
              << errno
              << endmsg;
@@ -694,6 +694,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
   }
     *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
+
 
 /** A notify listener callback, which is executed  when an error occurs.
  */
