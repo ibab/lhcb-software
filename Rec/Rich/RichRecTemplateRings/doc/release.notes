@@ -3,6 +3,9 @@
 ! Responsible  : Sajan Easo
 ! Purpose      : Reconstruct Cherenkov Rings for Particle Identification
 !-----------------------------------------------------------------------------
+! 2009-10-07- Sajan Easo
+  - Added an extra option for selecting all tracks for Cosmics data.
+    This allows the TT tracks to be used for ring finding.
 
 !==================== RichRecTemplateRings v1r1 2009-09-03 ===================
 ! 2009-09-03 - Marco Cattaneo
