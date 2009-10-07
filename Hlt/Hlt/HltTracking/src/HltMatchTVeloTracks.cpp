@@ -1,13 +1,13 @@
-// $Id: HltMatchTVeloTracks.cpp,v 1.1 2009-05-30 12:46:19 graven Exp $
+// $Id: HltMatchTVeloTracks.cpp,v 1.2 2009-10-07 06:38:33 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h" 
 #include "Event/Track.h" 
 #include "Event/State.h"
-#include "HltBase/HltUtils.h"
 // local
 #include "HltMatchTVeloTracks.h"
+#include "HltBase/HltTrackMerge.h"
 
 
 //-----------------------------------------------------------------------------

@@ -1,4 +1,4 @@
-// $Id: HltVeloEcalMatch.cpp,v 1.1 2009-05-30 19:24:13 graven Exp $
+// $Id: HltVeloEcalMatch.cpp,v 1.2 2009-10-07 06:38:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -7,7 +7,6 @@
 
 // local
 #include "HltVeloEcalMatch.h"
-#include "HltBase/HltUtils.h"
 
 using namespace LHCb;
 

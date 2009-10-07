@@ -1,9 +1,11 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.35 2009-08-18 12:53:55 witekma Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.36 2009-10-07 06:38:33 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
 // local
 #include "HltTrackUpgradeTool.h"
+#include "HltBase/HltUtils.h"
+#include "HltBase/HltTrackMerge.h"
 #include "EDictionary.h"
 #include "boost/algorithm/string/split.hpp"
 #include "boost/algorithm/string/classification.hpp"
@@ -11,6 +13,7 @@
 #include "GaudiKernel/Property.h"
 
 using namespace LHCb;
+ 
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltTrackUpgradeTool

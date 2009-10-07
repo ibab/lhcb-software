@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.7 2009-05-30 11:29:00 graven Exp $
+// $Id: HltVertexUpgrade.h,v 1.8 2009-10-07 06:38:33 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -6,9 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltAlgorithm.h"
-#include "HltBase/HltUtils.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "HltTrackUpgradeTool.h"
+#include "HltBase/HltUtils.h"
 
 /** @class HltVertexUpgrade HltVertexUpgrade.h
  *  
