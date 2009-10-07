@@ -88,7 +88,7 @@ def fixPathes(filename):
     if not found :
         out = open(filename, "w")
         data.insert(0, marker + "\n")
-        pathlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", "HPATH"]
+        pathlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH", "HPATH", "MANPATH"]
         for l in data :
             words = l.split()
             written = False

@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.53 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.54 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -277,6 +277,22 @@ class LbLoginScript(Script):
             if ev.has_key("LB_NO_STRIP_PATH") :
                 log.debug("Reenabling the path stripping")
                 del ev["LB_NO_STRIP_PATH"]
+        # add the system MANPATH because the CMT setup removes the leading ":"
+        if sys.platform != "win32" :
+            manp = ["/usr/share/man",
+                    "/usr/man",
+                    "/usr/local/share/man",
+                    "/usr/local/man",
+                    "/usr/X11R6/man"]
+            manl = []
+            if ev.has_key("MANPATH") :
+                manl = ev["MANPATH"].split(os.pathsep)
+            for m in manp :
+                if m not in manl :
+                    manl.append(m)
+            if manl :
+                ev["MANPATH"] = os.pathsep.join(manl)
+                
 
     def setCVSEnv(self):
         """ CVS base setup """
