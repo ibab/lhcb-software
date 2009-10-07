@@ -1,4 +1,4 @@
-// $Id: HltBase.h,v 1.23 2009-05-30 13:43:01 graven Exp $
+// $Id: HltBase.h,v 1.24 2009-10-07 09:03:46 graven Exp $
 #ifndef HLTBASE_HLTBASE_H 
 #define HLTBASE_HLTBASE_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IHltDataSvc.h"
-#include "HltBase/HltTypes.h"
 
 /** @class HltBase
  *  
@@ -27,6 +26,10 @@
  *  @author Jose Angel Hernando Morata
  *  @date   2006-06-15
  */
+namespace LHCb {
+  class Track;
+  class RecVertex;
+}
 
 template <class BASE>
 class HltBase : public BASE {
