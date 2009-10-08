@@ -119,8 +119,6 @@ RVSINFO       = LoKi.RecVertices.SmartInfo
 RVVDZ         = LoKi.RecVertices.DeltaZ () 
 ## @see LoKi::Cuts::RVVFC
 RVVFC         = LoKi.RecVertices.FC     () 
-## @see LoKi::Cuts::RVVFC2
-RVVFC2        = LoKi.RecVertices.FC2    () 
 
 # 
 ## @see LoKi::Cuts::TrTYPE
