@@ -209,6 +209,7 @@ StatusCode MDFWriterNet::initialize(void)
       *m_log << MSG::WARNING
              << "Could not establish connection to message queue: "
              << errno
+             << ". No monitoring available. "
              << endmsg;
   
       m_mq_available = false;
