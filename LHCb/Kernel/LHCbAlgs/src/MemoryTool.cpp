@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.9 2009-10-08 13:40:00 ibelyaev Exp $
+// $Id: MemoryTool.cpp,v 1.10 2009-10-08 14:15:46 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -177,7 +177,6 @@ void MemoryTool::execute() {
   }
   /// check the tendency: 
   if ( ( ( 0 < m_check && 0 == m_counter % m_check ) || 1 == m_check  ) && 
-       0  < m_maxPrint               && 
        0  != m_delMem                && 
        16 < m_delMem->nEntries    () && 
        0  < m_delMem->flagMean    () && 
