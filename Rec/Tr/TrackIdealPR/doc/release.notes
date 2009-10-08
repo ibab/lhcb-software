@@ -4,6 +4,9 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
 !======================= TrackIdealPR v2r18 2009-07-28 =======================
 ! 2009-07-15 - Wouter Hulsbergen
  - Adapted to change in OT linker table such that this now works for MC09

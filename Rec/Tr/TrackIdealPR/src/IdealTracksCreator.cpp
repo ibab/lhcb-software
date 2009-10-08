@@ -1,4 +1,4 @@
-// $Id: IdealTracksCreator.cpp,v 1.45 2009-07-15 12:38:23 wouter Exp $
+// $Id: IdealTracksCreator.cpp,v 1.46 2009-10-08 14:58:01 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -541,10 +541,10 @@ void IdealTracksCreator::printTrack(const Track* track) const{
       << "  * # LHCbID's     = " << track -> nLHCbIDs()
       << "  * # measurements = " << track -> nMeasurements() << endreq;
       
-   // print the measurements
-   const std::vector<Measurement*>& meas = track->measurements();
-   for ( std::vector<Measurement*>::const_iterator itMeas = meas.begin();
-           itMeas != meas.end(); ++itMeas ) {
+  // print the measurements
+  LHCb::Track::MeasurementContainer meas = track->measurements();
+  for ( LHCb::Track::MeasurementContainer::const_iterator itMeas = meas.begin();
+	itMeas != meas.end(); ++itMeas ) {
        debug() << "  - measurement of type " << (*itMeas) -> type() << endreq
               << "  - z        = " << (*itMeas) -> z() << " mm" << endreq
               << "  - LHCbID   = " << (*itMeas) -> lhcbID()  << endreq;
