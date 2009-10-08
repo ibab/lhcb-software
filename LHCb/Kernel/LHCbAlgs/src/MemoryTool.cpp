@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.6 2009-10-08 11:18:26 ibelyaev Exp $
+// $Id: MemoryTool.cpp,v 1.7 2009-10-08 13:26:01 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -19,20 +19,22 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( MemoryTool );
 
-//=============================================================================
+// ============================================================================
 // Standard constructor, initializes variables
-//=============================================================================
+// ============================================================================
 MemoryTool::MemoryTool( const std::string& type,
                         const std::string& name,
                         const IInterface* parent )
   : GaudiHistoTool ( type, name , parent )
-  , m_counter(0)
-  , m_bins(0)
-  // 
+  , m_counter ( 0 )
+  , m_bins    ( 0 )
+                      // 
   , m_skip   ( 10     )
-  , m_prev   ( -1.e-6 )
+  , m_prev   ( -1.e+6 )
   , m_histo1 ( "Total Memory [MB]" ,   0 , 2000 ) 
-  , m_histo2 ( "Delta Memory [MB]" , -25 ,   25 ) 
+  , m_histo2 ( "Delta Memory [MB]" , -25 ,   25 )
+  , m_check     ( 10 )
+  , m_maxPrint  ( 10 )
                       //
   , m_totMem ( 0      )
   , m_delMem ( 0      )
@@ -54,6 +56,11 @@ MemoryTool::MemoryTool( const std::string& type,
       m_histo2      , 
       "The parameters of 'delta memory' histogram" ) ;
   //
+  declareProperty 
+    ( "MaxPrints" , 
+      m_maxPrint  , 
+      "Maximal number of print-out" ) ;
+  //
   setProperty ( "HistoPrint", false );
   declareInterface<IGenericTool>(this);
 }
@@ -62,7 +69,25 @@ MemoryTool::MemoryTool( const std::string& type,
 //=============================================================================
 MemoryTool::~MemoryTool() {}
 // ============================================================================
-
+// finalize the tool 
+// ============================================================================
+StatusCode MemoryTool::finalize () 
+{
+  if ( 0 != m_delMem                && 
+       1 < m_delMem->nEntries    () && 
+       0 < m_delMem->flagMean    () && 
+       0 < m_delMem->flagMeanErr () && 
+       m_delMem->flagMean() > 3 * m_delMem->flagMeanErr() ) 
+  {
+    Warning ( "Mean 'delta-memory' exceeds 3*sigma" , StatusCode::SUCCESS ) ;
+  }
+  
+  m_totMem = 0 ;
+  m_delMem = 0 ;
+  m_plot1  = 0 ;
+  m_plot2  = 0 ;
+  return GaudiHistoTool::finalize (); 
+}
 //=============================================================================
 // Plot the memory usage
 //=============================================================================
@@ -92,13 +117,13 @@ void MemoryTool::execute() {
   // Fill the plot
   if   ( 0 != m_plot1  ) { fill ( m_plot1 , memMB , 1 , m_histo1.title() ) ; }
   // Fill the counter for "valid" previous measurements
+  const double deltaMem = memMB - m_prev ;
   if   ( 0 <= m_prev   )
   { 
-    const double delta = memMB - m_prev ;
     // fill the counter 
-    if ( 0 != m_delMem ) { *m_delMem += delta  ; }
-    // fill the counter 
-    if ( 0 != m_plot2  ) { fill ( m_plot2 , delta , 1 , m_histo2.title() ) ; }
+    if ( 0 != m_delMem ) { *m_delMem += deltaMem ; }
+    // fill the counter
+    if ( 0 != m_plot2  ) { fill ( m_plot2 , deltaMem , 1 , m_histo2.title() ) ; }
   } 
   
   // set "previous" measurement 
@@ -113,7 +138,55 @@ void MemoryTool::execute() {
     plot( bin, "Virtual mem, downscaled", "Virtual memory (kB), downscaled entries",
           0.5, m_bins+0.5, m_bins, mem );
   }
-  ++m_counter;
-}; 
-
-//=============================================================================
+  
+  /// increment event counter 
+  ++m_counter;                                         // increment event counter
+  
+  // check Total Memory for the particular event
+  if ( 0  != m_totMem                    && 
+       16 <  m_totMem->nEntries       () && 
+       0  <  m_totMem->flagMean       () && 
+       0  <  m_totMem->flagRMS        () && 
+       0  <  memMB                       && 
+       memMB > m_totMem->flagMean() + 3 * m_totMem->flagRMS () ) 
+  {
+    Warning ( "Total Memory for the event exceeds 3*sigma" , 
+              StatusCode::SUCCESS , m_maxPrint     ) ;    
+    always() << " Total Memory : " << memMB 
+             << " Mean : ("        << m_totMem->flagMean () 
+             << "+-"               << m_totMem->flagRMS() << ")" << endmsg ;
+  }
+  // check the particular event
+  if ( 0  <= m_prev                      && 
+       0  != m_delMem                    && 
+       16 <  m_delMem->nEntries       () && 
+       0  <  m_delMem->flagRMS        () && 
+       0  <  deltaMem                    && 
+       deltaMem > m_delMem->flagMean() + 3 * m_delMem->flagRMS () ) 
+  {
+    Warning ( "Delta Memory for the event exceeds 3*sigma" , 
+              StatusCode::SUCCESS , m_maxPrint     ) ;    
+    always() << " Delta Memory : "  << deltaMem
+             << " Mean : ("         << m_delMem->flagMean () 
+             << "+-"                << m_delMem->flagRMS() << ")" << endmsg ;
+  }
+  /// check the tendency: 
+  if ( ( ( 0 < m_check && 0 == m_counter % m_check ) || 1 == m_check  ) && 
+       0  < m_maxPrint               && 
+       0  != m_delMem                && 
+       16 < m_delMem->nEntries    () && 
+       0  < m_delMem->flagMean    () && 
+       0  < m_delMem->flagMeanErr () && 
+       m_delMem->flagMean() > 3 * m_delMem->flagMeanErr() ) 
+  {
+    Warning ( "Mean 'Delta-Memory' exceeds 3*sigma" , 
+              StatusCode::SUCCESS , m_maxPrint     ) ;
+    always() << " Memory Leak? "
+             << "("  << m_delMem->flagMean() 
+             << "+-" << m_delMem->flagMeanErr() << ")" << endmsg ;
+  }
+  
+}
+// ============================================================================
+// The END 
+// ============================================================================

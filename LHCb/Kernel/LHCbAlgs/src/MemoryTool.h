@@ -1,4 +1,4 @@
-// $Id: MemoryTool.h,v 1.3 2009-10-08 11:18:26 ibelyaev Exp $
+// $Id: MemoryTool.h,v 1.4 2009-10-08 13:26:01 ibelyaev Exp $
 // ============================================================================
 #ifndef MEMORYTOOL_H 
 #define MEMORYTOOL_H 1
@@ -17,6 +17,12 @@
 /** @class MemoryTool MemoryTool.h
  *  Tool to plot memory usage of the application at each call
  *
+ *  New Memory measurements:
+ *   - counter & plot of virtual memory
+ *   - counter & plot of virtual memory increment 
+ *   - warnings: seek for suspicion events: total memory & delta memory 
+ *   - regular check for the tendency
+ *
  *  @author Marco Cattaneo
  *  @date   2005-12-14
  */
@@ -30,15 +36,8 @@ public:
   virtual ~MemoryTool( ); ///< Destructor
 
   void execute(); ///< Plot the current memory usage
-  
-  StatusCode finalize () 
-  {
-    m_totMem = 0 ;
-    m_delMem = 0 ;
-    m_plot1  = 0 ;
-    m_plot2  = 0 ;
-    return GaudiHistoTool::finalize (); 
-  }
+
+  virtual StatusCode finalize () ;
 
 protected:
 
@@ -56,6 +55,11 @@ private:
   Gaudi::Histo1DDef m_histo1 ;         // the histogram definition (as property) 
   /// the histogram definition (as property) 
   Gaudi::Histo1DDef m_histo2 ;         // the histogram definition (as property) 
+  // ==========================================================================
+  /// how often check for the memory leaks ?
+  unsigned int m_check    ; // how often check for the memory leaks ?
+  /// maximalnumber of printouts 
+  unsigned int m_maxPrint ; // maximal number of printouts 
   // ==========================================================================
 private:
   // ==========================================================================
