@@ -2,7 +2,6 @@
   <class name="DeMuonDetector"     />
   <class name="DeMuonChamber"      />
   <class name="DeMuonRegion"       />
-  <class name="DeMuonGasGap"       />
   <class name="MuonBasicGeometry"  />
   <class name="MuonTSMap"          />
   <class name="MuonL1Board"        />

@@ -1,9 +1,8 @@
-// $Id: DeMuonDetector.cpp,v 1.52 2009-10-05 10:15:01 asatta Exp $
+// $Id: DeMuonDetector.cpp,v 1.53 2009-10-08 15:20:47 asatta Exp $
 
 // Include files
 #include "MuonChamberLayout.h"
 #include "MuonDet/DeMuonDetector.h"
-#include "MuonDet/DeMuonGasGap.h"
 #include "MuonDet/MuonChamberGrid.h"
 #include "MuonDet/DeMuonRegion.h"
 

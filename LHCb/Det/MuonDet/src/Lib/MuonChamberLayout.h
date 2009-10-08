@@ -1,4 +1,4 @@
-// $Id: MuonChamberLayout.h,v 1.4 2009-09-14 08:58:36 jonrob Exp $
+// $Id: MuonChamberLayout.h,v 1.5 2009-10-08 15:20:47 asatta Exp $
 #ifndef PUBLIC_MUONCHAMBERLAYOUT_H 
 #define PUBLIC_MUONCHAMBERLAYOUT_H 1
 
@@ -6,7 +6,6 @@
 
 //From Muon
 #include "MuonDet/DeMuonChamber.h"
-#include "MuonDet/DeMuonGasGap.h"
 #include "MuonKernel/MuonSystemLayout.h"
 
 //Gaudi
