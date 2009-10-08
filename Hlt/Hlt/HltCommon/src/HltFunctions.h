@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.21 2009-10-06 08:05:19 graven Exp $
+// $Id: HltFunctions.h,v 1.22 2009-10-08 20:23:57 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -12,7 +12,7 @@
  *  @date   2006-07-18
  */
 
-#include "HltBase/HltTypes.h"
+#include "HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "HltBase/IBiFunctionTool.h"

@@ -10,7 +10,6 @@
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 #include "HltBase/ERelations.h"
-#include "HltBase/HltTypes.h"
 #include "HltBase/IConfigTreeEditor.h"
 #include "HltBase/ConfigTreeNodeAlias.h"
 #include "HltBase/ConfigTreeNode.h"

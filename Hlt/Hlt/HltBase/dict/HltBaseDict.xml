@@ -2,17 +2,8 @@
   <class name = "IMatchTVeloTracks"     />
   <class name = "ITrackConfirmTool"     />
   <class name = "ITrackL0CaloMatchTool" />
-  <class name = "ITrackFunctionFactory" />
-  <class name = "IVertexFunctionFactory" />
-  <class name = "ITrackBiFunctionFactory" />
   <class name = "ITrackView"       />
   <class name = "ITrackUpgrade" />
-  <class name = "Hlt::TrackFunction" />
-  <class name = "Hlt::TrackFilter" />
-  <class name = "Hlt::VertexFunction" />
-  <class name = "Hlt::VertexFilter" />
-  <class name = "Hlt::TrackBiFunction" />
-  <class name = "Hlt::VertexBiFunction" />
   <class name = "zen::IntRelation" />
   <class name = "Hlt::IntRelation" />
   <class name = "Hlt::Selection" />

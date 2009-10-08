@@ -3,6 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+! 2009-10-08 - Gerhard Raven
+ - move HltTypes.h from HltBase to HltCommon
+
 ! 2009-10-06 - Gerhard Raven
  - remove unused FC2
 !========================== HltCommon v5r11p1 2009-09-30 ===================

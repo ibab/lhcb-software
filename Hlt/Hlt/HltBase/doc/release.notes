@@ -8,6 +8,7 @@
  - only allow const access when using HltSelectionContainer::input
  - move Hlt::IntRelation from HltTypes.h to ERelations.h
  - remove unimplemented interface IHltFunctionFactory
+ - move HltTypes.h to HltCommon
 
 ! 2009-10-07 - Gerhard Raven
  - use Gaudi::Math::closestPoints instead of own version of same algorithm

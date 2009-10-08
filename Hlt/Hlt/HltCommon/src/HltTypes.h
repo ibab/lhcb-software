@@ -1,4 +1,4 @@
-// $Id: HltTypes.h,v 1.13 2009-10-08 19:39:50 graven Exp $
+// $Id: HltTypes.h,v 1.1 2009-10-08 20:23:57 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 

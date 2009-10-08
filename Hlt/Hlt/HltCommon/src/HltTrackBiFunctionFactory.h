@@ -1,11 +1,11 @@
-// $Id: HltTrackBiFunctionFactory.h,v 1.2 2009-10-07 08:11:04 graven Exp $
+// $Id: HltTrackBiFunctionFactory.h,v 1.3 2009-10-08 20:23:57 graven Exp $
 #ifndef HLTCOMMON_HLTTRACKBIFUNCTIONFACTORY_H 
 #define HLTCOMMON_HLTTRACKBIFUNCTIONFACTORY_H 1
 
 // Include files
 // from Gaudi
 #include "HltBase/IBiFunctionFactory.h" 
-#include "HltBase/HltTypes.h"
+#include "HltTypes.h"
 #include "HltBase/HltBaseTool.h"
 
 /** @class HltFunctionFactory HltFunctionFactory.h

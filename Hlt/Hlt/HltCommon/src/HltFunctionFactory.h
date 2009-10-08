@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactory.h,v 1.10 2008-05-15 08:56:55 graven Exp $
+// $Id: HltFunctionFactory.h,v 1.11 2009-10-08 20:23:57 graven Exp $
 #ifndef HLTCOMMON_HLTFUNCTIONFACTORY_H 
 #define HLTCOMMON_HLTFUNCTIONFACTORY_H 1
 
@@ -8,7 +8,7 @@
 // #include "HltBase/IPyHltFunctionFactory.h"            // Interface
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
-#include "HltBase/HltTypes.h"
+#include "HltTypes.h"
 
 /** @class HltFunctionFactory HltFunctionFactory.h
  *  
