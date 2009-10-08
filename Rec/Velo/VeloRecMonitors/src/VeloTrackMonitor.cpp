@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.22 2009-10-06 19:55:53 wouter Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.23 2009-10-08 15:05:16 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -774,12 +774,12 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
     // RESET AFTER CERTAIN EVENTS  
     
     //Loop over nodes
-    const std::vector<LHCb::Node*>& nodes = track->nodes();
-    std::vector<LHCb::Node*>::const_iterator it = nodes.begin();
+    LHCb::Track::ConstNodeRange nodes = track->nodes();
+    LHCb::Track::ConstNodeRange::const_iterator it = nodes.begin();
     
     for ( ; it != nodes.end(); ++it ) {
       
-      FitNode& fitnode =  dynamic_cast<FitNode&>(**it);
+      const FitNode& fitnode =  dynamic_cast<const FitNode&>(**it);
       if(!fitnode.hasMeasurement()) continue;
       
       //Get ChannelID belonging to the LHCbID from the measured fitnode

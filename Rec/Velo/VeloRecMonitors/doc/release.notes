@@ -4,6 +4,8 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Wouter Hulsbergen
+ - adapted to change in LHCb::Track
 
 ! 2009-10-06 - Wouter Hulsbergen
  - removed all references to Track::measurements since not needed and soon obsolete.

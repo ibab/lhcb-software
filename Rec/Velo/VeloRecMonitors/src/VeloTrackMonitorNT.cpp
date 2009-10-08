@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitorNT.cpp,v 1.2 2009-10-06 19:55:53 wouter Exp $
+// $Id: VeloTrackMonitorNT.cpp,v 1.3 2009-10-08 15:05:16 wouter Exp $
 // Include files 
 
 
@@ -167,8 +167,9 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
     float adcpertrack=0.;
     //const std::vector< LHCb::LHCbID >& trackIDs = track.lhcbIDs();
     //std::vector< LHCb::LHCbID >::const_iterator it;
-    for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-         inode != track.nodes().end(); ++inode) {
+    LHCb::Track::ConstNodeRange nodes = track.nodes();
+    for(LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();
+	inode != nodes.end(); ++inode) {
       if(( (*inode)->type() == LHCb::Node::HitOnTrack )
          && (  ((*inode)->measurement().type() == LHCb::Measurement::VeloR)
                ||((*inode)->measurement().type() == LHCb::Measurement::VeloPhi))) {
@@ -184,8 +185,8 @@ void Velo::VeloTrackMonitorNT::FillVeloClNtuple(const LHCb::Track& track)
     if (nVeloHits>0)
       adcpertrack = adcpertrack/nVeloHits;
 
-    for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-         inode != track.nodes().end(); ++inode) {
+    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+         inode != nodes.end(); ++inode) {
       debug() << " node type="<< (*inode)->type() <<endmsg;
       debug() << " errResidual2=" << (*inode)->errResidual2() <<
         " tolerance="<<TrackParameters::lowTolerance<<endmsg;
@@ -330,9 +331,9 @@ void Velo::VeloTrackMonitorNT::FillVeloTrNtuple(const LHCb::Track& track)
   }
 
   //const std::vector<LHCbID>& vids = track.lhcbIDs();
-
-  for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-       inode != track.nodes().end(); ++inode) {
+  LHCb::Track::ConstNodeRange nodes = track.nodes();
+  for(LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();
+       inode != nodes.end(); ++inode) {
     if(( (*inode)->type() == LHCb::Node::HitOnTrack )
        && (  ((*inode)->measurement().type() == LHCb::Measurement::VeloR)
              ||((*inode)->measurement().type() == LHCb::Measurement::VeloPhi))) {
@@ -487,8 +488,9 @@ void Velo::VeloTrackMonitorNT::FillVeloEvNtuple(LHCb::Tracks* tracks)
     tottrcl  += std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVelo,_1));
     tottrrcl += std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isVeloR,_1));
     unsigned int m_sideLeft=0, m_sideRight=0;
-    for( LHCb::Track::NodeContainer::const_iterator inode = track->nodes().begin() ;
-         inode != track->nodes().end(); ++inode) {
+    LHCb::Track::ConstNodeRange nodes = track->nodes();
+    for(LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();
+	inode != nodes.end(); ++inode) {
       if(( (*inode)->type() == LHCb::Node::HitOnTrack )
          && (  ((*inode)->measurement().type() == LHCb::Measurement::VeloR)
                ||((*inode)->measurement().type() == LHCb::Measurement::VeloPhi))) {
