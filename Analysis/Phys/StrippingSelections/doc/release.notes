@@ -5,6 +5,11 @@
 ! -----------------------------------------------------------------------------
 
 
+! 2009-10-08 - Alessio sarti
+ - Refined the Jpsi Inclusive selection
+   - Removed the mip cut while waiting for the ismuonloose filtering
+   - Added 200 MeV windows around the Bs, uspsilon 2s and uspsilon 3s masses.
+
 ! 2009-10-06 - Alessio sarti
  - Refined the Jpsi and Lambda selections.
    - Implemented the 'or-tag' for the muon candidates
