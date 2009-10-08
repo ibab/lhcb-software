@@ -70,12 +70,14 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
   if( P ){
     
     if (P->isBasicParticle()) return StatusCode::SUCCESS;
-
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Looking at a " << P->particleID().pid() << endmsg ;
+    
     const LHCb::HltDecReports* decReports =0;
     if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
       decReports = get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
     }
-  
+    if (msgLevel(MSG::VERBOSE)) verbose() << "Got Decreports " << endmsg  ;
+
     m_TriggerTisTosTool->setOfflineInput(*P);
 
     m_TriggerTisTosTool->setTriggerInput("Hlt1L0.*Decision");
@@ -90,6 +92,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     tuple->column( head+"L0Global"+"_TOS", tos);
     //Now loop over all the subtriggers
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg ;
       // to clean-up the list make sure it is present in decision report 
       if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->selectionTisTos(*s,decision,tis,tos);
@@ -111,6 +114,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
       // to clean-up the list make sure it is present in decision report 
       if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);
@@ -129,6 +133,7 @@ StatusCode TupleToolTISTOS::fill( const LHCb::Particle*
     //Now loop over all the subtriggers
     vs = m_TriggerTisTosTool->triggerSelectionNames();
     for( std::vector< std::string >::const_iterator s=vs.begin();s != vs.end();++s){
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Selection " << *s << endmsg  ;
       // to clean-up the list make sure it is present in decision report 
       if( !(decReports->hasDecisionName(*s)) )continue;      
       m_TriggerTisTosTool->triggerTisTos(*s,decision,tis,tos);

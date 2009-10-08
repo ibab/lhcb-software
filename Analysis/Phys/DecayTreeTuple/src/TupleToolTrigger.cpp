@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.13 2009-01-22 14:44:29 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.14 2009-10-08 16:36:07 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -61,6 +61,7 @@ StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
     if (!(fillHlt(tuple,"Hlt1", m_verboseHlt1))) return StatusCode::FAILURE;
     if (!(fillHlt(tuple,"Hlt2", m_verboseHlt2))) return StatusCode::FAILURE; 
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Done" << endmsg ;
   
   return StatusCode::SUCCESS;
 }
