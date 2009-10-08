@@ -10,6 +10,7 @@
 // local
 #include "Event/Track.h"
 #include "Event/TrackFunctor.h"
+#include "Event/TrackFitResult.h"
 #include "Event/Node.h"
 
 using namespace Gaudi;
@@ -20,6 +21,66 @@ using namespace LHCb;
 //
 // 2004-12-14 : Jose Hernando, Eduardo Rodrigues
 //-----------------------------------------------------------------------------
+
+//=============================================================================
+// Retrieve a pointer to the fit result
+//=============================================================================
+const TrackFitResult* Track::fitResult() const
+{
+  //if( m_fitResult == 0 ) const_cast<Track*>(this)->m_fitResult = new TrackFitResult() ;
+  return m_fitResult ;
+}
+
+//=============================================================================
+// Retrieve a pointer to the fit result
+//=============================================================================
+TrackFitResult* Track::fitResult()  
+{
+  //if( m_fitResult == 0 ) m_fitResult = new TrackFitResult() ;
+  return m_fitResult ;
+}
+
+//=============================================================================
+// Set the fit result. This takes ownership.
+//=============================================================================
+void Track::setFitResult(LHCb::TrackFitResult* absfit) 
+{
+  if( m_fitResult != absfit ) {
+    if( m_fitResult ) delete m_fitResult ;
+    m_fitResult = absfit ;
+  }
+}
+
+
+//=============================================================================
+// Get a range of nodes in this track 
+//=============================================================================
+Track::ConstNodeRange Track::nodes() const 
+{
+  Track::ConstNodeRange nodes ;
+  if( m_fitResult ) {
+    // cast the const container to a container of const pointers
+    LHCb::TrackFitResult::NodeContainer::const_iterator begin = m_fitResult->nodes().begin() ;
+    LHCb::TrackFitResult::NodeContainer::const_iterator end = m_fitResult->nodes().end() ;
+    const LHCb::Node*const* pbegin = &(*begin) ;
+    const LHCb::Node*const* pend = &(*end) ;
+    nodes = Track::ConstNodeRange(pbegin,pend) ;
+  }
+  return nodes ;
+}
+
+//=============================================================================
+// Get the measurements on the track. Node that it does not return a
+// reference. This is because I want to remove this container from
+// fitresult.
+//=============================================================================
+Track::MeasurementContainer Track::measurements() const
+{
+  MeasurementContainer meas ;
+  if( m_fitResult ) 
+    meas.insert(meas.end(),m_fitResult->measurements().begin(),m_fitResult->measurements().end()) ; 
+  return meas ;
+}
 
 //=============================================================================
 // Retrieve the probability of chi^2
@@ -38,37 +99,13 @@ double Track::probChi2() const
 //=============================================================================
 // Retrieve the reference to the state closest to the given z-position
 //=============================================================================
-State& Track::closestState( double z )
+State & Track::closestState( double z )
 {
-  if ( !m_nodes.empty() ) {
+  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
     std::vector<Node*>::iterator iter =
-      std::min_element( m_nodes.begin(),m_nodes.end(),
+      std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
                         TrackFunctor::distanceAlongZ<Node>(z) );
-    if ( iter == m_nodes.end() )
-      throw GaudiException( "No state closest to z","Track.cpp",
-                            StatusCode::FAILURE );
-    return (*iter)->state();
-  } else {
-    std::vector<State*>::iterator iter =
-      std::min_element( m_states.begin(),m_states.end(),
-                        TrackFunctor::distanceAlongZ<State>(z) );
-    if ( iter == m_states.end() )
-      throw GaudiException( "No state closest to z","Track.cpp",
-                            StatusCode::FAILURE );
-    return *(*iter);
-  }
-};
-
-//=============================================================================
-// Retrieve the (const) reference to the state closest to the given z-position
-//=============================================================================
-const State & Track::closestState( double z ) const
-{
-  if ( !m_nodes.empty() ) {
-    std::vector<Node*>::const_iterator iter =
-      std::min_element( m_nodes.begin(),m_nodes.end(),
-                        TrackFunctor::distanceAlongZ<Node>(z) );
-    if ( iter == m_nodes.end() )
+    if ( iter == m_fitResult->nodes().end() )
       throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return (*iter)->state();
@@ -84,24 +121,24 @@ const State & Track::closestState( double z ) const
 };
 
 //=============================================================================
-// Retrieve the reference to the state closest to the given plane
+// Retrieve the (const) reference to the state closest to the given z-position
 //=============================================================================
-State & Track::closestState( const Gaudi::Plane3D& plane )
+const State & Track::closestState( double z ) const
 {
-  if ( !m_nodes.empty() ) {
-    std::vector<Node*>::iterator iter =
-      std::min_element( m_nodes.begin(),m_nodes.end(),
-                        TrackFunctor::distanceToPlane<Node>(plane) );
-    if ( iter == m_nodes.end() )
-      throw GaudiException( "No state closest to plane","Track.cpp",
+  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
+    std::vector<Node*>::const_iterator iter =
+      std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
+                        TrackFunctor::distanceAlongZ<Node>(z) );
+    if ( iter == m_fitResult->nodes().end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return (*iter)->state();
   } else {
-    std::vector<State*>::iterator iter =
+    std::vector<State*>::const_iterator iter =
       std::min_element( m_states.begin(),m_states.end(),
-                        TrackFunctor::distanceToPlane<State>(plane) );
+                        TrackFunctor::distanceAlongZ<State>(z) );
     if ( iter == m_states.end() )
-      throw GaudiException( "No state closest to plane","Track.cpp",
+      throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return *(*iter);
   }
@@ -112,12 +149,12 @@ State & Track::closestState( const Gaudi::Plane3D& plane )
 //=============================================================================
 const State & Track::closestState( const Gaudi::Plane3D& plane ) const
 {
-  if ( !m_nodes.empty() ) {
-    std::vector<Node*>::const_iterator iter =
-      std::min_element( m_nodes.begin(),m_nodes.end(),
+  if ( m_fitResult && !m_fitResult->nodes().empty() ) {
+     std::vector<Node*>::const_iterator iter =
+      std::min_element( m_fitResult->nodes().begin(),m_fitResult->nodes().end(),
                         TrackFunctor::distanceToPlane<Node>(plane) );
-    if ( iter == m_nodes.end() )
-      throw GaudiException( "No state closest to plane","Track.cpp",
+    if ( iter == m_fitResult->nodes().end() )
+      throw GaudiException( "No state closest to z","Track.cpp",
                             StatusCode::FAILURE );
     return (*iter)->state();
   } else {
@@ -196,40 +233,6 @@ void Track::addToStates( StateContainer& states )
 };
 
 //=============================================================================
-// Add a Measurement to the list associated to the Track
-//=============================================================================
-void Track::addToMeasurements( const Measurement& meas )
-{
-  // Only add a Measurement if the corresponding LHCbID belongs to the Track!
-  if ( !isOnTrack( meas.lhcbID() ) ) return;
-  Measurement* local = meas.clone();
-  int order = checkFlag(Track::Backward) ? -1 : 1;
-  std::vector<Measurement*>::iterator i =
-    std::upper_bound(m_measurements.begin(),
-                     m_measurements.end(),
-                     local,
-                     TrackFunctor::orderByZ<Measurement>(order));
-  m_measurements.insert(i,local);
-};
-
-//=============================================================================
-// Add a list of measurement to the list associated to the Track. This takes ownership.
-//=============================================================================
-void Track::addToMeasurements( MeasurementContainer& measurements )
-{
-  // Make sure that the incoming measurements are properly sorted. The 'if' is ugly, but more efficient than using 'orderByZ'.
-  bool backward = checkFlag(Track::Backward) ;
-  if(backward) std::sort(measurements.begin(),measurements.end(),TrackFunctor::decreasingByZ<Measurement>());
-  else         std::sort(measurements.begin(),measurements.end(),TrackFunctor::increasingByZ<Measurement>());
-  // Now append and use std::inplace_merge. Make sure there is enough capacity such that iterators stay valid.
-  m_measurements.reserve( measurements.size() + m_measurements.size()) ;
-  MeasurementContainer::iterator middle = m_measurements.end() ;
-  m_measurements.insert(middle, measurements.begin(), measurements.end()) ;
-  if(backward) std::inplace_merge(m_measurements.begin(),middle,m_measurements.end(),TrackFunctor::decreasingByZ<Measurement>());
-  else         std::inplace_merge(m_measurements.begin(),middle,m_measurements.end(),TrackFunctor::increasingByZ<Measurement>());
-};
-
-//=============================================================================
 // Remove an LHCbID from the list of LHCbIDs associated to the Track
 //=============================================================================
 void Track::removeFromLhcbIDs( const LHCbID& value )
@@ -237,8 +240,6 @@ void Track::removeFromLhcbIDs( const LHCbID& value )
   LHCbIDContainer::iterator pos =
     std::lower_bound( m_lhcbIDs.begin(), m_lhcbIDs.end(), value ) ;
   m_lhcbIDs.erase( pos ) ;
-  const Measurement* meas = measurement( value );
-  if( meas ) removeFromMeasurements( meas );
 };
 
 //=============================================================================
@@ -247,33 +248,6 @@ void Track::removeFromLhcbIDs( const LHCbID& value )
 void Track::removeFromStates( State* state )
 {
   TrackFunctor::deleteFromList<State>(m_states,state);
-};
-
-//=============================================================================
-// Remove a Measurement from the list of Measurements associated to the Track
-//=============================================================================
-void Track::removeFromMeasurements( const Measurement* meas )
-{
-  TrackFunctor::deleteFromList<Measurement>( m_measurements, meas );
-  // set the appropriate flag is case the last measurement was removed ;-)
-  if ( m_measurements.empty() ) setPatRecStatus( Track::PatRecIDs );
-};
-
-//=============================================================================
-// Remove a Node from the list of Nodes associated to the Track
-//=============================================================================
-void Track::removeFromNodes( Node* node )
-{
-  // Also delete from the Track the Measurement corresponding
-  // to the deleted Node, if present!
-  if ( node -> hasMeasurement() ) {
-    Measurement& meas = node -> measurement();
-    TrackFunctor::deleteFromList<Node>(m_nodes,node);
-    removeFromMeasurements( &meas );
-  }
-  else {
-    TrackFunctor::deleteFromList<Node>(m_nodes,node);
-  }
 };
 
 //=============================================================================
@@ -340,56 +314,11 @@ bool Track::isOnTrack( const LHCb::LHCbID& value ) const
 } ;
 
 //=============================================================================
-// Check whether the given Measurement is on the Track
-//=============================================================================
-bool Track::isOnTrack( const Measurement& value ) const
-{
-  for ( std::vector<Measurement*>::const_iterator it = m_measurements.begin();
-        it != m_measurements.end(); ++it ) {
-    if ( (*it) == (Measurement*) &value ) return true;
-  }
-  return false;
-};
-
-//=============================================================================
-// Check whether the Measurement on the Track corresponding to the input LHCbID
-// is present
-//=============================================================================
-bool Track::isMeasurementOnTrack( const LHCbID& value ) const
-{
-  return measurement(value) != 0 ;
-};
-
-//=============================================================================
 // Return the Measurement on the Track corresponding to the input LHCbID
 //=============================================================================
 const Measurement* Track::measurement( const LHCbID& value ) const
 {
-  MeasurementContainer::const_iterator it = m_measurements.begin() ;
-  for ( ; (it != m_measurements.end()) && !((*it)->lhcbID() == value) ; ++it ) {}
-  return it == m_measurements.end() ? 0 : *it ;
-}
-
-//=============================================================================
-// Remove all measurements from the track
-//=============================================================================
-void Track::clearMeasurements() 
-{
-  // remove all nodes first
-  clearNodes() ;
-  // now remove the measurements
-  std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
-  m_measurements.clear() ;
-  setPatRecStatus( Track::PatRecIDs );
-}
-
-//=============================================================================
-// Remove all nodes from the track
-//=============================================================================
-void Track::clearNodes() 
-{
-  std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
-  m_nodes.clear() ;
+  return m_fitResult ? m_fitResult->measurement(value) : 0 ;
 }
 
 //=============================================================================
@@ -402,13 +331,13 @@ void Track::reset()
   m_flags      = 0;
   m_lhcbIDs.clear();
   std::for_each(m_states.begin(), m_states.end(),TrackFunctor::deleteObject()) ;
-  std::for_each(m_measurements.begin(), m_measurements.end(),TrackFunctor::deleteObject()) ;
-  std::for_each(m_nodes.begin(), m_nodes.end(),TrackFunctor::deleteObject()) ;
   m_states.clear();
-  m_measurements.clear();
-  m_nodes.clear();
   m_ancestors.clear();
   m_extraInfo.clear();
+  if( m_fitResult ) {
+    delete m_fitResult ;
+    m_fitResult = 0 ;
+  }
 };
 
 //=============================================================================
@@ -450,31 +379,9 @@ void Track::copy( const Track& track )
        istate != track.states().end(); ++istate)
     m_states.push_back( (*istate)->clone() ) ;
   
-  // copy the measurements. make a map from old to new measurements.
-  typedef std::map<const Measurement*, Measurement*> MeasurementMap ;
-  MeasurementMap measurementmap ;
-  m_measurements.reserve(track.measurements().size()) ;
-  for( std::vector<Measurement*>::const_iterator imeas = track.measurements().begin() ;
-       imeas != track.measurements().end(); ++imeas) {
-    m_measurements.push_back( (*imeas)->clone() ) ;
-    measurementmap[*imeas] = m_measurements.back() ;
-  }
+  // copy the track fit info
+  if( track.m_fitResult ) m_fitResult = track.m_fitResult->clone() ;
 
-  // copy the nodes. be sure to remap the measurement.
-  m_nodes.reserve(track.nodes().size()) ;
-  for (std::vector<Node*>::const_iterator inode = track.nodes().begin();
-       inode != track.nodes().end(); ++inode) {
-    m_nodes.push_back((*inode)->clone()) ;
-    if( (*inode)->hasMeasurement() ) {
-      MeasurementMap::const_iterator it = measurementmap.find( &(*inode)->measurement() );
-      if(it != measurementmap.end()) 
-        m_nodes.back()->setMeasurement(*(it->second)) ;
-      else 
-        throw GaudiException( "Track::copy: found a node pointing to a measurement not on track!",
-                              "Track.cpp",StatusCode::FAILURE );
-    }
-  }
-  
   // copy the ancestors
   const SmartRefVector<Track>& ancestors = track.ancestors();
   for (SmartRefVector<Track>::const_iterator it4 = ancestors.begin();
@@ -568,11 +475,16 @@ double LHCb::Track::info( const int key, const double def ) const
 
 unsigned int LHCb::Track::nMeasurementsRemoved() const 
 {
-  size_t noutlier(0) ;
-  for( NodeContainer::const_iterator inode = nodes().begin() ;
-       inode != nodes().end(); ++inode)
-    if( (*inode)->type() == LHCb::Node::Outlier ) ++noutlier ;
-  return noutlier ;
+  return m_fitResult ? m_fitResult->nOutliers() : 0 ;
+}
+
+//=============================================================================
+// Count the number of outliers
+//=============================================================================
+
+unsigned int LHCb::Track::nMeasurements() const 
+{
+  return m_fitResult ? m_fitResult->nActiveMeasurements() : 0 ;
 }
 
 //=============================================================================

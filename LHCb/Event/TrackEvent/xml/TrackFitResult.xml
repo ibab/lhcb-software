@@ -1,0 +1,168 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackEvent'>
+
+<!-- ==================== State class definition ==================== -->
+
+    <class
+      name             = 'TrackFitResult'
+      author           = 'Jose Hernando, Eduardo Rodrigues, Wouter Hulsbergen'
+      desc             = 'TrackFitResult holds transient information from the track fit'
+      virtual          = 'TRUE' >
+
+      <import name='Measurement' soft='FORWARDONLY' />
+      <import name='Node' soft='FORWARDONLY' />
+      <import name='LHCbID' soft='FORWARDONLY' />
+      
+      <typedef
+        type   = "std::vector&lt;LHCb::Measurement*&gt;"
+        def    = "MeasurementContainer"
+        desc   = "Container for LHCb::Measurements on track"
+        access = "PUBLIC"
+	/>
+
+      <typedef
+        type   = "std::vector&lt;LHCb::Node*&gt;"
+        def    = "NodeContainer"
+        desc   = "Container for LHCb::Nodes on track"
+        access = "PUBLIC"
+	/>
+      
+      <attribute 
+	type = 'int'
+	name = 'nIter'
+	desc = 'Number of iterations in track fit'
+	access = 'PRIVATE' />
+      
+      <attribute 
+	type = 'double'
+	name = 'pScatter'
+	desc = 'Momentum used for computing material corrections'
+	access = 'PRIVATE' />
+      
+      <attribute
+        type      = 'std::vector&lt;LHCb::Measurement*&gt;'
+        name      = 'measurements'
+        desc      = 'Container of Measurements'
+        access    = 'PRIVATE'
+        setMeth   = 'FALSE' />
+
+      <attribute
+        type      = 'std::vector&lt;LHCb::Node*&gt;'
+        name      = 'nodes'
+        desc      = 'Container of Nodes'
+        access    = 'PRIVATE'
+        setMeth   = 'FALSE'
+	nonconstaccessor = 'TRUE' />
+
+      <constructor 
+	desc     = "Constructor">
+      </constructor>
+      
+
+      <destructor
+        desc = 'Trackfit destructor'
+	virtual = 'TRUE' >
+      </destructor>
+
+      <method
+        type    = 'void'
+        name    = 'copy'
+        argList = 'const LHCb::TrackFitResult&amp; rhs'
+        desc    = 'Copy the info from the argument track into this track'
+	virtual = 'TRUE' />
+
+      <method
+        type    = 'LHCb::TrackFitResult*'
+        name    = 'clone'
+        desc    = 'Clone the track (you take ownership of the pointer)'
+	const   = 'TRUE'
+        virtual = 'TRUE' />
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nOutliers'
+        desc    = 'Get the number of outliers on the track'
+        const   = 'TRUE'>
+      </method>
+      
+      <method
+        type    = 'unsigned int'
+        name    = 'nActiveMeasurements'
+        desc    = 'Get the number of active (non-outlier) measurements on the track'
+        const   = 'TRUE'>
+      </method>
+      
+      <method
+        name    = 'addToMeasurements'
+        desc    = 'Add a Measurement to the list associated to the track'>
+        <arg type = 'const LHCb::Measurement' name='meas' />
+      </method>
+
+      <method
+        name    = 'addToMeasurements'
+        desc    = 'Add a set of measurements to the track. Track takes ownership.'>
+        <arg type = 'MeasurementContainer' name='measurements' />
+      </method>
+
+      <method
+        name    = 'removeFromMeasurements'
+        desc    = 'Remove a Measurement from the list of Measurements associated to the track'
+        argList = 'const LHCb::Measurement* value'>
+      </method>
+
+      <method
+        name    = 'clearMeasurements'
+        desc    = 'Clear all measurements on track'>
+      </method>
+
+      <method
+        name    = 'addToNodes'
+        desc    = 'Add a Node to the list of Nodes (note: track will take the ownership of this pointer!!)'>
+        <arg type = 'Node*' name='node' />
+        <code>
+  m_nodes.push_back( node );
+        </code>
+      </method>
+
+      <method
+        name    = 'clearNodes'
+        desc    = 'Clear all nodes on track'>
+      </method>
+
+      <method
+        name    = 'removeFromNodes'
+        desc    = 'Remove a Node from the list of Nodes associated to the track'
+        argList = 'Node* value'>
+      </method>
+
+      <method
+        type    = 'unsigned int'
+        name    = 'nMeasurements'
+        desc    = 'Retrieve the number of Measurements on the track'
+        const   = 'TRUE'>
+        <code>
+  return m_measurements.size();
+        </code>
+      </method>
+
+      <method
+        type    = 'const LHCb::Measurement*'
+        name    = 'measurement'
+        argList = 'const LHCb::LHCbID value'
+        desc    = 'Return the measurement on the track corresponding to the input LHCbID. Call first the "isMeasurementOnTrack" method before calling this one, as it throws an exception if the LHCbID is not present! (ONLY for tracking code, not for general use.)'
+        const   = 'TRUE' />
+
+      <method
+        type    = 'void'
+        name    = 'reset'
+        desc    = 'Clear the track before re-use'
+	virtual = 'TRUE'>
+      </method>
+
+
+    </class>
+
+  </package>
+</gdd>

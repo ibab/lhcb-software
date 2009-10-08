@@ -48,10 +48,13 @@
       <import name='Event/Measurement' />
       <import name='Event/TrackParameters' />
       <import name='Node' soft='FORWARDONLY' />
+      <import name='TrackFitResult' soft='FORWARDONLY'/>
       <import name='Kernel/LHCbID' />
       <import name='GaudiKernel/Plane3DTypes' />
       <import name='GaudiKernel/GenericMatrixTypes' />
       <import name="GaudiKernel/VectorMap"/>
+      <import name="GaudiKernel/Range"/>
+      <import name="GaudiKernel/SharedObjectsContainer"/>
 
       <enum
         name   = 'History'
@@ -168,11 +171,11 @@
         <enumval name = "DC06nExpectedIT" value = "12" desc="number of expected IT hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
         <enumval name = "DC06nExpectedOT" value = "13" desc="number of expected OT hits. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
         <enumval name = "MatchChi2"  value = "16" desc="Chi2 from the velo-seed matching (TrackMatching)"/>
-        <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFit)"/>
+        <enumval name = "FitVeloChi2"  value = "17" desc="Chi2 of the velo segment (from TrackFitResult)"/>
         <enumval name = "FitVeloNDoF"  value = "18" desc="NDoF of the velo segment chisq"/>
-        <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFit)"/>
+        <enumval name = "FitTChi2"     value = "19" desc="Chi2 of the T station segment (from TrackFitResult)"/>
         <enumval name = "FitTNDoF"     value = "20" desc="NDoF of the T station segment chisq"/>
-        <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFit)"/>
+        <enumval name = "FitMatchChi2" value = "21" desc="Chi2 of the breakpoint between T and TT (from TrackFitResult)"/>
 	<enumval name = "TsaLikelihood" value = "32" desc ="Likelihood from tsa seeding"/> 
         <enumval name = "CloneDist"  value = "101" desc="Track is flagged as being a (rejected) clone of another track. Value is the KL clone distance"/>
         <enumval name = "DC06GhostProbability" value = "102" desc=" gives the NN ghost probability. OBSOLETE, may exist on DC06 DSTs and some 2007/09 files"/>
@@ -190,6 +193,13 @@
 
        </enum>
 
+   <typedef 
+     type = "SharedObjectsContainer&lt;LHCb::Track&gt;"
+     def  = "Selection"
+     desc = "Needed for access with SharedObjectContainer"
+     access = "PUBLIC"
+     />
+      
    <typedef
         type   = "GaudiUtils::VectorMap&lt;int,double&gt;"
         def    = "ExtraInfo"
@@ -205,7 +215,7 @@
    />
 
    <typedef
-        type   = "std::vector&lt;LHCb::Measurement*&gt;"
+        type   = "std::vector&lt;const LHCb::Measurement*&gt;"
         def    = "MeasurementContainer"
         desc   = "Container for LHCb::Measurements on track"
         access = "PUBLIC"
@@ -219,17 +229,17 @@
    />
 
    <typedef
-        type   = "std::vector&lt;LHCb::Node*&gt;"
-        def    = "NodeContainer"
-        desc   = "Container for LHCb::Nodes on track"
-        access = "PUBLIC"
-   />
-
+     type   = "std::vector&lt;const LHCb::Node*&gt;"
+     def    = "ConstNodeRange"
+     desc   = "Range of pointers to nodes on track. For non-const access, use fitresult."
+     access = "PUBLIC"
+     />
+	
    <constructor 
 	desc     = "Constructor with assigned key" 
 	argList  = "int key "
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;( key ), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_fitResult(0), m_ancestors()">
       </constructor>
 
   <constructor 
@@ -239,7 +249,7 @@
                     std::vector&lt;LHCb::LHCbID&gt; ids,
                     const LHCb::State&amp; aState"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(ids), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(ids), m_states(), m_fitResult(0), m_ancestors()">
       <code>
       addToStates(aState);
       setHistory(history);
@@ -254,7 +264,7 @@
 	argList  = "const LHCb::Track::History&amp; history, const LHCb::Track::Types&amp; trackType,
                     const LHCb::Track::PatRecStatus&amp; patStatus"
 	explicit = "TRUE"
-	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_measurements(), m_nodes(), m_ancestors()">
+	initList = "KeyedObject&lt;int&gt;(), m_chi2PerDoF(0.0), m_nDoF(0), m_likelihood(999), m_ghostProbability(999), m_flags(0), m_lhcbIDs(), m_states(), m_fitResult(0),  m_ancestors()">
       <code>
       setHistory(history);
       setType(trackType);
@@ -375,21 +385,13 @@
         setMeth   = 'FALSE' />
 
       <attribute
-        type      = 'std::vector&lt;LHCb::Measurement*&gt;'
-        name      = 'measurements'
-        desc      = 'Container of Measurements'
+	type      = 'LHCb::TrackFitResult*'
+        name      = 'fitResult'
+        desc      = 'Transient data related to track fit (nodes, material, etc)'
         access    = 'PROTECTED'
         setMeth   = 'FALSE'
+	getMeth   = 'FALSE'
         transient = 'TRUE' />
-
-      <attribute
-        type      = 'std::vector&lt;LHCb::Node*&gt;'
-        name      = 'nodes'
-        desc      = 'Container of Nodes'
-        access    = 'PROTECTED'
-        setMeth   = 'FALSE'
-        transient = 'TRUE'
-	nonconstaccessor = 'TRUE' />
 
       <attribute
         name    = "extraInfo"
@@ -618,6 +620,20 @@
       </method>
       
       <method
+        type    = 'MeasurementContainer'
+        name    = 'measurements'
+        desc    = 'Retrieve vector with measurements on the track'
+        const   = 'TRUE'>
+      </method>
+
+      <method
+        type    = 'ConstNodeRange'
+        name    = 'nodes'
+        desc    = 'Const retrieve the nodes on the track'
+        const   = 'TRUE'>
+      </method>
+
+      <method
         name    = 'addToStates'
         desc    = 'Add a State to the list of States associated to the track'>
         <arg type = 'const LHCb::State' name=' state' />
@@ -645,7 +661,8 @@
         type    = 'LHCb::State &amp;'
         name    = 'closestState'
         argList = 'double z'
-        desc    = 'Retrieve the reference to the state closest to the given z-position' />
+        desc    = 'Retrieve the reference to the state closest to the given z-position'
+        const   = 'FALSE' />
 
       <method
         type    = 'const LHCb::State &amp;'
@@ -653,12 +670,6 @@
         argList = 'double z'
         desc    = 'Retrieve the reference to the state closest to the given z-position'
         const   = 'TRUE' />
-
-      <method
-        type    = 'LHCb::State &amp;'
-        name    = 'closestState'
-        argList = 'const Gaudi::Plane3D plane'
-        desc    = 'Retrieve the reference to the state closest to the given plane' />
 
       <method
         type    = 'const LHCb::State &amp;'
@@ -702,52 +713,6 @@
         name    = 'nMeasurements'
         desc    = 'Retrieve the number of Measurements on the track'
         const   = 'TRUE'>
-        <code>
-  return m_measurements.size();
-        </code>
-      </method>
-
-      <method
-        name    = 'addToMeasurements'
-        desc    = 'Add a Measurement to the list associated to the track'>
-        <arg type = 'const LHCb::Measurement' name='meas' />
-      </method>
-
-      <method
-        name    = 'addToMeasurements'
-        desc    = 'Add a set of measurements to the track. Track takes ownership.'>
-        <arg type = 'MeasurementContainer' name='measurements' />
-      </method>
-
-      <method
-        name    = 'removeFromMeasurements'
-        desc    = 'Remove a Measurement from the list of Measurements associated to the track'
-        argList = 'const LHCb::Measurement* value'>
-      </method>
-
-      <method
-        name    = 'clearMeasurements'
-        desc    = 'Clear all measurements on track'>
-      </method>
-
-      <method
-        name    = 'addToNodes'
-        desc    = 'Add a Node to the list of Nodes (note: track will take the ownership of this pointer!!)'>
-        <arg type = 'Node*' name='node' />
-        <code>
-  m_nodes.push_back( node );
-        </code>
-      </method>
-
-      <method
-        name    = 'clearNodes'
-        desc    = 'Clear all nodes on track'>
-      </method>
-
-      <method
-        name    = 'removeFromNodes'
-        desc    = 'Remove a Node from the list of Nodes associated to the track'
-        argList = 'Node* value'>
       </method>
 
      <method
@@ -840,6 +805,26 @@
         </code>
       </method>
 
+      <method
+	type    = 'void'
+        name    = 'setFitResult'
+        desc    = 'Set pointer to object holding track fit data. Track becomes owner.'>
+	  <arg type = 'LHCb::TrackFitResult* ' name='trackfit' />
+      </method>
+ 
+      <method
+	type    = 'TrackFitResult*'
+        name    = 'fitResult'
+        desc    = 'get pointer to the object holding the trackfit data.'>
+      </method>
+	
+      <method
+	type    = 'const TrackFitResult*'
+	name    = 'fitResult'
+	desc    = 'get const pointer to the object holding the trackfit data.'
+	const   = 'TRUE'>
+      </method>
+	
       <method
         type    = 'void'
         name    = 'reset'
@@ -1004,21 +989,6 @@
         desc    = 'Check whether the given LHCbID is on the track'
         const   = 'TRUE'>
       </method>
-
-      <method
-        type    = 'bool'
-        name    = 'isOnTrack'
-        argList = 'const LHCb::Measurement value'
-        desc    = 'Check whether the given measurement is on the track'
-        const   = 'TRUE'>
-      </method>
-
-      <method
-        type    = 'bool'
-        name    = 'isMeasurementOnTrack'
-        argList = 'const LHCb::LHCbID value'
-        desc    = 'Check whether the measurement on the track corresponding to the input LHCbID is present'
-        const   = 'TRUE' />
 
       <method
         type    = 'const LHCb::Measurement*'

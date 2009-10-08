@@ -228,10 +228,9 @@ namespace TrackFunctor
 // Retrieve the number of Measurements that fulfill a predicate
 // (using e.g. the HasKey template in TrackKeys.h)
 //=============================================================================
-  template <class T>
-  unsigned int nMeasurements( const LHCb::Track& track, const T& pred )
+  template <class Container, class T>
+  unsigned int nMeasurements( const Container& meas, const T& pred )
   {
-    const std::vector<LHCb::Measurement*>& meas = track.measurements();
     return std::count_if( meas.begin(), meas.end(), pred );
   };
 
