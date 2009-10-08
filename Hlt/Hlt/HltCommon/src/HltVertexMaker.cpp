@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.cpp,v 1.35 2009-05-30 11:37:13 graven Exp $
+// $Id: HltVertexMaker.cpp,v 1.36 2009-10-08 15:38:18 graven Exp $
 // Include files 
 
 
@@ -26,9 +26,9 @@ using namespace LHCb;
 using namespace boost::lambda;
 
 HltVertexMaker_details::combinatorics_engine::combinatorics_engine(HltVertexMaker_details::combinatorics_engine::iterator begin1,
-                                                           HltVertexMaker_details::combinatorics_engine::iterator end1,
-                                                           HltVertexMaker_details::combinatorics_engine::iterator begin2,
-                                                           HltVertexMaker_details::combinatorics_engine::iterator end2,bool merge) 
+                                                                   HltVertexMaker_details::combinatorics_engine::iterator end1,
+                                                                   HltVertexMaker_details::combinatorics_engine::iterator begin2,
+                                                                   HltVertexMaker_details::combinatorics_engine::iterator end2,bool merge) 
     : m_range1(begin1,end1)
     , m_merge(merge)
 {

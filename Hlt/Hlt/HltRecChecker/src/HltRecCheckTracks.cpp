@@ -1,4 +1,4 @@
-// $Id: HltRecCheckTracks.cpp,v 1.6 2009-05-30 11:22:34 graven Exp $
+// $Id: HltRecCheckTracks.cpp,v 1.7 2009-10-08 15:44:42 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -62,7 +62,7 @@ StatusCode HltRecCheckTracks::execute() {
   LinkedTo<MCParticle> link(evtSvc(), msgSvc(), m_linkName);
   
   int nghost = 0;
-  for (Hlt::TrackSelection::iterator it = m_selections.input<1>()->begin();
+  for (Hlt::TrackSelection::const_iterator it = m_selections.input<1>()->begin();
        it != m_selections.input<1>()->end(); ++it) {
     const Track& track = **it;
     const State& state = track.firstState();

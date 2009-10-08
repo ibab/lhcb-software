@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.10 2009-05-30 11:22:34 graven Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.11 2009-10-08 15:44:42 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -77,7 +77,7 @@ void HltRecCheckVertices::relateVertices() {
   m_TESInputVertices = get<RecVertices>(m_TESInputVerticesName);
   m_relTrackMCVertex.clear();
   m_relVertexMCVertex.clear();
-  for (Hlt::TrackSelection::iterator it = m_selections.input<1>()->begin();
+  for (Hlt::TrackSelection::const_iterator it = m_selections.input<1>()->begin();
        it != m_selections.input<1>()->end(); ++it) {
     const Track& track = *(*it);
     MCParticle* mcpar = link.first( track.key() );

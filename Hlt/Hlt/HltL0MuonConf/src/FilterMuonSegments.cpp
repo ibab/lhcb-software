@@ -1,4 +1,4 @@
-// $Id: FilterMuonSegments.cpp,v 1.3 2008-12-19 17:34:24 graven Exp $
+// $Id: FilterMuonSegments.cpp,v 1.4 2009-10-08 15:43:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -81,7 +81,7 @@ StatusCode FilterMuonSegments::execute() {
             <<" station " << tileM3.station() << " " << tileM3 << endmsg;   
     //reject the muon tracks that share the M3 pad with one T Track from L0Muon    
     bool L0clone=false;
-    for(std::vector<LHCb::Track*>::iterator itL0Mu = m_selections.input<1>()->begin();
+    for(std::vector<LHCb::Track*>::const_iterator itL0Mu = m_selections.input<1>()->begin();
 	    itL0Mu!= m_selections.input<1>()->end(); itL0Mu++){ 
       std::vector<LHCb::LHCbID> lista= (*itL0Mu)->lhcbIDs ();
       debug() << "lista size " << lista.size() << endmsg;

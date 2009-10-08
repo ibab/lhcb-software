@@ -1,4 +1,4 @@
-// $Id: HltVertexMaker.h,v 1.14 2009-02-05 10:45:18 graven Exp $
+// $Id: HltVertexMaker.h,v 1.15 2009-10-08 15:38:18 graven Exp $
 #ifndef HLTVERTEXMAKER_H 
 #define HLTVERTEXMAKER_H 1
 
@@ -19,7 +19,7 @@
 namespace HltVertexMaker_details {
         class combinatorics_engine {
         public: 
-              typedef std::vector<LHCb::Track*>::iterator iterator;
+              typedef std::vector<LHCb::Track*>::const_iterator iterator;
               combinatorics_engine(iterator begin1,iterator end1,
                                    iterator begin2,iterator end2,bool merge) ;
               combinatorics_engine(iterator begin1,iterator end1);
