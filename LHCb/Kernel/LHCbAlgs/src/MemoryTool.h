@@ -1,4 +1,4 @@
-// $Id: MemoryTool.h,v 1.4 2009-10-08 13:26:01 ibelyaev Exp $
+// $Id: MemoryTool.h,v 1.5 2009-10-08 13:34:27 ibelyaev Exp $
 // ============================================================================
 #ifndef MEMORYTOOL_H 
 #define MEMORYTOOL_H 1
@@ -47,9 +47,9 @@ private:
   unsigned int  m_bins;    ///< Number of bins of histogram (Property HistoSize)  
   // ==========================================================================
   /// flag to skip/reset events for memory measurements  
-  int         m_skip   ;   // flag to skip/reset events for memory measurements
+  unsigned int  m_skip   ;   // flag to skip/reset events for memory measurements
   /// the previosu measurement of virtual memory 
-  double      m_prev   ;          // the previosu measurement of virtual memory
+  double        m_prev   ;          // the previosu measurement of virtual memory
   // ==========================================================================
   /// the histogram definition (as property) 
   Gaudi::Histo1DDef m_histo1 ;         // the histogram definition (as property) 

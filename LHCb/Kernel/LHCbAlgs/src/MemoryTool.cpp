@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.7 2009-10-08 13:26:01 ibelyaev Exp $
+// $Id: MemoryTool.cpp,v 1.8 2009-10-08 13:34:27 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -33,7 +33,7 @@ MemoryTool::MemoryTool( const std::string& type,
   , m_prev   ( -1.e+6 )
   , m_histo1 ( "Total Memory [MB]" ,   0 , 2000 ) 
   , m_histo2 ( "Delta Memory [MB]" , -25 ,   25 )
-  , m_check     ( 10 )
+  , m_check     ( 20 )
   , m_maxPrint  ( 10 )
                       //
   , m_totMem ( 0      )
@@ -55,6 +55,11 @@ MemoryTool::MemoryTool( const std::string& type,
     ( "DeltaMemoryHisto" , 
       m_histo2      , 
       "The parameters of 'delta memory' histogram" ) ;
+  //
+  declareProperty 
+    ( "Check"  , 
+      m_check  , 
+      "Frequency for checks for suspision memory leak" ) ;
   //
   declareProperty 
     ( "MaxPrints" , 
@@ -152,7 +157,7 @@ void MemoryTool::execute() {
   {
     Warning ( "Total Memory for the event exceeds 3*sigma" , 
               StatusCode::SUCCESS , m_maxPrint     ) ;    
-    always() << " Total Memory : " << memMB 
+    debug () << " Total Memory : " << memMB 
              << " Mean : ("        << m_totMem->flagMean () 
              << "+-"               << m_totMem->flagRMS() << ")" << endmsg ;
   }
@@ -166,7 +171,7 @@ void MemoryTool::execute() {
   {
     Warning ( "Delta Memory for the event exceeds 3*sigma" , 
               StatusCode::SUCCESS , m_maxPrint     ) ;    
-    always() << " Delta Memory : "  << deltaMem
+    debug () << " Delta Memory : "  << deltaMem
              << " Mean : ("         << m_delMem->flagMean () 
              << "+-"                << m_delMem->flagRMS() << ")" << endmsg ;
   }
@@ -181,7 +186,7 @@ void MemoryTool::execute() {
   {
     Warning ( "Mean 'Delta-Memory' exceeds 3*sigma" , 
               StatusCode::SUCCESS , m_maxPrint     ) ;
-    always() << " Memory Leak? "
+    debug () << " Memory Leak? "
              << "("  << m_delMem->flagMean() 
              << "+-" << m_delMem->flagMeanErr() << ")" << endmsg ;
   }
