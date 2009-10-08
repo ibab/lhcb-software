@@ -1,3 +1,7 @@
+2009-10-08  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* data/Makefile: removed extra tab at the end of the file.
+
 2009-10-07  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the system MANPATH explicitly. This is
