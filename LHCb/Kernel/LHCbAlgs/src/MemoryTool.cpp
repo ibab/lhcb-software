@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.8 2009-10-08 13:34:27 ibelyaev Exp $
+// $Id: MemoryTool.cpp,v 1.9 2009-10-08 13:40:00 ibelyaev Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -34,7 +34,7 @@ MemoryTool::MemoryTool( const std::string& type,
   , m_histo1 ( "Total Memory [MB]" ,   0 , 2000 ) 
   , m_histo2 ( "Delta Memory [MB]" , -25 ,   25 )
   , m_check     ( 20 )
-  , m_maxPrint  ( 10 )
+  , m_maxPrint  (  0 )
                       //
   , m_totMem ( 0      )
   , m_delMem ( 0      )
