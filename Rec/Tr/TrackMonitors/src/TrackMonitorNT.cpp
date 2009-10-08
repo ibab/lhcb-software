@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.8 2009-08-31 08:07:41 smenzeme Exp $
+// $Id: TrackMonitorNT.cpp,v 1.9 2009-10-08 14:48:55 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -208,16 +208,16 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
   LHCb::VeloChannelID theVeloID;
   
   // Loop over the nodes to get the hits variables
-  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
-
-  for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
-
+  LHCb::Track::ConstNodeRange nodes = aTrack->nodes() ;
+  for( LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin() ;
+       iNodes != nodes.end() ; ++iNodes) {
+    
     // Only loop on hits with measurement
     if ( !(**iNodes).hasMeasurement() ) continue;
     
     const LHCb::Node& aNode = **iNodes;
     LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
-    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+    const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
 
     if ( aNode.measurement().type() == LHCb::Measurement::IT ){  
       theSTID = nodeID.stID();

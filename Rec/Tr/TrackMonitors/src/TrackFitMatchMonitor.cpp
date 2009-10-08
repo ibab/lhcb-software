@@ -235,8 +235,9 @@ StatusCode TrackFitMatchMonitor::execute()
 
     const LHCb::FitNode *lastVelo(0),*firstTT(0),*lastTT(0),*firstT(0) ;
     const LHCb::FitNode *fitnode(0) ;
-    for( LHCb::Track::NodeContainer::const_iterator inode = (*itr)->nodes().begin() ;
-	 inode != (*itr)->nodes().end(); ++inode) 
+    LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
+    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode) 
       if( (*inode)->hasMeasurement() &&
 	  (fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ) ) {
 	switch(fitnode->measurement().type()) {

@@ -1,4 +1,4 @@
-// $Id: TrackResChecker.cpp,v 1.12 2009-07-10 11:33:57 cattanem Exp $
+// $Id: TrackResChecker.cpp,v 1.13 2009-10-08 14:49:57 wouter Exp $
 // Include files 
 #include "TrackResChecker.h"
 
@@ -258,11 +258,13 @@ void TrackResChecker::checkAmbiguity(const IHistoTool& histotool,
   unsigned int wrongOnTrack   = 0;
   unsigned int correctOnTrack = 0;
     
-  for(std::vector<LHCb::Measurement*>::const_iterator itMeas = track.measurements().begin(); 
-      itMeas !=track.measurements().end() ; ++itMeas )
+  // copy the container, in anti-cipation of changes in Track
+  LHCb::Track::MeasurementContainer measurements = track.measurements() ;
+  for(LHCb::Track::MeasurementContainer::const_iterator itMeas = measurements.begin(); 
+      itMeas != measurements.end() ; ++itMeas )
     if ( (*itMeas)->type() == LHCb::Measurement::OT ) {
       // only count ones that came from same particle as track.
-      LHCb::OTMeasurement* otMeas = dynamic_cast<LHCb::OTMeasurement*>(*itMeas);
+      const LHCb::OTMeasurement* otMeas = dynamic_cast<const LHCb::OTMeasurement*>(*itMeas);
       LHCb::MCParticle* aParticle = m_otLinker.first(otMeas->channel());
       
       bool found = false;
@@ -310,8 +312,8 @@ void TrackResChecker::plotsByMeasType(const IHistoTool& htool, const LHCb::Track
 				      const LHCb::MCParticle& mcPart ) const
 {
   
-  const std::vector<LHCb::Measurement*>& measures = track.measurements();
-  for ( std::vector<LHCb::Measurement*>::const_iterator it = measures.begin();
+  LHCb::Track::MeasurementContainer measures = track.measurements();
+  for ( LHCb::Track::MeasurementContainer::const_iterator it = measures.begin();
         it != measures.end(); ++it ) {
 
     LHCb::State trueStateAtMeas;

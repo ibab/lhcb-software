@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.41 2009-08-06 18:19:10 smenzeme Exp $
+// $Id: MeasurementProvider.cpp,v 1.42 2009-10-08 14:47:36 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,6 +6,8 @@
 
 // Event model
 #include "TrackKernel/TrackTraj.h"
+#include "Event/Measurement.h"
+#include "Event/TrackFitResult.h"
 
 // local
 #include "MeasurementProvider.h"
@@ -108,17 +110,18 @@ StatusCode MeasurementProvider::initialize()
 //=============================================================================
 StatusCode MeasurementProvider::load( Track& track ) const
 { 
-
   const std::vector<LHCbID>& ids = track.lhcbIDs();
 
+  // make sure we have a place to store the result
+  if( track.fitResult()==0 ) track.setFitResult( new LHCb::TrackFitResult() ) ;
+  
   std::vector<LHCbID> newids ;
   for ( std::vector<LHCbID>::const_iterator it = ids.begin();
         it != ids.end(); ++it ) {
     const LHCbID& id = *it;
-	 // First look if the Measurement corresponding to this LHCbID
-	 // is already in the Track, i.e. whether it has already been loaded!
-
-    if ( track.isMeasurementOnTrack( id ) ) {
+    // First look if the Measurement corresponding to this LHCbID
+    // is already in the Track, i.e. whether it has already been loaded!
+    if ( track.fitResult()->measurement( id ) ) {
       Warning("Found measurements already loaded on track!",StatusCode::SUCCESS,0) ;
       if( msgLevel( MSG::DEBUG ) || msgLevel( MSG::VERBOSE ) )
 	debug() << "Measurement had already been loaded for the LHCbID"
@@ -133,11 +136,11 @@ StatusCode MeasurementProvider::load( Track& track ) const
   LHCb::TrackTraj reftraj(track) ;
   
   // create all measurements for selected IDs
-  LHCb::Track::MeasurementContainer newmeasurements ;
+  LHCb::TrackFitResult::MeasurementContainer newmeasurements ;
   addToMeasurements(newids,newmeasurements,reftraj) ;
 
   // remove all zeros, just in case.
-  LHCb::Track::MeasurementContainer::iterator newend 
+  LHCb::TrackFitResult::MeasurementContainer::iterator newend 
     = std::remove_if(newmeasurements.begin(),newmeasurements.end(),
                      std::bind2nd(std::equal_to<LHCb::Measurement*>(),static_cast<LHCb::Measurement*>(0))) ;
   if(newend != newmeasurements.end()) {
@@ -146,9 +149,8 @@ StatusCode MeasurementProvider::load( Track& track ) const
   }
   
   // add the measurements to the track
-  track.addToMeasurements( newmeasurements ) ;
+  track.fitResult()->addToMeasurements( newmeasurements ) ;
   
-
   // Update the status flag of the Track
   track.setPatRecStatus( Track::PatRecMeas );
   

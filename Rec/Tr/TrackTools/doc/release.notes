@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
 ! 2009-10-07 - Johannes Albrecht
  - Add TrackNNGhostId tool to compute the ghost probability using a standalone 
    neural net

@@ -4,6 +4,9 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
 !======================= TrackCheckers v4r8 2009-09-09 =======================
 ! 2009-09-09 - Marco Cattaneo
  - Fix (again!) compilation on Windows (use abs(int) instead of fabs(int))

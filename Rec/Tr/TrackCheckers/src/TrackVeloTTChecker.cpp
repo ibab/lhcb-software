@@ -1,4 +1,4 @@
-// $Id: TrackVeloTTChecker.cpp,v 1.8 2009-07-10 11:33:57 cattanem Exp $
+// $Id: TrackVeloTTChecker.cpp,v 1.9 2009-10-08 14:49:57 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -160,12 +160,12 @@ StatusCode TrackVeloTTChecker::execute() {
                                            STClusterLocation::TTClusters );
     
       if( matched ) {
-        std::vector<Measurement*>::const_iterator itm;
-        for( itm = matchedTr->measurements().begin();
-             itm != matchedTr->measurements().end(); ++itm ) {
+	LHCb::Track::MeasurementContainer measurements = matchedTr->measurements() ;
+	for( LHCb::Track::MeasurementContainer::const_iterator itm = measurements.begin();
+             itm != measurements.end(); ++itm ) {
           ++nMeas;
-          Measurement* tmp= (*itm);
-          STMeasurement* ttClus = dynamic_cast<STMeasurement*>( tmp );
+          const Measurement* tmp= (*itm);
+          const STMeasurement* ttClus = dynamic_cast<const STMeasurement*>( tmp );
           if( !ttClus ) continue;
           if( ttClus->type() == Measurement::TT ) {
             ++nTTall;
@@ -346,20 +346,20 @@ MCParticle* TrackVeloTTChecker::VeloTrackMCTruth( Track* track )
   LinkedTo<MCParticle,VeloCluster> veloLink( evtSvc(), msgSvc(),
                                              VeloClusterLocation::Default );
   
-  std::vector<Measurement*>::const_iterator iterMeas;
-  for( iterMeas = track->measurements().begin();
-       iterMeas != track->measurements().end(); ++iterMeas ) {
-    Measurement* tempMeas = (*iterMeas);
+  LHCb::Track::MeasurementContainer measurements = track->measurements() ;
+  for( LHCb::Track::MeasurementContainer::const_iterator iterMeas = measurements.begin();
+       iterMeas != measurements.end(); ++iterMeas ) {
+    const Measurement* tempMeas = (*iterMeas);
     if( tempMeas->z() > 1000. ) continue;
 
     const VeloCluster* cluster;
     if( tempMeas->checkType( Measurement::VeloR ) ) {
-      VeloRMeasurement* myRV = dynamic_cast<VeloRMeasurement*>(tempMeas);
+      const VeloRMeasurement* myRV = dynamic_cast<const VeloRMeasurement*>(tempMeas);
       if( myRV == 0 ) continue;
       cluster = myRV->cluster();
     }
     else if( tempMeas->checkType( Measurement::VeloPhi ) ) {
-      VeloPhiMeasurement* myPV = dynamic_cast<VeloPhiMeasurement*>(tempMeas);
+      const VeloPhiMeasurement* myPV = dynamic_cast<const VeloPhiMeasurement*>(tempMeas);
       if( myPV == 0 ) continue;
       cluster = myPV->cluster();
     }
@@ -394,10 +394,10 @@ double TrackVeloTTChecker::CenterVeloTr( Track* track )
   double zmin = 1e8;
   double zmax = -1e8;   
 
-  std::vector<Measurement*>::const_iterator itm;
-  for( itm = track->measurements().begin();
-       itm != track->measurements().end(); ++itm ) {
-    Measurement* tmp = (*itm);
+  LHCb::Track::MeasurementContainer measurements = track->measurements() ;
+  for( LHCb::Track::MeasurementContainer::const_iterator itm = measurements.begin();
+       itm != measurements.end(); ++itm ) {
+    const Measurement* tmp = (*itm);
     if( ! ( tmp->checkType( Measurement::VeloR )
             || tmp->checkType( Measurement::VeloPhi ) ) ) continue;
     double z = tmp->z();

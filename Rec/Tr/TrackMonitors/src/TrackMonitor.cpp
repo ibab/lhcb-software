@@ -1,9 +1,10 @@
-// $Id: TrackMonitor.cpp,v 1.19 2009-09-02 14:21:10 smenzeme Exp $
+// $Id: TrackMonitor.cpp,v 1.20 2009-10-08 14:48:55 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
 //event
 #include "Event/Track.h"
+#include "Event/TrackFitResult.h"
 #include "Event/State.h"
 #include "Kernel/LHCbID.h"
 #include "Event/VeloCluster.h"
@@ -122,8 +123,9 @@ void TrackMonitor::findRefStates(const LHCb::Track& track,
 				 const LHCb::State*& lastMeasurementState) const
 {
   firstMeasurementState = lastMeasurementState = 0  ;
-  for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-       inode != track.nodes().end() ; ++inode) 
+  LHCb::Track::ConstNodeRange nodes = track.nodes() ;
+  for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+       inode != nodes.end() ; ++inode) 
     if( (*inode)->type()==LHCb::Node::HitOnTrack ) {
       if( firstMeasurementState==0 ||
 	  (*inode)->z() < firstMeasurementState->z() )
@@ -147,6 +149,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
   plot(track.nMeasurements(),type+"/100","#nMeas",  -0.5, 60., 61);
+
   const LHCb::State& firststate = track.firstState() ;
   plot(firststate.x(),type + "/120","x of first state",-100,100) ;
   plot(firststate.y(),type + "/121","y of first state",-100,100) ;
@@ -158,6 +161,10 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   if( firststate.qOverP()!=0 ) {
     plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", -5., 205., 21);
     plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", -0.1, 10.1, 51);
+  }
+
+  if(track.fitResult()) {
+    plot( track.fitResult()->nIter(), type + "/numiter","number of fit iterations",-0.5,10.5,11) ;
   }
 
   // found hits of each type
@@ -186,8 +193,9 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
     double resmax[] = { 0.1,0.1,0.1,0.1, //VeloR,VeloPhi,VeloLiteR.VeloLitePhi
 			0.5,0.5,2.0,10,  // TT,IT,OT,Muon
 			0.5,0.5 } ;      // TTLite,ITLite
-    for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-	 inode != track.nodes().end(); ++inode) 
+    LHCb::Track::ConstNodeRange nodes = track.nodes() ;
+    for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode) 
       if( (*inode)->type() == LHCb::Node::HitOnTrack 
 	  // discard extremely small fraction of hits with zero error
 	  // on residual. (e.g. a downstream track with only one

@@ -1,4 +1,4 @@
-// $Id: TrackLikelihood.cpp,v 1.9 2009-08-06 18:19:10 smenzeme Exp $
+// $Id: TrackLikelihood.cpp,v 1.10 2009-10-08 14:47:37 wouter Exp $
 
 // from GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -126,7 +126,7 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
 
   // pick up the LHCbIDs + measurements
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-  const std::vector<LHCb::Measurement*>& meas = aTrack.measurements();
+  LHCb::Track::MeasurementContainer meas = aTrack.measurements();
 
   // get the number of expected hits in the velo
   unsigned int nR = 0;
@@ -142,7 +142,7 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
   lik += binomialTerm(veloHits.size() - nR, expectedVelo.nPhi ,m_veloPhiEff);
 
 
-  std::vector<LHCb::Measurement*> veloRHits; veloRHits.reserve(meas.size());
+  std::vector<const LHCb::Measurement*> veloRHits; veloRHits.reserve(meas.size());
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloRHits), 
                  bind(&Measurement::checkType,_1,Measurement::VeloR));
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloRHits), 
@@ -150,31 +150,31 @@ double TrackLikelihood::addVelo(LHCb::Track& aTrack) const{
 
   // loop and count # with high threshold in R
   unsigned int nHigh = 0; 
-  for (std::vector<LHCb::Measurement*>::iterator iterM = veloRHits.begin(); 
+  for (std::vector<const LHCb::Measurement*>::iterator iterM = veloRHits.begin(); 
     iterM != veloRHits.end(); ++iterM){
-    LHCb::VeloMeasurement* veloMeas = dynamic_cast<LHCb::VeloMeasurement*>(*iterM); 
+    const LHCb::VeloMeasurement* veloMeas = dynamic_cast<const LHCb::VeloMeasurement*>(*iterM); 
     if( veloMeas ){
       if (veloMeas->highThreshold() == true) ++nHigh;
     }else{
-      LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<LHCb::VeloLiteMeasurement*>(*iterM);
+      const LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<const LHCb::VeloLiteMeasurement*>(*iterM);
       if (veloLiteMeas->highThreshold() == true) ++nHigh;
     }
   }
 
-  std::vector<LHCb::Measurement*> veloPhiHits; veloPhiHits.reserve(meas.size());
+  std::vector<const LHCb::Measurement*> veloPhiHits; veloPhiHits.reserve(meas.size());
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloPhiHits), 
                  bind(&Measurement::checkType,_1,Measurement::VeloPhi));
   LoKi::select(meas.begin(), meas.end(), std::back_inserter(veloPhiHits), 
                  bind(&Measurement::checkType,_1,Measurement::VeloLitePhi));
 
   // loop and count # with high threshold in phi
-  for (std::vector<LHCb::Measurement*>::iterator iterM = veloPhiHits.begin(); 
+  for (std::vector<const LHCb::Measurement*>::iterator iterM = veloPhiHits.begin(); 
     iterM != veloPhiHits.end(); ++iterM){
-    LHCb::VeloMeasurement* veloMeas = dynamic_cast<LHCb::VeloMeasurement*>(*iterM); 
+    const LHCb::VeloMeasurement* veloMeas = dynamic_cast<const LHCb::VeloMeasurement*>(*iterM); 
     if( veloMeas ){
       if (veloMeas->cluster()->highThreshold() == true) ++nHigh;
     }else{
-      LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<LHCb::VeloLiteMeasurement*>(*iterM);
+      const LHCb::VeloLiteMeasurement* veloLiteMeas = dynamic_cast<const LHCb::VeloLiteMeasurement*>(*iterM);
       if (veloLiteMeas->highThreshold() == true) ++nHigh;
     }
   }
@@ -193,7 +193,7 @@ double TrackLikelihood::addTT(LHCb::Track& aTrack) const{
 
   // pick up the LHCbIDs + measurements
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-  const std::vector<LHCb::Measurement*>& meas = aTrack.measurements();
+  LHCb::Track::MeasurementContainer meas = aTrack.measurements();
 
    // get the number of expected hits in TT
   const unsigned int nTTHits = std::count_if(ids.begin(), ids.end(),bind(&LHCbID::isTT,_1));
@@ -203,15 +203,15 @@ double TrackLikelihood::addTT(LHCb::Track& aTrack) const{
     lik += binomialTerm(nTTHits, nExpectedTT ,m_ttEff);
     
     // spillover information for TT
-    std::vector<LHCb::Measurement*> ttHits; ttHits.reserve(meas.size());
+    std::vector<const LHCb::Measurement*> ttHits; ttHits.reserve(meas.size());
     LoKi::select(meas.begin(), meas.end(), std::back_inserter(ttHits), 
                  bind(&Measurement::checkType,_1,Measurement::TT));
 
     // loop and count # with high threshold
     unsigned int nHigh = 0; 
-    for (std::vector<LHCb::Measurement*>::iterator iterM = ttHits.begin(); 
+    for (std::vector<const LHCb::Measurement*>::iterator iterM = ttHits.begin(); 
        iterM != ttHits.end(); ++iterM){
-      LHCb::STMeasurement* stMeas = dynamic_cast<LHCb::STMeasurement*>(*iterM); 
+      const LHCb::STMeasurement* stMeas = dynamic_cast<const LHCb::STMeasurement*>(*iterM); 
       if (stMeas->cluster()->highThreshold() == true) ++nHigh;
     }
 
@@ -248,7 +248,7 @@ double TrackLikelihood::addIT(LHCb::Track& aTrack) const{
 
   // pick up the LHCbIDs + measurements
   const std::vector<LHCb::LHCbID>& ids = aTrack.lhcbIDs();
-  const std::vector<LHCb::Measurement*>& meas = aTrack.measurements();
+  LHCb::Track::MeasurementContainer meas = aTrack.measurements();
 
   
   // IT
@@ -259,15 +259,15 @@ double TrackLikelihood::addIT(LHCb::Track& aTrack) const{
     lik += binomialTerm(itHits.size(),nIT, m_itEff);
    
     // spillover information for IT
-    std::vector<LHCb::Measurement*> itHits; itHits.reserve(meas.size());
+    std::vector<const LHCb::Measurement*> itHits; itHits.reserve(meas.size());
     LoKi::select(meas.begin(), meas.end(), std::back_inserter(itHits), 
                  bind(&Measurement::checkType,_1,Measurement::IT));
 
     // loop and count # with high threshold
     unsigned int nHigh = 0; 
-    for (std::vector<LHCb::Measurement*>::iterator iterM = itHits.begin(); 
+    for (std::vector<const LHCb::Measurement*>::iterator iterM = itHits.begin(); 
        iterM != itHits.end(); ++iterM){
-      LHCb::STMeasurement* stMeas = dynamic_cast<LHCb::STMeasurement*>(*iterM); 
+      const LHCb::STMeasurement* stMeas = dynamic_cast<const LHCb::STMeasurement*>(*iterM); 
       if (stMeas->cluster()->highThreshold() == true) ++nHigh;
     }
 

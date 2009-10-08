@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.11 2009-07-10 11:33:57 cattanem Exp $
+// $Id: TrackCheckerNT.cpp,v 1.12 2009-10-08 14:49:57 wouter Exp $
 // Include files 
 
 // local
@@ -687,7 +687,10 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
     MCParticle *mcPart = directLink.first(tr);
     
     // pointer to array with fake measurements
-    std::vector<Measurement*> *fakes = 0;
+    std::vector<const Measurement*> *fakes = 0;
+
+    // get the measurements on the track
+    std::vector<const Measurement*> measurements(tr->measurements()) ;
     
     // we'll soon loop over all track measurements (and we cheat a lot
     // in case we want data for the true vertex position or at fixed z
@@ -698,7 +701,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
     if (FixedZ == type) {
       // dynamically allocate vector and fake measurements
       // don't forget to delete them once you're done!
-      fakes = new std::vector<Measurement*>(maxFixedZ, (Measurement*) 0);
+      fakes = new std::vector<const Measurement*>(maxFixedZ, (Measurement*) 0);
       // handle the Vertex case
       if (0 != mcPart) {
 	// we have MC truth available, so we use it
@@ -715,11 +718,12 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 	  // ok, we have the vertex info...
 	  // we just clone the first measurement here and overwrite the
 	  // members we are going to use
-	  (*fakes)[0] = (*(tr->measurements().begin()))->clone();
+	  Measurement* meas = measurements.front()->clone();
 	  // we set Measurement parameters
-	  (*fakes)[0]->setType((Measurement::Type) FixedZ);
-	  (*fakes)[0]->setMeasure(0.);
-	  (*fakes)[0]->setZ(vtx->position().z());
+	  meas->setType((Measurement::Type) FixedZ);
+	  meas->setMeasure(0.);
+	  meas->setZ(vtx->position().z());
+	  (*fakes)[0] = meas ;
 	  // ok, done in the true vertex case...
 	}
       } else {
@@ -730,11 +734,12 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 	  // 
 	  // we just clone the first measurement here and overwrite the
 	  // members we are going to use, just like above
-	  (*fakes)[0] = (*(tr->measurements().begin()))->clone();
+	  Measurement* meas = measurements.front()->clone();
 	  // we set Measurement parameters
-	  (*fakes)[0]->setType((Measurement::Type) FixedZ);
-	  (*fakes)[0]->setMeasure(0.);
-	  (*fakes)[0]->setZ(0.);
+	  meas->setType((Measurement::Type) FixedZ);
+	  meas->setMeasure(0.);
+	  meas->setZ(0.);
+	  (*fakes)[0] = meas ;
 	  // ok, done in the true vertex case...
       }
       // ok, now fill in the real fixed z positions at which we want to
@@ -745,25 +750,26 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
 	if (p == m_zPositions.end()) break;
 	// we just clone the first measurement here and overwrite the
 	// members we are going to use
-	(*fakes)[k] = (*(tr->measurements().begin()))->clone();
+	Measurement* meas = measurements.front()->clone();
 	// we set Measurement parameters
-	(*fakes)[k]->setType((Measurement::Type) FixedZ);
-	(*fakes)[k]->setMeasure((double) k);
-	(*fakes)[k]->setZ(*p);
+	meas->setType((Measurement::Type) FixedZ);
+	meas->setMeasure((double) k);
+	meas->setZ(*p);
+	(*fakes)[k] = meas ;
 	++p;
       }
     }
     // ok, fake measurements created (if applicable)
     
     // get measurements (fake or real ones, depending on type)
-    const std::vector<Measurement*>& measures =
+    const std::vector<const Measurement*>& measures =
 	    ((FixedZ == type)?(*fakes):(tr->measurements()));
     
     // now comes the mean main loop over all measurements (which may or
     // may not be fake ones...)
-    for (std::vector<Measurement*>::const_iterator mmm = measures.begin();
+    for (std::vector<const Measurement*>::const_iterator mmm = measures.begin();
 	mmm != measures.end(); ++mmm) {
-      Measurement *m = *mmm;
+      const Measurement *m = *mmm;
       // the fake measurement container may contain NULL pointers, so we
       // skip them...
       if (0 == m) continue;
@@ -947,7 +953,7 @@ void TrackCheckerNT::fillDetTrackParametersAtMeasurements(
     // allocated for the fake measurements we created...
     if (FixedZ == type) {
       // delete the fake measurements
-      std::vector<Measurement*>::const_iterator p = measures.begin();
+      std::vector<const Measurement*>::const_iterator p = measures.begin();
       while (p != measures.end()) {
 	if (0 != *p)
 	  delete *p;
@@ -1011,6 +1017,8 @@ StatusCode TrackCheckerNT::fillHitPurEff(
   for (Tracks::const_iterator t = tracks->begin();
       (t != tracks->end()) && (nTrack < nTracks); ++t, ++nTrack) {
     Track *track = *t;
+    // 
+    LHCb::Track::MeasurementContainer measurements = track->measurements() ;
     
     if (LHCb::Track::FitStatusUnknown == track->fitStatus()) {
 	warning() << "Track with unknown fit status, skipping!" << endmsg;
@@ -1027,11 +1035,8 @@ StatusCode TrackCheckerNT::fillHitPurEff(
     // get VeloClusters and count correct and total number of clusters
     // Count number of Measurements of the different types
     {
-      std::vector<Measurement*>::const_iterator itMeas;
-      std::vector<Measurement*>::const_iterator
-	      endMeas = track->measurements().end();
-      for (itMeas = track->measurements().begin();
-		      itMeas != endMeas; ++itMeas) {
+      for(LHCb::Track::MeasurementContainer::const_iterator itMeas = measurements.begin() ;
+	  itMeas != measurements.end(); ++itMeas) {
 	if (      (*itMeas)->type() == Measurement::VeloPhi ) { ++nTotalVelo; }
 	else if ( (*itMeas)->type() == Measurement::VeloR )   { ++nTotalVelo; }
 	else if ( (*itMeas)->type() == Measurement::TT )      { ++nTotalTT;   }
@@ -1054,15 +1059,15 @@ StatusCode TrackCheckerNT::fillHitPurEff(
       while ( 0 != veloCluster ) {
         bool found = false;
 	++nMCTotalVelo;
-	std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
-	std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+	LHCb::Track::MeasurementContainer::const_iterator iMeas   = measurements.begin();
+	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::VeloR ) {
-	    VeloRMeasurement* meas = dynamic_cast<VeloRMeasurement*>( *iMeas );
+	    const VeloRMeasurement* meas = dynamic_cast<const VeloRMeasurement*>( *iMeas );
 	    found = ( veloCluster == meas->cluster() );
 	  }
 	  if ( (*iMeas)->type() == Measurement::VeloPhi ) {
-	    VeloPhiMeasurement* meas = dynamic_cast<VeloPhiMeasurement*>( *iMeas );
+	    const VeloPhiMeasurement* meas = dynamic_cast<const VeloPhiMeasurement*>( *iMeas );
 	    found = ( veloCluster == meas->cluster() );
 	  }
 	  ++iMeas;
@@ -1089,11 +1094,11 @@ StatusCode TrackCheckerNT::fillHitPurEff(
       while ( 0 != ttCluster ) {
         bool found = false;
 	++nMCTotalTT;
-	std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
-	std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+	LHCb::Track::MeasurementContainer::const_iterator iMeas   = measurements.begin();
+	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::TT ) {
-	    STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
+	    const STMeasurement* meas = dynamic_cast<const STMeasurement*>( *iMeas );
 	    found = ( ttCluster == meas->cluster() );
 	  }
 	  ++iMeas;
@@ -1107,11 +1112,11 @@ StatusCode TrackCheckerNT::fillHitPurEff(
       while ( 0 != itCluster ) {
         bool found = false;
 	++nMCTotalIT;
-	std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
-	std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+	LHCb::Track::MeasurementContainer::const_iterator iMeas   = measurements.begin();
+	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::IT ) {
-	    STMeasurement* meas = dynamic_cast<STMeasurement*>( *iMeas );
+	    const STMeasurement* meas = dynamic_cast<const STMeasurement*>( *iMeas );
 	    found = ( itCluster == meas->cluster() );
 	  }
 	  ++iMeas;
@@ -1131,11 +1136,11 @@ StatusCode TrackCheckerNT::fillHitPurEff(
       while ( 0 != otTime ) {
         bool found = false;
 	++nMCTotalOT;
-	std::vector<Measurement*>::const_iterator iMeas   = track->measurements().begin();
-	std::vector<Measurement*>::const_iterator endMeas = track->measurements().end();
+	LHCb::Track::MeasurementContainer::const_iterator iMeas   = measurements.begin();
+	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::OT ) {
-	    OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
+	    const OTMeasurement* meas = dynamic_cast<const OTMeasurement*>( *iMeas );
 	    found = ( otTime->channel() == meas->channel() );
 	  }
 	  ++iMeas;

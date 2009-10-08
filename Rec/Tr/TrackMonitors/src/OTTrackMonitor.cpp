@@ -122,8 +122,9 @@ StatusCode OTTrackMonitor::execute()
     if( (*itr)->fitStatus() == LHCb::Track::Fitted && (*itr)->nDoF()>1 ) {
       double sumtimeresidual(0) ;
       double sumn(0) ;
-      for( LHCb::Track::NodeContainer::const_iterator inode = (*itr)->nodes().begin() ;
-	   inode != (*itr)->nodes().end(); ++inode ) 
+      LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
+      for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+	   inode != nodes.end(); ++inode ) 
 	if( ( (*inode)->type() == LHCb::Node::HitOnTrack ||
 	      (*inode)->type() == LHCb::Node::Outlier )
 	    && (*inode)->measurement().type() == LHCb::Measurement::OT ) { 

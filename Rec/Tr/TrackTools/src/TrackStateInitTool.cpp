@@ -45,9 +45,8 @@ StatusCode TrackStateInitTool::fit( LHCb::Track& track, bool clearStates ) const
 
   unsigned int flags = track.flags();
 
-  track.clearNodes() ;
-  track.clearMeasurements() ;
   track.clearStates() ;
+  track.setFitResult(0) ;
 
   // create velo states
   if(savedType <= LHCb::Track::Upstream){

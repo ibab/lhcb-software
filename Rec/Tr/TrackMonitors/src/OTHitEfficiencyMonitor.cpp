@@ -196,13 +196,13 @@ StatusCode OTHitEfficiencyMonitor::execute()
 	  (*itr)->chi2PerDoF() < m_maxChi2PerDoF ) {
 	// count the number
 	size_t sumn(0) ;
-      for( LHCb::Track::NodeContainer::const_iterator inode = (*itr)->nodes().begin() ;
-	   inode != (*itr)->nodes().end(); ++inode ) 
-	if( (*inode)->type() == LHCb::Node::HitOnTrack
-	    && (*inode)->measurement().type() == LHCb::Measurement::OT ) ++sumn ;
-      
-      if( sumn >= m_minOTHitsPerTrack ) 
-	fillEfficiency(**itr) ;
+	LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
+	for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+	     inode != nodes.end(); ++inode ) 
+	  if( (*inode)->type() == LHCb::Node::HitOnTrack
+	      && (*inode)->measurement().type() == LHCb::Measurement::OT ) ++sumn ;
+	if( sumn >= m_minOTHitsPerTrack ) 
+	  fillEfficiency(**itr) ;
       }
   }
   return sc ;
@@ -329,8 +329,10 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
   typedef std::pair<const LHCb::Node*, const LHCb::Node*> MonoLayerNodes ;
   typedef std::map< const DeOTModule*, MonoLayerNodes > ModulesOnTrack ;
   ModulesOnTrack modulesOnTrack ;
-  for( LHCb::Track::NodeContainer::const_iterator inode = track.nodes().begin() ;
-       inode != track.nodes().end(); ++inode ) 
+  
+  LHCb::Track::ConstNodeRange nodes = track.nodes() ;
+  for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
+       inode != nodes.end(); ++inode ) 
     if( (*inode)->type() == LHCb::Node::HitOnTrack &&
 	(*inode)->measurement().type() == LHCb::Measurement::OT ) { 
       const LHCb::OTMeasurement* meas =

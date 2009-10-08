@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.9 2009-01-13 11:00:36 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.10 2009-10-08 14:47:37 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -80,8 +80,8 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
                                            State& state )
 {
   // Check if there are nodes on the track
-  typedef std::vector<Node*> NodeContainer ;
-  const NodeContainer& nodes = track.nodes();
+  typedef LHCb::Track::ConstNodeRange NodeContainer ;
+  NodeContainer nodes = track.nodes();
   if ( nodes.empty() ) return Error("No nodes on track found.");
 
   // If we are between the first and last node with a measurement, we
@@ -125,8 +125,8 @@ StatusCode TrackInterpolator::interpolate( const Track& track,
   } 
   
   // so, we interpolate. Get the nodes:
-  const LHCb::FitNode* nodeNext   = dynamic_cast<LHCb::FitNode*>(*nextnode) ;
-  const LHCb::FitNode* nodePrev = dynamic_cast<LHCb::FitNode*>(*prevnode) ;
+  const LHCb::FitNode* nodeNext   = dynamic_cast<const LHCb::FitNode*>(*nextnode) ;
+  const LHCb::FitNode* nodePrev = dynamic_cast<const LHCb::FitNode*>(*prevnode) ;
   
   if( (z-nodeNext->z()) * (z-nodePrev->z()) > 0 ) {
     error() << "logic failure in locating nodes: " 

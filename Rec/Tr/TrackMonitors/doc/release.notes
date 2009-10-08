@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
 ! 2009-09-26 Wouter Hulsbergen
  - added OTEfficiencyMonitor
 

@@ -1,4 +1,4 @@
-// $Id: TrackMatchChecker.cpp,v 1.6 2008-02-08 08:13:01 cattanem Exp $
+// $Id: TrackMatchChecker.cpp,v 1.7 2009-10-08 14:49:57 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -17,6 +17,7 @@
 // from TrackFitEvent
 #include "Event/STMeasurement.h"
 #include "Event/STCluster.h"
+#include "Event/Node.h"
 
 // local
 #include "TrackMatchChecker.h"
@@ -423,13 +424,12 @@ StatusCode TrackMatchChecker::monitor( )
 
     // get last measurement from velo
     double lastVeloZPos = 0.0;
-    if ( veloTrack->nMeasurements() > 0 ) {
-      std::vector<Measurement*> meass = veloTrack->measurements();
-      std::vector<Measurement*>::const_reverse_iterator lastMeas = 
-        meass.rbegin();
-      lastVeloZPos = (*lastMeas)->z();
-    }
-
+    LHCb::Track::ConstNodeRange nodes = veloTrack->nodes() ;
+    for( LHCb::Track::ConstNodeRange::iterator inode = nodes.begin() ;
+	 inode != nodes.end(); ++inode ) 
+      if( (*inode)->hasMeasurement() && (*inode)->z() > lastVeloZPos )
+	lastVeloZPos = (*inode)->z() ;
+    
     // retrieve MCParticle Velo
     m_veloMCMatch.push_back( true );
     MCParticle* mcpartVelo = veloLink.first( veloTrack );
@@ -488,8 +488,9 @@ StatusCode TrackMatchChecker::monitor( )
     // loop over TT clusters
     int purity = 0;
     int nClus = 0;
-    std::vector<Measurement*> allMeas = (*iMatch)->measurements();
-    std::vector<Measurement*>::const_iterator iMeas = allMeas.begin();
+
+    LHCb::Track::MeasurementContainer allMeas = (*iMatch)->measurements() ;
+    LHCb::Track::MeasurementContainer::const_iterator iMeas = allMeas.begin();
     while ( iMeas != allMeas.end() ) {
       if ( (*iMeas)->checkType( Measurement::TT ) ) {
         const STMeasurement* ttMeas= dynamic_cast<const STMeasurement*>(*iMeas);

@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.4 2009-07-20 11:17:31 mneedham Exp $
+// $Id: TTTrackMonitor.cpp,v 1.5 2009-10-08 14:48:55 wouter Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -145,21 +145,23 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
 
 
   // Loop over the nodes to get the hits variables
-  std::vector<LHCb::Node*>::const_iterator iNodes = track.nodes().begin();
+  LHCb::Track::ConstNodeRange nodes = track.nodes() ;
+
+  LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
   std::vector<const LHCb::STMeasurement*> measVector; measVector.reserve(24);
 
   unsigned int nHigh = 0u;
-  for ( ; iNodes != track.nodes().end(); ++iNodes ) {
+  for ( ; iNodes != nodes.end(); ++iNodes ) {
 
       // Only loop on hits with measurement that is IT type
-      LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+      const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
 
       if ( fNode->hasMeasurement() == false ||  fNode->measurement().type() != LHCb::Measurement::TT) continue;
     
       // unbiased residuals and biased residuals
       LHCb::LHCbID nodeID = fNode->measurement().lhcbID();
       STChannelID chan = fNode->measurement().lhcbID().stID();
-      STMeasurement* hit = dynamic_cast<STMeasurement*>(&fNode->measurement());
+      const STMeasurement* hit = dynamic_cast<const STMeasurement*>(&fNode->measurement());
       plot(fNode->unbiasedResidual(),"unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),"biasedResidual","biasedResidual",  -2., 2., 200 );
 

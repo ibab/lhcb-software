@@ -5,7 +5,7 @@
  * Implementation file for tool TrackVelodEdxCharge
  *
  * CVS Log :-
- * $Id: TrackVelodEdxCharge.cpp,v 1.5 2009-03-02 15:15:16 dhcroft Exp $
+ * $Id: TrackVelodEdxCharge.cpp,v 1.6 2009-10-08 14:47:37 wouter Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 18/07/2006
@@ -64,7 +64,8 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
     debug() << "Trying Track " << track->key() << endreq;
 
   // get the measurements for the track
-  const TkMeas & measurements = track->measurements();
+  typedef LHCb::Track::MeasurementContainer TkMeas ;
+  const TkMeas measurements = track->measurements();
   if ( measurements.empty() ) return Warning( "Track has no Measurements" );
 
   if ( msgLevel(MSG::DEBUG) )
@@ -80,7 +81,7 @@ StatusCode TrackVelodEdxCharge::nTracks( const LHCb::Track * track,
   
     // is this a velo phi measurement
     if       ( const VeloMeasurement* mVelo =
-               dynamic_cast<VeloMeasurement*>(*iM) )
+               dynamic_cast<const VeloMeasurement*>(*iM) )
     {
        veloMeas.push_back(mVelo);
     }
