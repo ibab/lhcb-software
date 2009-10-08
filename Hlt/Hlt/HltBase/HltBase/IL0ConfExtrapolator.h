@@ -1,4 +1,4 @@
-// $Id: IL0ConfExtrapolator.h,v 1.1 2008-03-27 10:32:19 albrecht Exp $
+// $Id: IL0ConfExtrapolator.h,v 1.2 2009-10-08 21:02:52 graven Exp $
 #ifndef IL0CONFEXTRAPOLATOR_H 
 #define IL0CONFEXTRAPOLATOR_H 1
 
@@ -72,7 +72,7 @@ public:
   //provides the Calo region for a given position
   //0: ECal IP, 1: ECal MP, 2: ECal OP
   //3: HCal IP, 4: HCal OP
-  virtual int getCaloRegion( float stateX, float stateY, float stateZ ) const = 0;
+  virtual int getCaloRegion( double stateX, double stateY, double stateZ ) const = 0;
 protected:
  
 private:
