@@ -1,4 +1,4 @@
-//$Id: MuonDigitization.cpp,v 1.50 2009-04-09 09:56:15 asatta Exp $
+//$Id: MuonDigitization.cpp,v 1.51 2009-10-08 16:13:40 asatta Exp $
 
 #include <algorithm>
 #include <vector>
@@ -8,7 +8,7 @@
 
 #include "MuonDet/MuonBasicGeometry.h"
 #include "MuonDet/DeMuonDetector.h"
-#include "MuonDet/DeMuonGasGap.h"
+#include "DetDesc/IGeometryInfo.h"
 
 #include "MuonDigitization.h"
 #include "MuonChamberResponse.h" 
@@ -284,64 +284,67 @@ StatusCode MuonDigitization::addChamberNoise(){
             int gap=(int)((m_flatDist()*gapPerChamber)); 
             int gapMax=m_muonDetector->gapsInRegion(k,s);
             if(gap>gapMax-1)gap=gapMax-1;
-            IDetectorElement::IDEContainer::iterator itGap;
-            int countGap=0;
-            DeMuonGasGap*  p_Gap=NULL;
-            for(itGap=(p_chamber)->childBegin(); 
-                itGap<(p_chamber)->childEnd(); 
-                itGap++){
-              // debug()<<(*itGap)->name()<<endmsg;
-              
-              if(countGap==gap){
-                p_Gap=dynamic_cast<DeMuonGasGap*>(*((*itGap)->childBegin()));
-                float zhalfgap= 1.0;
-                
-                if(p_Gap!=NULL){
-                  const ISolid* gapSolid=(p_Gap->geometry())->lvolume()
-                    ->solid();
-                  const SolidBox* gapBox = 
-                    dynamic_cast<const SolidBox *>(gapSolid);
-                  zhalfgap= gapBox->zHalfLength() ; 
-                }
-                
-                //then x&y	
-                double x = m_flatDist()* 
-                m_muonDetector->getSensAreaX(k,s);
-                double y = m_flatDist()*  
-                  m_muonDetector->getSensAreaY(k,s);
-                double time = m_flatDist()*m_BXTime;	
-                LHCb::MCHit* pHit = new LHCb::MCHit();
-                //traslate xyz e local to global..
-                
-                Gaudi::XYZPoint point1=(p_Gap->geometry())->
-                  toGlobal(Gaudi::XYZPoint(x,y,-1*zhalfgap+0.1));
-                Gaudi::XYZPoint point2=(p_Gap->geometry())->
-                  toGlobal(Gaudi::XYZPoint(x,y,zhalfgap-0.1));
-                float z=(point1.z()+point2.z())/2.0F;
-                
-                //              p_chamber->
-                
-                pHit->setEntry(point1);
-                pHit->setDisplacement(point2-point1);
-                double tofOfLight=(sqrt(x*x+ y*y+z*z))/300.0;
-                pHit->setTime(time+tofOfLight);
-                Gaudi::XYZPoint hitMid=
-                  Gaudi::XYZPoint((point1.x()+point2.x())/2.0F,
-                                (point1.y()+point2.y())/2.0F,
-                                  (point1.z()+point2.z())/2.0F);
-                
-                int sen=m_muonDetector->sensitiveVolumeID(hitMid);
-                pHit->setSensDetID(sen);
-                hitsContainer->push_back(pHit);
-                if(m_verboseDebug){	
-                  info()<<"adding chamber noise hit "<<
-                    ispill<<" "<<k<<" "<<s<<numberOfNoiseHit<<endmsg;
-                }
-                continue;              
-              }            
-            countGap++;            
+            IPVolume* gasGap=(p_chamber)->getGasGap(gap);
+            IPVolume* gasGapLayer=(p_chamber)->getGasGapLayer(gap);
+
+
+            float zhalfgap= 1.0;
+            
+            //  if(p_Gap!=NULL){
+            const ISolid* gasGapSolid=gasGap->lvolume()
+              ->solid();
+            const SolidBox* gapBox = 
+                    dynamic_cast<const SolidBox *>(gasGapSolid);
+            zhalfgap= gapBox->zHalfLength() ; 
+            //}
+            
+            //then x&y	
+            double x = m_flatDist()* 
+              m_muonDetector->getSensAreaX(k,s);
+            double y = m_flatDist()*  
+              m_muonDetector->getSensAreaY(k,s);
+            double time = m_flatDist()*m_BXTime;	
+            LHCb::MCHit* pHit = new LHCb::MCHit();
+            //traslate xyz e local to global..
+            Gaudi::XYZPoint pointInLayer1=gasGap
+              ->toMother(Gaudi::XYZPoint(x,y,-1*zhalfgap+0.1));
+            Gaudi::XYZPoint pointInLayer2=gasGap
+              ->toMother(Gaudi::XYZPoint(x,y,zhalfgap-0.1));
+
+            Gaudi::XYZPoint pointInCh1=gasGapLayer
+              ->toMother(pointInLayer1);
+            Gaudi::XYZPoint pointInCh2=gasGapLayer
+              ->toMother(pointInLayer2);
+            Gaudi::XYZPoint point1=(p_chamber->geometry())->
+              toGlobal(pointInCh1);
+            Gaudi::XYZPoint point2=(p_chamber->geometry())->
+              toGlobal(pointInCh2);
+            float z=(point1.z()+point2.z())/2.0F;
+            
+            //              p_chamber->
+            
+            pHit->setEntry(point1);
+            pHit->setDisplacement(point2-point1);
+            double tofOfLight=(sqrt(x*x+ y*y+z*z))/300.0;
+            pHit->setTime(time+tofOfLight);
+            Gaudi::XYZPoint hitMid=
+              Gaudi::XYZPoint((point1.x()+point2.x())/2.0F,
+                              (point1.y()+point2.y())/2.0F,
+                              (point1.z()+point2.z())/2.0F);
+            
+            int sen=m_muonDetector->sensitiveVolumeID(hitMid);
+            pHit->setSensDetID(sen);
+            hitsContainer->push_back(pHit);
+            if(m_verboseDebug){	
+              info()<<"adding chamber noise hit "<<
+                ispill<<" "<<k<<" "<<s<<numberOfNoiseHit<<endmsg;
             }
+            //        continue;              
+            //}            
+                //countGap++;            
+                // }
           }
+          
         
           
           
