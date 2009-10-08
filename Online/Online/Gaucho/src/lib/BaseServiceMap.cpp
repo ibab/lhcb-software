@@ -465,6 +465,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
     return;
   }
 
+// check if the saveset dir exists if not make it
+//   void *dir = gSystem->OpenDirectory(saveDir.c_str());
+//     if (dir == 0) {
+//     gSystem->mkdir(dirName.c_str(),true);
+//    }
+
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
   TFile *f=0;
@@ -473,6 +479,7 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
+
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
@@ -517,7 +524,10 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
       std::string type = it->second->monObject()->typeName();
       std::vector<std::string> HistoFullName = Misc::splitString(it->second->dimInfo()->getName(), "/");  
-  
+      // check if we have the runnumber
+      
+      
+      
       if ((s_monH1F == type)||(s_monH1D == type)||(s_monH2F == type)||(s_monH2D == type)||(s_monProfile == type)) {
           TDirectory *dir=0; 
           it->second->loadMonObject();

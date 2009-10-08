@@ -474,20 +474,32 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
   m_infoFileStatus = "......this is the file name were we will save histograms...........";
   char timestr[64];
   char year[5];
+//char month[3];
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
   ::strftime(year, sizeof(year),"%Y", timeInfo);
+//::strftime(month, sizeof(month),"%m", timeInfo);  
 
 
   if (save)  {
      std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
+     //add the month to avoid too many files per year
+  //   std::string dirName = m_saveSetDir + "/" + year + "/" + month + "/" + partName + "/" + taskName;  
      void *dir = gSystem->OpenDirectory(dirName.c_str());
      if ((dir == 0) && (save)) {
      gSystem->mkdir(dirName.c_str(),true);
     }
-  
-    std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
+  //  std::string tmpfile="";
+  //add runnumber to saveset name
+  //  if (m_runNumber != 0) {
+  //      if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + m_runNumber + "-" + timestr + "-EOR.root"; 
+  //      else tmpfile = dirName + "/" + taskName + "-" + m_runNumber + "-" + timestr + ".root"; }
+  //  else { 
+  //       if (isFromEndOfRun)  tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root";
+//	 else tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
+ //     }	 
+    std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
     if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
       msg << MSG::DEBUG << "updating infofile status" << endreq;
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);

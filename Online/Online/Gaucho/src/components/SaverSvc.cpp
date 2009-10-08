@@ -67,8 +67,8 @@ StatusCode SaverSvc::initialize() {
     verifName = utgidParts[2];
     m_monitoringFarm = true;
   }
-  msg << MSG::DEBUG << "nodeName = " << m_nodeName << endreq;
-  msg << MSG::DEBUG << "verifName = " << verifName << endreq;
+//  msg << MSG::DEBUG << "nodeName = " << m_nodeName << endreq;
+//  msg << MSG::DEBUG << "verifName = " << verifName << endreq;
   
   if ((verifName != "Saver")&&(verifName != "SAVER")&&(verifName != "RecSaver")&&(verifName != "RECSAVER")) {
      msg << MSG::ERROR << "Wrong utgid format for Saver !!" << endreq;
@@ -137,12 +137,14 @@ StatusCode SaverSvc::initialize() {
   
   char timestr[64];
   char year[5];
+//char month[3];  
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
   ::strftime(year, sizeof(year),"%Y", timeInfo);
-  
- // m_file = new std::string[m_taskName.size()];
+//  ::strftime(month, sizeof(year),"%m", timeInfo);
+    
+//  m_saveDir=m_saveDir+"/"+year+"/" + month +"/"+ m_tmpPart+"/";
   m_saveDir=m_saveDir+"/"+year+"/"+m_tmpPart+"/";
   msg << MSG::DEBUG << "savedir " << m_saveDir << endreq;  
   for (it = m_taskName.begin(); it < m_taskName.end(); it++){

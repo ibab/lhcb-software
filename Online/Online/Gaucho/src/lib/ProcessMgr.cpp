@@ -179,6 +179,14 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
        }
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
+      if (serviceName.find("RunNumber") != std::string::npos) {
+      //service containing runnumber found
+      //subscribe to it and get the runnumber
+        DimInfo *runbsvc = new DimInfo(serviceName.c_str(),-1);
+	int RunNumber = runbsvc->getInt();
+        msg << MSG::INFO << "Runnumber" << RunNumber << endreq;
+	delete runbsvc;
+      }
       if (!m_monitoringFarm) {
         //here we need to check for m_partName[1] (only 1 partition at a time in EFF), not the nodename
         //if (serviceName.find("/" + m_nodeName) == std::string::npos) {
