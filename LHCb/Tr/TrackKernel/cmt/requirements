@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackKernel
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 

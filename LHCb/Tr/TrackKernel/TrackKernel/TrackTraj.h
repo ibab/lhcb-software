@@ -37,7 +37,7 @@ namespace LHCb
     TrackTraj(const LHCb::Track::StateContainer& states, const IMagneticFieldSvc* magfieldsvc=0) ;
     
     /// Constructor from a (sorted) Track::NodesContainer and (optionally) pointer to mag field service
-    TrackTraj(const LHCb::Track::NodeContainer& nodes, const IMagneticFieldSvc* magfieldsvc=0) ;
+    TrackTraj(const std::vector<Node*>& nodes, const IMagneticFieldSvc* magfieldsvc=0) ;
     
     /// Destructor
     virtual ~TrackTraj() {}    

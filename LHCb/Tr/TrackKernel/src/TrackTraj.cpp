@@ -1,5 +1,6 @@
 
 #include "Event/Node.h"
+#include "Event/TrackFitResult.h"
 #include "TrackKernel/TrackTraj.h"
 #include "GaudiKernel/IMagneticFieldSvc.h"
 #include <algorithm>
@@ -28,18 +29,21 @@ namespace LHCb
     // first add the states from the track.nodes(). make sure these
     // are ordered in increasing z.
     StateContainer statesfromnodes ;
-    statesfromnodes.reserve( track.nodes().size() ) ;
-    if(!track.nodes().empty()) {
-      if( track.nodes().front()->z() < track.nodes().back()->z() ) {
-	//nodes in right order
-	for(LHCb::Track::NodeContainer::const_iterator it = track.nodes().begin() ;
-	    it != track.nodes().end(); ++it) 
-	  statesfromnodes.push_back( &((*it)->state() )) ;
-      } else {
-	// nodes in wrong order
-	for(LHCb::Track::NodeContainer::const_reverse_iterator it = track.nodes().rbegin() ;
-	    it != track.nodes().rend(); ++it) 
-	  statesfromnodes.push_back( &((*it)->state() )) ;
+    if( track.fitResult() ) {
+      const LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes() ;
+      if( ! nodes.empty() ) {
+	statesfromnodes.reserve( nodes.size() ) ;
+	if( nodes.front()->z() < nodes.back()->z() ) {
+	  //nodes in right order
+	  for(LHCb::TrackFitResult::NodeContainer::const_iterator it = nodes.begin() ;
+	      it != nodes.end(); ++it) 
+	    statesfromnodes.push_back( &((*it)->state() )) ;
+	} else {
+	  // nodes in wrong order
+	  for(LHCb::TrackFitResult::NodeContainer::const_reverse_iterator it = nodes.rbegin() ;
+	      it != nodes.rend(); ++it) 
+	    statesfromnodes.push_back( &((*it)->state() )) ;
+	}
       }
     }
     
@@ -55,7 +59,7 @@ namespace LHCb
     init(magfieldsvc) ;
   }
   
-  TrackTraj::TrackTraj(const LHCb::Track::NodeContainer& nodes, const IMagneticFieldSvc* magfieldsvc)
+  TrackTraj::TrackTraj(const std::vector<Node*>& nodes, const IMagneticFieldSvc* magfieldsvc)
     : ZTrajectory(), m_bfield(0,0,0)
   {
     // the sorting takes a lot of time. therefore, we rely on the fact
@@ -67,12 +71,12 @@ namespace LHCb
       m_states.reserve( nodes.size() ) ;
       if( nodes.front()->z() < nodes.back()->z() ) {
 	//nodes in right order
-	for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin() ;
+	for(std::vector<Node*>::const_iterator it = nodes.begin() ;
 	    it != nodes.end(); ++it) 
 	  m_states.push_back( &((*it)->state() )) ;
       } else {
 	// nodes in wrong order
-	for(LHCb::Track::NodeContainer::const_reverse_iterator it = nodes.rbegin() ;
+	for(std::vector<Node*>::const_reverse_iterator it = nodes.rbegin() ;
 	    it != nodes.rend(); ++it) 
 	  m_states.push_back( &((*it)->state() )) ;
       }
