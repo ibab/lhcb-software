@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-10-08 - Marco Cattaneo
+ - Remove RecCheckers. Package is obsolete, MCReconstructed tool has been moved
+   to DaVinciMCTools
 
 </PRE><H1><A NAME=v7r6>2009-09-08 RecSys v7r6</A></H1><PRE>
 This version uses Gaudi v21r4 and LHCb v28r0

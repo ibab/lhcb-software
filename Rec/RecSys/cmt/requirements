@@ -1,5 +1,5 @@
 package RecSys
-version v7r6
+version v7r7
 
 branches cmt doc python
  
@@ -20,7 +20,6 @@ use MuonPIDChecker       v4r0    Muon # Erica Polycarpo, Miriam Gandelman
 use GlobalReco           v6r26   Rec  # Chris Jones
 use LumiAlgs             v2r2    Rec  # Jaap Panman
 use RecAlgs              v1r8    Rec  # Marco Cattaneo
-use RecCheckers          v1r2    Rec  # Marco Cattaneo
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
 
 # Rich
