@@ -1,4 +1,4 @@
-// $Id: TTrackAndDistCut.cpp,v 1.6 2009-04-30 13:35:14 asatta Exp $
+// $Id: TTrackAndDistCut.cpp,v 1.7 2009-10-08 21:10:33 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -111,21 +111,21 @@ double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID 
 
   State* stato=NULL;
   stato=&(track->firstState());
-  float xpoint=stato->x();
-  float ypoint=stato->y();
-  float zpoint=stato->z();
-  float xslope=stato->slopes().x()/stato->slopes().z();
-  float yslope=stato->slopes().y()/stato->slopes().z();
-  float x_M2=xpoint+xslope*(z-zpoint);
-  float y_M2=ypoint+yslope*(z-zpoint); 
+  double xpoint=stato->x();
+  double ypoint=stato->y();
+  double zpoint=stato->z();
+  double xslope=stato->slopes().x()/stato->slopes().z();
+  double yslope=stato->slopes().y()/stato->slopes().z();
+  double x_M2=xpoint+xslope*(z-zpoint);
+  double y_M2=ypoint+yslope*(z-zpoint); 
   distDLL=((x_M2-x)/dx)*((x_M2-x)/dx)+
     ((y_M2-y)/dy)*((y_M2-y)/dy);   
   debug()<<" dist M2 "<<distDLL<<" "<<x<<" "<<dx<<" "<<x_M2<<endreq;
   debug()<<" dist M2 "<<distDLL<<" "<<y<<" "<<dy<<" "<<y_M2<<endreq;
   //info()<<
   m_iPosTool-> calcTilePos(tileM3,x, dx,y, dy,z, dz);
-  float x_M3=xpoint+xslope*(z-zpoint);
-  float y_M3=ypoint+yslope*(z-zpoint);
+  double x_M3=xpoint+xslope*(z-zpoint);
+  double y_M3=ypoint+yslope*(z-zpoint);
   distDLL+=((x_M3-x)/dx)*((x_M3-x)/dx)+
     ((y_M3-y)/dy)*((y_M3-y)/dy);
 
@@ -144,8 +144,8 @@ double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID 
     return StatusCode::FAILURE;
   }
   // loop over the coords
-  float dist_tempM4=100000;
-  float dist_tempM5=100000;
+  double dist_tempM4=100000;
+  double dist_tempM5=100000;
   LHCb::MuonCoords::const_iterator iCoord;
   for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
     int region = (*iCoord)->key().region();
@@ -155,21 +155,21 @@ double  TTrackAndDistCut::calcDLL(Track* track, MuonTileID & tileM4, MuonTileID 
     debug()<<station<<" "<<region<<endreq;
 
     m_iPosTool-> calcTilePos( (*iCoord)->key(),x, dx,y, dy,z, dz);
-    float dist_temp=0;
-    float x_Mi=xpoint+xslope*(z-zpoint);
-    float y_Mi=ypoint+yslope*(z-zpoint);
+    double dist_temp=0;
+    double x_Mi=xpoint+xslope*(z-zpoint);
+    double y_Mi=ypoint+yslope*(z-zpoint);
     dist_temp=((x_Mi-x)/dx)*((x_Mi-x)/dx)+
       ((y_Mi-y)/dy)*((y_Mi-y)/dy);
    
     if(station==3){
-      if(float(dist_temp)<float(dist_tempM4)){
+      if(double(dist_temp)<double(dist_tempM4)){
          dist_tempM4=dist_temp;
          tileM4 = (*iCoord)->key();
       }
     }
 
     if(station==4){
-      if(float(dist_temp)<float(dist_tempM5)){
+      if(double(dist_temp)<double(dist_tempM5)){
          dist_tempM5=dist_temp;
          tileM5 = (*iCoord)->key();
       }
