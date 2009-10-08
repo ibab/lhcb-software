@@ -1,4 +1,4 @@
-// $Id: HltMuonRefine.cpp,v 1.10 2009-04-29 14:18:11 asatta Exp $
+// $Id: HltMuonRefine.cpp,v 1.11 2009-10-08 19:17:55 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -114,14 +114,14 @@ StatusCode HltMuonRefine::execute() {
   double momentum;
   double dx,dy,dz;
   
-  Tracks::const_iterator pItr;
 
   int nRemoved = 0;
   MuonTileID tilemu;
   std::vector<L0MuonCandidate*>::const_iterator itL0Mu;
 
   
-  for ( pItr = m_selections.input<1>()->begin(); m_selections.input<1>()->end() != pItr; 
+  for ( Tracks::const_iterator pItr = m_selections.input<1>()->begin(); 
+        m_selections.input<1>()->end() != pItr; 
         pItr++ ) { 
     Track* thisTrack = (*pItr);
     if(thisTrack->checkFlag( Track::Invalid ))continue;   
