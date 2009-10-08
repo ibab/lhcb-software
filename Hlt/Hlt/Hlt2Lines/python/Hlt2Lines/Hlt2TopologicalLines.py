@@ -83,8 +83,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                                , 'Hlt2TopoTF2BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF3BodyCharmWideMass' : 0.05
                                                , 'Hlt2TopoTF4BodyCharmWideMass' : 0.05
-                                               , 'Hlt2B2DX3BodyNoKs' : 0.01
-                                               , 'Hlt2B2DX4BodyNoKs' : 0.01
                                               }
                 , 'Postscale'               : {'Hlt2Topo2BodySA' : 0.02
                                                , 'Hlt2Topo3BodySA' : 0.001
@@ -121,10 +119,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2TopoTF4BodyCharmSignal'   : True
                                    , 'Hlt2TopoTF4BodyCharmWideMass' : True
                                    # DX lines.  Here temporarily.
-                                   , 'Hlt2B2DX3BodyKsDD'           : True
-                                   , 'Hlt2B2DX4BodyKsDD'           : False
-                                   , 'Hlt2B2DX3BodyNoKs'           : True
-                                   , 'Hlt2B2DX4BodyNoKs'           : False
                                    }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : {'Hlt2Topo2BodySADecision'         : 50700
@@ -152,13 +146,8 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                    , 'Hlt2Topo4BodyCharmSADecision'   : 50870
                                    , 'Hlt2TopoTF4BodyCharmSignalDecision' : 50950
                                    , 'Hlt2TopoTF4BodyCharmWideMassDecision' : 50960
-                                   # DX lines.  Here temporarily.
-                                   , 'Hlt2B2DX3BodyKsDDDecision'     : 62000
-                                   , 'Hlt2B2DX4BodyKsDDDecision'     : 62010
-                                   , 'Hlt2B2DX3BodyNoKsDecision'     : 62020
-                                   , 'Hlt2B2DX4BodyNoKsDecision'     : 62030
                                    }
-                }
+                  }
 
 
 
@@ -729,150 +718,5 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         makeLine('TopoTF4BodyCharmWideMass'
                  , algos = [ charmRobustTopo4BodySeq, charmTFTopo4BodySBSeq])
-
-
-
-        ##
-        #
-        # DX inclusive lines
-        #
-        ##
-        # Obtain the Ks -> DD
-        from Hlt2SharedParticles.V0 import KsDDFit
-
-
-        ###################################################################
-        # Function to configure a robust filter for the inclusive DX.
-        #   It lashes the new FilterDesktop to a bindMembers with its
-        #   antecedents.
-        # The argument inputSeq should be a bindMember sequences that
-        #   produces the particles to filter.
-        ###################################################################
-        def dxRobustFilter(name, inputSeq, extracode = None) :
-            codestr = "(M>2000*MeV) & (M<6000*MeV) & (BPVDVDOCA()< %(DXRobustCoplanUL)s )" % self.getProps()
-            if extracode :
-              codestr = codestr + '&' + extracode
-            filter = Hlt2Member( FilterDesktop
-                            , 'DXRobustFilter'
-                            , InputLocations = inputSeq
-                            , Code = codestr
-                               )
-            filterSeq = bindMembers(name, inputSeq + [ filter ])
-            return filterSeq
-
-
-        ###################################################################
-        # Function to configure a post-track-fit filter for the topological.
-        #   It lashes the new FilterDesktop to a bindMembers with its
-        #   antecedents.
-        # The argument inputSeq should be a bindMember sequences that
-        #   produces the particles to filter.
-        ###################################################################
-        def dxTFFilter(name, inputSeq, extracode = None) :
-            codestr = "(M>2500*MeV) & (M<6000*MeV) & (BPVTRGPOINTINGWPT< %(DXTFPointUL)s )" % self.getProps()
-            if extracode :
-              codestr = codestr + '&' + extracode
-            filter = Hlt2Member( FilterDesktop
-                            , 'DXTFFilter'
-                            , InputLocations = inputSeq
-                            , Code = codestr
-                               )
-            filterSeq = bindMembers(name, inputSeq + [ filter ])
-            return filterSeq
-
-
-
-        # Construct a sequence for the DX robust 3-body decision.
-        ###################################################################
-        dxRobust3BodySeq = dxRobustFilter('DXRobust3Body', [topo3Body])
-
-        # Construct sequences for the DX robust 4-body decision.
-        # Note that the original DX trigger had a different set of decay
-        #   descriptors that included
-        #   ["B0 -> D*(2010)+ K-","B0 -> D*(2010)+ K+"]
-        # The default 4-body construction in dx4Body currently does not.
-        ###################################################################
-
-        # CombineParticles for the 4-body combinations.
-        ###################################################################
-        dx4Body = robustCombine(  name = 'DXRobust4Body'
-                                  , inputSeq = [lclInputParticles, topo3Body ]
-                                  , decayDesc = ["B0 -> D*(2010)+ pi-","B0 -> D*(2010)+ pi+"]
-                                  , extracuts = {'CombinationCut' : '(AM>2000*MeV) & (AM<6000*MeV)'
-                                                , 'MotherCut'     : "(BPVDVDOCA()< %(DXRobustCoplanUL)s )" % self.getProps()
-                                                }
-                                  )
-
-        dxRobust4BodySeq = dxRobustFilter('DXRobust4Body', [dx4Body])
-
-
-        ###################################################################
-        # Sequences for new combinatorics with Ks candidates.
-        # DX 2-body combinations with a Ks.
-        # This replaces the shared particles DXTF2BodyKsDD
-        # Performance of this must be checked.  The original DXTF2BodyKsDD
-        #   has no doca requirement.  This will default to the
-        #   ComRobPairMaxDocaUL cut.
-        ###################################################################
-        dxTF2BodyKsDD = tfCombine(  name = 'TmpDXTF2BodyKsDD'
-                                  , inputSeq = [ lclTFInputParticles, KsDDFit ]
-                                  , decayDesc = ["K*(892)0 -> KS0 pi+","K*(892)0 -> KS0 pi-","K*(892)0 -> KS0 K+","K*(892)0 -> KS0 K-"]
-                                  )
-
-        # DX 3-body combinations with a Ks.
-        # This replaces the shared particles DXTF3BodyKsDD
-        ###################################################################
-        dxTF3BodyKsDD = tfCombine(  name = 'TmpDXTF3BodyKsDD'
-                                  , inputSeq = [ lclTFInputParticles, dxTF2BodyKsDD ]
-                                  , decayDesc = ["D*(2010)+ -> K*(892)0 pi+","D*(2010)+ -> K*(892)0 pi-","D*(2010)+ -> K*(892)0 K+","D*(2010)+ -> K*(892)0 K-"]
-                                  )
-
-
-        ###################################################################
-        # DX 4-body combinations with a Ks.
-        # In the original, the mass windows and the pointing cut were
-        #   applied in this CombineParticles.  I have implemented it here
-        #   in two stages, just for consistency among the reconstructions,
-        #   but if it is a problem, the additional cuts should be reintroduced
-        #   as a special case.
-        ###################################################################
-        dxTF4BodyKsDD = tfCombine(  name = 'TmpDXTF4BodyKsDD'
-                                  , inputSeq = [ lclTFInputParticles, dxTF3BodyKsDD ]
-                                  , decayDesc = ["B0 -> pi- D*(2010)+","B0 -> pi+ D*(2010)+","B0 -> K- D*(2010)+","B0 -> K+ D*(2010)+"]
-                                  , extracuts = { 'CombinationCut' : "(AM>2500*MeV) & (AM<6000*MeV)"
-                                                , 'MotherCut' : "(BPVTRGPOINTINGWPT< %(DXTFPointUL)s )" % self.getProps()
-                                                }
-                                 )
-
-
-        ###################################################################
-        # DX lines
-        ###################################################################
-
-        # Line for 3-body with Ks
-        ###################################################################
-        dxTF3BodyKsDDSeq = dxTFFilter('DXPostTF3BodyKsDD', [dxTF3BodyKsDD])
-        makeLine('B2DX3BodyKsDD'
-                 , algos = [ dxRobust3BodySeq, dxTF3BodyKsDDSeq ])
-
-
-        # Lines for 4-body with Ks
-        ###################################################################
-        dxTF4BodyKsDDSeq = dxTFFilter('DXPostTF4BodyKsDD', [dxTF4BodyKsDD])
-        makeLine('B2DX4BodyKsDD'
-                 , algos = [ dxRobust4BodySeq, dxTF4BodyKsDDSeq ])
-
-
-        # Line for 3-body without Ks
-        ###################################################################
-        dxTF3BodySeq = dxTFFilter('DXPostTF3Body', [topoTF3Body])
-        makeLine('B2DX3BodyNoKs'
-                 , algos = [ dxRobust3BodySeq, dxTF3BodySeq ])
-
-        # Lines for 4-body without Ks
-        ###################################################################
-        dxTF4BodySeq = dxTFFilter('DXPostTF4Body', [topoTF4Body])
-        makeLine('B2DX4BodyNoKs'
-                 , algos = [ dxRobust4BodySeq, dxTF4BodySeq ])
 
 
