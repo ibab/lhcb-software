@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.54 2009-09-19 23:52:21 tskwarni Exp $"
+__version__ = "$Id: Configuration.py,v 1.55 2009-10-08 15:35:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -17,6 +17,7 @@ class Boole(LHCbConfigurableUser):
     KnownMoniSubdets = [ "VELO", "TT", "IT", "OT", "RICH", "CALO", "MUON", "L0", "MC" ]
     KnownFilterSubdets = [ "L0", "ODIN" ]
     KnownHistOptions = ["","None","Default","Expert"]
+    KnownSpillPaths  = [ "Prev", "PrevPrev", "Next" ]
 
     ## Default main sequences
     DefaultSequence = [ "ProcessPhase/Init",
@@ -29,7 +30,7 @@ class Boole(LHCbConfigurableUser):
         "EvtMax"         : -1
        ,"SkipEvents"     : 0
        ,"UseSpillover"   : False
-       ,"SpilloverPaths" : ["Prev", "PrevPrev", "Next"]
+       ,"SpilloverPaths" : []
        ,"TAEPrev"        : 0
        ,"TAENext"        : 0
        ,"TAESubdets"     : [ "CALO", "MUON" ]
@@ -130,7 +131,8 @@ class Boole(LHCbConfigurableUser):
         ApplicationMgr().ExtSvc  += [ "ToolSvc" ]
 
         ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
-        GaudiSequencer("InitBooleSeq").Members += [ "BooleInit" ]
+        initBoole = GaudiSequencer("InitBooleSeq")
+        initBoole.Members += [ "BooleInit" ]
 
         # Better name for this would be "DiracMode"
         if self.getProp( "NoWarnings" ) :
@@ -151,12 +153,37 @@ class Boole(LHCbConfigurableUser):
         # Do not print event number at every event (done already by BooleInit)
         EventSelector().PrintFreq = -1
 
+        # Load the spillover branches, then kill those not required to prevent further access
+        spillPaths = self.getProp("SpilloverPaths")
+        killPaths  = []
+        if len( spillPaths ) == 0:
+            spillPaths = self.KnownSpillPaths
+            self.setProp("SpilloverPaths",spillPaths)
+
         if self.getProp("UseSpillover"):
-            if tae :
-                log.warning("Disabling spillover, incompatible with TAE")
+            if tae:
+                killPaths = self.KnownSpillPaths
             else:
                 self.enableSpillover()
+                # Kill any spillover paths not required
+                for spill in self.KnownSpillPaths:
+                    if spill not in spillPaths:
+                        killPaths.append( spill )
+        else:
+            # Kill all spillover paths
+            killPaths = self.KnownSpillPaths
 
+        from Configurables import EventNodeKiller, TESCheck
+        spillLoader = TESCheck("SpilloverLoader")
+        spillLoader.Inputs = spillPaths
+        spillLoader.Stop   = False # In case no spillover on input file
+        spillLoader.OutputLevel = ERROR
+        spillKiller = EventNodeKiller("SpilloverKiller")
+        spillKiller.Nodes = killPaths
+        spillHandler = GaudiSequencer("SpilloverHandler")
+        spillHandler.Members += [ spillLoader, spillKiller ]
+        spillHandler.IgnoreFilterPassed = True # In case no spillover on input file
+        initBoole.Members += [ spillHandler ]
   
         if "MUON" in initDets:
             # Muon Background
@@ -521,7 +548,7 @@ class Boole(LHCbConfigurableUser):
 
             # Set up the Digi content
             DigiConf().Writer = writerName
-            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext"])
+            self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
 
@@ -545,9 +572,8 @@ class Boole(LHCbConfigurableUser):
             importOptions("$STDOPTS/RawDataIO.opts")
             # Make sure that file will have no knowledge of other nodes
             from Configurables import EventNodeKiller
-            nodeKiller = EventNodeKiller()
+            nodeKiller = EventNodeKiller("MDFKiller")
             nodeKiller.Nodes  = [ "Rec", "Trig", "MC", "Raw", "Gen", "Link", "pSim" ]
-            nodeKiller.Nodes += self.getProp("SpilloverPaths")
             taePrev = self.getProp("TAEPrev")
             while taePrev > 0:
                 nodeKiller.Nodes += ["Prev%"%taePrev]
