@@ -1,6 +1,6 @@
 from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
-                           OTTrackMonitor)
+                           OTTrackMonitor, OTHitEfficiencyMonitor)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
                                    HistoPrint = False ):
@@ -11,5 +11,6 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq.Members.append( TrackV0Monitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( OTTrackMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( OTHitEfficiencyMonitor(HistoPrint=HistoPrint) )
     
     return seq
