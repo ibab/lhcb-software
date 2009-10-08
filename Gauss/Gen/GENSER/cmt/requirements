@@ -3,7 +3,7 @@
 # Maintainer : Patrick ROBBE, Gloria CORTI
 #============================================================================
 package GENSER
-version v5r2
+version v6r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
@@ -16,19 +16,19 @@ use GaudiPolicy  v*
 
 #-- Photos
 #============================================================================
-macro photos_native_version "215.2"
+macro photos_native_version "215.5"
 use photos v* LCG_GeneratorsInterfaces
 
 #-- LHAPDF
 #============================================================================
-macro lhapdf_native_version "5.3.1"
+macro lhapdf_native_version "5.7.1"
 use lhapdf v* LCG_GeneratorsInterfaces
 set LHAPATH $(LCG_external)/MCGenerators/lhapdf/$(lhapdf_native_version)/share/PDFsets
 
 #-- Herwig and Jimmy
 #============================================================================
-macro herwig_native_version "6.510.2"
-macro jimmy_native_version "4.31.2"
+macro herwig_native_version "6.510.3"
+macro jimmy_native_version "4.31.3"
 
 #-- Hijing
 #============================================================================
@@ -36,7 +36,7 @@ macro hijing_native_version "1.383bs.2"
 
 #-- AlpGen (until interface package exist in LCG)
 #============================================================================
-macro alpgen_native_version "2.1.2"
+macro alpgen_native_version "2.1.3d"
 macro alpgen_path  $(LCG_external)/MCGenerators/alpgen/$(alpgen_native_version)
 macro alpgen_home  $(alpgen_path)/$(LCG_system)
 macro alpgen_linkopts "-L$(alpgen_home)/lib/archive \
@@ -48,13 +48,13 @@ macro alpgen_name "alpgen"
 
 #-- Pythia 8
 #============================================================================
-macro pythia8_native_version "107"
+macro pythia8_native_version "130"
 macro_append pythia8_linkopts " -lhepmcinterface "
 
 
 #-- Pythia 6
 #============================================================================
-macro pythia6_native_version "418.2"
+macro pythia6_native_version "421.2"
 use pythia6  v* LCG_GeneratorsInterfaces -no_auto_imports
 macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
                         WIN32 " pythia6_pdfdummy.lib "
@@ -65,7 +65,8 @@ macro_remove pythia6_linkopts " -lpythia6_pdfdummy " \
 library      pythia6forgauss   pythia6/*.F
 
 apply_pattern linker_library library=pythia6forgauss
-macro_append pythia6forgauss_shlibflags "$(pythia6_home)/lib/pydata.o -lnsl -lcrypt -ldl -lg2c"
+macro_append pythia6forgauss_shlibflags "$(pythia6_home)/lib/pydata.o -lnsl -lcrypt -ldl -lg2c" \
+             target-slc5 "$(pythia6_home)/lib/pydata.o -lnsl -lcrypt -ldl"
 
 ## FIXME: Move to include of install area
 ##apply_pattern install_more_includes more=GENSER
@@ -102,6 +103,7 @@ macro_remove libraryshr_linkopts "-Wl,--no-undefined"
 #============================================================================
 public
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c" \
+      target-slc5     "-lnsl -lcrypt -ldl" \
       WIN32           "/LIBPATH:$(DFDir)\LIB DFORDLL.LIB DFPORT.LIB"
 
 
@@ -110,3 +112,5 @@ macro_prepend GENSER_linkopts " -Wl,--no-as-needed " \
 macro_append  GENSER_linkopts " -Wl,--as-needed " \
               WIN32           ""
 
+macro_remove fflags "" \
+      target-slc5   "-ff90"
