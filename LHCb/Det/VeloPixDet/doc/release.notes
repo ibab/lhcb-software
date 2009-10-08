@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Victor Coco
+ - fix in pointToChannel function in the DeVeloPix...Type in order to fix the compilation warning 'unused parameter 'fraction''. For the moment set to 0.
+
 ! 2009-10-07 - Victor Coco
  - modification of the way to identity the sensor type in DeVeloPix initialisation. Made it more general.
 

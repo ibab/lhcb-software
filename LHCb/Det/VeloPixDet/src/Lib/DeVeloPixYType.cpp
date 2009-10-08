@@ -1,4 +1,4 @@
-// $Id: DeVeloPixYType.cpp,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: DeVeloPixYType.cpp,v 1.2 2009-10-08 08:24:40 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXYTYPE_CPP 1
 //==============================================================================
@@ -122,6 +122,8 @@ StatusCode DeVeloPixYType::pointToChannel(const Gaudi::XYZPoint& point,
   std::pair <int,int> pixelPos = WhichPixel(point,ladderIndex,chipIndex);
   channel.setPixel_lp(pixelPos.first);
   channel.setPixel_hp(pixelPos.second);
+  // Set fraction to 0 but this will need to be set correctly
+  fraction = 0.;
   return StatusCode::SUCCESS;
 }
 
