@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-10-08 - Patrick Koppenburg
+ - Number.icpp : avoid triggering of data on demand service when 
+	  counting numbers	
+ - v2r6
+
 !========================== DecayTreeTuple v2r5 2009-10-01 ==================
 
 ! 2009-09-28 - Patrick Koppenburg for Aurélien Martens
