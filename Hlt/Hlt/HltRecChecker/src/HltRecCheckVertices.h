@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.h,v 1.5 2008-12-30 21:25:38 graven Exp $
+// $Id: HltRecCheckVertices.h,v 1.6 2009-10-08 19:39:00 graven Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
@@ -7,7 +7,6 @@
 #include "HltBase/HltSelectionContainer.h"
 #include "Event/MCParticle.h"
 #include "HltBase/ERelations.h"
-#include "HltBase/HltTypes.h"
 
 /** @class HltRecCheckVertices HltRecCheckVertices.h
  *  
@@ -35,13 +34,10 @@ protected:
 private:
 
   std::string m_linkName;
-  std::string m_ipType;
 
   std::string m_TESInputVerticesName;
   LHCb::RecVertices* m_TESInputVertices;
   
-  zen::bifunction<LHCb::Track,LHCb::RecVertex>* m_ipFun;
-
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
 
 

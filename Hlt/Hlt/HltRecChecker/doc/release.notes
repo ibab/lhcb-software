@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - G. Raven
+ - follow some cleanup in HltBase
+
 !========================== HltRecChecker v1r10 2009-06-03 ===================
 ! 2009-06-03 - G. Raven
  - add two (now) missing includes

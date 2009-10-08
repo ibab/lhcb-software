@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.cpp,v 1.11 2009-10-08 15:44:42 graven Exp $
+// $Id: HltRecCheckVertices.cpp,v 1.12 2009-10-08 19:39:00 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -23,12 +23,11 @@ DECLARE_ALGORITHM_FACTORY( HltRecCheckVertices );
 
 HltRecCheckVertices::HltRecCheckVertices( const std::string& name,
                                   ISvcLocator* pSvcLocator)
-  : HltAlgorithm ( name , pSvcLocator ), m_ipFun(0)
+  : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
 {
   declareProperty( "LinkName" ,    m_linkName     = "" );
   declareProperty( "TESInputVerticesName", m_TESInputVerticesName = "");
-  declareProperty( "IPType", m_ipType = "");
   m_selections.declareProperties();
 }
 
@@ -52,11 +51,6 @@ StatusCode HltRecCheckVertices::initialize() {
   m_histoDX = initializeHisto("DeltaVX",-0.2,0.2,100);
   m_histoDY = initializeHisto("DeltaVY",-0.2,0.2,100);
   m_histoDZ = initializeHisto("DeltaVZ",-1.,1.,100);
-
- //  if (m_ipType == "2DIP")      m_ipFun = new Hlt::rIP();
-//   else if (m_ipType == "3DIP") m_ipFun = new  Hlt::IP();
-//   else 
-//     error() << " please select an option IPType = 2DIP,3DIP " << endreq;
 
   return sc;
 }
@@ -83,11 +77,6 @@ void HltRecCheckVertices::relateVertices() {
     MCParticle* mcpar = link.first( track.key() );
 
     size_t index = 0;
-    // TODO: repare this JAH 22/1/08
-    //  double ip = zen::map_compare_value(track,m_TESInputVertices->begin(),
-    //                                         m_TESInputVertices->end(),
-    //                                         *m_ipFun,zen::abs_min(),index);
-    //     verbose() << " ip " << ip << " index " << index << endreq;
     RecVertex& vertex = **(m_TESInputVertices->begin()+index);
     
     if (!mcpar) continue;    
@@ -155,6 +144,5 @@ void HltRecCheckVertices::checkVertices() {
 
 
 StatusCode HltRecCheckVertices::finalize() {
-  delete m_ipFun; m_ipFun = 0;
   return HltAlgorithm::finalize();
 }

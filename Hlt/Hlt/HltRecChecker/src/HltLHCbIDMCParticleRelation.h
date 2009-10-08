@@ -1,4 +1,4 @@
-// $Id: HltLHCbIDMCParticleRelation.h,v 1.1 2007-11-20 12:51:21 hernando Exp $
+// $Id: HltLHCbIDMCParticleRelation.h,v 1.2 2009-10-08 19:39:00 graven Exp $
 #ifndef HLTLHCBIDMCPARTICLERELATION_H 
 #define HLTLHCBIDMCPARTICLERELATION_H 1
 
@@ -7,7 +7,6 @@
 #include "GaudiAlg/GaudiAlgorithm.h"
 
 // from LinkerEvent
-#include "HltBase/HltTypes.h"
 #include "Linker/LinkedTo.h"
 
 #include "Event/MCParticle.h"
