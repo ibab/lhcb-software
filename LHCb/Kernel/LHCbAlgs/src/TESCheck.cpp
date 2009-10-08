@@ -1,4 +1,4 @@
-// $Id: TESCheck.cpp,v 1.6 2009-03-17 10:53:51 cattanem Exp $
+// $Id: TESCheck.cpp,v 1.7 2009-10-08 15:21:37 cattanem Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -160,7 +160,8 @@ StatusCode TESCheck::execute()
     if ( 0 == o  )
     {
       if ( m_stop ) { return Error ( "Check failed for '" + address + "'" ) ; }
-      Warning ( "Check failed for '" + address  + "'", StatusCode::SUCCESS, 1 ).ignore() ;
+      if ( msgLevel ( MSG::WARNING ) )
+        Warning ( "Check failed for '" + address  + "'", StatusCode::SUCCESS, 1 ).ignore() ;
       setFilterPassed(false) ;
     }
     else {

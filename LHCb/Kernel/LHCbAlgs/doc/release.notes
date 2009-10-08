@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Marco Cattaneo
+ - In TESCheck, do not call Warning() if OutputLevel is greater than WARNING
+
 ! 2009-10-08 - Vanya Belyaev
  - Memory Tool:
     1. two new conunters:
