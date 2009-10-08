@@ -1,4 +1,4 @@
-// $Id: Const.h,v 1.4 2007-07-23 17:07:36 ibelyaev Exp $
+// $Id: Const.h,v 1.5 2009-10-08 17:58:20 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_CONST_H 
 #define LOKI_CONST_H 1
@@ -33,15 +33,15 @@ namespace LoKi
   // ==========================================================================
   template <class TYPE>
   struct  Const<const TYPE>
-  { typedef typename  Const<TYPE>::value const         Value ; } ;
+  { typedef typename  Const<TYPE>::Value const         Value ; } ;
   // ==========================================================================
   template <class TYPE>
   struct  Const<TYPE*>
-  { typedef typename  Const<TYPE>::value const * const Value ; } ;
+  { typedef typename  Const<TYPE>::Value const * const Value ; } ;
   // ==========================================================================
   template <class TYPE>
   struct  Const<TYPE&>
-  { typedef typename  Const<TYPE>::value const &       Value ; } ;
+  { typedef typename  Const<TYPE>::Value const &       Value ; } ;
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

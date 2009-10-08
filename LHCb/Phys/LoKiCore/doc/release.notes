@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.156 2009-09-27 15:15:00 ibelyaev Exp $ 
+! $Id: release.notes,v 1.157 2009-10-08 17:58:20 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,6 +15,13 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! 2009-10-08 - Vanya Belyaev
+
+ - HybridBase:
+   
+      add more printout for python exceptions for easier debugging
+
+ 
 ! 2009-09-27 - Vanya BELYAEV
 
  - fix small incorrectness 
@@ -24,7 +31,7 @@
  - python/LoKiCore/dcorators.py
 
     fix for the chaneg in new Reflex/PyROOT:
-      now Refelx/PyROOT renames C++ methods "CLASS::__ne__" & "CLASS::__eq__" to 
+      now Reflex/PyROOT renames C++ methods "CLASS::__ne__" & "CLASS::__eq__" to 
       Python "CLASS.__cpp_ne__" and "CLASS.__cpp_eq__" , andprovides its own 
      "__ne__" and "__eq__" 
 

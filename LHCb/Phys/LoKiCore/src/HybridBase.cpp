@@ -1,4 +1,4 @@
-// $Id: HybridBase.cpp,v 1.11 2009-06-13 08:11:05 graven Exp $
+// $Id: HybridBase.cpp,v 1.12 2009-10-08 17:58:21 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -144,6 +144,21 @@ StatusCode LoKi::Hybrid::Base::finalize  ()
  * @return status code 
  */
 // ============================================================================
+namespace 
+{
+  // ==========================================================================
+  std::string toString ( PyObject* o ) 
+  { 
+    if ( 0 == o ) { return "NULL"; }
+    PyObject* str = PyObject_Str ( o ) ;
+    std::string tmp ;
+    if ( 0 != str ) { tmp = PyString_AS_STRING (str ) ; }
+    Py_XDECREF ( str ) ;
+    return tmp ;
+  } 
+  // ==========================================================================
+}
+// ============================================================================
 StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const 
 {
   // Check the proper python environment:
@@ -180,13 +195,124 @@ StatusCode LoKi::Hybrid::Base::executeCode ( const std::string& pycode ) const
       Py_file_input  , globals  , locals ) ;
   
   bool ok = true ;
-  if ( PyErr_Occurred()        ) { PyErr_Print() ; ok = false ; }
+  if ( 0 == result )
+  {
+    ok = false ;
+    
+    PyObject* o1 = 0 ;
+    PyObject* o2 = 0 ;
+    PyObject* o3 = 0 ;
+    PyErr_Fetch              ( &o1 , &o2 , &o3 ) ;
+    PyErr_NormalizeException ( &o1 , &o2 , &o3 ) ; 
+    
+    if ( 0 != o1 ) 
+    { error () << " PyError Type      : " << toString ( o1 ) << endmsg ; }
+    if ( 0 != o2 ) 
+    { error () << " PyError Value     : " << toString ( o2 ) << endmsg ; }
+    if ( 0 != o3 ) 
+    { error () << " PyError Traceback : " << toString ( o3 ) << endmsg ; }
+    
+    PyObject* pyErr = o2 ;
+    
+    // SyntaxError 
+    if ( PyErr_GivenExceptionMatches ( o2 , PyExc_SyntaxError    ) || 
+         PyErr_GivenExceptionMatches ( o2 , PyExc_TypeError      ) ||
+         PyErr_GivenExceptionMatches ( o2 , PyExc_NameError      ) ||
+         PyErr_GivenExceptionMatches ( o2 , PyExc_IndexError     ) ||
+         PyErr_GivenExceptionMatches ( o2 , PyExc_ImportError    ) ||
+         PyErr_GivenExceptionMatches ( o2 , PyExc_AttributeError )  ) 
+    {
+      //
+      PyObject* filename = PyObject_GetAttrString  ( pyErr , "filename"            ) ;
+      PyObject* lineno   = PyObject_GetAttrString  ( pyErr , "lineno"              ) ;
+      PyObject* offset   = PyObject_GetAttrString  ( pyErr , "offset"              ) ;
+      PyObject* text     = PyObject_GetAttrString  ( pyErr , "text"                ) ;
+      PyObject* prntfal  = PyObject_GetAttrString  ( pyErr , "print_file_and_line" ) ;
+      PyObject* msg      = PyObject_GetAttrString  ( pyErr , "msg"                 ) ;
+      PyObject* message  = PyObject_GetAttrString  ( pyErr , "message"             ) ;
+      //
+      long        _offset = -1 ;
+      long        _lineno = -1 ;
+      std::string _text        ;
+      std::string _msg         ;
+      std::string _message     ;
+      
+      if ( 0 != filename ) 
+      { info () << "Filename: " << toString ( filename ) << endmsg ; }
+      if ( 0 != lineno   ) 
+      { 
+        info () << "Lineno  : " << toString ( lineno   ) << endmsg ; 
+        if ( PyInt_Check ( lineno ) ) { _lineno = PyInt_AsLong ( lineno ) ;  }
+      }
+      if ( 0 != offset   ) 
+      {
+        info () << "offset  : " << toString ( offset   ) << endmsg ; 
+        if ( PyInt_Check ( offset ) ) { _offset = PyInt_AsLong ( offset ) ;  }        
+      }
+      if ( 0 != text     ) 
+      { 
+        _text = toString ( text ) ;
+        info () << "text    : " << _text << endmsg ; 
+      }
+      if ( 0 != msg      ) 
+      { 
+        _msg  = toString ( msg ) ;
+        info () << "msg     : " << _msg  << endmsg ; 
+      }
+      if ( 0 != message  ) 
+      { 
+        _message = toString ( message ) ;
+        info () << "message : " << _message << endmsg ; 
+      }
+      if ( 0 != prntfal  ) 
+      { 
+        info () << "prntfal : " << toString( prntfal )  << endmsg ; 
+      }
+      
+      {
+        MsgStream& stream = error ()  ;
+        stream 
+          << " Python error in Code\n" ;
+        if ( 0 != pyErr  ) 
+        { stream << "Python error  : " << toString ( pyErr ) << '\n' ; }
+        if ( !_msg.empty()     ) 
+        { stream << "PyErr msg     : " << _msg               << '\n' ; }
+        if ( !_message.empty() ) 
+        { stream << "PyErr message : " << _message           << '\n' ; }
+        if ( 0 <= _lineno   ) { stream << " Line #" << _lineno << '\n'; }
+        if ( !_text.empty() ) { stream << "       " << _text          ; }
+        if ( 0 < _offset ) 
+        { stream  << "      " << std::string(_offset,' ') << '^'      ; }
+        stream<< endmsg ;
+      }
+      
+      Py_XDECREF ( message  ) ;
+      Py_XDECREF ( msg      ) ;
+      Py_XDECREF ( prntfal  ) ;
+      Py_XDECREF ( text     ) ;
+      Py_XDECREF ( offset   ) ;
+      Py_XDECREF ( lineno   ) ;
+      Py_XDECREF ( filename ) ;
+      
+      // restore for printout 
+      PyErr_Restore ( o1 , o2 , o3 ) ;
+    }
+    else
+    {
+      // restore for printout 
+      PyErr_Restore ( o1 , o2 , o3 ) ;
+    }
+    //
+    error ()  << "Native Python printout to stderr"        << endmsg ;
+    PyErr_Print   () ;
+    error ()  << "End of native Python printout to stderr" << endmsg ;
+  }
   
   if ( 0 != globals && globnew ) { Py_XDECREF( globals ) ; }
   
   if ( 0 != result             ) { Py_XDECREF ( result )      ; }
   else if ( PyErr_Occurred()   ) { PyErr_Print() ; ok = false ; }
-  else { ok = false ; }
+  else                           {                 ok = false ; }
   
   if ( !ok ) 
   {
