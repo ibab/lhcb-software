@@ -1,4 +1,4 @@
-// $Id: RawDataCnvSvc.cpp,v 1.36 2009-05-25 08:56:21 cattanem Exp $
+// $Id: RawDataCnvSvc.cpp,v 1.37 2009-10-08 15:13:12 frankb Exp $
 //  ====================================================================
 //  RawDataCnvSvc.cpp
 //  --------------------------------------------------------------------
@@ -398,18 +398,20 @@ StatusCode RawDataCnvSvc::fillObjRefs(IOpaqueAddress* pA, DataObject* pObj)  {
 		if ( sc.isSuccess() ) {
 		  unsigned int *ptr = b->begin<unsigned int>();
 		  long unsigned int clid = *ptr++, ip[2] = {*ptr++, *ptr++}, svc_typ = *ptr++;
-		  string p[2] = { std::string((char*)ptr), std::string(((char*)ptr)+1+strlen((char*)ptr))};
+		  size_t len = strlen((char*)ptr)+1;
+		  string p[2] = { std::string((char*)ptr), std::string(((char*)ptr)+len)};
+		  string raw_loc = ((char*)ptr+len+1+p[1].length();
 		  IOpaqueAddress* addr = 0;
 		  // cout << "P0:" << p[0] << " P1:" << p[1] << " IP0:" << ip[0] << " IP1:" << ip[1] << " " << svc_typ << endl;
 		  sc = m_addressCreator->createAddress(svc_typ,clid,p,ip,addr);
 		  if ( sc.isSuccess() ) {
-		    sc = m_dataMgr->registerAddress(p[1],addr);
+		    sc = m_dataMgr->registerAddress(raw_loc,addr);
 		    if ( sc.isSuccess() ) {
 		      return sc;
 		    }
-		    return error("Failed to register address to "+p[1]+" in "+p[0]);
+		    return error("Failed to register address to raw data "+p[1]+" in "+raw_loc);
 		  }
-		  return error("Failed to create address to "+p[1]+" in "+p[0]);
+		  return error("Failed to create address to raw data "+p[1]+" in "+raw_loc);
 		}
 		return error("Failed to register address to DstEvent");
 	      }
