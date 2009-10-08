@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.cpp,v 1.45 2008-12-05 19:29:09 frankb Exp $
+// $Id: RawEventHelpers.cpp,v 1.46 2009-10-08 15:13:12 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -710,10 +710,12 @@ StatusCode LHCb::encodeRawBanks(const std::vector<RawBank*>& banks, char* const 
 	if ( b->version() == DAQ_STATUS_BANK ) {
 	  continue;
 	}
-	if ( b->version() == DAQ_FILEID_BANK ) {
-	  fid = b;
-	  continue;
-	}
+      }
+    }
+    if ( b->type() == RawBank::DAQ )   {
+      if ( b->version() == DAQ_FILEID_BANK ) {
+	fid = b;
+	continue;
       }
     }
     s = b->totalSize();
