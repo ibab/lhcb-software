@@ -5,6 +5,12 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
+!=========================== LbMIB v3r6 2009-10-08 =========================
+! 2009-10-08 - Magnus LIENG
+ - Fixed SumOfWeight value
+ - Fixed Timing issue for Beam 2 sources
+   . TimeCorrSource.cpp
+
 !=========================== LbMIB v3r5 2009-09-22 =========================
 ! 2009-09-22 - Magnus LIENG
  - Fixed timing issue and added time of generation histogram

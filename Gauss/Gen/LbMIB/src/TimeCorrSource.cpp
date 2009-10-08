@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.5 2009-09-22 16:42:21 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.6 2009-10-08 21:30:33 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -360,7 +360,7 @@ StatusCode TimeCorrSource::createEnvelopes() {
   }
 
   // Set sum of weights and number of particles
-  m_evtTree->GetEntry(m_counter);
+  m_evtTree->GetEntry(m_counter-1);
   m_sumOfWeights = (double)sumOfWeights;
 
   info() << "Input file contains " << m_counter 
@@ -460,13 +460,13 @@ HepMC::FourVector TimeCorrSource::getVertex(double ekin, int pid,
   else{ dz = 0; }
 
   // Time at which LHC clock passes interface plane
-  double protonAtIntPlaneClock = m_zOrigin*sqrt(1/(1-1/pow(1+m_beamEnergy/pMass,2)))/Gaudi::Units::c_light;
+  double protonAtIntPlaneClock = m_dz*m_zOrigin*sqrt(1/(1-1/pow(1+m_beamEnergy/pMass,2)))/Gaudi::Units::c_light;
 
   // Time at which the paticle has to start from the interface plane
   double partAtIntPlaneClock = dt + protonAtIntPlaneClock;
 
   // Time at which the particle has to start. (If generation point an interface plane are not the same.)
-  double partAtGenClock = partAtIntPlaneClock + (m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz);
+  double partAtGenClock = partAtIntPlaneClock + m_dz*(m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz);
   
   const HepMC::FourVector vtx( x, y, m_zGen, partAtGenClock); 
   
