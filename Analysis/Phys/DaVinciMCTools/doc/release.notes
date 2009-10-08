@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.269 2009-08-11 13:56:09 jpalac Exp $
+! $Id: release.notes,v 1.270 2009-10-08 16:14:20 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-10-08 - Patrick Koppenburg
+ - Remove _dll file
+ - Move MCReconstructed from RecCheckers to here
+ - v9r22
 
 !========================== DaVinciMCTools v9r21 2009-08-11 =================
 

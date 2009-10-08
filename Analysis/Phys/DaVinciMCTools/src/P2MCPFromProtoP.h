@@ -1,4 +1,4 @@
-// $Id: P2MCPFromProtoP.h,v 1.1 2009-03-31 18:10:28 jpalac Exp $
+// $Id: P2MCPFromProtoP.h,v 1.2 2009-10-08 16:14:20 pkoppenb Exp $
 #ifndef P2MCPFROMPROTOP_H 
 #define P2MCPFROMPROTOP_H 1
 
@@ -12,6 +12,7 @@
 
 /** @class P2MCPFromProtoP P2MCPFromProtoP.h
  *  
+ *  ProtoParticle to MC association tool
  *
  *  @author Juan PALACIOS
  *  @date   2009-03-31
@@ -49,10 +50,7 @@ private :
   
 
 private:
-
-
-
-  Addresses m_PP2MC;
+  Addresses m_PP2MC; ///< standard addresses (without /Event)
 
   mutable Tables m_tables;
   

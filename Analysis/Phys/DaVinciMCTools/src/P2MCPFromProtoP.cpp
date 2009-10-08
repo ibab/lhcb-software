@@ -1,4 +1,4 @@
-// $Id: P2MCPFromProtoP.cpp,v 1.3 2009-06-04 14:02:19 pkoppenb Exp $
+// $Id: P2MCPFromProtoP.cpp,v 1.4 2009-10-08 16:14:20 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -32,10 +32,14 @@ P2MCPFromProtoP::P2MCPFromProtoP( const std::string& type,
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltCharged ) ;
   m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ) ;
+
+  declareProperty("Locations",m_PP2MC,"More protoparticle locations (without /Event)");
 }
 //=============================================================================
 StatusCode P2MCPFromProtoP::initialize() {
   StatusCode sc = Particle2MCAssociatorBase::initialize();
+  debug() << "Will look into " << m_PP2MC << endmsg ;
+  
   if (sc.isFailure()) return sc;
   return sc;
 }
