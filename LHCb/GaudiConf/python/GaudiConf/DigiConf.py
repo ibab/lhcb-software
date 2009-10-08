@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.2 2009-04-03 15:01:40 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.3 2009-10-08 15:20:52 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -25,6 +25,7 @@ class DigiConf(ConfigurableUser):
        }
 
     KnownDigiTypes = ['Minimal','Default','Extended']
+    KnownSpillPaths= [ "Prev", "PrevPrev", "Next" ]
 
     def _doWrite( self ):
         """
@@ -39,13 +40,12 @@ class DigiConf(ConfigurableUser):
             raise TypeError( "Unknown DIGI type '%s'"%dType )
 
         items    = []
-        optItems = []
-        self._defineOutputData( dType, items, optItems )
+        self._defineOutputData( dType, items )
         
-        self._doWritePOOL( dType, items, optItems )
+        self._doWritePOOL( dType, items )
             
 
-    def _defineOutputData( self, dType, items, optItems ):
+    def _defineOutputData( self, dType, items ):
         """
         Define content of the output dataset
         """
@@ -99,9 +99,10 @@ class DigiConf(ConfigurableUser):
                 , "/Event/Link/Raw/IT/Clusters2MCHits#1"
                 , "/Event/Link/Raw/OT/Times2MCHits#1" ]
 
-            # Spillover event structure, copied from .sim if present
+            # Spillover event structure, copied from .sim if spillover enabled
             for spill in self.getProp("SpilloverPaths"):
-                optItems += [ "/Event/%s/MC/Header#1"%spill ]
+                items += [ "/Event/%s/MC/Header#1"%spill ]
+                items += [ "/Event/%s/Gen/Header#1"%spill ]
 
             # Add TAE RawEvents when enabled
             taePrev = self.getProp("TAEPrev")
@@ -129,7 +130,7 @@ class DigiConf(ConfigurableUser):
                 , "/Event/MC/Muon/Hits#1" ]
             
 
-    def _doWritePOOL( self, dType, items, optItems ):
+    def _doWritePOOL( self, dType, items ):
         """
         Write a file in POOL format
         """
@@ -137,9 +138,7 @@ class DigiConf(ConfigurableUser):
         ApplicationMgr().OutStream.insert( 0, writer )
         writer.Preload = False
         writer.ItemList += items
-        writer.OptItemList += optItems
         log.info( "%s.ItemList=%s"%(self.getProp("Writer"),items) )
-        log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),optItems) )
 
         # In Minimal case, need to kill some nodes
         if dType == "Minimal":
@@ -148,7 +147,7 @@ class DigiConf(ConfigurableUser):
             ApplicationMgr().OutStream.insert( 0, nodeKiller )
             nodeKiller.Nodes += [ "Link", "pSim" ]
             nodeKiller.Nodes += [ "MC/Velo", "MC/PuVeto", "MC/TT", "MC/IT", "MC/OT", "MC/Rich", "MC/Prs", "MC/Spd", "MC/Ecal", "MC/Hcal", "MC/Muon" ]
-            nodeKiller.Nodes += self.getProp("SpilloverPaths")
+            nodeKiller.Nodes += self.KnownSpillPaths
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOn()

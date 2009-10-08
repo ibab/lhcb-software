@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.169 2009-10-06 15:49:13 cattanem Exp $
+! $Id: release.notes,v 1.170 2009-10-08 15:20:52 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-10-08 - Marco Cattaneo
+ - In DigiConf.py:
+   . Make writing of spillover headers compulsory if SpilloverPaths have been set
+   . When saving spillover, save also spillover Gen headers (previously only saved MC)
+   . Kill all known Spillover nodes when saving "Minimal" format
 
 ! 2009-10-06 - Marco Cattaneo
  - In DstConf.py, do not set up DataOnDemand unpacking of Muon tracks if
