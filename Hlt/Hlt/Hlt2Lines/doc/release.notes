@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.60 2009-09-24 11:05:37 jpalac Exp $
+$Id: release.notes,v 1.61 2009-10-08 09:57:59 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-10-08 - Jacopo Nardulli
+ - New version of the Hlt2B2DX lines
+   Removed the B2DX lines from the topological
 
 !========================== Hlt2Lines v1r7 2009-09-24 ===================
 
