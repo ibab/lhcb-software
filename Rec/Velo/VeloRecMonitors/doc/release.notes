@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Kurt Rinnert
+ - all histograms and profiles in VeloTrackMonitor are now booked in
+   initialize()
+
 ! 2009-10-08 - Wouter Hulsbergen
  - adapted to change in LHCb::Track
 

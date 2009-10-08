@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.23 2009-10-08 15:05:16 wouter Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.24 2009-10-08 17:18:24 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -116,6 +116,66 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
     }
   }
 
+  //book profile for sensors vs unbiasedResiduals
+  const GaudiAlg::HistoID unsensors = "Sensors_vs_UnbiasedResiduals" ; 
+  m_prof_unsensors = bookProfile1D (unsensors, "Sensors vs UnbiasedResiduals" , -0.5, 139.5, 140) ;
+
+  //book profile for momentum of +ve tracks vs biasedResiduals
+  const GaudiAlg::HistoID pos_unmomentum = "PosMomentum_vs_UnBiasedResiduals" ; 
+  m_prof_pos_mom_unres = bookProfile1D (pos_unmomentum, "PosTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
+
+  //book profile for momentum of -ve tracks vs biasedResiduals 
+  const GaudiAlg::HistoID neg_unmomentum = "NegMomentum_vs_UnBiasedResiduals" ; 
+  m_prof_neg_mom_unres = bookProfile1D (neg_unmomentum, "NegTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
+  
+  //book profile for sensors vs biasedResiduals
+  const GaudiAlg::HistoID sensors = "Sensors_vs_BiasedResiduals" ; 
+  m_prof_sensors = bookProfile1D (sensors, "Sensors vs BiasedResiduals" , -0.5, 139.5, 140) ;
+      
+  //book profile for momentum of +ve tracks vs biasedResiduals
+  const GaudiAlg::HistoID pos_momentum = "PosMomentum_vs_BiasedResiduals" ; 
+  m_prof_pos_mom_res = bookProfile1D (pos_momentum, "PosTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
+
+  //book profile for momentum of -ve tracks vs biasedResiduals 
+  const GaudiAlg::HistoID neg_momentum = "NegMomentum_vs_BiasedResiduals" ; 
+  m_prof_neg_mom_res = bookProfile1D (neg_momentum, "NegTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
+  
+  //book profile for polarAngle vs RClusters
+  const GaudiAlg::HistoID thetaR = "RClusters_per_Track_vs_Theta" ; 
+  m_prof_thetaR = bookProfile1D (thetaR, "r clusters vs #theta (degree) " , -0.5, 30.5, 31) ;
+  
+  //book profile for polarAngle vs TotClusters
+  const GaudiAlg::HistoID thetaTot = "TotClusters_per_Track_vs_Theta" ; 
+  m_prof_thetaTot = bookProfile1D (thetaTot, "Number of Velo measurements vs #theta (degree)" , -0.5, 30.5, 31) ;
+
+  //book profile for Pseudoefficiency_sensor vs sensor
+  const GaudiAlg::HistoID pseudoEffsens = "Pseudoefficiency_per_sensor_vs_sensorID";
+  m_prof_pseudoEffsens = bookProfile1D (pseudoEffsens, "Pseudoefficiency vs sensorID",-0.5, 110.5, 111);
+
+  if ( m_xPlots) {
+    m_track_theta = book1D("Track_Theta", "#theta (degree)", -0.5, 50.5, 51);
+    m_track_phi = book1D("Track_Phi", "Azimuth #phi (degree)", -200., 200., 100);
+  }
+  m_track_eta = book1D("Track_Eta", "PseudoRapidity", 0.95, 6.05, 51);
+  m_track_adcsum = book1D("Track_adcsum", "adcsum", 0 ,100 , 100);
+  m_track_radc = book1D("Track_radc", "ADC for r clusters associated to a track", 0 ,100 , 100);
+  m_track_phiadc = book1D("Track_phiadc", "ADC for #phi clusters associated to a track", 0 ,100 , 100);
+  m_track_pseudoeff = book1D("Track_pseudoEfficiency", "PseudoEfficiency", -0.05, 1.55, 16);
+  m_track_pseudoeff_int = book1D("Track_pseudoEfficiencyByInterp", "PseudoEfficiency by Interpolation", -0.05, 1.55, 16);
+  m_used_sensors = book1D("UsedSensors","Number of times a sensor was used in the tracking vs Sensors",-0.5, 110.5, 111);
+  m_phi_diff = book1D("PhiDiff", "PhiDiff", -30., 30., 100);
+  m_track_rcoord = book1D("RCoord", "R coordinate(mm)", 0, 50, 100 );
+  m_half_phi_a = book1D( "HalfPhiCoordA", "Cluster #phi coordinate (degree) in half frame A", -95 , 95, 100 );
+  m_half_phi_c = book1D( "HalfPhiCoordC", "Cluster #phi coordinate (degree) in half frame C", -95 , 95, 100 );
+  m_nmeasure = book1D( "NMeasurements", "Number of clusters associated to a track", 0, 45, 45 );
+  m_nposmeas = book1D("NPosMeasurements", "Number of clusters associated to a pos. track", 0, 100, 100 );
+  m_nnegmeas = book1D("NNegMeasurements", "Number of clusters associated to a neg. track", 0, 100, 100 );
+  m_mod_mismatch = book1D("ModuleMismatch","Tracks with one used sensor from a module vs Module number" ,-0.5, 110.5, 111);
+  m_nrclus = book1D( "# R clusters", "Number of r clusters per event", 0., 2000, 400 );
+  m_nrphiclus = book1D( "# R+Phi clusters", "Number of r and #phi clusters per event", 0., 2000, 400 );
+  m_xy_hitmap = book2D("XY_HitMap", "X(mm) vs Y(mm) hitmap", -75, 75, 100, -45, 45, 100);
+  m_zx_hitmap = book2D("ZX_HitMap", "Z(mm) vs X(mm) hitmap", -200, 800, 500, -75, 75, 100);
+
   m_binary = sqrt( 12. );
 
   return StatusCode::SUCCESS;
@@ -222,44 +282,12 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
   //Number of R, Phi and total clusters in tracks per Event
   unsigned int nRClusEvent (0), nPhiClusEvent (0), nSumClusEvent (0);
  
-  //book profile for sensors vs biasedResiduals
-  const GaudiAlg::HistoID sensors = "Sensors_vs_BiasedResiduals" ; 
-  AIDA::IProfile1D* prof_sensors = bookProfile1D
-    (sensors, "Sensors vs BiasedResiduals" , -0.5, 139.5, 140) ;
-  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
-
-      
-  //book profile for momentum of +ve tracks vs biasedResiduals
-  const GaudiAlg::HistoID pos_momentum = "PosMomentum_vs_BiasedResiduals" ; 
-  AIDA::IProfile1D* prof_pos_mom_res = bookProfile1D
-    (pos_momentum, "PosTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
-
-  //book profile for momentum of -ve tracks vs biasedResiduals 
-  const GaudiAlg::HistoID neg_momentum = "NegMomentum_vs_BiasedResiduals" ; 
-  AIDA::IProfile1D* prof_neg_mom_res = bookProfile1D
-    (neg_momentum, "NegTracksMomentum(GeV) vs BiasedResiduals" , -0.5, 100.5, 20) ;
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
-  
-  
-  //book profile for polarAngle vs RClusters
-  const GaudiAlg::HistoID thetaR = "RClusters_per_Track_vs_Theta" ; 
-  AIDA::IProfile1D* prof_thetaR = bookProfile1D
-    (thetaR, "r clusters vs #theta (degree) " , -0.5, 30.5, 31) ;
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_thetaR -> reset() ; } // RESET AFTER CERTAIN EVENTS
-  
-  //book profile for polarAngle vs TotClusters
-  const GaudiAlg::HistoID thetaTot = "TotClusters_per_Track_vs_Theta" ; 
-  AIDA::IProfile1D* prof_thetaTot = bookProfile1D
-    (thetaTot, "Number of Velo measurements vs #theta (degree)" , -0.5, 30.5, 31) ;
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_thetaTot -> reset() ; } // RESET AFTER CERTAIN EVENTS
-
-  //book profile for Pseudoefficiency_sensor vs sensor
-  const GaudiAlg::HistoID pseudoEffsens = "Pseudoefficiency_per_sensor_vs_sensorID";
-  AIDA::IProfile1D* prof_pseudoEffsens = bookProfile1D
-    (pseudoEffsens, "Pseudoefficiency vs sensorID",-0.5, 110.5, 111);
-  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pseudoEffsens -> reset() ; } // RESET AFTER CERTAIN EVENTS
-
+  if ( ( context() == "Online" ) &&  (m_event == m_resetProfile) ) { m_prof_sensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS  
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaR -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_thetaTot -> reset() ; } // RESET AFTER CERTAIN EVENTS
+  if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pseudoEffsens -> reset() ; } // RESET AFTER CERTAIN EVENTS
 
   //Loop over track container
   LHCb::Tracks::const_iterator itTrk;
@@ -287,13 +315,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     //---------------------------
     if( m_xPlots){
       theta = track->firstState().slopes().theta();
-      plot1D(theta/degree, "#theta (degree)", -0.5, 50.5, 51);
-      plot1D(track->phi()/degree, "Azimuth #phi (degree)", -200., 200., 100);
+      m_track_theta->fill(theta/degree);
+      m_track_phi->fill(track->phi()/degree);
     }
       
     //eta
     //---
-    plot1D(track->pseudoRapidity(), "PseudoRapidity", 0.95, 6.05, 51);
+    m_track_eta->fill(track->pseudoRapidity());
 
     //pseudo-efficiency: Using Velo expectation Tool
     // evaluation using only in the region between 
@@ -334,14 +362,14 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         LHCb::VeloCluster *cluster;
         cluster = (LHCb::VeloCluster*)m_rawClusters->containedObject( (iter)->channelID() );
         double sumadc = cluster ->totalCharge();
-        plot1D(sumadc, "adcsum", "adcsum", 0 ,100 , 100);
+        m_track_adcsum->fill(sumadc);
         if(cluster->isRType()){
           double Radc = cluster ->totalCharge();
-          plot1D(Radc, "Radc", "ADC for r clusters associated to a track", 0 ,100 , 100);
+          m_track_radc->fill(Radc);
         }  
         if(cluster->isPhiType()){
           double Phiadc = cluster ->totalCharge();
-          plot1D(Phiadc, "Phiadc", "ADC for #phi clusters associated to a track", 0 ,100 , 100);
+          m_track_phiadc->fill(Phiadc);
         }
       }
       
@@ -360,10 +388,9 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     int nExpectedHitsInterp = m_expectTool->nExpected(*track,zmin,zmax);
     if(nExpectedHits != 0){
       double pseudoEfficiency = double(nVeloHits)/double(nExpectedHits);
-      plot1D(pseudoEfficiency, "pseudoEfficiency", "PseudoEfficiency", -0.05, 1.55, 16);
+      m_track_pseudoeff->fill(pseudoEfficiency);
       double pseudoEfficiencyInterp = double(nVeloHits)/double(nExpectedHitsInterp);
-      plot1D(pseudoEfficiencyInterp, "pseudoEfficiencyByInterp", "PseudoEfficiency by Interpolation", 
-             -0.05, 1.55, 16);
+      m_track_pseudoeff_int->fill(pseudoEfficiencyInterp);
     }
 
     //Evaluation of expected hit per sensor
@@ -435,7 +462,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       //UsedSensor plot
       //---------------
       if ( sensor->isR() || sensor->isPhi() ) {
-        plot1D(sensorID,"UsedSensors","Number of times a sensor was used in the tracking vs Sensors",-0.5, 110.5, 111);
+        m_used_sensors->fill(sensorID);
       }
       
       Gaudi::XYZPoint trackInterceptGlobal= extrapolateToZ(track, sensor->z());
@@ -528,13 +555,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       if(m_biasedResidualProfile){
         if ( 0 != pitch ) {
           //Sensors vs Biased Residuals profile only for Velo tracks
-          prof_sensors -> fill (sensor->sensorNumber(), m_binary * biasedResid / pitch );
+          m_prof_sensors -> fill (sensor->sensorNumber(), m_binary * biasedResid / pitch );
           //Momentum vs Biased Residuals profiles for +ve and -ve charges from Long tracks with VeloHits
           if( (track->checkType(Track::Long) == true) && charge  == 1) 
-            prof_pos_mom_res -> fill (track->p() /GeV, m_binary * biasedResid / pitch );   
+            m_prof_pos_mom_res -> fill (track->p() /GeV, m_binary * biasedResid / pitch );   
           
           else if( (track->checkType(Track::Long) == true) && charge == -1)
-            prof_neg_mom_res -> fill (track->p() /GeV, m_binary * biasedResid / pitch );
+            m_prof_neg_mom_res -> fill (track->p() /GeV, m_binary * biasedResid / pitch );
           
           if ((track->checkType(Track::Long) != true) && m_debugLevel)
             debug()<<"Profiles for biased residual vs momentum are not filled: track is not Long Track"<<endmsg;
@@ -579,15 +606,15 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
 
       if( m_ACDC ) {
         correct_phi = -phiCoor[i] + phiCoor_s[2*i] + phiCoor_s[2*i+1];//ACDC Geometry
-        plot1D((phiCoor_s[2*i] + phiCoor_s[2*i+1])/degree, "PhiDiff", "PhiDiff", -30., 30., 100);
+        m_phi_diff->fill((phiCoor_s[2*i] + phiCoor_s[2*i+1])/degree);
       }
       else {
         correct_phi = phiCoor[i] + phiCoor_s[2*i] - phiCoor_s[2*i+1];//DC06 Geometry
-        plot1D((phiCoor_s[2*i] - phiCoor_s[2*i+1])/degree, "PhiDiff", "PhiDiff", -30., 30., 100);
+        m_phi_diff->fill((phiCoor_s[2*i] - phiCoor_s[2*i+1])/degree);
       }
       
       
-      plot1D( rCoor[i]/mm, "RCoord", "R coordinate(mm)", 0, 50, 100 );
+      m_track_rcoord->fill( rCoor[i]/mm);
       
       const DeVeloSensor* sensor = m_veloDet->sensor(i);
       
@@ -601,14 +628,10 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       // the bottom part within (-90,0)
       //A side
       if (i%2==0)
-        plot1D( phiStateHalf.Phi()/degree,
-                "HalfPhiCoordA", "Cluster #phi coordinate (degree) in half frame",
-                -95 , 95, 100 );
+        m_half_phi_a->fill( phiStateHalf.Phi()/degree);
       else
         //C side
-        plot1D( -atan(tan(phiStateHalf.Phi()))/degree,
-                "HalfPhiCoordC", "Cluster #phi coordinate (degree) in half frame",
-                -95 , 95, 100 );
+        m_half_phi_a->fill( -atan(tan(phiStateHalf.Phi()))/degree);
 
       if(m_hitmapHistos){ 
         
@@ -619,9 +642,8 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         y_glob[i] = pointGlobal.y();
         z_glob[i] = pointGlobal.z();
           
-        plot2D(x_glob[i], y_glob[i], "XY_HitMap", "X(mm) vs Y(mm) hitmap", -75, 75, -45, 45, 100, 100);
-        plot2D(z_glob[i], x_glob[i], "ZX_HitMap", "Z(mm) vs X(mm) hitmap", -200, 800, -75, 75, 500, 100);
-        // plot2D(z_glob[i], y_glob[i], "ZY_HitMap", "Z(mm) vs Y(mm) hitmap", -200, 800, -75, 75, 100, 100); 
+        m_xy_hitmap->fill(x_glob[i], y_glob[i]);
+        m_zx_hitmap->fill(z_glob[i], x_glob[i]);
       }
       
     }//for loop on module
@@ -630,13 +652,13 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
     //No of R and total Clusters per track 
     //------------------------------------
-    prof_thetaR -> fill (theta/degree, nRClus);
-    prof_thetaTot -> fill (theta/degree, nSumClus);
-    plot1D( nSumClus, "NMeasurements", "Number of clusters associated to a track", 0, 45, 45 );
+    m_prof_thetaR -> fill (theta/degree, nRClus);
+    m_prof_thetaTot -> fill (theta/degree, nSumClus);
+    m_nmeasure->fill( nSumClus);
     if( (track->checkType(Track::Long) == true) && (charge == 1))
-      plot1D( nSumClus, "NPosMeasurements", "Number of clusters associated to a pos. track", 0, 100, 100 );
+      m_nposmeas->fill( nSumClus);
     else if ((track->checkType(Track::Long) == true) && (charge == -1))
-      plot1D( nSumClus, "NNegMeasurements", "Number of clusters associated to a neg. track", 0, 100, 100 );
+      m_nnegmeas->fill( nSumClus);
 
     
     nRClusEvent += nRClus;
@@ -654,22 +676,20 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
       if(N_exp[i]>=1){
         pseudoEfficiency_sens = N_rec[i] / N_exp[i];
         sensnumber=(double) i;
-        prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
+        m_prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
       }
       debug()<<i+64<<" N_rec "<<N_rec[i+64]<<" N_exp "<<N_exp[i+64]<<endmsg;
       if(N_exp[i+64]>=1){
         pseudoEfficiency_sens = N_rec[i+64] / N_exp[i+64];
         sensnumber=(double) i+64.;
-        prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
+        m_prof_pseudoEffsens -> fill(sensnumber, pseudoEfficiency_sens);          
       }
       //if expect hits on both sensor and only one sensor has hit -> mismatch
       if (((N_exp[i]>=1) && (N_exp[i+64]>=1)) && ((N_rec[i]==0) || (N_rec[i+64]==0))){
         if (N_rec[i+64]==0)
-           plot1D(i+64,"ModuleMismatch","Tracks with one used sensor from a module vs Module number"
-                 ,-0.5, 110.5, 111);
+           m_mod_mismatch->fill(i+64);
         else if (N_rec[i]==0)
-          plot1D(i,"ModuleMismatch","Tracks with one used sensor from a module vs Module number"
-                 ,-0.5, 110.5, 111);
+           m_mod_mismatch->fill(i);
       } 
     }
   }//End of loop over track container
@@ -681,14 +701,11 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     
     //No of R Clusters per Event 
     //--------------------------
-    plot1D( nRClusEvent, "# R clusters", "Number of r clusters per event",
-            0., 2000, 400 );
+    m_nrclus->fill( nRClusEvent);
     
     //No of R+Phi Clusters per Event 
     //------------------------------
-    plot1D( nSumClusEvent,
-            "# R+Phi clusters", "Number of r and #phi clusters per event",
-            0., 2000, 400 );
+    m_nrphiclus->fill( nSumClusEvent);
     
   }
   
@@ -707,16 +724,16 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
     for ( int bin = 1; bin <= 42; bin++ ) {
       // fill histograms
       if ( 0 == (bin % 2) ) {
-        m_h_aliMon_Mean_R_A->fill( prof_sensors->binHeight( bin ) );
-        m_h_aliMon_Sigma_R_A->fill( prof_sensors->binError( bin ) );
-        m_h_aliMon_Mean_P_A->fill( prof_sensors->binHeight( bin + 64 ) );
-        m_h_aliMon_Sigma_P_A->fill( prof_sensors->binError( bin + 64 ) );
+        m_h_aliMon_Mean_R_A->fill( m_prof_sensors->binHeight( bin ) );
+        m_h_aliMon_Sigma_R_A->fill( m_prof_sensors->binError( bin ) );
+        m_h_aliMon_Mean_P_A->fill( m_prof_sensors->binHeight( bin + 64 ) );
+        m_h_aliMon_Sigma_P_A->fill( m_prof_sensors->binError( bin + 64 ) );
       }
       else {
-        m_h_aliMon_Mean_R_C->fill( prof_sensors->binHeight( bin ) );
-        m_h_aliMon_Sigma_R_C->fill( prof_sensors->binError( bin ) );
-        m_h_aliMon_Mean_P_C->fill( prof_sensors->binHeight( bin + 64 ) );
-        m_h_aliMon_Sigma_P_C->fill( prof_sensors->binError( bin + 64 ) );
+        m_h_aliMon_Mean_R_C->fill( m_prof_sensors->binHeight( bin ) );
+        m_h_aliMon_Sigma_R_C->fill( m_prof_sensors->binError( bin ) );
+        m_h_aliMon_Mean_P_C->fill( m_prof_sensors->binHeight( bin + 64 ) );
+        m_h_aliMon_Sigma_P_C->fill( m_prof_sensors->binError( bin + 64 ) );
       }
     }
   }
@@ -753,25 +770,10 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
 {
   if(track->checkFitHistory(Track::BiKalman) == true){
     debug() << "Start Unbiased Residual method" << endmsg;    
-    //book profile for sensors vs unbiasedResiduals
     
-    const GaudiAlg::HistoID unsensors = "Sensors_vs_UnbiasedResiduals" ; 
-    AIDA::IProfile1D* prof_unsensors = bookProfile1D
-      (unsensors, "Sensors vs UnbiasedResiduals" , -0.5, 139.5, 140) ;
-    if ( m_event ==  m_resetProfile ) { prof_unsensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
-    
-    //book profile for momentum of +ve tracks vs biasedResiduals
-    const GaudiAlg::HistoID pos_momentum = "PosMomentum_vs_UnBiasedResiduals" ; 
-    AIDA::IProfile1D* prof_pos_mom_res = bookProfile1D
-      (pos_momentum, "PosTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_pos_mom_res -> reset() ; } // RESET AFTER CERTAIN EVENTS
-    
-    //book profile for momentum of -ve tracks vs biasedResiduals 
-    const GaudiAlg::HistoID neg_momentum = "NegMomentum_vs_UnBiasedResiduals" ; 
-    AIDA::IProfile1D* prof_neg_mom_res = bookProfile1D
-      (neg_momentum, "NegTracksMomentum(GeV) vs UnBiasedResiduals" , -0.5, 100.5, 20) ;
-    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { prof_neg_mom_res -> reset() ; } 
-    // RESET AFTER CERTAIN EVENTS  
+    if ( m_event ==  m_resetProfile ) { m_prof_unsensors -> reset() ; } // RESET AFTER CERTAIN EVENTS
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_pos_mom_unres -> reset() ; } // RESET AFTER CERTAIN EVENTS
+    if ( (context() == "Online") &&  (m_event == m_resetProfile) ) { m_prof_neg_mom_unres -> reset() ; } // RESET AFTER CERTAIN EVENTS  
     
     //Loop over nodes
     LHCb::Track::ConstNodeRange nodes = track->nodes();
@@ -827,14 +829,14 @@ StatusCode Velo::VeloTrackMonitor::unbiasedResiduals (LHCb::Track *track )
 
       if ( 0 != pitch ) {
         //Sensors vs Unbiased Residuals
-        prof_unsensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );
+        m_prof_unsensors -> fill (sensor->sensorNumber(), m_binary * UnbiasedResid / pitch );
         
         //Momentum vs UnBiased Residuals profiles for +ve and -ve charges for Velo part of Long tracks        
         if((track->checkType(Track::Long) == true) && track->charge()  == 1)
-          prof_pos_mom_res -> fill (track->p()/GeV,  m_binary * UnbiasedResid / pitch );   
+          m_prof_pos_mom_res -> fill (track->p()/GeV,  m_binary * UnbiasedResid / pitch );   
         
         else if((track->checkType(Track::Long) == true) && track->charge() == -1)
-          prof_neg_mom_res -> fill (track->p()/GeV,  m_binary * UnbiasedResid / pitch );   
+          m_prof_neg_mom_res -> fill (track->p()/GeV,  m_binary * UnbiasedResid / pitch );   
         
         if ((track->checkType(Track::Long) == true) && m_debugLevel)
           debug()<<"Profiles for unbiased residual vs momentum are not filled: track is not Long Track"<<endmsg; 

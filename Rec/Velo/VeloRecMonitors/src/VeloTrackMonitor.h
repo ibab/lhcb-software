@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.h,v 1.9 2009-10-06 19:55:53 wouter Exp $
+// $Id: VeloTrackMonitor.h,v 1.10 2009-10-08 17:18:24 krinnert Exp $
 #ifndef VELORECMONITORS_VELOTRACKMONITOR_H 
 #define VELORECMONITORS_VELOTRACKMONITOR_H 1
 
@@ -22,6 +22,10 @@
 //from Gaudi
 #include "GaudiAlg/IHistoTool.h"
 #include "GaudiAlg/GaudiTupleAlg.h"
+
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
+#include "AIDA/IProfile1D.h"
 
 // local
 #include "VeloMonitorBase.h"
@@ -78,6 +82,36 @@ namespace Velo
     AIDA::IHistogram1D *m_h_aliMon_Sigma_P_A;
     AIDA::IHistogram1D *m_h_aliMon_Sigma_P_C;
     AIDA::IProfile1D* m_prof_res[ 84 ]; 
+    AIDA::IProfile1D* m_prof_unsensors;
+    AIDA::IProfile1D* m_prof_pos_mom_unres;
+    AIDA::IProfile1D* m_prof_neg_mom_unres;
+    AIDA::IProfile1D* m_prof_sensors;
+    AIDA::IProfile1D* m_prof_pos_mom_res;
+    AIDA::IProfile1D* m_prof_neg_mom_res;
+    AIDA::IProfile1D* m_prof_thetaR;
+    AIDA::IProfile1D* m_prof_thetaTot;
+    AIDA::IProfile1D* m_prof_pseudoEffsens;
+    AIDA::IHistogram1D* m_track_theta;
+    AIDA::IHistogram1D* m_track_phi;
+    AIDA::IHistogram1D* m_track_eta;
+    AIDA::IHistogram1D* m_track_adcsum;
+    AIDA::IHistogram1D* m_track_radc;
+    AIDA::IHistogram1D* m_track_phiadc;
+    AIDA::IHistogram1D* m_track_pseudoeff;
+    AIDA::IHistogram1D* m_track_pseudoeff_int;
+    AIDA::IHistogram1D* m_used_sensors;
+    AIDA::IHistogram1D* m_phi_diff;
+    AIDA::IHistogram1D* m_track_rcoord;
+    AIDA::IHistogram1D* m_half_phi_a;
+    AIDA::IHistogram1D* m_half_phi_c;
+    AIDA::IHistogram1D* m_nmeasure;
+    AIDA::IHistogram1D* m_nposmeas;
+    AIDA::IHistogram1D* m_nnegmeas;
+    AIDA::IHistogram1D* m_mod_mismatch;
+    AIDA::IHistogram1D* m_nrclus;
+    AIDA::IHistogram1D* m_nrphiclus;
+    AIDA::IHistogram2D* m_xy_hitmap;
+    AIDA::IHistogram2D* m_zx_hitmap;
     
     // Job options
     unsigned long m_event;
