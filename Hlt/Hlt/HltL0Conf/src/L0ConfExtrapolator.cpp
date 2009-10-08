@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.8 2008-10-02 10:36:35 albrecht Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.9 2009-10-08 21:03:54 graven Exp $
 // Include files 
 
 #include <cmath>
@@ -238,15 +238,15 @@ FwdHypothesis L0ConfExtrapolator::getFwdHypothesis( const LHCb::Track& veloTrack
  *   this helper function checks for the physical regions of ECal 
  *   and HCal respectively, depending on z
  */
-int L0ConfExtrapolator::getCaloRegion(float stateX, 
-                                      float stateY, 
-                                      float stateZ ) const
+int L0ConfExtrapolator::getCaloRegion(double stateX, 
+                                      double stateY, 
+                                      double stateZ ) const
 {
-  float x = std::abs(stateX);
-  float y = std::abs(stateY);
+  double x = std::abs(stateX);
+  double y = std::abs(stateY);
   // two small tables to look up HCAL/ECAL region boundaries
-  static const float xpos[] = { 650., 1940., 3880., 2101., 4202., -1. };
-  static const float ypos[] = { 650., 1450., 2420., 1838., 3414., -1. };
+  static const double xpos[] = { 650., 1940., 3880., 2101., 4202., -1. };
+  static const double ypos[] = { 650., 1450., 2420., 1838., 3414., -1. };
 
   // depending on ECAL/HCAL+ECAL seeding, the starting offset into the
   // table is different

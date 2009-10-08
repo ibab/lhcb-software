@@ -18,16 +18,16 @@
 class LineHypothesis : virtual public Tf::IStationSelector {
 public: 
   /// Standard constructor
-  LineHypothesis( float my , float cy , float mx , float cx,
-                  float dx, float dy ) :
+  LineHypothesis( double my , double cy , double mx , double cx,
+                  double dx, double dy ) :
 	  m_y(my), m_cy(cy), m_x(mx), m_cx(cx), m_dx(dx), m_dy(dy)
   { }
 
-  Tf::XYSearchWindow searchWindow(float zz) const
+  Tf::XYSearchWindow searchWindow(double zz) const
   {
-    float z = zz;
-    float x = m_x * z + m_cx;
-    float y = m_y * z + m_cy;
+    double z = zz;
+    double x = m_x * z + m_cx;
+    double y = m_y * z + m_cy;
     return Tf::XYSearchWindow(x - m_dx, x + m_dx, y - m_dy, y + m_dy);
   }
 
@@ -39,8 +39,8 @@ public:
   }
   
 private:
-  float m_y, m_cy;
-  float m_x, m_cx;
-  float m_dx, m_dy;
+  double m_y, m_cy;
+  double m_x, m_cx;
+  double m_dx, m_dy;
 };
 #endif // LINEHYPOTHESIS_H

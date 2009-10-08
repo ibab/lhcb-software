@@ -4,6 +4,9 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Gerhard Raven
+ - replace floats by doubles
+
 !========================== HltL0Conf v2r10 2009-08-20 ===================
 ! 2009-08-19 - Alessia Satta
  - fix a bug in MuonSeedTool appeared with sorting of lhcbid in new track 

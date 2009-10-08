@@ -1,4 +1,4 @@
-// $Id: FwdHypothesis.h,v 1.3 2008-07-21 13:01:41 albrecht Exp $
+// $Id: FwdHypothesis.h,v 1.4 2009-10-08 21:05:04 graven Exp $
 #ifndef FWDHYPOTHESIS_H 
 #define FWDHYPOTHESIS_H 1
 
@@ -19,19 +19,19 @@
 class FwdHypothesis : virtual public Tf::IStationSelector {
 public: 
   /// Standard constructor
-  FwdHypothesis( float ax , float bx , float cx , float dx, 
-                 float ay , float by, 
-                 float errx , float erry, 
-                 float zRef ) :
+  FwdHypothesis( double ax , double bx , double cx , double dx, 
+                 double ay , double by, 
+                 double errx , double erry, 
+                 double zRef ) :
 	  m_ax(ax), m_bx(bx), m_cx(cx), m_dx(dx), m_ay(ay), m_by(by),
 	  m_errx(errx), m_erry(erry), m_zRef(zRef)
   { }
   
   Tf::XYSearchWindow searchWindow(double z) const
   {
-    float dz = float(z) - m_zRef;
-    float x = m_ax + (m_bx + dz * (m_cx + dz * m_dx)) * dz;
-    float y = m_ay + dz * m_by;
+    double dz = double(z) - m_zRef;
+    double x = m_ax + (m_bx + dz * (m_cx + dz * m_dx)) * dz;
+    double y = m_ay + dz * m_by;
 
     return Tf::XYSearchWindow(x - m_errx, x + m_errx, y - m_erry, y + m_erry);
   }
@@ -45,9 +45,9 @@ public:
   
 
 private:
-  float m_ax, m_bx, m_cx, m_dx;
-  float m_ay, m_by;
-  float m_errx, m_erry;
-  float m_zRef;
+  double m_ax, m_bx, m_cx, m_dx;
+  double m_ay, m_by;
+  double m_errx, m_erry;
+  double m_zRef;
 };
 #endif // FWDHYPOTHESIS_H

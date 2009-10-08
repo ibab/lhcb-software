@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.h,v 1.5 2008-08-29 14:28:03 albrecht Exp $
+// $Id: L0ConfExtrapolator.h,v 1.6 2009-10-08 21:03:54 graven Exp $
 #ifndef L0CONFEXTRAPOLATOR_H 
 #define L0CONFEXTRAPOLATOR_H 1
 
@@ -51,7 +51,7 @@ public:
   void hcal2T( const LHCb::Track& ecalTrack, 
                LHCb::State& statePosAtT, LHCb::State& stateNegAtT ) const;
   
-  int getCaloRegion( float stateX, float stateY, float stateZ ) const;
+  int getCaloRegion( double stateX, double stateY, double stateZ ) const;
 protected:
 
 private:

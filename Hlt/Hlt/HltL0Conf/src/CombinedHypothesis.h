@@ -23,7 +23,7 @@ public:
   { }
 
   Tf::XYSearchWindow searchWindow(double z) const {
-    float xmin = 1e42, xmax = -1e42, ymin = 1e42, ymax = -1e42;
+    double xmin = 1e42, xmax = -1e42, ymin = 1e42, ymax = -1e42;
     for (std::vector<Tf::IStationSelector*>::const_iterator
            it = m_windows.begin(); m_windows.end() != it; ++it) {
       Tf::XYSearchWindow win = (*it)->searchWindow(z);
