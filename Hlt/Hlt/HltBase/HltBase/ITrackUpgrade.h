@@ -1,4 +1,4 @@
-// $Id: ITrackUpgrade.h,v 1.8 2009-07-21 08:00:32 graven Exp $
+// $Id: ITrackUpgrade.h,v 1.9 2009-10-08 19:15:24 graven Exp $
 #ifndef HLTBASE_ITRACKUPGRADE_H 
 #define HLTBASE_ITRACKUPGRADE_H 1
 
@@ -18,7 +18,7 @@ namespace LHCb {
 };
 
 
-static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 1 , 1 );
+static const InterfaceID IID_ITrackUpgrade ( "ITrackUpgrade" , 2 , 0 );
 
 /** @class ITrackUpgrade ITrackUpgrade.h HltBase/ITrackUpgrade.h
  *
@@ -35,20 +35,21 @@ public:
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ITrackUpgrade; }
 
-  /// return the list of upgrade track reconstruction 
-  virtual std::vector<std::string> recos() = 0;
-  
+  //TODO: replace by different instances for different behaviour...
+  //      i.e. remove this, and provide what you want when you do 
+  //           tool<ITrackUpgrade>( reconame, ... )
   /// set this reconstruction as the default one
   virtual StatusCode setReco(const std::string& name) = 0;
   
+
+
   /// upgrade a list of input tracks
   virtual StatusCode upgrade
   ( const std::vector<LHCb::Track*>& itracks ,
     std::vector<LHCb::Track*>&       otracks ) = 0;
   
   /// upgrade an input track
-  virtual StatusCode upgrade( LHCb::Track&, 
-                              std::vector<LHCb::Track*>& tracks) = 0;
+  virtual StatusCode upgrade( LHCb::Track&, std::vector<LHCb::Track*>& tracks) = 0;
   
   /// returns the view of the seed track (the volume of search window)
   virtual std::vector<Tf::IStationSelector*> view(const LHCb::Track& seed) = 0;

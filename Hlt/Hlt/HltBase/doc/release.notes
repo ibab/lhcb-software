@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-10-08 - Gerhard Raven
+ - minimize ITrackUpgrade interface
+
 ! 2009-10-07 - Gerhard Raven
  - use Gaudi::Math::closestPoints instead of own version of same algorithm
    WARNING: do to the different cut-off of when lines are considered parallel,
