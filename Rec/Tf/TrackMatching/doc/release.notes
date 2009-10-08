@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Wouter Hulsbergen
+ - adapted to change in LHCb::Track
+
 !======================= TrackMatching v2r23 2009-07-14 ======================
 ! 2009-07-14 - Marco Cattaneo
  - Remove obsolete file TrackMatching_dll.cpp

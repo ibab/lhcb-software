@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues
 #============================================================================
 package           TrackMatching
-version           v2r23
+version           v2r24
 
 #============================================================================
 # Structure, i.e. directories to process. 
