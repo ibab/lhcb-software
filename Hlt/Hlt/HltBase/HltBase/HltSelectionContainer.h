@@ -1,4 +1,4 @@
-// $Id: HltSelectionContainer.h,v 1.3 2009-04-28 07:03:21 graven Exp $
+// $Id: HltSelectionContainer.h,v 1.4 2009-10-08 19:19:44 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
 #include "HltBase/HltSelection.h"
@@ -135,7 +135,7 @@ namespace Hlt {
             typename helper_<0>::selection_type* output() { return boost::get<0>(m_data).selection; }
 
             template <unsigned N> 
-            typename helper_<N>::selection_type* input() { 
+            const typename helper_<N>::selection_type* input() { 
                 BOOST_STATIC_ASSERT(N>0); // N=0 corresponds to the output....
                 typename helper_<N>::data_type& d = boost::get<N>(m_data); 
                 if (!d.selection->processed()) {
