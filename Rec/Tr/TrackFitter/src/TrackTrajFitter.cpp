@@ -1,4 +1,4 @@
-// $Id: TrackTrajFitter.cpp,v 1.4 2009-07-08 14:25:50 wouter Exp $
+// $Id: TrackTrajFitter.cpp,v 1.5 2009-10-08 14:46:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,6 +6,7 @@
 
 // from TrackEvent
 #include "Event/Track.h"
+#include "Event/TrackFitResult.h"
 #include "Event/Measurement.h"
 // from TrackKernel
 #include "TrackKernel/LineDifTraj.h"
@@ -70,7 +71,7 @@ StatusCode TrackTrajFitter::fit( Track& track, LHCb::ParticleID )
 {
   StatusCode sc;
   // grab the (OT,Velo,...) measurements from the input track and clone them.
-  const LHCb::Measurement::Vector& in = track.measurements();
+  const LHCb::Measurement::Vector& in = track.fitResult()->measurements();
   LHCb::Measurement::Vector out;
   for(LHCb::Measurement::Vector::const_iterator i=in.begin();i!=in.end();++i) {
        // grab all velo hits of the track...

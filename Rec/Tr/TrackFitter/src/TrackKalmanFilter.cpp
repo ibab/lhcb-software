@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.72 2009-09-30 14:05:08 cattanem Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.73 2009-10-08 14:46:07 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -12,6 +12,7 @@
 #include "Event/TrackFunctor.h"
 #include "Event/TrackUnitsConverters.h"
 #include "Event/StateVector.h"
+#include "Event/TrackFitResult.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackProjector.h"
@@ -244,7 +245,7 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
   StatusCode sc(StatusCode::SUCCESS, true); 
   
   // The seed covariance comes from the first node
-  NodeContainer nodes = track.nodes() ;
+  NodeContainer nodes = track.fitResult()->nodes() ;
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
   
   TrackSymMatrix seedCov = nodes.front()->state().covariance() ;
