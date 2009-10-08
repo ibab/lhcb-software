@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.17 2009-06-25 21:40:55 aperezca Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.18 2009-10-08 19:17:13 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -49,12 +49,10 @@ StatusCode HltVertexUpgrade::initialize() {
   m_selections.retrieveSelections();
   m_selections.registerSelection();
   
-  m_tool = tool<HltTrackUpgradeTool>("HltTrackUpgradeTool",this);
-  if (!m_tool) 
-    fatal() << " not able to retrieve upgrade track tool " << endreq;
-  
+  m_tool = tool<ITrackUpgrade>("HltTrackUpgradeTool",this);
+  if (!m_tool) fatal() << " not able to retrieve upgrade track tool " << endreq;
   sc = m_tool->setReco(m_recoName);
-  if ( sc.isFailure() ) return sc;
+  
   return sc;
 
 };
@@ -69,12 +67,11 @@ StatusCode HltVertexUpgrade::execute() {
 
   RecVertices* overtices = 
     getOrCreate<RecVertices,RecVertices>(m_TESOutputVerticesName);
-  m_tool->beginExecute();
 
   verbose()<<"Trying vertex upgrade "<<m_recoName<<endreq;
 
-  Hlt::VertexSelection *input = m_selections.input<1>();
-  for (Hlt::VertexSelection::iterator it=input->begin(); it!=input->end(); ++it) {
+  const Hlt::VertexSelection *input = m_selections.input<1>();
+  for (Hlt::VertexSelection::const_iterator it=input->begin(); it!=input->end(); ++it) {
     RecVertex& vseed = *(*it);
     const SmartRefVector<Track>& otracks = vseed.tracks();
     Track& seed1 = (Track&) *(*otracks.begin());
@@ -86,10 +83,10 @@ StatusCode HltVertexUpgrade::execute() {
     }
     std::vector<LHCb::Track*> tracks1, tracks2;
     debug() << " calling update for track1" << endreq;
-    sc = m_tool->iupgrade(seed1,tracks1);
+    sc = m_tool->upgrade(seed1,tracks1);
     if (sc.isFailure()) return sc;
     debug() << " calling update for track2" << endreq;
-    sc = m_tool->iupgrade(seed2,tracks2);
+    sc = m_tool->upgrade(seed2,tracks2);
     if (sc.isFailure()) return sc;
     if (tracks1.empty() || tracks2.empty() ) continue;
     debug() << " creating a vertex " << endreq;
@@ -117,5 +114,3 @@ StatusCode HltVertexUpgrade::execute() {
 
   return sc;
 }
-
-

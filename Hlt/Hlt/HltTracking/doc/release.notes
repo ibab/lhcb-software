@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.83 2009-10-07 06:38:32 graven Exp $
+!$Id: release.notes,v 1.84 2009-10-08 19:17:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2009-10-08 - Gerhard Raven
+ - use ITrackUpgrade interface instead of HltTrackUpgrade
 
 ! 2009-10-07 - Gerhard Raven
  - follow some cosmetic changes in HltBase/HltUtils.h

@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.cpp,v 1.36 2009-10-07 06:38:33 graven Exp $
+// $Id: HltTrackUpgradeTool.cpp,v 1.37 2009-10-08 19:17:13 graven Exp $
 // Include files
 #include "GaudiKernel/ToolFactory.h" 
 
@@ -36,7 +36,6 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
   , m_otracks(0)
   , m_tool(0)
 {
-  declareInterface<HltTrackUpgradeTool>(this);
   declareInterface<ITrackUpgrade>(this);
 
   declareProperty("RecoName", m_recoName = "empty");
@@ -46,19 +45,8 @@ HltTrackUpgradeTool::HltTrackUpgradeTool( const std::string& type,
 
 };
 
+
 void HltTrackUpgradeTool::recoConfiguration() {
-
-  std::string info = "InfoID";
-
-//   //Generic tool not used, use especific instead
-//   m_recoConf.add("TConf/Tool",std::string("L0ConfirmWithT"));
-//   m_recoConf.add("TConf/Owner",true);
-//   m_recoConf.add("TConf/View",true);
-//   m_recoConf.add("TConf/TransferIDs",true);
-//   m_recoConf.add("TConf/TransferAncestor",true);
-//   m_recoConf.add("TConf/ITrackType", (int) LHCb::Track::TypeUnknown);  
-//   m_recoConf.add("TConf/OTrackType", (int) LHCb::Track::Ttrack);
-//   m_recoConf.add("TConf/TESOutput",std::string("Hlt1/Track/TConf"));
 
   m_recoConf.add("TMuonConf/Tool",std::string("L0ConfirmWithT/TMuonConf"));
   m_recoConf.add("TMuonConf/Owner",true);
@@ -163,20 +151,6 @@ StatusCode HltTrackUpgradeTool::initialize() {
   return sc;
 };
 
-std::vector<std::string> HltTrackUpgradeTool::recos() {
-  std::vector<std::string> mrecos;
-  std::vector<std::string> keys = m_recoConf.keys();
-  for (std::vector<std::string>::iterator it = keys.begin();
-       it != keys.end(); it++) {
-    std::string key = *it;
-    std::vector<std::string> cromos;
-    boost::algorithm::split(cromos,key,boost::algorithm::is_any_of("/"));
-    if (cromos.size()==2 && cromos[1] == "Tool")
-      mrecos.push_back(cromos[0]);
-  }
-  return mrecos;
-}
-
 
 StatusCode HltTrackUpgradeTool::setReco(const std::string& key) 
 {
@@ -250,8 +224,7 @@ void HltTrackUpgradeTool::toolConfigure()
     optSvc->addPropertyToCatalogue(root,pp);
     debug() << " setting property " << root << pp << endreq;
   } else if (m_recoName == "THadronConf") {
-    SimpleProperty<std::string> pp0 = 
-      SimpleProperty<std::string>("trackingTool","PatConfirmTool");
+    SimpleProperty<std::string> pp0 = SimpleProperty<std::string>("trackingTool","PatConfirmTool");
     optSvc->addPropertyToCatalogue(root,pp0);
     SimpleProperty<int> pp1 = SimpleProperty<int>("particleType",1);
     optSvc->addPropertyToCatalogue(root,pp1);
@@ -271,8 +244,7 @@ void HltTrackUpgradeTool::toolConfigure()
 //=============================================================================
 
 void HltTrackUpgradeTool::beginExecute() {
-  if (m_owner)
-    m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_TESOutput);
+  if (m_owner) m_otracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_TESOutput);
 }
 
 StatusCode HltTrackUpgradeTool::upgrade
@@ -286,13 +258,10 @@ StatusCode HltTrackUpgradeTool::upgrade
   for (std::vector<Track*>::const_iterator it = itracks.begin();
        it != itracks.end(); ++it) {
     sc = iupgrade(**it,tracks);
-    if (sc.isFailure()) {
-        warning() << " failed to upgrade... " << endmsg;
-    }
+    if (sc.isFailure()) warning() << " failed to upgrade... " << endmsg;
     otracks.insert(otracks.end(),tracks.begin(),tracks.end());
   }
-  if (m_orderByPt)
-    std::sort(otracks.begin(),otracks.end(), Hlt::SortTrackByPt());
+  if (m_orderByPt) std::sort(otracks.begin(),otracks.end(), Hlt::SortTrackByPt());
   
   debug() << " upgraded " << otracks.size() << " tracks " << endreq;
   return sc;
@@ -300,13 +269,10 @@ StatusCode HltTrackUpgradeTool::upgrade
 
 StatusCode HltTrackUpgradeTool::upgrade(Track& itrack,
                                         std::vector<Track*>& otracks) {
-  StatusCode sc = StatusCode::SUCCESS;
   beginExecute();
-  
   iupgrade(itrack,otracks);
-  
   debug() << " upgraded " << otracks.size() << " tracks " << endreq;
-  return sc;
+  return StatusCode::SUCCESS;
 }
 
 
@@ -320,13 +286,11 @@ StatusCode HltTrackUpgradeTool::iupgrade(LHCb::Track& seed,
     if (isOutput(seed)) { //has any ancestor involved in this reco?
       tracks.push_back(&seed);
       verbose() << " seed is its upgraded track of type " << m_OtrackType << endreq;
-    } 
-    else { //track must be a mother already upgraded for equal input and output types, find its descendants
+    } else { //track must be a mother already upgraded for equal input and output types, find its descendants
       find(seed,tracks);
       verbose()<< " seed was already upgraded, found tracks " << tracks.size() << endreq;
     } 
-  } 
-  else if (seed.checkType( (LHCb::Track::Types) m_ItrackType)) { //(type == input) {
+  } else if (seed.checkType( (LHCb::Track::Types) m_ItrackType)) { //(type == input) 
     m_timer->start(m_timerTool);
     sc = m_tool->tracksFromTrack(seed,tracks);
     m_timer->stop(m_timerTool);
@@ -336,12 +300,10 @@ StatusCode HltTrackUpgradeTool::iupgrade(LHCb::Track& seed,
     }
     recoDone(seed,tracks);
     verbose() << " seed upgraded, reco tracks " << tracks.size() << endreq;
-  }
-  else if (seed.checkType( (LHCb::Track::Types) m_OtrackType)) { //(type == output but from other tool {
+  } else if (seed.checkType( (LHCb::Track::Types) m_OtrackType)) { //(type == output but from other tool 
     tracks.push_back(&seed);
     verbose() << " seed is of tool's output type " << m_OtrackType << "but from another tool. Accepted!" <<endreq;
   }
-  
   return sc;
 }
 
@@ -397,40 +359,39 @@ void HltTrackUpgradeTool::recoDone(Track& seed, std::vector<Track*>& tracks) {
   debug() << " seed " << seed.key() << " n-descendants " 
           << seed.info(m_recoID,-1) << endreq;
   if (m_owner) {
-    for (std::vector<Track*>::iterator it = tracks.begin();
-         it != tracks.end(); ++it)
+    for (std::vector<Track*>::iterator it = tracks.begin(); it != tracks.end(); ++it)
       m_otracks->insert(*it); 
   }  
+}
+
+
+namespace {
+struct cmp_ {
+    cmp_(const LHCb::Track* track) : track_(track) {}
+    bool operator()(const SmartRef<LHCb::Track>& ref) { return ref.target()==track_; }
+    const LHCb::Track *track_;
+};
 }
 
 size_t HltTrackUpgradeTool::find(const Track& seed, std::vector<Track*>& tracks) {
   /// @todo This comparison of doubles must be fixed
   if (!m_doTrackReco) return 0;
-  double key = (double) seed.key();
+  int key = seed.key();
   double ncan = (double) seed.info(m_recoID,-1);
   debug() << " find seed key " << key << " n-descendants " << ncan << endreq;
   for (Tracks::iterator it = m_otracks->begin();it != m_otracks->end();++it) {
-    Track* ptrack = *it;
-    const SmartRefVector<LHCb::Track>& ancestors = ptrack->ancestors();
-    bool ok = false;
-    for (SmartRefVector<LHCb::Track>::const_iterator 
-           it2 = ancestors.begin(); it2 != ancestors.end(); it2++) 
-      if ((const LHCb::Track*) *it2 == (const LHCb::Track*) &seed) ok = true;
-    if (ok) tracks.push_back(ptrack);    
-    // if (ptrack->info(m_recoID,-1) == key)
+    const SmartRefVector<LHCb::Track>& ancestors = (*it)->ancestors();
+    bool found = (std::find_if(ancestors.begin(),ancestors.end(),cmp_(&seed)) != ancestors.end());
+    if (found) tracks.push_back(*it);    
   }
   if (ncan != (double) tracks.size()) {
     Error("Different number of tracks",StatusCode::SUCCESS,1);
     debug() << " different number of stored tracks! " << ncan 
             << " != " << tracks.size() << endreq;
-    for (Tracks::iterator it = m_otracks->begin();
-         it != m_otracks->end();++it) {
-      Track& track = *(*it);
-      debug() << " key " << key << " mother " 
-              << track.info(m_recoID,-1) << endreq;
+    for (Tracks::iterator it = m_otracks->begin(); it != m_otracks->end();++it) {
+      debug() << " key " << key << " mother " << (*it)->info(m_recoID,-1) << endreq;
     }
   }  
-
   verbose() << " found tracks " << tracks.size() << endreq;
   return tracks.size();
 }

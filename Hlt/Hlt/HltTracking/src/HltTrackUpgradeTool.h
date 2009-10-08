@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgradeTool.h,v 1.17 2009-10-07 06:38:33 graven Exp $
+// $Id: HltTrackUpgradeTool.h,v 1.18 2009-10-08 19:17:13 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADETOOL_H 
 #define HLTTRACKING_HLTTRACKUPGRADETOOL_H 1
 
@@ -26,13 +26,8 @@
  *  @date   2006-08-28
  */
 
-static const InterfaceID IID_HltTrackUpgradeTool ( "HltTrackUpgradeTool",1,0 );
-
 class HltTrackUpgradeTool : public HltBaseTool, virtual public ITrackUpgrade {
 public: 
-
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_HltTrackUpgradeTool; }
 
   /// Standard constructor
   HltTrackUpgradeTool( const std::string& type, 
@@ -42,8 +37,6 @@ public:
   virtual ~HltTrackUpgradeTool( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
-
-  std::vector<std::string> recos();
 
   StatusCode setReco(const std::string& name);
 

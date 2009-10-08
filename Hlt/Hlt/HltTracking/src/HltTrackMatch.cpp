@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.14 2009-10-07 06:38:33 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.15 2009-10-08 19:17:13 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -119,12 +119,10 @@ StatusCode HltTrackMatch::setReco(const std::string& key)
   m_transferInfo = 
     m_recoConf.retrieve<bool>(m_matchName+"/TransferInfo");
 
-  m_qualityName = 
-    m_recoConf.retrieve<std::string>(m_matchName+"/Quality");
+  m_qualityName = m_recoConf.retrieve<std::string>(m_matchName+"/Quality");
   m_qualityID = 0;
   if (!m_qualityName.empty()) m_qualityID = hltInfoID(m_qualityName);
-  m_quality2Name = 
-    m_recoConf.retrieve<std::string>(m_matchName+"/Quality2");
+  m_quality2Name = m_recoConf.retrieve<std::string>(m_matchName+"/Quality2");
   m_quality2ID = 0;
   if (!m_quality2Name.empty()) m_quality2ID = hltInfoID(m_quality2Name);
   

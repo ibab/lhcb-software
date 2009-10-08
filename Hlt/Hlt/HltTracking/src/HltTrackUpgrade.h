@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.h,v 1.5 2008-07-30 13:39:39 graven Exp $
+// $Id: HltTrackUpgrade.h,v 1.6 2009-10-08 19:17:13 graven Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/ISequencerTimerTool.h"
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
-#include "HltTrackUpgradeTool.h"
+#include "HltBase/ITrackUpgrade.h"
 
 /** @class HltTrackUpgrade HltTrackUpgrade.h
  *  
@@ -36,7 +36,7 @@ private:
   void saveConfiguration();
 
   std::string m_recoName;
-  HltTrackUpgradeTool* m_tool;
+  ITrackUpgrade* m_tool;
 
   // 1 input: Track
   // 1 output: Track
