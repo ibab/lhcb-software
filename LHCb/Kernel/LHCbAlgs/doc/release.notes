@@ -4,6 +4,16 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-10-08 - Vanya Belyaev
+ - Memory Tool:
+    1. two new conunters:
+       "Total Memory/MB" 
+       "Delta Memory/MB"
+    2. two new histograms 
+       "Total Memory [MB]" 
+       "Delta Memory [MB]"
+ 
+
 ! 2009-09-14 - Rob Lambert
  - Fixed compiler warnings in EventCountAlg
 
