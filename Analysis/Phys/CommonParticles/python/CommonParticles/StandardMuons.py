@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardMuons.py,v 1.1 2009-01-15 14:22:14 ibelyaev Exp $ 
+# $Id: StandardMuons.py,v 1.2 2009-10-08 12:37:06 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardMuons.py
 #  configuration file for 'Standard Muons' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Muons'
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 
 _locations = {} 
@@ -20,6 +20,9 @@ from CommonParticles.StdNoPIDsMuons import *
 _locations.update ( locations )
 
 from CommonParticles.StdLooseMuons import *
+_locations.update ( locations )
+
+from CommonParticles.StdVeryLooseMuons import *
 _locations.update ( locations )
 
 from CommonParticles.StdTightMuons import *

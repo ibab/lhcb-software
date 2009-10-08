@@ -37,7 +37,7 @@ StdDC06NoPIDsMuons.Particle =  "muon" ;
 // LOOSE long
 // ============================================================================
 StdDC06LooseMuons.Particle = "muon" ;
-StdDC06LooseMuons.Muon.Selection = {"RequiresDet='MUON'" } ;
+StdDC06LooseMuons.Muon.Selection = {"RequiresDet='MUON' IsMuon=True" } ;
 StdDC06LooseMuons.TrackSelector.TrackTypes = {"Long"};
 
 // ============================================================================
