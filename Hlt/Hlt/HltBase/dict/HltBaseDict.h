@@ -1,7 +1,6 @@
 #ifndef DICT_HLTBASEDICT_H 
 #define DICT_HLTBASEDICT_H 1
 
-#include "HltBase/IHltFunctionFactory.h"
 #include "HltBase/IMatchTVeloTracks.h"
 #include "HltBase/ITrackConfirmTool.h"
 #include "HltBase/ITrackL0CaloMatchTool.h"
