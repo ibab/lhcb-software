@@ -56,11 +56,13 @@ protected:
   bool procexists;
   bool countexists;
   bool TCKexists;
+  bool RunNumberexists;
   
 
   DimService* m_dimSvcNumberOfProcess;
   DimService* m_dimSvcNumberOfCounters; 
   DimService* m_dimSvcTCK; 
+  DimService* m_dimSvcRunNumber; 
   std::vector<double >m_oldrateValue;
   std::map<int, std::pair<std::string, double> > m_oldCounters;
   std::map<int, std::pair<std::string, double> > m_newCounters;

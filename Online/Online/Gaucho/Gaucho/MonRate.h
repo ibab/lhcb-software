@@ -56,12 +56,12 @@ public:
     m_counterMap[countName] = std::pair<std::string*, std::pair<std::string, void*> > (descr, std::pair<std::string, void*> ("long", (void*) const_cast<long *>(&count)));
   }
   
-  void addCounter(const std::string& countName, const std::string& countDescription, const StatEntity& counter) { 
+  void addCounter(const std::string& countName, const std::string& countDescription, const StatEntity& count) { 
     //we only make rates of flag() and nEntries()   
     std::string* descr1 = new std::string(countDescription+"-flag"); 
     std::string* descr2 = new std::string(countDescription+"-nEntries");  
-    m_counterMap[countName+"-flag"] = std::pair<std::string*, std::pair<std::string, void*> >(descr1,std::pair<std::string,void*>("StatEntityflag",(void*) const_cast<StatEntity *>(&counter))); 
-    m_counterMap[countName+"-nEntries"] = std::pair<std::string*, std::pair<std::string, void*> >(descr2,std::pair<std::string,void*>("StatEntitynEntries",(void*) const_cast<StatEntity *>(&counter)));
+    m_counterMap[countName+"-flag"] = std::pair<std::string*, std::pair<std::string, void*> >(descr1,std::pair<std::string,void*>("StatEntityflag",(void*) const_cast<StatEntity *>(&count))); 
+    m_counterMap[countName+"-nEntries"] = std::pair<std::string*, std::pair<std::string, void*> >(descr2,std::pair<std::string,void*>("StatEntitynEntries",(void*) const_cast<StatEntity *>(&count)));
   }
     
   

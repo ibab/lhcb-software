@@ -57,11 +57,6 @@ public:
   double binContent(int i){if((this->typeName()=="MonRate") && (((i==5)||(i==6))||(i==7))) return binSum[i]; else { if(0!=binEntries[i]) return binSum[i]/binEntries[i]; else return 0;} };
   double binError(int i);
 
-
-  
-
-
-
   std::string binLabX(int i) {return binLabelX[i];}
   int numbinx() {return nbinsx;}
 
