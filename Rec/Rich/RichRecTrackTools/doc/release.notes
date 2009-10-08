@@ -5,7 +5,7 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-10-07 - Wouter Hulsbergen
- - replace measurements with nodes in FunctionalCKResForEcoTracks.
+ - adapted FunctionalCKResForEcoTracks to changes in LHCb::Track
 
 ! 2009-09-14 - Chris Jones
  - Fix track selector to select tracks that have default likelihood or
