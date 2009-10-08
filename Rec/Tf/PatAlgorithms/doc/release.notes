@@ -3,6 +3,12 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+========================= PatAlgorithms v3r23 2009-10-08 =====================
+! 2009-10-08 Sascha Stahl
+ - PatDownstream: retuned Parameters for MC09
+ - PatDownstream: made search windows momentum dependent
+ - PatDownstream: changed way of fitting the x projection
+					
 ! 2009-09-25 - Stephanie Hansmann-Menzemer
  - redo changes from yesterday
 

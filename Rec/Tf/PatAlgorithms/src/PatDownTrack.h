@@ -1,4 +1,4 @@
-// $Id: PatDownTrack.h,v 1.2 2009-04-07 12:17:23 ocallot Exp $
+// $Id: PatDownTrack.h,v 1.3 2009-10-08 10:09:46 sstahl Exp $
 #ifndef KSTRACK_H 
 #define KSTRACK_H 1
 
@@ -38,7 +38,10 @@ public:
   double      yMagnet()          const { return m_magnet.y(); }
   double      zMagnet()          const { return m_magnet.z(); }
   double      slopeX()           const { return m_slopeX;     }
-  void setSlopeX( double slope )       { m_slopeX = slope; }
+  void setSlopeX( double slope )       { 
+    m_slopeX = slope;
+    m_slopeXCand = slope;
+  }
   double      slopeY()           const { return m_slopeY; }
 
   double      moment()  const { 
@@ -72,11 +75,23 @@ public:
   PatTTHits& hits()   { return m_hits; }
 
   void startNewCandidate() {
+    m_hits.clear();
     m_magnet = m_magnetSave;
     m_slopeX = m_slopeXSave;
     m_displY  = 0.;
     m_displX  = 0.;
   }
+
+  void startNewXCandidate(PatTTHit* firstHit) {
+    m_hits.clear();
+    m_hits.push_back(firstHit);
+    m_magnet = m_magnetSave;
+    m_slopeX = m_slopeXCand;
+    m_displY  = 0.;
+    m_displX  = 0.;
+  }
+
+  
 
   void setDisplY( double displY )       { m_displY = displY; }
   double displY( )                const { return m_displY; }
@@ -103,7 +118,8 @@ public:
   void sortFinalHits() {
     std::sort( m_hits.begin(), m_hits.end(), Tf::increasingByZ<PatTTHit>() );
   }
-
+  
+ 
 protected:
 
 private:
@@ -118,6 +134,7 @@ private:
 
   double      m_slopeX;
   double      m_slopeXSave;
+  double      m_slopeXCand;
   double      m_slopeY;
   double      m_displX;
   double      m_displY;

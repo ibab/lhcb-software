@@ -1,4 +1,4 @@
-// $Id: PatDownstream.h,v 1.5 2009-04-07 12:17:23 ocallot Exp $
+// $Id: PatDownstream.h,v 1.6 2009-10-08 10:09:46 sstahl Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -28,6 +28,9 @@ namespace LHCb {
  *
  *  @author Olivier Callot
  *  @date   2007-10-18
+ *
+ *  @author Sascha Stahl
+ *  @date   2009-10-07
  */
 class PatDownstream : public GaudiAlgorithm {
 public: 
@@ -44,25 +47,44 @@ protected:
 
   void ttCoordCleanup();  ///< tag already used coordinates
 
-  void fitAndRemove ( PatDownTrack& track );
+  void prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track*>& myInTracks); // tag already used T-Seeds
+    
+  void getPreSelection( PatDownTrack& track );
+    
+  void fitAndRemove( PatDownTrack& track );
   
-  void findMatchingHits( PatDownTrack& track, int plane, double tol ) ;
+  void findMatchingHits( PatTTHits& MatchingXHits, PatDownTrack& track, int plane ) ;
 
+  void storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, LHCb::Track* tr );
+  
   void addUVHits( PatDownTrack& track );
 
   void tagUsedTT( const LHCb::Track* tr );
 
+  void fitXProjection( PatTTHits& xHits, PatDownTrack& track, PatTTHit* myHit );
+  
+  bool acceptCandidate( PatDownTrack& track, PatDownTrack& bestTrack, int& maxPoints, double& minChisq );
+
+  void addOverlapRegions( PatDownTrack& track );
+    
+  
 private:
   std::string   m_inputLocation;
   std::string   m_outputLocation;
   double        m_deltaP;
   double        m_xPredTol;
-  double        m_tolMatch;
+  double        m_tolX;
   double        m_tolUV;
+  double        m_tolMomentum;
   double        m_maxDistance;
+  double        m_maxWindow;
   double        m_maxChisq;
   bool          m_clusterFilter;
-  bool          m_seedFilter;  
+  bool          m_removeUsed;
+  double        m_longChi2;
+  double        m_maxDist;
+    
+
   double        m_minTTx;
   double        m_minTTy;
 
@@ -78,7 +100,6 @@ private:
   double m_stateErrorTY2;
   double m_stateErrorP;
 
-  bool   m_useForward;
   bool   m_printTracks;
   bool   m_withDebugTool;
 
@@ -91,8 +112,9 @@ private:
   double m_zTT;                   ///< Average position for track estimate
 
   PatTTHits m_xHits;
+ 
   PatTTHits m_uvHits;
-
+    
   int   m_seedKey;
   bool  m_printing;  
 };

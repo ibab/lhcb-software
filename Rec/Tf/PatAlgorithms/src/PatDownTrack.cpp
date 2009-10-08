@@ -1,4 +1,4 @@
-// $Id: PatDownTrack.cpp,v 1.3 2009-04-07 15:30:40 ocallot Exp $
+// $Id: PatDownTrack.cpp,v 1.4 2009-10-08 10:09:46 sstahl Exp $
 // Include files 
 
 // local
@@ -38,7 +38,7 @@ PatDownTrack::PatDownTrack( LHCb::Track* tr,
   double zMagnet = 
     m_magPar[0] + 
     m_magPar[1] * m_state->ty() * m_state->ty() +
-    m_magPar[2] * m_state->tx() * m_state->tx();
+    m_magPar[2] * m_state->tx() * m_state->tx() + m_magPar[3] / m_state->p();
 
   double dz      = zMagnet - m_state->z();
   double xMagnet = m_state->x() + dz * m_state->tx();
