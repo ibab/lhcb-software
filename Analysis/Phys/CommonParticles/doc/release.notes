@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.154 2009-10-08 12:37:06 pkoppenb Exp $
+!$Id: release.notes,v 1.155 2009-10-08 12:53:14 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -8,8 +8,10 @@
 ! 2009-10-08 - Patrick Koppenburg
  - New file StdNoPIDsUpPions.py for upstream pions
  - New file StdVeryLooseMuons.py for Muons with IsMuonLoose
- - Updated StandardDC06Muons to use {"RequiresDet='MUON' IsMuon=True" }
+ - Updated StdDC06Muons to use {"RequiresDet='MUON' IsMuon=True" }
    . This restores the efficiency of muon ID to 8% instead of 82%
+ - Updated StdDC06TightMuons to use {"RequiresDet='MUON' IsMuon=True" CombDLL(mu-pi)>'-3.0'"  }
+   . This restores the efficiency of muon ID to 6% instead of 40%
  - v6r2
 
 !========================= CommonParticles v6r1 2009-08-11 ===================

@@ -44,7 +44,7 @@ StdDC06LooseMuons.TrackSelector.TrackTypes = {"Long"};
 // TIGHT
 // ============================================================================
 StdDC06TightMuons.Particle = "muon" ;
-StdDC06TightMuons.Muon.Selection = {"RequiresDet='MUON' CombDLL(mu-pi)>'-3.0'" } ;
+StdDC06TightMuons.Muon.Selection = {"RequiresDet='MUON' IsMuon=True CombDLL(mu-pi)>'-3.0'" } ;
 StdDC06TightMuons.TrackSelector.TrackTypes = {"Long"};
 
 // ============================================================================
