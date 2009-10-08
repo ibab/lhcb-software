@@ -1,8 +1,7 @@
-// $Id: HltTypes.h,v 1.12 2009-05-30 12:14:28 graven Exp $
+// $Id: HltTypes.h,v 1.13 2009-10-08 19:39:50 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
-#include "GaudiKernel/DataObject.h"
 #include "HltBase/EFunctions.h"
 #include "HltBase/ERelations.h"
 #include "HltBase/IFunctionFactory.h"
@@ -15,7 +14,6 @@ namespace LHCb {
 
 namespace Hlt {
   
-  class IntRelation : public zen::IntRelation, public DataObject {};
   
   typedef zen::filter<double> Filter;
   

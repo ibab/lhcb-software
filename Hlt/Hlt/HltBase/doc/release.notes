@@ -6,6 +6,7 @@
 ! 2009-10-08 - Gerhard Raven
  - minimize ITrackUpgrade interface
  - only allow const access when using HltSelectionContainer::input
+ - move Hlt::IntRelation from HltTypes.h to ERelations.h
 
 ! 2009-10-07 - Gerhard Raven
  - use Gaudi::Math::closestPoints instead of own version of same algorithm

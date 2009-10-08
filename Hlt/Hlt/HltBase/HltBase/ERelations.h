@@ -1,8 +1,9 @@
-// $Id: ERelations.h,v 1.7 2009-05-30 12:14:28 graven Exp $
+// $Id: ERelations.h,v 1.8 2009-10-08 19:39:50 graven Exp $
 #ifndef HLTBASE_RELATIONS_H 
 #define HLTBASE_RELATIONS_H 1
 
 #include "GaudiKernel/GaudiException.h"
+#include "GaudiKernel/DataObject.h"
 #include <functional>
 #include <algorithm>
 #include <ostream>
@@ -135,5 +136,9 @@ namespace zen
   
 }
 
+namespace Hlt {
+  class IntRelation : public zen::IntRelation, public DataObject {};
+
+}
   
 #endif
