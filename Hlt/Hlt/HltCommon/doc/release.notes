@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 ! 2009-10-09 - Gerhard Raven
  - minimal change to be blind to details of Track container types
+ - follow changes in TrackEvent
 
 ! 2009-10-08 - Gerhard Raven
  - move HltTypes.h from HltBase to HltCommon

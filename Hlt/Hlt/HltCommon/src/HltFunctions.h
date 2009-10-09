@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.23 2009-10-09 06:58:39 graven Exp $
+// $Id: HltFunctions.h,v 1.24 2009-10-09 07:31:01 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -12,11 +12,13 @@
  *  @date   2006-07-18
  */
 
+#include "boost/foreach.hpp"
 #include "HltTypes.h"
 #include "HltBase/HltUtils.h"
 #include "TrackInterfaces/IFunctionTool.h"
 #include "HltBase/IBiFunctionTool.h"
 #include "Event/Node.h"
+#include "Event/TrackFunctor.h"
 #include "GaudiAlg/GaudiTool.h"
 #include <memory>
 
@@ -601,10 +603,9 @@ namespace Hlt {
     explicit FitMuChi2() {}
     double operator() (const LHCb::Track& t) const {
       double muChi2=0;
-      const LHCb::Track::NodeContainer& nodes = t.nodes();
-      for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin(); it != nodes.end(); ++it ){
-        if( (*it)->hasMeasurement()
-            && LHCb::Measurement::Muon == (*it)->measurement().type()  ) muChi2 += (*it)->chi2();
+      BOOST_FOREACH( const LHCb::Node* it, t.nodes() ) {
+        if( it->hasMeasurement()
+            && LHCb::Measurement::Muon == it->measurement().type()  ) muChi2 += it->chi2();
       }
       return muChi2;
     }
@@ -615,16 +616,18 @@ namespace Hlt {
    *   returns the Chi2OverNdf of a fitted track, the contribution of muon hits
    *   is removed
    */
+  struct isTypeMeasurement {
+    isTypeMeasurement( LHCb::Measurement::Type type ) : type_(type) {}  
+    bool operator()(const LHCb::Measurement* m) { return m->type()==type_ ; }
+    LHCb::Measurement::Type type_;
+  };
+
+
   class FitCleanedChi2OverNdf : public Hlt::TrackFunction {
   public:
     explicit FitCleanedChi2OverNdf() {}
     double operator() (const LHCb::Track& t) const {
-      int nMuonHits = 0;
-      const LHCb::Track::NodeContainer& nodes = t.nodes();
-      for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin(); it != nodes.end(); ++it ){
-        if( (*it)->hasMeasurement()
-            && LHCb::Measurement::Muon == (*it)->measurement().type()  ) nMuonHits++;
-      }
+      int nMuonHits = TrackFunctor::nMeasurements( t, isTypeMeasurement( LHCb::Measurement::Muon ) );
       double chi2=0;
       if(0!=(t.nDoF()-nMuonHits)) {
         chi2=t.chi2()-Hlt::FitMuChi2()(t)/double(t.nDoF()-nMuonHits);
