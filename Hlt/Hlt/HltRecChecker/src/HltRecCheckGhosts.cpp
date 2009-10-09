@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.7 2009-06-03 09:16:07 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.8 2009-10-09 07:00:37 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -403,7 +403,7 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
 
   verbose() << "About to get the measurements" << endreq;
 
-  for (std::vector<LHCb::Measurement*>::const_iterator iM = (ghostTrack->measurements()).begin(); 
+  for (LHCb::Track::MeasurementContainer::const_iterator iM = (ghostTrack->measurements()).begin(); 
                                                        iM != (ghostTrack->measurements()).end(); ++iM){
     //Not strictly necessary since GhostClassification only uses LHCbIDs but we can keep it
     //for possible future use; this loop adds the measurement objects to our dummy tracks.

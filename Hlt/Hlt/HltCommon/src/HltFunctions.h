@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.22 2009-10-08 20:23:57 graven Exp $
+// $Id: HltFunctions.h,v 1.23 2009-10-09 06:58:39 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -600,11 +600,9 @@ namespace Hlt {
   public:
     explicit FitMuChi2() {}
     double operator() (const LHCb::Track& t) const {
-      const std::vector<LHCb::Node*> nodes = t.nodes();
       double muChi2=0;
-      for(std::vector<LHCb::Node*>::const_iterator it = nodes.begin(); 
-          it != nodes.end(); 
-          ++it ){
+      const LHCb::Track::NodeContainer& nodes = t.nodes();
+      for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin(); it != nodes.end(); ++it ){
         if( (*it)->hasMeasurement()
             && LHCb::Measurement::Muon == (*it)->measurement().type()  ) muChi2 += (*it)->chi2();
       }
@@ -621,11 +619,9 @@ namespace Hlt {
   public:
     explicit FitCleanedChi2OverNdf() {}
     double operator() (const LHCb::Track& t) const {
-      const std::vector<LHCb::Node*> nodes = t.nodes();
       int nMuonHits = 0;
-      for(std::vector<LHCb::Node*>::const_iterator it = nodes.begin(); 
-          it != nodes.end(); 
-          ++it ){
+      const LHCb::Track::NodeContainer& nodes = t.nodes();
+      for(LHCb::Track::NodeContainer::const_iterator it = nodes.begin(); it != nodes.end(); ++it ){
         if( (*it)->hasMeasurement()
             && LHCb::Measurement::Muon == (*it)->measurement().type()  ) nMuonHits++;
       }
