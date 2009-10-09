@@ -3,6 +3,11 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
+
+! 2009-10-09 - Marco Cattaneo
+ - HltRoutingBits filter does not fail if routing bits bank is missing, just 
+   prints an error
+
 ! 2009-10-09 - Gerhard Raven
  - Add HltRoutingBitsFilter
  

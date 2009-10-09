@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsFilter.cpp,v 1.1 2009-10-09 14:13:09 graven Exp $
+// $Id: HltRoutingBitsFilter.cpp,v 1.2 2009-10-09 15:52:50 cattanem Exp $
 // Include files 
 #include <vector>
 #include "boost/assign/list_of.hpp"
@@ -14,6 +14,7 @@ class HltRoutingBitsFilter : public GaudiAlgorithm {
 public: 
   HltRoutingBitsFilter( const std::string& name, ISvcLocator* pSvcLocator );
   virtual ~HltRoutingBitsFilter( ); ///< Destructor
+  virtual StatusCode initialize();    ///< Algorithm initialisation
   virtual StatusCode execute   ();    ///< Algorithm execution
 private:
    std::vector<unsigned int> m_r,m_v;
@@ -48,6 +49,21 @@ HltRoutingBitsFilter::~HltRoutingBitsFilter() {
 } 
 
 //=============================================================================
+// Initialisation
+//=============================================================================
+StatusCode HltRoutingBitsFilter::initialize() {
+
+  if (m_v.size()!=3) {
+    return Error("Property VetoMask should contain exactly 3 unsigned integers");
+  }
+  if (m_r.size()!=3) {
+    return Error("Property RequireMask should contain exactly 3 unsigned integers");
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+//=============================================================================
 // Main execution
 //=============================================================================
 StatusCode HltRoutingBitsFilter::execute() {
@@ -55,19 +71,15 @@ StatusCode HltRoutingBitsFilter::execute() {
   LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
   if (banks.size()!=1) {
-    return Error("Unexpected # of rawbanks",StatusCode::FAILURE,10);
+    setFilterPassed(true);
+    return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::SUCCESS,10);
   }
   if (banks.front()->size()!=3*sizeof(unsigned int)) {
-    return Error("Unexpected rawbank size",StatusCode::FAILURE,10);
+    setFilterPassed(true);
+    return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,10);
   }
   const unsigned int *data = banks.front()->data();
 
-  if (m_v.size()!=3) {
-        return Error("Property VetoMask should contain exactly 3 unsigned integers",StatusCode::FAILURE,10);
-  }
-  if (m_r.size()!=3) {
-        return Error("Property RequireMask should contain exactly 3 unsigned integers", StatusCode::FAILURE,10);
-  }
   
   bool veto = false;
   bool req  = false;
