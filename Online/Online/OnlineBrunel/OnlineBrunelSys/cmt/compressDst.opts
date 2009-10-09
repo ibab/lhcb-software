@@ -1,0 +1,27 @@
+ApplicationMgr.TopAlg                = {
+                                        "StoreExplorerAlg",
+                                        //"LHCb::RawEventTestDump/Dump",
+                                    	"LHCb::MDFWriter/Writer"
+};
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Unpack.Postfix                       = "";
+Dump.RawLocation                     = "/Event/DAQ/RawEvent";
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 1;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 1;
+StoreExplorerAlg.AccessForeign       = 1;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 100;
+Writer.Connection                    = "mdfCompressed.dat";
+Writer.Compress                      = 2;
+Writer.GenerateMD5                   = true;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.ForceLeaves             = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {"DATA='PFN:file:///home/frankm/data/mepData_0.dat' SVC='LHCb::MDFSelector'"};
+StoreExplorerAlg.OutputLevel         = 1;

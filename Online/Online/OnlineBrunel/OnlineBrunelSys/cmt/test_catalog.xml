@@ -4,7 +4,17 @@
 <POOLFILECATALOG>
   <File ID="A010D1EC-6BB3-DE11-9269-001EC9AD0A4E">
     <physical>
+<!--
       <pfn filetype="MDF" name="file:///home/frankm/data/mepData_0.dat"/>
+-->
+      <pfn filetype="MDF" name="file:///home/frankm/data/mdfCompressed.dat"/>
+    </physical>
+    <logical/>
+  </File>
+
+  <File ID="3A9E32FB-C8B4-DE11-805E-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="MDF" name="mdfCompressed.dat"/>
     </physical>
     <logical/>
   </File>

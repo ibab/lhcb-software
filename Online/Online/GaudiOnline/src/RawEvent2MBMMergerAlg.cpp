@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.10 2009-10-07 20:20:58 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.11 2009-10-09 12:59:22 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace LHCb  {
 	  const _V& bnks = raw->banks(RawBank::DAQ);
 	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
 	    RawBank* b = *i;
-	    if ( b->version() == DAQ_STATUS_BANK )  {
+	    if ( b->version() == DAQ_STATUS_BANK && b->type() == DAQ_STATUS_BANK )  {
 	      res.first = b->begin<MDFHeader>();
 	      break;
 	    }
@@ -216,6 +216,7 @@ namespace LHCb  {
 
     /// Write MDF record from serialization buffer
     StatusCode writeBuffer(void* const ioDesc, const void* data, size_t len)  {
+      typedef const vector<RawBank*> _V;
       try {
 	EventDesc& e = m_prod->event();
 	if ( 0 == e.data )   {
@@ -233,33 +234,56 @@ namespace LHCb  {
 	  MDFHeader* h = (MDFHeader*)b->data();
 	  e.type       = EVENT_TYPE_EVENT;
 	  e.len        = len;
-	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
 
+	  // If the buffer got compressed, the data are in a temporary buffer
+	  // and need to be copied into the MBM buffer
+	  if ( m_compress ) {
+	    ::memcpy(e.data, data, len);
+	  }
+
+	  ::memcpy(e.mask,h->subHeader().H1->triggerMask(),sizeof(e.mask));
 
 	  if ( m_addFID )   {
 	    RawBank* fid_bank = 0;
 	    const FileIdInfo *src_info;
 	    FileIdInfo *fid_info;
 	    std::pair<const char*,int> buff = getDataFromAddress();
-	    if ( buff.first ) {
+	    if ( buff.first )   {
+	      MDFHeader* src_hdr = ((RawBank*)buff.first)->begin<MDFHeader>();
+	      RawBank*   src_fid = (RawBank*)(((char*)src_hdr) + src_hdr->size2());
+	      size_t rec_len = h->recordSize();
+	      fid_bank = (RawBank*)((char*)e.data + len);
+	      size_t fid_len = src_fid->totalSize();
+	      fid_info = fid_bank->begin<FileIdInfo>();
+	      src_info = src_fid->begin<FileIdInfo>();
+	      ::memcpy((char*)e.data + len,src_fid,fid_len);
+	      e.len += fid_len;
+	      fid_info->checksum = h->checkSum();
+	      h->setChecksum(0);
+	      h->setSize(h->size()+fid_len);
+	      h->setSize2(rec_len);
+
+	      /*
 	      const char *start = buff.first;
 	      const char *end = start+buff.second;
 	      while (start < end)  {
-		const RawBank* b = (RawBank*)start;
-		if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK )   {		  
-		  size_t fid_len = b->totalSize();
+		const RawBank* bb = (RawBank*)start;
+		if ( bb->type() == RawBank::DAQ && bb->version() == DAQ_FILEID_BANK )   {
+		  size_t fid_len = bb->totalSize();
 		  fid_bank = (RawBank*)((char*)data + len);
 		  fid_info = fid_bank->begin<FileIdInfo>();
-		  src_info = b->begin<FileIdInfo>();
+		  src_info = bb->begin<FileIdInfo>();
 		  ::memcpy((char*)data + len,start,fid_len);
 		  e.len += fid_len;
 		  fid_info->checksum = h->checkSum();
 		  h->setChecksum(0);
 		  h->setSize(h->size()+fid_len);
+		  h->setSize3(rec_len);
 		  break;
 		}
-		start += b->totalSize();
+		start += bb->totalSize();
 	      }
+	      */
 	    }
 	    if ( 0 == fid_bank ) {
 	      return error("Failed to access FID bank from input data!");

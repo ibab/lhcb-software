@@ -11,11 +11,11 @@ start_task()
 start_Brunel()
 {
     start_task Brunel_0 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
-    #start_task Brunel_1 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
-    #start_task Brunel_2 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    start_task Brunel_1 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
+    start_task Brunel_2 "from Gaudi.Configuration import importOptions;importOptions('../python/BrunelOnline.py');"
 }
 #
-start_task MbmEvents "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer2()"
+start_task MbmReco "import GaudiOnlineTests;GaudiOnlineTests.runRecBuffer2()"
 #
 $MINITERM TanServer@${HOST} -e "export UTGID=${NODENAME}/TANServer; exec -a \${UTGID} $gaudi_run libOnlineKernel.so tan_nameserver -a -tcp -d"&
 #
@@ -30,7 +30,7 @@ start_task StorageRecv  "import GaudiOnlineTests;GaudiOnlineTests.runReceiver(bu
 sleep 3
 start_task Storage2Farm "import GaudiOnlineTests;GaudiOnlineTests.runReproSender('${HOST}/FarmRecv',buffer='Send')"
 start_task Farm2Storage "import GaudiOnlineTests;GaudiOnlineTests.runReproSender('${HOST}/StorageRecv',buffer='Output')"
-#start_task DiskWR   "import GaudiOnlineTests;GaudiOnlineTests.runDiskWR('Output',True,False,'./mdfOutput.dat')"
+start_task RecoWR   "import GaudiOnlineTests;GaudiOnlineTests.runRecoWR('Recv',True,False,'./mdfOutput.dat')"
 #
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
 start_Brunel

@@ -64,27 +64,11 @@ pair<RawBank*,void*> FIDManipulator::getBank()  {
           RawDataAddress* pA = dynamic_cast<RawDataAddress*>(reg->address());
           if ( pA )    {
             pair<const char*,int> data = pA->data();
-            MDFHeader* h = (MDFHeader*)data.first;
-            if (m_type==MDFIO::MDF_BANKS) h=(MDFHeader*)((RawBank*)data.first)->data();
-            const char* start = ((char*)h)+h->sizeOf(h->headerVersion());
-            const char* end   = start+h->size();
-	    if ( m_debug > 0 ) {
-	      /// Debug section
-	      MsgStream log(m_msg,"FID");
-	      while(start<end)    {
-		RawBank* b = (RawBank*)start;
-		log << MSG::INFO << RawEventPrintout::bankHeader(b) << endmsg;
-		start += b->totalSize();
-	      }
-	      start = ((char*)h)+h->sizeOf(h->headerVersion());
-	    }
-            while(start<end)    {
-              RawBank* b = (RawBank*)start;
-              if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK )
-                return pair<RawBank*,void*>(b,h);
-              start += b->totalSize();
-            }
-          }
+            char* p = (char*)((m_type==MDFIO::MDF_BANKS) ? ((RawBank*)data.first)->begin<char>() : data.first);
+	    RawBank* b = (RawBank*)( p + ((MDFHeader*)p)->size2() );
+	    if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK )
+	      return pair<RawBank*,void*>(b,p);
+	  }
         }
         break;
       default:
@@ -117,6 +101,9 @@ StatusCode FIDManipulator::updateDstAddress(const FileIdInfo* info) {
     charPt += info->l0;
     strcpy( charPt, info->par1() );
     charPt += info->l1;
+    strcpy( charPt, "DAQ/RawEvent" );
+    charPt += strlen(charPt)+1;
+
     int bLen = charPt - (char*)&data[0];
     data.resize( (bLen+3)/4);
     raw->addBank(0,RawBank::DstAddress,0,data);
@@ -180,6 +167,7 @@ StatusCode FIDManipulator::add(int id, const string& guid)   {
               pair<char*,int> data = pA->data();
               MDFHeader* h = (MDFHeader*)data.first;
               if(m_type==MDFIO::MDF_BANKS) h = (MDFHeader*)((RawBank*)data.first)->data();
+	      unsigned int rec_len = h->size0();
               b = (RawBank*)(((char*)h)+h->recordSize());
               b->setMagic();
               b->setType(RawBank::DAQ);
@@ -199,6 +187,7 @@ StatusCode FIDManipulator::add(int id, const string& guid)   {
               // Update MDF header
               h->setChecksum(0);
               h->setSize(h->size()+len);
+	      h->setSize2(rec_len);
               // And data address
               data.second += len;
               pA->setData(data);
@@ -255,7 +244,7 @@ StatusCode FIDManipulator::remove() {
         h = (MDFHeader*)res.second;
 	b = (RawBank*)res.first;
 	if ( b->type() == RawBank::DAQ && b->version() == DAQ_FILEID_BANK ) {
-	  h->setChecksum(0); // Checksum is invalid if we remove data!
+	  h->setChecksum(i->checksum); // Checksum is invalid if we remove data!
 	  h->setSize(h->size()-res.first->totalSize());
 	  SmartDataPtr<DataObject> evt(m_dp,"/Event");
 	  if ( evt )  {      // Now update raw address in /Event

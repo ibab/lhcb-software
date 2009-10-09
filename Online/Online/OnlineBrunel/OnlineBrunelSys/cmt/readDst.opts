@@ -1,0 +1,30 @@
+ApplicationMgr.TopAlg                = {"ReadPackedDst/Unpack", 
+                                        "StoreExplorerAlg",
+                                        "LHCb::RawEventTestDump/Dump",
+                                        "LHCb::RawEventTestDump/DumpR"};
+ApplicationMgr.EvtMax                = 100000;
+ApplicationMgr.HistogramPersistency  = "NONE";
+Unpack.Postfix                       = "";
+Dump.RawLocation                     = "/Event/DAQ/DstEvent";
+Dump.CheckData                       = 1;
+Dump.CheckData                       = 0;
+Dump.DumpData                        = 1;
+Dump.FullDump                        = 0;
+Dump.OutputLevel                     = 1;
+
+DumpR.RawLocation                     = "/Event/DAQ/RawEvent";
+DumpR.CheckData                       = 1;
+DumpR.CheckData                       = 0;
+DumpR.DumpData                        = 1;
+DumpR.FullDump                        = 0;
+DumpR.OutputLevel                     = 1;
+StoreExplorerAlg.AccessForeign       = 1;
+StoreExplorerAlg.Load                = 1;
+StoreExplorerAlg.PrintFreq           = 100;
+EventDataSvc.RootCLID                = 1;
+EventDataSvc.ForceLeaves             = 1;
+EventDataSvc.EnableFaultHandler      = true;
+EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
+EventSelector.PrintFreq              = 100;
+EventSelector.Input                  = {"DATA='PFN:file://mdfOutput.dat' SVC='LHCb::MDFSelector'"};
+StoreExplorerAlg.OutputLevel         = 1;

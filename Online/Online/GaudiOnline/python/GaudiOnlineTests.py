@@ -64,6 +64,12 @@ def runRecBuffer2():
 def runDiskWR(buffer, partitionBuffers, decode, output):
   return _run(diskWRApp(pid,pnam,buffer,partitionBuffers,decode,output))
 #------------------------------------------------------------------------------------------------
+def runRecoWR(buffer, partitionBuffers, decode, output):
+  res = diskWRApp(pid,pnam,buffer,partitionBuffers,decode,output)
+  fid = fidRemoveAlg(name='FidKiller',location='/Event',datatype=MDF_BANKS)
+  ApplicationMgr().TopAlg.insert(0,fid)
+  return _run(res)
+#------------------------------------------------------------------------------------------------
 def runBufferCons(buffer, partitionBuffers, decode):
   return _run(bufferCons(pid,pnam,buffer,partitionBuffers,decode))
 #------------------------------------------------------------------------------------------------

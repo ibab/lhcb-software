@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.13 2009-10-07 21:49:11 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.14 2009-10-09 12:59:38 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -37,7 +37,7 @@ def ___doWriteMDF(self,items):
   mergeDst = Online.evtMerger(buffer='Output',name='DstMerger',location='/Event/DAQ/DstEvent',routing=0x100)
   mergeDst.FIDLocation = '/Event';
   mergeDst.AddFID = 1;
-
+  mergeDst.Compress = 2;
   seq.Members += [ packer, dstUpdate, mergeDst ]
   print 'Running modified ___doWriteMDF .... Done'
 
