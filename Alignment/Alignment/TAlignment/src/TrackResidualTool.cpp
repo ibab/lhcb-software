@@ -177,11 +177,11 @@ namespace Al
     // - we definitely need to cache the inverse of the smoothed covariance for every node
     
     // first determine the nodes that represent the first and last
-    // measurements. we don't care about the others. 
-    const std::vector<LHCb::Node*> allnodes = track.nodes() ;
-    std::vector<LHCb::Node*>::const_iterator begin = allnodes.end() ;
-    std::vector<LHCb::Node*>::const_iterator end   = allnodes.begin() ;
-    for( std::vector<LHCb::Node*>::const_iterator it = allnodes.begin() ;
+    // measurements. we don't care about the others.
+    LHCb::Track::ConstNodeRange allnodes = track.nodes() ;
+    LHCb::Track::ConstNodeRange::const_iterator begin = allnodes.end() ;
+    LHCb::Track::ConstNodeRange::const_iterator end   = allnodes.begin() ;
+    for( LHCb::Track::ConstNodeRange::const_iterator it = allnodes.begin() ;
 	 it != allnodes.end(); ++it)
       if( (*it)->hasMeasurement() && (*it)->type() != LHCb::Node::Outlier ) {
 	if( begin == allnodes.end() ) begin = it ;

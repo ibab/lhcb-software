@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-10-09 - Wouter Hulsbergen
+ - adapted to changes in LHCb::Track
+
 ! 2009-09-23 - Johan Blouw
  - added WriteAlignmentConditions to M'pede style alignment sequence
 

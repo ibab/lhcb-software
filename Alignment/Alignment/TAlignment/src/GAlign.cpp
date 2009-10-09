@@ -3,7 +3,7 @@
  *  Implementation file for Alignment algorithm : GAlign
  *
  *  CVS Log :-
- *  $Id: GAlign.cpp,v 1.15 2009-07-10 07:34:14 wouter Exp $
+ *  $Id: GAlign.cpp,v 1.16 2009-10-09 10:22:13 wouter Exp $
  *
  *  @author J.Blouw Johan.Blouw@cern.ch
  *  @date   30/12/2005
@@ -236,7 +236,7 @@ StatusCode GAlign::execute() {
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
-	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+	if ( atrack->isOnTrack( id ) 
 	     && (( id.isTT() && tt_detector ) ||
                  ( id.isOT() && ot_detector ) ||
                  ( id.isIT() && it_detector ) ||
@@ -308,7 +308,7 @@ StatusCode GAlign::execute() {
       bool flagC2 = true;
       for ( itID = atrack->lhcbIDs().begin(); atrack->lhcbIDs().end() != itID; ++itID ) {
         LHCb::LHCbID id = *itID;
-        if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+        if ( atrack->isOnTrack( id ) 
              && (( id.isTT() && tt_detector ) ||
                  ( id.isOT() && ot_detector ) ||
                  ( id.isIT() && it_detector ) ||
@@ -368,7 +368,7 @@ StatusCode GAlign::execute() {
            break;
 	// check if this LHCbID is really on the track
 	LHCb::LHCbID id = *itID;
-	if ( atrack->isOnTrack( id ) &&  atrack->isMeasurementOnTrack( id )
+	if ( atrack->isOnTrack( id ) 
 	     && (( id.isTT() && tt_detector ) ||
                  ( id.isOT() && ot_detector ) ||
                  ( id.isIT() && it_detector ) ||
