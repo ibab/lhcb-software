@@ -1,4 +1,4 @@
-// $Id: MuonRead.cpp,v 1.7 2008-06-30 17:20:28 spozzi Exp $
+// $Id: MuonRead.cpp,v 1.8 2009-10-09 07:32:34 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,8 @@
 #include "Event/MCHit.h"
 #include "Event/Track.h"
 #include "Event/Node.h"
+
+#include <boost/foreach.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : MuonRead
@@ -92,15 +94,13 @@ StatusCode MuonRead::execute() {
     Fchi2=((*it)->chi2()); //it track iterator!!
 
     // loop over track nodes const std::vector<LHCb::Node*>
-    const std::vector<LHCb::Node*>& nodes = (*it)->nodes() ; 
     int m = 1;
-    
-    for ( std::vector<LHCb::Node*>::const_iterator inode = nodes.begin(); inode != nodes.end() ; ++inode) {
-      debug()<<" node information "<< (*inode)->z();
+    BOOST_FOREACH( const LHCb::Node* node, (*it)->nodes() ) {
+      debug()<<" node information "<< node->z();
       
-      if ( (*inode)->z() > 11900 && (*inode)->type()!=LHCb::Node::Outlier  ) {
+      if ( node->z() > 11900 && node->type()!=LHCb::Node::Outlier  ) {
         debug() << " ----  in the Muon detector "<< endreq;
-        const LHCb::State& state =(*inode)->state();
+        const LHCb::State& state =node->state();
 	
         Fx.push_back(state.x());
         Fy.push_back(state.y());
@@ -115,10 +115,10 @@ StatusCode MuonRead::execute() {
         Fdty.push_back(sqrt(state.errTy2())); 
         Fp.push_back(state.qOverP());       
         
-        nodez.push_back((*inode)->z());
-        residual.push_back((*inode)->residual());
-        residualerr.push_back(sqrt((*inode)->errResidual2())) ;
-        measurementerr.push_back(sqrt((*inode)->errMeasure2())) ;
+        nodez.push_back(node->z());
+        residual.push_back(node->residual());
+        residualerr.push_back(std::sqrt(node->errResidual2())) ;
+        measurementerr.push_back(std::sqrt(node->errMeasure2())) ;
         m++;
         
       }      
@@ -279,7 +279,7 @@ StatusCode MuonRead::execute() {
 
     Simone->write();
     debug()<<" The muon track has "
-	   << list_of_tile.size()<<" Tiles and "<<  nodes.size()<<" nodes "<< endreq;
+	   << list_of_tile.size()<<" Tiles and "<<  (*it)->nodes().size()<<" nodes "<< endreq;
   }
   
   return StatusCode::SUCCESS;
