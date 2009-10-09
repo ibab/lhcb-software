@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.177 2009-09-24 11:46:30 jpalac Exp $
+! $Id: release.notes,v 1.178 2009-10-09 07:47:01 pkoppenb Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-10-09 - Patrick Koppenburg
+ - Adapt to changed in Track Event Model.
+ - v6r0p1
 
 !========================== VertexFit v6r0 2009-09-24 =================
 

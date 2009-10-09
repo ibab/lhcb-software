@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.12 2009-08-19 06:41:49 jpalac Exp $
+// $Id: PVReFitter.cpp,v 1.13 2009-10-09 07:47:01 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -631,10 +631,10 @@ LHCb::State PVReFitter::stateAtFirstMeas(LHCb::Track* tr) const
 
   if (tr->checkType( Track::VeloR )) {
     // Get most downstream state and VELO point
-    Measurement* firstMeas = *(tr->measurements().rbegin());
+    const Measurement* firstMeas = *(tr->measurements().rbegin());
     veloFirstZ = firstMeas->z();
   } else {
-    Measurement* firstMeas = *(tr->measurements().begin());
+    const Measurement* firstMeas = *(tr->measurements().begin());
     veloFirstZ = firstMeas->z();
   }
 
