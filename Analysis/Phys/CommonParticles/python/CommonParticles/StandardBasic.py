@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardBasic.py,v 1.2 2009-02-18 15:29:29 pkoppenb Exp $ 
+# $Id: StandardBasic.py,v 1.3 2009-10-09 12:39:25 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardBasic.py
 #  configuration file for 'Standard Basic' 
@@ -11,7 +11,7 @@
 Configuration file for 'Standard Basic' particles 
 """
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 
 _locations = {} 
@@ -19,7 +19,7 @@ _locations = {}
 from CommonParticles.StandardBasicCharged import *
 _locations.update ( locations )
 
-from CommonParticles.StandardBasicNeutral import *
+#from CommonParticles.StandardBasicNeutral import *
 _locations.update ( locations )
 
 # redefine the locations 

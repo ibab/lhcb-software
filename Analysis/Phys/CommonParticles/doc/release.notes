@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.155 2009-10-08 12:53:14 pkoppenb Exp $
+!$Id: release.notes,v 1.156 2009-10-09 12:39:25 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
 ! Purpose     : Common particles
+!
+! When adding a Particle make sure it is appended to one of the Standard* files
+!
 !-----------------------------------------------------------------------------
+
+! 2009-10-09 - Patrick Koppenburg
+ - Added Lambda as a pure copy of Ks with pi+ -> p+
+ - Reshuffled a few particles into appropriate categories Standard*.py
+ - Moved explicit loading of Std* out of StandardIntermediate
+   -> should do the same
 
 ! 2009-10-08 - Patrick Koppenburg
  - New file StdNoPIDsUpPions.py for upstream pions
