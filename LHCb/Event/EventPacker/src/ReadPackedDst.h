@@ -1,9 +1,12 @@
-// $Id: ReadPackedDst.h,v 1.2 2009-02-04 17:24:39 marcocle Exp $
+// $Id: ReadPackedDst.h,v 1.3 2009-10-09 12:58:43 frankb Exp $
 #ifndef READPACKEDDST_H 
 #define READPACKEDDST_H 1
 
 // Include files
 // from Gaudi
+#include "GaudiKernel/SmartIF.h"
+#include "GaudiKernel/IAddressCreator.h"
+#include "GaudiKernel/IDataManagerSvc.h"
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "GaudiAlg/IGenericTool.h"
 #include "GaudiKernel/ToolHandle.h"
@@ -23,6 +26,7 @@ public:
   virtual ~ReadPackedDst( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
+  virtual StatusCode finalize();      ///< Algorithm finalization
   virtual StatusCode execute   ();    ///< Algorithm execution
 
 protected:
@@ -63,5 +67,7 @@ private:
   unsigned int* m_data;
   int           m_size;
   ToolHandle<IGenericTool> m_odinDecoder;
+  SmartIF<IAddressCreator> m_addrCreator;
+  SmartIF<IDataManagerSvc> m_evtMgr;  
 };
 #endif // READPACKEDDST_H

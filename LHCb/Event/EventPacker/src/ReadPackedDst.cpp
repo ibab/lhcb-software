@@ -1,8 +1,10 @@
-// $Id: ReadPackedDst.cpp,v 1.9 2009-08-31 15:33:06 ocallot Exp $
+// $Id: ReadPackedDst.cpp,v 1.10 2009-10-09 12:58:43 frankb Exp $
 // Include files
 
 // from Gaudi
+#include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/AlgFactory.h"
+#include "GaudiKernel/IOpaqueAddress.h"
 #include "Event/RawEvent.h"
 #include "Event/PackedTrack.h"
 #include "Event/PackedCaloHypo.h"
@@ -47,8 +49,22 @@ StatusCode ReadPackedDst::initialize() {
   // Pass the input RawEvent to the tool
   sc = Gaudi::Utils::setProperty(&(*m_odinDecoder), "RawEventLocation", m_inputLocation );
   if (sc.isFailure()) return sc;
+  // Attach data loader facility
+  m_evtMgr = SmartIF<IDataManagerSvc>(eventSvc());
+  if ( !m_evtMgr ) return StatusCode::FAILURE;
+  m_addrCreator = serviceLocator()->service("EventPersistencySvc");
+  if ( !m_addrCreator ) return StatusCode::FAILURE;
+
   // Pass the Postfix property to the tool
   return Gaudi::Utils::setProperty(&(*m_odinDecoder), "ODINLocation", LHCb::ODINLocation::Default + m_postfix);
+}
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode ReadPackedDst::finalize() {
+  m_evtMgr = 0;
+  m_addrCreator = 0;
+  return GaudiAlgorithm::finalize();
 }
 
 //=============================================================================
@@ -70,19 +86,40 @@ StatusCode ReadPackedDst::execute() {
   if ( !exist<LHCb::ODIN>(LHCb::ODINLocation::Default + m_postfix) ) {
     return Warning( "ODIN not found" );
   }
+
   const std::vector<LHCb::RawBank*>& adds = dstEvent->banks( LHCb::RawBank::DstAddress );
   for (std::vector<LHCb::RawBank*>::const_iterator itA = adds.begin(); adds.end() != itA; ++itA ) {
+    std::string spars[3];
+    unsigned long ipars[2];
+    unsigned long clid;
+    long styp;
+    char* cptr;
     unsigned int* iptr  = (*itA)->data();
-    unsigned int clid = *iptr++;
-    unsigned int par0 = *iptr++;
-    unsigned int par1 = *iptr++;
-    unsigned int styp = *iptr++;
+    clid = *iptr++;
+    ipars[0] = *iptr++;
+    ipars[1] = *iptr++;
+    styp = *iptr++;
     
-    debug() << "Address bank: Class ID " << clid << " ipar[0] " << par0 << " ipar[1] " << par1
-            << " svcType " << styp;
-    char* cptr = (char*) iptr;
-    char* dptr = cptr + strlen(cptr) + 1;
-    debug() << " par[0]='" << cptr << "' par[1]='" << dptr << "'" << endmsg;
+    debug() << "Address bank: Class ID " << clid << " par[0] " << ipars[0] << " par[1] " << ipars[1]
+            << " svcType " << std::hex << styp;
+    cptr = (char*)iptr;
+    spars[0] = (char*)iptr;
+    cptr += strlen(cptr) + 1;
+    spars[1] = cptr;
+    cptr += strlen(cptr) + 1;
+    spars[2] = cptr;
+    debug() << " par[0]='" << spars[0] << "' par[1]='" << spars[1] << "' par[2]='" << spars[2] << "'" << endmsg;
+    /*
+    IOpaqueAddress* pAddr = 0;
+    if ( !m_addrCreator->createAddress(styp,clid, &spars[0],&ipars[0],pAddr).isSuccess() ) {
+      error() << "Failed to create raw data address from the DstAddress bank!" << endmsg;
+    }
+    else if ( !m_evtMgr->registerAddress(spars[2],pAddr).isSuccess() ) {
+      error() << "Failed to register raw data address from the DstAddress bank in TES!" << endmsg;
+      pAddr->release();
+      pAddr = 0;
+    }
+    */
   }
 
   const std::vector<LHCb::RawBank*>& banks = dstEvent->banks( LHCb::RawBank::DstBank );
@@ -155,10 +192,11 @@ StatusCode ReadPackedDst::execute() {
       recHeader->setApplicationVersion( stringFromData() );
       recHeader->setRunNumber( nextInt() );
       nb = nextInt();
+      std::pair<std::string, std::string> aPair;
       std::vector<std::pair<std::string,std::string> > allPairs;
       for ( unsigned int kk=0; nb > kk; ++kk ) {
-        std::string temp = stringFromData();
-        std::pair<std::string, std::string> aPair( temp, stringFromData() );
+        aPair.first = stringFromData();
+        aPair.second = stringFromData();
         allPairs.push_back( aPair );
       }
       recHeader->setCondDBTags( allPairs );
@@ -171,7 +209,8 @@ StatusCode ReadPackedDst::execute() {
       unsigned int nbAlg = nextInt();
       std::string temp;
       for ( unsigned int kk = 0 ; nbAlg > kk ; ++kk ) {
-        procStatus->addAlgorithmStatus( stringFromData(), nextInt() );
+	temp = stringFromData();
+        procStatus->addAlgorithmStatus( temp, nextInt() );
       }
 
     } else if ( LHCb::CLID_RawEvent == classID ) {

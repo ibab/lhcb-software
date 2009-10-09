@@ -1,4 +1,4 @@
-// $Id: WritePackedDst.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
+// $Id: WritePackedDst.cpp,v 1.4 2009-10-09 12:58:43 frankb Exp $
 // Include files 
 
 // from Gaudi
@@ -85,7 +85,7 @@ StatusCode WritePackedDst::execute() {
   }
   IOpaqueAddress* padd = reg->address();
 
-  std::vector<unsigned int> data(100);
+  std::vector<unsigned int> data(200);
   unsigned int* dataPt = &*data.begin();
   *dataPt++ = evt->classID();
   *dataPt++ = padd->ipar()[0];
@@ -96,6 +96,8 @@ StatusCode WritePackedDst::execute() {
   charPt = charPt + strlen( padd->par()[0].c_str() ) + 1;
   strcpy( charPt, padd->par()[1].c_str() );
   charPt = charPt + strlen( padd->par()[1].c_str() ) + 1;
+  strcpy( charPt, reg->identifier().c_str() );
+  charPt = charPt + strlen( reg->identifier().c_str()+7 ) + 1; // Omit '/Event' !
   int bLen = charPt - (char*)&*data.begin();
   data.resize( (bLen+3)/4);
   m_dst->addBank( 0, LHCb::RawBank::DstAddress, 0, data );
