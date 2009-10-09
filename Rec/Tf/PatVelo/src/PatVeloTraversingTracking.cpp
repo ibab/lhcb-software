@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.cpp,v 1.4 2009-09-25 16:45:35 gersabec Exp $
+// $Id: PatVeloTraversingTracking.cpp,v 1.5 2009-10-09 18:54:00 siborghi Exp $
 // Include files
 #include "PatVeloTraversingTracking.h"
 // from Gaudi
@@ -13,7 +13,7 @@ namespace Tf {
 //=============================================================================
 Tf::PatVeloTraversingTracking::
 PatVeloTraversingTracking( const std::string& name,
-			   ISvcLocator* pSvcLocator)
+                           ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
   ,  m_veloDet ( 0 )
 {
@@ -31,10 +31,10 @@ PatVeloTraversingTracking( const std::string& name,
   declareProperty( "MakeHistogram",       m_makeHistogram=false);
   //Input location of tracks
   declareProperty( "InputTracksLocation" ,
-		   m_inputTracksLocation = LHCb::TrackLocation::Velo );
+                   m_inputTracksLocation = LHCb::TrackLocation::Velo );
   //Output location of merged track
   declareProperty( "OutputTracksLocation" ,
-		   m_outputTracksLocation = "Rec/Track/Traversing" );
+                   m_outputTracksLocation = "Rec/Track/Traversing" );
 }
 
 
@@ -51,7 +51,10 @@ StatusCode Tf::PatVeloTraversingTracking::initialize() {
   if(m_debugLevel) debug() << "==> Initialize" << endmsg;
   setHistoTopDir( "Velo/" );
 
-  m_halfDistance = book1D("HalfDistance", "distance between velo halfs", 0, 5, 100 );
+  m_halfDistanceX = book1D("HalfDistanceX", "distance between velo halves X", -5.05, 5.05, 100 );
+  m_halfDistanceY = book1D("HalfDistanceY", "distance between velo halves Y", -5.05, 5.05, 100 );
+  m_halfSigmaX = book1D("HalfSigmaX", "sigma between velo halves X", -5.05, 20.05, 110 );
+  m_halfSigmaY = book1D("HalfSigmaY", "sigma between velo halves Y", -5.05, 20.05, 110 );
 
   m_veloDet = getDet<DeVelo>( DeVeloLocation::Default );
   return StatusCode::SUCCESS;
@@ -76,21 +79,21 @@ StatusCode Tf::PatVeloTraversingTracking::execute() {
 
   if ( m_debugLevel ) {
     debug()<< "==> getTrackContainer() "
-	   << "Retrieving " << m_inputTracksLocation << endmsg;
+           << "Retrieving " << m_inputTracksLocation << endmsg;
   }
   if ( !exist<LHCb::Tracks>(m_inputTracksLocation ) ) {
     return Error(" ----  No track container retrieved from " +
-		 m_inputTracksLocation, StatusCode::FAILURE);
+                 m_inputTracksLocation, StatusCode::FAILURE);
   }
 
   const LHCb::Tracks * trackContainer=get<LHCb::Tracks>(m_inputTracksLocation);
   if(m_debugLevel) debug() << "---- VeloTrack Container retrieved from "
-			   << m_inputTracksLocation << endmsg;
+                           << m_inputTracksLocation << endmsg;
 
-  double distance=0;
-  TraversingTrackSet set;
+
+  std::vector<TraversingTrackSet> chosen_sets;
   std::vector< std::vector<LHCb::Track*> > traversingTrackContainer;
-  findTracks(distance,set,trackContainer,traversingTrackContainer);
+  findTracks(chosen_sets,trackContainer,traversingTrackContainer);
 
   //Book place in TES:
   LHCb::Tracks* outputTracks;
@@ -102,13 +105,20 @@ StatusCode Tf::PatVeloTraversingTracking::execute() {
   }
 
   //Plot x-distance and save to TES:
-  if(distance>-900){ // less than "magic" -999 number
-    if(m_debugLevel) debug() << "Distance " << distance << endmsg;
-    if(m_makeHistogram) plot1D(distance, "x_distance",
-			       "Distance between velo halves [mm]",
-			       -1+0.05,20+0.05,210);
-    if(m_makeHistogram) m_halfDistance->fill(distance);
-    saveTrackInTES(set.mergedTrack());
+  debug()<<"Number of good candidate "<<chosen_sets.size()<<endmsg;
+  if ( chosen_sets.size()>0){
+    int iset=0;
+    for ( std::vector<TraversingTrackSet>::iterator set_it=chosen_sets.begin();
+          set_it!=chosen_sets.end(); ++set_it){
+      saveTrackInTES(set_it->mergedTrack());
+      if(m_makeHistogram) m_halfDistanceX->fill(set_it->DistanceX());
+      if(m_makeHistogram) m_halfDistanceY->fill(set_it->DistanceY());
+      if(m_makeHistogram) m_halfSigmaX->fill(set_it->SigmaX());
+      if(m_makeHistogram) m_halfSigmaY->fill(set_it->SigmaY());
+      iset++;
+      debug() << "add set n."<< iset<<endmsg;
+    }
+    chosen_sets.clear();
     traversingTrackContainer.clear();
     setFilterPassed(true);
     return StatusCode::SUCCESS;
@@ -141,14 +151,16 @@ double Tf::PatVeloTraversingTracking::impactParameter(LHCb::Track *track)
 // Main method. Finds traversing tracks based on the 3 criteria listed in
 // the class description
 //==========================================================================
-void Tf::PatVeloTraversingTracking::
-findTracks(double &distance,
-	   TraversingTrackSet& set,
-	   const LHCb::Tracks * trackContainer,
-	   std::vector< std::vector<LHCb::Track*> > & traversingTrackContainer)
+void Tf::PatVeloTraversingTracking::findTracks(std::vector<TraversingTrackSet> & chosen_sets,
+                                               const LHCb::Tracks * trackContainer,
+                                               std::vector< std::vector<LHCb::Track*> > & traversingTrackContainer)
 {
-  distance = -999; // "magic" value if no track pairs
 
+  TraversingTrackSet set_candidate;
+  double distancex = -999; // "magic" value if no track pairs
+  double sigmaX=0;
+  double sigmaY=0;
+  
   if(trackContainer->size()<2) return;
 
   /* STEP 1: SORT TRACK CONTAINER W.R.T THETA. USE STL SORT BY STORING THETA
@@ -178,13 +190,13 @@ findTracks(double &distance,
 
     if(fabs(theta-previous_theta)<m_thetaCut){
       if(traversingTrackCandidates.size() == 0){
-	traversingTrackCandidates.push_back(previous_track);
+        traversingTrackCandidates.push_back(previous_track);
       }
       traversingTrackCandidates.push_back(track);
     } else {
       if(traversingTrackCandidates.size()!=0){
-	traversingTrackContainer.push_back(traversingTrackCandidates);
-	traversingTrackCandidates.clear();
+        traversingTrackContainer.push_back(traversingTrackCandidates);
+        traversingTrackCandidates.clear();
       }
     }
   }
@@ -200,14 +212,14 @@ findTracks(double &distance,
   std::vector< std::vector<LHCb::Track*> >::iterator it_container;
   for( it_container = traversingTrackContainer.begin();
        it_container != traversingTrackContainer.end(); ++it_container){
-
+    distancex = -999; // "magic" value if no track pairs
     double bestSigmaX=1000000;
     std::vector<LHCb::Track*> candidates = *it_container;
     if(m_verboseLevel) verbose() << "Looping over candidates" << endmsg;
     // first candidate
     std::vector<LHCb::Track*>::iterator it_candidate0;
     for (it_candidate0 = candidates.begin();
-	 it_candidate0!=candidates.end();++it_candidate0){
+         it_candidate0!=candidates.end();++it_candidate0){
       
       LHCb::Track* track0 = *it_candidate0;
 
@@ -221,9 +233,9 @@ findTracks(double &distance,
       bool track0half = m_veloDet->sensor(sensorID0)->isLeft();
       double xcorr=0;
       if(track0half == true){
-	xcorr= m_distanceGuess/2;}
+        xcorr= m_distanceGuess/2;}
       else{
-	xcorr= -1*m_distanceGuess/2;
+        xcorr= -1*m_distanceGuess/2;
       }
 
       trackX.clear();
@@ -232,93 +244,97 @@ findTracks(double &distance,
       // next candidate
       std::vector<LHCb::Track*>::iterator it_candidate1;
       for( it_candidate1 = it_candidate0 + 1;
-	   it_candidate1 != candidates.end() ; ++it_candidate1){
+           it_candidate1 != candidates.end() ; ++it_candidate1){
 
-	LHCb::Track* track1 = *it_candidate1;
+        LHCb::Track* track1 = *it_candidate1;
 
-	//Check if the tracks are in different halves:
-	int sensorID1 = track1->lhcbIDs()[0].veloID().sensor();
-	bool track1half = m_veloDet->sensor(sensorID1)->isLeft();
-	if( track1half == track0half) continue;
+        //Check if the tracks are in different halves:
+        int sensorID1 = track1->lhcbIDs()[0].veloID().sensor();
+        bool track1half = m_veloDet->sensor(sensorID1)->isLeft();
+        if( track1half == track0half) continue;
 
-	double x1 = track1->position().x();
-	double y1 = track1->position().y();
-	double z1 = track1->position().z();
-	double tx1 = track1->slopes().x();
-	double ty1 = track1->slopes().y();
+        double x1 = track1->position().x();
+        double y1 = track1->position().y();
+        double z1 = track1->position().z();
+        double tx1 = track1->slopes().x();
+        double ty1 = track1->slopes().y();
 
-	double average_z = (z0+z1)/2;
+        double average_z = (z0+z1)/2;
 
-	double average_x = 0;
-	double average_y = 0;
-	//Extrapolate track candidates to 5 points in z. 
-	//Calculate sigma to check how parallel the tracks are in X:
-	for(double Z=average_z-800;Z<=average_z+800;Z+=400){
-	  // unsigned dist in x between tracks at Z
-	  double X = fabs((x0+tx0*(Z-z0)) - (x1+tx1*(Z-z1)));
-	  double Y = fabs((y0+ty0*(Z-z0)) - (y1+ty1*(Z-z1)));
-	  trackX.push_back(X);
-	  trackY.push_back(Y);
-	  average_x +=X;
-	  average_y +=Y;
-	}
+        double average_x = 0;
+        double average_y = 0;
+        //Extrapolate track candidates to 5 points in z. 
+        //Calculate sigma to check how parallel the tracks are in X:
+        for(double Z=average_z-800;Z<=average_z+800;Z+=400){
+          // unsigned dist in x between tracks at Z
+          double X = ((x0+tx0*(Z-z0)) - (x1+tx1*(Z-z1)));
+          double Y = ((y0+ty0*(Z-z0)) - (y1+ty1*(Z-z1)));
+          if (track0half){
+            X=-X;
+            Y=-Y;
+          }          
+          trackX.push_back(X);
+          trackY.push_back(Y);
+          average_x +=X;
+          average_y +=Y;
+        }
 
-	average_x /= trackX.size();
-	average_y /= trackY.size();
+        average_x /= trackX.size();
+        average_y /= trackY.size();
 
-	double sigmaX =  0;
-	for(std::vector<double>::iterator iter=trackX.begin();
-	    iter!=trackX.end();++iter){
-	  sigmaX += pow(*iter - average_x,2);
-	}
-	sigmaX = sqrt(sigmaX/trackX.size());
+        sigmaX =  0;
+        for(std::vector<double>::iterator iter=trackX.begin();
+            iter!=trackX.end();++iter){
+          sigmaX += pow(*iter - average_x,2);
+        }
+        sigmaX = sqrt(sigmaX/trackX.size());
 
-	double sigmaY =  0;
-	for(std::vector<double>::iterator iter=trackY.begin();
-	    iter!=trackY.end();++iter){
-	  sigmaY += pow(*iter - average_y,2);
-	}
-	sigmaY = sqrt(sigmaY/trackY.size());
+        sigmaY =  0;
+        for(std::vector<double>::iterator iter=trackY.begin();
+            iter!=trackY.end();++iter){
+          sigmaY += pow(*iter - average_y,2);
+        }
+        sigmaY = sqrt(sigmaY/trackY.size());
 
-	// If tracks are parallel (sigma < sigmaCut), 
-	// check if they come from the luminous region:
-	if ( ( sigmaX < m_sigmaCut ) && ( sigmaY < m_sigmaCut ) ) {
-	  IP_vector.clear();
-	  IP_vector.reserve(2);	
-	  IP_vector.push_back(track0->clone());
-	  IP_vector.push_back(track1->clone());
+        // If tracks are parallel (sigma < sigmaCut), 
+        // check if they come from the luminous region:
+        if ( ( sigmaX < m_sigmaCut ) && ( sigmaY < m_sigmaCut ) ) {
+          IP_vector.clear();
+          IP_vector.reserve(2);	
+          IP_vector.push_back(track0->clone());
+          IP_vector.push_back(track1->clone());
 
-	  bool IPflag = false;
-	  for(std::vector<LHCb::Track* >::iterator IP_it = IP_vector.begin();
-	      IP_it!=IP_vector.end();++IP_it){
-	    LHCb::Track* track = (*IP_it);
-	    if(IP_it == IP_vector.begin())
-	      track->position().SetX(track->position().x() +xcorr);
-	    else
-	      track->position().SetX(track->position().x() -xcorr);
+          bool IPflag = false;
+          for(std::vector<LHCb::Track* >::iterator IP_it = IP_vector.begin();
+              IP_it!=IP_vector.end();++IP_it){
+            LHCb::Track* track = (*IP_it);
+            if(IP_it == IP_vector.begin())
+              track->position().SetX(track->position().x() +xcorr);
+            else
+              track->position().SetX(track->position().x() -xcorr);
 
-	    double IP = fabs(impactParameter(*IP_it));
-	    if(IP < m_IPCut){ IPflag=true; }
-	  }
-	  if(sigmaX<bestSigmaX){
-	    if(m_includeLR==true || (m_includeLR==false && IPflag==false)){
-	      set.Init(average_x,sigmaX,track0,track1);
-	      distance = average_x;
-	      bestSigmaX = sigmaX;
-	    }
-
-	  } // closes 	  if(sigma<bestSigma)
-
-	} // closes 	if(sigma<m_sigmaCut)
-
+            double IP = fabs(impactParameter(*IP_it));
+            if(IP < m_IPCut){ IPflag=true; }
+          }
+          if(sigmaX<bestSigmaX){
+            if(m_includeLR==true || (m_includeLR==false && IPflag==false)){
+              set_candidate.Init(average_x,sigmaX,average_y,sigmaY,track0,track1);
+              distancex = average_x;
+            }
+          } // closes 	  if(sigma<bestSigma)
+        } // closes 	if(sigma<m_sigmaCut)
       } //closes loop over candidate1
 
     } //closes loop over candidate0
+    if (distancex >-900){
+      chosen_sets.push_back(set_candidate);
+    }
 
   } //closes loop over all candidates
   trackX.clear();
   IP_vector.clear();
-
+  debug()<<"Number of found good candidate "<<chosen_sets.size()<<endmsg;
+  
   return;
 }
 

@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.h,v 1.2 2009-08-03 09:10:39 mjohn Exp $
+// $Id: PatVeloTraversingTracking.h,v 1.3 2009-10-09 18:54:00 siborghi Exp $
 #ifndef TF_PATVELOTRAVERSINGTRACKING_H 
 #define TF_PATVELOTRAVERSINGTRACKING_H 1
 
@@ -55,49 +55,59 @@ namespace Tf
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
   private:
-    AIDA::IHistogram1D* m_halfDistance;
+    AIDA::IHistogram1D* m_halfDistanceX;
+    AIDA::IHistogram1D* m_halfDistanceY;
+    AIDA::IHistogram1D* m_halfSigmaX;
+    AIDA::IHistogram1D* m_halfSigmaY;
 
-  /** @class PatVeloTraversingTracking::TraversingTrackSet PatVeloTraversingTracking.h
-   *
-   * Container class. Holds two traversing track candidates,
-   * their merged track and their x-distance.
-   * Local to PatVeloTraversingTracking
-   *
-   *  @author Aras Papadelis. aras.papadelis@cern.ch
-   *  @date   2009-06-22
-   */
+    /** @class PatVeloTraversingTracking::TraversingTrackSet PatVeloTraversingTracking.h
+     *
+     * Container class. Holds two traversing track candidates,
+     * their merged track and their x-distance.
+     * Local to PatVeloTraversingTracking
+     *
+     *  @author Aras Papadelis. aras.papadelis@cern.ch
+     *  @date   2009-06-22
+     */
     class TraversingTrackSet{
     public:
       TraversingTrackSet(){}; ///< Empty constructor
 
       /// set parameters from two tracks
-      void Init(double dist, double sigma,
-		LHCb::Track* t1,LHCb::Track* t2){
-	m_distance = dist;
-	m_sigma = sigma;
-	m_t1 = t1->clone();
-	m_t2 = t2->clone();
+      void Init(double distx, double sigmax,
+                double disty, double sigmay,
+                LHCb::Track* t1,LHCb::Track* t2){
+        m_distancex = distx;
+        m_sigmax = sigmay;
+        m_distancey = disty;
+        m_sigmay = sigmay;
+        m_t1 = t1->clone();
+        m_t2 = t2->clone();
       }
 
       // accessors
-      inline double Distance(){return m_distance;}
-      inline double Sigma(){return m_sigma;}
+      inline double DistanceX(){return m_distancex;}
+      inline double SigmaX(){return m_sigmax;}
+      inline double DistanceY(){return m_distancey;}
+      inline double SigmaY(){return m_sigmay;}
       inline LHCb::Track* Track1(){return m_t1;}
       inline LHCb::Track* Track2(){return m_t2;}
 
       /// return the track constructed from the two stored tracks
       LHCb::Track* mergedTrack(){
-	LHCb::Track* merged(m_t1->clone());
-	const std::vector<LHCb::LHCbID>& m_idContainer = m_t2->lhcbIDs();
-	std::vector<LHCb::LHCbID>::const_iterator itID;
-	for(itID=m_idContainer.begin();itID!=m_idContainer.end();++itID)
-	  merged->addToLhcbIDs(*itID);
-	return merged;
+        LHCb::Track* merged(m_t1->clone());
+        const std::vector<LHCb::LHCbID>& m_idContainer = m_t2->lhcbIDs();
+        std::vector<LHCb::LHCbID>::const_iterator itID;
+        for(itID=m_idContainer.begin();itID!=m_idContainer.end();++itID)
+          merged->addToLhcbIDs(*itID);
+        return merged;
       }
 
     private:
-      double m_distance;  ///< distance between the two tracks
-      double m_sigma;     ///< sigma of the dist between tracks
+      double m_distancex;  ///< X distance between the two tracks
+      double m_sigmax;     ///< X sigma of the dist between tracks
+      double m_distancey;  ///< Y distance between the two tracks
+      double m_sigmay;     ///< Y sigma of the dist between tracks
       LHCb::Track* m_t1;  ///< pointer to first track
       LHCb::Track* m_t2;  ///< pointer to second track
     };
@@ -105,10 +115,9 @@ namespace Tf
   public:
     /// Main method. Finds traversing tracks based on the 3 criteria
     /// listed in the class description
-    void findTracks(double& distance,
-		    TraversingTrackSet& set,
-		    const LHCb::Tracks * trackContainer,
-		    std::vector< std::vector<LHCb::Track*> > & traversingTrackContainer);
+    void findTracks(std::vector<TraversingTrackSet>& chosen_sets,
+                    const LHCb::Tracks * trackContainer,
+                    std::vector< std::vector<LHCb::Track*> > & traversingTrackContainer);
 
     /// put this track into the TES
     void saveTrackInTES(LHCb::Track*);
