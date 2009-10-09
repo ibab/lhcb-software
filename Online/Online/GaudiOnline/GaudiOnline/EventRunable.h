@@ -1,4 +1,4 @@
-// $Id: EventRunable.h,v 1.3 2006-11-22 16:33:25 frankb Exp $
+// $Id: EventRunable.h,v 1.4 2009-10-09 10:08:39 garnierj Exp $
 #ifndef GAUDISVC_EVENTRUNABLE_H
 #define GAUDISVC_EVENTRUNABLE_H 1
 
@@ -46,6 +46,9 @@ namespace LHCb  {
     int               m_nerr;
     /// Monitoring quantity: Number of events processed
     int               m_evtCount;
+    /// Flag that indicates that we received an error event 
+    bool	      m_errorFired;	 
+    
 
   public:
     /// Standard Constructor
