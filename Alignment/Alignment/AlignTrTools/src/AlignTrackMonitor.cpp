@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.cpp,v 1.16 2009-09-08 07:40:29 wouter Exp $
+// $Id: AlignTrackMonitor.cpp,v 1.17 2009-10-09 12:00:00 wouter Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -28,6 +28,8 @@
 // Boost
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
+
 using namespace boost::lambda;
 //===========================================================================
 
@@ -247,15 +249,16 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
   unsigned int overlapStation = abs(defValue);
 
   // Loop over the nodes to get the hits variables
-  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
-  for ( ; iNodes != aTrack->nodes().end(); ++iNodes ) {
-
+  LHCb::Track::ConstNodeRange nodes = aTrack->nodes() ;
+  LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
+  for ( ; iNodes != nodes.end(); ++iNodes ) {
+    
     // Only loop on hits with measurement
     if ( !(**iNodes).hasMeasurement() ) continue;
 
     const LHCb::Node& aNode = **iNodes;
     LHCb::LHCbID nodeID = aNode.measurement().lhcbID();
-    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+    const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
 
     LHCb::STChannelID theSTID;
     LHCb::OTChannelID theOTID;
@@ -320,11 +323,11 @@ AlignTrackMonitor::fillVariables ( const LHCb::Track* aTrack ) {
     //**********************************************************************
     // Overlaps
     //**********************************************************************
-    std::vector<LHCb::Node*>::const_iterator iNodes2 = iNodes+1;
-    for ( ; iNodes2 != aTrack->nodes().end(); ++iNodes2 ) {
+    LHCb::Track::ConstNodeRange::const_iterator iNodes2 = iNodes+1;
+    for ( ; iNodes2 != nodes.end(); ++iNodes2 ) {
 
       const LHCb::Node& aNode2 = **iNodes2;
-      LHCb::FitNode* fNode2 = dynamic_cast<LHCb::FitNode*>(*iNodes2);
+      const LHCb::FitNode* fNode2 = dynamic_cast<const LHCb::FitNode*>(*iNodes2);
 
       // Only loop on hits with measurement
       if ( !aNode2.hasMeasurement() ) continue;
@@ -565,13 +568,13 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
   Array fitPar ( 5,defValue );
 
   Array bOVect;
-  std::vector<LHCb::Node*> hitsOverlapBox1;
-  std::vector<LHCb::Node*> hitsOverlapBox2;
-  std::vector<LHCb::Node*>::const_iterator iNodes = aTrack->nodes().begin();
-  std::vector<LHCb::Node*>::const_iterator iNodesEnd = aTrack->nodes().end();
-
+  std::vector<const LHCb::Node*> hitsOverlapBox1;
+  std::vector<const LHCb::Node*> hitsOverlapBox2;
+  LHCb::Track::ConstNodeRange nodes = aTrack->nodes() ;
+  LHCb::Track::ConstNodeRange::const_iterator iNodes = nodes.begin();
+  LHCb::Track::ConstNodeRange::const_iterator iNodesEnd = nodes.end();
   for ( ; iNodes!=iNodesEnd; ++iNodes ) {
-    LHCb::Node& aNode = **iNodes;
+    const LHCb::Node& aNode = **iNodes;
     LHCb::STChannelID aSTID;
     if ( aNode.hasMeasurement() )
       aSTID = aNode.measurement().lhcbID().stID();
@@ -644,7 +647,7 @@ double AlignTrackMonitor::boxOverlap ( const LHCb::Track* aTrack,
 //===========================================================================
 std::vector<double>
 AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
-                                   std::vector<LHCb::Node*> hitsOverlapBox ) {
+                                   std::vector<const LHCb::Node*> hitsOverlapBox ) {
 
   int nHitsToFit = hitsOverlapBox.size();
 
@@ -656,10 +659,10 @@ AlignTrackMonitor::fitTrackPiece ( const LHCb::Track* aTrack,
   Array xPar(8,0);
   Array yPar(5,0);
   Gaudi::XYZPoint bFieldPoint;
-  std::vector<LHCb::Node*>::const_iterator iNodes = hitsOverlapBox.begin();
+  std::vector<const LHCb::Node*>::const_iterator iNodes = hitsOverlapBox.begin();
   for ( ; iNodes != hitsOverlapBox.end(); ++iNodes ) {
     const LHCb::Node& aNode = **iNodes;
-    LHCb::FitNode* fNode = dynamic_cast<LHCb::FitNode*>(*iNodes);
+    const LHCb::FitNode* fNode = dynamic_cast<const LHCb::FitNode*>(*iNodes);
 
     LHCb::State hitState;
     sc = m_extrapolator->propagate( *aTrack, aNode.z(), hitState );

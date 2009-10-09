@@ -4,6 +4,9 @@ Package Coordinator : Johan Blouw
 Responsibles : J. Amoraal, J. Blouw, A. Hicheur, L. Nicolas
 Purpose: LHCb Alignment Tools
 
+! 2009-10-09 Wouter Hulsbergen
+  - adapted to changes in LHCb::Track
+
 ! 2009-09-23 - Johan Blouw
  - removed WriteAlignmentConditions configuration from TAConfig.py
 

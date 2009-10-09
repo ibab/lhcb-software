@@ -1,4 +1,4 @@
-// $Id: AlignTrackMonitor.h,v 1.10 2009-09-08 07:40:29 wouter Exp $
+// $Id: AlignTrackMonitor.h,v 1.11 2009-10-09 12:00:00 wouter Exp $
 #ifndef _AlignTrackMonitor_H_
 #define _AlignTrackMonitor_H_
 
@@ -91,7 +91,7 @@ private:
   // Fit track given by a set of hits with straight line,
   // using chi2 minimisation and return fit parameters
   std::vector<double> fitTrackPiece ( const LHCb::Track* aTrack,
-                                      std::vector<LHCb::Node*> hitsOverlapBox );
+                                      std::vector<const LHCb::Node*> hitsOverlapBox );
   
   // Fill the histos
   StatusCode fillHistos ( );
