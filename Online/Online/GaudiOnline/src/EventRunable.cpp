@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.11 2009-05-14 16:20:57 frankb Exp $
+// $Id: EventRunable.cpp,v 1.12 2009-10-09 10:08:20 garnierj Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -18,7 +18,7 @@ using namespace std;
 // Standard Constructor
 EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
-  m_receiveEvts(false), m_nerr(0), m_evtCount(0)
+  m_receiveEvts(false), m_nerr(0), m_evtCount(0), m_errorFired(false)
 {
   declareProperty("EvtMax",        m_evtMax=1);
   declareProperty("NumErrorToStop",m_nerrStop=-1);
@@ -55,7 +55,9 @@ StatusCode EventRunable::initialize()   {
     return error("Error retrieving EventDataSvc interface IDataProviderSvc.");
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
+  incidentSvc()->addListener(this,"DAQ_ERROR");
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
+
   return sc;
 }
 
@@ -81,6 +83,18 @@ void EventRunable::handle(const Incident& inc)    {
       }
     }
   }
+  else if ( inc.type() == "DAQ_ERROR" )  {
+    m_errorFired = true;
+    if ( !m_mepMgrName.empty() )  {
+      if ( 0 == m_mepMgr ) {
+        error("Got incident:"+inc.source()+
+              " -- Internal error:"+m_mepMgrName+" is not assigned.");
+      }
+      else {
+        m_mepMgr->cancel();
+      }
+    }
+  }
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_receiveEvts = true;
   }
@@ -93,6 +107,13 @@ StatusCode EventRunable::run()   {
     m_receiveEvts = true;
     while ( m_receiveEvts )   {
       // loop over the events
+
+      if(m_errorFired) {
+    //    Incident incident(name(),"DAQ_ERROR");
+    //    m_incidentSvc->fireIncident(incident);
+        return error("An error was reported. Aborting execution.");
+      }
+
       DataObject* pObj = 0;
       StatusCode sc = ui->nextEvent(m_evtMax);
       if ( sc.isSuccess() )  {
