@@ -1,4 +1,4 @@
-// $Id: TrackRemoveOddOTClusters.cpp,v 1.1.1.1 2009-04-21 10:57:19 jblouw Exp $
+// $Id: TrackRemoveOddOTClusters.cpp,v 1.2 2009-10-09 10:35:59 wouter Exp $
 // Include files
 
 
@@ -10,6 +10,7 @@
 #include <Event/Track.h>
 #include <Event/FitNode.h>
 #include <Event/OTMeasurement.h>
+#include <boost/foreach.hpp>
 
 // local
 class TrackRemoveOddOTClusters : public GaudiHistoAlg
@@ -55,17 +56,16 @@ StatusCode TrackRemoveOddOTClusters::execute()
      // all other hits that are within one cell-radius.
      
      std::map<int, std::vector< LHCb::FitNode* > > nodesInMono ;
-     for( LHCb::Track::NodeContainer::const_iterator inode = (*itrk)->nodes().begin(); 
-	  inode != (*itrk)->nodes().end(); ++inode ) 
-       if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-	   (*inode)->measurement().type() == LHCb::Measurement::OT ) {
+     BOOST_FOREACH( const LHCb::Node* node, (*itrk)->nodes()) 
+       if( node->type() == LHCb::Node::HitOnTrack &&
+	   node->measurement().type() == LHCb::Measurement::OT ) {
 	 // unique mono-layer = mono + 2 * ( layer + 4 * (station-1) )
-	 const LHCb::OTMeasurement* meas = dynamic_cast<const LHCb::OTMeasurement*>(&((*inode)->measurement())) ;
+	 const LHCb::OTMeasurement* meas = dynamic_cast<const LHCb::OTMeasurement*>(&(node->measurement())) ;
 	 const DeOTModule& mod = meas->module() ;
 	 const LHCb::OTChannelID otchan = meas->channel() ;
 	 int mono = mod.monoLayerA(otchan.straw()) ? 0 : 1 ;
 	 size_t uniquemono = mono + 2 * ( otchan.layer() + 4 * (otchan.station() - 1) ) ;
-	 nodesInMono[uniquemono].push_back( const_cast<LHCb::FitNode*>(dynamic_cast<const LHCb::FitNode*>(*inode) )) ;
+	 nodesInMono[uniquemono].push_back( const_cast<LHCb::FitNode*>(dynamic_cast<const LHCb::FitNode*>(node))) ;
        }
      for( std::map<int, std::vector< LHCb::FitNode* > >::iterator
 	    imono = nodesInMono.begin() ; imono != nodesInMono.end(); ++imono ) {

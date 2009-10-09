@@ -1,9 +1,9 @@
-// $Id: TrackSeedT0Alg.cpp,v 1.2 2009-09-06 20:54:43 wouter Exp $
+// $Id: TrackSeedT0Alg.cpp,v 1.3 2009-10-09 10:35:59 wouter Exp $
 // Include files
 #include <GaudiAlg/GaudiHistoAlg.h>
 
 #include <sstream>
-
+#include <boost/foreach.hpp>
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/PhysicalConstants.h"
@@ -145,16 +145,16 @@ StatusCode TrackSeedT0Alg::execute()
        size_t nmeas(0) ;
        std::vector< NodeT0 > t0vec ;
        size_t nodeindex(0) ;
-       for( LHCb::Track::NodeContainer::const_iterator inode = (*itrk)->nodes().begin(); 
-	    inode != (*itrk)->nodes().end(); ++inode,++nodeindex )
-	 if( (*inode)->type() == LHCb::Node::HitOnTrack &&
-	     (*inode)->measurement().type() == LHCb::Measurement::OT ) {
-	   const LHCb::OTMeasurement* meas = dynamic_cast<const LHCb::OTMeasurement*>(&((*inode)->measurement())) ;
-	   double drifttime = meas->calibratedTime() - meas->propagationTimeFromY( (*inode)->state().y()) ;
+       BOOST_FOREACH( const LHCb::Node* node, (*itrk)->nodes()) {
+	 ++nodeindex ;
+	 if( node->type() == LHCb::Node::HitOnTrack &&
+	     node->measurement().type() == LHCb::Measurement::OT ) {
+	   const LHCb::OTMeasurement* meas = dynamic_cast<const LHCb::OTMeasurement*>(&(node->measurement())) ;
+	   double drifttime = meas->calibratedTime() - meas->propagationTimeFromY( node->state().y()) ;
 	   // this is where we could use the distance between track and straw
 	   double dist = 0.5*2.45 ;
 	   if( m_useFittedDistance ) {
-	     const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
+	     const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node) ;
 	     dist = - fitnode->unbiasedResidual() ; // works only if fit made without drifttime!!
 	     plot(dist,"dist","distance to wire",-5,5) ;
 	   }
@@ -165,6 +165,7 @@ StatusCode TrackSeedT0Alg::execute()
 	   t0vec.push_back( NodeT0(nodeindex,thist0) ) ;
 	   ++nmeas ;
 	 }
+       }
        if( t0vec.size()>0 ) {
 	 // make a truncated mean. how? choose mean in interval with fixed width
 	 std::sort( t0vec.begin(), t0vec.end(), CompareNodeT0 ) ;
@@ -219,15 +220,14 @@ StatusCode TrackSeedT0Alg::execute()
 	  istate != (*itrk)->states().end(); ++istate )
        (const_cast<LHCb::State*>(*istate))->setQOverP(eventT0) ;
      // it could also be that this track was fitted already. in that case we update all nodes
-     for( LHCb::Track::NodeContainer::const_iterator inode = (*itrk)->nodes().begin(); 
-	  inode != (*itrk)->nodes().end(); ++inode )
-       (const_cast<LHCb::State&>((*inode)->state())).setQOverP(eventT0) ;
+     BOOST_FOREACH( const LHCb::Node* node, (*itrk)->nodes()) 
+       (const_cast<LHCb::State&>(node->state())).setQOverP(eventT0) ;
    }
    
    return StatusCode::SUCCESS;
 }
-
-//=============================================================================
+		
+		//=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode TrackSeedT0Alg::finalize()

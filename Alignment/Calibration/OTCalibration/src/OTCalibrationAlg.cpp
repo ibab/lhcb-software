@@ -1,4 +1,4 @@
-// $Id: OTCalibrationAlg.cpp,v 1.2 2009-05-14 14:40:07 wouter Exp $
+// $Id: OTCalibrationAlg.cpp,v 1.3 2009-10-09 10:35:59 wouter Exp $
 // Include files
 
 // local
@@ -37,6 +37,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <boost/foreach.hpp>
 
 DECLARE_ALGORITHM_FACTORY( OTCalibrationAlg );
 
@@ -197,9 +198,7 @@ void OTCalibrationAlg::accumulate(const LHCb::Track& track)
   // select all the OT hits and convert them into local hit format
   std::vector<OTCal::StrawHit> hits ;
   size_t numvelohits(0), numithits(0), numothits(0) ;
-  for( std::vector<LHCb::Node*>::const_iterator inode = track.nodes().begin() ;
-       inode != track.nodes().end(); ++inode) {
-    const LHCb::Node* node = *inode ;
+  BOOST_FOREACH( const LHCb::Node* node, track.nodes() ) {
     if(node->hasMeasurement() && 
        node->errMeasure2()>0 ) {
       switch( node->measurement().type() ) {

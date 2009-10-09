@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.2 2009-09-06 20:55:16 wouter Exp $
+! $Id: release.notes,v 1.3 2009-10-09 10:35:59 wouter Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
+
+
+! 2009-10-09 Wouter Hulsbergen
+  - adapted to changes in LHCb::Track
 
 ! 2009-09-06 Wouter Hulsbergen
   - cosmics analysis: Calo time is no longer stored in calo track segment, so
