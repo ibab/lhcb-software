@@ -55,7 +55,6 @@ private:
                     LHCb::Track* ) const;
   StatusCode  addTr(LHCb::RecVertex*,
                     LHCb::Track* ) const;
-  LHCb::State stateAtFirstMeas(LHCb::Track*) const;
 
 private:
       

@@ -1,4 +1,4 @@
-// $Id: PVReFitter.cpp,v 1.13 2009-10-09 07:47:01 pkoppenb Exp $
+// $Id: PVReFitter.cpp,v 1.14 2009-10-09 10:12:32 xieyu Exp $
 // Include files 
 
 // from Gaudi
@@ -229,10 +229,6 @@ StatusCode PVReFitter::seedPV(LHCb::RecVertex* PV,
 
   Gaudi::Vector3 V3;
   Gaudi::SymMatrix3x3 Cov3;
-
-  //causes crash if measurements are unavailable
-  //LHCb::State statetr1 = stateAtFirstMeas(tr1);
-  //LHCb::State statetr2 = stateAtFirstMeas(tr2);
 
   LHCb::State statetr1 =  tr1->firstState();
   LHCb::State statetr2 =  tr2->firstState();
@@ -484,8 +480,6 @@ StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
 
   double z2 = PosPV.z();
 
-  //LHCb::State statetr = stateAtFirstMeas(tr);
-
   LHCb::State statetr =  tr->firstState();
   LHCb::State newstate =  statetr;
 
@@ -619,26 +613,5 @@ StatusCode  PVReFitter::addTr(LHCb::RecVertex* PV,
   PV->addToTracks(tr);
 
   return sc;
-}
-
-//=============================================================================
-// state at first measurement
-//=============================================================================
-LHCb::State PVReFitter::stateAtFirstMeas(LHCb::Track* tr) const
-{
-
-  double veloFirstZ;
-
-  if (tr->checkType( Track::VeloR )) {
-    // Get most downstream state and VELO point
-    const Measurement* firstMeas = *(tr->measurements().rbegin());
-    veloFirstZ = firstMeas->z();
-  } else {
-    const Measurement* firstMeas = *(tr->measurements().begin());
-    veloFirstZ = firstMeas->z();
-  }
-
-  State& state = tr->closestState(veloFirstZ);
-  return state;
 }
 
