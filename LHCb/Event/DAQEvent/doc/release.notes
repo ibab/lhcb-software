@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+! 2009-10-09 - Jaap Panman
+ - add functionality to write/read MDF files with only lumi events:
+   Add FileID bank to RawBank
+	 Add src/components/FileIdBankWriter.cpp/h and Event/FileId.h
+
 !================ DAQEvent v8r0 2009-07-13 ===================================
 ! 2009-07-09 - Marco Clemencic
  - Renamed the values (enum) for the beam crossing type in the ODIN class from

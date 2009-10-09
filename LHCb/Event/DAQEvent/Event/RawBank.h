@@ -113,6 +113,7 @@ namespace LHCb
                    DstBank,         // 59
                    DstData,         // 60
                    DstAddress,      // 61
+                   FileID,          // 62
                    // Add new types here. Don't forget to update also RawBank.cpp
                    LastType    // LOOP Marker; add new bank types ONLY before!
     };
