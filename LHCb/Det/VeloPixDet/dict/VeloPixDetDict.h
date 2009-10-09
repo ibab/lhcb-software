@@ -7,6 +7,7 @@
 #include "VeloPixDet/DeVeloPixXType.h"
 #include "VeloPixDet/DeVeloPixSquareType.h"
 
+
 // ============================================================================
 #endif // VELOPIXDET_DETDICT_H
 // ============================================================================
