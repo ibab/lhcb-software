@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+# $Id: requirements,v 1.2 2009-10-09 07:03:48 cocov Exp $
 # =========================================================================
 
 # Maintained by : Victor Coco
@@ -37,15 +37,3 @@ apply_pattern     reflex_dictionary                                 \
                   selectionfile=$(VELOPIXDETROOT)/dict/VeloPixDetDict.xml \
                   options="-U__MINGW32__"
 
-private
-
-apply_pattern QMTest
-# =====================================
-# Packages needed for tests
-
-macro VeloPixDet_use_DDDB "" QMTest "DDDB v* Det"
-use $(VeloPixDet_use_DDDB)
-
-# =====================================
-
-end_private
