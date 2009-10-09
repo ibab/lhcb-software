@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.9 2009-08-18 09:13:53 jpalac Exp $
+# $Id: requirements,v 1.10 2009-10-09 07:48:09 pkoppenb Exp $
 # Created    : 09/10/2007
 # Maintainer : Yuehong Xie
 #
 
 package           VertexFitCheck
-version           v1r4
+version           v1r4p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
