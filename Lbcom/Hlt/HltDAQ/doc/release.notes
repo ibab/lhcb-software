@@ -3,7 +3,9 @@
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
-
+! 2009-10-09 - Gerhard Raven
+ - Add HltRoutingBitsFilter
+ 
 !========================== HltDAQ v1r0p2 2009-09-11 ===========================
 ! 2009-09-11 - Gerhard Raven
  - add counter for each routing bit
