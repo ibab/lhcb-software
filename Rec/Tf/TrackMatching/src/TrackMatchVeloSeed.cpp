@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.13 2009-10-08 15:10:28 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.14 2009-10-09 07:37:55 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -26,7 +26,7 @@
 
 #include <boost/assign/std/vector.hpp>
 #include <boost/assign/list_of.hpp>
-
+#include <boost/foreach.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackMatchVeloSeed
@@ -425,12 +425,9 @@ StatusCode TrackMatchVeloSeed::storeTracks( Tracks* matchCont )
       }
     }
     else {
-      const LHCb::Track::NodeContainer& nodes = seedTrack->nodes() ;
-      for( LHCb::Track::NodeContainer::const_iterator 
-	     inode = nodes.begin() ;
-	   inode != nodes.end(); ++inode) 
-	if( (*inode)->hasMeasurement() && (*inode)->type() != LHCb::Node::Outlier ) 
-	  aTrack -> addToLhcbIDs( (*inode)->measurement().lhcbID() ) ;
+      BOOST_FOREACH( const LHCb::Node* node, seedTrack->nodes() ) 
+	if( node->hasMeasurement() && node->type() != LHCb::Node::Outlier ) 
+	  aTrack -> addToLhcbIDs( node->measurement().lhcbID() ) ;
     }
 
     // copy all the states from the seed
@@ -549,14 +546,11 @@ bool TrackMatchVeloSeed::goodSeed(const LHCb::Track* aTrack) const{
     int layer_stereo = -999;
     int station_x = -999;
     int station_stereo = -999;
-    
-    const LHCb::Track::NodeContainer& nodes = aTrack->nodes() ;
-    for( LHCb::Track::NodeContainer::const_iterator 
-	   inode = nodes.begin() ;
-	 inode != nodes.end(); ++inode) 
-      if( (*inode)->hasMeasurement() && (*inode)->type() != LHCb::Node::Outlier ){
+
+    BOOST_FOREACH( const LHCb::Node* node, aTrack->nodes() ) 
+      if( node->hasMeasurement() && node->type() != LHCb::Node::Outlier ){
 	
-	LHCb::LHCbID ihit = (*inode)->measurement().lhcbID() ;
+	LHCb::LHCbID ihit = node->measurement().lhcbID() ;
 	
 	int layer = -1;
 	int station = -1;
