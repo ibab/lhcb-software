@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.4 2009-05-19 16:06:51 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.5 2009-10-09 09:38:43 ggiacomo Exp $
 
 #include <list>
 #include <fstream>
@@ -52,8 +52,8 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
   declareProperty( "Convergence"      , m_dsum  =  1.0e-5 );
   declareProperty( "NeuronThreshold"  , m_scut  =  0.7 );
   declareProperty( "DoubleKillAngCut" , m_acut  =  0.1 );
-  declareProperty( "TrackSpanCut"     , m_span_cut  =  2.0);
-  declareProperty( "StationFiringCut" , m_firing_cut  =  2.0);
+  declareProperty( "TrackSpanCut"     , m_span_cut  =  2 );
+  declareProperty( "StationFiringCut" , m_firing_cut  =  2 );
   declareProperty( "MaxNeurons"       , m_maxNeurons = 3000 );
   declareProperty( "MaxIterations"    , m_maxIterations = 100 );
   declareProperty( "SkipStation"      , m_skipStation = -1 );
@@ -215,19 +215,32 @@ StatusCode MuonNNetRec::muonNNetMon(){
   clear();
   m_recDone = true;
   
-  // check that of hits is reasonable
+  // preliminary cuts based on hits number in each station
   std::vector<MuonLogPad*>::const_iterator iCoord;
   int hit_per_station[5]= {0,0,0,0,0};
   // check on maximum number of hit combinations giving a neuron
   for (iCoord = coords->begin(); iCoord != coords->end();iCoord++ ){
     if ((*iCoord)->truepad()) hit_per_station[(*iCoord)->tile()->station()]++;
-  }
-  int ncomb=0;
+  }  
+
+  int ncomb=0, nFiringS=0;
+  int minFiringS=99;
+  int maxFiringS=-99;
   for (unsigned int i=0; i<5 ;i++) {
+    if (hit_per_station[i] > 0) {
+      nFiringS++;
+      if (minFiringS == 99) minFiringS=i;
+      maxFiringS=i;
+    }
     for (unsigned int j=i+1; j<5 && j<(i+3) ;j++) {
       ncomb +=  hit_per_station[i]*hit_per_station[j];
     }
   }
+  if (nFiringS <= m_firing_cut || (maxFiringS-minFiringS) < m_span_cut) {
+    info() << "not enough firing station to get tracks" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   if(ncomb > m_maxNeurons) {
     m_tooManyHits=true;
     info() << "Too many hits to proceed with cosmic track finding" << endmsg;
@@ -282,6 +295,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
   std::list< MuonNeuron* > neurons;
   int Nneurons = 0;
   std::vector<MuonHit*>::iterator ihT,ihH; 
+  MuonHit *head, *tail;
   for(ihT = m_trackhits.begin(); ihT != m_trackhits.end() ; ihT++){
     
     // skip a station for efficiency studies
@@ -297,18 +311,26 @@ StatusCode MuonNNetRec::muonNNetMon(){
       
       // cut on neuron length in terms of crossed stations
       
-      if(((*ihH)->station() - (*ihT)->station()) > neuronLength || 
-         ((*ihH)->station() - (*ihT)->station()) == 0) continue;
-      
-      int sta = (*ihT)->station() + 1;
-      int reg = (*ihT)->region()  + 1;
-      int hID = (*ihH)->hitID(); // head ID
+      if( fabs((*ihH)->station() - (*ihT)->station()) > neuronLength || 
+         (*ihH)->station() == (*ihT)->station() ) continue;
+      if ((*ihH)->station() > (*ihT)->station()) {
+        head = *ihH;
+        tail = *ihT;
+      }
+      else {
+        head = *ihT;
+        tail = *ihH;
+      }      
+
+      int sta = tail->station() + 1;
+      int reg = tail->region()  + 1;
+      int hID = head->hitID(); // head ID
       
       // here if everything OK. Now build the neurons.
       
       Nneurons++;
       // create the MuonNeuron
-      MuonNeuron* Neuron = new MuonNeuron(*(*ihH),*(*ihT),hID,tID,sta,reg);
+      MuonNeuron* Neuron = new MuonNeuron(*head,*tail,hID,tID,sta,reg);
       // store progressive neuron number for debugging
       Neuron->setNeuronID(Nneurons);
       // container to retrieve neurons from tool
@@ -538,13 +560,13 @@ StatusCode MuonNNetRec::muonNNetMon(){
     // are firing
     if( span >= m_span_cut && firstat > m_firing_cut) {
       if(m_XTalk) {
-	//	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
-	
-	StatusCode sct = muonTrack->AddXTalk( m_trackhits);
-	
-	//	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
-	
-	if(!sct)  warning()<<"WARNING: problem adding XTalk pads"<<endmsg;
+        //	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        
+        StatusCode sct = muonTrack->AddXTalk( m_trackhits);
+        
+        //	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
+        
+        if(!sct)  warning()<<"WARNING: problem adding XTalk pads"<<endmsg;
       }
       
       m_tracks.push_back(muonTrack);

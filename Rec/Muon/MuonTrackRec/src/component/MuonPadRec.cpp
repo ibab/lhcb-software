@@ -1,4 +1,4 @@
-// $Id: MuonPadRec.cpp,v 1.3 2009-10-01 11:47:32 ggiacomo Exp $
+// $Id: MuonPadRec.cpp,v 1.4 2009-10-09 09:38:43 ggiacomo Exp $
 #include <vector>
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
@@ -32,7 +32,8 @@ MuonPadRec::MuonPadRec( const std::string& type,
      m_padsReconstructed(false)
 {
   declareInterface<IMuonPadRec>(this);
-  declareProperty( "TileVeto", m_TileVeto);          // array of long int
+  declareProperty( "TileVeto", m_TileVeto);
+  declareProperty( "FirstComeFirstServed", m_getfirsthit = false);
   m_pads.clear(); m_pads.reserve(1000);
 }
 
@@ -114,21 +115,37 @@ StatusCode MuonPadRec::buildLogicalPads(const std::vector<MuonLogHit*> *myhits )
     removeDoubleHits(hits);
     debug() << "                  after cleaning doubles "<<hits.size()<<endmsg;
     if (!hits.empty()) {
-      // regions without crossing: straight copy of the input + making SmartRefs to the MuonDigits
-      StatusCode sc = addCoordsNoMap(hits);
-      if(!sc.isSuccess()){
-	error()
-	  << "Failed to map digits to coords in a one to one manner"
-	  << endreq;
-	return sc;
+      int station;
+      for( station = 0 ; station < m_muonDetector->stations() ; station++ ){
+        int region;
+        for( region = 0 ; region < m_muonDetector->regions() ; region++ ){
+          
+          // get mapping of input to output from region
+          // in fact we are reversing the conversion done in the digitisation
+          int NLogicalMap = m_muonDetector->getLogMapInRegion(station,region);     
+          verbose()<<" station and region "<<station<<" "<<region<<" maps "<<NLogicalMap<<endreq;
+          
+          if(1 == NLogicalMap){
+            // straight copy of the input + making SmartRefs to the MuonDigits
+            StatusCode sc = addCoordsNoMap(hits,station,region);
+            if(!sc.isSuccess()){
+              error()
+                << "Failed to map digits to coords in a one to one manner"
+                << endreq;
+              return sc;
+            }
+          }else{
+            // need to cross the input strips to get output strips
+            StatusCode sc = 
+              addCoordsCrossingMap(hits,station,region);
+            if(!sc.isSuccess()){error()
+                << "Failed to map digits to coords by crossing strips"
+                << endreq;
+              return sc;
+            }
+          }
+        }    
       }
-
-      sc = addCoordsCrossingMap(hits);
-      if(!sc.isSuccess()){
-	error()  << "Failed to map digits to coords by crossing strips"
-		 << endreq;
-	return sc;
-      }      
     }
     m_padsReconstructed = true;
   }
@@ -139,38 +156,57 @@ StatusCode MuonPadRec::buildLogicalPads(const std::vector<MuonLogHit*> *myhits )
 //=============================================================================
 
 // Adding entries to coords 1 to 1 from digits, need to make the references
-StatusCode MuonPadRec::addCoordsNoMap(std::vector<MuonLogHit*> &hits){
+StatusCode MuonPadRec::addCoordsNoMap(std::vector<MuonLogHit*> &hits,
+                                       const int & station,
+                                       const int & region){
   std::vector<MuonLogHit*>::iterator iD;
   for( iD = hits.begin() ; iD != hits.end() ; iD++ ){
-    if( m_muonDetector->getLogMapInRegion
-	( ((*iD)->tile())->station(), ((*iD)->tile())->region() ) == 1) {
+    if( ((*iD)->tile())->station() == static_cast<unsigned int>(station) &&
+        ((*iD)->tile())->region() == static_cast<unsigned int>(region) ){
       // make the coordinate to be added to coords
       debug()<<" LOGPAD OK nomap ODE "<< (*iD)->odeName() <<" ch "<< (*iD)->odeChannel()<<
         " tile "<<*((*iD)->tile())<< " time)="<< (*iD)->time() << endreq;
+      
       if(!m_TileIsVetoed[(long int) (*iD)->tile()]) {
         MuonLogPad *current = new MuonLogPad(*iD);
         current->settruepad();
         m_pads.push_back(current);
+      }
+      else {
+        debug() << "applied veto on pad "<<((long int) (*iD)->tile()) << endmsg;
       }
     }
   }
   return StatusCode::SUCCESS;
 }
 
-StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits){
+StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits,
+                                             const int & station,
+                                             const int & region){
 
-  // separate the two types of logical channel, flag if used with the pair
+  // get local MuonLayouts for strips
+  MuonLayout layoutOne,layoutTwo;
+  StatusCode sc = makeStripLayouts(station,region, layoutOne,layoutTwo);
+  if(!sc.isSuccess()){
+    return sc;
+  }
+  
+  // seperate the two types of logical channel, flag if used with the pair
   std::vector<std::pair<MuonLogHit*,bool> > typeOnes;
   std::vector<std::pair<MuonLogHit*,bool> > typeTwos;
   std::vector<MuonLogHit*>::iterator it;
   for( it = hits.begin() ; it != hits.end() ; it++ ){
-    if( m_muonDetector->getLogMapInRegion( ((*it)->tile())->station(), ((*it)->tile())->region() ) != 1) {
-      if( ((*it)->tile())->layout().xGrid() == 
-	  m_muonDetector->getLayoutX(0,((*it)->tile())->station(), ((*it)->tile())->region() ) ){
+    if( ((*it)->tile())->station() == static_cast<unsigned int>(station) &&
+        ((*it)->tile())->region() == static_cast<unsigned int>(region) ){
+      if( ((*it)->tile())->layout() == layoutOne ){
         typeOnes.push_back(std::pair<MuonLogHit*,bool>((*it),false));
-      } else {
+      }else if( ((*it)->tile())->layout() == layoutTwo ){
         typeTwos.push_back(std::pair<MuonLogHit*,bool>((*it),false));
-      } 
+      } else {
+        error()
+            << "MuonDigits in list are not compatible with expected shapes"
+            << endreq;
+      }    
     }
   }
   // now cross the two sets of channels
@@ -183,21 +219,26 @@ StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits){
     for( iTwo = typeTwos.begin() ; iTwo != typeTwos.end() ; iTwo++ ){
       // who said C++ did not make lovely transparent code?
       MuonTileID pad = (iOne->first->tile())->intercept(*(iTwo->first->tile()) );
-      if(pad.isValid() &&  (!m_TileIsVetoed[(long int) pad]) ) {
-        MuonLogPad *current = new MuonLogPad(iOne->first,iTwo->first);
-        current->settruepad();
-        debug() << " LOGPAD OK crossed ODE "<< iOne->first->odeName() 
+      if(pad.isValid()) {
+        if (!m_TileIsVetoed[(long int) pad]) { 
+          MuonLogPad *current = new MuonLogPad(iOne->first,iTwo->first);
+          current->settruepad();
+          debug() << " LOGPAD OK crossed ODE "<< iOne->first->odeName() 
                   <<" ch "<< iOne->first->odeChannel()<<" and "
                   << iTwo->first->odeChannel() << " tiles "
                   << *(iOne->first->tile()) << " and "
                   << *(iTwo->first->tile()) << " times="
                   << iOne->first->time()<< " and "
                   << iTwo->first->time()   <<      endreq;
-        m_pads.push_back(current);
+          
+          m_pads.push_back(current);
+        } 
+        else {
+          debug() << "applied veto on pad "<<((long int) pad) << endmsg;
+        }
         // set flags to used on iOne and iTwo
         iOne->second = true;
-        iTwo->second = true;
-        
+        iTwo->second = true;        
       }
     }
   }
@@ -221,6 +262,20 @@ StatusCode MuonPadRec::addCoordsCrossingMap(std::vector<MuonLogHit*> &hits){
 
 
 
+StatusCode MuonPadRec::makeStripLayouts(int station, int region, 
+                                     MuonLayout &layout1,
+                                     MuonLayout &layout2){  
+  unsigned int x1 = m_muonDetector->getLayoutX(0,station,region);
+  unsigned int y1 = m_muonDetector->getLayoutY(0,station,region);
+  unsigned int x2 = m_muonDetector->getLayoutX(1,station,region);
+  unsigned int y2 = m_muonDetector->getLayoutY(1,station,region);
+  MuonLayout layoutOne(x1,y1);
+  MuonLayout layoutTwo(x2,y2);
+  layout1=layoutOne;
+  layout2=layoutTwo;
+  return StatusCode::SUCCESS;
+}
+
 StatusCode MuonPadRec::removeDoubleHits(std::vector<MuonLogHit*> &hits) {
   std::vector<MuonLogHit*>::iterator ih1,ih2;
   int mytime;
@@ -229,9 +284,11 @@ StatusCode MuonPadRec::removeDoubleHits(std::vector<MuonLogHit*> &hits) {
     bool ok=true;
     for (ih2= hits.begin(); ih2 != ih1 ; ih2++) {
       if (*((*ih1)->tile()) == *((*ih2)->tile())) {
-        // choose time closer to 0 , i.e. 7.5 bits
         verbose() << "Found double hit in Tile "<< *((*ih1)->tile()) <<endmsg;
-        if (fabs((*ih1)->time() - 7.5) < fabs((*ih2)->time() - 7.5)) {
+        bool chooseone =
+          m_getfirsthit ? ( (*ih1)->time() < (*ih2)->time() ) // take the first one
+          : ( fabs((*ih1)->time() - 7.5) < fabs((*ih2)->time() - 7.5));  // or take time closer to 0 , i.e. 7.5 bits
+        if(chooseone) {
           verbose() << "  choose time "<<(*ih1)->time() <<" rather than "<<(*ih2)->time()<<endmsg;
           mytime=(*ih1)->rawtime();
           (*ih2)->setTime( mytime );

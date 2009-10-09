@@ -6,11 +6,20 @@
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !-----------------------------------------------------------------------------
 
+! 20091009 - v1r6 GG
+- go back to previous MuonPadRec (new version was not really faster and was breaking 
+ordering by station)
+- make anyway MuonNNetRec not depending on hits ordering
+- convert TrackSpanCut and StationFiringCut to integers
+- add FirstComeFirstServed option (default false) to MuonPadRec to choose the first 
+  hit and not the most centered in case of multiple hits in same channel in TAE mode
+
 ! 20091001 - v1r5
 - fix bug in MuonHitDecode
 
 ! 20091001 - v1r4
-- add possibilioty to veto logical pads in option file
+- add possibility to veto logical pads in option file (TileVeto option of MuonPadRec
+is array of integers containing keys of pads to be vetoed)
 
 ! 20090709 - v1r3
 - improve checks for incomplete events in IMuonHitDecode interface

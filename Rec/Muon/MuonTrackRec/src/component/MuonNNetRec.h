@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.2 2009-05-13 09:53:29 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.3 2009-10-09 09:38:43 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -111,8 +111,8 @@ private:
   double m_dsum;  // convergence factor
   double m_scut;  // neuron activation cut
   double m_acut;  // angular cut for double length neurons killing
-  double m_span_cut;  // cut on span for selected tracks
-  double m_firing_cut; // min # of stations firing in the track
+  int m_span_cut;  // cut on span for selected tracks
+  int m_firing_cut; // min # of stations firing in the track
   int m_maxNeurons; // max number of possible track segments
   int m_maxIterations; // max number of NN iterations
   // station to be skipped (e.g. for eff. study): 0-4;
