@@ -57,7 +57,6 @@ private:
                     LHCb::Track* ) const;
   StatusCode  addTr(LHCb::RecVertex*,
                     LHCb::Track* ) const;
-  LHCb::State stateAtFirstMeas(LHCb::Track*) const;
   StatusCode kalman_remove(LHCb::RecVertex*, 
                            LHCb::Track*) const;
   const LHCb::MCVertex* PV2MCVertex(const LHCb::RecVertex* pv) const;

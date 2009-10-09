@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.22 2009-10-09 07:48:09 pkoppenb Exp $
+!$Id: release.notes,v 1.23 2009-10-09 10:15:53 xieyu Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+! 2009-10-09 - Yuehong Xie
+ - remove stateAtFirstMeas in CheatedPVReFitter
 
 ! 2009-10-09 - Patrick Koppenburg
  - Adapt to nTrack Event Model changes
