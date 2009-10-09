@@ -1,11 +1,11 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.11 2009-09-18 10:48:28 marcocle Exp $
+# $Id: GetPack.py,v 1.12 2009-10-09 07:54:32 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
 import rcs
 import os, sys, re
-from subprocess import Popen, PIPE, STDOUT
+from subprocess import Popen, PIPE
 
 ## Class to select valid version tags according to LHCb policy
 class LHCbVersionFilter(object):
@@ -15,10 +15,15 @@ class LHCbVersionFilter(object):
         m = self.regexp.match(version)
         if m:
             # groups gives something like ("1","2","3") or ("1","2",None)
-            # and we need to convert it to numbers to sort them
-            values = [ int(n or "0") # this returns 0 if n is empty or None
-                       for n in m.groups() ]
-            if not '-pre' in version:
+            # and we need to convert it to numbers to sort them (None can be
+            # kept because it compares nicely with numbers: None < number)
+            values = []
+            for n in m.groups():
+                if n is None:
+                    values.append(None)
+                else:
+                    values.append(int(n))
+            if '-pre' not in version:
                 # this ensures that "-pre" versions are less important that actual tags
                 values[3] = 99999
             return tuple(values)
@@ -104,7 +109,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.11 2009-09-18 10:48:28 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.12 2009-10-09 07:54:32 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"

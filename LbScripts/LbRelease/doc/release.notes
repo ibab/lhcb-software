@@ -1,3 +1,8 @@
+2009-10-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: minor clean up in the version string filter
+	function
+
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of the version v2r13
