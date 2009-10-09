@@ -1,4 +1,4 @@
-// $Id: LumiFileReader.h,v 1.1 2009-10-09 15:32:13 panmanj Exp $
+// $Id: LumiFileReader.h,v 1.2 2009-10-09 15:51:08 panmanj Exp $
 #ifndef LUMIFILEREADER_H 
 #define LUMIFILEREADER_H 1
 
@@ -48,7 +48,7 @@ private:
   LHCb::HltLumiSummary*     m_HltLumiSummary;
   LHCb::ODIN*               m_odin;
 
-  //LHCb::FileId m_fileId;
+  LHCb::FileId m_fileId;
 
 };
 #endif // FILEREADER_H

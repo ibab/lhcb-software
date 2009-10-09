@@ -1,4 +1,4 @@
-// $Id: LumiFileReader.cpp,v 1.1 2009-10-09 15:32:13 panmanj Exp $
+// $Id: LumiFileReader.cpp,v 1.2 2009-10-09 15:51:08 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode LumiFileReader::initialize() {
 
   m_nbEvents    = 0;
   m_totDataSize = 0;
-  m_bankType  = LHCb::RawBank::LumiFileID; 
+  m_bankType  = LHCb::RawBank::FileID; 
 
   return StatusCode::SUCCESS;
 }
@@ -121,9 +121,8 @@ StatusCode LumiFileReader::execute() {
 	      << "Total Data bank size " << totDataSize << endmsg;
     }
     // decode ID
-    LHCb::FileId m_fileId;
-    //std::string s = m_fileId.fileIDint2str(id_bank);
-    //if ( msgLevel(MSG::INFO) ) info() << "RunInfo record: " << s << endmsg;
+    std::string s = m_fileId.fileIDint2str(id_bank);
+    if ( msgLevel(MSG::INFO) ) info() << "RunInfo record: " << s << endmsg;
     break;
   }
 
