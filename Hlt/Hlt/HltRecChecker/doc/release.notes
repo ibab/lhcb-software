@@ -6,6 +6,8 @@
 
 ! 2009-10-09 - G. Raven
  - minimal change to be blind to details of Track container types
+ - remove copying of measurements as not strictly needed, and requires
+   non-trivial changes for latest TrackEvent
 ! 2009-10-08 - G. Raven
  - follow some cleanup in HltBase
 

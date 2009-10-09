@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.8 2009-10-09 07:00:37 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.9 2009-10-09 07:29:42 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -402,30 +402,6 @@ StatusCode HltRecCheckGhosts::classifyParts(const LHCb::Track* ghostTrack) {
   dummyVeloTrack->addToStates(*ghostTrack->stateAt(LHCb::State::EndVelo)); //End of the Velo
 
   verbose() << "About to get the measurements" << endreq;
-
-  for (LHCb::Track::MeasurementContainer::const_iterator iM = (ghostTrack->measurements()).begin(); 
-                                                       iM != (ghostTrack->measurements()).end(); ++iM){
-    //Not strictly necessary since GhostClassification only uses LHCbIDs but we can keep it
-    //for possible future use; this loop adds the measurement objects to our dummy tracks.
-
-    if (*iM == 0) {
-      verbose() << "Something has gone very wrong indeed!" << endreq;
-      continue;
-    }
-    
-    if ((*iM)->type() == 1 || (*iM)->type() == 2 ) { //VELOR, VELOPHI
-      dummyVeloTrack->addToMeasurements(**iM);
-    }
-    if ((*iM)->type() == 1) { //VELOR only
-      dummyVeloRTrack->addToMeasurements(**iM);
-    }
-    if ((*iM)->type() == 4 || (*iM)->type() == 5 || //IT,OT
-        (*iM)->type() == 8 //IT lite
-       ) {
-      dummyTTrack->addToMeasurements(**iM);
-    }
-
-  }
 
   //Now we add the LHCbIDs to our dummy tracks, this is what
   //will allow us to associate them in a moment
