@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-10-09 - Jaap Panman
+ - add functionality to write/read MDF files with only lumi events:
+   Add LumiWriter[Conf].py, LumiReader[Conf].py,LumiFileReader.cpp/h
+
 !========================== LumiAlgs v2r2 2009-07-14 =========================
 ! 2009-07-10 - Jaap Panman
  - LumiIntegrateFSR.cpp: adapt to changed BXType names in ODIN
