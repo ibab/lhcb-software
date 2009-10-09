@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardIntermediate.py,v 1.5 2009-07-09 15:23:57 rlambert Exp $ 
+# $Id: StandardIntermediate.py,v 1.6 2009-10-09 12:39:26 pkoppenb Exp $ 
 # =============================================================================
 ## @file  CommonParticles/StandardIntermediates.py
 #  configuration file for 'Standard Intermediate particles
@@ -11,37 +11,28 @@
 Configuration file for 'Standard Intermediate' particles 
 """
 __author__  = "Patrick Koppenburg"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 
 _locations = {} 
 
+from CommonParticles.StandardV0 import *
+_locations.update ( locations )
+from CommonParticles.StandardKstar import *
+_locations.update ( locations )
+from CommonParticles.StandardRho import *
+_locations.update ( locations )
+from CommonParticles.StandardPhi import *
+_locations.update ( locations )
 from CommonParticles.StandardD0 import *
+_locations.update ( locations )
+from CommonParticles.StandardDplus import *
 _locations.update ( locations )
 from CommonParticles.StandardDstar import *
 _locations.update ( locations )
 from CommonParticles.StandardJpsi import *
 _locations.update ( locations )
 from CommonParticles.StandardDiMuon import *
-_locations.update ( locations )
-
-from CommonParticles.StdLooseDplus import *
-_locations.update ( locations )
-from CommonParticles.StdLooseDstarWithD2HH import *
-_locations.update ( locations )
-from CommonParticles.StdLooseKs import *
-_locations.update ( locations )
-from CommonParticles.StdLooseKstar import *
-_locations.update ( locations )
-from CommonParticles.StdLooseDetachedKstar import *
-_locations.update ( locations )
-from CommonParticles.StdLoosePhi import *
-_locations.update ( locations )
-from CommonParticles.StdLooseDetachedPhi import *
-_locations.update ( locations )
-from CommonParticles.StdLooseRho0 import *
-_locations.update ( locations )
-from CommonParticles.StdLooseRhoPlus import *
 _locations.update ( locations )
 
 # redefine the locations 

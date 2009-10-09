@@ -1,25 +1,24 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: StandardBasic.py,v 1.4 2009-10-09 12:41:27 pkoppenb Exp $ 
+# $Id: StandardRho.py,v 1.1 2009-10-09 12:39:26 pkoppenb Exp $ 
 # =============================================================================
-## @file  CommonParticles/StandardBasic.py
-#  configuration file for 'Standard Basic' 
-#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
-#  @date 2009-01-14
+## @file  CommonParticles/StandardRho.py
+#  configuration file for 'Standard Rho' 
+#  @author Patrick Koppenburg
+#  @date 2009-02-28
 # =============================================================================
 """
-Configuration file for 'Standard Basic' particles 
+Configuration file for 'Standard Rho'
 """
-__author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__author__  = "Patrick Koppenburg"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
 # =============================================================================
 
 _locations = {} 
 
-from CommonParticles.StandardBasicCharged import *
+from CommonParticles.StdLooseRho0 import *
 _locations.update ( locations )
-
-from CommonParticles.StandardBasicNeutral import *
+from CommonParticles.StdLooseRhoPlus import *
 _locations.update ( locations )
 
 # redefine the locations 
@@ -30,7 +29,8 @@ if '__main__' == __name__ :
 
     print __doc__
     print __author__
-    print __version__    
+    print __version__
+    
     from CommonParticles.Utils import locationsDoD
     print locationsDoD ( locations )
     
