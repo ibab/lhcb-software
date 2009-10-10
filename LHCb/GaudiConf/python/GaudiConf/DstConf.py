@@ -1,11 +1,13 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.15 2009-10-07 09:50:32 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.16 2009-10-10 12:22:31 ibelyaev Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
+
+from Configurables import CaloDstPackConf, CaloDstUnPackConf
 
 class DstConf(ConfigurableUser):
     __slots__ = {
@@ -28,6 +30,11 @@ class DstConf(ConfigurableUser):
        ,'OutputName'    : """ Name of the output file, for MDF writing """ 
        }
 
+    __used_configurables__ = (
+        CaloDstPackConf    , 
+        CaloDstUnPackConf 
+        )
+    
     KnownSimTypes  = ['None','Minimal','Full']
     KnownDstTypes  = ['NONE','DST','RDST','XDST']
     KnownPackTypes = ['NONE','TES','MDF']
@@ -208,28 +215,24 @@ class DstConf(ConfigurableUser):
         """
         packDST = self.getProp("PackSequencer")
         from Configurables import PackTrack, PackCaloHypo, PackProtoParticle, PackRecVertex, PackTwoProngVertex
-        packDST.Members = [   PackTrack()
-                              , PackCaloHypo( name       = "PackElectrons",
-                                              InputName  = "/Event/Rec/Calo/Electrons",
-                                              OutputName = "/Event/pRec/Calo/Electrons")
-                              , PackCaloHypo( name       = "PackPhotons",
-                                              InputName  = "/Event/Rec/Calo/Photons",
-                                              OutputName = "/Event/pRec/Calo/Photons")
-                              , PackCaloHypo( name       = "PackMergedPi0s",
-                                              InputName  = "/Event/Rec/Calo/MergedPi0s",
-                                              OutputName = "/Event/pRec/Calo/MergedPi0s")
-                              , PackCaloHypo( name       = "PackSplitPhotons",
-                                              InputName  = "/Event/Rec/Calo/SplitPhotons",
-                                              OutputName = "/Event/pRec/Calo/SplitPhotons")
-                              , PackProtoParticle( name       = "PackCharged",
-                                                   InputName  = "/Event/Rec/ProtoP/Charged",
-                                                   OutputName = "/Event/pRec/ProtoP/Charged")
-                              , PackProtoParticle( name       = "PackNeutrals",
-                                                   InputName  = "/Event/Rec/ProtoP/Neutrals",
-                                                   OutputName = "/Event/pRec/ProtoP/Neutrals")
-                              , PackRecVertex()
-                              , PackTwoProngVertex()
-                              ]
+        packDST.Members = [   PackTrack() ]
+
+        CaloDstPackConf (
+            Enable   = True    ,
+            Sequence = packDST 
+            )
+
+        packDST.Members += [
+            PackProtoParticle( name       = "PackCharged",
+                               InputName  = "/Event/Rec/ProtoP/Charged",
+                               OutputName = "/Event/pRec/ProtoP/Charged")
+            , PackProtoParticle( name       = "PackNeutrals",
+                                 InputName  = "/Event/Rec/ProtoP/Neutrals",
+                                 OutputName = "/Event/pRec/ProtoP/Neutrals")
+            , PackRecVertex()
+            , PackTwoProngVertex()
+            ]
+        
         if self.getProp( "DstType" ).upper() == "RDST":
             # Copy the HLT results from RawEvent to put them on the RDST
             from Configurables import RawEventSelectiveCopy
@@ -254,18 +257,11 @@ class DstConf(ConfigurableUser):
         unpackTracks       = UnpackTrack()
         unpackVertex       = UnpackRecVertex()
         unpackV0           = UnpackTwoProngVertex()
-        unpackElectrons    = UnpackCaloHypo( name       = "UnpackElectrons",
-                                             OutputName = "/Event/Rec/Calo/Electrons",
-                                             InputName  = "/Event/pRec/Calo/Electrons")
-        unpackPhotons      = UnpackCaloHypo( name       = "UnpackPhotons",
-                                             OutputName = "/Event/Rec/Calo/Photons",
-                                             InputName  = "/Event/pRec/Calo/Photons")
-        unpackMergedPi0s   = UnpackCaloHypo( name       = "UnpackMergedPi0s",
-                                             OutputName = "/Event/Rec/Calo/MergedPi0s",
-                                             InputName  = "/Event/pRec/Calo/MergedPi0s")
-        unpackSplitPhotons = UnpackCaloHypo( name       = "UnpackSplitPhotons",
-                                             OutputName = "/Event/Rec/Calo/SplitPhotons",
-                                             InputName  = "/Event/pRec/Calo/SplitPhotons")
+
+        CaloDstUnPackConf (
+           Enable = True 
+            )
+
         unpackCharged  = UnpackProtoParticle(name       = "UnpackCharged",
                                              OutputName = "/Event/Rec/ProtoP/Charged",
                                              InputName  = "/Event/pRec/ProtoP/Charged")
@@ -274,10 +270,6 @@ class DstConf(ConfigurableUser):
                                              InputName  = "/Event/pRec/ProtoP/Neutrals")
 
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Best" ]        = unpackTracks
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/Electrons" ]    = unpackElectrons
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/Photons" ]      = unpackPhotons
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/MergedPi0s" ]   = unpackMergedPi0s
-        DataOnDemandSvc().AlgMap[ "/Event/Rec/Calo/SplitPhotons" ] = unpackSplitPhotons
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Charged" ]    = unpackCharged
         DataOnDemandSvc().AlgMap[ "/Event/Rec/ProtoP/Neutrals" ]   = unpackNeutrals
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ]    = unpackVertex
@@ -298,6 +290,8 @@ class DstConf(ConfigurableUser):
         
 
     def __apply_configuration__(self):
+
+        log.info(self) 
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
         if hasattr( self, "PackSequencer" ): self._doPack()
         GaudiKernel.ProcessJobOptions.PrintOn()

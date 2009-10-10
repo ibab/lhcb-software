@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.170 2009-10-08 15:20:52 cattanem Exp $
+! $Id: release.notes,v 1.171 2009-10-10 12:22:31 ibelyaev Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-10-10 - Vanya Belyaev
+
+ - CaloPackingConf.py
+
+     two small configurables to pack/unpack Calo-objects on DST:
+
+     1. CaloDstPackConf 
+     2. CaloDstUnPackConf 
+
+ - DstConf:
+
+     make usage of new configurables 
+
 
 ! 2009-10-08 - Marco Cattaneo
  - In DigiConf.py:
