@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: ConfUtils.py,v 1.2 2009-08-10 13:39:59 ibelyaev Exp $
+# $Id: ConfUtils.py,v 1.3 2009-10-10 12:24:58 ibelyaev Exp $
 # =============================================================================
 ## Useful utulities for building Calo-configurables 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ Trivial module with few helper utilities to build  Calo-configurables
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'hltContext'     ,              ##    trivial function to check HLT context
@@ -153,9 +153,26 @@ def onDemand ( location , alg ) :
     
     """
     if not location : return
-    dod = DataOnDemandSvc() 
-    dod.AlgMap     .update ( { location : alg.getFullName () } ) 
-    __caloOnDemand .update ( { location : alg.getFullName () } ) 
+    
+    _alg = alg.getFullName()
+    
+    dod = DataOnDemandSvc()
+
+    _locs = [ location ]
+    if 0 != location.find ( '/Event/') : _locs.append ( '/Event/' + location )
+    
+    for l in _locs :
+        if dod.AlgMap.has_key ( l ) :
+            prev = dod.AlgMap[ l ]
+            if prev != _alg : log.warning ('Data-On-Demand: replace action for location "%s" from "%s" to "%s" ' % ( l , prev , _alg ) )
+        elif __caloOnDemand.has_key ( l ) :
+            prev = __caloOnDemand[ l ]
+            if prev != _alg : log.warning ('Calo-On-Demand: replace action for location "%s" from "%s" to "%s" ' % ( l , prev , _alg ) )
+            
+    log.debug ('Data-On-Demand: define the action for location "%s" to be "%s"' % ( location , _alg ) )
+    dod.AlgMap     .update ( { location : _alg } ) 
+    log.debug ('Calo-On-Demand: define the action for location "%s" to be "%s"' % ( location , _alg ) )
+    __caloOnDemand .update ( { location : _alg } ) 
 
 # =============================================================================
 def caloOnDemand () :
