@@ -4,6 +4,10 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+! 2009-10-10 - Christopher Rob Jones
+ - Remove dedicated hot pixel finder algorithm (now implemented as a generic 
+   HPD analysis tool). Update python options accordingly.
+
 ! 2009-10-07 - Antonis Papanestis
  - Book histograms during initialisation in the AlignmentMonitor
  - Change default options to fill mirror histograms as well.

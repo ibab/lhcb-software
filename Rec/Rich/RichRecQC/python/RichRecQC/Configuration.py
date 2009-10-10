@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.42 2009-09-04 14:32:39 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.43 2009-10-10 18:33:38 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration import *
@@ -161,8 +161,9 @@ class RichRecQCConf(RichConfigurableUser):
                 rawSeq.Members += [dbCheck]
 
                 # Hot pixel finder
-                from Configurables import Rich__DAQ__HotPixelFinder
-                hotpix = self.createMonitor(Rich__DAQ__HotPixelFinder,"RichHotPixels")
+                from Configurables import Rich__HPDAnalysisAlg
+                hotpix = self.createMonitor(Rich__HPDAnalysisAlg,"RichHotPixels")
+                hotpix.HPDAnalysisTools = ["RichHotPixelFinder"]
                 rawSeq.Members += [hotpix]
 
         # RICH data monitoring
