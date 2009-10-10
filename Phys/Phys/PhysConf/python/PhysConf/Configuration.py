@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.18 2009-10-02 12:55:50 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-10-10 12:29:51 ibelyaev Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -12,6 +12,7 @@ import GaudiKernel.ProcessJobOptions
 
 from Configurables import OffLineCaloRecoConf  
 from Configurables import OffLineCaloPIDsConf   
+from Configurables import CaloDstUnPackConf 
 
 
 class PhysConf(LHCbConfigurableUser) :
@@ -23,6 +24,7 @@ class PhysConf(LHCbConfigurableUser) :
         }
     
     __used_configurables__ = (
+        CaloDstUnPackConf   ,
         OffLineCaloRecoConf ,
         OffLineCaloPIDsConf 
         )
@@ -46,15 +48,27 @@ class PhysConf(LHCbConfigurableUser) :
         """
         Configure Reconstruction to be redone
         """
+        
         ## CaloPIDs 
         caloPIDs = OffLineCaloPIDsConf (
             EnablePIDsOnDemand = True   , ## enable PIDs-On-Demand
             DataType           = self.getProp('DataType')
             )
+
         ## Calo reco
         caloReco = OffLineCaloRecoConf (
             EnableRecoOnDemand = True     ## enable Reco-On-Demand
             )
+        
+        ## unpack Calo (?) 
+        unpack = CaloDstUnPackConf()
+        if unpack.getProp( 'Enable' ) : 
+            hypos    = unpack   .getProp( 'Hypos'   )
+            reco_old = caloReco .getProp( 'RecList' )
+            reco_new = [ h for h in reco_old if h not in hypos ]
+            caloReco.RecList = reco_new
+            log.warning("PhysConf: CaloReco.RecList is redefined: %s:" %  reco_new )
+
         #
         # Proto recalibration
         #
