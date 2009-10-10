@@ -2,11 +2,11 @@
 # Created    : 2003-11-06
 # Maintainer : Christopher Rob Jones
 #============================================================================
-# $Id: requirements,v 1.91 2009-09-30 13:23:51 jonrob Exp $
+# $Id: requirements,v 1.92 2009-10-10 18:26:19 jonrob Exp $
 #============================================================================
 
 package RichKernel
-version v7r27
+version v7r28
 
 # ================ structure =================================================
 branches RichKernel cmt dict doc src python
