@@ -9,7 +9,6 @@
 #include "HltBase/ITrackView.h"
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
-#include "HltBase/ERelations.h"
 #include "HltBase/IConfigTreeEditor.h"
 #include "HltBase/ConfigTreeNodeAlias.h"
 #include "HltBase/ConfigTreeNode.h"
@@ -26,8 +25,6 @@ namespace {
   
   struct _hltbase_instantiations  
   {
-    zen::IntRelation py_hlt_05; 
-    Hlt::IntRelation py_hlt_06;
     std::vector<ConfigTreeNodeAlias> py_hlt_07;
     boost::optional<ConfigTreeNode> py_hlt_08;
     boost::optional<PropertyConfig> py_hlt_09;

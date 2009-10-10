@@ -1,4 +1,4 @@
-// $Id: IMuonSeedTool.h,v 1.2 2007-12-07 18:00:44 albrecht Exp $
+// $Id: IMuonSeedTool.h,v 1.3 2009-10-10 16:03:24 graven Exp $
 #ifndef IMUONSEEDTOOL_H 
 #define IMUONSEEDTOOL_H 1
 
@@ -51,9 +51,5 @@ public:
   virtual StatusCode makeTrack( const LHCb::Track& inputTrack,
                                 LHCb::Track& seedTrack ) = 0; 
   
-protected:
-  
-private:
-
 };
 #endif // IMUONSEEDTOOL_H
