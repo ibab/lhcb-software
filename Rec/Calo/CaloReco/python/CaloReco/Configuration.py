@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -49,11 +49,12 @@ class CaloRecoConf(LHCbConfigurableUser):
         , "OutputLevel"        : INFO        # The global output level
         ##
         , 'Sequence'           : ''          # The sequencer to add the CALO reconstruction algorithms to
-        , 'RecList'            : [ 'Digits'     ,
-                                   'Clusters'   ,
-                                   'Photons'    ,
-                                   'MergedPi0s' ,
-                                   'Electrons'  ] ##
+        , 'RecList'            : [ 'Digits'       ,
+                                   'Clusters'     ,
+                                   'Photons'      ,
+                                   'MergedPi0s'   ,
+                                   'SplitPhotons' , # the same action as 'MergedPi0s'
+                                   'Electrons'    ] ##
         , 'ForceDigits'         : True       # Force digits recontruction to be run with Clusters
         , 'UseTracks'           : True       # Use Tracks as Neutrality Criteria 
         , 'UseSpd'              : False      # Use Spd as Neutrailty Criteria
@@ -157,13 +158,12 @@ class CaloRecoConf(LHCbConfigurableUser):
         recList = self.getProp ( 'RecList') 
 
         seq     = []
-
-        
         
         if 'Digits'     in recList : addAlgs ( seq , self.digits     () ) 
         if 'Clusters'   in recList : addAlgs ( seq , self.clusters   () ) 
         if 'Photons'    in recList : addAlgs ( seq , self.photons    () )
-        if 'MergedPi0s' in recList : addAlgs ( seq , self.mergedPi0s () )
+        if 'MergedPi0s' in recList or 'SplitPhotons' in recList :
+            addAlgs ( seq , self.mergedPi0s () )
         if 'Electrons'  in recList : addAlgs ( seq , self.electrons  () )
         
         setTheProperty ( seq , 'Context'     , self.getProp ( 'Context'     ) )
@@ -178,13 +178,9 @@ class CaloRecoConf(LHCbConfigurableUser):
             log.info ('Configure Calorimeter Reco blocks ' )            
             log.info ( prntCmp ( seq ) )
 
-        ## print ' CONFIGURATION!' , prntCmp ( seq )
-        
         if self.getProp( 'EnableRecoOnDemand' )  :
             log.info ( printOnDemand () ) 
             
-        ## print ' ON-DEMAND ' , printOnDemand () 
-                
 # =============================================================================
 ## @class HltCaloRecoConf
 #  Configurable for Calorimeter Reconstruction in Hlt context 
