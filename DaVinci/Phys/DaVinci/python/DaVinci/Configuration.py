@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.71 2009-08-25 14:52:50 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.72 2009-10-10 12:33:07 ibelyaev Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, DaVinciWriteDst )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, CaloDstUnPackConf, L0Conf, DaVinciWriteDst )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -70,7 +70,15 @@ class DaVinci(LHCbConfigurableUser) :
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
          }
 
-    __used_configurables__ = [ PhysConf, AnalysisConf, HltConf, DstConf, L0Conf, LHCbApp, DaVinciWriteDst ]
+    __used_configurables__ = [
+        PhysConf          ,
+        AnalysisConf      ,
+        HltConf           ,
+        DstConf           ,
+        CaloDstUnPackConf ,
+        L0Conf            ,
+        LHCbApp           ,
+        DaVinciWriteDst   ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []
@@ -261,7 +269,8 @@ class DaVinci(LHCbConfigurableUser) :
         # DST unpacking, not for DC06
         if ( self.getProp("DataType") != "DC06" and self.getProp("InputType") != "MDF" ):
             DstConf().EnableUnpack = True
-
+            CaloDstUnPackConf ( Enable = True )
+            
 ################################################################################
 # Ntuple files
 #

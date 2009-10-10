@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.377 2009-10-07 13:28:23 pkoppenb Exp $
+! $Id: release.notes,v 1.378 2009-10-10 12:33:07 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-10 - Vanya Belyaev
+
+ - make use of CaloDstUnPackConf configurable 
+
 
 ! 2009-10-07 - Patrick Koppenburg
  - Update DC06 BB data
