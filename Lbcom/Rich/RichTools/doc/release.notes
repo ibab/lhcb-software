@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2009-10-10 - Christopher Rob Jones
+ - Add new HPD occupancy and hot pixel finder tools
+
 !=========================== RichTools v2r27p1 2009-09-03 ====================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichTools_dll.cpp
