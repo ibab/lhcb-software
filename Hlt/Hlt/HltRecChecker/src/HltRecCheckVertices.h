@@ -1,4 +1,4 @@
-// $Id: HltRecCheckVertices.h,v 1.6 2009-10-08 19:39:00 graven Exp $
+// $Id: HltRecCheckVertices.h,v 1.7 2009-10-10 16:01:58 graven Exp $
 #ifndef HLTRECCHECKVERTICES_H 
 #define HLTRECCHECKVERTICES_H 1
 
@@ -6,7 +6,7 @@
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
 #include "Event/MCParticle.h"
-#include "HltBase/ERelations.h"
+#include "ERelations.h"
 
 /** @class HltRecCheckVertices HltRecCheckVertices.h
  *  

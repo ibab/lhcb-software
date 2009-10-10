@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-10-10 - G. Raven
+ - move ERelations from HltBase to HltRecChecker (only place where it is
+   used)
 ! 2009-10-09 - G. Raven
  - minimal change to be blind to details of Track container types
  - remove copying of measurements as not strictly needed, and requires

@@ -1,10 +1,10 @@
-// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.4 2009-10-08 19:39:00 graven Exp $
+// $Id: HltLHCbIDMCParticleRelation.cpp,v 1.5 2009-10-10 16:01:58 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // local
-#include "HltBase/ERelations.h"
+#include "ERelations.h"
 #include "HltLHCbIDMCParticleRelation.h"
 #include "Linker/LinkedFrom.h"
 
