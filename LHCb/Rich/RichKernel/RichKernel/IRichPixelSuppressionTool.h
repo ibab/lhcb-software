@@ -5,7 +5,7 @@
  *  Header file for tool interface : Rich::DAQ::IPixelSuppressionTool
  *
  *  CVS Log :-
- *  $Id: IRichPixelSuppressionTool.h,v 1.5 2008-03-25 15:55:03 jonrob Exp $
+ *  $Id: IRichPixelSuppressionTool.h,v 1.6 2009-10-10 18:22:50 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   2003-07-31
@@ -64,14 +64,6 @@ namespace Rich
        */
       virtual bool applyPixelSuppression( const LHCb::RichSmartID hpdID,
                                           LHCb::RichSmartID::Vector & smartIDs ) const = 0;
-
-      /** Returns the average occupancy for the given HPD
-       *
-       *  @param hpdID HPD identifier
-       *
-       *  @return The average HPD occupancy
-       */
-      virtual double averageOccupancy( const LHCb::RichSmartID hpdID ) const = 0;
 
     };
 

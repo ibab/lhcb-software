@@ -28,13 +28,18 @@
 #include "RichKernel/IRichToolRegistry.h"
 #include "RichKernel/IRichSnellsLawRefraction.h"
 #include "RichKernel/IRichAddBackground.h"
+#include "RichKernel/IRichHPDOccupancyTool.h"
+#include "RichKernel/IRichGenericHPDAnalysisTool.h"
 
 // instanciate templated classes
 namespace 
 {
   struct _Instantiations 
   {
-    Rich::IAddBackground::HPDBackgrounds obj_1;
+    Rich::IAddBackground::HPDBackgrounds   obj_1;
+    Rich::IGenericHPDAnalysisTool::Result  obj_2;
+    Rich::IGenericHPDAnalysisTool::Results obj_3;
+
   };
 }
 

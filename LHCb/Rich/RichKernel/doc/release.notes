@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.243 2009-09-29 08:31:40 jonrob Exp $
+! $Id: release.notes,v 1.244 2009-10-10 18:22:50 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-10-10 - Christopher Rob Jones
+ - Add new tool interface for standalone HPD occupancy tool, which was
+   previously part of the HPD suppression tool
+ - Add new generic HPD data analysis tool interface
+ - Update tool registry with a new new tools
 
 ! 2009-09-29 - Chris Jones
  - Suppress a warning back down to debug, since it unexpectidly occurs
