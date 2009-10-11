@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.9 2009-08-25 11:53:19 graven Exp $
+// $Id: HltLine.cpp,v 1.10 2009-10-11 09:15:40 graven Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -334,9 +334,9 @@ StatusCode HltLine::execute() {
 
   // did not(yet) accept, but something bad happened...
   if ( !accept && report.errorBits()!=0 && ( m_nAcceptOnError < m_maxAcceptOnError || m_maxAcceptOnError<0) ) {
-        accept =  ( m_acceptOnError    && ( report.errorBits()&0x01!=0) )
-               || ( m_acceptOnIncident && ( report.errorBits()&0x02!=0) )
-               || ( m_acceptIfSlow     && ( report.errorBits()&0x04!=0) );
+        accept =  ( m_acceptOnError    && ( (report.errorBits()&0x01)!=0) )
+               || ( m_acceptOnIncident && ( (report.errorBits()&0x02)!=0) )
+               || ( m_acceptIfSlow     && ( (report.errorBits()&0x04)!=0) );
         if (accept) ++m_nAcceptOnError;
   }
 
