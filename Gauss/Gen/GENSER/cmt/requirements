@@ -103,7 +103,7 @@ macro_remove libraryshr_linkopts "-Wl,--no-undefined"
 #============================================================================
 public
 macro GENSER_linkopts "-lnsl -lcrypt -ldl -lg2c" \
-      target-slc5     "-lnsl -lcrypt -ldl" \
+      target-slc5     "-lnsl -lcrypt -ldl -lgfortran" \
       WIN32           "/LIBPATH:$(DFDir)\LIB DFORDLL.LIB DFPORT.LIB"
 
 
