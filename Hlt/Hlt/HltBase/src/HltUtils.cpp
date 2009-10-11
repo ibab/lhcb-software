@@ -79,9 +79,9 @@ XYZPoint HltUtils::closestPoint(const Track& track1,
   const State& state2 = track2.firstState();
   XYZPoint pos1(0.,0.,0.);
   XYZPoint pos2(0.,0.,0.);
-  bool ok = Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
-                                      , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
-                                      , pos1, pos2);
+  Gaudi::Math::closestPoints( Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state1.position(),state1.slopes())
+                            , Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector>(state2.position(),state2.slopes())
+                            , pos1, pos2);
 
   return XYZPoint(0.5*(pos1.x()+pos2.x()),
                   0.5*(pos1.y()+pos2.y()),
