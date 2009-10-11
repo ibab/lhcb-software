@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.19 2009-10-10 12:29:51 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-10-11 09:23:38 jpalac Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -72,34 +72,37 @@ class PhysConf(LHCbConfigurableUser) :
         #
         # Proto recalibration
         #
-        from Configurables import (GaudiSequencer)
-        # Test protos are here
-        testrecalib = GaudiSequencer("TestProtoPRecalibration")
-        init.Members += [ testrecalib ]
-        from Configurables import (TESCheck)
-        protoCheck = TESCheck("CheckProto")
-        protoCheck.Inputs = [ "Rec/ProtoP" ] 
-        protoCheck.Stop = False 
-        testrecalib.Members += [ protoCheck ]
-        # Do recalibration
-        recalib = GaudiSequencer("ProtoPRecalibration")
-        recalib.IgnoreFilterPassed = True 
-        testrecalib.Members += [ recalib ]
         inputtype =  self.getProp('InputType').upper()
-        if ( inputtype != 'RDST' ) :
-            log.info('Doing MuonID for '+self.getProp( "DataType" )+' and '+inputtype)
-            from MuonID import ConfiguredMuonIDs
-            from Configurables import MuonRec, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
-            cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-            MuonIDSeq=cm.getMuonIDSeq()
-            recalib.Members += [ MuonRec(), MuonIDSeq,
-                                 ChargedProtoParticleAddMuonInfo(), ChargedProtoCombineDLLsAlg() ]
-#        else: # @todo breaks
+        if inputtype != 'MDST'  :        
+            from Configurables import (GaudiSequencer)
+            # Test protos are here
+            testrecalib = GaudiSequencer("TestProtoPRecalibration")
+            init.Members += [ testrecalib ]
+            from Configurables import (TESCheck)
+            protoCheck = TESCheck("CheckProto")
+            protoCheck.Inputs = [ "Rec/ProtoP" ] 
+            protoCheck.Stop = False 
+            testrecalib.Members += [ protoCheck ]
+            # Do recalibration
+            recalib = GaudiSequencer("ProtoPRecalibration")
+            recalib.IgnoreFilterPassed = True 
+            testrecalib.Members += [ recalib ]
+
+            if inputtype != 'RDST' :
+                log.info('Doing MuonID for '+self.getProp( "DataType" )+' and '+inputtype)
+                from MuonID import ConfiguredMuonIDs
+                from Configurables import MuonRec, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
+                cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
+                MuonIDSeq=cm.getMuonIDSeq()
+                recalib.Members += [ MuonRec(), MuonIDSeq,
+                                     ChargedProtoParticleAddMuonInfo(),
+                                     ChargedProtoCombineDLLsAlg() ]
+#           else: # @todo breaks
             # @todo Should use DoD Svc, but there are some problems
-#            from Configurables import (MuonPIDsFromProtoParticlesAlg)
-#            recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
-        from Configurables import (RichPIDsFromProtoParticlesAlg)
-        recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
+#                from Configurables import (MuonPIDsFromProtoParticlesAlg)
+#                recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
+            from Configurables import (RichPIDsFromProtoParticlesAlg)
+            recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
     
 #
 # Data on demand
@@ -134,6 +137,5 @@ class PhysConf(LHCbConfigurableUser) :
         """
         log.info("Applying Phys configuration")
         self.dataOnDemand()
-#        self.configureReco() # call it directly
         self.loki()
         
