@@ -1,4 +1,4 @@
-// $Id: EFunctions.h,v 1.17 2009-10-06 08:01:56 graven Exp $
+// $Id: EFunctions.h,v 1.18 2009-10-11 20:41:02 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -53,8 +53,6 @@ namespace zen
     virtual Self* clone() const = 0;
   };
 
-  typedef zen::filter< double > cut;
-
   template <class T1, class T2>
   class bifunction : public std::binary_function<const T1, const T2, double> 
   {
@@ -62,8 +60,8 @@ namespace zen
     typedef zen::bifunction<T1,T2> Self;
     typedef typename std::binary_function<const T1, const T2, double>  Base;
     typedef typename Base::result_type   result_type   ;
-    // typedef typename Base::argument_type argument_type ;
-    // typedef typename Base::argument_type argument_type ;
+    typedef typename Base::first_argument_type first_argument_type ;
+    typedef typename Base::second_argument_type second_argument_type ;
     virtual ~bifunction() {}
     virtual double operator() (const T1& t, const T2& t2) const = 0;
     virtual Self* clone() const = 0;
@@ -76,8 +74,8 @@ namespace zen
     typedef zen::bifilter<T1,T2> BiFilter;
     typedef typename std::binary_function<const T1, const T2, bool>  Base;
     typedef typename Base::result_type   result_type   ;
-    // typedef typename Base::argument_type argument_type ;
-    // typedef typename Base::argument_type argument_type ;
+    typedef typename Base::first_argument_type first_argument_type ;
+    typedef typename Base::second_argument_type second_argument_type ;
     virtual ~bifilter() {}
     virtual bool operator() (const T1& t, const T2& t2) const = 0;
     virtual BiFilter* clone() const = 0;
@@ -99,20 +97,6 @@ namespace zen
     std::auto_ptr<Function> m_fun;
   };
   
-  template <class T>
-  class binder_memberfunction : public zen::function<T> 
-  {
-  public:
-    typedef zen::function<T> Function;
-    typedef double (T::* ptr_memfun) () const;
-    explicit binder_memberfunction(ptr_memfun pmf):m_pmf(pmf) {}
-    double operator() (const T& t) const {return (t.*m_pmf)();}
-    binder_memberfunction<T>* clone() const {return new binder_memberfunction<T>(m_pmf);}
-  private:
-    ptr_memfun m_pmf;
-  };
-
-
   template <class T1, class Container> 
   class binder_function : public zen::function<T1> 
   {
@@ -159,33 +143,6 @@ namespace zen
     std::auto_ptr<zen::bifunction<T1,T2> > bifunction;
     Container* container;
     zen::bifilter<double,double>* comparator;
-  };  
-
-  template <class T>
-  class binder_cfunction : public zen::function<T> 
-  {
-  public:
-    typedef double (*FUN) (const T&);
-    binder_cfunction( FUN f):m_fun(f) {}
-    double operator() (const T& t) const {return (*m_fun)(t);}
-    zen::binder_cfunction<T>* clone() const 
-    {return new zen::binder_cfunction<T>(m_fun);}
-  private:
-    FUN m_fun;
-  };
-
-  template <class T1, class T2>
-  class binder_cbifunction : public zen::bifunction<T1,T2> 
-  {
-  public:
-    typedef double (*FUN) (const T1&, const T2&);
-    binder_cbifunction( FUN f):_fun(f) {}
-    double operator() (const T1& t1, const T2& t2) const 
-    {return (*_fun)(t1,t2);}
-    zen::binder_cbifunction<T1,T2>* clone() const 
-    {return new zen::binder_cbifunction<T1,T2>(_fun);}
-  private:
-    FUN _fun;
   };  
 
    /* Return the key of the best match
@@ -239,9 +196,9 @@ namespace zen
     ptr_memfun m_pmf;
     std::auto_ptr<Binder> m_binder;
   };
-  
-  //------------ Helper classes ---------------------------------
 
+
+  //------------ Helper classes ---------------------------------
   class abs_min : public zen::bifilter<double,double> 
   {
   public:
@@ -258,6 +215,8 @@ namespace zen
     {return (fabs(d) > fabs(d0));}
     abs_max* clone() const {return new abs_max();}
   };
+
+
 
   // simple filters and functions
 
@@ -355,22 +314,22 @@ namespace zen
     typedef zen::filter<double> Cut;
   public:
     explicit filter_from_function(const Function& f, const Cut& c)
-        : function( f.clone() )
-        , cut( c.clone() ) 
+        : m_function( f.clone() )
+        , m_cut( c.clone() ) 
         {}
     filter_from_function(const filter_from_function<T>& f)
         : zen::filter<T>()
-        , function( f.function->clone() )
-        , cut( f.cut->clone() ) 
+        , m_function( f.m_function->clone() )
+        , m_cut( f.m_cut->clone() ) 
         {}
     ~filter_from_function() {}
     bool operator() (const T& t) const
-    {return (*cut)( (*function)(t )) ;}
+    {return (*m_cut)( (*m_function)(t )) ;}
     zen::filter_from_function<T>* clone() const 
-    {return new zen::filter_from_function<T>(*function,*cut) ; }
+    {return new zen::filter_from_function<T>(*m_function,*m_cut) ; }
   private:
-    std::auto_ptr<Function> function;
-    std::auto_ptr<Cut> cut;    
+    std::auto_ptr<Function> m_function;
+    std::auto_ptr<Cut> m_cut;    
   };
 
   template <class T> 
@@ -381,22 +340,22 @@ namespace zen
   public:
     explicit filter_from_filter(const Filter& f, const Cut& c)
         : Filter()
-        , filter( f.clone() )
-        , cut( c.clone() ) 
+        , m_filter( f.clone() )
+        , m_cut( c.clone() ) 
     {}
     filter_from_filter(const filter_from_filter<T>& f)
         : Filter()
-        , filter( f.filter->clone() )
-        , cut( f.cut->clone() ) 
+        , m_filter( f.m_filter->clone() )
+        , m_cut( f.m_cut->clone() ) 
     {}
     ~filter_from_filter() {}
     bool operator() (const T& t) const
-    {return (*cut)( (*filter)(t )) ;}
+    {return (*m_cut)( (*m_filter)(t )) ;}
     zen::filter_from_filter<T>* clone() const 
-    {return new zen::filter_from_filter<T>(*filter,*cut) ; }
+    {return new zen::filter_from_filter<T>(*m_filter,*m_cut) ; }
   private:
-    std::auto_ptr<Filter> filter;
-    std::auto_ptr<Cut> cut;    
+    std::auto_ptr<Filter> m_filter;
+    std::auto_ptr<Cut> m_cut;    
   };
 
   template <class T> 

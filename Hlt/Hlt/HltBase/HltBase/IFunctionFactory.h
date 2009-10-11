@@ -1,4 +1,4 @@
-// $Id: IFunctionFactory.h,v 1.1 2008-01-22 09:35:00 hernando Exp $
+// $Id: IFunctionFactory.h,v 1.2 2009-10-11 20:41:02 graven Exp $
 #ifndef HLTBASE_IFUNCTIONFACTORY_H 
 #define HLTBASE_IFUNCTIONFACTORY_H 1
 
@@ -24,6 +24,8 @@ public:
 
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_IFunctionFactory; }
+  //FIXME: the above will return the same ID regardless of the template argument
+  //       T, resulting in different interfaces returning the same ID...
 
 
   virtual bool command(const std::string& command, 
