@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-10-11 - Christopher Rob Jones
+ - Extend RichSmartID with new methods to object HPD pixel row, HPD pixel 
+   column and HPD column level identifiers.
+
 ! 2009-10-02 - Vanya BELYAEV
 
  - add CaloCellID::hash method, change the output type  

@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: RichSmartID.xml,v 1.33 2008-02-27 10:28:58 jonrob Exp $
+  * $Id: RichSmartID.xml,v 1.34 2009-10-11 12:23:15 jonrob Exp $
   *****************************************************************************
   * XML-description of RichSmartID class                                      *
   * author: Chris Jones   Christopher.Rob.Jones@cern.ch                       *
@@ -355,7 +355,7 @@
             desc  = "Returns true if the RichSmartID contains valid HPD data"  
             type  = "bool">
             <code>
-               return ( hpdNumInColIsSet() &amp;&amp; hpdColIsSet()  &amp;&amp; panelIsSet() &amp;&amp; richIsSet() );
+               return ( hpdNumInColIsSet() &amp;&amp; hpdColIsSet() &amp;&amp; panelIsSet() &amp;&amp; richIsSet() );
             </code>
         </method>
 
@@ -401,20 +401,51 @@
         </method>
 
         <method 
+            name  = "pixelRowID"
+            const = "TRUE" 
+            desc  = "Decoding function to return an identifier for a single HPD pixel row, stripping pixel column and sub-pixel information"  
+            type = "LHCb::RichSmartID">
+            <code>
+               return LHCb::RichSmartID( m_key &amp; ~(pixelSubRowMask+pixelSubRowIsSetMask+pixelColMask+pixelColIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "pixelColID"
+            const = "TRUE" 
+            desc  = "Decoding function to return an identifier for a single HPD pixel column, stripping pixel row and sub-pixel information"  
+            type = "LHCb::RichSmartID">
+            <code>
+               return LHCb::RichSmartID( m_key &amp; ~(pixelSubRowMask+pixelSubRowIsSetMask+pixelRowMask+pixelRowIsSetMask) );
+            </code>
+        </method>
+
+        <method 
             name  = "hpdID"
             const = "TRUE" 
-            desc  = "Decoding function to strip all the pixel information and return a photon detector RichSmartID"  
+            desc  = "Decoding function to return an identifier for a single HPD, stripping all pixel level information"  
             type = "LHCb::RichSmartID">
             <code>
                return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+HPDNumInColMask+HPDColMask+
-                                   richIsSetMask+panelIsSetMask+HPDNumInColIsSetMask+HPDColIsSetMask) );
+                                         richIsSetMask+panelIsSetMask+HPDNumInColIsSetMask+HPDColIsSetMask) );
+            </code>
+        </method>
+
+        <method 
+            name  = "hpdColID"
+            const = "TRUE" 
+            desc  = "Decoding function to return an identifier for a single HPD column"  
+            type = "LHCb::RichSmartID">
+            <code>
+               return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+HPDColMask+
+                                         richIsSetMask+panelIsSetMask+HPDColIsSetMask) );
             </code>
         </method>
 
         <method 
             name  = "panelID"
             const = "TRUE" 
-            desc  = "Decoding function to strip the photon-detector information and return a panel RichSmartID"  
+            desc  = "Decoding function to strip the photon-detector information and return a HPD panel RichSmartID"  
             type  = "LHCb::RichSmartID">
             <code>
                return LHCb::RichSmartID( m_key &amp; (richMask+panelMask+richIsSetMask+panelIsSetMask) );

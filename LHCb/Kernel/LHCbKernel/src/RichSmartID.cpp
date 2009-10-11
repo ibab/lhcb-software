@@ -4,7 +4,7 @@
  *
  *  Implementation file for RICH Channel ID class : RichSmartID
  *
- *  $Id: RichSmartID.cpp,v 1.10 2008-02-06 10:13:58 jonrob Exp $
+ *  $Id: RichSmartID.cpp,v 1.11 2009-10-11 12:23:14 jonrob Exp $
  *
  *  @author  Chris Jones  Christopher.Rob.Jones@cern.ch
  *  @date    2005-01-06
@@ -27,17 +27,21 @@ std::ostream& LHCb::RichSmartID::fillStream(std::ostream& s) const
   if ( isValid() ) 
   {
     // If so, print out only the explicitly set fields
-    const std::string PANEL =  ( rich() == Rich::Rich1 ?
-                                 ( panel() == Rich::top  ? "Top   " : "Bottom" ) :
-                                 ( panel() == Rich::left ? "Left  " : "Right " ) );
     s << "{";
-    if ( richIsSet()          ) s << " "            << Rich::text( rich() );
-    if ( panelIsSet()         ) s << " "            << PANEL;
-    if ( hpdColIsSet()        ) s << " HPDCol"      << format("%3i",hpdCol());
-    if ( hpdNumInColIsSet()   ) s << " HPDNumInCol" << format("%3i",hpdNumInCol());
-    if ( pixelColIsSet()      ) s << " pixCol"      << format("%3i",pixelCol());
-    if ( pixelRowIsSet()      ) s << " pixRow"      << format("%3i",pixelRow());
-    if ( pixelSubRowIsSet()   ) s << " pixSubRow"   << format("%2i",pixelSubRow());
+    if ( richIsSet()        ) s << " "            << Rich::text( rich() );
+    if ( panelIsSet()       ) 
+    {
+      const std::string PANEL 
+        = ( rich() == Rich::Rich1 ?
+            ( panel() == Rich::top  ? "Top     " : "Bottom  " ) :
+            ( panel() == Rich::left ? "Left(A) " : "Right(C)" ) );
+      s << " "            << PANEL;
+    }
+    if ( hpdColIsSet()      ) s << " HPDCol"      << format("%3i",hpdCol());
+    if ( hpdNumInColIsSet() ) s << " HPDNumInCol" << format("%3i",hpdNumInCol());
+    if ( pixelColIsSet()    ) s << " pixCol"      << format("%3i",pixelCol());
+    if ( pixelRowIsSet()    ) s << " pixRow"      << format("%3i",pixelRow());
+    if ( pixelSubRowIsSet() ) s << " pixSubRow"   << format("%2i",pixelSubRow());
     s << " }";
   } 
   else 
