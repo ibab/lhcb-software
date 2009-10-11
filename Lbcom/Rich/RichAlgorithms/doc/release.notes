@@ -4,6 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-10-11 - Christopher Rob Jones
+ - Add new algorithm that runs the generic HPD analysis tools on the raw
+   data for each TAE event.
+
 !========================= RichAlgorithms v1r1 2009-09-03 ====================
 ! 2009-09-03 - Marco Cattaneo
  - Remove obsolete file src/RichAlgorithms_dll.cpp
