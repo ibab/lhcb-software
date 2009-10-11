@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::HPDHotPixelFinder
  *
  *  CVS Log :-
- *  $Id: RichHPDHotPixelFinder.h,v 1.1 2009-10-10 18:28:42 jonrob Exp $
+ *  $Id: RichHPDHotPixelFinder.h,v 1.2 2009-10-11 14:44:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -104,8 +104,8 @@ namespace Rich
     /// Count hits per channel in current event sample
     mutable HitCountMap m_hitCount;
 
-    /// Cached results
     typedef Rich::Map< LHCb::RichSmartID, IGenericHPDAnalysisTool::Results > ResultCache;
+    /// Cached results
     mutable ResultCache m_results;
 
   };

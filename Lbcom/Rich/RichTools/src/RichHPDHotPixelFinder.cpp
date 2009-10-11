@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::HPDHotPixelFinder
  *
  * CVS Log :-
- * $Id: RichHPDHotPixelFinder.cpp,v 1.1 2009-10-10 18:28:42 jonrob Exp $
+ * $Id: RichHPDHotPixelFinder.cpp,v 1.2 2009-10-11 14:44:05 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -29,20 +29,17 @@ HPDHotPixelFinder::HPDHotPixelFinder( const std::string& type,
   : ToolBase ( type, name, parent ),
     m_nEvts  ( 0                  )
 {
-
   // Define interface
   declareInterface<IGenericHPDAnalysisTool>(this);
-
   // job opts
-  declareProperty( "HotOcc",            m_hotOcc = 0.9 );
-  declareProperty( "NEventsForAverage", m_nEventsForAverage = 100 );
-
+  declareProperty( "HotOcc",            m_hotOcc            = 0.9 );
+  declareProperty( "NEventsForAverage", m_nEventsForAverage = 250 );
 }
 
 StatusCode HPDHotPixelFinder::initialize()
 {
   // Sets up various tools and services
-  StatusCode sc = ToolBase::initialize();
+  const StatusCode sc = ToolBase::initialize();
   if ( sc.isFailure() ) return sc;
 
   // incidents
@@ -65,7 +62,7 @@ HPDHotPixelFinder::analyse( const LHCb::RichSmartID hpdID,
     ++m_hitCount[*iR];
   }
 
-  // Do we have any results to return for this HPD
+  // Do we have any results to return for this HPD ?
   if ( !m_results.empty() )
   {
     ResultCache::iterator iR = m_results.find(hpdID);
@@ -88,11 +85,15 @@ HPDHotPixelFinder::analyse( const LHCb::RichSmartID hpdID,
 
 void HPDHotPixelFinder::handle( const Incident& )
 {
+  // Only one sort of incident subscribed to (EndEvent)
+  // so no need to check type here.
+
   ++m_nEvts;
 
-  // Look for hot pixels
+  // Look for hot pixels every now and then
   if ( m_nEvts == m_nEventsForAverage )
   {
+    
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << "Searching for hot pixels after " << m_nEvts << " events" << endmsg;
 
@@ -117,11 +118,12 @@ void HPDHotPixelFinder::handle( const Incident& )
              << 100.0*m_hotOcc
              << "% hot in " << m_nEventsForAverage << " events";
         // make result object
-        IGenericHPDAnalysisTool::Result result;
+        IGenericHPDAnalysisTool::Results & results = m_results[iHPDC->first.hpdID()];
+        results.push_back( IGenericHPDAnalysisTool::Result() );
+        IGenericHPDAnalysisTool::Result  & result = results.back();
         result.id      = iHPDC->first;
         result.message = mess.str();
         result.status  = StatusCode::FAILURE;
-        m_results[iHPDC->first.hpdID()].push_back(result);
       }
 
     }
