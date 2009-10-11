@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.378 2009-10-10 12:33:07 ibelyaev Exp $
+! $Id: release.notes,v 1.379 2009-10-11 09:10:31 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,10 +9,14 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-11 - Juan PALACIOS
+ - python/DaVinci/Configuration.py
+  . Add 'MDST' option to InputType property. Disables data unpacking MC link
+    re-doing.
+
 ! 2009-10-10 - Vanya Belyaev
 
  - make use of CaloDstUnPackConf configurable 
-
 
 ! 2009-10-07 - Patrick Koppenburg
  - Update DC06 BB data

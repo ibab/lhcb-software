@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.72 2009-10-10 12:33:07 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.73 2009-10-11 09:08:25 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -33,7 +33,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "MainOptions"        : ""            # Main option file to execute
        , "UserAlgorithms"     : []            # User algorithms to run.
        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
-       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST". Nothing means the input type is compatible with being a DST. 
+       , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
          # Trigger running
        , "L0"                 : False         # Run L0. 
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
@@ -59,7 +59,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "MainOptions"        : """ Main option file to execute """
        , "UserAlgorithms"     : """ User algorithms to run. """
        , "RedoMCLinks"        : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. """
-       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST'. Nothing means the input type is compatible with being a DST.  """
+       , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST'. Nothing means the input type is compatible with being a DST.  """
        , "L0"                 : """ Re-Run L0 """
        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
        , "HltType"            : """ HltType : No Hlt by default. Use Hlt1+Hlt2 to run Hlt """
@@ -97,12 +97,12 @@ class DaVinci(LHCbConfigurableUser) :
         if dataType not in [ "DC06", "2008", "2009", "MC09" ]:
             raise TypeError( "Invalid dataType '%s'"%dataType )
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST" ]:
+        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "MDST" ]:
             raise TypeError( "Invalid inputType '%s'"%inputType )
         # DST packing, not for  DC06
 #        if ( self.getProp("DataType") == "DC06" ):
 #            self.setProp('PackType', 'NONE') 
-        if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI")):
+        if ( self.getProp("Simulation") & ( inputType != "MDF" ) & (inputType != "DIGI") & (inputType != "MDST") ):
             redo = self.getProp("RedoMCLinks")
             if ( self.getProp("DataType")=="DC06" ) and ( not redo ):
                 log.warning("Redoing MC links enforced with DC06")
@@ -266,8 +266,10 @@ class DaVinci(LHCbConfigurableUser) :
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-        # DST unpacking, not for DC06
-        if ( self.getProp("DataType") != "DC06" and self.getProp("InputType") != "MDF" ):
+        # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
+        inputType = self.getProp( "InputType" ).upper()
+        if inputType!="MDST" and ( self.getProp("DataType") != "DC06"
+                                   and inputType != "MDF" ):
             DstConf().EnableUnpack = True
             CaloDstUnPackConf ( Enable = True )
             
