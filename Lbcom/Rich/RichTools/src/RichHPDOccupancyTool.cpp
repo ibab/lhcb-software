@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::HPDOccupancyTool
  *
  * CVS Log :-
- * $Id: RichHPDOccupancyTool.cpp,v 1.1 2009-10-10 18:28:42 jonrob Exp $
+ * $Id: RichHPDOccupancyTool.cpp,v 1.2 2009-10-11 16:05:11 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 21/03/2006
@@ -97,7 +97,7 @@ StatusCode HPDOccupancyTool::initialize()
 
 void HPDOccupancyTool::handle ( const Incident& )
 {
-  // Only one incident type registered, so do not both to check type
+  // Only one incident type registered, so do not bother to check type
   m_updateRunningOccs = true;
 }
 

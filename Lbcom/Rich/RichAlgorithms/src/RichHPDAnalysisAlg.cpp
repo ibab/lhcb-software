@@ -5,7 +5,7 @@
  *  Implementation file for monitor : Rich::DAQ::HPDAnalysisAlg
  *
  *  CVS Log :-
- *  $Id: RichHPDAnalysisAlg.cpp,v 1.1 2009-10-11 14:40:33 jonrob Exp $
+ *  $Id: RichHPDAnalysisAlg.cpp,v 1.2 2009-10-11 16:10:08 jonrob Exp $
  *
  *  @author Chris Jones    Christopher.Rob.Jones@cern.ch
  *  @date   2008-10-14
@@ -125,7 +125,7 @@ StatusCode HPDAnalysisAlg::processTAEEvent( const std::string & taeEvent )
             }
             else
             {
-              Warning( (*iR).message, (*iR).status, 5 ).ignore();
+              Warning( (*iR).message, StatusCode::SUCCESS, 5 ).ignore();
             }
           }
         }

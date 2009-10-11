@@ -5,7 +5,7 @@
  *  Header file for tool : Rich::HPDHotPixelFinder
  *
  *  CVS Log :-
- *  $Id: RichHPDHotPixelFinder.h,v 1.2 2009-10-11 14:44:05 jonrob Exp $
+ *  $Id: RichHPDHotPixelFinder.h,v 1.3 2009-10-11 16:05:11 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   15/03/2002
@@ -77,15 +77,11 @@ namespace Rich
                         IGenericHPDAnalysisTool::Results & results ) const;
 
   private:
-    
-    class HitData
-    {
-    public:
-      HitData() : nEvents(0), hits(0) { }
-    public:
-      unsigned long nEvents;
-      unsigned long hits;
-    };
+
+    /// Run HPD hot pixel analysis on current data values
+    void findHotPixels();
+
+  private:
 
     /// Hit count map
     typedef Rich::Map<LHCb::RichSmartID,unsigned int> HitCountMap;
