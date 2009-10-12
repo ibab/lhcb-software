@@ -1,10 +1,10 @@
-#$Id: Wrappers.py,v 1.11 2009-10-12 13:07:48 jpalac Exp $
+#$Id: Wrappers.py,v 1.12 2009-10-12 16:26:34 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
    - Selection          Wraps a selection configurable and the selections it
                         requires
-   - DataonDemand       Wraps a string TES location to make it look like a Seleciton
+   - DataOnDemand       Wraps a string TES location to make it look like a Seleciton
    - SelectionSequence  Creates a sequence from a selection such that all the
                         sub-selections required are executed in the right order
 """
@@ -15,9 +15,8 @@ __all__ = ('DataOnDemand', 'Selection', 'SelectionSequence')
 from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from LHCbKernel.Configuration import *
-from Configurables import LHCbConfigurableUser
 
-class DataOnDemand(LHCbConfigurableUser) :
+class DataOnDemand :
     """
     Simple wrapper for a Data-On-Demand location. Returns output location
     via outputLocation() method. Can be used as a Selection in
@@ -31,20 +30,25 @@ class DataOnDemand(LHCbConfigurableUser) :
 
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
     
-    __slots__ = {
-        "Location"            : ""   , 
-        "RequiredSelections"  : []
-        }
-
+    def __init__ (self,
+                  name,
+                  Location = "", 
+                  RequiredSelections = [] ) :
+        print "Instantiating ", name
+        self.name = name
+        self.requiredSelections = []
+        self.Location = Location
+        self.algorithm = None
+        
     def outputLocation(self) :
-        return self.getProp('Location')
+        return self.Location
 
     def algName(self) :
         loc = self.outputLocation()
         loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
         return loc
     
-class Selection(LHCbConfigurableUser) :
+class Selection :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
     configurable plus a list of required selection configurables. It uses
@@ -72,37 +76,32 @@ class Selection(LHCbConfigurableUser) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    __slots__ = {
-        "Algorithm"           : "",
-        "RequiredSelections"  : [],
-        "OutputBranch" : "Phys"
-        }
-    
-    def __apply_configuration__(self) :
-        print "Set Algo"
-        print "Set required selections"
-        for sel in self.requiredSelections() :
-            print self.algName(),  " adding InputLocation ", sel.outputLocation()
-            self.algorithm().InputLocations += [sel.outputLocation()]
-        print "Required Selection Algorithms: ", self.requiredSelections()
-
-    def requiredSelections(self) :
-        return self.getProp('RequiredSelections')
-
-    def algorithm(self) :
-        return self.getProp('Algorithm')
-
-    def dealWithStringSelection(self, selection) :
-        print "Selection.dealWithStringSelection(", selection, "): DO NOTHING"
+    def __init__(self,
+                 name,
+                 Algorithm,
+                 RequiredSelections = [],
+                 OutputBranch = "Phys") :
+        self.requiredSelections = []
+        print "Instantiating ", name
+        for sel in RequiredSelections :
+            print "Adding required selection ", sel.name
+            self.requiredSelections.append(sel)
+        self.algorithm = Algorithm
+        self.name = name
+        self.OutputBranch = OutputBranch
+        
+        for sel in self.requiredSelections :
+            print "Algo ", self.algName(),  " adding InputLocation ", sel.outputLocation()
+            self.algorithm.InputLocations += [sel.outputLocation()]
+        print "Required Selection Algorithms: ", self.requiredSelections
 
     def algName(self) :
-        return self.algorithm().name()
+        return self.algorithm.name()
 
     def outputLocation(self) :
-        branch = self.getProp('OutputBranch')
-        return branch + "/" + self.algName()
+        return self.OutputBranch + "/" + self.algName()
     
-class SelectionSequence(LHCbConfigurableUser) :
+class SelectionSequence :
     """
     Wrapper class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -124,36 +123,26 @@ class SelectionSequence(LHCbConfigurableUser) :
     """
     __author__ = "Juan Palacios juan.palacios@nikhef.nl"
 
-    __slots__ = {
-        "TopSelection" : ""
-        }
-
-    algos = []
-    
-    def __apply_configuration__(self) :
-        print "Adding Algo ", self.algorithm().name(),  " to ", self.sequence().name()
-        self.algos.insert(0, self.algorithm())
-        sel = self.topSelection()
-        sel.__apply_configuration__()
-        self.sequence().Members.insert(0,self.algorithm())
-        self.buildSelectionList( self.topSelection().RequiredSelections )
+    def __init__(self,
+                 name,
+                 TopSelection) :
+        self.name = name
+        self.TopSelection = TopSelection
+        self.algorithm = self.TopSelection.algorithm
+        print "Adding Algo ", self.algorithm.name(),  " to ", self.sequence().name()
+        if (self.algorithm != None) :
+            self.sequence().Members.insert(0,self.algorithm)
+        self.buildSelectionList( self.TopSelection.requiredSelections )
         
-    def topSelection(self) :
-        return self.getProp('TopSelection')
-
-    
-    def algorithm(self) :
-        return self.topSelection().algorithm()
-    
     def sequence(self) :
         from Configurables import GaudiSequencer
-        return GaudiSequencer("GaudiSeq"+self.name() )
+        return GaudiSequencer("GaudiSeq"+self.name )
 
     def algName(self) :
-        return self.algorithm().name()
+        return self.algorithm.name()
 
     def outputLocation(self) :
-        return self.topSelection().outputLocation()
+        return self.TopSelection.outputLocation()
 
     def outputLocations(self) :
         return [self.outputLocation()]
@@ -161,13 +150,11 @@ class SelectionSequence(LHCbConfigurableUser) :
     def buildSelectionList(self, selections) :
         for sel in selections :
             print "Adding Algo ", sel.algName(), " to ", self.sequence().name()
-            if type(sel) == DataOnDemand :
+            if sel.__class__.__name__ == 'DataOnDemand' :
                 print "DataOnDemand: do nothing"
             else :
-                self.algos.insert(0, sel.algorithm())
-                self.sequence().Members.insert( 0, sel.algorithm() )
-                sel.__apply_configuration__()
-                self.buildSelectionList( sel.requiredSelections() )
+                self.sequence().Members.insert( 0, sel.algorithm )
+                self.buildSelectionList( sel.requiredSelections )
 
 
 
