@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.25 2009-10-12 18:13:52 graven Exp $
+// $Id: HltFunctions.h,v 1.26 2009-10-12 19:49:30 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -55,11 +55,10 @@ namespace Hlt {
   class Info : public zen::function<T> 
   {
   public:
-    typedef zen::function<T> Function;
     explicit Info(int ikey) : key(ikey) { }
     double operator() (const T& t) const 
     {return t.info(key,-1);}
-    Function* clone() const {return new Info<T>(key);}
+    Info<T>* clone() const {return new Info<T>(key);}
     int key; 
   };
 
@@ -71,7 +70,7 @@ namespace Hlt {
   public:
     explicit PT() {}
     double operator() (const LHCb::Track& t) const {return t.pt();}
-    zen::function<LHCb::Track>* clone() const {return new PT();}
+    PT* clone() const {return new PT();}
   };
 
   /* CheckFlag:    
@@ -84,7 +83,7 @@ namespace Hlt {
     double operator()(const LHCb::Track& t) const{
       return (double) t.checkFlag(flag);
     }
-    Hlt::TrackFunction* clone() const {return new TrackFlag(flag);}
+    TrackFlag* clone() const {return new TrackFlag(flag);}
     LHCb::Track::Flags flag;      
   };
 
@@ -108,7 +107,7 @@ namespace Hlt {
 	return -1.;
       }
     }
-    Hlt::TrackFunction* clone() const { return new MissedVeloHits(); }
+    MissedVeloHits* clone() const { return new MissedVeloHits(); }
   };
 
   class NumberOfASideVeloHits : public Hlt::TrackFunction {
@@ -569,8 +568,7 @@ namespace Hlt {
                        const LHCb::Track& track2) const {
       return (double) HltUtils::doShareM3(track1,track2);
     }
-    zen::bifunction<LHCb::Track,LHCb::Track>* clone() const
-    {return new DoShareM3();}
+    DoShareM3* clone() const {return new DoShareM3();}
   };
 
 
@@ -584,7 +582,7 @@ namespace Hlt {
                        const LHCb::Track& track2) const {
       return HltUtils::deltaAngle(track1,track2);
     }
-    Hlt::TrackBiFunction* clone() const {return new DeltaAngle();}
+    DeltaAngle* clone() const {return new DeltaAngle();}
   };  
   
   /* FitChi2OverNdf:    
@@ -594,7 +592,7 @@ namespace Hlt {
   public:
     explicit FitChi2OverNdf() {}
     double operator() (const LHCb::Track& t) const {return t.chi2PerDoF();}
-    zen::function<LHCb::Track>* clone() const {return new FitChi2OverNdf();}
+    FitChi2OverNdf* clone() const {return new FitChi2OverNdf();}
   };
 
   /* FitMuChi2:    
@@ -611,7 +609,7 @@ namespace Hlt {
       }
       return muChi2;
     }
-    zen::function<LHCb::Track>* clone() const {return new FitMuChi2();}
+    FitMuChi2* clone() const {return new FitMuChi2();}
   };
   
   /* FitCleanedChi2OverNdf:    
@@ -636,7 +634,7 @@ namespace Hlt {
       }
       return chi2;
     }
-    zen::function<LHCb::Track>* clone() const {return new FitCleanedChi2OverNdf();}
+    FitCleanedChi2OverNdf* clone() const {return new FitCleanedChi2OverNdf();}
   };
   
   class VertexMaxMuChi2: public Hlt::VertexFunction {
@@ -648,7 +646,7 @@ namespace Hlt {
       double chi2_1 = Hlt::FitMuChi2()(*(v.tracks()[1]));
       return (fabs(chi2_0)>fabs(chi2_1)) ? chi2_0 : chi2_1;
     }
-    Hlt::VertexFunction* clone() const {return new VertexMaxMuChi2();}
+    VertexMaxMuChi2* clone() const {return new VertexMaxMuChi2();}
   };
 
 
@@ -658,17 +656,13 @@ namespace Hlt {
   zen::filter<T>* makeFilter(const zen::function<T>& fun,
                              const std::string& mode, 
                              double x0, double xf) {
-    if      (mode == "<")  return (fun < x0).clone();
-    else if (mode == ">")  return (fun > x0).clone();
-    else if (mode == "=")  return (fun == x0).clone();
-    else if (mode == "[]") return ((fun > x0) && (fun < xf)).clone();
-    else if (mode == "||>") {
-      zen::abs_function<T> afun(fun);
-      return (afun > x0).clone();
-    } else if ( mode == "||<") {
-      zen::abs_function<T> afun(fun);
-      return (afun < x0).clone();
-    } else if (mode == "||[]") {
+    if      (mode == "<")    return (fun < x0).clone();
+    else if (mode == ">")    return (fun > x0).clone();
+    else if (mode == "=")    return (fun == x0).clone();
+    else if (mode == "[]")   return ((fun > x0) && (fun < xf)).clone();
+    else if (mode == "||>")  return (zen::abs_function<T>(fun) > x0).clone();
+    else if (mode == "||<")  return (zen::abs_function<T>(fun) < x0).clone();
+    else if (mode == "||[]") {
       zen::abs_function<T> afun(fun);
       return ((afun > x0) && (afun < xf)).clone();
     } 

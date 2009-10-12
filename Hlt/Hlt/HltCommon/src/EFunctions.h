@@ -24,7 +24,7 @@ namespace zen
   public:
     typedef zen::function<T> Function;
     explicit abs_function(const Function& fun) : m_fun(fun.clone()) { }
-    abs_function(const abs_function<T>& rhs) : m_fun(rhs.m_fun->clone()) { }
+    abs_function(const abs_function<T>& rhs) : zen::function<T>(), m_fun(rhs.m_fun->clone()) { }
     virtual ~abs_function() {}
     double operator() (const T& t) const {return fabs((*m_fun)(t));}
     abs_function<T>* clone() const {return new abs_function<T>(*m_fun);}
