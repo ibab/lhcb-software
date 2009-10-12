@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::SnellsLawRefraction
  *
  * CVS Log :-
- * $Id: RichSnellsLawRefraction.cpp,v 1.5 2009-07-30 12:14:16 jonrob Exp $
+ * $Id: RichSnellsLawRefraction.cpp,v 1.6 2009-10-12 08:15:45 jonrob Exp $
  *
  * @author Antonis Papanestis
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
@@ -61,16 +61,20 @@ StatusCode SnellsLawRefraction::initialize()
   Gaudi::XYZPoint p1(100,100,0), p2(100,-100,0), p3(-100,-100,0);
   const Gaudi::XYZVector v(0,0,1);
   m_radiatorTool->intersections( p1, v, Rich::Aerogel, intersections );
+  if ( intersections.empty() ) return Error( "No intersections found for p1" );
   p1 = intersections.back().exitPoint();
   m_minZaero = p1.z();
+  intersections.clear();
   m_radiatorTool->intersections( p2, v, Rich::Aerogel, intersections );
+  if ( intersections.empty() ) return Error( "No intersections found for p2" );
   p2 = intersections.back().exitPoint();
   if ( p2.z() < m_minZaero ) m_minZaero = p2.z();
+  intersections.clear();
   m_radiatorTool->intersections( p3, v, Rich::Aerogel, intersections );
+  if ( intersections.empty() ) return Error( "No intersections found for p3" );
   p3 = intersections.back().exitPoint();
   if ( p3.z() < m_minZaero ) m_minZaero = p3.z();
-  debug() << "Points " << p1 << " " << p2 << " " << p3 << endmsg;
-
+  
   // make a plane using these points
   m_aeroExitPlane = Gaudi::Plane3D(p1,p2,p3);
 

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+! 2009-10-12 - Christopher Rob Jones
+ - Protect SnellsLawRefraction against zero intersections in initialize()
+
 ! 2009-10-10 - Christopher Rob Jones
  - Add new HPD occupancy and hot pixel finder tools
 
