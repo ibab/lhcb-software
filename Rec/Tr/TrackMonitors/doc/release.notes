@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-12 Wouter Hulsbergen
+ - fixed unchecked statuscode in OTHitEfficiencyMonitor
+ - made a separate configuration for OT monitors
+
 ! 2009-10-08 Wouter Hulsbergen
  - adapted to changes in LHCb::Track
 
