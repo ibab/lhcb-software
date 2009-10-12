@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.93 2009-09-18 15:43:22 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.94 2009-10-12 13:20:08 wouter Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -24,7 +24,7 @@ class Brunel(LHCbConfigurableUser):
     DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
     
     ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","ST","PROTO"] 
+    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
     KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
@@ -438,6 +438,10 @@ class Brunel(LHCbConfigurableUser):
         if "Tr" in moniSeq :
             from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
             ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
+
+        if "OT" in moniSeq :
+            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredOTMonitorSequence
+            ConfiguredOTMonitorSequence(Name='MoniOTSeq')
 
         if "MUON" in moniSeq :
             from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
