@@ -10,7 +10,12 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackV0Monitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
+    return seq
+
+def ConfiguredOTMonitorSequence(Name = "MoniOTSeq",
+                                HistoPrint = False ):
+    seq = GaudiSequencer(Name)
     seq.Members.append( OTTrackMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( OTHitEfficiencyMonitor(HistoPrint=HistoPrint) )
-    
     return seq
+
