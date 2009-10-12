@@ -158,7 +158,6 @@ namespace zen
   template <class T>
   class equal_to : public zen::filter<T> {
   public:
-    typedef typename zen::filter<T>::Self Filter;
     explicit equal_to(const T& t) : m_t(t) { }    
     bool operator() (const T& t) const {return (t == m_t);}
     equal_to* clone() const { return new equal_to(m_t) ;}
@@ -171,7 +170,6 @@ namespace zen
   class less : public zen::filter<T>
   {
   public:
-    typedef typename zen::filter<T>::Self Filter;
     explicit less(const T& t) : m_t(t) {}
     bool operator() (const T& t) const {return t < m_t;}
     less* clone() const { return new less(m_t) ;}
@@ -184,7 +182,6 @@ namespace zen
   class greater : public zen::filter<T>
   {
   public:
-    typedef typename zen::filter<T>::Self Filter;
     explicit greater(const T& t) : m_t(t) { }
     bool operator() (const T& t) const {return t > m_t;}
     greater* clone() const { return new greater(m_t) ;}
@@ -198,7 +195,6 @@ namespace zen
   class in_range : public zen::filter<T>
   {
   public:
-    typedef typename zen::filter<T>::Self Filter;
     explicit in_range(const T& x0, const T& x1 ) : m_t0(x0),m_t1(x1) {}    
     bool operator() (const T& t) const {return ((t>m_t0) && (t<m_t1));}
     in_range* clone() const { return new in_range(m_t0,m_t1) ;}
