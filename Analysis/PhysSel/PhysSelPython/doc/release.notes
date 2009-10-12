@@ -1,9 +1,18 @@
-!$Id: release.notes,v 1.14 2009-10-02 08:38:34 jpalac Exp $
+!$Id: release.notes,v 1.15 2009-10-12 13:08:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+!==================== PhysSel/PhysSelPython v2r2p1 2009-10-12 ================
+
+! 2009-10-02 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Selection class gets InputLocations from RequiredSelection's outputLocation(), NOT algName().
+    These are now different and previous behaviour was buggy in case of explicit locations.
+ - cmt/requirements
+  . Increase version to v2r2p1
 
 !==================== PhysSel/PhysSelPython v2r2 2009-10-02 ==================
 
