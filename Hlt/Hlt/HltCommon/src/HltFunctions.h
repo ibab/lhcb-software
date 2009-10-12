@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.24 2009-10-09 07:31:01 graven Exp $
+// $Id: HltFunctions.h,v 1.25 2009-10-12 18:13:52 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -20,6 +20,8 @@
 #include "Event/Node.h"
 #include "Event/TrackFunctor.h"
 #include "GaudiAlg/GaudiTool.h"
+
+#include "EFunctions.h"
 #include <memory>
 
 namespace Hlt {  

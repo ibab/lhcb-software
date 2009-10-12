@@ -1,8 +1,8 @@
-// $Id: HltTypes.h,v 1.2 2009-10-10 15:55:37 graven Exp $
+// $Id: HltTypes.h,v 1.3 2009-10-12 18:13:52 graven Exp $
 #ifndef HLTBASE_HLTTYPES_H 
 #define HLTBASE_HLTTYPES_H 1
 
-#include "HltBase/EFunctions.h"
+#include "HltBase/IFunctions.h"
 #include "HltBase/IFunctionFactory.h"
 #include "HltBase/IBiFunctionFactory.h"
 

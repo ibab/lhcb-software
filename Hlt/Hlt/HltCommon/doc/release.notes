@@ -3,6 +3,11 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+! 2009-10-12 - Gerhard Raven
+ - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h
+   and implementation, and move latter into HltCommon/src/EFunctions.h
+
 ! 2009-10-09 - Gerhard Raven
  - minimal change to be blind to details of Track container types
  - follow changes in TrackEvent

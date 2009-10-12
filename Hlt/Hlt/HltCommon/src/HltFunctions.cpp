@@ -1,4 +1,4 @@
-#include "HltBase/EFunctions.h"
+#include "EFunctions.h"
 #include "HltFunctions.h"
 
 //-----------------------------------------------------------------------------
