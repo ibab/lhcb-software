@@ -1,4 +1,4 @@
-// $Id: CaloCosmicsTool.cpp,v 1.9 2009-09-16 16:07:07 odescham Exp $
+// $Id: CaloCosmicsTool.cpp,v 1.10 2009-10-12 16:08:13 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -260,8 +260,8 @@ StatusCode CaloCosmicsTool::zSup(){
   m_zsupADCs.clear();
 
   std::string slot = *(m_slots.begin());
-  CaloVector<LHCb::CaloAdc>& adcs = m_daqs[slot]->adcs() ;
-  for(CaloVector<LHCb::CaloAdc>::iterator iadc = adcs.begin(); iadc!= adcs.end(); ++iadc){
+  const CaloVector<LHCb::CaloAdc>& adcs = m_daqs[slot]->adcs() ;
+  for(CaloVector<LHCb::CaloAdc>::const_iterator iadc = adcs.begin(); iadc!= adcs.end(); ++iadc){
     long sum = 0;
     LHCb::CaloCellID cell = (*iadc).cellID();
     if(cell.area() == m_calo->pinArea())continue;

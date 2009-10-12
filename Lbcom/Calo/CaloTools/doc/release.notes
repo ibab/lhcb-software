@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.78 2009-09-21 10:16:52 odescham Exp $
+! $Id: release.notes,v 1.79 2009-10-12 16:08:13 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+
+! 2009-12-21 - Olivier Deschamps
+  -  adapt to change in CaloDAQ
 
 ! 2009-09-21 - Olivier Deschamps
   -  improve Calo2MCTool.{cpp,h} : not yet complete but usable 
@@ -42,6 +45,10 @@
  - L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
 
 !========================== CaloTools v5r10 2009-08-31 =========================
+
+! 2009-12-10 - Olivier Deschamps
+ - adapt to change in CaloDAQ
+
 ! 2009-08-10 - Vanya BELYAEV
  - Calo2Calo & CaloGetter 
     fix the problem of mandatory "update" 

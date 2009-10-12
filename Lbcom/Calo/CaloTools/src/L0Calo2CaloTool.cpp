@@ -274,7 +274,7 @@ const LHCb::CaloDigits* L0Calo2CaloTool::makeDigits
   }
 
 
-  CaloVector<LHCb::CaloDigit>& dgs = m_dataProviderTool->digits( sources );
+  const CaloVector<LHCb::CaloDigit>& dgs = m_dataProviderTool->digits( sources );
 
 
   // populate the CaloDigits TS container 
