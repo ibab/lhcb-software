@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.5 2009-10-12 15:05:27 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.h,v 1.6 2009-10-12 15:40:05 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
@@ -187,6 +187,9 @@ namespace Rich
 
       /// Returns the number of active HPDs (0-9) in this particular ingress
       ShortType numActiveHPDs() const;
+
+      /// Returns the number of inactive HPDs (0-9) in this particular ingress
+      ShortType numInactiveHPDs() const;
 
     public:
 
