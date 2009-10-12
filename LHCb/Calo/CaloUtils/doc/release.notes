@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.134 2009-10-02 11:32:12 ibelyaev Exp $
+! $Id: release.notes,v 1.135 2009-10-12 16:04:35 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-12-10 - Olivier Deschamps
+ - Calo2Dview : speed-up processing
 
 ! 2009-10-02 - Vanya BELYAEV
 

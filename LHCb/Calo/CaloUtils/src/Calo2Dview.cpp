@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.17 2009-09-30 13:18:43 ibelyaev Exp $
+// $Id: Calo2Dview.cpp,v 1.18 2009-10-12 16:04:35 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -155,19 +155,19 @@ void Calo2Dview::getCaloParam(unsigned int calo){
 }
 
   
-AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string title,  std::string name , int area){
+void Calo2Dview::bookCalo2D(const HistoID unit,const std::string title,  std::string name , int area){
   int calo =  CaloCellCode::CaloNumFromName(name);
   if(calo < 0){
     error() << "Calo name : " << name << "is unknown " <<endreq;
-    return NULL;
+    return;
   }
-  return bookCalo2D(unit, title, calo, area);
-
+  bookCalo2D(unit, title, calo, area);
+  return; 
 }
 
 
 //=============================================================================
-AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string title,  unsigned  int calo , int area){
+void Calo2Dview::bookCalo2D(const HistoID unit,const std::string title,  unsigned  int calo , int area){
 
   getCaloParam(calo);
   caloViewMap[unit]=calo;
@@ -178,7 +178,7 @@ AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string 
       GaudiHistoAlg::bookProfile1D(unit, title , 0.,(double) m_bin1d , m_bin1d, m_prof);
     else
       GaudiHistoAlg::book1D(unit, title , 0.,(double) m_bin1d , m_bin1d);
-    return NULL;
+    return ;
   }
 
   // electronics 2D view : FEB vs Channel (include PIN-diode channels)
@@ -197,7 +197,7 @@ AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string 
       th2d->GetXaxis()->SetBinLabel( bin  , loc.str().c_str() );
     } 
     th2d->GetXaxis()->LabelsOption( m_lab.c_str() );  
-    return h2d;
+    return ;
   }  
 
   // 2D geometrical view with small bining to simulate variable bin size (separated PMT/PIN histo)
@@ -222,35 +222,35 @@ AIDA::IHistogram2D* Calo2Dview::bookCalo2D(const HistoID unit,const std::string 
       ymax = m_ysize[i] * (ymax-ymin) / 2.;
       ymin = -ymax;
     }
-    HistoID lun = getUnit(unit, calo , i) ;
+    const HistoID& lun = getUnit(unit, calo , i) ;
     h=GaudiHistoAlg::book2D( lun,
                              getTitle(title, calo, i),
                              xmin , xmax, xbin , ymin , ymax , ybin);  
+
+    //info() << "histo bounds" <<  xmin<< " " <<  xmax << " " << ymin << " " << ymax << endmsg;
+    //info() << "cell size " << m_xsize[i] << " " << m_ysize[i] << endmsg;
   } 
-  return h; // return outer view
+  return ; // return outer view
 }
 
 int Calo2Dview::centre(int x , int area){
   int theArea = m_split ? area : 0;
   return (x==0) ?   m_centre - m_refCell[theArea].col() : m_centre - m_refCell[theArea].row();
 }
-
-std::string Calo2Dview::getUnit(std::string unit, int calo, int area){
+//--------------------------------------------------
+const GaudiAlg::HistoID Calo2Dview::getUnit(std::string unit, int calo, int area)const{
   if(!m_split)return unit;
-  //std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
-  std::string nArea = CaloCellCode::caloArea ( calo , area);
+  const std::string& nArea = CaloCellCode::caloArea ( calo , area);
   int index = unit.find_last_of("/")+1 ;
-  std::string pref = unit.substr(0,index);
-  std::string suff = unit.substr(index,unit.length() );
-  unit = pref  + nArea +"/"+ suff;
-  return (HistoID) unit;
+  unit.insert(index, nArea+"/");
+  return  (HistoID) unit;
 }
+
 std::string Calo2Dview::getTitle(std::string title, int calo, int area){
   if(!m_split)return title;
-  // std::string nArea = CaloCellCode::CaloAreaFromNum( calo , area);
-  std::string nArea = CaloCellCode::caloArea ( calo , area);
+  const std::string& nArea = CaloCellCode::caloArea ( calo , area);
   std::string tit =  title + " (" +nArea + " area)";
-  return tit ;
+  return  tit ;
 }
 
 
@@ -265,7 +265,7 @@ void Calo2Dview::resetTitle(const HistoID unit , std::string title){
     lArea = (6+m_regMap[calo])/4;
   }
   for(int i=0;i<lArea;++i){
-    HistoID  lun = getUnit( unit, calo , i);
+    HistoID  lun = (HistoID) getUnit( unit, calo , i);
     std::string tit = getTitle( title,calo, i);
     if( histoExists(lun))histo2D(lun)->setTitle(tit);
     std::string name = (std::string) unit;
@@ -273,7 +273,7 @@ void Calo2Dview::resetTitle(const HistoID unit , std::string title){
     std::string suff = name.substr( index, name.length()  );
     std::string pref = name.substr( 0,index  );
     lun =  pref + "PIN/" +  suff ;
-    HistoID lun2 = getUnit( lun , calo, i );
+    const HistoID& lun2 = getUnit( lun , calo, i );
     if( histoExists((HistoID) lun2 )){
       std::string tit = title + " PIN-diode " ;
       std::string tit2 = getTitle(title,calo,i);
@@ -291,14 +291,14 @@ void Calo2Dview::reset(const HistoID unit , std::string title){
     lArea = (6+m_regMap[calo])/4;
   }
   for(int i=0;i<lArea;++i){
-    HistoID lun = getUnit( unit, calo , i);
+    HistoID lun = (HistoID) getUnit( unit, calo , i);
     if( histoExists(lun) ){histo2D(lun)->reset();}
     std::string name = (std::string) unit;
     int index = name.find_last_of("/") +1 ; 
     std::string pref = name.substr( 0,index  );
     std::string suff = name.substr( index, name.length()  );
     lun  = pref + "PIN/" + suff ;
-    HistoID lun2 = getUnit( lun , calo, i );
+    const HistoID& lun2 = getUnit( lun , calo, i );
     if( histoExists( lun2 ) )histo2D((HistoID) lun2 )->reset();
   } 
   if("" != title)resetTitle(unit, title);
@@ -306,83 +306,78 @@ void Calo2Dview::reset(const HistoID unit , std::string title){
 
 
 //=============================================================================
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title){
   double weight = m_energyWeighted ? mchit.activeE() : 1.;
-  return fillCalo2D(unit, mchit.cellID(), weight , title);
+  fillCalo2D(unit, mchit.cellID(), weight , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title){
   double weight = m_energyWeighted ? mcdigit.activeE() : 1.;
-  return fillCalo2D(unit, mcdigit.cellID(), weight , title);
+  fillCalo2D(unit, mcdigit.cellID(), weight , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title){
   double weight = m_energyWeighted ? digit.e() : 1.;
-  return fillCalo2D(unit, digit.cellID(), weight  , title);
+  fillCalo2D(unit, digit.cellID(), weight  , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title){
   double weight = m_energyWeighted ? (double) adc.adc() : 1.;
-  return fillCalo2D(unit, adc.cellID(), weight , title);
+  fillCalo2D(unit, adc.cellID(), weight , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title){
   double weight = m_energyWeighted ? (double) l0adc.adc() : 1.;
-  return fillCalo2D(unit, l0adc.cellID(), weight , title);
+  fillCalo2D(unit, l0adc.cellID(), weight , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title){
-  return fillCalo2D(unit, hit.cellID(), 1. , title);
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title){
+  fillCalo2D(unit, hit.cellID(), 1. , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title){
   setL0ClusterView(true);
   double weight = m_energyWeighted ? l0calo.et() : 1.;
-  return fillCalo2D(unit, l0calo.id(), weight , title);
+  fillCalo2D(unit, l0calo.id(), weight , title);
 }
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title){
   setL0ClusterView(true);
   double weight = m_energyWeighted ? cluster.e() : 1.;
-  return fillCalo2D(unit, cluster.seed(), weight , title);
+  fillCalo2D(unit, cluster.seed(), weight , title);
 }
 
 // The main implementation of fillCalo2D
-AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title){
+void  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title){
 
+  // threshold
+  if( value < m_threshold)return;
   // separate treatment for PIN-diode channels for 2D geometrical view
-  if( m_geo && id.isPin() )return m_pin ? fillCaloPin2D(unit,  id , value,title) : NULL;
-
+  if( m_geo && id.isPin() ){
+    if( m_pin ) fillCaloPin2D(unit,  id , value,title) ;
+  }
+  
   // get calo number
   unsigned int calo= id.calo();
   unsigned int area= id.area();
   // book histo if not found
-  HistoID lun = getUnit(unit, calo, area );  
+
+  const HistoID& lun = getUnit(unit, calo, area );  
   if( !histoExists( lun ) )bookCalo2D(unit, title, calo, area);
-
-
-
-  // threshold
-  if( value < m_threshold){
-    if ( msgLevel(MSG::DEBUG) ){
-      debug() << "value = " << value << " < threshold = "<< m_threshold << endreq;
-    }
-    return NULL;
-  }
-
 
   // get calo parameters
   getCaloParam(calo);
 
 
   // check the cellID is consistent with the calo
+  
   if(caloViewMap[ unit ] !=  calo){
     debug() << "Cannot put the  CaloCellID " << id << " in the "
             << CaloCellCode::CaloNameFromNum( caloViewMap[unit] ) 
             << " view '" << unit << "'" << endreq;
-    return NULL;
-  }
-
+    return; 
+  } 
+  
   // -------------- 1D view
   if( m_1d ){
     if(m_profile)
       fill(profile1D(lun), (double) id.index() , value , 1.);
     else
       fill(histo1D(lun), (double) id.index() , value);
-    return NULL;
+    return;
   }
   // -------------- Electronics 2D view (crate/feb .vs. channel)
   if( !m_geo ){
@@ -391,11 +386,20 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
     int chan  = m_calo->cardColumn( id) + nColCaloCard * m_calo->cardRow( id );
     double weight = (value + m_offset);
     if( m_flux )weight /=   (m_xsize[id.area()] * m_ysize[id.area()]);
-    return GaudiHistoAlg::fill( histo2D( lun ) ,  (double) code , (double) chan , weight);
+    GaudiHistoAlg::fill( histo2D( lun ) ,  (double) code , (double) chan , weight);
+    return;
   }  
 
   // -------------- 2D geometrical view with small bining to simulate variable cell sizes
-
+  IHistogram2D* h2D = histo2D(lun);  
+  double xs = m_xsize[area];
+  double ys = m_xsize[area];  
+  double xs0 = m_xsize[0];
+  double ys0 = m_xsize[0];  
+  double xResize = m_split ? xs : xs0;
+  double yResize = m_split ? ys : ys0;
+  unsigned int ibox = m_split ? 1 : m_reg/(area+1);
+  int ppcm  = m_split ? 1 : m_reg ;
 
   // PMT channels
   unsigned int row = id.row();
@@ -407,20 +411,19 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
   // loop over cluster area (1x1 or 2x2 cells depending on L0 mode)
   for(unsigned int kr = 0 ; kr < icl ; kr++){
     for(unsigned int kc = 0 ; kc < icl ; kc++){
-      LHCb::CaloCellID temp(calo, area , row + kr ,  col+ kc);
-      if( !m_calo->valid(temp) )continue;
+      LHCb::CaloCellID temp = id;
+      if( m_l0 ){
+        temp = LHCb::CaloCellID(calo, area , row + kr ,  col+ kc);
+        if( !m_calo->valid(temp) )continue;
+      }      
       unsigned int theRow = row+kr;
       unsigned int theCol = col+kc;
       // Fill the standard view  for PMT
-      unsigned int ibox = m_split ? 1 : m_reg/(area+1);
-      int ppcm  = m_split ? 1 : m_reg ;
       // loop over cell area ( ibox * ibox bins depending on Calo/Area)
       for(unsigned int ir = 0 ; ir < ibox ; ir++){
         for(unsigned int ic = 0 ; ic < ibox ; ic++){
           int iic = (theCol-m_centre )*ibox + ic ;
           int iir = (theRow-m_centre )*ibox + ir ;
-          double xResize = m_split ? m_xsize[area] : m_xsize[0];
-          double yResize = m_split ? m_ysize[area] : m_ysize[0];
           if(!m_dim){
             iic += ppcm * m_centre;
             iir += ppcm * m_centre;
@@ -430,22 +433,22 @@ AIDA::IHistogram2D*  Calo2Dview::fillCalo2D(const HistoID unit, LHCb::CaloCellID
           double x = xResize *  ((double) iic+0.5 ) /(double) ppcm ;
           double y = yResize *  ((double) iir+0.5 ) /(double) ppcm ;
           double weight = (value + m_offset);
-          if( m_flux )weight /=   (m_xsize[area] * m_ysize[area]);
-          GaudiHistoAlg::fill( histo2D(lun) ,  x, y , weight);
+          if( m_flux )weight /=   ( xs * ys );
+          GaudiHistoAlg::fill( h2D ,  x, y , weight);
         }
       }
     }
   }
-  return histo2D(lun);
+  return;
 }
 
-AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title){
+void  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title){
 
   // filter PIN ADC (sanity check)
-  if( !id.isPin() )return NULL;
+  if( !id.isPin() )return;
 
   // threshold
-  if( value < m_threshold)return NULL; 
+  if( value < m_threshold)return; 
 
   // re-set title and unit for PIN  
   std::string name = (std::string) unit;
@@ -465,16 +468,16 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
     // split area naming :
     lun2 = getUnit(lun, id.calo(), area);
     // book histo if not found 
-    if( !histoExists( (HistoID) lun2 ) ){
+    if( !histoExists(  lun2  )){
       std::string tit = title + " PIN-diode " ;
-      bookCalo2D( (HistoID) lun , getTitle(tit, id.calo(), area ), id.calo(), area);
+      bookCalo2D(  (HistoID)  lun , getTitle(tit, id.calo(), area ), id.calo(), area);
     }  
     // check the cellID is consistent with the calo
     if(caloViewMap[(HistoID) lun ] !=  id.calo() ){
       debug() << "Cannot put the  CaloCellID " << id << " in the "
               << CaloCellCode::CaloNameFromNum( caloViewMap[(HistoID) lun ] ) 
               << " view " << unit << endreq;
-      return NULL ;
+      return;
     }
     unsigned int ibox = m_split ? 1 : m_reg/(area+1); 
     int ppcm  = m_split ? 1 : m_reg ;
@@ -494,10 +497,11 @@ AIDA::IHistogram2D*  Calo2Dview::fillCaloPin2D(const HistoID unit, LHCb::CaloCel
         double y = (yResize * ((double) iir +0.5) )/(double) ppcm ;
         double weight = (value + m_offset);
         if( m_flux )weight /=   (m_xsize[area] * m_ysize[area]);
-        GaudiHistoAlg::fill( histo2D( (HistoID) lun2) , x , y , weight );
+        GaudiHistoAlg::fill( histo2D(  lun2 ), x , y , weight );
       }
     }
   }
-  return histo2D( (HistoID) lun2);
+  //  return histo2D( (HistoID) lun2);
+  return;
 }
 

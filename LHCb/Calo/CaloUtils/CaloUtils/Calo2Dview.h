@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.h,v 1.8 2009-05-05 17:06:11 odescham Exp $
+// $Id: Calo2Dview.h,v 1.9 2009-10-12 16:04:35 odescham Exp $
 #ifndef CALODAQ_CALO2DVIEW_H 
 #define CALODAQ_CALO2DVIEW_H 1
 
@@ -35,18 +35,18 @@ public:
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, std::string name ,int area =-1);
-  AIDA::IHistogram2D* bookCalo2D(const HistoID unit,const std::string title, unsigned  int calo , int area = -1);
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title="");  
-  AIDA::IHistogram2D* fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title="");
-  AIDA::IHistogram2D* fillCaloPin2D(const HistoID unit,  LHCb::CaloCellID id , double value, const std::string title="");
+  void bookCalo2D(const HistoID unit,const std::string title, std::string name ,int area =-1);
+  void bookCalo2D(const HistoID unit,const std::string title, unsigned  int calo , int area = -1);
+  void fillCalo2D(const HistoID unit, LHCb::MCCaloHit mchit, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::MCCaloDigit mcdigit, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::CaloDigit digit, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::CaloAdc adc, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::L0CaloAdc l0adc, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::L0PrsSpdHit hit, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::L0CaloCandidate l0calo, const std::string title="");
+  void fillCalo2D(const HistoID unit, LHCb::CaloCluster cluster, const std::string title="");  
+  void fillCalo2D(const HistoID unit, LHCb::CaloCellID id , double value, const std::string title="");
+  void fillCaloPin2D(const HistoID unit,  LHCb::CaloCellID id , double value, const std::string title="");
   void reset(const HistoID unit,std::string title="");
   void resetTitle(const HistoID unit,std::string title);
   void getCaloParam(unsigned int calo);
@@ -61,8 +61,7 @@ public:
   void setOneDimension(bool dim){m_1d = dim;}
   void setSplit(bool split){m_split = split;}
   bool split(){return m_split;}
-  
-    
+  const HistoID getUnit(std::string unit, int calo, int area)const;  
   
 protected:
   // attributes
@@ -92,7 +91,6 @@ protected:
   std::string m_prof;
 private:
   int centre(int x , int area);
-  std::string getUnit(std::string unit, int calo, int area);
   std::string getTitle(std::string title, int calo, int area);
 
   std::map<int,DeCalorimeter*> m_caloMap;
