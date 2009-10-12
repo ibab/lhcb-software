@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.4 2009-10-12 14:28:47 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.h,v 1.5 2009-10-12 15:05:27 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
@@ -175,18 +175,18 @@ namespace Rich
     public:
 
       /** For a given set of HPD Ids, set each of them as active
-       *  @param inputs  HPD Ids
+       *  @param inputs  HPD Ingress Input Numbers
        */
       void setHPDsActive( const L1IngressInputs & inputs );
-
-      /// Returns the number of active HPDs (0-9) in this particular ingress
-      ShortType numActiveHPDs() const;
 
       /// Returns a vector of the active HPD input numbers in this ingress
       void activeHPDInputs( L1IngressInputs & inputs ) const;
 
       /// Returns a vector of the inactive HPD input numbers in this ingress
       void inactiveHPDInputs( L1IngressInputs & inputs ) const;
+
+      /// Returns the number of active HPDs (0-9) in this particular ingress
+      ShortType numActiveHPDs() const;
 
     public:
 
