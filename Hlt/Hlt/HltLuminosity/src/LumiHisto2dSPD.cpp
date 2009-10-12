@@ -1,4 +1,4 @@
-// $Id: LumiHisto2dSPD.cpp,v 1.1 2009-01-27 21:21:39 aperezca Exp $
+// $Id: LumiHisto2dSPD.cpp,v 1.2 2009-10-12 16:09:41 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -56,12 +56,12 @@ StatusCode LumiHisto2dSPD::execute() {
 
   // Get SPD hits:
   if( !m_daq->getBanks()    )return StatusCode::SUCCESS;
-  CaloVector<LHCb::CaloAdc>& adcs= m_daq->adcs();
+  const CaloVector<LHCb::CaloAdc>& adcs= m_daq->adcs();
   int multDAQ    = adcs.size();
   debug() << "DAQ :    "<< multDAQ << endmsg ;
 
   //Make Histo:
-  for(CaloVector<LHCb::CaloAdc>::iterator iadc0 = adcs.begin() ; adcs.end() != iadc0 ; ++iadc0 ){
+  for(CaloVector<LHCb::CaloAdc>::const_iterator iadc0 = adcs.begin() ; adcs.end() != iadc0 ; ++iadc0 ){
     fillCalo2D( "SPD" , (*iadc0) , m_htitle+"Spd hits" );
   }
   return StatusCode::SUCCESS;

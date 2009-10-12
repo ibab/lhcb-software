@@ -4,6 +4,9 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-12-10 - Olivier Deschamps
+ - LumiHisto2dSPD : adapt to change in CaloDAQ
+
 ! 2009-09-30 - Gerhard Raven
  - less info() output
 
