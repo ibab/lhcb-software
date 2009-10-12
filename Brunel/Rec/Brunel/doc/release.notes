@@ -3,6 +3,19 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-12 - Marco Cattaneo
+ - Update references for:
+   . Improvements to PatDownstream (PatAlgorithms v3r23). See T-Rec 2009-09-28
+     http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=48029
+   . Deploy new ghost algorithm TrackAddNNGhostId, replaces NeuralNetTMVA
+     (TrackSys v4r26, TrackTools v3r22, TrackUtils v1r30)
+   . HPD hot pixel finder is no longer an algorithm, now a generic tool called
+     by dedicated instance of HPDAnalysisAlg algorithm (RichRecQC v2r34)
+   . Added OTEfficiencyMonitor (TrackMonitors v1r14)
+   . Rich alignment histograms now booked by default! (RichRecQC v2r34)
+   . VeloTrackMonitor histograms now booked at initialise (VeloRecMonitors v2r2)
+   . New memory histograms and counters (LHCbAlgs v2r29)
+
 ! 2009-10-06 - Marco Cattaneo
  - Update references for:
    . Reduced warnings (RichGlobalPID v3r10p4)
