@@ -5,7 +5,7 @@
  *  Header file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.h,v 1.7 2009-10-12 15:46:04 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.h,v 1.8 2009-10-12 15:47:48 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   19/01/2007
@@ -192,14 +192,6 @@ namespace Rich
       inline ShortType numActiveHPDs() const
       {
         const std::bitset<NumL1InputsPerIngress> bits(activeHPDbits());
-        return bits.count();
-      }
-
-      /// Returns the number of inactive HPDs (0-9) in this particular ingress
-      inline ShortType numInactiveHPDs() const
-      {
-        std::bitset<NumL1InputsPerIngress> bits(activeHPDbits());
-        bits.flip();
         return bits.count();
       }
 
