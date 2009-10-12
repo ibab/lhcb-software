@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.h,v 1.8 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.h,v 1.9 2009-10-12 16:03:54 odescham Exp $
 #ifndef CALOTRIGGERBITSFROMRAW_H 
 #define CALOTRIGGERBITSFROMRAW_H 1
 
@@ -27,13 +27,13 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  virtual LHCb::Calo::FiredCells& prsCells( ); // get prs FiredCells
-  virtual LHCb::Calo::FiredCells& spdCells( ); // get spd FiredCells
-  virtual LHCb::Calo::PrsSpdFiredCells& prsSpdCells( ); // get all FiredCells
-  virtual LHCb::Calo::PrsSpdFiredCells& prsSpdCells(int source ); // get FiredCells for a single bank
-  virtual LHCb::Calo::PrsSpdFiredCells& prsSpdCells( LHCb::RawBank* bank ); // get FiredCells for a single bank
-  virtual void clear();
-  virtual void cleanData(int feb);
+  const LHCb::Calo::FiredCells& prsCells( ); // get prs FiredCells
+  const LHCb::Calo::FiredCells& spdCells( ); // get spd FiredCells
+  const  LHCb::Calo::PrsSpdFiredCells& prsSpdCells( ); // get all FiredCells
+  const  LHCb::Calo::PrsSpdFiredCells& prsSpdCells(int source ); // get FiredCells for a single bank
+  const  LHCb::Calo::PrsSpdFiredCells& prsSpdCells( LHCb::RawBank* bank ); // get FiredCells for a single bank
+  void clear();
+  void cleanData(int feb);
   
 protected:
   bool getData( LHCb::RawBank* bank );

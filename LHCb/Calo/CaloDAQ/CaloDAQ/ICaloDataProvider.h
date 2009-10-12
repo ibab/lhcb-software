@@ -31,10 +31,10 @@ public:
   virtual int adc(LHCb::CaloCellID id)=0;
   virtual double digit(LHCb::CaloCellID id)=0;
   virtual unsigned int nTell1s()=0;
-  virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1)=0;
-  virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1)=0;
-  virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources)=0;
-  virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources)=0;
+  virtual const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true)=0;
+  virtual const CaloVector<LHCb::CaloDigit>& digits(int source=-1,bool clean=true)=0;
+  virtual const CaloVector<LHCb::CaloAdc>&  adcs(std::vector<int> sources,bool clean=true)=0;
+  virtual const CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources,bool clean=true)=0;
   typedef std::pair<LHCb::CaloAdc,LHCb::CaloAdc> CaloAdcPair;
   virtual CaloAdcPair adcRange() = 0;
   virtual CaloAdcPair pinRange() = 0;

@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.28 2009-09-18 13:16:18 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.29 2009-10-12 16:03:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -130,20 +130,20 @@ void CaloEnergyFromRaw::cleanData(int feb ) {
 //  Return the specific ADCs for PIN diode
 //  Warning : it requires a decoding adcs(...) method to be executed before
 //=========================================================================
-std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::pinAdcs () {
+const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::pinAdcs () {
   return m_pinData;
 }
 //=========================================================================
 //  Decode the adcs for ALL banks of one event
 //=========================================================================
-std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs () {
+const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs () {
   return adcs(-1);
 }
 //=========================================================================
 //  Decode the adcs for a single bank (given by sourceID)
 //  Decode ALL banks if source < 0
 //=========================================================================
-std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
+const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
   clear();
   int sourceID   ;
   bool decoded = false;
@@ -163,16 +163,13 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
 
       decoded = getData ( *itB );
       if( !decoded ){
-        std::stringstream s("");
-        s<< sourceID;
-        debug() <<"Error when decoding bank " << s.str()   << " -> incomplete data - May be corrupted"<< endmsg;
+        debug() <<"Error when decoding bank " << Gaudi::Utils::toString(sourceID)   
+                << " -> incomplete data - May be corrupted"<< endmsg;
       }
     } 
   }
   if( !found ){
-    std::stringstream s("");
-    s<< source;
-    debug() <<"rawBank sourceID : " << s.str() << " has not been found"<<endmsg;
+    debug() <<"rawBank sourceID : " << Gaudi::Utils::toString(source) << " has not been found"<<endmsg;
   }
   
   return m_data ;
@@ -180,7 +177,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs (int source) {
 //=========================================================================
 //  Decode the adcs of a single bank (given by bank pointer)
 //=========================================================================
-std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( LHCb::RawBank* bank ){
+const std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( LHCb::RawBank* bank ){
   clear();
   if( !getData( bank ) )clear();
   return m_data ;
@@ -190,7 +187,7 @@ std::vector<LHCb::CaloAdc>& CaloEnergyFromRaw::adcs ( LHCb::RawBank* bank ){
 //=========================================================================
 //  Decode the adcs of a single bank and convert to digit (given sourceID)
 //=========================================================================
-std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( int source ) {
+const std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( int source ) {
   adcs( source );
   if( !getDigits() ) m_digits.clear();
   return m_digits ;
@@ -199,7 +196,7 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( int source ) {
 //=========================================================================
 //  Decode the adcs of a single bank and convert to digit (given by bank pointer)
 //=========================================================================
-std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( LHCb::RawBank* bank ) {
+const std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( LHCb::RawBank* bank ) {
   adcs( bank );
   if( !getDigits() ) m_digits.clear();
   return m_digits ;
@@ -208,7 +205,7 @@ std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( LHCb::RawBank* bank )
 //=========================================================================
 //  Decode the adcs for ALL banks bank and convert to digit - return m_digits
 //=========================================================================
-std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
+const std::vector<LHCb::CaloDigit>&  CaloEnergyFromRaw::digits ( ) {
   adcs();
   if( !getDigits() ) m_digits.clear();
   return m_digits;
@@ -307,11 +304,8 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        std::stringstream s("");
-        s<<sourceID;
-        std::stringstream c("");
-        c<<code;
-        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+        Error(" FE-Card w/ [code : " +  Gaudi::Utils::toString(code) + " ] is not associated with TELL1 bank sourceID : " 
+              + Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);
@@ -414,11 +408,8 @@ bool CaloEnergyFromRaw::getData ( LHCb::RawBank* bank ){
         chanID = m_calo->cardChannels( feCards[card] );
         feCards.erase(feCards.begin()+card);
       }else{
-        std::stringstream s("");
-        s<<sourceID;
-        std::stringstream c("");
-        c<<code;
-        Error(" FE-Card w/ [code : " + c.str() + " ] is not associated with TELL1 bank sourceID : " +s.str()
+        Error(" FE-Card w/ [code : " + Gaudi::Utils::toString( code ) + " ] is not associated with TELL1 bank sourceID : " 
+              +Gaudi::Utils::toString(sourceID)
               + " in condDB :  Cannot read that bank").ignore();
         Error("Warning : previous data may be corrupted").ignore();
         if(m_cleanCorrupted)cleanData(prevCard);

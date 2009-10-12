@@ -26,12 +26,12 @@ public:
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual void clear();
-  virtual void cleanData(int feb);
-  virtual int    l0Adc(LHCb::CaloCellID id);
-  virtual unsigned int nTell1s(){return m_tell1s;};
-  virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(int source=-1);
-  virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(std::vector<int> sources);
+   void clear();
+   void cleanData(int feb);
+  int    l0Adc(LHCb::CaloCellID id);
+  unsigned int nTell1s(){return m_tell1s;};
+  const CaloVector<LHCb::L0CaloAdc>& l0Adcs(int source=-1,bool clean=true);
+  const CaloVector<LHCb::L0CaloAdc>& l0Adcs(std::vector<int> sources,bool clean=true);
   
 
 

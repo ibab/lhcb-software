@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.h,v 1.11 2009-10-02 19:20:40 odescham Exp $
+// $Id: CaloReadoutTool.h,v 1.12 2009-10-12 16:03:54 odescham Exp $
 #ifndef CALODAQ_CALOREADOUTTOOL_H 
 #define CALODAQ_CALOREADOUTTOOL_H 1
 
@@ -30,7 +30,6 @@ class CaloReadoutTool
     , virtual public IIncidentListener{
 public: 
 
-
   /// Standard constructor
   CaloReadoutTool( const std::string& type, 
                const std::string& name,
@@ -55,6 +54,7 @@ public:
     m_getRaw = false;
     clear();
     m_banks = bank;
+    m_ok = true;
   };
   //actual implementation MUST BE in the parent tool
   virtual void clear(){Warning("DUMMY CLEARING : THIS MESSAGE MUST NOT APPEAR").ignore() ; return;}; 
@@ -62,16 +62,22 @@ public:
   virtual void cleanData(int ){return; } ;// to be implemented in the parent tool
   virtual LHCb::RawBankReadoutStatus status(){return m_status;};
   virtual void putStatusOnTES();
-  virtual bool ok(){return m_ok;};
+  virtual bool ok(){
+    if(m_getRaw)getBanks() ;
+    return m_ok;
+  };
   
 
   // =========================================================================
   /// Inform that a new incident has occurred
-  virtual void handle(const Incident& /* inc */ ) { m_getRaw = true ; }
+  virtual void handle(const Incident& /* inc */ ) { 
+    debug() << "IIncident Svc reset" << endmsg;
+    m_getRaw = true ;  
+  } 
   // =========================================================================
 
 protected:  
-
+  
   bool getCaloBanksFromRaw();
   int findCardbyCode(std::vector<int> feCards, int code );
   bool checkCards(int nCards, std::vector<int> feCards );

@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.7 2009-09-30 13:49:21 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.8 2009-10-12 16:03:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -190,20 +190,20 @@ int CaloDataProviderFromTES::adc (LHCb::CaloCellID id){
 //---------
 
 
-CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(int source){
+const CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(int source,bool clean){
   std::vector<int> sources;
   sources.push_back(source);
-  return adcs(sources);
+  return adcs(sources,clean);
 }
-CaloVector<LHCb::CaloDigit>& CaloDataProviderFromTES::digits(int source){
+const CaloVector<LHCb::CaloDigit>& CaloDataProviderFromTES::digits(int source,bool clean){
   std::vector<int> sources;
   sources.push_back(source);
-  return digits(sources);
+  return digits(sources,clean);
 }
 
 
-CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(std::vector<int> sources){
-  clear();
+const CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(std::vector<int> sources,bool clean){
+  if(clean)clear();
   for(std::vector<int>::iterator i=sources.begin();i!=sources.end();i++){
     int source = *i; 
     if(checkSrc( source ))continue;
@@ -241,8 +241,8 @@ CaloVector<LHCb::CaloAdc>& CaloDataProviderFromTES::adcs(std::vector<int> source
   return m_adcs;
 }
 //---------
-CaloVector<LHCb::CaloDigit>& CaloDataProviderFromTES::digits(std::vector<int> sources){
-  clear();
+const CaloVector<LHCb::CaloDigit>& CaloDataProviderFromTES::digits(std::vector<int> sources,bool clean){
+  if(clean)clear();
   for(std::vector<int>::iterator i=sources.begin();i!=sources.end();i++){
     int source = *i; 
     if(checkSrc( source ))continue;

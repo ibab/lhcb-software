@@ -12,7 +12,7 @@
 #include "Event/L0CaloAdc.h"
 #include "CaloKernel/CaloVector.h"
 
-static const InterfaceID IID_ICaloL0DataProvider ( "ICaloL0DataProvider", 1, 0 );
+static const InterfaceID IID_ICaloL0DataProvider ( "ICaloL0DataProvider", 2, 0 );
 
 /** @class ICaloL0DataProvider ICaloL0DataProvider.h CaloDAQ/ICaloL0DataProvider.h
  *  Interface to the tool for fast decoding of CaloBanks
@@ -29,8 +29,8 @@ public:
 
   virtual int l0Adc(LHCb::CaloCellID id)=0;
   virtual unsigned int nTell1s()=0;
-  virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(int source=-1)=0;
-  virtual CaloVector<LHCb::L0CaloAdc>& l0Adcs(std::vector<int> sources)=0;
+  virtual const CaloVector<LHCb::L0CaloAdc>& l0Adcs(int source=-1,bool clean=true)=0;
+  virtual const CaloVector<LHCb::L0CaloAdc>& l0Adcs(std::vector<int> sources,bool clean=true)=0;
 
 protected:
 

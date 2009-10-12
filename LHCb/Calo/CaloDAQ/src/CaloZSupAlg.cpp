@@ -1,4 +1,4 @@
-// $Id: CaloZSupAlg.cpp,v 1.14 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloZSupAlg.cpp,v 1.15 2009-10-12 16:03:54 odescham Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -150,7 +150,7 @@ StatusCode CaloZSupAlg::execute() {
 
   //*** get the input data
 
-  std::vector<LHCb::CaloAdc>& adcs = m_adcTool->adcs( );
+  const std::vector<LHCb::CaloAdc>& adcs = m_adcTool->adcs( );
   if(m_statusOnTES)m_adcTool->putStatusOnTES();
 
   //***  prepare the output containers

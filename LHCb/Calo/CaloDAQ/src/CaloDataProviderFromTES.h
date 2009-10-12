@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.h,v 1.5 2009-09-30 13:49:21 odescham Exp $
+// $Id: CaloDataProviderFromTES.h,v 1.6 2009-10-12 16:03:53 odescham Exp $
 #ifndef CALODATAPROVIDERFROMTES_H 
 #define CALODATAPROVIDERFROMTES_H 1
 
@@ -42,21 +42,21 @@ public:
   }
   // =========================================================================
   
-  virtual int    adc(LHCb::CaloCellID id);
-  virtual double digit(LHCb::CaloCellID id);
-  virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
-  virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1);
-  virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources);
-  virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources);
-  virtual void clear();
-  virtual void cleanData(int feb);
-  virtual bool getBanks();
-  virtual ICaloDataProvider::CaloAdcPair adcRange(){
+   int    adc(LHCb::CaloCellID id);
+   double digit(LHCb::CaloCellID id);
+  const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true);
+  const CaloVector<LHCb::CaloDigit>& digits(int source=-1,bool clean=true);
+  const CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources,bool clean=true);
+  const CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources,bool clean=true);
+   void clear();
+   void cleanData(int feb);
+   bool getBanks();
+   ICaloDataProvider::CaloAdcPair adcRange(){
     LHCb::CaloAdc min = (m_minADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minADC;
     LHCb::CaloAdc max = (m_maxADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxADC;
     return std::make_pair(min,max) ;
   }
-  virtual ICaloDataProvider::CaloAdcPair pinRange(){ 
+   ICaloDataProvider::CaloAdcPair pinRange(){ 
     LHCb::CaloAdc min = (m_minPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minPinADC;
     LHCb::CaloAdc max = (m_maxPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxPinADC;
     return std::make_pair(min,max) ;

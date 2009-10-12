@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.10 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloTriggerAdcsFromRawAlg.cpp,v 1.11 2009-10-12 16:03:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -71,7 +71,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
   put( newL0Adcs, m_outputData );
 
   //*** get the input data from Raw and fill the output container
-  std::vector<LHCb::L0CaloAdc>& l0Adcs = m_l0AdcTool->adcs( );
+  const std::vector<LHCb::L0CaloAdc>& l0Adcs = m_l0AdcTool->adcs( );
   if(m_statusOnTES)m_l0AdcTool->putStatusOnTES();
 
 
@@ -85,7 +85,7 @@ StatusCode CaloTriggerAdcsFromRawAlg::execute() {
   
   //*** get the PinDiode data and fill the output container
   // MUST BE AFTER STANDARD ADCs
-  std::vector<LHCb::L0CaloAdc>& l0PinAdcs = m_l0AdcTool->pinAdcs( );
+  const std::vector<LHCb::L0CaloAdc>& l0PinAdcs = m_l0AdcTool->pinAdcs( );
   if( "None" != m_pinContainer && 0 != l0PinAdcs.size() ){
     LHCb::L0CaloAdcs* newL0PinAdcs = new LHCb::L0CaloAdcs();
     put( newL0PinAdcs, m_pinContainer );

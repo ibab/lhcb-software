@@ -26,21 +26,21 @@ public:
 
   virtual StatusCode initialize();
   virtual StatusCode finalize();
-  virtual void clear();
-  virtual void cleanData(int feb);
-  virtual int    adc(LHCb::CaloCellID id);
-  virtual double digit(LHCb::CaloCellID id);
-  virtual unsigned int nTell1s(){return m_tell1s;};
-  virtual CaloVector<LHCb::CaloAdc>& adcs(int source=-1);
-  virtual CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> source);
-  virtual CaloVector<LHCb::CaloDigit>& digits(int source=-1); 
-  virtual CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources);
-  virtual ICaloDataProvider::CaloAdcPair adcRange(){
+  void clear();
+  void cleanData(int feb);
+  int    adc(LHCb::CaloCellID id);
+  double digit(LHCb::CaloCellID id);
+  unsigned int nTell1s(){return m_tell1s;};
+  const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true);
+  const CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> source,bool clean=true);
+  const CaloVector<LHCb::CaloDigit>& digits(int source=-1,bool clean=true); 
+  const CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources,bool clean=true);
+  ICaloDataProvider::CaloAdcPair adcRange(){
     LHCb::CaloAdc min = (m_minADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minADC;
     LHCb::CaloAdc max = (m_maxADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxADC;
     return std::make_pair(min,max) ;
   }
-  virtual ICaloDataProvider::CaloAdcPair pinRange(){ 
+  ICaloDataProvider::CaloAdcPair pinRange(){ 
     LHCb::CaloAdc min = (m_minPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minPinADC;
     LHCb::CaloAdc max = (m_maxPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxPinADC;
     return std::make_pair(min,max) ;

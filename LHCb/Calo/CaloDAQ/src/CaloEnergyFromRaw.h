@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.h,v 1.11 2009-09-16 16:02:46 odescham Exp $
+// $Id: CaloEnergyFromRaw.h,v 1.12 2009-10-12 16:03:54 odescham Exp $
 #ifndef CALOENERGYFROMRAW_H 
 #define CALOENERGYFROMRAW_H 1
 
@@ -26,16 +26,16 @@ public:
   virtual StatusCode initialize();
   virtual StatusCode finalize();
 
-  virtual std::vector<LHCb::CaloAdc>& adcs( );// decode all banks
-  virtual std::vector<LHCb::CaloAdc>& adcs( LHCb::RawBank* bank ); // decode a single bank
-  virtual std::vector<LHCb::CaloAdc>& adcs( int source ); // decode a single Tell1 bank
-  virtual std::vector<LHCb::CaloAdc>& pinAdcs( );
+  const std::vector<LHCb::CaloAdc>& adcs( );// decode all banks
+  const std::vector<LHCb::CaloAdc>& adcs( LHCb::RawBank* bank ); // decode a single bank
+  const std::vector<LHCb::CaloAdc>& adcs( int source ); // decode a single Tell1 bank
+  const std::vector<LHCb::CaloAdc>& pinAdcs( );
   //
-  virtual std::vector<LHCb::CaloDigit>& digits( ); // decode all banks
-  virtual std::vector<LHCb::CaloDigit>& digits( LHCb::RawBank* bank );// decode a single bank
-  virtual std::vector<LHCb::CaloDigit>& digits(  int source );// decode a single Tell1 bank  
-  virtual void clear();
-  virtual void cleanData(int feb);
+  const std::vector<LHCb::CaloDigit>& digits( ); // decode all banks
+  const std::vector<LHCb::CaloDigit>& digits( LHCb::RawBank* bank );// decode a single bank
+  const std::vector<LHCb::CaloDigit>& digits(  int source );// decode a single Tell1 bank  
+  void clear();
+  void cleanData(int feb);
   
   
 protected:

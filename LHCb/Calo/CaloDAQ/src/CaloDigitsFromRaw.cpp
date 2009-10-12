@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.16 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.17 2009-10-12 16:03:54 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -180,7 +180,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
 
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
     put( digits, m_outputDigits );
-    std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
+    const std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
 
     for ( std::vector<LHCb::CaloDigit>::const_iterator itD = allDigits.begin();
@@ -199,7 +199,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
     // Channel ADC
     LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
     put( adcs ,  m_outputADCs ); 
-    std::vector<LHCb::CaloAdc>& allAdcs = m_energyTool->adcs( );
+    const std::vector<LHCb::CaloAdc>& allAdcs = m_energyTool->adcs( );
     for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
           allAdcs.end() != itA; ++itA ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( (*itA).cellID(), (*itA).adc() ); // 'clone'
@@ -211,7 +211,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
 
     // PinDiode ADC (possibly in a different container)
     // MUST BE AFTER STANDARD ADCs
-    std::vector<LHCb::CaloAdc>& allPinAdcs = m_energyTool->pinAdcs( );
+    const std::vector<LHCb::CaloAdc>& allPinAdcs = m_energyTool->pinAdcs( );
     if( "None" != m_pinContainerName && 0 !=allPinAdcs.size() ){
       LHCb::CaloAdcs*  pinAdcs;
       if(m_pinContainerName == m_outputDigits || m_pinContainerName == "SAME"|| m_pinContainerName == "Same"){

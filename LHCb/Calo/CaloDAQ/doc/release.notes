@@ -4,7 +4,15 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
-! 2009-02-30 - Olivier Deschamps
+! 2009-10-10 - Olivier Deschamps
+  - Calo decoding tools (I)Calo(L0)DataProvider/(I)CaloEnergyFromRaw/(I)CaloTriggerXXXFromRaw : 
+    - add protections with const qualifier
+    - remove usage of stringstream (slow)
+    - change signature of adcs() methods
+    - increment interface version
+
+
+! 2009-09-30 - Olivier Deschamps
   - Calo(L0)DataProvider : fix intialisation when (l0)Adc() method is called first
 
 ! 2009-09-30 - Olivier Deschamps

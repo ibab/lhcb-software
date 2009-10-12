@@ -1,4 +1,4 @@
-// $Id: CaloAdcFromRaw.cpp,v 1.2 2009-09-02 12:22:12 cattanem Exp $
+// $Id: CaloAdcFromRaw.cpp,v 1.3 2009-10-12 16:03:53 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -108,10 +108,10 @@ StatusCode CaloAdcFromRaw::execute() {
   if( m_location != ""  && m_data->getBanks()){
     LHCb::CaloAdcs* outs = new LHCb::CaloAdcs();
     put( outs , m_location);
-    CaloVector<LHCb::CaloAdc>& adcs = m_data->adcs();
+    const CaloVector<LHCb::CaloAdc>& adcs = m_data->adcs();
 
     debug() << " #ADCS " << adcs.size() << endmsg;
-    for(CaloVector<LHCb::CaloAdc>::iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
+    for(CaloVector<LHCb::CaloAdc>::const_iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
       LHCb::CaloAdc adc = *iadc;
       LHCb::CaloCellID id = adc.cellID();
       int value = adc.adc();
@@ -137,8 +137,8 @@ StatusCode CaloAdcFromRaw::execute() {
   if( m_l0Location != ""  && m_l0data->getBanks() ){
     LHCb::L0CaloAdcs* outs = new LHCb::L0CaloAdcs();
     put( outs , m_l0Location);
-    CaloVector<LHCb::L0CaloAdc>& adcs = m_l0data->l0Adcs();
-    for(CaloVector<LHCb::L0CaloAdc>::iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
+    const CaloVector<LHCb::L0CaloAdc>& adcs = m_l0data->l0Adcs();
+    for(CaloVector<LHCb::L0CaloAdc>::const_iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
       LHCb::L0CaloAdc adc = *iadc;
       LHCb::CaloCellID id = adc.cellID();
       int value = adc.adc();
@@ -163,8 +163,8 @@ StatusCode CaloAdcFromRaw::execute() {
   if( m_l0BitLocation != ""  && m_l0data->getBanks() ){
     LHCb::L0PrsSpdHits* outs = new LHCb::L0PrsSpdHits();
     put( outs , m_l0BitLocation);
-    CaloVector<LHCb::L0CaloAdc>& adcs = m_l0data->l0Adcs();
-    for(CaloVector<LHCb::L0CaloAdc>::iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
+    const CaloVector<LHCb::L0CaloAdc>& adcs = m_l0data->l0Adcs();
+    for(CaloVector<LHCb::L0CaloAdc>::const_iterator iadc = adcs.begin();adcs.end()!=iadc;++iadc){
       LHCb::L0CaloAdc adc = *iadc;
       LHCb::CaloCellID id = adc.cellID();
       int value = adc.adc();
