@@ -5,12 +5,14 @@
  *  Implementation file for RICH DAQ utility class : Rich::DAQ::L1IngressHeader
  *
  *  CVS Log :-
- *  $Id: RichDAQL1IngressHeader.cpp,v 1.2 2009-10-12 14:28:47 jonrob Exp $
+ *  $Id: RichDAQL1IngressHeader.cpp,v 1.3 2009-10-12 15:06:31 jonrob Exp $
  *
  *  @author Chris Jones   Christopher.Rob.Jones@cern.ch
  *  @date   619/01/2007
  */
 //=============================================================================================
+
+#include <bitset>
 
 #include "RichKernel/RichDAQL1IngressHeader.h"
 
@@ -27,9 +29,8 @@ void L1IngressHeader::setHPDsActive( const L1IngressInputs & inputs )
 
 ShortType L1IngressHeader::numActiveHPDs() const
 {
-  L1IngressInputs inputs;
-  activeHPDInputs(inputs);
-  return inputs.size();
+  const std::bitset<NumL1InputsPerIngress> bits(activeHPDbits());
+  return bits.count();
 }
 
 void L1IngressHeader::activeHPDInputs( L1IngressInputs & inputs ) const
