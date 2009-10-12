@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiNumbers.xml,v 1.9 2009-05-09 19:19:49 ibelyaev Exp $ 
+     * $Id: LoKiNumbers.xml,v 1.10 2009-10-12 09:59:40 cattanem Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -42,10 +42,6 @@
   
   <class pattern   = "LoKi::Random::*"       />
   <class pattern   = "LoKi::Algorithms::*"   />
-  
-
-  <class name = "std::vector<double>" />
-  <class name = "std::vector<bool>"   />
 
   <exclusion>
     
