@@ -388,7 +388,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
 	
 	// to get a slightly more precise answer, intersect with the plane
 	double tolerance = 0.1 ;
-	m_linearextrapolator->propagate( state, (*ilay)->plane(), tolerance) ;
+	m_linearextrapolator->propagate( state, (*ilay)->plane(), tolerance).ignore() ;
 	
 	// get a single module. this goes wrong if there are large misalignments!
 	const DeOTModule* module = m_otdet->findModule(state.position());
