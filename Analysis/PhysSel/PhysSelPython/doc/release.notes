@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.15 2009-10-12 13:08:19 jpalac Exp $
+!$Id: release.notes,v 1.16 2009-10-12 16:26:58 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-10-12 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Wrappers are now simple classes, not LHCbConfigurableUsers.
+ - cmt/requirements
+  . Increase version to v3r0
 
 !==================== PhysSel/PhysSelPython v2r2p1 2009-10-12 ================
 
