@@ -8,7 +8,7 @@
 # |-PackType        = 'TES'
 # |-DDDBtag         = 'default'  (default: '')
 # |-WithMC          = True  (default: False)
-# |-MainSequence    = ['ProcessPhase/Init', 'ProcessPhase/Reco', 'ProcessPhase/Moni', 'ProcessPhase/MCLinks', 'ProcessPhase/Check', 'ProcessPhase/Output']
+# |-MainSequence    = ['ProcessPhase/Reco', 'ProcessPhase/Moni', 'ProcessPhase/MCLinks', 'ProcessPhase/Check']
 # |                 (default: [])
 # |-OutputType      = 'DST'
 # |-DigiType        = 'Default'
@@ -53,13 +53,13 @@
 # DstWriter.OptItemList=['/Event/Phys/Selections#1', '/Event/Prev/MC/Header#1', '/Event/PrevPrev/MC/Header#1', '/Event/Next/MC/Header#1', '/Event/Link/Raw/Hcal/Digits#1']
 # MuonID WARNING: FOI tuning not ready for DATA=2009,VERSION=def. Loading FOIfactor=1.200000
 # MuonID WARNING: new DLL parameters not tuned for DATA=2009,VERSION=def. Loading values for DC06
-# WARNING: Default tag requested for partition DDDB (using head-20090902)
+# WARNING: Default tag requested for partition DDDB (using head-20091007)
 # WARNING: Default tag requested for partition LHCBCOND (using head-20090902)
 # WARNING: Default tag requested for partition SIMCOND (using sim-20090902-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r4
-                                          running on lxbuild111.cern.ch on Wed Sep 30 17:57:24 2009
+                                                   Welcome to Brunel version v35r1
+                                          running on lxbuild135.cern.ch on Mon Oct 12 10:28:52 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -71,7 +71,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, ProcessPhase/Reco, ProcessPhase/Moni, ProcessPhase/MCLinks, ProcessPhase/Check, ProcessPhase/Output
@@ -93,7 +93,7 @@ PrsCheckBanks        INFO  if not (MC) re-create them from packed bank and delet
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20090902"
+DDDB                 INFO Using TAG "head-20091007"
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
 SIMCOND              INFO Using TAG "sim-20090902-vc-md100"
 PrsSpdFillRawBu...   INFO Data coding type 2
@@ -239,13 +239,17 @@ TrackDownstream...   INFO Member list: PatDownstream
 PatDownstream        INFO ========================================
 PatDownstream        INFO  deltaP             = 2
 PatDownstream        INFO  xPredTol           = 150000
-PatDownstream        INFO  TolMatch           = 2.5
-PatDownstream        INFO  TolUV              = 3
+PatDownstream        INFO  TolMomentum        = 20000
+PatDownstream        INFO  TolMatch           = 0.5
+PatDownstream        INFO  TolUV              = 1
 PatDownstream        INFO  MaxDistance        = 0.1
 PatDownstream        INFO  MaxChisq           = 10
+PatDownstream        INFO  MaxWindowSize      = 6
+PatDownstream        INFO  RemoveUsed         = 0
+PatDownstream        INFO  LongChisq          = 1.5
 PatDownstream        INFO ========================================
-PatDownstream        INFO zMagnetParams 5372.42 -3372.25 370.484
-PatDownstream        INFO momentumParams 1226.32 479.859 2859.75
+PatDownstream        INFO zMagnetParams 5376.8 -3895.12 309.877 85527.9
+PatDownstream        INFO momentumParams 1148.65 961.786 5326.81
 TrackDownstream...   INFO Member list: TrackStateInitAlg/InitDownstreamFit, TrackEventFitter/FitDownstream
 FitDownstream.F...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 FitDownstream.F...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
@@ -321,20 +325,10 @@ FitVelo              INFO   Tracks output container  : Rec/Track/PreparedVelo
 FitVelo              INFO   Fitter name              : TrackMasterFitter/Fitter
 FitVelo              INFO ==================================================
 FitVelo              INFO
-TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLikelihood, NeuralNetTmva
+TrackAddExtraIn...   INFO Member list: GaudiSequencer/TrackClonesSeq, TrackAddLikelihood, TrackAddNNGhostId
 TrackClonesSeq       INFO Member list: TrackBuildCloneTable/FindTrackClones, TrackCloneCleaner/FlagTrackClones
 FindTrackClones      INFO Will build clone table for z=[0, 990, 9450]mm at 'Rec/Track/BestClones'
 FindTrackClones      INFO Max Kullbeck Liebler Distance = 5000
---- Reader         : Parsing option string:
---- Reader         : "Silent"
---- Reader         : The following options are set:
---- Reader         : - By User:
---- Reader         :     Silent: "True" [Boolean silent flag (default off)]
---- Reader         : - Default:
---- Reader         :     V: "False" [Verbose flag]
---- Reader         :     Color: "False" [Color flag (default on)]
-NeuralNetTmva        INFO The MVAnalysis_m_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/MVAnalysis_m_CFMlpANN.weights.txt
-NeuralNetTmva        INFO The MVAnalysis_pf_CFMlpANN.weights.txt weights file is at /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/MVAnalysis_pf_CFMlpANN.weights.txt
 TrackEraseExtra...   INFO Member list: TrackEraseExtraInfo
 RecoVertexSeq        INFO Member list: PatPVOffline, TrackV0Finder
 PatPVOffline.PV...   INFO Short distance extrapolator: TrackParabolicExtrapolator
@@ -562,9 +556,13 @@ MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitor, with conte
 MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of IsMuonLoose
 MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of (binned+integrated) DLL
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, with context 'Offline'
-MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, OTTrackMonitor, with context 'Offline'
+MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, OTTrackMonitor, OTHitEfficiencyMonitor, with context 'Offline'
 ToolSvc.TrackMa...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 ToolSvc.TrackMa...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
+ToolSvc.TrackIn...   INFO Short distance extrapolator: TrackParabolicExtrapolator
+ToolSvc.TrackIn...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
+ToolSvc.TrackIn...   INFO SimplifiedMaterialLocator::initialize()
+ToolSvc.TrackIn...   INFO Found TrackfitGeometry volume with 17 daughters.
 MoniSTSeq            INFO Member list: ST::STClusterMonitor/TTClusterMonitor, ST::STClusterMonitor/ITClusterMonitor, with context 'Offline'
 MoniPROTOSeq         INFO Member list: ChargedProtoParticleMoni/ChargedProtoPMoni, with context 'Offline'
 MCLinks              INFO Member list: GaudiSequencer/MCLinksL0Seq, GaudiSequencer/MCLinksUnpackSeq, GaudiSequencer/MCLinksTrSeq, with context 'Offline'
@@ -619,7 +617,8 @@ BestTracks.Sele...   INFO            Eta cut          : -1.79769e+308 < P < 1.79
 BestTracks.Sele...   INFO            Will reject electrons
 BestTracks.Sele...   INFO            Will reject particles from interations before z=9400
 CheckRICHSeq         INFO Member list: GaudiSequencer/RichRawMoni, GaudiSequencer/RichPixelMoni, GaudiSequencer/RichTrackMoni, GaudiSequencer/RichRecoMoni, GaudiSequencer/RichPIDMoni, GaudiSequencer/RichENNTracklessRingsMoni, GaudiSequencer/RichMirrAlignMoni, GaudiSequencer/RichHPDIonFeedback, with context 'Offline'
-RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::DAQ::HotPixelFinder/RichHotPixels, with context 'Offline'
+RichRawMoni          INFO Member list: Rich::DAQ::RawDataSize/RichRawDataSize, Rich::DAQ::DataDBCheck/RichRawDataDBCheck, Rich::HPDAnalysisAlg/RichHotPixels, with context 'Offline'
+RichHotPixels        INFO Loading HPD Analysis tools : [RichHotPixelFinder]
 RichPixelMoni        INFO Member list: Rich::Rec::MC::PixelQC/RichRecPixelQC, with context 'Offline'
 RichTrackMoni        INFO Member list: Rich::Rec::MC::TrackSelEff/RiLongTrkEff, Rich::Rec::MC::TrackSelEff/RiForwardTrkEff, Rich::Rec::MC::TrackSelEff/RiMatchTrkEff, Rich::Rec::MC::TrackSelEff/RiKsTrackTrkEff, Rich::Rec::MC::TrackSelEff/RiVeloTTTrkEff, Rich::Rec::MC::TrackSelEff/RiSeedTrkEff, with context 'Offline'
 RiLongTrkEff.Tr...   INFO Track Selection : [Forward, Match]
@@ -676,7 +675,7 @@ MuonPIDChecker       INFO initialize:: ======> Monitor Performance of IsMuonLoos
 MuonPIDChecker       INFO initialize:: ======> Monitor Performance of (binned+integrated) DLL
 Output               INFO Member list: GaudiSequencer/OutputDSTSeq
 OutputDSTSeq         INFO Member list: TrackToDST, GaudiSequencer/PackDST
-PackDST              INFO Member list: PackTrack, PackCaloHypo/PackElectrons, PackCaloHypo/PackPhotons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons, PackProtoParticle/PackCharged, PackProtoParticle/PackNeutrals, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuons
+PackDST              INFO Member list: PackTrack, PackProtoParticle/PackCharged, PackProtoParticle/PackNeutrals, PackRecVertex, PackTwoProngVertex, PackTrack/PackMuons, PackCaloHypo/PackPhotons, PackCaloHypo/PackElectrons, PackCaloHypo/PackMergedPi0s, PackCaloHypo/PackSplitPhotons
 FileRecordPersi...   INFO  'CnvServices':[ 'FileRecordCnvSvc' ]
 FileRecordPersi...   INFO Added successfully Conversion service:FileRecordCnvSvc
 FSRWriter            INFO Data source: FileRecordDataSvc output: DATAFILE='PFN:Brunel.dst' TYP='POOL_ROOTTREE' OPT='REC'
@@ -783,7 +782,9 @@ MuonPIDMonitor       INFO ------------------------------------------------------
 MuonPIDMonitor       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
 MuonPIDMonitor       INFO ----------------------------------------------------------------------------
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
+VeloTrackMonitor  SUCCESS Booked 30 Histogram(s) : 1D=19 2D=2 1DProf=9
 TrackVertexMonitorSUCCESS Booked 11 Histogram(s) : 1D=5 1DProf=6
+OTHitEfficiency...SUCCESS Booked 46 Histogram(s) : 2D=9 1DProf=37
 TTClusterMonitor  SUCCESS Booked 10 Histogram(s) : 1D=7 2D=3
 ITClusterMonitor  SUCCESS Booked 6 Histogram(s) : 1D=3 2D=3
 ChargedProtoPMoni    INFO ====================================================================================================================================================
@@ -899,7 +900,9 @@ ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
 ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
 ENNRingPeakSear...SUCCESS Booked 1 Histogram(s) : 1D=1
 RichAlignMoniR1      INFO Number of pions:0; Kaons:0;
+RichAlignMoniR1   SUCCESS Booked 18 Histogram(s) : 1D=3 2D=15
 RichAlignMoniR2      INFO Number of pions:0; Kaons:0;
+RichAlignMoniR2   SUCCESS Booked 516 Histogram(s) : 1D=3 2D=513
 MuonPIDChecker       INFO ------------------------Total MuonPID Efficiencies (%)----------------------
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 MuonPIDChecker       INFO  Particle   :  These Events  :               Reference values
@@ -942,7 +945,6 @@ MuonPIDChecker       INFO  Ghosts     :   ( -1.00 +- -1.00)     :   (  3.21 +-  
 MuonPIDChecker       INFO Tot ID Rate :   (  0.00 +-  0.00)     :   (  8.25 +-  0.02)     :   (  3.79 +-  0.01)
 MuonPIDChecker       INFO ----------------------------------------------------------------------------
 FSRWriter            INFO Set up File Summary Record
-IODataManager        INFO Referring to dataset Brunel.dst by its file ID:96C3BE0B-DAAD-DE11-8D36-00304879EE40
 RootDBase.open    SUCCESS Brunel.dst File version:52200
 FSRWriter            INFO Events output: 1
 DstWriter            INFO Events output: 0
@@ -964,7 +966,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.11 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.93 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1048,7 +1050,7 @@ TimingAuditor.T...   INFO       TrackClonesSeq          |     0.000 |     0.000 
 TimingAuditor.T...   INFO        FindTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        FlagTrackClones        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackAddLikelihood      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO       NeuralNetTmva           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackAddNNGhostId       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackEraseExtraInformatio|     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackEraseExtraInfo     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    RecoVertexSeq              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1186,6 +1188,7 @@ TimingAuditor.T...   INFO     TrackFitMatchMonitor      |     0.000 |     0.000 
 TimingAuditor.T...   INFO     TrackV0Monitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TrackDiMuonMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     OTTrackMonitor            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO     OTHitEfficiencyMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniSTSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     TTClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     ITClusterMonitor          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1263,21 +1266,20 @@ TimingAuditor.T...   INFO    OutputDSTSeq               |     0.000 |     0.000 
 TimingAuditor.T...   INFO     TrackToDST                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO     PackDST                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTrack                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PackElectrons            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PackPhotons              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PackMergedPi0s           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO      PackSplitPhotons         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackCharged              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackNeutrals             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackRecVertex            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackTwoProngVertex       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      PackMuons                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      PackPhotons              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      PackElectrons            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      PackMergedPi0s           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      PackSplitPhotons         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  FSRWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DstWriter                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 RootDBase.close     ERROR Failed to modify file: Brunel.dst Errno=2 No such file or directory
-FileRecordCnvSvc     INFO Disconnected data IO:96C3BE0B-DAAD-DE11-8D36-00304879EE40[Brunel.dst]
-XMLCatalog           INFO File 'test_catalog.xml' does not exist. New file created.
+FileRecordCnvSvc     INFO Disconnected data IO:3457B66E-03B7-DE11-8EBC-001E4F3D8360[Brunel.dst]
 StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
