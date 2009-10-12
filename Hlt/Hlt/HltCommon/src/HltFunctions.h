@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.26 2009-10-12 19:49:30 graven Exp $
+// $Id: HltFunctions.h,v 1.27 2009-10-12 20:02:24 graven Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -41,7 +41,7 @@ namespace Hlt {
     double operator() (const T& t) const {
         return ( t.hasInfo(m_key) ? t.info(m_key,-1e6) : (*m_fun)(t) );
     }
-    Function* clone() const {return new SmartFunction(m_key,*m_fun);}
+    SmartFunction* clone() const {return new SmartFunction(m_key,*m_fun);}
   private:
     int m_key;
     std::auto_ptr<Function> m_fun;
@@ -123,7 +123,7 @@ namespace Hlt {
       }
       return (double) nLeft;
     }
-    Hlt::TrackFunction* clone() const {return new NumberOfASideVeloHits();}
+    NumberOfASideVeloHits* clone() const {return new NumberOfASideVeloHits();}
   };
 
   class NumberOfCSideVeloHits : public Hlt::TrackFunction {
@@ -139,21 +139,21 @@ namespace Hlt {
       }
       return (double) nRight;
     }
-    Hlt::TrackFunction* clone() const {return new NumberOfCSideVeloHits();}
+    NumberOfCSideVeloHits* clone() const {return new NumberOfCSideVeloHits();}
   };
   
   class Charge : public Hlt::TrackFunction {
   public:
     explicit Charge() {}
     double operator() (const LHCb::Track& t) const {return t.charge();}
-    zen::function<LHCb::Track>* clone() const {return new Charge();}
+    Charge* clone() const {return new Charge();}
   };
   
   class P : public Hlt::TrackFunction {
   public:
     explicit P() {}
     double operator() (const LHCb::Track& t) const {return t.p();}
-    zen::function<LHCb::Track>* clone() const {return new P();}
+    P* clone() const {return new P();}
   };
   
 
@@ -162,7 +162,7 @@ namespace Hlt {
   public:
     explicit ETCalo() {}
     double operator() (const LHCb::Track& t) const;    
-    zen::function<LHCb::Track>* clone() const {return new ETCalo();}
+    ETCalo* clone() const {return new ETCalo();}
   };
 
   class DeltaE : public Hlt::TrackFunction
@@ -170,7 +170,7 @@ namespace Hlt {
   public:
     explicit DeltaE() {}
     double operator() (const LHCb::Track& t) const;    
-    zen::function<LHCb::Track>* clone() const {return new DeltaE();}
+    DeltaE* clone() const {return new DeltaE();}
   };
   
   class DeltaP : public Hlt::TrackBiFunction
@@ -178,7 +178,7 @@ namespace Hlt {
   public:
     explicit DeltaP() {}
     double operator() (const LHCb::Track& t1, const LHCb::Track& t2) const;    
-    Hlt::TrackBiFunction* clone() const {return new DeltaP();}
+    DeltaP* clone() const {return new DeltaP();}
   };
 
   class VertexMinPT : public Hlt::VertexFunction {
@@ -186,7 +186,7 @@ namespace Hlt {
     explicit VertexMinPT() {}
     double operator() (const LHCb::RecVertex& v) const {
       return HltUtils::VertexMinPT(v);}
-    Hlt::VertexFunction* clone() const {return new VertexMinPT();}
+    VertexMinPT* clone() const {return new VertexMinPT();}
   };
 
   class VertexMaxPT : public Hlt::VertexFunction {
@@ -194,7 +194,7 @@ namespace Hlt {
     explicit VertexMaxPT() {}
     double operator() (const LHCb::RecVertex& v) const {
       return HltUtils::VertexMaxPT(v);}
-    Hlt::VertexFunction* clone() const {return new VertexMaxPT();}
+    VertexMaxPT* clone() const {return new VertexMaxPT();}
   };
 
   class VertexMatchIDsFraction : public Hlt::VertexBiFunction {
@@ -206,7 +206,7 @@ namespace Hlt {
       return HltUtils::vertexMatchIDsFraction(vref,v);
       
     }
-    zen::bifunction<LHCb::RecVertex, LHCb::RecVertex>* clone() const
+    VertexMatchIDsFraction* clone() const
     {return new VertexMatchIDsFraction();}
   };
   
@@ -220,7 +220,7 @@ namespace Hlt {
       double ip1 = HltUtils::impactParameter(pv,*(v.tracks()[1]));
       return (fabs(ip1)<fabs(ip0)) ? ip1 : ip0;
     }
-    Hlt::VertexBiFunction* clone() const {return new VertexMinIP();}
+    VertexMinIP* clone() const {return new VertexMinIP();}
   };
 
   class VertexTrack1IP: public Hlt::VertexBiFunction {
@@ -229,10 +229,9 @@ namespace Hlt {
     double operator() (const LHCb::RecVertex& v,
                        const LHCb::RecVertex& pv) const{
       const LHCb::Track& track1 = *(v.tracks()[0]);
-      double ip1 = HltUtils::impactParameter(pv,track1);
-      return ip1;
+      return HltUtils::impactParameter(pv,track1);
     }
-    Hlt::VertexBiFunction* clone() const {return new VertexTrack1IP();}
+    VertexTrack1IP* clone() const {return new VertexTrack1IP();}
   };
 
   class VertexTrack2IP: public Hlt::VertexBiFunction {
@@ -241,10 +240,9 @@ namespace Hlt {
     double operator() (const LHCb::RecVertex& v,
                        const LHCb::RecVertex& pv) const{
       const LHCb::Track& track2 = *(v.tracks()[1]);
-      double ip2 = HltUtils::impactParameter(pv,track2);
-      return ip2;
+      return HltUtils::impactParameter(pv,track2);
     }
-    Hlt::VertexBiFunction* clone() const {return new VertexTrack2IP();}
+    VertexTrack2IP* clone() const {return new VertexTrack2IP();}
   };
   
   class VertexMaxChi2OverNdf: public Hlt::VertexFunction {
@@ -256,7 +254,7 @@ namespace Hlt {
       double chi2_1 = (v.tracks()[1])->chi2PerDoF();
       return (fabs(chi2_0)>fabs(chi2_1)) ? chi2_0 : chi2_1;
     }
-    Hlt::VertexFunction* clone() const {return new VertexMaxChi2OverNdf();}
+    VertexMaxChi2OverNdf* clone() const {return new VertexMaxChi2OverNdf();}
   };
 
   class VertexTrack1Chi2OverNdf: public Hlt::VertexFunction {
@@ -266,7 +264,7 @@ namespace Hlt {
     {
       return v.tracks()[0]->chi2PerDoF();
     }
-    Hlt::VertexFunction* clone() const {return new VertexTrack1Chi2OverNdf();}
+    VertexTrack1Chi2OverNdf* clone() const {return new VertexTrack1Chi2OverNdf();}
   };
 
   class VertexTrack2Chi2OverNdf: public Hlt::VertexFunction {
@@ -276,7 +274,7 @@ namespace Hlt {
     {
       return v.tracks()[1]->chi2PerDoF();
     }
-    Hlt::VertexFunction* clone() const {return new VertexTrack2Chi2OverNdf();}
+    VertexTrack2Chi2OverNdf* clone() const {return new VertexTrack2Chi2OverNdf();}
   };
 
   template <class T, class ITOOL>
@@ -326,8 +324,7 @@ namespace Hlt {
     double operator() (const LHCb::Track& track, 
                        const LHCb::RecVertex& vertex) const
     {return HltUtils::rImpactParameter(vertex, track);}
-    zen::bifunction<LHCb::Track,LHCb::RecVertex>* clone() const
-    {return new rIP();}
+    rIP* clone() const {return new rIP();}
   };
 
   /* IP:
@@ -339,8 +336,7 @@ namespace Hlt {
     double operator() (const LHCb::Track& track, 
                        const LHCb::RecVertex& vertex) const
     {return HltUtils::impactParameter(vertex, track);}
-    zen::bifunction<LHCb::Track,LHCb::RecVertex>* clone() const
-    {return new IP();}
+    IP* clone() const {return new IP();}
   };
 
   /* DZ:
@@ -354,8 +350,7 @@ namespace Hlt {
       double dz = vertex1.position().z() - vertex2.position().z();
       return dz;
     }
-    zen::bifunction<LHCb::RecVertex,LHCb::RecVertex>* clone() const
-    {return new DZ();}
+    DZ* clone() const {return new DZ();}
   };
   
   /* FC:
@@ -368,8 +363,7 @@ namespace Hlt {
                        const LHCb::RecVertex& vertex2) const {
       return HltUtils::FC(vertex1,vertex2);
     }
-    zen::bifunction<LHCb::RecVertex,LHCb::RecVertex>* clone() const
-    {return new FC();}
+    FC* clone() const {return new FC();}
   };
 
   /* DOCA
@@ -382,8 +376,7 @@ namespace Hlt {
                        const LHCb::Track& track2) const {
       return HltUtils::closestDistanceMod(track1,track2);
     }
-    zen::bifunction<LHCb::Track,LHCb::Track>* clone() const
-    {return new DOCA();}
+    DOCA* clone() const {return new DOCA();}
   };
 
   class DimuonMass : public Hlt::TrackBiFunction {
@@ -394,8 +387,7 @@ namespace Hlt {
       return HltUtils::invariantMass(track1,track2,
                                      105.658369,105.658369);
     }
-    zen::bifunction<LHCb::Track,LHCb::Track>* clone() const
-    {return new DimuonMass();}
+    DimuonMass* clone() const {return new DimuonMass();}
   };
   
   class VertexDOCA : public Hlt::VertexFunction {
@@ -406,8 +398,7 @@ namespace Hlt {
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       return HltUtils::closestDistanceMod(t1,t2);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexDOCA();}
+    VertexDOCA* clone() const {return new VertexDOCA();}
   };
 
   class VertexAngle : public Hlt::VertexFunction {
@@ -418,8 +409,7 @@ namespace Hlt {
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       return HltUtils::deltaAngle(t1,t2);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexAngle();}
+    VertexAngle* clone() const {return new VertexAngle();}
   };
 
 
@@ -432,8 +422,7 @@ namespace Hlt {
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       return Hlt::DimuonMass()(t1,t2);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexDimuonMass();}
+    VertexDimuonMass* clone() const {return new VertexDimuonMass();}
   };
 
   
@@ -444,8 +433,7 @@ namespace Hlt {
                        const LHCb::Track& track2) const {
       return track1.pt()+track2.pt();
     }
-    zen::bifunction<LHCb::Track,LHCb::Track>* clone() const
-    {return new SumPT();}
+    SumPT* clone() const {return new SumPT();}
   };
 
   class VertexSumPT : public Hlt::VertexFunction {
@@ -457,30 +445,25 @@ namespace Hlt {
       const LHCb::Track& t2 = *(vertex.tracks()[1]);
       return Hlt::SumPT()(t1,t2);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexSumPT();}
+    VertexSumPT* clone() const {return new VertexSumPT();}
   };
   
   class VertexTrack1PT : public Hlt::VertexFunction {
   public:
     explicit VertexTrack1PT() {}
     double operator() (const LHCb::RecVertex& vertex) const {
-      const LHCb::Track& track1 = *(vertex.tracks()[0]);
-      return track1.pt();
+      return vertex.tracks()[0]->pt();
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexTrack1PT();}
+    VertexTrack1PT* clone() const {return new VertexTrack1PT();}
   };
 
   class VertexTrack2PT : public Hlt::VertexFunction {
   public:
     explicit VertexTrack2PT() {}
     double operator() (const LHCb::RecVertex& vertex) const {
-      const LHCb::Track& track2 = *(vertex.tracks()[1]);
-      return track2.pt();
+      return vertex.tracks()[1]->pt();
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexTrack2PT();}
+    VertexTrack2PT* clone() const {return new VertexTrack2PT();}
   };
 
   ///* Return the number of tracks of a vertex
@@ -510,8 +493,7 @@ namespace Hlt {
       }
       return double(nLeft);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexNumberOfASideTracks();}
+    VertexNumberOfASideTracks* clone() const {return new VertexNumberOfASideTracks();}
   };
 
   ///* Return the number of tracks of a vertex
@@ -541,8 +523,7 @@ namespace Hlt {
       }
       return double(nRight);
     }
-    zen::function<LHCb::RecVertex>* clone() const
-    {return new VertexNumberOfCSideTracks();}
+    VertexNumberOfCSideTracks* clone() const {return new VertexNumberOfCSideTracks();}
   };
   
   /* matchIDsFraction
@@ -554,7 +535,7 @@ namespace Hlt {
                        const LHCb::Track& track2) const {
       return HltUtils::matchIDsFraction(track1,track2);
     }
-    Hlt::TrackBiFunction* clone() const {return new MatchIDsFraction();}
+    MatchIDsFraction* clone() const {return new MatchIDsFraction();}
   };
 
 
