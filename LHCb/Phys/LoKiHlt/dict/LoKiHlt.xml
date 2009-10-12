@@ -1,5 +1,5 @@
 <!-- 
-     * $Id: LoKiHlt.xml,v 1.6 2009-06-17 12:02:57 ibelyaev Exp $ 
+     * $Id: LoKiHlt.xml,v 1.7 2009-10-12 10:08:20 cattanem Exp $ 
      * ========================================================================
      * @file
      * The XML seleciton file to build Reflex 
@@ -70,6 +70,7 @@
     <class name="LoKi::HLT::HasSelection::Names"   />
     <class name="LoKi::HLT::DecisionBut::Names"    />
     <class name="LoKi::L0::ChannelDecision::Names" />
+    <class name="LoKi::L0::ChannelDecision::Channels" />
     <class name="LoKi::Algorithms::AnyPassed::Algorithms" /> 
 
     <class pattern="LoKi::HLT::*">
