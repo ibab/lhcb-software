@@ -1,4 +1,4 @@
-// $Id: IFunctionFactory.h,v 1.3 2009-10-12 18:12:39 graven Exp $
+// $Id: IFunctionFactory.h,v 1.4 2009-10-12 18:48:04 graven Exp $
 #ifndef HLTBASE_IFUNCTIONFACTORY_H 
 #define HLTBASE_IFUNCTIONFACTORY_H 1
 
@@ -31,8 +31,8 @@ public:
   virtual bool command(const std::string& command, 
                        const std::string& value="") = 0;
 
-  virtual zen::function<T>* function(const std::string& functioname) = 0;
-  virtual zen::filter<T>* filter(const std::string& filtername) = 0;
+  virtual zen::function<T>* function( const std::string& functioname ) = 0;
+  virtual zen::filter<T>*   filter  ( const std::string& filtername  ) = 0;
 
 };
 

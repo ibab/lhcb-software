@@ -1,4 +1,4 @@
-// $Id: IFunctions.h,v 1.1 2009-10-12 18:18:31 graven Exp $
+// $Id: IFunctions.h,v 1.2 2009-10-12 18:48:04 graven Exp $
 #ifndef HLTBASE_OPER_H 
 #define HLTBASE_OPER_H 1
 
@@ -27,9 +27,6 @@ namespace zen
   {
   public:
     typedef zen::function<T> Self;
-    typedef typename std::unary_function<const T,double>  Base;
-    typedef typename Base::result_type   result_type   ;
-    typedef typename Base::argument_type argument_type ;
     virtual ~function() {}
     virtual double operator() (const T& t) const = 0;
     virtual Self* clone() const = 0;
@@ -40,9 +37,6 @@ namespace zen
   {
   public:
     typedef zen::filter<T> Self;
-    typedef typename std::unary_function<const T,double>  Base;
-    typedef typename Base::result_type   result_type   ;
-    typedef typename Base::argument_type argument_type ;
     virtual ~filter() {}
     virtual bool operator() (const T& t) const  = 0;
     virtual Self* clone() const = 0;
@@ -53,10 +47,6 @@ namespace zen
   {
   public:
     typedef zen::bifunction<T1,T2> Self;
-    typedef typename std::binary_function<const T1, const T2, double>  Base;
-    typedef typename Base::result_type   result_type   ;
-    typedef typename Base::first_argument_type first_argument_type ;
-    typedef typename Base::second_argument_type second_argument_type ;
     virtual ~bifunction() {}
     virtual double operator() (const T1& t, const T2& t2) const = 0;
     virtual Self* clone() const = 0;
@@ -67,10 +57,6 @@ namespace zen
   {
   public:
     typedef zen::bifilter<T1,T2> BiFilter;
-    typedef typename std::binary_function<const T1, const T2, bool>  Base;
-    typedef typename Base::result_type   result_type   ;
-    typedef typename Base::first_argument_type first_argument_type ;
-    typedef typename Base::second_argument_type second_argument_type ;
     virtual ~bifilter() {}
     virtual bool operator() (const T1& t, const T2& t2) const = 0;
     virtual BiFilter* clone() const = 0;
