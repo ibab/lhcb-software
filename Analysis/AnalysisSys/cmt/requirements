@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.134 2009-10-02 14:18:28 jpalac Exp $
+# $Id: requirements,v 1.135 2009-10-12 13:13:11 jpalac Exp $
 package AnalysisSys
-version v3r10
+version v3r11
 
 branches doc cmt
 
@@ -9,13 +9,13 @@ branches doc cmt
 
 use  AnalysisConf               v1r7     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
-use  AnalysisDict               v1r0     Phys   # TEMPORARY!
+#use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  CommonParticles            v6r1     Phys   # Patrick Koppenburg, WGs
 use  FlavourTagging             v8r8     Phys   # Marco Musy
 use  DaVinciFilter              v7r1     Phys   # Patrick Koppenburg - deprecated
 
-use  DaVinciMonitors            v1r5p1   Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r5p2   Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r2p3   Rich   # Chris Jones
 use  DstCalibSel                v1r2     Rich   # Andrew Powell
 
@@ -30,12 +30,12 @@ use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
 use  DecayTreeTuple             v2r5     Phys   # Rob Lambert
 ####################################################################
 #
-use PhysSelPython               v2r2     PhysSel
-use AnalysisPython              v1r3   Phys
+use PhysSelPython               v2r2p1   PhysSel
+use AnalysisPython              v1r3     Phys
 #
 # Stripping
 #
-use StrippingConf               v1r5   Phys   # Anton Poluektov
+use StrippingConf               v1r6   Phys   # Anton Poluektov
 use StrippingSelections         v1r7   Phys   # Anton Poluektov
 
 ####################################################################
@@ -46,7 +46,7 @@ use  MicroDSTAlgorithm   	v3r8    MicroDST          # Juan Palacios
 use  MicroDSTConf               v2r6    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r3  Tutorial          # P. Koppenburg
+use Analysis            	v8r3    Tutorial          # P. Koppenburg
 use LoKiExample         	v8r5    Ex                # Vanya Belyaev
 use MicroDSTExample             v2r10   Ex                # Juan Palacios
 
