@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.245 2009-10-10 18:26:19 jonrob Exp $
+! $Id: release.notes,v 1.246 2009-10-12 14:28:47 jonrob Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
+
+! 2009-10-12 - Christopher Rob Jones
+ - Add the method L1IngressHeader::inactiveHPDInputs which returns the
+   list of inactive (i.e. missing HPDs) in a given decoded L1 ingress.
 
 ! 2009-10-10 - Christopher Rob Jones
  - Add new tool interface for standalone HPD occupancy tool, which was
