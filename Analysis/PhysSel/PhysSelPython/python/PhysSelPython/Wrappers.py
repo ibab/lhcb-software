@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.13 2009-10-12 16:40:57 jpalac Exp $
+#$Id: Wrappers.py,v 1.14 2009-10-12 19:54:17 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -16,7 +16,7 @@ from Gaudi.Configuration import *
 from GaudiConf.Configuration import *
 from LHCbKernel.Configuration import *
 
-class DataOnDemand :
+class DataOnDemand(object) :
     """
     Simple wrapper for a Data-On-Demand location. Returns output location
     via outputLocation() method. Can be used as a Selection in
@@ -51,7 +51,7 @@ class DataOnDemand :
         loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
         return loc
     
-class Selection :
+class Selection(object) :
     """
     Wrapper class for offline selection. Takes a top selection DVAlgorithm
     configurable plus a list of required selection configurables. It uses
@@ -107,7 +107,7 @@ class Selection :
     def outputLocation(self) :
         return self.OutputBranch + "/" + self.algName()
     
-class SelectionSequence :
+class SelectionSequence(object) :
     """
     Wrapper class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
@@ -159,7 +159,7 @@ class SelectionSequence :
     def buildSelectionList(self, selections) :
         for sel in selections :
             print "Adding Algo ", sel.algName(), " to ", self.sequence().name()
-            if sel.__class__.__name__ == 'DataOnDemand' :
+            if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
                 self.sequence().Members.insert( 0, sel.algorithm )
