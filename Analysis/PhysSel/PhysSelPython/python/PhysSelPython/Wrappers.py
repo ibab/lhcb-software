@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.12 2009-10-12 16:26:34 jpalac Exp $
+#$Id: Wrappers.py,v 1.13 2009-10-12 16:40:57 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -39,6 +39,9 @@ class DataOnDemand :
         self.requiredSelections = []
         self.Location = Location
         self.algorithm = None
+
+    def __apply_configuration__(self) :
+        print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
         
     def outputLocation(self) :
         return self.Location
@@ -95,6 +98,9 @@ class Selection :
             self.algorithm.InputLocations += [sel.outputLocation()]
         print "Required Selection Algorithms: ", self.requiredSelections
 
+    def __apply_configuration__(self) :
+        print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
+
     def algName(self) :
         return self.algorithm.name()
 
@@ -133,6 +139,9 @@ class SelectionSequence :
         if (self.algorithm != None) :
             self.sequence().Members.insert(0,self.algorithm)
         self.buildSelectionList( self.TopSelection.requiredSelections )
+
+    def __apply_configuration__(self) :
+        print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
         
     def sequence(self) :
         from Configurables import GaudiSequencer
