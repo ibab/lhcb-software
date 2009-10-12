@@ -87,7 +87,6 @@ namespace zen
   class binder_by_key : public zen::function<T1> 
   {
   public:
-    typedef zen::function<T1> Function;
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
     typedef zen::binder_function<T1,Container> Binder;
     typedef typename Container::iterator iterator;
@@ -113,7 +112,6 @@ namespace zen
   {
     template <typename T> struct _helper { typedef double (T::* ptr_memfun) () const; };
   public:
-    typedef zen::function<T1> Function;
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2;
     typedef zen::binder_function<T1,Container> Binder;
     typedef typename Container::iterator iterator;
@@ -207,7 +205,6 @@ namespace zen
   class logical_not : public zen::filter<T>
   {
   public:
-    typedef zen::filter<bool> Filter;
     explicit logical_not() {}
     bool operator() (const bool& t) const {return !t;}
     logical_not<T>* clone() const { return new logical_not<T>();}
@@ -217,7 +214,6 @@ namespace zen
   class logical_and : public zen::bifilter<T1,T2>
   {
   public:
-    typedef zen::bifilter<T1,T2> BiFilter;
     explicit logical_and() {}
     bool operator() (const T1& t1, const T2& t2) const 
     {return (t1 && t2) ;}
@@ -228,7 +224,6 @@ namespace zen
   class logical_or : public zen::bifilter<T1,T2>
   {
   public:
-    typedef zen::bifilter<T1,T2> BiFilter;
     explicit logical_or() {}
     bool operator() (const T1& t1, const T2& t2) const 
     {return (t1 || t2) ;}
@@ -324,7 +319,6 @@ namespace zen
   template <class T1, class T2> 
   class bifilter_from_bifunction : public zen::bifilter<T1,T2> {
   public:
-    typedef zen::bifilter<T1,T2>      Filter;
     typedef zen::bifunction<T1,T2>    Function;
     typedef zen::filter<double> Cut;
   public:
