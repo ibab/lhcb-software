@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.24 2009-10-08 17:18:24 krinnert Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.25 2009-10-12 17:14:11 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -173,8 +173,10 @@ StatusCode Velo::VeloTrackMonitor::initialize() {
   m_mod_mismatch = book1D("ModuleMismatch","Tracks with one used sensor from a module vs Module number" ,-0.5, 110.5, 111);
   m_nrclus = book1D( "# R clusters", "Number of r clusters per event", 0., 2000, 400 );
   m_nrphiclus = book1D( "# R+Phi clusters", "Number of r and #phi clusters per event", 0., 2000, 400 );
-  m_xy_hitmap = book2D("XY_HitMap", "X(mm) vs Y(mm) hitmap", -75, 75, 100, -45, 45, 100);
-  m_zx_hitmap = book2D("ZX_HitMap", "Z(mm) vs X(mm) hitmap", -200, 800, 500, -75, 75, 100);
+  if ( m_hitmapHistos ) {
+    m_xy_hitmap = book2D("XY_HitMap", "X(mm) vs Y(mm) hitmap", -75, 75, 100, -45, 45, 100);
+    m_zx_hitmap = book2D("ZX_HitMap", "Z(mm) vs X(mm) hitmap", -200, 800, 500, -75, 75, 100);
+  }
 
   m_binary = sqrt( 12. );
 

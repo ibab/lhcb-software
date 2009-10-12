@@ -4,6 +4,10 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-12 - Kurt Rinnert
+ - do not book hitmap histos in track monitor by default, fixed hist IDs in
+   sampling monitor
+
 ! 2009-10-08 - Kurt Rinnert
  - all histograms and profiles in VeloTrackMonitor are now booked in
    initialize()

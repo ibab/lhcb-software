@@ -1,4 +1,4 @@
-// $Id: VeloSamplingMonitor.cpp,v 1.10 2009-09-29 18:27:36 krinnert Exp $
+// $Id: VeloSamplingMonitor.cpp,v 1.11 2009-10-12 17:14:11 krinnert Exp $
 // Include files
 // -------------
 
@@ -69,12 +69,12 @@ StatusCode Velo::VeloSamplingMonitor::initialize() {
   m_hClusADCSampPU = book2D( histIDBase + "PU", histTitleBase + "PU", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   m_hClusADCSampPUC = book2D( histIDBase + "PUC", histTitleBase + "PU, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   m_hClusADCSampPUA = book2D( histIDBase + "PUA", histTitleBase + "PU, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampTop = book2D( histIDBase + "Top", histTitleBase + "Top", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampTopC = book2D( histIDBase + "TopC", histTitleBase + "Top, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampTopA = book2D( histIDBase + "TopA", histTitleBase + "Top, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampBot = book2D( histIDBase + "Bottom", histTitleBase + "Bottom", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampBotC = book2D( histIDBase + "BottomC", histTitleBase + "Bottom, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
-  m_hClusADCSampBotA = book2D( histIDBase + "BottomA", histTitleBase + "Bottom, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTop = book2D( histIDBase + "T", histTitleBase + "Top", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTopC = book2D( histIDBase + "TC", histTitleBase + "Top, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampTopA = book2D( histIDBase + "TA", histTitleBase + "Top, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBot = book2D( histIDBase + "B", histTitleBase + "Bottom", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBotC = book2D( histIDBase + "BC", histTitleBase + "Bottom, C-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
+  m_hClusADCSampBotA = book2D( histIDBase + "BA", histTitleBase + "Bottom, A-Side", -0.5, nxbins-0.5, nxbins, -0.5, 50.5, 51);
   if ( m_useNZS ) {
     m_hChanADCSamp = book2D( "ChanADCSamp", "Channel ADC values versus sampling index", -0.5, nxbins - 0.5, nxbins, -0.5, 50.5, 51 );
   }
