@@ -4,6 +4,9 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+! 2009-10-12 Silvia Borghi
+ - PatVeloTraversingTracking: fix a mistypo
+
 ! 2009-10-09 Silvia Borghi
  - PatVeloTraversingTracking: store all traversing tracks and add new monitoring 
    histograms 

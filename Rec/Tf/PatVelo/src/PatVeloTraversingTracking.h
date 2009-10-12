@@ -1,4 +1,4 @@
-// $Id: PatVeloTraversingTracking.h,v 1.3 2009-10-09 18:54:00 siborghi Exp $
+// $Id: PatVeloTraversingTracking.h,v 1.4 2009-10-12 09:24:19 siborghi Exp $
 #ifndef TF_PATVELOTRAVERSINGTRACKING_H 
 #define TF_PATVELOTRAVERSINGTRACKING_H 1
 
@@ -78,7 +78,7 @@ namespace Tf
                 double disty, double sigmay,
                 LHCb::Track* t1,LHCb::Track* t2){
         m_distancex = distx;
-        m_sigmax = sigmay;
+        m_sigmax = sigmax;
         m_distancey = disty;
         m_sigmay = sigmay;
         m_t1 = t1->clone();
