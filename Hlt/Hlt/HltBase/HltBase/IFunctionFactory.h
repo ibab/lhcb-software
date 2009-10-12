@@ -1,11 +1,11 @@
-// $Id: IFunctionFactory.h,v 1.2 2009-10-11 20:41:02 graven Exp $
+// $Id: IFunctionFactory.h,v 1.3 2009-10-12 18:12:39 graven Exp $
 #ifndef HLTBASE_IFUNCTIONFACTORY_H 
 #define HLTBASE_IFUNCTIONFACTORY_H 1
 
 // Include files
 // from STL
 #include <string>
-#include "HltBase/EFunctions.h"
+#include "HltBase/IFunctions.h"
 
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"

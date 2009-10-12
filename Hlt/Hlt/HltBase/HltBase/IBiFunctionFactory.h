@@ -1,11 +1,11 @@
-// $Id: IBiFunctionFactory.h,v 1.3 2008-06-30 08:58:15 graven Exp $
+// $Id: IBiFunctionFactory.h,v 1.4 2009-10-12 18:12:39 graven Exp $
 #ifndef HLTBASE_IBIFUNCTIONFACTORY_H 
 #define HLTBASE_IBIFUNCTIONFACTORY_H 1
 
 // Include files
 // from STL
 #include <string>
-#include "HltBase/EFunctions.h"
+#include "HltBase/IFunctions.h"
 
 
 // from Gaudi

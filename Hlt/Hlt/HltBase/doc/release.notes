@@ -3,6 +3,10 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-10-12 - Gerhard Raven
+ - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h
+   and implementation, and move latter into HltCommon/src/EFunctions.h
+
 ! 2009-10-08 - Gerhard Raven
  - remove unimplemented interface ITrackMatchUpgrade
  - move ERelations.h to HltRecChecker (only place using it)
