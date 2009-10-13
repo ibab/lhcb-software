@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.18 2009-10-13 13:20:49 jpalac Exp $
+!$Id: release.notes,v 1.19 2009-10-13 14:31:42 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
@@ -11,6 +11,8 @@
   . SelectionSequence: make GaudiSequencer "on-demand" from local list of
     algorithms to avoid problems with Members not being understood. Triggered
     by calling the sequence() method.
+  . SelectionSequence: Add EventPreSelector, list of event selecting 
+    algorithms to be added at the beginning of the sequence.
 
 ! 2009-10-12 - Juan PALACIOS
  - python/PhysSelPython/Wrappers.py
