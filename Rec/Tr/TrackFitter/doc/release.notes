@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-10-13 - Wouter Hulsbergen
+ - Added extra extrapolator to TrackMasterFitter for velo-only tracks. Configuration
+   now identical for all track types except Seed.
+
 ! 2009-10-08 - Wouter Hulsbergen
  - Adapted to changes in LHCb::Track 
 
