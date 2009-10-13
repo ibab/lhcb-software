@@ -1,4 +1,4 @@
-// $Id: MonUtilities.h,v 1.6 2009-05-28 13:44:27 jucogan Exp $
+// $Id: MonUtilities.h,v 1.7 2009-10-13 08:10:57 jucogan Exp $
 #ifndef COMPONENT_MONUTILITIES_H 
 #define COMPONENT_MONUTILITIES_H 1
 
@@ -52,6 +52,7 @@ namespace L0Muon
     std::string hname_info_evt(std::string toolname="") ;
 
     std::string hname_pads_map(int sta,std::string toolname="") ;
+    std::string hname_pads_map_reg(int sta, int reg,std::string toolname="") ;
     std::string hname_pads_multiBx(int sta,std::string toolname="") ;
     std::string hname_pads_multi(int sta,std::string toolname="") ;
     std::string hname_pads_multiBx_region(int sta, int reg,std::string toolname="") ;

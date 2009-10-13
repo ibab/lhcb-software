@@ -1,4 +1,4 @@
-// $Id: MonUtilities.cpp,v 1.5 2009-05-28 13:44:27 jucogan Exp $
+// $Id: MonUtilities.cpp,v 1.6 2009-10-13 08:10:57 jucogan Exp $
 // Include files 
 
 #include <sstream>
@@ -192,6 +192,10 @@ std::string L0Muon::MonUtilities::hname_info_evt(std::string toolname)  {return 
 
 std::string L0Muon::MonUtilities::hname_pads_map(int sta,std::string toolname)  {
   return toolname+stationName(sta);
+}
+
+std::string L0Muon::MonUtilities::hname_pads_map_reg(int sta, int reg, std::string toolname)  {
+  return toolname+stationName(sta)+regionName(reg);
 }
 
 std::string L0Muon::MonUtilities::hname_pads_multiBx(int sta,std::string toolname)  {
