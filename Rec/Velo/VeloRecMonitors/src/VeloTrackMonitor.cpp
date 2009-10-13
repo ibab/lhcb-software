@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.25 2009-10-12 17:14:11 krinnert Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.26 2009-10-13 07:35:51 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -633,7 +633,7 @@ StatusCode Velo::VeloTrackMonitor::monitorTracks ( ) {
         m_half_phi_a->fill( phiStateHalf.Phi()/degree);
       else
         //C side
-        m_half_phi_a->fill( -atan(tan(phiStateHalf.Phi()))/degree);
+        m_half_phi_c->fill( -atan(tan(phiStateHalf.Phi()))/degree);
 
       if(m_hitmapHistos){ 
         

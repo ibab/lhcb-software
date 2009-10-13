@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-13 - Kurt Rinnert
+ - bug fix in track monitor: C side phi plot was not filled.
+
 ! 2009-10-12 - Kurt Rinnert
  - do not book hitmap histos in track monitor by default, fixed hist IDs in
    sampling monitor
