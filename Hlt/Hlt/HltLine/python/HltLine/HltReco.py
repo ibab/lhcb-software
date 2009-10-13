@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.7 2009-08-26 08:37:45 gkrocker Exp $
+# $Id: HltReco.py,v 1.8 2009-10-13 09:05:48 pkoppenb Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -140,8 +140,8 @@ recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 PatDownstream = PatDownstream()
 PatDownstream.InputLocation=recoSeeding.OutputTracksName
 PatDownstream.OutputLocation="Hlt/Track/SeedTT"
-PatDownstream.UseForward = True
-PatDownstream.SeedFilter = True
+PatDownstream.RemoveUsed = True
+PatDownstream.RemoveAll = True
 
 FitSeeding = TrackEventFitter('FitSeedTTTracks')
 FitSeeding.TracksInContainer  = PatDownstream.OutputLocation
