@@ -1,4 +1,4 @@
-// $Id: PatVeloPhiHitManager.cpp,v 1.4 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloPhiHitManager.cpp,v 1.5 2009-10-13 12:54:29 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
@@ -26,10 +26,10 @@ namespace Tf {
     : Tf::ExtendedVeloPhiHitManager<PatVeloPhiHit>(type, name, parent)
     {
       declareInterface<PatVeloPhiHitManager>(this);
-      // cut tuned on MC09 signal / DC06 minBias : review with real data
-      declareProperty("MaxClustersPhiInner", m_maxPhiInner = 28) ; 
-      // cut tuned on MC09 signal / DC06 minBias : review with real data
-      declareProperty("MaxClustersPhiOuter", m_maxPhiOuter = 33) ; 
+      // currently disarmed : only 682 strips
+      declareProperty("MaxClustersPhiInner", m_maxPhiInner = 9999) ; 
+      // currently disarmed : only 1780 strips
+      declareProperty("MaxClustersPhiOuter", m_maxPhiOuter = 9999) ; 
     }
 
   //=============================================================================
@@ -42,10 +42,14 @@ namespace Tf {
 
     debug() << "==> Initialize" << endmsg;
 
-    info() << "Kill hits in Inner Phi zone with more than " <<  m_maxPhiInner
-	   << " clusters" << endmsg;
-    info() << "Kill hits in Outer Phi zone with more than " <<  m_maxPhiOuter
-	   << " clusters" << endmsg;
+    if( m_maxPhiInner < 512 ){
+      info() << "Kill hits in Inner Phi zone with more than " <<  m_maxPhiInner
+	     << " clusters" << endmsg;
+    }
+    if( m_maxPhiOuter < 512 ){
+      info() << "Kill hits in Outer Phi zone with more than " <<  m_maxPhiOuter
+	     << " clusters" << endmsg;
+    }
     return StatusCode::SUCCESS;
   }
 

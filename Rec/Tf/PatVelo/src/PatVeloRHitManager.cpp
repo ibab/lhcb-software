@@ -1,4 +1,4 @@
-// $Id: PatVeloRHitManager.cpp,v 1.5 2009-07-20 11:35:32 dhcroft Exp $
+// $Id: PatVeloRHitManager.cpp,v 1.6 2009-10-13 12:54:29 dhcroft Exp $
 
 #include "GaudiKernel/ToolFactory.h"
 
@@ -25,8 +25,8 @@ namespace Tf {
     : Tf::ExtendedVeloRHitManager<PatVeloRHit>(type, name, parent)
     {
       declareInterface<PatVeloRHitManager>(this);
-      // cut tuned on MC09 signal / DC06 minBias : review with real data
-      declareProperty("MaxClustersRZone", m_maxRClustersZone = 24) ; 
+      // currently disarmed: only 512 strips in a zone...
+      declareProperty("MaxClustersRZone", m_maxRClustersZone = 999) ; 
     }
 
   //=============================================================================
@@ -39,9 +39,10 @@ namespace Tf {
 
     debug() << "==> Initialize" << endmsg;
 
-    info() << "Kill hits in R zone with more than " << m_maxRClustersZone
-	   << " clusters" << endmsg;
-
+    if( m_maxRClustersZone < 512 ) {
+      info() << "Kill hits in R zone with more than " << m_maxRClustersZone
+	     << " clusters" << endmsg;
+    }
     return StatusCode::SUCCESS;
   }
 
