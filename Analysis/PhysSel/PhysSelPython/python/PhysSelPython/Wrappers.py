@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.14 2009-10-12 19:54:17 jpalac Exp $
+#$Id: Wrappers.py,v 1.15 2009-10-13 06:58:07 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -38,7 +38,9 @@ class DataOnDemand(object) :
         self.name = name
         self.requiredSelections = []
         self.Location = Location
-        self.algorithm = None
+
+    def algorithm(self) :
+        return None
 
     def __apply_configuration__(self) :
         print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
@@ -89,20 +91,23 @@ class Selection(object) :
         for sel in RequiredSelections :
             print "Adding required selection ", sel.name
             self.requiredSelections.append(sel)
-        self.algorithm = Algorithm
+        self.alg = Algorithm
         self.name = name
         self.OutputBranch = OutputBranch
         
         for sel in self.requiredSelections :
             print "Algo ", self.algName(),  " adding InputLocation ", sel.outputLocation()
-            self.algorithm.InputLocations += [sel.outputLocation()]
+            self.algorithm().InputLocations += [sel.outputLocation()]
         print "Required Selection Algorithms: ", self.requiredSelections
 
     def __apply_configuration__(self) :
         print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
 
+    def algorithm(self) :
+        return self.alg
+
     def algName(self) :
-        return self.algorithm.name()
+        return self.algorithm().name()
 
     def outputLocation(self) :
         return self.OutputBranch + "/" + self.algName()
@@ -134,21 +139,24 @@ class SelectionSequence(object) :
                  TopSelection) :
         self.name = name
         self.TopSelection = TopSelection
-        self.algorithm = self.TopSelection.algorithm
-        print "Adding Algo ", self.algorithm.name(),  " to ", self.sequence().name()
-        if (self.algorithm != None) :
-            self.sequence().Members.insert(0,self.algorithm)
+        self.alg = self.TopSelection.algorithm()
+        print "Adding Algo ", self.alg.name(),  " to ", self.sequence().name()
+        if (self.algorithm() != None) :
+            self.sequence().Members.insert( 0, self.algorithm() )
         self.buildSelectionList( self.TopSelection.requiredSelections )
 
     def __apply_configuration__(self) :
         print self.name, ".__apply_configuration(): NOT A CONFIGURABLE."
+
+    def algorithm(self) :
+        return self.alg
         
     def sequence(self) :
         from Configurables import GaudiSequencer
         return GaudiSequencer("GaudiSeq"+self.name )
 
     def algName(self) :
-        return self.algorithm.name()
+        return self.algorithm().name()
 
     def outputLocation(self) :
         return self.TopSelection.outputLocation()
