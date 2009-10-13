@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.25 2009-09-28 13:40:34 jvantilb Exp $
+// $Id: TrackMasterFitter.h,v 1.26 2009-10-13 14:34:21 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -82,9 +82,14 @@ private:
   //! Update transport matrices stored in nodes
   StatusCode updateTransport( LHCb::Track& track ) const ;
 
+  ITrackExtrapolator* extrapolator( LHCb::Track::Types tracktype ) const {
+    return tracktype == (LHCb::Track::Velo || LHCb::Track::VeloR) ? m_veloExtrapolator : m_extrapolator ;
+  }
+  
 private:
 
-  ITrackExtrapolator* m_extrapolator; ///< extrapolator
+  ITrackExtrapolator* m_extrapolator;     ///< extrapolator
+  ITrackExtrapolator* m_veloExtrapolator; ///< extrapolator for Velo-only tracks
   ITrackKalmanFilter* m_trackNodeFitter;    ///< delegate to actual track fitter (which fits from nodes)
   IMeasurementProvider* m_measProvider;
   IMaterialLocator*     m_materialLocator ;
@@ -94,6 +99,7 @@ private:
 
   // job options
   std::string m_extrapolatorName;   ///< name of the extrapolator in Gaudi
+  std::string m_veloExtrapolatorName; ///< name of the velo-only extrapolator 
   bool m_upstream;                  ///< switch between upstream/downstream fit
   bool m_addDefaultRefNodes  ;      ///< add default reference nodes
   bool m_stateAtBeamLine;           ///< add state closest to the beam-line?

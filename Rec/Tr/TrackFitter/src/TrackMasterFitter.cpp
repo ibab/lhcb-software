@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.73 2009-10-08 14:46:07 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.74 2009-10-13 14:34:21 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -58,6 +58,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
                                       const IInterface* parent)
   : GaudiTool( type, name, parent)
   , m_extrapolator(0)
+  , m_veloExtrapolator(0)
   , m_trackNodeFitter(0)
   , m_measProvider(0)
   , m_materialLocator(0)
@@ -66,6 +67,8 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
 
   declareProperty( "Extrapolator"        , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
+  declareProperty( "VeloExtrapolator"    , m_veloExtrapolatorName =
+                   "TrackLinearExtrapolator" );
   declareProperty( "FitUpstream"         , m_upstream         = true        );
   declareProperty( "NumberFitIterations" , m_numFitIter       = 3           );
   declareProperty( "Chi2Outliers"        , m_chi2Outliers     = 9.0         );
@@ -79,7 +82,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ErrorY"         , m_errorY  = 20.0*Gaudi::Units::mm );
   declareProperty( "ErrorTx"        , m_errorTx = 0.1                    );
   declareProperty( "ErrorTy"        , m_errorTy = 0.1                    );
-  declareProperty( "ErrorQoP"       , m_errorQoP = boost::assign::list_of(0.0)(0.001) );
+  declareProperty( "ErrorQoP"       , m_errorQoP = boost::assign::list_of(0.0)(0.01) );
   declareProperty( "MakeNodes"      , m_makeNodes = false                   );
   declareProperty( "MakeMeasurements", m_makeMeasurements = false           );
   declareProperty( "MaterialLocator", m_materialLocatorName = "DetailedMaterialLocator");
@@ -120,6 +123,7 @@ StatusCode TrackMasterFitter::initialize()
   if ( sc.isFailure() ) return sc;
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
+  m_veloExtrapolator  = tool<ITrackExtrapolator>( m_veloExtrapolatorName, "VeloExtrapolator",this );
   m_trackNodeFitter   = tool<ITrackKalmanFilter>( "TrackKalmanFilter", "NodeFitter", this ) ;
   m_measProvider      = tool<IMeasurementProvider>( "MeasurementProvider","MeasProvider", this );
   m_materialLocator   = tool<IMaterialLocator>(m_materialLocatorName, "MaterialLocator", this) ;
@@ -180,7 +184,7 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   if (m_useSeedStateErrors) {
     State state0 = track.firstState();
     double z1 = nodes.front()->state().z();
-    m_extrapolator->propagate(state0,z1);
+    extrapolator(track.type())->propagate(state0,z1);
     seedCov = state0.covariance() ;
     if ( m_debugLevel )
       debug() << " state0 at z " << z1 
@@ -671,6 +675,7 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
   
   LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes() ;
   if( nodes.size()>1 ) {
+    ITrackExtrapolator* extrap = extrapolator(track.type()) ;
     LHCb::TrackFitResult::NodeContainer::iterator inode = nodes.begin() ;
     const LHCb::StateVector* refvector = &((*inode)->refVector()) ;
     TrackMatrix F = TrackMatrix( ROOT::Math::SMatrixIdentity() );
@@ -679,7 +684,7 @@ StatusCode TrackMasterFitter::updateTransport(LHCb::Track& track) const
       FitNode* node = dynamic_cast<FitNode*>(*inode) ;
       double z = node->z() ;
       LHCb::StateVector statevector = *refvector ;
-      StatusCode thissc = m_extrapolator -> propagate(statevector,z,&F) ;
+      StatusCode thissc = extrap -> propagate(statevector,z,&F) ;
       if ( thissc.isFailure() ) {
         error() << "unable to propagate reference vector from z=" << refvector->z() 
 		<< " to " << z 
@@ -778,6 +783,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
     std::sort( states.begin(), states.end(), LessThanFirst<ZPosWithState> ) ;
     
     // create the states in between
+    ITrackExtrapolator* extrap = extrapolator( track.type() ) ;
     LHCb::Track::StateContainer newstates ;
     for( ZPosWithStateContainer::iterator it = states.begin();
          it != states.end() ; ++it) 
@@ -797,7 +803,7 @@ StatusCode TrackMasterFitter::initializeRefStates(LHCb::Track& track,
         LHCb::StateVector statevec( best->second->stateVector(), best->second->z() ) ;
         for( ZPosWithStateContainer::iterator jt = best+direction ;
              jt != it+direction ; jt += direction) {
-          StatusCode thissc = m_extrapolator->propagate( statevec, jt->first, 0, pid ) ;
+          StatusCode thissc = extrap->propagate( statevec, jt->first, 0, pid ) ;
           LHCb::State* newstate = new LHCb::State( statevec ) ;
           jt->second = newstate ;
           newstates.push_back( newstate ) ;
