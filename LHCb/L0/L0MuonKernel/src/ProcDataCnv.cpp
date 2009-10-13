@@ -144,6 +144,9 @@ int L0Muon::ProcDataCnv::decodeBank(const std::vector<unsigned int> raw, int ver
   case 2:
     return decodeBank_v2(raw);
     break;
+  case 3:
+    return decodeBank_v2(raw);
+    break;
   };
   
   return 0;
@@ -535,6 +538,9 @@ int L0Muon::ProcDataCnv::rawBank(std::vector<unsigned int> &raw, int version, in
     return rawBank_v1(raw,mode);
     break;
   case 2:
+    return rawBank_v2(raw,mode, compression);
+    break;
+  case 3:
     return rawBank_v2(raw,mode, compression);
     break;
   };
