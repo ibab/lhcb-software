@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.17 2009-10-13 06:58:07 jpalac Exp $
+!$Id: release.notes,v 1.18 2009-10-13 13:20:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-10-13 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Add name() for backwards compatibility.
+  . SelectionSequence: make GaudiSequencer "on-demand" from local list of
+    algorithms to avoid problems with Members not being understood. Triggered
+    by calling the sequence() method.
 
 ! 2009-10-12 - Juan PALACIOS
  - python/PhysSelPython/Wrappers.py
