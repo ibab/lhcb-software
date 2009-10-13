@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-# use MDF               v3r14    DAQ
+use MDF               v3r20    DAQ
 # use DAQEvent          v7r11    Event
 #=======================================================
 # LHCb Online packages
