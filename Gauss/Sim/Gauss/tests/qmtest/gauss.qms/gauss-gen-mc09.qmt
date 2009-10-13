@@ -6,12 +6,13 @@
     <text>$DECFILESROOT/options/11144103.opts</text>
     <text>$LBPYTHIAROOT/options/Pythia.opts</text>
     <text>$GAUSSOPTS/GenStandAlone.py</text>
+    <text>$GAUSSROOT/tests/options/testGauss-NoOutput.py</text>
     <text>$GAUSSROOT/tests/options/testGauss-gen-defaults.py</text>
   </set></argument>
   <argument name="timeout"><integer>7200</integer></argument>
   <argument name="reference"><text>$GAUSSROOT/tests/refs/testGauss-gen-MC09.ref</text></argument>
   <argument name="error_reference"><text>$GAUSSROOT/tests/refs/testGauss-gen-MC09-err.ref</text></argument>
-  <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
+  <!-- <argument name="use_temp_dir"><enumeral>true</enumeral></argument> -->
   <argument name="validator"><text>
 preprocessor = normalizeExamples + \
     RegexpReplacer(when = "Connected to database",
