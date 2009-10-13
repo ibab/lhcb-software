@@ -1,4 +1,4 @@
-// $Id: RecSubfarmDisplay.cpp,v 1.6 2009-04-17 13:16:37 frankb Exp $
+// $Id: RecSubfarmDisplay.cpp,v 1.7 2009-10-13 16:07:03 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.6 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/RecSubfarmDisplay.cpp,v 1.7 2009-10-13 16:07:03 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
@@ -88,8 +88,8 @@ void RecSubfarmDisplay::init(int argc, char** argv)   {
   RTL::CLI cli(argc,argv,help);
   int hdr_height, nodes_height, moores_height;
   cli.getopt("headerheight",  1, hdr_height    =   5);
-  cli.getopt("nodesheight",   1, nodes_height  =  10);
-  cli.getopt("mooresheight",  1, moores_height =  20);
+  cli.getopt("nodesheight",   1, nodes_height  =  20);
+  cli.getopt("mooresheight",  1, moores_height =  10);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/hlta01/ROpublish");
 

@@ -1,4 +1,4 @@
-// $Id: BufferDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Id: BufferDisplay.cpp,v 1.2 2009-10-13 16:07:03 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.1 2009-04-17 13:17:04 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.2 2009-10-13 16:07:03 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmDisplay.h"
@@ -83,7 +83,7 @@ void BufferDisplay::update(const void* data) {
       }
     }
     if ( line > 1 ) {
-      ::sprintf(txt,"%-20s%5s%6s  %6s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
+      ::sprintf(txt,"%-22s%5s%6s %4s%12s %-4s %s","   Name","Part","PID","State","Seen/Prod","REQ","Buffer");
       ::scrc_put_chars(m_display,txt,INVERSE,++line,1,0);
       ::scrc_put_chars(m_display,txt,INVERSE,line,3+m_display->cols/2,1);
     }
@@ -101,27 +101,33 @@ void BufferDisplay::update(const void* data) {
           const Clients& clients = (*ib).clients;
           char* bnam = (char*)(*ib).name;
 	  if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
+	  if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
+	  if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";
           for (Clients::const_iterator ic=clients.begin(); ic!=clients.end(); ic=clients.next(ic))  {
             Clients::const_reference c = (*ic);
             cnam = (char*)c.name;
-            if ( ::strlen(cnam)>19 ) {
-              p = ::strchr(cnam,'_');
-              if ( p ) cnam = ++p;
-              if ( ::strlen(cnam)>19 ) {
-                p = ::strchr(cnam,'_');
-                if ( p ) cnam = ++p;
+            if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {   // Cleanup name if too long to be displayed properly....
+	      cnam = ++p;
+	      if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+		cnam = ++p;
+		if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+		  cnam = ++p;
+		  if ( ::strlen(cnam)>22 && (p=::strchr(cnam,'_')) ) {
+		    cnam = ++p;
+		  }
+		}
               }
             }
             if ( c.type == 'C' )
-              ::sprintf(txt,"%-20s%5X%6d C%6s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
+              ::sprintf(txt,"%-22s%5X%6d C%4s%12d %c%c%c%c %s",cnam,c.partitionID,c.processID,
                         sstat[(size_t)c.state],c.events,c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],bnam);
             else if ( c.type == 'P' )
-              ::sprintf(txt,"%-20s%5X%6d P%6s%12d %4s %s",cnam,c.partitionID,c.processID,
+              ::sprintf(txt,"%-22s%5X%6d P%4s%12d %4s %s",cnam,c.partitionID,c.processID,
                         sstat[(size_t)c.state],c.events,"",bnam);
             else
-              ::sprintf(txt,"%-20s%5X%6d ?%6s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
+              ::sprintf(txt,"%-22s%5X%6d ?%4s%12s %4s %s",cnam,c.partitionID,c.processID,"","","",bnam);
             key = bnam;
-            key += cnam;
+            key += c.name;
             entries[key] = txt;
           }
         }

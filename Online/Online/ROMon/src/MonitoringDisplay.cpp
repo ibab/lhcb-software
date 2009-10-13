@@ -1,4 +1,4 @@
-// $Id: MonitoringDisplay.cpp,v 1.15 2009-04-17 13:16:37 frankb Exp $
+// $Id: MonitoringDisplay.cpp,v 1.16 2009-10-13 16:07:03 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,11 +11,12 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.15 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/MonitoringDisplay.cpp,v 1.16 2009-10-13 16:07:03 frankb Exp $
 
 // C++ include files
 #include <cstdlib>
 #include <iostream>
+#include <set>
 
 // Framework include files
 #include "GaudiKernel/strcasecmp.h"
@@ -46,7 +47,7 @@ typedef Nodeset::Nodes               Nodes;
 typedef Node::Buffers                Buffers;
 typedef MBMBuffer::Clients           Clients;
 typedef Node::Tasks                  Tasks;
-typedef map<string,Stream> Streams;
+typedef map<string,Stream>           Streams;
 
 static char* nullchr(char* src,char match) {
   char* p = strchr(src,match);
@@ -200,7 +201,8 @@ void MonitoringDisplay::showTasks(const Nodeset& ns) {
 	    strcpy(node,nam+part.length());
             if ( (typ=nullstr(nam,"_SND")) )  {}
             else if ( (typ=nullstr(nam,"_RCV")) ) {}
-            else if ( (typ=nullchr(node,'_')) && c.type=='C' ) {
+            else if ( c.type=='C' && (typ=strchr(node,'_')) )   {
+	      if ( typ>node ) typ -= 3;  // Keep the last 2 digits of the node name
               *typ = 0;
               float perc=(*ib).ctrl.tot_produced>0 ? 100*(float(c.events)/(*ib).ctrl.tot_produced) : 0;
               sprintf(txt[nTsk++],fmt,++typ,sstat[size_t(c.state)],c.reqs[0],c.reqs[1],c.reqs[2],c.reqs[3],c.events,perc);
@@ -275,12 +277,14 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
   MonitorDisplay* disp = m_relay;
   string part = m_partName + "_";
   string part2 = "_" + m_partName;
+  bool is_reco = false;
 
-  disp->draw_line_reverse(" %-10s %-12s %11s%12s%11s%11s%10s%6s%6s",
+  disp->draw_line_reverse(" %-14s %-12s %11s%12s%11s%11s%10s%6s%6s",
                           "Node","Buffer","Received","Produced","Pending",
                           "Sent","Free[kB]","Slots","Users");
   for (Nodes::const_iterator n=ns.nodes.begin(); n!=ns.nodes.end(); n=ns.nodes.next(n))  {
     if ( ::strncasecmp((*n).name,m_relayNode.c_str(),m_relayNode.length()) == 0 ) {
+      is_reco = ::strncasecmp((*n).name,"mona09",6) == 0;
       const Buffers& buffs = *(*n).buffers();
       for (Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
         string buff_nam = (*ib).name;
@@ -293,10 +297,9 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
               char nam[BM_USER_NAME_LEN], *typ, *ptr, *str;
               strcpy(nam,cl.name);
               if ( (typ=nullstr(nam,"_RCV")) )  {
-                *typ = 0;
                 str=typ+4;
                 received += cl.events;
-                streams[str].received  = cl.events;
+                streams[str].received += cl.events;
                 streams[str].buffer    = &(*ib);
               }
               else if ( (typ=nullstr(nam,"_SND")) ) {
@@ -308,7 +311,7 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
             }
           }
           nlines++;
-          disp->draw_line_normal(" %-10s %-12s %11d%12d%11d%11d%10d%6d%6d",
+          disp->draw_line_normal(" %-14s %-12s %11d%12d%11d%11d%10d%6d%6d",
                                  (*n).name,buff_nam.c_str(),received,c.tot_produced,c.i_events,received,
                                  (c.i_space*c.bytes_p_Bit)/1024,c.p_emax-c.i_events,c.i_users);
         }
@@ -320,15 +323,20 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
     txt[0][sizeof(txt[0])-1]=0;
     disp->draw_line_normal("%-50s%-50s",txt[0],txt[0]);
   }
-  sprintf(txt[0]," %-10s %-10s %11s%11s","Stream","Node","Received","Sent");
+  set<string> to_nodes;
+  sprintf(txt[0]," %-14s %-10s %11s%11s","Stream","Node",is_reco ? "Sent" : "Received",is_reco ? "" : "Sent");
   disp->draw_line_reverse("%-50s%-50s",txt[0],txt[0]);
-  txt[0][0] = txt[1][0] = nStr = received = sent = 0;
+  txt[0][0] = txt[1][0] = 0;
+  nStr = received = sent = 0;
   for (Streams::const_iterator is=streams.begin(); is!=streams.end(); ++is)  {
-    bool first = true;
     const Stream& s = (*is).second;
-    for (Stream::Targets::const_iterator t=s.to.begin(), t1=t; t!=s.to.end(); ++t, first=false)  {
-      sprintf(txt[nStr++]," %-10s %-10s %11d%11d",(*is).first.c_str(),(*t).first.c_str(),s.received,(*t).second);
+    for (Stream::Targets::const_iterator t=s.to.begin(), t1=t; t!=s.to.end(); ++t)  {
+      if ( is_reco )
+	sprintf(txt[nStr++]," %-14s %-10s %11d%11s",(*is).first.c_str(),(*t).first.c_str(),int((*t).second),"");
+      else
+	sprintf(txt[nStr++]," %-14s %-10s %11d%11d",(*is).first.c_str(),(*t).first.c_str(),int(s.received),int((*t).second));
       sent += (*t).second;
+      to_nodes.insert((*t).first);
       if ( nStr==2 ) {
         disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
         txt[0][0] = txt[1][0] = nStr = 0;
@@ -337,8 +345,8 @@ void MonitoringDisplay::showRelay(const Nodeset& ns) {
     received += s.received;
   }
   if ( nStr > 0 ) disp->draw_line_normal("%-50s%-50s",txt[0],txt[1]);
-  disp->draw_line_bold(" Total events received:%11d   Distributed:%10d to %ld Nodes",
-                  received,sent,streams.size());
+  disp->draw_line_bold(" %-26s%11d   Distributed:%10d to %ld Nodes",
+                  "Total events received:",received,sent,to_nodes.size());
 }
 
 /// Update header information
