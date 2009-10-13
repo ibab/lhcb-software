@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-10-13 - Silvia MIGLIORANZI
+ - In all QMTests running on signal events, the option "testGauss-NoOutput.py"
+   (the Output files are not produced) is used. The reference stdoutput files
+   for slc4_amd64_gcc34 have been updated.
 
 !========================= Gauss v37r5 2009-10-05 ============================
 ! 2009-10-05 - Gloria CORTI
