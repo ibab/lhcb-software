@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.73 2009-10-08 14:46:07 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.74 2009-10-13 14:33:10 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -93,7 +93,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
 
   // ==> prediction and filter
   double chisq(0) ;
-  int ndof(-m_DoF) ;
+  int ndof(0) ;
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Running forward filter" << endmsg ;
 
@@ -136,6 +136,13 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
     node.setState( state );
 
   } // end of prediction and filter
+
+  // Count the number of active track parameters. For now, just look at the momentum.
+  const double threshold = 0.1 ;
+  size_t npar = m_DoF != 5u ? m_DoF :
+    (state.covariance()(4,4) / seedCov(4,4) < threshold ? 5 : 4) ;
+  ndof -= npar ;
+  
 
   // Check if the number of degrees of freedom is not below zero
   if( ndof < 0 ) Warning( "Number of degrees of freedom below zero", StatusCode::SUCCESS, 0 ).ignore();
