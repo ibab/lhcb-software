@@ -143,22 +143,12 @@ def ConfiguredFitVelo( Name = "FitVelo",
                        TracksInContainer = "Rec/Track/PreparedVelo"):
     # note that we ignore curvatue in velo. in the end that seems the
     # most sensible thing to do.
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
-                                        FieldOff=True )
-    eventfitter.Fitter.NumberFitIterations = 2
-    #eventfitter.Fitter.ErrorP= [0.01, 5e-08]
-    #eventfitter.Fitter.ErrorX2 = 100
-    #eventfitter.Fitter.ErrorY2 = 100
-    #eventfitter.Fitter.ErrorP= [0,0.01]
-    #eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
     return eventfitter
 
 def ConfiguredFitVeloTT( Name = "FitVeloTT",
                          TracksInContainer = "Rec/Track/VeloTT" ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.NumberFitIterations = 2
-    eventfitter.Fitter.MaxNumberOutliers = 1
-    eventfitter.Fitter.Extrapolator.ApplyEnergyLossCorr = False
     # Make the nodes even though this is a refit, to add StateAtBeamLine
     # (PatVeloTT also fits but does not make nodes)
     eventfitter.Fitter.MakeNodes = True
