@@ -1,12 +1,12 @@
 2009-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r3
+
+2009-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: 
 	* scripts/mkLCGCMTtar: 
 	* scripts/mkLHCbtar: added support for the Ganga distribution.
-
-2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
-
-	* cmt/requirements: release of version v2r3
 
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
