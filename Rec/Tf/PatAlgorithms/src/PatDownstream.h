@@ -1,4 +1,4 @@
-// $Id: PatDownstream.h,v 1.6 2009-10-08 10:09:46 sstahl Exp $
+// $Id: PatDownstream.h,v 1.7 2009-10-13 08:31:40 sstahl Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -81,6 +81,7 @@ private:
   double        m_maxChisq;
   bool          m_clusterFilter;
   bool          m_removeUsed;
+  bool          m_removeAll;
   double        m_longChi2;
   double        m_maxDist;
     

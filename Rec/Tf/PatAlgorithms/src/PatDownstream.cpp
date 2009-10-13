@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.11 2009-10-08 10:09:46 sstahl Exp $
+// $Id: PatDownstream.cpp,v 1.12 2009-10-13 08:31:40 sstahl Exp $
 // Include files 
 
 #include <algorithm>
@@ -75,8 +75,12 @@ PatDownstream::PatDownstream( const std::string& name,
   declareProperty( "StateErrorTY2" , m_stateErrorTY2 =  1.e-4);
   declareProperty( "StateErrorP"   , m_stateErrorP   =  0.15);
 
-  // Change this in order to remove hits and T-tracks used for longtracks
+  // Change this in order to remove hits and T-tracks used for longtracks.
+  // RemoveAll configures that everything is removed.
+  // If false only hits and T-tracks from good longtracks are removed.
+  // The criterion for this is the Chi2 of the longtracks from the fit.
   declareProperty( "RemoveUsed"    , m_removeUsed    = false     );
+  declareProperty( "RemoveAll"    ,  m_removeAll = false      );
   declareProperty( "LongChi2"      , m_longChi2     = 1.5       );
   
   //== debugging options
@@ -115,7 +119,8 @@ StatusCode PatDownstream::initialize() {
          << " MaxChisq           = " << m_maxChisq      << endmsg
          << " MaxWindowSize      = " << m_maxWindow     << endmsg
          << " RemoveUsed         = " << m_removeUsed    << endmsg
-         << " LongChisq          = " << m_longChi2      << endmsg
+         << " RemoveAll          = " << m_removeAll     << endmsg
+         << " LongChisq          = " << m_longChi2      << endmsg     
          << "========================================"  << endmsg;
   
   info() << "zMagnetParams ";
@@ -348,12 +353,13 @@ void PatDownstream::prepareSeeds(LHCb::Tracks* inTracks, std::vector<LHCb::Track
             const LHCb::Track* pt = (*itA);
             if ( tr == pt ) {
               if ( m_printing ) debug() << " is used in match " << matchTr->key(); 
-              if ( matchTr->chi2PerDoF() < m_longChi2) {
+              if ( m_removeAll || matchTr->chi2PerDoF() < m_longChi2 ) {
                 if ( m_printing ) debug() << " good longtrack " << matchTr->key(); 
                 store = false;
                 tagUsedTT( matchTr );
                 break;
               }
+              break;
             }
           }
           if ( !store ) break;
@@ -389,7 +395,7 @@ void PatDownstream::ttCoordCleanup ( ) {
     if ( exist<LHCb::Tracks>( LHCb::TrackLocation::Forward ) ) {
       LHCb::Tracks* tracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
       BOOST_FOREACH(const LHCb::Track* tr, *tracks) {
-        if (tr->chi2PerDoF()<m_longChi2) tagUsedTT( tr );
+        if (m_removeAll || tr->chi2PerDoF()<m_longChi2) tagUsedTT( tr );
       }
     }
   }

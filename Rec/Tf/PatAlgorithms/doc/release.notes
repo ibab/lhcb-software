@@ -3,7 +3,13 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
-========================= PatAlgorithms v3r23 2009-10-08 =====================
+========================= PatAlgorithms v3r23 2009-10-13 =====================
+! 2009-10-13 Sascha Stahl
+ - PatDownstream: Options to remove used hits and T-tracks changed.
+	 Use RemoveUsed to switch it on. If RemoveAll all hits and T-tracks
+	 that have already been used are removed. If not RemoveAll, only hits
+	 and T-tracks from longtracks with a chi2 smaller than LongChi2 are used
+	 to remove hits and T-tracks.						
 ! 2009-10-08 Sascha Stahl
  - PatDownstream: retuned Parameters for MC09
  - PatDownstream: made search windows momentum dependent
