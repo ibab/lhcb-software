@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.8 2009-10-06 08:20:19 pkoppenb Exp $ 
+# $Id: requirements,v 1.9 2009-10-13 13:12:33 poluekt Exp $ 
 # =============================================================================
 # Stripping configuration package
 # =============================================================================
@@ -20,6 +20,13 @@ use Boost        v*   LCG_Interfaces
 use GaudiPolicy  v*                             
 use Python       v* LCG_Interfaces 
 use AIDA         v* LCG_Interfaces 
+
+use DaVinciKernel        v*     Phys
+use LoKiCore             v*     Phys
+
+private
+use LHCbAlgs             v*     Kernel  
+end_private
 
 # =============================================================================
 library          StrippingConf    ../src/*.cpp

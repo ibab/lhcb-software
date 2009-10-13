@@ -11,7 +11,7 @@ __all__ = (
 from GaudiConf.Configuration import *
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import LHCbConfigurableUser
-from Configurables import TESCheck
+from Configurables import StrippingCheck
 
 class StrippingStream ( LHCbConfigurableUser ) :
 
@@ -19,17 +19,19 @@ class StrippingStream ( LHCbConfigurableUser ) :
 
     def __apply_configuration__ ( self ) :
         log.info("Configuring StrippingStream " + self.name() )
-
-    def appendLine (self, line) :
-	line.createConfigurable()
-	self.sequence().Members += [ line.configurable() ]
-	self.lines().append(line)
-
-    def appendTES (self, line) :
-	self.sequence().Members += [ TESCheck(line.name(), 
-				     Inputs = [ "/Event/Strip/" + line.outputLocation() ], 
-				     Stop = False ) ]
-	self.lines().append(line)
+        
+    def appendLines (self, lines) : 
+	for line in lines : 
+	    self.lines().append(line)
+	    
+    def createConfigurables(self, TES = False) : 
+	for line in self.lines() : 
+	    if TES :
+		self.sequence().Members += [ StrippingCheck(line.name(), 
+				     InputLocation = "/Event/Strip/" + line.outputLocation() + "/Particles") ]
+	    else :  
+		line.createConfigurable()
+		self.sequence().Members += [ line.configurable() ]
 
     def lines( self ) :
         return self.getProp('Lines')
@@ -38,6 +40,7 @@ class StrippingStream ( LHCbConfigurableUser ) :
 	return GaudiSequencer("StrippingStream"+self.name(),
                               ModeOR = True,
                               ShortCircuit = False)
+
 
     def outputLocations (self) : 
 	outputList = []

@@ -1,9 +1,23 @@
-!$Id: release.notes,v 1.24 2009-10-06 08:20:19 pkoppenb Exp $
+!$Id: release.notes,v 1.25 2009-10-13 13:12:34 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-10-13 - Anton Poluektov
+
+ - Major changes in Configuration.py. StrippingConf does not interact with 
+   DaVinci internally, but rather provides an interface with the streams. 
+   This requires corresponding changes in StrippingSelections jobs. 
+
+ - Streams are not defined in StrippingLine constructor now. 
+   StrippingLines have to be attached to StrippingStreams in job options. 
+
+ - New algorithm StrippingCheck. Used instead of StrippingAlg for SETC tagger
+   (checks if the TES location is not empty). Activated by TES=True option
+   of StrippingConf. 
+
 
 !========================== StrippingConf v1r6 2009-10-06 ===================
 ! 2009-10-05 - Anton POLUEKTOV

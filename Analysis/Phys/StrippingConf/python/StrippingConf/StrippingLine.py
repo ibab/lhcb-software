@@ -43,19 +43,8 @@ def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
 
-_stripping_lines__ = []
-
-def strippingLines () :
-    return tuple(_stripping_lines__)
-
-def _add_to_stripping_lines_( line ) :
-    for i in _stripping_lines__ : 
-	if i.name() == line.name() : 
-	    raise AttributeError, " StrippingLine  '%s' is already defined!" % line.name()
-    _stripping_lines__.append ( line ) 
-
 # Own slots of StrippingLine
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'HLT' , 'algos', 'stream' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'HLT' , 'algos' ) 
 
 class bindMembers (object) :
     """
@@ -129,8 +118,6 @@ class bindMembers (object) :
             x = '_handle_' + type(alg).__name__
             handle = getattr(self, x if hasattr(self, x) else '_default_handler_')
             handle(line,alg)
-
-
 
 
 class StrippingTool (object ) :  
@@ -269,7 +256,6 @@ class StrippingLine(object):
 
     def __init__ ( self             ,
                    name             ,   # the base name for the Line
-                   stream = None    ,   # stream name
                    prescale  = 1    ,   # prescale factor
                    HLT       = None ,   # HltDecReports predicate
                    checkPV   = True ,   # Check PV before running algos 
@@ -282,7 +268,6 @@ class StrippingLine(object):
         HLT   = deepcopy ( HLT   )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
-        stream = deepcopy ( stream )
         # 2) save all parameters (needed for the proper cloning)
         self._name      = name
         if callable(prescale) : prescale = prescale( self.name() )
@@ -294,7 +279,6 @@ class StrippingLine(object):
         if callable(postscale) : postscale = postscale( self.name() )
         self._postscale = postscale
         self._algos     = algos
-        self._stream    = stream
         self._args      = args
 
         line = self.subname()
@@ -307,9 +291,7 @@ class StrippingLine(object):
         _members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
         self._outputloc = _boundMembers.outputLocation()
-        
-        # register into the local storage of all created Lines
-        _add_to_stripping_lines_( self ) 
+
 
     def createConfigurable( self ) : 
         # check for forbidden attributes
@@ -367,9 +349,6 @@ class StrippingLine(object):
     def type      ( self ) :
         """ The actual type of Hlt Line """
         return StrippingLine
-
-    def stream    ( self ) : 
-	return self._stream
 
     ## Get the underlying 'Configurable'
     #  probably it is the most important method except the constructor
@@ -445,7 +424,6 @@ class StrippingLine(object):
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
         __algos      = deepcopy ( args.get ( 'algos'     , self._algos     ) )
         __args       = deepcopy ( self._args  ) 
-        __stream     = deepcopy ( args.get ( 'stream'    , self._stream    ) )
 
         # restore the original deepcopy behaviour...
         if origMethod :
@@ -474,5 +452,4 @@ class StrippingLine(object):
                                checkPV   = __checkPV    ,
                                postscale = __postscale  ,
                                algos     = __algos      , 
-                               stream	 = __stream	, 
                                **__args )

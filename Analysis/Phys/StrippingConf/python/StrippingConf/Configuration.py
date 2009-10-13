@@ -14,124 +14,53 @@ from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import FilterDesktop
 from Configurables import LHCbConfigurableUser
-from Configurables import EventTuple, TupleToolSelResults
-from Configurables import DaVinci, DaVinciWriteDst
 from StrippingLine import StrippingLine
-from StrippingLine import strippingLines
 from StrippingStream import StrippingStream
 
-class StrippingConf( LHCbConfigurableUser ):
-#    __used_configurables__ = [ DaVinci, DaVinciWriteDst ]
-    __used_configurables__ = [ DaVinci ]
+class StrippingConf ( LHCbConfigurableUser ) :
 
-    __slots__ = { 
-		    "ActiveLines"       : [],    # list of lines to be added
-		    "ActiveStreams"     : [],    # list of active streams
-		    "OutputType"	: "ETC", # Output type. Can be either "ETC" or "DST"
-		    "DSTPrefix"		: "",    # Prefix for DST streams
-		    "MainOptions"	: "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py", # Main options file to import
-		    "StreamFile"	: {}, 
-                }
+    __slots__ = {
+		  "TES"        	      : False     # If True, just check that TES location is not empty, 
+		                                  # instead of running selections (used for SETC tagger)
+		}
 
-#
-# Return the list of all active lines. The line is active if:
-#   * It is listed in ActiveLines (or ActiveLines is empty) AND 
-#   * Its stream is listed in the ActiveStreams (or ActiveStreams is empty)
-#
-    def activeLines (self) : 
-        linesList = self.getProp('ActiveLines')
-        streamsList = self.getProp('ActiveStreams')
-        lines = [ i for i in strippingLines() if ( (not linesList   or i.subname() in linesList ) and 
-    						   (not streamsList or i.stream() in streamsList )) ]
-	return lines
+    def __apply_configuration__ ( self ) :
+        log.info("Configuring StrippingConf")
+
 #
 # Return the list of all active StrippingStreams. 
 #
     def activeStreams (self) :
-        return GaudiSequencer(self.name()+"ActiveStreams",
+        return GaudiSequencer(self.name() + "ActiveStreams",
                               ModeOR = True,
                               ShortCircuit = False).Members
 
 #
-# Configuration method
+# Return GaudiSequencer containing stream sequencers
 #
-    def __apply_configuration__ (self): 
+    def sequence (self) : 
+	return GaudiSequencer("StrippingGlobal",
+	                      ModeOR = True, 
+	                      ShortCircuit = False)
 
-	log.info("Stripping configuration")
 
-#       Import main options file (descriptions of all lines)
-        importOptions(self.getProp('MainOptions'))
+#
+# Return list of selection names for TagCreator
+#
+    def selections (self) : 
+	_selections = [ "StrippingGlobal" ]
+	for stream in self.activeStreams() : 
+	    streamName = stream.sequence().name()
+	    _selections += [ streamName ]
+	    for line in stream.lines() :
+		_selections += [ line.name() ]
+	return _selections
 
-	output = (self.getProp('OutputType')).upper()
-
-        if output not in [ "ETC", "SETC", "DST", "NONE" ]:
-            raise TypeError( "Invalid output type '%s'"%output )
-
-#	Create a list of active stream names
-        lines = self.activeLines()
-        streams = []
-        for line in lines : 
-    	    if line.stream() not in streams : 
-    		streams.append(line.stream())
-    		log.info("StrippingConf: New active stream : "+line.stream())
-
-#	Create streams
-    	for streamName in streams : 
-    	    self.activeStreams().append(StrippingStream(streamName))
-    	    log.info("StrippingConf: Created stream : "+streamName)
-
-#	Append lines to streams
-	for line in lines : 
-	    for stream in self.activeStreams() :
-		if line.stream() == stream.name() :
-		    if output == "SETC" : 
-			stream.appendTES(line)
-		    else : 
-			stream.appendLine(line)
-		    log.info("StrippingConf: Appended line "+line.name()+" to stream "+line.stream()+", output="+line.outputLocation())
-        
-	if output == "ETC" or output == "SETC" : 
-
-#           The user wants to write ETC. 
-#           Selections of all active stripping lines will go there. 
-
-	    tag = EventTuple("TagCreator")
-	    tag.EvtColsProduce = True
-	    tag.ToolList = [ "TupleToolEventInfo", "TupleToolRecoStats", "TupleToolSelResults"  ]
-	    tag.addTool(TupleToolSelResults)
-
-#           Sequencer for the global selection (logical OR of all selections)
-
-	    strippingSeq = GaudiSequencer("StrippingGlobal")
-	    strippingSeq.ModeOR = True
-	    strippingSeq.ShortCircuit = False
-	    tag.TupleToolSelResults.Selections += [ "StrippingGlobal" ]
-
-	    for stream in self.activeStreams() : 
-		tag.TupleToolSelResults.Selections += [ stream.sequence().name() ]
-		log.info("StrippingConf: Stream "+stream.name()+" sequencer is "+stream.sequence().name())
-		strippingSeq.Members += [ stream.sequence() ]
-		for line in stream.lines() : 
-		    sel = line.name()
-		    tag.TupleToolSelResults.Selections += [ sel ]
-		    log.info("StrippingConf: added selection "+sel)
-		print stream.outputLocations()
-
-	    DaVinci().appendToMainSequence( [ strippingSeq ] )
-	    DaVinci().appendToMainSequence( [ tag ] )
-	
-	if output == "DST" : 
-            log.warning("DST writing now handled externally by SelDSTWriter. No action taken.")
-            
-	if output == "NONE" : 
-
-	    strippingSeq = GaudiSequencer("StrippingGlobal")
-	    strippingSeq.ModeOR = True
-	    strippingSeq.ShortCircuit = False
-
-	    for stream in self.activeStreams() : 
-		strippingSeq.Members += [ stream.sequence() ] 
-
-	    DaVinci().appendToMainSequence( [ strippingSeq ] )
+#
+# Append StrippingStream
+#
+    def appendStream(self, stream) : 
+	stream.createConfigurables(self.getProp("TES"))
+	self.activeStreams().append(stream)
+	self.sequence().Members += [ stream.sequence() ]
