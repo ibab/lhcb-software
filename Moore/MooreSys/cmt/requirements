@@ -1,5 +1,5 @@
 package MooreSys
-version v7r5
+version v7r6
 
 branches doc cmt
 
@@ -7,12 +7,8 @@ branches doc cmt
 # Don't forget the applications
 #=======================================================
 
-use  Moore                  v7r5    Hlt
+use  Moore                  v7r6    Hlt
 
-use  HltCommon              v5r11p1   Hlt
-use  HltConf                v4r4p1    Hlt
-use  CaloTools              v5r11p1   Calo
-use  CaloPIDs	            v5r1p1 Calo
 
 # Declare this as a container package
 apply_pattern container_package
