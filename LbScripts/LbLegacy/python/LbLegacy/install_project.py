@@ -211,6 +211,7 @@
  090821 - implemented retry loop for the software retrieval.
  090916 - Added the --nofixperm option to prevent the fixing of the permissions. This
           could improve the installation time on windows 
+ 091013 - Added the support for the LCGGanga tarball.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -223,7 +224,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '090916'
+script_version = '091013'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r3"
@@ -941,7 +942,7 @@ def getPackVer(file):
     if name == "LBSCRIPTS" :
         file_base = []
         file_base.append(os.path.join(base_dir[0],name,name+'_'+vers))
-    if name == "LCGCMT" or name == "GENSER" or name == "LCGGrid":
+    if name == "LCGCMT" or name == "GENSER" or name == "LCGGrid" or name == "LCGGanga":
         if len(packver) >= 2:
             vers = '_'.join(packver[1:])
             file_path = os.path.join(this_lcg_dir,name,name+'_'+vers)
@@ -1120,7 +1121,7 @@ def getProjectTar(tar_list, already_present_list=None):
         if not isInstalled(file) :
             log.debug('file= %s' % file)
             if tar_list[file] == "source":
-                if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 :
+                if file.find('LCGCMT') != -1 or file.find('LCGGrid') != -1 or file.find('LCGGanga') != -1:
                     checkWriteAccess(os.path.join(this_lcg_dir,'..'))
                     os.chdir(os.path.join(this_lcg_dir,'..'))
                 elif file.find('GENSER') != -1:
@@ -1147,7 +1148,7 @@ def getProjectTar(tar_list, already_present_list=None):
                 log.debug('untar file %s' % file)
                 rc = unTarFileInTmp(os.path.join(this_targz_dir,file), os.getcwd(), overwrite=overwrite_mode)
                 pack_ver = getPackVer(file)
-                if rc != 0 and pack_ver[0] != 'LCGGrid' :
+                if rc != 0 and ( pack_ver[0] != 'LCGGrid' or pack_ver[0] != 'LCGGanga') :
                     removeAll(pack_ver[3])
                     log.info('Cleaning up %s' % pack_ver[3])
                     sys.exit("getProjectTar: Exiting ...")

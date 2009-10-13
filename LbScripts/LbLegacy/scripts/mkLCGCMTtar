@@ -277,6 +277,8 @@ def get_output_filename(native_version, binary, packages_versions):
                             packver=w.split("_")[1]
             os.chdir(here)
             filename = "LCGGrid_" + packver
+        elif NAME == "GANGA" :
+            filename = "LCGGanga_" + version
         else:
             filename = packages_versions['LCGCMT']
     else:

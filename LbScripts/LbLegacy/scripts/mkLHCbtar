@@ -26,6 +26,7 @@
  - 081215 - Removed LCGCMT from the direct dependencies of Dirac
  - 081217 - added LCGGrid to the Dirac dependencies
  - 090430 - added support for slc5
+ - 091013 - added suport for Ganga distribution
 """
 
 #-----------------------------------------------------------------------------
@@ -35,7 +36,7 @@ import re
 from LbLegacy.install_project import calculateMD5
 from LbConfiguration.Platform import isBinaryDbg, getBinaryOpt
 
-script_version = '090430'
+script_version = '091013'
 
 from LbLegacy.LHCb_config import data_files
 
@@ -300,12 +301,17 @@ def make_tar(pname, pversion, binary=''):
                     dver = 'osc_vis' + '_' + dver
             if PACK == 'LHCBGRID':
                 dver = 'LCGGrid' + '_' + pversion
-            if PACK == 'DIRAC' and dnam == 'LCGCMT' :
+            if ( PACK == 'DIRAC' or PACK == 'GANGA' ) and dnam == 'LCGCMT' :
                 dver = 'LCGGrid' + '_' + _get_grid_version(path_list)
             dbin = tar_opt
             dtar = dver+dbin
             print 'dnam %s, dver %s, dbin %s, dtar %s' %(dnam,dver,dbin,dtar)
             dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
+            if PACK == 'GANGA' and dnam == 'LCGCMT' :
+                dver = 'LCGGanga' + '_' + pversion
+                dtar = dver+dbin
+                print 'dnam %s, dver %s, dbin %s, dtar %s' %(dnam,dver,dbin,dtar)
+                dep.write('[<A HREF=source/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
         else:
             dtar = dnam+'_'+dver+tar_bin
             dep.write('[<A HREF='+dnam+'/'+dtar+'.tar.gz>'+dtar+'</A>]\n')
@@ -549,7 +555,7 @@ if __name__ == "__main__":
     print pname, pversion, binary
     print 'debug_flag= %s'%(debug_flag)
 
-    tar_status = make_tar(pname,pversion,binary)
+    tar_status = make_tar(pname, pversion, binary)
 
     if tar_status == 0 : rc = create_web()
 
