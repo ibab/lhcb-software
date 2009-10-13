@@ -8,11 +8,9 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-Hlt1Global                                                  SUCCESS Number of counters : 3
  |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |      1032 |        101 |(  9.78682 +- 0.924945 )%|   -------   |   -------   |
 """, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
-Hlt2Global                                                  SUCCESS Number of counters : 3
  |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1032 |          2 |( 0.193798 +- 0.136903 )%|   -------   |   -------   |
 """,  signature_offset = 0, id = "Hlt2")
 </text></argument>

@@ -55,9 +55,16 @@ mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolR
 #
 # Selection
 #
+
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = ['Bd2KstarMuMu_10Hz']
-StrippingConf().OutputType = "NONE"
+from Configurables import StrippingStream
+from StrippingSelections import StrippingBd2KstarMuMu
+
+stream = StrippingStream("KstarMuMu")
+stream.appendLines( [ StrippingBd2KstarMuMu.line_10hz ] )
+
+sc = StrippingConf()
+sc.appendStream( stream )
 
 from Configurables import DaVinci
 
@@ -71,6 +78,7 @@ DaVinci().DataType = "MC09"
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
+DaVinci().appendToMainSequence( [ sc.sequence() ] )
 # DaVinci().HltType = "Hlt1+Hlt2"
 # DaVinci().HltThresholdSettings = 'Effective_Nominal'  ## need to replace with MC09
 #-- GAUDI jobOptions generated on Tue Jun 23 11:54:57 2009

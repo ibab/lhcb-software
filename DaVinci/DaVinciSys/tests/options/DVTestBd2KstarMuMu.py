@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.11 2009-09-17 12:09:11 jpalac Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.12 2009-10-13 17:35:37 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -45,14 +45,21 @@ TestCorrelations.Algorithms = ["FilterTrueTracks",
 # DaVinci
 ###
 ## Preselection
+
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = [ "Bd2KstarMuMu_10Hz" ]  
-StrippingConf().OutputType = "NONE"
-StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py"
+from Configurables import StrippingStream
+from StrippingSelections import StrippingBd2KstarMuMu
+
+stream = StrippingStream("KstarMuMu")
+stream.appendLines( [ StrippingBd2KstarMuMu.line_10hz ] )
+
+sc = StrippingConf()
+sc.appendStream( stream )
 
 from Configurables import DaVinci
 DaVinci().UserAlgorithms = [ trueSeq ]
 DaVinci().MoniSequence = [ TestCorrelations ]
+DaVinci().appendToMainSequence( [ sc.sequence() ] )
 
 ##
 ## Options

@@ -1,18 +1,20 @@
-## $Id: DVTestReadETC.py,v 1.3 2009-07-09 09:38:45 pkoppenb Exp $
+## $Id: DVTestReadETC.py,v 1.4 2009-10-13 17:35:37 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $
 ## ============================================================================
 #
 # Example options to read a user-defined ETC
 #
 from Gaudi.Configuration import *
 from Configurables import DaVinci
-from StrippingConf.StrippingLine import StrippingLine, strippingLines
 from StrippingConf.Configuration import StrippingConf
-StrippingConf().ActiveLines = []
-StrippingConf().OutputType = "NONE"                    # Can be either "ETC" or "DST"
-StrippingConf().MainOptions = "$STRIPPINGSELECTIONSROOT/options/StrippingSelections.py"
 
+from StrippingSelections import StreamBmuon
+
+sc = StrippingConf()
+sc.appendStream( StreamBmuon.stream )
+
+DaVinci().appendToMainSequence( [ sc.sequence() ] )
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq  = 1
 DaVinci().DataType = "MC09"
