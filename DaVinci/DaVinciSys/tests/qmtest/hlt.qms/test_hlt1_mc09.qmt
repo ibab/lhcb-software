@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<!-- This must be identical to the block in test_hlt12_mc09.qmt -->
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt1-MC09.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |        90 |         68 |(  75.5556 +- 4.53004  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>

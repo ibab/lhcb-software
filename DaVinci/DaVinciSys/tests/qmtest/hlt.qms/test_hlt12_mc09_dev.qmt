@@ -1,0 +1,16 @@
+<?xml version="1.0" ?>
+<!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+<argument name="program"><text>gaudirun.py</text></argument>
+<argument name="args"><set>
+  <text>../options/DVTestHlt12-MC09.py</text>
+</set></argument>
+<argument name="validator"><text>
+findReferenceBlock("""
+ |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |        90 |         74 |(  82.2222 +- 4.03007  )%|   -------   |   -------   |
+3""", stdout, result, causes, signature_offset = 0, id = "Hlt1")
+findReferenceBlock("""
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|        90 |         71 |(  78.8889 +- 4.30172  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "Hlt2")
+</text></argument>
+</extension>
