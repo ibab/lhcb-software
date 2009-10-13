@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.16 2009-10-13 13:20:38 jpalac Exp $
+#$Id: Wrappers.py,v 1.17 2009-10-13 14:31:25 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -34,7 +34,6 @@ class DataOnDemand(object) :
                   name,
                   Location = "", 
                   RequiredSelections = [] ) :
-        print "Instantiating ", name
         self._name = name
         self.requiredSelections = []
         self.Location = Location
@@ -123,7 +122,8 @@ class SelectionSequence(object) :
     Wrapper class for offline selection sequence. Takes a Selection object
     corresponding to the top selection algorithm, and recursively uses
     Selection.requiredSelections to for a GaudiSequences with all the required
-    selecitons needed to run the top selection.
+    selecitons needed to run the top selection. Can add list of event selection
+    algorithms to be added at the beginning of the sequence. 
 
     Example: selection sequence for A -> B(bb), C(cc)
 
@@ -132,7 +132,8 @@ class SelectionSequence(object) :
     from A2B2bbC2cc import SelA2B2bbC2cc
     from PhysSelPython.Wrappers import SelectionSequence
     SeqA2B2bbC2cc = SelectionSequence('SeqA2B2bbC2cc',
-                                      TopSelection = SelA2B2bbC2cc)
+                                      TopSelection = SelA2B2bbC2cc,
+                                      EventPreSelector = [alg0, alg1] )
     # use it
     mySelSeq = SeqA2B2bbC2cc.sequence()
     dv = DaVinci()
@@ -142,12 +143,17 @@ class SelectionSequence(object) :
 
     def __init__(self,
                  name,
-                 TopSelection) :
+                 TopSelection,
+                 EventPreSelector = []) :
         self._name = name
         self.TopSelection = TopSelection
+        self.algos = EventPreSelector
         self.alg = self.TopSelection.algorithm()
-        self.algos = [self.alg]
+        self.sels = [self.alg]
+        if (self.alg != None) :
+            self.buildSelectionList( self.TopSelection.requiredSelections )
         self.gaudiseq = None
+        self.algos += self.sels
 
     def name(self) :
         return self._name
@@ -162,9 +168,6 @@ class SelectionSequence(object) :
         if self.gaudiseq == None :
             from Configurables import GaudiSequencer
             self.gaudiseq = GaudiSequencer(self.name(), Members = self.algos)
-            print "Adding Algo ", self.alg.name(), " to ", self.gaudiseq.name()
-            if (self.algorithm() != None) :
-                self.buildSelectionList( self.TopSelection.requiredSelections )
         return self.gaudiseq
 
     def algName(self) :
@@ -178,11 +181,10 @@ class SelectionSequence(object) :
 
     def buildSelectionList(self, selections) :
         for sel in selections :
-            print "Adding Algo ", sel.algName(), " to ", self.gaudiseq.name()
             if type(sel) == DataOnDemand :
                 print "DataOnDemand: do nothing"
             else :
-                self.algos.insert(0, sel.algorithm())
+                self.sels.insert(0, sel.algorithm())
                 self.buildSelectionList( sel.requiredSelections )
 
 
