@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-12 - Anton Poluektov
+ - Moved selections from options/ to python/ to reflect changes in StrippingConf. 
+ - Added stream definitions in python/ 
+ - Added Bd2Kstaree selection by Marie-Helene Schune. 
+ - New test jobs: TestStrippingETC.py, TestStrippingDST.py, TestStrippingSETC.py
+ - Root macro TestStripping.C to print summary of ETC selections. 
 
 ! 2009-10-08 - Alessio sarti
  - Refined the Jpsi Inclusive selection
