@@ -4,6 +4,9 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Patrick Koppenburg
+ - CaloReadoutTool.cpp : bug fix : initialise m_packed in constructor
+
 ! 2009-10-10 - Olivier Deschamps
   - Calo decoding tools (I)Calo(L0)DataProvider/(I)CaloEnergyFromRaw/(I)CaloTriggerXXXFromRaw : 
     - add protections with const qualifier
