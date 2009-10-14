@@ -1,4 +1,4 @@
-// $Id: GiGa.h,v 1.8 2008-11-28 15:09:05 robbep Exp $ 
+// $Id: GiGa.h,v 1.9 2009-10-14 13:50:02 gcorti Exp $ 
 #ifndef GIGA_GIGASVC_H
 #define GIGA_GIGASVC_H   1 
 
@@ -15,6 +15,8 @@
 #include  "GaudiKernel/Service.h" 
 #include  "GaudiKernel/MsgStream.h" 
 #include  "GaudiKernel/Stat.h" 
+#include  "GaudiKernel/IToolSvc.h" 
+
 
 // from GiGa 
 #include  "GiGa/IGiGaSvc.h"
@@ -26,7 +28,6 @@
 class     IChronoStatSvc                  ;
 class     ISvcLocator                     ;
 class     IRndmGenSvc                     ;
-class     IToolSvc                        ;
 template   <class TYPE> class SvcFactory  ;
 
 // from GiGa  
@@ -549,8 +550,8 @@ private:
     if( name.empty() ) { return tool( type , Tool , parent , create ) ; }
     Assert( 0 != toolSvc() , "IToolSvc* points toNULL!" );
     // get the tool from Tool Service 
-    StatusCode sc = toolSvc () 
-      -> retrieveTool ( type , name , Tool, parent , create );
+    StatusCode sc = toolSvc()->retrieveTool( type , name , Tool, parent, 
+                                             create );
     Assert( sc.isSuccess() , 
             "Could not retrieve Tool'" + type + "'/'" + name + "'", sc ) ;
     Assert( 0 != Tool      , 

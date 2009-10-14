@@ -1,11 +1,7 @@
-// $Id: GiGaHitsByID.h,v 1.1 2002-12-07 21:05:29 ibelyaev Exp $
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $
-// ============================================================================
-// $Log: not supported by cvs2svn $ 
-// ============================================================================
+// $Id: GiGaHitsByID.h,v 1.2 2009-10-14 13:50:02 gcorti Exp $
 #ifndef GIGA_GIGAHITSBYID_H 
 #define GIGA_GIGAHITSBYID_H 1
+
 // Include files
 // forward declaration from G4 
 class G4VHitsCollection ;
@@ -36,38 +32,47 @@ public:
   ~GiGaHitsByID(){}; ///< Destructor
   
   /// access to unique collection ID 
-  const int                id         () const { return m_id            ; }
+  int id() const { return m_id; }
+
   // access to the collection itself (const)
-  const G4VHitsCollection* collection () const { return m_collection    ; }
+  const G4VHitsCollection* collection() const { return m_collection; }
+
   // access to the collection itself (const)
-  const G4VHitsCollection* hits       () const { return   collection () ; }
+  const G4VHitsCollection* hits() const { return collection(); }
+
   // access to the collection itself (const)
-  const G4VHitsCollection* col        () const { return   collection () ; }
+  const G4VHitsCollection* col() const { return collection(); }
   
   /// access to the collection itself (non const)
-  G4VHitsCollection*       collection ()       { return m_collection    ; }
+  G4VHitsCollection* collection() { return m_collection; }
+
   /// access to the collection itself (const)
-  G4VHitsCollection*       hits       ()       { return   collection () ; }
+  G4VHitsCollection* hits() { return collection(); }
+
   /// access to the collection itself (const)
-  G4VHitsCollection*       col        ()       { return   collection () ; }
+  G4VHitsCollection* col() { return collection(); }
   
   /** set new collection pointer 
    *  @param valeu new value of collection pointer 
    */
-  GiGaHitsByID& setCollection ( G4VHitsCollection* value ) 
-  { m_collection = value ; return *this ; };
+  GiGaHitsByID& setCollection ( G4VHitsCollection* value ){ 
+    m_collection = value; 
+    return *this; 
+  }
   
   /** set new collection pointer 
    *  @param valeu new value of collection pointer 
    */
-  GiGaHitsByID& setHits       ( G4VHitsCollection* value ) 
-  { return setCollection ( value ); }
+  GiGaHitsByID& setHits( G4VHitsCollection* value ) { 
+    return setCollection( value ); 
+  }
   
   /** set new collection pointer 
    *  @param valeu new value of collection pointer 
    */
-  GiGaHitsByID& setCol        ( G4VHitsCollection* value ) 
-  { return setCollection ( value ); }  
+  GiGaHitsByID& setCol( G4VHitsCollection* value ) {
+    return setCollection( value ); 
+  }  
   
 private:
   
@@ -80,10 +85,6 @@ private:
   G4VHitsCollection* m_collection ;
   
 };
-// ============================================================================
 
-// ============================================================================
-// The END 
-// ============================================================================
+
 #endif // GIGA_GIGAHITSBYID_H
-// ============================================================================
