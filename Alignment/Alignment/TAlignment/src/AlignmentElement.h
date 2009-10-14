@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.h,v 1.17 2009-01-21 16:27:19 wouter Exp $
+// $Id: AlignmentElement.h,v 1.18 2009-10-14 19:56:02 wouter Exp $
 #ifndef TALIGNMENT_ALIGNMENTELEMENT_H
 #define TALIGNMENT_ALIGNMENTELEMENT_H 1
 
@@ -10,17 +10,10 @@
 // from Gaudi
 #include "GaudiKernel/Point3DTypes.h"
 #include "GaudiKernel/GenericMatrixTypes.h"
+#include "GaudiKernel/Transform3DTypes.h"
 
 // from DetDesc
-#include "DetDesc/IGeometryInfo.h"
 #include "DetDesc/DetectorElement.h"
-#include "DetDesc/3DTransformationFunctions.h"
-#include "DetDesc/GlobalToLocalDelta.h"
-#include "DetDesc/AlignmentCondition.h"
-
-// from BOOST
-#include "boost/assign/std/vector.hpp"
-#include "boost/assign/list_of.hpp"
 
 // LOcal
 #include "AlParameters.h"
@@ -137,7 +130,7 @@ public:
 
   /** Get center of gravity of this element (which is the 'local' center for single elements)
    */
-  const Gaudi::XYZPoint centerOfGravity() const { return m_centerOfGravity ; }
+  const Gaudi::XYZPoint& centerOfGravity() const { return m_centerOfGravity ; }
 
   /** operator ==. Is this AlignmentElement constructed from this DetectorElement?
    */

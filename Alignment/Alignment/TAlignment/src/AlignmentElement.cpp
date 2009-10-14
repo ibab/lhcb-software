@@ -1,4 +1,4 @@
-// $Id: AlignmentElement.cpp,v 1.23 2009-01-21 16:27:19 wouter Exp $
+// $Id: AlignmentElement.cpp,v 1.24 2009-10-14 19:56:02 wouter Exp $
 // Include files
 
 // from STD
@@ -14,12 +14,18 @@
 #include "DetDesc/GeometryInfoException.h"
 #include "VeloDet/DeVeloRType.h"
 #include "VeloDet/DeVeloPhiType.h"
+#include "DetDesc/IGeometryInfo.h"
+#include "DetDesc/3DTransformationFunctions.h"
+#include "DetDesc/GlobalToLocalDelta.h"
+#include "DetDesc/AlignmentCondition.h"
 
 // from BOOST
 #include "boost/regex.hpp"
 #include "boost/algorithm/string_regex.hpp"
 #include "boost/lambda/bind.hpp"
 #include "boost/lambda/lambda.hpp"
+#include "boost/assign/std/vector.hpp"
+#include "boost/assign/list_of.hpp"
 
 // local
 #include "AlignmentElement.h"
