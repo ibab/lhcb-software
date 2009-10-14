@@ -1,4 +1,4 @@
-// $Id: CaloReadoutTool.cpp,v 1.41 2009-10-14 11:10:29 pkoppenb Exp $
+// $Id: CaloReadoutTool.cpp,v 1.42 2009-10-14 11:35:45 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -26,8 +26,8 @@ CaloReadoutTool::CaloReadoutTool( const std::string& type,
                   const std::string& name,
                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_ok(false)
   , m_packed(false)
+  , m_ok(false)
   , m_first(true)
 {
   declareInterface<ICaloReadoutTool>(this);
