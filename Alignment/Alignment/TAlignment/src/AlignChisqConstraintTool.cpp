@@ -7,6 +7,7 @@
 #include "boost/tokenizer.hpp"
 #include <string>
 #include <boost/lexical_cast.hpp>
+#include "boost/assign/list_of.hpp"
 
 /* helper class */
 

@@ -6,6 +6,7 @@
 #include "LHCbMath/LHCbMath.h"
 #include "boost/tokenizer.hpp"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "boost/assign/list_of.hpp"
 
 /* helper class */
 
