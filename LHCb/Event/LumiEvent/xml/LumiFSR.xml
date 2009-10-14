@@ -22,7 +22,7 @@
 
 
       <location name="Default"   
-		place="/FileRecords/EOR/LumiFSR"/>
+		place="/FileRecords/LumiFSR"/>
 
       <base name="KeyedObject&lt;int&gt;"/>
       &KeyedObject;

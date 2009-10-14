@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Jaap Panman
+ - remove EOR from FileRecords path
+
 !======================== LumiEvent v2r1 2009-06-16 ==========================
 ! 2009-06-12 - Jaap Panman
  - LumiFSR        : add + and += operators
