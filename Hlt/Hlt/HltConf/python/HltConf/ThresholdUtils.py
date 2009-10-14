@@ -32,8 +32,6 @@ def setThresholds(ThresholdSettings,confs):
 
 
 def Name2Threshold(name) :
-        Name2Threshold._dict
-        global _dict 
         if name not in Name2Threshold._dict : 
             from Gaudi.Configuration import log
             log.warning(' '+'#'*(41+len(name)) )
