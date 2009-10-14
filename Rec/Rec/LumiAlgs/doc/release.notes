@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Jaap Panman
+ - remove EOR from FileRecords path
+
 ! 2009-10-09 - Jaap Panman
  - add functionality to write/read MDF files with only lumi events:
    Add LumiWriter[Conf].py, LumiReader[Conf].py,LumiFileReader.cpp/h

@@ -57,7 +57,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             decoder = HltLumiSummaryDecoder('LumiDecode'+i, OutputLevel = debugOPL )
             seqMembers.append( decoder )
             accounting = LumiAccounting('LumiCount'+i,
-                                        OutputDataContainer = "/FileRecords/EOR/LumiFSR"+i,
+                                        OutputDataContainer = "/FileRecords/LumiFSR"+i,
                                         OutputLevel = debugOPL )
             seqMembers.append( accounting )
             
