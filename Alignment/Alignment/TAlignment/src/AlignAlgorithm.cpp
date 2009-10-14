@@ -1,4 +1,4 @@
-// $Id: AlignAlgorithm.cpp,v 1.57 2009-07-06 14:52:08 wouter Exp $
+// $Id: AlignAlgorithm.cpp,v 1.58 2009-10-14 19:52:58 wouter Exp $
 // Include files
 // from std
 // #include <utility>
@@ -16,6 +16,7 @@
 
 // from Event
 #include "Event/TwoProngVertex.h"
+#include "Event/ODIN.h"
 
 // from DetDesc
 #include "DetDesc/DetectorElement.h"
@@ -332,7 +333,12 @@ StatusCode AlignAlgorithm::execute() {
     }
   } 
   
-  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons ) ;
+  Gaudi::Time eventtime ;
+  if( exist<LHCb::ODIN>( LHCb::ODINLocation::Default ) ){
+    const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+    eventtime = odin->eventTime() ;
+  }
+  m_equations->addEventSummary( numusedtracks, numusedvertices, numuseddimuons, eventtime ) ;
     
   return StatusCode::SUCCESS;
 }
