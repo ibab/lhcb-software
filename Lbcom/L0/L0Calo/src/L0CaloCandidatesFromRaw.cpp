@@ -1,14 +1,14 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.17 2008-08-15 08:08:56 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.18 2009-10-14 10:21:36 robbep Exp $
 // Include files 
+// local
+#include "L0CaloCandidatesFromRaw.h"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 
 // From Event
 #include "Event/RawBankReadoutStatus.h"
-
-// local
-#include "L0CaloCandidatesFromRaw.h"
+#include "Event/L0CaloCandidate.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloCandidatesFromRaw
@@ -16,7 +16,7 @@
 // 2003-12-15 : Olivier Callot
 //-----------------------------------------------------------------------------
 
-DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw );
+DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw ) ;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -27,25 +27,26 @@ L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
 {
   declareProperty( "Extension",      m_extension = "" );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
-L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {}; 
+L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {};
 
 //=============================================================================
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = GaudiAlgorithm::initialize(); 
+  if ( sc.isFailure() ) return sc;  
 
   debug() << "==> Initialize" << endmsg;
 
   m_convertTool = 
-    tool<L0CaloCandidatesFromRawBank>( "L0CaloCandidatesFromRawBank" );
+    tool< L0CaloCandidatesFromRawBank >( "L0CaloCandidatesFromRawBank" ) ;
 
   return StatusCode::SUCCESS;
-};
+}
 
 //=============================================================================
 // Main execution
@@ -53,7 +54,7 @@ StatusCode L0CaloCandidatesFromRaw::initialize() {
 StatusCode L0CaloCandidatesFromRaw::execute() {
 
   debug() << "==> Execute" << endmsg;
-  
+
   std::string name     = rootInTES() + 
     LHCb::L0CaloCandidateLocation::Default + m_extension;
   std::string nameFull = rootInTES() + 
@@ -152,6 +153,6 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 StatusCode L0CaloCandidatesFromRaw::finalize() {
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
+  return GaudiAlgorithm::finalize(); 
 }
 //=============================================================================

@@ -1,5 +1,7 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.13 2008-07-17 20:38:38 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.14 2009-10-14 10:21:36 robbep Exp $
 // Include files
+// local
+#include "L0CaloCandidatesFromRawBank.h"
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
@@ -7,9 +9,10 @@
 // from Event
 #include "Event/L0DUBase.h"
 #include "Event/RawBankReadoutStatus.h"
+#include "Event/L0CaloCandidate.h" 
 
-// local
-#include "L0CaloCandidatesFromRawBank.h"
+// From Calo
+#include "CaloDet/DeCalorimeter.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloCandidatesFromRawBank
@@ -20,19 +23,19 @@
 // Declaration of the Tool Factory
 DECLARE_TOOL_FACTORY( L0CaloCandidatesFromRawBank );
 
-
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
 L0CaloCandidatesFromRawBank::L0CaloCandidatesFromRawBank
-( const std::string& type,
-  const std::string& name,
+( const std::string& type , const std::string& name,
   const IInterface* parent )
   : GaudiTool ( type, name , parent ) {
-  declareInterface<L0CaloCandidatesFromRawBank>(this);
+  declareInterface< L0CaloCandidatesFromRawBank >( this ) ;
   // Store also the intermediate informations for debugging the Selection boards
+  // such as the partial results of the hadron Selection Boards
   declareProperty( "DebugDecoding" , m_doDebugDecoding = false ) ;
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================
@@ -42,22 +45,22 @@ L0CaloCandidatesFromRawBank::~L0CaloCandidatesFromRawBank() {}
 //
 //=========================================================================
 StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
-  StatusCode sc = GaudiTool::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
+  StatusCode sc = GaudiTool::initialize() ; 
+  if ( sc.isFailure() ) return sc;  
+  
   // Retrieve the detector elements
-  m_ecal = getDet<DeCalorimeter>(DeCalorimeterLocation::Ecal );
-  m_hcal = getDet<DeCalorimeter>(DeCalorimeterLocation::Hcal );
+  m_ecal = getDet< DeCalorimeter >( DeCalorimeterLocation::Ecal ) ;
+  m_hcal = getDet< DeCalorimeter >( DeCalorimeterLocation::Hcal ) ;
 
   Condition* gain = m_ecal->condition( "Gain" );
-  if ( 0 == gain ) {
-    return Error( "Condition 'Gain' not found in Ecal" );
-  }
-  if ( gain->exists( "L0EtBin" ) ) {
-    m_etScale = gain->paramAsDouble( "L0EtBin" );
-  } else {
+  if ( 0 == gain ) return Error( "Condition 'Gain' not found in Ecal" ) ;
+  
+  // Gain for Et conversion
+  if ( gain -> exists( "L0EtBin" ) )
+    m_etScale = gain -> paramAsDouble( "L0EtBin" ) ;
+  else 
     return Error( "Parameter 'L0EtBin' not found in Ecal 'Gain'" );
-  }
-
+  
   return StatusCode::SUCCESS;
 }
 
@@ -66,57 +69,61 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
 //  L0DU
 //=========================================================================
 void L0CaloCandidatesFromRawBank::convertRawBankToTES
-( std::vector<std::vector<unsigned int> >& data,
-  std::string& nameFullInTES,
-  std::string& nameInTES,
-  const int version ,
-  LHCb::RawBankReadoutStatus& readoutStatus ) {
+( std::vector< std::vector< unsigned int > >& data,
+  std::string& nameFullInTES , std::string& nameInTES,
+  const int version , LHCb::RawBankReadoutStatus& readoutStatus ) {
   
   if ( msgLevel( MSG::DEBUG ) ) 
     debug() << "L0CaloCandidatesFromRawBank ... entering conversion" 
-	    << " for version " << version << endreq;
-  
+	    << " for version " << version << endmsg ;
+
   // Assume that full path (including rootInTES) is given in nameInTES etc.
   // Full container: container with the inputs of the Selection Boards
-  LHCb::L0CaloCandidates* outFull = new LHCb::L0CaloCandidates();
-  put( outFull, nameFullInTES, IgnoreRootInTES );
+  LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
+  put( outFull , nameFullInTES , IgnoreRootInTES ) ;
 
   // Default container: container with the outputs of the Selection Boards
-  LHCb::L0CaloCandidates* out     = new LHCb::L0CaloCandidates();
+  LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
   put( out, nameInTES, IgnoreRootInTES );
 
   if ( msgLevel( MSG::DEBUG ) ) 
     debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
-            << endreq;
+            << endmsg ;
   
-  Gaudi::XYZPoint dummy( 0., 0., 0.);
-  Gaudi::XYZPoint center( 0., 0., 0.);
-  LHCb::L0CaloCandidate* myL0Cand( 0 ) ;
-  std::vector<LHCb::L0CaloCandidate*> bestCand;
-  double tol;
-  DeCalorimeter* det;
+  Gaudi::XYZPoint dummy( 0. , 0. , 0. ) , center( 0. , 0. , 0. ) ;
+  LHCb::L0CaloCandidate * myL0Cand( 0 ) ;
+  std::vector< LHCb::L0CaloCandidate * > bestCand ;
+  double tol ;
+  DeCalorimeter * det ;
 
   std::map< int , LHCb::L0CaloCandidate * > mapHadrons ;
   mapHadrons.clear() ;
 
+  unsigned int * ptData( 0 ) ;
+  int bankSize( 0 ) , cand( 0 ) , sumEt( 0 ) , mult( 0 ) , rawId( 0 ) , source( 0 ), 
+	  et( 0 ) ;
+  unsigned short mask( 0 ) , type( 0 ) , slave( 0 ) , io( 0 ) ;
+  LHCb::CaloCellID id ;
+  bool hadronType( false ) ;
+	  
   for ( std::vector<std::vector<unsigned int> >::iterator itBnk = data.begin(); 
         data.end() != itBnk; ++itBnk ) {
 
-    unsigned int* ptData = &(*(*itBnk).begin());
-    int bankSize = (*itBnk).size();  //== is in bytes...
+    ptData = &(*(*itBnk).begin()) ;
+    bankSize = (*itBnk).size() ;  //== is in bytes...
 
     if ( msgLevel( MSG::DEBUG ) ) 
       debug() << " L0CaloCandidatesFromRawBank Bank " << itBnk-data.begin() 
               << " size " << bankSize << " words " << endreq ;
 
-    while ( 0 < bankSize-- ){
+    while ( 0 < bankSize-- ) {
 
-      int cand = (*ptData++);
-      unsigned short mask  = ( cand & 0x10000000 ) >> 28 ;
+      cand = (*ptData++);
+      mask  = ( cand & 0x10000000 ) >> 28 ;
 
-      unsigned short type  = ( cand & 0x0F000000 ) >> 24 ;
-      unsigned short slave = ( cand & 0x60000000 ) >> 29 ;
-      unsigned short io    = ( cand & 0x80000000 ) >> 31 ;
+      type  = ( cand & 0x0F000000 ) >> 24 ;
+      slave = ( cand & 0x60000000 ) >> 29 ;
+      io    = ( cand & 0x80000000 ) >> 31 ;
 
       // Do not store candidates which are flagged as masked
       if ( 1 == mask ) { 
@@ -129,18 +136,18 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
       }
       
       if ( msgLevel( MSG::DEBUG ) )
-        debug() << " io= "<< io << " slave= " << slave 
-                << " type= " << type << endreq ;
+        debug() << " io= "<< io << " slave= " << slave  << " type= " << type 
+	        << endmsg ;
       
-      while ( bestCand.size() <= (unsigned int)type ) bestCand.push_back( 0 );
+      // add a new "best candidate" if there is not enough
+      while ( bestCand.size() <= (unsigned int) type ) bestCand.push_back( 0 );
 
       if ( msgLevel( MSG::VERBOSE ) ) 
-        verbose() << format( "Data %8x ", cand )<<endreq;
+        verbose() << format( "Data %8x ", cand ) << endmsg ;
       
-      if ( L0DUBase::CaloType::SumEt == type ) {
-
-        // CaloSumEt Case 
-        int sumEt = cand & 0xFFFFFF;
+      switch ( type ) {
+      case L0DUBase::CaloType::SumEt: 
+        sumEt = cand & 0xFFFFFF;
 
         if ( version > 0 ) {
           if ( 0 == slave ) {
@@ -154,72 +161,59 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           }
         }
 
+	// Total HCAL SumEt -> adds in "Best Candidate" container
+	// If more that one, this is an error -> bank status set to corrupted 
+	// Save SumEt only in default container, not in full not to have it 
+	// twice
         if ( L0DUBase::CaloType::SumEt == type ) {
-          if ( 0 == bestCand[ type ] ) { 
-            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-                                                   sumEt , sumEt * m_etScale , 
-                                                   dummy , 0. ) ;
-            // Do not include Sum Et in OutFull, only in default
-            //          outFull -> add( myL0Cand ) ;
-            bestCand[type] = myL0Cand ;
-            if ( msgLevel( MSG::DEBUG ) )
-              debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
+          if ( 0 == bestCand[ type ] ) {
+            bestCand[ type ]  = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+							    sumEt , sumEt * m_etScale , 
+							    dummy , 0. ) ;
           } else {
-            warning() << "SumEt candidate already filled" << endreq ;
-            readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;            
+            warning() << "SumEt candidate already filled" << endmsg ;
+            readoutStatus.addStatus( 0 , LHCb::RawBankReadoutStatus::Corrupted ) ;
           }
         } else {
-          if ( m_doDebugDecoding ) { 
-             myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-                                                   sumEt , sumEt * m_etScale , 
-                                                   dummy , 0. );
-            outFull -> add( myL0Cand );
-            if ( msgLevel( MSG::DEBUG ) ) 
-              debug() << " outFull CaloSumEt = " << *myL0Cand << endreq ;
-          }
+	  // The other cases (intermediate sum per Hadron Selection Board
+	  // are only saved when we do debugDecoding, in the full container
+          if ( m_doDebugDecoding )  
+            outFull -> add( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+							sumEt , sumEt * m_etScale , 
+							dummy , 0. ) ) ;
         }
-
-      } else if ( L0DUBase::CaloType::SpdMult == type ) {
-        int mult = 0 ; 
+	break ;
+      case L0DUBase::CaloType::SpdMult:
+        mult = 0 ; 
+	// Get SPD multiplicity (total and all 16 inputs)
         if ( version > 0 ) {
-          if ( 1 == io )  mult = ( cand & 0x3FFF ) ;
-          if ( 0 == io ) {
-            mult = ( cand & 0x3FF ) ;
-            // a utiliser + tard 	  address =( cand & 0x3C00 ) >> 10 ;
-          }
-        } else {
-          mult = cand & 0xFFFFFF ;
-        }
+          if ( 1 == io ) mult = ( cand & 0x3FFF ) ;
+          if ( 0 == io ) mult = ( cand &  0x3FF ) ;
+        } else mult = cand & 0xFFFFFF ;
 
-        if ( m_doDebugDecoding ) { 
-          if ( 0 == io ) { 
-            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
-                                                   mult, 0., dummy, 0. );
-            outFull -> add( myL0Cand );
-            if ( msgLevel( MSG::DEBUG ) ) debug() << " outFull CaloSpdMult = " 
-                                                  << *myL0Cand << endreq ;
-          }
-        }
+        if ( m_doDebugDecoding )
+	// Save intermediate multiplicities only when doing debug decoding, and save
+	// in Full
+          if ( 0 == io )
+            outFull -> add( new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID(),
+							mult , 0. , dummy , 0. ) ) ;
         
+	// Save total multiplicity in default container, not in full
         if ( ( 1 == io ) || ( 0 == version ) ) { 
           if ( 0 == bestCand[ type ] ) {
-            myL0Cand = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
-                                                   mult, 0., dummy, 0. ) ;
-            bestCand[ type ] = myL0Cand ;
-            // Do not include in outFull, only in Default
-            //          outFull -> add( myL0Cand ) ;
-            if ( msgLevel( MSG::VERBOSE ) ) verbose() <<" Candidate SPD = " 
-                                                      << *myL0Cand << endreq;
+            bestCand[ type ] = new LHCb::L0CaloCandidate ( type , LHCb::CaloCellID() ,
+							   mult , 0. , dummy , 0. ) ;
           } else {
             warning() << "SPD Multiplicity candidate is already filled !" 
-                      << endreq ;
+                      << endmsg ;
             readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Corrupted ) ;
           }
         }
-        
-      } else {
-        int rawId =  ( cand >>8 ) & 0xFFFF;
-        int source = 0 ;
+	break ;
+      default:
+      // All the other cases (electron, photon, pi0L, pi0G, hadron)
+        rawId =  ( cand >>8 ) & 0xFFFF ;
+        source = 0 ;
         if ( L0DUBase::CaloType::Hadron == type ) {
           det = m_hcal;
           rawId |= 0xc000;  // HCAL
@@ -228,30 +222,32 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
           det = m_ecal;
           rawId |= 0x8000;  // ECAL
         }
-        LHCb::CaloCellID id ( rawId );
+	    
+	id.setAll( rawId ) ;
+	    
         if ( det->valid( id ) ) {
-          center = det->cellCenter( id );
-          tol    = det->cellSize( id ) * .5;
-          center.SetX( center.x() + tol );
-          center.SetY( center.y() + tol );
+          center = det->cellCenter( id ) ;
+          tol    = det->cellSize( id ) * .5 ;
+          center.SetX( center.x() + tol ) ;
+          center.SetY( center.y() + tol ) ;
         } else {
           if ( 0 == version ) { 
-            debug() << "Non valid CELL Id" << endreq ;
-            LHCb::CaloCellID tmp( id.calo(), id.area(), id.row()+1, id.col()+1);
-            center = det->cellCenter( tmp );
-            tol    = det->cellSize( tmp ) * .5;
+            debug() << "Non valid CELL Id" << endmsg ;
+            LHCb::CaloCellID tmp( id.calo() , id.area() , id.row()+1 , id.col()+1) ;
+            center = det -> cellCenter( tmp ) ;
+            tol    = det -> cellSize( tmp ) * .5 ;
             center.SetX( center.x() - tol );
             center.SetY( center.y() - tol );
           } else {
             warning() << "Non valid CELL Id. RAW = " << std::hex << cand 
-                      << endreq ;
+                      << endmsg ;
             readoutStatus.addStatus( source , LHCb::RawBankReadoutStatus::Corrupted ) ;
             continue ;
           }
         }
-        int et = cand & 0xFF;
         
-        bool hadronType = false ;
+	et = cand & 0xFF;
+        hadronType = false ;
         
         if ( L0DUBase::CaloType::Hadron == type ) {
           hadronType = true ;
@@ -278,11 +274,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               }
             } else { 
               outFull -> add( myL0Cand ) ;
-              if ( 0 == bestCand[type] ) {
-                bestCand[type] = myL0Cand;
-              } else if ( et > bestCand[type]->etCode() ) {
-                bestCand[type] = myL0Cand;
-              }
+              if ( 0 == bestCand[type] ) bestCand[ type ] = myL0Cand ;
+              else if ( et > bestCand[type]->etCode() ) bestCand[type] = myL0Cand ;
             }
           } else if ( ( 0 == io ) && ( 0 == slave ) ) { 
             // If Debugging, store all duplicates:
@@ -326,9 +319,6 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
                                                  tol );
           if ( ( 0 == io ) || ( 0 == version ) ) {
             outFull -> add( myL0Cand ) ;
-            if ( msgLevel( MSG::DEBUG ) ) 
-              debug() << "outFull le reste type = " << type << " " << *myL0Cand 
-                      << endreq ;
             if ( 0 == version ) {
               if ( 0 == bestCand[type] ) {
                 bestCand[type] = myL0Cand;
@@ -337,9 +327,8 @@ void L0CaloCandidatesFromRawBank::convertRawBankToTES
               }
             }      
           } else {
-            if ( 0 == bestCand[ type ] ) {
-              bestCand[ type ] = myL0Cand ;
-            } else {
+            if ( 0 == bestCand[ type ] ) bestCand[ type ] = myL0Cand ;
+            else {
               warning() << "Electromagnetic candidate already filled !" 
                         << endreq ;
               readoutStatus.addStatus( 1 , LHCb::RawBankReadoutStatus::Corrupted ) ;
