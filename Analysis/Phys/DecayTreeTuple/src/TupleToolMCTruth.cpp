@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.14 2009-06-04 10:54:46 rlambert Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.15 2009-10-14 14:01:28 jpalac Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -14,11 +14,9 @@
 #include "Event/MCParticle.h"
 
 // kernel
-#include "Kernel/IP2VVMCPartAngleCalculator.h"
-#include "Kernel/IBackgroundCategory.h"
-
+#include "Kernel/IParticle2MCAssociator.h"
 //-----------------------------------------------------------------------------
-// Implementation file for class : EventInfoTupleTool
+// Implementation file for class : TupleToolMCTruth
 //
 // 2007-11-07 : Jeremie Borel
 //-----------------------------------------------------------------------------
@@ -35,14 +33,20 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_smartAssociation(0)
-  , m_toolList(0)
-  , m_mcTools(0)
+    , m_p2mcAssoc(0)
+    , m_p2mcAssocType("DaVinciSmartAssociator")
+    , m_toolList(0)
+    , m_mcTools(0)
+
 {
   declareInterface<IParticleTupleTool>(this);
 
   // The names of MCTupleTools to use on the associated mcp
-  declareProperty( "ToolList", m_toolList = std::vector<std::string>(1,"MCTupleToolKinematic") );
+  declareProperty( "ToolList", 
+                   m_toolList = std::vector<std::string>(1,
+                                                         "MCTupleToolKinematic") );
+  declareProperty( "IP2MCPAssociatorType", m_p2mcAssocType);
+  
 }
 
 //=============================================================================
@@ -50,7 +54,8 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 StatusCode TupleToolMCTruth::initialize(){
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  m_smartAssociation = tool<IParticle2MCWeightedAssociator>("DaVinciSmartAssociator", this);
+  m_p2mcAssoc = tool<IParticle2MCAssociator>(m_p2mcAssocType, 
+                                             this);
 
    //initialise the tools
   std::sort( m_toolList.begin(), m_toolList.end() );
@@ -63,7 +68,12 @@ StatusCode TupleToolMCTruth::initialize(){
     else Warning("There was a problem retrieving " + *it +" , this tool will be ignored");
   }
   
-  if (msgLevel(MSG::VERBOSE)) verbose() << "Completed TupleTool intialisation, " << m_mcTools.size() << " tools added " << endmsg ;
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Completed TupleTool intialisation, " 
+              << m_mcTools.size() 
+              << " tools added " << endmsg ;
+  }
+  
   return StatusCode::SUCCESS;
 }
 
@@ -72,8 +82,8 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
 				 , const std::string& head
 				 , Tuples::Tuple& tuple ){
 
-  Assert( m_smartAssociation 
-	  , "The DaVinci smart associator hasn't been initialized!");
+  Assert( m_p2mcAssoc 
+          , "The DaVinci smart associator hasn't been initialized!");
   
   
   int mcPid=0;
@@ -83,7 +93,7 @@ StatusCode TupleToolMCTruth::fill( const LHCb::Particle*
   if( P ){
     //assignedPid = P->particleID().pid();
     if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::getting related MCP to " << P << endmsg ;
-    mcp = m_smartAssociation->relatedMCP(P);
+    mcp = m_p2mcAssoc->relatedMCP(P);
     if (msgLevel(MSG::VERBOSE)) verbose() << "MCTupleToolKinematic::got mcp " << mcp << endmsg ;
   }
  

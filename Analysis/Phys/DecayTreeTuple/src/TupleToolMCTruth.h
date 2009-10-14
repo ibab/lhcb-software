@@ -1,6 +1,6 @@
-// $Id: TupleToolMCTruth.h,v 1.7 2009-06-04 10:54:46 rlambert Exp $
-#ifndef JBOREL_TUPLETOOLMCTRUTH_H
-#define JBOREL_TUPLETOOLMCTRUTH_H 1
+// $Id: TupleToolMCTruth.h,v 1.8 2009-10-14 14:01:28 jpalac Exp $
+#ifndef TUPLETOOLMCTRUTH_H
+#define TUPLETOOLMCTRUTH_H 1
 
 // Include files
 // from Gaudi
@@ -9,17 +9,20 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
 //struct Particle2MCLinker;
-#include "Kernel/Particle2MCLinker.h"
-#include "Kernel/IDaVinciAssociatorsWrapper.h"
-#include "Kernel/IParticle2MCWeightedAssociator.h"
-#include "Kernel/MCAssociation.h"
 #include <vector>
-/** @class TupleToolMCTruth TupleToolMCTruth.h jborel/TupleToolMCTruth.h
+
+class IParticle2MCAssociator;
+
+/** @class TupleToolMCTruth TupleToolMCTruth.h
  *
  * \brief Fill MC truth info if a link is present
  *
- * Uses the DaVinci smart associator to perform the association.
+ * Uses an IParticle2MCAssociator to perform the association.
+ * <b> Properties: </b>
  *
+ * IP2MCPAssociatorType: Implementation of IP2MCAssociator to be used. Default: DaVinciSmartAssociator.
+ * 
+ * ToolList: List of MCTupleTools to run. Default: [MCTupleToolKinematic] 
  *
  * - head_TRUEID : true pid
  *
@@ -58,12 +61,12 @@ public:
 
 private:
 
-  IParticle2MCWeightedAssociator* m_smartAssociation;
-
+  IParticle2MCAssociator* m_p2mcAssoc;
+  std::string m_p2mcAssocType;
   std::vector< std::string > m_toolList;///<names of all MCTupleTools, set by the option ToolList
   
   std::vector< IMCParticleTupleTool* > m_mcTools;///<vector of MCTools to fill
   
 };
 
-#endif // JBOREL_TUPLETOOLMCTRUTH_H
+#endif // TUPLETOOLMCTRUTH_H
