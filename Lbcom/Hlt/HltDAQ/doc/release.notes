@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Marco Cattaneo
+ - Remove obsolete file HltDAQ_dll.cpp
+
 ! 2009-10-09 - Marco Cattaneo
  - HltRoutingBits filter does not fail if routing bits bank is missing, just 
    prints an error

@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsFilter.cpp,v 1.2 2009-10-09 15:52:50 cattanem Exp $
+// $Id: HltRoutingBitsFilter.cpp,v 1.3 2009-10-14 16:27:22 cattanem Exp $
 // Include files 
 #include <vector>
 #include "boost/assign/list_of.hpp"
@@ -72,11 +72,11 @@ StatusCode HltRoutingBitsFilter::execute() {
   const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
   if (banks.size()!=1) {
     setFilterPassed(true);
-    return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::SUCCESS,10);
+    return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::SUCCESS,0);
   }
   if (banks.front()->size()!=3*sizeof(unsigned int)) {
     setFilterPassed(true);
-    return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,10);
+    return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,0);
   }
   const unsigned int *data = banks.front()->data();
 
