@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.20 2009-08-21 10:59:19 pkoppenb Exp $
+### $Id: DVTestHlt2Bu2D0K_KsHH.py,v 1.21 2009-10-14 14:42:23 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D0(Kpi)K*(Kpi) selection
  #
@@ -44,7 +44,7 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
-DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt = True                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 

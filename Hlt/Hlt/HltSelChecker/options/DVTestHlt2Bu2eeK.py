@@ -50,7 +50,7 @@ from Configurables import DaVinci
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1
 DaVinci().SkipEvents = 0
-DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt = True                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 

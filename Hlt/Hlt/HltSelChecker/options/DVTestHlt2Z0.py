@@ -41,7 +41,7 @@ Z0Checker("HltMuZ0Checker").Locations = [ "/Event/HLT/Hlt2Muons/Particles" ]
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
-DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt = True                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 

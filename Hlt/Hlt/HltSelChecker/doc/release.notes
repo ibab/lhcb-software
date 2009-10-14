@@ -19,6 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Patrick Koppenburg
+ - HltType becomes Hlt
+ - Threshold setting names have changed
+ - v8r8
+
 !========================== HltSelChecker v8r7 2009-08-21 ===================
 ! 2009-08-26 - Patrick Koppenburg
  - Add file for MC09 Charm thresholds testing

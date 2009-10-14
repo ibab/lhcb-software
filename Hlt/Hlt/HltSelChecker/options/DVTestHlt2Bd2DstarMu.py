@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bd2DstarMu.py,v 1.2 2009-08-21 14:37:50 pkoppenb Exp $
+### $Id: DVTestHlt2Bd2DstarMu.py,v 1.3 2009-10-14 14:42:23 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D*MuNu
  #
@@ -43,7 +43,7 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 from Configurables import DaVinci
 DaVinci().EvtMax = -1
-DaVinci().HltType = "Hlt1+Hlt2"                # Both Hlt levels
+DaVinci().Hlt = True                # Both Hlt levels
 DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
 DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().DataType = "DC06" 
