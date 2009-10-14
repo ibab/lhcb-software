@@ -202,7 +202,7 @@ class TAlignment( LHCbConfigurableUser ):
             # configure in the tool service
             elementtool 			  = GetElementsToBeAligned( "GetElementsToBeAligned" )
             elementtool.OutputLevel               = outputLevel
-            print "(1)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
+            #print "(1)I will try to aling ", self.getProp( "ElementsToAlign" ), " elements!"
             elementtool.Elements                  = self.getProp( "ElementsToAlign" )
             elementtool.UseLocalFrame             = self.getProp( "UseLocalFrame"   )  
             #alignAlg.addTool( elementtool )
