@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.2 2009-07-06 13:52:14 wouter Exp $
+! $Id: release.notes,v 1.3 2009-10-14 19:51:34 wouter Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2009-10-14 Wouter Hulsbergen
+ - added data members for first and last event time
 
 !=========================== AlignKernel v3r0 2009-07-06 ====================
 

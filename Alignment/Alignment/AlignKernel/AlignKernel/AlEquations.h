@@ -9,6 +9,7 @@
 #include "GaudiKernel/SymmetricMatrixTypes.h"
 #include "GaudiKernel/GenericVectorTypes.h"
 #include "GaudiKernel/DataObject.h"
+#include "GaudiKernel/Time.h"
   
 namespace Al
 {
@@ -72,17 +73,22 @@ namespace Al
     
     void addEventSummary( size_t numtracks, 
 			  size_t numvertices,
-			  size_t numdimuons ) {
+			  size_t numdimuons,
+			  Gaudi::Time time ) {
       ++m_numEvents ;
       m_numTracks += numtracks ;
       m_numVertices += numvertices ;
       m_numDiMuons += numdimuons ;
+      if( m_firstTime.ns() > time.ns() ) m_firstTime = time ;
+      if( m_lastTime.ns() < time.ns()  ) m_lastTime  = time ;
     }
 
     size_t numTracks() const { return m_numTracks ; }
     size_t numVertices() const { return m_numVertices ; }
     size_t numDiMuons() const { return m_numDiMuons ; }
     size_t numEvents() const { return m_numEvents ; }
+    Gaudi::Time firstTime() const { return m_firstTime ; }
+    Gaudi::Time lastTime() const { return m_lastTime ; }
     size_t numHits() const ;
     double totalChiSquare() const { return m_totalChiSquare ; }
     size_t totalNumDofs() const { return m_totalNumDofs ; }
@@ -112,6 +118,8 @@ namespace Al
     size_t           m_numExternalHits ;
     double           m_totalVertexChiSquare ;
     size_t           m_totalVertexNumDofs ;
+    Gaudi::Time      m_firstTime ;
+    Gaudi::Time      m_lastTime ;
   };
   
 } ;

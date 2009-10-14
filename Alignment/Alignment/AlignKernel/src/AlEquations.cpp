@@ -94,7 +94,9 @@ namespace Al
       m_totalNumDofs(0u), 
       m_numExternalHits(0u),
       m_totalVertexChiSquare(0.0), 
-      m_totalVertexNumDofs(0u)
+      m_totalVertexNumDofs(0u),
+      m_firstTime(Gaudi::Time::max()),
+      m_lastTime(Gaudi::Time::epoch())
   {
     assert( nElem == m_elements.size() ) ;
   }
@@ -113,6 +115,8 @@ namespace Al
     m_numExternalHits = 0u ;
     m_totalVertexChiSquare  = 0.0 ;
     m_totalVertexNumDofs    = 0u ;
+    m_firstTime = Gaudi::Time(Gaudi::Time::max()) ;
+    m_lastTime = Gaudi::Time(Gaudi::Time::epoch()) ;
   }
 
   void Equations::writeToBuffer(std::ostream& buffer) const
@@ -126,7 +130,9 @@ namespace Al
 	   << m_totalNumDofs
 	   << m_numExternalHits 
 	   << m_totalVertexChiSquare
-	   << m_totalVertexNumDofs ;
+	   << m_totalVertexNumDofs 
+	   << m_firstTime
+	   << m_lastTime ;
   }
 
   void Equations::readFromBuffer(std::istream& buffer)
@@ -140,7 +146,9 @@ namespace Al
 	   >> m_totalNumDofs
 	   >> m_numExternalHits 
 	   >> m_totalVertexChiSquare
-	   >> m_totalVertexNumDofs ;
+	   >> m_totalVertexNumDofs 
+	   >> m_firstTime
+	   >> m_lastTime ;
   }
 
   void Equations::writeToFile(const char* filename) const 
@@ -176,7 +184,8 @@ namespace Al
     m_numExternalHits += rhs.m_numExternalHits ;
     m_totalVertexChiSquare  += rhs.m_totalVertexChiSquare ;
     m_totalVertexNumDofs    += rhs.m_totalVertexNumDofs ;
-    
+    if( m_firstTime.ns() > rhs.m_firstTime.ns() ) m_firstTime = rhs.m_firstTime ;
+    if( m_lastTime.ns()  < rhs.m_lastTime.ns()  ) m_lastTime  = rhs.m_lastTime ;
   }
   
   size_t Equations::numHits() const
