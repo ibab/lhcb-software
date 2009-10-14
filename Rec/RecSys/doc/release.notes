@@ -5,6 +5,9 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-10-14 - Christopher Rob Jones
+ - Update python Configurable to allow users to explicit set an empty sequence
+
 ! 2009-10-08 - Marco Cattaneo
  - Remove RecCheckers. Package is obsolete, MCReconstructed tool has been moved
    to DaVinciMCTools

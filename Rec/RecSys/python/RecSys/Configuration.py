@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2009-08-10 15:02:40 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-10-14 06:15:22 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -41,12 +41,12 @@ class RecSysConf(LHCbConfigurableUser):
     
     ## Steering options
     __slots__ = {
-        "RecoSequence" : []      # The Sub-detector sequencing. Default is all known
+        "RecoSequence" : None      # The Sub-detector sequencing. Default is all known
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData for all options
        ,"ExpertHistos":  False   # set to True to write out expert histos
        ,"Context":     "Offline" # The context within which to run the reco sequences
        ,"OutputType": ""         # some sequences are different for RDST
-       ,"DataType": ""           # Type of data, propagated from application
+       ,"DataType": ""           # Type f data, propagated from application
        ,"OutputLevel" : INFO     # The printout level to use
         }
 
@@ -59,7 +59,7 @@ class RecSysConf(LHCbConfigurableUser):
                 raise RuntimeError("Unknown SpecialData option '%s'"%option)
         
         # Phases
-        if len(self.getProp("RecoSequence")) == 0 :
+        if not self.isPropertySet("RecoSequence"):
             if "fieldOff" in self.getProp("SpecialData"):
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOff)
             else:
