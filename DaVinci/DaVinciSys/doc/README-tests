@@ -8,14 +8,14 @@ To run one-by-one :
 
 cmt qmtest_run davincisys.davincisys >! davincisys &
 
-cmt qmtest_run davincisys.preselections.test_dc06stripping >! dc06stripping & 
-cmt qmtest_run davincisys.preselections.test_bu2llk_dc06 >! bu2llk_dc06 & 
-cmt qmtest_run davincisys.preselections.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
-cmt qmtest_run davincisys.preselections.test_stripping >! stripping & 
-cmt qmtest_run davincisys.tag.test_tag >! tag & 
-cmt qmtest_run davincisys.io.test_dst >! dst &  
-cmt qmtest_run davincisys.io.test_rdst >! rdst &  
-cmt qmtest_run davincisys.io.test_decaytreetuple >! decaytreetuple & 
+cmt qmtest_run stripping.test_dc06stripping >! dc06stripping & 
+cmt qmtest_run stripping.test_bu2llk_dc06 >! bu2llk_dc06 & 
+cmt qmtest_run stripping.test_bd2kstarmumu_mc09 >! bd2kstarmumu_mc09 & 
+cmt qmtest_run stripping.test_stripping >! stripping & 
+cmt qmtest_run tagging.test_tag >! tag & 
+cmt qmtest_run io.test_dst >! dst &  
+cmt qmtest_run io.test_rdst >! rdst &  
+cmt qmtest_run io.test_decaytreetuple >! decaytreetuple & 
 cmt qmtest_run hlt.test_tistos >! tistos & 
 cmt qmtest_run hlt.test_hlt12_dc06_effective >! hlt12_dc06_effective & 
 cmt qmtest_run hlt.test_hlt12_dc06_leptonic >! hlt12_dc06_leptonic & 
@@ -28,6 +28,6 @@ cmt qmtest_run hlt.test_hlt12_mc09_dev >! hlt12_mc09_dev &
 cmt qmtest_run hlt.test_hlt12_mdf >! hlt12_mdf & 
 
 # require some of the above :
-cmt qmtest_run davincisys.io.test_read >! read & 
-cmt qmtest_run davincisys.preselections.test_stripping_read >! stripping_read  & 
+cmt qmtest_run io.test_read >! read & 
+cmt qmtest_run stripping.test_stripping_read >! stripping_read  & 
 
