@@ -1,4 +1,4 @@
-// $Id: VeloClusterMonitor.h,v 1.12 2009-08-05 15:00:44 krinnert Exp $
+// $Id: VeloClusterMonitor.h,v 1.13 2009-10-14 13:46:41 erodrigu Exp $
 #ifndef VELORECMONITORS_VELOCLUSTERMONITOR_H 
 #define VELORECMONITORS_VELOCLUSTERMONITOR_H 1
 
@@ -50,20 +50,14 @@ namespace Velo
     // Monitor the VeloClusters
     void monitorClusters();
 
-    // R_i-R_j difference distributions
-    void rDifferences( unsigned int sensorNumber1,
-                       double localR1,
-                       unsigned int sensorNumber2 );
-
-    // R_i-R_j correlation distributions
-    void rCorrelations( unsigned int sensorNumber1, double localR1 );
-
+  private:
     // Data members
     std::string m_tae;
 
     LHCb::VeloClusters* m_clusters;
     std::vector<unsigned int> m_nClustersPerSensor;
     
+    // Histograms
     AIDA::IHistogram1D* m_hNCluEvt;
     AIDA::IHistogram1D* m_hCluSize;
     AIDA::IHistogram2D* m_hCluSizeSens;
@@ -80,15 +74,10 @@ namespace Velo
     AIDA::IHistogram2D* m_hActiveLinkSens;
     
     std::vector<AIDA::IHistogram1D*> m_hNCluSens;
-    std::map<unsigned int, AIDA::IHistogram1D*> m_hRDiff; 
-    std::map<unsigned int, AIDA::IHistogram2D*> m_hRCorr; 
     
     // Job options
     std::string m_clusterCont;
-    std::vector<unsigned int> m_rSensorNumbers;
-    std::vector<unsigned int> m_phiSensorNumbers;
-    bool m_rCorrelationPlots;
-    bool m_perSensorPlots;
+    bool        m_perSensorPlots;
   };
 }
 

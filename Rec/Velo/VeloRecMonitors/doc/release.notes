@@ -1,8 +1,11 @@
 !-----------------------------------------------------------------------------
 ! Package     : Velo/VeloRecMonitors
 ! Responsible : VELO monitoring group
-! Purpose     : VELO monitoring packages for reconstruction data (ZS data)
+! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+
+! 2009-10-14 - Eduardo Rodrigues
+ - VeloClusterMonitor: code only relevant for TED runs removed. Clean up.
 
 ! 2009-10-13 - Kurt Rinnert
  - bug fix in track monitor: C side phi plot was not filled.
