@@ -1,7 +1,14 @@
-! $Id: release.notes,v 1.134 2009-10-14 08:01:40 odescham Exp $
+! $Id: release.notes,v 1.135 2009-10-14 10:31:45 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-10-14 - Patrick Robbe
+ - L0Candidate.h/.cpp: add separate file to contain class declarations
+   which were previously in L0CaloAlg.h/.cpp
+ - L0CaloCandidatesFromRaw.cpp: clean code
+ - L0CaloCandidatesFromRawBank.h/.cpp: clean code
+ - L0CaloAlg.h/.cpp: clean code
 
 ! 2009-10-14 - Olivier Deschamps
  - adapt to change in CaloDAQ
