@@ -1,4 +1,4 @@
-// $Id: WritePackedDst.cpp,v 1.4 2009-10-09 12:58:43 frankb Exp $
+// $Id: WritePackedDst.cpp,v 1.5 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -161,7 +161,7 @@ StatusCode WritePackedDst::execute() {
 
       LHCb::RecHeader* in = get<LHCb::RecHeader>( *itC );
       PackedBank bank( in );      
-      unsigned int evHigh = ( in->evtNumber() ) >> 32;
+      unsigned int evHigh = ((in->evtNumber() ) >> 32) && 0xFFFFFFFF;
       unsigned int evLow  = ( in->evtNumber() && 0xFFFFFFFF );
       bank.addEntry( evHigh, evLow, in->randomSeeds().size() );
       for ( unsigned int kk=0 ; in->randomSeeds().size() > kk; ++kk ) {

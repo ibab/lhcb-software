@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.2 2008-11-19 13:00:55 cattanem Exp $
+// $Id: PackMCVertex.cpp,v 1.3 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Boost
@@ -41,7 +41,7 @@ PackMCVertex::~PackMCVertex() {};
 //=============================================================================
 StatusCode PackMCVertex::execute() {
 
-  LHCb::MCVertices* verts = get<LHCb::MCVertices>( m_inputName );
+  LHCb::MCVertices* verts = getOrCreate<LHCb::MCVertices,LHCb::MCVertices>( m_inputName );
   if( msgLevel(MSG::DEBUG) )
     debug() << m_inputName << " contains " << verts->size()
             << " MCVertices to convert." << endmsg;

@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
+// $Id: PackMCParticle.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ StatusCode PackMCParticle::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  LHCb::MCParticles* parts = get<LHCb::MCParticles>( m_inputName );
+  LHCb::MCParticles* parts = getOrCreate<LHCb::MCParticles,LHCb::MCParticles>( m_inputName );
   debug() << m_inputName << " contains " << parts->size()
           << " MCParticles to convert." << endmsg;
   

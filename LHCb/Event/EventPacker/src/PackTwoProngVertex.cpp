@@ -1,4 +1,4 @@
-// $Id: PackTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
+// $Id: PackTwoProngVertex.cpp,v 1.3 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode PackTwoProngVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::TwoProngVertices* verts = get<LHCb::TwoProngVertices>( m_inputName );
+  LHCb::TwoProngVertices* verts = getOrCreate<LHCb::TwoProngVertices,LHCb::TwoProngVertices>( m_inputName );
   LHCb::PackedTwoProngVertices* out = new LHCb::PackedTwoProngVertices();
   put( out, m_outputName );
   out->setVersion( 1 );

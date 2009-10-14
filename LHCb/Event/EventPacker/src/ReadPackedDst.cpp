@@ -1,4 +1,4 @@
-// $Id: ReadPackedDst.cpp,v 1.10 2009-10-09 12:58:43 frankb Exp $
+// $Id: ReadPackedDst.cpp,v 1.11 2009-10-14 16:22:02 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -17,6 +17,11 @@
 
 // local
 #include "ReadPackedDst.h"
+
+#ifdef _WIN32
+  // Disable warning C4355: 'this' : used in base member initializer list 
+  #pragma warning ( disable : 4355 )
+#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : ReadPackedDst

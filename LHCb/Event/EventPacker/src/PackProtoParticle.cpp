@@ -1,4 +1,4 @@
-// $Id: PackProtoParticle.cpp,v 1.3 2008-12-09 08:13:23 ocallot Exp $
+// $Id: PackProtoParticle.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -42,7 +42,7 @@ StatusCode PackProtoParticle::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::ProtoParticles* parts = get<LHCb::ProtoParticles>( m_inputName );
+  LHCb::ProtoParticles* parts = getOrCreate<LHCb::ProtoParticles,LHCb::ProtoParticles>( m_inputName );
   LHCb::PackedProtoParticles* out = new LHCb::PackedProtoParticles();
   put( out, m_outputName );
   out->setVersion( 1 );

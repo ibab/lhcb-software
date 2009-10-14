@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-10-14 - Marco Cattaneo
+ - In Packer algorithms, use getOrCreate of input containers instead of get,
+   to produce empty output container if input is missing (useful for Lumi events)
+ - Fix a windows warnings in ReadPackedDst and WritePackedDst
+
 ! 2009-10-09 Markus Frank
  - Add name of leaf in TES to DstAddress bank
 

@@ -1,4 +1,4 @@
-// $Id: PackRecVertex.cpp,v 1.3 2008-12-09 08:13:23 ocallot Exp $
+// $Id: PackRecVertex.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -41,7 +41,7 @@ StatusCode PackRecVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::RecVertices* verts = get<LHCb::RecVertices>( m_inputName );
+  LHCb::RecVertices* verts = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
   
   LHCb::PackedRecVertices* out = new LHCb::PackedRecVertices();
   put( out, m_outputName );
