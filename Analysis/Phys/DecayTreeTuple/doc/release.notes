@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-10-14 - Juan PALACIOS
+ - src/TupleToolMCTruth{.h, .cpp}
+  . Add property IP2MCPAssociatorType to allow to switch implementation of
+    IParticle2MCAssociator to be used. Default: DaVinciSmartAssociator.
+  . Remove unnecessary includes.
+  . Minor clean-up.
+
 ! 2009-10-08 - Patrick Koppenburg
  - Number.icpp : avoid triggering of data on demand service when 
 	  counting numbers	
