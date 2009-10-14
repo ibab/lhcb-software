@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.5 2009-10-09 09:38:43 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.6 2009-10-14 08:40:34 ggiacomo Exp $
 
 #include <list>
 #include <fstream>
@@ -237,7 +237,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
     }
   }
   if (nFiringS <= m_firing_cut || (maxFiringS-minFiringS) < m_span_cut) {
-    info() << "not enough firing station to get tracks" << endmsg;
+    debug() << "not enough firing station to get tracks" << endmsg;
     return StatusCode::SUCCESS;
   }
 
