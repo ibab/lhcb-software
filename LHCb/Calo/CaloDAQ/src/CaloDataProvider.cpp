@@ -136,6 +136,7 @@ const CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(int source,bool clean){
 }
 const CaloVector<LHCb::CaloAdc>& CaloDataProvider::adcs(std::vector<int> sources,bool clean){
   if(clean)clear();
+  if( m_getRaw )getBanks();
   if( !m_packed) return adcs(); // decode the single 'offline' bank
   for(std::vector<int>::iterator i=sources.begin();i!=sources.end();i++){
     decodeTell1(*i);
@@ -152,6 +153,7 @@ void CaloDataProvider::adc2digit(){
   }
 }
 const CaloVector<LHCb::CaloDigit>& CaloDataProvider::digits(std::vector<int> sources,bool clean){
+  if( m_getRaw )getBanks();
   if( !m_packed) return digits(); // decode the single 'offline' bank
   adcs(sources,clean);
   adc2digit();
