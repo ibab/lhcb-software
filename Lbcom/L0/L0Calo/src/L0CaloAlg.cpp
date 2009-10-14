@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.56 2008-10-31 13:19:52 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.57 2009-10-14 08:01:40 odescham Exp $
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -1180,7 +1180,7 @@ void L0CaloAlg::sumEcalData(  ) {
     m_ecalFe[eCard].reset( );
   }
 
-  std::vector<LHCb::L0CaloAdc>& adcs = m_adcsEcal->adcs( );
+  const std::vector<LHCb::L0CaloAdc>& adcs = m_adcsEcal->adcs( );
 
   debug() << "Found " << adcs.size() << " ECAL adcs" << endreq;
 
@@ -1225,7 +1225,7 @@ void L0CaloAlg::sumHcalData( ) {
     m_hcalFe[hCard].reset( );
   }
 
-  std::vector<LHCb::L0CaloAdc>& adcs = m_adcsHcal->adcs( );
+  const std::vector<LHCb::L0CaloAdc>& adcs = m_adcsHcal->adcs( );
 
   debug() << "Found " << adcs.size() << " HCAL adcs" << endreq;
 
