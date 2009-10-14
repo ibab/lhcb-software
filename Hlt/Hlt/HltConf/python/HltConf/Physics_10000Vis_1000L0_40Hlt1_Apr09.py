@@ -24,7 +24,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         return '0xDC09'
 
     def HltType(self) :
-        verifyType(self, Physics_10000Vis_1000L0_40Hlt1_Apr09 )
+        self.verifyType( Physics_10000Vis_1000L0_40Hlt1_Apr09 )
         return          'Physics_10000Vis_1000L0_40Hlt1_Apr09'
 
     def ActiveHlt2Lines(self) :
