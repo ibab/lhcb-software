@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci.py,v 1.40 2009-07-29 17:02:46 pkoppenb Exp $
+# $Id: DaVinci.py,v 1.41 2009-10-14 14:35:18 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -61,7 +61,7 @@ DaVinci().MoniSequence = [ exampleSeq ]        # Monitoring
 # HLT
 # DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
 # DaVinci().Hlt2Requires = 'L0+Hlt1'          ## change if you want Hlt2 irrespective of Hlt1
-# DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+# DaVinci().Hlt = True             ## 
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 ########################################################################

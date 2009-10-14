@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.379 2009-10-11 09:10:31 jpalac Exp $
+! $Id: release.notes,v 1.380 2009-10-14 14:35:18 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,11 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-14 - Patrick Koppenburg
+ - HltType does not exist anymore. Use DaVinci().Hlt = True instead
+   Hlt1 and 2 settings are completely defined by Threshold Settings.
+   Beware that they have all changed names. See HltConf release notes.
 
 ! 2009-10-11 - Juan PALACIOS
  - python/DaVinci/Configuration.py

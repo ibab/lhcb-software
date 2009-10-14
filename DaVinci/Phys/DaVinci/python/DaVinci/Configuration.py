@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.73 2009-10-11 09:08:25 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.74 2009-10-14 14:35:18 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -35,9 +35,9 @@ class DaVinci(LHCbConfigurableUser) :
        , "RedoMCLinks"        : False         # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association.
        , "InputType"          : "DST"         # or "DIGI" or "ETC" or "RDST" or "DST or "MDST". Nothing means the input type is compatible with being a DST. 
          # Trigger running
-       , "L0"                 : False         # Run L0. 
+       , "L0"                 : False         # Run L0.
+       , "Hlt"                : False         # Run Hlt
        , "ReplaceL0BanksWithEmulated" : False # Re-run L0 
-       , "HltType"            : ''            # HltType : No Hlt. Use Hlt1+Hlt2 to run Hlt
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
        , "HltThresholdSettings" : ''          # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
@@ -62,7 +62,6 @@ class DaVinci(LHCbConfigurableUser) :
        , "InputType"          : """ 'DST' or 'DIGI' or 'ETC' or 'RDST' or 'DST' or 'MDST'. Nothing means the input type is compatible with being a DST.  """
        , "L0"                 : """ Re-Run L0 """
        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
-       , "HltType"            : """ HltType : No Hlt by default. Use Hlt1+Hlt2 to run Hlt """
        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
        , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1'.
                                     'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
@@ -111,7 +110,6 @@ class DaVinci(LHCbConfigurableUser) :
             if (inputType == "RDST")  and (redo) :
                 log.warning("Re-doing MC links not possible for RDST")
                 self.setProp("RedoMCLinks", False )
-                
 
 ################################################################################
 # Configure slaves
@@ -164,10 +162,9 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Define HLT. Make sure it runs first.
         """
-        if (self.getProp("HltType")!=''):
+        if (self.getProp("Hlt")):
             HltConf().DataType = self.getProp("DataType")                                      
             HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
-            HltConf().HltType =  self.getProp("HltType")                                       ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
             HltConf().WithMC =  self.getProp("Simulation")                                       
             if ( self.getProp("HltThresholdSettings") != '' ):
                 HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")                                      
@@ -185,7 +182,7 @@ class DaVinci(LHCbConfigurableUser) :
         """
         Define L0. Make sure it runs before HLT.
         """
-        if ( (self.getProp("HltType")!='') and (self.getProp("DataType") == 'DC06') and (not self.getProp("L0")) ):
+        if ( (self.getProp("Hlt")) and (self.getProp("DataType") == 'DC06') and (not self.getProp("L0")) ):
             log.warning("It is mandatory to run the L0 emulation on DC06 data to get the HLT to work correctly")
             log.warning("Will set ReplaceL0BanksWithEmulated = True")
             self.setProp("ReplaceL0BanksWithEmulated",True) 
