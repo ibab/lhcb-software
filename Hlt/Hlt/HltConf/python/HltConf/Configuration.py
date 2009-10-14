@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.122 2009-10-14 13:55:45 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.123 2009-10-14 19:42:29 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -77,13 +77,10 @@ class HltConf(LHCbConfigurableUser):
         """
         Get the class that contains the thresholds, etc
         """
-
         thresName  = self.getProp('ThresholdSettings')   # the name
         if ( thresName == '' ): thresName = self.settingsForDataType( self.getProp('DataType') )
         from HltConf.ThresholdUtils import Name2Threshold
-        setting = Name2Threshold(thresName)
-        print 'requested %s got %s' % ( thresName, setting )
-        return setting
+        return Name2Threshold(thresName)
 
 ##################################################################################
     def confType(self) :
