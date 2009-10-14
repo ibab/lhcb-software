@@ -14,7 +14,7 @@ from Moore.Configuration import *
 #Moore().configLabel = 'NO prescale'
 
 Moore().HltType = 'Hlt1' # +Hlt2'
-Moore().HltThresholds = 'Effective_Nominal'
+Moore().ThresholdSettings = 'Effective_Nominal'
 Moore().Verbose = True
 
 #Moore().Simulation = False
