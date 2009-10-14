@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.121 2009-10-13 13:19:57 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.122 2009-10-14 13:55:45 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -10,9 +10,8 @@ from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables       import GaudiSequencer as Sequence
 from Configurables       import HltANNSvc 
-from Hlt1                import Hlt1Conf, hlt1TypeDecoder
-from Hlt2                import Hlt2Conf, hlt2TypeDecoder
-from Effective_Nominal   import Effective_Nominal 
+from Hlt1                import Hlt1Conf
+from Hlt2                import Hlt2Conf
 
 ##################################################################################
 class HltConf(LHCbConfigurableUser):
@@ -22,7 +21,6 @@ class HltConf(LHCbConfigurableUser):
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf ]
     __slots__ = { "L0TCK"                      : ''
-                , "HltType"                    : 'Hlt1+Hlt2'
                 , "DataType"                   : '2009'
                 , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                    : False # print the generated Hlt sequence
@@ -55,6 +53,9 @@ class HltConf(LHCbConfigurableUser):
         """
         Define L0 channels
         """
+        log.warning( '###############################################################')
+        log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
+        log.warning( '###############################################################')
         if L0TCK :
             importOptions('$L0TCK/L0DUConfig.opts')
             from Configurables import L0DUMultiConfigProvider
@@ -63,6 +64,10 @@ class HltConf(LHCbConfigurableUser):
             from Hlt1Lines.HltL0Candidates import decodeL0Channels
             channels = decodeL0Channels( L0TCK )
         else :
+            log.warning( '##################################################################################################')
+            log.warning( '## WARNING You did not inform the HLT configuration what L0 Configuration is used for the input ##')
+            log.warning( '## WARNING Will assume some canonical list of L0 Channels                                       ##')
+            log.warning( '##################################################################################################')
             channels = [ 'Muon','DiMuon','Muon,lowMult','DiMuon,lowMult','Electron','Photon','Hadron' ,'LocalPi0','GlobalPi0' ]
         from Hlt1Lines.HltL0Candidates import setupL0Channels
         setupL0Channels( channels ) 
@@ -72,32 +77,19 @@ class HltConf(LHCbConfigurableUser):
         """
         Get the class that contains the thresholds, etc
         """
+
         thresName  = self.getProp('ThresholdSettings')   # the name
-        thresClass = None
-        if ( thresName == '' ):
-            # return a class or None
-            thresClass = self.settingsForDataType( self.getProp('DataType') )
-        else :
-            # bootstrap (it does not like string replacement...)
-            exec "from HltConf."+thresName+" import "+thresName
-            thresClass = eval(thresName+"()")                # the class
-        return thresClass
-        
+        if ( thresName == '' ): thresName = self.settingsForDataType( self.getProp('DataType') )
+        from HltConf.ThresholdUtils import Name2Threshold
+        setting = Name2Threshold(thresName)
+        print 'requested %s got %s' % ( thresName, setting )
+        return setting
+
 ##################################################################################
-    def confType(self,hlttype) :
+    def confType(self) :
         """
-        Decoding fo configuration. That's where Hlt1 and 2 configurations are called.
+        Decoding fo configuration. This is where Hlt1 and 2 configurations are called.
         """
-        self.defineL0Channels( self.getProp('L0TCK') )
-        #
-        #  main HLT sequencer
-        # 
-        Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
-                       , Members = 
-                       [ Sequence('Hlt1') 
-                       , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
-                       , Sequence('HltEndSequence') 
-                       ] )
         #
         # set thresholds if you can
         #
@@ -112,31 +104,41 @@ class HltConf(LHCbConfigurableUser):
             log.warning( '## WARNING Set a ThresholdSetting to get something well defined ##' )
             log.warning( '## ###############################################################' )
 
-        #
-        # decode Hlt types
-        #
-        hlttype = self.getProp("HltType")
-        #
-        # decode Hlt1 types
-        #
-        ( hlt1type, hlttype ) = hlt1TypeDecoder( hlttype )
-        if hlt1type != '' :
-            Hlt1Conf()
-            Hlt1Conf().ThresholdSettings = ThresholdSettings
-            Hlt1Conf().Hlt1Type = hlt1type
-        #
-        # decode Hlt2 types
-        #
-        ( hlt2type, hlttype ) = hlt2TypeDecoder( hlttype )
-        if hlt2type != '':
-            self.setOtherProps(Hlt2Conf(),[ "DataType","Hlt2Requires" ])
-            Hlt2Conf()
-            Hlt2Conf().ThresholdSettings = ThresholdSettings
-            Hlt2Conf().Hlt2Type = hlt2type
-            Hlt2Conf().WithMC = self.getProp("WithMC")
 
-        if hlttype and hlttype not in [ '', 'NONE' ]:
-            raise AttributeError, "unknown HltType fragment '%s'"%hlttype
+        ## what L0 configuration are we running on top of?
+        L0TCK = None
+        if thresClass : L0TCK = thresClass.L0TCK()
+        if self.getProp('L0TCK') :
+            if L0TCK != self.getProp('L0TCK') :
+                log.warning( '##############################################################################' )
+                log.warning( '## WARNING You are configuring the HLT to run on top of an L0 configuration ##' )
+                log.warning( '## WARNING which is different then the one it was generated for             ##' )
+                log.warning( '##############################################################################' )
+            L0TCK = self.getProp('L0TCK')
+        self.defineL0Channels( L0TCK )
+        #
+        #  main HLT sequencer
+        # 
+        Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
+                       , Members = 
+                       [ Sequence('Hlt1') 
+                       , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                       , Sequence('HltEndSequence') 
+                       ] )
+
+        #
+        # dispatch Hlt1 configuration
+        #
+        Hlt1Conf()
+        Hlt1Conf().ThresholdSettings = ThresholdSettings
+        #
+        # dispatch Hlt2 configuration
+        #
+        if not thresClass or thresClass.ActiveHlt2Lines() :
+            Hlt2Conf()
+            self.setOtherProps(Hlt2Conf(),[ "DataType","Hlt2Requires" ])
+            Hlt2Conf().ThresholdSettings = ThresholdSettings
+            Hlt2Conf().WithMC = self.getProp("WithMC")
 
 #########################################################################################
 # Utility function for setting thresholds both in Hlt1 and 2
@@ -336,10 +338,28 @@ class HltConf(LHCbConfigurableUser):
         if ( sets != None ):
             activeHlt1Lines = sets.ActiveHlt1Lines()
             activeHlt2Lines = sets.ActiveHlt2Lines()
+        else :
+            activeHlt1Lines = hlt1Lines()
+            activeHlt2Lines = htl2Lines()
 
-        # for i in hlt1Lines() : print '# active line :', i.name(), ' found :', i.name() in activeHlt1Lines
+        # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
+        if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
+        if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
+
+        print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
+        print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
+        awol1 = set( activeHlt1Lines ) - set( [ i.name() for i in hlt1Lines() ] )
+        if awol1 : 
+            log.fatal(' # some requested Hlt1 lines are absent : %s ' % awol1 )
+
+        print '# List of requested Hlt2Lines : %s ' % activeHlt2Lines 
+        print '# List of available Hlt2Lines : %s ' % [ i.name() for i in hlt2Lines() ] 
+        awol2 = set( activeHlt2Lines ) - set( [ i.name() for i in hlt2Lines() ] )
+        if awol2 : 
+            log.fatal(' # some requested Hlt2 lines are absent : %s ' % awol2 )
+
         
-        lines1 = [ i for i in hlt1Lines() if ( not activeHlt1Lines or i.name() in activeHlt1Lines + [ 'Hlt1Global' ] ) ]
+        lines1 = [ i for i in hlt1Lines() if  i.name() in activeHlt1Lines ]
         log.info( '# List of configured Hlt1Lines : ' + str(hlt1Lines()) )
         log.info( '# List of Hlt1Lines added to Hlt1 : ' + str(lines1) )
         log.info( '# List of configured Hlt1Lines not added to Hlt1 : ' + str(set(hlt1Lines())-set(lines1)) )
@@ -347,7 +367,7 @@ class HltConf(LHCbConfigurableUser):
 
         # for i in hlt2Lines() : print '# active line :', i.name(), ' found :', i.name() in activeHlt2Lines
         
-        lines2 = [ i for i in hlt2Lines() if ( not activeHlt2Lines or i.name() in activeHlt2Lines + [ 'Hlt2Global' ]) ]
+        lines2 = [ i for i in hlt2Lines() if i.name() in activeHlt2Lines  ]
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
@@ -364,7 +384,7 @@ class HltConf(LHCbConfigurableUser):
 #
 # end sequence
 #
-    def endSequence(self,hlttype):
+    def endSequence(self):
         """
         define end sequence (mostly for persistence + monitoring)
         """
@@ -379,10 +399,12 @@ class HltConf(LHCbConfigurableUser):
         from Configurables       import HltLumiWriter
         from Configurables       import DeterministicPrescaler as Prescale
         
-        if hlttype is 'PA' :  # if _only_ PA, we strip down even more...
+        sets = self.settings()
+        if hasattr(self,'StripEndSequence') and getattr(self,'StripEndSequence') :
+            log.warning('### Setting requests stripped down HltEndSequence ###')
             self.EnableHltGlobalMonitor = False
-            self.EnableHltSelReports = False
-            self.EnableHltVtxReports = False
+            self.EnableHltSelReports    = False
+            self.EnableHltVtxReports    = False
             self.EnableLumiEventWriting = False
             
             # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
@@ -423,8 +445,8 @@ class HltConf(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         importOptions('$HLTCONFROOT/options/HltInit.py')
         
-        self.confType(self.getProp('HltType'))      
-        self.endSequence(self.getProp('HltType'))
+        self.confType()
+        self.endSequence()
         # make sure 'strings' is known...
         from Configurables import LoKi__Hybrid__HltFactory as HltFactory
         HltFactory('ToolSvc.HltFactory').Modules += [ 'LoKiCore.functions' ]

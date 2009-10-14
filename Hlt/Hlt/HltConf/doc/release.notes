@@ -1,9 +1,25 @@
-! $Id: release.notes,v 1.344 2009-09-29 13:02:47 graven Exp $ 
+! $Id: release.notes,v 1.345 2009-10-14 13:55:45 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-14 - Gerhard Raven
+ - update the HltType and HltThresholdSettings setup:
+   o HltType is no longer an independent setable item, it is automatically
+     determined by selecting a HltThresholdSetting.
+     This implies that active Hlt1 and Hlt2 lines are now specified by HltThresholdSetting,
+     and all configurables are executed. Note that if a thresholdsetting specifies
+     an empty list of activeHlt2Lines, the Hlt2 configuration is NOT executed.
+   o the names of the the ThresholdSettings have been regularized, eg.
+     Effective_Nominal has become Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09
+     Charm_320Vis_300L0_10Hlt1 has become Physics_320Vis_300L0_10Hlt1_Aug09
+   o HltThresholdSetting also specifies the matching L0 configuration, and
+     informs the Hlt of this configuration. (note: it is not (yet) verified
+     that the configured (assumed) L0 configuration is (at runtime) consistent
+     with the actual input data)
+
 
 !========================== HltConf v4r4p1 2009-09-29 ===================
 ! 2009-09-19 - Gerhard Raven

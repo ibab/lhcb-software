@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.34 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -27,71 +27,33 @@ from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
 
-_type2conf = { 'TOPO' : [ Hlt2TopologicalLinesConf
-                         , Hlt2B2DXLinesConf ]
-              , 'LEPT' : [ Hlt2InclusiveDiMuonLinesConf
-                         , Hlt2InclusiveMuonLinesConf ]
-              , 'PHI'  : [ Hlt2InclusivePhiLinesConf ]
-              , 'EXCL' : [ Hlt2B2JpsiXLinesConf
-                         , Hlt2B2PhiXLinesConf
-                         , Hlt2XGammaLinesConf
-                         , Hlt2B2HHLinesConf
-#                         , Hlt2B2LLXLinesConf                         # DO NOT RUN UNTIL CALO IS FIXED
-                         , Hlt2DisplVerticesLinesConf ]
-               , 'COMM': [ Hlt2CommissioningLinesConf ]
-              }
-
-def hlt2TypeDecoder(hlttype) :
-      trans = { 'Hlt2' : 'TOPO+LEPT+PHI+EXCL+COMM'  # @todo need express as well
-              }
-      for short,full in trans.iteritems() : hlttype = hlttype.replace(short,full)
-      # split hlttype in known and unknown bits
-      known   = [ i for i in hlttype.split('+') if i in _type2conf.keys() ]
-      unknown = [ i for i in hlttype.split('+') if i not in known ]
-      return ( '+'.join(known), '+'.join(unknown) )
-
 
 class Hlt2Conf(LHCbConfigurableUser):
     from Configurables import Hlt2PID
     from CaloReco.Configuration   import HltCaloRecoConf 
     from CaloPIDs.Configuration   import HltCaloPIDsConf
-    __used_configurables__ = [ Hlt2PID, HltCaloRecoConf, HltCaloPIDsConf ]
-    for (k,v) in _type2conf.iteritems() : __used_configurables__.extend( v )
+    __used_configurables__ = [ Hlt2PID, HltCaloRecoConf, HltCaloPIDsConf
+                             , Hlt2TopologicalLinesConf
+                             , Hlt2B2DXLinesConf 
+                             , Hlt2InclusiveDiMuonLinesConf
+                             , Hlt2InclusiveMuonLinesConf 
+                             , Hlt2InclusivePhiLinesConf 
+                             , Hlt2B2JpsiXLinesConf
+                             , Hlt2B2PhiXLinesConf
+                             , Hlt2XGammaLinesConf
+                             , Hlt2B2HHLinesConf
+                             # , Hlt2B2LLXLinesConf                         # DO NOT RUN UNTIL CALO IS FIXED
+                             , Hlt2DisplVerticesLinesConf
+                             , Hlt2CommissioningLinesConf 
+                             ]
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-         , "Hlt2Type"                   : ''  # Explicitly set by HltConf.Configuration
          , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
          , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
          , "Hlt2Tracks"                 : "Hlt/Track/Long"
          , "WithMC"                     : False 
          }
 
-###################################################################################
-#
-# Get Hlt2 lines Configurables
-#
-    def getHlt2Configurables(self):
-        """
-        Return a list of requested configurables
-        """
-        #
-        # 1) convert hlt2 type to trigger categories
-        #
-        hlt2type          = self.getProp("Hlt2Type")
-        #
-        # 2) define what categories stand for
-        # There are the strings used in HltThresholdSettings
-        #
-        #
-        # Now, decode
-        #
-        usedType2conf = {}
-        for i in hlt2type.split('+'):
-            if i not in _type2conf : raise AttributeError, "unknown HltType fragment '%s'"%i
-            usedType2conf[i] = _type2conf[i]
-
-        return usedType2conf
-        
 ###################################################################################
 #
 # Threshold settings
@@ -107,27 +69,15 @@ class Hlt2Conf(LHCbConfigurableUser):
         Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, PV = False )
         Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
         ThresholdSettings = self.getProp("ThresholdSettings")
-        #print "# Hlt2 thresholds:", ThresholdSettings
-        #
-        type2conf = self.getHlt2Configurables()
         #
         # Loop over thresholds
         #
-        for i in type2conf :
-            if i == '' : continue
-            #print '# TYPE2CONF', i
-            for confs in type2conf[i] :
-                #print '# CONF', confs
-                if confs not in self.__used_configurables__ : raise AttributeError, "configurable for '%s' not in list of used configurables"%i
-                log.info( '# requested ' + i + ', importing ' + str( type2conf[i])  )
-                from ThresholdUtils import setThresholds
-                setThresholds(ThresholdSettings,confs)
+        from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
+        for i in self.__used_configurables__ :
+            if not issubclass(i,HltLinesConfigurableUser) : continue
+            from ThresholdUtils import setThresholds
+            setThresholds(ThresholdSettings,i)
                     
-        #
-        # Obsolete. This is now commented out.
-        #
-        # importOptions( "$HLTSELECTIONSROOT/options/Hlt2Lines.py" ) # I AM OBSOLETE : KILL ME!!!
-
 ###################################################################################
 #
 # Reco
