@@ -3,12 +3,10 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.1 2009-09-15 15:08:55 jblouw Exp $"
-__author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
-import GaudiPython
+
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, AlignTrTools, MisAlignAlg )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer )
 
 
 ## @class MisAligner
@@ -16,9 +14,12 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, GaudiSequencer, Align
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/09/2009
 
-class MisAligner( LHCbConfigurableUser):
+class MisAligner( LHCbConfigurableUser ):
 
-	__used_configurables__ = [LHCbApp]
+	__version__ = "$Id: Configuration.py,v 1.2 2009-10-14 12:32:41 jblouw Exp $"
+	__author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
+
+	__used_configurables__ = [ LHCbApp ]
 
 	__slots__ = {
 	  "Detectors":	["Velo", "TT", "IT", "OT"]  # list of detectors to create (mis)alignment files for
@@ -82,6 +83,7 @@ class MisAligner( LHCbConfigurableUser):
 
 	def defineOptions(self):
 		log.info("Setting options")
+ 		from Configurables import MisAlignAlg
 		MisAlignAlg().Detectors = self.getProp("Detectors")
 		MisAlignAlg().OTMisalignment_file = self.getProp("OT")
 		MisAlignAlg().ITMisalignment_file = self.getProp("IT")

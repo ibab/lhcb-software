@@ -4,8 +4,6 @@
 # Syntax is:
 #   gaudirun.py Brunel-2008.py <someDataFiles>.py
 ##############################################################################
-import GaudiPython
-import Configurables
 from Gaudi.Configuration import *
 from Configurables import ( MisAligner, LHCbApp )
 
