@@ -3,6 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-14 - Marco Cattaneo
+ - Update Configurable to allow handling of Lumi events:
+   . New LumiSeq sequence runs if input is real data in either MDF or ETC format
+   . LumiSeq runs immediately after initialisation, filters on Hlt routing bits.
+   . All phases other than "Init" and "Output" moved into a "PhysicsSeq"
+     sequencer and run only if physics routing bit is set
+   . Calo bank unpacking moved from Init phase to first algorithm of PhysicsSeq
+   . Dummy DSTPacker sequence is run if physics routing bit is not set, to create
+     empty containers for the events output file
+
 ! 2009-10-14 - Christopher Rob Jones
  - Update python Configurable to allow users to explicit set empty sequences
 
