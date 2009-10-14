@@ -12,6 +12,7 @@ Purpose: LHCb reconstruction program
    . Calo bank unpacking moved from Init phase to first algorithm of PhysicsSeq
    . Dummy DSTPacker sequence is run if physics routing bit is not set, to create
      empty containers for the events output file
+ - Set context of top level sequence to value of "Context" property
 
 ! 2009-10-14 - Christopher Rob Jones
  - Update python Configurable to allow users to explicit set empty sequences

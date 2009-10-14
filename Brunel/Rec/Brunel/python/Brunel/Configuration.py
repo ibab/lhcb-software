@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.95 2009-10-14 06:14:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.96 2009-10-14 16:26:27 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -21,7 +21,7 @@ class Brunel(LHCbConfigurableUser):
     __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf, CaloMoniDstConf ]
 
     ## Default init sequences
-    DefaultInitSequence     = ["Reproc", "Brunel", "Calo"]
+    DefaultInitSequence     = ["Reproc", "Brunel"]
     
     ## Known monitoring sequences, all run by default
     KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
@@ -30,13 +30,10 @@ class Brunel(LHCbConfigurableUser):
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
     ## Default main sequences for real and simulated data
-    DefaultSequence = [ "ProcessPhase/Init",
-                        "ProcessPhase/Reco",
+    DefaultSequence = [ "ProcessPhase/Reco",
                         "ProcessPhase/Moni" ]
-    DefaultRealSequence = DefaultSequence + [ "ProcessPhase/Output" ]
     DefaultMCSequence   = DefaultSequence + [ "ProcessPhase/MCLinks",
-                                              "ProcessPhase/Check",
-                                              "ProcessPhase/Output" ]
+                                              "ProcessPhase/Check" ]
     
     # Steering options
     __slots__ = {
@@ -138,7 +135,7 @@ class Brunel(LHCbConfigurableUser):
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
             self.setProp("WriteFSR", False)
 
-        self.configureSequences( withMC )
+        self.configureSequences( withMC, inputType )
 
         self.configureInit( inputType )
         
@@ -152,7 +149,6 @@ class Brunel(LHCbConfigurableUser):
         if withMC:
             # Create associators for checking and for DST
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
-            ProcessPhase("MCLinks").Context = self.getProp("Context")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
@@ -205,28 +201,56 @@ class Brunel(LHCbConfigurableUser):
         AuditorSvc().Auditors += [ 'TimingAuditor' ] 
         SequencerTimerTool().OutputLevel = 4
         
-    def configureSequences(self, withMC):
+    def configureSequences(self, withMC, inputType):
         brunelSeq = GaudiSequencer("BrunelSequencer")
-        ApplicationMgr().TopAlg = [ brunelSeq ]
+        brunelSeq.Context = self.getProp("Context")
+        ApplicationMgr().TopAlg += [ brunelSeq ]
+        brunelSeq.Members += [ "ProcessPhase/Init" ]
+        physicsSeq = GaudiSequencer( "PhysicsSeq" )
+
+        # Treatment of luminosity events (only on MDF or real data ETC)
+        if not withMC and inputType in ["MDF","ETC"]:
+            lumiSeq = GaudiSequencer("LumiSeq")
+            # Count the events for the FSR
+            if self.getProp("WriteFSR"):
+                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
+                lumiCounters = GaudiSequencer("LumiCounters")
+                lumiSeq.Members += [ lumiCounters ]
+                LumiAlgsConf().LumiSequencer = lumiCounters
+            # Filter out Lumi only triggers from further processing, but still write to output
+            from Configurables import HltRoutingBitsFilter
+            physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )
+            physicsSeq.Members += [ physFilter ]
+            lumiFilter = HltRoutingBitsFilter( "LumiFilter", RequireMask = [ 0x0, 0x2, 0x0 ] )
+            lumiSeq.Members += [ lumiFilter, physFilter ]
+            lumiSeq.ModeOR = True
+            # Call DST packing algorithms if physics sequence not called
+            notPhysSeq = GaudiSequencer("NotPhysicsSeq")
+            notPhysSeq.ModeOR = True
+            dummyPackerSeq = GaudiSequencer("DummyPackerSeq")
+            notPhysSeq.Members = [ physFilter, dummyPackerSeq ]
+
+            brunelSeq.Members += [ lumiSeq, notPhysSeq ]
+
+        # Convert Calo 'packed' banks to 'short' banks if needed
+        physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
+
+        importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
         if not self.isPropertySet("MainSequence"):
             if withMC:
                 mainSeq = self.DefaultMCSequence
             else:
-                mainSeq = self.DefaultRealSequence
+                mainSeq = self.DefaultSequence
             self.MainSequence = mainSeq
-        brunelSeq.Members += self.getProp("MainSequence")
+        physicsSeq.Members += self.getProp("MainSequence")
+        outputPhase = ProcessPhase("Output")
+        brunelSeq.Members  += [ physicsSeq, outputPhase ]
 
     def configureInit(self, inputType):
         # Init sequence
         if not self.isPropertySet("InitSequence"):
-            if inputType in ["MDF"]:
-                # add Lumi for MDF input in offline mode
-                initSeq = self.DefaultInitSequence + ["Lumi"]
-            else:
-                initSeq = self.DefaultInitSequence
-            self.setProp( "InitSequence", initSeq )
+            self.setProp( "InitSequence", self.DefaultInitSequence )
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
-        ProcessPhase("Init").Context = self.getProp("Context")
 
         from Configurables import RecInit, MemoryTool
         recInit = RecInit( "BrunelInit",
@@ -241,16 +265,6 @@ class Brunel(LHCbConfigurableUser):
         evtC.HistoTopDir = "Brunel/"
         GaudiSequencer("InitBrunelSeq").Members += [ evtC ]
         
-        if "Lumi" in initSeq :
-            if self.getProp("WriteFSR"):
-                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
-                LumiAlgsConf().LumiSequencer = GaudiSequencer("InitLumiSeq")
-
-        # Convert Calo 'packed' banks to 'short' banks if needed
-        if "Calo" in initSeq :
-            GaudiSequencer("InitCaloSeq").Members += ["GaudiSequencer/CaloBanksHandler"]
-            importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
-
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
         
@@ -319,7 +333,8 @@ class Brunel(LHCbConfigurableUser):
 
             # event output
             dstWriter = OutputStream( writerName )
-            dstWriter.RequireAlgs += ["Reco"] # Write only if Rec phase completed
+            dstWriter.AcceptAlgs += ["Reco"] # Write only if Rec phase completed
+            dstWriter.AcceptAlgs += ["LumiSeq"] # Write also if Lumi sequence completed
             # Set a default output file name if not already defined in the user job options
             if not dstWriter.isPropertySet( "Output" ):
                 outputFile = self.outputName()
@@ -374,6 +389,8 @@ class Brunel(LHCbConfigurableUser):
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
+                # Run the packers also on Lumi only events to write empty containers
+                GaudiSequencer("DummyPackerSeq").Members += [ packSeq ]
 
             # Define the file content
             DstConf().Writer     = writerName
@@ -417,7 +434,6 @@ class Brunel(LHCbConfigurableUser):
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
         moniSeq = self.getProp("MoniSequence")
         ProcessPhase("Moni").DetectorList += moniSeq
-        ProcessPhase('Moni').Context = self.getProp("Context")
 
         # Units needed in several of the monitoring options
         importOptions('$STDOPTS/PreloadUnits.opts')
@@ -498,7 +514,6 @@ class Brunel(LHCbConfigurableUser):
                         
         checkSeq = self.getProp("MCCheckSequence")        
         ProcessPhase("Check").DetectorList += checkSeq
-        ProcessPhase("Check").Context = self.getProp("Context")
 
         # Tracking handled inside TrackSys configurable
         TrackSys().setProp( "WithMC", True )
