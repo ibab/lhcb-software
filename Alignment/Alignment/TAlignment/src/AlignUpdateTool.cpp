@@ -339,15 +339,17 @@ namespace Al
     logmessage << "********************* ALIGNMENT LOG ************************" << std::endl
 	       << "Iteration: " << iteration << std::endl
 	       << "Total number of events: " << equations.numEvents() << std::endl 
+	       << "Time of first event [ns]: " << equations.firstTime().ns() << " --> " << equations.firstTime().format(true,"%F %r") << std::endl
+	       << "Time of last event [ns] : " << equations.lastTime().ns() << " --> " << equations.lastTime().format(true,"%F %r") << std::endl
       //<< "Total number of tracks: " << m_nTracks << std::endl
       //<< "Number of covariance calculation failures: " << m_covFailure << std::endl
 	       << "Used " << equations.numVertices() << " vertices for alignment" << std::endl
 	       << "Used " << equations.numDiMuons() << " J/Psis for alignment" << std::endl
 	       << "Used " << equations.numTracks() << " tracks for alignment" << std::endl
-	       << "Total chisquare/dofs: " << equations.totalChiSquare() << " / " << equations.totalNumDofs() << std::endl
+	       << "Total chisquare/dofs:    " << equations.totalChiSquare() << " / " << equations.totalNumDofs() << std::endl
 	       << "Average track chisquare: " << equations.totalTrackChiSquare() / equations.numTracks() << std::endl
-	       << "Track chisquare/dof: " << equations.totalTrackChiSquare() / equations.totalTrackNumDofs() << std::endl
-	       << "Vertex chisquare/dof: " 
+	       << "Track chisquare/dof:     " << equations.totalTrackChiSquare() / equations.totalTrackNumDofs() << std::endl
+	       << "Vertex chisquare/dof:    " 
 	       << (equations.totalVertexNumDofs()>0 ? equations.totalVertexChiSquare() / equations.totalVertexNumDofs() : 0.0 ) << std::endl
 	       << "Used " << equations.numHits() << " hits for alignment" << std::endl
 	       << "Total number of hits in external detectors: " << equations.numExternalHits() << std::endl;
@@ -454,9 +456,11 @@ namespace Al
 	  info() << "Solution = " << solution << endmsg ;
 	  info() << "Covariance = " << covmatrix << endmsg ;
 	}
-	logmessage << "Alignment change chisquare/dof: " 
+	logmessage << "Alignment delta chisquare/dof: " 
 		   << deltaChi2 << " / " << numParameters << std::endl
-		   << "Normalised alignment change chisquare: " << deltaChi2 / numParameters << std::endl;
+		   << "Normalised alignment change chisquare: " << deltaChi2 / numParameters << std::endl
+		   << "Alignment delta chisquare/track dof: "
+		   << deltaChi2 / equations.totalTrackNumDofs() << std::endl;
 	
 	//m_dAlignChi2vsIterHisto->fill(iteration, deltaChi2) ;
 	//m_nordAlignChi2vsIterHisto->fill(iteration, deltaChi2 /numParameters);
@@ -470,6 +474,7 @@ namespace Al
 	for (Elements::const_iterator it = elements.begin(); it != elements.end(); ++it, ++iElem) {
 	  const Al::ElementData& elemdata = equations.element(iElem) ;
 	  logmessage << "Alignable: " << (*it)->name() << std::endl
+		     << "Global position: " << (*it)->centerOfGravity() << std::endl
 		     << "Number of hits/outliers seen: " << elemdata.numHits() << " "
 		     << elemdata.numOutliers() << std::endl ;
 	  int offset = (*it)->activeParOffset() ;
