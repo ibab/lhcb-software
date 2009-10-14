@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-Leptonic.py,v 1.1 2009-08-10 15:08:02 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-Leptonic.py,v 1.2 2009-10-14 14:33:40 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -14,5 +14,5 @@ importOptions( "$DAVINCISYSROOT/tests/options/DVTestHlt-DC06-Effective.py")
 # now overwrite threshold setting
 #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'Leptonic_Nominal'
+DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_LeptonicHlt2_Jul09'
 

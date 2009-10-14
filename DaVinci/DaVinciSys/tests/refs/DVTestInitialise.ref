@@ -174,7 +174,7 @@ MagneticFieldSvc                                               INFO Opened magne
 MagneticFieldSvc                                               INFO Map scaled by factor 1
 MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector.Lo...   INFO ExtrapolatorID=5
 MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector         INFO Short distance extrapolator: TrackParabolicExtrapolator
-MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector         INFO Long distance extrapolator: TrackHerabExtrapolator
+MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector         INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 TransportSvc                                                   INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc                                                   INFO Recovery of geometry errors is  ENABLED
 ToolSvc.TrajOTProjector                                        INFO Use drifttime           = 1
@@ -194,7 +194,7 @@ MuonIDAlg.myMuIDTool.fitter                                    INFO  first/last 
 MuonIDAlg.myMuIDTool.fitter                                    INFO ==================================================
 MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelecto...   INFO ExtrapolatorID=5
 MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelector     INFO Short distance extrapolator: TrackParabolicExtrapolator
-MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelector     INFO Long distance extrapolator: TrackHerabExtrapolator
+MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelector     INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MuonIDAlg                                                      INFO  -----> DLL  new (binned-integrated method)
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'

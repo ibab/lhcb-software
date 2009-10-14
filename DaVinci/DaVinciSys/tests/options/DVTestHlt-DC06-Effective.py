@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-Effective.py,v 1.3 2009-09-18 17:41:02 jpalac Exp $
+# $Id: DVTestHlt-DC06-Effective.py,v 1.4 2009-10-14 14:33:40 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -30,9 +30,9 @@ DaVinci().MoniSequence = [ moni ]
 # HLT
 #
 DaVinci().ReplaceL0BanksWithEmulated = True    ## enable if you want to rerun L0
+DaVinci().Hlt = True 
 DaVinci().Hlt2Requires = 'L0'                  ## Run Hlt1 and 2
-DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-DaVinci().HltThresholdSettings = 'Effective_Nominal'
+DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
 
 #-- GAUDI jobOptions generated on Fri Sep 18 18:52:16 2009
 #-- Contains event types : 

@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.6 2009-08-21 15:15:56 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.7 2009-10-14 14:33:40 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -26,9 +26,9 @@ DaVinci().DataType = "2009"                    # Default is "MC09", pretend it's
 #
 # HLT
 #
-DaVinci().HltType = 'Hlt1+Hlt2'             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().Hlt = True             ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
 DaVinci().InputType = "MDF"
-DaVinci().HltThresholdSettings = 'Effective_Nominal'
+DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
 EventSelector().Input   = [
     "   DATA='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/47910/047910_0000000001.raw' SVC='LHCb::MDFSelector'" ]
 

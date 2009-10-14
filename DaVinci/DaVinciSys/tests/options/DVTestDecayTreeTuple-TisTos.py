@@ -38,8 +38,8 @@ DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple_TisTos.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
-DaVinci().HltType = "Hlt1+Hlt2"
-DaVinci().HltThresholdSettings = 'Effective_Nominal'  ## need to replace with MC09
+DaVinci().Hlt = True 
+DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
 
 #-- GAUDI jobOptions generated on Mon Jun 22 17:05:57 2009
 #-- Contains event types : 
