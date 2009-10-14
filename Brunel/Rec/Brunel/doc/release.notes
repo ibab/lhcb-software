@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-14 - Christopher Rob Jones
+ - Update python Configurable to allow users to explicit set empty sequences
+
 ! 2009-10-12 - Marco Cattaneo
  - Update references for:
    . Improvements to PatDownstream (PatAlgorithms v3r23). See T-Rec 2009-09-28

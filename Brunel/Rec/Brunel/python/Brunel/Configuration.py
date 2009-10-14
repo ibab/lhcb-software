@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.94 2009-10-12 13:20:08 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.95 2009-10-14 06:14:53 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -58,11 +58,11 @@ class Brunel(LHCbConfigurableUser):
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
-       ,"MainSequence"    : []
-       ,"InitSequence"    : []
-       ,"RecoSequence"    : []
-       ,"MoniSequence"    : []
-       ,"MCCheckSequence" : []
+       ,"MainSequence"    : None
+       ,"InitSequence"    : None
+       ,"RecoSequence"    : None
+       ,"MoniSequence"    : None
+       ,"MCCheckSequence" : None
        ,"MCLinksSequence" : ["L0", "Unpack", "Tr"]
        ,"Monitors"        : []
        ,"SpecialData"     : []
@@ -208,28 +208,24 @@ class Brunel(LHCbConfigurableUser):
     def configureSequences(self, withMC):
         brunelSeq = GaudiSequencer("BrunelSequencer")
         ApplicationMgr().TopAlg = [ brunelSeq ]
-        mainSeq = self.getProp("MainSequence")
-        if len( mainSeq ) == 0:
+        if not self.isPropertySet("MainSequence"):
             if withMC:
                 mainSeq = self.DefaultMCSequence
             else:
                 mainSeq = self.DefaultRealSequence
             self.MainSequence = mainSeq
-        brunelSeq.Members += mainSeq
-
+        brunelSeq.Members += self.getProp("MainSequence")
 
     def configureInit(self, inputType):
         # Init sequence
-        initSeq = self.getProp( "InitSequence" )
-        if len( initSeq ) == 0 :
+        if not self.isPropertySet("InitSequence"):
             if inputType in ["MDF"]:
                 # add Lumi for MDF input in offline mode
                 initSeq = self.DefaultInitSequence + ["Lumi"]
             else:
                 initSeq = self.DefaultInitSequence
             self.setProp( "InitSequence", initSeq )
-
-        ProcessPhase("Init").DetectorList += initSeq
+        ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
         ProcessPhase("Init").Context = self.getProp("Context")
 
         from Configurables import RecInit, MemoryTool
@@ -405,21 +401,21 @@ class Brunel(LHCbConfigurableUser):
 
     def configureMoni(self,expert,withMC):
         # Set up monitoring (i.e. not using MC truth)
-        moniSeq = self.getProp("MoniSequence")
-        if len( moniSeq ) == 0:
+        if not self.isPropertySet("MoniSequence"):
             if expert:
                 moniSeq = self.KnownExpertMoniSubdets
             else:
                 moniSeq = self.KnownMoniSubdets
             self.MoniSequence = moniSeq
         else:
-            for seq in moniSeq:
+            for seq in self.getProp("MoniSequence"):
                 if expert:
                     if seq not in self.KnownExpertMoniSubdets:
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
                 else:
                     if seq not in self.KnownMoniSubdets:
                         log.warning("Unknown subdet '%s' in MoniSequence"%seq)
+        moniSeq = self.getProp("MoniSequence")
         ProcessPhase("Moni").DetectorList += moniSeq
         ProcessPhase('Moni').Context = self.getProp("Context")
 
@@ -485,22 +481,22 @@ class Brunel(LHCbConfigurableUser):
 
     def configureCheck(self,expert):
         # "Check" histograms filled only with simulated data
-        checkSeq = self.getProp("MCCheckSequence")
-        if len( checkSeq ) == 0:
+        if not self.isPropertySet("MCCheckSequence"):
             if expert:
                 checkSeq = self.KnownExpertCheckSubdets
             else:
                 checkSeq = self.KnownCheckSubdets
             self.MCCheckSequence = checkSeq
         else:
-            for seq in checkSeq:
+            for seq in self.getProp("MCCheckSequence"):
                 if expert:
                     if seq not in self.KnownExpertCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
                 else:
                     if seq not in self.KnownCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
-            
+                        
+        checkSeq = self.getProp("MCCheckSequence")        
         ProcessPhase("Check").DetectorList += checkSeq
         ProcessPhase("Check").Context = self.getProp("Context")
 
@@ -574,8 +570,10 @@ class Brunel(LHCbConfigurableUser):
     def __apply_configuration__(self):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
-        self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context",
+        self.setOtherProps(RecSysConf(),["SpecialData","Context",
                                          "OutputType","DataType","OutputLevel"])
+        if self.isPropertySet("RecoSequence") :
+            self.setOtherProp(RecSysConf(),"RecoSequence")
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
