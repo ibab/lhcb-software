@@ -31,11 +31,10 @@ def setThresholds(ThresholdSettings,confs):
                 setattr(conf,k,v)
 
 
-global _dict 
-_dict = {}
 def Name2Threshold(name) :
+        Name2Threshold._dict
         global _dict 
-        if name not in _dict : 
+        if name not in Name2Threshold._dict : 
             from Gaudi.Configuration import log
             log.warning(' '+'#'*(41+len(name)) )
             log.warning(' ## Using trigger threshold settings "%s" ##'%name)
@@ -43,5 +42,7 @@ def Name2Threshold(name) :
             toplvl = __import__('HltConf.%s' % name )
             mod = getattr( toplvl, name )
             cls = getattr( mod, name )
-            _dict[name] = cls()
-        return _dict[name]
+            Name2Threshold._dict[name] = cls()
+        return Name2Threshold._dict[name]
+
+Name2Threshold._dict = {}
