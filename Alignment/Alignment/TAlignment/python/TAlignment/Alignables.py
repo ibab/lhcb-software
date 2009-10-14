@@ -215,7 +215,7 @@ class Alignables( list ):
                 for k in self.m_otQuarters :
                     ## Nine modules numbered from 1 to 9
                     for l in self.m_otModules :
-                        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
+                        elements.append( 'OT/' + i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
                     #    if ( i.strip('/') != 'T1' and ( j.strip('/') != 'X1' or j.strip('/') != 'U' )
                     #         and i.strip('/') != 'T3' and ( j.strip('/') != 'X2' or j.strip('/') != 'V' ) ) :
                     #        elements.append( i.strip('/') + j.strip('/') + k.strip('/') + l.strip('/') + " : " + self.m_ot + i + j + k + l )
