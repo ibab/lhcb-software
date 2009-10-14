@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.14 2009-10-09 12:59:38 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.15 2009-10-14 13:38:28 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -11,36 +11,56 @@ import Configurables as Configs
 import Gaudi.Configuration as Gaudi
 import GaudiKernel
 
+processingType ='DataTaking'
 
 GaudiKernel.ProcessJobOptions._parser._parse_units(os.path.expandvars("$STDOPTS/units.opts"))
 
 debug = 0
 def dummy(*args,**kwd): pass
 
-def ___doWriteMDF(self,items):
+#============================================================================================================
+def packDST(self,items):
   """
   Write an RDST in MDF format
   """
   import OnlineEnv as Online
   import Configurables
-  print 'Running modified ___doWriteMDF'
-  seq = Gaudi.GaudiSequencer("WriteMDFSeq")
 
   # Configure DST packer algorithm
   packer = Configurables.WritePackedDst('MdfPacker')
   packer.Containers += items
-
   # Now configure the FID updater of DSTAddress
   dstUpdate = Online.dstAddressUpdate(name='DstUpdate')
-
   # Now configure bank merger
   mergeDst = Online.evtMerger(buffer='Output',name='DstMerger',location='/Event/DAQ/DstEvent',routing=0x100)
   mergeDst.FIDLocation = '/Event';
   mergeDst.AddFID = 1;
-  mergeDst.Compress = 2;
-  seq.Members += [ packer, dstUpdate, mergeDst ]
-  print 'Running modified ___doWriteMDF .... Done'
+  mergeDst.Compress = 0; # May use compress=2 as well
 
+  seq = Gaudi.GaudiSequencer("WriteMDFSeq")
+  seq.Members += [ packer, dstUpdate, mergeDst ]
+  print 'Warning: Packing of TES DST data .... commissioned....'
+
+#============================================================================================================
+def serializeDST(self,items):
+  """
+  Write an RDST in MDF format
+  """
+  import OnlineEnv as Online
+
+  # First update data of the standard DST writer
+  serial = Online.serialWriter(name='DstWriter',location=loc)
+  serial.RequireAlgs += ['Reco']
+  serial.OutputLevel = lvl
+  # Now configure bank merger
+  mergeDst = Online.evtMerger(buffer='Output',name='DstMerger',location='/Event/GaudiSerialize',routing=0x100)
+  mergeDst.FIDLocation = '/Event';
+
+  seq = Gaudi.GaudiSequencer("WriteMDFSeq")
+  seq.Members = [ serial, mergeDst ]
+  print 'Warning: Serialization of TES DST data .... commissioned....'
+
+#============================================================================================================
 def patchBrunel(true_online_version):
   """
         Instantiate the options to run Brunel with raw data
@@ -49,32 +69,34 @@ def patchBrunel(true_online_version):
   """
   import GaudiConf.DstConf
   import Brunel.Configuration
-  from Configurables import HistogramPersistencySvc,EventLoopMgr
-
-  GaudiConf.DstConf.DstConf._doWriteMDF = ___doWriteMDF
+  from Configurables import DstConf, Serialisation, HistogramPersistencySvc, EventLoopMgr
 
   brunel = Brunel.Configuration.Brunel()
   EventLoopMgr().OutputLevel = 0
-  # Brunel.Configuration.Brunel.defineMonitors = dummy
-  #Brunel.Configuration.Brunel.configureOutput = dummy
-  #if debug: print dir(brunel)
-  #brunel.DDDBtag   = 'default'
-  #brunel.CondDBtag = 'default'
   brunel.DDDBtag   = "head-20090112"
   brunel.CondDBtag = "sim-20090112"
   brunel.WriteFSR  = False # This crashes Jaap's stuff
   brunel.Simulation = True
-  brunel.OutputType = 'RDST'
-  brunel.PackType   = 'MDF'
 
   if true_online_version:
-    #brunel.__repr__      = dummy
     brunel.OutputLevel    = 4
     brunel.PrintFreq      = -1
     brunel.Histograms     = 'None'
-  #Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
-  # Set the property, used to build other file names
-  #brunel.setProp( "DatasetName", 'GaudiSerialize' )
+    
+  if processingType == 'Reprocessing':
+    GaudiConf.DstConf.DstConf._doWriteMDF = packDST
+    brunel.PackType   = 'MDF'
+    brunel.OutputType = 'RDST'
+  else:
+    #GaudiConf.DstConf.DstConf._doWriteMDF = serializeDST
+    Brunel.Configuration.Brunel.configureOutput = dummy
+    Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
+    brunel.setProp( 'DatasetName', 'GaudiSerialize' )
+    DstConf().Writer       = 'DstWriter'
+    DstConf().DstType      = 'DST'
+    DstConf().PackType     = 'NONE'
+    Serialisation().Writer = 'Writer'
+
   HistogramPersistencySvc().OutputFile = ""
   brunel.MainSequence = [ "UpdateAndReset",
                           "ProcessPhase/Init",
@@ -83,24 +105,17 @@ def patchBrunel(true_online_version):
                           "ProcessPhase/Output" ]
   return brunel
 
+#============================================================================================================
 def setupOnline():
   """
         Setup the online environment: Buffer managers, event serialisation, etc.
 
         @author M.Frank
   """
-  import os
   import OnlineEnv as Online
-  from Configurables import DstConf
-  from Configurables import Serialisation
 
-  proc_type = 'DataTaking'
   buffs = ['Events','Output']
-  if (hasattr(Online,'ActivityType') and getattr(Online,'ActivityType') == 'Reprocessing'):
-    proc_type = 'Reprocessing'
-  if os.environ.has_key('Standalone_test'):
-    proc_type = 'Reprocessing'
-  if proc_type == 'Reprocessing':
+  if processingType == 'Reprocessing':
     buffs = ['Input','Output']
 
   app=Gaudi.ApplicationMgr()
@@ -115,27 +130,11 @@ def setupOnline():
   app.Runable.NumErrorToStop = 1;
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
-  
-  if proc_type == 'Reprocessing':
-    #import Brunel.Configuration
-    print 'Setup writing: Processing type :',proc_type,hasattr(os.environ,'Standalone_test')
-    #DstConf().Writer       = 'DstWriter'
-    #DstConf().DstType      = 'DST'
-    #DstConf().PackType     = 'NONE'
-    #  DstConf().Simulation   = False
-    #Serialisation().Writer = 'Writer'
-    #Serialisation().Location = '/Event/DAQ/DstEvent'
-  else:
-    DstConf().Writer       = 'DstWriter'
-    DstConf().DstType      = 'DST'
-    DstConf().PackType     = 'NONE'
-    #  DstConf().Simulation   = False
-    Serialisation().Writer = 'Writer'
-
   app.AuditAlgorithms = False
   Configs.MonitorSvc().OutputLevel = 5
   app.OutputLevel = 4
 
+#============================================================================================================
 def patchMessages():
   """
         Messages in the online get redirected.
@@ -154,6 +153,7 @@ def patchMessages():
   msg.OutputLevel  = 4
   msg.doPrintAlways = False
 
+#============================================================================================================
 def start():
   """
         Finish configuration and configure Gaudi application manager
@@ -163,6 +163,19 @@ def start():
   import OnlineEnv as Online
   Online.end_config(False)
   #Online.end_config(True)
+
+#============================================================================================================
+def getProcessingType():
+  import os
+  import OnlineEnv as Online
+  if (hasattr(Online,'ActivityType') and getattr(Online,'ActivityType') == 'Reprocessing'):
+    return 'Reprocessing'
+  if os.environ.has_key('Standalone_test'):
+    return 'Reprocessing'
+  return 'DataTaking'
+
+processingType = getProcessingType()
+#print 'Warning: Setup writing: Processing type :',processingType,hasattr(os.environ,'Standalone_test')
 
 true_online = os.environ.has_key('LOGFIFO') and os.environ.has_key('PARTITION')
 debug = not true_online
