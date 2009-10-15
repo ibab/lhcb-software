@@ -79,8 +79,6 @@ DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
-# DaVinci().HltType = "Hlt1+Hlt2"
-# DaVinci().HltThresholdSettings = 'Effective_Nominal'  ## need to replace with MC09
 #-- GAUDI jobOptions generated on Tue Jun 23 11:54:57 2009
 #-- Contains event types : 
 EventSelector().Input   = [

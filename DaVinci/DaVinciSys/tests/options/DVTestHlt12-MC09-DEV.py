@@ -1,8 +1,8 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09-DEV.py,v 1.2 2009-08-10 16:52:55 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09-DEV.py,v 1.3 2009-10-15 09:25:06 pkoppenb Exp $
 #
-# Test for Hlt1&2. This should be identical to Hlt1 except for the HltType.
+# Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
 # The Hlt1 efficiency should be identical to the one in DVTestHlt1-2008.py
 #
