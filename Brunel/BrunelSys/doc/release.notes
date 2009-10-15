@@ -3,6 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+! 2009-10-15 - Marco Cattaneo
+ - Update references for Brunel configurable changes
+
 ! 2009-10-12 - Marco Cattaneo
  - Update references for:
    . Improvements to PatDownstream (PatAlgorithms v3r23). See T-Rec 2009-09-28
