@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-Effective.py,v 1.4 2009-10-14 14:33:40 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-Effective.py,v 1.5 2009-10-15 14:01:16 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -14,7 +14,7 @@ from Configurables import GaudiSequencer
 moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
-importOptions( "$HLTSELECTIONSROOT/options/Hlt2Correlations.py")
+importOptions( "$HLTSELCHECKERROOT/options/Hlt2Correlations.py")
 #
 # Standard configuration
 #
