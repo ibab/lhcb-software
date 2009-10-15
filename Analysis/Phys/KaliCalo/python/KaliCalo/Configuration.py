@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.1 2009-09-28 19:53:55 ibelyaev Exp $
+# $Id: Configuration.py,v 1.2 2009-10-15 15:42:34 pkoppenb Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -133,7 +133,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## forwarded to DaVinci & other configurables 
         , 'EvtMax'              :  -1    ## Number of events to run (DaVinci)             
         , 'DataType'            : 'MC09' ## Data type               (DaVinci)
-        , 'HltType'             : ''     ## Hlt type                (DaVinci)
+        , 'Hlt'                 : False  ## Hlt type                (DaVinci)
         , 'Simulation'          : True   ## Simulation              (DaVinci) 
         , 'MeasureTime'         : True   ## Measure the time for sequencers
         , 'OutputLevel'         : INFO   ## The global output level
@@ -155,7 +155,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         ## DaVinci & Co configuration: 
         , 'EvtMax'              : """ Number of events to run (DaVinci) """
         , 'DataType'            : """ Data type               (DaVinci) """
-        , 'HltType'             : """ Hlt type                (DaVinci) """
+        , 'Hlt'                 : """ Hlt                     (DaVinci) """
         , 'Simulation'          : """ Simulation              (DaVinci) """
         , 'MeasureTime'         : """ Measure the time for sequencers """
         , 'OutputLevel'         : """ The global output level """
@@ -362,7 +362,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             , DataType       = self.getProp ('DataType'   ) 
             , Simulation     = self.getProp ('Simulation' ) 
             , EvtMax         = self.getProp ('EvtMax'     ) 
-            , HltType        = self.getProp ('HltType'    )  
+            , Hlt            = self.getProp ('Hlt'        )  
             ) 
         
         log.info( dv )
