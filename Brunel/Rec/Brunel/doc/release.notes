@@ -3,6 +3,11 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-15 - Marco Cattaneo
+ - Move configuration of Monitoring phase to RecMoniConf configurable
+   (RecSys v35r7)
+ - Brunel().MoniSequence option removed, now a property of RecMoniConf
+
 ! 2009-10-14 - Marco Cattaneo
  - Update Configurable to allow handling of Lumi events:
    . New LumiSeq sequence runs if input is real data in either MDF or ETC format

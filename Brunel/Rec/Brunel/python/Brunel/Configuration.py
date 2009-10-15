@@ -3,13 +3,13 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.97 2009-10-15 10:49:14 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.98 2009-10-15 13:51:04 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
-                            ProcessPhase, GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf, CaloMoniDstConf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys, RecMoniConf,
+                            GaudiSequencer, RichRecQCConf, DstConf, LumiAlgsConf, L0Conf )
 
 ## @class Brunel
 #  Configurable for Brunel application
@@ -18,14 +18,11 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf, CaloMoniDstConf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel"]
     
-    ## Known monitoring sequences, all run by default
-    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
-    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
     ## Known checking sequences, all run by default
     KnownCheckSubdets       = ["Pat","RICH","MUON"] 
     KnownExpertCheckSubdets = KnownCheckSubdets+["TT","IT","OT","Tr","CALO","PROTO"]
@@ -58,7 +55,6 @@ class Brunel(LHCbConfigurableUser):
        ,"MainSequence"    : None
        ,"InitSequence"    : None
        ,"RecoSequence"    : None
-       ,"MoniSequence"    : None
        ,"MCCheckSequence" : None
        ,"MCLinksSequence" : ["L0", "Unpack", "Tr"]
        ,"Monitors"        : []
@@ -71,7 +67,7 @@ class Brunel(LHCbConfigurableUser):
         'EvtMax'       : """ Maximum number of events to process (default -1, all events on input files) """
        ,'SkipEvents'   : """ Number of events to skip (default 0) """
        ,'PrintFreq'    : """ The frequency at which to print event numbers (default 1, prints every event) """
-       ,'DataType'     : """ Data type, can be ['DC06','2008']. Default '2008' """
+       ,'DataType'     : """ Data type, possible values defined in DDDBConf """
        ,'WithMC'       : """ Flags whether to enable processing with MC truth (default False) """
        ,'Simulation'   : """ Flags whether to use SIMCOND conditions (default False) """
        ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
@@ -135,6 +131,7 @@ class Brunel(LHCbConfigurableUser):
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
             self.setProp("WriteFSR", False)
 
+
         # Flag to handle or not LumiEvents
         handleLumi = inputType in ["MDF","ETC"] and not withMC
 
@@ -146,11 +143,9 @@ class Brunel(LHCbConfigurableUser):
 
         self.configureOutput( outputType, withMC, handleLumi )
 
-        # Activate all monitoring (does not use MC truth)
-        self.configureMoni( histOpt == "Expert", withMC )
-
         if withMC:
             # Create associators for checking and for DST
+            from Configurables import ProcessPhase
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
@@ -170,8 +165,10 @@ class Brunel(LHCbConfigurableUser):
             # so do not set ApplicationMgr().HistogramPersistency = "NONE"
             return
 
-        # Pass expert checking option to RecSys
-        if histOpt == "Expert": RecSysConf().setProp( "ExpertHistos", True )
+        # Pass expert checking option to RecSys and RecMoni
+        if histOpt == "Expert":
+            RecSysConf().setProp( "ExpertHistos", True )
+            RecMoniConf().setProp( "ExpertHistos", True )
 
         # Use a default histogram file name if not already set
         if not HistogramPersistencySvc().isPropertySet( "OutputFile" ):
@@ -247,6 +244,7 @@ class Brunel(LHCbConfigurableUser):
                 mainSeq = self.DefaultSequence
             self.MainSequence = mainSeq
         physicsSeq.Members += self.getProp("MainSequence")
+        from Configurables import ProcessPhase
         outputPhase = ProcessPhase("Output")
         brunelSeq.Members  += [ physicsSeq, outputPhase ]
 
@@ -254,6 +252,7 @@ class Brunel(LHCbConfigurableUser):
         # Init sequence
         if not self.isPropertySet("InitSequence"):
             self.setProp( "InitSequence", self.DefaultInitSequence )
+        from Configurables import ProcessPhase
         ProcessPhase("Init").DetectorList += self.getProp("InitSequence")
 
         from Configurables import RecInit, MemoryTool
@@ -386,6 +385,7 @@ class Brunel(LHCbConfigurableUser):
                 # Filter Track States to be written
                 trackFilter = TrackToDST()
                 
+            from Configurables import ProcessPhase
             ProcessPhase("Output").DetectorList += [ "DST" ]
             GaudiSequencer("OutputDSTSeq").Members += [ trackFilter ]
 
@@ -421,87 +421,11 @@ class Brunel(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
-    def configureMoni(self,expert,withMC):
-        # Set up monitoring (i.e. not using MC truth)
-        if not self.isPropertySet("MoniSequence"):
-            if expert:
-                moniSeq = self.KnownExpertMoniSubdets
-            else:
-                moniSeq = self.KnownMoniSubdets
-            self.MoniSequence = moniSeq
-        else:
-            for seq in self.getProp("MoniSequence"):
-                if expert:
-                    if seq not in self.KnownExpertMoniSubdets:
-                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
-                else:
-                    if seq not in self.KnownMoniSubdets:
-                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
-        moniSeq = self.getProp("MoniSequence")
-        ProcessPhase("Moni").DetectorList += moniSeq
-
-        # Units needed in several of the monitoring options
-        importOptions('$STDOPTS/PreloadUnits.opts')
-
-        # Histograms filled both in real and simulated data cases
-        if "CALO" in moniSeq :
-            from Configurables import GaudiSequencer
-            seq = GaudiSequencer( "MoniCALOSeq")
-            caloMoni = CaloMoniDstConf( Sequence = seq, Context = 'Offline' )
-
-        if "VELO" in moniSeq :
-            importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
-
-        if "Tr" in moniSeq :
-            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
-            ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
-
-        if "OT" in moniSeq :
-            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredOTMonitorSequence
-            ConfiguredOTMonitorSequence(Name='MoniOTSeq')
-
-        if "MUON" in moniSeq :
-            from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
-            mydata =  self.getProp("DataType")
-            mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
-            mymonitconf.configure(mc = False, expertck = expert)
-
-        if "ST" in moniSeq :
-            from Configurables import ST__STClusterMonitor, GaudiSequencer
-            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
-                                                       ST__STClusterMonitor("ITClusterMonitor")]
-            ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
-            ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
-
-        if "PROTO" in moniSeq :
-            from Configurables import ChargedProtoParticleMoni
-            GaudiSequencer( "MoniPROTOSeq" ).Members += [ChargedProtoParticleMoni("ChargedProtoPMoni")]
-
-        # Histograms filled only in real data case
-        if not withMC:
-            if "RICH" in moniSeq :
-                from Configurables import GaudiSequencer
-                self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","WithMC"])
-                RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
-
-        # Expert histograms
-        if expert:
-            if "RICH" in moniSeq :
-                RichRecQCConf().setProp( "ExpertHistos", True )
-            if "TT" in moniSeq :
-                from Configurables import ST__STClusterMonitor
-                clusMoni = ST__STClusterMonitor("TTClusterMonitor")
-                clusMoni.FullDetail = True
-                GaudiSequencer("MoniTTSeq").Members += [clusMoni]
-            if "IT" in moniSeq :
-                from Configurables import ST__STClusterMonitor
-                clusMoni = ST__STClusterMonitor("ITClusterMonitor")
-                clusMoni.FullDetail = True
-                clusMoni.DetType = "IT"
-                GaudiSequencer("MoniITSeq").Members += [clusMoni]
-
     def configureCheck(self,expert):
         # "Check" histograms filled only with simulated data
+
+        RecMoniConf().setProp( "CheckEnabled", True )
+        
         if not self.isPropertySet("MCCheckSequence"):
             if expert:
                 checkSeq = self.KnownExpertCheckSubdets
@@ -517,7 +441,8 @@ class Brunel(LHCbConfigurableUser):
                     if seq not in self.KnownCheckSubdets:
                         log.warning("Unknown subdet '%s' in MCCheckSequence"%seq)
                         
-        checkSeq = self.getProp("MCCheckSequence")        
+        checkSeq = self.getProp("MCCheckSequence")
+        from Configurables import ProcessPhase
         ProcessPhase("Check").DetectorList += checkSeq
 
         # Tracking handled inside TrackSys configurable
@@ -574,6 +499,7 @@ class Brunel(LHCbConfigurableUser):
 
             if "CALO" in  checkSeq : 
                 importOptions( "$CALOASSOCIATORSROOT/options/CaloAssociators.opts" )
+                importOptions( "$STDOPTS/PreloadUnits.opts" )
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
 
             if "RICH" in checkSeq :
@@ -592,6 +518,7 @@ class Brunel(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.setOtherProps(RecSysConf(),["SpecialData","Context",
                                          "OutputType","DataType","OutputLevel"])
+        self.setOtherProps(RecMoniConf(),["Context","DataType","OutputLevel"])
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         self.defineGeometry()
@@ -602,4 +529,5 @@ class Brunel(LHCbConfigurableUser):
         log.info( self )
         log.info( RecSysConf() )
         log.info( TrackSys() )
+        log.info( RecMoniConf() )
         GaudiKernel.ProcessJobOptions.PrintOff()
