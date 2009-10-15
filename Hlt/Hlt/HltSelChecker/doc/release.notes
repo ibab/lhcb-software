@@ -19,6 +19,18 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Patrick Koppenburg
+ - options/DVTestHlt2.py options/DVTestReadHltSummary.py 
+   options/Hlt2Correlations.py options/MC09-MinimumBias.py 
+   options/MC09-MinimumBiasNoTruth.py src/HltCorrelations.cpp 
+   src/HltCorrelations.h src/HltSelectionsBase.cpp src/HltSelectionsBase.h 
+   src/ReadHltSummary.cpp src/ReadHltSummary.h 
+   . Moved from obsolete HltSelections package
+ - options/*.py : replace all HLTSELECTION by HLTSELCHECKER
+ - Rename ReadHltSummary into ReadHltReport, as it reads HltDec- and -SelReports
+ - Change options accordingly
+ - v9r0
+
 ! 2009-10-14 - Patrick Koppenburg
  - HltType becomes Hlt
  - Threshold setting names have changed

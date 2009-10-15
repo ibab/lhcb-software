@@ -1,9 +1,9 @@
-# $Id: requirements,v 1.56 2009-10-14 14:42:22 pkoppenb Exp $
+# $Id: requirements,v 1.57 2009-10-15 12:32:15 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 
 package           HltSelChecker
-version           v8r8
+version           v9r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
