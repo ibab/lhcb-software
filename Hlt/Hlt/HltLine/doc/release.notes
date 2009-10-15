@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.33 2009-10-13 09:05:48 pkoppenb Exp $
+! $Id: release.notes,v 1.34 2009-10-15 09:49:48 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+! 2009-10-15 - Gerhard Raven
+ - add a flag 'Reco' to Hlt2Lines constructor to flag if line wants
+   reconstruction run or not. Default is True. Note: this is a temporary
+   (quick) solution, would be better if reco is (automatically) pulled in 
+   by the dependency resolution
 
 ! 2009-10-13 - Patrick Koppenburg
  - Adapt to new options of PatDownstream

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.11 2009-09-08 07:18:14 graven Exp $ 
+# $Id: HltLine.py,v 1.12 2009-10-15 09:49:48 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -572,9 +572,9 @@ class bindMembers (object) :
         margs = alg.Args.copy() 
         #### TODO: use _checkSelection to make sure the result is valid!!!
         #    expand '%' in FilterDescriptor, InputSelection{,1,2} to allow bound selections
-        _subs_cand_ =  ['FilterDescriptor', 'OutputSelection', 'InputSelections'
-                       , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ]
-        for key in set(margs).intersection(set(_subs_cand_)) :
+        _subs_cand_ =  set(['FilterDescriptor', 'OutputSelection', 'InputSelections'
+                       , 'InputSelection', 'InputSelection1','InputSelection2','InputSelecion3' ])
+        for key in set(margs).intersection(_subs_cand_) :
             if type(margs[key]) is str  : margs[key] =   re.sub('%','Hlt1%s'%line,margs[key])
             if type(margs[key]) is list : margs[key] = [ re.sub('%','Hlt1%s'%line,i) for i in margs[key] ]
         algName = alg.name ( line )
@@ -1223,6 +1223,7 @@ class Hlt2Line(object):
     """
 
     _PVAlgorithms = None
+    _RecoAlgorithms = None
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1231,6 +1232,7 @@ class Hlt2Line(object):
     #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
     #    - 'L0DU'      : the list of L0Channels names for L0Filter 
     #    - 'HLT'       : the list of HLT selections for HLTFilter
+    #    - 'Reco'      : insert reconstruction (or not)
     #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
@@ -1244,6 +1246,7 @@ class Hlt2Line(object):
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
                    PV        = None ,   # insert PV reconstruction at the start of the line
+                   Reco      = True ,   # request Hlt2 reconstruction sequence
                    #Lumi      = False ,   # process lumi exclusive events
                    **args           ) : # other configuration parameters
         """
@@ -1259,7 +1262,13 @@ class Hlt2Line(object):
         - 'postscale' : the postscale factor
         
         """
-        if PV not in [ True, False ] : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
+        if type(Reco) != bool : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
+        if not self._RecoAlgorithms :
+            #  Full reconstruction of all tracks 
+            from HltReco import HltRecoSequence
+            self._RecoAlgorithms = [ HltRecoSequence  ]
+
+        if type(PV) != bool : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
         if not self._PVAlgorithms : 
             from HltReco import PV3D
             self._PVAlgorithms = PV3D.members()
@@ -1269,7 +1278,8 @@ class Hlt2Line(object):
         ODIN  = deepcopy ( ODIN  )
         L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
-        PV    = deepcopy ( PV   )
+        PV    = deepcopy ( PV    )
+        Reco  = deepcopy ( Reco  )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -1284,6 +1294,7 @@ class Hlt2Line(object):
         self._L0DU      = L0DU
         self._HLT       = HLT
         self._PV        = PV
+        self._Reco      = Reco
         self._algos     = algos
         self._args      = args
 
@@ -1302,7 +1313,11 @@ class Hlt2Line(object):
         line = self.subname()
 
         # bind members to line 
-        _boundMembers = bindMembers( line, algos if not self._PV else self._PVAlgorithms + algos )
+        xalgos = []
+        if self._Reco : xalgos += self._RecoAlgorithms
+        if self._PV   : xalgos += self._PVAlgorithms 
+        xalgos += algos 
+        _boundMembers = bindMembers( line, xalgos )
         _members = _boundMembers.members()
 
 
