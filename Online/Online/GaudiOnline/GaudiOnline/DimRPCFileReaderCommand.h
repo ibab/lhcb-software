@@ -7,8 +7,6 @@
 
 class Command {
 public:
-  Command ();
-  Command (char* cmd, char* f, int fid, char* g, char* s, int n);
   struct Data {
     std::string name;
     std::string file;
@@ -17,10 +15,13 @@ public:
     std::string sender;
     int nEvts;
     int sliceID;
-  } data;
+  };
+  Data data;
 
+  Command ();
+  Command (char* cmd, char* f, int fid, char* g, char* s, int n);
   int decodeCommand(std::string msg);
-  std::string encodeResponse(int status,int nEvts, std::string error);
+  std::string encodeResponse(int status,int nEvts, const std::string& error);
   void clear();
   void setSliceID( int );
   
@@ -180,7 +181,7 @@ void Command::setSliceID( int id ){
   data.sliceID = id;
 }
 
-std::string Command::encodeResponse(int status,int nEvts=0, std::string error=""){
+std::string Command::encodeResponse(int status,int nEvts=0, const std::string& error=""){
   std::stringstream outstream;
   std::string out;
   if (status==0){

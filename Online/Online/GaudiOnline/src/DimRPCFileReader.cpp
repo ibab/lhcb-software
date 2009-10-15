@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.21 2009-10-15 14:24:30 apuignav Exp $
+// $Id: DimRPCFileReader.cpp,v 1.22 2009-10-15 15:04:30 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -209,8 +209,8 @@ void DimRPCFileReader::handle(const Incident& inc)    {
 StatusCode DimRPCFileReader::run()   {  
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
-    if ( m_command->data.sliceID<0){
-      m_reply=m_command->encodeResponse(0,error="SliceID not set");
+    if ( m_command->data.sliceID < 0 )  {
+      m_reply = m_command->encodeResponse(0,0,"SliceID not set");
       ::dis_update_service(m_rpc.first);
       return error("Failed to get SliceID from JobOptions.");
     }
