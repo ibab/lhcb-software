@@ -12,6 +12,7 @@
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
+#include "TrackInterfaces/IPitchResTool.h"
 
 class OTTrackMonitor : public GaudiHistoAlg 
 {
@@ -47,6 +48,7 @@ private:
   const ITrajPoca* m_pocatool ;
   ToolHandle<ITrackProjector> m_projector ;
   ToolHandle<IOTRawBankDecoder> m_decoder ;
+  const IPitchResTool *m_pitchtool;
   const DeOTDetector* m_otdet ;
   std::string m_trackLocation;
   double m_maxUnbiasedChisqPerDofGoodTracks ;
@@ -91,6 +93,8 @@ StatusCode OTTrackMonitor::initialize()
   m_projector.retrieve().ignore() ;
   m_decoder.retrieve().ignore() ;
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  m_pitchtool = tool<IPitchResTool>("PitchResTool");
+
   return sc;
 }
 
@@ -122,6 +126,14 @@ StatusCode OTTrackMonitor::execute()
     if( (*itr)->fitStatus() == LHCb::Track::Fitted && (*itr)->nDoF()>1 ) {
       double sumtimeresidual(0) ;
       double sumn(0) ;
+      // calculate the pitch residuals by M. Schiller
+      std::vector<std::pair<int,double> > pitchRes = m_pitchtool->calcPitchResiduals( *itr );
+      for (int i = 0; i < pitchRes.size(); ++i) {
+        std::ostringstream os;
+        os << "Layer " << pitchRes[i].first << " pitch residuals";
+        plot(pitchRes[i].second, os.str(), -3., 3., 120);
+      }
+
       LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
       for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
 	   inode != nodes.end(); ++inode ) 

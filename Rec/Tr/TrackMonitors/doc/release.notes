@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Johan Blouw
+ - added PitchResTool to the package. It is used to calculate pitch residuals in the Outer Tracker
+ - modified OTTrackMonitor so that pitch residuals are calculated and histogrammed.
+
 ! 2009-10-15 - Marco Cattaneo
  - Fix one more untested StatusCode in OTHitEfficiencyMonitor
 
