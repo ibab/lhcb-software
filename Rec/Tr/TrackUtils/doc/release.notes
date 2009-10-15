@@ -4,6 +4,14 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Patrick Koppenburg
+ - Move HltInsertTrackErrParam from HltSelections
+   . This is the ominous algorithm that hacks the errors and replaces
+     them by some P-dependent value. To be revised.
+ - Move NumberOfTracksFilter from HltSelections
+   . setFilterPassed depending number of tracks in a container
+ - Increment to v1r30
+
 ! 2009-10-07 - Johannes Albrecht
  - add initial relese of TrackAddNNGhostId algorithm
 
