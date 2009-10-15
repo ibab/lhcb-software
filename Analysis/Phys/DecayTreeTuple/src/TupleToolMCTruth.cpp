@@ -1,4 +1,4 @@
-// $Id: TupleToolMCTruth.cpp,v 1.15 2009-10-14 14:01:28 jpalac Exp $
+// $Id: TupleToolMCTruth.cpp,v 1.16 2009-10-15 09:05:22 jpalac Exp $
 // Include files
 #include "gsl/gsl_sys.h"
 // from Gaudi
@@ -33,10 +33,10 @@ TupleToolMCTruth::TupleToolMCTruth( const std::string& type,
 				    const std::string& name,
 				    const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_p2mcAssoc(0)
-    , m_p2mcAssocType("DaVinciSmartAssociator")
-    , m_toolList(0)
-    , m_mcTools(0)
+  , m_p2mcAssoc(0)
+  , m_p2mcAssocType("DaVinciSmartAssociator")
+  , m_toolList(0)
+  , m_mcTools(0)
 
 {
   declareInterface<IParticleTupleTool>(this);
