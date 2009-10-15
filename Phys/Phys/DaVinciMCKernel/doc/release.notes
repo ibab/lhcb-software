@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.96 2009-10-01 08:19:50 jpalac Exp $
+! $Id: release.notes,v 1.97 2009-10-15 14:07:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v4r1
+ - Kernel/IParticle2MCAssociator.h
+ - Kernel/IParticle2MCWeightedAssociator.h
+ - Kernel/Particle2MCAssociatorBase.h
+ - src/Lib/Particle2MCAssociatorBase.cpp
+  . Use new GAUDI_API stuff.
 
 ! 2009-10-01 - Juan PALACIOS
  - Kernel/Particle2MCAssociatorBase.h
