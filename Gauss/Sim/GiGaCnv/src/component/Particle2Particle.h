@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.3  2006/01/31 10:34:15  gcorti
+/// adapt to changes in event model
+///
 /// Revision 1.2  2001/08/12 17:24:55  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -12,13 +15,15 @@
 #ifndef GIGACNV_PARTICLE2PARTICLE_H 
 #define GIGACNV_PARTICLE2PARTICLE_H 1
 // ============================================================================
+/// LHCbEvent 
+#include "Event/MCParticle.h"
 /// STD & STL 
 #include <functional>
 /// GiGaCnv 
 #include "Particle2Definition.h"
 /// forward declarations 
 class IParticlePropertySvc;
-class LHCb::MCParticle;
+//class LHCb::MCParticle;
 class G4PrimaryParticle;
 
 /** @class Particle2Particle Particle2Particle.h 
