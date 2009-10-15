@@ -16,15 +16,14 @@ selSequence = SeqBs2Jpsi2MuMuPhi2KK.SeqBs2Jpsi2MuMuPhi2KK
 from PhysSelPython.Wrappers import DataOnDemand, Selection, SelectionSequence
 
 particleLocation = selSequence.outputLocation()
-print 'PARTICLE LOCATION: ', particleLocation
 
 BsSel = DataOnDemand('DOD_Bs',
                      Location = particleLocation)
 
 from Configurables import FilterDesktop
 _bsFilter = FilterDesktop('_bsFilter',
-                          Code = 'ALL',
-                          RootInTES = '/Event/MicroDST/')
+                          Code = 'ALL')
+
 from Configurables import LoKi__Hybrid__PlotTool as PlotTool
 
 _bsFilter.HistoProduce = True
@@ -58,16 +57,14 @@ dv.Simulation=True
 dv.RedoMCLinks=False
 dv.UserAlgorithms = [seq]
 dv.InputType='MDST'
-mainSeq = GaudiSequencer("DaVinciMainSequence")
-mainSeq.RootInTES = "/Event/MicroDST/"
 # some necessary framework stuff
 
-ecs = EventClockSvc()
-ecs.addTool(OdinTimeDecoder)
-ecs.OdinTimeDecoder.RootInTES = "/Event/MicroDST/"
+#ecs = EventClockSvc()
+#ecs.addTool(OdinTimeDecoder)
+#ecs.OdinTimeDecoder.RootInTES = "/Event/MicroDST/"
+#ecs.OdinTimeDecoder.RootInTES = "/Event/"
 
-
-dv.Input   = ["DATAFILE='PFN:/afs/cern.ch/user/j/jpalac/w0/nightlies/lhcb3/DaVinci_HEAD/Ex/MicroDSTExample/cmt/Test.SeqBs2Jpsi2MuMuPhi2KK.mdst'  TYP='POOL_ROOTTREE' OPT='READ'" ]
+dv.Input   = ["DATAFILE='PFN:/afs/cern.ch/user/j/jpalac/w0/nightlies/lhcb3/DaVinci_HEAD/Ex/MicroDSTExample/cmt/TestODIN_.SeqBs2Jpsi2MuMuPhi2KK.mdst'  TYP='POOL_ROOTTREE' OPT='READ'" ]
 
 ApplicationMgr().ExtSvc += [ "NTupleSvc" ]
 ApplicationMgr().HistogramPersistency = "ROOT"
