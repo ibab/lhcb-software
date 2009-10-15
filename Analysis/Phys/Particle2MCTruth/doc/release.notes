@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.21 2009-10-15 09:17:43 jpalac Exp $
+! $Id: release.notes,v 1.22 2009-10-15 16:23:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Particle2MCTruth
 ! Responsible : Juan PALACIOS
@@ -6,10 +6,12 @@
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
 
-! 2009-08-25 - Juan PALACIOS
- - Revert to old style API mechanism.
+! 2009-10-15 - Juan PALACIOS
+ - P2MCP/IP2MCP.h
+  . Add missing GAUDI_API
+
  - cmt/requirements
-  . Increase version to v2r3p1
+  . Increase version to v2r3p2
 
 ! ======================== Particle2MCTruth v2r3 2009-08-27 =================
 
