@@ -8,6 +8,7 @@
 #include <set>
 #include <map>
 #include <vector>
+#include <sstream>
 
 //  Author: jotalo, 19/06/2008
 
@@ -45,7 +46,7 @@ public:
   void printMap();
   void printServiceSet();
 
-  void write(std::string saveDir, std::string &fileName);
+  void write(std::string saveDir, std::string &fileName, int runNumber);
   void add();
   void setServiceSet(const std::set<std::string>& serviceSet){m_serviceSet = serviceSet;}
 

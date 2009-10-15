@@ -455,7 +455,7 @@ std::string BaseServiceMap::createSaverName (const std::string &serviceName){
 
 
 
-void BaseServiceMap::write(std::string saveDir, std::string &fileName)
+void BaseServiceMap::write(std::string saveDir, std::string &fileName, int runNumber)
 {
   MsgStream msg(msgSvc(), name());
 //  msg << MSG::DEBUG << " We will try to Write " << endreq;
@@ -464,21 +464,30 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 //    msg << MSG::DEBUG << " Writer can't write because ServerMap, ServiceMap or DimInfoMap is empty " << endreq;
     return;
   }
+   //get the runnumber
+  std::vector<std::string> savedirParts = Misc::splitString(saveDir, "/");
+  std::string tmpPart=savedirParts[savedirParts.size()-1];
 
-// check if the saveset dir exists if not make it
-//   void *dir = gSystem->OpenDirectory(saveDir.c_str());
-//     if (dir == 0) {
-//     gSystem->mkdir(dirName.c_str(),true);
-//    }
 
+  msg << MSG::INFO << " runnumber " << runNumber << endreq;
+  std::string runNumberstr;
+  std::stringstream outstr;
+  outstr << runNumber;
+  runNumberstr=outstr.str();
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
   TFile *f=0;
 
   char timestr[64];
+  char year[5];
+  char month[3];  
+  char day[3];  
   time_t rawTime=time(NULL);
   struct tm* timeInfo = localtime(&rawTime);
   ::strftime(timestr, sizeof(timestr),"%Y%m%dT%H%M%S", timeInfo);
+  ::strftime(year, sizeof(year),"%Y", timeInfo);
+  ::strftime(month, sizeof(month),"%m", timeInfo);
+  ::strftime(day, sizeof(day),"%d", timeInfo);
 
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
@@ -500,15 +509,15 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
 
     
    // std::string tmpfile = saveDir + m_dimInfoIt->first + "-" + timestr + ".root";
-    std::string tmpfile = saveDir + taskName + "/" + taskName + "-" + timestr + ".root";
+    std::string tmpfile = saveDir + taskName + "/" + month +"/" +day + "/"+ taskName + "-" + runNumberstr +"-"+ timestr + ".root";
     fileName.replace(0, fileName.length(), tmpfile);
     msg << MSG::INFO << "SaverSvc will save histograms in file " << fileName << endreq;
 
-/*    std::string dirName = saveDir + taskName + "/" + taskName;  
+    std::string dirName = saveDir + taskName + "/" + month +"/" +day ;  
     void *hdir = gSystem->OpenDirectory(dirName.c_str());
     if (hdir == 0) {
      gSystem->mkdir(dirName.c_str(),true);
-    }*/
+    }
 
     f = new TFile(fileName.c_str(),"create");
     
@@ -581,13 +590,12 @@ void BaseServiceMap::write(std::string saveDir, std::string &fileName)
   }
   
   msg << MSG::INFO << "SaverSvc saved histograms in file " << fileName << endreq;
-  
 }
 
 
 void BaseServiceMap::add() {
   MsgStream msg(msgSvc(), name());
-  
+  // msg << MSG::INFO << " Adder will add. " << endreq;
   std::map<std::string, DimInfoMonObject*>::iterator it;
 
   if (0 == m_serverMap.size()){
@@ -605,7 +613,7 @@ void BaseServiceMap::add() {
 
   for (m_dimInfoIt=m_dimInfo.begin(); m_dimInfoIt!=m_dimInfo.end(); ++m_dimInfoIt) 
   {
-   // msg << MSG::DEBUG << " Adder : " << m_dimInfoIt->first << endreq;
+  // msg << MSG::INFO << " Adder : " << m_dimInfoIt->first << endreq;
 
     if (m_dimSrv.find(m_dimInfoIt->first) == m_dimSrv.end()) { 
   //    msg << MSG::DEBUG << "No Adder Found " << m_dimInfoIt->first << endreq;
@@ -646,13 +654,14 @@ void BaseServiceMap::add() {
           ((MonRate*) (m_dimSrv[m_dimInfoIt->first].second))->setNumCounters(((MonRate*)it->second->monObject())->numCounters());
         }
       }
-      //msg << MSG::DEBUG << "Combining Service : " << endreq;
+      //msg << MSG::INFO << "Combining Service : " << endreq;
       m_dimSrv[m_dimInfoIt->first].second->combine(it->second->monObject());
     }
-    //msg << MSG::DEBUG << "Updating Service : " << endreq;
+   // msg << MSG::INFO << "Updating Service : " << endreq;
     m_dimSrv[m_dimInfoIt->first].first->updateService(m_dimSrv[m_dimInfoIt->first].second->endOfRun());
 
     if (m_dimSrv[m_dimInfoIt->first].second->typeName().compare(s_monRate) == 0){
+     // msg << MSG::INFO << "Updating MonRate " << endreq;
       if (m_processMgr->publishRates()) m_monRateDecoder->update((MonRate*)(m_dimSrv[m_dimInfoIt->first].second));
     }
   }

@@ -4,6 +4,7 @@
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IMessageSvc.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
+
 #include <string>
 #include <set>
 #include <map>
@@ -20,6 +21,14 @@ static const int s_reconfigureAdder(129);
 static const std::string s_Adder("Adder");
 static const std::string s_Saver("Saver");
 
+#define MAX_CAR 512
+
+
+struct RunNumberData
+{
+  int value;
+  char comment[MAX_CAR+1];
+};
 
 //  Author: jotalo, 19/06/2008
 
@@ -29,6 +38,9 @@ class BaseServiceMap;
 class Interactor;
 class DimTimerProcess;
 class RatePublisher;
+class DimInfoRunNb;
+
+
 class ProcessMgr {
 public:
   ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &m_refreshTime);
@@ -71,7 +83,7 @@ public:
   void setPartitionName(const std::string &partitionName);
   void setNodeName(const std::string &nodeName){m_nodeName=nodeName;}
   void setPublishRates(bool publishRates){m_publishRates = publishRates;}
-
+  void setrunNumber(DimInfoRunNb* runNbSvc) {m_runNbSvc=runNbSvc;}
   void setSaveDir(const std::string &saveDir){m_saveDir = saveDir;}
   void setSaveDiff(const int &saveDiff){m_saveDiff = saveDiff;}
   bool saveDiff () {if (0 == m_saveDiff) return false; else return true;}
@@ -81,6 +93,7 @@ public:
   std::string taskName() {return m_taskName;}
   std::string getPartitionName() {return m_partitionName;}
   std::string getFarm() {return m_farm;}
+  int getrunNumber();
   
   void setMonitorSvc(IGauchoMonitorSvc* pGauchoMonitorSvc){m_pGauchoMonitorSvc = pGauchoMonitorSvc;}
   //void setFileStaus(std::string& file) {m_pFile = &file;}
@@ -104,6 +117,7 @@ protected:
   std::string m_partitionName;
   std::string m_nodeName;
   std::string m_farm;
+  int m_runNumber;
   
   //std::string *m_pFile;
   std::string m_fileName;
@@ -124,6 +138,8 @@ protected:
   DimInfoServices* m_dimInfoServices;
   BaseServiceMap*  m_serviceMap;
   DimTimerProcess* m_dimTimerProcess;
+  DimInfoRunNb* m_runNbSvc;
+
 
 };
 

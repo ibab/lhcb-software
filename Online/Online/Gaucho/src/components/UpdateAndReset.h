@@ -10,6 +10,7 @@
 #include "GauchoTimer.h"
 #include "dis.hxx"
 #include <map>
+#include <sstream>
 
 static const std::string s_statusNoUpdated("NO_UPDATED");
 static const std::string s_statusProcessingUpdate("PROCESSINGUPDATE");

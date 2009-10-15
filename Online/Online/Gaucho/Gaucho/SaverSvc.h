@@ -11,6 +11,8 @@
 
 class IIncidentSvc;
 class ProcessManager;
+class DimInfoRunNb;
+
 namespace LHCb {
 
   class SaverSvc : virtual public IIncidentListener, public Service, public Interactor  {
@@ -70,6 +72,7 @@ private:
   bool m_enablePostEvents;
   
   DimService* m_dimSvcSaveSetLoc;  
+  DimInfoRunNb* m_runNbSvc;
   };
 }  //end namespace LHCb  
 

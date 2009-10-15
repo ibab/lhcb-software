@@ -7,7 +7,7 @@
 #include "Gaucho/Misc.h"
 #include "CPP/Interactor.h"
 #include "TFile.h"
-
+#include "Gaucho/DimInfoRunNb.h"
 
 ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor *service, const int &refreshTime): m_serviceOwner(serviceOwner), m_name("ProcessMgr"), m_msgSvc(msgSvc), m_service(service), m_refreshTime(refreshTime)
 {
@@ -22,6 +22,7 @@ ProcessMgr::~ProcessMgr() {
   if (m_dimInfoServices) {delete m_dimInfoServices; m_dimInfoServices=0;}
   if (m_dimInfoServers) {delete m_dimInfoServers; m_dimInfoServers=0;}
   if (m_serviceMap) {delete m_serviceMap; m_serviceMap=0;}
+  if (m_runNbSvc) {delete m_runNbSvc;}
 }
 
 void ProcessMgr::updateMap(){
@@ -72,7 +73,7 @@ void ProcessMgr::destroyTimerProcess() {
 void ProcessMgr::timerHandler(){
   MsgStream msg(msgSvc(), name());
  // msg << MSG::DEBUG << "inside timerHandler"<< endreq;
-
+    
   if (m_serviceOwner.compare(s_Adder) == 0){
     m_serviceMap->add();
  //   msg << MSG::DEBUG << "isAdder"<< endreq;
@@ -91,8 +92,18 @@ void ProcessMgr::timerHandler(){
 }
 
 void ProcessMgr::write(){
-  m_serviceMap->write(m_saveDir, m_fileName);
+  int runNb = getrunNumber();
+  m_serviceMap->write(m_saveDir, m_fileName,runNb);
 }
+
+
+int ProcessMgr::getrunNumber(){
+  int runmbr = 0;
+   runmbr = m_runNbSvc->getRunNb();
+   return runmbr;
+}
+
+
 
 void ProcessMgr::setUtgid(const std::string &utgid)
 {
@@ -179,13 +190,35 @@ void ProcessMgr::updateServiceSet(std::string &dimString, std::set<std::string> 
        }
     }
     else if (m_serviceOwner.compare(s_Saver)==0){
-      if (serviceName.find("RunNumber") != std::string::npos) {
+     if (serviceName.find("RunNumber") != std::string::npos) {
       //service containing runnumber found
       //subscribe to it and get the runnumber
-        DimInfo *runbsvc = new DimInfo(serviceName.c_str(),-1);
-	int RunNumber = runbsvc->getInt();
-        msg << MSG::INFO << "Runnumber" << RunNumber << endreq;
-	delete runbsvc;
+    
+    //   	int c=0;
+    //    if (m_runNbSvc==0) m_runNbSvc = new DimInfoRunNb(serviceName.c_str());
+
+    //    c=m_runNbSvc->getRunNb();
+    
+
+/*	char * service;
+	char * format;
+        int type;
+	DimBrowser dbr;
+	msg << MSG::INFO << "Looking for " << serviceName << endreq;
+	dbr.getServices(serviceName.c_str());
+        while( (type = dbr.getNextService(service, format)) ) {
+	   msg << MSG::INFO << "service found " << service << " format " << format << endreq;	
+	}
+
+        msg << MSG::INFO << "Subscribing to " << serviceName.c_str() << endreq; 
+	DimInfo runNumber(serviceName.c_str(),1,-1);
+	int ntries = 0;
+	while (ntries<20) {
+           msg << MSG::INFO << "Runnumber " << runNumber.getData()<< endreq;
+	   ntries ++;
+	   sleep(2);
+	   }*/
+
       }
       if (!m_monitoringFarm) {
         //here we need to check for m_partName[1] (only 1 partition at a time in EFF), not the nodename
