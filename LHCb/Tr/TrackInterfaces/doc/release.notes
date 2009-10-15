@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Johan Blouw
+ - added IPitchResTool interface to calculate pitch residuals in the Outer Tracker
+
 ! 2009-09-22 - Wouter Hulsbergen
  - Added missing const to ITrackExtrapolator
 

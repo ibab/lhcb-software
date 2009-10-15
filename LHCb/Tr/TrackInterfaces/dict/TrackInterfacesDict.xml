@@ -38,4 +38,5 @@
   <class name    = "ITrajFitter"             />
   <class name    = "IVeloExpectation"        />
   <class name    = "IVeloClusterPosition"    />
+  <class name    = "IPitchResTool"           />
 </lcgdict>
