@@ -1,5 +1,8 @@
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2002/01/22 18:24:43  ibelyaev
+///  Vanya: update for newer versions of Geant4 and Gaudi
+///
 /// Revision 1.3  2001/08/12 17:24:52  ibelyaev
 /// improvements with Doxygen comments
 ///
@@ -57,7 +60,7 @@ class GiGaElementCnv: public GiGaCnvBase
   static const CLID&          classID();
   
   /// storage Type 
-  static const unsigned char storageType() ; 
+  static unsigned char storageType() ; 
   
   ///
 protected: 

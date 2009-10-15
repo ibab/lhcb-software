@@ -1,8 +1,11 @@
-// $Id: GiGaLAssemblyCnv.h,v 1.1 2002-01-22 18:24:44 ibelyaev Exp $
+// $Id: GiGaLAssemblyCnv.h,v 1.2 2009-10-15 10:01:28 silviam Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
-// $Log: not supported by cvs2svn $  
+// $Log: not supported by cvs2svn $
+// Revision 1.1  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//  
 // ============================================================================
 #ifndef GIGACNV_GIGALASSEMBLYCNV_H 
 #define GIGACNV_GIGALASSEMBLYCNV_H 1
@@ -64,7 +67,7 @@ public:
   
   /** storage Type 
    */
-  static const unsigned char storageType() ; 
+  static unsigned char storageType() ; 
   
 private:
   

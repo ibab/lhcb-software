@@ -1,4 +1,4 @@
-// $Id: GiGaIsotopeCnv.cpp,v 1.8 2007-01-12 15:45:56 ranjard Exp $ 
+// $Id: GiGaIsotopeCnv.cpp,v 1.9 2009-10-15 10:01:01 silviam Exp $ 
 #define GIGACNV_GIGAISOTOPECNV_CPP
 // ============================================================================
 #include "GaudiKernel/CnvFactory.h"
@@ -51,7 +51,7 @@ const CLID&  GiGaIsotopeCnv::classID() { return Isotope::classID() ; }
 // ============================================================================
 /// StorageType
 // ============================================================================
-const unsigned char GiGaIsotopeCnv::storageType () 
+unsigned char GiGaIsotopeCnv::storageType () 
 { return GiGaGeom_StorageType; }
 // ============================================================================
 

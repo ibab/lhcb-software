@@ -1,4 +1,4 @@
-// $Id: GiGaLVolumeCnv.h,v 1.7 2007-08-02 15:03:24 gcorti Exp $ 
+// $Id: GiGaLVolumeCnv.h,v 1.8 2009-10-15 10:01:45 silviam Exp $ 
 #ifndef     GIGA_GIGALVOLUMECNV_H
 #define     GIGA_GIGALVOLUMECNV_H 1 
 
@@ -58,7 +58,7 @@ public:
   static const CLID& classID();
 
   /// storage Type 
-  static const unsigned char storageType(); 
+  static unsigned char storageType(); 
 
   /** Provide matrix transformation of physical volume in its mother reference
    *  system with corresponding values from associated detector element

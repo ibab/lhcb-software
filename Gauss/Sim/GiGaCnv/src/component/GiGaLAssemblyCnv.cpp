@@ -1,4 +1,4 @@
-// $Id: GiGaLAssemblyCnv.cpp,v 1.5 2007-01-12 15:45:57 ranjard Exp $
+// $Id: GiGaLAssemblyCnv.cpp,v 1.6 2009-10-15 10:01:19 silviam Exp $
 // Includes 
 #include "GaudiKernel/CnvFactory.h"
 #include "GaudiKernel/DataObject.h"
@@ -63,7 +63,7 @@ const CLID& GiGaLAssemblyCnv::classID     () { return CLID_LAssembly ; }
 /** StorageType
  */ 
 // ============================================================================
-const unsigned char GiGaLAssemblyCnv::storageType ()
+unsigned char GiGaLAssemblyCnv::storageType ()
 { return GiGaGeom_StorageType ; }
 
 // ============================================================================

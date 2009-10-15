@@ -2,6 +2,9 @@
 /// CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 /// $Log: not supported by cvs2svn $
+/// Revision 1.4  2006/01/31 10:39:33  gcorti
+/// adapt to event model
+///
 /// Revision 1.3  2002/12/07 14:36:25  ibelyaev
 ///  see $GIGACNVROOT/doc/release.notes
 ///
@@ -65,7 +68,7 @@ public:
   /** accessor to MCParticle index  (const version)
    *  @return index  
    */
-  inline const int          index   () const { return second ; }
+  inline       int          index   () const { return second ; }
   
 };
 

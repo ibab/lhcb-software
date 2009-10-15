@@ -1,8 +1,11 @@
-// $Id: GiGaMixtureCnv.h,v 1.4 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaMixtureCnv.h,v 1.5 2009-10-15 10:02:03 silviam Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.3  2001/08/12 17:24:54  ibelyaev
 // improvements with Doxygen comments
 //
@@ -59,7 +62,7 @@ public:
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
-  static const unsigned char storageType() ; 
+  static unsigned char storageType() ; 
   ///
 protected: 
   /// miscellaneous functions which performs the conversion itself

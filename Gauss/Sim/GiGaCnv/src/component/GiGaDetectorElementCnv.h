@@ -1,4 +1,4 @@
-// $Id: GiGaDetectorElementCnv.h,v 1.6 2007-10-02 13:14:51 gcorti Exp $ 
+// $Id: GiGaDetectorElementCnv.h,v 1.7 2009-10-15 10:00:35 silviam Exp $ 
 #ifndef    GIGA_GIGADETECTORELEMENT_H
 #define    GIGA_GIGADETECTORELEMENT_H 1 
 
@@ -46,7 +46,7 @@ public:
   static const CLID&         classID();
 
   /// storage Type 
-  static const unsigned char storageType() ; 
+  static unsigned char storageType() ; 
   ///
 
 protected: 

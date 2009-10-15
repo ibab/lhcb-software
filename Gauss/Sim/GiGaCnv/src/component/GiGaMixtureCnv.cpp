@@ -1,4 +1,4 @@
-// $Id: GiGaMixtureCnv.cpp,v 1.7 2007-01-12 15:45:57 ranjard Exp $
+// $Id: GiGaMixtureCnv.cpp,v 1.8 2009-10-15 10:01:53 silviam Exp $
 #define GIGACNV_GIGAMIXTURECNV_CPP 1 
 // ============================================================================
 #include "GaudiKernel/CnvFactory.h" 
@@ -37,7 +37,7 @@ GiGaMixtureCnv::~GiGaMixtureCnv(){};
 const CLID&  GiGaMixtureCnv::classID            () 
 { return Mixture::classID() ; }
 /// StorageType 
-const unsigned char GiGaMixtureCnv::storageType () 
+unsigned char GiGaMixtureCnv::storageType () 
 { return GiGaGeom_StorageType; } 
 
 /// Create representation 

@@ -1,4 +1,4 @@
-// $Id: GiGaDetectorElementCnv.cpp,v 1.12 2007-10-02 13:14:50 gcorti Exp $ 
+// $Id: GiGaDetectorElementCnv.cpp,v 1.13 2009-10-15 10:00:28 silviam Exp $ 
 
 // Include files 
 
@@ -67,7 +67,7 @@ const CLID&         GiGaDetectorElementCnv::classID     ()
 //=============================================================================
 // StorageType 
 //=============================================================================
-const unsigned char GiGaDetectorElementCnv::storageType () 
+unsigned char GiGaDetectorElementCnv::storageType () 
 { return GiGaGeom_StorageType ; } 
 
 //=============================================================================

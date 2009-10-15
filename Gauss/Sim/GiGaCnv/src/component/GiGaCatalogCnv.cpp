@@ -1,4 +1,4 @@
-// $Id: GiGaCatalogCnv.cpp,v 1.6 2007-01-12 15:45:55 ranjard Exp $
+// $Id: GiGaCatalogCnv.cpp,v 1.7 2009-10-15 10:00:05 silviam Exp $
 // Include files
 
 // from Gaudi
@@ -63,7 +63,7 @@ const CLID&  GiGaCatalogCnv::classID () { return DataObject::classID() ; }
 // StorageType
 // ============================================================================
 //const unsigned char GiGaCatalogCnv::storageType () 
-const long GiGaCatalogCnv::storageType () 
+long GiGaCatalogCnv::storageType () 
 { return GiGaGeom_StorageType; } 
 
 //=============================================================================

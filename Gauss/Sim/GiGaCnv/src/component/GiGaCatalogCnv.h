@@ -1,8 +1,11 @@
-// $Id: GiGaCatalogCnv.h,v 1.3 2003-12-10 14:04:24 ranjard Exp $ 
+// $Id: GiGaCatalogCnv.h,v 1.4 2009-10-15 10:00:14 silviam Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.3  2003/12/10 14:04:24  ranjard
+// v14r0 - fix for Gaudi v13r0
+//
 // Revision 1.2  2002/01/22 18:24:43  ibelyaev
 //  Vanya: update for newer versions of Geant4 and Gaudi
 //
@@ -85,7 +88,7 @@ public:
    *  @return storage type  for created object 
    */
   //static const unsigned char storageType() ; 
-  static const long storageType() ; 
+  static long storageType() ; 
   
 private:
 

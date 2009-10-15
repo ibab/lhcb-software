@@ -1,4 +1,4 @@
-// $Id: GiGaSurfaceCnv.cpp,v 1.14 2007-01-12 15:45:58 ranjard Exp $
+// $Id: GiGaSurfaceCnv.cpp,v 1.15 2009-10-15 10:02:15 silviam Exp $
 #define GIGACNV_GIGASURFACECNV_CPP 1 
 // ============================================================================
 // GaudiKernel
@@ -67,7 +67,7 @@ const CLID&  GiGaSurfaceCnv::classID            ()
 // ============================================================================
 /// StorageType
 // ============================================================================
-const unsigned char GiGaSurfaceCnv::storageType () 
+unsigned char GiGaSurfaceCnv::storageType () 
 { return GiGaGeom_StorageType; } 
 
 // ============================================================================

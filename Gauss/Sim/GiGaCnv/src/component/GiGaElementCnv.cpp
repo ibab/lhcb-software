@@ -1,8 +1,11 @@
-// $Id: GiGaElementCnv.cpp,v 1.7 2007-01-12 15:45:56 ranjard Exp $ 
+// $Id: GiGaElementCnv.cpp,v 1.8 2009-10-15 10:00:43 silviam Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.7  2007/01/12 15:45:56  ranjard
+// v18r0 - use GAUDI v19r0
+//
 // Revision 1.6  2002/12/07 14:36:26  ibelyaev
 //  see $GIGACNVROOT/doc/release.notes
 //
@@ -69,7 +72,7 @@ const CLID&  GiGaElementCnv::classID () { return Element::classID() ; }
 // ============================================================================
 /// StorageType 
 // ============================================================================
-const unsigned char GiGaElementCnv::storageType ()
+unsigned char GiGaElementCnv::storageType ()
 { return GiGaGeom_StorageType; } 
 // ============================================================================
 

@@ -1,6 +1,9 @@
-// $Id: GiGaSurfaceCnv.h,v 1.5 2002-01-22 18:24:44 ibelyaev Exp $ 
+// $Id: GiGaSurfaceCnv.h,v 1.6 2009-10-15 10:02:32 silviam Exp $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.5  2002/01/22 18:24:44  ibelyaev
+//  Vanya: update for newer versions of Geant4 and Gaudi
+//
 // Revision 1.4  2001/11/19 18:27:01  ibelyaev
 //  bux fix and the new converter for catalogs
 //
@@ -65,7 +68,7 @@ public:
   /// Class ID for created object == class ID for this specific converter
   static const CLID&          classID();
   /// storage Type 
-  static const unsigned char storageType() ; 
+  static unsigned char storageType() ; 
   ///
 protected: 
   /// miscellaneous functions which performs the conversion itself

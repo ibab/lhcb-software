@@ -1,4 +1,4 @@
-// $Id: GiGaLVolumeCnv.cpp,v 1.17 2007-10-02 13:14:51 gcorti Exp $ 
+// $Id: GiGaLVolumeCnv.cpp,v 1.18 2009-10-15 10:01:36 silviam Exp $ 
 // Include files 
 
 // from Gaudi
@@ -69,7 +69,7 @@ const CLID& GiGaLVolumeCnv::classID() {
 //=============================================================================
 // StorageType
 //=============================================================================
-const unsigned char GiGaLVolumeCnv::storageType () 
+unsigned char GiGaLVolumeCnv::storageType () 
 { return GiGaGeom_StorageType ; } 
 
 //=============================================================================
