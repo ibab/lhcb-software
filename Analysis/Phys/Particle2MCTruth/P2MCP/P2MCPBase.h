@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.h,v 1.9 2009-07-30 13:58:21 jpalac Exp $
+// $Id: P2MCPBase.h,v 1.10 2009-10-15 09:08:50 jpalac Exp $
 #ifndef P2MCP_P2MCPBASE_H 
 #define P2MCP_P2MCPBASE_H 1
 
@@ -24,7 +24,8 @@
  *  @author Juan PALACIOS
  *  @date   2009-01-30
  */
-class GAUDI_API P2MCPBase : public extends1<GaudiTool, IP2MCP>
+class P2MCPBase : public GaudiTool,
+                  virtual public IP2MCP
 {
 public: 
   /// Standard constructor
