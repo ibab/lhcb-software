@@ -5,6 +5,10 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+! 2009-10-15 - Marco Cattaneo
+ - In python/RecSys/Configuration.py, add RecMoniSys configurable to set up
+   Monitoring phase of, e.g., Brunel
+
 ! 2009-10-14 - Christopher Rob Jones
  - Update python Configurable to allow users to explicit set an empty sequence
 

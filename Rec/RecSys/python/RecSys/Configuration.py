@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.15 2009-10-14 06:15:22 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2009-10-15 13:51:48 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -15,7 +15,7 @@ from GlobalReco.Configuration import *
 from CaloReco.Configuration   import OffLineCaloRecoConf 
 from CaloPIDs.Configuration   import OffLineCaloPIDsConf
 
-from Configurables import ProcessPhase
+from Configurables import ProcessPhase, CaloMoniDstConf, RichRecQCConf
 
 ## @class RecSysConf
 #  Configurable for LHCb reconstruction
@@ -65,6 +65,7 @@ class RecSysConf(LHCbConfigurableUser):
             else:
                 self.setProp("RecoSequence",self.DefaultSubDetsFieldOn)
         recoSeq = self.getProp("RecoSequence")
+        from Configurables import ProcessPhase
         ProcessPhase("Reco").DetectorList += recoSeq
 
         # Primary Vertex and V0 finding
@@ -139,3 +140,113 @@ class RecSysConf(LHCbConfigurableUser):
         if "PROTO" in recoSeq:
             self.setOtherProps(GlobalRecoConf(),["SpecialData","Context","OutputLevel"])
             GlobalRecoConf().RecoSequencer = GaudiSequencer("RecoPROTOSeq")
+
+
+## @class RecMoniConf
+#  Configurable for LHCb reconstruction monitoring (without MC truth)
+#  @author Marco Cattaneo (Marco.Cattaneo@cern.ch)
+#  @date   15/10/2009
+class RecMoniConf(LHCbConfigurableUser):
+
+    ## Possible used Configurables
+    __used_configurables__ = [ CaloMoniDstConf, RichRecQCConf ]
+
+    ## Steering options
+    __slots__ = {
+        "MoniSequence" : None
+       ,"ExpertHistos" : False
+       ,"CheckEnabled" : False
+       ,"OutputLevel"  : INFO 
+       ,"Context"      : "Offline"
+       ,"DataType"     : ""
+        }
+
+    _propertyDocDct = { 
+        'MoniSequence' : """ List of subdetectors to monitor, default is all known """
+       ,'ExpertHistos' : """ Flags whether to fill expert histos (default False) """
+       ,'CheckEnabled' : """ Flags whether a check sequence (with MC truth) is also enabled (default False) """
+       ,'OutputLevel'  : """ The printout level to use (default INFO) """
+       ,'Context'      : """ The context within which to run (default 'Offline') """
+       ,'DataType'     : """ Data type, propagated from the application """
+       }
+
+    ## Known monitoring sequences, all run by default
+    KnownMoniSubdets        = ["CALO","RICH","MUON","VELO","Tr","OT","ST","PROTO"] 
+    KnownExpertMoniSubdets  = KnownMoniSubdets+["TT","IT"]
+    
+    ## Apply the configuration
+    def applyConf(self):
+
+        # Set up monitoring (i.e. not using MC truth)
+        if not self.isPropertySet("MoniSequence"):
+            if self.getProp("ExpertHistos"):
+                moniSeq = self.KnownExpertMoniSubdets
+            else:
+                moniSeq = self.KnownMoniSubdets
+            self.MoniSequence = moniSeq
+        else:
+            for seq in self.getProp("MoniSequence"):
+                if self.getProp("ExpertHistos"):
+                    if seq not in self.KnownExpertMoniSubdets:
+                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
+                else:
+                    if seq not in self.KnownMoniSubdets:
+                        log.warning("Unknown subdet '%s' in MoniSequence"%seq)
+        moniSeq = self.getProp("MoniSequence")
+        from Configurables import ProcessPhase
+        ProcessPhase("Moni").DetectorList += moniSeq
+
+        # Histograms filled both in real and simulated data cases
+        if "CALO" in moniSeq :
+            from Configurables import GaudiSequencer
+            seq = GaudiSequencer( "MoniCALOSeq")
+            caloMoni = CaloMoniDstConf( Sequence = seq, Context = 'Offline' )
+
+        if "VELO" in moniSeq :
+            importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
+
+        if "Tr" in moniSeq :
+            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
+            ConfiguredTrackMonitorSequence(Name='MoniTrSeq')
+
+        if "OT" in moniSeq :
+            from TrackMonitors.ConfiguredTrackMonitors import ConfiguredOTMonitorSequence
+            ConfiguredOTMonitorSequence(Name='MoniOTSeq')
+
+        if "MUON" in moniSeq :
+            from MuonPIDChecker import ConfigureMuonPIDChecker as mmuon
+            mydata =  self.getProp("DataType")
+            mymonitconf = mmuon.ConfigureMuonPIDChecker(data = mydata)
+            mymonitconf.configure(mc = False, expertck = self.getProp("ExpertHistos"))
+
+        if "ST" in moniSeq :
+            from Configurables import ST__STClusterMonitor, GaudiSequencer
+            GaudiSequencer( "MoniSTSeq" ).Members += [ ST__STClusterMonitor("TTClusterMonitor"),
+                                                       ST__STClusterMonitor("ITClusterMonitor")]
+            ST__STClusterMonitor("TTClusterMonitor").DetType = "TT" ## default anyway 
+            ST__STClusterMonitor("ITClusterMonitor").DetType = "IT"
+
+        if "PROTO" in moniSeq :
+            from Configurables import ChargedProtoParticleMoni
+            GaudiSequencer( "MoniPROTOSeq" ).Members += [ChargedProtoParticleMoni("ChargedProtoPMoni")]
+
+        # If checking is enabled, all Rich histograms are booked in check sequence
+        if "RICH" in moniSeq and not self.getProp("CheckEnabled"):
+            from Configurables import GaudiSequencer
+            self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","ExpertHistos"])
+            RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("MoniRICHSeq"))
+            RichRecQCConf().setProp("WithMC", False)
+
+        # Expert histograms
+        if self.getProp("ExpertHistos"):
+            if "TT" in moniSeq :
+                from Configurables import ST__STClusterMonitor
+                clusMoni = ST__STClusterMonitor("TTClusterMonitor")
+                clusMoni.FullDetail = True
+                GaudiSequencer("MoniTTSeq").Members += [clusMoni]
+            if "IT" in moniSeq :
+                from Configurables import ST__STClusterMonitor
+                clusMoni = ST__STClusterMonitor("ITClusterMonitor")
+                clusMoni.FullDetail = True
+                clusMoni.DetType = "IT"
+                GaudiSequencer("MoniITSeq").Members += [clusMoni]
