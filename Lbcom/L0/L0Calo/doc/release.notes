@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.135 2009-10-14 10:31:45 robbep Exp $
+! $Id: release.notes,v 1.136 2009-10-15 07:58:15 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-10-15 - Patrick Robbe
+ - L0CaloAlg.cpp: add "include <numeric>" for std::accumulate
 
 ! 2009-10-14 - Patrick Robbe
  - L0Candidate.h/.cpp: add separate file to contain class declarations

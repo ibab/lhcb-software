@@ -1,10 +1,11 @@
-// $Id: L0CaloAlg.cpp,v 1.58 2009-10-14 10:33:18 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.59 2009-10-15 07:57:34 robbep Exp $
 
 /// local
 #include "L0CaloAlg.h"
 
 /// STL
 #include <fstream>
+#include <numeric>
 
 /// Gaudi
 #include "GaudiKernel/AlgFactory.h"
