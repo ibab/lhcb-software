@@ -56,7 +56,7 @@ DaVinci().MoniSequence = [  tag, tagcheck ]  # The algorithms
 # HLT
 DaVinci().ReplaceL0BanksWithEmulated = True  ## true to rerun L0
 #DaVinci().Hlt2IgnoreHlt1Decision = True     
-DaVinci().HltType = ''  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().Hlt = False
 
 
 ########################################################################

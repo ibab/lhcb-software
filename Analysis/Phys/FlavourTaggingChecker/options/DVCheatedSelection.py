@@ -28,7 +28,7 @@ DaVinci().Simulation   = True
 # HLT
 #DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
 #DaVinci().Hlt2IgnoreHlt1Decision = True    ## Hlt2 irrespective of Hlt1
-DaVinci().HltType = ''                  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().Hlt = False
 
 ########################################################################
 # Data file BsDspi:

@@ -50,7 +50,7 @@ from Configurables import DaVinci
 DaVinci().TupleFile = "DVNtuples.root"         # Ntuple
 DaVinci().HistogramFile='DVHistos.root'
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().DataType = "MC09"                    # Default is "MC09"
 DaVinci().Simulation   = True                  # It's MC
 #
 # Add our own stuff
@@ -60,8 +60,8 @@ DaVinci().MainOptions  = ""                    # None
 #
 # Trigger (Restore when fixed on 2008 data)
 #
-DaVinci().HltType = 'Hlt1+Hlt2'                ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
-DaVinci().RedoMCLinks=True
+DaVinci().Hlt = True
+DaVinci().HltThresholdSettings = "Physics_320Vis_300L0_10Hlt1_Aug09"   # some settings. See HltConf for more.
 ########################################################################
 #
 # To run in shell :

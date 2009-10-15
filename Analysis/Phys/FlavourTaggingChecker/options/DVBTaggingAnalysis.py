@@ -59,8 +59,8 @@ DaVinci().UserAlgorithms = [ preselSeq, tagana ]  # The algorithms
 DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
 #DaVinci().Hlt2IgnoreHlt1Decision = True    ## Hlt2 irrespective of Hlt1
 
-#tagana.RequireTrigger = False
-DaVinci().HltType = 'Hlt1'                  ## pick one of 'Hlt1', 'Hlt2', or 'Hlt1+Hlt2'
+DaVinci().Hlt = True
+DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'
 
 ########################################################################
 # Data file BsDspi:

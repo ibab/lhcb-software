@@ -1,4 +1,4 @@
-#$Id: TestMicroDSTMake.py,v 1.24 2009-08-11 08:02:30 jpalac Exp $
+#$Id: TestMicroDSTMake.py,v 1.25 2009-10-15 09:29:43 pkoppenb Exp $
 from Gaudi.Configuration import *
 from Configurables import DaVinci
 from Configurables import MCParticleArrayFilterAlg
@@ -228,7 +228,7 @@ dv.EvtMax = nEvents
 if L0DUInfo :
     dv.ReplaceL0BanksWithEmulated = True
 if HltInfo :
-    dv.HltType = 'Hlt1+Hlt2'
+    dv.Hlt = True 
 dv.HistogramFile = "EventCount.root"
 #dv.SkipEvents = 2*nEvents
 dv.UserAlgorithms = [evtCountAlg, MySelection]

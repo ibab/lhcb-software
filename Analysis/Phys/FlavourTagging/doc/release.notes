@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.147 2009-10-05 20:51:24 musy Exp $
+! $Id: release.notes,v 1.148 2009-10-15 09:32:06 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
-! 2009-10-05 - Marco Musy
+! 2009-10-15 - Patrick Koppenburg
+ - Replace HltType by Hlt and HltThresholdSettings
+ - v8r9
 
-- removed options/DC06SelBs2DsPi.opts
-- fixes to options/DVBTagging.py
+! 2009-10-05 - Marco Musy
+ - removed options/DC06SelBs2DsPi.opts
+ - fixes to options/DVBTagging.py
 
 !========================== FlavourTagging v8r8 2009-10-01 ===================
 

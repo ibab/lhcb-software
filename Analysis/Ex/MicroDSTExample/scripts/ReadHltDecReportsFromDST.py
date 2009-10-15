@@ -17,7 +17,7 @@ DaVinci().SkipEvents=0
 DaVinci().DataType = "DC06"
 DaVinci().Simulation = True
 DaVinci().ReplaceL0BanksWithEmulated = True
-DaVinci().HltType = 'Hlt1+Hlt2'
+DaVinci().HltType = True
 #==============================================================================
 def EventDataPlots(data, plotter) :
     if (data != None):

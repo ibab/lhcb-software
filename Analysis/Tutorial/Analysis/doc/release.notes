@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.86 2009-10-02 14:10:19 jpalac Exp $
+!$Id: release.notes,v 1.87 2009-10-15 09:27:47 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,9 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - Patrick Koppenburg
+ - Replace HltType by Hlt and HltThresholdSettings
 
 !========================== Analysis v8r3 2009-10-02 =================
 

@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.44 2009-10-02 09:16:19 jpalac Exp $
+!$Id: release.notes,v 1.45 2009-10-15 09:29:43 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - Patrick Koppenburg
+ - Replace HltType by Hlt and HltThresholdSettings
+ - v2r10p1
 
 !======================= Ex/MicroDSTExample v2r10 2009-10-02 =================
 
