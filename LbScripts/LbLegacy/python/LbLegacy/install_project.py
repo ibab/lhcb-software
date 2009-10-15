@@ -1009,7 +1009,13 @@ def getProjectList(name,version,binary=' '):
     # loop over projects to be downloaded
     project_list = {}
     html_list = []
-    fd = open(tar_file+'.html')
+    tar_file_html = tar_file + '.html'
+    if os.path.exists(tar_file_html) :
+        fd = open(tar_file_html)
+    else :
+        log.error("File %s doesn't exist" % os.path.join(this_html_dir,tar_file_html))
+        log.warning("%s %s %s is not installed" % (name, version, binary))
+        sys.exit("some projects are not installed. Exiting ...")
 
     fdlines = fd.readlines()
     for fdline in fdlines:
