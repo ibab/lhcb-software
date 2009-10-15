@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: LoKi_Phi.py,v 1.2 2009-05-21 13:58:58 ibelyaev Exp $ 
+# $Id: LoKi_Phi.py,v 1.3 2009-10-15 09:28:59 pkoppenb Exp $ 
 # =============================================================================
 ## @file
 #  The configuration file to run LoKi_Phi example
@@ -38,7 +38,7 @@ with the campain of Dr.O.Callot et al.:
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 from  Gaudi.Configuration import * 
 
@@ -57,7 +57,7 @@ from  Configurables import DaVinci
 DaVinci (
     DataType       = 'DC06'  , ## Data type  
     Simulation     = True    , ## Monte Carlo 
-    HltType        = ''      ,
+    Hlt            = False      ,
     #
     UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
     # delegate this properties to Event Selector 

@@ -58,7 +58,7 @@ from  Configurables import DaVinci
 DaVinci (
     DataType       = 'DC06'  , ## Data type  
     Simulation     = True    , ## Monte Carlo 
-    HltType        = ''      ,
+    Hlt            = False      ,
     #
     UserAlgorithms = [ alg ] , ## let DaVinci know about local algorithm
     # delegate this properties to Event Selector 
