@@ -1,3 +1,8 @@
+2009-10-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Match.py: 
+	* tests/MatchTest.py: factored out the tests from Match.py
+
 2009-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: Modified to work on Windows, provided that few Unix
