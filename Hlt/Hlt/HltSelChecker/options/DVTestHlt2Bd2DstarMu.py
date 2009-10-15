@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bd2DstarMu.py,v 1.4 2009-10-15 12:32:16 pkoppenb Exp $
+### $Id: DVTestHlt2Bd2DstarMu.py,v 1.5 2009-10-15 12:36:18 pkoppenb Exp $
  #
  #  Test file for HLT Bd->D*MuNu
  #
@@ -30,7 +30,6 @@ moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2Correlations.py")
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 #
 # Decay Tree Tuple

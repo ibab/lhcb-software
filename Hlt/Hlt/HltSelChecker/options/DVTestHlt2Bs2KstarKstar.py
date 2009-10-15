@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.19 2009-10-15 12:32:16 pkoppenb Exp $
+### $Id: DVTestHlt2Bs2KstarKstar.py,v 1.20 2009-10-15 12:36:18 pkoppenb Exp $
  #
  #  Test file for HLT Bs->KstarKstar selection
  #
@@ -35,7 +35,6 @@ moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2Correlations.py")
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple

@@ -35,7 +35,6 @@ moni = GaudiSequencer("Hlt2MonitorSeq")
 moni.IgnoreFilterPassed = True
 moni.Context = "HLT"
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2Correlations.py")
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2MonitorPlots.py")
 importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
 ###
  # Tuple

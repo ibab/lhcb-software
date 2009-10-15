@@ -29,6 +29,7 @@
  - options/*.py : replace all HLTSELECTION by HLTSELCHECKER
  - Rename ReadHltSummary into ReadHltReport, as it reads HltDec- and -SelReports
  - Change options accordingly
+ - Remove references to HltMonitorPlots
  - v9r0
 
 ! 2009-10-14 - Patrick Koppenburg
