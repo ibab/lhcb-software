@@ -1,4 +1,4 @@
-// $Id: IP2MCP.h,v 1.9 2009-10-15 09:08:50 jpalac Exp $
+// $Id: IP2MCP.h,v 1.10 2009-10-15 16:24:45 jpalac Exp $
 #ifndef P2MCP_IP2MCP_H 
 #define P2MCP_IP2MCP_H 1
 
@@ -34,9 +34,11 @@ namespace LHCb
  *  @author Juan PALACIOS
  *  @date   2009-01-19
  */
-class IP2MCP : virtual public IParticle2MCAssociator
+class GAUDI_API IP2MCP : virtual public IParticle2MCAssociator
 {
 public:
+
+  DeclareInterfaceID(IP2MCP, 2, 0 );
 
   /**
    * Calculate and return the weighted associations between an 
@@ -119,11 +121,8 @@ public:
             const LHCb::MCParticle* mcParticle) const = 0;
 
 protected:
-  virtual ~IP2MCP(); ///< virtual and protected destructor
+  virtual ~IP2MCP() {} ///< virtual and protected destructor
 
- public:
-   // Return the interface ID
-   static const InterfaceID& interfaceID();
 
 };
 #endif // P2MCP_IP2MCP_H
