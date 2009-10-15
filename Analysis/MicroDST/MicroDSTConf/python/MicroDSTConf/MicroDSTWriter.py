@@ -1,7 +1,7 @@
 """
 
 """
-__version__ = "$Id: MicroDSTWriter.py,v 1.24 2009-10-14 11:27:45 jpalac Exp $"
+__version__ = "$Id: MicroDSTWriter.py,v 1.25 2009-10-15 08:55:28 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -185,10 +185,10 @@ class MicroDSTWriter(BaseDSTWriter) :
     def extendSequence(self, sel) :
         print self.name(), ": Extending sequence ", sel.sequence().Members
         clonerList = []
-#        if self.getProp("CopyODIN")          :
-#            clonerList+=self._copyODIN(sel)
-#        if self.getProp("CopyRecHeader")     :
-#            clonerList+=self._copyRecHeader(sel)
+        if self.getProp("CopyODIN")          :
+            clonerList+=self._copyODIN(sel)
+        if self.getProp("CopyRecHeader")     :
+            clonerList+=self._copyRecHeader(sel)
         if self.getProp("CopyParticles")     :
             clonerList+=self._copyParticleTrees(sel)
         if self.getProp("CopyPVs")           :
