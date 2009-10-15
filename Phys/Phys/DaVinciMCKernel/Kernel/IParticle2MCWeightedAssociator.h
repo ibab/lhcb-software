@@ -1,4 +1,4 @@
-// $Id: IParticle2MCWeightedAssociator.h,v 1.7 2009-10-15 14:07:30 jpalac Exp $
+// $Id: IParticle2MCWeightedAssociator.h,v 1.8 2009-10-15 16:10:53 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCWEIGHTEDASSOCIATOR_H 1
 
@@ -24,7 +24,7 @@
  *  @author Juan PALACIOS
  *  @date   2009-03-25
  */
-class IParticle2MCWeightedAssociator : virtual public IParticle2MCAssociator
+class GAUDI_API IParticle2MCWeightedAssociator : virtual public IParticle2MCAssociator
 {
 public: 
 
