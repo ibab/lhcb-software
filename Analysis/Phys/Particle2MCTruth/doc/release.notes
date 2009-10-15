@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.20 2009-08-27 09:26:14 jpalac Exp $
+! $Id: release.notes,v 1.21 2009-10-15 09:17:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Particle2MCTruth
 ! Responsible : Juan PALACIOS
 ! Purpose     : Collection of implementations of IP2MCP and
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
+
+! 2009-08-25 - Juan PALACIOS
+ - Revert to old style API mechanism.
+ - cmt/requirements
+  . Increase version to v2r3p1
 
 ! ======================== Particle2MCTruth v2r3 2009-08-27 =================
 
