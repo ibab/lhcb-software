@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.13 2009-10-15 09:13:41 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.14 2009-10-15 16:25:00 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,7 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
   : 
-  P2MCPBase( type, name , parent ),
+  base_class( type, name , parent ),
   m_reporter(0),
   m_matcher(0),
   m_tables()
@@ -43,7 +43,7 @@ MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
 //=============================================================================
 StatusCode MCMatchObjP2MCRelator::initialize()
 {
-  StatusCode sc =  P2MCPBase::initialize();
+  StatusCode sc =  base_class::initialize();
   if (sc.isFailure()) return sc;
   m_reporter = tool<LoKi::IReporter>( "LoKi::Reporter", this ) ;
 
@@ -68,7 +68,7 @@ StatusCode MCMatchObjP2MCRelator::initialize()
 StatusCode MCMatchObjP2MCRelator::finalize()
 {
   m_incSvc=0;
-  return P2MCPBase::finalize();
+  return base_class::finalize();
 }
 //=============================================================================
 bool MCMatchObjP2MCRelator::isMatched(const LHCb::Particle* particle, 
