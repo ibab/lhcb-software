@@ -37,7 +37,7 @@ def Name2Threshold(name) :
         from Gaudi.Configuration import log
         log.warning(' '+'#'*(41+len(name)) )
         log.warning(' ## Using trigger threshold settings "%s" ##'%name)
-        mod = getattr( __import__('HltConf.%s' % name ), name )
+        mod = getattr( __import__('HltSettings.%s' % name ), name )
         cls = getattr( mod, name )
         Name2Threshold._dict[name] = cls()
         #log.warning(' ## type is %-30s ##' % Name2Threshold._dict[name].HltType() )

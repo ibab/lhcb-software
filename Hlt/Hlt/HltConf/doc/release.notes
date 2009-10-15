@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.346 2009-10-15 09:51:46 graven Exp $ 
+! $Id: release.notes,v 1.347 2009-10-15 13:35:40 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-10-15 - Patrick Koppenburg
+ - All threshold settings moved to new package HltSettings
+ - Increment to v5r0
+
 ! 2009-10-15 - Gerhard Raven
  - remove HltRecoSequence from Hlt2 sequence. This sequence is now included 
    in the lines that actually need it.
-
 
 ! 2009-10-14 - Gerhard Raven
  - update the HltType and HltThresholdSettings setup:
