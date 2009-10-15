@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.10 2009-06-03 07:30:48 frankb Exp $
+// $Id: DimRPCFileReader.h,v 1.11 2009-10-15 14:24:30 apuignav Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -60,8 +60,11 @@ namespace LHCb  {
     Command*          m_command;
     /// Buffer with reply data after successful event processing
     std::string       m_reply;
+    std::string       m_idle;
     /// File ID info
     int               m_fileID;
+    /// Slice info
+    int               m_sliceID;
     /// Static DIM callback for command input
     static void cmndCallback(void* tag, void* address, int* size);
     /// Service for publishing info on read events

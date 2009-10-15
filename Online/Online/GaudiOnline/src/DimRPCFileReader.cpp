@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.20 2009-06-02 08:52:11 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.21 2009-10-15 14:24:30 apuignav Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -34,8 +34,8 @@ DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)
   m_receiveEvts(false), m_evtCount(0), m_rpc(0,0)
 {
   ::lib_rtl_create_lock(0,&m_lock);
-  m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
   declareProperty("Incident",     m_incidentName="NEW_INPUT_FID");
+  declareProperty("SliceID" ,     m_sliceID=0);
 }
 
 /// Standard Destructor
@@ -71,7 +71,11 @@ StatusCode DimRPCFileReader::initialize()   {
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
 
   m_command = new Command();
-  // m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
+  m_command->setSliceID( m_sliceID );
+  std::stringstream outstream;
+  outstream << "ds6:statusi1es7:commands4:idles6:paramsds7:sliceIDi" << m_sliceID << "eee";
+  outstream >> m_idle;
+  m_reply = m_idle;
 
   // Init the extra Services
   std::string svcName=RTL::processName()+"/RpcFileDBOut";
@@ -205,6 +209,11 @@ void DimRPCFileReader::handle(const Incident& inc)    {
 StatusCode DimRPCFileReader::run()   {  
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
+    if ( m_command->data.sliceID<0){
+      m_reply=m_command->encodeResponse(0,error="SliceID not set");
+      ::dis_update_service(m_rpc.first);
+      return error("Failed to get SliceID from JobOptions.");
+    }
     while(1) {
       m_receiveEvts = true;
       info ("Starting loop through events");
@@ -239,7 +248,7 @@ StatusCode DimRPCFileReader::run()   {
       m_reply = m_command->encodeResponse(2,m_evtCount);
       ::dis_update_service(m_rpc.first);      
       s_isProcessing = false;
-      m_reply = "ds6:statusi1es6:paramsdes7:commands4:idlee";
+      m_reply = m_idle;
       m_evtCount = 0;
       info("Preparation took %5.2f seconds",difftime(m_timerStopPrep,m_timerStartPrep));
       info("Processing  took %5.2f seconds",difftime(m_timerStopProc,m_timerStartProc));

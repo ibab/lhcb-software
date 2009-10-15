@@ -16,11 +16,13 @@ public:
     std::string guid;
     std::string sender;
     int nEvts;
+    int sliceID;
   } data;
 
   int decodeCommand(std::string msg);
   std::string encodeResponse(int status,int nEvts, std::string error);
   void clear();
+  void setSliceID( int );
   
 private:
   enum StringValue { not_defined,
@@ -43,7 +45,8 @@ Command::Command () {
   data.fileID=-1;
   data.guid="";
   data.sender="";
-  data.nEvts=0;    
+  data.nEvts=0;
+  data.sliceID=-1;
   
   s_mapStringValues["params"] = enum_params;
   s_mapStringValues["command"] = enum_command;
@@ -170,19 +173,23 @@ void Command::clear(){
   data.name="";
   data.file="";
   data.fileID=-1;
-  data.sender="";  
+  data.sender="";
+}
+
+void Command::setSliceID( int id ){
+  data.sliceID = id;
 }
 
 std::string Command::encodeResponse(int status,int nEvts=0, std::string error=""){
   std::stringstream outstream;
   std::string out;
   if (status==0){
-    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "es5:errors"<< error.length() << ":" << error << "es7:commands" << data.name.length() << ":" << data.name << "e";
+    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "es5:errors"<< error.length() << ":" << error << "es7:commands" << data.name.length() << ":" << data.name << "e";
   } else if (status==1){
-    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "ees7:commands" << data.name.length() << ":" << data.name << "e";
+    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "ees7:commands" << data.name.length() << ":" << data.name << "e";
   } else if (status==2) {
-    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "es5:nEvtsi" << nEvts << "ees7:commands" << data.name.length() << ":" << data.name << "e";
-  }
+    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "es5:nEvtsi" << nEvts << "ees7:commands" << data.name.length() << ":" << data.name << "e";
+  } 
   outstream >> out;
   return out;
 }
