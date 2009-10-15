@@ -1,4 +1,4 @@
-// $Id: CameraTool.h,v 1.4 2009-08-26 10:50:11 rogers Exp $
+// $Id: CameraTool.h,v 1.5 2009-10-15 13:09:52 nmangiaf Exp $
 #ifndef CAMERATOOL_H
 #define CAMERATOOL_H 1
 
@@ -10,12 +10,16 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiKernel/ToolFactory.h"
 
+
 // CAMERA.
 #include "container.h"
 
 // from std
 #include <string>
 #include <vector>
+
+// Event
+#include "Event/ODIN.h"
 
 // Forward declarations
 class client;
@@ -36,8 +40,8 @@ class TH2D;
  */
 
 class CameraTool : public GaudiTool,
-                   virtual public ICameraTool
-{
+                   virtual public ICameraTool,
+                   virtual public IIncidentListener {
 
   int numErrBZ;
   int numErrCN;
@@ -133,7 +137,6 @@ public:
   int Append(const std::string & C);
 
 private:
-
   std::string m_servername; ///! Name of the server to connect to.
   int m_servport; ///! Port to connect to the server on.
  
@@ -145,6 +148,9 @@ private:
   container m_out; ///! Holds messages that are to be sent to the CAMERA server.
   bool m_dosend; ///! Indicates if the messages are to be stored and sent to CAMERA or not.
   unsigned int m_lastHistoNum; ///! Part of the title hack required until MonObjects are used. Notes how many histograms are to sent.
+  
+  bool m_newRun;
+  virtual void   handle (const Incident &incident);///! It handles the change of run number to change the Camera data directory
 
 };
 

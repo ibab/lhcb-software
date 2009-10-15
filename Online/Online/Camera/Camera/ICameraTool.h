@@ -1,4 +1,4 @@
-// $Id: ICameraTool.h,v 1.2 2009-08-26 10:50:11 rogers Exp $
+// $Id: ICameraTool.h,v 1.3 2009-10-15 13:09:52 nmangiaf Exp $
 #ifndef RICHKERNEL_ICAMERATOOL_H 
 #define RICHKERNEL_ICAMERATOOL_H 1
 
@@ -29,7 +29,12 @@ class ICameraTool : virtual public IAlgTool {
   // Return the interface ID
   static const InterfaceID& interfaceID() { return IID_ICameraTool; }
   
-  enum MessageLevel { NONE, INFO, WARNING, ERROR };
+  enum MessageLevel { NONE = 0, 
+                      INFO = 1,
+                      WARNING = 2, 
+                      ERROR = 3, 
+                      CAM_COMMAND = 9 
+                     };
 
   virtual int SendAndClear(MessageLevel l,const std::string& who,const std::string& what)=0;
   virtual int SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)=0; 

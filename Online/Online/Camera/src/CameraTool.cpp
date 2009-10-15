@@ -1,5 +1,11 @@
-// $Id: CameraTool.cpp,v 1.6 2009-08-26 10:49:34 rogers Exp $
+// $Id: CameraTool.cpp,v 1.7 2009-10-15 13:09:28 nmangiaf Exp $
 // Include files
+
+// from Gaudi
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "DetDesc/RunChangeIncident.h"
+
 
 // local
 #include "CameraTool.h"
@@ -40,6 +46,7 @@ CameraTool::CameraTool( const std::string& type,
   declareProperty("ServerNames",m_servernames);
   declareProperty("ServerPorts",m_servports);
   declareProperty("Enabled",m_dosend=true);
+  m_newRun = true;
   numErrBZ = 0;
   numErrCN = 0;
 }
@@ -54,7 +61,10 @@ StatusCode CameraTool::initialize()
 {
   const StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;
-  
+
+  // subscribe to incidents
+  incSvc()->addListener( this, IncidentType::RunChange );
+ 
   if (m_dosend) {
     if (m_servernames.size() > 0){
       unsigned int num = m_servernames.size();
@@ -111,6 +121,33 @@ StatusCode CameraTool::finalize()
 
 int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::string& what)
 {
+  //
+  //Change directory if the run changes 
+  //
+  if ( m_newRun ) {
+    //Retrieve the ODIN and check if it's present
+    LHCb::ODIN *odin(NULL);
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default)) {
+      odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default); 
+      unsigned int runNumber = odin->runNumber();
+      if (msgLevel(MSG::DEBUG))
+        debug() << "New Run Number: "<<runNumber<<" = > Camera has changed directory" << endmsg;
+      std::ostringstream msg;
+      msg << "switch "<<runNumber;
+      //std::string msg = "COMMAND/9/switch "+(std::string) argv[1]+"\n";
+      warning()<<msg.str()<<endmsg;
+      m_newRun = false;
+      SendAndClear(ICameraTool::CAM_COMMAND,"COMMAND",msg.str());
+      if (msgLevel(MSG::DEBUG))
+        info() << "New run: Change Camera Directory in "<<runNumber << endmsg;
+    }
+    else {
+      std::ostringstream msg;
+      debug() << "Failed in changing Camera directory after run changed.\n"
+              <<" ODIN bank doesn't exists."
+              <<" It will retry when the next message arrives";
+    }    
+  }//if run changed
 
   std::stringstream ss;
   std::stringstream s;
@@ -193,6 +230,34 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
 
 int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::string& what)
 { 
+  //
+  //Change directory if the run changes 
+  //
+  if ( m_newRun ) {
+    //Retrieve the ODIN and check if it's present
+    LHCb::ODIN *odin(NULL);
+    if (exist<LHCb::ODIN>(LHCb::ODINLocation::Default)) {
+      odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default); 
+      unsigned int runNumber = odin->runNumber();
+      if (msgLevel(MSG::DEBUG))
+        debug() << "New Run Number: "<<runNumber<<" = > Camera has changed directory" << endmsg;
+      std::ostringstream msg;
+      msg << "switch "<<runNumber;
+      //std::string msg = "COMMAND/9/switch "+(std::string) argv[1]+"\n";
+      warning()<<msg.str()<<endmsg;
+      m_newRun = false;
+      SendAndClear(ICameraTool::CAM_COMMAND,"COMMAND",msg.str());
+      if (msgLevel(MSG::DEBUG))
+        info() << "New run: Change Camera Directory in "<<runNumber << endmsg;
+    }
+    else {
+      std::ostringstream msg;
+      debug() << "Failed in changing Camera directory after run changed.\n"
+              <<" ODIN bank doesn't exists."
+              <<" It will retry when the next message arrives";
+    }    
+  }//if run changed
+
   m_out.add("TEXT","Time of report: ");
   time_t t = time(NULL);
   m_out.add("CTIME",ctime(&t));
@@ -360,6 +425,9 @@ std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) {
   case ICameraTool::ERROR:
     os << 3;
     break;
+  case ICameraTool::CAM_COMMAND:
+    os << 9;
+    break;
     // Use the None case for default.
   default:
     os << 0;
@@ -367,3 +435,14 @@ std::ostream& operator<<(std::ostream &os, ICameraTool::MessageLevel l) {
   }// switch(1)
   return os;
 }//operator<<(std::ostream &, ICameraTool::MessageLevel)
+
+void CameraTool::handle(const Incident &incident) {
+
+  if ( msgLevel(MSG::VERBOSE) )
+    verbose() << "Beginning of handle " << endmsg;
+
+  if (IncidentType::RunChange == incident.type() ) {
+    m_newRun = true;
+  } // if incidentType
+
+} // void handle
