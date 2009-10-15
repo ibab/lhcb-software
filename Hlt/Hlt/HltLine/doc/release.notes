@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.35 2009-10-15 12:48:25 graven Exp $
+! $Id: release.notes,v 1.36 2009-10-15 12:50:19 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -11,6 +11,7 @@
    by the dependency resolution
  - in Hlt2Lines, 'usePV' now does PV2D instead of PV3D (as 2D is what 
    is used!)
+ - streamline HltReco.py 
 
 ! 2009-10-13 - Patrick Koppenburg
  - Adapt to new options of PatDownstream

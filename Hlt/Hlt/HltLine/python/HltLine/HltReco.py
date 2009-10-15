@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.8 2009-10-13 09:05:48 pkoppenb Exp $
+# $Id: HltReco.py,v 1.9 2009-10-15 12:50:19 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -143,6 +143,7 @@ PatDownstream.OutputLocation="Hlt/Track/SeedTT"
 PatDownstream.RemoveUsed = True
 PatDownstream.RemoveAll = True
 
+
 FitSeeding = TrackEventFitter('FitSeedTTTracks')
 FitSeeding.TracksInContainer  = PatDownstream.OutputLocation
 FitSeeding.TracksOutContainer = "Hlt/Track/FitSeedTT"
@@ -191,22 +192,11 @@ from HltDecodeRaw import DecodeVELO
 recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', MeasureTime = True
                                          , Members = DecodeVELO.members() +  [ patVeloR ] )
 
-recoRZPVSequence = GaudiSequencer( 'HltRecoRZPVSequence' , MeasureTime = True, IgnoreFilterPassed = True
-                                 , Members = [ patPV2D ] )
-
-recoRZVeloSequence = GaudiSequencer ( 'HltRecoRZVeloSequence', MeasureTime = True
-                                    , Members = 
-                                    [  recoRZVeloTracksSequence
-                                    ,  recoRZPVSequence ] )
-
 # define basic reco sequence, this should be run in any case
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
-                                  ,  Members =
-                                  [  recoRZVeloSequence
-		                  ,  recoVelo
-				  ,  recoVeloGeneral
-#                                  ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
-				  ] )
+                                  ,  Members = [  recoRZVeloTracksSequence ,  recoVelo ,  recoVeloGeneral
+                                               # ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
+				                               ] )
 
 # Now we add different algorithms for long track reco based on the different reconstruction scenarios
 # first we want to decide if the seeding should run
@@ -238,11 +228,6 @@ if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , MeasureTime = True
                                              , Members = [ recoRZVeloTracksSequence , prepareRZVelo ] )
 
-hlt1RecoRZPVSequence = GaudiSequencer( 'Hlt1RecoRZPVSequence', MeasureTime = True
-                                     , Members = [ recoRZPVSequence , preparePV2D ] )
-
-recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
-                           , Members = [ recoRZVeloSequence , prepareRZVelo, preparePV2D ] ) 
 
 #hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
 #                                 , Members = 
@@ -253,15 +238,14 @@ recoRZVelo = GaudiSequencer( 'Hlt1RecoRZVeloSequence' , MeasureTime = True
 #                                 , recoFwd ] )
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
-                        , Members =
-                        [ trackRecoSequence ] )
+                        , Members = [ trackRecoSequence ] )
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward ] )
-PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
+PV3D     = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoPV3D ] )
 RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
 #Forward1 = bindMembers( None, [ patVeloR, recoVelo, recoForward ] )
 #PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
