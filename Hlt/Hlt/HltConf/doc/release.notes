@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.347 2009-10-15 13:35:40 pkoppenb Exp $ 
+! $Id: release.notes,v 1.348 2009-10-15 15:00:40 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -12,6 +12,8 @@
 ! 2009-10-15 - Gerhard Raven
  - remove HltRecoSequence from Hlt2 sequence. This sequence is now included 
    in the lines that actually need it.
+ - ALWAYS run the Hlt2 configuration, even if 'empty' Hlt2 (this possible now
+   the above change has been made)
 
 ! 2009-10-14 - Gerhard Raven
  - update the HltType and HltThresholdSettings setup:
