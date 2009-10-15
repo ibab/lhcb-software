@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.475 2009-10-15 15:38:25 pkoppenb Exp $
+! $Id: release.notes,v 1.476 2009-10-15 16:53:40 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-10-15 - Juan PALACIOS
+ - src/PhysDesktop.cpp
+  . No longer return failure if no LHCb::Vertices found. Print Info and
+    continue.
 
 ! 2009-10-15 - Patrick Koppenburg
  - Reduce the verbosity of the tweaks
