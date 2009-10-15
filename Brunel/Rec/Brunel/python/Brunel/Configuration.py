@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.96 2009-10-14 16:26:27 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.97 2009-10-15 10:49:14 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -135,13 +135,16 @@ class Brunel(LHCbConfigurableUser):
             if hasattr( self, "WriteFSR" ): log.warning("Don't know how to write FSR to MDF output file")
             self.setProp("WriteFSR", False)
 
-        self.configureSequences( withMC, inputType )
+        # Flag to handle or not LumiEvents
+        handleLumi = inputType in ["MDF","ETC"] and not withMC
+
+        self.configureSequences( withMC, handleLumi )
 
         self.configureInit( inputType )
         
         self.configureInput( inputType )
 
-        self.configureOutput( outputType, withMC )
+        self.configureOutput( outputType, withMC, handleLumi )
 
         # Activate all monitoring (does not use MC truth)
         self.configureMoni( histOpt == "Expert", withMC )
@@ -156,13 +159,6 @@ class Brunel(LHCbConfigurableUser):
 
             # activate all configured checking (uses MC truth)
             self.configureCheck( histOpt == "Expert" )
-
-        # Setup L0 filtering if requested, runs L0 before Reco
-        if self.getProp("RecL0Only"):
-            ProcessPhase("Init").DetectorList.append("L0")
-            L0Conf().L0Sequencer = GaudiSequencer("InitL0Seq")
-            L0Conf().FilterL0FromRaw = True
-            self.setOtherProps( L0Conf(), ["DataType"] )
 
         # ROOT persistency for histograms
         importOptions('$STDOPTS/RootHist.opts')
@@ -201,15 +197,15 @@ class Brunel(LHCbConfigurableUser):
         AuditorSvc().Auditors += [ 'TimingAuditor' ] 
         SequencerTimerTool().OutputLevel = 4
         
-    def configureSequences(self, withMC, inputType):
+    def configureSequences(self, withMC, handleLumi):
         brunelSeq = GaudiSequencer("BrunelSequencer")
         brunelSeq.Context = self.getProp("Context")
         ApplicationMgr().TopAlg += [ brunelSeq ]
         brunelSeq.Members += [ "ProcessPhase/Init" ]
         physicsSeq = GaudiSequencer( "PhysicsSeq" )
 
-        # Treatment of luminosity events (only on MDF or real data ETC)
-        if not withMC and inputType in ["MDF","ETC"]:
+        # Treatment of luminosity events
+        if handleLumi:
             lumiSeq = GaudiSequencer("LumiSeq")
             # Count the events for the FSR
             if self.getProp("WriteFSR"):
@@ -234,6 +230,14 @@ class Brunel(LHCbConfigurableUser):
 
         # Convert Calo 'packed' banks to 'short' banks if needed
         physicsSeq.Members += ["GaudiSequencer/CaloBanksHandler"]
+
+        # Setup L0 filtering if requested, runs L0 before Reco
+        if self.getProp("RecL0Only"):
+            l0TrgSeq = GaudiSequencer("L0TriggerSeq")
+            physicsSeq.Members += [ l0TrgSeq ]
+            L0Conf().L0Sequencer = l0TrgSeq
+            L0Conf().FilterL0FromRaw = True
+            self.setOtherProps( L0Conf(), ["DataType"] )
 
         importOptions("$CALODAQROOT/options/CaloBankHandler.opts")
         if not self.isPropertySet("MainSequence"):
@@ -321,7 +325,7 @@ class Brunel(LHCbConfigurableUser):
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
 
-    def configureOutput(self, dstType, withMC):
+    def configureOutput(self, dstType, withMC, handleLumi):
         """
         Set up output stream
         """
@@ -334,7 +338,8 @@ class Brunel(LHCbConfigurableUser):
             # event output
             dstWriter = OutputStream( writerName )
             dstWriter.AcceptAlgs += ["Reco"] # Write only if Rec phase completed
-            dstWriter.AcceptAlgs += ["LumiSeq"] # Write also if Lumi sequence completed
+            if handleLumi:
+                dstWriter.AcceptAlgs += ["LumiSeq"] # Write also if Lumi sequence completed
             # Set a default output file name if not already defined in the user job options
             if not dstWriter.isPropertySet( "Output" ):
                 outputFile = self.outputName()
