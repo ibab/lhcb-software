@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.8 2009-09-17 08:47:33 marcocle Exp $
+# $Id: Makefile,v 1.9 2009-10-15 08:48:02 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -8,9 +8,32 @@
 # It is equivalent to a "cmt broadcast make", or, if invoked with "-j" to a
 # "tbroadcast make -j", but better. 
 #
+# This makefile works on Windows as long as you install some Unix standard
+# commands (apart from a standard LHCb environment):
+#
+#  - make
+#    http://gnuwin32.sourceforge.net/packages/make.htm
+#  - awk (gawk)
+#    http://gnuwin32.sourceforge.net/packages/gawk.htm
+#  - sed
+#    http://gnuwin32.sourceforge.net/packages/sed.htm
+#  - coreutils (for rm, uname, tee)
+#    http://gnuwin32.sourceforge.net/packages/coreutils.htm
+#  - bash
+#    http://win-bash.sourceforge.net/
+#    Note: this version is very limited, but we can leverage on the power of
+#          gnu make.
+#
+# Note: on Windows, because of limitations of the bash interpreter, the log
+#       of the build is not enabled by default.
+#       Moreover, the "-j" switch of make is not supported.
+#
 # Author: Marco Clemencic
 #
 ################################################################################
+
+# --- Simplistic platform detection
+platform := $(if $(findstring windows,$(shell uname)),windows,unix)
 
 # --- List of Packages in the current directory
 packages := $(strip $(subst /cmt/requirements,,$(wildcard */cmt/requirements) $(wildcard */*/cmt/requirements)))
@@ -22,7 +45,7 @@ unescape_slash = $(subst _slash_,/,$(1))
 #  Note: The command "cmt show groups" does not work in old versions of CMT
 cmt_version := $(shell cmt version)
 ifeq ($(cmt_version),v1r20p20090520)
-groups = all `(cmt show groups)`
+groups = all $(shell cd $(1)/cmt ; cmt show groups)
 else
 groups = all all_groups
 endif
@@ -30,7 +53,17 @@ endif
 # --- Common configuration variables
 # The special environment variable PIPESTATUS is a bash feature, so we have to force
 # the usage of that shell.
-SHELL=/bin/bash --norc
+ifeq ($(platform),windows)
+  SHELL=bash.exe
+else
+  SHELL=/bin/bash --norc
+endif
+# Name of the makefile to generate
+ifeq ($(platform),windows)
+Makefile := NMake
+else
+Makefile := Makefile
+endif
 # Banners to be printed for the targets.
 define build_banner
 echo "#==============================================================================="
@@ -65,11 +98,27 @@ endif
 endif
 endif
 
+# -- Macro to enable/disable logging of the build
+#    (there are problems with the logging on Windows)
+ifeq ($(platform),windows)
+logging = disabled
+else
+logging = enabled
+endif
+
+# -- On Windows we have to remove the 'j' flag from the environment variable MAKEFLAGS.
+#    Note that in MAKEFLAGS, the 'j' options may appear by itself or as 'j 1'
+ifeq ($(platform),windows)
+strip_makeflags = export MAKEFLAGS=$(subst j,,$(subst j 1,,$(MAKEFLAGS))) ;
+endif
+
 # Fix the separator for environment variables
 # (needed if the variables are specified as lists in Eclipse)
 COMMA := ,
 override CMTEXTRATAGS := $(subst ;,$(COMMA),$(CMTEXTRATAGS))
+ifneq ($(platform),windows)
 override CMTPROJECTPATH := $(subst ;,:,$(CMTPROJECTPATH))
+endif
 
 # --- Declare the variables that have to be exported
 export PATH LD_LIBRARY_PATH PYTHONPATH CMTEXTRATAGS CMTPROJECTPATH CMTUSERCONTEXT
@@ -79,11 +128,15 @@ export CCACHE_PREFIX
 all: $(packages:=_build)
 
 clean: $(packages:=_clean)
-	rm -rf InstallArea
+	$(RM) -r InstallArea
 
-purge: clean
-	rm -rf .*.pack.d $(packages:=/cmt/Makefile)
-
+# This hack is needed because the stand-alone bash implementation on Windows is very limited (short command line)
+purge: clean $(foreach dep,$(wildcard .*.pack.d),$(dep)_do_purge) $(packages:=/cmt/Makefile_do_purge)
+%_do_purge: clean
+	$(RM) $*
+# This should be the actual implementation
+#purge: clean
+#	$(RM) .*.pack.d $(packages:=/cmt/Makefile)
 
 # --- Add rules to build packages (e.g. "make MyHat/MyPackage")
 $(foreach pack,$(packages),$(eval $(pack): $(pack)_build))
@@ -95,7 +148,7 @@ $(foreach pack,$(packages),$(eval .PRECIOUS: $(pack)/cmt/version.cmt))
 endif
 
 # --- Actual rules
-%/cmt/Makefile:
+%/cmt/$(Makefile):
 	@echo Configuring package $*
 	@cd $*/cmt && cmt config
 
@@ -103,27 +156,36 @@ ifeq ($(cmt_version),v1r20p20090520)
 %/cmt/version.cmt: %/cmt/requirements
 	@echo Generate $@
 	@awk 'BEGIN{version="v*"}/^ *version/{version = $$2}END{print version}' $< > $@
-%_build: %/cmt/Makefile %/cmt/version.cmt
+%_build: %/cmt/$(Makefile) %/cmt/version.cmt
 else
-%_build: %/cmt/Makefile
+%_build: %/cmt/$(Makefile)
 endif
 	@$(call build_banner,$*)
+ifeq ($(logging),enabled)
 	@date > $*/cmt/build.$(CMTCONFIG).log
-	@+cd $*/cmt ; \
-	for group in $(groups) ; do \
+	@+cd $*/cmt ; $(strip_makeflags) \
+	for group in $(call groups,$*) ; do \
 		echo "# Building group $$group" | tee -a build.$(CMTCONFIG).log ; \
 		cmt make $$group 2>&1 | tee -a build.$(CMTCONFIG).log ; export BUILD_RESULT=$$PIPESTATUS ; \
 		date >> build.$(CMTCONFIG).log ; \
 		$(Package_failure_handler) \
 	done
+else
+	@+cd $*/cmt ; $(strip_makeflags) \
+	for group in $(call groups,$*) ; do \
+		echo "# Building group $$group"; \
+		cmt make $$group ; export BUILD_RESULT=$$? ; \
+		$(Package_failure_handler) \
+	done
+endif
 
 ifeq ($(cmt_version),v1r20p20090520)
-%_clean: %/cmt/Makefile %/cmt/version.cmt
+%_clean: %/cmt/$(Makefile) %/cmt/version.cmt
 else
-%_clean: %/cmt/Makefile
+%_clean: %/cmt/$(Makefile)
 endif
 	@$(call clean_banner,$*)
-	-$(MAKE) -j1 -C $*/cmt clean binclean
+	@cd $*/cmt && cmt make clean binclean
 
 
 ## --- Dependencies between packages

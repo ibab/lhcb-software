@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: GetPack.py,v 1.12 2009-10-09 07:54:32 marcocle Exp $
+# $Id: GetPack.py,v 1.13 2009-10-15 08:48:02 marcocle Exp $
 
 from LbUtils.Script import Script
 from LbConfiguration import createProjectMakefile
@@ -109,7 +109,7 @@ class Skip:
 ## @class GetPack
 # Main script class for getpack.
 class GetPack(Script):
-    _version = "$Id: GetPack.py,v 1.12 2009-10-09 07:54:32 marcocle Exp $".replace("$","").replace("Id:","").strip()
+    _version = "$Id: GetPack.py,v 1.13 2009-10-15 08:48:02 marcocle Exp $".replace("$","").replace("Id:","").strip()
     def __init__(self):
         Script.__init__(self, usage = "\n\t%prog [options] package [ [version] ['tag'|'head'] ]"
                                       "\n\t%prog [options] -i [repository [hat]]"
@@ -660,8 +660,8 @@ Select the project
             self.project_name = self.askProject()
         
         proj = self.checkoutProject(self.project_name, self.project_version)
-        if not sys.platform.startswith("win"): # create a project Makefile for the checked out project
-            createProjectMakefile(os.path.join(proj[2], "Makefile"))
+        # create a project Makefile for the checked out project (if not present)
+        createProjectMakefile(os.path.join(proj[2], "Makefile"))
         if self.options.recursive:
             # get the conatiner package too, etc.
             try:

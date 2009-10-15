@@ -35,7 +35,7 @@ clean_docs:
 ifeq ($(container),)
 	$(warning Documentation not cleand because the container package is not known)
 else
-	rm -rf $(container)/doc/html
+	$(RM) -r $(container)/doc/html
 endif
 
 # Add the clean_docs target to purge if we know the container package 

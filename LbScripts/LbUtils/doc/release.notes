@@ -1,3 +1,8 @@
+2009-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: Modified to work on Windows, provided that few Unix
+	commands are available (documented at the beginning of the file).
+
 2009-10-01  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r18

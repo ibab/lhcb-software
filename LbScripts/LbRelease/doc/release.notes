@@ -1,3 +1,7 @@
+2009-10-15  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbRelease/GetPack.py: create the top-level Makefile on	Windows too.
+
 2009-10-09  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: minor clean up in the version string filter

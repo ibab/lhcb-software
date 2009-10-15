@@ -7,12 +7,12 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.17 2009-08-11 15:11:27 hmdegaud Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.18 2009-10-15 08:48:02 marcocle Exp $"
 
 try:
     from LbConfiguration import createProjectMakefile
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.17 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
 except ImportError :
     # dummy implementation for when we do not have LbScripts in the path yet.
     def createProjectMakefile(path, force):
@@ -1642,10 +1642,8 @@ class SetupProject:
                             messages.append('Created user project in %s' % user_proj_dir)
                         else:
                             messages.append('Cannot create user project in %s' % user_proj_dir)
-                    # Check if a Makefile is present in the user-project (Unix only)
-                    if not sys.platform.startswith("win"):
-                        # Create a project Makefile
-                        createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
+                    # Create a project Makefile
+                    createProjectMakefile(os.path.join(user_proj_dir, "Makefile"), overwrite = False)
 
                     if os.path.isdir(user_proj_dir):
                         # Let's enter the user project directory
