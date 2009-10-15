@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-15 - Patrick Koppenburg
+ - Topo : remove big commented out block
+
 ! 2009-10-12 - Anton Poluektov
  - Moved selections from options/ to python/ to reflect changes in StrippingConf. 
  - Added stream definitions in python/ 
