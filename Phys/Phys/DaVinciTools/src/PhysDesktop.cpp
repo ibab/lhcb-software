@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.81 2009-09-28 12:08:00 ibelyaev Exp $
+// $Id: PhysDesktop.cpp,v 1.82 2009-10-15 15:38:25 pkoppenb Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -218,7 +218,8 @@ const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const
   } 
   else if ( "None" != m_primVtxLocn ) 
   {
-    error () <<"NULL LHCb::RecVertex::Container*" << endmsg;
+    if (msgLevel(MSG::DEBUG)) debug() << "NULL LHCb::RecVertex::Container*" << endmsg;
+    counter("NULL LHCb::RecVertex::Container*")++;
   }
   //
   return m_primVerts;
@@ -529,8 +530,8 @@ void PhysDesktop::saveP2PVRelations(const  LHCb::Particle::ConstVector& pToSave)
       for ( ; i!= r.end() ; ++i) table->relate( *p,i->to() );
     }
   } else {
-    Warning("Recalculating P->PV table since not using P->PV internally", 
-            StatusCode::SUCCESS, 1).ignore();
+    if (msgLevel(MSG::DEBUG)) debug() << "Recalculating P->PV table since not using P->PV internally" << endmsg ;
+    counter("Recalculating P->PV table")++;
     for ( p_iter p = pToSave.begin() ; p!=pToSave.end() ; ++p) {
       const LHCb::VertexBase* pv = m_dva->_getRelatedPV(*p);
       if ( 0 != pv ) table->relate( *p, pv );
