@@ -1,3 +1,8 @@
+2009-10-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the --check-option. It must not create any
+	file.
+
 2009-10-13  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r3

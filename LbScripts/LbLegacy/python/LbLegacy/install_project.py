@@ -212,6 +212,7 @@
  090916 - Added the --nofixperm option to prevent the fixing of the permissions. This
           could improve the installation time on windows 
  091013 - Added the support for the LCGGanga tarball.
+ 091015 - fixed the --check option. It must not create any file.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -224,7 +225,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091013'
+script_version = '091015'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r3"
@@ -991,16 +992,19 @@ def getProjectList(name,version,binary=' '):
 
     this_html_dir = html_dir.split(os.pathsep)[0]
 
-    checkWriteAccess(this_html_dir)
+    if not check_only :
+        checkWriteAccess(this_html_dir)
     os.chdir(this_html_dir)
-    getFile(url_dist+'html/',tar_file+'.html')
+    if not check_only :
+        getFile(url_dist+'html/',tar_file+'.html')
     
     disthtm = os.path.join(this_html_dir,"distribution.htm")
     
-    if os.path.exists(disthtm) :
-        os.remove(disthtm)
-    log.debug("Downloading %s/%s" % (url_dist + "html", disthtm) )
-    getFile(url_dist + "html", disthtm)
+    if not check_only :
+        if os.path.exists(disthtm) :
+            os.remove(disthtm)
+        log.debug("Downloading %s/%s" % (url_dist + "html", disthtm) )
+        getFile(url_dist + "html", disthtm)
 
     # loop over projects to be downloaded
     project_list = {}
@@ -1750,10 +1754,11 @@ def runInstall(pname,pversion,binary=''):
 
     setLHCbEnv()
 
-    if pname != 'LbScripts' :
-        script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
-        getProjectTar(script_project_list)
-
+    if not check_only :
+        if pname != 'LbScripts' :
+            script_project_list = getProjectList('LbScripts', lbscripts_version)[0]
+            getProjectTar(script_project_list)
+    
     project_list,html_list = getProjectList(pname,pversion)
     if pname != 'LHCbGrid' and sys.platform != "win32" and cmtconfig.find("slc3")!=-1 and cmtconfig.find("sl3") != -1 :
         grid_project_list, grid_html_list = getProjectList('LHCbGrid', grid_version)
