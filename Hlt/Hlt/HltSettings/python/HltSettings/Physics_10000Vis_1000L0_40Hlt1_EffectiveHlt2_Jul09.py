@@ -1,4 +1,4 @@
-from HltConf.Physics_10000Vis_1000L0_40Hlt1_Apr09  import Physics_10000Vis_1000L0_40Hlt1_Apr09
+from HltSettings.Physics_10000Vis_1000L0_40Hlt1_Apr09  import Physics_10000Vis_1000L0_40Hlt1_Apr09
 class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L0_40Hlt1_Apr09 ) :
     """
     Threshold settings for Hlt1 and 2 in nominal conditions
