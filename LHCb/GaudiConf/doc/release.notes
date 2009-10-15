@@ -1,27 +1,21 @@
-! $Id: release.notes,v 1.172 2009-10-12 07:42:24 ibelyaev Exp $
+! $Id: release.notes,v 1.173 2009-10-15 09:52:49 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+! 2009-10-15 - Marco Cattaneo
+ - In CaloPackingConf.py, add helper functions previously in CaloReco.CaloPacking
+
 ! 2009-10-12 - Vanya Belyaev 
-
- - cmt/requirements 
-
-   change order of configurables 
+ - cmt/requirements : change order of configurables 
 
 ! 2009-10-10 - Vanya Belyaev
-
- - CaloPackingConf.py
-
+ - Add CaloPackingConf.py:
      two small configurables to pack/unpack Calo-objects on DST:
-
      1. CaloDstPackConf 
      2. CaloDstUnPackConf 
 
- - DstConf:
-
-     make usage of new configurables 
-
+ - DstConf.py: make usage of new CaloDst configurables 
 
 ! 2009-10-08 - Marco Cattaneo
  - In DigiConf.py:

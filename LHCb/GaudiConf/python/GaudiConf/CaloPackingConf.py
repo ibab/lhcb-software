@@ -10,7 +10,7 @@ Helper module to define DST (un)packing rule for Calo Hypo objects
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # =============================================================================
 __all__ = (
     'CaloDstPackConf'     ,  ## the configurable, responsible for Dst packing   
@@ -73,8 +73,6 @@ class CaloDstPackConf ( LHCbConfigurableUser ) :
 
         if not self.getProp('Enable') : return
         
-        from CaloReco.CaloPacking import caloHypoDstPack
-        
         caloHypoDstPack (
             self.getProp ('Sequence'    ) ,
             self.getProp ('Enable'      ) ,
@@ -127,13 +125,78 @@ class CaloDstUnPackConf ( LHCbConfigurableUser ) :
 
         if not self.getProp('Enable') : return
 
-        from CaloReco.CaloPacking import caloHypoDstUnPack
-        
         caloHypoDstUnPack (
             self.getProp ('Enable'      ) ,
             self.getProp ('Hypos'       ) ,
             self.getProp ('OutputLevel' ) 
             )
+
+## define Dst packing rules 
+def caloHypoDstPack (
+    sequence                      , 
+    enable                        ,
+    hypos    = [ 'Electrons'    ,
+                 'Photons'      ,
+                 'MergedPi0s'   ,
+                 'SplitPhotons' ] ,
+    level    = INFO  
+    ) :
+    """
+    Define the Dst-packing rules
+
+    """
+    if not enable :
+        log.debug('CaloHypoDstPack: the packing is disabled')
+        return None
+    
+    from Configurables import PackCaloHypo
+    
+    for hypo in hypos :
+        _name   = 'Pack'       + hypo
+        _input  =  'Rec/Calo/' + hypo  
+        _output = 'pRec/Calo/' + hypo
+        _alg    = PackCaloHypo(
+            name        = _name   ,
+            InputName   = _input  ,
+            OutputName  = _output ,
+            OutputLevel = level   )
+        sequence.Members .append ( _alg )
+        log.debug ('CaloHypoDstPack: add %s ' % _alg.getFullName() )
+
+# ==============================================================================
+## define Dst-unpacking rules 
+def caloHypoDstUnPack (
+    enable                        ,
+    hypos    = [ 'Electrons'    ,
+                 'Photons'      ,
+                 'MergedPi0s'   ,
+                 'SplitPhotons' ] ,
+    level    = INFO  
+    ) :
+    """
+    Define Dst-unpacking rules 
+    """
+
+    if not enable :
+        log.debug('CaloHypoDstUnPack: the unpacking is disabled')
+        return None
+    
+    from Configurables        import UnpackCaloHypo
+    from CaloKernel.ConfUtils import onDemand
+
+    for hypo in hypos :
+        _name    = 'Unpack'     + hypo 
+        _input   = 'pRec/Calo/' + hypo
+        _output  =  'Rec/Calo/' + hypo  
+        _alg    = UnpackCaloHypo(
+            name        = _name   ,
+            InputName   = _input  ,
+            OutputName  = _output ,
+            OutputLevel = level   )
+        onDemand ( _alg.OutputName , _alg ) 
+        log.debug ('CaloHypoDstUnPack: add %s ' % _alg.getFullName() )
+
+
 
 ## ============================================================================
 if '__main__' == __name__ :
