@@ -8,6 +8,7 @@ branches cmt doc
 #=======================================================
 
 use HltConf             v4r4    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltSettings         v0r0    Hlt   # Parick Koppenburg, Gerhard Raven
 use HltLine             v1r6p1  Hlt   # Vanya Belyaev, Gerhard Raven
 use Hlt1Lines           v1r6    Hlt   # Gerhard Raven
 use HltBase             v6r7    Hlt   # Gerhard Raven
@@ -25,8 +26,6 @@ use HltLuminosity       v2r11   Hlt   # Jaap Panman
 use HltBeamGasAlley     v2r2    Hlt   # Plamen Hopchev
 use HltRawData          v2r1    Hlt   # Tomasz Skwarnicki
 
-# And now for something completely different
-use HltPython	        v1r17   Hlt   # Jose Angel Hernando-Morata
 use TCKUtils            v1r4    Hlt   # Gerhard Raven
 use TCKPresenter        v1r1    Hlt   # Klaus Neumann
 
@@ -35,8 +34,7 @@ use TCKPresenter        v1r1    Hlt   # Klaus Neumann
 #=======================================================
 
 use Hlt2Lines           v1r7    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use HltSelections       v9r6    Hlt   # Patrick Koppenburg
-use Hlt2SharedParticles v2r3    Hlt   # Patrick Koppenburg/Gerhard Raven
+use Hlt2SharedParticles v2r3    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltKshort           v2r0p1  Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
 use HltDisplVertices    v1r1    Hlt   # Neil Gauvin
