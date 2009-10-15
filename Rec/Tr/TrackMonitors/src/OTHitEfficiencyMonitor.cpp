@@ -379,7 +379,7 @@ void OTHitEfficiencyMonitor::fillEfficiency(const LHCb::Track& track)
        ilay !=  m_otdet->layers().end(); ++ilay, ++layindex ) 
     if( layersOnTrack.find( *ilay ) == layersOnTrack.end() ) {
       // propagate to the z-coordinate of this layer
-      m_interpolator->interpolate( track, layerzpos[layindex] , state ) ;
+      m_interpolator->interpolate( track, layerzpos[layindex] , state ).ignore();
       
       // only consider if state has reasonably small error. we should
       // still fine-tune this a little bit, make a propor projecion
