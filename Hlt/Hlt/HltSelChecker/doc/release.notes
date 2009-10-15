@@ -1,7 +1,7 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltSelChecker
 ! Responsible : P. Koppenburg
-! Purpose     : High-Level Trigger Exclusive Selections - Checking 
+! Purpose     : Checking and debugging of Hlt2
 !-----------------------------------------------------------------------------
 !
 ! To generate efficiencies at https://twiki.cern.ch/twiki/bin/view/LHCb/Hlt2EffsRates
