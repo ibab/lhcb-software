@@ -1,4 +1,4 @@
-// $Id: P2MCPBase.cpp,v 1.8 2009-07-30 13:59:00 jpalac Exp $
+// $Id: P2MCPBase.cpp,v 1.9 2009-10-15 09:11:44 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -20,9 +20,11 @@ P2MCPBase::P2MCPBase( const std::string& type,
                       const std::string& name,
                       const IInterface* parent )
   : 
-  base_class ( type, name , parent ),
+  GaudiTool ( type, name , parent ),
   m_defMCLoc(LHCb::MCParticleLocation::Default)
 {
+  declareInterface<IParticle2MCAssociator>(this);
+  declareInterface<IP2MCP>(this);
   declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
 }
 //=============================================================================
@@ -108,13 +110,13 @@ P2MCPBase::isMatched(const LHCb::Particle* /*particle */,
 // initialize
 //=============================================================================
 StatusCode P2MCPBase::initialize() {
-  return base_class::initialize();
+  return GaudiTool::initialize();
 }
 //=============================================================================
 // finalize
 //=============================================================================
 StatusCode P2MCPBase::finalize() {
-  return base_class::finalize() ; 
+  return GaudiTool::finalize() ; 
 }
 //=============================================================================
 // Destructor
