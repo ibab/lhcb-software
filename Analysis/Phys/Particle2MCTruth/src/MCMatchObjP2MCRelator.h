@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.13 2009-07-30 13:59:00 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.14 2009-10-15 09:13:41 jpalac Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -22,7 +22,8 @@ namespace LoKi
  *  @author Juan PALACIOS
  *  @date   2009-03-04
  */
-class MCMatchObjP2MCRelator : public extends1<P2MCPBase, IIncidentListener>
+class MCMatchObjP2MCRelator : public P2MCPBase,
+                              public virtual IIncidentListener
 
 {
 public: 
