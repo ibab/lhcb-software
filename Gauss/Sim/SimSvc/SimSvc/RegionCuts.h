@@ -1,4 +1,4 @@
-// $Id: RegionCuts.h,v 1.2 2003-06-04 12:59:30 witoldp Exp $
+// $Id: RegionCuts.h,v 1.3 2009-10-15 12:41:13 silviam Exp $
 #ifndef SIMSVC_REGIONCUTS_H 
 #define SIMSVC_REGIONCUTS_H 1
 
@@ -58,31 +58,31 @@ public:
     return m_volumes;
   }
   
-  const double gammaCut() const
+  double gammaCut() const
   {
     return m_gammacut;
   }
-  const double electronCut() const
+  double electronCut() const
   {
     return m_electroncut;
   }
-  const double positronCut() const
+  double positronCut() const
   {
     return m_positroncut;
   }
-  const double protonCut() const
+  double protonCut() const
   {
     return m_protoncut;
   }
-  const double antiProtonCut() const
+  double antiProtonCut() const
   {
     return m_aprotoncut;
   }
-  const double neutronCut() const
+  double neutronCut() const
   {
     return m_neutroncut;
   }
-  const double antiNeutronCut() const
+  double antiNeutronCut() const
   {
     return m_aneutroncut;
   }

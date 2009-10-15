@@ -87,14 +87,14 @@ public:
    * logical volume or not
    * @param vol the logical volume
    */
-  virtual const bool hasSimAttribute (const ILVolume* vol) const;
+  virtual bool hasSimAttribute (const ILVolume* vol) const;
 
   /**
    * This method tells whether a simulation attribute is associated to a given
    * logical volume or not
    * @param vol the logical volume
    */
-  virtual const bool hasSimAttribute (const std::string volname) const;
+  virtual bool hasSimAttribute (const std::string volname) const;
 
   /**
    * This method returns the pointer to the vector of region definitions.

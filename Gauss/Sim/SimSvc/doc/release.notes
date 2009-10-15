@@ -5,6 +5,15 @@
 !               volumes
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Silvia Miglioranzi
+ - Fix compilation warnings on slc5 "type qualifiers ignored on function return 
+   type" in:
+   - ISimulationSvc.h
+   - RegionCuts.h
+   - SimAttribute.h
+   - SimulationSvc.cpp
+   - SimulationSvc.h
+
 !=========================== SimSvc v5r1 2007-02-08 ==========================
 ! 2007-12-12 - Gloria Corti
  - Adapt to location of Simulation.xml in Gauss package for default file
