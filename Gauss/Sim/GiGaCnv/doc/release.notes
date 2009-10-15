@@ -4,6 +4,33 @@
 ! Purpose     : Hold converters between LHCb and Geant4
 !-----------------------------------------------------------------------------
 
+!======================== GiGaCnv v18r6p2 2009-10-15 =========================
+! 2009-10-15 - Silvia MIGLIORANZI
+ - Fix compilation warnings on slc5 "type qualifiers ignored on function return 
+   type" in:
+   - GiGaCatalogCnv.cpp
+	 - GiGaCatalogCnv.h
+   - GiGaDetectorElementCnv.cpp
+   - GiGaDetectorElementCnv.h
+   - GiGaElementCnv.cpp
+   - GiGaElementCnv.h
+   - GiGaIsotopeCnv.cpp
+   - GiGaIsotopeCnv.h
+   - GiGaLAssemblyCnv.cpp
+   - GiGaLAssemblyCnv.h
+   - GiGaLVolumeCnv.cpp
+   - GiGaLVolumeCnv.h
+   - GiGaMixtureCnv.cpp
+   - GiGaMixtureCnv.h
+   - GiGaSurfaceCnv.cpp
+   - GiGaSurfaceCnv.h
+	 - GiGaKineRefTableEntry.h
+   corrected removing "const" from return type of functions.
+ - Fix compilation warning on slc5: include "Event/MCPaticle.h" instead of forward 
+   declaration in:
+   - Particle2Definition.h
+   - Particle2Particle.h
+
 !======================== GiGaCnv v18r6p1 2009-07-15 =========================
 ! 2009-06-10 - Gloria CORTI
  - Fix warning of unused variable. At the same time change "log" to "msg"
