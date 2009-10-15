@@ -18,7 +18,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         # and overrule either ActiveHlt.Lines also overrule
         # HltType...
         if self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self)  :
-            raise LogicError('Must update HltType when modifying ActiveHlt.Lines()')
+            raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
     def L0TCK(self) :
         return '0xDC09'

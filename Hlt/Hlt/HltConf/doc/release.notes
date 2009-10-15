@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.345 2009-10-14 13:55:45 graven Exp $ 
+! $Id: release.notes,v 1.346 2009-10-15 09:51:46 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-15 - Gerhard Raven
+ - remove HltRecoSequence from Hlt2 sequence. This sequence is now included 
+   in the lines that actually need it.
+
 
 ! 2009-10-14 - Gerhard Raven
  - update the HltType and HltThresholdSettings setup:

@@ -8,6 +8,9 @@ class Physics_10000Vis_1000L0_40Hlt1_LeptonicHlt2_Jul09( Physics_10000Vis_1000L0
     @author P.Koppenburg, G. Raven
     @date 2009-08-06
     """
+    def HltType(self) :
+        self.verifyType( Physics_10000Vis_1000L0_40Hlt1_LeptonicHlt2_Jul09 )
+        return          'Physics_10000Vis_1000L0_40Hlt1_LeptonicHlt2_Jul09'
     
     def Thresholds(self) :
         """

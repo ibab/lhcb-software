@@ -8,6 +8,10 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
     @author P.Koppenburg, M. Gandelman, G. Raven
     @date 2009-08-05
     """
+
+    def HltType(self) :
+        self.verifyType( Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09 )
+        return          'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
     
     def Thresholds(self) :
         """
