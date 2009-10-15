@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.45 2009-10-15 09:29:43 pkoppenb Exp $
+!$Id: release.notes,v 1.46 2009-10-15 10:32:28 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
@@ -7,7 +7,18 @@
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings
- - v2r10p1
+
+! 2009-10-14 - Juan PALACIOS
+ - Added options/MicroDST2DecayTreeTuple.py
+  . New example to make a DecayTreeTuple from a MicroDST.
+
+! 2009-10-14 - Juan PALACIOS
+ - options/TestMicroDSTMakeNewConf.py
+  . Clean up
+ - options/TestMicroDSTRead.py
+  . Remove unnecessary RootInTES
+ - cmt/requirements
+  . Increase version to v2r11
 
 !======================= Ex/MicroDSTExample v2r10 2009-10-02 =================
 
