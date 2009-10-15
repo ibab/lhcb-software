@@ -1,4 +1,4 @@
-// $Id: STEfficiency.cpp,v 1.5 2009-09-01 13:26:31 mneedham Exp $
+// $Id: STEfficiency.cpp,v 1.6 2009-10-15 08:57:49 jluisier Exp $
 // Include files 
 
 // from Gaudi
@@ -64,13 +64,14 @@ STEfficiency::STEfficiency( const std::string& name,
   declareProperty("DetType"         , m_detType =  "IT" );
   declareProperty("ExpectedHitsTool", m_expectedHitsTool = "ITHitExpectation");
   declareProperty("Cut"             , m_spacialCut);
-  declareProperty("CollectorName"   , m_collectorName = "STClusterCollector");
+  //declareProperty("CollectorName"   , m_collectorName = "STClusterCollector");
   declareProperty("TrackSelName"    , m_trackSelectorName
 		  = "ITIsolatedTrackSelector");
   declareProperty("MinExpectedHits" , m_minHits = 10);
   declareProperty("XLayerCut"       , m_xCut = 0.500 );
   declareProperty("StereoLayerCut"  , m_stereoCut = 0.700 );
   declareProperty("ChargeCut"       , m_chargeCut = 0.);
+  declareProperty("CollectorPrefix" , m_collectorPrefix = "");
 
   m_spacialCut.push_back( 500 * Gaudi::Units::um );
   m_spacialCut.push_back( 700 * Gaudi::Units::um );
@@ -97,6 +98,7 @@ StatusCode STEfficiency::initialize()
       name = "Mixed";
       if ( i < 4 ) name = ITNames().BoxToString( i + 1 );
       name += "Collector";
+      name = m_collectorPrefix + name;
       m_collectors.push_back( tool< ISTClusterCollector >( "STClusterCollector", name ) );
     }
 
@@ -193,7 +195,6 @@ StatusCode STEfficiency::execute()
 
       // collect hits
       m_collectors[type - 1] -> execute( **It, output );
-      //m_collector -> execute( **It, output );
 
       plot(output.size(), "collected", "collected", -0.5, 20.5, 21);
       
@@ -365,9 +366,13 @@ StatusCode STEfficiency::finalize()
 	    if ( i == presentCut )
 	      {
                 plot(eff, "layer eff", "layer eff", 0., 100, 200);
-		info() << std::setw(11) << std::left << nick << ' ' << nFound
-		       << " found tracks, cut = " << m_spacialCut[i] << ' '
-		       << /*setprecision(2) <<*/ eff << " +/- " << err << endmsg;
+		info() << std::setw(11) << std::left << nick << ' ' 
+		       << std::setw(4) << std::right << nFound
+		       << " found hits" << " (" << std::setw(4) << std::right
+		       << nExpected << " expected ones), cut = "
+		       << m_spacialCut[i] << ' '
+		       << /*setprecision(2) <<*/ eff << " +/- " << err
+		        << endmsg;
                 
 	      }
 	  } // i
@@ -376,7 +381,7 @@ StatusCode STEfficiency::finalize()
       
   // total efficency
   double teff = 999;
-  if (m_totalExpected == 0u) teff = 100 * m_totalFound/m_totalExpected;
+  if (m_totalExpected != 0u) teff = 100 * m_totalFound/m_totalExpected;
   double terror = sqrt( eff * (100. - eff) / m_totalExpected );
   info() << "Total Eff " << teff <<  " +/- " << terror << endmsg; 
   

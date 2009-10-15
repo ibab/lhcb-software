@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 J Luisier
+ - Add a new option in STEfficiency, to allow spill over studies and removed
+	 useless option
+
 ! 2009-10-12 Wouter Hulsbergen
  - fixed unchecked statuscode in OTHitEfficiencyMonitor
  - made a separate configuration for OT monitors
