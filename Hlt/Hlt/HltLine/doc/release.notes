@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.34 2009-10-15 09:49:48 graven Exp $
+! $Id: release.notes,v 1.35 2009-10-15 12:48:25 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -9,6 +9,8 @@
    reconstruction run or not. Default is True. Note: this is a temporary
    (quick) solution, would be better if reco is (automatically) pulled in 
    by the dependency resolution
+ - in Hlt2Lines, 'usePV' now does PV2D instead of PV3D (as 2D is what 
+   is used!)
 
 ! 2009-10-13 - Patrick Koppenburg
  - Adapt to new options of PatDownstream
