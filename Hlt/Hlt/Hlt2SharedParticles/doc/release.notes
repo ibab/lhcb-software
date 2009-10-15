@@ -1,9 +1,13 @@
-d$Id: release.notes,v 1.51 2009-09-28 14:44:54 pkoppenb Exp $
+d$Id: release.notes,v 1.52 2009-10-15 12:47:12 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - Gerhard Raven
+ - make GoodPions/GoodKaons depend on PV2D instead of PV3D
+   (as they actually use PV2D!)
 
 ! 2009-09-28 - Patrick Koppenburg
  - Replace ChargedProtoPAlg with ChargedProtoParticleMaker and other algorithms.
