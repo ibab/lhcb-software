@@ -1,4 +1,4 @@
-// $Id: IParticle2MCAssociator.h,v 1.10 2009-05-07 10:26:05 jpalac Exp $
+// $Id: IParticle2MCAssociator.h,v 1.11 2009-10-15 14:07:30 jpalac Exp $
 #ifndef KERNEL_IPARTICLE2MCASSOCIATOR_H 
 #define KERNEL_IPARTICLE2MCASSOCIATOR_H 1
 
@@ -16,7 +16,7 @@ namespace LHCb
 }
 
 
-static const InterfaceID IID_IParticle2MCAssociator ( "IParticle2MCAssociator", 1, 0 );
+
 
 /** @class IParticle2MCAssociator IParticle2MCAssociator.h Kernel/IParticle2MCAssociator.h
  *  
@@ -32,11 +32,11 @@ static const InterfaceID IID_IParticle2MCAssociator ( "IParticle2MCAssociator", 
  *  @author Juan PALACIOS
  *  @date   2009-01-19
  */
-class IParticle2MCAssociator : virtual public IAlgTool {
+class GAUDI_API IParticle2MCAssociator : virtual public IAlgTool {
 public: 
 
-  // Return the interface ID
-  static const InterfaceID& interfaceID() { return IID_IParticle2MCAssociator; }
+DeclareInterfaceID( IParticle2MCAssociator, 1, 0 );
+
   /**
    * Calculate and return the LHCb::MCParticle associated to an
    * LHCb::Particle. The associated LHCb::Particle is selected from a

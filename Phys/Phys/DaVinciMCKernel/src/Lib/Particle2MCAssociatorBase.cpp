@@ -1,4 +1,4 @@
-// $Id: Particle2MCAssociatorBase.cpp,v 1.12 2009-05-07 10:26:06 jpalac Exp $
+// $Id: Particle2MCAssociatorBase.cpp,v 1.13 2009-10-15 14:07:30 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -20,11 +20,9 @@ Particle2MCAssociatorBase::Particle2MCAssociatorBase( const std::string& type,
                                                       const std::string& name,
                                                       const IInterface* parent )
   : 
-  GaudiTool ( type, name , parent ),
+  base_class ( type, name , parent ),
   m_defMCLoc(LHCb::MCParticleLocation::Default)
 {
-  declareInterface<IParticle2MCAssociator>(this);
-  declareInterface<IParticle2MCWeightedAssociator>(this);
   declareProperty ( "MCParticleDefaultLocation" , m_defMCLoc  ) ;
 }
 //=============================================================================
@@ -127,13 +125,13 @@ Particle2MCAssociatorBase::associationWeight(const LHCb::Particle*,
 // initialize
 //=============================================================================
 StatusCode Particle2MCAssociatorBase::initialize() {
-  return GaudiTool::initialize();
+  return base_class::initialize();
 }
 //=============================================================================
 // finalize
 //=============================================================================
 StatusCode Particle2MCAssociatorBase::finalize() {
-  return GaudiTool::finalize() ; 
+  return base_class::finalize() ; 
 }
 //=============================================================================
 // Destructor
