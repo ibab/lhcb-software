@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.125 2009-09-14 16:02:33 ishapova Exp $
+! $Id: release.notes,v 1.126 2009-10-16 14:19:01 cattanem Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+!===================== Tools/CondDBUI v2r23 2009-10-16 ========================
 ! 2009-09-14 - Illya Shapoval
  - The script for adding the global tag to the db is unified to standard 
    CondDBUI form and functionality, and added to the CondDBUI package as 
