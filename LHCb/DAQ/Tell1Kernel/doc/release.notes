@@ -2,6 +2,7 @@
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
 
+!====================== Tell1Kernel v1r8 2009-10-16 ======================
 ! 2009-09-08 - Kurt Rinnert
  - added tool interfaces and utility headers previously scattered over
    different packages
