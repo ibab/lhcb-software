@@ -136,7 +136,7 @@ namespace DecayTreeFitter
     
     // error
     for(int irow=1; irow<=3; ++irow)
-      for(int icol=0; icol<=irow; ++icol)
+      for(int icol=1; icol<=irow; ++icol)
 	p.Vfast(irow,icol) = m_V(irow-1,icol-1) ;
     
     return status ;
