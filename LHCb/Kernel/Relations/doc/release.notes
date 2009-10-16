@@ -1,22 +1,17 @@
-! $Id: release.notes,v 1.68 2009-09-14 14:02:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.69 2009-10-16 13:59:16 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Kernel/Relations
 ! Responsible : Vanya BELYAEV   ibelyaev@physics.syr.edu
 ! Purpose     : General purposes templated relations between classes
 !-----------------------------------------------------------------------------
 
+!====================== Relations v5r9 2009-10-16 ============================
 ! 2009-09-14 - Vanya BELYAEV
-
  - RelationBase & RelationWeightedBase :
-
      imporve CPU performance of "merge" & "imerge" methods 
       (on the price of ugly switch) 
-
  -cmt/requirements 
-
     version increment to v5r9 
-
-
 
 !====================== Relations v5r8 2009-05-25 ============================
 ! 2009-05-25 - Juan PALACIOS
