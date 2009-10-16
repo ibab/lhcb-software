@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.97 2009-10-15 14:07:17 jpalac Exp $
+! $Id: release.notes,v 1.98 2009-10-16 13:43:59 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciMCKernel
 ! Responsible : Juan PALACIOS
 ! Purpose     : MCEvent dependent interfaces and base classes.
 !-----------------------------------------------------------------------------
 
+!====================== DaVinciMCKernel v4r1 2009-10-16 ======================
 ! 2009-10-15 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v4r1
