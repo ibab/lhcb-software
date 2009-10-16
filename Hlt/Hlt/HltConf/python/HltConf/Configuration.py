@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.124 2009-10-15 15:00:40 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.125 2009-10-16 06:51:39 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -53,10 +53,10 @@ class HltConf(LHCbConfigurableUser):
         """
         Define L0 channels
         """
-        log.warning( '###############################################################')
-        log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
-        log.warning( '###############################################################')
         if L0TCK :
+            log.warning( '###############################################################')
+            log.warning( '## WARNING HLT will assume input data contains L0 TCK %s ##' % L0TCK )
+            log.warning( '###############################################################')
             importOptions('$L0TCK/L0DUConfig.opts')
             from Configurables import L0DUMultiConfigProvider
             if L0TCK not in L0DUMultiConfigProvider('L0DUConfig').registerTCK :
@@ -78,7 +78,8 @@ class HltConf(LHCbConfigurableUser):
         Get the class that contains the thresholds, etc
         """
         thresName  = self.getProp('ThresholdSettings')   # the name
-        if ( thresName == '' ): thresName = self.settingsForDataType( self.getProp('DataType') )
+        if not thresName : thresName = self.settingsForDataType( self.getProp('DataType') )
+        if not thresName : return None
         from HltConf.ThresholdUtils import Name2Threshold
         return Name2Threshold(thresName)
 
@@ -331,16 +332,16 @@ class HltConf(LHCbConfigurableUser):
         activeHlt1Lines = []
         activeHlt2Lines = []
         sets = self.settings()
-        if ( sets != None ):
+        if ( sets ):
             activeHlt1Lines = sets.ActiveHlt1Lines()
             activeHlt2Lines = sets.ActiveHlt2Lines()
         else :
-            activeHlt1Lines = hlt1Lines()
-            activeHlt2Lines = htl2Lines()
+            activeHlt1Lines = [ i.name() for i in hlt1Lines() ]
+            activeHlt2Lines = [ i.name() for i in hlt2Lines() ]
 
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
-        if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
-        if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
+        activeHlt1Lines += [ 'Hlt1Global' ]
+        activeHlt2Lines += [ 'Hlt2Global' ]
 
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
@@ -396,14 +397,14 @@ class HltConf(LHCbConfigurableUser):
         from Configurables       import DeterministicPrescaler as Prescale
         
         sets = self.settings()
-        if hasattr(self,'StripEndSequence') and getattr(self,'StripEndSequence') :
+        if sets and hasattr(sets,'StripEndSequence') and getattr(sets,'StripEndSequence') :
             log.warning('### Setting requests stripped down HltEndSequence ###')
             self.EnableHltGlobalMonitor = False
             self.EnableHltSelReports    = False
             self.EnableHltVtxReports    = False
             self.EnableLumiEventWriting = False
             
-            # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
+        # note: the following is a list and not a dict, as we depend on the order of iterating through it!!!
         from Configurables import HltLine
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
                 , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
