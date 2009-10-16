@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r14 2009-10-16 =========================
 ! 2009-10-14 - Patrick Koppenburg
  - CaloReadoutTool.cpp : bug fix : initialise m_packed in constructor
 
@@ -14,7 +15,6 @@
     - change signature of adcs() methods
     - increment interface version
 
-
 ! 2009-09-30 - Olivier Deschamps
   - Calo(L0)DataProvider : fix intialisation when (l0)Adc() method is called first
 
@@ -24,21 +24,17 @@
   - adapt CaloDataProviderFromTES and CaloDataProvider
   - remove CaloDataProviderPatched (obsolete)
 
-
-
 ! 2009-09-28 - Olivier Deschamps
  - Calo(L0)DataProvider(...).cpp : fix uncomplete initialization in clear()
 
 ! 2009-09-18 - Olivier Deschamps
  - CaloReadoutTool : fix problem with IncidentSvc handling for getBanks() (problem in Boole when RawBanks does not exist at BeginEvent)
 
-
 ! 2009-09-16 - Olivier Deschamps
  - CaloReadoutTool : 
     - implement BeginEvent update via IncidentService : the getBanks() method no longer need to be externally invoked at each event
     - implement initialize()/finalize() method
     - adapt all iheriting readout tools accordingly
-
 
 !========================== CaloDAQ v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
