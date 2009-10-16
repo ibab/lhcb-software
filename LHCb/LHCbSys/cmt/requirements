@@ -13,7 +13,7 @@ use CaloInterfaces        v7r15   Calo    # Olivier Deschamps
 use CaloKernel            v6r1    Calo    # Olivier Deschamps
 use CaloUtils             v8r7    Calo    # Olivier Deschamps
 
-use MDF                   v3r19   DAQ     # Markus Frank
+use MDF                   v3r20   DAQ     # Markus Frank
 use Tell1Kernel           v1r8    DAQ     # Tomasz Szumlak
 
 use MuonKernel            v4r0    Muon    # Andrei Tsaregorodtsev
