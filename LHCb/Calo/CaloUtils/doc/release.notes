@@ -1,39 +1,27 @@
-! $Id: release.notes,v 1.135 2009-10-12 16:04:35 odescham Exp $
+! $Id: release.notes,v 1.136 2009-10-16 12:18:19 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloUtils v8r7 2009-10-16 =========================
 ! 2009-12-10 - Olivier Deschamps
  - Calo2Dview : speed-up processing
 
 ! 2009-10-02 - Vanya BELYAEV
-
  - attempt for "blind-fix" for compilaiton problme at lhcb6 slot 
 
 ! 2009-10-01 - Vanya BELYAEV
-
  - SharedCells.h 
-
     add misisng include <numeric> 
 
 ! 2009-09-30 - Vanya BELYAEV
-
  - add possibiilty to use CaloCellID as property 
-
    new files: 
- 
      CaloCellIDAsProperty.h/.cpp 
-
  - add some python decoration:
-
       >>> import GaudiUtils.CellID 
-
-   
- 
  - cmt/requirements 
-
     version increment to v8r7 
-
 
 !========================== CaloUtils v8r6 2009-08-31 =========================
 ! 2009-08-21 - Olivier Deschamps 
