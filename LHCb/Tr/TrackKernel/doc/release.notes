@@ -4,10 +4,10 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== TrackKernel v1r1 2009-10-16 ===================
 ! 2009-10-08 - Wouter Hulsbergen
  - adapted to changes in LHCb::Track
 
 !========================== TrackKernel v1r0 2009-07-08 ===================
-
 ! 2009-07-08 Wouter Hulsbergen
  - imported classes from TrackFitEvent
