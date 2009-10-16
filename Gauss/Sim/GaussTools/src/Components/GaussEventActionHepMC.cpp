@@ -1,4 +1,4 @@
-/// $Id: GaussEventActionHepMC.cpp,v 1.4 2007-10-02 16:33:53 gcorti Exp $
+/// $Id: GaussEventActionHepMC.cpp,v 1.5 2009-10-16 15:01:39 silviam Exp $
 // Include files 
 
 // from Gaudi
@@ -119,8 +119,16 @@ void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle,
   std::cout << offset << "--- " << name << " barcode: " << particle->barcode() 
             << " pdg: " << particle->pdg_id() 
             << " energy: " << particle->momentum().e()
-            << " ProdVtx " << particle->production_vertex()->position()
-            << " EndVtx " << particle->end_vertex()->position() << std::endl;
+    //            << " ProdVtx " << particle->production_vertex()->position()
+            << " ProdVtx x" << particle->production_vertex()->position().x()
+            << " ProdVtx y" << particle->production_vertex()->position().y()
+            << " ProdVtx z" << particle->production_vertex()->position().z()
+            << " ProdVtx t" << particle->production_vertex()->position().t()
+    //        << " EndVtx " << particle->end_vertex()->position() << std::endl;
+            << " EndVtx x" << particle->end_vertex()->position().x() 
+            << " EndVtx y" << particle->end_vertex()->position().y() 
+            << " EndVtx z" << particle->end_vertex()->position().z() 
+            << " EndVtx t" << particle->end_vertex()->position().t() << std::endl;
 
   for(HepMC::GenVertex::particles_out_const_iterator 
         it=particle->end_vertex()->particles_out_const_begin();

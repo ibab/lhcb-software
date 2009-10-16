@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.11 2008-12-12 17:23:45 gcorti Exp $
+// $Id: MCTruthManager.cpp,v 1.12 2009-10-16 15:02:33 silviam Exp $
 // Include files 
 #include <string>
 
@@ -269,7 +269,12 @@ void MCTruthManager::printTree(HepMC::GenParticle* particle, std::string offset)
 {
   std::cout << offset << "---  barcode: " << particle->barcode() << " pdg: " 
             << particle->pdg_id() << " energy: " << particle->momentum().e() 
-            << " production vertex: "<< particle->production_vertex()->position() << std::endl;
+    //        << " production vertex: "<< particle->production_vertex()->position() << std::endl;
+            << " production vertex: "<< particle->production_vertex()->position().x() 
+            << " " << particle->production_vertex()->position().y() 
+            << " " << particle->production_vertex()->position().z() 
+            << " " << particle->production_vertex()->position().t() << std::endl;
+
   
   for(HepMC::GenVertex::particles_out_const_iterator 
         it=particle->end_vertex()->particles_out_const_begin();
