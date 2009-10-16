@@ -4,6 +4,10 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+!================ DAQEvent v8r1 2009-10-16 ===================================
+! 2009-10-16 - Marco Cattaneo
+ - Remove obsolete file DAQEvent_dll.cpp
+
 ! 2009-10-09 - Jaap Panman
  - add functionality to write/read MDF files with only lumi events:
    Add FileID bank to RawBank
