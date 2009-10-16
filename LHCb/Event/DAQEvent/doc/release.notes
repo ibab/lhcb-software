@@ -4,6 +4,11 @@
 !Purpose: Define the classes delivered to the online farm by the DAQ
 !-----------------------------------------------------------------------------
 
+
+! 2009-10-16 - 
+ - componenet : add new ODINTimeFilter (GPS time, EventID, BCID filtering)
+
+
 !================ DAQEvent v8r1 2009-10-16 ===================================
 ! 2009-10-16 - Marco Cattaneo
  - Remove obsolete file DAQEvent_dll.cpp
