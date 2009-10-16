@@ -7,6 +7,10 @@
 !               these aren't defined.
 !-----------------------------------------------------------------------------
 
+! 2009-10-15 - Silvia Miglioranzi
+ - Change version name in requirements file (mismatch between what was 
+   written in the requirements and the actual version)
+
 !============================ ClhepTools v2r1 ===============================
 ! 2007-06-22 - Gloria Corti
  - Adapt to move of definitions of Gaudi:: math types to GaudiKernel
