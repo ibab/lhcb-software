@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.50 2009-10-14 16:15:23 cattanem Exp $
+! $Id: release.notes,v 1.51 2009-10-16 13:17:05 cattanem Exp $
 ! Package: IOExample
 ! Package Manager: M.Frank
 ! Purpose: Demonstrate how to write and read back event data using POOL I/O.
 !-------------------------------------------------------------------------------
 
+!====================== IOExample v3r3 2009-10-16 ==============================
 ! 2009-10-14 - Marco Cattaneo
  - Replace PoolDigi input file with an MC09 file and update QMTest reference
 
