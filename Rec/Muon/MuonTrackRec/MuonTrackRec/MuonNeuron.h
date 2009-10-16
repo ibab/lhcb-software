@@ -1,4 +1,4 @@
-// $Id: MuonNeuron.h,v 1.2 2009-03-24 16:23:37 ggiacomo Exp $
+// $Id: MuonNeuron.h,v 1.3 2009-10-16 17:05:57 ggiacomo Exp $
 #ifndef MUONNEURON_H 
 #define MUONNEURON_H 1
 
@@ -26,16 +26,18 @@
 class MuonNeuron {
 public: 
   /// Standard constructor
-  MuonNeuron(MuonHit &h, 
-             MuonHit &t);
+  MuonNeuron();
 
-  MuonNeuron(MuonHit &h, 
-	     MuonHit &t,
+  MuonNeuron(MuonHit *h, 
+             MuonHit *t);
+
+  MuonNeuron(MuonHit *h, 
+	     MuonHit *t,
 	     int s,
 	     int r);
 
-  MuonNeuron(MuonHit &h, 
-	     MuonHit &t,
+  MuonNeuron(MuonHit *h, 
+	     MuonHit *t,
 	     int hID,
 	     int tID,
 	     int s,
@@ -47,11 +49,11 @@ public:
 
   /// return neuron head
   inline MuonHit* head() const {
-    return &m_head; 
+    return m_head; 
   }   
   /// returns the neuron tail
   inline MuonHit* tail() const {
-    return &m_tail; 
+    return m_tail; 
   }
 
   /// return the neuorn station.
@@ -146,8 +148,8 @@ protected:
   
 private:
   
-  MuonHit& m_head;
-  MuonHit& m_tail;
+  MuonHit* m_head;
+  MuonHit* m_tail;
   ROOT::Math::XYZVector m_neuron;
   ROOT::Math::XYZVector m_neuronXZ;
   ROOT::Math::XYZVector m_neuronYZ;

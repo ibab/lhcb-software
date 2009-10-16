@@ -1,7 +1,6 @@
-// $Id: MuonNNetRec.cpp,v 1.6 2009-10-14 08:40:34 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.7 2009-10-16 17:05:59 ggiacomo Exp $
 
 #include <list>
-#include <fstream>
 
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
@@ -12,9 +11,8 @@
 #include "MuonTrackRec/MuonHit.h"
 #include "MuonTrackRec/IMuonHitDecode.h"
 #include "MuonTrackRec/IMuonPadRec.h"
-#include "MuonDet/IMuonFastPosTool.h"
+#include "MuonTrackRec/IMuonClusterRec.h"
 #include "MuonDet/DeMuonDetector.h"
-#include "Kernel/MuonTileID.h"
 #include "MuonNNetRec.h"
 using namespace LHCb;
 using namespace std;
@@ -61,18 +59,15 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
   declareProperty( "PhysicsTiming"    , m_physicsTiming = false );
   declareProperty( "AssumeCosmics"    , m_assumeCosmics = true );
   declareProperty( "AssumePhysics"    , m_assumePhysics = false );
-  declareProperty( "OfflineTimeAlignment", m_offlineTimeAlignment = false );
-  declareProperty( "TimeResidualFile" , m_timeResidualFile = "none");
   declareProperty( "AddXTalk"         , m_XTalk = false);
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
-  declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
+  declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 MuonNNetRec::~MuonNNetRec() { 
-  if(MuonTrackRec::ResMap) delete MuonTrackRec::ResMap;
   clear();
 } 
 
@@ -82,18 +77,14 @@ MuonNNetRec::~MuonNNetRec() {
 
 void MuonNNetRec::clear() {
   
-  std::vector<MuonHit*>::iterator ih;
   std::vector<MuonTrack*>::iterator it;
   std::vector<MuonNeuron*>::iterator in;
   
-  for(ih=m_trackhits.begin() ; ih !=m_trackhits.end() ; ih++)
-    delete (*ih); // delete all the allocated MuonHit's
   for(it=m_tracks.begin() ; it !=m_tracks.end() ; it++)
     delete (*it); // delete all the allocated MuonTrack's
   for(in=m_allneurons.begin() ; in !=m_allneurons.end() ; in++)
     delete (*in); // delete all the allocated MuonNeuron's
 
-  m_trackhits.clear() ; // clear the array of pointers to MuonHit's
   m_tracks.clear() ;  // clear the array of pointers to MuonTrack's
   m_allneurons.clear();  // clear the array of pointers to all MuonNeuron's
   m_useneurons.clear();  // clear the array of pointers to used MuonNeuron's
@@ -129,11 +120,13 @@ StatusCode MuonNNetRec::initialize ()
     return StatusCode::FAILURE;
   }
 
-  m_posTool = tool<IMuonFastPosTool>(m_posToolName);
-  if(!m_posTool) {
-    error()<<"error retrieving the muon position tool "<<endreq;
+  m_clusterTool = tool<IMuonClusterRec>(m_clusterToolName);
+  if(!m_clusterTool){
+    error()<<"error retrieving the cluster rec. tool "<<endreq;
     return StatusCode::FAILURE;
   }
+  // switch off xtalk code if we're doing real clustering
+  if (m_clusterToolName == "MuonClusterRec") m_XTalk=false;
 
   incSvc()->addListener( this, IncidentType::EndEvent );
 
@@ -153,16 +146,6 @@ StatusCode MuonNNetRec::initialize ()
   setPhysicsTiming(m_physicsTiming);
   setAssumeCosmics(m_assumeCosmics);
   setAssumePhysics(m_assumePhysics);
-  if(m_offlineTimeAlignment && m_timeResidualFile != "none"){
-    if(!loadTimeRes()){
-      err()<<"Time corrections file "<<m_timeResidualFile<<" not found"<<endmsg;
-      return StatusCode::FAILURE;
-    }
-    m_offlineTimeAlignment = true;
-  } else {
-    m_offlineTimeAlignment = false;
-  }
-  setOfflineTimeAlignment(m_offlineTimeAlignment);
 
   return StatusCode::SUCCESS;
 }
@@ -196,6 +179,11 @@ StatusCode MuonNNetRec::finalize ()
 
 StatusCode MuonNNetRec::muonNNetMon(){  
 
+
+  if( m_recDone == true ) {
+    return StatusCode::SUCCESS;
+  }
+
   // call decoding and pad reconstruction
   const std::vector<MuonLogHit*> *myhits = m_decTool->hits();
   if(myhits) {
@@ -203,24 +191,23 @@ StatusCode MuonNNetRec::muonNNetMon(){
     if (!sc) return sc;
   }
   const std::vector<MuonLogPad*>* coords =m_padTool->pads(); 
-
-  if( m_recDone == true ) {
-    return StatusCode::SUCCESS;
-  }
   
   // timing
   m_timer->start( m_timeinitNet );
   
+  // call clustering algorithm
+  const std::vector<MuonHit*>* trackhits = m_clusterTool->clusters(coords);
+
   debug()<<"\n running MuonNNetMon"<<endmsg;
   clear();
   m_recDone = true;
   
   // preliminary cuts based on hits number in each station
-  std::vector<MuonLogPad*>::const_iterator iCoord;
+  std::vector<MuonHit*>::const_iterator iCoord;
   int hit_per_station[5]= {0,0,0,0,0};
   // check on maximum number of hit combinations giving a neuron
-  for (iCoord = coords->begin(); iCoord != coords->end();iCoord++ ){
-    if ((*iCoord)->truepad()) hit_per_station[(*iCoord)->tile()->station()]++;
+  for (iCoord = trackhits->begin(); iCoord != trackhits->end();iCoord++ ){
+    hit_per_station[(*iCoord)->station()]++;
   }  
 
   int ncomb=0, nFiringS=0;
@@ -246,39 +233,6 @@ StatusCode MuonNNetRec::muonNNetMon(){
     info() << "Too many hits to proceed with cosmic track finding" << endmsg;
     return StatusCode::SUCCESS;
   }
-  int nhits=0; // hits per event
-
-  
-  // loop over the coordinates and fill the MuonHits  
-  for (iCoord = coords->begin(); iCoord != coords->end();iCoord++ ){
-    if(! (*iCoord)->truepad() ) continue;
-    const LHCb::MuonTileID* tile= (*iCoord)->tile();
-    //float m_hitTime = (*iCoord)->time();
-    //float m_hitDeltaTime = (*iCoord)->dtime() ;
-    
-    double x,dx,y,dy,z,dz;
-
-    if ( (m_posTool->calcTilePos(*tile,x,dx,y,dy,z,dz)).isFailure() )
-      return StatusCode::FAILURE;
-
-    // counters
-    nhits++;
-    
-    // fill the hit array
-    // create a MuonHit object
-    MuonHit* muon_Hit = new MuonHit(m_muonDetector, *iCoord, 
-                                    x,y,z,m_posTool );
-    
-    // store a progressive hit number for debugging purposes
-    StatusCode sc = muon_Hit->setHitID(nhits);
-    if ( sc.isFailure() )  {
-      err()<<"Hit ID = 0 is not valid"<<endmsg;
-      delete muon_Hit;
-      return StatusCode::FAILURE;
-    }
-    // fill the vector of MuonHits
-    m_trackhits.push_back(muon_Hit);
-  } // end of loop over coords
 
 
   // starts the NNet reconstruction
@@ -294,16 +248,16 @@ StatusCode MuonNNetRec::muonNNetMon(){
   
   std::list< MuonNeuron* > neurons;
   int Nneurons = 0;
-  std::vector<MuonHit*>::iterator ihT,ihH; 
+  std::vector<MuonHit*>::const_iterator ihT,ihH; 
   MuonHit *head, *tail;
-  for(ihT = m_trackhits.begin(); ihT != m_trackhits.end() ; ihT++){
+  for(ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){
     
     // skip a station for efficiency studies
     int stT = (*ihT)->station();
     if (stT == m_skipStation) continue;
     
     int tID = (*ihT)->hitID(); // tail ID
-    for(ihH = ihT+1 ;ihH != m_trackhits.end() ; ihH++){
+    for(ihH = ihT+1 ;ihH != trackhits->end() ; ihH++){
       
       // skip a station for efficiency studies
       int stH = (*ihH)->station();
@@ -330,7 +284,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       
       Nneurons++;
       // create the MuonNeuron
-      MuonNeuron* Neuron = new MuonNeuron(*head,*tail,hID,tID,sta,reg);
+      MuonNeuron* Neuron = new MuonNeuron(head,tail,hID,tID,sta,reg);
       // store progressive neuron number for debugging
       Neuron->setNeuronID(Nneurons);
       // container to retrieve neurons from tool
@@ -562,7 +516,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       if(m_XTalk) {
         //	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
-        StatusCode sct = muonTrack->AddXTalk( m_trackhits);
+        StatusCode sct = muonTrack->AddXTalk( trackhits);
         
         //	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
@@ -625,34 +579,12 @@ StatusCode MuonNNetRec::trackFit( )
   return StatusCode::SUCCESS;
 }
 
-//=============================================================================
-// load map of time residuals for offline correction
-//=============================================================================
 
-bool MuonNNetRec::loadTimeRes() {
-  char inbuf[100];
-  bool out = true;
-  int s=0,r=0,q=0,nx=0,ny=0,v=0;
-  float res=0.;
-  std::ifstream resList;
-  resList.open(m_timeResidualFile.c_str());
-  if (resList.good() ) {
-    info() << "Loading Time Alignment correction from file "<<m_timeResidualFile<<endmsg;
-    int nc=0;
-    MuonTrackRec::ResMap = new std::map<long int, float>;
-    while (! resList.eof()) {
-      resList.getline(inbuf,sizeof(inbuf));
-      sscanf(inbuf,"M%dR%dQ%d %d %d v%d  %f",&s,&r,&q,&nx,&ny,&v,&res);
-      //sscanf(inbuf,"M%dR%dQ%d %d %d %f",&s,&r,&q,&nx,&ny,&res);
-      long int key = MuonTrackRec::logicalPadKey(q-1, s-1, r-1, nx, ny, v);
-      (*MuonTrackRec::ResMap)[key] = res /25. * 16. ; // convert from ns to TDC units
-      nc++;
-    }
-    info() << "Loaded "<<nc<<" corrections"<<endmsg;
-  }
-  else {
-    out = false;
-  }
-  return out;
+const std::vector<MuonHit*>* MuonNNetRec::trackhits()   {
+  if(!m_recDone) muonNNetMon();
+  return m_clusterTool->clusters(m_padTool->pads());
 }
+
+
+
 

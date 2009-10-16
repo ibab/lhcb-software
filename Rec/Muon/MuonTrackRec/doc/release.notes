@@ -1,10 +1,21 @@
 !-----------------------------------------------------------------------------
 ! Package     : Muon/MuonTrackRec
 ! Responsible : Giovanni Passaleva / Giacomo Graziani
-! Purpose     : Standalone Muon track reconstruction (with a recurrent neural network)
-!               implementation MuonNNetRecThe is based on a recursive NNet, see: 
+! Purpose     : Standalone Muon track reconstruction 
+!               implementation MuonNNetRec is based on a recursive NNet, see: 
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
 !-----------------------------------------------------------------------------
+
+! 20091016 - v2r0 GG
+ - add clustering tool to be used before track reconstruction:
+   * class MuonHit represents now a cluster 
+   * new tool IMuonClusterRec with 2 implementations:
+      - MuonFakeClustering just copies log pads to MuonHits (previous behaviour for bkw compatibility)
+      - MuonClusterRec to cluster MuonLogPads into MuonHits
+   * clustering is off by default, turn it on with 
+      ToolSvc.MuonNNetRec.ClusterTool = "MuonClusterRec"
+   * the options PosTool, OfflineTimeAlignment TimeResidualFile  have been moved from the MuonNNetRec 
+     to the clustering tool; this should be the only bkw-incompatible change
 
 ! 20091009 - v1r6 GG
 - go back to previous MuonPadRec (new version was not really faster and was breaking 

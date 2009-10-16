@@ -1,4 +1,4 @@
-// $Id: IMuonTrackRec.h,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: IMuonTrackRec.h,v 1.2 2009-10-16 17:05:57 ggiacomo Exp $
 #ifndef MUONNNET_IMUONTRACKREC_H 
 #define MUONNNET_IMUONTRACKREC_H 1
 
@@ -38,9 +38,6 @@ public:
   virtual void setZref(double Zref) =0;
   virtual void setPhysicsTiming(bool PhysTiming) =0;
   virtual void setAssumeCosmics(bool AssumeCosmics) =0;
-  virtual void setAssumePhysics(bool AssumePhysics) =0;
-  virtual void setOfflineTimeAlignment(bool OfflineTA) =0;
-  virtual void setTimeResidualMap(std::map<long int, float>* Map) =0;
-  
+  virtual void setAssumePhysics(bool AssumePhysics) =0;  
 };
 #endif // MUONNNET_IMUONTRACKREC_H

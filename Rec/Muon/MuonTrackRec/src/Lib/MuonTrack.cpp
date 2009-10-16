@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.3 2009-05-19 16:06:51 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.4 2009-10-16 17:05:58 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -15,11 +15,6 @@ namespace MuonTrackRec {
   DLLEXPORT bool PhysTiming = false;
   DLLEXPORT bool IsCosmic = false;
   DLLEXPORT bool IsPhysics = false;
-  DLLEXPORT bool OfflineTimeAlign = false;
-  DLLEXPORT std::map<long int, float>* ResMap = NULL;
-  DLLEXPORT long int logicalPadKey(int q, int s, int r, int nx, int ny, int view) {
-    return (view + nx*3 + ny*96*3 + r*16*96*3 + s*4*16*96*3 + q*5*4*16*96*3);
-  }
 };
 #undef MUONTRACKRECNMSPC
 
@@ -55,12 +50,11 @@ std::vector< MuonHit* > MuonTrack::getHits(){
 }
 ///
 int MuonTrack::getSpan(){
-  std::vector< MuonHit* > hits = getHits();
-  std::vector< MuonHit* >::iterator iv = hits.begin();
+  MuonTrack::MuonTkIt iv = m_muonTrack.begin();
   int smax = -9999;
   int smin =  9999;
-  for(;iv != hits.end(); iv++){
-    int s = (*iv)->station();
+  for(;iv != m_muonTrack.end(); iv++){
+    int s = (iv->second).station();
      if(s >= smax) smax = s;
      if(s <= smin) smin = s;
   }
@@ -68,12 +62,11 @@ int MuonTrack::getSpan(){
 }
 ///
 int MuonTrack::getFiringStations(){
-  std::vector< MuonHit* > hits = getHits();
-  std::vector< MuonHit* >::iterator iv;
+  MuonTrack::MuonTkIt iv;
   int firstat = 0;
   for(int s=0; s<5; s++){
-    for(iv = hits.begin() ;iv != hits.end(); iv++){
-      int hs = (*iv)->station();
+    for(iv = m_muonTrack.begin() ;iv != m_muonTrack.end(); iv++){
+      int hs = (iv->second).station();
       if(hs == s){
         firstat++;
         break;
@@ -85,21 +78,21 @@ int MuonTrack::getFiringStations(){
 
 StatusCode MuonTrack::speedFit() {
   // first extract the hits 
-  std::vector< MuonHit* > t_hits = getHits();
-  std::vector< MuonHit* >::iterator tk;
-  double dof = t_hits.size() - 2.;
+  MuonTrack::MuonTkIt tk;
+  double dof = m_muonTrack.size() - 2.;
   if(dof<0) return StatusCode::FAILURE;
 
   double tc11,tc12,tc22,tv1,tv2,ttt;
   tc11 = tc12 = tc22 = tv1 = tv2 = ttt = 0;
   double tdet,t,xp,yp,z,d;
 
-  for(tk = t_hits.begin(); tk != t_hits.end(); tk++){
-    xp = (*tk)->X() - m_bx; 
-    yp = (*tk)->Y() - m_by; 
-    z  = (*tk)->Z();
+  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    MuonHit* hit= &(tk->second);
+    xp = hit->X() - m_bx; 
+    yp = hit->Y() - m_by; 
+    z  = hit->Z();
     d = sqrt(xp*xp+yp*yp+z*z);
-    t = correctedTime(**tk);
+    t = correctedTime(*hit);
 
     tc11 += d*d;
     tc12 +=   d;
@@ -135,52 +128,6 @@ double MuonTrack::correctTOF(double rawT,
            (1-MuonTrackRec::Zref/Z) );
 }
 
-double MuonTrack::correctMisAlignment(MuonHit& hit) {
-  long int key=0;
-  double tcor=hit.hitTime();
-  MuonLogPad* pad=hit.logPad();
-  //  std::cout << "hit type ="<<(int)pad->type()<<std::endl;
-  if (pad->type() == MuonLogPad::XTWOFE) {
-    double d1=0.,d2=0.;
-    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
-                                      pad->tile()->station(),
-                                      pad->tile()->region(),
-                                      pad->tile()->nX(),
-                                      pad->tile()->nY() ,
-                                      0);//1);
-    if (MuonTrackRec::ResMap->count(key)) {
-      d1 = (*MuonTrackRec::ResMap)[key];
-    }
-    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
-                                      pad->tile()->station(),
-                                      pad->tile()->region(),
-                                      pad->tile()->nX(),
-                                      pad->tile()->nY() ,
-                                      0);//2);
-    if (MuonTrackRec::ResMap->count(key)) {
-      d2 = (*MuonTrackRec::ResMap)[key];
-    }
-    //    std::cout<<"correcting double r. hit by "<<-d1<<" and "<<-d2<<"   Time was "<<tcor<<std::endl;
-    tcor -=  ( (d1+d2)/2. );
-    pad->shiftTimes( d1, d2 );
-    //    std::cout << " now is "<<tcor <<std::endl;
-  }
-  else {
-    key = MuonTrackRec::logicalPadKey(pad->tile()->quarter(),
-                                      pad->tile()->station(),
-                                      pad->tile()->region(),
-                                      pad->tile()->nX(),
-                                      pad->tile()->nY() ,
-                                      0);
-    if (MuonTrackRec::ResMap->count(key)) {
-      //      std::cout<<"correcting single r. hit by "<<-((*MuonTrackRec::ResMap)[key])<<"   Time was "<<tcor<<std::endl;
-      double avres= (*MuonTrackRec::ResMap)[key];
-      tcor -= avres;
-      //       std::cout << " now is "<<tcor <<std::endl;
-    }
-  }
-  return tcor;
-}
 
 double MuonTrack::correctTime(double rawT,
                               double X,
@@ -195,8 +142,6 @@ double MuonTrack::correctTime(double rawT,
 
 double MuonTrack::correctedTime(MuonHit& hit) {
   double tc = hit.hitTime();
-  if(MuonTrackRec::OfflineTimeAlign)
-    tc = correctMisAlignment(hit);
   return correctTime( tc, hit.X(), hit.Y(), hit.Z());
 }
 
@@ -204,9 +149,8 @@ double MuonTrack::correctedTime(MuonHit& hit) {
 StatusCode MuonTrack::linFit()
 {
   // first extract the hits 
-  std::vector< MuonHit* > t_hits = getHits();
-  std::vector< MuonHit* >::iterator tk;
-  double dof = t_hits.size() - 2.;
+  MuonTkIt tk;
+  double dof = m_muonTrack.size() - 2.;
   if(dof<0) return StatusCode::FAILURE;
 
   double xc11,xc12,xc22,xv1,xv2,xxx;
@@ -216,14 +160,14 @@ StatusCode MuonTrack::linFit()
   double xdet,ydet;
   double  xerr,yerr,x,y,z;
 
-  for(tk = t_hits.begin(); tk != t_hits.end(); tk++){
+  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    MuonHit* hit= &(tk->second);
+    xerr = 2.* hit->dX();
+    yerr = 2.* hit->dY();
 
-    xerr = 2.*(*tk)->hitTile_dX()/sqrt(12.);
-    yerr = 2.*(*tk)->hitTile_dY()/sqrt(12.);
-
-    x = (*tk)->X(); 
-    y = (*tk)->Y(); 
-    z = (*tk)->Z();
+    x = hit->X(); 
+    y = hit->Y(); 
+    z = hit->Z();
 
     // then fit them with a min chi^2 in the 2 projections xz and yz
     //1) XZ projection:
@@ -275,20 +219,21 @@ StatusCode MuonTrack::linFit()
   double sumt,sumd,sumt2,sumd2,sumtd;
   sumt = sumd = sumt2 = sumd2 = sumtd = 0.;
 
-  for(tk = t_hits.begin(); tk != t_hits.end(); tk++){
-    xp = (*tk)->X() - m_bx; 
-    yp = (*tk)->Y() - m_by; 
-    z  = (*tk)->Z();
+  for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
+    MuonHit* hit= &(tk->second);
+    xp = hit->X() - m_bx; 
+    yp = hit->Y() - m_by; 
+    z  = hit->Z();
     d = sqrt(xp*xp+yp*yp+z*z)/MuonTrackRec::muspeed;
-    t = correctedTime(**tk);
+    t = correctedTime(*hit);
     sumt  += t   ; sumd  += d;
     sumt2 += t*t ; sumd2 += d*d;
     sumtd += t*d ;
   }
   // compute t0 choosing track direction according to y slope
-  m_t0 = ( sumt - sz()*sumd )/t_hits.size();
-  m_sigmat = sqrt( (sumt2 + sumd2 - sz()*2*sumtd - t_hits.size()*m_t0*m_t0 ) / (t_hits.size()-1) );
-  m_errt0 = m_sigmat/sqrt(float(t_hits.size()));
+  m_t0 = ( sumt - sz()*sumd )/m_muonTrack.size();
+  m_sigmat = sqrt( (sumt2 + sumd2 - sz()*2*sumtd - m_muonTrack.size()*m_t0*m_t0 ) / (m_muonTrack.size()-1) );
+  m_errt0 = m_sigmat/sqrt(float(m_muonTrack.size()));
   return StatusCode::SUCCESS;
 }
 
@@ -324,7 +269,7 @@ double MuonTrack::sz() const {return ( MuonTrackRec::IsPhysics ? 1. :
                                        (m_speed>0 ? 1.: -1.) ) );}
 
 // attach Xtalk hits (by Silvia Pozzi)
-StatusCode MuonTrack::AddXTalk(std::vector< MuonHit* > m_trackhits)
+StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits)
 {
   int nXTalk = 0;
   bool m_fit = true;
@@ -337,50 +282,50 @@ StatusCode MuonTrack::AddXTalk(std::vector< MuonHit* > m_trackhits)
   }
   
   // first extract the hits 
-  std::vector< MuonHit* > t_hits = getHits(); // track hits  
+  MuonTkIt tk;
   std::vector< MuonHit* > tt_hits ;
-  std::vector< MuonHit* >::iterator tk;
 
   //  std::cout << " initial track hit size "<<t_hits.size()<<std::endl;
 
     //m_trackhits = ?????  // Container of all the hits ???  Where is it, is it available?
-  std::vector<MuonHit*>::iterator ihT,ihH,ihK; 
-  for (ihT = m_trackhits.begin(); ihT != m_trackhits.end() ; ihT++){ // loop on all the hits
+  std::vector<MuonHit*>::const_iterator ihT,ihH,ihK; 
+  for (ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
   
-    for (tk = t_hits.begin(); tk != t_hits.end(); tk++){ // loop in the track hits
-      if ( (*tk)->station() == (*ihT)->station() && 
-	   (*tk)->hitID()   != (*ihT)->hitID() ) {
-	
-	double deltaX = 90;
-	double deltaY = 90;
-	if ( m_fit ) {
-	  
-	  deltaX = fabs( (*ihT)->X() - ( m_bx + m_sx *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dX()) ;
+    for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop in the track hits
+      MuonHit* hit= &(tk->second);
+      if ( hit->station() == (*ihT)->station() && 
+           hit->hitID()   != (*ihT)->hitID() ) {
+        
+        double deltaX = 90;
+        double deltaY = 90;
+        if ( m_fit ) {
+          
+          deltaX = fabs( (*ihT)->X() - ( m_bx + m_sx *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dX()) ;
+          
+          deltaY = fabs( (*ihT)->Y() - ( m_by + m_sy *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dY()) ;
+          
+        } else {
+          
+          deltaX = fabs( hit->X() - (*ihT)->X() ) / (hit->hitTile_dX()/2. + (*ihT)->hitTile_dX()/2.) ;
+          
+          deltaY = fabs( hit->Y() - (*ihT)->Y() ) / (hit->hitTile_dY()/2. + (*ihT)->hitTile_dY()/2.) ;
+          
+        }
 
-	  deltaY = fabs( (*ihT)->Y() - ( m_by + m_sy *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dY()) ;
-  
-	} else {
-
-	  deltaX = fabs( (*tk)->X() - (*ihT)->X() ) / ((*tk)->hitTile_dX()/2. + (*ihT)->hitTile_dX()/2.) ;
-
-	  deltaY = fabs( (*tk)->Y() - (*ihT)->Y() ) / ((*tk)->hitTile_dY()/2. + (*ihT)->hitTile_dY()/2.) ;
-
-	}
-
-	if (deltaX<1.5 && deltaY<1.5 ) {
-	  bool trovato = true;
-	  for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
-	    if ((*ihT)==(*ihK) ) trovato = false;
-	  if (trovato){
-	    tt_hits.push_back(*ihT);  
-	    nXTalk++;
-	  }  
-	} //if (deltaX < ... && deltaY<...)
-      } // if (*tk)->... == (*ihT)...
+        if (deltaX<1.5 && deltaY<1.5 ) {
+          bool trovato = true;
+          for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
+            if ((*ihT)==(*ihK) ) trovato = false;
+          if (trovato){
+            tt_hits.push_back(*ihT);  
+            nXTalk++;
+          }  
+        } //if (deltaX < ... && deltaY<...)
+      } // if hit->... == (*ihT)...
       
     } // loop on m_trackhits
   } // loop on t_hits
-
+  
   int idhit=100;
   std::vector<MuonHit* >::iterator tj;
   for (tj=tt_hits.begin(); tj!=tt_hits.end(); tj++ ){

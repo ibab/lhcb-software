@@ -1,4 +1,4 @@
-// $Id: MuonNeuron.cpp,v 1.1.1.1 2009-03-19 14:38:47 ggiacomo Exp $
+// $Id: MuonNeuron.cpp,v 1.2 2009-10-16 17:05:58 ggiacomo Exp $
 #include "MuonTrackRec/MuonNeuron.h"
 
 //=============================================================================
@@ -6,8 +6,12 @@
 //=============================================================================
 //=============================================================================
 
-MuonNeuron::MuonNeuron(MuonHit &h, 
-		       MuonHit &t) : 
+MuonNeuron::MuonNeuron() {
+}
+
+
+MuonNeuron::MuonNeuron(MuonHit *h, 
+		       MuonHit *t) : 
      m_head( h ),
      m_tail( t ),
      m_status(1.0),
@@ -17,7 +21,7 @@ MuonNeuron::MuonNeuron(MuonHit &h,
      m_tailID(-1),
      m_ID(-1)
 {
-  m_neuron = t - h;
+  m_neuron = *t - *h;
   m_neuronXZ.SetX(m_neuron.X());
   m_neuronXZ.SetY(0.);
   m_neuronXZ.SetZ(m_neuron.Z());
@@ -28,8 +32,8 @@ MuonNeuron::MuonNeuron(MuonHit &h,
 
 //=============================================================================
 
-MuonNeuron::MuonNeuron(MuonHit &h, 
-		       MuonHit &t,
+MuonNeuron::MuonNeuron(MuonHit *h, 
+		       MuonHit *t,
 		       int s,
 		       int r) : 
      m_head( h ),
@@ -43,7 +47,7 @@ MuonNeuron::MuonNeuron(MuonHit &h,
 {
   //  m_head = h; 
   //  m_tail = t;
-  m_neuron = t - h;
+  m_neuron = *t - *h;
   m_neuronXZ.SetX(m_neuron.X());
   m_neuronXZ.SetY(0.);
   m_neuronXZ.SetZ(m_neuron.Z());
@@ -54,8 +58,8 @@ MuonNeuron::MuonNeuron(MuonHit &h,
 
 //=============================================================================
 
-MuonNeuron::MuonNeuron(MuonHit &h, 
-	     MuonHit &t,
+MuonNeuron::MuonNeuron(MuonHit *h, 
+	     MuonHit *t,
 	     int hID,
 	     int tID,
 	     int s,
@@ -73,7 +77,7 @@ MuonNeuron::MuonNeuron(MuonHit &h,
   //  m_tailID = tID;
   //  m_station = s;
   //  m_region = r;
-  m_neuron = t - h;
+  m_neuron = *t - *h;
   m_neuronXZ.SetX(m_neuron.X());
   m_neuronXZ.SetY(0.);
   m_neuronXZ.SetZ(m_neuron.Z());
@@ -275,7 +279,7 @@ void MuonNeuron::killDoubleLength( const float angcut ){
 /// neuron length in terms of stations crossed
 int MuonNeuron::stationDifference()
 {
-  return ( m_head.station() - m_tail.station() );
+  return ( m_head->station() - m_tail->station() );
 }
 
 /// return neuron length
@@ -285,13 +289,13 @@ double MuonNeuron::len() const {
 
 /// return neuron length along Z
 double MuonNeuron::deltaZ() const {
-  return (m_head.Z()-m_tail.Z());
+  return (m_head->Z()-m_tail->Z());
 }
 
 /// return distance along Z between the neuron station and the closest one
 double MuonNeuron::deltaZ( const int st ) const {
   double zsta[5]={12100, 15200, 16400, 17600, 18800}; 
-  return (zsta[st]-m_tail.Z());
+  return (zsta[st]-m_tail->Z());
 }
 
 /// return neuron length in the xz plane
@@ -321,22 +325,22 @@ double MuonNeuron::angleYZ( const MuonNeuron &n ) {
 
 /// check if this is th with n
 bool MuonNeuron::tailHead(const MuonNeuron& n) const {
-  return (m_tail == n.m_head);
+  return (m_tail->hitID() == n.m_head->hitID());
 }
 
 /// check if this is ht with n
 bool MuonNeuron::headTail(const MuonNeuron& n) const {
-  return (m_head == n.m_tail);
+  return (m_head->hitID() == n.m_tail->hitID());
 }
 
 /// check if this is tt with n
 bool MuonNeuron::tailTail(const MuonNeuron& n) const {
-  return (m_tail == n.m_tail);
+  return (m_tail->hitID() == n.m_tail->hitID());
 }
 
 /// check if this is hh with n
 bool MuonNeuron::headHead(const MuonNeuron& n) const {
-  return (m_head == n.m_head);
+  return (m_head->hitID() == n.m_head->hitID());
 }
 
 /// check if this is connected  to n

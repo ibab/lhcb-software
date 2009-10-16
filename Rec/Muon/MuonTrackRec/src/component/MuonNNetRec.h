@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.3 2009-10-09 09:38:43 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.4 2009-10-16 17:05:59 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -12,7 +12,7 @@
 class DeMuonDetector;
 class IMuonHitDecode;
 class IMuonPadRec;
-class IMuonFastPosTool;
+class IMuonClusterRec;
 class ISequencerTimerTool;
 
 /** @class MuonNNetRec MuonNNetRec.h
@@ -37,10 +37,7 @@ public:
   virtual void handle ( const Incident& incident );   
 
   //------------------
-  virtual inline const std::vector<MuonHit*>* trackhits()   {
-    if(!m_recDone) muonNNetMon();
-    return (const std::vector<MuonHit*>*) (&m_trackhits);
-  }
+  virtual const std::vector<MuonHit*>* trackhits();
   virtual inline const std::vector<MuonTrack*>* tracks()   {
     if(!m_recDone) muonNNetMon();
     return (const std::vector<MuonTrack*>*) (&m_tracks);
@@ -65,22 +62,17 @@ public:
     MuonTrackRec::IsPhysics = AssumePhysics;
     if(AssumePhysics) MuonTrackRec::IsCosmic = false;
   }
-  virtual void setOfflineTimeAlignment(bool OfflineTimeAlign) 
-  { MuonTrackRec::OfflineTimeAlign = OfflineTimeAlign;}
-  virtual void setTimeResidualMap(std::map<long int, float>* Map) 
-  { MuonTrackRec::ResMap = Map;}
 
 private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
-  IMuonFastPosTool* m_posTool;
+  IMuonClusterRec* m_clusterTool;
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
   bool m_recOK;
   bool m_tooManyHits;
   bool m_forceResetDAQ;
 
-  std::vector< MuonHit* > m_trackhits;
   std::vector< MuonNeuron* > m_useneurons;
   std::vector< MuonNeuron* > m_allneurons;
   std::vector< MuonTrack* > m_tracks;
@@ -89,7 +81,6 @@ private:
 
   StatusCode muonNNetMon();
   StatusCode trackFit();
-  bool loadTimeRes(); 
 
    // algorithm timing monitor
   ISequencerTimerTool* m_timer;
@@ -126,16 +117,12 @@ private:
   bool m_assumeCosmics;
   // if true we assume that tracks have the "right" direction (pz>0)
   bool m_assumePhysics;
-  // if true, offline-computed corrections are applied to detector time-alignment
-  bool m_offlineTimeAlignment;
-  // path of file containing offline-computed corrections to time-alignment
-  std::string m_timeResidualFile;
   // name of decoding tool (MuonHitDecode for offline, MuonMonHitDecode for online monitoring)
   std::string m_decToolName;
   // name of pad rec tool (MuonPadRec only option so far)
   std::string m_padToolName;
-  // name of tile 2 coordinate conversion tool (MuonDetPosTool for using MuonDet, faster alternative provided by HltMuon)
-  std::string m_posToolName;
+  // name of clustering tool
+  std::string m_clusterToolName;
   /// cross talk
   bool m_XTalk;
     

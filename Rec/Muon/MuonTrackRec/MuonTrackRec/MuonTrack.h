@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.3 2009-05-19 16:06:51 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.4 2009-10-16 17:05:57 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -34,9 +34,6 @@ namespace MuonTrackRec {
   EXTERN bool PhysTiming;
   EXTERN bool IsCosmic;
   EXTERN bool IsPhysics;
-  EXTERN bool OfflineTimeAlign;
-  EXTERN std::map<long int, float>* ResMap;
-  EXTERN long int logicalPadKey(int q, int s, int r, int nx, int ny, int view);
 };
 #endif  // MUONTRACKRECNMSPC
 #undef EXTERN
@@ -59,7 +56,7 @@ public:
   // linear chi2 fit. Track is fitted separately in XZ, YZ, TZ (assuming speed of light)
   StatusCode linFit();
   // add XTalk tracks
-  StatusCode AddXTalk(std::vector< MuonHit* >);
+  StatusCode AddXTalk(const std::vector< MuonHit* >* trackhits);
   // linear fit to get particle speed
   StatusCode speedFit();
   inline double chi2x() const {return m_chi2x;}  /// chi2/dof XZ
@@ -118,7 +115,6 @@ private:
                     double X,
                     double Y,
                     double Z);
-  double correctMisAlignment(MuonHit& hit);
   double correctTime(double rawT,
                      double X,
                      double Y,
