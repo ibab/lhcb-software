@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-10-16 Wouter Hulsbergen
+ - make measurement providers private tool of 'master' provider
+
 ! 2009-10-08 Wouter Hulsbergen
  - adapted to changes in LHCb::Track
 

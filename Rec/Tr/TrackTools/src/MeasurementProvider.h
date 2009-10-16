@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.h,v 1.20 2009-02-09 15:12:44 albrecht Exp $
+// $Id: MeasurementProvider.h,v 1.21 2009-10-16 15:16:58 wouter Exp $
 #ifndef TRACKTOOLS_MEASUREMENTPROVIDER_H 
 #define TRACKTOOLS_MEASUREMENTPROVIDER_H
 
@@ -29,6 +29,9 @@ public:
 
   /** initialize tool */
   StatusCode initialize();
+
+  /** finalize tool */
+  StatusCode finalize();
 
   /** See interface class */
   StatusCode load( LHCb::Track& track ) const ;  

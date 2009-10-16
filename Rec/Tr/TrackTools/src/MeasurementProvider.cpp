@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.42 2009-10-08 14:47:36 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.43 2009-10-16 15:16:58 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -29,12 +29,12 @@ MeasurementProvider::MeasurementProvider( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent ) 
   : GaudiTool ( type, name , parent ),
-    m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider" ),
-    m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider" ),
-    m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider" ),
-    m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider" ),
-    m_otProvider(     "OTMeasurementProvider" ),
-    m_muonProvider(   "MuonMeasurementProvider" )
+    m_veloRProvider(  "MeasurementProviderT<MeasurementProviderTypes::VeloR>/VeloRMeasurementProvider", this ),
+    m_veloPhiProvider("MeasurementProviderT<MeasurementProviderTypes::VeloPhi>/VeloPhiMeasurementProvider", this ),
+    m_ttProvider(     "MeasurementProviderT<MeasurementProviderTypes::TT>/TTMeasurementProvider", this ),
+    m_itProvider(     "MeasurementProviderT<MeasurementProviderTypes::IT>/ITMeasurementProvider", this ),
+    m_otProvider(     "OTMeasurementProvider", this ),
+    m_muonProvider(   "MuonMeasurementProvider", this )
 {
   declareInterface<IMeasurementProvider>(this);
   declareProperty( "IgnoreVelo", m_ignoreVelo = false );
@@ -104,6 +104,39 @@ StatusCode MeasurementProvider::initialize()
   }
   return sc ;
 }
+
+
+StatusCode MeasurementProvider::finalize() 
+{
+  
+  info() << "In MeasurementProvider::finalize. Releasing tool handles." << endreq ;
+  StatusCode sc = GaudiTool::finalize() ;
+  // make sure to release all toolhandles
+  if(!m_ignoreVelo) {
+    sc = m_veloRProvider.release() ;
+    if (sc.isFailure()) return sc;
+    sc = m_veloPhiProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreTT) {
+    sc = m_ttProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreIT) {
+    sc = m_itProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreOT) {
+    sc = m_otProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  if(!m_ignoreMuon) {
+    sc = m_muonProvider.release() ;
+    if (sc.isFailure()) return sc;
+  }
+  return sc ;
+}
+
 
 //=============================================================================
 // Load all the Measurements from the list of LHCbIDs on the input Track
