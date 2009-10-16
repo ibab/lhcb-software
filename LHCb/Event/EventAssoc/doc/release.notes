@@ -4,6 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v4r8 2009-10-16 ========================
 ! 2009-09-02 - Juan PALACIOS
  - dict/selection.*
   . Add LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>
