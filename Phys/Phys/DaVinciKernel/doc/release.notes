@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.324 2009-09-14 15:54:27 jpalac Exp $
+!$Id: release.notes,v 1.325 2009-10-16 13:40:40 cattanem Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+!======================== DaVinciKernel v8r2 2009-10-16 =====================
 ! 2009-09-14 - Juan PALACIOS
  - DVAlgorithm
   . Add properties UseP2PVRelations and WriteP2PVRelations.
