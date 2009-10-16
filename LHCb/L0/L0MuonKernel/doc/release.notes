@@ -4,6 +4,7 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+!============================ L0MuonKernel v8r8 2009-10-16 ==================== 
 ! 2009-10-13 - Julien Cogan
  - Change to decode bank v3
  - Add new histo name (for virtual hit maps)
