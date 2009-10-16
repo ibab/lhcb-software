@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.137 2009-10-08 15:20:47 asatta Exp $
+! $Id: release.notes,v 1.138 2009-10-16 13:20:31 cattanem Exp $
 ! Package     : MuonDet
 ! Responsible : Alessia Satta
 !----------------------------------------------------------------------------
 
+!========================= MuonDet v9r0 2009-10-16 ==========================
 ! 2009-10-08 - Alessia Satta
  - Remove obsolete header file (DeMuonGasGap.h)
 
