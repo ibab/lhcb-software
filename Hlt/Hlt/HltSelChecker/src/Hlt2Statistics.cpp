@@ -1,11 +1,10 @@
-// $Id: Hlt2Statistics.cpp,v 1.4 2009-01-26 17:30:02 pkoppenb Exp $
+// $Id: Hlt2Statistics.cpp,v 1.5 2009-10-16 11:29:32 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 #include "Event/GenHeader.h" 
-#include "Event/HltSummary.h"
 #include "Kernel/ParticleID.h" 
 #include "Event/HltDecReports.h"
 #include "Event/HltSelReports.h"

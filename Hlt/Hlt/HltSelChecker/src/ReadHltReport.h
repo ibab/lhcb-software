@@ -1,4 +1,4 @@
-// $Id: ReadHltReport.h,v 1.1 2009-10-15 12:32:16 pkoppenb Exp $
+// $Id: ReadHltReport.h,v 1.2 2009-10-16 11:29:32 graven Exp $
 #ifndef READHLTSUMMARY_H 
 #define READHLTSUMMARY_H 1
 
@@ -12,7 +12,6 @@
  *  @author Patrick Koppenburg
  *  @date   2007-03-29
  */
-class IHltSummaryTool;
 class IParticlePropertySvc;
 
 class ReadHltReport : public DVAlgorithm {

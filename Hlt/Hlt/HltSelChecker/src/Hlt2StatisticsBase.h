@@ -1,4 +1,4 @@
-// $Id: Hlt2StatisticsBase.h,v 1.3 2009-01-26 17:30:02 pkoppenb Exp $
+// $Id: Hlt2StatisticsBase.h,v 1.4 2009-10-16 11:29:32 graven Exp $
 #ifndef HLT2STATISTICSBASE_H 
 #define HLT2STATISTICSBASE_H 1
 
@@ -6,7 +6,6 @@
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
 #include "Kernel/IAlgorithmCorrelations.h"            // Interface
-#include "Kernel/IHltSummaryTool.h"
 /** @class Hlt2StatisticsBase Hlt2StatisticsBase.h
  *  
  *  Common base class for Hlt2 algorithms making stats
