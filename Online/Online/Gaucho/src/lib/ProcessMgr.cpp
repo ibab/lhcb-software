@@ -14,6 +14,7 @@ ProcessMgr::ProcessMgr(std::string serviceOwner, IMessageSvc* msgSvc, Interactor
   m_monitoringFarm = false;
   m_publishRates = false;
   m_fileName = "Waiting for command to save histograms............."; 
+  m_runNumber = 0;
 }
 
 ProcessMgr::~ProcessMgr() {
@@ -92,15 +93,18 @@ void ProcessMgr::timerHandler(){
 }
 
 void ProcessMgr::write(){
-  int runNb = getrunNumber();
-  m_serviceMap->write(m_saveDir, m_fileName,runNb);
+   if ((m_runNumber==0)|| (m_runNumber ==-1)) {
+     m_runNumber = m_runNbSvc->getRunNb();
+   }  
+  m_serviceMap->write(m_saveDir, m_fileName, m_runNumber);
 }
 
 
 int ProcessMgr::getrunNumber(){
-  int runmbr = 0;
-   runmbr = m_runNbSvc->getRunNb();
-   return runmbr;
+   if ((m_runNumber==0)|| (m_runNumber ==-1)) {
+     m_runNumber = m_runNbSvc->getRunNb();
+   }  
+   return  m_runNumber;
 }
 
 

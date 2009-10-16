@@ -34,6 +34,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("saveDiff", m_saveDiff=0);
   m_monitoringFarm = true;
   m_enablePostEvents = true;
+  m_finalizing = false;
 }
 
 SaverSvc::~SaverSvc() {}
@@ -268,6 +269,7 @@ StatusCode SaverSvc::finalize() {
 //------------------------------------------------------------------------------
   MsgStream msg(msgSvc(), name());
   m_enablePostEvents = false;
+  m_finalizing = false;
   msg << MSG::INFO<< "Save historgams on finalized..... " << endmsg;
   // No longer accept incidents!
   if ( m_incidentSvc ) {
@@ -306,7 +308,7 @@ StatusCode SaverSvc::save(ProcessMgr* processMgr) {
     }
     std::string *fileName = processMgr->fileNamePointer();
       
-    processMgr->setrunNumber(m_runNbSvc);
+    if (!m_finalizing) processMgr->setrunNumber(m_runNbSvc);
     processMgr->write();    
     
     msg << MSG::DEBUG << "Finished saving histograms in file "<< *fileName << endreq;

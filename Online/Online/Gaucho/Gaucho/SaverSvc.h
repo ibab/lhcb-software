@@ -4,7 +4,6 @@
 // Include files
 #include "CPP/Interactor.h"
 #include "GaudiKernel/Service.h"
-//#include "GaudiKernel/IMonitorSvc.h"
 #include "Gaucho/IGauchoMonitorSvc.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "dis.hxx"
@@ -37,12 +36,12 @@ namespace LHCb {
       * @param var    Monitoring variable (by reference!)
       * @param dsc    Description of monitoring variable
       */
-     template <class T>
+/*     template <class T>
      void declareInfo(const std::string& nam,const T& var,const std::string& dsc) const {
        m_pGauchoMonitorSvc->declareInfo(nam, var, dsc, this);
      }
      //std::vector<std::string> m_file;
-     std::string* m_file;
+     std::string* m_file; */
 
 private:
   /// Reference to monitoring service
@@ -51,14 +50,12 @@ private:
   /// Reference to incident service
   IIncidentSvc* m_incidentSvc;
   
-  //ProcessMgr *m_processMgr;
-  //std::string m_file;
-  //int m_fileSize;
   std::vector<ProcessMgr *> m_processMgr;
   
   std::string m_utgid;
   std::string m_nodeName;
   bool m_monitoringFarm;
+  bool m_finalizing;
   
   std::string m_tmpPart;
   std::vector<std::string> m_partName;
