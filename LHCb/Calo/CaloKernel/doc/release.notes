@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.46 2009-10-10 12:24:58 ibelyaev Exp $
+! $Id: release.notes,v 1.47 2009-10-16 11:46:19 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloKernel
 ! Responsible : Vanya Belyaev Ivan.Belyaev@itep.ru
@@ -7,17 +7,14 @@
 ! which are essentially independent from Detector and Event models
 ! =============================================================================
 
-
+!======================= CaloKernel v6r1 2009-10-16 ===========================
 ! 2009-10-10 - Vanya Belyaev
-
  - CaloKernel/ConfUtils.py
-
     issue warning messages for modification of existing entries in 
       Data-On-Demand Service 
 
  - cmt/requirements
    version increment to v6r1
-
 
 !======================= CaloKernel v6r0 2009-08-31 ===========================
 ! 2009-08-05 - Vanya BELYAEV
