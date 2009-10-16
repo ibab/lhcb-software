@@ -18,6 +18,7 @@ cmt qmtest_run davincisys.io.test_dst >! dst &
 cmt qmtest_run davincisys.io.test_rdst >! rdst &  
 cmt qmtest_run davincisys.io.test_decaytreetuple >! decaytreetuple & 
 cmt qmtest_run davincisys.hlt.test_tistos >! tistos & 
+cmt qmtest_run davincisys.hlt.test_hlt12_dc06_none >! hlt12_dc06_none & 
 cmt qmtest_run davincisys.hlt.test_hlt12_dc06_effective >! hlt12_dc06_effective & 
 cmt qmtest_run davincisys.hlt.test_hlt12_dc06_leptonic >! hlt12_dc06_leptonic & 
 cmt qmtest_run davincisys.hlt.test_hlt12_dc06_charming >! hlt12_dc06_charming & 

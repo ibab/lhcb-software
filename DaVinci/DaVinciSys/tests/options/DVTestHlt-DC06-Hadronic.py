@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt-DC06-Hadronic.py,v 1.2 2009-10-14 14:33:40 pkoppenb Exp $
+# $Id: DVTestHlt-DC06-Hadronic.py,v 1.3 2009-10-16 08:39:00 pkoppenb Exp $
 #
 # Options for a typical DaVinci job
 #
@@ -9,7 +9,7 @@
 #
 ########################################################################
 from Gaudi.Configuration import *
-importOptions( "$DAVINCISYSROOT/tests/options/DVTestHlt-DC06-Effective.py")
+importOptions( "$DAVINCISYSROOT/tests/options/DVTestHlt-DC06-None.py")
 #
 # now overwrite threshold setting
 #
