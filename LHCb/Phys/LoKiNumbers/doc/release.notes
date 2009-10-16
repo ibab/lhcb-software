@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r3 2009-10-16 =======================
 ! 2009-10-12 - Marco Cattaneo
  - Remove duplicate dictionaries already produced by Root 5.24 
  - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows 
