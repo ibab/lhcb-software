@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.46 2009-08-02 18:37:23 dgolubko Exp $
+# $Id: requirements,v 1.47 2009-10-16 11:44:57 cattanem Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v7r14
+version           v7r15
 
 # =============== structure ===================================================
 branches          cmt doc CaloInterfaces
@@ -23,7 +23,3 @@ apply_pattern reflex_dictionary                                                 
               headerfiles=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.h     \
               selectionfile=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.xml \
               options="-U__MINGW32__"
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""

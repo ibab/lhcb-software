@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.66 2009-09-21 10:17:34 odescham Exp $
+! $Id: release.notes,v 1.67 2009-10-16 11:44:57 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+!========================= CaloInterfaces v7r15 2009-10-16 ====================
+! 2009-10-16 - Marco Cattaneo
+ - In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
 
 ! 2009-09-21 - Olivier Deschamps
   -  complete ICalo2MCTool.h 
