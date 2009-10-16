@@ -1,10 +1,4 @@
-// $Id: CaloDigitMonitor.cpp,v 1.8 2009-08-05 17:40:24 ibelyaev Exp $ 
-// ============================================================================
 // Include files
-// ============================================================================
-// STD & STL 
-// ============================================================================
-#include <vector>
 // ============================================================================
 // Event
 // ============================================================================
@@ -18,12 +12,13 @@
 // ============================================================================
 #include  "CaloMoniAlg.h"
 // ============================================================================
+
 /** @class CaloDigitMonitor CaloDigitMonitor.cpp
  *
  *  The algorithm for trivial monitoring of "CaloDigit" containers.
  *  The algorithm produces the following histograms:
  *   1. CaloDigit multiplicity
- *   2. CaloDigit occupancy 2D plot per area
+ *   2. CaloDigit ocupancy 2D plot per area
  *   3. CaloDigit energy 2D plot per area
  *  The same set of histograms, but with cut on Et (or E), is produced if specified
  *
@@ -39,6 +34,7 @@
  *  @author Konstantin Belous Konstantin.Beloous@itep.ru
  *  @date   21/06/2007
  */
+
 class CaloDigitMonitor : public CaloMoniAlg
 {
   /// friend factory for instantiation
@@ -55,6 +51,9 @@ protected:
    */
   CaloDigitMonitor( const std::string &name, ISvcLocator *pSvcLocator )
     : CaloMoniAlg( name, pSvcLocator ){
+    
+    declareProperty( "Spectrum", m_spectrum = false); // activate spectrum per channel histogramming
+
     if(detData()     == "Ecal" ){setInputData( LHCb::CaloDigitLocation::Ecal );}
     else if(detData()== "Hcal" ){setInputData( LHCb::CaloDigitLocation::Hcal );}    
     else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
@@ -71,6 +70,7 @@ private:
   CaloDigitMonitor &operator=( const CaloDigitMonitor& );
 private:
   DeCalorimeter *m_calo;
+  bool m_spectrum;
 //
 };
 
@@ -148,6 +148,23 @@ StatusCode CaloDigitMonitor::execute(){
     hFill2(id, "7", x, y, e );
     if(doHisto("8"))fillCalo2D("8", id , 1. , detData() + " digits position 2D view");
     if( detData() != "Spd" && doHisto("9") )fillCalo2D("9", id , e  , detData() + " digits energy 2D view");
+
+    
+    
+    if (m_spectrum) {
+      if ( msgLevel( MSG::DEBUG) )debug() << "Filling cell by cell histograms" << endmsg;
+      int col = id.col();
+      int row = id.row();
+      std::ostringstream tit;
+      tit << detData() << " channel : " << id;
+      std::string unit = detData() + "Cells/" + id.areaName() + "/" 
+        + Gaudi::Utils::toString(row) + ";" + Gaudi::Utils::toString(col);
+      if ( msgLevel( MSG::DEBUG) )debug() << " et  " << et << " cell " << unit << endmsg;
+      if( detData() == "Prs") 
+        plot1D(e , unit, tit.str() , m_energyMin, m_energyMax, m_energyBin);
+      else
+        plot1D(et , unit, tit.str() , m_etMin, m_etMax, m_etBin);      
+    }
   }
   fillCounters("1");  
   return StatusCode::SUCCESS;

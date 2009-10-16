@@ -1,4 +1,4 @@
-// $Id: CaloEFlowAlg.cpp,v 1.3 2009-05-06 16:15:30 odescham Exp $
+// $Id: CaloEFlowAlg.cpp,v 1.4 2009-10-16 15:39:40 odescham Exp $
 // Include files 
 
 // from GaudiKernel
@@ -27,11 +27,12 @@ CaloEFlowAlg::CaloEFlowAlg( const std::string& name,
   declareProperty("EtFilterMin"        , m_etFilterMin = 50.*Gaudi::Units::MeV );
   declareProperty("EnergyFilterMax"    , m_eFilterMax  = 1.*Gaudi::Units::GeV );
   declareProperty("EtFilterMax"        , m_etFilterMax = 1.*Gaudi::Units::GeV );
-
+ 
   if(detData()     == "Ecal" ){setInputData( LHCb::CaloDigitLocation::Ecal );}
   else if(detData()== "Hcal" ){setInputData( LHCb::CaloDigitLocation::Hcal );}    
   else if(detData()== "Prs"  ){setInputData( LHCb::CaloDigitLocation::Prs  );}
   else if(detData()== "Spd"  ){setInputData( LHCb::CaloDigitLocation::Spd  );}
+
 }
 //=============================================================================
 // Destructor
@@ -60,6 +61,7 @@ StatusCode CaloEFlowAlg::initialize() {
     return Error( "Unknown detector name "+detData() );
   }
 
+  hBook1( "4", detData() + " : # of Digits"   ,  m_calo->numberOfCells(),  0, m_calo->numberOfCells()   );
 
   return StatusCode::SUCCESS;
 }
@@ -89,6 +91,8 @@ StatusCode CaloEFlowAlg::execute() {
     return StatusCode::SUCCESS;
   }
   
+  initCounters();
+  
   for( Digits::const_iterator digit = digits->begin(); digits->end() != digit ; ++digit ){
     if ( 0 == *digit ) continue;
     
@@ -97,25 +101,30 @@ StatusCode CaloEFlowAlg::execute() {
     bool isvalid = m_calo->valid(id) && !m_calo->isPinId( id );
     if( isvalid == false ) continue ;    
     
-    const double            e      = (*digit)->e();
-    const double            et     = e * m_calo->cellSine( id );
+    double            e      = (*digit)->e();
+    double            et     = e * m_calo->cellSine( id );
 
     if ( msgLevel(MSG::VERBOSE) )
       verbose() << " before thresholds :  cellID " << id.index() << " e " << e << " et " << et << endmsg;
+
+debug() << "thresholds are EMin " << m_eFilterMin << " EMax " <<m_eFilterMax
+<< " EtMin " << m_etFilterMin << " EtMax " << m_etFilterMax << endmsg;
     
-    if( e  < m_eFilterMin )  continue;
-    if( e  > m_eFilterMax )  continue;
-    if( et < m_etFilterMin ) continue;
-    if( et > m_etFilterMax ) continue;
+    if( e  < m_eFilterMin && m_eFilterMin!=-1) continue;
+    if( e  > m_eFilterMax && m_eFilterMax!=-1)  continue;
+    if( et < m_etFilterMin && m_etFilterMin!=-1) continue;
+    if( et > m_etFilterMax && m_etFilterMax!=-1) continue;
 
     if ( msgLevel(MSG::VERBOSE) )verbose() << " cellID " << id.index() << " e " << e << " et " << et << endmsg;
     
-    
+    count( id );    
     if(doHisto("1")) fillCalo2D("1", id , 1. , detData() + " digits position 2D view");
     if(doHisto("2")) fillCalo2D("2", id , e  , detData() + " energy weighted - digits position 2D view");
     if(doHisto("3")) fillCalo2D("3", id , et , detData() + " Et weighted - digits position 2D view");
   
   }
+
+  fillCounters("4");  
  
   
   return StatusCode::SUCCESS;

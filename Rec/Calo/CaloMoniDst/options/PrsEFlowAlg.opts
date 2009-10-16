@@ -1,0 +1,14 @@
+CaloEFlowAlg.Members += {   "CaloEFlowAlg/PrsEFlowAlgo"};
+
+// define the subset of useful monitoring histos for EF
+PrsEFlowAlgo.histoList   = { "All" };
+
+//define parameters
+PrsEFlowAlgo.SplitAreas = false;
+PrsEFlowAlgo.EtFilterMax  = -1.;
+PrsEFlowAlgo.EnergyFilterMax = -1;
+PrsEFlowAlgo.EtFilterMin  = -1.;
+PrsEFlowAlgo.EnergyFilterMin = -1;
+PrsEFlowAlgo.OneDimension = true;
+
+// PrsEFlowAlgo.Profile = true;

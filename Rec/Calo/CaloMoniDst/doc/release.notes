@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.58 2009-10-06 12:22:48 cattanem Exp $ 
+! $Id: release.notes,v 1.59 2009-10-16 15:39:40 odescham Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniDst
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calo monitoring of Dst tape 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-16 - Olivier Deschamps for Aurelien Martens 
+ - Update in CaloEFlowAlg
 
 ! 2009-10-06 - Marco Cattaneo
  - Add link to LHCb-INT-2009-022 note in CaloEMuMonitor.h doxygen header

@@ -1,4 +1,4 @@
-// $Id: CaloEFlowAlg.h,v 1.1 2009-04-20 15:43:44 odescham Exp $
+// $Id: CaloEFlowAlg.h,v 1.2 2009-10-16 15:39:40 odescham Exp $
 #ifndef CALOENERGYFLOWMONITOR_H 
 #define CALOENERGYFLOWMONITOR_H 1
 
@@ -22,8 +22,6 @@
 // ============================================================================
 #include  "CaloMoniAlg.h"
 // ============================================================================
-
-
 
 /** @class CaloEFlowAlg CaloEFlowAlg.h
  *  

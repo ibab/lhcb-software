@@ -12,7 +12,11 @@ MoniCALOSeq.Members += { "GaudiSequencer/CaloDigitMon"
 #include "$CALOMONIDSTOPTS/CaloHypoMonitor.opts"
 #include "$CALOMONIDSTOPTS/SpdMonitor.opts"
 #include "$CALOMONIDSTOPTS/CaloPIDsMonitor.opts"
-#include "$CALOMONIDSTOPTS/CaloEFlowAlg.opts"
+
+#include "$CALOMONIDSTOPTS/EcalEFlowAlg.opts"
+#include "$CALOMONIDSTOPTS/HcalEFlowAlg.opts"
+#include "$CALOMONIDSTOPTS/PrsEFlowAlg.opts"
+
 
 // define the subset of useful monitoring histos for DQ
 #include "$CALOMONIDSTOPTS/CaloDQ.opts"
