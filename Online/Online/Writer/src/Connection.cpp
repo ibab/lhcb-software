@@ -265,7 +265,9 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   do {
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
-          *m_log << MSG::FATAL << "Buffer is full! MaxQueueSizeBytes=" << m_maxQueueSize << endmsg;
+          *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
+                 << ". Queued commands=" << m_mmObj.getAllocCmdCount() 
+                 << endmsg;
           sleep(1);
       }
   } while(newHeader == NULL && m_stopRetrying == 0);

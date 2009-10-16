@@ -239,8 +239,8 @@ void FailoverMonitor::listenForUpdates(void)
     /*Let's receive each one of the advertised nodes.*/
     int die = 0;
     struct nodestate nstate;
-    *m_log << WHERE << "Failover thread expects update about "
-           << fmsg.num_nodes << " node(s) in state " << fmsg.msg_type
+    *m_log << MSG::INFO << WHERE << "Failover thread expects update about "
+           << fmsg.num_nodes << " node(s) in state " << (fmsg.msg_type == 1 ? "joined":"left")
            << endmsg;
     for(unsigned int i=0;i<fmsg.num_nodes;i++) {
       bRead = 0;
@@ -251,7 +251,7 @@ void FailoverMonitor::listenForUpdates(void)
           die = 1;
         break;
       }
-      *m_log << MSG::WARNING << WHERE
+      *m_log << MSG::INFO << WHERE
              << "Received update for node: " << IP(nstate.n_ipaddr)
              << " Identifier is: " << nstate.n_id
              << endmsg;

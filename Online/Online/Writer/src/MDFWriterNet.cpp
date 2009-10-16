@@ -240,6 +240,7 @@ StatusCode MDFWriterNet::initialize(void)
       return StatusCode::FAILURE;
   } else {
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
+        m_incidentSvc->addListener(this, "DAQ_ERROR");
   }
 
   *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
@@ -346,12 +347,12 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     std::string f = this->createNewFile(runNumber);
     *m_log << MSG::INFO << "new filename: " << f << endmsg;
     currFile = new File(f, runNumber, m_streamID);
-  } catch (std::exception e) {
+  } catch (std::exception &e) {
     currFile = NULL; 
     *m_log << MSG::ERROR
            << " Exception: "
-           << e.what()
-           << "Could not get new file name! Check the RunDB XML_RPC server."
+           << e.what() << endmsg; 
+    *m_log << MSG::ERROR << " Could not get new file name! Check the RunDB XML_RPC server."
            <<  endmsg ;
     return currFile;       
   }
@@ -447,7 +448,7 @@ void MDFWriterNet::closeFile(File *currFile)
  */
 void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
-  if (inc.type() == "DAQ_CANCEL")  {
+  if (inc.type() == "DAQ_CANCEL" || inc.type() == "DAQ_ERROR")  {
       m_srvConnection->stopRetrying();
   }
 }
@@ -493,8 +494,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
              << endmsg;
       m_currFile = createAndOpenFile(runNumber);
       if(m_currFile == NULL) {
-          Incident incident(name(),"DAQ_CANCEL");
-          m_incidentSvc->fireIncident(incident); 
+          Incident incident(name(),"DAQ_ERROR");
+          m_incidentSvc->fireIncident(incident);
           return StatusCode::FAILURE;
       }    
       m_openFiles.addFile(m_currFile);
@@ -661,8 +662,8 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
     m_rpcObj->createFile(cmd->file_name, cmd->run_no);
   } catch(std::exception& e) {
     *m_log << MSG::ERROR << "Could not create Run Database Record ";
-    *m_log << "Cause: " << e.what() << std::endl;
-    *m_log << "Record is: FileName=" << cmd->file_name;
+    *m_log << "Cause: " << e.what() << endmsg;
+    *m_log << MSG::ERROR << "Record is: FileName=" << cmd->file_name;
     *m_log << " Run Number=" << cmd->run_no << endmsg;
   }
 }
@@ -690,8 +691,8 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
     *m_log << MSG::ERROR << "Could not update Run Database Record ";
-    *m_log << "Cause: " << rte.what() << std::endl;
-    *m_log << "Record is: FileName=" << cmd->file_name;
+    *m_log << "Cause: " << rte.what() << endmsg;
+    *m_log << MSG::ERROR << "Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }
