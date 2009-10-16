@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.247 2009-10-12 15:40:05 jonrob Exp $
+! $Id: release.notes,v 1.248 2009-10-16 14:12:29 cattanem Exp $
 ! Package     : Rich/RichKernel
 ! Responsible : Chris Jones
 ! Purpose     : General purpose RICH classes
 !-----------------------------------------------------------------------
 
+!====================== RichKernel v7r28 2009-10-16 ====================
 ! 2009-10-12 - Christopher Rob Jones
  - Add the method L1IngressHeader::inactiveHPDInputs which returns the
    list of inactive (i.e. missing HPDs) in a given decoded L1 ingress.
@@ -19,7 +20,6 @@
  - Update tool registry with a new new tools
 
 !====================== RichKernel v7r27 2009-10-05 ====================
-
 ! 2009-09-29 - Chris Jones
  - Suppress a warning back down to debug, since it unexpectidly occurs
    under normal conditions.
