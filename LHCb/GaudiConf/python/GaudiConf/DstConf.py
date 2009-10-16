@@ -1,13 +1,12 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.16 2009-10-10 12:22:31 ibelyaev Exp $"
+__version__ = "$Id: DstConf.py,v 1.17 2009-10-16 11:55:23 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
-
-from Configurables import CaloDstPackConf, CaloDstUnPackConf
+from CaloPackingConf import CaloDstPackConf, CaloDstUnPackConf
 
 class DstConf(ConfigurableUser):
     __slots__ = {
