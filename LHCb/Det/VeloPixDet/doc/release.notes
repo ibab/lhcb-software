@@ -4,14 +4,18 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r0 2009-10-16 =======================
 ! 2009-10-09 - Victor Coco
- - fix in the requirement file, remove useless call to QMTest + remove useless vector definition in the dict/VeloPixDetDict.xml
+ - fix in the requirement file, remove useless call to QMTest + 
+   remove useless vector definition in the dict/VeloPixDetDict.xml
 
 ! 2009-10-08 - Victor Coco
- - fix in pointToChannel function in the DeVeloPix...Type in order to fix the compilation warning 'unused parameter 'fraction''. For the moment set to 0.
+ - fix in pointToChannel function in the DeVeloPix...Type in order to fix the 
+   compilation warning 'unused parameter 'fraction''. For the moment set to 0.
 
 ! 2009-10-07 - Victor Coco
- - modification of the way to identity the sensor type in DeVeloPix initialisation. Made it more general.
+ - modification of the way to identify the sensor type in DeVeloPix 
+   initialisation. Made it more general.
 
 ! 2009-09-17 - Victor Coco
  - initial version
