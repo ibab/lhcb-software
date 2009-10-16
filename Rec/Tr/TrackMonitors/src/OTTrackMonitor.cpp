@@ -128,7 +128,7 @@ StatusCode OTTrackMonitor::execute()
       double sumn(0) ;
       // calculate the pitch residuals by M. Schiller
       std::vector<std::pair<int,double> > pitchRes = m_pitchtool->calcPitchResiduals( *itr );
-      for (int i = 0; i < pitchRes.size(); ++i) {
+      for (unsigned int i = 0; i < pitchRes.size(); ++i) {
         std::ostringstream os;
         os << "Layer " << pitchRes[i].first << " pitch residuals";
         plot(pitchRes[i].second, os.str(), -3., 3., 120);

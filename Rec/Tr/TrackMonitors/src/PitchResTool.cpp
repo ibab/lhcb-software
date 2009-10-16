@@ -1,4 +1,4 @@
-// $Id: PitchResTool.cpp,v 1.1 2009-10-15 16:48:30 jblouw Exp $
+// $Id: PitchResTool.cpp,v 1.2 2009-10-16 08:47:58 jblouw Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -50,7 +50,7 @@ StatusCode PitchResTool::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if (sc.isFailure()) return sc;  // error printed already by GaudiTool
 
-  always() << "==> Initialize" << endmsg;
+  debug() << "==> Initialize" << endmsg;
 
   m_extrapolator = tool<ITrackExtrapolator>(m_trackExtrapolatorName);
 
