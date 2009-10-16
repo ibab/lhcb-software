@@ -4,41 +4,36 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r8 2009-10-16 ======================
 ! 2009-10-11 - Christopher Rob Jones
  - Extend RichSmartID with new methods to object HPD pixel row, HPD pixel 
    column and HPD column level identifiers.
 
 ! 2009-10-02 - Vanya BELYAEV
-
  - add CaloCellID::hash method, change the output type  
  - modify a little bit CaloCellIDHash.h file  
 
 ! 2009-10-01 - Vanya  BELYAEV
-
  - CaloCellID, add the methods 
       1. caloName 
       2. areaName 
-
  - move back PidArea into pubilc header 
    (there are some lines of code that explicitly relies 
     on its numerical value) 
 
 ! 2009-09-29 - Vanya BELYAEV
-
  - CaloCellCode:
      1. replace C-arrays by boost::array
      2. reimplement many functions 
      3. add documentation lines 
      4. remove redundant "static" fields 
      5. improve the safety of the lines 
-
  - CaloCellID:
      1. move fillStream & bits mehtods into   cpp-file 
      2. change the self-printout 
      3. add "toString" method 
      4. add constructors from strings 
      5. make use of new methods form CaloCellCode namespace 
-
  - CaloCellIDAsProperty 
      add the possibility to use CaloCellID,
      std::vector<CaloCellID> and 
