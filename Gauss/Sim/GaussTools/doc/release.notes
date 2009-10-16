@@ -4,6 +4,16 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-10-16 - Silvia Miglioranzi
+ - *** Temporary*** fix for error in compilation on slc5 
+   (error: no match for operator<<) in:
+   - GaussEventActionHepMC.cpp
+   - MCTruthManager.cpp
+ - Fix warning in compilation on slc5 "type qualifiers ignored on function return
+   type" in:
+   - GaussTrackInformation.h
+   - GiGaSetSimAttributes.h
+
 !======================== GaussTools v15r3 2009-05-26 ========================
 ! 2009-05-26 - Gloria CORTI
  - Put protection for bug #50862 where chraged patricle go into repeting
