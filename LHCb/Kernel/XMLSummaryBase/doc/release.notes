@@ -4,6 +4,7 @@
 ! Purpose     : Holds the bare minumum code for manipulating XML
 !-----------------------------------------------------------------------------
 
+!======================== XmlSummaryBase v1r0 2009-10-16 =====================
 ! 2009-10-07 - Rob Lambert
  - Additional protection against losing the objects
  - This is useful for inside C++

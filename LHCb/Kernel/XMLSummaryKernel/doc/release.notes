@@ -4,6 +4,7 @@
 ! Purpose     : Holds code for writing an XML-based summary in Gaudi
 !-----------------------------------------------------------------------------
 
+!======================== XmlSummaryKernel v1r0 2009-10-16 ===================
 ! 2009-10-07 - Rob Lambert
  - Protection against the loss of the summary object
  - added extra tests for unopenable files for writing
