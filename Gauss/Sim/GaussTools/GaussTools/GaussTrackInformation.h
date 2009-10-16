@@ -54,7 +54,7 @@ public:
   virtual void Print      () const {};
   
   /// flag to append the step 
-  const   bool appendStep () const { return m_appendStep ; }
+  bool appendStep () const { return m_appendStep ; }
   
   /** set new value for flag to append step
    *  @param value new value of the flag 
@@ -63,7 +63,7 @@ public:
   { m_appendStep = value ; return *this ; }
   
   /// flag to force the saving of track into traectory
-  const bool toBeStored () const { return m_toBeStored ; }
+  bool toBeStored () const { return m_toBeStored ; }
   
   /** set new value for flag to force the saving track into trajectory
    *  @param value new value of the flag 
@@ -72,7 +72,7 @@ public:
   { m_toBeStored = value ; return *this ; }
   
   /// track created a hit
-  const bool createdHit() const { return m_createdHit ; }
+  bool createdHit() const { return m_createdHit ; }
   
   /** set new value for flag 
    *  @param value new value of the flag 
@@ -81,14 +81,14 @@ public:
   { m_createdHit = value ; return *this ; }
 
   // Retrieve if direct parent particle has been stored or not
-  const bool directParent() const {return m_directParent;}
+  bool directParent() const {return m_directParent;}
 
   // Set if direct parent particle has been stored or not
   GaussTrackInformation& setDirectParent(const bool value)
   { m_directParent = value; return *this;}
   
   /// Get flag to store or not in internal HepMC structure
-  const bool storeHepMC() const {return m_storeHepMC;}
+  bool storeHepMC() const {return m_storeHepMC;}
 
   /// Set value of flag to store or not in internal HepMC structure
   GaussTrackInformation& setStoreHepMC(const bool value)

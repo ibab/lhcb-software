@@ -1,4 +1,4 @@
-// $Id: GiGaSetSimAttributes.h,v 1.3 2007-01-12 15:36:56 ranjard Exp $
+// $Id: GiGaSetSimAttributes.h,v 1.4 2009-10-16 15:02:00 silviam Exp $
 #ifndef GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 
 #define GAUSSTOOLS_GIGASETSIMATTRIBUTES_H 1
 
@@ -91,7 +91,7 @@ protected:
     const GaussG4UserLimits& ul ) const ;
   
   // policy for overwtiting the existing limits 
-  inline const bool overwrite() const { return m_overwrite ; }
+  inline bool overwrite() const { return m_overwrite ; }
 
 private:
   
