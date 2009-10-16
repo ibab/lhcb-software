@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.349 2009-10-16 06:51:39 graven Exp $ 
+! $Id: release.notes,v 1.350 2009-10-16 09:30:54 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2009-10-16 - Gerhard Raven
  - make sure that HltThresholdSettings = None works
+ - Hlt2Global does not need reconstruction 
 
 ! 2009-10-15 - Patrick Koppenburg
  - All threshold settings moved to new package HltSettings
