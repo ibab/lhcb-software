@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.9 2009-10-15 12:50:19 graven Exp $
+# $Id: HltReco.py,v 1.10 2009-10-16 09:19:17 graven Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -140,6 +140,8 @@ recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 PatDownstream = PatDownstream()
 PatDownstream.InputLocation=recoSeeding.OutputTracksName
 PatDownstream.OutputLocation="Hlt/Track/SeedTT"
+#PatDownstream.UseForward = True
+#PatDownstream.SeedFilter = True
 PatDownstream.RemoveUsed = True
 PatDownstream.RemoveAll = True
 
@@ -194,9 +196,7 @@ recoRZVeloTracksSequence = GaudiSequencer( 'HltRecoRZVeloTracksSequence', Measur
 
 # define basic reco sequence, this should be run in any case
 trackRecoSequence = GaudiSequencer( 'HltTrackRecoSequence'
-                                  ,  Members = [  recoRZVeloTracksSequence ,  recoVelo ,  recoVeloGeneral
-                                               # ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
-				                               ] )
+                                  ,  Members = [  recoRZVeloTracksSequence ,  recoVelo ,  recoVeloGeneral ] )
 
 # Now we add different algorithms for long track reco based on the different reconstruction scenarios
 # first we want to decide if the seeding should run
@@ -215,27 +215,9 @@ if RunFastFit    :  trackRecoSequence.Members += [ fastKalman]
 if RunCloneKiller:  trackRecoSequence.Members += [ cloneKiller ]
 
 
-####TODO
-###           HltTrackRecoSequence                  GaudiSequencer           
-###              HltRecoRZVelo                      Tf::PatVeloRTracking     
-###              HltRecoVelo                        Tf::PatVeloSpaceTracking
-###              HltRecoForward                     PatForward               
-###              HltRecoPVSequence                  GaudiSequencer             IgnoreFilterPassed
-###                    HltRecoPV2D                  PatPV2D                  
-###                    Hlt1RecoPV3D                 PatPV3D            
-
 
 hlt1RecoRZVeloTracksSequence = GaudiSequencer( 'Hlt1RecoRZVeloTracksSequence' , MeasureTime = True
                                              , Members = [ recoRZVeloTracksSequence , prepareRZVelo ] )
-
-
-#hlt1RecoSequence = GaudiSequencer( 'Hlt1RecoSequence', MeasureTime = True
-#                                 , Members = 
-#                                 [ hlt1RecoRZVeloTracksSequence
-#                                 , hlt1RecoRZPVSequence
-#                                 , reco1Velo
-#                                 ,  recoPV3D # this aborts the remainder of the sequence if no primary -- do we really want that??
-#                                 , recoFwd ] )
 
 recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
                         , Members = [ trackRecoSequence ] )
