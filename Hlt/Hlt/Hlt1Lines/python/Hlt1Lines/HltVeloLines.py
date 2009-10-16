@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.13 2009-10-14 11:54:50 sredford Exp $
+# $Id: HltVeloLines.py,v 1.14 2009-10-16 09:14:20 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 
 #
@@ -57,7 +57,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                          , LiteClusterLocation = cf.OutputLiteClusterLocation )
             rt = PatVeloRTracking( 'Hlt1Velo' + side + 'RTracking'
                                      , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
-                                     , HitManagerName = rm.splitName()[-1] )
+                                     , HitManagerName = rm.name() )
 
             ## do the space tracking
             pm = DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
@@ -82,7 +82,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
             st = PatVeloSpaceTracking('Hlt1Velo' +  side + 'SpaceTracking'
                                          , InputTracksName = rt.OutputTracksName
                                          , OutputTracksName = tracks
-                                         , SpaceToolName = spacetool.getFullName() )
+                                         , SpaceToolName = spacetool.getFullName().replace('::','__') )
 
             gt = PatVeloGeneralTracking( 'Hlt1Velo' + side + 'GeneralTracking'
                                            , RHitManagerName = rm.splitName()[-1]
@@ -90,7 +90,7 @@ class HltVeloLinesConf(HltLinesConfigurableUser):
                                            , TrackToolName = tt.splitName()[-1]
                                            , OutputTracksLocation = tracks )
 
-            pv3D = PatPV3D( 'Hlt1Velo' + side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D', OutputLevel = 3)
+            pv3D = PatPV3D( 'Hlt1Velo' + side + 'PatPV3D', OutputVerticesName = 'Hlt/Vertex/' + side + 'PV3D')
             pv3D.addTool( PVOfflineTool, name = 'PVOfflineTool')
             pv3D.PVOfflineTool.InputTracks = [tracks]
             pv3D.PVOfflineTool.PVFitterName = "LSAdaptPV3DFitter"

@@ -1,16 +1,19 @@
-! $Id: release.notes,v 1.41 2009-10-15 15:58:54 sredford Exp $
+! $Id: release.notes,v 1.42 2009-10-16 09:14:20 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
-!========================== Hlt1Lines v1r6 2009-09-24 ===================
+! 2009-10-16 - Gerhard Raven
+ - one name() -> splitName()  to many in VeloLines ????
+
 ! 2009-10-15 - Sophie Redford
  - changed rm.name() to rm.splitName()[-1] to ensure chain of logic from one tool to next isn't broken
    same for pm.name() and tt.name()
    also removed second import of TraversingTracking
 
+!========================== Hlt1Lines v1r6 2009-09-24 ===================
 
 ! 2009-08-11 - Gerhard Raven
  - make sure beamgas lines uses the same VELO decoding as everyone else
