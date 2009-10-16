@@ -6,34 +6,27 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r13 2009-10-16 =========================
 ! 2009-10-07 - Gerhard Raven
  - faster (but equivalent) check for parallel tracks in GeomFun.icpp
 
 ! 2009-09-13 - Vanya BELYAEV
-
  - add the parsing functions to ValueWithError and 
    std::vector<ValueWithError> classes, thus allowing their usage 
    as proeprteis for Gaudi components 
  
 
 ! 2009-09-12 - Vanya BELYAEV
-
  - more polishing for *WithErrorClasses 
-
  - add python/LHCbMath/Types.py helper module to load few 
-
     important classes, like  Gaudi.XYZPoint, etc... 
     the classes also "Decorated" on-flight 
 
 
 ! 2009-09-05 - Vanya BELYAEV
-
  - SVEctorWithErorr 
-
     add functions to get the correlation coefficient and correlation matrix 
-
  - cmt/requirements 
-
     version increment to v3r13 
 
 !========================= LHCbMath v3r12 2009-09-02 =========================
