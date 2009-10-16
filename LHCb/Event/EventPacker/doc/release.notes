@@ -4,6 +4,7 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v1r8 2009-10-16 ====================
 ! 2009-10-14 - Marco Cattaneo
  - In Packer algorithms, use getOrCreate of input containers instead of get,
    to produce empty output container if input is missing (useful for Lumi events)
