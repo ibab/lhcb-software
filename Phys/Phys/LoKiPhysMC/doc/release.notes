@@ -1,18 +1,15 @@
-! $Id: release.notes,v 1.63 2009-09-03 13:50:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.64 2009-10-16 14:11:06 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiPhysMC v8r5 2009-10-16 ========================
 ! 2009-09-03 - Vanya BELYAEV
-
  - fix event and reference counters for MC-match 
-
  - cmt/requirements 
-
      version increment to v8r5 
-
 
 !========================== LoKiPhysMC v8r4 2009-09-02 ========================
 ! 2009-09-02 - Marco Cattaneo
