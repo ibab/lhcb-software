@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.62 2009-10-13 12:26:31 pkoppenb Exp $
+$Id: release.notes,v 1.63 2009-10-16 09:33:05 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-10-16 - Gerhard Raven
+ - most commissioning lines do not need Reco
 
 ! 2009-10-13 - Patrick Koppenburg
  - Rename Transparant (dutch) to Transparent (english)

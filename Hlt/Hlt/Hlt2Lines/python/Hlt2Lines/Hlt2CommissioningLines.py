@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.9 2009-10-13 12:26:31 pkoppenb Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.10 2009-10-16 09:33:05 graven Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -29,12 +29,12 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
         Line('PassThrough' ,  HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"
             , prescale = self.prescale
             , postscale = self.postscale
-            , PV = False
+            , PV = False, Reco = False
             )
         Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(Incident|Tell1Error|(Non)?RandomODIN|Velo.*|Align.*|L0.*|Lumi.*)Decision$')"
             , prescale = self.prescale
             , postscale = self.postscale
-            , PV = False
+            , PV = False, Reco = False
             )
 
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
@@ -53,7 +53,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                                             , Incident = HltSelReportsMaker().DebugIncident
                                             )
                       ]
-            , PV = False
+            , PV = False, Reco = False
             )
 
         from Configurables import HltANNSvc
