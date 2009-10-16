@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r2 2009-10-16 ==========================
+! 2009-10-16 - Marco Cattaneo
+ - remove obsolete file LumiEvent_dll.cpp
+
 ! 2009-10-14 - Jaap Panman
  - remove EOR from FileRecords path
 
