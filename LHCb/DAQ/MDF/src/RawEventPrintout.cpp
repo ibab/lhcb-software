@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/DAQ/MDF/src/RawEventPrintout.cpp,v 1.4 2009-10-06 16:53:00 frankb Exp $
+// $Id: RawEventPrintout.cpp,v 1.5 2009-10-16 14:53:14 cattanem Exp $
 //  ====================================================================
 //  MIFWriter.cpp
 //  --------------------------------------------------------------------
@@ -96,6 +96,7 @@ std::string RawEventPrintout::bankType(int i)  {
     PRINT(DstBank);         // 59
     PRINT(DstData);         // 60
     PRINT(DstAddress);      // 61
+    PRINT(FileID);          // 62
 
     default: return "UNKNOWN";
 #undef PRINT
