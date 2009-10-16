@@ -159,7 +159,7 @@ StatusCode CaloDigitMonitor::execute(){
       tit << detData() << " channel : " << id;
       std::string unit = detData() + "Cells/" + id.areaName() + "/" 
         + Gaudi::Utils::toString(row) + ";" + Gaudi::Utils::toString(col);
-      if ( msgLevel( MSG::DEBUG) )debug() << " et  " << et << " cell " << unit << endmsg;
+      if ( msgLevel( MSG::VERBOSE) )verbose() << " et  " << et << " cell " << unit << endmsg;
       if( detData() == "Prs") 
         plot1D(e , unit, tit.str() , m_energyMin, m_energyMax, m_energyBin);
       else
