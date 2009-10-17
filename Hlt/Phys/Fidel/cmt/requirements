@@ -6,7 +6,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           Fidel
-version           v1r3p2
+version           v1r3p3
 
 #============================================================================
 # Structure, i.e. directories to process. 
