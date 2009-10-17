@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.42 2009-10-16 09:14:20 graven Exp $
+! $Id: release.notes,v 1.43 2009-10-17 16:57:30 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+!========================== Hlt1Lines v1r6p1 2009-10-18 =================
+! 2009-10-17 - Gerhard Raven
+ - fix unknown member in HltCosmicLines
 
 ! 2009-10-16 - Gerhard Raven
  - one name() -> splitName()  to many in VeloLines ????
