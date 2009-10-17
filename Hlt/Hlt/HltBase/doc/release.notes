@@ -3,6 +3,7 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+!========================== HltBase v7r0 2009-10-17 =====================
 ! 2009-10-12 - Gerhard Raven
  - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h
    and implementation, and move latter into HltCommon/src/EFunctions.h
