@@ -78,6 +78,12 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
                                       , 'MuTrackPoint' : 0.4
                                       , 'MuTrackTrChi2' : 10
                                       }
+                 , HltExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
+                 , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
+                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2DebugEvent'   : 0.0001
+                                                }              }
+
                  }
     
     def ActiveHlt2Lines(self) :
@@ -85,7 +91,7 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
         Returns a list of active lines
         """
         # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
-        return [ ]
+        return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2DebugEvent']
 
         
     def ActiveHlt1Lines(self) :

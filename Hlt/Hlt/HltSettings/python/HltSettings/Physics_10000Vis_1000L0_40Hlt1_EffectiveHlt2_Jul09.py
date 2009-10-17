@@ -29,7 +29,11 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
         d = Physics_10000Vis_1000L0_40Hlt1_Apr09.Thresholds(self)
         # switch the Hlt2 pass through line back to normal
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
-        d.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough' : 0.0001 } } } )
+        d.update( { Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough' : 0.0001 
+                                                                , 'Hlt2Forward'     : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                                , 'Hlt2DebugEvent'  : 0.0001
+                                                                } 
+                                                 } } )
         # Remaining
         d.update(  { Hlt2InclusiveMuonLinesConf : { 'SingleMuonPt' : 5550  
                                                   , 'SingleMuonIP' : 0.73        

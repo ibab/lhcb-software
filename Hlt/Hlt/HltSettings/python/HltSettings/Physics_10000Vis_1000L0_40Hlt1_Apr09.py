@@ -32,7 +32,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         Returns a list of active Hlt2 lines
         """
         # return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2Forward','Hlt2DebugEvent']
-        return [ ]
+        return [ 'Hlt2PassThrough', 'Hlt2Transparent','Hlt2DebugEvent']
 
     def ActiveHlt1Lines(self) :
         """
@@ -96,8 +96,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                  'Hlt1NonRandomODIN',
                  'Hlt1RandomODIN',
                  'Hlt1Tell1Error' ,
-                 'Hlt1Incident',
-                 'Hlt1OTCosmic']
+                 'Hlt1Incident' ]
     
     
 
@@ -112,6 +111,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         from Hlt1Lines.HltPhotonLines         import HltPhotonLinesConf
         from Hlt1Lines.HltExpressLines        import HltExpressLinesConf
         from Hlt1Lines.HltVeloLines           import HltVeloLinesConf
+        from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
     
         return { HltHadronLinesConf : { 'SingleHadron_PTCut' : 4450
                                         , 'HadMain_IPCut'      : 0.09
@@ -149,7 +149,10 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                                         , 'MuTrackPoint'       : 0.4
                                         , 'MuTrackTrChi2'      : 10 
                                         }
-                 , HltExpressLinesConf : {  'Prescale' : { '.*' : .000015  }
-                                         }
+                 , HltExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
+                 , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
+                                                               , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
+                                                               , 'Hlt2DebugEvent'   : 0.0001
+                                                }              }
                  }
     

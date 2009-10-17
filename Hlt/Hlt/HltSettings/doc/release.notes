@@ -4,5 +4,8 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-10-17 - Gerhard Raven
+ - in "Hlt1-only" configurations, run Hlt2 in pass-through mode
+
 ! 2009-10-15 - Patrick Koppenburg
  - First import of package
