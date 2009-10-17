@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.42 2009-08-31 09:49:57 graven Exp $
+! $Id: release.notes,v 1.43 2009-10-17 17:24:05 graven Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r4p1 2009-10-17 =================
+! 2009-10-17 - Gerhard Raven
+ - add cmt/.cvsignore
 !========================== TisTosTobbing v3r4 2009-08-31 ===================
 ! 2009-08-12 - Gerhard Raven
  - replace globbing with regex matching, print warning if a bare '*' is
