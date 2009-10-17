@@ -1,10 +1,11 @@
-$Id: release.notes,v 1.63 2009-10-16 09:33:05 graven Exp $
+$Id: release.notes,v 1.64 2009-10-17 11:24:20 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v1r8 2009-10-17 ===================
 ! 2009-10-16 - Gerhard Raven
  - most commissioning lines do not need Reco
 
