@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.125 2009-10-16 06:51:39 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.126 2009-10-17 11:33:32 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -231,8 +231,9 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# added ' + str(len(missingDecisions))  +  ' decisions to HltANNSvc' )
 
         if False :
+            from HltLine.HltLine     import hlt1Lines
             for i in hlt1Lines() :
-                log.debug( "checking " + i.name() )
+                print ( "checking " + i.name() )
                 decisionName = i.name() + 'Decision'
                 if decisionName in HltANNSvc().Hlt1SelectionID :
                     id = HltANNSvc().Hlt1SelectionID[ decisionName ] 
@@ -240,13 +241,14 @@ class HltConf(LHCbConfigurableUser):
                     id = None
 
                 if id :
-                    log.debug( i.index() )
+                    print ( i.index() )
                     for (key,value ) in zip(i.index(),range(0,len(i.index()))) :
                         from HltLine.HltLine     import hlt1Selections
                         if key in hlt1Selections()['All'] :
                             # TODO: see if the selection is unique to this line...
+                            unique = key.startswith(i.name())
                             cur = HltANNSvc().Hlt1SelectionID[ key ] if key in HltANNSvc().Hlt1SelectionID else  None
-                            log.debug( ' selection %s in line %s should have ID %d:%d -- has %d' % ( key,  i.name(), id, value, cur)  )
+                            print( ' selection %s in line %s (unique:%s) should have ID %d:%d -- has %d' % ( key,  i.name(), unique, id, value, cur)  )
                         #else :
                         #    print ' line %s, algo %s does not have a selection? ' % (i.name(),key)
                 else :

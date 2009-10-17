@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.350 2009-10-16 09:30:54 graven Exp $ 
+! $Id: release.notes,v 1.351 2009-10-17 11:33:32 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v5r0 2009-10-17 =====================
 ! 2009-10-16 - Gerhard Raven
  - make sure that HltThresholdSettings = None works
  - Hlt2Global does not need reconstruction 
