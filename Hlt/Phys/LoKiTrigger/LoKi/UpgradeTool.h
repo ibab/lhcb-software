@@ -1,4 +1,4 @@
-// $Id: UpgradeTool.h,v 1.1 2008-11-13 22:11:03 ibelyaev Exp $
+// $Id: UpgradeTool.h,v 1.2 2009-10-17 17:21:49 graven Exp $
 // ============================================================================
 #ifndef LOKI_UPGRADETOOL_H 
 #define LOKI_UPGRADETOOL_H 1
@@ -68,21 +68,21 @@ namespace LoKi
     public:
       // ======================================================================
       /// ITracksFromTrack tool name 
-      const std::string& trTool   () const { return m_config.trTool   () ; }
+      const std::string& trTool   () const { return config().trTool   () ; }
       /// TES  location of upgraded tracks 
-      const std::string& address  () const { return m_config.address  () ; }
+      const std::string& address  () const { return config().address  () ; }
       /// track type 
-      LHCb::Track::Types trType   () const { return m_config.trType   () ; }
+      LHCb::Track::Types trType   () const { return config().trType   () ; }
       /// owner ? 
-      bool               owner    () const { return m_config.owner    () ; }
+      bool               owner    () const { return config().owner    () ; }
       /// transfer IDs ?
-      bool               moveIDs  () const { return m_config.moveIDs  () ; }
+      bool               moveIDs  () const { return config().moveIDs  () ; }
       /// transfer Ancestors 
-      bool               moveAncs () const { return m_config.moveAncs () ; }
+      bool               moveAncs () const { return config().moveAncs () ; }
       // transfer extra info? 
-      bool               moveInfo () const { return m_config.moveInfo () ; }
+      bool               moveInfo () const { return config().moveInfo () ; }
       // pt-ordering ?
-      bool               ptOrder  () const { return m_config.ptOrder  () ; }
+      bool               ptOrder  () const { return config().ptOrder  () ; }
       // ======================================================================
     public:
       // ======================================================================

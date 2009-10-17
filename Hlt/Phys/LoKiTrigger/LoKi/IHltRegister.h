@@ -1,4 +1,4 @@
-// $Id: IHltRegister.h,v 1.3 2009-07-12 15:59:10 ibelyaev Exp $
+// $Id: IHltRegister.h,v 1.4 2009-10-17 17:21:49 graven Exp $
 // ============================================================================
 #ifndef LOKI_IHLTREGISTER_H 
 #define LOKI_IHLTREGISTER_H 1
