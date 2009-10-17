@@ -4,7 +4,8 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
-! 2009-12-10 - Olivier Deschamps
+!========================== HltLuminosity v2r11p1 2009-10-17 ===================
+! 2009-10-12 - Olivier Deschamps
  - LumiHisto2dSPD : adapt to change in CaloDAQ
 
 ! 2009-09-30 - Gerhard Raven
