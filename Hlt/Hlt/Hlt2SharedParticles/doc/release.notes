@@ -1,10 +1,11 @@
-d$Id: release.notes,v 1.52 2009-10-15 12:47:12 graven Exp $
+d$Id: release.notes,v 1.53 2009-10-17 11:25:42 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v2r4 2009-10-15 =============
 ! 2009-10-15 - Gerhard Raven
  - make GoodPions/GoodKaons depend on PV2D instead of PV3D
    (as they actually use PV2D!)
