@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r12 2009-10-17 ===================
 ! 2009-10-12 - Gerhard Raven
  - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h
    and implementation, and move latter into HltCommon/src/EFunctions.h
