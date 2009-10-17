@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.43 2009-10-16 15:16:58 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.44 2009-10-17 15:02:43 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -109,7 +109,7 @@ StatusCode MeasurementProvider::initialize()
 StatusCode MeasurementProvider::finalize() 
 {
   
-  info() << "In MeasurementProvider::finalize. Releasing tool handles." << endreq ;
+  debug() << "In MeasurementProvider::finalize. Releasing tool handles." << endreq ;
   StatusCode sc = GaudiTool::finalize() ;
   // make sure to release all toolhandles
   if(!m_ignoreVelo) {
