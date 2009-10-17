@@ -4,6 +4,9 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+!========================== HltBeamGasAlley v2r2p1 2009-10-17 =================
+! 2009-10-17 Gerhard Raven
+ - add cmt/.cvsignore
 !========================== HltBeamGasAlley v2r2 2009-08-31 ===================
 ! 2009-08-31 Gerhard Raven
  - fix warnings in nightly build
