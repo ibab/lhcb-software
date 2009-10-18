@@ -5,6 +5,10 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v7r0>2009-10-17 HltSys v7r0</A></H1><PRE>
+ - HltTrhesholdSettings now specified HltType and L0TCK, thesholds
+   themselves are moved into Hlt/HltSettings.
+
 </PRE><H1><A NAME=v6r8>2009-09-24 HltSys v6r8</A></H1><PRE>
 
 ! 2009-09-08 Stephan Nies

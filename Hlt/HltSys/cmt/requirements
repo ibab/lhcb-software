@@ -1,5 +1,5 @@
 package HltSys
-version v6r8
+version v7r0
 
 branches cmt doc 
 
@@ -7,47 +7,52 @@ branches cmt doc
 # HLT1 and common packages
 #=======================================================
 
-use HltConf             v4r4    Hlt   # Vanya Belyaev, Gerhard Raven
-use HltSettings         v0r0    Hlt   # Parick Koppenburg, Gerhard Raven
-use HltLine             v1r6p1  Hlt   # Vanya Belyaev, Gerhard Raven
-use Hlt1Lines           v1r6    Hlt   # Gerhard Raven
-use HltBase             v6r7    Hlt   # Gerhard Raven
-use HltCommon           v5r11   Hlt   # Gerhard Raven
-use HltTracking         v4r2    Hlt   # Jose Angel Hernando-Morata
+use HltConf             v5r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltSettings         v1r0    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltLine             v1r7    Hlt   # Vanya Belyaev, Gerhard Raven
+use Hlt1Lines           v1r6p1  Hlt   # Gerhard Raven
+use HltBase             v7r0    Hlt   # Gerhard Raven
+use HltCommon           v5r12   Hlt   # Gerhard Raven
+use HltTracking         v4r3    Hlt   # Jose Angel Hernando-Morata
 use HltEcalAlley        v2r0    Hlt   # Mariusz Witek
 use HltMuon             v3r5    Hlt   # Alessia Satta          
 use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
-use HltCosmics          v1r0    Hlt   # Stephan Nies
-use HltL0Conf           v2r10   Hlt   # Johannes Albrecht
-use HltL0MuonConf       v3r6    Hlt   # Alessia Satta/Sandra Amato  
-use HltRecChecker	v1r10	Hlt   # Jose Angel Hernando-Morata
+use HltCosmics          v1r0p1  Hlt   # Stephan Nies
+use HltL0Conf           v2r11   Hlt   # Johannes Albrecht
+use HltL0MuonConf       v3r7    Hlt   # Alessia Satta/Sandra Amato  
+use HltRecChecker	v1r11	Hlt   # Jose Angel Hernando-Morata
 use HltGlobalMonitor	v2r6p2	Hlt   # Bruno de Paula
-use HltLuminosity       v2r11   Hlt   # Jaap Panman
-use HltBeamGasAlley     v2r2    Hlt   # Plamen Hopchev
+use HltLuminosity       v2r11p1   Hlt   # Jaap Panman
+use HltBeamGasAlley     v2r2p1  Hlt   # Plamen Hopchev
 use HltRawData          v2r1    Hlt   # Tomasz Skwarnicki
 
 use TCKUtils            v1r4    Hlt   # Gerhard Raven
-use TCKPresenter        v1r1    Hlt   # Klaus Neumann
+use TCKPresenter        v1r1p1    Hlt   # Klaus Neumann / Stephan Nies
 
 #=======================================================
 # HLT2 packages
 #=======================================================
 
-use Hlt2Lines           v1r7    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use Hlt2SharedParticles v2r3    Hlt   # Patrick Koppenburg, Gerhard Raven
+use Hlt2Lines           v1r8    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
+use Hlt2SharedParticles v2r4    Hlt   # Patrick Koppenburg, Gerhard Raven
 use HltKshort           v2r0p1  Hlt   # Jaap Panman
 use HltHidValley        v1r2p3  Hlt   # Marcin Kucharczyk
-use HltDisplVertices    v1r1    Hlt   # Neil Gauvin
-use HltSelChecker       v8r7    Hlt   # Patrick Koppenburg
-use Fidel               v1r3p2  Phys  # Sara Furcas    
+use HltDisplVertices    v1r1p1  Hlt   # Neil Gauvin
+use HltSelChecker       v9r0    Hlt   # Patrick Koppenburg
+use Fidel               v1r3p3  Phys  # Sara Furcas    
 
 
 #=============================================================
 # Stuff added temporarily to allow a fast development cycle
 #=============================================================
 
-use LoKiTrigger         v9r5   Phys   # Vanya Belyaev
-use TisTosTobbing       v3r4   Phys   # Tomasz Skwarnicki  
+use LoKiTrigger         v9r6   Phys   # Vanya Belyaev
+use TisTosTobbing       v3r4p1   Phys   # Tomasz Skwarnicki  
+
+#=============================================================
+# temporary Patch on top of REC v7r6
+#=============================================================
+use TrackUtils          v1r30   Tr
 
 # Declare this as a container package
 apply_pattern container_package
