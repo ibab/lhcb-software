@@ -44,16 +44,28 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
-                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
+                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ]
+                                            , HistogramUpdatePeriod = 0
+                                            , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
+                                            )
                                   ]
 
         companionTrackWithIP  = [ Velo
                                   , Member ( 'TF', 'CompanionVelo',
-                                             FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ])
+                                             FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ]
+                                            , HistogramUpdatePeriod = 0
+                                            , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
+                                            )
                                   , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
-                                  , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
+                                  , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT]
+                                            , HistogramUpdatePeriod = 0
+                                            , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
+                                            )
                                   , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
-                                             FilterDescriptor = ['DOCA,<,0.2'])
+                                             FilterDescriptor = ['DOCA,<,0.2']
+                                            , HistogramUpdatePeriod = 0
+                                            , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
+                                            )
                                   ]
         
         ##### common bodies no IP
@@ -74,9 +86,15 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                                 , Member ( 'TF', 'CompanionVelo', 
                                            FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.15' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
-                                , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT])
+                                , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT]
+                                          , HistogramUpdatePeriod = 0
+                                          , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
+                                          )
                                 , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
-                                           FilterDescriptor = ['DOCA,<,0.2'])
+                                           FilterDescriptor = ['DOCA,<,0.2']
+                                          , HistogramUpdatePeriod = 0
+                                          , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
+                                          )
                                 ]
 
         ##### Lines
@@ -116,6 +134,8 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                        , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                        , Member ( 'VF', 'MassCut'
                                 , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
+                                , HistogramUpdatePeriod = 0
+                                , HistoDescriptor = { 'VertexDiElectronMass':('VertexDiElectronMass',0.,3.,100), 'VertexDiElectronMassBest':('VertexDiElectronMassBest',0.,3.,100) }
                                 , OutputSelection = '%Decision'
                                 )
                        ]

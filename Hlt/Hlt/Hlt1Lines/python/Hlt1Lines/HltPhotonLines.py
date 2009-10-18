@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
+# $Id: HltPhotonLines.py,v 1.10 2009-10-18 18:07:45 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
 # =============================================================================
 
 
@@ -58,7 +58,11 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                  tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
                                  tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
                                )
-                      , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON])
+                      , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON]
+                               , HistogramUpdatePeriod = 0
+                               , HistoDescriptor = { 'IsPhoton' : ('IsPhoton',-2.,2.,400), 'IsPhotonBest' : ('IsPhotonBest',-2.,2.,400)}
+                               )
+
                       , RZVelo, PV2D.ignoreOutputSelection()
                       , Member ('TF', 'RZVelo'  # 2D IP selection
                                , FilterDescriptor = ['rIP_PV2D,||[],0.10,3.0']
@@ -92,6 +96,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                , InputSelection1 = '%TFFirstForward'
                                , InputSelection2 = '%TFSecondForward'
                                , FilterDescriptor = [ 'DOCA,<,0.2']
+                               , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
                                )
                       , Member ('VF', 'DiTrack' #two track vertex: DZ
@@ -106,6 +111,8 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
               , algos = [ convertL0Candidates('Photon') ] + commonSeq1
                       + [ Member ('TF', 'Forward'
                                   , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                  , HistogramUpdatePeriod = 0
+                                  , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
                                  )
                         , Member ('VM2', 'PhoTra'
                                , InputSelection1 = '%TFPhoton'
@@ -122,6 +129,8 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
               , algos = [ convertL0Candidates('Electron') ] + commonSeq1
                       + [ Member ('TF', 'Forward'
                                   , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                  , HistogramUpdatePeriod = 0
+                                  , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
                                  )
                         , Member ('VM2', 'PhoTra'
                                , InputSelection1 = '%TFPhoton'
