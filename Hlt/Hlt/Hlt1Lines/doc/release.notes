@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.43 2009-10-17 16:57:30 graven Exp $
+! $Id: release.notes,v 1.44 2009-10-18 18:09:59 witekma Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-10-18 - Mariusz Witek
+  - add monitoring histograms to Photon and Electron lines
 
 !========================== Hlt1Lines v1r6p1 2009-10-18 =================
 ! 2009-10-17 - Gerhard Raven
