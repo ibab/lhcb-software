@@ -139,9 +139,4 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
 ##
         from Exclusive_Nominal import Exclusive_Nominal
         list.extend( Exclusive_Nominal().ActiveHlt2Lines() )
-##
-## commissioning : whole list
-##
-        from Commissioning_Nominal import Commissioning_Nominal
-        list.extend( Commissioning_Nominal().ActiveHlt2Lines() )
         return list

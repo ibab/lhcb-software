@@ -4,7 +4,10 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
-!========================== HltSettings v1r0 2009-10-17 ====================
+!========================== HltSettings v1r0 2009-10-18 ====================
+! 2009-10-18 - Gerhard Raven
+ - add Commissioning_Passthrough config
+
 ! 2009-10-17 - Gerhard Raven
  - in "Hlt1-only" configurations, run Hlt2 in pass-through mode
 
