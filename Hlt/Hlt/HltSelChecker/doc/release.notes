@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-19 - Patrick Koppenburg
+ - Small change in list of TupleTuples
+ - v9r1
+
 !========================== HltSelChecker v9r0 2009-10-17 ===================
 ! 2009-10-16 - Gerhard Raven
  - remove all (obsolute, unused, unneeded) references to HltSummary

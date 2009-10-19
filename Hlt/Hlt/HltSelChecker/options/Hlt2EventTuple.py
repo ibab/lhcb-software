@@ -13,7 +13,7 @@ from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger, L0F
 
 # add event-info tuple
 tuple = EventTuple("TriggerTuple")
-tuple.ToolList = [ "TupleToolEventInfo", "TupleToolGeneration",
+tuple.ToolList = [ "TupleToolEventInfo",   #  "TupleToolGeneration",
                    "TupleToolTrigger", "MCTupleToolEventType",
                    "TupleToolTriggerRecoStats" ]
 tuple.addTool( TupleToolTrigger )
