@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.176 2009-10-19 08:14:22 cattanem Exp $
+! $Id: release.notes,v 1.177 2009-10-19 13:11:05 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
@@ -6,6 +6,7 @@
 !======================== GaudiConf v12r9 2009-10-19 ========================
 ! 2009-10-19 - Marco Cattaneo
  - In CaloPackingConf.py, remove unneccessary LHCbConfigurableUser dependency
+ - In DstConf.py, really fix the genConf warning.
 
 ! 2009-10-16 - Marco Cattaneo
  - In DstConf.py, fix genConf warnings due to import path of new CaloPacking

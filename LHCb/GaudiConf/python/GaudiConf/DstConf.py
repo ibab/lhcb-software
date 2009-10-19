@@ -1,8 +1,12 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.17 2009-10-16 11:55:23 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.18 2009-10-19 13:11:05 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
+
+__all__ = [
+    'DstConf'  ## the configurable, configures DST writing/packing/unpacking   
+    ]
 
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
