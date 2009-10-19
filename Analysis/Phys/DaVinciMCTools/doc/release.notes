@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.270 2009-10-08 16:14:20 pkoppenb Exp $
+! $Id: release.notes,v 1.271 2009-10-19 12:02:16 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-10-19 - Patrick Koppenburg
+ - MCReconstructed : removed commented out stuff. More debugging
 
 ! 2009-10-08 - Patrick Koppenburg
  - Remove _dll file

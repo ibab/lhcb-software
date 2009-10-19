@@ -97,7 +97,7 @@ StatusCode DaVinciSmartAssociator::initialize() {
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
   //And the P2MCPFromProtoP instance that will do the associating
   //of charged and neutral "stables" 
-  m_weightedAssociation = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP", this);
+  m_weightedAssociation = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP");
 
   return sc;
 }

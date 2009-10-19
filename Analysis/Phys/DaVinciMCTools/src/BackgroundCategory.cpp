@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.54 2009-05-13 12:28:24 jpalac Exp $
+// $Id: BackgroundCategory.cpp,v 1.55 2009-10-19 12:02:17 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -1484,7 +1484,7 @@ StatusCode BackgroundCategory::initialize(){
   if (!sc) return sc;
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
-  m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP", this); 
+  m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP"); 
 
   if (msgLevel(MSG::VERBOSE)) m_printDecay = tool<IPrintDecay>("PrintDecayTreeTool",this);
 
