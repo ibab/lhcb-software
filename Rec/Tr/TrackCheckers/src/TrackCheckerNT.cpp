@@ -1,8 +1,10 @@
-// $Id: TrackCheckerNT.cpp,v 1.12 2009-10-08 14:49:57 wouter Exp $
+// $Id: TrackCheckerNT.cpp,v 1.13 2009-10-19 17:12:54 mschille Exp $
 // Include files 
 
 // local
 #include "TrackCheckerNT.h"
+
+#include <boost/foreach.hpp>
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -15,6 +17,8 @@
 #include "Event/MCVertex.h"
 
 // from Event/DigiEvent
+#include "Kernel/OTChannelID.h"
+#include "Event/OTLiteTime.h"
 #include "Event/OTTime.h"
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
@@ -31,6 +35,7 @@
 #include <STDet/DeSTDetector.h>
 #include <STDet/DeSTLayer.h>
 #include <VeloDet/DeVelo.h>
+#include <OTDAQ/IOTRawBankDecoder.h>
 
 // STL sets
 #include <set>
@@ -102,6 +107,7 @@ TrackCheckerNT::TrackCheckerNT( const std::string& name,
   // of the ROOT macros as well - the defaults should be fine, though
   declareProperty("maxTracks", m_maxTracks = 1000);
   declareProperty("maxMCParticles", m_maxMCParticles = 10000);
+  declareProperty("OTDecoderName", m_otDecoderName = "OTRawBankDecoder");
 
   // warn the user if he tries to monitor more fixed z positions than we
   // write to our ntuple...
@@ -137,6 +143,7 @@ StatusCode TrackCheckerNT::initialize()
   m_extrapolator = tool<ITrackExtrapolator>( "TrackMasterExtrapolator" );
   m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector",
                                           "Projector", this );
+  m_otdecoder = tool<IOTRawBankDecoder>(m_otDecoderName);
   
   // get number of channels per detector - this may be interesting
   // if you look at occupancies, for example, so save the user from having
@@ -231,11 +238,10 @@ StatusCode TrackCheckerNT::execute()
   VeloClusters* VeloCont = get<VeloClusters>("Raw/Velo/Clusters");
   STClusters *TTCont = get<STClusters>("Raw/TT/Clusters");
   STClusters *ITCont = get<STClusters>("Raw/IT/Clusters");
-  OTTimes* OTCont = get<OTTimes>("Raw/OT/Times");
   tuple->column("nVeloHits", VeloCont->size());
   tuple->column("nTTHits", TTCont->size());
   tuple->column("nITHits", ITCont->size());
-  tuple->column("nOTHits", OTCont->size());
+  tuple->column("nOTHits", m_otdecoder->totalNumberOfHits());
 
   // handle the tracks in our event
   // the loop over tracks is done in the different methods
@@ -351,7 +357,7 @@ MCParticle* TrackCheckerNT::getMCParticle(const Measurement *mm)
       return veloLink.first(m->cluster());
   } else if (mm->checkType(Measurement::OT)) {
     const OTMeasurement *m = dynamic_cast<const OTMeasurement*>(mm);
-    LinkedTo<MCParticle, OTTime> otLink(evtSvc(),msgSvc(),
+    LinkedTo<MCParticle> otLink(evtSvc(),msgSvc(),
 	LHCb::OTTimeLocation::Default);
     if ( otLink.notFound() )
       error() << "Unable to retrieve OTTime-MCParticle linker table" << endmsg;
@@ -443,7 +449,7 @@ TrackCheckerNT::MeasType TrackCheckerNT::getMeasType(const STCluster* stc)
 }
 
 // get the MeasType for OTTimes
-TrackCheckerNT::MeasType TrackCheckerNT::getMeasType(const OTTime* ott)
+TrackCheckerNT::MeasType TrackCheckerNT::getMeasType(const OTChannelID ott)
 {
   // we use a threshold to determine if we are in a stereo layer
   // at the moment, this roughly corresponds to 2.5 degrees
@@ -457,7 +463,7 @@ TrackCheckerNT::MeasType TrackCheckerNT::getMeasType(const OTTime* ott)
 	error() << "Can't retrieve OT detector geometry." << endmsg;
 	return Unknown;
   }
-  DeOTModule *m = OT->findModule(ott->channel());
+  DeOTModule *m = OT->findModule(ott);
   if (m->angle() < -stereoThreshold)
     return V;
   if (m->angle() > stereoThreshold)
@@ -1127,26 +1133,25 @@ StatusCode TrackCheckerNT::fillHitPurEff(
     
       // get OTTimes and count correct and total number of clusters
       // Get the linker table MCParticle => OTTime
-      LinkedFrom<OTTime,MCParticle> otLink(evtSvc(),msgSvc(),
+      LinkedFromKey<MCParticle, OTChannelID> otLink(evtSvc(),msgSvc(),
 	  LHCb::OTTimeLocation::Default);
       if ( itLink.notFound() )
-	return Error( "Unable to retrieve MCParticle-OTTime linker table" );
+	return Error( "Unable to retrieve MCParticle-OTChannelID linker table" );
     
-      const OTTime* otTime = otLink.first( mcPart );
-      while ( 0 != otTime ) {
+      std::vector<OTChannelID> otids(otLink.keyRange(mcPart));
+      BOOST_FOREACH(OTChannelID otid, otids) {
         bool found = false;
 	++nMCTotalOT;
 	LHCb::Track::MeasurementContainer::const_iterator iMeas   = measurements.begin();
 	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::OT ) {
-	    const OTMeasurement* meas = dynamic_cast<const OTMeasurement*>( *iMeas );
-	    found = ( otTime->channel() == meas->channel() );
+	    OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
+	    found = ( otid == meas->channel() );
 	  }
 	  ++iMeas;
 	}
 	if ( found ) { ++nGoodOT; }
-	otTime = otLink.next();
       }
     } // end if (0 != mcPart)
 
@@ -1314,7 +1319,7 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
       LHCb::STClusterLocation::ITClusters);
   if (itLink.notFound())
     return Error("Unable to retrieve MCParticle-IT STCluster linker table");
-  LinkedFrom<OTTime,MCParticle> otLink(evtSvc(),msgSvc(),
+  LinkedFromKey<MCParticle, OTChannelID> otLink(evtSvc(),msgSvc(),
       LHCb::OTTimeLocation::Default);
   if (otLink.notFound())
     return Error("Unable to retrieve MCParticle-OTTime linker table");
@@ -1440,30 +1445,29 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
     {
       int nX = 0, nU = 0, nV = 0;
       std::set<int> Stations, xStations, uStations, vStations, StStations;
-      for (const OTTime* ott = otLink.first(mcPart);
-	  0 != ott; ott = otLink.next()) {
-	Stations.insert(ott->channel().station());
+      std::vector<OTChannelID> otids(otLink.keyRange(mcPart));
+      BOOST_FOREACH(OTChannelID otid, otids) {
+	Stations.insert(otid.station());
 	// determine if it's an r or phi cluster
-	MeasType type;
-	type = getMeasType(ott);
+	MeasType type = getMeasType(otid);
 	if (X == type) {
 	  // x cluster
 	  ++nX;
-	  xStations.insert(ott->channel().station());
+	  xStations.insert(otid.station());
 	} else if (U == type) {
 	  // u cluster
 	  ++nU;
-	  uStations.insert(ott->channel().station());
-	  StStations.insert(ott->channel().station());
+	  uStations.insert(otid.station());
+	  StStations.insert(otid.station());
 	} else {
 	  // v cluster
 	  ++nV;
-	  vStations.insert(ott->channel().station());
-	  StStations.insert(ott->channel().station());
+	  vStations.insert(otid.station());
+	  StStations.insert(otid.station());
 	}
 	// get OT Module which took the hit to find the Monolayer
 	DeOTDetector *OT = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
-	DeOTModule *mod = OT->findModule(ott->channel());
+	DeOTModule *mod = OT->findModule(otid);
 	// although the mantisse of a float is 23 bits only, it is just the
 	// "fractional part" of the number represented, so a leading set bit
 	// is implicitly assumed. hence, we will not run into trouble with a
@@ -1472,9 +1476,9 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 	// remaining 23 are safe in the mantissa - again, all is well
 	int mask = (int) HitMaskOT[nPart];
 	// ok, or our new bit onto mask
-	mask |= (1 << ((mod->monoLayerA(ott->channel().straw())?0:1) +
-			8 * (ott->channel().station() - 1) +
-			2 * ott->channel().layer()));
+	mask |= (1 << ((mod->monoLayerA(otid.straw())?0:1) +
+			8 * (otid.station() - 1) +
+			2 * otid.layer()));
 	// ok, convert back to float...
 	HitMaskOT[nPart] = (float) mask;
       }
@@ -1512,23 +1516,22 @@ StatusCode TrackCheckerNT::fillMCHitStatistics(
 	  StStations.insert(ITCluster->channelID().station());
 	}
       }
-      for (const OTTime* ott = otLink.first(mcPart);
-	  0 != ott; ott = otLink.next()) {
-	Stations.insert(ott->channel().station());
+      std::vector<OTChannelID> otids(otLink.keyRange(mcPart));
+      BOOST_FOREACH(OTChannelID otid, otids) {
+	Stations.insert(otid.station());
 	// determine if it's an r or phi cluster
-	MeasType type;
-	type = getMeasType(ott);
+	MeasType type = getMeasType(otid);
 	if (X == type) {
 	  // x cluster
-	  xStations.insert(ott->channel().station());
+	  xStations.insert(otid.station());
 	} else if (U == type) {
 	  // u cluster
-	  uStations.insert(ott->channel().station());
-	  StStations.insert(ott->channel().station());
+	  uStations.insert(otid.station());
+	  StStations.insert(otid.station());
 	} else {
 	  // v cluster
-	  vStations.insert(ott->channel().station());
-	  StStations.insert(ott->channel().station());
+	  vStations.insert(otid.station());
+	  StStations.insert(otid.station());
 	}
       }
       

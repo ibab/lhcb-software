@@ -4,6 +4,10 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
+! 2009-10-19 - Manuel Tobias Schiller
+ - adapted TrackCheckerNT to new-style MC association on OT hit level so
+   things work again with MC09 data
+
 ! 2009-10-08 Wouter Hulsbergen
  - adapted to changes in LHCb::Track
 

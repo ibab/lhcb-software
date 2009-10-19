@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.h,v 1.5 2008-11-06 16:58:06 cattanem Exp $
+// $Id: TrackCheckerNT.h,v 1.6 2009-10-19 17:12:54 mschille Exp $
 #ifndef TRACKCHECKERNT_H 
 #define TRACKCHECKERNT_H 1
 
@@ -20,6 +20,7 @@
 // from Event/LinkerEvent
 #include "Linker/LinkedTo.h"
 #include "Linker/LinkedFrom.h"
+#include "Linker/LinkedFromKey.h"
 
 // from Event/TrackEvent
 #include "Event/Track.h"
@@ -33,11 +34,12 @@ namespace LHCb
   class State;
   class Measurement;
   class STCluster;
-  class OTTime;
+  class OTChannelID;
 }
 
 class ITrajPoca;
 class IMagneticFieldSvc;
+class IOTRawBankDecoder;
 
 /** @class TrackCheckerNT TrackCheckerNT.h
  *  
@@ -106,7 +108,7 @@ private:
   void fillTrackState(std::vector<float>& statevec, LHCb::State &st);
   MeasType getMeasType(const LHCb::Measurement* m);
   MeasType getMeasType(const LHCb::STCluster* stc);
-  MeasType getMeasType(const LHCb::OTTime* ott);
+  MeasType getMeasType(const LHCb::OTChannelID ott);
   LHCb::MCParticle* getMCParticle(const LHCb::Measurement *mm);
   StatusCode fillGlobalTrackParameters(
       LHCb::Tracks *tracks,
@@ -139,10 +141,12 @@ private:
   IIdealStateCreator*      m_stateCreator; // Pointer to IdealStateCreator
   ITrackExtrapolator*      m_extrapolator; // Pointer to TrackMasterExtrapolator
   ITrackProjectorSelector* m_projectorSelector;    // Pointer to Projector selection tool
+  IOTRawBankDecoder*	   m_otdecoder;	// Pointer ot OTRawBankDecoder
 
   // jobOptions
   std::string m_tracksInContainer; // Input Tracks container location
   std::string m_linkerInTable;     // Input Linker table location
+  std::string m_otDecoderName;
   // Additional z-positions where to determine resolutions and pulls
   std::vector<double> m_zPositions;
 
