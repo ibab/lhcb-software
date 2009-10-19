@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.54 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.55 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -69,6 +69,10 @@ def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
         name = os.path.join(location, name)
     return name
     
+def generateSetupProjectCache(cachefn, project, version=None, 
+                              cmtconfig=None, setupextra=None, env=None):
+    pass
+
 
 def getLbLoginEnv(optionlist = None):
     if not optionlist :
@@ -243,6 +247,10 @@ class LbLoginScript(Script):
                           dest="no_compat",
                           action="store_true",
                           help="prevent the usage detection of the compat libraries [default: %default]")
+        parser.set_defaults(compat_version="v*")
+        parser.add_option("--compat-version",
+                          dest="compat_version",
+                          help="Set the vesion of the Compat project to use [default %default")
         parser.set_defaults(strip_path=True)
         parser.add_option("--no-strip-path",
                           dest="strip_path",
@@ -914,7 +922,7 @@ class LbLoginScript(Script):
                 setupprojargs.append("--runtime-project")            
                 setupprojargs.append("COMPAT")
                 setupprojargs.append("--use")
-                setupprojargs.append("CompatSys v*")
+                setupprojargs.append("CompatSys %s" % opts.compat_version)
                 
     
             log.debug("Arguments to SetupProject: %s" % " ".join(setupprojargs))
