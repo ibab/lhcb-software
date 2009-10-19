@@ -90,9 +90,7 @@ void EvtVtoSll::decay(EvtParticle *p){
   EvtVector4R k=l1->getP4()+l2->getP4();
   double k2=k*k;
 
-  EvtTensor4C T(dual(directProd(P,(1.0/k2)*k)));
-
-
+  EvtTensor4C T(dual(EvtGenFunctions::directProd(P,(1.0/k2)*k)));
 
   double M2=p->mass();
   M2*=M2;

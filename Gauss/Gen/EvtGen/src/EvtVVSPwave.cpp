@@ -88,7 +88,8 @@ void EvtVVSPwave::decay( EvtParticle *p){
   
   g.setdiag(1.0,-1.0,-1.0,-1.0);
 
-  d=ad*((1.0/(v->getP4().d3mag()*v->getP4().d3mag()))*directProd(v->getP4(),v->getP4())+(1/3.0)*g)+
+  d=ad*((1.0/(v->getP4().d3mag()*v->getP4().d3mag()))*
+        EvtGenFunctions::directProd(v->getP4(),v->getP4())+(1/3.0)*g)+
     as*g;
 
   EvtVector4C ep0,ep1,ep2;  

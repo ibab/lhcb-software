@@ -151,8 +151,8 @@ EvtComplex fminus = EvtComplex(cos(averageM*t), -1.*sin(averageM*t))*exp(-(gamma
   c=(h0+0.5*(hp+hm));
   
   M=a*EvtTensor3C::id()+
-                b*eps(v1dir)+
-                c*directProd(v1dir,v1dir);
+    b*EvtGenFunctions::eps(v1dir)+
+    c*EvtGenFunctions::directProd(v1dir,v1dir);
 		
   EvtVector3C t0=M.cont1(v1->eps(0).vec().conj());
   EvtVector3C t1=M.cont1(v1->eps(1).vec().conj());

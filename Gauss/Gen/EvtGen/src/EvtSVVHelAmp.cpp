@@ -112,8 +112,8 @@ void EvtSVVHelAmp::SVVHel(EvtParticle *parent,EvtAmp& amp,EvtId n_v1,EvtId n_v2,
   EvtComplex c=h0+0.5*(hp+hm);
 
   EvtTensor3C M=a*EvtTensor3C::id()+
-                b*eps(v1dir)+
-                c*directProd(v1dir,v1dir);
+    b*EvtGenFunctions::eps(v1dir)+
+    c*EvtGenFunctions::directProd(v1dir,v1dir);
 
   EvtVector3C t0=M.cont1(v1->eps(0).vec().conj());
   EvtVector3C t1=M.cont1(v1->eps(1).vec().conj());

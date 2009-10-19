@@ -613,22 +613,7 @@ EvtDiracSpinor operator*(const EvtGammaMatrix& g,const EvtDiracSpinor& d){
    }
    
    return temp;
-}  
-
-
-EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp){
-
-  int i;
-  EvtComplex temp;
-  
-  temp=EvtComplex(0.0,0.0);
-  
-  for(i=0;i<4;i++){
-    temp+=::conj(d.get_spinor(i))*dp.get_spinor(i);
-  }
-  return temp;
-}  
-
+}
 
 // upper index
 const EvtGammaMatrix& EvtGammaMatrix::sigmaUpper(unsigned int mu, unsigned int nu)
@@ -698,7 +683,18 @@ const EvtGammaMatrix& EvtGammaMatrix::sigmaLower(unsigned int mu, unsigned int n
 }
 
 
-EvtGammaMatrix slash(const EvtVector4C& p)
+EvtGammaMatrix EvtGenFunctions::slash(const EvtVector4C& p)
 {
-    return EvtGammaMatrix::g0()*p.get(0) + EvtGammaMatrix::g1()*p.get(1) + EvtGammaMatrix::g2()*p.get(2) + EvtGammaMatrix::g3()*p.get(3);
+    return EvtGammaMatrix::g0()*p.get(0) + 
+      EvtGammaMatrix::g1()*p.get(1) + 
+      EvtGammaMatrix::g2()*p.get(2) + 
+      EvtGammaMatrix::g3()*p.get(3);
+}
+
+EvtGammaMatrix EvtGenFunctions::slash(const EvtVector4R& p)
+{
+  return EvtGammaMatrix::g0()*p.get(0) + 
+    EvtGammaMatrix::g1()*p.get(1) + 
+    EvtGammaMatrix::g2()*p.get(2) + 
+    EvtGammaMatrix::g3()*p.get(3);
 }

@@ -324,7 +324,8 @@ EvtComplex cont(const EvtTensor4C& t1,const EvtTensor4C& t2){
 }
 
 
-EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4C& c2){ 
+EvtTensor4C EvtGenFunctions::directProd(const EvtVector4C& c1,
+                                        const EvtVector4C& c2){ 
   EvtTensor4C temp;
   int i,j;
   
@@ -337,7 +338,8 @@ EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4C& c2){
 }
 
 
-EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4R& c2){ 
+EvtTensor4C EvtGenFunctions::directProd(const EvtVector4C& c1,
+                                        const EvtVector4R& c2){ 
   EvtTensor4C temp;
   int i,j;
   
@@ -350,7 +352,8 @@ EvtTensor4C directProd(const EvtVector4C& c1,const EvtVector4R& c2){
 }
 
 
-EvtTensor4C directProd(const EvtVector4R& c1,const EvtVector4R& c2){ 
+EvtTensor4C EvtGenFunctions::directProd(const EvtVector4R& c1,
+                                        const EvtVector4R& c2){ 
 
   EvtTensor4C temp;
   int i,j;

@@ -350,3 +350,16 @@ EvtDiracSpinor EvtDiracSpinor::adjoint() const
 
     return result;
 }
+
+EvtComplex operator*(const EvtDiracSpinor& d,const EvtDiracSpinor& dp){
+
+  int i;
+  EvtComplex temp;
+  
+  temp=EvtComplex(0.0,0.0);
+  
+  for(i=0;i<4;i++){
+    temp += conj( d.get_spinor(i) ) * dp.get_spinor( i ) ;
+  }
+  return temp;
+}

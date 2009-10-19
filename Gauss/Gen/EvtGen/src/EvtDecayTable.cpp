@@ -300,7 +300,7 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       std::string pname;
       pname=parser.getToken(itoken++);
       bool yesno=false;
-      if ( parser.getToken(itoken++).c_str()=="yes") yesno=true;
+      if ( parser.getToken(itoken++)=="yes") yesno=true;
       EvtId thisPart = EvtPDL::getId(pname);
       EvtPDL::includeBirthFactor(thisPart,yesno);
       if ( verbose ) {
@@ -312,7 +312,7 @@ void EvtDecayTable::readDecayFile(const std::string dec_name, bool verbose){
       std::string pname;
       pname=parser.getToken(itoken++);
       bool yesno=false;
-      if ( parser.getToken(itoken++).c_str()=="yes") yesno=true;
+      if ( parser.getToken(itoken++)=="yes") yesno=true;
       EvtId thisPart = EvtPDL::getId(pname);
       EvtPDL::includeDecayFactor(thisPart,yesno);
       if ( verbose ) {

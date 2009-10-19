@@ -127,9 +127,10 @@ void EvtBHadronic::decay( EvtParticle *p){
 
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
-      -ap*(directProd(p4b,p4b)+directProd(p4b,p4[0]))
-      -gf*EvtComplex(0.0,1.0)*dual(directProd(p4[0]+p4b,p4b-p4[0]))
-      -am*((directProd(p4b,p4b)-directProd(p4b,p4[0])));
+      -ap*(EvtGenFunctions::directProd(p4b,p4b)+EvtGenFunctions::directProd(p4b,p4[0]))
+      -gf*EvtComplex(0.0,1.0)*dual(EvtGenFunctions::directProd(p4[0]+p4b,p4b-p4[0]))
+      -am*((EvtGenFunctions::directProd(p4b,p4b)-
+            EvtGenFunctions::directProd(p4b,p4[0])));
     jb[0]=tds.cont1(p->getDaug(0)->epsParent(0).conj());
     jb[1]=tds.cont1(p->getDaug(0)->epsParent(1).conj());
     jb[2]=tds.cont1(p->getDaug(0)->epsParent(2).conj());
@@ -143,9 +144,11 @@ void EvtBHadronic::decay( EvtParticle *p){
 
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
-      -ap*(directProd(p4b,p4b)+directProd(p4b,p4[0]))
-      -gf*EvtComplex(0.0,1.0)*dual(directProd(p4[0]+p4b,p4b-p4[0]))
-      -am*((directProd(p4b,p4b)-directProd(p4b,p4[0])));
+      -ap*(EvtGenFunctions::directProd(p4b,p4b)+
+           EvtGenFunctions::directProd(p4b,p4[0]))
+      -gf*EvtComplex(0.0,1.0)*dual(EvtGenFunctions::directProd(p4[0]+p4b,p4b-p4[0]))
+      -am*((EvtGenFunctions::directProd(p4b,p4b)-
+            EvtGenFunctions::directProd(p4b,p4[0])));
     jb[0]=tds.cont1(p->getDaug(0)->epsParent(0).conj());
     jb[1]=tds.cont1(p->getDaug(0)->epsParent(1).conj());
     jb[2]=tds.cont1(p->getDaug(0)->epsParent(2).conj());
@@ -174,23 +177,23 @@ void EvtBHadronic::decay( EvtParticle *p){
     ep_meson_bb[3]=ep_meson_b[3]*(p4b);
     ep_meson_bb[4]=ep_meson_b[4]*(p4b);
     
-    jb[0]=EvtComplex(0.0,(1.0)*hf)*dual(directProd(pp,pm)).cont2(ep_meson_b[0])
+    jb[0]=EvtComplex(0.0,(1.0)*hf)*dual(EvtGenFunctions::directProd(pp,pm)).cont2(ep_meson_b[0])
        -kf*ep_meson_b[0]
        -bp*ep_meson_bb[0]*pp-bm*ep_meson_bb[0]*pm;
      
-    jb[1]=EvtComplex(0.0,(1.0)*hf)*dual(directProd(pp,pm)).cont2(ep_meson_b[1])
+    jb[1]=EvtComplex(0.0,(1.0)*hf)*dual(EvtGenFunctions::directProd(pp,pm)).cont2(ep_meson_b[1])
        -kf*ep_meson_b[1]
        -bp*ep_meson_bb[1]*pp-bm*ep_meson_bb[1]*pm;
     
-    jb[2]=EvtComplex(0.0,(1.0)*hf)*dual(directProd(pp,pm)).cont2(ep_meson_b[2])
+    jb[2]=EvtComplex(0.0,(1.0)*hf)*dual(EvtGenFunctions::directProd(pp,pm)).cont2(ep_meson_b[2])
        -kf*ep_meson_b[2]
        -bp*ep_meson_bb[2]*pp-bm*ep_meson_bb[2]*pm;
     
-    jb[3]=EvtComplex(0.0,(1.0)*hf)*dual(directProd(pp,pm)).cont2(ep_meson_b[3])
+    jb[3]=EvtComplex(0.0,(1.0)*hf)*dual(EvtGenFunctions::directProd(pp,pm)).cont2(ep_meson_b[3])
        -kf*ep_meson_b[3]
        -bp*ep_meson_bb[3]*pp-bm*ep_meson_bb[3]*pm;
     
-    jb[4]=EvtComplex(0.0,(1.0)*hf)*dual(directProd(pp,pm)).cont2(ep_meson_b[4])
+    jb[4]=EvtComplex(0.0,(1.0)*hf)*dual(EvtGenFunctions::directProd(pp,pm)).cont2(ep_meson_b[4])
        -kf*ep_meson_b[4]
        -bp*ep_meson_bb[4]*pp-bm*ep_meson_bb[4]*pm;
     break;
@@ -203,9 +206,11 @@ void EvtBHadronic::decay( EvtParticle *p){
     ffmodel.getvectorff(B0,D1P10,EvtPDL::getMeanMass(D1P10),q2,&f,&gf,&ap,&am);
     g.setdiag(1.0,-1.0,-1.0,-1.0);
     tds = -f*g 
-      -ap*(directProd(p4b,p4b)+directProd(p4b,p4[0]))
-      +gf*EvtComplex(0.0,1.0)*dual(directProd(p4[0]+p4b,p4b-p4[0]))
-      -am*((directProd(p4b,p4b)-directProd(p4b,p4[0])));
+      -ap*(EvtGenFunctions::directProd(p4b,p4b)+
+           EvtGenFunctions::directProd(p4b,p4[0]))
+      +gf*EvtComplex(0.0,1.0)*dual(EvtGenFunctions::directProd(p4[0]+p4b,p4b-p4[0]))
+      -am*((EvtGenFunctions::directProd(p4b,p4b)-
+            EvtGenFunctions::directProd(p4b,p4[0])));
     jb[0]=tds.cont1(p->getDaug(0)->epsParent(0).conj());
     jb[1]=tds.cont1(p->getDaug(0)->epsParent(1).conj());
     jb[2]=tds.cont1(p->getDaug(0)->epsParent(2).conj());

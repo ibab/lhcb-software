@@ -567,7 +567,7 @@ double EvtDecayBase::getArg(unsigned int j) {
   // Verify string
 
   if (getParentId().getId() == 25) {
-    int i;
+    int i = 0 ; 
     ++i;
   }
 

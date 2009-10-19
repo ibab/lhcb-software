@@ -114,15 +114,15 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis() const{
   static EvtVector4C ezero(0.0,0.0,0.0,1.0);
   static EvtVector4C eminus(0.0,1.0/sqrt(2.0),EvtComplex(0.0,-1.0/sqrt(2.0)),0.0);
   
-  static EvtTensor4C dPpp(directProd(eplus,eplus));
-  static EvtTensor4C dPp0(directProd(eplus,ezero));
-  static EvtTensor4C dP0p(directProd(ezero,eplus));
-  static EvtTensor4C dPpm(directProd(eplus,eminus));
-  static EvtTensor4C dP00(directProd(ezero,ezero));
-  static EvtTensor4C dPmp(directProd(eminus,eplus));
-  static EvtTensor4C dPmm(directProd(eminus,eminus));
-  static EvtTensor4C dPm0(directProd(eminus,ezero));
-  static EvtTensor4C dP0m(directProd(ezero,eminus));
+  static EvtTensor4C dPpp(EvtGenFunctions::directProd(eplus,eplus));
+  static EvtTensor4C dPp0(EvtGenFunctions::directProd(eplus,ezero));
+  static EvtTensor4C dP0p(EvtGenFunctions::directProd(ezero,eplus));
+  static EvtTensor4C dPpm(EvtGenFunctions::directProd(eplus,eminus));
+  static EvtTensor4C dP00(EvtGenFunctions::directProd(ezero,ezero));
+  static EvtTensor4C dPmp(EvtGenFunctions::directProd(eminus,eplus));
+  static EvtTensor4C dPmm(EvtGenFunctions::directProd(eminus,eminus));
+  static EvtTensor4C dPm0(EvtGenFunctions::directProd(eminus,ezero));
+  static EvtTensor4C dP0m(EvtGenFunctions::directProd(ezero,eminus));
 
   static EvtTensor4C es0(conj(dPpp));
   static EvtTensor4C es1(conj((1/sqrt(2.0))*dPp0 +(1/sqrt(2.0))*dP0p));
@@ -162,15 +162,15 @@ EvtSpinDensity EvtTensorParticle::rotateToHelicityBasis(double alpha,
 
   for (int i=0; i<5; i++) es[i].zero();    
   
-  es[0]=directProd(eplus,eplus);
-  es[1] =(1/sqrt(2.0))*directProd(eplus,ezero)
-    +(1/sqrt(2.0))*directProd(ezero,eplus);
-  es[2] =(1/sqrt(6.0))*directProd(eplus,eminus)
-    +(2/sqrt(6.0))*directProd(ezero,ezero)
-    +(1/sqrt(6.0))*directProd(eminus,eplus);
-  es[3] =(1/sqrt(2.0))*directProd(eminus,ezero)
-    +(1/sqrt(2.0))*directProd(ezero,eminus);
-  es[4]=directProd(eminus,eminus);
+  es[0]=EvtGenFunctions::directProd(eplus,eplus);
+  es[1] =(1/sqrt(2.0))*EvtGenFunctions::directProd(eplus,ezero)
+    +(1/sqrt(2.0))*EvtGenFunctions::directProd(ezero,eplus);
+  es[2] =(1/sqrt(6.0))*EvtGenFunctions::directProd(eplus,eminus)
+    +(2/sqrt(6.0))*EvtGenFunctions::directProd(ezero,ezero)
+    +(1/sqrt(6.0))*EvtGenFunctions::directProd(eminus,eplus);
+  es[3] =(1/sqrt(2.0))*EvtGenFunctions::directProd(eminus,ezero)
+    +(1/sqrt(2.0))*EvtGenFunctions::directProd(ezero,eminus);
+  es[4]=EvtGenFunctions::directProd(eminus,eminus);
 
   for (int i=0; i<5; i++) es[i]=conj(es[i]);    
 

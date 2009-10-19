@@ -254,32 +254,32 @@ void EvtGoityRoberts::DecayBDstarpilnuGR(EvtParticle *pb,EvtId ndstar,
   g_metric.setdiag(1.0,-1.0,-1.0,-1.0);
 
   if (nlep==EM||nlep==MUM){ 
-    omega=EvtComplex(0.0,0.5)*dual(h1*mb*md*directProd(v,vp)+
-                             h2*mb*directProd(v,p4_pi)+
-                             h3*md*directProd(vp,p4_pi))+
-        f1*mb*directProd(v,p4_pi)+f2*md*directProd(vp,p4_pi)+
-                       f3*directProd(p4_pi,p4_pi)+f4*mb*mb*directProd(v,v)+
-        f5*mb*md*directProd(vp,v)+f6*mb*directProd(p4_pi,v)+k*g_metric+
-        EvtComplex(0.0,0.5)*directProd(dual(directProd(vp,p4_pi)).cont2(v),
+    omega=EvtComplex(0.0,0.5)*dual(h1*mb*md*EvtGenFunctions::directProd(v,vp)+
+                             h2*mb*EvtGenFunctions::directProd(v,p4_pi)+
+                             h3*md*EvtGenFunctions::directProd(vp,p4_pi))+
+        f1*mb*EvtGenFunctions::directProd(v,p4_pi)+f2*md*EvtGenFunctions::directProd(vp,p4_pi)+
+                       f3*EvtGenFunctions::directProd(p4_pi,p4_pi)+f4*mb*mb*EvtGenFunctions::directProd(v,v)+
+        f5*mb*md*EvtGenFunctions::directProd(vp,v)+f6*mb*EvtGenFunctions::directProd(p4_pi,v)+k*g_metric+
+        EvtComplex(0.0,0.5)*EvtGenFunctions::directProd(dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v),
                               (g1*p4_pi+g2*mb*v))+
-        EvtComplex(0.0,0.5)*directProd((g3*mb*v+g4*md*vp+g5*p4_pi),
-                             dual(directProd(vp,p4_pi)).cont2(v));
+        EvtComplex(0.0,0.5)*EvtGenFunctions::directProd((g3*mb*v+g4*md*vp+g5*p4_pi),
+                             dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v));
 
    l1=EvtLeptonVACurrent(lepton->spParent(0),neutrino->spParentNeutrino());
    l2=EvtLeptonVACurrent(lepton->spParent(1),neutrino->spParentNeutrino());
   }
   else{
     if (nlep==EP||nlep==MUP){ 
-      omega=EvtComplex(0.0,-0.5)*dual(h1*mb*md*directProd(v,vp)+
-                             h2*mb*directProd(v,p4_pi)+
-                                      h3*md*directProd(vp,p4_pi))+
-        f1*mb*directProd(v,p4_pi)+f2*md*directProd(vp,p4_pi)+
-                       f3*directProd(p4_pi,p4_pi)+f4*mb*mb*directProd(v,v)+
-        f5*mb*md*directProd(vp,v)+f6*mb*directProd(p4_pi,v)+k*g_metric+
-        EvtComplex(0.0,-0.5)*directProd(dual(directProd(vp,p4_pi)).cont2(v),
+      omega=EvtComplex(0.0,-0.5)*dual(h1*mb*md*EvtGenFunctions::directProd(v,vp)+
+                             h2*mb*EvtGenFunctions::directProd(v,p4_pi)+
+                                      h3*md*EvtGenFunctions::directProd(vp,p4_pi))+
+        f1*mb*EvtGenFunctions::directProd(v,p4_pi)+f2*md*EvtGenFunctions::directProd(vp,p4_pi)+
+                       f3*EvtGenFunctions::directProd(p4_pi,p4_pi)+f4*mb*mb*EvtGenFunctions::directProd(v,v)+
+        f5*mb*md*EvtGenFunctions::directProd(vp,v)+f6*mb*EvtGenFunctions::directProd(p4_pi,v)+k*g_metric+
+        EvtComplex(0.0,-0.5)*EvtGenFunctions::directProd(dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v),
                               (g1*p4_pi+g2*mb*v))+
-        EvtComplex(0.0,-0.5)*directProd((g3*mb*v+g4*md*vp+g5*p4_pi),
-                             dual(directProd(vp,p4_pi)).cont2(v));
+        EvtComplex(0.0,-0.5)*EvtGenFunctions::directProd((g3*mb*v+g4*md*vp+g5*p4_pi),
+                             dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v));
 
    l1=EvtLeptonVACurrent(neutrino->spParentNeutrino(),lepton->spParent(0));
    l2=EvtLeptonVACurrent(neutrino->spParentNeutrino(),lepton->spParent(1));
@@ -401,7 +401,7 @@ void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
   EvtVector4C omega;
 
   if ( nlep==EM|| nlep==MUM ) {
-    omega=EvtComplex(0.0,-1.0)*h*mb*md*dual(directProd(vp,p4_pi)).cont2(v)+
+    omega=EvtComplex(0.0,-1.0)*h*mb*md*dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v)+
                  a1*p4_pi+a2*mb*v+a3*md*vp;
     l1=EvtLeptonVACurrent(
              lepton->spParent(0),neutrino->spParentNeutrino());
@@ -410,7 +410,7 @@ void EvtGoityRoberts::DecayBDpilnuGR(EvtParticle *pb,EvtId nd,
   }
   else{
     if ( nlep==EP|| nlep==MUP ) {
-     omega=EvtComplex(0.0,1.0)*h*mb*md*dual(directProd(vp,p4_pi)).cont2(v)+
+     omega=EvtComplex(0.0,1.0)*h*mb*md*dual(EvtGenFunctions::directProd(vp,p4_pi)).cont2(v)+
                  a1*p4_pi+a2*mb*v+a3*md*vp;
      l1=EvtLeptonVACurrent(
               neutrino->spParentNeutrino(),lepton->spParent(0));

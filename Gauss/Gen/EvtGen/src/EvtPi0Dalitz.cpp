@@ -96,11 +96,12 @@ void EvtPi0Dalitz::decay( EvtParticle *p){
 
   EvtTensor4C w,v;
 
-  v=2.0*(gamma->getP4()*q)*directProd(q,gamma->getP4()) 
+  v=2.0*(gamma->getP4()*q)*EvtGenFunctions::directProd(q,gamma->getP4()) 
     - (gamma->getP4()*q)*(gamma->getP4()*q)*EvtTensor4C::g()
-    -m2*directProd(gamma->getP4(),gamma->getP4());
+    -m2*EvtGenFunctions::directProd(gamma->getP4(),gamma->getP4());
  
-  w=4.0*( directProd(ep->getP4(),em->getP4()) + directProd(em->getP4(),ep->getP4())
+  w=4.0*( EvtGenFunctions::directProd(ep->getP4(),em->getP4()) + 
+          EvtGenFunctions::directProd(em->getP4(),ep->getP4())
 	   -EvtTensor4C::g()*(ep->getP4()*em->getP4()-ep->getP4().mass2()));
 
   double prob=(real(cont(v,w)))/(m2*m2);

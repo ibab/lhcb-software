@@ -94,7 +94,7 @@ double EvtDecayAngleChi(const EvtVector4R& p4_p,const EvtVector4R& p4_d1,
 double EvtDecayPlaneNormalAngle(const EvtVector4R& p,const EvtVector4R& q,
                           const EvtVector4R& d1,const EvtVector4R& d2){
 
-  EvtVector4C lc=dual(directProd(d1,d2)).cont2(q);
+  EvtVector4C lc=dual(EvtGenFunctions::directProd(d1,d2)).cont2(q);
 
   EvtVector4R l(real(lc.get(0)),real(lc.get(1)),
 		real(lc.get(2)),real(lc.get(3)));

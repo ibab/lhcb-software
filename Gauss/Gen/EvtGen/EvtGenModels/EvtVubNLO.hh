@@ -115,7 +115,7 @@ private:
   double lambda_bar(double omega0);
   inline double lambda2(){return 0.12;}
   double mu_pi2(double omega0);
-  inline double lambda(double mu=0){ return _mB-_mb;}
+  inline double lambda(double){ return _mB-_mb;}
 
   // specail for gaussian SF
   static double cGaus(double b){return pow(Gamma(1+b/2.)/Gamma((1+b)/2.),2);}

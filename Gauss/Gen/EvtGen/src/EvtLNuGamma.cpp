@@ -134,8 +134,8 @@ void EvtLNuGamma::decay(EvtParticle *p){
     fa = fv;
   }
 
-  EvtVector4C temp1a = dual(directProd(parVelocity,photp)).cont2(photone1);
-  EvtVector4C temp2a = dual(directProd(parVelocity,photp)).cont2(photone2);
+  EvtVector4C temp1a = dual(EvtGenFunctions::directProd(parVelocity,photp)).cont2(photone1);
+  EvtVector4C temp2a = dual(EvtGenFunctions::directProd(parVelocity,photp)).cont2(photone2);
 
   EvtVector4C temp1b = (photone1)*(parVelocity*photp);
   EvtVector4C temp1c = (photp)*(photone1*parVelocity);

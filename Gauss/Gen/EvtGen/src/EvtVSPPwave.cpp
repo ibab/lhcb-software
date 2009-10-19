@@ -82,7 +82,7 @@ void EvtVSPPwave::decay( EvtParticle *p){
 
   double norm=1/(m_p*momgamma.d3mag());
 
-  tds = dual(directProd(norm*p4_p,momgamma));
+  tds = dual(EvtGenFunctions::directProd(norm*p4_p,momgamma));
 
   vertex(0,0,(tds.cont1( p->eps(0))).cont(
 	 gamma->epsParentPhoton(0).conj() ) );

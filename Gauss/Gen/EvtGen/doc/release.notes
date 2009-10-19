@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-10-19 - Patrick Robbe 
+ - Fix gcc4.3 compilation, mainly dealing with scope of friend functions
+
 !========================== EvtGen v11r5 2009-10-05 ==========================
 ! 2009-09-19 - Patrick Robbe for Marwa Jahjah Hussein
  - EvtLambdaB2LambdaV.h/.cpp: correct decay model

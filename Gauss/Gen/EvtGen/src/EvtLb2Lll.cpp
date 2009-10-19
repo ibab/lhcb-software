@@ -301,7 +301,7 @@ void EvtLb2Lll::calcAmp(EvtAmp *amp,EvtParticle *parent){
   double r,M_L,M_Lb,M_s,M_c,M_b,q2,alpha,alpha_s,eta,M_W,M_t;
   double M_psi[2]={0,0},Gamma_psi[2]={0,0},k_psi[2]={0,0};
   double F0_1,F0_2,a_F1,a_F2,b_F1,b_F2,F1,F2;
-  double f_1,f_2,f_3,g_1,g_2,g_3,f_1T,f_2T,f_3T,g_1T,g_2T,g_3T,f_TV,f_TS,g_TV,g_TS,f_T,g_T;
+  double f_1,f_2,f_3,g_1,g_2,g_3,f_1T,f_2T,f_3T,g_1T,g_2T,g_3T,f_TV,f_TS,g_TV(0.0),g_TS,f_T,g_T;
   EvtComplex A1,A2,A3,B1,B2,B3,D1,D2,D3,E1,E2,E3,N1,N2,H1,H2;
   EvtComplex C_SL,C_BR,C_LLtot,C_LRtot,C_LL,C_LR,C_RL,C_RR,C_LRLR,C_RLLR,C_LRRL,C_RLRL,C_T,C_TE;
   EvtComplex Yld,C_7eff,C_9eff;
@@ -549,15 +549,18 @@ void EvtLb2Lll::calcAmp(EvtAmp *amp,EvtParticle *parent){
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
     Matrix[j/2][j%2][i/2][i%2] += cont(lbar_Smunu_l[i/2][i%2]  , 4*C_T*f_T*hbar_Smunu_h[j/2][j%2]);
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
-    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_Smunu_l[i/2][i%2]  , -4*C_T*f_TV*i1*(directProd(q_mu,hbar_Gmu_h[j/2][j%2])-directProd(hbar_Gmu_h[j/2][j%2],q_mu)));
+    Matrix[j/2][j%2][i/2][i%2] += 
+      cont(lbar_Smunu_l[i/2][i%2]  , 
+           -4*C_T*f_TV*i1*(EvtGenFunctions::directProd(q_mu,hbar_Gmu_h[j/2][j%2])-
+                           EvtGenFunctions::directProd(hbar_Gmu_h[j/2][j%2],q_mu)));
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
-    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_Smunu_l[i/2][i%2]  , -4*C_T*f_TS*i1*(directProd(P_mu,q_mu)-directProd(q_mu,P_mu))*hbar_h[j/2][j%2]);
+    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_Smunu_l[i/2][i%2]  , -4*C_T*f_TS*i1*(EvtGenFunctions::directProd(P_mu,q_mu)-EvtGenFunctions::directProd(q_mu,P_mu))*hbar_h[j/2][j%2]);
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
     Matrix[j/2][j%2][i/2][i%2] += cont(lbar_ESmunu_l[i/2][i%2] , 4*C_TE*f_T*i1*hbar_Smunu_h[j/2][j%2]);
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
-    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_ESmunu_l[i/2][i%2] , 4*C_TE*f_TV*(directProd(q_mu,hbar_Gmu_h[j/2][j%2])-directProd(hbar_Gmu_h[j/2][j%2],q_mu)));
+    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_ESmunu_l[i/2][i%2] , 4*C_TE*f_TV*(EvtGenFunctions::directProd(q_mu,hbar_Gmu_h[j/2][j%2])-EvtGenFunctions::directProd(hbar_Gmu_h[j/2][j%2],q_mu)));
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
-    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_ESmunu_l[i/2][i%2] , 4*C_TE*f_TS*(directProd(P_mu,q_mu)-directProd(q_mu,P_mu))*hbar_h[j/2][j%2]);
+    Matrix[j/2][j%2][i/2][i%2] += cont(lbar_ESmunu_l[i/2][i%2] , 4*C_TE*f_TS*(EvtGenFunctions::directProd(P_mu,q_mu)-EvtGenFunctions::directProd(q_mu,P_mu))*hbar_h[j/2][j%2]);
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;
     //Matrix[j/2][j%2][i/2][i%2] *= G_F*alpha/4/sqrt(2)/EvtConst::pi*V_tb*conj(V_ts);
     //std::cout << "Matrix = " << Matrix[j/2][j%2][i/2][i%2] << std::endl;

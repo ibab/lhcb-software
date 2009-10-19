@@ -96,7 +96,7 @@ void EvtTVSPwave::decay( EvtParticle *p ){
   EvtVector4C epsdual0,epsdual1,epsdual2;
 
   double norm=massv/(m_parent*momv.get(0)*momv.d3mag()*momv.d3mag());
-  pdual=dual(directProd(norm*p_parent,momv));
+  pdual=dual(EvtGenFunctions::directProd(norm*p_parent,momv));
   
   epsdual0=pdual.cont1(v->epsParent(0).conj());
   epsdual1=pdual.cont1(v->epsParent(1).conj());

@@ -1,7 +1,7 @@
 /*****************************************************************************
  * Project: BaBar detector at the SLAC PEP-II B-factory
  * Package: EvtGenModels
- *    File: $Id: EvtD0mixDalitz.cpp,v 1.1 2009-03-16 16:47:51 robbep Exp $
+ *    File: $Id: EvtD0mixDalitz.cpp,v 1.2 2009-10-19 15:47:44 robbep Exp $
  *
  * Description:
  *   The D0mixDalitz model, with many resonances and mixing implemented.
@@ -42,32 +42,26 @@ void EvtD0mixDalitz::init()
   // check that there are 0 arguments
   checkNDaug( 3 );
 
-  if ( getNArg() )
-    if ( getNArg() == 2 )
-      {
-	_x = getArg( 0 );
-	_y = getArg( 1 );
-      }
-    else if ( getNArg() == 4 )
-      {
-	_x = getArg( 0 );
-	_y = getArg( 1 );
-	_qp = EvtComplex( getArg( 2 ), getArg( 3 ) );
-      }
-    else if ( getNArg() == 5 )
-      {
-	_x = getArg( 0 );
-	_y = getArg( 1 );
-	_qp = EvtComplex( getArg( 2 ), getArg( 3 ) );
-	_isRBWmodel = ! getArg( 4 ); // RBW by default. If arg4 is set, do K-matrix.
-      }
-    else
-      {
-	report( ERROR, "EvtD0mixDalitz" ) << "Number of arguments for this model must be 0, 2, 4 or 5:" << std::endl
-					  << "[ x y ][ qp.re qp.im ][ doK-matrix ]" << std::endl
-					  << "Check your dec file." << std::endl;
-	exit( 1 );
-      }
+  if ( getNArg() ) {
+    if ( getNArg() == 2 ) {
+      _x = getArg( 0 );
+      _y = getArg( 1 );
+    } else if ( getNArg() == 4 ) {
+      _x = getArg( 0 );
+      _y = getArg( 1 );
+      _qp = EvtComplex( getArg( 2 ), getArg( 3 ) );
+    } else if ( getNArg() == 5 ) {
+      _x = getArg( 0 );
+      _y = getArg( 1 );
+      _qp = EvtComplex( getArg( 2 ), getArg( 3 ) );
+      _isRBWmodel = ! getArg( 4 ); // RBW by default. If arg4 is set, do K-matrix.
+    } else {
+      report( ERROR, "EvtD0mixDalitz" ) << "Number of arguments for this model must be 0, 2, 4 or 5:" << std::endl
+                                        << "[ x y ][ qp.re qp.im ][ doK-matrix ]" << std::endl
+                                        << "Check your dec file." << std::endl;
+      exit( 1 );
+    }
+  }
 
   checkSpinParent  (    _SCALAR );
   checkSpinDaughter( 0, _SCALAR );

@@ -162,7 +162,7 @@ EvtTensor3C EvtTensor3C::operator*=(const double c){
 
 
 
-EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3C& c2){ 
+EvtTensor3C EvtGenFunctions::directProd(const EvtVector3C& c1,const EvtVector3C& c2){ 
   EvtTensor3C temp;
   int i,j;
   
@@ -175,7 +175,7 @@ EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3C& c2){
 }
 
 
-EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3R& c2){ 
+EvtTensor3C EvtGenFunctions::directProd(const EvtVector3C& c1,const EvtVector3R& c2){ 
   EvtTensor3C temp;
   int i,j;
   
@@ -188,7 +188,7 @@ EvtTensor3C directProd(const EvtVector3C& c1,const EvtVector3R& c2){
 }
 
 
-EvtTensor3C directProd(const EvtVector3R& c1,const EvtVector3R& c2){ 
+EvtTensor3C EvtGenFunctions::directProd(const EvtVector3R& c1,const EvtVector3R& c2){ 
   EvtTensor3C temp;
   int i,j;
   
@@ -304,7 +304,7 @@ EvtVector3C EvtTensor3C::cont2(const EvtVector3R& v) const {
 } 
 
 
-EvtTensor3C eps(const EvtVector3R& v){
+EvtTensor3C EvtGenFunctions::eps(const EvtVector3R& v){
 
   EvtTensor3C temp;
 
@@ -345,7 +345,7 @@ ostream& operator<<(ostream& s,const EvtTensor3C& v){
 }
 
 
-EvtTensor3C rotateEuler(const EvtTensor3C& v,
+EvtTensor3C EvtGenFunctions::rotateEuler(const EvtTensor3C& v,
 			double alpha,double beta,double gamma){
 
   EvtTensor3C tmp(v);

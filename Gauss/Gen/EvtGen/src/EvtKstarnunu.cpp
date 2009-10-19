@@ -119,10 +119,10 @@ void EvtKstarnunu::decay(EvtParticle *p){
   
   double m_k = meson->mass();
 
-  EvtTensor4C tds=(-2*v0/(m_b+m_k))*dual(directProd(p4b,momkstar))
+  EvtTensor4C tds=(-2*v0/(m_b+m_k))*dual(EvtGenFunctions::directProd(p4b,momkstar))
     - EvtComplex(0.0,1.0)*
     ( (m_b+m_k)*a1*EvtTensor4C::g()
-      - (a2/(m_b+m_k))*directProd(p4b-momkstar,p4b+momkstar)); 
+      - (a2/(m_b+m_k))*EvtGenFunctions::directProd(p4b-momkstar,p4b+momkstar)); 
   
   EvtVector4C l;
 

@@ -100,8 +100,8 @@ void EvtSVPHelAmp::decay( EvtParticle *p ){
   vp=(momv1+momph)/(momv1+momph).mass();   
 
   d=((1.0/sqrt(3.0))*(h0-(hp+hm))*(-1.0/sqrt(3.0)))*g+
-    ((1.0/sqrt(2.0))*(hp-hm)*EvtComplex(0.0,1.0)*(sqrt(1.0/2.0)))*dual(directProd(v,vp))+
-    (sqrt(2.0/3.0)*(h0+0.5*(hp+hm))*sqrt(3.0/2.0))*(directProd(v,v)+(1.0/3.0)*g);
+    ((1.0/sqrt(2.0))*(hp-hm)*EvtComplex(0.0,1.0)*(sqrt(1.0/2.0)))*dual(EvtGenFunctions::directProd(v,vp))+
+    (sqrt(2.0/3.0)*(h0+0.5*(hp+hm))*sqrt(3.0/2.0))*(EvtGenFunctions::directProd(v,v)+(1.0/3.0)*g);
 
   EvtVector4C ep0,ep1,ep2;  
   
