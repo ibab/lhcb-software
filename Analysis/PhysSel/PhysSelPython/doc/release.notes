@@ -1,9 +1,17 @@
-!$Id: release.notes,v 1.20 2009-10-15 17:51:41 jpalac Exp $
+!$Id: release.notes,v 1.21 2009-10-19 20:42:17 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-10-19 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . SelectionSequence important bug fix. Sequence was getting corrupted when
+    more than one SelectionSequence created in same scope is created with an
+    empty EventPreSelector list.
+ - cmt/requirements
+  . Increase version to v3r0p1
 
 !==================== PhysSel/PhysSelPython v3r0 2009-10-15 ================
 
