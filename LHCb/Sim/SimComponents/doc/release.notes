@@ -5,6 +5,11 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-10-19 - Patrick Koppenburg
+ - MCDecayFinder : Issue a warning (10 times) when decay is not found.
+ - Proper indent
+ - v2r20
+
 !====================== SimComponents v2r19 2009-07-13 =======================
 ! 2009-07-13 - Marco Cattaneo
  - Remove obsolete file SimComponents_dll.cpp

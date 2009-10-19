@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.7 2009-03-05 13:55:07 rlambert Exp $
+// $Id: MCDecayFinder.cpp,v 1.8 2009-10-19 12:59:07 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -59,7 +59,7 @@ StatusCode MCDecayFinder::initialize(){
   StatusCode sc = GaudiTool::initialize();
   if (!sc) return sc;
   
-  debug() << "==> Initializing" << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "==> Initializing" << endreq;
 
   m_ppSvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true );
 
@@ -67,7 +67,7 @@ StatusCode MCDecayFinder::initialize(){
     return Warning( "No decay specified!", StatusCode::SUCCESS );
   }
   if( compile(m_source) ){
-    debug() << "The compilation of the decay was successful"
+    if (msgLevel(MSG::DEBUG)) debug() << "The compilation of the decay was successful"
             << endreq;
     return StatusCode::SUCCESS;
   }
@@ -82,9 +82,9 @@ StatusCode MCDecayFinder::setDecay( std::string decay ){
   m_decay = NULL;
   m_members = NULL;
 
-  debug() << "Setting decay to " << decay << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Setting decay to " << decay << endreq;
   if( sanityCheck(decay) && compile(decay) ) {
-    debug() << "The compilation of the decay was successfull"
+    if (msgLevel(MSG::DEBUG)) debug() << "The compilation of the decay was successfull"
             << endreq;
     m_source = decay;
     if( old_decay )
@@ -156,60 +156,60 @@ bool MCDecayFinder::compile( std::string &source )
     return false;
   }
   yy_delete_buffer(bs);
-  debug() << "Result of the compilation:\n"
-          << revert() << endreq;
+  if (msgLevel(MSG::DEBUG)) debug() << "Result of the compilation:\n"
+                                    << revert() << endreq;
   return true;
 }
 
 bool MCDecayFinder::hasDecay( const  LHCb::MCParticle::ConstVector &event )
 {
-  verbose() << "About to test the event" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
   const LHCb::MCParticle *drop_me = NULL;
-  if( m_decay )
-    return m_decay->test( event.begin(), event.end(), drop_me );
-  else
-  {
-    warning() << "Trying to find an unspecified decay!" << endreq;
-    return false;
+  if( m_decay ){
+    bool r =  m_decay->test( event.begin(), event.end(), drop_me );
+    return r ;
   }
+  else Exception("Trying to find an unspecified decay!");
+  
 }
 
 bool MCDecayFinder::findDecay( const LHCb::MCParticle::ConstVector& event,
                                const LHCb::MCParticle*& previous_result )
 {
-  verbose() << "About to test the event" << endreq;
-  if( m_decay )
-    return m_decay->test( event.begin(), event.end(), previous_result );
-  else
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
+  if( m_decay ){
+    bool r = m_decay->test( event.begin(), event.end(), previous_result );
+    if (!r) Warning("Could not find decay");
+    return r ;
+  } else
   {
-    warning() << "Trying to find an unspecified decay!" << endreq;
-    return false;
+    Exception("Trying to find an unspecified decay!");
   }
 }
 
 bool MCDecayFinder::hasDecay( const LHCb::MCParticles &event )
 {
-  verbose() << "About to test the event" << endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
   const LHCb::MCParticle *drop_me = NULL;
-  if( m_decay )
-    return m_decay->test( event.begin(), event.end(), drop_me );
-  else
-  {
-    warning() << "Trying to find an unspecified decay!" << endreq;
-    return false;
+  if( m_decay ){
+    bool r = m_decay->test( event.begin(), event.end(), drop_me );
+    if (!r) Warning("Could not find decay");
+    return r ;
+  } else {
+    Exception("Trying to find an unspecified decay!");
   }
 }
 
 bool MCDecayFinder::findDecay( const LHCb::MCParticles &event,
                                const LHCb::MCParticle *&previous_result )
 {
-  verbose() << "About to test the event" << endreq;
-  if( m_decay )
-    return m_decay->test( event.begin(), event.end(), previous_result );
-  else
-  {
-    warning() << "Trying to find an unspecified decay!" << endreq;
-    return false;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
+  if( m_decay ){
+    bool r = m_decay->test( event.begin(), event.end(), previous_result );
+    if (!r) Warning("Could not find decay");
+    return r;
+  } else {
+    Exception("Trying to find an unspecified decay!");
   }
 }
 
@@ -254,7 +254,7 @@ void MCDecayFinder::descendants( const LHCb::MCParticle *head,
       descendants( *pi, result, leaf );
     }
   }
- 
+  
   if( !leaf || term )
     result.push_back(const_cast<LHCb::MCParticle *>(head));
 }
@@ -275,7 +275,7 @@ void MCDecayFinder::decayMembers( const LHCb::MCParticle *head,
         }
     }
   }
-
+  
   m_decay->test(head, &members);
 }
 
@@ -377,18 +377,18 @@ bool MCDecayFinder::Descriptor::test( const LHCb::MCParticle *part,
       for ( vi = part->endVertices().begin();
             vi != part->endVertices().end(); vi++)
       {
-	if(! *vi) continue;
+        if(! *vi) continue;
         SmartRefVector<LHCb::MCParticle>::const_iterator idau;
         for ( idau = (*vi)->products().begin();
               idau != (*vi)->products().end(); idau++ )
         {
-	  if(! *idau) continue;
+          if(! *idau) continue;
           parts.push_back(*idau);
         }
       }
       if( skipResonnance )
         filterResonnances( parts );
-
+      
       if( subtrees ) {
         std::vector<std::pair<const LHCb::MCParticle*,
           LHCb::MCParticle::ConstVector > > local_subtrees;
@@ -427,7 +427,7 @@ MCDecayFinder::Descriptor::testDaughters(std::list<const LHCb::MCParticle*> &par
   for( di = daughters.begin();
        (di != daughters.end()) && !parts.empty(); di++ )
   {
-	if(! *di) continue;
+    if(! *di) continue;
     std::list<const LHCb::MCParticle *>::iterator p = parts.begin();
     while( p != parts.end() && ((*di)->test(*p,collect,subtrees) == false) )
       p++;
@@ -448,7 +448,7 @@ void MCDecayFinder::Descriptor::addDaughter( Descriptor *daughter )
 {
   if( daughter->mother == NULL )
     return; // empty daughter of a {}
-
+  
   if( daughter->mother->getQmark() )
   {
     daughters.push_back( daughter );
@@ -483,11 +483,11 @@ void MCDecayFinder::Descriptor::addNonResonnantDaughters(
       
       const LHCb::ParticleProperty *pp = m_ppSvc->find( (*idau)->particleID() );
       if(!pp)
-	{
-	  throw DescriptorError(std::string("Unknown particle '")+"'");
-	  //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
-	  continue;
-	}
+      {
+        throw DescriptorError(std::string("Unknown particle '")+"'");
+        //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
+        continue;
+      }
       
       if( pp->lifetime() >= m_resThreshold )
         parts.push_front(*idau);
@@ -505,12 +505,12 @@ void MCDecayFinder::Descriptor::filterResonnances( std::list<const LHCb::MCParti
   for( pi=parts.begin(); m_ppSvc && pi!=parts.end(); pi = npi )
   {
     const LHCb::ParticleProperty *pp = m_ppSvc->find( (*pi)->particleID() );
-      if(!pp)
-	{
-	  throw DescriptorError(std::string("Unknown particle '")+"'");
-	  //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
-	  continue;
-	}
+    if(!pp)
+    {
+      throw DescriptorError(std::string("Unknown particle '")+"'");
+      //warning() << "Particle property not obtainable for " << (*idau)->particleID() << endmsg;
+      continue;
+    }
     
     if( pp->lifetime() < m_resThreshold )
     {
@@ -962,154 +962,145 @@ int MCDecayFinder::ParticleMatcher::conjugatedID( int id )
 }
 bool MCDecayFinder::sanityCheck(const std::string & decay)
 {
-  //check for f_0(980), can probably remove this now...
-  //std::size_t apos = decay.find("f_0(980)");
-  //
-  //if(apos!=std::string::npos)
-  //  {
-  //    warning() << "Sorry, but for some strage reason f_0(980) doesn't work in a decay descriptor... don't ask me why" << endmsg;
-  //    return false;
-  //  }
-    
   //check for more than one lot of '...'
-    std::size_t apos = decay.find("...");
+  std::size_t apos = decay.find("...");
+  if(apos!=std::string::npos)
+  {
+    apos++;
+    apos = decay.find("...",apos);
     if(apos!=std::string::npos)
-      {
-	apos++;
-	apos = decay.find("...",apos);
-	if(apos!=std::string::npos)
 	  {
 	    warning() << "The decay descriptor " << decay 
-		      << " has two lots of |...|. This would cause a segfault if I hadn't caught it here." 
-		      << endmsg;
+                << " has two lots of |...|. This would cause a segfault if I hadn't caught it here." 
+                << endmsg;
 	    return false;
 	  }
-	
-      }
-    //check for mismatched brackets, first make the string with only brackets
-    std::string bstring="";
     
-    for(std::string::const_iterator itd=decay.begin(); itd != decay.end(); itd++)
-      {
-	for(std::string::const_iterator itb=m_brackets.begin(); itb != m_brackets.end() && itd != decay.end(); itb++)
+  }
+    //check for mismatched brackets, first make the string with only brackets
+  std::string bstring="";
+  
+  for(std::string::const_iterator itd=decay.begin(); itd != decay.end(); itd++)
+  {
+    for(std::string::const_iterator itb=m_brackets.begin(); itb != m_brackets.end() && itd != decay.end(); itb++)
 	  {
 	    if(*itb == *itd)
-	      {
-		bstring += *itb;
-		break;
-	      }
+      {
+        bstring += *itb;
+        break;
+      }
 	    
 	  }
-	
-      }
-    //check the number of brackets matches up
-    verbose() << "Checking brackets " << bstring << endmsg;
-    if(bstring.size()==0) return true;
-    if(bstring.size()%2!=0)
-      {
-	warning() << "There is an uneven number of brackets in: " << bstring << endmsg;
-	return false;
-      }
     
+  }
+  //check the number of brackets matches up
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Checking brackets " << bstring << endmsg;
+  if(bstring.size()==0) return true;
+  if(bstring.size()%2!=0)
+  {
+    warning() << "There is an uneven number of brackets in: " << bstring << endmsg;
+    return false;
+  }
+  
     
-    //loop until there is no string
-    while(bstring.size()>1)
-      {
-	const unsigned int start=bstring.size();
-	
-	//loop over possible bracket combinations
-	//iterate over n and n+1, to get opening and closing bracket
-	for(unsigned int itb=0; bstring.size()>1 && itb < m_brackets.size()-1; itb+=2)
+  //loop until there is no string
+  while(bstring.size()>1)
+  {
+    const unsigned int start=bstring.size();
+    
+    //loop over possible bracket combinations
+    //iterate over n and n+1, to get opening and closing bracket
+    for(unsigned int itb=0; bstring.size()>1 && itb < m_brackets.size()-1; itb+=2)
 	  {
 	    //loop over the string
 	    for(unsigned int itd=0; bstring.size()>1 && itd < bstring.size()-1; itd+=1)
-	      {
-		//remove matching brackets
-		if(bstring[itd]==m_brackets[itb] && bstring[itd+1]==m_brackets[itb+1])
-		  {
-		    verbose() << "Removing : " << bstring[itd] << bstring[itd+1] << endmsg;
-		    bstring.erase(itd,2);
-		    //reduced loop counter by two, to move to previous location
-		    if(itd >= 2) itd-=2;
+      {
+        //remove matching brackets
+        if(bstring[itd]==m_brackets[itb] && bstring[itd+1]==m_brackets[itb+1])
+        {
+          if (msgLevel(MSG::VERBOSE)) verbose() << "Removing : " << bstring[itd] << bstring[itd+1] << endmsg;
+          bstring.erase(itd,2);
+          //reduced loop counter by two, to move to previous location
+          if(itd >= 2) itd-=2;
 		    else itd=0; 
-		    itb=0;
-		    //unless I am at the beginning, then just go to back to zero
-		  }
-	      }
+          itb=0;
+          //unless I am at the beginning, then just go to back to zero
+        }
+      }
 	    
 	  }
-	
-	//break if the string is the same size at beginning and at end
-	if (start==bstring.size()) break;
-      }
-    verbose() << "Removed matching brackets now: " << bstring << endmsg;
-    if(bstring.size()>0)
-      {
-	warning() << "There are mismatched brackets in this decay descriptor. The non-matching brackets are: " << bstring << endmsg;
-	return false;
-      }
-    //now check for at least one comma between all curly brackets
- 
-    bstring=decay;
     
-    while(bstring.size()!=0)
-      {
-	const unsigned int start=bstring.size();
+    //break if the string is the same size at beginning and at end
+    if (start==bstring.size()) break;
+  }
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Removed matching brackets now: " << bstring << endmsg;
+  if(bstring.size()>0)
+  {
+    warning() << "There are mismatched brackets in this decay descriptor. The non-matching brackets are: " << bstring << endmsg;
+    return false;
+      }
+  //now check for at least one comma between all curly brackets
+  
+  bstring=decay;
+  
+  while(bstring.size()!=0)
+  {
+    const unsigned int start=bstring.size();
     
-	//find the first closing bracket }
-	
-	for(unsigned int iclose=0; bstring.size()!=0 && iclose<bstring.size(); iclose++)
+    //find the first closing bracket }
+    
+    for(unsigned int iclose=0; bstring.size()!=0 && iclose<bstring.size(); iclose++)
 	  {
 	    if(bstring[iclose]==m_brackets[1])
-	      {
-		//find the opening bracket for this
+      {
+        //find the opening bracket for this
 		for(unsigned int iopen=iclose-1; true; iopen--)
-		  {
-		    if(bstring[iopen]==m_brackets[0]) 
-		      {
-			//check there is at least one comma
-			unsigned int comma=iopen+1;
-			char acomma=',';
-			while(comma<iclose)
+    {
+      if(bstring[iopen]==m_brackets[0]) 
+      {
+        //check there is at least one comma
+        unsigned int comma=iopen+1;
+        char acomma=',';
+        while(comma<iclose)
 			  {
 			    if(bstring[comma]==acomma) break;
 			    else comma++;
 			  }
-			if(bstring[comma]!=acomma)
+        if(bstring[comma]!=acomma)
 			  {
 			    warning() << "every {} must contain at least one alternative. "<< bstring << " does not" << endmsg;
 			    return false;
 			  }
-			else
+        else
 			  {
 			    //OK so far, erase this bracket
 			    bstring.erase(iopen, iclose-iopen+1);
 			    //start from the beginning of this bracket
 			    iclose=iopen-1;
 			    //stop looping over iopen, go on to the next closing bracket
-			    verbose() << "OK so far, moving onto the next curly bracket in " << bstring << endmsg;
+			    if (msgLevel(MSG::VERBOSE)) verbose() << "OK so far, moving onto the next curly bracket in " << bstring << endmsg;
 			    break;
 			  }
-		      }
-		    else if(iopen <=0 || iopen>=iclose)
-		      {
-			warning() << "there is something odd with the descriptor: "<< bstring << endmsg;
-			return false;
-		      }
-		    
+      }
+      else if(iopen <=0 || iopen>=iclose)
+      {
+        warning() << "there is something odd with the descriptor: "<< bstring << endmsg;
+        return false;
+      }
+		  
 		  }
-
-	      }
+    
+      }
 	    
 	  }
-	
-	if (start==bstring.size()) break;
-      }
-    //find the opening bracket for this
-    //check that there is at least one comma
-    //replace all with a #
-    verbose() << "Sanity check passed for decay: " << decay << endmsg;
     
-    return true;
+    if (start==bstring.size()) break;
+  }
+  //find the opening bracket for this
+  //check that there is at least one comma
+  //replace all with a #
+  if (msgLevel(MSG::VERBOSE)) verbose() << "Sanity check passed for decay: " << decay << endmsg;
+  
+  return true;
   
 }
