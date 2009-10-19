@@ -1,5 +1,5 @@
 """
-High level configuration tools for StrippingConf, to be invoked by Moore and DaVinci
+High level configuration tools for StrippingConf, to be used with Moore and DaVinci
 """
 
 __author__  = "Anton Poluektov <A.O.Poluektov@warwick.ac.uk>"
@@ -11,56 +11,73 @@ __author__  = "Anton Poluektov <A.O.Poluektov@warwick.ac.uk>"
 from os import environ
 from pprint import *
 from Gaudi.Configuration import *
-from LHCbKernel.Configuration import *
-from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer
-from Configurables import LHCbConfigurableUser
-from StrippingLine import StrippingLine
-from StrippingStream import StrippingStream
 
-class StrippingConf ( LHCbConfigurableUser ) :
+class StrippingConf ( object ) :
 
-    __slots__ = {
-		  "TES"        	      : False     # If True, just check that TES location is not empty, 
-		                                  # instead of running selections (used for SETC tagger)
-		}
+    def __init__( self,
+                  name = "",
+                  TES = False,
+                  Streams = [] ) :
+        
+        log.info("Initialising StrippingConf "+ name)
+        if name == "" :
+            self._name = self.__class__.__name__
+        else :
+            self._name = name
+        self.TES = TES
+        self._streams = []
+        self._streamSequencers = []
+        self._sequence = None
+        for stream in Streams :
+            self.appendStream(stream)
 
-    def __apply_configuration__ ( self ) :
-        log.info("Configuring StrippingConf")
-
-#
-# Return the list of all active StrippingStreams. 
-#
     def activeStreams (self) :
-        return GaudiSequencer(self.name() + "ActiveStreams",
-                              ModeOR = True,
-                              ShortCircuit = False).Members
+        """
+        Return the list of all active StrippingStreams. 
+        """
+        return self._streams
 
-#
-# Return GaudiSequencer containing stream sequencers
-#
-    def sequence (self) : 
-	return GaudiSequencer("StrippingGlobal",
-	                      ModeOR = True, 
-	                      ShortCircuit = False)
+    def sequence (self) :
+        """
+        Return GaudiSequencer containing stream sequencers
+        """
+        if self._sequence == None :
+            from Configurables import GaudiSequencer
+            log.info("Initialising GaudiSequencer/"+ self._name)
+            self._sequence = GaudiSequencer(self._name,
+                                            ModeOR = True, 
+                                            ShortCircuit = False,
+                                            Members = self._streamSequencers)
+        return self._sequence
 
+    def selections (self) :
+        """
+        Return list of selection names for TagCreator
+        """
+        _selections = ["StrippingGlobal"]
+        for stream in self._streams : 
+            streamName = stream.sequence().name()
+            _selections.append(streamName)
+            for line in stream.lines() :
+                _selections.append(line.name())
+        return _selections
 
-#
-# Return list of selection names for TagCreator
-#
-    def selections (self) : 
-	_selections = [ "StrippingGlobal" ]
-	for stream in self.activeStreams() : 
-	    streamName = stream.sequence().name()
-	    _selections += [ streamName ]
-	    for line in stream.lines() :
-		_selections += [ line.name() ]
-	return _selections
-
-#
-# Append StrippingStream
-#
-    def appendStream(self, stream) : 
-	stream.createConfigurables(self.getProp("TES"))
-	self.activeStreams().append(stream)
-	self.sequence().Members += [ stream.sequence() ]
+    def appendStreams(self, streams) :
+        """
+        Append a list of streams to the configuration.
+        """
+        for stream in streams :
+            self.appendStream(stream)
+            
+    def appendStream(self, stream) :
+        """
+        Append a StrippingStream to the configuration. Takes care of adding
+        corresponding sequencer to _streamSequencers list.
+        """
+        log.info(self._name+ " appending stream "+ stream.name())
+	stream.createConfigurables( self.TES )
+	self._streams.append(stream)
+        self._appendSequencer(stream)
+        
+    def _appendSequencer(self, stream) :
+        self._streamSequencers.append(stream.sequence())
