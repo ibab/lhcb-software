@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.4 2009-10-16 17:05:58 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.5 2009-10-19 11:14:25 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -36,15 +36,15 @@ MuonTrack::~MuonTrack() {}
 //=============================================================================
 
 //=============================================================================
-void MuonTrack::insert( const int id, const MuonHit& xyz ){
-  m_muonTrack.insert( MuonTrack::MuonTkVtype(id, xyz) );
+void MuonTrack::insert( const int id, const MuonHit* xyz ){
+  m_muonTrack.insert( MuonTrack::MuonTkVtype(id, const_cast<MuonHit*>(xyz)) );
 }
 ///
 std::vector< MuonHit* > MuonTrack::getHits(){
   std::vector< MuonHit* > hits;
   MuonTrack::MuonTkIt tk = m_muonTrack.begin();
   for(; tk != m_muonTrack.end(); tk++){
-    hits.push_back( &(tk->second) );
+    hits.push_back( tk->second );
   }
   return hits;
 }
@@ -54,7 +54,7 @@ int MuonTrack::getSpan(){
   int smax = -9999;
   int smin =  9999;
   for(;iv != m_muonTrack.end(); iv++){
-    int s = (iv->second).station();
+    int s = iv->second->station();
      if(s >= smax) smax = s;
      if(s <= smin) smin = s;
   }
@@ -66,7 +66,7 @@ int MuonTrack::getFiringStations(){
   int firstat = 0;
   for(int s=0; s<5; s++){
     for(iv = m_muonTrack.begin() ;iv != m_muonTrack.end(); iv++){
-      int hs = (iv->second).station();
+      int hs = iv->second->station();
       if(hs == s){
         firstat++;
         break;
@@ -87,7 +87,7 @@ StatusCode MuonTrack::speedFit() {
   double tdet,t,xp,yp,z,d;
 
   for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= &(tk->second);
+    MuonHit* hit= tk->second;
     xp = hit->X() - m_bx; 
     yp = hit->Y() - m_by; 
     z  = hit->Z();
@@ -161,7 +161,7 @@ StatusCode MuonTrack::linFit()
   double  xerr,yerr,x,y,z;
 
   for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= &(tk->second);
+    MuonHit* hit= tk->second;
     xerr = 2.* hit->dX();
     yerr = 2.* hit->dY();
 
@@ -220,7 +220,7 @@ StatusCode MuonTrack::linFit()
   sumt = sumd = sumt2 = sumd2 = sumtd = 0.;
 
   for(tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){
-    MuonHit* hit= &(tk->second);
+    MuonHit* hit= tk->second;
     xp = hit->X() - m_bx; 
     yp = hit->Y() - m_by; 
     z  = hit->Z();
@@ -292,7 +292,7 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits)
   for (ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
   
     for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop in the track hits
-      MuonHit* hit= &(tk->second);
+      MuonHit* hit= tk->second;
       if ( hit->station() == (*ihT)->station() && 
            hit->hitID()   != (*ihT)->hitID() ) {
         
@@ -331,10 +331,51 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits)
   for (tj=tt_hits.begin(); tj!=tt_hits.end(); tj++ ){
     idhit++;
     //t_hits.push_back((*tj));
-    this->insert(idhit,( (const MuonHit) **tj));
+    this->insert(idhit,( *tj) );
   }
 
   //std::cout << "nXTalk " << nXTalk << " added "<< tt_hits.size()<< " track "<<this->getHits().size()<<std::endl;
 
   return StatusCode::SUCCESS;
+}
+
+int MuonTrack::clsize(MuonHit* hit, int& xsize, int& ysize) {
+  // cluster size is computed only for the first hit of a given station, return -1 otherwise
+  std::vector< MuonHit* > hits=getHits();
+  bool start=false;
+  xsize=ysize=0;
+  int np=0;
+  MuonHit *tkh, *prevh;
+  
+  for (std::vector< MuonHit* >::iterator itkh=hits.begin() ; itkh != hits.end(); itkh++) {
+    tkh=*itkh;
+    if (!start && tkh != hit && tkh->station() == hit->station()) {
+      xsize=ysize=-1;
+      return -1;
+    }
+    if (tkh == hit) start=true;
+    if (start && tkh->station() == hit->station()) {
+      bool prendilax=true,prendilay=true;
+      // check that this position is not already the same of a previous pad      
+      for (std::vector< MuonHit* >::iterator iprevh=hits.begin() ; iprevh<itkh ; iprevh++) {
+        prevh=*iprevh;
+        if(prevh->station() == tkh->station()) {
+          if ( fabs(tkh->X() - prevh->X())< tkh->hitTile_dX()) { 
+            prendilax=false;
+          }
+          if ( fabs(tkh->Y() - prevh->Y())< tkh->hitTile_dY() ) { 
+            prendilay=false;
+          }
+        }
+      }
+      np += tkh->npads();
+      if (prendilax) {
+        xsize += tkh->clsizeX();
+      }
+      if (prendilay) {
+        ysize += tkh->clsizeY();
+      }
+    }
+  }
+  return np;
 }

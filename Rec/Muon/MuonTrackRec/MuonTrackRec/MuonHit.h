@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.4 2009-10-16 17:05:57 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.5 2009-10-19 11:14:23 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -118,7 +118,7 @@ private:
   void createFromPad(MuonLogPad* mp);
   void recomputePos(std::vector<double> *data, 
                     double* pos, double* dpos,
-                    int* clsize);
+                    int* clsize, double step);
   void recomputeTime();
   DeMuonDetector* m_muonDet;
   std::vector<MuonLogPad*> m_pads;

@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.8 2009-10-19 08:31:47 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.9 2009-10-19 11:14:27 ggiacomo Exp $
 
 #include <list>
 
@@ -472,8 +472,8 @@ StatusCode MuonNNetRec::muonNNetMon(){
       const MuonHit* tail = (tmpList.front())->tail(); 
       
       
-      muonTrack->insert( hID, *head ); // insert the head point
-      muonTrack->insert( tID, *tail ); // insert the tail point
+      muonTrack->insert( hID, head ); // insert the head point
+      muonTrack->insert( tID, tail ); // insert the tail point
       
       track.push_back(tmpList.front());
       tmpList.pop_front();

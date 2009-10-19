@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.3 2009-10-16 17:05:58 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.4 2009-10-19 11:14:25 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonTrackRec/MuonHit.h"
@@ -129,9 +129,9 @@ void MuonHit::addPad(MuonLogPad* mp){
       if ((y+dy) > m_hit_maxy) m_hit_maxy = y+dy;
       if ((z-dz) < m_hit_minz) m_hit_minz = z-dz;
       if ((z+dz) > m_hit_maxz) m_hit_maxz = z+dz;
-      recomputePos(&m_padx,&x,&m_dx,&m_xsize);
-      recomputePos(&m_pady,&y,&m_dy,&m_ysize);
-      recomputePos(&m_padz,&z,&m_dz,&m_zsize);
+      recomputePos(&m_padx,&x,&m_dx,&m_xsize,dx);
+      recomputePos(&m_pady,&y,&m_dy,&m_ysize,dy);
+      recomputePos(&m_padz,&z,&m_dz,&m_zsize,10*dz);
       SetXYZ(x,y,z);
 
       recomputeTime();     
@@ -141,7 +141,7 @@ void MuonHit::addPad(MuonLogPad* mp){
 
 void MuonHit::recomputePos(std::vector<double> *data, 
                            double* pos, double* dpos,
-                           int* clsize) {
+                           int* clsize, double step) {
   int np=0;
   double sum=0.,sum2=0.;
   std::vector<double>::iterator ip,previp;
@@ -149,7 +149,7 @@ void MuonHit::recomputePos(std::vector<double> *data,
     bool prendila=true;
     // check that this position is not already the same of a previous pad
     for (previp=data->begin() ; previp < ip; previp++) {
-      if ( fabs((*ip)-(*previp))< 1.*Gaudi::Units::mm) { // closer than 1 mm means the same
+      if ( fabs((*ip)-(*previp))< 0.5*step) { 
         prendila=false;
         break;
       }
@@ -330,8 +330,6 @@ const LHCb::MuonTileID* MuonHit::centerTile()
     }
   }
   if (out == NULL) {
-    std::cout <<"OHHHHHHHHHHHHHHHHHHHHHHHHHHHH npads="<<m_pads.size()
-              << " xyz= "<<X()<<" "<<Y()<<" "<<Z()<<std::endl;
     for (unsigned int ip=0; ip<m_pads.size(); ip++) {
       std::cout << m_padx[ip] << " " <<m_pady[ip]<< " " <<m_padz[ip]<<std::endl;
     }

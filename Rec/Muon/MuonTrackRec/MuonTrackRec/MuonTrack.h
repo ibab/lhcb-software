@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.4 2009-10-16 17:05:57 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.5 2009-10-19 11:14:24 ggiacomo Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -46,7 +46,7 @@ public:
 
   /// public member functions
   /// insert a hit in the track
-  void insert( const int id, const MuonHit& xyz );
+  void insert( const int id, const MuonHit* xyz );
   /// return a vector with hits
   std::vector< MuonHit* > getHits();
   /// get the track span i.e. the max length in station units
@@ -107,6 +107,8 @@ public:
   Gaudi::XYZTPoint& residuals(MuonHit& hit);
   // corrected time of i-th hit (i from 0)
   double correctedTime(MuonHit& hit);
+  /// cluster size (total, and in the x/y views) associated to a given hit (only if first hit of a given station, to avoid double counting)
+  int clsize(MuonHit* hit, int& xsize, int& ysize);
 
 
 private:
@@ -119,9 +121,9 @@ private:
                      double X,
                      double Y,
                      double Z);
-  typedef std::map< int, MuonHit >::value_type MuonTkVtype;
-  typedef std::map< int, MuonHit >::iterator MuonTkIt;
-  std::map< int, MuonHit > m_muonTrack;
+  typedef std::map< int, MuonHit* >::value_type MuonTkVtype;
+  typedef std::map< int, MuonHit* >::iterator MuonTkIt;
+  std::map< int, MuonHit* > m_muonTrack;
   double m_chi2x;
   double m_chi2y;
   double m_sx;

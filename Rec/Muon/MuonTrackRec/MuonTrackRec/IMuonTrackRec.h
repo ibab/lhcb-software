@@ -1,4 +1,4 @@
-// $Id: IMuonTrackRec.h,v 1.2 2009-10-16 17:05:57 ggiacomo Exp $
+// $Id: IMuonTrackRec.h,v 1.3 2009-10-19 11:14:18 ggiacomo Exp $
 #ifndef MUONNNET_IMUONTRACKREC_H 
 #define MUONNNET_IMUONTRACKREC_H 1
 
@@ -35,9 +35,11 @@ public:
   virtual const std::vector<MuonNeuron*>* allneurons()  =0;
   virtual bool recOK() =0;
   virtual bool tooManyHits() =0;
+  virtual bool clusteringOn() =0;
   virtual void setZref(double Zref) =0;
   virtual void setPhysicsTiming(bool PhysTiming) =0;
   virtual void setAssumeCosmics(bool AssumeCosmics) =0;
   virtual void setAssumePhysics(bool AssumePhysics) =0;  
+  
 };
 #endif // MUONNNET_IMUONTRACKREC_H

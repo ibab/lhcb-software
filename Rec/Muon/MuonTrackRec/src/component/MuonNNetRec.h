@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.4 2009-10-16 17:05:59 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.5 2009-10-19 11:14:27 ggiacomo Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -52,6 +52,7 @@ public:
   }
   virtual inline bool recOK() {return (m_recDone && m_recOK);}
   virtual inline bool tooManyHits() {return m_tooManyHits;}
+  virtual inline bool clusteringOn() {return (m_clusterToolName != "MuonFakeClustering");}
   virtual inline void setZref(double Zref) { MuonTrackRec::Zref=Zref; }
   virtual void setPhysicsTiming(bool PhysTiming) { MuonTrackRec::PhysTiming = PhysTiming;}
   virtual void setAssumeCosmics(bool AssumeCosmics) { 
