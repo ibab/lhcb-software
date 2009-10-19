@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.17 2009-10-13 14:31:25 jpalac Exp $
+#$Id: Wrappers.py,v 1.18 2009-10-19 20:41:53 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -147,14 +147,15 @@ class SelectionSequence(object) :
                  EventPreSelector = []) :
         self._name = name
         self.TopSelection = TopSelection
-        self.algos = EventPreSelector
+        self.algos = []
+        self.algos += EventPreSelector
         self.alg = self.TopSelection.algorithm()
         self.sels = [self.alg]
         if (self.alg != None) :
             self.buildSelectionList( self.TopSelection.requiredSelections )
         self.gaudiseq = None
         self.algos += self.sels
-
+        
     def name(self) :
         return self._name
 
