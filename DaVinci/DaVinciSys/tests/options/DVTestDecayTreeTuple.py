@@ -27,8 +27,8 @@ tuple.ToolList +=  [
     , "TupleToolTrackInfo"
 #    , "TupleToolTISTOS"
      ]
-tuple.InputLocations = ["Strip_loose_Bd2KstarMuMu"]
-tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^K*(892)0 -> ^K+ ^pi-)]cc"
+tuple.InputLocations = ["StripBd2JpsiKS"]
+tuple.Decay = "[B0 -> (^J/psi(1S) -> ^mu+ ^mu-) (^KS0 -> ^pi+ ^pi-)]cc"
 #tuple.OutputLevel = 1 ;
 ########################################################################
 #
@@ -48,8 +48,12 @@ evtTuple.TupleToolTrigger.VerboseHlt2 = True
 #
 from Configurables import MCDecayTreeTuple
 mcTuple = MCDecayTreeTuple("MCTuple")
-mcTuple.Decay = "{[ [B0]nos -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc, [ [B~0]os -> ^mu+ ^mu- (^K*(892)0 -> ^K+ ^pi- {,gamma}{,gamma}) {,gamma}{,gamma}{,gamma}]cc}"
+mcTuple.Decay = "{[ [B0]nos -> (^J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (^KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma}]cc, [ [B0]os -> (^J/psi(1S) -> ^mu+ ^mu- {,gamma}{,gamma}) (^KS0 -> ^pi+ ^pi- {,gamma}{,gamma}) {,gamma}]cc}"
 mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolReconstructed"  ]
+from Configurables import MCTupleToolReconstructed, MCReconstructed
+#ToolSvc().addTool(MCReconstructed)
+#ToolSvc().MCReconstructed.OutputLevel = 1
+
 #mcTuple.OutputLevel = 1
 #######################################################################
 #
@@ -58,28 +62,32 @@ mcTuple.ToolList = [ "MCTupleToolKinematic", "TupleToolEventInfo", "MCTupleToolR
 
 from StrippingConf.Configuration import StrippingConf
 from Configurables import StrippingStream
-from StrippingSelections import StrippingBd2KstarMuMu
+from StrippingSelections import StrippingBd2JpsiKS
 
-stream = StrippingStream("KstarMuMu")
-stream.appendLines( [ StrippingBd2KstarMuMu.line_10hz ] )
+stream = StrippingStream("Test")
+stream.appendLines( [ StrippingBd2JpsiKS.line ] )
 
 sc = StrippingConf()
 sc.appendStream( stream )
 
-from Configurables import DaVinci
-
+########################################################################
+from Configurables import PrintMCTree
+pmc = PrintMCTree()
+pmc.ParticleNames = [ "B0", "B~0" ]
 ########################################################################
 #
 # DaVinci
 #
+from Configurables import DaVinci
+
 DaVinci().EvtMax = 1000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09" 
 DaVinci().Simulation   = True
 DaVinci().TupleFile = "DecayTreeTuple.root"  # Ntuple
-DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ]
+DaVinci().MoniSequence = [ tuple, evtTuple, mcTuple ] # , pmc ] 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )
 #-- GAUDI jobOptions generated on Tue Jun 23 11:54:57 2009
 #-- Contains event types : 
 EventSelector().Input   = [
-"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004871/0000/00004871_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+"   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004889/0000/00004889_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
