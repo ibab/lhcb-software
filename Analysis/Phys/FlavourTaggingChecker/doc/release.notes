@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.61 2009-10-19 08:41:26 musy Exp $
+! $Id: release.notes,v 1.62 2009-10-19 11:24:40 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - M. Musy for M. Grabalosa
+ - add monitor of the B opposite side statistics.
 
 ! 2009-10-15 - M. Musy
   fix in TaggingTuplesSignal replace HltSummary with HltDecReports
