@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.60 2009-10-15 09:31:13 pkoppenb Exp $
+! $Id: release.notes,v 1.61 2009-10-19 08:41:26 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-10-15 - M. Musy
+  fix in TaggingTuplesSignal replace HltSummary with HltDecReports
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings

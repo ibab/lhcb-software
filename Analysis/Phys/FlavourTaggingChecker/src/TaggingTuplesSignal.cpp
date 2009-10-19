@@ -1,9 +1,10 @@
-// $Id: TaggingTuplesSignal.cpp,v 1.5 2009-06-04 17:19:02 musy Exp $
+// $Id: TaggingTuplesSignal.cpp,v 1.6 2009-10-19 08:41:26 musy Exp $
 // Include files 
 // local
 #include "TaggingTuplesSignal.h"
 #include "Event/L0DUReport.h"
-#include "Event/HltSummary.h"
+#include "Event/HltDecReports.h"
+
 
 // Declaration of Factory
 DECLARE_ALGORITHM_FACTORY( TaggingTuplesSignal );
@@ -149,31 +150,23 @@ StatusCode TaggingTuplesSignal::execute() {
    vtxchargedec=0;
    sspiondec = 0;
    ssjetdec = 0;
-   
-   L0DUReport* trg = 0;
-   if ( exist<L0DUReport>(L0DUReportLocation::Default)){
-     trg = get<L0DUReport> (L0DUReportLocation::Default);
-   } else {
-     debug() << "no L0 trigger"<<endreq;
-   }
-   if(NULL!=trg) {
-     trig0 = trg->decision() ;
-     info() << "====L0===="<< trig0 <<endreq;
-   }
-   
-   HltSummary* hlt = 0;
-   if ( exist<HltSummary>(HltSummaryLocation::Default)){
-     hlt = get<HltSummary> (HltSummaryLocation::Default);
-   } else {
-     debug() << "no hlt trigger"<<endreq;
-   }
-   
-   if(NULL!=hlt) {
-       hlt0 = hlt->decision() ; 
-       info() << "====Hlt===="<< hlt0 <<endreq;
-     }
 
-  FlavourTags*  tags = new FlavourTags;
+   if( !exist<L0DUReport>(L0DUReportLocation::Default) ) {
+     err() << "L0DUReport not found in " 
+           << L0DUReportLocation::Default << endreq;
+     return StatusCode::SUCCESS;
+   }
+   L0DUReport* l0 = get<L0DUReport>(L0DUReportLocation::Default);
+   trig0  = l0->decision();
+   if( exist<HltDecReports>( HltDecReportsLocation::Default ) ){ 
+     const HltDecReports* decReports = 
+       get<HltDecReports>( HltDecReportsLocation::Default );
+     hlt0 = decReports->decReport("HltGlobal") ? 
+       decReports->decReport("HltGlobal")->decision() : 0 ;
+   }
+ 
+
+   FlavourTags*  tags = new FlavourTags;
 
 // about MCParticle
   MCParticles* mcpart = get<MCParticles>( MCParticleLocation::Default );
