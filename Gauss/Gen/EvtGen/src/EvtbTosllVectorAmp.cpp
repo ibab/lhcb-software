@@ -134,15 +134,15 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
 
   if (bmesons.contains(parentID)) {
 
-    T1=a*dual(directProd(pbhat,pkstarhat))
+    T1=a*dual(EvtGenFunctions::directProd(pbhat,pkstarhat))
        -b*uniti*EvtTensor4C::g()
-       +c*uniti*directProd(pbhat,phat)
-       +d*uniti*directProd(pbhat,qhat);
+       +c*uniti*EvtGenFunctions::directProd(pbhat,phat)
+       +d*uniti*EvtGenFunctions::directProd(pbhat,qhat);
     
-    T2=e*dual(directProd(pbhat,pkstarhat))
+    T2=e*dual(EvtGenFunctions::directProd(pbhat,pkstarhat))
        -f*uniti*EvtTensor4C::g()
-       +g*uniti*directProd(pbhat,phat)
-       +h*uniti*directProd(pbhat,qhat);
+       +g*uniti*EvtGenFunctions::directProd(pbhat,phat)
+       +h*uniti*EvtGenFunctions::directProd(pbhat,qhat);
     
     l11=EvtLeptonVCurrent(lepPlus->spParent(0),
                           lepMinus->spParent(0));
@@ -166,15 +166,15 @@ void EvtbTosllVectorAmp::CalcAmp( EvtParticle *parent,
     
     if (bbarmesons.contains(parentID)) {
 
-      T1=-a*dual(directProd(pbhat,pkstarhat))
+      T1=-a*dual(EvtGenFunctions::directProd(pbhat,pkstarhat))
          -b*uniti*EvtTensor4C::g()
-         +c*uniti*directProd(pbhat,phat)
-         +d*uniti*directProd(pbhat,qhat);
+         +c*uniti*EvtGenFunctions::directProd(pbhat,phat)
+         +d*uniti*EvtGenFunctions::directProd(pbhat,qhat);
       
-      T2=-e*dual(directProd(pbhat,pkstarhat))
+      T2=-e*dual(EvtGenFunctions::directProd(pbhat,pkstarhat))
          -f*uniti*EvtTensor4C::g()
-         +g*uniti*directProd(pbhat,phat)
-         +h*uniti*directProd(pbhat,qhat);
+         +g*uniti*EvtGenFunctions::directProd(pbhat,phat)
+         +h*uniti*EvtGenFunctions::directProd(pbhat,qhat);
       
       l11=EvtLeptonVCurrent(lepPlus->spParent(1),
                             lepMinus->spParent(1));

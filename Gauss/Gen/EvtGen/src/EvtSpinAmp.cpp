@@ -379,7 +379,7 @@ bool EvtSpinAmp::iterate( vector<int>& index ) const
         }
     }
 
-    return abs(index[last])<=_twospin[last];
+    return (abs(index[last]))<=((int)_twospin[last]);
 }
 
 // Test whether a particular index is an allowed one (specifically to deal with

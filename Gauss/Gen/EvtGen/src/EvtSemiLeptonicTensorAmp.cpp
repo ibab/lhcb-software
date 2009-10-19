@@ -118,7 +118,7 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
 
   EvtTensor4C tds;
   if (l_num==EM||l_num==MUM||l_num==TAUM){
-    EvtTensor4C tdual=EvtComplex(0.0,hf)*dual(directProd(pp,pm));
+    EvtTensor4C tdual=EvtComplex(0.0,hf)*dual(EvtGenFunctions::directProd(pp,pm));
     tds0=tdual.cont2(ep_meson_b[0])
       -kf*ep_meson_b[0]
       -bpf*ep_meson_bb[0]*pp-bmf*ep_meson_bb[0]*pm;
@@ -152,7 +152,7 @@ void EvtSemiLeptonicTensorAmp::CalcAmp( EvtParticle *parent,
   }
   else{
     if (l_num==EP||l_num==MUP||l_num==TAUP){
-     EvtTensor4C tdual=EvtComplex(0.0,-hf)*dual(directProd(pp,pm));
+     EvtTensor4C tdual=EvtComplex(0.0,-hf)*dual(EvtGenFunctions::directProd(pp,pm));
       tds0=tdual.cont2(ep_meson_b[0])
         -kf*ep_meson_b[0]
         -bpf*ep_meson_bb[0]*pp-bmf*ep_meson_bb[0]*pm;

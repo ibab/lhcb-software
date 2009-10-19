@@ -217,11 +217,11 @@ double EvtVector4R::dot ( const EvtVector4R& p2 )const{
 double EvtVector4R::scalartripler3( const EvtVector4R& p1,
         const EvtVector4R& p2, const EvtVector4R& p3 ) const
 {
-    EvtVector4C lc=dual(directProd(*this, p1)).cont2(p2);
-    EvtVector4R  l(real(lc.get(0)), real(lc.get(1)), real(lc.get(2)),
-            real(lc.get(3)));
-
-    return -1.0/mass() * (l * p3);
+  EvtVector4C lc=dual(EvtGenFunctions::directProd(*this, p1)).cont2(p2);
+  EvtVector4R  l(real(lc.get(0)), real(lc.get(1)), real(lc.get(2)),
+                 real(lc.get(3)));
+  
+  return -1.0/mass() * (l * p3);
 }
 
 // Calculate the 3-d dot product of 4-vectors p1 and p2 in the rest frame of

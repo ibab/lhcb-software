@@ -100,7 +100,7 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
     tds = a1f*(m_b+m_meson)*EvtTensor4C::g();
     tds.addDirProd((-a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds+=EvtComplex(0.0,vf/(m_b+m_meson))
-                  *dual(directProd(p4meson+p4b,p4b-p4meson));
+      *dual(EvtGenFunctions::directProd(p4meson+p4b,p4b-p4meson));
     tds.addDirProd((a0f-a3f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
 
     l1=EvtLeptonVACurrent(parent->getDaug(1)->spParent(0),
@@ -113,7 +113,7 @@ void EvtSemiLeptonicVectorAmp::CalcAmp( EvtParticle *parent,
     tds = a1f*(m_b+m_meson)*EvtTensor4C::g();
     tds.addDirProd((-a2f/(m_b+m_meson))*p4b,p4b+p4meson);
     tds-=EvtComplex(0.0,vf/(m_b+m_meson))
-                  *dual(directProd(p4meson+p4b,p4b-p4meson));
+                  *dual(EvtGenFunctions::directProd(p4meson+p4b,p4b-p4meson));
     tds.addDirProd((a0f-a3f)*2.0*(m_meson/q2)*p4b,p4b-p4meson);
 
     l1=EvtLeptonVACurrent(parent->getDaug(2)->spParentNeutrino(),

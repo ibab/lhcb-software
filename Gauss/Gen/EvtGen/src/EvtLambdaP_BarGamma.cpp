@@ -97,10 +97,13 @@ void EvtLambdaP_BarGamma::decay(EvtParticle* p) {
 	      photonGamma += EvtGammaMatrix::sigmaLower(mu, nu) * photonPol.get(mu) * photonMomentum.get(nu);
 	  
 	  EvtComplex amp = 
-	    -I*_gLambdab * lambdaPol.adjoint() * ((constA()*EvtGammaMatrix::id() + constB()*EvtGammaMatrix::g5())
-						   * photonGamma * (slash(lambdaMomentum) + slash(photonMomentum) + _mLambdab*EvtGammaMatrix::id())
-						   / ((lambdaMomentum + photonMomentum)*(lambdaMomentum + photonMomentum) - _mLambdab*_mLambdab)
-						   * EvtGammaMatrix::g5() * antiP_Pol);
+	    -I*_gLambdab * lambdaPol.adjoint() * 
+      ((constA()*EvtGammaMatrix::id() + constB()*EvtGammaMatrix::g5())
+       * photonGamma * (EvtGenFunctions::slash(lambdaMomentum) + 
+                        EvtGenFunctions::slash(photonMomentum) + 
+                        _mLambdab*EvtGammaMatrix::id())
+       / ((lambdaMomentum + photonMomentum)*(lambdaMomentum + photonMomentum) - _mLambdab*_mLambdab)
+       * EvtGammaMatrix::g5() * antiP_Pol);
 	  // use of parentheses so I do not have to define EvtDiracSpinor*EvtGammaMatrix, which shouldn't be defined to prevent errors in indexing
 
 	  vertex(i, j, k, amp);
@@ -116,21 +119,20 @@ void EvtLambdaP_BarGamma::initProbMax()
 }
 
 // form factors at 0
-const double EvtLambdaP_BarGamma::f0(double fqm, int n){
+double EvtLambdaP_BarGamma::f0(double fqm, int n) const {
     return fqm * pow(1 - pow(_mLambdab - _mLambda0, 2) / (_mV * _mV), n);
 }
 
-const double EvtLambdaP_BarGamma::g0(double gqm, int n){
+double EvtLambdaP_BarGamma::g0(double gqm, int n) const {
     return gqm * pow(1 - pow(_mLambdab - _mLambda0, 2) / (_mA * _mA), n);
 }
 
-
-const double EvtLambdaP_BarGamma::constA(){
+double EvtLambdaP_BarGamma::constA() const {
     return _GF/sqrt(2.) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
         * (f0(_f1) - f0(_f2));
 }
 
-const double EvtLambdaP_BarGamma::constB(){
+double EvtLambdaP_BarGamma::constB() const {
     return _GF/sqrt(2.) * _e0 / (8 * EvtConst::pi*EvtConst::pi) * 2 * _c7Eff * _mb * _VtbVtsStar
         * (g0(_g1) - (_mLambdab - _mLambda0) / (_mLambdab + _mLambda0) * g0(_g2));
 }
