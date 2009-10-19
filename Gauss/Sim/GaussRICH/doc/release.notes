@@ -3,6 +3,11 @@
 ! Responsible	: Sajan Easo 
 ! Purpose     : collection of sensitive detectors, G4 actions, etc for RICH
 !----------------------------------------------------------------------------- 
+! 2009-10-19 - Silvia Miglioranzi
+   Fixed an error in compilation on slc5 (extra qualification 'RichG4ReconFlatMirr::' 
+   on member 'FlatMirrorIntersection') for the:
+   -RichG4ReconFlatMirr.h
+
 ! 2009-09-13 - Sajan Easo
  - In order to be compatible with the recent G4.9.2, in RichG4Cerenkov.cc
    and RichG4OpRayleigh.cc, the names of some G4 methods 

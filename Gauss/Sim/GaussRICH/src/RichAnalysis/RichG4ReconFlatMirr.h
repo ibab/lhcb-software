@@ -1,4 +1,4 @@
-// $Id: RichG4ReconFlatMirr.h,v 1.4 2008-05-30 13:43:23 gcorti Exp $
+// $Id: RichG4ReconFlatMirr.h,v 1.5 2009-10-19 15:48:26 silviam Exp $
 #ifndef RICHANALYSIS_RICHG4RECONFLATMIRR_H
 #define RICHANALYSIS_RICHG4RECONFLATMIRR_H 1
 
@@ -30,9 +30,9 @@ public:
   Gaudi::XYZPoint FlatMirrorReflect(const Gaudi::XYZPoint & HitCoordQw ,
                                int FlatMirrorType);
 
- Gaudi::XYZPoint RichG4ReconFlatMirr::FlatMirrorIntersection( const Gaudi::XYZPoint & aGlobalPoint1,
-                                                              const Gaudi::XYZPoint & aGlobalPoint2,
-                                                                 int aRichDetNum, int aFlatMirrorNum) ;
+  Gaudi::XYZPoint FlatMirrorIntersection( const Gaudi::XYZPoint & aGlobalPoint1,
+                                          const Gaudi::XYZPoint & aGlobalPoint2,
+                                          int aRichDetNum, int aFlatMirrorNum) ;
   
  Gaudi::XYZPoint ConvertToGlobal(const Gaudi::XYZPoint & aLocalPoint,
                                 int aRichDetNum, int aMirrorNum );
