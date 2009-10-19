@@ -10,7 +10,7 @@ Helper module to define DST (un)packing rule for Calo Hypo objects
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__ = (
     'CaloDstPackConf'     ,  ## the configurable, responsible for Dst packing   
@@ -25,7 +25,7 @@ from LHCbKernel.Configuration import *
 #  the configurable for packing of Calorimeter objects on Dst 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date  2009-10-10
-class CaloDstPackConf ( LHCbConfigurableUser ) :
+class CaloDstPackConf ( ConfigurableUser ) :
     """
     Class/Configurable to define Dst-packing rules for Calorimeter objects 
     """
@@ -85,7 +85,7 @@ class CaloDstPackConf ( LHCbConfigurableUser ) :
 #  The configurable for unpacking of Calorimeter objects from Dst 
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date  2009-10-10
-class CaloDstUnPackConf ( LHCbConfigurableUser ) :
+class CaloDstUnPackConf ( ConfigurableUser ) :
     """
     Class/Configurable to define Dst-unpacking rules for Calorimeter objects 
     """
