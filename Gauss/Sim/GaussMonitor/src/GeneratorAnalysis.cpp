@@ -1,4 +1,4 @@
-// $Id: GeneratorAnalysis.cpp,v 1.6 2008-07-26 18:02:08 robbep Exp $
+// $Id: GeneratorAnalysis.cpp,v 1.7 2009-10-19 13:55:52 silviam Exp $
 // Include files 
 
 // from Gaudi
@@ -925,7 +925,8 @@ void GeneratorAnalysis::bHadronInfo( LHCb::ParticleID m_mPID,
       }else{
         m_stateBStarStar++;
       }
-      if( produceHistos() && ( 0 <= spin <= 3 ) ) {
+      //      if( produceHistos() && ( 0 <= spin <= 3 ) ) {
+      if( produceHistos() && ( 0 <= spin && spin <= 3 ) ) {
         m_bMesonStates->fill((double)spin);
       }
       if( produceHistos() ) m_bMesonStatesCode->fill((double)spin);

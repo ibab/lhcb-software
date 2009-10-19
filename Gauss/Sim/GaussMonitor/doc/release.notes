@@ -4,6 +4,11 @@
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-10-19 - Silvia Miglioranzi
+ - Fixed warning in compilation on slc5: "comparisons like X<=Y<=Z do not have 
+   their mathematical meaning" in:
+   - GeneratorAnalysis.cpp
+
 !====================== GaussMonitor v6r4 2009-04-30 =========================
 ! 2009-03-26 - Stefania Vecchi on behalf of Olga Levitskaya
  - added MonitorStepAction: produces histograms on the step size and number of
