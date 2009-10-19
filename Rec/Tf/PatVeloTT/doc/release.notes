@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : 
 !-----------------------------------------------------------------------------
+! 2009-10-19 - Stephanie Hansmann-Menzemer
+ - Fix memory leak in PatVeloTTFit
 
 !========================== PatVeloTT v3r8 2009-09-03 ========================
 ! 2009-09-02 - Wouter Hulsbergen

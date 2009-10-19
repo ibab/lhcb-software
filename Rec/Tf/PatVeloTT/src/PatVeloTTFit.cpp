@@ -1,4 +1,4 @@
-// $Id: PatVeloTTFit.cpp,v 1.3 2009-04-06 06:42:27 cattanem Exp $
+// $Id: PatVeloTTFit.cpp,v 1.4 2009-10-19 13:22:25 smenzeme Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "STDet/DeSTDetector.h"
@@ -97,7 +97,7 @@ StatusCode PatVeloTTFit::fitVTT( LHCb::Track& track ) const
 	Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
 	PatTTHit* pattthit = new PatTTHit( *sthit );
 	sthits.push_back( sthit ) ;
-	hits.push_back( new PatTTHit( *sthit ) ) ; 
+	hits.push_back( pattthit ) ; 
 	
 	double xOnTrack = cand.xAtZ( pattthit->z() );
 	//double yOnTrack = cand.yAtZ( pattthit->z() );
