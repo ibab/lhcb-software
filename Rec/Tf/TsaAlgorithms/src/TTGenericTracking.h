@@ -1,4 +1,4 @@
-// $Id: TTGenericTracking.h,v 1.2 2009-10-01 13:31:26 jvantilb Exp $
+// $Id: TTGenericTracking.h,v 1.3 2009-10-19 16:32:12 jvantilb Exp $
 #ifndef TTGenericTracking_H
 #define TTGenericTracking_H 1
 
@@ -11,7 +11,8 @@
  *  cosmic tracks, since for regular collision data the occupancy is too high.
  *  Keep in mind that the TT has only 4 layers, so a typical TT track will have
  *  only 4 hits, having 0 degrees of freedom left for the linear track fit (4 
- *  parameters).
+ *  parameters). A presentation on this algorithm was giving on 19.10.2009 in
+ *  the T-Rec meeting: http://indico.cern.ch/event/48032 .
  *  The algorithm has three stages:
  *  - <b>Track finding</b>: Loops over the hits in the x layers to make all
  *    possible combinations of 2d tracks out of a hit in an x1 layer and a
