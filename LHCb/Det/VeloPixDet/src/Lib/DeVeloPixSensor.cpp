@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.cpp,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: DeVeloPixSensor.cpp,v 1.2 2009-10-19 07:32:11 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSENSOR_CPP 1
 //==============================================================================
@@ -138,5 +138,6 @@ void DeVeloPixSensor::initSensor()
   m_lpSize = param<double>("LowPrecisionSize");
   m_nPixCol = param<int>("NPixelColumn");
   m_nPixRow = param<int>("NPixelRow");
+  m_interchipPixSize = param<double>("InterChipPixelSize");
 
 }

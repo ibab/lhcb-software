@@ -1,4 +1,4 @@
-// $Id: PixelLadder.cpp,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: PixelLadder.cpp,v 1.2 2009-10-19 07:32:12 cocov Exp $
 // Include files
 // local
 #define  VELOPIXDET_PIXELLADDER_CPP 1
@@ -40,6 +40,15 @@ int PixelLadder::nChip() const
   return m_NChip;
 }
 
+//========================== Access to the positions of the readout edge (-1 or +1)
+// for a chip having its readout edge on the left side it will be -1 for an orientation along X
+// for a chip having its readout edge on the top side it will be +1 for an orientation along Y
+// in a ladder we do the assumption that all orientation are the same
+
+std::vector<int> PixelLadder::edgesOrientation() const
+{
+  return m_edgesOrientation;
+}
 
 //========================== Set the reference point coordinates
 void PixelLadder::setReferencePoint( Gaudi::XYZPoint p)
@@ -51,4 +60,14 @@ void PixelLadder::setReferencePoint( Gaudi::XYZPoint p)
 void PixelLadder::setNChip( int n )
 {
   m_NChip = n;
+}
+
+//========================== Set the positions of the readout edge
+void PixelLadder::setEdgesOrientation( std::vector< int > orientation )
+{
+  m_edgesOrientation.clear();
+  for (int i = 0 ; i < orientation.size() ; i++ )
+  {
+    m_edgesOrientation.push_back(orientation[i]);
+  }
 }

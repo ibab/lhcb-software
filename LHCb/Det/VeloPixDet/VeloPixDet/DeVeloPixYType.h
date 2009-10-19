@@ -1,4 +1,4 @@
-// $Id: DeVeloPixYType.h,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: DeVeloPixYType.h,v 1.2 2009-10-19 07:32:11 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXYTYPE_H 
 #define VELOPIXDET_DEVELOPIXYTYPE_H 1
 
@@ -52,14 +52,14 @@ public:
   /// and the local pitch.
   virtual int WhichLadder(const Gaudi::XYZPoint& point) const;
   
-  virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex) const;
+  virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex,std::pair <float, float>& fraction) const;
   
   virtual int WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const;
   
 
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloPixChannelID& channel,
-                                    double& fraction) const;
+                                    std::pair <float, float>& fraction) const;
 
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;

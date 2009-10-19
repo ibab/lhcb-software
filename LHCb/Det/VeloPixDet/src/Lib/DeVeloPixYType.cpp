@@ -1,4 +1,4 @@
-// $Id: DeVeloPixYType.cpp,v 1.2 2009-10-08 08:24:40 cocov Exp $
+// $Id: DeVeloPixYType.cpp,v 1.3 2009-10-19 07:32:12 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXYTYPE_CPP 1
 //==============================================================================
@@ -97,35 +97,43 @@ StatusCode DeVeloPixYType::initialize()
 //==============================================================================
 /// # Calculate the nearest channel to a 3-d point.
 //==============================================================================
+
 StatusCode DeVeloPixYType::pointToChannel(const Gaudi::XYZPoint& point,
                                        LHCb::VeloPixChannelID& channel,
-                                       double& fraction) const
+                                       std::pair <float, float>& fraction) const
 {
   MsgStream msg(msgSvc(), "DeVeloPixYType");
   Gaudi::XYZPoint localPoint = globalToLocal(point);
 
-  // Check boundaries...
+  // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
   if(!sc.isSuccess()) return sc;  
   unsigned int sensor=sensorNumber();
-  // set VeloPixChannelID....
+  // Create the associated VeloPixChannelID
   channel.setSensor(sensor);
-  // get the ladder
+  // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(point);
+  // Get the chip number in which the point is
   int chipIndex = WhichChip(point,ladderIndex);
-  // compute the proper chip number for VeloPixChanelID
+  // Compute the proper chip number for VeloPixChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
     prop_chipIndex += m_ladders[ilad].nChip();
   }
+  // Set the chip number in the VeloPixChannelID
   channel.setChip(prop_chipIndex);  
-  std::pair <int,int> pixelPos = WhichPixel(point,ladderIndex,chipIndex);
+  // Get the pixel position in which the point is
+  std::pair <int,int> pixelPos = WhichPixel(point,ladderIndex,chipIndex,fraction);
+  if( pixelPos.first < 0. || pixelPos.second < 0. ){
+    return StatusCode::FAILURE;
+  }
+  // Set the pixel position in the VeloPixChannelID
   channel.setPixel_lp(pixelPos.first);
   channel.setPixel_hp(pixelPos.second);
   // Set fraction to 0 but this will need to be set correctly
-  fraction = 0.;
   return StatusCode::SUCCESS;
 }
+
 
 //==============================================================================
 /// Checks if local point is inside sensor          
@@ -166,18 +174,43 @@ int DeVeloPixYType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) con
 //==============================================================================
 /// Get 
 //==============================================================================
-std::pair<int,int> DeVeloPixYType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex) const
+
+std::pair<int,int> DeVeloPixYType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<float,float>& fraction) const
 {
-  float LowPrecisionOffset = chipIndex*(chipLength()+interChipDist());
+  float alongAxisOffset = 0.;
+  if( chipIndex>0)  alongAxisOffset = chipIndex*(chipLength()+interChipDist()/2)+(chipIndex-1)*interChipDist()/2;
+
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
-  Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-LowPrecisionOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
+  Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-alongAxisOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
+
+  std::vector<int> positionEdgePix =  (m_ladders[ladderIndex]).edgesOrientation();
   std::pair< int , int > thePixel;
-  int lp = (int)(LocalPoint.x()/lpSize());
-  // Deal with the last pixel that is LowPrecisionSize + InterChipDist
-  if (lp == nPixCol()) lp = nPixCol()-1; 
-  thePixel.first=lp;  
+
+  // Set the size of the edges (left/right) pixels
+  float interchipPixSizeLEFT = lpSize();
+  float interchipPixSizeRIGHT = lpSize();
+  if ( positionEdgePix[chipIndex]== 1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeRIGHT = interchipPixSize();
+  if ( positionEdgePix[chipIndex]== -1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeLEFT = interchipPixSize();
+  
+  // correct for the extra length of the left pixel
+  float newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
+  // set the results for most of the case
+  thePixel.first = (int)(newx/lpSize());
+  fraction.first = newx/lpSize() - (int)(newx/lpSize());
+  //modify in the case where it is on the left edge
+  if (newx < lpSize()  && newx > - (interchipPixSizeLEFT-lpSize())){
+    thePixel.first=0; // in case it would have been negative
+      fraction.first = LocalPoint.x()/interchipPixSizeLEFT;
+  }
+  else if (newx <((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT && newx >((nPixCol()-2)*lpSize())){
+    fraction.first = (newx-(nPixCol()-1)*lpSize())/interchipPixSizeRIGHT;
+  }
+  else{
+    thePixel.first = -1;
+    fraction.first = -1; 
+  }
   thePixel.second=(int)(LocalPoint.y()/hpSize());  
+  fraction.second=LocalPoint.y()/hpSize()-thePixel.second;  
   return thePixel;
 }
-
 

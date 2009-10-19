@@ -4,7 +4,12 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+
+! 2009-10-18 - Victor Coco
+ - addition in DeVelPixSquare of some function to get the 3x3 neighbourg list + amelioration of channel to point and point to channel.
+
 !========================== VeloPixDet v1r0 2009-10-16 =======================
+
 ! 2009-10-09 - Victor Coco
  - fix in the requirement file, remove useless call to QMTest + 
    remove useless vector definition in the dict/VeloPixDetDict.xml

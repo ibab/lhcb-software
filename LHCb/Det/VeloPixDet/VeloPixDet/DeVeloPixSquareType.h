@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.1.1.1 2009-09-17 16:07:20 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.2 2009-10-19 07:32:11 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -43,12 +43,20 @@ public:
   virtual StatusCode initialize();
 
   /// Calculate the nearest channel to a 3-d point.
-  /// Also returns the fractional difference in the channel
-  /// and the local pitch.
+  /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloPixChannelID& channel,
-                                    double& fraction) const;
+                                    std::pair <float, float>& fraction) const;
 
+  /// Calculate the XYZ center of a pixel
+  virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
+                                                Gaudi::XYZPoint& point) const;
+  
+
+  /// Get the list of VeloPixChannelID forming the 3x3 cluster of pixel centered on point
+  virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
+                                       std::vector <LHCb::VeloPixChannelID>& channels) const;
+  
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const;
 
@@ -59,7 +67,12 @@ public:
   virtual int WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const;
   
   /// Determines in which pixel of a given chip and a given ladder is local 3-d point
-  virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex) const;
+  virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex,
+                                        int chipIndex, std::pair <float, float>& fraction) const;
+
+  /// Returns the size of the pixel of a given channel
+  virtual std::pair<float,float> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const;
+  
     
   /// Access to the sensor on the other side of the VeloPix
   inline const DeVeloPixSquareType* otherSideSensor() const { return m_otherSideSensor; }
