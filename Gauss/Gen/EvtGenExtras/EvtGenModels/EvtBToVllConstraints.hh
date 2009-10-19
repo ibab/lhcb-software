@@ -38,8 +38,8 @@ public:
 	const std::pair<double, double> getS4Zero() const;
 	const std::pair<double, double> getS5Zero() const;
 	const std::pair<double, double> getS6Zero() const;
-	const double getAFBIntegral() const;
-	const double getFLIntegral() const;
+	double getAFBIntegral() const;
+	double getFLIntegral() const;
 
 private:
 
@@ -85,16 +85,16 @@ private:
 	inline double getLambda(const double q2) const;
 	inline EvtComplex getN(const double q2, const double beta, const double lambda) const;
 	
-	const double getJ4(const double q2) const;
-	const double getJ5(const double q2) const;
-	const double getJ6(const double q2) const;
-	const double getAFB(const double q2) const;
-	const double getFL(const double q2) const;
-	const double getGamma(const double q2) const;
+	double getJ4(const double q2) const;
+	double getJ5(const double q2) const;
+  double getJ6(const double q2) const;
+	double getAFB(const double q2) const;
+	double getFL(const double q2) const;
+	double getGamma(const double q2) const;
 	
 	const std::pair<double, double> findZero(gsl_function* F) const;
-	const double findZeroGradient(gsl_function* F, const double zero) const;
-	const double findRateIntegral(gsl_function* F, const double q2min, const double q2max) const;
+	double findZeroGradient(gsl_function* F, const double zero) const;
+	double findRateIntegral(gsl_function* F, const double q2min, const double q2max) const;
 	
 };
 

@@ -26,7 +26,8 @@
 #include "EvtGenBase/EvtReport.hh"
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenModels/EvtbTosllMSFF.hh"
-#include <math.h>
+#include <cmath>
+#include <cstdlib>
 
 EvtbTosllMSFF::EvtbTosllMSFF(){}
 

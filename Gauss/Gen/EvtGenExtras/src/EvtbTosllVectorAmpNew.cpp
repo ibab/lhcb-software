@@ -45,7 +45,7 @@
 #include "EvtGenModels/EvtbTosllWilsCoeffNLO.hh"
 // The header file for current class memeber functions description
 #include "EvtGenModels/EvtbTosllVectorAmpNew.hh"
-
+#include <cstdlib>
 
 //
 // The main functiom for the amplitude calculation
@@ -295,15 +295,15 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
 
     // The amplitude for the decay barB -> bar V ell^+ ell^-
 
-    T1 = -a*unit1*dual(directProd(hatp1,hatp2))
+    T1 = -a*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
          -b*uniti*EvtTensor4C::g()
-         +c*uniti*directProd((hatp1+hatp2),hatp1)
-         +d*uniti*directProd((hatp1-hatp2),hatp1);
+         +c*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
+         +d*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
 
-    T2 = -e*unit1*dual(directProd(hatp1,hatp2))
+    T2 = -e*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
          -f*uniti*EvtTensor4C::g()
-         +g*uniti*directProd((hatp1+hatp2),hatp1)
-         +h*uniti*directProd((hatp1-hatp2),hatp1);
+         +g*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
+         +h*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
 
 
     lvc11 = EvtLeptonVCurrent(lepPlus->spParent(0),
@@ -344,16 +344,16 @@ void EvtbTosllVectorAmpNew::CalcAmp( EvtParticle *parent,
 
     // The amplitude for the decay B -> V ell^+ ell^-
 
-    T1 = conj(a)*unit1*dual(directProd(hatp1,hatp2))
+    T1 = conj(a)*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
         -conj(b)*uniti*EvtTensor4C::g()
-        +conj(c)*uniti*directProd((hatp1+hatp2),hatp1)
-        +conj(d)*uniti*directProd((hatp1-hatp2),hatp1);
+        +conj(c)*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
+        +conj(d)*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
 
 
-    T2 = conj(e)*unit1*dual(directProd(hatp1,hatp2))
+    T2 = conj(e)*unit1*dual(EvtGenFunctions::directProd(hatp1,hatp2))
         -conj(f)*uniti*EvtTensor4C::g()
-        +conj(g)*uniti*directProd((hatp1+hatp2),hatp1)
-        +conj(h)*uniti*directProd((hatp1-hatp2),hatp1);
+        +conj(g)*uniti*EvtGenFunctions::directProd((hatp1+hatp2),hatp1)
+        +conj(h)*uniti*EvtGenFunctions::directProd((hatp1-hatp2),hatp1);
 
      
       lvc11=EvtLeptonVCurrent(lepPlus->spParent(1),

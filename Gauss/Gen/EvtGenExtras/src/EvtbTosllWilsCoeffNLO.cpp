@@ -31,7 +31,7 @@
 #include "EvtGenBase/EvtDiLog.hh"
 // The header file for current class memeber functions description
 #include "EvtGenModels/EvtbTosllWilsCoeffNLO.hh"
-
+#include <cstdlib>
 
 //   **************************************************************
 //   *                                                            *

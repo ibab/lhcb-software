@@ -256,12 +256,17 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	const EvtParticle* lepMinus = (charge1 < charge2) ? parent->getDaug(1) : parent->getDaug(2);
 
 	//eqn 4.4
-	const EvtTensor4C T1 = tensA*dual(directProd(pbhat, pkstarhat)) - tensB*I*EvtTensor4C::g() + 
-		tensC*I*directProd(pbhat, phat);
+	const EvtTensor4C T1 = 
+    tensA*dual(EvtGenFunctions::directProd(pbhat, pkstarhat)) - 
+    tensB*I*EvtTensor4C::g() + 
+		tensC*I*EvtGenFunctions::directProd(pbhat, phat);
 
 	//eqn 4.5
-	const EvtTensor4C T2 = tensE*dual(directProd(pbhat, pkstarhat)) - tensF*I*EvtTensor4C::g() +
-				tensG*I*directProd(pbhat, phat) + tensH*I*directProd(pbhat, qhat);
+	const EvtTensor4C T2 = 
+    tensE*dual(EvtGenFunctions::directProd(pbhat, pkstarhat)) - 
+    tensF*I*EvtTensor4C::g() +
+    tensG*I*EvtGenFunctions::directProd(pbhat, phat) + 
+    tensH*I*EvtGenFunctions::directProd(pbhat, qhat);
 	
 	//now calculate the V, A, and S lepton currents
 	EvtVector4C l11,l12;

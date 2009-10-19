@@ -489,43 +489,44 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	fact.parameters->setBbar(_isBbar);
 }
 
-const double EvtBToVllConstraints::getJ4(const double q2) const{
+double EvtBToVllConstraints::getJ4(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	return obs.getS(EvtBToVllBasisCoeffs::I4); 
 }
 
-const double EvtBToVllConstraints::getJ5(const double q2) const{
+double EvtBToVllConstraints::getJ5(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	return obs.getS(EvtBToVllBasisCoeffs::I5); 
 }
 
-const double EvtBToVllConstraints::getJ6(const double q2) const{
+double EvtBToVllConstraints::getJ6(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	return obs.getS(EvtBToVllBasisCoeffs::I6);
 }
 
-const double EvtBToVllConstraints::getAFB(const double q2) const{
+double EvtBToVllConstraints::getAFB(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	//eqn 5.7 of Altmannhofer et al (2008)
 	return (3/8.)*((2*obs.getS(EvtBToVllBasisCoeffs::I6s) + obs.getS(EvtBToVllBasisCoeffs::I6c)));
 }
-const double EvtBToVllConstraints::getFL(const double q2) const{
+
+double EvtBToVllConstraints::getFL(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	//eqn 5.9 of Altmannhofer et al (2008)
 	return -obs.getS(EvtBToVllBasisCoeffs::I2c);
 }
-const double EvtBToVllConstraints::getGamma(const double q2) const{
+
+double EvtBToVllConstraints::getGamma(const double q2) const{
 	EvtBToVllObservable obs(*this);
 	obs.initParams(q2);
 	//eqn 5.3 of Altmannhofer et al (2008)
 	return obs.getDGamma();
 }
-
 
 const std::pair<double, double> EvtBToVllConstraints::getS4Zero() const{
 	
@@ -596,7 +597,7 @@ const std::pair<double, double> EvtBToVllConstraints::getS6Zero() const{
     return findZero(&F);
 }
 
-const double EvtBToVllConstraints::getAFBIntegral() const{
+double EvtBToVllConstraints::getAFBIntegral() const{
 	
 	//hack to get const correctness 
 	class afb_utils{
@@ -621,7 +622,8 @@ const double EvtBToVllConstraints::getAFBIntegral() const{
 	
 	
 }
-const double EvtBToVllConstraints::getFLIntegral() const{
+
+double EvtBToVllConstraints::getFLIntegral() const{
 	
 	//hack to get const correctness 
 	class fl_utils{
@@ -686,7 +688,7 @@ const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F) 
 	return std::make_pair(r,gradient);
 }
 
-const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const double zero) const{
+double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const double zero) const{
 	
 	double result = 0.0;
 	double abserr = 1e6;
@@ -695,7 +697,7 @@ const double EvtBToVllConstraints::findZeroGradient(gsl_function* F, const doubl
 	return result;
 }
 
-const double EvtBToVllConstraints::findRateIntegral(gsl_function* F, const double q2min, const double q2max) const{
+double EvtBToVllConstraints::findRateIntegral(gsl_function* F, const double q2min, const double q2max) const{
 	
 	//hack to get const correctness 
 	class rate_utils{

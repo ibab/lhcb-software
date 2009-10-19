@@ -132,15 +132,15 @@ void EvtBToVllObservable::initParams(const double _q2){
 	B->initParams(_q2, false);
 }
 
-const double EvtBToVllObservable::getA(EvtBToVllBasisCoeffs::BasisVectors vec) const{
+double EvtBToVllObservable::getA(EvtBToVllBasisCoeffs::BasisVectors vec) const{
 	return Re((Bbar->getVector(vec) - B->getVector(vec))/getDGamma());
 }
 
-const double EvtBToVllObservable::getS(EvtBToVllBasisCoeffs::BasisVectors vec) const{
+double EvtBToVllObservable::getS(EvtBToVllBasisCoeffs::BasisVectors vec) const{
 	return Re((Bbar->getVector(vec) + B->getVector(vec))/getDGamma());
 }
 
-const double EvtBToVllObservable::getDGamma() const{
+double EvtBToVllObservable::getDGamma() const{
 	const EvtComplex gamma = 0.75*(2*Bbar->getVector(EvtBToVllBasisCoeffs::I1s) + Bbar->getVector(EvtBToVllBasisCoeffs::I1c)) - 
 		0.25*(2*Bbar->getVector(EvtBToVllBasisCoeffs::I2s) + Bbar->getVector(EvtBToVllBasisCoeffs::I2c));
 	const EvtComplex gammaBar = 0.75*(2*B->getVector(EvtBToVllBasisCoeffs::I1s) + B->getVector(EvtBToVllBasisCoeffs::I1c)) - 

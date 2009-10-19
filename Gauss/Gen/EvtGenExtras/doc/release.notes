@@ -4,8 +4,11 @@
 ! Purpose     : Repository of EvtGen models with external linkages
 !-----------------------------------------------------------------------------
 
+! 2009-09-10 - Patrick Robbe
+ - fix for gcc4.3 compilation
+
 !======================= EvtGenExtras v2r1 2009-10-05 ========================
-! 2008-09-17 - Patrick Robbe for Nikolai Nikitin
+! 2009-09-17 - Patrick Robbe for Nikolai Nikitin
  - Add new classes for the description of rare semileptonic B-mesons decays.
    . Class EvtbTosllWilsCoeffNLO - for calculation of the Wilson coefficients
      in the NLO approach at MSbar substruction scheme, including mu-dependence

@@ -7,6 +7,7 @@
 #include <cmath>
 #include <utility>
 #include <vector>
+#include <cassert>
 
 /**
  * Module EvtGenBase/EvtMathematicaFn

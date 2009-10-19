@@ -63,9 +63,9 @@ public:
 	EvtBToVllObservable(const EvtBToVllConstraints& _constraints);
 	void initParams(const double _q2);
 	
-	const double getA(EvtBToVllBasisCoeffs::BasisVectors vec) const;
-	const double getS(EvtBToVllBasisCoeffs::BasisVectors vec) const;
-	const double getDGamma() const;
+	double getA(EvtBToVllBasisCoeffs::BasisVectors vec) const;
+	double getS(EvtBToVllBasisCoeffs::BasisVectors vec) const;
+	double getDGamma() const;
 	
 	
 private:

@@ -1,5 +1,5 @@
 //--------------------------------------------------------------------------
-// $Id: EvtbTosllScalarAmpNew.cpp,v 1.1 2009-09-19 16:38:13 robbep Exp $
+// $Id: EvtbTosllScalarAmpNew.cpp,v 1.2 2009-10-19 16:14:34 robbep Exp $
 //
 // Environment:
 //      This software is part of the EvtGen package developed jointly
@@ -42,7 +42,7 @@
 #include "EvtGenModels/EvtbTosllWilsCoeffNLO.hh"
 // The header file for current class memeber functions description
 #include "EvtGenModels/EvtbTosllScalarAmpNew.hh"
-
+#include <cstdlib>
 
 //
 // The main functiom for the amplitude calculation
