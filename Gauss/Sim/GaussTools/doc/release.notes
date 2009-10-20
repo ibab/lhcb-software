@@ -4,6 +4,10 @@
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+! 2009-10-20 - Silvia Miglioranzi
+ - Added a #warning message (to appear in compilation) for the temporary fix 
+   for the operator<< 
+
 ! 2009-10-16 - Silvia Miglioranzi
  - *** Temporary*** fix for error in compilation on slc5 
    (error: no match for operator<<) in:
