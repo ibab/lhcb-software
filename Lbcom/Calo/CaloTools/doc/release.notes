@@ -1,22 +1,23 @@
-! $Id: release.notes,v 1.79 2009-10-12 16:08:13 odescham Exp $
+! $Id: release.notes,v 1.80 2009-10-20 08:11:32 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
 
+!========================== CaloTools v5r12 2009-10-20 =========================
 ! 2009-12-21 - Olivier Deschamps
   -  adapt to change in CaloDAQ
-
-! 2009-09-21 - Olivier Deschamps
   -  improve Calo2MCTool.{cpp,h} : not yet complete but usable 
 
 ! 2009-09-15 - Olivier Deschamps
-  - new tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation (interface CaloInterfaces/ICalo2MCTool.h)
+  - new tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation
+							 (interface CaloInterfaces/ICalo2MCTool.h)
       - preliminary (incomplete) version of the tool
   - use Relations in requirements
 
 ! 2009-09-14 - Olivier Deschamps
-  - adapt to change in CaloDAQ/CaloReadoutTool (->CaloCosmicsTool & CaloGetterTool & L0Calo2CaloTool)
+  - adapt to change in CaloDAQ/CaloReadoutTool 
+    (->CaloCosmicsTool & CaloGetterTool & L0Calo2CaloTool)
 
 ! 2009-09-11 - Olivier Deschamps
  - Calo2Calo.cpp : 
