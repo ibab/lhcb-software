@@ -1,8 +1,11 @@
-// $Id: GiGaTrajectoryPoint.h,v 1.13 2004-02-22 19:01:51 ibelyaev Exp $ 
+// $Id: GiGaTrajectoryPoint.h,v 1.14 2009-10-20 10:06:33 silviam Exp $ 
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.13  2004/02/22 19:01:51  ibelyaev
+//  add new data fields to GiGaTrajectoryPoint
+//
 // Revision 1.12  2002/12/07 21:36:30  ibelyaev
 //  trivial fix
 //
@@ -126,9 +129,9 @@ public:
   { return (&right) == this ; } /// ?
   
   /// get the time 
-  const double    time () const { return m_time   ; } 
+  double    time () const { return m_time   ; } 
   /// get the time
-  const double GetTime () const { return   time() ; }
+  double GetTime () const { return   time() ; }
   /// set the time
   void setTime    ( double Time ) { m_time = Time ; }  
   /// get the 4-position

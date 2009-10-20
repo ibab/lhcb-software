@@ -1,10 +1,15 @@
-! $Id: release.notes,v 1.129 2009-10-14 13:50:02 gcorti Exp $
+! $Id: release.notes,v 1.130 2009-10-20 10:06:58 silviam Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
 ! Purpose     : Holds interfaces and base classes plus generic implementation
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
+
+! 2009-10-20 - Silvia Miglioranzi
+ - Fix compilation warnings on slc5 (type qualifiers ignored on function 
+   return type):
+   - GiGaTrajectoryPoint.h
 
 ! 2009-10-14 - Gloria Corti
  - Fix compilation errors on slc5
