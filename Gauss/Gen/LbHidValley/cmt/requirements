@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.7 2008-06-24 10:49:13 ibelyaev Exp $ 
+# $Id: requirements,v 1.8 2009-10-20 07:44:47 marcin Exp $ 
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -23,7 +23,7 @@ use               GENSER       v* Gen
 # =============== constituents ================================================
 library           LbHidValleyLib Lib/*.cpp  Lib/*.F  
 library           LbHidValley    Components/*.cpp
-application       HidValley      Main/*.cpp Main/*.F 
+#application       HidValley      Main/*.cpp Main/*.F 
 
 # =============== standard patterns ===========================================
 apply_pattern     component_library library=LbHidValley
