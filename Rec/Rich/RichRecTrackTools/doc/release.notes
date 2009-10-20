@@ -4,8 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+!======================== RichRecTrackTools v1r15 2009-10-20 =================
 ! 2009-10-07 - Wouter Hulsbergen
- - adapted FunctionalCKResForEcoTracks to changes in LHCb::Track
+ - adapted FunctionalCKResForRecoTracks to changes in LHCb::Track
 
 ! 2009-09-14 - Chris Jones
  - Fix track selector to select tracks that have default likelihood or
