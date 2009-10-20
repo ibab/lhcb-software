@@ -20,7 +20,7 @@ use HltDAQ            v1r1    Hlt       # Tomasz Skwarnicki
 # L0 trigger simulation
 use L0Calo            v9r22   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v8r19   L0        # Olivier Deschamps   
-use L0Muon            v8r5p1  L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0Muon            v8r5p2  L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
 
