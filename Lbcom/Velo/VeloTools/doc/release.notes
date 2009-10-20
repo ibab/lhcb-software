@@ -4,6 +4,10 @@
 ! Purpose     : Velo Tools for reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== VeloTools v3r4 2009-10-20 ========================
+! 2009-10-20 - Marco Cattaneo
+ - Remove obsolete file VeloTools_dll.cpp
+
 ! 2009-09-09 - Kurt Rinnert
  - protected Linux-only include in LivDBTELL1SensorMap on Windows
 
