@@ -2,8 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r2p2 2009-10-20 ===========================
 ! 2009-10-02 - Xabier Cid Vidal
- - In ConfiguredMuonIDs.py and all Muon_*, remove all the absolute path references, as these are not valid for Ganga and Dirac.
+ - In ConfiguredMuonIDs.py and all Muon_*, remove all the absolute path
+   references, as these are not valid for Ganga and Dirac.
  - In CLTool.cpp fix a bug appearing when only one momentum bin is applied
  - In IsMuonCandidate.cpp fix a bug related to the units of the momentum
 
