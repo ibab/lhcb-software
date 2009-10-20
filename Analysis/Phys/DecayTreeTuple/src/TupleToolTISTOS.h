@@ -49,5 +49,14 @@ private:
   ITriggerTisTos* m_TriggerTisTosTool;
   IParticleDescendants* m_particleDescendants;
 
+  bool m_verboseL0;     ///< get details on L0
+  bool m_verboseHlt1;   ///< get details on Hlt1
+  bool m_verboseHlt2;   ///< get details on Hlt2
+
+  // do not allow trigger names to mutate from event-to-event
+  std::vector<std::string> m_l0;
+  std::vector<std::string> m_hlt1;
+  std::vector<std::string> m_hlt2;
+
 };
 #endif // TUPLETOOLTISTOS_H

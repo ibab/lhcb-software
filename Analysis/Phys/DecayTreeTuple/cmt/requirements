@@ -20,6 +20,8 @@ use   MCInterfaces       v*    Kernel
 use   HltInterfaces      v*    Kernel
 use   DecFiles           v18r* Gen     --no_auto_imports
 
+use Boost        v*   LCG_Interfaces
+
 include_path      none
 #============================================================================
 # Component library building rule

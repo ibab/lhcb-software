@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-10-21 - Tomasz Skwarnicki
+ - undo use of HltDecReports to clean up trigger list in TupleToolTISTOS
+   since cannot be done consistently. Make sure the list does not mutate.
+   Verbose properties to control tistossing of individual triggers.
+
 ! 2009-10-14 - Juan PALACIOS
  - src/TupleToolMCTruth{.h, .cpp}
   . Add property IP2MCPAssociatorType to allow to switch implementation of
