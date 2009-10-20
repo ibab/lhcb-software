@@ -3,7 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
-========================= PatAlgorithms v3r23 2009-10-13 =====================
+
+!========================= PatAlgorithms v3r23 2009-10-20 ====================
 ! 2009-10-13 Sascha Stahl
  - PatDownstream: Options to remove used hits and T-tracks changed.
 	 Use RemoveUsed to switch it on. If RemoveAll all hits and T-tracks
@@ -21,7 +22,7 @@
 ! 2009-09-24 - Stephanie Hansmann-Menzemer
  - isX() not anylonger method of LineHit, adapt pattern reco algorithm accordingly 
 
-========================= PatAlgorithms v3r22 2009-06-11 =====================
+!========================= PatAlgorithms v3r22 2009-06-11 ====================
 ! 2009-06-11 - Marco Cattaneo
  - Fix a doxygen warning
 
