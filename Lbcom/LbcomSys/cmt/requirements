@@ -1,5 +1,5 @@
 package LbcomSys
-version v7r6
+version v7r7
 
 branches doc cmt
 
@@ -12,14 +12,14 @@ use Associators       v3r7    Associators # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r9    Calo      # Olivier Deschamps
-use CaloTools         v5r11   Calo      # Olivier Deschamps
+use CaloTools         v5r12   Calo      # Olivier Deschamps
 
 # HLT
-use HltDAQ            v1r0p1  Hlt       # Tomasz Skwarnicki
+use HltDAQ            v1r1    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v9r21   L0        # Olivier Deschamps, Patrick Robbe
-use L0DU              v8r18   L0        # Olivier Deschamps   
+use L0Calo            v9r22   L0        # Olivier Deschamps, Patrick Robbe
+use L0DU              v8r19   L0        # Olivier Deschamps   
 use L0Muon            v8r5p1  L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
@@ -33,10 +33,10 @@ use OTMonitor         v2r11   OT        # Jan Amoraal
 
 # Rich
 use RichAlgorithms    v1r1p1  Rich      # Chris Jones
-use RichDAQ           v3r25   Rich      # Chris Jones
+use RichDAQ           v3r26   Rich      # Chris Jones
 use RichMCMonitors    v1r7p1  Rich      # Chris Jones
 use RichMCTools       v3r13   Rich      # Chris Jones
-use RichTools         v2r27p1 Rich      # Chris Jones
+use RichTools         v2r28   Rich      # Chris Jones
 
 # Silicon detectors
 use SiTools           v1r7p1  Si        # Matt Needham
@@ -50,11 +50,11 @@ use STMonitors        v1r6    ST        # Mark Tobin
 use STTools           v3r12   ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
-use VeloAlgorithms    v4r9    Velo      # Tomasz Szumlak
+use VeloAlgorithms    v4r10   Velo      # Tomasz Szumlak
 use VeloAssociators   v2r3    Velo      # Tomasz Szumlak
-use VeloDAQ           v4r8    Velo      # Kurt Rinnert
+use VeloDAQ           v4r9    Velo      # Kurt Rinnert
 use VeloSimulation    v3r6p1  Velo      # Tomasz Szumlak
-use VeloTools         v3r3    Velo      # Tomasz Szumlak
+use VeloTools         v3r4    Velo      # Tomasz Szumlak
 
 # Declare this as a container package
 apply_pattern container_package
