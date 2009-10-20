@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.11 2009-08-12 21:39:19 graven Exp $
+// $Id: TriggerTisTos.cpp,v 1.12 2009-10-20 22:40:24 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -10,10 +10,8 @@
 
 #include "boost/regex.hpp"
 
-
-#include "HltBase/HltUtils.h"
-#include "Event/Particle.h"
-
+#include "Event/HltDecReports.h"
+#include "Event/HltSelReports.h"
 
 using namespace LHCb;
 
@@ -38,7 +36,8 @@ TriggerTisTos::TriggerTisTos( const std::string& type,
 {
   declareInterface<ITriggerTisTos>(this);
 
-  m_hltANSvc = 0;
+  declareProperty("TriggerInputWarnings", m_trigInputWarn = false );
+
 }
 //=============================================================================
 // Destructor
@@ -54,8 +53,6 @@ StatusCode TriggerTisTos::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_hltANSvc = svc<IANSvc>("HltANNSvc");
-
   setOfflineInput();
   setTriggerInput();
   
@@ -67,7 +64,6 @@ StatusCode TriggerTisTos::initialize() {
 
 void TriggerTisTos::getTriggerNames()
 {
-  // this needs to be implemented better, in particular we need to check if TCK has changed
   if( m_newEvent ){
     m_triggerNames.clear(); 
     m_newEvent = false;
@@ -76,28 +72,29 @@ void TriggerTisTos::getTriggerNames()
   // done before ?
   if( m_triggerNames.size() !=0 ){ return; }
 
-  // use HltANNSvc to get Hlt1, then Hlt2 names
-  std::vector<std::string> selIDs = m_hltANSvc->keys("Hlt1SelectionID");
-  for(std::vector<std::string>::const_iterator i =
+
+  // get trigger names from HltDecReports and HltSelReports
+  if( !m_hltDecReports )getHltSummary();
+  //    for the same TCK this should be fixed list for events which passed Hlt
+  if( m_hltDecReports ){
+    m_triggerNames = m_hltDecReports->decisionNames();
+  }
+  //    Now add intermediate selections which found some candidates in this event
+  //    and were configured to save them in HltSelReports.
+  //    This part is likely to vary from event to event even for the same TCK.
+  if( m_hltSelReports ){
+    std::vector<std::string> selIDs = m_hltSelReports->selectionNames();
+    for(std::vector<std::string>::const_iterator i =
           selIDs.begin(); i!=selIDs.end(); ++i) {
-    if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
-            == m_triggerNames.end() ){
-          m_triggerNames.push_back(*i);
+      if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
+          == m_triggerNames.end() ){
+        m_triggerNames.push_back(*i);
+      }
     }
-  }
-  {    
-  std::vector<std::string> selIDs2 = m_hltANSvc->keys("Hlt2SelectionID");
-  for(std::vector<std::string>::const_iterator i =
-          selIDs2.begin(); i!=selIDs2.end(); ++i) {
-    if( find( m_triggerNames.begin(), m_triggerNames.end(), *i )
-            == m_triggerNames.end() ){
-          m_triggerNames.push_back(*i);
-    }
-  }
   }
   
   if( m_triggerNames.size()==0 ){
-    Error( "No known trigger names found" , StatusCode::FAILURE, 50 );
+    Error( "No known trigger names found" , StatusCode::FAILURE, 50 ).setChecked();
   }
   
 }
@@ -117,7 +114,9 @@ void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWild
                  " a selectionName using a '*', without leading '.': '" + selectionNameWithWildChar 
                + "'. Please verify whether this is what you still want\n "
                " For more information on the supported syntax, please check "
-               " http://www.boost.org/doc/libs/1_39_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html",StatusCode::SUCCESS ).ignore();
+               " http://www.boost.org/doc/libs/1_39_0/libs/regex/doc/html/boost_regex/syntax/perl_syntax.html"
+                 ,StatusCode::SUCCESS 
+                 ).ignore();
   }
   unsigned int sizeAtEntrance( m_triggerInput_Selections.size() );
   getTriggerNames();
@@ -130,11 +129,11 @@ void TriggerTisTos::addToTriggerInput( const std::string & selectionNameWithWild
       }
     }
   }
-  if( m_triggerInput_Selections.size()==sizeAtEntrance ){
+  if( m_trigInputWarn && (m_triggerInput_Selections.size()==sizeAtEntrance) ){
     std::ostringstream mess;
     mess << " addToTriggerInput called with selectionNameWithWildChar=" << selectionNameWithWildChar
          << " added no selection to the Trigger Input, which has size=" << m_triggerInput_Selections.size();
-    Warning( mess.str(),StatusCode::SUCCESS, 50 );
+    Warning( mess.str(),StatusCode::SUCCESS, 50 ).setChecked();
   }
 }
  
@@ -165,7 +164,7 @@ void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
 {
   decision = false; tis=false; tos=false;
   if( m_triggerInput_Selections.size()==0 ){
-    Warning(" triggerTisTos called with empty Trigger Input");
+    if( m_trigInputWarn )Warning(" triggerTisTos called with empty Trigger Input").setChecked();
     return;
   }
   for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();
@@ -187,7 +186,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerTisTos::hltObjectSummaries( un
 {
   std::vector<const LHCb::HltObjectSummary*> hosVec;  
   if( m_triggerInput_Selections.size()==0 ){
-    Warning(" hltObjectSummaries called with empty Trigger Input");
+    if( m_trigInputWarn )Warning(" hltObjectSummaries called with empty Trigger Input").setChecked();
     return hosVec;
   }
   for( std::vector< std::string >::const_iterator iTriggerSelection=m_triggerInput_Selections.begin();

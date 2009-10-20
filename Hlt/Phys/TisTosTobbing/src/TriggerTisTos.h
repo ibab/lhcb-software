@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.h,v 1.9 2009-08-12 21:39:19 graven Exp $
+// $Id: TriggerTisTos.h,v 1.10 2009-10-20 22:40:24 tskwarni Exp $
 #ifndef TRIGGERTISTOS_H 
 #define TRIGGERTISTOS_H 1
 
@@ -8,7 +8,6 @@
 #include "Kernel/ITriggerTisTos.h"            // Interface
 
 #include "TriggerSelectionTisTos.h"
-#include "Kernel/IANSvc.h"
 
 /** @class TriggerTisTos TriggerTisTos.h
  *  
@@ -51,6 +50,10 @@ public:
   
 private:
 
+  /// if true then warning about empty trigger inputs are printed
+  bool m_trigInputWarn;
+  
+
   /// obtain all known trigger names
   void getTriggerNames();
 
@@ -61,10 +64,6 @@ private:
 
   /// all known trigger names 
   std::vector< std::string > m_triggerNames;
-
-
-  /// HltANNSvc for valid trigger names
-  IANSvc* m_hltANSvc;  
 
 };
 #endif // TRIGGERTISTOS_H

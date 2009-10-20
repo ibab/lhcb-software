@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.14 2009-01-19 17:12:30 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.15 2009-10-20 22:40:24 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -105,24 +105,34 @@ StatusCode TriggerSelectionTisTos::initialize() {
   
   setOfflineInput();
   
-  if( m_TOSFrac[kVelo]>1.0 && m_TISFrac[kVelo]<0.0 ){
+  if ( msgLevel(MSG::VERBOSE) ){
+    verbose() << " TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << endmsg;
+    verbose() << " TOSFracTT   " <<  m_TOSFrac[kTT] <<   " TISFracTT   " << m_TISFrac[kTT] << endmsg;    
+    verbose() << " TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << endmsg;    
+    verbose() << " TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << endmsg;    
+    verbose() << " TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << endmsg;
+    verbose() << " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << endmsg;
+  }
+
+  if( m_TOSFrac[kVelo]<=0.0 ){
     info()<< " TOSFracVelo " <<  m_TOSFrac[kVelo] << " TISFracVelo " << m_TISFrac[kVelo] << " thus Velo hits not used " << endmsg;
   }
-  if( m_TOSFrac[kTT]>1.0 && m_TISFrac[kTT]<0.0 ){
+  if( m_TOSFrac[kTT]<=0.0 ){
     info()<< " TOSFracTT   " <<  m_TOSFrac[kTT] <<   " TISFracTT   " << m_TISFrac[kTT] << " thus TT hits not used " << endmsg;
   }
-  if( m_TOSFrac[kOTIT]>1.0 && m_TISFrac[kOTIT]<0.0 ){
+  if( m_TOSFrac[kOTIT]<=0.0 ){
     info()<< " TOSFracOTIT " <<  m_TOSFrac[kOTIT] << " TISFracOTIT " << m_TISFrac[kOTIT] << " thus OTIT hits not used " << endmsg;
   }
-  if( m_TOSFrac[kMuon]>1.0 && m_TISFrac[kMuon]<0.0 ){
+  if( m_TOSFrac[kMuon]<=0.0 ){
     info()<< " TOSFracMuon " <<  m_TOSFrac[kMuon] << " TISFracMuon " << m_TISFrac[kMuon] << " thus Muon hits not used " << endmsg;
   }
-  if( m_TOSFrac[kEcal]>1.0 && m_TISFrac[kEcal]<0.0 ){
+  if( m_TOSFrac[kEcal]<=0.0 ){
     info()<< " TOSFracEcal " <<  m_TOSFrac[kEcal] << " TISFracEcal " << m_TISFrac[kEcal] << " thus Ecal hits not used " << endmsg;
   }
-  if( m_TOSFrac[kHcal]>1.0 && m_TISFrac[kHcal]<0.0 ){
+  if( m_TOSFrac[kHcal]<=0.0 ){
     info()<< " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << " thus Hcal hits not used " << endmsg;
   }
+ 
  
   return StatusCode::SUCCESS;
 
@@ -157,7 +167,7 @@ void TriggerSelectionTisTos::getHltSummary()
     if( exist<HltDecReports>(m_HltDecReportsLocation) ){    
       m_hltDecReports = get<HltDecReports>(m_HltDecReportsLocation);
     } else {
-      Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 20 );
+      Error( " No HltDecReports at "+m_HltDecReportsLocation.value(), StatusCode::FAILURE, 20 ).setChecked();
       m_hltDecReports =0;
     }    
   }  
@@ -165,7 +175,7 @@ void TriggerSelectionTisTos::getHltSummary()
     if( exist<HltSelReports>(m_HltSelReportsLocation) ){    
       m_hltSelReports = get<HltSelReports>(m_HltSelReportsLocation);
     } else {
-      Error( " No HltSelReports at "+m_HltSelReportsLocation.value(), StatusCode::FAILURE, 20 );
+      Error( " No HltSelReports at "+m_HltSelReportsLocation.value(), StatusCode::FAILURE, 20 ).setChecked();
       m_hltSelReports =0;
     }    
   }
@@ -276,6 +286,8 @@ void TriggerSelectionTisTos::hosTISTOS(const LHCb::HltObjectSummary & hos,
     // effectively .and. requirement between all types
     int nonTrivial=0;
     for( int hitType=0; hitType!=nHitTypes; ++hitType ){
+      // special way of switching sub-detector off (set TOSFrac=0.0) from TOS and TIS !      
+      if(  m_TOSFrac[hitType] <=0.0 ) overlap[hitType] = 2.0; 
       TOS= overlap[hitType] >= m_TOSFrac[hitType];
       if( !TOS )break;
       if( overlap[hitType]<1.1 )++nonTrivial;  
@@ -310,6 +322,8 @@ void TriggerSelectionTisTos::setOfflineInput( )
 //    hit list input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::LHCbID> & hitlist, ClassifiedHits hitidlist[] )
 {
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with LHCbID list ENTER " << endmsg;
+
   bool modified(false);
   
   for( std::vector<LHCbID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
@@ -325,11 +339,16 @@ void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::LHCbID> 
     
   }
   if( modified )clearCache();
+
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with LHCbID list EXIT " << endmsg;
+
 }
 
 //    calo hit list input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::CaloCellID> & hitlist, ClassifiedHits hitidlist[] )
 {
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with CaloCellID list ENTER " << endmsg;
+
   bool modified(false);
   
   for( std::vector<CaloCellID>::const_iterator id=hitlist.begin();id!=hitlist.end();++id){
@@ -345,11 +364,16 @@ void TriggerSelectionTisTos::addToOfflineInput( const std::vector<LHCb::CaloCell
     
   }
   if( modified )clearCache();
+
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with CaloCellID list EXIT " << endmsg;
+
 }
 
 //    Track input ---------------------------------------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, ClassifiedHits hitidlist[]) 
 {
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Track ENTER " << endmsg;
+
 
   //   add hits saved directly on the track ------------------------------------------------------------
   const std::vector<LHCbID>& ids = track.lhcbIDs();
@@ -359,7 +383,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
     
   // ------------------ add expected Hcal hits (3x3 group around cell crossed at shower max) ------------
   // do it only if needed 
-  if( ( m_TOSFrac[kHcal] > 0.0 ) && ( m_TISFrac[kHcal] < 1.0 ) ){
+  if(  m_TOSFrac[kHcal] > 0.0 ){
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Track PROJECT TO HCAL " << endmsg;
     if( m_track2calo != 0 ){
       if( m_hcalDeCal==0 ){ m_hcalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal ); }
       if( m_hcalDeCal != 0 ){
@@ -383,7 +408,8 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
   }
   // ------------------ add expected Ecal hits (3x3 group around cell crossed at shower max) ------------
   // do it only if needed 
-  if( ( m_TOSFrac[kEcal] > 0.0 ) && ( m_TISFrac[kEcal] < 1.0 ) ){
+  if( m_TOSFrac[kEcal] > 0.0 ){
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Track PROJECT TO ECAL " << endmsg;
     if( m_track2calo != 0 ){
       if( m_ecalDeCal==0 ){ m_ecalDeCal = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal ); }
       if( m_ecalDeCal != 0 ){
@@ -406,7 +432,9 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
     }
   }
   
-  
+   
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Track END " << endmsg;
+ 
 
 }
 
@@ -414,12 +442,15 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Track & track, Class
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & protoParticle,
                                       ClassifiedHits hitidlist[] ) 
 {
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle ENTER " << endmsg;
+
 
   const Track* t=protoParticle.track();
 
 
   // Ecal via CaloHypo
-  if( ( m_TOSFrac[kEcal] > 0.0 ) && ( m_TISFrac[kEcal] < 1.0 ) ){
+  if( m_TOSFrac[kEcal] > 0.0 ){
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle ECAL VIA CaloHypo " << endmsg;
     const SmartRefVector< LHCb::CaloHypo > &caloVec = protoParticle.calo();
     if( caloVec.size() > 0 ){
       const LHCb::CaloHypo*   hypo  = *(caloVec.begin());
@@ -428,6 +459,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
         LHCb::CaloCellID centerCell,centerCell1,dummyCell;      
         if( 0!=t ){
           if( LHCb::CaloHypo::EmCharged == hypo->hypothesis() ){
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle EmCharged " << endmsg;
             if( (hypo->clusters().begin())->target() ){              
               centerCell  = (*(hypo->clusters().begin()))->seed();
               // info() << " EmCharged " << centerCell << endmsg;          
@@ -435,25 +467,28 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
           }
         } else {
           if( LHCb::CaloHypo::Photon == hypo->hypothesis() ){
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle Photon " << endmsg;
             if( (hypo->clusters().begin())->target() ){              
               centerCell  = (*(hypo->clusters().begin()))->seed();
               //    info() << " Photon " << centerCell << endmsg;          
             }            
           } else if (  LHCb::CaloHypo::Pi0Merged == hypo->hypothesis() ){
+            if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle Pi0Merged " << endmsg;
             // Split Photons
             const SmartRefVector<LHCb::CaloHypo>& hypos = hypo->hypos();
-            const LHCb::CaloHypo* g1 = *(hypos.begin() );
-            if( g1 ){              
-              if( (g1->clusters().begin())->target() )
-              centerCell  = (*(g1->clusters().begin()))->seed();
-            }            
-            const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
-            if( g2 ){
-              if( (g2->clusters().begin())->target() )              
-              centerCell1 = (*(g2->clusters().begin()))->seed();
-              // info() << " Pi0Merged " << centerCell << centerCell1 << endmsg;          
+            if( hypos.size()>1 ){ 
+              const LHCb::CaloHypo* g1 = *(hypos.begin() );
+              if( g1 ){              
+                if( (g1->clusters().begin())->target() )
+                  centerCell  = (*(g1->clusters().begin()))->seed();
+              }            
+              const LHCb::CaloHypo* g2 = *(hypos.begin()+1 );
+              if( g2 ){
+                if( (g2->clusters().begin())->target() )              
+                  centerCell1 = (*(g2->clusters().begin()))->seed();
+                // info() << " Pi0Merged " << centerCell << centerCell1 << endmsg;          
+              }
             }
-            
           }        
         }
       
@@ -480,10 +515,11 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 
 
  if( 0!=t ){
+    if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle TRACK " << endmsg;
     // add hits from track itself (possibly projected hcal and ecal hits too)
     addToOfflineInput(*t,hitidlist);
     // add muon hits only if needed 
-    if( ( m_TOSFrac[kMuon] > 0.0 ) && ( m_TISFrac[kMuon] < 1.0 ) ){
+    if( m_TOSFrac[kMuon]>0.0  ){
       if( m_muonTracks==0 ){ 
         if( exist<LHCb::Tracks>(m_MuonTracksLocation) ){
           m_muonTracks = get<LHCb::Tracks>(m_MuonTracksLocation);
@@ -491,10 +527,11 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
         } else {
           m_muonsOff = true;          
           Warning(" No offline muon tracks at "+m_MuonTracksLocation.value()+
-                  " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 );
+                  " thus, muon hits will be ignored on trigger tracks. " , StatusCode::SUCCESS, 10 ).setChecked();
         }
       }
       if( m_muonTracks != 0 ){
+       if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle TRACK-MUON " << endmsg;
         const LHCb::MuonPID* muid = protoParticle.muonPID();
         if( muid!=0 ){
           if( muid->IsMuon() ){
@@ -516,18 +553,27 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 //    Particle input; for composite particles loop over daughters will be executed ------------------------------
 void TriggerSelectionTisTos::addToOfflineInput( const LHCb::Particle & particle, ClassifiedHits hitidlist[]  )
 {
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Particle ENTER " << endmsg;
   const SmartRefVector<LHCb::Particle> & daughters = particle.daughters();  
   if( daughters.size() >0 ){
     for(SmartRefVector<LHCb::Particle>::const_iterator p = daughters.begin(); p!=daughters.end(); ++p){
-      const LHCb::Particle & part = *(*p);
-      addToOfflineInput(part,hitidlist);
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Particle DAUGHTER " << endmsg;
+      if( *p ){
+        const LHCb::Particle & part = *(*p);
+        addToOfflineInput(part,hitidlist);
+      }
     }
   } else {
     const ProtoParticle* pp = particle.proto();
     if( 0!=pp ){
+      if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Particle PROTOPARTICLE " << endmsg;
       addToOfflineInput(*pp,hitidlist);
-    }
+    } else {
+        Error("Particle passed as signal has no daughters and ProtoParticle is not accessible; TisTossing is not possible",
+              StatusCode::SUCCESS, 10 ).setChecked();
+    }    
   }
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with Particle EXIT " << endmsg;
 }
 
 //=============================================================================
