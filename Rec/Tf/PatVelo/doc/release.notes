@@ -4,9 +4,10 @@
 ! Purpose     : Velo pattern recognition
 !-----------------------------------------------------------------------------
 
+!========================== PatVelo v3r18 2009-10-20 =========================
 ! 2009-10-13 David Hutchcroft
- - Set limit on the number of cluster required to kill a sector so high no sectors
-   are killed
+ - Set limit on the number of cluster required to kill a sector so high no
+   sectors are killed
 
 ! 2009-10-12 Silvia Borghi
  - PatVeloTraversingTracking: fix a mistypo
