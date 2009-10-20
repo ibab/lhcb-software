@@ -1,4 +1,4 @@
-// $Id: MCTruthManager.cpp,v 1.12 2009-10-16 15:02:33 silviam Exp $
+// $Id: MCTruthManager.cpp,v 1.13 2009-10-20 08:22:44 silviam Exp $
 // Include files 
 #include <string>
 
@@ -267,6 +267,7 @@ void MCTruthManager::PrintEvent()
 
 void MCTruthManager::printTree(HepMC::GenParticle* particle, std::string offset)
 {
+#warning REMEMBER: remove temporary fix for error in compilation on slc5 operator<<
   std::cout << offset << "---  barcode: " << particle->barcode() << " pdg: " 
             << particle->pdg_id() << " energy: " << particle->momentum().e() 
     //        << " production vertex: "<< particle->production_vertex()->position() << std::endl;
