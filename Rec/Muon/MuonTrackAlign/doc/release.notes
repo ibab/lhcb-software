@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.21 2009-10-09 07:32:33 wouter Exp $
+! $Id: release.notes,v 1.22 2009-10-20 15:13:32 cattanem Exp $
 ! Package     : MuonTrackAlign
 ! Responsible : Alessia Satta
 ! Purpose     : Track reconstruction for Muon Alignment purposes
 !---------------------------------------------------------------------
+
+!=================== MuonTrackAlign v1r8 2009-10-20 ==================
+! 2009-10-20 - Marco Cattaneo
+ - Remove obsolete file MuonTrackAlign_dll.cpp
 
 ! 2009-10-09 - Wouter Hulsbergen
  - Adapted to changes in LHCb::Track
