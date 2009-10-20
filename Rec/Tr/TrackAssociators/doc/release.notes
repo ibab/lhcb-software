@@ -4,8 +4,13 @@
 ! Purpose     : Associators to MC truth for Tracks
 !----------------------------------------------------------------------------
 
+!===================== TrackAssociators v2r7 2009-10-20 ====================
+! 2009-10-20 - Marco Cattaneo
+ - Remove obsolete file TrackAssociators_dll.cpp
+
 ! 2009-10-07 - Wouter Hulsbergen
- - Removed code that would omit outliers in comparison to MC since it was anyway broken.
+ - Removed code that would omit outliers in comparison to MC since it was 
+   anyway broken.
 
 !===================== TrackAssociators v2r6 2008-04-04 ====================
 ! 2008-04-04 - Marco Cattaneo
