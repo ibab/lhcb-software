@@ -1,0 +1,8 @@
+!-----------------------------------------------------------------------------
+! Package     : L0/L0Base
+! Responsible : Julien Cogan
+! Purpose     : Package containing base classes for L0 components
+!-----------------------------------------------------------------------------
+
+! 2009-10-20 - Julien Cogan
+ - First release containing L0AlgBase and L0FromRawBase
