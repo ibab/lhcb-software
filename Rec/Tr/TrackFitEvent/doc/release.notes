@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v4r1 2009-10-20 ====================
 ! 2009-09-25 Wouter Hulsbergen
  - added data member 'doca' to fitnode.
 
