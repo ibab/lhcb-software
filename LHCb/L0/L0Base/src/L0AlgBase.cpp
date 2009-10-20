@@ -1,11 +1,11 @@
-// $Id: L0AlgBase.cpp,v 1.1.1.1 2009-10-20 12:43:08 jucogan Exp $
+// $Id: L0AlgBase.cpp,v 1.2 2009-10-20 13:28:21 jucogan Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // local
-#include "L0AlgBase.h"
+#include "L0Base/L0AlgBase.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0AlgBase

@@ -4,5 +4,6 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+!============================ L0Base v1r1 2009-10-20 =========================
 ! 2009-10-20 - Julien Cogan
  - First release containing L0AlgBase and L0FromRawBase
