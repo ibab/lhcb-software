@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r22 2009-10-20 ==========================
 ! 2009-09-22 - Chris Jones
  - Improve "Loose" photon selection for cosmic running.
 
