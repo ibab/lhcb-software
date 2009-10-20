@@ -3,6 +3,7 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+!=========================  VeloDAQ v4r9 2009-10-20 =======================
 ! 2009-09-25 - Kurt Rinnert
  - bug fix in error bank decoder: there were no (empty) event infos inserted
    for PPFPGAs w/o errors resulting in a creash when trying to access an info 
