@@ -4,6 +4,7 @@
 ! Purpose     : The Rich Global PID algorithm
 !-----------------------------------------------------------------------------
 
+!======================= RichGlobalPID v3r10p4 2009-10-20 ====================
 ! 2009-10-02 - Chris Jones
  - Suppress warning messages about empty track or pixel containers so 0 
    instances are printed during processing. They are instead just summarised
