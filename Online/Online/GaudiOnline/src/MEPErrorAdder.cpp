@@ -228,6 +228,10 @@ MEPErrorAdder::removeSubs() {
     delete m_subsNumMEPRecvTimeouts[i];
     delete m_subsNotReqPkt[i];
     delete m_subsTotWrongPartID[i];
+    delete m_subsSentEvt[i];
+    delete m_subsSentOct[i];
+    delete m_subsSentEvtErr[i];
+
     delete m_subsSrcName[i];
   }	 
 
@@ -248,6 +252,10 @@ MEPErrorAdder::removeSubs() {
   m_subsNumMEPRecvTimeouts.clear();
   m_subsNotReqPkt.clear();
   m_subsTotWrongPartID.clear();
+  m_subsSentEvt.clear();
+  m_subsSentOct.clear();
+  m_subsSentEvtErr.clear();
+
   m_subsSrcName.clear();
 
   return 0;
@@ -345,6 +353,10 @@ MEPErrorAdder::infoHandler() {
     if (ReceiveSingleService(curr,m_subsNotReqPkt[i], m_rNotReqPkt[i], m_notReqPkt)) break;    
     if (ReceiveSingleService(curr,m_subsTotWrongPartID[i], m_rTotWrongPartID[i], m_totWrongPartID)) break;    
   
+    if (ReceiveSingleService(curr,m_subsSentEvt[i], m_rSentEvt[i], m_sentEvt)) break;
+    if (ReceiveSingleService(curr,m_subsSentOct[i], m_rSentOct[i], m_sentOct)) break;
+    if (ReceiveSingleService(curr,m_subsSentEvtErr[i], m_rSentEvtErr[i], m_sentEvtErr)) break;
+
     if (curr == m_subsSrcName[i]) {
 	//Receiving source names
 	
@@ -486,6 +498,10 @@ MEPErrorAdder::resetRemSingleCounters() {
   m_rNotReqPkt.resize(m_nrServices,0);
   m_rTotWrongPartID.resize(m_nrServices,0);
 
+  m_rSentEvt.resize(m_nrServices,0); 
+  m_rSentOct.resize(m_nrServices,0);
+  m_rSentEvtErr.resize(m_nrServices,0);
+ 
   return 0;
 }
 
@@ -502,6 +518,10 @@ MEPErrorAdder::publishSingleCounters() {
   PUBCNT(numMEPRecvTimeouts, "MEP-receive Timeouts");
   PUBCNT(notReqPkt,          "Total unsolicited packets");
   PUBCNT(totWrongPartID,     "Packets with wrong partition-ID");
+  
+  PUBCNT(sentEvt,	     "Events sent from HLT (MDF)");
+  PUBCNT(sentOct,            "Bytes sent from HLT");
+  PUBCNT(sentEvtErr,	     "Number of event send errors from HLT");
 
   return 0;
 }
@@ -570,6 +590,10 @@ MEPErrorAdder::setupSubs() {
   m_subsNumMEPRecvTimeouts.resize(m_nrServices,NULL);
   m_subsNotReqPkt.resize(m_nrServices,NULL);
   m_subsTotWrongPartID.resize(m_nrServices,NULL);
+ 
+  m_subsSentEvt.resize(m_nrServices,NULL);
+  m_subsSentOct.resize(m_nrServices,NULL);
+  m_subsSentEvtErr.resize(m_nrServices,NULL);
 
   m_subsSrcName.resize(m_nrServices,NULL);
 
@@ -620,6 +644,15 @@ MEPErrorAdder::setupSubs() {
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totWrongPartID",m_subFarms[i].c_str());
 	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     
+	//MDF, from HLT
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvt",m_subFarms[i].c_str());
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentOct",m_subFarms[i].c_str());
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+ 	
+
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
     }
@@ -662,7 +695,15 @@ MEPErrorAdder::setupSubs() {
 	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totWrongPartID",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
-    
+
+	//MDF, from HLT
+    	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/BytesOut",m_listenerDnsNode.c_str(),i+1);
+	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+     	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/EventsOut",m_listenerDnsNode.c_str(),i+1);
+	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+     	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
+	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+     
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
  

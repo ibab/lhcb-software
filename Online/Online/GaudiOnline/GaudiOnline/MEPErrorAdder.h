@@ -8,7 +8,7 @@
 //  Author    : David Svantesson 
 //
 //  This service adds up the counters of received and errornous MEPs per TELL1-source. One service runs for each subfarm and one for each partition.
-//  
+//  It also sums counters from the DiskWR process 
 //  
 //
 //  ===========================================================
@@ -95,6 +95,10 @@ namespace LHCb  {
     std::vector<int64_t>			m_rNotReqPkt;
     std::vector<int64_t>			m_rTotWrongPartID;    
 
+    std::vector<int64_t>			m_rSentEvt;
+    std::vector<int64_t>			m_rSentOct;
+    std::vector<int64_t>			m_rSentEvtErr;
+
     //Summed up vectors to send
     std::vector<int64_t>        m_badLenPkt;
     std::vector<int64_t>        m_misPkt;
@@ -116,6 +120,11 @@ namespace LHCb  {
     int64_t			m_notReqPkt;
     int64_t			m_totWrongPartID;
 
+    int64_t			m_sentEvt;
+    int64_t			m_sentOct;
+    int64_t			m_sentEvtErr;
+
+
     //Subscriptions
     std::vector<DimInfo*> 	m_subsBadLenPkt;
     std::vector<DimInfo*> 	m_subsMisPkt;       
@@ -135,6 +144,10 @@ namespace LHCb  {
     std::vector<DimInfo*>	m_subsNumMEPRecvTimeouts;
     std::vector<DimInfo*>	m_subsNotReqPkt;
     std::vector<DimInfo*>	m_subsTotWrongPartID;
+
+    std::vector<DimInfo*>	m_subsSentEvt;
+    std::vector<DimInfo*>	m_subsSentOct;
+    std::vector<DimInfo*>	m_subsSentEvtErr;
 
     std::vector<DimInfo*>	m_subsSrcName;
 
