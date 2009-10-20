@@ -1,14 +1,17 @@
-! $Id: release.notes,v 1.167 2009-09-17 12:14:49 odescham Exp $
+! $Id: release.notes,v 1.168 2009-10-20 08:19:02 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v8r19 2009-10-20 =========================
 ! 2009-09-14 - Olivier Deschamps
- - L0DUConfigProvider.cpp : remove protection against empty configuration. Simple TCK registration is enough to run w/o crash.
+ - L0DUConfigProvider.cpp : remove protection against empty configuration.
+   Simple TCK registration is enough to run w/o crash.
  - *.cpp/h : replace endreq by endmsg
 
 ! 2009-09-14 - Olivier Deschamps
- - L0DURawBankMonitor : adapt to change in CaloDAQ (call to CaloDataProvider::getBanks no longer needed)
+ - L0DURawBankMonitor : adapt to change in CaloDAQ 
+   (call to CaloDataProvider::getBanks no longer needed)
 
 ! 2009-09-09 - Julien Cogan
  - Fix bug in L0Conf (pointed out by Gerhard Raven) : 

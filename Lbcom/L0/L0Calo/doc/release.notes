@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.136 2009-10-15 07:58:15 robbep Exp $
+! $Id: release.notes,v 1.137 2009-10-20 08:16:00 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+!========================= L0Calo v9r22 2009-10-20 ========================
+! 2009-10-20 - Marco Cattaneo
+ - Remove obsolete file L0Calo_dll.cpp
 
 ! 2009-10-15 - Patrick Robbe
  - L0CaloAlg.cpp: add "include <numeric>" for std::accumulate
