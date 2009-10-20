@@ -4,12 +4,15 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!============================ TrackMonitors v1r14 2009-10-20 =================
 ! 2009-10-16 - Johan Blouw
- - changed an 'always' into 'debug', and fixed the 'comparison between signed and unsigned integer expressions' in OTTRackMonitors
+ - changed an 'always' into 'debug', and fixed the 'comparison between signed
+   and unsigned integer expressions' in OTTRackMonitors
 
 ! 2009-10-15 - Johan Blouw
- - added PitchResTool to the package. It is used to calculate pitch residuals in the Outer Tracker
- - modified OTTrackMonitor so that pitch residuals are calculated and histogrammed.
+ - added PitchResTool to the package. It is used to calculate pitch residuals
+   in the Outer Tracker
+ - modified OTTrackMonitor so that pitch residuals are calculated & histogrammed.
 
 ! 2009-10-15 - Marco Cattaneo
  - Fix one more untested StatusCode in OTHitEfficiencyMonitor
