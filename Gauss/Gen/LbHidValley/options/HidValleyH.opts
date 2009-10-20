@@ -1,11 +1,4 @@
-// $Id: HidValleyH.opts,v 1.2 2006-11-30 12:37:01 ibelyaev Exp $ 
-// ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
-// ============================================================================
-// $Log: not supported by cvs2svn $
-// Revision 1.1.1.1  2006/10/28 14:06:41  ibelyaev
-// New package: "Hidden Valley" production 
-// 
+// $Id: HidValleyH.opts,v 1.3 2009-10-20 07:47:56 marcin Exp $
 // ============================================================================
 /** @file
  *
@@ -19,8 +12,8 @@
  * 
  *  @code 
  *
- *  // include "common" configuration file:
- *  #include "$GAUSSROOT/cmt/HidValleyH.opts"
+ *  // include this "common" configuration file:
+ *  #include "$DECFILESROOT/options/HidValleyH.opts"
  *
  *  // define the event type 
  *  Generation.EventType = 439000<XY> ;
@@ -49,89 +42,83 @@
  *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
  *  @date 2006-10-20
  */
-// ============================================================================
-// make usage of LoKi
-// ============================================================================
 #include "$DECFILESROOT/options/LoKi.opts"
-// ============================================================================
-// Load the library
-// ============================================================================
-ApplicationMgr.DLLs += { "LbHidValley" } ;
-// ============================================================================
-Generation.SampleGenerationTool       = "Special/HidValleyH" ;
-Generation.HidValleyH.ProductionTool  = "PythiaProduction/Pythia";
-Generation.HidValleyH.Pythia.Commands =
-  { 
-    // read the input particle data table 
+Generation.Special.PythiaProduction.Commands = { 
     "pyinit pdtinput $LBHIDVALLEYOPTS/NewHiggses.pdt" , 
-    // read *ONLY MODIFIED* lines 
     "pyinit pdtlevel 3"
-  } ;
-Generation.HidValleyH.Pythia.PyGiveCommands = 
-  {
-    // ========================================================================
-    // General switches 
-    // ========================================================================
+};
+Generation.Special.PythiaProduction.PygiveCommands = 
+{
     // regular minimum bias events 
     "MSEL=0"      ,
-    // store the documentation strings 
-    "MSTP(128)=0" ,
-    // ========================================================================
+    // store the documentation strings ? 
+    "MSTP(128)=2" ,   // VERY IMPORTANT to preserve the event history!  
     // Switch ON processes for H0(H_20) Production:
-    // ========================================================================
     // 151 f + fbar -> H0              
     // 152 g + g -> H0                 
-    "MSUB(151)=1;MSUB(152)=1;MSUB(153)=1" ,
+    "MSUB(151)=1","MSUB(152)=1","MSUB(153)=1" ,
     // 171 f + fbar -> Z0 + H0         
     // 172 f + fbar' -> W+/- + H0      
     // 173 f + f' -> f + f' + H0       
     // 174 f + f' -> f" + f"' + H0     
-    "MSUB(171)=1;MSUB(172)=1;MSUB(173)=1;MSUB(174)=1" ,
+    "MSUB(171)=1","MSUB(172)=1","MSUB(173)=1","MSUB(174)=1" ,
     // 181 g + g -> Q + Qbar + H0      
     // 182 q + qbar -> Q + Qbar + H0   
     // 183 q + qbar -> g + H0          
     // 184 q + g -> q + H0             
     // 185 g + g -> g + H0             
-    "MSUB(181)=1;MSUB(182)=1;MSUB(183)=1;MSUB(184)=1" ,
+    "MSUB(181)=1","MSUB(182)=1","MSUB(183)=1","MSUB(184)=1" ,
     // 185 g + g -> g + H0             
     "MSUB(185)=1" ,
-    // ========================================================================
     // Switch OFF processes :
-    // ========================================================================
     // 11 f + f' -> f + f' (QCD) 
     // 12 f + fbar -> f' + fbar'
     // 13 f + fbar -> g + g 
-    "MSUB(11)=0;MSUB(12)=0;MSUB(13)=0"  ,
+    "MSUB(11)=0","MSUB(12)=0","MSUB(13)=0"  ,
     // 28 f + g -> f + g
     // 53 g + g -> f + fbar
     // 68 g + g -> g + g
-    "MSUB(28)=0;MSUB(53)=0;MSUB(68)=0"  ,
+    "MSUB(28)=0","MSUB(53)=0","MSUB(68)=0"  ,
     // 71 Z0 + Z0 -> Z0 + Z0
     // 72 Z0 + Z0 -> W+ + W-
     // 73 Z0 + W+/- -> Z0 + W+/-
     // 76 W+ + W- -> Z0 + Z0
     // 77 W+/- + W+/- -> W+/- + W+/-
-    "MSUB(71)=0;MSUB(72)=0;MSUB(73)=0;MSUB(76)=0;MSUB(77)=0" ,
+    "MSUB(71)=0","MSUB(72)=0","MSUB(73)=0","MSUB(76)=0","MSUB(77)=0" ,
     // 86 g + g -> J/Psi + g 
     // 87 g + g -> chi_0c + g 
     // 88 g + g -> chi_1c + g
     // 89 g + g -> chi_2c + g 
-    "MSUB(86)=0;MSUB(87)=0;MSUB(88)=0;MSUB(89)=0"  ,
+    "MSUB(86)=0","MSUB(87)=0","MSUB(88)=0","MSUB(89)=0"  ,
     // 91 Elastic scattering
     // 92 Single diffractive (XB)
     // 93 Single diffractive (AX) 
     // 93 Single diffractive (AX) 
     // 95 Low-pT scattering 
-    "MSUB(91)=0;MSUB(92)=0;MSUB(93)=0;MSUB(94)=0;MSUB(95)=0" ,
+    "MSUB(91)=0","MSUB(92)=0","MSUB(93)=0","MSUB(94)=0","MSUB(95)=0" ,
     // 106 g + g -> J/Psi + gamma  
     "MSUB(106)=0" 
-  } ;
-// ============================================================================
-Generation.HidValleyH.CutTool     = "NbQuarks" ;
-Generation.HidValleyH.NbQuarks.NB = 3 ;
-// use the fixed number of interactions 
+};
+
+Generation.Special.CutTool     = "NbQuarks" ;
+Generation.Special.NbQuarks.NB = 3 ;
 Generation.PileUpTool = "FixedNInteractions/PileUp" ; 
 Generation.PileUp.NInteractions = 1 ;
+Generation.Special.PythiaProduction.ValidateHEPEVT = true ; 
 // ============================================================================
-// The END 
+GenMonitor.Members +=  { "GaussMonitor::CheckLifeTimeHepMC/HepMCLifeTime" } ;
+HepMCLifeTime.Particles = 
+  { "H_20" , "H_30" , 
+    "B0" , "B_s0" , "B+" , "B_c+" , "Lambda_b0" , 
+    "D0" , "D+" , "D_s+" ,  "Lambda_c+" } ;
+SimMonitor.Members += { "GaussMonitor::CheckLifeTimeMC/MCLifeTime" } ;
+MCLifeTime.Particles = 
+  { "H_20" , "H_30" , 
+    "B0" , "B_s0" , "B+" , "B_c+" , "Lambda_b0" , 
+    "D0" , "D+" , "D_s+" ,  "Lambda_c+" } ;
+// ============================================================================
+GiGa.ModularPL.PhysicsConstructors += { "GiGaHiggsParticles" };
+GiGa.ModularPL.GiGaHiggsParticles.Higgses = {"H_20" , "H_30"} ;
+//set off unwanted processes                                                                                                                   
+#include "$DECFILESROOT/options/SwitchOffAllPythiaProcesses.opts"  
 // ============================================================================
