@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.35 2009-10-15 08:55:37 jpalac Exp $
+!$Id: release.notes,v 1.36 2009-10-20 16:49:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-10-20 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . _copyPVRelations method: SelectionSequence no longer a Configurable.
 
 ! 2009-10-14 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
