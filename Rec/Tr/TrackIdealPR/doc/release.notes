@@ -4,6 +4,7 @@
 ! Purpose     : Perfect pattern recognition
 !-----------------------------------------------------------------------------
 
+!======================= TrackIdealPR v2r19 2009-10-20 =======================
 ! 2009-10-08 Wouter Hulsbergen
  - adapted to changes in LHCb::Track
 
