@@ -124,9 +124,9 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
 	double zpos = StateParameters::ZEndTT ;
 	StatusCode thissc = m_extrapolator->propagate( statevec, zpos, 0, 
 						       LHCb::ParticleID(211)); 
-	LHCb::State *newState = new LHCb::State( statevec ) ;
-	newState->setLocation(LHCb::State::LocationUnknown);
-	track.addToStates( *newState ) ;
+	LHCb::State newState = LHCb::State( statevec ) ;
+	newState.setLocation(LHCb::State::LocationUnknown);
+	track.addToStates( newState ) ;
       }
     }
   }

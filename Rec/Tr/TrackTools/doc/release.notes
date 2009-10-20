@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-10-20 Stephanie Hansmann-Menzemer
+ - fix memory leak in TrackStateInitTool
 
 ! 2009-10-16 Wouter Hulsbergen
  - make measurement providers private tool of 'master' provider
