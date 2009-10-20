@@ -1,4 +1,4 @@
-// $Id: TrackCheckerNT.cpp,v 1.13 2009-10-19 17:12:54 mschille Exp $
+// $Id: TrackCheckerNT.cpp,v 1.14 2009-10-20 07:47:21 mschille Exp $
 // Include files 
 
 // local
@@ -1146,7 +1146,7 @@ StatusCode TrackCheckerNT::fillHitPurEff(
 	LHCb::Track::MeasurementContainer::const_iterator endMeas = measurements.end();
 	while ( !found && ( iMeas != endMeas ) ) {
 	  if ( (*iMeas)->type() == Measurement::OT ) {
-	    OTMeasurement* meas = dynamic_cast<OTMeasurement*>( *iMeas );
+	    const OTMeasurement* meas = dynamic_cast<const OTMeasurement*>( *iMeas );
 	    found = ( otid == meas->channel() );
 	  }
 	  ++iMeas;
