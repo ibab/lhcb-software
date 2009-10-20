@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v2r3 2009-10-20 =========================
 ! 2009-10-20 - Jaap Panman
  - remove small memory leak in LumiAccounting::finalize()
 
