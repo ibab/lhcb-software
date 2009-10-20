@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r34 2009-10-20 ==========================
 ! 2009-10-10 - Christopher Rob Jones
  - Remove dedicated hot pixel finder algorithm (now implemented as a generic 
    HPD analysis tool). Update python options accordingly.
