@@ -4,6 +4,7 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r27 2009-10-20 ======================
 ! 2009-09-30 - Chris Jones
  - Suppressed PID disabled warning messages in ChargedProtoPAlg for HLT, until
    the move other to the new algorithms, to reduce printout.
