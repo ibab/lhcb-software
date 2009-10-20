@@ -2,10 +2,9 @@
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
 
+!===================== VeloAlgorithms v4r10 2009-10-20 ====================
 ! 2009-10-04 - Vanya BELYAEV
-
  - VeloEffChecker.cpp 
-
     fix in finalize method to take into account that from now, there is
     no separate "numeric" and "literal" maps in GaudiHistoAlg.
     Thus the iteration isdone through "universal" ID, but only numeric 
@@ -14,7 +13,6 @@
 
  - cmt/requirements 
     version increment to v4r10  
-
 
 !===================== VeloAlgorithms v4r9 2009-09-03 =====================
 ! 2009-09-03 - Marco Cattaneo
