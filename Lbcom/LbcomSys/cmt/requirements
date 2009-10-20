@@ -32,7 +32,7 @@ use OTAssociators     v4r3    OT        # Jan Amoraal
 use OTMonitor         v2r11   OT        # Jan Amoraal
 
 # Rich
-use RichAlgorithms    v1r1p1  Rich      # Chris Jones
+use RichAlgorithms    v1r2    Rich      # Chris Jones
 use RichDAQ           v3r26   Rich      # Chris Jones
 use RichMCMonitors    v1r7p1  Rich      # Chris Jones
 use RichMCTools       v3r13   Rich      # Chris Jones
