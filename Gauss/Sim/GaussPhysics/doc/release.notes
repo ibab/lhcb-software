@@ -4,6 +4,11 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussPhysics v6r3 2009-10-20 =========================
+! 2009-10-20- Marcin Kucharczyk
+ - Add Hidden Valley pion definition (G4HiddenValley.cpp, G4HiddenValley.h)
+ - Add Hidden Valley pion to GiGaPhysUnknownParticles list
+
 !====================== GaussPhysics v6r3 2009-07-15 =========================
 ! 2009-07-03 - Patrick Robbe for Neal Gueissaz
  - Add Neutralino2 definition (G4Neutralino2.cpp, G4Neutralino2.h)

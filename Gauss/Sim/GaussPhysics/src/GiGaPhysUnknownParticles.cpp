@@ -1,4 +1,4 @@
-// $Id: GiGaPhysUnknownParticles.cpp,v 1.5 2009-07-03 09:11:33 robbep Exp $
+// $Id: GiGaPhysUnknownParticles.cpp,v 1.6 2009-10-20 07:35:07 marcin Exp $
 // Include files 
 
 // from Gaudi
@@ -24,6 +24,7 @@
 #include "G4Neutralino2.h"
 #include "G4CharginoMinus.h"
 #include "G4CharginoPlus.h"
+#include "G4HiddenValley.h"
 
 //
 #include "GiGaPhysUnknownParticles.h"
@@ -64,6 +65,7 @@ void GiGaPhysUnknownParticles::ConstructParticle()
   G4AntiXiccStarMinus::AntiXiccStarMinusDefinition();
   G4XiccStarPlus::XiccStarPlusDefinition();
   G4Neutralino::NeutralinoDefinition();
+  G4HiddenValley::HiddenValleyDefinition(); 
   G4Neutralino2::Neutralino2Definition();
   G4CharginoPlus::CharginoPlusDefinition();
   G4CharginoMinus::CharginoMinusDefinition();
