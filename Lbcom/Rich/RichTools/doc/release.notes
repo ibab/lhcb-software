@@ -4,6 +4,7 @@
 ! Purpose     : General purpose Rich Tools
 !-----------------------------------------------------------------------------
 
+!=========================== RichTools v2r28 2009-10-20 ======================
 ! 2009-10-12 - Christopher Rob Jones
  - Protect SnellsLawRefraction against zero intersections in initialize()
 
