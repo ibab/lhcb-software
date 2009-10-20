@@ -1,4 +1,4 @@
-// $Id: LumiAccounting.cpp,v 1.3 2009-06-12 08:17:50 panmanj Exp $
+// $Id: LumiAccounting.cpp,v 1.4 2009-10-20 09:06:16 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -157,15 +157,15 @@ StatusCode LumiAccounting::finalize() {
     info() << "number of files seen: " << m_count_files << endmsg;
     // FSR - use the class method which prints it
     LHCb::LumiFSRs::iterator fsr;
-    LHCb::LumiFSR* sumFSR = new LHCb::LumiFSR();
+    LHCb::LumiFSR sumFSR;
     for ( fsr = m_lumiFSRs->begin(); fsr != m_lumiFSRs->end(); fsr++ ) {
       // sum up the information
-      *sumFSR = *sumFSR + *(*fsr);
+      sumFSR += *(*fsr);
       // print the individual FSR
       info() << "FSR: " << *(*fsr) << endmsg; 
     }
     // print the integral
-    info() << "INTEGRAL: " << *sumFSR << endmsg; 
+    info() << "INTEGRAL: " << sumFSR << endmsg; 
   }
 
   // check if the FSRs can be retrieved from the TS

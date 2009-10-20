@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-10-20 - Jaap Panman
+ - remove small memory leak in LumiAccounting::finalize()
+
 ! 2009-10-14 - Jaap Panman
  - remove EOR from FileRecords path
 
