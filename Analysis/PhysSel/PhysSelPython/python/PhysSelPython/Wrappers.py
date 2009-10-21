@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.18 2009-10-19 20:41:53 jpalac Exp $
+#$Id: Wrappers.py,v 1.19 2009-10-21 09:46:01 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -123,17 +123,20 @@ class SelectionSequence(object) :
     corresponding to the top selection algorithm, and recursively uses
     Selection.requiredSelections to for a GaudiSequences with all the required
     selecitons needed to run the top selection. Can add list of event selection
-    algorithms to be added at the beginning of the sequence. 
+    algorithms to be added at the beginning of the sequence, and a list of
+    algorithms to be run straight after the selection algoritms.
 
-    Example: selection sequence for A -> B(bb), C(cc)
+    Example: selection sequence for A -> B(bb), C(cc). Add pre-selectors alg0
+             and alg1, and counter counter0.
 
     # Assume module A2B2bbC2cc defining a Selection object for the decay
     # A -> B(bb), C(cc)
     from A2B2bbC2cc import SelA2B2bbC2cc
     from PhysSelPython.Wrappers import SelectionSequence
-    SeqA2B2bbC2cc = SelectionSequence('SeqA2B2bbC2cc',
-                                      TopSelection = SelA2B2bbC2cc,
-                                      EventPreSelector = [alg0, alg1] )
+    SeqA2B2bbC2cc = SelectionSequence( 'SeqA2B2bbC2cc',
+                                       TopSelection = SelA2B2bbC2cc,
+                                       EventPreSelector = [alg0, alg1],
+                                       PostSelectionAlgs = [counter0]   )
     # use it
     mySelSeq = SeqA2B2bbC2cc.sequence()
     dv = DaVinci()
@@ -144,7 +147,8 @@ class SelectionSequence(object) :
     def __init__(self,
                  name,
                  TopSelection,
-                 EventPreSelector = []) :
+                 EventPreSelector = [],
+                 PostSelectionAlgs = [] ) :
         self._name = name
         self.TopSelection = TopSelection
         self.algos = []
@@ -155,7 +159,9 @@ class SelectionSequence(object) :
             self.buildSelectionList( self.TopSelection.requiredSelections )
         self.gaudiseq = None
         self.algos += self.sels
-        
+        for postAlg in PostSelectionAlgs :
+            self.algos.append(postAlg)
+            
     def name(self) :
         return self._name
 
