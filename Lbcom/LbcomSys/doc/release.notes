@@ -6,6 +6,82 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r7>2009-10-21 LbcomSys v7r7</A></H1><PRE>
+This version uses Gaudi v21r5 and LHCb v28r1
+
+- Packages modified: CaloTools v5r12, HltDAQ v1r1, L0Calo v9r22, L0DU v8r19,
+    L0Muon v8r5p2, RichAlgorithms v1r2, RichDAQ v3r26, RichTools v2r28,
+    VeloAlgorithms v4r10, VeloDAQ v4r9, VeloTools v3r4
+
+- In CaloTools v5r12
+  . Adapt to changes in CaloDAQ
+  . New tool : Calo2MCTool.{cpp,h} : handle Calo object->MC relation
+    (interface CaloInterfaces/ICalo2MCTool.h). Not yet complete but usable
+  . Calo2Calo.cpp : 
+    o make use of CaloAlgUtils.h to define context-dependent TES I/O 
+    o caloGetterTool : public -> private tool
+    o use caloGetterTool in isLocMax(id) method
+  . CaloGetterTool.cpp : make use of CaloAlgUtils.h to define context-dependent
+                         TES I/O 
+  . L0Calo2CaloTool.cpp: decrease error level for invalid ur/dr/ul cells
+  . use Relations in requirements
+
+- In HltDAQ v1r1
+  . Add HltRoutingBitsFilter
+
+- In L0Calo v9r22
+  . L0Candidate.h/.cpp: add separate file to contain class declarations
+    which were previously in L0CaloAlg.h/.cpp
+  . L0CaloCandidatesFromRaw.cpp: clean code
+  . L0CaloCandidatesFromRawBank.h/.cpp: clean code
+  . L0CaloAlg.h/.cpp: clean code
+  . L0CaloCompare.cpp: allows to do full monitoring on Hadron candidates
+
+- In L0DU v8r19
+  . L0DUConfigProvider.cpp : remove protection against empty configuration.
+    Simple TCK registration is enough to run w/o crash.
+  . *.cpp/h : replace endreq by endmsg
+  . Fix bug in L0Conf: 
+    import of L0Sequence.opts was missing when using DecodeL0DU flag 
+
+- In L0Muon v8r5p2
+  . Remove calls to ChronoStatSvc in execute
+
+- In RichAlgorithms v1r2
+  . Add new algorithm that runs the generic HPD analysis tools on the raw
+    data for each TAE event.
+
+- In RichDAQ v3r26
+  . Print more hardware information about software suppressed pixels
+  . Add software suppression of (hot) pixels to raw decoder tool.
+
+- In RichTools v2r28
+  . Protect SnellsLawRefraction against zero intersections in initialize()
+  . Add new HPD occupancy and hot pixel finder tools
+
+- In VeloAlgorithms v4r10
+  . VeloEffChecker.cpp : fix in finalize method to take into account that from
+    now, there are no separate "numeric" and "literal" maps in GaudiHistoAlg.
+
+- In VeloDAQ v4r9
+  . Bug fix in error bank decoder: there were no (empty) event infos inserted
+    for PPFPGAs w/o errors resulting in a crash when trying to access an info 
+    for a PPFPGA > number of PPFGA w/ errors. Of course the positions were also
+    wrong. The only cases handled correctly before the fix were: 
+    1. only errors in PPFPGA 0
+    2. errors in all PPFPGAs   
+
+- In VeloTools v3r4
+  . protected Linux-only include in LivDBTELL1SensorMap on Windows
+  . added tool implementations previously residing in VeloTELL1Tools
+  . added new tool providing PVSS TELL1 names
+
+- In CaloTools v5r12, L0Calo v9r22, L0DU v8r19
+  . Adapt to changes in CaloDAQ
+
+- In HltDAQ v1r1, L0Calo v9r22, VeloTools v3r4
+  . Remove obsolete file <package>_dll.cpp
+
 </PRE><H1><A NAME=v7r6>2009-09-07 LbcomSys v7r6</A></H1><PRE>
 This version uses Gaudi v21r4 and LHCb v28r0
 
