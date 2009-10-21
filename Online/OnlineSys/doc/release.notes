@@ -6,6 +6,10 @@
 !-----------------------------------------------------------------------------
 
 </PRE><H1><A NAME=v4r29>2009-09-14 OnlineSys v4r29</A></H1><PRE>
+     New version v4r30 built against LHCb v28r1.
+     Update several requirements files to contain correct version number.
+
+</PRE><H1><A NAME=v4r29>2009-09-14 OnlineSys v4r29</A></H1><PRE>
      New version v4r29 built against LHCb v28r0.
      Updates for Gaucho, GaudiOnline, HistDBPython, ROMon, ROLogger,
      UPI, Writer, OnlineHistDB and Presenter.
