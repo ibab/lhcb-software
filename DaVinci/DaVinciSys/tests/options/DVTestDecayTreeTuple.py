@@ -61,7 +61,7 @@ from Configurables import MCTupleToolReconstructed, MCReconstructed
 #
 
 from StrippingConf.Configuration import StrippingConf
-from Configurables import StrippingStream
+from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingBd2JpsiKS
 
 stream = StrippingStream("Test")

@@ -1,6 +1,6 @@
-## $Id: DVTestBd2KstarMuMu.py,v 1.12 2009-10-13 17:35:37 pkoppenb Exp $
+## $Id: DVTestBd2KstarMuMu.py,v 1.13 2009-10-21 15:40:17 pkoppenb Exp $
 ## ============================================================================
-## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $
+## CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $
 ## ============================================================================
 """
 @file DVTestBd2KstarMuMu.py
@@ -47,10 +47,10 @@ TestCorrelations.Algorithms = ["FilterTrueTracks",
 ## Preselection
 
 from StrippingConf.Configuration import StrippingConf
-from Configurables import StrippingStream
+from StrippingConf.StrippingStream import StrippingStream
 from StrippingSelections import StrippingBd2KstarMuMu
 
-stream = StrippingStream("KstarMuMu")
+stream = StrippingStream("Bmuon")
 stream.appendLines( [ StrippingBd2KstarMuMu.line_10hz ] )
 
 sc = StrippingConf()
