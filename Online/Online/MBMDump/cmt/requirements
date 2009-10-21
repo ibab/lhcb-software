@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           MBMDump
-version           v1r0
+version           v1r13
 #============================================================================
 branches          cmt doc MBMDump src
 use OnlineKernel  v* Online
