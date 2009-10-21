@@ -1,5 +1,5 @@
-// $Id: StandardPacker.h,v 1.5 2009-07-08 13:29:32 cattanem Exp $
-#ifndef KERNEL_STANDARDPACKER_H 
+// $Id: StandardPacker.h,v 1.6 2009-10-21 16:35:19 jonrob Exp $
+#ifndef KERNEL_STANDARDPACKER_H
 #define KERNEL_STANDARDPACKER_H 1
 
 // Include files
@@ -14,42 +14,50 @@
  *  @author Olivier Callot
  *  @date   2005-03-15
  */
+
 namespace Packer {
   const double ENERGY_SCALE     = 1.e2;  ///< .01 MeV steps
   const double POSITION_SCALE   = 1.e4;  ///< 0.1 micron steps
   const double SLOPE_SCALE      = 1.e8;  ///< full scale +- 20 radians
   const double FRACTION_SCALE   = 3.e4;  ///< store in short int.
+  const double TIME_SCALE       = 1.e5;  ///< 0.0001 ns resolution
 }
 
 class StandardPacker {
-public: 
+public:
+
   /// Standard constructor
-  StandardPacker( ) {}; 
+  StandardPacker( ) {};
 
   ~StandardPacker( ) {}; ///< Destructor
 
   /** returns an int for a double energy */
-  int energy( double e ) { 
-    return packDouble( e * Packer::ENERGY_SCALE );  
+  int energy( double e ) {
+    return packDouble( e * Packer::ENERGY_SCALE );
   }
-  
+
   /** returns an int for a double position */
-  int position( double x ) { 
-    return packDouble( x * Packer::POSITION_SCALE ); 
+  int position( double x ) {
+    return packDouble( x * Packer::POSITION_SCALE );
   }
-  
+
   /** returns an int for a double slope */
-  int slope( double x ) { 
-    return packDouble( x * Packer::SLOPE_SCALE ); 
+  int slope( double x ) {
+    return packDouble( x * Packer::SLOPE_SCALE );
   }
-  
+
   /** returns an short int for a double fraction, for covariance matrix */
-  short int fraction( double f ) { 
-    return shortPackDouble( f * Packer::FRACTION_SCALE );  
+  short int fraction( double f ) {
+    return shortPackDouble( f * Packer::FRACTION_SCALE );
+  }
+
+  /** returns an int for a double time (TOF) value */
+  int time( double x ) {
+    return packDouble( x * Packer::TIME_SCALE );
   }
 
   /** returns an int containing the float value of the double */
-  int fltPacked( double x  ) { 
+  int fltPacked( double x  ) {
     union fltInt { int i; float f; } convert;
     convert.f = (float)x;
     return convert.i;
@@ -63,7 +71,7 @@ public:
   int reference( DataObject* out, const DataObject* parent, int key ) {
     LinkManager::Link* myLink = out->linkMgr()->link( parent );
     if ( NULL == myLink ) {
-      out->linkMgr()->addLink( parent->registry()->identifier(), 
+      out->linkMgr()->addLink( parent->registry()->identifier(),
                                parent );
     }
     if ( key != (key & 0x0FFFFFFF ) ) {
@@ -81,15 +89,18 @@ public:
 
   /** returns the energy as double from the int value */
   double energy( int k )         { return double(k) / Packer::ENERGY_SCALE; }
-  
+
   /** returns the position as double from the int value */
   double position( int k )       { return double(k) / Packer::POSITION_SCALE; }
-  
+
   /** returns the slope as double from the int value */
   double slope( int k )          { return double(k) / Packer::SLOPE_SCALE; }
-  
+
   /** returns the fraction as double from the short int value */
-  double fraction( short int k ) { return double(k) / Packer::FRACTION_SCALE; }  
+  double fraction( short int k ) { return double(k) / Packer::FRACTION_SCALE; }
+
+  /** returns the time as double from the int value */
+  double time( int k )           { return double(k) / Packer::TIME_SCALE; }
 
   /** returns an double from a int containing in fact a float */
   double fltPacked( int k  ) {
@@ -99,7 +110,9 @@ public:
   }
 
 protected:
-  int packDouble ( double val ) {
+
+  int packDouble ( double val ) 
+  {
     if (  2.e9 < val ) return  2000000000;  // saturate 31 bits
     if ( -2.e9 > val ) return -2000000000;  // idem
     if ( 0 < val ) return int( val + 0.5 ); // proper rounding
@@ -112,8 +125,6 @@ protected:
     if ( 0 < val ) return int( val + 0.5 ); // proper rounding
     return int( val - 0.5 );
   }
-
-private:
 
 };
 #endif // KERNEL_STANDARDPACKER_H

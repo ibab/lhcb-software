@@ -4,6 +4,10 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-10-21 - Chris Jones
+ - Extend StandardPacker.h with methods to pack time values (TOF values 
+   for the packing of MC hits).
+
 !===================== LHCbKernel v11r8 2009-10-16 ======================
 ! 2009-10-11 - Christopher Rob Jones
  - Extend RichSmartID with new methods to object HPD pixel row, HPD pixel 
