@@ -5,14 +5,247 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2009-10-07 - Victor Coco
- - Added dependency on Det/VeloPixDet (new package) for upgrade simulation
+</PRE><H1><A NAME=v28r1>2009-10-21 LHCbSys v28r1</A></H1><PRE>
+This version uses Gaudi v21r5 and LCG_57
 
-! 2009-09-15 - Rob Lambert
- - Added dependency on Kernel/XMLSummaryBase
+- Packages added: XMLSummaryBase   - Code for writing XML-based summary in Gaudi
+                  XMLSummaryKernel - Schema and code to manipulate XML summary
+                     VeloPixDet    - Pixel detector description for LHCb upgrade
+- Packages modified: CaloDAQ v4r14, CaloInterfaces v7r15, CaloKernel v6r1, 
+    CaloUtils v8r7, MDF v3r20, Tell1Kernel v1r8, DDDB v1r23, Magnet v5r4,
+    MuonDet v9r0, OTDet v8r3, STDet v4r14, DAQEvent v8r1, EventAssoc v4r8,
+    EventPacker v1r8, LumiEvent v2r2, TrackEvent v5r1, IOExample v3r3,
+    GaudiConf v12r9, KernelSys v12r1, LHCbAlgs v2r29, LHCbKernel v11r8,
+    LHCbMath v3r13, PartProp v1r5, Relations v5r9, L0MuonKernel v8r8,
+    DaVinciInterfaces v1r2, DaVinciKernel v8r2, DaVinciMCKernel v4r1,
+    LoKiCore v9r5, LoKiHlt v2r4, LoKiNumbers v8r3, LoKiPhys v8r10, 
+    LoKiPhysMC v8r5, RichKernel v7r28, CondDBUI v2r23, TfKernel v2r12,
+    TrackInterfaces v4r8, TrackKernel v1r1
 
-! 2009-09-14 - Rob Lambert
- - Added dependency on Kernel/XMLSummaryKernel
+- In CaloDAQ v4r14
+  . CaloReadoutTool.cpp : 
+    o implement BeginEvent update via IncidentService
+    o implement initialize()/finalize() method
+    o adapt all inheriting readout tools accordingly
+    o bug fix : initialise m_packed in constructor
+  . (I)Calo(L0)DataProvider/(I)CaloEnergyFromRaw/(I)CaloTriggerXXXFromRaw : 
+    o add protections with const qualifier
+    o remove usage of stringstream (slow)
+    o change signature of adcs() methods
+  . Calo(L0)DataProvider : fixes to inititialisation
+  . ICaloDataProvider : new virtual methods adcRange() and pinRange() return 
+                        min/max (pin)Adc in the decoded ADC list.
+    o adapt CaloDataProviderFromTES and CaloDataProvider
+    o remove CaloDataProviderPatched (obsolete)
+
+- In CaloInterfaces v7r15
+  . New interface : ICalo2MCTool
+
+- In CaloKernel v6r1
+  . CaloKernel/ConfUtils.py: issue warning messages for modification of existing
+    entries in Data-On-Demand Service 
+
+- In CaloUtils v8r7
+  . Calo2Dview : speed-up processing
+  . Add possibility to use CaloCellID as property 
+
+- In MDF v3r20
+  . Update printout helper for new bank types
+
+- In Tell1Kernel v1r8
+  . Added tool interfaces and utility headers previously scattered over
+    different packages
+
+- In DDDB v1r23
+  . Changed default tag for 2009 data (needs SQLDDDB v5r13 or later):
+    o head-20091007         for DDDB
+
+- In Magnet v5r4
+  . Magnetic field grid is now stored in class DetDesc/MagneticFieldGrid. 
+    New utility 'MagneticFieldGridReader' reads the field from a file (thereby
+    replacing the IMagFieldTools)
+
+- In MuonDet v9r0
+  . Largely Modified to reduce the detector elements inside the chambers 
+  . Remove obsolete header file (DeMuonGasGap.h)
+  . Cache MsgStream objects for speed
+
+- In OTDet v8r3
+  . Added method to compute intersection with monolayer plane in 'straw'
+    coordinates.
+
+- In STDet v4r14
+  . Change sign of tolerance in DeSTSensor::localInActive such that it is more
+    intuitive. Note that with negative numbers you have the same behaviour as
+    before.
+
+- In DAQEvent v8r1
+  . Add functionality to write/read MDF files with only lumi events:
+    o Add FileID bank to RawBank
+	  o Add src/components/FileIdBankWriter.cpp/h and Event/FileId.h
+
+- In EventAssoc v4r8
+  . Add dict: LHCb::RelationWeighted1D<LHCb::Particle,LHCb::MCParticle,double>
+
+- In EventPacker v1r8
+  . In Packer algorithms, use getOrCreate of input containers instead of get,
+    to produce empty output container if input is missing
+  . Fix a windows warnings in ReadPackedDst and WritePackedDst
+  . Add name of leaf in TES to DstAddress bank
+
+- In LumiEvent v2r2
+  . remove EOR from FileRecords path
+
+- In TrackEvent v5r1
+  . Added class 'TrackFitResult' to store trackfit related (transient) data in 
+    track. Moved nodes and measurements into this class.
+  . Added typedef for SharedObjectsContainer to Track
+  . Modified Track.xml to add history, type and location for TT tracks.
+
+- In IOExample v3r3
+  . Replace PoolDigi and PoolSim input files with MC09 files and update QMTest
+    reference
+
+- In GaudiConf v12r9
+  . Add CaloPackingConf.py: contains CaloDstPackConf, CaloDstUnPackConf
+    configurables to pack/unpack Calo-objects on DST
+  . In DstConf.py: 
+    o make usage of new CaloDst configurables 
+    o do not set up DataOnDemand unpacking of Muon tracks if DstType is RDST 
+  . In DigiConf.py:
+    o Make writing of spillover headers compulsory if SpilloverPaths are set
+    o When saving spillover, save also spillover Gen headers
+    o Kill all known Spillover nodes when saving "Minimal" format
+  . Deployment of XmlSummarySvc: 
+    o Added explicit requirement on XMLSummaryKernel in requirements
+    o In Configurable.py, LHCbApp: Added configuration of an XMLSummarySvc
+      LHCbApp().XMLSummary. Default behaviour is to neither create nor fill a
+      summary service/file
+  . Add options/valgrind-python.supp, suppression file for valgrind errors from
+    python, e.g. when executing gaudirun.py
+
+- In KernelSys v12r1
+  . Added dependency on XMLSummaryKernel
+
+- In LHCbAlgs v2r29
+  . In TESCheck, do not call Warning() if OutputLevel is greater than WARNING
+  . Memory Tool:
+    o two new counters: "Total Memory/MB", "Delta Memory/MB"
+    o two new histograms: "Total Memory [MB]", "Delta Memory [MB]"
+  . Added EventCountAlg, which has a nameable counter(). This will presumably
+    replace EventCountHisto with the XMLSummarySvc for most users.
+
+- In LHCbKernel v11r8
+  . Extend RichSmartID with new methods to object HPD pixel row, HPD pixel 
+    column and HPD column level identifiers.
+  . CaloCellID:
+    o add the methods caloName, areaName
+    o move fillStream & bits mehtods into cpp file 
+    o change the self-printout 
+    o add "toString" method 
+    o add constructors from strings 
+    o make use of new methods form CaloCellCode namespace 
+    o add hash method, change the output type  
+  . CaloCellCode:
+    o replace C-arrays by boost::array
+    o reimplement many functions 
+    o add documentation lines 
+    o remove redundant "static" fields 
+    o improve the safety of the lines 
+  . CaloCellIDAsProperty: Add the possibility to use CaloCellID,
+    std::vector<CaloCellID> and std::map<CaloCellID,double> as properties
+  . Added VeloPixChannelID for upgrade simulation
+
+- In LHCbMath v3r13
+  . Faster (but equivalent) check for parallel tracks in GeomFun.icpp
+  . Add parsing functions to ValueWithError and std::vector<ValueWithError>
+    classes, thus allowing their usage as properties for Gaudi components 
+  . More polishing for *WithErrorClasses 
+  . Add python/LHCbMath/Types.py helper module to load few important classes, 
+    like  Gaudi.XYZPoint, etc... the classes also "Decorated" on-flight 
+  . SVEctorWithErorr : add functions to get the correlation coefficient and 
+                       correlation matrix 
+
+- In PartProp v1r5
+  . python/PartProp/Nodes.py: fix for invald class name 
+
+- In Relations v5r9
+  . RelationBase & RelationWeightedBase : improve CPU performance of "merge" and
+    "imerge" methods
+
+- In L0MuonKernel v8r8
+  . Change to decode bank v3
+  . Add new histo name (for virtual hit maps)
+
+- In DaVinciInterfaces v1r2
+  . Kernel/IPhysDesktop.h: Add methods to control use of P->PV relation tables.
+
+- In DaVinciKernel v8r2
+  . DVAlgorithm:
+    o Add properties UseP2PVRelations and WriteP2PVRelations.
+    o getRelatedPV now uses P->PV relations according to whether there is PV
+    o re-fitting, UseP2PVRelations is true, or the event has a single PV.
+  . Kernel/BestPV.h: Call DVAlgorithm::bestPV
+
+- In DaVinciMCKernel v4r1
+  . Kernel/IParticle2MCAssociator.h, Kernel/IParticle2MCWeightedAssociator.h,
+    Kernel/Particle2MCAssociatorBase.h, src/Lib/Particle2MCAssociatorBase.cpp:
+    o Use new GAUDI_API stuff.
+  . Kernel/Particle2MCAssociatorBase.h
+    o Include STL header <numeric>, needed for accumulate algorithm.
+  . dict/DaVinciMCKernelDict.xml: Remove duplicate dictionaries
+
+- In LoKiCore v9r5
+  . HybridBase: add more printout for python exceptions for easier debugging
+  . fix small incorrectness 
+  . python/LoKiCore/decorators.py: fix for change in new Reflex/PyROOT
+
+- In LoKiPhys v8r10
+  . New symbols:
+    o "track ghost probablity" LoKi::Particles::GhostProbability,
+      TRGHP & TRGHOSTPROB 
+    o "track likelihood" LoKi::Particles::TrackLikelihood, TRLH  & TRLIKELIHOOD 
+    o ISMUONLOOE & ISLOOSEMUON
+
+- In LoKiPhysMC v8r5
+  . fix event and reference counters for MC-match 
+
+- In RichKernel v7r28
+  . Add the method L1IngressHeader::inactiveHPDInputs which returns the
+    list of inactive (i.e. missing HPDs) in a given decoded L1 ingress.
+  . Add L1IngressHeader::numInactiveHPDs() to return the number of 
+    inactive HPDs
+  . Add a faster implementation of L1IngressHeader::numActiveHPDs() using bitset
+  . Add new tool interface for standalone HPD occupancy tool, which was
+    previously part of the HPD suppression tool
+  . Add new generic HPD data analysis tool interface
+  . Update tool registry with a new new tools
+
+- In CondDBUI v2r23
+  . The script for adding the global tag to the db is unified to standard 
+    CondDBUI form and functionality, and added to the CondDBUI package as 
+    CondDBAdmin_GlobalTag.py.
+  . Fixed the bug in an analysis method of the ReleaseNotes class for dealing
+    with release_notes.xml content.
+
+- In TfKernel v2r12
+  . isX() method from LineHit.h now works for all detectors
+
+- In TrackInterfaces v4r8
+  . Added IPitchResTool to calculate pitch residuals in the Outer Tracker
+  . Added missing const to ITrackExtrapolator
+
+- In TrackKernel v1r1
+  . Adapted to changes in LHCb::Track
+
+- In LoKiHlt v2r4, LoKiNumbers v8r3
+  . Remove duplicate dictionary already defined in Root 5.24
+
+- In CaloInterfaces v7r15, LoKiNumbers v8r3
+  . In requirements, remove hack for Gaudi v21r1 to link dictionary on Windows
+
+- In Magnet v5r4, OTDet v8r3, DAQEvent v8r1, LumiEvent v2r2, LoKiHlt v2r4
+  . Remove obsolete file <package>_dll.cpp
 
 </PRE><H1><A NAME=v28r0>2009-09-09 LHCbSys v28r0</A></H1><PRE>
 This version uses Gaudi v21r4 and LCG_56c
