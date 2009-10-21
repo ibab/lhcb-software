@@ -1,11 +1,12 @@
-! $Id: release.notes,v 1.352 2009-10-21 09:39:43 graven Exp $ 
+! $Id: release.notes,v 1.353 2009-10-21 13:13:10 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
-! 2009-10-17 - Gerhard Raven
+!========================== HltConf v5r0p1 2009-10-21 ===================
+! 2009-10-21 - Gerhard Raven
  - if no Hlt2 activeLines in settings, do NOT run Hlt2 config...
 
 !========================== HltConf v5r0 2009-10-17 =====================
