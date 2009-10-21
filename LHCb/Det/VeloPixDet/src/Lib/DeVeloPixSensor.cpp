@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.cpp,v 1.2 2009-10-19 07:32:11 cocov Exp $
+// $Id: DeVeloPixSensor.cpp,v 1.3 2009-10-21 11:19:28 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSENSOR_CPP 1
 //==============================================================================
@@ -11,6 +11,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/IUpdateManagerSvc.h"
+
 
 #include "DetDesc/Condition.h"
 

@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.2 2009-10-19 07:32:11 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -46,7 +46,7 @@ public:
   /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloPixChannelID& channel,
-                                    std::pair <float, float>& fraction) const;
+                                    std::pair <double, double>& fraction) const;
 
   /// Calculate the XYZ center of a pixel
   virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
@@ -68,10 +68,10 @@ public:
   
   /// Determines in which pixel of a given chip and a given ladder is local 3-d point
   virtual std::pair<int,int> WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex,
-                                        int chipIndex, std::pair <float, float>& fraction) const;
+                                        int chipIndex, std::pair <double, double>& fraction) const;
 
   /// Returns the size of the pixel of a given channel
-  virtual std::pair<float,float> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const;
+  virtual std::pair<double,double> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const;
   
     
   /// Access to the sensor on the other side of the VeloPix

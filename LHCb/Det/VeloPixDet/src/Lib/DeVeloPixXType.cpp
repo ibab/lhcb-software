@@ -1,4 +1,4 @@
-// $Id: DeVeloPixXType.cpp,v 1.3 2009-10-19 07:32:12 cocov Exp $
+// $Id: DeVeloPixXType.cpp,v 1.4 2009-10-21 11:19:28 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXXTYPE_CPP 1
 //==============================================================================
@@ -100,7 +100,7 @@ StatusCode DeVeloPixXType::initialize()
 
 StatusCode DeVeloPixXType::pointToChannel(const Gaudi::XYZPoint& point,
                                        LHCb::VeloPixChannelID& channel,
-                                       std::pair <float, float>& fraction) const
+                                       std::pair <double, double>& fraction) const
 {
   MsgStream msg(msgSvc(), "DeVeloPixXType");
   Gaudi::XYZPoint localPoint = globalToLocal(point);
@@ -176,9 +176,9 @@ int DeVeloPixXType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) con
 //==============================================================================
 /// Get the index relative to the chip of the pixel containing the point 
 //==============================================================================
-std::pair<int,int> DeVeloPixXType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<float,float>& fraction) const
+std::pair<int,int> DeVeloPixXType::WhichPixel(const Gaudi::XYZPoint& point, int ladderIndex, int chipIndex, std::pair<double,double>& fraction) const
 {
-  float alongAxisOffset = 0.;
+  double alongAxisOffset = 0.;
   if( chipIndex>0)  alongAxisOffset = chipIndex*(chipLength()+interChipDist()/2)+(chipIndex-1)*interChipDist()/2;
 
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
@@ -188,13 +188,13 @@ std::pair<int,int> DeVeloPixXType::WhichPixel(const Gaudi::XYZPoint& point, int 
   std::pair< int , int > thePixel;
 
   // Set the size of the edges (left/right) pixels
-  float interchipPixSizeLEFT = lpSize();
-  float interchipPixSizeRIGHT = lpSize();
+  double interchipPixSizeLEFT = lpSize();
+  double interchipPixSizeRIGHT = lpSize();
   if ( positionEdgePix[chipIndex]== 1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeRIGHT = interchipPixSize();
   if ( positionEdgePix[chipIndex]== -1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeLEFT = interchipPixSize();
   
   // correct for the extra length of the left pixel
-  float newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
+  double newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
   // set the results for most of the case
   thePixel.first = (int)(newx/lpSize());
   fraction.first = newx/lpSize() - (int)(newx/lpSize());

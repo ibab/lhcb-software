@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.h,v 1.2 2009-10-19 07:32:11 cocov Exp $
+// $Id: DeVeloPixSensor.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSENSOR_H
 #define VELOPIXDET_DEVELOPIXSENSOR_H 1
 
@@ -58,7 +58,7 @@ public:
   /// Also returns the fractional x-y position IN the pixel
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloPixChannelID& channel,
-                                    std::pair <float, float>& fraction) const = 0;
+                                    std::pair <double, double>& fraction) const = 0;
 
   /// Calculate the XYZ center of a pixel
   virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
@@ -70,7 +70,7 @@ public:
                                         std::vector <LHCb::VeloPixChannelID>& channels) const = 0;
 
   /// Return the pixel size (since the edge pixel might have different size)
-  virtual std::pair<float,float> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const = 0;
+  virtual std::pair<double,double> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const = 0;
 
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const = 0;

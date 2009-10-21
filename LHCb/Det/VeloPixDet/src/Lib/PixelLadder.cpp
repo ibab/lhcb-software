@@ -1,4 +1,4 @@
-// $Id: PixelLadder.cpp,v 1.2 2009-10-19 07:32:12 cocov Exp $
+// $Id: PixelLadder.cpp,v 1.3 2009-10-21 11:19:29 cocov Exp $
 // Include files
 // local
 #define  VELOPIXDET_PIXELLADDER_CPP 1
@@ -66,7 +66,7 @@ void PixelLadder::setNChip( int n )
 void PixelLadder::setEdgesOrientation( std::vector< int > orientation )
 {
   m_edgesOrientation.clear();
-  for (int i = 0 ; i < orientation.size() ; i++ )
+  for (unsigned int i = 0 ; i < orientation.size() ; i++ )
   {
     m_edgesOrientation.push_back(orientation[i]);
   }
