@@ -34,4 +34,32 @@
   <class name="std::vector<LHCb::PackedTwoProngVertex>" />
   <class name="LHCb::PackedTwoProngVertices" id="00000612-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedMCHit" />
+  <class name="std::vector<LHCb::PackedMCHit>" />
+  <class name="LHCb::PackedMCHits" id="000005F5-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCCaloHit" />
+  <class name="std::vector<LHCb::PackedMCCaloHit>" />
+  <class name="LHCb::PackedMCCaloHits" id="000005F6-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCRichHit" />
+  <class name="std::vector<LHCb::PackedMCRichHit>" />
+  <class name="LHCb::PackedMCRichHits" id="000005F1-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCRichOpticalPhoton" />
+  <class name="std::vector<LHCb::PackedMCRichOpticalPhoton>" />
+  <class name="LHCb::PackedMCRichOpticalPhotons" id="000005F2-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCRichSegment" />
+  <class name="std::vector<LHCb::PackedMCRichSegment>" />
+  <class name="LHCb::PackedMCRichSegments" id="000005F3-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCRichTrack" />
+  <class name="std::vector<LHCb::PackedMCRichTrack>" />
+  <class name="LHCb::PackedMCRichTracks" id="000005F4-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMCRichDigitSummarys" />
+  <class name="std::vector<LHCb::PackedMCRichDigitSummary>" />
+  <class name="LHCb::PackedMCRichDigitSummarys" id="000005F7-0000-0000-0000-000000000000" />
+
 </lcgdict>

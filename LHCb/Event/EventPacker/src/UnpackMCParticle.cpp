@@ -1,4 +1,4 @@
-// $Id: UnpackMCParticle.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackMCParticle.cpp,v 1.3 2009-10-21 16:41:14 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -48,6 +48,7 @@ StatusCode UnpackMCParticle::execute() {
 
   StandardPacker pack;
   
+  newMCParticles->reserve( dst->size() );
   for ( std::vector<LHCb::PackedMCParticle>::const_iterator itS = dst->begin();
         dst->end() != itS; ++itS ) {
     const LHCb::PackedMCParticle& src = (*itS);
@@ -59,7 +60,7 @@ StatusCode UnpackMCParticle::execute() {
     double py = pack.energy( src.py );
     double pz = pack.energy( src.pz );
     double mass = src.mass;
-    double E = sqrt( px*px + py*py + pz*pz + mass*mass );
+    double E = std::sqrt( px*px + py*py + pz*pz + mass*mass );
     Gaudi::LorentzVector p( px, py, pz , E );
     part->setMomentum( p );
 

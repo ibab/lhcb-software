@@ -1,0 +1,49 @@
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// Local
+#include "CheckerBaseAlg.h"
+
+using namespace DataPacking;
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+template < class PACKER >
+Check<PACKER>::Check( const std::string& name,
+                      ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
+{
+  declareProperty( "DataA" , m_dataA = PACKER::unpackedLocation()        );
+  declareProperty( "DataB",  m_dataB = PACKER::unpackedLocation()+"Test" );
+}
+
+template < class PACKER >
+Check<PACKER>::~Check() { }
+
+template < class PACKER >
+StatusCode Check<PACKER>::execute()
+{
+  // Load the input data
+  typename PACKER::DataVector * dataA =
+    this->get<typename PACKER::DataVector>(m_dataA);
+  typename PACKER::DataVector * dataB =
+    this->get<typename PACKER::DataVector>(m_dataB);
+
+  // check data sizes
+  if ( dataA->size() != dataB->size() )
+  {
+    return this->Error( "Size of containers '"+m_dataA+"' and '"+m_dataB+"' differs" );
+  }
+
+  // Packer
+  static PACKER packer;
+
+  // compare the containers
+  // For the moment just carry on if an error is returned (with a message)
+  packer.check( *dataA, *dataB, *dynamic_cast<GaudiAlgorithm*>(this) ).ignore();
+
+  // return
+  return StatusCode::SUCCESS;
+}

@@ -1,0 +1,45 @@
+
+// from Gaudi
+#include "GaudiKernel/AlgFactory.h"
+
+// Local
+#include "UnpackerBaseAlg.h"
+
+using namespace DataPacking;
+
+//=============================================================================
+// Standard constructor, initializes variables
+//=============================================================================
+template < class PACKER >
+Unpack<PACKER>::Unpack( const std::string& name,
+                        ISvcLocator* pSvcLocator )
+  : GaudiAlgorithm ( name , pSvcLocator )
+{
+  declareProperty( "InputName" , m_inputName  = PACKER::packedLocation()   );
+  declareProperty( "OutputName", m_outputName = PACKER::unpackedLocation() );
+}
+
+template < class PACKER >
+Unpack<PACKER>::~Unpack() { }
+
+template < class PACKER >
+StatusCode Unpack<PACKER>::execute()
+{
+  // Load the input data
+  typename PACKER::PackedDataVector * pdata =
+    this->get<typename PACKER::PackedDataVector>(m_inputName);
+
+  // Make the output unpacked data
+  typename PACKER::DataVector * data = new typename PACKER::DataVector();
+
+  // give new container to Gaudi
+  this->put( data, m_outputName );
+
+  // Packer
+  static PACKER packer;
+
+  // Fill packed data
+  packer.unpack( *pdata, *data );
+
+  return StatusCode::SUCCESS;
+}

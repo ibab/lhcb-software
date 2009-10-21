@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-10-21 - Chris Jones
+ - Add new packing classes for the packing of all MC information in Gauss
+   and Boole.
+
 !============================ EventPacker v1r8 2009-10-16 ====================
 ! 2009-10-14 - Marco Cattaneo
  - In Packer algorithms, use getOrCreate of input containers instead of get,

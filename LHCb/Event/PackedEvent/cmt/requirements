@@ -3,20 +3,27 @@
 # Maintainer : Olivier Callot
 #============================================================================
 package           PackedEvent
-version           v3r6
+version           v3r7
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc Event dict
+branches          cmt doc Event dict src
 
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
 use	GaudiKernel     v*
+use     LHCbKernel      v*     Kernel
+use     MCEvent         v*     Event
+use     RecEvent        v*     Event
 
 apply_pattern install_more_includes more=Event
+
+# ================ linker library ============================================
+library PackedEventLib ../src/*.cpp
+apply_pattern linker_library library=PackedEventLib
 
 #============================================================================ 
 # Produce lcg dictionary

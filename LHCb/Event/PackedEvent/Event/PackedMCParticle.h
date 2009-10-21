@@ -1,4 +1,4 @@
-// $Id: PackedMCParticle.h,v 1.4 2008-02-27 14:36:18 jonrob Exp $
+// $Id: PackedMCParticle.h,v 1.5 2009-10-21 16:40:16 jonrob Exp $
 #ifndef EVENT_PACKEDMCPARTICLE_H 
 #define EVENT_PACKEDMCPARTICLE_H 1
 
@@ -7,12 +7,6 @@
 #include <string>
 #include <vector>
 
-/** @class PackedMCParticles PackedMCParticle.h Event/PackedMCParticle.h
- *  DataObject containing a vector of packed MCParticles
- *
- *  @author Olivier Callot
- *  @date   2005-03-18
- */
 namespace LHCb 
 {
   struct PackedMCParticle {
@@ -20,7 +14,7 @@ namespace LHCb
 
     PackedMCParticle( const PackedMCParticle& c ) : // copy constructor
       key( c.key), px( c.px), py(c.py), pz(c.pz), mass(c.mass), PID( c.PID),
-      originVertex( c.originVertex), endVertices( c.endVertices) {};
+      originVertex( c.originVertex ), endVertices( c.endVertices) {};
   
     int key;
     int px;
@@ -39,6 +33,12 @@ namespace LHCb
     static const std::string& Default = "pSim/MCParticles";
   }
 
+  /** @class PackedMCParticles PackedMCParticle.h Event/PackedMCParticle.h
+   *  DataObject containing a vector of packed MCParticles
+   *
+   *  @author Olivier Callot
+   *  @date   2005-03-18
+   */
   class PackedMCParticles : public DataObject {
   public: 
     /// Standard constructor
@@ -52,10 +52,13 @@ namespace LHCb
     std::vector<PackedMCParticle>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedMCParticle>::const_iterator end()   const { return m_vect.end(); }
 
-  protected:
+    void reserve( const unsigned int size ) { m_vect.reserve(size); }
+    unsigned int size() const { return m_vect.size(); }
 
   private:
+
     std::vector<PackedMCParticle> m_vect;
+
   };
 } // namespace LHCb
 
