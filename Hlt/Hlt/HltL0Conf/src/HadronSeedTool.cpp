@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.9 2009-01-13 14:06:06 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.10 2009-10-21 08:34:02 albrecht Exp $
 // Include files 
 
 #include <cmath>
@@ -164,7 +164,7 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
   if( m_decodeCalos ){
     
     // initialize caloDAQ for this event
-    m_hcalDaq->getBanks();
+    //    m_hcalDaq->getBanks();
     
     // calculate barycenter of HCal cluster around seed
     StatusCode sc = getHCalBarycenter( hadL0Cand, x, y, e, region );
@@ -178,7 +178,7 @@ StatusCode HadronSeedTool::makeTrack(const LHCb::L0CaloCandidate& hadL0Cand,
       // L0 candidate position was refined using hcal - let's see if the
       // ecal helps to narrow down things even further
       // want at least 2 ecal cells with valid data
-      m_ecalDaq->getBanks();
+      //      m_ecalDaq->getBanks();
       sc = getECalBarycenter( x, y, z, e, 2, region );
       // we can just ignore the error code, because we are not guaranteed
       // to find something in the ecal
