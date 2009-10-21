@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.6 2009-07-09 09:38:45 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.7 2009-10-21 10:14:15 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -22,8 +22,14 @@ jpsi = FilterDesktop('MyJpsi')
 jpsi.InputLocations = [ 'StdLooseJpsi2MuMu' ]
 jpsi.Code = "ALL"
 #
-# @todo This does not work properly
-# jpsi.CloneTree = True # Write the muons as well
+# get DoD muons
+#
+from PhysSelPython.Wrappers import Selection, DataOnDemand, SelectionSequence
+from Configurables import SelDSTWriter
+
+MyLooseJpsi = DataOnDemand('DODStdLooseJpsi2MuMu',
+                           Location = 'Phys/StdLooseJpsi2MuMu')
+
 #
 # Loop over three overlapping mass zones
 #
@@ -35,20 +41,30 @@ for i in MassRanges :
     ln = str(lm)
     hn = str(hm)
     name = ln+"_"+hn
-    seq = GaudiSequencer("Seq_"+name)
-    d = DeterministicPrescaler("Prescale_"+name)
-    d.AcceptFraction = 100./(hm-lm)  # same background level in each
-    j = jpsi.clone("Jpsi_"+name)
-    j.Code = "(MM>"+ln+") & (MM<"+hn+")"
-    p = PrintDecayTree("Print_"+name)
-    p.InputLocations = [ "Jpsi_"+name ]
-    seq.Members += [ d, j, p ]
-    #
-    # This the bit that declares the sequence to the Dst writer
-    # The second line allows to sdae particles (not yet 100% functional)
-    #
-    DaVinciWriteDst().DstFiles[ "Jpsi_"+name+".dst" ] = seq
-    DaVinciWriteDst().Items += [ "/Event/Phys/Jpsi_"+name+"#2" ] # will not save StdLooseMuos
+
+    # define the prescale to have a constant (assumed flat) level of background
+    prescale = DeterministicPrescaler("Prescale_"+name, AcceptFraction = 100./(hm-lm))
+    filter   = FilterDesktop("Jpsi_"+name, Code = "(MM>"+ln+") & (MM<"+hn+")")
+    printer  = PrintDecayTree("Print_"+name, InputLocations = [ "Jpsi_"+name ])
+    
+    SelJpsi = Selection('SelJpsi_'+name,
+                        Algorithm = filter,
+                        RequiredSelections = [ MyLooseJpsi ])
+    
+    SeqJpsi = SelectionSequence('SeqJpsi_'+name
+                                , TopSelection = SelJpsi
+                                , EventPreSelector = [ prescale ]
+                                , PostSelectionAlgs = [ printer ])
+    
+    dstWriter = SelDSTWriter("JpsiDSTWriter_"+name,
+                             SelectionSequences = [SeqJpsi],
+                             SaveCandidates = True,
+                             CopyMCTruth = True)
+    seq = dstWriter.sequence()
+    # seq.Members.append(printer) # does not work
+
+    DaVinci().UserAlgorithms += [ seq ]
+
 ##############################################################################
 DaVinci().EvtMax = 100
 DaVinci().PrintFreq = 1 

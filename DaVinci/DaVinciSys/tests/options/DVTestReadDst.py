@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestReadDst.py,v 1.5 2009-07-09 09:38:45 pkoppenb Exp $
+# $Id: DVTestReadDst.py,v 1.6 2009-10-21 10:14:15 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -12,14 +12,20 @@ from Gaudi.Configuration import *
 from Configurables import DaVinci
 ##############################################################################
 #
-# Print the J/psi
+# Print the J/psis
 #
 from Configurables import PrintDecayTree, PrintHeader
-pJpsi = PrintDecayTree('PrintJpsi')
-pJpsi.InputLocations = [ "Jpsi_3050_3150", "Jpsi_2600_3200", "Jpsi_3000_3500"  ]
-# pJpsi.OutputLevel = 1
-#
-ph = PrintHeader()
+DaVinci().UserAlgorithms = [ PrintHeader() ]
+MassRanges = [ [ 2600, 3200 ], [ 3050, 3150 ],  [ 3000, 3500 ] ]
+for i in MassRanges :
+    ln = str(i[0])
+    hn = str(i[1])
+    name = ln+"_"+hn
+
+    pJpsi = PrintDecayTree('PrintJpsi_'+name
+                         , InputLocations = [ "Jpsi_"+name  ]
+                         , RootInTES = "/Event/Sel" )
+    DaVinci().UserAlgorithms += [ pJpsi ]
 ##############################################################################
 #
 #
@@ -28,10 +34,9 @@ ph = PrintHeader()
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
 DaVinci().DataType = "MC09" # Default is "DC06"
-DaVinci().Input = [ "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Jpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Jpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Jpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
+DaVinci().Input = [ "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+                 ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
                     ]
-DaVinci().UserAlgorithms = [  ph, pJpsi ]
 ########################################################################
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

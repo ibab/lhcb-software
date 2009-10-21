@@ -8,9 +8,15 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DaVinciInit                                                 SUCCESS Number of counters : 1
+PrintJpsi_2600_3200                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "Events"                                        |        76 |         76 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |        76 |         16 |(  21.0526 +- 4.67644  )%|   -------   |   -------   |
+PrintJpsi_3050_3150                                         SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        76 |         69 |(  90.7895 +- 3.31706  )%|   -------   |   -------   |
+PrintJpsi_3000_3500                                         SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        76 |         11 |(  14.4737 +- 4.03583  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
 </text></argument>
 </extension>

@@ -8,9 +8,19 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-DSTJpsi_3000_3500                                              INFO Events output: 11
-DSTJpsi_3050_3150                                              INFO Events output: 58
-DSTJpsi_2600_3200                                              INFO Events output: 7
-""", stdout, result, causes, signature_offset = 0)
+Print_2600_3200                                             SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |         7 |          7 |(  100.000 +- 14.2857  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "Stream1")
+findReferenceBlock("""
+Print_3050_3150                                             SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        58 |         58 |(  100.000 +- 1.72414  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "Stream2")
+findReferenceBlock("""
+Print_3000_3500                                             SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        11 |         11 |(  100.000 +- 9.09091  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "Stream3")
 </text></argument>
 </extension>
