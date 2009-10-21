@@ -1,13 +1,13 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.74 2009-10-14 14:35:18 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.75 2009-10-21 07:12:05 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, CaloDstUnPackConf, L0Conf, DaVinciWriteDst )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, CaloDstUnPackConf, L0Conf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -76,8 +76,7 @@ class DaVinci(LHCbConfigurableUser) :
         DstConf           ,
         CaloDstUnPackConf ,
         L0Conf            ,
-        LHCbApp           ,
-        DaVinciWriteDst   ]
+        LHCbApp           ]
 
     ## Known monitoring sequences run by default
     KnownMonitors        = []
@@ -327,9 +326,6 @@ class DaVinci(LHCbConfigurableUser) :
             importOptions( self.getProp( "MainOptions" ) )
         else :
             log.info("No MainOptions specified. DaVinci() will import no options file!")
-        seq = DaVinciWriteDst().dstSequence()
-        log.info("Adding DST sequence")
-        self.appendToMainSequence( [ seq ] )
         log.info("Creating User Algorithms")
 #        print '##### User',  self.getProp("UserAlgorithms")
         self.appendToMainSequence( self.getProp("UserAlgorithms")  )        
