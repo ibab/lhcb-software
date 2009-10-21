@@ -68,8 +68,9 @@ def fixDPMRFIO(searchdir=None, shiftvers="2.1"):
             if f == "libdpm.so" :
                 if debug_flag == 1:
                     print "found libdpm.so in %s" % root
+                shiftname = os.path.join(root, shiftname)
                 if os.path.exists(shiftname) :
-                    os.remove(libshiftname)
+                    os.remove(shiftname)
                 os.symlink(f, shiftname)
                 if debug_flag == 1 :
                     print "created symlink %s to libdpm.so" % shiftname

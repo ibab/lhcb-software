@@ -1,6 +1,8 @@
 2009-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* scripts/mkLCGCMTtar: exclude Qt and pyqt 3 for slc5
+	* scripts/mkLCGCMTtar: 
+	- exclude Qt and pyqt 3 for slc5
+	- fixed libshift link creation (on libdpm)
 
 2009-10-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
