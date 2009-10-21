@@ -44,12 +44,22 @@ fi
 if [[ ${ARCH} == "x86_64" ]]
   then 
      if test -z "${DEBUGGING}";
-      then 
+       then 
 	 #echo running normal sw;
-	 export CMTCONFIG=slc4_amd64_gcc34
-      else 
+	 if test "`uname -r`" = "2.6.18-128.1.16.el5";
+	    then 
+	       export CMTCONFIG=x86_64-slc5-gcc43-opt
+	    else
+	       export CMTCONFIG=slc4_amd64_gcc34
+	 fi      
+       else 
 	 #echo running debug sw;
-	 export CMTCONFIG=slc4_amd64_gcc34_dbg   
+	 if test "`uname -r`" = "2.6.18-128.1.16.el5";
+	    then 
+	       export CMTCONFIG=x86_64-slc5-gcc43-dbg
+	    else 
+	       export CMTCONFIG=slc4_amd64_gcc34_dbg   
+	 fi      
      fi        
   else
     if test -z "${DEBUGGING}";
@@ -88,14 +98,22 @@ if [[ ${CMTCONFIG} == "slc4_ia32_gcc34" ]]
      if  [[ ${CMTCONFIG} == "slc4_ia32_gcc34_dbg" ]]
        then . ./pathsetup_dbg
      fi
-fi;
+fi
 if [[ ${CMTCONFIG} == "slc4_amd64_gcc34" ]]
   then . ./pathsetup64
   else 
      if  [[ ${CMTCONFIG} == "slc4_amd64_gcc34_dbg" ]]
        then . ./pathsetup64_dbg
-     fi;
-fi;
+       else 
+          if  [[ ${CMTCONFIG} == "x86_64-slc5-gcc43-opt" ]]
+             then . ./pathsetupslc5
+	     else 
+	        if [[ ${CMTCONFIG} == "x86_64-slc5-gcc43-dbg" ]]
+		  then . ./pathsetupslc5_dbg
+		fi	  	
+          fi
+     fi
+fi
 export LOGFIFO=/tmp/logGaudi.fifo
 
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
