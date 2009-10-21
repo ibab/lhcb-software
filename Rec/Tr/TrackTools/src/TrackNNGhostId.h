@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.h,v 1.1 2009-10-07 10:27:39 albrecht Exp $
+// $Id: TrackNNGhostId.h,v 1.2 2009-10-21 07:14:16 albrecht Exp $
 #ifndef TRACKNNGHOSTID_H 
 #define TRACKNNGHOSTID_H 1
 
@@ -32,6 +32,9 @@ public:
   virtual ~TrackNNGhostId( ); ///< Destructor
 
   StatusCode initialize();
+
+  StatusCode finalize();
+
 
   StatusCode execute(LHCb::Track& aTrack) const;
 

@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.cpp,v 1.1 2009-10-07 10:27:24 albrecht Exp $
+// $Id: TrackNNGhostId.cpp,v 1.2 2009-10-21 07:14:19 albrecht Exp $
 // Include files 
 #include "Event/Track.h"
 //#include "Kernel/HitPattern.h"
@@ -38,7 +38,7 @@ TrackNNGhostId::TrackNNGhostId( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<ITrackManipulator>(this);
-
+  
 }
 //=============================================================================
 // Destructor
@@ -147,4 +147,17 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
 
 
   return StatusCode::SUCCESS;
+}
+
+//=============================================================================
+// Finalize
+//=============================================================================
+StatusCode TrackNNGhostId::finalize()
+{
+  debug() << "==> Finalize" << endmsg;
+
+  delete m_classReader;
+  delete m_inputVec;
+  
+  return GaudiTool::finalize();  // must be called after all other actions
 }
