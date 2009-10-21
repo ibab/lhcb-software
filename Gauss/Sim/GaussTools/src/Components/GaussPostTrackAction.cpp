@@ -390,9 +390,9 @@ void GaussPostTrackAction::PostUserTrackingAction ( const G4Track* track )
   // (7) store the particle if it has a certain type of daughter particle 
   //     or at least one from secondaries  particle have kinetic energy over 
   //     threshold  
-  if( m_storeByChildType || m_storeByChildEnergy 
-      && 0 != trackMgr()->GimmeSecondaries()    
-      && zstore ) {
+  if( m_storeByChildType || (m_storeByChildEnergy 
+                             && 0 != trackMgr()->GimmeSecondaries()    
+                             && zstore )) {
     const G4TrackVector* childrens = trackMgr()->GimmeSecondaries() ; 
     for( unsigned int index = 0 ; index < childrens->size() ; ++index ) {
       const G4Track* tr = (*childrens)[index];
