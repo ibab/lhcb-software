@@ -4,6 +4,14 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-20 - Michael Alexander
+ - VeloIPResolutionMonitor: 
+   . changed fit to '3D' IPs from Landau to 'x*gaus(x)'
+   . added options of different fitting methods for '3D' IPs
+   . made the limits of the underlying histos dependent on 1/PT bin
+   . added histos of residuals of 1/PT parametrisation as fn of eta & phi
+   . added option to refit PVs removing track for which IPs are calculated
+
 !======================= VeloRecMonitors v2r2 2009-10-21 =====================
 ! 2009-10-14 - Eduardo Rodrigues
  - VeloClusterMonitor: code only relevant for TED runs removed. Clean up.
