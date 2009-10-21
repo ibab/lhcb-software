@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.55 2009-10-19 12:02:17 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.56 2009-10-21 10:55:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -566,7 +566,8 @@ const LHCb::MCParticle* BackgroundCategory::get_lowest_common_mother(MCParticleV
     if (tempmother) tempmother = tempmother->mother();
     else Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
 
-    if (!tempmother) Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
+    if (!tempmother) 
+      Exception("Something went wrong in the MCParticle tree, please report the bug.").ignore(); //shouldn't happen!
 
     if (msgLevel(MSG::VERBOSE)) verbose() << "The current candidate for a common mother is " 
                                           << tempmother 
@@ -1484,7 +1485,7 @@ StatusCode BackgroundCategory::initialize(){
   if (!sc) return sc;
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
-  m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP"); 
+  m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP",this); 
 
   if (msgLevel(MSG::VERBOSE)) m_printDecay = tool<IPrintDecay>("PrintDecayTreeTool",this);
 

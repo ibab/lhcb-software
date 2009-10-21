@@ -1,3 +1,4 @@
+// $Id: DaVinciSmartAssociator.cpp,v 1.14 2009-10-21 10:55:58 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -97,7 +98,7 @@ StatusCode DaVinciSmartAssociator::initialize() {
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
   //And the P2MCPFromProtoP instance that will do the associating
   //of charged and neutral "stables" 
-  m_weightedAssociation = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP");
+  m_weightedAssociation = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP",this);
 
   return sc;
 }
