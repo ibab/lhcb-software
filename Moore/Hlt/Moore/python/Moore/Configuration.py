@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.85 2009-10-06 09:05:41 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.86 2009-10-21 09:28:17 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -54,7 +54,6 @@ class Moore(LHCbConfigurableUser):
         , "CondDBtag" :        'default' # default as set in DDDBConf for DataType
         , "outputFile" :       '' # output filename
         , "inputFiles" :       [ ] # input
-        , "HltType" :          'Hlt1'
         , "UseTCK"     :       False # use TCK instead of options...
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
@@ -72,6 +71,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableDataOnDemand": False
         , "EnableLumiEventWriting"       : True
         , "EnableTimer" :       True
+        , 'EnableRunChangeHandler' : False
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
@@ -204,14 +204,13 @@ class Moore(LHCbConfigurableUser):
         # Set the location of the Online conditions
         from Configurables import MagneticFieldSvc
         MagneticFieldSvc().UseSetCurrent = True
-        from Configurables import RunChangeHandlerSvc
-        rch = RunChangeHandlerSvc()
-        rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : baseloc + "/%d/online.xml",
-                           "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
-                           }
-        # In case of PA, do something special to avoid accessing online.xml...
-        import OnlineEnv
-        if OnlineEnv.HLTType != 'PA' :
+
+        if self.getProp('UseRunChangeHandler') : 
+            from Configurables import RunChangeHandlerSvc
+            rch = RunChangeHandlerSvc()
+            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : baseloc + "/%d/online.xml",
+                               "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
+                               }
             ApplicationMgr().ExtSvc.append(rch)
 
 
@@ -297,7 +296,7 @@ class Moore(LHCbConfigurableUser):
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
                           , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                           , ConfigAccessSvc = self.getConfigAccessSvc().getName()
-                          , HltType = self.getProp('HltType')
+                          , HltType = self.getProp('ThresholdSettings')
                           , MooreRelease = self.getRelease()
                           , Label = self.getProp('configLabel'))
         # make sure gen is the very first Top algorithm...
@@ -305,11 +304,11 @@ class Moore(LHCbConfigurableUser):
         ApplicationMgr().TopAlg = DecodeODIN.members() + [ gen.getFullName() ] + ApplicationMgr().TopAlg
 
     def _l0(self) :
-        if ( (self.getProp("HltType")!='') and (self.getProp("DataType") == 'DC06') and (not self.getProp("L0")) ):
-            log.warning("It is mandatory to run the L0 emulation on DC06 data to get the HLT to work correctly")
+        if ( self.getProp("DataType") == 'DC06' and not self.getProp("L0") ):
+            log.warning("It is mandatory to rerun the L0 emulation on DC06 data to get the HLT to work correctly")
             log.warning("Will set ReplaceL0BanksWithEmulated = True")
             self.setProp("ReplaceL0BanksWithEmulated",True)
-        if ( self.getProp("ReplaceL0BanksWithEmulated") and (not self.getProp("L0")) ):
+        if ( self.getProp("ReplaceL0BanksWithEmulated") and not self.getProp("L0") ):
             log.warning("You asked to replace L0 banks with emulation. Will set L0 = True")
             self.setProp("L0",True)
         if ( self.getProp("L0") ):
@@ -322,7 +321,7 @@ class Moore(LHCbConfigurableUser):
     def _config_with_hltconf(self):
         hltConf = HltConf()
         self.setOtherProps( hltConf,  
-                            [ 'HltType','ThresholdSettings'
+                            [ 'ThresholdSettings'
                             , 'L0TCK','DataType','Verbose'
                             , 'RequireL0ForEndSequence'
                             , 'SkipHltRawBankOnRejectedEvents'

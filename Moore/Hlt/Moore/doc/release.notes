@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-10-21 - Gerhard Raven
+ - add 'UseRunChangeHandler' property
+ - do not use HltType anymore
+
 !========================== Moore v7r5 2009-10-02 ===================
 ! 2009-10-02 - Gerhard Raven
  - small adaptation of stripPath for zipped python
