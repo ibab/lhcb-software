@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v8r0>2009-10-21 Moore v8r0</A></H1><PRE>
+Based on Hlt v7r0, Phys v8r10, Lbcom v7r6, Rec v7r6 en Online v4r29.
+
 </PRE><H1><A NAME=v7r5>2009-09-29 Moore v7r5</A></H1><PRE>
 Based on Hlt v6r8, Phys v8r10, Lbcom v7r6, Rec v7r6 en Online v4r29.
 - Added the pattern container_package.
