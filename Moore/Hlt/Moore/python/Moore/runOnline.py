@@ -25,7 +25,7 @@ def start() :
        Moore().CondDBtag = 'head-20090713'
        Moore().DDDBtag   = 'head-20090713'
        Moore().UseSnapshotOnline = True
-       Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType != 'PA' )
+       Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
     
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric

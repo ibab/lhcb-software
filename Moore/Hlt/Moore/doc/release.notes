@@ -2,6 +2,7 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v8r0 2009-10-21 ===================
 ! 2009-10-21 - Gerhard Raven
  - add 'UseRunChangeHandler' property
  - do not use HltType anymore

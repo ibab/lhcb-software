@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.86 2009-10-21 09:28:17 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.87 2009-10-21 13:46:23 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -285,6 +285,9 @@ class Moore(LHCbConfigurableUser):
         for i in auditors : self.addAuditor( i )
 
     def _generateConfig(self) :
+        from HltConf.ThresholdUtils import Name2Threshold
+        settings = Name2Threshold(self.getProp('ThresholdSettings'))
+
         importOptions('$L0TCKROOT/options/L0DUConfig.opts')
         # cannot write (yet) to a tarfile...
         if self.getProp('TCKpersistency').lower() == 'tarfile' :
@@ -296,7 +299,7 @@ class Moore(LHCbConfigurableUser):
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
                           , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                           , ConfigAccessSvc = self.getConfigAccessSvc().getName()
-                          , HltType = self.getProp('ThresholdSettings')
+                          , HltType = settings.HltType()
                           , MooreRelease = self.getRelease()
                           , Label = self.getProp('configLabel'))
         # make sure gen is the very first Top algorithm...

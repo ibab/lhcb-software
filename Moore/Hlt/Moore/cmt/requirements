@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.84 2009-10-21 09:28:17 graven Exp $
+# $Id: requirements,v 1.85 2009-10-21 13:46:22 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v7r5
+version v8r0
 
 branches doc cmt options python
 

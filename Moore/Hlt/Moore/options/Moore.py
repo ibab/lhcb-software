@@ -11,15 +11,18 @@ from Moore.Configuration import Moore
 
 
 # if you want to generate a configuration, uncomment the following lines:
-#Moore().generateConfig = True
-#Moore().configLabel = 'ODINRandom accept=1, TELL1 Error accept=0'
+Moore().generateConfig = True
+Moore().configLabel = 'Default'
+
+#Moore().ThresholdSettings = 'Commissioning_PassThrough'
+#Moore().configLabel = 'ODINRandom acc=0, TELL1Error acc=1'
 
 #Moore().ThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'
 #Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_LeptonicHlt2_Jul09'
 #Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_CharmingHlt2_Jul09'
 #Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09'
-#Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_Apr09'
-Moore().ThresholdSettings = 'Commissioning_PassThrough'
+Moore().configLabel = 'ODINRandom=0.000001, ODINNonRandom=0.000001'
+Moore().ThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_Apr09'
 
 Moore().Verbose = True
 Moore().EvtMax = 10000
