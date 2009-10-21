@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.h,v 1.12 2009-10-20 22:40:24 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.h,v 1.13 2009-10-21 09:02:13 tskwarni Exp $
 #ifndef TRIGGERSELECTIONTISTOS_H 
 #define TRIGGERSELECTIONTISTOS_H 1
 
@@ -214,8 +214,11 @@ private:
   /// maximum fraction of matching hits allowed for TIS
   double m_TISFrac[nHitTypes]; 
   /// minimum fraction of matching hits required for TOS
-  double m_TOSFrac[nHitTypes]; 
- 
+  double m_TOSFrac[nHitTypes];
+  
+  /// to allow disabling collecting offline hit ids via Ecal hypotheses
+  bool m_noCaloHypo;
+
   /// Offline Input stored as classified hits
   ClassifiedHits m_offlineInput[nHitTypes];
 

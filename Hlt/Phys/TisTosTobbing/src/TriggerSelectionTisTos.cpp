@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.15 2009-10-20 22:40:24 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.16 2009-10-21 09:02:13 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -61,6 +61,8 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
   declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 );
   declareProperty("TISFracEcal", m_TISFrac[kEcal] = 0.0099 ); 
   declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.0099 );
+
+  declareProperty("NoCaloHypo",m_noCaloHypo = false );  
 
   for( int hitType=0; hitType!=nHitTypes; ++hitType ){
     m_offlineInput[hitType].reserve(500);
@@ -133,7 +135,10 @@ StatusCode TriggerSelectionTisTos::initialize() {
     info()<< " TOSFracHcal " <<  m_TOSFrac[kHcal] << " TISFracHcal " << m_TISFrac[kHcal] << " thus Hcal hits not used " << endmsg;
   }
  
- 
+  if( m_noCaloHypo ){
+    warning()<< " NoCaloHypo=True thus no TisTossing of neutral particles built on top of Calo clusters " << endmsg;
+  }
+  
   return StatusCode::SUCCESS;
 
 }
@@ -449,7 +454,7 @@ void TriggerSelectionTisTos::addToOfflineInput( const LHCb::ProtoParticle & prot
 
 
   // Ecal via CaloHypo
-  if( m_TOSFrac[kEcal] > 0.0 ){
+  if( m_TOSFrac[kEcal] > 0.0 && !m_noCaloHypo ){
     if ( msgLevel(MSG::VERBOSE) ) verbose() << " addToOfflineInput with ProtoParticle ECAL VIA CaloHypo " << endmsg;
     const SmartRefVector< LHCb::CaloHypo > &caloVec = protoParticle.calo();
     if( caloVec.size() > 0 ){

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.44 2009-10-20 22:40:24 tskwarni Exp $
+! $Id: release.notes,v 1.45 2009-10-21 09:02:12 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
@@ -12,6 +12,7 @@
   add additional protections against missing subobjects
   verbose output
   consistently switch subdetector off by setting TOSFrac to 0 or less
+  NoCaloHypo flag to switch off offline input via Calo clusters
 
 !========================== TisTosTobbing v3r4p1 2009-10-17 =================
 ! 2009-10-17 - Gerhard Raven
