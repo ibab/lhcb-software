@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.7 2009-10-15 13:09:28 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.8 2009-10-21 14:36:56 nmangiaf Exp $
 // Include files
 
 // from Gaudi
@@ -135,7 +135,7 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
       std::ostringstream msg;
       msg << "switch "<<runNumber;
       //std::string msg = "COMMAND/9/switch "+(std::string) argv[1]+"\n";
-      warning()<<msg.str()<<endmsg;
+      //warning()<<msg.str()<<endmsg;
       m_newRun = false;
       SendAndClear(ICameraTool::CAM_COMMAND,"COMMAND",msg.str());
       if (msgLevel(MSG::DEBUG))
@@ -244,7 +244,7 @@ int CameraTool::SendAndClearTS(MessageLevel l,const std::string& who,const std::
       std::ostringstream msg;
       msg << "switch "<<runNumber;
       //std::string msg = "COMMAND/9/switch "+(std::string) argv[1]+"\n";
-      warning()<<msg.str()<<endmsg;
+      //warning()<<msg.str()<<endmsg;
       m_newRun = false;
       SendAndClear(ICameraTool::CAM_COMMAND,"COMMAND",msg.str());
       if (msgLevel(MSG::DEBUG))
