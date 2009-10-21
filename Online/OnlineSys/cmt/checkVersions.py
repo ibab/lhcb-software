@@ -1,6 +1,14 @@
 #!/usr/bin/python
 import os, sys
 
+def _exec(cmd):
+  print cmd
+  return os.popen(cmd)
+
+def _exec3(cmd):
+  print cmd
+  return os.popen3(cmd)
+
 with_versions = None
 for arg in sys.argv:
   if arg.upper()[:2]=='-V':
@@ -12,7 +20,7 @@ for arg in sys.argv:
 
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
-curr_dir = os.getcwd()
+curr_dir = os.popen('pwd').readlines()[0]
 dir2 = curr_dir[0:curr_dir.rfind('/')]
 if with_versions: dir2 = dir2[0:dir2.rfind('/')-1]
 dir2 = dir2[0:dir2.rfind('/')+1]
@@ -21,8 +29,8 @@ if with_versions:
 else:
   print 'Execution mode: WITHOUT version directories'
 
-print dir2
-# print lines
+#print dir2
+#print lines
 
 for line in lines:
   items = line.split()[1:]
@@ -39,7 +47,7 @@ for line in lines:
     path = dir+head+os.sep+package
     pkg = head+os.sep+package
   if with_versions: path = path+os.sep+version
-  # print dir,pkg,path
+  #print dir,pkg,path,dir==dir2,dir2
   if dir == dir2:
     last_tag = []
     lines = os.popen('cd '+path+'; cvs status -v cmt/requirements').readlines()
