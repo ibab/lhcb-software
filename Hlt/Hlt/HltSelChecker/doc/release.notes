@@ -19,13 +19,19 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-21 - Patrick Koppenburg
+ - New python class CheckerSeq that configures a typical HltSelChecker job
+   -> removes all duplucations in option files.
+ - More cleanup scheduled fro tomorrow. Stay tuned.
+ - v10r0 . Please do not tag as v10r0 yet!
+
 ! 2009-10-19 - Patrick Koppenburg
  - Small change in list of TupleTuples
  - v9r1
 
 !========================== HltSelChecker v9r0 2009-10-17 ===================
 ! 2009-10-16 - Gerhard Raven
- - remove all (obsolute, unused, unneeded) references to HltSummary
+ - remove all (obsolete, unused, unneeded) references to HltSummary
 
 ! 2009-10-15 - Patrick Koppenburg
  - options/DVTestHlt2.py options/DVTestReadHltSummary.py 

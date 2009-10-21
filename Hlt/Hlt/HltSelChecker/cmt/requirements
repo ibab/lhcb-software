@@ -1,13 +1,13 @@
-# $Id: requirements,v 1.58 2009-10-19 06:51:48 pkoppenb Exp $
+# $Id: requirements,v 1.59 2009-10-21 16:40:33 pkoppenb Exp $
 # Created    : 05/02/2002
 # Maintainer : P. Koppenburg
 
 package           HltSelChecker
-version           v9r1
+version           v10r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc options
+branches          cmt doc options src python
 
 # Used packages. 
 #============================================================================
@@ -24,3 +24,5 @@ library           HltSelChecker   ../src/*.cpp  -import=AIDA
 #============================================================================
 apply_pattern component_library library=HltSelChecker
 	     
+# ======= the patterns =======================================================
+apply_pattern install_python_modules

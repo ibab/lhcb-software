@@ -6,51 +6,14 @@
  #  @date 2007-07-20
  #/
 from Gaudi.Configuration import *
-from Configurables import HltCorrelations, FilterTrueTracks, MCDecayFinder, GaudiSequencer, DecayTreeTuple, CheckSelResult
-#--------------------------------------------------------------
-signal = "Bs2DsH"
-#
-# True filter criterion - will only run HLT on True signal
-#
-importOptions( "$HLTSELCHECKERROOT/options/FilterTrueTracks.py")
-FilterTrueTracks().addTool(MCDecayFinder)
-FilterTrueTracks().MCDecayFinder.Decay =  "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^K- {,gamma}{,gamma}]cc, [[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^pi- {,gamma}{,gamma}]cc}" 
-# Set the following to false if you want only events with a signal
-# fully reconstructed in the HLT
-#
-GaudiSequencer("SeqTrueSignalTracks").IgnoreFilterPassed = True
-#
-# Overwrite input - uncomment to run HLT on True signal only
-#
-# importOptions( "$HLTSELCHECKERROOT/options/OverwriteWithTruth.py")
-#
-# Monitoring
-#
-moni = GaudiSequencer("Hlt2MonitorSeq")
-moni.IgnoreFilterPassed = True
-moni.Context = "HLT"
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2Correlations.py")
-importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py" )
-#
-# Decay Tree Tuple
-#
-#importOptions( "$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
-#DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2B2DplusHCombine"]
-#DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "[B_s0 -> (^D+ => ^K+ ^pi+ ^pi- ) ^pi- ]cc" 
-#
-# Configuration
-#
 from Configurables import DaVinci
-DaVinci().EvtMax = -1
-DaVinci().Hlt = True                # Both Hlt levels
-DaVinci().Hlt2Requires = 'L0'                  # Ignore Hlt1 in 2
-DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
-DaVinci().DataType = "DC06" 
-DaVinci().Simulation = True 
-DaVinci().TupleFile =  "HLT-"+signal+".root"
-DaVinci().HistogramFile = "DVHlt2-"+signal+".root"
-DaVinci().MoniSequence += [ moni ] #, DecayTreeTuple("Hlt2DecayTreeTuple") ]
-DaVinci().Input = [
-  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2DsK-lum2-fixedL0.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-#  "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2Dspi-lum2.dst' TYP='POOL_ROOTTREE' OPT='READ'"
-  ]
+from HltSelChecker.CheckerSeq import *
+#--------------------------------------------------------------
+CS = CheckerSeq( dv=DaVinci()
+               , s="Bs2DsH"
+               , d = "{[[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^K+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^K- {,gamma}{,gamma}]cc, [[B_s0]nos -> (D_s- => ^K+ ^K- ^pi- {,gamma}{,gamma}{,gamma}) ^pi+ {,gamma}{,gamma}]cc, [[B_s0]os -> (D_s+ => ^K- ^K+ ^pi+ {,gamma}{,gamma}{,gamma}) ^pi- {,gamma}{,gamma}]cc}"
+               , ip = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dijkstra/Selections-DC06/Bs2DsK-lum2-fixedL0.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+               , dt = 'DC06')
+
+CS.configure()
+
