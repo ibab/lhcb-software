@@ -10,11 +10,11 @@ public:
   struct Data {
     std::string name;
     std::string file;
-    int fileID;
     std::string guid;
     std::string sender;
-    int nEvts;
+    int fileID;
     int sliceID;
+    int nEvts;
   };
   Data data;
 

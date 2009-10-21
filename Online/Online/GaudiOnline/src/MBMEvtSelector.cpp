@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -96,7 +96,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.5 2008-10-06 11:49:19 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -159,7 +159,7 @@ namespace LHCb {
   // Backwards component compatibility
   class OnlineEvtSelector : public MBMEvtSelector  {
   public:
-    OnlineEvtSelector(const std::string& nam,ISvcLocator* svc): MBMEvtSelector(nam,svc) {}
+    OnlineEvtSelector(const std::string& nam,ISvcLocator* svc)  : MBMEvtSelector(nam,svc) {}
     virtual ~OnlineEvtSelector()    {}
   };
 }

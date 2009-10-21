@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.6 2009-01-27 08:30:02 cattanem Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.7 2009-10-21 07:05:33 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -38,8 +38,9 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
   //  VetoMask=0x,0x,0x,0x;MaskType=ANY/ALL;UserType=USER/VIP/ONE;
   //  Frequency=MANY/PERC;Perc=20.5"
-  declareProperty("Input", m_input);
-  declareProperty("Decode",m_decode);
+  declareProperty("GUID",  m_guid = "");
+  declareProperty("Input", m_input = "");
+  declareProperty("Decode",m_decode = false);
   declareProperty("AllowSuspend",m_allowSuspend = false);
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
@@ -51,7 +52,7 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   declareProperty("REQ8", m_Rqs[7] = "");
   // Note: This is purely dummy! 
   // Only present for backwards compatibility with offline
-  declareProperty("PrintFreq",m_printFreq);
+  declareProperty("PrintFreq",m_printFreq = 100000);
 }
 
 // IInterface::queryInterface
@@ -212,7 +213,7 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
   if ( pctxt )   {
     const RawEventDescriptor& d = pctxt->descriptor();
     unsigned long   p0 = (unsigned long)&d;
-    RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,"","0",p0,0);
+    RawDataAddress* pA = new RawDataAddress(RAWDATA_StorageType,CLID_DataObject,m_guid,"0",p0,0);
     pA->setData(pair<char*,int>(0,0));
     if ( m_decode && d.eventType() == EVENT_TYPE_EVENT )  {
       pA->setType(RawDataAddress::BANK_TYPE);

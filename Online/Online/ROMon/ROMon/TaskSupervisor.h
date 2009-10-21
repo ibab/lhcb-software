@@ -45,8 +45,9 @@ namespace ROMon {
     typedef std::vector<PVSSProject> Projects;
     struct Node {
       typedef std::pair<std::string,bool> Item;
-      typedef std::vector<Item>           Tasks;
-      typedef std::vector<Item>           Connections;
+      //typedef std::pair<std::string,int>  ItemI;
+      typedef std::vector<Item>          Tasks;
+      typedef std::vector<Item>          Connections;
       typedef std::vector<PVSSProject>    Projects;
       std::string name, status, time, boot;
     
@@ -196,6 +197,7 @@ namespace ROMon {
     enum State { DEAD, ALIVE };
   protected:
     typedef std::map<std::string,bool> Items;
+    typedef std::map<std::string,int>  ItemsI;
     typedef Inventory::TaskList        TaskList;
     typedef Inventory::ProjectList     ProjectList;
     typedef Inventory::ConnectionList  ConnectionList;
@@ -212,7 +214,7 @@ namespace ROMon {
     /// List of projects present
     Items               m_projects;
     /// List of connections present
-    Items               m_connections;
+    ItemsI              m_connections;
     /// DIM service ID with subscribed information
     int                 m_id;
     /// Flag to indicate information update

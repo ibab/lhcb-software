@@ -41,6 +41,9 @@ def runMDF2MBMFile(buffers,fname,partitionBuffers=True):
 def runMDF2MBMRepro(buffers,fname,partitionBuffers=True):
   return _run(mdf2mbmReproApp(pid,pnam,buffers=buffers,input=["DATA='"+fname+"' SVC='LHCb::MDFSelector'"],partitionBuffers=partitionBuffers))
 
+def runMDF2MBMRepro2(buffers,input,partitionBuffers=True):
+  return _run(mdf2mbmReproApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=partitionBuffers))
+
 #------------------------------------------------------------------------------------------------
 def runMDF2MBM2(buffers):
   import data;

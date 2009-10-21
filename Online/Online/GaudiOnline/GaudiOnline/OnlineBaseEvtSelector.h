@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.6 2009-01-12 16:30:39 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.7 2009-10-21 07:05:33 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.6 2009-01-12 16:30:39 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.7 2009-10-21 07:05:33 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -213,6 +213,8 @@ namespace LHCb  {
     bool                          m_partitionBuffer;
     /// Dummy property for backwards compatibility
     int                           m_printFreq;
+    /// Local GUID to be added: needed to chain GUID information for reprocessing
+    std::string                   m_guid;
     /// Requirement properties
     std::string                   m_Rqs[8];
     /// Decoded requirements

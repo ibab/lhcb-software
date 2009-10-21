@@ -360,7 +360,7 @@ int NodeTaskMon::start()   {
     for(ConnectionList::iterator c=m_nodeType.connections.begin(); c!=m_nodeType.connections.end();++c) {
       string& n = *c;
       if ( (idx=n.find("<DIM_DNS_NODE>")) != string::npos ) n.replace(idx,idx+14,::getenv("DIM_DNS_NODE"));
-      m_connections[n] = false;
+      m_connections[n] = 0;
     }
     cout << "Subscribed to service:" << nam << endl;
     m_id = ::dic_info_service((char*)nam.c_str(),MONITORED,0,0,0,infoHandler,(long)this,0,0);
@@ -383,42 +383,49 @@ int NodeTaskMon::stop()   {
  
 /// Encode connection status information in XML
 const string& NodeTaskMon::updateConnections() {
-  Items::const_iterator i;
-  Items::iterator  j;
+  ItemsI::iterator  j;
   stringstream  xml;
   int good=0, bad=0;
   time_t now = time(0);
-  if ( now-m_connUpdate > CONNECTION_UPDATE_TIMEDIFF ) {
+  bool   recheck = false;
+  bool   force = now-m_connUpdate > CONNECTION_UPDATE_TIMEDIFF;
+
+  for(j=m_connections.begin(); j != m_connections.end(); ++j)
+    if ( (*j).second > 0 ) recheck = true;
+
+  if ( recheck || force ) {
     // cout << "Updating connection status of " << name() << endl;
     for(j=m_connections.begin(); j != m_connections.end(); ++j) {
-      MethodCall c("ping",Args((*j).first,1,9000));
-      //cout << " ... PING " << (*j).first << " from " << name() << endl;
-      MethodResponse r(Server(name(),8088)(c));
-      //r.print();
-      (*j).second = false;
-      if ( !r.hasError() ) {
-        list<Arg>* l = (list<Arg>*)r.result().data;
-        if ( l->size() == 1 ) {
-          l = (list<Arg>*)(*l->begin()).data.tuple->data;
-          for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
-            if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 1 received")==0) 
-              (*j).second = true;
-          }
-        }
+      if ( force || (*j).second > 0 ) {
+	MethodCall c("ping",Args((*j).first,1,9000));
+	//cout << " ... PING " << (*j).first << " from " << name() << endl;
+	MethodResponse r(Server(name(),8088)(c));
+	//r.print();
+	(*j).second++;
+	if ( !r.hasError() ) {
+	  list<Arg>* l = (list<Arg>*)r.result().data;
+	  if ( l->size() >= 1 ) {
+	    l = (list<Arg>*)(*l->begin()).data.tuple->data;
+	    for(list<Arg>::const_iterator i=l->begin(); i != l->end(); ++i) {
+	      if ( (*i).type==Arg::STRING && ::strstr((*i).data.str," 1 received")!=0) 
+		(*j).second = 0;
+	    }
+	  }
+	}
       }
     }
-    for(i=m_connections.begin(); i != m_connections.end(); ++i) 
-      (*i).second ? ++good : ++bad;
+    for(j=m_connections.begin(); j != m_connections.end(); ++j) 
+      (*j).second<5 ? ++good : ++bad;
     xml << "\t\t<Connections count=\"" << good
         << "\" ok=\"" << good
         << "\" missing=\"" << bad
         << "\">" << endl;
-    for(i=m_connections.begin(); i != m_connections.end(); ++i) {
-      xml << "\t\t\t<Connection name=\"" << (*i).first << "\" status=\""
-          << ( (*i).second ? "OK" : "Not OK") << "\"/>" << endl;
+    for(j=m_connections.begin(); j != m_connections.end(); ++j) {
+      xml << "\t\t\t<Connection name=\"" << (*j).first << "\" status=\""
+          << ( (*j).second<5 ? "OK" : "Not OK") << "\"/>" << endl;
     }
     xml << "\t\t</Connections>";
-    m_connUpdate = now;
+    m_connUpdate = time(0);
     return m_connStatus = xml.str();
   }
   return m_connStatus;

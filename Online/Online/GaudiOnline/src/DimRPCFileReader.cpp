@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.22 2009-10-15 15:04:30 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.23 2009-10-21 07:05:33 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -148,7 +148,6 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
   if ( s_isProcessing ) {
     error("File is processing and STILL got new proc request:"+in);
   }
-
   int sc = m_command->decodeCommand(in);
   if (!sc) {
     info("Error decoding "+in);
@@ -163,27 +162,15 @@ void DimRPCFileReader::handleCommand(const char* address, int /* size */){
   if ( prp ) {
     time(&m_timerStopPrep);
     time(&m_timerStartProc);
-    Service* es = dynamic_cast<Service*>(m_evtSelector);
-    //es->sysStop();
-    //es->sysFinalize();
-    //es->sysInitialize();
+    SmartIF<IService> es(m_evtLoopMgr);
     SmartIF<IService> am(serviceLocator());
     am->stop();
     prp->setProperty("Input","FILE=file://"+c.file);
-    //prp->setProperty("Input","[\"DATA='file://"+c.file+"' SVC='LHCb::MDFSelector'\"]");
-    //prp->setProperty("PrintFreq","500");
-    //es->sysStart();
+    prp->setProperty("GUID",c.guid);
 
-    es = dynamic_cast<Service*>(m_evtLoopMgr);
-    //es->sysStop();
     es->reinitialize();
-    //es->sysStart();
     am->start();
-    /*
-    es->sysFinalize();
-    es->sysInitialize();
-    */
-    m_fileID=c.fileID;
+    m_fileID = c.fileID;
     incidentSvc()->fireIncident(ContextIncident<int>(c.guid,m_incidentName,c.fileID));
     ::lib_rtl_unlock(m_lock);
     return;

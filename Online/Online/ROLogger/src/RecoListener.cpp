@@ -1,4 +1,4 @@
-// $Id: RecoListener.cpp,v 1.2 2009-03-26 16:44:21 frankb Exp $
+// $Id: RecoListener.cpp,v 1.3 2009-10-21 07:05:15 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RecoListener.cpp,v 1.2 2009-03-26 16:44:21 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/RecoListener.cpp,v 1.3 2009-10-21 07:05:15 frankb Exp $
 
 // Framework include files
 #include "ROLogger/RecoListener.h"
@@ -48,6 +48,7 @@ RecoListener::RecoListener(Interactor* parent,const string& n, const string& fac
     }
   }
   f->push_back(fmcLogger("STOREIO01",m_facility));
+  f->push_back(fmcLogger("STOREIO01","recomgr"));
   f->push_back(fmcLogger("STORECTL01",m_facility));
   IocSensor::instance().send(m_parent,CMD_UPDATE_FARMS,f.release());
 }
@@ -64,6 +65,7 @@ void RecoListener::subFarmHandler(void* tag, void* address, int* size) {
   for(const char* data = (char*)address, *end=data+*size;data<end;data += strlen(data)+1)
     f->push_back(fmcLogger(data,h->m_facility));
   f->push_back(fmcLogger("STOREIO01",h->m_facility));
+  f->push_back(fmcLogger("STOREIO01","recomgr"));
   f->push_back(fmcLogger("STORECTL01",h->m_facility));
   f->push_back(fmcLogger("MONA08",h->m_facility));
   f->push_back(fmcLogger("MONA09",h->m_facility));
@@ -71,3 +73,4 @@ void RecoListener::subFarmHandler(void* tag, void* address, int* size) {
   if ( h->name() == "LHCb" ) f->push_back(fmcLogger("CALD07",h->m_facility));
   IocSensor::instance().send(h->m_parent,CMD_UPDATE_FARMS,f.release());
 }
+
