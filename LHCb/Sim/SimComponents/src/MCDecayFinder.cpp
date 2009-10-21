@@ -1,4 +1,4 @@
-// $Id: MCDecayFinder.cpp,v 1.8 2009-10-19 12:59:07 pkoppenb Exp $
+// $Id: MCDecayFinder.cpp,v 1.9 2009-10-21 08:30:34 pkoppenb Exp $
 // Include files 
 #include <list>
 #include <functional>
@@ -164,53 +164,40 @@ bool MCDecayFinder::compile( std::string &source )
 bool MCDecayFinder::hasDecay( const  LHCb::MCParticle::ConstVector &event )
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
+  if (!m_decay)   Exception("Trying to find an unspecified decay!");
   const LHCb::MCParticle *drop_me = NULL;
-  if( m_decay ){
-    bool r =  m_decay->test( event.begin(), event.end(), drop_me );
-    return r ;
-  }
-  else Exception("Trying to find an unspecified decay!");
-  
+  bool r =  m_decay->test( event.begin(), event.end(), drop_me );
+  return r ;
 }
 
 bool MCDecayFinder::findDecay( const LHCb::MCParticle::ConstVector& event,
                                const LHCb::MCParticle*& previous_result )
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
-  if( m_decay ){
-    bool r = m_decay->test( event.begin(), event.end(), previous_result );
-    if (!r) Warning("Could not find decay");
-    return r ;
-  } else
-  {
-    Exception("Trying to find an unspecified decay!");
-  }
+  if (!m_decay)   Exception("Trying to find an unspecified decay!");
+  bool r = m_decay->test( event.begin(), event.end(), previous_result );
+  if (!r) Warning("Could not find decay");
+  return r ;
 }
 
 bool MCDecayFinder::hasDecay( const LHCb::MCParticles &event )
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
+  if (!m_decay) Exception("Trying to find an unspecified decay!");
   const LHCb::MCParticle *drop_me = NULL;
-  if( m_decay ){
     bool r = m_decay->test( event.begin(), event.end(), drop_me );
     if (!r) Warning("Could not find decay");
     return r ;
-  } else {
-    Exception("Trying to find an unspecified decay!");
-  }
 }
 
 bool MCDecayFinder::findDecay( const LHCb::MCParticles &event,
                                const LHCb::MCParticle *&previous_result )
 {
   if (msgLevel(MSG::VERBOSE)) verbose() << "About to test the event" << endreq;
-  if( m_decay ){
-    bool r = m_decay->test( event.begin(), event.end(), previous_result );
-    if (!r) Warning("Could not find decay");
-    return r;
-  } else {
-    Exception("Trying to find an unspecified decay!");
-  }
+  if (!m_decay) Exception("Trying to find an unspecified decay!");
+  bool r = m_decay->test( event.begin(), event.end(), previous_result );
+  if (!r) Warning("Could not find decay");
+  return r;
 }
 
 bool MCDecayFinder::hasDecay( void )

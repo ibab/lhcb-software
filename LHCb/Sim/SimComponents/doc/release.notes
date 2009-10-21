@@ -5,6 +5,9 @@
 !               processing stage accessing the MC event classes
 !-----------------------------------------------------------------------------
 
+! 2009-10-21 - Patrick Koppenburg
+ - MCDecayFinder : Fix compilation warnings
+
 ! 2009-10-19 - Patrick Koppenburg
  - MCDecayFinder : Issue a warning (10 times) when decay is not found.
  - Proper indent
