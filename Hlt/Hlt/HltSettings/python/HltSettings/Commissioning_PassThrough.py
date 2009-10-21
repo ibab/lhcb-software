@@ -13,7 +13,7 @@ class Commissioning_PassThrough :
         self.StripEndSequence = True
 
     def HltType(self) :
-        return 'Commissioning_PassThrough'
+        return 'PassThrough'
 
     def L0TCK(self) :
         return None
@@ -37,8 +37,8 @@ class Commissioning_PassThrough :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-        return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN'  : 1
-                                                            , 'Hlt1RandomODIN'     : 0.000001 # @OnlineEnv.AcceptRate
-                                                            , 'Hlt1Tell1Error'     : 1
+        return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN'  : 1.
+                                                            , 'Hlt1RandomODIN'     : 0. # @OnlineEnv.AcceptRate
+                                                            , 'Hlt1Tell1Error'     : 1.
                                              }              } 
                }

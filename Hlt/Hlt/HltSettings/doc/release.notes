@@ -4,6 +4,9 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-10-21 - Gerhard Raven
+ - tweak Commissioning_PassThrough
+
 !========================== HltSettings v1r0 2009-10-18 ====================
 ! 2009-10-18 - Gerhard Raven
  - add Commissioning_Passthrough config
