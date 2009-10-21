@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DaVinci-WriteSelDST.py,v 1.6 2009-10-02 15:13:31 jpalac Exp $
+# $Id: DaVinci-WriteSelDST.py,v 1.7 2009-10-21 10:09:51 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -17,7 +17,7 @@
 from Gaudi.Configuration import *
 from Configurables import DaVinci, SelDSTWriter
 ##############################################################################
-from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
+from Configurables import GaudiSequencer, FilterDesktop
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
