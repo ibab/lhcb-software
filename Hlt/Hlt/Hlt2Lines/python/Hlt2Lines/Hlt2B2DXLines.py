@@ -338,49 +338,4 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq4BodyMWDecision" : 52210 } )
         
 
-        '''
-        #OR everything to make 1 decision
-        # Filter everything in signal and broad mass windows
-        B2D2hhBachelorSeqSignalFilterDesktop = FilterDesktop('B2D2hhBachelorSeqSignalFilterDesktop', Code = "(M>5.0*GeV) & (M<5.5*GeV)")
-        B2D2hhBachelorSeqSignalFilterDesktop.InputLocations = [B2D2hhBachelorSeq.outputSelection()]
-        B2D2hhKstarPhiSeqSignalFilterDesktop = FilterDesktop('B2D2hhKstarPhiSeqSignalFilterDesktop', Code = "(M>5.0*GeV) & (M<5.5*GeV)")
-        B2D2hhKstarPhiSeqSignalFilterDesktop.InputLocations =  [B2D2hhKstarPhiSeq.outputSelection()]
-        B2D2hhhBachelorSeqSignalFilterDesktop = FilterDesktop('B2D2hhhBachelorSeqSignalFilterDesktop', Code = "(M>5.0*GeV) & (M<5.5*GeV)")
-        B2D2hhhBachelorSeqSignalFilterDesktop.InputLocations =  [B2D2hhhBachelorSeq.outputSelection()]
-        #Broad MW
-        B2D2hhBachelorSeqMWFilterDesktop = FilterDesktop('B2D2hhBachelorSeqMWFilterDesktop', Code = "(M>4*GeV) & (M<6*GeV)")
-        B2D2hhBachelorSeqMWFilterDesktop.InputLocations =  [B2D2hhBachelorSeq.outputSelection()]
-        B2D2hhKstarPhiSeqMWFilterDesktop = FilterDesktop('B2D2hhKstarPhiSeqMWFilterDesktop', Code = "(M>4*GeV) & (M<6*GeV)")
-        B2D2hhKstarPhiSeqMWFilterDesktop.InputLocations =  [B2D2hhKstarPhiSeq.outputSelection()]
-        B2D2hhhBachelorSeqMWFilterDesktop = FilterDesktop('B2D2hhhBachelorSeqMWFilterDesktop', Code = "(M>4*GeV) & (M<6*GeV)")
-        B2D2hhhBachelorSeqMWFilterDesktop.InputLocations =  [B2D2hhhBachelorSeq.outputSelection()]
-        #OR everything to make 1 decision
-        MainSeqOR = GaudiSequencer('MainSeqOR')
-        IntSeqOR = GaudiSequencer('IntSeqOR')
-        MainSeqOR.Members += [IntSeqOR]
-        SubIntSeqOR = GaudiSequencer('SubIntSeqOR')
-        SubIntSeqOR.ModeOR = 1
-        SubIntSeqOR.IgnoreFilterPassed = True
-        Filt_1 = GaudiSequencer("Filt_1")
-        Filt_2 = GaudiSequencer("Filt_2")
-        Filt_3 = GaudiSequencer("Filt_3")
-        Filt_4 = GaudiSequencer("Filt_4")
-        Filt_5 = GaudiSequencer("Filt_5")
-        Filt_6 = GaudiSequencer("Filt_6")
-        Filt_1.Members += [B2D2hhBachelorSeqSignalFilterDesktop]
-        Filt_2.Members += [B2D2hhhBachelorSeqSignalFilterDesktop]
-        Filt_3.Members += [B2D2hhKstarPhiSeqSignalFilterDesktop]
-        Filt_4.Members += [B2D2hhBachelorSeqMWFilterDesktop]
-        Filt_5.Members += [B2D2hhhBachelorSeqMWFilterDesktop]
-        Filt_6.Members += [B2D2hhKstarPhiSeqMWFilterDesktop]
-        SubIntSeqOR.Members += [Filt_1,Filt_2,Filt_3,Filt_4,Filt_5,Filt_6]
-        IntSeqOR.Members += [SubIntSeqOR]
-        FilterAll = FilterDesktop("FilterAll")
-        FilterAll.InputLocations =["B2D2hhBachelorSeqSignalFilterDesktop","B2D2hhhBachelorSeqSignalFilterDesktop","B2D2hhKstarPhiSeqSignalFilterDesktop",
-                                   "B2D2hhBachelorSeqMWFilterDesktop","B2D2hhhBachelorSeqMWFilterDesktop","B2D2hhKstarPhiSeqMWFilterDesktop"]
-        FilterAll.Code = "ALL"
-        MainSeqOR.Members += [FilterAll]
-        AllLine = Hlt2Line("AllLine",prescale = 1.0, algos = [ MainSeqOR ], postscale = 1.0, PV = True)
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2AllLineDecision" : 52220 } )
 
-        '''
