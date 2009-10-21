@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.58 2009-08-08 10:44:59 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.59 2009-10-21 12:58:15 mneedham Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -161,6 +161,21 @@ double DeSTSector::noise(const LHCb::STChannelID& aChannel) const
   return 999;
 }
 
+double DeSTSector::rawNoise(const LHCb::STChannelID& aChannel) const{
+  return sqrt(noise(aChannel)*noise(aChannel) + cmNoise(aChannel)*cmNoise(aChannel));
+}
+
+double DeSTSector::rawSectorNoise() const{
+  return sqrt(sectorNoise()*sectorNoise() + cmSectorNoise()*cmSectorNoise());
+}
+
+double DeSTSector::rawBeetleNoise(const unsigned int& beetle) const{
+  return sqrt(beetleNoise(beetle)*beetleNoise(beetle) + cmBeetleNoise(beetle)*cmBeetleNoise(beetle));
+}
+
+double DeSTSector::rawPortNoise(const unsigned int& beetle, const unsigned int& port) const{
+  return sqrt(portNoise(beetle,port)*portNoise(beetle,port) + cmPortNoise(beetle,port)*cmPortNoise(beetle,port));
+}
 
 double DeSTSector::sectorNoise() const
 {
@@ -295,27 +310,178 @@ double DeSTSector::portNoise(const unsigned int& beetle,
   }
 }
 
+double DeSTSector::cmNoise(const LHCb::STChannelID& aChannel) const
+{
+  // check strip is valid
+  if (!isStrip(aChannel.strip())) return 999; 
+
+  const Status theStatus = stripStatus(aChannel);
+
+  // take ok strips
+  if (theStatus == DeSTSector::OK) return m_cmModeValues[aChannel.strip()-1u];
+
+  // and pinholes...
+  if (theStatus == DeSTSector::Pinhole) return m_cmModeValues[aChannel.strip()-1u]; 
+
+  return 999;
+}
+
+
+double DeSTSector::cmSectorNoise() const
+{
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
+
+  double sum(0.0), number(0.0);
+
+  for (unsigned int chan(0); chan < m_nStrip; ++chan)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole )
+    {
+      sum    += m_cmModeValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of " << nStrip()
+            << " are not taken into account" << endmsg;
+    return sum / number;
+  }
+}
+
+double DeSTSector::cmBeetleNoise(const unsigned int& beetle) const
+{
+  if (beetle > nBeetle())
+   {
+     MsgStream msg(msgSvc(), name() );
+     msg << MSG::WARNING << "You asked for beetle " << beetle
+         << " but there are " << nBeetle() << " of them" << endmsg;
+     return 999.99; 
+   }
+  else if (beetle == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
+        << endmsg;
+     return 999.99;
+  }
+
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
+
+  double sum(0.), number(0.);
+
+  for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle);
+       chan < beetle * LHCbConstants::nStripsInBeetle; chan++)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole ) 
+    {
+      sum    += m_cmModeValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of "
+        << LHCbConstants::nStripsInBeetle
+        << " are not taken into account" << endmsg;
+    return sum / number;
+  }
+}
+
+double DeSTSector::cmPortNoise(const unsigned int& beetle,
+                               const unsigned int& port) const
+{
+  if (beetle > nBeetle())
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle " << beetle
+        << " but there are " << nBeetle() << " of them" << endmsg;
+    return 999.99;
+  }
+  else if (beetle == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for beetle 0 but is starts at 1"
+        << endmsg;
+    return 999.99;
+  }
+
+  if (port > 4)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for port " << port
+        << " but there are 4 of them" << endmsg;
+    return 999.99;
+  }
+  else if (port == 0)
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::WARNING << "You asked for port 0 but is starts at 1"
+        << endmsg;
+    return 0.;
+  }
+
+  const std::vector<DeSTSector::Status> statusVector = stripStatus();
+
+  double sum(0.), number(0.);
+
+  for (unsigned int chan((beetle - 1) * LHCbConstants::nStripsInBeetle +
+                         (port - 1) * LHCbConstants::nStripsInPort);
+       chan < (beetle - 1) * LHCbConstants::nStripsInBeetle +
+         port * LHCbConstants::nStripsInPort; chan++)
+  {
+    if ( statusVector[chan] == DeSTSector::OK ||
+         statusVector[chan] == DeSTSector::Pinhole )
+    {
+      sum    += m_cmModeValues[chan];
+      number += 1.;
+    }    
+  }
+  
+  if (number < 1.)
+    return 999.99;
+  else
+  {
+    MsgStream msg(msgSvc(), name() );
+    msg << MSG::DEBUG << number << " strips out of "
+        << LHCbConstants::nStripsInPort
+        << " are not taken into account" << endmsg;
+    return sum / number;
+  }
+}
+
+
 double DeSTSector::toADC(const double& e,
                          const LHCb::STChannelID& aChannel) const
 {
-  return toADC(e, aChannel.strip() - 1);
+  return toADC(e, aChannel.strip());
 }
 
 double DeSTSector::toADC(const double& e, const unsigned int& aStrip) const
 {
-  return e / m_electronsPerADC[aStrip];
+  return e / m_electronsPerADC[aStrip-1];
 }
 
 double DeSTSector::toElectron(const double& val,
                               const LHCb::STChannelID& aChannel) const
 {
-  return toElectron(val, aChannel.strip() - 1);
+  return toElectron(val, aChannel.strip());
 }
 
 double DeSTSector::toElectron(const double& val,
                               const unsigned int& aStrip) const
 {
-  return val * m_electronsPerADC[aStrip];
+  return val * m_electronsPerADC[aStrip-1];
 }
 
 std::auto_ptr<LHCb::Trajectory> 
@@ -538,6 +704,22 @@ StatusCode DeSTSector::updateNoiseCondition()
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Size mismatch for electronsPerADC" << endmsg;
     return StatusCode::FAILURE;
+  }
+
+  if (aCon->exists("cmNoise") == true){
+    std::vector <double > tmpCM =  aCon -> param<std::vector< double > >("cmNoise");
+    if (tmpCM.size() == m_nStrip)
+      m_cmModeValues.assign(tmpCM.begin(), tmpCM.end());
+    else {
+     MsgStream msg(msgSvc(), name());
+     msg << MSG::ERROR << "Size mismatch for cmNoise" << endmsg;
+     return StatusCode::FAILURE;
+    } 
+  }
+  else {
+    // doesn't exists (MC early databases...)
+    m_cmModeValues.resize(m_nStrip);
+    for (unsigned int i = 0; i < m_nStrip; ++i) m_cmModeValues[i] = 0.0;
   }
 
   return StatusCode::SUCCESS;

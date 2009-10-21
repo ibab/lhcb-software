@@ -1,13 +1,20 @@
-!$Id: release.notes,v 1.180 2009-10-16 12:33:31 cattanem Exp $
+!$Id: release.notes,v 1.181 2009-10-21 12:58:15 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+
+! 2009-10-21 M Needham
+ - Add conditions for common mode noise. 
+ - allow updating of noise condition 
+
 
 !======================== STDet v4r14 2009-10-16 =========================
 ! 2009-09-15 - Jeroen van Tilburg
  - Change sign of tolerance in DeSTSensor::localInActive such that it is more
    intuitive. Note that with negative numbers you have the same behaviour as
    before.
+
 
 !======================== STDet v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
