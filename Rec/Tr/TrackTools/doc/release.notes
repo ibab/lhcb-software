@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-10-21 - Johannes Albrecht
+ - fix small memory leak in TrackNNGhostId
+
 !======================== TrackTools v3r22 2009-10-20 ========================
 ! 2009-10-20 Stephanie Hansmann-Menzemer
  - fix memory leak in TrackStateInitTool
