@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.cpp,v 1.1 2009-10-16 17:05:58 ggiacomo Exp $
+// $Id: MuonClusterRec.cpp,v 1.2 2009-10-21 10:58:56 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -146,8 +146,8 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
                   if ((*clpad)->tile()->region() != (*jpad)->tile()->region() ) continue;
                   int deltaX = abs(regX((*clpad)->tile())-regX((*jpad)->tile()));
                   int deltaY = abs(regY((*clpad)->tile())-regY((*jpad)->tile()));
-                  if (deltaX == 0 && deltaY == 1 ||
-                      deltaX == 1 && deltaY == 0) {
+                  if ( (deltaX == 0 && deltaY == 1) ||
+                       (deltaX == 1 && deltaY == 0) ) {
                     takeit=true;
                     break;
                   }
@@ -158,11 +158,11 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
                 m_posTool->calcTilePos(*((*jpad)->tile()),x,dx,y,dy,z,dz);
               
                 bool Xinside = ( x > muon_Hit->minX() && x < muon_Hit->maxX());
-                bool Xadj = ( x > muon_Hit->maxX() && x-dx-muon_Hit->maxX() < dx/2 || 
-                              x < muon_Hit->minX() && muon_Hit->minX()-x-dx  < dx/2);
+                bool Xadj = ( (x > muon_Hit->maxX() && x-dx-muon_Hit->maxX() < dx/2) || 
+                              (x < muon_Hit->minX() && muon_Hit->minX()-x-dx  < dx/2) );
                 bool Yinside = ( y > muon_Hit->minY() && y < muon_Hit->maxY());
-                bool Yadj = ( y > muon_Hit->maxY() && y-dy-muon_Hit->maxY() < dy/2 || 
-                              y < muon_Hit->minY() && muon_Hit->minY()-y-dy  < dy/2);
+                bool Yadj = ( (y > muon_Hit->maxY() && y-dy-muon_Hit->maxY() < dy/2) || 
+                              (y < muon_Hit->minY() && muon_Hit->minY()-y-dy  < dy/2) );
                 if ( (Xinside || Xadj) && (Yinside || Yadj) ) takeit=true;
               }
               if (takeit) {  // it's a neighbour, add it to the cluster
