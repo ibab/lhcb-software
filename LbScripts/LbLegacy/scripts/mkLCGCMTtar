@@ -75,6 +75,20 @@ def fixDPMRFIO(searchdir=None, shiftvers="2.1"):
                     print "created symlink %s to libdpm.so" % shiftname
                 break
 
+#----------------------------------------------------------------------------
+#  package filer ==============================================
+#----------------------------------------------------------------------------
+def pkgFilter(NAME, pak, vers, binary):
+    keep = True
+    if NAME == "GANGA" and binary.find("slc5") != -1 :
+        if pak == "Qt" and vers.startswith("3.") :
+            keep = False
+        if pak == "pyqt" and vers.startswith("3.") :
+            keep = False
+    if not keep :
+        print "Excluding %s %s for %s" % (pak, vers, binary)
+    return keep
+
 
 
 #----------------------------------------------------------------------------
@@ -202,7 +216,8 @@ def get_native_versions(native_version, binary):
         cmtcmd = cmtshow+ 'macro_value '+native
         status,vers = commands.getstatusoutput(cmtcmd)
         pack = fdline.split('_native')[0]
-        packages_versions[pack] = vers
+        if pkgFilter(NAME, pack, vers, binary) :
+            packages_versions[pack] = vers
 
     os.system(rmcmd+natives)
     
@@ -349,6 +364,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
             rc = os.system(str)
 
             if rc != 0:
+                print "Wrong %s %s tar file" % (key, binary_dir)
                 tarko.append(os.path.join(key,value,binary_dir))
             elif len(dirlist) != 0:
                 # if binary = slc4_ia32_gcc345 rename it to slc4_ia32_gcc34
@@ -378,7 +394,7 @@ def get_tar_files(native_version, packages_versions,binary_dir, output_file):
                         print 'remove %s '%(os.path.join(packpath,dirlist[0],lnk))
         else:
             if not (key == 'CASTOR' and binary_dir.find('win32') != -1):
-                print key,binary_dir
+                print "%s %s missing" % (key, binary_dir)
                 missing.append(os.path.join(key,value,binary_dir))
 
 # clean CLHEP directory
