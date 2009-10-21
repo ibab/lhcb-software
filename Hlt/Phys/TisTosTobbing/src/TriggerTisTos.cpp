@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.12 2009-10-20 22:40:24 tskwarni Exp $
+// $Id: TriggerTisTos.cpp,v 1.13 2009-10-21 12:37:34 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -70,7 +70,7 @@ void TriggerTisTos::getTriggerNames()
   }
 
   // done before ?
-  if( m_triggerNames.size() !=0 ){ return; }
+  if( !(m_triggerNames.empty()) ){ return; }
 
 
   // get trigger names from HltDecReports and HltSelReports
@@ -93,8 +93,8 @@ void TriggerTisTos::getTriggerNames()
     }
   }
   
-  if( m_triggerNames.size()==0 ){
-    Error( "No known trigger names found" , StatusCode::FAILURE, 50 ).setChecked();
+  if( m_triggerNames.empty() ){
+    Warning( "No known trigger names found" , StatusCode::FAILURE, 1 ).setChecked();
   }
   
 }
@@ -163,7 +163,7 @@ std::vector< std::string > TriggerTisTos::triggerSelectionNames(unsigned int dec
 void TriggerTisTos::triggerTisTos( bool & decision, bool & tis, bool & tos)
 {
   decision = false; tis=false; tos=false;
-  if( m_triggerInput_Selections.size()==0 ){
+  if( m_triggerInput_Selections.empty() ){
     if( m_trigInputWarn )Warning(" triggerTisTos called with empty Trigger Input").setChecked();
     return;
   }
@@ -185,7 +185,7 @@ std::vector<const LHCb::HltObjectSummary*> TriggerTisTos::hltObjectSummaries( un
                                                                               unsigned int tosRequirement)
 {
   std::vector<const LHCb::HltObjectSummary*> hosVec;  
-  if( m_triggerInput_Selections.size()==0 ){
+  if( m_triggerInput_Selections.empty() ){
     if( m_trigInputWarn )Warning(" hltObjectSummaries called with empty Trigger Input").setChecked();
     return hosVec;
   }

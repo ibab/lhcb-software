@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.45 2009-10-21 09:02:12 tskwarni Exp $
+! $Id: release.notes,v 1.46 2009-10-21 12:37:34 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2009-10-21 - Patrick Koppenburg
+ - Remove _dll file
+ - Reduce verbosity of warnings
+ - Replace all size()==0 by empty()
 
 ! 2009-10-21 - Tomasz Skwarnicki
  - TriggerTisTos:
