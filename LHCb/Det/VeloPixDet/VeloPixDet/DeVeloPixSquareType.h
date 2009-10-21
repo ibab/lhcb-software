@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.3 2009-10-21 11:19:28 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.4 2009-10-21 15:04:56 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -71,7 +71,7 @@ public:
                                         int chipIndex, std::pair <double, double>& fraction) const;
 
   /// Returns the size of the pixel of a given channel
-  virtual std::pair<double,double> PixelSize(int ladderIndex,  LHCb::VeloPixChannelID channel) const;
+  virtual std::pair<double,double> PixelSize( LHCb::VeloPixChannelID channel) const;
   
     
   /// Access to the sensor on the other side of the VeloPix

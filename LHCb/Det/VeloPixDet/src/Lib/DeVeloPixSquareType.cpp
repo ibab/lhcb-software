@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.4 2009-10-21 11:19:28 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.5 2009-10-21 15:04:56 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -160,7 +160,7 @@ StatusCode DeVeloPixSquareType::channelToPoint( const LHCb::VeloPixChannelID& ch
       // Get the ladder
       ladderIndex = ilad;
       // Set the position in the pixel
-      std::pair <double, double> size = PixelSize(ladderIndex,channel);
+      std::pair <double, double> size = PixelSize(channel);
       if ( channel.pixel_lp()> 0 ) LocalPoint.SetX((channel.pixel_lp()-1)*lpSize()+size.first/2);
       else LocalPoint.SetX(size.first/2);
       if ( channel.pixel_hp()> 0 ) LocalPoint.SetY((channel.pixel_hp()-1)*hpSize()+size.second/2);
@@ -198,7 +198,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
       std::pair <double, double> size (0.,0.);
       if( x == 0 && y == 0 && sc.isSuccess() ) {
         channels.push_back(channelCentral);
-        size = PixelSize( WhichLadder(point),channelCentral);
+        size = PixelSize(channelCentral);
       }
       else continue;
       double relx = 0;
@@ -306,18 +306,27 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   return thePixel;
 }
 
-
-std::pair<double,double> DeVeloPixSquareType::PixelSize(int ladderIndex , LHCb::VeloPixChannelID channel) const
+std::pair<double,double> DeVeloPixSquareType::PixelSize(LHCb::VeloPixChannelID channel) const
 {
-  std::pair<double,double> size;
+  int ladderIndex = -1;
+  int chipNum = channel.chip();
+  int ntotChip = 0;
+  for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
+    ntotChip += m_ladders[ilad].nChip();
+    if ( chipNum < ntotChip ) {
+      ladderIndex = ilad;
+      continue;
+    }
+  }
+  std::pair<double,double> size (-1.,-1.);
   size.first = lpSize();
   size.second = hpSize();
   std::vector<int> positionEdgePix =  (m_ladders[ladderIndex]).edgesOrientation();
   // case where the edge pixel is on the right and the channel correspond to a edge pixel
-  if ( ( positionEdgePix[channel.chip()]== 1 || positionEdgePix[channel.chip()]== 0 ) && channel.pixel_lp() == (unsigned int)(nPixCol()-1)){
+  if ( ( positionEdgePix[chipNum]== 1 || positionEdgePix[chipNum]== 0 ) && channel.pixel_lp() == (unsigned int)(nPixCol()-1)){
     size.first = interchipPixSize();
   }
-  if ( ( positionEdgePix[channel.chip()]== -1 || positionEdgePix[channel.chip()]== 0) && channel.pixel_lp() == 0 ){
+  if ( ( positionEdgePix[chipNum]== -1 || positionEdgePix[chipNum]== 0) && channel.pixel_lp() == 0 ){
     size.first = interchipPixSize();
   }
   return size;

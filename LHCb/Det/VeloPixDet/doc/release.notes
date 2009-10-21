@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-10-21 - Victor Coco
+ - modify the function PixelSize so that the only argument is Channel ID
+
+! 2009-10-21 - Victor Coco
  - remove some wild cast (usinged int <--> int and double <--> float)
 
 
