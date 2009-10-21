@@ -2,7 +2,7 @@
 # Maintainer : Markus Frank
 #============================================================================
 package           OnlineTools
-version           v1r0
+version           v1r2
 #============================================================================
 branches          cmt doc src OnlineTools
 # dependency list
