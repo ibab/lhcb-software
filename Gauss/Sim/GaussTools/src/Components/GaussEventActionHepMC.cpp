@@ -1,4 +1,4 @@
-/// $Id: GaussEventActionHepMC.cpp,v 1.6 2009-10-20 08:22:21 silviam Exp $
+/// $Id: GaussEventActionHepMC.cpp,v 1.7 2009-10-21 15:31:04 silviam Exp $
 // Include files 
 
 // from Gaudi
@@ -116,11 +116,13 @@ void GaussEventActionHepMC::DumpTree(HepMC::GenParticle* particle,
     name = p->particle();
   }
 
-#warning REMEMBER: remove temporary fix for error in compilation on slc5 operator<<
+#ifndef WIN32
+#warning REMEMBER: remove temporary fix for problem in compilation on slc5 operator<<
+#endif
   std::cout << offset << "--- " << name << " barcode: " << particle->barcode() 
             << " pdg: " << particle->pdg_id() 
             << " energy: " << particle->momentum().e()
-    //            << " ProdVtx " << particle->production_vertex()->position()
+    //        << " ProdVtx " << particle->production_vertex()->position()
             << " ProdVtx x" << particle->production_vertex()->position().x()
             << " ProdVtx y" << particle->production_vertex()->position().y()
             << " ProdVtx z" << particle->production_vertex()->position().z()
