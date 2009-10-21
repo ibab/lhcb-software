@@ -1,6 +1,6 @@
 project MOORE
 
-use HLT		HLT_v6r8
+use HLT		HLT_v7r0
 use PHYS    PHYS_v8r10
 use LBCOM	LBCOM_v7r6
 use REC		REC_v7r6
