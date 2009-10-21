@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.7 2009-02-11 16:51:43 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/MBMDump/src/MBMMainMenu.cpp,v 1.8 2009-10-21 17:10:33 frankb Exp $
 //  ====================================================================
 //  BankListWindow.cpp
 //  --------------------------------------------------------------------
@@ -8,7 +8,7 @@
 //  Author    : Markus Frank
 //
 //  ====================================================================
-// $Id: MBMMainMenu.cpp,v 1.7 2009-02-11 16:51:43 frankb Exp $
+// $Id: MBMMainMenu.cpp,v 1.8 2009-10-21 17:10:33 frankb Exp $
 //
 // C++ include files
 #include "MBMDump/MBMDump.h"
@@ -153,7 +153,9 @@ int MBMMainMenu::excludeMEP() {
 
 void MBMMainMenu::handleMenu(int cmd_id)    {
   char* ptr;
+  bool  including = false;
   int b_type = DisplayMenu::B_UNKNOWN;
+  
   switch(cmd_id){
   case C_PROC:
     setCursor(C_PART,2);
@@ -181,20 +183,35 @@ void MBMMainMenu::handleMenu(int cmd_id)    {
     if ( (ptr=::strchr(m_buffName,' ')) ) *ptr = 0;
     if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
     if ( m_mepFlags == 0 )  {
-      (m_bmID == MBM_INV_DESC) ? includeMBM() : excludeMBM();
+      if (m_bmID == MBM_INV_DESC) {
+	includeMBM();
+	including=true;
+      }
+      else  {
+	excludeMBM();
+	including=false;
+      }
     }
     else  {
-      (m_mepID == MEP_INV_DESC) ? includeMEP() : excludeMEP();
+      if (m_mepID == MEP_INV_DESC) {
+	includeMEP();
+	including=true;
+      }
+      else {
+	excludeMEP();
+	including=false;
+      }
     }
     setCursor(m_bmID == MBM_INV_DESC ? C_PART : C_RQS,1);
     for(int i=0; i<8; ++i) m_req[i].setBufferID(m_bmID);
-    output("Show display menu...");
     if ( (ptr=::strchr(m_buffType,' ')) ) *ptr = 0;
-    if      ( !::strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
+    if ( !including )                          b_type = DisplayMenu::B_UNKNOWN;
+    else if ( !::strcmp(m_buffType,mep_type) ) b_type = DisplayMenu::B_MEP;
     else if ( !::strcmp(m_buffType,raw_type) ) b_type = DisplayMenu::B_RAW;
     else if ( !::strcmp(m_buffType,dsc_type) ) b_type = DisplayMenu::B_DESC;
     else if ( !::strcmp(m_buffType,mdf_type) ) b_type = DisplayMenu::B_MDF;
-    else                                     b_type = DisplayMenu::B_UNKNOWN;
+    else                                       b_type = DisplayMenu::B_UNKNOWN;
+    output("Show display menu... %s buffer B type:%d",including ? "included in" : "excluded from",int(b_type));
     m_dispMenu->update(b_type);
     break;
   case C_RQS:
