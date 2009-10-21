@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.6 2009-10-20 14:44:16 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.7 2009-10-21 10:45:25 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -947,7 +947,7 @@ const LHCb::Track* Velo::VeloIPResolutionMonitor::smearTrack( const LHCb::Track*
   m_measurementProvider->load( *smearedTrack );
   m_trackFitter->fit( *smearedTrack );
   
-  for( LHCb::Track::NodeContainer::const_iterator inode = smearedTrack->nodes().begin();
+  for( LHCb::Track::ConstNodeRange::const_iterator inode = smearedTrack->nodes().begin();
         inode != smearedTrack->nodes().end(); ++inode){
 
     if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
@@ -1002,7 +1002,7 @@ const LHCb::Track* Velo::VeloIPResolutionMonitor::smearTrack( const LHCb::Track*
 
   // make plots of measurement resolution vs pitch after smearing
 
-  for( LHCb::Track::NodeContainer::const_iterator inode = smearedTrack->nodes().begin();
+  for( LHCb::Track::ConstNodeRange::const_iterator inode = smearedTrack->nodes().begin();
         inode != smearedTrack->nodes().end(); ++inode){
 
     if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
