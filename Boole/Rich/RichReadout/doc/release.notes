@@ -4,6 +4,10 @@
 ! Purpose     : Rich Digitisation
 !-----------------------------------------------------------------------------
 
+!======================== RichReadout v2r12p1 2009-10-22 =====================
+! 2009-10-22 - Marco Cattaneo
+ - remove obsolete file RichReadout_dll.cpp
+
 ! 2009-10-04 - Chris Jones
  - Work around for crash when RichDetailedFrontEndResponse is deleted.
    'Solution' is to disable some clean up, so not a long term fix but just 
