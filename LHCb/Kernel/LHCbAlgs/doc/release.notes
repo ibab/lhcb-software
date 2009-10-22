@@ -4,6 +4,11 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r29p1 2009-10-22 ========================
+! 2009-10-22 - Marco Clemencic
+ - Modified the ODINCodecBaseTool to accept ODIN bank version 6 (no change in
+   the actual decoding).
+
 !======================== LHCbAlgs v2r29 2009-10-16 ==========================
 ! 2009-10-08 - Marco Cattaneo
  - In TESCheck, do not call Warning() if OutputLevel is greater than WARNING

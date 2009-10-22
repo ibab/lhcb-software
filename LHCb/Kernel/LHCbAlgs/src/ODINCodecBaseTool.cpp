@@ -62,7 +62,7 @@ StatusCode ODINCodecBaseTool::initialize() {
 // ODIN Bank constants
 //=============================================================================
 namespace {
-  const unsigned int bank_version = 5;
+  const unsigned int bank_version = 6;
   const size_t bank_size    = 10 * sizeof(int);
   const size_t bank_size_v2 =  9 * sizeof(int);
 }
