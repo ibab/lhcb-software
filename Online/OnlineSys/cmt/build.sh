@@ -51,6 +51,7 @@ then
 	    | grep -v "#CMT---> " \
 	    | grep -v "${CMTCONFIG}.make ok" \
 	    | grep -v "CMTCONFIG=${CMTCONFIG}" \
+	    | grep -v "INFO:zipdir:" \
 	    | grep -v "Makefile.header" \
 	    | grep -v "(constituents.make)" \
 	    | grep -v "dependencies.make" \
