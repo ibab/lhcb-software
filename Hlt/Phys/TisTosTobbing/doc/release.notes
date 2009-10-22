@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.46 2009-10-21 12:37:34 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2009-10-22 20:53:23 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2009-10-22 - Tomasz Skwarnicki
+ - add TriggerSelectionTisTosInHlt, TriggerTisTosInHlt bypassing HltSelReports
+   for use in Hlt2 
 
 ! 2009-10-21 - Patrick Koppenburg
  - Remove _dll file

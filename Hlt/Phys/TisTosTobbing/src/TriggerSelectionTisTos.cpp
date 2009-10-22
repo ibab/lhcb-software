@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.16 2009-10-21 09:02:13 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.17 2009-10-22 20:53:23 tskwarni Exp $
 // Include files 
 #include <algorithm>
 
@@ -154,9 +154,6 @@ void TriggerSelectionTisTos::handle(const Incident& )
 
   m_muonTracks = 0;
   m_muonsOff = false;
-
-  m_hltDecReports = 0;
-  m_hltSelReports = 0;
 
   setOfflineInput( );
 
