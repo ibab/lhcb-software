@@ -8,16 +8,21 @@
 !
 ! setenv dvv <some string>  # Leptonic Hadronic Charming Effective
 !
-! foreach a (`ls -1 options/DVTestHlt2B*.py | grep -v Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTestHlt2${a}.py options/${dvv}.py >! ${dvv}-$a &
+! foreach a (`ls -1 options/DVTest-B*.py | grep -v Hlt2Bs | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
 ! end
-! foreach a (`ls -1 options/DVTestHlt2{Bs,[C-Z]}*.py | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTestHlt2${a}.py options/${dvv}.py >! ${dvv}-$a &
+! foreach a (`ls -1 options/DVTest-{Bs,[C-Z]}*.py | awk -FTestHlt2 '{print $2}' | awk -F. '{print $1}'`)
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
 ! end
 !
 ! python scripts/GetEfficiencies.py ${dvv}
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-22 - Patrick Koppenburg
+ - Add a lot of test files, remove many others
+ - That does not mean yet that all is complete. Only CP channels done, but all
+   untested.
 
 ! 2009-10-21 - Patrick Koppenburg
  - New python class CheckerSeq that configures a typical HltSelChecker job
