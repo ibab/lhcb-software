@@ -1,6 +1,10 @@
-! $Id: release.notes,v 1.14 2009-10-01 13:17:40 jhe Exp $
+! $Id: release.notes,v 1.15 2009-10-22 17:26:14 hmdegaud Exp $
 ! Package     : Gen/BcVegPy
 ! Responsible : 
+
+
+! 2009-10-01 - Hubert Degaudenzi
+ - Fixed the call to the time function which does not work with gfortran (gcc4)
 
 ! ====================== BcVegPy v2r0 2009-10-01 ===========================
 ! 2009-10-01 - Jibo He
