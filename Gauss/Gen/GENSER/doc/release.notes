@@ -4,6 +4,10 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+
+! 2009-10-22 - Hubert Degaudenzi 
+ - changed the target-slc5 switching into target-gcc4 for the gfortran flags 
+
 ! 2009-10-22 - Patrick Robbe
  - Add "-fsecond-underscore" for slc5 gFortran compilation
 
