@@ -4,6 +4,9 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2009-10-22 - Patrick Robbe
+ - Add "-fsecond-underscore" for slc5 gFortran compilation
+
 ! 2009-10-08 - Gloria Corti
  - Change versions of external packages to pick up those with slc5 libraries
  - Remove fflags "-ff90" and linking "-lg2c" on slc5

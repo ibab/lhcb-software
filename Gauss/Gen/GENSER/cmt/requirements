@@ -114,3 +114,7 @@ macro_append  GENSER_linkopts " -Wl,--as-needed " \
 
 macro_remove fflags "" \
       target-slc5   "-ff90"
+
+macro_append fflags "" \
+      target-slc5   " -fsecond-underscore "
+

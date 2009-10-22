@@ -1,6 +1,7 @@
-// $Id: LHAPDFCommonBlocks.cpp,v 1.3 2007-09-09 19:32:43 robbep Exp $
+// $Id: LHAPDFCommonBlocks.cpp,v 1.4 2009-10-22 16:43:05 robbep Exp $
 // access LHAPDF common LHASILENT
 #include "Generators/LHAPDFCommonBlocks.h"
+#include <cstring>
 
 extern "C" {
 #ifdef WIN32

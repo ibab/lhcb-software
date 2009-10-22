@@ -1,4 +1,4 @@
-// $Id: LHAPDFCommonBlocks.h,v 1.2 2005-12-11 23:21:47 robbep Exp $
+// $Id: LHAPDFCommonBlocks.h,v 1.3 2009-10-22 16:43:05 robbep Exp $
 
 #ifndef GENERATORS_LHAPDFCOMMONBLOCKS_H
 #define GENERATORS_LHAPDFCOMMONBLOCKS_H 1
@@ -51,7 +51,7 @@ class Lhacontrol {
   static const int s_lenlhaparm = 20 ;
 
   /// Dummy string value to return in case of error.
-  char * m_dummystr ;
+  const char * m_dummystr ;
 
   /// Dummy value double value to return in case of error.
   double m_dummy;

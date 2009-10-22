@@ -1,4 +1,4 @@
-// $Id: StringParse.cpp,v 1.2 2006-04-04 14:58:58 robbep Exp $
+// $Id: StringParse.cpp,v 1.3 2009-10-22 16:43:05 robbep Exp $
 // --------------------------------------------------
 // 
 // File:  GeneratorUtils/StringParse.cxx
@@ -15,6 +15,7 @@
 #include <vector>
 #include <iostream>
 #include <cmath>
+#include <cstdlib>
 
 StringParse::StringParse(const std::string & input) {
   m_past_end="?!?";
