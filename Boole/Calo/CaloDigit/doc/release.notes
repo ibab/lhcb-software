@@ -4,8 +4,11 @@
 ! Purpose     : Digitisation and Zero-suppression of the Calorimeters
 !-----------------------------------------------------------------------------
 
-! 2009-10-01 - Vanya BELYAEV
+!======================== CaloDigit v3r1 2009-10-22 ==========================
+! 2009-10-22 - Marco Cattaneo
+ - Remove obsolete file CaloDigit_dll.cpp
 
+! 2009-10-01 - Vanya BELYAEV
  - minor fix for the recent changes in CaloCellCode functions 
  - cmt/requirements 
    version increment to v3r1 
