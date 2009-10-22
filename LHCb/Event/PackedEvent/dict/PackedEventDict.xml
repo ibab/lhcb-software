@@ -58,7 +58,7 @@
   <class name="std::vector<LHCb::PackedMCRichTrack>" />
   <class name="LHCb::PackedMCRichTracks" id="000005F4-0000-0000-0000-000000000000" />
 
-  <class name="LHCb::PackedMCRichDigitSummarys" />
+  <class name="LHCb::PackedMCRichDigitSummary" />
   <class name="std::vector<LHCb::PackedMCRichDigitSummary>" />
   <class name="LHCb::PackedMCRichDigitSummarys" id="000005F7-0000-0000-0000-000000000000" />
 
