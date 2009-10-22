@@ -5,16 +5,210 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-! 2009-10-15 - Marco Cattaneo
- - In python/RecSys/Configuration.py, add RecMoniSys configurable to set up
-   Monitoring phase of, e.g., Brunel
+</PRE><H1><A NAME=v7r7>2009-10-23 RecSys v7r7</A></H1><PRE>
+This version uses Gaudi v21r5 and LHCb v28r1
 
-! 2009-10-14 - Christopher Rob Jones
- - Update python Configurable to allow users to explicit set an empty sequence
+- Packages removed: RecCheckers: obsolete, MCReconstructed tool has been moved
+                                 to DaVinciMCTools
+                    NNTools: obsolete
+- Packages updated: CaloMoniDst v4r1, CaloPIDs v5r1p1, CaloReco v5r2,
+    MuonID v7r2p2, MuonTrackAlign v1r8, GlobalReco v6r27, LumiAlgs v2r3,
+    RichGlobalPID v3r10p4, RichRecAlgorithms v2r17, RichRecMCTools v2r25p1,
+    RichRecMonitors v2r24, RichRecQC v2r34, RichRecSys v3r22, 
+    RichRecTemplateRings v1r1p1, RichRecTrackTools v1r15,  PatAlgorithms v3r23,
+    PatVelo v3r18, PatVeloTT v3r8p1, TrackMatching v2r24, TrackSys v4r26,
+    TsaAlgorithms v3r13, TrackAssociators v2r7, TrackCheckers v4r9,
+    TrackExtrapolators v2r24, TrackFitEvent v4r1, TrackFitter v2r38,
+    TrackIdealPR v2r19, TrackMonitors v1r14, TrackProjectors v2r25,
+    TrackTools v3r22, TrackUtils v1r30, VeloRecMonitors v2r2
 
-! 2009-10-08 - Marco Cattaneo
- - Remove RecCheckers. Package is obsolete, MCReconstructed tool has been moved
-   to DaVinciMCTools
+- In RecSys v7r7
+  . Changes to python/RecSys/Configuration.py:
+    o Add RecMoniSys configurable to set up Monitoring phase of, e.g., Brunel
+    o Allow users to explicit set an empty sequence
+
+- In CaloMoniDst v4r1
+  . Update in CaloEFlowAlg
+  . CaloMoniAlg.h :
+    minor fix for the recent modification in CaloCellCode functions 
+  . CaloPi0Monitor : 
+    o selection of non-converted photons
+    o isolation criteria
+    o Add background subtracted histo 
+  . Add background histo in resolved pi0 monitor
+  . Fix problem with HashMap<const string, IHistogram*> removing const !
+
+- In CaloPIDs v5r1p1
+  . Reduce CaloTrackMatchAlg verbosity 
+  . Reduce InCaloAcceptance/CaloTrackMatchAlg verbosity when no good tracks found
+  . Add protection against missing inputs
+
+- In CaloReco v5r2
+  . Fix python modules to avoid make error with Gaudi v21r5
+  . Add the possibility to use both Tracks and Spd ( in *OR* mode) 
+    as neutrality criterion for clusters  
+  . Brunel.opts, HltCaloSeq.opts, python/Reconstruction.py :
+    remove CaloGetterInit/CaloDigitGetter (no longer needed)
+
+- In MuonID v7r2p2
+  . In ConfiguredMuonIDs.py and all Muon_*, remove all the absolute path
+    references, as these are not valid for Ganga and Dirac.
+  . In CLTool.cpp fix a bug appearing when only one momentum bin is applied
+  . In IsMuonCandidate.cpp fix a bug related to the units of the momentum
+  . In ConfiguredMuonIDs.py, set DoF property of TrackKalmanFilter to 0, since
+    MuonID uses an external state as a constraint, worth '5 measurements'. 
+    Fixes warning in Brunel about negative nDOF
+
+- In GlobalReco v6r27
+  . Suppressed PID disabled warning messages in ChargedProtoPAlg for HLT, until
+    the move other to the new algorithms, to reduce printout.
+  . Fix untested StatusCodes in Charged ProtoParticle tuple monitor.
+  . src/NeutralProtoPAlg.cpp 
+    disable replace of container for "lightMode"  ( it result in HUGE gain 
+    in calibration mode, avoiding decoding of "old" & "packed" protoparticles)
+  . Fix python Configurable to properly set output level for all algorithms
+
+- In LumiAlgs v2r3
+  . remove small memory leak in LumiAccounting::finalize()
+  . remove EOR from FileRecords path
+  . add functionality to write/read MDF files with only lumi events:
+    Add LumiWriter[Conf].py, LumiReader[Conf].py,LumiFileReader.cpp/h
+
+- In RichGlobalPID v3r10p4
+  . Suppress warning messages about empty track or pixel containers so 0 
+    instances are printed during processing. They are instead just summarised
+    at the end of the job.
+
+- In RichRecAlgorithms v2r17
+  . Improve event selection algorithm by including both Min and Max cuts
+
+- In RichRecMCTools v2r25p1
+  . Fix untested StatusCodes
+
+- RichRecMonitors v2r24
+  . Fix some untested StatusCodes in various ntupling methods.
+
+- In RichRecQC v2r34
+  . Remove dedicated hot pixel finder algorithm (now implemented as a generic 
+    HPD analysis tool). Update python options accordingly.
+  . Book histograms during initialisation in the AlignmentMonitor
+  . Change default options to fill mirror histograms as well.
+  . Add option to monitoring Configurable to apply custom selection of events 
+    used by the monitoring algorithms.
+  . Add new ring search monitor
+
+- In RichRecSys v3r22
+  . Fix python modules to avoid make error with Gaudi v21r5
+  . Improve "Loose" photon selection for cosmic running.
+  . Improvements to how the OutputLevel level property is propagated to other
+    python Configurables and used
+
+- In RichRecTemplateRings v1r1p1
+  . Added an extra option for selecting all tracks for Cosmics data.
+    This allows the TT tracks to be used for ring finding.
+
+- In RichRecTrackTools v1r15
+  . Fix track selector to select tracks that have default likelihood or
+    ghost probability values (999) (e.g. in the HLT).
+
+- In PatAlgorithms v3r23
+  . PatDownstream: 
+    o Changed options to remove used hits and T-tracks. Use RemoveUsed to switch
+      it on. If RemoveAll all hits and T-tracks that have already been used are
+      removed. If not RemoveAll, only hits and T-tracks from longtracks with a 
+      chi2 smaller than LongChi2 are used to remove hits and T-tracks
+    o Retuned Parameters for MC09
+    o Made search windows momentum dependent
+    o Changed way of fitting the x projection
+					
+- In PatVeloTT v3r8p1
+  . Fix memory leak in PatVeloTTFit
+
+- TrackSys v4r26
+  . RecoTracking.py: 
+    o Use TrackAddNNGhostId instead of NeuralNetTmva to calculate ghost
+      probability
+    o Remove import of obsolete options file
+      $TRACKTOOLSROOT/options/FastMomentumEstimate.opts"
+  . Remove obsolete options files RecoTracking.opts, NoFieldTracking.opts
+
+- In TsaAlgorithms v3r13
+  . Added new algorithm: TTGenericTracking. See include file for documentation.
+
+- In TrackAssociators v2r7
+  . Removed code that would omit outliers in comparison to MC since it was 
+    anyway broken.
+
+- In TrackCheckers v4r9
+  . Adapted TrackCheckerNT to new-style MC association on OT hit level so
+    things work again with MC09 data
+
+- In TrackExtrapolators v2r24
+  . Fixed division by zero in TrackRungeKuttaExtrapolator
+  . Use Runge Kutta extrapolator as default
+  . Added missing const to TrackExtrapolator functions with Plane3D and
+    small optimization for planes that are not perpendicular to z.
+
+- In TrackFitEvent v4r1
+  . Added data member 'doca' to fitnode.
+
+- In TrackFitter v2r38
+  . Added extra extrapolator to TrackMasterFitter for velo-only tracks.
+    Configuration now identical for all track types except Seed.
+  . Update ConfiguredFitters: remove default prefitters, add some flags 
+  . Removed the lines in TrackMasterFitter that check for the number of
+    measurements. This is not strictly needed. Added a warning in
+    TrackKalmanFilter when ndof is below zero.
+
+- In TrackMonitors v1r14
+  . Added PitchResTool. Calculates pitch residuals in the Outer Tracker
+  . In OTTrackMonitor, pitch residuals are calculated & histogrammed.
+  . Add a new option in STEfficiency, to allow spill over studies and removed
+	  useless option
+  . Added OTHitEfficiencyMonitor
+  . Made a separate configuration for OT monitors
+
+- In TrackProjectors v2r25
+  . Fill new data member doca in FitNode
+
+- In TrackTools v3r22
+  . Fix memory leak in TrackStateInitTool
+  . Make measurement providers private tool of 'master' provider
+  . Add TrackNNGhostId tool to compute the ghost probability using a standalone 
+    neural net
+  . Remove obsolete file options/FastMomentumEstimate.opts
+
+- In TrackUtils v1r30
+  . Move HltInsertTrackErrParam from HltSelections
+    o hacks the errors and replaces them by some P-dependent value
+  . Move NumberOfTracksFilter from HltSelections
+    o setFilterPassed depending number of tracks in a container
+  . Add initial relese of TrackAddNNGhostId algorithm
+
+- In VeloRecMonitors v2r2
+  . VeloClusterMonitor: code only relevant for TED runs removed. Clean up.
+  . bug fix in track monitor: C side phi plot was not filled.
+  . Fixed hist IDs in sampling monitor
+  . All histograms and profiles in VeloTrackMonitor are now booked in
+    initialize(). Do not book hitmap histos by default
+  . Changed online monitoring options +/- 5 TAE instances of the occupancy
+    monitor. 
+  . Added property to sampling monitor that allows to disable NZS based plots.
+  . Online options now disable NZS plots in sampling monitor
+  . Fixed wrong property in online options for occupancy monitor
+  . Added PVSS TELL1 names to histogram titles in occupancy monitor
+  . Masked out XML writing feature in VeloOccupancyMonitor on Windows(TM)
+  . Adapted to new locations of tool interfaces. Reverted cmt hack to hide tool
+    usage in standard build because no longer needed.
+  . Added missing dependency on L0Event and HltEvent
+
+- In MuonTrackAlign v1r8, RichRecTrackTools v1r15, TrackMatching v2r24,
+     TrackCheckers v4r9, TrackFitter v2r38, TrackIdealPR v2r19,
+     TrackMonitors v1r14, TrackTools v3r22, VeloRecMonitors v2r2
+  . Adapted to changes in LHCb::Track
+
+- In MuonTrackAlign v1r8, TrackAssociators v2r7
+  . Remove obsolete file <package>_dll.cpp
 
 </PRE><H1><A NAME=v7r6>2009-09-08 RecSys v7r6</A></H1><PRE>
 This version uses Gaudi v21r4 and LHCb v28r0
