@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-22 - Marco Cattaneo
+ - Update references for addition of OT pitch residual plots (TrackMonitors v1r14)
+
 ! 2009-10-15 - Marco Cattaneo
  - Move configuration of Monitoring phase to RecMoniConf configurable
    (RecSys v35r7)

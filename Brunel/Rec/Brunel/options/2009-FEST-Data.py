@@ -14,8 +14,9 @@ Brunel().Simulation = True
 # Make sure Brunel is configured for MDF data
 if Brunel().getProp("InputType").upper() == "MDF":
     for file in range(1,files+1):
-        filename = "/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/%i/%06i_%010i.raw" % (run,run,file)
-        EventSelector().Input += [ "DATAFILE='rfio:" + filename + "'  SVC='LHCb::MDFSelector'" ]
+        if file != 2:  # file 2 of run 56721 does not exist...
+            filename = "/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/%i/%06i_%010i.raw" % (run,run,file)
+            EventSelector().Input += [ "DATAFILE='rfio:" + filename + "'  SVC='LHCb::MDFSelector'" ]
 else:
     print "********************************************************************************"
     print "The 2009-FEST-Files.py files require Brunel be set up to process MDF data"
