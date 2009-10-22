@@ -1,4 +1,4 @@
-### @file $Id: CheckerSeq.py,v 1.1 2009-10-21 16:40:33 pkoppenb Exp $
+## @file $Id: CheckerSeq.py,v 1.2 2009-10-22 16:21:33 pkoppenb Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.1 2009-10-21 16:40:33 pkoppenb Exp $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.2 2009-10-22 16:21:33 pkoppenb Exp $, $Revision: 1.2 $"
 # =============================================================================
 ###############################################################################
 #
@@ -21,38 +21,43 @@ class CheckerSeq :
     """
 
 ###############################################################################
-    def __init__(self,dv = None,s='Undefined', d='Undefined',ip=[],dt ='MC09'):
+    def __init__(self,
+                 DV       = None,
+                 Signal   ='Undefined',
+                 Decay    ='Undefined',
+                 Input    =[],
+                 DataType ='MC09'):
         """
         Defaults
         """
-        self.DV = dv    # DaVinci configurable
-        self.Signal = s
-        self.Decay = d
-        self.Input = ip
-        self.DataType = dt
+        self._DV = DV    # DaVinci configurable
+        self._Signal = Signal
+        self._Decay = Decay
+        self._Input = Input
+        self._DataType = DataType
 
 ###############################################################################
     def configureDV(self,seq):
         """
         DaVinci settings
         """
-        DV = self.DV
-        DV.EvtMax = -1 
+        DV = self._DV
+        DV.EvtMax = 1000 
         DV.Hlt = True
         DV.Hlt2Requires = 'L0'
-        DV.DataType = self.DataType
+        DV.DataType = self._DataType
         DV.Simulation = True
-        DV.TupleFile = "HLT-"+self.Signal+".root"
-        DV.HistogramFile = "DVHlt2-"+self.Signal+".root"
+        DV.TupleFile = "HLT-"+self._Signal+".root"
+        DV.HistogramFile = "DVHlt2-"+self._Signal+".root"
         DV.MoniSequence += [ seq ]
-        DV.Input = self.Input
+        DV.Input = self._Input
 ###############################################################################
     def sequence(self):
         """
         The monitoring sequence
         """
         from Configurables import GaudiSequencer
-        seq = GaudiSequencer("HltCheck"+self.Signal)
+        seq = GaudiSequencer("HltCheck"+self._Signal)
         seq.Context = "HLT"
         seq.IgnoreFilterPassed = True
 
@@ -87,7 +92,7 @@ class CheckerSeq :
         ftt.TracksPath = [ "Hlt/Track/Long" ]
         ftt.OutputPath = "Hlt/Track/Signal"
         ftt.addTool(MCDecayFinder)
-        ftt.MCDecayFinder.Decay = self.Decay
+        ftt.MCDecayFinder.Decay = self._Decay
         return ftt
     
 ###############################################################################
@@ -104,7 +109,7 @@ class CheckerSeq :
         """
         Does everything
         """
-        if (self.Signal=='Undefined'):
+        if (self._Signal=='Undefined'):
             print "Error: Undefined Signal"
             return 
 
