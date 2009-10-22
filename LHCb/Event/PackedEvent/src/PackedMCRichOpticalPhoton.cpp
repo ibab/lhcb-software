@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.cpp,v 1.3 2009-10-22 09:34:19 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -106,14 +106,14 @@ void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
                                                   m_pack.position(pphot.aeroy),
                                                   m_pack.position(pphot.aeroz) ) );
 
-      phot->setCherenkovTheta( m_pack.fltPacked(pphot.theta) );
-      phot->setCherenkovPhi( m_pack.fltPacked(pphot.phi) );
+      phot->setCherenkovTheta ( (float)m_pack.fltPacked(pphot.theta) );
+      phot->setCherenkovPhi   ( (float)m_pack.fltPacked(pphot.phi)   );
 
       phot->setEmissionPoint( Gaudi::XYZPoint( m_pack.position(pphot.emisx),
                                                m_pack.position(pphot.emisy),
                                                m_pack.position(pphot.emisz) ) );
 
-      phot->setEnergyAtProduction( (double)m_pack.energy(pphot.energy) / PhotEnScale );
+      phot->setEnergyAtProduction( (float) ( (double)m_pack.energy(pphot.energy)/PhotEnScale) );
 
       phot->setParentMomentum( Gaudi::XYZVector( m_pack.energy(pphot.pmomx),
                                                  m_pack.energy(pphot.pmomy),
