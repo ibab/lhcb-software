@@ -1,4 +1,4 @@
-// $Id: GeomFun.icpp,v 1.12 2009-10-07 07:30:28 graven Exp $ 
+// $Id: GeomFun.icpp,v 1.13 2009-10-22 12:26:54 ibelyaev Exp $ 
 // ============================================================================
 // include files 
 // ============================================================================
@@ -28,7 +28,7 @@ bool Gaudi::Math::intersection(const aLine& line,
   }
   return canCalculate;
 }
-
+// ============================================================================
 template<typename aLine, typename aPlane>
 bool Gaudi::Math::intersection(const aPlane& plane0,
                                const aPlane& plane1,
@@ -116,7 +116,7 @@ inline bool Gaudi::Math::closestPointParams
  double&      mu0   , 
  double&      mu1   )   
 {  
-  /** 
+  /**
    *  Let the points 
    * \f$\vec{\mathbf{v}}_0=\vec{\mathbf{p}}_0+\mu_0\vec{\mathbf{d}}_0\f$ 
    * and 
@@ -124,26 +124,25 @@ inline bool Gaudi::Math::closestPointParams
    * be the closest points. It means that 
    *  \f[
    *   \begin{pmatrix}
-   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_0 \\
-   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_1 \\
+   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_0 \ \
+   *     \left(\vec{\mathbf{p}}_0-\vec{\mathbf{p}}_1\right)\vec{\mathbf{d}}_1 \ \
    *   \end{pmatrix} =  0
    *  \f]
    *  The final system is:
    *  \f[ 
    *   \begin{pmatrix}
-   *      \vec{\mathbf{d}}^2_0                 & - \vec{\mathbf{d}}_0\vec{\mathbf{d}}_1 \\
+   *      \vec{\mathbf{d}}^2_0                 & - \vec{\mathbf{d}}_0\vec{\mathbf{d}}_1 \ \
    *      \vec{\mathbf{d}}_0\vec{\mathbf{d}}_1 & - \vec{\mathbf{d}}^2_1 
    *   \end{pmatrix}
    *   \begin{pmatrix}
    *     \mu_0 \\  \mu_1 
    *   \end{pmatrix} = 
    *   \begin{pmatrix}
-   *       \vec{\mathbf{d}}_0 \left( \vec{\mathbf{p}}_1 - \vec{\mathbf{p}}_0 \right) \\
+   *       \vec{\mathbf{d}}_0 \left( \vec{\mathbf{p}}_1 - \vec{\mathbf{p}}_0 \right) \ \
    *       \vec{\mathbf{d}}_1 \left( \vec{\mathbf{p}}_1 - \vec{\mathbf{p}}_0 \right) 
    *   \end{pmatrix}  
    *  \f]
    */
-
   // lhs: 
   
   // the matrix: 

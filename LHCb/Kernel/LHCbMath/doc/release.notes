@@ -6,6 +6,22 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-10-22 - Vanya Belyaev
+
+ - python/LHCbMath/Types.h
+
+     add more decorations for lines & planes & their operations, like 
+      intersections, impact parameters, distances, parallel, etc..
+      
+ - python/LHCbMath/tests.py
+
+     add the tests for new functions 
+
+ - cmt/requirements 
+
+     version increment to v3r14 
+
+
 !========================= LHCbMath v3r13 2009-10-16 =========================
 ! 2009-10-07 - Gerhard Raven
  - faster (but equivalent) check for parallel tracks in GeomFun.icpp

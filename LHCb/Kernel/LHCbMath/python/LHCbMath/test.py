@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: test.py,v 1.1 2009-09-12 19:29:27 ibelyaev Exp $
+# $Id: test.py,v 1.2 2009-10-22 12:26:54 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  Test-file for various "with error" objects
@@ -68,6 +68,31 @@ v4 = Gaudi.Math.SVector4WithError()
 
 print 'SVector3WithError                :' , v3 , vp1.asVector() 
 print 'SVector4WithError                :' , v4 , vl1.asVector() 
+
+
+pnt1   = Gaudi.XYZPoint(-1,-2,-3)
+pnt2   = Gaudi.XYZPoint( 1,-2,-3)
+line1  = Gaudi.Math.XYZLine(Gaudi.XYZPoint(0,1,2), Gaudi.XYZVector(1,1,1)  )
+line2  = Gaudi.Math.XYZLine(Gaudi.XYZPoint(1,3,0), Gaudi.XYZVector(1,-1,2) )
+plane1 = Gaudi.Math.Plane3D ( 0 , 1, 2,  3 )
+plane2 = Gaudi.Math.Plane3D ( 1 , 8, 9,  0 )
+plane3 = Gaudi.Math.Plane3D ( 4 , 5, 6, -1 )
+
+print ' line  : intersect          : ', line1.intersect ( plane1 )
+print ' plane : intersect two      : ', plane1.line(plane2)
+print ' plane : intersect three    : ', plane1.point(plane2,plane3)
+print ' plane : intersect two      : ', plane1.intersect(plane2)
+print ' plane : intersect three    : ', plane1.intersect(plane2,plane3)
+print ' line  : impactParameter    : ', line1.impactParameter ( pnt1  )
+print ' point : impactParameter    : ', pnt1 .impactParameter ( line1 )
+print ' line  : distance           : ', line1.distance  (line2)
+print ' line  : closestPoints      : ', line1.closestPoints(line2) 
+print ' line  : closestPointParams : ', line1.closestPointParams(line2) 
+print ' line  : closestPoint       : ', line1.closestPoint ( pnt2  ) 
+print ' point : closestPoint       : ', pnt2 .closestPoint ( line1 ) 
+print ' line  : closestPointParam  : ', line1.closestPointParam ( pnt1  ) 
+print ' point : closestPointParam  : ', pnt1 .closestPointParam ( line1 ) 
+print ' line  : parallel           : ', line1.parallel  (line2)
 
 
 
