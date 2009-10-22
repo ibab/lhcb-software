@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -25,11 +25,11 @@ from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        prntCmp        ,
                                        hltContext     , 
                                        setTheProperty )
-from CaloReco.Reconstruction  import ( digitsReco     ,
-                                       clusterReco    , 
-                                       photonReco     ,
-                                       electronReco   ,
-                                       mergedPi0Reco  ) 
+from Reconstruction  import ( digitsReco     ,
+                              clusterReco    , 
+                              photonReco     ,
+                              electronReco   ,
+                              mergedPi0Reco  ) 
 
 # =============================================================================
 ## @class CaloRecoConf

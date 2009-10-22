@@ -1,11 +1,14 @@
-! $Id: release.notes,v 1.162 2009-10-20 15:09:37 cattanem Exp $
+! $Id: release.notes,v 1.163 2009-10-22 08:35:30 cattanem Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
 
-!========================== CaloReco v5r2  2009-10-20 =========================
+!========================== CaloReco v5r2  2009-10-22 =========================
+! 2009-10-22 - Marco Cattaneo
+ - Fix python import problems causing errors in make
+
 ! 2009-10-15 - Marco Cattaneo
  - Remove CaloPacking.py, moved to GaudiConf
 

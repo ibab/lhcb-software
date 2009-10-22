@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.6 2009-09-28 19:48:58 ibelyaev Exp $
+# $Id: Reconstruction.py,v 1.7 2009-10-22 08:35:30 cattanem Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,7 +11,7 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 __all__ = (
     'digitsReco'     , 
@@ -35,9 +35,6 @@ from CaloKernel.ConfUtils import ( prntCmp        ,
                                    caloOnDemand   ,
                                    getAlgo        ) 
 
-
-
-from CaloPIDs.PIDs import trackMatch
 
 # =============================================================================
 ## prepare the digits for the recontruction
@@ -198,7 +195,7 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
         lcorr
         ]
 
-    from CaloReco.Corrections import eCorrection, sCorrection, lCorrection
+    from Corrections import eCorrection, sCorrection, lCorrection
     ecorr = eCorrection ( ecorr )
     scorr = sCorrection ( scorr )
     lcorr = lCorrection ( lcorr )
@@ -211,6 +208,7 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
     seq = getAlgo ( GaudiSequencer , "PhotonReco" , context  )
 
     if useTracks : 
+        from CaloPIDs.PIDs import trackMatch
         addAlgs ( seq , trackMatch ( context , enableRecoOnDemand ) ) 
 
     addAlgs ( seq , alg ) 
@@ -316,6 +314,7 @@ def electronReco ( context , enableRecoOnDemand ) :
     
     eseq = getAlgo ( GaudiSequencer , "ElectronReco" , context )
     
+    from CaloPIDs.PIDs import trackMatch
     addAlgs ( eseq , trackMatch ( context , enableRecoOnDemand ) ) 
     addAlgs ( eseq , alg ) 
     
@@ -392,7 +391,7 @@ def mergedPi0Reco ( context , enableRecoOnDemand ) :
     scorr = splitg.SCorrection
     lcorr = splitg.LCorrection
     
-    from CaloReco.Corrections import eCorrection, sCorrection, lCorrection
+    from Corrections import eCorrection, sCorrection, lCorrection
     ecorr = eCorrection ( ecorr )
     scorr = sCorrection ( scorr )
     lcorr = lCorrection ( lcorr )

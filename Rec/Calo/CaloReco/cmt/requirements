@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.73 2009-10-15 09:55:39 cattanem Exp $
+# $Id: requirements,v 1.74 2009-10-22 08:35:30 cattanem Exp $
 # =============================================================================
 package            CaloReco
 version            v5r2
@@ -15,8 +15,8 @@ use Relations       v*     Kernel
 library            CaloReco    *.cpp
 
 # ================ standard patterns ==========================================
-apply_pattern      install_python_modules
 apply_pattern      component_library library=CaloReco
+apply_pattern      install_python_modules
 # =============================================================================
 
 # Set the default path for Brunel options.
