@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.8 2009-10-22 14:33:41 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.9 2009-10-22 16:26:46 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -220,12 +220,12 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     float limit1D;
     float limit3D;
     if ( !m_useLogScale ){
-      limit1D = m_limitFactor * m_limitGradient1D * m_bins[ i+1 ] + m_limitIntercept1D;
-      limit3D = m_limitFactor * m_limitGradient3D * m_bins[ i+1 ] + m_limitIntercept3D;
+      limit1D = m_limitFactor * ( m_limitGradient1D * m_bins[ i+1 ] + m_limitIntercept1D );
+      limit3D = m_limitFactor * ( m_limitGradient3D * m_bins[ i+1 ] + m_limitIntercept3D );
     }
     else{
-      limit1D = m_limitFactor * m_limitGradient1D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept1D;
-      limit3D = m_limitFactor * m_limitGradient3D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept3D;
+      limit1D = m_limitFactor * ( m_limitGradient1D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept1D );
+      limit3D = m_limitFactor * ( m_limitGradient3D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept3D );
     }
 
     // if underlying histograms are to be saved, the histograms for each bin are booked and pointers to the underlying 
