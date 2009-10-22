@@ -49,11 +49,6 @@ use Fidel               v1r3p3  Phys  # Sara Furcas
 use LoKiTrigger         v9r6   Phys   # Vanya Belyaev
 use TisTosTobbing       v3r4p1   Phys   # Tomasz Skwarnicki  
 
-#=============================================================
-# temporary Patch on top of REC v7r6
-#=============================================================
-use TrackUtils          v1r30   Tr
-
 # Declare this as a container package
 apply_pattern container_package
 
