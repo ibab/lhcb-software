@@ -3,80 +3,64 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
-! 2009-10-22 - Marco Cattaneo
- - Update references for addition of OT pitch residual plots (TrackMonitors v1r14)
-
-! 2009-10-15 - Marco Cattaneo
- - Move configuration of Monitoring phase to RecMoniConf configurable
-   (RecSys v35r7)
- - Brunel().MoniSequence option removed, now a property of RecMoniConf
-
-! 2009-10-14 - Marco Cattaneo
- - Update Configurable to allow handling of Lumi events:
-   . New LumiSeq sequence runs if input is real data in either MDF or ETC format
-   . LumiSeq runs immediately after initialisation, filters on Hlt routing bits.
-   . All phases other than "Init" and "Output" moved into a "PhysicsSeq"
-     sequencer and run only if physics routing bit is set
-   . Calo bank unpacking moved from Init phase to first algorithm of PhysicsSeq
-   . Dummy DSTPacker sequence is run if physics routing bit is not set, to create
-     empty containers for the events output file
+</PRE><H1><A NAME=v35r7>2009-10-23 Brunel v35r7</A></H1><PRE>
+ - Changes to Configurable:
+   . Fix for ETC input (was missing definition of EvtTupleSvc)
+   . Allow users to explicit set empty sequences
+   . Set context of top level sequence to value of "Context" property
+   . Add support for Lumi events:
+     o New LumiSeq sequence runs if input is real data in MDF or ETC format
+     o LumiSeq runs immediately after initialisation, filters on Hlt routing bits
+     o All phases other than "Init" and "Output" moved into a "PhysicsSeq"
+       sequencer and run only if physics routing bit is set
+     o Calo bank unpacking moved from Init phase to first algorithm of PhysicsSeq
+     o Dummy DSTPacker sequence is run if physics routing bit is not set, to
+       create empty containers for the events output file
    . Bug fix: production of Lumi FSR now done also when input is from ETC
      (was MDF only)
- - Set context of top level sequence to value of "Context" property
- - Use more recent input file for DC06 test
- - Update references for above changes and:
-   . Removed cut on hot sectors when using VELO lite clusters (PatVelo v3r18)  
-   . Added extra extrapolator to TrackMasterFitter for velo-only tracks
-     (TrackFitter v2r38)
-   . OT monitors no run in dedicated sequence (TrackMonitors v1r14)
-   . Changes to VeloTrackMonitor histograms (VeloRecMonitors v2r2)
+   . Move configuration of Monitoring phase to RecMoniConf configurable
+     (RecSys v35r7)
+   . Brunel().MoniSequence option removed, now a property of RecMoniConf
 
-! 2009-10-14 - Christopher Rob Jones
- - Update python Configurable to allow users to explicit set empty sequences
+ - Changes to example options:
+   . Replace usage of obsolete Brunel().NoWarnings option with 
+     Brunel().OutputLevel
+   . Add options/2009-FEST-Data.py, datafile containing lumi events
+   . Add options/Brunel-MC09Stripping.py, to reconstruct MC09 stripping FETC
 
-! 2009-10-12 - Marco Cattaneo
- - Update references for:
+ - Changes to references to reflect changes in Brunel v35r7 output:
+   . Introduction of Runge Kutta as default extrapolator
+     (TrackExtrapolators v2r24)
+   . Fix untested StatusCodes
+     (GlobalReco v6r27, RichRecMCTools v2r25p1, RichRecMonitors v2r4)
+   . Fix of nDoF in Muon fit (MuonID v7r2p1)
+   . New Rich ring search monitor (RichRecQC v2r34)
+   . Fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
+   . Reduced CaloPIDs verbosity (CaloPIDs v5r1p1)
+   . Reduced warnings (RichGlobalPID v3r10p4)
+   . New handling of Calo Raw bank decoding (CaloDAQ v4r14)
    . Improvements to PatDownstream (PatAlgorithms v3r23). See T-Rec 2009-09-28
      http://indico.cern.ch/getFile.py/access?contribId=3&resId=0&materialId=slides&confId=48029
    . Deploy new ghost algorithm TrackAddNNGhostId, replaces NeuralNetTMVA
      (TrackSys v4r26, TrackTools v3r22, TrackUtils v1r30)
    . HPD hot pixel finder is no longer an algorithm, now a generic tool called
      by dedicated instance of HPDAnalysisAlg algorithm (RichRecQC v2r34)
-   . Added OTEfficiencyMonitor (TrackMonitors v1r14)
+   . Added OTEfficiencyMonitor and OT pitch residual plots. OT monitors now run
+     in dedicated sequence (TrackMonitors v1r14)
    . Rich alignment histograms now booked by default! (RichRecQC v2r34)
-   . VeloTrackMonitor histograms now booked at initialise (VeloRecMonitors v2r2)
    . New memory histograms and counters (LHCbAlgs v2r29)
+   . Removed cut on hot sectors when using VELO lite clusters (PatVelo v3r18)  
+   . Added extra extrapolator to TrackMasterFitter for velo-only tracks
+     (TrackFitter v2r38)
+   . Changes to VeloTrackMonitor histograms. VeloTrackMonitor histograms now
+     booked at initialise (VeloRecMonitors v2r2)
 
-! 2009-10-06 - Marco Cattaneo
- - Update references for:
-   . Reduced warnings (RichGlobalPID v3r10p4)
-   . Fix untested StatusCodes (RichRecMonitors v2r4)
-
-! 2009-09-30 - Marco Cattaneo
- - Update references for:
-   . Introduction of Runge Kutta as default extrapolator
-     (TrackExtrapolators v2r24)
-   . Further change to Calo decoding sequence
-   . Fix untested StatusCodes (GlobalReco v6r27, RichRecMCTools v2r25p1)
-   . Fix of nDoF in Muon fit (MuonID v7r2p1)
-
-! 2009-09-18 - Marco Cattaneo
- - Update references for new handling of Calo Raw bank decoding (CaloDAQ v4r14)
- - In example options, replace usage of obsolete Brunel().NoWarnings option with
-   Brunel().OutputLevel
- - Add options/2009-FEST-Data.py, and corresponding brunel-fest09.qmt test, to
-   test a datafile containing lumi events
- - Add options/Brunel-MC09Stripping.py and brunel-mc09-stripping.qmt test, to 
-   test reconstruction of MC09 stripping FETC
- - Fix Configurable for ETC input (was missing definition of EvtTupleSvc)
-
-! 2009-09-14 - Marco Cattaneo
- - Adapt valgrind.job to use gaudirun.py, uses python suppressions file from
-   STDOPTS (needs GaudiConf from v12r9)
- - Update references for new Rich ring search monitor (RichRecQC v2r34)
- - Update references for fix to CaloPID monitor initialisation (CaloMoniDst v4r1)
- - Update references for reduced CaloPIDs verbosity (CaloMoniDst v5r2)
- - Increment version to v35r7
+ - Changes to tests:
+   . Adapt valgrind.job to use gaudirun.py, uses python suppressions file from
+     STDOPTS (needs GaudiConf from v12r9)
+   . Add brunel-fest09.qmt, to test a datafile containing lumi events
+   . Add brunel-mc09-stripping.qmt, to test reconstruction of MC09 stripping FETC
+   . Use more recent input file for DC06 test
 
 </PRE><H1><A NAME=v35r6>2009-09-09 Brunel v35r6</A></H1><PRE>
  - Changes to Configurable:
