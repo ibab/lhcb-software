@@ -3,10 +3,61 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-10-08 - Marco Cattaneo
- - Fix reference for improvements to spillover handling
+</PRE><H1><A NAME=v19r7>2009-10-22 Boole v19r7</A></H1><PRE>
+This version uses projects Gaudi v21r5, LHCb v28r1, Lbcom v7r7
+ and SQLDDDB v5r13, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
 
-- Fix reference for fix to EventDataSvc reference counting
+Version for post-MC09 developments. Output needs Brunel v34r3 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+Also supports simulation of upgrade geometry, this requires
+SQLDDDB v5r12 or later, AppConfig v3r5 or later
+
+ - Changes to configuration
+   . Improve handling of spillover:
+     + New option "UseSpillover", default False. If True, enables spillover and
+       enables access to branches defined in SpilloverPaths
+     + Access to any branches not defined in SpilloverPaths is disabled
+     + If "UseSpillover" is False, access to all SpilloverPaths is disabled
+   . Add support for XmlSummary (not yet filled). Enabled by setting
+     LHCbApp().XMLSummary = True
+     (GaudiConf v12r9, XmlSummaryKernel v1r0, XmlSummaryBase v1r0, Gaudi v21r5)
+
+ - Changes to persistency (GaudiConf v12r9)
+   . Make writing of spillover headers compulsory if SpilloverPaths are set
+   . When saving spillover, save also spillover Gen headers
+   . Kill all known Spillover nodes when saving "Minimal" format
+
+ - Changes to example options
+   . Add options/Boole-Spillover.py, options/Spillover-Files.py: examples for
+     enabling spillover
+
+ - New tuning
+   . Speed up initialisation through optimisation of Muon geometry (remove
+     detector elements for gas gaps). Enabled only for post-MC09 geometries,
+     requires SQLDDDB v5r13 or later
+     (MuonDet v9r0, MuonAlgs v6r9, MuonBackground v2r10)
+   . Remove calls to ChronoStatSvc in execute (L0Muon v8r5p2)
+   . Save memory with alignment of libraries (GaudiPolicy v10r3)
+
+ - Bug fixes
+   . Many fixes reference counting. Now OutputStream no longer crashes when many
+     streams are defined, and Algorithms are deleted on program termination 
+     (Gaudi v21r5)
+     (GaudiKernel v27r5, GaudiSvc v18r5, GaudiAlg v12r4)
+   . Work around for crash when RichDetailedFrontEndResponse is deleted
+     (RichReadout v2r12p1)
+
+ - Changes to monitoring
+   . New printout and histograms of memory usage statistics (LHCbAlgs v2r29)
+
+ - Additional internal changes (transparent)
+   . Follow changes in CaloCellCode functions (CaloDigit v3r1)
+   . Modifications to BeginEvent handling in CaloDAQ
+     (CaloDAQ v4r14, CaloTools v5r12, L0Calo v9r22, L0DU v8r19)
+
+ - Changes to tests
+   . Add a qmtest for spillover
 
 </PRE><H1><A NAME=v19r6>2009-09-28 Boole v19r6</A></H1><PRE>
 This version uses projects Gaudi v21r4, LHCb v28r0, Lbcom v7r6
