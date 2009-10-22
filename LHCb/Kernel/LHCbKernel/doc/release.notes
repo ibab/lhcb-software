@@ -5,6 +5,7 @@
 !--------------------------------------------------------------------------
 
 ! 2009-10-21 - Chris Jones
+ - Make StandardPacker methods const
  - Extend StandardPacker.h with methods to pack time values (TOF values 
    for the packing of MC hits).
 
