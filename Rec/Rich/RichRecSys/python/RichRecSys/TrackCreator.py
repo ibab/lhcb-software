@@ -4,12 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.8 2009-09-16 13:37:28 jonrob Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.9 2009-10-22 08:42:44 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
 from GaudiKernel.SystemOfUnits import mm, GeV
-from RichRecSys.SegmentCreator import *
+from SegmentCreator import *
 
 # ----------------------------------------------------------------------------------
 
