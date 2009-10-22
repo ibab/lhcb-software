@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.85 2009-10-21 13:46:22 graven Exp $
+# $Id: requirements,v 1.86 2009-10-22 12:04:01 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -33,7 +33,7 @@ use GaudiPoolDb        v*                   -no_auto_imports
 use GaudiPython        v*                   -no_auto_imports
 
 # From LHCbSys
-use LHCbAlgs           v*    Kernel         -no_auto_imports
+use LHCbAlgs v2r29p1  Kernel
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
@@ -45,6 +45,8 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
+use HltSettings v1r0p1   Hlt
+use HltConf     v5r0p1   Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 
