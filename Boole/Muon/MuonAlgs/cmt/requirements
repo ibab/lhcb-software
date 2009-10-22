@@ -1,5 +1,5 @@
 package MuonAlgs 
-version v6r8
+version v6r9
 
 # ================ structure ===========================================
 branches src cmt options doc

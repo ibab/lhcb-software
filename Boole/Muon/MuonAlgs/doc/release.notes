@@ -3,8 +3,13 @@
 ! Responsible : Alessia Satta
 ! Purpose     : Muon digitisation algorithms
 !-----------------------------------------------------------------------------
+
+!========================= MuonAlgs v6r9 2009-10-22 ==========================
+! 2009-10-22 - Marco Cattaneo
+ - remove obsolete file MuonAlgs_dll.cpp
+
 ! 2009-10-08 - Alessia Satta
- - remove obsolete header
+ - Adapt to changes in MuonDet v9r0
 
 !========================= MuonAlgs v6r8 2009-04-09 ==========================
 ! 2009-04-09 - Alessia Satta
