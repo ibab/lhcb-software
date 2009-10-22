@@ -14,11 +14,11 @@ use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
 # Calorimeter
 use CaloMoniDigi        v2r4    Calo  # Olivier Deschamps
-use CaloDigit           v3r0    Calo  # Olivier Callot
+use CaloDigit           v3r1    Calo  # Olivier Callot
 
 # Muon
-use MuonAlgs            v6r8    Muon  # Alessia Satta
-use MuonBackground      v2r9    Muon  # Alessia Satta
+use MuonAlgs            v6r9    Muon  # Alessia Satta
+use MuonBackground      v2r10   Muon  # Alessia Satta
 use MuonMoniDigi        v2r4    Muon  # Alessio Sarti
 
 # Outer Tracker
@@ -28,7 +28,7 @@ use OTSimulation        v4r2    OT    # Jan Amoraal
 use RichDigiQC          v3r11   Rich  # Chris Jones
 use RichDigiSys         v1r0    Rich  # Chris Jones
 use RichMCAssociators   v2r7    Rich  # Chris Jones
-use RichReadout         v2r12   Rich  # Chris Jones
+use RichReadout         v2r12p1 Rich  # Chris Jones
 
 # Silicon Tracker
 use STDigiAlgorithms    v1r7    ST    # Matt Needham
