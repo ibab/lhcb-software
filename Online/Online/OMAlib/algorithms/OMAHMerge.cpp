@@ -1,8 +1,7 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.4 2009-06-11 15:17:31 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OMAlib/algorithms/OMAHMerge.cpp,v 1.5 2009-10-22 09:41:46 ggiacomo Exp $
 #include <TH2D.h>
 #include "OMAlib/OMAAlgorithms.h"
 #include "OMAlib/OMAlib.h"
-
 
 OMAHMerge::OMAHMerge(OMAlib* Env) : 
   OMAHcreatorAlg("HMerge", Env) {
@@ -44,6 +43,7 @@ TH1* OMAHMerge::hMerge(const char* newname, const char* newtitle, const std::vec
   TH1* newH = NULL;
   int dimension =in->at(0)->GetDimension();
 
+
   std::vector<TH1*>::const_iterator ih;
   for (int ia=0; ia<dimension; ia++) {
     for (ih=in->begin(); ih != in->end(); ih++) {
@@ -53,21 +53,23 @@ TH1* OMAHMerge::hMerge(const char* newname, const char* newtitle, const std::vec
       
       if(ih == in->begin()) {
         (steps[ia]).clear();
-        for (int ib=0; ib<= ax->GetNbins(); ib++)
+        for (int ib=0; ib<= ax->GetNbins(); ib++) {
           (steps[ia]).push_back(ax->GetXmin() + ib*delta );
+        }
       }
       else {
-      ix=(steps[ia]).begin();
-      Double_t x=0.;
-      for (int ib=0; ib<= ax->GetNbins(); ib++) {
-        x = ax->GetXmin() + ib*delta;
-        while ( ix != (steps[ia]).end() && 
-                *ix < x  &&
-                (! approxeq(x, *ix)) ) 
-          ix++;
-        if ( ! approxeq(x, *ix) ) 
-          ix = (steps[ia]).insert(ix,x);
-      }
+        ix=(steps[ia]).begin();
+        Double_t x=0.;
+        for (int ib=0; ib<= ax->GetNbins(); ib++) {
+          x = ax->GetXmin() + ib*delta;
+          while ( ix != (steps[ia]).end() && 
+                  *ix < x  &&
+                  (! approxeq(x, *ix)) ) 
+            ix++;
+          if ( ix ==  (steps[ia]).end() || (!approxeq(x, *ix)) ) {
+            ix = (steps[ia]).insert(ix,x);
+          }
+        }
       
       }
     }
@@ -93,6 +95,10 @@ TH1* OMAHMerge::hMerge(const char* newname, const char* newtitle, const std::vec
     }
   }
   return (TH1*) newH;    
+
+
+
+  
 }
 
 void OMAHMerge::fillMerged(TH1* newH, const std::vector<TH1*> *in)
