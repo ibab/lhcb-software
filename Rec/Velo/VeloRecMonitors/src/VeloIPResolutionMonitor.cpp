@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.7 2009-10-21 10:45:25 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.8 2009-10-22 14:33:41 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -70,20 +70,22 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
 
   // Set whether to save the underlying histograms used to make the plots of fit results
   declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=false);
-  declareProperty("UnderlyingHistosLimitGradient1D",m_gradient1D=2.25265e-02);
-  declareProperty("UnderlyingHistosLimitGradient3D",m_gradient3D=1.52943e-02);
-  declareProperty("UnderlyingHistosLimitFactor",m_limitFactor=10.);
+  declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 6.525937e-03 );
+  declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 1.947187e-02 );
+  declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 8.524237e-03 );
+  declareProperty("UnderlyingHistosLimitGradient3D", m_limitGradient3D = 2.690075e-02 );
+  declareProperty("UnderlyingHistosLimitFactor", m_limitFactor = 10. );
 
   // Set whether to calculate residuals as a fn. of eta and phi compared to the 1/PT parametrisation
   // and which gradient & y intercept values to use
   declareProperty("CalcResiduals", m_calcResiduals = true );
-  declareProperty("YIntercept3D", m_3DyIntercept = 0.0186528 );
-  declareProperty("Linear3D", m_3Dgrad = 0.0366653 );
-  declareProperty("Quad3D", m_3Dquad = -0.000342694 );
-  declareProperty("YIntercept1D", m_1DyIntercept = 0.0147429 );
-  declareProperty("Gradient1D",m_1Dgrad = 0.0282716 );
-  declareProperty("Quad1D",m_3Dquad = -0.0010723 );
-  
+  declareProperty("ResidualsYIntercept1D", m_res1DyIntercept = 6.160529e-03 );
+  declareProperty("ResidualsGradient1D",m_res1Dgrad = 2.018678e-02 );
+  declareProperty("ResidualsQuad1D",m_res1Dquad = -2.288513e-04 );
+  declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 8.680847e-03 );
+  declareProperty("ResidualsLinear3D", m_res3Dgrad = 2.656325e-02 );
+  declareProperty("ResidualsQuad3D", m_res3Dquad = 1.135474e-04 );
+
   // Set whether to use the MC PV associated to each track instead of the rec. PV
   /*declareProperty("CheckTrackMCAssociation", m_checkAssoc = false );
   declareProperty("UseOnlyPromptTracks", m_useOnlyPrompt = false );
@@ -218,12 +220,12 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     float limit1D;
     float limit3D;
     if ( !m_useLogScale ){
-      limit1D = m_limitFactor * m_gradient1D * m_bins[ i+1 ];
-      limit3D = m_limitFactor * m_gradient3D * m_bins[ i+1 ];
+      limit1D = m_limitFactor * m_limitGradient1D * m_bins[ i+1 ] + m_limitIntercept1D;
+      limit3D = m_limitFactor * m_limitGradient3D * m_bins[ i+1 ] + m_limitIntercept3D;
     }
     else{
-      limit1D = m_limitFactor * m_gradient1D * pow( 10, m_bins[ i+1 ] );
-      limit3D = m_limitFactor * m_gradient3D * pow( 10, m_bins[ i+1 ] );
+      limit1D = m_limitFactor * m_limitGradient1D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept1D;
+      limit3D = m_limitFactor * m_limitGradient3D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept3D;
     }
 
     // if underlying histograms are to be saved, the histograms for each bin are booked and pointers to the underlying 
@@ -560,18 +562,18 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         // fill histos of residuals of the 1/PT parametrisation as a fn. of eta and phi 
         if( m_calcResiduals ){
           if( m_useLogScale ) inversePT = pow( 10, inversePT );
-          m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_3DyIntercept - m_3Dgrad * inversePT
-                                    - m_3Dquad * inversePT * inversePT );
-          m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_3DyIntercept - m_3Dgrad * inversePT 
-                                    - m_3Dquad * inversePT * inversePT );
-          m_p_XphiResiduals->Fill( track->phi(), XYIP.x() - m_1DyIntercept - m_1Dgrad * inversePT 
-                                   - m_1Dquad * inversePT * inversePT );
-          m_p_XetaResiduals->Fill( track->pseudoRapidity(), XYIP.x() - m_1DyIntercept - m_1Dgrad * inversePT 
-                                   - m_1Dquad * inversePT * inversePT );
-          m_p_YphiResiduals->Fill( track->phi(), XYIP.y() - m_1DyIntercept - m_1Dgrad * inversePT 
-                                   - m_1Dquad * inversePT * inversePT );
-          m_p_YetaResiduals->Fill( track->pseudoRapidity(), XYIP.y() - m_1DyIntercept - m_1Dgrad * inversePT 
-                                   - m_1Dquad * inversePT * inversePT );
+          m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT
+                                    - m_res3Dquad * inversePT * inversePT );
+          m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT 
+                                    - m_res3Dquad * inversePT * inversePT );
+          m_p_XphiResiduals->Fill( track->phi(), XYIP.x() - m_res1DyIntercept - m_res1Dgrad * inversePT 
+                                   - m_res1Dquad * inversePT * inversePT );
+          m_p_XetaResiduals->Fill( track->pseudoRapidity(), XYIP.x() - m_res1DyIntercept - m_res1Dgrad * inversePT 
+                                   - m_res1Dquad * inversePT * inversePT );
+          m_p_YphiResiduals->Fill( track->phi(), XYIP.y() - m_res1DyIntercept - m_res1Dgrad * inversePT 
+                                   - m_res1Dquad * inversePT * inversePT );
+          m_p_YetaResiduals->Fill( track->pseudoRapidity(), XYIP.y() - m_res1DyIntercept - m_res1Dgrad * inversePT 
+                                   - m_res1Dquad * inversePT * inversePT );
         }
 
         if( m_smearConstant != 0 ) delete track;

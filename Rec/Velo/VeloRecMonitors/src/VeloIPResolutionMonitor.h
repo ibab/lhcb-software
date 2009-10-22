@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.3 2009-10-20 14:44:16 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.4 2009-10-22 14:33:41 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -71,19 +71,21 @@ namespace Velo
     int m_nBins;
 
     bool m_saveUnderlyingHistos;
-    float m_gradient1D;
-    float m_gradient3D;
+    float m_limitIntercept1D;
+    float m_limitGradient1D;
+    float m_limitIntercept3D;
+    float m_limitGradient3D;
     float m_limitFactor;
 
     bool m_refitPVs;
 
     bool m_calcResiduals;
-    float m_3DyIntercept;
-    float m_3Dgrad;
-    float m_3Dquad;
-    float m_1DyIntercept;
-    float m_1Dgrad;
-    float m_1Dquad;
+    float m_res3DyIntercept;
+    float m_res3Dgrad;
+    float m_res3Dquad;
+    float m_res1DyIntercept;
+    float m_res1Dgrad;
+    float m_res1Dquad;
     
     /*bool m_checkAssoc;
     bool m_useOnlyPrompt;

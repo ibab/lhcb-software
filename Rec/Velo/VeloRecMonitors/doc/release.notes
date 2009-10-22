@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-22 - Michael Alexander
+ - bugfix in VeloIPResolutionMonitor: histogram x-axis limits corrected
+
 ! 2009-10-20 - Michael Alexander
  - VeloIPResolutionMonitor: 
    . changed fit to '3D' IPs from Landau to 'x*gaus(x)'
