@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.h,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 #ifndef EVENT_PACKEDMCRICHOPTICALPHOTON_H
 #define EVENT_PACKEDMCRICHOPTICALPHOTON_H 1
 
@@ -135,23 +135,23 @@ namespace LHCb
   public:
 
     /// Default Constructor
-    MCRichOpticalPhotonPacker() {}
+    MCRichOpticalPhotonPacker() : PhotEnScale ( 5.0e8 ) {}
 
   public:
 
     /// Pack an MCRichOpticalPhoton
     void pack( DataVector       & phots,
                PackedDataVector & pphots,
-               const unsigned int version );
+               const unsigned int version ) const;
 
     /// Unpack an MCRichOpticalPhoton
     void unpack( PackedDataVector & pphots,
-                 DataVector       & phots );
+                 DataVector       & phots ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB,
-                      GaudiAlgorithm & parent );
+                      GaudiAlgorithm & parent ) const;
 
   private:
 
@@ -161,7 +161,7 @@ namespace LHCb
   private:
     
     /// Scale factor for photon energies
-    static const double PhotEnScale = 5.0e8;
+    double PhotEnScale;
 
   };
 

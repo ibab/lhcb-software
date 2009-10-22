@@ -41,7 +41,7 @@ StatusCode Pack<PACKER>::execute()
   this->put( pdata, m_outputName );
 
   // Packer
-  static PACKER packer;
+  static const PACKER packer;
 
   // Fill packed data
   packer.pack( *data, *pdata, m_version );  

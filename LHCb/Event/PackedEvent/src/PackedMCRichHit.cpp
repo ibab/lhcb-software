@@ -1,4 +1,4 @@
-// $Id: PackedMCRichHit.cpp,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCRichHit.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichHit.h"
@@ -13,7 +13,7 @@ using namespace LHCb;
 
 void MCRichHitPacker::pack( DataVector       & hits,
                             PackedDataVector & phits,
-                            const unsigned int version )
+                            const unsigned int version ) const
 {
   phits.data().reserve( hits.size() );
   if ( 0 == version )
@@ -48,7 +48,7 @@ void MCRichHitPacker::pack( DataVector       & hits,
 }
 
 void MCRichHitPacker::unpack( PackedDataVector & phits,
-                              DataVector       & hits )
+                              DataVector       & hits ) const
 {
   hits.reserve( phits.data().size() );
   if ( 0 == phits.version() )
@@ -87,7 +87,7 @@ void MCRichHitPacker::unpack( PackedDataVector & phits,
 
 StatusCode MCRichHitPacker::check( const DataVector & dataA,
                                    const DataVector & dataB,
-                                   GaudiAlgorithm & parent )
+                                   GaudiAlgorithm & parent ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 

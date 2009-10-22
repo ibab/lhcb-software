@@ -38,7 +38,7 @@ StatusCode Check<PACKER>::execute()
   }
 
   // Packer
-  static PACKER packer;
+  static const PACKER packer;
 
   // compare the containers
   // For the moment just carry on if an error is returned (with a message)

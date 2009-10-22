@@ -36,7 +36,7 @@ StatusCode Unpack<PACKER>::execute()
   this->put( data, m_outputName );
 
   // Packer
-  static PACKER packer;
+  static const PACKER packer;
 
   // Fill packed data
   packer.unpack( *pdata, *data );

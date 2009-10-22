@@ -1,4 +1,4 @@
-// $Id: PackedMCRichDigitSummary.cpp,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCRichDigitSummary.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichDigitSummary.h"
@@ -13,7 +13,7 @@ using namespace LHCb;
 
 void MCRichDigitSummaryPacker::pack( DataVector       & sums,
                                      PackedDataVector & psums,
-                                     const unsigned int version )
+                                     const unsigned int version ) const
 {
   psums.data().reserve( sums.size() );
   if ( 0 == version )
@@ -45,7 +45,7 @@ void MCRichDigitSummaryPacker::pack( DataVector       & sums,
 }
 
 void MCRichDigitSummaryPacker::unpack( PackedDataVector & psums,
-                                       DataVector       & sums )
+                                       DataVector       & sums ) const
 {
   sums.reserve( psums.data().size() );
   if ( 0 == psums.version() )
@@ -79,7 +79,7 @@ void MCRichDigitSummaryPacker::unpack( PackedDataVector & psums,
 
 StatusCode MCRichDigitSummaryPacker::check( const DataVector & dataA,
                                             const DataVector & dataB,
-                                            GaudiAlgorithm & parent )
+                                            GaudiAlgorithm & parent ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 

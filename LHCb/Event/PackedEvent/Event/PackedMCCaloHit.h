@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.h,v 1.1 2009-10-21 16:40:16 jonrob Exp $
+// $Id: PackedMCCaloHit.h,v 1.2 2009-10-22 09:26:33 jonrob Exp $
 #ifndef EVENT_PACKEDMCCALOHIT_H
 #define EVENT_PACKEDMCCALOHIT_H 1
 
@@ -134,16 +134,16 @@ namespace LHCb
     /// Pack MCCaloHits
     void pack( DataVector       & hits,
                PackedDataVector & phits,
-               const unsigned int version  );
+               const unsigned int version  ) const;
 
     /// Unpack MCCaloHits
     void unpack( PackedDataVector & phits,
-                 DataVector       & hits );
+                 DataVector       & hits ) const;
 
     /// Compare two MCCaloHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB,
-                      GaudiAlgorithm & parent );
+                      GaudiAlgorithm & parent ) const;
 
   private:
 

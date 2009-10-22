@@ -1,4 +1,4 @@
-// $Id: PackedMCRichDigitSummary.h,v 1.1 2009-10-21 16:40:16 jonrob Exp $
+// $Id: PackedMCRichDigitSummary.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 #ifndef EVENT_PackedMCRichDigitSummary_H
 #define EVENT_PackedMCRichDigitSummary_H 1
 
@@ -126,16 +126,16 @@ namespace LHCb
     /// Pack MCRichDigitSummarys
     void pack( DataVector       & hits,
                PackedDataVector & phits,
-               const unsigned int version );
+               const unsigned int version ) const;
 
     /// Unpack MCRichDigitSummarys
     void unpack( PackedDataVector & phits,
-                 DataVector       & hits );
+                 DataVector       & hits ) const;
 
     /// Compare two MCRichDigitSummarys to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB,
-                      GaudiAlgorithm & parent );
+                      GaudiAlgorithm & parent ) const;
 
   private:
 

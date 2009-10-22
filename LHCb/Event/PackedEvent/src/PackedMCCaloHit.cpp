@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.cpp,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCCaloHit.cpp,v 1.2 2009-10-22 09:26:33 jonrob Exp $
 
 // local
 #include "Event/PackedMCCaloHit.h"
@@ -13,7 +13,7 @@ using namespace LHCb;
 
 void MCCaloHitPacker::pack( DataVector       & hits,
                             PackedDataVector & phits,
-                            const unsigned int version )
+                            const unsigned int version ) const
 {
   phits.data().reserve( hits.size() );
 
@@ -45,7 +45,7 @@ void MCCaloHitPacker::pack( DataVector       & hits,
 }
 
 void MCCaloHitPacker::unpack( PackedDataVector & phits,
-                              DataVector       & hits )
+                              DataVector       & hits ) const
 {
   hits.reserve( phits.data().size() );
   if ( 0 == phits.version() )
@@ -80,7 +80,7 @@ void MCCaloHitPacker::unpack( PackedDataVector & phits,
 
 StatusCode MCCaloHitPacker::check( const DataVector & dataA,
                                    const DataVector & dataB,
-                                   GaudiAlgorithm & parent )
+                                   GaudiAlgorithm & parent ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 

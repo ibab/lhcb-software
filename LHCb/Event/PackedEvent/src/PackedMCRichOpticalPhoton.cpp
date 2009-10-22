@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -13,7 +13,7 @@ using namespace LHCb;
 
 void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
                                       PackedDataVector & pphots,
-                                      const unsigned int version )
+                                      const unsigned int version ) const
 {
   pphots.data().reserve( phots.size() );
   if ( 0 == version )
@@ -78,7 +78,7 @@ void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
 }
 
 void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
-                                        DataVector       & phots )
+                                        DataVector       & phots ) const
 {
   phots.reserve( pphots.data().size() );
   if ( 0 == pphots.version() )
@@ -144,7 +144,7 @@ void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
 
 StatusCode MCRichOpticalPhotonPacker::check( const DataVector & dataA,
                                              const DataVector & dataB,
-                                             GaudiAlgorithm & parent )
+                                             GaudiAlgorithm & parent ) const
 {
   StatusCode sc = StatusCode::SUCCESS;
 

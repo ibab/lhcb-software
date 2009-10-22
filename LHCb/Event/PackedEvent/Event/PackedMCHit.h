@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.h,v 1.1 2009-10-21 16:40:16 jonrob Exp $
+// $Id: PackedMCHit.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 #ifndef EVENT_PACKEDMCHIT_H
 #define EVENT_PACKEDMCHIT_H 1
 
@@ -142,16 +142,16 @@ namespace LHCb
     /// Pack MCHits
     void pack( DataVector       & hits,
                PackedDataVector & phits,
-               const unsigned int version );
+               const unsigned int version ) const;
 
     /// Unpack MCHits
     void unpack( PackedDataVector & phits,
-                 DataVector       & hits );
+                 DataVector       & hits ) const;
 
     /// Compare two MCHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB,
-                      GaudiAlgorithm & parent );
+                      GaudiAlgorithm & parent ) const;
 
   private:
 

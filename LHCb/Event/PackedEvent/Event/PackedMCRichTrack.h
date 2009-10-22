@@ -1,4 +1,4 @@
-// $Id: PackedMCRichTrack.h,v 1.1 2009-10-21 16:40:17 jonrob Exp $
+// $Id: PackedMCRichTrack.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
 #ifndef EVENT_PackedMCRichTrack_H
 #define EVENT_PackedMCRichTrack_H 1
 
@@ -126,16 +126,16 @@ namespace LHCb
     /// Pack MCRichTracks
     void pack( DataVector       & tracks,
                PackedDataVector & ptracks,
-               const unsigned int version );
+               const unsigned int version ) const;
 
     /// Unpack MCRichTracks
     void unpack( PackedDataVector & ptracks,
-                 DataVector       & tracks );
+                 DataVector       & tracks ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance
     StatusCode check( const DataVector & dataA,
                       const DataVector & dataB,
-                      GaudiAlgorithm & parent );
+                      GaudiAlgorithm & parent ) const;
 
   private:
 
