@@ -1,4 +1,4 @@
-// $Id: ParticlesInAcceptance.cpp,v 1.1.1.1 2009-08-05 09:43:37 ngueissa Exp $
+// $Id: ParticlesInAcceptance.cpp,v 1.2 2009-10-22 17:08:20 robbep Exp $
 // Include files 
 
 // local
@@ -92,7 +92,7 @@ bool ParticlesInAcceptance::studyFullEvent( HepMCEvents * theEvents ,
     }
   }
   debug()<<"Found "<< Part.size() <<" wanted particles ";
-  if( Part.size() < abs(m_NbPart) ){
+  if( Part.size() < ( (int) abs(m_NbPart) ) ){
     debug() << ": Not enough wanted particles in event !" << endmsg;
     return false;
   }

@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-10-22 - Patrick Robbe
+ - Fixes for SLC5 compilation with GCC4.3
+
 !========================= LbPythia v8r5 2009-10-05 ==========================
 ! 2009-09-02 - Neal Gauvin 
   - PythiaHiggsType : new option for subsituting the b quark with any particle.

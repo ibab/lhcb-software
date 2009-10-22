@@ -1,8 +1,11 @@
-// $Id: Pythia.cpp,v 1.6 2008-01-27 15:01:48 robbep Exp $
+// $Id: Pythia.cpp,v 1.7 2009-10-22 17:08:20 robbep Exp $
 // Include files
 
 // local
 #include "LbPythia/Pythia.h"
+
+// STL
+#include <cstring>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : Pythia

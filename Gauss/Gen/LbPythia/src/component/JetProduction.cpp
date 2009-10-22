@@ -1,4 +1,4 @@
-// $Id: JetProduction.cpp,v 1.4 2008-10-20 07:51:40 robbep Exp $
+// $Id: JetProduction.cpp,v 1.5 2009-10-22 17:08:20 robbep Exp $
 // Include files 
 
 // local
@@ -1004,7 +1004,7 @@ double JetProduction::generateValue( const int mode, const double mean,
     do {
       tmp = m_gaussGenerator()*sigma + mean ;
       i++;
-    } while ( (tmp<min) || (tmp>max) && (i<maxtries) );
+    } while ( ( (tmp<min) || (tmp>max) ) && (i<maxtries) );
     if ( i>=maxtries ) {
       error() << "Could not generate value in range within 1000 trials."<<endreq;
       error() << tmp << " not in [ " << min << " , " << max << " ]" << endreq;

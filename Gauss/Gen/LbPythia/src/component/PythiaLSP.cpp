@@ -1,4 +1,4 @@
-// $Id: PythiaLSP.cpp,v 1.2 2009-08-14 13:13:22 robbep Exp $
+// $Id: PythiaLSP.cpp,v 1.3 2009-10-22 17:08:20 robbep Exp $
 // Include files 
 
 // local
@@ -88,7 +88,7 @@ bool PythiaLSP::applyCut( ParticleVector & /* theParticleVector */ ,
   }
 
   debug()<<"Found "<< LSP.size() <<" LSP's ";
-  if( LSP.size() < abs(m_NbLSP) ){
+  if( LSP.size() < ( (int) abs(m_NbLSP) ) ){
     debug() << ": Not enough LSP in event !" << endmsg;
     return false;
   }
