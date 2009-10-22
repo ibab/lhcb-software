@@ -9,8 +9,6 @@ except ImportError:
 
 
 
-
-
 def createSelfExtractFile(filename, sourcedir, execscript):
     tarball = TempFile()
     createTarBall(tarball.name, sourcedir)
@@ -35,9 +33,6 @@ except ImportError:
 
 if __name__ == '__main__':
     pass
-
-
-
 
 
 
