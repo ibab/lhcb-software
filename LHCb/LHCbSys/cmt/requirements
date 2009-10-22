@@ -120,7 +120,9 @@ use TrackInterfaces       v4r8    Tr      # Matt Needham
 use TrackKernel           v1r1    Tr      # Wouter Hulsbergen
 use TsaKernel             v3r5p1  Tf      # Matt Needham
 use DetCondExample        v11r8   Ex      # Marco Clemencic
-use DetDescExample        v7r7p1 Ex      # Marco Clemencic
+use DetDescExample        v7r7p1  Ex      # Marco Clemencic
+
+use HistoStrings          v1r0   Kernel   # Vanya Belyaev 
 
 # Declare this as a container package
 apply_pattern container_package
