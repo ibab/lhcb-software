@@ -1534,11 +1534,11 @@ C B))  ITERATING LOOP
 C===============================================================
       DO 1000 IT=1,ITMX
         IF(IT.EQ.1) THEN
-C #if __GNUC__ < 4
-C	  CALL TIME(BEGIN_TIME)
-C #else
-	  CALL DATE_AND_TIME(BEGIN_DATE,BEGIN_TIME)
-C #endif
+#if __GNUC__ < 4
+          CALL TIME(BEGIN_TIME)
+#else
+          CALL DATE_AND_TIME(BEGIN_DATE,BEGIN_TIME)
+#endif
 	  WRITE(*,'(A)') BEGIN_TIME
 C	  WRITE(3,'(A)') BEGIN_TIME
 	END IF
