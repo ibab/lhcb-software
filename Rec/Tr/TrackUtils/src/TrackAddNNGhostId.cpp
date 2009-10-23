@@ -1,4 +1,4 @@
-// $Id: TrackAddNNGhostId.cpp,v 1.1 2009-10-07 10:45:02 albrecht Exp $
+// $Id: TrackAddNNGhostId.cpp,v 1.2 2009-10-23 12:21:32 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -45,7 +45,7 @@ StatusCode TrackAddNNGhostId::initialize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  m_ghostTool =  tool<ITrackManipulator>(m_ghostToolName);
+  m_ghostTool =  tool<ITrackManipulator>(m_ghostToolName,this);
   
   return StatusCode::SUCCESS;
 }
