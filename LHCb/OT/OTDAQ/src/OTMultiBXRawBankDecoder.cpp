@@ -2,6 +2,7 @@
 
 #include <boost/assign/list_of.hpp>
 #include <cmath>
+#include <sstream>
 
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
@@ -140,7 +141,7 @@ OTMultiBXRawBankDecoder::OTMultiBXRawBankDecoder( const std::string& type,
                                     const std::string& name,
                                     const IInterface* parent )
   : GaudiTool ( type, name , parent ),
-    m_decoder("OTRawBankDecoder"),
+    m_decoder("OTRawBankDecoder/OTSingleBXRawBankDecoder"),
     m_hitdata(0)
 {
   declareInterface<IOTRawBankDecoder>(this);
@@ -163,8 +164,12 @@ OTMultiBXRawBankDecoder::~OTMultiBXRawBankDecoder() {}
 //=============================================================================
 StatusCode OTMultiBXRawBankDecoder::initialize()
 {
-  
-  debug()<<"initializing OTMultiBXRawBankDecoder"<<endmsg;
+  std::stringstream msg ;
+  msg <<  "Merging raw events from following locations: " ;
+  for( std::vector<std::string>::const_iterator ilocation = m_rawEventLocations.begin() ;
+       ilocation != m_rawEventLocations.end(); ++ilocation) 
+    msg << "\'" << *ilocation << "\', " ;
+  info() << msg.str() << endreq ;
   
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
@@ -173,6 +178,8 @@ StatusCode OTMultiBXRawBankDecoder::initialize()
   if( sc.isFailure() ) {
     error() << "Failed to retieve decoder" << endmsg ;
     return sc ;
+  } else {
+    info() << "retrieved single BX decoder: " << m_decoder->type() << "/" << m_decoder->name() << endreq ;
   }
 
   // Setup incident services
