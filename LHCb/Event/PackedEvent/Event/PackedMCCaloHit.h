@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.h,v 1.2 2009-10-22 09:26:33 jonrob Exp $
+// $Id: PackedMCCaloHit.h,v 1.3 2009-10-23 10:46:17 jonrob Exp $
 #ifndef EVENT_PACKEDMCCALOHIT_H
 #define EVENT_PACKEDMCCALOHIT_H 1
 
@@ -119,10 +119,6 @@ namespace LHCb
     typedef LHCb::PackedMCCaloHit        PackedData;
     typedef LHCb::MCCaloHits             DataVector;
     typedef LHCb::PackedMCCaloHits PackedDataVector;
-    // Since this class is used for different sub-systems, given invalid defaults
-    // Users must explicitly set the options in the packers and unpacker.
-    static const std::string packedLocation()   { return ""; }
-    static const std::string unpackedLocation() { return ""; }
 
   public:
 
@@ -173,6 +169,8 @@ namespace LHCb
     {
       m_energyScale = 1.0e2;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCCaloHitLocation::Spd; }
+    static const std::string unpackedLocation() { return LHCb::MCCaloHitLocation::Spd;       }
   };
 
   // -----------------------------------------------------------------------
@@ -191,6 +189,8 @@ namespace LHCb
     {
       m_energyScale = 1.0e2;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCCaloHitLocation::Prs; }
+    static const std::string unpackedLocation() { return LHCb::MCCaloHitLocation::Prs;       }
   };
 
   // -----------------------------------------------------------------------
@@ -209,6 +209,8 @@ namespace LHCb
     {
       m_energyScale = 1.0e2;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCCaloHitLocation::Ecal; }
+    static const std::string unpackedLocation() { return LHCb::MCCaloHitLocation::Ecal;       }
   };
 
   // -----------------------------------------------------------------------
@@ -227,6 +229,8 @@ namespace LHCb
     {
       m_energyScale = 1.0e2;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCCaloHitLocation::Hcal; }
+    static const std::string unpackedLocation() { return LHCb::MCCaloHitLocation::Hcal;       }
   };
 
 }

@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCHit.h,v 1.3 2009-10-23 10:46:17 jonrob Exp $
 #ifndef EVENT_PACKEDMCHIT_H
 #define EVENT_PACKEDMCHIT_H 1
 
@@ -125,10 +125,6 @@ namespace LHCb
     typedef LHCb::PackedMCHit        PackedData;
     typedef LHCb::MCHits             DataVector;
     typedef LHCb::PackedMCHits PackedDataVector;
-    // Since this class is used for different sub-systems, given invalid defaults
-    // Users must explicitly set the options in the packers and unpacker.
-    static const std::string packedLocation()   { return ""; }
-    static const std::string unpackedLocation() { return ""; }
 
   public:
 
@@ -185,23 +181,27 @@ namespace LHCb
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::Velo; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::Velo;       }
   };
 
-  /** @class MCPuVeloHitPacker Event/PackedMCHit.h
+  /** @class MCPuVetoHitPacker Event/PackedMCHit.h
    *
-   *  Utility class to handle the packing and unpacking of the MC PuVelo Hits
+   *  Utility class to handle the packing and unpacking of the MC PuVeto Hits
    *
    *  @author Christopher Rob Jones
    *  @date   2009-10-13
    */
-  class MCPuVeloHitPacker : public MCHitPacker
+  class MCPuVetoHitPacker : public MCHitPacker
   {
   public:
-    MCPuVeloHitPacker() : MCHitPacker()
+    MCPuVetoHitPacker() : MCHitPacker()
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::PuVeto; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::PuVeto;       }
   };
 
   /** @class MCTTHitPacker Event/PackedMCHit.h
@@ -219,6 +219,8 @@ namespace LHCb
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::TT; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::TT;       }
   };
 
   /** @class MCITHitPacker Event/PackedMCHit.h
@@ -235,7 +237,9 @@ namespace LHCb
     {
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
-    }
+    }    
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::IT; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::IT;       }
   };
 
   /** @class MCOTHitPacker Event/PackedMCHit.h
@@ -253,6 +257,8 @@ namespace LHCb
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::OT; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::OT;       }
   };
 
   /** @class MCMuonHitPacker Event/PackedMCHit.h
@@ -270,6 +276,8 @@ namespace LHCb
       m_dispScale = 1.0e2;
       m_enScale   = 5.0e3;
     }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::Muon; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::Muon;       }
   };
 
 }

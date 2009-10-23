@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackMCParticle.cpp,v 1.5 2009-10-23 10:46:04 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ PackMCParticle::PackMCParticle( const std::string& name,
   declareProperty( "InputName" , m_inputName  = LHCb::MCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedMCParticleLocation::Default );
 }
+
 //=============================================================================
 // Destructor
 //=============================================================================

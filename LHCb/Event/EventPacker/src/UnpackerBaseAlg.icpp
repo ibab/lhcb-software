@@ -23,6 +23,18 @@ template < class PACKER >
 Unpack<PACKER>::~Unpack() { }
 
 template < class PACKER >
+StatusCode Unpack<PACKER>::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
+  
+  info() << "Input '" << rootInTES() << m_inputName 
+         << "' Output '" << rootInTES() << m_outputName << "'" << endmsg;
+
+  return sc;
+}
+
+template < class PACKER >
 StatusCode Unpack<PACKER>::execute()
 {
   // Load the input data

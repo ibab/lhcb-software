@@ -1,4 +1,4 @@
-// $Id: UnpackerBaseAlg.h,v 1.1 2009-10-21 16:41:15 jonrob Exp $
+// $Id: UnpackerBaseAlg.h,v 1.2 2009-10-23 10:46:04 jonrob Exp $
 #ifndef UNPACKERBASEALG_H
 #define UNPACKERBASEALG_H 1
 
@@ -28,7 +28,8 @@ namespace DataPacking
 
     virtual ~Unpack();     ///< Destructor
 
-    virtual StatusCode execute(); ///< Algorithm execution
+    virtual StatusCode initialize(); ///< Algorithm initialize
+    virtual StatusCode execute();    ///< Algorithm execution
 
   private:
 

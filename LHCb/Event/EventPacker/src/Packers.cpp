@@ -1,4 +1,4 @@
-// $Id: Packers.cpp,v 1.1 2009-10-21 16:41:14 jonrob Exp $
+// $Id: Packers.cpp,v 1.2 2009-10-23 10:46:04 jonrob Exp $
 
 #include "PackerBaseAlg.icpp"
 
@@ -46,8 +46,8 @@ template class DataPacking::Pack<LHCb::MCVeloHitPacker>;
 typedef DataPacking::Pack<LHCb::MCVeloHitPacker> F;
 DECLARE_ALGORITHM_FACTORY( F );
 
-template class DataPacking::Pack<LHCb::MCPuVeloHitPacker>;
-typedef DataPacking::Pack<LHCb::MCPuVeloHitPacker> G;
+template class DataPacking::Pack<LHCb::MCPuVetoHitPacker>;
+typedef DataPacking::Pack<LHCb::MCPuVetoHitPacker> G;
 DECLARE_ALGORITHM_FACTORY( G );
 
 template class DataPacking::Pack<LHCb::MCTTHitPacker>;
