@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.7 2009-10-21 10:14:15 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.8 2009-10-23 06:55:31 pkoppenb Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -12,7 +12,7 @@
 #
 ##############################################################################
 from Gaudi.Configuration import *
-from Configurables import DaVinci, DaVinciWriteDst
+from Configurables import DaVinci
 ##############################################################################
 from Configurables import GaudiSequencer, FilterDesktop, DeterministicPrescaler, PrintDecayTree
 #
