@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.6 2009-10-23 08:41:35 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.7 2009-10-23 10:02:04 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -92,6 +92,8 @@ public:
   inline const std::vector<MuonLogPad*>* logPads() {
     return &m_pads;
   }
+  /// return the MuonTileIDs of the logical pads used for this cluster
+  std::vector<LHCb::MuonTileID*> getLogPadTiles(); 
   /// number of logical pads in this hit
   inline int npads() {
     return m_pads.size();

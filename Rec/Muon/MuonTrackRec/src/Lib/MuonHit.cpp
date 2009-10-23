@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.5 2009-10-23 08:41:36 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.6 2009-10-23 10:02:04 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonTrackRec/MuonHit.h"
@@ -293,6 +293,14 @@ std::vector<LHCb::MuonTileID*> MuonHit::getTiles()
   std::vector<MuonLogHit*>::iterator ih;
   for(ih = hits.begin(); ih != hits.end(); ih++){
     tiles.push_back((*ih)->tile());
+  }
+  return tiles;
+}
+
+std::vector<LHCb::MuonTileID*> MuonHit::getLogPadTiles() {
+  std::vector<LHCb::MuonTileID*> tiles;
+  for (m_ip=m_pads.begin() ; m_ip != m_pads.end(); m_ip++) {
+    tiles.push_back(const_cast<LHCb::MuonTileID*>((*m_ip)->tile()));
   }
   return tiles;
 }
