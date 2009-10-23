@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.2 2009-10-15 15:42:34 pkoppenb Exp $
+# $Id: Configuration.py,v 1.3 2009-10-23 16:45:03 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -45,10 +45,6 @@ __all__  = (
 # =============================================================================
 from Gaudi.Configuration      import *
 from LHCbKernel.Configuration import *
-from CaloReco.Configuration   import OffLineCaloRecoConf
-from CaloPIDs.Configuration   import OffLineCaloPIDsConf
-
-from Configurables import DaVinci
 
 # =============================================================================
 ## @class KaliPi0Conf
@@ -110,11 +106,11 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     """
     
     ## Explicitly Used Configurables
-    __used_configurables__ = [
-        OffLineCaloRecoConf ,
-        OffLineCaloPIDsConf ,
-        DaVinci
-        ]
+    #__used_configurables__ = [
+    #    OffLineCaloRecoConf ,
+    #    OffLineCaloPIDsConf ,
+    #    DaVinci
+    #    ]
 
     ## the own slots 
     __slots__ = {
@@ -168,6 +164,9 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         """
         ## General Calorimeter Reconstruction Configuration
+
+        from Configurables  import OffLineCaloRecoConf
+        from Configurables  import OffLineCaloPIDsConf
         
         if self.getProp( 'FirstPass' ) and self.getProp( 'UseTracks' ) :
             
@@ -356,7 +355,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         kaliSeq.MeasureTime = self.getProp ( 'MeasureTime' )
         kaliSeq.OutputLevel = self.getProp ( 'OutputLevel' )
         
-        from DaVinci.Configuration import DaVinci
+        from Configurables import DaVinci
+
         dv = DaVinci (
             UserAlgorithms = [ kaliSeq ] 
             , DataType       = self.getProp ('DataType'   ) 
