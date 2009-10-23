@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.200 2009-09-24 12:09:37 jpalac Exp $
+#$Id: requirements,v 1.201 2009-10-23 08:51:29 jpalac Exp $
 package PhysSys
 version v8r10
 
@@ -16,7 +16,7 @@ use  VertexFit			v6r0     Phys   # Yuehong Xie
 use  LoKiFitters                v2r2     Phys   # Vanya Belyaev
 use  DecayTreeFitter            v1r5     Phys   # Wouter Hulsbergen
 use  PhysDict                   v4r1     Phys   # Juan Palacios
-use  KaliCalo                   v2r0     Phys   # Vanya Belyaev
+#use  KaliCalo                   v2r0     Phys   # Vanya Belyaev
 # Declare this as a container package
 apply_pattern container_package
 
