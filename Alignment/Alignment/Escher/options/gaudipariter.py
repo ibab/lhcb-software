@@ -13,9 +13,13 @@ import os
 rundir = os.getcwd()
 
 for i in range( opts.numiter ) :
-    print "Iteration nr: ", i
+    print "Iteration nr: ", i, "\n"
     # make the directory from where to run the job
     iterdir = 'Iter' + str( i )
+    if os.path.isdir( iterdir ) :
+        print "Directory exists. Will skip this iteration."
+        continue
+    
     os.mkdir ( iterdir )
     os.chdir ( iterdir )
 
@@ -32,7 +36,7 @@ for i in range( opts.numiter ) :
         theseoptions += ' ' + a
             
     # run the job
-    thiscommand = '$ESCHEROPTS/gaudipar.py' + theseoptions
+    thiscommand = '$ESCHEROPTS/gaudipar.py' + theseoptions + '>& logfile.txt'
     print 'command: ', thiscommand
     os.system( thiscommand )
 
