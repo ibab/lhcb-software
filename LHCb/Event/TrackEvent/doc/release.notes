@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Wouter Hulsbergen
+ - Hide TrackFitResult copy constructor.
+
 !======================= TrackEvent v5r1 2009-10-16 ==========================
 ! 2009-10-08 - Wouter Hulsbergen
  - Added class 'TrackFitResult' to store trackfit related (transient) data in 

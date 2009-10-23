@@ -59,10 +59,17 @@
       <constructor 
 	desc     = "Constructor">
       </constructor>
-      
+   
+      <method
+	type     = ''
+	name     = 'TrackFitResult'
+	argList  = 'const LHCb::TrackFitResult&amp; rhs'
+	access   = 'PROTECTED'
+	desc     = 'Copy constructor (hidden). Use clone method instead.'>
+      </method>      
 
       <destructor
-        desc = 'Trackfit destructor'
+        desc = 'Destructor'
 	virtual = 'TRUE' >
       </destructor>
 
