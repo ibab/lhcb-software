@@ -1,15 +1,16 @@
-// ----------------------------------------------------------------------------
+// $Id: LHCbMath.h,v 1.9 2009-10-23 13:51:04 ibelyaev Exp $ 
+// ============================================================================
 /** @file
  *
  *  Collection of math related functions for general use in LHCb
  *
  *  CVS Log :-
- *  $Id: LHCbMath.h,v 1.8 2009-07-06 08:57:16 cattanem Exp $
+ *  $Id: LHCbMath.h,v 1.9 2009-10-23 13:51:04 ibelyaev Exp $
  *
  *  @author Juan PALACIOS
  *  @date   2005-11-21
  */
-// ----------------------------------------------------------------------------
+// ============================================================================
 #ifndef LHCBMATH_LHCBMATH_H 
 #define LHCBMATH_LHCBMATH_H 1
 // ============================================================================
@@ -26,6 +27,7 @@
 #include "boost/call_traits.hpp"
 #include "boost/integer_traits.hpp"
 #include "boost/static_assert.hpp"
+#include "boost/numeric/conversion/converter.hpp"
 // ============================================================================
 namespace LHCb 
 {
@@ -189,32 +191,34 @@ namespace LHCb
       float m_eps ; // the precision 
     } ;
     // ========================================================================
-    /** Round to nearest integer. Rounds half integers to nearest even integer.
-     *  @author Matt Needham 
+    /** round to nearest integer, rounds half integers to nearest even integer 
+     *  It is just a simple wrapper around boost::numeric::converter 
+     *  @author Vanya BELYAEV Ivan.BElyaev
      */
-    inline int round ( const double x )  {
-      int i;
-      LHCb::Math::Equal_To<double> equal_to(lowTolerance);
-      if (x >= 0.0) {
-        i = int(x + 0.5);
-        if (equal_to(x + 0.5, double(i)) && i & 1) --i;
-      }
-      else {
-        i = int(x - 0.5);
-        if (equal_to(x - 0.5 , double(i)) && i & 1) ++i;
-        
-      }
-      return i;
-    }
-    // ======================================================================== 
-    /** Round to nearest integer. Rounds half integers to nearest even integer.
-     *  @author Matt Needham 
-     */
-    inline int round ( const float x )  
+    inline long round ( const double x ) 
     {
-      return LHCb::Math::round ( double ( x ) ) ;
+      typedef boost::numeric::RoundEven<double> Rounder ;
+      typedef boost::numeric::make_converter_from 
+        <double,
+        boost::numeric::silent_overflow_handler,
+        Rounder>::to<long>::type Converter ;
+      return Converter::convert ( x ) ; 
     }
     // ========================================================================
+    /** round to nearest integer, rounds half integers to nearest even integer 
+     *  It is just a simple wrapper around boost::numeric::converter 
+     *  @author Vanya BELYAEV Ivan.BElyaev
+     */
+    inline long round ( const float  x ) 
+    {
+      typedef boost::numeric::RoundEven<float> Rounder ;
+      typedef boost::numeric::make_converter_from 
+        <float,
+        boost::numeric::silent_overflow_handler,
+        Rounder>::to<long>::type Converter ;
+      return Converter::convert ( x ) ; 
+    }    
+    // ========================================================================    
     /** check if the double value is actually equal to the integer value  
      *  @param val value to be compared with the integer 
      *  @param ref the reference integer number 

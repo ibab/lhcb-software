@@ -6,6 +6,44 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Vanya Belyaev
+
+ - LHCbMath/LHCbMath.h
+    
+      reimplement the function "round" using boost:numeric 
+
+ - tests/TestRound.cpp 
+     
+      new test/illustration for new "round" function.
+
+    Three functions are compared:
+
+     1. "old-round" (based on Knuth-compare) 
+     2. modified round (based on Lomont-compare 
+     2  New implementation using boost::numeric::converter 
+  
+   Results:  
+ 
+      - No difference in result has been found , 
+      - Large difference in CPU has been detected: 
+
+    Differences: 0
+
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+ round-Knuth     -1.3e+07
+                Time User   : Tot= 17.2  [s] Ave/Min/Max= 34.5(+-  182)/    0/1e+03 [us] #=500000
+ round&Lomont    -1.3e+07
+                Time User   : Tot= 4.91  [s] Ave/Min/Max= 9.82(+- 98.6)/    0/1e+03 [us] #=500000
+ round-New       -1.3e+07
+                Time User   : Tot= 2.03  [s] Ave/Min/Max= 4.06(+- 63.6)/    0/1e+03 [us] #=500000
+
+
+     Lomont-based rounding is approximately factor of 4 faster, 
+     and the new rounding is approximately factor of 10 faster...
+    
+
 ! 2009-10-22 - Vanya Belyaev
 
  - python/LHCbMath/Types.h

@@ -43,6 +43,8 @@ application  TestLomont  ../tests/TestLomontCompare.cpp
 macro_append TestLomont_dependencies   " LHCbMathLib "
 application  TestErrors  ../tests/withErrors.cpp 
 macro_append TestErrors_dependencies   " LHCbMathLib "
+application  TestRound  ../tests/TestRound.cpp 
+macro_append TestRound_dependencies    " LHCbMathLib "
 
 # ================= patterns ================================================
 apply_pattern       linker_library library=LHCbMathLib
