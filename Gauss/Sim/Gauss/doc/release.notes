@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Chris Jones
+ - Add packing of MC data in output SIM file. Controlled by new Configurable 
+   option "DataPacking". In additional some optional checking of the packing
+   can be turned on/off via the option "DataPackingChecks"
+
 ! 2009-10-23 - Victor COCO
  - Changes to Gauss configurables to be able to selectively choose the list
    of predefined detectors to simulate. Two new properties of Gauss() have
