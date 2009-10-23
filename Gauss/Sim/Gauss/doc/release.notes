@@ -4,6 +4,23 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Victor COCO
+ - Changes to Gauss configurables to be able to selectively choose the list
+   of predefined detectors to simulate. Two new properties of Gauss() have
+   been introduced:
+   . DetectorGeoDict 
+   . DetectorSimDict
+   dictionaries specifying detector and subset
+   The default configuration for MC09 is
+   "DetectorGeoDict" : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], 
+	                      "OT":['OT'], "RICH":['Rich1','Rich2'], 
+                        "CALO":['Spd','Prs','Ecal','Hcal'], 
+                        "MUON":['Muon'],"MAGNET": True }
+	 "DetectorSimDict" : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], 
+                        "OT":['OT'], "RICH":['Rich1','Rich2'], 
+                        "CALO":['Spd','Prs', 'Ecal','Hcal'], 
+                        "MUON":['Muon'], "MAGNET": True }
+
 ! 2009-10-13 - Silvia MIGLIORANZI
  - In all QMTests running on signal events, the option "testGauss-NoOutput.py"
    (the Output files are not produced) is used. The reference stdoutput files
