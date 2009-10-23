@@ -1,4 +1,4 @@
-// $Id: MuonHit.cpp,v 1.4 2009-10-19 11:14:25 ggiacomo Exp $
+// $Id: MuonHit.cpp,v 1.5 2009-10-23 08:41:36 ggiacomo Exp $
 // Include files
 #include <cmath>
 #include "MuonTrackRec/MuonHit.h"
@@ -279,13 +279,14 @@ std::vector<MuonLogHit*> MuonHit::getHits()
 {
   std::vector<MuonLogHit*> out;
   for (m_ip=m_pads.begin() ; m_ip != m_pads.end(); m_ip++) {
-    out.insert(out.end(), ((*m_ip)->getHits()).begin(), ((*m_ip)->getHits()).end());
+    std::vector<MuonLogHit*> padhits = (*m_ip)->getHits();
+    out.insert(out.end(), padhits.begin(), padhits.end());
   }
   return out;
 }
 
 
-const std::vector<LHCb::MuonTileID*> MuonHit::getTiles()
+std::vector<LHCb::MuonTileID*> MuonHit::getTiles()
 {
   std::vector<LHCb::MuonTileID*> tiles;
   std::vector<MuonLogHit*> hits = getHits();

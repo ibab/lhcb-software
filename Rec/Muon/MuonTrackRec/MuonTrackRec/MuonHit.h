@@ -1,4 +1,4 @@
-// $Id: MuonHit.h,v 1.5 2009-10-19 11:14:23 ggiacomo Exp $
+// $Id: MuonHit.h,v 1.6 2009-10-23 08:41:35 ggiacomo Exp $
 #ifndef COSMICSMUONHIT_H 
 #define COSMICSMUONHIT_H 1
 
@@ -59,7 +59,7 @@ public:
   /// return the logical channels used for this cluster
   std::vector<MuonLogHit*> getHits();
   /// return the MuonTileIDs of the logical channels used for this cluster
-  const std::vector<LHCb::MuonTileID*> getTiles();
+  std::vector<LHCb::MuonTileID*> getTiles();
   /// get the raw times of logical channels in this cluster
   std::vector<float> getTimes();
   std::vector<double> hitTile_Size(); /// half-sizes of the tile(s) underlying this hit
