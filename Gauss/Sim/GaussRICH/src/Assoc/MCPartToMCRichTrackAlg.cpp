@@ -5,7 +5,7 @@
  * Implementation file for class : MCPartToMCRichTrackAlg
  *
  * CVS Log :-
- * $Id: MCPartToMCRichTrackAlg.cpp,v 1.1 2009-01-26 13:45:31 jonrob Exp $
+ * $Id: MCPartToMCRichTrackAlg.cpp,v 1.2 2009-10-23 10:47:46 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -31,16 +31,10 @@ MCPartToMCRichTrackAlg::MCPartToMCRichTrackAlg( const std::string& name,
   : RichAlgBase ( name , pSvcLocator ),
     m_linker    ( NULL )
 {
-
+  // Event locations to process
   m_evtLocs.clear();
-  m_evtLocs.push_back(                    LHCb::MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "Prev/"          + LHCb::MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "PrevPrev/"      + LHCb::MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "Next/"          + LHCb::MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "NextNext/"      + LHCb::MCRichTrackLocation::Default );
-  m_evtLocs.push_back( "LHCBackground/" + LHCb::MCRichTrackLocation::Default );
+  m_evtLocs.push_back( LHCb::MCRichTrackLocation::Default );
   declareProperty( "EventLocations", m_evtLocs );
-
 }
 
 //=============================================================================
@@ -53,9 +47,10 @@ MCPartToMCRichTrackAlg::~MCPartToMCRichTrackAlg() {};
 //=============================================================================
 StatusCode MCPartToMCRichTrackAlg::execute()
 {
-  debug() << "Execute" << endreq;
-
   StatusCode sc = StatusCode::SUCCESS;
+
+  // make sure linker always exists
+  linker();
 
   // Loop over all event locations
   for ( EventList::const_iterator iEvt = m_evtLocs.begin();
@@ -65,7 +60,7 @@ StatusCode MCPartToMCRichTrackAlg::execute()
     if ( sc.isFailure() ) break;
   }
 
-  // force a new linker for next event
+  // force a new linker for this event
   resetLinker();
 
   // return final status code
@@ -83,7 +78,7 @@ MCPartToMCRichTrackAlg::linker()
     // New linker object
     m_linker =
       new MCPartToRichTracks( evtSvc(), msgSvc(),
-                              LHCb::MCParticleLocation::Default+"2MCRichTracks" );
+                              rootInTES() + LHCb::MCParticleLocation::Default+"2MCRichTracks" );
     // set the ordering
     m_linker->setDecreasingWeight();
   }
@@ -97,13 +92,13 @@ StatusCode MCPartToMCRichTrackAlg::addEvent( const std::string & evtLoc )
 {
 
   // load MCRichTracks in this event
-  SmartDataPtr<LHCb::MCRichTracks> mcTracks( evtSvc(), evtLoc );
-  if ( !mcTracks )
+  if ( !exist<LHCb::MCRichTracks>( evtLoc ) )
   {
     if ( msgLevel(MSG::DEBUG) )
     { debug() << "Cannot locate MCRichTracks at " << evtLoc << endreq; }
     return StatusCode::SUCCESS;
   }
+  const LHCb::MCRichTracks * mcTracks = get<LHCb::MCRichTracks>( evtLoc );
   if ( msgLevel(MSG::DEBUG) )
   { debug() << "Successfully located " << mcTracks->size()
             << " MCRichTracks at " << evtLoc << endreq; }

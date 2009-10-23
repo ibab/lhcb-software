@@ -1,4 +1,4 @@
-// $Id: GetMCRichInfoBase.cpp,v 1.3 2009-07-17 13:46:12 jonrob Exp $
+// $Id: GetMCRichInfoBase.cpp,v 1.4 2009-10-23 10:47:46 jonrob Exp $
 // Include files
 
 // local
@@ -39,7 +39,7 @@ StatusCode GetMCRichInfoBase::initialize()
   // initialise
   getRichG4CollectionRange();
 
-  info() << "Filling " << dataLocationInTES() << " from G4 collections";
+  info() << "Filling '" << rootInTES() << dataLocationInTES() << "' from G4 collections";
   for ( int iii = colRange()[0]; iii < colRange()[1]+1 ; ++iii )
   {
     info() << " '" << RichG4HitCollectionName()->RichHCName(iii) << "'";
