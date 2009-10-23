@@ -96,7 +96,8 @@ LambdaDDCombine = StrippingMember( CombineParticles
                                    , DaughtersCuts = { "p+"  :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISDOWN) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))",
                                                        "pi-" :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISDOWN) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))" }
                                    , CombinationCut = "(ADAMASS('Lambda0')<20*MeV)"
-                                   , MotherCut = " (500<BPVVDZ) & (2200>BPVVDZ) & (BPVDIRA>0.999999)  & ( (CHILDCUT((PT>0.4*GeV),1)) | (CHILDCUT((PT>0.4*GeV),2)) )"
+                                   , MotherCut = " (500<BPVVDZ) & (2200>BPVVDZ) & (BPVDIRA>0.999999)  & ( (CHILDCUT((PT>0.4*GeV),1)) | (CHILDCUT((PT>0.4*GeV),2)) & " +
+                                   " ((CHILDCUT((MIPCHI2DV(PRIMARY)>5),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>5),2)))"
                                    )
 
 # Define the line
