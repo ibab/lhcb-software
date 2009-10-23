@@ -5,6 +5,7 @@ Purpose	: collection of alignment algorithms
 
 ! 2009-10-09 - Wouter Hulsbergen
  - adapted to changes in LHCb::Track
+ - adapted to changes in AlignKernel (adding first/last event time)
 
 ! 2009-09-23 - Johan Blouw
  - added WriteAlignmentConditions to M'pede style alignment sequence
