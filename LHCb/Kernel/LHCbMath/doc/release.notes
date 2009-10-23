@@ -8,6 +8,20 @@
 
 ! 2009-10-23 - Vanya Belyaev
 
+ - add new tests for CPU comparison of Lomont-type 
+      & Knuth-type compare.
+
+0%   10   20   30   40   50   60   70   80   90   100%
+|----|----|----|----|----|----|----|----|----|----|
+***************************************************
+ Knuth/GSL-compare 4.0001e+06 Time User   : Tot= 24.8  [s] Ave/Min/Max= 1.24(+-0.428)/    0/    2 [ms] #=20000
+ Lomont-compare    3.9996e+06 Time User   : Tot= 5.86  [s] Ave/Min/Max=  293(+-  455)/    0/1e+03 [us] #=20000
+
+  Bottom line:  Lomont-type compare is approximately 4 times more CPU efficient 
+
+
+! 2009-10-23 - Vanya Belyaev
+
  - LHCbMath/LHCbMath.h
     
       reimplement the function "round" using boost:numeric 
