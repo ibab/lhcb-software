@@ -4,8 +4,8 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
-! 2009-10-21 - Johannes Albrecht
- - fix small memory leak in TrackNNGhostId
+! 2009-10-21 and 23 - Johannes Albrecht
+ - fix small memory leak in TrackNNGhostId, add ghost id for all track types
 
 !======================== TrackTools v3r22 2009-10-20 ========================
 ! 2009-10-20 Stephanie Hansmann-Menzemer

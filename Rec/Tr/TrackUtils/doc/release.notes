@@ -4,6 +4,9 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Johannes Albrecht
+ - TrackAddNNGhostId: make ghostId tool private
+
 !========================== TrackUtils v1r30 2009-10-17 ======================
 ! 2009-10-15 - Patrick Koppenburg
  - Move HltInsertTrackErrParam from HltSelections
