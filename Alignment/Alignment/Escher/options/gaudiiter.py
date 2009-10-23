@@ -4,7 +4,8 @@
 from optparse import OptionParser
 parser = OptionParser(usage = "%prog [options] <opts_file> ...")
 parser.add_option("-n","--numiter",type="int", dest="numiter",help="number of iterations", default=3)
-parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=1000)
+parser.add_option("-e","--numevents",type="int", dest="numevents",help="number of events", default=100000)
+parser.add_option("-d", "--aligndb",type="str", dest="aligndb",help="path to file with alignment database layer", default = '')
 (opts, args) = parser.parse_args()
 
 # Prepare the "configuration script" to parse (like this it is easier than
@@ -41,6 +42,13 @@ if options:
 from Configurables import TAlignment
 TAlignment().NumIterations = opts.numiter
 TAlignment().UpdateInFinalize = False
+
+# set the database layer
+if opts.aligndb:
+   from Configurables import ( CondDB, CondDBAccessSvc )
+   alignCond = CondDBAccessSvc( 'AlignCond' )
+   alignCond.ConnectionString = 'sqlite_file:' + opts.aligndb + '/LHCBCOND'
+   CondDB().addLayer( alignCond )
 
 # This does not work yet, so I comment it out.
 # Hack to overide default EvtSel open
