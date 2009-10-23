@@ -39,7 +39,7 @@ class Commissioning_OTCosmics :
         Returns a dictionary of cuts
         """
         from Hlt1Lines.HltCosmicLines  import HltCosmicLinesConf
-        return { HltCosmicLinesConf : { 'Prescale' : { 'Hlt1CosmicOT'  : 0.5
+        return { HltCosmicLinesConf : { 'Prescale' : { 'Hlt1CosmicOT'  : 1.
                                              }              } 
                }
 
