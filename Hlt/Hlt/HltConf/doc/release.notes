@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.353 2009-10-21 13:13:10 graven Exp $ 
+! $Id: release.notes,v 1.354 2009-10-23 10:05:59 snies Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v5r0p1 2009-10-21 ===================
+! 2009-10-23 - Stephan Nies
+ - included Cosmics in Hlt1.py again and update updated HltInit  
+
 ! 2009-10-21 - Gerhard Raven
  - if no Hlt2 activeLines in settings, do NOT run Hlt2 config...
 

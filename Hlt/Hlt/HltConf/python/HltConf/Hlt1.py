@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.31 2009-10-14 13:55:45 graven Exp $
+# $Id: Hlt1.py,v 1.32 2009-10-23 10:05:59 snies Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.31 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -44,7 +44,7 @@ class Hlt1Conf(LHCbConfigurableUser):
                             , HltHadronLinesConf
                             , HltPhotonLinesConf
                             , HltElectronLinesConf
-                            # , HltCosmicLinesConf
+                            , HltCosmicLinesConf
                             ]
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
