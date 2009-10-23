@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.cpp,v 1.2 2009-10-21 07:14:19 albrecht Exp $
+// $Id: TrackNNGhostId.cpp,v 1.3 2009-10-23 12:20:57 albrecht Exp $
 // Include files 
 #include "Event/Track.h"
 //#include "Kernel/HitPattern.h"
@@ -11,7 +11,11 @@
 #include "Event/STCluster.h"
 #include "Event/VeloCluster.h"
 
-#include "TMVA/TMVAClassification_MLP_longTracks.C"
+#include "TMVA/TMVAClassification_MLP_fittedVelo.C"
+#include "TMVA/TMVAClassification_MLP_fittedUpstream.C"
+#include "TMVA/TMVAClassification_MLP_fittedDownstream.C"
+#include "TMVA/TMVAClassification_MLP_fittedTtrack.C"
+#include "TMVA/TMVAClassification_MLP_fittedLong.C"
 
 // local
 #include "TrackNNGhostId.h"
@@ -53,19 +57,56 @@ StatusCode TrackNNGhostId::initialize() {
     return Error("Failed to initialize", sc);
   }
 
-  //input variable names as used for training
-  m_inputVars.push_back( "track_probChi2" );
-  m_inputVars.push_back( "track_fitMatchChi2" );
-  m_inputVars.push_back( "track_ttHits" );
-  m_inputVars.push_back( "track_nCandCommonHits" );
-  m_inputVars.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
-  m_inputVars.push_back( "track_veloHits" );
-  m_inputVars.push_back( "track_itHits" );
-  m_inputVars.push_back( "track_otHits" );
+  /**
+   *   initialize input variable names as used for training
+   *   and class readers for all track types
+   *
+   */
+  //velo tracks
+  m_inNames.clear();
+  m_inNames.push_back( "track_probChi2" );
+  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  m_inNames.push_back( "track_veloHits" );
+  m_readerVelo = new ReadMLP_fittedVelo( m_inNames );
+
+  //upstream tracks
+  m_inNames.clear();
+  m_inNames.push_back( "track_probChi2" );
+  m_inNames.push_back( "track_ttHits" );
+  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  m_inNames.push_back( "track_veloHits" );
+  m_readerUpstream = new ReadMLP_fittedUpstream( m_inNames );
+
+  //downstream tracks
+  m_inNames.clear();
+  m_inNames.push_back( "track_probChi2" );
+  m_inNames.push_back( "track_ttHits" );
+  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  m_inNames.push_back( "track_itHits" );
+  m_inNames.push_back( "track_otHits" );
+  m_readerDownstream = new ReadMLP_fittedDownstream( m_inNames );
+
+  //Ttracks
+  m_inNames.clear();
+  m_inNames.push_back( "track_probChi2" );
+  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  m_inNames.push_back( "track_itHits" );
+  m_inNames.push_back( "track_otHits" );
+  m_readerTtrack = new ReadMLP_fittedTtrack( m_inNames );
+
+  //long tracks
+  m_inNames.clear();
+  m_inNames.push_back( "track_probChi2" );
+  m_inNames.push_back( "track_fitMatchChi2" );
+  m_inNames.push_back( "track_ttHits" );
+  m_inNames.push_back( "track_nCandCommonHits" );
+  m_inNames.push_back( "nVeloHits+nTTHits+nITHits+nOTHits" );
+  m_inNames.push_back( "track_veloHits" );
+  m_inNames.push_back( "track_itHits" );
+  m_inNames.push_back( "track_otHits" );
+  m_readerLong = new ReadMLP_fittedLong( m_inNames );
   
-  m_classReader = new ReadMLP_long( m_inputVars );
-  
-  m_inputVec = new std::vector<double>( 8 );
+  m_inputVec = new std::vector<double>;
   
   m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder");
 
@@ -76,20 +117,9 @@ StatusCode TrackNNGhostId::initialize() {
 StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
 
   bool isDebug   = msgLevel(MSG::DEBUG);
-
+  double retval = 0;
   if ( isDebug ) debug() << "==> Execute" << endmsg;
 
-  if( aTrack.history() != LHCb::Track::PatForward 
-      && aTrack.history() != LHCb::Track::TrackMatching )  {
-
-    if ( isDebug ) debug() << "track type is "<<aTrack.history() 
-                           <<", currently no ghost classification for this type possible!"<< endmsg;
-
-    return StatusCode::SUCCESS;
-  }
-  
-
-  
   int veloHits = 0, ttHits=0,itHits=0,otHits=0;  
   const std::vector<LHCb::LHCbID> ids = aTrack.lhcbIDs();
   for(unsigned int i = 0; i < ids.size(); ++i){
@@ -104,47 +134,86 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
   LHCb::STClusters *itCont = get<LHCb::STClusters>("Raw/IT/Clusters");
   int nHitMult = veloCont->size()+ttCont->size()+itCont->size()+m_otdecoder->totalNumberOfHits();
   
-  //const LHCb::HitPattern hitPat(aTrack.lhcbIDs());
-    
-  (*m_inputVec)[0] = aTrack.probChi2();
-  (*m_inputVec)[1] = aTrack.info(LHCb::Track::FitMatchChi2,-60);
-  (*m_inputVec)[2] = ttHits;
-  (*m_inputVec)[3] = aTrack.info(LHCb::Track::NCandCommonHits,-60);
-  (*m_inputVec)[4] = nHitMult;
-  (*m_inputVec)[5] = veloHits;
-  (*m_inputVec)[6] = itHits;
-  (*m_inputVec)[7] = otHits;
+  /**
+   *   now evaluate the MVA value for different track types
+   *
+   */
+  if( aTrack.checkType(LHCb::Track::Velo) ){
+    m_inputVec->clear();
+    m_inputVec->reserve(3);
+    m_inputVec->push_back( aTrack.probChi2() );
+    m_inputVec->push_back( nHitMult );
+    m_inputVec->push_back( veloHits );
+    // retrive the classifier responses            
+    retval = m_readerVelo->GetMvaValue( *m_inputVec );
+  }//end evaluate velo track
 
-  if ( isDebug ) debug()<<"m_input variables:"
-                        <<"\n ProbChi2:         "<< (*m_inputVec)[0]
-                        <<"\n FitMatchChi:      "<< (*m_inputVec)[1]
-                        <<"\n ttHits:           "<< (*m_inputVec)[2]
-                        <<"\n NCandCommonHits:  "<< (*m_inputVec)[3]
-                        <<"\n nTotalHits:       "<< (*m_inputVec)[4]
-                        <<"\n velotHits         "<< (*m_inputVec)[5]
-                        <<"\n itHits:           "<< (*m_inputVec)[6]
-                        <<"\n otHits:           "<< (*m_inputVec)[7]
-                        <<endmsg;
+  if( aTrack.checkType(LHCb::Track::Upstream) ){
+    m_inputVec->clear();
+    m_inputVec->reserve(4);
+    m_inputVec->push_back( aTrack.probChi2() );
+    m_inputVec->push_back( ttHits );
+    m_inputVec->push_back( nHitMult );
+    m_inputVec->push_back( veloHits );
+    // retrive the classifier responses            
+    retval = m_readerUpstream->GetMvaValue( *m_inputVec );
+  }//end evaluate upstream track
+
+  if( aTrack.checkType(LHCb::Track::Downstream) ){
+    m_inputVec->clear();
+    m_inputVec->reserve(5);
+    m_inputVec->push_back( aTrack.probChi2() );
+    m_inputVec->push_back( ttHits );
+    m_inputVec->push_back( nHitMult );
+    m_inputVec->push_back( itHits );
+    m_inputVec->push_back( otHits );
+    // retrive the classifier responses            
+    retval = m_readerDownstream->GetMvaValue( *m_inputVec );
+  }//end evaluate downstream track
   
+  if( aTrack.checkType(LHCb::Track::Ttrack) ){ 
+    m_inputVec->clear();
+    m_inputVec->reserve(4);
+    m_inputVec->push_back( aTrack.probChi2() );
+    m_inputVec->push_back( nHitMult );
+    m_inputVec->push_back( itHits );
+    m_inputVec->push_back( otHits );
+    // retrive the classifier responses            
+    retval = m_readerTtrack->GetMvaValue( *m_inputVec );
+  }//end evaluate Ttrack track
   
-  if(-60 == (*m_inputVec)[1]
-     || -60 == (*m_inputVec)[3] ){
-    if ( isDebug ) debug()<<"warning: extra info of track not propetly filled ....  exit"<<endmsg;
-    return StatusCode::SUCCESS;
-  }
+  if( aTrack.checkType(LHCb::Track::Long) ){
+    m_inputVec->clear();
+    m_inputVec->reserve(8);
+    m_inputVec->push_back( aTrack.probChi2() );
+    m_inputVec->push_back( aTrack.info(LHCb::Track::FitMatchChi2,-60) );
+    m_inputVec->push_back( ttHits);
+    m_inputVec->push_back( aTrack.info(LHCb::Track::NCandCommonHits,-60));
+    m_inputVec->push_back( nHitMult);
+    m_inputVec->push_back( veloHits);
+    m_inputVec->push_back( itHits);
+    m_inputVec->push_back( otHits);
+    if(-60 != (*m_inputVec)[1]
+       && -60 != (*m_inputVec)[3] ){
+      // retrive the classifier responses            
+      retval = m_readerLong->GetMvaValue( *m_inputVec );
+    }
+    else  if( isDebug ) debug()<<"warning: extra info of track not propetly filled ....  "<<endmsg;
+  }//end evaluate long track
   
+  if( isDebug )
+    for(int i=0;i<m_inputVec->size();i++)  debug()<<"input variable [ "<<i<<" ] :"<<(*m_inputVec)[i]<<endmsg;
   
-  // retrive the classifier responses            
-  double retval = m_classReader->GetMvaValue( *m_inputVec );
-    
+  if ( isDebug ) debug() << "direct NN output is: "<<retval<<endmsg;
+
   //normalize the output to the interval [0,1]
   if(retval<-1) retval=-1;
-  retval = double(retval-1.)/double(-2.);
-
+  if(retval>1) retval=1;
+  retval = -0.5*double(retval-1.);
+  
   if ( isDebug ) debug() << "normlized NN output is: "<<retval<<endmsg;
 
   aTrack.setGhostProbability(retval);
-
 
   return StatusCode::SUCCESS;
 }
@@ -156,7 +225,11 @@ StatusCode TrackNNGhostId::finalize()
 {
   debug() << "==> Finalize" << endmsg;
 
-  delete m_classReader;
+  delete m_readerVelo;
+  delete m_readerUpstream;
+  delete m_readerDownstream;
+  delete m_readerTtrack;
+  delete m_readerLong;
   delete m_inputVec;
   
   return GaudiTool::finalize();  // must be called after all other actions

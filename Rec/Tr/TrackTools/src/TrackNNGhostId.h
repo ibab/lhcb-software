@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.h,v 1.2 2009-10-21 07:14:16 albrecht Exp $
+// $Id: TrackNNGhostId.h,v 1.3 2009-10-23 12:20:26 albrecht Exp $
 #ifndef TRACKNNGHOSTID_H 
 #define TRACKNNGHOSTID_H 1
 
@@ -43,8 +43,14 @@ protected:
 
 private:
 	IOTRawBankDecoder* m_otdecoder;
-  IClassifierReader* m_classReader;
+  std::vector<std::string> m_inNames;
   std::vector<double>* m_inputVec;
-  std::vector<std::string> m_inputVars;
+
+  IClassifierReader* m_readerVelo;
+  IClassifierReader* m_readerUpstream;
+  IClassifierReader* m_readerDownstream;
+  IClassifierReader* m_readerTtrack;
+  IClassifierReader* m_readerLong;
+  
 };
 #endif // TRACKNNGHOSTID_H
