@@ -7,7 +7,8 @@ C...the standard event record common block.
 C...returns number of b quarks in the event
 C...(why not measure bbbar cross section with beam-gas events?)
       
-      DOUBLE PRECISION DUMMY
+C      DOUBLE PRECISION DUMMY
+      INTEGER DUMMY
       INTEGER REVERT
       
       CHARACTER*16 CHAU

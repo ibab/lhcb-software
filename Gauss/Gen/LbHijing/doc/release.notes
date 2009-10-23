@@ -4,6 +4,11 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Silvia Miglioranzi
+ - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran' 
+   intrinsic at (1) must be INTEGER") in: 
+   - hilunhep.F
+
 !========================= LbHijing v5r0 2009-04-06 ==========================
 ! 2009-03-11 - Patrick Robbe
  - HijingProduction.cpp: set mass units correctly (GeV -> MeV)
