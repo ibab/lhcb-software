@@ -10,9 +10,8 @@ from Configurables import DaVinci
 from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
-#               , Signal="{[B0 -> ^pi- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]nos -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc, [[B_s0]os -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [B_s0 -> ^K- ^K+ {,gamma}{,gamma}{,gamma}]cc}"
-               , Signal="{[[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc}"  # we know it's Kpi
-               , Decay = "B2HH"
+               , Signal="B2HH"  
+               , Decay = "{[[B0]nos -> ^K+ ^pi- {,gamma}{,gamma}{,gamma}]cc, [[B0]os -> ^K- ^pi+ {,gamma}{,gamma}{,gamma}]cc}"# we know it's Kpi
                # Angelo Carbone, https://twiki.cern.ch/twiki/bin/view/LHCb/NewCpOfflineSelected
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/a/acarbone/MC09_bd2kpi.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()

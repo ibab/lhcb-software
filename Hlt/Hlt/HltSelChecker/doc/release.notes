@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-23 - Patrick Koppenburg
+ - Add test files from flavour group, remove the ones from RD that have no data yet
+
 ! 2009-10-22 - Patrick Koppenburg
  - Add a lot of test files, remove many others
  - That does not mean yet that all is complete. Only CP channels done, but all

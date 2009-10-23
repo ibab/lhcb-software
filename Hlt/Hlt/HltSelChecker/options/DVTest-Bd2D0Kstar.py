@@ -11,7 +11,7 @@ from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
                , Signal="Bd2D0Kstar"
-               , Decay = "{[[B0]nos,[[B~0]os}  -> (D~0 -> ^K+ ^pi- {gamma,}{gamma,})) (K*0(892) -> ^K+ ^pi-^ {gamma,}{gamma,}) {gamma,}{gamma,}]cc"
+               , Decay = "[B0 -> (D~0 -> ^K+ ^pi- {gamma,}{gamma,}) (K*(892)0 -> ^K+ ^pi- {gamma,}{gamma,}) {gamma,}{gamma,}]cc"
                # Jacopo Nardulli, https://twiki.cern.ch/twiki/bin/view/LHCb/NewCpOfflineSelected
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/j/jnardull/MC09/Bd2D0Kst.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
