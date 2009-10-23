@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.123 2009-09-02 12:38:52 cattanem Exp $ 
+# $Id: requirements,v 1.124 2009-10-23 09:43:14 ibelyaev Exp $ 
 # =============================================================================
 package       DetDesc
-version       v18r15
+version       v18r16
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -10,6 +10,7 @@ branches      DetDesc doc cmt src
 use           GaudiKernel       v*
 use           ROOT              v* LCG_Interfaces
 use           GSL               v* LCG_Interfaces -no_auto_imports
+use           HistoStrings      v* Kernel
 
 # =========== own includes ====================================================
 apply_pattern install_more_includes more=DetDesc

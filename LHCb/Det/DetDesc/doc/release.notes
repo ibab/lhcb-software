@@ -1,9 +1,28 @@
 ! =============================================================================
-! $Id: release.notes,v 1.403 2009-09-02 12:38:52 cattanem Exp $ 
+! $Id: release.notes,v 1.404 2009-10-23 09:43:14 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-10-23 - Vanya Belyaev
+
+ - add "histograms conditions": conditions which are able to hold the histograms:
+
+     DetDesc::Histo1DCond 
+     DetDesc::Histo2DCond 
+
+   new files: 
+
+     DetDesc/HistoCondition.h
+     DetDesc/HistoParam.h
+     src/Lib/CLID_HistoCondition.cpp
+     src/Lib/HistoCondition.cpp
+     src/Lib/HistoParam.cpp
+
+ - cmt/requirements 
+
+     version increment to v8r16 
 
 !====================== DetDesc v18r15 2009-09-02 =============================
 ! 2009-09-02 - Marco Cattaneo
