@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v1r0p1 2009-10-21 ==================
+! 2009-10-23 - Stephan Nies
+ - added Comissioning_OTCosmics.py
+
 ! 2009-10-21 - Gerhard Raven
  - tweak Commissioning_PassThrough
 
