@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.15 2009-10-23 12:43:01 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.16 2009-10-23 22:05:36 jonrob Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -430,13 +430,7 @@ class Gauss(LHCbConfigurableUser):
             #       by hand any more ...
             if slot != '' : simMoniSeq.RootInTES = slot
 
-            #simMoniSeq.Members += [
-            #    GiGaGetEventAlg( "GiGaGetEventAlg"+slot,
-            #                     Vertices = "",
-            #                     Particles = TESNode+"MC/Particles" ), 
-            #    MCTruthMonitor( "MCTruthMonitor"+slot,
-            #                    MCParticles = TESNode+"MC/Particles" ,
-            #                    MCVertices  = TESNode+"MC/Vertices" ) ]
+            # Basic monitors
             simMoniSeq.Members += [
                 GiGaGetEventAlg("GiGaGet"+self.slotName(slot)+"Event"), 
                 MCTruthMonitor( self.slotName(slot)+"MCTruthMonitor" ) ]
