@@ -1,8 +1,11 @@
-// $Id: MCCaloMonitor.h,v 1.4 2009-03-26 21:55:03 robbep Exp $
+// $Id: MCCaloMonitor.h,v 1.5 2009-10-23 10:45:22 jonrob Exp $
 // ============================================================================
 // CVS tag $Name: not supported by cvs2svn $ 
 // ============================================================================
 // $Log: not supported by cvs2svn $
+// Revision 1.4  2009/03/26 21:55:03  robbep
+// changes for spill over generation
+//
 // Revision 1.3  2006/02/13 12:03:00  odescham
 // v2r1 migration to GaudiHistoAlg completed - structure pathes adapted to new enveloppes
 //
@@ -94,13 +97,11 @@ private:
   std::string m_DetectorName;
   std::string m_mcParticles ;
   
-  /// Spill over slot to look for hits: '', 'Prev/', 'Next/', etc.
-  std::string m_slot ;
-  
   const std::string m_textNorm;
 
   int m_Bin;
   
+  DeCalorimeter * m_detector;
 
 protected:
   

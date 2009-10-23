@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.16 2009-04-06 12:54:11 gcorti Exp $ 
+! $Id: release.notes,v 1.17 2009-10-23 10:45:22 jonrob Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniSim
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-22 - Chris Jones
+ - Minor changes to help deploying packing and Spillover locations in Gauss
+  + Switch to loading data via get<..> methods to aid usage in Gauss with 
+    RootInTES for spillover locations.
+ - Cache DeCalorimeter pointer in initialize()
 
 !======================= CaloMoniSim v3r2 2009-04-06 ==========================
 ! 2009-03-26 - Patrick Robbe 

@@ -1,4 +1,4 @@
-// $Id: MCCaloMonitor.cpp,v 1.9 2009-03-26 21:55:03 robbep Exp $
+// $Id: MCCaloMonitor.cpp,v 1.10 2009-10-23 10:45:22 jonrob Exp $
 
 // Include files
 
@@ -9,7 +9,7 @@
 
 // from Gaudi
 #include "Kernel/CaloCellID.h"
-#include "GaudiKernel/DeclareFactoryEntries.h" 
+#include "GaudiKernel/DeclareFactoryEntries.h"
 // from Event
 #include "Event/MCHit.h"
 #include "Event/MCParticle.h"
@@ -31,8 +31,8 @@ using namespace LHCb;
 //-----------------------------------------------------------------------------
 /** @file
  *  Implementation file for class MCCaloMonitor
- * 
- *  @date 24-11-2003 
+ *
+ *  @date 24-11-2003
  *  @author Carlos Gonzalez
  */
 //-----------------------------------------------------------------------------
@@ -45,22 +45,21 @@ DECLARE_ALGORITHM_FACTORY( MCCaloMonitor );
 // Standard constructor, initializes variables
 //=============================================================================
 MCCaloMonitor::MCCaloMonitor( const std::string& name,
-			      ISvcLocator* pSvcLocator)
+                              ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
-    , m_nameOfMCHits              ( "" )
-    , m_GeometryRoot        ( "/dd/Structure/LHCb/DownstreamRegion/" )
-    , m_DivMonitor                ( false      )
-    , m_MaxE                 (  10 * Gaudi::Units::MeV  )
-    , m_MinE                 (   0 * Gaudi::Units::MeV  )
-    , m_Threshold                 ( 1.5 * Gaudi::Units::MeV  )
-    , m_MaxT                   (  7   )
-    , m_MinT                   (  -1   )
-    , m_hDir                  ( " "   )
-    , m_nEvents                   (   0   )
-    , m_DetectorName              ( " "   ) 
-    , m_textNorm ("Norm")
+  , m_nameOfMCHits              ( "" )
+  , m_GeometryRoot        ( "/dd/Structure/LHCb/DownstreamRegion/" )
+  , m_DivMonitor                ( false      )
+  , m_MaxE                 (  10 * Gaudi::Units::MeV  )
+  , m_MinE                 (   0 * Gaudi::Units::MeV  )
+  , m_Threshold                 ( 1.5 * Gaudi::Units::MeV  )
+  , m_MaxT                   (  7   )
+  , m_MinT                   (  -1   )
+  , m_hDir                  ( " "   )
+  , m_nEvents                   (   0   )
+  , m_DetectorName              ( " "   )
+  , m_textNorm ("Norm")
 {
-  declareProperty("MCHits"          , m_nameOfMCHits          );
   declareProperty("GeometryRoot"    , m_GeometryRoot    );
   declareProperty("Regions"         , m_DivMonitor            );
   declareProperty("MaximumEnergy"   , m_MaxE            );
@@ -72,7 +71,6 @@ MCCaloMonitor::MCCaloMonitor( const std::string& name,
   declareProperty("Detector"        , m_Detector             );
   declareProperty("DetectorName"    , m_DetectorName         );
   declareProperty("MCParticles"     , m_mcParticles = MCParticleLocation::Default ) ;
-  declareProperty("Slot"            , m_slot             ) ;
 }
 
 //=============================================================================
@@ -90,7 +88,7 @@ StatusCode MCCaloMonitor::initialize() {
   info() << "==> Initialise Monitoring " << m_Detector << endreq;
 
   m_hDir = m_Detector;
-  m_nameOfMCHits = m_slot + "MC/" + m_Detector + "/Hits";
+  m_nameOfMCHits = "MC/" + m_Detector + "/Hits";
   if (m_Detector == "Spd"){
     m_DetectorName = "SPD";
   }
@@ -103,9 +101,9 @@ StatusCode MCCaloMonitor::initialize() {
   if (m_Detector == "Hcal"){
     m_DetectorName = "HCAL";
   }
-  
+
   // Histograms
-  
+
   m_hName1  = "Subhits in the " + m_DetectorName;
   m_hName1a = "Subhits in the INNER " + m_DetectorName;
   m_hName1b = "Subhits in the MIDDLE " + m_DetectorName;
@@ -125,9 +123,17 @@ StatusCode MCCaloMonitor::initialize() {
   m_hName43 = "Number of Subhits in the " + m_DetectorName + " ( BC = 2  )";
   m_hName44 = "Number of Subhits in the " + m_DetectorName + " ( BC = 3  )";
   m_hName45 = "Number of Subhits in the " + m_DetectorName + " ( BC = 4  )";
-  m_Bin = int(m_MaxT-m_MinT+1);  
+  m_Bin = int(m_MaxT-m_MinT+1);
   MinT = 1.*m_MinT - 0.5;
   MaxT = 1.*m_MaxT + 0.501;
+
+  m_detector = getDet<DeCalorimeter>(m_GeometryRoot + m_Detector);
+  if( 0 == m_detector ) {
+    error() <<
+      "Cannot locate Detector Element ="<< m_GeometryRoot+m_Detector << endreq;
+    return StatusCode::FAILURE ;
+  }
+  
   return StatusCode::SUCCESS;
 };
 
@@ -135,34 +141,19 @@ StatusCode MCCaloMonitor::initialize() {
 // Main execution
 //=============================================================================
 StatusCode MCCaloMonitor::execute() {
-  
+
   ++m_nEvents;
   m_nEvents  = 1;
   debug() << "Execute Monitoring " << m_Detector << endreq;
 
-
   MCCaloHits::const_iterator iHit;
-  
+
   // Get the MCHits
-  SmartDataPtr< MCCaloHits > CaloHits (eventSvc(),m_nameOfMCHits);
-  if( 0 == CaloHits ) {
-    error() << "Cannot locate MCCaloHits in " << m_Detector << endreq;
-    return StatusCode::FAILURE ;
-  }  
+  const MCCaloHits * CaloHits = get<MCCaloHits>(m_nameOfMCHits);
+
   // Get the MCParticles
-  
-  SmartDataPtr< MCParticles > mcParts (eventSvc(), m_mcParticles );
-  if( 0 == mcParts ) {
-    error() << "Cannot locate mcParts in "<< m_Detector << endreq;
-    return StatusCode::FAILURE ;
-  }
-  SmartDataPtr<DeCalorimeter> detector( detSvc() ,m_GeometryRoot + m_Detector );
-  
-  if( 0 == detector ) {
-    error() << 
-      "Cannot locate Detector Element ="<< m_GeometryRoot+m_Detector << endreq;
-    return StatusCode::FAILURE ;
-  }
+  //const MCParticles * mcParts = get<MCParticles>(m_mcParticles);
+
   int hits_Counter = 0;
 
   int hits_CounterBC_1 = 0;
@@ -171,14 +162,14 @@ StatusCode MCCaloMonitor::execute() {
   int hits_CounterBC2 = 0;
   int hits_CounterBC3 = 0;
   int hits_CounterBC4 = 0;
-  
+
   for ( iHit = CaloHits->begin(); iHit != CaloHits->end() ; ++iHit ){
-    
+
     // NORMAL ENERGY SUBHITS HISTOGRAMS
     int binTime;
-    if ( (*iHit)->time() >= 7){ 
+    if ( (*iHit)->time() >= 7){
       binTime = 7 ;
-    } 
+    }
     else {
       binTime=(*iHit)->time();
     }
@@ -191,21 +182,21 @@ StatusCode MCCaloMonitor::execute() {
     if (m_DivMonitor) {
       if ( ( 2 == zone && m_DetectorName != "Hcal" ) ||
            ( 1 == zone && m_DetectorName == "Hcal" ) ){
-        if ( detector->valid(ID) ){
+        if ( m_detector->valid(ID) ){
           plot1D((*iHit)->activeE(),111,m_hName1a,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),121,m_hName2a,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,131,m_hName3a,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
         }
       }
       if ( ( 1 == zone   && m_DetectorName != "Hcal" ) ){
-        if ( detector->valid(ID) ){
+        if ( m_detector->valid(ID) ){
           plot1D((*iHit)->activeE(),112,m_hName1b,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),122,m_hName2b,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,132,m_hName3b,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
         }
       }
       if ( 0 == zone ) {
-        if ( detector->valid(ID) ){
+        if ( m_detector->valid(ID) ){
           plot1D((*iHit)->activeE(),113,m_hName1c,m_MinE,m_MaxE,100,1./m_nEvents) ;
           plot1D((*iHit)->activeE(),123,m_hName2c,m_MinE,m_MaxE,100,((*iHit)->activeE())/m_nEvents) ;
           plot1D(binTime,133,m_hName3c,MinT,MaxT,m_Bin,((*iHit)->activeE())/m_nEvents) ;
@@ -217,27 +208,27 @@ StatusCode MCCaloMonitor::execute() {
       hits_Counter = hits_Counter + 1;
       switch ((*iHit)->time()){
       case -1:
-	++hits_CounterBC_1;
-	break;
+        ++hits_CounterBC_1;
+        break;
       case 0:
-	++hits_CounterBC0 ;
-	break;
+        ++hits_CounterBC0 ;
+        break;
       case 1:
-	++hits_CounterBC1 ;
-	break;
+        ++hits_CounterBC1 ;
+        break;
       case 2:
-	++hits_CounterBC2 ;
-	break;
+        ++hits_CounterBC2 ;
+        break;
       case 3:
-	++hits_CounterBC3;
-	break;
+        ++hits_CounterBC3;
+        break;
       case 4:
-	++hits_CounterBC4;
-	break;
+        ++hits_CounterBC4;
+        break;
       }
     }
   } // end for
-  
+
   plot1D(hits_Counter,14,m_hName4,0,1000,100,1.);
   plot1D(hits_CounterBC_1,140,m_hName40,0,1000,100,1.);
   plot1D(hits_CounterBC0,141,m_hName41,0,1000,100,1.);
@@ -252,7 +243,7 @@ StatusCode MCCaloMonitor::execute() {
 //  Finalize
 //=============================================================================
 StatusCode MCCaloMonitor::finalize() {
-  
+
   info()<< "Finalize Monitoring " << m_Detector << endreq;
   return GaudiHistoAlg::finalize();  // must be called after all other actions
 }
@@ -260,5 +251,5 @@ StatusCode MCCaloMonitor::finalize() {
 //=============================================================================
 
 // ============================================================================
-// The END 
+// The END
 // ============================================================================
