@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.404 2009-10-23 09:43:14 ibelyaev Exp $ 
+! $Id: release.notes,v 1.405 2009-10-24 09:54:32 marcocle Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-10-24 - Marco Clemencic
+ - Fixed a typo in src/Lib/HistoCondition.cpp
 
 ! 2009-10-23 - Vanya Belyaev
 

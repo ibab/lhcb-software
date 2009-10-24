@@ -1,4 +1,4 @@
-// $Id: HistoCondition.cpp,v 1.1 2009-10-23 09:43:15 ibelyaev Exp $
+// $Id: HistoCondition.cpp,v 1.2 2009-10-24 09:54:33 marcocle Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -97,7 +97,7 @@ StatusCode DetDesc::Histo2DCond::initialize ()
   StatusCode sc =  Condition::initialize() ; 
   if ( sc.isFailure() ) { return sc ; }  // RETURN 
   // set the histogram here , later ...
-  reuturn StatusCode::SUCCESS ;
+  return StatusCode::SUCCESS ;
 }
 // ============================================================================
 
