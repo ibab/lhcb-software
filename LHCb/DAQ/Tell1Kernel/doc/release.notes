@@ -1,6 +1,9 @@
 ! package DAQ/Tell1Kernel
 ! package manager: C.Parkes, T.Szumlak
 !-------------------------------------------------------------------------
+!====================== Tell1Kernel v1r9 2009-10-24 ======================
+! 2009-10-24 - Tomasz Szumlak
+ - add various definitions needed for the Tell1 line in Boole
 
 !====================== Tell1Kernel v1r8 2009-10-16 ======================
 ! 2009-09-08 - Kurt Rinnert

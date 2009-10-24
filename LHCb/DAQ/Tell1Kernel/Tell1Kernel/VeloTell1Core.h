@@ -1,4 +1,4 @@
-// $Id: VeloTell1Core.h,v 1.5 2008-10-17 16:20:55 szumlat Exp $
+// $Id: VeloTell1Core.h,v 1.6 2009-10-24 13:47:11 szumlat Exp $
 #ifndef VELOTELL1CORE_H 
 #define VELOTELL1CORE_H 1
 
@@ -34,6 +34,19 @@ namespace VeloTELL1{
 
   enum strips{
     HEADER_STRIPS=4
+  };
+
+  enum stripsTopo{
+    INNER_DUMMY_1=21,
+    INNER_DUMMY_2=22,
+    OUTER_DUMMY_1=42,
+    OUTER_DUMMY_2=43,
+    INNER_STR_1=170,
+    INNER_STR_2=171,
+    OUTER_STR_1=341,
+    OUTER_STR_2=342,
+    INNER_STR_ALL=683,
+    SENSOR_STRIPS=2048
   };
 
   enum tableLimits{
