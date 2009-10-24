@@ -98,3 +98,6 @@ for i in range( opts.numiter ) :
     incSvc = appMgr.service( 'IncidentSvc', 'IIncidentSvc' )
     updateConstants = gbl.Incident( 'Alignment', 'UpdateConstants' )
     incSvc.fireIncident( updateConstants )
+
+#exit the appmgr for finalize
+appMgr.exit()
