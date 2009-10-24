@@ -1,9 +1,13 @@
-$Id: release.notes,v 1.64 2009-10-17 11:24:20 graven Exp $
+$Id: release.notes,v 1.65 2009-10-24 08:37:35 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
 !-----------------------------------------------------------------------------
+
+! 2009-10-24 - Patrick Koppenburg
+ - Undo the undocumented changes by J. Nardulli that break the nightlies.
+ - v1r9
 
 !========================== Hlt2Lines v1r8 2009-10-17 ===================
 ! 2009-10-16 - Gerhard Raven
