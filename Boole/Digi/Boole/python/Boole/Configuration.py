@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.55 2009-10-08 15:35:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.56 2009-10-24 14:00:03 szumlat Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -27,29 +27,30 @@ class Boole(LHCbConfigurableUser):
                         "ProcessPhase/Filter" ]
     
     __slots__ = {
-        "EvtMax"         : -1
-       ,"SkipEvents"     : 0
-       ,"UseSpillover"   : False
-       ,"SpilloverPaths" : []
-       ,"TAEPrev"        : 0
-       ,"TAENext"        : 0
-       ,"TAESubdets"     : [ "CALO", "MUON" ]
-       ,"Outputs"        : [ "DIGI" ]
-       ,"DigiType"       : "Default"
-       ,"Histograms"     : "Default"
-       ,"NoWarnings"     : False
-       ,"OutputLevel"    : INFO 
-       ,"DatasetName"    : "Boole"
-       ,"DataType"       : "2009"
-       ,"DDDBtag"        : ""
-       ,"CondDBtag"      : ""
-       ,"Monitors"       : []
-       ,"MainSequence"   : []
-       ,"InitSequence"   : []
-       ,"DigiSequence"   : []
-       ,"LinkSequence"   : []
-       ,"MoniSequence"   : []
-       ,"FilterSequence" : []
+        "EvtMax"          : -1
+       ,"SkipEvents"      : 0
+       ,"UseSpillover"    : False
+       ,"SpilloverPaths"  : []
+       ,"TAEPrev"         : 0
+       ,"TAENext"         : 0
+       ,"TAESubdets"      : [ "CALO", "MUON" ]
+       ,"Outputs"         : [ "DIGI" ]
+       ,"DigiType"        : "Default"
+       ,"Histograms"      : "Default"
+       ,"NoWarnings"      : False
+       ,"OutputLevel"     : INFO 
+       ,"DatasetName"     : "Boole"
+       ,"DataType"        : "2009"
+       ,"DDDBtag"         : ""
+       ,"CondDBtag"       : ""
+       ,"Tell1Processing" : False
+       ,"Monitors"        : []
+       ,"MainSequence"    : []
+       ,"InitSequence"    : []
+       ,"DigiSequence"    : []
+       ,"LinkSequence"    : []
+       ,"MoniSequence"    : []
+       ,"FilterSequence"  : []
         }
 
     _propertyDocDct = { 
@@ -69,6 +70,7 @@ class Boole(LHCbConfigurableUser):
        ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
+       ,'Tell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated data (Default value is False) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
@@ -212,21 +214,27 @@ class Boole(LHCbConfigurableUser):
     def configureDigiVELO(self, seq, tae ):
         # Velo digitisation and clustering (also for PuVeto and trigger)
         if tae == "":
-            from Configurables import (VeloSim,VeloDataProcessor,
-                                       VeloClusterMaker,PrepareVeloRawBuffer)
+            from Configurables import VeloSim
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
-            importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
-            seq.Members += [ VeloDataProcessor("VeloDataProcessor") ]
-            if self.getProp("DataType") == "Upgrade" :
-                from Configurables import VeloSpillSubtraction                
-                seq.Members += [ VeloSim("VeloSimPrev") ]
-                seq.Members += [ VeloDataProcessor("VeloDataProcessorPrev") ]
-                seq.Members += [ VeloSpillSubtraction() ]
-                importOptions("$BOOLEUMCROOT/options/VeloSimPrev.opts")
-            seq.Members += [ VeloClusterMaker("VeloClusterMaker") ]
-            seq.Members += [ PrepareVeloRawBuffer("PrepareVeloRawBuffer") ]
+            if True != self.getProp("Tell1Processing"):
+                from Configurables import (VeloDataProcessor, VeloClusterMaker,
+                                           PrepareVeloRawBuffer)
+                importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
+                seq.Members += [ VeloDataProcessor("VeloDataProcessor") ]
+                if self.getProp("DataType") == "Upgrade" :
+                    from Configurables import VeloSpillSubtraction                
+                    seq.Members += [ VeloSim("VeloSimPrev") ]
+                    seq.Members += [ VeloDataProcessor("VeloDataProcessorPrev") ]
+                    seq.Members += [ VeloSpillSubtraction() ]
+                    importOptions("$BOOLEUMCROOT/options/VeloSimPrev.opts")
+                seq.Members += [ VeloClusterMaker("VeloClusterMaker") ]
+                seq.Members += [ PrepareVeloRawBuffer("PrepareVeloRawBuffer") ]
+            else:
+                from Configurables import VeloTell1DataProcessor, VeloSimTell1ClusterMaker
+                seq.Members += [ VeloTell1DataProcessor() ]
+                seq.Members += [ VeloSimTell1ClusterMaker() ]
         else:
             raise RuntimeError("TAE not implemented for VELO")
 
@@ -625,6 +633,9 @@ class Boole(LHCbConfigurableUser):
             if self.getProp("DataType") == "Upgrade" :
                 from Configurables import VeloMonitorSpilloverSubtr
                 GaudiSequencer("MoniVELOSeq").Members += [ VeloMonitorSpilloverSubtr() ]
+            if True == self.getProp("Tell1Processing"):
+                GaudiSequencer("MoniVELOSeq").Members.remove( VeloDigit2MCHitLinker() )
+                GaudiSequencer("MoniVELOSeq").Members.remove( VeloDigiMoni() )
 
         if "IT" in moniDets or "TT" in moniDets:
             from Configurables import ( MCSTDepositMonitor, MCSTDigitMonitor, STDigitMonitor,

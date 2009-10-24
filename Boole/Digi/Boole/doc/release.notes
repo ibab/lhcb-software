@@ -3,6 +3,14 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+- Tell1 digitisation and clusterisation line added, this introduces
+  the bit perfect Tell1 code (actually a high level model of the firmware
+  that is run on the VELO acquisition boards)
+  In order to run it one needs to add (e.g. in the Boole-Default.py):
+  theApp = Boole()
+  theApp.Tell1Processing = True
+  This option controls both DigiVELOSeq and MoniVELOSeq composition
+
 </PRE><H1><A NAME=v19r7>2009-10-21 Boole v19r7</A></H1></PRE>
  - Changes to Configurable:
    . Improve handling of spillover:

@@ -15,7 +15,6 @@ from Configurables import Boole
 
 # Just instantiate the configurable...
 theApp = Boole()
-
 ##############################################################################
 # I/O datasets are defined in a separate file, see examples in MC09-Files.py
 ##############################################################################
