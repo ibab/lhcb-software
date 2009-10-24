@@ -1,6 +1,13 @@
 ! Package     : VeloAlgorithms
 ! Responsible : Chris Parkes
 !--------------------------------------------------------------------------
+!===================== VeloAlgorithms v5r0 2009-10-24 ====================
+! 2009-10-24 - Tomasz Szumlak
+ - modification in VeloTell1DataProcessor algorithm, add new methods
+   to reorder strips - this is needed by the subsequent clustrisation
+   algorithm
+ - add helper method to search for the sector shift - useful during
+   strip reordering
 
 !===================== VeloAlgorithms v4r10 2009-10-20 ====================
 ! 2009-10-04 - Vanya BELYAEV

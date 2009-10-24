@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.h,v 1.1 2009-08-10 08:48:02 szumlat Exp $
+// $Id: VeloSimTell1ClusterMaker.h,v 1.2 2009-10-24 13:48:23 szumlat Exp $
 #ifndef VELOSIMTELL1CLUSTERMAKER_H 
 #define VELOSIMTELL1CLUSTERMAKER_H 1
 
@@ -17,8 +17,6 @@
 
 // kernel
 #include "Tell1Kernel/BitReader.h"
-// local
-//#include "ClusterMakerThresholds.h"
 
 /** @class VeloSimTell1ClusterMaker VeloSimTell1ClusterMaker.h
  *  

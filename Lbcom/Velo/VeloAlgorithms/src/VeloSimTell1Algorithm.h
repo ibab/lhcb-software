@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1Algorithm.h,v 1.1 2009-08-10 08:48:02 szumlat Exp $
+// $Id: VeloSimTell1Algorithm.h,v 1.2 2009-10-24 13:48:23 szumlat Exp $
 #ifndef VELOSIMTELL1ALGORITHM_H 
 #define VELOSIMTELL1ALGORITHM_H 1
 
@@ -65,7 +65,6 @@ protected:
   virtual void setIsEnable(bool flag);
   virtual bool isEnable() const;
   virtual unsigned int convergenceLimit() const;
-  virtual unsigned int runType() const;
   virtual bool isInitialized() const;
   virtual StatusCode readDataFromFile(const char* fileName,
                                       VeloTELL1::sdataVec& inVec);
@@ -107,7 +106,6 @@ private:
   bool m_isEnable;
   unsigned int m_convergenceLimit;
   bool m_isInitialized;
-  unsigned int m_runType;
 
 };
 #endif // VELOSIMTELL1ALGORITHM_H

@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1ClusterMaker.cpp,v 1.2 2009-09-01 11:35:38 krinnert Exp $
+// $Id: VeloSimTell1ClusterMaker.cpp,v 1.3 2009-10-24 13:48:23 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -37,7 +37,7 @@ VeloSimTell1ClusterMaker::VeloSimTell1ClusterMaker( const std::string& name,
     ISvcLocator* pSvcLocator)
 : VeloSimTell1Algorithm ( name , pSvcLocator ),
   m_rawEvent ( 0 ),
-  m_rawEventLoc ( LHCb::RawEventLocation::Emulated ),
+  m_rawEventLoc ( LHCb::RawEventLocation::Default ),
   m_adcs ( ),
   m_adcsMem ( ),
   m_zsEnableMap ( ),
@@ -64,7 +64,7 @@ VeloSimTell1ClusterMaker::VeloSimTell1ClusterMaker( const std::string& name,
     1685, 512, 576, 640, 1707, 1771, 1835, 1899, 
     1963, 2027;
   declareProperty("InputDataLoc",
-      m_inputDataLoc=LHCb::VeloTELL1DataLocation::CMSuppressedADCs);
+      m_inputDataLoc=LHCb::VeloTELL1DataLocation::SimADCs );
   declareProperty("PrintInfo", m_printInfo=false);
   declareProperty("ValidationRun", m_validationRun=false);
   declareProperty("HitThresholdValue",

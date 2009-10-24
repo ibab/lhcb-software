@@ -1,4 +1,4 @@
-// $Id: VeloSimTell1Algorithm.cpp,v 1.1 2009-08-10 08:48:02 szumlat Exp $
+// $Id: VeloSimTell1Algorithm.cpp,v 1.2 2009-10-24 13:48:23 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -21,6 +21,7 @@
 DECLARE_ALGORITHM_FACTORY( VeloSimTell1Algorithm );
 
 using namespace boost::assign;
+using namespace VeloTELL1;
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -118,43 +119,25 @@ StatusCode VeloSimTell1Algorithm::INIT()
   if(!m_isInitialized){
     // build list of source IDs
     if(m_srcIdList.empty()){
-      if ( !exist<LHCb::VeloTELL1Datas>(LHCb::VeloTELL1DataLocation::ADCs) ) {
+      if ( !exist<LHCb::VeloTELL1Datas>(LHCb::VeloTELL1DataLocation::SimADCs) ) {
         debug() << " --> Input NZS data stream is EMPTY!" << endmsg;
         return StatusCode::FAILURE;
       }
       LHCb::VeloTELL1Datas* lDat=
-        get<LHCb::VeloTELL1Datas>(LHCb::VeloTELL1DataLocation::ADCs);
+        get<LHCb::VeloTELL1Datas>(LHCb::VeloTELL1DataLocation::SimADCs);
       LHCb::VeloTELL1Datas::const_iterator datIT=lDat->begin();
       for( ; datIT!=lDat->end(); ++datIT){
         const unsigned int tell1=static_cast<unsigned int>((*datIT)->key());
         m_srcIdList.push_back(tell1);
       }
     }
-    //
-    if(!exist<VeloProcessInfos>(m_procInfosLoc)){
-      debug()<< " ==> No init info available! " <<endmsg;
-    }else{
-      m_procInfos=get<VeloProcessInfos>(m_procInfosLoc);
-      m_isInitialized=true;
-    }
-    VeloProcessInfos::const_iterator procIt=m_procInfos->begin();
+
     bool bit=false;
-    if(m_tell1Process!=VeloTELL1::CLUSTER_MAKER){
-      bit=(*procIt)->isEnable(m_tell1Process);
-    }else if(m_tell1Process==VeloTELL1::CLUSTER_MAKER){
-      bit=true;
-    }else if(m_tell1Process==VeloTELL1::MEAN_COMMON_MODE_SUBTRACTION){
+    if(m_tell1Process==VeloTELL1::CLUSTER_MAKER){
+      m_isInitialized=true;
       bit=true;
     }
-    //
-    //if((*procIt)->convLimit()<=0){
-    //  Error("Convergence Limit not set!");
-    //  return ( StatusCode::FAILURE );
-    //}else{
-    m_convergenceLimit=(*procIt)->convLimit();
-    //}
-    m_runType=(*procIt)->runType();
-    //
+
     if(bit){
       setIsEnable(true);
       info()<< " ==> " << m_algorithmName << " Configured ";
@@ -281,11 +264,6 @@ bool VeloSimTell1Algorithm::isInitialized() const
   return ( m_isInitialized );
 }
 //=============================================================================
-unsigned int VeloSimTell1Algorithm::runType() const
-{
-  return ( m_runType );
-}
-//=============================================================================
 StatusCode VeloSimTell1Algorithm::readDataFromFile(
                              const char* fileName, VeloTELL1::sdataVec& dataVec)
 {
@@ -336,27 +314,41 @@ void VeloSimTell1Algorithm::prepareData(bool insertAtEnd=false)
 {
   debug()<< " ==> prepareData() " <<endmsg;
   //
-  VeloTELL1::sdataVec::iterator start,stop;
+  VeloTELL1::sdataVec::iterator start, stop;
   LHCb::VeloTELL1Datas::const_iterator sensIt;
   sensIt=inputData()->begin();
-  for( ; sensIt!=inputData()->end(); ++sensIt){
-    const VeloTELL1::sdataVec& data=(*sensIt)->data();
-    if(!insertAtEnd){
-      for (unsigned int proc=0; proc<VeloTELL1::NumberOfPPFPGA; ++proc) {
-        start  = m_dataBuffer.begin()+proc*(VeloTELL1::STRIPS_IN_PPFPGA+VeloTELL1::DUMMY_STRIPS);
-        std::copy(data.begin()+proc*VeloTELL1::STRIPS_IN_PPFPGA,data.begin()+(proc+1)*VeloTELL1::STRIPS_IN_PPFPGA,start);
 
-        start  = m_dataBuffer.begin()+proc*(VeloTELL1::STRIPS_IN_PPFPGA+VeloTELL1::DUMMY_STRIPS)+VeloTELL1::STRIPS_IN_PPFPGA;
-        stop  = m_dataBuffer.begin()+(proc+1)*(VeloTELL1::STRIPS_IN_PPFPGA+VeloTELL1::DUMMY_STRIPS);
-        std::fill(start,stop,0);
+  for( ; sensIt!=inputData()->end(); ++sensIt){
+
+    const VeloTELL1::sdataVec& data=(*sensIt)->data();
+
+    if(!insertAtEnd){
+
+      for (unsigned int proc=0; proc<VeloTELL1::NumberOfPPFPGA; ++proc){
+
+        start=m_dataBuffer.begin()+proc*(STRIPS_IN_PPFPGA+DUMMY_STRIPS);
+        std::copy(data.begin()+proc*STRIPS_IN_PPFPGA,
+                  data.begin()+(proc+1)*STRIPS_IN_PPFPGA, start);
+        start=m_dataBuffer.begin()+proc*(STRIPS_IN_PPFPGA+DUMMY_STRIPS)+
+              STRIPS_IN_PPFPGA;
+        stop=m_dataBuffer.begin()+(proc+1)*(STRIPS_IN_PPFPGA+DUMMY_STRIPS);
+        std::fill(start, stop, 0);
+
       } 
+
     }else{
-      std::copy(data.begin(),data.end(),m_dataBuffer.begin());
-      std::fill(m_dataBuffer.begin()+VeloTELL1::NumberOfPPFPGA*VeloTELL1::STRIPS_IN_PPFPGA,m_dataBuffer.end(),512);
+
+      std::copy(data.begin(), data.end(), m_dataBuffer.begin());
+      std::fill(m_dataBuffer.begin()+NumberOfPPFPGA*STRIPS_IN_PPFPGA,
+                m_dataBuffer.end(), 512);
+
     }
-    // check if there is propre number of strips
+
+    // check if there is proper number of strips
     (*sensIt)->setDecodedData(m_dataBuffer);
+
   }
+
 }
 //=============================================================================
 void VeloSimTell1Algorithm::prepareData(VeloTELL1::sdataVec& inVec) const
