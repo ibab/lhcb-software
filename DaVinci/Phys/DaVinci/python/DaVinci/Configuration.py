@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.75 2009-10-21 07:12:05 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.76 2009-10-24 17:13:02 ibelyaev Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -41,6 +41,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
        , "HltThresholdSettings" : ''          # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
+       , 'EnableUnpack' : None  ## Explicitly enable/disable unpackinf for input data (if specified) 
        }
 
     _propertyDocDct = {  
@@ -67,6 +68,7 @@ class DaVinci(LHCbConfigurableUser) :
                                     'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
                                     """
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
+       , 'EnableUnpack' : """Explicitly enable/disable unpackinf for input data (if specified) """
          }
 
     __used_configurables__ = [
@@ -262,12 +264,19 @@ class DaVinci(LHCbConfigurableUser) :
         # Get the event time (for CondDb) from ODIN
         from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = "OdinTimeDecoder";
-        # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
+        
         inputType = self.getProp( "InputType" ).upper()
-        if inputType!="MDST" and ( self.getProp("DataType") != "DC06"
-                                   and inputType != "MDF" ):
-            DstConf().EnableUnpack = True
-            CaloDstUnPackConf ( Enable = True )
+        
+        # if property set explcicitly - use it! 
+        if self.isPropertySet('EnableUnpack') :
+            unPack = self.getProp('EnableUnpack')
+            DstConf           ( EnableUnpack = unPack ) 
+            CaloDstUnPackConf ( Enable       = unPack )    
+        elif inputType!="MDST" and ( self.getProp("DataType") != "DC06"
+                                     and inputType != "MDF" ):
+            # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
+            DstConf           ( EnableUnpack = True ) 
+            CaloDstUnPackConf ( Enable       = True )
             
 ################################################################################
 # Ntuple files

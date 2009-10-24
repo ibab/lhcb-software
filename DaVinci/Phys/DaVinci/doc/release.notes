@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.381 2009-10-21 07:12:05 pkoppenb Exp $
+! $Id: release.notes,v 1.382 2009-10-24 17:13:01 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-24 - Vanya Belyaev
+ - python/DaVinci/Configuration.py
+
+       add new slot EnableUnpack, which (if specified) 
+       has a precedence with repect to implicit 
+       logic of enabling/disabling of unpacking input data.
+ 
 
 ! 2009-10-21 - Patrick Koppenburg
  - Remove DaVinciWriteDST. Use Selection framework instead. 
