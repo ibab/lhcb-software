@@ -1,4 +1,4 @@
-// $Id: CaloCellCode.h,v 1.11 2009-10-01 11:46:08 ibelyaev Exp $ 
+// $Id: CaloCellCode.h,v 1.12 2009-10-25 14:35:32 ibelyaev Exp $ 
 // ============================================================================
 #ifndef      KERNEL_CALOCELLCODE_H 
 #define      KERNEL_CALOCELLCODE_H 1
@@ -7,8 +7,9 @@
 // ============================================================================
 // STD and STL 
 // ============================================================================
-#include <vector>
 #include <string>
+#include <vector>
+#include <set>
 #include <algorithm>
 // ============================================================================
 // GaudiKernel

@@ -3,7 +3,7 @@
 <gdd>
 
 <!-- **************************************************************************
-  * $Id: CaloCellID.xml,v 1.17 2009-10-02 11:29:18 ibelyaev Exp $
+  * $Id: CaloCellID.xml,v 1.18 2009-10-25 14:35:33 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloCellIDclass                                        *
   * author: Vanya BELYAEV Ivan.Belyaev@itep.ru                                *
@@ -23,8 +23,10 @@
     *
     * </desc>
   
-  <import name = "GaudiKernel/Kernel"       />
-  <import name = "Kernel/CaloCellCode"      />
+    <import name = "set"    std="TRUE"        />
+    <import name = "vector" std="TRUE"        />
+    <import name = "GaudiKernel/Kernel"       />
+    <import name = "Kernel/CaloCellCode"      />
     
   <typedef
     def    = "ContentType"
@@ -38,6 +40,12 @@
     desc   = "vector of cell IDs"
     access = "PUBLIC" />
   
+  <typedef
+    def    = "Set"
+    type   = "std::set&lt;LHCb::CaloCellID&gt;"
+    desc   = "the ordered set of unique of cell IDs"
+    access = "PUBLIC" />
+
    <attribute
     name      = "all"
     desc      = "all significant bits representation of CellID (32bits)"
