@@ -33,8 +33,8 @@ public:
                                     const bool        fromTES = false ) = 0 ;
   virtual bool hasSelection ( const stringKey& id ) const = 0;
   //@TODO: should only have const access to requested input...
-  virtual /* const*/  Hlt::Selection* selection ( const stringKey&  id     , 
-                                            const IAlgorithm* parent ) =0 ;
+  virtual const  Hlt::Selection* selection ( const stringKey&  id     , 
+                                             const IAlgorithm* parent ) =0 ;
   //@TODO: make typesafe, i.e. allow getting of derived classes 
   //template <typename T>
   //Hlt::TSelection<T>& selection( const stringKey& id, const IAlgorithm* parent) {

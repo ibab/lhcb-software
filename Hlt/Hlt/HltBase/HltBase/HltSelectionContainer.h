@@ -1,4 +1,4 @@
-// $Id: HltSelectionContainer.h,v 1.4 2009-10-08 19:19:44 graven Exp $
+// $Id: HltSelectionContainer.h,v 1.5 2009-10-25 21:07:10 graven Exp $
 #ifndef HLTBASE_HLTSELECTIONCONTAINER_H 
 #define HLTBASE_HLTSELECTIONCONTAINER_H 1
 #include "HltBase/HltSelection.h"
@@ -49,6 +49,14 @@ namespace Hlt {
                 selection_type*             selection;
                 stringKey                   property;
                 data_() : selection(0) {}
+        };
+
+        template <typename Candidate> struct cdata_ {
+                typedef const Hlt::TSelection<Candidate> selection_type;
+                typedef Candidate                        candidate_type;
+                selection_type*             selection;
+                stringKey                   property;
+                cdata_() : selection(0) {}
         };
 
         
@@ -135,7 +143,7 @@ namespace Hlt {
             typename helper_<0>::selection_type* output() { return boost::get<0>(m_data).selection; }
 
             template <unsigned N> 
-            const typename helper_<N>::selection_type* input() { 
+            typename helper_<N>::selection_type* input() { 
                 BOOST_STATIC_ASSERT(N>0); // N=0 corresponds to the output....
                 typename helper_<N>::data_type& d = boost::get<N>(m_data); 
                 if (!d.selection->processed()) {
@@ -160,48 +168,40 @@ namespace Hlt {
 
     }
 
-    template <typename T1, typename T2, typename T3, typename T4, typename T5, typename T6> 
-    struct SelectionContainer6 : public detail::SelectionContainer_< boost::tuple< 
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4>, detail::data_<T5>, detail::data_<T6> 
-                                                                   >             >{
-        SelectionContainer6(HltAlgorithm& owner) : detail::SelectionContainer_<boost::tuple<
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4>, detail::data_<T5>, detail::data_<T6> 
-                                                                              >            > (owner) {}
-    };
 
     template <typename T1, typename T2, typename T3, typename T4, typename T5> 
     struct SelectionContainer5 : public detail::SelectionContainer_< boost::tuple< 
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4>, detail::data_<T5> 
+          detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>, detail::cdata_<T5> 
                                                                    >             >{
         SelectionContainer5(HltAlgorithm& owner) : detail::SelectionContainer_< boost::tuple<
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4>, detail::data_<T5> 
+          detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4>, detail::cdata_<T5> 
                                                                               >             > (owner) {}
     };
 
     template <typename T1, typename T2, typename T3, typename T4> 
     struct SelectionContainer4 : public detail::SelectionContainer_< boost::tuple< 
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4> 
+          detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4> 
                                                                    >             >{
         SelectionContainer4(HltAlgorithm& owner) : detail::SelectionContainer_<boost::tuple<
-          detail::data_<T1>, detail::data_<T2>, detail::data_<T3>, detail::data_<T4> 
+          detail::data_<T1>, detail::cdata_<T2>, detail::cdata_<T3>, detail::cdata_<T4> 
                                                                               >            > (owner) {}
     };
 
     template <typename T1,                                                    
               typename T2,
               typename T3> struct SelectionContainer3 : public detail::SelectionContainer_< boost::tuple< detail::data_<T1>,
-                                                                                                          detail::data_<T2>,
-                                                                                                          detail::data_<T3> > >{
+                                                                                                          detail::cdata_<T2>,
+                                                                                                          detail::cdata_<T3> > >{
         SelectionContainer3(HltAlgorithm& owner) : detail::SelectionContainer_<boost::tuple<detail::data_<T1>,
-                                                                                            detail::data_<T2>,
-                                                                                            detail::data_<T3> > > (owner) {}
+                                                                                            detail::cdata_<T2>,
+                                                                                            detail::cdata_<T3> > > (owner) {}
     };
 
     template <typename T1,
               typename T2> struct SelectionContainer2 : public detail::SelectionContainer_< boost::tuple< detail::data_<T1>,
-                                                                                                          detail::data_<T2> > >{
+                                                                                                          detail::cdata_<T2> > >{
         SelectionContainer2(HltAlgorithm& owner) : detail::SelectionContainer_<boost::tuple<detail::data_<T1>,
-                                                                                            detail::data_<T2> > > (owner) {}
+                                                                                            detail::cdata_<T2> > > (owner) {}
     };
 
     template <typename T1> struct SelectionContainer1 : public detail::SelectionContainer_< boost::tuple< detail::data_<T1> > > {

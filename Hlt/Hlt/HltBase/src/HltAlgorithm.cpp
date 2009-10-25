@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.56 2009-10-06 18:05:30 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.57 2009-10-25 21:07:10 graven Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -123,7 +123,7 @@ StatusCode HltAlgorithm::endExecute() {
   setDecision( m_outputSelection->decision() );
 
   if (produceHistos()) {
-      for (std::vector<Hlt::Selection*>::iterator it = m_inputSelections.begin();
+      for (std::vector<const Hlt::Selection*>::iterator it = m_inputSelections.begin();
            it != m_inputSelections.end(); ++it) {
         fill(m_inputHistos[(*it)->id()],(*it)->size(),1.);
       }
@@ -142,7 +142,7 @@ bool HltAlgorithm::verifyInput()
 {
   if (!m_requireInputsToBeValid) return true;
   bool ok = true;
-  BOOST_FOREACH( Hlt::Selection* i, m_inputSelections ) {
+  BOOST_FOREACH( const Hlt::Selection* i, m_inputSelections ) {
     // propagate error status!
     if (i->error()) m_outputSelection->setError(true);
     ok = ok &&  i->decision() ;
@@ -161,7 +161,7 @@ bool HltAlgorithm::verifyInput()
     warning() << endreq;
     warning() << " Empty input or false input selection!" << endreq;
     warning() << " Most likely due to a misconfiguration" << endreq;
-    BOOST_FOREACH( Hlt::Selection *i, m_inputSelections ) {
+    BOOST_FOREACH( const Hlt::Selection *i, m_inputSelections ) {
       warning() << " input selection " << i->id()
                 << " decision " << i->decision()
                 << " processed " << i->processed()
@@ -199,10 +199,10 @@ private:
 };
 
 
-Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
+const Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
     debug() << " retrieveSelection " << selname << endreq;
-    Hlt::Selection* sel = dataSvc().selection(selname,this);
+    const Hlt::Selection* sel = dataSvc().selection(selname,this);
     if (sel == 0 ) {
       error() << " unknown selection " << selname << endreq;
       Assert(0," retrieveSelection, unknown selection!");

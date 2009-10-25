@@ -3,6 +3,9 @@
 ! Responsible : Jose Angel Hernando Morata
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+! 2009-10-25 - Gerhard Raven
+ - input selections are now const
+
 !========================== HltBase v7r0 2009-10-17 =====================
 ! 2009-10-12 - Gerhard Raven
  - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h

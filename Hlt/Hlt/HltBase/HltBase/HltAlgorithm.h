@@ -1,10 +1,11 @@
-// $Id: HltAlgorithm.h,v 1.40 2009-10-06 18:05:30 graven Exp $
+// $Id: HltAlgorithm.h,v 1.41 2009-10-25 21:07:10 graven Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
 // Include files
 #include "HltBase/HltBaseAlg.h"
 #include "HltBase/HltSelection.h"
+#include <boost/type_traits/remove_const.hpp>
 
 /** @class HltAlgorithm 
  *  
@@ -40,12 +41,12 @@ public:
 
   //@TODO: move the {retrieve,register}{,T}Selection into IHltDataSvc...
   // retrieve a selection
-  Hlt::Selection& retrieveSelection(const stringKey& selname);
+  const Hlt::Selection& retrieveSelection(const stringKey& selname);
 
   // retrieve a selection with candidates of type T (e.g. Track)
   template <class T>
-  Hlt::TSelection<T>& retrieveTSelection(const stringKey& key) {
-        Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
+  const Hlt::TSelection<T>& retrieveTSelection(const stringKey& key) {
+        const Hlt::TSelection<T> *sel = (key.str().substr(0,4) == "TES:")  ?
                                   this->registerTESSelection<T>(key) :
                                   retrieveSelection(key).template down_cast<T>();
         if (sel==0) throw GaudiException("Failed to down_cast Selection",key.str(),StatusCode::FAILURE);
@@ -86,17 +87,17 @@ private:
   StatusCode sysExecute();
 
   template <typename T> 
-  Hlt::TSelection<T>* registerTESSelection(const stringKey& key) {
+  const Hlt::TSelection<T>* registerTESSelection(const stringKey& key) {
        // must ALWAYS add a callback to our stack for this 
        if (!dataSvc().hasSelection(key) 
            && dataSvc().addSelection( new Hlt::TSelection<T>(key), this, true).isFailure()) {
             throw GaudiException("Failed to register TES Selection",key.str(),StatusCode::FAILURE);
        }
-       Hlt::TSelection<T>* selection = retrieveSelection(key).template down_cast<T>();
+       const Hlt::TSelection<T>* selection = retrieveSelection(key).template down_cast<T>();
        if (selection==0) {
             throw GaudiException("Failed to retrieve TES-backed Selection",key.str(),StatusCode::FAILURE);
        }
-       m_callbacks.push_back( new HltAlgorithm::TESSelectionCallBack<Hlt::TSelection<T> >( *selection,*this ) ); 
+       m_callbacks.push_back( new HltAlgorithm::TESSelectionCallBack<const Hlt::TSelection<T> >( *selection,*this ) ); 
        return selection;
   }
 
@@ -116,7 +117,7 @@ private:
   void setOutputSelection(Hlt::Selection* sel);
 
   // list of all the input selections
-  std::vector<Hlt::Selection*> m_inputSelections;
+  std::vector<const Hlt::Selection*> m_inputSelections;
 
   // (owner) pointer to the output selection
   Hlt::Selection* m_outputSelection;
@@ -136,14 +137,13 @@ private:
   template<typename T>
   class TESSelectionCallBack : public CallBack {
   public:
-      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : m_selection(selection),m_parent(parent) {
+      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : m_selection(const_cast<typename boost::remove_const<T>::type&>(selection)),m_parent(parent) {
         assert(m_selection.id().str().substr(0,4)=="TES:");
       }
       StatusCode execute() {
         typedef typename T::candidate_type::Container  container_type;
-
         // TODO: does not work, as fullTESLocation is private...
-        // container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
+        //container_type *obj = SmartDataPtr<container_type>( m_parent.evtSvc(), m_parent.fullTESLocation( m_selection.id().str().substr(4), true ) );
         // if (obj==0) { }
         container_type *obj = m_parent.get<container_type>( m_parent.evtSvc(), m_selection.id().str().substr(4) );
         m_selection.clean(); //TODO: check if/why this is needed??
@@ -152,7 +152,7 @@ private:
         return StatusCode::SUCCESS;
       }
   private:
-      T&            m_selection;
+      typename boost::remove_const<T>::type&            m_selection;
       HltAlgorithm& m_parent;
   };
 
