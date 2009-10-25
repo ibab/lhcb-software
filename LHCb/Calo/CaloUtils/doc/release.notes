@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.136 2009-10-16 12:18:19 cattanem Exp $
+! $Id: release.notes,v 1.137 2009-10-25 14:46:51 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-10-25 - Vanya Belyaev
+
+ - CaloNeighbours:
+
+    make use of new typedef  
+
+ - CaloTrackTool:
+
+     use ICaloDigits4Track 
+
+ - cmt/requirements 
+    
+     version increment to v8r8 
 
 !========================== CaloUtils v8r7 2009-10-16 =========================
 ! 2009-12-10 - Olivier Deschamps

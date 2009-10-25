@@ -1,4 +1,4 @@
-// $Id: CaloNeighbours.cpp,v 1.1 2009-08-05 17:33:00 ibelyaev Exp $
+// $Id: CaloNeighbours.cpp,v 1.2 2009-10-25 14:46:51 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -20,7 +20,7 @@ namespace
   // ==========================================================================
   inline 
   bool _neighbours 
-  ( std::set<LHCb::CaloCellID>& cells    , 
+  ( LHCb::CaloCellID::Set&      cells    , 
     const unsigned int          level    , 
     const DeCalorimeter*        detector ) 
   {
@@ -49,7 +49,7 @@ namespace
  */
 // ============================================================================
 bool LHCb::CaloFunctors::neighbours 
-( std::set<LHCb::CaloCellID>& cells    , 
+( LHCb::CaloCellID::Set&      cells    , 
   const unsigned int          level    , 
   const DeCalorimeter*        detector ) 
 {
@@ -72,7 +72,7 @@ bool LHCb::CaloFunctors::neighbours
   if ( 0 == level    ) { return true  ; }                             // RETURN 
   if ( cells.empty() ) { return true  ; }                             // RETURN 
   // local copy:
-  std::set<LHCb::CaloCellID> local ;
+  LHCb::CaloCellID::Set local ;
   local.insert ( cells.begin() , cells.end()  ) ;
   const bool result = _neighbours ( local , level , detector ) ;
   if ( !result       ) { return false ; }                             // RETURN

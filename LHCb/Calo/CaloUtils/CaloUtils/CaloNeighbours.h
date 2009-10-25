@@ -1,4 +1,4 @@
-// $Id: CaloNeighbours.h,v 1.1 2009-08-05 17:33:00 ibelyaev Exp $
+// $Id: CaloNeighbours.h,v 1.2 2009-10-25 14:46:51 ibelyaev Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALONEIGHBOURS_H 
 #define CALOUTILS_CALONEIGHBOURS_H 1
@@ -36,7 +36,7 @@ namespace LHCb
      *  @return true if neighbours are added 
      */
     bool neighbours 
-    ( std::set<LHCb::CaloCellID>& cells    , 
+    ( LHCb::CaloCellID::set&      cells    , 
       const unsigned int          level    , 
       const DeCalorimeter*        detector ) ;
     // ========================================================================

@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.9 2008-06-25 09:24:51 jpalac Exp $
+// $Id: CaloTrackTool.h,v 1.10 2009-10-25 14:46:51 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -32,6 +32,7 @@
 // CaloInterfaces 
 // ============================================================================
 #include "CaloInterfaces/ICaloTrackMatch.h"
+#include "CaloInterfaces/ICaloDigits4Track.h"
 // ============================================================================
 // TrackInterfaces 
 // ============================================================================
@@ -41,9 +42,9 @@
 // ============================================================================
 #include "CaloDet/DeCalorimeter.h"
 // ============================================================================
-
 namespace Calo
 {
+  // ==========================================================================
   /** @class Calo::CaloTrackTool CaloTrackTool.h
    *  
    *
@@ -53,15 +54,19 @@ namespace Calo
   class CaloTrackTool : public GaudiTool 
   {
   public:
+    // ========================================================================
     typedef std::vector<LHCb::Track::Types>               TrackTypes ;
-    typedef Gaudi::Math::Line<Gaudi::XYZPoint,Gaudi::XYZVector> Line ;
+    typedef ICaloDigits4Track::Line                             Line ;
+    // ========================================================================
   public:
+    // ========================================================================
     /// initialize the tool 
     virtual StatusCode initialize () ;
-
+    // ========================================================================
     void _setProperty(const std::string& p ,const std::string& v);
-
+    // ========================================================================
   protected:
+    // ========================================================================
     /// standard constructor 
     CaloTrackTool
     ( const std::string& type   , // ?
@@ -69,13 +74,19 @@ namespace Calo
       const IInterface*  parent ) ;
     /// protected destructor 
     virtual ~CaloTrackTool() {}
+    // ========================================================================
   private:
+    // ========================================================================
     /// the default constructor is disabled ;
     CaloTrackTool() ;
+    // ========================================================================
   protected:
+    // ========================================================================
     inline ITrackExtrapolator* extrapolator      () const ;
     inline ITrackExtrapolator* fastExtrapolator  () const ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// Propagate track to a given 3D-place 
     inline StatusCode propagate 
     ( const LHCb::Track&      track ,
@@ -92,11 +103,15 @@ namespace Calo
     ( LHCb::State&            state ,
       const double            z     ,
       const LHCb::ParticleID& pid   = LHCb::ParticleID(211) ) const ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// construct the straight line from the state 
     inline Line line ( const LHCb::State& state ) const 
     { return Line ( state.position() , state.slopes () ) ; } ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /** get  a pointer to the satte for the given track at given location 
      *  it shodul be faster then double usage of 
      *  LHCb::Track::hasStateAt ( location )  and LHCb::stateAt ( location ) 
@@ -106,6 +121,7 @@ namespace Calo
     inline const LHCb::State* state 
     ( const LHCb::Track&          track , 
       const LHCb::State::Location loc   ) const ;
+    // ========================================================================
     /** get  a pointer to the satte for the given track at given location 
      *  it shodul be faster then double usage of 
      *  LHCb::Track::hasStateAt ( location )  and LHCb::stateAt ( location ) 
@@ -115,7 +131,9 @@ namespace Calo
     inline       LHCb::State* state 
     ( LHCb::Track&                track , 
       const LHCb::State::Location loc   ) const ;
+    // ========================================================================
   protected:
+    // ========================================================================
     /// check if the track to be used @see TrackUse 
     inline bool use  ( const LHCb::Track* track ) const { return m_use( track) ; } 
     /// print the short infomration about track flags 
@@ -126,11 +144,15 @@ namespace Calo
     inline MsgStream& print 
     ( const LHCb::Track* track             , 
       const MSG::Level   level = MSG::INFO ) const ;
+    // ========================================================================
   protected:
+    // ========================================================================
     double tolerance() const { return m_tolerance ; }
     const std::string& detectorName() const { return m_detectorName ; }
     const DeCalorimeter* calo() const { return m_calo ; }
+    // ========================================================================
   private:
+    // ========================================================================
     // extrapolator name 
     std::string              m_extrapolatorName     ; ///< extrapolator name 
     // the actual extrapolator 
@@ -157,11 +179,12 @@ namespace Calo
     // local storages 
     mutable Gaudi::XYZPoint  m_pos                  ;
     mutable Gaudi::XYZVector m_mom                  ;    
+    // ========================================================================
   } ;
-  
+  // ==========================================================================
 } // end of namespace Calo
 // ============================================================================
-/// get the extrapolator 
+// get the extrapolator 
 // ============================================================================
 inline ITrackExtrapolator* 
 Calo::CaloTrackTool::extrapolator() const 
@@ -169,9 +192,9 @@ Calo::CaloTrackTool::extrapolator() const
   if ( 0 != m_extrapolator     ) { return m_extrapolator ; }
   m_extrapolator = tool<ITrackExtrapolator>( m_extrapolatorName , this ) ;
   return m_extrapolator ;
-} ;
+} 
 // ============================================================================
-/// get the fast extrapolator 
+// get the fast extrapolator 
 // ============================================================================
 inline ITrackExtrapolator* 
 Calo::CaloTrackTool::fastExtrapolator() const 
@@ -180,9 +203,9 @@ Calo::CaloTrackTool::fastExtrapolator() const
   m_fastExtrapolator = 
     tool<ITrackExtrapolator>( m_fastExtrapolatorName , this ) ;
   return m_fastExtrapolator ;
-} ;
+} 
 // ============================================================================
-/// Propagate track to a given 3D-place 
+// Propagate track to a given 3D-place 
 // ============================================================================
 inline StatusCode 
 Calo::CaloTrackTool::propagate 
@@ -195,9 +218,9 @@ Calo::CaloTrackTool::propagate
   if ( ::fabs( plane.Distance ( state.position() ) ) < tolerance() ) 
   { return StatusCode::SUCCESS ; }
   return propagate ( state , plane , pid ) ; 
-} ;
+} 
 // ============================================================================
-/// Propagate state to a given 3D-place 
+// Propagate state to a given 3D-place 
 // ============================================================================
 inline StatusCode 
 Calo::CaloTrackTool::propagate 
@@ -224,11 +247,11 @@ Calo::CaloTrackTool::propagate
     StatusCode sc = propagate ( state , point.Z() , pid ) ;
     if ( sc.isFailure() ) 
     { return Error ( "propagate: failure from propagate" , sc  ) ; }   // RETURN
-  } ;
+  } 
   return Error ( "propagate: no convergency has been reached" ) ;
-} ;
+} 
 // ============================================================================
-/// Propagate state to a given Z 
+// Propagate state to a given Z 
 // ============================================================================
 inline StatusCode 
 Calo::CaloTrackTool::propagate 
@@ -263,9 +286,9 @@ Calo::CaloTrackTool::propagate
   { return Error ("Error form FastExtrapolator" , sc2 ) ; }
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// print the short infomration about track flags 
+// print the short infomration about track flags 
 // ============================================================================
 inline MsgStream& 
 Calo::CaloTrackTool::print 
@@ -273,7 +296,7 @@ Calo::CaloTrackTool::print
   const LHCb::Track* track  ) const 
 { return stream.isActive() ? m_use.print ( stream , track ) : stream ; }
 // ============================================================================
-/// print the short infomration about track flags 
+// print the short infomration about track flags 
 // ============================================================================
 inline MsgStream& 
 Calo::CaloTrackTool::print 
@@ -281,7 +304,7 @@ Calo::CaloTrackTool::print
   const MSG::Level   level ) const 
 { return print ( msgStream ( level ) , track ) ; }
 // ============================================================================
-/// get  a pointer to the state for the given track at given location 
+// get  a pointer to the state for the given track at given location 
 // ============================================================================
 inline const LHCb::State* 
 Calo::CaloTrackTool::state 
@@ -297,9 +320,9 @@ Calo::CaloTrackTool::state
   //
   if ( states.rend() == found ) { return 0 ;}                  // RETURN 
   return *found ;                                              // RETURN 
-} ;
+} 
 // ============================================================================
-/// get  a pointer to the state for the given track at given location 
+// get  a pointer to the state for the given track at given location 
 // ============================================================================
 inline  LHCb::State* 
 Calo::CaloTrackTool::state 
@@ -308,9 +331,7 @@ Calo::CaloTrackTool::state
   const LHCb::Track& _t = track ;
   // yes, I know that const_cast is bad, but the code duplication is worse
   return const_cast<LHCb::State*> ( state ( _t , loc ) ) ;
-} ;
-// ============================================================================
-
+} 
 // ============================================================================
 // The END 
 // ============================================================================
