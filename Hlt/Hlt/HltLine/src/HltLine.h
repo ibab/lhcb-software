@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.6 2009-08-05 21:04:26 graven Exp $
+// $Id: HltLine.h,v 1.7 2009-10-25 20:49:35 graven Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -141,7 +141,7 @@ private:
   StatEntity *m_acceptCounter;
   StatEntity *m_errorCounter;
   StatEntity *m_slowCounter;
-  Hlt::Selection* m_selection;
+  const Hlt::Selection* m_selection;
   std::string m_outputContainerName;
   std::string m_decision;
   std::vector<std::string> m_incidents;  ///< Incidents to be flagged in HltDecReport if they occurs during processing

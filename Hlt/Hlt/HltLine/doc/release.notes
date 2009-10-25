@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.36 2009-10-15 12:50:19 graven Exp $
+! $Id: release.notes,v 1.37 2009-10-25 20:47:59 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-10-25 - Gerhard Raven
+ - more const
+
+!========================== HltLine v1r7 2009-10-17 ===================
+! 2009-10-17 - Gerhard Raven
+ - create a branch compatible with old PatDownstream, i.e. REC_v7r6
+
 ! 2009-10-15 - Gerhard Raven
  - add a flag 'Reco' to Hlt2Lines constructor to flag if line wants
    reconstruction run or not. Default is True. Note: this is a temporary
