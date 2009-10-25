@@ -5,7 +5,7 @@
 <gdd>
   <package name="DigiEvent">
 <!-- **************************************************************************
-  * $Id: CaloDigit.xml,v 1.5 2009-07-24 16:44:43 odescham Exp $
+  * $Id: CaloDigit.xml,v 1.6 2009-10-25 14:37:51 ibelyaev Exp $
   *****************************************************************************
   * XML-description of CaloDigit class                                        *
   * author: Vanya Belyaev Ivan.Belyaev@itep.ru                                *
@@ -29,12 +29,27 @@
 <base   name = "KeyedObject&lt;LHCb::CaloCellID&gt;" />
 &KeyedObject;
 
+<import name = "set"    std="TRUE"           />
+<import name = "vector" std="TRUE"           />
+
 <typedef
  def    = "Base"
  type   = "KeyedObject&lt;LHCb::CaloCellID&gt;"
  desc   = "Shortcut for own base class "
  access = "PROTECTED"
 />
+
+ <typedef
+    def    = "Vector"
+    type   = "std::vector&lt;const LHCb::CaloDigit*&gt;"
+    desc   = "vector of (const) Calo-digits"
+    access = "PUBLIC" />
+
+ <typedef
+    def    = "Set"
+    type   = "std::set&lt;const LHCb::CaloDigit*&gt;"
+    desc   = "the set of unique (const) Calo-digits"
+    access = "PUBLIC" />
 
 <constructor
  desc     = "Non-default constructor"
