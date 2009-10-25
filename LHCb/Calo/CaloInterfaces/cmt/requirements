@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.47 2009-10-16 11:44:57 cattanem Exp $
+# $Id: requirements,v 1.48 2009-10-25 14:40:11 ibelyaev Exp $
 # =============================================================================
 package           CaloInterfaces
-version           v7r15
+version           v7r16
 
 # =============== structure ===================================================
-branches          cmt doc CaloInterfaces
+branches          cmt doc CaloInterfaces src 
 
 # =============== dependencies ================================================
 use GaudiKernel     v*
@@ -18,8 +18,19 @@ apply_pattern	  install_more_includes more=CaloInterfaces
  
 
 # =============== LCG Dictionaries ============================================
-apply_pattern reflex_dictionary                                                 \
-              dictionary=CaloInterfaces                                        \
-              headerfiles=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.h     \
-              selectionfile=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.xml \
-              options="-U__MINGW32__"
+apply_pattern  reflex_dictionary                                               \
+               dictionary=CaloInterfaces                                       \
+               headerfiles=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.h     \
+               selectionfile=$(CALOINTERFACESROOT)/dict/CaloInterfacesDict.xml \
+               options="-U__MINGW32__"
+
+# =============== Constituents ================================================
+library        CaloInterfaces  *.cpp 
+apply_pattern  linker_library library=CaloInterfaces 
+
+# =============== Interdependencies ===========================================
+macro_append   CaloInterfacesDict_dependency " CaloInterfaces " 
+
+# =============================================================================
+# The END 
+# =============================================================================
