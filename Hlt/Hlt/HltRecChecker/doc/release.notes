@@ -4,6 +4,9 @@
 ! Purpose     : Check reconstruction algorithms for HLT 
 !-----------------------------------------------------------------------------
 
+! 2009-10-25 - G. Raven
+ - more const
+
 !========================== HltRecChecker v1r11 2009-10-17 ===================
 ! 2009-10-10 - G. Raven
  - move ERelations from HltBase to HltRecChecker (only place where it is

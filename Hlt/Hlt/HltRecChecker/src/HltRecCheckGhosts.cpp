@@ -1,4 +1,4 @@
-// $Id: HltRecCheckGhosts.cpp,v 1.9 2009-10-09 07:29:42 graven Exp $
+// $Id: HltRecCheckGhosts.cpp,v 1.10 2009-10-25 20:38:45 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,7 @@ StatusCode HltRecCheckGhosts::execute() {
 
   debug() << "About to retrieve the selection" << endmsg;
 
-  Hlt::Selection* s = m_dataSvc->selection(stringKey(m_inputTrackSelection),this);
+  const Hlt::Selection* s = m_dataSvc->selection(stringKey(m_inputTrackSelection),this);
 
   if (s == NULL) return StatusCode::SUCCESS;
 
@@ -131,7 +131,7 @@ StatusCode HltRecCheckGhosts::execute() {
 
   //We need to down cast what the data service does in order to get
   //a vector of tracks for us to look at
-  Hlt::TSelection<LHCb::Track>* tracks =  s->down_cast<LHCb::Track >();
+  const Hlt::TSelection<LHCb::Track>* tracks =  s->down_cast<LHCb::Track >();
 
   debug() << "About to print out a  mountain of crap" << endmsg;
 
@@ -141,13 +141,13 @@ StatusCode HltRecCheckGhosts::execute() {
   Tuple m_ghostTuple = nTuple("GhostTuple");
 
   debug() << "Printing out the tracks in input container" << endmsg;
-  BOOST_FOREACH( LHCb::Track* tT, *tracks) {
+  BOOST_FOREACH( const LHCb::Track* tT, *tracks) {
     verbose() << tT << endmsg;
   }
 
   verbose() << "About to loop over the selected tracks" << endreq;
 
-  BOOST_FOREACH( LHCb::Track* ghostTrack, *tracks) {
+  BOOST_FOREACH( const LHCb::Track* ghostTrack, *tracks) {
 
     LHCb::GhostTrackInfo ghostInfoLong;    
 
