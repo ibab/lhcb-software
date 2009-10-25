@@ -11,11 +11,11 @@ use  Moore                  v8r0   Hlt
 
 
 # temporary 
-use HltSettings v1r0p1   Hlt
-use HltConf     v5r0p1   Hlt
-use CaloTools   v5r11p1  Calo
-use CaloPIDs    v5r1p1   Calo
-use LHCbAlgs v2r29p1  Kernel
+#use HltSettings v1r0p1   Hlt
+#use HltConf     v5r0p1   Hlt
+#use CaloTools   v5r11p1  Calo
+#use CaloPIDs    v5r1p1   Calo
+#use LHCbAlgs v2r29p1  Kernel
 
 
 # Declare this as a container package
