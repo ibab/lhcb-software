@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.3 2009-10-23 16:45:03 ibelyaev Exp $
+# $Id: Configuration.py,v 1.4 2009-10-25 17:45:28 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -106,12 +106,13 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     """
     
     ## Explicitly Used Configurables
-    #__used_configurables__ = [
-    #    OffLineCaloRecoConf ,
-    #    OffLineCaloPIDsConf ,
-    #    DaVinci
-    #    ]
-
+    __used_configurables__ = [
+        'OffLineCaloRecoConf' ,
+        'OffLineCaloPIDsConf' ,
+        'CaloDstUnPackConf'   ,
+        'DaVinci'
+        ]
+    
     ## the own slots 
     __slots__ = {
         ## Own flags:
