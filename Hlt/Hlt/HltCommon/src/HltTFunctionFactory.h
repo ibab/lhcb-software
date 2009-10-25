@@ -1,4 +1,4 @@
-// $Id: HltTFunctionFactory.h,v 1.9 2009-07-02 09:46:39 graven Exp $
+// $Id: HltTFunctionFactory.h,v 1.10 2009-10-25 21:04:36 graven Exp $
 #ifndef HLTTFUNCTIONFACTORY_H 
 #define HLTTFUNCTIONFACTORY_H 1
 
@@ -85,7 +85,7 @@ namespace Hlt {
     TFunction* create(const std::string& name, HltAlgorithm* algo) {
       assert(algo!=0);
       algo->Assert(!name.empty(), "create() must have input name in binder function ");
-      T2Selection& sel = algo->retrieveTSelection<T2>(name);
+      const T2Selection& sel = algo->retrieveTSelection<T2>(name);
       TFunction *fun(0);
       typedef typename zen::binder_function<T1,T2Selection> BinderFunction;
       BinderFunction* bfun = new BinderFunction(m_constructor(),sel,COMPARATOR());

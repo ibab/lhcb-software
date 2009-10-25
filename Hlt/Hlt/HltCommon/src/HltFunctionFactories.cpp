@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.32 2009-07-03 14:45:37 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.33 2009-10-25 21:04:36 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -45,29 +45,29 @@ StatusCode HltTrackFunctionFactory::initialize() {
   declare<Hlt::NumberOfASideVeloHits>("NumberOfASideVeloHits");
   declare<Hlt::NumberOfCSideVeloHits>("NumberOfCSideVeloHits");
 
-  declare<Hlt::rIP,zen::abs_min,Hlt::VertexSelection>("rIP");
-  declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("IP");
-  declare<Hlt::IP,zen::abs_min,Hlt::VertexSelection>("FitIP");
+  declare<Hlt::rIP,zen::abs_min,const Hlt::VertexSelection>("rIP");
+  declare<Hlt::IP,zen::abs_min,const Hlt::VertexSelection>("IP");
+  declare<Hlt::IP,zen::abs_min,const Hlt::VertexSelection>("FitIP");
 
-  declare<Hlt::DOCA,zen::abs_min,Hlt::TrackSelection>("DOCA");
-  declare<Hlt::MatchIDsFraction,zen::abs_max,Hlt::TrackSelection>("MatchIDsFraction");
-  declare<Hlt::DoShareM3,zen::abs_max,Hlt::TrackSelection>("DoShareM3");
+  declare<Hlt::DOCA,zen::abs_min,const Hlt::TrackSelection>("DOCA");
+  declare<Hlt::MatchIDsFraction,zen::abs_max,const Hlt::TrackSelection>("MatchIDsFraction");
+  declare<Hlt::DoShareM3,zen::abs_max,const Hlt::TrackSelection>("DoShareM3");
 
   declare<Hlt::FitChi2OverNdf>("FitChi2OverNdf");
   declare<Hlt::FitMuChi2>("FitMuChi2");
   declare<Hlt::FitCleanedChi2OverNdf>("FitCleanedChi2OverNdf");
 
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Calo2DChi2","HltRZVeloTCaloMatch");
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Calo3DChi2","HltVeloTCaloMatch");
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("RZVeloTMatch","HltMatchTVeloTracks");
+  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Calo2DChi2","HltRZVeloTCaloMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Calo3DChi2","HltVeloTCaloMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("RZVeloTMatch","HltMatchTVeloTracks");
 
   declare<ITrackFunctionTool>("MuonIDDistance","HltMuonIDDistanceTool");
   declare<ITrackFunctionTool>("DeltaP","HltDeltaPTool");
   declare<ITrackFunctionTool>("IsMuon","HltIsMuonTool");
   declare<ITrackFunctionTool>("IsPhoton","HltIsPhotonTool");
   declare<ITrackFunctionTool>("AntiEleConf","HltAntiEleConf");
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal2DChi2","HltRZVeloEcalMatch");
-  declare<ITrackBiFunctionTool,zen::abs_min,Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Ecal2DChi2","HltRZVeloEcalMatch");
+  declare<ITrackBiFunctionTool,zen::abs_min,const Hlt::TrackSelection> ("Ecal3DChi2","HltVeloEcalMatch");
 
   declare<ITrackFunctionTool>("ptAtOrigin","PtTransporter");
   return sc;
@@ -90,19 +90,19 @@ StatusCode HltVertexFunctionFactory::initialize() {
 
   StatusCode sc = HltTFunctionFactory<LHCb::RecVertex>::initialize();
 
-  declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("VertexDz");
-  declare<Hlt::DZ,zen::abs_min,Hlt::VertexSelection>("FitVertexDz");
-  declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("VertexPointing");
-  declare<Hlt::FC,zen::abs_min,Hlt::VertexSelection>("FitVertexPointing");
+  declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("VertexDz");
+  declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("FitVertexDz");
+  declare<Hlt::FC,zen::abs_min,const Hlt::VertexSelection>("VertexPointing");
+  declare<Hlt::FC,zen::abs_min,const Hlt::VertexSelection>("FitVertexPointing");
   
-  declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("VertexMinIP");
-  declare<Hlt::VertexMinIP,zen::abs_min,Hlt::VertexSelection>("FitVertexMinIP");
-  declare<Hlt::VertexTrack1IP,zen::abs_min,Hlt::VertexSelection>("VertexTrack1IP");
-  declare<Hlt::VertexTrack1IP,zen::abs_min,Hlt::VertexSelection>("FitVertexTrack1IP");
-  declare<Hlt::VertexTrack2IP,zen::abs_min,Hlt::VertexSelection>("VertexTrack2IP");
-  declare<Hlt::VertexTrack2IP,zen::abs_min,Hlt::VertexSelection>("FitVertexTrack2IP");
+  declare<Hlt::VertexMinIP,zen::abs_min,const Hlt::VertexSelection>("VertexMinIP");
+  declare<Hlt::VertexMinIP,zen::abs_min,const Hlt::VertexSelection>("FitVertexMinIP");
+  declare<Hlt::VertexTrack1IP,zen::abs_min,const Hlt::VertexSelection>("VertexTrack1IP");
+  declare<Hlt::VertexTrack1IP,zen::abs_min,const Hlt::VertexSelection>("FitVertexTrack1IP");
+  declare<Hlt::VertexTrack2IP,zen::abs_min,const Hlt::VertexSelection>("VertexTrack2IP");
+  declare<Hlt::VertexTrack2IP,zen::abs_min,const Hlt::VertexSelection>("FitVertexTrack2IP");
 
-  declare<Hlt::VertexMatchIDsFraction,zen::abs_max,Hlt::VertexSelection>("VertexMatchIDsFraction");
+  declare<Hlt::VertexMatchIDsFraction,zen::abs_max,const Hlt::VertexSelection>("VertexMatchIDsFraction");
   
   declare<Hlt::VertexAngle>("VertexAngle");
   declare<Hlt::VertexAngle>("FitVertexAngle");

@@ -37,7 +37,7 @@ namespace zen
   {
   public:
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
-    typedef typename Container::iterator iterator;
+    typedef typename Container::const_iterator iterator;
     typedef typename std::pair<double,iterator> Pair;
     explicit binder_function(const zen::bifunction<T1,T2>& f,
                              Container& con, 
@@ -89,7 +89,7 @@ namespace zen
   public:
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2; 
     typedef zen::binder_function<T1,Container> Binder;
-    typedef typename Container::iterator iterator;
+    typedef typename Container::const_iterator iterator;
     explicit binder_by_key(const Binder& bin) : m_binder( bin.clone() ) {}
     binder_by_key(const binder_by_key<T1,Container>& rhs) : m_binder( rhs.m_binder->clone() ) {}
     virtual ~binder_by_key() {}
@@ -114,7 +114,7 @@ namespace zen
   public:
     typedef typename boost::remove_pointer<typename Container::value_type>::type T2;
     typedef zen::binder_function<T1,Container> Binder;
-    typedef typename Container::iterator iterator;
+    typedef typename Container::const_iterator iterator;
     typedef typename _helper<T2>::ptr_memfun ptr_memfun;
     explicit binder_by_value(const Binder& bin, ptr_memfun pmf): m_binder(bin.clone()),m_pmf(pmf) {}
     binder_by_value(const binder_by_value<T1,Container>& rhs) : m_binder(rhs.m_binder->clone()), m_pmf(rhs.m_pmf) {}

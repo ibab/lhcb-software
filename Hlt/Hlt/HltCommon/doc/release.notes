@@ -4,6 +4,11 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+
+! 2009-10-25 - Gerhard Raven
+ - more const
+ - remove unused HltSelectionFilter and HltSelectionToTES
+
 !========================== HltCommon v5r12 2009-10-17 ===================
 ! 2009-10-12 - Gerhard Raven
  - split HltBase/EFunctions.h into interface, HltBase/IFunctions.h
