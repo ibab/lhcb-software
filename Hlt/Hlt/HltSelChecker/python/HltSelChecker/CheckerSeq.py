@@ -1,4 +1,4 @@
-## @file $Id: CheckerSeq.py,v 1.2 2009-10-22 16:21:33 pkoppenb Exp $
+## @file $Id: CheckerSeq.py,v 1.3 2009-10-25 18:04:22 graven Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.2 2009-10-22 16:21:33 pkoppenb Exp $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.3 2009-10-25 18:04:22 graven Exp $, $Revision: 1.3 $"
 # =============================================================================
 ###############################################################################
 #
@@ -116,5 +116,6 @@ class CheckerSeq :
         seq = self.sequence()
         self.configureDV(seq)
 
-        from Gaudi.Configuration import *
+        import Gaudi.Configuration
+        from Configurables import MessageSvc
         MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"

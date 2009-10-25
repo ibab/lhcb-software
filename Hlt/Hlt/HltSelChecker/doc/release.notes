@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-25 - Gerhard Raven
+ - fix python warning : import * only allowed at module level
+
 ! 2009-10-23 - Patrick Koppenburg
  - Add test files from flavour group, remove the ones from RD that have no data yet
  - add 320Vis test file (for the charm setting)
