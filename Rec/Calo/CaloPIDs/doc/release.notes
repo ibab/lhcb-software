@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.78 2009-09-30 11:31:54 graven Exp $ 
+! $Id: release.notes,v 1.79 2009-10-25 17:22:36 ibelyaev Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+! 2009-10-25 - Vanya Belyaev
+
+ - add ICaloDigit4Track interface for all <CALO>EnergyForTrack tools 
+
+ - CaloEnergyForTrack.cpp
+
+    fix the typo in  property name 
+
+ - cmt/requirements
+   
+     version increment to v5r2 
 
 !========================== CaloPIDs v5r1p1 2009-09-30 =========================
 ! 2009-09-30 - Olivier Deschamps

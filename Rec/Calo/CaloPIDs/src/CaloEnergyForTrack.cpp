@@ -1,4 +1,4 @@
-// $Id: CaloEnergyForTrack.cpp,v 1.4 2009-05-15 12:53:38 cattanem Exp $
+// $Id: CaloEnergyForTrack.cpp,v 1.5 2009-10-25 17:22:36 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -21,15 +21,13 @@
 #include "Event/Track.h"
 #include "Event/CaloDigit.h"
 // ============================================================================
+// CaloUtils 
+// ============================================================================
+#include "CaloUtils/CaloNeighbours.h"
+// ============================================================================
 // local 
 // ============================================================================
 #include "CaloEnergyForTrack.h"
-// ============================================================================
-
-// ============================================================================
-/// factory
-// ============================================================================
-DECLARE_TOOL_FACTORY(CaloEnergyForTrack) ;
 // ============================================================================
 // constructor
 // ============================================================================
@@ -45,20 +43,33 @@ CaloEnergyForTrack::CaloEnergyForTrack
   , m_location      ( LHCb::State::Spd ) 
   , m_planes        (       ) 
   , m_morePlanes    ( 0     )
-  , m_nSigmas       ( 0     )
-  , m_addNeighbors  ( false )
+  , m_addNeighbors  ( 0     )
 {
-  declareInterface <ICaloTrackIdEval>  ( this ) ;
-  declareInterface <IIncidentListener> ( this ) ;
+  declareInterface <ICaloTrackIdEval>   ( this ) ;
+  declareInterface <ICaloDigits4Track>  ( this ) ;
+  declareInterface <IIncidentListener>  ( this ) ;
   //
-  declareProperty ( "DataAddress" , m_address       ) ;
-  declareProperty ( "BadValue"    , m_bad           ) ;
-  declareProperty ( "MorePlanes"  , m_morePlanes    ) ;
-  declareProperty ( "NSigmas"     , m_nSigmas       ) ;
-  declareProperty ( "AddNeigbours" , m_addNeighbors  ) ;
-} ;
+  // ==========================================================================
+  declareProperty 
+    ( "DataAddress" , 
+      m_address     , 
+      "TES-location of corresponding CaloDigits") ;
+  declareProperty 
+    ( "BadValue"    , 
+      m_bad         , 
+      "The bad valur to be returned" ) ;
+  declareProperty 
+    ( "MorePlanes"  , 
+      m_morePlanes  , 
+      "Use more planes" ) ;
+  declareProperty 
+    ( "AddNeighbours" , 
+      m_addNeighbors  , 
+      "Add more neighbour levels" ) ;
+  // ==========================================================================
+} 
 // ============================================================================
-/// initialize the tool 
+// initialize the tool 
 // ============================================================================
 StatusCode CaloEnergyForTrack::initialize() 
 {
@@ -107,41 +118,19 @@ StatusCode CaloEnergyForTrack::initialize()
   if ( m_planes.empty() ) { return Error ( "Empty list of Calo-planes" )  ; }
   //
   return StatusCode::SUCCESS ;
-} ;
+} 
 // ============================================================================
-/// The main processing method (functor interface)
+/*  collect the cellID-s along the line 
+ *  @param line   (INPUT)  the line  
+ *  @param cells  (OUTPUT) the container of cells 
+ *  @return status code 
+ */
 // ============================================================================
-double CaloEnergyForTrack::operator() ( const LHCb::Track* track ) const 
+StatusCode CaloEnergyForTrack::collect 
+( const CaloEnergyForTrack::Line& line   , 
+  LHCb::CaloCellID::Set&          cells  ) const 
 {
-  double value = m_bad ;
-  StatusCode sc = process( track , value ) ;
-  Assert ( sc.isSuccess() , "Failure from process():" , sc );
-  return value ;
-} ;
-// ============================================================================
-/// The main processing method 
-// ============================================================================
-StatusCode CaloEnergyForTrack::process   
-( const LHCb::Track* track , 
-  double&            value )  const 
-{
-  value = m_bad ;
-  if ( !use ( track ) ) { return Error ( "Track is not OK" ) ; }
-  
-  // get the correct state 
-  const LHCb::State* state = CaloTrackTool::state ( *track , m_location ) ;
-  if ( 0 == state )
-  { 
-    // propagate it! 
-    StatusCode sc = propagate ( *track  , m_planes.front() , m_state ) ;
-    if ( sc.isFailure() ) 
-    { return Error ( "process(): failure from propagate,  return 'bad'" , sc ) ; }
-    // initialize the state 
-    state = &m_state ;
-  }
-  
-  // get the line from the state:
-  const Line l1 = line ( *state ) ;  
+  cells.clear() ;
   
   // get the interesection points of the line with the planes 
   Points points ; 
@@ -153,7 +142,7 @@ StatusCode CaloEnergyForTrack::process
     {
       double  mu = 0 ;
       Gaudi::XYZPoint point ;
-      Gaudi::Math::intersection ( l1 , *iplane , point , mu ) ;
+      Gaudi::Math::intersection ( line , *iplane , point , mu ) ;
       points.push_back ( point ) ;
     }
     // add some additional points (if requested) 
@@ -167,7 +156,6 @@ StatusCode CaloEnergyForTrack::process
     }
   }
   // get all touched calorimeter cells: convert points to cells 
-  Cells cells ;
   for ( Points::const_iterator ipoint = points.begin() ;
         points.end() != ipoint ; ++ipoint )
   {
@@ -177,14 +165,97 @@ StatusCode CaloEnergyForTrack::process
     if ( 0 == pars || !pars->valid()  ) { continue ;}
     // collect all valid cells 
     cells.insert ( pars->cellID() ) ;            
-    if ( m_addNeighbors ) 
-    {
-      const CaloNeighbors& nei = pars->neighbors() ;
-      cells.insert( nei.begin() , nei.end() ) ;
-    }
   }
-  // accumulate the energy from touched cells 
-  double energy = 0  ;
+  
+  // add neighbours 
+  if ( 0 < m_addNeighbors ) 
+  { LHCb::CaloFunctors::neighbours ( cells , m_addNeighbors , calo() ) ; }
+  
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  collect the cellID-s along the line 
+ *  @param line   (INPUT)  the line  
+ *  @param cells  (OUTPUT) the container of cells 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const CaloEnergyForTrack::Line& line   , 
+  LHCb::CaloCellID::Vector&       cells  ) const 
+{
+  cells.clear() ;
+  Cells _cells ;
+  StatusCode sc = collect ( line , _cells ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  cells.insert ( cells.end() , _cells.begin() , _cells.end() ) ;
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  collect the cellID-s along the path of the tracks 
+ *  @param track  (INPUT)  the track 
+ *  @param cells  (OUTPUT) the container of cells 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const LHCb::Track*     track  , 
+  LHCb::CaloCellID::Set& cells  ) const 
+{
+  cells.clear() ;
+  
+  // get the correct state 
+  const LHCb::State* state = CaloTrackTool::state ( *track , m_location ) ;
+  if ( 0 == state )
+  { 
+    // propagate it! 
+    StatusCode sc = propagate ( *track  , m_planes.front() , m_state ) ;
+    if ( sc.isFailure() ) 
+    { return Error ( "process(): failure from propagate,  return 'bad'" , sc ) ; }
+    // initialize the state 
+    state = &m_state ;
+  }  
+  // get the line from the state:
+  const Line l1 = line ( *state ) ;
+  
+  return collect ( l1 , cells ) ;
+}
+// ============================================================================
+/*  collect the cellID-s along the path of the tracks 
+ *  @param track  (INPUT)  the track 
+ *  @param cells  (OUTPUT) the container of cells 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const LHCb::Track*        track  , 
+  LHCb::CaloCellID::Vector& cells  ) const 
+{
+  cells.clear() ;
+  Cells _cells ;
+  StatusCode sc = collect ( track , _cells ) ;
+  if ( sc.isFailure() ) 
+  { return Error("Error from collect(set)" , sc ) ; }
+  cells.insert ( cells.end() , _cells.begin() , _cells.end() ) ;
+  return StatusCode::SUCCESS ;  
+}
+// ==========================================================================
+/*  collect the fired digits along the path of the tracks 
+ *  @param line   (INPUT)  the line  
+ *  @param hits   (OUTPUT) the container of digits 
+ *  @return status code 
+ */
+// ==========================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const CaloEnergyForTrack::Line& line   , 
+  LHCb::CaloDigit::Set&           hits   ) const 
+{
+  hits.clear() ;
+  Cells cells ;
+  StatusCode sc = collect ( line , cells ) ;
+  if ( sc.isFailure() ) 
+  { return Error("Error from collect(cells)", sc ) ; }
+  // convert cells into digits: 
   if ( !cells.empty() ) 
   {
     const Digits* data = digits() ;
@@ -193,15 +264,117 @@ StatusCode CaloEnergyForTrack::process
     {
       // get the gidit 
       const LHCb::CaloDigit* digit = data->object ( *icell ) ;
-      // accumulate the energy for good fired cells 
-      if ( 0 != digit ) { energy += digit->e() ; }  
-    } ;
+      // accumulate good fired cells 
+      if ( 0 != digit ) { hits.insert ( digit ) ; }  
+    } 
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  collect the fired digits along the line 
+ *  @param line   (INPUT)  the line  
+ *  @param digits (OUTPUT) the container of digits 
+ *  @return status code 
+ */
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const CaloEnergyForTrack::Line&  line , 
+  LHCb::CaloDigit::Vector&         hits ) const 
+{
+  hits.clear() ;
+  LHCb::CaloDigit::Set _hits ;
+  StatusCode sc = collect ( line , _hits ) ;
+  if ( sc.isFailure() ) { return Error("Error from collect(set)", sc ) ; }
+  hits.insert ( hits.end() , _hits.begin() , _hits.end() ) ;
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  collect the digits from the given calorimeter along the track 
+ *  @param  track  (INPUT)  pointer to the object to be processed
+ *  @param  digits (OUTPUT) the conatiner of collected digits 
+ *  @return status code 
+ */  
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const LHCb::Track*    track , 
+  LHCb::CaloDigit::Set& hits  )  const 
+{
+  hits.clear() ;
+  Cells cells ;
+  StatusCode sc = collect ( track , cells ) ;
+  if ( sc.isFailure() ) { return Error ("Error from collect(cells)", sc ) ; }
+  // convert cells into digits: 
+  if ( !cells.empty() ) 
+  {
+    const Digits* data = digits() ;
+    for ( Cells::const_iterator icell = cells.begin() ; 
+          cells.end() != icell ; ++icell ) 
+    {
+      // get the gidit 
+      const LHCb::CaloDigit* digit = data->object ( *icell ) ;
+      // accumulate good fired cells 
+      if ( 0 != digit ) { hits.insert ( digit ) ; }  
+    } 
+  }
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+/*  collect the digits from the given calorimeter along the track 
+ *  @param  track  (INPUT)  pointer to the object to be processed
+ *  @param  digits (OUTPUT) the conatiner of collected digits 
+ *  @return status code 
+ */  
+// ============================================================================
+StatusCode CaloEnergyForTrack::collect 
+( const LHCb::Track*       track , 
+  LHCb::CaloDigit::Vector& hits  )  const 
+{
+  hits.clear() ;
+  LHCb::CaloDigit::Set _hits ;
+  StatusCode sc = collect ( track , _hits ) ;
+  if ( sc.isFailure() ) { return Error ("Error from collect(set)", sc ) ; }
+  hits.insert ( hits.end() , _hits.begin() , _hits.end() ) ;
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// The main processing method 
+// ============================================================================
+StatusCode CaloEnergyForTrack::process   
+( const LHCb::Track* track , 
+  double&            value )  const 
+{
+  value = m_bad ;
+  LHCb::CaloDigit::Set hits ;
+  StatusCode sc = collect ( track , hits ) ;
+  if ( sc.isFailure() ) { return Error ( "Error from 'collect(set)'", sc ) ; }
+  
+  // accumulate the energy from all touched cells 
+  double energy = 0  ;
+  for ( LHCb::CaloDigit::Set::const_iterator idigit = hits.begin() ; 
+        hits.end() != idigit ; ++idigit ) 
+  {
+    const LHCb::CaloDigit* digit = *idigit ;
+    if ( 0 != digit ) { energy += digit->e() ; }    
   }
   //
   value = energy ;                                             // RESULT
   //
   return StatusCode::SUCCESS ;
-} ;
+}
+// ============================================================================
+// The main processing method (functor interface)
+// ============================================================================
+double CaloEnergyForTrack::operator() ( const LHCb::Track* track ) const 
+{
+  double value = m_bad ;
+  StatusCode sc = process( track , value ) ;
+  Assert ( sc.isSuccess() , "Failure from process():" , sc );
+  return value ;
+} 
+// ============================================================================
+/// factory
+// ============================================================================
+DECLARE_TOOL_FACTORY(CaloEnergyForTrack) ;
 // ============================================================================
 // The END 
 // ============================================================================
