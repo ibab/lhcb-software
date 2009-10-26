@@ -1,5 +1,5 @@
 package STDAQ
-version v3r19
+version v3r20
 
 branches cmt doc src options
 include_path none
