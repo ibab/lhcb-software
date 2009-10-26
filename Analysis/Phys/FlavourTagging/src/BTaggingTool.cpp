@@ -307,19 +307,19 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
 
-  info() << "BTAGGING TAG   " 
-         << std::setw(9) << evt->runNumber()
-         << std::setw(9) << evt->evtNumber()
-         << std::setw(5) << theTag.decision()
-         << std::setw(3) << theTag.category()
-         << std::setw(5) << theTag.decisionOS()
-         << std::setw(3) << theTag.categoryOS()
-         << std::setw(5) << muon.decision()
-         << std::setw(3) << elec.decision()
-         << std::setw(3) << kaon.decision()
-         << std::setw(3) << sameside
-         << std::setw(3) << vtxCh.decision()
-         << endreq;
+  debug() << "BTAGGING TAG   " 
+          << std::setw(9) << evt->runNumber()
+          << std::setw(9) << evt->evtNumber()
+          << std::setw(5) << theTag.decision()
+          << std::setw(3) << theTag.category()
+          << std::setw(5) << theTag.decisionOS()
+          << std::setw(3) << theTag.categoryOS()
+          << std::setw(5) << muon.decision()
+          << std::setw(3) << elec.decision()
+          << std::setw(3) << kaon.decision()
+          << std::setw(3) << sameside
+          << std::setw(3) << vtxCh.decision()
+          << endmsg;
 
   return StatusCode::SUCCESS;
 }
