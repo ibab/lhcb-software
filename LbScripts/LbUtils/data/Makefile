@@ -1,4 +1,4 @@
-# $Id: Makefile,v 1.10 2009-10-15 12:11:14 marcocle Exp $
+# $Id: Makefile,v 1.11 2009-10-26 17:49:17 marcocle Exp $
 ################################################################################
 #
 # Generic Makefile for CMT projects.
@@ -192,7 +192,7 @@ endif
 # The PKG_ONLY macro can be used to build a single package disregarding the
 # dependencies between packages.
 ifndef PKG_ONLY
-MKDEPCMD := cmt show uses | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print $$5"/"$$3}else{print $$3}}'
+MKDEPCMD := cmt show uses | sed 's/^\# */\# /' | tr " " "\t" | awk -F"\t" '/^\#\t*use/{if($$5){print $$5"/"$$3}else{print $$3}}'
 .%.pack.d: pack=$(call unescape_slash,$*)
 .%.pack.d:
 	@echo Computing dependencies for package $(pack)
