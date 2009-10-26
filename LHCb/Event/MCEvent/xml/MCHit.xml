@@ -16,12 +16,13 @@
       <import name="MCParticle" soft="TRUE"/>
       &ContainedObject;
       <base     name="ContainedObject"/>
-      <location name="Velo"    place="MC/Velo/Hits"  />
-      <location name="PuVeto"  place="MC/PuVeto/Hits"/>
-      <location name="TT"      place="MC/TT/Hits"    />
-      <location name="IT"      place="MC/IT/Hits"    />
-      <location name="OT"      place="MC/OT/Hits"    />
-      <location name="Muon"    place="MC/Muon/Hits"  />
+      <location name="Velo"    place="MC/Velo/Hits"    />
+      <location name="PuVeto"  place="MC/PuVeto/Hits"  />
+      <location name="VeloPix" place="MC/VeloPix/Hits" />
+      <location name="TT"      place="MC/TT/Hits"      />
+      <location name="IT"      place="MC/IT/Hits"      />
+      <location name="OT"      place="MC/OT/Hits"      />
+      <location name="Muon"    place="MC/Muon/Hits"    />
       
       <attribute
        desc="Sensitive detector identifier, its meaning is different for each sub-detector"
