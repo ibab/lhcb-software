@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.36 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.37 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -18,7 +18,7 @@ from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
 from Hlt2Lines.Hlt2InclusiveMuonLines   import Hlt2InclusiveMuonLinesConf
 from Hlt2Lines.Hlt2InclusivePhiLines    import Hlt2InclusivePhiLinesConf
 from Hlt2Lines.Hlt2TopologicalLines     import Hlt2TopologicalLinesConf
-from Hlt2Lines.Hlt2XGammaLines          import Hlt2XGammaLinesConf
+from Hlt2Lines.Hlt2B2XGammaLines        import Hlt2B2XGammaLinesConf
 from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf

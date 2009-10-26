@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.355 2009-10-25 11:51:43 graven Exp $ 
+! $Id: release.notes,v 1.356 2009-10-26 17:17:06 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-26 - Patrick Koppenburg
+ - XGamma renamed B2XGamma
 
 ! 2009-10-25 - Gerhard Raven
  - add dependency on HltCommon to get rid of warning in nightlies that
