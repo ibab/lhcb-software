@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.148 2009-10-15 09:32:06 pkoppenb Exp $
+! $Id: release.notes,v 1.149 2009-10-26 15:25:32 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-10-26 - Juan PALACIOS
+ - src/BTaggingTool.cpp
+  . Change message output level to debug.
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings
