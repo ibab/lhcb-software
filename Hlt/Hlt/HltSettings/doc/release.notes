@@ -4,6 +4,14 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-10-26 - Patrick Koppenburg
+ - Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09.py : rename XGamma into
+   B2XGamma. 
+ - Reorder lines in Exclusive_Nominal that had already diverged :-(
+ - Add DXLines from Jacopo
+ - Requires Hlt/Hlt2Lines pkoppenb_20091026
+ - v1r1
+
 !========================== HltSettings v1r0p1 2009-10-21 ==================
 ! 2009-10-23 - Stephan Nies
  - added Comissioning_OTCosmics.py

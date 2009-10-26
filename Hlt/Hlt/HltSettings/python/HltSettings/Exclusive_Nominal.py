@@ -15,32 +15,65 @@ class Exclusive_Nominal :
         """
         Returns a list of active lines
         """
+
+        lines = []
+        # Hlt2B2DXLines.py
+        lines.append( [ 
+              'Hlt2B2D2hhBachelorReq3BodySignal'
+            , 'Hlt2B2D2hhBachelorReq4BodySignal'
+            , 'Hlt2B2D2hhhBachelorReq3BodySignal'
+            , 'Hlt2B2D2hhhBachelorReq4BodySignal'
+            , 'Hlt2B2D2hhKstarReq3BodySignal'
+            , 'Hlt2B2D2hhKstarReq4BodySignal'
+            , 'Hlt2B2D2hhBachelorReq3BodyMW'
+            , 'Hlt2B2D2hhBachelorReq4BodyMW'
+            , 'Hlt2B2D2hhhBachelorReq3BodyMW'
+            , 'Hlt2B2D2hhhBachelorReq4BodyMW'
+            , 'Hlt2B2D2hhKstarReq3BodyMW'
+            , 'Hlt2B2D2hhKstarReq4BodyMW'
+            ] )
+        # Hlt2B2JpsiXLines.py
+        lines.append( [
+              'Bs2JpsiPhiPrescaled'
+            , 'Bs2JpsiPhi'
+            , 'Bd2JpsiKstar'
+            , 'Bu2JpsiK'
+            , 'Bd2JpsiMuMuKsLLBiased'
+            , 'Bd2JpsiMuMuKsLLUnbiased'
+            , 'Bd2JpsiMuMuKsDDBiased'
+            , 'Bd2JpsiMuMuKsDDUnbiased'
+            , 'B2JpsiX_MuMu'
+            ] )
         
-        return       [ 'Hlt2B2HH',
-                       'Hlt2Bs2JpsiPhi',          
-                       'Hlt2Bs2JpsiPhiSignal',    
-                       'Hlt2Bu2eeK',              
-                       'Hlt2Bu2eeKSignal',        
-                       'Hlt2Bu2eeKJpsi',          
-                       'Hlt2Bu2eeKHighMass',         
-                       'Hlt2Bu2MuMuK',         
-                       'Hlt2Bu2MuMuKSignal',         
-                       'Hlt2Bu2MuMuKJpsi',         
-                       'Hlt2Bu2MuMuKHighMass',         
-                       'Hlt2Bd2JpsiKstar',         
-                       'Hlt2Bd2JpsiKstarSignal',
-                       'Hlt2Bs2PhiPhi',
-                       'Hlt2DisplVertices',
-                       'Hlt2Bd2JpsiMuMuKsLLBiased',         
-                       'Hlt2Bd2JpsiMuMuKsDDBiased',         
-                       'Hlt2Bd2JpsiMuMuKsLLUnbiased',         
-                       'Hlt2Bd2JpsiMuMuKsDDUnbiased',         
-                       'Hlt2B2JpsiX_MuMu',         
-                       'Hlt2Bu2JpsiK',               
-                       'Hlt2Bu2JpsiKSignal',         
-                       'Hlt2PhiGamma',
-                       'Hlt2KstGamma',
-                       'Hlt2Bs2JpsiPhiPrescaled',
-                       'Hlt2Bs2JpsiPhiDetached' ]
+        # Hlt2B2LLXLines.py
+        lines.append( [
+              'Hlt2Bu2eeK'
+            , 'Hlt2Bu2eeKSignal'
+            , 'Hlt2Bu2eeKJpsi'
+            , 'Hlt2Bu2eeKHighMass'
+            , 'Hlt2Bu2MuMuK'
+            , 'Hlt2Bu2MuMuKSignal'
+            , 'Hlt2Bu2MuMuKJpsi'
+            , 'Hlt2Bu2MuMuKHighMass'
+            ] )
+        # Hlt2DisplVerticesLines.py
+        lines.append( [
+              'Hlt2DisplVertices'
+            ] )
+        # Hlt2B2XGammaLines.py
+        lines.append( [
+              'Hlt2Bs2PhiGamma'
+            , 'Hlt2Bd2KstGamma'
+            ] )
+        # Hlt2B2HHLines
+        lines.append( [
+            'Hlt2B2HH'
+            ] )
+        # Hlt2B2PhiXLines
+        lines.append( [
+            'Hlt2Bs2PhiPhi'
+            ] )
+        
+        return lines
 
    

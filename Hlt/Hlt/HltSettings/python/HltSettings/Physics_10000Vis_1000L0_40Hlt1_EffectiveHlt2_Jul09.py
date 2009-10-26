@@ -22,7 +22,7 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
         from Hlt2Lines.Hlt2InclusiveDiMuonLines import Hlt2InclusiveDiMuonLinesConf
         from Hlt2Lines.Hlt2TopologicalLines  import Hlt2TopologicalLinesConf
         from Hlt2Lines.Hlt2InclusivePhiLines import Hlt2InclusivePhiLinesConf
-        from Hlt2Lines.Hlt2XGammaLines import Hlt2XGammaLinesConf
+        from Hlt2Lines.Hlt2B2XGammaLines import Hlt2B2XGammaLinesConf
     
         # Hlt thresholds
         # pick up inherited thresholds, and update them...
@@ -60,7 +60,7 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
                                                  , 'TFPhiPT' : 1800
                                                  , 'TFKaonRichPID' : 0.453  }
                    
-                   , Hlt2XGammaLinesConf : {  'BsDirAngle' : 0.998
+                   , Hlt2B2XGammaLinesConf : {  'BsDirAngle' : 0.998
                                             , 'B0DirAngle' : 0.996
                                             , 'BsPVIPchi2' : 20
                                             , 'B0PVIPchi2' : 20  }
