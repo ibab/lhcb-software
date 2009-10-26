@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.9 2009-08-18 12:48:47 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.10 2009-10-26 18:46:47 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,7 @@ HltIsPhotonTool::HltIsPhotonTool( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   // just a safeguard against crazy clusters
+  declareProperty("temporaryFix", m_temporaryFix = true);
   declareProperty("MinEtCluster", m_minEtCluster = 2000.);
   declareInterface<ITrackFunctionTool>(this);
 }
@@ -53,6 +54,10 @@ StatusCode HltIsPhotonTool::initialize() {
   m_tool = tool<IL0Calo2Calo>("L0Calo2CaloTool");
   if(!m_tool)debug()<<"error retrieving the clasterization tool "<<endreq;
 
+  // Temporary fix
+  m_tool1 = tool<ICaloClusterization>("CaloClusterizationTool", this);
+  if(!m_tool1)debug()<<"error retrieving the clasterization tool 1 "<<endreq;
+
   // TMVA discriminant
   std::vector<std::string> inputVars;
   inputVars.push_back("showershape");
@@ -64,6 +69,10 @@ StatusCode HltIsPhotonTool::initialize() {
   m_reader0.reset( new ReadFisherArea0(inputVars) );
   m_reader1.reset( new ReadFisherArea1(inputVars) );
   m_reader2.reset( new ReadFisherArea2(inputVars) );
+
+  if (m_temporaryFix) {
+    info() << " Fix in HltIsPhotonTool is active !!!!!!!!!!!!!!!!!!" << endreq;
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -107,9 +116,22 @@ double HltIsPhotonTool::function(const Track& ctrack)
 
   std::vector<CaloCluster*> clusters;
   unsigned int level = 3; // level 1:3x3, 2:5x5, 3:7x7
-  // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
-  m_tool->clusterize(clusters, idL0, level);
-  if (clusters.empty()) return -9999999.;
+  if (m_temporaryFix) {
+    if ( !exist<LHCb::CaloDigits>(LHCb::CaloDigitLocation::Ecal) ) {
+      warning() << "ECAL not decoded. CaloDigits do not exists." << endreq;
+      return -9999999.;
+    }
+    // get input data (sequential and simultaneously direct access!)  
+    LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
+    // remember to delete cluster
+    m_tool1->clusterize(clusters, digits, m_detector, idL0, level);
+    if (clusters.empty()) return -9999999.;
+  } else {
+    // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
+    m_tool->clusterize(clusters, idL0, level);
+    if (clusters.empty()) return -9999999.;
+  }
+
 
   // get cluster closest to Track ( = L0Photon )
   double dist2min = 100000000.;
@@ -176,6 +198,15 @@ double HltIsPhotonTool::function(const Track& ctrack)
   double z = clustermin->position().z();
   double sin_alpha = sqrt( (x*x+y*y) / (x*x+y*y+z*z));
   double etnew = clustermin->e()*sin_alpha;
+
+  if (m_temporaryFix) {
+    // delete reconstructed clusters
+    for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
+          clusters.end() != cluster; ++cluster ) { 
+      CaloCluster* cl = *cluster;
+      if ( cl ) delete cl;
+    }
+  }
 
   if ( etnew > m_minEtCluster ) {
     return phovar;

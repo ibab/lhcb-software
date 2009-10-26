@@ -1,4 +1,4 @@
-// $Id: HltRadCorTool.h,v 1.1 2009-08-18 12:48:47 witekma Exp $
+// $Id: HltRadCorTool.h,v 1.2 2009-10-26 18:46:47 witekma Exp $
 #ifndef TOOL_HLTRADCORTOOL_H 
 #define TOOL_HLTRADCORTOOL_H 1
 
@@ -8,7 +8,8 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/ITracksFromTrack.h"            // Interface
-
+// temporaray fix
+#include "CaloInterfaces/ICaloClusterization.h"
 
 /** @class HltRadCorTool HltRadCorTool.h tool/HltRadCorTool.h
  *   
@@ -38,6 +39,10 @@ private:
   const DeCalorimeter* m_detector;
 
   IL0Calo2Calo* m_tool;
+
+  // temporaray fix
+  ICaloClusterization* m_tool1;
+  bool m_temporaryFix;
 
 };
 #endif // TOOL_HLTRADCORTOOL_H

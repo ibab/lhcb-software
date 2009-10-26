@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.h,v 1.3 2009-08-18 12:48:47 witekma Exp $
+// $Id: HltIsPhotonTool.h,v 1.4 2009-10-26 18:46:47 witekma Exp $
 #ifndef HLTISPHOTONTOOL_H 
 #define HLTISPHOTONTOOL_H 1
 
@@ -14,6 +14,8 @@
 #include "TMVA_FisherArea1.C"
 #include "TMVA_FisherArea2.C"
 #include <memory>
+// temporaray fix
+#include "CaloInterfaces/ICaloClusterization.h"
 
 /** @class HltIsPhotonTool HltIsPhotonTool.h
  *  
@@ -55,5 +57,8 @@ private:
                             double showerkappa, double showertail,  double e);
   void  normalizeShowerShapeVariables(double& showershape, double& showerasym, 
 				      double& showerkappa, double& showertail, double& showerenergy);
+  // temporaray fix
+  ICaloClusterization* m_tool1;
+  bool m_temporaryFix;
 };
 #endif // HLTISPHOTONTOOL_H

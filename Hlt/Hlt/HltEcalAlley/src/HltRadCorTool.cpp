@@ -1,4 +1,4 @@
-// $Id: HltRadCorTool.cpp,v 1.1 2009-08-18 12:48:47 witekma Exp $
+// $Id: HltRadCorTool.cpp,v 1.2 2009-10-26 18:46:47 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ HltRadCorTool::HltRadCorTool( const std::string& type,
                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
 {
+  declareProperty("temporaryFix", m_temporaryFix = true);
   declareInterface<ITracksFromTrack>(this);
  
 }
@@ -47,6 +48,13 @@ StatusCode HltRadCorTool::initialize() {
   m_tool = tool<IL0Calo2Calo>("L0Calo2CaloTool");
   if(!m_tool)debug()<<"error retrieving the clasterization tool "<<endreq;
 
+  // Temporary fix
+  m_tool1 = tool<ICaloClusterization>("CaloClusterizationTool", this);
+  if(!m_tool1)debug()<<"error retrieving the clasterization tool 1 "<<endreq;
+
+  if (m_temporaryFix) {
+    info() << " Fix in HltRadCorTool is active !!!!!!!!!!!!!!!!!!" << endreq;
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -115,8 +123,21 @@ void HltRadCorTool::getRadiationFromClusters(const LHCb::Track& tra, double & en
   // get input data (sequential and simultaneously direct access!)  
   std::vector<CaloCluster*> clusters;
   unsigned int level = 3; // level 1:3x3, 2:5x5, 3:7x7
-  // remember to delete cluster
-  m_tool->clusterize(clusters, idL0, level);
+  if (m_temporaryFix) {
+    if ( !exist<LHCb::CaloDigits>(LHCb::CaloDigitLocation::Ecal) ) {
+      warning() << "ECAL not decoded. CaloDigits do not exists." << endreq;
+      return;
+    }
+    // get input data (sequential and simultaneously direct access!)  
+    LHCb::CaloDigits* digits = get<LHCb::CaloDigits>( LHCb::CaloDigitLocation::Ecal );
+    // remember to delete cluster
+    m_tool1->clusterize(clusters, digits, m_detector, idL0, level);
+    if (clusters.empty()) return;
+  } else {
+  // do not delete clusters (owned by tool, registered in TES and deleted after event processing)
+    m_tool->clusterize(clusters, idL0, level);
+    if (clusters.empty()) return;
+  }
 
   const LHCb::State &tstate =  *(tra.stateAt(LHCb::State::AtT));
   
@@ -166,8 +187,13 @@ void HltRadCorTool::getRadiationFromClusters(const LHCb::Track& tra, double & en
       }
     }
   }
-  /*
-  for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
-       clusters.end() != cluster; ++cluster ) delete *cluster;
-  */
+  if (m_temporaryFix) {
+    // delete reconstructed clusters
+    for( std::vector<CaloCluster*>::iterator cluster = clusters.begin();
+          clusters.end() != cluster; ++cluster ) { 
+      CaloCluster* cl = *cluster;
+      if ( cl ) delete cl;
+    }
+  }
+
 }
