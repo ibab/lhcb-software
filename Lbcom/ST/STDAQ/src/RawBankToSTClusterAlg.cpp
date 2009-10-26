@@ -1,4 +1,4 @@
-// $Id: RawBankToSTClusterAlg.cpp,v 1.53 2009-02-26 14:46:20 mneedham Exp $
+// $Id: RawBankToSTClusterAlg.cpp,v 1.54 2009-10-26 14:24:59 jvantilb Exp $
 
 #include <algorithm>
 
@@ -251,8 +251,13 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
 
   // estimate the offset
   double stripNum = mean(tWords); 
-  double interStripPos = STFun::stripFraction(stripNum - floor(stripNum));
-  if (interStripPos > 0.99) stripNum +=1; 
+  double interStripPos = stripNum - floor(stripNum);
+
+  // If fracStrip equals zero and the interStripPos equals one, the stripNum
+  // must be incremented. Note that since the rounding can be different from
+  // rounding on the Tell1, the interStripPos can be 0.75. Trust me, this is
+  // correct.-- JvT
+  if( fracStrip == 0u && interStripPos > 0.5 ) stripNum +=1; 
   unsigned int offset = (unsigned int)stripNum; 
 
   STCluster::ADCVector adcs ; 
@@ -262,7 +267,7 @@ void RawBankToSTClusterAlg::createCluster( const STClusterWord& aWord,
 
   STTell1Board::chanPair nearestChan = aBoard->DAQToOffline(fracStrip,bankVersion,STDAQ::StripRepresentation(aWord.channelID()));
 
-  aBoard->ADCToOffline(aWord.channelID(),adcs,bankVersion,offset,interStripPos);
+  aBoard->ADCToOffline(aWord.channelID(),adcs,bankVersion,offset,fracStrip);
 
   // make cluster +set things
   STCluster* newCluster = new STCluster(this->word2LiteCluster(aWord, 

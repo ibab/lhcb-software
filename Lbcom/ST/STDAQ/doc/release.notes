@@ -4,6 +4,12 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-10-26 - Jeroen Van Tilburg
+ - RawBankToSTClusterAlg: Adopt changes in STKernel, STTell1Board::ADCToOffline.
+   Also, the requirement on whether the interstrip fraction was rounded up to
+   one, now depends on the interstrip stored in the raw buffer, and on a loose
+   requirement on the re-calculated interstrip fraction.
+
 !=============================== STDAQ v3r19 2009-07-13 ======================
 ! 2009-07-13 - Marco Cattaneo
  - Remove obsolete file STDAQ_dll.cpp
