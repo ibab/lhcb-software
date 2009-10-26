@@ -9,7 +9,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 
-class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
+class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  'TrIPchi2Phi'          : 20       # Dimensionless
                    ,'TrIPchi2Kst'         : 20       # Dimensionless
@@ -101,7 +101,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
         #    Bs to Phi Gamma - Hlt2Line
         ############################################################################
 
-        line = Hlt2Line('PhiGamma'
+        line = Hlt2Line('Bs2PhiGamma'
                         , prescale = self.prescale
                         , algos = [ GoodKaons, 
                                     Hlt2Phi4PhiGamma, 
@@ -117,7 +117,7 @@ class Hlt2XGammaLinesConf(HltLinesConfigurableUser) :
         #    B0 to Kstar Gamma - Hlt2Line
         ############################################################################
 
-        line = Hlt2Line('KstGamma'
+        line = Hlt2Line('Bd2KstGamma'
                         , prescale = self.prescale
                         , algos = [ GoodKaons,
                                     GoodPions,

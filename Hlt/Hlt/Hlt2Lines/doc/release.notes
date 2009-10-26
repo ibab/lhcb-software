@@ -1,9 +1,16 @@
-$Id: release.notes,v 1.66 2009-10-26 09:49:45 jnardull Exp $
+$Id: release.notes,v 1.67 2009-10-26 12:47:50 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the Hlt2Lines
+!
+! WARNING : When adding, removing or changing names of lines,
+!           ALWAYS also edit Hlt/HltSettings
+!
 !-----------------------------------------------------------------------------
+
+! 2009-10-26 - Patrick Koppenburg
+ - Rename Hlt2XGammaLines. into Hlt2B2XGammaLines.
 
 ! 2009-10-26 - Jacopo Nardulli
   Re-introduce the Hlt2B2DX Lines. 
