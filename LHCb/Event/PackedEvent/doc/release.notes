@@ -4,6 +4,10 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-10-26 - Victor Coco
+ - Add MCVeloPixHitPacker class in PackedMCHit file to allow packing of VeloPix
+   informations.
+
 ! 2009-10-21 - Chris Jones
  - Add new packing classes for the packing of all MC information in Gauss
    and Boole.

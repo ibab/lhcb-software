@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.h,v 1.3 2009-10-23 10:46:17 jonrob Exp $
+// $Id: PackedMCHit.h,v 1.4 2009-10-26 16:37:41 cocov Exp $
 #ifndef EVENT_PACKEDMCHIT_H
 #define EVENT_PACKEDMCHIT_H 1
 
@@ -56,12 +56,13 @@ namespace LHCb
   /// Namespace for locations in TDS
   namespace PackedMCHitLocation
   {
-    static const std::string& Velo   = "pSim/Velo/Hits";
-    static const std::string& PuVeto = "pSim/PuVeto/Hits";
-    static const std::string& TT     = "pSim/TT/Hits";
-    static const std::string& IT     = "pSim/IT/Hits";
-    static const std::string& OT     = "pSim/OT/Hits";
-    static const std::string& Muon   = "pSim/Muon/Hits";
+    static const std::string& Velo    = "pSim/Velo/Hits";
+    static const std::string& PuVeto  = "pSim/PuVeto/Hits";
+    static const std::string& VeloPix = "pSim/VeloPix/Hits";
+    static const std::string& TT      = "pSim/TT/Hits";
+    static const std::string& IT      = "pSim/IT/Hits";
+    static const std::string& OT      = "pSim/OT/Hits";
+    static const std::string& Muon    = "pSim/Muon/Hits";
   }
 
   /** @class PackedMCHits Event/PackedMCHit.h
@@ -203,6 +204,26 @@ namespace LHCb
     static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::PuVeto; }
     static const std::string unpackedLocation() { return LHCb::MCHitLocation::PuVeto;       }
   };
+
+  /** @class MCVeloPixHitPacker Event/PackedMCHit.h
+   *
+   *  Utility class to handle the packing and unpacking of the MC VeloPix Hits
+   *
+   *  @author Christopher Rob Jones
+   *  @date   2009-10-13
+   */
+  class MCVeloPixHitPacker : public MCHitPacker
+  {
+  public:
+    MCVeloPixHitPacker() : MCHitPacker()
+    {
+      m_dispScale = 1.0e2;
+      m_enScale   = 5.0e3;
+    }
+    static const std::string packedLocation()   { return LHCb::PackedMCHitLocation::VeloPix; }
+    static const std::string unpackedLocation() { return LHCb::MCHitLocation::VeloPix;       }
+  };
+
 
   /** @class MCTTHitPacker Event/PackedMCHit.h
    *
