@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.62 2009-09-02 13:31:31 cattanem Exp $
+! $Id: release.notes,v 1.63 2009-10-26 10:51:26 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2009-08-10 - Olivier Deschamps
+ - python/CaloAccosiators/MCTruthOnDemand.py : 
+	   add explicitely the caloDigit creation in CaloDigit2MC sequence (to please HLT redefining onDemand)
+
+
 
 !===================== CaloAssociators v6r9 2009-09-02 ========================
 ! 2009-09-02 - Marco Cattaneo
