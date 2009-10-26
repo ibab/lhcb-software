@@ -4,6 +4,10 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-10-26 - Jeroen Van Tilburg
+ - Add new algorithm STPulseMonitor. It monitors the pulse shape as a function
+   of the spill, using NZS+TAE data.
+
 !======================= STMonitors v1r6 2009-09-03 ==========================
 ! 2009-09-03 - Mark Tobin
  - Modified STSummaryMonitor and STErrorMonitor to always book histograms 
