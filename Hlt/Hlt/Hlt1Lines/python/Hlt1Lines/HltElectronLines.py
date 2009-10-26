@@ -131,6 +131,7 @@ class HltElectronLinesConf(HltLinesConfigurableUser) :
                      + [ Member ( 'VF', 'VertexCut'
                                 , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                 )
+                       , DecodeECAL
                        , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                        , Member ( 'VF', 'MassCut'
                                 , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]

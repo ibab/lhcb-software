@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.44 2009-10-18 18:09:59 witekma Exp $
+! $Id: release.notes,v 1.45 2009-10-26 18:57:02 witekma Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-10-26 - Mariusz Witek
+  - fix crashes in Ecal Alley. Add DecodeECAL in HltPhotonLines
+    and HltElectronLines in appropriate places
 
 ! 2009-10-18 - Mariusz Witek
   - add monitoring histograms to Photon and Electron lines

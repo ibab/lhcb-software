@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.10 2009-10-18 18:07:45 witekma Exp $
+# $Id: HltPhotonLines.py,v 1.11 2009-10-26 18:55:13 witekma Exp $
 # =============================================================================
 ## @file
 #  Configuration of Photon Lines
@@ -12,7 +12,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
 # =============================================================================
 
 
@@ -58,6 +58,7 @@ class HltPhotonLinesConf(HltLinesConfigurableUser):
                                  tools = [ Tool( L0ConfirmWithT,  particleType = 2 ,
                                  tools = [ Tool( PatConfirmTool,  nSigmaX=10, nSigmaTx=10,nSigmaY=10,nSigmaTy=10 )])])])]
                                )
+                      , DecodeECAL
                       , Member ('TF', 'Photon' , FilterDescriptor = ['IsPhoton,>,'+IS_PHOTON]
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IsPhoton' : ('IsPhoton',-2.,2.,400), 'IsPhotonBest' : ('IsPhotonBest',-2.,2.,400)}
