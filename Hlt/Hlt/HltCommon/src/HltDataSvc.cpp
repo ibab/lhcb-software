@@ -185,7 +185,7 @@ HltDataSvc::hasSelection(const stringKey& id) const {
 }
 
 
-Hlt::Selection*
+const Hlt::Selection*
 HltDataSvc::selection ( const stringKey&  id     , 
                         const IAlgorithm* parent ) 
 {

@@ -32,7 +32,7 @@ public:
   
   bool hasSelection(const stringKey& id) const;
   
-  Hlt::Selection* selection ( const stringKey&  id, const IAlgorithm* parent ) ;
+  const Hlt::Selection* selection ( const stringKey&  id, const IAlgorithm* parent ) ;
   
   std::vector<stringKey> selectionKeys() const;
   StatusCode inputUsedBy(const stringKey& key, std::vector<std::string>& inserter) const;

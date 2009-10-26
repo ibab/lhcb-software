@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 
+! 2009-10-26 - Gerhard Raven
+ - one more const
+
 ! 2009-10-25 - Gerhard Raven
  - more const
  - remove unused HltSelectionFilter, HltSelectionToTES and HltTriggerRawConversion
