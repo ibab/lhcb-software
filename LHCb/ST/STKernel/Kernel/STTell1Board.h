@@ -1,4 +1,4 @@
-// $Id: STTell1Board.h,v 1.13 2009-01-22 11:43:44 mneedham Exp $
+// $Id: STTell1Board.h,v 1.14 2009-10-26 14:21:47 jvantilb Exp $
 #ifndef _STTell1Board_H
 #define _STTell1Board_H 1
 
@@ -60,7 +60,7 @@ public:
 		      LHCb::STCluster::ADCVector& adcs,
 		      const int version,
 		      const unsigned int offset,
-		      const double interStripPos) const;
+		      const unsigned int fracStrip) const;
   
 
   /// construct DAQChannel from LHCb::STChannelID

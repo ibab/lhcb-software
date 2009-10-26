@@ -1,4 +1,4 @@
-// $Id: STTell1Board.cpp,v 1.13 2009-07-24 13:58:59 jluisier Exp $
+// $Id: STTell1Board.cpp,v 1.14 2009-10-26 14:21:47 jvantilb Exp $
 #include "Kernel/STTell1Board.h"
 #include "Kernel/STDAQDefinitions.h"
 #include "Kernel/LHCbConstants.h"
@@ -48,7 +48,8 @@ bool STTell1Board::isInside(const STChannelID aOfflineChan,
 
 
 STTell1Board::chanPair STTell1Board::DAQToOffline(const unsigned int fracStrip,
-                                                  const STDAQ::version& version, const STDAQ::StripRepresentation aDAQChan) const{
+                                                  const STDAQ::version& version,
+                               const STDAQ::StripRepresentation aDAQChan) const{
 
   // convert a DAQ channel to offline !
   const unsigned int index = aDAQChan.value()/m_nStripsPerHybrid;
@@ -98,7 +99,7 @@ void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
                                 STCluster::ADCVector& adcs,
                                 const int version,
                                 const unsigned int offset,
-                                const double interStripPos) const
+                                const unsigned int fracStrip) const
 {
   const unsigned int index = aDAQChan/m_nStripsPerHybrid;
   const unsigned int size = adcs.size();
@@ -109,7 +110,7 @@ void STTell1Board::ADCToOffline(const unsigned int aDAQChan,
     // calculate the new offset
     newoffset = size - 1 - offset;
     // Correct for interstrip fraction when not equal to zero
-    if( interStripPos > 0.01 && interStripPos < 0.99 ) {
+    if( fracStrip != 0u ) {
       --newoffset;
     }
     if (newoffset < 0) newoffset = 0;
