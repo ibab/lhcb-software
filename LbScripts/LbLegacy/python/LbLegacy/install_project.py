@@ -213,6 +213,7 @@
           could improve the installation time on windows 
  091013 - Added the support for the LCGGanga tarball.
  091015 - fixed the --check option. It must not create any file.
+ 091026 - fixed the exception handling in the retrieve function
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -225,7 +226,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091015'
+script_version = '091026'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r3"
@@ -367,8 +368,8 @@ def retrieve(url, dest):
         except :
             retrieved = False
             log.error("Failed to retrieve %s" % url)
-            if os.path.exists(fname) :
-                os.remove(fname)
+            if os.path.exists(dest) :
+                os.remove(dest)
         local_retries -= 1
         if local_retries and not retrieved:
             sleep_time = _retry_time + random.uniform(-_retry_time/2, _retry_time/2)

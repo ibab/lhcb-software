@@ -1,3 +1,8 @@
+2009-10-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: fixed the exception handling in the retrieve 
+	function.
+
 2009-10-21  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/mkLCGCMTtar: 
