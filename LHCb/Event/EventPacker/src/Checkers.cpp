@@ -1,4 +1,4 @@
-// $Id: Checkers.cpp,v 1.2 2009-10-23 10:46:04 jonrob Exp $
+// $Id: Checkers.cpp,v 1.3 2009-10-26 16:44:12 cocov Exp $
 
 #include "CheckerBaseAlg.icpp"
 
@@ -49,6 +49,10 @@ DECLARE_ALGORITHM_FACTORY( F );
 template class DataPacking::Check<LHCb::MCPuVetoHitPacker>;
 typedef DataPacking::Check<LHCb::MCPuVetoHitPacker> G;
 DECLARE_ALGORITHM_FACTORY( G );
+
+template class DataPacking::Check<LHCb::MCVeloPixHitPacker>;
+typedef DataPacking::Check<LHCb::MCVeloPixHitPacker> Fp;
+DECLARE_ALGORITHM_FACTORY( Fp );
 
 template class DataPacking::Check<LHCb::MCTTHitPacker>;
 typedef DataPacking::Check<LHCb::MCTTHitPacker> H;

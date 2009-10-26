@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-10-26 - Victor Coco
+ - Extend the packinf unpacking to VeloPix sub-detector
+
 ! 2009-10-21 - Chris Jones
  - Add new packing classes for the packing of all MC information in Gauss
    and Boole.

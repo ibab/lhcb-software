@@ -1,4 +1,4 @@
-// $Id: Unpackers.cpp,v 1.2 2009-10-23 10:46:04 jonrob Exp $
+// $Id: Unpackers.cpp,v 1.3 2009-10-26 16:44:12 cocov Exp $
 
 #include "UnpackerBaseAlg.icpp"
 
@@ -45,6 +45,10 @@ DECLARE_ALGORITHM_FACTORY( Ed );
 template class DataPacking::Unpack<LHCb::MCVeloHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCVeloHitPacker> F;
 DECLARE_ALGORITHM_FACTORY( F );
+
+template class DataPacking::Unpack<LHCb::MCVeloPixHitPacker>;
+typedef DataPacking::Unpack<LHCb::MCVeloPixHitPacker> Fp;
+DECLARE_ALGORITHM_FACTORY( Fp );
 
 template class DataPacking::Unpack<LHCb::MCPuVetoHitPacker>;
 typedef DataPacking::Unpack<LHCb::MCPuVetoHitPacker> G;
