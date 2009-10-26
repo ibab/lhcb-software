@@ -8,7 +8,6 @@ branches doc cmt
 #=======================================================
 use  DaVinci                 	v24r4   Phys
 #  
-use  KaliKalo                   v2r0    Phys
 # Declare this as a container package
 apply_pattern container_package
 
