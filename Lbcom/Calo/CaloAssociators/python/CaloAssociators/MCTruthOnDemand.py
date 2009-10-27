@@ -12,10 +12,11 @@ Configuration file to run Calorimeter Monte Carlo Truth Associations on-demand
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 # nothing to be imported 
 __all__     = (
+    'caloMCTruth', 
     ) 
 # =============================================================================
 from Gaudi.Configuration   import *
@@ -23,41 +24,90 @@ from Gaudi.Configuration   import *
 from Configurables         import ( CaloDigit2MCLinks2Table ,
                                     CaloClusterMCTruth      )
 
-from Configurables         import ( CaloZSupAlg       ,
-                                    CaloDigitsFromRaw ) 
-
 from CaloKernel.ConfUtils  import ( onDemand       ,
-                                    printOnDemand  ,
                                     getAlgo        ) 
 
+import logging
+_log = logging.getLogger ( 'CaloAssociators' )
+
 # =============================================================================
-linker2table = getAlgo ( GaudiSequencer                , 
-                         'CaloDigit2MC'                ,
-                         'Offline'                     ,
-                         'Relations/Raw/Calo/Digits'   ,
-                         True                          )
+## define configuration 
+def caloMCTruth ( context           = 'Offline' ,
+                  enableMCOnDemand  = True      ,
+                  Digits            = [ 'Ecal'] ) :
+    """
+    Define the configuration for on-demand association for Calo objects 
+    """
 
-linker2table.Members += [CaloZSupAlg       ( "EcalZSup"        ) ,
-                         CaloZSupAlg       ( "HcalZSup"        ) ,
-                         CaloDigitsFromRaw ( "PrsFromRaw"      ) ,
-                         CaloDigitsFromRaw ( "SpdFromRaw"      ) ,
-                         CaloDigit2MCLinks2Table( "CaloDigit2MCLinks" )
-                         ]
+    from CaloDAQ.CaloDigits import caloDigits
 
+    ## configure 'digits'
+    caloDigits( 'Offline'        , 
+                enableMCOnDemand ,
+                False            )
 
-for context in ( 'Offline' ,
-                 'HLT'     ) : 
-    getAlgo ( CaloClusterMCTruth            ,   
-              'CaloClusterMCTruth'          ,
-              context                       , 
-              'Relations/Rec/Calo/Clusters' ,
-              True                          )
+    from Configurables import GaudiSequencer 
+    main = getAlgo (
+        GaudiSequencer ,
+        'CaloMCTruth'  ,
+        context        ,
+        ''             ,
+        False          ,
+        )
+    main.Members = []
     
+    mc2digits = getAlgo (
+        GaudiSequencer               ,
+        "CaloDigitMCTruth"           ,
+        'Offline'                    , 
+        'Relations/Raw/Calo/Digits'  ,
+        enableMCOnDemand             , 
+        )
+    mc2digits.Members = []
+
+    from Configurables import CaloDigit2MCLinks2Table
+    links2table = getAlgo (
+        CaloDigit2MCLinks2Table      ,
+        'CaloDigitMCLinks2Table'     , 
+        'Offilne'                    ,
+        'Relations/Raw/Calo/Digits'  ,
+        False 
+        )
+    links2table.Inputs = [] 
+    
+    for dig in Digits :
+        
+        location = 'Raw/' + dig + '/Digits'
+        algName  = dig + 'ZSup' 
+        if  dig in ( 'Spd' , 'Prs' ) :
+            algName = dig + 'FromRaw'
+        alg      = getConfigurable( algName )
+
+        mc2digits   .Members += [ alg      ]
+        links2table .Inputs  += [ location ] 
+
+    mc2digits.Members += [ links2table ]
+
+    main.Members += [ mc2digits ]
+    
+    from Configurables import CaloClusterMCTruth
+    
+    clusters = getAlgo ( CaloClusterMCTruth            ,   
+                         'CaloClusterMCTruth'          ,
+                         context                       , 
+                         'Relations/Rec/Calo/Clusters' ,
+                         enableMCOnDemand              )
+
+    main.Members += [ clusters ]
+
+    return main
 
 # =============================================================================
 if '__main__' == __name__ :
     
     print __doc__
+    print __author__
+    print __version__
     print printOnDemand() 
     
 # =============================================================================

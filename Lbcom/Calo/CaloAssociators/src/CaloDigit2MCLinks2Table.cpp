@@ -1,4 +1,4 @@
-// $Id: CaloDigit2MCLinks2Table.cpp,v 1.8 2009-09-02 13:31:31 cattanem Exp $
+// $Id: CaloDigit2MCLinks2Table.cpp,v 1.9 2009-10-27 14:33:10 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,18 +30,18 @@
 // ============================================================================
 /** @class  CaloDigit2MCLinks2Table  CaloDigit2MCLinks2Table.cpp
  *
- *  Helper algorithm to "decode" idirotic linker object 
- *  to relation tabel for Monte Carlo links form CaloDigits to 
- *  MCParticle
+ *  Helper algorithm to "decode" the idiotic linker object 
+ *  into the relation table for Monte Carlo associatiations 
+ *  from CaloDigits to MCParticle
  *
- *  The mportant "properties" of this algoeithm are:
+ *  The important "properties" of this algorithm are:
  *   
  *  - "Inputs"
  *    The default value is            CaloDigitLocation::Ecal  
  *    List of Linker objects for CaloDigit->MCParticle links 
  * 
  *  - "Output"
- *    Teh default value is "Relations/" + LHCb::CaloDigitLocation::Default
+ *    The default value is "Relations/" + LHCb::CaloDigitLocation::Default
  *    Name of (output) relation table for CaloDigit->MCParticle 
  *
  *  @see CaloDigit
@@ -73,9 +73,18 @@ protected:
     : GaudiAlgorithm ( name , pSvc ) 
     , m_inputs ( 1 , LHCb::CaloDigitLocation::Ecal      ) 
     , m_output ( "Relations/" + LHCb::CaloDigitLocation::Default ) 
-  { } 
+  {
+    declareProperty 
+      ( "Inputs" , 
+        m_inputs , 
+        "TES-Input Locations of CaloDigits & Linkers") ;
+    declareProperty 
+      ( "Output" , 
+        m_output , 
+        "TES-Output Location of Relation Table CaloDigit->MCParticle" ) ;
+  } 
   /// virtual destructor (protected)
-  virtual ~CaloDigit2MCLinks2Table() {};
+  virtual ~CaloDigit2MCLinks2Table() {}
   // ==========================================================================
 private:
   // ==========================================================================
