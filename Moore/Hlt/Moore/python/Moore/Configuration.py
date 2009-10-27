@@ -1,20 +1,15 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.90 2009-10-27 09:34:10 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.91 2009-10-27 21:22:18 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import HltConf
-from Configurables import HltConfigSvc, HltGenConfig
-from Configurables import EventClockSvc
 from Configurables import GaudiSequencer
 from Configurables import LHCbApp, L0Conf
-from Configurables import L0DUMultiConfigProvider
-from Configurables import LHCb__MDFWriter as MDFWriter
-# from HltConf.Configuration import *
 
 import GaudiKernel.ProcessJobOptions
 from  ctypes import c_uint
@@ -57,7 +52,6 @@ class Moore(LHCbConfigurableUser):
         , "UseTCK"     :       False # use TCK instead of options...
         , "L0"         :       False # run L0
         , "ReplaceL0BanksWithEmulated" : False # rerun L0
-        , "L0TCK"      :       ''  # which L0 TCKs to use for configuration
         , "CheckOdin"  :       False  # use TCK from ODIN
         , "InitialTCK" :'0x80710000'  # which configuration to use during initialize
         , "prefetchConfigDir" :'MOORE_v8r0'  # which configurations to prefetch.
@@ -82,7 +76,7 @@ class Moore(LHCbConfigurableUser):
         }   
                 
 
-    def _enableDataOnDemand(self) :
+    def _configureDataOnDemand(self) :
         if not self.getProp("EnableDataOnDemand") :
             if 'DataOnDemandSvc' in ApplicationMgr().ExtSvc : 
                 ApplicationMgr().ExtSvc.pop('DataOnDemandSvc')
@@ -99,7 +93,7 @@ class Moore(LHCbConfigurableUser):
 
         import OnlineEnv 
         self.setProp('UseTCK', True)
-        self._enableDataOnDemand()
+        self._configureDataOnDemand()
 
         from Configurables import LHCb__RawDataCnvSvc as RawDataCnvSvc
         EventPersistencySvc().CnvServices.append( RawDataCnvSvc('RawDataCnvSvc') )
@@ -121,17 +115,13 @@ class Moore(LHCbConfigurableUser):
             del allConfigurables['EventSelector']
 
         TAE = OnlineEnv.TAE != 0
-        input   = 'EVENT'
-        if TAE: input = 'MEP'
-
+        input   = 'EVENT' if not TAE else 'MEP'
         mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,'SEND'],False)
         app.Runable = OnlineEnv.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
         evtMerger = OnlineEnv.evtMerger(name='Output',buffer='SEND',location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
         evtMerger.DataType = OnlineEnv.MDF_BANKS
         eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
-
-
         app.ExtSvc.append(eventSelector)
         OnlineEnv.evtDataSvc()
 
@@ -220,21 +210,30 @@ class Moore(LHCbConfigurableUser):
         files = self.getProp('inputFiles')
         if 'DST' in [ _ext(f) for f in files ] :
             importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
-        #if 'RAW' in [ _ext(f) for f in files ] :
-        EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-        self._enableDataOnDemand()
+        if 'RAW' in [ _ext(f) for f in files ] :
+            EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
+        self._configureDataOnDemand()
         EventSelector().Input = [ _datafmt(f) for f in files ]
 
     def _configureOutput(self):
         fname = self.getProp('outputFile')
         if not fname : return
-        if _ext(fname).upper() != 'RAW'  : raise NameError('unsupported filetype for file "%s"'%fname)
-        writer = MDFWriter( 'MDFWriter'
-                          , Compress = 0
-                          , ChecksumType = 1
-                          , GenerateMD5 = True
-                          , Connection = 'file://' + fname
-                          )
+        writer = None 
+        if _ext(fname).upper() == 'RAW'  : 
+            from Configurables import LHCb__MDFWriter as MDFWriter
+            writer = MDFWriter( 'MDFWriter'
+                              , Compress = 0
+                              , ChecksumType = 1
+                              , GenerateMD5 = True
+                              , Connection = 'file://' + fname
+                              )
+        if _ext(fname).upper() == 'DST'  : 
+            importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
+            from Configurables import InputCopyStream
+            writer = InputCopyStream("InputCopyStream")
+            writer.RequireAlgs = [ 'Hlt1Global' ]
+            writer.Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
+        if not writer : raise NameError('unsupported filetype for file "%s"'%fname)
         ApplicationMgr().OutStream.append( writer )
 
     def getRelease(self):
@@ -295,9 +294,11 @@ class Moore(LHCbConfigurableUser):
         if self.getProp('TCKpersistency').lower() == 'tarfile' :
             self.setProp('TCKpersistency','file')
         # make sure we load as many L0 TCKs as possible...
+        from Configurables import L0DUMultiConfigProvider
         L0DUMultiConfigProvider('L0DUConfig').Preload = True
         svcs = self.getProp("configServices")
         algs = self.getProp("configAlgorithms")
+        from Configurables import HltGenConfig
         gen = HltGenConfig( ConfigTop = [ i.rsplit('/')[-1] for i in algs ]
                           , ConfigSvc = [ i.rsplit('/')[-1] for i in svcs ]
                           , ConfigAccessSvc = self.getConfigAccessSvc().getName()
@@ -319,6 +320,14 @@ class Moore(LHCbConfigurableUser):
         if ( self.getProp("L0") ):
             l0seq = GaudiSequencer("seqL0")
             ApplicationMgr().TopAlg += [ l0seq ]
+            L0TCK = None
+            if not self.getProp('UseTCK') :
+                from HltConf.ThresholdUtils import Name2Threshold
+                L0TCK = Name2Threshold(self.getProp('ThresholdSettings')).L0TCK()
+            else  :
+                L0TCK = '0x%s' % self.getProp('InitialTCK')[-4:]
+
+            L0Conf().setProp( "TCK", L0TCK )
             L0Conf().setProp( "L0Sequencer", l0seq )
             self.setOtherProps( L0Conf(), [ "ReplaceL0BanksWithEmulated" , "DataType" ] )
             log.info("Will rerun L0")
@@ -327,7 +336,7 @@ class Moore(LHCbConfigurableUser):
         hltConf = HltConf()
         self.setOtherProps( hltConf,  
                             [ 'ThresholdSettings'
-                            , 'L0TCK','DataType','Verbose'
+                            , 'DataType','Verbose'
                             , 'RequireL0ForEndSequence'
                             , 'SkipHltRawBankOnRejectedEvents'
                             , 'HistogrammingLevel' 
@@ -336,7 +345,7 @@ class Moore(LHCbConfigurableUser):
                           )
 
     def _config_with_tck(self):
-        if (self.getProp('L0TCK')) : raise RunTimeError( 'UseTCK and L0TCK are mutually exclusive')
+        from Configurables import HltConfigSvc
         cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
                           , initialTCK = self.getProp('InitialTCK')
                           , checkOdin = self.getProp('CheckOdin')
@@ -387,6 +396,7 @@ class Moore(LHCbConfigurableUser):
         app.CondDBtag = self.getProp('CondDBtag')
         app.DDDBtag   = self.getProp('DDDBtag')
         # Get the event time (for CondDb) from ODIN 
+        from Configurables import EventClockSvc
         EventClockSvc().EventTimeDecoder = 'OdinTimeDecoder'
         # make sure we don't pick up small variations of the read current
         # Need a defined HistogramPersistency to read some calibration inputs!!!
