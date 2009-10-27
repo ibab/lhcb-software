@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-10-27 - Silvia Borghi
+ - in VeloTrackMonitor.cpp changed option to have alignment histograms by default
+
 ! 2009-10-22 - Michael Alexander
  - bugfix in VeloIPResolutionMonitor: histogram x-axis limits corrected
 

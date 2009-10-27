@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.26 2009-10-13 07:35:51 krinnert Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.27 2009-10-27 18:37:26 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -65,7 +65,7 @@ Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
   declareProperty( "ProfileResetEvent", m_resetProfile);
   declareProperty( "ExtraPlots", m_xPlots = true);
   declareProperty( "EventClusterInfo", m_EventClusterInfo = true);
-  declareProperty( "AlignMoniBasic", m_alignMoniBasic = false);
+  declareProperty( "AlignMoniBasic", m_alignMoniBasic = true);
   declareProperty( "AlignNMeasMin", m_alignNMeasMin = 6);
   declareProperty( "ACDCGeometry", m_ACDC = true);
 }
