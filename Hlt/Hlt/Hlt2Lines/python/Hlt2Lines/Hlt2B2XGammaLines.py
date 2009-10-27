@@ -110,7 +110,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         , PV = True
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2PhiGammaDecision" : 50500} )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaDecision" : 50500} )
 
         
         ############################################################################
@@ -127,4 +127,4 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                         , postscale = self.postscale
                         , PV = True
                         )
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2KstGammaDecision" : 50510} )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaDecision" : 50510} )
