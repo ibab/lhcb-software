@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.179 2009-10-09 10:12:32 xieyu Exp $
+! $Id: release.notes,v 1.180 2009-10-27 13:47:58 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+!========================== VertexFit v6r0p1 2009-10-27 ===============
 
 ! 2009-10-09 - Yuehong Xie
  - Remove unused method in PVReFitter
