@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.36 2009-10-20 16:49:23 jpalac Exp $
+!$Id: release.notes,v 1.37 2009-10-27 11:11:19 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : MicroDST/MicroDSTConf
 ! Responsible : Juan PALACIOS
 ! Purpose     : Configuration and options files for MicroDST making.
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Juan PALACIOS
+ - python/MicroDSTConf/MicroDSTWriter.py
+  . Adapt to changes in BTaggingTool: tags now to go <Selection>/FlavourTags.
 
 ! 2009-10-20 - Juan PALACIOS
  - python/MicroDSTConf/MicroDSTWriter.py
