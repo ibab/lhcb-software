@@ -12,14 +12,14 @@ from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 
 # Create Jpsi -> mumu candidates out of std loose muons
 ## ############################################################
-mucut = '(PT>500*MeV) & (TRCHI2DOF<3) & (ISLONG) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)<1000*MeV) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)<4000*MeV) & (PPINFO(LHCb.ProtoParticle.CaloEcalE,-10000)>-10*MeV) & (PPINFO(LHCb.ProtoParticle.CaloHcalE,-10000)>1000*MeV)'
+mucut = '(PT>500*MeV) & (TRCHI2DOF<3) & (ISLONG) '
 JpsiInclusive = StrippingMember( CombineParticles
                                  , 'Combine'
                                  , InputLocations = [ 'StdLooseMuons' ]
                                  , DecayDescriptor = 'J/psi(1S) -> mu+ mu-'
                                  , DaughtersCuts = { 'mu+' : mucut , 
                                                      'mu-' : mucut }
-                                 , CombinationCut = "(ADAMASS('J/psi(1S)')<200*MeV) | (ADAMASS('psi(2S)')<200*MeV) | (ADAMASS('Upsilon(1S)')<200*MeV)"
+                                 , CombinationCut = " (AM>2900*MeV) "
                                  , MotherCut = "(VFASPF(VCHI2/VDOF)<20) "
                                  )
 

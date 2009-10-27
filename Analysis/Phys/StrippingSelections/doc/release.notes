@@ -4,6 +4,11 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-08 - Alessio sarti
+ - Refined the Jpsi Inclusive selection
+   - Removed the mip cut while waiting for the ismuonloose filtering [reappeared!]
+   - Changed mass window: now Mass>2.9 GeV
+
 ! 2009-10-15 - Patrick Koppenburg
  - Topo : remove big commented out block
 
