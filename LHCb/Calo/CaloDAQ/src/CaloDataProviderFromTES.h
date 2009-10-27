@@ -1,6 +1,6 @@
-// $Id: CaloDataProviderFromTES.h,v 1.6 2009-10-12 16:03:53 odescham Exp $
-#ifndef CALODATAPROVIDERFROMTES_H 
-#define CALODATAPROVIDERFROMTES_H 1
+// $Id: CaloDataProviderFromTES.h,v 1.7 2009-10-27 10:11:26 odescham Exp $
+#ifndef CALODATAPROVIDERFROMTES_H  
+#define CALODATAPROVIDERFROMTES_H 1 
 
 // Include files
 // from Gaudi
@@ -10,7 +10,6 @@
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiKernel/Incident.h" 
 #include "CaloDet/DeCalorimeter.h"
-
 /** @class CaloDataProviderFromTES CaloDataProviderFromTES.h
  *  
  *
@@ -30,38 +29,38 @@ public:
 
   virtual ~CaloDataProviderFromTES( ); ///< Destructor
 
-
-
   virtual StatusCode initialize();
   virtual StatusCode finalize();
   // =========================================================================
   /// Inform that a new incident has occurred
   virtual void handle(const Incident& /* inc */ ) { 
-    counter("IncidentSvc get ADC containers") += 1;
-    getBanks() ; 
+    m_getRaw = true;
   }
   // =========================================================================
   
-   int    adc(LHCb::CaloCellID id);
-   double digit(LHCb::CaloCellID id);
+  int    adc(LHCb::CaloCellID id);
+  double digit(LHCb::CaloCellID id);
   const CaloVector<LHCb::CaloAdc>& adcs(int source=-1,bool clean=true);
   const CaloVector<LHCb::CaloDigit>& digits(int source=-1,bool clean=true);
   const CaloVector<LHCb::CaloAdc>& adcs(std::vector<int> sources,bool clean=true);
   const CaloVector<LHCb::CaloDigit>& digits(std::vector<int> sources,bool clean=true);
-   void clear();
-   void cleanData(int feb);
-   bool getBanks();
-   ICaloDataProvider::CaloAdcPair adcRange(){
+  void clear();
+  void cleanData(int feb);
+  bool getBanks();
+  ICaloDataProvider::CaloAdcPair adcRange(){
     LHCb::CaloAdc min = (m_minADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minADC;
     LHCb::CaloAdc max = (m_maxADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxADC;
     return std::make_pair(min,max) ;
   }
-   ICaloDataProvider::CaloAdcPair pinRange(){ 
+  ICaloDataProvider::CaloAdcPair pinRange(){ 
     LHCb::CaloAdc min = (m_minPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_minPinADC;
     LHCb::CaloAdc max = (m_maxPinADC.cellID() == LHCb::CaloCellID()) ? LHCb::CaloAdc(LHCb::CaloCellID(), 0) : m_maxPinADC;
     return std::make_pair(min,max) ;
   }
-  bool ok(){return m_ok;};
+  bool ok(){
+    if(m_getRaw)getBanks();
+    return m_ok;
+  };
 
   
   //
@@ -71,8 +70,7 @@ public:
   void setBanks(const std::vector<LHCb::RawBank*>* /* bank */ ){}; // harmless method
   LHCb::RawBankReadoutStatus status(){return LHCb::RawBankReadoutStatus(); }; // harmless method
   unsigned int nTell1s(){return 0;}; // harmless method
-  void putStatusOnTES(){}; // harmless method
-
+  void putStatusOnTES(){return;}; // harmless method
 
 protected:
 
@@ -98,7 +96,6 @@ private:
   CaloVector<LHCb::CaloDigit> m_digits;
   DeCalorimeter*   m_calo;
   unsigned int m_tell1s;
-
   //
   std::string  m_detectorName;
   bool m_packedIsDefault; 
@@ -110,15 +107,11 @@ private:
   bool m_extraHeader;
   bool m_packed;
   bool m_cleanCorrupted;
-  LHCb::RawBankReadoutStatus m_status;
-
   std::string m_data;
   std::string m_adcLoc;
   std::string m_digLoc;
   std::string m_loc;
-
-  std::vector<int> m_readSources;
-  
+  std::vector<int> m_readSources;  
   LHCb::CaloDigits* m_digCont;
   LHCb::CaloAdcs* m_adcCont;
   bool m_ok;
@@ -126,5 +119,6 @@ private:
   LHCb::CaloAdc m_minPinADC;
   LHCb::CaloAdc m_maxADC;
   LHCb::CaloAdc m_maxPinADC;
+  bool m_getRaw;
 };
 #endif // CALODATAPROVIDERFROMTES_H

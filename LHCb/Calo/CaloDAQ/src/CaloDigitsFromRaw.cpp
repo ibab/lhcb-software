@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.17 2009-10-12 16:03:54 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.18 2009-10-27 10:11:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,6 @@ CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
   declareProperty( "PinContainer"            ,  m_pinContainerName );
   declareProperty( "DigitsContainer"         ,  m_outputDigits );
   declareProperty( "AdcsContainer"           ,  m_outputADCs);
-  declareProperty( "PinContainer"            ,  m_pinContainerName );
   declareProperty( "StatusOnTES"             ,  m_statusOnTES = true);
 
 

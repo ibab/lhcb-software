@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.cpp,v 1.4 2009-09-02 12:22:13 cattanem Exp $
+// $Id: CaloMergeTAE.cpp,v 1.5 2009-10-27 10:11:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,8 @@ CaloMergeTAE::CaloMergeTAE( const std::string& name,
 
   declareProperty("MergeSlots"     , m_slots);
   declareProperty("Detector"       , m_detectorName);
-  declareProperty("Threshold"      , m_threshold = 0.);
+  declareProperty("SumThreshold"   , m_threshold = -256);
+  declareProperty("SlotThreshold"  , m_slotcut   = -256);
   declareProperty("OutputType"     , m_data = "Digits" );
   //
   m_slots.push_back("T0");
@@ -150,8 +151,7 @@ void CaloMergeTAE::mergeDigits(){
   for( CaloVector<CellParam>::const_iterator icell = cells.begin() ; icell != cells.end() ; icell++){
     LHCb::CaloCellID id = (*icell).cellID();
 
-    std::stringstream txt("");
-    txt  << "Digit :" ;
+    std::string txt  = "Digit :" ;
     double sum = 0;
     for(  std::map<std::string,LHCb::CaloDigits*>::iterator imap = digitsMap.begin();imap!=digitsMap.end();imap++){
       LHCb::CaloDigits* digs = (*imap).second;
@@ -159,16 +159,16 @@ void CaloMergeTAE::mergeDigits(){
       LHCb::CaloDigit* dig = digs->object( id );
       if( NULL == dig ) continue;
       double e = dig->e();
+      if( e < m_slotcut )continue;
       sum += e;
-      txt << (*imap).first << " : " << e << " | " ;
+      if ( msgLevel( MSG::DEBUG) )txt += (*imap).first + " : " + Gaudi::Utils::toString(e) + " | " ;
     }
     
     if(  sum > m_threshold ){
       LHCb::CaloDigit* newDigit = new LHCb::CaloDigit(id, sum);
       newDigits->insert( newDigit);
-      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endmsg;
+      if ( msgLevel( MSG::DEBUG) )debug() << id << " : "  << txt << " =>  TAE = " << sum <<endmsg;
     }
-
   }
 
 }
@@ -193,8 +193,7 @@ void CaloMergeTAE::mergeAdcs(){
   for( CaloVector<CellParam>::const_iterator icell = cells.begin() ; icell != cells.end() ; icell++){
     LHCb::CaloCellID id = (*icell).cellID();
 
-    std::stringstream txt("");
-    txt  << "ADC :" ;
+    std::string txt =  "ADC :" ;
     int sum = 0;
     for(  std::map<std::string,LHCb::CaloAdcs*>::iterator imap = adcsMap.begin();imap!=adcsMap.end();imap++){
       LHCb::CaloAdcs* adcs = (*imap).second;
@@ -202,14 +201,15 @@ void CaloMergeTAE::mergeAdcs(){
       LHCb::CaloAdc* adc = adcs->object( id );
       if( NULL == adc ) continue;
       int val = adc->adc();
+      if( val < m_slotcut)continue;
       sum += val;
-      txt << (*imap).first << " : " << val << " | " ;
+      if ( msgLevel( MSG::DEBUG) )txt += (*imap).first + " : " + Gaudi::Utils::toString( val ) +  " | " ;
     }
     
     if(  (double) sum > m_threshold ){
       LHCb::CaloAdc* newAdc = new LHCb::CaloAdc(id, sum);
       newAdcs->insert( newAdc );
-      debug() << id << " : "  << txt.str() << " =>  TAE = " << sum <<endmsg;
+      if ( msgLevel( MSG::DEBUG) )debug() << id << " : "  << txt << " =>  TAE = " << sum <<endmsg;
     }
 
   }

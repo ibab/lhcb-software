@@ -1,4 +1,4 @@
-// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.25 2009-10-12 16:03:54 odescham Exp $
+// $Id: CaloTriggerAdcsFromRaw.cpp,v 1.26 2009-10-27 10:11:26 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -75,6 +75,7 @@ StatusCode CaloTriggerAdcsFromRaw::initialize ( ) {
 void CaloTriggerAdcsFromRaw::clear( ) {
   m_data.clear();
   m_pinData.clear();
+  m_readSources.clear();
 }
 
 

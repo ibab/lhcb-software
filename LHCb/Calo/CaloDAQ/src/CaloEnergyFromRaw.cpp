@@ -1,4 +1,4 @@
-// $Id: CaloEnergyFromRaw.cpp,v 1.29 2009-10-12 16:03:54 odescham Exp $
+// $Id: CaloEnergyFromRaw.cpp,v 1.30 2009-10-27 10:11:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -85,6 +85,7 @@ void CaloEnergyFromRaw::clear( ) {
   m_data.clear();
   m_digits.clear();
   m_pinData.clear();
+  m_readSources.clear();
 }
 
 //-------------------------------------

@@ -1,0 +1,6 @@
+CaloDigitsSeq.Members += { 
+  "CaloDigitsFromRaw/SpdFromRaw",
+    "CaloDigitsFromRaw/PrsFromRaw",
+    "CaloZSupAlg/EcalZSup",
+    "CaloZSupAlg/HcalZSup"
+};

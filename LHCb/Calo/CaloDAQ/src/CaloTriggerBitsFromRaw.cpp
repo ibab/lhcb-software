@@ -1,4 +1,4 @@
-// $Id: CaloTriggerBitsFromRaw.cpp,v 1.29 2009-10-12 16:03:54 odescham Exp $
+// $Id: CaloTriggerBitsFromRaw.cpp,v 1.30 2009-10-27 10:11:26 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -62,6 +62,7 @@ StatusCode CaloTriggerBitsFromRaw::initialize ( ) {
 void CaloTriggerBitsFromRaw::clear( ) {
   (m_data.first).clear();
   (m_data.second).clear();
+  m_readSources.clear();
 }
 
 void CaloTriggerBitsFromRaw::cleanData(int feb ) {
@@ -119,8 +120,7 @@ const LHCb::Calo::PrsSpdFiredCells& CaloTriggerBitsFromRaw::prsSpdCells (int sou
   if( NULL == m_banks || 0 == m_banks->size() ){
     debug() << "The banks container is empty" << endmsg;
   }else{    
-    for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); 
-         itB != m_banks->end() ; ++itB ) {
+    for( std::vector<LHCb::RawBank*>::const_iterator itB = m_banks->begin(); itB != m_banks->end() ; ++itB ) {
       sourceID       = (*itB)->sourceID();
       if( source >= 0 && source != sourceID )continue;
       found = true;

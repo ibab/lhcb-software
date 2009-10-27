@@ -70,6 +70,8 @@ StatusCode CheckCaloBank::initialize() {
 //=============================================================================
 StatusCode CheckCaloBank::execute() {
 
+  setFilterPassed(false);
+  if( !exist<LHCb::RawEvent>(  LHCb::RawEventLocation::Default ) )return StatusCode::SUCCESS;
   LHCb::RawEvent* rawEvt = get<LHCb::RawEvent> ( LHCb::RawEventLocation::Default );
   
   bool trig = ( 0 == (rawEvt->banks( m_trig )).size() ) ?  false : true ;

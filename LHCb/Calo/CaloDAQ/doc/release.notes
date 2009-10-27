@@ -4,6 +4,14 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+
+! 2009-10-26 - Olivier Deschamps
+  - new options file : CaloDigitsSeq.opts (to be imported everywhere it is needed)
+  - protect CaloDataProviderFromTES against missing adc/digit 
+  - protect CheckCaloBank against missing RawEvent
+  - CaloDigitFromRaw : remove duplicate property !
+  - CaloXXFromRaw    : clear read sourceID in clear() method (not really useful but ...)
+
 !========================== CaloDAQ v4r14 2009-10-16 =========================
 ! 2009-10-14 - Patrick Koppenburg
  - CaloReadoutTool.cpp : bug fix : initialise m_packed in constructor

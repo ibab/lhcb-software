@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.h,v 1.2 2008-10-27 18:14:26 odescham Exp $
+// $Id: CaloMergeTAE.h,v 1.3 2009-10-27 10:11:26 odescham Exp $
 #ifndef CALOMERGETAE_H 
 #define CALOMERGETAE_H 1
 
@@ -47,6 +47,7 @@ private:
   std::vector<std::string> m_slots;
   std::string m_detectorName;
   double m_threshold;
+  double m_slotcut;
   std::string m_locDigit;
   std::string m_outDigit;
   std::string m_locAdc;
