@@ -1,10 +1,19 @@
-! $Id: release.notes,v 1.23 2009-10-22 10:43:46 jonrob Exp $
+! $Id: release.notes,v 1.24 2009-10-27 14:08:49 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/Particle2MCTruth
 ! Responsible : Juan PALACIOS
 ! Purpose     : Collection of implementations of IP2MCP and
 !               P2MCPBase for Particle -> MCTruth matching
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Vanya Belyaev
+
+ - MCMatchObjP2MCRelator
+
+    change a bit the initialization logic:
+    postpone the loading of the relation tables 
+    to the first actual usage of them..
+
 
 ! 2009-10-22 - Chris Jones
  - Add private usage of CLHEP (needed for linking on OSX)

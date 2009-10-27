@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.cpp,v 1.14 2009-10-15 16:25:00 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.cpp,v 1.15 2009-10-27 14:08:49 ibelyaev Exp $
 // Include files 
 
 // from Gaudi
@@ -26,19 +26,17 @@ DECLARE_TOOL_FACTORY( MCMatchObjP2MCRelator );
 MCMatchObjP2MCRelator::MCMatchObjP2MCRelator( const std::string& type,
                                               const std::string& name,
                                               const IInterface* parent )
-  : 
-  base_class( type, name , parent ),
-  m_reporter(0),
-  m_matcher(0),
-  m_tables()
+  : base_class( type, name , parent )
+  , m_reporter (0)
+  , m_matcher  (0)
+  , m_tables   ( )
+  , m_loaded   ( false ) 
 {
-
   m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
   m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
   m_tables.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
-
-  declareProperty("RelTableLocations",  m_tables );
-
+  
+  declareProperty    ( "RelTableLocations",  m_tables ) ;
 }
 //=============================================================================
 StatusCode MCMatchObjP2MCRelator::initialize()
@@ -55,25 +53,40 @@ StatusCode MCMatchObjP2MCRelator::initialize()
   }
 
   m_incSvc = svc<IIncidentSvc>("IncidentSvc", true);
-  if (0!=m_incSvc) m_incSvc->addListener(this, IncidentType::BeginEvent);
+  if (0!=m_incSvc) m_incSvc->addListener( this, IncidentType::EndEvent);
 
   // create the new matcher 
   m_matcher = new LoKi::MCMatchObj( "P2MCRelator" , m_reporter ) ;
   // increment the reference counter 
   m_matcher->addRef() ;
 
+  m_loaded = false ;
+  
   return (0!=m_reporter && 0!=m_matcher && 0!= m_incSvc) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 }
 //=============================================================================
 StatusCode MCMatchObjP2MCRelator::finalize()
 {
   m_incSvc=0;
+  
+  if ( 0 != m_matcher ) 
+  { 
+    m_matcher -> clear () ; 
+    long count = m_matcher->refCount();
+    while ( 0 < count ) { count = m_matcher->release() ; }
+    m_matcher = 0 ; 
+  }  
+  
+  m_loaded = false ;
   return base_class::finalize();
 }
 //=============================================================================
 bool MCMatchObjP2MCRelator::isMatched(const LHCb::Particle* particle, 
                                       const LHCb::MCParticle* mcParticle) const
 {
+  
+  if ( !m_loaded ) { addTables ( m_matcher ) ; m_loaded = true ; }
+  
   const bool match = matcher()->match(particle, mcParticle);
 
   if (msgLevel(MSG::VERBOSE)) {
@@ -105,12 +118,13 @@ void MCMatchObjP2MCRelator::addTables(LoKi::MCMatchObj* matcher) const
       Error ( " There is no valid data at '" + address + "'" ).ignore() ; 
     }
   }
+  m_loaded = true ;
 }
 //=============================================================================
 void MCMatchObjP2MCRelator::handle(const Incident&) 
 {
-  m_matcher->clear();
-  addTables(m_matcher);
+  if ( 0 != m_matcher ) { m_matcher->clear(); }
+  m_loaded = false ;
 }
 //=============================================================================
 // Destructor

@@ -1,4 +1,4 @@
-// $Id: MCMatchObjP2MCRelator.h,v 1.15 2009-10-15 16:25:00 jpalac Exp $
+// $Id: MCMatchObjP2MCRelator.h,v 1.16 2009-10-27 14:08:49 ibelyaev Exp $
 #ifndef MCMATCHOBJP2MCRELATOR_H 
 #define MCMATCHOBJP2MCRELATOR_H 1
 
@@ -69,7 +69,8 @@ private:
   typedef std::vector<std::string> Addresses ;
   Addresses m_tables;
   IIncidentSvc* m_incSvc;
-  
+
+  mutable bool m_loaded ;
 };
 
 
