@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -25,11 +25,15 @@ from CaloKernel.ConfUtils     import ( addAlgs        ,
                                        prntCmp        ,
                                        hltContext     , 
                                        setTheProperty )
-from Reconstruction  import ( digitsReco     ,
-                              clusterReco    , 
-                              photonReco     ,
-                              electronReco   ,
-                              mergedPi0Reco  ) 
+from Reconstruction           import ( clusterReco    , 
+                                       photonReco     ,
+                                       electronReco   ,
+                                       mergedPi0Reco  ) 
+
+from Configurables            import CaloDigitConf
+
+import logging
+_log = logging.getLogger ('CaloReco')
 
 # =============================================================================
 ## @class CaloRecoConf
@@ -48,7 +52,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , "MeasureTime"        : True        # Measure the time for sequencers
         , "OutputLevel"        : INFO        # The global output level
         ##
-        , 'Sequence'           : ''          # The sequencer to add the CALO reconstruction algorithms to
+        , 'Sequence'           : None        # The sequencer to add the CALO reconstruction algorithms to
         , 'RecList'            : [ 'Digits'       ,
                                    'Clusters'     ,
                                    'Photons'      ,
@@ -56,6 +60,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                                    'SplitPhotons' , # the same action as 'MergedPi0s'
                                    'Electrons'    ] ##
         , 'ForceDigits'         : True       # Force digits recontruction to be run with Clusters
+        , 'CreateADCs'          : False      # Create Calo-ADCs
         , 'UseTracks'           : True       # Use Tracks as Neutrality Criteria 
         , 'UseSpd'              : False      # Use Spd as Neutrailty Criteria
         , 'EnableRecoOnDemand'  : False      # Enable Reco-On-Demand
@@ -71,33 +76,51 @@ class CaloRecoConf(LHCbConfigurableUser):
         , 'Sequence'           : """ The sequencer to add the CALO reconstruction algorithms to """
         , 'RecList'            : """ The recontruction sketch """
         , 'ForceDigits'        : """ Force digits recontruction to be run with Clusters """ 
+        , 'CreateADCs'         : """ Create Calo-ADCs """ 
         , 'UseTracks'          : """ Use Tracks as Neutrality criterion """ 
         , 'UseSpd'             : """ Use Spd as Neutrality criterion """ 
         , 'EnableRecoOnDemand' : """ Enable Reco-On-Demand """ 
         ##
     }
-
+    
+    ## used configurables 
+    __used_configurables__ = (
+        CaloDigitConf ,
+        )
+    
     ## configure processing of Digits
     def digits   ( self ) :
         """
-        Configure proecssing of Digits
+        Configure processing of Digits
         
         """
-        cmp = digitsReco   ( self.getProp('Context')            ,
-                             self.getProp('EnableRecoOnDemand') )
-        log.info ('Configured Digits Processiong  : %s ' % cmp.name()  )
-        ##
-        return cmp
+        from CaloDAQ.CaloDigits import caloDigits
         
+        CaloDigitConf ( 
+            Context = 'Offline' , # self.getProp ('Context'           ) ,
+            EnableDigitsOnDemand = self.getProp ('EnableRecoOnDemand') ,
+            CreateADCs           = self.getProp ('CreateADCs'        ) )
+        
+        return caloDigits (
+            'Offline'                        ,  
+            #self.getProp ('Context'           ) ,
+            self.getProp ('EnableRecoOnDemand') ,
+            self.getProp ('CreateADCs'        )
+            )
+    
     ## Configure reconstruction of Ecal Clusters
     def clusters ( self ) :
         """
         Configure reconstruction of Ecal Clusters
         """
         cmp = clusterReco   ( self.getProp('Context')             ,
-                              self.getProp('EnableRecoOnDemand' ) ,
-                              self.getProp('ForceDigits'        ) )
-        log.info ('Configured Ecal Clusters  Reco : %s ' % cmp.name()  )
+                              self.getProp('EnableRecoOnDemand' ) )
+        
+        if self.getProp ( 'ForceDigits' ) :
+            ## insert digits into Cluster Sequence
+            cmp.Members = [ self.digits() ] + cmp.Members 
+            
+        _log.info ('Configured Ecal Clusters  Reco : %s ' % cmp.name()  )
         ##
         return cmp
     
@@ -110,7 +133,7 @@ class CaloRecoConf(LHCbConfigurableUser):
                              self.getProp ( 'EnableRecoOnDemand') ,
                              self.getProp ( 'UseTracks'         ) ,
                              self.getProp ( 'UseSpd'            ) )
-        log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
+        _log.info ('Configured Single Photons Reco : %s ' % cmp.name()  )
         ##
         return cmp
 
@@ -121,7 +144,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         cmp = electronReco ( self.getProp( 'Context'            ) ,
                              self.getProp( 'EnableRecoOnDemand' ) ) 
-        log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
+        _log.info ('Configured Electron Hypos Reco : %s ' % cmp.name()  )
         ##
         return cmp
 
@@ -132,7 +155,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         cmp = mergedPi0Reco ( self.getProp ( 'Context'            ) ,
                               self.getProp ( 'EnableRecoOnDemand' ) )
-        log.info ('Configured Merged Pi0     Reco : %s ' % cmp.name()  )
+        _log.info ('Configured Merged Pi0     Reco : %s ' % cmp.name()  )
         ##
         return cmp
     
@@ -141,7 +164,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         """
         Check the configuration
         """
-        log.warning('CaloRecoConf: Configuration is not checked!')
+        _log.warning('Configuration is not checked!')
 
         
     ## Calorimeter Reconstruction Configuration
@@ -152,8 +175,8 @@ class CaloRecoConf(LHCbConfigurableUser):
         
         self.checkConfiguration()
         
-        log.info ('CaloRecoConf: Apply Calo Reco Configuration ')
-        log.info ( self )
+        _log.info ('Apply Calo Reco Configuration ')
+        _log.info ( self )
 
         recList = self.getProp ( 'RecList') 
 
@@ -170,16 +193,17 @@ class CaloRecoConf(LHCbConfigurableUser):
         setTheProperty ( seq , 'OutputLevel' , self.getProp ( 'OutputLevel' ) )
         setTheProperty ( seq , 'MeasureTime' , self.getProp ( 'MeasureTime' ) )
         
-        if self.getProp('Sequence') :
-            addAlgs  ( self.Sequence , seq ) 
-            log.info ('Configure main Calo Reco Sequence  : %s '% self.Sequence.name() )
-            log.info ( prntCmp ( self.Sequence ) ) 
+        if self.isPropertySet('Sequence') :
+            main = self.getProp('Sequence') 
+            addAlgs  ( main , seq ) 
+            _log.info ('Configure main Calo Reco Sequence  : %s '% main.name() )
+            _log.info ( prntCmp ( main ) ) 
         else :
-            log.info ('Configure Calorimeter Reco blocks ' )            
-            log.info ( prntCmp ( seq ) )
+            _log.info ('Configure Calorimeter Reco blocks ' )            
+            _log.info ( prntCmp ( seq  ) )
 
         if self.getProp( 'EnableRecoOnDemand' )  :
-            log.info ( printOnDemand () ) 
+            _log.info ( printOnDemand () ) 
             
 # =============================================================================
 ## @class HltCaloRecoConf
@@ -221,7 +245,12 @@ class OffLineCaloRecoConf(CaloRecoConf):
         if hltContext ( self.getProp( 'Context' ) ) :
             raise AttributeError, 'Invalid context for OffLineCaloRecoConf'
         
-
+# =============================================================================
+if '__main__' == __name__ :
+    print __doc__
+    print __author__
+    print __version__
+    
             
 # =============================================================================
 # The END

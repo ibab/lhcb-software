@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Reconstruction.py,v 1.7 2009-10-22 08:35:30 cattanem Exp $
+# $Id: Reconstruction.py,v 1.8 2009-10-27 14:43:32 ibelyaev Exp $
 # =============================================================================
 ## The major building blocks of Calorimeter Reconstruction
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhe.nl
@@ -11,10 +11,9 @@ The major building blocks of Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 __all__ = (
-    'digitsReco'     , 
     'clustersReco'   , 
     'photonsReco'    , 
     'mergedPi0sReco' 
@@ -35,39 +34,29 @@ from CaloKernel.ConfUtils import ( prntCmp        ,
                                    caloOnDemand   ,
                                    getAlgo        ) 
 
+import logging
+_log = logging.getLogger('CaloReco')
 
 # =============================================================================
 ## prepare the digits for the recontruction
-def digitsReco  ( context , enableRecoOnDemand ) :
+def digitsReco  ( context            ,
+                  enableRecoOnDemand ,
+                  createADC          ) :
     """
     Prepare the digits for the recontruction
     """
-    
-    from Configurables import ( CaloZSupAlg       ,
-                                CaloDigitsFromRaw ) 
-    
-    alg = GaudiSequencer (
-        'CaloDigits'      ,
-        Context = context ,
-        Members = [
-        CaloZSupAlg       ( "EcalZSup"        ) ,
-        CaloZSupAlg       ( "HcalZSup"        ) ,
-        CaloDigitsFromRaw ( "PrsFromRaw"      ) ,
-        CaloDigitsFromRaw ( "SpdFromRaw"      ) 
-        ]
-        )
-    setTheProperty ( alg , 'Context' , context )
-    log.debug ( 'Configure Ecal Digits  Reco  for         : %s' % alg.name() )
-    ##
-    if enableRecoOnDemand : 
-        log.warning ('CaloReco/ClusterReco: creation-on-demand of digits is requested but disabled')
-    ##
-    return alg
 
+    from CaloDAQ.CaloDigits  import caloDigits
+
+    _log.warning('CaloReco.digitsReco is deprecated, use CaloDigitConf instead')
+        
+    return caloDigits ( context            ,
+                        enableRecoOnDemand ,
+                        createADC          )
 
 ## ============================================================================
 ## define the recontruction of Ecal clusters
-def clusterReco ( context , enableRecoOnDemand , forceDigits = True ) :
+def clusterReco ( context , enableRecoOnDemand ) :
     """
     Define the recontruction of Ecal Clusters
     """
@@ -91,13 +80,8 @@ def clusterReco ( context , enableRecoOnDemand , forceDigits = True ) :
         share.InputData  = 'Hlt/Calo/EcalClusters'
         covar.InputData  = 'Hlt/Calo/EcalClusters'
 
-    if forceDigits :
-        alg.Members = [ digitsReco ( context , enableRecoOnDemand ) ]
-        log.info    ('CaloReco/ClusterReco: creation of digits    not forced')
-    else :
-        log.warning ('CaloReco/ClusterReco: creation of digits is not forced')
-        
-    alg.Members += [
+
+    alg.Members = [
         clust ,
         share ,
         covar 
@@ -106,7 +90,7 @@ def clusterReco ( context , enableRecoOnDemand , forceDigits = True ) :
     setTheProperty ( alg , 'Context' , context )
     ##
     if enableRecoOnDemand : 
-        log.info    ('CaloReco/ClusterReco: creation-on-demand of clusters is enabled')
+        _log.info    ('CaloReco/ClusterReco: creation-on-demand of clusters is enabled')
         
     return alg
 
@@ -152,12 +136,12 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
         tool = alg.NeutralCluster
         tool . MinChi2 = 4
         alg.SelectionTools += [ tool ]
-        log.info    ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks     : %s' % tool.getFullName() )
+        _log.info    ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks     : %s' % tool.getFullName() )
     elif useSpd    and not useTracks :
         alg.addTool ( CaloSelectNeutralClusterWithSpd    , "NeutralCluster" )
         tool = alg.NeutralCluster
         alg.SelectionTools += [ tool ]
-        log.warning ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Spd        : %s' % tool.getFullName() )
+        _log.warning ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Spd        : %s' % tool.getFullName() )
     elif useTracks and     useSpd    :
         alg.addTool ( CaloSelectorOR                     , "NeutralCluster" )
         tool = alg.NeutralCluster 
@@ -169,10 +153,10 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
             tool.NeutralClusterWithSpd    
             ]
         alg.SelectionTools += [ tool ]
-        log.warning ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks|Spd : %s as %s '
-                     % ( tool.getFullName() , [ t.getFullName() for t in tool.SelectorTools ]  ) )
+        _log.warning ('CaloReco/PhotonReco: Configure Neutral Cluster Selector with Tracks|Spd : %s as %s '
+                      % ( tool.getFullName() , [ t.getFullName() for t in tool.SelectorTools ]  ) )
     else : 
-        log.warning ('CaloReco/PhotohReco: No Neutral Cluster Selector specified ' )
+        _log.warning ('CaloReco/PhotohReco: No Neutral Cluster Selector specified ' )
 
     ## hypo tools
     alg.addTool ( CaloExtraDigits , 'SpdPrsExtraG' )
@@ -201,9 +185,9 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
     lcorr = lCorrection ( lcorr )
     
     if hltContext ( context ) :
-        log.debug ( 'Configure Single Photon Reco for HLT     : %s' % alg.name() )
+        _log.debug ( 'Configure Single Photon Reco for HLT     : %s' % alg.name() )
     else:
-        log.debug ( 'Configure Single Photon Reco for Offline : %s' % alg.name() )
+        _log.debug ( 'Configure Single Photon Reco for Offline : %s' % alg.name() )
 
     seq = getAlgo ( GaudiSequencer , "PhotonReco" , context  )
 
@@ -216,12 +200,12 @@ def photonReco ( context , enableRecoOnDemand , useTracks , useSpd = False ) :
     setTheProperty ( seq , 'Context' , context )
     
     if hltContext ( context ) :
-        log.debug ( 'Configure Photon Reco Seq    for HLT     : %s' % seq.name() )
+        _log.debug ( 'Configure Photon Reco Seq    for HLT     : %s' % seq.name() )
     else:
-        log.debug ( 'Configure Photon Reco Seq    for Offline : %s' % seq.name() )
+        _log.debug ( 'Configure Photon Reco Seq    for Offline : %s' % seq.name() )
 
     if enableRecoOnDemand : 
-        log.info    ('CaloReco/ClusterReco: creation-on-demand of photons  is enabled')
+        _log.info    ('CaloReco/ClusterReco: creation-on-demand of photons  is enabled')
         
     return seq
 
@@ -321,12 +305,12 @@ def electronReco ( context , enableRecoOnDemand ) :
     setTheProperty ( eseq , 'Context' , context )
 
     if hltContext (  context ) :
-        log.debug ( 'Configure Electron Hypo Reco for HLT     : %s' % eseq.name() )
+        _log.debug ( 'Configure Electron Hypo Reco for HLT     : %s' % eseq.name() )
     else:
-        log.debug ( 'Configure Electron Hypo Reco for Offline : %s' % eseq.name() )
+        _log.debug ( 'Configure Electron Hypo Reco for Offline : %s' % eseq.name() )
 
     if enableRecoOnDemand : 
-        log.info    ('CaloReco/ClusterReco: creation-on-demand of electrons is enabled')
+        _log.info    ('CaloReco/ClusterReco: creation-on-demand of electrons is enabled')
 
     return eseq
 
@@ -424,12 +408,12 @@ def mergedPi0Reco ( context , enableRecoOnDemand ) :
     setTheProperty ( mseq , 'Context' , context )
 
     if hltContext ( context ) :
-        log.debug ( 'Configure Merged Pi0 Reco     for HLT     : %s' % mseq.name() )
+        _log.debug ( 'Configure Merged Pi0 Reco     for HLT     : %s' % mseq.name() )
     else:
-        log.debug ( 'Configure Merged Pi0 Reco     for Offline : %s' % mseq.name() )
+        _log.debug ( 'Configure Merged Pi0 Reco     for Offline : %s' % mseq.name() )
 
     if enableRecoOnDemand : 
-        log.info    ('CaloReco/ClusterReco: creation-on-demand of merged pi0 is enabled')
+        _log.info    ('CaloReco/ClusterReco: creation-on-demand of merged pi0 is enabled')
 
     return mseq
 

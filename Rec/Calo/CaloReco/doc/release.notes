@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.164 2009-10-27 11:00:47 odescham Exp $
+! $Id: release.notes,v 1.165 2009-10-27 14:43:32 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-27 - Vanya Belyaev
+
+ - make usage off CaloDigitConf configurabel to access digits 
+
 
 ! 2009-10-26 - Olivier Deschamps
   - CaloRecoOnDemand : CaloDigitsSeq imported from CaloDAQ 
