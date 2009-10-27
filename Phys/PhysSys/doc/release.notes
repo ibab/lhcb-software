@@ -3,7 +3,20 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
-- Added the pattern container_package.
+</PRE><H1><A NAME=v8r11>2009-10-27 Phys v8r11 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v8r11                                  #
+###############################################################################
+
+- Based on LHCb v28r1 and Gaudi v21r5
+
+- Highlights
+  * PhysConf: Add MDST DataType for physics MicroDST. Fix Calo unpacking/reco.
+  * PhysDekstop: allow disabling of P->PV relations tables internal use. Fix for use with Stripping DST.
+  * VertexFit: Adapt to changes in track event model.
+  * DecayTreeFitter: Fixed bug in RecoPhoton
+  * KaliCalo: Use Configurables.
 
 </PRE><H1><A NAME=v8r10>2009-09-24 Phys v8r10 </A></H1><PRE>
 
