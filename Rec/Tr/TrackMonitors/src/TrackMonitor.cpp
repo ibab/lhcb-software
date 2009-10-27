@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.20 2009-10-08 14:48:55 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.21 2009-10-27 21:04:54 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -140,11 +140,11 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
                                   const std::string& type) const
 {
   // plots we should always make...
-  plot(track.probChi2(),type+"/2","probChi2", -0.01, 1.01, 51);
+  plot(track.probChi2(),type+"/2","probChi2",0, 1, 50);
   plot(track.chi2PerDoF(),type+"/3","chi2/ndof",0,20);
   plot(track.nLHCbIDs(),type+"/4","#nLHCbIDs", -0.5, 60.5, 61);
   plot(track.pseudoRapidity(),type+"/7", "eta", 0.95 , 6.05, 50);
-  plot(track.nDoF(),type+"/ndof","ndof",-0.5,10.5,11);
+  plot(track.nDoF(),type+"/ndof","ndof",-0.5,50.5,51);
   plot(track.flag(),type+"/flag","flag",-0.5,255.5,256) ;
   plot(track.history(),type+"/history","history",-0.5,20.5,21) ;
   plot(track.fitStatus(),type+"/fitstatus","fit status",-0.5,5.5,6) ;
@@ -165,6 +165,7 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
 
   if(track.fitResult()) {
     plot( track.fitResult()->nIter(), type + "/numiter","number of fit iterations",-0.5,10.5,11) ;
+    plot( track.fitResult()->pScatter(), type + "/pscatter","momentum used for material corrections",0,100*Gaudi::Units::GeV) ;
   }
 
   // found hits of each type
