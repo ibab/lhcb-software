@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.135 2009-10-12 13:13:11 jpalac Exp $
+# $Id: requirements,v 1.136 2009-10-27 16:35:23 jpalac Exp $
 package AnalysisSys
 version v3r11
 
@@ -7,12 +7,12 @@ branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v1r7     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r8     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
-use  CommonParticles            v6r1     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v8r8     Phys   # Marco Musy
+use  CommonParticles            v6r2     Phys   # Patrick Koppenburg, WGs
+use  FlavourTagging             v9r0     Phys   # Marco Musy
 use  DaVinciFilter              v7r1     Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r5p2   Phys   # Patrick Koppenburg
@@ -20,35 +20,35 @@ use  RichPIDQC                  v1r2p3   Rich   # Chris Jones
 use  DstCalibSel                v1r2     Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r21    Phys   # Juan Palacios
+use  DaVinciMCTools     	v9r22    Phys   # Juan Palacios
 use  DaVinciAssociators         v9r3p5   Phys   # Vladimir Gligorov
-use  Particle2MCTruth           v2r3     Phys   # Juan Palacios
-use  VertexFitCheck             v1r4   Phys   # Yuehong Xie
+use  Particle2MCTruth           v2r3p2   Phys   # Juan Palacios
+use  VertexFitCheck             v1r4p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r8     Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r9     Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v2r5     Phys   # Rob Lambert
+use  DecayTreeTuple             v2r6     Phys   # Rob Lambert
 ####################################################################
 #
-use PhysSelPython               v2r2p1   PhysSel
-use AnalysisPython              v1r3     Phys
+use PhysSelPython               v3r1     PhysSel
+use AnalysisPython              v1r4     Phys
 #
 # Stripping
 #
-use StrippingConf               v1r6   Phys   # Anton Poluektov
-use StrippingSelections         v1r7   Phys   # Anton Poluektov
+use StrippingConf               v1r7   Phys   # Anton Poluektov
+use StrippingSelections         v1r8   Phys   # Anton Poluektov
 
 ####################################################################
 use  MicroDSTBase        	v1r6p1  MicroDST          # Juan Palacios
 use  MicroDSTInterfaces  	v1r3    MicroDST          # Juan Palacios
 use  MicroDSTTools      	v1r5p1  MicroDST          # Juan Palacios
-use  MicroDSTAlgorithm   	v3r8    MicroDST          # Juan Palacios
-use  MicroDSTConf               v2r6    MicroDST          # Juan Palacios
+use  MicroDSTAlgorithm   	v3r9    MicroDST          # Juan Palacios
+use  MicroDSTConf               v2r7    MicroDST          # Juan Palacios
 
 ####################################################################
-use Analysis            	v8r3    Tutorial          # P. Koppenburg
-use LoKiExample         	v8r5    Ex                # Vanya Belyaev
-use MicroDSTExample             v2r10   Ex                # Juan Palacios
+use Analysis            	v8r3p1  Tutorial          # P. Koppenburg
+use LoKiExample         	v8r5p1  Ex                # Vanya Belyaev
+use MicroDSTExample             v2r11   Ex                # Juan Palacios
 
 # Declare this as a container package
 apply_pattern container_package
