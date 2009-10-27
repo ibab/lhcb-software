@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.64 2009-10-27 10:57:05 odescham Exp $
+! $Id: release.notes,v 1.65 2009-10-27 10:57:39 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -11,7 +11,7 @@
 
 
 ! 2009-10-26 - Olivier Deschamps
- - python/CaloAccosiators/MCTruthOnDemand.py : 
+ - python/CaloAssociators/MCTruthOnDemand.py : 
 	   add explicitely the caloDigit creation in CaloDigit2MC sequence (to please HLT redefining onDemand)
 
 
