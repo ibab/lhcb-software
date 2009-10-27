@@ -1,22 +1,15 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.20 2009-10-11 09:23:38 jpalac Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2009-10-27 13:37:23 jpalac Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer
-from Configurables import LoKiSvc
 import GaudiKernel.ProcessJobOptions
 
-from Configurables import OffLineCaloRecoConf  
-from Configurables import OffLineCaloPIDsConf   
-from Configurables import CaloDstUnPackConf 
-
-
 class PhysConf(LHCbConfigurableUser) :
-    from Configurables import (GaudiSequencer)
+
     __slots__ = {
         "DataType"        : 'MC09'                             # Data type, can be ['DC06','2008']
      ,  "Simulation"      : True                               # set to True to use SimCond
@@ -24,9 +17,9 @@ class PhysConf(LHCbConfigurableUser) :
         }
     
     __used_configurables__ = (
-        CaloDstUnPackConf   ,
-        OffLineCaloRecoConf ,
-        OffLineCaloPIDsConf 
+        'CaloDstUnPackConf'   ,
+        'OffLineCaloRecoConf' ,
+        'OffLineCaloPIDsConf' 
         )
     
 #
@@ -37,6 +30,7 @@ class PhysConf(LHCbConfigurableUser) :
         Init Sequence. Called by master application.
         """
         # only one initialisiation do far
+        from Configurables import GaudiSequencer
         init = GaudiSequencer("PhysInitSeq")
         self.configureReco(init)
         return init
@@ -48,7 +42,10 @@ class PhysConf(LHCbConfigurableUser) :
         """
         Configure Reconstruction to be redone
         """
-        
+
+        from Configurables  import OffLineCaloRecoConf
+        from Configurables  import OffLineCaloPIDsConf 
+
         ## CaloPIDs 
         caloPIDs = OffLineCaloPIDsConf (
             EnablePIDsOnDemand = True   , ## enable PIDs-On-Demand
@@ -56,11 +53,13 @@ class PhysConf(LHCbConfigurableUser) :
             )
 
         ## Calo reco
+
         caloReco = OffLineCaloRecoConf (
             EnableRecoOnDemand = True     ## enable Reco-On-Demand
             )
         
-        ## unpack Calo (?) 
+        ## unpack Calo (?)
+        from Configurables import CaloDstUnPackConf 
         unpack = CaloDstUnPackConf()
         if unpack.getProp( 'Enable' ) : 
             hypos    = unpack   .getProp( 'Hypos'   )
@@ -125,6 +124,7 @@ class PhysConf(LHCbConfigurableUser) :
         """
         Define loki service
         """
+        from Configurables import LoKiSvc
         lokiService = LoKiSvc()
         ApplicationMgr().ExtSvc +=  [ lokiService ]
         
