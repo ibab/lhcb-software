@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.cpp,v 1.2 2009-10-21 10:58:56 ggiacomo Exp $
+// $Id: MuonClusterRec.cpp,v 1.3 2009-10-27 11:57:17 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -36,6 +36,7 @@ MuonClusterRec::MuonClusterRec( const std::string& type,
   declareProperty( "PosTool"          , m_posToolName = "MuonDetPosTool");
   declareProperty( "OfflineTimeAlignment", m_offlineTimeAlignment = false );
   declareProperty( "TimeResidualFile" , m_timeResidualFile = "none");
+  declareProperty( "MaxPadsPerStation" , m_maxPadsPerStation = 500);
   m_clustersDone = false;
 }
 
@@ -105,6 +106,7 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
     bool searchNeighbours;
 
     clear();
+    
 
     //group pads by station
     debug() << "Log. pads before clustering:"<<endmsg;
@@ -120,6 +122,11 @@ const std::vector<MuonHit*>* MuonClusterRec::clusters(const std::vector<MuonLogP
 
   
     for (int station =0 ; station<m_muonDetector->stations() ; station++) {
+      if (stationPads[station].size() > m_maxPadsPerStation) {
+        info() << "skipping station M"<<station+1<<" with too many pads:" 
+               << stationPads[station].size() <<endmsg;
+        continue;
+      }
       for (ipad = stationPads[station].begin(); ipad != stationPads[station].end(); ipad++ ){
         if (! usedPad.count(*ipad)) {
           // cluster seed

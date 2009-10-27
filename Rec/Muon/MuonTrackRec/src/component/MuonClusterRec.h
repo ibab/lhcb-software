@@ -1,4 +1,4 @@
-// $Id: MuonClusterRec.h,v 1.1 2009-10-16 17:05:58 ggiacomo Exp $
+// $Id: MuonClusterRec.h,v 1.2 2009-10-27 11:57:17 ggiacomo Exp $
 #ifndef COMPONENT_MUONCLUSTERREC_H 
 #define COMPONENT_MUONCLUSTERREC_H 1
 
@@ -32,6 +32,8 @@ public:
 
 
 private:
+  unsigned int m_maxPadsPerStation;
+
   inline int regX(const LHCb::MuonTileID* tile) {
     return ( (tile->quarter() > 1 ? -1 : 1) * tile->nX() );
   }
