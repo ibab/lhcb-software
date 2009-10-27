@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-27 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r8
+
 ! 2009-10-08 - Alessio sarti
  - Refined the Jpsi Inclusive selection
    - Removed the mip cut while waiting for the ismuonloose filtering [reappeared!]
