@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.62 2009-10-19 11:24:40 musy Exp $
+! $Id: release.notes,v 1.63 2009-10-27 16:27:40 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v3r9
 
 ! 2009-10-15 - M. Musy for M. Grabalosa
  - add monitor of the B opposite side statistics.
