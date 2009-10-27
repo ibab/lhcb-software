@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.42 2009-09-14 15:54:06 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.43 2009-10-27 13:22:15 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -77,6 +77,8 @@ class IRelatedPVFinder;
  *
  *  - <b>PVReFitters</b> : the map for possible primary vertex re-fitters 
  *     @see IPVReFitter
+ *
+ *  - <b>ReFitPVs</b> : bool. Perform automatic PV re-fitting when asking for best PV.
  *
  *  - <b>DecayDescriptor</b>  : the decay descriptor ofthe algorithm 
  *               in the spirit of (MC)DecayFinder tool by Olivier Dormond.
@@ -379,16 +381,20 @@ public:
   /// Accessor for WriteSelResult Tool
   inline IWriteSelResult* writeSelResult()const
   {
-    return getTool<IWriteSelResult>(m_writeSelResultName,m_writeSelResult);
+    return getTool<IWriteSelResult>(m_writeSelResultName,
+                                    m_writeSelResult);
   }
   /// Tagging Tool
   inline IBTaggingTool* flavourTagging()const{
-    return getTool<IBTaggingTool>(m_taggingToolName,m_taggingTool);
+    return getTool<IBTaggingTool>(m_taggingToolName, 
+                                  m_taggingTool, 
+                                  this );
   }
   
   /// Descnedants
   inline IParticleDescendants* descendants()const{
-    return getTool<IParticleDescendants>(m_descendantsName,m_descendants);
+    return getTool<IParticleDescendants>(m_descendantsName,
+                                         m_descendants);
   }
   // ==========================================================================
   /** Accessor for ParticlePropertySvc
@@ -445,6 +451,17 @@ protected:
     }
     return t ;
   } 
+
+  /**
+   * Access to the list of TES input locations given by the InputLocations
+   * property
+   *
+   * @return vector or strings with TES input locations
+   */
+  inline const std::vector<std::string>& inputLocations() 
+  {
+    return m_inputLocations;
+  }
 
 protected:
   
@@ -704,7 +721,7 @@ DVAlgorithm::pid ( const LHCb::ParticleID& id ) const
   const LHCb::ParticleProperty* pp = ppSvc()->find ( id ) ;
   if ( 0 == pp ) { Error ( "pid() : invalid LHCb::ParticleProperty!" ) ; }
   return pp ;
-} 
+}
 // ==========================================================================
 // The END 
 // ==========================================================================
