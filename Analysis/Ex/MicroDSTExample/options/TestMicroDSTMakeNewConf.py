@@ -12,13 +12,13 @@ conf.CopyProtoParticles = True
 conf.SelectionSequences = [selSequence]
 conf.CopyL0DUReport = False
 conf.CopyHltDecReports = False
-conf.CopyMCTruth = True
+conf.CopyMCTruth = False
 conf.CopyBTags = True
 microDST0Seq = conf.sequence()
 
 dv = DaVinci()
 dv.DataType = 'DC06'
-dv.EvtMax = 495
+dv.EvtMax = 100
 dv.UserAlgorithms = [microDST0Seq]
 dv.Input =  [
 "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v4-lumi2/00002146/DST/0000/00002146_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",

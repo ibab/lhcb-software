@@ -102,7 +102,7 @@ particleNameFunc = Functors.ParticleName(ppSvc)
 
 # List of "interesting" particle PIDs
 # Add PID of anything yo uthink might be interesting!
-interestingParticles = [531,-531, 333, 443, 511, -511, 321, -321, 211, -211, -13, 13]
+interestingParticles = [531,-531, 333, 443, 511, -511, 321, -321, 211, -211, -13, 13, 22]
 
 histoPath = "MicroDST/Histos/"
 massPlots = {}
