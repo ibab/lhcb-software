@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.89 2009-10-27 09:23:15 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.90 2009-10-27 09:34:10 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -206,11 +206,13 @@ class Moore(LHCbConfigurableUser):
         MagneticFieldSvc().UseSetCurrent = True
 
         if self.getProp('EnableRunChangeHandler') : 
+            import OnlineEnv
+            online_xml = '%s/%s/online_%%d.xml' % (baseloc, OnlineEnv.PartitionName )
             from Configurables import RunChangeHandlerSvc
             rch = RunChangeHandlerSvc()
-            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : baseloc + "/%d/online.xml",
-                               "Conditions/Online/Velo/MotionSystem": baseloc + "/%d/online.xml",
-                               }
+            rch.Conditions = { "Conditions/Online/LHCb/Magnet/Set"  : online_xml
+                             , "Conditions/Online/Velo/MotionSystem": online_xml
+                             }
             ApplicationMgr().ExtSvc.append(rch)
 
 
