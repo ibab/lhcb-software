@@ -1,8 +1,16 @@
-!$Id: release.notes,v 1.325 2009-10-16 13:40:40 cattanem Exp $
+!$Id: release.notes,v 1.326 2009-10-27 13:22:39 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-10-27 - Juan PALACIOS
+ - Kernel/DVAlgorithm.h
+  . IBTaggingTool* is now private.
+  . Add protected method returning list of input TES locations corresponding
+    to property InputLocations.
+ - cmt/requirements
+  . Increase version to v8r3.
 
 !======================== DaVinciKernel v8r2 2009-10-16 =====================
 ! 2009-09-14 - Juan PALACIOS
