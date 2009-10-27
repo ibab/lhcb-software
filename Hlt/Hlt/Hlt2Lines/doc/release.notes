@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.67 2009-10-26 12:47:50 pkoppenb Exp $
+$Id: release.notes,v 1.68 2009-10-27 12:45:57 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.67 2009-10-26 12:47:50 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Jacopo Nardulli
+ - Removing DecayTreeTuple from the DX Lines 
 
 ! 2009-10-26 - Patrick Koppenburg
  - Rename Hlt2XGammaLines. into Hlt2B2XGammaLines.

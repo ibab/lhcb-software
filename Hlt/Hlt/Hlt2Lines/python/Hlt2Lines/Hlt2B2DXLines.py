@@ -38,7 +38,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import FilterDesktop,CombineParticles
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
-        from Configurables import HltANNSvc, DecayTreeTuple
+        from Configurables import HltANNSvc
         from Hlt2SharedParticles.V0 import KsDDFit
 
         ###################################################################
