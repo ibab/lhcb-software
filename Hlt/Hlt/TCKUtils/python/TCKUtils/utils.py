@@ -146,6 +146,7 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
     for i in s.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
         x = Configuration( i,s )
         info[ i.alias().str() ] = x
+    ## TODO/FIXME: need to support multiple TCK pointing to same TOPLEVEL
     for i in s.configTreeNodeAliases( alias( 'TCK/'  ) ) :
         tck =  _tck(i.alias().str().split('/')[-1])
         id  =  i.ref().str()
@@ -455,6 +456,9 @@ def getAlgorithms( id, cas = ConfigAccessSvc() ) :
 def getHlt1Lines( id , cas = ConfigAccessSvc() ) :
     # should be a list... so we try to 'eval' it
     return eval(_getProperty(id,'Hlt1','Members',cas))
+def getHlt2Lines( id , cas = ConfigAccessSvc() ) :
+    # should be a list... so we try to 'eval' it
+    return eval(_getProperty(id,'Hlt2Lines','Members',cas))
 def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
     id = tck2id(id,cas)
     table = execInSandbox( _xget, [ id ], cas )[id]

@@ -5,6 +5,10 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-10-27 - Gerhard Raven
+ - add getHlt2Lines
+ - add reminder to fix getConfigurations in case two TCK point to same TOPLEVEL
+
 !========================== TCKUtils v1r4 2009-08-31 ===================
 ! 2009-08-24 - Gerhard Raven
  - add getTCKList
