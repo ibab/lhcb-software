@@ -1,4 +1,4 @@
-// $Id: BTagging.h,v 1.17 2006-10-24 10:16:44 jpalac Exp $
+// $Id: BTagging.h,v 1.18 2009-10-27 11:08:35 jpalac Exp $
 #ifndef USER_BTAGGING_H 
 #define USER_BTAGGING_H 1
 
@@ -24,9 +24,17 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 private:
+  inline const std::vector<std::string>& inputLocations() 
+  {
+    return m_inputLocations;
+  }
+
+  void performTagging(const std::string & location);
+
+private:
   //bool m_WriteToTES; ///< write FlavourTag to TES
   std::string m_TagLocation; ///< Location of tags
-
+  std::vector< std::string>  m_inputLocations; ///< InputLocaitons from parent DVAlgorithm. Temporary.
 };
 
 //=======================================================================//

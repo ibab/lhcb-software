@@ -1,5 +1,6 @@
 // Include files 
 #include "GaudiKernel/DeclareFactoryEntries.h"
+#include "GaudiKernel/Property.h"
 // from DaVinci
 #include "Kernel/StringUtils.h"
 // local
@@ -20,33 +21,64 @@ DECLARE_ALGORITHM_FACTORY( BTagging );
 //=======================================================================
 BTagging::BTagging(const std::string& name,
                    ISvcLocator* pSvcLocator):
-  DVAlgorithm(name, pSvcLocator){
-  
-  declareProperty( "TagOutputLocation", 
-                   m_TagLocation = FlavourTagLocation::Default );
+  DVAlgorithm(name, pSvcLocator),
+  m_TagLocation("FlavourTags")
+
+{ 
+  declareProperty( "TagOutputLocation", m_TagLocation );
 }
 
 //=======================================================================
-StatusCode BTagging::initialize() { return DVAlgorithm::initialize() ; }
+StatusCode BTagging::initialize() { 
+
+  StatusCode sc = DVAlgorithm::initialize() ; 
+  m_inputLocations.clear();
+  if ( sc.isSuccess() )
+  {
+    SimpleProperty< std::vector<std::string> > v;
+    bool good = v.assign(*Gaudi::Utils::getProperty(this, "InputLocations"));
+    if (good) {
+      m_inputLocations = v.value();
+    } else {
+      sc = Error("Could not retrieve InputLocations");
+    }
+  }
+  return sc;
+}
 
 BTagging::~BTagging() {}
 
 //=======================================================================
-// Main execution
+// Main executio
 //=======================================================================
 StatusCode BTagging::execute() {
 
-  setFilterPassed( false );
+  std::vector<std::string>::const_iterator iLoc = inputLocations().begin();
+  std::vector<std::string>::const_iterator endLoc = inputLocations().end();
+  for ( ; iLoc != endLoc; ++iLoc) {
+    performTagging(*iLoc);
+  }
+  setFilterPassed( true );
+  return StatusCode::SUCCESS;
+}
+//=======================================================================
+void BTagging::performTagging(const std::string & location) 
+{
 
   //look in location where Selection has put the B candidates
-  const LHCb::Particle::ConstVector& parts = desktop()->particles();
-  if( parts.empty() ) return StatusCode::SUCCESS;
-  debug() << "BTagging will tag "<< parts.size() << " B hypos!" <<endreq;
+  const Particle::Container* parts = get<Particle::Container>( location+"/Particles" );
+  if( !parts || parts->empty() ) {
+    Warning("No particles foung at "+ location, 
+            StatusCode::SUCCESS,10).ignore();
+    return;
+  }
+  
+  debug() << "BTagging will tag "<< parts->size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
-  Particle::ConstVector::const_iterator icandB;
-  for ( icandB = parts.begin(); icandB != parts.end(); icandB++){
+  Particle::Container::const_iterator icandB;
+  for ( icandB = parts->begin(); icandB != parts->end(); icandB++){
     if((*icandB)->particleID().hasBottom()) {
       debug() << "About to tag candidate B of mass=" 
               << (*icandB)->momentum().M()/GeV <<" GeV"<<endreq;
@@ -110,11 +142,11 @@ StatusCode BTagging::execute() {
     }
   }
 
-  ///Output to TES (for backward compatibility) 
-  if(! (tags->empty()) ) put(tags, m_TagLocation);
+  ///Output to TES (for backward compatibility)
+  const std::string tagLocation = location+"/"+m_TagLocation;
+  debug() << "Putting FlavourTags in " << tagLocation << endmsg;
+  if(! (tags->empty()) ) put(tags, tagLocation);
 
-  setFilterPassed( true );
-  return StatusCode::SUCCESS;
 }
 
 //=========================================================================
