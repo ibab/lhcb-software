@@ -1,12 +1,11 @@
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.18 2009-07-06 15:32:40 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-10-27 15:42:08 jpalac Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
-from Configurables import GaudiSequencer
 import GaudiKernel.ProcessJobOptions
 
 class AnalysisConf(LHCbConfigurableUser) :
@@ -25,6 +24,7 @@ class AnalysisConf(LHCbConfigurableUser) :
         Init Sequence. Called by master application.
         """
         # only one initialisiation do far
+        from Configurables import GaudiSequencer
         init = GaudiSequencer("AnalysisInitSeq")
         self.redoMCLinks(init)
         return init
@@ -67,6 +67,7 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Define DaVinciAssociators. Do MC unpacking.
         """
+        from CaloAssociators import MCTruthOnDemand
         importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
         self.unpackMC()
 #
