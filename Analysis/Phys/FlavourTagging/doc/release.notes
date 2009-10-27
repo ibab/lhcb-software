@@ -1,9 +1,17 @@
-! $Id: release.notes,v 1.149 2009-10-26 15:25:32 jpalac Exp $
+! $Id: release.notes,v 1.150 2009-10-27 11:08:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Juan PALACIOS
+ - BTaggingTool
+  . Now runs tagging in parallel for each particle location defined in
+    DVAlgorithm property InputLocations. 
+  . Output FlavourTags are written to <InputLocation>/FlavourTags.
+ - cmt/requirements
+  . Increase version to v9r0
 
 ! 2009-10-26 - Juan PALACIOS
  - src/BTaggingTool.cpp
