@@ -77,6 +77,7 @@ use XMLSummaryKernel      v1r0    Kernel  # Rob Lambert
 
 use L0MuonKernel          v8r8    L0      # Andrei Tsaregorodtsev, Julien Cogan
 use L0Interfaces          v1r5    L0      # Olivier Deschamps
+use L0Base                v1r1    L0      # Julien Cogan
 
 # L1/Raw buffer encoding and decoding
 use DAQSys                v6r0    DAQ     # Marco Cattaneo

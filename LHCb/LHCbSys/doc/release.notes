@@ -5,6 +5,9 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+! 2009-10-27 - Julien Cogan
+ - add new package : L0/L0Base - It contains base classes for L0 components
+
 </PRE><H1><A NAME=v28r1>2009-10-21 LHCbSys v28r1</A></H1><PRE>
 This version uses Gaudi v21r5 and LCG_57
 
