@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -69,7 +69,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         , "OutputLevel"        : """ The global output level """ 
         ##
         , 'Sequence'           : """ The sequencer to add the CALO reconstruction algorithms to """
-        , 'RecList'            : """ The recontriuction sketch """
+        , 'RecList'            : """ The recontruction sketch """
         , 'ForceDigits'        : """ Force digits recontruction to be run with Clusters """ 
         , 'UseTracks'          : """ Use Tracks as Neutrality criterion """ 
         , 'UseSpd'             : """ Use Spd as Neutrality criterion """ 

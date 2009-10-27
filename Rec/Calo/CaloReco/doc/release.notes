@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.163 2009-10-22 08:35:30 cattanem Exp $
+! $Id: release.notes,v 1.164 2009-10-27 11:00:47 odescham Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloReco
 ! Responsible : Olivier Deschamps odescham@in2p3.fr 
 ! Purpose     : Main Package for Calorimeter Reconstruction Software 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-26 - Olivier Deschamps
+  - CaloRecoOnDemand : CaloDigitsSeq imported from CaloDAQ 
+  - CaloElectronAlg  : fix hypothesis setting (uncorrect since a while!)
 
 !========================== CaloReco v5r2  2009-10-22 =========================
 ! 2009-10-22 - Marco Cattaneo
@@ -25,6 +29,9 @@
   . Bug fix from Gerhard Raven: unpack the digits.
  - cmt/requirements
   . Increase version to v5r1p1
+
+! 2009-09-17 - Olivier Deschamps 
+ - CaloStandaloneClusterSelection.opts : fix bug in Photon selection
 
 ! 2009-09-14 - Olivier Deschamps 
  - Brunel.opts, HltCaloSeq.opts, python/Reconstruction.py :

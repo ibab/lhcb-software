@@ -1,4 +1,4 @@
-// $Id: CaloElectronAlg.cpp,v 1.18 2009-09-04 07:57:09 odescham Exp $
+// $Id: CaloElectronAlg.cpp,v 1.19 2009-10-27 11:00:47 odescham Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -293,9 +293,9 @@ CaloElectronAlg::execute()
     std::auto_ptr<LHCb::CaloHypo> hypo ( new LHCb::CaloHypo() ) ;
     //
     // set parameters of newly created hypo 
-    hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
+    //    hypo->setHypothesis( LHCb::CaloHypo::Photon ); /// temporary!      
+    hypo->setHypothesis( LHCb::CaloHypo::EmCharged ); /// final!
     hypo->addToClusters( *cluster );
-    // NEW OD 13/06/06
     hypo->setPosition( new LHCb::CaloPosition((*cluster)->position()) ); 
     
     StatusCode sc( StatusCode::SUCCESS );

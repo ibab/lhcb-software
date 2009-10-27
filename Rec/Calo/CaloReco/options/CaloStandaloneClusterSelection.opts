@@ -4,10 +4,9 @@
 SinglePhotonRec.SelectionTools   += { 
   //"CaloSelectCluster/PhotonClusterSelect",
   "CaloSelectClusterWithPrs/EcalClusterWithPrs",
-  "CaloSelectorNOT/SpdNOT"
+  "CaloSelectNeutralClusterWithSpd/EcalClusterWithNoSpd"
 }; 
 SinglePhotonRec.EcalClusterWithPrs.MinEnergy = 10*MeV ;
-SinglePhotonRec.SpdNOT.SelectorTools =  { "CaloSelectNeutralClusterWithSpd/EcalClusterWithNoSpd"}; 
 //SinglePhotonRec.PhotonClusterSelect.MinEnergy = 0;
 //SinglePhotonRec.PhotonClusterSelect.MaxDigits = 99;
 

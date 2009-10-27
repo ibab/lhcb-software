@@ -4,11 +4,10 @@
 // Setup the CaloReco on-Demand for DaVinci usage
 //
 
-// CaloDigits
+// CaloDigits on-demand
 #include "$CALODAQROOT/options/CaloDigitsOnDemand.opts"
 
-// CaloClusters
-
+// CaloClusters on-demand 
 DataOnDemandSvc.AlgMap += {
   "Rec/Calo/EcalClusters"      : "GaudiSequencer/CaloClusterOnDemand"
  ,"Rec/Calo/EcalSplitClusters" : "CaloMergedPi0Alg/MergedPi0Rec"
@@ -20,14 +19,9 @@ CaloClusterOnDemand.Members += {   "GaudiSequencer/CaloDigitsSeq",
                                    "CaloSharedCellAlg/EcalShare",
                                    "CaloClusterCovarianceAlg/EcalCovar",
                                    "CaloClusterCorrect3x3Position/EcalPosition"};
-// Warning instance name MUST be the same as in CaloDigitsOnDemand !
-CaloDigitsSeq.Members += { "CaloDigitsFromRaw/SpdFromRaw",
-                           "CaloDigitsFromRaw/PrsFromRaw",
-                           "CaloZSupAlg/EcalZSup",
-                           "CaloZSupAlg/HcalZSup"};
+#include "$CALODAQROOT/options/CaloDigitsSeq.opts"
 
-
-
+//
 MergedPi0Rec.CreateSplitClustersOnly = true;
 #include "$CALORECOOPTS/MergedPi0Rec.opts"
 
