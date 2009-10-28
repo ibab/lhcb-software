@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.136 2009-10-27 16:35:23 jpalac Exp $
+# $Id: requirements,v 1.137 2009-10-28 10:22:30 jpalac Exp $
 package AnalysisSys
 version v3r11
 
@@ -16,7 +16,7 @@ use  FlavourTagging             v9r0     Phys   # Marco Musy
 use  DaVinciFilter              v7r1     Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r5p2   Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r2p3   Rich   # Chris Jones
+use  RichPIDQC                  v1r2p4   Rich   # Chris Jones
 use  DstCalibSel                v1r2     Rich   # Andrew Powell
 
 ####################################################################
