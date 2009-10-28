@@ -1,8 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltBase
-! Responsible : Jose Angel Hernando Morata
+! Responsible : Gerhard Raven
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
+
+!========================== HltBase v7r0p1 2009-10-28 ===================
 ! 2009-10-25 - Gerhard Raven
  - input selections are now const
 
