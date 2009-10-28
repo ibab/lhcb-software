@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.23 2009-10-09 10:15:53 xieyu Exp $
+!$Id: release.notes,v 1.24 2009-10-28 13:53:52 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFitCheck
 ! Responsible : Yuehong Xie
 ! Puspose     : A set of tests for components in the Phys/VertexFit package.
 !===========================================================================
+
+!===================== VertexFitCheck v1r4p1 2009-10-28 ====================
 
 ! 2009-10-09 - Yuehong Xie
  - remove stateAtFirstMeas in CheatedPVReFitter
