@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.19 2009-10-21 09:46:01 jpalac Exp $
+#$Id: Wrappers.py,v 1.20 2009-10-28 14:09:15 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -10,17 +10,16 @@ are available:
 """
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
-__all__ = ('DataOnDemand', 'Selection', 'SelectionSequence')
-
-from Gaudi.Configuration import *
-from GaudiConf.Configuration import *
-from LHCbKernel.Configuration import *
+__all__ = ('DataOnDemand', 'AutomaticData', 'Selection', 'SelectionSequence')
 
 class DataOnDemand(object) :
     """
-    Simple wrapper for a Data-On-Demand location. Returns output location
-    via outputLocation() method. Can be used as a Selection in
-    RequiredSelections field of other Selections.
+    Simple wrapper for a data location. To be used for locations
+    that are guaranteed to be populated. This could be a location
+    on a DST or a location registered to the DataOnDemandSvc.
+    Returns output location via outputLocation() method.
+    Can be used as a Selection in RequiredSelections field of other
+    Selections.
 
     Example: wrap StdLoosePions
 
@@ -54,6 +53,9 @@ class DataOnDemand(object) :
         loc = self.outputLocation()
         loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
         return loc
+
+
+AutomaticData = DataOnDemand
     
 class Selection(object) :
     """
