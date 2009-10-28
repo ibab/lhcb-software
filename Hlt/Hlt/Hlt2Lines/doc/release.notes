@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.68 2009-10-27 12:45:57 jnardull Exp $
+$Id: release.notes,v 1.69 2009-10-28 17:18:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,7 @@ $Id: release.notes,v 1.68 2009-10-27 12:45:57 jnardull Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v1r9 2009-10-28 ===================
 ! 2009-10-27 - Jacopo Nardulli
  - Removing DecayTreeTuple from the DX Lines 
 
