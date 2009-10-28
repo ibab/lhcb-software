@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.h,v 1.4 2009-10-21 15:04:56 cocov Exp $
+// $Id: DeVeloPixSensor.h,v 1.5 2009-10-28 13:02:28 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSENSOR_H
 #define VELOPIXDET_DEVELOPIXSENSOR_H 1
 
@@ -162,7 +162,7 @@ public:
   /// The thickness of the sensor in mm
   inline double siliconThickness() const {return m_siliconThickness;}
   /// The number of ladders orming the detector
-  inline double ladderNumber() const {return m_ladderNumber;}
+  inline int ladderNumber() const {return m_ladderNumber;}
 
   /// Returns the software module number
   inline unsigned int module() const {return m_module;}

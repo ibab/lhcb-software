@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.5 2009-10-21 15:04:56 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.6 2009-10-28 13:02:28 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -113,17 +113,24 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
 {
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-
+  //std::cout<<"Point "<<point<<std::endl;
+  //std::cout<<"LocalPoint "<<localPoint<<std::endl;
+  
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
+
   if(!sc.isSuccess()) return sc;  
   unsigned int sensor=sensorNumber();
   // Create the associated VeloPixChannelID
   channel.setSensor(sensor);
   // Get the ladder number in which the point is
-  int ladderIndex = WhichLadder(point);
+  int ladderIndex = WhichLadder(localPoint);
+  
+  //std::cout<<"LADDER INDEX "<<ladderIndex<<std::endl;
+  
   // Get the chip number in which the point is
-  int chipIndex = WhichChip(point,ladderIndex);
+  int chipIndex = WhichChip(localPoint,ladderIndex);
+  //std::cout<<"CHIP INDEX "<<chipIndex<<std::endl;
   // Compute the proper chip number for VeloPixChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
@@ -132,7 +139,8 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
   // Set the chip number in the VeloPixChannelID
   channel.setChip(prop_chipIndex);  
   // Get the pixel position in which the point is
-  std::pair <int,int> pixelPos = WhichPixel(point,ladderIndex,chipIndex,fraction);
+  std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
+  //std::cout<<"FUCKING PIXEL "<<pixelPos.first<<" "<<pixelPos.second<<std::endl;
   if( pixelPos.first < 0. || pixelPos.second < 0. ){
     return StatusCode::FAILURE;
   }
@@ -189,31 +197,42 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
                                        std::vector <LHCb::VeloPixChannelID>& channels) const
 {
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
-  // Get the channel 
+  // Get the channel corresponding to the central point 
   LHCb::VeloPixChannelID  channelCentral;
   std::pair <double, double> fraction;
   StatusCode sc = pointToChannel( point, channelCentral, fraction);
+
+  // Initialise the size and if there is a channel at the central point get its size
+  std::pair <double, double> size (0.,0.);
+  if( sc.isSuccess()) size = PixelSize(channelCentral);
+
+  // Loop over the possible position in the 3x3 cluster
   for (int x = -1 ; x < 2 ; x ++){
     for (int y = -1 ; y < 2 ; y ++){
-      std::pair <double, double> size (0.,0.);
+      
+      // if it is the central position and it was corresponding to a channel, put it in the list
       if( x == 0 && y == 0 && sc.isSuccess() ) {
         channels.push_back(channelCentral);
-        size = PixelSize(channelCentral);
+        continue;
       }
-      else continue;
+      // but if is the central position and it does not correspond to any channel skip it
+      else if( x == 0 && y == 0 && !sc.isSuccess() )  continue;
       double relx = 0;
       double rely = 0;
+      // compute the relx,rely distances to which one might find an other pixel for the different x,y    
       if (x < 0) relx = - fraction.first*size.first - lpSize()/2;
       if (x > 0) relx = (1- fraction.first)*size.first + lpSize()/2;
       if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
       if (y < 0) rely = (1- fraction.second)*size.second + hpSize()/2;
       if (!sc.isSuccess()){
+      // in case fraction is undefined (central position does not correspond to any channel), move by nominal size
         relx = x*lpSize();
         rely = y*hpSize();
       }
       Gaudi::XYZPoint neigh_point (point.x()+relx,point.y()+rely,point.z());       
       LHCb::VeloPixChannelID neig_channel;
       std::pair <double,double> frac (0.,0.);
+      // if there is a channel corresponding to this new point, put it in the list
       if ( pointToChannel( neigh_point, neig_channel, frac).isSuccess()){
         channels.push_back(neig_channel);
       }
@@ -229,6 +248,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
 StatusCode DeVeloPixSquareType::isInActiveArea(const Gaudi::XYZPoint& point) const
 {
   // Check the the point is in the active part of a ladder
+  
   if(WhichLadder(point)>-0.5)return StatusCode::SUCCESS;
   return StatusCode::FAILURE;
 }
@@ -239,13 +259,19 @@ StatusCode DeVeloPixSquareType::isInActiveArea(const Gaudi::XYZPoint& point) con
 //==============================================================================
 int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 {
+  //std::cout<<"thePoint in WhichLadder "<<point<<std::endl;
+  
   for ( int index = 0 ; index <(int) m_ladders.size() ; index++){
     const Gaudi::XYZPoint pointRef = m_ladders[index].ReferencePoint();
     if (
         (point.x()-pointRef.x() > 0. && point.x()-pointRef.x()<m_ladders[index].nChip()*(chipLength()+interChipDist())) 
         && (point.y()-pointRef.y() > 0. && point.y()-pointRef.y()<chipWidth())
-        && (fabs(point.z()-z()-pointRef.z())<6*siliconThickness()/10)
-        ) return index;
+        && (fabs(point.z()-pointRef.z())<6*siliconThickness()/10)
+        ) 
+    {
+      return index;
+    }
+    
   }
   return -1;
 }
@@ -274,15 +300,15 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
 
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
   Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-alongAxisOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
-
-  std::vector<int> positionEdgePix =  (m_ladders[ladderIndex]).edgesOrientation();
+  
+  int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipIndex);
   std::pair< int , int > thePixel;
 
   // Set the size of the edges (left/right) pixels
   double interchipPixSizeLEFT = lpSize();
   double interchipPixSizeRIGHT = lpSize();
-  if ( positionEdgePix[chipIndex]== 1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeRIGHT = interchipPixSize();
-  if ( positionEdgePix[chipIndex]== -1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeLEFT = interchipPixSize();
+  if ( positionEdgePix== 1 || positionEdgePix== 0 )interchipPixSizeRIGHT = interchipPixSize();
+  if ( positionEdgePix== -1 || positionEdgePix== 0 )interchipPixSizeLEFT = interchipPixSize();
   
   // correct for the extra length of the left pixel
   double newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
@@ -290,6 +316,7 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   thePixel.first = (int)(newx/lpSize());
   fraction.first = newx/lpSize() - (int)(newx/lpSize());
   //modify in the case where it is on the left edge
+  
   if (newx < lpSize()  && newx > - (interchipPixSizeLEFT-lpSize())){
     thePixel.first=0; // in case it would have been negative
       fraction.first = LocalPoint.x()/interchipPixSizeLEFT;
@@ -297,7 +324,7 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   else if (newx <((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT && newx >((nPixCol()-2)*lpSize())){
     fraction.first = (newx-(nPixCol()-1)*lpSize())/interchipPixSizeRIGHT;
   }
-  else{
+  else if (newx < - (interchipPixSizeLEFT-lpSize()) && newx >((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT ){
     thePixel.first = -1;
     fraction.first = -1; 
   }
@@ -309,9 +336,10 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
 std::pair<double,double> DeVeloPixSquareType::PixelSize(LHCb::VeloPixChannelID channel) const
 {
   int ladderIndex = -1;
+  int ladderNum = ladderNumber();
   int chipNum = channel.chip();
   int ntotChip = 0;
-  for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
+  for(int ilad = 0 ; ilad < ladderNum ; ilad ++){
     ntotChip += m_ladders[ilad].nChip();
     if ( chipNum < ntotChip ) {
       ladderIndex = ilad;
@@ -319,14 +347,15 @@ std::pair<double,double> DeVeloPixSquareType::PixelSize(LHCb::VeloPixChannelID c
     }
   }
   std::pair<double,double> size (-1.,-1.);
+  if (ladderIndex == -1)return size;
   size.first = lpSize();
   size.second = hpSize();
-  std::vector<int> positionEdgePix =  (m_ladders[ladderIndex]).edgesOrientation();
+  int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipNum);
   // case where the edge pixel is on the right and the channel correspond to a edge pixel
-  if ( ( positionEdgePix[chipNum]== 1 || positionEdgePix[chipNum]== 0 ) && channel.pixel_lp() == (unsigned int)(nPixCol()-1)){
+  if ( ( positionEdgePix== 1 || positionEdgePix== 0 ) && channel.pixel_lp() == (unsigned int)(nPixCol()-1)){
     size.first = interchipPixSize();
   }
-  if ( ( positionEdgePix[chipNum]== -1 || positionEdgePix[chipNum]== 0) && channel.pixel_lp() == 0 ){
+  if ( ( positionEdgePix== -1 || positionEdgePix== 0) && channel.pixel_lp() == 0 ){
     size.first = interchipPixSize();
   }
   return size;

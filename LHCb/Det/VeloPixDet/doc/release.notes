@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 - Victor Coco
+ - debugging of the pointToChannel function and similar.
+
 ! 2009-10-21 - Victor Coco
  - modify the function PixelSize so that the only argument is Channel ID
 

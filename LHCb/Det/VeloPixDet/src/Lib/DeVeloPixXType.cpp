@@ -1,4 +1,4 @@
-// $Id: DeVeloPixXType.cpp,v 1.4 2009-10-21 11:19:28 cocov Exp $
+// $Id: DeVeloPixXType.cpp,v 1.5 2009-10-28 13:02:28 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXXTYPE_CPP 1
 //==============================================================================
@@ -184,14 +184,14 @@ std::pair<int,int> DeVeloPixXType::WhichPixel(const Gaudi::XYZPoint& point, int 
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
   Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-alongAxisOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
 
-  std::vector<int> positionEdgePix =  (m_ladders[ladderIndex]).edgesOrientation();
+  int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipIndex);
   std::pair< int , int > thePixel;
 
   // Set the size of the edges (left/right) pixels
   double interchipPixSizeLEFT = lpSize();
   double interchipPixSizeRIGHT = lpSize();
-  if ( positionEdgePix[chipIndex]== 1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeRIGHT = interchipPixSize();
-  if ( positionEdgePix[chipIndex]== -1 || positionEdgePix[chipIndex]== 0 )interchipPixSizeLEFT = interchipPixSize();
+  if ( positionEdgePix== 1 || positionEdgePix== 0 )interchipPixSizeRIGHT = interchipPixSize();
+  if ( positionEdgePix== -1 || positionEdgePix== 0 )interchipPixSizeLEFT = interchipPixSize();
   
   // correct for the extra length of the left pixel
   double newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
