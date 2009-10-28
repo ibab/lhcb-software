@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.46 2009-10-15 10:32:28 jpalac Exp $
+!$Id: release.notes,v 1.47 2009-10-28 14:32:35 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Ex/MicroDSTExample
 ! Responsible : Juan PALACIOS
 ! Purpose     : MicroDST making and reading examples.
 !-----------------------------------------------------------------------------
+
+!======================= Ex/MicroDSTExample v2r11 2009-10-28 =================
+
+! 2009-10-28 - Juan PALACIOS
+ - Added scripts/ReadTags.py
+  . Script to test FlavourTags.
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings
