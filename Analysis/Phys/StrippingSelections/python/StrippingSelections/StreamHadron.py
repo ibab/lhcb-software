@@ -24,5 +24,6 @@ stream.appendLines( [
 		        StrippingBu2D0K_D02KSPiPi.line1,  
 		        StrippingBu2D0K_D02KSPiPi.line2,  
 		        StrippingBu2hhh.line,  
-		        StrippingTopo.line
+		        StrippingTopo.line1,
+                        StrippingTopo.line2
 		    ] )
