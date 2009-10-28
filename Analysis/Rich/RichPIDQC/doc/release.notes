@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.17 2009-10-28 10:18:21 jpalac Exp $
+!$Id: release.notes,v 1.18 2009-10-28 13:49:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+!========================== RichPIDQC v1r2p4 2009-10-28 ======================
 
 ! 2009-10-28 - Juan PALACIOS
  - python/RichPIDQC/Configuration.py, DstarToDzeroPi.py
