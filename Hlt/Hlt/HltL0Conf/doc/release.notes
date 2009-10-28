@@ -4,6 +4,10 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v2r12 2009-10-28 ===================
+! 2009-10-21 - Patrick Koppenburg
+ - Undocumented changes by Johannes Albrecht
+
 !========================== HltL0Conf v2r11 2009-10-17 ===================
 ! 2009-10-08 - Gerhard Raven
  - replace floats by doubles
