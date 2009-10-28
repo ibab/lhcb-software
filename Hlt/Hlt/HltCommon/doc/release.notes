@@ -5,6 +5,7 @@
 !----------------------------------------------------------------------------
 
 
+!========================== HltCommon v5r13 2009-10-28 ===================
 ! 2009-10-28 - Gerhard Raven
  - add hooks to verify compatibility of configurations in ConfigFileAccessSvc
 
