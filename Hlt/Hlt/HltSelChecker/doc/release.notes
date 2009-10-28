@@ -6,7 +6,7 @@
 !
 ! To generate efficiencies at https://twiki.cern.ch/twiki/bin/view/LHCb/Hlt2EffsRates
 !
-! setenv dvv Effective # Leptonic Hadronic Charming Effective Hlt1Only 
+! setenv dvv 320Vis # Leptonic Hadronic Charming Effective Hlt1Only 320Vis
 !
 ! foreach a (`ls -1 options/DVTest-B*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
 !   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &

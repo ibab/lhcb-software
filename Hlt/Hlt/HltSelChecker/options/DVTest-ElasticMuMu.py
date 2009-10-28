@@ -11,7 +11,7 @@ from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
                , Signal="ElasticMuMu"
-               , Decay = "pp => ^mu+ ^mu-"
+               , Decay = ""
                # Dermot Moran, https://twiki.cern.ch/twiki/bin/view/LHCb/FlavourPhysics#MC09_samples_of_offline_selected
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/d/dmoran/ElasticMuMu/ElasticMuMu_SEL.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()

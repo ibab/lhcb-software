@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2.py,v 1.1 2009-10-15 12:32:15 pkoppenb Exp $
+### $Id: DVTestHlt2.py,v 1.2 2009-10-28 17:00:32 pkoppenb Exp $
 #
 #   Hlt 2 selections test job
 #
@@ -48,6 +48,10 @@ DaVinci().ReplaceL0BanksWithEmulated = False   # Redo L0
 DaVinci().HistogramFile = "DVTestHlt.root"     # Histogram file
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+
+from Configurables import HltConf
+HltConf().AdditionalHlt1Lines = ['Hlt1BeamGasCrossingForcedRZReco']
+HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
 
 # This will speed things up, but don't do that if you add a DaVinci selection
 

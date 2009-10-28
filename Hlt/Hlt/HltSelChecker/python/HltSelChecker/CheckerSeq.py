@@ -1,4 +1,4 @@
-## @file $Id: CheckerSeq.py,v 1.3 2009-10-25 18:04:22 graven Exp $
+## @file $Id: CheckerSeq.py,v 1.4 2009-10-28 17:00:32 pkoppenb Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.3 2009-10-25 18:04:22 graven Exp $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.4 2009-10-28 17:00:32 pkoppenb Exp $, $Revision: 1.4 $"
 # =============================================================================
 ###############################################################################
 #
@@ -24,7 +24,7 @@ class CheckerSeq :
     def __init__(self,
                  DV       = None,
                  Signal   ='Undefined',
-                 Decay    ='Undefined',
+                 Decay    ='',
                  Input    =[],
                  DataType ='MC09'):
         """
@@ -61,9 +61,10 @@ class CheckerSeq :
         seq.Context = "HLT"
         seq.IgnoreFilterPassed = True
 
-        ftt = self.trueTracks()
-        seq.Members.append(ftt)
-        seq.Members.append( self.correlations( ftt.name() ))
+        if (self._Decay):
+            ftt = self.trueTracks(self._Decay)
+            seq.Members.append(ftt)
+            seq.Members.append( self.correlations( ftt.name() ))
         seq.Members.append( self.eventTuple() )
         return seq
     
@@ -83,7 +84,7 @@ class CheckerSeq :
         return tuple
         
 ###############################################################################
-    def trueTracks(self):
+    def trueTracks(self,decay):
         """
         True Tracks
         """
@@ -92,7 +93,7 @@ class CheckerSeq :
         ftt.TracksPath = [ "Hlt/Track/Long" ]
         ftt.OutputPath = "Hlt/Track/Signal"
         ftt.addTool(MCDecayFinder)
-        ftt.MCDecayFinder.Decay = self._Decay
+        ftt.MCDecayFinder.Decay = decay
         return ftt
     
 ###############################################################################

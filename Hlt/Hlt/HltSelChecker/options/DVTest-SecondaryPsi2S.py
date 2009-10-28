@@ -11,7 +11,7 @@ from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
                , Signal="SecondaryPsi2S"
-               , Decay = "psi(2S) -> ^mu+ ^mu- {,gamma}{,gamma}"
+               , Decay = "psi(2S) -> ^mu+ ^mu- {,gamma}{,gamma}{,gamma}"
                # Giovanni Sabatino, https://twiki.cern.ch/twiki/bin/view/LHCb/FlavourPhysics#MC09_samples_of_offline_selected
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/s/sabatino/168/outputdata/psi_2S.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()

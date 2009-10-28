@@ -11,7 +11,7 @@ from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
                , Signal="DrellYan2GeV"
-               , Decay = "pp => ^mu+ ^mu-"
+               , Decay = ""
                # Jonathan Anderson, https://twiki.cern.ch/twiki/bin/view/LHCb/FlavourPhysics#MC09_samples_of_offline_selected
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/j/janderso/DY2GeV_MC09_Selected.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
