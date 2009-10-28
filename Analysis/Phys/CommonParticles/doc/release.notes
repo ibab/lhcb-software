@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.156 2009-10-09 12:39:25 pkoppenb Exp $
+!$Id: release.notes,v 1.157 2009-10-28 13:46:46 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,8 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+!========================= CommonParticles v6r2 2009-10-28 ===================
 
 ! 2009-10-09 - Patrick Koppenburg
  - Added Lambda as a pure copy of Ks with pi+ -> p+
