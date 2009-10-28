@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.271 2009-10-19 12:02:16 pkoppenb Exp $
+! $Id: release.notes,v 1.272 2009-10-28 13:51:16 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r22 2009-10-28 =================
 
 ! 2009-10-19 - Patrick Koppenburg
  - MCReconstructed : removed commented out stuff. More debugging
