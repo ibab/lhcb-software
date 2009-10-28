@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.43 2009-10-21 12:58:15 mneedham Exp $
+// $Id: DeSTSector.h,v 1.44 2009-10-28 15:00:20 jluisier Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -661,19 +661,6 @@ inline std::vector<DeSTSector::Status> DeSTSector::stripStatus() const{
   } // nStrip
   return vec;
 }
-
-inline void DeSTSector::setNoise(const std::vector<double>& values) {
-  m_noiseValues = values; 
-} 
-
-
-inline void DeSTSector::setCMNoise(const std::vector<double>& values) {
-  m_cmModeValues = values; 
-} 
-
-inline void DeSTSector::setADCConversion(const std::vector<double>& values) {
-  m_electronsPerADC = values; 
-} 
 
 inline LHCb::STChannelID DeSTSector::stripToChan(const unsigned int strip) const{
   return isStrip(strip) ? LHCb::STChannelID(elementID().type(),elementID().station(),

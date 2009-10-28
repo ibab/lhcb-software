@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.182 2009-10-28 11:42:40 jluisier Exp $
+!$Id: release.notes,v 1.183 2009-10-28 15:00:20 jluisier Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
 ! 2009-10-28 J Luisier
+ - Bug fix in setNoise, setCMnoise and setADCConversion methods
  - Bug fix in case of unexisting cmNoise paramVector in Noise condition
 
 ! 2009-10-21 M Needham

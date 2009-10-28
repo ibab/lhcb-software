@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.60 2009-10-28 11:42:40 jluisier Exp $
+// $Id: DeSTSector.cpp,v 1.61 2009-10-28 15:00:21 jluisier Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -309,6 +309,57 @@ double DeSTSector::portNoise(const unsigned int& beetle,
     return sum / number;
   }
 }
+
+void DeSTSector::setNoise(const std::vector<double>& values)
+{
+  Condition* aCon( condition(m_noiseString) );
+  if (aCon == 0)
+  {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  }
+  else
+  {
+    std::vector<double>& reference =
+      aCon -> param< std::vector< double > >( "SectorNoise" );
+    reference.assign( values.begin(), values.end() );
+  }
+} 
+
+
+ void DeSTSector::setCMNoise(const std::vector<double>& values)
+{
+  Condition* aCon( condition(m_noiseString) );
+  if (aCon == 0)
+  {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  }
+  else
+  {
+    std::vector<double>& reference =
+      aCon -> param< std::vector< double > >( "cmNoise" );
+    reference.assign( values.begin(), values.end() );
+  }
+} 
+
+ void DeSTSector::setADCConversion(const std::vector<double>& values)
+{
+  Condition* aCon( condition(m_noiseString) );
+  if (aCon == 0)
+  {
+    MsgStream msg(msgSvc(), name());
+    msg << MSG::ERROR << "Failed to find status condition" << endmsg;
+  }
+  else
+  {
+    std::vector<double>& reference =
+      aCon -> param< std::vector< double > >( "electronsPerADC" );
+    reference.assign( values.begin(), values.end() );
+  }
+} 
+
+
 
 double DeSTSector::cmNoise(const LHCb::STChannelID& aChannel) const
 {
@@ -786,7 +837,8 @@ void DeSTSector::setSectorStatus(const DeSTSector::Status& newStatus)
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "Failed to find status condition" << endmsg;
   } else {
-    aCon->param<int>("SectorStatus") = int(newStatus);
+    int& value = aCon->param<int>("SectorStatus");
+    value = int(newStatus);
   }
 }
 
