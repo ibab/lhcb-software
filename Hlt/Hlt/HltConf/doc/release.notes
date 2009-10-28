@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.356 2009-10-26 17:17:06 pkoppenb Exp $ 
+! $Id: release.notes,v 1.357 2009-10-28 16:09:42 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-10-28 - Patrick Koppenburg
+ - Add new slors AdditionalHlt1Lines and 2Lines, which allows users to 
+	 test lines by hand. Usage:
+
+from Configurables import HltConf
+HltConf().AdditionalHlt1Lines = ['Hlt1BeamGasCrossingForcedRZReco']
+HltConf().AdditionalHlt2Lines = ['Hlt2Bs2PhiGamma', 'Hlt2Bd2KstGamma']
+   
 
 ! 2009-10-26 - Patrick Koppenburg
  - XGamma renamed B2XGamma

@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.127 2009-10-21 09:39:43 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.128 2009-10-28 16:09:42 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -36,7 +36,9 @@ class HltConf(LHCbConfigurableUser):
                 , 'SkipHltRawBankOnRejectedEvents' : False
                 , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
                                                           # (only matters if EnablelumiEventWriting = True)
-                , "WithMC"                       : False 
+                , "WithMC"                       : False
+                , "AdditionalHlt1Lines"          : []     # must be configured
+                , "AdditionalHlt2Lines"          : []     # must be configured
                 }
 
     __settings__ = None 
@@ -328,6 +330,8 @@ class HltConf(LHCbConfigurableUser):
         """
         Add the configured lines into the Hlt1 and Hlt2 sequencers,
         provided there is no reason not to do so...
+
+        @todo remove this method
         """
         from HltLine.HltLine     import hlt1Lines
         from HltLine.HltLine     import hlt2Lines
@@ -341,6 +345,11 @@ class HltConf(LHCbConfigurableUser):
         else :
             activeHlt1Lines = [ i.name() for i in hlt1Lines() ]
             activeHlt2Lines = [ i.name() for i in hlt2Lines() ]
+
+        # append additional lines # WARNING do that in DaVinci, not Moore!
+        # @todo : Need to protect against that when making a TCK. Gerhard know how
+        activeHlt1Lines.extend( self.getProp('AdditionalHlt1Lines')  )
+        activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
 
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
         activeHlt1Lines += [ 'Hlt1Global' ]
