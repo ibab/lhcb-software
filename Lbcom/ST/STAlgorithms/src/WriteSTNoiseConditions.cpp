@@ -1,4 +1,4 @@
-// $Id: WriteSTNoiseConditions.cpp,v 1.2 2009-10-28 15:06:56 jluisier Exp $
+// $Id: WriteSTNoiseConditions.cpp,v 1.3 2009-10-28 15:46:05 jluisier Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -31,7 +31,7 @@ WriteSTNoiseConditions::WriteSTNoiseConditions( const std::string& name,
   declareProperty("startTag", m_startTag = "<condition");
   declareProperty("outputFile",m_outputFileName = "NoiseValuesInfo.xml");
   declareProperty("depths", m_depth = 3u );
-  declareProperty("precision", m_precision = 2u);
+  declareProperty("precision", m_precision = 4u);
   declareProperty("removeCondb", m_removeCondb = false);
   declareProperty("author", m_author = "Joe Bloggs");
   declareProperty("tag", m_tag = "None");

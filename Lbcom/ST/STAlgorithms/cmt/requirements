@@ -15,7 +15,7 @@ use STKernel            v*    ST
 use RecEvent            v*    Event
 
 # ================= component library ====================
-library STAlgorithms ../src/*.cpp 
+library STAlgorithms ../src/*.cpp  import=AIDA
 apply_pattern component_library library=STAlgorithms
 
 
