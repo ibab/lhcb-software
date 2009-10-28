@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 - Patrick Koppenburg
+ - Fix or remove a few decay descriptors
+
 ! 2009-10-25 - Gerhard Raven
  - fix python warning : import * only allowed at module level
 
