@@ -7,10 +7,10 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |        90 |         69 |(  76.6667 +- 4.45831  )%|   -------   |   -------   |
+ |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |       999 |        416 |(  41.6416 +- 1.55967  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|        90 |         63 |(  70.0000 +- 4.83046  )%|   -------   |   -------   |
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       999 |        106 |(  10.6106 +- 0.974385 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
