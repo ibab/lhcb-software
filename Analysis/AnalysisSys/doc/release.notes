@@ -3,7 +3,16 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
-</PRE><H1><A NAME=v3r9>2009-10-02 Analysis v3r10 </A></H1><PRE>
+</PRE><H1><A NAME=v3r11>2009-10-28 Analysis v3r11 </A></H1><PRE>
+
+ - Based on LHCb v28r1 and Gaudi v21r5
+
+ - Highlights
+   * New Stripping configuration framework
+   * Improvements to Selection Framweork
+   * Changes to DecayTreeTuple for using MC associaiton in MicroDST.
+
+</PRE><H1><A NAME=v3r10>2009-10-02 Analysis v3r10 </A></H1><PRE>
 
  - Based on LHCb v28r0 and Gaudi v21r4
 
