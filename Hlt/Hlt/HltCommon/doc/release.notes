@@ -5,6 +5,9 @@
 !----------------------------------------------------------------------------
 
 
+! 2009-10-28 - Gerhard Raven
+ - add hooks to verify compatibility of configurations in ConfigFileAccessSvc
+
 ! 2009-10-26 - Gerhard Raven
  - one more const
 

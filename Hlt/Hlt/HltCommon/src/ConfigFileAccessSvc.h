@@ -1,4 +1,4 @@
-// $Id: ConfigFileAccessSvc.h,v 1.5 2008-07-10 07:24:08 graven Exp $
+// $Id: ConfigFileAccessSvc.h,v 1.6 2009-10-28 11:25:27 graven Exp $
 #ifndef CONFIGFILEACCESSSVC_H 
 #define CONFIGFILEACCESSSVC_H 1
 
@@ -44,15 +44,18 @@ public:
   std::vector<ConfigTreeNodeAlias> configTreeNodeAliases(const ConfigTreeNodeAlias::alias_type&);
 private:
   MsgStream& verbose() const { return msg(MSG::VERBOSE); }
-  MsgStream& debug() const { return msg(MSG::DEBUG); }
-  MsgStream& info() const { return msg(MSG::INFO); }
+  MsgStream&   debug() const { return msg(MSG::DEBUG);   }
+  MsgStream&    info() const { return msg(MSG::INFO);    }
   MsgStream& warning() const { return msg(MSG::WARNING); }
-  MsgStream& error() const { return msg(MSG::ERROR); }
-  MsgStream& fatal() const { return msg(MSG::FATAL); }
-  MsgStream& always() const { return msg(MSG::ALWAYS); }
+  MsgStream&   error() const { return msg(MSG::ERROR);   }
+  MsgStream&   fatal() const { return msg(MSG::FATAL);   }
+  MsgStream&  always() const { return msg(MSG::ALWAYS);  }
   
   mutable std::auto_ptr<MsgStream>     m_msg;
   std::string                          m_dir;   ///< where to read/write configurations from/to?
+
+  // TODO: replace fs::path with a concrete config...
+  bool isCompatible(const ConfigTreeNodeAlias& alias, const boost::filesystem::path& dirName ) const;
 
   boost::filesystem::path propertyConfigPath( const PropertyConfig::digest_type& digest ) const;
   boost::filesystem::path configTreeNodePath( const ConfigTreeNode::digest_type& digest ) const;

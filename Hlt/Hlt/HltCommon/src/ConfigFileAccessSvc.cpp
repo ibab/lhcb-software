@@ -1,6 +1,7 @@
 #include "ConfigFileAccessSvc.h"
 #include <sstream>
 #include <string>
+#include "boost/filesystem/path.hpp"
 
 #include "boost/lexical_cast.hpp"
 #include "boost/filesystem/path.hpp"
@@ -188,6 +189,15 @@ ConfigFileAccessSvc::writeConfigTreeNode(const ConfigTreeNode& config) {
     }
 }
 
+// TODO: replace fs::path with a concrete config...
+bool 
+ConfigFileAccessSvc::isCompatible(const ConfigTreeNodeAlias& /*alias*/, const fs::path& /*dirName*/ ) const {
+    // TODO: only allow write of TOPLEVEL alias if _consistent_ with other configs in same directory...
+    // (nasty: we wrote everything, only to find out in the end that 
+    // should be common to all implementations -- mix-in ?? 
+    return true;
+}
+
 ConfigTreeNodeAlias::alias_type 
 ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) {
    // verify that we're pointing at something existing
@@ -198,7 +208,12 @@ ConfigFileAccessSvc::writeConfigTreeNodeAlias(const ConfigTreeNodeAlias& alias) 
    // now write alias...
    fs::path fnam = configTreeNodeAliasPath(alias.alias());
    fs::path fdir = fnam.branch_path();
-   if (!fs::exists(fdir) && !create_directories(fdir)) {
+   if (fs::exists(fdir)) {
+            if (!isCompatible(alias,fdir) ) {
+                error() << " current TOPLEVEL is not compatible with other config in " << fdir.string() << " refusing to write TOPLEVEL alias " << endmsg;
+                return ConfigTreeNodeAlias::alias_type();
+            }
+   } else if ( !create_directories(fdir) ) {
             error() << " directory " << fdir.string() << " does not exist, and could not create... " << endmsg;
             return ConfigTreeNodeAlias::alias_type();
    }
