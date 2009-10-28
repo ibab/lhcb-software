@@ -1,6 +1,6 @@
 class Physics_320Vis_300L0_10Hlt1_Aug09 :
     """
-    Threshold settings for Hlt1 and 2 for 2010 conditions
+    Threshold settings for Hlt1 for 2010 conditions
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
@@ -16,7 +16,8 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
         # so we can force that classes which inherit from us
         # and overrule either ActiveHlt.Lines also overrule
         # HltType...
-        if self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self)  :
+        if ( self.ActiveHlt1Lines() != ref.ActiveHlt1Lines(self)  or
+             self.ActiveHlt2Lines() != ref.ActiveHlt2Lines(self) ) :
             raise RuntimeError('Must update HltType when modifying ActiveHlt.Lines()')
 
     

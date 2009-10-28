@@ -94,11 +94,9 @@ class Physics_10000Vis_1000L0_40Hlt1_HadronicHlt2_Jul09( Physics_10000Vis_1000L0
                        'Hlt2UnbiasedBmm' ] )
 ##
 ## phi : whole list
+        from Phi_Nominal import PhiHigh_Nominal
+        list.extend( PhiHigh_Nominal().ActiveHlt2Lines() )
 ##
-        list.extend( [ 'Hlt2IncPhi',
-                       'Hlt2IncPhiRobust',
-                       'Hlt2IncPhiTF',
-                       'Hlt2IncPhiSidebands' ])
 ##
 ## exclusive : whole list
 ##

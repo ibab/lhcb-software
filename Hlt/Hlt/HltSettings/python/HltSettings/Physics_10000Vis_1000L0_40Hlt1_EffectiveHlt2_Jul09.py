@@ -130,10 +130,8 @@ class Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09( Physics_10000Vis_1000L
 ##
 ## phi : whole list
 ##
-        list.extend( [ 'Hlt2IncPhi',
-                       'Hlt2IncPhiRobust',
-                       'Hlt2IncPhiTF',
-                       'Hlt2IncPhiSidebands' ])
+        from Phi_Nominal import PhiHigh_Nominal
+        list.extend( PhiHigh_Nominal().ActiveHlt2Lines() )
 ##
 ## exclusive : whole list
 ##

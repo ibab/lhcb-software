@@ -4,6 +4,15 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 - Patrick Koppenburg
+ - Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09.py
+   . New setting for MC09 (2010) conditions in Hlt1 and then most of Hlt2
+     with default cuts. Effectively runs Hlt2 on top of 
+     Physics_320Vis_300L0_10Hlt1_Aug09
+ - B2DX_320Vis : container for B2DX from Jacopo
+ - Physics_10000Vis_1000L0_40Hlt1_*Hlt2_Jul09.py:
+   . Better treatment of Phi stream 
+
 ! 2009-10-26 - Patrick Koppenburg
  - Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_Jul09.py : rename XGamma into
    B2XGamma. 
