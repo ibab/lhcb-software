@@ -95,11 +95,6 @@ TopoStripping3BodySeq = GaudiSequencer("TopoStripping3BodySeq")
 TopoStripping3BodySeq.Members += [TopoStripping2Body]
 TopoStripping3BodySeq.Members += [TopoStripping3Body]
 TopoStripping3BodySeq.Members += [filterTopoStripping3Body]
-#the 'robust' decision
-TopoStrippingSequence = GaudiSequencer("TopoStrippingSequence")
-TopoStrippingSequence.Members += [TopoStripping2BodySeq]
-TopoStrippingSequence.Members += [TopoStripping3BodySeq]
-TopoStrippingSequence.ModeOR = 1
 #the chi2-cut based 2-body sequence
 TopoStrippingTF2BodySeq = GaudiSequencer("TopoStrippingTF2BodySeq")
 TopoStrippingTF2BodySeq.Members += [TopoStrippingTF2Body]
@@ -109,14 +104,23 @@ TopoStrippingTF3BodySeq = GaudiSequencer("TopoStrippingTF3BodySeq")
 TopoStrippingTF3BodySeq.Members += [TopoStrippingTF2Body]
 TopoStrippingTF3BodySeq.Members += [TopoStrippingTF3Body]
 TopoStrippingTF3BodySeq.Members += [filterTopoStrippingTF3Body]
-#the 'chi2-cut based' decision
-TopoStrippingTFSequence = GaudiSequencer("TopoStrippingTFSequence")
-TopoStrippingTFSequence.Members += [TopoStrippingTF2BodySeq]
-TopoStrippingTFSequence.Members += [TopoStrippingTF3BodySeq]
-TopoStrippingTFSequence.ModeOR = 1
-#Finally the line itself
-line = StrippingLine('TopologicalLine'
+#the 2-body decision
+TopoStripping2BodySequence = GaudiSequencer("TopoStripping2BodySequence")
+TopoStripping2BodySequence.Members += [TopoStripping2BodySeq]
+TopoStripping2BodySequence.Members += [TopoStrippingTF2BodySeq]
+#the 3-body decision
+TopoStripping3BodySequence = GaudiSequencer("TopoStripping3BodySequence")
+TopoStripping3BodySequence.Members += [TopoStripping3BodySeq]
+TopoStripping3BodySequence.Members += [TopoStrippingTF3BodySeq]
+#the 2-body line itself
+line1 = StrippingLine('Topological2BodyLine'
 #               , prescale = 1.
                , prescale = 0.1
-               , algos = [StrippingKillTooManyTopoIP,TopoStrippingSequence,TopoStrippingTFSequence]
+               , algos = [StrippingKillTooManyTopoIP,TopoStripping2BodySequence]
+               )
+#the 3-body line itself
+line2 = StrippingLine('Topological3BodyLine'
+#               , prescale = 1.
+               , prescale = 0.1
+               , algos = [StrippingKillTooManyTopoIP,TopoStripping3BodySequence]
                )

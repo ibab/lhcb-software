@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-28
+ - python/StrippingSelections/StrippingTopo.py
+  . Split the 2 body and 3 body topological lines. 
+
 ! 2009-10-27 - Juan PALACIOS
  - cmt/requirements
   . Increase version to v1r8
