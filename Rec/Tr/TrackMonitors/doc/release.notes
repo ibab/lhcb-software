@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 Wouter Hulsbergen
+ - fixed histo limits in TrackMonitor and added histo for scattering momentum
+ - fixed memory leak in OTHitEfficiencyMonitor
+
 !============================ TrackMonitors v1r14 2009-10-20 =================
 ! 2009-10-16 - Johan Blouw
  - changed an 'always' into 'debug', and fixed the 'comparison between signed

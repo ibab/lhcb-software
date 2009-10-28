@@ -13,7 +13,8 @@
 #include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram2D.h"
 
-#include "boost/lexical_cast.hpp"
+#include <boost/lexical_cast.hpp>
+#include <boost/foreach.hpp>
 
 namespace {
   struct ModuleEfficiencyHistograms
@@ -102,7 +103,7 @@ private:
 
   // booked histograms
   AIDA::IProfile1D* m_efficiencyPerModulePr ;
-  ModuleEfficiencyHistograms* m_moduleHistograms[9] ;
+  std::vector<ModuleEfficiencyHistograms*> m_moduleHistograms ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -112,7 +113,7 @@ DECLARE_ALGORITHM_FACTORY( OTHitEfficiencyMonitor );
 // Standard constructor, initializes variables
 //=============================================================================
 OTHitEfficiencyMonitor::OTHitEfficiencyMonitor( const std::string& name,
-					ISvcLocator* pSvcLocator)
+						ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
     m_decoder("OTRawBankDecoder"),
     m_interpolator("TrackInterpolator"),
@@ -139,17 +140,24 @@ OTHitEfficiencyMonitor::~OTHitEfficiencyMonitor()
 StatusCode OTHitEfficiencyMonitor::initialize() 
 {
   StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
-  m_decoder.retrieve().ignore() ;
-  m_interpolator.retrieve().ignore() ;
-  m_linearextrapolator.retrieve().ignore() ;
+  if(sc.isFailure()) return sc ;
+  sc = m_decoder.retrieve() ;
+  if(sc.isFailure()) return sc ;
+  sc = m_interpolator.retrieve() ;
+  if(sc.isFailure()) return sc ;
+  sc = m_linearextrapolator.retrieve() ;
+  if(sc.isFailure()) return sc ;
+
   m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
 
   // book all histograms
   setHistoTopDir("OT/") ;
   m_efficiencyPerModulePr = bookProfile1D( "efficiencyVsModule","efficiency per module",
 					   -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
+  
+  m_moduleHistograms.reserve(9) ;
   for(int i=0; i<9; ++i)
-    m_moduleHistograms[i] = new ModuleEfficiencyHistograms(*this,i+1) ;
+    m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1) ) ;
   
   return sc;
 }
@@ -160,7 +168,9 @@ StatusCode OTHitEfficiencyMonitor::initialize()
 StatusCode OTHitEfficiencyMonitor::finalize() 
 {
   // here we should create some 'summary' histograms
-
+  
+  // the delete the structure that holds the histograms
+  BOOST_FOREACH ( ModuleEfficiencyHistograms* hist, m_moduleHistograms ) delete hist ;
   // rescale the occupancy histogram
   m_decoder.release().ignore() ;
   m_interpolator.release().ignore() ;
