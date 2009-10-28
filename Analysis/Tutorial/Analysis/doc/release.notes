@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.87 2009-10-15 09:27:47 pkoppenb Exp $
+!$Id: release.notes,v 1.88 2009-10-28 14:27:54 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Tutorial/Analysis
 ! Responsible : P. Koppenburg
@@ -8,6 +8,12 @@
 !   See https://twiki.cern.ch/twiki/bin/view/LHCb/DaVinciTutorial
 !
 !-----------------------------------------------------------------------------
+
+!========================== Analysis v8r3p1 2009-10-28 ===============
+
+! 2009-10-28 - Juan PALACIOS
+ - python/DaVinci4/Bs2JpsiPhi.py
+  . Add name to SelectionSequence.
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings
