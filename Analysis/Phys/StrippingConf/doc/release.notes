@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.26 2009-10-19 16:10:49 jpalac Exp $
+!$Id: release.notes,v 1.27 2009-10-28 12:36:51 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-10-28 - Anton POLUEKTOV
+ - Configuration.py
+  * Default name for main stripping sequencer is back to "StrippingGlobal"
+    for backwards compatibility. 
+  * Use StrippingConf._name instead of fixed "StrippingGlobal" in the 
+    list of selections names. 
 
 ! 2009-10-19 - Juan PALACIOS
  - Configuration.py

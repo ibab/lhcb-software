@@ -21,7 +21,7 @@ class StrippingConf ( object ) :
         
         log.info("Initialising StrippingConf "+ name)
         if name == "" :
-            self._name = self.__class__.__name__
+            self._name = "StrippingGlobal"
         else :
             self._name = name
         self.TES = TES
@@ -54,7 +54,7 @@ class StrippingConf ( object ) :
         """
         Return list of selection names for TagCreator
         """
-        _selections = ["StrippingGlobal"]
+        _selections = [ self._name ]
         for stream in self._streams : 
             streamName = stream.sequence().name()
             _selections.append(streamName)
