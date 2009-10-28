@@ -1,5 +1,5 @@
 ########################################################################
-# $Id: Bs2JpsiPhi.py,v 1.2 2009-10-04 14:16:54 jpalac Exp $
+# $Id: Bs2JpsiPhi.py,v 1.3 2009-10-28 14:27:36 jpalac Exp $
 ########################################################################
 """
  Selection module for exercise 4
@@ -9,7 +9,7 @@
 """
 __author__ = ['Juan Palacios']
 __date__ = '02/10/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 # limit what we get with from Bs2JpsiPhi import *
 __all__ = ('name', 'Phi2KK', 'LooseJpsi2MuMu', 'Jpsi2MuMu', 'Bs2Jpsi', 'SeqBs2JpsiPhi')
@@ -79,4 +79,4 @@ Bs2JpsiPhi = Selection("SelBs2JpsiPhi",
                        RequiredSelections = [ Jpsi2MuMu, Phi2KK ])
 
 # finally, the Bs -> J/Psi Phi SelectionSequence
-SeqBs2JpsiPhi = SelectionSequence(TopSelection = Bs2JpsiPhi)
+SeqBs2JpsiPhi = SelectionSequence("SeqBs2JpsiPhi", TopSelection = Bs2JpsiPhi)
