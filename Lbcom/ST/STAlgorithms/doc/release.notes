@@ -2,6 +2,10 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 J Luisier
+ - Bug fix in WriteSTNoiseConditions (that wrote the strip status)
+ - Add algorithm that checks which strips are alive
+
 ! 2009-10-20 M.Needham
    -  Add algorithm to write noise conditions
 

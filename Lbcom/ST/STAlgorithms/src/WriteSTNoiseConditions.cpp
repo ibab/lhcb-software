@@ -1,4 +1,4 @@
-// $Id: WriteSTNoiseConditions.cpp,v 1.1 2009-10-21 13:03:17 mneedham Exp $
+// $Id: WriteSTNoiseConditions.cpp,v 1.2 2009-10-28 15:06:56 jluisier Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -29,9 +29,9 @@ WriteSTNoiseConditions::WriteSTNoiseConditions( const std::string& name,
   // constructer
   declareProperty("footer", m_footer = "</DDDB>");
   declareProperty("startTag", m_startTag = "<condition");
-  declareProperty("outputFile",m_outputFileName = "ReadoutSectors.xml");
+  declareProperty("outputFile",m_outputFileName = "NoiseValuesInfo.xml");
   declareProperty("depths", m_depth = 3u );
-  declareProperty("precision", m_precision = 16u);
+  declareProperty("precision", m_precision = 2u);
   declareProperty("removeCondb", m_removeCondb = false);
   declareProperty("author", m_author = "Joe Bloggs");
   declareProperty("tag", m_tag = "None");
@@ -90,7 +90,7 @@ StatusCode WriteSTNoiseConditions::finalize()
 
   for( DeSTDetector::Sectors::const_iterator iterS = sectors.begin();
        iterS != sectors.end(); ++iterS){
-    const Condition* aCon = (*iterS)->statusCondition();
+    const Condition* aCon = (*iterS)->noiseCondition();
     std::string temp = strip(aCon->toXml("", false, m_precision));
     outputFile << temp << "\n"  << std::endl; 
   } // sectors
