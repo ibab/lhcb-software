@@ -151,7 +151,7 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
         tck =  _tck(i.alias().str().split('/')[-1])
         id  =  i.ref().str()
         for k in info.values() :
-            if k.info['id'] == id : k.update( { 'TCK' : tck } )
+            if k.info['id'] == id : k.info['TCK'].append(tck)
     for i in s.configTreeNodeAliases( alias( 'TAG/'  ) ) :
         tag = i.alias().str().split('/')[1:] 
         id  = i.ref().str()
@@ -261,7 +261,7 @@ def _updateProperties(id, updates, label, cas  ) :
 class Configuration :
     " A class representing a configuration entry "
     def __init__(self,alias,svc) :
-        self.info = { 'id' : alias.ref().str() , 'TCK' : '<NONE>', 'label' : '<NONE>' }
+        self.info = { 'id' : alias.ref().str() , 'TCK' : [], 'label' : '<NONE>' }
         self.info.update( zip(['release','hlttype'],alias.alias().str().split('/')[1:3]))
         x = svc.readConfigTreeNode( alias.ref() )
         label =  x.get().label();
@@ -271,14 +271,14 @@ class Configuration :
     def update(self,d) : 
         self.info.update( d )
     def printSimple(self,prefix='      ') : 
-        tck = self.info['TCK']
-        if type(tck) == int : tck = '0x%08x' % tck
-        print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
+        for tck in self.info['TCK'] :
+            if type(tck) == int : tck = '0x%08x' % tck
+            print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
     def PVSS(self) :
-        tck = self.info['TCK']
-        if type(tck) == str and tck != '<NONE>' and not tck.startswith('0x') : tck = int(tck)
-        if type(tck) != str : tck = '0x%08x' % tck
-        return  '%20s : %10s : %s : %s\n'%(self.info['hlttype'],tck,self.info['id'],self.info['label'])
+        for tck in self.info['TCK'] :
+            if type(tck) == str and not tck.startswith('0x') : tck = int(tck)
+            if type(tck) != str : tck = '0x%08x' % tck
+            return  '%20s : %10s : %s : %s\n'%(self.info['hlttype'],tck,self.info['id'],self.info['label'])
 
 class PropCfg :
     " A class representing a PropertyConfig "
@@ -426,13 +426,20 @@ def getReleases( cas = ConfigAccessSvc() ) :
 def getHltTypes( release, cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
     return set( [ i['hlttype']  for i in info.itervalues() if i['release']==release ] )
-def getTCKs( release, hlttype, cas = ConfigAccessSvc() ) :
+def getTCKs( release = None, hlttype = None, cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    pred = lambda x : x['release'] == release and x['hlttype'] == hlttype and x['TCK']!='<NONE>'
-    return [ ('0x%08x'%v['TCK'],v['label'])  for v in info.itervalues() if pred(v) ]
+    pred = lambda x : x['TCK'] and ( not release or x['release'] == release ) and ( not hlttype or x['hlttype'] == hlttype )
+    result = []
+    for i in [ x for x in info.itervalues() if pred(x) ]:
+            for tck in i['TCK'] :
+                result.append( ('0x%08x'%tck,i['label'])  )
+    return result
 def getTCKList( cas = ConfigAccessSvc() ) :
     info = execInSandbox( _getConfigurations, cas )
-    return [ '0x%08x'%v['TCK']  for v in info.itervalues() if v['TCK'] != '<NONE>']
+    result = []
+    for i in info.itervalues() :
+            for tck in i['TCK'] : result.append( '0x%08x'%tck  )
+    return result
 def getRoutingBits( id , cas = ConfigAccessSvc() ) :
     # should be a map... so we try to 'eval' it
     for p in ['RoutingBits','routingBitDefinitions'] :
@@ -467,6 +474,9 @@ def getHlt1Decisions( id , cas = ConfigAccessSvc() ) :
 
 
 def printConfigurations( info ) :
+    print 'hello world'
+    for i in info.itervalues() : print i.info
+    print 'goodbye world'
     for release in sorted(set( [ i['release'] for i in info.itervalues()  ] )) : 
         print release
         confInRelease = [ i for i in info.itervalues() if i['release']==release ]

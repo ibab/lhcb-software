@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-10-28 - Gerhard Raven
+ - take into account single top level config can have multiple TCKs
+
 ! 2009-10-27 - Gerhard Raven
  - add getHlt2Lines
  - add reminder to fix getConfigurations in case two TCK point to same TOPLEVEL
