@@ -4,6 +4,7 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r1 2009-10-28 ===================
 ! 2009-10-28 - Patrick Koppenburg
  - Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09.py
    . New setting for MC09 (2010) conditions in Hlt1 and then most of Hlt2
