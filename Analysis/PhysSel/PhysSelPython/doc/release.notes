@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.24 2009-10-27 16:30:08 jpalac Exp $
+!$Id: release.notes,v 1.25 2009-10-28 14:09:49 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+!==================== PhysSel/PhysSelPython v3r1 2009-10-28 ================
+
+! 2009-10-28 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Remove unnecessary imports.
+  . Add AutomaticData alias for DataOnDemand, and improve documentation.
 
 ! 2009-10-27 - Juan PALACIOS
  - cmt/requirements
