@@ -1,9 +1,10 @@
-! $Id: release.notes,v 1.47 2009-10-22 20:53:23 tskwarni Exp $
+! $Id: release.notes,v 1.48 2009-10-28 17:23:48 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
 
+!========================== TisTosTobbing v3r5 2009-10-28 ===================
 ! 2009-10-22 - Tomasz Skwarnicki
  - add TriggerSelectionTisTosInHlt, TriggerTisTosInHlt bypassing HltSelReports
    for use in Hlt2 
