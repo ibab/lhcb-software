@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v2r1 2009-10-28 ===================
 ! 2009-10-26 - Mariusz Witek
 - fix crashes in HltIsPhotonTool and HltRadCorTool.
   Back to old fast Calo clusterization and full Ecal decoding.
