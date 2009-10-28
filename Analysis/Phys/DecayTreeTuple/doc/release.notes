@@ -8,6 +8,8 @@
 !
 !----------------------------------------------------------------------------
 
+!========================== DecayTreeTuple v2r6 2009-10-28 ==================
+
 ! 2009-10-21 - Tomasz Skwarnicki
  - undo use of HltDecReports to clean up trigger list in TupleToolTISTOS
    since cannot be done consistently. Make sure the list does not mutate.
