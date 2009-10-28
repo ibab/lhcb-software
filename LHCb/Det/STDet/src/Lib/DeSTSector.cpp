@@ -1,4 +1,4 @@
-// $Id: DeSTSector.cpp,v 1.59 2009-10-21 12:58:15 mneedham Exp $
+// $Id: DeSTSector.cpp,v 1.60 2009-10-28 11:42:40 jluisier Exp $
 #include "STDet/DeSTSector.h"
 
 #include "DetDesc/IGeometryInfo.h"
@@ -677,7 +677,7 @@ StatusCode DeSTSector::updateStatusCondition(){
 
 StatusCode DeSTSector::updateNoiseCondition()
 {
-  const Condition* aCon = condition(m_noiseString);
+  Condition* aCon = condition(m_noiseString);
   if (aCon == 0){
     MsgStream msg(msgSvc(), name());
     msg << MSG::ERROR << "failed to find noise condition" << endmsg;
@@ -718,8 +718,9 @@ StatusCode DeSTSector::updateNoiseCondition()
   }
   else {
     // doesn't exists (MC early databases...)
-    m_cmModeValues.resize(m_nStrip);
-    for (unsigned int i = 0; i < m_nStrip; ++i) m_cmModeValues[i] = 0.0;
+    m_cmModeValues.assign(m_nStrip, 0.);
+    //for (unsigned int i = 0; i < m_nStrip; ++i) m_cmModeValues[i] = 0.0;
+    aCon->addParam("cmNoise", m_cmModeValues, "Common mode per sector");
   }
 
   return StatusCode::SUCCESS;
