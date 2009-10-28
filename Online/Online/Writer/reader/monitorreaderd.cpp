@@ -75,13 +75,11 @@ int main(int /* argc */, char** /* argv */) {
    
     // setup DIM-services 
     string hostname = getenv("HOST");
-    char servicename[100];
-    sprintf(servicename,"%s_Writerstat",hostname.c_str());	
-    DimServer::start(servicename);
-    sprintf(servicename,"%s_Writerstat/mq",hostname.c_str());	
-    DimService pubMQ(servicename, message);
+    DimService pubMQ((hostname+"_Writerstat/mq").c_str(), message);
 
-    pubMQ.updateService();
+    DimServer::start((hostname+"_Writerstat/mq").c_str());
+
+    //pubMQ.updateService();
 
     Writers* writers = new Writers();
     list<CommandHandler*> commandHandlers;
