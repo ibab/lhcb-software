@@ -4,15 +4,10 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: Configuration.py,v 1.6 2009-05-08 14:19:50 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.7 2009-10-28 10:17:57 jpalac Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
-from DsToPhiPi          import DsToPhiPiConf
-from DstarToDzeroPi     import DstarToDzeroPiConf
-from JPsiMuMu           import JPsiMuMuConf
-from KshortPiPi         import KshortPiPiConf
-from LambdaToProtonPion import LambdaToProtonPionConf
         
 ## @class RichPIDQCConf
 #  Configurable for RICH reconstruction
@@ -21,9 +16,11 @@ from LambdaToProtonPion import LambdaToProtonPionConf
 class RichPIDQCConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ DsToPhiPiConf, JPsiMuMuConf,
-                               KshortPiPiConf, LambdaToProtonPionConf,
-                               DstarToDzeroPiConf ]
+    __used_configurables__ = [ 'DsToPhiPiConf',
+                               'JPsiMuMuConf',
+                               'KshortPiPiConf',
+                               'LambdaToProtonPionConf',
+                               'DstarToDzeroPiConf'     ]
 
     ## Steering options
     __slots__ = {
@@ -59,25 +56,30 @@ class RichPIDQCConf(LHCbConfigurableUser):
 
         # Run Conor's Ds -> Phi Pi selection and calibration
         if "DsPhiPi" in calibs :
+            from DsToPhiPi          import DsToPhiPiConf
             self.setOtherProps(DsToPhiPiConf(),["MCChecks","MakeNTuple"])
             DsToPhiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDsToPhiPiSeq"))
 
         # Andrew's D* -> D0(KPi) Pi selection and calibration
         if "DstarD0Pi" in calibs :
+            from DstarToDzeroPi     import DstarToDzeroPiConf
             self.setOtherProps(DstarToDzeroPiConf(),["MCChecks","MakeNTuple"])
             DstarToDzeroPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichDstarToD0PiSeq"))
 
         # Andrew's Lambda -> Proton Pion selection
         if "LambdaPrPi" in calibs :
+            from LambdaToProtonPion import LambdaToProtonPionConf
             self.setOtherProps(LambdaToProtonPionConf(),["MCChecks","MakeNTuple"])
             LambdaToProtonPionConf().setProp("Sequencer",self.newSeq( calibSeq, "RichLambdaToPrPiSeq"))
 
         # Andrew's Kshort -> Pion Pion selection
         if "KshortPiPi" in calibs :
+            from KshortPiPi         import KshortPiPiConf
             self.setOtherProps(KshortPiPiConf(),["MCChecks","MakeNTuple"])
             KshortPiPiConf().setProp("Sequencer",self.newSeq( calibSeq, "RichKsToPiPiSeq"))
 
         # Nicola's J/Psi -> Mu Mu selection
         if "JPsiMuMu" in calibs :
+            from JPsiMuMu           import JPsiMuMuConf
             self.setOtherProps(JPsiMuMuConf(),["MCChecks","MakeNTuple"])
             JPsiMuMuConf().setProp("Sequencer",self.newSeq( calibSeq, "RichJPsiToMuMuSeq"))

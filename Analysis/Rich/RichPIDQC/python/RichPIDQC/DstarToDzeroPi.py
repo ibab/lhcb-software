@@ -4,12 +4,12 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   10/02/2009
 
-__version__ = "$Id: DstarToDzeroPi.py,v 1.3 2009-07-06 16:02:19 jonrob Exp $"
+__version__ = "$Id: DstarToDzeroPi.py,v 1.4 2009-10-28 10:17:57 jpalac Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
 #from Configurables import RichDstarToD0PiSelConf
-from DstCalibSel.Configuration import RichDstarToD0PiSelConf
+
                 
 ## @class DstarToDzeroPiConf
 #  Configurable for RICH D* -> D0(Kpi) pi PID monitoring
@@ -19,7 +19,7 @@ from DstCalibSel.Configuration import RichDstarToD0PiSelConf
 class DstarToDzeroPiConf(LHCbConfigurableUser) :
 
     ## Possible used Configurables
-    __used_configurables__ = [ RichDstarToD0PiSelConf ]
+    __used_configurables__ = [ 'RichDstarToD0PiSelConf' ]
     
     ## Steering options
     __slots__ = {
@@ -30,7 +30,7 @@ class DstarToDzeroPiConf(LHCbConfigurableUser) :
 
     ## Configure Ds -> Phi Pi selection
     def __apply_configuration__(self) :
-
+        from DstCalibSel.Configuration import RichDstarToD0PiSelConf
         if not self.isPropertySet("Sequencer") :
             raise RuntimeError("ERROR : Sequence not set")
         seq = self.getProp("Sequencer")
