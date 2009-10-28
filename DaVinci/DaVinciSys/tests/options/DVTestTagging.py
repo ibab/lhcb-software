@@ -23,12 +23,13 @@ importOptions( "$FLAVOURTAGGINGOPTS/BTaggingTool.py" )
 from Configurables import BTagging, BTaggingChecker
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ "Sel09Bu2LLK" ]
-tag.OutputLevel = 3
+tag.InputLocations = [ "Phys/Sel09Bu2LLK" ]
+tag.OutputLevel = 1
 
 # Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "BTagging" ]
+tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
+tagcheck.TagsLocation = "Phys/Sel09Bu2LLK/FlavourTags"
 
 MessageSvc().Format = "% F%40W%S%7W%R%T %0W%M"
 ########################################################################
