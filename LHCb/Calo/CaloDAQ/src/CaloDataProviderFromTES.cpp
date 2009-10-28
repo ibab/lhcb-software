@@ -1,4 +1,4 @@
-// $Id: CaloDataProviderFromTES.cpp,v 1.9 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloDataProviderFromTES.cpp,v 1.10 2009-10-28 10:31:20 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -193,12 +193,12 @@ int CaloDataProviderFromTES::adc (LHCb::CaloCellID id){
   if( fromDigit() ){
     if( NULL == m_digCont )return 0 ;
     LHCb::CaloDigit* digit = m_digCont->object( id );
-    if( NULL == digit )return 0.;
+    if( NULL == digit )return 0;
     return (int) (digit->e() / m_calo->cellGain( id ) + m_pedShift);
   }else if(  fromAdc() ){
     if( NULL == m_adcCont )return 0 ;
     LHCb::CaloAdc* adc = m_adcCont->object( id );
-    if( NULL == adc )return 0.;
+    if( NULL == adc )return 0;
     return adc->adc();
   }
   return 0;
