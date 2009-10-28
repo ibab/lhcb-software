@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.382 2009-10-24 17:13:01 ibelyaev Exp $
+! $Id: release.notes,v 1.383 2009-10-28 16:14:04 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-28 - Patrick Koppenburg
+ - DaVinci to depend on HltTCK
 
 ! 2009-10-24 - Vanya Belyaev
  - python/DaVinci/Configuration.py
