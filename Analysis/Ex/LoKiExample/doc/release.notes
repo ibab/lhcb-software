@@ -1,11 +1,13 @@
-! $Id: release.notes,v 1.56 2009-10-15 09:28:59 pkoppenb Exp $ 
+! $Id: release.notes,v 1.57 2009-10-28 14:29:19 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.56 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.57 $
 ! -----------------------------------------------------------------------------
 ! Package     :  LoKiExamples
 ! Responsible :  Vanya BELYAEV  ibelyaev@physics.syr.edu
 ! Purpose     :  Collection of examples for LoKi package 
 ! -----------------------------------------------------------------------------
+
+!========================== LoKiExample v8r5p1 2009-10-28 =================
 
 ! 2009-10-15 - Patrick Koppenburg
  - Replace HltType by Hlt and HltThresholdSettings
