@@ -4,6 +4,9 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2009-10-29 - Julien Cogan
+ - Modify defaut properties for L0FromRawBase
+
 ! 2009-10-29 - Patrick Robbe
  - L0AlgBase, L0FromRawBase: add utility functions to access member
    variables

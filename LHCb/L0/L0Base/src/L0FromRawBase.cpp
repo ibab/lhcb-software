@@ -1,4 +1,4 @@
-// $Id: L0FromRawBase.cpp,v 1.3 2009-10-29 10:41:22 robbep Exp $
+// $Id: L0FromRawBase.cpp,v 1.4 2009-10-29 11:17:00 jucogan Exp $
 // Include files 
 
 // from Gaudi
@@ -20,8 +20,8 @@ L0FromRawBase::L0FromRawBase( const std::string& name,
                               ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty("WriteProcData"  , m_writeProcData   = true);
-  declareProperty("WriteOnTES"  , m_writeOnTES   = false);
+  declareProperty("WriteProcData"  , m_writeProcData   = false);
+  declareProperty("WriteOnTES"  , m_writeOnTES   = true);
   declareProperty("L0Context"   , m_l0context   = "");
 }
 //=============================================================================
