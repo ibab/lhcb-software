@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.14 2009-10-14 10:21:36 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.cpp,v 1.15 2009-10-29 10:51:23 robbep Exp $
 // Include files
 // local
 #include "L0CaloCandidatesFromRawBank.h"
@@ -9,7 +9,6 @@
 // from Event
 #include "Event/L0DUBase.h"
 #include "Event/RawBankReadoutStatus.h"
-#include "Event/L0CaloCandidate.h" 
 
 // From Calo
 #include "CaloDet/DeCalorimeter.h"
@@ -70,25 +69,14 @@ StatusCode L0CaloCandidatesFromRawBank::initialize ( ) {
 //=========================================================================
 void L0CaloCandidatesFromRawBank::convertRawBankToTES
 ( std::vector< std::vector< unsigned int > >& data,
-  std::string& nameFullInTES , std::string& nameInTES,
-  const int version , LHCb::RawBankReadoutStatus& readoutStatus ) {
+  LHCb::L0CaloCandidates * outFull , 
+  LHCb::L0CaloCandidates * out ,
+  const int version , 
+  LHCb::RawBankReadoutStatus & readoutStatus ) {
   
   if ( msgLevel( MSG::DEBUG ) ) 
     debug() << "L0CaloCandidatesFromRawBank ... entering conversion" 
 	    << " for version " << version << endmsg ;
-
-  // Assume that full path (including rootInTES) is given in nameInTES etc.
-  // Full container: container with the inputs of the Selection Boards
-  LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
-  put( outFull , nameFullInTES , IgnoreRootInTES ) ;
-
-  // Default container: container with the outputs of the Selection Boards
-  LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
-  put( out, nameInTES, IgnoreRootInTES );
-
-  if ( msgLevel( MSG::DEBUG ) ) 
-    debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
-            << endmsg ;
   
   Gaudi::XYZPoint dummy( 0. , 0. , 0. ) , center( 0. , 0. , 0. ) ;
   LHCb::L0CaloCandidate * myL0Cand( 0 ) ;

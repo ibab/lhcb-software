@@ -1,11 +1,14 @@
-// $Id: L0CaloCandidatesFromRawBank.h,v 1.5 2009-10-14 10:21:36 robbep Exp $
+// $Id: L0CaloCandidatesFromRawBank.h,v 1.6 2009-10-29 10:51:23 robbep Exp $
 #ifndef L0CALO_L0CALOCANDIDATESFROMRAWBANK_H 
 #define L0CALO_L0CALOCANDIDATESFROMRAWBANK_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+
+// From Event
 #include "Event/RawEvent.h"
+#include "Event/L0CaloCandidate.h" 
 
 // forward declaration
 namespace LHCb {
@@ -13,7 +16,7 @@ namespace LHCb {
 };
 class DeCalorimeter ;
 
-static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 3, 1 );
+static const InterfaceID IID_L0CaloCandidatesFromRawBank ( "L0CaloCandidatesFromRawBank", 4, 0 );
 
 /** @class L0CaloCandidatesFromRawBank L0CaloCandidatesFromRawBank.h
  *  Tool to convert the Raw Bank L0CaloCandidate to TES containers
@@ -39,8 +42,8 @@ public:
   virtual StatusCode initialize(); ///< Initialisation
 
   void convertRawBankToTES( std::vector<std::vector< unsigned int > >& data,
-                            std::string& nameFullInTES,
-                            std::string& nameInTES,
+                            LHCb::L0CaloCandidates * outFull,
+                            LHCb::L0CaloCandidates * out,
                             const int version , 
                             LHCb::RawBankReadoutStatus & readoutStatus );
 
