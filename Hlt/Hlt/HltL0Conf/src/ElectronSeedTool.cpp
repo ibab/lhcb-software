@@ -29,8 +29,12 @@ DECLARE_TOOL_FACTORY( ElectronSeedTool );
 ElectronSeedTool::ElectronSeedTool(const std::string& type, 
                                    const std::string& name, 
                                    const IInterface* parent) 
-  : GaudiTool( type, name, parent ),
-    m_fieldOff(false)
+  : GaudiTool( type, name, parent )
+  ,  m_fieldOff(false)
+  , m_ecal(0)
+  , m_magFieldSvc(0)
+  , m_caloDaq(0)
+  , m_DataStore(0)
 {
   // Declare the algorithm's properties which can be set at run time
   declareInterface<ICaloSeedTool>(this);
@@ -41,6 +45,7 @@ ElectronSeedTool::ElectronSeedTool(const std::string& type,
   declareProperty("sigmaY2", m_sigmaY2 = boost::assign::list_of(4.)(12.25)(64.) );
   declareProperty("sigmaTx2", m_sigmaTx2 = boost::assign::list_of(9.e-6)(9.e-6)(36.e-6) );
   declareProperty("sigmaTy2", m_sigmaTy2 = boost::assign::list_of(25.e-6)(49.e-6)(64.e-6) );
+  clearElectronVariables();
 
 }
 
@@ -117,11 +122,7 @@ StatusCode ElectronSeedTool::makeTrack( const LHCb::L0CaloCandidate& eL0Cand,
   
   //===================================================================================================
   //clear electron variables
-  e_et=0.;
-  e_x1=0.;e_x2=0.;e_x3=0.;e_x4=0.;
-  e_y1=0.;e_y2=0.;e_y3=0.;e_y4=0.;
-  e_e1=0.;e_e2=0.;e_e3=0.;e_e4=0.;
-  e_s1=0.;e_s2=0.;e_s3=0.;e_s4=0.;
+  clearElectronVariables();
   //===================================================================================================
 
   //set the calo id to LHCbids of the track

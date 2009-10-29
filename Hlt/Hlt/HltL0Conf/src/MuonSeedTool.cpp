@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.13 2009-08-19 10:15:56 asatta Exp $
+// $Id: MuonSeedTool.cpp,v 1.14 2009-10-29 09:04:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -37,6 +37,10 @@ MuonSeedTool::MuonSeedTool( const std::string& type,
                             const IInterface* parent )
   : GaudiTool ( type, name , parent ),
     m_fieldOff(false)
+  , m_iPosTool(0)
+  , m_magFieldSvc(0)
+  , m_momentumTool(0)
+  , m_DataStore(0)
 {
   declareInterface<IMuonSeedTool>(this);
 

@@ -1,4 +1,4 @@
-// $Id: PatConfirmTool.cpp,v 1.13 2009-05-01 11:15:48 graven Exp $
+// $Id: PatConfirmTool.cpp,v 1.14 2009-10-29 09:04:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -33,6 +33,7 @@ PatConfirmTool::PatConfirmTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_DataStore(0)
 {
   declareInterface<ITrackConfirmTool>(this);
   //  declareInterface<ITrackView>(this);

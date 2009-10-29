@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltL0Conf v2r12 2009-10-28 ===================
+! 2009-10-29 - Patrick Koppenburg
+ - Initialize global variables
+
 ! 2009-10-21 - Patrick Koppenburg
  - Undocumented changes by Johannes Albrecht
 

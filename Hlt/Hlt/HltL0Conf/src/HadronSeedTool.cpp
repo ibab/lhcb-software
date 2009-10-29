@@ -1,4 +1,4 @@
-// $Id: HadronSeedTool.cpp,v 1.10 2009-10-21 08:34:02 albrecht Exp $
+// $Id: HadronSeedTool.cpp,v 1.11 2009-10-29 09:04:24 pkoppenb Exp $
 // Include files 
 
 #include <cmath>
@@ -44,8 +44,15 @@ const double HadronSeedTool::zT3 = 9315.;
 HadronSeedTool::HadronSeedTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent ),
-    m_fieldOff(false)
+  : GaudiTool ( type, name , parent )
+  , m_ecal(0) 
+  , m_hcal(0)
+  , m_ecalDaq(0)
+  , m_hcalDaq(0)
+  , m_l0ConfExtrapolator(0)
+  , m_magFieldSvc(0)
+  , m_DataStore(0)
+  ,  m_fieldOff(false)
 {
   //resolutions w/o calo decoding --> only region 3,4 (HCal) sensible
   declareProperty("l0SigmaX2", m_l0SigmaX2 = boost::assign::list_of(0.)(0.)(0.)(1849.)(8281.) );

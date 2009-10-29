@@ -1,4 +1,4 @@
-// $Id: L0ConfExtrapolator.cpp,v 1.9 2009-10-08 21:03:54 graven Exp $
+// $Id: L0ConfExtrapolator.cpp,v 1.10 2009-10-29 09:04:25 pkoppenb Exp $
 // Include files 
 
 #include <cmath>
@@ -36,6 +36,7 @@ L0ConfExtrapolator::L0ConfExtrapolator( const std::string& type,
                                         const std::string& name,
                                         const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_magFieldSvc(0)
   , m_fieldOff(false)
   , zEndT3(9315.0)
 {

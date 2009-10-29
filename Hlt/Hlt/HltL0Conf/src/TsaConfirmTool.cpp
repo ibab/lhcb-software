@@ -1,4 +1,4 @@
-// $Id: TsaConfirmTool.cpp,v 1.20 2008-07-29 07:40:52 albrecht Exp $
+// $Id: TsaConfirmTool.cpp,v 1.21 2009-10-29 09:04:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -49,6 +49,16 @@ TsaConfirmTool::TsaConfirmTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_l0ConfExtrapolator(0)
+  , m_hitMan(0)
+  , m_xSelection(0)
+  , m_finalSelection(0)
+  , m_likelihood(0)
+  , m_stubFind(0)
+  , m_stubLinker(0)
+  , m_extendStubs(0)
+  , m_Tsa2TrackCnv(0)
+  , m_DataStore(0)
 {
   declareInterface<ITrackConfirmTool>(this);
 

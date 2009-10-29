@@ -45,6 +45,17 @@ public:
   
 
 private:
+
+  void clearElectronVariables(){
+    //clear electron variables
+    e_et=0.;
+    e_x1=0.;e_x2=0.;e_x3=0.;e_x4=0.;
+    e_y1=0.;e_y2=0.;e_y3=0.;e_y4=0.;
+    e_e1=0.;e_e2=0.;e_e3=0.;e_e4=0.;
+    e_s1=0.;e_s2=0.;e_s3=0.;e_s4=0.;
+    return ;
+  } ;
+
   bool m_debugMode, m_fieldOff;
   
   std::vector<double> m_sigmaX2;

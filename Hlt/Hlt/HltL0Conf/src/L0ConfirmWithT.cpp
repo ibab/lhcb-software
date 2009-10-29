@@ -1,4 +1,4 @@
-// $Id: L0ConfirmWithT.cpp,v 1.14 2009-05-27 09:16:51 graven Exp $
+// $Id: L0ConfirmWithT.cpp,v 1.15 2009-10-29 09:04:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,10 @@ L0ConfirmWithT::L0ConfirmWithT( const std::string& type,
                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
     , m_fieldOff(false)
+  , m_l0ConfExtrapolator(0)
+  , m_magFieldSvc(0)
+  , m_TrackConfirmTool(0)
+  , m_DataStore(0)
 {
   declareInterface<ITracksFromTrack>(this);
   declareInterface<ITrackView>(this);
