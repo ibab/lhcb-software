@@ -4,6 +4,12 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+! 2009-10-29 - Vanya Belyaev
+
+ - CaloDAQ/CaloDigits.py
+
+     remove the excessive debug printout 
+
 
 ! 2009-10-27 - Olivier Deschamps
   - CaloDigitFromRaw : add missing statusOnTES when output = ADC

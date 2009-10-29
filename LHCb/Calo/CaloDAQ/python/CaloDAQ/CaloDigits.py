@@ -10,7 +10,7 @@ The configuration for CaloDigits
 """
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
 # =============================================================================
 from Gaudi.Configuration import *
 
@@ -42,8 +42,6 @@ def caloDigits ( context        ,
                      "Raw/Spd/Digits"        ,
                      enableOnDemand          )
     
-    spd.OutputLevel = 1
-    spd.PropertiesPrint = True 
     
     prs  = getAlgo ( CaloDigitsFromRaw       , 
                      "PrsFromRaw"            ,
