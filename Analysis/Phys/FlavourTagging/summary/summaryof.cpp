@@ -28,9 +28,9 @@ int main(int argc, char **argv) {
   long run, event;
   int tag,tagOS,truetag,categ,categOS,Trig=-1,L0,HLT,nsele=0;
   int backcat=0;
-  int bid,fe,fm,fk,fS,fV;
+  int fe,fm,fk,fS,fV;
   string flagstring;
-  bool MCBpass=false, MONpass=false, TAGpass=false;
+  bool MONpass=false, TAGpass=false;
   for(int it=1; it!=20; ++it) nrt[it]=nwt[it]=0;
  
   ifstream in(argv[1]);
