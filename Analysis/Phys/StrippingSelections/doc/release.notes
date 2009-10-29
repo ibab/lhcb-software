@@ -4,12 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
-!===================== StrippingSelections v1r8 2009-10-28 ====================
-
 ! 2009-10-29 - Andrew Powell and Patrick Spradlin
  - Maintenance of stripping selections for RICH PID calibration:
    . python/StrippingRICHLambdaNoPID.py
-	Fixed bug and incorporated KS0 veto (+/- 15 MeV)
+       Fixed bug and incorporated KS0 veto (+/- 15 MeV)
+
+!===================== StrippingSelections v1r8 2009-10-28 ====================
 
 ! 2009-10-28
  - python/StrippingSelections/StrippingTopo.py
