@@ -52,7 +52,7 @@ class CommandHandler {
         FILE* fp; /// The logfile
     public:
         std::string command; /// the name of the command
-        CommandHandler(char*, FILE*);
+        CommandHandler(const char*, FILE*);
         virtual bool handleCommand(Command *)=0;
         virtual struct Command* parse(char*);
         virtual std::string* getErrorMessage() const;

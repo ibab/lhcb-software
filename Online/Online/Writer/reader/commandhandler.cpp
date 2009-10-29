@@ -9,7 +9,7 @@
 using namespace std;
 
 /** Constructor, which reserves some money for the error message */
-CommandHandler::CommandHandler(char* cmd, FILE* logFilePointer) : command(cmd) {
+CommandHandler::CommandHandler(const char* cmd, FILE* logFilePointer) : command(cmd) {
     this->errorMessage = new string("No error occurred");
     this->fp = logFilePointer;
 }
