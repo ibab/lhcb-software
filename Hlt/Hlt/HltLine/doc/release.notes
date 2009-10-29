@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.39 2009-10-29 08:31:58 pkoppenb Exp $
+! $Id: release.notes,v 1.40 2009-10-29 13:30:34 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
-!========================== HltLine v1r7p1 2009-10-28 ===================
+!========================== HltLine v1r8 2009-10-28 ===================
+! 2009-10-29 - Patrick Koppenburg
+ - Change default of AcceptIfSlow to false (for DaVinci). 
+   In the pit this will be changed to true.
+
 ! 2009-10-29 - Patrick Koppenburg
  - Initialize all global variables
  - Remove unused m_isInitialized

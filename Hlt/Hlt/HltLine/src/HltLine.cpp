@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.11 2009-10-29 08:31:58 pkoppenb Exp $
+// $Id: HltLine.cpp,v 1.12 2009-10-29 13:30:34 pkoppenb Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -179,7 +179,7 @@ HltLine::HltLine( const std::string& name,
   declareProperty( "ReturnOK"             , m_returnOK       = false );
   declareProperty( "AcceptOnError"        , m_acceptOnError  = true );
   declareProperty( "AcceptOnIncident"     , m_acceptOnIncident = true );
-  declareProperty( "AcceptIfSlow"         , m_acceptIfSlow   = true );
+  declareProperty( "AcceptIfSlow"         , m_acceptIfSlow   = false );
   declareProperty( "MaxAcceptOnError"     , m_maxAcceptOnError   = -1 ); // -1: no quota # TODO: make this a throttelable rate...
   declareProperty( "FlagAsSlowThreshold"  , m_slowThreshold  = 500000, "microseconds"  );
   declareProperty( "IncidentsToBeFlagged" , m_incidents);
