@@ -1,10 +1,10 @@
-// $Id: L0CaloAlg.h,v 1.30 2009-10-14 10:31:18 robbep Exp $
+// $Id: L0CaloAlg.h,v 1.31 2009-10-29 10:50:58 robbep Exp $
 
 #ifndef   L0CALO_L0CALOALG_H
 #define   L0CALO_L0CALOALG_H  1
 
 // from Gaudi 
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0AlgBase.h"
 
 // Local classes
 #include "TriggerCard.h"
@@ -28,7 +28,7 @@ class L0CaloCandidatesFromRawBank ;
  *  @date    4 October 2000
  */ 
 
-class L0CaloAlg : public GaudiAlgorithm {
+class L0CaloAlg : public L0AlgBase {
 public:  
   /// standard algorithm Constructor
   L0CaloAlg( const std::string& name , ISvcLocator* pSvcLocator ) ;
@@ -89,7 +89,6 @@ protected:
                        int cardNumber , int spdMult ,  unsigned int bank ) ;
 
 private:
-  std::string m_nameOfOutputDataContainer ;   ///< of the output container.
   bool        m_usePsSpd                  ;   ///< use Ps/Spd in validation
   bool        m_addEcalToHcal             ;   ///< Use ECAL in Validation
   bool        m_createHCALLut             ;   ///< Create HCAL LUT Files for validation boards (Set by options)
@@ -113,8 +112,6 @@ private:
 
   std::vector<std::vector<unsigned int> > m_rawOutput ; ///< RAW output bank
 
-  bool   m_storeFlag  ;
-  bool   m_writeOnTES ;
   double m_totRawSize;
   int    m_nbEvents;  
   

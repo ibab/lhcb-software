@@ -1,4 +1,4 @@
-// $Id: L0CaloAlg.cpp,v 1.59 2009-10-15 07:57:34 robbep Exp $
+// $Id: L0CaloAlg.cpp,v 1.60 2009-10-29 10:50:58 robbep Exp $
 
 /// local
 #include "L0CaloAlg.h"
@@ -63,14 +63,10 @@ int L0CaloAlg::s_hcalLUT[ 4 ][ 16 ] = {
 // Constructor
 //=============================================================================
 L0CaloAlg::L0CaloAlg( const std::string & name , ISvcLocator * pSvcLocator)
-  : GaudiAlgorithm              ( name , pSvcLocator            )
-  , m_nameOfOutputDataContainer ( LHCb::L0ProcessorDataLocation::Calo  )
+  : L0AlgBase( name , pSvcLocator )
   , m_rawOutput  ( 2 )
   , m_bankVersion( 1 ) 
   , m_nbValidation( 0 ) {
-  declareProperty( "OutputData"      , m_nameOfOutputDataContainer ) ;
-  declareProperty( "StoreInBuffer"   , m_storeFlag      = true     ) ;
-  declareProperty( "WriteOnTES"      , m_writeOnTES     = false    ) ; 
   declareProperty( "UsePSSPD"        , m_usePsSpd       = true     ) ;
   declareProperty( "AddECALToHCAL"   , m_addEcalToHcal  = true     ) ;
   declareProperty( "CreateHCALLut"   , m_createHCALLut  = false    ) ;
@@ -87,14 +83,10 @@ L0CaloAlg::~L0CaloAlg() { }
 //                 the trigger cards and their connections (HCAL-ECAL)
 //=============================================================================
 StatusCode L0CaloAlg::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = L0AlgBase::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc; 
 
   debug() << "==> Initialize" << endmsg;
-
-  // check for the valid names of the input/output data containers
-  if( m_nameOfOutputDataContainer.empty() )
-    return Error( "The name of the Output data container is empty!" );
 
   // Warning m_ecalFE & m_hcalFE  HAVE to contain PIN-diode FEs
   // in order to ensure the card numbering is correct afterward.
@@ -442,7 +434,7 @@ StatusCode L0CaloAlg::execute() {
   
   // Save the candidates in CaloProcessor data location (for L0DU) 
   LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas() ;
-  put( L0Calo, m_nameOfOutputDataContainer ) ;
+  put( L0Calo, LHCb::L0ProcessorDataLocation::Calo ) ;
   
   // Candidate is maximum of all Selection Boards inputs. In case of equality, 
   // take the one with smallest input number (done in compareL0Candidate)
@@ -605,7 +597,7 @@ StatusCode L0CaloAlg::execute() {
                   totSpdMult , 1 ) ;
 
   // Store the RAW bank if required.
-  if ( m_storeFlag ) {
+  if ( writeBanks() ) {
     m_nbEvents++;
     m_totRawSize = m_totRawSize + m_rawOutput[0].size() + 
       m_rawOutput[1].size();
@@ -615,13 +607,19 @@ StatusCode L0CaloAlg::execute() {
     raw->addBank( 1, LHCb::RawBank::L0Calo, m_bankVersion , m_rawOutput[1] );
   }
 
-  if( m_writeOnTES ) {
-    std::string name     = 
-      rootInTES() + LHCb::L0CaloCandidateLocation::Default ;
-    std::string nameFull = 
-      rootInTES() + LHCb::L0CaloCandidateLocation::Full ;
+  if( writeOnTES() ) {
+    std::string name = dataLocation( LHCb::L0CaloCandidateLocation::Default ) ;
+    std::string nameFull = dataLocation( LHCb::L0CaloCandidateLocation::Full ) ;
+    LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
+    LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
+    put( outFull , nameFull , IgnoreRootInTES ) ;
+    put( out, name , IgnoreRootInTES ) ;
+    if ( msgLevel( MSG::DEBUG ) ) 
+      debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
+              << endmsg ;
+
     LHCb::RawBankReadoutStatus readoutStatus( LHCb::RawBank::L0Calo ) ;
-    m_bankToTES -> convertRawBankToTES( m_rawOutput, nameFull, name , 
+    m_bankToTES -> convertRawBankToTES( m_rawOutput, outFull, out , 
                                         m_bankVersion , readoutStatus );
   }
 
@@ -637,7 +635,7 @@ StatusCode L0CaloAlg::finalize() {
                       m_totRawSize/m_nbEvents )
            << endmsg ;
   }
-  return GaudiAlgorithm::finalize(); 
+  return L0AlgBase::finalize(); 
 }
 
 //=============================================================================

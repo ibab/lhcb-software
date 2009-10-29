@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.cpp,v 1.18 2009-10-14 10:21:36 robbep Exp $
+// $Id: L0CaloCandidatesFromRaw.cpp,v 1.19 2009-10-29 10:50:58 robbep Exp $
 // Include files 
 // local
 #include "L0CaloCandidatesFromRaw.h"
@@ -9,6 +9,10 @@
 // From Event
 #include "Event/RawBankReadoutStatus.h"
 #include "Event/L0CaloCandidate.h"
+#include "Event/L0ProcessorData.h"
+
+// Local 
+#include "L0Candidate.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : L0CaloCandidatesFromRaw
@@ -23,10 +27,7 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCandidatesFromRaw ) ;
 //=============================================================================
 L0CaloCandidatesFromRaw::L0CaloCandidatesFromRaw( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
-  : GaudiAlgorithm ( name , pSvcLocator )
-{
-  declareProperty( "Extension",      m_extension = "" );
-}
+  : L0FromRawBase ( name , pSvcLocator ) { } ;
 
 //=============================================================================
 // Destructor
@@ -37,7 +38,7 @@ L0CaloCandidatesFromRaw::~L0CaloCandidatesFromRaw() {};
 // Initialisation. Check parameters
 //=============================================================================
 StatusCode L0CaloCandidatesFromRaw::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); 
+  StatusCode sc = L0FromRawBase::initialize(); 
   if ( sc.isFailure() ) return sc;  
 
   debug() << "==> Initialize" << endmsg;
@@ -55,10 +56,19 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 
   debug() << "==> Execute" << endmsg;
 
-  std::string name     = rootInTES() + 
-    LHCb::L0CaloCandidateLocation::Default + m_extension;
-  std::string nameFull = rootInTES() + 
-    LHCb::L0CaloCandidateLocation::Full + m_extension;
+  std::string name = dataLocation( LHCb::L0CaloCandidateLocation::Default ) ;
+  std::string nameFull = dataLocation( LHCb::L0CaloCandidateLocation::Full ) ;
+
+  LHCb::L0CaloCandidates * outFull = new LHCb::L0CaloCandidates( ) ;
+  LHCb::L0CaloCandidates * out = new LHCb::L0CaloCandidates() ;
+
+  if ( writeOnTES() ) {
+    put( outFull , nameFull , IgnoreRootInTES ) ;
+    put( out, name , IgnoreRootInTES ) ;
+    if ( msgLevel( MSG::DEBUG ) ) 
+      debug() << "L0CaloCandidatesFromRawBank Registered output in TES" 
+              << endmsg ;
+  }
 
   LHCb::RawEvent * rawEvt = 0 ;
   int version = -1 ;
@@ -120,30 +130,47 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
     Warning( "RawEvent not found" ).ignore() ;
   }
 
-  m_convertTool->convertRawBankToTES( data, nameFull, name , version , 
-                                      readoutStatus );  
+  m_convertTool -> convertRawBankToTES( data, outFull , out , version , 
+                                        readoutStatus ) ;  
 
-  // Now put the status on TES also
-  LHCb::RawBankReadoutStatuss * statuss = 
-    getOrCreate< LHCb::RawBankReadoutStatuss , LHCb::RawBankReadoutStatuss > 
-    ( LHCb::RawBankReadoutStatusLocation::Default ) ;
-  
-  LHCb::RawBankReadoutStatus * status = statuss -> object( readoutStatus.key() ) ;
-  
-  if ( 0 == status ) {
-    status = new LHCb::RawBankReadoutStatus( readoutStatus ) ;
-    statuss -> insert( status ) ;
-  } else {
-    // merge both status if already exists
-    if ( status -> status() != readoutStatus.status() ) {
-      std::map< int , long >::iterator it ;
-      for ( it = readoutStatus.statusMap().begin() ; 
-            it != readoutStatus.statusMap().end() ; ++it ) {
-        status -> addStatus( (*it).first , (*it).second ) ;
+
+  if ( writeOnTES() ) {
+    // Now put the status on TES also
+    LHCb::RawBankReadoutStatuss * statuss = 
+      getOrCreate< LHCb::RawBankReadoutStatuss , LHCb::RawBankReadoutStatuss > 
+      ( LHCb::RawBankReadoutStatusLocation::Default ) ;
+    
+    LHCb::RawBankReadoutStatus * status = 
+      statuss -> object( readoutStatus.key() ) ;
+    
+    if ( 0 == status ) {
+      status = new LHCb::RawBankReadoutStatus( readoutStatus ) ;
+      statuss -> insert( status ) ;
+    } else {
+      // merge both status if already exists
+      if ( status -> status() != readoutStatus.status() ) {
+        std::map< int , long >::iterator it ;
+        for ( it = readoutStatus.statusMap().begin() ; 
+              it != readoutStatus.statusMap().end() ; ++it ) {
+          status -> addStatus( (*it).first , (*it).second ) ;
+        }
       }
-    }
+    }    
   }
   
+  if ( writeProcData() ) {
+    // Write processor data for L0DU if requested
+    // Save the candidates in CaloProcessor data location (for L0DU) 
+    LHCb::L0ProcessorDatas* L0Calo = new LHCb::L0ProcessorDatas() ;
+    put( L0Calo, LHCb::L0ProcessorDataLocation::L0Calo ) ;
+
+    LHCb::L0CaloCandidates::iterator it ;
+    for ( it = out -> begin() ; it != out -> end() ; ++it ) {
+      L0Candidate cand( (*it) ) ;
+      cand.saveCandidate( fiberType( (*it) -> type() ) , L0Calo ) ;
+    }    
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -153,6 +180,6 @@ StatusCode L0CaloCandidatesFromRaw::execute() {
 StatusCode L0CaloCandidatesFromRaw::finalize() {
   debug() << "==> Finalize" << endmsg;
 
-  return GaudiAlgorithm::finalize(); 
+  return L0FromRawBase::finalize(); 
 }
 //=============================================================================

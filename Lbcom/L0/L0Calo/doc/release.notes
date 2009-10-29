@@ -1,7 +1,16 @@
-! $Id: release.notes,v 1.137 2009-10-20 08:16:00 cattanem Exp $
+! $Id: release.notes,v 1.138 2009-10-29 10:50:58 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-10-29 - Patrick Robbe
+ - requirements: use new base package L0/L0Base
+ - L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common 
+   options amongst all L0 packages, defined in L0Base)
+ - L0CaloCandidatesFromRawBank: do not write candidates in TES in the tool
+   but move it outside
+ - L0CaloCompare: do not compare during the IDLEs
+ - L0Candidate: add creation from L0CaloCandidate
 
 !========================= L0Calo v9r22 2009-10-20 ========================
 ! 2009-10-20 - Marco Cattaneo

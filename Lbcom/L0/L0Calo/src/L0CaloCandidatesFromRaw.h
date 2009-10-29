@@ -1,4 +1,4 @@
-// $Id: L0CaloCandidatesFromRaw.h,v 1.3 2006-11-07 10:25:41 ocallot Exp $
+// $Id: L0CaloCandidatesFromRaw.h,v 1.4 2009-10-29 10:50:58 robbep Exp $
 #ifndef L0CALOCANDIDATESFROMRAW_H 
 #define L0CALOCANDIDATESFROMRAW_H 1
 
@@ -7,7 +7,10 @@
 #include <string>
 
 // from Gaudi
-#include "GaudiAlg/GaudiAlgorithm.h"
+#include "L0Base/L0FromRawBase.h"
+
+// from Event
+#include "Event/L0DUBase.h"
 
 #include "L0CaloCandidatesFromRawBank.h"
 
@@ -17,7 +20,7 @@
  *  @author Olivier Callot
  *  @date   2003-12-15
  */
-class L0CaloCandidatesFromRaw : public GaudiAlgorithm {
+class L0CaloCandidatesFromRaw : public L0FromRawBase {
 public: 
   /// Standard constructor
   L0CaloCandidatesFromRaw( const std::string& name, ISvcLocator* pSvcLocator );
@@ -29,8 +32,31 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-
+  
 private:
+/** Converts type from L0DUBase::CaloType to L0DUBase::FiberType 
+ */
+  L0DUBase::Fiber::Type fiberType( const int type ) 
+    const {
+    switch ( type ) {
+    case L0DUBase::CaloType::Electron: 
+      return L0DUBase::Fiber::CaloElectron ; break ;
+    case L0DUBase::CaloType::Photon:
+        return L0DUBase::Fiber::CaloPhoton ; break ;
+    case L0DUBase::CaloType::Pi0Global: 
+      return L0DUBase::Fiber::CaloPi0Global ; break ;
+    case L0DUBase::CaloType::Pi0Local: 
+      return L0DUBase::Fiber::CaloPi0Local ; break ;
+    case L0DUBase::CaloType::Hadron: 
+      return L0DUBase::Fiber::CaloHadron ; break ;
+    case L0DUBase::CaloType::SumEt: 
+      return L0DUBase::Fiber::CaloSumEt ; break ;
+    case L0DUBase::CaloType::SpdMult: 
+      return L0DUBase::Fiber::CaloSpdMult ; break ;
+    }
+    return L0DUBase::Fiber::CaloPhoton ;
+  }
+  
   std::string    m_extension;    ///< Adedd to default name, allows comparisons
   L0CaloCandidatesFromRawBank* m_convertTool;
 };
