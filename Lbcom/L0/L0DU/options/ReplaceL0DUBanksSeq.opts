@@ -15,7 +15,7 @@ RemoveL0DUBank.bankTypes ={ "L0DU" };
 
 // Do not store rawBank except for L0DU
 L0DU.StoreInBuffer = true;   
-L0Calo.StoreInBuffer = false;   
+L0Calo.WriteBanks = false;   
 L0Muon.StoreInBuffer = false;   
 
 

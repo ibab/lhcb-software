@@ -16,7 +16,7 @@ L0DU.WriteOnTES = true;
 
 // Store rawBanks in rawEvent in SIMulation mode
 L0DU.StoreInBuffer = true;   
-L0Calo.StoreInBuffer=true;
+L0Calo.WriteBanks=true;
 L0Muon.StoreInBuffer=true;
 
 
