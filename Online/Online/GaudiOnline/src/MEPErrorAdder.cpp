@@ -108,13 +108,13 @@ MEPErrorAdder::initialize() {
   if (m_sumPartition) {
   	// We want to subscribe to when the subfarm setup for this partition changes
 	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
-  	m_subsSubFarms = new DimUpdatedInfo(temp,"",this);
+  	m_subsSubFarms = new DimUpdatedInfo(temp,(char *)"",this);
 	
 	m_log << MSG::INFO << "Summing up statistics for partition: " << m_partitionName << endmsg;
 
 	// Get subfarms first time
 	sprintf(temp,"RunInfo/%s/HLTsubFarms",m_partitionName.c_str());
-	DimInfo t_subFarms(temp,"");  
+	DimInfo t_subFarms(temp,(char *)"");  
 	while (t_subFarms.getSize()<1) { MEPRxSys::microsleep(10000); } // Must wait until data received to avoid segfault
 
 	readRunInfo(&t_subFarms);
@@ -654,7 +654,7 @@ MEPErrorAdder::setupSubs() {
  	
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
-	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
+	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
     }
   } else {
     //Subfarm sum
@@ -705,7 +705,7 @@ MEPErrorAdder::setupSubs() {
 	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,zero,this);
      
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
-	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,"",this);
+	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);
  
     }
   }
