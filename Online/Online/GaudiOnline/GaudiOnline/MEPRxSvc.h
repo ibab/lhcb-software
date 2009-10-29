@@ -158,6 +158,7 @@ namespace LHCb  {
   public:
     int64_t                     m_totRxPkt;
     int64_t                     m_totRxOct;
+    int64_t			m_totRxEvt;
     int64_t                     m_notReqPkt;
     int64_t                     m_incEvt;
     int64_t                     m_totBadMEP;

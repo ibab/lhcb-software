@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.80 2009-05-19 09:40:52 frankb Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.81 2009-10-29 13:14:42 dsvantes Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -449,6 +449,7 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
   if (m_parent->m_srcFlags[srcid] & ODIN)
       m_odinMEP = (u_int8_t *) newhdr;
   m_parent->m_rxEvt[srcid] += m_pf;
+  m_parent->m_totRxEvt += m_pf;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -1010,6 +1011,7 @@ void MEPRxSvc::publishCounters()
 {
   PUB64CNT(totRxOct,           "Total received bytes");
   PUB64CNT(totRxPkt,           "Total received packets");
+  PUB64CNT(totRxEvt,	       "Total received events");
   PUB64CNT(incEvt,             "Incomplete events");
   PUB64CNT(totBadMEP,          "Total bad MEPs");
   PUB64CNT(totMEPReq,          "Total requested MEPs");
@@ -1043,6 +1045,7 @@ void MEPRxSvc::clearCounters() {
   m_notReqPkt          = 0;
   m_totRxOct           = 0;
   m_totRxPkt           = 0;
+  m_totRxEvt	       = 0;
   m_incEvt             = 0;
   m_totMEPReqPkt       = 0;
   m_numMEPRecvTimeouts = 0;
