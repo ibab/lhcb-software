@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.9 2009-10-01 11:51:14 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.10 2009-10-29 10:51:48 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -14,6 +14,7 @@
 #include "Event/L0CaloCandidate.h"
 #include "Event/RawEvent.h"
 #include "Event/L0DUBase.h"
+#include "Event/ODIN.h"
 
 DECLARE_ALGORITHM_FACTORY( L0CaloCompare );
 
@@ -27,9 +28,13 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
                                     ISvcLocator* pSvcLocator )  
   : Calo2Dview ( name , pSvcLocator ) 
 { 
+  m_idleBCIdVector.push_back( 3561 ) ;
+  m_idleBCIdVector.push_back( 3562 ) ;
+  m_idleBCIdVector.push_back( 3563 ) ;
   declareProperty( "FullMonitoring"      , m_fullMonitoring    = true ) ;  
   declareProperty( "ReferenceDataSuffix" , m_referenceDataSuffix = "" ) ;  
   declareProperty( "CheckDataSuffix"     , m_checkDataSuffix = "RAW"  ) ;  
+  declareProperty( "IdleBCIdList"        , m_idleBCIdVector ) ;
 
   m_mapCompareName.reserve( 5 ) ; m_mapCompareName.resize( 15 , "" ) ;
   m_mapCompareTitle.reserve( 5 ) ; m_mapCompareTitle.resize( 15 , "" ) ;
@@ -59,7 +64,7 @@ L0CaloCompare::L0CaloCompare( const std::string& name,
   m_mapCompareName [ L0DUBase::CaloType::Pi0Global ] = "EcalMapPigCompare" ;  
   m_mapCompareTitle[ L0DUBase::CaloType::Pi0Global ] = "Pi0Global Ecal map" ;
   m_mapAllName     [ L0DUBase::CaloType::Pi0Global ] = "EcalMapPigAll" ;  
-  m_mapAllTitle    [ L0DUBase::CaloType::Pi0Global ] = "Pi0Global Ecal map all" ;
+  m_mapAllTitle    [ L0DUBase::CaloType::Pi0Global ] = "Pi0Global Ecal map all";
 }
 
 //=============================================================================
@@ -92,6 +97,8 @@ StatusCode L0CaloCompare::initialize() {
                                              "SumEt comparison " , 
                                              -101. , 101. , 200 ) ;
 
+  m_idles.insert( m_idleBCIdVector.begin() , m_idleBCIdVector.end() ) ;
+
   return StatusCode::SUCCESS; 
 }
 
@@ -99,6 +106,18 @@ StatusCode L0CaloCompare::initialize() {
 // Main execution
 //=============================================================================
 StatusCode L0CaloCompare::execute() {
+
+  // Remove events during IDLEs
+  // Read ODIN bank to obtain BCId and event number
+  unsigned int bcId( 4000 ) ; 
+
+  if ( exist< LHCb::ODIN >( LHCb::ODINLocation::Default ) ) {
+    LHCb::ODIN * odin = get< LHCb::ODIN >( LHCb::ODINLocation::Default ) ;
+    if ( 0 != odin ) bcId = odin -> bunchId() ;
+  }
+
+  if ( std::binary_search( m_idles.begin() , m_idles.end() , bcId ) ) 
+    return StatusCode::SUCCESS ;
 
   LHCb::L0CaloCandidates* candidatesRef  ; 
   LHCb::L0CaloCandidates* candidatesDefaultRef( 0 ) ;
@@ -179,7 +198,8 @@ StatusCode L0CaloCompare::execute() {
   int rawId( 0 ) ;
   int type( 0 ) ;
 
-  for ( candRef = candidatesRef->begin() ; candidatesRef->end() != candRef ; ++candRef ) {
+  for ( candRef = candidatesRef->begin() ; candidatesRef->end() != candRef ; 
+        ++candRef ) {
     caloCell = (*candRef) -> id() ; 
     rawId    = (*candRef) -> id().all() ; 
     type     = (*candRef) -> type() ;
@@ -191,16 +211,19 @@ StatusCode L0CaloCompare::execute() {
     case L0DUBase::CaloType::Pi0Global:
     case L0DUBase::CaloType::Hadron:
       debug() << "Type= " << type << " cellID = " << caloCell 
-              << " etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq;
-      //      (mapRef[type])[rawId] = *candRef ;
-      mapRef[type].insert(std::pair<int,LHCb::L0CaloCandidate *>( rawId , *candRef ) ) ;
+              << " etCode = " << (*candRef)->etCode() 
+              << " rawId= " << rawId << endreq;
+      mapRef[type].insert(std::pair<int,LHCb::L0CaloCandidate *>( rawId , 
+                                                                  *candRef ) ) ;
       break ;
     case L0DUBase::CaloType::SpdMult:
-      debug() << " SpdMult : etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq ;
+      debug() << " SpdMult : etCode = " << (*candRef)->etCode() 
+              << " rawId= " << rawId << endreq ;
       SpdMultRef = *candRef ;
       break ; 
     case L0DUBase::CaloType::SumEt:
-      debug() << " SumEt : etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq;
+      debug() << " SumEt : etCode = " << (*candRef)->etCode() 
+              << " rawId= " << rawId << endreq;
       SumEtRef = *candRef ;
       break ; 
     default:
@@ -211,17 +234,19 @@ StatusCode L0CaloCompare::execute() {
   // If full monitoring, look also at the default container to obtain the
   // values of SPD Mult and SumEt which are only there
   if ( m_fullMonitoring ) {
-    for ( candRef = candidatesDefaultRef->begin() ; candidatesDefaultRef->end() != candRef ; 
-          ++candRef ) {
+    for ( candRef = candidatesDefaultRef->begin() ; 
+          candidatesDefaultRef->end() != candRef ; ++candRef ) {
       type = (*candRef) -> type() ;
       
       switch ( type ) {
       case L0DUBase::CaloType::SpdMult:
-        debug() << " SpdMult : etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq ;
+        debug() << " SpdMult : etCode = " << (*candRef)->etCode() 
+                << " rawId= " << rawId << endreq ;
         SpdMultRef = *candRef ;
         break ; 
       case L0DUBase::CaloType::SumEt:
-        debug() << " SumEt : etCode = " << (*candRef)->etCode() << " rawId= " << rawId << endreq;
+        debug() << " SumEt : etCode = " << (*candRef)->etCode() 
+                << " rawId= " << rawId << endreq;
         SumEtRef = *candRef ;
         break ; 
       default:
@@ -250,14 +275,17 @@ StatusCode L0CaloCompare::execute() {
       debug() << "Type= " << type << " cellID to check = " << caloCell 
               << " etCode = " << etCodeCheck << " rawId= " << rawId << endreq ;
 
-      fillCalo2D( m_mapAllName[ type ] , caloCell , 1. , m_mapAllTitle[ type ] ) ;
+      fillCalo2D( m_mapAllName[ type ] , caloCell , 1. , 
+                  m_mapAllTitle[ type ] ) ;
       iterMap = mapRef[ type ].find( rawId ) ; 
       if ( iterMap == mapRef[ type ].end() ) {
         debug() << "          Ele L0cand not found ! " << endreq ; 
-        fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , m_mapCompareTitle[ type ] ) ;
+        fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
+                    m_mapCompareTitle[ type ] ) ;
       } else {
 	//        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
-	std::pair< l0cmap::iterator , l0cmap::iterator > res = mapRef[ type ].equal_range( rawId ) ;
+	std::pair< l0cmap::iterator , l0cmap::iterator > 
+    res = mapRef[ type ].equal_range( rawId ) ;
 	bool found = false ;
 	for ( iterMap = res.first ; iterMap != res.second ; ++iterMap ) {
 	  LHCb::L0CaloCandidate * theCand = (*iterMap).second ;
@@ -267,7 +295,8 @@ StatusCode L0CaloCompare::execute() {
 	if ( ! found ) {
 	  debug() << " Same cell but different etCode : ref = " << etCodeRef  
 		  << " check = " << etCodeCheck << endreq ;
-          fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , m_mapCompareTitle[ type ] ) ; 
+          fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
+                      m_mapCompareTitle[ type ] ) ; 
 	}
       }
 

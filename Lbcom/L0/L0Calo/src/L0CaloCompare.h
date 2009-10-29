@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.h,v 1.4 2009-06-04 15:14:17 robbep Exp $
+// $Id: L0CaloCompare.h,v 1.5 2009-10-29 10:51:48 robbep Exp $
 #ifndef L0CALOCOMPARE_H 
 #define L0CALOCOMPARE_H 1
 
@@ -39,5 +39,10 @@ private:
   std::vector< std::string >  m_mapCompareTitle ;
   std::vector< std::string >  m_mapAllName ;
   std::vector< std::string >  m_mapAllTitle ;
+
+  std::set< unsigned int > m_idles ; ///< List of idle BCIds
+  /// Vector of Idles BCIds (to set via job options)
+  std::vector< unsigned int > m_idleBCIdVector ;
+  
 };
 #endif // L0CALOCOMPARE_H
