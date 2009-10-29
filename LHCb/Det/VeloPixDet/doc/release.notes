@@ -4,6 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2009-10-29 - Victor Coco
+ - added channelToChannels and debug pointTo3x3Channel + channel2Point
+
 ! 2009-10-28 - Victor Coco
  - debugging of the pointToChannel function and similar.
 

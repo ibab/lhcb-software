@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.h,v 1.5 2009-10-28 13:02:28 cocov Exp $
+// $Id: DeVeloPixSensor.h,v 1.6 2009-10-29 15:34:05 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSENSOR_H
 #define VELOPIXDET_DEVELOPIXSENSOR_H 1
 
@@ -68,6 +68,10 @@ public:
   ///  Get the list of VeloPixChannelID forming the 3x3 cluster of pixel centered on point
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
                                         std::vector <LHCb::VeloPixChannelID>& channels) const = 0;
+
+  /// Get the 8 channel (if they exist) arround a given seed channel
+  virtual StatusCode  channelToNeighbours( const LHCb::VeloPixChannelID& seedChannel, 
+                                       std::vector <LHCb::VeloPixChannelID>& channels) const = 0;
 
   /// Return the pixel size (since the edge pixel might have different size)
   virtual std::pair<double,double> PixelSize(LHCb::VeloPixChannelID channel) const = 0;

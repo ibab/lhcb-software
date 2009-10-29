@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.6 2009-10-28 13:02:28 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.7 2009-10-29 15:34:05 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -113,24 +113,18 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
 {
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   Gaudi::XYZPoint localPoint = globalToLocal(point);
-  //std::cout<<"Point "<<point<<std::endl;
-  //std::cout<<"LocalPoint "<<localPoint<<std::endl;
-  
+
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
 
-  if(!sc.isSuccess()) return sc;  
+  if(!sc.isSuccess())return sc;  
   unsigned int sensor=sensorNumber();
   // Create the associated VeloPixChannelID
   channel.setSensor(sensor);
   // Get the ladder number in which the point is
   int ladderIndex = WhichLadder(localPoint);
-  
-  //std::cout<<"LADDER INDEX "<<ladderIndex<<std::endl;
-  
   // Get the chip number in which the point is
   int chipIndex = WhichChip(localPoint,ladderIndex);
-  //std::cout<<"CHIP INDEX "<<chipIndex<<std::endl;
   // Compute the proper chip number for VeloPixChanelID
   int prop_chipIndex = chipIndex;
   for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
@@ -140,7 +134,6 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
   channel.setChip(prop_chipIndex);  
   // Get the pixel position in which the point is
   std::pair <int,int> pixelPos = WhichPixel(localPoint,ladderIndex,chipIndex,fraction);
-  //std::cout<<"FUCKING PIXEL "<<pixelPos.first<<" "<<pixelPos.second<<std::endl;
   if( pixelPos.first < 0. || pixelPos.second < 0. ){
     return StatusCode::FAILURE;
   }
@@ -159,39 +152,45 @@ StatusCode DeVeloPixSquareType::channelToPoint( const LHCb::VeloPixChannelID& ch
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   Gaudi::XYZPoint LocalPoint(0.,0.,0.);
   int chipNum = channel.chip();  
+  int ladderNum = ladderNumber();
   int ladderIndex = 0;
   int ntotChip = 0;
   int chipInLadd = 0;
-  for(int ilad = 0 ; ilad < ladderIndex ; ilad ++){
+  for(int ilad = 0 ; ilad < ladderNum ; ilad ++){
+    int ntotChip_tmp = ntotChip;
     ntotChip += m_ladders[ilad].nChip();
-    if ( chipNum < ntotChip ) {
+    if ( chipNum < ntotChip && ( chipNum > ntotChip_tmp ||  chipNum == ntotChip_tmp ) ) {
       // Get the ladder
       ladderIndex = ilad;
+      // get the chip
+      chipInLadd = chipNum-(ntotChip-m_ladders[ilad].nChip());
       // Set the position in the pixel
       std::pair <double, double> size = PixelSize(channel);
-      if ( channel.pixel_lp()> 0 ) LocalPoint.SetX((channel.pixel_lp()-1)*lpSize()+size.first/2);
-      else LocalPoint.SetX(size.first/2);
-      if ( channel.pixel_hp()> 0 ) LocalPoint.SetY((channel.pixel_hp()-1)*hpSize()+size.second/2);
-      else LocalPoint.SetX(size.second/2);
-      // chipInLadd start at one...
-      chipInLadd = chipNum-(ntotChip-m_ladders[ilad].nChip());
-      continue;
+      // Set the offset due to left edge pixel (except when it is the first pixel)
+      double xoffset = 0.;
+      
+      int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipInLadd);
+      if (channel.pixel_lp()>0 && ( positionEdgePix == 0 || positionEdgePix == -1 ) ) xoffset = interchipPixSize()- lpSize();
+      LocalPoint.SetX((channel.pixel_lp())*lpSize()+size.first/2+xoffset);
+      LocalPoint.SetY((channel.pixel_hp())*hpSize()+size.second/2);
     }
   }
   // Add the bottom left position of the chip in the ladder
-  LocalPoint.SetX((chipInLadd-1)*(chipLength()+interChipDist())+LocalPoint.x());
+  if (chipInLadd < 2)LocalPoint.SetX((chipInLadd)*(chipLength()+interChipDist()/2)+LocalPoint.x());
+  // the else is not used for TIMEPIX minplane and all this have to be checked for othe geometry
+  else LocalPoint.SetX((chipInLadd-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2)+LocalPoint.x());
+
   // Add the postition of the reference LocalPoint of the ladder
   LocalPoint.SetX(m_ladders[ladderIndex].ReferencePoint().x()+LocalPoint.x());
   LocalPoint.SetY(m_ladders[ladderIndex].ReferencePoint().y()+LocalPoint.y());
-  // BECAREFULL, Z is set to ReferencePoint().z()  but it is not so sure.. to be checked
   LocalPoint.SetZ(m_ladders[ladderIndex].ReferencePoint().z());
   point = localToGlobal(LocalPoint);
+  
   return StatusCode::SUCCESS;
 }
 
 //==============================================================================
 /// Calculate the nearest 3x3 list of channel to a 3-d point 
-/// (assuming the DeVeloPixSquareType instance is already the correct one: z is corresponding to the sensor number)
 //==============================================================================
 StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point,
                                        std::vector <LHCb::VeloPixChannelID>& channels) const
@@ -201,7 +200,7 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
   LHCb::VeloPixChannelID  channelCentral;
   std::pair <double, double> fraction;
   StatusCode sc = pointToChannel( point, channelCentral, fraction);
-
+  Gaudi::XYZPoint loc_point = globalToLocal(point);
   // Initialise the size and if there is a channel at the central point get its size
   std::pair <double, double> size (0.,0.);
   if( sc.isSuccess()) size = PixelSize(channelCentral);
@@ -221,25 +220,74 @@ StatusCode  DeVeloPixSquareType::pointTo3x3Channels(const Gaudi::XYZPoint& point
       double rely = 0;
       // compute the relx,rely distances to which one might find an other pixel for the different x,y    
       if (x < 0) relx = - fraction.first*size.first - lpSize()/2;
-      if (x > 0) relx = (1- fraction.first)*size.first + lpSize()/2;
+      if (x > 0) relx = (1.- fraction.first)*size.first + lpSize()/2;
       if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
-      if (y < 0) rely = (1- fraction.second)*size.second + hpSize()/2;
+      if (y > 0) rely = (1.- fraction.second)*size.second + hpSize()/2;
       if (!sc.isSuccess()){
       // in case fraction is undefined (central position does not correspond to any channel), move by nominal size
         relx = x*lpSize();
         rely = y*hpSize();
       }
-      Gaudi::XYZPoint neigh_point (point.x()+relx,point.y()+rely,point.z());       
+      
+      Gaudi::XYZPoint neigh_point (loc_point.x()+relx,loc_point.y()+rely,loc_point.z());  
+      Gaudi::XYZPoint glob_neigh_point = localToGlobal(neigh_point);
       LHCb::VeloPixChannelID neig_channel;
       std::pair <double,double> frac (0.,0.);
       // if there is a channel corresponding to this new point, put it in the list
-      if ( pointToChannel( neigh_point, neig_channel, frac).isSuccess()){
+      if ( pointToChannel( glob_neigh_point, neig_channel, frac).isSuccess()){
         channels.push_back(neig_channel);
       }
     }
   }
   return StatusCode::SUCCESS;
 }
+
+
+//==============================================================================
+/// Get the 8 channel (if they exist) arround a given seed channel
+//==============================================================================
+StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannelID& seedChannel,
+                                       std::vector <LHCb::VeloPixChannelID>& channels) const
+{
+  MsgStream msg(msgSvc(), "DeVeloPixSquareType");
+  // Get the point corresponding to the seedChannel 
+  std::pair <double, double> fraction;
+  Gaudi::XYZPoint point;
+  StatusCode sc = channelToPoint (seedChannel, point);
+  if (!sc.isSuccess()) return sc;
+  
+  Gaudi::XYZPoint loc_point = globalToLocal(point);
+
+  // Initialise the size of the seed pixel
+  std::pair <double, double> size (0.,0.);
+  size = PixelSize(seedChannel);
+
+  // Loop over the possible position in the 3x3 cluster
+  for (int x = -1 ; x < 2 ; x ++){
+    for (int y = -1 ; y < 2 ; y ++){
+      // if x|y correspond to the central channel, skip it
+      if( x == 0 && y == 0  )  continue;
+      double relx = 0;
+      double rely = 0;
+      // compute the relx,rely distances to which one might find an other pixel for the different x,y    
+      if (x < 0) relx = - fraction.first*size.first - lpSize()/2;
+      if (x > 0) relx = (1.- fraction.first)*size.first + lpSize()/2;
+      if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
+      if (y > 0) rely = (1.- fraction.second)*size.second + hpSize()/2;
+      
+      Gaudi::XYZPoint neigh_point (loc_point.x()+relx,loc_point.y()+rely,loc_point.z());  
+      Gaudi::XYZPoint glob_neigh_point = localToGlobal(neigh_point);
+      LHCb::VeloPixChannelID neig_channel;
+      std::pair <double,double> frac (0.,0.);
+      // if there is a channel corresponding to this new point, put it in the list
+      if ( pointToChannel( glob_neigh_point, neig_channel, frac).isSuccess()){
+        channels.push_back(neig_channel);
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
 
 
 //==============================================================================
@@ -259,19 +307,15 @@ StatusCode DeVeloPixSquareType::isInActiveArea(const Gaudi::XYZPoint& point) con
 //==============================================================================
 int DeVeloPixSquareType::WhichLadder(const Gaudi::XYZPoint& point) const
 {
-  //std::cout<<"thePoint in WhichLadder "<<point<<std::endl;
-  
   for ( int index = 0 ; index <(int) m_ladders.size() ; index++){
     const Gaudi::XYZPoint pointRef = m_ladders[index].ReferencePoint();
     if (
         (point.x()-pointRef.x() > 0. && point.x()-pointRef.x()<m_ladders[index].nChip()*(chipLength()+interChipDist())) 
         && (point.y()-pointRef.y() > 0. && point.y()-pointRef.y()<chipWidth())
         && (fabs(point.z()-pointRef.z())<6*siliconThickness()/10)
-        ) 
-    {
+        ){
       return index;
     }
-    
   }
   return -1;
 }
@@ -284,8 +328,6 @@ int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
   Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-interChipDist()/2,point.y()-refPoint.y(),point.z()-refPoint.z());
   int ChipNum = (int)(LocalPoint.x()/(chipLength()+interChipDist()));
-  // treat the edge configuration (long pixel in the interchip area)
-  
   return ChipNum;
 
 }
