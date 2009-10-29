@@ -9,6 +9,7 @@ include_path none
 set L0CALOOPTS	$(L0CALOROOT)/options
 
 # ================ used packages =========================================
+use L0Base      v*      L0
 use LinkerEvent	v*	Event
 use CaloDAQ	v*	Calo
 use CaloUtils   v*      Calo
