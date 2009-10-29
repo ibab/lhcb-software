@@ -1,10 +1,11 @@
-// $Id: L0Candidate.h,v 1.1 2009-10-14 10:18:52 robbep Exp $
+// $Id: L0Candidate.h,v 1.2 2009-10-29 10:52:15 robbep Exp $
 #ifndef L0CALO_L0CANDIDATE_H 
 #define L0CALO_L0CANDIDATE_H 1
 
 // From Event
 #include "Event/L0DUBase.h"
 #include "Event/L0ProcessorData.h"
+#include "Event/L0CaloCandidate.h"
 
 // From Kernel
 #include "Kernel/CaloCellID.h"
@@ -25,6 +26,12 @@ public:
    * @param det : The detector element pointer
    */
   L0Candidate( DeCalorimeter * det ) : m_det( det ) , m_et( 0 ) , m_ID() { } ;
+
+  /** Constructor
+   * @param cand : candidate from L0CaloCandidate type
+   */
+  L0Candidate( LHCb::L0CaloCandidate * cand ) :
+    m_det( 0 ) , m_et( cand -> etCode() ) , m_ID( cand -> id() ) { } ;
   
   ///	Destructor
   ~L0Candidate() { } ;
