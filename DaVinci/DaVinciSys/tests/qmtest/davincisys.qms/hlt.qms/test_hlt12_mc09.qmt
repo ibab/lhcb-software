@@ -11,7 +11,7 @@ findReferenceBlock("""
  |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |       999 |        416 |(  41.6416 +- 1.55967  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       999 |        101 |(  10.1101 +- 0.953785 )%||   -------   |   -------   |
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       999 |        101 |(  10.1101 +- 0.953785 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
