@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.38 2009-10-28 17:21:16 pkoppenb Exp $
+! $Id: release.notes,v 1.39 2009-10-29 08:31:58 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltLine v1r7p1 2009-10-28 ===================
+! 2009-10-29 - Patrick Koppenburg
+ - Initialize all global variables
+ - Remove unused m_isInitialized
+
 ! 2009-10-25 - Gerhard Raven
  - more const
 

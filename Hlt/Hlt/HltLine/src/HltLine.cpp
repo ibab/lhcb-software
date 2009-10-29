@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.10 2009-10-11 09:15:40 graven Exp $
+// $Id: HltLine.cpp,v 1.11 2009-10-29 08:31:58 pkoppenb Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -156,19 +156,24 @@ HltLine::HltLine( const std::string& name,
   , m_jos(0)
   , m_algMgr(0)
   , m_errorHisto(0)
+  , m_timeHisto(0)
+  , m_stepHisto(0)
   , m_hltANNSvc(0)
   , m_hltDataSvc(0)
   , m_acceptCounter(0)
   , m_errorCounter(0)
   , m_slowCounter(0)
   , m_selection(0)
+  , m_timer(0)
+  , m_nAcceptOnError(0)
 {
   for (unsigned i=0; i<m_stages.size(); ++i) {
     m_stages[i] = new HltStage(*this, transition(stage(i)));
     declareProperty( m_stages[i]->property().name() , m_stages[i]->property() );
   }
   declareProperty( "HltDecReportsLocation", m_outputContainerName   = LHCb::HltDecReportsLocation::Default );
-  declareProperty( "DecisionName"         , m_decision       = name+"Decision"); //TODO: install updateHandler, refuse changes after initialize...
+  //TODO: install updateHandler, refuse changes after initialize...
+  declareProperty( "DecisionName"         , m_decision       = name+"Decision"); 
   declareProperty( "IgnoreFilterPassed"   , m_ignoreFilter   = false );
   declareProperty( "MeasureTime"          , m_measureTime    = false );
   declareProperty( "ReturnOK"             , m_returnOK       = false );

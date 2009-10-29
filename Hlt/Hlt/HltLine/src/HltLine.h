@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.7 2009-10-25 20:49:35 graven Exp $
+// $Id: HltLine.h,v 1.8 2009-10-29 08:31:58 pkoppenb Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -146,7 +146,6 @@ private:
   std::string m_decision;
   std::vector<std::string> m_incidents;  ///< Incidents to be flagged in HltDecReport if they occurs during processing
   bool m_ignoreFilter;                   ///< True if one continues always.
-  bool m_isInitialized;                  ///< Indicate that we are ready
   bool m_measureTime;                    ///< Flag to measure time
   bool m_returnOK;                       ///< Forces the sequencer to return a good status
   bool m_acceptOnError;                  ///< Forces accept if error
