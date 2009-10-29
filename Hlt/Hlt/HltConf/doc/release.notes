@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.358 2009-10-28 17:18:58 pkoppenb Exp $ 
+! $Id: release.notes,v 1.359 2009-10-29 14:45:54 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,9 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v5r1 2009-10-28 ===================
+! 2009-10-29 - Patrick Koppenburg
+ - New option EnableAcceptIfSlow that passes AcceptIfSlow True to all lines
+
 ! 2009-10-28 - Patrick Koppenburg
  - Add new slors AdditionalHlt1Lines and 2Lines, which allows users to 
 	 test lines by hand. Usage:

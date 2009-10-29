@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.128 2009-10-28 16:09:42 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.129 2009-10-29 14:45:54 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -20,25 +20,26 @@ class HltConf(LHCbConfigurableUser):
     """
     __used_configurables__ = [ Hlt1Conf
                              , Hlt2Conf ]
-    __slots__ = { "L0TCK"                      : ''
-                , "DataType"                   : '2009'
-                , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
-                , "Verbose"                    : False # print the generated Hlt sequence
-                , "HistogrammingLevel"         : 'None' # or 'Line'
-                , "ThresholdSettings"           : '' #  select a predefined set of settings, eg. 'Effective_Nominal'
-                , "EnableHltGlobalMonitor"       : True
-                , "EnableHltDecReports"          : True
-                , "EnableHltSelReports"          : True
-                , "EnableHltVtxReports"          : True
-                , "EnableHltRoutingBits"         : True
-                , "EnableLumiEventWriting"       : False
-                , 'RequireL0ForEndSequence'     : True
+    __slots__ = { "L0TCK"                          : ''
+                , "DataType"                       : '2009'
+                , "Hlt2Requires"                   : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
+                , "Verbose"                        : False      # print the generated Hlt sequence
+                , "HistogrammingLevel"             : 'None'     # or 'Line'
+                , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
+                , "EnableHltGlobalMonitor"         : True
+                , "EnableHltDecReports"            : True
+                , "EnableHltSelReports"            : True
+                , "EnableHltVtxReports"            : True
+                , "EnableHltRoutingBits"           : True
+                , "EnableLumiEventWriting"         : False
+                , "EnableAcceptIfSlow"             : False      # Switch on AcceptIfSlow switch of HltLine
+                , 'RequireL0ForEndSequence'        : True
                 , 'SkipHltRawBankOnRejectedEvents' : False
-                , "LumiBankKillerAcceptFraction" : 0.9999 # fraction of lumi-only events where raw event is stripped down
-                                                          # (only matters if EnablelumiEventWriting = True)
-                , "WithMC"                       : False
-                , "AdditionalHlt1Lines"          : []     # must be configured
-                , "AdditionalHlt2Lines"          : []     # must be configured
+                , "LumiBankKillerAcceptFraction"   : 0.9999     # fraction of lumi-only events where raw event is stripped down
+                                                                # (only matters if EnablelumiEventWriting = True)
+                , "WithMC"                         : False
+                , "AdditionalHlt1Lines"            : []         # must be configured
+                , "AdditionalHlt2Lines"            : []         # must be configured
                 }
 
     __settings__ = None 
@@ -322,7 +323,7 @@ class HltConf(LHCbConfigurableUser):
         elif self.getProp('HistogrammingLevel') == 'Line' : 
             for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()!='HltLine' ) 
         elif self.getProp('HistogrammingLevel') == 'NotLine' : 
-            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='HltLine' ) 
+            for i in hlt1Lines()+hlt2Lines() : _disableHistograms( i.configurable(), lambda x: x.getType()=='HltLine' )
             
 
 ##################################################################################
@@ -382,6 +383,11 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
         Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
 
+        # switch on timing limit
+        if  self.getProp('EnableAcceptIfSlow') : 
+            for i in hlt1Lines()+hlt2Lines() :
+                i.configurable().AcceptIfSlow = True 
+        
         self.configureHltMonitoring(lines1)
         self.configureVertexPersistence()
         self.configureANNSelections()
