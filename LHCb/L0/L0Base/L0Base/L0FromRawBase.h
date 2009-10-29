@@ -1,4 +1,4 @@
-// $Id: L0FromRawBase.h,v 1.1 2009-10-20 13:20:16 jucogan Exp $
+// $Id: L0FromRawBase.h,v 1.2 2009-10-29 10:41:22 robbep Exp $
 #ifndef L0FROMRAWBASE_H 
 #define L0FROMRAWBASE_H 1
 
@@ -20,16 +20,30 @@ public:
 
   virtual ~L0FromRawBase( ); ///< Destructor
 
-  virtual StatusCode initialize();    ///< Algorithm initialization
-  virtual StatusCode execute   ();    ///< Algorithm execution
-  virtual StatusCode finalize  ();    ///< Algorithm finalization
-
 protected:
 
-  bool m_writeProcData;    ///< Flag to activate the writing of the raw banks
+/** If algorithm should write the processor data on TES
+ */
+  bool writeProcData() const { return m_writeProcData ; } ;
+
+/** If algorithm should write the L0XXCandidates or L0DUReport on TES
+ */
+  bool writeOnTES() const { return m_writeOnTES ; } ;
+
+  /** The suffix to append to the default locations where
+   *  to store the objects on the TES
+   */
+  std::string l0context() const { return m_l0context ; } ;
+  
+  /** returns the location where to write the data on TES
+   *  @param[in] standardLocation "default" path where objects are stored
+   */
+  std::string dataLocation( const std::string & standardLocation ) const {
+    return ( rootInTES() + standardLocation + l0context() ) ; } ;
+
+  bool m_writeProcData;    ///< Flag to activate the writing of the processor data
   bool m_writeOnTES;       ///< Flag to activate the writing of the Candidates/Report on the TES
   std::string m_l0context; ///< Suffix appended to the default location in TES
-
 
 private:
 

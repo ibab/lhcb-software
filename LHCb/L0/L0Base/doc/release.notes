@@ -4,6 +4,10 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+! 2009-10-29 - Patrick Robbe
+ - L0AlgBase, L0FromRawBase: add utility functions to access member
+   variables
+
 !============================ L0Base v1r1 2009-10-20 =========================
 ! 2009-10-20 - Julien Cogan
  - First release containing L0AlgBase and L0FromRawBase
