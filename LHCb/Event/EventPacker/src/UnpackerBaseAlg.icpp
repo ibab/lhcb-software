@@ -37,21 +37,24 @@ StatusCode Unpack<PACKER>::initialize()
 template < class PACKER >
 StatusCode Unpack<PACKER>::execute()
 {
-  // Load the input data
-  typename PACKER::PackedDataVector * pdata =
-    this->get<typename PACKER::PackedDataVector>(m_inputName);
-
-  // Make the output unpacked data
+  // Make the output unpacked data and give to Gaudi
+  // Do first, to make sure output always exists, even if input does not
   typename PACKER::DataVector * data = new typename PACKER::DataVector();
-
-  // give new container to Gaudi
   this->put( data, m_outputName );
 
-  // Packer
-  static const PACKER packer;
-
-  // Fill packed data
-  packer.unpack( *pdata, *data );
-
+  // if input does not exist, just return
+  if ( exist<typename PACKER::PackedDataVector>(m_inputName) )
+  {
+    // Load the input data
+    typename PACKER::PackedDataVector * pdata =
+      this->get<typename PACKER::PackedDataVector>(m_inputName);
+    
+    // Packer
+    static const PACKER packer;
+    
+    // Fill unpacked data
+    packer.unpack( *pdata, *data );
+  }
+    
   return StatusCode::SUCCESS;
 }
