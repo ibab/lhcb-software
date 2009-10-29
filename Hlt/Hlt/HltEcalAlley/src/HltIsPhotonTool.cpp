@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.10 2009-10-26 18:46:47 witekma Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.11 2009-10-29 08:25:06 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,9 @@ HltIsPhotonTool::HltIsPhotonTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_tool(0)
+    , m_detector(0)
+    , m_tool1(0)
 {
   // just a safeguard against crazy clusters
   declareProperty("temporaryFix", m_temporaryFix = true);

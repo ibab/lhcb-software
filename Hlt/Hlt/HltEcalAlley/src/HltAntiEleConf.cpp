@@ -1,4 +1,4 @@
-// $Id: HltAntiEleConf.cpp,v 1.2 2009-03-03 10:02:07 witekma Exp $
+// $Id: HltAntiEleConf.cpp,v 1.3 2009-10-29 08:25:06 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,7 @@ HltAntiEleConf::HltAntiEleConf( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_tool(0)
 {
   declareInterface<ITrackFunctionTool>(this);
 }

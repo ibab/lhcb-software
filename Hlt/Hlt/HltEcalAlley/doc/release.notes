@@ -5,12 +5,15 @@
 !----------------------------------------------------------------------------
 
 !========================== HltEcalAlley v2r1 2009-10-28 ===================
+! 2009-10-29 - Patrick Koppenburg
+ - Initialize all global variables
+
 ! 2009-10-26 - Mariusz Witek
-- fix crashes in HltIsPhotonTool and HltRadCorTool.
-  Back to old fast Calo clusterization and full Ecal decoding.
-  The old method was introduced by a flag temporaryFix (set to true).
-  DecodeECAL was needed in HltPhotonLines and HltElectronLines 
-  in appropriate places.
+ - fix crashes in HltIsPhotonTool and HltRadCorTool.
+   Back to old fast Calo clusterization and full Ecal decoding.
+   The old method was introduced by a flag temporaryFix (set to true).
+   DecodeECAL was needed in HltPhotonLines and HltElectronLines 
+   in appropriate places.
 
 !========================== HltEcalAlley v2r0 2009-08-31 ===================
 ! 2009-08-18 - Mariusz Witek
