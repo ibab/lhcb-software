@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.7 2009-08-05 17:38:29 ibelyaev Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.8 2009-10-30 18:59:22 dgolubko Exp $
 // Include files 
 
 // from Gaudi
@@ -250,6 +250,7 @@ StatusCode CaloClusterizationTool::_clusterize
 
     // look Cell neigbours for next levels
     std::set<LHCb::CaloCellID> in_cells = cells;
+    out_cells = cells;
 
     for(int i = m_neig_level; i > 1; i--){      
       look_neig(in_cells, m_detector, out_cells);
