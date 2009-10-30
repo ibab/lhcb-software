@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.44 2009-10-30 15:24:55 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.45 2009-10-30 16:15:04 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -34,7 +34,7 @@
 #include "Kernel/IWriteSelResult.h"
 #include "Kernel/IDistanceCalculator.h"
 #include "Kernel/IPVReFitter.h"
-class IRelatedPVFinder;
+#include "Kernel/IRelatedPVFinder.h"
 // ============================================================================
 #include "Kernel/IMassFit.h"
 #include "Kernel/IMassVertexFit.h"
@@ -155,7 +155,9 @@ public:
    **/
   inline const IRelatedPVFinder* relatedPVFinder() const
   {
-    return desktop()->relatedPVFinder();
+    if ( 0!=m_pvRelator ) return m_pvRelator;
+    const std::string& pvRelatorName = onOffline()->relatedPVFinderType();
+    return getTool<IRelatedPVFinder>(pvRelatorName, m_pvRelator, this) ;      
   }
   /**
    * direct const access to container of input primary vertices.
@@ -623,6 +625,10 @@ protected:
 
   /// 
   mutable IOnOffline* m_onOffline;
+
+  ///
+  mutable IRelatedPVFinder* m_pvRelator;
+  
   
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;

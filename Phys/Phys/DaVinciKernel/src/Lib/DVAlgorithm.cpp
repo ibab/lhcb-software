@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.61 2009-10-30 15:24:55 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.62 2009-10-30 16:15:04 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -68,6 +68,7 @@ DVAlgorithm::DVAlgorithm
     , m_writeSelResultName    ( "WriteSelResult" )
     , m_writeSelResult        ( 0 )
     , m_onOffline             ( 0 )
+    , m_pvRelator             ( 0 )
     , m_ppSvc                 ( 0 )
     , m_setFilterCalled       ( false )
     , m_countFilterWrite      ( 0 )
