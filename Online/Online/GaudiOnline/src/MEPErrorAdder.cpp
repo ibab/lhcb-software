@@ -66,6 +66,7 @@ MEPErrorAdder::MEPErrorAdder(const std::string& nam, ISvcLocator* svc)
   
   m_allNames = NULL;
   m_allNamesSize = 0;
+  m_zero = 0;
   
 }
 
@@ -601,56 +602,54 @@ MEPErrorAdder::setupSubs() {
   resetRem2DCounters();
   resetRemSingleCounters();
 
-  longlong zero = 0;
-
   if (m_sumPartition) { 
     //Partition sum
 
     for (int i=0;i<m_nrSubFarms;i++) {
   	//all subfarms
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/badLenPkt",m_subFarms[i].c_str());
-	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/badPckFktPkt",m_subFarms[i].c_str());
-   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/misPkt",m_subFarms[i].c_str());
-   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/truncPkt",m_subFarms[i].c_str());
-    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/multipleEvt",m_subFarms[i].c_str());
-    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxOct",m_subFarms[i].c_str());
-    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxPkt",m_subFarms[i].c_str());
-    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxEvt",m_subFarms[i].c_str());
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 	
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxOct",m_subFarms[i].c_str());
-	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxPkt",m_subFarms[i].c_str());
-	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/incEvt",m_subFarms[i].c_str());
-	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totBadMEP",m_subFarms[i].c_str());
-	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totMEPReq",m_subFarms[i].c_str());
-	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totMEPReqPkt",m_subFarms[i].c_str());
-	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/numMEPRecvTimeouts",m_subFarms[i].c_str());
-	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/notReqPkt",m_subFarms[i].c_str());
-	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totWrongPartID",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     
 	//MDF, from HLT
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvt",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentOct",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/sentEvtErr",m_subFarms[i].c_str());
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
  	
 
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/srcName",m_subFarms[i].c_str());
@@ -661,48 +660,48 @@ MEPErrorAdder::setupSubs() {
     for (int i=0;i<m_nrSubNodes;i++) {
    	//all nodes in this subfarm 
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/badLenPkt",m_listenerDnsNode.c_str(),i+1);
-        m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+        m_subsBadLenPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/badPckFktPkt",m_listenerDnsNode.c_str(),i+1);
-   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+   	m_subsBadPckFktPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/misPkt",m_listenerDnsNode.c_str(),i+1);
-   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+   	m_subsMisPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/truncPkt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsTruncPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/multipleEvt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsMultipleEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxOct",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxPkt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxEvt",m_listenerDnsNode.c_str(),i+1);
-    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxOct",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxPkt",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/incEvt",m_listenerDnsNode.c_str(),i+1);
-	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totBadMEP",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totMEPReq",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotMEPReq[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totMEPReqPkt",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotMEPReqPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/numMEPRecvTimeouts",m_listenerDnsNode.c_str(),i+1);
-	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsNumMEPRecvTimeouts[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/notReqPkt",m_listenerDnsNode.c_str(),i+1);
-	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsNotReqPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totWrongPartID",m_listenerDnsNode.c_str(),i+1);
-	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsTotWrongPartID[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	//MDF, from HLT
     	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/BytesOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsSentOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/EventsOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsSentEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s%.2i_DiskWR_1/Runable/SND_0/ErrorsOut",m_listenerDnsNode.c_str(),i+1);
-	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,zero,this);
+	m_subsSentEvtErr[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/srcName",m_listenerDnsNode.c_str(),i+1);
 	m_subsSrcName[i] = new DimInfo(temp,m_updateFrequency,(char *)"",this);

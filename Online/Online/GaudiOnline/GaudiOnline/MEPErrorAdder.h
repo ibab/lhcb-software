@@ -75,6 +75,8 @@ namespace LHCb  {
     char			*m_allNames;		// TELL1 source names from DIM service
     int				m_allNamesSize;
 
+    longlong m_zero;
+
     //Save all received values from all sources
     std::vector<std::vector<int64_t> >      	m_rBadLenPkt;
     std::vector<std::vector<int64_t> >      	m_rMisPkt;
