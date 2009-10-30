@@ -1,4 +1,4 @@
-// $Id: UnpackMCVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackMCVertex.cpp,v 1.3 2009-10-30 17:21:23 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -38,23 +38,28 @@ UnpackMCVertex::~UnpackMCVertex() {};
 //=============================================================================
 StatusCode UnpackMCVertex::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  // CRJ : If packed data does not exist just return. Needed for packing of 
+  //     : spillover which is not neccessarily available for each event
+  if ( !exist<LHCb::PackedMCVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::PackedMCVertices* dst = get<LHCb::PackedMCVertices>( m_inputName );
-  debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::MCVertices* newMCVertices = new LHCb::MCVertices();
   put( newMCVertices, m_outputName );
 
   StandardPacker pack;
   
+  newMCVertices->reserve( dst->size() );
   for ( std::vector<LHCb::PackedMCVertex>::const_iterator itS = dst->begin();
         dst->end() != itS; ++itS ) {
     const LHCb::PackedMCVertex& src = (*itS);
 
     LHCb::MCVertex* vert = new LHCb::MCVertex( );
     newMCVertices->insert( vert, src.key );
-    Gaudi::XYZPoint pt( pack.position( src.x ), pack.position( src.y ), pack.position( src.z) );
+    const Gaudi::XYZPoint pt( pack.position( src.x ), pack.position( src.y ), pack.position( src.z) );
     vert->setPosition( pt );
     vert->setTime( src.tof );
     vert->setType( (LHCb::MCVertex::MCVertexType) src.type );

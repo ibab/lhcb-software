@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.3 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackMCVertex.cpp,v 1.4 2009-10-30 17:21:22 jonrob Exp $
 // Include files 
 
 // from Boost
@@ -54,6 +54,7 @@ StatusCode PackMCVertex::execute() {
   LHCb::PackedMCVertices* out = new LHCb::PackedMCVertices();
   put( out, m_outputName );
 
+  out->reserve( verts->size() );
   for ( LHCb::MCVertices::const_iterator itV = verts->begin();
         verts->end() != itV; ++itV ) {
     LHCb::MCVertex* vert = (*itV);

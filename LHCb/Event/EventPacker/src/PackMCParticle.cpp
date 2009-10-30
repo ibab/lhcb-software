@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.5 2009-10-23 10:46:04 jonrob Exp $
+// $Id: PackMCParticle.cpp,v 1.6 2009-10-30 17:21:22 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -50,6 +50,7 @@ StatusCode PackMCParticle::execute() {
   LHCb::PackedMCParticles* out = new LHCb::PackedMCParticles();
   put( out, m_outputName );
 
+  out->reserve( parts->size() );
   for ( LHCb::MCParticles::const_iterator itP = parts->begin();
         parts->end() != itP; ++itP ) {
     LHCb::MCParticle* part = (*itP);

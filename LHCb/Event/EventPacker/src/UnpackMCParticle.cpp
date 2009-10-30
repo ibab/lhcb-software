@@ -1,4 +1,4 @@
-// $Id: UnpackMCParticle.cpp,v 1.3 2009-10-21 16:41:14 jonrob Exp $
+// $Id: UnpackMCParticle.cpp,v 1.4 2009-10-30 17:21:22 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -38,10 +38,14 @@ UnpackMCParticle::~UnpackMCParticle() {};
 //=============================================================================
 StatusCode UnpackMCParticle::execute() {
 
-  debug() << "==> Execute" << endmsg;
+  // CRJ : If packed data does not exist just return. Needed for packing of 
+  //     : spillover which is not neccessarily available for each event
+  if ( !exist<LHCb::PackedMCParticles>(m_inputName) )  return StatusCode::SUCCESS;
 
   LHCb::PackedMCParticles* dst = get<LHCb::PackedMCParticles>( m_inputName );
-  debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endmsg;
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::MCParticles* newMCParticles = new LHCb::MCParticles();
   put( newMCParticles, m_outputName );
@@ -56,15 +60,15 @@ StatusCode UnpackMCParticle::execute() {
     LHCb::MCParticle* part = new LHCb::MCParticle( );
     newMCParticles->insert( part, src.key );
 
-    double px = pack.energy( src.px );
-    double py = pack.energy( src.py );
-    double pz = pack.energy( src.pz );
-    double mass = src.mass;
-    double E = std::sqrt( px*px + py*py + pz*pz + mass*mass );
-    Gaudi::LorentzVector p( px, py, pz , E );
+    const double px = pack.energy( src.px );
+    const double py = pack.energy( src.py );
+    const double pz = pack.energy( src.pz );
+    const double mass = src.mass;
+    const double E = std::sqrt( px*px + py*py + pz*pz + mass*mass );
+    const Gaudi::LorentzVector p( px, py, pz , E );
     part->setMomentum( p );
 
-    LHCb::ParticleID PID(src.PID);    
+    const LHCb::ParticleID PID(src.PID);    
     part->setParticleID( PID );
     
     int hintID;

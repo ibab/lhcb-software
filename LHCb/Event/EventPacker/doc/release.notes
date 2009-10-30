@@ -5,7 +5,8 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-10-29 - Chris Jones
- - Create (empty) unpacked data container even when packed data does not exist
+ - Silently return no unpacked data when packed data does not exist. Needed
+   for spillover events, which are not always present.
 
 ! 2009-10-26 - Victor Coco
  - Extend the packinf unpacking to VeloPix sub-detector
