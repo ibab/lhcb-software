@@ -3,6 +3,40 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r4>2009-10-30 DaVinci v24r4 </A></H1><PRE>
+
+Based on Phys v8r11, Analysis v3r11, Rec v7r7, HLT v7r1, Lbcom v7r7, LHCb v28r1, Gaudi v21r5
+
+ * Highlights
+   - Big changes to Stripping configuration framework. 
+      . Allows easy definition of streams and configuration of stripping.
+      . Examples on how to read stripping DSTs here:
+          https://twiki.cern.ch/twiki/bin/view/LHCb/LHCbStripping#Reading
+   - Improvements to Selection Framweork. 
+      . Allow pre and post selection algorithm lists in SelectionSequence. 
+      . Add AutomaticData class, an alias for DataOnDemand, to avoid confusion.
+      . See https://twiki.cern.ch/twiki/bin/view/LHCb/ParticleSelection
+   - MicroDST-friendly changes: 
+      . DecayTreeTuple's TupleToolMCTruth can use MC associaiton in MicroDST.
+      . 'MDST' property of DaVinci() for running job with input DSTs. 
+      . See https://twiki.cern.ch/twiki/bin/view/LHCb/MicroDST for more 
+        MicroDST reading examples.
+   - Significant speed up in DVAlgorithm/PhysDesktop 
+      . Particle->PV relation handling for busy events.
+   - Fix to gamma reconstruction
+      . standard photons work again!
+   - Bug fix to HLT + MC association crashes.
+   - More migration to Configurables in Calo configuration.
+   - Big changes to HLT
+      . Restructure of Settings and configuration
+      . HltConf now allows to add any configured line to Hlt1 or 2 for testing.
+      . HltSelChecker completely rewritten. Now does MC09.
+      . Addition of B2DX lines
+      . Renaming of XGamma lines
+      . DaVinci() Hlt slots changed: HltType replaced by bool Hlt. 
+        Hlt1, Hlt2 configuration to run now defined by HltThresholdSettings
+        See https://twiki.cern.ch/twiki/bin/view/LHCb/HltSettings for more details.
+
 </PRE><H1><A NAME=v24r3p1>2009-10-06 DaVinci v24r3p1 </A></H1><PRE>
 
 Based on Phys v8r10, Analysis v3r10, Rec v7r6, HLT v6r8, Lbcom v7r6, LHCb v28r0, Gaudi v21r4

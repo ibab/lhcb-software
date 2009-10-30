@@ -10,11 +10,7 @@ findReferenceBlock("""
  |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |       127 |         56 |(  44.0945 +- 4.40573  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
-<<<<<<< test_hlt12_dc06_charming.qmt
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       127 |         45 |(  35.4331 +- 4.24431  )%|   -------   |   -------   |
-=======
  |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       127 |         35 |(  27.5591 +- 3.96481  )%|   -------   |   -------   |
->>>>>>> 1.17
 """, stdout, result, signature_offset = 0, id = "Hlt2")
 </text></argument>
 </extension>
