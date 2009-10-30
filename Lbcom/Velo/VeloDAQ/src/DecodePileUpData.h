@@ -22,6 +22,7 @@ namespace LHCb
   class RawEvent;
   class RawBank;
 }
+using namespace LHCb;
 // -----------------------------------
 
 namespace PuTell1
@@ -60,8 +61,8 @@ private:
 
   LHCb::RawEvent*       m_rawEvent;    
   std::string		m_rawEventLoc;   
-  const std::string	m_PUClusterLocation;  
-  const std::string	m_PUClusterNZSLocation;        
+  std::string	m_PUClusterLocation;  
+  std::string	m_PUClusterNZSLocation;        
   bool          	m_isNonZeroSupp;
   PuTell1::DataTable	m_PUcontainerBee_NZS;
   PuTell1::DataTable	m_PUcontainerBee;

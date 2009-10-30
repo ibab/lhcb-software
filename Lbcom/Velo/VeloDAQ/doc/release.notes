@@ -3,6 +3,11 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-10-30 - Serena Oggero
+ - bug fix in DecodePileUpData: there were some StatusCode FAILURE resulting
+   in a crash when the Event was not retreived from the right location
+ - added a property to disable the NZS banks decoding
+
 !=========================  VeloDAQ v4r9 2009-10-20 =======================
 ! 2009-09-25 - Kurt Rinnert
  - bug fix in error bank decoder: there were no (empty) event infos inserted
