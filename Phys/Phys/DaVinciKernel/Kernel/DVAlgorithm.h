@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.43 2009-10-27 13:22:15 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.44 2009-10-30 15:24:55 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -23,6 +23,7 @@
 // from DaVinciKernel
 // ============================================================================
 #include "Kernel/IPhysDesktop.h"
+#include "Kernel/IOnOffline.h"
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
 #include "Kernel/IParticleFilter.h"
@@ -140,6 +141,12 @@ public:
     return getTool<IPhysDesktop>(m_desktopName,m_desktop,this) ;
   }
 
+  /// accessor for IOnOffline tool
+  inline IOnOffline* onOffline() const
+  {
+    return getTool<IOnOffline>("OnOfflineTool", m_onOffline, this) ;    
+  }
+  
   /**
    * direct const access to the tool that calculates the Particle->PV
    * weighted relations
@@ -613,6 +620,9 @@ protected:
   std::string m_writeSelResultName;
   /// Reference to CheckOverlap
   mutable IWriteSelResult* m_writeSelResult;
+
+  /// 
+  mutable IOnOffline* m_onOffline;
   
   /// Reference to ParticlePropertySvc
   mutable const LHCb::IParticlePropertySvc* m_ppSvc;
