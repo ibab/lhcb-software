@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.7 2009-07-07 06:44:57 cattanem Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.8 2009-10-30 13:21:48 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -123,7 +123,7 @@ StatusCode ST::STTAEClusterMonitor::initialize() {
 //==============================================================================
 void ST::STTAEClusterMonitor::bookHistograms() {
   m_prof_clustersVsSample = bookProfile1D("Number of clusters vs sampling points",-m_maxSample, m_maxSample, m_nSamples);
-  m_2d_ADCsVsSample = book2D("Cluster ADC values vs sampling point",-m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+  m_2d_ADCsVsSample = book2D("Cluster ADC values vs sampling point",-m_maxSample, m_maxSample, m_nSamples, -0.5, 60.5, 61);
   if(detType() == "TT" || m_plotBySvcBox) {
     /// list of service boxes  
     std::vector<std::string>::const_iterator itSvcBoxes=(this->readoutTool())->serviceBoxes().begin();
@@ -133,7 +133,7 @@ void ST::STTAEClusterMonitor::bookHistograms() {
         std::string quadrant = svcBox.substr(0,2);
         if(m_2ds_ADCsVsSampleByServiceBox[quadrant] == 0) {
           m_2ds_ADCsVsSampleByServiceBox[quadrant] = book2D("Cluster ADC values vs sampling point "+quadrant,
-                                                            -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+                                                            -m_maxSample, m_maxSample, m_nSamples, -0.5, 60.5, 61);
         }
         if(m_profs_ADCsVsSampleByServiceBox[quadrant] == 0) {
           m_profs_ADCsVsSampleByServiceBox[quadrant] = bookProfile1D("ADC MPV vs sampling point"+quadrant,
@@ -142,7 +142,7 @@ void ST::STTAEClusterMonitor::bookHistograms() {
       } // End of TT condition
       if(m_plotBySvcBox) {
         m_2ds_ADCsVsSampleByServiceBox[svcBox] = book2D("Cluster ADC values vs sampling point "+svcBox,
-                                                        -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+                                                        -m_maxSample, m_maxSample, m_nSamples, -0.5, 60.5, 61);
         m_profs_ADCsVsSampleByServiceBox[svcBox] = bookProfile1D("ADC MPV vs sampling point "+svcBox,
                                                                  -m_maxSample, m_maxSample, m_nSamples);
       }
@@ -160,7 +160,7 @@ void ST::STTAEClusterMonitor::bookHistograms() {
       //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
       m_2ds_ADCsVsSampleByDetRegion[region] = book2D("Cluster ADC values vs sampling point "+region,
-                                                     -m_maxSample, m_maxSample, m_nSamples, -2., 202., 51);
+                                                     -m_maxSample, m_maxSample, m_nSamples, -0.5, 60.5, 61);
       m_profs_ADCsVsSampleByDetRegion[region] = bookProfile1D("ADC MPV vs sampling point "+region,
                                                               -m_maxSample, m_maxSample, m_nSamples);
     };
@@ -238,6 +238,6 @@ void ST::STTAEClusterMonitor::monitorClusters() {
           }
         } // End of cluster condition
       }// End of cluster iterator
-    } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 50).ignore(); // End of cluster exists
+    } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 1).ignore(); // End of cluster exists
   }// End loop over cluster locations
 }

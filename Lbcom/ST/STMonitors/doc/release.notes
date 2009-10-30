@@ -4,6 +4,12 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-10-30 - Mark Tobin
+ - Modified STNZSMonitor such that it uses ISTNoiseCalculationTool to calculate
+ noise. 
+ - Add algorithm (STNoiseCalculation) to calculate noise in Tool.
+ - Modified the binning of some histograms in the STTAEClusterMonitor
+           
 ! 2009-10-26 - Jeroen Van Tilburg
  - Add new algorithm STPulseMonitor. It monitors the pulse shape as a function
    of the spill, using NZS+TAE data.

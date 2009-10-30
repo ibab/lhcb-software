@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.5 2009-08-04 13:52:39 mtobin Exp $
+// $Id: STNZSMonitor.h,v 1.6 2009-10-30 13:21:48 mtobin Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -9,23 +9,20 @@
  *
  *  Class for monitoring the noise of the Tell1's. For each Tell1 the noise
  *  versus the strip number is stored in a histogram. The histograms can be
- *  stored using sourceID or tell1 name with the option \b UseSourceID. There
- *  are several options for calculating the noise:
- *  - \b FollowPeriod: This is the period of the exponential moving average. It
- *    determines the lifetime of the averages (in number of events). As long as
- *    the number of processed events is smaller than FollowPeriod the average
- *    is a cumulative average. Set this to -1 to always use a cumulative
- *    averaging.
+ *  stored using sourceID or tell1 name with the option \b UseSourceID. The
+ *  noise is calculated using a ISTNoiseCalculationTool.  The algorithm can be
+ *  configured using the following options:
  *  - \b UpdateRate: Rate at which the histograms are updated (in number of
  *    events). Useful in online mode. Set to -1 to update only at the end.
- *  - \b ResetRate: Rate at which the counters for histograms are reset
- *    (in number of events). Set to -1 to do no reset (default).
- *  - \b SkipEvents: Number of events to be skipped. Useful when running over
- *     common-mode-subtracted data where the pedestals have not been calculated.
+ *  - \b NoiseToolType: Sets the type of the noise calculation tool. (default is ST::STNoiseCalculationTool)
+ *  - \b NoiseToolName: Sets the name of the noise calculation tool. (default is TTNoiseCalculationTool)
  *
  *  @author J. van Tilburg, N. Chiapolini
  *  @date   10/02/2009
  */
+namespace ST {
+  class ISTNoiseCalculationTool;
+}
 
 class STNZSMonitor : public ST::HistoAlgBase {
 
@@ -44,22 +41,14 @@ private:
   void bookHistograms();
 
   /// Fill the noise histograms (only called every N events and at finalize)
-  void updateNoiseHistogram(int tell1ID);
+  void updateNoiseHistogram(unsigned int tell1ID);
 
   //const std::string   m_basenameNoiseHisto; 
   int                 m_evtNumber;
 
-  typedef std::map<int, std::vector<double> > DataMap;  
-  DataMap m_meanMap;            ///< Internal map for the pedestals
-  DataMap m_meanSqMap;          ///< Internal map of the pedestal^2
-
-  /// Internal map of number of events per tell1 and FPGA-PP
-  std::map<int, std::vector<int> > m_nEvents;
+  
 
   // jobOptions:
-
-  /// Detector type. Can be set to IT or TT. Changes m_dataLocation accordingly
-  std::string m_detType;
 
   /// Location in the Event Data Store with the ADC values
   std::string m_dataLocation;
@@ -68,24 +57,31 @@ private:
   /// the tell1 name.
   bool m_useSourceID;
 
-  /// Period of the an exponential moving average.
-  /// Set to -1 to have a cumulative average.
-  int m_followingPeriod;
-
   /// Rate at which the histograms are updated (in number of events).
   /// Set to -1 to update only at the end.
   int m_updateRate;
   
-  /// Rate at which the counters for histograms are reset (in number of events).
-  /// Set to -1 to do no reset (default).
-  int m_resetRate;
+  /// Dumps noise calculation variables to histograms for debugging
+  bool m_checkCalculation;
+  /// Plot noise calculation variables (mean, mean squared and rms)
+  void dumpNoiseCalculation(unsigned int sourceID);
   
-  /// Number of events to be skipped. Useful when running over
-  /// common-mode-subtracted data where the pedestals have not been calculated. 
-  int m_skipEvents;
-
   /// Map of noise histograms booked in initialize
   std::map<int, AIDA::IHistogram1D*> m_noiseHistos;
+
+  ST::ISTNoiseCalculationTool* m_noiseTool; ///< Tool to calculate noise
+  std::string m_noiseToolType; ///< Tool type (default is STNoiseCalculationTool)
+  std::string m_noiseToolName; ///< Tool name (default is TTNoiseCalculationTool)
+
+  /// Period of the an exponential moving average.(read from the noise tool)
+  int m_followingPeriod;
+
+  /// Rate at which the counters for histograms are reset (read from the noise tool)
+  int m_resetRate;
+  
+  /// Number of events to be skipped (read from noise tool)
+  int m_skipEvents;
+
 
 };
 

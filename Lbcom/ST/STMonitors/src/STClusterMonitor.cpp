@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.13 2009-09-03 10:23:14 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.14 2009-10-30 13:21:48 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -194,7 +194,7 @@ void ST::STClusterMonitor::monitorClusters() {
         m_2d_nClustersVsTELL1->fill(TELL1, nClusters);
     }
     m_nClustersPerTELL1.clear();
-  } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS,5).ignore(); // End of cluster exists
+  } else Warning("No clusters found at "+m_clusterLocation, StatusCode::SUCCESS,1).ignore(); // End of cluster exists
 }
 
 //==============================================================================
@@ -202,7 +202,7 @@ void ST::STClusterMonitor::monitorClusters() {
 //==============================================================================
 void ST::STClusterMonitor::bookHistograms() {
   // filled in monitor clusters
-  m_1d_nClusters = book1D("Number of clusters",-10.,10010.,501);
+  m_1d_nClusters = book1D("Number of clusters",-20.,20020.,501);
   m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 90.,10010., 
                                  496);
   m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
