@@ -1,8 +1,16 @@
-!$Id: release.notes,v 1.326 2009-10-27 13:22:39 jpalac Exp $
+!$Id: release.notes,v 1.327 2009-10-30 15:25:14 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-10-30 - Juan PALACIOS
+ - Move Kernel/StringUtils.h to Kernel/DaVinciStringUtils.h and put 
+   implementation in src/Lib/DaVinciStringUtils.cpp
+ - DValgorithm
+  . Add method onOffline() to get IOnOfflineTool pointer.
+  . Use DaVinci::StringUtils::expandLocation function to add context paths
+    to input locations before passing them to the PhysDesktop.
 
 ! 2009-10-27 - Juan PALACIOS
  - Kernel/DVAlgorithm.h
