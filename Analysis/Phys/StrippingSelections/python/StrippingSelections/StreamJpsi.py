@@ -13,5 +13,6 @@ from StrippingSelections import StrippingMuIDCalib
 stream = StrippingStream("Jpsi")
 stream.appendLines( [ 
 		        StrippingJpsiInc.line, 
-		        StrippingMuIDCalib.line_jpsi
+		        StrippingMuIDCalib.jp_line, 
+		        StrippingMuIDCalib.b_line 
 		    ] )

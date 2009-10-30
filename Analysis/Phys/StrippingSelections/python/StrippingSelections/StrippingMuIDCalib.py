@@ -80,7 +80,7 @@ JpsiFromBCombine = StrippingMember( CombineParticles
 
 # Define the line
 ## ############################################################
-line_jpsi = StrippingLine('JpsiFromBNoPID'
+b_line = StrippingLine('JpsiFromBNoPID'
                         , prescale = 1.
                         , algos = [ JpsiFromBCombine ]
                         )
