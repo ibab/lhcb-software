@@ -1,5 +1,5 @@
-# --> Including file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v24r3p1/DaVinciSys/tests/options/DVTestInitialise.py'
-# <-- End of file '/afs/cern.ch/lhcb/software/DEV/DAVINCI/DAVINCI_v24r3p1/DaVinciSys/tests/options/DVTestInitialise.py'
+# --> Including file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
+# <-- End of file '/afs/cern.ch/user/p/pkoppenb/cmtuser/DaVinci_HEAD/DaVinciSys/tests/options/DVTestInitialise.py'
 # applying configuration of DaVinci
 # Applying DaVinci configuration
 # /***** User DaVinci/DaVinci ************************************************************************
@@ -16,22 +16,23 @@
 # |-MoniSequence               = []  (default: [])
 # |-InputType                  = 'DST'
 # |-PrintFreq                  = 1  (default: 100)
-# |-HltType                    = ''
 # |-EvtMax                     = 0  (default: -1)
 # |-CondDBtag                  = 'default'
 # |-L0                         = False
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
 # |-DataType                   = 'MC09'
+# |-Hlt                        = False
 # |-RedoMCLinks                = False
 # |-HistogramFile              = ''
+# |-EnableUnpack               = None
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
 # Set DDDBtag default
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v28r0/GaudiConf/options/PreloadUnits.opts'
-# --> Including file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v28r0/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v28r0/GaudiConf/options/units.opts'
-# <-- End of file '/afs/cern.ch/lhcb/software/releases/LHCB/LHCB_v28r0/GaudiConf/options/PreloadUnits.opts'
-# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/LHCB/LHCB_v28r1/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/LHCB/LHCB_v28r1/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/LHCB/LHCB_v28r1/GaudiConf/options/units.opts'
+# <-- End of file '/afs/cern.ch/lhcb/software/nightlies/lhcb2/Fri/LHCB/LHCB_v28r1/GaudiConf/options/PreloadUnits.opts'
+# --> Including file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r5/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # ApplicationMgr.ExtSvc    += { "Gaudi::MultiFileCatalog/FileCatalog",                              "Gaudi::IODataManager/IODataManager",                              "PoolDbCacheSvc/PoolDbCacheSvc",                              "PoolDbCnvSvc/PoolRootEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootKeyEvtCnvSvc",                              "PoolDbCnvSvc/PoolRootTreeEvtCnvSvc"                            };
 # EventPersistencySvc.CnvServices += { "PoolRootEvtCnvSvc" };
 # EventPersistencySvc.CnvServices += { "PoolRootTreeEvtCnvSvc" };
@@ -52,14 +53,13 @@
 # PoolRootEvtCnvSvc.EnableIncident      =    1;
 # PoolRootKeyEvtCnvSvc.EnableIncident   =    1;
 # PoolRootTreeEvtCnvSvc.EnableIncident  =    1;
-# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r4/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
+# <-- End of file '/afs/cern.ch/sw/Gaudi/releases/GAUDI/GAUDI_v21r5/GaudiPoolDb/options/GaudiPoolDbRoot.opts'
 # Resetting ApplicationMgr
+# WARNING: PhysConf: CaloReco.RecList is redefined: ['Digits', 'Clusters']:
 # Doing MuonID for MC09 and DST
 # MuonID WARNING: FOI tuning not ready for DATA=MC09,VERSION=def. Loading FOIfactor=1.200000
 # MuonID WARNING: new DLL parameters not tuned for DATA=MC09,VERSION=def. Loading values for DC06
 # No MainOptions specified. DaVinci() will import no options file!
-# Adding DST sequence
-# Append to Main Sequence has been called
 # Creating User Algorithms
 # Append to Main Sequence has been called
 # Creating Moni Algorithms
@@ -78,21 +78,17 @@
 # |-MoniSequence               = []  (default: [])
 # |-InputType                  = 'DST'
 # |-PrintFreq                  = 1  (default: 100)
-# |-HltType                    = ''
 # |-EvtMax                     = 0  (default: -1)
 # |-CondDBtag                  = 'default'
 # |-L0                         = False
 # |-ReplaceL0BanksWithEmulated = False
 # |-Simulation                 = True
 # |-DataType                   = 'MC09'
+# |-Hlt                        = False
 # |-RedoMCLinks                = False
 # |-HistogramFile              = ''
+# |-EnableUnpack               = None
 # \----- (End of User DaVinci/DaVinci) ---------------------------------------------------------------
-# applying configuration of DaVinciWriteDst
-# /***** User DaVinciWriteDst/DaVinciWriteDst ********************************************************
-# |-Items    = []  (default: [])
-# |-DstFiles = {}  (default: {})
-# \----- (End of User DaVinciWriteDst/DaVinciWriteDst) -----------------------------------------------
 # skipping configuration of HltConf
 # skipping configuration of Hlt1Conf
 # skipping configuration of HltCommissioningLinesConf
@@ -105,10 +101,12 @@
 # \----- (End of User AnalysisConf/AnalysisConf) -----------------------------------------------------
 # WARNING: Default tag requested for partition DDDB (using MC09-20090602)
 # WARNING: Default tag requested for partition SIMCOND (using MC09-20090402-vc-md100)
+# WARNING: CaloReco/ClusterReco: creation-on-demand of digits is requested but disabled
+# WARNING: CaloReco/ClusterReco: creation-on-demand of digits is requested but disabled
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to DaVinci version v24r3p1
-                                          running on lxplus241.cern.ch on Tue Oct  6 11:28:36 2009
+                                                   Welcome to DaVinci version v24r4
+                                          running on lxplus301.cern.ch on Fri Oct 30 08:08:07 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersistencySvc                                         INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -119,7 +117,7 @@ DetectorDataSvc                                             SUCCESS Detector des
 RndmGenSvc.Engine                                              INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine                                              INFO Current Seed:1234567 Luxury:3
 RndmGenSvc                                                     INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.69 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
 DataOnDemandSvc                                             WARNING The property 'Nodes'      is obsolete, switch to map-like 'NodeMap'  = { 'data' : 'type'      }
 DataOnDemandSvc                                             WARNING The property 'Algorithms' is obsolete, switch to map-like 'AlgMap'   = { 'data' : 'algorithm' }
 EventPersistencySvc                                            INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
@@ -155,24 +153,23 @@ DaVinciInit                                                 SUCCESS ============
 HistogramPersistencySvc                                        INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc                                                    INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersistencySvc                                        INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc                                               INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/PARAM/ParamFiles/v8r1/data/CaloPIDs_DC09_v1.root as CaloPIDs
+HistogramDataSvc                                               INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/CaloPIDs_DC09_v1.root as CaloPIDs
 PhysInitSeq                                                    INFO Member list: GaudiSequencer/TestProtoPRecalibration
 TestProtoPRecalibration                                        INFO Member list: TESCheck/CheckProto, GaudiSequencer/ProtoPRecalibration
 ProtoPRecalibration                                            INFO Member list: MuonRec, GaudiSequencer/MuonIDSeq, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg, RichPIDsFromProtoParticlesAlg/RichPIDsFromProtos
 COOLConfSvc                                                    INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc                                                    INFO CORAL Connection Retrial Time-Out set to 900s
-DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
+DDDB                                                           INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
 DDDB                                                           INFO Using TAG "MC09-20090602"
-SIMCOND                                                        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/releases/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
+SIMCOND                                                        INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
 SIMCOND                                                        INFO Using TAG "MC09-20090402-vc-md100"
 MuonIDSeq                                                      INFO Member list: MuonIDAlg
 MuonIDAlg                                                      INFO MuonIDAlg v7r2
-MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c1.vp.cdf
-MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c2.vp.cdf
-MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c3.vp.cdf
-MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/releases/DBASE/FieldMap/v5r3/cdf/field048.c4.vp.cdf
+MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c1.vp.cdf
+MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c2.vp.cdf
+MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c3.vp.cdf
+MagneticFieldSvc                                               INFO Opened magnetic field file : /afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/FieldMap/v5r3/cdf/field048.c4.vp.cdf
 MagneticFieldSvc                                               INFO Map scaled by factor 1
-MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector.Lo...   INFO ExtrapolatorID=5
 MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector         INFO Short distance extrapolator: TrackParabolicExtrapolator
 MuonIDAlg.myMuIDTool.fitter.Extrapolator.ExtraSelector         INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 TransportSvc                                                   INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
@@ -192,15 +189,13 @@ MuonIDAlg.myMuIDTool.fitter                                    INFO  Max 0 outli
 MuonIDAlg.myMuIDTool.fitter                                    INFO  State z positions at:
 MuonIDAlg.myMuIDTool.fitter                                    INFO  first/last measurement
 MuonIDAlg.myMuIDTool.fitter                                    INFO ==================================================
-MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelecto...   INFO ExtrapolatorID=5
 MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelector     INFO Short distance extrapolator: TrackParabolicExtrapolator
 MuonIDAlg.myMuIDTool.TrackMasterExtrapolator.ExtraSelector     INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 MuonIDAlg                                                      INFO  -----> DLL  new (binned-integrated method)
 ChargedProtoCombineDLLsAlg                                     INFO Using retuned RICH el and mu DLL values in combined DLLs
 RichPIDsFromProtos                                             INFO Creating RichPIDs 'Rec/Rich/PIDs' from ProtoParticles at 'Rec/ProtoP/Charged'
 AnalysisInitSeq                                                INFO Member list:
-DaVinciMainSequence                                            INFO Member list: GaudiSequencer/DstWriters
-DstWriters                                                     INFO Member list:
+DaVinciMainSequence                                            INFO Member list:
 MonitoringSequence                                             INFO Member list:
 ApplicationMgr                                                 INFO Application Manager Initialized successfully
 ApplicationMgr                                                 INFO Application Manager Started successfully
@@ -245,7 +240,7 @@ ToolSvc                                                        INFO Removing all
 ToolSvc.OTChannelMapTool                                    SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChannelMapTool                                    SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.TIMER                                            INFO This machine has a speed about   2.69 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.TIMER                                            INFO This machine has a speed about   2.06 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.TIMER                                            INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.TIMER                                            INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -263,7 +258,6 @@ TimingAuditor.TIMER                                            INFO      Charged
 TimingAuditor.TIMER                                            INFO      RichPIDsFromProtos       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO   AnalysisInitSeq             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  DaVinciMainSequence          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.TIMER                                            INFO   DstWriters                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO  MonitoringSequence           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.TIMER                                            INFO ------------------------------------------------------------------------------------------------
 ApplicationMgr                                                 INFO Application Manager Finalized successfully
