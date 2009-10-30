@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhi.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBs2JpsiPhi.py,v 1.2 2009-10-30 11:08:30 poluekt Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '23/09/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->JpsiPhi stripping selection using LoKi::Hybrid and python
@@ -30,7 +30,6 @@ _phiFilter.Code = "  (MINTREE('K+'==ABSID, PIDK) > -5.0)" \
 Phi =  Selection ("Phi2KKFor"+name,
                  Algorithm = _phiFilter,
                  RequiredSelections = [_stdPhi2KK])
-Phi.__apply_configuration__()
 
 Jpsi = DataOnDemand("stdLTUJpsi2MuMu", Location = "StdLTUnbiasedJpsi2MuMu")
 
@@ -48,10 +47,8 @@ _Bs.OfflineVertexFitter.useResonanceVertex = False
 Bs = Selection ( "Sel"+name,
                  Algorithm = _Bs,
                  RequiredSelections = [Jpsi, Phi])
-Bs.__apply_configuration__()
 
 sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
-sequence.__apply_configuration__()
 
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 

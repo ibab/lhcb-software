@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-30 - Anton Poluektov
+ - Removed __apply_configuration() call for selections using SelectionSequence
+
 ! 2009-10-29 - Andrew Powell and Patrick Spradlin
  - Maintenance of stripping selections for RICH PID calibration:
    . python/StrippingRICHLambdaNoPID.py

@@ -38,9 +38,8 @@ from Configurables import DaVinci
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"
-DaVinci().Simulation   = True
 DaVinci().ETCFile = "etc.root"                 # ETC file name
-DaVinci().HistogramFile = "TestStripping.root"
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file
+importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
+

@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhiDetached.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBs2JpsiPhiDetached.py,v 1.2 2009-10-30 11:08:30 poluekt Exp $
 
 __author__ = ['Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 __all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
 
@@ -23,10 +23,8 @@ from StrippingBs2JpsiPhiPrescaled import Phi, Jpsi
 Bs = Selection ( "Sel"+name,
                  Algorithm = _Bs,
                  RequiredSelections = [Phi, Jpsi])
-Bs.__apply_configuration__()
 
 sequence = SelectionSequence("Seq"+name, TopSelection = Bs)
-sequence.__apply_configuration__()
 
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 

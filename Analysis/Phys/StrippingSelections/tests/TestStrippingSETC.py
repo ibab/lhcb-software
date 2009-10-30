@@ -10,6 +10,8 @@ from StrippingConf.Configuration import StrippingConf
 
 from StrippingSelections import StreamBmuon
 
+from StrippingSelections import StreamBmuon, StreamHadron, StreamJpsi, StreamDstar, StreamLambda, StreamBelectron
+
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 #
@@ -18,6 +20,11 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
 sc = StrippingConf(TES = True)
 sc.appendStream( StreamBmuon.stream )
+sc.appendStream( StreamHadron.stream )
+sc.appendStream( StreamJpsi.stream )
+sc.appendStream( StreamDstar.stream )
+sc.appendStream( StreamLambda.stream )
+sc.appendStream( StreamBelectron.stream )
 
 from Configurables import EventTuple, TupleToolSelResults
 
@@ -33,9 +40,8 @@ from Configurables import DaVinci
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().EvtMax = 1000                        # Number of events
-DaVinci().DataType = "2008"
 DaVinci().ETCFile = "setc.root"                 # ETC file name
 
 EventSelector().Input   = [
-"   DATAFILE='000000.Bmuon.dst' TYP='POOL_ROOTTREE' OPT='READ'"
+"   DATAFILE='000000.Hadron.dst' TYP='POOL_ROOTTREE' OPT='READ'"
 ]

@@ -24,8 +24,9 @@ dstWriter = SelDSTWriter("MyDSTWriter",
 	OutputFileSuffix = '000000'
         )
 
-DaVinci().EvtMax = 200                         # Number of events
-DaVinci().DataType = "2008"                    # Default is "DC06"
+DaVinci().EvtMax = 1000                         # Number of events
 DaVinci().UserAlgorithms = [ dstWriter.sequence() ]
 
-importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
+#importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")
+importOptions("$STRIPPINGSELECTIONSROOT/tests/MC09_Bincl.py")     # Data file
+
