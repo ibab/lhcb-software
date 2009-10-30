@@ -1,4 +1,4 @@
-// $Id: PatTableForFunction.cpp,v 1.2 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatTableForFunction.cpp,v 1.3 2009-10-30 13:19:13 wouter Exp $
 // Include files
 
 // from Gaudi
@@ -24,7 +24,8 @@ DECLARE_TOOL_FACTORY( PatTableForFunction );
 PatTableForFunction::PatTableForFunction( const std::string& type,
                                           const std::string& name,
                                           const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+  : GaudiTool ( type, name , parent ),
+    m_nVar(0)
 {
   declareInterface<PatTableForFunction>(this);
 }
@@ -32,6 +33,18 @@ PatTableForFunction::PatTableForFunction( const std::string& type,
 // Destructor
 //=============================================================================
 PatTableForFunction::~PatTableForFunction() {}
+
+void PatTableForFunction::clear()
+{
+  m_nVar = 0 ;
+  m_nPointVar.clear() ;
+  m_minVar.clear();
+  m_maxVar.clear();
+  m_deltaVar.clear();
+  m_table.clear();
+  m_indexVector.clear();
+  m_variableVector.clear();
+}
 
 
 void PatTableForFunction::addVariable(int nBin, double lowVal, double highVal) {

@@ -1,4 +1,4 @@
-// $Id: PatTableForFunction.h,v 1.2 2007-10-10 18:42:24 smenzeme Exp $
+// $Id: PatTableForFunction.h,v 1.3 2009-10-30 13:19:13 wouter Exp $
 #ifndef PATTABLEFORFUNCTION_H
 #define PATTABLEFORFUNCTION_H 1
 
@@ -68,6 +68,7 @@ static const InterfaceID IID_PatTableForFunction ( "PatTableForFunction", 1, 0 )
     double getValueFromTable(std::vector<double>& var);
     double getInterpolatedValueFromTable(std::vector<double>& var);
 
+    void clear() ;
   protected:
 
   private:
