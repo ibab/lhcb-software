@@ -43,7 +43,6 @@ JpsiCombine = StrippingMember( CombineParticles
 jp_line = StrippingLine('JpsiNoPID'
                         , prescale = 1.
                         , algos = [ JpsiCombine ]
-                        , stream = 'Jpsi'
                         )
 
 
@@ -87,43 +86,3 @@ line_jpsi = StrippingLine('JpsiFromBNoPID'
                         )
 
 
-# Create Lambda_dd -> ppi candidates
-## ############################################################
-LambdaDDCombine = StrippingMember( CombineParticles
-                                   , 'CombineDD'
-                                   , InputLocations = [ "StdNoPIDsDownPions","StdNoPIDsDownProtons" ]
-                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
-                                   , DaughtersCuts = { "p+"  :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISDOWN) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))",
-                                                       "pi-" :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISDOWN) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))" }
-                                   , CombinationCut = "(ADAMASS('Lambda0')<20*MeV)"
-                                   , MotherCut = " (500<BPVVDZ) & (2200>BPVVDZ) & (BPVDIRA>0.999999)  & ( (CHILDCUT((PT>0.4*GeV),1)) | (CHILDCUT((PT>0.4*GeV),2)) ) & " +
-                                   " ((CHILDCUT((MIPCHI2DV(PRIMARY)>5),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>5),2))) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 30*MeV )"
-                                   )
-
-# Define the line
-# ############################################################
-line_lambda_dd = StrippingLine('LambdaDDNoPID'
-                        , prescale = 1.
-                        , algos = [ LambdaDDCombine ]
-                    )
-
-
-# Create Lambda_LL -> ppi candidates
-## ############################################################
-LambdaLLCombine = StrippingMember( CombineParticles
-                                   , 'CombineLL'
-                                   , InputLocations = [ "StdNoPIDsPions","StdNoPIDsProtons" ]
-                                   , DecayDescriptor = "[Lambda0 -> p+ pi-]cc"
-                                   , DaughtersCuts = { "p+"  :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISLONG) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))",
-                                                       "pi-" :  "(P>3000*MeV) & (PT>100*MeV) & (TRCHI2DOF<2) & (ISLONG) & (0.5<PPINFO(LHCb.ProtoParticle.InAccMuon,-1))" }
-                                   , CombinationCut = "(ADAMASS('Lambda0')<20*MeV)"
-                                   , MotherCut = "(50<BPVVDZ) & (600>BPVVDZ) & (BPVDIRA>0.9999995)  & ( CHILDCUT((PT>0.2*GeV),1) | CHILDCUT((PT>0.2*GeV),2) ) & " +
-                                   " ((CHILDCUT((MIPCHI2DV(PRIMARY)>5),1)) & (CHILDCUT((MIPCHI2DV(PRIMARY)>5),2))) & ( ADWM( 'KS0' , WM( 'pi+' , 'pi-') ) > 30*MeV )"
-                                   )
-
-# Define the line
-# ############################################################
-line_lambda_ll = StrippingLine('LambdaLLNoPID'
-                        , prescale = 1.
-                        , algos = [ LambdaLLCombine ]
-                    )
