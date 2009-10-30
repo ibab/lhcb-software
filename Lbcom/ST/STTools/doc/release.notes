@@ -2,6 +2,14 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-10-30  M Tobin
+ - Add implementations of ISTNoiseCalculationTool:
+ - Re-implementation of Nicola Chiapolini's methods which were in STNZSMonitors.
+ - STNoiseCalculationToolBase: base class to provide common data accessors.
+ - STNoiseCalculcationTool: calculates noise from using ADCs from input container.
+ - STCMSNoiseCalculationTool: calculates noise after CMS using different
+ techniques for CMS.
+
 !=========================== STTools v3r12 2009-09-03 =========================
 ! 2009-08-21  M Needham
  - Add STRawADCInfo tool

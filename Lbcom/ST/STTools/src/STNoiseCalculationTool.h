@@ -1,0 +1,95 @@
+// $Id: STNoiseCalculationTool.h,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+#ifndef STNOISECALCULATIONTOOL_H 
+#define STNOISECALCULATIONTOOL_H 1
+
+// Include files
+// from Gaudi
+#include "STNoiseCalculationToolBase.h"
+#include "Kernel/ISTNoiseCalculationTool.h"            // Interface
+
+/** @class STNoiseCalculationTool STNoiseCalculationTool.h
+ *
+ *  The noise per strip of the TELL1s is calculated for all TELL1s.  
+ *  Implements abstract methods of STNoiseCalculationToolBase class.
+ *  There are options for calculating the noise:
+ *  - \b FollowPeriod: This is the period of the exponential moving average. It
+ *    determines the lifetime of the averages (in number of events). As long as
+ *    the number of processed events is smaller than FollowPeriod the average
+ *    is a cumulative average. Set this to -1 to always use a cumulative
+ *    averaging.
+ *  - \b ResetRate: Rate at which the counters for the noise calculation are reset
+ *    (in number of events). Set to -1 to do no reset (default).
+ *  - \b SkipEvents: Number of events to be skipped. Useful when running over
+ *     common-mode-subtracted data where the pedestals have not been calculated.
+ *
+ *  The noise values are stored in a map which is accessed via the source ID of the TELL1.
+ *
+ *  @author J. van Tilburg, N. Chiapolini
+ *  @date   10/02/2009
+ *  
+ *  Reimplementation of noise calculation in STNZSMonitor as a Tool
+ *
+ *  @author Mark Tobin
+ *  @date   2009-10-01
+ */
+namespace ST { 
+  class STNoiseCalculationTool : virtual public ST::ISTNoiseCalculationTool, public ST::STNoiseCalculationToolBase {
+  private:
+
+    friend class ToolFactory<ST::STNoiseCalculationTool>;
+
+  public: 
+    /// Standard constructor
+    STNoiseCalculationTool( const std::string& type, 
+                            const std::string& name,
+                            const IInterface* parent);
+
+    virtual ~STNoiseCalculationTool( ); ///< Destructor
+
+    virtual StatusCode initialize(); ///< Tool initialisation
+
+    virtual StatusCode calculateNoise();
+
+  public:
+    virtual std::vector<double> rawMean(const unsigned int TELL) const;
+    virtual std::vector<double> rawMeanSq(const unsigned int TELL) const;
+    virtual std::vector<double> rawNoise(const unsigned int TELL) const;
+    virtual std::vector<unsigned int> rawN(const unsigned int TELL) const;
+    
+    virtual std::vector<double> cmsMean(const unsigned int TELL) const;
+    virtual std::vector<double> cmsMeanSq(const unsigned int TELL) const;
+    virtual std::vector<double> cmsNoise(const unsigned int TELL) const;
+    virtual std::vector<unsigned int> cmsN(const unsigned int TELL) const;
+
+  public:
+    /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsNoiseBegin(const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the CMS RMS noise on the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsNoiseEnd(const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsMeanBegin( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the CMS mean ADC value for the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsMeanEnd( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsMeanSquaredBegin( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the CMS mean squared ADC value for the first channel for a given TELL1 source ID
+    virtual std::vector<double>::const_iterator cmsMeanSquaredEnd( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the number of events containing data in the first PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsBegin( const unsigned int TELL1SourceID ) const;
+
+    /// Return an iterator corresponding to the number of events containing data in the last PP for a given TELL1 source ID
+    virtual std::vector<unsigned int>::const_iterator cmsNEventsEnd( const unsigned int TELL1SourceID ) const;
+
+  protected:
+
+  private:
+
+  };
+}
+#endif // STNOISECALCULATIONTOOL_H
