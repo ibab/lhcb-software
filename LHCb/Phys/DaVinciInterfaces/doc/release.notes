@@ -4,6 +4,12 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-10-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r3
+ - Kernel/IPhysDesktop.h
+  . Remove virtual const IRelatedPVFinder* relatedPVFinder() const method.
+
 !===================== DaVinciInterfaces v1r2 2009-10-16 =====================
 ! 2009-09-14 - Juan PALACIOS
  - Kernel/IPhysDesktop.h
