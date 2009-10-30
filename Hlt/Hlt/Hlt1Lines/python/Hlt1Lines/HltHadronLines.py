@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.8 2009-08-24 20:04:56 graven Exp $
+# $Id: HltHadronLines.py,v 1.9 2009-10-30 14:22:20 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -47,18 +47,18 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
     #     HadCompanion_PtCut
     #
     __slots__ = { 'L0Channel'               : "Hadron" 
-                , 'HadMain_IPCut'           : 0.1
+                , 'HadSingle_IPCut'         : 0.1
+                , 'HadDi_IPCut'             : 0.1
                 , 'HadMain_PTCut'           : 2500.
                 , 'HadMain_TrackFitChi2Cut' : 10.
                 , 'HadCompanion_DOCACut'    : 0.2
                 , 'HadCompanion_DZCut'      : 1.5
-                , 'HadCompanion_IPCut'      : 0.1
                 , 'HadCompanion_PTCut'      : 1000.
                 , 'HadCompanion_PointingCut': 0.4
                 , 'SingleHadron_PTCut'      : 5000.
                 , 'SoftHadMain_ETCut'       : 2500. 
                 , 'SoftHadMain_PTCut'       : 1500.
-                , 'SoftHadMain_IPCut'       : 0.1
+                , 'SoftHadDi_IPCut'         : 0.1
                 , 'Prescale'                : { 'Hlt1SoftDiHadron' : 0 }
                 }
     
@@ -82,7 +82,11 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
             if (type=="Soft"):
                 candidates = "All"+candidates
                 L0candidates = "%TFL0Hadron"
-            IPCut = _cut(type+"HadMain_IPCut")
+            if (_cut(type+"HadDi_IPCut") > _cut(type+"HadSingle_IPCut")) :
+              IPCut = _cut(type+"HadSingle_IPCut")
+            else :
+              IPCut = _cut(type+"HadDi_IPCut")
+
             PTCut = _cut(type+"HadMain_PTCut")
             # get the L0 candidates (all or L0)
             from Hlt1Lines.HltL0Candidates import convertL0Candidates
@@ -135,11 +139,16 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # simple hadron cut
         #---------------
         def singlehadron():
-            sh = [ Member ( 'TF' , 'SingleHadron' ,
+            sh = [ Member ( 'TF' , 'SingleHadronPT' ,
                             FilterDescriptor = ['PT,>,'+_cut('SingleHadron_PTCut')],
                             HistogramUpdatePeriod = 1,
                             HistoDescriptor  = histosfilter('PT',0.,8000.,200)
-                            )
+                            ),
+                   Member ( 'TF' , 'SingleHadronIP' ,
+                            FilterDescriptor = [ 'IP_PV2D,||>,'+ _cut("HadSingle_IPCut")],
+                            HistogramUpdatePeriod = 1,
+                            HistoDescriptor = histosfilter('IP_PV2D',-0.2,1.8,200)
+                          )
                    ]
             return sh
 
@@ -147,7 +156,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # companion track - dihadron part
         #------------------------------------
         def companion(type=""):
-            IP2Cut = _cut(type+"HadCompanion_IPCut")
+            IP2Cut = _cut(type+"HadDi_IPCut")
             comp = [ RZVelo , PV2D.ignoreOutputSelection()
                 , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
                 , Member ( 'TF', '1UVelo'
@@ -169,8 +178,14 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         def dihadron(type=""):
             PT2Cut = _cut(type+"HadCompanion_PTCut")
             dih = [ PV2D.ignoreOutputSelection()
+                , Member ( 'TF' , 'DiHadronIP' ,
+                            InputSelection = '%TFConfirmed',
+                            FilterDescriptor = [ 'IP_PV2D,||>,'+ _cut(type+"HadDi_IPCut")],
+                            HistogramUpdatePeriod = 1,
+                            HistoDescriptor = histosfilter('IP_PV2D',-0.2,1.8,200)
+                          )
                 , Member ( 'VM2', 'UVelo'
-                         , InputSelection1 = '%TFConfirmed'
+                         , InputSelection1 = '%TFDiHadronIP'
                          , InputSelection2 = '%TFCompanion'
                          , FilterDescriptor = [ 'DOCA,<,'+str(self.getProp('HadCompanion_DOCACut'))]
                          , HistoDescriptor  = histosfilter('DOCA',0.,1.,200)
@@ -200,7 +215,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
             after = [ PV2D.ignoreOutputSelection()
                 , Member ( 'TU' , 'FitTrack' , RecoName = "FitTrack", callback = setupHltFastTrackFit )
                 , Member ( 'TF' , '1FitTrack' ,
-                           FilterDescriptor = ["FitIP_PV2D,||>,"+_cut('HadMain_IPCut')],
+                           FilterDescriptor = ["FitIP_PV2D,||>,"+_cut('HadSingle_IPCut')],
                            HistogramUpdatePeriod = 1,
                            HistoDescriptor  = histosfilter('FitIP_PV2D',-.3,3.,200)
                            )
@@ -216,7 +231,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # afterburn of a line with vertices
         #-------------------
         def vafterburn(type=""):
-            IPCut = _cut(type+'HadMain_IPCut')
+            IPCut = _cut(type+'HadDi_IPCut')
             vafter =  [ PV2D.ignoreOutputSelection()
                 , Member ( 'VU', 'FitTrack',   RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                 , Member ( 'VF', '1FitTrack',
