@@ -1,0 +1,15 @@
+!-----------------------------------------------------------------------------
+! Package     : myGauss/BlsMoniSim
+! Responsible : Vadim Talanov
+! Purpose     : BlsMoniSim package documentation
+!-----------------------------------------------------------------------------
+
+!======================= BlsMoniSim v0r0 2009-10-30 ==========================
+! 2009-10-30 - Vadim Talanov
+ - First version for Gauss v37r5
+ - Monitors two BLS counters at negative (BlsA) and positive (BlsC) X side of
+   the beam line
+ - Creates and fills multimap of Particles-Hits separately for each BLS
+ - Fills histograms with hits/tracks spatial, time and per event distributions
+
+! BlsMoniSim/doc/release.notes
