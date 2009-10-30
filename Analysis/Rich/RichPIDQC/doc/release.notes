@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.18 2009-10-28 13:49:43 jpalac Exp $
+!$Id: release.notes,v 1.19 2009-10-30 17:54:41 powell Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/RichPIDQC
 ! Responsible : Chris Jones
 ! Purpose     : PID Calbriation and Monitoring on Data
 !-----------------------------------------------------------------------------
+
+! 2009-10-30 - Andrew Powell
+ - python/RichPIDQC/DstarToDzeroPi.py
+  . Now uses CombineParticles instead of private C++ algorithim (DstCalibSel)
 
 !========================== RichPIDQC v1r2p4 2009-10-28 ======================
 
