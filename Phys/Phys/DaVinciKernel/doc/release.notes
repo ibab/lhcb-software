@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.327 2009-10-30 15:25:14 jpalac Exp $
+!$Id: release.notes,v 1.328 2009-10-30 16:15:45 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
@@ -11,6 +11,8 @@
   . Add method onOffline() to get IOnOfflineTool pointer.
   . Use DaVinci::StringUtils::expandLocation function to add context paths
     to input locations before passing them to the PhysDesktop.
+  . Add IRelatedPVFinder* member variable, and make relatedPVFinder() method
+    access it directly, by-passing PhysDesktop.
 
 ! 2009-10-27 - Juan PALACIOS
  - Kernel/DVAlgorithm.h
