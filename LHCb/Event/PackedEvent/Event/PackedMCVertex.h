@@ -1,4 +1,4 @@
-// $Id: PackedMCVertex.h,v 1.5 2008-02-27 14:36:18 jonrob Exp $
+// $Id: PackedMCVertex.h,v 1.6 2009-10-30 17:20:13 jonrob Exp $
 #ifndef EVENT_PACKEDMCVERTEX_H 
 #define EVENT_PACKEDMCVERTEX_H 1
 
@@ -52,10 +52,13 @@ namespace LHCb
     std::vector<PackedMCVertex>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedMCVertex>::const_iterator end()   const { return m_vect.end(); }
 
-  protected:
+    void reserve( const unsigned int size ) { m_vect.reserve(size); }
+    unsigned int size() const { return m_vect.size(); }
 
   private:
+
     std::vector<PackedMCVertex> m_vect;
+
   };
 } // namespace LHCb
 
