@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.79 2009-10-26 14:21:47 jvantilb Exp $
+! $Id: release.notes,v 1.80 2009-10-30 12:48:45 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
+
+
+! 2009-10-30 Mark Tobin
+ - Add interface for STNoiseCalculationTool
+ - Add method to Readout tool for mapping TELL number to source ID.
 
 ! 2009-10-26 - Jeroen Van Tilburg
  - STTell1Board: Use (usigned int) interstrip position from the raw buffer in

@@ -1,4 +1,4 @@
-// $Id: ISTReadoutTool.h,v 1.8 2009-07-07 10:24:11 mtobin Exp $
+// $Id: ISTReadoutTool.h,v 1.9 2009-10-30 12:48:45 mtobin Exp $
 #ifndef _ISTReadoutTool_H
 #define _ISTReadoutTool_H
 
@@ -95,6 +95,12 @@ public:
 
   /// Add the mapping of source ID to TELL1 board number
   virtual unsigned int SourceIDToTELLNumber(unsigned int sourceID) const = 0; 
+
+  /// Add the mapping of TELL1 board number to source ID
+  virtual const  std::map<unsigned int, unsigned int>& TELLNumberToSourceIDMap() const = 0; 
+
+  /// Add the mapping of TELL1 board number to source ID
+  virtual unsigned int TELLNumberToSourceID(unsigned int sourceID) const = 0; 
 
 };
 
