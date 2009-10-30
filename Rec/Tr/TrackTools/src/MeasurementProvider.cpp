@@ -1,4 +1,4 @@
-// $Id: MeasurementProvider.cpp,v 1.44 2009-10-17 15:02:43 wouter Exp $
+// $Id: MeasurementProvider.cpp,v 1.45 2009-10-30 14:39:39 cattanem Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -11,6 +11,11 @@
 
 // local
 #include "MeasurementProvider.h"
+
+// Disable warning on windows about using 'this' in constructors
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif
 
 using namespace LHCb;
 

@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
 
+! 2009-10-30 - Marco Cattaneo
+ - Fix compilation warnings
+
 ! 2009-10-21 and 23 - Johannes Albrecht
  - fix small memory leak in TrackNNGhostId, add ghost id for all track types
 

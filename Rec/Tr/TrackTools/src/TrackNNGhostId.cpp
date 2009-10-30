@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.cpp,v 1.3 2009-10-23 12:20:57 albrecht Exp $
+// $Id: TrackNNGhostId.cpp,v 1.4 2009-10-30 14:39:39 cattanem Exp $
 // Include files 
 #include "Event/Track.h"
 //#include "Kernel/HitPattern.h"
@@ -202,7 +202,7 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
   }//end evaluate long track
   
   if( isDebug )
-    for(int i=0;i<m_inputVec->size();i++)  debug()<<"input variable [ "<<i<<" ] :"<<(*m_inputVec)[i]<<endmsg;
+    for(unsigned int i=0;i<m_inputVec->size();i++)  debug()<<"input variable [ "<<i<<" ] :"<<(*m_inputVec)[i]<<endmsg;
   
   if ( isDebug ) debug() << "direct NN output is: "<<retval<<endmsg;
 

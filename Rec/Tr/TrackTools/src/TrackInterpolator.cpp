@@ -1,4 +1,4 @@
-// $Id: TrackInterpolator.cpp,v 1.10 2009-10-08 14:47:37 wouter Exp $
+// $Id: TrackInterpolator.cpp,v 1.11 2009-10-30 14:39:39 cattanem Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -16,6 +16,11 @@
 
 // local
 #include "TrackInterpolator.h"
+
+// Disable warning on windows about using 'this' in constructors
+#ifdef _WIN32
+#pragma warning ( disable:4355 )
+#endif
 
 using namespace Gaudi;
 using namespace Gaudi::Math;
