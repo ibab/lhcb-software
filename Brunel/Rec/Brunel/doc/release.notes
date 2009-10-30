@@ -9,8 +9,9 @@ Purpose: LHCb reconstruction program
      sequencing of Calo truth associators when running Calo checkers. 
 
  - Changes to references to reflect changes in Brunel v35r8 output:
-   . Changed VeloTrackMonitor histograms
-   . Changed TrackMonitor histograms
+   . Changed VeloTrackMonitor histograms (VeloRecMonitors v2r3) 
+   . Changed TrackMonitor histograms (TrackMonitors v1r15)
+   . Introduction of CaloDigitConf (CaloDAQ v4r15, CaloReco v5r3)
 
 </PRE><H1><A NAME=v35r7>2009-10-23 Brunel v35r7</A></H1><PRE>
  - Changes to Configurable:
