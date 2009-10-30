@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-10-30 - Wouter Hulsbergen
+ - Made MagnetTool aware of field updates 
+
 !========================== PatVeloTT v3r8p1 2009-10-20 ======================
 ! 2009-10-19 - Stephanie Hansmann-Menzemer
  - Fix memory leak in PatVeloTTFit
