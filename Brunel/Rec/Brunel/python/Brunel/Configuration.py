@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.98 2009-10-15 13:51:04 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.99 2009-10-30 17:13:09 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -497,8 +497,8 @@ class Brunel(LHCbConfigurableUser):
                 # Checking on the tracks in the "best" container - needs MCHits
                 importOptions( "$TRACKSYSROOT/options/TrackChecking.opts" )
 
-            if "CALO" in  checkSeq : 
-                importOptions( "$CALOASSOCIATORSROOT/options/CaloAssociators.opts" )
+            if "CALO" in  checkSeq :
+                GaudiSequencer("CheckCALOSeq").Members += [ "CaloDigit2MCLinks2Table", "CaloClusterMCTruth" ]
                 importOptions( "$STDOPTS/PreloadUnits.opts" )
                 importOptions( "$CALOMONIDSTOPTS/CaloChecker.opts" )
 

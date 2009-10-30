@@ -3,6 +3,15 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-30 - Marco Cattaneo
+ - Changes to Configurable:
+   . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
+     sequencing of Calo truth associators when running Calo checkers. 
+
+ - Changes to references to reflect changes in Brunel v35r8 output:
+   . Changed VeloTrackMonitor histograms
+   . Changed TrackMonitor histograms
+
 </PRE><H1><A NAME=v35r7>2009-10-23 Brunel v35r7</A></H1><PRE>
  - Changes to Configurable:
    . Fix for ETC input (was missing definition of EvtTupleSvc)
