@@ -1,4 +1,4 @@
-// $Id: ITReadoutTool.h,v 1.3 2009-07-06 17:28:33 mtobin Exp $
+// $Id: ITReadoutTool.h,v 1.4 2009-10-30 12:54:19 mtobin Exp $
 #ifndef _ITReadoutTool_H
 #define _ITReadoutTool_H
 
@@ -34,6 +34,9 @@ public:
 
   /** Add the mapping of source ID to board number for IT and TT */
   virtual const  std::map<unsigned int, unsigned int>& SourceIDToTELLNumberMap() const; 
+
+  /** Add the mapping of board number to source ID for IT and TT */
+  virtual const  std::map<unsigned int, unsigned int>& TELLNumberToSourceIDMap() const; 
 
 private:
 

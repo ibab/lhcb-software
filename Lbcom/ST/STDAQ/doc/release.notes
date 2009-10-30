@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2006-10-30 - Mark Tobin
+ - Added method to get source ID from TELL1 number to readout tool.
+
 ! 2009-10-26 - Jeroen Van Tilburg
  - RawBankToSTClusterAlg: Adopt changes in STKernel, STTell1Board::ADCToOffline.
    Also, the requirement on whether the interstrip fraction was rounded up to

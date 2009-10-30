@@ -1,4 +1,4 @@
-// $Id: STReadoutTool.h,v 1.10 2009-07-07 10:27:42 mtobin Exp $
+// $Id: STReadoutTool.h,v 1.11 2009-10-30 12:54:19 mtobin Exp $
 #ifndef _STReadoutTool_H
 #define _STReadoutTool_H
 
@@ -90,6 +90,9 @@ public:
 
   /// Add the mapping of source ID to TELL1 board number
   virtual unsigned int SourceIDToTELLNumber(unsigned int sourceID) const; 
+
+  /// Add the mapping of TELL1 board number to source ID
+  virtual unsigned int TELLNumberToSourceID(unsigned int TELL) const; 
 
   /// print mapping
   void printMapping() const;
