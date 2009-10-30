@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.4 2009-09-14 15:49:49 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.5 2009-10-30 16:39:20 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -145,11 +145,6 @@ public:
   /// between LHCb::Particle and LHCb::VertexBase
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const = 0;
 
-  /**
-   * Get a pointer to the Particle->PV relator tool
-   **/
-  virtual const IRelatedPVFinder* relatedPVFinder() const = 0 ;
-  
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle* part, 
                       const LHCb::VertexBase* vert ) = 0;
