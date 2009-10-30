@@ -1,4 +1,4 @@
-// $Id: VeloTrackMonitor.cpp,v 1.27 2009-10-27 18:37:26 siborghi Exp $
+// $Id: VeloTrackMonitor.cpp,v 1.28 2009-10-30 11:49:01 siborghi Exp $
 // Include files 
 
 // from Gaudi
@@ -56,7 +56,7 @@ Velo::VeloTrackMonitor::VeloTrackMonitor( const std::string& name,
     m_resetProfile(1000)
 
 {
-  declareProperty( "TrackLocation", m_trackCont = LHCb::TrackLocation::Velo);
+  declareProperty( "TrackLocation", m_trackCont = LHCb::TrackLocation::Default);
   declareProperty( "ClusterLocation", m_clusterCont = LHCb::VeloClusterLocation::Default );
   declareProperty( "HitMapHistos", m_hitmapHistos = false);
   declareProperty( "BiasedResiduals", m_biasedResidualProfile = true);

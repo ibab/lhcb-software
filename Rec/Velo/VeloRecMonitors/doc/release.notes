@@ -3,6 +3,8 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2009-10-30 - Silvia Borghi
+ - in VeloTrackMonitor.cpp changed the default of TrackLocation
 
 ! 2009-10-27 - Silvia Borghi
  - in VeloTrackMonitor.cpp changed option to have alignment histograms by default
