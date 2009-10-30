@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.h,v 1.4 2007-10-10 18:42:24 smenzeme Exp $ 
+// $Id: PatTTMagnetTool.h,v 1.5 2009-10-30 13:20:50 wouter Exp $ 
 #ifndef PATTTMAGNETTOOL_H
 #define PATTTMAGNETTOOL_H 1
 
@@ -53,10 +53,11 @@ static const InterfaceID IID_PatTTMagnetTool ( "PatTTMagnetTool", 1, 0 );
     double averageDist2mom();
     void prepareBdlTables();
     void prepareDeflectionTables();
+    StatusCode updateField() ;
 
   protected:
     void f_bdl(double slopeY, double zOrigin , double zStart, double zStop);
-
+    
   private:
 
     double m_BdlTrack;

@@ -1,4 +1,4 @@
-// $Id: PatTTMagnetTool.cpp,v 1.5 2009-04-06 06:42:27 cattanem Exp $
+// $Id: PatTTMagnetTool.cpp,v 1.6 2009-10-30 13:20:50 wouter Exp $
 
 // Include files
 
@@ -14,6 +14,8 @@
 #include "Event/State.h"
 // from TrackInterfacces
 #include "TrackInterfaces/ITrackExtrapolator.h"
+#include "Kernel/ILHCbMagnetSvc.h"
+#include "GaudiKernel/IUpdateManagerSvc.h"
 
 // local
 #include "PatTableForFunction.h"
@@ -75,7 +77,21 @@ StatusCode PatTTMagnetTool::initialize ( ) {
 
   m_zCenterTT /= m_zLayers.size();
   std::sort(m_zLayers.begin(),m_zLayers.end());
+  
+  // subscribe to the updatemanagersvc with a dependency on the magnetic field svc
+  IUpdateManagerSvc* m_updMgrSvc = svc<IUpdateManagerSvc>("UpdateManagerSvc", true);
+  ILHCbMagnetSvc* m_fieldSvc = svc<ILHCbMagnetSvc>("MagneticFieldSvc", true);
+  m_updMgrSvc->registerCondition( this,m_fieldSvc,&PatTTMagnetTool::updateField) ;
 
+  // initialize with the current conditions
+  return m_updMgrSvc->update(this) ;
+}
+
+//=========================================================================
+// Callback function for field updates
+//=========================================================================
+StatusCode PatTTMagnetTool::updateField() 
+{
   prepareBdlTables();
   prepareDeflectionTables();
 
@@ -92,8 +108,10 @@ StatusCode PatTTMagnetTool::initialize ( ) {
   if(m_noField) {
     info() << " No B field detected." << endmsg;    
   }
-  return StatusCode::SUCCESS;
+
+  return StatusCode::SUCCESS ;
 }
+
 
 //=========================================================================
 // z middle of TT
@@ -136,8 +154,12 @@ void PatTTMagnetTool::prepareBdlTables() {
   //
   //                      slopeY    zOrigin    zVeloEnd
 
+  // WDH: I do not understand why these tables are stored as
+  // tools. what is wrong with just owning the objects?
   m_lutBdl       = tool<PatTableForFunction>("PatTableForFunction/table1",this);
   m_lutZHalfBdl  = tool<PatTableForFunction>("PatTableForFunction/table2",this);
+  m_lutBdl->clear() ;
+  m_lutZHalfBdl->clear() ;
 
   m_lutBdl->addVariable(30, -0.3, 0.3);
   m_lutBdl->addVariable(10, -250.*Gaudi::Units::mm, 250.*Gaudi::Units::mm);
@@ -185,10 +207,12 @@ void PatTTMagnetTool::prepareDeflectionTables() {
 
   m_lutDxLay    = tool<PatTableForFunction>("PatTableForFunction/table3",this);
   m_lutDxToMom  = tool<PatTableForFunction>("PatTableForFunction/table4",this);
+  m_lutDxLay->clear() ;
+  m_lutDxToMom->clear() ;
 
   // Retrieve extrapolators
   ITrackExtrapolator* my_linear = tool<ITrackExtrapolator>( "TrackLinearExtrapolator" );
-  ITrackExtrapolator* my_parabolic = tool<ITrackExtrapolator>( "TrackHerabExtrapolator" );
+  ITrackExtrapolator* my_parabolic = tool<ITrackExtrapolator>( "TrackRungeKuttaExtrapolator" );
 
   // tmp state
   LHCb::State tmpState;
