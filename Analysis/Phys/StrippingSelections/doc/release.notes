@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-10-30 - Alessio sarti
+ - Removed Lambda selection from StrippingMuIdCalib.py
+ - Addes StrippingLambdaNoPid.py
+	- includes a common Rich + Muon LL and DD selection prescaled 
+	with 0.05 and 0.004 respectively.
+
 ! 2009-10-30 - Anton Poluektov
  - Removed __apply_configuration() call for selections using SelectionSequence
 
