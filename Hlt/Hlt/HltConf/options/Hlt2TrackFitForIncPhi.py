@@ -34,6 +34,7 @@ fitter.NodeFitter.BiDirectionalFit = True
 fitter.NodeFitter.Smooth = True
 fitter.AddDefaultReferenceNodes = True    # says Wouter
 
+
 ######################################################################
 # Set up Kalman fitted ChargedProtoPAlg
 ######################################################################
@@ -42,10 +43,7 @@ Hlt2IncPhiTFParticlesSeq.Members += [ Hlt2IncPhiTFMakeProtoSeq ]
 
 from Configurables import ChargedProtoPAlg, TrackSelector
 Hlt2IncPhiTFChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiTFChargedProtoPAlg')
-#Hlt2IncPhiTFChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiTFChargedProtoCombDLL')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFChargedProtoPAlg ]
-#                                   , Hlt2IncPhiTFChargedProtoCombDLL ]
-
 
 Hlt2IncPhiTFChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFChargedForIncPhi"
@@ -53,7 +51,6 @@ Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/TFCharged
 Hlt2IncPhiTFChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
 Hlt2IncPhiTFChargedProtoPAlg.TrackSelector.AcceptClones = False
 
-#Hlt2IncPhiTFChargedProtoCombDLL.ProtoParticleLocation = "Hlt/ProtoP/IncPhiTFCharged"
 
 ######################################################################
 # Kalman fitted ProtoParticles
@@ -76,67 +73,25 @@ from Configurables import ProtoParticleCALOFilter
 Hlt2IncPhiTFKaons = NoPIDsParticleMaker('Hlt2IncPhiTFKaons')
 Hlt2IncPhiTFMakeProtoSeq.Members += [ Hlt2IncPhiTFKaons ]
 
-
 Hlt2IncPhiTFKaons.Input = Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation 
 Hlt2IncPhiTFKaons.Particle = "kaon"
 
-######################################################################
-# Kaons using RICH HLT reco results
-######################################################################
 
 ######################################################################
-# Rich particles sequencer
+# Add RICH info to protoparticles
 ######################################################################
+from Configurables import RichTrackCreatorConfig,ChargedProtoParticleAddRichInfo,ChargedProtoCombineDLLsAlg
 
+# Set up RICH PID sequencer (HltRICHReco must be added at appropriate point)
+importOptions('$HLTCONFROOT/options/Hlt2Rich.py')
 
-Hlt2IncPhiRichParticlesSeq = GaudiSequencer('Hlt2IncPhiRichParticlesSeq')
-
-######################################################################
-# Set up Rich ChargedProtoPAlg
-######################################################################
-from Configurables import RichTrackCreatorConfig
+# Create RICH PID using the TF tracks
 RichTrackCreatorConfig().InputTracksLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
 
+# Add RICH PID to Inc Phi TF protoparticles
+Hlt2IncPhiAddRichInfo = ChargedProtoParticleAddRichInfo('Hlt2IncPhiAddRichInfo')
+Hlt2IncPhiAddRichInfo.ProtoParticleLocation = Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation
+Hlt2IncPhiAddCombInfo = ChargedProtoCombineDLLsAlg('Hlt2IncPhiAddCombInfo')
+Hlt2IncPhiAddCombInfo.ProtoParticleLocation = Hlt2IncPhiTFChargedProtoPAlg.OutputProtoParticleLocation
 
-from Configurables import ChargedProtoPAlg, ChargedProtoCombineDLLsAlg, TrackSelector
-importOptions("$HLTCONFROOT/options/Hlt2Rich.py")
 
-
-Hlt2IncPhiRichChargedProtoPAlg = ChargedProtoPAlg('Hlt2IncPhiRichChargedProtoPAlg')
-Hlt2IncPhiRichChargedProtoCombDLL = ChargedProtoCombineDLLsAlg('Hlt2IncPhiRichChargedProtoCombDLL')
-Hlt2IncPhiRichParticlesSeq.Members += [ GaudiSequencer("HltRICHReco"), Hlt2IncPhiRichChargedProtoPAlg
-                                   , Hlt2IncPhiRichChargedProtoCombDLL ]
-
-Hlt2IncPhiRichChargedProtoPAlg.InputTrackLocation = Hlt2IncPhiTFTrackFit.TracksOutContainer
-Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation = "Hlt/ProtoP/RichChargedForIncPhi"
-# Clones will not be accepted
-Hlt2IncPhiRichChargedProtoPAlg.addTool(TrackSelector, name = 'TrackSelector')
-Hlt2IncPhiRichChargedProtoPAlg.TrackSelector.AcceptClones = False
-
-Hlt2IncPhiRichChargedProtoCombDLL.ProtoParticleLocation = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
-
-######################################################################
-# Rich ProtoParticles
-######################################################################
-Hlt2IncPhiRichChargedProtoPAlg.InputRichPIDLocation = "Rec/Rich/HltPIDs"
-Hlt2IncPhiRichChargedProtoPAlg.UseCaloSpdPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseCaloPrsPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseCaloEcalPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseCaloHcalPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseCaloBremPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseRichPID = 1
-Hlt2IncPhiRichChargedProtoPAlg.UseMuonPID = 0
-Hlt2IncPhiRichChargedProtoPAlg.UseVeloPID = 0
-
-######################################################################
-# Rich Charged Particles
-######################################################################
-Hlt2IncPhiRichPIDsKaons = CombinedParticleMaker('Hlt2IncPhiRichPIDsKaons')
-Hlt2IncPhiRichParticlesSeq.Members += [ Hlt2IncPhiRichPIDsKaons ]
-
-Hlt2IncPhiRichPIDsKaons.Input = Hlt2IncPhiRichChargedProtoPAlg.OutputProtoParticleLocation 
-Hlt2IncPhiRichPIDsKaons.Particle = "kaon"
-Hlt2IncPhiRichPIDsKaons.addTool(TrackSelector())
-Hlt2IncPhiRichPIDsKaons.TrackSelector.TrackTypes = ["Long"]
-Hlt2IncPhiRichPIDsKaons.addTool(ProtoParticleCALOFilter('Kaon'))
-Hlt2IncPhiRichPIDsKaons.Kaon.Selection = ["RequiresDet='RICH' CombDLL(k-pi)>'-10.0'"]

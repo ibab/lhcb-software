@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.69 2009-10-28 17:18:23 pkoppenb Exp $
+$Id: release.notes,v 1.70 2009-10-30 14:21:51 mlieng Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -10,6 +10,10 @@ $Id: release.notes,v 1.69 2009-10-28 17:18:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2Lines v1r9 2009-10-28 ===================
+! 2009-10-30 - Magnus Lieng
+ - RICH PID data directly added to TF particles. Previously track based. (New
+   protoparticles and particles had to be created.)
+
 ! 2009-10-27 - Jacopo Nardulli
  - Removing DecayTreeTuple from the DX Lines 
 

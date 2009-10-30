@@ -122,26 +122,22 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
         ############################################################################
         #    Inclusive Phi selection, RICH PID
         ############################################################################
-        
-        TfKaonRichPidTf = "(PIDK>"+str(self.getProp('TFKaonRichPID'))+")"
-        Hlt2InclusivePhiRich = Hlt2Member( CombineParticles
+        from Configurables import ChargedProtoParticleAddRichInfo,ChargedProtoCombineDLLsAlg
+        Hlt2IncPhiAddRichInfo = ChargedProtoParticleAddRichInfo('Hlt2IncPhiAddRichInfo')
+        Hlt2IncPhiAddCombInfo = ChargedProtoCombineDLLsAlg('Hlt2IncPhiAddCombInfo')
+
+        # Filter on RICH info
+        TfKaonRichPidTf = "INGENERATION(('K+'==ABSID) & (PIDK > "+str(self.getProp('TFKaonRichPID'))+"), 1)"
+        Hlt2InclusivePhiRich = Hlt2Member( FilterDesktop
                                            , "RichCombine"
-                                           , DecayDescriptors = decayDesc
-                                           , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
-                                           , CombinationCut = TfPhiMassCut
-                                           , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                           , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
+                                           , InputLocations = [Hlt2InclusivePhiTF]
+                                           , Code = TfKaonRichPidTf
                                            )
-        Hlt2InclusivePhiRichSB = Hlt2Member( CombineParticles
+        Hlt2InclusivePhiRichSB = Hlt2Member( FilterDesktop
                                              , "RichCombineSB"
-                                             , DecayDescriptors = decayDesc
-                                             , DaughtersCuts = { "K+" : TfKaonPtCut+" & "+TfKaonIpsCut+" & "+TfKaonRichPidTf }
-                                             , CombinationCut = TfPhiMassCutSB
-                                             , MotherCut = TfPhiVchi2Cut+" & "+TfPhiPtCut
-                                             , InputLocations  = [ "Hlt2IncPhiRichPIDsKaons" ]
-                                             )
-        
-        
+                                             , InputLocations = [Hlt2InclusivePhiTFSB]
+                                             , Code = TfKaonRichPidTf
+                                           )
         
 
         ############################################################################
@@ -154,7 +150,9 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2InclusivePhi, 
                                     GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                     Hlt2InclusivePhiTF,
-                                    GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
+                                    GaudiSequencer("HltRICHReco"),
+                                    Hlt2IncPhiAddRichInfo,
+                                    Hlt2IncPhiAddCombInfo,
                                     Hlt2InclusivePhiRich]
                         , postscale = self.postscale
                         , PV = True
@@ -202,8 +200,10 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2InclusivePhiSB, 
                                     GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                     Hlt2InclusivePhiTFSB,
-                                    GaudiSequencer("Hlt2IncPhiRichParticlesSeq"),
-                                      Hlt2InclusivePhiRichSB]
+                                    GaudiSequencer("HltRICHReco"),
+                                    Hlt2IncPhiAddRichInfo,
+                                    Hlt2IncPhiAddCombInfo,
+                                    Hlt2InclusivePhiRichSB]
                         , postscale = self.postscale
                           , PV = True
                         )

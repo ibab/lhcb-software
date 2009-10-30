@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.359 2009-10-29 14:45:54 pkoppenb Exp $ 
+! $Id: release.notes,v 1.360 2009-10-30 14:23:46 mlieng Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,6 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 !========================== HltConf v5r1 2009-10-28 ===================
+! 2009-10-30 - Magnus Lieng
+ - RICH PID data directly added to TF particles. Previously track based. (New
+   protoparticles and particles had to be created.)
+
 ! 2009-10-29 - Patrick Koppenburg
  - New option EnableAcceptIfSlow that passes AcceptIfSlow True to all lines
 
