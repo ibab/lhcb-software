@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.9 2009-10-30 14:22:20 gligorov Exp $
+# $Id: HltHadronLines.py,v 1.10 2009-10-30 14:27:18 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -82,8 +82,8 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
             if (type=="Soft"):
                 candidates = "All"+candidates
                 L0candidates = "%TFL0Hadron"
-            if (_cut(type+"HadDi_IPCut") > _cut(type+"HadSingle_IPCut")) :
-              IPCut = _cut(type+"HadSingle_IPCut")
+            if (_cut(type+"HadDi_IPCut") > _cut("HadSingle_IPCut")) :
+              IPCut = _cut("HadSingle_IPCut")
             else :
               IPCut = _cut(type+"HadDi_IPCut")
 

@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.46 2009-10-28 17:23:05 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2009-10-30 14:23:25 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-10-30 - V. Gligorov
+ - HltHadronLines.py
+   . Split the single and dihadron IP cuts. Also make the confirmed and
+     companion tracks in the dihadron always use the same cuts.
 
 !========================== Hlt1Lines v1r7 2009-10-28 ===================
 ! 2009-10-26 - Mariusz Witek
