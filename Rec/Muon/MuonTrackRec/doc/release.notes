@@ -4,33 +4,53 @@
 ! Purpose     : Standalone Muon track reconstruction 
 !               implementation MuonNNetRec is based on a recursive NNet, see: 
 !   http://indico.cern.ch/getFile.py/access?subContId=0&contribId=6&resId=1&materialId=slides&confId=26109
+!               implementation of MuonCombRac, combinatorial track 
+!               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
+
+! 2009-10-30 - v2r1 - GP
+ - new tracking tool MuonCombRec. Combinatorial algorithm for reconstruction 
+   of tracks from the IP. Based on MuonTrackAlign package.
+ - the tool implements the new clustering tool of v2r0
+ - new methods:
+   * setSkipStation: allow to skip a station for efficiency studies. This can 
+     be done also within the same event if one wants to perfom the track 
+     reconstruction several times excluding every time a different station
+   * setSkipStation: allow to set a seed station different from 
+     the default (M5)
+ - options: inherits some options from MuonNNetRec and MuonTrackAlign
+   * FOIs can be changed via options
+   * Seed station can be choosen via options
+   * A station can be skipped via options for efficiency studies.
 
 ! 20091016 - v2r0 GG
  - add clustering tool to be used before track reconstruction:
    * class MuonHit represents now a cluster 
    * new tool IMuonClusterRec with 2 implementations:
-      - MuonFakeClustering just copies log pads to MuonHits (previous behaviour for bkw compatibility)
+      - MuonFakeClustering just copies log pads to MuonHits (previous 
+        behaviour for bkw compatibility)
       - MuonClusterRec to cluster MuonLogPads into MuonHits
    * clustering is off by default, turn it on with 
       ToolSvc.MuonNNetRec.ClusterTool = "MuonClusterRec"
-   * the options PosTool, OfflineTimeAlignment TimeResidualFile  have been moved from the MuonNNetRec 
-     to the clustering tool; this should be the only bkw-incompatible change
+   * the options PosTool, OfflineTimeAlignment TimeResidualFile  have been 
+     moved from the MuonNNetRec to the clustering tool; 
+     this should be the only bkw-incompatible change
 
 ! 20091009 - v1r6 GG
-- go back to previous MuonPadRec (new version was not really faster and was breaking 
-ordering by station)
+- go back to previous MuonPadRec (new version was not really faster and 
+  was breaking ordering by station)
 - make anyway MuonNNetRec not depending on hits ordering
 - convert TrackSpanCut and StationFiringCut to integers
-- add FirstComeFirstServed option (default false) to MuonPadRec to choose the first 
-  hit and not the most centered in case of multiple hits in same channel in TAE mode
+- add FirstComeFirstServed option (default false) to MuonPadRec to choose 
+  the first hit and not the most centered in case of multiple hits in same 
+  channel in TAE mode
 
 ! 20091001 - v1r5
 - fix bug in MuonHitDecode
 
 ! 20091001 - v1r4
-- add possibility to veto logical pads in option file (TileVeto option of MuonPadRec
-is array of integers containing keys of pads to be vetoed)
+- add possibility to veto logical pads in option file (TileVeto option of 
+  MuonPadRec is array of integers containing keys of pads to be vetoed)
 
 ! 20090709 - v1r3
 - improve checks for incomplete events in IMuonHitDecode interface
@@ -44,10 +64,14 @@ is array of integers containing keys of pads to be vetoed)
  - compile under slc5
 
 ! 2009-03-16 - G. Graziani
- - first release of MuonTrackRec, unifying and reorganizing code from packages MuonMonKernel, Cosmics, MuonNNet: 
+ - first release of MuonTrackRec, unifying and reorganizing code from packages 
+   MuonMonKernel, Cosmics, MuonNNet: 
    * migrate from MuonMonKernel the base classes for muon decoding output
-   * add abstract interface for decoding (IMuonHitDecode): default implementation uses the official
-	   MuonRawBuffer tool, MuonMonKernel providing a fast alternative for online monitoring
-   * add abstract interface for 2d pad reconstruction (IMuonPadRec): implementation migrated from MuonMonKernel
-   * more general tool (IMuonTrackRec) for standalone track rec. (MuonNNetRec is the first implementation)
+   * add abstract interface for decoding (IMuonHitDecode): default 
+     implementation uses the official MuonRawBuffer tool, MuonMonKernel 
+     providing a fast alternative for online monitoring
+   * add abstract interface for 2d pad reconstruction (IMuonPadRec): 
+     implementation migrated from MuonMonKernel
+   * more general tool (IMuonTrackRec) for standalone track rec. 
+     (MuonNNetRec is the first implementation)
    

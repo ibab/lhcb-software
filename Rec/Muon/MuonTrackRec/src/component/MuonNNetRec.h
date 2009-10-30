@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.5 2009-10-19 11:14:27 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.6 2009-10-30 12:06:10 gpassal Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -63,6 +63,8 @@ public:
     MuonTrackRec::IsPhysics = AssumePhysics;
     if(AssumePhysics) MuonTrackRec::IsCosmic = false;
   }
+  virtual void setSeedStation(int seedS){}
+  virtual void setSkipStation(int skipS){}
 
 private:
   IMuonHitDecode* m_decTool;

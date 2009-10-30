@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.5 2009-10-19 11:14:25 ggiacomo Exp $
+// $Id: MuonTrack.cpp,v 1.6 2009-10-30 12:06:10 gpassal Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -47,6 +47,26 @@ std::vector< MuonHit* > MuonTrack::getHits(){
     hits.push_back( tk->second );
   }
   return hits;
+}
+///
+void MuonTrack::setBestCandidate( std::vector<MuonHit*> bcand ) 
+{
+  m_bestcand = bcand;
+}
+///
+std::vector<MuonHit*> MuonTrack::bestCandidate() 
+{
+  return m_bestcand;
+}
+/// set the clone flag
+void MuonTrack::setClone()
+{
+  m_isClone = true;
+}
+/// get the Clone flag
+bool MuonTrack::isClone()
+{
+  return m_isClone;
 }
 ///
 int MuonTrack::getSpan(){

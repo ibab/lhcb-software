@@ -1,4 +1,4 @@
-// $Id: IMuonTrackRec.h,v 1.3 2009-10-19 11:14:18 ggiacomo Exp $
+// $Id: IMuonTrackRec.h,v 1.4 2009-10-30 12:06:10 gpassal Exp $
 #ifndef MUONNNET_IMUONTRACKREC_H 
 #define MUONNNET_IMUONTRACKREC_H 1
 
@@ -40,6 +40,7 @@ public:
   virtual void setPhysicsTiming(bool PhysTiming) =0;
   virtual void setAssumeCosmics(bool AssumeCosmics) =0;
   virtual void setAssumePhysics(bool AssumePhysics) =0;  
-  
+  virtual void setSeedStation(int seedS) = 0;
+  virtual void setSkipStation(int skipS) = 0;
 };
 #endif // MUONNNET_IMUONTRACKREC_H
