@@ -4,6 +4,14 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-10-30 - V. Gligorov
+ - Debug_320Vis_300L0_Hadron_Hlt1_Oct09.py
+   . Runs only the hadron lines with the 2010 thresholds for debugging
+ - Physics_320Vis_300L0_10Hlt1_Aug09.py
+ - Physics_10000Vis_1000L0_40Hlt1_Apr09.py
+   . Updated to reflect the split in the single/di hadron IP cuts in
+     the hadron lines.    
+
 !========================== HltSettings v1r1 2009-10-28 ===================
 ! 2009-10-28 - Patrick Koppenburg
  - Physics_320Vis_300L0_10Hlt1_Hlt2_Oct09.py

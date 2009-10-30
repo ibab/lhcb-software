@@ -114,10 +114,10 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
     
         return { HltHadronLinesConf : { 'SingleHadron_PTCut' : 4450
-                                        , 'HadMain_IPCut'      : 0.09
+                                        , 'HadSingle_IPCut'      : 0.09
                                         , 'HadMain_PTCut'      : 1600
                                         , 'HadCompanion_DZCut' : 0.05
-                                        , 'HadCompanion_IPCut' : 0.13
+                                        , 'HadDi_IPCut' : 0.13
                                         , 'HadCompanion_PTCut' : 950
                                         , 'HadCompanion_PointingCut' : 1.0 
                                         }

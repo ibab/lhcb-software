@@ -42,10 +42,10 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
         return { HltHadronLinesConf : {  'SingleHadron_PTCut' : 4800
-                                         , 'HadMain_IPCut' : 0.06 
+                                         , 'HadSingle_IPCut' : 0.06 
                                          , 'HadMain_PTCut' : 250
                                          , 'HadCompanion_DZCut' : 1.83
-                                         , 'HadCompanion_IPCut' : 0.05
+                                         , 'HadDi_IPCut' : 0.05
                                          , 'HadCompanion_PTCut' : 750
                                          , 'HadCompanion_PointingCut' : 0.39
                                         }
