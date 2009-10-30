@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r9 2009-10-30 ====================
+
 ! 2009-10-30 - Anton Poluektov
  - Removed StrippingRICHLambdaNoPid.py from cvs (outdated)
  - Modified Lambda and Jpsi streams (new lines)
