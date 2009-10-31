@@ -52,8 +52,15 @@ class Exclusive_Nominal :
         # Hlt2DisplVerticesLines.py
             , 'Hlt2DisplVertices'
         # Hlt2B2XGammaLines.py
-            , 'Hlt2Bs2PhiGamma'
-            , 'Hlt2Bd2KstGamma'
+              , 'Hlt2Bs2PhiGamma'
+              , 'Hlt2Bs2PhiGammaNoCutsK'
+              , 'Hlt2Bs2PhiGammaWideBMass'
+              , 'Hlt2Bs2PhiGammaLooseDira'
+              , 'Hlt2Bd2KstGamma'
+              , 'Hlt2Bd2KstGammaNoCutsKPi'
+              , 'Hlt2Bd2KstGammaWideBMass'
+              , 'Hlt2Bd2KstGammaWideKMass'
+              , 'Hlt2Bd2KstGammaLooseDira'
         # Hlt2B2HHLines
             , 'Hlt2B2HH'
         # Hlt2B2PhiXLines

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.70 2009-10-30 14:21:51 mlieng Exp $
+$Id: release.notes,v 1.71 2009-10-31 11:42:32 fsoomro Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,11 @@ $Id: release.notes,v 1.70 2009-10-30 14:21:51 mlieng Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-10-31 - Fatima Soomro
+- Updated the cuts in B2XGammaLines with the ones corresponding to MC09 optimization.
+  Added monitoring lines to B2XGammaLines and updated their names in the Exclusive_Nominal.py in HltSettings/python/HltSettings/
+
 
 !========================== Hlt2Lines v1r9 2009-10-28 ===================
 ! 2009-10-30 - Magnus Lieng
