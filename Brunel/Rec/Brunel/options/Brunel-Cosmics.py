@@ -15,6 +15,7 @@ Brunel().SpecialData  = ["fieldOff","cosmics"]
 #--------------------------------------------------------------------------------
 TrackSys().ExpertTracking += [ "noDrifttimes" ]
 TrackSys().TrackPatRecAlgorithms = [ "PatSeed" ]
+TrackSys().TrackExtraInfoAlgorithms = [""]
 
 #--------------------------------------------------------------------------------
 # RICH options for cosmics
