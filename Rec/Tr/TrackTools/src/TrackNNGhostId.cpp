@@ -1,4 +1,4 @@
-// $Id: TrackNNGhostId.cpp,v 1.4 2009-10-30 14:39:39 cattanem Exp $
+// $Id: TrackNNGhostId.cpp,v 1.5 2009-10-31 15:00:26 smenzeme Exp $
 // Include files 
 #include "Event/Track.h"
 //#include "Kernel/HitPattern.h"
@@ -128,11 +128,29 @@ StatusCode TrackNNGhostId::execute(LHCb::Track& aTrack) const{
     if(ids[i].isIT()) ++itHits;
     if(ids[i].isOT()) ++otHits;
   }
+
   
-  LHCb::VeloClusters* veloCont = get<LHCb::VeloClusters>("Raw/Velo/Clusters");
-  LHCb::STClusters *ttCont = get<LHCb::STClusters>("Raw/TT/Clusters");
-  LHCb::STClusters *itCont = get<LHCb::STClusters>("Raw/IT/Clusters");
-  int nHitMult = veloCont->size()+ttCont->size()+itCont->size()+m_otdecoder->totalNumberOfHits();
+  int nVeloCont = 0;
+  int nTTCont = 0;
+  int nITCont = 0;
+
+
+  if (exist<LHCb::VeloClusters>("Raw/Velo/Clusters")){
+    LHCb::VeloClusters* veloCont = get<LHCb::VeloClusters>("Raw/Velo/Clusters");
+    nVeloCont = veloCont->size();
+  }
+  if (exist<LHCb::STClusters>("Raw/TT/Clusters")){
+    LHCb::STClusters *ttCont = get<LHCb::STClusters>("Raw/TT/Clusters");
+    nTTCont = ttCont->size();
+  }
+  if (exist<LHCb::STClusters>("Raw/IT/Cluseters")){
+    LHCb::STClusters *itCont = get<LHCb::STClusters>("Raw/IT/Clusters");
+    nITCont = itCont->size();
+  }
+
+  int nHitMult = nVeloCont + nTTCont + nITCont + m_otdecoder->totalNumberOfHits();
+
+
   
   /**
    *   now evaluate the MVA value for different track types

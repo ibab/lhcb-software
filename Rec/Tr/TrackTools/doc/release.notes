@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-10-31 - Stephanie Hansmann-Menzemer
+ - check for existence of cluster locations in TrackNNGhostId
 
 ! 2009-10-30 - Marco Cattaneo
  - Fix compilation warnings
