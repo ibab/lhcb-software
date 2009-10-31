@@ -1,7 +1,5 @@
 // Include files 
 #include "BTaggingTool.h"
-// from DaVinci
-//#include "Kernel/StringUtils.h"
 #include "GaudiKernel/IIncidentSvc.h"
 
 //--------------------------------------------------------------------------

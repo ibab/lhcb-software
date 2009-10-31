@@ -1,8 +1,6 @@
 // Include files 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 #include "GaudiKernel/Property.h"
-// from DaVinci
-#include "Kernel/StringUtils.h"
 // local
 #include "BTagging.h"
 
