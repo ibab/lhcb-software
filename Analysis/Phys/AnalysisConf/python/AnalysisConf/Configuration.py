@@ -1,8 +1,12 @@
+#!/usr/bin/env python 
+# =============================================================================
 """
 High level configuration tools for AnalysisConf
 """
-__version__ = "$Id: Configuration.py,v 1.19 2009-10-27 15:42:08 jpalac Exp $"
+# =============================================================================
+__version__ = "$Id: Configuration.py,v 1.20 2009-10-31 13:11:14 ibelyaev Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
+# =============================================================================
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
@@ -15,7 +19,16 @@ class AnalysisConf(LHCbConfigurableUser) :
         , "Simulation"      : True                               # set to True to use SimCond
         , "RedoMCLinks"     : False                              # On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association. 
          }
-
+    
+    _propertyDocDct = { 
+        "DataType"          : """ Data type, can be ['DC06','2008','2009','MC09'] """ 
+        , "Simulation"      : """ set to True to use SimCond """ 
+        , "RedoMCLinks"     : """ On some stripped DST one needs to redo the Track<->MC link table. Set to true if problems with association """ 
+        }
+    
+    __used_configurables__ = (
+        'CaloAssociatorsConf' ,
+        )
 #
 # configure reconstruction to be redone
 #
@@ -67,8 +80,31 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Define DaVinciAssociators. Do MC unpacking.
         """
-        from CaloAssociators import MCTruthOnDemand
         importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
+        
+        from Configurables import CaloAssociatorsConf
+        
+        CaloAssociatorsConf ( EnableMCOnDemand = True )
+
+        from CaloKernel.ConfUtils import getAlgo
+        from Configurables        import NeutralPP2MC
+
+        ## offline neutral protoparticles 
+        alg1 = getAlgo (
+            NeutralPP2MC                    , ## type 
+            'NeutralPP2MC'                  , ## base-name 
+            'Offline'                       , ## context 
+            'Relations/Rec/ProtoP/Neutrals' , ## base-location 
+            True                            ) ## on-demand 
+
+        ## hlt neutral protoparticles 
+        alg2 = getAlgo (
+            NeutralPP2MC                    , ## type 
+            'NeutralPP2MC'                  , ## base-name 
+            'Hlt'                           , ## context 
+            'Relations/Rec/ProtoP/Neutrals' , ## base-location 
+            True                            ) ## on-demand 
+
         self.unpackMC()
 #
 # Standard Particles
@@ -115,3 +151,18 @@ class AnalysisConf(LHCbConfigurableUser) :
         self.tagging()
         self.standardParticles()
         self.standardDC06Particles()
+
+        from CaloKernel.ConfUtils import printOnDemand
+
+        print printOnDemand()
+        
+        
+
+if '__main__' == __name__ :
+    print __doc__
+    print __author__
+    print __version__
+    
+# =============================================================================
+# The END 
+# =============================================================================

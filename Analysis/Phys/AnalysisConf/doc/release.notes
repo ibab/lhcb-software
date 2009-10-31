@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.38 2009-10-28 13:44:25 jpalac Exp $
+!$Id: release.notes,v 1.39 2009-10-31 13:11:14 ibelyaev Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-10-31 - Vanya Belyaev
+
+ - make use of CaloAssociatorsConf instead of CaloAssociators.opts 
+ - cmt/requirements   
+     version increment to v1r9 
+
 
 !========================== AnalysisConf v1r8 2009-10-28 ====================
 
