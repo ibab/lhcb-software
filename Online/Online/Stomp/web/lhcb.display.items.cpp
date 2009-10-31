@@ -136,6 +136,8 @@ var StyledItem = function(item_name, class_name, fmt)  {
 	item_data = parseInt(data[1]);
       else if ( data[0] == 22 )   // Float
 	item_data = parseFloat(data[1]);
+      else if ( data[0] == 23 )   // Boolean: handle like string
+	item_data = data[1];
       else if ( data[0] == 25 )   // String
 	item_data = data[1];
       else

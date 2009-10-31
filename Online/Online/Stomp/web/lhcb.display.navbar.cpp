@@ -214,7 +214,14 @@ var navbar_body = function()  {
 		  'NavigationBar',
 		  '../Images/lhc-logo.gif',32,20,
 		  '../Images/lhc-logo.gif',64,48);
-  
+  /*
+  navBar.addSized('Ramses',
+		  'Radiation Monitoring in LHCb',
+		  'JavaScript:navBar.open_url("lhcb.display.htm?type=ramses")',
+		  'NavigationBar',
+		  '../Images/LHCb/Ramses_icon.jpg',20,20,
+		  '../Images/LHCb/Ramses_icon.jpg',32,32);
+  */
   navBar.addSized('LHCb',
 		  'LHCb home page',
 		  'JavaScript:navBar.open_abs_url("http://lhcb.cern.ch")',

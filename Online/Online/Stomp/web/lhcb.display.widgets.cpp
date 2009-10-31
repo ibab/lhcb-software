@@ -272,7 +272,6 @@ if ( !lhcb.widgets ) {
     tr.appendChild(td);
     
     this.runState = FSMItem('lbWeb.'+sys,logger,true);
-    //this.runState = StyledItem('lbWeb.'+sys+'.FSM.state',null,null);
     tr.appendChild(this.runState);
     tr.appendChild(this.runState.lock);
 

@@ -4,6 +4,7 @@ var _debugLoading = false;
 
 var _loadScriptAbs = function(base,name) 
 {  document.write('<SCRIPT language="JavaScript" src="'+base+'/'+name+'"></SCRIPT>');   }
+
 var _loadScript = function(name) { _loadScriptAbs(_fileBase,name); }
 
 var _loadStatic = function(name)

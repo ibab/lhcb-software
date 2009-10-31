@@ -320,17 +320,19 @@ var DataProvider = function(logger)  {
       var itm = v[1];
       var data = v.slice(2);
       //_dataProvider.logger.info('DataProvider: Update data item['+itm+'] = '+data);
-      var o = _dataProvider.items[itm];
-      var len = o.length;
-      for(var i=0; i<len; ++i) {
-	if ( o[i] ) {
-	  o[i].set(data);
+      if ( data != 'DEAD' ) {
+	var o = _dataProvider.items[itm];
+	var len = o.length;
+	for(var i=0; i<len; ++i) {
+	  if ( o[i] ) {
+	    o[i].set(data);
+	  }
+	  else {
+	    alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
+	  }
 	}
-	else {
-	  alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
-	}
+	_dataProvider.logger.info("Update item: [" +frame.body.length+' bytes] '+ itm);
       }
-      _dataProvider.logger.info("Update item: [" +frame.body.length+' bytes] '+ itm);
       return;
     }
     _dataProvider.logger.error('onmessage: retrieved data with invalid item number');    

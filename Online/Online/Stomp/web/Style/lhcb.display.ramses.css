@@ -1,0 +1,28 @@
+/* <style type="text/css"> */
+.Dose {
+  font-size:           12px;
+  font-family:         Arial, Helvetica, sans-serif;
+  border:              solid 1px #111111; 
+  padding:             1px;
+  color:#000000; top:20px;
+  left:90px; 
+  background-color:#ffffcc;
+}
+.Average {
+  font-size:           12px;
+  font-family:         Arial, Helvetica, sans-serif;
+  border:              solid 1px #111111; 
+  padding:             1px;
+  color:#000000; top:20px;
+  left:90px; 
+  background-color:#bbbbcc;
+}
+.Sensor {
+  font-size:           14px;
+  font-weight:         bold;
+  font-family:         Arial, Helvetica, sans-serif;
+  border:              none; 
+  color:               #000000;
+}
+
+/* </STYLE>  */

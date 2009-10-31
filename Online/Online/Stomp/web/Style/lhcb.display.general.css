@@ -253,6 +253,14 @@
     border-width:     1px;
     text-align:       left;
 }
+
+.CanvasWhite   {
+    background-color: #EEEEEE;
+    overflow-x:       scroll;
+    overflow-y:       scroll;
+    border:           solid;
+    border-width:     1px;
+}
                   	  
 .tooltip {
   font-size:           10px;
