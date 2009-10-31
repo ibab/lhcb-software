@@ -1,13 +1,11 @@
-#$Id: requirements,v 1.68 2009-10-27 11:08:19 jpalac Exp $
+#$Id: requirements,v 1.69 2009-10-31 09:56:34 jpalac Exp $
 #============================================================================
 # Created    : 2002-05-22
 # Maintainer : Marco Musy
 #
-# Documentation on the requirement file can be found at
-# http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 #============================================================================
 package           FlavourTagging
-version           v9r0
+version           v9r0p1
 
 # Structure, i.e. directories to process. 
 #============================================================================
