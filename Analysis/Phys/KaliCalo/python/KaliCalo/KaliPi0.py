@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.4 2009-10-01 13:01:57 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.5 2009-10-31 16:59:12 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,21 +31,41 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
 from KaliCalo.Configuration import  KaliPi0Conf
 
+from CommonParticles.StandardElectrons import StdLooseElectrons as SLE 
 
 kali = KaliPi0Conf (
     ## example of the first pass 
-    FirstPass = True  ,
-    UseTracks = True  ,
-    UseSpd    = False 
-    ## examle of the second pass 
-    # FirstPass = False ,FemtoDST  = 'out2'
+    FirstPass = True ,
+    UseTracks = True ,
+    #, UseSpd    = False 
+    ## examle of the second pass
+    # FirstPass  = False  ,
+    # UseSpd     = False  , 
+    # DestroyTES = False  ,
+    DestroyList = [ 'KaliPi0' , 'StdLooseElectrons' ] ,
+    OtherAlgs   = [ SLE ] ,
+    FemtoDST   = 'out4' 
     )
+
+
+## temporary solve the problem with atexit/__del__ for AppMgr 
+def _KaliAtExit_ () :
+    """
+    Temporary solve the problme with atexit/__del__ for AppMgr 
+    """
+    from GaudiPython.Bindings import AppMgr
+    gaudi = AppMgr()
+    gaudi.exit()
+
+import atexit
+atexit.register ( _KaliAtExit_ )
+
 
 # =============================================================================
 ## the actual job steering 
@@ -162,13 +182,41 @@ if '__main__' == __name__ :
         "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004838/0002/00004838_00023827_1.dst' TYP='POOL_ROOTTREE' OPT='READ'",
         "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004838/0002/00004838_00023881_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
         )
-    
-    from GaudiPython.Bindings import AppMgr
-        
-    gaudi = AppMgr()
-    
-    gaudi.run(5000)
 
+    #EventSelector(
+    #    Input   = [
+    #    "   DATAFILE='PFN:KaliPi0.fmDST' TYP='POOL_ROOTTREE' OPT='READ'"
+    #    ]
+    #    )
+
+    from GaudiPython.Bindings import AppMgr
+            
+    gaudi = AppMgr()
+
+    #evtSel = gaudi.evtsel()
+    #evtSel.open('KaliPi0.fmDST')
+    #evtSel.open('out3')
+    
+    gaudi.run(10000)
+
+    import GaudiPython.GaudiAlgs
+    import GaudiPython.HistoUtils
+    from   KaliCalo.Pi0HistoFit import fitPi0Histo as fit 
+    
+    kali = gaudi.algorithm('KaliPi0')
+    histos = kali.Histos()
+    if histos :
+        keys = histos.keys()
+        keys.sort() 
+        for h in keys :
+            histo = histos[h]
+            if hasattr ( histo , 'dump' ) :
+                print histo.dump(40,20,True) 
+                print 'fit result: ', fit  ( histo , 80 , 200 )
+                
+    
+    gaudi.exit() 
+    
         
 # =============================================================================
 # The END 

@@ -1,11 +1,21 @@
-! $Id: release.notes,v 1.13 2009-10-26 15:56:27 jpalac Exp $ 
+! $Id: release.notes,v 1.14 2009-10-31 16:59:12 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.13 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-10-31 - Vanya Belyaev
+ 
+  - add single electrom selection code by Oleg 
+  - add pytho utilities and scripts 
+  - add algorithm to perform Albert's trick
+
+ - cmt/requirements 
+   version increment to v3r0 
+ 
 
 
 !========================== KaliCalo v2r2 2009-10-26 ==========================

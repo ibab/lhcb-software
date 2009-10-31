@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.4 2009-10-25 17:45:28 ibelyaev Exp $
+# $Id: Configuration.py,v 1.5 2009-10-31 16:59:12 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -45,6 +45,10 @@ __all__  = (
 # =============================================================================
 from Gaudi.Configuration      import *
 from LHCbKernel.Configuration import *
+
+import logging
+
+_log = logging.getLogger('KaliCalo')
 
 # =============================================================================
 ## @class KaliPi0Conf
@@ -109,16 +113,17 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     __used_configurables__ = [
         'OffLineCaloRecoConf' ,
         'OffLineCaloPIDsConf' ,
-        'CaloDstUnPackConf'   ,
         'DaVinci'
         ]
-    
+
     ## the own slots 
     __slots__ = {
         ## Own flags:
         'FirstPass'             : False      ## The first (specific) pass on (x)DST ?
-        , 'DestroyTES'          : True       ## Destroy TES containers 
+        , 'DestroyTES'          : True       ## Destroy TES containers : List of Input Partcle Containers
+        , 'DestroyList'         : ['KaliPi0' ]  ## the list of input TES-location for Destroyer
         , 'Coefficients'        : {}         ## The map of (mis)calibration coefficients
+        , 'OtherAlgs'           : []         ## List of "other" algorithms to be run, e.g. electorn calibration
         ## CaloReco Flags:
         , 'UseTracks'           : True       ## Use Tracks for the first pass ?
         , 'UseSpd'              : True       ## Use Spd as neutrality criteria ?
@@ -139,8 +144,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     _propertyDocDct = {
         ## Own flags 
         'FirstPass'             : """ The first (specific) pass on (x)DST ?"""
-        , 'DestroyTES'          : """ Destroy TES containers ? """
+        , 'DestroyTES'          : """ Destroy TES containers """
+        , 'DestroyList'         : """ The list of input TES-locations for Destroyer """
         , 'Coefficients'        : """ The map of (mis)calibration coefficients """
+        , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
@@ -168,9 +175,10 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
         from Configurables  import OffLineCaloRecoConf
         from Configurables  import OffLineCaloPIDsConf
-        
+        from Configurables  import CaloDstUnPackConf 
+
         if self.getProp( 'FirstPass' ) and self.getProp( 'UseTracks' ) :
-            
+
             OffLineCaloRecoConf (
                 EnableRecoOnDemand = True  ,
                 UseTracks          = True  ,        ## Use Tracks For First Pass
@@ -217,7 +225,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         ## 3. "Light-mode" for Neutral ProtoParticles: no PIDs         
         from GlobalReco.GlobalRecoConf import NeutralProtoPAlg
-        log.warning("KaliPi0: \"Light\"-mode is activated for Neutral ProtoParticles") 
+        _log.warning("KaliPi0: \"Light\"-mode is activated for Neutral ProtoParticles") 
         return  NeutralProtoPAlg (
             LightMode      = True ,                  ## "ligght-mode", no PIDs
             HyposLocations = [ 'Rec/Calo/Photons']   ## only single photons 
@@ -248,8 +256,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         photon.PtCut              = 250 
         maker.addTool ( PhysDesktop )
         maker.PhysDesktop.InputPrimaryVertices = "None" ## NB: it saves a lot of CPU time 
-        log.warning("KaliPi0: PID-info is disabled for PhotonMaker") 
-        log.warning("KaliPi0: Primary Vertices are disabled for StdLooseAllPhotons") 
+        _log.warning("KaliPi0: PID-info is disabled for PhotonMaker") 
+        _log.warning("KaliPi0: Primary Vertices are disabled for StdLooseAllPhotons") 
         
         return maker 
 
@@ -260,54 +268,52 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         from Configurables import Kali__Pi0, PhysDesktop        
         kali = Kali__Pi0 (
-            "Kali"                                         ,
+            "KaliPi0"                                      ,
             NTupleLUN      = "KALIPI0"                     ,
             HistoPrint     = True                          ,
             NTuplePrint    = True                          ,
             InputLocations = [ 'StdLooseAllPhotons' ]      ,
-            Destroy        = self.getProp( 'DestroyTES'  ) ,
             OutputLevel    = self.getProp( 'OutputLevel' ) 
             )
         kali.addTool ( PhysDesktop )
         desktop = kali.PhysDesktop
         desktop.InputPrimaryVertices = "None"  ## NB: it saves a lot of CPU time!
-        log.warning("KaliPi0: Primary Vertices are disabled for Kali") 
+        _log.warning("KaliPi0: Primary Vertices are disabled for Kali") 
         
-        if self.getProp( 'DestroyTES' ) : 
-            log.warning("KaliPi0: TES containers will be destroyed")
-        else :
-            log.warning("KaliPi0: TES containers will be preserved")
-                
         return kali 
 
     ## 7. The configuration of femtoDST
     def fmDst ( self ) :
         """
-        The configurtaion of femto-DST
+        The configuration of femto-DST
         """
         from Gaudi.Configuration import OutputStream
+
         return OutputStream (
-            'WRITER', 
+            'FMDST', 
             ItemList =  [
-            "/Event#1"            ,
-            "/Event/DAQ#1"        ,
-            "/Event/DAQ/ODIN#1"   ,
+            "/Event#1"                 ,
+            "/Event/DAQ#1"             ,
+            "/Event/DAQ/ODIN#1"        ,
             #
-            "/Event/Rec#1"        ,
-            "/Event/pRec#1"       ,
+            "/Event/Rec#1"             ,
+            "/Event/Rec/Track#1"       ,
+            "/Event/Rec/Track/Best#1"  ,
+            "/Event/pRec#1"            ,
             #
-            "/Event/Raw#1"        ,
-            "/Event/Raw/Spd#1"    ,
-            "/Event/Raw/Prs#1"    ,
-            "/Event/Raw/Ecal#1"   ,
-            "/Event/Raw/Hcal#1"   ,
+            "/Event/Raw#1"             , 
+            "/Event/Raw/Spd#1"         ,
+            "/Event/Raw/Prs#1"         ,
+            "/Event/Raw/Ecal#1"        ,
+            "/Event/Raw/Hcal#1"        ,
             "/Event/Raw/Spd/Digits#1"  ,
             "/Event/Raw/Prs/Digits#1"  ,
             "/Event/Raw/Ecal/Digits#1" ,
             "/Event/Raw/Hcal/Digits#1" 
             ] ,
-            Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST') ,
-            RequireAlgs = [ "Kali" ] 
+            Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % self.getProp('FemtoDST')
+            , AcceptAlgs  = self.getProp('DestroyList')
+            , RequireAlgs =             [ 'Destroyer' ] 
             )
 
                 
@@ -316,7 +322,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         """
         Apply the configuration:
 
-        - General CaloReconstructiion settings
+        - General CaloReconstruction settings
         - (Optional) CaloDigit (mis)calibration
         - Light-mode for Neutral ProtoParticle Maker
         - Specific setting for Photon Maker
@@ -326,8 +332,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         - NTuples & Histos
         
         """
-        log.info ( "KaliPi0Conf: ConfApplying Kali-pi0 configuration" )
-        log.info (  self )
+        _log.info ( "KaliPi0Conf: ConfApplying Kali-pi0 configuration" )
+        _log.info (  self )
 
         ## 1. General Calorimeter Reconstruction configuration 
         self.caloConf() 
@@ -345,39 +351,107 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         kali    = self.kaliPi0 ()
 
         ## 6. The general configuration of DaVinci
-        from Gaudi.Configuration import GaudiSequencer
-
+        from Configurables import GaudiSequencer,DaVinciInit
+        
         kaliSeq = GaudiSequencer ( 'KaliSeq' )
+        
+        kaliSeq.MeasureTime = self.getProp ( 'MeasureTime' )
+        kaliSeq.OutputLevel = self.getProp ( 'OutputLevel' )
+
+        kaliSeq.Members = [ ]
+
         if not not misKali : kaliSeq.Members.append ( misKali )
         if not not proto   : kaliSeq.Members.append ( proto   )
         if not not photon  : kaliSeq.Members.append ( photon  )
         kaliSeq.Members.append ( kali   )
+
+        ## collect the actual sequence of algorithms:
+        algs = [ kaliSeq ]
+
+        # run 'Other' algorithms ? 
+        if self.getProp('OtherAlgs') : algs += self.getProp('OtherAlgs') 
         
-        kaliSeq.MeasureTime = self.getProp ( 'MeasureTime' )
-        kaliSeq.OutputLevel = self.getProp ( 'OutputLevel' )
-        
+        ## 7. Destroy TES if needed 
+        if self.getProp( 'DestroyTES' ) or self.getProp( 'DestroyList' ) :
+            from Configurables import Kali__Destroyer
+            tesList = [ 'Phys/' + loc + '/Particles' for loc in self.getProp('DestroyList') ]
+            destroyer = Kali__Destroyer (
+                'Destroyer'                             ,
+                Particles = tesList                     , 
+                Destroy   = self.getProp('DestroyTES' )  
+                )
+            from Configurables import  ( SpdEnergyForTrack  ,
+                                         PrsEnergyForTrack  , 
+                                         EcalEnergyForTrack ,
+                                         HcalEnergyForTrack )
+            
+            destroyer.addTool ( SpdEnergyForTrack  , 'SpdDigits'  )
+            destroyer.addTool ( PrsEnergyForTrack  , 'PrsDigits'  )
+            destroyer.addTool ( EcalEnergyForTrack , 'EcalDigits' )
+            destroyer.addTool ( HcalEnergyForTrack , 'HcalDigits' )
+
+            destroyer.addTool ( SpdEnergyForTrack  , 'BremSpdDigits'  )
+            destroyer.addTool ( PrsEnergyForTrack  , 'BremPrsDigits'  )
+            destroyer.addTool ( EcalEnergyForTrack , 'BremEcalDigits' )
+
+            destroyer.SpdDigits      .AddNeighbours = 1   ## 3x3
+            destroyer.PrsDigits      .AddNeighbours = 2   ## 5x5 
+            destroyer.EcalDigits     .AddNeighbours = 3   ## 7x7 
+            destroyer.HcalDigits     .AddNeighbours = 1   ## 3x3 
+
+            destroyer.Digits4Track = [
+                destroyer.SpdDigits   ,
+                destroyer.PrsDigits   ,
+                destroyer.EcalDigits  ,
+                destroyer.HcalDigits  
+                ]
+            
+            destroyer.BremSpdDigits  .AddNeighbours = 2   ## 3x3
+            destroyer.BremPrsDigits  .AddNeighbours = 2   ## 5x5 
+            destroyer.BremEcalDigits .AddNeighbours = 3   ## 7x7
+            
+            destroyer.Digits4Track = [
+                destroyer.BremSpdDigits   ,
+                destroyer.BremPrsDigits   ,
+                destroyer.BremEcalDigits  
+                ]
+            
+            algs += [ destroyer ]
+            
+        if self.getProp( 'DestroyTES' ) :
+            _log.warning("KaliPi0: TES containers will be destroyed")
+        else :
+            _log.warning("KaliPi0: TES containers will be preserved")        
+            
+
         from Configurables import DaVinci
 
+        # unpacking is enabled only for first pass on DST 
+        unPack = self.getProp (  'FirstPass' )
+
         dv = DaVinci (
-            UserAlgorithms = [ kaliSeq ] 
-            , DataType       = self.getProp ('DataType'   ) 
-            , Simulation     = self.getProp ('Simulation' ) 
-            , EvtMax         = self.getProp ('EvtMax'     ) 
-            , Hlt            = self.getProp ('Hlt'        )  
+            UserAlgorithms = algs                         ,
+            DataType       = self.getProp ('DataType'   ) ,
+            Simulation     = self.getProp ('Simulation' ) ,
+            EvtMax         = self.getProp ('EvtMax'     ) ,
+            Hlt            = self.getProp ('Hlt'        ) ,
+            EnableUnpack   = unPack 
             ) 
-        
-        log.info( dv )
-        
+
         ## 7. The configuration of femtoDST
         fmDST = self.fmDst()
         from Gaudi.Configuration import ApplicationMgr 
-        mgr = ApplicationMgr ( OutStream = [ fmDST ] ) 
-
+        
+        ApplicationMgr( OutStream = [ fmDST ] )     
+            
         ## 8. The configuration of NTuples & Histograms   
-        from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc 
-        NTupleSvc (
-            Output = [ "KALIPI0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % self.getProp('NTuple')] 
-            )
+        from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc
+        output = NTupleSvc().Output
+        
+        NTupleSvc ().Output += [
+            "KALIPI0 DATAFILE='%s' TYPE='ROOT' OPT='NEW'" % self.getProp('NTuple')
+            ]
+        
         HistogramPersistencySvc ( OutputFile = self.getProp('Histos') ) 
 
 
@@ -387,10 +461,15 @@ def  action ( ) :
     """
     Reset DV-init sequence. IMPORTANT: It saves a lot of CPU time!!!
     """
-    dvinit = getConfigurable('DaVinciInitSeq')
-    dvinit.Members = []
-    log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
-
+    dvInitSeq = getConfigurable('DaVinciInitSeq')
+    dvInitSeq.Members = []
+    
+    #dvInit    = getConfigurable('DaVinciInit'   )
+    #dvInitSeq.Members = [ dvInit ]
+        
+    _log.warning ( 'KaliPi0Conf: DaVinciInitSeq is cleared!')
+    
+    
 # =============================================================================
 ## Important: use Post Config action! 
 appendPostConfigAction ( action )
