@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-10-31 - Stephanie Hansmann-Menzemer
+ - modify Brunel-Cosmics.py to not run any exta info algorithm
+
 ! 2009-10-30 - Marco Cattaneo
  - Changes to Configurable:
    . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
