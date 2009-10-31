@@ -4,7 +4,7 @@
 High level configuration tools for AnalysisConf
 """
 # =============================================================================
-__version__ = "$Id: Configuration.py,v 1.20 2009-10-31 13:11:14 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2009-10-31 13:31:09 ibelyaev Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 # =============================================================================
 
@@ -152,11 +152,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         self.standardParticles()
         self.standardDC06Particles()
 
-        from CaloKernel.ConfUtils import printOnDemand
-
-        print printOnDemand()
-        
-        
 
 if '__main__' == __name__ :
     print __doc__
