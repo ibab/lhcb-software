@@ -1,11 +1,19 @@
-! $Id: release.notes,v 1.14 2009-10-31 16:59:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.15 2009-11-01 11:05:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.14 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.15 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-11-01 - Vanya Belyaev
+
+ - remove the specialized algorithsm Pi02
+ - add property 'Mirror' to Kali::Pi0 algorithm      (Default is false ) 
+ - add property 'Mirror' to KaliPi0Conf Configurable (Default is False )
+
+
 
 ! 2009-10-31 - Vanya Belyaev
  

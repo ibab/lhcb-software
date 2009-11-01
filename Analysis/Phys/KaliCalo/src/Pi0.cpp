@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.1 2009-10-31 16:59:12 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.2 2009-11-01 11:05:36 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -41,6 +41,8 @@ namespace Kali
     // ========================================================================
   public:
     // ========================================================================
+    /// the proper initialzation
+    virtual StatusCode initialze  () ;             // the proper tinitialzation
     /// the main 'execution' method 
     virtual StatusCode analyse    () ;          //  the main 'execution' method 
     // ========================================================================
@@ -53,7 +55,15 @@ namespace Kali
     Pi0 ( const std::string& name ,            //    the algorithm instance name 
           ISvcLocator*       pSvc )            // the pointer to Service Locator 
       : LoKi::Algo ( name , pSvc ) 
-    {}
+        //
+      , m_mirror ( false )
+    {
+      declareProperty 
+        ( "Mirror" , 
+          m_mirror , 
+          "Flag to activate Albert's trick with backroung estimation" )
+        -> declareUpdateHandler ( &Kali::Pi0::mirrorHandler , this ) ;
+    }
     /// virtual & protected destructor 
     virtual ~Pi0() {}
     // ========================================================================
@@ -66,9 +76,48 @@ namespace Kali
     /// the assignement operator is disabled 
     Pi0& operator=( const Pi0& ) ;      // the assignement operator is disabled 
     // ========================================================================
+  public:
+    // ========================================================================
+    /// update handler for 'Mirror' property
+    void mirrorHandler ( Property& p ) ; // update handler for 'Mirror' property
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// use Albert's trick? 
+    bool  m_mirror ;                                     // use Albert's trick? 
+    // ========================================================================
   } ;
   // ==========================================================================
-} //                                                      end of namesapce Kali
+} //                                                      end of namespace Kali
+// ============================================================================
+// update handler for 'Mirror' property
+// ============================================================================
+void Kali::Pi0::mirrorHandler ( Property& /* p */ ) 
+{
+  // no action if not initialized yet:
+  if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+  //
+  if ( m_mirror ) 
+  { Warning ( "Albert's trick for background evaluation is   activated!", StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
+  //
+}
+// ============================================================================
+// the proper initialization
+// ============================================================================
+StatusCode Kali::Pi0::initialze  ()                 // the proper initialzation
+{
+  StatusCode sc = LoKi::Algo::initialize();
+  if ( sc.isFailure() ) { return sc ; }
+  //
+  if ( m_mirror ) 
+  { Warning ( "Albert's trick for background evaluation is   activated!", StatusCode::SUCCESS ) ; }
+  else 
+  { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
+  //
+  return StatusCode::SUCCESS ;
+}
 // ============================================================================
 // the only one essential method 
 // ============================================================================
@@ -112,24 +161,48 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const LHCb::Particle* g2 = pi0(2) ;
     if ( 0 == g2         ) { continue ; }  // CONTINUE
     
-    if ( 0 != h1 && m12 < 250 * MeV ) { h1 -> fill ( m12 / GeV ) ; }
+    // trick with "mirror-background" by Albert Puig
     
-    const bool good  = ( m12         < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
+    // invert the first photon :
+    Gaudi::LorentzVector p1 = g1->momentum() ;
+    p1.SetPx ( -p1.Px() ) ;
+    p1.SetPy ( -p1.Py() ) ;
+    const Gaudi::LorentzVector fake1 = ( p1 + g2->momentum() ) ;
     
-    if ( !good   ) { continue ; }   // CONTINUE!!!
+    // invert the second photon 
+    Gaudi::LorentzVector p2 = g2->momentum() ;
+    p2.SetPx ( -p2.Px() ) ;
+    p2.SetPy ( -p2.Py() ) ;
+    const Gaudi::LorentzVector fake2 = ( g1->momentum() + p2 ) ;
     
-    if ( 0 != h2 ) { h2 -> fill ( m12 / GeV ) ; }
+    double fakemass [2] ;
+    fakemass [0] = fake1.M() ;
+    fakemass [1] = fake2.M() ;
+    
+    double fakept   [2] ;
+    fakept   [0] = fake1.Pt() ;
+    fakept   [1] = fake2.Pt() ;
+    
+    const bool good  =             ( m12         < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
+    bool       good1 = m_mirror && ( fakemass[0] < 250 * MeV && fakept[0] > 800 * MeV ) ;
+    bool       good2 = m_mirror && ( fakemass[1] < 250 * MeV && fakept[1] > 800 * MeV ) ;
+    
+    if ( 0 != h1 && good ) { h1 -> fill ( m12 / GeV ) ; }
+    
+    if ( (!good)  && (!good1) && (!good2) ) { continue ; }   // CONTINUE!!!
+    
+    if ( 0 != h2 && good ) { h2 -> fill ( m12 / GeV ) ; }
     
     //double spd1e = energyFrom ( g1 , spd ) / GeV ;
     double spd1e = seedEnergyFrom ( g1 , spd ) / GeV ;
     
     if ( 0 < spd1e ) { continue ; }
-    if ( 0 != h3 ) { h3 -> fill ( m12 / GeV ) ; }
+    if ( 0 != h3 && good ) { h3 -> fill ( m12 / GeV ) ; }
     
     double spd2e = seedEnergyFrom ( g2 , spd ) / GeV ;
     if ( 0 < spd2e ) { continue ; }
     
-    if ( 0 != h4 ) { h4 -> fill ( m12 / GeV ) ; }
+    if ( 0 != h4 && good ) { h4 -> fill ( m12 / GeV ) ; }
     
     double prs1e = energyFrom ( g1 , prs ) / GeV ;
     double prs2e = energyFrom ( g2 , prs ) / GeV ;
@@ -139,11 +212,13 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
       std::swap ( g1    , g2    ) ;
       std::swap ( spd1e , spd2e ) ;
       std::swap ( prs1e , prs2e ) ; 
+      //
+      std::swap ( good1       , good2       ) ;
+      std::swap ( fakemass[0] , fakemass[1] ) ;
+      std::swap ( fakept  [0] , fakept  [1] ) ;
     }
     
     // fill N-tuple
-    
-    tuple -> column ( "m12"  , m12             / GeV ) ;
     
     tuple -> column ( "p0"   , p12             / GeV ) ;
     tuple -> column ( "g1"   , g1->momentum()  / GeV ) ;
@@ -169,10 +244,30 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     const bool ispd2 = 0 < spd2e ;
     tuple -> column ( "spd1" , ispd1 ) ;
     tuple -> column ( "spd2" , ispd2 ) ;
-
+    
+    if  ( good ) 
+    { 
+      tuple -> column ( "m12"  , m12      / GeV ) ;
+      tuple -> column ( "pt"   , p12.Pt() / GeV ) ;
+      tuple -> column ( "bkg"  , 0 , 0 , 3  ) ;
+    }
+    else if ( good1 ) 
+    {
+      tuple -> column ( "m12"  , fakemass [0] / GeV ) ;
+      tuple -> column ( "pt"   , fakept   [0] / GeV ) ;
+      tuple -> column ( "bkg"  , 1 , 0 , 3  ) ;
+    }
+    else if ( good2 ) 
+    {
+      tuple -> column ( "m12"  , fakemass [1] / GeV ) ;
+      tuple -> column ( "pt"   , fakept   [1] / GeV ) ;
+      tuple -> column ( "bkg"  , 2 , 0 , 3  ) ;
+    }
+    else { continue ; }  // ??
+    
     tuple -> write () ; 
     
-    // finaly save good photons: 
+    // finally save good photons: 
 
     photons.insert  ( g1 ) ;
     photons.insert  ( g2 ) ;    

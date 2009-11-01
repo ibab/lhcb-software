@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.5 2009-10-31 16:59:12 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.6 2009-11-01 11:05:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,7 +31,7 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
@@ -41,16 +41,16 @@ from CommonParticles.StandardElectrons import StdLooseElectrons as SLE
 
 kali = KaliPi0Conf (
     ## example of the first pass 
-    FirstPass = True ,
-    UseTracks = True ,
+    FirstPass = True  ,
+    UseTracks = True  ,
+    Mirror    = True   
     #, UseSpd    = False 
     ## examle of the second pass
     # FirstPass  = False  ,
     # UseSpd     = False  , 
     # DestroyTES = False  ,
-    DestroyList = [ 'KaliPi0' , 'StdLooseElectrons' ] ,
-    OtherAlgs   = [ SLE ] ,
-    FemtoDST   = 'out4' 
+    # DestroyList = [ 'KaliPi0' , 'StdLooseElectrons' ] ,
+    # OtherAlgs   = [ SLE ] ,
     )
 
 
@@ -212,7 +212,7 @@ if '__main__' == __name__ :
             histo = histos[h]
             if hasattr ( histo , 'dump' ) :
                 print histo.dump(40,20,True) 
-                print 'fit result: ', fit  ( histo , 80 , 200 )
+                print 'fit result: ', fit  ( histo , 0.05 , 0.220 )
                 
     
     gaudi.exit() 

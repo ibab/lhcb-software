@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.5 2009-10-31 16:59:12 ibelyaev Exp $
+# $Id: Configuration.py,v 1.6 2009-11-01 11:05:36 ibelyaev Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -119,15 +119,16 @@ class  KaliPi0Conf(LHCbConfigurableUser):
     ## the own slots 
     __slots__ = {
         ## Own flags:
-        'FirstPass'             : False      ## The first (specific) pass on (x)DST ?
-        , 'DestroyTES'          : True       ## Destroy TES containers : List of Input Partcle Containers
-        , 'DestroyList'         : ['KaliPi0' ]  ## the list of input TES-location for Destroyer
-        , 'Coefficients'        : {}         ## The map of (mis)calibration coefficients
-        , 'OtherAlgs'           : []         ## List of "other" algorithms to be run, e.g. electorn calibration
+        'FirstPass'             : False ## The first (specific) pass on (x)DST ?
+        , 'DestroyTES'          : True  ## Destroy TES containers : List of Input Partcle Containers
+        , 'DestroyList'         : ['KaliPi0' ]  ## The list of input TES-location for Destroyer
+        , 'Coefficients'        : {}    ## The map of (mis)calibration coefficients
+        , 'OtherAlgs'           : []    ## List of "other" algorithms to be run, e.g. electorn calibration
+        , 'Mirror'              : False ## Use Albert's trick for combinatorial background evaluation
         ## CaloReco Flags:
-        , 'UseTracks'           : True       ## Use Tracks for the first pass ?
-        , 'UseSpd'              : True       ## Use Spd as neutrality criteria ?
-        , 'ForceDigits'         : False      ## Force Digits witgh Cluster Recontruction
+        , 'UseTracks'           : True  ## Use Tracks for the first pass ?
+        , 'UseSpd'              : True  ## Use Spd as neutrality criteria ?
+        , 'ForceDigits'         : False ## Force Digits witgh Cluster Recontruction
         ## IO-related 
         , 'NTuple'              : 'KaliPi0_Tuples.root' ## The output NTuple-file
         , 'Histos'              : 'KaliPi0_Histos.root' ## The output Histo-file
@@ -148,6 +149,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         , 'DestroyList'         : """ The list of input TES-locations for Destroyer """
         , 'Coefficients'        : """ The map of (mis)calibration coefficients """
         , 'OtherAlgs'           : """ The list of 'other' algorithm to run, e.g. electron calibration """
+        , 'Mirror'              : """ Use Albert's trick for combinatorial background evaluation """ 
         ## CaloReco flags 
         , 'UseTracks'           : """ Use Tracks for the first pass ? """
         , 'UseSpd'              : """ Use Spd as neutrality criteria ? """
@@ -273,8 +275,14 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             HistoPrint     = True                          ,
             NTuplePrint    = True                          ,
             InputLocations = [ 'StdLooseAllPhotons' ]      ,
-            OutputLevel    = self.getProp( 'OutputLevel' ) 
+            OutputLevel    = self.getProp( 'OutputLevel' ) ,
+            Mirror         = self.getProp( 'Mirror'      ) 
             )
+        if self.getProp('Mirror' ) :
+            _log.warning("KaliPi0: Albert's trick is   activated") 
+        else :
+            _log.warning("KaliPi0: Albert's trick is deactivated") 
+            
         kali.addTool ( PhysDesktop )
         desktop = kali.PhysDesktop
         desktop.InputPrimaryVertices = "None"  ## NB: it saves a lot of CPU time!
@@ -318,7 +326,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
 
                 
     ## Apply the configuration
-    def applyConf (self):
+    def __apply_configuration__ (self):
         """
         Apply the configuration:
 
@@ -332,7 +340,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         - NTuples & Histos
         
         """
-        _log.info ( "KaliPi0Conf: ConfApplying Kali-pi0 configuration" )
+        _log.info ( "KaliPi0Conf: Applying KaliPi0 configuration" )
         _log.info (  self )
 
         ## 1. General Calorimeter Reconstruction configuration 

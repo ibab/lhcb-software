@@ -17,7 +17,7 @@ __all__ = (
     )
 # =============================================================================
 __author__  = 'Vanya BELYAEV Ivan.Belyaev@nikhef.nl'
-__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $'
+__version__ = 'CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $'
 # =============================================================================
 import ROOT 
 import copy 
@@ -82,8 +82,11 @@ class Pi0Histos ( ROOT.TPySelectorFix ) :
     ## the major method 
     def Process ( self , entry ) :
         if self.GetEntry ( entry ) <= 0 : return 0
-        
+
         tree  = self.fChain
+        if 0 != tree.bkg : return 1                   ## RETURN
+        
+        
         cell1 = CaloCellID(tree.ind1)
         cell2 = CaloCellID(tree.ind2)
         cell1.setCalo ( 2 ) 
