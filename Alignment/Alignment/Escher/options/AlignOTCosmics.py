@@ -20,7 +20,7 @@ Escher().DataType     = "2008"
 Escher().Kalman = True
 Escher().Millepede = False
 Escher().TrackContainer = "Rec/Track/Best" # Velo, VeloR, Long, Upstream, Downstream, Ttrack, Muon or Calo
-Escher().EvtMax = 1000
+Escher().EvtMax = 100000
 Escher().SpecialData = [ "fieldOff", "cosmics"]
 TrackSys().ExpertTracking += [ "noDrifttimes","kalmanSmoother" ]
 TrackSys().TrackPatRecAlgorithms = [ "PatSeed" ]
@@ -28,37 +28,38 @@ TrackSys().TrackExtraInfoAlgorithms = ['']
 
 RecSysConf().RecoSequence = ["TT","IT","OT","Tr"]
 
+
 # load a special database
-from Configurables import ( CondDB, CondDBAccessSvc )
-otGeom = CondDBAccessSvc( 'OTGeom' )
-otGeom.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/OTDDDBCroissant.db/DDDB'
-CondDB().addLayer( otGeom )
-otCond = CondDBAccessSvc( 'OTCond' )
-otCond.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/LHCBCOND_changes.db/LHCBCOND'
-CondDB().addLayer( otCond )
+#from Configurables import ( CondDB, CondDBAccessSvc )
+#otGeom = CondDBAccessSvc( 'OTGeom' )
+#otGeom.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/OTDDDBCroissant.db/DDDB'
+#CondDB().addLayer( otGeom )
+#otCond = CondDBAccessSvc( 'OTCond' )
+#otCond.ConnectionString = 'sqlite_file:/afs/cern.ch/user/j/janos/dbase/LHCBCOND_changes.db/LHCBCOND'
+#CondDB().addLayer( otCond )
 
 # configure the alignment
 from Configurables import TAlignment
 from TAlignment.Alignables import *
 elements = Alignables()
-elements.OTCFramesASide("TxTyTzRz")
-elements.OTCFramesCSide("TxTyTzRz")
+elements.OTCFramesASide("TxTzRz")
+elements.OTCFramesCSide("TxTzRz")
 constraints = [
-    "T1X1C : T1X1UCSide : Tx Ty Tz Rz",
-    "T1X1A : T1X1UASide : Tx Ty Tz Rz",
-    "T3X2C : T3X1UCSide : Tx Ty Tz Rz",
-    "T3X2A : T3X1UASide : Tx Ty Tz Rz"
+    "OT/T1X1C : OT/T1X1UCSide : Tx Ty Tz Rz",
+    "OT/T1X1A : OT/T1X1UASide : Tx Ty Tz Rz",
+    "OT/T3X2C : OT/T3X1UCSide : Tx Ty Tz Rz",
+    "OT/T3X2A : OT/T3X1UASide : Tx Ty Tz Rz"
     ]
 TAlignment().ElementsToAlign      = list(elements)
 TAlignment().TrackLocation        = "Rec/Track/AlignTracks"
 TAlignment().Constraints          = constraints
 TAlignment().WriteCondSubDetList  = ['OT']
 
-#from Configurables import (PatSeeding, PatSeedingTool)
-#PatSeeding = PatSeeding("PatSeeding")
-#PatSeeding.addTool( PatSeedingTool("PatSeedingTool") )
-#PatSeeding.PatSeedingTool.MaxOTOccupancy         = 0.01
-#PatSeeding.PatSeedingTool.MaxITOccupancy         = 0.01
+from Configurables import (PatSeeding, PatSeedingTool)
+PatSeeding = PatSeeding("PatSeeding")
+PatSeeding.addTool( PatSeedingTool("PatSeedingTool") )
+PatSeeding.PatSeedingTool.MaxOTOccupancy         = 0.02
+PatSeeding.PatSeedingTool.MaxITOccupancy         = 0.02
 #PatSeeding.PatSeedingTool.CommonXFraction        = 0.
 #PatSeeding.PatSeedingTool.MaxUsedFractPerRegion  = 0.
 #PatSeeding.PatSeedingTool.MaxUsedFractITOT       = 0.
