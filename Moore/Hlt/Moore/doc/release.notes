@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-11-01 - Gerhard Raven
+ - when writing configurations, remove the px from the version
+ - remove obsolete options files
+
 ! 2009-10-27 - Gerhard Raven
  - changes to support writing (stripped) DST
 

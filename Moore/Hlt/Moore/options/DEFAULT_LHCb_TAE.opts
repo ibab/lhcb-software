@@ -1,7 +1,0 @@
-#include "$MOOREOPTS/DEFAULT_TAE.opts"
-//## TODO: adapt from
-// ### @OnlineEnv.MooreVersion: Moore_v7r1
-
-HltConfigSvc.prefetchDir = "MOORE_v7r1";
-HltConfigSvc.initialTCK  = @OnlineEnv.InitialTCK;
-HltConfigSvc.checkOdin   = true;
