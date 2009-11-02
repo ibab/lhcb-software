@@ -3,6 +3,10 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+</PRE><H1><A NAME=v4r4>2009-11-02 TAlignment v4r4</A></H1><PRE>
+! 2009-11-02 Johan Blouw
+ - tagging v4r4
+
 ! 2009-10-09 - Wouter Hulsbergen
  - adapted to changes in LHCb::Track
  - adapted to changes in AlignKernel (adding first/last event time)
