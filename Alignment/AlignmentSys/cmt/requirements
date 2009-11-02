@@ -17,7 +17,7 @@ use AlignTrTools	v4r4	Alignment # Johan Blouw, Adlene Hicheur, Louis Nicolas
 use TAlignment		v4r4	Alignment # Jan Amoraal, Johan Blouw, Marc Deissenroth, Florin Maciuc
 use AlignT2Velo         v1r1    Alignment # Steve Blusk
 use VeloAlignment	v4r8	Alignment # Marco Gersabeck
-use MisAligner		v1r1	Alignment # Johan Blouw, Manuel Schiller
+use MisAligner		v1r2	Alignment # Johan Blouw, Manuel Schiller
 use Escher		v4r3	Alignment # Johan Blouw
 
 #=======================================================
