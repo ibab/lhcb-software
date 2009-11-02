@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.92 2009-11-01 11:58:08 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.93 2009-11-02 10:22:00 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -22,9 +22,10 @@ def _ext(name) :
     if x == 'MDF' : x = 'RAW'
     return x
 
-def _datafmt(pfn) : 
-    fmt = { 'RAW' : "DATAFILE='PFN:%s' SVC='LHCb::MDFSelector'"
-          , 'DST' : "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='READ'" 
+def _datafmt(fn) : 
+    pfn = 'PFN:%s' % fn if fn.find(':') == -1  else fn
+    fmt = { 'RAW' : "DATAFILE='%s' SVC='LHCb::MDFSelector'"
+          , 'DST' : "DATAFILE='%s' TYP='POOL_ROOTTREE' OPT='READ'" 
           }
     return fmt[ _ext(pfn) ] % pfn
 
@@ -66,6 +67,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableLumiEventWriting"       : True
         , "EnableTimer" :       True
         , 'EnableRunChangeHandler' : False
+        , 'WriterRequires' : []
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
         , 'RequireL0ForEndSequence'     : False
@@ -231,7 +233,7 @@ class Moore(LHCbConfigurableUser):
             importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
             from Configurables import InputCopyStream
             writer = InputCopyStream("InputCopyStream")
-            writer.RequireAlgs = [ 'Hlt1Global' ]
+            if self.getProp('WriterRequires') : writer.RequireAlgs = self.getProp('WriterRequires')
             writer.Output = "DATAFILE='PFN:%s' TYP='POOL_ROOTTREE' OPT='REC'" % fname
         if not writer : raise NameError('unsupported filetype for file "%s"'%fname)
         ApplicationMgr().OutStream.append( writer )
