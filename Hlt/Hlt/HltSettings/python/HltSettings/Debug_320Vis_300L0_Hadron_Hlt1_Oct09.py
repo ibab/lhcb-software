@@ -24,8 +24,8 @@ class Debug_320Vis_300L0_Hadron_Hlt1_Oct09 :
         return '0xFF68'
 
     def HltType(self) :
-        self.verifyType( VavaDebug )
-        return          'VavaDebug'
+        self.verifyType( Debug_320Vis_300L0_Hadron_Hlt1_Oct09 )
+        return          'Debug_320Vis_300L0_Hadron_Hlt1_Oct09'
 
     def Thresholds(self) :
         """
