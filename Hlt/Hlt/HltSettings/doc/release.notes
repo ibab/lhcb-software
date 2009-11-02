@@ -4,9 +4,12 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-02 - V. Gligorov
+ - Debug_10000Vis_1000L0_Hadron_Hlt1_Oct09.py
+   . Runs only the hadron lines with the nominal thresholds for debugging 
+
 ! 2009-10-31 - Fatima Soomro
 - added the names of B2XGamma monitoring lines to Exclusive_Nominal.py
-
 
 ! 2009-10-30 - V. Gligorov
  - Debug_320Vis_300L0_Hadron_Hlt1_Oct09.py
