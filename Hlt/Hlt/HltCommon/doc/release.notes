@@ -3,6 +3,8 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
+
+!========================== HltCommon v5r12p1 2009-11-02 ===================
 ! 2009-11-02 - Gerhard Raven
 - even if HltConfigSvc does not check ODIN, create HltDecReports with
   the 'used' TCK!
@@ -17,6 +19,7 @@
 ! 2009-10-25 - Gerhard Raven
  - more const
  - remove unused HltSelectionFilter, HltSelectionToTES and HltTriggerRawConversion
+
 
 !========================== HltCommon v5r12 2009-10-17 ===================
 ! 2009-10-12 - Gerhard Raven
