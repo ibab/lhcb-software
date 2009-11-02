@@ -174,7 +174,7 @@ StatusCode DecodePileUpData::decodePileUpBinary( const std::vector<LHCb::RawBank
 
     // fill in the data container
     unsigned int head = PuTell1::HEADERS_PER_SECTION; // skip the first 2 words (header) of the section
-    unsigned int wordTot = (aBank->size() / (2 * sizeof(uint32_t)));
+    unsigned int wordTot = (aBank->size() / ( 2 * sizeof(unsigned int) ));
     debug() << "now some prints...tot numb word is " << wordTot << endmsg;
     Fill( head, wordTot, dataPtr, PuTell1::WORDS_PER_SECTION, m_PUcontainerBee );
     counter++;
