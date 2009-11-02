@@ -3,6 +3,19 @@
 <head>
    <title>My Demo Chart</title>
    <meta name="Description" content="Generic HTML histogram page">
+
+   <!--
+   IMPORTANT NOTE:
+
+   EJSChart.js MUST be included from the same domain as this file.
+   Otherwise the different documents are not accessible from the 
+   main document!
+   This would give different results depending on the level of
+   the internet security in IE; though mostly for firefox it works.
+
+
+   DO NOT CHANGE THE PATHES OF THE INCUDED FILES BELOW!
+   -->
    <script language="javascript" src="charts/EJSChart.js"></script>
    <script language="javascript" src="http://cern.ch/frankm/test/Online/Stomp/web/lhcb.display.charts.cpp"></script>
 </head> 
