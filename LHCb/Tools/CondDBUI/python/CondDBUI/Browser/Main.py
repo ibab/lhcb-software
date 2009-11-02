@@ -21,6 +21,12 @@ def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py")
     except ParserError:
         # Ignore errors from the parser (e.g. file not found)
         pass
+    # If we can use Oracle ...
+    from os import environ as env
+    if 'CORAL_LFC_BASEDIR' in env and 'LFC_HOST' in env and not 'COOL_IGNORE_LFC' in env:
+        # ... add Oracle connection strings explicitly
+        for c in [ "CondDB/DDDB", "CondDB/LHCBCOND", "CondDB/SIMCOND", "CondDBOnline/ONLINE" ]:
+            data[c] = c
     return data
 
 ## Initialize and start the application.
@@ -36,7 +42,7 @@ def main(argv = []):
     if __versionNumber__ == "$":
         __versionNumber__ = 'HEAD version'
 
-    __versionId__  = '$Id: Main.py,v 1.5 2009-07-20 12:54:22 marcocle Exp $'.split()
+    __versionId__  = '$Id: Main.py,v 1.6 2009-11-02 19:05:57 marcocle Exp $'.split()
     if len(__versionId__) < 4:
         __versionDate__ = 'unknown'
     else:
@@ -44,6 +50,7 @@ def main(argv = []):
 
     # Initializes the Qt application
     app = QApplication(argv)
+    app.setApplicationName(app.objectName())
     app.setApplicationVersion("%s (%s)" % (__versionNumber__, __versionDate__) )
     app.setOrganizationName("LHCb")
     app.setOrganizationDomain("lhcb.cern.ch")

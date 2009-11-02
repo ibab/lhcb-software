@@ -1,9 +1,16 @@
 ! =============================================================================
-! $Id: release.notes,v 1.126 2009-10-16 14:19:01 cattanem Exp $
+! $Id: release.notes,v 1.127 2009-11-02 19:05:57 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-11-02 - Marco Clemencic
+ - Added a helper function for python with its dictionary (as a work-around for
+   a problem with dictionaries of std::map in CondDBUI.Browser).
+ - Changes in CondDBUI.Browser:
+   - added the list of recently opened COOL connection strings
+   - store settings using QSettings 
 
 !===================== Tools/CondDBUI v2r23 2009-10-16 ========================
 ! 2009-09-14 - Illya Shapoval

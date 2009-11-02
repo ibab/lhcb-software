@@ -6,6 +6,10 @@ from PyQt4.QtGui import QIcon, QApplication, QItemSelectionModel
 
 from PyCool import cool
 
+# Import the dictionary for helper functions
+import PyCintex
+Helpers = PyCintex.gbl.CondDBUI.Helpers
+
 import time
 
 __all__ = ["CondDBNodesListModel",
@@ -76,6 +80,10 @@ def report_(fn):
     return wrap
 
 
+## Small function useful to temporarily add debug printouts
+def DEBUG(*args):
+    print "DEBUG:", ", ".join(args)
+
 icons = {}
 
 ## Function to set the icons used by the models.
@@ -141,7 +149,7 @@ class CondDBStructureItem(object):
     def root(self):
         if self.parent is None:
             return self
-        return parent.root()
+        return self.parent.root()
     
     @property
     def children(self):
@@ -157,16 +165,15 @@ class CondDBStructureItem(object):
                 #        names because I cannot extract the list of keys from the map
                 #        (I do not know if it is a problem with PyROOT or a missing
                 #        dictionary in PyCool).
-                channels = self.node.listChannels()
-                names = self.node.listChannelsWithNames()
-                if len(channels) == 1 and channels[0] == 0 and not names[0]:
+                channels = Helpers.getChannelsWithNames(self.node)
+                if (len(channels) == 1) and (0 in channels) and (not channels[0]):
                     # If we have only the default channel, no need to show it
                     return self._children
                 
                 for c in channels:
                     self._children.append(CondDBStructureItem(db = self.db,
                                                               parent = self,
-                                                              name = str(names[c]) or str(c),
+                                                              name = channels[c] or str(c),
                                                               node = self.node,
                                                               channel = c))
             else:

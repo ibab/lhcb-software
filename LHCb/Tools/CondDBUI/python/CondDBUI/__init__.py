@@ -221,7 +221,7 @@ class Tag:
 #                                  CondDB Class                                         #
 #########################################################################################
 
-class CondDB:
+class CondDB(object):
     '''
     Object allowing to manipulate a COOL database object in an LHCb way.
     This object contains a functions to open or create a database. It can then be
@@ -257,6 +257,12 @@ class CondDB:
         else:
             self.openDatabase(self.connectionString, create_new_db, self.readOnly)
 
+    ## REturn representation string for the CondDB instance.
+    def __repr__(self):
+        repr = self.__class__.__name__ + "(%r" %  self.connectionString
+        if not self.defaultTag != "HEAD": repr += ",defaultTag=%r" % self.defaultTag
+        if not self.readOnly: repr += ",readOnly=False"
+        return repr + ")" 
     #---------------------------------------------------------------------------------#
 
     #=================#

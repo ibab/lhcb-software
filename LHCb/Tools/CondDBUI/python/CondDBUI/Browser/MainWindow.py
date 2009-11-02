@@ -5,7 +5,9 @@
 
 from PyQt4.QtCore import (Qt, QObject,
                           SIGNAL, SLOT,
-                          QVariant, QDateTime)
+                          QVariant, QDateTime,
+                          QSettings,
+                          QSize, QPoint)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
                          QHeaderView,
                          QLabel,
@@ -29,9 +31,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, parent = None, flags = Qt.Widget):
         # Base class constructor.
         super(MainWindow, self).__init__(parent, flags)
-        # Application name
+        # Application and organization names
         app = QApplication.instance()
-        self.appName = str(app.objectName())
+        self.appName = str(app.applicationName())
+        self.appOrg  = str(app.organizationName())
         # Preconfigured databases
         self.defaultDatabases = {} # action
         # Icons for the model (property)
@@ -43,6 +46,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Current connection string. Needed because the copy in
         # self.db has the variables expanded.
         self._connectionString = None
+        # Maximum number of entries in the list of recent databases
+        self.maxRecentEntries = 10
         # Prepare the GUI.
         self.setupUi(self)
         # --- Part of the initialization that require the GUI objects. ---
@@ -124,7 +129,50 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.showData)
         QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.showData)
+        
+        self.readSettings()
 
+    ## Store settings into the configuration file
+    def writeSettings(self):
+        settings = QSettings()
+
+        settings.beginGroup("MainWindow")
+        settings.setValue("size", QVariant(self.size()))
+        settings.setValue("pos", QVariant(self.pos()))
+        settings.endGroup()
+        
+        settings.beginWriteArray("Recent")
+        recents = self.menuRecent.actions()
+        i = 0
+        for action in recents:
+            settings.setArrayIndex(i)
+            settings.setValue("ConnString", QVariant(action.text()))
+            i += 1
+        settings.endArray()
+
+    ## Load settings from the configuration file
+    def readSettings(self):
+        settings = QSettings()
+        
+        settings.beginGroup("MainWindow");
+        self.resize(settings.value("size", QVariant(QSize(965, 655))).toSize())
+        self.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        settings.endGroup()
+        
+        size = settings.beginReadArray("Recent")
+        for i in range(size):
+            settings.setArrayIndex(i)
+            conn = settings.value("ConnString").toString()
+            action = QAction(self)
+            action.setText(conn)
+            QObject.connect(action, SIGNAL("triggered()"), self.openRecentDatabase)
+            self.menuRecent.addAction(action)
+        settings.endArray()
+
+    ## Close Event handler
+    def closeEvent(self, event):
+        self.writeSettings()
+    
     ## Fills the menu of standard databases from the connString dictionary.
     #  @see getStandardConnectionStrings()
     def setDefaultDatabases(self, connStrings):
@@ -158,6 +206,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Open the database using the connection string in the action
         self.openDatabase(str(sender.data().toString()))
 
+    ## Slot called by the actions in the menu "Database->Recent"
+    def openRecentDatabase(self):
+        sender = self.sender()
+        self.openDatabase(str(sender.text()))
+        
     ## Commodity function to enable/disable the main widget (i.e. whatever needs
     #  to be grayed out when there is no database opened.
     def _setMainViewEnabled(self, value):
@@ -167,6 +220,36 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.actionDump_to_files.setEnabled(value)
         self.actionClose.setEnabled(value)
         self.mainWidget.setEnabled(value)
+    
+    ## Add a connection string to the list of the recent opened databases
+    def _addToRecents(self, connString):
+        # do nothing if there is no connection string
+        if not connString:
+            return
+        # action to add to the menu
+        action = None
+        # check if the connection string is already in the list
+        for oldAction in self.menuRecent.actions():
+            if oldAction.text() == connString:
+                # if it is found, remove it from the list and use it as action to add
+                action = oldAction
+                self.menuRecent.removeAction(action)
+                break
+        # if the action was not found in the menu, create a new one
+        if action is None:
+            action = QAction(self)
+            action.setText(connString)
+            QObject.connect(action, SIGNAL("triggered()"), self.openRecentDatabase)
+        # if the menu is not empty
+        if self.menuRecent.actions():
+            # add the action at the beginning of the list
+            self.menuRecent.insertAction(self.menuRecent.actions()[0], action)
+            # and remove the entries exceeding the maximum
+            while len(self.menuRecent.actions()) > self.maxRecentEntries:
+                 self.menuRecent.removeAction(self.menuRecent.actions()[-1])
+        else:
+            # otherwise just add the action
+            self.menuRecent.addAction(action)
     
     ## Open the database identified by a connection string or by a nickname.
     #  If name is an empty string (or None) the result is a disconnection from the
@@ -199,7 +282,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.menuAdvanced.setEnabled(editable)
             self.actionRead_Only.setChecked(readOnly)
             # remember the used connection string
-            self._connectionString = connString 
+            self._connectionString = connString
+            self._addToRecents(connString)
             # update the DB instance of the models
             self.emit(SIGNAL("openedDB"), self.db)
         except:
