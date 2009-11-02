@@ -9,11 +9,12 @@ Purpose: LHCb Alignment packages.
 </PRE><H1><A NAME=v4r3>2009-11-02 AlignmentSys v4r3</A></H1><PRE>
 
 - Updated packages:
-	AlignKernel	v3r1	
-	AlignTrTools 	v4r4
-	TAlignment	v4r4
-	VeloAlignment	v4r8	
-	MisAligner	v1r2
+	Alignment/AlignKernel			v3r1	
+	Alignment/Alignment/AlignTrTools 	v4r4
+	Alignment/TAlignment			v4r4
+	Alignment/VeloAlignment			v4r8	
+	Alignment/MisAligner			v1r2
+	Calibration/OTCalibration 		v1r1
 
 
 

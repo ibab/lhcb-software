@@ -24,7 +24,7 @@ use Escher		v4r3	Alignment # Johan Blouw
 # LHCb Calibration packages
 #=======================================================
 
-use OTCalibration	v1r0	Calibration # Wouter Hulsbergen
+use OTCalibration	v1r1	Calibration # Wouter Hulsbergen
 
 
 # Declare this as a container package
