@@ -1,8 +1,20 @@
 !-----------------------------------------------------------------------------
 ! Package     : Online/Camera
-! Responsible : Gareth Rogers
+! Responsible : Nicola Mangiafave
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
+
+
+! 2009-11-02 - Nicola Mangiafave
+- Changed Gui layout and fonts to make it more human readable.
+  Eliminated the word "DANGER" from the CameraTool warning messages.
+
+=============== v1r10 ===============
+
+! 2009-10-15 - Nicola Mangiafave
+- Added automatic change of data directory every time the run changes. 
+  The new directory name is equal to the run number.
+
 
 =============== v1r8 ===============
 

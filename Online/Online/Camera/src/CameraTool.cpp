@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.8 2009-10-21 14:36:56 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.9 2009-11-02 12:08:29 nmangiaf Exp $
 // Include files
 
 // from Gaudi
@@ -183,12 +183,12 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
         }
         else {
           if (numErrBZ < 5){
-            warning() << "DANGER! All threads of camserv are busy!  -> Aborting message '" << ss.str() << endmsg;
+            warning() << "All threads of camserv are busy!  -> Aborting message '" << ss.str() << endmsg;
             numErrBZ++;
           }
           if (numErrBZ==5){
             
-            warning() << "DANGER! All threads of camserv are busy!  -> Aborting message '" << ss.str()<<endmsg;
+            warning() << "All threads of camserv are busy!  -> Aborting message '" << ss.str()<<endmsg;
             warning() << "Above message repeated "<<numErrBZ<<" times. Aborting further messaging of this type."<<endmsg;
             numErrBZ++;
             
@@ -203,11 +203,11 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
     
     if (!success) {
       if (numErrCN < 5){
-        warning() << "DANGER! Could not connect to any camera server! -> Aborting message '" << ss.str() << endmsg;
+        warning() << "Could not connect to any camera server! -> Aborting message '" << ss.str() << endmsg;
         numErrCN++;
       }
       else if (numErrCN==5) {
-        warning() << "DANGER! Could not connect to any camera server!  -> Aborting message '" << ss.str()<<endmsg;
+        warning() << "Could not connect to any camera server!  -> Aborting message '" << ss.str()<<endmsg;
         warning() << "Above message repeated 5 times. Aborting further messaging of this type."<<endmsg;
         numErrCN++;
       }

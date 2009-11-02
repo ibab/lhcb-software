@@ -157,7 +157,7 @@ void MessagePresenter::UpdateRight(){
         l=3;
       }
 
-       if (l==1 && !doinfo) continue;
+      if (l==1 && !doinfo) continue;
       if (l==2 && !dowarn) continue;
       if (l==3 && !doerr) continue;
 
@@ -179,11 +179,11 @@ void MessagePresenter::UpdateRight(){
       if (l==0)
         fListBox863->GetEntry(k)->SetBackgroundColor(TColor::RGB2Pixel(256,256,256));
       if (l==1)
-        fListBox863->GetEntry(k)->SetBackgroundColor(TColor::RGB2Pixel(32,220,32));
+        fListBox863->GetEntry(k)->SetBackgroundColor(Pgreen);
       if (l==2)
-        fListBox863->GetEntry(k)->SetBackgroundColor(TColor::RGB2Pixel(242,242,16));
+        fListBox863->GetEntry(k)->SetBackgroundColor(Pyellow);
       if (l==3)
-        fListBox863->GetEntry(k)->SetBackgroundColor(TColor::RGB2Pixel(230,20,20));
+        fListBox863->GetEntry(k)->SetBackgroundColor(Pred);
       k++;
 
     }
@@ -274,7 +274,7 @@ void MessagePresenter::UpdateRight(){
 
   }
 
-  //    fListBox863->Resize(576,594);
+  //  fListBox863->Resize(576,594);
   fMainFrame1933->AddFrame(fListBox863, new TGLayoutHints(kLHintsNormal));
   //  fListBox863->MoveResize(230,24,665,650);
   fListBox863->Layout();
@@ -604,11 +604,6 @@ void MessagePresenter::setup(){
 
   gStyle->SetPalette(colNum, palette);
 
-  Pred=TColor::RGB2Pixel(230,20,20);
-  Pgreen=TColor::RGB2Pixel(32,220,32);
-  Pyellow=TColor::RGB2Pixel(242,242,16);
-
-
   fTextButton659->SetState(kButtonDown);
   fTextButton699->SetState(kButtonDown);
   fTextButton514->SetState(kButtonDown);
@@ -684,33 +679,74 @@ void MessagePresenter::selectleft(){
   UpdateRight();
 
 }
-
+static const char *gFiletypes[] = { "All files",     "*",
+                                    "Portable Network Graphics",    "*.png",
+                                    "Portable Document Format",    "*.pdf",
+                                    "Encapsulated Postscript",   "*.eps",
+                                    0,               0 };
 void MessagePresenter::dumpmsg(){
   Int_t i =  fListBox863->GetSelected();
   if (i<0) return;
   
   //std::cerr << iwAlive <<std::endl;
-  
-  if (iwAlive>1){// also print png
-    //iw ->print();
-    if (iw->canvas() !=NULL)
-      iw->canvas()->Print("canvas.png");
-    if (iw->textedit() !=NULL){
-      iw->textedit()->SaveFile("details.txt");
-    }
-  }
-  
-  //  std::cerr << "Dumping to msg.txt and canvas.png"<<std::endl;
-  
-  //  std::cout << fListBox863->GetEntry(i)->GetTitle()<<std::endl;
 
-  FILE * F = fopen("msg.txt","w");
-  if (F!=NULL){
+  //static TString dir(".");
+  //std:;string 
+	static Bool_t overwr = kFALSE;
+  TGFileInfo fi;
+  fi.fFilename = StrDup(savname);
+  fi.fFileTypes = gFiletypes;
+  fi.fIniDir    = StrDup(savdir);
+  fi.fOverwrite = overwr;
+  new TGFileDialog(fClient->GetDefaultRoot(), this, kFDSave, &fi);
+  overwr = fi.fOverwrite;
+  std::string namestub;
+  if (fi.fFilename && strlen(fi.fFilename)) {
+    std::string s = fi.fFilename;
     
-    fprintf(F,"%s\n", fListBox863->GetEntry(i)->GetTitle());
-    fclose(F);
+    savdir = fi.fIniDir;
+    size_t pos2 = s.find_last_of("/\\");   
+    if (pos2!= string::npos) savname = s.substr(pos2+1);
+    std::string stext,smsg;
+
+    size_t pos = s.find_last_of(".");
+   
+    std::cout << pos <<" "<<pos2<<" "<<s.length();
+    std::cout << fi.fFilename << std::endl;
+
+
+    if ((pos2!=string::npos) && (pos2>pos)){ // no "." in name
+      stext = s+".txt";
+      smsg = s+".msg.txt";
+    }
+    else{
+      stext = s;
+      smsg = s;
+      if (pos!=string::npos){
+	stext.replace(pos,s.length()-pos,".txt");
+	smsg.replace(pos,s.length()-pos,"_msg.txt");
+      }
+      else {
+	stext = s+".txt";
+	smsg = s+".msg.txt";
+      }
+    }
+    if (iwAlive>1){// also print png
+      
+      if (iw->canvas() !=NULL)
+	iw->canvas()->Print(s.c_str());
+      
+      if (iw->textedit() !=NULL){
+	iw->textedit()->SaveFile(stext.c_str());
+      }
+    }
+    FILE * F = fopen(smsg.c_str(),"w");
+    if (F!=NULL){
+      fprintf(F,"%s\n", fListBox863->GetEntry(i)->GetTitle());
+      fclose(F);
+    }
+    
   }
-  std::cout<<"Done dumping files"<<std::endl;
 }
 
 void MessagePresenter::selectright(){
@@ -767,7 +803,13 @@ void MessagePresenter::Layout(){
 MessagePresenter::MessagePresenter():TGMainFrame()
 {
 
+  Pred=TColor::RGB2Pixel(240,50,50);
+  Pgreen=TColor::RGB2Pixel(80,255,80);
+  Pyellow=TColor::RGB2Pixel(242,242,60);
 
+
+  savdir = ".";
+  savname = "msg.png";
 
   //int   dummy_argc   = 1;
   // char *dummy_argv[] =  { "MP", NULL  };
@@ -779,123 +821,73 @@ MessagePresenter::MessagePresenter():TGMainFrame()
   savepos =-2;
 }
 void MessagePresenter::display(){
-  // main frame
-  //fMainFrame1933 = new TGMainFrame(gClient->GetRoot(),10,10,kMainFrame | kVerticalFrame);
 
   fMainFrame1933 = this;
   fMainFrame1933->SetLayoutBroken(kTRUE);
-
   fMainFrame1933->SetWindowName("CAMERA");
-
+  
   //=====================================
+  
+  TGFont *ufont;         // will reflect user font changes
+  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
+  TGGC   *uGC;           // will reflect user GC changes
+  // graphics context changes
 
-  //TGTextButton *
-  fTextButton515 = new TGTextButton(fMainFrame1933,"Clear all");
+  GCValues_t valStopped;
+  valStopped.fMask = kGCForeground | kGCBackground | kGCFillStyle | kGCFont | kGCGraphicsExposures;
+  gClient->GetColorByName("#000000",valStopped.fForeground);
+  gClient->GetColorByName("#c0c0c0",valStopped.fBackground);
+  valStopped.fFillStyle = kFillSolid;
+  valStopped.fFont = ufont->GetFontHandle();
+  valStopped.fGraphicsExposures = kFALSE;
+  uGC = gClient->GetGC(&valStopped, kTRUE);
+  // 
+
+  fTextButton515 = new TGTextButton(fMainFrame1933,"Clear all",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButton515->SetTextJustify(36);
   fTextButton515->Resize(90,24);
   fTextButton515->SetToolTipText("Remove all entries from the list");
   fMainFrame1933->AddFrame(fTextButton515, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
 
   fTextButton515->MoveResize(400,2,90,20);
-  fTextButtonDump = new TGTextButton(fMainFrame1933,"Print Msg");
+  fTextButtonDump = new TGTextButton(fMainFrame1933,"Print Msg",-1,uGC->GetGC(),ufont->GetFontStruct());
   fTextButtonDump->SetTextJustify(36);
   fTextButtonDump->Resize(90,24);
   fTextButtonDump->SetToolTipText("Remove all entries from the list");
   fMainFrame1933->AddFrame(fTextButtonDump, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButtonDump->MoveResize(600,2,90,20);
-  //   TGNumberEntry *
+
   fNumberEntry670=new TGNumberEntry(fMainFrame1933, (Double_t) 0,14,-1,(TGNumberFormat::EStyle) 0,(TGNumberFormat::EAttribute) 1);
   fMainFrame1933->AddFrame(fNumberEntry670, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fNumberEntry670->MoveResize(260,2,120,20);
   fNumberEntry670->SetNumber(50);
-  fLabel746 = new TGLabel(fMainFrame1933,"Max lines");
+  fLabel746 = new TGLabel(fMainFrame1933,"Max lines",uGC->GetGC(),ufont->GetFontStruct());
   fLabel746->SetTextJustify(36);
   fMainFrame1933->AddFrame(fLabel746, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fLabel746->MoveResize(200,2,60,20);
 
   //=====================================
-  GCValues_t valButton514;
-  GCValues_t valButton659;
-  GCValues_t valButton699;
-  GCValues_t valStopped;
-
-  fTextButton514 = new TGCheckButton(fMainFrame1933,"Errors");
-  TGFont *ufont;         // will reflect user font changes
-  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
-  TGGC   *uGC;           // will reflect user GC changes
-  // graphics context changes
-
-  // GCValues_t valButton514;
-  valButton514.fMask = kGCForeground | kGCBackground | kGCFillStyle | kGCFont | kGCGraphicsExposures;
-  gClient->GetColorByName("#ff0000",valButton514.fForeground);
-  gClient->GetColorByName("#c0c0c0",valButton514.fBackground);
-  valButton514.fFillStyle = kFillSolid;
-  valButton514.fFont = ufont->GetFontHandle();
-  valButton514.fGraphicsExposures = kFALSE;
-  uGC = gClient->GetGC(&valButton514, kTRUE);
-  //,-1,uGC->GetGC());
+  fTextButton514 = new TGCheckButton(fMainFrame1933,"Errors",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton514, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton514->MoveResize(5,0,55,17);
 
-
-
-  fstopped = new TGCheckButton(fMainFrame1933,"Update");
-  //  TGFont *ufont;         // will reflect user font changes
-  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
-  //TGGC   *uGC;           // will reflect user GC changes
-  // graphics context changes
-
-  // GCValues_t valButton514;
-  valStopped.fMask = kGCForeground | kGCBackground | kGCFillStyle | kGCFont | kGCGraphicsExposures;
-  gClient->GetColorByName("#ff0000",valStopped.fForeground);
-  gClient->GetColorByName("#c0c0c0",valStopped.fBackground);
-  valStopped.fFillStyle = kFillSolid;
-  valStopped.fFont = ufont->GetFontHandle();
-  valStopped.fGraphicsExposures = kFALSE;
-  uGC = gClient->GetGC(&valButton514, kTRUE);
-  //,-1,uGC->GetGC());
+  fstopped = new TGCheckButton(fMainFrame1933,"Update",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fstopped, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fstopped->MoveResize(400,0,55,17);
-
-
-
-
-  fTextButton659 = new TGCheckButton(fMainFrame1933,"warnings");
-  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
-
-
-  // graphics context changes
-  //=============================
-  valButton659.fMask = kGCForeground | kGCBackground | kGCFillStyle | kGCFont | kGCGraphicsExposures;
-  gClient->GetColorByName("#ffff00",valButton659.fForeground);
-  gClient->GetColorByName("#c0c0c0",valButton659.fBackground);
-  valButton659.fFillStyle = kFillSolid;
-  valButton659.fFont = ufont->GetFontHandle();
-  valButton659.fGraphicsExposures = kFALSE;
-  uGC = gClient->GetGC(&valButton659, kTRUE);
-  //,-1,uGC->GetGC());
+  
+  fTextButton659 = new TGCheckButton(fMainFrame1933,"warnings",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton659, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton659->MoveResize(75,0,72,17);
-  fTextButton699 = new TGCheckButton(fMainFrame1933,"info");
-  ufont = gClient->GetFont("-adobe-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1");
-  //====================================================================================================
-  // graphics context changes
-  valButton699.fMask = kGCForeground | kGCBackground | kGCFillStyle | kGCFont | kGCGraphicsExposures;
-  gClient->GetColorByName("#00ff00",valButton699.fForeground);
-  gClient->GetColorByName("#c0c0c0",valButton699.fBackground);
-  valButton699.fFillStyle = kFillSolid;
-  valButton699.fFont = ufont->GetFontHandle();
-  valButton699.fGraphicsExposures = kFALSE;
-  uGC = gClient->GetGC(&valButton699, kTRUE);
-  //,-1,uGC->GetGC());
+  
+  fTextButton699 = new TGCheckButton(fMainFrame1933,"info",-1,uGC->GetGC(),ufont->GetFontStruct());
   fMainFrame1933->AddFrame(fTextButton699, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
   fTextButton699->MoveResize(145,0,42,17);
 
   //========================================================================================================
   // list box
+  
   fListBox816 = new TGListBox(fMainFrame1933,-1,kSunkenFrame);
   fListBox816->AddEntry("Hello",0);
-  //   fListBox816->Resize(216,650);
   fMainFrame1933->AddFrame(fListBox816, new TGLayoutHints(kLHintsLeft | kLHintsTop,2,2,2,2));
 
   fListBox816->MoveResize(5,24,220,650);
@@ -904,12 +896,8 @@ void MessagePresenter::display(){
 
   // list box
   fListBox863 = new TGListBox(fMainFrame1933,-1,kSunkenFrame);
-  //fListBox863->AddEntry("Message Presenter",0);
-  // fListBox863->Resize(665,650);
   fMainFrame1933->AddFrame(fListBox863, new TGLayoutHints(kLHintsNormal));
   fListBox863->MoveResize(230,24,665,650);
-
-
 
   fStatusBar528 = new TGStatusBar(fMainFrame1933,700-24,24);
 
@@ -1080,9 +1068,10 @@ int main(int /* argc */, char ** argv){
   
   int   dummy_argc   = 1;
   char *dummy_argv[] =  { "MP", NULL  };
+
+
   TApplication * TApp = 
     new TApplication("MessagePresenter",&dummy_argc,dummy_argv);
-
   MessagePresenter mp;//(NULL,100,100);
   mp.display();
   //mp.messageloop(argv[1],argv[2]);

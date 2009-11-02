@@ -1,0 +1,11 @@
+# GUI specific settings.
+# If runCameraGui.sh is sourched in the same directory of .rootrc,
+# these fonts are set. These fonts make the camera Gui more human readable.
+
+Gui.NormalFont:        -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1
+Gui.BoldFont:          -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1
+Gui.SmallFont:         -adobe-helvetica-bold-r-*-*-12-*-*-*-*-*-iso8859-1
+Gui.ProportionalFont:  -adobe-courier-medium-r-*-*-12-*-*-*-*-*-iso8859-1
+Gui.MenuFont:             -*-helvetica-medium-r-*-*-12-*-*-*-*-*-iso8859-1
+Gui.DefaultFont:            -*-helvetica-bold-r-*-*-14-*-*-*-*-*-iso8859-1
+

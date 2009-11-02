@@ -32,7 +32,7 @@
 
 
 #include "display.h"
-
+#include <TString.h>
 class MessagePresenter: public  TGMainFrame{
  
   InfoWindow *iw;
@@ -52,7 +52,8 @@ class MessagePresenter: public  TGMainFrame{
  public:
   void display();
 private:  
- 
+  TString savdir;//(".");
+  TString savname;//(".");
   void Layout();
   int GetXtra(std::string str, std::string &);
   
