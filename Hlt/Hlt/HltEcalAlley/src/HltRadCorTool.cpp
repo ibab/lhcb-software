@@ -1,4 +1,4 @@
-// $Id: HltRadCorTool.cpp,v 1.3 2009-10-29 08:25:06 pkoppenb Exp $
+// $Id: HltRadCorTool.cpp,v 1.4 2009-11-02 07:42:24 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -28,9 +28,9 @@ HltRadCorTool::HltRadCorTool( const std::string& type,
                 const std::string& name,
                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+    , m_detector(0)
     , m_tool(0)
     , m_tool1(0)
-    , m_detector(0)
 {
   declareProperty("temporaryFix", m_temporaryFix = true);
   declareInterface<ITracksFromTrack>(this);

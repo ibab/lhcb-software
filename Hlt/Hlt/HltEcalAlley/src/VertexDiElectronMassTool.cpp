@@ -1,4 +1,4 @@
-// $Id: VertexDiElectronMassTool.cpp,v 1.3 2009-08-18 12:48:47 witekma Exp $
+// $Id: VertexDiElectronMassTool.cpp,v 1.4 2009-11-02 07:42:24 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -81,5 +81,4 @@ double VertexDiElectronMassTool::function(const RecVertex& vertex)
   double m = 0;
   if(m2>0.) m = sqrt(m2); 
   return m;
-} 
-
+}

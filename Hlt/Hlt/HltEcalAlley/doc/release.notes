@@ -4,6 +4,9 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+! 2009-11-02 - Gerhard Raven
+ - fix compiler warnings
+
 !========================== HltEcalAlley v2r1 2009-10-28 ===================
 ! 2009-10-29 - Patrick Koppenburg
  - Initialize all global variables

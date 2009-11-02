@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.11 2009-10-29 08:25:06 pkoppenb Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.12 2009-11-02 07:42:24 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -25,8 +25,8 @@ HltIsPhotonTool::HltIsPhotonTool( const std::string& type,
                                   const std::string& name,
                                   const IInterface* parent )
   : GaudiTool ( type, name , parent )
-    , m_tool(0)
     , m_detector(0)
+    , m_tool(0)
     , m_tool1(0)
 {
   // just a safeguard against crazy clusters
@@ -427,8 +427,5 @@ void HltIsPhotonTool::caloClusterShapeVariables(const LHCb::CaloCluster *cluster
   //  std::cout << "fr2r4 " << fr2r4 << std::endl;    
 
   ///
-  return;
-
-
 }
 
