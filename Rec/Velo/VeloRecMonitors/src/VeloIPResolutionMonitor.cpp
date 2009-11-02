@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.10 2009-11-02 00:52:55 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.11 2009-11-02 01:37:13 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -561,7 +561,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
 
         // fill histos of residuals of the 1/PT parametrisation as a fn. of eta and phi 
         if( m_calcResiduals ){
-          if( m_useLogScale ) inversePT = pow( 10., inversePT );
+          if( m_useLogScale ) inversePT = pow( (double)10., inversePT );
           m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT
                                     - m_res3Dquad * inversePT * inversePT );
           m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT 
