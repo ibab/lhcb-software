@@ -3,6 +3,9 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-11-02 - Serena Oggero
+ - bug fix in DecodePileUpData (switched to unsigned int)
+
 ! 2009-10-30 - Serena Oggero
  - bug fix in DecodePileUpData: there were some StatusCode FAILURE resulting
    in a crash when the Event was not retreived from the right location
