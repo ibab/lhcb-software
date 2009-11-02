@@ -3,6 +3,9 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v8r0p1>2009-11-02 Moore v8r0p1</A></H1><PRE>
+Minimal changes needed for L0xHlt stripping
+
 </PRE><H1><A NAME=v8r0>2009-10-21 Moore v8r0</A></H1><PRE>
 Based on Hlt v7r0, Phys v8r10, Lbcom v7r6, Rec v7r6 en Online v4r29.
 
