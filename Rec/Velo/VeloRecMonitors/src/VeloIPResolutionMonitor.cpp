@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.11 2009-11-02 01:37:13 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.12 2009-11-02 22:27:48 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -224,8 +224,8 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
       limit3D = m_limitFactor * ( m_limitGradient3D * (float)m_bins[ i+1 ] + m_limitIntercept3D );
     }
     else{
-      limit1D = m_limitFactor * ( m_limitGradient1D * pow( 10., (float)m_bins[ i+1 ] ) + m_limitIntercept1D );
-      limit3D = m_limitFactor * ( m_limitGradient3D * pow( 10., (float)m_bins[ i+1 ] ) + m_limitIntercept3D );
+      limit1D = m_limitFactor * ( m_limitGradient1D * pow( (float)10., (float)m_bins[ i+1 ] ) + m_limitIntercept1D );
+      limit3D = m_limitFactor * ( m_limitGradient3D * pow( (float)10., (float)m_bins[ i+1 ] ) + m_limitIntercept3D );
     }
 
     // if underlying histograms are to be saved, the histograms for each bin are booked and pointers to the underlying 
@@ -901,7 +901,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
 
     quad->SetParameters( m_h_GaussWidthVsInversePT_X->GetMinimum(),
                          ( m_h_GaussWidthVsInversePT_X->GetMaximum() - m_h_GaussWidthVsInversePT_X->GetMinimum() )
-                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10., (float)m_bins[0])),
+                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10., (float)m_bins[0])),
                          0 );
     m_h_GaussWidthVsInversePT_X->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_X resolution:" << endmsg;
@@ -912,7 +912,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
     
     quad->SetParameters( m_h_GaussWidthVsInversePT_Y->GetMinimum(),
                          ( m_h_GaussWidthVsInversePT_Y->GetMaximum() - m_h_GaussWidthVsInversePT_Y->GetMinimum() )
-                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10.,(float)m_bins[0])),
+                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10.,(float)m_bins[0])),
                          0 );
     m_h_GaussWidthVsInversePT_Y->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_Y resolution:" << endmsg;
@@ -924,7 +924,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
     quad->SetParameters( m_h_MeanVsInversePT_unsigned3D->GetMinimum(),
                          ( m_h_MeanVsInversePT_unsigned3D->GetMaximum() 
                            - m_h_MeanVsInversePT_unsigned3D->GetMinimum() )
-                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10., (float)m_bins[0])),
+                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10., (float)m_bins[0])),
                          0 );
     m_h_MeanVsInversePT_unsigned3D->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_3D resolution:" << endmsg;
