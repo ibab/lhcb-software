@@ -67,7 +67,7 @@
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
                                                    Welcome to Brunel version v35r7
-                                          running on lxbuild156.cern.ch on Fri Oct 30 17:48:16 2009
+                                          running on lxbuild156.cern.ch on Mon Nov  2 10:29:25 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -79,7 +79,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.16 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -175,7 +175,6 @@ TrackForwardFitSeq   INFO Member list: TrackStateInitAlg/InitForwardFit, TrackEv
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT Bdl LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT Bdl LUTs finished
 ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
-ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
 ToolSvc.TrackSt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 ToolSvc.TrackSt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
@@ -222,6 +221,7 @@ FitSeed              INFO   Fitter name              : TrackMasterFitter/Fitter
 FitSeed              INFO ==================================================
 FitSeed              INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
+ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 TrackMatchFitSeq     INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/FitMatch, with context 'Offline'
 FitMatch.Fitter...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 FitMatch.Fitter...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
@@ -814,7 +814,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.16 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.86 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1101,7 +1101,6 @@ StatusCodeSvc        INFO listing all unchecked return codes:
 StatusCodeSvc        INFO
 Num | Function                       | Source Library
 ----+--------------------------------+------------------------------------------
-  3 | EcalEnergyForTrack::EcalEnergyForTrack(std::string const&, std::string const&, IInterface const*) | libCaloPIDs.so
   1 | EventLoopMgr::nextEvent(int)   | libGaudiSvc.so
 
 ApplicationMgr       INFO Application Manager Finalized successfully
