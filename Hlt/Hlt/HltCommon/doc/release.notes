@@ -3,7 +3,9 @@
 ! Responsible : Gerhard Raven
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
-
+! 2009-11-02 - Gerhard Raven
+- even if HltConfigSvc does not check ODIN, create HltDecReports with
+  the 'used' TCK!
 
 !========================== HltCommon v5r13 2009-10-28 ===================
 ! 2009-10-28 - Gerhard Raven

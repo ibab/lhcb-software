@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.cpp,v 1.34 2009-09-07 21:13:25 graven Exp $
+// $Id: HltConfigSvc.cpp,v 1.35 2009-11-02 08:56:57 graven Exp $
 // Include files 
 
 #include <algorithm>
@@ -125,15 +125,13 @@ StatusCode HltConfigSvc::initialize() {
   if (!m_decodeOdin.retrieve().isSuccess()) return StatusCode::FAILURE;
 
 
-  if (m_checkOdin) {
-      if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) return StatusCode::FAILURE;
-      // add listener to be triggered by first BeginEvent with low priority
-      // so it gets called first
-      bool rethrow = false;
-      bool oneShot = false;
-      m_incidentSvc->addListener(this,IncidentType::BeginEvent,
-                                 std::numeric_limits<long>::min(),rethrow,oneShot);
-  }
+  if (!service( "IncidentSvc", m_incidentSvc).isSuccess()) return StatusCode::FAILURE;
+  // add listener to be triggered by first BeginEvent with low priority
+  // so it gets called first
+  bool rethrow = false;
+  bool oneShot = false;
+  m_incidentSvc->addListener(this,IncidentType::BeginEvent,
+                             std::numeric_limits<long>::min(),rethrow,oneShot);
 
   
   // load all TCKs... (brute force, but OK for now...)
@@ -283,7 +281,9 @@ void HltConfigSvc::checkOdin() {
             return;
         }
     }
+}
 
+void HltConfigSvc::createHltDecReports() {
     std::auto_ptr<LHCb::HltDecReports> hdr( new LHCb::HltDecReports() );
     hdr->setConfiguredTCK(m_configuredTCK.uint());
     hdr->setTaskID(m_id);
@@ -292,5 +292,6 @@ void HltConfigSvc::checkOdin() {
 
 void HltConfigSvc::handle(const Incident& /*incident*/) {
      //dummyCheckOdin();
-    checkOdin();
+    if (m_checkOdin) checkOdin();
+    createHltDecReports();
 }

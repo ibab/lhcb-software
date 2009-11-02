@@ -1,4 +1,4 @@
-// $Id: HltConfigSvc.h,v 1.15 2009-08-06 12:41:52 graven Exp $
+// $Id: HltConfigSvc.h,v 1.16 2009-11-02 08:56:57 graven Exp $
 #ifndef HLTCONFIGSVC_H 
 #define HLTCONFIGSVC_H 1
 
@@ -40,6 +40,7 @@ public:
 private:
   void dummyCheckOdin();
   void checkOdin();
+  void createHltDecReports();
 
    void updateMap(Property&);
    void updateInitial(Property&);
