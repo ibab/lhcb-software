@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.24 2009-05-04 14:57:09 ocallot Exp $
+// $Id: XmlGenericCnv.cpp,v 1.25 2009-11-02 12:38:41 cattanem Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -263,7 +263,9 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
         xercesc::XMLString::release(&nameString);
         if (element != NULL) {
           if ( mustSubstitute ) {
-            element->setAttribute( serialNumberString, xercesc::XMLString::transcode( numeral.c_str() ) );
+            XMLCh* tempString = xercesc::XMLString::transcode( numeral.c_str() );
+            element->setAttribute( serialNumberString, tempString );
+            xercesc::XMLString::release(&nameString);
           }
           try {
             // deal with the node found itself
@@ -358,13 +360,11 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
 
   // fills the object with its children
   // gets the children
-  xercesc::DOMNodeList* childList = element->getChildNodes();
   // scans them
-  unsigned int i;
-  for (i = 0; i < childList->getLength(); i++) {
-    if (childList->item(i)->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
+  xercesc::DOMNode* childNode = element->getFirstChild();
+  while (childNode) {
+    if (childNode->getNodeType() == xercesc::DOMNode::ELEMENT_NODE) {
       // gets the current child
-      xercesc::DOMNode* childNode = childList->item(i);
       xercesc::DOMElement* childElement = (xercesc::DOMElement*) childNode;
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(childElement, refpObject, address);
@@ -375,10 +375,9 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
                 << dom2Std (childElement->getNodeName())
                 << endmsg;
       }
-    } else if (childList->item(i)->getNodeType() ==
+    } else if (childNode->getNodeType() ==
                xercesc::DOMNode::TEXT_NODE) {
       // gets the current child
-      xercesc::DOMNode* childNode = childList->item(i);
       xercesc::DOMText* textNode = (xercesc::DOMText*) childNode;
       // calls fill_obj on it
       StatusCode sc2 = converter->i_fillObj(textNode, refpObject, address);
@@ -390,6 +389,7 @@ StatusCode XmlGenericCnv::internalCreateObj (xercesc::DOMElement* element,
             << endmsg;
       }     
     }
+    childNode = childNode->getNextSibling();
   }
   
   // ends up the object construction

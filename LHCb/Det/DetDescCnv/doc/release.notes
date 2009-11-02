@@ -4,6 +4,13 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2009-11-02 - Marco Cattaneo
+ - Apply patch #3399 XmlGenericCnv uses inneficient part of Xerces-C API for DOM
+   walking. Speeds up loading LHCb geometry by about 10%
+ - Fix a memory leak in XmlGenericCnv.cpp
+ - Replace all endreq by endmsg
+ - Remove obsolete file src/component/DetDescCnv_dll.cpp
+
 !================ DetDescCnv v4r9 2009-05-06 ==================================
 ! 2009-05-04 - Olivier Callot
  - Create a MsgStream in XmlGenericCnv in initialize(), add methods to print like
