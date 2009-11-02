@@ -5,7 +5,39 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v3r6 2009-10-08 =========================
+!=========================== LbMIB v4r0 2009-11-02 =========================
+! 2009-11-02 - Magnus LIENG
+ - Removed option files related to CollimatorSource
+   . MIB-BeamGasStartupNoShield.opts
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+ - Removed script files related to CollimatorSource
+   . scripts/beamgas2mib_opts.py
+   . scripts/beamgas2mib.py
+   . scripts/mibplotter.py
+   . python/LbMIB/gasmap.py
+   . python/LbMIB/plotter.py
+ - Removed data files related to CollimatorSource
+   . data/GasEstimates-1996.csv
+   . data/GasEstimates-2001-y3d90.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed-endmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed-startmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup-endmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup-startmap.csv
+ - Changed TimeCorrSource example to python options
+   . TimeCorr-Example.opts -> MIB-Example.py
+
+! 2009-10-29 - Magnus LIENG
+ - Added global time offset option
+   . TimeCorrSource.cpp
+   . TimeCorrSource.cpp
+ - Removed CollimatorSource. Functionality contained in TimeCorrSource
+   . CollimatorSource.cpp
+   . CollimatorSource.h
+
 ! 2009-10-08 - Magnus LIENG
  - Fixed SumOfWeight value
  - Fixed Timing issue for Beam 2 sources

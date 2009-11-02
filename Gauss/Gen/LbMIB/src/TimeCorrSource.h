@@ -82,6 +82,9 @@ private:
   int m_pPerEvt;
   int m_fileOffset;
 
+  /// Timing
+  double m_timeOffset;
+  
   /// Random number generators
   Rndm::Numbers m_flatGenerator;
   Rndm::Numbers m_poissonGenerator;

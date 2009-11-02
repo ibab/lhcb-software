@@ -3,11 +3,11 @@
 # Maintainer : Magnus Lieng, Gloria Corti
 #============================================================================
 package           LbMIB
-version           v3r6
+version           v4r0
 
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options python scripts data
+branches          cmt doc src options scripts
 
 # Used packages.
 #============================================================================

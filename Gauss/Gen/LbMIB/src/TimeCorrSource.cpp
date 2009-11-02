@@ -1,4 +1,4 @@
-// $Id: TimeCorrSource.cpp,v 1.6 2009-10-08 21:30:33 mlieng Exp $
+// $Id: TimeCorrSource.cpp,v 1.7 2009-11-02 14:50:16 mlieng Exp $
 // Include files
  
 // from Gaudi
@@ -49,8 +49,8 @@ TimeCorrSource::TimeCorrSource(const std::string& type,
 
   // Scaling factors
   declareProperty("ScalingFactor", m_scalingFactor = 1.0);
-  declareProperty("TimeOfFile", m_timeOfFile = 1.0);
-  declareProperty("BunchFrequency", m_bunchFreq = 31.6*1000000);
+  declareProperty("TimeOfFile", m_timeOfFile = 1.0*Gaudi::Units::s);
+  declareProperty("BunchFrequency", m_bunchFreq = 31.6*1000000*Gaudi::Units::hertz);
   declareProperty("BeamEnergy", m_beamEnergy = 7.0*Gaudi::Units::TeV);
 
   // Histogram generation
@@ -72,6 +72,8 @@ TimeCorrSource::TimeCorrSource(const std::string& type,
   declareProperty("ZParticleGen", m_zGen = -1.0*Gaudi::Units::m);
   declareProperty("ZDirection", m_dz = 1);
 
+  // Global timing offset
+  declareProperty("TimeOffset", m_timeOffset = 0.0*Gaudi::Units::ns);
 
 }
 
@@ -317,10 +319,10 @@ StatusCode TimeCorrSource::finalize() {
   if( m_pPerEvt == -1 ) {
     info() << " Using weight to find number of particles in event" << endmsg;
     info() << " Sum(weights) of events in file is " << m_sumOfWeights << endmsg;
-    info() << " The file represents " << m_timeOfFile << " seconds" << endmsg; 
-    info() << " The resulting weights is " << m_sumOfWeights / m_timeOfFile 
+    info() << " The file represents " << m_timeOfFile/Gaudi::Units::s << " seconds" << endmsg; 
+    info() << " The resulting weights is " << m_sumOfWeights / m_timeOfFile *Gaudi::Units::hertz
            << " Hz (i.e. per 1 sec of LHC running)" << endmsg;
-    info() << " Events are generate per bunch with frequency " << m_bunchFreq
+    info() << " Events are generate per bunch with frequency " << m_bunchFreq/Gaudi::Units::hertz
            << " Hz and scaling factor " << m_scalingFactor << endmsg;
     info() << "  === Average num of MIB events per generated event is "
            <<  m_sumOfWeights * m_scalingFactor / m_bunchFreq / m_timeOfFile << endmsg;
@@ -466,7 +468,7 @@ HepMC::FourVector TimeCorrSource::getVertex(double ekin, int pid,
   double partAtIntPlaneClock = dt + protonAtIntPlaneClock;
 
   // Time at which the particle has to start. (If generation point an interface plane are not the same.)
-  double partAtGenClock = partAtIntPlaneClock + m_dz*(m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz);
+  double partAtGenClock = partAtIntPlaneClock + m_dz*(m_zGen-m_zOrigin)*sqrt(1/(1-1/pow(1+ekin/mass,2)))/(Gaudi::Units::c_light*dz) + m_timeOffset;
   
   const HepMC::FourVector vtx( x, y, m_zGen, partAtGenClock); 
   
