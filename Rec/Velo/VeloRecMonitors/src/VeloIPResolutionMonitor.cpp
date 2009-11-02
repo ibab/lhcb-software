@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.9 2009-10-22 16:26:46 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.10 2009-11-02 00:52:55 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -70,21 +70,21 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
 
   // Set whether to save the underlying histograms used to make the plots of fit results
   declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=false);
-  declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 6.525937e-03 );
-  declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 1.947187e-02 );
-  declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 8.524237e-03 );
-  declareProperty("UnderlyingHistosLimitGradient3D", m_limitGradient3D = 2.690075e-02 );
+  declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 6.525937e-03F );
+  declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 1.947187e-02F );
+  declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 8.524237e-03F );
+  declareProperty("UnderlyingHistosLimitGradient3D", m_limitGradient3D = 2.690075e-02F );
   declareProperty("UnderlyingHistosLimitFactor", m_limitFactor = 10. );
 
   // Set whether to calculate residuals as a fn. of eta and phi compared to the 1/PT parametrisation
   // and which gradient & y intercept values to use
   declareProperty("CalcResiduals", m_calcResiduals = true );
-  declareProperty("ResidualsYIntercept1D", m_res1DyIntercept = 6.160529e-03 );
-  declareProperty("ResidualsGradient1D",m_res1Dgrad = 2.018678e-02 );
-  declareProperty("ResidualsQuad1D",m_res1Dquad = -2.288513e-04 );
-  declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 8.680847e-03 );
-  declareProperty("ResidualsLinear3D", m_res3Dgrad = 2.656325e-02 );
-  declareProperty("ResidualsQuad3D", m_res3Dquad = 1.135474e-04 );
+  declareProperty("ResidualsYIntercept1D", m_res1DyIntercept = 6.160529e-03F );
+  declareProperty("ResidualsGradient1D",m_res1Dgrad = 2.018678e-02F );
+  declareProperty("ResidualsQuad1D",m_res1Dquad = -2.288513e-04F );
+  declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 8.680847e-03F );
+  declareProperty("ResidualsLinear3D", m_res3Dgrad = 2.656325e-02F );
+  declareProperty("ResidualsQuad3D", m_res3Dquad = 1.135474e-04F );
 
   // Set whether to use the MC PV associated to each track instead of the rec. PV
   /*declareProperty("CheckTrackMCAssociation", m_checkAssoc = false );
@@ -220,12 +220,12 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     float limit1D;
     float limit3D;
     if ( !m_useLogScale ){
-      limit1D = m_limitFactor * ( m_limitGradient1D * m_bins[ i+1 ] + m_limitIntercept1D );
-      limit3D = m_limitFactor * ( m_limitGradient3D * m_bins[ i+1 ] + m_limitIntercept3D );
+      limit1D = m_limitFactor * ( m_limitGradient1D * (float)m_bins[ i+1 ] + m_limitIntercept1D );
+      limit3D = m_limitFactor * ( m_limitGradient3D * (float)m_bins[ i+1 ] + m_limitIntercept3D );
     }
     else{
-      limit1D = m_limitFactor * ( m_limitGradient1D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept1D );
-      limit3D = m_limitFactor * ( m_limitGradient3D * pow( 10, m_bins[ i+1 ] ) + m_limitIntercept3D );
+      limit1D = m_limitFactor * ( m_limitGradient1D * pow( 10., (float)m_bins[ i+1 ] ) + m_limitIntercept1D );
+      limit3D = m_limitFactor * ( m_limitGradient3D * pow( 10., (float)m_bins[ i+1 ] ) + m_limitIntercept3D );
     }
 
     // if underlying histograms are to be saved, the histograms for each bin are booked and pointers to the underlying 
@@ -561,7 +561,7 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
 
         // fill histos of residuals of the 1/PT parametrisation as a fn. of eta and phi 
         if( m_calcResiduals ){
-          if( m_useLogScale ) inversePT = pow( 10, inversePT );
+          if( m_useLogScale ) inversePT = pow( 10., inversePT );
           m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT
                                     - m_res3Dquad * inversePT * inversePT );
           m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT 
@@ -901,7 +901,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
 
     quad->SetParameters( m_h_GaussWidthVsInversePT_X->GetMinimum(),
                          ( m_h_GaussWidthVsInversePT_X->GetMaximum() - m_h_GaussWidthVsInversePT_X->GetMinimum() )
-                         / (pow(10, m_bins[m_nBins-1]) - pow(10, m_bins[0])),
+                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10., (float)m_bins[0])),
                          0 );
     m_h_GaussWidthVsInversePT_X->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_X resolution:" << endmsg;
@@ -912,7 +912,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
     
     quad->SetParameters( m_h_GaussWidthVsInversePT_Y->GetMinimum(),
                          ( m_h_GaussWidthVsInversePT_Y->GetMaximum() - m_h_GaussWidthVsInversePT_Y->GetMinimum() )
-                         / (pow(10, m_bins[m_nBins-1]) - pow(10,m_bins[0])),
+                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10.,(float)m_bins[0])),
                          0 );
     m_h_GaussWidthVsInversePT_Y->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_Y resolution:" << endmsg;
@@ -924,7 +924,7 @@ StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
     quad->SetParameters( m_h_MeanVsInversePT_unsigned3D->GetMinimum(),
                          ( m_h_MeanVsInversePT_unsigned3D->GetMaximum() 
                            - m_h_MeanVsInversePT_unsigned3D->GetMinimum() )
-                         / (pow(10, m_bins[m_nBins-1]) - pow(10, m_bins[0])),
+                         / (pow(10., (float)m_bins[m_nBins-1]) - pow(10., (float)m_bins[0])),
                          0 );
     m_h_MeanVsInversePT_unsigned3D->Fit( quad, "QN" );
     info() << "Results of quadratic fit to IP_3D resolution:" << endmsg;
