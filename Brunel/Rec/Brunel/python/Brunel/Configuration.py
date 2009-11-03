@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.99 2009-10-30 17:13:09 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.100 2009-11-03 11:28:13 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -18,7 +18,8 @@ from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
 class Brunel(LHCbConfigurableUser):
 
     ## Possible used Configurables
-    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, RichRecQCConf, LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, RichRecQCConf,
+                               LHCbApp, DstConf, LumiAlgsConf, L0Conf ]
 
     ## Default init sequences
     DefaultInitSequence     = ["Reproc", "Brunel"]
@@ -145,11 +146,14 @@ class Brunel(LHCbConfigurableUser):
 
         if withMC:
             # Create associators for checking and for DST
-            from Configurables import ProcessPhase
+            from Configurables import ProcessPhase, DataOnDemandSvc
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
-            GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
-                                                            "UnpackMCVertex" ]
+            # CRJ : Don't explicitly run, to handle case when they are not packed on DIGI file
+            #       Instead use DoD
+            #GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
+            #                                                "UnpackMCVertex" ]
+            ApplicationMgr().ExtSvc += [ DataOnDemandSvc() ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
             # activate all configured checking (uses MC truth)

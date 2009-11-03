@@ -3,6 +3,9 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+! 2009-11-03 - Christopher Rob Jones
+ - Adapt to Configurable changes in GaudiConf
+
  - Changes to Configurable:
    . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
      sequencing of Calo truth associators when running Calo checkers. 
