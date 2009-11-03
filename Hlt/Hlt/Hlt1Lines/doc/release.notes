@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.47 2009-10-30 14:23:25 gligorov Exp $
+! $Id: release.notes,v 1.48 2009-11-03 14:01:33 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-03 - V. Gligorov
+ - HltHadronLines.py
+   . Bind the confirmation stage so that it is only run once for the single and
+     dihadron lines.
 
 ! 2009-10-30 - V. Gligorov
  - HltHadronLines.py

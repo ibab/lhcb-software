@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.10 2009-10-30 14:27:18 gligorov Exp $
+# $Id: HltHadronLines.py,v 1.11 2009-11-03 14:00:28 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hadron Lines
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.10 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -134,7 +134,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                                HistoDescriptor  = histosfilter('PT',0.,8000.,200)
                                )
                     ]
-            return conf
+            return bindMembers('HadronConfirmation'+type, conf)
         
         # simple hadron cut
         #---------------
@@ -157,12 +157,13 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         #------------------------------------
         def companion(type=""):
             IP2Cut = _cut(type+"HadDi_IPCut")
+            OutputOfConfirmation = confirmation(type).outputSelection()
             comp = [ RZVelo , PV2D.ignoreOutputSelection()
                 , Member ( 'TU', 'UVelo' , RecoName = 'Velo')
                 , Member ( 'TF', '1UVelo'
-                           , FilterDescriptor = ['MatchIDsFraction_%TFConfirmed,<,0.9' ]
+                           , FilterDescriptor = ['MatchIDsFraction_%s,<,0.9' %OutputOfConfirmation ]
                            , HistogramUpdatePeriod = 1
-                           , HistoDescriptor  = histosfilter('MatchIDsFraction_%TFGuidedForward',0.,8000.,200)
+                           , HistoDescriptor  = histosfilter('MatchIDsFraction_%s' %OutputOfConfirmation,0.,8000.,200)
                            )
                 , Member ( 'TF', 'Companion'
                            , FilterDescriptor = [ 'IP_PV2D,||>,'+IP2Cut]
@@ -176,10 +177,11 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
         # dihadron part
         #---------------------
         def dihadron(type=""):
-            PT2Cut = _cut(type+"HadCompanion_PTCut")
+            PT2Cut = _cut("HadCompanion_PTCut")
+            OutputOfConfirmation = confirmation(type).outputSelection()
             dih = [ PV2D.ignoreOutputSelection()
                 , Member ( 'TF' , 'DiHadronIP' ,
-                            InputSelection = '%TFConfirmed',
+                            InputSelection = '%s' %OutputOfConfirmation,
                             FilterDescriptor = [ 'IP_PV2D,||>,'+ _cut(type+"HadDi_IPCut")],
                             HistogramUpdatePeriod = 1,
                             HistoDescriptor = histosfilter('IP_PV2D',-0.2,1.8,200)
@@ -254,7 +256,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
                , prescale = self.prescale
                , postscale = self.postscale
                , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-               , algos = confirmation()+singlehadron()+afterburn()
+               , algos = [confirmation()]+singlehadron()+afterburn()
                )
 
         # DiHadron Line
@@ -263,7 +265,7 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
               , prescale = self.prescale
               , postscale = self.postscale
               , L0DU  = "L0_CHANNEL('"+_cut("L0Channel")+"')"
-              , algos =  confirmation()+companion()+dihadron()+vafterburn()
+              , algos =  [confirmation()]+companion("")+dihadron()+vafterburn()
               )
 
         # Soft DiHadron Line
@@ -272,5 +274,5 @@ class HltHadronLinesConf(HltLinesConfigurableUser) :
              , prescale = self.prescale
              , postscale = self.postscale
              , L0DU = "L0_ALL"
-             , algos = confirmation('Soft')+companion()+dihadron()+vafterburn()
+             , algos = [confirmation('Soft')]+companion('Soft')+dihadron('Soft')+vafterburn('Soft')
              )
