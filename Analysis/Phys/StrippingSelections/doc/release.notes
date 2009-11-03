@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-03 - Marco Gersabeck
+ - Added StrippingD2hhNoPID.py
+
 ! 2009-11-03 - Celestino Rodriguez
  - Added StrippingBs2Kst0Kst0.py
 
