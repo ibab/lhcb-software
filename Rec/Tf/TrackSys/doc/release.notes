@@ -3,6 +3,8 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+! 2009-11-03 - Stephanie Hansmann-Menzemer
+ - automatic settings for cosmic reconstruction in Configurables
 
 !============================ TrackSys v4r26 2009-10-20 ======================
 ! 2009-10-07 - Johannes Albrecht

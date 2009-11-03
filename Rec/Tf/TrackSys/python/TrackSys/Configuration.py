@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.11 2009-09-01 13:51:41 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.12 2009-11-03 12:26:28 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -32,16 +32,27 @@ class TrackSys(LHCbConfigurableUser):
     DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run
     DefaultExtraInfoAlgorithms = ["CloneFlagging","TrackLikelihood","GhostProbability"]
-
+    ## Cosmic track pattern recognition algorithms to run
+    CosmicPatRecAlgorithms    = ["PatSeed"]
+    ## Cosmic expert swithces
+    CosmicExpertTracking      = ["noDrifttimes"] 
+            
     ## @brief Check the options are sane etc.
     def defineOptions(self):
-        if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
-            self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
-        if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
-            self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
-        for prop in self.getProp("ExpertTracking"):
-            if prop not in self.KnownExpertTracking:
-                raise RuntimeError("Unknown expertTracking option '%s'"%prop)
+      if "cosmics" not in self.getProp("SpecialData"):
+           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
+               self.setProp("TrackPatRecAlgorithms",self.DefaultPatRecAlgorithms)
+           if len(self.getProp("TrackExtraInfoAlgorithms")) == 0 :
+               self.setProp("TrackExtraInfoAlgorithms",self.DefaultExtraInfoAlgorithms)
+           for prop in self.getProp("ExpertTracking"):
+               if prop not in self.KnownExpertTracking:
+                   raise RuntimeError("Unknown expertTracking option '%s'"%prop)
+      else:         
+           if len(self.getProp("TrackPatRecAlgorithms")) == 0 :
+               self.setProp("TrackPatRecAlgorithms",self.CosmicPatRecAlgorithms)
+           if len(self.getProp("ExpertTracking")) == 0 :
+               self.setProp("ExpertTracking",self.CosmicExpertTracking)            
+                                                               
 
     ## @brief Shortcut to the fieldOff option
     def fieldOff(self) : return "fieldOff" in self.getProp("SpecialData")
