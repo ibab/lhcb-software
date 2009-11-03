@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCHit.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 
 // STL
 #include <sstream>
@@ -16,11 +16,10 @@
 using namespace LHCb;
 
 void MCHitPacker::pack( DataVector       & hits,
-                        PackedDataVector & phits,
-                        const unsigned int version ) const
+                        PackedDataVector & phits ) const
 {
   phits.data().reserve( hits.size() );
-  if ( 0 == version )
+  if ( 0 == phits.packingVersion() )
   {
     for ( DataVector::const_iterator iD = hits.begin();
           iD != hits.end(); ++iD )
@@ -49,7 +48,7 @@ void MCHitPacker::pack( DataVector       & hits,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << version;
+    mess << "Unknown packed data version " << phits.packingVersion();
     throw GaudiException( mess.str(), "MCHitPacker", StatusCode::FAILURE );
   }
 }
@@ -58,7 +57,7 @@ void MCHitPacker::unpack( PackedDataVector & phits,
                           DataVector       & hits ) const
 {
   hits.reserve( phits.data().size() );
-  if ( 0 == phits.version() )
+  if ( 0 == phits.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = phits.data().begin();
           iD != phits.data().end(); ++iD )
@@ -90,7 +89,7 @@ void MCHitPacker::unpack( PackedDataVector & phits,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << phits.version();
+    mess << "Unknown packed data version " << phits.packingVersion();
     throw GaudiException( mess.str(), "MCHitPacker", StatusCode::FAILURE );
   }
 }

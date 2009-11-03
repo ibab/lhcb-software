@@ -4,6 +4,11 @@
 ! Purpose     : Pack, Unpack and Compare containers for optimized persistency
 !-----------------------------------------------------------------------------
 
+! 2009-11-03 - Christopher Rob Jones
+ - Update new packers to explicitly store the 'packing version' in the packed
+   DataObject. Allows the 'version' of the data object to the be used to store
+   any versioning needed in the original unpacked data.
+
 ! 2009-10-26 - Victor Coco
  - Add MCVeloPixHitPacker class in PackedMCHit file to allow packing of VeloPix
    informations.

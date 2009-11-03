@@ -47,6 +47,9 @@ StatusCode Unpack<PACKER>::execute()
     // Make the output unpacked data and give to Gaudi
     typename PACKER::DataVector * data = new typename PACKER::DataVector();
     this->put( data, m_outputName );
+
+    // set the data version
+    data->setVersion(pdata->version());
     
     // Packer
     static const PACKER packer;

@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.h,v 1.4 2009-10-26 16:37:41 cocov Exp $
+// $Id: PackedMCHit.h,v 1.5 2009-11-03 16:08:54 jonrob Exp $
 #ifndef EVENT_PACKEDMCHIT_H
 #define EVENT_PACKEDMCHIT_H 1
 
@@ -83,7 +83,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedMCHits( ) { }
+    PackedMCHits( ) : m_packingVersion(0) { }
 
     /// Destructor
     virtual ~PackedMCHits( ) { }
@@ -102,9 +102,19 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
   private:
 
-    Vector m_vect; ///< The packed data objects
+    /// Data packing version (not used as yet, but for any future schema evolution)
+    char   m_packingVersion;
+
+    /// The packed data objects
+    Vector m_vect; 
 
   };
 
@@ -138,8 +148,7 @@ namespace LHCb
 
     /// Pack MCHits
     void pack( DataVector       & hits,
-               PackedDataVector & phits,
-               const unsigned int version ) const;
+               PackedDataVector & phits ) const;
 
     /// Unpack MCHits
     void unpack( PackedDataVector & phits,

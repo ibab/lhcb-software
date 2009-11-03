@@ -1,4 +1,4 @@
-// $Id: PackedMCRichSegment.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichSegment.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichSegment.h"
@@ -12,12 +12,11 @@
 using namespace LHCb;
 
 void MCRichSegmentPacker::pack( DataVector       & segs,
-                                PackedDataVector & psegs,
-                                const unsigned int version ) const
+                                PackedDataVector & psegs ) const
 {
   psegs.data().reserve( segs.size() );
 
-  if ( 0 == version )
+  if ( 0 == psegs.packingVersion() )
   {
     for ( DataVector::const_iterator iD = segs.begin();
           iD != segs.end(); ++iD )
@@ -90,7 +89,7 @@ void MCRichSegmentPacker::pack( DataVector       & segs,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << version;
+    mess << "Unknown packed data version " << psegs.packingVersion();
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }
@@ -100,7 +99,7 @@ void MCRichSegmentPacker::unpack( PackedDataVector & psegs,
 {
   segs.reserve( psegs.data().size() );
 
-  if ( 0 == psegs.version() )
+  if ( 0 == psegs.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = psegs.data().begin();
           iD != psegs.data().end(); ++iD )
@@ -164,7 +163,7 @@ void MCRichSegmentPacker::unpack( PackedDataVector & psegs,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << psegs.version();
+    mess << "Unknown packed data version " << psegs.packingVersion();
     throw GaudiException( mess.str(), "MCRichSegmentPacker", StatusCode::FAILURE );
   }
 }

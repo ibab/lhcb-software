@@ -31,6 +31,12 @@ StatusCode Check<PACKER>::execute()
   typename PACKER::DataVector * dataB =
     this->get<typename PACKER::DataVector>(m_dataB);
 
+  // Compare versions
+  if ( dataA->version() != dataB->version() )
+  {
+    return this->Error( "Containers '"+m_dataA+"' and '"+m_dataB+"' have different versions" );
+  }
+
   // check data sizes
   if ( dataA->size() != dataB->size() )
   {

@@ -1,4 +1,4 @@
-// $Id: PackedMCRichDigitSummary.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichDigitSummary.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichDigitSummary.h"
@@ -12,11 +12,10 @@
 using namespace LHCb;
 
 void MCRichDigitSummaryPacker::pack( DataVector       & sums,
-                                     PackedDataVector & psums,
-                                     const unsigned int version ) const
+                                     PackedDataVector & psums ) const
 {
   psums.data().reserve( sums.size() );
-  if ( 0 == version )
+  if ( 0 == psums.packingVersion() )
   {
     for ( DataVector::const_iterator iD = sums.begin();
           iD != sums.end(); ++iD )
@@ -39,7 +38,7 @@ void MCRichDigitSummaryPacker::pack( DataVector       & sums,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << version;
+    mess << "Unknown packed data version " << psums.packingVersion();
     throw GaudiException( mess.str(), "MCRichDigitSummaryPacker", StatusCode::FAILURE );
   }
 }
@@ -48,7 +47,7 @@ void MCRichDigitSummaryPacker::unpack( PackedDataVector & psums,
                                        DataVector       & sums ) const
 {
   sums.reserve( psums.data().size() );
-  if ( 0 == psums.version() )
+  if ( 0 == psums.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = psums.data().begin();
           iD != psums.data().end(); ++iD )
@@ -72,7 +71,7 @@ void MCRichDigitSummaryPacker::unpack( PackedDataVector & psums,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << psums.version();
+    mess << "Unknown packed data version " << psums.packingVersion();
     throw GaudiException( mess.str(), "MCRichDigitSummaryPacker", StatusCode::FAILURE );
   }
 }

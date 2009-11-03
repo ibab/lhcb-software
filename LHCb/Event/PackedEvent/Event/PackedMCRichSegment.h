@@ -1,4 +1,4 @@
-// $Id: PackedMCRichSegment.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichSegment.h,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 #ifndef EVENT_PackedMCRichSegment_H
 #define EVENT_PackedMCRichSegment_H 1
 
@@ -74,7 +74,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedMCRichSegments( ) { }
+    PackedMCRichSegments( ) : m_packingVersion(0) { }
 
     /// Destructor
     virtual ~PackedMCRichSegments( ) { }
@@ -95,9 +95,19 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
   private:
 
-    Vector m_vect; ///< The packed data objects
+    /// Data packing version (not used as yet, but for any future schema evolution)
+    char   m_packingVersion;
+
+    /// The packed data objects
+    Vector m_vect; 
 
   };
 
@@ -133,8 +143,7 @@ namespace LHCb
 
     /// Pack an MCRichSegment
     void pack( DataVector       & segs,
-               PackedDataVector & psegs,
-               const unsigned int version ) const;
+               PackedDataVector & psegs ) const;
 
     /// Unpack an MCRichSegment
     void unpack( PackedDataVector & psegs,

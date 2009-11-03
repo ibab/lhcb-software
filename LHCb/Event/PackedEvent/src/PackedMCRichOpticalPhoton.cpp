@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.3 2009-10-22 09:34:19 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.cpp,v 1.4 2009-11-03 16:08:54 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -12,11 +12,10 @@
 using namespace LHCb;
 
 void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
-                                      PackedDataVector & pphots,
-                                      const unsigned int version ) const
+                                      PackedDataVector & pphots ) const
 {
   pphots.data().reserve( phots.size() );
-  if ( 0 == version )
+  if ( 0 == pphots.packingVersion() )
   {
     for ( DataVector::const_iterator iD = phots.begin();
           iD != phots.end(); ++iD )
@@ -72,7 +71,7 @@ void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << version;
+    mess << "Unknown packed data version " << pphots.packingVersion();
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 }
@@ -81,7 +80,7 @@ void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
   phots.reserve( pphots.data().size() );
-  if ( 0 == pphots.version() )
+  if ( 0 == pphots.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = pphots.data().begin();
           iD != pphots.data().end(); ++iD )
@@ -136,7 +135,7 @@ void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << pphots.version();
+    mess << "Unknown packed data version " << pphots.packingVersion();
     throw GaudiException( mess.str(), "MCRichOpticalPhotonPacker", StatusCode::FAILURE );
   }
 

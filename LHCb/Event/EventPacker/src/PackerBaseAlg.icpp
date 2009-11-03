@@ -15,9 +15,9 @@ Pack<PACKER>::Pack( const std::string& name,
                     ISvcLocator* pSvcLocator )
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputName" , m_inputName  = PACKER::unpackedLocation() );
-  declareProperty( "OutputName", m_outputName = PACKER::packedLocation()   );
-  declareProperty( "Version",    m_version    = 0                          );
+  declareProperty( "InputName" , m_inputName   = PACKER::unpackedLocation() );
+  declareProperty( "OutputName", m_outputName  = PACKER::packedLocation()   );
+  declareProperty( "PackingVersion", m_version = 0                          );
 }
 
 template < class PACKER >
@@ -46,8 +46,11 @@ StatusCode Pack<PACKER>::execute()
   typename PACKER::PackedDataVector * pdata = 
     new typename PACKER::PackedDataVector();
 
-  // Set version number
-  pdata->setVersion(m_version);
+  // set data version
+  pdata->setVersion(data->version());
+
+  // Set packing version number
+  pdata->setPackingVersion(m_version);
 
   // give new container to Gaudi
   this->put( pdata, m_outputName );
@@ -56,7 +59,7 @@ StatusCode Pack<PACKER>::execute()
   static const PACKER packer;
 
   // Fill packed data
-  packer.pack( *data, *pdata, m_version );  
+  packer.pack( *data, *pdata );  
 
   // Clear the registry address of the unpacked container, to prevent reloading
   pdata->registry()->setAddress( 0 );

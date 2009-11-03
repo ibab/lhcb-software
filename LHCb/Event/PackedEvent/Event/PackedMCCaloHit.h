@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.h,v 1.3 2009-10-23 10:46:17 jonrob Exp $
+// $Id: PackedMCCaloHit.h,v 1.4 2009-11-03 16:08:54 jonrob Exp $
 #ifndef EVENT_PACKEDMCCALOHIT_H
 #define EVENT_PACKEDMCCALOHIT_H 1
 
@@ -76,7 +76,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedMCCaloHits( ) { }
+    PackedMCCaloHits( ) : m_packingVersion(0) { }
 
     /// Destructor
     virtual ~PackedMCCaloHits( ) { }
@@ -95,9 +95,19 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
   private:
 
-    Vector m_vect; ///< The packed data objects
+    /// Data packing version (not used as yet, but for any future schema evolution)
+    char   m_packingVersion;
+    
+    /// The packed data objects
+    Vector m_vect; 
 
   };
 
@@ -129,8 +139,7 @@ namespace LHCb
 
     /// Pack MCCaloHits
     void pack( DataVector       & hits,
-               PackedDataVector & phits,
-               const unsigned int version  ) const;
+               PackedDataVector & phits ) const;
 
     /// Unpack MCCaloHits
     void unpack( PackedDataVector & phits,

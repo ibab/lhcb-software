@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.h,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.h,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 #ifndef EVENT_PACKEDMCRICHOPTICALPHOTON_H
 #define EVENT_PACKEDMCRICHOPTICALPHOTON_H 1
 
@@ -86,7 +86,7 @@ namespace LHCb
   public:
 
     /// Standard constructor
-    PackedMCRichOpticalPhotons( ) { }
+    PackedMCRichOpticalPhotons( ) : m_packingVersion(0) { }
 
     /// Destructor
     virtual ~PackedMCRichOpticalPhotons( ) { }
@@ -105,9 +105,19 @@ namespace LHCb
     /// Read access to the data vector
     const Vector & data() const { return m_vect; }
 
+    /// Set the packing version
+    void setPackingVersion( const char ver ) { m_packingVersion = ver; }
+
+    /// Access the packing version
+    char packingVersion() const { return m_packingVersion; }
+
   private:
 
-    Vector m_vect; ///< The packed data objects
+    /// Data packing version (not used as yet, but for any future schema evolution)
+    char   m_packingVersion;
+
+    /// The packed data objects
+    Vector m_vect; 
 
   };
 
@@ -141,8 +151,7 @@ namespace LHCb
 
     /// Pack an MCRichOpticalPhoton
     void pack( DataVector       & phots,
-               PackedDataVector & pphots,
-               const unsigned int version ) const;
+               PackedDataVector & pphots ) const;
 
     /// Unpack an MCRichOpticalPhoton
     void unpack( PackedDataVector & pphots,

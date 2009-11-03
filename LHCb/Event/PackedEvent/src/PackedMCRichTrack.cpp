@@ -1,4 +1,4 @@
-// $Id: PackedMCRichTrack.cpp,v 1.2 2009-10-22 09:21:53 jonrob Exp $
+// $Id: PackedMCRichTrack.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichTrack.h"
@@ -12,12 +12,11 @@
 using namespace LHCb;
 
 void MCRichTrackPacker::pack( DataVector       & tracks,
-                              PackedDataVector & ptracks,
-                              const unsigned int version  ) const
+                              PackedDataVector & ptracks ) const
 {
   ptracks.data().reserve( tracks.size() );
 
-  if ( 0 == version )
+  if ( 0 == ptracks.packingVersion() )
   {
     for ( DataVector::const_iterator iD = tracks.begin();
           iD != tracks.end(); ++iD )
@@ -49,7 +48,7 @@ void MCRichTrackPacker::pack( DataVector       & tracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << version;
+    mess << "Unknown packed data version " << ptracks.packingVersion();
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }
@@ -58,7 +57,7 @@ void MCRichTrackPacker::unpack( PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
   tracks.reserve( ptracks.data().size() );
-  if ( 0 == ptracks.version() )
+  if ( 0 == ptracks.packingVersion() )
   {
     for ( PackedDataVector::Vector::const_iterator iD = ptracks.data().begin();
           iD != ptracks.data().end(); ++iD )
@@ -90,7 +89,7 @@ void MCRichTrackPacker::unpack( PackedDataVector & ptracks,
   else
   {
     std::ostringstream mess;
-    mess << "Unknown packed data version " << ptracks.version();
+    mess << "Unknown packed data version " << ptracks.packingVersion();
     throw GaudiException( mess.str(), "MCRichTrackPacker", StatusCode::FAILURE );
   }
 }
