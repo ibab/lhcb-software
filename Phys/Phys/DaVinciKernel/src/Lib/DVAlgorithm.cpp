@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.62 2009-10-30 16:15:04 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.63 2009-11-03 12:41:26 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -322,7 +322,7 @@ StatusCode DVAlgorithm::sysExecute ()
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
   
-  const LHCb::RecVertices* pvs = desktop()->primaryVertices();
+  const LHCb::RecVertices* pvs = this->primaryVertices();
   
   m_multiPV = 0!=pvs ? pvs->size() > 1 : false;
 
