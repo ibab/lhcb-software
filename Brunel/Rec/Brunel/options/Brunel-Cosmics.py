@@ -10,13 +10,6 @@ from Configurables import ( Brunel, TrackSys,
 # Set the special data options
 Brunel().SpecialData  = ["fieldOff","cosmics"]
 
-#--------------------------------------------------------------------------------
-# Tweak the tracking options for cosmics
-#--------------------------------------------------------------------------------
-TrackSys().ExpertTracking += [ "noDrifttimes" ]
-TrackSys().TrackPatRecAlgorithms = [ "PatSeed" ]
-TrackSys().TrackExtraInfoAlgorithms = [""]
-
 
 #--------------------------------------------------------------------------------
 # RICH options for cosmics
