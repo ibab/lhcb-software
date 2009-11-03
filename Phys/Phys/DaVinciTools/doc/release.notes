@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.477 2009-10-27 13:42:15 jpalac Exp $
+! $Id: release.notes,v 1.478 2009-11-03 12:32:57 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-03 - Juan PALACIOS
+ - src/PhysDesktop{.cpp, .h}
+  . Add inplementations for IPhysDesktop::Particle2VertexMap() methods.
+  . Add Particle2Vertex::Map data member.
+ - cmt/requirements
+  . Increase version to v19r4
 
 !========================== DaVinciTools v19r3 2009-10-27 ===================
 
