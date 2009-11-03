@@ -1,4 +1,4 @@
-// $Id: Particle2Vertex.h,v 1.2 2009-08-31 20:26:31 jpalac Exp $
+// $Id: Particle2Vertex.h,v 1.3 2009-11-03 08:39:15 jpalac Exp $
 #ifndef KERNEL_PARTICLE2VERTEX_H 
 #define KERNEL_PARTICLE2VERTEX_H 1
 
@@ -9,6 +9,7 @@
 #include "Relations/RelationWeighted1D.h"
 #include "Relations/Relation.h"
 #include "Relations/Relation1D.h"
+#include "GaudiKernel/HashMap.h"
 /** @namespace Particle2Vertex Particle2Vertex.h Kernel/Particle2Vertex.h
  *  
  * Namespace containing types corresponding to the Particle -> VertexBase 
@@ -37,6 +38,8 @@ namespace Particle2Vertex {
                               LHCb::VertexBase>           LightTable ;
   typedef Table::IBase::TypeTraits::Entry                 Relation   ;
   typedef Table::IBase::TypeTraits::Entries               Relations  ;
+
+  typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> Map;
 
 }
 #endif // KERNEL_PARTICLE2VERTEX_H
