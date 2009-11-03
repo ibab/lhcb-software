@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.42 2009-09-15 07:21:07 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.43 2009-11-03 12:31:38 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -10,6 +10,7 @@
 // from Gaudi
 //#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiTool.h"
+
 // from DaVinci
 #include "Kernel/IPhysDesktop.h"
 #include "Kernel/DaVinciFun.h"
@@ -30,6 +31,15 @@ class IRelatedPVFinder ;
  *  @date   18/02/2002
  *
  */
+
+// for backwards compatibility. Remove when LHCb v28r2 comes out.
+#include "GaudiKernel/HashMap.h"
+namespace Particle2Vertex 
+{
+  typedef GaudiUtils::HashMap<const LHCb::Particle*, const LHCb::VertexBase*> Map;
+}
+
+
 class PhysDesktop : public GaudiTool,
                     virtual public IPhysDesktop {
   
@@ -76,6 +86,10 @@ public:
 
   /// retrieve the Particle->Primary vertex relations
   virtual Particle2Vertex::LightTable& Particle2VertexRelations();
+
+  virtual Particle2Vertex::Map& Particle2VertexMap();
+
+  virtual const Particle2Vertex::Map& Particle2VertexMap() const;
 
   /// Keep for future use: Register the new particles in the Desktop, 
   /// pass ownership, return pointer to new particle
@@ -308,6 +322,8 @@ private: // data
   IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
+
+  Particle2Vertex::Map m_p2PVMap;
 
   IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
 

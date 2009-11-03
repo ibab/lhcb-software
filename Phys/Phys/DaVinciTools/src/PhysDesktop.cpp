@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.83 2009-10-15 16:52:36 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.84 2009-11-03 12:31:38 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -83,25 +83,26 @@ PhysDesktop::PhysDesktop( const std::string& type,
                           const std::string& name,
                           const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_writeP2PV            (true)
-  , m_usingP2PV            (true)
-  , m_primVtxLocn          ()
-  , m_inputLocations       ()
-  , m_outputLocn           ()
-  , m_p2PVDefaultLocations ()
-  , m_p2PVInputLocations   ()
+    , m_writeP2PV            (true)
+    , m_usingP2PV            (true)
+    , m_primVtxLocn          ()
+    , m_inputLocations       ()
+    , m_outputLocn           ()
+    , m_p2PVDefaultLocations ()
+    , m_p2PVInputLocations   ()
   //
-  , m_parts     (   )
-  , m_secVerts  (   )
-  , m_refitPVs  (   )
-  , m_primVerts ( 0 )
+    , m_parts     (   )
+    , m_secVerts  (   )
+    , m_refitPVs  (   )
+    , m_primVerts ( 0 )
   //
-  , m_OnOffline     ( 0  )
-  , m_p2VtxTable    (    )
-  , m_pvRelator     ( 0  )
-  , m_pvRelatorName (    )
+    , m_OnOffline     ( 0  )
+    , m_p2VtxTable    (    )
+    , m_p2PVMap       (    )
+    , m_pvRelator     ( 0  )
+    , m_pvRelatorName (    )
   //
-  , m_dva ( 0 )
+    , m_dva ( 0 )
 {
 
   // Declaring implemented interfaces
@@ -239,6 +240,16 @@ const Particle2Vertex::LightTable& PhysDesktop::Particle2VertexRelations() const
 Particle2Vertex::LightTable& PhysDesktop::Particle2VertexRelations()
 {
   return i_p2PVTable();
+}
+//============================================================================
+Particle2Vertex::Map& PhysDesktop::Particle2VertexMap() 
+{
+  return m_p2PVMap;
+}
+//============================================================================
+const Particle2Vertex::Map& PhysDesktop::Particle2VertexMap() const 
+{
+  return m_p2PVMap;
 }
 //============================================================================
 // Clean local data, called by DVAlgorithm
