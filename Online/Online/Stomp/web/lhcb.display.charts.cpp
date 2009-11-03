@@ -30,3 +30,4 @@ Charts.createChartArea = function(name) {
   // document.write('Chartarea defined:'+name+'  '+Charts.area[name]);
   return Charts.area[name];
 }
+//alert('lhcb.display.charts.cpp loaded....');

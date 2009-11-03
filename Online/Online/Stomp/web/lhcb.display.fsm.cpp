@@ -102,6 +102,7 @@ fsm_body2 = function(body)  {
   var tips  = init_tooltips(body);
   var selector = FSMTable(sys,msg,state);
   body.appendChild(selector);
+  body.className = 'MainBody';
   if ( msg == null ) {
     selector.logger = new OutputLogger(selector.logDisplay,  -1, LOG_INFO,'StatusLogger');
   }

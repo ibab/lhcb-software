@@ -21,6 +21,15 @@
     text-align:       center;
     text-decoration:  none;
 }
+.MainBody  {
+    background-color: #666666;
+    color:            #FFFFFF;
+    border:           none;
+    border-color:     #000000;
+    font-family:      Arial, Helvetica, sans-serif;
+    text-align:       center;
+    text-decoration:  none;
+}
 /***********************************************************************************/
 /*                                                                                 */
 /* Generic LHCb Monitoring display styles.                                         */

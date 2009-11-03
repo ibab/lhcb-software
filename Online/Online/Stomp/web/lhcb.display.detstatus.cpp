@@ -508,6 +508,7 @@ var detstatus_body = function()  {
 
   selector = DetStatus(msg);
   body.appendChild(selector);
+  body.className = 'MainBody';
   setWindowTitle('LHCb Detector High Voltage Status');
   if ( msg > 0 )
     selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');

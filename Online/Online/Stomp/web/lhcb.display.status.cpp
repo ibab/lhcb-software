@@ -24,7 +24,6 @@ var SelectionBox = function() {
   return select;
 }
 
-
 var PartitionSelector = function(msg) {
   var td;
   table = document.createElement('table');
@@ -151,7 +150,6 @@ var PartitionSelector = function(msg) {
   return table;
 }
 
-
 var status_unload = function()  {
   dataProviderReset();
   //alert('Connection reset.\n\nBye, Bye my friend....');
@@ -165,6 +163,7 @@ var status_body = function()  {
   var selector = new PartitionSelector(msg);
 
   body.appendChild(selector);
+  body.className = 'MainBody';
 
   //alert('status_body: system:'+sys+' msg:'+msg);
   //alert('XMLHTTP:'+window.XMLHttpRequest);

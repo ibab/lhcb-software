@@ -366,6 +366,7 @@ var collimators_body = function()  {
 
   selector = Collimators(msg);
   body.appendChild(selector);
+  body.className = 'MainBody';
   setWindowTitle('LHC Collimator settings @ Pt.8');
   //msg = 1;
   if ( msg > 0 )

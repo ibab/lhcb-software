@@ -3,6 +3,8 @@ _loadScript('wz_jsgraphics.js');
 _loadFile('lhcb.display.general','css');
 _loadFile('lhcb.display.ramses','css');
 
+var s_offset = _isInternetExplorer() ? 0 : 70;
+
 var RamsesStatus = function(msg)   {
   table           = document.createElement('table');
   table.body      = document.createElement('tbody');
@@ -70,15 +72,15 @@ var RamsesStatus = function(msg)   {
     div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_LHCb_2.jpg" width="940"></IMG>';
     // Now draw the canvas with the measurement point on it....
     this.jg = new jsGraphics('Ramses');
-    this.jg.drawString(this.installSensor('PAXL8501'),200,20);
-    this.jg.drawString(this.installSensor('PAXL8521'),420,20);
-    this.jg.drawString(this.installSensor('PAXL8512'),200,500);
-    this.jg.drawString(this.installSensor('PMIL8501'),450,100);
-    this.jg.drawString(this.installSensor('PMIL8513'),600,20);
-    this.jg.drawString(this.installSensor('PMIL8511'),450,450);
-    this.jg.drawString(this.installSensor('PMIL8512'),700,50);
-    this.jg.drawString(this.installSensor('PMIL8531'),580,500);
-    this.jg.drawString(this.installSensor('Legend'),850,580);
+    this.jg.drawString(this.installSensor('PAXL8501'),200,20+s_offset);
+    this.jg.drawString(this.installSensor('PAXL8521'),420,20+s_offset);
+    this.jg.drawString(this.installSensor('PAXL8512'),200,500+s_offset);
+    this.jg.drawString(this.installSensor('PMIL8501'),450,100+s_offset);
+    this.jg.drawString(this.installSensor('PMIL8513'),600,20+s_offset);
+    this.jg.drawString(this.installSensor('PMIL8511'),450,450+s_offset);
+    this.jg.drawString(this.installSensor('PMIL8512'),700,50+s_offset);
+    this.jg.drawString(this.installSensor('PMIL8531'),580,500+s_offset);
+    this.jg.drawString(this.installSensor('Legend'),850,580+s_offset);
     this.jg.paint();
     // Subscribe to data
     this.bindSensor('PAXL8501');

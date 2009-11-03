@@ -181,6 +181,7 @@ var page1_body = function()  {
   if ( sys == null ) sys = 'LHCb';
   selector = Page1(msg, sys);
   body.appendChild(selector);
+  body.className = 'MainBody';
   setWindowTitle(sys+' Page 1');
   if ( msg > 0 )
     selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');

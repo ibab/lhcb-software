@@ -16,22 +16,24 @@ if ( !lhcb.widgets ) {
    * @version 1.0
    */
   lhcb.widgets.BCM_datapoints = function(typ) {
+    var post = '';
     var bcms = new Array();
     var low = typ.toLowerCase();
     var bcm = StyledItem('lbWeb.BCM_DP_S0.RS2_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S0 RS2 ('+low+')  [%]';
+    if (typ == 'REL' ) post = ' [%]';
+    bcm.nice_name = 'BCM S0 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[0] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S0.RS32_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S0 RS32 ('+low+')  [%]';
+    bcm.nice_name = 'BCM S0 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[1] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S1.RS2_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S1 RS2 ('+low+')  [%]';
+    bcm.nice_name = 'BCM S1 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[2] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S1.RS32_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S1 RS32 ('+low+')  [%]';
+    bcm.nice_name = 'BCM S1 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[3] = bcm;
 
@@ -344,7 +346,7 @@ var BcmStatus = function(msg,chart,sensors)   {
       bcms[2*j+1].c_data   = data;
       bcms[2*j+1].c_series = series;
     }
-    if ( c.bcm_charts ) c.bcm_charts.bcms.subscribe(c.provider);
+    if ( c.bcm_charts  ) bcms.subscribe(c.provider);
     if ( c.bcm_sensors ) c.bcm_sensors.subscribe(c.provider);
     c.bcm_summary.subscribe(c.provider);
     return this;
@@ -352,7 +354,7 @@ var BcmStatus = function(msg,chart,sensors)   {
 
   table.subscribe = function() {
     var c = this.onload.client;
-    if ( c.bcm_charts ) c.bcm_charts.bcms.subscribe(c.provider);
+    if ( c.bcm_charts  ) c.bcm_charts.bcms.subscribe(c.provider);
     if ( c.bcm_sensors ) c.bcm_sensors.subscribe(c.provider);
     c.bcm_summary.subscribe(c.provider);
     return this;
@@ -465,9 +467,11 @@ var bcm_body = function()  {
 
   selector = BcmStatus(msg,chart,sensors);
   body.appendChild(selector);
-  body.onload = chart ? selector.start_charts : selector.subscribe;
+  body.onload = function() {};
+  body.onload1 = chart ? selector.start_charts : selector.subscribe;
   body.onload.client = selector;
-  setWindowTitle('LHCb Detector High Voltage Status');
+  body.className = 'MainBody';
+  setWindowTitle('LHCb BCM Status');
   if ( msg > 0 )
     selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
   else
@@ -476,8 +480,8 @@ var bcm_body = function()  {
   selector.provider.topic = '/topic/status';
   selector.build();
   selector.provider.start();
-  if ( !_isInternetExplorer() )  {
-    setTimeout(function(){document.getElementsByTagName('body')[0].onload(); },2500);
-  }
+  //if ( !_isInternetExplorer() )  {
+    setTimeout(function(){document.getElementsByTagName('body')[0].onload1(); },2500);
+  //}
 }
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

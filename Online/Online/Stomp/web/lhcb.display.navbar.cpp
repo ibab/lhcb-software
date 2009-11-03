@@ -208,6 +208,13 @@ var navbar_body = function()  {
 	     '../Images/Wizard_16x16.gif',
 	     '../Images/Wizard_32x32.gif');
 
+  navBar.add('BCM',
+	     'Show BCM status',
+	     'JavaScript:navBar.open_url("lhcb.display.htm?type=bcm&charts=1")',
+	     'NavigationBar',
+	     '../Images/BCM.png',
+	     '../Images/BCM.png');
+
   navBar.addSized('LHC Status',
 		  'LHC status around LHCb',
 		  'JavaScript:navBar.open_url("lhcb.display.htm?type=lhc")',
