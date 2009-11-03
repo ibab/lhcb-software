@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-11-03 - Christopher Rob Jones
+ - Adapt to changes in GaudiConf
+
 - Tell1 digitisation and clusterisation line added, this introduces
   the bit perfect Tell1 code (actually a high level model of the firmware
   that is run on the VELO acquisition boards)

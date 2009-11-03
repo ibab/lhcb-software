@@ -1,12 +1,12 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.56 2009-10-24 14:00:03 szumlat Exp $"
+__version__ = "$Id: Configuration.py,v 1.57 2009-11-03 11:22:47 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
-from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf, DigiConf
+from Configurables import LHCbConfigurableUser, LHCbApp, ProcessPhase, L0Conf, DigiConf, SimConf
 
 class Boole(LHCbConfigurableUser):
 
@@ -51,6 +51,7 @@ class Boole(LHCbConfigurableUser):
        ,"LinkSequence"    : []
        ,"MoniSequence"    : []
        ,"FilterSequence"  : []
+       ,"EnablePack"      : True
         }
 
     _propertyDocDct = { 
@@ -78,9 +79,10 @@ class Boole(LHCbConfigurableUser):
        ,'LinkSequence' : """ List of MC truth link sequences, see KnownLinkSubdets  """
        ,'MoniSequence' : """ List of subdetectors to monitor, see KnownMoniSubdets """
        ,'FilterSequence' : """ List of Filter sequences, see KnownFilterSubdets  """
+       ,'EnablePack'    : """ Turn on/off packing of the data (where appropriate/available) """
        }
     
-    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf ]
+    __used_configurables__ = [ LHCbApp, L0Conf, DigiConf, SimConf ]
 
     def defineDB(self):
         if self.getProp("DataType") == "DC06" :
@@ -94,7 +96,9 @@ class Boole(LHCbConfigurableUser):
     def defineEvents(self):
         # Delegate handling to LHCbApp configurable
         self.setOtherProps(LHCbApp(),["EvtMax","SkipEvents"])
-
+        # Setup SIM input
+        self.setOtherProp(DigiConf(),"EnablePack")
+        SimConf().setProp("EnableUnpack",self.getProp("EnablePack"))
 
     def configurePhases(self):
         """
@@ -131,7 +135,8 @@ class Boole(LHCbConfigurableUser):
         # Start the DataOnDemandSvc ahead of ToolSvc
         ApplicationMgr().ExtSvc  += [ "DataOnDemandSvc" ]
         ApplicationMgr().ExtSvc  += [ "ToolSvc" ]
-
+        #DataOnDemandSvc().OutputLevel = 1
+ 
         ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
         initBoole = GaudiSequencer("InitBooleSeq")
         initBoole.Members += [ "BooleInit" ]
@@ -352,10 +357,6 @@ class Boole(LHCbConfigurableUser):
         Set up the MC links sequence
         """
 
-        # Unpack MCParticles and MCVertices if not existing on input file
-        DataOnDemandSvc().AlgMap["MC/Particles"] = "UnpackMCParticle"
-        DataOnDemandSvc().AlgMap["MC/Vertices"]  = "UnpackMCVertex"
-
         doWriteTruth = ("DIGI" in self.getProp("Outputs")) and (self.getProp("DigiType").capitalize() != "Minimal")
 
         if "VELO" in linkDets or "VELO" in moniDets or "Tr" in linkDets:
@@ -484,15 +485,7 @@ class Boole(LHCbConfigurableUser):
         MuonDigitization().SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
         MuonBackground("MuonLowEnergy").SpilloverPathsSize = len(self.getProp("SpilloverPaths"))
 
-        # Handle the unpacking of pSim containers
-        for spill in self.getProp("SpilloverPaths") :
-            from Configurables import UnpackMCParticle, UnpackMCVertex
-            particleUnpacker = UnpackMCParticle( "UnpackMCP" + spill )
-            particleUnpacker.RootInTES = spill
-            vertexUnpacker = UnpackMCVertex( "UnpackMCV" + spill )
-            vertexUnpacker.RootInTES = spill
-            DataOnDemandSvc().AlgMap[ spill + "/MC/Particles" ] = particleUnpacker
-            DataOnDemandSvc().AlgMap[ spill + "/MC/Vertices" ] = vertexUnpacker
+        self.setOtherProp(SimConf(),"SpilloverPaths")
 
 
     def defineMonitors(self):
@@ -714,14 +707,6 @@ class Boole(LHCbConfigurableUser):
             from Configurables import L0Conf
             L0Conf().MoniSequencer = GaudiSequencer("MoniL0Seq")
 
-        if "MC" in moniDets:
-            from Configurables import UnpackMCVertex, UnpackMCParticle, CompareMCVertex, CompareMCParticle
-            # This sequence only makes sense if input data is unpacked. Should be moved to Gauss
-            testMCV = UnpackMCVertex(   "TestMCVertex",   OutputName = "MC/VerticesTest" )
-            testMCP = UnpackMCParticle( "TestMCParticle", OutputName = "MC/ParticlesTest" )
-            GaudiSequencer("MoniMCSeq").Members += [ testMCV, testMCP,
-                                                     CompareMCParticle(), CompareMCVertex() ]
-
     def _setupPhase( self, name, knownDets ):
         seq = self.getProp("%sSequence"%name)
         if len( seq ) == 0:
@@ -736,7 +721,6 @@ class Boole(LHCbConfigurableUser):
 
     def __apply_configuration__(self):
         GaudiKernel.ProcessJobOptions.PrintOff()
-        
         self.defineDB()
         self.defineEvents()
         self.configurePhases()
