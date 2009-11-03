@@ -20,6 +20,7 @@ Hlt2SharedDiMuon = Hlt2Member( CombineParticles
                              , CombinationCut = "AALL"
                              , MotherCut = "(VFASPF(VCHI2/VDOF)<25)"
                              , InputLocations = [ Muons ]
+                             , WriteP2PVRelations = False
                              )
 
 DiMuon = bindMembers( "Shared", [ Muons, Hlt2SharedDiMuon ] )

@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
@@ -23,6 +23,7 @@ from GaudiKernel.SystemOfUnits import MeV
 Hlt2NoCutsPions = NoPIDsParticleMaker("Hlt2NoCutsPions")
 Hlt2NoCutsPions.Input =  "Hlt/ProtoP/Charged"
 Hlt2NoCutsPions.Particle =  "pion" 
+Hlt2NoCutsPions.WriteP2PVRelations = False
 ##########################################################################
 # Make the kaons
 #
@@ -48,6 +49,7 @@ Hlt2Muons.Muon.Selection = ["RequiresDet='MUON' IsMuon=True" ]
 Hlt2Muons.addTool(TrackSelector)
 Hlt2Muons.TrackSelector.TrackTypes = ["Long"] 
 Hlt2Muons.Input =  "Hlt/ProtoP/Charged"
+Hlt2Muons.WriteP2PVRelations = False
 ##########################################################################
 # Make the electrons
 #
