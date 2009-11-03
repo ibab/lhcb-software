@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.49 2009-11-02 19:05:57 marcocle Exp $
+# $Id: requirements,v 1.50 2009-11-03 11:00:24 marcocle Exp $
 package CondDBUI
 
 version v2r23
@@ -51,11 +51,11 @@ private
 # ============== Environment =========================================
 
 use Reflex       v*   LCG_Interfaces
-apply_pattern reflex_dictionary dictionary=CondDBUIDict \
+apply_pattern reflex_dictionary dictionary=CondDBUI \
                                 headerfiles=$(CONDDBUIROOT)/dict/dictionary.h \
                                 selectionfile=$(CONDDBUIROOT)/dict/dictionary.xml \
-                                imports="Python -import=COOL"
-macro_append CondDBUIDict_reflex_options ' $(ppcmd)$(Python_inc) $(ppcmd)"$(COOL_base)/include"  $(ppcmd)"$(CORAL_base)/include" '
+                                imports="Python -import=COOL -import=Boost"
+macro_append CondDBUI_reflex_options ' $(lib_CondDBUIDict_cppflags) '
 
 # CORAL path
 #set  CORAL_AUTH_PATH       ${HOME}/private
