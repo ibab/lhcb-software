@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.13 2009-10-15 12:48:25 graven Exp $ 
+# $Id: HltLine.py,v 1.14 2009-11-03 16:45:28 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1247,7 +1247,6 @@ class Hlt2Line(object):
                    priority  = None ,   # hint for ordering lines
                    PV        = None ,   # insert PV reconstruction at the start of the line
                    Reco      = True ,   # request Hlt2 reconstruction sequence
-                   #Lumi      = False ,   # process lumi exclusive events
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1262,8 +1261,9 @@ class Hlt2Line(object):
         - 'postscale' : the postscale factor
         
         """
-        if type(Reco) != bool : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
+        if type(Reco) != bool : raise AttributeError, "Must specify Reco = True or Reco = False when constructing  Hlt2Line %s"%(name)
         if not self._RecoAlgorithms :
+            ## TODO: push this into the individual dependency chains of eg. NoCutsPions, ...
             #  Full reconstruction of all tracks 
             from HltReco import HltRecoSequence
             self._RecoAlgorithms = [ HltRecoSequence  ]
@@ -1272,6 +1272,9 @@ class Hlt2Line(object):
         if not self._PVAlgorithms : 
             from HltReco import PV2D
             self._PVAlgorithms = PV2D.members()
+
+        if not HLT :
+            HLT = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )

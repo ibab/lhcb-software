@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.40 2009-10-29 13:30:34 pkoppenb Exp $
+! $Id: release.notes,v 1.41 2009-11-03 16:45:28 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+
+! 2009-11-03 - Gerhard Raven
+ - if an Hlt2 line does not require anything specific about Hlt1,
+   add a filter to it which verifies that the event is not exclusive lumi,
+   i.e. require HLT_PASS_RE('Hlt1(?!Lumi).*Decision')
+ 
 
 !========================== HltLine v1r8 2009-10-28 ===================
 ! 2009-10-29 - Patrick Koppenburg
