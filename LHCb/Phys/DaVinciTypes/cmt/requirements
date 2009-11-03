@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.1.1.1 2009-08-04 07:22:39 jpalac Exp $
+#$Id: requirements,v 1.2 2009-11-03 08:38:31 jpalac Exp $
 #============================================================================
 # Created    : 2009-08-04
 # Maintainer : Juan Palacios
 #============================================================================
 package           DaVinciTypes
-version           v1r0
+version           v1r1
 
 #============================================================================
 # Structure, i.e. directories to process. 
