@@ -4,7 +4,7 @@
 ! Purpose          : collection of physics constructors for Gauss
 !-----------------------------------------------------------------------------
 
-!====================== GaussPhysics v6r3 2009-10-20 =========================
+!====================== GaussPhysics v6r4 2009-11-03 =========================
 ! 2009-10-20- Marcin Kucharczyk
  - Add Hidden Valley pion definition (G4HiddenValley.cpp, G4HiddenValley.h)
  - Add Hidden Valley pion to GiGaPhysUnknownParticles list
