@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.5 2009-10-30 16:39:20 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.6 2009-11-03 11:09:04 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -98,6 +98,11 @@ public:
 
   /// retrieve the Particle->Primary vertex relations
   virtual Particle2Vertex::LightTable& Particle2VertexRelations() = 0;
+
+  virtual Particle2Vertex::Map& Particle2VertexMap() = 0;
+
+  virtual const Particle2Vertex::Map& Particle2VertexMap() const = 0;
+  
 
   /// Store relations over-writing previously existing ones
   virtual void overWriteRelations(Particle2Vertex::Table::Range::const_iterator begin,
