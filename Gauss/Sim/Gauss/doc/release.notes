@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-03 - Gloria CORTI
+ - Change version number of Geant4Files to pick the latest as from 9.2.
+
 ! 2009-11-03 - Christopher Rob Jones
  - Move knowledge of the output SIM file content to new SimConf() Configurable
    in the gaudiConf package

@@ -18,7 +18,7 @@ use DDDB               v*     Det            -no_auto_imports
 use ParamFiles         v8r0                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
 use DecFiles           v19r*  Gen            -no_auto_imports
-use Geant4Files	       v91r0	             -no_auto_imports
+use Geant4Files	       v92r0	             -no_auto_imports
 use MIBData            v2r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 use BcVegPyData        v2r*                  -no_auto_imports
@@ -67,7 +67,7 @@ macro LbAlpGen_use    "LbAlpGen     v*  Gen  -no_auto_imports"  WIN32 ""
 macro LbHijing_use    "LbHijing     v*  Gen  -no_auto_imports"  WIN32 ""
 macro LbPythia8_use   "LbPythia8    v*  Gen  -no_auto_imports"  WIN32 ""
 use ${LbHerwig_use}
-#use ${LbBcVegPy_use}                   # TEMPORARILY OFF
+use ${LbBcVegPy_use}
 #use ${LbHidValley_use}                 # TEMPORARILY OFF
 #use ${LbAlpGen_use}                    # TEMPORARILY OFF
 use ${LbHijing_use}
