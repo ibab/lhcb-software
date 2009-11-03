@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -120,11 +120,10 @@ class Hlt2PID(LHCbConfigurableUser):
         hcal = ChargedProtoParticleAddHcalInfo(prefix+"ChargedProtoPAddHcal")
         prs  = ChargedProtoParticleAddPrsInfo(prefix+"ChargedProtoPAddPrs")
         spd  = ChargedProtoParticleAddSpdInfo(prefix+"ChargedProtoPAddSpd")
-        velo = ChargedProtoParticleAddVeloInfo(prefix+"ChargedProtoPAddVeloDEDX")
         # Fill the Combined DLL information in the charged protoparticles
         combine = ChargedProtoCombineDLLsAlg(prefix+"ChargedProtoPCombDLLs")
         # Fill the sequence
-        pidList += [ muon,ecal,brem,hcal,prs,spd,velo,combine ]
+        pidList += [ muon,ecal,brem,hcal,prs,spd,combine ]
 
         from HltLine.HltLine import bindMembers
         return bindMembers ( None, pidList  )
