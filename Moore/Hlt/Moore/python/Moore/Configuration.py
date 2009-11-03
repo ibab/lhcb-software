@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.93 2009-11-02 10:22:00 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.94 2009-11-03 10:12:48 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -67,6 +67,7 @@ class Moore(LHCbConfigurableUser):
         , "EnableLumiEventWriting"       : True
         , "EnableTimer" :       True
         , 'EnableRunChangeHandler' : False
+        , 'EnableAcceptIfSlow' : True
         , 'WriterRequires' : []
         , "Verbose" :           True # whether or not to print Hlt sequence
         , "ThresholdSettings" : ''
@@ -344,6 +345,7 @@ class Moore(LHCbConfigurableUser):
                             , 'SkipHltRawBankOnRejectedEvents'
                             , 'HistogrammingLevel' 
                             , "EnableLumiEventWriting"
+                            , "EnableAcceptIfSlow"
                             ]
                           )
 

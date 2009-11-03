@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.88 2009-11-02 10:21:59 graven Exp $
+# $Id: requirements,v 1.89 2009-11-03 10:12:47 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v8r0p1
+version v8r1
 
 branches doc cmt options python
 
@@ -33,21 +33,15 @@ use GaudiPoolDb        v*                   -no_auto_imports
 use GaudiPython        v*                   -no_auto_imports
 
 # From LHCbSys
-use LHCbAlgs v2r29p1  Kernel
 use L0Interfaces       v*    L0             -no_auto_imports
 
 #-- Lbcom packages 
-use  CaloTools              v5r11p1   Calo
-use  CaloPIDs               v5r1p1 Calo
 use LbcomSys            v*        -no_auto_imports
 
 #-- Rec packages 
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
-use HltSettings v1r0p1   Hlt
-use HltConf     v5r0p1   Hlt
-use HltCommon   v5r12p1  Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 

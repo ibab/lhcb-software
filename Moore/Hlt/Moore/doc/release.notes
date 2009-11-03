@@ -2,6 +2,10 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+! 2009-11-03 - Gerhard Raven
+ - add 'EnableAcceptIfSlow' option 
+
+!========================== Moore v8r0p1 2009-11-02 ===================
 ! 2009-11-02 - Gerhard Raven
  - add more support for stripping
 
