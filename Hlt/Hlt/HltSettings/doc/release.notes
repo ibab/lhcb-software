@@ -4,6 +4,9 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-03 - Antonio Perez-Calero
+ - Added Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09.py for mu+track lines debugging
+
 ! 2009-11-02 - V. Gligorov
  - Debug_10000Vis_1000L0_Hadron_Hlt1_Oct09.py
    . Runs only the hadron lines with the nominal thresholds for debugging 
