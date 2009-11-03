@@ -5,6 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
+! 2009-11-03 - Gerhard Raven
+ - fix tck -> id conversion for TCKs that start with leading 0s
+
 !========================== TCKUtils v1r5 2009-10-28 ===================
 ! 2009-10-28 - Gerhard Raven
  - take into account single top level config can have multiple TCKs

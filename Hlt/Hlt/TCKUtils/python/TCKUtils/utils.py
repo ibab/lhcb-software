@@ -42,7 +42,7 @@ def _tck2id(x,cas = ConfigAccessSvc() ) :
     #return val.digest() if val.digest() != invalid.digest() else None
 
 def tck2id(x,cas) :
-    if type(x) is int : x = hex(x)
+    if type(x) is int : x = '0x%08x' % x 
     import re
     if re.compile('^[0-9a-fA-F]{32}$').match(x) :
         # x is already a configID
