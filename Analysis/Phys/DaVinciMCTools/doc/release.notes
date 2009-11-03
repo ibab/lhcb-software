@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.272 2009-10-28 13:51:16 jpalac Exp $
+! $Id: release.notes,v 1.273 2009-11-03 10:27:59 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-11-03 - V. Gligorov
+ - BackgroundCategory : change PID override threshold so that by default, the
+   best PID match is always used.
 
 !========================== DaVinciMCTools v9r22 2009-10-28 =================
 
