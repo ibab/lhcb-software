@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-03 - Celestino Rodriguez
+ - Added StrippingBs2Kst0Kst0.py
+
 !===================== StrippingSelections v1r9 2009-10-30 ====================
 
 ! 2009-10-30 - Anton Poluektov
