@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.177 2009-10-19 13:11:05 cattanem Exp $
+! $Id: release.notes,v 1.178 2009-11-03 11:19:18 jonrob Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-03 - Christopher Rob Jones
+ - Add new SimConf Configurable that deals with all issues regarding the SIM
+   file content, including data packing and unpacking.
 
 !======================== GaudiConf v12r9 2009-10-19 ========================
 ! 2009-10-19 - Marco Cattaneo

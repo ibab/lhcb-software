@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.18 2009-10-19 13:11:05 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.19 2009-11-03 11:19:18 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -11,16 +11,22 @@ __all__ = [
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from CaloPackingConf import CaloDstPackConf, CaloDstUnPackConf
+from Configurables   import LHCbConfigurableUser, SimConf, DigiConf
 
-class DstConf(ConfigurableUser):
+class DummyWriter(LHCbConfigurableUser):
+    __slots__ = { "ItemList" : [], "OptItemList" : [] }
+
+class DstConf(LHCbConfigurableUser):
+    
     __slots__ = {
-         "DstType"       : "NONE"
-       , "SimType"       : "None"
-       , "EnableUnpack"  : False
-       , "PackType"      : "TES"
-       , "PackSequencer" : None
-       , "Writer"        : "DstWriter"
-       , "OutputName"    : ""
+         "DstType"        : "NONE"
+       , "SimType"        : "None"
+       , "EnableUnpack"   : False
+       , "PackType"       : "TES"
+       , "PackSequencer"  : None
+       , "Writer"         : "DstWriter"
+       , "OutputName"     : ""
+       , "SpilloverPaths" : []
          }
 
     _propertyDocDct = { 
@@ -30,13 +36,16 @@ class DstConf(ConfigurableUser):
        ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'Writer'        : """ Name of OutputStream writing the DST """
-       ,'OutputName'    : """ Name of the output file, for MDF writing """ 
+       ,'OutputName'    : """ Name of the output file, for MDF writing """
+       ,'SpilloverPaths': """ Paths to write out when spillover is enabled """
        }
 
-    __used_configurables__ = (
+    __used_configurables__ = [
         CaloDstPackConf    , 
-        CaloDstUnPackConf 
-        )
+        CaloDstUnPackConf  ,
+        SimConf            ,
+        DigiConf
+        ]
     
     KnownSimTypes  = ['None','Minimal','Full']
     KnownDstTypes  = ['NONE','DST','RDST','XDST']
@@ -59,18 +68,17 @@ class DstConf(ConfigurableUser):
         if pType not in self.KnownPackTypes:
             raise TypeError( "Unknown PackType '%s'"%pType )
 
-        items    = []
-        optItems = []
-        self._defineOutputData( dType, pType, sType, items, optItems )
+        writer = DummyWriter()
+        self._defineOutputData( dType, pType, sType, writer )
         
         if pType == 'MDF':
             if dType == 'DST': raise TypeError( "Only RDST are supported with MDF packing" )
-            self._doWriteMDF( items )
+            self._doWriteMDF( writer.ItemList )
         else:
-            self._doWritePOOL( items, optItems )
+            self._doWritePOOL( writer.ItemList, writer.OptItemList )
             
 
-    def _defineOutputData( self, dType, pType, sType, items, optItems ):
+    def _defineOutputData( self, dType, pType, sType, writer ):
         """
         Define content of the output dataset
         """
@@ -79,8 +87,14 @@ class DstConf(ConfigurableUser):
         if pType == 'NONE':
             if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
             recDir = "Rec"
+            if sType != "NONE":
+                DigiConf().EnablePack = False
+                SimConf().EnablePack  = False
         else:
             recDir = "pRec"
+            if sType != "NONE":
+                DigiConf().EnablePack = True
+                SimConf().EnablePack  = True
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
 
@@ -90,97 +104,66 @@ class DstConf(ConfigurableUser):
         else:
             depth = "#1"
 
-        items += [ "/Event/DAQ/ODIN"                         + depth
-                 , "/Event/Rec/Header"                       + depth
-                 , "/Event/Rec/Status"                       + depth 
-                 , "/Event/" + recDir + "/Track/Best"        + depth
-                 , "/Event/" + recDir + "/Calo/Electrons"    + depth
-                 , "/Event/" + recDir + "/Calo/Photons"      + depth
-                 , "/Event/" + recDir + "/Calo/MergedPi0s"   + depth
-                 , "/Event/" + recDir + "/Calo/SplitPhotons" + depth
-                 , "/Event/" + recDir + "/ProtoP/Charged"    + depth
-                 , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
-                 , "/Event/" + recDir + "/Vertex/Primary"    + depth
-                 , "/Event/" + recDir + "/Vertex/V0"         + depth ]
+        writer.ItemList += [   "/Event/DAQ/ODIN"                         + depth
+                             , "/Event/Rec/Header"                       + depth
+                             , "/Event/Rec/Status"                       + depth 
+                             , "/Event/" + recDir + "/Track/Best"        + depth
+                             , "/Event/" + recDir + "/Calo/Electrons"    + depth
+                             , "/Event/" + recDir + "/Calo/Photons"      + depth
+                             , "/Event/" + recDir + "/Calo/MergedPi0s"   + depth
+                             , "/Event/" + recDir + "/Calo/SplitPhotons" + depth
+                             , "/Event/" + recDir + "/ProtoP/Charged"    + depth
+                             , "/Event/" + recDir + "/ProtoP/Neutrals"   + depth
+                             , "/Event/" + recDir + "/Vertex/Primary"    + depth
+                             , "/Event/" + recDir + "/Vertex/V0"         + depth ]
 
         # Copy of HLT results, only on RDST
         if dType == "RDST":
-            items += [ "/Event/pRec/RawEvent" + depth ]
+            writer.ItemList += [ "/Event/pRec/RawEvent" + depth ]
 
         # Additional objects not on RDST
         else:
-            items += [ "/Event/" + recDir + "/Track/Muon" + depth ]
+            writer.ItemList += [ "/Event/" + recDir + "/Track/Muon" + depth ]
 
             # Additional objects not packable as MDF
             if pType != "MDF":
-                items += [ "/Event/DAQ/RawEvent#1" ]
+                writer.ItemList += [ "/Event/DAQ/RawEvent#1" ]
 
                 # Add selection results if DST commes from stripping ETC
-                optItems += [ "/Event/Phys/Selections#1" ]
+                writer.OptItemList += [ "/Event/Phys/Selections#1" ]
 
                 # Add the simulation objects (POOL DST only)
-                if sType != "None":
+                if sType != "NONE":
+                    
                     # Minimal MC output.
-                    items += [ "/Event/Gen/Header#1"
-                             , "/Event/MC/Header#1"
-                             , "/Event/pSim/MCVertices#1" ]
+                    SimConf().addHeaders(writer)
+                    SimConf().addMCVertices(writer)
 
                     if sType == "Full":
-                        items += [
-                             # Links to MCParticles created in Brunel
-                               "/Event/Link/Rec/Track/Best#1"
+                        
+                        writer.ItemList += [
+                            # Links to MCParticles created in Brunel
+                            "/Event/Link/Rec/Track/Best#1"
+                            ]
 
-                             # Objects propagated from Gauss
-                             , "/Event/Gen/Collisions#1"
-                             , "/Event/Gen/HepMCEvents#1"
-                             , "/Event/pSim/MCParticles#1"
+                        # Objects propagated from Gauss
+                        # Generation information
+                        SimConf().addGenInfo(writer)
+                        # MCparticles
+                        SimConf().addMCParticles(writer)
 
-                             # Objects propagated from Boole
-                             , "/Event/MC/DigiHeader#1"
-                             , "/Event/MC/TrackInfo#1"
-                             , "/Event/MC/Rich/DigitSummaries#1"
-                             , "/Event/MC/Muon/DigitsInfo#1"
-                             , "/Event/Link/Raw/Velo/Clusters#1"
-                             , "/Event/Link/Raw/TT/Clusters#1"
-                             , "/Event/Link/Raw/IT/Clusters#1"
-                             , "/Event/Link/Raw/OT/Times#1"
-                             , "/Event/Link/Raw/Ecal/Digits#1"
-                             , "/Event/Link/Raw/Muon/Digits#1"
-                             , "/Event/Link/Trig/L0/FullCalo#1" ]
-
-                        # Objects propagated from Boole, not always available
-                        optItems += [ "/Event/Prev/MC/Header#1"
-                                      , "/Event/PrevPrev/MC/Header#1"
-                                      , "/Event/Next/MC/Header#1"
-                                      , "/Event/Link/Raw/Hcal/Digits#1" # From Boole v14r9
-                                      ]
+                        # Objects propagated from Boole
+                        # Digi headers
+                        DigiConf().addHeaders(writer)
+                        # Digitisation summaries
+                        DigiConf().addMCDigitSummaries(writer)
+                        # Links to MCParticles
+                        DigiConf().addMCParticleLinks(writer)
 
                         if dType == "XDST":
                             # Add the MCHits (from Gauss) and links to them (from Boole)
-                            items += [
-                                "/Event/MC/PuVeto/Hits#1"
-                                , "/Event/MC/Velo/Hits#1"
-                                , "/Event/MC/TT/Hits#1"
-                                , "/Event/MC/IT/Hits#1"
-                                , "/Event/MC/OT/Hits#1"
-                                , "/Event/MC/Rich/Hits#1"
-                                , "/Event/MC/Prs/Hits#1"
-                                , "/Event/MC/Spd/Hits#1"
-                                , "/Event/MC/Ecal/Hits#1"
-                                , "/Event/MC/Hcal/Hits#1"
-                                , "/Event/MC/Muon/Hits#1"
-                                , "/Event/Link/Raw/Velo/Clusters2MCHits#1"
-                                , "/Event/Link/Raw/TT/Clusters2MCHits#1"
-                                , "/Event/Link/Raw/IT/Clusters2MCHits#1"
-                                , "/Event/Link/Raw/OT/Times2MCHits#1" ]
-                            # RICH extended information
-                            optItems += [
-                                 "/Event/MC/Rich/OpticalPhotons#1"
-                                ,"/Event/MC/Rich/Tracks#1"
-                                ,"/Event/MC/Rich/Segments#1"
-                                ,"/Event/Link/MC/Particles2MCRichTracks#1"
-                                ,"/Event/Link/MC/Rich/Hits2MCRichOpticalPhotons#1"
-                                ]
+                            SimConf().addSubDetSimInfo(writer)
+                            DigiConf().addMCHitLinks(writer)
 
     def _doWritePOOL( self, items, optItems ):
         """
@@ -191,8 +174,8 @@ class DstConf(ConfigurableUser):
         writer.Preload = False
         writer.ItemList += items
         writer.OptItemList += optItems
-        log.info( "%s.ItemList=%s"%(self.getProp("Writer"),items) )
-        log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),optItems) )
+        log.info( "%s.ItemList=%s"%(self.getProp("Writer"),writer.ItemList) )
+        log.info( "%s.OptItemList=%s"%(self.getProp("Writer"),writer.OptItemList) )
         
 
     def _doWriteMDF( self, items ):
@@ -255,15 +238,14 @@ class DstConf(ConfigurableUser):
         """
         Set up DataOnDemandSvc to unpack a packed (r)DST
         """
-        from Configurables import UnpackTrack, UnpackCaloHypo, UnpackProtoParticle, UnpackRecVertex, UnpackTwoProngVertex
+        from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
+                                    UnpackRecVertex, UnpackTwoProngVertex )
 
         unpackTracks       = UnpackTrack()
         unpackVertex       = UnpackRecVertex()
         unpackV0           = UnpackTwoProngVertex()
 
-        CaloDstUnPackConf (
-           Enable = True 
-            )
+        CaloDstUnPackConf ( Enable = True )
 
         unpackCharged  = UnpackProtoParticle(name       = "UnpackCharged",
                                              OutputName = "/Event/Rec/ProtoP/Charged",
@@ -285,16 +267,14 @@ class DstConf(ConfigurableUser):
                                        InputName  = "/Event/pRec/Track/Muon")
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
 
-        # If simulation, set up also unpacking of MC Truth
-        if self.getProp("SimType").capitalize() != "None":
-            from Configurables import UnpackMCParticle, UnpackMCVertex
-            DataOnDemandSvc().AlgMap[ "/Event/MC/Particles" ] = UnpackMCParticle()
-            DataOnDemandSvc().AlgMap[ "/Event/MC/Vertices" ]  = UnpackMCVertex()
-        
-
     def __apply_configuration__(self):
 
-        log.info(self) 
+        log.info(self)
+        if self.getProp("SimType").capitalize() != "NONE":
+            SimConf().setProp("EnableUnpack",True)
+            DigiConf().setProp("EnableUnpack",True)
+            self.setOtherProps(DigiConf(),["SpilloverPaths"])
+            self.setOtherProps(SimConf(), ["SpilloverPaths"])
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
         if hasattr( self, "PackSequencer" ): self._doPack()
         GaudiKernel.ProcessJobOptions.PrintOn()
