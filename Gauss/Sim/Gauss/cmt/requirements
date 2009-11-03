@@ -48,14 +48,15 @@ use KernelSys          v*     Kernel         -no_auto_imports
 use DetSys             v*     Det            -no_auto_imports
 use LHCbAlgs           v*     Kernel         -no_auto_imports
 use SimComponents      v*     Sim            -no_auto_imports
+use EventPacker        v*     Event          
  
 #===========================================================================
 
 #== From GAUSS project =====================================================
 
 #-- Generator
-use LbPGuns            v*     Gen            -no_auto_imports # TEMPORARLY OFF
-use LbMIB              v*     Gen            -no_auto_imports # TEMPORARLY OFF
+use LbPGuns            v*     Gen            -no_auto_imports 
+use LbMIB              v*     Gen            -no_auto_imports
 use LbPythia           v*     Gen            -no_auto_imports
 
 #-- Not built on Windows
@@ -66,9 +67,9 @@ macro LbAlpGen_use    "LbAlpGen     v*  Gen  -no_auto_imports"  WIN32 ""
 macro LbHijing_use    "LbHijing     v*  Gen  -no_auto_imports"  WIN32 ""
 macro LbPythia8_use   "LbPythia8    v*  Gen  -no_auto_imports"  WIN32 ""
 use ${LbHerwig_use}
-#use ${LbBcVegPy_use}                   # TEMPORARLY OFF
-#use ${LbHidValley_use}                 # TEMPORARLY OFF
-#use ${LbAlpGen_use}                    # TEMPORARLY OFF
+#use ${LbBcVegPy_use}                   # TEMPORARILY OFF
+#use ${LbHidValley_use}                 # TEMPORARILY OFF
+#use ${LbAlpGen_use}                    # TEMPORARILY OFF
 use ${LbHijing_use}
 use ${LbPythia8_use}
 

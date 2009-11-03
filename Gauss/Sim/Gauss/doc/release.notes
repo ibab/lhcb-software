@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-03 - Christopher Rob Jones
+ - Move knowledge of the output SIM file content to new SimConf() Configurable
+   in the gaudiConf package
+
 ! 2009-10-23 - Chris Jones
  - Add packing of MC data in output SIM file. Controlled by new Configurable 
    option "DataPacking". In additional some optional checking of the packing
