@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.100 2009-11-03 11:28:13 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.101 2009-11-03 17:06:58 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -149,11 +149,13 @@ class Brunel(LHCbConfigurableUser):
             from Configurables import ProcessPhase, DataOnDemandSvc
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
-            # CRJ : Don't explicitly run, to handle case when they are not packed on DIGI file
-            #       Instead use DoD
-            #GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
-            #                                                "UnpackMCVertex" ]
-            ApplicationMgr().ExtSvc += [ DataOnDemandSvc() ]
+            GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
+                                                            "UnpackMCVertex" ]
+            # Explicitly run unpacking of RICH summaries (instead of DoD as needed)
+            from Configurables import DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_
+            unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
+            GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
+            #ApplicationMgr().ExtSvc += [ DataOnDemandSvc() ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
             # activate all configured checking (uses MC truth)
