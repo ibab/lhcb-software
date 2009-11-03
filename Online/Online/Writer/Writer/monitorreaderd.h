@@ -4,4 +4,5 @@
 
 #include "dis.hxx"
 #include "dic.hxx"
-
+#include <mqueue.h>
+#include <syslog.h>
