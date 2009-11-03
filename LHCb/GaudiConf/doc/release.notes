@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.178 2009-11-03 11:19:18 jonrob Exp $
+! $Id: release.notes,v 1.179 2009-11-03 11:25:09 jonrob Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
@@ -6,6 +6,9 @@
 ! 2009-11-03 - Christopher Rob Jones
  - Add new SimConf Configurable that deals with all issues regarding the SIM
    file content, including data packing and unpacking.
+ - Update DigiConf and DstConf to internally use SimConf where appropriate.
+   Also, remove any duplicated knowledge of the SIM/DIGI content (for instance
+   when copying data to the (X)DSTs).
 
 !======================== GaudiConf v12r9 2009-10-19 ========================
 ! 2009-10-19 - Marco Cattaneo
