@@ -1,10 +1,13 @@
-! $Id: release.notes,v 1.66 2009-10-27 14:33:09 ibelyaev Exp $
+! $Id: release.notes,v 1.67 2009-11-03 16:33:39 odescham Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@itep.ru
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2009-11-03 - Olivier  Deschamps
+   - MCTruthOnDeman.py : fix typo
 
 ! 2009-10-27 - Vanya Belyaev
 

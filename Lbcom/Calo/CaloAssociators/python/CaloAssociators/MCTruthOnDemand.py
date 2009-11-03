@@ -12,7 +12,7 @@ Configuration file to run Calorimeter Monte Carlo Truth Associations on-demand
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 # nothing to be imported 
 __all__     = (
@@ -69,7 +69,7 @@ def caloMCTruth ( context           = 'Offline' ,
     links2table = getAlgo (
         CaloDigit2MCLinks2Table      ,
         'CaloDigitMCLinks2Table'     , 
-        'Offilne'                    ,
+        'Offline'                    ,
         'Relations/Raw/Calo/Digits'  ,
         False 
         )
