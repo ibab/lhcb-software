@@ -53,7 +53,7 @@ MIBackground.MIBSources = ["TimeCorrSource"]
 # Input File Options:
 ##############################################################################
 # Name of source file (Default: "" - MUST be set in options)
-MIBackground.TimeCorrSource.ParticleSourceFile = "$MIBDATAROOT/data/TCTV.staged_shield.mu.root"
+MIBackground.TimeCorrSource.ParticleSourceFile = "$MIBDATAROOT/data/ir8.left.tctv.v.s.totalorbit.14x4600.IRPLANE.root"
 
 ##############################################################################
 # Mode Modifiers:
@@ -115,7 +115,7 @@ MIBackground.TimeCorrSource.BunchFrequency = 31.6*megahertz
 
 # In tha case of input files that represent something else than 1 sec
 # it is possible to indicate the amount of time it does represent (in sec).
-MIBackground.TimeCorrSource.TimeOfFile = 1.0*s
+MIBackground.TimeCorrSource.TimeOfFile = 0.025*s
 
 ##############################################################################
 # Histogramming (Defalt = false)
