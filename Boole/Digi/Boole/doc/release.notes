@@ -5,6 +5,8 @@ Purpose: LHCb Digitization program
 
 ! 2009-11-03 - Christopher Rob Jones
  - Adapt to changes in GaudiConf
+  + Use new SimConf Configurable for details of the SIM file content + unpacking
+  + Add new "EnablePack" flag to turn on/off data packing
 
 - Tell1 digitisation and clusterisation line added, this introduces
   the bit perfect Tell1 code (actually a high level model of the firmware
