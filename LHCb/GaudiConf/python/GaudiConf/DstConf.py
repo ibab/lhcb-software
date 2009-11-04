@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.19 2009-11-03 11:19:18 jonrob Exp $"
+__version__ = "$Id: DstConf.py,v 1.20 2009-11-04 08:20:29 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -11,7 +11,8 @@ __all__ = [
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from CaloPackingConf import CaloDstPackConf, CaloDstUnPackConf
-from Configurables   import LHCbConfigurableUser, SimConf, DigiConf
+from Configurables   import LHCbConfigurableUser
+import SimConf, DigiConf
 
 class DummyWriter(LHCbConfigurableUser):
     __slots__ = { "ItemList" : [], "OptItemList" : [] }
