@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.22 2009-11-04 17:11:36 jonrob Exp $"
+__version__ = "$Id: DstConf.py,v 1.23 2009-11-04 17:21:23 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -289,9 +289,8 @@ class DstConf(LHCbConfigurableUser):
     def __apply_configuration__(self):
 
         log.info(self)
-        if self.getProp("SimType").capitalize() != "NONE":
-            SimConf().setProp("EnableUnpack",True)
-            DigiConf().setProp("EnableUnpack",True)
+        if self.getProp("SimType").capitalize() != "None":
+            DigiConf().setProp("EnableUnpack",True) # DigiConf propagates it to SimConf
             self.setOtherProps(DigiConf(),["SpilloverPaths"])
             self.setOtherProps(SimConf(), ["SpilloverPaths"])
         if self.getProp( "EnableUnpack" ) : self._doUnpack()

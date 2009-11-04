@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.6 2009-11-04 16:08:44 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.7 2009-11-04 17:21:22 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -65,6 +65,11 @@ class DigiConf(LHCbConfigurableUser):
 
         simDir = "MC"
         if self.getProp("EnablePack") : simDir = "pSim"
+
+        # Pack RICH summary info if not already done
+        from Configurables import DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_
+        RichSumPack = DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryPacker")
+        DataOnDemandSvc().AlgMap["pSim/Rich/DigitSummaries"] = RichSumPack
         
         writer.ItemList += [ 
             # Digitization summaries
@@ -102,14 +107,10 @@ class DigiConf(LHCbConfigurableUser):
         """
         Define content of the output dataset
         """
+
         # Pack pSim containers for the output if not on the input file
         DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
         DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
-
-        # Pack RICH summary info
-        from Configurables import DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_
-        RichSumPack = DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryPacker")
-        DataOnDemandSvc().AlgMap["pSim/Rich/DigitSummaries"] = RichSumPack
 
         simDir = "MC"
         if self.getProp("EnablePack") : simDir = "pSim"
