@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltVeloLines.py,v 1.14 2009-10-16 09:14:20 graven Exp $
-# =============================================================================
 ## @file
 #  Configuration of Hlt Lines for the VELO closing proceure
 # =============================================================================
@@ -9,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 #
@@ -17,7 +15,7 @@ __version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 #
 from HltLine.HltLinesConfigurableUser import *
 
-class HltVeloLinesConf(HltLinesConfigurableUser):
+class Hlt1VeloLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Prescale'                   : { 'Hlt1Velo(.Side|TrTr)' : 0.0001 } 
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits

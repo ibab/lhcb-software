@@ -1,7 +1,5 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltMuonLines.py,v 1.14 2009-08-26 08:55:56 graven Exp $
-# =============================================================================
 ## @file
 #  Configuration of Muon Lines
 #  Include New Line for Dimuon without PV: Leandro de Paula
@@ -14,7 +12,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 
@@ -22,7 +20,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import *
 
 
-class HltMuonLinesConf(HltLinesConfigurableUser) :
+class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 
     #  Muon Lines

@@ -35,7 +35,7 @@ def _combine( op, arg ) :
     return arg.keys()
 
 ############# start building the lumi line(s)...
-class HltLumiLinesConf(HltLinesConfigurableUser) :
+class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
     __slots__ = { 'TriggerTypes'         : ['RandomTrigger']  # ODIN trigger type accepted
@@ -91,7 +91,7 @@ class HltLumiLinesConf(HltLinesConfigurableUser) :
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
                 if debugOPL <= DEBUG:
-                    print '# DEBUG   : HltLumiLines::HistoMaker:', BXType, key, threshold, bins
+                    print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
 
         # populate reco sequence if needed

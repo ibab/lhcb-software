@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltBeamGasLines.py,v 1.13 2009-09-11 13:38:56 graven Exp $
-# =============================================================================
 ## @file
 #  Configuration of BeamGas Lines
 #  @author Jaap Panman jaap.panman@cern.ch
@@ -12,14 +10,14 @@
 # =============================================================================
 __author__  = "Jaap Panman jaap.panman@cern.ch"
 __author__  = "Plamen Hopchev phopchev@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 
-class HltBeamGasLinesConf(HltLinesConfigurableUser) :
+class Hlt1BeamGasLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     __slots__ = { 'L0ChannelBeam1'          : "Hadron" # assume the L0 puts special channel name

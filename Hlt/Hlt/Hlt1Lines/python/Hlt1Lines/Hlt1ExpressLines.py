@@ -2,7 +2,7 @@ from HltLine.HltLinesConfigurableUser import *
 #
 # Define lines that define the XPress stream
 #
-class HltExpressLinesConf(HltLinesConfigurableUser) :
+class Hlt1ExpressLinesConf(HltLinesConfigurableUser) :
     # steering variables
     __slots__ = { 'Prescale' : { 'Hlt1XPress' : 0.0025
                                , 'Hlt1AlignVelo' : 0.000001 

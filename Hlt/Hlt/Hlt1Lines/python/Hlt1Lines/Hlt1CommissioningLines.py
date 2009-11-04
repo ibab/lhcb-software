@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltCommissioningLines.py,v 1.9 2009-08-24 20:04:56 graven Exp $
-# =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -11,13 +9,13 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
 
-class HltCommissioningLinesConf(HltLinesConfigurableUser):
+class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
 
    __slots__ = { 'Prescale' : { 'Hlt1NonRandomODIN'  : 0.000001
                               , 'Hlt1RandomODIN'     : 0.000001 # @OnlineEnv.AcceptRate

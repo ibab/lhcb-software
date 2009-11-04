@@ -5,7 +5,7 @@ from Gaudi.Configuration import *
 from HltLine.HltLinesConfigurableUser import *
 
 
-class HltElectronLinesConf(HltLinesConfigurableUser) :
+class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
     __slots__ = { 'Compan_PtCut'         :  1000.    # for global optimization 1

@@ -31,13 +31,13 @@ class Debug_320Vis_300L0_Hadron_Hlt1_Oct09 :
         """
         Returns a dictionary of cuts
         """
-        from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-        from Hlt1Lines.HltMuonLines           import HltMuonLinesConf
-        from Hlt1Lines.HltHadronLines         import HltHadronLinesConf
-        from Hlt1Lines.HltElectronLines       import HltElectronLinesConf
-        from Hlt1Lines.HltPhotonLines         import HltPhotonLinesConf
-        from Hlt1Lines.HltExpressLines        import HltExpressLinesConf
-        from Hlt1Lines.HltVeloLines           import HltVeloLinesConf
+        from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
+        from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
+        from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
+        from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
+        from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf
+        from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
         return { HltHadronLinesConf : {  'SingleHadron_PTCut' : 4800

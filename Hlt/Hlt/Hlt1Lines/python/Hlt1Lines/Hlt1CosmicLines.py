@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltCosmicLines.py,v 1.2 2009-10-17 16:57:30 graven Exp $
-# =============================================================================
 ## @file
 #  Cosmics 
 #  @author Stephan Nies & Jesko Merkel 
@@ -11,13 +9,13 @@
 """
 # =============================================================================
 __author__  = "Stephan Nies & Jesko Merkel " 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
 
-class HltCosmicLinesConf(HltLinesConfigurableUser):
+class Hlt1CosmicLinesConf(HltLinesConfigurableUser):
  
     __slots__ = { 'Prescale' : { }
                 }

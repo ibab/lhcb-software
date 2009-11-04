@@ -32,16 +32,16 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
         """
         Returns a dictionary of cuts
         """
-        from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-        from Hlt1Lines.HltMuonLines           import HltMuonLinesConf
-        from Hlt1Lines.HltHadronLines         import HltHadronLinesConf
-        from Hlt1Lines.HltElectronLines       import HltElectronLinesConf
-        from Hlt1Lines.HltPhotonLines         import HltPhotonLinesConf
-        from Hlt1Lines.HltExpressLines        import HltExpressLinesConf
-        from Hlt1Lines.HltVeloLines           import HltVeloLinesConf
+        from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        from Hlt1Lines.Hlt1MuonLines           import Hlt1MuonLinesConf
+        from Hlt1Lines.Hlt1HadronLines         import Hlt1HadronLinesConf
+        from Hlt1Lines.Hlt1ElectronLines       import Hlt1ElectronLinesConf
+        from Hlt1Lines.Hlt1PhotonLines         import Hlt1PhotonLinesConf
+        from Hlt1Lines.Hlt1ExpressLines        import Hlt1ExpressLinesConf
+        from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        return { HltHadronLinesConf : {  'SingleHadron_PTCut' : 4800
+        return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 4800
                                          , 'HadSingle_IPCut' : 0.06 
                                          , 'HadMain_PTCut' : 250
                                          , 'HadCompanion_DZCut' : 1.83
@@ -49,18 +49,18 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
                                          , 'HadCompanion_PTCut' : 750
                                          , 'HadCompanion_PointingCut' : 0.39
                                         }
-                 , HltPhotonLinesConf : {  'Pho_EtCut' : 2800.0
+                 , Hlt1PhotonLinesConf : {  'Pho_EtCut' : 2800.0
                                            , 'Track_PtCut' : 650
                                            , 'Track_IPCut3D' : 0.15
                                            , 'Pho_IsPho' : -0.082
                                            }
 
 
-                 , HltElectronLinesConf : { 'Ele_EtCut' : 2800.0
+                 , Hlt1ElectronLinesConf : { 'Ele_EtCut' : 2800.0
                                           , 'Compan_PtCut' : 2750
                                           , 'Ele_IPCut' : 0.13
                                           }
-                 , HltMuonLinesConf : {  'DiMuon_SumPtCut' : 120.0
+                 , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut' : 120.0
                                       , 'Muon_PtCut' : 1000
                                       , 'MuonIP_PtCut' : 1000
                                       , 'Muon_IPMinCut' : 0.05
@@ -79,7 +79,7 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
                                       , 'MuTrackPoint' : 0.4
                                       , 'MuTrackTrChi2' : 10
                                       }
-                 , HltExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
+                 , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
                                                                , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                                , 'Hlt2DebugEvent'   : 0.0001

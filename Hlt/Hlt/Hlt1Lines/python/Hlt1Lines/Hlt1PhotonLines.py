@@ -1,7 +1,5 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: HltPhotonLines.py,v 1.11 2009-10-26 18:55:13 witekma Exp $
-# =============================================================================
 ## @file
 #  Configuration of Photon Lines
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -12,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $'
 # =============================================================================
 
 
@@ -23,7 +21,7 @@ from HltLine.HltLinesConfigurableUser import *
 #//--------------------------
 
 
-class HltPhotonLinesConf(HltLinesConfigurableUser):
+class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Track_PtCut'     : 650.   # for global optimization 1
                , 'Track_IPCut3D'   : 0.15   # for global optimization 2
                , 'Pho_IsPho'       : -0.1   # for global optimization 3 optional

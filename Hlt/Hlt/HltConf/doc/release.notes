@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.360 2009-10-30 14:23:46 mlieng Exp $ 
+! $Id: release.notes,v 1.361 2009-11-04 14:51:58 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-04 - V. Gligorov
+ - Hlt1.py 
+   . Follow renaming of Hlt1Lines files/classes 
 
 !========================== HltConf v5r1 2009-10-28 ===================
 ! 2009-10-30 - Magnus Lieng

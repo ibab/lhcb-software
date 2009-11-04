@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltHadronLines.py,v 1.11 2009-11-03 14:00:28 gligorov Exp $
-# =============================================================================
 ## @file
 #  Configuration of Hadron Lines
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -11,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
@@ -27,7 +25,7 @@ def histosfilter(name,xlower=0.,xup=100.,nbins=100):
     return histosfs
 
 
-class HltHadronLinesConf(HltLinesConfigurableUser) :
+class Hlt1HadronLinesConf(HltLinesConfigurableUser) :
     #--------------------------------
     #
     # (J.A. Hernando 17/12/08)

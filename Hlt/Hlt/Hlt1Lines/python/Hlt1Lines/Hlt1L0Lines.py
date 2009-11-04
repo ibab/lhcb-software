@@ -1,6 +1,4 @@
 # =============================================================================
-# $Id: HltL0Lines.py,v 1.6 2009-08-25 09:12:42 graven Exp $
-# =============================================================================
 ## @file
 #  Configuration of Hlt Lines which are plain L0 lines
 #  @author Gerhard Raven Gerhard.Raven@nikhef.nl
@@ -11,12 +9,12 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
-class HltL0LinesConf(HltLinesConfigurableUser) :
+class Hlt1L0LinesConf(HltLinesConfigurableUser) :
    __slots__ = { 'Postscale' : { '.*' : 0.000001 } # set new default Postscale for these lines!
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }

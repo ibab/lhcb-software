@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1.py,v 1.32 2009-10-23 10:05:59 snies Exp $
+# $Id: Hlt1.py,v 1.33 2009-11-04 14:50:44 gligorov Exp $
 # =============================================================================
 ## @file
 #  Configuration of HLT1
@@ -14,37 +14,37 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.32 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.33 $"
 # =============================================================================
 
 from Gaudi.Configuration import * 
 from LHCbKernel.Configuration import *
-from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-from Hlt1Lines.HltLumiLines     import HltLumiLinesConf
-from Hlt1Lines.HltBeamGasLines  import HltBeamGasLinesConf
-from Hlt1Lines.HltL0Lines       import HltL0LinesConf
-from Hlt1Lines.HltVeloLines     import HltVeloLinesConf
-from Hlt1Lines.HltExpressLines  import HltExpressLinesConf
-from Hlt1Lines.HltMuonLines     import HltMuonLinesConf
-from Hlt1Lines.HltHadronLines   import HltHadronLinesConf
-from Hlt1Lines.HltPhotonLines   import HltPhotonLinesConf
-from Hlt1Lines.HltElectronLines import HltElectronLinesConf
-from Hlt1Lines.HltCosmicLines   import HltCosmicLinesConf
+from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+from Hlt1Lines.Hlt1LumiLines     import Hlt1LumiLinesConf
+from Hlt1Lines.Hlt1BeamGasLines  import Hlt1BeamGasLinesConf
+from Hlt1Lines.Hlt1L0Lines       import Hlt1L0LinesConf
+from Hlt1Lines.Hlt1VeloLines     import Hlt1VeloLinesConf
+from Hlt1Lines.Hlt1ExpressLines  import Hlt1ExpressLinesConf
+from Hlt1Lines.Hlt1MuonLines     import Hlt1MuonLinesConf
+from Hlt1Lines.Hlt1HadronLines   import Hlt1HadronLinesConf
+from Hlt1Lines.Hlt1PhotonLines   import Hlt1PhotonLinesConf
+from Hlt1Lines.Hlt1ElectronLines import Hlt1ElectronLinesConf
+from Hlt1Lines.Hlt1CosmicLines   import Hlt1CosmicLinesConf
 
 
 
 class Hlt1Conf(LHCbConfigurableUser):
-   __used_configurables__ = [ HltCommissioningLinesConf
-                            , HltLumiLinesConf
-                            , HltBeamGasLinesConf
-                            , HltL0LinesConf
-                            , HltVeloLinesConf
-                            , HltExpressLinesConf
-                            , HltMuonLinesConf
-                            , HltHadronLinesConf
-                            , HltPhotonLinesConf
-                            , HltElectronLinesConf
-                            , HltCosmicLinesConf
+   __used_configurables__ = [ Hlt1CommissioningLinesConf
+                            , Hlt1LumiLinesConf
+                            , Hlt1BeamGasLinesConf
+                            , Hlt1L0LinesConf
+                            , Hlt1VeloLinesConf
+                            , Hlt1ExpressLinesConf
+                            , Hlt1MuonLinesConf
+                            , Hlt1HadronLinesConf
+                            , Hlt1PhotonLinesConf
+                            , Hlt1ElectronLinesConf
+                            , Hlt1CosmicLinesConf
                             ]
 
    __slots__ = { "ThresholdSettings"            : {} # dictionary decoded in HltThresholdSettings
