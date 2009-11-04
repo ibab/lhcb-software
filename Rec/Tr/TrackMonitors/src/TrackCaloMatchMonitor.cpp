@@ -153,8 +153,12 @@ StatusCode TrackCaloMatchMonitor::execute()
 	  if( std::abs(dy)<200 && std::abs(dx)<100 ) {
 	    profile1D( xtrack, dy, "dyVersusX","dy versus x",-3500,3500) ;
 	    profile1D( ytrack, dy, "dyVersusY","dy versus y",-3500,3500) ;
+	    profile1D( state->tx(), dy, "dyVersusTx","dy versus x",-1,1) ;
+	    profile1D( state->ty(), dy, "dyVersusTy","dy versus y",-1,1) ;
 	    profile1D( xtrack, dx, "dxVersusX","dx versus x",-3500,3500) ;
 	    profile1D( ytrack, dx, "dxVersusY","dx versus y",-3500,3500) ;
+	    profile1D( state->tx(), dx, "dxVersusTx","dy versus x",-1,1) ;
+	    profile1D( state->ty(), dx, "dxVersusTy","dy versus y",-1,1) ;
 	  }
 	}
       }
