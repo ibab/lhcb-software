@@ -4,6 +4,7 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!========================== EvtGen v11r6 2009-11-04 ==========================
 ! 2009-10-19 - Patrick Robbe 
  - Fix gcc4.3 compilation, mainly dealing with scope of friend functions
 
