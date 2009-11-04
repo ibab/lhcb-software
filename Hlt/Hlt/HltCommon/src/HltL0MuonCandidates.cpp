@@ -1,4 +1,4 @@
-// $Id: HltL0MuonCandidates.cpp,v 1.13 2009-09-30 09:15:14 graven Exp $
+// $Id: HltL0MuonCandidates.cpp,v 1.14 2009-11-04 21:56:17 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -171,8 +171,8 @@ namespace {
 //=============================================================================
 bool HltL0MuonCandidates::checkClone(L0MuonCandidate* muon)
 {
-  const MuonTileID& tileM1 = muon->muonTileIDs(0).front();
-  const MuonTileID& tileM2 = muon->muonTileIDs(1).front();
+  MuonTileID tileM1 = muon->muonTileIDs(0).front();
+  MuonTileID tileM2 = muon->muonTileIDs(1).front();
 
   BOOST_FOREACH(const Track* t, *m_selection.output() ) {
     const std::vector< LHCb::LHCbID >& ids= t->lhcbIDs();
