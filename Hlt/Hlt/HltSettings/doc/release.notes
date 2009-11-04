@@ -4,6 +4,13 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 - Antonio Perez-Calero
+ - Modified Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09.py so that active lines (muon+track) 
+   is a fixed property
+ - Added Debug_10000Vis_1000L0_NoLines_Hlt1_Oct09.py for general develop & debug purposes, 
+   which sets the nominal thresholds but does not include any Hlt1 Line. They must be 
+   added by HltConf().AdditionalHlt1Lines = ['myline']
+
 ! 2009-11-03 - Antonio Perez-Calero
  - Added Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09.py for mu+track lines debugging
 

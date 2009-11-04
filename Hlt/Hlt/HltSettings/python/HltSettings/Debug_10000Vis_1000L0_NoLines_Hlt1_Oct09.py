@@ -1,14 +1,14 @@
 # Note: if you define activeLines, you MUST provide a unique 'HltType' for this 
 #       set of activelines
 
-class Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 :
+class Debug_10000Vis_1000L0_NoLines_Hlt1_Oct09 :
     """
-    Threshold settings for testing the Hlt1 muon+track lines, nominal conditions
+    Thresholds and settings for testing the Hlt1 lines for nominal conditions. No lines included by default
     
     WARNING :: DO NOT EDIT WITHOUT PERMISSION OF THE AUTHORS
     
     @author A. Perez-Calero (aperez@ecm.ub.es)
-    @date 2009-11-3
+    @date 2009-11-4
     """
     
     def verifyType(self,ref) :
@@ -24,8 +24,8 @@ class Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 :
         return '0xDC09'
 
     def HltType(self) :
-        self.verifyType( Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 )
-        return          'Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09'
+        self.verifyType( Debug_10000Vis_1000L0_NoLines_Hlt1_Oct09 )
+        return          'Debug_10000Vis_1000L0_NoLines_Hlt1_Oct09'
 
     def ActiveHlt2Lines(self) :
         """
@@ -37,7 +37,7 @@ class Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09 :
         """
         Returns a list of active Hlt1 lines
         """
-        return ['Hlt1MuTrack','Hlt1MuTrackFitMu','Hlt1MuTrack4JPsi','Hlt1MuTrackFitMu4JPsi']
+        return []
 
     def Thresholds(self) :
         """
