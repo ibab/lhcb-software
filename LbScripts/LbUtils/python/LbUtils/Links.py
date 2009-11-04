@@ -71,9 +71,11 @@ def makeRelativeLink(src, dest, dryrunmode):
     """ create a relative symlink (instead of an absolute one) """
     relpath = getRelativePath(dirname(dest), src)
     log = logging.getLogger()
-    log.info("Creating relativelink %s -> %s" % (dest, relpath))
     if not dryrunmode :
         symlink(relpath, dest)
+        log.debug("Creating relativelink %s -> %s" % (dest, relpath))
+    else :
+        log.info("Creating relativelink %s -> %s" % (dest, relpath))
         
 def relativizeLink(linkname):
     linkdir = dirname(linkname)
