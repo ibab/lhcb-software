@@ -1,11 +1,11 @@
-! $Id: release.notes,v 1.18 2009-11-04 12:58:09 silviam Exp $ 
+! $Id: release.notes,v 1.19 2009-11-04 13:01:16 silviam Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Calo/CaloMoniSim
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : 
 ! -----------------------------------------------------------------------------
 
-
+!======================= CaloMoniSim v4r0 2009-11-04 ==========================
 ! 2009-10-22 - Chris Jones
  - Minor changes to help deploying packing and Spillover locations in Gauss
   + Switch to loading data via get<..> methods to aid usage in Gauss with 
