@@ -115,7 +115,8 @@ StatusCode UpdateAndReset::initialize() {
     instancenumber = serviceParts[2];
     if (partName=="CALD0701") {
        partName="LHCb";
-       taskName = "Calib"+taskName+"_"+instancenumber;
+       if (instancenumber=="1") {taskName = "CaloDAQCalib";}
+       else {taskName = "Calib"+taskName+"_"+instancenumber;}
     }   
   }
   else if (4 == serviceParts.size()) {
@@ -485,6 +486,7 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
 
 
   if (save)  {
+     //std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName;  
      //add the month and day to avoid too many files per year
      std::string dirName = m_saveSetDir + "/" + year + "/" + partName + "/" + taskName + "/" + month + "/" + day;  
      void *dir = gSystem->OpenDirectory(dirName.c_str());
@@ -499,22 +501,34 @@ void UpdateAndReset::manageTESHistos (bool list, bool reset, bool save, bool isF
        outstr << m_runNumber;
        runNumberstr=outstr.str();    
        if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + runNumberstr + "-" + timestr + "-EOR.root"; 
-       else tmpfile = dirName + "/" + taskName + "-" + runNumberstr + "-" + timestr + ".root"; 
-    }
+       else tmpfile = dirName + "/" + taskName + "-" + runNumberstr + "-" + timestr + ".root"; }
     else { 
        if (isFromEndOfRun)  tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root";
        else tmpfile = dirName + "/" + taskName + "-" + timestr + ".root"; 
     }	 
+   // std::string tmpfile = dirName + "/" + taskName + "-" + timestr + ".root";
+   // if (isFromEndOfRun) tmpfile = dirName + "/" + taskName + "-" + timestr + "-EOR.root"; 
+      msg << MSG::DEBUG << "updating infofile status" << endreq;
     m_infoFileStatus.replace(0, m_infoFileStatus.length(), tmpfile);
+   
+
+ //   msg << MSG::INFO << "We will save histograms in file " << m_infoFileStatus << endreq;
     f = new TFile(m_infoFileStatus.c_str(),"create");
   }
   if (f!=0) {
     if(! f->IsZombie()) {
       histogramIdentifier(object, idList, reset, save, level, (TDirectory*) f);  
+ //     if (0 == idList.size()) msg << MSG::INFO << "No histogram found" << endreq;    
       if (save) {
         f->Close();
         delete f;f=0;
       }    
+    /*  if ((list)&&(0 != idList.size())) {
+        msg << MSG::INFO << "Printing identified histograms/profiles " << endreq;
+        for (std::vector<std::string>::iterator it = idList.begin(); it != idList.end(); it++){
+          msg << MSG::INFO << "    " << (*it) << endreq;
+        }
+      }*/
     }
     else {
       std::string errorTmpfile = "Error Saving Data => Zombie File..!!!!!"; 
@@ -569,7 +583,10 @@ void UpdateAndReset::histogramIdentifier(IRegistry* object, std::vector<std::str
            TH1* hRoot = (TH1*) Gaudi::Utils::Aida2ROOT::aida2root(histogram);
            std::vector<std::string> HistoFullName = Misc::splitString(hRoot->GetName(), "/");
 	   hRoot->Write( HistoFullName[HistoFullName.size()-1].c_str() );
+          // msg << MSG::DEBUG << ", saving name=" << hRoot->GetName() << " directory="
+          //  << (hRoot->GetDirectory() ? hRoot->GetDirectory()->GetName() : "none") <<endreq;
          }
+        // msg << MSG::DEBUG << "Resetting histogram" << endreq;
          if (reset) histogram->reset();
          idList.push_back(id);
          continue;
