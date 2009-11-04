@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.49 2009-11-04 15:03:02 gligorov Exp $
+! $Id: release.notes,v 1.50 2009-11-04 16:53:42 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-04 - V. Gligorov
+ - Added Hlt1HadronViaTLines.py, an implementation of the hadron alley in which
+   the T-tracks are created first, then matched to the L0 objects and extrapolated
+   back to the Velo.
 
 ! 2009-11-04 - V. Gligorov
  - Renamed all Hlt...Lines files (and classnames within the file) into Hlt1...Lines
