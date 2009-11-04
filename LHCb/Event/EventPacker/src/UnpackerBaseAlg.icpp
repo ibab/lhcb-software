@@ -27,8 +27,8 @@ StatusCode Unpack<PACKER>::initialize()
 {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
-  
-  info() << "Input '" << rootInTES() << m_inputName 
+
+  info() << "Input '" << rootInTES() << m_inputName
          << "' Output '" << rootInTES() << m_outputName << "'" << endmsg;
 
   return sc;
@@ -37,26 +37,40 @@ StatusCode Unpack<PACKER>::initialize()
 template < class PACKER >
 StatusCode Unpack<PACKER>::execute()
 {
-  // if input does not exist, just return
-  if ( exist<typename PACKER::PackedDataVector>(m_inputName) )
+  // Check to see if the output data already exists.
+  // If it does silently return doing nothing
+  DataObject * pObject(NULL);
+  StatusCode test = eventSvc()->findObject( m_outputName, pObject );
+  if ( test.isFailure() )
   {
-    // Load the input data
-    typename PACKER::PackedDataVector * pdata =
-      this->get<typename PACKER::PackedDataVector>(m_inputName);
 
-    // Make the output unpacked data and give to Gaudi
-    typename PACKER::DataVector * data = new typename PACKER::DataVector();
-    this->put( data, m_outputName );
+    // if input does not exist, just return doing nothing again
+    test = eventSvc()->findObject( m_inputName, pObject );
+    if ( test.isSuccess() )
+    {
 
-    // set the data version
-    data->setVersion(pdata->version());
-    
-    // Packer
-    static const PACKER packer;
-    
-    // Fill unpacked data
-    packer.unpack( *pdata, *data );
-  }
-    
+      // Load the input data
+      typename PACKER::PackedDataVector * pdata =
+        this->get<typename PACKER::PackedDataVector>(m_inputName);
+
+      // Make the output unpacked data
+      typename PACKER::DataVector * data = new typename PACKER::DataVector();
+
+      // give new container to Gaudi
+      this->put( data, m_outputName );
+
+      // set the data version
+      data->setVersion(pdata->version());
+
+      // Packer
+      static const PACKER packer;
+
+      // Fill unpacked data
+      packer.unpack( *pdata, *data );
+
+    } // input exists
+
+  } // output exists
+
   return StatusCode::SUCCESS;
 }

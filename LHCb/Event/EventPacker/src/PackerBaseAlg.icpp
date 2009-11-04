@@ -29,7 +29,7 @@ StatusCode Pack<PACKER>::initialize()
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) return sc;
 
-  info() << "Input '" << rootInTES() << m_inputName 
+  info() << "Input '" << rootInTES() << m_inputName
          << "' Output '" << rootInTES() << m_outputName << "'" << endmsg;
 
   return sc;
@@ -38,31 +38,47 @@ StatusCode Pack<PACKER>::initialize()
 template < class PACKER >
 StatusCode Pack<PACKER>::execute()
 {
-  // Load the input data
-  typename PACKER::DataVector * data = 
-    this->getOrCreate<typename PACKER::DataVector,typename PACKER::DataVector>(m_inputName);
+  // Check to see if the output data already exists.
+  // If it does silently return doing nothing
+  DataObject * pObject(NULL);
+  StatusCode test = eventSvc()->findObject( m_outputName, pObject );
+  if ( test.isFailure() )
+  {
 
-  // Make the output packed data
-  typename PACKER::PackedDataVector * pdata = 
-    new typename PACKER::PackedDataVector();
+    // if input does not exist, just return doing nothing again
+    test = eventSvc()->findObject( m_inputName, pObject );
+    if ( test.isSuccess() )
+    {
 
-  // set data version
-  pdata->setVersion(data->version());
+      // Load the input data
+      typename PACKER::DataVector * data = 
+        this->get<typename PACKER::DataVector>(m_inputName);
 
-  // Set packing version number
-  pdata->setPackingVersion(m_version);
+      // Make the output packed data
+      typename PACKER::PackedDataVector * pdata =
+        new typename PACKER::PackedDataVector();
 
-  // give new container to Gaudi
-  this->put( pdata, m_outputName );
+      // set data version
+      pdata->setVersion(data->version());
 
-  // Packer
-  static const PACKER packer;
+      // Set packing version number
+      pdata->setPackingVersion(m_version);
 
-  // Fill packed data
-  packer.pack( *data, *pdata );  
+      // give new container to Gaudi
+      this->put( pdata, m_outputName );
 
-  // Clear the registry address of the unpacked container, to prevent reloading
-  pdata->registry()->setAddress( 0 );
+      // Packer
+      static const PACKER packer;
+
+      // Fill packed data
+      packer.pack( *data, *pdata );
+
+      // Clear the registry address of the unpacked container, to prevent reloading
+      pdata->registry()->setAddress( 0 );
+
+    } // input
+
+  } // output
 
   return StatusCode::SUCCESS;
 }
