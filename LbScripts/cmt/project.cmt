@@ -1,6 +1,7 @@
 project LbScripts
 
 build_strategy with_installarea
+structure_strategy without_version_directory
 setup_strategy root
 
 container LbScriptsSys
