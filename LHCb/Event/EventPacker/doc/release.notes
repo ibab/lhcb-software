@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 - Christopher Rob Jones
+ - Add packers for RichPIDs and MuonPIDs
+
 ! 2009-11-03 - Christopher Rob Jones
  - Update new packers to explicitly store the 'packing version' in the packed
    DataObject. Allows the 'version' of the data object to the be used to store

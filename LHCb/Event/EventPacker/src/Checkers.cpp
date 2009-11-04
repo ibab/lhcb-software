@@ -1,4 +1,4 @@
-// $Id: Checkers.cpp,v 1.3 2009-10-26 16:44:12 cocov Exp $
+// $Id: Checkers.cpp,v 1.4 2009-11-04 17:13:18 jonrob Exp $
 
 #include "CheckerBaseAlg.icpp"
 
@@ -9,6 +9,8 @@
 #include "Event/PackedMCCaloHit.h"
 #include "Event/PackedMCHit.h"
 #include "Event/PackedMCRichDigitSummary.h"
+#include "Event/PackedMuonPID.h"
+#include "Event/PackedRichPID.h"
 
 template class DataPacking::Check<LHCb::MCRichHitPacker>;
 typedef DataPacking::Check<LHCb::MCRichHitPacker> A;
@@ -73,3 +75,11 @@ DECLARE_ALGORITHM_FACTORY( K );
 template class DataPacking::Check<LHCb::MCRichDigitSummaryPacker>;
 typedef DataPacking::Check<LHCb::MCRichDigitSummaryPacker> L;
 DECLARE_ALGORITHM_FACTORY( L );
+
+template class DataPacking::Check<LHCb::RichPIDPacker>;
+typedef DataPacking::Check<LHCb::RichPIDPacker> M;
+DECLARE_ALGORITHM_FACTORY( M );
+
+template class DataPacking::Check<LHCb::MuonPIDPacker>;
+typedef DataPacking::Check<LHCb::MuonPIDPacker> N;
+DECLARE_ALGORITHM_FACTORY( N );

@@ -62,4 +62,12 @@
   <class name="std::vector<LHCb::PackedMCRichDigitSummary>" />
   <class name="LHCb::PackedMCRichDigitSummarys" id="000005F7-0000-0000-0000-000000000000" />
 
+  <class name="LHCb::PackedRichPID" />
+  <class name="std::vector<LHCb::PackedRichPID>" />
+  <class name="LHCb::PackedRichPIDs" id="00000619-0000-0000-0000-000000000000" />
+
+  <class name="LHCb::PackedMuonPID" />
+  <class name="std::vector<LHCb::PackedMuonPID>" />
+  <class name="LHCb::PackedMuonPIDs" id="00000623-0000-0000-0000-000000000000" />
+
 </lcgdict>
