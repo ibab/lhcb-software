@@ -1,3 +1,8 @@
+2009-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/Log.py: removed the -v for the verbose option and -q for 
+	the quiet options. These are too common switches.
+
 2009-10-15  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Match.py: 
