@@ -33,7 +33,8 @@ class TAlignment( LHCbConfigurableUser ):
         , "DimuonLocation"               : ""                          # Location of input vertex list
         , "UseCorrelations"              : True                        # Correlations
         , "ApplyMS"                      : True                        # Multiple Scattering
-        , "Constraints"                  : []                          # Specify which constrains to use with strategy 1  
+        , "Constraints"                  : []                          # Specifies 'exact' (lagrange) constraints  
+        , "SurveyConstraints"            : []                          # Specifies 'chisquare' constraints
         , "UseWeightedAverageConstraint" : False                       # Weighted average constraint
         , "MinNumberOfHits"              : 100                         # Min number of hits per element
         , "Chi2Outlier"                  : 10000                       # Chi2 cut for outliers
@@ -211,6 +212,10 @@ class TAlignment( LHCbConfigurableUser ):
             constrainttool                        = Al__AlignConstraintTool("Al::AlignConstraintTool")
             constrainttool.Constraints            = self.getProp( "Constraints" )
             constrainttool.UseWeightedAverage     = self.getProp( "UseWeightedAverageConstraint" )
+
+            # this one is in the toolsvc, for now
+            chisqconstrainttool                   = Al__AlignConstraintTool("Al::AlignChisqConstraintTool")
+            chisqconstrainttool.Constraints       = self.getProp( "SurveyConstraints" )
 
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
