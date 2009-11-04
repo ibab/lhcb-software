@@ -1,4 +1,3 @@
-
 # ====================================================================
 #  Track fitting options
 # ====================================================================
@@ -7,7 +6,8 @@ from TrackSys.Configuration import TrackSys
 from Gaudi.Configuration import allConfigurables
 
 from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilter,
-                            TrackProjectorSelector, TrajOTProjector, TrackMasterExtrapolator,
+                            TrackProjectorSelector, TrajOTProjector, TrajOTCosmicsProjector,
+                            TrackMasterExtrapolator,
                             TrackSimpleExtraSelector, TrackDistanceExtraSelector,
                             TrackHerabExtrapolator,
                             SimplifiedMaterialLocator, DetailedMaterialLocator,
@@ -215,8 +215,8 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     eventfitter.Fitter.MeasProvider.IgnoreMuon = True
     return eventfitter
 
-def ConfiguredStraightLineFit( Name, TracksInContainer,
-                               NoDriftTimes =  TrackSys().noDrifttimes()  ):
+def ConfiguredStraightLineFitter( Name, TracksInContainer,
+                                  NoDriftTimes =  TrackSys().noDrifttimes()  ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
                                         FieldOff=True,
                                         NoDriftTimes=NoDriftTimes,
@@ -225,3 +225,24 @@ def ConfiguredStraightLineFit( Name, TracksInContainer,
     eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 
+def ConfiguredStraightLineFit( Name, TracksInContainer,
+                               NoDriftTimes =  TrackSys().noDrifttimes()  ):
+    return ConfiguredStraightLineFitter(Name, TracksInContainer, NoDriftTimes)
+
+def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
+                                  MaxNumberOutliers = 0 ):
+    # create the OTCosmicsProjector if it doesn't exist yet
+    if not allConfigurables.get( 'OTCosmicsProjector' ) :
+        cosmicsOTProjector = TrajOTCosmicsProjector('OTCosmicsProjector')
+        cosmicsOTProjector.FitEventT0 = True
+        cosmicsOTProjector.UseConstantDriftVelocity = True
+    else :
+        cosmicsOTProjector = TrajOTCosmicsProjector('OTCosmicsProjector')
+    # create the fitter and set it up
+    eventfitter = ConfiguredStraightLineFitter(Name, TracksInContainer,  NoDriftTimes = False )
+    eventfitter.Fitter.addTool(TrackKalmanFilter(),'NodeFitter')
+    eventfitter.Fitter.NodeFitter.addTool( TrackProjectorSelector, "Projector" )
+    eventfitter.Fitter.NodeFitter.Projector.OT = cosmicsOTProjector
+    eventfitter.Fitter.MaxNumberOutliers = MaxNumberOutliers
+    eventfitter.Fitter.ErrorQoP = [ 25, 0 ]
+    return eventfitter
