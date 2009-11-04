@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.23 2009-11-04 17:21:23 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.24 2009-11-04 17:58:27 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -11,7 +11,9 @@ __all__ = [
 from Gaudi.Configuration import *
 import GaudiKernel.ProcessJobOptions
 from CaloPackingConf import CaloDstPackConf, CaloDstUnPackConf
-from Configurables   import LHCbConfigurableUser, SimConf, DigiConf
+from Configurables   import LHCbConfigurableUser
+from SimConf  import SimConf
+from DigiConf import DigiConf
 
 class DummyWriter(LHCbConfigurableUser):
     __slots__ = { "ItemList" : [], "OptItemList" : [] }
@@ -88,13 +90,11 @@ class DstConf(LHCbConfigurableUser):
             if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
             recDir = "Rec"
             if sType != "NONE":
-                DigiConf().EnablePack = False
-                SimConf().EnablePack  = False
+                DigiConf().EnablePack = False # DigiConf propagates it to SimConf
         else:
             recDir = "pRec"
             if sType != "NONE":
-                DigiConf().EnablePack = True
-                SimConf().EnablePack  = True
+                DigiConf().EnablePack = True # DigiConf propagates it to SimConf
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
 

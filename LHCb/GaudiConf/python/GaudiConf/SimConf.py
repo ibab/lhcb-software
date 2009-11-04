@@ -1,8 +1,12 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.2 2009-11-04 17:11:36 jonrob Exp $"
+__version__ = "$Id: SimConf.py,v 1.3 2009-11-04 17:58:27 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
+
+__all__ = [
+    'SimConf'  ## the configurable, configures SIM writing/packing/unpacking   
+    ]
 
 from Gaudi.Configuration import *
 from Configurables import LHCbConfigurableUser
