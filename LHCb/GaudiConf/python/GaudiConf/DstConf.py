@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.24 2009-11-04 17:58:27 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.25 2009-11-04 18:03:53 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -89,11 +89,11 @@ class DstConf(LHCbConfigurableUser):
         if pType == 'NONE':
             if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
             recDir = "Rec"
-            if sType != "NONE":
+            if sType != "None":
                 DigiConf().EnablePack = False # DigiConf propagates it to SimConf
         else:
             recDir = "pRec"
-            if sType != "NONE":
+            if sType != "None":
                 DigiConf().EnablePack = True # DigiConf propagates it to SimConf
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
@@ -135,7 +135,7 @@ class DstConf(LHCbConfigurableUser):
                 writer.OptItemList += [ "/Event/Phys/Selections#1" ]
 
                 # Add the simulation objects (POOL DST only)
-                if sType != "NONE":
+                if sType != "None":
                     
                     # Minimal MC output.
                     SimConf().addHeaders(writer)

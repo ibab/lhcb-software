@@ -1,9 +1,11 @@
-! $Id: release.notes,v 1.183 2009-11-04 17:21:22 cattanem Exp $
+! $Id: release.notes,v 1.184 2009-11-04 18:03:53 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
 ! 2009-11-04 - Marco Cattaneo
+ - Fix tests on SimType in DstConf
+ - Fix build warnings from genconf
  - Fix DigiConf to correctly set up data on demand packing of MCRichDigitSummary
    when DigiConf is called from DstConf
 
