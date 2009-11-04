@@ -24,7 +24,7 @@ class Alignables( list ):
         self.m_otModules  = [ "/M1", "/M2", "/M3", "/M4", "/M5", "/M6", "/M7", "/M8", "/M9" ]
         
         self.m_muon            = "/dd/Structure/LHCb/DownstreamRegion/Muon"
-        self.m_mustations      = ["/M2","/M3","/M4","/M5"] ###cosmici
+        self.m_mustations      = ["/M1","/M2","/M3","/M4","/M5"] ###cosmici
         self.m_muhalfstations  = ["/M.ASide", "/M.CSide"] 
 
         if elements and self.__validElements( elements ) :    
