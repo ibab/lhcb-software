@@ -1,6 +1,7 @@
 from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,TrackCaloMatchMonitor)
+from Configurables import (RecSysConf, TrackSys)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
                                    HistoPrint = False ):
@@ -10,12 +11,13 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackV0Monitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
-    from Configurables import RecSysConf
     if "CALO" in RecSysConf().RecoSequence:
-        seq.Members.append( TrackCaloMatchMonitor("TrackEcalMatchMonitor", HistoPrint=HistoPrint) )
+        isMip = TrackSys().cosmics()
+        seq.Members.append( TrackCaloMatchMonitor("TrackEcalMatchMonitor", CaloSystem='Ecal',
+                                                  UseGeometricZ=isMip, HistoPrint=HistoPrint) )
         #seq.Members.append(TrackCaloMatchMonitor("TrackHcalMatchMonitor", CaloSystem='Hcal', HistoPrint=HistoPrint))
-        seq.Members.append(TrackCaloMatchMonitor("TrackSpdMatchMonitor", CaloSystem='Spd', HistoPrint=HistoPrint))
-        seq.Members.append(TrackCaloMatchMonitor("TrackPrsMatchMonitor", CaloSystem='Prs', HistoPrint=HistoPrint))
+        seq.Members.append(TrackCaloMatchMonitor("TrackSpdMatchMonitor", CaloSystem='Spd',HistoPrint=HistoPrint))
+        seq.Members.append(TrackCaloMatchMonitor("TrackPrsMatchMonitor", CaloSystem='Prs',HistoPrint=HistoPrint))
 
     return seq
     

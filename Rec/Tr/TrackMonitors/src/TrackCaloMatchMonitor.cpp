@@ -27,9 +27,11 @@ private:
   std::string m_trackLocation;
   std::string m_caloName ;
   bool m_useClusters ;
+  bool m_useGeometricZ ;
   std::string m_clusterLocation;
   std::string m_caloDigitLocation;
   DeCalorimeter* m_caloDet ;
+  double m_geometricZ ;
 } ;
 
 // Declaration of the Algorithm Factory
@@ -45,6 +47,7 @@ TrackCaloMatchMonitor::TrackCaloMatchMonitor( const std::string& name,
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "CaloSystem", m_caloName = "Ecal") ;
   declareProperty( "UseClusters", m_useClusters = true ) ;
+  declareProperty( "UseGeometricZ", m_useGeometricZ = false ) ; // this you need for cosmics (MIPs)
   //declareProperty( "ClusterContainer", m_clusterLocation = LHCb::CaloClusterLocation::Ecal ) ;
   //declareProperty( "CaloDigitContainer", m_caloDigitsLocation = LHCb::CaloDigitLocation::Ecal ) ;
 }
@@ -68,20 +71,30 @@ StatusCode TrackCaloMatchMonitor::initialize()
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
     if( m_useClusters ) m_clusterLocation = LHCb::CaloClusterLocation::Ecal ;
     m_caloDigitLocation = LHCb::CaloDigitLocation::Ecal ;
+    m_geometricZ = m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()).z() + m_caloDet->zOffset() ;
   } else if( m_caloName == "Hcal") {
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
     if( m_useClusters ) m_clusterLocation = LHCb::CaloClusterLocation::Hcal ;
     m_caloDigitLocation = LHCb::CaloDigitLocation::Hcal ;
+    m_geometricZ = m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()).z() + m_caloDet->zOffset() ;
   } else if( m_caloName == "Prs") {
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
     m_caloDigitLocation = LHCb::CaloDigitLocation::Prs ;
+    m_geometricZ = m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()).z() ;
   } else if( m_caloName == "Spd") {
     m_caloDigitLocation = LHCb::CaloDigitLocation::Spd ;
     m_caloDet = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd );
+    m_geometricZ = m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()).z() ;
   } else {
     error() << "Unknown calo system: " << m_caloName << endreq ;
     sc = StatusCode::FAILURE ; 
   }
+
+  info() << "CaloDet: center = " 
+	 << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
+	 << " zoffset: " << m_caloDet->zOffset()
+	 << " zsize:   " << m_caloDet->zSize() << endreq ;
+
   return sc;
 }
 
@@ -99,11 +112,13 @@ StatusCode TrackCaloMatchMonitor::execute()
 
   // make a list of calo positions, depending on the subsystem use clusters or cells
   std::vector< MyCaloPosition > calopositions ;
+
   if( !m_clusterLocation.empty() ) {
     const LHCb::CaloClusters* caloclusters = get<LHCb::CaloClusters>( m_clusterLocation ) ;
     calopositions.reserve( caloclusters->size()) ;
-    BOOST_FOREACH( const LHCb::CaloCluster* cluster, *caloclusters) 
+    BOOST_FOREACH( const LHCb::CaloCluster* cluster, *caloclusters) {
       calopositions.push_back( MyCaloPosition( cluster->seed(), cluster->position()) ) ;
+    }
   } else {
     const LHCb::CaloDigits* calodigits = get<LHCb::CaloDigits>( m_caloDigitLocation ) ;
     calopositions.reserve( calodigits->size()) ;
@@ -122,16 +137,15 @@ StatusCode TrackCaloMatchMonitor::execute()
     }
   }
 
+  if(m_useGeometricZ) 
+    BOOST_FOREACH( MyCaloPosition& cluster, calopositions) 
+      cluster.pos.setZ( m_geometricZ ) ;
+  
   const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
 
   BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
     if( track->hasT() ) {
-      const LHCb::State* state = track->stateAt( LHCb::State::EndRich2 ) ;
-      if(state==0) {
-	//info() << "strange: cannot find EndRich2 state: " << std::endl
-	//      << *track << endreq ;
-	state = &(track->closestState(12000)) ;
-      }
+      const LHCb::State* state = &(track->closestState(m_geometricZ)) ;
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
 	//state = &(track->closestState(pos.z())) ;
 	double dz = cluster.pos.z() -state->z() ;
@@ -153,12 +167,12 @@ StatusCode TrackCaloMatchMonitor::execute()
 	  if( std::abs(dy)<200 && std::abs(dx)<100 ) {
 	    profile1D( xtrack, dy, "dyVersusX","dy versus x",-3500,3500) ;
 	    profile1D( ytrack, dy, "dyVersusY","dy versus y",-3500,3500) ;
-	    profile1D( state->tx(), dy, "dyVersusTx","dy versus x",-1,1) ;
-	    profile1D( state->ty(), dy, "dyVersusTy","dy versus y",-1,1) ;
+	    profile1D( state->tx(), dy, "dyVersusTx","dy versus Tx",-1,1) ;
+	    profile1D( state->ty(), dy, "dyVersusTy","dy versus Ty",-1,1) ;
 	    profile1D( xtrack, dx, "dxVersusX","dx versus x",-3500,3500) ;
 	    profile1D( ytrack, dx, "dxVersusY","dx versus y",-3500,3500) ;
-	    profile1D( state->tx(), dx, "dxVersusTx","dy versus x",-1,1) ;
-	    profile1D( state->ty(), dx, "dxVersusTy","dy versus y",-1,1) ;
+	    profile1D( state->tx(), dx, "dxVersusTx","dy versus Tx",-1,1) ;
+	    profile1D( state->ty(), dx, "dxVersusTy","dy versus Ty",-1,1) ;
 	  }
 	}
       }
