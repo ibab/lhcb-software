@@ -20,5 +20,5 @@ RichPatternGun.Peak = 10;
 RichPatternGun.NParticles = 1;
 
 /// entry to be added to ParticlePropertySvc to enable optical photons
-ParticlePropertySvc.Particles = {"opticalphoton 50 10000022 0.0 0.000000e+000   1.000000e+016                 Cerenkov           0   0.000000e+000"};
+//ParticlePropertySvc.Particles = {"opticalphoton 50 10000022 0.0 0.000000e+000   1.000000e+016                 Cerenkov           0   0.000000e+000"};
 GiGa.TrackSeq.PostTrack.RejectOpticalPhotons = false;

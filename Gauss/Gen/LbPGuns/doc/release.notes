@@ -5,6 +5,13 @@
 !-----------------------------------------------------------------------------
 
 !========================== LbPGuns v1r2 2009-11-04 ==========================
+! 2009-11-04 - Magnus Lieng
+ - Changed .opts files into .py files
+   . ParticleGun.opts -> ParticleGun.py
+   . CosmicsGun.opst -> CosmicsGun.py
+   . MaterialEvalGun.opts -> MaterialEvalGun.py
+   . Rich1Cosmics.opts -> Rich1Cosmics.py
+   . UpsilonGun.opts -> UpsilonGun.py
 ! 2009-10-28 - Magnus Lieng
  - Added Beam Shape tool. By defining beam centroid and optics parameters at 
    the generation point a "beam-like" particle distribution (position and 
