@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.101 2009-11-03 17:06:58 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.102 2009-11-04 11:55:17 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -151,11 +151,6 @@ class Brunel(LHCbConfigurableUser):
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
                                                             "UnpackMCVertex" ]
-            # Explicitly run unpacking of RICH summaries (instead of DoD as needed)
-            from Configurables import DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_
-            unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
-            GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
-            #ApplicationMgr().ExtSvc += [ DataOnDemandSvc() ]
             GaudiSequencer("MCLinksTrSeq").Members += [ "TrackAssociator" ]
 
             # activate all configured checking (uses MC truth)
@@ -461,7 +456,12 @@ class Brunel(LHCbConfigurableUser):
             mycheckconf.configure(mc = True, expertck = expert)
 
         if "RICH" in checkSeq :
+            # Unpacking RICH summaries
+            from Configurables import DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_
+            unp = DataPacking__Unpack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryUnpack")
             from Configurables import GaudiSequencer
+            GaudiSequencer("MCLinksUnpackSeq").Members += [unp]
+
             self.setOtherProps(RichRecQCConf(), ["Context","OutputLevel","DataType","WithMC"])
             RichRecQCConf().setProp("MoniSequencer", GaudiSequencer("CheckRICHSeq"))
 
