@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction program
  - Changes to Configurable:
    . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
      sequencing of Calo truth associators when running Calo checkers.
-   . Adapt to changes in GaudiConf v12r10
+   . Adapt to changes in GaudiConf v12r10, EventPacker v1r9, PackedEvent v3r7
 
  - Changes to options 
    . Modify Brunel-Cosmics.py to follow changes in TrackSys v4r27
