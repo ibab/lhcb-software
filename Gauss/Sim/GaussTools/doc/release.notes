@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package       : Sim/GaussTools
-! Responsible	  : Gloria Corti
+! Responsible	  : Gloria Corti, Silvia MIGLIORANZI
 ! Purpose       : G4 actions and some miscellaneous algs for Gauss
 !-----------------------------------------------------------------------------
 
+!======================== GaussTools v15r4 2009-11-04 ========================
 ! 2009-10-21 - Silvia Miglioranzi
  - Fix the warning message text (see previous entry in releases.notes) in order 
    not to be counted as error in the nightlies.
