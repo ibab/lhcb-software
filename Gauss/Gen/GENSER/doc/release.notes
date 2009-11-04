@@ -5,6 +5,7 @@
 !-----------------------------------------------------------------------------
 
 
+!========================== GENSER v6r0 2009-11-04 ===========================
 ! 2009-10-22 - Hubert Degaudenzi 
  - changed the target-slc5 switching into target-gcc4 for the gfortran flags 
 
