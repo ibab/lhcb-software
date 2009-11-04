@@ -35,6 +35,7 @@ public:
 private:
   void setNormalization(const std::string& hisname)  ;
   // this should be moved to OTChannelID
+  enum {NumUniqueStation=3, NumUniqueLayer=12, NumUniqueModule=432, NumUniqueOtis=432*4 } ;
   inline int uniqueLayer( const LHCb::OTChannelID& channelID) {
     return  (channelID.station()-1) * 4 + channelID.layer() ;
   }
@@ -43,6 +44,9 @@ private:
   }
   inline int uniqueModule( const LHCb::OTChannelID& channelID) {
     return uniqueQuarter(channelID)*9 + channelID.module() - 1 ;
+  }
+  inline int uniqueOtis( const LHCb::OTChannelID& channelID) {
+    return uniqueModule(channelID)*4 + (channelID.straw()-1)/32 ;
   }
 private:
   const ITrajPoca* m_pocatool ;
@@ -73,6 +77,7 @@ OTTrackMonitor::OTTrackMonitor( const std::string& name,
   declareProperty( "Projector", m_projector ) ;
   declareProperty( "MaxUnbiasedChisqPerDofGoodTracks", m_maxUnbiasedChisqPerDofGoodTracks = 2 ) ;
   declareProperty( "Granularity", m_granularity = 1 ) ;
+  declareProperty( "RawBankDecoder",m_decoder ) ;
 }
 
 //=============================================================================
@@ -116,7 +121,6 @@ StatusCode OTTrackMonitor::execute()
 { 
   setHistoTopDir("OT/") ;
   ++m_numEvents ;
-  const int numUniqueModule = 432 ;
   const double cellRadius = 2.5 ;
   const int    numDistBins  = 25 ;
 
@@ -148,7 +152,7 @@ StatusCode OTTrackMonitor::execute()
 	  int uniquelayer   = uniqueLayer(channel) ;
 	  //int uniquequarter = uniqueQuarter(channel) ;
 	  int uniquemodule  = uniqueModule(channel) ;
-	  
+
 	  // directory name
 	  char tmpprefix[256] = "" ;
 	  switch( m_granularity ) {
@@ -191,19 +195,17 @@ StatusCode OTTrackMonitor::execute()
 	  
 	  // plots by module
 	  profile1D( uniquemodule, drifttimeresidual, "timeresvsmodule", "unbiased drifttime residual versus module", 
-		     -0.5,numUniqueModule-0.5,numUniqueModule) ;
+		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
 	  profile1D( uniquemodule, residual, "resvsmodule", "unbiased residual versus module", 
-		     -0.5,numUniqueModule-0.5,numUniqueModule) ;
+		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
 	  profile1D( uniquemodule, respull, "respullvsmodule", "residual pull versus module", 
-		     -0.5,numUniqueModule-0.5,numUniqueModule) ;
+		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
 	  plot(uniquemodule,"moduleHotOccupancy","number of HOTs per module",
-	       -0.5,numUniqueModule-0.5,numUniqueModule) ;
+	       -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
+	  plot(uniqueOtis(channel),"otisHotOccupancy","number of HOTs per otis",-0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
 	  if( isoutlier) 
 	    plot(uniquemodule,"moduleOutlierOccupancy","number of outliers per module",
-		 -0.5,numUniqueModule-0.5,numUniqueModule) ;
-
-
-
+		 -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
 	  
 	  // residuals distributions, by layer
 	  plot(drifttime,nameprefix + "drifttime","drifttime",-25,75) ;
@@ -216,6 +218,7 @@ StatusCode OTTrackMonitor::execute()
 		    0,cellRadius,numDistBins) ;
 	  profile1D(std::abs(trkdist),respull, "respullvsdistance", "residual pull versus distance", 
 		    0,cellRadius,numDistBins) ;
+	  plot(meas->deltaTimeOfFlight(),"deltaToF", -25,25) ;
 	  
 	  // same but for 'good' tracks
 	  double unbiasedchi2 = ((*itr)->chi2() - respull * respull)/((*itr)->nDoF()-1) ;
@@ -255,11 +258,16 @@ StatusCode OTTrackMonitor::execute()
   for( DeOTDetector::Modules::const_iterator imodule = m_otdet->modules().begin() ;
        imodule != m_otdet->modules().end(); ++imodule) {
     LHCb::OTChannelID modid = (*imodule)->elementID() ;
-    size_t numhits = m_decoder->decodeModule( modid ).size() ;
+    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule( modid ) ;
+    size_t numhits = ottimes.size() ;
     plot(uniqueModule(modid),"moduleHitOccupancy","number of hits per module",
-	 -0.5,numUniqueModule-0.5,numUniqueModule,numhits) ;
+	 -0.5,NumUniqueModule-0.5,NumUniqueModule,numhits) ;
+    for( LHCb::OTLiteTimeRange::const_iterator ihit = ottimes.begin() ;
+	 ihit != ottimes.end() ; ++ihit )
+      plot(uniqueOtis(ihit->channel()),"otisHitOccupancy","number of hits per otis",
+	   -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
   }
-
+  
   // set this on every event
   setNormalization( "moduleHotOccupancy" ) ;
   setNormalization( "moduleHitOccupancy" ) ;
@@ -274,7 +282,3 @@ void OTTrackMonitor::setNormalization(const std::string& hisname)
   TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(histo(hisname) ) ;
   if( h1 ) h1->SetEntries( m_numEvents ) ;
 }
-
-
-
-
