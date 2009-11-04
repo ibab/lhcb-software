@@ -40,7 +40,7 @@ class Debug_320Vis_300L0_Hadron_Hlt1_Oct09 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines  import Hlt2CommissioningLinesConf
 
-        return { HltHadronLinesConf : {  'SingleHadron_PTCut' : 4800
+        return { Hlt1HadronLinesConf : {  'SingleHadron_PTCut' : 4800
                                          , 'HadSingle_IPCut' : 0.06 
                                          , 'HadMain_PTCut' : 250
                                          , 'HadCompanion_DZCut' : 1.83
@@ -48,7 +48,7 @@ class Debug_320Vis_300L0_Hadron_Hlt1_Oct09 :
                                          , 'HadCompanion_PTCut' : 750
                                          , 'HadCompanion_PointingCut' : 0.39
                                         }
-                 , HltExpressLinesConf : {  'Prescale' : { '.*' : 0.0  } }
+                 , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : 0.0  } }
 
                  }
     

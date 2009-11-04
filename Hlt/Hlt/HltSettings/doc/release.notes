@@ -4,6 +4,10 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 - V. Gligorov
+ - Modified all Hlt1 threshold settings files to reflect the renaming of the
+   Hlt1Lines files and classes.  
+
 ! 2009-11-04 - Antonio Perez-Calero
  - Modified Debug_10000Vis_1000L0_MuTrack_Hlt1_Oct09.py so that active lines (muon+track) 
    is a fixed property

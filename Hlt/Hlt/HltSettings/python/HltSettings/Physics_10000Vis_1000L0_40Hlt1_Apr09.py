@@ -113,7 +113,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
         from Hlt1Lines.Hlt1VeloLines           import Hlt1VeloLinesConf
         from Hlt2Lines.Hlt2CommissioningLines import Hlt2CommissioningLinesConf
     
-        return { HltHadronLinesConf : { 'SingleHadron_PTCut' : 4450
+        return { Hlt1HadronLinesConf : { 'SingleHadron_PTCut' : 4450
                                         , 'HadSingle_IPCut'      : 0.09
                                         , 'HadMain_PTCut'      : 1600
                                         , 'HadCompanion_DZCut' : 0.05
@@ -121,16 +121,16 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                                         , 'HadCompanion_PTCut' : 950
                                         , 'HadCompanion_PointingCut' : 1.0 
                                         }
-                 , HltPhotonLinesConf : { 'Pho_EtCut'          : 2800.0
+                 , Hlt1PhotonLinesConf : { 'Pho_EtCut'          : 2800.0
                                           , 'Track_PtCut'        : 650
                                           , 'Track_IPCut3D'      : 0.15
                                           , 'Pho_IsPho'          : -0.082 
                                           }
-                 , HltElectronLinesConf : { 'SingleEle_PtCut'    : 2820.0
+                 , Hlt1ElectronLinesConf : { 'SingleEle_PtCut'    : 2820.0
                                             , 'Compan_PtCut'       : 2750
                                             , 'Ele_IPCut'          : 0.13 
                                             }
-                 , HltMuonLinesConf : { 'DiMuon_SumPtCut'    : 1480.0
+                 , Hlt1MuonLinesConf : { 'DiMuon_SumPtCut'    : 1480.0
                                         , 'Muon_PtCut'         : 6200
                                         , 'MuonIP_PtCut'       : 1800
                                         , 'Muon_IPMinCut'      : 0.07
@@ -149,7 +149,7 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                                         , 'MuTrackPoint'       : 0.4
                                         , 'MuTrackTrChi2'      : 10 
                                         }
-                 , HltExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
+                 , Hlt1ExpressLinesConf : {  'Prescale' : { '.*' : .000015  } }
                  , Hlt2CommissioningLinesConf : { 'Prescale' : { 'Hlt2PassThrough'  : 1.
                                                                , 'Hlt2Forward'      : 0. # first needs a check that /Hlt/Track/Long actually exists..
                                                                , 'Hlt2DebugEvent'   : 0.0001
