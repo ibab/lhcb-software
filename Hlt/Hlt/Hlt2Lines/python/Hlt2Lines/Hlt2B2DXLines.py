@@ -274,7 +274,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
                                 , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s ) & (SUMQ == 0)' % self.getProps() )
         D2TF3BodySeq = TFFilter('D2TF3BodySeq'
                                 , [TF3Body]
-                                , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s ) & ((SUMQ == -1) | (SUMQ == 1))' % self.getProps())
+                                , extracode = '(BPVVDCHI2> %(ComTFVtxPVDDispChi2LL)s )' % self.getProps())
         
         # 2 Body combination for a K* or a Phi
         D2TF2BodyKstarPhiSeq = TFFilter('D2TF2BodyKstarPhiSeq'

@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.71 2009-10-31 11:42:32 fsoomro Exp $
+$Id: release.notes,v 1.72 2009-11-04 11:43:01 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.71 2009-10-31 11:42:32 fsoomro Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-04 - Jacopo Nardulli
+- Fix an error in the B2DX code 
 
 ! 2009-10-31 - Fatima Soomro
 - Updated the cuts in B2XGammaLines with the ones corresponding to MC09 optimization.
