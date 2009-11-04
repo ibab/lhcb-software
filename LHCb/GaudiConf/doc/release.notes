@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.181 2009-11-04 16:08:44 cattanem Exp $
+! $Id: release.notes,v 1.182 2009-11-04 17:11:36 jonrob Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-04 - Christopher Rob Jones
+ - Add packed RichPID and MuonPID data containers to the DST definition.
+   In addition add the associated packers to the default packing sequence and
+   the unpackers to the data on demand service.
 
 ! 2009-11-03 - Christopher Rob Jones
  - Add new SimConf Configurable that deals with all issues regarding the SIM

@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.21 2009-11-04 16:08:44 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.22 2009-11-04 17:11:36 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -108,6 +108,8 @@ class DstConf(LHCbConfigurableUser):
                              , "/Event/Rec/Header"                       + depth
                              , "/Event/Rec/Status"                       + depth 
                              , "/Event/" + recDir + "/Track/Best"        + depth
+                             , "/Event/" + recDir + "/Rich/PIDs"         + depth
+                             , "/Event/" + recDir + "/Muon/MuonPID"      + depth
                              , "/Event/" + recDir + "/Calo/Electrons"    + depth
                              , "/Event/" + recDir + "/Calo/Photons"      + depth
                              , "/Event/" + recDir + "/Calo/MergedPi0s"   + depth
@@ -200,8 +202,16 @@ class DstConf(LHCbConfigurableUser):
         Set up the sequence to create the packed containers
         """
         packDST = self.getProp("PackSequencer")
+
         from Configurables import PackTrack, PackCaloHypo, PackProtoParticle, PackRecVertex, PackTwoProngVertex
-        packDST.Members = [   PackTrack() ]
+        from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_
+        from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_
+        
+        packDST.Members = [ PackTrack() ]
+
+        richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_("PackRichPIDs")
+        muonpidpack = DataPacking__Pack_LHCb__MuonPIDPacker_("PackMuonPIDs")
+        packDST.Members += [ richpidpack, muonpidpack ]
 
         CaloDstPackConf (
             Enable   = True    ,
@@ -228,7 +238,7 @@ class DstConf(LHCbConfigurableUser):
         else:
             packDST.Members += [ PackTrack( name       = "PackMuons",
                                             InputName  = "/Event/Rec/Track/Muon",
-                                            OutputName = "/Event/pRec/Track/Muon") ]
+                                            OutputName = "/Event/pRec/Track/Muon" ) ]
 
         # In MDF case, add a sub sequence for the MDF writing
         if self.getProp( "PackType" ).upper() == "MDF":
@@ -260,11 +270,20 @@ class DstConf(LHCbConfigurableUser):
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/Primary" ]    = unpackVertex
         DataOnDemandSvc().AlgMap[ "/Event/Rec/Vertex/V0" ]         = unpackV0
 
+        from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_
+        from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_
+        
+        unpackrichpid = DataPacking__Unpack_LHCb__RichPIDPacker_("UnpackRichPIDs")
+        unpackmuonpid = DataPacking__Unpack_LHCb__MuonPIDPacker_("UnpackMuonPIDs")
+
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Rich/PIDs"    ] = unpackrichpid
+        DataOnDemandSvc().AlgMap[ "/Event/Rec/Muon/MuonPID" ] = unpackmuonpid
+
         # Muon tracks do not exist on RDST, do not try to unpack them
         if self.getProp( "DstType" ).upper() != "RDST":
             unpackMuons = UnpackTrack( name       = "UnpackMuons",
                                        OutputName = "/Event/Rec/Track/Muon",
-                                       InputName  = "/Event/pRec/Track/Muon")
+                                       InputName  = "/Event/pRec/Track/Muon" )
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
 
     def __apply_configuration__(self):

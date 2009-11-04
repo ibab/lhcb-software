@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.1 2009-11-03 11:19:18 jonrob Exp $"
+__version__ = "$Id: SimConf.py,v 1.2 2009-11-04 17:11:36 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -137,10 +137,10 @@ class SimConf(LHCbConfigurableUser) :
         
         unp = type(name+slot)
         if slot != '' : unp.RootInTES = slot
-        output = self.dodLocation( slot, 'MC', tesLoc )
         if self.isPropertySet("DataUnpackingSeq"):
             self.getProp("DataUnpackingSeq").Members += [unp]
         else:
+            output = self.dodLocation( slot, 'MC', tesLoc )
             DataOnDemandSvc().AlgMap[ output ] = unp
 
     def _doUnpacking(self):
