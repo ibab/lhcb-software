@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.11 2009-10-20 07:50:01 marcin Exp $ 
+! $Id: release.notes,v 1.12 2009-11-04 14:19:14 silviam Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Gen/LbHidValley
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -19,6 +19,7 @@
 !
 ! -----------------------------------------------------------------------------
 
+!========================= LbHidValley v2r2 2009-11-04 ========================
 ! 2009-10-20 - Marcin Kucharczyk
   - update cmt/requirements and options/HidValleyH.opts
 
