@@ -4,6 +4,7 @@
 ! Purpose     : "Interface" to Hijing 
 !-----------------------------------------------------------------------------
 
+!========================= LbHijing v5r1 2009-11-04 ==========================
 ! 2009-10-23 - Silvia Miglioranzi
  - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran' 
    intrinsic at (1) must be INTEGER") in: 
