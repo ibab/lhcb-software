@@ -59,14 +59,18 @@ GaudiSequencer("RecoTTSeq").Members += [ RawBankToSTClusterAlg("CreateTTClusters
 ## IT clusters for pattern recognition and track fit
 createITClusters = RawBankToSTClusterAlg("CreateITClusters")
 createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
-createITClusters.DetType     = "IT";
-createITLiteClusters.DetType = "IT";
+createITClusters.DetType     = "IT"
+createITLiteClusters.DetType = "IT"
 
 ## Special OT decoder for cosmics to merge spills.
 if TrackSys().cosmics():
    from Configurables import (Tf__OTHitCreator)
    Tf__OTHitCreator('OTHitCreator').RawBankDecoder = 'OTMultiBXRawBankDecoder'
    ## note: this does not change the OTMeasurementProvider used in the fit.
+   # also adapt the MasterExtrapolator in the TrackInterpolator
+   from Configurables import TrackInterpolator
+   TrackInterpolator().Extrapolator.ExtraSelector = 'TrackSimpleExtraSelector'
+   
    
 GaudiSequencer("RecoITSeq").Members += [ createITClusters, createITLiteClusters ]
 
@@ -121,13 +125,21 @@ if "PatSeed" in trackAlgs :
    importOptions("$PATALGORITHMSROOT/options/PatSeeding.py")
    if TrackSys().cosmics() :
       importOptions("$PATALGORITHMSROOT/options/PatSeedingTool-Cosmics.opts")
+
 if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
    track.DetectorList += [ "SeedFit" ]
    ## Seed fit initialization
    GaudiSequencer("TrackSeedFitSeq").Members += [TrackStateInitAlg("InitSeedFit")]
    TrackStateInitAlg("InitSeedFit").TrackLocation = "Rec/Track/Seed"
    ## Seed fit
-   GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+   if not TrackSys().cosmics() :
+      GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
+   else :
+      from Configurables import TrackCosmicsSeedT0Alg
+      cosmicsSeedFit = ConfiguredStraightLineFit( Name = "FitSeedCosmics",
+                                                  TracksInContainer = "Rec/Track/Seed" )
+      GaudiSequencer("TrackSeedFitSeq").Members.append(cosmicsSeedFit)
+      
    ## Add to output best tracks
    cloneKiller.TracksInContainers += ["Rec/Track/Seed"]
 
