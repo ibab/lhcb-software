@@ -10,7 +10,6 @@
    their mathematical meaning" in:
    - GeneratorAnalysis.cpp
 
-!====================== GaussMonitor v6r4 2009-04-30 =========================
 ! 2009-03-26 - Stefania Vecchi on behalf of Olga Levitskaya
  - added MonitorStepAction: produces histograms on the step size and number of
    muons in Muon Filters (useful to test the multiple scattering simulation)
