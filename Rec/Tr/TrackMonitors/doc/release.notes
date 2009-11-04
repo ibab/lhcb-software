@@ -4,6 +4,10 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 Wouter Hulsbergen
+ - fix decoder for OT algorithms when running on cosmics
+ - added track-calo match algorithms
+
 ! 2009-10-28 Wouter Hulsbergen
  - fixed histo limits in TrackMonitor and added histo for scattering momentum
  - fixed memory leak in OTHitEfficiencyMonitor

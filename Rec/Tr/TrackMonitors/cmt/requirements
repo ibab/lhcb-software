@@ -3,7 +3,7 @@
 # Maintainer : Wouter Hulsbergen
 #============================================================================
 package           TrackMonitors
-version           v1r14
+version           v1r15
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -23,6 +23,7 @@ use   TrackInterfaces 	v*	Tr
 use   TrackKernel	v*	Tr
 use   STKernel          v*      ST
 use   PartProp          v*      Kernel
+use   CaloDet           v*      Det
 
 #============================================================================
 # Component library building rule
