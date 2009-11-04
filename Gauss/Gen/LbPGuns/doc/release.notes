@@ -4,7 +4,7 @@
 ! Purpose     : Holds code for generaion of particle guns
 !-----------------------------------------------------------------------------
 
-!========================== LbPGuns v1r2 2009-10-28 ==========================
+!========================== LbPGuns v1r2 2009-11-04 ==========================
 ! 2009-10-28 - Magnus Lieng
  - Added Beam Shape tool. By defining beam centroid and optics parameters at 
    the generation point a "beam-like" particle distribution (position and 

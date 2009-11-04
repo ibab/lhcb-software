@@ -5,7 +5,7 @@
 !               obtained with dedicated simulations
 !-----------------------------------------------------------------------------
 
-!=========================== LbMIB v4r0 2009-11-02 =========================
+!=========================== LbMIB v4r0 2009-11-04 =========================
 ! 2009-11-02 - Magnus LIENG
  - Removed option files related to CollimatorSource
    . MIB-BeamGasStartupNoShield.opts
