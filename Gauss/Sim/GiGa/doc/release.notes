@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.130 2009-10-20 10:06:58 silviam Exp $
+! $Id: release.notes,v 1.131 2009-11-04 11:20:23 silviam Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GiGa
 ! Responsible : Gloria CORTI, Vanya BELYAEV
@@ -6,6 +6,7 @@
 !               for G4 <-> Gaudi applications 
 !-----------------------------------------------------------------------------
 
+!======================= GiGa v19r5 2009-11-04 ===============================
 ! 2009-10-20 - Silvia Miglioranzi
  - Fix compilation warnings on slc5 (type qualifiers ignored on function 
    return type):
