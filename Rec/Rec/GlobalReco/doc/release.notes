@@ -4,6 +4,12 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 - Christopher Rob Jones
+ - Do not automatically add the RICH, MUOn and Combined DLL information to the
+   ProtoParticle extraInfo in Brunel. Instead the MuonPIDs and RichPIDs are 
+   saved on the (r/X)DSTs (packed) and the information is added at the start
+   of DaVinci instead.
+
 !========================== GlobalReco v6r27 2009-10-20 ======================
 ! 2009-09-30 - Chris Jones
  - Suppressed PID disabled warning messages in ChargedProtoPAlg for HLT, until

@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.8 2009-09-09 13:53:26 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.9 2009-11-04 17:50:13 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -51,19 +51,7 @@ class GlobalRecoConf(LHCbConfigurableUser):
         seq = self.getProp("RecoSequencer")
         seq.Context = self.getProp("Context")
 
-        # Charged Proto particles (OLD)
-        #from Configurables import ( ChargedProtoPAlg, ChargedProtoCombineDLLsAlg,
-        #                            DelegatingTrackSelector )
-        #charged = ChargedProtoPAlg()
-        #charged.addTool( DelegatingTrackSelector, name="TrackSelector" )
-        #tracktypes = self.getProp("TrackTypes")
-        #charged.TrackSelector.TrackTypes = tracktypes
-        #for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
-        # Fill the Combined DLL information in the charged protoparticles
-        #combine = ChargedProtoCombineDLLsAlg()
-        #seq.Members += [ charged,combine ]
-
-        # Charged Proto particles (NEW)
+        # Charged Proto particles
         from Configurables import ( GaudiSequencer,
                                     ChargedProtoParticleMaker,
                                     ChargedProtoParticleAddRichInfo,
@@ -85,8 +73,8 @@ class GlobalRecoConf(LHCbConfigurableUser):
         charged.TrackSelector.TrackTypes = tracktypes
         for type in tracktypes : self.setupTypeTrackSelector( type, charged.TrackSelector )
         # Add PID information
-        rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
-        muon = ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")
+        #rich = ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")
+        #muon = ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")
         ecal = ChargedProtoParticleAddEcalInfo("ChargedProtoPAddEcal")
         brem = ChargedProtoParticleAddBremInfo("ChargedProtoPAddBrem")
         hcal = ChargedProtoParticleAddHcalInfo("ChargedProtoPAddHcal")
@@ -94,9 +82,10 @@ class GlobalRecoConf(LHCbConfigurableUser):
         spd  = ChargedProtoParticleAddSpdInfo("ChargedProtoPAddSpd")
         velo = ChargedProtoParticleAddVeloInfo("ChargedProtoPAddVeloDEDX")
         # Fill the Combined DLL information in the charged protoparticles
-        combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
+        #combine = ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLLs")
         # Fill the sequence
-        cseq.Members += [ charged,rich,muon,ecal,brem,hcal,prs,spd,velo,combine ]
+        cseq.Members += [ charged,ecal,brem,hcal,prs,spd,velo ]
+        #cseq.Members += [ rich,muon,combine ]
         
         # Neutrals
         from Configurables import NeutralProtoPAlg
@@ -109,13 +98,13 @@ class GlobalRecoConf(LHCbConfigurableUser):
         if self.isPropertySet("OutputLevel"):
             level = self.getProp("OutputLevel")
             charged.OutputLevel = level
-            rich.OutputLevel = level
-            muon.OutputLevel = level
+            #rich.OutputLevel = level
+            #muon.OutputLevel = level
             ecal.OutputLevel = level
             brem.OutputLevel = level
             hcal.OutputLevel = level
             prs.OutputLevel = level
             spd.OutputLevel = level
             velo.OutputLevel = level
-            combine.OutputLevel = level
+            #combine.OutputLevel = level
             neutral.OutputLevel = level
