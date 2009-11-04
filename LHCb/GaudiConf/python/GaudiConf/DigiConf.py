@@ -1,12 +1,11 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.5 2009-11-04 08:20:29 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.6 2009-11-04 16:08:44 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration import *
-from Configurables import LHCbConfigurableUser
-import SimConf
+from Configurables import LHCbConfigurableUser, SimConf
 import GaudiKernel.ProcessJobOptions
 
 class DigiConf(LHCbConfigurableUser):

@@ -1,10 +1,7 @@
-! $Id: release.notes,v 1.180 2009-11-04 08:20:29 cattanem Exp $
+! $Id: release.notes,v 1.181 2009-11-04 16:08:44 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
-
-! 2009-11-04 - Marco Cattaneo
- - Fix genconf warnings when building DstConf, DigiConf
 
 ! 2009-11-03 - Christopher Rob Jones
  - Add new SimConf Configurable that deals with all issues regarding the SIM
