@@ -72,7 +72,7 @@ public:
 private:
   void setNormalization(const std::string& hisname)  ;
   // this should be moved to OTChannelID  
-  enum {NumUniqueStation=3, NumUniqueLayer=12, NumUniqueModule=432 } ;
+  enum {NumUniqueStation=3, NumUniqueLayer=12, NumUniqueModule=432, NumUniqueOtis=432*4  } ;
 
   inline int uniqueLayer( const LHCb::OTChannelID& channelID) {
     return  (channelID.station()-1) * 4 + channelID.layer() ;
@@ -83,6 +83,10 @@ private:
   inline int uniqueModule( const LHCb::OTChannelID& channelID) {
     return uniqueQuarter(channelID)*9 + channelID.module() - 1 ;
   }
+  inline int uniqueOtis( const LHCb::OTChannelID& channelID) {
+    return uniqueModule(channelID)*4 + (channelID.straw()-1)/32 ;
+  }
+
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module,
 		      double strawpos[2], double yFrac[2], const LHCb::State& refstate ) ;
   void fillEfficiency(const LHCb::Track& track, const DeOTModule& module, const LHCb::State& state) ;
@@ -103,6 +107,7 @@ private:
 
   // booked histograms
   AIDA::IProfile1D* m_efficiencyPerModulePr ;
+  AIDA::IProfile1D* m_efficiencyPerOtisPr ;
   std::vector<ModuleEfficiencyHistograms*> m_moduleHistograms ;
 } ;
 
@@ -154,7 +159,8 @@ StatusCode OTHitEfficiencyMonitor::initialize()
   setHistoTopDir("OT/") ;
   m_efficiencyPerModulePr = bookProfile1D( "efficiencyVsModule","efficiency per module",
 					   -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-  
+  m_efficiencyPerOtisPr = bookProfile1D( "efficiencyVsOtis","efficiency per otis",
+					 -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
   m_moduleHistograms.reserve(9) ;
   for(int i=0; i<9; ++i)
     m_moduleHistograms.push_back( new ModuleEfficiencyHistograms(*this,i+1) ) ;
@@ -250,6 +256,7 @@ void OTHitEfficiencyMonitor::fillEfficiency( const LHCb::Track& track,
 	modulehist->m_effvsyfrac->fill(yfrac[imono],foundhit) ;
 	modulehist->m_receffvsyfrac->fill(yfrac[imono],foundhot) ;
 	m_efficiencyPerModulePr->fill( uniquemodule, foundhit ) ;	
+	m_efficiencyPerOtisPr->fill( uniquemodule*4 + (istraw+monooffset-1)/32, foundhit ) ;	
       }
     }
     // monitor 'cluster size'. cluster size is zero if there is no hit in 'closest straw'.
