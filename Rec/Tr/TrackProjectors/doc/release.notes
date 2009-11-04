@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking projectors
 !-----------------------------------------------------------------------------
 
+! 2009-11-04 Wouter Hulsbergen
+ - Set default value of fitEventT0 of cosmics projector to true
+
 !====================== TrackProjectors v2r25 2009-10-20 =====================
 ! 2009-09-25 Wouter Hulsbergen
  - Fill new data member doca in FitNode
