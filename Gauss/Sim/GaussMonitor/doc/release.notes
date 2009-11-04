@@ -1,9 +1,10 @@
 !-----------------------------------------------------------------------------
 ! Package     : Sim/GaussMonitor
-! Responsible : Gloria CORTI
+! Responsible : Gloria CORTI, Silvia MIGLIORANZI
 ! Purpose     : Hold monitoring algorithms for Gauss
 !-----------------------------------------------------------------------------
 
+!====================== GaussMonitor v6r4 2009-11-04 =========================
 ! 2009-10-19 - Silvia Miglioranzi
  - Fixed warning in compilation on slc5: "comparisons like X<=Y<=Z do not have 
    their mathematical meaning" in:
