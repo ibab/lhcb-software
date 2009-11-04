@@ -104,7 +104,7 @@ TrajOTCosmicsProjector::TrajOTCosmicsProjector( const std::string& type,
   : TrajOTProjector( type, name, parent )
 {
   declareProperty( "TofReferenceZ", m_tofReferenceZ = 12.8*Gaudi::Units::m) ;
-  declareProperty( "FitEventT0", m_fitEventT0 = false ) ;
+  declareProperty( "FitEventT0", m_fitEventT0 = true ) ;
   declareProperty( "UseConstantDriftVelocity", m_useConstantDriftVelocity = true ) ;
 }
 
