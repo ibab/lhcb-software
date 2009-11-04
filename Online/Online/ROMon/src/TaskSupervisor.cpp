@@ -425,8 +425,11 @@ const string& NodeTaskMon::updateConnections() {
           << ( (*j).second<5 ? "OK" : "Not OK") << "\"/>" << endl;
     }
     xml << "\t\t</Connections>";
+    ::dim_lock();
     m_connUpdate = time(0);
-    return m_connStatus = xml.str();
+    m_connStatus = xml.str();
+    ::dim_unlock();
+    return m_connStatus;
   }
   return m_connStatus;
 }

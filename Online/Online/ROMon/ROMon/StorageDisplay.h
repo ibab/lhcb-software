@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
+// $Id: StorageDisplay.h,v 1.7 2009-11-04 08:05:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -12,7 +12,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.6 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/ROMon/StorageDisplay.h,v 1.7 2009-11-04 08:05:50 frankb Exp $
 #ifndef ROMON_STORAGEDISPLAY_H
 #define ROMON_STORAGEDISPLAY_H 1
 
@@ -23,6 +23,9 @@
  *   ROMon namespace declaration
  */
 namespace ROMon {
+
+  // Forward declarations
+  struct DataWriterInfo;
 
   /**@class StorageDisplay ROMon.h GaudiOnline/StorageDisplay.h
    *
@@ -53,6 +56,9 @@ namespace ROMon {
 
     /// Partition name for projection(s)
     std::string     m_partName;
+
+    /// Store node services
+    DataWriterInfo* m_wrInfo;
 
   public:
     /// Standard constructor

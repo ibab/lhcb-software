@@ -1,4 +1,4 @@
-// $Id: StorageDisplay.cpp,v 1.14 2009-04-17 13:16:37 frankb Exp $
+// $Id: StorageDisplay.cpp,v 1.15 2009-11-04 08:05:50 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,9 +11,11 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.14 2009-04-17 13:16:37 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/StorageDisplay.cpp,v 1.15 2009-11-04 08:05:50 frankb Exp $
 
 // C++ include files
+#include <ctime>
+#include <string>
 #include <cstdlib>
 #include <iostream>
 
@@ -24,20 +26,36 @@
 #include "ROMon/StorageDisplay.h"
 #include "dic.hxx"
 
+namespace ROMon {
+  struct DataWriterInfo {
+    struct _RawItem {
+      int v[2];
+      short s[2];
+      char  c[4];
+    };
+    struct _Item {
+      int           id;
+      int           value, val2;
+      int           val3, val4;
+      time_t        stamp;
+      unsigned char hasData;
+    };
+    char name[32];
+    _Item mbWritten;
+    _Item openFiles;
+    _Item totalFiles;
+    _Item numSockets;
+    _Item numThreads;
+    _Item abnormals;
+  };
+}
+
 using namespace ROMon;
 using namespace std;
 static const char *sstat[17] = {" nl", "   ", "*SL","*EV","*SP","WSL","WEV","WSP","wsl","wev","wsp"," ps"," ac", "SPR", "WER", "   "};
 
-
-struct DataWriterInfo {
-  int space;
-  int free_space;
-  int open_files;
-  int closed_files;
-  int transferred_files;
-  int deleted_files;
-  char data_dir[256];
-};
+static const size_t NUM_STORE_NODES = 4;
+static const size_t NUM_STORE_SERVICES = 9;
 
 namespace {
   struct Stream {
@@ -81,6 +99,20 @@ static void help() {
 
 }
 
+/// DimInfoHandler overload
+static void dataWrHandler(void* tag, void* address, int* size) {
+  if ( address && tag && size && *size>0) {
+    DataWriterInfo::_Item*    v = *(DataWriterInfo::_Item**)tag;
+    DataWriterInfo::_RawItem* r = (DataWriterInfo::_RawItem*)address;
+    v->value   = r->v[0];
+    v->val2    = r->v[1];
+    v->val3    = r->s[0];
+    v->val4    = r->s[1];
+    v->stamp   = ::time(0);
+    v->hasData = 1;
+  }
+}
+
 /// Static abstract object creator.
 ClusterDisplay* ROMon::createStorageDisplay(int width, int height, int posx, int posy, int argc, char** argv) {
   return new StorageDisplay(width,height,posx,posy,argc,argv);
@@ -88,14 +120,14 @@ ClusterDisplay* ROMon::createStorageDisplay(int width, int height, int posx, int
 
 /// Initializing constructor for using display as sub-display
 StorageDisplay::StorageDisplay(int width, int height, int posx, int posy, int argc, char** argv)
-: ClusterDisplay(width, height)
+  : ClusterDisplay(width, height), m_wrInfo(0)
 {
   m_position = Position(posx,posy);
   init(1, argc, argv);
 }
 
 /// Standard constructor
-StorageDisplay::StorageDisplay(int argc, char** argv) {
+StorageDisplay::StorageDisplay(int argc, char** argv) : m_wrInfo(0) {
   init(0, argc,argv);
 }
 
@@ -106,9 +138,9 @@ void StorageDisplay::init(int flag, int argc, char** argv)   {
   int right, width, height, posx, posy;
   cli.getopt("headerheight",  1, hdr_height    =    5);
   cli.getopt("streamheight",  1, strm_height   =   12);
-  cli.getopt("loggerheight",  1, logg_height   =    4);
+  cli.getopt("loggerheight",  1, logg_height   =    9);
   cli.getopt("widthhltrec",   1, hlt_width     =   27);
-  cli.getopt("bufferheight",  1, buff_height   =    5);
+  cli.getopt("bufferheight",  1, buff_height   =   10);
   cli.getopt("delay",         1, m_delay       = 1000);
   cli.getopt("servicename",   1, m_svcName     = "/storectl01/ROpublish");
   cli.getopt("partitionname", 1, m_partName    = "LHCb");
@@ -134,10 +166,43 @@ void StorageDisplay::init(int flag, int argc, char** argv)   {
   m_logging = createSubDisplay(Position(right,m_streams->bottom()-1),Area(width,logg_height), "Logger Summary");
   m_files   = createSubDisplay(Position(right,m_logging->bottom()-1),Area(width,height+1),    "File Information");
   end_update();
+  m_wrInfo = new DataWriterInfo[NUM_STORE_NODES];
+  ::memset(m_wrInfo,0,sizeof(DataWriterInfo)*NUM_STORE_NODES);
+  for(size_t i=0; i<NUM_STORE_NODES; ++i) {
+    char text[256];
+    std::string svc;
+    DataWriterInfo& w = m_wrInfo[i];
+    ::sprintf(w.name,"store%02d",int(i+1));
+    ::sprintf(text,"PUBLISHERD_%s/Counters/MBWritten",w.name);
+    w.mbWritten.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.mbWritten,0,0);
+    ::sprintf(text,"PUBLISHERD_%s/Counters/OpenFiles",w.name);
+    w.openFiles.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.openFiles,0,0);
+    ::sprintf(text,"PUBLISHERD_%s/Counters/TotalFiles",w.name);
+    w.totalFiles.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.totalFiles,0,0);
+    ::sprintf(text,"PUBLISHERD_%s/Counters/NumSockets",w.name);
+    w.numSockets.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.numSockets,0,0);
+    ::sprintf(text,"PUBLISHERD_%s/Counters/NumThreads",w.name);
+    w.numThreads.id = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.numThreads,0,0);
+    ::sprintf(text,"PUBLISHERD_%s/Counters/Abnormals",w.name);
+    w.abnormals.id  = ::dic_info_service(text,MONITORED,0,0,0,dataWrHandler,(long)&w.abnormals,0,0);
+  }
 }
 
 /// Standard destructor
 StorageDisplay::~StorageDisplay()   {
+  if ( m_wrInfo ) {
+    for(size_t j=0; j<NUM_STORE_NODES; ++j) {
+      DataWriterInfo& i = m_wrInfo[j];
+      if ( i.mbWritten.id  ) ::dic_release_service(i.mbWritten.id);
+      if ( i.openFiles.id  ) ::dic_release_service(i.openFiles.id);
+      if ( i.totalFiles.id ) ::dic_release_service(i.totalFiles.id);
+      if ( i.numSockets.id ) ::dic_release_service(i.numSockets.id);
+      if ( i.numThreads.id ) ::dic_release_service(i.numThreads.id);
+      if ( i.abnormals.id  ) ::dic_release_service(i.abnormals.id);
+    }
+  }
+  delete [] m_wrInfo;
+  m_wrInfo = 0;
   begin_update();
   delete m_hltRec;
   delete m_buffers;
@@ -175,20 +240,44 @@ MonitorDisplay* StorageDisplay::nodeDisplay() const {
   return m_select;
 }
 
+#define PRT(x,y)  {  ::sprintf(text,"%-15s ",#y);\
+  for(size_t j=0; j<NUM_STORE_NODES; ++j) {\
+    DataWriterInfo& i = m_wrInfo[j]; \
+    (i.x.hasData)  ? ::sprintf(&text[strlen(text)-1],"%12d ",i.x.value)  : ::sprintf(&text[strlen(text)-1],"%12s ","----");}}\
+
+
 /// Show the data logging status
 void StorageDisplay::showLogging() {
+  char text[256];
   MonitorDisplay* disp = m_logging;
-  DataWriterInfo  wi;
-  wi.space = wi.free_space = wi.open_files = wi.closed_files = wi.transferred_files = wi.deleted_files = 0;
-  strcpy(wi.data_dir,"/daqarea/2008/RAW/LHCb/Physics/0123456789");
+  //DataWriterInfo  wi;
+  //wi.space = wi.free_space = wi.open_files = wi.closed_files = wi.transferred_files = wi.deleted_files = 0;
+  //strcpy(wi.data_dir,"/daqarea/2008/RAW/LHCb/Physics/0123456789");
+  //disp->draw_line_reverse("File Information for Run %-10                                         ",0);
+  //disp->draw_line_normal("Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
+  //                       wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
+  //disp->draw_line_normal("Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
+  //                       wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
+  //                       wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
+  //disp->draw_line_normal("Directory:%s", wi.data_dir);
 
-  disp->draw_line_reverse("File Information for Run %-10                                         ",0);
-  disp->draw_line_normal("Space:%9d MB [%4d TB] Free Space: %9d MB [%4d TB]", 
-                         wi.space,wi.space/1024/1024,wi.free_space,wi.free_space/1024/1024);
-  disp->draw_line_normal("Open:%5d  Closed:%5d Transferring:%5d Deleted:%5d Total:%5d     ",
-                         wi.open_files,wi.closed_files,wi.transferred_files,wi.deleted_files,
-                         wi.open_files+wi.closed_files+wi.transferred_files+wi.deleted_files);
-  disp->draw_line_normal("Directory:%s", wi.data_dir);
+  disp->draw_line_reverse("Writerd summary information from publishers:");
+  ::sprintf(text,"%-15s ","Node");
+  for(size_t j=0; j<NUM_STORE_NODES; ++j)
+    ::sprintf(&text[strlen(text)-1],"%12s ",m_wrInfo[j].name);
+  disp->draw_line_normal(text);
+  PRT(mbWritten, MB written...);
+  disp->draw_line_normal(text);
+  PRT(totalFiles,Total Files..);
+  disp->draw_line_normal(text);
+  PRT(openFiles, Open files...);
+  disp->draw_line_normal(text);
+  PRT(numSockets,Num.Sockets..);
+  disp->draw_line_normal(text);
+  PRT(numThreads,Num.Threads..);
+  disp->draw_line_normal(text);
+  PRT(abnormals, Anomalies....);
+  disp->draw_line_normal(text);
 }
 
 /// Show the file information
