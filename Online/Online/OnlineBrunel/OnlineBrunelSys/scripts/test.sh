@@ -2,7 +2,6 @@
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 export NODENAME=`python -c "print '$HOST'.split('.')[0]"`
 export PYTHONPATH=`cd ..;dirname $PWD`/InstallArea/python:${PYTHONPATH};
-export Standalone_test=1
 #
 start_task()
 {

@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.15 2009-10-14 13:38:28 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.16 2009-11-04 18:04:12 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -89,8 +89,9 @@ def patchBrunel(true_online_version):
     brunel.OutputType = 'RDST'
   else:
     #GaudiConf.DstConf.DstConf._doWriteMDF = serializeDST
+    from Configurables import ProcessPhase
     Brunel.Configuration.Brunel.configureOutput = dummy
-    Brunel.Configuration.ProcessPhase("Output").DetectorList += [ 'DST' ]
+    ProcessPhase("Output").DetectorList += [ 'DST' ]
     brunel.setProp( 'DatasetName', 'GaudiSerialize' )
     DstConf().Writer       = 'DstWriter'
     DstConf().DstType      = 'DST'
@@ -123,6 +124,7 @@ def setupOnline():
   app.HistogramPersistency = 'ROOT'
   app.SvcOptMapping.append('LHCb::OnlineEvtSelector/EventSelector')
   app.SvcOptMapping.append('LHCb::FmcMessageSvc/MessageSvc')
+  ###print "BUFFERS",buffs
   mep = Online.mepManager(Online.PartitionID,Online.PartitionName,buffs,True)
   sel = Online.mbmSelector(input=buffs[0],type='ONE',decode=False)
   app.EvtSel  = sel
