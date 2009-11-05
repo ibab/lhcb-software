@@ -89,6 +89,7 @@ namespace LHCb  {
     
     std::vector<int64_t>			m_rTotRxOct;
     std::vector<int64_t>			m_rTotRxPkt;
+    std::vector<int64_t>			m_rTotRxEvt;
     std::vector<int64_t>			m_rIncEvt;
     std::vector<int64_t>			m_rTotBadMEP;
     std::vector<int64_t>			m_rTotMEPReq;
@@ -114,6 +115,7 @@ namespace LHCb  {
     //Summed up single counters to send
     int64_t			m_totRxOct;
     int64_t			m_totRxPkt;
+    int64_t			m_totRxEvt;
     int64_t			m_incEvt;
     int64_t			m_totBadMEP;
     int64_t			m_totMEPReq;
@@ -139,6 +141,7 @@ namespace LHCb  {
 
     std::vector<DimInfo*>	m_subsTotRxOct;
     std::vector<DimInfo*>	m_subsTotRxPkt;
+    std::vector<DimInfo*>	m_subsTotRxEvt;
     std::vector<DimInfo*>	m_subsIncEvt;
     std::vector<DimInfo*>	m_subsTotBadMEP;
     std::vector<DimInfo*>	m_subsTotMEPReq;
