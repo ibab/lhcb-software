@@ -1,4 +1,4 @@
-// $Id: PitchResTool.cpp,v 1.2 2009-10-16 08:47:58 jblouw Exp $
+// $Id: PitchResTool.cpp,v 1.3 2009-11-05 09:12:50 jblouw Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -68,12 +68,13 @@ StatusCode PitchResTool::finalize()
   return GaudiTool::finalize();  // must be called after all other actions
 }
 
-std::vector<std::pair<int, double> > PitchResTool::calcPitchResiduals(
+std::vector<std::pair<LHCb::OTChannelID, double> > PitchResTool::calcPitchResiduals(
     const LHCb::Track* track) const
 {
-  std::vector<std::pair<int, double> > retVal;
+  std::vector<std::pair<LHCb::OTChannelID, double> > retVal;
   // JB modified the code to comply with the new Track class
   // So, get the nodes on the track:
+
   LHCb::Track::ConstNodeRange nodes = track->nodes();
   // Loop over the nodes:
   for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin();
@@ -152,7 +153,7 @@ std::vector<std::pair<int, double> > PitchResTool::calcPitchResiduals(
         delta *= nomPitch / effPitch;
 
         // put the result into the vector with results
-        retVal.push_back(std::make_pair(layer, delta));
+        retVal.push_back(std::make_pair(h1, delta));
     }
   }
 

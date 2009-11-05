@@ -131,13 +131,27 @@ StatusCode OTTrackMonitor::execute()
       double sumtimeresidual(0) ;
       double sumn(0) ;
       // calculate the pitch residuals by M. Schiller
-      std::vector<std::pair<int,double> > pitchRes = m_pitchtool->calcPitchResiduals( *itr );
+      std::vector<std::pair<LHCb::OTChannelID, double> > pitchRes = 
+	m_pitchtool->calcPitchResiduals( *itr );
       for (unsigned int i = 0; i < pitchRes.size(); ++i) {
+	// directory name
+	char tmpprefix[256] = "" ;
+	switch( m_granularity ) {
+	case 1: sprintf(tmpprefix,"station%d/PitchRes/",pitchRes[i].first.station()) ; break ;
+	case 2: sprintf(tmpprefix,"layer%d/PitchRes/",uniqueLayer(pitchRes[i].first)) ; break ;
+	default: {} ;
+	}
+	std::string nameprefix(tmpprefix) ;
         std::ostringstream os;
-        os << "Layer " << pitchRes[i].first << " pitch residuals";
-        plot(pitchRes[i].second, os.str(), -3., 3., 120);
+        os << "Layer " << uniqueLayer(pitchRes[i].first) << " pitch residuals";
+        plot(pitchRes[i].second, nameprefix + os.str(), os.str(), -3., 3., 120);
+        std::ostringstream os1;
+	os1 << "Module " << uniqueModule(pitchRes[i].first) << " pitch residuals";
+	plot(pitchRes[i].second, nameprefix + os1.str(), os1.str(), -10., 10., 120);
+	profile1D( uniqueModule(pitchRes[i].first),pitchRes[i].second,"Pitchresvsmodule","Pitchresidual vs. module nr.",
+		   -0.5,NumUniqueModule-0.5,NumUniqueModule);
       }
-
+      setHistoTopDir("OT/");
       LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
       for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
 	   inode != nodes.end(); ++inode ) 
@@ -147,7 +161,8 @@ StatusCode OTTrackMonitor::execute()
 	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
 	  
 	  const LHCb::OTMeasurement* meas =
-	    static_cast<const LHCb::OTMeasurement*>(&(*inode)->measurement()) ;
+	    static_cast<const LHCb::OTMeasurement*>(&(*inode)->measurement());
+
 	  LHCb::OTChannelID channel = meas->channel() ;
 	  int uniquelayer   = uniqueLayer(channel) ;
 	  //int uniquequarter = uniqueQuarter(channel) ;
