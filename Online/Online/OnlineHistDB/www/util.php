@@ -91,7 +91,7 @@ function getSubSystems($conn) {
 function getPages($conn) {
   global $folder;
   $i=0; $page=array();
-  $stid = OCIParse($conn,"select PageName,Folder from PAGE");
+  $stid = OCIParse($conn,"select PageName,Folder from PAGE order by PageName");
   OCIExecute($stid, OCI_DEFAULT);
   while( OCIFetchInto($stid, $row, OCI_NUM)) {
     $page[$i++]=$row[0];
