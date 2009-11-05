@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.cpp,v 1.8 2009-10-30 18:59:22 dgolubko Exp $
+// $Id: CaloClusterizationTool.cpp,v 1.9 2009-11-05 22:37:14 dgolubko Exp $
 // Include files 
 
 // from Gaudi
@@ -14,6 +14,7 @@
 #include "CaloKernel/CaloUtil.h"
 // ============================================================================
 #include "CaloUtils/ClusterFunctors.h"
+#include "CaloUtils/CaloNeighbours.h"
 // local
 #include "CaloClusterizationTool.h"
 #include "TaggedCellFunctor.h"
@@ -151,19 +152,6 @@ inline void CaloClusterizationTool::setEXYCluster
   ///
 }
 // ============================================================================
-// Looking neigbours around cell
-// ============================================================================
-void CaloClusterizationTool::look_neig( std::set<LHCb::CaloCellID> in_cells ,
-                                        const DeCalorimeter* m_detector,
-                                        std::set<LHCb::CaloCellID>& out_cells ){
-  
-  for(std::set<LHCb::CaloCellID>::const_iterator icell = in_cells.begin();
-      in_cells.end() != icell; ++icell){
-    const CaloNeighbors& nei = m_detector->neighborCells( (*icell) );
-    out_cells.insert( nei.begin(), nei.end() );
-  }
-}
-// ============================================================================
 // Standard constructor, initializes variables
 // ============================================================================
 CaloClusterizationTool::CaloClusterizationTool( const std::string& type,
@@ -206,7 +194,7 @@ StatusCode CaloClusterizationTool::_clusterize
   m_release = false;
   bool useData = false;
   //
-  std::set<LHCb::CaloCellID> out_cells;
+  LHCb::CaloCellID::Set out_cells; 
   std::vector<LHCb::CaloCellID> cell_list;
 
   // fill with data if level >0 and no predefined seed list
@@ -237,31 +225,20 @@ StatusCode CaloClusterizationTool::_clusterize
 
   // if list of "seed" is not empty
   if( !cell_list.empty() ){
+    out_cells.insert( cell_list.begin(), cell_list.end() );
 
-    // look Cell neigbours
-    std::set<LHCb::CaloCellID> cells;
-
-    for( std::vector<LHCb::CaloCellID>::const_iterator icell = 
-           cell_list.begin() ; cell_list.end() != icell ; ++icell){  
-      const CaloNeighbors& nei = m_detector->neighborCells( (*icell) );
-      cells.insert( nei.begin(), nei.end() );
-      cells.insert( (*icell) );
-    }
-
-    // look Cell neigbours for next levels
-    std::set<LHCb::CaloCellID> in_cells = cells;
-    out_cells = cells;
-
-    for(int i = m_neig_level; i > 1; i--){      
-      look_neig(in_cells, m_detector, out_cells);
-      in_cells = out_cells;
-    }
-    
+    /** find all neighbours for the given set of cells for the givel level 
+     *  @param cells    (UPDATE) list of cells 
+     *  @param level    (INPUT)  level
+     *  @param detector (INPUT) the detector
+     *  @return true if neighbours are added 
+     */
+    LHCb::CaloFunctors::neighbours(out_cells, m_neig_level, m_detector);
   }
-  
+ 
   // z-position of cluster 
   LHCb::ClusterFunctors::ZPosition zPosition( m_detector );
-  
+
   // Create access direct and sequential on the tagged cells  
   DirVector taggedCellsDirect( (CelAutoTaggedCell*) 0 ) ;
   SeqVector taggedCellsSeq                              ;

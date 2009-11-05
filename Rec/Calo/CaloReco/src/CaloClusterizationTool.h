@@ -1,4 +1,4 @@
-// $Id: CaloClusterizationTool.h,v 1.4 2009-06-17 18:24:00 odescham Exp $
+// $Id: CaloClusterizationTool.h,v 1.5 2009-11-05 22:37:14 dgolubko Exp $
 #ifndef CALOCLUSTERIZATIONTOOL_H 
 #define CALOCLUSRERIZATIONTOOL_H 1
 // ============================================================================
@@ -114,10 +114,6 @@ protected:
   inline void setEXYCluster
   ( LHCb::CaloCluster*         cluster,
     const DeCalorimeter* detector );
-
-  void look_neig(std::set<LHCb::CaloCellID> in_cells ,
-                 const DeCalorimeter* m_detector,
-                 std::set<LHCb::CaloCellID>& out_cells);
 
 private:
 
