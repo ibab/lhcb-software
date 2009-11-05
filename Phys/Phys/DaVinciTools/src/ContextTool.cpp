@@ -1,4 +1,4 @@
-// $Id: ContextTool.cpp,v 1.12 2008-10-30 16:44:24 jpalac Exp $
+// $Id: ContextTool.cpp,v 1.13 2009-11-05 13:50:40 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -30,8 +30,10 @@ ContextTool::ContextTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_desktop()
-  , m_fitter(){
+  , m_desktop(0)
+  , m_dist(0)
+  , m_fitter(0)
+  , m_onOffline(0){
   declareInterface<IContextTool>(this);
 
 }
