@@ -20,11 +20,12 @@ tuple.ToolList +=  [
     , "TupleToolKinematic"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
+    , "TupleToolMCTruth"
     , "TupleToolTISTOS"
      ]
 tuple.InputLocations = ["StdLooseJpsi2MuMu"]
 tuple.Decay = "J/psi(1S) -> ^mu+ ^mu-"
-#tuple.OutputLevel = 1 
+# tuple.OutputLevel = 1 
 ########################################################################
 #
 # DaVinci
@@ -35,7 +36,8 @@ DaVinci().PrintFreq = 1
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "DC06" 
 DaVinci().Simulation   = True
-DaVinci().TupleFile = "DecayTreeTuple_TisTos.root"  # Ntuple
+# DaVinci().TupleFile = "$rootfile"  # Ntuple
+DaVinci().TupleFile = "TisTosTobbing-DC06.root"  # Ntuple
 DaVinci().MoniSequence = [ tuple ]
 DaVinci().ReplaceL0BanksWithEmulated = True
 DaVinci().Hlt = True 
@@ -48,3 +50,8 @@ DaVinci().HltThresholdSettings = 'Physics_10000Vis_1000L0_40Hlt1_EffectiveHlt2_J
 DaVinci().Input   = [
 "   DATAFILE='castor://castorlhcb.cern.ch:9002/?svcClass=lhcbdata&castorVersion=2&path=/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002000/DST/0000/00002000_00000004_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+
+#foreach a ( 0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 )
+#setenv rootfile /tmp/${a}.root
+#gaudirun.py tests/options/DVTestDecayTreeTuple-TisTos-DC06.py >! /tmp/test-$a &
+#end

@@ -20,6 +20,7 @@ tuple.ToolList +=  [
     , "TupleToolKinematic"
     , "TupleToolPrimaries"
     , "TupleToolEventInfo"
+    , "TupleToolMCTruth"
     , "TupleToolTISTOS"
      ]
 tuple.InputLocations = ["StdLooseJpsi2MuMu"]
