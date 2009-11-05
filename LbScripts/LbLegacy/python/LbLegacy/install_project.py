@@ -214,6 +214,7 @@
  091013 - Added the support for the LCGGanga tarball.
  091015 - fixed the --check option. It must not create any file.
  091026 - fixed the exception handling in the retrieve function
+ 091105 - stripped off the hat for the data package if there is one.
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -226,7 +227,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091026'
+script_version = '091105'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r3"
@@ -2175,6 +2176,9 @@ def main():
             pversion = value
         if key in ('-p', '--project'):
             pname = value
+            if pname.find("/") != -1 :
+                plist = pname.split("/")
+                pname = "/".join(plist[1:])
         if key == '-b':
             binary = os.environ['CMTCONFIG']
         if key == '--binary':
@@ -2196,6 +2200,7 @@ def main():
             fix_perm = False
         if key == '--overwrite':
             overwrite_mode = True
+            
 
     thelog = logging.getLogger()
     thelog.setLevel(logging.DEBUG)

@@ -1,3 +1,8 @@
+2009-11-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: strips off the hat from the data package in order that
+	the call is consistent with the call to SetupProject.
+
 2009-10-26  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: fixed the exception handling in the retrieve 
