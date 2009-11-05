@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r13p1 2009-11-05 ===================
 ! 2009-11-04 - Gerhard Raven
  - fix stale reference in HltL0MuonCandidates
 
