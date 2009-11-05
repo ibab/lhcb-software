@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.12 2009-01-29 11:00:42 cattanem Exp $
+! $Id: release.notes,v 1.13 2009-11-05 10:53:43 evh Exp $
 ! Package     : Online/Gaucho	
 ! Responsible : Eric.van.Herwijnen@cern.ch
 !--------------------------------------------------------------------------
-
+! 2009-11-05 - Eric van Herwijnen
+ - Set timerCycle to desiredDeltaTCycle - 1
+ - Put default refreshrate to 20secs (AdderSvc, SaverSvc, UpdateAndReset, also
+ - Change name of Calo calibration task in savesets (UpdateAndReset)
+ options in OnlineTasks/options
 ! 2009-01-29 - Marco Cattaneo
  - Backward compatible fixes for Gaudi v21
 
