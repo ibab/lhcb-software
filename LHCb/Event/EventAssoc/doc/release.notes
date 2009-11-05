@@ -4,6 +4,13 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 - Juan PALACIOS
+ - Split selection into selMC and selPhys to reduce size of dictionaries.
+   . Executable dict/selection.py imports new modules mc.py and mc.py 
+     to create dictionaries EventAssocMCDict and EventAssocPhysDict.
+ - cmt/requirements
+  . Increase version to v5r0
+
 ! 2009-11-04 - Victor Coco
  - dict/selection.*
   . Add LHCb::RelationWeighted1D<LHCb::Particle,LHCb::Particle,double>
