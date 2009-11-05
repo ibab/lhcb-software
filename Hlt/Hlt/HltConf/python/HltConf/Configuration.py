@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.129 2009-10-29 14:45:54 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.130 2009-11-05 15:54:03 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -22,7 +22,6 @@ class HltConf(LHCbConfigurableUser):
                              , Hlt2Conf ]
     __slots__ = { "L0TCK"                          : ''
                 , "DataType"                       : '2009'
-                , "Hlt2Requires"                   : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
                 , "Verbose"                        : False      # print the generated Hlt sequence
                 , "HistogrammingLevel"             : 'None'     # or 'Line'
                 , "ThresholdSettings"              : ''         #  select a predefined set of settings, eg. 'Effective_Nominal'
@@ -137,7 +136,7 @@ class HltConf(LHCbConfigurableUser):
         #
         if not thresClass or thresClass.ActiveHlt2Lines() :
             Hlt2Conf()
-            self.setOtherProps(Hlt2Conf(),[ "DataType","Hlt2Requires" ])
+            self.setOtherProps(Hlt2Conf(),[ "DataType" ])
             Hlt2Conf().ThresholdSettings = ThresholdSettings
             Hlt2Conf().WithMC = self.getProp("WithMC")
 
@@ -180,6 +179,7 @@ class HltConf(LHCbConfigurableUser):
                       , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                       , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
+                      , 46 : "HLT_PASS_RE('Hlt1(?!Lumi)(?!Random)(?!NonRandom).*Decision')"    # I don't like that
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"
@@ -381,7 +381,7 @@ class HltConf(LHCbConfigurableUser):
         log.info( '# List of configured Hlt2Lines : ' + str(hlt2Lines())  )
         log.info( '# List of Hlt2Lines added to Hlt2 : ' + str( lines2 )  )
         log.info( '# List of configured Hlt2Lines not added to Hlt2 : ' + str(set(hlt2Lines())-set(lines2)) )
-        Sequence('Hlt2Lines').Members += [ i.configurable() for i in lines2 ] 
+        Sequence('Hlt2').Members += [ i.configurable() for i in lines2 ] 
 
         # switch on timing limit
         if  self.getProp('EnableAcceptIfSlow') : 

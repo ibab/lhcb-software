@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.38 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.39 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -48,7 +48,6 @@ class Hlt2Conf(LHCbConfigurableUser):
                              ]
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-         , "Hlt2Requires"               : 'L0+Hlt1'  # require L0 and Hlt1 pass before running Hlt2
          , "ThresholdSettings"          : {} # ThresholdSettings predefined by Configuration
          , "Hlt2Tracks"                 : "Hlt/Track/Long"
          , "WithMC"                     : False 
@@ -67,7 +66,6 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         from HltLine.HltLine     import Hlt2Line
         Hlt2Line( "Global", HLT= "HLT_PASS_SUBSTR('Hlt2') ", priority = 255, PV = False, Reco = False )
-        Hlt2.Members += [ Sequence('Hlt2Lines',ModeOR=True,ShortCircuit=False) ]
         ThresholdSettings = self.getProp("ThresholdSettings")
         #
         # Loop over thresholds
@@ -82,9 +80,12 @@ class Hlt2Conf(LHCbConfigurableUser):
 #
 # Reco
 #
-    def hlt2Reconstruction(self,Hlt2):
+    def hlt2Reconstruction(self):
         """
         Reconstruction
+
+        @todo This must go to Hlt2 shared particles.
+        Hlt2Conf does not need to know about this
         """
         #  Full reconstruction of all tracks 
         from HltLine.HltReco import HltRecoSequence
@@ -97,6 +98,9 @@ class Hlt2Conf(LHCbConfigurableUser):
     def hlt2Tracks(self):
         """
         Charged particles
+
+        @todo This must go to Hlt2 shared particles.
+        Hlt2Conf does not need to know about this
         """
         from Configurables import HltInsertTrackErrParam
         SeqHlt2Charged = Sequence('SeqHlt2Charged'
@@ -117,29 +121,6 @@ class Hlt2Conf(LHCbConfigurableUser):
        
 ###################################################################################
 #
-# Requirements
-#
-    def hlt2Requirements(self,Hlt2):
-        """
-        Requirements
-        """
-        Hlt2.Members += [ Sequence("Hlt2Requirements") ]
-        Sequence("Hlt2Requirements").Members = [ ]
-        reqs = self.getProp('Hlt2Requires')
-        if reqs.upper() != "NONE" :
-            from Configurables import LoKi__HDRFilter   as HltFilter
-            from Configurables import LoKi__L0Filter    as L0Filter
-            from HltLine.HltDecodeRaw import DecodeL0DU
-            L0accept = Sequence(name='Hlt2L0Requirements', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION" )])
-            
-            hlt2requires = { 'L0'   : L0accept 
-                           , 'Hlt1' : HltFilter('Hlt1GlobalPass' , Code = "HLT_PASS('Hlt1Global')" )
-                             }
-            for i in reqs.split('+') :
-                if i : Sequence("Hlt2Requirements").Members.append( hlt2requires[i] )
-
-###################################################################################
-#
 # PID
 #
     def configurePID(self):
@@ -154,6 +135,9 @@ class Hlt2Conf(LHCbConfigurableUser):
     def configureCalo(self):
         """
         Configure calo sequences
+
+        @todo This must go to Hlt2 shared particles.
+        Hlt2Conf does not need to know about this
         """   
         Hlt2CaloSeq = GaudiSequencer("Hlt2CaloSeq")
         Hlt2CaloSeq.Context = "HLT"
@@ -177,12 +161,10 @@ class Hlt2Conf(LHCbConfigurableUser):
         """
         Hlt2 configuration
         """
-        Hlt2 = Sequence("Hlt2", Context = 'HLT' )
+        Hlt2 = Sequence("Hlt2", Context = 'HLT',ModeOR=True,ShortCircuit=False) 
         if Hlt2 not in Sequence("Hlt").Members : Sequence("Hlt").Members += [ Hlt2 ]
-        # requirements
-        self.hlt2Requirements(Hlt2)        
         # reco
-        self.hlt2Reconstruction(Hlt2)
+        self.hlt2Reconstruction()
         if self.getProp('WithMC'):
               importOptions( "$HLTCONFROOT/options/HltTrackAssociator.py" )
         # set Hlt2 PID
