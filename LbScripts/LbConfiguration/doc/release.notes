@@ -1,3 +1,9 @@
+2009-11-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py: Added DIRAC and LHCbDIRAC to the known
+	projects (to enable case insensitivity for them too) and added the default hat for
+	the package HltTCK.
+
 2009-10-19  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: added the possibility to choose the version of the 

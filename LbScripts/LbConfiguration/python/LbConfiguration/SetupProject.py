@@ -7,12 +7,12 @@ from stat import S_ISDIR
 import getopt
 from fnmatch import fnmatch
 
-_cvs_id = "$Id: SetupProject.py,v 1.18 2009-10-15 08:48:02 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.19 2009-11-05 10:33:19 marcocle Exp $"
 
 try:
     from LbConfiguration import createProjectMakefile
     from LbUtils.CVS import CVS2Version
-    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.18 $")
+    __version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.19 $")
 except ImportError :
     # dummy implementation for when we do not have LbScripts in the path yet.
     def createProjectMakefile(path, force):
@@ -29,7 +29,7 @@ lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
 project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
-                 "Panoramix", "LbScripts", "Curie", "LCGCMT"]
+                 "Panoramix", "LbScripts", "Curie", "LCGCMT", "Dirac", "LHCbDIRAC"]
 
 # List of pairs (project,[packages]) to automatically select for override
 # The project are prepended to the list of overriding packages and
@@ -1268,7 +1268,8 @@ class SetupProject:
         use_hats = { 'XmlDDDB':'Det',
                      'XmlConditions':'Det',
                      'DecFiles':'Gen',
-                     'SQLDDDB':'Det' }
+                     'SQLDDDB':'Det',
+                     'HltTCK':'TCK' }
         use_rexp = re.compile("^(?:([^/]*)/)?([^/ .]*)[ .]*([^ ]+)? *$")
         for u in self.use:
             m = use_rexp.match(u)
