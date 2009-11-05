@@ -137,10 +137,11 @@ StatusCode TrackCaloMatchMonitor::execute()
     }
   }
 
-  if(m_useGeometricZ) 
+  if(m_useGeometricZ) {
     BOOST_FOREACH( MyCaloPosition& cluster, calopositions) 
       cluster.pos.setZ( m_geometricZ ) ;
-  
+  }
+
   const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
 
   BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
