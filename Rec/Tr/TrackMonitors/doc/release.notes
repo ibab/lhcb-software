@@ -7,6 +7,7 @@
 ! 2009-11-05 Johan Blouw
  - small update of OTTrackMonitor, for the pitch resodual part.
    PitchResidual tool now returns a vector of residuals for OTChannelIDs
+ - removed 'unused variable from PitchResTool'.
 
 ! 2009-11-05 Wouter Hulsbergen
  - fix compilor warning in TrackCaloMatchMonitor on gdb43

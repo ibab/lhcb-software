@@ -1,4 +1,4 @@
-// $Id: PitchResTool.cpp,v 1.3 2009-11-05 09:12:50 jblouw Exp $
+// $Id: PitchResTool.cpp,v 1.4 2009-11-05 09:20:48 jblouw Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -98,7 +98,7 @@ std::vector<std::pair<LHCb::OTChannelID, double> > PitchResTool::calcPitchResidu
         if (h1.uniqueModule() != h2.uniqueModule()) continue;
 
         // work out layer
-        int layer = (h1.station() - 1) * 4 + h1.layer();
+        // int layer = (h1.station() - 1) * 4 + h1.layer();
         // get vector joining wires (dx, dy, dz)
         Gaudi::XYZPoint p1 = m1->trajectory().beginPoint();
         Gaudi::XYZPoint p2 = m2->trajectory().beginPoint();
