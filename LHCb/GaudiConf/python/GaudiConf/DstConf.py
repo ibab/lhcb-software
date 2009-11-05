@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.25 2009-11-04 18:03:53 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.26 2009-11-05 09:55:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -28,7 +28,7 @@ class DstConf(LHCbConfigurableUser):
        , "PackSequencer"  : None
        , "Writer"         : "DstWriter"
        , "OutputName"     : ""
-       , "SpilloverPaths" : []
+       , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next" ]
          }
 
     _propertyDocDct = { 
@@ -39,7 +39,7 @@ class DstConf(LHCbConfigurableUser):
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'Writer'        : """ Name of OutputStream writing the DST """
        ,'OutputName'    : """ Name of the output file, for MDF writing """
-       ,'SpilloverPaths': """ Paths to write out when spillover is enabled """
+       ,'SpilloverPaths': """ Paths to write to XDST if available on input file """
        }
 
     __used_configurables__ = [
@@ -53,22 +53,10 @@ class DstConf(LHCbConfigurableUser):
     KnownDstTypes  = ['NONE','DST','RDST','XDST']
     KnownPackTypes = ['NONE','TES','MDF']
 
-    def _doWrite( self ):
+    def _doWrite( self, dType, pType, sType ):
         """
         Define the file content and write it out
         """
-        sType = self.getProp( "SimType" ).capitalize()
-        if sType not in self.KnownSimTypes:
-            raise TypeError( "Unknown SimType '%s'"%sType )
-
-        dType = self.getProp( "DstType" ).upper()
-        if dType not in self.KnownDstTypes:
-            raise TypeError( "Unknown DstType '%s'"%dType )
-        if dType == 'NONE': return
-
-        pType = self.getProp( "PackType" ).upper()
-        if pType not in self.KnownPackTypes:
-            raise TypeError( "Unknown PackType '%s'"%pType )
 
         writer = DummyWriter()
         self._defineOutputData( dType, pType, sType, writer )
@@ -104,8 +92,7 @@ class DstConf(LHCbConfigurableUser):
         else:
             depth = "#1"
 
-        writer.ItemList += [   "/Event/DAQ/ODIN"                         + depth
-                             , "/Event/Rec/Header"                       + depth
+        writer.ItemList += [   "/Event/Rec/Header"                       + depth
                              , "/Event/Rec/Status"                       + depth 
                              , "/Event/" + recDir + "/Track/Best"        + depth
                              , "/Event/" + recDir + "/Rich/PIDs"         + depth
@@ -230,10 +217,10 @@ class DstConf(LHCbConfigurableUser):
             ]
         
         if self.getProp( "DstType" ).upper() == "RDST":
-            # Copy the HLT results from RawEvent to put them on the RDST
+            # Copy the ODIN and HLT results from RawEvent to put them on the RDST
             from Configurables import RawEventSelectiveCopy
             rawEventSelectiveCopy = RawEventSelectiveCopy()
-            rawEventSelectiveCopy.RawBanksToCopy = [ "HltDecReports" , "L0DU" ]
+            rawEventSelectiveCopy.RawBanksToCopy = [ "HltDecReports" , "L0DU", "ODIN" ]
             packDST.Members += [ rawEventSelectiveCopy ]
         else:
             packDST.Members += [ PackTrack( name       = "PackMuons",
@@ -289,12 +276,25 @@ class DstConf(LHCbConfigurableUser):
     def __apply_configuration__(self):
 
         log.info(self)
-        if self.getProp("SimType").capitalize() != "None":
+
+        sType = self.getProp( "SimType" ).capitalize()
+        if sType not in self.KnownSimTypes:
+            raise TypeError( "Unknown SimType '%s'"%sType )
+        if sType != "None":
             DigiConf().setProp("EnableUnpack",True) # DigiConf propagates it to SimConf
-            self.setOtherProps(DigiConf(),["SpilloverPaths"])
-            self.setOtherProps(SimConf(), ["SpilloverPaths"])
+
+        dType = self.getProp( "DstType" ).upper()
+        if dType not in self.KnownDstTypes:
+            raise TypeError( "Unknown DstType '%s'"%dType )
+        if dType == 'NONE': return
+        self.setOtherProps(DigiConf(),["SpilloverPaths"]) # DigiConf propagates it to SimConf
+
+        pType = self.getProp( "PackType" ).upper()
+        if pType not in self.KnownPackTypes:
+            raise TypeError( "Unknown PackType '%s'"%pType )
+
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
         if hasattr( self, "PackSequencer" ): self._doPack()
         GaudiKernel.ProcessJobOptions.PrintOn()
-        self._doWrite()
+        self._doWrite(dType, pType, sType)
         GaudiKernel.ProcessJobOptions.PrintOff()

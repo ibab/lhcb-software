@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.184 2009-11-04 18:03:53 cattanem Exp $
+! $Id: release.notes,v 1.185 2009-11-05 09:55:36 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-05 - Marco Cattaneo
+ - In DstConf, copy all existing SpilloverPaths to DST if they exist on input
+ - Remove DAQ/ODIN from DST and RDST. Add ODIN bank to pRec/RawEvent on RDST
 
 ! 2009-11-04 - Marco Cattaneo
  - Fix tests on SimType in DstConf
