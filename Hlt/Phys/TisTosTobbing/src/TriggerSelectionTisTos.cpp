@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.18 2009-11-05 14:07:53 pkoppenb Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.19 2009-11-05 15:06:36 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -37,6 +37,8 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_hltDecReports(0)
+  , m_hltSelReports(0)
   , m_track2calo(0)
   , m_hcalDeCal(0)
   , m_ecalDeCal(0)

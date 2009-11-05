@@ -1,4 +1,4 @@
-// $Id: TriggerTisTos.cpp,v 1.13 2009-10-21 12:37:34 pkoppenb Exp $
+// $Id: TriggerTisTos.cpp,v 1.14 2009-11-05 15:06:36 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -74,7 +74,7 @@ void TriggerTisTos::getTriggerNames()
 
 
   // get trigger names from HltDecReports and HltSelReports
-  if( !m_hltDecReports )getHltSummary();
+  if( !m_hltDecReports ) getHltSummary();
   //    for the same TCK this should be fixed list for events which passed Hlt
   if( m_hltDecReports ){
     m_triggerNames = m_hltDecReports->decisionNames();
