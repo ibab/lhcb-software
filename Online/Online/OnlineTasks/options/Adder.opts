@@ -16,7 +16,7 @@ MessageSvc.LoggerOnly   = 1;
 HistogramPersistencySvc.Warnings = false;
 
 AdderSvc.taskname="RecBrunel"; // Could be empty.
-AdderSvc.refreshTime=10;
+AdderSvc.refreshTime=20;
 AdderSvc.dimclientdns="hlt01";
 AdderSvc.partitionname="LHCb";
 

@@ -29,7 +29,7 @@ AdderSvc::AdderSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
   declareProperty("partitionname",m_partitionName);
-  declareProperty("refreshTime",  m_refreshTime=10);
+  declareProperty("refreshTime",  m_refreshTime=20);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("publishRates",m_publishRates=0);
 

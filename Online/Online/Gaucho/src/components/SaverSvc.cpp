@@ -28,7 +28,7 @@ SaverSvc::SaverSvc(const std::string& name, ISvcLocator* ploc) : Service(name, p
   declareProperty("taskname",m_taskName);
   declareProperty("algorithmname",m_algorithmName);
   declareProperty("objectname",m_objectName);
-  declareProperty("refreshTime",  m_refreshTime=10);
+  declareProperty("refreshTime",  m_refreshTime=20);
   declareProperty("dimclientdns",m_dimClientDns);
   declareProperty("savedir", m_saveDir);
   declareProperty("saveDiff", m_saveDiff=0);

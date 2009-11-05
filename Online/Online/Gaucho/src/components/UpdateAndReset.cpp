@@ -60,7 +60,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   : GaudiAlgorithm(name, ploc)
 {
   declareProperty("disableMonRate", m_disableMonRate = 0);
-  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 10);
+  declareProperty("desiredDeltaTCycle", m_desiredDeltaTCycle = 20);
   declareProperty("disableReadOdin", m_disableReadOdin = 0);
   declareProperty("disableChekInTimer", m_disableChekInTimer = 0);
   declareProperty("disableChekInExecute", m_disableChekInExecute = 0);
@@ -69,7 +69,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   
   declareProperty("saveHistograms", m_saveHistograms = 0);
   declareProperty("saveSetDir", m_saveSetDir = "/hist/Savesets");
-  declareProperty("saverCycle", m_saverCycle = 100);
+  declareProperty("saverCycle", m_saverCycle = 900);
   declareProperty("resetHistosAfterSave", m_resetHistosAfterSave = 0);
   
   declareProperty("teste", m_teste = 100000);
@@ -137,8 +137,7 @@ StatusCode UpdateAndReset::initialize() {
   
 
   if (0 == m_desiredDeltaTCycle){
-//    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
-    m_desiredDeltaTCycle = 10;
+    m_desiredDeltaTCycle = 20;
   }
     
   // In the begining the delayed values are the same as the current values.

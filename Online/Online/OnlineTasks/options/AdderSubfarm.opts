@@ -15,7 +15,7 @@ MessageSvc.OutputLevel               = 1;
 MessageSvc.LoggerOnly                = 1;
 MessageSvc.fifoPath                  = "/tmp/logGaudi.fifo";                  
 AdderSvc.taskname                    = {"GauchoJob"}; // Could be empty.
-AdderSvc.refreshTime                 = 10;
+AdderSvc.refreshTime                 = 20;
 AdderSvc.dimclientdns                = "$DIM_DNS_CLIENT_NODE";
 
 
