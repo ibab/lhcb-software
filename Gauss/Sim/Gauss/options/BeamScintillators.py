@@ -3,6 +3,9 @@
 ##  *  File containing options to simulate geometry upstream of VELO and
 ##  *  produce hits in Scintillator planes just at the wall.
 ##  *
+##  *  Works ONLY with MC09 geometry:
+##  *  DDDB="MC09-20090602",SIMCOND="sim-20090402-vc-md100"
+##  *  
 ##  *  @author G.Corti
 ##  *  @date 2008-05-06
 ##  */
