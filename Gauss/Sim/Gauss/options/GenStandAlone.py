@@ -13,5 +13,4 @@
 
 from Gauss.Configuration import *
 
-Gauss().GenStandAlone = True
-
+Gauss().Phases = ["Generator"] 
