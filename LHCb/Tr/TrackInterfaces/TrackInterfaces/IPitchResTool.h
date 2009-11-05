@@ -9,6 +9,7 @@
 // Forward declarations
 namespace LHCb {
   class Track;
+  class OTChannelID;
 };
 
 static const InterfaceID IID_IPitchResTool ( "IPitchResTool", 1, 0 );
@@ -34,7 +35,7 @@ public:
   // 0.5 pitch wrt the first monolayer. That means that the sum of the
   // 2 residuals is bound by the distance between the two wires projected 
   // onto the track.
-  virtual std::vector<std::pair<int,double> > 
+  virtual std::vector<std::pair<LHCb::OTChannelID, double> > 
     calcPitchResiduals(const LHCb::Track* track) const = 0;
 
 };

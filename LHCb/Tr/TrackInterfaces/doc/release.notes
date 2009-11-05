@@ -4,6 +4,9 @@
 ! Purpose     : package for tracking tools interfaces
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 - Johan Blouw
+ - PitchResTool now returns a map of OTChannelIDs and pitch residuals.
+
 !====================== TrackInterfaces v4r8 2009-10-16 ======================
 ! 2009-10-15 - Johan Blouw
  - added IPitchResTool interface to calculate pitch residuals in the Outer Tracker
