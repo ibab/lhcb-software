@@ -74,7 +74,7 @@ UpdateAndReset::UpdateAndReset(const std::string& name, ISvcLocator* ploc)
   
   declareProperty("teste", m_teste = 100000);
   
-  m_timerCycle = 9;
+  m_timerCycle = m_desiredDeltaTCycle - 1;
   m_firstExecute = true;
   m_dimSvcSaveSetLoc = 0;
   
@@ -94,7 +94,6 @@ StatusCode UpdateAndReset::initialize() {
 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();
-//  msg << MSG::DEBUG << "Setting up DIM for UTGID " << m_utgid << endreq;
     
   sc = serviceLocator()->service("MonitorSvc", m_pGauchoMonitorSvc, false);
   if( sc.isSuccess() ) msg << MSG::DEBUG << "Found the IGauchoMonitorSvc interface" << endreq;
@@ -140,19 +139,13 @@ StatusCode UpdateAndReset::initialize() {
     m_desiredDeltaTCycle = 20;
   }
     
-  // In the begining the delayed values are the same as the current values.
-//  msg << MSG::INFO << "This program will update data every " << m_desiredDeltaTCycle << " seconds !!!" << endreq;
-
   if (1 == m_saveHistograms){
- //   msg << MSG::INFO << "As you demand in your options file, this program will save data " << endreq;
     div_t divresult = div (m_saverCycle, m_desiredDeltaTCycle);
     m_numCyclesToSave = divresult.quot;
     if (0 == divresult.rem ) {
-//      msg << MSG::INFO << " every " << m_saverCycle << " seconds" << endreq;
     } 
     else {
       m_saverCycle = divresult.quot * m_desiredDeltaTCycle;
-      msg << MSG::DEBUG << " saverCycle set to "  << m_saverCycle << endreq;
     } 
   }
   
