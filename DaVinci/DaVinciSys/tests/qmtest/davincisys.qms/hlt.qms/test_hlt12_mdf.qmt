@@ -8,10 +8,11 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"34:HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"      |      1032 |         95 |(  9.20543 +- 0.899937 )%|   -------   |   -------   |
+ |*"46:HLT_PASS_RE('Hlt1(?!Lumi)(?!Random)(?!NonRan|      1032 |         95 |(  9.20543 +- 0.899937 )%|   -------   |   -------   |
 """, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
  |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1032 |          3 |( 0.290698 +- 0.167590 )%|   -------   |   -------   |
 """,  signature_offset = 0, id = "Hlt2")
+countErrorLines({"FATAL":0})
 </text></argument>
 </extension>

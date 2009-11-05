@@ -8,7 +8,8 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       999 |        103 |(  10.3103 +- 0.962109 )%|   -------   |   -------   |
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       999 |        138 |(  13.8138 +- 1.09167  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
+countErrorLines({"FATAL":0})
 </text></argument>
 </extension>

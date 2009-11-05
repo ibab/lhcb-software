@@ -12,5 +12,6 @@ DaVinciInit                                                 SUCCESS ============
 DaVinciInit                                                 SUCCESS 200 events processed
 DaVinciInit                                                 SUCCESS ==================================================================
 """, stdout, result, causes, signature_offset = 0)
+countErrorLines({"FATAL":0})
 </text></argument>
 </extension>
