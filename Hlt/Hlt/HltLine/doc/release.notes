@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.41 2009-11-03 16:45:28 graven Exp $
+! $Id: release.notes,v 1.42 2009-11-05 08:46:47 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== HltLine v1r9 2009-11-05 ===================
 ! 2009-11-03 - Gerhard Raven
  - if an Hlt2 line does not require anything specific about Hlt1,
    add a filter to it which verifies that the event is not exclusive lumi,
