@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.18 2009-11-03 11:09:47 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-11-05 18:22:13 silviam Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -67,7 +67,8 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorMoni"      : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'], "OT":['OT'], "RICH":['Rich1','Rich2'], "CALO":['Spd','Prs','Ecal','Hcal'], "MUON":['Muon'],"MAGNET": True }
        ,"SpilloverPaths"    : []
        ,"PhysicsList"       : "LHEP"
-       ,"SimPhases"         : ["Generator","Simulation"] # The simulation phases to include in the SIM file
+       ,"DeltaRays"         : True
+       ,"Phases"            : ["Generator","Simulation"] # The Gauss phases to include in the SIM file
        ,"BeamMomentum"      : 5.0*SystemOfUnits.TeV
        ,"BeamCrossingAngle" : 0.329*SystemOfUnits.mrad
        ,"BeamEmittance"     : 0.704*(10**(-9))*SystemOfUnits.rad*SystemOfUnits.m
@@ -93,7 +94,8 @@ class Gauss(LHCbConfigurableUser):
        ,"DetectorMoni"   : """ Dictionary specifying the detectors to monitor (should be simulated) :"""
        ,'SpilloverPaths' : """ Spillover paths to fill: [] means no spillover, otherwise put ['Next', 'Prev', 'PrevPrev'] """
        ,'PhysicsList'    : """ Name of physics list to be passed ['LHEP','QGSP'] """
-       ,'SimPhases'      : """ List of phases to run (Generator, Simulation) """
+       ,"DeltaRays"      : """ Simulation of delta rays enabled (default True) """
+       ,'Phases'         : """ List of phases to run (Generator, Simulation) """
        ,'Output'         : """ Output: [ 'NONE', 'SIM'] (default 'SIM') """
        ,'Production'     : """ Generation type : ['PHYS', 'PGUN', 'MIB' (default 'PHYS')"""
        ,'EnablePack'     : """ Flag to turn on or off the packing of the SIM data """
@@ -690,9 +692,13 @@ class Gauss(LHCbConfigurableUser):
          giga = GiGa()
          giga.addTool( GiGaPhysListModular("ModularPL") , name="ModularPL" ) 
          giga.PhysicsList = "GiGaPhysListModular/ModularPL"
-         giga.ModularPL.CutForElectron = 10000.0 * SystemOfUnits.m
+         ecut = 5.0 * SystemOfUnits.mm
+         if not self.getProp("DeltaRays"):
+             ecut = 10000.0 * SystemOfUnits.m
+         print 'Ecut value =', ecut
+         giga.ModularPL.CutForElectron = ecut
          giga.ModularPL.CutForPositron = 5.0 * SystemOfUnits.mm 
-         giga.ModularPL.CutForGamma    = 10.0 * SystemOfUnits.mm
+         giga.ModularPL.CutForGamma    = 5.0 * SystemOfUnits.mm
 
          ## Check here that the physics list is allowed
          physListOpts = "$GAUSSOPTS/PhysList-"+physList+".opts"
@@ -770,7 +776,7 @@ class Gauss(LHCbConfigurableUser):
         Set up the simulation sequence
         """
         
-        if "Simulation" not in self.getProp("SimPhases"):
+        if "Simulation" not in self.getProp("Phases"):
             log.warning("No simulation phase.")
             return
         
@@ -1129,7 +1135,7 @@ class Gauss(LHCbConfigurableUser):
 
         # Propagate properties to SimConf
         SimConf().setProp("Writer","GaussTape")
-        self.setOtherProps( SimConf(), ["SpilloverPaths","EnablePack","SimPhases"] )
+        self.setOtherProps( SimConf(), ["SpilloverPaths","EnablePack","Phases"] )
         
         # CRJ : Propagate detector list to SimConf. Probably could be simplified a bit
         #       by sychronising the options in Gauss() and SimConf()
