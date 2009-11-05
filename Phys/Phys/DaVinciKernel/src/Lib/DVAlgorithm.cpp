@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.63 2009-11-03 12:41:26 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.64 2009-11-05 16:18:27 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -316,8 +316,6 @@ StatusCode DVAlgorithm::sysExecute ()
 
   DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
 
-  desktop()->setUsingP2PV(this->useP2PV());
-
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
   { return Error (  "Not able to fill PhysDesktop" , sc ) ; }
@@ -325,6 +323,8 @@ StatusCode DVAlgorithm::sysExecute ()
   const LHCb::RecVertices* pvs = this->primaryVertices();
   
   m_multiPV = 0!=pvs ? pvs->size() > 1 : false;
+
+  desktop()->setUsingP2PV(this->useP2PV());
 
   // execute the algorithm 
   sc = this->Algorithm::sysExecute();
