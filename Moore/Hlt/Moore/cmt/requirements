@@ -1,5 +1,5 @@
 #============================================================================
-# $Id: requirements,v 1.89 2009-11-03 10:12:47 graven Exp $
+# $Id: requirements,v 1.90 2009-11-05 08:53:27 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
@@ -42,6 +42,11 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
+use Hlt2SharedParticles v2r5        Hlt
+use HltCommon           v5r13p1     Hlt
+use HltLine             v1r9        Hlt
+use TCKUtils            v1r5p1      Hlt
+use LHCbAlgs            v2r29p1     Kernel
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 

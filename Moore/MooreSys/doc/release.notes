@@ -3,31 +3,34 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v8r1>2009-11-05 Moore v8r1</A></H1><PRE>
+Based on Hlt v7r1, Phys v8r11, Lbcom v7r7, Rec v7r7 and Online v4r30
+
 </PRE><H1><A NAME=v8r0p1>2009-11-02 Moore v8r0p1</A></H1><PRE>
 Minimal changes needed for L0xHlt stripping
 
 </PRE><H1><A NAME=v8r0>2009-10-21 Moore v8r0</A></H1><PRE>
-Based on Hlt v7r0, Phys v8r10, Lbcom v7r6, Rec v7r6 en Online v4r29.
+Based on Hlt v7r0, Phys v8r10, Lbcom v7r6, Rec v7r6 and Online v4r29.
 
 </PRE><H1><A NAME=v7r5>2009-09-29 Moore v7r5</A></H1><PRE>
-Based on Hlt v6r8, Phys v8r10, Lbcom v7r6, Rec v7r6 en Online v4r29.
+Based on Hlt v6r8, Phys v8r10, Lbcom v7r6, Rec v7r6 and Online v4r29.
 - Added the pattern container_package.
 
 </PRE><H1><A NAME=v7r4>2009-09-14 Moore v7r4</A></H1><PRE>
-Based on Hlt v6r7, Phys v8r8, Lbcom v7r5, Rec v7r5 en Online v4r28.
+Based on Hlt v6r7, Phys v8r8, Lbcom v7r5, Rec v7r5 and Online v4r28.
 - Added the pattern container_package.
 
 </PRE><H1><A NAME=v7r3>2009-08-04 Moore v7r3</A></H1><PRE>
-Based on Hlt v6r5, Phys v8r7, Lbcom v7r4, Rec v7r4 en Online v4r27.
+Based on Hlt v6r5, Phys v8r7, Lbcom v7r4, Rec v7r4 and Online v4r27.
 
 </PRE><H1><A NAME=v7r2>2009-07-15 Moore v7r2</A></H1><PRE>
-Based on Hlt v6r4, Phys v8r6, Lbcom v7r3, Rec v7r3 en Online v4r25.
+Based on Hlt v6r4, Phys v8r6, Lbcom v7r3, Rec v7r3 and Online v4r25.
 
 </PRE><H1><A NAME=v7r1>2009-06-08 Moore v7r1</A></H1><PRE>
-Based on Hlt v6r2, Phys v8r4, Lbcom v7r1, Rec v7r1 en Online v4r23.
+Based on Hlt v6r2, Phys v8r4, Lbcom v7r1, Rec v7r1 and Online v4r23.
 
 </PRE><H1><A NAME=v7r0>2009-05-27 Moore v7r0</A></H1><PRE>
-Based on Hlt v6r1, Phys v8r3, Lbcom v7r0, Rec v7r0 en Online v4r22.
+Based on Hlt v6r1, Phys v8r3, Lbcom v7r0, Rec v7r0 and Online v4r22.
 First release based on LHCB v27r0, and Gaudi v21r0
 
 </PRE><H1><A NAME=v6r2>2009-04-11 Moore v6r2</A></H1><PRE>

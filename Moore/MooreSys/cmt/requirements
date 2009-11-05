@@ -9,6 +9,11 @@ branches doc cmt
 
 use  Moore                  v8r1   Hlt
 
+use Hlt2SharedParticles vxry Hlt
+use HltCommon           v5r13p1     Hlt
+use HltLine             v1r9        Hlt
+use TCKUtils            v1r5p1      Hlt
+use LHCbAlgs            v2r29p1     Kernel
 
 # Declare this as a container package
 apply_pattern container_package
