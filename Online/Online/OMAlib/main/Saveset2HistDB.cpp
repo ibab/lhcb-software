@@ -1,9 +1,10 @@
-// $Id: Saveset2HistDB.cpp,v 1.4 2009-06-03 13:33:11 ggiacomo Exp $
+// $Id: Saveset2HistDB.cpp,v 1.5 2009-11-05 18:55:52 ggiacomo Exp $
 #include <iostream>
 #include <TFile.h>
 #include <TKey.h>
 #include <TH1.h>
 #include "OnlineHistDB/OnlineHistDB.h"
+#include "OMAlib/OMAlib.h"
 
 using namespace std;
 
@@ -33,6 +34,7 @@ OnlineHistDBEnv::HistType typeFromClass(std::string cl);
 
 int main(int narg,char **argv ) {
   
+
   if(narg < 2) {
     usage();
     return 0;
@@ -77,6 +79,10 @@ int main(int narg,char **argv ) {
     return 1;
   }
   
+  OMAlib* omalib = new OMAlib(HistDB); // this is just to test OMAlib
+  std::string algo("Scale");
+  omalib->getAlg(algo);
+
   // loop on input root files and store histograms to be declared
   int nh=0;
   for (iarg = firstfile ; iarg < narg ; iarg++ ) {

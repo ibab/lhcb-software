@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.h,v 1.12 2009-06-09 17:34:10 ggiacomo Exp $
+// $Id: AnalysisTask.h,v 1.13 2009-11-05 18:55:52 ggiacomo Exp $
 #ifndef OMALIB_ANALYSISTASK_H 
 #define OMALIB_ANALYSISTASK_H 1
 
@@ -41,7 +41,7 @@ protected:
   std::vector<SavesetFinder*> m_saveset;
   std::string m_partition;
   std::string m_RICHClDir;
-  
+  bool m_stayHere;
 
 private:
   void getAllTasks();

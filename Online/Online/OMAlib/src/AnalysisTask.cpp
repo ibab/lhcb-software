@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.19 2009-08-26 16:14:22 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.20 2009-11-05 18:55:52 ggiacomo Exp $
 
 
 // from Gaudi
@@ -32,6 +32,7 @@ AnalysisTask::AnalysisTask( const std::string& name,
   declareProperty ( "InputTasks"   , m_inputTasks);
   declareProperty ( "Partition"    , m_partition = "LHCb" );
   declareProperty ( "TextLog"      , m_textLogName = "");
+  declareProperty ( "StopAlgSequence", m_stayHere = true);
   //
   declareProperty ( "RICHclustersDir", m_RICHClDir= "/home/ryoung");
 }
@@ -98,9 +99,12 @@ StatusCode AnalysisTask::initialize() {
       info()<< "listening to latest saveset for task "<<*iF << endmsg;
       m_saveset.push_back( new SavesetFinder(this, *iF, m_partition) );
     }
-    // stay here until killed
-    while (1) {
-      sleep(99999);
+
+    if (m_stayHere) {
+      // stay here until killed
+      while (1) {
+	sleep(99999);
+      }
     }
   }
 
