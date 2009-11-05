@@ -4,6 +4,15 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 - Silvia Miglioranzi
+ - Configuration.py was modified: DRays configurable was added and "SimPhases"
+   configurable was renamed "Phases".
+ - GenStandAlone.py was modified to use the new "Phases" configurable
+ - In BeamScintillators.py a comment was added to inform that it is valid 
+   only in combination with the MC09 geometry.
+ - DRaysON-LT.opts and DRaysON-HT.py were removed. Kine-LT.py was added to steer
+   the lowering of the kinetic tresholds.
+ 
 ! 2009-11-05 - Gloria Corti
  - Change version of database packages
  - Introduce new packages GaussUMC and BlsMoniSim
