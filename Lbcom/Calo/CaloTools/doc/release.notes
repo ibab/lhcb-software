@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.80 2009-10-20 08:11:32 cattanem Exp $
+! $Id: release.notes,v 1.81 2009-11-05 22:49:16 dgolubko Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2009-11-05 - Dmitry GOLUBKOV
+ - L0Calo2CaloTool : bugfix - make storage of all created clusters on TES the
+   only supported behaviour (therefore remove the 'DuplicateClustersOnTES' property),
+   use CaloFunctors::neighbours() instead of look_neig()
+ - cmt/requirements version increment to v5r13
 
 !========================== CaloTools v5r12 2009-10-20 =========================
 ! 2009-12-21 - Olivier Deschamps

@@ -2,6 +2,7 @@
 #include "L0Calo2CaloTool.h"
 #include "CaloKernel/CaloVector.h"
 #include "CaloDet/DeCalorimeter.h"
+#include "CaloUtils/CaloNeighbours.h"
 #include "Event/L0DUBase.h"
 
 #include <boost/functional/hash.hpp>
@@ -37,8 +38,6 @@ L0Calo2CaloTool::L0Calo2CaloTool(const std::string& type,
                   "if Sort: sort the clusters due to transverse energy");
   declareProperty("DecodeFullEcal",         m_decodeFullEcal         = false,
                   "false = decode only the Tell1s around the L0CaloCandidate cellID");
-  declareProperty("DuplicateClustersOnTES", m_duplicateClustersOnTES = false,
-                  "allow duplicated clusters on TES in case of multiple calls on the same zone");
 }
 // ==========================================================================
 StatusCode L0Calo2CaloTool::initialize()
@@ -161,42 +160,18 @@ StatusCode L0Calo2CaloTool::putClustersOnTES( std::vector<LHCb::CaloCluster*>& c
             << " v=" << (int) output->version() << " newly found clusters.size() = " << clusters.size() << endmsg; ///////
 
   // populate the CaloClusters TS container 
-  int cnt(0);
   for ( std::vector<LHCb::CaloCluster*>::iterator icluster = clusters.begin();
         clusters.end() != icluster; ++icluster){
     LHCb::CaloCluster* cl  = *icluster;
     if ( 0 == cl ) continue;
 
-    if ( m_duplicateClustersOnTES ){ // store everything on TES (allow duplications in case of multiple calls)
-      output -> insert ( cl ) ;
-      continue;
-    }
+    // check that cluster is not yet owned by some container
+    if ( 0 != cl->parent() ) continue;
 
-    // look for a cluster with the same seed cell (cover most of the cases)
-    int key = static_cast<int>( cl->seed().index() ); // alternatively use m_calo->cellIndex( cl->seed() )
-    const LHCb::CaloCluster* fnd = output->object( key );
-
-    // when found, check if the cluster seems to be the same (e.g. same energy)
-    static const double zerro = 1e-15;
-    if ( fnd && (fabs(fnd->e() - cl->e()) > zerro) ){
-      // Now look for a cluster with the same seed cell AND energy
-      // the hKey typically is a very large number, much more than cellID.index().
-      // Using the unique cellID.index() number as a key to most of the clusters,
-      // reduce the clashes possible in case of using only the hKey for everything.
-      size_t hKey = key;
-      boost::hash_combine<double>(hKey, cl->e());
-      key = static_cast<int>( hKey );
-      fnd = output->object( key );
-    }
-    if ( msgLevel(MSG::DEBUG) ) debug() << " CaloCluster #" << cnt ++ << " seed =" << (LHCb::CaloCellID)cl->seed() << " idx =" << cl->seed().index()
-                                        << " CaloCluster key = " << cl->key() << " Hash key=" << key << "  e =" << cl->e() << endmsg;
-    if ( fnd ){ // if already in TES - substitute the pointer in the output container with that from TES
-      delete cl;
-      cl = const_cast<LHCb::CaloCluster *>( fnd );
-      continue;
-    }
-    output -> insert ( cl, key ) ;
+    // store everything on TES (allow duplications in case of multiple calls)
+    output -> insert ( cl ) ;
   }
+
   if ( msgLevel(MSG::DEBUG) ) debug() << "1: LHCb::CaloClusters at " << m_clusterLocation << " size = " << ( output ? long( output->size() ) : -1 ) << endmsg; ////////////
  
   return StatusCode::SUCCESS;
@@ -292,34 +267,20 @@ StatusCode L0Calo2CaloTool::finalize()
 {  
   return GaudiTool::finalize ();
 }
-// ==========================================================================
-// Looking neigbours around cell (borrowed from CaloClusterizationTool)
-// ============================================================================
-void L0Calo2CaloTool::look_neig
-( const std::set<LHCb::CaloCellID>& in_cells,
-  std::set<LHCb::CaloCellID>&       out_cells ) const
-{
-  for(std::set<LHCb::CaloCellID>::const_iterator icell = in_cells.begin();
-      in_cells.end() != icell; ++icell){
-    const CaloNeighbors& nei = m_calo->neighborCells( (*icell) );
-    out_cells.insert( nei.begin(), nei.end() );
-  }
-}
 // ============================================================================
 void L0Calo2CaloTool::collectTell1s
 ( std::set<int>&                    tell1s,
   const LHCb::CaloCellID&           cellID,
   const unsigned int                level  ) const
 {
-  std::set<LHCb::CaloCellID> cell_list;
+  LHCb::CaloCellID::Set out_cells;
   std::set<int> cards;
 
   if ( !m_calo->valid(cellID) ) return;
 
   // incert the cells corresponding to the L0CaloCandidate
-  cell_list.insert( cellID );
+  out_cells.insert( cellID );
 
-  std::set<LHCb::CaloCellID> out_cells = cell_list;
   if ( level > 0 ){
     unsigned int area = cellID.area();
     unsigned int row  = cellID.row();
@@ -335,40 +296,27 @@ void L0Calo2CaloTool::collectTell1s
                 << " ur =" << ur << ":" << m_calo->cellCenter( ur )
                 << " dr =" << dr << ":" << m_calo->cellCenter( dr ) << endmsg;
   
-    if ( m_calo->valid(ul) ) cell_list.insert( ul );
+    if ( m_calo->valid(ul) ) out_cells.insert( ul );
     else debug() << "ul cell " << ul << " invalid" << endmsg;
 
-    if ( m_calo->valid(ur) ) cell_list.insert( ur );
+    if ( m_calo->valid(ur) ) out_cells.insert( ur );
     else debug() << "ur cell " << ur << " invalid" << endmsg;
 
-    if ( m_calo->valid(dr) ) cell_list.insert( dr );
+    if ( m_calo->valid(dr) ) out_cells.insert( dr );
     else debug() << "dr cell " << dr << " invalid" << endmsg;
 
-    // ------------------------------------------------------------------------
-    // look Cell neigbours -- code adapted from the CaloClusterization tool
-    out_cells = cell_list;
-    std::set<LHCb::CaloCellID> cells;
 
-    for (std::set<LHCb::CaloCellID>::const_iterator icell = 
-         cell_list.begin() ; cell_list.end() != icell ; ++icell){  
-      const CaloNeighbors& nei = m_calo->neighborCells( (*icell) );
-      cells.insert( nei.begin(), nei.end() );
-      cells.insert( (*icell) );
-    }
-
-    // look Cell neigbours for next levels
-    std::set<LHCb::CaloCellID>& in_cells  = cells;
-    out_cells = cells;
-
-    for (int ii = level; ii > 1; ii--){
-      look_neig(in_cells, out_cells);
-      in_cells = out_cells;
-    }
-    // ------------------------------------------------------------------------
+    /** find all neighbours for the given set of cells for the givel level
+     *  @param cells    (UPDATE) list of cells
+     *  @param level    (INPUT)  level
+     *  @param detector (INPUT) the detector
+     *  @return true if neighbours are added
+     */
+    LHCb::CaloFunctors::neighbours(out_cells, level, m_calo);
   }
 
 
-  for (std::set<LHCb::CaloCellID>::const_iterator it = out_cells.begin();
+  for (LHCb::CaloCellID::Set::const_iterator it = out_cells.begin();
        it != out_cells.end(); ++ it){
     if ( ! m_calo->valid( *it ) ){
       warning() << "one of the neighbour cells, " << *it << " turned out to be invalid" << endmsg;

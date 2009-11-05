@@ -23,6 +23,14 @@ class DeCalorimeter;
  * Tool to get a list of CaloClusters (owned by TES) in the vicinity of the input L0CaloCandidate(s),
  * if necessary invoking decoding and clusterization.
  *
+ * Remarks:
+ * - the returned clusters are owned by TES and should not be deleted by the user;
+ * - in case of multiple calls of the tool on intersecting zones of Ecal
+ *   - there might appear duplicated clusters on TES,
+ *   - unless the input/output   std::vector<LHCb::CaloCluster*> clusters
+ *     is clear()'ed by the user before calling L0Calo2CaloTool::clusterize(),
+ *     this vector also might contain duplicates
+ *
  *  @author Dmitry Golubkov
  *  @date   2009-07-29
  */
@@ -156,10 +164,8 @@ protected:
    *
    * @param clusters (INPUT/OUTPUT) vector of pointers to Calo clusters
    *
-   * Depending on the value of DuplicateClustersOnTES property,
-   * either put all the clusters or remove duplicates wich have
-   * the same seed cell and the same energy (may be useful in case of
-   * multiple calls of the L0Calo2CaloTool on intersecting zones of Ecal)
+   * NB: in case of multiple calls of the L0Calo2CaloTool on intersecting
+   * zones of Ecal, there might appear duplicates!
    */
   StatusCode putClustersOnTES
   ( std::vector<LHCb::CaloCluster*>&      clusters ) const ;
@@ -233,17 +239,6 @@ protected:
     const LHCb::CaloCellID& cellID,
     const unsigned int      level  ) const ;
   // ==========================================================================
-  /** find neighbour cells for a set of input cells 
-   *
-   * Shamelessly borrowed from the CaloClusterization tool.
-   *
-   * @param in_cells (INPUT) set of cells
-   * @param out_cells (OUTPUT) set of neighbour cells for in_cells
-   */
-  void look_neig
-  ( const std::set<LHCb::CaloCellID>& in_cells,
-    std::set<LHCb::CaloCellID>&       out_cells) const ;
-  // ==========================================================================
 private:
   std::string          m_clusterizationToolName;
   ICaloClusterization* m_clusterizationTool;
@@ -259,7 +254,7 @@ private:
   bool                 m_sort;
   bool                 m_sortET;
   bool                 m_decodeFullEcal;
-  bool                 m_duplicateClustersOnTES;
+
   mutable std::set<int>  m_decodedSources;
 };
 #endif // L0CALO2CALOTOOL_H
