@@ -14,6 +14,8 @@ GaussGen.RunNumber        = 1082
 nEvts = 5
 LHCbApp().EvtMax = nEvts
 
+#Gauss().Output = 'NONE'
+#Gauss().Histograms = 'NONE'
 #--Set name of output files for given job (uncomment the lines)
 #  Note that if you do not set it Gauss will make a name based on event type,
 #  number of events and the date

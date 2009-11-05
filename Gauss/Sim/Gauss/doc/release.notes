@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 - Gloria Corti
+ - Change version of database packages
+ - Introduce new packages GaussUMC and BlsMoniSim
+
 ! 2009-11-03 - Gloria CORTI
  - Change version number of Geant4Files to pick the latest as from 9.2.
 

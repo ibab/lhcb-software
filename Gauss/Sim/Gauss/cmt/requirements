@@ -15,11 +15,11 @@ branches src doc options cmt job python
 
 #-- Databases
 use DDDB               v*     Det            -no_auto_imports
-use ParamFiles         v8r0                  -no_auto_imports
+use ParamFiles         v8r1                  -no_auto_imports
 use FieldMap           v5r*                  -no_auto_imports
-use DecFiles           v19r*  Gen            -no_auto_imports
+use DecFiles           v20r*  Gen            -no_auto_imports
 use Geant4Files	       v92r0	             -no_auto_imports
-use MIBData            v2r0                  -no_auto_imports
+use MIBData            v3r0                  -no_auto_imports
 use MCatNLOData        v1r1                  -no_auto_imports
 use BcVegPyData        v2r*                  -no_auto_imports
 use XmlVis             v*     Vis            -no_auto_imports
@@ -37,18 +37,15 @@ use Python             v*     LCG_Interfaces -no_auto_imports
 use HepMC              v*     LCG_Interfaces -no_auto_imports
  
 # From GAUDI project
-use GaudiSvc           v*                    -no_auto_imports
-use GaudiAud           v*                    -no_auto_imports
+use Gaudi              v*                    -no_auto_imports
 use GaudiPoolDb        v*                    -no_auto_imports
-use GaudiPython        v*                    
-use RootHistCnv        v*                    -no_auto_imports
  
 # From LHCB project
+use EventPacker        v*     Event          -no_auto_imports
 use KernelSys          v*     Kernel         -no_auto_imports
 use DetSys             v*     Det            -no_auto_imports
 use LHCbAlgs           v*     Kernel         -no_auto_imports
 use SimComponents      v*     Sim            -no_auto_imports
-use EventPacker        v*     Event          
  
 #===========================================================================
 
@@ -68,7 +65,7 @@ macro LbHijing_use    "LbHijing     v*  Gen  -no_auto_imports"  WIN32 ""
 macro LbPythia8_use   "LbPythia8    v*  Gen  -no_auto_imports"  WIN32 ""
 use ${LbHerwig_use}
 use ${LbBcVegPy_use}
-#use ${LbHidValley_use}                 # TEMPORARILY OFF
+use ${LbHidValley_use}
 #use ${LbAlpGen_use}                    # TEMPORARILY OFF
 use ${LbHijing_use}
 use ${LbPythia8_use}
@@ -83,6 +80,7 @@ use GaussPhysics         v*    Sim   -no_auto_imports
 use GaussTracker         v*    Sim   -no_auto_imports
 use GaussRICH            v*    Sim   -no_auto_imports
 use GaussCalo            v*    Sim   -no_auto_imports
+use GaussUMC             v*    Sim   -no_auto_imports
 
 #-- Monitoring
 use GaussMonitor         v*    Sim   -no_auto_imports
@@ -95,9 +93,10 @@ use BcmMoniSim           v*    Bcm   -no_auto_imports
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
 use $(GiGaVisUI_use)
 
-#-- Optional GDML
-macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v* Sim"
-use $(GDMLG4Writer_use)
+#-- Optional GDML, to be reactivated, may need to be adapted to internal
+#-- of Geant4
+#macro GDMLG4Writer_use "" Linux&GDML "GDMLG4Writer v* Sim"
+#use $(GDMLG4Writer_use)
 
 #===========================================================================
 #== Necessary enviroment variables
