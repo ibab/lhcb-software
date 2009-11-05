@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.102 2009-11-04 11:55:17 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.103 2009-11-05 09:52:05 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -72,12 +72,12 @@ class Brunel(LHCbConfigurableUser):
        ,'WithMC'       : """ Flags whether to enable processing with MC truth (default False) """
        ,'Simulation'   : """ Flags whether to use SIMCOND conditions (default False) """
        ,'RecL0Only'    : """ Flags whether to reconstruct and output only events passing L0 (default False) """
-       ,'InputType'    : """ Type of input file. Can be one of ['MDF','DIGI','ETC','RDST','DST'] (default 'MDF') """
+       ,'InputType'    : """ Type of input file. Can be one of self.KnownInputTypes (default 'MDF') """
        ,'DigiType'     : """ Type of digi, can be ['Minimal','Default','Extended'] """
-       ,'OutputType'   : """ Type of output file. Can be one of ['RDST','DST','XDST','NONE'] (default 'DST') """
+       ,'OutputType'   : """ Type of output file. Can be one of self.KnownOutputTypes (default 'DST') """
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
-       ,'Histograms'   : """ Type of histograms. Can be one of ['None','Default','Expert'] """
+       ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
        ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
@@ -92,6 +92,10 @@ class Brunel(LHCbConfigurableUser):
        ,'SpecialData'  : """ Various special data processing options. See RecSys.KnownSpecialData for all options """
        ,'Context'      : """ The context within which to run (default 'Offline') """
        }
+
+    KnownInputTypes  = [ "MDF",  "DST", "RDST", "XDST", "DIGI", "ETC" ]
+    KnownOutputTypes = [ "NONE", "DST", "RDST", "XDST" ]
+    KnownHistograms  = [ "None", "Default", "Expert" ]
 
     def defineGeometry(self):
         # DIGI is always simulation, as is usage of MC truth!
@@ -108,15 +112,15 @@ class Brunel(LHCbConfigurableUser):
     def defineOptions(self):
 
         inputType = self.getProp( "InputType" ).upper()
-        if inputType not in [ "MDF", "DST", "DIGI", "ETC", "RDST", "XDST" ]:
+        if inputType not in self.KnownInputTypes:
             raise TypeError( "Invalid inputType '%s'"%inputType )
 
         outputType = self.getProp( "OutputType" ).upper()
-        if outputType not in [ "NONE", "DST", "RDST", "XDST" ]:
+        if outputType not in self.KnownOutputTypes:
             raise TypeError( "Invalid outputType '%s'"%outputType )
 
         histOpt = self.getProp("Histograms").capitalize()
-        if histOpt not in ["","None","Default","Expert"]:
+        if histOpt not in self.KnownHistograms:
             raise RuntimeError("Unknown Histograms option '%s'"%histOpt)
 
         withMC = self.getProp("WithMC")
