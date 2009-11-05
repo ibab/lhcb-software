@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.11 2009-10-09 12:59:22 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.12 2009-11-05 17:10:34 niko Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -105,7 +105,7 @@ namespace LHCb  {
 	  const _V& bnks = raw->banks(RawBank::DAQ);
 	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
 	    RawBank* b = *i;
-	    if ( b->version() == DAQ_STATUS_BANK && b->type() == DAQ_STATUS_BANK )  {
+	    if ( b->version() == DAQ_STATUS_BANK && b->type() == RawBank::DAQ )  {
 	      res.first = b->begin<MDFHeader>();
 	      break;
 	    }
