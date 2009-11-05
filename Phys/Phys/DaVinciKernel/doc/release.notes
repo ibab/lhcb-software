@@ -1,8 +1,15 @@
-!$Id: release.notes,v 1.328 2009-10-30 16:15:45 jpalac Exp $
+!$Id: release.notes,v 1.329 2009-11-05 10:23:55 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
+
+! 2009-11-05 - Juan PALACIOS
+ - Add Kernel/DaVinciP2VVAngles.h and src/Lib/DaVinciP2VVangles.cpp
+  . Namespace DaVinci::P2VVAngles with P2VV angle calculating functions.
+ - Kernel/DaVinciFun.h,  src/Lib/DaVinciFun.cpp
+  . DaVinci::P2VVAngles moved to Kernel/DaVinciP2VVAngles.h and 
+    src/Lib/DaVinciP2VVangles.cpp
 
 ! 2009-10-30 - Juan PALACIOS
  - Move Kernel/StringUtils.h to Kernel/DaVinciStringUtils.h and put 
