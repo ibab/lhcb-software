@@ -10,6 +10,7 @@ drop table DIMSERVICENAME;
 drop table HISTOGRAM;
 drop table HISTOGRAMSET;
 drop table DISPLAYOPTIONS;
+drop table FITFUNCTION;
 drop table TASK;
 drop table SUBSYSTEM;
 drop table ERGOSUM;
@@ -20,6 +21,8 @@ drop sequence HistogramSet_ID;
 drop sequence Analysis_ID;
 drop sequence Displayoptions_ID;
 drop sequence AnaMessage_ID;
+drop sequence FunCode_ID;
+drop sequence SHH_ID;
 
 purge recyclebin;
 CREATE OR REPLACE TYPE vthresholds as VARRAY(50) OF FLOAT;
@@ -271,10 +274,10 @@ create table ANALYSIS (
  AID integer  constraint A_PK primary key 
 	USING INDEX (create index A_PK_IX ON ANALYSIS(AID) ),
  HSET integer NOT NULL CONSTRAINT A_HSET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
- ALGORITHM varchar2(30) NOT NULL references ALGORITHM(ALGNAME)
- ANADOC varchar2(2000);
- ANAMESSAGE varchar2(200);
- MINSTATS int;
+ ALGORITHM varchar2(30) NOT NULL references ALGORITHM(ALGNAME),
+ ANADOC varchar2(2000),
+ ANAMESSAGE varchar2(200),
+ MINSTATS int
 );
 CREATE INDEX A_HSET_IX on ANALYSIS(HSET) ;
 CREATE INDEX A_AL_IX on ANALYSIS(ALGORITHM) ;
