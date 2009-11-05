@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.8 2009-11-05 18:11:45 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.9 2009-11-05 18:14:45 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -48,7 +48,6 @@ private:
   bool  m_allSteps ; ///< Fill also intermediate steps
   bool m_fillGlobal ; ///< Fill Hlt1Global and Hlt2Global (backward-compatible mode)
   std::vector<unsigned int> m_routingBits ; ///< Routing bits to fill
-  unsigned int m_maxBits ; ///< Span of bits
   
 };
 #endif // JBOREL_TUPLETOOLTRIGGER_H
