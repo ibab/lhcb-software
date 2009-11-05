@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2009-10-15 13:51:48 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-11-05 12:18:11 wouter Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -150,6 +150,9 @@ class RecMoniConf(LHCbConfigurableUser):
 
     ## Possible used Configurables
     __used_configurables__ = [ CaloMoniDstConf, RichRecQCConf ]
+
+    ## Configurables that must be configured before us
+    __queried_configurables__ = [ RecSysConf, TrackSys ]
 
     ## Steering options
     __slots__ = {
