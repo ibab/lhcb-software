@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTos.cpp,v 1.17 2009-10-22 20:53:23 tskwarni Exp $
+// $Id: TriggerSelectionTisTos.cpp,v 1.18 2009-11-05 14:07:53 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -37,6 +37,11 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_track2calo(0)
+  , m_hcalDeCal(0)
+  , m_ecalDeCal(0)
+  , m_muonTracks(0)
+  , m_muonsOff(false)
 {
   declareInterface<ITriggerSelectionTisTos>(this);
 
@@ -68,8 +73,6 @@ TriggerSelectionTisTos::TriggerSelectionTisTos( const std::string& type,
     m_offlineInput[hitType].reserve(500);
   }
 
-  m_track2calo = 0;
-  
   m_cached_SelectionNames.reserve(500);
   m_cached_decision.reserve(500);
   m_cached_tis.reserve(500);

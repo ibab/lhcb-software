@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.48 2009-10-28 17:23:48 pkoppenb Exp $
+! $Id: release.notes,v 1.49 2009-11-05 14:07:53 pkoppenb Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2009-11-05 - Patrick Koppenburg
+ - Initialise all member variables
+ - v3r6
 
 !========================== TisTosTobbing v3r5 2009-10-28 ===================
 ! 2009-10-22 - Tomasz Skwarnicki

@@ -1,4 +1,4 @@
-// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.1 2009-10-22 20:53:23 tskwarni Exp $
+// $Id: TriggerSelectionTisTosInHlt.cpp,v 1.2 2009-11-05 14:07:53 pkoppenb Exp $
 // Include files 
 #include <algorithm>
 
@@ -39,50 +39,52 @@ TriggerSelectionTisTosInHlt::TriggerSelectionTisTosInHlt( const std::string& typ
                                                 const std::string& name,
                                                 const IInterface* parent )
   : GaudiTool ( type, name , parent )
+  , m_track2calo(0)
+  , m_hcalDeCal(0)
+  , m_ecalDeCal(0)
+  , m_muonTracks(0)
+  , m_HLTmuonTracks(0)
+  , m_muonsOff(false)
+  , m_objectSummaries(0)
 {
   declareInterface<ITriggerSelectionTisTos>(this);
-
+  
    declareProperty("HltDecReportsLocation",
-                  m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default); 
-
+                   m_HltDecReportsLocation = LHCb::HltDecReportsLocation::Default); 
+   
    // if you ever use this tool for offline particles (after Hlt was run) change
    // OfflineMuonTrackLocation to LHCb::TrackLocation::Muon i.e. 'Rec/Track/Muon' 
    declareProperty("OfflineMuonTrackLocation",
-                  m_MuonTracksLocation = LHCb::TrackLocation::HltMuon); 
+                   m_MuonTracksLocation = LHCb::TrackLocation::HltMuon); 
    //             m_MuonTracksLocation = LHCb::TrackLocation::Muon); 
    // do not change this one even if you call the tool in offline
    declareProperty("HltOfflineMuonTrackLocation",
-                  m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
- 
-  declareProperty("TOSFracVelo", m_TOSFrac[kVelo] = 0.7 );
-  declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
-  declareProperty("TOSFracOTIT", m_TOSFrac[kOTIT] = 0.7 );
-  declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.7 );
-  declareProperty("TOSFracEcal", m_TOSFrac[kEcal] = 0.01); 
-  declareProperty("TOSFracHcal", m_TOSFrac[kHcal] = 0.01);
-
-  declareProperty("TISFracVelo", m_TISFrac[kVelo] = 0.01 );
-  declareProperty("TISFracTT",   m_TISFrac[kTT]   = 0.01 );
-  declareProperty("TISFracOTIT", m_TISFrac[kOTIT] = 0.01 );
-  declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 );
-  declareProperty("TISFracEcal", m_TISFrac[kEcal] = 0.0099 ); 
-  declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.0099 );
-
-  declareProperty("NoCaloHypo",m_noCaloHypo = false );  
-
-  for( int hitType=0; hitType!=nHitTypes; ++hitType ){
-    m_offlineInput[hitType].reserve(500);
-  }
-
-  m_track2calo = 0;
-  
-  m_cached_SelectionNames.reserve(500);
-  m_cached_decision.reserve(500);
-  m_cached_tis.reserve(500);
-  m_cached_tos.reserve(500);
-  
-  
- 
+                   m_HltMuonTracksLocation =  LHCb::TrackLocation::HltMuon);
+   
+   declareProperty("TOSFracVelo", m_TOSFrac[kVelo] = 0.7 );
+   declareProperty("TOSFracTT",   m_TOSFrac[kTT]   = 0.7 );
+   declareProperty("TOSFracOTIT", m_TOSFrac[kOTIT] = 0.7 );
+   declareProperty("TOSFracMuon", m_TOSFrac[kMuon] = 0.7 );
+   declareProperty("TOSFracEcal", m_TOSFrac[kEcal] = 0.01); 
+   declareProperty("TOSFracHcal", m_TOSFrac[kHcal] = 0.01);
+   
+   declareProperty("TISFracVelo", m_TISFrac[kVelo] = 0.01 );
+   declareProperty("TISFracTT",   m_TISFrac[kTT]   = 0.01 );
+   declareProperty("TISFracOTIT", m_TISFrac[kOTIT] = 0.01 );
+   declareProperty("TISFracMuon", m_TISFrac[kMuon] = 0.01 );
+   declareProperty("TISFracEcal", m_TISFrac[kEcal] = 0.0099 ); 
+   declareProperty("TISFracHcal", m_TISFrac[kHcal] = 0.0099 );
+   
+   declareProperty("NoCaloHypo",m_noCaloHypo = false );  
+   
+   for( int hitType=0; hitType!=nHitTypes; ++hitType ){
+     m_offlineInput[hitType].reserve(500);
+   }
+   
+   m_cached_SelectionNames.reserve(500);
+   m_cached_decision.reserve(500);
+   m_cached_tis.reserve(500);
+   m_cached_tos.reserve(500);   
 }
 
 
