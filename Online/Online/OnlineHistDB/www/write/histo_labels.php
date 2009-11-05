@@ -21,7 +21,7 @@ $id=$_POST["id"];
 if ($_POST["Update_labels"] == 'Confirm') {
   $hsid = HistoSet($id);
   $inset = ($htype == "HID") ? "'${id}'" : "NULL";
-  $command="begin OnlineHistDB.DeclareBinLabels($hsid,$inset,PARAMETERS(";
+  $command="begin OnlineHistDB.DeclareBinLabels($hsid,$inset,LABELS(";
   $first=1;
   $nlabx=$nlaby=0;
   for ($i=1 ; $i<=$_POST["nlabx"]; $i++) {

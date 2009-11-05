@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.46 2009-06-23 13:32:24 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistogram.cpp,v 1.47 2009-11-05 17:38:30 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -227,10 +227,10 @@ void OnlineHistogram::load() {
     text  dsn[VSIZE_SN]="";
     text  pgref[VSIZE_PAGENAME]="";
     int isAnaHist=0;
-    OCITable *parameters;
+    OCIArray *labels;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
-			     OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
-			     (dvoid **) &parameters));
+			     OCIlabels, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
+			     (dvoid **) &labels));
     myOCIBindInt   (stmt,":out", out);  
     myOCIBindString(stmt,":nm" , m_identifier);
     myOCIBindString(stmt,":pg" , m_page);
@@ -254,7 +254,7 @@ void OnlineHistogram::load() {
     myOCIBindInt   (stmt,":hdi", m_hsdisp, &m_hsdisp_null);
     myOCIBindInt   (stmt,":shd", m_shdisp, &m_shdisp_null);
     myOCIBindString(stmt,":dsn", dsn, VSIZE_SN, &m_dimServiceName_null);
-    myOCIBindObject(stmt,":lbl", (void **) &parameters, OCIparameters );
+    myOCIBindObject(stmt,":lbl", (void **) &labels, OCIlabels );
     myOCIBindInt   (stmt,":nxlb",m_xbinlab, &m_xbinlab_null );
     myOCIBindInt   (stmt,":nylb",m_ybinlab, &m_ybinlab_null );    
     myOCIBindString(stmt,":refp", pgref, VSIZE_PAGENAME, &m_refPage_null);
@@ -284,7 +284,7 @@ void OnlineHistogram::load() {
         if (m_shdisp_null) m_shdisp = 0;         
         m_dimServiceName = m_dimServiceName_null ? "" : std::string((const char *) dsn);
         m_isAnaHist = (isAnaHist>0);
-        stringVarrayToVector(parameters, m_binlabels);
+        stringVarrayToVector(labels, m_binlabels);
         if (m_xbinlab_null) m_xbinlab = 0; 
         if (m_ybinlab_null) m_ybinlab = 0; 
         m_refPage= m_refPage_null ? "" : std::string((const char *) pgref);
@@ -294,7 +294,7 @@ void OnlineHistogram::load() {
     else {
       m_isAbort=true;
     }
-    checkerr(OCIObjectFree ( m_envhp, m_errhp, parameters, OCI_OBJECTFREE_FORCE) );
+    checkerr(OCIObjectFree ( m_envhp, m_errhp, labels, OCI_OBJECTFREE_FORCE) );
     releaseOCITaggedStatement(stmt, "HLOAD");
     
     if (!m_isAbort) {
@@ -687,7 +687,7 @@ void OnlineHistogram::getDisplayOptions(int doid) {
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, "BEGIN :out := ONLINEHISTDB.GETDISPLAYOPTIONS(:id,:do,:fitf,:fitp); END;") ) {
     text  fitfun[VSIZE_FITFUN]="";
-    OCITable *fitPars;
+    OCIArray *fitPars;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &fitPars));
@@ -720,7 +720,7 @@ int OnlineHistogram::setDisplayOptions(std::string function) {
     ",theFitFun => :fitf, theFitPars => :fitp); END;";
   OCIStmt *stmt=NULL;
   if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.c_str()) ) {
-    OCITable *fitPars;
+    OCIArray *fitPars;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &fitPars));
@@ -1169,7 +1169,7 @@ bool OnlineHistogram::setBinLabels(std::vector<std::string> *Xlabels,
   m_StmtMethod = "OnlineHistogram::setBinLabels";
   OCIStmt *stmt=NULL;
   std::stringstream command;
-  command << "BEGIN ONLINEHISTDB.DECLAREBINLABELS(theSet => :set, theHID => :hid, labels => parameters(";
+  command << "BEGIN ONLINEHISTDB.DECLAREBINLABELS(theSet => :set, theHID => :hid, thelabels => labels(";
   for (unsigned int il=0;il<newlabels.size();il++) {
     if (il>0) command << ",";
     command << "'" << newlabels[il] <<"'";
@@ -1485,7 +1485,7 @@ int OnlineHistogram::declareAnalysis(std::string Algorithm,
   command += "); END;";
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, command.c_str()) ) {
-    OCITable *warn,*alarm,*inps;
+    OCIArray *warn,*alarm,*inps;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &warn));
@@ -1546,7 +1546,7 @@ bool OnlineHistogram::setAnalysis(int AnaID,
   m_StmtMethod = "OnlineHistogram::setAnalysis";
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, "BEGIN ONLINEHISTDB.SETSPECIALANALYSIS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,inputs=>:inp);END;"  ) ) {
-    OCITable *warn,*alarm,*inps;
+    OCIArray *warn,*alarm,*inps;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &warn));
@@ -1590,7 +1590,7 @@ bool OnlineHistogram::getAnaSettings(int AnaID,
   m_StmtMethod = "OnlineHistogram::getAnaSettings";
   if ( OCI_SUCCESS == prepareOCIStatement
        (stmt, "BEGIN ONLINEHISTDB.GETANASETTINGS(theAna=>:id,theHisto=>:hid,warn=>:w,alr=>:a,mask=>:m,inputs=>:inp); END;" ) ) {
-    OCITable *warn,*alarm,*inps;
+    OCIArray *warn,*alarm,*inps;
     checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
                              OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
                              (dvoid **) &warn));

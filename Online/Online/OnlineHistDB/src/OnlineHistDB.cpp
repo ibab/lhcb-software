@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.40 2009-06-16 17:39:24 ggiacomo Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDB.cpp,v 1.41 2009-11-05 17:38:30 ggiacomo Exp $
 /*
    C++ interface to the Online Monitoring Histogram DB
    G. Graziani (INFN Firenze)
@@ -154,7 +154,7 @@ OnlineHistogram* OnlineHistDB::declareAnalysisHistogram
       if (ish < Sources.size()-1) command << ",";
     }
     command << ")";
-    command << ",THRESHOLDS(";
+    command << ",VTHRESHOLDS(";
     if (np > 0) {
       for (int ipp=0; ipp<np ;ipp++) {
         command << Parameters->at(ipp);
@@ -219,7 +219,7 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
     
     if ( OCI_SUCCESS == prepareOCIStatement(stmt, statement.str().c_str()) ) {
       myOCIBindString(stmt, ":x1", Name);
-      OCITable *parameters;
+      OCIArray *parameters;
       checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
 			       OCIparameters, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
 			       (dvoid **) &parameters));
@@ -233,7 +233,7 @@ bool OnlineHistDB::declareCheckAlgorithm(std::string Name,
       stringVectorToVarray(allPars, parameters);
       myOCIBindObject(stmt, ":par",(void **) &parameters , OCIparameters);
 
-      OCITable *defvalues;
+      OCIArray *defvalues;
       checkerr( OCIObjectNew ( m_envhp, m_errhp, m_svchp, OCI_TYPECODE_TABLE,
 			       OCIthresholds, (dvoid *) 0, OCI_DURATION_SESSION, TRUE,
 			       (dvoid **) &defvalues));
@@ -276,7 +276,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   }
 
   std::stringstream statement;
-  statement << "BEGIN ONLINEHISTDB.DECLARECREATORALGORITHM(Name =>:x1,Ninp=>:x2,pars=>PARAMETERS(";
+  statement << "BEGIN ONLINEHISTDB.DECLARECREATORALGORITHM(Name =>:x1,Ninp=>:x2,pars=>VPARAMETERS(";
   int ipar=0;
   int setflag = (int)SetAsInput;
   
@@ -287,7 +287,7 @@ bool OnlineHistDB::declareCreatorAlgorithm(std::string Name,
   statement << "),thetype=>:type";
   if (doc)
     statement << ",doc=>:d";
-  statement << ",thegetset=>:setflag,defVals=>THRESHOLDS(";
+  statement << ",thegetset=>:setflag,defVals=>VTHRESHOLDS(";
   ipar=0;
   while (ipar++<Npars) {
     statement << ":dv" << ipar;
@@ -349,7 +349,7 @@ bool OnlineHistDB::declareFitFunction(std::string Name,
 
   std::stringstream statement;
   statement << "BEGIN ONLINEHISTDB.DECLAREFITFUNCTION('" <<Name<<
-    "',"<<Npars <<",PARAMETERS(";
+    "',"<<Npars <<",VPARAMETERS(";
 
   if (Npars>0) {
     std::vector<std::string>::iterator ip;
@@ -366,7 +366,7 @@ bool OnlineHistDB::declareFitFunction(std::string Name,
   if (Nin >0) {
     statement<< ",theNin => '"<<Nin<<"'";
   }
-  statement<< ",theDefVals=>THRESHOLDS(";
+  statement<< ",theDefVals=>VTHRESHOLDS(";
   bool first=true;
   std::vector<float>::iterator idv;
   for (idv = parInitv->begin() ; idv != parInitv->end(); idv++) {

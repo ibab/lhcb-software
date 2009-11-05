@@ -54,7 +54,7 @@ else {
 for ($ip=1;$ip<=$np;$ip++) {
  $mypars[$ip]=$_POST["a1_p${ip}"];
 }
-$parameters="thresholds(".implode(",",$mypars).")";
+$parameters="vthresholds(".implode(",",$mypars).")";
 $command="begin OnlineHistDB.DeclareAnalysisHistogram(theAlg=>'".$_POST["alg"].
   "',theTitle=>'".sqlstring($_POST["hctitle"])."',${sourceh},thePars=>${parameters},".
   "theName=>:name); end;";

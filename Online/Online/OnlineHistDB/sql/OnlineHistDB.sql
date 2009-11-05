@@ -1,8 +1,8 @@
 create or replace package OnlineHistDB AUTHID CURRENT_USER as
  -- some useful types
  TYPE sourceh is VARRAY(8) of HCREATOR.SOURCEH1%TYPE; 
- TYPE histotlist is TABLE OF HISTOGRAM.HID%TYPE;
- TYPE floattlist is TABLE OF real;
+ TYPE histotlist is VARRAY(333) OF HISTOGRAM.HID%TYPE;
+ TYPE floattlist is VARRAY(333) OF real;
 
  -- major declarations (task, subsystem, histogram)
  procedure DeclareSubSystem(subsys varchar2);	
@@ -22,7 +22,7 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 
  -- setting various histogram properties
  function SetDimServiceName(theHID IN  HISTOGRAM.HID%TYPE, theDSN IN DIMSERVICENAME.SN%TYPE) return number;
- procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int);
+ procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, thelabels labels, Nx IN int);
  function SetPageToDisplay(theHID HISTOGRAM.HID%TYPE, thePage PAGE.PAGENAME%TYPE) return number;
 
  -- access histogram properties
@@ -34,29 +34,29 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay out int, theHSDisplay out int, theSHDisplay out int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int,
+	theDIMServiceName OUT varchar2, theLabels OUT labels, NlabX OUT int, NlabY OUT int,
         theRefPage OUT varchar2)
 	return number;
 
  -- declarations of algorithms and fit functions
- procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer :=0, defVals thresholds);
- procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN parameters,
+ procedure DeclareCheckAlgorithm(Name varchar2,pars vparameters,doc varchar2:=NULL, nin integer :=0, defVals vthresholds);
+ procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,pars IN vparameters,
 			thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, thegetset in ALGORITHM.GETSET%TYPE := 0,
-			defVals thresholds);
- procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL,
-        theNin IN int := 0, theDefVals IN thresholds := thresholds() ); 
+			defVals vthresholds);
+ procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN vparameters, theMi IN int, theDoc IN varchar2 := NULL,
+        theNin IN int := 0, theDefVals IN vthresholds := vthresholds() ); 
 
  -- display options
  function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN thresholds) return number;
+        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
  function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN thresholds) return number;
+        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
  function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         theOptions IN dispopt,
-                        theFitFun IN varchar2, theFitPars IN thresholds) return number;
+                        theFitFun IN varchar2, theFitPars IN vthresholds) return number;
  function GetBestDO(theHID IN HISTOGRAM.HID%TYPE, thePage IN varchar2 := NULL,TheInstance IN int := 1) return number;
  function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
-        theFitFun OUT varchar2, theFitPars OUT thresholds)  return number;
+        theFitFun OUT varchar2, theFitPars OUT vthresholds)  return number;
  procedure GetFitOptions(theDOID IN int, theFitFun OUT int, theNp OUT int, theNin OUT int);
  function GetFitParam(theDOID IN int, iPar IN int) return number;
  procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float );
@@ -78,25 +78,25 @@ create or replace package OnlineHistDB AUTHID CURRENT_USER as
 
 
  -- analysis
- function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-	instance IN integer:=1, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
- function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-	anaID IN integer :=0, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
- procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
-	inputs IN thresholds:=thresholds());
+ function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
+	instance IN integer:=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
+ function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
+	anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) return number;
+ procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN vthresholds, alr IN vthresholds,
+	inputs IN vthresholds:=vthresholds());
  procedure GetAlgoNpar(theAlg IN varchar2, Npar OUT integer, Ninp OUT integer);
  procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetFitAlgNpar(fcode IN int, Npar OUT integer, Ninp OUT integer);
  procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float);
  procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float);
  procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float);
- procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
-	mask OUT int, inputs OUT thresholds);
+ procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT vthresholds, alr OUT vthresholds,
+	mask OUT int, inputs OUT vthresholds);
  function GetHistoAnalysis(theHistoSet IN int, anaids OUT intlist, ananames OUT analist) return number;
 
  -- "analysis" (virtual) histograms
  procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
-                                  theSources sourceh := NULL, thePars IN thresholds := thresholds(),theName OUT varchar2);
+                                  theSources sourceh := NULL, thePars IN vthresholds := vthresholds(),theName OUT varchar2);
  procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float);
  procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist);
 
@@ -154,7 +154,7 @@ create or replace  package body OnlineHistDB as
 -----------------------
 
 
-function DeclareDisplayOptions(theOptions IN dispopt, theFitFun IN varchar2, theFitPars IN thresholds,
+function DeclareDisplayOptions(theOptions IN dispopt, theFitFun IN varchar2, theFitPars IN vthresholds,
                         theDOID IN DISPLAYOPTIONS.DOID%TYPE := NULL) return number is
  myid number := 0;
 begin
@@ -167,7 +167,7 @@ begin
   myid := theDOID;
  end if;
  if (theFitFun is not NULL) then
-  UPDATE DISPLAYOPTIONS SET FITPARS=theFitPars WHERE DOID=myid;
+  UPDATE DISPLAYOPTIONS SET VFITPARS=theFitPars WHERE DOID=myid;
  end if;
  return myid;
 end DeclareDisplayOptions;
@@ -432,10 +432,10 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
  mynhs HISTOGRAMSET.NHS%TYPE;
  mynana HISTOGRAMSET.NANALYSIS%TYPE;
  myihs HISTOGRAM.IHS%TYPE;
- cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,WARNINGS,ALARMS from ANASETTINGS where HISTO=Xhisto;
+ cursor myans(Xhisto HISTOGRAM.HID%TYPE) is select ANA,VWARNINGS,VALARMS from ANASETTINGS where HISTO=Xhisto;
  myana ANASETTINGS.ANA%TYPE;
- mywn thresholds;
- myal thresholds;
+ mywn vthresholds;
+ myal vthresholds;
  oldtype  VIEWHISTOGRAM.HSTYPE%TYPE := 'NON'; 
  mytype  VIEWHISTOGRAM.HSTYPE%TYPE := thetype;
 
@@ -495,7 +495,7 @@ function DeclareHistByAttributes(tk IN varchar2,algo IN  varchar2, title IN  var
     -- if analysis exists for set, create it for this histogram, masked by default, with same parameters than first histogram in set
     if (mynana >0) then
       for aset in myans(myhsid||'/1') LOOP
-       INSERT INTO ANASETTINGS(ANA,HISTO,MASK,WARNINGS,ALARMS) VALUES(aset.ANA,myhid,1,aset.WARNINGS,aset.ALARMS);
+       INSERT INTO ANASETTINGS(ANA,HISTO,MASK,VWARNINGS,VALARMS) VALUES(aset.ANA,myhid,1,aset.VWARNINGS,aset.VALARMS);
       end LOOP;     
     end if;
     close myhinset;
@@ -617,8 +617,8 @@ begin
 end SetDimServiceName;
 -----------------------
 
-procedure DeclareCheckAlgorithm(Name varchar2,pars parameters,doc varchar2:=NULL, nin integer := 0,
-				defVals thresholds) is
+procedure DeclareCheckAlgorithm(Name varchar2,pars vparameters,doc varchar2:=NULL, nin integer := 0,
+				defVals vthresholds) is
 -- pars must contain the names of output parameters, followed by input parameters
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
@@ -628,9 +628,9 @@ begin
  open al;
  fetch al into  algo;
  if al%NOTFOUND then
-   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,NPARS,ALGPARS,PARDEFVAL) VALUES(Name,'CHECK',nin,np,pars,defVals);
+   insert into ALGORITHM(ALGNAME,ALGTYPE,NINPUT,NPARS,VALGPARS,VPARDEFVAL) VALUES(Name,'CHECK',nin,np,pars,defVals);
  else
-   update ALGORITHM set ALGTYPE='CHECK',NPARS=np,NINPUT=nin,ALGPARS=pars,PARDEFVAL=defVals where ALGNAME=Name;
+   update ALGORITHM set ALGTYPE='CHECK',NPARS=np,NINPUT=nin,VALGPARS=pars,VPARDEFVAL=defVals where ALGNAME=Name;
  end if;
  close al;
  if (LENGTH(doc) > 0 ) then
@@ -644,8 +644,8 @@ end DeclareCheckAlgorithm;
 
 -----------------------
 procedure DeclareCreatorAlgorithm(Name IN varchar2,Ninp IN number:=0,
-	        pars IN parameters, thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, 
-                thegetset in ALGORITHM.GETSET%TYPE := 0, defVals thresholds) is
+	        pars IN vparameters, thetype IN varchar2 := 'H1D', doc IN varchar2:=NULL, 
+                thegetset in ALGORITHM.GETSET%TYPE := 0, defVals vthresholds) is
 -- here Ninp is the number of input histograms
  cursor al is  select ALGNAME from ALGORITHM where ALGNAME=Name;	
  algo ALGORITHM.ALGNAME%TYPE;
@@ -663,7 +663,7 @@ begin
  end if;
  close al;
  if (nin > 0) then
-    update ALGORITHM set NPARS=nin,ALGPARS=pars,PARDEFVAL=defVals where ALGNAME=Name;
+    update ALGORITHM set NPARS=nin,VALGPARS=pars,VPARDEFVAL=defVals where ALGNAME=Name;
  end if;
  if (LENGTH(doc) > 0 ) then
     update ALGORITHM set ALGDOC=doc where ALGNAME=Name;
@@ -675,26 +675,26 @@ EXCEPTION
 end DeclareCreatorAlgorithm;
 
 -----------------------
-procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN parameters, theMi IN int, theDoc IN varchar2 := NULL,
-        theNin IN int := 0, theDefVals IN thresholds := thresholds() ) is
+procedure DeclareFitFunction(theName IN varchar2, theNp IN int, thePnames IN vparameters, theMi IN int, theDoc IN varchar2 := NULL,
+        theNin IN int := 0, theDefVals IN vthresholds := vthresholds() ) is
  cursor ff is select NAME from FITFUNCTION where NAME=theName;
  func FITFUNCTION.NAME%TYPE;
 begin
  open ff;
  fetch ff into func;
  if ff%NOTFOUND then
-   insert into FITFUNCTION(NAME,CODE,NP,PARNAMES,MUSTINIT,DOC,NINPUT,FIPARDEFVAL) 
+   insert into FITFUNCTION(NAME,CODE,NP,VPARNAMES,MUSTINIT,DOC,NINPUT,VFIPARDEFVAL) 
         VALUES(theName,FunCode_ID.NEXTVAL, theNp, thePnames, theMi, theDoc, theNin, theDefVals );
  else 
-   update FITFUNCTION set NP=theNp,PARNAMES=thePnames,MUSTINIT=theMi,DOC=theDoc,NINPUT=theNin, FIPARDEFVAL=theDefVals
+   update FITFUNCTION set NP=theNp,VPARNAMES=thePnames,MUSTINIT=theMi,DOC=theDoc,NINPUT=theNin, VFIPARDEFVAL=theDefVals
         where NAME=theName;
  end if;
 end DeclareFitFunction;
 -----------------------
 
 
-function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-                         instance IN integer :=1, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
+function DeclareAnalysis(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
+                         instance IN integer :=1, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
 	return number is
  cursor ana is select AID from ANALYSIS where HSET=theSet and ALGORITHM=Algo order by AID;
  myid ANALYSIS.AID%TYPE := 0;
@@ -716,8 +716,8 @@ begin
 end DeclareAnalysis;
 -----------------------
 
-function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN thresholds, alr IN thresholds, 
-                         anaID IN integer :=0, inputs IN thresholds:=thresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
+function DeclareAnalysisWithID(theSet IN HISTOGRAMSET.HSID%TYPE, Algo IN varchar2, warn IN vthresholds, alr IN vthresholds, 
+                         anaID IN integer :=0, inputs IN vthresholds:=vthresholds(), Doc IN varchar2 := NULL, Message IN varchar2 := NULL) 
         return number is cursor hs is  select NHS from HISTOGRAMSET where HSID=theSet;
  mynh HISTOGRAMSET.NHS%TYPE :=0;
  cursor al is  select ALGTYPE,NPARS,NINPUT from ALGORITHM where ALGNAME=Algo;	
@@ -758,13 +758,13 @@ begin
     UPDATE  HISTOGRAMSET set NANALYSIS=NANALYSIS+1 where HSID=theSet;
     for i IN 1..mynh LOOP
      hid := theSet||'/'||i;
-      INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
+      INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS) VALUES(Analysis_ID.CURRVAL,hid,warn,alr,inputs);
     end LOOP;
    end if;
  else
   -- analysis already exists: update parameters
    UPDATE ANALYSIS SET ANADOC=Doc, ANAMESSAGE=Message where AID=anaID;
-   UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs where ANA=anaID and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
+   UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs where ANA=anaID and REGEXP_REPLACE(HISTO,'^(.*)/.*$','\1')=theSet;
    myid := anaID;
  end if;
  return myid;
@@ -775,8 +775,8 @@ exception
 end DeclareAnalysisWithID;
 
 -----------------------
-procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN thresholds, alr IN thresholds,
-	inputs IN thresholds:=thresholds()) is
+procedure SetSpecialAnalysis(theAna IN integer, theHisto IN varchar2,  warn IN vthresholds, alr IN vthresholds,
+	inputs IN vthresholds:=vthresholds()) is
  cursor anaset(Xh HISTOGRAM.HID%TYPE) is select MASK from ANASETTINGS where ANA=theAna and HISTO=Xh;
  mk ANASETTINGS.MASK%TYPE;
 begin
@@ -790,10 +790,10 @@ begin
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
     else
      -- histogram has been added to set after analysis declaration: create new ANASETTINGS entry
-     INSERT INTO ANASETTINGS(ANA,HISTO,WARNINGS,ALARMS,INPUTPARS) VALUES(theAna,theHisto,warn,alr,inputs);
+     INSERT INTO ANASETTINGS(ANA,HISTO,VWARNINGS,VALARMS,VINPUTPARS) VALUES(theAna,theHisto,warn,alr,inputs);
     end if;
  else
-  UPDATE ANASETTINGS SET WARNINGS=warn,ALARMS=alr,INPUTPARS=inputs WHERE ANA=theAna and HISTO=theHisto;
+  UPDATE ANASETTINGS SET VWARNINGS=warn,VALARMS=alr,VINPUTPARS=inputs WHERE ANA=theAna and HISTO=theHisto;
  end if;
  close anaset;
 EXCEPTION
@@ -805,7 +805,7 @@ end SetSpecialAnalysis;
 -----------------------
 
 function DeclareHistoSetDisplayOptions(theSet IN HISTOGRAMSET.HSID%TYPE,theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN thresholds) return number is
+        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
  cursor checko is select HSDISPLAY from HISTOGRAMSET where HSID=theSet; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  mySetDisp HISTOGRAMSET.HSDISPLAY%TYPE := NULL;
@@ -831,7 +831,7 @@ end DeclareHistoSetDisplayOptions;
 -----------------------
 
 function DeclareHistDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, theOptions IN dispopt,
-        theFitFun IN varchar2, theFitPars IN thresholds) return number is
+        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
  cursor checko is select HS.HSID,HS.NHS,H.DISPLAY from HISTOGRAMSET HS,HISTOGRAM H where H.HID=theHID and H.HSET=HS.HSID; 
  mydoid DISPLAYOPTIONS.DOID%TYPE;
  myHSID HISTOGRAMSET.HSID%TYPE;
@@ -861,7 +861,7 @@ end DeclareHistDisplayOptions;
 
 function DeclareHistoPageDisplayOptions(theHID IN HISTOGRAM.HID%TYPE, thePage varchar2, TheInstance IN int := 1, 
                         theOptions IN dispopt,
-                        theFitFun IN varchar2, theFitPars IN thresholds) return number is
+                        theFitFun IN varchar2, theFitPars IN vthresholds) return number is
  cursor checko is select SDISPLAY from SHOWHISTO where HISTO=theHID and PAGE=thePage and INSTANCE=TheInstance; 
  myDisp HISTOGRAM.DISPLAY%TYPE := NULL;
  mydoid DISPLAYOPTIONS.DOID%TYPE;
@@ -886,8 +886,8 @@ end DeclareHistoPageDisplayOptions;
 
 -----------------------
 function GetDisplayOptions(theDOID IN int, theOptions OUT dispopt, 
-        theFitFun OUT varchar2, theFitPars OUT thresholds)   return number is
- cursor mydo is select OPT,FITFUN,FITPARS from DISPLAYOPTIONS where DOID=theDOID;
+        theFitFun OUT varchar2, theFitPars OUT vthresholds)   return number is
+ cursor mydo is select OPT,FITFUN,VFITPARS from DISPLAYOPTIONS where DOID=theDOID;
  out int;
 begin
  open mydo;
@@ -916,9 +916,9 @@ begin
 end GetFitOptions;
 
 function GetFitParam(theDOID IN int, iPar IN int) return number is
- theFitPars thresholds;
+ theFitPars vthresholds;
 begin
- select FITPARS into theFitPars from DISPLAYOPTIONS where DOID=theDOID;
+ select VFITPARS into theFitPars from DISPLAYOPTIONS where DOID=theDOID;
  if ( iPar >0 and iPar <= theFitPars.COUNT ) then
   return theFitPars(iPar);
  else 
@@ -927,14 +927,14 @@ begin
 end GetFitParam;
 
 procedure GetFitFunParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
- theFitPars parameters;
- theDefVal thresholds;
+ theFitPars vparameters;
+ theDefVal vthresholds;
  nmaxopar int;
  mymu int;
 begin 
  name := NULL;
  defVal := NULL;
- select NP,PARNAMES,FIPARDEFVAL,MUSTINIT into nmaxopar,theFitPars,theDefVal,mymu from FITFUNCTION where CODE=fcode;
+ select NP,VPARNAMES,VFIPARDEFVAL,MUSTINIT into nmaxopar,theFitPars,theDefVal,mymu from FITFUNCTION where CODE=fcode;
  if ( Ipar >0 and Ipar <= nmaxopar ) then
   name := theFitPars(Ipar);
   if (mymu = 1) then 
@@ -944,14 +944,14 @@ begin
 end GetFitFunParname;
 -----------------------
 procedure GetFitFunInputParname(fcode IN int, Ipar IN integer, name OUT varchar2, defVal OUT float ) is
- theFitPars parameters;
- theDefVal thresholds;
+ theFitPars vparameters;
+ theDefVal vthresholds;
  nmaxipar int;
  mynp int;
 begin 
  name := NULL;
  defVal := NULL;
- select NP,NINPUT,PARNAMES,FIPARDEFVAL into mynp,nmaxipar,theFitPars,theDefVal from FITFUNCTION where CODE=fcode;
+ select NP,NINPUT,VPARNAMES,VFIPARDEFVAL into mynp,nmaxipar,theFitPars,theDefVal from FITFUNCTION where CODE=fcode;
  if ( Ipar >0 and Ipar <= nmaxipar ) then
   name := theFitPars(mynp+Ipar);
   defVal := theDefVal(mynp+Ipar);
@@ -1102,9 +1102,9 @@ end GetAlgoNpar;
 procedure GetAlgoParname(theAlg IN varchar2, Ipar IN integer, name OUT varchar2, defVal OUT float) is
 -- for check functions Ipar from 1 to NPARS gives output parameter
 -- Ipar from NPARS+1 to NPARS+NINPUT gives input parameter
- cursor np is select ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME=theAlg;
- mypars parameters;
- mydefval thresholds;
+ cursor np is select VALGPARS,VPARDEFVAL from ALGORITHM where ALGNAME=theAlg;
+ mypars vparameters;
+ mydefval vthresholds;
 begin
  name := 'Unknown';
  defVal := NULL;
@@ -1161,17 +1161,17 @@ procedure GetFitAlgParname(fcode IN int, Ipar IN integer, name OUT varchar2, def
  nin int;
  noutfa int;
  ninfa int;
- fapars parameters;
+ fapars vparameters;
  noutff int;
  ninff int;
- ffpars parameters;
+ ffpars vparameters;
  isinput int;
- defvalfa thresholds;
- defvalff thresholds;
+ defvalfa vthresholds;
+ defvalff vthresholds;
  ffix int :=0;
  mymu FITFUNCTION.MUSTINIT%TYPE;
- cursor np is select NPARS,NINPUT,ALGPARS,PARDEFVAL from ALGORITHM where ALGNAME='Fit';
- cursor fp is select NP,NINPUT,PARNAMES,FIPARDEFVAL,MUSTINIT from FITFUNCTION where CODE=fcode;
+ cursor np is select NPARS,NINPUT,VALGPARS,VPARDEFVAL from ALGORITHM where ALGNAME='Fit';
+ cursor fp is select NP,NINPUT,VPARNAMES,VFIPARDEFVAL,MUSTINIT from FITFUNCTION where CODE=fcode;
 begin
  name := 'Unknown';
  defVal := NULL;
@@ -1277,9 +1277,9 @@ end GetHistoAnalysis;
 
 -----------------------
 procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, Ipar IN integer, warn OUT float, alr OUT float) is
- cursor anaset is  select WARNINGS,ALARMS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
- myw thresholds;
- mya thresholds;
+ cursor anaset is  select VWARNINGS,VALARMS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+ myw vthresholds;
+ mya vthresholds;
 begin
  open anaset;
  fetch anaset into myw,mya;
@@ -1297,8 +1297,8 @@ EXCEPTION
 end GetAnaSettings;
 -----------------------
 procedure GetAnaInput(theAna IN integer, theHisto IN varchar2, Ipar IN integer, input OUT float) is
- cursor anaset is  select INPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
- myinp thresholds := thresholds();
+ cursor anaset is  select VINPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+ myinp vthresholds := vthresholds();
 begin
  open anaset;
  fetch anaset into myinp;
@@ -1320,15 +1320,15 @@ end GetAnaInput;
 
 ------------------------------------------------------------------------------------------------------------
 
-procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT thresholds, alr OUT thresholds,
-	mask OUT int , inputs OUT thresholds) is
- cursor anaset is  select WARNINGS,ALARMS,MASK,INPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
+procedure GetAnaSettings(theAna IN integer, theHisto IN varchar2, warn OUT vthresholds, alr OUT vthresholds,
+	mask OUT int , inputs OUT vthresholds) is
+ cursor anaset is  select VWARNINGS,VALARMS,MASK,VINPUTPARS FROM ANASETTINGS WHERE ANA=theAna and HISTO=theHisto;
 begin
  open anaset;
  fetch anaset into warn,alr,mask,inputs;
  if(anaset%NOTFOUND) then
-     warn := thresholds();
-     alr := thresholds();
+     warn := vthresholds();
+     alr := vthresholds();
      mask := 0;
      raise_application_error(-20005,'Cannot find Analysis '||theAna||' for histogram'|| theHisto);
  end if;
@@ -1341,8 +1341,8 @@ end GetAnaSettings;
 -----------------------
 
 procedure GetHCSettings(theHID IN HISTOGRAM.HID%TYPE, Ipar IN integer, value OUT float) is
- cursor hcp is  select HCPARS FROM HCREATOR WHERE HCID=theHID;
- myp thresholds;
+ cursor hcp is  select VHCPARS FROM HCREATOR WHERE HCID=theHID;
+ myp vthresholds;
 begin
  open hcp;
  fetch hcp into myp;
@@ -1359,7 +1359,7 @@ end GetHCSettings;
 -------------------------
 
 procedure DeclareAnalysisHistogram(theAlg IN varchar2,theTitle IN varchar2,theSet IN HISTOGRAMSET.HSID%TYPE := 0,
-			           theSources sourceh, thePars IN thresholds := thresholds(),
+			           theSources sourceh, thePars IN vthresholds := vthresholds(),
 	                           theName OUT varchar2) is
  myhid HISTOGRAM.HID%TYPE;
  myhcid HCREATOR.HCID%TYPE;
@@ -1421,7 +1421,7 @@ begin
   INSERT INTO HCREATOR(HCID,ALGORITHM) VALUES(myhid,theAlg); 
  end if;
 
- UPDATE HCREATOR set HCPARS=thePars where HCID=myhid;
+ UPDATE HCREATOR set VHCPARS=thePars where HCID=myhid;
  if ( algogs = 1 and theSet > 0 ) then
   UPDATE HCREATOR set SOURCESET=theSet where HCID=myhid;
  end if;
@@ -1445,14 +1445,14 @@ end DeclareAnalysisHistogram;
 
 -----------------------
 procedure GetAnaHistDirections(theHCID IN varchar2, Alg OUT varchar2, Sset OUT int, Sources out hnalist, Pars out flolist) is
- cursor myHC is select ALGORITHM,SOURCEH1,SOURCEH2,SOURCEH3,SOURCEH4,SOURCEH5,SOURCEH6,SOURCEH7,SOURCEH8,SOURCESET,HCPARS
+ cursor myHC is select ALGORITHM,SOURCEH1,SOURCEH2,SOURCEH3,SOURCEH4,SOURCEH5,SOURCEH6,SOURCEH7,SOURCEH8,SOURCESET,VHCPARS
     from HCREATOR where HCID=theHCID;
  cursor myhh(Xset int) is select NAME from VIEWHISTOGRAM where HSID=Xset;
  Npar int;
  Ninp int;
  myalg HCREATOR.ALGORITHM%TYPE;
  sh sourceh := sourceh();
- mypars thresholds ;
+ mypars vthresholds ;
  i int;
 begin
  sh.EXTEND(8);
@@ -1787,13 +1787,13 @@ function GetHistogramData(theName IN varchar2, thePage IN varchar2, theInstance 
 	theTask OUT varchar2, theAlgo OUT varchar2, theNanalysis OUT int,
 	theDescr OUT varchar2, theDoc OUT varchar2, theIsanalysishist OUT int, theCreation OUT int,
         theObsolete OUT int, theDisplay OUT int, theHSDisplay OUT int, theSHDisplay OUT int,
-	theDIMServiceName OUT varchar2, theLabels OUT parameters, NlabX OUT int, NlabY OUT int,
+	theDIMServiceName OUT varchar2, theLabels OUT labels, NlabX OUT int, NlabY OUT int,
         theRefPage OUT varchar2 ) 
 	return number is
 cursor myh(XName HISTOGRAM.NAME%TYPE) is SELECT HS.HSID,HS.NHS,HS.HSTYPE,HS.HSTITLE,HS.HSALGO,HS.HSTASK,
         HS.NANALYSIS,HS.DESCR,HS.DOC,HS.HSDISPLAY,
         H.HID,H.IHS,H.SUBTITLE,H.ISANALYSISHIST,TIMEST2UXT(H.CREATION), TIMEST2UXT(H.OBSOLETENESS),
-	H.DISPLAY,H.BINLABELS,H.NBINLABX,H.NBINLABY,H.REFPAGE FROM HISTOGRAMSET HS,HISTOGRAM H 
+	H.DISPLAY,H.VBINLABELS,H.NBINLABX,H.NBINLABY,H.REFPAGE FROM HISTOGRAMSET HS,HISTOGRAM H 
            WHERE H.NAME=XName AND H.HSET=HS.HSID;
 cursor mysh(Xhid HISTOGRAM.HID%TYPE) is SELECT SDISPLAY FROM SHOWHISTO 
 	WHERE PAGE=thePage AND HISTO=Xhid AND INSTANCE=theInstance;
@@ -1826,21 +1826,21 @@ begin
 end GetHistogramData;
 -----------------------
 
-procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, labels parameters, Nx IN int) is
+procedure DeclareBinLabels(theSet IN HISTOGRAMSET.HSID%TYPE, theHID IN HISTOGRAM.HID%TYPE, thelabels labels, Nx IN int) is
 Ny int;
 begin
-if (labels.COUNT > 0 ) then
- Ny := labels.COUNT-Nx;
+if (thelabels.COUNT > 0 ) then
+ Ny := thelabels.COUNT-Nx;
  if (theHID is not NULL) then
-  UPDATE HISTOGRAM SET BINLABELS=labels,NBINLABX=Nx,NBINLABY=Ny where HID=theHID;
+  UPDATE HISTOGRAM SET VBINLABELS=thelabels,NBINLABX=Nx,NBINLABY=Ny where HID=theHID;
  else
-  UPDATE HISTOGRAM SET BINLABELS=labels,NBINLABX=Nx,NBINLABY=Ny where HSET=theSet;
+  UPDATE HISTOGRAM SET VBINLABELS=thelabels,NBINLABX=Nx,NBINLABY=Ny where HSET=theSet;
  end if;
 else
  if (theHID is not NULL) then
-  UPDATE HISTOGRAM SET BINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HID=theHID;
+  UPDATE HISTOGRAM SET VBINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HID=theHID;
  else
-  UPDATE HISTOGRAM SET BINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HSET=theSet;
+  UPDATE HISTOGRAM SET VBINLABELS=NULL,NBINLABX=0,NBINLABY=0 where HSET=theSet;
  end if;
 end if;
 end DeclareBinLabels;

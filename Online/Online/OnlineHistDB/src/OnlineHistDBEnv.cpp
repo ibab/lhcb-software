@@ -1,4 +1,4 @@
-//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.21 2009-07-06 16:01:17 ggiacomo Exp $
+//$Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/OnlineHistDB/src/OnlineHistDBEnv.cpp,v 1.22 2009-11-05 17:38:30 ggiacomo Exp $
 #include <cctype>
 #include <cstring>
 #include <cstdlib>
@@ -12,7 +12,7 @@ OnlineHistDBEnv::OnlineHistDBEnv(std::string passwd,
                                  std::string db,
                                  bool newsession) 
   :  m_ownEnv(newsession), m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
-     OCIthresholds(NULL), OCIparameters(NULL),
+     OCIthresholds(NULL), OCIparameters(NULL), OCIlabels(NULL), 
      OCIintlist(NULL), OCIinttlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
      m_TaggedStatement(NULL),
      m_refRoot(NULL), m_savesetsRoot(NULL),
@@ -74,6 +74,7 @@ void OnlineHistDBEnv::copyEnv(OnlineHistDBEnv &m) {
   m_debug = m.debug(); m_excLevel = m.excLevel();
   OCIthresholds = m.OCIthresholds;
   OCIparameters = m.OCIparameters;
+  OCIlabels = m.OCIlabels;
   OCIintlist = m.OCIintlist;
   OCIinttlist = m.OCIinttlist;
   OCIanalist = m.OCIanalist;
@@ -93,7 +94,7 @@ void OnlineHistDBEnv::copyEnv(OnlineHistDBEnv &m) {
 // dummy constructor for no-DB operation
 OnlineHistDBEnv::OnlineHistDBEnv()
   :  m_ownEnv(false), m_envhp(NULL), m_errhp(NULL), m_svchp(NULL),
-     OCIthresholds(NULL), OCIparameters(NULL),
+     OCIthresholds(NULL), OCIparameters(NULL), OCIlabels(NULL), 
      OCIintlist(NULL), OCIinttlist(NULL), OCIanalist(NULL), OCIhnalist(NULL), OCIflolist(NULL),    
      m_TaggedStatement(NULL),
      m_refRoot(NULL), m_savesetsRoot(NULL),
@@ -134,18 +135,25 @@ void OnlineHistDBEnv::checkCurBind() {
 }
 
 void OnlineHistDBEnv::getOCITypes() {
+
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
-			 (ub4) 0, (const text *) "THRESHOLDS",
-			 (ub4) strlen((const char *) "THRESHOLDS"),
+			 (ub4) 0, (const text *) "VTHRESHOLDS",
+			 (ub4) strlen((const char *) "VTHRESHOLDS"),
 			 (CONST text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIthresholds)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
-			 (ub4) 0, (const text *) "PARAMETERS",
-			 (ub4) strlen((const char *) "PARAMETERS"),
+			 (ub4) 0, (const text *) "VPARAMETERS",
+			 (ub4) strlen((const char *) "VPARAMETERS"),
 			 (CONST text *) 0, (ub4) 0,
 			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
 			 &OCIparameters)); 
+  checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
+			 (ub4) 0, (const text *) "LABELS",
+			 (ub4) strlen((const char *) "LABELS"),
+			 (CONST text *) 0, (ub4) 0,
+			 OCI_DURATION_SESSION,  OCI_TYPEGET_HEADER,
+			 &OCIlabels)); 
   checkerr(OCITypeByName(m_envhp, m_errhp, m_svchp, (const text *) 0,
 			 (ub4) 0, (const text *) "INTLIST",
 			 (ub4) strlen((const char *) "INTLIST"),

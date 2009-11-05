@@ -32,9 +32,9 @@ function update_histo_analysis() {
     else
       break;
   }
-  $warnings="thresholds(".implode(",",$warn).")";
-  $alarms="thresholds(".implode(",",$alr).")";
-  $inputs= "thresholds(".implode(",",$inps).")";
+  $warnings="vthresholds(".implode(",",$warn).")";
+  $alarms="vthresholds(".implode(",",$alr).")";
+  $inputs= "vthresholds(".implode(",",$inps).")";
 
   $Docs="";
   if ($_POST["a${ia}_doc"]) {

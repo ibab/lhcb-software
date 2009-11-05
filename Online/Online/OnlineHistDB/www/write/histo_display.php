@@ -51,10 +51,10 @@ function update_histo_display() {
       else
         $ffpar[$_POST["FITNP"]+$ip]=-999999.;
     }
-    $command .= "thresholds(".implode(",",$ffpar).")";
+    $command .= "vthresholds(".implode(",",$ffpar).")";
   }
   else {
-    $command.=",NULL,thresholds()";
+    $command.=",NULL,vthresholds()";
   }
 
   $command .= "); END;";
