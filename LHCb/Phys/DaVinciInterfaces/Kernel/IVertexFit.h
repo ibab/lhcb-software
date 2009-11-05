@@ -1,4 +1,4 @@
-// $Id: IVertexFit.h,v 1.4 2009-08-19 15:50:37 ibelyaev Exp $ 
+// $Id: IVertexFit.h,v 1.5 2009-11-05 18:42:44 pkoppenb Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_IVERTEXFIT_H 
 #define DAVINCIKERNEL_IVERTEXFIT_H 1
@@ -36,10 +36,10 @@
  *  @code 
  *
  *  StatusCode combine( const LHCb::Particle::ConstVector& dauhters , 
- *                      LHCb::Particle&        mother   , 
- *                      LHCb::Vertex&          vertex   ) const 
+ *                      LHCb::Vertex&          vertex   ,
+ *                      LHCb::Particle&        mother   ) const 
  *   {
- *      return fit( daughters , mother , vertex ) ;
+ *      return fit( daughters , vertex, mother ) ;
  *   };
  *  
  *  @endcode 

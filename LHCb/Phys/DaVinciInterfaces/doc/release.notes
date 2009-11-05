@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 - Patrick Koppenburg
+ - Fix dxygen for IVertexFit.h
+
 ! 2009-11-03 - Juan PALACIOS
  - Kernel/IPhysDesktop.h
   . Add const and non-const methods Particle2Vertex::Map& Particle2VertexMap()
