@@ -1,4 +1,4 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.9 2009-09-17 17:47:01 gcowan Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.10 2009-11-05 10:11:42 conti Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
@@ -8,11 +8,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
     __slots__ = {'BsLifetimeCut': 0.15 # ps
                  ,'Prescale'    : { 'Hlt2Bs2JpsiPhiPrescaled' : 1.
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
-				   ,'Hlt2Bs2JpsiPhi' : 0.05
+				   ,'Hlt2Bs2JpsiPhiWide' : 0.05
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
-				   ,'Hlt2Bd2JpsiKstar' : 0.05
+				   ,'Hlt2Bd2JpsiKstarWide' : 0.05
                                    ,'Hlt2Bd2JpsiKstarSignal' : 1.
-       				   ,'Hlt2Bu2JpsiK' : 0.05
+       				   ,'Hlt2Bu2JpsiKWide' : 0.05
                                    ,'Hlt2Bu2JpsiKSignal' : 1.
 	                           ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsLLUnbiased' : 1.
@@ -22,11 +22,11 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                     }
                  ,'Postscale'   : { 'Hlt2Bs2JpsiPhiPrescaled' : 0.1
                                    ,'Hlt2Bs2JpsiPhiDetached' : 1.
-                 		   ,'Hlt2Bs2JpsiPhi' : 1.
+                 		   ,'Hlt2Bs2JpsiPhiWide' : 1.
                                    ,'Hlt2Bs2JpsiPhiSignal' : 1.
-				   ,'Hlt2Bd2JpsiKstar' : 1.
+				   ,'Hlt2Bd2JpsiKstarWide' : 1.
                                    ,'Hlt2Bd2JpsiKstarSignal' : 1.
-                  		   ,'Hlt2Bu2JpsiK' : 1.
+                  		   ,'Hlt2Bu2JpsiKWide' : 1.
                                    ,'Hlt2Bu2JpsiKSignal' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsLLBiased' : 1.
                                    ,'Hlt2Bd2JpsiMuMuKsLLUnbiased' : 1.
@@ -123,7 +123,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
         from Hlt2SharedParticles.DiMuon import HighPtJpsi2MuMu
         from Configurables import CombineParticles
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiDecision" : 50370 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiWideDecision" : 50370 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2JpsiPhiSignalDecision" : 50371 } )
     
         # Make the phi
@@ -144,7 +144,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<6)"
                                 )
         
-        line = Hlt2Line('Bs2JpsiPhi'
+        line = Hlt2Line('Bs2JpsiPhiWide'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, PhiCombine, BsCombine]
@@ -173,7 +173,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons, NoCutsPions
         from Hlt2SharedParticles.DiMuon import HighPtJpsi2MuMu
         from Configurables import CombineParticles
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiKstarDecision" : 50360 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiKstarWideDecision" : 50360 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2JpsiKstarSignalDecision" : 50361 } )
         
         # Make the Kstar
@@ -194,7 +194,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , MotherCut = "(VFASPF(VCHI2/VDOF)<6) & (PT>2000*MeV)"
                                 )
         
-        line = Hlt2Line('Bd2JpsiKstar'
+        line = Hlt2Line('Bd2JpsiKstarWide'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, NoCutsPions, KstarCombine, BdCombine]
@@ -222,7 +222,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.BasicParticles import NoCutsKaons
         from Hlt2SharedParticles.DiMuon import HighPtJpsi2MuMu
         from Configurables import CombineParticles
-        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2JpsiKDecision" : 50380 } )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2JpsiKWideDecision" : 50380 } )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bu2JpsiKSignalDecision" : 50381 } )
         
         # Make the Bu
@@ -235,7 +235,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                 , DaughtersCuts = {"K+" : "(PT>1300*MeV)"}
                                 )
         
-        line = Hlt2Line('Bu2JpsiK'
+        line = Hlt2Line('Bu2JpsiKWide'
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, BuCombine]

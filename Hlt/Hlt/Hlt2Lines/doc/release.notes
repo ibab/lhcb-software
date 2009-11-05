@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.72 2009-11-04 11:43:01 jnardull Exp $
+$Id: release.notes,v 1.73 2009-11-05 10:11:42 conti Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.72 2009-11-04 11:43:01 jnardull Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-05 Geraldine Conti
+- Fix a bug in Hlt2B2JpsiXLines.py file
 
 ! 2009-11-04 - Jacopo Nardulli
 - Fix an error in the B2DX code 
