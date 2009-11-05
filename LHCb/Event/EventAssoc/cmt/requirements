@@ -1,11 +1,11 @@
-# $Id: requirements,v 1.32 2009-10-16 12:47:26 cattanem Exp $
+# $Id: requirements,v 1.33 2009-11-05 07:27:10 jpalac Exp $
 # =============================================================================
 # Created    : 19/12/2003
 # =============================================================================
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           EventAssoc
-version           v4r8
+version           v5r0
 
 # =============== structure ===================================================
 branches          cmt doc dict 
@@ -21,8 +21,14 @@ use               Relations   v* Kernel
 use               GaudiPython v* -no_auto_imports 
         
 # =============== LCG/Reflex dictionaries =====================================
-apply_pattern     reflex_dictionary                              \ 
-                  dictionary=EventAssoc                          \
-                  headerfiles=$(EVENTASSOCROOT)/dict/selection.h \
-                  selectionfile=../dict/selection.xml            \
+apply_pattern     reflex_dictionary                                  \ 
+                  dictionary=EventAssocPhys                          \
+                  headerfiles=$(EVENTASSOCROOT)/dict/selPhys.h \
+                  selectionfile=../dict/selPhys.xml            \
+                  options="-U__MINGW32__"
+
+apply_pattern     reflex_dictionary                                  \ 
+                  dictionary=EventAssocMC                          \
+                  headerfiles=$(EVENTASSOCROOT)/dict/selMC.h \
+                  selectionfile=../dict/selMC.xml            \
                   options="-U__MINGW32__"
