@@ -146,7 +146,6 @@ def _getConfigurations( cas = ConfigAccessSvc() ) :
     for i in s.configTreeNodeAliases( alias( 'TOPLEVEL/') ) :
         x = Configuration( i,s )
         info[ i.alias().str() ] = x
-    ## TODO/FIXME: need to support multiple TCK pointing to same TOPLEVEL
     for i in s.configTreeNodeAliases( alias( 'TCK/'  ) ) :
         tck =  _tck(i.alias().str().split('/')[-1])
         id  =  i.ref().str()
@@ -271,9 +270,12 @@ class Configuration :
     def update(self,d) : 
         self.info.update( d )
     def printSimple(self,prefix='      ') : 
-        for tck in self.info['TCK'] :
-            if type(tck) == int : tck = '0x%08x' % tck
-            print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
+        if not self.info['TCK'] :
+            print prefix + '%10s : %s : %s'%('<NONE>',self.info['id'],self.info['label'])
+        else :
+            for tck in self.info['TCK'] :
+                if type(tck) == int : tck = '0x%08x' % tck
+                print prefix + '%10s : %s : %s'%(tck,self.info['id'],self.info['label'])
     def PVSS(self) :
         for tck in self.info['TCK'] :
             if type(tck) == str and not tck.startswith('0x') : tck = int(tck)

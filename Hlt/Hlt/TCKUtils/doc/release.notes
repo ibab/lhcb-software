@@ -5,7 +5,9 @@
 !               and the underlying information
 !-----------------------------------------------------------------------------
 
-!========================== TCKUtils v1r5p1 2009-11-03 ===================
+!========================== TCKUtils v1r5p1 2009-11-05 ===================
+! 2009-11-05 - Gerhard Raven
+ - fix printing of configurations without TCK
 ! 2009-11-03 - Gerhard Raven
  - fix tck -> id conversion for TCKs that start with leading 0s
 
