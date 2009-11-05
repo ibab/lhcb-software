@@ -8,6 +8,12 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-05 - Patrick Koppenburg
+ - TupleToolTrigger:
+   . Do not fill Hlt1Global and Hlt2Global anymore (by default). They are confusing.
+   . Fill Hlt routing bits
+ - v2r7
+
 !========================== DecayTreeTuple v2r6 2009-10-28 ==================
 
 ! 2009-10-21 - Tomasz Skwarnicki

@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.14 2009-10-08 16:36:07 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.15 2009-11-05 18:11:45 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +13,9 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
+#include "Event/RawEvent.h" 
+#include "Event/RawBank.h" 
+#include <boost/dynamic_bitset.hpp>
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TriggerTupleTool
@@ -33,15 +36,18 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
   : GaudiTool ( type, name , parent )
 {
   declareInterface<IEventTupleTool>(this);
-  declareProperty( "VerboseL0",   m_verboseL0=false );
-  declareProperty( "VerboseHlt1", m_verboseHlt1=false );
-  declareProperty( "VerboseHlt2", m_verboseHlt2=false );
-  declareProperty( "FillL0", m_fillL0=true );
-  declareProperty( "FillHlt", m_fillHlt=true );
-  declareProperty( "AllIntermediateSteps", m_allSteps=false );
-  //  declareProperty( "Hlt1MajorKey", m_hlt1MajorKey = "Hlt1SelectionID"); 
-  //  declareProperty( "Hlt2MajorKey", m_hlt2MajorKey = "Hlt2SelectionID");
-
+  declareProperty( "VerboseL0",   m_verboseL0=true, "Fill L0 details" );
+  declareProperty( "VerboseHlt1", m_verboseHlt1=false, "Fill Hlt1 details" );
+  declareProperty( "VerboseHlt2", m_verboseHlt2=false, "Fill Hlt2 details" );
+  declareProperty( "FillL0", m_fillL0=true, "Fill L0" );
+  declareProperty( "FillHlt", m_fillHlt=true, "Fill Hlt" );
+  declareProperty( "AllIntermediateSteps", m_allSteps=false, "Fill also intermediate steps" );
+  declareProperty( "FillGlobal", m_fillGlobal = false, "Fill Hlt1Global and Hlt2Global" );
+  for ( unsigned int i = 32 ; i < 96 ; i++){
+    m_routingBits.push_back(i);
+  }
+  declareProperty( "RoutingBits", m_routingBits, "Routing bits to fill" );
+  
 }
 
 //=========================================================================
@@ -49,6 +55,11 @@ TupleToolTrigger::TupleToolTrigger( const std::string& type,
 //=========================================================================
 StatusCode TupleToolTrigger::initialize ( ) {
   StatusCode sc = GaudiTool::initialize();
+  if (!m_fillHlt && ( m_fillGlobal || m_verboseHlt1 || m_verboseHlt2 || !m_routingBits.empty() || m_allSteps) ){
+    Error("Inconsistent options. Please switch FillHlt on");
+    return StatusCode::FAILURE ;
+  }  
+  
   return sc ;
 }
 //=============================================================================
@@ -60,6 +71,7 @@ StatusCode TupleToolTrigger::fill( Tuples::Tuple& tuple ) {
   if (m_fillHlt){
     if (!(fillHlt(tuple,"Hlt1", m_verboseHlt1))) return StatusCode::FAILURE;
     if (!(fillHlt(tuple,"Hlt2", m_verboseHlt2))) return StatusCode::FAILURE; 
+    if (!m_routingBits.empty()) if (!(fillRoutingBits(tuple))) return StatusCode::FAILURE; 
   }
   if (msgLevel(MSG::DEBUG)) debug() << "Done" << endmsg ;
   
@@ -94,8 +106,10 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
   if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
     const LHCb::HltDecReports* decReports = 
       get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
-    if( !tuple->column( level+"Global", (decReports->decReport(level+"Global"))? 
-                        (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
+    if (m_fillGlobal) {
+      if( !tuple->column( level+"Global", (decReports->decReport(level+"Global"))? 
+                          (decReports->decReport(level+"Global")->decision()):0 )) return StatusCode::FAILURE;
+    }
     if ( individual) {
       unsigned int nsel = 0 ;
       std::vector<std::string> names = svc<IANNSvc>("HltANNSvc")->keys(level+"SelectionID");
@@ -122,5 +136,36 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
     }
   } else Warning("No HltDecReports at "+LHCb::HltDecReportsLocation::Default,StatusCode::FAILURE,1);
   if (msgLevel(MSG::DEBUG)) debug() << "Done " << level << endmsg ;
+  return StatusCode::SUCCESS ;
+}
+//============================================================================
+StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple ) {
+  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
+    const unsigned int size = 3 ;
+    const unsigned int byte = 8 ;
+    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+    const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
+    if (banks.size()!=1) {
+      return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::FAILURE,0);
+    }
+    if (banks.front()->size()!=size*sizeof(unsigned int)) {
+      return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,0);
+    }
+    const unsigned int *data = banks.front()->data();
+    boost::dynamic_bitset<unsigned int> x(byte*sizeof(unsigned int), data[0]);
+    x.append(data[1]);
+    x.append(data[2]);
+
+    if (msgLevel(MSG::DEBUG)) info() << "Routing Bits : " << x << endmsg ;
+    
+    std::vector<unsigned int> yes ;
+    for ( std::vector<unsigned int>::const_iterator j = m_routingBits.begin() ; j != m_routingBits.end() ; ++j){
+      //      if (msgLevel(MSG::VERBOSE)) verbose()
+      if (msgLevel(MSG::VERBOSE)) verbose()  << "Trying bit " << *j  << " " << x[*j] << endmsg ;
+      if ( x[*j] ) yes.push_back(*j); // accepted
+      //        test &= 
+    }
+    if (!tuple->farray("RoutingBits", yes, "MaxRoutingBits" , m_routingBits.size() )) return StatusCode::FAILURE ;
+  }
   return StatusCode::SUCCESS ;
 }

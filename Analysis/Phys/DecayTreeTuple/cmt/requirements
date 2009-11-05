@@ -3,12 +3,12 @@
 # Maintainer : Patrick Koppenburg
 #============================================================================
 package           DecayTreeTuple
-version           v2r6
+version           v2r7
 
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src options
+branches          cmt doc src
 #============================================================================
 # Used packages. Specify the version, * at the end specifies 'any revision'
 #    Put as many lines as needed, with all packages, without the '#'
@@ -18,7 +18,8 @@ use   DaVinciMCKernel    v*    Phys
 use   DaVinciAssociators v*    Phys
 use   MCInterfaces       v*    Kernel
 use   HltInterfaces      v*    Kernel
-use   DecFiles           v18r* Gen     --no_auto_imports
+use   DecFiles           v*    Gen     --no_auto_imports
+use   DAQEvent           v*    Event
 
 use Boost        v*   LCG_Interfaces
 
