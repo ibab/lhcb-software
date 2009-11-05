@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.185 2009-11-05 09:55:36 cattanem Exp $
+! $Id: release.notes,v 1.186 2009-11-05 17:43:17 silviam Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-05 - Silvia Miglioranzi
+ - In SimConf.py changed the name of the "SimPhases" configurable to "Phases".
 
 ! 2009-11-05 - Marco Cattaneo
  - In DstConf, copy all existing SpilloverPaths to DST if they exist on input
