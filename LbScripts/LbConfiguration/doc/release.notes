@@ -1,3 +1,7 @@
+2009-11-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: fixed the echo statement on windows.
+
 2009-11-05  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py: Added DIRAC and LHCbDIRAC to the known

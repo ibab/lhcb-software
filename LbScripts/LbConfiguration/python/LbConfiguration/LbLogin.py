@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.55 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.56 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -163,9 +163,11 @@ class LbLoginScript(Script):
             self.output_file.close()
     def _add_echo(self, line):
         if line[-1] == "\n" :
-            line = line[:-1]           
-        outline = "echo '%s'\n" % line
-        
+            line = line[:-1]
+        if sys.platform != "win32" :           
+            outline = "echo '%s'\n" % line
+        else :
+            outline = "echo %s\n" % line
         self._extra += outline
             
     def defineOpts(self):
@@ -963,17 +965,13 @@ class LbLoginScript(Script):
         if opts.loglevel != "CRITICAL" :
             self._add_echo( "*" * 80 )
             if opts.scriptsvers :
-                toprint = "*" + " " * 27 + "---- LHCb Login %s ----" % opts.scriptsvers
+                self._add_echo( "*" + ("---- LHCb Login %s ----" % opts.scriptsvers).center(78) + "*" )
             else :
-                toprint = "*" + " " * 27 + "---- LHCb Login ----"
-            self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
+                self._add_echo("*" + "---- LHCb Login %s ----".center(78) + "*")
             if self.binary :
-                toprint = "*" + " " * 11 + "Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)
+                self._add_echo("*" + ("Building with %s on %s_%s system" % (self.compdef, self.platform, self.binary)).center(78)+ "*")
             else : # for windows
-                toprint = "*" + " " * 11 + "Building with %s on %s system" % (self.compdef, self.platform)
-            self._add_echo(toprint + " " * (80-len(toprint)-1) + "*")
-#            toprint = "*" + " " * 11 + "DEVELOPMENT SCRIPT"
-#            self._add_echo( toprint + " " * (80-len(toprint)-1) + "*" )
+                self._add_echo("*" + ("Building with %s on %s system" % (self.compdef, self.platform)).center(78)+ "*")
             self._add_echo( "*" * 80 )
             self._add_echo( " --- CMTROOT is set to %s " % ev["CMTROOT"] )
             self._add_echo( " --- CMTCONFIG is set to %s " % ev["CMTCONFIG"] )
