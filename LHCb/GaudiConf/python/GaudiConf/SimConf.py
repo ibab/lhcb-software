@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.3 2009-11-04 17:58:27 cattanem Exp $"
+__version__ = "$Id: SimConf.py,v 1.4 2009-11-05 17:42:28 silviam Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 __all__ = [
@@ -16,7 +16,7 @@ class SimConf(LHCbConfigurableUser) :
 
     __slots__ = {
          "Writer"            : "NONE" # Name of the SIM Writer
-        ,"SimPhases"         : ["Generator","Simulation"] # The simulation phases to include in the SIM file
+        ,"Phases"            : ["Generator","Simulation"] # The simulation phases to include in the SIM file
         ,"SpilloverPaths"    : []   # Paths to write out when spillover is enabled
         ,"EnablePack"        : True # Turn on/off packing of the SIM data
         ,"EnableUnpack"      : True # Configure the SIM unpacking via the Data On Demand Service
@@ -229,10 +229,10 @@ class SimConf(LHCbConfigurableUser) :
 
             list = []
 
-            if "Generator" in self.getProp("SimPhases") :
+            if "Generator" in self.getProp("Phases") :
                 list += [ self.tapeLocation( slot, 'Gen', 'Header' ) ]
 
-            if "Simulation" in self.getProp("SimPhases") :
+            if "Simulation" in self.getProp("Phases") :
                 list += [ self.tapeLocation( slot, 'MC', 'Header' ) ]
 
             # main event is manditory, spillover events optional.
@@ -245,7 +245,7 @@ class SimConf(LHCbConfigurableUser) :
     def addGenInfo( self, tape ):
 
         # Add Generator level information
-        if "Generator" in self.getProp("SimPhases") :
+        if "Generator" in self.getProp("Phases") :
 
             # Event locations
             for slot in self.allEventLocations() :
@@ -261,7 +261,7 @@ class SimConf(LHCbConfigurableUser) :
 
     def addMCParticles( self, tape ) :
         
-        if "Simulation" in self.getProp("SimPhases") :
+        if "Simulation" in self.getProp("Phases") :
 
             # Event locations
             for slot in self.allEventLocations() :
@@ -280,7 +280,7 @@ class SimConf(LHCbConfigurableUser) :
 
     def addMCVertices( self, tape ) :
         
-        if "Simulation" in self.getProp("SimPhases") :
+        if "Simulation" in self.getProp("Phases") :
 
             # Event locations
             for slot in self.allEventLocations() :
@@ -304,7 +304,7 @@ class SimConf(LHCbConfigurableUser) :
 
     def addSubDetSimInfo( self, tape ) :
 
-        if "Simulation" in self.getProp("SimPhases") :
+        if "Simulation" in self.getProp("Phases") :
 
             # Active Detectors
             dets = self.getProp("Detectors")
