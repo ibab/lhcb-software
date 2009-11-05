@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.76 2009-10-24 17:13:02 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.77 2009-11-05 15:57:19 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -164,11 +164,20 @@ class DaVinci(LHCbConfigurableUser) :
         Define HLT. Make sure it runs first.
         """
         if (self.getProp("Hlt")):
-            HltConf().DataType = self.getProp("DataType")                                      
-            HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
+            HltConf().DataType = self.getProp("DataType")
             HltConf().WithMC =  self.getProp("Simulation")                                       
             if ( self.getProp("HltThresholdSettings") != '' ):
-                HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")                                      
+                HltConf().ThresholdSettings = self.getProp("HltThresholdSettings")
+            if ( self.getProp("Hlt2Requires") == 'L0+Hlt1' or self.getProp("Hlt2Requires") == 'Hlt1' ):
+                log.info('Hlt2 requires L0 and Hlt1')
+            elif ( self.getProp("Hlt2Requires") == 'L0' ):
+                log.info('Hlt2 requires L0 only. Will set Hlt1 passthrough prescale to 1. Note that Hlt1Global has no useful meaning.')
+                from Hlt1Lines.Hlt1CommissioningLines import Hlt1CommissioningLinesConf
+                Hlt1CommissioningLinesConf().Prescale.update( { 'Hlt1NonRandomODIN'  : 1. } )
+            else : raise AttributeError, 'Hlt2 can require L0 or Hlt1'
+                
+#            HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
+# @todo : FIXME
             from Configurables import GaudiSequencer
             hltSeq = GaudiSequencer("Hlt")
             ApplicationMgr().TopAlg += [ hltSeq ]  # catch the Hlt sequence to make sur it's run first

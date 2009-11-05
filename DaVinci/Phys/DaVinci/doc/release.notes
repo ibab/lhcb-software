@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.384 2009-10-30 07:43:01 jpalac Exp $
+! $Id: release.notes,v 1.385 2009-11-05 15:57:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,14 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-05 - Patrick Koppenburg
+ - Hlt2Requires not dealt with internally and not passed to HltConf
+   . The option 'L0' now resets the prescale of the NonRandomODIN line 
+     to 1, menaing Hlt1 becomes 100% efficient.
+   . To check for Hlt1 "physics" efficiency, look at routing bit 46,
+     or the individual lines.
+ - v24r5
 
 !========================== DaVinci v24r4 2009-10-30 =======================
 
