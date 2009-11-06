@@ -54,5 +54,5 @@ from StrippingConf.StrippingLine import StrippingLine
 # Create the line for this selection
 line = StrippingLine('Bd2eeKstar'
                , prescale = 1
-               , algos = [ SelBd2eeKstar ]
+               , algos = [ SeqPreselBd2Kstaree, SelBd2eeKstar ]
                )

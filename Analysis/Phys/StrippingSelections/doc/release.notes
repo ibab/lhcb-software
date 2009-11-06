@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-06 - Anton Poluektov
+ - Fixed StrippingBd2Kstaree.py (sequencer was missing in the line)
+
 ! 2009-11-03 - Marco Gersabeck
  - Added StrippingD2hhNoPID.py
 
