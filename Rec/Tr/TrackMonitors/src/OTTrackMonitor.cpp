@@ -1,25 +1,70 @@
-#include "GaudiKernel/AlgFactory.h" 
-#include "GaudiKernel/ToolHandle.h"
+
 #include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiKernel/AlgFactory.h" 
+
+#include "GaudiKernel/ToolHandle.h"
 #include "Event/Track.h"
 #include "Event/FitNode.h"
 #include "Event/OTMeasurement.h"
 #include "Kernel/ITrajPoca.h"
 #include "GaudiKernel/ToolHandle.h"
 #include "TrackInterfaces/ITrackProjector.h"
+#include "TrackInterfaces/IPitchResTool.h"
 #include "GaudiUtils/Aida2ROOT.h"
 #include "TH1.h"
 #include "OTDet/DeOTDetector.h"
 #include "OTDet/DeOTModule.h"
 #include "OTDAQ/IOTRawBankDecoder.h"
-#include "TrackInterfaces/IPitchResTool.h"
 
-class OTTrackMonitor : public GaudiHistoAlg 
+#include <boost/foreach.hpp>
+#include <boost/lexical_cast.hpp>
+
+const double cellRadius = 2.5;
+
+class OTTrackMonitor: public GaudiHistoAlg
 {
-public:
+  static const int HIST_DRIFTTIME = 0;
+  static const int HIST_DRIFTRADIUS = 1;
+  static const int HIST_TRACK_DISTANCE = 2;
+  static const int HIST_DRIFTTIME_RESIDUAL = 3;
+  static const int HIST_RESIDUAL = 4;
+  static const int HIST_RESIDUAL_PULL = 5;
+  static const int HIST_GOOD_DRIFTTIME = 8 + 0;
+  static const int HIST_GOOD_DRIFTRADIUS = 8 + 1;
+  static const int HIST_GOOD_TRACK_DISTANCE = 8 + 2;
+  static const int HIST_GOOD_DRIFTTIME_RESIDUAL = 8 + 3;
+  static const int HIST_GOOD_RESIDUAL = 8 + 4;
+  static const int HIST_GOOD_RESIDUAL_PULL = 8 + 5;
+private:
+  AIDA::IHistogram1D* hists[12][16];
 
-   /** Standard construtor */
-  OTTrackMonitor( const std::string& name, ISvcLocator* pSvcLocator );
+  AIDA::IProfile1D* profileTimeResidualVsModule;
+  AIDA::IProfile1D* profileResidualVsModule;
+  AIDA::IProfile1D* profileResidualPullVsModule;
+
+  AIDA::IProfile1D* profileTimeResidualVsDistance;
+  AIDA::IProfile1D* profileResidualVsDistance;
+  AIDA::IProfile1D* profileResidualPullVsDistance;
+
+  AIDA::IProfile1D* profileTimeResidualVsDistanceGood;
+  AIDA::IProfile1D* profileResidualVsDistanceGood;
+  AIDA::IProfile1D* profileResidualPullVsDistanceGood;
+
+  AIDA::IHistogram1D* histModuleHitOccupancy;
+  AIDA::IHistogram1D* histModuleHotOccupancy;
+  AIDA::IHistogram1D* histModuleOutlierOccupancy;
+  AIDA::IHistogram1D* histOtisHitOccupancy;
+  AIDA::IHistogram1D* histOtisHotOccupancy;
+
+  AIDA::IHistogram2D* histXY[12];
+  AIDA::IHistogram2D* histRT[12];
+
+  AIDA::IHistogram1D* histAverageTimeResidual;
+  AIDA::IHistogram2D* histAverageTimeResidualVsMomentum;
+  AIDA::IHistogram1D* histDeltaToF;
+public:
+  /** Standard construtor */
+  OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator);
 
   /** Destructor */
   virtual ~OTTrackMonitor();
@@ -33,32 +78,50 @@ public:
   /** Algorithm execute */
   virtual StatusCode execute();
 private:
-  void setNormalization(const std::string& hisname)  ;
+  void bookHists(int index, const std::string& prefix);
+
+  void setNormalization(AIDA::IHistogram1D* hist);
+
+  enum
+  {
+    NumUniqueStation = 3,
+    NumUniqueLayer = 12,
+    NumUniqueModule = 432,
+    NumUniqueOtis = 432 * 4
+  };
+
   // this should be moved to OTChannelID
-  enum {NumUniqueStation=3, NumUniqueLayer=12, NumUniqueModule=432, NumUniqueOtis=432*4 } ;
-  inline int uniqueLayer( const LHCb::OTChannelID& channelID) {
-    return  (channelID.station()-1) * 4 + channelID.layer() ;
+  inline int uniqueLayer(const LHCb::OTChannelID& channelID)
+  {
+    return (channelID.station() - 1) * 4 + channelID.layer();
   }
-  inline int uniqueQuarter( const LHCb::OTChannelID& channelID) {
-    return uniqueLayer( channelID) * 4 + channelID.quarter() ;
+
+  inline int uniqueQuarter(const LHCb::OTChannelID& channelID)
+  {
+    return uniqueLayer(channelID) * 4 + channelID.quarter();
   }
-  inline int uniqueModule( const LHCb::OTChannelID& channelID) {
-    return uniqueQuarter(channelID)*9 + channelID.module() - 1 ;
+
+  inline int uniqueModule(const LHCb::OTChannelID& channelID)
+  {
+    return uniqueQuarter(channelID) * 9 + channelID.module() - 1;
   }
-  inline int uniqueOtis( const LHCb::OTChannelID& channelID) {
-    return uniqueModule(channelID)*4 + (channelID.straw()-1)/32 ;
+
+  inline int uniqueOtis( const LHCb::OTChannelID& channelID)
+  {
+    return uniqueModule(channelID) * 4 + (channelID.straw() - 1) / 32;
   }
+
 private:
-  const ITrajPoca* m_pocatool ;
-  ToolHandle<ITrackProjector> m_projector ;
-  ToolHandle<IOTRawBankDecoder> m_decoder ;
-  const IPitchResTool *m_pitchtool;
-  const DeOTDetector* m_otdet ;
+  const ITrajPoca* m_pocatool;
+  ToolHandle<ITrackProjector> m_projector;
+  ToolHandle<IOTRawBankDecoder> m_decoder;
+  const IPitchResTool* m_pitchtool;
+  const DeOTDetector* m_otdet;
   std::string m_trackLocation;
-  double m_maxUnbiasedChisqPerDofGoodTracks ;
-  int m_granularity ;
-  size_t m_numEvents ;
-} ;
+  double m_maxUnbiasedChisqPerDofGoodTracks;
+  int m_granularity;
+  size_t m_numEvents;
+};
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( OTTrackMonitor );
@@ -66,234 +129,325 @@ DECLARE_ALGORITHM_FACTORY( OTTrackMonitor );
 //=============================================================================
 // Standard constructor, initializes variables
 //=============================================================================
-OTTrackMonitor::OTTrackMonitor( const std::string& name,
-					ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg( name , pSvcLocator ),
-    m_projector("TrajOTProjector"),
-    m_decoder("OTRawBankDecoder"),
-    m_numEvents(0)
+OTTrackMonitor::OTTrackMonitor(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg( name , pSvcLocator ),
+                               m_projector("TrajOTProjector"),
+                               m_decoder("OTRawBankDecoder"),
+                               m_numEvents(0)
 {
-  declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
+  declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default );
   declareProperty( "Projector", m_projector ) ;
   declareProperty( "MaxUnbiasedChisqPerDofGoodTracks", m_maxUnbiasedChisqPerDofGoodTracks = 2 ) ;
   declareProperty( "Granularity", m_granularity = 1 ) ;
-  declareProperty( "RawBankDecoder",m_decoder ) ;
+  declareProperty( "RawBankDecoder", m_decoder ) ;
 }
 
 //=============================================================================
 // Destructor
 //=============================================================================
-OTTrackMonitor::~OTTrackMonitor() 
+OTTrackMonitor::~OTTrackMonitor()
 {
 }
 
+void OTTrackMonitor::bookHists(int index, const std::string& prefix)
+{
+  hists[index][HIST_DRIFTTIME] = book(prefix + "drifttime", "drifttime", -25, 75);
+  hists[index][HIST_DRIFTRADIUS] = book(prefix + "driftradius", "driftradius", 0, 5);
+  hists[index][HIST_TRACK_DISTANCE] = book(prefix + "trkdist", "unbiased distance", -5, 5);
+  hists[index][HIST_DRIFTTIME_RESIDUAL] = book(prefix + "drifttimeresidual", "drifttime residual (rms unbiased)", -20, 20);
+  hists[index][HIST_RESIDUAL] = book(prefix + "residual", "residual (rms unbiased)", -2, 2);
+  hists[index][HIST_RESIDUAL_PULL] = book(prefix + "residualpull", "residual pull", -5, 5);
+
+  hists[index][HIST_GOOD_DRIFTTIME] = book(prefix + "drifttimegood", "drifttime (good tracks)", -25, 75);
+  hists[index][HIST_GOOD_DRIFTRADIUS] = book(prefix + "driftradiusgood", "driftradius (good tracks)", 0, 5);
+  hists[index][HIST_GOOD_TRACK_DISTANCE] = book(prefix + "trkdistgood", "unbiased distance (good tracks)", -5, 5);
+  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix + "drifttimeresidualgood", "drifttime residual (rms unbiased, good tracks)", -20, 20);
+  hists[index][HIST_GOOD_RESIDUAL] = book(prefix + "residualgood", "residual (rms unbiased, good tracks)", -2, 2);
+  hists[index][HIST_GOOD_RESIDUAL_PULL] = book(prefix + "residualpullgood", "residual pull (good tracks)", -5, 5);
+
+  histXY[index] = book2D(prefix + "xyh2", "position of track at hit",
+    -3000, 3000, 20, -3000, 3000, 20);
+  histRT[index] = book2D(prefix + "rt", "drifttime versus unbiased distance",
+    -cellRadius, cellRadius, 50, -25, 75, 50);
+}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode OTTrackMonitor::initialize() 
+StatusCode OTTrackMonitor::initialize()
 {
-  StatusCode sc = GaudiHistoAlg::initialize(); // must be executed first
-  m_pocatool = tool<ITrajPoca>("TrajPoca") ;
-  m_projector.retrieve().ignore() ;
-  m_decoder.retrieve().ignore() ;
-  m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default );
+  StatusCode statusCode = GaudiHistoAlg::initialize(); // must be executed first
+
+  m_pocatool = tool<ITrajPoca>("TrajPoca");
+  m_projector.retrieve().ignore();
+  m_decoder.retrieve().ignore();
+  m_otdet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   m_pitchtool = tool<IPitchResTool>("PitchResTool");
 
-  return sc;
+  setHistoTopDir("OT/");
+
+  switch(m_granularity)
+  {
+  case 1:
+    for(int s = 0; s < 3; s++)
+    {
+      bookHists(s, "station" + boost::lexical_cast<std::string>(s + 1) + "/");
+    }
+    break;
+  case 2:
+    for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++)
+    {
+      bookHists(4 * s + l, "layer" + boost::lexical_cast<std::string>(4 * s + l) + "/");
+    }
+    break;
+  }
+
+  const int numDistBins = 25;
+
+  profileTimeResidualVsModule = bookProfile1D("timeresvsmodule", "unbiased drifttime residual versus module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  profileResidualVsModule = bookProfile1D("resvsmodule", "unbiased residual versus module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  profileResidualPullVsModule = bookProfile1D("respullvsmodule", "residual pull versus module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+
+  profileTimeResidualVsDistance = bookProfile1D("timeresvsdistance", "unbiased drifttime residual versus distance",
+    0, cellRadius, numDistBins);
+  profileResidualVsDistance = bookProfile1D("resvsdistance", "unbiased residual versus distance",
+    0, cellRadius, numDistBins);
+  profileResidualPullVsDistance = bookProfile1D("respullvsdistance", "residual pull versus distance",
+    0, cellRadius, numDistBins);
+
+  profileTimeResidualVsDistanceGood = bookProfile1D("timeresvsdistancegood", "unbiased drifttime residual versus distance (good tracks)",
+    0, cellRadius, numDistBins);
+  profileResidualVsDistanceGood = bookProfile1D("resvsdistancegood", "unbiased residual versus distance (good tracks)",
+    0, cellRadius, numDistBins);
+  profileResidualPullVsDistanceGood = bookProfile1D("respullvsdistancegood", "residual pull versus distance (good tracks)",
+    0, cellRadius, numDistBins);
+
+  histModuleHitOccupancy = book("moduleHitOccupancy", "number of hits per module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  histModuleHotOccupancy = book("moduleHotOccupancy", "number of HOTs per module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  histModuleOutlierOccupancy = book("moduleOutlierOccupancy", "number of outliers per module",
+    -0.5, 1.0 * NumUniqueModule - 0.5, NumUniqueModule);
+  histOtisHitOccupancy = book("otisHitOccupancy", "number of hits per otis",
+    -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
+  histOtisHotOccupancy = book("otisHotOccupancy", "number of HOTs per otis",
+    -0.5, 1.0 * NumUniqueOtis - 0.5, NumUniqueOtis);
+
+  histAverageTimeResidual = book("avtimeres", "average time residual on track",
+    -10, 10);
+  histAverageTimeResidualVsMomentum = book2D("avtimeresvsmom", "average time residual versus momentum",
+    0, 20, 40, -5, 5, 50) ;
+  histDeltaToF = book("deltaToF", "delta time of flight",
+    -25, 25);
+
+  return statusCode;
 }
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode OTTrackMonitor::finalize() 
+StatusCode OTTrackMonitor::finalize()
 {
   // rescale the occupancy histogram
-  m_projector.release().ignore() ;
-  m_decoder.release().ignore() ;
-  return GaudiHistoAlg::finalize() ;
+  m_projector.release().ignore();
+  m_decoder.release().ignore();
+  return GaudiHistoAlg::finalize();
 }
 
 //=========================================================================
 // 
 //=========================================================================
 StatusCode OTTrackMonitor::execute()
-{ 
-  setHistoTopDir("OT/") ;
-  ++m_numEvents ;
-  const double cellRadius = 2.5 ;
-  const int    numDistBins  = 25 ;
+{
+  ++m_numEvents;
 
-  const LHCb::Tracks* tracks = get<LHCb::Tracks>( m_trackLocation ) ;
-  for( LHCb::Tracks::const_iterator itr = tracks->begin() ;
-       itr != tracks->end(); ++itr) 
-    if( (*itr)->fitStatus() == LHCb::Track::Fitted && (*itr)->nDoF()>1 ) {
-      double sumtimeresidual(0) ;
-      double sumn(0) ;
-      // calculate the pitch residuals by M. Schiller
-      std::vector<std::pair<LHCb::OTChannelID, double> > pitchRes = 
-	m_pitchtool->calcPitchResiduals( *itr );
-      for (unsigned int i = 0; i < pitchRes.size(); ++i) {
-	// directory name
-	char tmpprefix[256] = "" ;
-	switch( m_granularity ) {
-	case 1: sprintf(tmpprefix,"station%d/PitchRes/",pitchRes[i].first.station()) ; break ;
-	case 2: sprintf(tmpprefix,"layer%d/PitchRes/",uniqueLayer(pitchRes[i].first)) ; break ;
-	default: {} ;
-	}
-	std::string nameprefix(tmpprefix) ;
-        std::ostringstream os;
-        os << "Layer " << uniqueLayer(pitchRes[i].first) << " pitch residuals";
-        plot(pitchRes[i].second, nameprefix + os.str(), os.str(), -3., 3., 120);
-        std::ostringstream os1;
-	os1 << "Module " << uniqueModule(pitchRes[i].first) << " pitch residuals";
-	plot(pitchRes[i].second, nameprefix + os1.str(), os1.str(), -10., 10., 120);
-	profile1D( uniqueModule(pitchRes[i].first),pitchRes[i].second,"Pitchresvsmodule","Pitchresidual vs. module nr.",
-		   -0.5,NumUniqueModule-0.5,NumUniqueModule);
+  // may be we don't need it
+  setHistoTopDir("OT/");
+
+  LHCb::Tracks* tracks = exist<LHCb::Tracks>(m_trackLocation) ? get<LHCb::Tracks>(m_trackLocation) : 0;
+
+  // iterate over all tracks
+  if(tracks != 0) { BOOST_FOREACH(const LHCb::Track* track, *tracks)
+  {
+    int timeResidualSumN = 0;
+    double timeResidualSum = 0;
+
+    // process only fitted tracks with nDoF >= 2
+    if(track->fitStatus() != LHCb::Track::Fitted || track->nDoF() < 2) continue;
+
+    std::vector< std::pair<LHCb::OTChannelID, double> > pitchRes = m_pitchtool->calcPitchResiduals(track);
+    for(unsigned int i = 0; i < pitchRes.size(); ++i)
+    {
+      // directory name
+      char tmpprefix[256] = "" ;
+      switch( m_granularity )
+      {
+      case 1: sprintf(tmpprefix,"station%d/PitchRes/",pitchRes[i].first.station()) ; break ;
+      case 2: sprintf(tmpprefix,"layer%d/PitchRes/",uniqueLayer(pitchRes[i].first)) ; break ;
+      default: break;
       }
-      setHistoTopDir("OT/");
-      LHCb::Track::ConstNodeRange nodes = (*itr)->nodes() ;
-      for( LHCb::Track::ConstNodeRange::const_iterator inode = nodes.begin() ;
-	   inode != nodes.end(); ++inode ) 
-	if( ( (*inode)->type() == LHCb::Node::HitOnTrack ||
-	      (*inode)->type() == LHCb::Node::Outlier )
-	    && (*inode)->measurement().type() == LHCb::Measurement::OT ) { 
-	  const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(*inode) ;
-	  
-	  const LHCb::OTMeasurement* meas =
-	    static_cast<const LHCb::OTMeasurement*>(&(*inode)->measurement());
+      std::string nameprefix(tmpprefix);
+      std::ostringstream os;
+      os << "Layer " << uniqueLayer(pitchRes[i].first) << " pitch residuals";
+      plot(pitchRes[i].second, nameprefix + os.str(), os.str(), -3., 3., 120);
+      std::ostringstream os1;
+      os1 << "Module " << uniqueModule(pitchRes[i].first) << " pitch residuals";
 
-	  LHCb::OTChannelID channel = meas->channel() ;
-	  int uniquelayer   = uniqueLayer(channel) ;
-	  //int uniquequarter = uniqueQuarter(channel) ;
-	  int uniquemodule  = uniqueModule(channel) ;
-
-	  // directory name
-	  char tmpprefix[256] = "" ;
-	  switch( m_granularity ) {
-	  case 1: sprintf(tmpprefix,"station%d/",channel.station()) ; break ;
-	  case 2: sprintf(tmpprefix,"layer%d/",uniquelayer) ; break ;
-	  default: {} ;
-	  }
-	  std::string nameprefix(tmpprefix) ;
-	  
-	  // Now, this gives access to the unbaised residual:
-	  double residual = fitnode->unbiasedResidual() ;
-	  // But we cannot obtain the unbiased 'radius', because the hit
-	  // was used for the time-of-flight (at last on cosmics). This
-	  // is what has been causing all the trouble. Therefore, first
-	  // get the full unbiased state: 
-	  // double radius = meas->driftRadiusWithErrorFromY(ypos).val ;
-	  bool isoutlier((*inode)->type() == LHCb::Node::Outlier ) ;
-	  LHCb::State ubstate = isoutlier ? fitnode->state() : fitnode->unbiasedState() ;
-	  
-	  // project it:
-	  LHCb::FitNode unbiasednode(*fitnode) ;
-	  unbiasednode.setState( ubstate ) ;
-	  unbiasednode.setRefVector( ubstate.stateVector() ) ;
-	  m_projector->projectReference(unbiasednode) ;
-	  
-	  // and only now get the time-of-flight
-	  double drifttime = meas->driftTimeFromY(ubstate.y()) ;
-	  double radius   = meas->driftRadiusWithErrorFromY(ubstate.y()).val ;
-	  double trkdist = unbiasednode.pocaVector().Dot( ubstate.position() - fitnode->measurement().trajectory().beginPoint() ) ;
-	  double trktime = meas->module().driftTimeWithError(std::abs(trkdist)).val ;
-	  double drifttimeresidual = drifttime - trktime ;
-	  double resscalefactor = std::sqrt(fitnode->errMeasure()/fitnode->errUnbiasedResidual()) ;
-	  double respull = fitnode->residual()/fitnode->errResidual() ;
-	 
-	  // make sure all residuals have the same sign in global coordinates
-	  if( meas->trajectory().direction(0).y() < 0 ) {
-	    residual *= -1 ;
-	    respull  *= -1 ;
-	  }
-	  
-	  // plots by module
-	  profile1D( uniquemodule, drifttimeresidual, "timeresvsmodule", "unbiased drifttime residual versus module", 
-		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-	  profile1D( uniquemodule, residual, "resvsmodule", "unbiased residual versus module", 
-		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-	  profile1D( uniquemodule, respull, "respullvsmodule", "residual pull versus module", 
-		     -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-	  plot(uniquemodule,"moduleHotOccupancy","number of HOTs per module",
-	       -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-	  plot(uniqueOtis(channel),"otisHotOccupancy","number of HOTs per otis",-0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
-	  if( isoutlier) 
-	    plot(uniquemodule,"moduleOutlierOccupancy","number of outliers per module",
-		 -0.5,NumUniqueModule-0.5,NumUniqueModule) ;
-	  
-	  // residuals distributions, by layer
-	  plot(drifttime,nameprefix + "drifttime","drifttime",-25,75) ;
-	  plot(radius,nameprefix + "driftradius","driftradius",0,5) ;
-	  plot(trkdist,nameprefix + "trkdist","unbiased distance",-5,5) ;
-	  plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidual","drifttime residual (rms unbiased)",-20,20) ;
-	  plot(residual*resscalefactor,nameprefix + "residual","residual (rms unbiased)",-2,2) ;
-	  plot(respull,nameprefix + "residualpull","residual pull",-5,5) ;
-	  profile1D(std::abs(trkdist),drifttimeresidual, "timeresvsdistance", "unbiased drifttime residual versus distance", 
-		    0,cellRadius,numDistBins) ;
-	  profile1D(std::abs(trkdist),respull, "respullvsdistance", "residual pull versus distance", 
-		    0,cellRadius,numDistBins) ;
-	  plot(meas->deltaTimeOfFlight(),"deltaToF", -25,25) ;
-	  
-	  // same but for 'good' tracks
-	  double unbiasedchi2 = ((*itr)->chi2() - respull * respull)/((*itr)->nDoF()-1) ;
-	  bool goodtrack = unbiasedchi2 < m_maxUnbiasedChisqPerDofGoodTracks ;
-	  if( goodtrack ) {
-	    plot(drifttime,nameprefix + "drifttimegood","drifttime (good tracks)",-25,75) ;
-	    plot(trkdist,nameprefix + "trkdistgood","unbiased distance (good tracks)",-5,5) ;
-	    // remove hits outside cell radius
-	    if ( std::abs(trkdist) < cellRadius ) {
-	      plot(drifttimeresidual*resscalefactor,nameprefix + "drifttimeresidualgood","drifttime residual (rms unbiased, good tracks)",-20,20) ;
-	      plot(residual*resscalefactor,nameprefix + "residualgood","residual (rms unbiased, good tracks)",-2,2) ;
-	      plot(respull,nameprefix + "residualpullgood","residual pull (good tracks)",-5,5) ;
-	      profile1D(std::abs(trkdist),drifttimeresidual, "timeresvsdistancegood", "unbiased drifttime residual versus distance", 
-			0,cellRadius) ;
-	      profile1D(std::abs(trkdist),respull, "respullvsdistancegood", "residual pull versus distance", 
-			0,cellRadius) ;
-	      if(!isoutlier) {
-		sumtimeresidual += drifttimeresidual ;
-		++sumn ;
-	      }
-	    }
-	  }
-	  
-	  // 2D occupancy plot, quite a beast. should be forbidden in monitoring!
-	  plot2D((*inode)->state().x(),(*inode)->state().y(),nameprefix + "xyh2","position of track at hit",-3000,3000,-3000,3000,20,20) ;
-	  plot2D(trkdist,drifttime,nameprefix + "rt","drifttime versus unbiased distance",-cellRadius,cellRadius,-25,75) ;
-	  
-	}
-      if(sumn>5)  {
-	plot( sumtimeresidual/sumn,"avtimeres","average time residual on track",-10,10) ;
-	plot2D( (*itr)->p()/1000,sumtimeresidual/sumn,"avtimeresvsmom","average time residual versus momentum",0,20,-5,5,40,50) ;
-      }
+      plot(pitchRes[i].second, nameprefix + os1.str(), os1.str(), -10., 10., 120);
+      profile1D( uniqueModule(pitchRes[i].first),pitchRes[i].second,"Pitchresvsmodule","Pitchresidual vs. module nr.",
+        -0.5,NumUniqueModule-0.5,NumUniqueModule);
     }
-  
-  // for normalization issues, also want raw HIT occupancy by
-  // module.
-  for( DeOTDetector::Modules::const_iterator imodule = m_otdet->modules().begin() ;
-       imodule != m_otdet->modules().end(); ++imodule) {
-    LHCb::OTChannelID modid = (*imodule)->elementID() ;
-    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule( modid ) ;
-    size_t numhits = ottimes.size() ;
-    plot(uniqueModule(modid),"moduleHitOccupancy","number of hits per module",
-	 -0.5,NumUniqueModule-0.5,NumUniqueModule,numhits) ;
-    for( LHCb::OTLiteTimeRange::const_iterator ihit = ottimes.begin() ;
-	 ihit != ottimes.end() ; ++ihit )
-      plot(uniqueOtis(ihit->channel()),"otisHitOccupancy","number of hits per otis",
-	   -0.5,NumUniqueOtis-0.5,NumUniqueOtis) ;
-  }
-  
+
+    // iterate over all track nodes
+    BOOST_FOREACH(const LHCb::Node* node, track->nodes())
+    {
+      // process only OT nodes which are HitOnTrack or Outlier and with OT measurement
+      if((node->type() != LHCb::Node::HitOnTrack && node->type() && node->type() != LHCb::Node::Outlier) || node->measurement().type() != LHCb::Measurement::OT) continue;
+
+      // get fit node
+      const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node);
+      if(fitnode == 0) continue;
+
+      // get measurement and cast to OT measurement
+//      const LHCb::OTMeasurement* measurement = static_cast<const LHCb::OTMeasurement*>(&node->measurement());
+      const LHCb::OTMeasurement* measurement = dynamic_cast<const LHCb::OTMeasurement*>(&node->measurement());
+      if(measurement == 0) continue;
+
+      LHCb::OTChannelID channel = measurement->channel();
+
+      int uniquelayer = uniqueLayer(channel);
+//      int uniquequarter = uniqueQuarter(channel);
+      int uniquemodule = uniqueModule(channel);
+
+      // Now, this gives access to the unbaised residual:
+      double residual = fitnode->unbiasedResidual();
+      // But we cannot obtain the unbiased 'radius', because the hit
+      // was used for the time-of-flight (at last on cosmics). This
+      // is what has been causing all the trouble. Therefore, first
+      // get the full unbiased state:
+      // double radius = meas->driftRadiusWithErrorFromY(ypos).val ;
+      bool isOutlier = (node->type() == LHCb::Node::Outlier);
+      LHCb::State unbiasedState = isOutlier ? fitnode->state() : fitnode->unbiasedState();
+
+      // project it:
+      LHCb::FitNode unbiasedNode(*fitnode);
+      unbiasedNode.setState( unbiasedState );
+      unbiasedNode.setRefVector( unbiasedState.stateVector() );
+      m_projector->projectReference(unbiasedNode);
+
+      // and only now get the time-of-flight
+      double drifttime = measurement->driftTimeFromY(unbiasedState.y());
+      double radius = measurement->driftRadiusWithErrorFromY(unbiasedState.y()).val;
+      double trackDistance = unbiasedNode.pocaVector().Dot( unbiasedState.position() - fitnode->measurement().trajectory().beginPoint() );
+      double trackTime = measurement->module().driftTimeWithError(std::abs(trackDistance)).val;
+      double drifttimeResidual = drifttime - trackTime;
+      double residualScaleFactor = std::sqrt(fitnode->errMeasure() / fitnode->errUnbiasedResidual());
+      double residualPull = fitnode->residual() / fitnode->errResidual();
+
+      // make sure all residuals have the same sign in global coordinates
+      if( measurement->trajectory().direction(0).y() < 0 )
+      {
+        residual *= -1.0;
+        residualPull *= -1.0;
+      }
+
+      fill(profileTimeResidualVsModule, uniquemodule, drifttimeResidual, 1.0);
+      fill(profileResidualVsModule, uniquemodule, residual, 1.0);
+      fill(profileResidualPullVsModule, uniquemodule, residualPull, 1.0);
+
+      fill(histModuleHotOccupancy, uniquemodule, 1.0);
+      if(isOutlier) fill(histModuleOutlierOccupancy, uniquemodule, 1.0);
+
+      fill(histOtisHotOccupancy, uniqueOtis(channel), 1.0);
+
+      // get index of hist - this depends on granularity (plots per stations or per layer)
+      int histIndex = 0;
+      switch(m_granularity)
+      {
+      case 1: histIndex = channel.station() - 1; break;
+      case 2: histIndex = uniquelayer; break;
+      }
+
+      fill(hists[histIndex][HIST_DRIFTTIME], drifttime, 1.0);
+      fill(hists[histIndex][HIST_DRIFTRADIUS], radius, 1.0);
+      fill(hists[histIndex][HIST_TRACK_DISTANCE], trackDistance, 1.0);
+      fill(hists[histIndex][HIST_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
+      fill(hists[histIndex][HIST_RESIDUAL], residual * residualScaleFactor, 1.0);
+      fill(hists[histIndex][HIST_RESIDUAL_PULL], residualPull, 1.0);
+
+      fill(profileTimeResidualVsDistance, std::abs(trackDistance), drifttimeResidual, 1.0);
+      fill(profileResidualVsDistance, std::abs(trackDistance), residual, 1.0);
+      fill(profileResidualPullVsDistance, std::abs(trackDistance), residualPull, 1.0);
+
+      fill(histDeltaToF, measurement->deltaTimeOfFlight(), 1.0);
+
+      // same for 'good' tracks
+      double unbiasedChi2 = (track->chi2() - residualPull * residualPull) / (track->nDoF() - 1);
+      bool isGoodTrack = unbiasedChi2 < m_maxUnbiasedChisqPerDofGoodTracks;
+
+      if(isGoodTrack)
+      {
+        fill(hists[histIndex][HIST_GOOD_DRIFTTIME], drifttime, 1.0);
+        fill(hists[histIndex][HIST_GOOD_DRIFTRADIUS], radius, 1.0);
+        fill(hists[histIndex][HIST_GOOD_TRACK_DISTANCE], trackDistance, 1.0);
+
+        // remove hits outside cell radius
+        // NOTE: actualy it is qute strange: the hits outside of cell radius also can be good
+        if(std::abs(trackDistance) < cellRadius)
+        {
+          fill(hists[histIndex][HIST_GOOD_DRIFTTIME_RESIDUAL], drifttimeResidual * residualScaleFactor, 1.0);
+          fill(hists[histIndex][HIST_GOOD_RESIDUAL], residual * residualScaleFactor, 1.0);
+          fill(hists[histIndex][HIST_GOOD_RESIDUAL_PULL], residualPull, 1.0);
+
+          fill(profileTimeResidualVsDistanceGood, std::abs(trackDistance), drifttimeResidual, 1.0);
+          fill(profileResidualVsDistanceGood, std::abs(trackDistance), residual, 1.0);
+          fill(profileResidualPullVsDistanceGood, std::abs(trackDistance), residualPull, 1.0);
+
+          if(!isOutlier)
+          {
+            ++timeResidualSumN;
+            timeResidualSum += drifttimeResidual;
+          }
+        }
+      } // if(isGoodTrack)
+
+      // 2D occupancy plot, quite a beast. should be forbidden in monitoring!
+      fill(histXY[histIndex], node->state().x(), node->state().y(), 1.0);
+      fill(histRT[histIndex], trackDistance, drifttime, 1.0);
+    } // BOOST_FOREACH(const LHCb::Node* node, track->nodes())
+
+    if(timeResidualSumN > 5)
+    {
+      fill(histAverageTimeResidual, timeResidualSum / timeResidualSumN, 1.0);
+      fill(histAverageTimeResidualVsMomentum, track->p() / 1000.0, timeResidualSum / timeResidualSumN, 1.0);
+    } // if(timeResidualSumN > 5)
+  } } // BOOST_FOREACH(const LHCb::Track* track, *tracks) AND if(tracks != 0)
+
+  BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
+  {
+    LHCb::OTChannelID modid = module->elementID();
+//    size_t numhits = m_decoder->decodeModule(modid).size();
+    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule(modid);
+    size_t numhits = ottimes.size();
+    fill(histModuleHitOccupancy, uniqueModule(modid), numhits);
+    BOOST_FOREACH(const LHCb::OTLiteTime& liteTime, ottimes)
+    {
+      fill(histOtisHitOccupancy, uniqueOtis(liteTime.channel()), 1.0);
+    }
+  } // BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
+
   // set this on every event
-  setNormalization( "moduleHotOccupancy" ) ;
-  setNormalization( "moduleHitOccupancy" ) ;
-  setNormalization( "moduleOutlierOccupancy" ) ;
-  
-  return StatusCode::SUCCESS ;
+  setNormalization(histModuleHitOccupancy);
+  setNormalization(histModuleHotOccupancy);
+  setNormalization(histModuleOutlierOccupancy);
+
+  return StatusCode::SUCCESS;
 }
 
-
-void OTTrackMonitor::setNormalization(const std::string& hisname) 
+void OTTrackMonitor::setNormalization(AIDA::IHistogram1D* hist) 
 {
-  TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(histo(hisname) ) ;
-  if( h1 ) h1->SetEntries( m_numEvents ) ;
+  TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(hist);
+  if(h1) h1->SetEntries(m_numEvents);
 }
