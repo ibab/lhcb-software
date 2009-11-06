@@ -1,4 +1,4 @@
-// $Id: UnpackTwoProngVertex.h,v 1.1 2009-01-26 09:45:51 ocallot Exp $
+// $Id: UnpackTwoProngVertex.h,v 1.2 2009-11-06 18:34:34 jonrob Exp $
 #ifndef UNPACKTWOPRONGVERTEX_H 
 #define UNPACKTWOPRONGVERTEX_H 1
 
@@ -22,10 +22,9 @@ public:
 
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
-
 private:
   std::string m_inputName;
   std::string m_outputName;
+  bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
 };
 #endif // UNPACKTWOPRONGVERTEX_H

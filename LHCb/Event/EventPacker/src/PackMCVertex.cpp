@@ -1,4 +1,4 @@
-// $Id: PackMCVertex.cpp,v 1.4 2009-10-30 17:21:22 jonrob Exp $
+// $Id: PackMCVertex.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Boost
@@ -30,6 +30,7 @@ PackMCVertex::PackMCVertex( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::MCVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedMCVertexLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,9 @@ PackMCVertex::~PackMCVertex() {};
 // Main execution
 //=============================================================================
 StatusCode PackMCVertex::execute() {
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::MCVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::MCVertices* verts = getOrCreate<LHCb::MCVertices,LHCb::MCVertices>( m_inputName );
   if( msgLevel(MSG::DEBUG) )

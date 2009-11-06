@@ -1,4 +1,4 @@
-// $Id: UnpackMCParticle.cpp,v 1.4 2009-10-30 17:21:22 jonrob Exp $
+// $Id: UnpackMCParticle.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,7 @@ UnpackMCParticle::UnpackMCParticle( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedMCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::MCParticleLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,7 +41,7 @@ StatusCode UnpackMCParticle::execute() {
 
   // CRJ : If packed data does not exist just return. Needed for packing of 
   //     : spillover which is not neccessarily available for each event
-  if ( !exist<LHCb::PackedMCParticles>(m_inputName) )  return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::PackedMCParticles>(m_inputName) )  return StatusCode::SUCCESS;
 
   LHCb::PackedMCParticles* dst = get<LHCb::PackedMCParticles>( m_inputName );
 

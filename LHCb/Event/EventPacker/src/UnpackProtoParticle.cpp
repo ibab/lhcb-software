@@ -1,4 +1,4 @@
-// $Id: UnpackProtoParticle.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackProtoParticle.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ UnpackProtoParticle::UnpackProtoParticle( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedProtoParticleLocation::Charged );
   declareProperty( "OutputName", m_outputName = LHCb::ProtoParticleLocation::Charged );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -41,6 +42,10 @@ UnpackProtoParticle::~UnpackProtoParticle() {}
 StatusCode UnpackProtoParticle::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::PackedProtoParticles>(m_inputName) ) return StatusCode::SUCCESS;
+
   LHCb::PackedProtoParticles* dst = get<LHCb::PackedProtoParticles>( m_inputName );
   debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endmsg;
 

@@ -1,4 +1,4 @@
-// $Id: UnpackTwoProngVertex.cpp,v 1.2 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackTwoProngVertex.cpp,v 1.3 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ UnpackTwoProngVertex::UnpackTwoProngVertex( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedTwoProngVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::TwoProngVertexLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,10 @@ UnpackTwoProngVertex::~UnpackTwoProngVertex() {}
 StatusCode UnpackTwoProngVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::PackedTwoProngVertices>(m_inputName) ) return StatusCode::SUCCESS;
+
   LHCb::PackedTwoProngVertices* dst = get<LHCb::PackedTwoProngVertices>( m_inputName );
   debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 

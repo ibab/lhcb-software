@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.11 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackTrack.cpp,v 1.12 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ PackTrack::PackTrack( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::TrackLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedTrackLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,10 @@ PackTrack::~PackTrack() {}
 StatusCode PackTrack::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::Tracks>(m_inputName) ) return StatusCode::SUCCESS;
+
   LHCb::Tracks* tracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_inputName );
   LHCb::PackedTracks* out = new LHCb::PackedTracks();
   put( out, m_outputName );

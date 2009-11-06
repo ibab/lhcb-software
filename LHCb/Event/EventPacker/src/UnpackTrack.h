@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.h,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: UnpackTrack.h,v 1.2 2009-11-06 18:34:34 jonrob Exp $
 #ifndef UNPACKTRACK_H 
 #define UNPACKTRACK_H 1
 
@@ -30,5 +30,6 @@ protected:
 private:
   std::string m_inputName;
   std::string m_outputName;
+  bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
 };
 #endif // UNPACKTRACK_H

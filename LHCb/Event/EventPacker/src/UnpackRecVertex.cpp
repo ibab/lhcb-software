@@ -1,4 +1,4 @@
-// $Id: UnpackRecVertex.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackRecVertex.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ UnpackRecVertex::UnpackRecVertex( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedRecVertexLocation::Primary );
   declareProperty( "OutputName", m_outputName = LHCb::RecVertexLocation::Primary );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,10 @@ UnpackRecVertex::~UnpackRecVertex() {}
 StatusCode UnpackRecVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::PackedRecVertices>(m_inputName) ) return StatusCode::SUCCESS;
+
   LHCb::PackedRecVertices* dst = get<LHCb::PackedRecVertices>( m_inputName );
   debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 

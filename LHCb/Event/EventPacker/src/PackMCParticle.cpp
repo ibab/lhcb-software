@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.6 2009-10-30 17:21:22 jonrob Exp $
+// $Id: PackMCParticle.cpp,v 1.7 2009-11-06 18:34:33 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -27,6 +27,7 @@ PackMCParticle::PackMCParticle( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::MCParticleLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedMCParticleLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 
 //=============================================================================
@@ -40,6 +41,9 @@ PackMCParticle::~PackMCParticle() {};
 StatusCode PackMCParticle::execute() {
 
   debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::MCParticles>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::MCParticles* parts = getOrCreate<LHCb::MCParticles,LHCb::MCParticles>( m_inputName );
   debug() << m_inputName << " contains " << parts->size()

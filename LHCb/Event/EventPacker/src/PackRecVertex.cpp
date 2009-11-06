@@ -1,4 +1,4 @@
-// $Id: PackRecVertex.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackRecVertex.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ PackRecVertex::PackRecVertex( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::RecVertexLocation::Primary );
   declareProperty( "OutputName", m_outputName = LHCb::PackedRecVertexLocation::Primary );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,9 @@ PackRecVertex::~PackRecVertex() {}
 StatusCode PackRecVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::RecVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::RecVertices* verts = getOrCreate<LHCb::RecVertices,LHCb::RecVertices>( m_inputName );
   

@@ -1,4 +1,4 @@
-// $Id: PackProtoParticle.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackProtoParticle.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ PackProtoParticle::PackProtoParticle( const std::string& name,
 {
   declareProperty( "InputName"  , m_inputName  = LHCb::ProtoParticleLocation::Charged );
   declareProperty( "OutputName" , m_outputName = LHCb::PackedProtoParticleLocation::Charged ); 
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -41,6 +42,9 @@ PackProtoParticle::~PackProtoParticle() {}
 StatusCode PackProtoParticle::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::ProtoParticles>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::ProtoParticles* parts = getOrCreate<LHCb::ProtoParticles,LHCb::ProtoParticles>( m_inputName );
   LHCb::PackedProtoParticles* out = new LHCb::PackedProtoParticles();

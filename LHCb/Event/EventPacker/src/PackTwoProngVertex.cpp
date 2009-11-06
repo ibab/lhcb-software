@@ -1,4 +1,4 @@
-// $Id: PackTwoProngVertex.cpp,v 1.3 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackTwoProngVertex.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -28,6 +28,7 @@ PackTwoProngVertex::PackTwoProngVertex( const std::string& name,
 {
   declareProperty( "InputName",  m_inputName  = LHCb::TwoProngVertexLocation::Default );
   declareProperty( "OutputName", m_outputName = LHCb::PackedTwoProngVertexLocation::Default );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -40,6 +41,9 @@ PackTwoProngVertex::~PackTwoProngVertex() {}
 StatusCode PackTwoProngVertex::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::TwoProngVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
   LHCb::TwoProngVertices* verts = getOrCreate<LHCb::TwoProngVertices,LHCb::TwoProngVertices>( m_inputName );
   LHCb::PackedTwoProngVertices* out = new LHCb::PackedTwoProngVertices();
