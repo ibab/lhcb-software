@@ -4,6 +4,10 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Chris Jones
+ - Downgrade Warnings to Info in data recreation algorithms, since this case
+   will occur with new DST content.
+
 ! 2009-11-04 - Christopher Rob Jones
  - Do not automatically add the RICH, MUOn and Combined DLL information to the
    ProtoParticle extraInfo in Brunel. Instead the MuonPIDs and RichPIDs are 
