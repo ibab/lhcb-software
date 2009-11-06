@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.186 2009-11-05 17:43:17 silviam Exp $
+! $Id: release.notes,v 1.187 2009-11-06 14:00:36 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-06 - Marco Cattaneo
+ - Bug fix in DstConf: set up unpacking even if no DST output requested 
 
 ! 2009-11-05 - Silvia Miglioranzi
  - In SimConf.py changed the name of the "SimPhases" configurable to "Phases".

@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.4 2009-11-05 17:42:28 silviam Exp $"
+__version__ = "$Id: SimConf.py,v 1.5 2009-11-06 14:00:36 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 __all__ = [
@@ -259,12 +259,12 @@ class SimConf(LHCbConfigurableUser) :
                 else:
                     tape.ItemList    += generatorList
 
-    def addMCParticles( self, tape ) :
+    def addMCParticles( self, tape, eventLocations ) :
         
         if "Simulation" in self.getProp("Phases") :
 
             # Event locations
-            for slot in self.allEventLocations() :
+            for slot in eventLocations :
 
                 # Annoyingly (MC)Particles and (MC)Vertices change their names when packed ...
                 if not self.getProp('EnablePack') :
@@ -278,12 +278,12 @@ class SimConf(LHCbConfigurableUser) :
                 else:
                     tape.ItemList    += simList
 
-    def addMCVertices( self, tape ) :
+    def addMCVertices( self, tape, eventLocations ) :
         
         if "Simulation" in self.getProp("Phases") :
 
             # Event locations
-            for slot in self.allEventLocations() :
+            for slot in eventLocations :
 
                 # Annoyingly (MC)Particles and (MC)Vertices change their names when packed ...
                 if not self.getProp('EnablePack') :
@@ -297,10 +297,10 @@ class SimConf(LHCbConfigurableUser) :
                 else:
                     tape.ItemList    += simList
                     
-    def addGeneralSimInfo( self, tape ) :
+    def addGeneralSimInfo( self, tape, eventLocations) :
 
-        self.addMCVertices(tape)
-        self.addMCParticles(tape)
+        self.addMCVertices(tape, eventLocations)
+        self.addMCParticles(tape, eventLocations)
 
     def addSubDetSimInfo( self, tape ) :
 
@@ -387,7 +387,7 @@ class SimConf(LHCbConfigurableUser) :
         self.addGenInfo( tape )
 
         # Add general simulation information
-        self.addGeneralSimInfo( tape )
+        self.addGeneralSimInfo( tape, self.allEventLocations() )
 
         # Add Sub-detector information
         self.addSubDetSimInfo( tape )

@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.8 2009-11-04 17:58:27 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.9 2009-11-06 14:00:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -131,7 +131,7 @@ class DigiConf(LHCbConfigurableUser):
 
         if dType == "Minimal":
 
-            SimConf().addMCVertices(writer) # Filtered, only primary vertices with no daughters
+            SimConf().addMCVertices(writer,['']) # Filtered, only primary vertices with no daughters
 
         else:
             # Standard DIGI content
@@ -139,8 +139,11 @@ class DigiConf(LHCbConfigurableUser):
             # Generator info
             SimConf().addGenInfo(writer)
 
-            # General MC simulation information
-            SimConf().addGeneralSimInfo(writer)
+            # General MC simulation information. Spillover added only to Extended format
+            locations = [ '' ]
+            if dType == "Extended":
+                locations = SimConf().allEventLocations()
+            SimConf().addGeneralSimInfo(writer,locations)
 
             # Summary info
             self.addMCDigitSummaries(writer)

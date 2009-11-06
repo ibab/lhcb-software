@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.26 2009-11-05 09:55:36 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.27 2009-11-06 14:00:36 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -124,9 +124,13 @@ class DstConf(LHCbConfigurableUser):
                 # Add the simulation objects (POOL DST only)
                 if sType != "None":
                     
+                    eventLocations = ['']
+                    if dType == "XDST":
+                        locations = SimConf().allEventLocations()
+
                     # Minimal MC output.
                     SimConf().addHeaders(writer)
-                    SimConf().addMCVertices(writer)
+                    SimConf().addMCVertices(writer,eventLocations)
 
                     if sType == "Full":
                         
@@ -139,7 +143,7 @@ class DstConf(LHCbConfigurableUser):
                         # Generation information
                         SimConf().addGenInfo(writer)
                         # MCparticles
-                        SimConf().addMCParticles(writer)
+                        SimConf().addMCParticles(writer,eventLocations)
 
                         # Objects propagated from Boole
                         # Digi headers
@@ -286,7 +290,6 @@ class DstConf(LHCbConfigurableUser):
         dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
             raise TypeError( "Unknown DstType '%s'"%dType )
-        if dType == 'NONE': return
         self.setOtherProps(DigiConf(),["SpilloverPaths"]) # DigiConf propagates it to SimConf
 
         pType = self.getProp( "PackType" ).upper()
@@ -294,7 +297,9 @@ class DstConf(LHCbConfigurableUser):
             raise TypeError( "Unknown PackType '%s'"%pType )
 
         if self.getProp( "EnableUnpack" ) : self._doUnpack()
-        if hasattr( self, "PackSequencer" ): self._doPack()
-        GaudiKernel.ProcessJobOptions.PrintOn()
-        self._doWrite(dType, pType, sType)
-        GaudiKernel.ProcessJobOptions.PrintOff()
+
+        if dType != 'NONE':
+            if hasattr( self, "PackSequencer" ): self._doPack()
+            GaudiKernel.ProcessJobOptions.PrintOn()
+            self._doWrite(dType, pType, sType)
+            GaudiKernel.ProcessJobOptions.PrintOff()
