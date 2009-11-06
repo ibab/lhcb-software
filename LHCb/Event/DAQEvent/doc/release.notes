@@ -5,6 +5,12 @@
 !-----------------------------------------------------------------------------
 
 
+! 2009-11-06 - Marco Clemencic
+ - Modified ODIN.xml with the new trigger types valid since version 6 of the bank.
+   The triggerType function now returns an enum that is not anymore guaranteed to
+   match the value of the bits, since from now the ODIN object is not stored
+   anymore.
+
 ! 2009-10-16 - 
  - componenet : add new ODINTimeFilter (GPS time, EventID, BCID filtering)
 

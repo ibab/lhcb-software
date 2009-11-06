@@ -139,17 +139,17 @@
                   BeamCrossing = 3'
         access = 'PUBLIC' />
 
-      <enum
-	name   = 'TriggerType'
-	desc   = 'Type of trigger broadcasted by ODIN'
-	value  = 'Reserve           = 0,
-                  PhysicsTrigger    = 1,
-                  AuxilliaryTrigger = 2,
-                  RandomTrigger     = 3,
-                  PeriodicTrigger   = 4,
-                  NonZSupTrigger    = 5,
-                  TimingTrigger     = 6,
-                  CalibrationTrigger= 7'
+       <enum
+         name   = 'TriggerType'
+         desc   = 'Type of trigger broadcasted by ODIN'
+         value  = "PhysicsTrigger,
+                   BeamGasTrigger,
+                   LumiTrigger,
+                   TechnicalTrigger,
+                   AuxiliaryTrigger,
+                   NonZSupTrigger,
+                   TimingTrigger,
+                   CalibrationTrigger"
 	access = 'PUBLIC' />
 
       &DataObject;
@@ -207,9 +207,9 @@
 
       <attribute
         name="triggerType"
-        desc="Trigger Type"
-        type="unsigned int"
-        init="0" />
+        desc="Trigger Type @see enum LHCb::ODIN::TriggerType"
+        type="TriggerType"
+        init="PhysicsTrigger" />
 
       <attribute
         name="readoutType"
