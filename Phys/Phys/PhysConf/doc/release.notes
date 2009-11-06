@@ -1,10 +1,16 @@
-!$Id: release.notes,v 1.27 2009-10-27 13:37:40 jpalac Exp $
+!$Id: release.notes,v 1.28 2009-11-06 18:09:53 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Chris Jones
+ - Rework the PID re-calibration sequence to adapt to future DST content 
+   changes (Rich and Muon PID objects directly stored on the DSTs)
+ - Implement version checking of the MuonPID DataObject to conditionally rerun
+   the full Muon PID sequence when needed for DC06/MC09
+ 
 !========================== PhysConf v1r5 2009-10-27 ===================
 
 ! 2009-10-27 - Juan PALACIOS
