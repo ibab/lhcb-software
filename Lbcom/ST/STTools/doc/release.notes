@@ -2,6 +2,9 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-10-30 M Needham
+ - Add tool to select ladders 1 and 7 in IT for alignment
+
 ! 2009-10-30  M Tobin
  - Add implementations of ISTNoiseCalculationTool:
  - Re-implementation of Nicola Chiapolini's methods which were in STNZSMonitors.
