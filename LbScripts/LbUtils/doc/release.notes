@@ -1,3 +1,10 @@
+2009-11-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/ConfigFile.py: implementation detail of the config file reading.
+	* python/LbUtils/Script.py: implemented the Script class with a config file reading. 
+	The name of the settings of the config file are extracted from the command line parser.
+	the values of the config file are fed back into the defaults of the command line parser.
+
 2009-11-04  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Links.py: tuned the verbosity of the log of the makeRelativeLink

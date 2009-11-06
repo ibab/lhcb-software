@@ -1,4 +1,4 @@
-# $Id: Option.py,v 1.11 2009-03-11 20:45:11 hmdegaud Exp $
+# $Id: Option.py,v 1.12 2009-11-06 14:30:54 hmdegaud Exp $
 
 from optparse import OptionParser, Option, OptionContainer, OptParseError
 from LbUtils import Log, Env
@@ -191,7 +191,7 @@ class Parser(OptionParser):
             result.append(OptionContainer.format_option_help(self, formatter))
             result.append("\n")
         for group in self.option_groups:
-            if group.title != "Logging" and group.title != "Environment" :
+            if group.title != "Logging" and group.title != "Environment" and group.title != "Config":
                 result.append(group.format_help(formatter))
                 result.append("\n")
         formatter.dedent()
