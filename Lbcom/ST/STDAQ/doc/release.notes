@@ -4,6 +4,9 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+! 2009-11-05 M Needham
+ - Minimize messages about lost banks 
+
 ! 2006-10-30 - Mark Tobin
  - Added method to get source ID from TELL1 number to readout tool.
 
