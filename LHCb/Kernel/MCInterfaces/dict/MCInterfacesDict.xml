@@ -17,5 +17,6 @@
   <class name = "ISiDepositedCharge"          />
   <class name = "ITrackGhostClassification"   />
   <class name = "IVisPrimVertTool"            />
+  <class name = "IHepMCParticleSelector"         />
 
 </lcgdict>

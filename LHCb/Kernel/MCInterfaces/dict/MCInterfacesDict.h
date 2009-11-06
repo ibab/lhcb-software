@@ -32,5 +32,7 @@
 #include "MCInterfaces/IMCEventTypeFinder.h"
 #include "MCInterfaces/IMCReconstructed.h"
 
+#include "MCInterfaces/IHepMCParticleSelector.h"
+
 #endif // DICT_MCINTERFACESDICT_H
 

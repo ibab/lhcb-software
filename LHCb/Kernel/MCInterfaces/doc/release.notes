@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Victor Coco
+ - Add an interface IHepMCParticleSelector to select GenParticle matching some 
+   criteria (also add GenEvent in the requirements )
+
 !==================== MCInterfaces v1r9 2009-06-16 ===========================
 ! 2009-06-08 - Chris Jones
  - Add a new method to Rich::Rec::MC::IMCTruthTool to return the associated
