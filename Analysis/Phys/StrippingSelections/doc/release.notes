@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-06 - Juan Palacios
+ - python/StrippingSelections/StrippingJpsiInc.py
+  . Re-written with selection "framework" classes.
+
 ! 2009-11-06 - Anton Poluektov
  - Fixed StrippingBd2Kstaree.py (sequencer was missing in the line)
 
