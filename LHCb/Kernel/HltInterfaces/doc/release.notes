@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.6 2009-01-08 15:53:41 cattanem Exp $
+! $Id: release.notes,v 1.7 2009-11-06 13:22:03 pkoppenb Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2009-11-06 - Patrick Koppenburg
+ - New functions readRoutingBits and firexRoutingBits in namespace Hlt that
+   get quick access to routing bits.
+ - Depend on DAQEvent
+ - v2r1
 
 !============ Kernel/HltInterfaces v2r0 2009-01-08 ============================
 ! 2008-12-29 - Gerhard Raven
