@@ -24,7 +24,7 @@ mucut = '(PT>500*MeV) & (TRCHI2DOF<3) & (ISLONG) '
 _Jpsi = CombineParticles(name,
                          DecayDescriptor = 'J/psi(1S) -> mu+ mu-',
                          DaughtersCuts = { 'mu+' : mucut , 
-                                             'mu-' : mucut },
+                                           'mu-' : mucut },
                          CombinationCut = " (AM>2900*MeV) ",
                          MotherCut = "(VFASPF(VCHI2/VDOF)<20) ",
                          WriteP2PVRelations = False
