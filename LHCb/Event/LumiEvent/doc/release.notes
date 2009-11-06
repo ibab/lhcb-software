@@ -4,6 +4,9 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Jaap Panman
+ - add TT track counters
+
 !======================== LumiEvent v2r2 2009-10-16 ==========================
 ! 2009-10-16 - Marco Cattaneo
  - remove obsolete file LumiEvent_dll.cpp

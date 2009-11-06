@@ -34,6 +34,8 @@
         <enumval name="BKMuon"     value = "5"   desc="number of muon tracks NOT pointing to PV"/>
         <enumval name="SPDMult"    value = "6"   desc="number of SPD hits"/>
         <enumval name="CaloEt"     value = "7"   desc="Calo Et"/>
+	<enumval name="TTIP"       value = "8"   desc="number of TT tracks from the IP"/>
+	<enumval name="TTMIB"      value = "9"   desc="number of TT tracks parallel with beam"/>
         <enumval name="PV2D"       value = "10"  desc="number of 2D vertices"/>
         <enumval name="PV3D"       value = "11"  desc="number of 3D vertices"/>
         <enumval name="PU"         value = "13"  desc="number of PU vertices"/>
