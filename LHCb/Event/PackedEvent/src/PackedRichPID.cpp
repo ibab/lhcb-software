@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.2 2009-11-04 17:42:01 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.3 2009-11-06 17:51:44 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -94,6 +94,7 @@ StatusCode RichPIDPacker::check( const DataVector & dataA,
     // Track reference
     ok &= (*iA)->track() == (*iB)->track();
     // DLLs (do when packed)
+    ok &= (*iA)->particleLLValues().size() == (*iB)->particleLLValues().size();
 
     // force printout for tests
     //ok = false;
