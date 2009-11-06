@@ -1,4 +1,4 @@
-// $Id: PackerBaseAlg.h,v 1.2 2009-10-23 10:46:04 jonrob Exp $
+// $Id: PackerBaseAlg.h,v 1.3 2009-11-06 17:50:04 jonrob Exp $
 #ifndef PACKERBASEALG_H
 #define PACKERBASEALG_H 1
 
@@ -36,6 +36,7 @@ namespace DataPacking
     std::string m_inputName;  ///< Input location
     std::string m_outputName; ///< Output location
     unsigned int m_version;   ///< Version schema number
+    bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
 
   };
 

@@ -18,6 +18,7 @@ Pack<PACKER>::Pack( const std::string& name,
   declareProperty( "InputName" , m_inputName   = PACKER::unpackedLocation() );
   declareProperty( "OutputName", m_outputName  = PACKER::packedLocation()   );
   declareProperty( "PackingVersion", m_version = 0                          );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 
 template < class PACKER >
@@ -39,33 +40,46 @@ template < class PACKER >
 StatusCode Pack<PACKER>::execute()
 {
   // Check to see if the output data already exists.
-  // If it does silently return doing nothing
-  DataObject * pObject(NULL);
-  StatusCode test = eventSvc()->findObject( m_outputName, pObject );
-  if ( test.isFailure() )
+  const bool outputOK = !exist<typename PACKER::PackedDataVector>(m_outputName);
+  if ( !outputOK && msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Output already exists at '" << m_outputName << "'" << endmsg;
+  }
+
+  // Only proceed if output doesn't exist
+  if ( outputOK )
   {
 
-    // if input does not exist, just return doing nothing again
-    test = eventSvc()->findObject( m_inputName, pObject );
-    if ( test.isSuccess() )
+    // Check to see if input exists
+    const bool inputOK = exist<typename PACKER::DataVector>(m_inputName);
+    if ( !inputOK && msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Input missing at '" << m_inputName << "'" << endmsg;
+    }
+
+    // Pointer to packed data
+    typename PACKER::PackedDataVector * pdata = NULL;
+    if ( inputOK || ( !inputOK && m_alwaysOutput ) )
+    {
+      // make new output data
+      pdata = new typename PACKER::PackedDataVector();
+      // give new container to Gaudi
+      this->put( pdata, m_outputName );
+    }
+
+    // Only fill if all input OK
+    if ( inputOK )
     {
 
       // Load the input data
-      typename PACKER::DataVector * data = 
+      typename PACKER::DataVector * data =
         this->get<typename PACKER::DataVector>(m_inputName);
-
-      // Make the output packed data
-      typename PACKER::PackedDataVector * pdata =
-        new typename PACKER::PackedDataVector();
 
       // set data version
       pdata->setVersion(data->version());
 
       // Set packing version number
       pdata->setPackingVersion(m_version);
-
-      // give new container to Gaudi
-      this->put( pdata, m_outputName );
 
       // Packer
       static const PACKER packer;
@@ -76,9 +90,14 @@ StatusCode Pack<PACKER>::execute()
       // Clear the registry address of the unpacked container, to prevent reloading
       pdata->registry()->setAddress( 0 );
 
-    } // input
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << " Created " << pdata->data().size() << " data objects at '" << m_outputName << endmsg;
+      }
 
-  } // output
+    } // input OK
+
+  } // output OK
 
   return StatusCode::SUCCESS;
 }

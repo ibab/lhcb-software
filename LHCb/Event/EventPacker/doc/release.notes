@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Chris Jones
+ - Add an option to the (new) packers and unpackers to optionally create the
+   output container if the input is missing. Default is to not to do so.
+
 ! 2009-11-04 - Christopher Rob Jones
  - Add packers for RichPIDs and MuonPIDs
  - Protect packers and unpackers from missing input data and also already 

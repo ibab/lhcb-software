@@ -17,6 +17,7 @@ Unpack<PACKER>::Unpack( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = PACKER::packedLocation()   );
   declareProperty( "OutputName", m_outputName = PACKER::unpackedLocation() );
+  declareProperty( "AlwaysCreateOutput",        m_alwaysOutput = false     );
 }
 
 template < class PACKER >
@@ -37,27 +38,42 @@ StatusCode Unpack<PACKER>::initialize()
 template < class PACKER >
 StatusCode Unpack<PACKER>::execute()
 {
+
   // Check to see if the output data already exists.
-  // If it does silently return doing nothing
-  DataObject * pObject(NULL);
-  StatusCode test = eventSvc()->findObject( m_outputName, pObject );
-  if ( test.isFailure() )
+  const bool outputOK = !exist<typename PACKER::DataVector>(m_outputName);
+  if ( !outputOK && msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Output already exists at '" << m_outputName << "'" << endmsg;
+  }
+
+  // Only proceed if output doesn't exist
+  if ( outputOK )
   {
 
-    // if input does not exist, just return doing nothing again
-    test = eventSvc()->findObject( m_inputName, pObject );
-    if ( test.isSuccess() )
+    // Check to see if input exists
+    const bool inputOK = exist<typename PACKER::PackedDataVector>(m_inputName);
+    if ( !inputOK && msgLevel(MSG::DEBUG) )
+    {
+      debug() << "Input missing at '" << m_inputName << "'" << endmsg;
+    }
+
+    // Pointer to packed data
+    typename PACKER::DataVector * data = NULL;
+    if ( inputOK || ( !inputOK && m_alwaysOutput ) )
+    {
+      // make new output data
+      data = new typename PACKER::DataVector();
+      // give new container to Gaudi
+      this->put( data, m_outputName );
+    }
+
+    // Only fill if all input OK
+    if ( inputOK )
     {
 
       // Load the input data
       typename PACKER::PackedDataVector * pdata =
         this->get<typename PACKER::PackedDataVector>(m_inputName);
-
-      // Make the output unpacked data
-      typename PACKER::DataVector * data = new typename PACKER::DataVector();
-
-      // give new container to Gaudi
-      this->put( data, m_outputName );
 
       // set the data version
       data->setVersion(pdata->version());
@@ -68,9 +84,15 @@ StatusCode Unpack<PACKER>::execute()
       // Fill unpacked data
       packer.unpack( *pdata, *data );
 
-    } // input exists
+      if ( msgLevel(MSG::DEBUG) )
+      {
+        debug() << " Created " << data->size() << " data objects at '" << m_outputName << endmsg;
+      }
 
-  } // output exists
+    } // input OK
+
+  } // output OK
 
   return StatusCode::SUCCESS;
 }
+
