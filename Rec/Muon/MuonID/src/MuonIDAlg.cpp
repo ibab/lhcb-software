@@ -210,7 +210,7 @@ StatusCode MuonIDAlg::initialize() {
   const StatusCode sc = GaudiAlgorithm::initialize();
   if ( sc.isFailure() ) { return sc; }
 
-  info()   << "MuonIDAlg v7r2 " << endmsg;
+  info()   << "MuonIDAlg v7r3" << endmsg;
 
   if (msgLevel(MSG::DEBUG) ) {
     debug()  << "==> Initialise" << endmsg;
@@ -379,11 +379,26 @@ StatusCode MuonIDAlg::execute() {
   }
   
   LHCb::Tracks* trTracks = get<LHCb::Tracks>(m_TracksPath);
-  if ( trTracks==0 ) return Error(" Cannot retrieve Tracks ");
 
   if (msgLevel(MSG::DEBUG) ) debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endmsg;
   
-  LHCb::MuonPIDs * pMuids = new LHCb::MuonPIDs();
+  // CRJ : Handle the case MuonPID data is already on the TES
+  LHCb::MuonPIDs * pMuids(NULL);
+  if ( exist<LHCb::MuonPIDs>(m_MuonPIDsPath) )
+  {
+    // data already in TES, so clear and reuse
+    pMuids = get<LHCb::MuonPIDs>(m_MuonPIDsPath);
+    pMuids->clear();
+    Warning( "MuonPIDs already exist at '" + m_MuonPIDsPath + "' -> Will Replace", 
+             StatusCode::SUCCESS ).ignore();
+  }
+  else
+  {
+    // make new data and give to gaudi
+    pMuids = new LHCb::MuonPIDs();
+    put(pMuids,m_MuonPIDsPath);
+  }
+
   LHCb::Tracks * mutracks = new LHCb::Tracks();
   //LHCb::Tracks * mutracks_all = m_DoAllMuonTracks ? new LHCb::Tracks() : 0;
   LHCb::Tracks * mutracks_all = new LHCb::Tracks();
@@ -446,11 +461,11 @@ StatusCode MuonIDAlg::execute() {
   }
   m_ntotmu += m_nmu;
 
-  // Register the MuonIDs container to the TES
-  put(pMuids,m_MuonPIDsPath);
   // Register the PIDTracks container to the TES
   put(mutracks,m_MuonTracksPath);
+
   if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: Muon Tracks registered  " << endmsg;
+
   // Register the PIDTracksIsMuonLoose container to the TES
   if (m_DoAllMuonTracks) put(mutracks_all,m_MuonTracksPathAll);
   else delete mutracks_all;
