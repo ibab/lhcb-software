@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.27 2009-11-06 14:00:36 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.28 2009-11-06 18:00:16 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -272,7 +272,7 @@ class DstConf(LHCbConfigurableUser):
 
         # Muon tracks do not exist on RDST, do not try to unpack them
         if self.getProp( "DstType" ).upper() != "RDST":
-            unpackMuons = UnpackTrack( name       = "UnpackMuons",
+            unpackMuons = UnpackTrack( name       = "UnpackMuonTracks",
                                        OutputName = "/Event/Rec/Track/Muon",
                                        InputName  = "/Event/pRec/Track/Muon" )
             DataOnDemandSvc().AlgMap[ "/Event/Rec/Track/Muon" ] = unpackMuons
