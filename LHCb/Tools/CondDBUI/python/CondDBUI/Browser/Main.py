@@ -42,7 +42,7 @@ def main(argv = []):
     if __versionNumber__ == "$":
         __versionNumber__ = 'HEAD version'
 
-    __versionId__  = '$Id: Main.py,v 1.6 2009-11-02 19:05:57 marcocle Exp $'.split()
+    __versionId__  = '$Id: Main.py,v 1.7 2009-11-06 16:50:27 marcocle Exp $'.split()
     if len(__versionId__) < 4:
         __versionDate__ = 'unknown'
     else:
@@ -54,17 +54,34 @@ def main(argv = []):
     app.setApplicationVersion("%s (%s)" % (__versionNumber__, __versionDate__) )
     app.setOrganizationName("LHCb")
     app.setOrganizationDomain("lhcb.cern.ch")
+    # @FIXME: I need a flexible way of defining the default style (command line, settings, ...)
+    # app.setStyle("plastique")
+
+    # Get the list of command line arguments after the filter applied by QApplication
+    # and convert them to strings so that we can pass the to optparse
+    argv = map(str, app.arguments())
+    
+    from optparse import OptionParser
+    parser = OptionParser(usage = "%prog [Qt-options] [options] [database]")
+    parser.add_option("--rw", action = "store_true",
+                      help = "Open the database specified in the command line in read/write mode")
+    parser.set_defaults(rw = False)
+    opts, args = parser.parse_args(argv[1:])
+    
+    if len(args) > 1:
+        parser.error("Only one database can be specified on the command line (see --help).")
 
     mw = MainWindow()
     mw.setDefaultDatabases(getStandardConnectionStrings())
-
-    # Use the first argument as name of the database to open
-    if len(argv) > 1:
-        db = argv[1]
+    
+    # Use the first (and only) argument as name of the database to open
+    if args:
+        db = args[0]
+        readOnly = not opts.rw
         if db in mw.defaultDatabases:
-            mw.openStandardDatabase(db)
+            mw.openStandardDatabase(db, readOnly = readOnly)
         else:
-            mw.openDatabase(db)
+            mw.openDatabase(db, readOnly = readOnly)
         
     mw.show()
     

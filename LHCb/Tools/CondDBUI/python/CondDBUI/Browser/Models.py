@@ -2,7 +2,9 @@ from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTable
                           QVariant, QModelIndex,
                           QDateTime, QDate, QTime,
                           Qt, SIGNAL, SLOT)
-from PyQt4.QtGui import QIcon, QApplication, QItemSelectionModel
+from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
+                         QItemDelegate,
+                         QComboBox, QLineEdit)
 
 from PyCool import cool
 
@@ -925,3 +927,113 @@ class CondDBPayloadFieldModel(QAbstractListModel):
         if self._fields:
             return self._fields[self._selected]
         return None
+
+## List of supported COOL storage types
+__cool_storage_types__ = [
+                          "Bool",
+                          # "Char",   # not (yet?) supported
+                          "UChar",
+                          "Int16",
+                          "UInt16",
+                          "Int32",
+                          "UInt32",
+                          "UInt63",
+                          "Int64",
+                          # "UInt64", # not (yet?) supported
+                          "Float",
+                          "Double",
+                          "String255",
+                          "String4k",
+                          "String64k",
+                          "String16M",
+                          "Blob64k",
+                          "Blob16M",
+                          ]
+__default_field__ = ("data", "String16M")
+
+class NodeFieldsDelegate(QItemDelegate):
+    def __init__(self, parent):
+        super(NodeFieldsDelegate, self).__init__(parent)
+    def createEditor(self, parent, option, index):
+        if index.column() == 1:
+            editor = QComboBox(parent)
+            editor.addItems(__cool_storage_types__)
+        else:
+            editor = QLineEdit(parent)
+        return editor
+    def setEditorData(self, editor, index):
+        value = index.model().data(index, Qt.EditRole)
+        if index.column() == 1:
+            editor.setCurrentIndex(__cool_storage_types__.index(str(value.toString())))
+        else:
+            editor.setText(value.toString())
+    def setModelData(self, editor, model, index):
+        if index.column() == 1:
+            value = editor.currentText()
+        else:
+            value = editor.text()
+        model.setData(index, QVariant(value), Qt.EditRole)
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
+
+## Class for the management of the list of fields used to create a new node.
+class NodeFieldsModel(QAbstractTableModel):
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, parent = None):
+        super(NodeFieldsModel,self).__init__(parent)
+        self.fields = [__default_field__]
+    ## Number of fields in the range.
+    def rowCount(self, parent = None):
+        return len(self.fields)
+    ## Number of columns in the table. 
+    def columnCount(self, parent = None):
+        return 2
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                return QVariant(self.fields[index.row()][index.column()])
+            elif role == Qt.ToolTipRole:
+                return QVariant()
+        return QVariant()
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return QVariant(("Name", "Type")[section])
+            else:
+                return QVariant()
+        return QVariant()
+    ## Flags for the item (to make the item editable)
+    def flags(self, index):
+        if not index.isValid():
+            return Qt.ItemIsEnabled
+        return QAbstractTableModel.flags(self, index) | Qt.ItemIsEditable
+    ## Handle the changes in the data
+    def setData(self, index, value, role):
+        if (index.isValid() and role == Qt.EditRole):
+            data = list(self.fields[index.row()])
+            data[index.column()] = str(value.toString())
+            self.fields[index.row()] = tuple(data)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            return True
+        return False
+    def insertRows(self, position, parent = QModelIndex()):
+        return self.insertRows(position, 1, parent)
+    def insertRows(self, position, rows, parent = QModelIndex()):
+        self.beginInsertRows(QModelIndex(), position, position+rows-1)
+        count = rows
+        while count > 0:
+            count -= 1
+            self.fields.insert(position, ("field_%d" % (position + count),
+                                          __default_field__[1]))
+        self.endInsertRows()
+        return True
+    def removeRow(self, position, parent = QModelIndex()):
+        return self.removeRows(position, 1, parent)
+    def removeRows(self, position, rows, parent = QModelIndex()):
+        self.beginRemoveRows(QModelIndex(), position, position+rows-1)
+        del self.fields[position:position+rows]
+        self.endRemoveRows()
+        return True

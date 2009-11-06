@@ -20,6 +20,7 @@ from Ui_MainWindow import Ui_MainWindow
 from CondDBUI import CondDB
 
 from Models import *
+from Dialogs import *
 
 import os
 
@@ -120,7 +121,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #iovsmodel.setUntil(self.untilFilterWidget.toValidityKey())
         
         # When created, we have to ensure that everything is grayed out.
-        self._setMainViewEnabled(False)
+        self.emit(SIGNAL("databaseOpen(bool)"), False)
         self.menuEdit.setEnabled(False)
         self.menuAdvanced.setEnabled(False)
         
@@ -141,6 +142,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.setValue("pos", QVariant(self.pos()))
         settings.endGroup()
         
+        settings.setValue("IOVs/UTC", QVariant(self.iovUTCCheckBox.isChecked()))
+        
         settings.beginWriteArray("Recent")
         recents = self.menuRecent.actions()
         i = 0
@@ -158,6 +161,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.resize(settings.value("size", QVariant(QSize(965, 655))).toSize())
         self.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
+        
+        self.iovUTCCheckBox.setChecked(settings.value("IOVs/UTC", QVariant(True)).toBool())
         
         size = settings.beginReadArray("Recent")
         for i in range(size):
@@ -193,7 +198,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ## Slot called by the actions in the menu "Database->Standard".
     #  It can also be called passing the name of one of those databases.
-    def openStandardDatabase(self, name = None):
+    def openStandardDatabase(self, name = None, readOnly = True):
         if name is None:
             sender = self.sender()
         else:
@@ -204,22 +209,29 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                      "The conditions database '%s' is not in the list of known database." % name)
                 return
         # Open the database using the connection string in the action
-        self.openDatabase(str(sender.data().toString()))
+        self.openDatabase(str(sender.data().toString()), readOnly = readOnly)
 
     ## Slot called by the actions in the menu "Database->Recent"
     def openRecentDatabase(self):
         sender = self.sender()
         self.openDatabase(str(sender.text()))
+    
+    ## Open the "create new database" dialog box
+    def newDatabaseDialog(self):
+        dd = NewDatabaseDialog(self)
+        if dd.exec_():
+            connString = str(dd.connectionString())
+            # Create an empty database
+            CondDB(connString, readOnly = False, create_new_db = True)
+            # and open it in read/write mode
+            self.openDatabase(connString, readOnly = False)
         
-    ## Commodity function to enable/disable the main widget (i.e. whatever needs
-    #  to be grayed out when there is no database opened.
-    def _setMainViewEnabled(self, value):
-        value = bool(value)
-        self.actionRead_Only.setEnabled(value)
-        self.actionSlice.setEnabled(value)
-        self.actionDump_to_files.setEnabled(value)
-        self.actionClose.setEnabled(value)
-        self.mainWidget.setEnabled(value)
+    ## Open the "open database" dialog box
+    def openDatabaseDialog(self):
+        dd = OpenDatabaseDialog(self)
+        if dd.exec_():
+            connString = str(dd.connectionString())
+            self.openDatabase(connString, dd.readOnly())
     
     ## Add a connection string to the list of the recent opened databases
     def _addToRecents(self, connString):
@@ -246,7 +258,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.menuRecent.insertAction(self.menuRecent.actions()[0], action)
             # and remove the entries exceeding the maximum
             while len(self.menuRecent.actions()) > self.maxRecentEntries:
-                 self.menuRecent.removeAction(self.menuRecent.actions()[-1])
+                self.menuRecent.removeAction(self.menuRecent.actions()[-1])
         else:
             # otherwise just add the action
             self.menuRecent.addAction(action)
@@ -269,18 +281,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         return
                     raise
                 title = "%s - %s" % (connString, self.appName)
-                self._setMainViewEnabled(True)
+                # Notify the widgets that the database is open
+                self.emit(SIGNAL("databaseOpen(bool)"), True)
+                # Notify the widgets if the database is open in read-only mode
+                editable = not readOnly
+                self.emit(SIGNAL("databaseOpenReadOnly(bool)"), bool(readOnly))
+                self.menuEdit.setEnabled(editable)
+                self.menuAdvanced.setEnabled(editable)
             else:
                 self.db = None
                 title = self.appName
-                self._setMainViewEnabled(False)
+                # Notify the widgets that there is not database open
+                self.emit(SIGNAL("databaseOpen(bool)"), False)
+                self.menuEdit.setEnabled(False)
+                self.menuAdvanced.setEnabled(False)
             self.setWindowTitle(title)
             self._path = None
-            # Change the status of the editing menus
-            editable = not readOnly
-            self.menuEdit.setEnabled(editable)
-            self.menuAdvanced.setEnabled(editable)
-            self.actionRead_Only.setChecked(readOnly)
             # remember the used connection string
             self._connectionString = connString
             self._addToRecents(connString)
@@ -348,24 +364,35 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.emit(SIGNAL("changedPathChannel"), None, None)
 
+    ## Return the cool::FolderSet object currently selected in the structure tree.
+    #  If the selected item is not a FolderSet, the parent is returned.
+    #  If there is not database opened, returns None.
+    def selectedFolderSet(self):
+        if not self.db:
+            return None
+        # Get the FolderSet currently selected in the tree view ("/" if none)
+        idx = self.hierarchyTreeView.currentIndex()
+        while idx.isValid() and idx.internalPointer().leaf:
+            idx = idx.internalPointer().parent.index
+        if idx.isValid():
+            currentFolderSet = idx.internalPointer().node
+        else:
+            currentFolderSet = self.models["tree"].root.node
+        return currentFolderSet
+
     def testSlot(self):
         print "Test slot triggered"
 
     @property
-    def icons(self, styleName = None):
-        if styleName is None:
-            styleName = os.environ.get("CONDDBBROWSER_STYLE", "Plastique")
+    def icons(self):
         if self._icons is None:
             self._icons = {}
-            style = QStyleFactory.create(styleName)
-            if not style:
-                print "Cannot find style '%s'," % styleName,
-                styleName = QStyleFactory.keys()[0]
-                print "trying '%s'." % styleName
-                style = QStyleFactory.create(styleName)
-            
+            style = QApplication.instance().style()            
             for iconName, iconId in [ ("folderset", QStyle.SP_DirIcon),
-                                      ("folder", QStyle.SP_FileIcon) ]:
+                                      ("folder", QStyle.SP_FileIcon),
+                                      ("up", QStyle.SP_ArrowUp),
+                                      ("down", QStyle.SP_ArrowDown),
+                                      ]:
                 self._icons[iconName] = style.standardIcon(iconId)
         return self._icons
 
@@ -394,3 +421,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         msg += traceback.format_exc()
         print msg
         QMessageBox.critical(self, "Exception in Python code", msg)
+    
+    ## Dump a snapshot of the current database to files
+    def dumpToFiles(self):
+        print "dumpToFiles"
+    
+    ## Add a new node to the database
+    def newNodeDialog(self):
+        fs = self.selectedFolderSet()
+        fsname = str(fs.fullPath())
+        if fsname != "/": fsname += "/"
+        d = NewNodeDialog(self)
+        folders = set()
+        foldersets = set()
+        for n in self.models["nodes"].nodes:
+            if self.db.db.existsFolder(n):
+                folders.add(n)
+            else:
+                foldersets.add(n)
+        d.setNodes(folders, foldersets)
+        d.setText(fsname)
+        if d.exec_():
+            print "create '%s' of type %s" % (d.text(), d.getType()),
+            if d.getType() != "FolderSet":
+                print repr(d.fields())
+            else:
+                print              
+        

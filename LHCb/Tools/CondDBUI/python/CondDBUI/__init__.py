@@ -1274,7 +1274,7 @@ class CondDB(object):
 
     dropDatabase = classmethod(dropDatabase)
 
-    def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI", storageKeys = ['data']):
+    def createNode(self, path, description = '', storageType = "XML", versionMode = "MULTI", storageKeys = {'data':'String16M'}):
         '''
         Creates a new node (folder or folderset) in the database.
         inputs:
@@ -1288,8 +1288,11 @@ class CondDB(object):
             versionMode: string; applies to folders only: is it multi version ('MULTI') or single
                          version ('SINGLE') ?
                          -> Default = 'MULTI'
-            storageKeys: list of strings; the keys of the attribute list that will be stored in the folder.
-                         -> Default = ['data']
+            storageKeys: dictionary mapping strings (names) to strings (COOL storage types);
+                         fields that will be stored in the folder.
+                         A list of strings can be used in alternative to the dictionary, in which
+                         case the type defaults to "String16M".
+                         -> Default = {'data': 'String16M'}
         outputs:
             none
         '''
@@ -1305,9 +1308,15 @@ class CondDB(object):
                 folderSpec = cool.FolderSpecification(cool.FolderVersioning.MULTI_VERSION)
             else:
                 folderSpec = cool.FolderSpecification(cool.FolderVersioning.SINGLE_VERSION)
-
+            if type(storageKeys) is list:
+                d = {}
+                for k in storageKeys:
+                    d[k] = "String16M"
+                storageKeys = d
             for key in storageKeys:
-                folderSpec.payloadSpecification().extend(key,cool.StorageType.String16M)
+                folderSpec.payloadSpecification().extend(key,
+                                                         getattr(cool.StorageType,
+                                                                 storageKeys[key]))
 
             # WARNING: this folderdesc stuff is VERY important for LHCb: it tells the CondDB conversion
             #          service which type of converter to call. In this case (storage_type = 7), it calls

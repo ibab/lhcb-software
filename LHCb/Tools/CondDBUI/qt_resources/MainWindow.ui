@@ -579,6 +579,166 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionNew</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newDatabaseDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionOpen</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>openDatabaseDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDump_to_files</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>dumpToFiles()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>actionDump_to_files</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>actionRead_Only</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>actionClose</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>actionSlice</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>mainWidget</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>330</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionRead_Only</receiver>
+   <slot>setChecked(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNew_Node</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newNodeDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -591,6 +751,12 @@
   <slot>reopenDatabase(bool)</slot>
   <slot>sinceChanged(QDateTime)</slot>
   <slot>untilChanged(QDateTime)</slot>
+  <slot>newDatabaseDialog()</slot>
+  <slot>openDatabaseDialog()</slot>
+  <slot>dumpToFiles()</slot>
+  <slot>newNodeDialog()</slot>
   <signal>openedDB(P*)</signal>
+  <signal>databaseOpen(bool)</signal>
+  <signal>databaseOpenReadOnly(bool)</signal>
  </slots>
 </ui>
