@@ -1,10 +1,11 @@
-// $Id: ODINCodecBaseTool.h,v 1.1 2009-02-03 18:31:03 marcocle Exp $
+// $Id: ODINCodecBaseTool.h,v 1.2 2009-11-06 16:47:45 marcocle Exp $
 #ifndef ODIN_CODEC_BASE_TOOL_H
 #define ODIN_CODEC_BASE_TOOL_H
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "GaudiAlg/IGenericTool.h"            // Interface
+#include <vector>
 #include <string>
 
 // Forward declarations
@@ -60,8 +61,14 @@ protected:
   std::string m_odinLocation;
 
   /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
   std::string m_rawEventLocation;
 
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
+
+  /// Flag to indicate if unknown version numbers have to be ignored.
+  bool m_ignoreBankVersion;
 };
 
 #endif

@@ -6,6 +6,7 @@
 
 #include <sstream>
 #include <memory>
+#include <algorithm>
 // from LHCb
 #include "Event/ODIN.h"
 #include "Event/RawBank.h"
@@ -29,6 +30,13 @@ ODINCodecBaseTool::ODINCodecBaseTool( const std::string& type,
   declareProperty("RawEventLocation", m_rawEventLocation = "",
                   "Location of the RawEvent object in the transient store. By "
                   "default is the content of LHCb::RawEventLocation::Default.");
+  declareProperty("RawEventLocations", m_rawEventLocations,
+                  "List of possible locations of the RawEvent object in the"
+                  " transient store. By default it is LHCb::RawEventLocation::Copied,"
+                  " LHCb::RawEventLocation::Default.");
+  declareProperty("IgnoreUnknownBankVersion", m_ignoreBankVersion = false,
+                  "Do not stop in case of unknown bank version number, assuming"
+                  " it is binary compatible with the latest known version.");
 }
 //=============================================================================
 // Destructor
@@ -49,11 +57,21 @@ StatusCode ODINCodecBaseTool::initialize() {
     info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
   }
 
-  if (m_rawEventLocation.empty()) {
-    // use the default
-    m_rawEventLocation = LHCb::RawEventLocation::Default;
-  } else {
-    info() << "Using '" << m_rawEventLocation << "' as location of the RawEvent object" << endmsg;
+  bool usingDefaultLocation = m_rawEventLocations.empty() and m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
   }
 
   return sc; // SUCCESS
@@ -65,6 +83,19 @@ namespace {
   const unsigned int bank_version = 6;
   const size_t bank_size    = 10 * sizeof(int);
   const size_t bank_size_v2 =  9 * sizeof(int);
+
+  namespace PreV6 {
+    enum TriggerType {
+        Reserve            = 0,
+        PhysicsTrigger     = 1,
+        AuxilliaryTrigger  = 2,
+        RandomTrigger      = 3,
+        PeriodicTrigger    = 4,
+        NonZSupTrigger     = 5,
+        TimingTrigger      = 6,
+        CalibrationTrigger = 7
+    };
+  }
 }
 //=============================================================================
 // Decode
@@ -88,7 +119,7 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
 
   // Validate bank version
   const unsigned int version = bank->version();
-  if (version > bank_version) {
+  if ((version > bank_version) && ! m_ignoreBankVersion) {
     std::ostringstream msg;
     msg << "Unknown ODIN bank version " << version << ", latest known is " << bank_version;
     //Exception(msg.str()); // throw
@@ -120,7 +151,11 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   odin->setEventNumber((temp64 << 32) + odinData[LHCb::ODIN::L0EventIDLo]);
 
   temp64 = odinData[LHCb::ODIN::GPSTimeHi];
-  odin->setGpsTime ((temp64 << 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+  if (version <= 5) {
+    odin->setGpsTime ((temp64 << 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+  } else {
+    odin->setGpsTime (temp64 * 1000000ull + odinData[LHCb::ODIN::GPSTimeLo]);
+  }
 
   temp32 = odinData[LHCb::ODIN::Word7];
   odin->setDetectorStatus( (temp32 & LHCb::ODIN::DetectorStatusMask) >> LHCb::ODIN::DetectorStatusBits );
@@ -128,7 +163,31 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
 
   temp32 = odinData[LHCb::ODIN::Word8];
   odin->setBunchId( (temp32 & LHCb::ODIN::BunchIDMask) >> LHCb::ODIN::BunchIDBits );
-  odin->setTriggerType( (temp32 & LHCb::ODIN::TriggerTypeMask) >> LHCb::ODIN::TriggerTypeBits );
+  if (version <= 5) {
+    switch ((temp32 & LHCb::ODIN::TriggerTypeMask) >> LHCb::ODIN::TriggerTypeBits) {
+    case PreV6::Reserve            :
+    case PreV6::PhysicsTrigger     : odin->setTriggerType(LHCb::ODIN::PhysicsTrigger);     break;
+    case PreV6::AuxilliaryTrigger  : odin->setTriggerType(LHCb::ODIN::AuxiliaryTrigger);   break;
+    case PreV6::RandomTrigger      : odin->setTriggerType(LHCb::ODIN::LumiTrigger);        break;
+    case PreV6::PeriodicTrigger    : odin->setTriggerType(LHCb::ODIN::TechnicalTrigger);   break;
+    case PreV6::NonZSupTrigger     : odin->setTriggerType(LHCb::ODIN::NonZSupTrigger);     break;
+    case PreV6::TimingTrigger      : odin->setTriggerType(LHCb::ODIN::TimingTrigger);      break;
+    case PreV6::CalibrationTrigger : odin->setTriggerType(LHCb::ODIN::CalibrationTrigger); break;
+    default                        : odin->setTriggerType(LHCb::ODIN::PhysicsTrigger);     break;
+    }
+  } else {
+    switch ((temp32 & LHCb::ODIN::TriggerTypeMask) >> LHCb::ODIN::TriggerTypeBits) {
+    case 0 : odin->setTriggerType(LHCb::ODIN::PhysicsTrigger);     break;
+    case 1 : odin->setTriggerType(LHCb::ODIN::BeamGasTrigger);     break;
+    case 2 : odin->setTriggerType(LHCb::ODIN::LumiTrigger);        break;
+    case 3 : odin->setTriggerType(LHCb::ODIN::TechnicalTrigger);   break;
+    case 4 : odin->setTriggerType(LHCb::ODIN::AuxiliaryTrigger);   break;
+    case 5 : odin->setTriggerType(LHCb::ODIN::NonZSupTrigger);     break;
+    case 6 : odin->setTriggerType(LHCb::ODIN::TimingTrigger);      break;
+    case 7 : odin->setTriggerType(LHCb::ODIN::CalibrationTrigger); break;
+    default: odin->setTriggerType(LHCb::ODIN::PhysicsTrigger);     break;
+    }
+  }
 
   if (version >= 5) {
     switch ( (temp32 & LHCb::ODIN::CalibrationTypeMask) >> LHCb::ODIN::CalibrationTypeBits ) {
@@ -204,15 +263,29 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
   data[LHCb::ODIN::OrbitNumber] = odin->orbitNumber();
   data[LHCb::ODIN::L0EventIDHi] = (unsigned int) ((odin->eventNumber() >> 32) & 0xFFFFFFFF );
   data[LHCb::ODIN::L0EventIDLo] = (unsigned int) ((odin->eventNumber()) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeHi]   = (unsigned int) ((odin->gpsTime() >> 32) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeLo]   = (unsigned int) ((odin->gpsTime()) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeHi]   = (unsigned int) ((odin->gpsTime() / 1000000ull) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeLo]   = (unsigned int) ((odin->gpsTime() % 1000000ull) & 0xFFFFFFFF );
 
   data[LHCb::ODIN::Word7] = (unsigned int) ( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
                                              ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
 
+  // This conversion is needed to be able to disentagle the enum internal (C) representation
+  // from the hardware ODIN bit codes.
+  int triggerType = 0;
+  switch (odin->triggerType()) {
+  case LHCb::ODIN::PhysicsTrigger     : triggerType = 0; break;
+  case LHCb::ODIN::BeamGasTrigger     : triggerType = 1; break;
+  case LHCb::ODIN::LumiTrigger        : triggerType = 2; break;
+  case LHCb::ODIN::TechnicalTrigger   : triggerType = 3; break;
+  case LHCb::ODIN::AuxiliaryTrigger   : triggerType = 4; break;
+  case LHCb::ODIN::NonZSupTrigger     : triggerType = 5; break;
+  case LHCb::ODIN::TimingTrigger      : triggerType = 6; break;
+  case LHCb::ODIN::CalibrationTrigger : triggerType = 7; break;
+  }
+
   data[LHCb::ODIN::Word8] = ((odin->bunchId() << LHCb::ODIN::BunchIDBits) & LHCb::ODIN::BunchIDMask) |
                             ((odin->timeAlignmentEventWindow() << LHCb::ODIN::TAEWindowBits) & LHCb::ODIN::TAEWindowMask) |
-                            ((odin->triggerType() << LHCb::ODIN::TriggerTypeBits) & LHCb::ODIN::TriggerTypeMask) |
+                            ((triggerType << LHCb::ODIN::TriggerTypeBits) & LHCb::ODIN::TriggerTypeMask) |
                             ((odin->calibrationType() << LHCb::ODIN::CalibrationTypeBits) & LHCb::ODIN::CalibrationTypeMask) |
                             ((odin->forceBit() << LHCb::ODIN::ForceBits) & LHCb::ODIN::ForceMask) |
                             ((odin->bunchCrossingType() << LHCb::ODIN::BXTypeBits) & LHCb::ODIN::BXTypeMask) |
@@ -223,3 +296,4 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
   return bank; // pass the ownership to the caller
 }
 //=============================================================================
+

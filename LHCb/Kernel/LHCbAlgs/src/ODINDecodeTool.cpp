@@ -1,6 +1,7 @@
-// $Id: ODINDecodeTool.cpp,v 1.1 2009-02-03 18:31:03 marcocle Exp $
+// $Id: ODINDecodeTool.cpp,v 1.2 2009-11-06 16:47:45 marcocle Exp $
 // Include files
 #include "ODINCodecBaseTool.h"
+#include "GaudiKernel/SerializeSTL.h"
 
 /** @class ODINDecodeTool ODINDecodeTool.h
  *
@@ -73,8 +74,20 @@ void ODINDecodeTool::execute() {
     }
   }
 
-  debug() << "Getting " << m_rawEventLocation << endmsg;
-  LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(m_rawEventLocation);
+  debug() << "Getting RawEvent" << endmsg;
+  LHCb::RawEvent* rawEvent = NULL;
+  for (std::vector<std::string>::const_iterator p = m_rawEventLocations.begin(); p != m_rawEventLocations.end(); ++p) {
+    if (exist<LHCb::RawEvent>(*p)){
+      rawEvent = get<LHCb::RawEvent>(*p);
+    }
+  }
+  if (!rawEvent) {
+    using namespace GaudiUtils;
+    // Throw a meaningful exception it the bank is not found;
+    std::ostringstream out;
+    out << "Cannot find RawEvent in " << m_rawEventLocations;
+    Exception(out.str(), StatusCode(StatusCode::FAILURE, true));
+  }
 
   // Check if have an ODIN bank...
   const std::vector<LHCb::RawBank*>& odinBanks = rawEvent->banks(LHCb::RawBank::ODIN);

@@ -4,6 +4,12 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Marco Clemencic
+ - Modified the ODINCodecBaseTool to look for the RawEvent bank in more than one
+   place, always including LHCb::RawEventLocation::Copied, LHCb::RawEventLocation::Default.
+   The decoding has been modified to use the new definition of the trigger types
+   ODIN class (which now is only transient).
+
 !======================== LHCbAlgs v2r29p1 2009-10-22 ========================
 ! 2009-10-22 - Marco Clemencic
  - Modified the ODINCodecBaseTool to accept ODIN bank version 6 (no change in
