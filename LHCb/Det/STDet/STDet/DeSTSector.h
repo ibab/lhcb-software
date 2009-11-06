@@ -1,4 +1,4 @@
-// $Id: DeSTSector.h,v 1.44 2009-10-28 15:00:20 jluisier Exp $
+// $Id: DeSTSector.h,v 1.45 2009-11-06 12:31:20 mneedham Exp $
 #ifndef _DeSTSector_H_
 #define _DeSTSector_H_
 
@@ -11,6 +11,7 @@
 #include "Kernel/STChannelID.h"
 #include "Kernel/LHCbConstants.h"
 #include "STDet/DeSTBaseElement.h"
+#include "STDet/DeSTSensor.h"
 
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
@@ -247,15 +248,20 @@ public:
                   double& xAtYEq0, double& zAtYEq0, double& ybegin, double& yend) const ;
 
   /**
-   * @return capacitance
+   * @return total capacitance
+   * ie sensors, cable + pitch adaptor
    */
   double capacitance() const;
+
+  /** 
+   * @return sensor Capacitance
+   */
+  double sensorCapacitance() const; 
 
   /** strip length
    * @return strip length
    */
   double stripLength() const;
-
 
   /** thickness
    * @return double thickness
@@ -520,6 +526,11 @@ inline bool DeSTSector::isStrip(const unsigned int strip) const {
 
 inline double DeSTSector::capacitance() const{
   return m_capacitance;
+}
+
+inline double DeSTSector::sensorCapacitance() const{
+  const Sensors& theSensors = sensors();
+  return theSensors.size() * theSensors.front()->capacitance(); ;
 }
 
 inline double DeSTSector::stripLength() const {

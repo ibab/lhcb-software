@@ -1,4 +1,4 @@
-// $Id: DeSTSensor.h,v 1.6 2009-03-14 09:18:07 mneedham Exp $
+// $Id: DeSTSensor.h,v 1.7 2009-11-06 12:31:20 mneedham Exp $
 #ifndef _DeSTSensor_H_
 #define _DeSTSensor_H_
 
@@ -6,7 +6,7 @@
 #include <memory> // for auto_ptr with gcc 4.3
 
 #include "Kernel/STChannelID.h"
-
+#include "GaudiKernel/SystemOfUnits.h"
 #include "STDet/DeSTBaseElement.h"
 #include "GaudiKernel/Plane3DTypes.h"
 #include "LHCbMath/LineTypes.h"
@@ -155,6 +155,9 @@ public:
   **/
   double activeWidth() const;
 
+  /**  sensor capacitance **/
+  double capacitance() const;
+
   /** print to stream */
   std::ostream& printOut( std::ostream& os ) const;
 
@@ -237,6 +240,12 @@ inline double DeSTSensor::activeWidth() const{
 
 inline double DeSTSensor::activeHeight() const{
   return fabs(m_vMinLocal - m_vMaxLocal);
+}
+
+inline double DeSTSensor::capacitance() const {
+  // by chance the CMS and LHCb sensors have same capacitance
+  static const double rho = 1.4 * Gaudi::Units::picofarad/Gaudi::Units::cm;
+  return rho * activeHeight();
 }
 
 inline Gaudi::Plane3D DeSTSensor::plane() const {

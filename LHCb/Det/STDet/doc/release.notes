@@ -1,7 +1,10 @@
-!$Id: release.notes,v 1.183 2009-10-28 15:00:20 jluisier Exp $
+!$Id: release.notes,v 1.184 2009-11-06 12:31:20 mneedham Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
+
+! 2009-11-6 M Needham
+ - Add sensor capacitance methods
 
 ! 2009-10-28 J Luisier
  - Bug fix in setNoise, setCMnoise and setADCConversion methods
