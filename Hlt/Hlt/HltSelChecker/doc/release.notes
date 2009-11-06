@@ -19,6 +19,11 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Patrick Koppenburg
+ - Remove Hlt1Global and Hlt2Global from correlation table. They are meaningless
+ - But all routing bits instead
+ = v10r1
+
 !========================== HltSelChecker v10r0 2009-10-28 ===================
 ! 2009-10-28 - Patrick Koppenburg
  - Fix or remove a few decay descriptors

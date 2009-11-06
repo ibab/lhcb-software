@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.h,v 1.1 2009-10-15 12:32:16 pkoppenb Exp $
+// $Id: HltCorrelations.h,v 1.2 2009-11-06 13:49:40 pkoppenb Exp $
 #ifndef HLTCORRELATIONS_H 
 #define HLTCORRELATIONS_H 1
 
@@ -28,6 +28,12 @@ private:
   StatusCode fillResult(std::string sel, const LHCb::HltDecReports* decReports){
     return (m_algoCorr->fillResult(sel,(decReports->decReport(sel))? 
                                    (decReports->decReport(sel)->decision()):0));
+  }
+  // bitx
+  std::string bitX(unsigned int i){
+    char buffer[2];
+    _itoa (i,buffer,10);
+    return std::string("Bit"+std::string(buffer));
   }
 
 private:

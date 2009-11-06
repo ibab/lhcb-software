@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.1 2009-10-15 12:32:16 pkoppenb Exp $
+// $Id: HltCorrelations.cpp,v 1.2 2009-11-06 13:49:40 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -8,6 +8,9 @@
 #include "LoKi/AlgFunctors.h"
 #include "Event/L0DUReport.h"
 #include "Event/HltDecReports.h"
+#include "Kernel/ReadRoutingBits.h"
+#include "GaudiKernel/xtoa.h"
+
 
 // local
 #include "HltCorrelations.h"
@@ -54,10 +57,12 @@ StatusCode HltCorrelations::initialize() {
   const hltPairs& sels = HltSelectionsBase::selections();
 
   algos.push_back("L0");
-  algos.push_back("Hlt1Global");
-  algos.push_back("Hlt1IgnoringLumiDecision");
-  algos.push_back("Hlt2Global");
-  
+
+  // trigger bits
+  for ( unsigned int i = 32 ; i!=96 ; i++){
+    algos.push_back(bitX(i));
+  }
+  // trigger lines
   for ( hltPairs::const_iterator p = sels.begin() ; p!= sels.end() ; ++p){
     bool duplicate = false ;
     for ( strings::const_iterator i=algos.begin() ; i!=algos.end() ; ++i){
@@ -94,14 +99,20 @@ StatusCode HltCorrelations::execute() {
     StatusCode sc = m_algoCorr->fillResult("L0",report->decision());
     if (!sc) return sc;
   }
+
+  // bits
+  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
+    LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
+    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,32,95);
+    for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
+      if (!m_algoCorr->fillResult(bitX(*i),true));
+    } 
+  }
   
+  // decreports
   if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
     const LHCb::HltDecReports* decReports = 
       get<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default );
-
-    if (!fillResult("Hlt1Global",decReports)) return StatusCode::FAILURE;
-    if (!fillResult("Hlt2Global",decReports)) return StatusCode::FAILURE;
-    if (!fillResult("Hlt1IgnoringLumiDecision",decReports)) return StatusCode::FAILURE;
     
     hltPairs sels = HltSelectionsBase::selections();
     
