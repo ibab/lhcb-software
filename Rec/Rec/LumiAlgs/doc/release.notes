@@ -4,6 +4,10 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+
+! 2009-11-06 - Jaap Panman
+ - move to new odin TriggerType definitions
+
 !========================== LumiAlgs v2r3 2009-10-20 =========================
 ! 2009-10-20 - Jaap Panman
  - remove small memory leak in LumiAccounting::finalize()

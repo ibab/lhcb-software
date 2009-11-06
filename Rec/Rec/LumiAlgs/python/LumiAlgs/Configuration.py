@@ -10,6 +10,7 @@ __author__  = ""
 from Gaudi.Configuration  import *
 import GaudiKernel.ProcessJobOptions
 from Configurables import LHCbConfigurableUser 
+from Configurables import LoKi__ODINFilter  as ODINFilter
     
 # -------------------------------------------------------------------------------------------
 
@@ -32,7 +33,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
     ## Apply the configuration to the given sequence
     def applyConf(self):
-        from Configurables import ( OdinTypesFilter, LumiAccounting,
+        from Configurables import ( LumiAccounting,
                                     HltLumiSummaryDecoder, GaudiSequencer )
         debugOPL = INFO
          
@@ -50,10 +51,8 @@ class LumiAlgsConf(LHCbConfigurableUser):
         BXMembers = []
         for i in crossings:
             seqMembers=[]
-            seqMembers.append( OdinTypesFilter('Filter'+i,
-                                               TriggerTypes=['RandomTrigger'],
-                                               BXTypes=[i],
-                                               OutputLevel = debugOPL ))
+            seqMembers.append( ODINFilter ( 'Filter'+i,
+                                            Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+i+' ) ' ))
             decoder = HltLumiSummaryDecoder('LumiDecode'+i, OutputLevel = debugOPL )
             seqMembers.append( decoder )
             accounting = LumiAccounting('LumiCount'+i,
