@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -24,11 +24,11 @@ class Hlt1CommissioningLinesConf(HltLinesConfigurableUser):
                }
    def __apply_configuration__(self):
         from HltLine.HltLine import Hlt1Line   as Line
-        Line('NonRandomODIN' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.RandomTrigger'
+        Line('NonRandomODIN' ,  ODIN = 'ODIN_TRGTYP != LHCb.ODIN.LumiTrigger'
             , prescale = self.prescale
             , postscale = self.postscale
             )
-        Line('RandomODIN' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.RandomTrigger'
+        Line('RandomODIN' ,  ODIN = 'ODIN_TRGTYP == LHCb.ODIN.LumiTrigger'
             , prescale = self.prescale
             , postscale = self.postscale
             )

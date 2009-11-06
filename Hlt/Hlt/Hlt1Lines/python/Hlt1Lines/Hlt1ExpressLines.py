@@ -14,7 +14,7 @@ class Hlt1ExpressLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line as Line
         from HltLine.HltDecodeRaw import DecodeVELO
         Line( 'AlignVelo' # do _not_ start with Velo, as those are assumed to be closing lines...
-            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
+            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )"
             , prescale = self.prescale
             , postscale = self.postscale
             , algos = [ DecodeVELO
@@ -23,7 +23,7 @@ class Hlt1ExpressLinesConf(HltLinesConfigurableUser) :
             )
 
         Line( 'XPress' 
-            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )"
+            , ODIN = "( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )"
             , prescale = self.prescale
             , postscale = self.postscale
             )

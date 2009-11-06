@@ -1,7 +1,11 @@
-!$Id: release.notes,v 1.52 2009-09-14 07:24:03 graven Exp $
+!$Id: release.notes,v 1.53 2009-11-06 16:09:48 panmanj Exp $
 Package     : Hlt/HltGlobalMonitor
 Package Coordinator : Bruno Souza de Paula 
 Purpose     : LHCb HLT Global Monitoring
+
+
+! 2009-11-06 - Jaap Panman
+ - move to new odin TriggerType definitions
 
 !========================== HltGlobalMonitor v2r6p2 2009-09-14 ===================
 ! 2009-09-14 - Gerhard Raven

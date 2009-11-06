@@ -38,7 +38,7 @@ def _combine( op, arg ) :
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
-    __slots__ = { 'TriggerTypes'         : ['RandomTrigger']  # ODIN trigger type accepted
+    __slots__ = { 'TriggerTypes'         : ['LumiTrigger']  # ODIN trigger type accepted
                 , 'BXTypes'              : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'            : ['Count','VDM']
                 , 'FullReco'             : True
@@ -67,7 +67,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
                                     , MeasureTime = True)
-
+1
         # define empty sequence to collect counters
         seqCountName = 'LumiCount'
         lumiCountSequence = Sequence(seqCountName+BXType +'Seq'
@@ -151,7 +151,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line   as Line
         return Line ( 'Lumi'+BXType
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
+                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
                     , algos = [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
                     , postscale = self.postscale
                     ) 
@@ -171,7 +171,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
 ##         from Configurables import LumiHistoCurrents    #This code should be here, to produce 2 plots, not 8!  Commented for a while...
 ##         LumiCurrentsMonitor = Line ( 'LumiCurMoni'
 ##                                      , prescale = self.prescale
-##                                      , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.RandomTrigger ) '
+##                                      , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) '
 ##                                      , algos = [
 ##             LumiHistoCurrents('LumiCurrentMoni')
 ##             ] 

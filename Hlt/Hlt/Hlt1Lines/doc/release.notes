@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.50 2009-11-04 16:53:42 gligorov Exp $
+! $Id: release.notes,v 1.51 2009-11-06 16:08:10 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-06 - Jaap Panman
+ - move to new odin TriggerType definitions
 
 ! 2009-11-04 - V. Gligorov
  - Added Hlt1HadronViaTLines.py, an implementation of the hadron alley in which

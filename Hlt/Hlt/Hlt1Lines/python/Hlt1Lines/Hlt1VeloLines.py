@@ -7,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 #
@@ -20,7 +20,7 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
-               , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.RandomTrigger )" # on what trigger types do we run?
+               , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )" # on what trigger types do we run?
                }
 
    def __apply_configuration__(self):

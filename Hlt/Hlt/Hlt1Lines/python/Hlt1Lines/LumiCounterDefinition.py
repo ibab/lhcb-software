@@ -27,7 +27,9 @@ class LumiCounterDefinitionConf(LHCbConfigurableUser) :
     self.Definition  = {
       # 'Velo'     : [LumiCountTracks   , fullReco, 'Hlt/Track/Velo'  ,   5,  200],
       'RZVelo'   : [LumiCountTracks   , fullReco, 'Hlt/Track/RZVelo',   5,  200],
-      'Muon'     : [LumiCountTracks   , False   , 'Rec/Tracks/Muons',   5,  200],
+      'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200],
+      'TTIP'     : [LumiCountTracks   , False   , 'Hlt/Track/TTIP'  ,   5,  200],
+      'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  200],
       'PV2D'     : [LumiCountVertices , fullReco, 'Hlt/Vertex/PV2D' ,   1,   20],
       'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20],
       'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200],

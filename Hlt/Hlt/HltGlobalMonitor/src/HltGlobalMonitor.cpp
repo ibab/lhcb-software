@@ -1,4 +1,4 @@
-// $Id: HltGlobalMonitor.cpp,v 1.45 2009-09-11 15:01:58 graven Exp $
+// $Id: HltGlobalMonitor.cpp,v 1.46 2009-11-06 16:09:48 panmanj Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -90,13 +90,14 @@ StatusCode HltGlobalMonitor::initialize() {
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
   m_L0Input         = book1D("L0 channel",-0.5,18.5,19);
+  // this code may break when the enums are no longer directly exposing the hardware
   m_odin            = book1D("ODIN trigger type",  "ODIN trigger Type ",-0.5, 7.5, 8);
   std::vector<std::pair<unsigned,std::string> > odinLabels = boost::assign::list_of< std::pair<unsigned,std::string> >
-                (ODIN::Reserve,           "Reserve")
                 (ODIN::PhysicsTrigger,    "Physics")
-                (ODIN::AuxilliaryTrigger, "Auxilliary")
-                (ODIN::RandomTrigger,     "Random")
-                (ODIN::PeriodicTrigger,   "Periodic")
+                (ODIN::BeamGasTrigger,    "BeamGas")
+                (ODIN::LumiTrigger,       "Lumi")
+                (ODIN::TechnicalTrigger,  "Technical")
+                (ODIN::AuxiliaryTrigger,  "Auxiliary")
                 (ODIN::NonZSupTrigger,    "NonZSup")
                 (ODIN::TimingTrigger,     "Timing")
                 (ODIN::CalibrationTrigger,"Calibration");
@@ -196,8 +197,8 @@ void HltGlobalMonitor::monitorODIN(const LHCb::ODIN* odin,
   unsigned long long gpstime=odin->gpsTime();
   if (msgLevel(MSG::DEBUG)) debug() << "gps time" << gpstime << endreq;
   m_gpstimesec=int(gpstime/1000000-904262401);
-  counter("ODIN::Random")    += (odin->triggerType()==ODIN::RandomTrigger);
-  counter("ODIN::NotRandom") += (odin->triggerType()!=ODIN::RandomTrigger);
+  counter("ODIN::Random")    += (odin->triggerType()==ODIN::LumiTrigger);
+  counter("ODIN::NotRandom") += (odin->triggerType()!=ODIN::LumiTrigger);
   fill(m_odin, odin->triggerType(), 1.);
   if ( hlt == 0 ) return;
 
