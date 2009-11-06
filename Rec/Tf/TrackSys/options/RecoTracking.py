@@ -135,7 +135,6 @@ if "TsaSeed" in trackAlgs or "PatSeed" in trackAlgs :
    if not TrackSys().cosmics() :
       GaudiSequencer("TrackSeedFitSeq").Members += [ConfiguredFitSeed()]
    else :
-      from Configurables import TrackCosmicsSeedT0Alg
       cosmicsSeedFit = ConfiguredStraightLineFit( Name = "FitSeedCosmics",
                                                   TracksInContainer = "Rec/Track/Seed" )
       GaudiSequencer("TrackSeedFitSeq").Members.append(cosmicsSeedFit)
