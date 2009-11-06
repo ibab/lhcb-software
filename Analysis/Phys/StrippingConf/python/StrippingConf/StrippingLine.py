@@ -38,13 +38,23 @@ def memberName     ( member, line, level='Stripping' ) :
     """ Convention: the generic name of 'member' algorithm inside StrippingLine """
     return '%s%s%s'%(level,line,member.subname())
 
+## Convention: the name of 'ODINFilter' algorithm inside StrippingLine
+def odinentryName    ( line, level = 'Stripping' ) :
+    """ Convention: the name of 'ODINFilter' algorithm inside HltLine """
+    return '%s%sODINFilter'   % (level,line)
+
+## Convention: the name of 'L0DUFilter' algorithm inside StrippingLine
+def l0entryName    ( line, level = 'StrippingLine' ) :
+    """ Convention: the name of 'L0DUFilter' algorithm inside HltLine """
+    return '%s%sL0DUFilter'   % (level,line)
+
 ## Convention: the name of 'HLTFilter' algorithm inside StrippingLine
 def hltentryName    ( line, level = 'Stripping' ) :
     """ Convention: the name of 'HLTFilter' algorithm inside StrippingLine """
     return '%s%sHltFilter'   % (level,line)
 
 # Own slots of StrippingLine
-_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'HLT' , 'algos' ) 
+_myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'algos' ) 
 
 class bindMembers (object) :
     """
@@ -257,6 +267,8 @@ class StrippingLine(object):
     def __init__ ( self             ,
                    name             ,   # the base name for the Line
                    prescale  = 1    ,   # prescale factor
+                   ODIN      = None ,   # ODIN predicate
+                   L0DU      = None ,   # L0DU predicate
                    HLT       = None ,   # HltDecReports predicate
                    checkPV   = True ,   # Check PV before running algos 
                    algos     = []   ,   # the list of algorithms/members
@@ -265,6 +277,8 @@ class StrippingLine(object):
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )
+        ODIN  = deepcopy ( ODIN  )
+        L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
@@ -273,6 +287,8 @@ class StrippingLine(object):
         if callable(prescale) : prescale = prescale( self.name() )
         self._prescale  = prescale
         
+        self._ODIN      = ODIN
+        self._L0DU      = L0DU
         self._HLT       = HLT
         self._checkPV   = checkPV
         
@@ -300,6 +316,8 @@ class StrippingLine(object):
         args    = self._args
         algos   = self._algos
         checkPV = self._checkPV
+        ODIN    = self._ODIN
+        L0DU    = self._L0DU
         HLT     = self._HLT
 
         mdict = {} 
@@ -327,6 +345,8 @@ class StrippingLine(object):
                       , 'Postscale'    : Scaler(    postscalerName ( line,'Stripping' ) , AcceptFraction = self._postscale ) 
                       } )
 
+        if ODIN : mdict.update( { 'ODIN' : ODINFilter ( odinentryName( line ) , Code = self._ODIN )  } )
+        if L0DU : mdict.update( { 'L0DU' : L0Filter   ( l0entryName  ( line ) , Code = self._L0DU )  } )
         if HLT  : mdict.update( { 'HLT'  : HDRFilter  ( hltentryName ( line ) , Code = self._HLT  ) } )
         if _members : 
             mdict.update( { 'Filter' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = _members ) } )
@@ -419,6 +439,8 @@ class StrippingLine(object):
         # Explictly copy all major structural parameters 
         __name       = deepcopy ( name        )
         __prescale   = deepcopy ( args.get ( 'prescale'  , self._prescale  ) ) 
+        __ODIN       = deepcopy ( args.get ( 'ODIN'      , self._ODIN      ) )        
+        __L0DU       = deepcopy ( args.get ( 'L0DU'      , self._L0DU      ) )        
         __HLT        = deepcopy ( args.get ( 'HLT'       , self._HLT       ) )        
         __checkPV    = deepcopy ( args.get ( 'checkPV'   , self._checkPV   ) )        
         __postscale  = deepcopy ( args.get ( 'postscale' , self._postscale ) ) 
@@ -448,6 +470,8 @@ class StrippingLine(object):
 
         return StrippingLine ( name      = __name       ,
                                prescale  = __prescale   ,
+                               ODIN      = __ODIN       ,
+                               L0DU      = __L0DU       ,
                                HLT       = __HLT        ,
                                checkPV   = __checkPV    ,
                                postscale = __postscale  ,
