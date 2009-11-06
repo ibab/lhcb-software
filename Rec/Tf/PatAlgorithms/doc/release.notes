@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-11-06 Stephanie Hansmann-Menzemer
+ - Fix for unitialized member variable in PatForwardTool
 
 !========================= PatAlgorithms v3r23 2009-10-20 ====================
 ! 2009-10-13 Sascha Stahl

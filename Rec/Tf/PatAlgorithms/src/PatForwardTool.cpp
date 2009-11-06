@@ -1,4 +1,4 @@
-// $Id: PatForwardTool.cpp,v 1.15 2009-05-06 15:35:32 smenzeme Exp $
+// $Id: PatForwardTool.cpp,v 1.16 2009-11-06 20:23:27 smenzeme Exp $
 // Include files
 
 // from Gaudi
@@ -33,7 +33,8 @@ DECLARE_TOOL_FACTORY( PatForwardTool );
 PatForwardTool::PatForwardTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
-  : GaudiTool ( type, name , parent )
+    : GaudiTool ( type, name , parent ),
+      m_nnSwitch(false)
 {
   declareInterface<IPatForwardTool>(this);
   declareInterface<ITracksFromTrack>(this);
