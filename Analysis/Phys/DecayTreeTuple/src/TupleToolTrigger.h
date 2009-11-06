@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.h,v 1.9 2009-11-05 18:14:45 pkoppenb Exp $
+// $Id: TupleToolTrigger.h,v 1.10 2009-11-06 13:25:53 pkoppenb Exp $
 #ifndef JBOREL_TUPLETOOLTRIGGER_H
 #define JBOREL_TUPLETOOLTRIGGER_H 1
 
@@ -38,13 +38,11 @@ private:
   StatusCode fillHlt( Tuples::Tuple&, const std::string &, bool );
   StatusCode fillRoutingBits( Tuples::Tuple& );
  
-  bool m_fillHlt;
-  bool m_fillL0;
+  bool m_fillHlt;     ///< fill Hlt
+  bool m_fillL0;      ///< fill L0
   bool m_verboseL0;     ///< get details on L0
   bool m_verboseHlt1; ///< get details on Hlt1
   bool m_verboseHlt2; ///< get details on Hlt2
-  //  std::string m_hlt1MajorKey ; ///< Major key of Hlt1 in HltANNSvc
-  //  std::string m_hlt2MajorKey ; ///< Major key of Hlt2 in HltANNSvc
   bool  m_allSteps ; ///< Fill also intermediate steps
   bool m_fillGlobal ; ///< Fill Hlt1Global and Hlt2Global (backward-compatible mode)
   std::vector<unsigned int> m_routingBits ; ///< Routing bits to fill

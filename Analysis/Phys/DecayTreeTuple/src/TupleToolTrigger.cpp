@@ -1,4 +1,4 @@
-// $Id: TupleToolTrigger.cpp,v 1.15 2009-11-05 18:11:45 pkoppenb Exp $
+// $Id: TupleToolTrigger.cpp,v 1.16 2009-11-06 13:25:53 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -13,9 +13,7 @@
 
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
-#include "Event/RawEvent.h" 
-#include "Event/RawBank.h" 
-#include <boost/dynamic_bitset.hpp>
+#include "Kernel/ReadRoutingBits.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TriggerTupleTool
@@ -141,30 +139,8 @@ StatusCode TupleToolTrigger::fillHlt( Tuples::Tuple& tuple, const std::string & 
 //============================================================================
 StatusCode TupleToolTrigger::fillRoutingBits( Tuples::Tuple& tuple ) {
   if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
-    const unsigned int size = 3 ;
-    const unsigned int byte = 8 ;
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
-    const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
-    if (banks.size()!=1) {
-      return Error("Unexpected # of HltRoutingBits rawbanks",StatusCode::FAILURE,0);
-    }
-    if (banks.front()->size()!=size*sizeof(unsigned int)) {
-      return Error("Unexpected HltRoutingBits rawbank size",StatusCode::FAILURE,0);
-    }
-    const unsigned int *data = banks.front()->data();
-    boost::dynamic_bitset<unsigned int> x(byte*sizeof(unsigned int), data[0]);
-    x.append(data[1]);
-    x.append(data[2]);
-
-    if (msgLevel(MSG::DEBUG)) info() << "Routing Bits : " << x << endmsg ;
-    
-    std::vector<unsigned int> yes ;
-    for ( std::vector<unsigned int>::const_iterator j = m_routingBits.begin() ; j != m_routingBits.end() ; ++j){
-      //      if (msgLevel(MSG::VERBOSE)) verbose()
-      if (msgLevel(MSG::VERBOSE)) verbose()  << "Trying bit " << *j  << " " << x[*j] << endmsg ;
-      if ( x[*j] ) yes.push_back(*j); // accepted
-      //        test &= 
-    }
+    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_routingBits);
     if (!tuple->farray("RoutingBits", yes, "MaxRoutingBits" , m_routingBits.size() )) return StatusCode::FAILURE ;
   }
   return StatusCode::SUCCESS ;

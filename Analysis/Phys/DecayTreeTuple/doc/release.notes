@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-06 - Patrick Koppenburg
+ - Moved implemetation of Hlt routing bits reading to HltInterfaces
+
 ! 2009-11-05 - Patrick Koppenburg
  - TupleToolTrigger:
    . Do not fill Hlt1Global and Hlt2Global anymore (by default). They are confusing.
