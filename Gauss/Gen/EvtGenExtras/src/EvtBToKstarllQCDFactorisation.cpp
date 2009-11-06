@@ -137,6 +137,8 @@ void QCDFactorisation::init(){
 		std::cout << "Rate averaged AFB_[1,6] is: " << intAFB_1_6 << std::endl;
 		const double intFL_1_6 = constrain.getFLIntegral();
 		std::cout << "Rate averaged FL_[1,6] is: " << intFL_1_6 << std::endl;
+		const double intS5_1_6 = constrain.getS5Integral();
+		std::cout << "Rate averaged S5_[1,6] is: " << intS5_1_6 << std::endl;
 	}
 	
 #if 0

@@ -40,6 +40,7 @@ public:
 	const std::pair<double, double> getS6Zero() const;
 	double getAFBIntegral() const;
 	double getFLIntegral() const;
+	double getS5Integral() const;
 
 private:
 
@@ -87,7 +88,7 @@ private:
 	
 	double getJ4(const double q2) const;
 	double getJ5(const double q2) const;
-  double getJ6(const double q2) const;
+	double getJ6(const double q2) const;
 	double getAFB(const double q2) const;
 	double getFL(const double q2) const;
 	double getGamma(const double q2) const;

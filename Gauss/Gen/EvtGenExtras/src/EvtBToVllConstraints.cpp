@@ -648,6 +648,30 @@ double EvtBToVllConstraints::getFLIntegral() const{
 	
 }
 
+double EvtBToVllConstraints::getS5Integral() const{
+
+	//hack to get const correctness
+	class s5_utils{
+	public:
+		s5_utils(const EvtBToVllConstraints* _calc):calc(_calc){
+		}
+		static double getValue(const double q2, void* params){
+			const s5_utils* c = (s5_utils*)params;
+			const double result = c->calc->getJ5(q2);
+			return result;
+		}
+	private:
+		const EvtBToVllConstraints* calc;
+	};
+	s5_utils u(this);
+
+    gsl_function F;
+    F.function = &s5_utils::getValue;
+    F.params = &u;
+    return findRateIntegral(&F,q2min,q2max);
+
+}
+
 const std::pair<double, double> EvtBToVllConstraints::findZero(gsl_function* F) const{
 	
 	//slight hack: recover from errors by setting result to an error value
