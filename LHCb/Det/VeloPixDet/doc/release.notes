@@ -4,8 +4,11 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+! 2009-11-06 - Victor Coco
+ - debug channelToNeighbours (not initialised fraction..)
+
 ! 2009-10-29 - Victor Coco
- - added channelToChannels and debug pointTo3x3Channel + channel2Point
+ - added channelToNeighbours and debug pointTo3x3Channel + channel2Point
 
 ! 2009-10-28 - Victor Coco
  - debugging of the pointToChannel function and similar.

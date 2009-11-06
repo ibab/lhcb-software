@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.7 2009-10-29 15:34:05 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.8 2009-11-06 11:05:05 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -116,7 +116,6 @@ StatusCode DeVeloPixSquareType::pointToChannel(const Gaudi::XYZPoint& point,
 
   // Check that the point is in the active area of the sensor
   StatusCode sc = isInActiveArea(localPoint);
-
   if(!sc.isSuccess())return sc;  
   unsigned int sensor=sensorNumber();
   // Create the associated VeloPixChannelID
@@ -251,7 +250,7 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
 {
   MsgStream msg(msgSvc(), "DeVeloPixSquareType");
   // Get the point corresponding to the seedChannel 
-  std::pair <double, double> fraction;
+  std::pair <double, double> fraction(0.5,0.5);
   Gaudi::XYZPoint point;
   StatusCode sc = channelToPoint (seedChannel, point);
   if (!sc.isSuccess()) return sc;
@@ -265,7 +264,7 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
   // Loop over the possible position in the 3x3 cluster
   for (int x = -1 ; x < 2 ; x ++){
     for (int y = -1 ; y < 2 ; y ++){
-      // if x|y correspond to the central channel, skip it
+
       if( x == 0 && y == 0  )  continue;
       double relx = 0;
       double rely = 0;
@@ -274,6 +273,11 @@ StatusCode  DeVeloPixSquareType::channelToNeighbours( const LHCb::VeloPixChannel
       if (x > 0) relx = (1.- fraction.first)*size.first + lpSize()/2;
       if (y < 0) rely = - fraction.second*size.second - hpSize()/2;
       if (y > 0) rely = (1.- fraction.second)*size.second + hpSize()/2;
+      if (!sc.isSuccess()){
+      // in case fraction is undefined (central position does not correspond to any channel), move by nominal size
+        relx = x*lpSize();
+        rely = y*hpSize();
+      }
       
       Gaudi::XYZPoint neigh_point (loc_point.x()+relx,loc_point.y()+rely,loc_point.z());  
       Gaudi::XYZPoint glob_neigh_point = localToGlobal(neigh_point);
