@@ -1,5 +1,5 @@
 package GaussSys
-version v37r5
+version v38r0
 
 branches cmt doc
 
@@ -8,15 +8,15 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v37r5   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v38r0   Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
-macro GENSER_use        "GENSER       v5r2    Gen"  WIN32 ""
-macro EvtGen_use        "EvtGen       v11r5   Gen"  WIN32 ""
-macro EvtGenExtras_use  "EvtGenExtras v2r1    Gen"  WIN32 ""
-macro Generators_use    "Generators   v10r4   Gen"  WIN32 ""
-macro LbPythia_use      "LbPythia     v8r5    Gen"  WIN32 ""
+macro GENSER_use        "GENSER       v6r0    Gen"  WIN32 ""
+macro EvtGen_use        "EvtGen       v11r6   Gen"  WIN32 ""
+macro EvtGenExtras_use  "EvtGenExtras v2r2    Gen"  WIN32 ""
+macro Generators_use    "Generators   v10r5   Gen"  WIN32 ""
+macro LbPythia_use      "LbPythia     v8r6    Gen"  WIN32 ""
 use ${GENSER_use}
 use ${EvtGen_use}
 use ${EvtGenExtras_use}
@@ -25,13 +25,13 @@ use ${LbPythia_use}
 
 # Generators packages: extensions to Pythia6
 macro LbAlpGen_use      "LbAlpGen     v1r0    Gen"  WIN32 ""
-macro BcVegPy_use       "BcVegPy      v2r0    Gen"  WIN32 ""
+macro BcVegPy_use       "BcVegPy      v2r1    Gen"  WIN32 ""
 macro LbBcVegPy_use     "LbBcVegPy    v3r0    Gen"  WIN32 ""
 macro LbHidValley_use   "LbHidValley  v2r2    Gen"  WIN32 ""
 #use ${LbAlpGen_use}
 use ${BcVegPy_use}
 use ${LbBcVegPy_use}
-#use ${LbHidValley_use}
+use ${LbHidValley_use}
 
 # Generators packages: alternative to Pythia6 for pp collisions
 macro LbHerwig_use      "LbHerwig     v6r0p1  Gen"  WIN32 ""
@@ -40,40 +40,42 @@ use ${LbHerwig_use}
 use ${LbPythia8_use}
 
 # Generators packages: alternative to Pythia6 for p-A collisions
-macro LbHijing_use      "LbHijing     v5r0    Gen"  WIN32 ""
+macro LbHijing_use      "LbHijing     v5r1    Gen"  WIN32 ""
 use ${LbHijing_use}
 
 # Generators packages: LHCb sampling results for Machine Induced Background
-use LbMIB               v3r5      Gen
+use LbMIB               v4r0      Gen
 
 # Generators packages: LHCb particle gun generator: temporarly off on Win32
-macro LbPGuns_use       "LbPGuns v1r1    Gen"  WIN32 ""
+macro LbPGuns_use       "LbPGuns v1r2    Gen"  WIN32 ""
 use ${LbPGuns_use}
 
 # Simulation basic packages
-use GiGa        	v19r4	  Sim     
-use GiGaCnv     	v18r6p1	  Sim
-use SimSvc              v5r1      Sim
+use GiGa        	v19r5	  Sim     
+use GiGaCnv     	v18r7	  Sim
+use SimSvc              v5r2      Sim
 macro GiGaVisUI_use     "GiGaVisUI    v5r1    Sim"  WIN32 ""
 use ${GiGaVisUI_use} 
 use VisSvc              v5r5      Vis 
-use ClhepTools          v2r1      Tools
+use ClhepTools          v2r1p1    Tools
 
 # Simulation specialized packages
 use GaussKine           v3r4      Sim
 use GaussAlgs		v3r4      Sim
-use GaussTools          v15r3     Sim
-use GaussRICH		v9r4p2    Sim
+use GaussTools          v15r4     Sim
+use GaussRICH		v10r0     Sim
 use GaussTracker	v6r2p1	  Sim
 use GaussCalo		v9r3	  Sim
-use GaussPhysics	v6r3	  Sim
+use GaussPhysics	v6r4	  Sim
+use GaussUMC            v1r0      Sim
 
 # Monitoring packages
 use GaussMonitor	v6r3      Sim
-use CaloMoniSim         v3r2      Calo
+use CaloMoniSim         v4r0      Calo
 use VeloGauss           v2r4      Velo
 use MuonMoniSim         v2r5p1    Muon
 use BcmMoniSim          v1r2      Bcm
+use BlsMoniSim          v1r0      Bls
 
 # GMDL
 #use GDML                v1r240p0  Sim
@@ -96,6 +98,4 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 #====================================================================
-#
-# Package for Upgrade generation: temporary for MC09
-use DDDB                v1r22     Det
+
