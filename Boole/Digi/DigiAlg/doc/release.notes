@@ -4,6 +4,9 @@
 ! Purpose     : Holds generic digitization algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-11-07 - Marco Clemencic
+ - Modifiled BooleInit to use the new names of the ODIN trigger types.
+
 !========================== DigiAlg v4r17 2009-07-14 =========================
 ! 2009-07-10 - Marco Cattaneo
  - Adapt BooleInit to change of names in ODIN::BXTypes enum
