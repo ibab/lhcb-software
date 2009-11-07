@@ -4,11 +4,12 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-11-07 - Chris Jones
+ - Add more const'ness to StandardPacker.h
+
 ! 2009-10-25 - Vanya Belyaev
-
  - Kernel/CaloCellID.h
-
-    add a typedef for std::set<LHCb::CaloCellID> ad LHCb::CaloCellID::Set  
+    add a typedef for std::set<LHCb::CaloCellID> and LHCb::CaloCellID::Set  
 
 ! 2009-10-21 - Chris Jones
  - Make StandardPacker methods const
