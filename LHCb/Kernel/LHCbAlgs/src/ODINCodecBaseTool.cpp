@@ -57,7 +57,7 @@ StatusCode ODINCodecBaseTool::initialize() {
     info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
   }
 
-  bool usingDefaultLocation = m_rawEventLocations.empty() and m_rawEventLocation.empty();
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
   if (! m_rawEventLocation.empty()) {
     warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
     m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);

@@ -4,6 +4,9 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+! 2009-11-07 - Marco Cattaneo
+ - Fix Windows compilation error in ODINCodecBaseTool
+
 ! 2009-11-06 - Chris Jones
  - Add trivial algorithm that allows for sequence filtering based on the 
    version of DataObjects. Allows for use cases like the re-creation of some
