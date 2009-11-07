@@ -1,11 +1,10 @@
-// $Id: HltBackgroundCategory.cpp,v 1.20 2009-01-26 17:30:02 pkoppenb Exp $
+// $Id: HltBackgroundCategory.cpp,v 1.21 2009-11-07 21:40:59 graven Exp $
 // Include files 
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 
 // LHCb
-#include "Event/HltSummary.h"
 #include "Kernel/IBackgroundCategory.h"
 #include "Kernel/IPrintDecayTreeTool.h"            // Interface
 #include "MCInterfaces/IPrintMCDecayTreeTool.h"            // Interface
