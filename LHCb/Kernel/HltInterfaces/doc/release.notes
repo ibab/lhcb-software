@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.7 2009-11-06 13:22:03 pkoppenb Exp $
+! $Id: release.notes,v 1.8 2009-11-07 20:03:34 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2009-11-07 - Gerhard Raven
+ - remove IHltSummaryTool 
 
 ! 2009-11-06 - Patrick Koppenburg
  - New functions readRoutingBits and firexRoutingBits in namespace Hlt that
