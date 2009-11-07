@@ -4,6 +4,9 @@
 ! Purpose     : Event model for HLT tracks
 !-----------------------------------------------------------------------------
 
+! 2009-11-07 - Gerhard Raven
+ - remove obsolete HltSummary.xml
+
 !======================== HltEvent v8r18 2009-06-16 ==========================
 ! 2009-06-11 - Juan PALACIOS
  - Remove operators == and < for HltDecReport and HltObjectSummary, and 
