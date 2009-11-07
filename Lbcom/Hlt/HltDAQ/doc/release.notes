@@ -4,6 +4,9 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+! 2009-11-07 - Gerhard Raven
+ - In HltRoutingBitsWriter, publish counters 
+
 !========================== HltDAQ v1r1 2009-10-20 ===========================
 ! 2009-10-14 - Marco Cattaneo
  - Remove obsolete file HltDAQ_dll.cpp

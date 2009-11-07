@@ -1,4 +1,4 @@
-// $Id: HltRoutingBitsWriter.cpp,v 1.2 2009-09-11 09:28:39 graven Exp $
+// $Id: HltRoutingBitsWriter.cpp,v 1.3 2009-11-07 16:36:00 graven Exp $
 // Include files 
 // from Boost
 #include "boost/foreach.hpp"
@@ -36,7 +36,10 @@ StatusCode HltRoutingBitsWriter::decode() {
             StatusCode sc = factory->get( i->second, cut, m_preambulo );
             if (sc.isFailure()) return sc;
             m_evaluators[i->first].predicate = cut.clone();
-            m_evaluators[i->first].counter   = &counter(boost::str(  boost::format("%02d:%s") % i->first % i->second) );
+            std::string title = boost::str(boost::format("%02d:%s") % i->first % i->second) ;
+            m_evaluators[i->first].counter   = &counter(title);
+            declareInfo(boost::str( boost::format("COUNTER_TO_RATE[%s]")% title ),
+                        *m_evaluators[i->first].counter,title);
         }
     }
     this->release(factory);
