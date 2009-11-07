@@ -67,7 +67,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
                                     , MeasureTime = True)
-1
+
         # define empty sequence to collect counters
         seqCountName = 'LumiCount'
         lumiCountSequence = Sequence(seqCountName+BXType +'Seq'
