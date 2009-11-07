@@ -1,4 +1,4 @@
-// $Id: PackedRecVertex.h,v 1.3 2009-01-26 09:41:02 ocallot Exp $
+// $Id: PackedRecVertex.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDRECVERTEX_H 
 #define EVENT_PACKEDRECVERTEX_H 1
 
@@ -72,18 +72,19 @@ namespace LHCb {
     std::vector<PackedRecVertex>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedRecVertex>::const_iterator end()   const { return m_vect.end(); }
     std::vector<PackedRecVertex>& vertices()                   { return m_vect; }
+    const std::vector<PackedRecVertex>& vertices() const       { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRefs()                     const { return m_refs.size(); }
     std::vector<int>& refs()                           { return m_refs; }
+    const std::vector<int>& refs() const               { return m_refs; }
 
     void addExtra( int a, int b ) { std::pair<int,int> tmp( a, b ); m_extra.push_back( tmp ); }
     std::vector<std::pair<int,int> >::const_iterator beginExtra() const { return m_extra.begin(); }
     unsigned int sizeExtra()                         const { return m_extra.size(); }
     std::vector<std::pair<int,int> >& extras()             { return m_extra; }
-
-  protected:
+    const std::vector<std::pair<int,int> >& extras() const { return m_extra; }
 
   private:
     std::vector<PackedRecVertex>     m_vect;

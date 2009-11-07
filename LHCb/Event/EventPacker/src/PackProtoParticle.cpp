@@ -1,4 +1,4 @@
-// $Id: PackProtoParticle.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
+// $Id: PackProtoParticle.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -48,6 +48,7 @@ StatusCode PackProtoParticle::execute() {
 
   LHCb::ProtoParticles* parts = getOrCreate<LHCb::ProtoParticles,LHCb::ProtoParticles>( m_inputName );
   LHCb::PackedProtoParticles* out = new LHCb::PackedProtoParticles();
+  out->protos().reserve(parts->size());
   put( out, m_outputName );
   out->setVersion( 1 );
 

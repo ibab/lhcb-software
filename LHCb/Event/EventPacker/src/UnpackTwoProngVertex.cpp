@@ -1,4 +1,4 @@
-// $Id: UnpackTwoProngVertex.cpp,v 1.3 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackTwoProngVertex.cpp,v 1.4 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -17,7 +17,6 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( UnpackTwoProngVertex );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -43,12 +42,17 @@ StatusCode UnpackTwoProngVertex::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::PackedTwoProngVertices>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::PackedTwoProngVertices>(m_inputName) )
+    return StatusCode::SUCCESS;
 
-  LHCb::PackedTwoProngVertices* dst = get<LHCb::PackedTwoProngVertices>( m_inputName );
-  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
+  const LHCb::PackedTwoProngVertices* dst = 
+    getOrCreate<LHCb::PackedTwoProngVertices,LHCb::PackedTwoProngVertices>( m_inputName );
+  
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::TwoProngVertices* newTwoProngVertices = new LHCb::TwoProngVertices();
+  newTwoProngVertices->reserve(dst->vertices().size());
   put( newTwoProngVertices, m_outputName );
 
   StandardPacker pack;
@@ -168,6 +172,7 @@ StatusCode UnpackTwoProngVertex::execute() {
       pids.push_back( myPid );
     }
     vert->setCompatiblePIDs( pids );
+
   }
 
   return StatusCode::SUCCESS;

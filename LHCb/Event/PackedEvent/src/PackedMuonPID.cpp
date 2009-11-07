@@ -1,4 +1,4 @@
-// $Id: PackedMuonPID.cpp,v 1.1 2009-11-04 17:13:08 jonrob Exp $
+// $Id: PackedMuonPID.cpp,v 1.2 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMuonPID.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MuonPIDPacker::pack( DataVector       & pids,
+void MuonPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   ppids.data().reserve( pids.size() );
@@ -50,7 +50,7 @@ void MuonPIDPacker::pack( DataVector       & pids,
   }
 }
 
-void MuonPIDPacker::unpack( PackedDataVector & ppids,
+void MuonPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   pids.reserve( ppids.data().size() );

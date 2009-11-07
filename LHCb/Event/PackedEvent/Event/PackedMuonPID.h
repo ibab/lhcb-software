@@ -1,4 +1,4 @@
-// $Id: PackedMuonPID.h,v 1.1 2009-11-04 17:13:08 jonrob Exp $
+// $Id: PackedMuonPID.h,v 1.2 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDMUONPID_H
 #define EVENT_PACKEDMUONPID_H 1
 
@@ -138,11 +138,11 @@ namespace LHCb
   public:
 
     /// Pack MuonPIDs
-    void pack( DataVector       & hits,
+    void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
     /// Unpack MuonPIDs
-    void unpack( PackedDataVector & phits,
+    void unpack( const PackedDataVector & phits,
                  DataVector       & hits ) const;
 
     /// Compare two MuonPIDs to check the packing -> unpacking performance

@@ -1,4 +1,4 @@
-// $Id: PackTrack.cpp,v 1.12 2009-11-06 18:34:34 jonrob Exp $
+// $Id: PackTrack.cpp,v 1.13 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -47,6 +47,7 @@ StatusCode PackTrack::execute() {
 
   LHCb::Tracks* tracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>( m_inputName );
   LHCb::PackedTracks* out = new LHCb::PackedTracks();
+  out->tracks().reserve(tracks->size());
   put( out, m_outputName );
   out->setVersion( 3 );
 

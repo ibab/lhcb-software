@@ -1,4 +1,4 @@
-// $Id: PackCaloHypo.h,v 1.1.1.1 2008-11-18 17:12:59 ocallot Exp $
+// $Id: PackCaloHypo.h,v 1.2 2009-11-07 12:20:39 jonrob Exp $
 #ifndef PACKCALOHYPO_H 
 #define PACKCALOHYPO_H 1
 
@@ -23,10 +23,11 @@ public:
 
   virtual StatusCode execute   ();    ///< Algorithm execution
 
-protected:
-
 private:
+
   std::string m_inputName;
-  std::string m_outputName;
+  std::string m_outputName; 
+  bool m_alwaysOutput;      ///< Flag to turn on the creation of output, even when input is missing
+
 };
 #endif // PACKCALOHYPO_H

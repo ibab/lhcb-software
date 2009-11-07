@@ -1,4 +1,4 @@
-// $Id: PackCaloHypo.cpp,v 1.4 2009-10-14 16:22:02 cattanem Exp $
+// $Id: PackCaloHypo.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -27,7 +27,8 @@ PackCaloHypo::PackCaloHypo( const std::string& name,
   : GaudiAlgorithm ( name , pSvcLocator )
 {
   declareProperty( "InputName" , m_inputName  = LHCb::CaloHypoLocation::Electrons );
-  declareProperty( "OutputName", m_outputName = LHCb::PackedCaloHypoLocation::Electrons );
+  declareProperty( "OutputName", m_outputName = LHCb::PackedCaloHypoLocation::Electrons ); 
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -41,9 +42,13 @@ StatusCode PackCaloHypo::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  LHCb::CaloHypos* hypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>( m_inputName );
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::CaloHypos>(m_inputName) ) return StatusCode::SUCCESS;
+
+  const LHCb::CaloHypos* hypo = getOrCreate<LHCb::CaloHypos,LHCb::CaloHypos>( m_inputName );
   
   LHCb::PackedCaloHypos* out = new LHCb::PackedCaloHypos();
+  out->hypos().reserve(hypo->size());
   put( out, m_outputName );
   out->setVersion( 1 );
 

@@ -1,4 +1,4 @@
-// $Id: PackedMCRichHit.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichHit.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichHit.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichHitPacker::pack( DataVector       & hits,
+void MCRichHitPacker::pack( const DataVector  & hits,
                             PackedDataVector & phits ) const
 {
   phits.data().reserve( hits.size() );
@@ -46,8 +46,8 @@ void MCRichHitPacker::pack( DataVector       & hits,
   }
 }
 
-void MCRichHitPacker::unpack( PackedDataVector & phits,
-                              DataVector       & hits ) const
+void MCRichHitPacker::unpack( const PackedDataVector & phits,
+                              DataVector             & hits ) const
 {
   hits.reserve( phits.data().size() );
   if ( 0 == phits.packingVersion() )

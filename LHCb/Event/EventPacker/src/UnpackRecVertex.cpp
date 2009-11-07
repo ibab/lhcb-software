@@ -1,4 +1,4 @@
-// $Id: UnpackRecVertex.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackRecVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -45,10 +45,14 @@ StatusCode UnpackRecVertex::execute() {
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::PackedRecVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
-  LHCb::PackedRecVertices* dst = get<LHCb::PackedRecVertices>( m_inputName );
-  debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
+  const LHCb::PackedRecVertices* dst = 
+    getOrCreate<LHCb::PackedRecVertices,LHCb::PackedRecVertices>( m_inputName );
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedRecVertices = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::RecVertices* newRecVertices = new LHCb::RecVertices();
+  newRecVertices->reserve(dst->vertices().size());
   put( newRecVertices, m_outputName );
 
   StandardPacker pack;

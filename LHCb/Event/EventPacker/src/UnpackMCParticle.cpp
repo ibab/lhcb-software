@@ -1,4 +1,4 @@
-// $Id: UnpackMCParticle.cpp,v 1.5 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackMCParticle.cpp,v 1.6 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -41,9 +41,11 @@ StatusCode UnpackMCParticle::execute() {
 
   // CRJ : If packed data does not exist just return. Needed for packing of 
   //     : spillover which is not neccessarily available for each event
-  if ( !m_alwaysOutput && !exist<LHCb::PackedMCParticles>(m_inputName) )  return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::PackedMCParticles>(m_inputName) ) 
+    return StatusCode::SUCCESS;
 
-  LHCb::PackedMCParticles* dst = get<LHCb::PackedMCParticles>( m_inputName );
+  LHCb::PackedMCParticles* dst = 
+    getOrCreate<LHCb::PackedMCParticles,LHCb::PackedMCParticles>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedMCParticles = " << dst->end() - dst->begin() << endmsg;

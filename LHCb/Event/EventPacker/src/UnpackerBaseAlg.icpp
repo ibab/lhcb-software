@@ -72,7 +72,7 @@ StatusCode Unpack<PACKER>::execute()
     {
 
       // Load the input data
-      typename PACKER::PackedDataVector * pdata =
+      const typename PACKER::PackedDataVector * pdata =
         this->get<typename PACKER::PackedDataVector>(m_inputName);
 
       // set the data version

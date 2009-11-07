@@ -1,4 +1,4 @@
-// $Id: UnpackProtoParticle.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackProtoParticle.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -44,12 +44,17 @@ StatusCode UnpackProtoParticle::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::PackedProtoParticles>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::PackedProtoParticles>(m_inputName) ) 
+    return StatusCode::SUCCESS;
 
-  LHCb::PackedProtoParticles* dst = get<LHCb::PackedProtoParticles>( m_inputName );
-  debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endmsg;
+  const LHCb::PackedProtoParticles* dst = 
+    getOrCreate<LHCb::PackedProtoParticles,LHCb::PackedProtoParticles>( m_inputName );
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::ProtoParticles* newProtoParticles = new LHCb::ProtoParticles();
+  newProtoParticles->reserve(dst->protos().size());
   put( newProtoParticles, m_outputName );
 
   StandardPacker pack;

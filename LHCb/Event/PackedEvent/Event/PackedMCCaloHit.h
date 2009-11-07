@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.h,v 1.4 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCCaloHit.h,v 1.5 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDMCCALOHIT_H
 #define EVENT_PACKEDMCCALOHIT_H 1
 
@@ -138,11 +138,11 @@ namespace LHCb
   public:
 
     /// Pack MCCaloHits
-    void pack( DataVector       & hits,
+    void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
     /// Unpack MCCaloHits
-    void unpack( PackedDataVector & phits,
+    void unpack( const PackedDataVector & phits,
                  DataVector       & hits ) const;
 
     /// Compare two MCCaloHits to check the packing -> unpacking performance

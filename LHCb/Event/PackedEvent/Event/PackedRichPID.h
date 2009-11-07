@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.h,v 1.1 2009-11-04 17:13:08 jonrob Exp $
+// $Id: PackedRichPID.h,v 1.2 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDRICHPID_H
 #define EVENT_PACKEDRICHPID_H 1
 
@@ -133,11 +133,11 @@ namespace LHCb
   public:
 
     /// Pack RichPIDs
-    void pack( DataVector       & hits,
+    void pack( const DataVector & hits,
                PackedDataVector & phits ) const;
 
     /// Unpack RichPIDs
-    void unpack( PackedDataVector & phits,
+    void unpack( const PackedDataVector & phits,
                  DataVector       & hits ) const;
 
     /// Compare two RichPIDs to check the packing -> unpacking performance

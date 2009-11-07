@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCHit.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // STL
 #include <sstream>
@@ -15,7 +15,7 @@
 
 using namespace LHCb;
 
-void MCHitPacker::pack( DataVector       & hits,
+void MCHitPacker::pack( const DataVector & hits,
                         PackedDataVector & phits ) const
 {
   phits.data().reserve( hits.size() );
@@ -53,7 +53,7 @@ void MCHitPacker::pack( DataVector       & hits,
   }
 }
 
-void MCHitPacker::unpack( PackedDataVector & phits,
+void MCHitPacker::unpack( const PackedDataVector & phits,
                           DataVector       & hits ) const
 {
   hits.reserve( phits.data().size() );

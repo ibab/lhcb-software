@@ -1,4 +1,4 @@
-// $Id: PackedMCRichSegment.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichSegment.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichSegment.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichSegmentPacker::pack( DataVector       & segs,
+void MCRichSegmentPacker::pack( const DataVector       & segs,
                                 PackedDataVector & psegs ) const
 {
   psegs.data().reserve( segs.size() );
@@ -94,7 +94,7 @@ void MCRichSegmentPacker::pack( DataVector       & segs,
   }
 }
 
-void MCRichSegmentPacker::unpack( PackedDataVector & psegs,
+void MCRichSegmentPacker::unpack( const PackedDataVector & psegs,
                                   DataVector       & segs ) const
 {
   segs.reserve( psegs.data().size() );

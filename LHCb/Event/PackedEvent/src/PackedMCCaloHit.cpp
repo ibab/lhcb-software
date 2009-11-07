@@ -1,4 +1,4 @@
-// $Id: PackedMCCaloHit.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCCaloHit.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCCaloHit.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCCaloHitPacker::pack( DataVector       & hits,
+void MCCaloHitPacker::pack( const DataVector & hits,
                             PackedDataVector & phits ) const
 {
   phits.data().reserve( hits.size() );
@@ -43,7 +43,7 @@ void MCCaloHitPacker::pack( DataVector       & hits,
   }
 }
 
-void MCCaloHitPacker::unpack( PackedDataVector & phits,
+void MCCaloHitPacker::unpack( const PackedDataVector & phits,
                               DataVector       & hits ) const
 {
   hits.reserve( phits.data().size() );

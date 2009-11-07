@@ -1,4 +1,4 @@
-// $Id: PackedMCRichSegment.h,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichSegment.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PackedMCRichSegment_H
 #define EVENT_PackedMCRichSegment_H 1
 
@@ -142,11 +142,11 @@ namespace LHCb
   public:
 
     /// Pack an MCRichSegment
-    void pack( DataVector       & segs,
+    void pack( const DataVector  & segs,
                PackedDataVector & psegs ) const;
 
     /// Unpack an MCRichSegment
-    void unpack( PackedDataVector & psegs,
+    void unpack( const PackedDataVector & psegs,
                  DataVector       & segs ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance

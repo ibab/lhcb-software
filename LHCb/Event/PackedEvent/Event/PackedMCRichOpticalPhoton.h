@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.h,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDMCRICHOPTICALPHOTON_H
 #define EVENT_PACKEDMCRICHOPTICALPHOTON_H 1
 
@@ -150,11 +150,11 @@ namespace LHCb
   public:
 
     /// Pack an MCRichOpticalPhoton
-    void pack( DataVector       & phots,
+    void pack( const DataVector       & phots,
                PackedDataVector & pphots ) const;
 
     /// Unpack an MCRichOpticalPhoton
-    void unpack( PackedDataVector & pphots,
+    void unpack( const PackedDataVector & pphots,
                  DataVector       & phots ) const;
 
     /// Compare two MCRichHits to check the packing -> unpacking performance

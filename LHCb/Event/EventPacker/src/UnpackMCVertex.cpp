@@ -1,4 +1,4 @@
-// $Id: UnpackMCVertex.cpp,v 1.4 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackMCVertex.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -43,7 +43,8 @@ StatusCode UnpackMCVertex::execute() {
   //     : spillover which is not neccessarily available for each event
   if ( !m_alwaysOutput && !exist<LHCb::PackedMCVertices>(m_inputName) ) return StatusCode::SUCCESS;
 
-  LHCb::PackedMCVertices* dst = get<LHCb::PackedMCVertices>( m_inputName );
+  const LHCb::PackedMCVertices* dst = 
+    getOrCreate<LHCb::PackedMCVertices,LHCb::PackedMCVertices>( m_inputName );
 
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedMCVertices = " << dst->end() - dst->begin() << endmsg;

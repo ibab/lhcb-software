@@ -1,4 +1,4 @@
-// $Id: PackedMCRichTrack.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichTrack.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichTrack.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichTrackPacker::pack( DataVector       & tracks,
+void MCRichTrackPacker::pack( const DataVector & tracks,
                               PackedDataVector & ptracks ) const
 {
   ptracks.data().reserve( tracks.size() );
@@ -53,7 +53,7 @@ void MCRichTrackPacker::pack( DataVector       & tracks,
   }
 }
 
-void MCRichTrackPacker::unpack( PackedDataVector & ptracks,
+void MCRichTrackPacker::unpack( const PackedDataVector & ptracks,
                                 DataVector       & tracks ) const
 {
   tracks.reserve( ptracks.data().size() );

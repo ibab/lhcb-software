@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.12 2009-11-06 18:34:34 jonrob Exp $
+// $Id: UnpackTrack.cpp,v 1.13 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -44,11 +44,12 @@ StatusCode UnpackTrack::execute() {
   // If input does not exist, and we aren't making the output regardless, just return
   if ( !m_alwaysOutput && !exist<LHCb::PackedTracks>(m_inputName) ) return StatusCode::SUCCESS;
 
-  LHCb::PackedTracks* dst = get<LHCb::PackedTracks>( m_inputName );
+  const LHCb::PackedTracks* dst = getOrCreate<LHCb::PackedTracks,LHCb::PackedTracks>( m_inputName );
   if ( msgLevel(MSG::DEBUG) )
     debug() << "Size of PackedTracks = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::Tracks* newTracks = new LHCb::Tracks();
+  newTracks->reserve( dst->tracks().size() );
   put( newTracks, m_outputName );
 
   StandardPacker pack;

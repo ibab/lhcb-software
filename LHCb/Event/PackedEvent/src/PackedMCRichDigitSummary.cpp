@@ -1,4 +1,4 @@
-// $Id: PackedMCRichDigitSummary.cpp,v 1.3 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichDigitSummary.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichDigitSummary.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichDigitSummaryPacker::pack( DataVector       & sums,
+void MCRichDigitSummaryPacker::pack( const DataVector & sums,
                                      PackedDataVector & psums ) const
 {
   psums.data().reserve( sums.size() );
@@ -43,7 +43,7 @@ void MCRichDigitSummaryPacker::pack( DataVector       & sums,
   }
 }
 
-void MCRichDigitSummaryPacker::unpack( PackedDataVector & psums,
+void MCRichDigitSummaryPacker::unpack( const PackedDataVector & psums,
                                        DataVector       & sums ) const
 {
   sums.reserve( psums.data().size() );

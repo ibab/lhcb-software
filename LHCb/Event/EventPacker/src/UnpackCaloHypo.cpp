@@ -1,4 +1,4 @@
-// $Id: UnpackCaloHypo.cpp,v 1.3 2009-07-09 09:44:16 cattanem Exp $
+// $Id: UnpackCaloHypo.cpp,v 1.4 2009-11-07 12:20:39 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -29,6 +29,7 @@ UnpackCaloHypo::UnpackCaloHypo( const std::string& name,
 {
   declareProperty( "InputName" , m_inputName  = LHCb::PackedCaloHypoLocation::Electrons );
   declareProperty( "OutputName", m_outputName = LHCb::CaloHypoLocation::Electrons );
+  declareProperty( "AlwaysCreateOutput",         m_alwaysOutput = false     );
 }
 //=============================================================================
 // Destructor
@@ -41,10 +42,18 @@ UnpackCaloHypo::~UnpackCaloHypo() {}
 StatusCode UnpackCaloHypo::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  LHCb::PackedCaloHypos* dst = get<LHCb::PackedCaloHypos>( m_inputName );
-  debug() << "Size of PackedCaloHypos = " << dst->end() - dst->begin() << endmsg;
+
+  // If input does not exist, and we aren't making the output regardless, just return
+  if ( !m_alwaysOutput && !exist<LHCb::PackedCaloHypos>(m_inputName) ) return StatusCode::SUCCESS;
+
+  LHCb::PackedCaloHypos* dst =
+    getOrCreate<LHCb::PackedCaloHypos,LHCb::PackedCaloHypos>( m_inputName );
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Size of PackedCaloHypos = " << dst->end() - dst->begin() << endmsg;
 
   LHCb::CaloHypos* newCaloHypos = new LHCb::CaloHypos();
+  newCaloHypos->reserve(dst->hypos().size());
   put( newCaloHypos, m_outputName );
 
   StandardPacker pack;

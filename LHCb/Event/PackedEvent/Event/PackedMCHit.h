@@ -1,4 +1,4 @@
-// $Id: PackedMCHit.h,v 1.5 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCHit.h,v 1.6 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDMCHIT_H
 #define EVENT_PACKEDMCHIT_H 1
 
@@ -147,11 +147,11 @@ namespace LHCb
   public:
 
     /// Pack MCHits
-    void pack( DataVector       & hits,
+    void pack( const DataVector       & hits,
                PackedDataVector & phits ) const;
 
     /// Unpack MCHits
-    void unpack( PackedDataVector & phits,
+    void unpack( const PackedDataVector & phits,
                  DataVector       & hits ) const;
 
     /// Compare two MCHits to check the packing -> unpacking performance

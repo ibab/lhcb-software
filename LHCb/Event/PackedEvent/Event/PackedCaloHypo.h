@@ -1,4 +1,4 @@
-// $Id: PackedCaloHypo.h,v 1.3 2009-01-26 09:41:02 ocallot Exp $
+// $Id: PackedCaloHypo.h,v 1.4 2009-11-07 12:20:26 jonrob Exp $
 #ifndef EVENT_PACKEDCALOHYPO_H 
 #define EVENT_PACKEDCALOHYPO_H 1
 
@@ -91,12 +91,13 @@ namespace LHCb {
     std::vector<PackedCaloHypo>::const_iterator begin() const { return m_vect.begin(); }
     std::vector<PackedCaloHypo>::const_iterator end()   const { return m_vect.end(); }
     std::vector<PackedCaloHypo>& hypos()                      { return m_vect; }
+    const std::vector<PackedCaloHypo>& hypos() const          { return m_vect; }
 
     void addRef( int i ) { m_refs.push_back( i ); }
     std::vector<int>::const_iterator beginRefs() const { return m_refs.begin(); }
     unsigned int  sizeRef()                      const { return m_refs.size(); }
     std::vector<int>& refs()                           { return m_refs; }
-  protected:
+    const std::vector<int>& refs() const               { return m_refs; }
 
   private:
     std::vector<PackedCaloHypo> m_vect;

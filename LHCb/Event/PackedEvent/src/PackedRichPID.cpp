@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.3 2009-11-06 17:51:44 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void RichPIDPacker::pack( DataVector       & pids,
+void RichPIDPacker::pack( const DataVector & pids,
                           PackedDataVector & ppids ) const
 {
   ppids.data().reserve( pids.size() );
@@ -41,7 +41,7 @@ void RichPIDPacker::pack( DataVector       & pids,
   }
 }
 
-void RichPIDPacker::unpack( PackedDataVector & ppids,
+void RichPIDPacker::unpack( const PackedDataVector & ppids,
                             DataVector       & pids ) const
 {
   pids.reserve( ppids.data().size() );

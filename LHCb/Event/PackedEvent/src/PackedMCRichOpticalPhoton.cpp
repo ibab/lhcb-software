@@ -1,4 +1,4 @@
-// $Id: PackedMCRichOpticalPhoton.cpp,v 1.4 2009-11-03 16:08:54 jonrob Exp $
+// $Id: PackedMCRichOpticalPhoton.cpp,v 1.5 2009-11-07 12:20:27 jonrob Exp $
 
 // local
 #include "Event/PackedMCRichOpticalPhoton.h"
@@ -11,7 +11,7 @@
 
 using namespace LHCb;
 
-void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
+void MCRichOpticalPhotonPacker::pack( const DataVector & phots,
                                       PackedDataVector & pphots ) const
 {
   pphots.data().reserve( phots.size() );
@@ -76,7 +76,7 @@ void MCRichOpticalPhotonPacker::pack( DataVector       & phots,
   }
 }
 
-void MCRichOpticalPhotonPacker::unpack( PackedDataVector & pphots,
+void MCRichOpticalPhotonPacker::unpack( const PackedDataVector & pphots,
                                         DataVector       & phots ) const
 {
   phots.reserve( pphots.data().size() );
