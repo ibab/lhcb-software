@@ -1,13 +1,14 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.77 2009-11-05 15:57:19 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.78 2009-11-07 12:24:47 jonrob Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf, HltConf, DstConf, CaloDstUnPackConf, L0Conf )
+from Configurables import ( LHCbConfigurableUser, LHCbApp, PhysConf, AnalysisConf,
+                            HltConf, DstConf, CaloDstUnPackConf, L0Conf )
 import GaudiKernel.ProcessJobOptions
 
 class DaVinci(LHCbConfigurableUser) :
@@ -41,7 +42,7 @@ class DaVinci(LHCbConfigurableUser) :
        , "HltUserAlgorithms"  : [ ]           # put here user algorithms to add
        , "Hlt2Requires"       : 'L0+Hlt1'     # Say what Hlt2 requires
        , "HltThresholdSettings" : ''          # Use some special threshold settings, eg. 'Miriam_20090430' or 'FEST'
-       , 'EnableUnpack' : None  ## Explicitly enable/disable unpackinf for input data (if specified) 
+       , 'EnableUnpack' : None  ## Explicitly enable/disable unpacking for input data (if specified) 
        }
 
     _propertyDocDct = {  
@@ -68,7 +69,7 @@ class DaVinci(LHCbConfigurableUser) :
                                     'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
                                     """
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
-       , 'EnableUnpack' : """Explicitly enable/disable unpackinf for input data (if specified) """
+       , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
          }
 
     __used_configurables__ = [
@@ -286,6 +287,8 @@ class DaVinci(LHCbConfigurableUser) :
             # DST unpacking, not for DC06 unless MDF. Not for MDST, ever.
             DstConf           ( EnableUnpack = True ) 
             CaloDstUnPackConf ( Enable       = True )
+            if self.getProp("Simulation") :
+                DstConf().setProp("SimType","Full")
             
 ################################################################################
 # Ntuple files
