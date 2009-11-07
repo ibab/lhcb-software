@@ -3,7 +3,6 @@
 
 #include "Kernel/IANNSvc.h"
 #include "Kernel/IANSvc.h"
-#include "Kernel/IHltSummaryTool.h"
 
 #endif // DICT_HLTINTERFACESDICT_H
 
