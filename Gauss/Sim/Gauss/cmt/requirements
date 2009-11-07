@@ -3,7 +3,7 @@
 # Maintainer : Gloria Corti, Florence Ranjard
 #============================================================================
 package Gauss
-version v37r4
+version v38r0
 
 #============================================================================
 #-- Structure
@@ -88,6 +88,7 @@ use CaloMoniSim          v*    Calo  -no_auto_imports
 use VeloGauss            v*    Velo  -no_auto_imports
 use MuonMoniSim          v*    Muon  -no_auto_imports
 use BcmMoniSim           v*    Bcm   -no_auto_imports
+use BlsMoniSim           v*    Bls   -no_auto_imports
 
 #-- Optional visualisation and UI
 macro GiGaVisUI_use "" Linux&Vis "GiGaVisUI v* Sim"
