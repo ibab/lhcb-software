@@ -382,27 +382,28 @@ StatusCode MuonIDAlg::execute() {
 
   if (msgLevel(MSG::DEBUG) ) debug()  << "Number of input tracks for MuonID: " << trTracks->size() << endmsg;
   
-  // CRJ : Handle the case MuonPID data is already on the TES
-  LHCb::MuonPIDs * pMuids(NULL);
-  if ( exist<LHCb::MuonPIDs>(m_MuonPIDsPath) )
+  // CRJ : Handle the case MuonPID and MuonTrack data is already on the TES
+  LHCb::MuonPIDs * pMuids = getOrCreate<LHCb::MuonPIDs,LHCb::MuonPIDs>(m_MuonPIDsPath);
+  if ( !pMuids->empty() )
   {
-    // data already in TES, so clear and reuse
-    pMuids = get<LHCb::MuonPIDs>(m_MuonPIDsPath);
     pMuids->clear();
     Warning( "MuonPIDs already exist at '" + m_MuonPIDsPath + "' -> Will Replace", 
              StatusCode::SUCCESS ).ignore();
   }
-  else
+  LHCb::Tracks * mutracks = getOrCreate<LHCb::Tracks,LHCb::Tracks>(m_MuonTracksPath);
+  if ( !mutracks->empty() )
   {
-    // make new data and give to gaudi
-    pMuids = new LHCb::MuonPIDs();
-    put(pMuids,m_MuonPIDsPath);
+    mutracks->clear();
+    Warning( "Muon Tracks already exist at '" + m_MuonTracksPath + "' -> Will Replace", 
+             StatusCode::SUCCESS ).ignore();
   }
 
-  LHCb::Tracks * mutracks = new LHCb::Tracks();
+  // CRJ : Set Muon PID data version
+  pMuids->setVersion(1);
+
   //LHCb::Tracks * mutracks_all = m_DoAllMuonTracks ? new LHCb::Tracks() : 0;
   LHCb::Tracks * mutracks_all = new LHCb::Tracks();
-  
+
   LHCb::Tracks::const_iterator iTrack;
   for( iTrack = trTracks->begin() ; iTrack != trTracks->end() ; iTrack++){
     // in the clone killed output we want only
@@ -460,9 +461,6 @@ StatusCode MuonIDAlg::execute() {
            << endmsg;
   }
   m_ntotmu += m_nmu;
-
-  // Register the PIDTracks container to the TES
-  put(mutracks,m_MuonTracksPath);
 
   if (msgLevel(MSG::DEBUG) ) debug()  << "execute:: Muon Tracks registered  " << endmsg;
 

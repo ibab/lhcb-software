@@ -3,8 +3,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-11-06 - Chris Jones
- - Update MuonIDAlg to allow it to be run when the MuonPIDs already exist in
-   the TES. In this case the existing container is cleared and reused.
+ - Update MuonIDAlg to allow it to be run when the MuonPIDs and MuonTracks 
+   already exist in the TES. In this case the existing containers are cleared 
+   and reused.
 
 !======================== MuonID v7r2p2 2009-10-20 ===========================
 ! 2009-10-02 - Xabier Cid Vidal
