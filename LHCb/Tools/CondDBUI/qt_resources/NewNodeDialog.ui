@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>503</width>
+    <width>498</width>
     <height>452</height>
    </rect>
   </property>
@@ -28,12 +28,6 @@
    </property>
    <item rowspan="4" row="0" column="0" >
     <widget class="QWidget" native="1" name="basicInfosWidget" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
-       <horstretch>2</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
      <layout class="QVBoxLayout" name="verticalLayout_3" >
       <property name="sizeConstraint" >
        <enum>QLayout::SetDefaultConstraint</enum>
@@ -94,12 +88,6 @@
          </property>
          <item>
           <widget class="QGroupBox" name="nodeTypeGB" >
-           <property name="sizePolicy" >
-            <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-             <horstretch>0</horstretch>
-             <verstretch>0</verstretch>
-            </sizepolicy>
-           </property>
            <property name="title" >
             <string>Type</string>
            </property>
@@ -188,14 +176,30 @@
      </layout>
     </widget>
    </item>
-   <item row="4" column="0" >
-    <widget class="QGroupBox" name="fieldsGB" >
+   <item row="2" column="1" >
+    <widget class="QDialogButtonBox" name="buttonBox" >
      <property name="sizePolicy" >
-      <sizepolicy vsizetype="Preferred" hsizetype="Preferred" >
-       <horstretch>1</horstretch>
+      <sizepolicy vsizetype="Expanding" hsizetype="Fixed" >
+       <horstretch>0</horstretch>
        <verstretch>0</verstretch>
       </sizepolicy>
      </property>
+     <property name="layoutDirection" >
+      <enum>Qt::LeftToRight</enum>
+     </property>
+     <property name="orientation" >
+      <enum>Qt::Vertical</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+     <property name="centerButtons" >
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="4" column="0" >
+    <widget class="QGroupBox" name="fieldsGB" >
      <property name="title" >
       <string>Fields</string>
      </property>
@@ -264,28 +268,6 @@
        </widget>
       </item>
      </layout>
-    </widget>
-   </item>
-   <item row="2" column="1" >
-    <widget class="QDialogButtonBox" name="buttonBox" >
-     <property name="sizePolicy" >
-      <sizepolicy vsizetype="Expanding" hsizetype="Fixed" >
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="layoutDirection" >
-      <enum>Qt::LeftToRight</enum>
-     </property>
-     <property name="orientation" >
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="standardButtons" >
-      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
-     </property>
-     <property name="centerButtons" >
-      <bool>false</bool>
-     </property>
     </widget>
    </item>
   </layout>

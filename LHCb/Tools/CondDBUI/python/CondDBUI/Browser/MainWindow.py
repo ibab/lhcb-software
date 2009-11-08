@@ -22,6 +22,8 @@ from CondDBUI import CondDB
 from Models import *
 from Dialogs import *
 
+from Utils import parentpath
+
 import os
 
 ## Class containing the logic of the application.
@@ -288,6 +290,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.emit(SIGNAL("databaseOpenReadOnly(bool)"), bool(readOnly))
                 self.menuEdit.setEnabled(editable)
                 self.menuAdvanced.setEnabled(editable)
+                if editable:
+                    # The "Delete Node" entry should be active only
+                    # when a node is selected (when opening a new db there is
+                    # no selection)
+                    self.actionDelete_Node.setEnabled(False)
             else:
                 self.db = None
                 title = self.appName
@@ -322,7 +329,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     ## Display the application information dialog box
     def aboutDialog(self):
-        from PyQt4 import Qt
+        from PyQt4.QtCore import PYQT_VERSION_STR, qVersion
         app = QApplication.instance()
         message = '''<p><b>%s</b><br/>%s</p>
         <p>Browser for the LHCb-COOL condition database.</p>
@@ -330,7 +337,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         and the Python API to COOL: PyCool.</p>
         <p>The Graphical Library is PyQt %s, based on Qt %s</p>
         <p><i>Marco Clemencic, Nicolas Gilardi</i></p>''' \
-        % (app.objectName(), app.applicationVersion(), Qt.PYQT_VERSION_STR, Qt.qVersion())
+        % (app.objectName(), app.applicationVersion(), PYQT_VERSION_STR, qVersion())
         
         QMessageBox.about(self, app.objectName(), message)
 
@@ -346,6 +353,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.emit(SIGNAL("changedPathChannel"), item.path, item.channel)
                 else:
                     self.emit(SIGNAL("changedPathChannel"), None, None)
+                # Nodes can be deleted only if they are Folders or empty FolderSets
+                self.actionDelete_Node.setEnabled(item.leaf or not item.children)
             except ValueError:
                 i = -1
             self.pathComboBox.setCurrentIndex(i)
@@ -363,11 +372,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 self.emit(SIGNAL("changedPathChannel"), path, None)
             else:
                 self.emit(SIGNAL("changedPathChannel"), None, None)
+            # Nodes can be deleted only if they are Folders or empty FolderSets
+            self.actionDelete_Node.setEnabled(item.leaf or not item.children)
 
     ## Return the cool::FolderSet object currently selected in the structure tree.
     #  If the selected item is not a FolderSet, the parent is returned.
     #  If there is not database opened, returns None.
-    def selectedFolderSet(self):
+    def getSelectedFolderSet(self):
         if not self.db:
             return None
         # Get the FolderSet currently selected in the tree view ("/" if none)
@@ -422,13 +433,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print msg
         QMessageBox.critical(self, "Exception in Python code", msg)
     
-    ## Dump a snapshot of the current database to files
-    def dumpToFiles(self):
-        print "dumpToFiles"
+    ## Helper function useful to force a refresh of the models and the selection
+    #  of node if specified.
+    def _refreshModels(self, selectPath = None):
+        # trigger a refresh of the caches in the models
+        self.emit(SIGNAL("openedDB"), self.db)
+        if selectPath:
+            #  select the specified path
+            i = self.pathComboBox.findText(selectPath)
+            self.pathComboBox.setCurrentIndex(i)
+            self.selectedPath(selectPath)
     
     ## Add a new node to the database
     def newNodeDialog(self):
-        fs = self.selectedFolderSet()
+        fs = self.getSelectedFolderSet()
         fsname = str(fs.fullPath())
         if fsname != "/": fsname += "/"
         d = NewNodeDialog(self)
@@ -442,9 +460,65 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         d.setNodes(folders, foldersets)
         d.setText(fsname)
         if d.exec_():
-            print "create '%s' of type %s" % (d.text(), d.getType()),
-            if d.getType() != "FolderSet":
-                print repr(d.fields())
+            if d.getType() == "FolderSet":
+                storageType = "NODE"
+                storageKeys = None # ignored
+                versionMode = None # ignored
             else:
-                print              
-        
+                storageType = "XML" # actually it is not used
+                storageKeys = {}
+                for k,v in d.fields():
+                    storageKeys[str(k)] = v
+                versionMode = {"MultiVersion": "MULTI",
+                               "SingleVersion": "SIGLE"}[d.getType()]
+            path = str(d.text())
+            self.db.createNode(path = path,
+                               description = str(d.description()),
+                               storageType = storageType,
+                               versionMode = versionMode,
+                               storageKeys = storageKeys)
+            # Now that the node has been created, we have to notify the models.
+            # FIXME: this is the easiest solution to implement, but not optimal
+            self._refreshModels(path)
+            
+    ## Ask for confirmation to delete the selected node and delete it if ok
+    def deleteNode(self):
+        path = str(self.pathComboBox.currentText())
+        if path:
+            message = """<p>Are you sure you want to delete the node?</p>
+            <p><center><tt>%s</tt><center></p>
+            <p><font color="red">The action cannot be undone.</font></p>""" % path
+            answer = QMessageBox.question(self, "Delete node?",
+                                          message,
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.No)
+            if answer == QMessageBox.Yes:
+                self.db.deleteNode(path)
+                # Now that the node has been deleted, we have to notify the models.
+                # FIXME: this is the easiest solution to implement, but not optimal
+                self._refreshModels(parentpath(path))
+    
+    ## Helper to show a dialog about 
+    def _unimplemented(self):
+        QMessageBox.information(self, "Unimplemented",
+                                "Sorry, the function you selected is not implemented yet.")
+    
+    ## Dump a snapshot of the current database to files
+    def dumpToFiles(self):
+        self._unimplemented()
+
+    ## Create a slice of the current database to a database
+    def createSlice(self):
+        self._unimplemented()
+    
+    ## Add a new condition to the selected folder+channel
+    def addCondition(self):
+        self._unimplemented()
+    
+    ## Create a new tag
+    def newTag(self):
+        self._unimplemented()
+    
+    ## Delete a tag
+    def deleteTag(self):
+        self._unimplemented()

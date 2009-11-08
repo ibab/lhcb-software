@@ -1,6 +1,5 @@
 from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTableModel,
                           QVariant, QModelIndex,
-                          QDateTime, QDate, QTime,
                           Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
                          QItemDelegate,
@@ -8,11 +7,11 @@ from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
 
 from PyCool import cool
 
+from Utils import *
+
 # Import the dictionary for helper functions
 import PyCintex
 Helpers = PyCintex.gbl.CondDBUI.Helpers
-
-import time
 
 __all__ = ["CondDBNodesListModel",
            "CondDBStructureModel",
@@ -29,93 +28,12 @@ __all__ = ["CondDBNodesListModel",
 #    if index.isValid():
 #        name = index.internalPointer()
 #    return name
-
-# Number of times to indent output
-# A list is used to force access by reference
-__report_indent = [0]
-def report(fn):
-    """Decorator to print information about a function
-    call for use while debugging.
-    Prints function name, arguments, and call number
-    when the function is called. Prints this information
-    again along with the return value when the function
-    returns.
-    """
-    def wrap(*params,**kwargs):
-        call = wrap.callcount = wrap.callcount + 1
-        indent = ' ' * __report_indent[0]
-        fc = "%s(%s)" % (fn.__name__, ', '.join(
-            [a.__repr__() for a in params] +
-            ["%s = %s" % (a, repr(b)) for a,b in kwargs.items()]
-        ))
-        print "%s%s called [#%s]" % (indent, fc, call)
-        __report_indent[0] += 1
-        ret = fn(*params,**kwargs)
-        __report_indent[0] -= 1
-        print "%s%s returned %s [#%s]" % (indent, fc, repr(ret), call)
-        return ret
-    wrap.callcount = 0
-    return wrap
-
-def report_(fn):
-    """Decorator to print information about a function
-    call for use while debugging.
-    Prints function name, arguments, and call number
-    when the function is called. Prints this information
-    again along with the return value when the function
-    returns.
-    """
-    def wrap(*params,**kwargs):
-        #call = wrap.callcount = wrap.callcount + 1
-        #indent = ' ' * __report_indent[0]
-        #fc = "%s(%s)" % (fn.__name__, ', '.join(
-        #    [a.__repr__() for a in params] +
-        #    ["%s = %s" % (a, repr(b)) for a,b in kwargs.items()]
-        #))
-        #print "%s%s called [#%s]" % (indent, fc, call)
-        #__report_indent[0] += 1
-        ret = fn(*params,**kwargs)
-        #__report_indent[0] -= 1
-        #print "%s%s returned %s [#%s]" % (indent, fc, repr(ret), call)
-        return ret
-    #wrap.callcount = 0
-    return wrap
-
-
-## Small function useful to temporarily add debug printouts
-def DEBUG(*args):
-    print "DEBUG:", ", ".join(args)
-
 icons = {}
 
 ## Function to set the icons used by the models.
 def setModelsIcons(dict):
     global icons
     icons = dict
-
-## Utility function to extract the basename from a path
-def basename(path):
-    if len(path) > 1:
-        path = path.split("/")[-1]
-    return path
-## Utility function to extract the name of the parent node from a path
-def parentpath(path):
-    if len(path) == 1: # root node
-        return None
-    parent = path.rsplit("/",1)[0]
-    if not parent:
-        parent = "/"
-    return parent
-
-## Guard-like class to change the cursor icon during operations that may take a
-#  long time.
-class BusyCursor(object):
-    ## Constructor, sets the application cursor to Qt.WaitCursor.
-    def __init__(self):
-        QApplication.setOverrideCursor(Qt.WaitCursor)
-    ## Destructor, restore the application cursor.
-    def __del__(self):
-        QApplication.restoreOverrideCursor()
 
 ## Class to manage the hierarchy of items in CondDBStructureModel.
 class CondDBStructureItem(object):
@@ -445,7 +363,7 @@ class CondDBTagsListModel(QAbstractListModel):
     ## Function returning the (cached) list of all tags.
     def alltags(self):
         if self._alltags[self._path] is None:
-            bc = BusyCursor()
+            _bc = BusyCursor()
             self._alltags[self._path] = self.db.getTagList(self._path)
         return self._alltags[self._path]
     
@@ -481,14 +399,6 @@ class CondDBTagsListModel(QAbstractListModel):
         return QVariant()
 
 
-## Helper function to convert a cool::ValidityKey to a QDateTime (UTC).
-def _valKeyToDateTime(valkey):
-    # Cannot use setTime_t because of the limited range.
-    timeTuple = time.gmtime(valkey / 1e9)
-    d = apply(QDate, timeTuple[0:3])
-    t = apply(QTime, timeTuple[3:6])
-    return QDateTime(d, t, Qt.UTC)
-    
 ## Model class for the list of IOVs
 class CondDBIoVModel(QAbstractTableModel):
     __pyqtSignals__ = ("setViewEnabled(bool)",
@@ -777,7 +687,7 @@ class CondDBIoVModel(QAbstractTableModel):
                 if valkey == cool.ValidityKeyMax:
                     s = "Max"
                 else:
-                    dt = _valKeyToDateTime(valkey)
+                    dt = valKeyToDateTime(valkey)
                     if not self.showUTC():
                         dt = dt.toLocalTime()
                     s = dt.toString(self.displayFormat())
@@ -1019,14 +929,26 @@ class NodeFieldsModel(QAbstractTableModel):
             self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
             return True
         return False
-    def insertRows(self, position, parent = QModelIndex()):
+    def insertRow(self, position, parent = QModelIndex()):
         return self.insertRows(position, 1, parent)
     def insertRows(self, position, rows, parent = QModelIndex()):
         self.beginInsertRows(QModelIndex(), position, position+rows-1)
+        # find the highest number used in a field with name "field_%d"
+        # so that the new fields will start for that id +1 to avoid conflicts
+        id = -1
+        for n,_t in self.fields:
+            if n.startswith("field_"):
+                try:
+                    nid = int(n[6:])
+                    if nid > id:
+                        id = nid
+                except: # ignore conversion errors
+                    pass
+        id += 1
         count = rows
         while count > 0:
             count -= 1
-            self.fields.insert(position, ("field_%d" % (position + count),
+            self.fields.insert(position, ("field_%d" % (id + count),
                                           __default_field__[1]))
         self.endInsertRows()
         return True

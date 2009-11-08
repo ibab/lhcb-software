@@ -266,7 +266,7 @@
      <x>0</x>
      <y>0</y>
      <width>965</width>
-     <height>29</height>
+     <height>28</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuDataBase" >
@@ -398,9 +398,6 @@
    </property>
    <property name="checked" >
     <bool>true</bool>
-   </property>
-   <property name="enabled" >
-    <bool>false</bool>
    </property>
    <property name="text" >
     <string>Read Only</string>
@@ -739,6 +736,86 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionDelete_Node</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>deleteNode()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionSlice</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>createSlice()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionAdd_Condition</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>addCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionNew_Tag</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>newTag()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionDelete_Tag</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>deleteTag()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -755,6 +832,11 @@
   <slot>openDatabaseDialog()</slot>
   <slot>dumpToFiles()</slot>
   <slot>newNodeDialog()</slot>
+  <slot>deleteNode()</slot>
+  <slot>createSlice()</slot>
+  <slot>addCondition()</slot>
+  <slot>newTag()</slot>
+  <slot>deleteTag()</slot>
   <signal>openedDB(P*)</signal>
   <signal>databaseOpen(bool)</signal>
   <signal>databaseOpenReadOnly(bool)</signal>

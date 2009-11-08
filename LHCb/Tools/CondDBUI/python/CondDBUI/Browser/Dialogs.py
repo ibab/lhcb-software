@@ -215,7 +215,6 @@ class NewNodeDialog(QDialog, Ui_NewNodeDialog):
         self.fieldsModel.insertRow(self.fieldsModel.rowCount())
     ## Slot used to remove a field from the field view
     def removeField(self):
-        print "removeField"
         if self.fieldsView.selectionModel().hasSelection():
             index = self.fieldsView.selectionModel().currentIndex()
             self.fieldsModel.removeRow(index.row())
