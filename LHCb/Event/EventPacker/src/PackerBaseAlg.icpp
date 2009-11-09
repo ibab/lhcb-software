@@ -92,7 +92,9 @@ StatusCode Pack<PACKER>::execute()
 
       if ( msgLevel(MSG::DEBUG) )
       {
-        debug() << " Created " << pdata->data().size() << " data objects at '" << m_outputName << endmsg;
+        debug() << "Created " << pdata->data().size() << " data objects at '" << m_outputName << endmsg;
+        debug() << " Unpacked Version = " << (int)data->version() << endmsg;
+        debug() << " Packed Version   = " << (int)pdata->version() << endmsg;
       }
 
     } // input OK
