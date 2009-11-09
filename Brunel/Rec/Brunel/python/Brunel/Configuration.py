@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.105 2009-11-09 17:15:37 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.106 2009-11-09 18:24:39 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -49,6 +49,7 @@ class Brunel(LHCbConfigurableUser):
        ,"WriteFSR"        : True
        ,"Histograms"      : "Default"
        ,"OutputLevel"     : INFO 
+       ,"NoWarnings"      : False 
        ,"ProductionMode"  : False 
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
@@ -79,6 +80,7 @@ class Brunel(LHCbConfigurableUser):
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
+       ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
        ,'ProductionMode'  : """ Enables special settings for running in production """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag for DDDB """
@@ -275,11 +277,17 @@ class Brunel(LHCbConfigurableUser):
         
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
-        
+
+        # Kept for Dirac backward compatibility
+        if self.getProp( "NoWarnings" ) :
+            log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().ProductionMode=True instead")
+            self.setProp( "ProductionMode", True )
+            
         # Special settings for production
         if self.getProp( "ProductionMode" ) :
-            self.OutputLevel = ERROR
-            LHCbApp().setProp( "TimeStamp", True )
+            self.setProp("OutputLevel", ERROR)
+            if not LHCbApp().isPropertySet( "TimeStamp" ) :
+                LHCbApp().setProp( "TimeStamp", True )
 
         # OutputLevel
         self.setOtherProp(LHCbApp(),"OutputLevel")
@@ -289,6 +297,8 @@ class Brunel(LHCbConfigurableUser):
                 # Suppress known warnings
                 importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
                 if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
+        self.setOtherProps(RecSysConf(), ["OutputLevel"])
+        self.setOtherProps(RecMoniConf(),["OutputLevel"])
 
         # Switch off LoKi banner
         from Configurables import LoKiSvc
@@ -531,8 +541,8 @@ class Brunel(LHCbConfigurableUser):
         
         GaudiKernel.ProcessJobOptions.PrintOff()
         self.setOtherProps(RecSysConf(),["SpecialData","Context",
-                                         "OutputType","DataType","OutputLevel"])
-        self.setOtherProps(RecMoniConf(),["Context","DataType","OutputLevel"])
+                                         "OutputType","DataType"])
+        self.setOtherProps(RecMoniConf(),["Context","DataType"])
         if self.isPropertySet("RecoSequence") :
             self.setOtherProp(RecSysConf(),"RecoSequence")
         self.defineGeometry()
