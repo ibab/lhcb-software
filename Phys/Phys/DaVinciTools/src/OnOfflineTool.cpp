@@ -1,4 +1,4 @@
-// $Id: OnOfflineTool.cpp,v 1.21 2009-08-13 10:48:16 ibelyaev Exp $
+// $Id: OnOfflineTool.cpp,v 1.22 2009-11-09 15:49:32 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -28,7 +28,7 @@ OnOfflineTool::OnOfflineTool( const std::string& type,
                               const std::string& name,
                               const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_onlinePVLocation("Hlt/Vertex/PV2D")
+  , m_onlinePVLocation(LHCb::RecVertexLocation::Velo3D)
   , m_offlinePVLocation(LHCb::RecVertexLocation::Primary)
   , m_online(false)
   , m_offlineDistTool("LoKi::DistanceCalculator")

@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.479 2009-11-05 13:50:40 pkoppenb Exp $
+! $Id: release.notes,v 1.480 2009-11-09 15:49:32 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-09 - Patrick Koppenburg
+ - OnOfflineTool : Return 3D PV for HLT
 
 ! 2009-11-05 - Patrick Koppenburg
  - ContextTool : Initialise variables. This causes random crashes!
