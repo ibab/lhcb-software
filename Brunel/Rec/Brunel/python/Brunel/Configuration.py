@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.103 2009-11-05 09:52:05 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.104 2009-11-09 10:03:41 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -225,7 +225,7 @@ class Brunel(LHCbConfigurableUser):
             # Call DST packing algorithms if physics sequence not called
             notPhysSeq = GaudiSequencer("NotPhysicsSeq")
             notPhysSeq.ModeOR = True
-            dummyPackerSeq = GaudiSequencer("DummyPackerSeq")
+            dummyPackerSeq = GaudiSequencer("PackDST")
             notPhysSeq.Members = [ physFilter, dummyPackerSeq ]
 
             brunelSeq.Members += [ lumiSeq, notPhysSeq ]
@@ -290,6 +290,10 @@ class Brunel(LHCbConfigurableUser):
                 # Suppress known warnings
                 importOptions( "$BRUNELOPTS/SuppressWarnings.opts" )
                 if not recInit.isPropertySet( "OutputLevel" ): recInit.OutputLevel = INFO
+
+        # Switch off LoKi banner
+        from Configurables import LoKiSvc
+        LoKiSvc().Welcome = False
 
 
     def configureInput(self, inputType):
@@ -398,9 +402,10 @@ class Brunel(LHCbConfigurableUser):
                 # Add the sequence to pack the DST containers
                 packSeq = GaudiSequencer("PackDST")
                 DstConf().PackSequencer = packSeq
+                DstConf().AlwaysCreate  = True
                 GaudiSequencer("OutputDSTSeq").Members += [ packSeq ]
                 # Run the packers also on Lumi only events to write empty containers
-                GaudiSequencer("DummyPackerSeq").Members += [ packSeq ]
+#                GaudiSequencer("DummyPackerSeq").Members += [ packSeq ]
 
             # Define the file content
             DstConf().Writer     = writerName
