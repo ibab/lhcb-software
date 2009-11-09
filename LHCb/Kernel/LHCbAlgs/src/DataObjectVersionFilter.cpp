@@ -1,4 +1,4 @@
-// $Id: DataObjectVersionFilter.cpp,v 1.1 2009-11-06 18:04:23 jonrob Exp $
+// $Id: DataObjectVersionFilter.cpp,v 1.2 2009-11-09 15:01:11 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -23,8 +23,8 @@ DataObjectVersionFilter::DataObjectVersionFilter( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "MinVersion", m_minV = -99999 );
-  declareProperty( "MaxVersion", m_maxV =  99999 );
+  declareProperty( "MinVersion", m_minV = 0 );
+  declareProperty( "MaxVersion", m_maxV = 99 );
   declareProperty( "DataObjectLocation", m_loc = "" );
 }
 
@@ -43,11 +43,13 @@ StatusCode DataObjectVersionFilter::execute()
   try
   {
     const DataObject * data = get<DataObject>(m_loc);
-    OK = data->version() <= m_maxV && data->version() >= m_minV;
+    const unsigned char ver = data->version();
+    if ( msgLevel(MSG::DEBUG) )
+      debug() << "version = " << (unsigned int)ver << endmsg;
+    OK = ver <= m_maxV && ver >= m_minV;
   }
   catch ( const GaudiException & )
   {
-    info() << "BAAAAAAAAAAAAAAAAAAAAAAAA" << endmsg;
     OK = false;
   }
   

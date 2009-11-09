@@ -1,4 +1,4 @@
-// $Id: DataObjectVersionFilter.h,v 1.1 2009-11-06 18:04:23 jonrob Exp $
+// $Id: DataObjectVersionFilter.h,v 1.2 2009-11-09 15:01:11 jonrob Exp $
 #ifndef DATAOBJECTVERSIONFILTER_H 
 #define DATAOBJECTVERSIONFILTER_H 1
 
@@ -30,9 +30,9 @@ public:
 
 private:
 
-  int m_minV;          ///< Min version number
-  int m_maxV;          ///< Max version number
-  std::string m_loc;   ///< DataObject location in TES
+  unsigned char m_minV;          ///< Min version number
+  unsigned char m_maxV;          ///< Max version number
+  std::string m_loc;             ///< DataObject location in TES
 
 };
 

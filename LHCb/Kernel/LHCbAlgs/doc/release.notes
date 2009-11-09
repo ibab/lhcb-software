@@ -10,7 +10,7 @@
 ! 2009-11-06 - Chris Jones
  - Add trivial algorithm that allows for sequence filtering based on the 
    version of DataObjects. Allows for use cases like the re-creation of some
-   data demending on its version.
+   data depending on its version.
 
 ! 2009-11-06 - Marco Clemencic
  - Modified the ODINCodecBaseTool to look for the RawEvent bank in more than one
