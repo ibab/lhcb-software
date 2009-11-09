@@ -122,8 +122,6 @@ StatusCode FullEventHiggsType::initialize() {
     m_b_pid = abs( m_ppSvc->find( m_subb )->pdgID() );
   }
 
-  std::cout<<"Initialize"<<std::endl;//#######
-
 	return sc ;
 }
 
@@ -193,8 +191,6 @@ bool FullEventHiggsType::studyFullEvent( LHCb::HepMCEvents * theEvents  ,
 		theb2 = *(++iterb);
 	}
 
-  std::cout<<"11"<<std::endl;//#######
-
 	if ( ( 1 == bList.size() ) && ( m_motherofb_id != "t" ) ) {
     Warning( "No b pairs in this event!" ) ;
   //can occure in ttbar event when one top decay on another mode than bW
@@ -210,8 +206,6 @@ bool FullEventHiggsType::studyFullEvent( LHCb::HepMCEvents * theEvents  ,
     Warning( "No b in this event!" ) ;
     return false ;
   }
-
-  std::cout<<"22"<<std::endl;//#######
 
 	double pzb1,thetab1;
 	double pzb2,thetab2;
@@ -236,8 +230,6 @@ bool FullEventHiggsType::studyFullEvent( LHCb::HepMCEvents * theEvents  ,
 		thetab1=1000000;
 	}
 
-  std::cout<<"33"<<std::endl;//#######
-
 	// Selection of the lepton
 	std::vector< const HepMC::GenParticle * > LeptonList ;
 	for ( HepMC::GenEvent::particle_const_iterator iterall = 
@@ -255,8 +247,6 @@ bool FullEventHiggsType::studyFullEvent( LHCb::HepMCEvents * theEvents  ,
     }
     return false ;
   }
-
-  std::cout<<"44"<<std::endl;//#######
 
 	double pzl1,ptl1,thetal1;
 	double pzl2,ptl2,thetal2;
@@ -295,8 +285,6 @@ bool FullEventHiggsType::studyFullEvent( LHCb::HepMCEvents * theEvents  ,
 		ptl2=-1000;
 		pzl2=-1000;
 	}
-
-  std::cout<<"55"<<std::endl;//#######
 
 	if((m_nbbquarks==-1 &&  m_nbLepton ==0)// no cut
 		||(m_nbbquarks==-1 &&  m_nbLepton ==1 && 
