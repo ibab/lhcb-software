@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-11-9 - Neal Gauvin
+- PythiaHiggsType as a full event cut tool : FullEventHiggsType
+
 !========================= LbPythia v8r6 2009-11-04 ==========================
 ! 2009-10-22 - Patrick Robbe
  - Fixes for SLC5 compilation with GCC4.3

@@ -1,4 +1,3 @@
-// $Id: ParticlesInAcceptance.h,v 1.1.1.1 2009-08-05 09:43:37 ngueissa Exp $
 #ifndef COMPONENT_PARTICLESINACCEPTANCE_H 
 #define COMPONENT_PARTICLESINACCEPTANCE_H 1
 
