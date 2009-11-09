@@ -1,4 +1,4 @@
-// $Id: ODINEncodeTool.cpp,v 1.1 2009-02-03 18:31:03 marcocle Exp $
+// $Id: ODINEncodeTool.cpp,v 1.2 2009-11-09 18:28:15 marcocle Exp $
 // Include files
 #include "ODINCodecBaseTool.h"
 
@@ -21,8 +21,18 @@ public:
 
   virtual ~ODINEncodeTool(); ///< Destructor
 
+  /// Initialize the tool
+  virtual inline StatusCode initialize();
+
   /// Do the conversion
   virtual void execute();
+
+private:
+  /// Location in the transient store of the ODIN object.
+  std::string m_odinLocation;
+
+  /// Location in the transient store of the RawEvent object.
+  std::string m_rawEventLocation;
 };
 
 //=============================================================================
@@ -48,11 +58,40 @@ ODINEncodeTool::ODINEncodeTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : ODINCodecBaseTool(type, name, parent) {
+  declareProperty("ODINLocation", m_odinLocation = "",
+                  "Location of the ODIN object in the transient store. By "
+                  "default is the content of LHCb::ODINLocation::Default.");
+  declareProperty("RawEventLocation", m_rawEventLocation = "",
+                  "Location of the RawEvent object in the transient store. By "
+                  "default is the content of LHCb::RawEventLocation::Default.");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 ODINEncodeTool::~ODINEncodeTool() {
+}
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode ODINEncodeTool::initialize() {
+  StatusCode sc = ODINCodecBaseTool::initialize(); // always first
+  if (sc.isFailure()) return sc; // error message already printed
+
+  if (m_odinLocation.empty()) {
+    // use the default
+    m_odinLocation = LHCb::ODINLocation::Default;
+  } else {
+    info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
+  }
+
+  if (m_rawEventLocation.empty()) {
+    // use the default
+    m_rawEventLocation = LHCb::RawEventLocation::Default;
+  } else {
+    info() << "Using '" << m_rawEventLocation << "' as location of the RawEvent object" << endmsg;
+  }
+
+  return sc;
 }
 //=============================================================================
 // Main function

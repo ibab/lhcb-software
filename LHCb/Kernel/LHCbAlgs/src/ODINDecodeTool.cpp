@@ -1,4 +1,4 @@
-// $Id: ODINDecodeTool.cpp,v 1.2 2009-11-06 16:47:45 marcocle Exp $
+// $Id: ODINDecodeTool.cpp,v 1.3 2009-11-09 18:28:15 marcocle Exp $
 // Include files
 #include "ODINCodecBaseTool.h"
 #include "GaudiKernel/SerializeSTL.h"
@@ -22,8 +22,22 @@ public:
 
   virtual ~ODINDecodeTool(); ///< Destructor
 
+  /// Initialize the tool
+  virtual inline StatusCode initialize();
+
   /// Do the conversion
   virtual void execute();
+
+private:
+  /// Location in the transient store of the ODIN object.
+  std::string m_odinLocation;
+
+  /// Location in the transient store of the RawEvent object.
+  /// @warning Obsolete: use m_rawEventLocations
+  std::string m_rawEventLocation;
+
+  /// List of locations in the transient store to search the RawEvent object.
+  std::vector<std::string> m_rawEventLocations;
 };
 
 //=============================================================================
@@ -48,11 +62,53 @@ ODINDecodeTool::ODINDecodeTool( const std::string& type,
                                 const std::string& name,
                                 const IInterface* parent )
   : ODINCodecBaseTool(type, name, parent) {
+  declareProperty("ODINLocation", m_odinLocation = "",
+                  "Location of the ODIN object in the transient store. By "
+                  "default is the content of LHCb::ODINLocation::Default.");
+  declareProperty("RawEventLocation", m_rawEventLocation = "",
+                  "Location of the RawEvent object in the transient store. By "
+                  "default is the content of LHCb::RawEventLocation::Default.");
+  declareProperty("RawEventLocations", m_rawEventLocations,
+                  "List of possible locations of the RawEvent object in the"
+                  " transient store. By default it is LHCb::RawEventLocation::Copied,"
+                  " LHCb::RawEventLocation::Default.");
 }
 //=============================================================================
 // Destructor
 //=============================================================================
 ODINDecodeTool::~ODINDecodeTool() {
+}
+//=============================================================================
+// Initialize
+//=============================================================================
+StatusCode ODINDecodeTool::initialize() {
+  StatusCode sc = ODINCodecBaseTool::initialize(); // always first
+  if (sc.isFailure()) return sc; // error message already printed
+
+  if (m_odinLocation.empty()) {
+    // use the default
+    m_odinLocation = LHCb::ODINLocation::Default;
+  } else {
+    info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
+  }
+
+  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
+  if (! m_rawEventLocation.empty()) {
+    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
+    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
+  }
+
+  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
+      == m_rawEventLocations.end()) {
+    // append the defaults to the search path
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
+    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
+  }
+
+  if (!usingDefaultLocation) {
+    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
+  }
+  return sc;
 }
 //=============================================================================
 // Main function

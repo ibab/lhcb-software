@@ -24,16 +24,6 @@ ODINCodecBaseTool::ODINCodecBaseTool( const std::string& type,
 
   declareProperty("Force", m_force = false,
                   "If already present, override the destination object.");
-  declareProperty("ODINLocation", m_odinLocation = "",
-                  "Location of the ODIN object in the transient store. By "
-                  "default is the content of LHCb::ODINLocation::Default.");
-  declareProperty("RawEventLocation", m_rawEventLocation = "",
-                  "Location of the RawEvent object in the transient store. By "
-                  "default is the content of LHCb::RawEventLocation::Default.");
-  declareProperty("RawEventLocations", m_rawEventLocations,
-                  "List of possible locations of the RawEvent object in the"
-                  " transient store. By default it is LHCb::RawEventLocation::Copied,"
-                  " LHCb::RawEventLocation::Default.");
   declareProperty("IgnoreUnknownBankVersion", m_ignoreBankVersion = false,
                   "Do not stop in case of unknown bank version number, assuming"
                   " it is binary compatible with the latest known version.");
@@ -42,39 +32,6 @@ ODINCodecBaseTool::ODINCodecBaseTool( const std::string& type,
 // Destructor
 //=============================================================================
 ODINCodecBaseTool::~ODINCodecBaseTool() {
-}
-//=============================================================================
-// Destructor
-//=============================================================================
-StatusCode ODINCodecBaseTool::initialize() {
-  StatusCode sc = GaudiTool::initialize(); // always first
-  if (sc.isFailure()) return sc; // error message already printed
-
-  if (m_odinLocation.empty()) {
-    // use the default
-    m_odinLocation = LHCb::ODINLocation::Default;
-  } else {
-    info() << "Using '" << m_odinLocation << "' as location of the ODIN object" << endmsg;
-  }
-
-  bool usingDefaultLocation = m_rawEventLocations.empty() && m_rawEventLocation.empty();
-  if (! m_rawEventLocation.empty()) {
-    warning() << "The RawEventLocation property is obsolete, use RawEventLocations instead" << endmsg;
-    m_rawEventLocations.insert(m_rawEventLocations.begin(), m_rawEventLocation);
-  }
-
-  if (std::find(m_rawEventLocations.begin(), m_rawEventLocations.end(), LHCb::RawEventLocation::Default)
-      == m_rawEventLocations.end()) {
-    // append the defaults to the search path
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Copied);
-    m_rawEventLocations.push_back(LHCb::RawEventLocation::Default);
-  }
-
-  if (!usingDefaultLocation) {
-    info() << "Using '" << m_rawEventLocations << "' as search path for the RawEvent object" << endmsg;
-  }
-
-  return sc; // SUCCESS
 }
 //=============================================================================
 // ODIN Bank constants

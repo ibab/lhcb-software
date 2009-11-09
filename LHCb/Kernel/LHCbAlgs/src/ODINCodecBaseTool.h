@@ -1,4 +1,4 @@
-// $Id: ODINCodecBaseTool.h,v 1.2 2009-11-06 16:47:45 marcocle Exp $
+// $Id: ODINCodecBaseTool.h,v 1.3 2009-11-09 18:28:15 marcocle Exp $
 #ifndef ODIN_CODEC_BASE_TOOL_H
 #define ODIN_CODEC_BASE_TOOL_H
 // Include files
@@ -40,7 +40,7 @@ public:
   virtual ~ODINCodecBaseTool(); ///< Destructor
 
   /// Initialize the tool
-  virtual StatusCode initialize();
+  virtual inline StatusCode initialize() { return GaudiTool::initialize(); }
 
 protected:
   /// Decode the ODIN RawBank and fill the ODIN object
@@ -56,16 +56,6 @@ protected:
 
   /// If set to true, override the destination object.
   bool m_force;
-
-  /// Location in the transient store of the ODIN object.
-  std::string m_odinLocation;
-
-  /// Location in the transient store of the RawEvent object.
-  /// @warning Obsolete: use m_rawEventLocations
-  std::string m_rawEventLocation;
-
-  /// List of locations in the transient store to search the RawEvent object.
-  std::vector<std::string> m_rawEventLocations;
 
   /// Flag to indicate if unknown version numbers have to be ignored.
   bool m_ignoreBankVersion;
