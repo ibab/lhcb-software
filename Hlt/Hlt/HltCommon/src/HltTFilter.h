@@ -1,4 +1,4 @@
-// $Id: HltTFilter.h,v 1.12 2009-02-13 13:41:09 hernando Exp $
+// $Id: HltTFilter.h,v 1.13 2009-11-09 17:32:17 aperezca Exp $
 #ifndef HLTCOMMON_HLTTFILTER_H 
 #define HLTCOMMON_HLTTFILTER_H 1
 
@@ -44,7 +44,10 @@ namespace Hlt {
     std::string operation;
     double minvalue;
     double maxvalue;
-    bool isMin() const { return operation!=">"; }
+    //bool isMin() const { return operation!=">"; } //This can't deal with absolute value!
+    bool isMin() const { return operation.find(">")==std::string::npos; }
+    bool isAbs() const { return operation.find("||")!=std::string::npos; }
+
     AIDA::IHistogram1D* histovalues;
     AIDA::IHistogram1D* histobest;
   };  

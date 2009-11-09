@@ -4,6 +4,10 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+! 2009-11-09 - Antonio Perez-Calero
+  - Corrected bug in HltTFilter to be able to monitor filters on absolute value
+	- Added some debugging comments
+
 !========================== HltCommon v5r13p1 2009-11-05 ===================
 ! 2009-11-04 - Gerhard Raven
  - fix stale reference in HltL0MuonCandidates

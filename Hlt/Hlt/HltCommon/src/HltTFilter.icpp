@@ -1,4 +1,4 @@
-// $Id: HltTFilter.icpp,v 1.24 2009-10-08 15:30:39 graven Exp $
+// $Id: HltTFilter.icpp,v 1.25 2009-11-09 17:32:17 aperezca Exp $
 // Include files
 
 #include "EParser.h"
@@ -64,7 +64,16 @@ StatusCode HltTFilter<T>::initialize() {
   BOOST_FOREACH( const std::string& descriptor, m_filterDescriptor.value() ) {
         addTFilterData(descriptor);
   }
-
+  
+  if (msgLevel(MSG::DEBUG)) {
+    BOOST_FOREACH( TFilterData *filter, m_tfilters ) {
+      debug() << " applying filter " << filter->filtername << endreq;
+      debug() << " filter operation " << filter->operation << endreq;
+      debug() << " is filter min? " << filter->isMin() << endreq;
+      debug() << " is filter abs? " << filter->isAbs() << endreq;
+    }
+  }  
+  
   // output
   m_selections.registerSelection();
   return  sc;
@@ -81,12 +90,12 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
           << " operation " << ptf->operation
           << " range " << ptf->minvalue 
           << ", " << ptf->maxvalue <<endreq;
-
+  
   if (!ok) {
     error() << " can not create TFilter "<< descriptor << endreq;
     return ok;
   }
-
+  
   ptf->function.reset( m_factory->function(ptf->functionname) );
   Assert( 0 != ptf->function.get(),
           " addTFilterData() function no created"+ptf->functionname);
@@ -113,10 +122,10 @@ bool HltTFilter<T>::addTFilterData(const std::string& descriptor) {
 
 template <class T>
 StatusCode HltTFilter<T>::execute() {
-
+  
   StatusCode sc= StatusCode::SUCCESS;
   debug() << "==> Execute" << endmsg;
-
+  
   const Hlt::TSelection<T>* in  = m_selections.template input<1>();
   Hlt::TSelection<T>* out = m_selections.output();
 
@@ -133,28 +142,36 @@ StatusCode HltTFilter<T>::execute() {
 
   // loop in filters, and apply to the surviving objects
   BOOST_FOREACH( TFilterData *filter, m_tfilters ) {
-
+    
     if (msgLevel(MSG::VERBOSE)) {
-        verbose() << " applying filter " << filter->filtername << endreq;
-        verbose() << " input objects " << out->size() << endreq;
+      verbose() << " applying filter " << filter->filtername << endreq;
+      verbose() << " input objects " << out->size() << endreq;
     }
-
+    
     if (m_addInfo) {
       BOOST_FOREACH( T* cand, *out ) cand->addInfo(filter->infoID,(*filter->function)(*cand));
     }
 
-
+    
     // debug and monitor
     if ((msgLevel(MSG::DEBUG) || produceHistos()) && m_addInfo) {
       std::vector<double> vals; vals.reserve(m_selections.output()->size());
       BOOST_FOREACH( T* cand, *out) vals.push_back( cand->info(filter->infoID,1e6));
 
-      double val = *( filter->isMin() ? std::min_element(vals.begin(),vals.end()) 
+      if (filter->isAbs()) {
+        debug() << "filter is applied on absolute value " << endreq;
+        debug() << "values before abs() " << endreq;
+        for(std::vector<double>::const_iterator i=vals.begin();i!=vals.end();++i) debug() << *i << ", ";
+        debug() << endreq;
+        BOOST_FOREACH(double& v,vals) v=fabs(v);
+      }
+      
+      double val = *( filter->isMin() ? std::min_element(vals.begin(),vals.end())
                                       : std::max_element(vals.begin(),vals.end()) );
       if (msgLevel(MSG::DEBUG)) {
         std::string name = filter->filtername+" : ";
         for(std::vector<double>::const_iterator i=vals.begin();i!=vals.end();++i)
-             debug() << *i << ", ";
+          debug() << *i << ", ";
         debug() << endreq; 
         debug() << " best " << val << endreq;
       }
