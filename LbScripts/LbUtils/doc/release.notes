@@ -1,3 +1,9 @@
+2009-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/ConfigFile.py: fixed bug in the reading of the config file.
+	* python/LbUtils/Log.py: fixed the name of the internal variable for the log level
+	to comply with the default convention of the command line parser.
+
 2009-11-06  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/ConfigFile.py: implementation detail of the config file reading.

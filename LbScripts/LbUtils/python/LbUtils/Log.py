@@ -1,4 +1,4 @@
-# $Id: Log.py,v 1.6 2009-11-04 16:29:11 hmdegaud Exp $
+# $Id: Log.py,v 1.7 2009-11-09 10:37:31 hmdegaud Exp $
 """ implement the default logging settings to the parser"""
 
 import logging
@@ -37,26 +37,26 @@ def addDefaultLogger(parser, format=None):
     log = logging.getLogger()
     log.addHandler(console)
     log.setLevel(logging.WARNING)
-    parser.set_defaults(loglevel="WARNING")
+    parser.set_defaults(log_level="WARNING")
     grp = parser.add_option_group("Logging")
     grp.add_option("--silent",
                       action="callback",
                       callback=setLogLevelCallBack, 
-                      dest="loglevel",
+                      dest="log_level",
                       help="silent mode. Only CRITICALS")
     grp.add_option("--quiet",
                       action="callback",
                       callback=setLogLevelCallBack, 
-                      dest="loglevel",
+                      dest="log_level",
                       help="quiet mode. Only ERRORS and CRITICALS")
     grp.add_option("--verbose",
                       action="callback", 
                       callback=setLogLevelCallBack, 
-                      dest="loglevel",
+                      dest="log_level",
                       help="verbose mode [default: %default]. Everything down to INFOS")
     grp.add_option("--debug",
                       action="callback",
                       callback=setLogLevelCallBack,
-                      dest="loglevel",
+                      dest="log_level",
                       help="debug mode. Everything")
     return log

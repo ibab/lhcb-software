@@ -1,4 +1,4 @@
-# $Id: ConfigFile.py,v 1.1 2009-11-06 14:30:54 hmdegaud Exp $
+# $Id: ConfigFile.py,v 1.2 2009-11-09 10:37:31 hmdegaud Exp $
 from optparse import OptionValueError
 from ConfigParser import SafeConfigParser
 
@@ -95,7 +95,7 @@ def readOptionConfig(group_title, option, config_parser):
     config = None
     if option.action == "store_true" or option.action=="store_false" :
         config = config_parser.getboolean(group_title, option.dest)
-    else :
+    elif option.dest :
         config = config_parser.get(group_title, option.dest)
     return config
 
@@ -109,6 +109,9 @@ def readMainConfig(parser, config_parser):
     config = {}
     for o in parser.option_list:
         config[o.dest] = readOptionConfig("DEFAULT", o, config_parser)
+    for o in config.keys() :
+        if not o :
+            del config[o]
     return config
     
 def readConfigFile(parser, config_file=None):
@@ -124,11 +127,12 @@ def readConfigFile(parser, config_file=None):
         if good_files :
             config["DEFAULT"] = readMainConfig(parser, cf)
             for g in parser.option_groups :
-                if g.title != "Config" :
+                if g.title != "Config" and g.title in cf.sections() :
                     config[g.title] = readGroupConfig(g, cf)
     return config
 
 def setDefaultConfig(parser, config):
     for g in config.keys() :
-        parser.defaults[g[0]] = g[1]
+        for o in config[g].keys() :
+            parser.defaults[o] = config[g][o]
 
