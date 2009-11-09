@@ -1,9 +1,15 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.127 2009-09-02 13:45:25 cattanem Exp $
+! $Id: release.notes,v 1.128 2009-11-09 14:31:26 pkoppenb Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2009-11-09 - Patrick Koppenburg
+ - Rename locations of HLT vertices to what is actually used. Now
+       Velo2D is Hlt/Vertex/PV2D
+       Velo3D is Hlt/Vertex/PV3D
+ - v2r23
 
 !========================= RecEvent v2r22 2009-09-02 =========================
 ! 2009-08-29 - Chris Jones

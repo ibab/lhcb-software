@@ -23,8 +23,8 @@
       <base name = "VertexBase"/>
       &KeyedObject;
 
-      <location name="Velo2D"    place="Rec/Trig/Vertex2D"     />
-      <location name="Velo3D"    place="Rec/Trig/Vertex3D"     />
+      <location name="Velo2D"    place="Hlt/Vertex/PV2D"     />
+      <location name="Velo3D"    place="Hlt/Vertex/PV3D"     />
       <location name="Primary"   place="Rec/Vertex/Primary"    />
       <location name="V0"        place="Rec/Vertex/V0"    />
       <enum
