@@ -10,7 +10,7 @@ Helper module to define DST (un)packing rule for Calo Hypo objects
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
 # =============================================================================
 __all__ = (
     'CaloDstPackConf'     ,  ## the configurable, responsible for Dst packing   
@@ -38,14 +38,16 @@ class CaloDstPackConf ( ConfigurableUser ) :
                           'SplitPhotons'
                           ]       , ## The list of hypos to be packed 
         'Enable'      : False     , ## Enable/disable the packing 
-        'OutputLevel' : INFO        ## The global output level
+        'OutputLevel' : INFO      , ## The global output level
+        'AlwaysCreate': False       ## Abort/continue if missing input to packers
        }
     ## documentation lines
     _propetyDocDct = {
         'Sequence'    : """ The sequence to be appended    """ , 
         'Hypos'       : """ the list of hypos to be packed """ , 
         'Enable'      : """ Enable/disable the packing     """ , 
-        "OutputLevel" : """ The global output level        """
+        "OutputLevel" : """ The global output level        """ ,
+        'AlwaysCreate': """ Flags whether to create output packed objects even if input missing """
         }
     
     ## Check the configuration
@@ -77,7 +79,8 @@ class CaloDstPackConf ( ConfigurableUser ) :
             self.getProp ('Sequence'    ) ,
             self.getProp ('Enable'      ) ,
             self.getProp ('Hypos'       ) ,
-            self.getProp ('OutputLevel' ) 
+            self.getProp ('OutputLevel' ) ,
+            self.getProp ('AlwaysCreate')
             )
 
 # =============================================================================
@@ -139,7 +142,8 @@ def caloHypoDstPack (
                  'Photons'      ,
                  'MergedPi0s'   ,
                  'SplitPhotons' ] ,
-    level    = INFO  
+    level    = INFO               ,  
+    alwaysCreate = False
     ) :
     """
     Define the Dst-packing rules
@@ -156,10 +160,11 @@ def caloHypoDstPack (
         _input  =  'Rec/Calo/' + hypo  
         _output = 'pRec/Calo/' + hypo
         _alg    = PackCaloHypo(
-            name        = _name   ,
-            InputName   = _input  ,
-            OutputName  = _output ,
-            OutputLevel = level   )
+            name               = _name        ,
+            AlwaysCreateOutput = alwaysCreate ,
+            InputName          = _input       ,
+            OutputName         = _output      ,
+            OutputLevel        = level   )
         sequence.Members .append ( _alg )
         log.debug ('CaloHypoDstPack: add %s ' % _alg.getFullName() )
 

@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.28 2009-11-06 18:00:16 jonrob Exp $"
+__version__ = "$Id: DstConf.py,v 1.29 2009-11-09 10:01:32 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -26,6 +26,7 @@ class DstConf(LHCbConfigurableUser):
        , "EnableUnpack"   : False
        , "PackType"       : "TES"
        , "PackSequencer"  : None
+       , "AlwaysCreate"   : False
        , "Writer"         : "DstWriter"
        , "OutputName"     : ""
        , "SpilloverPaths" : [ "Prev", "PrevPrev", "Next" ]
@@ -37,6 +38,7 @@ class DstConf(LHCbConfigurableUser):
        ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
        ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
+       ,'AlwaysCreate'  : """ Flags whether to create output packed objects even if input missing """
        ,'Writer'        : """ Name of OutputStream writing the DST """
        ,'OutputName'    : """ Name of the output file, for MDF writing """
        ,'SpilloverPaths': """ Paths to write to XDST if available on input file """
@@ -197,27 +199,33 @@ class DstConf(LHCbConfigurableUser):
         from Configurables import PackTrack, PackCaloHypo, PackProtoParticle, PackRecVertex, PackTwoProngVertex
         from Configurables import DataPacking__Pack_LHCb__RichPIDPacker_
         from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_
-        
-        packDST.Members = [ PackTrack() ]
 
-        richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_("PackRichPIDs")
-        muonpidpack = DataPacking__Pack_LHCb__MuonPIDPacker_("PackMuonPIDs")
+        alwaysCreate = self.getProp("AlwaysCreate")
+        packDST.Members = [ PackTrack(AlwaysCreateOutput = alwaysCreate) ]
+
+        richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_( name               = "PackRichPIDs",
+                                                              AlwaysCreateOutput = alwaysCreate )
+        muonpidpack = DataPacking__Pack_LHCb__MuonPIDPacker_( name               = "PackMuonPIDs",
+                                                              AlwaysCreateOutput = alwaysCreate )
         packDST.Members += [ richpidpack, muonpidpack ]
 
         CaloDstPackConf (
-            Enable   = True    ,
-            Sequence = packDST 
+            Enable       = True    ,
+            Sequence     = packDST ,
+            AlwaysCreate = alwaysCreate
             )
 
         packDST.Members += [
-            PackProtoParticle( name       = "PackCharged",
-                               InputName  = "/Event/Rec/ProtoP/Charged",
-                               OutputName = "/Event/pRec/ProtoP/Charged")
-            , PackProtoParticle( name       = "PackNeutrals",
-                                 InputName  = "/Event/Rec/ProtoP/Neutrals",
-                                 OutputName = "/Event/pRec/ProtoP/Neutrals")
-            , PackRecVertex()
-            , PackTwoProngVertex()
+            PackProtoParticle( name               = "PackCharged",
+                               AlwaysCreateOutput = alwaysCreate,
+                               InputName          = "/Event/Rec/ProtoP/Charged",
+                               OutputName         = "/Event/pRec/ProtoP/Charged")
+            , PackProtoParticle( name               = "PackNeutrals",
+                                 AlwaysCreateOutput = alwaysCreate,
+                                 InputName          = "/Event/Rec/ProtoP/Neutrals",
+                                 OutputName         = "/Event/pRec/ProtoP/Neutrals")
+            , PackRecVertex(AlwaysCreateOutput = alwaysCreate)
+            , PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
             ]
         
         if self.getProp( "DstType" ).upper() == "RDST":
@@ -227,9 +235,10 @@ class DstConf(LHCbConfigurableUser):
             rawEventSelectiveCopy.RawBanksToCopy = [ "HltDecReports" , "L0DU", "ODIN" ]
             packDST.Members += [ rawEventSelectiveCopy ]
         else:
-            packDST.Members += [ PackTrack( name       = "PackMuons",
-                                            InputName  = "/Event/Rec/Track/Muon",
-                                            OutputName = "/Event/pRec/Track/Muon" ) ]
+            packDST.Members += [ PackTrack( name               = "PackMuons",
+                                            AlwaysCreateOutput = alwaysCreate,
+                                            InputName          = "/Event/Rec/Track/Muon",
+                                            OutputName         = "/Event/pRec/Track/Muon" ) ]
 
         # In MDF case, add a sub sequence for the MDF writing
         if self.getProp( "PackType" ).upper() == "MDF":

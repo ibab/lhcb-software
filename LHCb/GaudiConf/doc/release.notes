@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.187 2009-11-06 14:00:36 cattanem Exp $
+! $Id: release.notes,v 1.188 2009-11-09 10:01:32 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-09 - Marco Cattaneo
+ - Add "AlwaysCreate" slot to DstConf and CaloPackingConf, to control new
+   "AlwaysCreateOutput" property of the packers
 
 ! 2009-11-06 - Marco Cattaneo
  - Bug fix in DstConf: set up unpacking even if no DST output requested 
