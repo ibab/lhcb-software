@@ -1,9 +1,13 @@
-d$Id: release.notes,v 1.56 2009-11-05 08:50:59 graven Exp $
+d$Id: release.notes,v 1.57 2009-11-09 15:46:19 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-11-09 - Patrick Koppenburg
+ - GoodPions and Kaons : depend on PV3D
+ - v2r6
 
 !========================== Hlt2SharedParticles v2r5 2009-11-05 =============
 ! 2009-11-03 - Gerhard Raven
