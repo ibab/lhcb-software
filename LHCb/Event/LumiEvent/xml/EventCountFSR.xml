@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Rob Lambert -->
+<!--- Created : 2009-11-09 -->
+
+<!DOCTYPE gdd SYSTEM "gdd.dtd" >
+<gdd>
+  <package name='LumiEvent'>
+
+
+<!-- EventCountFSR Class -->
+
+    <class
+      name="EventCountFSR"
+      author="Rob Lambert"
+      desc="Accounting class for processed events in FSR"
+      id="13503"
+      >
+      <base name='DataObject'/>
+
+
+      <location name="Default"   
+		place="/FileRecords/EventCountFSR"/>
+      
+      <attribute
+        desc="Number of events this output file should contain"
+        name="output"
+        type="longlong"
+        init="0"
+       />
+
+      <attribute
+        desc="Number of events read from all input files"
+        name="input"
+        type="longlong"
+        init="0"
+       />
+
+      <attribute
+        desc="were all events from the input files processed, used to overwrite the input/output comparison at the lowest level of the tree, and whenever it is explicitly verified OK"
+        name="all"
+        type="bool"
+        init="0"
+       />
+
+    </class>
+
+  </package>
+
+
+</gdd>
