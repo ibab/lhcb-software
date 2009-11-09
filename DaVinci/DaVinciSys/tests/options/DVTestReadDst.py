@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestReadDst.py,v 1.6 2009-10-21 10:14:15 pkoppenb Exp $
+# $Id: DVTestReadDst.py,v 1.7 2009-11-09 13:05:37 pkoppenb Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -33,7 +33,7 @@ for i in MassRanges :
 
 DaVinci().EvtMax = -1
 DaVinci().PrintFreq = 1 
-DaVinci().DataType = "MC09" # Default is "DC06"
+DaVinci().DataType = "MC09"
 DaVinci().Input = [ "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3050_3150.dst' TYP='POOL_ROOTTREE' OPT='READ'"
                  ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_2600_3200.dst' TYP='POOL_ROOTTREE' OPT='READ'"
                  ,  "DATAFILE='PFN:$DAVINCISYSROOT/tests/qmtest/Sel.SeqJpsi_3000_3500.dst' TYP='POOL_ROOTTREE' OPT='READ'" 

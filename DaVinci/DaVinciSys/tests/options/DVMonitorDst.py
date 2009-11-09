@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.1 2009-10-02 13:16:59 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.2 2009-11-09 13:05:37 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -28,5 +28,5 @@ DaVinci().DataType = "MC09" # Default is "DC06"
 DaVinci().Simulation = True
 DaVinci().InputType = "RDST"
 EventSelector().Input   = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RDST/00005288/0000/00005288_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
+    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RDST/00004937/0000/00004937_00000001_1.rdst' TYP='POOL_ROOTTREE' OPT='READ'"]
     

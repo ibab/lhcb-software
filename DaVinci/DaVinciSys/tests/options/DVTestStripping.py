@@ -43,7 +43,7 @@ from Configurables import DaVinci
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
 DaVinci().EvtMax = 100                         # Number of events
-DaVinci().DataType = "MC09"                    # Default is "DC06"
+DaVinci().DataType = "MC09"      
 DaVinci().Simulation   = True                  # It is MC
 DaVinci().ETCFile = "etc.root"
 

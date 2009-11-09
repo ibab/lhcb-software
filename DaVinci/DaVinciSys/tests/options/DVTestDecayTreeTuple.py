@@ -1,4 +1,4 @@
-## @file DVTestHltDecayTreeTuple-DC06.py
+## @file DVTestHltDecayTreeTuple.py
  #
  #
  #  See DecayTreeTuple documentation
