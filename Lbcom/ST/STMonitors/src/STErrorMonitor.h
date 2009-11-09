@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.h,v 1.3 2009-09-03 10:23:14 mtobin Exp $
+// $Id: STErrorMonitor.h,v 1.4 2009-11-09 17:55:51 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -41,5 +41,10 @@ private:
 
   // Book histrograms for online monitoring
   AIDA::IHistogram1D* m_1d_errorBanks;
+
+  /// Map of error histograms booked in initialize
+  std::map<unsigned int, AIDA::IHistogram2D*> m_errorHistos;
+
+
 };
 #endif // STERRORMONITOR_H

@@ -4,6 +4,13 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-11-09 - Mark Tobin
+ - Fix binning of 2d histograms for ADCs vs TELL1
+ - Add flags to only makes noise plots for certain TELL
+ - Book histograms in STErrorMonitor for online monitoring.
+ - Change noise plots to profile histograms; better for the history mode in the 
+ online monitoring.
+
 ! 2009-10-30 - Mark Tobin
  - Modified STNZSMonitor such that it uses ISTNoiseCalculationTool to calculate
  noise. 

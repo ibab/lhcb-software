@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.6 2009-10-30 13:21:48 mtobin Exp $
+// $Id: STNZSMonitor.h,v 1.7 2009-11-09 17:55:51 mtobin Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -66,8 +66,11 @@ private:
   /// Plot noise calculation variables (mean, mean squared and rms)
   void dumpNoiseCalculation(unsigned int sourceID);
   
+  std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
+  bool   m_selectedTells;///< Use only selected TELL1s
+
   /// Map of noise histograms booked in initialize
-  std::map<int, AIDA::IHistogram1D*> m_noiseHistos;
+  std::map<int, AIDA::IProfile1D*> m_noiseHistos;
 
   ST::ISTNoiseCalculationTool* m_noiseTool; ///< Tool to calculate noise
   std::string m_noiseToolType; ///< Tool type (default is STNoiseCalculationTool)

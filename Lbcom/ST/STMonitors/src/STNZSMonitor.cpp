@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.9 2009-10-30 13:21:48 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.10 2009-11-09 17:55:51 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -13,7 +13,7 @@
 #include "Event/STTELL1Data.h"
 
 // AIDA
-#include "AIDA/IHistogram1D.h"
+#include "AIDA/IProfile1D.h"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -46,6 +46,8 @@ STNZSMonitor::STNZSMonitor( const std::string& name,
 
   // Debugging
   declareProperty("CheckNoiseCalculation", m_checkCalculation=false);
+  // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1) 
+  declareProperty("LimitToTell",      m_limitToTell     ); 
 
   /// Noise calculation tool
   declareProperty("NoiseToolType",m_noiseToolType="ST::STNoiseCalculationTool");
@@ -53,8 +55,7 @@ STNZSMonitor::STNZSMonitor( const std::string& name,
 
 }
 
-StatusCode STNZSMonitor::initialize()
-{
+StatusCode STNZSMonitor::initialize() {
   // Initialize ST::HistoAlgBase
   StatusCode sc = ST::HistoAlgBase::initialize();
   if (sc.isFailure()) return sc;
@@ -69,7 +70,12 @@ StatusCode STNZSMonitor::initialize()
   m_resetRate = m_noiseTool->resetRate();
   m_skipEvents = m_noiseTool->skipEvents();
 
-
+  // Select small number of TELL1s (useful for debugging)
+  m_selectedTells = false;
+  if ( m_limitToTell.size() > 0 ) {
+    m_selectedTells = true;
+    sort(m_limitToTell.begin(), m_limitToTell.end());
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -80,17 +86,23 @@ void STNZSMonitor::bookHistograms() {
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int sourceID = (*itT).first;
+
+    // Limit to selected tell1s
+    if ( m_selectedTells ) {
+      if (!binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber(sourceID))) {
+        continue;
+      }
+    }
     unsigned int tellID = m_useSourceID ? sourceID : (*itT).second;
     // Create a title for the histogram
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
     HistoID histoID        = "noise_$tell" + strTellID;
     std::string histoTitle = "Noise for Tell" + strTellID;
-    m_noiseHistos[sourceID] = book1D(histoID, histoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    m_noiseHistos[sourceID] = bookProfile1D(histoID, histoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
   }
 }
 
-StatusCode STNZSMonitor::execute()
-{ 
+StatusCode STNZSMonitor::execute() { 
   m_evtNumber++;
   // Skip first m_skipEvents. Useful when running over CMS data.
   if( m_evtNumber < m_skipEvents ) {
@@ -131,26 +143,29 @@ StatusCode STNZSMonitor::execute()
   return StatusCode::SUCCESS;
 }
 
-StatusCode STNZSMonitor::finalize()
-{
+StatusCode STNZSMonitor::finalize() {
   //printHistos();
   // Update all histograms at the end
-  std::map<int, AIDA::IHistogram1D*>::const_iterator itH = m_noiseHistos.begin();
+  std::map<int, AIDA::IProfile1D*>::const_iterator itH = m_noiseHistos.begin();
   for( ; itH != m_noiseHistos.end(); ++itH ) { 
+    // Limit to selected tell1s
+    if ( m_selectedTells && 
+         !binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber((*itH).first))) {
+      continue;
+    }
+
     updateNoiseHistogram( (*itH).first );
     if(m_checkCalculation) dumpNoiseCalculation( (*itH).first );
   } 
-  
 
   return ST::HistoAlgBase::finalize();// must be called after all other actions
 }
 
-void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID)
-{
+void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID) {
   // Get the histogram and reset it in case it is already booked. 
   if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() ) { 
 
-    IHistogram1D* hist = m_noiseHistos.find(sourceID)->second;//->second.end();
+    IProfile1D* hist = m_noiseHistos.find(sourceID)->second;//->second.end();
     hist->reset();
   
     // Loop over strips in tell1
@@ -201,21 +216,21 @@ void STNZSMonitor::dumpNoiseCalculation(unsigned int sourceID) {
   std::string idCMSN = "CMS number events, TELL "+idTELL;
   int pp=0;
   for(; rawNIt != rawN.end(); ++rawNIt, ++cmsNIt, ++pp) {
-    plot1D(pp,idRawN,idRawN, -0.5, 3.5, 4, (*rawNIt));  // sort this out (4 bins)
-    plot1D(pp,idCMSN,idCMSN, -0.5, 3.5, 4, (*cmsNIt)); // sort this out (4 bins)
+    profile1D(pp, (*rawNIt), idRawN, idRawN, -0.5, 3.5, 4);
+    profile1D(pp, (*cmsNIt), idCMSN, idCMSN, -0.5, 3.5, 4);
 
 
   }
   for(; rawMeanIt != rawMean.end(); ++rawMeanIt, ++rawMeanSqIt, ++rawNoiseIt, ++cmsMeanIt, ++cmsMeanSqIt, ++cmsNoiseIt, ++strip) {
-    plot1D(strip,idRawMean,idRawMean, -0.5, 3071.5, 3072, (*rawMeanIt)); 
-    plot1D(strip,idRawMeanSq,idRawMeanSq, -0.5, 3071.5, 3072, (*rawMeanSqIt)); 
-    plot1D(strip,idRawNoiseS,idRawNoiseS, -0.5, 3071.5, 3072, (*rawNoiseIt)); 
-    plot1D(strip,idRawNoiseC,idRawNoiseC, -0.5, 3071, 3072, sqrt( *rawMeanSqIt - gsl_pow_2( *rawMeanIt ) ));
+    profile1D(strip, (*rawMeanIt), idRawMean, idRawMean, -0.5, 3071.5, 3072); 
+    profile1D(strip, (*rawMeanSqIt), idRawMeanSq, idRawMeanSq, -0.5, 3071.5, 3072); 
+    profile1D(strip, (*rawNoiseIt), idRawNoiseS, idRawNoiseS, -0.5, 3071.5, 3072); 
+    profile1D(strip, sqrt(*rawMeanSqIt - gsl_pow_2(*rawMeanIt)), idRawNoiseC, idRawNoiseC, -0.5, 3071, 3072);
 
-    plot1D(strip,idCMSMean,idCMSMean, -0.5, 3071.5, 3072, (*cmsMeanIt)); 
-    plot1D(strip,idCMSMeanSq,idCMSMeanSq, -0.5, 3071.5, 3072, (*cmsMeanSqIt)); 
-    plot1D(strip,idCMSNoiseS,idCMSNoiseS, -0.5, 3071.5, 3072, (*cmsNoiseIt)); 
-    plot1D(strip,idCMSNoiseC,idCMSNoiseC, -0.5, 3071.5, 3072, sqrt( *cmsMeanSqIt - gsl_pow_2( *cmsMeanIt ) ));
+    profile1D(strip, (*cmsMeanIt), idCMSMean, idCMSMean, -0.5, 3071.5, 3072); 
+    profile1D(strip, (*cmsMeanSqIt), idCMSMeanSq, idCMSMeanSq, -0.5, 3071.5, 3072); 
+    profile1D(strip, (*cmsNoiseIt), idCMSNoiseS, idCMSNoiseS, -0.5, 3071.5, 3072); 
+    profile1D(strip, sqrt(*cmsMeanSqIt - gsl_pow_2(*cmsMeanIt)), idCMSNoiseC, idCMSNoiseC, -0.5, 3071.5, 3072);
 
   }
 }

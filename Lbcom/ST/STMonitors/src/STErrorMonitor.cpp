@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.7 2009-09-03 10:23:14 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.8 2009-11-09 17:55:51 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -17,6 +17,7 @@
 
 // AIDA
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 
 // local
 #include "STErrorMonitor.h"
@@ -60,6 +61,17 @@ StatusCode STErrorMonitor::initialize()
 
   // Book histogram
   m_1d_errorBanks = book1D("Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
+
+  // Get the tell1 mapping from source ID to tell1 number
+  std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+  for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
+    unsigned int tellID = (*itT).second;
+    // Create a title for the histogram
+    std::string strTellID  = boost::lexical_cast<std::string>(tellID);
+    HistoID histoID        = "error-types_$tell" + strTellID;
+    std::string histoTitle = "Error types tell" + strTellID;
+    m_errorHistos[tellID] = book2D(histoID, histoTitle, 0, noptlinks, 0, 10, nports*noptlinks, 10);
+  }
 
   return StatusCode::SUCCESS;
 }
@@ -109,13 +121,10 @@ StatusCode STErrorMonitor::execute()
       // Loop over the Beetles and ports
       for (unsigned int beetle = 0u; beetle < nBeetlesPerPPx; ++beetle) {
         for (unsigned int port = 0u; port < nports; ++port) {
-          
           // Fill 2D histogram with the error types versus Beetle port
           unsigned int errorType = (*errorIt) -> linkInfo(beetle, port, pcn);
           double portBin = double(port)/double(nports)+beetle+pp*nBeetlesPerPPx;
-          plot2D(portBin, errorType, "error-types_$tell"+strTellNum, 
-                 "Error types tell"+strTellNum, 0, noptlinks, 0, 10, 
-                 nports*noptlinks, 10);
+          m_errorHistos[tellNum]->fill(portBin, errorType);
         }
       }
     }
