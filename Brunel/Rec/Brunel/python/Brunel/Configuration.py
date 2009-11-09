@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.104 2009-11-09 10:03:41 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.105 2009-11-09 17:15:37 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -48,8 +48,8 @@ class Brunel(LHCbConfigurableUser):
        ,"PackType"        : "TES"
        ,"WriteFSR"        : True
        ,"Histograms"      : "Default"
-       ,"NoWarnings"      : False
        ,"OutputLevel"     : INFO 
+       ,"ProductionMode"  : False 
        ,"DatasetName"     : "Brunel"
        ,"DDDBtag"         : ""
        ,"CondDBtag"       : ""
@@ -78,8 +78,8 @@ class Brunel(LHCbConfigurableUser):
        ,'PackType'     : """ Type of packing for the output file. Can be one of ['TES','MDF','NONE'] (default 'TES') """
        ,'WriteFSR'     : """ Flags whether to write out an FSR """
        ,'Histograms'   : """ Type of histograms. Can be one of self.KnownHistograms """
-       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
+       ,'ProductionMode'  : """ Enables special settings for running in production """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
@@ -276,9 +276,8 @@ class Brunel(LHCbConfigurableUser):
         # Do not print event number at every event (done already by BrunelInit)
         EventSelector().PrintFreq = -1
         
-        # Better name for this would be "DiracMode"
-        if self.getProp( "NoWarnings" ) :
-            log.warning("Brunel().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Brunel().OutputLevel=ERROR instead")
+        # Special settings for production
+        if self.getProp( "ProductionMode" ) :
             self.OutputLevel = ERROR
             LHCbApp().setProp( "TimeStamp", True )
 
@@ -353,7 +352,7 @@ class Brunel(LHCbConfigurableUser):
                 outputFile = self.outputName()
                 outputFile = outputFile + '.' + self.getProp("OutputType").lower()
                 dstWriter.Output = "DATAFILE='PFN:" + outputFile + "' TYP='POOL_ROOTTREE' OPT='REC'"
-            if self.getProp( "NoWarnings" ) and not dstWriter.isPropertySet( "OutputLevel" ):
+            if self.getProp( "ProductionMode" ) and not dstWriter.isPropertySet( "OutputLevel" ):
                 dstWriter.OutputLevel = INFO
 
             # FSR output stream
@@ -368,7 +367,7 @@ class Brunel(LHCbConfigurableUser):
                 FSRWriter.Output = dstWriter.getProp("Output")
 
                 ApplicationMgr().OutStream.append(FSRWriter)
-                if self.getProp( "NoWarnings" ) and not FSRWriter.isPropertySet( "OutputLevel" ):
+                if self.getProp( "ProductionMode" ) and not FSRWriter.isPropertySet( "OutputLevel" ):
                     FSRWriter.OutputLevel = INFO
                 # Suppress spurious error when reading POOL files without run records
                 if self.getProp( "InputType" ).upper() not in [ "MDF" ]:

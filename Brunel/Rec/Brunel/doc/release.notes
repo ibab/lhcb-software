@@ -9,6 +9,8 @@ Purpose: LHCb reconstruction program
    . Adapt to changes in GaudiConf v12r10, EventPacker v1r9, PackedEvent v3r7
    . Use "AlwaysCreate" option of DstConf to create empty packed DST objects if
      input containers are missing (in particular for Lumi event case)
+   . Remove obsolete option "NoWarnings", replaced by "ProductionMode",
+     special settings for running in production
 
  - Changes to options 
    . Modify Brunel-Cosmics.py to follow changes in TrackSys v4r27
