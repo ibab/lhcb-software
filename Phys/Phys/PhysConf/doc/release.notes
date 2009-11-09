@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.28 2009-11-06 18:09:53 jonrob Exp $
+!$Id: release.notes,v 1.29 2009-11-09 15:26:32 jonrob Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/PhysConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Phys project
 !-----------------------------------------------------------------------------
+
+! 2009-11-09 - Chris Jones
+ - Fix PhysConf() for rDSTs
 
 ! 2009-11-06 - Chris Jones
  - Rework the PID re-calibration sequence to adapt to future DST content 

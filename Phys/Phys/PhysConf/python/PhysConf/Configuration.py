@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.22 2009-11-06 18:09:53 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2009-11-09 15:26:32 jonrob Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -79,6 +79,10 @@ class PhysConf(LHCbConfigurableUser) :
                                         MuonPIDsFromProtoParticlesAlg, RichPIDsFromProtoParticlesAlg,
                                         ChargedProtoParticleAddRichInfo, ChargedProtoParticleAddMuonInfo,
                                         ChargedProtoCombineDLLsAlg, DataObjectVersionFilter )
+
+            # Print out TES contents at the start of each event
+            #from Configurables import StoreExplorerAlg
+            #init.Members += [ StoreExplorerAlg() ]
             
             # Test protos are available
             testrecalib = GaudiSequencer("ProtoParticlePreProcessing")
@@ -93,14 +97,17 @@ class PhysConf(LHCbConfigurableUser) :
 
             # Check MuonPIDs
             mseq = GaudiSequencer("CheckMuonSeq")
-            testrecalib.Members += [ mseq ]
+            pidseq.Members += [ mseq ]
             mseq.Members += [ MuonPIDsFromProtoParticlesAlg("CheckMuonPIDs") ]
-            if self.getProp("AllowPIDRerunning") :
+            if self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
                 # Optionally rerun MuonPID here. Eventually this should not be done ever in DV
                 # but still needed for DC06/MC09 compatibility ...
                 mseq.Members += [ DataObjectVersionFilter( "MuonPIDVersionCheck",
                                                            DataObjectLocation = "Rec/Muon/MuonPID",
                                                            MaxVersion = 0 ) ]
+                # Check raw event is available
+                mseq.Members += [ TESCheck( "TESCheckRawEvent", Inputs = ["DAQ/RawEvent"], Stop = False ) ]
+                # Run Muon PID
                 from MuonID import ConfiguredMuonIDs
                 from Configurables import MuonRec
                 cm = ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
@@ -108,7 +115,7 @@ class PhysConf(LHCbConfigurableUser) :
             
             # Check RichPIDs
             rseq = GaudiSequencer("CheckRichSeq")
-            testrecalib.Members += [ rseq ]
+            pidseq.Members += [ rseq ]
             rseq.Members += [ RichPIDsFromProtoParticlesAlg("CheckRichPIDs") ]           
 
             # Do Combined
@@ -121,22 +128,6 @@ class PhysConf(LHCbConfigurableUser) :
             # Combined DLLs
             testrecalib.Members += [ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL")]
 
-#            if inputtype != 'RDST' :
-#                log.info('Doing MuonID for '+self.getProp( "DataType" )+' and '+inputtype)
-#                from MuonID import ConfiguredMuonIDs
-#                from Configurables import MuonRec, ChargedProtoParticleAddMuonInfo, ChargedProtoCombineDLLsAlg
-#                cm=ConfiguredMuonIDs.ConfiguredMuonIDs(data=self.getProp("DataType"))
-#                MuonIDSeq=cm.getMuonIDSeq()
-#                recalib.Members += [ MuonRec(), MuonIDSeq,
-#                                     ChargedProtoParticleAddMuonInfo(),
-#                                     ChargedProtoCombineDLLsAlg() ]
-#           else: # @todo breaks
-            # @todo Should use DoD Svc, but there are some problems
-#                from Configurables import (MuonPIDsFromProtoParticlesAlg)
-#                recalib.Members += [ MuonPIDsFromProtoParticlesAlg("MuonPIDsFromProtos") ]
-#            from Configurables import (RichPIDsFromProtoParticlesAlg)
-#            recalib.Members += [ RichPIDsFromProtoParticlesAlg("RichPIDsFromProtos") ]
-    
 #
 # Data on demand
 #
