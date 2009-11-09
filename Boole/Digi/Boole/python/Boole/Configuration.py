@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.57 2009-11-03 11:22:47 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.58 2009-11-09 18:25:06 marcocle Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -350,7 +350,7 @@ class Boole(LHCbConfigurableUser):
             odinFilter = OdinTypesFilter()
             GaudiSequencer("FilterODINSeq").Members += [ odinFilter ]
             if not odinFilter.isPropertySet( "TriggerTypes" ):
-                odinFilter.TriggerTypes = ["RandomTrigger"]
+                odinFilter.TriggerTypes = ["LumiTrigger"]
 
     def configureLink(self,linkDets,moniDets):
         """
