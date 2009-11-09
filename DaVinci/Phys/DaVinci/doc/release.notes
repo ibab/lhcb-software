@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.385 2009-11-05 15:57:19 pkoppenb Exp $
+! $Id: release.notes,v 1.386 2009-11-09 10:20:58 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-09 - Patrick Koppenburg
+ - New test files with stripped DSTs
 
 ! 2009-11-05 - Patrick Koppenburg
  - Hlt2Requires not dealt with internally and not passed to HltConf
