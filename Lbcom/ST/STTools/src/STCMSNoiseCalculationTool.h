@@ -1,4 +1,4 @@
-// $Id: STCMSNoiseCalculationTool.h,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+// $Id: STCMSNoiseCalculationTool.h,v 1.2 2009-11-09 17:51:38 mtobin Exp $
 #ifndef STCMSNOISECALCULATIONTOOL_H 
 #define STCMSNOISECALCULATIONTOOL_H 1
 
@@ -40,7 +40,8 @@ namespace ST {
 
     virtual StatusCode initialize(); ///< Tool initialisation
 
-    virtual StatusCode calculateNoise();
+  private:
+    virtual StatusCode calculateNoise();///< calculation of noise
 
   protected:
 

@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationTool.h,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+// $Id: STNoiseCalculationTool.h,v 1.2 2009-11-09 17:51:38 mtobin Exp $
 #ifndef STNOISECALCULATIONTOOL_H 
 #define STNOISECALCULATIONTOOL_H 1
 
@@ -48,7 +48,8 @@ namespace ST {
 
     virtual StatusCode initialize(); ///< Tool initialisation
 
-    virtual StatusCode calculateNoise();
+  private:
+    virtual StatusCode calculateNoise(); ///< Noise calculation
 
   public:
     virtual std::vector<double> rawMean(const unsigned int TELL) const;

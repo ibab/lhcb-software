@@ -1,4 +1,4 @@
-// $Id: STCMSNoiseCalculationTool.cpp,v 1.1 2009-10-30 12:59:46 mtobin Exp $
+// $Id: STCMSNoiseCalculationTool.cpp,v 1.2 2009-11-09 17:51:38 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -87,7 +87,7 @@ StatusCode ST::STCMSNoiseCalculationTool::initialize() {
   debug() << "initialize" << endmsg;
   StatusCode sc = ST::STNoiseCalculationToolBase::initialize();
   if (sc.isFailure()) return sc;
-  
+
   // 4 ports per Beetle
   m_portHeader.resize(4, 0);
 
@@ -274,7 +274,6 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
     m_pedestalBuildup--;
     return StatusCode::SUCCESS;
   }
-  
   
   m_evtNumber++;
   
@@ -540,7 +539,6 @@ void ST::STCMSNoiseCalculationTool::divPedestals() {
     }
     it1++;
   }
-  plotPedestals();
 }
 
 void ST::STCMSNoiseCalculationTool::plotPedestals() {
@@ -565,6 +563,7 @@ void ST::STCMSNoiseCalculationTool::plotPedestals() {
     ++it1;
   }
 }
+
 // Substract pedetals from ADC values..
 /// Calculate the pedestal substracted ADC values for one beetle
 void ST::STCMSNoiseCalculationTool::substractPedestals(const std::vector<signed int>& BeetleADCs, 

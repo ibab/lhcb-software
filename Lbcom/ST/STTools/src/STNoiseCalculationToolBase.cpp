@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationToolBase.cpp,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+// $Id: STNoiseCalculationToolBase.cpp,v 1.2 2009-11-09 17:51:38 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -6,6 +6,9 @@
 
 // STTELL1Event
 #include "Event/STTELL1Data.h"
+
+// ODIN
+#include "Event/ODIN.h"
 
 // LHCbKernel
 #include "Kernel/STDAQDefinitions.h"
@@ -57,6 +60,9 @@ StatusCode ST::STNoiseCalculationToolBase::initialize() {
     m_rawNoiseMap[TELL1SourceID].resize(3072, 0.0);
     m_rawNEvents[TELL1SourceID].resize(4,0);
   }
+  m_firstEvent = true;
+  m_eventNumber = 0;
+  m_runNumber = 0;
   return StatusCode::SUCCESS;
 }
 
@@ -72,7 +78,42 @@ std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawNoiseBegi
   }
   return m_rawNoiseMap.find(TELL1SourceID)->second.begin();
 }
-
+//======================================================================================================================
+//
+// Noise calculation
+//
+//======================================================================================================================
+StatusCode ST::STNoiseCalculationToolBase::updateNoise() {
+  // get event number, run number, then test that this is a new event.
+  bool newEvent=false;
+  bool newRun=false;
+  const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default); 
+  const unsigned int eventNumber = odin->eventNumber();
+  const unsigned int runNumber = odin->runNumber();
+  if(m_firstEvent) {
+    m_firstEvent = false;
+    newEvent = true;
+  } else {
+    newRun = (m_runNumber != runNumber);
+    newEvent = (m_eventNumber != eventNumber);
+  }
+  if(newEvent || newRun) {
+    m_eventNumber = eventNumber;
+    m_runNumber = runNumber;
+    if(newRun) {
+      // TO DO: reset counters at the start of a run
+    }
+    this->calculateNoise();
+  } else {
+    return Warning( "You should only call updateNoise once per event" , StatusCode::SUCCESS , 0);
+  }
+  return StatusCode::SUCCESS;
+}
+//======================================================================================================================
+//
+// Data Accessors
+//
+//======================================================================================================================
 /// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
 std::vector<double>::const_iterator ST::STNoiseCalculationToolBase::rawNoiseEnd( const unsigned int TELL1SourceID ) const {
   if(m_rawNoiseMap.find(TELL1SourceID) == m_rawNoiseMap.end()) {

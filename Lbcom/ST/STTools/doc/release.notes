@@ -2,6 +2,10 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-11-09 - Mark Tobin
+ - Add protection to STNoiseCalculationToolBase to make sure that the
+ updateNoise method is called only once per event.
+
 ! 2009-10-30 M Needham
  - Add tool to select ladders 1 and 7 in IT for alignment
 

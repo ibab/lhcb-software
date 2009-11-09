@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationToolBase.h,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+// $Id: STNoiseCalculationToolBase.h,v 1.2 2009-11-09 17:51:38 mtobin Exp $
 #ifndef STCMNOISECALCULATIONTOOLBASE_H 
 #define STCMNOISECALCULATIONTOOLBASE_H 1
 
@@ -30,7 +30,7 @@ namespace ST {
 
     virtual StatusCode initialize(); ///< Tool initialisation
 
-    virtual StatusCode calculateNoise() = 0;
+    virtual StatusCode updateNoise();///< Update the noise calculation
 
     /// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator rawNoiseBegin(const unsigned int TELL1SourceID ) const;
@@ -135,6 +135,12 @@ namespace ST {
     std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
     bool   m_selectedTells;///< Use only selected TELL1s
     
+  private:
+    virtual StatusCode calculateNoise() = 0;
+
+    bool m_firstEvent;///< First call to noise calculation
+    unsigned int m_eventNumber;///< Current event number
+    unsigned int m_runNumber;///< Current run number
   };
 }
 #endif // STCMNOISECALCULATIONTOOLBASE_H
