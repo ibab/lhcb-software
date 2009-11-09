@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.9 2009-09-01 15:17:43 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.10 2009-11-09 18:07:35 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -41,6 +41,11 @@ StatusCode CompareTrack::execute() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
   LHCb::Tracks* old  = get<LHCb::Tracks>( m_inputName  );
   LHCb::Tracks* test = get<LHCb::Tracks>( m_testName  );
+
+  if ( old->version() != test->version() )
+  {
+    return Error( "Version number mis-match" );
+  }
 
   if ( old->size() != test->size() ) {
     err() << "Old Track size " << old->size()
