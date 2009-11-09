@@ -1,9 +1,0 @@
-# ============= pyqt_uic:begin =============
-$(${CONSTITUENT}_output)Ui_${NAME}.py: ${FULLNAME}
-	$(pyqt_uic_command) -o $(${CONSTITUENT}_output)Ui_${NAME}.py ${FULLNAME}
-
-$(${CONSTITUENT}_output)${CONSTITUENT}.stamp: $(${CONSTITUENT}_output)Ui_${NAME}.py
-
-${CONSTITUENT}clean ::
-	$(cmt_uninstallarea_command) $(${CONSTITUENT}_output)Ui_${NAME}.py
-# ============= pyqt_uic:end ===============

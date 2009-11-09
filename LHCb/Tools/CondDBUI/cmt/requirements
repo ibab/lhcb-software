@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.50 2009-11-03 11:00:24 marcocle Exp $
+# $Id: requirements,v 1.51 2009-11-09 18:57:47 marcocle Exp $
 package CondDBUI
 
 version v2r23
@@ -35,9 +35,6 @@ use XercesC v* LCG_Interfaces -no_auto_imports
 
 use pyqt v* LCG_Interfaces -no_auto_imports
 use pyqt_compat v* LCG_Interfaces -no_auto_imports
-# Work-around for a couple of problems in pyqt_compat
-macro pyqt_compat_native_version "$(pyqt_compat_config_version)_python$(Python_config_version_twodigit)"
-path_prepend PYTHONPATH   "$(pyqt_compat_home)/lib/python$(Python_version)/site-packages/PyQt4"
 
 # ====================================================================
 # Install scripts and modules
@@ -60,27 +57,6 @@ macro_append CondDBUI_reflex_options ' $(lib_CondDBUIDict_cppflags) '
 # CORAL path
 #set  CORAL_AUTH_PATH       ${HOME}/private
 #set  CORAL_DBLOOKUP_PATH   ${CONDDBUIROOT}/cmt
-
-# FIXME: Temporary work-around until we get the fragments in PyQt LCG_Interfaces 
-macro pyqt_resource_command "pyrcc4"
-make_fragment pyqt_resource_header
-make_fragment pyqt_resource_trailer
-make_fragment pyqt_resource -header=pyqt_resource_header -trailer=pyqt_resource_trailer
-pattern PyQtResource \
-   private ; \
-     macro PyQtResource<name><group>_output "<outputdir>/" ; \
-   end_private ; \
-   document pyqt_resource PyQtResource<name><group> <qrc_files> -group=<group>
-
-macro pyqt_uic_command "python -m PyQt4.uic.pyuic"
-make_fragment pyqt_uic_header
-make_fragment pyqt_uic_trailer
-make_fragment pyqt_uic -header=pyqt_uic_header -trailer=pyqt_uic_trailer
-pattern PyQtUIC  \
-   private ; \
-     macro PyQtUIC<name><group>_output "<outputdir>/" ; \
-   end_private ; \
-   document pyqt_uic PyQtUIC<name><group> <ui_files> -group=<group>
 
 # Generate the resource file for the browser
 apply_pattern PyQtResource qrc_files=../qt_resources/*.qrc outputdir=../python/CondDBUI/Browser

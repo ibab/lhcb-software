@@ -1,9 +1,0 @@
-# ============= pyqt_resource:begin =============
-$(${CONSTITUENT}_output)${NAME}_rc.py: ${FULLNAME}
-	$(pyqt_resource_command) -o $(${CONSTITUENT}_output)${NAME}_rc.py ${FULLNAME}
-
-$(${CONSTITUENT}_output)${CONSTITUENT}.stamp: $(${CONSTITUENT}_output)${NAME}_rc.py
-
-${CONSTITUENT}clean ::
-	$(cmt_uninstallarea_command) $(${CONSTITUENT}_output)${NAME}_rc.py
-# ============= pyqt_resource:end ===============
