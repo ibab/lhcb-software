@@ -9,7 +9,7 @@ Confurable for Calorimeter Reconstruction
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $"
 # =============================================================================
 __all__ = (
     'HltCaloRecoConf'     ,
@@ -98,6 +98,7 @@ class CaloRecoConf(LHCbConfigurableUser):
         
         CaloDigitConf ( 
             Context = 'Offline' , # self.getProp ('Context'           ) ,
+            OutputLevel          = self.getProp ('OutputLevel'       ) ,
             EnableDigitsOnDemand = self.getProp ('EnableRecoOnDemand') ,
             CreateADCs           = self.getProp ('CreateADCs'        ) )
         
