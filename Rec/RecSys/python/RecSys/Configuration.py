@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.17 2009-11-05 12:18:11 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.18 2009-11-09 18:41:53 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -117,7 +117,6 @@ class RecSysConf(LHCbConfigurableUser):
                 UseTracks          = True                           ,
                 EnableRecoOnDemand = False 
                 )
-            self.setOtherProps ( caloConf , ['Context', 'OutputLevel'] )
             
             caloPIDs = OffLineCaloPIDsConf (
                 Sequence           = pids                           ,
@@ -126,7 +125,6 @@ class RecSysConf(LHCbConfigurableUser):
                 EnablePIDsOnDemand = False                          ,
                 DataType           = self.getProp ('DataType')      
                 )
-            self.setOtherProps ( caloPIDs , ['Context', 'OutputLevel'] )
 
 
         # MUON
@@ -203,7 +201,9 @@ class RecMoniConf(LHCbConfigurableUser):
         if "CALO" in moniSeq :
             from Configurables import GaudiSequencer
             seq = GaudiSequencer( "MoniCALOSeq")
-            caloMoni = CaloMoniDstConf( Sequence = seq, Context = 'Offline' )
+            caloMoni = CaloMoniDstConf( Sequence    = seq,
+                                        OutputLevel = self.getProp('OutputLevel'),
+                                        Context = 'Offline' )
 
         if "VELO" in moniSeq :
             importOptions('$VELORECMONITORSROOT/options/BrunelMoni_Velo.py')
