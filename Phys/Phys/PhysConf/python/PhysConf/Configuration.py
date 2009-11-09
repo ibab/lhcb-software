@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.23 2009-11-09 15:26:32 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.24 2009-11-09 16:01:22 jonrob Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -85,15 +85,15 @@ class PhysConf(LHCbConfigurableUser) :
             #init.Members += [ StoreExplorerAlg() ]
             
             # Test protos are available
-            testrecalib = GaudiSequencer("ProtoParticlePreProcessing")
-            init.Members += [ testrecalib ]
+            protoPartPreProcess = GaudiSequencer("ProtoParticlePreProcessing")
+            init.Members += [ protoPartPreProcess ]
 
             # Run alg to check in ProtoParticles are available
-            testrecalib.Members += [ TESCheck( "TESCheckProtoParticles", Inputs = ["Rec/ProtoP"], Stop = False ) ]
+            protoPartPreProcess.Members += [ TESCheck( "TESCheckProtoParticles", Inputs = ["Rec/ProtoP"], Stop = False ) ]
 
             # Check PID info
             pidseq = GaudiSequencer("CheckPID")
-            testrecalib.Members += [ pidseq ]
+            protoPartPreProcess.Members += [ pidseq ]
 
             # Check MuonPIDs
             mseq = GaudiSequencer("CheckMuonSeq")
@@ -121,12 +121,12 @@ class PhysConf(LHCbConfigurableUser) :
             # Do Combined
             recalib = GaudiSequencer("ProtoParticleCombDLLs")
             recalib.IgnoreFilterPassed = True 
-            testrecalib.Members += [ recalib ]
+            protoPartPreProcess.Members += [ recalib ]
             # Add Rich and Muon PID results to protoparticles
-            testrecalib.Members += [ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")]
-            testrecalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
+            recalib.Members += [ChargedProtoParticleAddMuonInfo("ChargedProtoPAddMuon")]
+            recalib.Members += [ChargedProtoParticleAddRichInfo("ChargedProtoPAddRich")]
             # Combined DLLs
-            testrecalib.Members += [ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL")]
+            recalib.Members += [ChargedProtoCombineDLLsAlg("ChargedProtoPCombDLL")]
 
 #
 # Data on demand
