@@ -1,4 +1,4 @@
-// $Id: ISTNoiseCalculationTool.h,v 1.1 2009-10-30 12:48:45 mtobin Exp $
+// $Id: ISTNoiseCalculationTool.h,v 1.2 2009-11-09 17:49:46 mtobin Exp $
 #ifndef KERNEL_ISTNOISECALCULATIONTOOL_H 
 #define KERNEL_ISTNOISECALCULATIONTOOL_H 1
 
@@ -22,7 +22,7 @@ namespace ST {
     static const InterfaceID& interfaceID() { return IID_ISTNoiseCalculationTool; }
 
     /// Calculate the noise for the TELL1 data
-    virtual StatusCode calculateNoise() = 0;
+    virtual StatusCode updateNoise() = 0;
 
     /// Return an iterator corresponding to the RAW RMS noise on the first channel for a given TELL1 source ID
     virtual std::vector<double>::const_iterator rawNoiseBegin(const unsigned int TELL1SourceID ) const = 0;
@@ -96,7 +96,8 @@ namespace ST {
   protected:
 
   private:
-
+    /// Calculate the noise for the TELL1 data
+    virtual StatusCode calculateNoise() = 0;
   };
 }
 #endif // KERNEL_ISTNOISECALCULATIONTOOL_H

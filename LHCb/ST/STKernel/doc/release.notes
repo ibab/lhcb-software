@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.80 2009-10-30 12:48:45 mtobin Exp $
+! $Id: release.notes,v 1.81 2009-11-09 17:49:46 mtobin Exp $
 ! Package     : STKernel
 ! Responsible : M. Needham
 !----------------------------------------------------------------------------
 
+! 2009-11-09 - Mark Tobin
+ - Rename method in ISTNoiseCalculationTool.
 
 ! 2009-10-30 Mark Tobin
  - Add interface for STNoiseCalculationTool
