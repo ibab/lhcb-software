@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.481 2009-11-10 10:54:39 jpalac Exp $
+! $Id: release.notes,v 1.482 2009-11-10 13:21:09 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -7,6 +7,8 @@
 ! 2009-11-10 - Juan Palacios
  - src/PhysDesktop.cpp
   . PV loading and handling given to DValgorithm.
+  . OutputLocation set by parent DVAlgorithm
+  . Comment out all OnOfflineTool stuff.
 
 ! 2009-11-09 - Patrick Koppenburg
  - OnOfflineTool : Return 3D PV for HLT
