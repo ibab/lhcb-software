@@ -1,4 +1,4 @@
-// $Id: DaVinciStringUtils.cpp,v 1.1 2009-10-30 15:23:25 jpalac Exp $
+// $Id: DaVinciStringUtils.cpp,v 1.2 2009-11-10 13:13:20 jpalac Exp $
 // Include files 
 
 
@@ -37,6 +37,15 @@ namespace DaVinci
 
       }
     }
+    //=========================================================================
+    void expandLocation( std::string& location,
+                         const std::string& prefix) 
+    {
+      if ( location.find("/") == std::string::npos ) {
+          location = prefix + "/" + location;
+      }
+    }
+    
     
   } // namespace StringUtils
   

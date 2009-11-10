@@ -1,4 +1,4 @@
-// $Id: DaVinciStringUtils.h,v 1.1 2009-10-30 15:23:25 jpalac Exp $
+// $Id: DaVinciStringUtils.h,v 1.2 2009-11-10 13:13:19 jpalac Exp $
 #ifndef KERNEL_DAVINCISTRINGUTILS_H 
 #define KERNEL_DAVINCISTRINGUTILS_H 1
 
@@ -34,27 +34,46 @@ namespace DaVinci
 
     void stripParticleName(std::string& name);
 
-  /**
-   *
-   * Add leading prefix +"/" string to input locations,
-   * unless these contain a "/", in which case leave them untouched.
-   * <b> Examples: </b> 
-   *
-   * "MyBsSelection" becomes "Phys/MyBsSelection" if prefix = "Phys"
-   *
-   * "Phys/MyBsSelection" remains unchanged.
-   * "Anything/MyBsSelection" remains unchanged.
-   * "/MyBsSelection" remains unchanged, but is most likely an error!
-   * 
-   *
-   * @author Juan Palacios juan.palacios@nikhef.nl
-   * @date 2008-10-31
-   *
-   */
+    /**
+     *
+     * Add leading prefix +"/" string to input locations,
+     * unless these contain a "/", in which case leave them untouched.
+     * <b> Examples: </b> 
+     *
+     * "MyBsSelection" becomes "Phys/MyBsSelection" if prefix = "Phys"
+     *
+     * "Phys/MyBsSelection" remains unchanged.
+     * "Anything/MyBsSelection" remains unchanged.
+     * "/MyBsSelection" remains unchanged, but is most likely an error!
+     * 
+     *
+     * @author Juan Palacios juan.palacios@nikhef.nl
+     * @date 2008-10-31
+     *
+     */
     void expandLocations( std::vector<std::string>::iterator begin,
                           std::vector<std::string>::iterator end,
                           const std::string& prefix                );
-    
+
+    /**
+     *
+     * Add leading prefix +"/" string to input location,
+     * unless these contain a "/", in which case leave them untouched.
+     * <b> Examples: </b> 
+     *
+     * "MyBsSelection" becomes "Phys/MyBsSelection" if prefix = "Phys"
+     *
+     * "Phys/MyBsSelection" remains unchanged.
+     * "Anything/MyBsSelection" remains unchanged.
+     * "/MyBsSelection" remains unchanged, but is most likely an error!
+     * 
+     *
+     * @author Juan Palacios juan.palacios@nikhef.nl
+     * @date 2008-10-31
+     *
+     */
+    void expandLocation( std::string& location,
+                         const std::string& prefix);
   }
 }
 #endif // KERNEL_DAVINCISTRINGUTILS_H
