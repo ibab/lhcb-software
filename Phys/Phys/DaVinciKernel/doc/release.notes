@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.330 2009-11-05 16:18:45 jpalac Exp $
+!$Id: release.notes,v 1.331 2009-11-10 10:41:52 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
+! 2009-11-10 - Juan Palacios
+ - DVAlgorithm
+  . Takes handling of PVs over from PhysDesktop.
 
 ! 2009-11-05 - Juan PALACIOS
  - src/Lib/DVAlgorithm.cpp
