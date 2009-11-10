@@ -17,7 +17,6 @@
 #include "Event/MuonCoord.h"
 
 #include "MuonDet/DeMuonDetector.h"
-#include "TrackInterfaces/IMeasurementProvider.h"
 #include "ImuIDTool.h"
 #include "TMath.h"
 #include "TRandom1.h"
@@ -249,9 +248,6 @@ private:
   // fill local arrays of pad sizes and region sizes
   DeMuonDetector*  m_mudet;
 
-  // Tool to provide measurement from LHCbID
-  IMeasurementProvider* m_measProvider;
-  
   //load muonIDtool
   ImuIDTool* m_Chi2MuIDTool;
 
