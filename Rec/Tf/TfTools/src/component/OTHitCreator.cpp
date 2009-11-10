@@ -399,7 +399,6 @@ namespace Tf
       m_detectordata->region(regionid.station(),regionid.layer(),regionid.region()) ;
     size_t modindex = Tf::HitCreatorGeom::OTModule::moduleIndexInRegion( id ) ;
     const Tf::HitCreatorGeom::OTModule* thismodule = thisregion->modules()[modindex] ;
-    assert( thismodule->detelement().elementID() == id ) ;
     return thismodule ;
   }
 
