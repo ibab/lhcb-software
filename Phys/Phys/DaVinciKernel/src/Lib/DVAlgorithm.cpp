@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.65 2009-11-10 10:41:38 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.66 2009-11-10 13:15:22 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -271,7 +271,15 @@ StatusCode DVAlgorithm::loadTools()
  
   if (msgLevel(MSG::DEBUG)) debug() << ">>> Preloading PhysDesktop with locations " << m_inputLocations << endmsg;
   desktop()->setInputLocations(m_inputLocations);
+ 
+  std::string outputLocation = this->name();
   
+  DaVinci::StringUtils::expandLocation(outputLocation,
+                                       onOffline()->trunkOnTES());
+  
+  desktop()->setOutputLocation(outputLocation);
+  
+ 
   // vertex fitter
   
   if ( m_particleCombinerNames.end() == m_particleCombinerNames.find("") )
