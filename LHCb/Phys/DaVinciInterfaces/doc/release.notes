@@ -4,6 +4,10 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Juan Palacios
+ - Kernel/IPhysDesktop.h
+  . Add void setOutputLocation(const std::string&)
+
 ! 2009-11-10 - Victor Coco
  - Add interface for Jet to Jet matching: IJets2Jets
 
