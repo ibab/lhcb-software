@@ -4,6 +4,9 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Wouter Hulsbergen
+ - add method to OTHitCreator to create single hit given OTChannelID
+
 !============================ TfKernel v2r12 2009-10-16 ======================
 ! 2009-09-25 - Stephanie Hansmann-Menzemer
  - add isX() back again this time it works for all detectors  ...

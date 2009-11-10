@@ -4,7 +4,7 @@
  *
  *  Header file for class : Tf::IOTHitCreator
  *
- *  $Id: IOTHitCreator.h,v 1.10 2008-08-21 18:08:32 smenzeme Exp $
+ *  $Id: IOTHitCreator.h,v 1.11 2009-11-10 14:15:17 wouter Exp $
  *
  *  @author S. Hansmann-Menzemer, W. Hulsbergen, C. Jones, K. Rinnert
  *  @date   2007-06-01
@@ -192,6 +192,15 @@ namespace Tf
                                    const TLayerID iLayer, 
                                    const OTRegionID iRegion) const = 0 ;
 
+    /** Create a single OTHit from an lhcbid. Don't use this method if
+	you want to get a list of hits from e.g. a module. Note that
+	it does not return a reference but an object. Caller takes
+	ownership.
+     *  @param[in] id of ot hit
+     *  @return new OTHit
+     */
+    virtual OTHit hit( const LHCb::OTChannelID id ) const = 0 ;
+    
   };
 }
 
