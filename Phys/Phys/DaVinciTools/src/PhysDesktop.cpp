@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.85 2009-11-10 10:54:24 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.86 2009-11-10 13:20:56 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -8,8 +8,7 @@
 
 // local
 #include "PhysDesktop.h"
-#include "Kernel/IOnOffline.h"
-#include "Kernel/IRelatedPVFinder.h"
+//#include "Kernel/IOnOffline.h"
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
 #include "Event/RecVertex.h"
@@ -87,7 +86,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
     , m_usingP2PV            (true)
     , m_primVtxLocn          ("")
     , m_inputLocations       ()
-    , m_outputLocn           ()
+    , m_outputLocn           ("")
     , m_p2PVDefaultLocations ()
     , m_p2PVInputLocations   ()
   //
@@ -96,11 +95,9 @@ PhysDesktop::PhysDesktop( const std::string& type,
     , m_refitPVs  (   )
     , m_primVerts ( 0 )
   //
-    , m_OnOffline     ( 0  )
+  //    , m_OnOffline     ( 0  )
     , m_p2VtxTable    (    )
     , m_p2PVMap       (    )
-    , m_pvRelator     ( 0  )
-    , m_pvRelatorName (    )
   //
     , m_dva ( 0 )
 {
@@ -118,9 +115,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   m_p2PVInputLocations.clear();
   
   declareProperty("P2PVInputLocations", m_p2PVInputLocations);
-
-  // instance of PV relator
-  declareProperty( "RelatedPVFinderName", m_pvRelatorName );
 
 } ;
 
@@ -141,7 +135,7 @@ StatusCode PhysDesktop::initialize()
     return StatusCode::FAILURE;
   }
 
-  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
+  //  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
   if (m_primVtxLocn!="") {
     return Error("You have set obsolete property InputPrimaryVertices. Set it in DVAlgorithm.");
@@ -152,34 +146,29 @@ StatusCode PhysDesktop::initialize()
     debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
   }
   
-  if (""==m_pvRelatorName) m_pvRelatorName=m_OnOffline->relatedPVFinderType();
-
-  // PV relator
-  m_pvRelator = tool<IRelatedPVFinder>(m_pvRelatorName, this);
-
   // Output Location
-  IInterface* p = const_cast<IInterface*>( this->parent() ) ;
+//   IInterface* p = const_cast<IInterface*>( this->parent() ) ;
 
-  if ( 0 != p )
-  {
-    // set the default value using parent's name
-    m_outputLocn = m_OnOffline->trunkOnTES() +"/"+ nameFromInterface ( p ) ;
-    // try to overwrite the name from  parents's "OutputLocation" property:
-    void* tmp = 0 ;
-    StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
-    if ( sc.isSuccess() && 0 != tmp ){
-      IProperty* pp = static_cast<IProperty*>( tmp ) ;
-      StringProperty output = StringProperty ( "OutputLocation" , 
-                                               "NOTDEFINED" ) ;
-      sc = pp->getProperty( &output ) ;
-      if ( sc.isSuccess() ) { {
-        if ( output.value() != "" )
-          m_outputLocn = output.value() ; }   // NB !!
-      }
-      // release the used interface
-      pp->release() ;
-    }
-  }
+//   if ( 0 != p )
+//   {
+//     // set the default value using parent's name
+//     m_outputLocn = m_OnOffline->trunkOnTES() +"/"+ nameFromInterface ( p ) ;
+//     // try to overwrite the name from  parents's "OutputLocation" property:
+//     void* tmp = 0 ;
+//     StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
+//     if ( sc.isSuccess() && 0 != tmp ){
+//       IProperty* pp = static_cast<IProperty*>( tmp ) ;
+//       StringProperty output = StringProperty ( "OutputLocation" , 
+//                                                "NOTDEFINED" ) ;
+//       sc = pp->getProperty( &output ) ;
+//       if ( sc.isSuccess() ) { {
+//         if ( output.value() != "" )
+//           m_outputLocn = output.value() ; }   // NB !!
+//       }
+//       // release the used interface
+//       pp->release() ;
+//     }
+//   }
 
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
@@ -874,11 +863,6 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
 
 }
 //=============================================================================
-const IRelatedPVFinder* PhysDesktop::relatedPVFinder() const
-{
-  return m_pvRelator;
-}
-//=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
                          const LHCb::VertexBase* vert)
 {
@@ -913,6 +897,13 @@ void PhysDesktop::overWriteRelations(Particle2Vertex::Table::Range::const_iterat
   }
 }
 //=========================================================================
+//  set OutputLocation
+//=========================================================================
+void  PhysDesktop::setOutputLocation(const std::string& location) 
+{
+  m_outputLocn = location;
+}
+//=========================================================================
 //  set InputLocations
 //=========================================================================
 StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_il) {
@@ -923,7 +914,7 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
   
   if (!dv_il.empty()){
     m_inputLocations = dv_il ;
-    fixInputLocations(m_inputLocations.begin(),m_inputLocations.end());
+    //    fixInputLocations(m_inputLocations.begin(),m_inputLocations.end());
   }
 
   // Check if InputLocation has been set
@@ -941,7 +932,7 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
   }
 
   // set PV relation locations
-  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
+  //  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
 
   return StatusCode::SUCCESS ;
 }
@@ -964,17 +955,17 @@ PhysDesktop::setP2PVInputLocations ( const std::vector<std::string>& location) {
 
 }
 //=============================================================================
-void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
-                                    std::vector<std::string>::iterator end){
-  const std::string& prefix = m_OnOffline->trunkOnTES();
+// void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
+//                                     std::vector<std::string>::iterator end){
+//   const std::string& prefix = m_OnOffline->trunkOnTES();
  
-  for (std::vector<std::string>::iterator loc = begin; loc!=end; ++loc) {
-    if ( (*loc).find("/") == std::string::npos ) {
-      *loc = prefix + "/" + *loc;
-      if ( msgLevel(MSG::VERBOSE) ) {
-        verbose() << "Input location changed to " << *loc << endmsg;
-      }
-    }
-  }
-}
+//   for (std::vector<std::string>::iterator loc = begin; loc!=end; ++loc) {
+//     if ( (*loc).find("/") == std::string::npos ) {
+//       *loc = prefix + "/" + *loc;
+//       if ( msgLevel(MSG::VERBOSE) ) {
+//         verbose() << "Input location changed to " << *loc << endmsg;
+//       }
+//     }
+//   }
+// }
 //=============================================================================

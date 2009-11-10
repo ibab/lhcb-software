@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.43 2009-11-03 12:31:38 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.44 2009-11-10 13:20:55 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -18,8 +18,7 @@
 // Forward declarations
 class DVAlgorithm;
 class IDataProviderSvc;
-class IOnOffline;
-class IRelatedPVFinder ;
+//class IOnOffline;
 
 /** @class PhysDesktop PhysDesktop.h Kernel/PhysDesktop.h
  *  
@@ -57,11 +56,11 @@ public:
   
   virtual StatusCode initialize();
 
-  /// set InputLocations (for DVAlgorithm)
-  virtual StatusCode setInputLocations(const std::vector<std::string> & ) ;
+  virtual void setOutputLocation(const std::string& location);
 
-  /// set O->PV InputLocations (for DVAlgorithm)
-  virtual StatusCode setP2PVInputLocations(const std::vector<std::string> & location) ;
+  virtual StatusCode setInputLocations(const std::vector<std::string>& locations) ;
+
+  virtual StatusCode setP2PVInputLocations(const std::vector<std::string>& locations) ;
 
 
   /// Load Input particles and vertices (in local data) from various input
@@ -138,11 +137,6 @@ public:
   /// between LHCb::Particle and LHCb::VertexBase
   virtual const LHCb::VertexBase* relatedVertex(const LHCb::Particle* part) const;
   
-  /**
-   * Get a pointer to the Particle->PV relator tool
-   **/
-  virtual const IRelatedPVFinder* relatedPVFinder() const;
-
   /// Establish a relation between an LHCb::Particle and an LHCb::VertexBase
   virtual void relate(const LHCb::Particle*   part, 
                       const LHCb::VertexBase* vert );
@@ -262,8 +256,8 @@ private:
    * @todo put this in some tool (not necessarily in the Gaudi sense of the word)
    *
    */
-  void fixInputLocations(std::vector<std::string>::iterator begin,
-                         std::vector<std::string>::iterator end);
+//   void fixInputLocations(std::vector<std::string>::iterator begin,
+//                          std::vector<std::string>::iterator end);
   
 
   inline bool writeP2PV() const 
@@ -319,18 +313,11 @@ private: // data
   LHCb::RecVertex::ConstVector m_refitPVs;    ///< Local Container of re-fitted primary vertices
   LHCb::RecVertex::Container* m_primVerts;    ///< Local Container of primary vertices
 
-  IOnOffline* m_OnOffline ;   ///< locate PV
+  //  IOnOffline* m_OnOffline ;   ///< locate PV
 
   Particle2Vertex::LightTable m_p2VtxTable; ///< Table of Particle to PV relations
 
   Particle2Vertex::Map m_p2PVMap;
-
-  IRelatedPVFinder* m_pvRelator ; ///< Tool that relates the Particle to a PV
-
-  /// Name of PVrelator. Default is RelatedPVFinder. You can choose another 
-  /// instance by setting RelatedPVFinderName to RelatedPVFinder/MyFinder and then configuring
-  /// ToolSvc.MyFinder.
-  std::string m_pvRelatorName ; 
 
   DVAlgorithm* m_dva;
 
