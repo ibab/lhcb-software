@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.6 2009-11-03 11:09:04 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.7 2009-11-10 13:18:52 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -9,7 +9,6 @@
 #include "Kernel/Particle2Vertex.h"
 // Forward declarations
 class StatusCode;
-class IRelatedPVFinder;
 
 /** @class IPhysDesktop IPhysDesktop.h Kernel/IPhysDesktop.h
  *
@@ -72,11 +71,14 @@ public:
   /// Only DVAlgorithm::sysExecute() should call this function.
   virtual StatusCode getEventInput() = 0;
 
-  /// set InputLocations (fro DVAlgorithm)
-  virtual StatusCode setInputLocations(const std::vector<std::string> &) = 0 ;
+  /// set OutputLocation (from DVAlgorithm)
+  virtual void setOutputLocation(const std::string&) = 0 ;
 
-  /// set InputLocations (fro DVAlgorithm)
-  virtual StatusCode setP2PVInputLocations(const std::vector<std::string> &) = 0 ;
+  /// set InputLocations (from DVAlgorithm)
+  virtual StatusCode setInputLocations(const std::vector<std::string>&) = 0 ;
+
+  /// set Particle->PV relations input TES locations (from DVAlgorithm)
+  virtual StatusCode setP2PVInputLocations(const std::vector<std::string>&) = 0 ;
 
   /// 
   virtual void setWriteP2PV(const bool&) = 0;
