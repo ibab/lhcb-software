@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.188 2009-11-09 10:01:32 cattanem Exp $
+! $Id: release.notes,v 1.189 2009-11-10 10:30:05 jonrob Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-10 - Chris Jones
+ - Add to DstConf flag to turn on full checks of DST data packing
 
 ! 2009-11-09 - Marco Cattaneo
  - Add "AlwaysCreate" slot to DstConf and CaloPackingConf, to control new

@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.29 2009-11-09 10:01:32 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.30 2009-11-10 10:30:05 jonrob Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -24,6 +24,7 @@ class DstConf(LHCbConfigurableUser):
          "DstType"        : "NONE"
        , "SimType"        : "None"
        , "EnableUnpack"   : False
+       , "EnablePackingChecks" : False
        , "PackType"       : "TES"
        , "PackSequencer"  : None
        , "AlwaysCreate"   : False
@@ -36,6 +37,7 @@ class DstConf(LHCbConfigurableUser):
         'DstType'       : """ Type of dst, can be ['DST','RDST','XDST'] """
        ,'SimType'       : """ Type of simulation output, can be ['None','Minimal','Full'] """
        ,'EnableUnpack'  : """ Flag to set up on demand unpacking of DST containers """
+       ,'EnablePackingChecks' : """ Flag to turn on the running of various unpacking checks, to test the quality of the data packing """
        ,'PackType'      : """ Type of packing for the DST, can be ['NONE','TES','MDF'] """
        ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        ,'AlwaysCreate'  : """ Flags whether to create output packed objects even if input missing """
@@ -201,7 +203,7 @@ class DstConf(LHCbConfigurableUser):
         from Configurables import DataPacking__Pack_LHCb__MuonPIDPacker_
 
         alwaysCreate = self.getProp("AlwaysCreate")
-        packDST.Members = [ PackTrack(AlwaysCreateOutput = alwaysCreate) ]
+        packDST.Members = [ PackTrack( name = "PackTracks", AlwaysCreateOutput = alwaysCreate) ]
 
         richpidpack = DataPacking__Pack_LHCb__RichPIDPacker_( name               = "PackRichPIDs",
                                                               AlwaysCreateOutput = alwaysCreate )
@@ -209,21 +211,27 @@ class DstConf(LHCbConfigurableUser):
                                                               AlwaysCreateOutput = alwaysCreate )
         packDST.Members += [ richpidpack, muonpidpack ]
 
+        caloPackSeq = GaudiSequencer("CaloPacking")
+        packDST.Members += [caloPackSeq]
         CaloDstPackConf (
             Enable       = True    ,
-            Sequence     = packDST ,
+            Sequence     = caloPackSeq ,
             AlwaysCreate = alwaysCreate
             )
 
+        packChargedPs = PackProtoParticle( name               = "PackChargedProtos",
+                                           AlwaysCreateOutput = alwaysCreate,
+                                           InputName          = "/Event/Rec/ProtoP/Charged",
+                                           OutputName         = "/Event/pRec/ProtoP/Charged" )
+        packNeutralPs = PackProtoParticle( name               = "PackNeutralProtos",
+                                           AlwaysCreateOutput = alwaysCreate,
+                                           InputName          = "/Event/Rec/ProtoP/Neutrals",
+                                           OutputName         = "/Event/pRec/ProtoP/Neutrals" )
+        #packChargedPs.OutputLevel = 2
+        #packNeutralPs.OutputLevel = 2
         packDST.Members += [
-            PackProtoParticle( name               = "PackCharged",
-                               AlwaysCreateOutput = alwaysCreate,
-                               InputName          = "/Event/Rec/ProtoP/Charged",
-                               OutputName         = "/Event/pRec/ProtoP/Charged")
-            , PackProtoParticle( name               = "PackNeutrals",
-                                 AlwaysCreateOutput = alwaysCreate,
-                                 InputName          = "/Event/Rec/ProtoP/Neutrals",
-                                 OutputName         = "/Event/pRec/ProtoP/Neutrals")
+            packChargedPs
+            , packNeutralPs
             , PackRecVertex(AlwaysCreateOutput = alwaysCreate)
             , PackTwoProngVertex(AlwaysCreateOutput = alwaysCreate)
             ]
@@ -235,7 +243,7 @@ class DstConf(LHCbConfigurableUser):
             rawEventSelectiveCopy.RawBanksToCopy = [ "HltDecReports" , "L0DU", "ODIN" ]
             packDST.Members += [ rawEventSelectiveCopy ]
         else:
-            packDST.Members += [ PackTrack( name               = "PackMuons",
+            packDST.Members += [ PackTrack( name               = "PackMuonTracks",
                                             AlwaysCreateOutput = alwaysCreate,
                                             InputName          = "/Event/Rec/Track/Muon",
                                             OutputName         = "/Event/pRec/Track/Muon" ) ]
@@ -244,6 +252,76 @@ class DstConf(LHCbConfigurableUser):
         if self.getProp( "PackType" ).upper() == "MDF":
             packDST.Members += [ GaudiSequencer("WriteMDFSeq") ]
 
+        # Tests
+        if self.getProp("EnablePackingChecks") : self._doPackChecks()
+
+    def _doPackChecks(self):
+        
+        packDST = self.getProp("PackSequencer")
+        from Configurables import GaudiSequencer
+        checks = GaudiSequencer("PackingChecks")
+        packDST.Members += [checks]
+
+        from Configurables import ( UnpackTrack, UnpackCaloHypo, UnpackProtoParticle,
+                                    UnpackRecVertex, UnpackTwoProngVertex )
+        from Configurables import DataPacking__Unpack_LHCb__RichPIDPacker_
+        from Configurables import DataPacking__Unpack_LHCb__MuonPIDPacker_
+        
+        from Configurables import ( CompareTrack, CompareRecVertex, CompareTwoProngVertex,
+                                    CompareProtoParticle )
+        from Configurables import DataPacking__Check_LHCb__RichPIDPacker_
+        from Configurables import DataPacking__Check_LHCb__MuonPIDPacker_
+
+        # Unpack to temporary locations
+        tempLoc = "Test"
+        unpackTracks       = UnpackTrack("UnpackTracksTest")
+        unpackRichPIDs     = DataPacking__Unpack_LHCb__RichPIDPacker_("UnpackRichPIDsTest")
+        unpackMuonPIDs     = DataPacking__Unpack_LHCb__MuonPIDPacker_("UnpackMuonPIDsTest")
+        unpackChargedPs    = UnpackProtoParticle("UnpackChargedProtosTest")
+        unpackNeutralPs    = UnpackProtoParticle("UnpackNeutralProtosTest")
+        unpackVertex       = UnpackRecVertex("UnpackVertexTest")
+        unpackV0           = UnpackTwoProngVertex("UnpackV0Test")
+        unpackTracks.OutputName = unpackTracks.getProp("OutputName")+tempLoc
+        unpackVertex.OutputName = unpackVertex.getProp("OutputName")+tempLoc
+        unpackV0.OutputName     = unpackV0.getProp("OutputName")+tempLoc
+        unpackRichPIDs.OutputName = unpackRichPIDs.getProp("OutputName")+tempLoc     
+        unpackMuonPIDs.OutputName = unpackMuonPIDs.getProp("OutputName")+tempLoc
+        unpackChargedPs.InputName  = "/Event/pRec/ProtoP/Charged"
+        unpackNeutralPs.InputName  = "/Event/pRec/ProtoP/Neutrals"
+        unpackChargedPs.OutputName = "/Event/Rec/ProtoP/Charged"+tempLoc
+        unpackNeutralPs.OutputName = "/Event/Rec/ProtoP/Neutrals"+tempLoc
+
+        checks.Members += [ unpackTracks, unpackRichPIDs, unpackMuonPIDs,
+                            unpackChargedPs, unpackNeutralPs, unpackVertex, unpackV0 ]
+        
+        # Comparisons
+        checkTracks    = CompareTrack("CheckPackedTracks")
+        checkVertex    = CompareRecVertex("CheckPackedVertices")
+        checkV0        = CompareTwoProngVertex("CheckPackedV0s")
+        checkRichPID   = DataPacking__Check_LHCb__RichPIDPacker_("CheckPackedRichPIDs")
+        checkMuonPID   = DataPacking__Check_LHCb__MuonPIDPacker_("CheckPackedMuonPIDs")
+        checkChargedPs = CompareProtoParticle("CheckChargedProtos")
+        checkNeutralPs = CompareProtoParticle("CheckNeutralProtos")
+        checkChargedPs.InputName = "/Event/Rec/ProtoP/Charged"
+        checkChargedPs.TestName  = unpackChargedPs.OutputName
+        checkNeutralPs.InputName = "/Event/Rec/ProtoP/Neutrals"
+        checkNeutralPs.TestName  = unpackNeutralPs.OutputName
+        
+        checks.Members += [ checkTracks, checkRichPID, checkMuonPID,
+                            checkChargedPs, checkNeutralPs, checkVertex, checkV0 ]
+
+        if self.getProp( "DstType" ).upper() != "RDST" :
+
+            unpackMuTracks = UnpackTrack("UnpackMuonTracksTest")
+            unpackMuTracks.InputName  = "/Event/pRec/Track/Muon"
+            unpackMuTracks.OutputName = "/Event/Rec/Track/Muon"+tempLoc
+
+            checkMuTracks = CompareTrack("CheckPackedMuonTracks")
+            checkMuTracks.InputName = "/Event/Rec/Track/Muon"
+            checkMuTracks.TestName  = unpackMuTracks.OutputName
+
+            checks.Members += [ unpackMuTracks, checkMuTracks ]
+            
     def _doUnpack( self ):
         """
         Set up DataOnDemandSvc to unpack a packed (r)DST
