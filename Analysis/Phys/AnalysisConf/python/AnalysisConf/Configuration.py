@@ -4,7 +4,7 @@
 High level configuration tools for AnalysisConf
 """
 # =============================================================================
-__version__ = "$Id: Configuration.py,v 1.21 2009-10-31 13:31:09 ibelyaev Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2009-11-10 17:32:49 pkoppenb Exp $"
 __author__ = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 # =============================================================================
 
@@ -80,8 +80,6 @@ class AnalysisConf(LHCbConfigurableUser) :
         """
         Define DaVinciAssociators. Do MC unpacking.
         """
-        importOptions ("$DAVINCIASSOCIATORSROOT/options/DaVinciAssociators.opts")
-        
         from Configurables import CaloAssociatorsConf
         
         CaloAssociatorsConf ( EnableMCOnDemand = True )
@@ -103,7 +101,11 @@ class AnalysisConf(LHCbConfigurableUser) :
             'NeutralPP2MC'                  , ## base-name 
             'Hlt'                           , ## context 
             'Relations/Rec/ProtoP/Neutrals' , ## base-location 
-            True                            ) ## on-demand 
+            True                            ) ## on-demand
+        
+        from Configurables import DataOnDemandSvc
+        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Charged' ] = 'ChargedPP2MC' 
+        DataOnDemandSvc().AlgMap['/Event/Relations/Rec/ProtoP/Upstream' ] =   'ChargedPP2MC' 
 
         self.unpackMC()
 #

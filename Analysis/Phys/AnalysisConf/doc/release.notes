@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.39 2009-10-31 13:11:14 ibelyaev Exp $
+!$Id: release.notes,v 1.40 2009-11-10 17:32:49 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-11-10 - Patrick Koppenburg
+ - Explicit declaration of PP association
 
 ! 2009-10-31 - Vanya Belyaev
 
