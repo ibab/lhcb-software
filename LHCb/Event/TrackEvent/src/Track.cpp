@@ -62,8 +62,8 @@ Track::ConstNodeRange Track::nodes() const
     // cast the const container to a container of const pointers
     LHCb::TrackFitResult::NodeContainer::const_iterator begin = m_fitResult->nodes().begin() ;
     LHCb::TrackFitResult::NodeContainer::const_iterator end = m_fitResult->nodes().end() ;
-    const LHCb::Node*const* pbegin = &(*begin) ;
-    const LHCb::Node*const* pend = &(*end) ;
+    Track::ConstNodeRange::const_iterator pbegin(&(*begin)) ;
+    Track::ConstNodeRange::const_iterator pend(&(*end)) ;
     nodes = Track::ConstNodeRange(pbegin,pend) ;
   }
   return nodes ;

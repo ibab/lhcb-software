@@ -229,7 +229,7 @@
    />
 
    <typedef
-     type   = "std::vector&lt;const LHCb::Node*&gt;"
+     type   = "Gaudi::Range_&lt;std::vector&lt;const LHCb::Node*&gt; &gt;"
      def    = "ConstNodeRange"
      desc   = "Range of pointers to nodes on track. For non-const access, use fitresult."
      access = "PUBLIC"
