@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MDF.py,v 1.7 2009-10-14 14:33:40 pkoppenb Exp $
+# $Id: DVTestHlt12-MDF.py,v 1.8 2009-11-10 17:28:34 pkoppenb Exp $
 #
 # Test for Hlt1&2. Test for MDF files.
 #
@@ -15,10 +15,8 @@ from Configurables import GaudiSequencer
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().HltThresholdSettings = 'Miriam_20090430'
 DaVinci().EvtMax = 10000                       # Number of events
-DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().PrintFreq  = 100                     # Print frequency
+DaVinci().PrintFreq  = 1                       # Print frequency
 DaVinci().DataType = "2009"                    # Default is "MC09", pretend it's real data
 # DaVinci().Simulation   = False 
 # DaVinci().MoniSequence += [ ReadHltSummary() ]

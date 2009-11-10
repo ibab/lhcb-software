@@ -45,9 +45,11 @@ DaVinci().Simulation    = True
 # DaVinci().MainOptions = "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
 from Configurables import StoreExplorerAlg, PrintDecayTree
 PrintDecayTree().InputLocations = [ "/Event/Sel/Phys/Bu2LLK"  ] 
-DaVinci().MoniSequence = [  PrintDecayTree()
+DaVinci().MoniSequence = [   PrintDecayTree()
                             #, StoreExplorerAlg() ] #
-                            ,tag, tagcheck ]  # The algorithms
+                            ,tag
+                            , tagcheck
+                            ]  # The algorithms
 
 
 ########################################################################
@@ -55,3 +57,6 @@ DaVinci().MoniSequence = [  PrintDecayTree()
 # example data file
 #
 DaVinci().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+
+MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
+
