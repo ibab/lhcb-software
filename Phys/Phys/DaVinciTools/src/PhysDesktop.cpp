@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.84 2009-11-03 12:31:38 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.85 2009-11-10 10:54:24 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -85,7 +85,7 @@ PhysDesktop::PhysDesktop( const std::string& type,
   : GaudiTool ( type, name , parent )
     , m_writeP2PV            (true)
     , m_usingP2PV            (true)
-    , m_primVtxLocn          ()
+    , m_primVtxLocn          ("")
     , m_inputLocations       ()
     , m_outputLocn           ()
     , m_p2PVDefaultLocations ()
@@ -143,7 +143,10 @@ StatusCode PhysDesktop::initialize()
 
   m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
 
-  if (m_primVtxLocn=="") m_primVtxLocn = m_OnOffline->primaryVertexLocation();
+  if (m_primVtxLocn!="") {
+    return Error("You have set obsolete property InputPrimaryVertices. Set it in DVAlgorithm.");
+  }
+  
 
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
@@ -210,6 +213,9 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
 {
   //
+  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() instead.",1).ignore();
+  return m_dva->primaryVertices();
+
   verbose() << "Returning PVs!" << endmsg;
   
   if ( 0!= m_primVerts ) 
@@ -678,13 +684,13 @@ StatusCode PhysDesktop::getEventInput(){
       verbose() << "Loading any primary vertices from "
                 << primaryVertexLocation() << endmsg;
     }
-    StatusCode sc = getPrimaryVertices();
-    if ( sc.isFailure() ) return sc;
-    if ( 0==m_primVerts) {
-      Info( "No primary vertex container at "+primaryVertexLocation() ) ;      
-    } else if (m_primVerts->empty()) {
-      Info( "Empty primary vertex container at "+primaryVertexLocation() ) ;      
-    }
+    //    StatusCode sc = getPrimaryVertices();
+    //    if ( sc.isFailure() ) return sc;
+//     if ( 0==m_primVerts) {
+//       Info( "No primary vertex container at "+primaryVertexLocation() ) ;      
+//     } else if (m_primVerts->empty()) {
+//       Info( "Empty primary vertex container at "+primaryVertexLocation() ) ;      
+//     }
     
   }
 
