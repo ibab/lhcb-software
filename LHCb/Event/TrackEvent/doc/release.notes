@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Wouter Hulsbergen
+ - Replace vector by range for nodes in Track. This should have been committed on 2009-10-08
+
 ! 2009-10-23 - Wouter Hulsbergen
  - Hide TrackFitResult copy constructor.
 
