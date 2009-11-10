@@ -1,10 +1,15 @@
-!$Id: release.notes,v 1.331 2009-11-10 10:41:52 jpalac Exp $
+!$Id: release.notes,v 1.332 2009-11-10 13:15:42 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciKernel
 ! Responsible : J.P. Palacios
 !============================================================================
 
 ! 2009-11-10 - Juan Palacios
+
+ - src/Lib/DVAlgorithm.cpp
+  . Set IPhysDesktop's outputLocation manually.
+ - Kernel/DaVinciStringUtils.h, src/Lib/DaVinciStringUtils.cpp
+  . Add DaVinci::::StringUtils::expandLocation(string loc, string prefix).
  - DVAlgorithm
   . Takes handling of PVs over from PhysDesktop.
 
