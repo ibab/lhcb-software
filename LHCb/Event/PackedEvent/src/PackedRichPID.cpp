@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.4 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.5 2009-11-10 10:24:09 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -24,7 +24,12 @@ void RichPIDPacker::pack( const DataVector & pids,
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       ppid.pidResultCode = (int)pid.pidResultCode();
-      ppid.llValues = pid.particleLLValues();
+      ppid.llValues.reserve(pid.particleLLValues().size());
+      for ( std::vector<float>::const_iterator iLL = pid.particleLLValues().begin();
+            iLL != pid.particleLLValues().end(); ++iLL )
+      {
+        ppid.llValues.push_back( m_pack.deltaLL(*iLL) );
+      }
       if ( NULL != pid.track() )
       {
         ppid.track = m_pack.reference( &ppids,
@@ -56,7 +61,14 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       pids.add( pid );
       // Fill data from packed object
       pid->setPidResultCode( ppid.pidResultCode );
-      pid->setParticleLLValues( ppid.llValues );
+      std::vector<float> dlls;
+      dlls.reserve(ppid.llValues.size());
+      for ( std::vector<int>::const_iterator iLL = ppid.llValues.begin();
+            iLL != ppid.llValues.end(); ++iLL )
+      {
+        dlls.push_back( m_pack.deltaLL(*iLL) );
+      }
+      pid->setParticleLLValues(dlls);
       if ( -1 != ppid.track )
       {
         int hintID(0), key(0);
@@ -93,8 +105,15 @@ StatusCode RichPIDPacker::check( const DataVector & dataA,
     ok &= (*iA)->pidResultCode() == (*iB)->pidResultCode();
     // Track reference
     ok &= (*iA)->track() == (*iB)->track();
-    // DLLs (do when packed)
+    // DLLs
     ok &= (*iA)->particleLLValues().size() == (*iB)->particleLLValues().size();
+    std::vector<float>::const_iterator iLLA((*iA)->particleLLValues().begin());
+    std::vector<float>::const_iterator iLLB((*iB)->particleLLValues().begin());
+    for ( ; iLLA != (*iA)->particleLLValues().end() && iLLB != (*iB)->particleLLValues().end();
+          ++iLLA, ++iLLB )
+    {
+      ok &= ch.compareDoubles( "Delta(LL)", *iLLA, *iLLB );
+    }
 
     // force printout for tests
     //ok = false;

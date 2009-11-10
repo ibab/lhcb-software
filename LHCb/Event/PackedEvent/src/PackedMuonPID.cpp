@@ -1,4 +1,4 @@
-// $Id: PackedMuonPID.cpp,v 1.2 2009-11-07 12:20:27 jonrob Exp $
+// $Id: PackedMuonPID.cpp,v 1.3 2009-11-10 10:24:09 jonrob Exp $
 
 // local
 #include "Event/PackedMuonPID.h"
@@ -24,8 +24,8 @@ void MuonPIDPacker::pack( const DataVector & pids,
       ppids.data().push_back( PackedData() );
       PackedData & ppid = ppids.data().back();
       // fill data
-      ppid.MuonLLMu = (float)pid.MuonLLMu();
-      ppid.MuonLLBg = (float)pid.MuonLLBg();
+      ppid.MuonLLMu = m_pack.deltaLL(pid.MuonLLMu());
+      ppid.MuonLLBg = m_pack.deltaLL(pid.MuonLLBg());
       ppid.nShared  = (int)pid.nShared();
       ppid.status   = (int)pid.Status();
       if ( NULL != pid.idTrack() )
@@ -64,8 +64,8 @@ void MuonPIDPacker::unpack( const PackedDataVector & ppids,
       Data * pid  = new Data();
       pids.add( pid );
       // Fill data from packed object
-      pid->setMuonLLMu( ppid.MuonLLMu );
-      pid->setMuonLLBg( ppid.MuonLLBg );
+      pid->setMuonLLMu( m_pack.deltaLL(ppid.MuonLLMu) );
+      pid->setMuonLLBg( m_pack.deltaLL(ppid.MuonLLBg) );
       pid->setNShared( ppid.nShared );
       pid->setStatus( ppid.status );
       if ( -1 != ppid.idtrack )
@@ -112,7 +112,9 @@ StatusCode MuonPIDPacker::check( const DataVector & dataA,
     // Track references
     ok &= (*iA)->idTrack() == (*iB)->idTrack();
     ok &= (*iA)->muonTrack() == (*iB)->muonTrack();
-    // DLLs for later
+    // DLLs
+    ok &= ch.compareDoubles( "MuonLLMu", (*iA)->MuonLLMu(), (*iB)->MuonLLMu() );
+    ok &= ch.compareDoubles( "MuonLLBg", (*iA)->MuonLLBg(), (*iB)->MuonLLBg() );
 
     // force printout for tests
     //ok = false;

@@ -1,4 +1,4 @@
-// $Id: PackedMuonPID.h,v 1.2 2009-11-07 12:20:26 jonrob Exp $
+// $Id: PackedMuonPID.h,v 1.3 2009-11-10 10:24:09 jonrob Exp $
 #ifndef EVENT_PACKEDMUONPID_H
 #define EVENT_PACKEDMUONPID_H 1
 
@@ -37,8 +37,8 @@ namespace LHCb
         mutrack(-1)
     {}
 
-    float MuonLLMu;
-    float MuonLLBg;
+    int MuonLLMu;
+    int MuonLLBg;
     int nShared;
     int status;
     int idtrack;
