@@ -9,6 +9,9 @@
    temporary packed object during packing
 
 ! 2009-11-10 - Olivier Callot
+ - Fix CompareTrack to not report saturated q/p error for poorely measured tracks
+
+! 2009-11-10 - Olivier Callot
  - Fix a wrong decoding of likelihood and ghost probability for Track version>2
 
 ! 2009-11-06 - Chris Jones

@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.10 2009-11-09 18:07:35 jonrob Exp $
+// $Id: CompareTrack.cpp,v 1.11 2009-11-10 21:28:25 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -157,7 +157,8 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
-    if ( 5.     < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) ) isOK = false;
+    if ( 5.     < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) &&
+         fabs( tDiag[4]*tP*1.e5 ) < 199999000 ) isOK = false;
 
     std::vector<double> oFrac;
     oFrac.push_back(  oSta->covariance()(1,0) / oDiag[1] / oDiag[0] );
@@ -202,10 +203,10 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
                         tSta->tx(), tSta->ty(), 1./tSta->qOverP() )
              << endmsg;
       info() << format( " old Diag %10.5f %10.5f %12.9f %12.9f %12.3f", 
-                        oDiag[0], oDiag[1], oDiag[2], oDiag[3], oDiag[4]*oP*oP )
+                        oDiag[0], oDiag[1], oDiag[2], oDiag[3], oDiag[4]*oP*1.e5 )
              << endmsg;
       info() << format( "test Diag %10.5f %10.5f %12.9f %12.9f %12.3f", 
-                        tDiag[0], tDiag[1], tDiag[2], tDiag[3], tDiag[4]*tP*tP )
+                        tDiag[0], tDiag[1], tDiag[2], tDiag[3], tDiag[4]*tP*1.e5 )
              << endmsg;
       info() << " old Frac ";
       for ( kk = 0 ; oFrac.size() > kk ; ++kk ) {
