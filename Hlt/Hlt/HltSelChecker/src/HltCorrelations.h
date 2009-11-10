@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.h,v 1.2 2009-11-06 13:49:40 pkoppenb Exp $
+// $Id: HltCorrelations.h,v 1.3 2009-11-10 17:11:14 pkoppenb Exp $
 #ifndef HLTCORRELATIONS_H 
 #define HLTCORRELATIONS_H 1
 
@@ -42,5 +42,7 @@ private:
   strings m_moreAlgorithms ;   ///< additional algorithms
   mutable IAlgorithmCorrelations* m_algoCorr ;  ///< Correlation tool
   mutable ICheckSelResults* m_selTool ; ///< Selection results tool
+  unsigned int m_firstBit; ///< first routing bit to look at
+  unsigned int m_lastBit ;///< last routing bit to look at
 };
 #endif // HLTCORRELATIONS_H

@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.2 2009-11-06 13:49:40 pkoppenb Exp $
+// $Id: HltCorrelations.cpp,v 1.3 2009-11-10 17:11:14 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -33,8 +33,12 @@ HltCorrelations::HltCorrelations( const std::string& name,
   : HltSelectionsBase ( name , pSvcLocator )
    , m_algoCorr()
 {
+  
+
   declareProperty( "Algorithms", m_moreAlgorithms, 
                    "List of additional algorithms appended to Hlt selections" );
+  declareProperty( "FirstBit", m_firstBit = 32 );
+  declareProperty( "LastBit", m_lastBit = 95 );
 }
 //=============================================================================
 // Destructor
@@ -59,7 +63,9 @@ StatusCode HltCorrelations::initialize() {
   algos.push_back("L0");
 
   // trigger bits
-  for ( unsigned int i = 32 ; i!=96 ; i++){
+  if ( m_firstBit > m_lastBit ) return Exception("Inconsistent bit range");
+  
+  for ( unsigned int i = m_firstBit ; i<=m_lastBit ; i++){
     algos.push_back(bitX(i));
   }
   // trigger lines
@@ -101,13 +107,15 @@ StatusCode HltCorrelations::execute() {
   }
 
   // bits
+  if (msgLevel(MSG::DEBUG)) debug() << "Reading routing bits" << endmsg;
   if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
-    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,32,95);
+    std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
     for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
       if (!m_algoCorr->fillResult(bitX(*i),true));
-    } 
+    }
   }
+  if (msgLevel(MSG::DEBUG)) debug() << "Read routing bits" << endmsg;
   
   // decreports
   if( exist<LHCb::HltDecReports>( LHCb::HltDecReportsLocation::Default ) ){ 
