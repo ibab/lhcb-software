@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.138 2009-10-30 15:25:32 ibelyaev Exp $
+! $Id: release.notes,v 1.139 2009-11-10 14:00:14 pkoppenb Exp $
 !==============================================================================
 ! Package     : DaVinciAssociators
 ! Responsible : Vladimir Gligorov
 !==============================================================================
+
+! 2009-11-10 - Patrick Koppenburg
+ - Remove all option files
 
 ! 2009-10-30 - Vanya Belyaev
 
