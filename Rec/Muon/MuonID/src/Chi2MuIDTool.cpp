@@ -1,4 +1,4 @@
-// $Id: Chi2MuIDTool.cpp,v 1.8 2009-10-02 18:23:50 jcidvida Exp $
+// $Id: Chi2MuIDTool.cpp,v 1.9 2009-11-10 14:05:54 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -57,7 +57,7 @@ StatusCode Chi2MuIDTool::initialize() {
 
   m_fitter = tool<ITrackFitter>("TrackMasterFitter","fitter",this); 
   m_extrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator",this);
-  m_measProvider = tool<IMeasurementProvider>("MeasurementProvider",this);  
+  m_measProvider = tool<IMeasurementProvider>("MuonMeasurementProvider",this);  
   m_mySeedState=0;
 
   m_mudet = getDet<DeMuonDetector>("/dd/Structure/LHCb/DownstreamRegion/Muon");
