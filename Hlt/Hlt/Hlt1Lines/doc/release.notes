@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.51 2009-11-06 16:08:10 panmanj Exp $
+! $Id: release.notes,v 1.52 2009-11-10 12:05:11 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-10 - Jaap Panman
+ - correct fullReco flag in LumiCounterDefinition
 
 ! 2009-11-06 - Jaap Panman
  - move to new odin TriggerType definitions
