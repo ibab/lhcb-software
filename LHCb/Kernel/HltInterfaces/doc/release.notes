@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.8 2009-11-07 20:03:34 graven Exp $
+! $Id: release.notes,v 1.9 2009-11-10 17:09:22 pkoppenb Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
+
+! 2009-11-10 - Patrick Koppenburg
+ - ReadRoutingBits : Do not break on missing RawBank
 
 ! 2009-11-07 - Gerhard Raven
  - remove IHltSummaryTool 

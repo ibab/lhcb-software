@@ -1,4 +1,4 @@
-// $Id: ReadRoutingBits.cpp,v 1.1 2009-11-06 13:22:03 pkoppenb Exp $
+// $Id: ReadRoutingBits.cpp,v 1.2 2009-11-10 17:09:22 pkoppenb Exp $
 // Include files 
 
 #include "Kernel/ReadRoutingBits.h"
@@ -47,14 +47,14 @@ namespace Hlt {
     }
     const unsigned int size = 3 ;
     const unsigned int byte = 8 ;
+    boost::dynamic_bitset<unsigned int> x(byte*sizeof(unsigned int));
     const std::vector<LHCb::RawBank*>& banks = rawEvent->banks(LHCb::RawBank::HltRoutingBits);
-    if (banks.size()!=1) 
-      throw GaudiException("Cannot find RawBank","Hlt::readRoutingBits",StatusCode::FAILURE);
+    if (banks.size()!=1) return x ;
     if (banks.front()->size()!=size*sizeof(unsigned int)) {
       throw GaudiException("RawBank wrong size","Hlt::readRoutingBits",StatusCode::FAILURE);
     }
     const unsigned int *data = banks.front()->data();
-    boost::dynamic_bitset<unsigned int> x(byte*sizeof(unsigned int), data[0]);
+    x.append(data[0]);
     x.append(data[1]);
     x.append(data[2]);
     return x ;
