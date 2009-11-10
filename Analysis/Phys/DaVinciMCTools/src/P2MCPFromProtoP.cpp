@@ -1,4 +1,4 @@
-// $Id: P2MCPFromProtoP.cpp,v 1.4 2009-10-08 16:14:20 pkoppenb Exp $
+// $Id: P2MCPFromProtoP.cpp,v 1.5 2009-11-10 15:33:42 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -27,18 +27,26 @@ P2MCPFromProtoP::P2MCPFromProtoP( const std::string& type,
   Particle2MCAssociatorBase ( type, name , parent ),
   m_PP2MC()
 {
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltCharged ) ;
-  m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ) ;
-
-  declareProperty("Locations",m_PP2MC,"More protoparticle locations (without /Event)");
+  declareProperty("Locations",m_PP2MC,"Protoparticle locations (without /Event)");
 }
 //=============================================================================
 StatusCode P2MCPFromProtoP::initialize() {
   StatusCode sc = Particle2MCAssociatorBase::initialize();
-  debug() << "Will look into " << m_PP2MC << endmsg ;
+
+  if ( m_PP2MC.empty() ){
+    if ( context() == "Hlt" || context() == "HLT" ){
+      m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltCharged ) ;
+      m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::HltNeutrals ) ;
+    } else {
+      m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Charged  ) ;
+      m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Upstream ) ;
+      m_PP2MC.push_back ( "Relations/" + LHCb::ProtoParticleLocation::Neutrals ) ;
+    }
+    debug() << "Will look into " << m_PP2MC << endmsg ;
+  } else {
+    // Non standard
+    info() << "Will look into " << m_PP2MC << endmsg ;
+  }
   
   if (sc.isFailure()) return sc;
   return sc;
