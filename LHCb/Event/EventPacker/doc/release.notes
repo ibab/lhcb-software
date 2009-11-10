@@ -4,6 +4,10 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Chris Jones
+ - Add some debug to ProtoParticle packers and unpackers + remove need for 
+   temporary packed object during packing
+
 ! 2009-11-10 - Olivier Callot
  - Fix a wrong decoding of likelihood and ghost probability for Track version>2
 

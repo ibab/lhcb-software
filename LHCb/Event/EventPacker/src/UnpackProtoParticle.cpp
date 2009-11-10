@@ -1,4 +1,4 @@
-// $Id: UnpackProtoParticle.cpp,v 1.5 2009-11-07 12:20:39 jonrob Exp $
+// $Id: UnpackProtoParticle.cpp,v 1.6 2009-11-10 10:25:07 jonrob Exp $
 // Include files 
 
 // from Gaudi
@@ -18,7 +18,6 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( UnpackProtoParticle );
-
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -49,9 +48,8 @@ StatusCode UnpackProtoParticle::execute() {
 
   const LHCb::PackedProtoParticles* dst = 
     getOrCreate<LHCb::PackedProtoParticles,LHCb::PackedProtoParticles>( m_inputName );
-
   if ( msgLevel(MSG::DEBUG) )
-    debug() << "Size of PackedProtoParticles = " << dst->end() - dst->begin() << endmsg;
+    debug() << "Found " << dst->protos().size() << " PackedProtoParticles at '" << m_inputName << "'" << endmsg;
 
   LHCb::ProtoParticles* newProtoParticles = new LHCb::ProtoParticles();
   newProtoParticles->reserve(dst->protos().size());
@@ -59,8 +57,8 @@ StatusCode UnpackProtoParticle::execute() {
 
   StandardPacker pack;
   
-  for ( std::vector<LHCb::PackedProtoParticle>::const_iterator itS = dst->begin();
-        dst->end() != itS; ++itS ) {
+  for ( std::vector<LHCb::PackedProtoParticle>::const_iterator itS = dst->protos().begin();
+        dst->protos().end() != itS; ++itS ) {
     const LHCb::PackedProtoParticle& src = (*itS);
 
     LHCb::ProtoParticle* part = new LHCb::ProtoParticle( );
@@ -88,17 +86,20 @@ StatusCode UnpackProtoParticle::execute() {
 
     int kk;
     for ( kk = src.firstHypo; src.lastHypo > kk; ++kk ) {
-      int reference = *(dst->beginRefs()+kk);
+      const int reference = *(dst->refs().begin()+kk);
       pack.hintAndKey( reference, dst, newProtoParticles, hintID, key );
       SmartRef<LHCb::CaloHypo> ref( newProtoParticles, hintID, key );
       part->addToCalo( ref );
     }
 
     for ( kk = src.firstExtra; src.lastExtra > kk; ++kk ) {
-      std::pair<int,int> info = *(dst->beginExtra()+kk);
+      const std::pair<int,int>& info = *(dst->extras().begin()+kk);
       part->addInfo( info.first, pack.fltPacked( info.second ) );
     }
   }
+
+  if ( msgLevel(MSG::DEBUG) )
+    debug() << "Created " << newProtoParticles->size() << " ProtoParticles at '" << m_outputName << "'" << endmsg;
   
   return StatusCode::SUCCESS;
 }
