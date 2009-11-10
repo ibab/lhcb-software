@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.10 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.11 2009-11-10 12:15:15 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -62,7 +62,6 @@ StatusCode STNZSMonitor::initialize() {
 
   m_evtNumber = 0;
 
-  bookHistograms();
   m_noiseTool = tool<ST::ISTNoiseCalculationTool>(m_noiseToolType, m_noiseToolName);
 
   // Read following period, reset rate and skip events from configuration of tool
@@ -70,23 +69,22 @@ StatusCode STNZSMonitor::initialize() {
   m_resetRate = m_noiseTool->resetRate();
   m_skipEvents = m_noiseTool->skipEvents();
 
-  // Select small number of TELL1s (useful for debugging)
+  // Select small number of TELL1s (useful for debugging) then book histograms
   m_selectedTells = false;
   if ( m_limitToTell.size() > 0 ) {
     m_selectedTells = true;
     sort(m_limitToTell.begin(), m_limitToTell.end());
   }
+  bookHistograms();
 
   return StatusCode::SUCCESS;
 }
 
 void STNZSMonitor::bookHistograms() {
-
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int sourceID = (*itT).first;
-
     // Limit to selected tell1s
     if ( m_selectedTells ) {
       if (!binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber(sourceID))) {
@@ -147,13 +145,14 @@ StatusCode STNZSMonitor::finalize() {
   //printHistos();
   // Update all histograms at the end
   std::map<int, AIDA::IProfile1D*>::const_iterator itH = m_noiseHistos.begin();
+
   for( ; itH != m_noiseHistos.end(); ++itH ) { 
     // Limit to selected tell1s
     if ( m_selectedTells && 
          !binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber((*itH).first))) {
       continue;
     }
-
+    
     updateNoiseHistogram( (*itH).first );
     if(m_checkCalculation) dumpNoiseCalculation( (*itH).first );
   } 
