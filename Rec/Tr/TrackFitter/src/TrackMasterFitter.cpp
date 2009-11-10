@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.74 2009-10-13 14:34:21 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.75 2009-11-10 22:07:02 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -590,7 +590,7 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
     }
 
   const int nPar = track.nStates()>0 ? track.firstState().nParameters() : 5 ;
-  bool upstream = track.nodes().front()->z() > track.nodes().back()->z() ;
+  bool upstream = nodes.front()->z() > nodes.back()->z() ;
   
   if( track.hasT() ) {
     track.addInfo( Track::FitTChi2 , upstream ? chisqT[0] : chisqT[1]) ;
