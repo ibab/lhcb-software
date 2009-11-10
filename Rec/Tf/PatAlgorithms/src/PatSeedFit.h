@@ -1,15 +1,17 @@
-// $Id: PatSeedFit.h,v 1.2 2009-04-22 13:09:21 smenzeme Exp $
+// $Id: PatSeedFit.h,v 1.3 2009-11-10 14:21:26 wouter Exp $
 #ifndef INCLUDE_PATSEEDFIT_H
 #define INCLUDE_PATSEEDFIT_H 1
 
 #include "GaudiAlg/GaudiTool.h"
 #include "TrackInterfaces/IPatSeedFit.h"
 
-
 static const InterfaceID IID_PatSeedFit("PatSeedFit", 1, 0);
 
 // forward declarations
 class PatSeedTool;
+namespace Tf {
+  class IOTHitCreator ;
+}
 
 /** @class PatSeedFit PatSeedFit.h
  *  
@@ -49,7 +51,7 @@ private:
   DeSTDetector* m_itDet ;
   const DeOTDetector* m_otDet;
   const IPatSeedFit* m_seedTool ;
-  const IOTRawBankDecoder* m_otdecoder ;
+  const Tf::IOTHitCreator* m_othitcreator ;
   const ITrackMomentumEstimate *m_momentumTool ;
   ITrackFitter* m_veloFitter ;
   IPatSeedFit* m_seedFitter;

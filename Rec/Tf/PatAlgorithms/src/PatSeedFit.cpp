@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.10 2009-09-25 19:15:28 smenzeme Exp $
+// $Id: PatSeedFit.cpp,v 1.11 2009-11-10 14:21:26 wouter Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -9,7 +9,7 @@
 #include "TrackInterfaces/ITrackMomentumEstimate.h"
 #include "STDet/DeSTDetector.h"
 #include "OTDet/DeOTDetector.h"
-#include "OTDAQ/IOTRawBankDecoder.h"
+#include "TfKernel/IOTHitCreator.h"
 #include "TfKernel/RecoFuncs.h"
 
 #include "PatSeedFit.h"
@@ -61,7 +61,7 @@ StatusCode PatSeedFit::initialize()
   m_itDet = getDet<DeSTDetector>(DeSTDetLocation::IT);
   m_otDet = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   // Retrieve the raw bank decoder (for recreating the OTLiteTime)
-  m_otdecoder = tool<IOTRawBankDecoder>("OTRawBankDecoder") ;
+  m_othitcreator = tool<Tf::IOTHitCreator>("Tf::OTHitCreator/OTHitCreator") ;
   m_seedTool = tool<IPatSeedFit>( "PatSeedFit" );
   m_momentumTool = tool<ITrackMomentumEstimate>( "FastMomentumEstimate" );
   m_veloFitter = tool<ITrackFitter>( "Tf::PatVeloFitLHCbIDs", "FitVelo", this ) ;
@@ -120,16 +120,8 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
       }
       
     } else if( ihit->detectorType()==LHCb::LHCbID::OT ) {
-
-      LHCb::OTChannelID otid = ihit->otID() ;
-      const DeOTModule* module = m_otDet->findModule( otid ) ;
-      if(module==0) {
-        return Error("No module found for OT hit!");
-      }
-
-      LHCb::OTLiteTime otlitetime = m_otdecoder->time( otid );
-      Tf::OTHit* othit = new  Tf::OTHit( *module, otlitetime ) ;
-      othits.push_back( othit) ;
+      Tf::OTHit* othit = new Tf::OTHit(m_othitcreator->hit( ihit->otID() )) ;
+      othits.push_back( othit ) ;
       hits.push_back( new PatFwdHit( *othit ) ) ;
     }
   }

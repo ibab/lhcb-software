@@ -3,6 +3,10 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+
+! 2009-11-10 Wouter Hulsbergen
+ - Replace OTRawBankDecoder with OTHitCreator in PadSeedFit
+
 ! 2009-11-06 Stephanie Hansmann-Menzemer
  - Fix for unitialized member variable in PatForwardTool
 
