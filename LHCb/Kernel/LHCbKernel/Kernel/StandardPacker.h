@@ -1,4 +1,4 @@
-// $Id: StandardPacker.h,v 1.8 2009-11-07 11:45:35 jonrob Exp $
+// $Id: StandardPacker.h,v 1.9 2009-11-10 10:27:14 jonrob Exp $
 #ifndef KERNEL_STANDARDPACKER_H
 #define KERNEL_STANDARDPACKER_H 1
 
@@ -16,11 +16,12 @@
  */
 
 namespace Packer {
-  const double ENERGY_SCALE     = 1.e2;  ///< .01 MeV steps
-  const double POSITION_SCALE   = 1.e4;  ///< 0.1 micron steps
-  const double SLOPE_SCALE      = 1.e8;  ///< full scale +- 20 radians
-  const double FRACTION_SCALE   = 3.e4;  ///< store in short int.
-  const double TIME_SCALE       = 1.e5;  ///< 0.0001 ns resolution
+  const double ENERGY_SCALE     = 1.0e2;  ///< .01 MeV steps
+  const double POSITION_SCALE   = 1.0e4;  ///< 0.1 micron steps
+  const double SLOPE_SCALE      = 1.0e8;  ///< full scale +- 20 radians
+  const double FRACTION_SCALE   = 3.0e4;  ///< store in short int.
+  const double TIME_SCALE       = 1.0e5;  ///< 0.0001 ns resolution
+  const double DELTALL_SCALE    = 1.0e4;  ///< 0.0001 precision
 }
 
 class StandardPacker {
@@ -54,6 +55,11 @@ public:
   /** returns an int for a double time (TOF) value */
   int time( const double x ) const {
     return packDouble( x * Packer::TIME_SCALE );
+  }
+
+  /** returns an int for a double delta log likelihood value */
+  int deltaLL( const double x ) const {
+    return packDouble( x * Packer::DELTALL_SCALE );
   }
 
   /** returns an int containing the float value of the double */
@@ -105,6 +111,9 @@ public:
 
   /** returns the time as double from the int value */
   double time( const int k )           const { return double(k) / Packer::TIME_SCALE; }
+
+  /** returns the delta Log Likelihood as double from the int value */
+  double deltaLL( const int k )        const { return double(k) / Packer::DELTALL_SCALE; }
 
   /** returns an double from a int containing in fact a float */
   double fltPacked( const int k  ) const {

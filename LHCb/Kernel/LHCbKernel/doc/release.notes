@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-11-10 - Chris Jones
+ - Add packing methods for delta LL values
+
 ! 2009-11-07 - Chris Jones
  - Add more const'ness to StandardPacker.h
 
