@@ -45,6 +45,7 @@ DECLARE_SERVICE_FACTORY(MonitorSvc)
 MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl): 
   Service(name, sl)
 {
+   declareProperty("UniqueServiceNames", m_uniqueServiceNames = 0);
    declareProperty("disableMonRate", m_disableMonRate = 0);
    declareProperty("disableDimPropServer", m_disableDimPropServer = 0);
    declareProperty("disableDimCmdServer", m_disableDimCmdServer = 0);
@@ -95,10 +96,11 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 
 StatusCode MonitorSvc::initialize() {
+  StatusCode sc = Service::initialize();
 
   MsgStream msg(msgSvc(),"MonitorSvc");
 
- // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
+  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
 
 
   //const std::string& utgid = RTL::processName();
@@ -580,8 +582,11 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   //this is so that the trendtool stay subscribed to the same dimservice
   std::string dimSvcName ="";
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
-  if ((utgidParts.size() == 4)&(dimPrefix=="")) {
-    dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;
+  if ((utgidParts.size() == 4)&&(dimPrefix=="")) {
+    if (m_uniqueServiceNames==1) {
+      //this is for the storage system
+      dimSvcName = dimPrefix + m_utgid + "/"+dimName;}
+    else { dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;}
   }
   else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
   

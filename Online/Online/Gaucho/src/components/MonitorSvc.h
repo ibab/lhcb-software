@@ -146,7 +146,9 @@ private:
   
 public:    
    void declareMonRateComplement( int& runNumber, unsigned int& triggerConfigurationKey, int& cycleNumber, double& deltaT, double& offsetTimeFirstEvInRun, double& offsetTimeLastEvInCycle, double& offsetGpsTimeLastEvInCycle);  
-
+  
+  int m_uniqueServiceNames;
+  
   int m_disableMonRate;
   int m_disableDimPropServer;
   int m_disableDimCmdServer;
