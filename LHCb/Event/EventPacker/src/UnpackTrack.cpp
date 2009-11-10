@@ -1,4 +1,4 @@
-// $Id: UnpackTrack.cpp,v 1.13 2009-11-07 12:20:39 jonrob Exp $
+// $Id: UnpackTrack.cpp,v 1.14 2009-11-10 07:26:04 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -65,8 +65,8 @@ StatusCode UnpackTrack::execute() {
     track->setNDoF(       src.nDoF );
     track->setFlags(      src.flags );
     if ( dst->version() > 2 ) {
-      track->setLikelihood(       src.likelihood );
-      track->setGhostProbability( src.ghostProba );
+      track->setLikelihood(       pack.fltPacked( src.likelihood ) );
+      track->setGhostProbability( pack.fltPacked( src.ghostProba ) );
     }
     std::vector<LHCb::LHCbID> lhcbids(  src.lastId - src.firstId  ) ;
     std::vector<LHCb::LHCbID>::iterator lhcbit = lhcbids.begin() ;

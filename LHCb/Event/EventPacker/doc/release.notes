@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Olivier Callot
+ - Fix a wrong decoding of likelihood and ghost probability for Track version>2
+
 ! 2009-11-06 - Chris Jones
  - Add an option to the packers and unpackers to optionally create the
    output container if the input is missing. Default is to not to do so.
