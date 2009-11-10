@@ -2,6 +2,9 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Wouter Hulsbergen
+ - Make sure trackfitters are (also) configured by standard ConfiguredMasterFitter
+
 ! 2009-11-06 - Chris Jones
  - Update MuonIDAlg to allow it to be run when the MuonPIDs and MuonTracks 
    already exist in the TES. In this case the existing containers are cleared 

@@ -13,7 +13,7 @@ from Gaudi.Configuration import *
 from Configurables import MuonIDAlg,Chi2MuIDTool,DistMuIDTool
 from Configurables import TrackMasterFitter,IsMuonCandidateC,MakeMuonMeasurements, CLTool, GetArrival
 from Configurables import GaudiSequencer
-
+from TrackFitter.ConfiguredFitters import *
 
 class ConfiguredMuonIDs():
 
@@ -55,7 +55,7 @@ class ConfiguredMuonIDs():
     if self.debug: print "# CONFIGURING FITTER"
     ## check if input is already an instance or this must be created
     if isinstance(fitter,TrackMasterFitter): myfitter=fitter
-    else: myfitter=TrackMasterFitter(str(fitter))
+    else: myfitter=ConfiguredMasterFitter( Name = str(fitter) )
     
     myfitter.UseSeedStateErrors = self.info.UseSeedStateErrors
     myfitter.FitUpstream = self.info.FitUpstream
@@ -172,7 +172,8 @@ class ConfiguredMuonIDs():
 
     ## add and configure fitter to be used for finding chi2
     if self.debug: print "# \tCONFIGURING MUIDTOOL: adding tools"
-    mymuidtool.addTool(TrackMasterFitter(), name='fitter') 
+    mymuidtool.addTool(TrackMasterFitter, name='fitter') 
+    ConfiguredMasterFitter( Name = mymuidtool.fitter )
     self.configureFitter(mymuidtool.fitter)
 
     ## for MuonIDAlg, can stop here (no use or extra subtools)
