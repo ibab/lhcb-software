@@ -49,5 +49,6 @@
   <class name = "IVertexFit"/>
   <class name = "IPrintDecay"/>
   <class name = "ISetInputParticles"/>
+  <class name = "IJets2Jets"/>
 
 </lcgdict>

@@ -4,6 +4,9 @@
 ! Purpose     : Tool interfaces and dictionaries for DaVinci
 !-----------------------------------------------------------------------------
 
+! 2009-11-10 - Victor Coco
+ - Add interface for Jet to Jet matching: IJets2Jets
+
 ! 2009-11-05 - Patrick Koppenburg
  - Fix dxygen for IVertexFit.h
 

@@ -1,4 +1,4 @@
-// $Id: DaVinciInterfacesDict.h,v 1.4 2009-08-17 07:52:55 jpalac Exp $
+// $Id: DaVinciInterfacesDict.h,v 1.5 2009-11-10 12:54:14 cocov Exp $
 #ifndef DICT_DAVINCIINTERFACESDICT_H 
 #define DICT_DAVINCIINTERFACESDICT_H 1
 
@@ -59,5 +59,6 @@
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IPrintDecay.h"
 #include "Kernel/ISetInputParticles.h"
+#include "Kernel/IJets2Jets.h"
 
 #endif // DICT_DAVINCIINTERFACESDICT_H
