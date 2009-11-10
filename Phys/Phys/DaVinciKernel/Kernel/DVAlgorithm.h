@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.h,v 1.45 2009-10-30 16:15:04 jpalac Exp $ 
+// $Id: DVAlgorithm.h,v 1.46 2009-11-10 10:41:38 jpalac Exp $ 
 // ============================================================================
 #ifndef DAVINCIKERNEL_DVALGORITHM_H
 #define DAVINCIKERNEL_DVALGORITHM_H 1
@@ -166,7 +166,7 @@ public:
    **/
   inline const LHCb::RecVertex::Container* primaryVertices() const
   {
-    return desktop()->primaryVertices();
+    return m_PVs;
   }
 
   /**
@@ -531,6 +531,9 @@ private:
   /// The base class provides an instance of all type of tools
   StatusCode loadTools() ;
 
+  /// Load the primart vertices from 
+  void loadPVs();
+
   /// Method to create SelResult container
   StatusCode fillSelResult() ;
 
@@ -692,9 +695,14 @@ private:
   bool m_preloadTools;
   /// InputLocations
   std::vector<std::string> m_inputLocations ;
-
+  /// User-defined Particle->PV relations locations
   std::vector<std::string> m_p2PVInputLocations ;
-
+  /// Pointer to event's RecVertices
+  LHCb::RecVertex::Container* m_PVs;
+  /// TES location of input PVs.
+  std::string m_PVLocation;
+  /// Don't use PVs
+  bool m_noPVs;
 };
 // ==========================================================================
 /*  Accessor for ParticlePropertySvc

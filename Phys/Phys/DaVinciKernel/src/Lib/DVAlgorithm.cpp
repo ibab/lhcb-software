@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.64 2009-11-05 16:18:27 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.65 2009-11-10 10:41:38 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -77,6 +77,9 @@ DVAlgorithm::DVAlgorithm
     , m_multiPV               ( false )
     , m_useP2PV               ( true  )
     , m_writeP2PV             ( true  )
+    , m_PVs                   ( 0 )
+    , m_PVLocation            ("")
+    , m_noPVs                 ( false )
 {
   m_inputLocations.clear() ;
   declareProperty( "InputLocations", 
@@ -87,6 +90,8 @@ DVAlgorithm::DVAlgorithm
   declareProperty( "P2PVInputLocations", 
                    m_p2PVInputLocations, 
                    "Particle -> PV Relations Input Locations forwarded to PhysDesktop" );
+
+  declareProperty( "InputPrimaryVertices", m_PVLocation );
 
   declareProperty("UseP2PVRelations", m_useP2PV,
                   "Use P->PV relations internally. Forced to true if re-fitting PVs. Otherwise disabled for single PV events. Default: true.");
@@ -212,7 +217,9 @@ StatusCode DVAlgorithm::initialize ()
     Warning( mgs +  "Some tools/utilities could have the problems." );
   }
   
-  if ( m_avoidSelResult ) { if (msgLevel(MSG::DEBUG)) debug() << "Avoiding SelResult" << endmsg; }
+  if ( m_avoidSelResult ) { 
+    if (msgLevel(MSG::DEBUG)) debug() << "Avoiding SelResult" << endmsg; 
+  }
   
   
   // Load tools very
@@ -226,6 +233,12 @@ StatusCode DVAlgorithm::initialize ()
     { debug() << "Decay Descriptor: " << m_decayDescriptor << endmsg; }
   }
 
+  if (m_PVLocation=="") {
+    m_PVLocation = onOffline()->primaryVertexLocation();
+  }
+
+  m_noPVs = (m_PVLocation=="None"||m_PVLocation=="") ? true : false;
+  
   if (!m_p2PVInputLocations.empty() ) 
   {
     DaVinci::StringUtils::expandLocations( m_p2PVInputLocations.begin(),
@@ -235,7 +248,7 @@ StatusCode DVAlgorithm::initialize ()
     desktop()->setP2PVInputLocations(m_p2PVInputLocations);
   }
    
-  desktop()->setWriteP2PV( m_writeP2PV );
+  desktop()->setWriteP2PV( m_writeP2PV && !m_noPVs );
 
   if (msgLevel(MSG::DEBUG)) debug() << "End of DVAlgorithm::initialize with " << sc << endmsg;
   
@@ -303,6 +316,34 @@ StatusCode DVAlgorithm::loadTools()
   return StatusCode::SUCCESS;
 }
 // ============================================================================
+// Load PVs
+// ============================================================================
+void DVAlgorithm::loadPVs() {
+
+  if (m_noPVs) {
+    m_PVs=0;
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "PV loading disabled. No PVs used in event";
+    } 
+  }
+  
+
+  if (msgLevel(MSG::VERBOSE)) {
+    verbose() << "Getting PV from " << m_PVLocation << endmsg;
+  }
+
+  if ( !exist<LHCb::RecVertices>( m_PVLocation ) ) {
+    m_PVs = 0 ;
+    Warning("No PV container at " + m_PVLocation,1).ignore();
+  } else {
+    m_PVs = get<LHCb::RecVertices>( m_PVLocation ); 
+    if (m_PVs->empty()) {
+      Warning( "Empty PV container at "+m_PVLocation, 1).ignore() ;      
+    }
+  }
+
+}
+// ============================================================================
 // Execute
 // ============================================================================
 StatusCode DVAlgorithm::sysExecute () 
@@ -315,6 +356,8 @@ StatusCode DVAlgorithm::sysExecute ()
   Gaudi::Utils::AlgContext sentry ( ctx , this ) ;
 
   DaVinci::Guards::CleanDesktopGuard desktopGuard(desktop());
+
+  this->loadPVs();
 
   StatusCode sc = desktop()->getEventInput();
   if ( sc.isFailure()) 
