@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.106 2009-11-09 18:24:39 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.107 2009-11-11 14:57:47 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -152,7 +152,7 @@ class Brunel(LHCbConfigurableUser):
 
         if withMC:
             # Create associators for checking and for DST
-            from Configurables import ProcessPhase, DataOnDemandSvc
+            from Configurables import ProcessPhase
             ProcessPhase("MCLinks").DetectorList += self.getProp("MCLinksSequence")
             # Unpack Sim data
             GaudiSequencer("MCLinksUnpackSeq").Members += [ "UnpackMCParticle",
@@ -161,6 +161,10 @@ class Brunel(LHCbConfigurableUser):
 
             # activate all configured checking (uses MC truth)
             self.configureCheck( histOpt == "Expert" )
+            
+            # data on demand needed to pack RichDigitSummary for DST, when reading unpacked DIGI
+            # Also needed to unpack MCHit containers when expert checking enabled
+            ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
 
         # ROOT persistency for histograms
         importOptions('$STDOPTS/RootHist.opts')
@@ -485,7 +489,6 @@ class Brunel(LHCbConfigurableUser):
 
         if expert:
             # Data on Demand for MCParticle to MCHit association, needed by ST, IT, OT, Tr, Muon
-            ApplicationMgr().ExtSvc += [ "DataOnDemandSvc" ]
             importOptions( "$ASSOCIATORSROOT/options/MCParticleToMCHit.py" )
 
             # Allow multiple files open at once (SIM,DST,DIGI etc.)
