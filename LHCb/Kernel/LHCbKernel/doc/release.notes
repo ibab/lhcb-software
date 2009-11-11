@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-11-11 M Needham
+ - Bug fix in TTNames class stringToChannel
+
 ! 2009-11-11 - Wouter Hulsbergen
  - Added methods to retrieve sequential IDs to OTChannelID
 

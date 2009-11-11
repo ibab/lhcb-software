@@ -106,7 +106,6 @@ std::string LHCb::TTNames::UniqueLayerToString(const LHCb::STChannelID& chan) {
   return theString;
 }
 
-
 std::string LHCb::TTNames::channelToString(const LHCb::STChannelID& chan) {
   std::string theStrip = UniqueSectorToString(chan) + "Strip" + boost::lexical_cast<std::string>(chan.strip());
   return theStrip;
@@ -131,7 +130,7 @@ LHCb::STChannelID LHCb::TTNames::stringToChannel(const std::string& name)  {
       layer = 2;
     }
     else {
-      return STChannelID();
+      return STChannelID(LHCb::STChannelID::typeTT, station , 0u , 0u , 0u, 0u);
     }
   }
 
@@ -143,7 +142,7 @@ LHCb::STChannelID LHCb::TTNames::stringToChannel(const std::string& name)  {
       layer = 1;
     }
     else {
-      return STChannelID();
+      return STChannelID(LHCb::STChannelID::typeTT, station , 0u , 0u , 0u, 0u);
     }
   }
 
@@ -174,7 +173,7 @@ LHCb::STChannelID LHCb::TTNames::stringToChannel(const std::string& name)  {
     sector = toInt(sectorName); 
   }
 
-  return LHCb::STChannelID(LHCb::STChannelID::typeIT, station, layer,
+  return LHCb::STChannelID(LHCb::STChannelID::typeTT, station, layer,
                            region, sector, strip);
 }
 
