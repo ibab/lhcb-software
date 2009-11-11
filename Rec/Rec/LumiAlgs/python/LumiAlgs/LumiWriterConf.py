@@ -1,5 +1,5 @@
 # options to run mdf writer for lumi writer
-__version__ = "$Id: LumiWriterConf.py,v 1.1 2009-10-09 15:32:12 panmanj Exp $"
+__version__ = "$Id: LumiWriterConf.py,v 1.2 2009-11-11 16:52:57 panmanj Exp $"
 __author__  = "Jaap Panman"
 
 
@@ -14,7 +14,7 @@ from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
 from Configurables import createODIN
-from Configurables import OdinTypesFilter 
+from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
 from Configurables import bankKiller 
 from Configurables import FileIdBankWriter
@@ -66,7 +66,8 @@ class LumiWriterConf(LHCbConfigurableUser):
       pass
       
     # select only the right Trigger Type
-    writeLumiSequence( OdinTypesFilter( 'OdinTriggerTypes', TriggerTypes=['RandomTrigger'] ) )
+    writeLumiSequence( ODINFilter ( 'OdinTriggerTypes',
+                                    Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
     # kill non-lumi banks
     if self.getProp('KillBanks') :
       writeLumiSequence(

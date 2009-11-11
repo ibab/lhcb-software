@@ -4,6 +4,13 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+
+! 2009-11-11 - Jaap Panman
+ - Added protection in navigate method of LumiIntegrateFSR not to attempt 
+   reading not-existing FSR tree, and prevent the configurable to attempt 
+   it for MDF files
+ - remove RandomTrigger in configurables (now LumiTrigger)
+
 ! 2009-11-11 - Rob Lambert
  - Added EventAccounting, to fill the EventCountFSR
    There are no tests in this package, they REALLY should be added

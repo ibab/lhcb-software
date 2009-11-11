@@ -39,7 +39,9 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types 
        ,"HistoProduce"  : False
+       ,"OutputLevel"   : WARNING
         }
+
     _propertyDocDct = {
        "Context"   : """ The context within which to run """
        ,"DataType"      : "Data type, can be ['DC06','2008','MC09','2009']"
@@ -131,12 +133,14 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         #create the Event FSR
         EvMembers=self.fillEventFSR(status)
-        #Touch all FSRs so they are always copied
-        TouchMembers=self.touchFSR()
 
         #finally configure the sequence
         sequence.Members += EvMembers
-        sequence.Members += TouchMembers
+
+        #Touch all FSRs so they are always copied
+        if True or inputType != 'MDF':
+            TouchMembers=self.touchFSR()
+            sequence.Members += TouchMembers
         sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False

@@ -1,5 +1,5 @@
 # options to run mdf reader for lumi reader
-__version__ = "$Id: LumiReaderConf.py,v 1.1 2009-10-09 15:32:12 panmanj Exp $"
+__version__ = "$Id: LumiReaderConf.py,v 1.2 2009-11-11 16:52:57 panmanj Exp $"
 __author__  = "Jaap Panman"
 
 from os import environ, path
@@ -12,7 +12,7 @@ from Configurables import GaudiSequencer as Sequence
 from Configurables import ( LHCbConfigurableUser, LHCbApp )
 
 from Configurables import createODIN
-from Configurables import OdinTypesFilter 
+from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import RawEventDump
 from Configurables import HltLumiSummaryDecoder
 from Configurables import LumiFileReader
@@ -57,7 +57,8 @@ class LumiReaderConf(LHCbConfigurableUser):
     # create ODIN by hand
     readLumiSequence( createODIN ('createODIN') )
     # select only the right Trigger Type
-    readLumiSequence( OdinTypesFilter( 'OdinTriggerTypes', TriggerTypes=['RandomTrigger'] ) )
+    readLumiSequence( ODINFilter ( 'OdinTriggerTypes',
+                                   Code = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) ' ))
     # decode lumi
     readLumiSequence( HltLumiSummaryDecoder( 'LumiDecoder' ) ) 
     # read and decode input file ---

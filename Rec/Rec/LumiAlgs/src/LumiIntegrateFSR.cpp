@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.3 2009-11-11 13:29:44 rlambert Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.4 2009-11-11 16:52:57 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -322,7 +322,9 @@ std::vector< std::string > LumiIntegrateFSR::navigate(std::string rootname, std:
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Explore: " << rootname << " for " << tag << endmsg;
   std::vector< std::string > addresses;
   SmartDataPtr<DataObject>   root(m_fileRecordSvc, rootname);
-  explore(root->registry(), tag, addresses);
+  if ( root ) {
+    explore(root->registry(), tag, addresses);
+  }
   return addresses;
 }
 
