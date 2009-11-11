@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.53 2009-11-11 08:51:21 graven Exp $
+! $Id: release.notes,v 1.54 2009-11-11 10:38:54 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -7,6 +7,7 @@
 
 ! 2009-11-11 - Gerhard Raven
  - fix name in CosmicOT
+ - minor cosmetic changes in Hlt1HadronLines
 
 ! 2009-11-10 - Jaap Panman
  - correct fullReco flag in LumiCounterDefinition
