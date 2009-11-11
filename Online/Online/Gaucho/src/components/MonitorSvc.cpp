@@ -582,17 +582,20 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   //this is so that the trendtool stay subscribed to the same dimservice
   std::string dimSvcName ="";
   std::vector<std::string> utgidParts = Misc::splitString(m_utgid, "_");
-  if ((utgidParts.size() == 4)&&(dimPrefix=="")) {
+  if ((utgidParts.size() == 4)) {
     if (m_uniqueServiceNames==1) {
       //this is for the storage system
       dimSvcName = dimPrefix + m_utgid + "/"+dimName;
     }
-    else { dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;}
+    else { if (dimPrefix=="") dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;
+           else  dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+    }
   }
   else {
     if (utgidParts[0]=="CALD0701") {
        //calibrationfarm - add partition
-       dimSvcName = dimPrefix+"LHCb_"+m_utgid + "/"+dimName;
+       if (dimPrefix!="") dimSvcName = dimPrefix+"LHCb_"+m_utgid + "/"+dimName;
+       else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
     }  
     else {
        dimSvcName = dimPrefix + m_utgid + "/"+dimName;
