@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.44 2009-11-10 13:20:55 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.45 2009-11-11 07:16:48 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -124,9 +124,6 @@ public:
   /// Clean desktop
   virtual StatusCode cleanDesktop();
   
-  /// Impose output location
-  virtual void imposeOutputLocation(const std::string& outputLocationString);
-
   /// Get output location
   virtual const std::string& getOutputLocation() const { return m_outputLocn ;}
 
@@ -260,7 +257,7 @@ private:
 //                          std::vector<std::string>::iterator end);
   
 
-  inline bool writeP2PV() const 
+  inline bool saveP2PV() const 
   {
     return m_writeP2PV;
   }

@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.86 2009-11-10 13:20:56 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.87 2009-11-11 07:16:48 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -175,7 +175,7 @@ StatusCode PhysDesktop::initialize()
                              StatusCode::FAILURE);
 
   // check that output location is set to *SOME* value
-  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
+  //  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
 
   return sc;
 }
@@ -455,7 +455,7 @@ void PhysDesktop::saveParticles(const LHCb::Particle::ConstVector& pToSave) cons
   // now save relations table
   if (msgLevel(MSG::VERBOSE)) verbose() << "Save P->PV relations" << endmsg;
 
-  if ( writeP2PV() ) saveP2PVRelations(pToSave);
+  if ( saveP2PV() ) saveP2PVRelations(pToSave);
  
 }
 //=============================================================================
@@ -823,17 +823,6 @@ StatusCode PhysDesktop::getPrimaryVertices() {
 
   return StatusCode::SUCCESS ;
 
-}
-//=============================================================================
-// Impose OutputLocation
-//=============================================================================
-void PhysDesktop::imposeOutputLocation(const std::string& outputLocationString){
-  if (outputLocationString != m_outputLocn) {
-    Warning( "Non-standard output location imposed: "+ outputLocationString, 
-             StatusCode::SUCCESS , 1).ignore();
-    m_outputLocn = outputLocationString;
-  }
-  return;
 }
 //=============================================================================
 // Write an empty container if needed
