@@ -250,7 +250,7 @@ StatusCode AdderSvc::finalize() {
 //  shutDown();
   m_enablePostEvents = false;
   msg << MSG::DEBUG << "Finalize Adder..... " << endmsg;
-  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
+//  if (m_processMgr) {delete m_processMgr; m_processMgr=0;}
   return Service::finalize();
 }
 
