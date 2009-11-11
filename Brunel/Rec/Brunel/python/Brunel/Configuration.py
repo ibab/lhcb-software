@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.107 2009-11-11 14:57:47 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.108 2009-11-11 21:21:22 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -180,6 +180,7 @@ class Brunel(LHCbConfigurableUser):
         if histOpt == "Expert":
             RecSysConf().setProp( "ExpertHistos", True )
             RecMoniConf().setProp( "ExpertHistos", True )
+            DstConf().EnablePackingChecks = True
 
         # Use a default histogram file name if not already set
         if not HistogramPersistencySvc().isPropertySet( "OutputFile" ):
