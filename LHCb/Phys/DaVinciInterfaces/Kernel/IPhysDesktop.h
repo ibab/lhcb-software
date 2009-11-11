@@ -1,4 +1,4 @@
-// $Id: IPhysDesktop.h,v 1.7 2009-11-10 13:18:52 jpalac Exp $
+// $Id: IPhysDesktop.h,v 1.8 2009-11-11 08:54:54 jpalac Exp $
 #ifndef DAVINCIKERNEL_IPHYSDESKTOP_H 
 #define DAVINCIKERNEL_IPHYSDESKTOP_H 1
 
@@ -138,9 +138,6 @@ public:
   /// Clone all particles given by a list. This duplicates information 
   /// on the TES and should be used only when necessary. (Used by Filters)
   virtual StatusCode cloneTrees( const LHCb::Particle::ConstVector& ) = 0;
-
-  /// Impose output location
-  virtual void imposeOutputLocation(const std::string& outputLocationString) = 0;
 
   /// Get output location
   virtual const std::string& getOutputLocation() const = 0 ;
