@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 - Silvia Miglioranzi
+ - Update of QMTest ref files (slc5). Update of gauss-gen-mc09 test.
+
 ! 2009-11-09 - Silvia Miglioranzi
  - Update of QMTest ref files (platforms slc4 64 and 32) for the nightly slot 
    lhcb3.
