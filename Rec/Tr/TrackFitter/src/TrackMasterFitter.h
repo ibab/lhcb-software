@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.26 2009-10-13 14:34:21 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.27 2009-11-11 21:12:52 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -6,9 +6,11 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // interface base class
 #include "TrackInterfaces/ITrackFitter.h"
+#include "TrackInterfaces/ITrackProjectorSelector.h"
 
 // Forward declarations
 class ITrackManipulator ;
@@ -63,6 +65,9 @@ private:
   //! update the reference vector for each measurement before next iteration
   StatusCode updateRefVectors( LHCb::Track& track ) const;
 
+  //! projectReference state
+  StatusCode projectReference( LHCb::Track& track ) const;
+
   //! determine the z-position of the closest approach to the beam line
   //! by linear extrapolation.
   double closestToBeamLine( const LHCb::State& state ) const;
@@ -93,6 +98,7 @@ private:
   ITrackKalmanFilter* m_trackNodeFitter;    ///< delegate to actual track fitter (which fits from nodes)
   IMeasurementProvider* m_measProvider;
   IMaterialLocator*     m_materialLocator ;
+  ToolHandle<ITrackProjectorSelector> m_projectorSelector ;
   std::string           m_materialLocatorName ;
 
 private:

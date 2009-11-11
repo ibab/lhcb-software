@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.74 2009-10-13 14:33:10 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.75 2009-11-11 21:12:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -12,10 +12,7 @@
 #include "Event/TrackFunctor.h"
 #include "Event/TrackUnitsConverters.h"
 #include "Event/StateVector.h"
-#include "Event/TrackFitResult.h"
-
-// from TrackInterfaces
-#include "TrackInterfaces/ITrackProjector.h"
+#include "Event/KalmanFitResult.h"
 
 // local
 #include "TrackKalmanFilter.h"
@@ -66,9 +63,6 @@ StatusCode TrackKalmanFilter::initialize()
   StatusCode sc = GaudiTool::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;
 
-  m_projectorSelector = tool<ITrackProjectorSelector>( "TrackProjectorSelector",
-                                                       "Projector", this );
-
   m_debugLevel   = msgLevel( MSG::DEBUG );
   
   return StatusCode::SUCCESS;
@@ -116,10 +110,6 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
 
     // filter if there is an active measurement
     if ( node.hasMeasurement() ) {
-      // Project the reference (only in the forward filter)
-      sc = projectReference( node );
-      if ( sc.isFailure() ) return Warning( "Fit Failure: unable to project reference", StatusCode::FAILURE, 0 );
-
       // Filter step, only for non-outliers
       if( node.type() != LHCb::Node::Outlier) {
         sc = filter( node, state );
@@ -251,11 +241,14 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
 {
   StatusCode sc(StatusCode::SUCCESS, true); 
   
-  // The seed covariance comes from the first node
-  NodeContainer nodes = track.fitResult()->nodes() ;
+  // The seed covariance comes from the KalmanFitResult
+  LHCb::KalmanFitResult* kalfit = dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
+  if( !kalfit) return Warning("No kalfit on track",StatusCode::FAILURE,0) ;
+  
+  NodeContainer& nodes = kalfit->nodes() ;
   if( nodes.empty() ) return Warning( "Fit failure: track has no nodes", StatusCode::FAILURE,0 );
   
-  TrackSymMatrix seedCov = nodes.front()->state().covariance() ;
+  const TrackSymMatrix& seedCov = kalfit->seedCovariance() ;
   
   // First locate the first and last node that actually have information
   NodeContainer::iterator firstMeasurementNode = nodes.begin() ;
@@ -292,7 +285,6 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
       node->setPredictedStateBackward( LHCb::State() );
       node->setDeltaChi2Forward(0);
       node->setDeltaChi2Backward(0);
-      if(node->hasMeasurement()) sc = projectReference(*node) ;
       updateResidual(*node) ;
       prevNode = node ;
     }
@@ -310,7 +302,6 @@ StatusCode TrackKalmanFilter::fit( Track& track ) const
       node->setPredictedStateBackward( LHCb::State() );
       node->setDeltaChi2Forward(0);
       node->setDeltaChi2Backward(0);
-      if(node->hasMeasurement()) sc = projectReference(*node) ;
       updateResidual(*node) ;
     }
   }     
@@ -379,37 +370,6 @@ StatusCode TrackKalmanFilter::predictReverseFit(const FitNode& prevNode,
     verbose() << " after predictReverseFit state = " << aState << endmsg ;
 
   return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-// 
-//=========================================================================
-StatusCode TrackKalmanFilter::projectReference(FitNode& node) const
-{
-  // if the reference is not set, issue an error
-  StatusCode sc = StatusCode::SUCCESS;
-  if( !node.refIsSet() ) {
-    sc = StatusCode::FAILURE ;
-    Warning( "Node without reference", sc, 0 ).ignore();
-    debug() << "Node without reference. " << node.measurement().type() <<endmsg;
-  } else {
-    // project the reference state
-    Measurement& meas = node.measurement();
-    ITrackProjector *proj = m_projectorSelector->projector(meas);
-    if ( proj==0 ) {
-      sc = StatusCode::FAILURE ;
-      Warning( "Could not get projector for measurement", sc, 0 ).ignore();
-      debug() << "could not get projector for measurement" << endmsg ;
-    } else {
-      sc = proj -> projectReference(node) ;
-      if ( sc.isFailure() ) {
-        Warning( "unable to project statevector", sc, 0 ).ignore();
-        debug() << "unable to project this statevector: " << node.refVector() 
-                << endmsg ;
-      }
-    }
-  }
-  return sc;
 }
 
 //=========================================================================

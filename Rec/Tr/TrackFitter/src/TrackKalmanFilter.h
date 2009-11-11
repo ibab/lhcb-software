@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.h,v 1.30 2009-08-08 10:33:47 mneedham Exp $
+// $Id: TrackKalmanFilter.h,v 1.31 2009-11-11 21:12:52 wouter Exp $
 #ifndef TRACKFITTER_TRACKKALMANFILTER_H 
 #define TRACKFITTER_TRACKKALMANFILTER_H 1
 
@@ -8,7 +8,6 @@
 #include "GaudiAlg/GaudiTool.h"
 
 // from TrackInterfaces
-#include "TrackInterfaces/ITrackProjectorSelector.h"
 #include "TrackInterfaces/ITrackKalmanFilter.h"
 
 // from TrackEvent
@@ -43,7 +42,7 @@ public:
 
   //! fit a track
   StatusCode fit( LHCb::Track& track ) const ;
-
+  
 protected:
   typedef std::vector<LHCb::Node*> NodeContainer ;
   typedef LoKi::Range_<NodeContainer> NodeRange;
@@ -58,9 +57,6 @@ protected:
   StatusCode predictReverseFit( const LHCb::FitNode& prevNode, 
                                 const LHCb::FitNode& aNode,
                                 LHCb::State& aState ) const;
-
-  //! project the reference state (only done in forward fit)
-  StatusCode projectReference( LHCb::FitNode& aNode ) const;
 
   //! filter this node
   StatusCode filter( LHCb::FitNode& node, LHCb::State& state ) const;
@@ -78,9 +74,6 @@ protected:
   bool isPositiveMatrix( const Gaudi::TrackSymMatrix& mat ) const;
 
 private:
-
- //! projector selector
-  ITrackProjectorSelector* m_projectorSelector;
 
   // job options
   bool m_biDirectionalFit;          ///< Flag for bidirectional fit

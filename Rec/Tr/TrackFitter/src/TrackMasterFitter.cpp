@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.75 2009-11-10 22:07:02 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.76 2009-11-11 21:12:52 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -14,12 +14,13 @@
 #include "TrackInterfaces/ITrackExtrapolator.h"            
 #include "TrackInterfaces/ITrackKalmanFilter.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
+#include "TrackInterfaces/ITrackProjector.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
 #include "Event/StateParameters.h"
 #include "Event/Track.h"
-#include "Event/TrackFitResult.h"
+#include "Event/KalmanFitResult.h"
 #include "Event/FitNode.h"
 #include "Event/State.h"
 #include "TrackKernel/TrackTraj.h"
@@ -35,6 +36,7 @@
 
 // boost
 #include <boost/assign/list_of.hpp> // for 'vector_list_of()'
+#include <boost/foreach.hpp>
 
 using namespace Gaudi;
 using namespace LHCb;
@@ -62,9 +64,11 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   , m_trackNodeFitter(0)
   , m_measProvider(0)
   , m_materialLocator(0)
+  , m_projectorSelector("TrackProjectorSelector",this)
 {
   declareInterface<ITrackFitter>( this );
 
+  declareProperty( "Projector", m_projectorSelector ) ;
   declareProperty( "Extrapolator"        , m_extrapolatorName =
                    "TrackMasterExtrapolator" );
   declareProperty( "VeloExtrapolator"    , m_veloExtrapolatorName =
@@ -111,6 +115,8 @@ TrackMasterFitter::~TrackMasterFitter() {
 //=========================================================================
 StatusCode TrackMasterFitter::finalize() 
 {
+  StatusCode sc = m_projectorSelector.retrieve() ;
+  if ( sc.isFailure() ) return sc;
   return GaudiTool::finalize() ;
 }
 
@@ -120,6 +126,9 @@ StatusCode TrackMasterFitter::finalize()
 StatusCode TrackMasterFitter::initialize() 
 {
   StatusCode sc = GaudiTool::initialize(); // must be executed first
+  if ( sc.isFailure() ) return sc;
+  
+  sc = m_projectorSelector.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
@@ -162,8 +171,14 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
   // any track that doesnt make it to the end is failed
   track.setFitStatus( Track::FitFailed );
   
-  // create the TrackFit if it doesn't exist yet
-  if( track.fitResult()==0 ) { track.setFitResult( new LHCb::TrackFitResult() ) ; }
+  // create the KalmanFitResult if it doesn't exist yet
+  LHCb::KalmanFitResult* kalfitresult = dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult()) ;
+  if( !kalfitresult ) {
+    kalfitresult = track.fitResult() ? 
+      new LHCb::KalmanFitResult(*track.fitResult()) :
+      new LHCb::KalmanFitResult() ;
+    track.setFitResult( kalfitresult ) ;
+  }
   
   // Make the nodes from the measurements
   StatusCode sc;
@@ -197,7 +212,8 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     seedCov(3,3) = m_errorTy*m_errorTy ;
     seedCov(4,4) = gsl_pow_2( m_errorQoP[0] * seed.qOverP() ) + gsl_pow_2(m_errorQoP[1]);   
   }
-  
+  kalfitresult->setSeedCovariance( seedCov ) ;
+
   if ( m_debugLevel )
     debug() << "SeedState: z = " << seed.z()
 	    << " stateVector = " << seed.stateVector()
@@ -218,9 +234,6 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
       sc = updateRefVectors( track );
       if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
     }
-    
-    // reset the covariance of the first state
-    seed.covariance() = seedCov ;
     
     double prevchi2 = track.chi2() ;
     sc = m_trackNodeFitter -> fit( track );
@@ -245,9 +258,6 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     // update reference trajectories with smoothed states
     sc = updateRefVectors( track );
     if ( sc.isFailure() ) return failure( "problem updating ref vectors" );
-    
-    // reset the covariance of the first state
-    seed.covariance() = seedCov ;
     
     // Call the track fit
     sc = m_trackNodeFitter -> fit( track );
@@ -406,9 +416,53 @@ StatusCode TrackMasterFitter::updateRefVectors( Track& track ) const
   std::vector<Node*>& nodes = track.fitResult()->nodes();
   for (TrackFitResult::NodeContainer::iterator iNode = nodes.begin(); 
        iNode != nodes.end(); ++iNode ) 
-    (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ; 
-  if(m_updateTransport) sc =updateTransport(track) ;
+    (*iNode)->setRefVector( (*iNode)->state().stateVector() ) ;
+  
+  // update the projections. need to be done every time ref is
+  // updated. we can move this code here at some point.
+  sc = projectReference( track ) ;
+  if( sc.isFailure() ) return failure( "problem projecting reference" ); 
+
+  // update the transport using the new ref vectors
+  if(m_updateTransport) {
+    sc = updateTransport(track) ;
+    if ( sc.isFailure() ) return failure( "problem updating transport" ); 
+  }
   return sc ;
+}
+
+//=========================================================================
+// Update the measurements before a refit
+//=========================================================================
+StatusCode TrackMasterFitter::projectReference( LHCb::Track& track ) const
+{
+  StatusCode sc = StatusCode::SUCCESS ;
+  BOOST_FOREACH( LHCb::Node* node, track.fitResult()->nodes() ) {
+    if( !node->refIsSet() ) {
+      sc = Warning( "Node without reference", StatusCode::FAILURE, 0 );
+      debug() << "Node without reference" << endmsg ;
+      break ;
+    } else if( node->hasMeasurement() ) {
+      // if the reference is not set, issue an error
+      StatusCode sc = StatusCode::SUCCESS;
+      ITrackProjector *proj = m_projectorSelector->projector(node->measurement());
+      if ( proj==0 ) {
+	sc = Warning( "Could not get projector for measurement", StatusCode::FAILURE, 0 );
+	debug() << "could not get projector for measurement" << endmsg ;
+	break ;
+      } else {
+	LHCb::FitNode& fitnode = dynamic_cast<LHCb::FitNode&>(*node) ;
+	sc = proj -> projectReference(fitnode) ;
+	if ( sc.isFailure() ) {
+	  Warning( "unable to project statevector", sc, 0 ).ignore();
+	  debug() << "unable to project this statevector: " << node->refVector() 
+		  << endmsg ;
+	  break ;
+	}
+      }
+    }
+  }
+  return sc;
 }
 
 //=========================================================================
@@ -508,6 +562,9 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
     (*it)->state().setState(ref) ;
   }
   
+  // update the projections. need to be done every time ref is updated
+  projectReference( track ) ;
+
   // add all the noise, if required
   if(m_applyMaterialCorrections && sc.isSuccess()) {
     sc = updateMaterialCorrections( track, pid ) ;
