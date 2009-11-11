@@ -1,7 +1,7 @@
 """
 High level configuration tools for PhysConf
 """
-__version__ = "$Id: Configuration.py,v 1.24 2009-11-09 16:01:22 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.25 2009-11-11 15:30:56 jonrob Exp $"
 __author__  = "Patrick Koppenburg <Patrick.Koppenburg@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -93,6 +93,7 @@ class PhysConf(LHCbConfigurableUser) :
 
             # Check PID info
             pidseq = GaudiSequencer("CheckPID")
+            pidseq.IgnoreFilterPassed = True
             protoPartPreProcess.Members += [ pidseq ]
 
             # Check MuonPIDs
@@ -100,8 +101,8 @@ class PhysConf(LHCbConfigurableUser) :
             pidseq.Members += [ mseq ]
             mseq.Members += [ MuonPIDsFromProtoParticlesAlg("CheckMuonPIDs") ]
             if self.getProp("AllowPIDRerunning") and inputtype != 'RDST' :
-                # Optionally rerun MuonPID here. Eventually this should not be done ever in DV
-                # but still needed for DC06/MC09 compatibility ...
+                # Optionally rerun MuonPID here. Eventually this really should not be done in DV
+                # but still needed for DC06/MC09 compatibility for a while ...
                 mseq.Members += [ DataObjectVersionFilter( "MuonPIDVersionCheck",
                                                            DataObjectLocation = "Rec/Muon/MuonPID",
                                                            MaxVersion = 0 ) ]
