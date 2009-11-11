@@ -63,7 +63,6 @@ def main() :
         if old : 
             packSys = 'Gaudi'
     destination = os.path.join(destination_dir,project,version)
-    cmtversion = 'v1r20p20070208'
 
 # if skip = True then skip cmt config and build vsnet
     skip = 'False'

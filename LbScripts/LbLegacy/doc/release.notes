@@ -1,3 +1,7 @@
+2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/copy-Win2afs: removed useless variable.
+
 2009-11-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: strips off the hat from the data package in order that
