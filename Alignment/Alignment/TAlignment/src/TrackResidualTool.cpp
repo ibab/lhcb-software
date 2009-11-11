@@ -6,6 +6,8 @@
 #include "LHCbMath/MatrixInversion.h"
 #include "ITrackResidualTool.h"
 #include "IGetElementsToBeAligned.h"
+#include "TrackInterfaces/ITrackKalmanFilter.h"
+#include "Event/TrackFitResult.h"
 
 namespace Al
 {
@@ -38,6 +40,7 @@ namespace Al
     typedef std::map<const LHCb::Track*, const Al::TrackResiduals*> ResidualMap ;
     mutable ResidualMap m_residuals ;
     ToolHandle<IGetElementsToBeAligned> m_elementTool ;
+    ToolHandle<ITrackKalmanFilter> m_kalmanFilter ;
   } ;
   
 }
@@ -61,10 +64,12 @@ namespace Al
 				       const std::string& name,
 				       const IInterface* parent)
     : GaudiTool(type,name,parent),
-      m_elementTool("GetElementsToBeAligned")
+      m_elementTool("GetElementsToBeAligned"),
+      m_kalmanFilter("TrackKalmanFilter",this)
   {
     // interfaces
     declareInterface<ITrackResidualTool>(this);
+    declareProperty("KalmanFilter",m_kalmanFilter) ;
   }
   
   StatusCode TrackResidualTool::initialize()
@@ -73,9 +78,10 @@ namespace Al
     if (sc.isFailure()) return Error("Failed to initialize",sc);
     sc = m_elementTool.retrieve() ;
     incSvc()->addListener(this, IncidentType::EndEvent);
+    sc = m_kalmanFilter.retrieve() ;
     return sc ;
   }
-
+  
   StatusCode TrackResidualTool::finalize()
   {
     m_elementTool.release().ignore() ;
@@ -165,6 +171,14 @@ namespace Al
   const Al::TrackResiduals* TrackResidualTool::compute(const LHCb::Track& track) const
   {
     debug() << "In TrackResidualTool::Compute" << endreq ;
+
+    // Call one iteration with the smoother gain if necessary
+    if( track.fitHistory() != LHCb::Track::StdKalman ) {
+      Warning("Track was fitted with bi-directional fit. Will refit with standard kalman on the fly.",
+	      StatusCode::SUCCESS,0).ignore() ;
+      m_kalmanFilter->fit( const_cast<LHCb::Track&>(track) ) ;
+    }
+    
     // ingredients
     // - smoothed states plus covariance
     // - upstream predicted covariance
@@ -233,73 +247,9 @@ namespace Al
 	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
       } else {
 	// we have run the bi-directional fit. that basically means we have to rerun the smoother
-	Warning("BiDirectional trackfit: Computing smoother gain matrix on the fly",StatusCode::SUCCESS,1) ;
-
-	// this is the transport matrix  from  k-1 to k
-	const Gaudi::TrackMatrix& F          = node->transportMatrix();
-	// this is the noise matrix from k-1 to k
-	const Gaudi::TrackSymMatrix& Q       = node->noiseMatrix();
-	// this is the prediction from k-1 to k
-	const Gaudi::TrackSymMatrix& predcov = node->predictedStateForward().covariance() ;
-	// this is the smoothedcovariance at node k
-	const Gaudi::TrackSymMatrix& cov    = *(diagcov[k]) ;
-	
-	// invert the transport matrix
-	int fail ;
-	Gaudi::TrackMatrix invF = F.Inverse(fail) ; assert(fail==0);
-	
-	// Now compute the smoother gain matrix for node k-1. The full formula is
-	//
-	// A_{k-1} = invF * ( predcov - Q ) * invpredcov
-	//
-	// The one big problem is the subtraction: If Q is large
-	// compared to the filter covariance from the previous state
-	// (which we do no longer have), then this subtraction can go
-	// wrong. (The correlation is then essentially 'zero'.) Let's
-	// hope that this does not happen.
-	
-	// let's do some test
-	Gaudi::TrackSymMatrix predcovMinusQ = predcov - Q ;
-	for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
-	  if( (error = !(0<=predcovMinusQ(irow,irow)) ) )
-	    warning() << "Predicted covariance has negative element on diagonal. Skipping track." << endreq ;
-	for(size_t irow=0; irow<Gaudi::TrackSymMatrix::kRows && !error; ++irow) 
-	  for(size_t icol=0; icol<irow && !error; ++icol) {
-	    double c2 = predcovMinusQ(irow,icol)*predcovMinusQ(irow,icol)/( predcovMinusQ(irow,irow)*predcovMinusQ(icol,icol)) ;
-	    if( ( error = !( -1<=c2 && c2<=1) ) ) 
-	      warning() << "Predicted covariance has negative correlation. Skipping track." << endreq ;
-	  }
-	
-	// This is the full formula
-	//   smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
-	// but we only compute it this way if the noise is non-zero.
-	bool nonZeroNoise = Q(2,2) > 0 || Q(4,4) > 0  ;
-	if( nonZeroNoise ) {
-	  Gaudi::TrackSymMatrix invpredcov = predcov ;
-	  if( Gaudi::Math::invertPosDefSymMatrix( invpredcov ) ) {
-	    smoothergainmatrix[k-1] = invF * predcovMinusQ * invpredcov ;
-	  } else {
-	    warning() << "Error inverting prediction. Skipping track" << endreq ;
-	    error = true ;
-	  }
-	} else {
-	  smoothergainmatrix[k-1] = invF  ;
-	}
-	
-	// Now calculate the diagonal (k-1,k). This matrix represents
-	// the covariance of the statvectors of k-1 and k. (multiply
-	// with k-1 on the left and with k on the right)
-	Gaudi::TrackMatrix C_km1_k = smoothergainmatrix[k-1] * cov ;
-	
-	// What we actually need is the transpose. We can imporve this later:
-	
-	assert( k < offdiagcov.size() ) ;
-	if ( !(k-1 < offdiagcov[k].size() ) ) {
-	  std::cout << "k,size" << k << " " << offdiagcov[k-1].size() << std::endl ;
-	}
-	assert( k-1< offdiagcov[k].size() ) ;
-	
-	offdiagcov[k][k-1] = new Gaudi::TrackMatrix(Transpose(C_km1_k)) ;
+	Warning("BiDirectional trackfit: track not correctly fitted for TrackResidualTool.",
+		StatusCode::FAILURE,100) ;
+	return 0 ;
       }
     }
 
