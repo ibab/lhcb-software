@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.31 2009-11-11 16:58:24 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.32 2009-11-11 17:23:42 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -87,7 +87,7 @@ class DstConf(LHCbConfigurableUser):
         else:
             recDir = "pRec"
             if sType != "None":
-                DigiConf().setProp("EnablePack", False)
+                DigiConf().setProp("EnablePack", True)
                 SimConf().setProp("EnablePack", DigiConf().getProp("EnablePack") )
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
