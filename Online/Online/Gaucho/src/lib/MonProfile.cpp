@@ -275,8 +275,10 @@ void MonProfile::splitObject(){
 
      bBinLabelX = false;
      for (int i = 1; i < (nbinsx+1) ; ++i){
-       std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
-       if (binLab.length() > 0 ){
+     //  std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
+     //  if (binLab.length() > 0 ){
+         const char *binLab = m_profile->GetXaxis()->GetBinLabel(i);
+	 if (strlen(binLab) > 0 ) {
          bBinLabelX = true;
          break;
        }
