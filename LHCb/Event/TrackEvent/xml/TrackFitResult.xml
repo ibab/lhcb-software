@@ -78,7 +78,8 @@
         name    = 'copy'
         argList = 'const LHCb::TrackFitResult&amp; rhs'
         desc    = 'Copy the info from the argument track into this track'
-	virtual = 'TRUE' />
+	virtual = 'FALSE'
+	access  = 'PROTECTED'/>
 
       <method
         type    = 'LHCb::TrackFitResult*'
