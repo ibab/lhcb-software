@@ -1,22 +1,6 @@
-Particle anti_lambda_b0 has a strange PDGEncoding 
-Particle lambda_b0 has a strange PDGEncoding 
-Particle anti_xi_b0 has a strange PDGEncoding 
-Particle xi_b0 has a strange PDGEncoding 
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (387.6382955,383.7386469,895)
-          direction: (0.4677562372,0.4448847155,0.7637288082).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (-241.8754443,439.2252051,895)
-          direction: (-0.2287466916,0.3985465527,0.888164172).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
-WARNING - G4Navigator::ComputeStep()
-          Track stuck, not moving for 10 steps
-          in volume -/dd/Structure/LHCb/BeforeMagnetRegion/Velo2Rich1- at point (337.4979098,-263.97809,895)
-          direction: (0.3255997872,-0.2523134429,0.9112204481).
-          Potential geometry or navigation problem !
-          Trying pushing it of 9e-10 mm ...
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed. 
+ The material /dd/Materials/Vacuum will be constructed with the default minimal density: 1e-25g/cm3
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed. 
+ The material /dd/Materials/RichMaterials/RichHpdVacuum will be constructed with the default minimal density: 1e-25g/cm3
+--- Warning from G4Material::G4Material() define a material with density=0 is not allowed. 
+ The material /dd/Materials/RichMaterials/HpdS20PhCathode will be constructed with the default minimal density: 1e-25g/cm3
