@@ -18,6 +18,17 @@
       >
       <base name='DataObject'/>
 
+      <enum
+        desc="FSR status, is the accounting OK"
+        name="StatusFlag"
+        strTypConv = 'TRUE'
+        access="PUBLIC" >
+        <enumval name="Unknown"    value = "-3"  desc="other enum possibilities"/>
+        <enumval name="UNRELIABLE" value = "-2"  desc="The counting in this FSR is known to be suspect"/>
+        <enumval name="UNCHECKED"  value = "-1"  desc="The counting needs to be checked"/>
+        <enumval name="ERROR"      value = "0"   desc="The counting in all lower FSRs doesn't compute"/>
+        <enumval name="VERIFIED"   value = "1"   desc="The counting in all lower FSRs has been verified OK"/>
+      </enum>
 
       <location name="Default"   
 		place="/FileRecords/EventCountFSR"/>
@@ -37,10 +48,10 @@
        />
 
       <attribute
-        desc="were all events from the input files processed, used to overwrite the input/output comparison at the lowest level of the tree, and whenever it is explicitly verified OK"
-        name="all"
-        type="bool"
-        init="0"
+        desc="Is the FSR reliable? This also allows FSR counting to be explicitly verified in production"
+        name="statusFlag"
+        type="LHCb::EventCountFSR::StatusFlag"
+        init="LHCb::EventCountFSR::UNCHECKED"
        />
 
     </class>

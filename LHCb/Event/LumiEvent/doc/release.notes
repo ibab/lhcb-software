@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 - Rob Lambert
+ - Edited to inculde EventCountFSR, storing how many events are in the file
+   and how many were used to make the file
+
 ! 2009-11-06 - Jaap Panman
  - add TT track counters
 
