@@ -1,3 +1,7 @@
+2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/ConfigFile.py: fixed help in the option.
+
 2009-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/ConfigFile.py: fixed bug in the reading of the config file.

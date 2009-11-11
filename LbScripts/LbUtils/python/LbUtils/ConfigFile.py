@@ -1,4 +1,4 @@
-# $Id: ConfigFile.py,v 1.2 2009-11-09 10:37:31 hmdegaud Exp $
+# $Id: ConfigFile.py,v 1.3 2009-11-11 10:11:00 hmdegaud Exp $
 from optparse import OptionValueError
 from ConfigParser import SafeConfigParser
 
@@ -67,7 +67,7 @@ def addConfigFileOptions(parser, config_file, config_dir,
                    callback=_configDirCb,
                    nargs=1,
                    dest="config_dir",
-                   help="Set configuration directory [default %default]")
+                   help="Set configuration directory")
     grp.add_option("--config-name",
                    action="callback",
                    callback=_configNameCb,
