@@ -3,6 +3,225 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+! 2009-11-11 - Silvia Miglioranzi
+ - Updated the ref files for the gausssys QMTest for all the platforms.
+
+!========================== GENSER v6r0 2009-11-04 ===========================
+! 2009-10-22 - Hubert Degaudenzi
+ - changed the target-slc5 switching into target-gcc4 for the gfortran flags
+
+! 2009-10-22 - Patrick Robbe
+ - Add "-fsecond-underscore" for slc5 gFortran compilation
+
+! 2009-10-08 - Gloria Corti
+ - Change versions of external packages to pick up those with slc5 libraries
+ - Remove fflags "-ff90" and linking "-lg2c" on slc5
+
+!========================== EvtGen v11r6 2009-11-04 ==========================
+! 2009-10-19 - Patrick Robbe
+ - Fix gcc4.3 compilation, mainly dealing with scope of friend functions
+
+!======================= EvtGenExtras v2r2 2009-11-04 ========================
+! 2009-09-10 - Patrick Robbe
+ - fix for gcc4.3 compilation
+
+!====================== Generators v10r5 2009-11-04 ==========================
+! 2009-10-22 - Patrick Robbe
+ - src/Lib/Signal.cpp: remove the constraint that the signal has a b
+   or a c quark. This will allow Sigma+ signal generation for example.
+ - Small fixes for SLC5 compilation
+
+!========================= LbPythia v8r6 2009-11-04 ==========================
+! 2009-10-22 - Patrick Robbe
+ - Fixes for SLC5 compilation with GCC4.3
+
+! ====================== BcVegPy v2r1 2009-11-04 ===========================
+! 2009-10-01 - Hubert Degaudenzi
+ - Fixed the call to the time function which does not work with gfortran (gcc4)
+
+!========================= LbHidValley v2r2 2009-11-04 ========================
+! 2009-10-20 - Marcin Kucharczyk
+  - update cmt/requirements and options/HidValleyH.opts
+
+! 2008-06-24 - Vanya BELYAEV
+
+ - some minor almost decorative fixes:
+      - force the verification of HEPEVT structure
+      - force the specific printout from UPINIT and UPEVNT
+ - cmt/requirements
+   version increment to v2r2
+
+!========================= LbHijing v5r1 2009-11-04 ==========================
+! 2009-10-23 - Silvia Miglioranzi
+ - Fixed an error on compilation on slc5 ("Error: 'i' argument of 'ran'
+   intrinsic at (1) must be INTEGER") in:
+   - hilunhep.F
+
+!=========================== LbMIB v4r0 2009-11-04 =========================
+! 2009-11-02 - Magnus LIENG
+ - Removed option files related to CollimatorSource
+   . MIB-BeamGasStartupNoShield.opts
+   . MIB-Example.opts
+   . MIB-Shield.opts
+   . MIB-StagedShield.opts
+ - Removed script files related to CollimatorSource
+   . scripts/beamgas2mib_opts.py
+   . scripts/beamgas2mib.py
+   . scripts/mibplotter.py
+   . python/LbMIB/gasmap.py
+   . python/LbMIB/plotter.py
+ - Removed data files related to CollimatorSource
+   . data/GasEstimates-1996.csv
+   . data/GasEstimates-2001-y3d90.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed-endmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-scrubbed-startmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup-endmap.csv
+   . data/GasEstimates-ARossi-2006-07-28-startup-startmap.csv
+ - Changed TimeCorrSource example to python options
+   . TimeCorr-Example.opts -> MIB-Example.py
+
+! 2009-10-29 - Magnus LIENG
+ - Added global time offset option
+   . TimeCorrSource.cpp
+   . TimeCorrSource.cpp
+ - Removed CollimatorSource. Functionality contained in TimeCorrSource
+   . CollimatorSource.cpp
+   . CollimatorSource.h
+
+! 2009-10-08 - Magnus LIENG
+ - Fixed SumOfWeight value
+ - Fixed Timing issue for Beam 2 sources
+   . TimeCorrSource.cpp
+
+!========================== LbPGuns v1r2 2009-11-04 ==========================
+! 2009-11-04 - Magnus Lieng
+ - Changed .opts files into .py files
+   . ParticleGun.opts -> ParticleGun.py
+   . CosmicsGun.opst -> CosmicsGun.py
+   . MaterialEvalGun.opts -> MaterialEvalGun.py
+   . Rich1Cosmics.opts -> Rich1Cosmics.py
+   . UpsilonGun.opts -> UpsilonGun.py
+! 2009-10-28 - Magnus Lieng
+ - Added Beam Shape tool. By defining beam centroid and optics parameters at
+   the generation point a "beam-like" particle distribution (position and
+   momenta) is created.
+   . BeamShape.py
+   . BeamShape.cpp
+   . BeamShape.h
+
+!======================= GiGa v19r5 2009-11-04 ===============================
+! 2009-10-20 - Silvia Miglioranzi
+ - Fix compilation warnings on slc5 (type qualifiers ignored on function
+   return type):
+   - GiGaTrajectoryPoint.h
+
+! 2009-10-14 - Gloria Corti
+ - Fix compilation errors on slc5
+   . GiGa.h, include IToolSvc rather than forward declaration
+ - Fix compilation warnings on slc5
+   . GiGaIGiGaSvc.cpp, put std::string around "blabla" in
+                       ___GIGA_CATCH_PRINT_AND_RETURN___(...)
+   . GiGaHitsByID.h,v, remove const from return type of id()
+
+!======================== GiGaCnv v18r7 2009-11-04 =========================
+! 2009-10-15 - Silvia MIGLIORANZI
+ - Fix compilation warnings on slc5 "type qualifiers ignored on function return
+   type" in:
+   - GiGaCatalogCnv.cpp
+         - GiGaCatalogCnv.h
+   - GiGaDetectorElementCnv.cpp
+   - GiGaDetectorElementCnv.h
+   - GiGaElementCnv.cpp
+   - GiGaElementCnv.h
+   - GiGaIsotopeCnv.cpp
+   - GiGaIsotopeCnv.h
+   - GiGaLAssemblyCnv.cpp
+   - GiGaLAssemblyCnv.h
+   - GiGaLVolumeCnv.cpp
+   - GiGaLVolumeCnv.h
+   - GiGaMixtureCnv.cpp
+   - GiGaMixtureCnv.h
+   - GiGaSurfaceCnv.cpp
+   - GiGaSurfaceCnv.h
+         - GiGaKineRefTableEntry.h
+   corrected removing "const" from return type of functions.
+ - Fix compilation warning on slc5: include "Event/MCPaticle.h" instead of forward
+   declaration in:
+   - Particle2Definition.h
+   - Particle2Particle.h
+
+!=========================== SimSvc v5r2 2009-11-04 ==========================
+! 2009-10-15 - Silvia Miglioranzi
+ - Fix compilation warnings on slc5 "type qualifiers ignored on function return
+   type" in:
+   - ISimulationSvc.h
+   - RegionCuts.h
+   - SimAttribute.h
+   - SimulationSvc.cpp
+   - SimulationSvc.h
+
+!============================ ClhepTools v2r1p1 ===============================
+! 2009-10-15 - Silvia Miglioranzi
+ - Change version name in requirements file (mismatch between what was
+   written in the requirements and the actual version)
+
+!======================== GaussTools v15r4 2009-11-04 ========================
+! 2009-10-21 - Silvia Miglioranzi
+ - Fix the warning message text (see previous entry in releases.notes) in order
+   not to be counted as error in the nightlies.
+   Fix warning in compilation on slc5 ("warning: suggest parentheses around &&
+   within ||") for:
+   - GaussPostTrackAction.cpp
+
+! 2009-10-20 - Silvia Miglioranzi
+ - Added a #warning message (to appear in compilation) for the temporary fix
+   for the operator<<
+
+! 2009-10-16 - Silvia Miglioranzi
+ - *** Temporary*** fix for error in compilation on slc5
+   (error: no match for operator<<) in:
+   - GaussEventActionHepMC.cpp
+   - MCTruthManager.cpp
+ - Fix warning in compilation on slc5 "type qualifiers ignored on function return
+   type" in:
+   - GaussTrackInformation.h
+   - GiGaSetSimAttributes.h
+
+!========================= GaussRICH v10r0 2009-11-04 =========================
+! 2009-10-23 - Chris Jones
+ - Some minor fixes to better support spillover locations
+
+! 2009-10-19 - Silvia Miglioranzi
+   - Fixed an error in compilation on slc5 (extra qualification
+     'RichG4ReconFlatMirr::' on member 'FlatMirrorIntersection') for the:
+     RichG4ReconFlatMirr.h
+
+! 2009-09-13 - Sajan Easo
+ - In order to be compatible with the recent G4.9.2, in RichG4Cerenkov.cc
+   and RichG4OpRayleigh.cc, the names of some G4 methods
+   with '..PhotonMomentum' are changed to '..PhotonEnergy'.
+   These changes are backward incompatible.
+   These modifications fix the compilation problems seen recently
+   from using the new G4.
+ - In order to be compatible with recent Gaudi, ITime.h is changed to
+   Time.h in the include statements in some of the cpp files in RichAnalysis
+   are Misc subdirectories.
+
+!====================== GaussPhysics v6r4 2009-11-03 =========================
+! 2009-10-20- Marcin Kucharczyk
+ - Add Hidden Valley pion definition (G4HiddenValley.cpp, G4HiddenValley.h)
+ - Add Hidden Valley pion to GiGaPhysUnknownParticles list
+
+!======================= CaloMoniSim v4r0 2009-11-04 ==========================
+! 2009-10-22 - Chris Jones
+ - Minor changes to help deploying packing and Spillover locations in Gauss
+  + Switch to loading data via get<..> methods to aid usage in Gauss with
+    RootInTES for spillover locations.
+ - Cache DeCalorimeter pointer in initialize()
+
+
 !=============================================================================
 </PRE><H1><A NAME="v37r5">2009-10-05 - GaussSys v37r5</A></H1><PRE>
 <H2><A NAME="Note">MC09 version: BcVegPy for production at various energies.
