@@ -585,10 +585,19 @@ std::pair<std::string, std::string> MonitorSvc::registerDimSvc(const std::string
   if ((utgidParts.size() == 4)&&(dimPrefix=="")) {
     if (m_uniqueServiceNames==1) {
       //this is for the storage system
-      dimSvcName = dimPrefix + m_utgid + "/"+dimName;}
+      dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+    }
     else { dimSvcName = utgidParts[0]+"_x_"+utgidParts[2] +"_"+utgidParts[3]+ "/"+dimName;}
   }
-  else dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+  else {
+    if (utgidParts[0]=="CALD0701") {
+       //calibrationfarm - add partition
+       dimSvcName = dimPrefix+"LHCb_"+m_utgid + "/"+dimName;
+    }  
+    else {
+       dimSvcName = dimPrefix + m_utgid + "/"+dimName;
+    }   
+  } 
   
   //msg << MSG::INFO << " register========>dimSvcName="<< dimSvcName << endreq;
 
