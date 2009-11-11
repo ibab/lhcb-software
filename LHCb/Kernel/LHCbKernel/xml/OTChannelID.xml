@@ -12,6 +12,12 @@
       
       &StlVector;
      
+      <enum 
+        name  = ''
+        desc  = 'Number of unique sequential IDs'
+        value = 'NumSequentialLayer = 12, NumSequentialQuarter = 48, NumSequentialModule = 432, NumSequentialOtis = 432*4, NumSequentialStraw = 432*128'
+      />
+
       <constructor argList = "unsigned int station, unsigned int layer, unsigned int quarter, unsigned int module, unsigned int straw, 
                               unsigned int tdcTime=0u" 
                    desc    = "Explicit constructor from the geometrical location of the straw and the tdc time of the hit">
@@ -86,6 +92,41 @@
               const   = "TRUE" 
               desc    = "true if same tdc counts">
         <code> return (tdcTime() == testChannel.tdcTime()); </code>
+      </method> 
+
+      <method type  = "unsigned int"
+              name  = "sequentialUniqueLayer"
+              const = "TRUE"
+              desc  = "Returns a layer id in range [0,11]">
+         <code> return (station()-1) * 4 + layer() ;</code>
+      </method> 
+
+     <method type  = "unsigned int"
+              name  = "sequentialUniqueQuarter"
+              const = "TRUE"
+              desc  = "Returns a quarter id in range [0,47]">
+         <code> return sequentialUniqueLayer()*4 + quarter() ;</code>
+      </method> 
+
+      <method type  = "unsigned int"
+              name  = "sequentialUniqueModule"
+              const = "TRUE"
+              desc  = "Returns a module id in range [0,431]">
+         <code> return sequentialUniqueQuarter()*9 + module() ;</code>
+      </method> 
+
+      <method type  = "unsigned int"
+              name  = "sequentialUniqueOtis"
+              const = "TRUE"
+              desc  = "Returns an otis id in range [0,1727]">
+         <code> return sequentialUniqueModule()*4 + (straw()-1)/32 ;</code>
+      </method> 
+
+      <method type  = "unsigned int"
+              name  = "sequentialUniqueStraw"
+              const = "TRUE"
+              desc  = "Returns a straw id in range [0,55295]">
+         <code> return sequentialUniqueModule()*128 + (straw()-1) ;</code>
       </method> 
 
       <attribute  type = "bitfield" 
