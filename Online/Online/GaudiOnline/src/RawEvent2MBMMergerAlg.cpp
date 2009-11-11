@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.12 2009-11-05 17:10:34 niko Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.13 2009-11-11 13:50:05 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -7,6 +7,9 @@
 //
 //  ====================================================================
 #include "GaudiKernel/MsgStream.h"
+#include "GaudiKernel/Incident.h"
+#include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IIncidentListener.h"
 #include "GaudiOnline/MEPManager.h"
 #include "GaudiOnline/FileIdInfo.h"
 #include "Event/RawEvent.h"
@@ -31,34 +34,59 @@ namespace LHCb  {
     * @author:  M.Frank
     * @version: 1.0
     */
-  class RawEvent2MBMMergerAlg : public MDFWriter   {
+  class RawEvent2MBMMergerAlg : public MDFWriter, virtual public IIncidentListener   {
     /// Reference to MEP manager service
     IMEPManager*  m_mepMgr;
     /// Reference to BM producer
     Producer*     m_prod;
+    /// Reference to incident service
+    IIncidentSvc* m_incidentSvc;
+
     /// Property: output buffer name
     string        m_bufferName;
     /// Property: TES location with banks to find FID
     string        m_fidLocation;
+    /// Property: Timeout incident name
+    string        m_tmoIncident;
     /// Property: Word 4 of trigger mask (Routing bits)
     unsigned int  m_routingBits;
+    /// Property: Word 4 of trigger mask for timeout events (Routing bits)
+    unsigned int  m_timeoutBits;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
+    /// Monitoring quantity: Counter for number of events with errors (Timeout, ...)
+    int           m_badEvents;
     /// Flag to add FID if required
     int           m_addFID;
+    /// Flag to indicate that a timeout occurred during processing
+    int           m_eventTMO;
+
   public:
     /// Standard algorithm constructor
     RawEvent2MBMMergerAlg(const string& nam, ISvcLocator* pSvc)
-    :  MDFWriter(MDFIO::MDF_NONE, nam, pSvc), m_mepMgr(0), m_prod(0)
+      :  MDFWriter(MDFIO::MDF_NONE, nam, pSvc), m_mepMgr(0), m_prod(0), m_incidentSvc(0)
     {
-      declareProperty("Buffer",      m_bufferName="RESULT");
-      declareProperty("RoutingBits", m_routingBits=NO_ROUTING);
-      declareProperty("AddFID",      m_addFID=0);
-      declareProperty("FIDLocation", m_fidLocation="/Event");
+      declareProperty("Buffer",         m_bufferName="RESULT");
+      declareProperty("TimeoutIncident",m_tmoIncident="DAQ_TIMEOUT");
+      declareProperty("RoutingBits",    m_routingBits=NO_ROUTING);
+      declareProperty("TimeoutBits",    m_timeoutBits=NO_ROUTING);
+      declareProperty("AddFID",         m_addFID=0);
+      declareProperty("FIDLocation",    m_fidLocation="/Event");
     }
     /// Standard Destructor
     virtual ~RawEvent2MBMMergerAlg()      {                                 }
-    /// Initialize
+
+    /// IInterface implementation: Query interface
+    virtual StatusCode queryInterface(const InterfaceID& riid,void** ppIf) {
+      if ( riid.versionMatch(IIncidentListener::interfaceID()) )  {
+	*ppIf = (IIncidentListener*)this;
+	addRef();
+	return StatusCode::SUCCESS;
+      }
+      return MDFWriter::queryInterface(riid, ppIf);
+    }
+
+    /// Algorithm overload: initialize
     virtual StatusCode initialize()   {
       StatusCode status = service("MEPManager",m_mepMgr);
       if ( !status.isSuccess() )   {
@@ -68,16 +96,30 @@ namespace LHCb  {
       if ( 0 == m_prod ) {
 	return error("Failed to create event producer for buffer:"+m_bufferName);
       }
+      status = service("IncidentSvc",m_incidentSvc,true);
+      if ( !status.isSuccess() )  {
+	return error("Cannot access incident service.");
+      }
+      if ( m_timeoutBits != NO_ROUTING ) {
+	m_incidentSvc->addListener(this,m_tmoIncident);
+      }
       declareInfo("SpaceCalls", m_spaceActions=0,  "Total number successful space requests.");
       declareInfo("SpaceErrors",m_spaceErrors=0,   "Total number failed space requests.");
       declareInfo("EventsOut",  m_writeActions=0,  "Total number of events declared to BM.");
       declareInfo("ErrorsOut",  m_writeErrors=0,   "Total number of declare errors.");
       declareInfo("BytesOut",   m_bytesDeclared=0, "Total number of bytes declared to BM.");
+      declareInfo("BadEvents",  m_badEvents=0, "Total number of bytes declared to BM.");
+      m_eventTMO = 0;
       return StatusCode::SUCCESS;
     }
 
-    /// Finalize
+    /// Algorithm overload: finalize
     virtual StatusCode finalize()     {    
+      if ( m_incidentSvc )  {
+        m_incidentSvc->removeListener(this);
+        m_incidentSvc->release();
+        m_incidentSvc = 0;
+      }
       if ( monitorSvc() ) monitorSvc()->undeclareAll(this);
       if ( m_mepMgr )  {
         m_mepMgr->release();
@@ -89,8 +131,21 @@ namespace LHCb  {
       }
       return StatusCode::SUCCESS;
     }
+
+    /// Algorithm overload: sysReinitializew
     virtual StatusCode sysReinitialize()   {
       return StatusCode::SUCCESS;
+    }
+
+    /// Incident handler implemenentation: Inform that a new incident has occured
+    virtual void handle(const Incident& inc)    {
+      if ( inc.type() == m_tmoIncident )  {
+	MsgStream err(msgSvc(), name());
+	err << MSG::WARNING << inc.type() << ": Write data after timeout during event processing." << std::endl;
+	++m_badEvents;
+	m_eventTMO = 1;
+	//writeEvent(m_timeoutBits);
+      }
     }
 
     pair<MDFHeader*,const RawBank*> getHeader(bool with_hltbits) {
@@ -99,9 +154,10 @@ namespace LHCb  {
       pair<MDFHeader*,const RawBank*> res(0,0);
       switch(m_inputType)   {
       case MDFIO::MDF_NONE: {
-	RawEvent *raw = 0;
-	StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,(DataObject*&)raw);
+	DataObject* pDO = 0;
+	StatusCode sc = eventSvc()->retrieveObject(m_bankLocation,pDO);
 	if ( sc.isSuccess() ) {
+	  RawEvent *raw = (RawEvent*)pDO;
 	  const _V& bnks = raw->banks(RawBank::DAQ);
 	  for(_V::const_iterator i=bnks.begin(); i != bnks.end(); ++i)  {
 	    RawBank* b = *i;
@@ -166,12 +222,21 @@ namespace LHCb  {
     }
 
     virtual StatusCode execute() {
+      unsigned int bits = m_routingBits;
+      if ( m_eventTMO != 0 && m_timeoutBits != NO_ROUTING ) {
+	bits = m_timeoutBits;
+	m_eventTMO = 0;
+      }
+      return writeEvent(bits);
+    }
+
+    StatusCode writeEvent(unsigned int routingBits) {
       setupMDFIO(msgSvc(),eventSvc());
       pair<MDFHeader*,const RawBank*> h = getHeader(true);
       if ( h.first ) {
 	const unsigned int* hmask = h.first->subHeader().H1->triggerMask();
 	const unsigned int* tmask = h.second ? h.second->begin<unsigned int>() : hmask;
-	unsigned int m[] = { tmask[0], tmask[1], tmask[2], m_routingBits != NO_ROUTING ? m_routingBits : hmask[3]};
+	unsigned int m[] = { tmask[0], tmask[1], tmask[2], routingBits != NO_ROUTING ? routingBits : hmask[3]};
 	h.first->subHeader().H1->setTriggerMask(m);
       }
       switch(m_inputType)   {

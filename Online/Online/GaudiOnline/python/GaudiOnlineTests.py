@@ -32,6 +32,33 @@ def runEvtHolder(errBuffer='OUT'):           return _run(mepHolderApp(pid,pnam,e
 def runMBMRead(percent=1,print_freq=0.0001):
   return _run(defaultFilterApp(pid,pnam,percent=percent,print_freq=print_freq))
 #------------------------------------------------------------------------------------------------
+def runMBMReadTimeout(percent=1,print_freq=0.0001):
+  res = simpleFilterApp(pid,pnam,percent=percent,print_freq=print_freq)
+  tmo = timeoutAlg(1000,True)
+  delay = delayAlg(1500,1)
+  merger = evtMerger(buffer='OUT',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE)
+  merger.TimeoutBits   = 0x1000
+  ApplicationMgr().TopAlg.append(delay)
+  ApplicationMgr().TopAlg.append(tmo)
+  ApplicationMgr().TopAlg.append(merger)
+  msgSvc().OutputLevel = 1
+  delay.OutputLevel = 1
+  tmo.OutputLevel = 1
+  return _run(res)
+#------------------------------------------------------------------------------------------------
+def runMBMReadSEGV(percent=1,print_freq=0.0001):
+  res = simpleFilterApp(pid,pnam,percent=percent,print_freq=print_freq)
+  segv = signalAlg(probability=1.)
+  delay = delayAlg(1000)
+  merger = evtMerger(buffer='OUT',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE)
+  merger.TimeoutBits = 0x1000
+  ApplicationMgr().TopAlg.append(delay)
+  ApplicationMgr().TopAlg.append(segv)
+  ApplicationMgr().TopAlg.append(merger)
+  msgSvc().OutputLevel = 1
+  segv.OutputLevel = 1
+  return _run(res)
+#------------------------------------------------------------------------------------------------
 #def runMDF2MBM(buffers,input=["DATA='file:///daqarea/lhcb/data/2008/RAW/LHCb/BEAM/32484/032484_0000081651.raw' SVC='LHCb::MDFSelector'"]):
 def runMDF2MBM(buffers,input=["DATA='file:///home/frankm/data/mepData_0.dat' SVC='LHCb::MDFSelector'"]):
   return _run(mdf2mbmApp(pid,pnam,buffers=buffers,input=input,partitionBuffers=True))

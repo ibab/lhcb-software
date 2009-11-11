@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.1 2009-11-09 17:47:11 frankb Exp $
+// $Id: TimeoutAlg.cpp,v 1.2 2009-11-11 13:50:05 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -92,20 +92,25 @@ namespace LHCb  {
 
     /// In-thread callback to handle timeout signal sent by timeout callback to event loop thread
     static void timeoutHandler(int /* signum */)   {
-      char text[256];
       if ( m_handlers.size() > 0 ) {
 	TimeoutAlg* a = m_handlers.front();
 	m_handlers.erase(m_handlers.begin());
-	::pthread_sigmask(SIG_SETMASK,&a->m_blockMask,0);
-	::sprintf(text,"TIMEOUT during event processing after %d milliseconds",a->m_timeout);
-	++a->m_timeoutCount;
-	if ( a->m_printTrace )  {
-	  ExceptionTracer tr(a->msgSvc(),a->name());
-	}
-	throw GaudiException(text,"EVENT_TIMEOUT",StatusCode::FAILURE);
+	a->handleTimeout();
       }
       std::cout << "ERROR << Timeout handler size is NULL!!" << std::endl;
       ExceptionTracer tr(0,"TimeoutAlg");
+    }
+
+    void handleTimeout() {
+      char text[256];
+      ::pthread_sigmask(SIG_SETMASK,&m_blockMask,0);
+      ::sprintf(text,"TIMEOUT during event processing after %d milliseconds",m_timeout);
+      ++m_timeoutCount;
+      m_incidentSvc->fireIncident(Incident(text,"DAQ_TIMEOUT"));
+      if ( m_printTrace )  {
+	ExceptionTracer tr(msgSvc(),name());
+      }
+      throw GaudiException(text,"DAQ_TIMEOUT",StatusCode::FAILURE);
     }
 
     /// Start new timer 
@@ -161,7 +166,7 @@ namespace LHCb  {
       }
       m_incidentSvc->addListener(this,m_startIncident);
       m_incidentSvc->addListener(this,m_cancelIncident);
-      m_incidentSvc->addListener(this,"EVENT_TIMEOUT");
+      m_incidentSvc->addListener(this,"DAQ_TIMEOUT");
       declareInfo("TimeoutCount",m_timeoutCount=0,"Number of timeouts processed");
       ::memset(&m_sigact,0,sizeof(m_sigact));
       m_sigact.sa_handler = timeoutHandler;
@@ -205,7 +210,7 @@ namespace LHCb  {
 
     /// Incident handler implemenentation: Inform that a new incident has occured
     virtual void handle(const Incident& inc)    {
-      if ( inc.type() == "EVENT_TIMEOUT" )  {
+      if ( inc.type() == "DAQ_TIMEOUT" )  {
 	MsgStream err(msgSvc(), name());
 	err << MSG::FATAL << inc.type() << ": Timeout during event processing." << std::endl;
 	++m_timeoutCount;

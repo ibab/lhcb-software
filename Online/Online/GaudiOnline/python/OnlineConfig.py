@@ -1,5 +1,10 @@
 import Gaudi.Configuration as CFG
 import Configurables as Configs
+try:
+  import signal
+  SIGSEGV = signal.SIGSEGV
+except:
+  SIGSEGV = 11
 
 # Data type: banks from TES=1, 
 #            compressed records data from address = 2
@@ -58,10 +63,31 @@ def storeExplorer(load=1,freq=0.0001,name='StoreExplorerAlg'):
   return alg
 
 #------------------------------------------------------------------------------------------------
+def signalAlg(signal=SIGSEGV,probability=0.0001,name='SEGV'):
+  alg                      = Configs.LHCb__SignalAlg(name)
+  alg.Probability          = probability
+  alg.SignalNumber         = signal
+  return alg
+
+#------------------------------------------------------------------------------------------------
+def timeoutAlg(timeout=1000,trace=False,name='Timeout'):
+  alg                      = Configs.LHCb__TimeoutAlg(name)
+  alg.Timeout              = timeout
+  alg.PrintTrace           = trace
+  return alg
+
+#------------------------------------------------------------------------------------------------
+def delayAlg(delay=1000,errmax=1,name='Delay'):
+  alg                      = Configs.LHCb__DelaySleepAlg(name)
+  alg.DelayTime            = delay
+  alg.ErrorMax             = errmax
+  return alg
+
+#------------------------------------------------------------------------------------------------
 def prescaler(percent=25,name='Prescaler'):
-  alg                = CFG.Prescaler(name)
-  alg.PercentPass    = percent
-  alg.OutputLevel    = 4
+  alg                      = CFG.Prescaler(name)
+  alg.PercentPass          = percent
+  alg.OutputLevel          = 4
   return alg
 
 #------------------------------------------------------------------------------------------------
@@ -248,7 +274,7 @@ def mbmInitApp(partID, partName, flags,partitionBuffers=False):
   return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=onlineRunable(1))
 
 #------------------------------------------------------------------------------------------------
-def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False):
+def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=0x1000):
   "MEP Holder application for usage of multi event packet buffers."
   runable              = Configs.LHCb__MEPHolderSvc('Runable')
   if errBuffer is None:
@@ -257,6 +283,7 @@ def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False):
     mepMgr               = mepManager(partID,partName,['MEP',errBuffer],partitionBuffers)
     runable.HandleErrors = True
     runable.ErrorBuffer  = errBuffer
+    runable.RoutingBits  = routing
   extsvc               = [Configs.MonitorSvc(), mepMgr]
   runable.Requirements = [mbm_requirements['MEP']]
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
@@ -343,6 +370,17 @@ def defaultFilterApp(partID, partName, percent, print_freq):
   #delay                = Configs.LHCb__DelaySleepAlg('Delay')
   #delay.DelayTime      = 999999;
   #algs.append(delay)
+  return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
+
+#------------------------------------------------------------------------------------------------
+def simpleFilterApp(partID, partName, percent, print_freq):
+  mepMgr               = mepManager(partID,partName,['EVENT','OUT'],True)
+  mepMgr.HandleSignals = True
+  runable              = evtRunable(mepMgr)
+  evtSel               = mbmSelector('EVENT')
+  evtdata              = evtDataSvc()
+  evtPers              = rawPersistencySvc()
+  algs                 = [storeExplorer(load=1,freq=print_freq),prescaler(percent=percent)]
   return _application('NONE',extsvc=[Configs.MonitorSvc(),mepMgr,evtSel],runable=runable,algs=algs)
 
 #------------------------------------------------------------------------------------------------

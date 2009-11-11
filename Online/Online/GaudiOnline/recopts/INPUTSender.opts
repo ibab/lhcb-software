@@ -3,7 +3,7 @@ ApplicationMgr.TopAlg                = { "LHCb::FIDManipAlg/Fid" };
 MEPManager.Buffers                   = {"READ"};
 EventSelector.Input                  = "READ";
 EventSelector.Decode                 = false;
-Sender.DataSink                      = "$NODENAME::RECReceiver";
+Sender.DataSink                      = "$NODENAME/RECReceiver";
 Sender.DataType                      = 3;
 
 Fid.DataType                         = 3;

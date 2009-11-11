@@ -1,6 +1,5 @@
 #!/bin/bash
 echo "All args: $*"
-. `dirname ${0}`/preamble.sh
 . ${GAUDIONLINEROOT}/tests/cmt/preamble.sh
 #rm /dev/shm/bm_* /dev/shm/sem.bm_* /dev/shm/TAN* /dev/shm/sem.TAN*
 #

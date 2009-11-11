@@ -1,4 +1,4 @@
-// $Id: EventRunable.h,v 1.4 2009-10-09 10:08:39 garnierj Exp $
+// $Id: EventRunable.h,v 1.5 2009-11-11 13:50:04 frankb Exp $
 #ifndef GAUDISVC_EVENTRUNABLE_H
 #define GAUDISVC_EVENTRUNABLE_H 1
 
@@ -36,6 +36,8 @@ namespace LHCb  {
     IDataProviderSvc* m_dataSvc;
     /// Property: MEP manager service name/type
     std::string       m_mepMgrName;
+    /// Property: Timeout incident name
+    std::string       m_tmoIncident;
     /// Flag indicating that MBM event retrieval is active
     bool              m_receiveEvts;
     /// Number of events to be processed
@@ -48,7 +50,8 @@ namespace LHCb  {
     int               m_evtCount;
     /// Flag that indicates that we received an error event 
     bool	      m_errorFired;	 
-    
+    /// Flag that indicates that a timeout occurred
+    bool	      m_eventTMO;
 
   public:
     /// Standard Constructor

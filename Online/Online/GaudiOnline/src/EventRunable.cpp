@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.12 2009-10-09 10:08:20 garnierj Exp $
+// $Id: EventRunable.cpp,v 1.13 2009-11-11 13:50:05 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -18,11 +18,12 @@ using namespace std;
 // Standard Constructor
 EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)   
 : OnlineService(nam, svcLoc), m_mepMgr(0), m_dataSvc(0),
-  m_receiveEvts(false), m_nerr(0), m_evtCount(0), m_errorFired(false)
+  m_receiveEvts(false), m_nerr(0), m_evtCount(0), m_errorFired(false), m_eventTMO(false)
 {
-  declareProperty("EvtMax",        m_evtMax=1);
-  declareProperty("NumErrorToStop",m_nerrStop=-1);
-  declareProperty("MEPManager",    m_mepMgrName="LHCb::MEPManager/MEPManager");
+  declareProperty("EvtMax",         m_evtMax=1);
+  declareProperty("NumErrorToStop", m_nerrStop=-1);
+  declareProperty("MEPManager",     m_mepMgrName="LHCb::MEPManager/MEPManager");
+  declareProperty("TimeoutIncident",m_tmoIncident="DAQ_TIMEOUT");
 }
 
 // Standard Destructor
@@ -56,8 +57,8 @@ StatusCode EventRunable::initialize()   {
   }
   incidentSvc()->addListener(this,"DAQ_CANCEL");
   incidentSvc()->addListener(this,"DAQ_ERROR");
+  incidentSvc()->addListener(this,m_tmoIncident);
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
-
   return sc;
 }
 
@@ -98,6 +99,9 @@ void EventRunable::handle(const Incident& inc)    {
   else if ( inc.type() == "DAQ_ENABLE" )  {
     m_receiveEvts = true;
   }
+  else if ( inc.type() == m_tmoIncident )  {
+    m_eventTMO = true;
+  }
 }
 
 /// IRunable implementation : Run the class implementation
@@ -107,14 +111,15 @@ StatusCode EventRunable::run()   {
     m_receiveEvts = true;
     while ( m_receiveEvts )   {
       // loop over the events
-
+      
       if(m_errorFired) {
-    //    Incident incident(name(),"DAQ_ERROR");
-    //    m_incidentSvc->fireIncident(incident);
+	//    Incident incident(name(),"DAQ_ERROR");
+	//    m_incidentSvc->fireIncident(incident);
         return error("An error was reported. Aborting execution.");
       }
-
+      
       DataObject* pObj = 0;
+      m_eventTMO = false;
       StatusCode sc = ui->nextEvent(m_evtMax);
       if ( sc.isSuccess() )  {
         m_evtCount++;
@@ -127,6 +132,9 @@ StatusCode EventRunable::run()   {
           info("End of event input reached.");
           break;
         }
+	if ( m_eventTMO )    {
+	  m_incidentSvc->fireIncident(Incident(name(),"EVENT_TIMEOUT"));
+	}
         continue;
       }
       if ( !m_receiveEvts ) {	
