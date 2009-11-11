@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.94 2009-11-03 10:12:48 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.95 2009-11-11 16:29:01 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -127,6 +127,23 @@ class Moore(LHCbConfigurableUser):
         eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
         app.ExtSvc.append(eventSelector)
         OnlineEnv.evtDataSvc()
+
+        # Event processing timeout catcher
+        # ======================================================
+        #>>> To test: force delay bigger than the timeout....
+        #delay = OnlineEnv.delayAlg(5500,1)
+        #delay.OutputLevel = 1
+        #ApplicationMgr().TopAlg.append(delay)
+        #
+        #>>> Configure timeout catch algorithm
+        # event processing timeout: 5000ms, print trace=True
+        # Events with timeout will have routing bit 0x200 set
+        # and could be redirected at the storage level to a seperate
+        # output stream
+        tmoCatcher = OnlineEnv.timeoutAlg(5000,True)
+        tmoCatcher.OutputLevel = 2
+        evtMerger.TimeoutBits = 0x200
+        ApplicationMgr().TopAlg.append(tmoCatcher)
 
         # define the send sequence
         SendSequence =  GaudiSequencer('SendSequence')
