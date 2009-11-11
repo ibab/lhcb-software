@@ -361,6 +361,24 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	 * These tensors will be used in the eqns 2.2, 4.4 and 4.5 of Ali et al.
 	 * 
 	 */
+	const double turnOver = 18.25;//the point in q2 to cut off at
+	/*
+	 * The probability distribution really blows up
+	 * at high q2, due to the rapid increase of the
+	 * tensors A and E (mostly A). We are far outside
+	 * of the physical region, and so this pole may
+	 * well not be physically meaningful. To spare
+	 * some CPU cycles this pole is cut off at a
+	 * level similar to the photon pole probability
+	 * value of 3000. Beyond the q2 value set above,
+	 * the probability remains flat.
+	 */
+	if(q2 > (turnOver+1e-6)){
+		getTnAmplitudes(turnOver,MB,mK,tensors);
+		return;
+	}
+
+
 
 	//energy of final state meson
 	const double e = ((MB*MB) - q2)/(2*MB);
