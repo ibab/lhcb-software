@@ -88,7 +88,7 @@ StatusCode Pack<PACKER>::execute()
       packer.pack( *data, *pdata );
 
       // Clear the registry address of the unpacked container, to prevent reloading
-      pdata->registry()->setAddress( 0 );
+      data->registry()->setAddress( 0 );
 
       if ( msgLevel(MSG::DEBUG) )
       {
