@@ -13,6 +13,8 @@ from Configurables import ( LumiCountVertices,
                             LumiFromL0DU,
                             LumiCountHltTracks
                             )
+from Configurables import GaudiSequencer as Sequence
+from Configurables import DeterministicPrescaler as Scaler
 
 
 ####### create binders...
@@ -38,12 +40,11 @@ def _combine( op, arg ) :
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
-    __slots__ = { 'TriggerTypes'         : ['LumiTrigger']  # ODIN trigger type accepted
-                , 'BXTypes'              : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
-                , 'LumiLines'            : ['Count','VDM']
-                , 'FullReco'             : True
-                , 'OutputLevel'          : INFO
-                , 'Debug'                : False
+    __slots__ = { 'TriggerTypes'           : ['LumiTrigger']  # ODIN trigger type accepted
+                , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
+                , 'LumiLines'              : ['Count','VDM']
+                , 'TrackingAcceptFraction' : 0                # use 0/1: switches on/off tracking
+                , 'OutputLevel'            : WARNING
                 }
 
 
@@ -52,12 +53,9 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
         '''
-        from Configurables import GaudiSequencer as Sequence
 
         # debugging options
         debugOPL = self.getProp('OutputLevel')
-        debugging = self.getProp('Debug')
-        fullReco = self.getProp('FullReco')
         from HltLine.HltReco import PV2D
 
         # define empty reco sequence
@@ -66,6 +64,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ModeOR = True
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
+                                    , IgnoreFilterPassed = True
                                     , MeasureTime = True)
 
         # define empty sequence to collect counters
@@ -74,6 +73,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ModeOR = True
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
+                                    , IgnoreFilterPassed = True
                                     , MeasureTime = True)
 
         # populate count sequence from the definition
@@ -82,43 +82,47 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         histoMaxBins = []
         veloBW = False
         for key, definition in counters.iteritems():
-            # example 'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000],
+            # example 'CaloEt' : [LumiFromL0DU , True , 'Sum(Et)' , 500, 6000],
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
-                    _combine( _createCounter( op, seqCountName+BXType , lumiCountSequence), { key : inputDef } ) )
+                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence), { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
                 if debugOPL <= DEBUG:
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
+        # create filter sequence for the tracking
+        lumiRecoSequence.Members.append(
+            Sequence('LumiRecoFilterSequence'+BXType ,
+                     Members = [Scaler( 'Lumi'+BXType+'TrackingScaler' ,
+                                        AcceptFraction = self.getProp('TrackingAcceptFraction')
+                                        ),
+                                Sequence('LumiTrackRecoSequence' ,
+                                         IgnoreFilterPassed = True,
+                                         Members = PV2D.members(),
+                                         MeasureTime = True ) 
+                                ],
+                     IgnoreFilterPassed = False,
+                     MeasureTime = True ) )
 
-        # populate reco sequence if needed
-        if fullReco:
-            # create lumiRecoSequence
-            lumiTrackRecoSequence = GaudiSequencer( 'LumiTrackRecoSequence'
-                                                    ,  IgnoreFilterPassed = True
-                                                    ,  Members = PV2D.members()
-                                                    )
-            lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' , MeasureTime = True ) )
-            # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
-            if veloBW:
-                from Configurables import HltTrackFilter
-                lumiRecoSequence.Members.append(
-                    Sequence('HltRZVeloBWSequence'
-                             , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
-                                                           , InputSelection   = 'TES:Hlt/Track/RZVelo'
-                                                           , AddInfo = False
-                                                           , FilterDescriptor = ['IsBackward,>,0.5']
-                                                           , OutputSelection     = 'RZVeloBW'
-                                                           , RequirePositiveInputs = False
-                                                           ) ]
-                             , MeasureTime = True
-                             , ModeOR = True
-                             , ShortCircuit = False
-                             ) )
-                
+        # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
+        from Configurables import HltTrackFilter
+        lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence'+BXType )
+        lumiRecoFilterSequence.Members.append(
+            Sequence('HltRZVeloBWSequence'
+                     , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
+                                                   , InputSelection   = 'TES:Hlt/Track/RZVelo'
+                                                   , AddInfo = False
+                                                   , FilterDescriptor = ['IsBackward,>,0.5']
+                                                   , OutputSelection     = 'RZVeloBW'
+                                                   , RequirePositiveInputs = False
+                                                   ) ]
+                     , MeasureTime = True
+                     , ModeOR = True
+                     , ShortCircuit = False
+                     ) )
 
         # define histogrammers
         from Configurables import LumiHistoMaker, LumiHisto2dSPD, LumiHistoCurrents
@@ -133,8 +137,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                            HistoTitle=str(BXType),
                                            OutputLevel = debugOPL ))
 
-        #HistoMembers.append(LumiHistoCurrents('HistoCur'+BXType)) Testing here for 8 plots...
-                                           
         lumiHistoSequence = Sequence('LumiHisto'+BXType +'Seq'
                                      , Members = HistoMembers
                                      , ModeOR = True
@@ -158,25 +160,11 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         '''
         from HltLine.HltLine import Hlt1Line   as Line
         from HltLine.HltLine import Hlt1Member as Member
-        self.setOtherProps(LumiCounterDefinitionConf(),["FullReco"])
 
         counters = LumiCounterDefinitionConf().defineCounters()
         BXTypes=self.getProp('BXTypes')
         BXMembers = []
-
-##         from Configurables import LumiHistoCurrents    #This code should be here, to produce 2 plots, not 8!  Commented for a while...
-##         LumiCurrentsMonitor = Line ( 'LumiCurMoni'
-##                                      , prescale = self.prescale
-##                                      , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) '
-##                                      , algos = [
-##             LumiHistoCurrents('LumiCurrentMoni')
-##             ] 
-##                                      , postscale = self.postscale
-##                                      ) 
-        
-##         BXMembers.append(LumiCurrentsMonitor)
-
-        for bx in BXTypes:    # HltANNSvc can't support 5 lumi lines!!
+        for bx in BXTypes: 
             BXMembers.append(self.__create_lumi_line__(bx, counters))
 
         

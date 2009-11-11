@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.55 2009-11-11 10:46:30 graven Exp $
+! $Id: release.notes,v 1.56 2009-11-11 13:12:10 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-11 - Jaap Panman
+ - tracking in LumiLines behind a prescaler
 
 ! 2009-11-11 - Gerhard Raven
  - fix name in CosmicOT

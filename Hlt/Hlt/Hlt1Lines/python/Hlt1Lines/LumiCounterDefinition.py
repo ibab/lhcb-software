@@ -17,22 +17,19 @@ from Configurables import LHCbConfigurableUser
 
 class LumiCounterDefinitionConf(LHCbConfigurableUser) :
   __slots__ = {
-    'FullReco'   : True,
     'Definition' : {},
     }
 
   ####### counter definition...
   def defineCounters( self ):
-    fullReco = self.getProp('FullReco')
     self.Definition  = {
-      # 'Velo'     : [LumiCountTracks   , fullReco, 'Hlt/Track/Velo'  ,   5,  200],
-      'RZVelo'   : [LumiCountTracks   , fullReco, 'Hlt/Track/RZVelo',   5,  200],
+      'RZVelo'   : [LumiCountTracks   , True    , 'Hlt/Track/RZVelo',   5,  200],
       'Muon'     : [LumiCountTracks   , False   , 'Hlt/Track/Muons' ,   5,  200],
       'TTIP'     : [LumiCountTracks   , False   , 'Hlt/Track/TTIP'  ,   5,  200],
       'TTMIB'    : [LumiCountTracks   , False   , 'Hlt/Track/TTMIB' ,   5,  200],
-      'PV2D'     : [LumiCountVertices , fullReco, 'Hlt/Vertex/PV2D' ,   1,   20],
+      'PV2D'     : [LumiCountVertices , True    , 'Hlt/Vertex/PV2D' ,   1,   20],
       'PV3D'     : [LumiCountVertices , False   , 'Hlt/Vertex/PV3D' ,   1,   20],
-      'RZVeloBW' : [LumiCountHltTracks, fullReco, 'RZVeloBW'        ,   5,  200],
+      'RZVeloBW' : [LumiCountHltTracks, True    , 'RZVeloBW'        ,   5,  200],
       'SPDMult'  : [LumiFromL0DU      , True    , 'Spd(Mult)'       ,   6,  500],
       'PUMult'   : [LumiFromL0DU      , True    , 'PUHits(Mult)'    ,   3,  200],
       'CaloEt'   : [LumiFromL0DU      , True    , 'Sum(Et)'         , 500, 6000],
