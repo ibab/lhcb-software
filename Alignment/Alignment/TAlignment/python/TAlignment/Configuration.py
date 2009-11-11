@@ -179,7 +179,8 @@ class TAlignment( LHCbConfigurableUser ):
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
                                         gslSVDsolver, CLHEPSolver, SparseSolver, DiagSolvTool,
-                                        Al__AlignConstraintTool, Al__AlignUpdateTool )
+                                        Al__AlignConstraintTool, Al__AlignUpdateTool,
+                                        Al__TrackResidualTool )
             alignAlg = AlignAlgorithm( "Alignment" )
             alignAlg.OutputLevel                  = outputLevel
             alignAlg.NumberOfIterations           = self.getProp( "NumIterations" )
@@ -220,6 +221,9 @@ class TAlignment( LHCbConfigurableUser ):
             # and these too
             gslSVDsolver().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
             DiagSolvTool().EigenValueThreshold    = self.getProp( "EigenValueThreshold" )
+
+            trackresidualtool = Al__TrackResidualTool("Al::TrackResidualTool")
+            trackresidualtool.KalmanFilter.BiDirectionalFit = False
             
             alignSequencer.Members.append(alignAlg)
 
