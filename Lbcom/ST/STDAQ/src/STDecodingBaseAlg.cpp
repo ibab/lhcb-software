@@ -1,4 +1,4 @@
-// $Id: STDecodingBaseAlg.cpp,v 1.29 2009-11-06 12:32:31 mneedham Exp $
+// $Id: STDecodingBaseAlg.cpp,v 1.30 2009-11-11 12:20:55 mneedham Exp $
 
 #include <algorithm>
 
@@ -227,7 +227,7 @@ std::vector<unsigned int> STDecodingBaseAlg::missingInAction(const std::vector<R
         missing.push_back((unsigned int)testID);
         std::string lostBank = "lost bank "+
 	 boost::lexical_cast<std::string>(testID);  
-        Warning(lostBank, StatusCode::SUCCESS,0);
+        Warning(lostBank, StatusCode::SUCCESS,0).ignore();
       }
     } // iBoard
   }
