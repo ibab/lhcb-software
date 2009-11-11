@@ -26,6 +26,13 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import L0ConfirmWithT
         from HltLine.HltReco import RZVelo, Velo, PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
+
+
+        ####
+        #from Configurables import L0Calo2CaloTool
+        #l0c2c = L0Calo2CaloTool()
+        #l0c2c.DuplicateClustersOnTES = True
+        ####
         
         COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))
         SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))
@@ -98,48 +105,50 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                 ]
 
         ##### Lines
-        Line ('SingleElectron'
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        if 'Electron' in L0Channels() :
+            Line ('SingleElectron'
+                     , prescale = self.prescale
+                     , L0DU = "L0_CHANNEL('Electron')"
+                     , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP
+                             + [ Member ( 'TF','Decision'
+                                        , OutputSelection = '%Decision'
+                                        , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
+                                        )
+                               ]
+                     , postscale = self.postscale
+                     )
+
+            Line( 'ElectronTrackWithIP' 
                  , prescale = self.prescale
                  , L0DU = "L0_CHANNEL('Electron')"
-                 , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP
-                         + [ Member ( 'TF','Decision'
+                 , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
+                         + [ Member ( 'VF', 'VertexCut'
+                                    , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
                                     , OutputSelection = '%Decision'
-                                    , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
-                                    , HistogramUpdatePeriod = 0
-                                    , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
                                     )
                            ]
                  , postscale = self.postscale
-                 )
+                )
 
-        Line( 'ElectronTrackWithIP' 
-             , prescale = self.prescale
-             , L0DU = "L0_CHANNEL('Electron')"
-             , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
-                     + [ Member ( 'VF', 'VertexCut'
-                                , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
-                                , OutputSelection = '%Decision'
-                                )
-                       ]
-             , postscale = self.postscale
-            )
-
-        Line( 'ElectronTrackNoIP' 
-             , prescale = self.prescale
-             , L0DU = "L0_CHANNEL('Electron')"
-             , algos = [ convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
-                     + [ Member ( 'VF', 'VertexCut'
-                                , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
-                                )
-                       , DecodeECAL
-                       , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
-                       , Member ( 'VF', 'MassCut'
-                                , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
-                                , HistogramUpdatePeriod = 0
-                                , HistoDescriptor = { 'VertexDiElectronMass':('VertexDiElectronMass',0.,3.,100), 'VertexDiElectronMassBest':('VertexDiElectronMassBest',0.,3.,100) }
-                                , OutputSelection = '%Decision'
-                                )
-                       ]
-             , postscale = self.postscale
-            )
+            Line( 'ElectronTrackNoIP' 
+                 , prescale = self.prescale
+                 , L0DU = "L0_CHANNEL('Electron')"
+                 , algos = [ convertL0Candidates('Electron') ] + prepareElectronNoIP + companionTrackNoIP 
+                         + [ Member ( 'VF', 'VertexCut'
+                                    , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
+                                    )
+                           , DecodeECAL
+                           , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
+                           , Member ( 'VF', 'MassCut'
+                                    , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
+                                    , HistogramUpdatePeriod = 0
+                                    , HistoDescriptor = { 'VertexDiElectronMass':('VertexDiElectronMass',0.,3.,100), 'VertexDiElectronMassBest':('VertexDiElectronMassBest',0.,3.,100) }
+                                    , OutputSelection = '%Decision'
+                                    )
+                           ]
+                 , postscale = self.postscale
+                )
         

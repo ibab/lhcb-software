@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $'
 # =============================================================================
 
 
@@ -41,6 +41,12 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
         from Configurables import PatConfirmTool
         from HltLine.HltReco import RZVelo, Velo, PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeECAL
+
+        ####
+        #from Configurables import L0Calo2CaloTool
+        #l0c2c = L0Calo2CaloTool()
+        #l0c2c.DuplicateClustersOnTES = True
+        ####
 
         TRACK_PT_CUT = str(self.getProp('Track_PtCut'))
         TRACK_IP_CUT = str(self.getProp('Track_IPCut3D'))
@@ -104,64 +110,68 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                )
                       ]
 
-        Line ('PhotonTrack' 
-              , prescale = self.prescale
-              , L0DU = "L0_CHANNEL('Photon')"
-              , algos = [ convertL0Candidates('Photon') ] + commonSeq1
-                      + [ Member ('TF', 'Forward'
-                                  , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
-                                  , HistogramUpdatePeriod = 0
-                                  , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
-                                 )
-                        , Member ('VM2', 'PhoTra'
-                               , InputSelection1 = '%TFPhoton'
-                               , InputSelection2 = '%TFForward'
-                               , OutputSelection = '%Decision'
-                               )
-                        ]
-              , postscale = self.postscale
-             )
+        from Hlt1Lines.HltL0Candidates import L0Channels
+        if 'Photon' in L0Channels() :
+            Line ('PhotonTrack' 
+                  , prescale = self.prescale
+                  , L0DU = "L0_CHANNEL('Photon')"
+                  , algos = [ convertL0Candidates('Photon') ] + commonSeq1
+                          + [ Member ('TF', 'Forward'
+                                      , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                      , HistogramUpdatePeriod = 0
+                                      , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
+                                     )
+                            , Member ('VM2', 'PhoTra'
+                                   , InputSelection1 = '%TFPhoton'
+                                   , InputSelection2 = '%TFForward'
+                                   , OutputSelection = '%Decision'
+                                   )
+                            ]
+                  , postscale = self.postscale
+                 )
+        if 'Electron' in L0Channels() :
+            Line ('PhotonFromEleTrack' 
+                  , prescale = self.prescale
+                  , L0DU = "L0_CHANNEL('Electron')"
+                  , algos = [ convertL0Candidates('Electron') ] + commonSeq1
+                          + [ Member ('TF', 'Forward'
+                                      , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
+                                      , HistogramUpdatePeriod = 0
+                                      , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
+                                     )
+                            , Member ('VM2', 'PhoTra'
+                                   , InputSelection1 = '%TFPhoton'
+                                   , InputSelection2 = '%TFForward'
+                                   , OutputSelection = '%Decision'
+                                   )
+                            ]
+                  , postscale = self.postscale
+                 )
 
-        Line ('PhotonFromEleTrack' 
-              , prescale = self.prescale
-              , L0DU = "L0_CHANNEL('Electron')"
-              , algos = [ convertL0Candidates('Electron') ] + commonSeq1
-                      + [ Member ('TF', 'Forward'
-                                  , FilterDescriptor = ['PT,>,'+PHOTRA_PT_CUT]
-                                  , HistogramUpdatePeriod = 0
-                                  , HistoDescriptor = { 'PT' : ('PT',0.,6000.,300), 'PTBest' : ('PTBest',0.,6000.,300)}
-                                 )
-                        , Member ('VM2', 'PhoTra'
-                               , InputSelection1 = '%TFPhoton'
-                               , InputSelection2 = '%TFForward'
-                               , OutputSelection = '%Decision'
-                               )
-                        ]
-              , postscale = self.postscale
-             )
+        if 'Photon' in L0Channels() :
+            Line ('PhotonDiTrack' 
+                  , prescale = self.prescale
+                  , L0DU = "L0_CHANNEL('Photon')"
+                  , algos = [ convertL0Candidates('Photon') ] + commonSeq1 + commonSeq2
+                          + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
+                                     , InputSelection1 = '%VFDiTrack'
+                                     , InputSelection2 = '%TFPhoton'
+                                     , OutputSelection = '%Decision'
+                                     )
+                            ]
+                  , postscale = self.postscale
+                 )
 
-        Line ('PhotonDiTrack' 
-              , prescale = self.prescale
-              , L0DU = "L0_CHANNEL('Photon')"
-              , algos = [ convertL0Candidates('Photon') ] + commonSeq1 + commonSeq2
-                      + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
-                                 , InputSelection1 = '%VFDiTrack'
-                                 , InputSelection2 = '%TFPhoton'
-                                 , OutputSelection = '%Decision'
-                                 )
-                        ]
-              , postscale = self.postscale
-             )
-
-        Line ('PhotonFromEleDiTrack' 
-              , prescale = self.prescale
-              , L0DU = "L0_CHANNEL('Electron')"
-              , algos = [ convertL0Candidates('Electron') ] + commonSeq1 + commonSeq2
-                      + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
-                                 , InputSelection1 = '%VFDiTrack'
-                                 , InputSelection2 = '%TFPhoton'
-                                 , OutputSelection = '%Decision'
-                                 )
-                        ]
-              , postscale = self.postscale
-             )
+        if 'Electron' in L0Channels() :
+            Line ('PhotonFromEleDiTrack' 
+                  , prescale = self.prescale
+                  , L0DU = "L0_CHANNEL('Electron')"
+                  , algos = [ convertL0Candidates('Electron') ] + commonSeq1 + commonSeq2
+                          + [ Member ( 'AddPhotonToVertex', 'DiTrackDecision' # add photon track to ditrack vertex to save all objects into summary
+                                     , InputSelection1 = '%VFDiTrack'
+                                     , InputSelection2 = '%TFPhoton'
+                                     , OutputSelection = '%Decision'
+                                     )
+                            ]
+                  , postscale = self.postscale
+                 )
