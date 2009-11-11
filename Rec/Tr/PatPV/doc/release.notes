@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+2009-11-11 - Mariusz Witek
+- add PatPV2DFit3D, new algorithm to fir PV 2D with quasi-3D tracks
+  timing still to be optimized. Roughly 4 times slower than PatPV2D.
+
 !============================= PatPV v3r8 2009-01-12 =========================
 ! 2008-12-17 - Marco Cattaneo
  - Fix gcc 4.3 warning
