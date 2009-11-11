@@ -10,13 +10,17 @@
 findReferenceBlock("""
 PrintJpsi_2600_3200                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        76 |         16 |(  21.0526 +- 4.67644  )%|   -------   |   -------   |
-PrintJpsi_3050_3150                                         SUCCESS Number of counters : 1
- |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        76 |         69 |(  90.7895 +- 3.31706  )%|   -------   |   -------   |
+ |*"#accept"                                       |        69 |         16 |(  23.1884 +- 5.08071  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "2600")
+findReferenceBlock("""
 PrintJpsi_3000_3500                                         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- |*"#accept"                                       |        76 |         11 |(  14.4737 +- 4.03583  )%|   -------   |   -------   |
-""", stdout, result, causes, signature_offset = 0)
+ |*"#accept"                                       |        69 |         10 |(  14.4928 +- 4.23792  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "3000")
+findReferenceBlock("""
+PrintJpsi_3050_3150                                         SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        69 |         62 |(  89.8551 +- 3.63472  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0, id = "3050")
 </text></argument>
 </extension>
