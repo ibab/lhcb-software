@@ -1,5 +1,7 @@
 2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Log.py: added the --log-level option. This will take "DEBUG", "INFO",
+	etc values.
 	* python/LbUtils/ConfigFile.py: fixed help in the option.
 
 2009-11-09  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

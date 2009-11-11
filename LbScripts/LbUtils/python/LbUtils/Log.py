@@ -1,4 +1,4 @@
-# $Id: Log.py,v 1.7 2009-11-09 10:37:31 hmdegaud Exp $
+# $Id: Log.py,v 1.8 2009-11-11 10:12:58 hmdegaud Exp $
 """ implement the default logging settings to the parser"""
 
 import logging
@@ -27,6 +27,10 @@ def setLogLevelCallBack(option, opt_str, value, parser):
             formatter = logging.Formatter("%(levelname)-8s: %(funcName)-25s %(message)s")
             for h in log.handlers :
                 h.setFormatter(formatter)
+    if opt_str == "--log-level":
+        log.setLevel(value)
+        log.info("setting log level to %s" % value)
+        setattr(parser.values, option.dest, value)
 
 def addDefaultLogger(parser, format=None):
     console = logging.StreamHandler()
@@ -53,10 +57,16 @@ def addDefaultLogger(parser, format=None):
                       action="callback", 
                       callback=setLogLevelCallBack, 
                       dest="log_level",
-                      help="verbose mode [default: %default]. Everything down to INFOS")
+                      help="verbose mode. Everything down to INFOS")
     grp.add_option("--debug",
                       action="callback",
                       callback=setLogLevelCallBack,
                       dest="log_level",
                       help="debug mode. Everything")
+    grp.add_option("--log-level",
+                      action="callback",
+                      callback=setLogLevelCallBack,
+                      nargs=1,
+                      dest="log_level",
+                      help="default log level [default %default]")
     return log
