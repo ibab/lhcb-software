@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.60 2009-10-09 07:47:00 pkoppenb Exp $
+#$Id: requirements,v 1.61 2009-11-11 16:57:28 jpalac Exp $
 #============================================================================
 # Created    : 23/08/2004
 # Maintainer : P. Koppenburg, Yuehong Xie, J. Palacios
@@ -17,6 +17,7 @@ branches          cmt doc src
 use     TrackInterfaces v*     Tr
 use  GaudiAlg           v*
 use  DaVinciInterfaces  v*  Phys
+use  DaVinciKernel      v*  Phys
 use  LHCbMath           v*  Kernel
 
 # Component library building rule

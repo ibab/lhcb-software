@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.180 2009-10-27 13:47:58 jpalac Exp $
+! $Id: release.notes,v 1.181 2009-11-11 16:57:28 jpalac Exp $
 !===========================================================================
 ! Package     : VertexFit
 ! Responsible : Yuehong Xie
 !===========================================================================
+
+! 2009-11-11 - Juan Palacios
+ - src/PVReFitterAlg{.h, .cpp}
+   . Use IOnOffline tool to determine input PV location.
+   . Write unweighted table.
+   . Output goes to <algo name>/Particle2VertexRelations, <algo name>/_ReFittedPVs.
 
 !========================== VertexFit v6r0p1 2009-10-27 ===============
 
