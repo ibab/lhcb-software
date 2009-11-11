@@ -22,6 +22,7 @@ preprocessor = normalizeExamples + \
     LineSkipper(["INFO Connected to database"]) + \
     LineSkipper(["INFO Disconnect from database after being idle"]) + \
     LineSkipper(["Generation.FixedLumi"]) + \
+    LineSkipper(["GenMemory"]) + \
     LineSkipper(["ChronoStatSvc.f...   INFO  Service finalized succes"]) 
 validateWithReference(preproc = preprocessor)
 </text></argument> 
