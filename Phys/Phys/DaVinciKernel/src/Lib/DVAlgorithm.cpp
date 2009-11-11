@@ -1,4 +1,4 @@
-// $Id: DVAlgorithm.cpp,v 1.66 2009-11-10 13:15:22 jpalac Exp $
+// $Id: DVAlgorithm.cpp,v 1.67 2009-11-11 08:57:44 jpalac Exp $
 // ============================================================================
 // Include 
 // ============================================================================
@@ -591,7 +591,7 @@ void DVAlgorithm::imposeOutputLocation(const std::string& outputLocationString)
   if ( 0==desktop() ) {
     fatal() << "Desktop has not been created yet" << endmsg;
   }
-  desktop()->imposeOutputLocation(outputLocationString);  
+  desktop()->setOutputLocation(outputLocationString);  
   return;  
 }
 // ============================================================================
