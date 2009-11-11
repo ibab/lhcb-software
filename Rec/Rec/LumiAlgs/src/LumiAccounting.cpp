@@ -1,4 +1,4 @@
-// $Id: LumiAccounting.cpp,v 1.4 2009-10-20 09:06:16 panmanj Exp $
+// $Id: LumiAccounting.cpp,v 1.5 2009-11-11 09:25:39 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -180,16 +180,16 @@ StatusCode LumiAccounting::finalize() {
       LHCb::LumiFSR::ExtraInfo::iterator infoIter;
       LHCb::LumiFSR::ExtraInfo  fsrInfo = (*fsr)->extraInfo();
       for (infoIter = fsrInfo.begin(); infoIter != fsrInfo.end(); infoIter++) {
-	// get the key and value of the input info
-	int key = infoIter->first;
-	LHCb::LumiFSR::ValuePair values = infoIter->second;
-	int incr = values.first;
-	longlong count = values.second;
-	const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
-	int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
-	debug() << "SUM: key: " << key 
-		<< " name: " << keyName << " KeyInt: " << keyInt 
-		<< " increment: " << incr << " integral: " << count << endmsg;
+        // get the key and value of the input info
+        int key = infoIter->first;
+        LHCb::LumiFSR::ValuePair values = infoIter->second;
+        int incr = values.first;
+        longlong count = values.second;
+        const std::string keyName = LHCb::LumiCounters::counterKeyToString(key);
+        int keyInt = LHCb::LumiCounters::counterKeyToType(keyName);
+        debug() << "SUM: key: " << key 
+                << " name: " << keyName << " KeyInt: " << keyInt 
+                << " increment: " << incr << " integral: " << count << endmsg;
       }
     }
   }
