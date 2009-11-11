@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.56 2009-11-11 13:12:10 panmanj Exp $
+! $Id: release.notes,v 1.57 2009-11-11 15:49:36 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-11-11 - Jaap Panman
- - tracking in LumiLines behind a prescaler
+ - tracking in LumiLines behind a (binary) prescaler
 
 ! 2009-11-11 - Gerhard Raven
  - fix name in CosmicOT

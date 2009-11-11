@@ -43,7 +43,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'TriggerTypes'           : ['LumiTrigger']  # ODIN trigger type accepted
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
-                , 'TrackingAcceptFraction' : 0                # use 0/1: switches on/off tracking
+                , 'Tracking'               : False            # use 0/1: switches on/off tracking
                 , 'OutputLevel'            : WARNING
                 }
 
@@ -94,10 +94,12 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
         # create filter sequence for the tracking
+        if self.getProp('Tracking'): trackingFraction = 1
+        else: trackingFraction = 0
         lumiRecoSequence.Members.append(
             Sequence('LumiRecoFilterSequence'+BXType ,
                      Members = [Scaler( 'Lumi'+BXType+'TrackingScaler' ,
-                                        AcceptFraction = self.getProp('TrackingAcceptFraction')
+                                        AcceptFraction = trackingFraction
                                         ),
                                 Sequence('LumiTrackRecoSequence' ,
                                          IgnoreFilterPassed = True,
