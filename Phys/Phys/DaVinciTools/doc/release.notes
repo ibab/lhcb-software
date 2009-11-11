@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.483 2009-11-11 09:10:33 jpalac Exp $
+! $Id: release.notes,v 1.484 2009-11-11 19:22:04 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-11 - Patrick Koppenburg
+ - CheckSelResults : Return false when SelResults container is not there.
 
 ! 2009-11-11 - Juan Palacios
  - src/PhysDesktop.cpp

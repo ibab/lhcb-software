@@ -1,4 +1,4 @@
-// $Id: CheckSelResultsTool.cpp,v 1.5 2009-01-27 07:23:36 cattanem Exp $
+// $Id: CheckSelResultsTool.cpp,v 1.6 2009-11-11 19:22:04 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -63,7 +63,7 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
  
     if (!exist<LHCb::SelResults>(m_selResults)){
       Warning("SelResult container not found at "+m_selResults) ;
-      return StatusCode::SUCCESS;   
+      return false ;   
     }
     LHCb::SelResults* SelResCtr = get<LHCb::SelResults>(m_selResults);
 
@@ -79,7 +79,8 @@ bool CheckSelResultsTool::isSelected ( const Selection  & selection) const {
         return (*iselRes)->found() ;
       }
     }
-  }
+  } 
+  
   if (msgLevel(MSG::DEBUG)) {
     debug() << selection << " has not been run" ;
     if (m_useSelResults) debug() << " or found in SelResults" ;
