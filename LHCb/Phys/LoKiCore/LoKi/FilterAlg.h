@@ -1,4 +1,4 @@
-// $Id: FilterAlg.h,v 1.4 2009-06-13 08:06:37 graven Exp $
+// $Id: FilterAlg.h,v 1.5 2009-11-11 15:02:15 cattanem Exp $
 // ============================================================================
 #ifndef LOKI_FILTERALG_H 
 #define LOKI_FILTERALG_H 1
@@ -156,7 +156,7 @@ namespace LoKi
       // use the factory 
       StatusCode sc = _factory-> get ( code() , functor , preambulo () ) ;
       // release the factory (not needed anymore) 
-      this->release ( _factory ) ;
+      this->release ( _factory ).ignore() ;
       if ( sc.isFailure() ) 
       { return Error("Unable to decode functor '" + code() + "'" , sc ) ; }
       //
