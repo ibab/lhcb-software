@@ -12,7 +12,8 @@ class FriendOfTProfile: public TProfile{
 };
 
 class MonProfile: public MonObject {
-
+  friend class boost::serialization::access;
+  
 protected:
   TProfile* m_profile;
   AIDA::IProfile1D* m_aidaProfile;
