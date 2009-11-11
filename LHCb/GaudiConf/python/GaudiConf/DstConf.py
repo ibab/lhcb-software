@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.30 2009-11-10 10:30:05 jonrob Exp $"
+__version__ = "$Id: DstConf.py,v 1.31 2009-11-11 16:58:24 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -82,11 +82,13 @@ class DstConf(LHCbConfigurableUser):
             if dType == 'RDST': raise TypeError( "RDST should always be in a packed format" )
             recDir = "Rec"
             if sType != "None":
-                DigiConf().EnablePack = False # DigiConf propagates it to SimConf
+                DigiConf().setProp("EnablePack", False)
+                SimConf().setProp("EnablePack", DigiConf().getProp("EnablePack") )
         else:
             recDir = "pRec"
             if sType != "None":
-                DigiConf().EnablePack = True # DigiConf propagates it to SimConf
+                DigiConf().setProp("EnablePack", False)
+                SimConf().setProp("EnablePack", DigiConf().getProp("EnablePack") )
             if not hasattr( self, "PackSequencer" ):
                 raise TypeError( "Packing requested but PackSequencer not defined" )
 
@@ -130,7 +132,7 @@ class DstConf(LHCbConfigurableUser):
                     
                     eventLocations = ['']
                     if dType == "XDST":
-                        locations = SimConf().allEventLocations()
+                        eventLocations = SimConf().allEventLocations()
 
                     # Minimal MC output.
                     SimConf().addHeaders(writer)
@@ -372,12 +374,16 @@ class DstConf(LHCbConfigurableUser):
         if sType not in self.KnownSimTypes:
             raise TypeError( "Unknown SimType '%s'"%sType )
         if sType != "None":
-            DigiConf().setProp("EnableUnpack",True) # DigiConf propagates it to SimConf
+            DigiConf().setProp("EnableUnpack",True)
+            SimConf().setProp("EnableUnpack", DigiConf().getProp("EnableUnpack") )
 
         dType = self.getProp( "DstType" ).upper()
         if dType not in self.KnownDstTypes:
             raise TypeError( "Unknown DstType '%s'"%dType )
-        self.setOtherProps(DigiConf(),["SpilloverPaths"]) # DigiConf propagates it to SimConf
+
+        # Propagate SpilloverPaths to DigiConf and to SimConf via DigiConf
+        self.setOtherProps(DigiConf(),["SpilloverPaths"])
+        DigiConf().setOtherProps(SimConf(),["SpilloverPaths"])
 
         pType = self.getProp( "PackType" ).upper()
         if pType not in self.KnownPackTypes:

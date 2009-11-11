@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.189 2009-11-10 10:30:05 jonrob Exp $
+! $Id: release.notes,v 1.190 2009-11-11 16:58:24 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
+
+! 2009-11-11 - Marco Cattaneo
+ - Fix the propagation of properties from DstConf to SimConf via DigiConf
 
 ! 2009-11-10 - Chris Jones
  - Add to DstConf flag to turn on full checks of DST data packing

@@ -1,7 +1,7 @@
 """
 Configurable for Gauss output
 """
-__version__ = "$Id: SimConf.py,v 1.5 2009-11-06 14:00:36 cattanem Exp $"
+__version__ = "$Id: SimConf.py,v 1.6 2009-11-11 16:58:24 cattanem Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 __all__ = [
@@ -249,7 +249,7 @@ class SimConf(LHCbConfigurableUser) :
 
             # Event locations
             for slot in self.allEventLocations() :
-                   
+
                 generatorList = [ self.tapeLocation( slot, 'Gen', 'Collisions' ),
                                   self.tapeLocation( slot, 'Gen', 'HepMCEvents' ) ]
 
