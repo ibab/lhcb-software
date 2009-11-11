@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.52 2009-11-10 12:05:11 panmanj Exp $
+! $Id: release.notes,v 1.53 2009-11-11 08:51:21 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-11 - Gerhard Raven
+ - fix name in CosmicOT
 
 ! 2009-11-10 - Jaap Panman
  - correct fullReco flag in LumiCounterDefinition
