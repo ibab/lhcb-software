@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.54 2009-11-11 10:38:54 graven Exp $
+! $Id: release.notes,v 1.55 2009-11-11 10:46:30 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -8,6 +8,8 @@
 ! 2009-11-11 - Gerhard Raven
  - fix name in CosmicOT
  - minor cosmetic changes in Hlt1HadronLines
+ - make sure that a line only is created if the matching L0 channel is
+   in the configuration (provided a line needs an L0 channel)
 
 ! 2009-11-10 - Jaap Panman
  - correct fullReco flag in LumiCounterDefinition
