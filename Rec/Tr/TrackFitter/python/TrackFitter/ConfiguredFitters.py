@@ -74,8 +74,7 @@ def ConfiguredMasterFitter( Name,
         # set up the NoDriftTimeProjector in the toolsvc
         defaultOTNoDriftTimeProjector = TrajOTProjector("OTNoDrifttimesProjector")
         defaultOTNoDriftTimeProjector.UseDrift = False
-        fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-        fitter.NodeFitter.Projector.OT = defaultOTNoDriftTimeProjector
+        fitter.Projector.OT = defaultOTNoDriftTimeProjector
 
     # use lite clusters for velo and ST
     if LiteClusters:
@@ -191,8 +190,7 @@ def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters =
         from Configurables import TrajOTProjector, TrackProjectorSelector
         otprojector = TrajOTProjector('OTFastFitProjector')
         otprojector.SkipDriftTimeZeroAmbiguity = False
-        fitter.NodeFitter.addTool( TrackProjectorSelector(), "Projector" )
-        fitter.NodeFitter.Projector.OT = otprojector
+        fitter.Projector.OT = otprojector
         
     # at some point, need to switch to analytic evaluation
     # TrackHerabExtrapolator().extrapolatorID = 4
@@ -240,9 +238,7 @@ def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
         cosmicsOTProjector = TrajOTCosmicsProjector('OTCosmicsProjector')
     # create the fitter and set it up
     eventfitter = ConfiguredStraightLineFitter(Name, TracksInContainer,  NoDriftTimes = False )
-    eventfitter.Fitter.addTool(TrackKalmanFilter(),'NodeFitter')
-    eventfitter.Fitter.NodeFitter.addTool( TrackProjectorSelector, "Projector" )
-    eventfitter.Fitter.NodeFitter.Projector.OT = cosmicsOTProjector
+    eventfitter.Fitter.Projector.OT = cosmicsOTProjector
     eventfitter.Fitter.MaxNumberOutliers = MaxNumberOutliers
     eventfitter.Fitter.ErrorQoP = [ 25, 0 ]
     return eventfitter
