@@ -8,7 +8,7 @@ version           v2r2
 #============================================================================
 # Structure, i.e. directories to process. 
 #============================================================================
-branches          cmt doc src python job
+branches          cmt doc src python job options tests
 #============================================================================
 # Used packages
 #============================================================================
@@ -33,4 +33,4 @@ apply_pattern    component_library library=LumiAlgs
 # Setup Python Configurables
 #============================================================================
 apply_pattern install_python_modules
-
+apply_pattern QMTest

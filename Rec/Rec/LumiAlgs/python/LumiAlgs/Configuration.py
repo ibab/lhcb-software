@@ -35,7 +35,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"DataType"      : "2008"     # Data type, can be ['DC06','2008','MC09','2009']
        ,"InputType"     : "MDF"      # Data type, can be ['MDF','DST']. Different sequencer made.
        ,"ForceFullSequence" : False  # re-write the FSR independent of the InputType
-       ,"SetFSRStatus" : None        # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
+       ,"SetFSRStatus" : ""        # overwrite the event FSR status to something ['UNRELIABLE', 'ERROR','VERIFIED']
        ,"LumiSequencer" : None       # The sequencer to add the Lumi Accounting to - essential input
        ,"BXTypes"       : [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] # bunch crossing types 
        ,"HistoProduce"  : False
@@ -83,11 +83,11 @@ class LumiAlgsConf(LHCbConfigurableUser):
         
         return BXMembers
     
-    def fillEventFSR(self,status=None):
+    def fillEventFSR(self,status=""):
         '''fill the EventAccounting'''
         from Configurables import (EventAccounting, GaudiSequencer)
         accounting = EventAccounting('EventAccount')
-        if status is not None:
+        if status is not None and status != "":
             accounting.DefaultStatus=status
             accounting.OverrideStatus=True
         return [accounting]

@@ -12,6 +12,7 @@
    i.e. adding LumiAccounting and EventAccounting to a sequence
  - Added navigation of EventCountFSRs into the integrator
    This ensures they are all touched on each file and will be copied
+ - Added simple tests to try LumiWriter.py, LumiReader.py and test the configurable
 
 
 ! 2009-11-06 - Jaap Panman
