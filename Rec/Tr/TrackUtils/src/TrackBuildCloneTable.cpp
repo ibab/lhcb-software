@@ -1,4 +1,4 @@
-// $Id: TrackBuildCloneTable.cpp,v 1.3 2007-09-17 09:25:03 jonrob Exp $
+// $Id: TrackBuildCloneTable.cpp,v 1.4 2009-11-11 12:47:10 cattanem Exp $
 
 #include "TrackBuildCloneTable.h"
 
@@ -73,7 +73,7 @@ StatusCode TrackBuildCloneTable::execute()
       // extrapolate to desired z pos
       const StatusCode sc = m_extrapolator->propagate(tmpState,*iZ);
       if (sc.isFailure())
-      { Warning("Problem extrapolating state",StatusCode::SUCCESS); continue; }
+      { Warning("Problem extrapolating state",StatusCode::SUCCESS).ignore(); continue; }
 
       // Add Clone state to clone track
       cloneTrack.states.insert( CloneTrack::CloneStates::value_type(*iZ,CloneState(tmpState)) );

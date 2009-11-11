@@ -4,6 +4,10 @@
 ! Purpose     : Package for general utility algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 - Marco Cattaneo
+ - Fix untested StatusCodes on calls to Warning and Error
+ - Fix a Windows warning
+
 ! 2009-10-23 - Johannes Albrecht
  - TrackAddNNGhostId: make ghostId tool private
 

@@ -1,4 +1,4 @@
-// $Id: TrackV0Finder.cpp,v 1.12 2009-07-09 09:55:36 wouter Exp $
+// $Id: TrackV0Finder.cpp,v 1.13 2009-11-11 12:47:10 cattanem Exp $
 // Include files 
 
 
@@ -94,6 +94,10 @@ private:
 #include "TrackInterfaces/ITrackInterpolator.h"
 #include <iterator>
 
+#ifdef _WIN32
+  // Disable warning C4355: 'this' : used in base member initializer list
+  #pragma warning ( disable : 4355 )
+#endif
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : TrackV0Finder

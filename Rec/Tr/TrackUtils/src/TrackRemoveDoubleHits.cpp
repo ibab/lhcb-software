@@ -1,4 +1,4 @@
-// $Id: TrackRemoveDoubleHits.cpp,v 1.6 2008-05-28 12:33:52 lnicolas Exp $
+// $Id: TrackRemoveDoubleHits.cpp,v 1.7 2009-11-11 12:47:10 cattanem Exp $
 //
 
 //-----------------------------------------------------------------------------
@@ -173,7 +173,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	    
 	    if ( m_keepHighThreshold ) {
 	      Warning("Found a double hit in IT. Removing from track LHCbID of strip with low threshold!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      if ( isHighThreshold ( aLHCbID ) &&
 		   !isHighThreshold ( aLHCbID2 ) )
 		lhcbIDsToRemove.push_back( aLHCbID2 );
@@ -187,7 +187,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	    }
 	    else if ( m_keepHighCharge ) {
 	      Warning("Found a double hit in IT. Removing from track LHCbID of strip with less charge!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      if ( charge ( aLHCbID ) > charge ( aLHCbID2 ) )
 		lhcbIDsToRemove.push_back( aLHCbID2 );
 	      else if ( charge ( aLHCbID2 ) > charge ( aLHCbID ) )
@@ -199,7 +199,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	    }
 	    else {
 	      Warning("Found a double hit in IT. Removing both LHCbIDs from track!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      lhcbIDsToRemove.push_back( aLHCbID );
 	      lhcbIDsToRemove.push_back( aLHCbID2 );
 	    }
@@ -219,7 +219,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	    
 	    if ( m_keepHighThreshold ) {
 	      Warning("Found a double hit in TT. Removing from track LHCbID of strip with low threshold!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      if ( isHighThreshold ( aLHCbID ) &&
 		   !isHighThreshold ( aLHCbID2 ) )
 		lhcbIDsToRemove.push_back( aLHCbID2 );
@@ -233,7 +233,7 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	    }
 	    else if ( m_keepHighCharge ) {
 	      Warning("Found a double hit in TT. Removing from track LHCbID of strip with less charge!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      if ( charge ( aLHCbID ) > charge ( aLHCbID2 ) )
 		lhcbIDsToRemove.push_back( aLHCbID2 );
 	      else if ( charge ( aLHCbID2 ) > charge ( aLHCbID ) )
@@ -247,10 +247,10 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 	      // Depending on the case, the warning is different.
 	      if ( aLHCbID.stID().sector() == aLHCbID2.stID().sector() )
 		Warning("Found a double hit in TT (same sector). Removing both LHCbIDs from track!!!",
-			StatusCode::SUCCESS, 1);
+			StatusCode::SUCCESS, 1).ignore();
 	      else if ( abs(sectorDiff) == 1 )
 		Warning("Found a double hit in TT (different sectors). Removing both LHCbIDs from track!!!",
-			StatusCode::SUCCESS, 1);
+			StatusCode::SUCCESS, 1).ignore();
 	      // But in both case we remove the two LHCbIDs
 	      lhcbIDsToRemove.push_back( aLHCbID );
 	      lhcbIDsToRemove.push_back( aLHCbID2 );
@@ -273,13 +273,13 @@ StatusCode TrackRemoveDoubleHits::execute ( ) {
 
 	    if ( fabs ( tx ) > 0.350 ) {
 	      Warning("Found a double hit in OT. Removing both LHCbIDs from track!!!",
-		      StatusCode::SUCCESS, 1);
+		      StatusCode::SUCCESS, 1).ignore();
 	      lhcbIDsToRemove.push_back( aLHCbID );
 	      lhcbIDsToRemove.push_back( aLHCbID2 );
 	      break;
 	    }
 	    Warning("Found an acceptable double hit in OT. Keeping both LHCbIDs on track.",
-		    StatusCode::SUCCESS, 1);
+		    StatusCode::SUCCESS, 1).ignore();
 	  }
 	  //**********************************************************************
 	}

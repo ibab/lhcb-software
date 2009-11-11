@@ -1,4 +1,4 @@
-// $Id: TrackCloneCleaner.cpp,v 1.3 2007-09-17 09:25:03 jonrob Exp $
+// $Id: TrackCloneCleaner.cpp,v 1.4 2009-11-11 12:47:10 cattanem Exp $
 //
 // This File contains the implementation of the TsaEff
 // C++ code for 'LHCb Tracking package(s)'
@@ -133,7 +133,7 @@ StatusCode TrackCloneCleaner::execute()
       }
       else
       {
-        Error( "Track flagged as clone of itself !!" );
+        Error( "Track flagged as clone of itself !!" ).ignore();
       }
       cloneTrack = linker.next();
     } // clone track

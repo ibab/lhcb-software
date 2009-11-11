@@ -1,4 +1,4 @@
-// $Id: HltInsertTrackErrParam.cpp,v 1.1 2009-10-15 11:41:56 pkoppenb Exp $
+// $Id: HltInsertTrackErrParam.cpp,v 1.2 2009-11-11 12:47:10 cattanem Exp $
 // Include files 
 #include "GaudiKernel/AlgFactory.h"
 #include <math.h>
@@ -119,7 +119,7 @@ StatusCode HltInsertTrackErrParam::execute() {
     
     StatusCode sc = insertParamInTrack( tk );
     if (!sc) {
-      Warning(" call to insertParamInTrack failed -- abandoning all new tracks");
+      Warning(" call to insertParamInTrack failed -- abandoning all new tracks").ignore();
       if (newTracks!=0) { 
         std::for_each(newTracks->begin(),
                       newTracks->end(),

@@ -1,4 +1,4 @@
-// $Id: NumberOfTracksFilter.cpp,v 1.1 2009-10-15 11:41:56 pkoppenb Exp $
+// $Id: NumberOfTracksFilter.cpp,v 1.2 2009-11-11 12:47:10 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -72,7 +72,7 @@ StatusCode NumberOfTracksFilter::execute() {
         p!=m_tracksPath.end() ; ++p) {
 
     if ( !exist<LHCb::Track::Container>(*p)){
-      Warning("No tracks at "+(*p),1);
+      Warning("No tracks at "+(*p),1).ignore();
     } else {
       LHCb::Track::Container* inTracks = get< LHCb::Track::Container>(*p);
       if (msgLevel(MSG::VERBOSE)) verbose() << "Container " << *p << " contains "
