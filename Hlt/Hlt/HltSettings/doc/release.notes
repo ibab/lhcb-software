@@ -4,6 +4,9 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 - Gerhard Raven
+ - cleanup cosmicOT 
+
 ! 2009-11-04 - V. Gligorov
  - Modified all Hlt1 threshold settings files to reflect the renaming of the
    Hlt1Lines files and classes.  

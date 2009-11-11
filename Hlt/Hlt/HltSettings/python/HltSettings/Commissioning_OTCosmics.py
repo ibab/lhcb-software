@@ -9,12 +9,8 @@ class Commissioning_OTCosmics :
     """
     
     
-    def __init__(self) :
-        #self.StripEndSequence = True
-        pass
-
     def HltType(self) :
-        return 'OTCosmics'
+        return 'CosmicOT'
 
     def L0TCK(self) :
         return None
@@ -23,15 +19,12 @@ class Commissioning_OTCosmics :
         """
         Returns a list of active lines
         """
-        
         return  [ ]
    
     def ActiveHlt1Lines(self) :
         """
         Returns a list of active lines
         """
-        
-        #return [ 'Hlt1NonRandomODIN','Hlt1RandomODIN','Hlt1Tell1Error' ]
         return [ 'Hlt1CosmicOT' ]
 
     def Thresholds(self) :
@@ -40,11 +33,5 @@ class Commissioning_OTCosmics :
         """
         from Hlt1Lines.HltCosmicLines  import HltCosmicLinesConf
         return { HltCosmicLinesConf : { 'Prescale' : { 'Hlt1CosmicOT'  : 1.
-                                             }              } 
+                                      }              } 
                }
-
-        ##return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN'  : 1.
-        ##                                                    , 'Hlt1RandomODIN'     : 0. # @OnlineEnv.AcceptRate
-        ##                                                    , 'Hlt1Tell1Error'     : 1.
-        ##                                     }              } 
-        ##       }
