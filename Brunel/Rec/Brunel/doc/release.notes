@@ -28,6 +28,7 @@ Purpose: LHCb reconstruction program
    . New TrackCaloMatch monitoring (TrackSys v4r27, TrackMonitors v1r15)
    . New plots in OTTrackMonitor (TrackMonitors v1r15)
    . OdinTypesFilter replaced by LoKi::ODINFilter (LumiAlgs v2r4)
+   . Suppress warnings about lost banks (STDAQ v3r20)
 
 </PRE><H1><A NAME=v35r7>2009-10-23 Brunel v35r7</A></H1><PRE>
  - Changes to Configurable:
