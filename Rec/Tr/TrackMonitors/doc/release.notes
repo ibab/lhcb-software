@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 M Needham
+ - Remove fullDetail from alignment histograms in IT/TTTrackMonitor
+
 ! 2009-11-05 Johan Blouw
  - small update of OTTrackMonitor, for the pitch resodual part.
    PitchResidual tool now returns a vector of residuals for OTChannelIDs

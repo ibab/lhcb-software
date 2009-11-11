@@ -1,4 +1,4 @@
-// $Id: ITTrackMonitor.cpp,v 1.7 2009-10-08 14:48:55 wouter Exp $
+// $Id: ITTrackMonitor.cpp,v 1.8 2009-11-11 12:21:27 mneedham Exp $
 // Include files 
 #include "ITTrackMonitor.h"
 
@@ -191,18 +191,18 @@ void ITTrackMonitor::fillHistograms(const LHCb::Track& track,
       }      
 
       // 2D plots in full detail mode
-      if (fullDetail() == true){
-        const unsigned int bin = chan.station()*100 + chan.layer()*10 + chan.sector(); 
-        const std::string boxName = ITNames().BoxToString(chan);
-        plot2D(bin, fNode->unbiasedResidual() , ittype+"/unbiasedResSector"+boxName ,
+     
+     const unsigned int bin = chan.station()*100 + chan.layer()*10 + chan.sector(); 
+     const std::string boxName = ITNames().BoxToString(chan);
+     plot2D(bin, fNode->unbiasedResidual() , ittype+"/unbiasedResSector"+boxName ,
                "unbiasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
-        plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
+     plot2D(bin, fNode->residual() , ittype+"/biasedResSector"+boxName , 
                "/biasedResSector"+boxName  , 99.5, 400.5, -2., 2.,301 , 200  );
 
-        const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
-        plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
-        plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
-      }
+     const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
+     plot2D(bin, signalToNoise,ittype+"/SNSector"+boxName ,"SNSector"+boxName  , 99.5, 400.5, -0.25, 100.25, 301, 201);
+     plot2D(bin, hit->totalCharge(),ittype+"/CSector"+boxName ,"CSector"+boxName  , 99.5, 400.5, -0.5, 200.5,301,201 );
+     
 
       // get the measurement and plot ST related quantities
       plot(hit->totalCharge(),ittype+"/charge", "clusters charge", 0., 200., 100);

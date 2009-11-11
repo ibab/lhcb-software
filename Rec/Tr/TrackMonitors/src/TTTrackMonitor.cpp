@@ -1,4 +1,4 @@
-// $Id: TTTrackMonitor.cpp,v 1.5 2009-10-08 14:48:55 wouter Exp $
+// $Id: TTTrackMonitor.cpp,v 1.6 2009-11-11 12:21:27 mneedham Exp $
 // Include files 
 #include "TTTrackMonitor.h"
 
@@ -165,19 +165,18 @@ void TTTrackMonitor::fillHistograms(const LHCb::Track& track,
       plot(fNode->unbiasedResidual(),"unbiasedResidual","unbiasedResidual",  -2., 2., 200 );
       plot(fNode->residual(),"biasedResidual","biasedResidual",  -2., 2., 200 );
 
-         // 2D plots in full detail mode
-      if (fullDetail() == true){
-	const unsigned int bin = histoBin(chan);
-        const std::string layerName = TTNames().UniqueLayerToString(chan);
-        plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
-               "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
-        plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
-               "/biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+      // 2D plots in full detail mode
+      const unsigned int bin = histoBin(chan);
+      const std::string layerName = TTNames().UniqueLayerToString(chan);
+      plot2D(bin, fNode->unbiasedResidual() , "unbiasedResSector"+layerName ,
+            "unbiasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
+      plot2D(bin, fNode->residual() , "biasedResSector"+layerName , 
+             "/biasedResSector"+layerName  , 99.5, 500.5, -2., 2.,401 , 200  );
 
-        const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
-        plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
-        plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
-      }
+      const double signalToNoise = hit->totalCharge()/hit->sector().noise(chan);
+      plot2D(bin, signalToNoise,"SNSector"+layerName ,"SNSector"+layerName  , 99.5, 500.5, -0.25, 100.25, 401, 201);
+      plot2D(bin, hit->totalCharge(),"CSector"+layerName ,"CSector"+layerName  , 99.5, 500.5, -0.5, 200.5,401,201 );
+      
       
       // get the measurement and plot ST related quantities
       plot(hit->totalCharge(),"charge", "clusters charge", 0., 200., 100);
