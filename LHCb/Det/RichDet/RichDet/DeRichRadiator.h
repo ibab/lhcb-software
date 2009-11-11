@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichRadiator.h,v 1.26 2009-07-26 18:13:17 jonrob Exp $
+ *  $Id: DeRichRadiator.h,v 1.27 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -88,9 +88,19 @@ public:
    * @return A pointer to the refractive index  interpolated function of the radiator
    * @retval NULL No interpolation function
    */
-  inline const Rich::TabulatedProperty1D* refIndex() const
+  inline const Rich::TabulatedProperty1D* refIndex( bool hlt = false ) const
   {
-    return m_refIndex;
+    return ( hlt ? hltRefIndex() : m_refIndex );
+  }
+
+  /**
+   * Retrieves The refractive index of the radiator for use by the HLT
+   * @return A pointer to the HLT refractive index interpolated function of the radiator
+   * @retval NULL No interpolation function
+   */
+  inline const Rich::TabulatedProperty1D* hltRefIndex() const
+  {
+    return ( m_hltRefIndex ? m_hltRefIndex : generateHltRefIndex() );
   }
 
   /**
@@ -186,15 +196,22 @@ public:
                                       std::vector<RichRadIntersection>& intersections ) const = 0;
 
   /** Returns the refractive index at the given photon energy for this radiator
-   *  @param energy The photon energy 
+   *  @param energy The photon energy
    *  @return The refractive index at that energy
    */
-  virtual double refractiveIndex( const double energy ) const = 0;
+  virtual double refractiveIndex( const double energy, bool hlt = false ) const = 0;
 
 protected:
 
   /// Initialise Tab Property Interpolators
   StatusCode initTabPropInterpolators();
+
+  /**
+   * Generates and returns the refractive index of the radiator for use by the HLT
+   * @return A pointer to the HLT refractive index interpolated function of the radiator
+   * @retval NULL No interpolation function
+   */
+  virtual const Rich::TabulatedProperty1D* generateHltRefIndex() const;
 
 protected:
 
@@ -204,8 +221,14 @@ protected:
   /// pointer to the refractive index of the material
   Rich::TabulatedProperty1D* m_refIndex;
 
+  /// pointer to the refractive index of the material used by the HLT
+  mutable Rich::TabulatedProperty1D* m_hltRefIndex;
+
   /// pointer to the Tabulated property refractive index
   const TabulatedProperty* m_refIndexTabProp;
+
+  /// pointer to the Tabulated property refractive index
+  mutable TabulatedProperty* m_hltRefIndexTabProp;
 
   /// pointer to the Tabulated property Cherenkov Ref Index
   const TabulatedProperty* m_chkvRefIndexTabProp;

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichSingleSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichSingleSolidRadiator.h,v 1.18 2009-07-26 18:13:17 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.h,v 1.19 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -94,7 +94,7 @@ public:
                                       std::vector<RichRadIntersection>& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
-  virtual double refractiveIndex( const double energy ) const;
+  virtual double refractiveIndex( const double energy, bool hlt = false ) const;
 
   /**
    * Returns a pointer to the material of this radiator
@@ -113,7 +113,7 @@ protected:
   StatusCode prepareMomentumVector( std::vector<double>& photonMomentumVect,
                                     double min,
                                     double max,
-                                    unsigned int nbins );
+                                    unsigned int nbins ) const;
 
 private:
 

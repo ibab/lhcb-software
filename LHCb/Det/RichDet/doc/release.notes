@@ -4,6 +4,9 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 - Antonis Papanestis
+ - Introduce separate refractive index for the HLT.
+
 !======================== RichDet v12r1p1 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
  - Remove obsolete file RichDet_dll.cpp

@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichMultiSolidRadiator
  *
- *  $Id: DeRichMultiSolidRadiator.cpp,v 1.22 2009-07-26 18:13:18 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.cpp,v 1.23 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -290,7 +290,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 // Refractive Index
 //=========================================================================
 double
-DeRichMultiSolidRadiator::refractiveIndex( const double energy ) const
+DeRichMultiSolidRadiator::refractiveIndex( const double energy, bool hlt ) const
 {
   double refIn(0);
   // Loop over all tiles and form an average
@@ -298,7 +298,7 @@ DeRichMultiSolidRadiator::refractiveIndex( const double energy ) const
         iRad != m_radiators.end(); ++iRad )
   {
     // Should this be a weighted average of some form ?
-    refIn += (*((*iRad)->refIndex()))[energy*Gaudi::Units::eV];
+    refIn += (*((*iRad)->refIndex(hlt)))[energy*Gaudi::Units::eV];
   }
   return ( m_radiators.empty() ? refIn : refIn/m_radiators.size() );
 }

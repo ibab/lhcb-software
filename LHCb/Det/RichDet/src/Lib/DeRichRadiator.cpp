@@ -4,7 +4,7 @@
  *
  *  Implementation file for detector description class : DeRichRadiator
  *
- *  $Id: DeRichRadiator.cpp,v 1.19 2009-08-03 09:22:37 jonrob Exp $
+ *  $Id: DeRichRadiator.cpp,v 1.20 2009-11-11 17:27:30 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -33,7 +33,9 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
   m_radiatorID          ( Rich::InvalidRadiator ),
   m_rich                ( Rich::InvalidDetector ),
   m_refIndex            ( 0                     ),
+  m_hltRefIndex         ( 0                     ),
   m_refIndexTabProp     ( 0                     ),
+  m_hltRefIndexTabProp  ( 0                     ),
   m_chkvRefIndexTabProp ( 0                     ),
   m_rayleigh            ( 0                     ),
   m_rayleighTabProp     ( 0                     ),
@@ -46,7 +48,7 @@ DeRichRadiator::DeRichRadiator(const std::string & name) :
 //  destructor
 //=========================================================================
 DeRichRadiator::~DeRichRadiator()
-{ 
+{
   delete m_refIndex;
   delete m_rayleigh;
   delete m_absorption;
@@ -86,6 +88,9 @@ StatusCode DeRichRadiator::initialize()
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+//  initTabPropInterpolators
+//=========================================================================
 StatusCode DeRichRadiator::initTabPropInterpolators()
 {
   MsgStream msg = msgStream( "DeRichRadiator" );
@@ -100,7 +105,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     if ( !m_refIndex->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid RINDEX Rich::TabulatedProperty1D for " 
+          << "Invalid RINDEX Rich::TabulatedProperty1D for "
           << m_refIndexTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -115,7 +120,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     if ( !m_rayleigh->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid RAYLEIGH Rich::TabulatedProperty1D for " 
+          << "Invalid RAYLEIGH Rich::TabulatedProperty1D for "
           << m_rayleighTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -130,7 +135,7 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
     if ( !m_absorption->valid() )
     {
       msg << MSG::ERROR
-          << "Invalid ABSORPTION Rich::TabulatedProperty1D for " 
+          << "Invalid ABSORPTION Rich::TabulatedProperty1D for "
           << m_absorptionTabProp->name() << endmsg;
       return StatusCode::FAILURE;
     }
@@ -138,3 +143,16 @@ StatusCode DeRichRadiator::initTabPropInterpolators()
 
   return StatusCode::SUCCESS;
 }
+
+//=========================================================================
+//  generateHltRefIndex
+//=========================================================================
+const Rich::TabulatedProperty1D* DeRichRadiator::generateHltRefIndex() const
+{
+  // return normal refractive index
+  m_hltRefIndex = m_refIndex;
+
+  return m_hltRefIndex;
+}
+
+//=============================================================================

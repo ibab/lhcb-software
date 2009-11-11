@@ -4,7 +4,7 @@
  *  Header file for detector description class : DeRichMultiSolidRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichMultiSolidRadiator.h,v 1.15 2009-07-26 18:13:17 jonrob Exp $
+ *  $Id: DeRichMultiSolidRadiator.h,v 1.16 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis  a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -30,7 +30,7 @@ extern const CLID CLID_DeRichMultiSolidRadiator;
  * @author Antonis Papanestis a.papanestis@rl.ac.uk
  */
 
-class DeRichMultiSolidRadiator : public DeRichRadiator 
+class DeRichMultiSolidRadiator : public DeRichRadiator
 {
 
 public:
@@ -49,7 +49,7 @@ public:
    * Retrieves reference to class identifier
    * @return the class identifier for this class
    */
-  const CLID& clID() const 
+  const CLID& clID() const
   {
     return classID();
   }
@@ -91,11 +91,11 @@ public:
                                       std::vector<RichRadIntersection>& intersections ) const;
 
   // Returns the refractive index at the given photon energy for this radiator
-  virtual double refractiveIndex( const double energy ) const;
+  virtual double refractiveIndex( const double energy, bool hlt = false ) const;
 
 private:
 
-  StatusCode addVolumes(const ILVolume* lv, 
+  StatusCode addVolumes(const ILVolume* lv,
                         const std::string volName,
                         const Gaudi::Transform3D& toUpperLevel);
 
@@ -114,7 +114,7 @@ private:
 
   /// The DeRichRadiators that make up this radiator
   std::vector<DeRichRadiator*> m_radiators;
-  
+
 };
 
 #endif    // RICHDET_DERICHMULTISOLIDRADIATOR_H

@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.h,v 1.6 2009-07-26 18:13:17 jonrob Exp $
+ *  $Id: DeRichGasRadiator.h,v 1.7 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -28,7 +28,7 @@ extern const CLID CLID_DeRichGasRadiator;
  *  @author Antonis Papanestis
  *  @date   2006-03-02
  */
-class DeRichGasRadiator : public DeRichSingleSolidRadiator 
+class DeRichGasRadiator : public DeRichSingleSolidRadiator
 {
 
 public:
@@ -68,16 +68,34 @@ private:
   /// method to update the refractive index of the radiator
   StatusCode updateProperties();
 
+  /// method to update the refractive index of the radiator for the HLT
+  StatusCode updateHltProperties();
+
+  /**
+   * Generates and returns the refractive index of the radiator for use by the HLT
+   * @return A pointer to the HLT refractive index interpolated function of the radiator
+   * @retval NULL No interpolation function
+   */
+  virtual const Rich::TabulatedProperty1D* generateHltRefIndex() const;
+
   /// method for the calculation of the refractive index from the Sellmeir
   /// coeficients and update of the Tabulated Property
   StatusCode calcSellmeirRefIndex (const std::vector<double>& momVect,
-                                   const TabulatedProperty* tabProp );
+                                   const TabulatedProperty* tabProp,
+                                   SmartRef<Condition> pressureCond,
+                                   SmartRef<Condition> temperatureCond ) const;
 
   /// Condition holding the current temperature of radiator
   SmartRef<Condition> m_temperatureCond;
 
+  /// Condition holding the current temperature of radiator for use at the HLT
+  SmartRef<Condition> m_hltTemperatureCond;
+
   /// Condition holding the current pressure of radiator
   SmartRef<Condition> m_pressureCond;
+
+  /// Condition holding the current pressure of radiator for use at the HLT
+  SmartRef<Condition> m_hltPressureCond;
 
   /// Condition holding the scale factor for the refractivity
   /// This conditions scales n-1 NOT n

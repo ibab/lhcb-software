@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.15 2009-08-03 09:22:37 jonrob Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.16 2009-11-11 17:27:29 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -35,7 +35,9 @@ const CLID CLID_DeRichGasRadiator = 12042;  // User defined
 DeRichGasRadiator::DeRichGasRadiator(const std::string & name) :
   DeRichSingleSolidRadiator(name),
   m_temperatureCond (),
+  m_hltTemperatureCond (),
   m_pressureCond    (),
+  m_hltPressureCond (),
   m_scaleFactorCond ()
 {}
 
@@ -106,6 +108,18 @@ StatusCode DeRichGasRadiator::initialize ( )
     return sc;
   }
 
+  // HLT temperature
+  if ( hasCondition( "HltGasTemperature" ) )
+    m_hltTemperatureCond = condition( "HltGasTemperature" );
+  else
+    m_hltTemperatureCond = m_temperatureCond;
+
+  // HLT pressure
+  if ( hasCondition( "HltGasPressure" ) )
+    m_hltPressureCond = condition( "HltGasPressure" );
+  else
+    m_hltPressureCond =  m_pressureCond;
+
   msg << MSG::DEBUG << "Initialisation Complete" << endmsg;
   m_firstUpdate = false;
 
@@ -152,7 +166,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
   if ( !sc ) return sc;
 
   // calculate the refractive index and update Tabulated property
-  sc = calcSellmeirRefIndex( photonMomentumVect, m_refIndexTabProp );
+  sc = calcSellmeirRefIndex( photonMomentumVect, m_refIndexTabProp,
+                             m_pressureCond, m_temperatureCond );
   if ( !sc ) return sc;
 
   std::vector<double> ckvPhotonMomentumVect;
@@ -160,7 +175,8 @@ StatusCode DeRichGasRadiator::updateProperties ( )
                               ckvPhotonEnergyHighLimit, ckvPhotonEnergyNumBins );
   if ( !sc ) return sc;
 
-  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp );
+  sc = calcSellmeirRefIndex( ckvPhotonMomentumVect, m_chkvRefIndexTabProp,
+                             m_pressureCond, m_temperatureCond );
   if ( !sc ) return sc;
 
   // Hack - Update interpolators in base class after first update
@@ -173,7 +189,9 @@ StatusCode DeRichGasRadiator::updateProperties ( )
 //  calcSellmeirRefIndex
 //=========================================================================
 StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& momVect,
-                                                    const TabulatedProperty* tabProp )
+                                                    const TabulatedProperty* tabProp,
+                                                    SmartRef<Condition> pressureCond,
+                                                    SmartRef<Condition> temperatureCond ) const
 {
 
   // test the tab property pointer
@@ -184,8 +202,8 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   }
 
   // get temperature and pressure
-  const double curPressure = m_pressureCond->param<double>("CurrentPressure");
-  const double curTemp     = m_temperatureCond->param<double>("CurrentTemperature");
+  const double curPressure = pressureCond->param<double>("CurrentPressure");
+  const double curTemp     = temperatureCond->param<double>("CurrentTemperature");
   double scaleFactor( 1.0 );
   if ( m_scaleFactorCond )
     scaleFactor = m_scaleFactorCond->param<double>("CurrentScaleFactor");
@@ -234,4 +252,81 @@ StatusCode DeRichGasRadiator::calcSellmeirRefIndex (const std::vector<double>& m
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+//  generateHltRefIndex
+//=========================================================================
+const Rich::TabulatedProperty1D* DeRichGasRadiator::generateHltRefIndex() const
+{
+  m_hltRefIndexTabProp = new TabulatedProperty("HltRefIndexTabProperty");
+
+  DeRichGasRadiator* nonConstSelf = const_cast<DeRichGasRadiator*>(this);
+
+  // temperature
+  if ( m_hltTemperatureCond !=  m_temperatureCond )
+    updMgrSvc()->registerCondition(nonConstSelf, m_hltTemperatureCond.path(),
+                                   &DeRichGasRadiator::updateHltProperties );
+
+  // pressure
+  if ( m_hltPressureCond != m_pressureCond )
+    updMgrSvc()->registerCondition(nonConstSelf, m_hltPressureCond.path(),
+                                   &DeRichGasRadiator::updateHltProperties );
+
+  if (  m_hltTemperatureCond !=  m_temperatureCond || m_hltPressureCond != m_pressureCond )
+  {
+    StatusCode sc = updMgrSvc()->update(nonConstSelf);
+    if ( sc.isFailure() )
+    {
+      error() << "First UMS update failed for HLT properties" << endmsg;
+      return 0;
+    }
+  }
+  else
+    nonConstSelf->updateHltProperties();
+
+
+  return m_hltRefIndex;
+}
+
+//=========================================================================
+//  updateHltProperties
+//=========================================================================
+StatusCode DeRichGasRadiator::updateHltProperties ( )
+{
+
+  // load parameters
+  const double photonEnergyLowLimit     = param<double>("PhotonMinimumEnergy");
+  const double photonEnergyHighLimit    = param<double>("PhotonMaximumEnergy");
+  const unsigned int photonEnergyNumBins  = param<int>("PhotonEnergyNumBins");
+
+  if ( photonEnergyHighLimit < photonEnergyLowLimit )
+  {
+    error() << "Inadmissible photon energy limits "
+            << photonEnergyHighLimit << " " << photonEnergyLowLimit << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  std::vector<double> photonMomentumVect;
+  StatusCode sc = prepareMomentumVector( photonMomentumVect, photonEnergyLowLimit,
+                                         photonEnergyHighLimit, photonEnergyNumBins );
+  if ( !sc ) return sc;
+
+  // calculate the refractive index and update Tabulated property
+  sc = calcSellmeirRefIndex( photonMomentumVect, m_hltRefIndexTabProp,
+                             m_hltPressureCond, m_hltTemperatureCond );
+  if ( !sc ) return sc;
+
+
+  if ( !m_hltRefIndex )
+  { m_hltRefIndex = new Rich::TabulatedProperty1D( m_hltRefIndexTabProp ); }
+  else
+  { m_hltRefIndex->initInterpolator( m_hltRefIndexTabProp ); }
+  if ( !m_hltRefIndex->valid() )
+  {
+    error() << "Invalid RINDEX Rich::TabulatedProperty1D for "
+            << m_hltRefIndexTabProp->name() << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  return sc;
+}
 //=============================================================================

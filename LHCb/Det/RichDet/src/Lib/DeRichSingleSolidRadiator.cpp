@@ -3,7 +3,7 @@
  *
  *  Implementation file for detector description class : DeRichSingleSolidRadiator
  *
- *  $Id: DeRichSingleSolidRadiator.cpp,v 1.27 2009-08-03 09:22:37 jonrob Exp $
+ *  $Id: DeRichSingleSolidRadiator.cpp,v 1.28 2009-11-11 17:27:30 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2004-06-18
@@ -103,7 +103,7 @@ StatusCode DeRichSingleSolidRadiator::
 prepareMomentumVector ( std::vector<double>& photonMomentumVect,
                         double min,
                         double max,
-                        unsigned int nbins)
+                        unsigned int nbins) const
 {
 
   // check parameters are sane
@@ -232,7 +232,7 @@ intersections( const Gaudi::XYZPoint& pGlobal,
 // Refractive Index
 //=========================================================================
 double
-DeRichSingleSolidRadiator::refractiveIndex( const double energy ) const
+DeRichSingleSolidRadiator::refractiveIndex( const double energy, bool hlt ) const
 {
-  return (*(this->refIndex()))[energy*Gaudi::Units::eV];
+  return (*(this->refIndex(hlt)))[energy*Gaudi::Units::eV];
 }
