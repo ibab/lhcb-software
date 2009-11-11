@@ -21,37 +21,42 @@
 #include "MBM/Requirement.h"
 #include "MDF/MDFHeader.h"
 #include "MDF/MEPEvent.h"
+#include "MDF/OnlineRunInfo.h"
+#include "MDF/RawEventHelpers.h"
+
+
+DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPHolderSvc)
 
 using MBM::Consumer;
 using MBM::EventDesc;
 using MBM::Requirement;
-
-DECLARE_NAMESPACE_SERVICE_FACTORY(LHCb,MEPHolderSvc)
+using namespace std;
+using namespace LHCb;
   
 static void handle_errors(void* param, void* data,size_t length) {
-  LHCb::MEPHolderSvc* svc = (LHCb::MEPHolderSvc*)param;
+  MEPHolderSvc* svc = (MEPHolderSvc*)param;
   svc->saveOnError(data,length).ignore();
 }
 
 // Standard Constructor
-LHCb::MEPHolderSvc::MEPHolderSvc(const std::string& nam, ISvcLocator* svc)
+MEPHolderSvc::MEPHolderSvc(const string& nam, ISvcLocator* svc)
 : OnlineService(nam, svc), m_mepMgr(0), m_consumer(0), m_producer(0), 
   m_receiveEvts(false), m_evtCount(0)
 {
-  declareProperty("HandleErrors",   m_handleErrs=false);
+  declareProperty("HandleErrors",   m_handleErrs=0);
   declareProperty("Requirements",   m_req);
   declareProperty("ReleaseTimeout", m_releaseTMO=1000);
   declareProperty("MEPManager",     m_mepMgrName="LHCb::MEPManager/MEPManager");
   declareProperty("ErrorBuffer",    m_prodBuffer="SEND");
-  declareProperty("RoutingBits",    m_routingBits=~0x0);
+  declareProperty("RoutingBits",    m_routingBits=0x400);
 }
 
 // Standard Destructor
-LHCb::MEPHolderSvc::~MEPHolderSvc()   {
+MEPHolderSvc::~MEPHolderSvc()   {
 }
 
 // IInterface implementation: Query interface
-StatusCode LHCb::MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
+StatusCode MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppIf) {
   if ( riid == IRunable::interfaceID() )  {
     *ppIf = (IRunable*)this;
     addRef();
@@ -62,19 +67,106 @@ StatusCode LHCb::MEPHolderSvc::queryInterface(const InterfaceID& riid,void** ppI
 
 
 /// Save event data on error
-StatusCode LHCb::MEPHolderSvc::saveOnError(void* data, size_t length) {
+StatusCode MEPHolderSvc::saveOnError(void* data, size_t length) {
+  return (m_handleErrs == 1) ? saveMEP(data,length) : saveEvents(data,length);
+}
+
+/// Save event data on error
+StatusCode MEPHolderSvc::saveEvents(void* data, size_t length) {
+  if ( data || length ) {
+    unsigned int partitionID = 0;
+    typedef std::map<unsigned int, RawEvent*> SubEvents;
+    typedef std::vector<RawBank*> Banks;
+    MEPEVENT* ev = (MEPEVENT*)data;
+    LHCb::MEPEvent* me = (LHCb::MEPEvent*)ev->data;
+    SubEvents events;
+
+    info("Got request to save MEP with ERRORS as single events.....");    
+    if ( ev->magic != mep_magic_pattern() )  {
+      return error("Bad MEP magic pattern!!!!");
+    }
+    decodeMEP(me, false, partitionID, events);
+    const OnlineRunInfo* odin_info = 0;
+    // In case there are ODIN banks missing, take any first odin bank!
+    for(SubEvents::const_iterator k=events.begin(); k!=events.end(); ++k)  {
+      const Banks& odin = (*k).second->banks(RawBank::ODIN);
+      if ( !odin.empty() ) {
+	odin_info = odin[0]->begin<OnlineRunInfo>();
+	break;
+      }
+    }
+    // Now write the events to the output buffer
+    for(SubEvents::const_iterator i=events.begin(); i!=events.end(); ++i)  {
+      RawEvent* raw = (*i).second;
+      size_t len, ev_len = rawEventLength(raw);
+      int ret = m_producer->getSpace(ev_len);
+      if ( MBM_NORMAL == ret )    {
+	unsigned int trMask[] = {0x0,0x0,0x0,m_routingBits};
+	EventDesc& e = m_producer->event();
+	const Banks& daq  = raw->banks(RawBank::DAQ);
+	const Banks& odin = raw->banks(RawBank::ODIN);
+	char* space = (char*)e.data;
+	Banks daq_banks;
+	const OnlineRunInfo* oi = 0;
+	for(Banks::const_iterator j=daq.begin(); j != daq.end(); ++j)  {
+	  RawBank* b = *j;
+	  if( b->version() == DAQ_STATUS_BANK ) {
+	    oi = odin.empty() ? odin_info : odin[0]->begin<OnlineRunInfo>();
+	    if ( oi ) {
+	      MDFHeader::SubHeader sh = b->begin<MDFHeader>()->subHeader();
+	      sh.H1->setTriggerMask(trMask);
+	      sh.H1->setRunNumber(oi->Run);
+	      sh.H1->setOrbitNumber(oi->Orbit);
+	      sh.H1->setBunchID(oi->bunchID);
+	    }
+	    daq_banks.push_back(b);
+	    break;
+	  }
+	}
+	if ( 0 == oi ) {
+	  error("No ODIN bank found in event. Failed to encode event to ERROR stream");
+	}
+	else if ( daq_banks.empty() ) {
+	  error("No MDF Header bank found. Failed to encode event to ERROR stream");
+	}
+	else if( !encodeRawBanks(daq_banks,space,ev_len,false,&len).isSuccess() ) {
+	  error("Failed to encode event with Raw banks to ERROR stream");
+	}
+	else if ( !encodeRawBanks(raw,space+len,ev_len-len,true).isSuccess() ) {
+	  error("Failed to encode event with Raw banks to ERROR stream");
+	}
+	else {
+	  ::memcpy(e.mask,trMask,sizeof(e.mask));
+	  e.type = EVENT_TYPE_EVENT;
+	  e.len  = ev_len;
+	  ret = m_producer->sendEvent();
+	  if ( MBM_NORMAL != ret )   {
+	    error("Failed to declare event to ERROR stream");
+	  }
+	}
+	continue;
+      }
+      error("Failed to get space for ERROR stream");
+    }
+    error("Finished saving MEP events causing HLT errors.");
+  }
+  return StatusCode::SUCCESS;
+}
+
+/// Save MEP event data on error
+StatusCode MEPHolderSvc::saveMEP(void* data, size_t length) {
   if ( data || length ) {
     static const size_t BANK_LIMIT = 60*1024;
     info("Got request to save MEP with ERRORS.....");    
     const char* start = (const char*)data, *end = start+length;
-    size_t len = sizeof(MEPEVENT)+((length/BANK_LIMIT)+1)*sizeof(LHCb::RawBank);
+    size_t len = sizeof(MEPEVENT)+((length/BANK_LIMIT)+1)*sizeof(RawBank);
     int ret = m_producer->getSpace(len+length);
     if ( ret == MBM_NORMAL )    {
       size_t hdrSize = 0;
       EventDesc& e = m_producer->event();
       char* target = (char*)e.data;
-      unsigned int trMask[] = {~0x0,~0x0,~0x0,m_routingBits};
-      LHCb::MEPEvent* me = (LHCb::MEPEvent*)((MEPEVENT*)data)->data;
+      unsigned int trMask[] = {0x0,0x0,0x0,m_routingBits};
+      MEPEvent* me = (MEPEvent*)((MEPEVENT*)data)->data;
 
       // First create the MDF bank to ensure proper data handling
       RawBank* b = (RawBank*)target;
@@ -155,7 +247,7 @@ StatusCode LHCb::MEPHolderSvc::saveOnError(void* data, size_t length) {
 }
 
 // Incident handler implemenentation: Inform that a new incident has occured
-void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
+void MEPHolderSvc::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
     m_receiveEvts = false;
@@ -166,7 +258,7 @@ void LHCb::MEPHolderSvc::handle(const Incident& inc)    {
   }
 }
 
-StatusCode LHCb::MEPHolderSvc::initialize()  {
+StatusCode MEPHolderSvc::initialize()  {
   StatusCode sc = OnlineService::initialize();
   if ( sc.isSuccess() )  {
     declareInfo("MEPsIn",m_evtCount=0,"Number of events received from network");
@@ -174,7 +266,7 @@ StatusCode LHCb::MEPHolderSvc::initialize()  {
       incidentSvc()->addListener(this,"DAQ_CANCEL");
       try {
         int partID = m_mepMgr->partitionID();
-        const std::string& proc = m_mepMgr->processName();
+        const string& proc = m_mepMgr->processName();
         MEPID id = m_mepMgr->mepID();
         m_consumer = new Consumer(id->mepBuffer,proc,partID);
         for(Requirements::iterator i=m_req.begin(); i!=m_req.end(); ++i)  {
@@ -191,8 +283,8 @@ StatusCode LHCb::MEPHolderSvc::initialize()  {
 	}
         return StatusCode::SUCCESS;
       }
-      catch( std::exception& e)  {
-        return error("Failed setup MEP buffers:"+std::string(e.what()));
+      catch( exception& e)  {
+        return error("Failed setup MEP buffers:"+string(e.what()));
       }
     }
     return error("Failed to access MEP manager service.");
@@ -200,7 +292,7 @@ StatusCode LHCb::MEPHolderSvc::initialize()  {
   return error("Failed to initialize service base class.");
 }
 
-StatusCode LHCb::MEPHolderSvc::finalize()  {
+StatusCode MEPHolderSvc::finalize()  {
   undeclareInfo("MEPsIn");
   if ( m_mepMgr && m_handleErrs ) {
     MEPID id = m_mepMgr->mepID();
@@ -222,7 +314,7 @@ StatusCode LHCb::MEPHolderSvc::finalize()  {
 }
 
 // Process single event
-StatusCode LHCb::MEPHolderSvc::run()  {
+StatusCode MEPHolderSvc::run()  {
   m_receiveEvts = true;
   MEPID id = m_mepMgr->mepID();
   int m_procType = 1;
@@ -267,8 +359,8 @@ StatusCode LHCb::MEPHolderSvc::run()  {
     debug("Leaving event loop ....");
     return StatusCode::SUCCESS;
   }
-  catch(const std::exception& e)  {
-    return error("Exception during event processing:"+std::string(e.what()));
+  catch(const exception& e)  {
+    return error("Exception during event processing:"+string(e.what()));
     return StatusCode::FAILURE;
   }
   catch(...)  {

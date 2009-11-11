@@ -55,8 +55,8 @@ namespace LHCb  {
     std::string      m_mepMgrName;
     /// Property: 4rth. Word of trigger mask for sending ERROR MEPs. 
     int              m_routingBits;
-    /// Property: Flag to register callback for MEP error event handling
-    bool             m_handleErrs;
+    /// Property: Flag to register callback for MEP error event handling. 0=No handling, 1=save as MEP, 2=save as events
+    int              m_handleErrs;
     /// Flag indicating that MBM event retrieval is active
     bool             m_receiveEvts;
     /// Timeout before finally releasing MEP after MBM CANCEL
@@ -81,6 +81,10 @@ namespace LHCb  {
     virtual StatusCode run();
     /// Save event data on error
     StatusCode saveOnError(void* data, size_t length);
+    /// Save MEP event data on error
+    StatusCode saveMEP(void* data, size_t length);
+    /// Save event data on error as individual events
+    StatusCode saveEvents(void* data, size_t length);
   };
 }      // End namespace LHCb
 #endif //  GAUDIONLINE_MEPHOLDERSVC_H

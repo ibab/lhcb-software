@@ -274,7 +274,7 @@ def mbmInitApp(partID, partName, flags,partitionBuffers=False):
   return _application('NONE','NONE',extsvc=[Configs.MonitorSvc(),mepMgr],runable=onlineRunable(1))
 
 #------------------------------------------------------------------------------------------------
-def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=0x1000):
+def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=0x400):
   "MEP Holder application for usage of multi event packet buffers."
   runable              = Configs.LHCb__MEPHolderSvc('Runable')
   if errBuffer is None:
@@ -284,6 +284,7 @@ def mepHolderApp(partID, partName,errBuffer=None,partitionBuffers=False,routing=
     runable.HandleErrors = True
     runable.ErrorBuffer  = errBuffer
     runable.RoutingBits  = routing
+    runable.HandleErrors = 2
   extsvc               = [Configs.MonitorSvc(), mepMgr]
   runable.Requirements = [mbm_requirements['MEP']]
   evtloop              = Configs.LHCb__OnlineRunable('EmptyEventLoop')
