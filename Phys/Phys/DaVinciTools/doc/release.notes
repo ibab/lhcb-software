@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.482 2009-11-10 13:21:09 jpalac Exp $
+! $Id: release.notes,v 1.483 2009-11-11 09:10:33 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-11 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . temporarilly re-introduce imposeoutputLocation for nightlies compilation.
 
 ! 2009-11-10 - Juan Palacios
  - src/PhysDesktop.cpp
