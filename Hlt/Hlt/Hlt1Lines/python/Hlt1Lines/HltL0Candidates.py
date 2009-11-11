@@ -1,6 +1,6 @@
 #
 #==============================================================================
-# $Id: HltL0Candidates.py,v 1.4 2009-08-05 12:56:36 pkoppenb Exp $
+# $Id: HltL0Candidates.py,v 1.5 2009-11-11 22:17:23 graven Exp $
 #==============================================================================
 #
 # Module to define the conversion of L0 candidates across several HltLines
@@ -124,6 +124,7 @@ def L0Channels() :
 def convertL0Candidates(channel) :
     global _dict
     if not _dict : raise RunTimeError('HltL0Candidates not initialized -- no call to setupL0Channels...')
+    if channel not in _dict.keys() : raise KeyError('Unknown L0 candidates requested: %s -- check that this channel is included in requested L0 configuration...'%channel)
     return _dict[channel]
 
 def HltL0Candidates(channel) :
