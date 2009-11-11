@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.cpp,v 1.2 2009-07-10 15:53:40 panmanj Exp $
+// $Id: LumiIntegrateFSR.cpp,v 1.3 2009-11-11 13:29:44 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -40,6 +40,7 @@ LumiIntegrateFSR::LumiIntegrateFSR( const std::string& name,
   // expect the data to be written at LHCb::LumiFSRLocation::Default
   declareProperty( "FileRecordLocation" , m_FileRecordName  = "/FileRecords"  );
   declareProperty( "FSRName"            , m_FSRName        = "/LumiFSR"     );
+  declareProperty( "EventCountFSRName"            , m_EventCountFSRName        = "/EventCountFSR");
   declareProperty( "PrimaryBXType"      , m_PrimaryBXType  = "BeamCrossing" );
   declareProperty( "AddBXTypes"         , m_addBXTypes ) ;
   declareProperty( "SubtractBXTypes"    , m_subtractBXTypes ) ;
@@ -191,6 +192,14 @@ void LumiIntegrateFSR::add_file() {
       delete result;
     }
   }
+  
+  //touch all EventCountFSRs
+  std::vector< std::string > evAddresses = navigate(fileRecordRoot, m_EventCountFSRName);
+  for(std::vector< std::string >::iterator iAddr = evAddresses.begin() ; 
+  	  iAddr != evAddresses.end() ; ++iAddr ){
+  	if ( msgLevel(MSG::VERBOSE) ) verbose() << "address: " << (*iAddr) << endmsg;
+  }  
+  //in the future I'll need to calculate/check something here...
 }
 
 //=============================================================================

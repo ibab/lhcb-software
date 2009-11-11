@@ -1,4 +1,4 @@
-// $Id: LumiIntegrateFSR.h,v 1.1 2009-06-12 08:17:50 panmanj Exp $
+// $Id: LumiIntegrateFSR.h,v 1.2 2009-11-11 13:29:44 rlambert Exp $
 #ifndef LUMIINTEGRATEFSR_H 
 #define LUMIINTEGRATEFSR_H 1
 
@@ -11,6 +11,7 @@
 
 // event model
 #include "Event/LumiFSR.h"
+#include "Event/EventCountFSR.h"
 #include "Event/LumiIntegral.h"
 
 // local
@@ -47,6 +48,7 @@ protected:
   std::string m_rawEventLocation;               // Location where we get the RawEvent
   std::string m_FileRecordName;                  // location of FileRecords
   std::string m_FSRName;                        // specific tag of summary data in FSR
+  std::string m_EventCountFSRName;              // specific tag of event summary data in FSR
   std::string m_ToolName;                       // name of tool for normalization
   std::string m_PrimaryBXType;                  // BXType to normalize
   std::vector< std::string > m_BXTypes;         // list of bunch crossing types

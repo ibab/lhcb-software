@@ -8,6 +8,10 @@
  - Added EventAccounting, to fill the EventCountFSR
    There are no tests in this package, they REALLY should be added
    Documentation is also very lax :((
+ - Modified configurable, so that now it is actually doing what's required
+   i.e. adding LumiAccounting and EventAccounting to a sequence
+ - Added navigation of EventCountFSRs into the integrator
+   This ensures they are all touched on each file and will be copied
 
 
 ! 2009-11-06 - Jaap Panman
