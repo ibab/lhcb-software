@@ -1,5 +1,7 @@
 2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbUtils/Script.py: store the config has a data member of the Script class. Delay the 
+	setting of the parser defaults.
 	* python/LbUtils/Log.py: added the --log-level option. This will take "DEBUG", "INFO",
 	etc values.
 	* python/LbUtils/ConfigFile.py: fixed help in the option.
