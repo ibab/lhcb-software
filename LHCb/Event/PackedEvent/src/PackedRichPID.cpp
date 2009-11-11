@@ -1,4 +1,4 @@
-// $Id: PackedRichPID.cpp,v 1.5 2009-11-10 10:24:09 jonrob Exp $
+// $Id: PackedRichPID.cpp,v 1.6 2009-11-11 10:07:44 jonrob Exp $
 
 // local
 #include "Event/PackedRichPID.h"
@@ -66,7 +66,7 @@ void RichPIDPacker::unpack( const PackedDataVector & ppids,
       for ( std::vector<int>::const_iterator iLL = ppid.llValues.begin();
             iLL != ppid.llValues.end(); ++iLL )
       {
-        dlls.push_back( m_pack.deltaLL(*iLL) );
+        dlls.push_back( (float)m_pack.deltaLL(*iLL) );
       }
       pid->setParticleLLValues(dlls);
       if ( -1 != ppid.track )
