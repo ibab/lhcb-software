@@ -136,11 +136,12 @@ class LumiAlgsConf(LHCbConfigurableUser):
 
         #finally configure the sequence
         sequence.Members += EvMembers
-
+        
         #Touch all FSRs so they are always copied
-        if True or inputType != 'MDF':
+        if inputType != 'MDF':
             TouchMembers=self.touchFSR()
             sequence.Members += TouchMembers
+        
         sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False
