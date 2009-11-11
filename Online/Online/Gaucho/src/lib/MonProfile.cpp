@@ -250,8 +250,6 @@ void MonProfile::splitObject(){
   try {
      FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
   
-     int nbinsxOld = 0;
-     if (nbinsx != 0) nbinsxOld = nbinsx;
      nbinsx = m_profile->GetNbinsX();
      Xmin = m_profile->GetXaxis()->GetXmin();
      Xmax = m_profile->GetXaxis()->GetXmax();
@@ -264,12 +262,7 @@ void MonProfile::splitObject(){
      const char *cTitle  = m_profile->GetTitle();
      sTitle  = std::string(cTitle);
 
-     MsgStream msgStream = createMsgStream();
-//  if (binSum != 0) {
-//    delete []binSum;
-//  }
      if (binSum==0) binSum = new double[(nbinsx+2)];
-//  if (binEntries != 0) delete []binEntries;
      if (binEntries==0) binEntries = new double[(nbinsx+2)];
 
      for (int i = 0; i < (nbinsx+2) ; ++i){
@@ -306,7 +299,6 @@ void MonProfile::splitObject(){
      m_fTsumwy = fot->fTsumwy;
      m_fTsumwy2 = fot->fTsumwy2;
      m_fSumSize =  ((int)(fot->fSumw2.GetSize()));
-//  if (m_fSumw2 != 0) delete []m_fSumw2;
      if (m_fSumw2==0) m_fSumw2 = new double[m_fSumSize];
 
      for (int i=0;i<fot->fSumw2.GetSize();++i) {
