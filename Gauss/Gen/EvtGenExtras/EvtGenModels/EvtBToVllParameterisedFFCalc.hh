@@ -15,6 +15,11 @@ enum FFLABELS {V,A0,A1,A2,T1,T2,T3,XIL,XIT};
 
 class FFCalc{
 public:
+
+	FFCalc():
+		mB(constants::mB),mKstar(constants::mKstar){
+	}
+
 	// all the form factors to calculate
 	virtual double getV(const double q2) const;
 	virtual double getA0(const double q2) const;
@@ -27,15 +32,20 @@ public:
 	//uses eqn (3) of Beneke et al, Eur.Phys.J C41, 173-188 (2005)
 	virtual double getXiL(const double q2) const{
 		const double E = getE(q2);
-		return ((constants::mB + constants::mKstar)/(2*E))*getA1(q2) - 
-			((constants::mB - constants::mKstar)/constants::mB)*getA2(q2);
+		return ((mB + mKstar)/(2*E))*getA1(q2) -
+			((mB - mKstar)/mB)*getA2(q2);
 	}
 	virtual double getXiT(const double q2) const{
-		return (constants::mB/(constants::mB + constants::mKstar))*getV(q2);
+		return (mB/(mB + mKstar))*getV(q2);
 	}
 	
 	virtual std::string getName() const = 0;
 	
+	void setMasses(const double _mB, const double _mKstar){
+		mB = _mB;
+		mKstar = _mKstar;
+	}
+
 protected:	
 	virtual double calc(const double*, const double) const{
 		assert(false);
@@ -47,10 +57,13 @@ protected:
 	}
 	
 	double getE(const double q2) const{
-		return ((constants::mB*constants::mB) - q2)/(2*constants::mB);
+		return ((mB*mB) - q2)/(2*mB);
 	}
-		
 	
+	double mB;
+	double mKstar;
+
+
 };
 //get a form factor model to use
 std::auto_ptr<FFCalc> getFFModel(const PARAMETERIZATIONS model = BALL07PRIVATE);
@@ -180,11 +193,11 @@ public:
 	//the following are from BFS 05 eqn (5)
 	virtual double getXiL(const double q2) const{
 		const double E = getE(q2);
-		return isZero(q2) ? _xiL0 : ((constants::mB + constants::mKstar)/(2*E))*getA1(q2) - 
-		((constants::mB - constants::mKstar)/constants::mB)*getA2(q2);
+		return isZero(q2) ? _xiL0 : ((mB + mKstar)/(2*E))*getA1(q2) -
+		((mB - mKstar)/mB)*getA2(q2);
 	}
 	virtual double getXiT(const double q2) const{
-		return isZero(q2) ? _xiT0 : (constants::mB/(constants::mB + constants::mKstar))*getV(q2);
+		return isZero(q2) ? _xiT0 : (mB/(mB + mKstar))*getV(q2);
 	}
 	
 	virtual std::string getName() const{
@@ -204,7 +217,7 @@ private:
 	static const double _T3C[3];
 
 	double getF(const double q2, const double _C[3]) const{
-		const double mB2 = constants::mB*constants::mB;
+		const double mB2 = mB*mB;
 		return _C[0]/(1 - ((_C[1]*q2)/mB2) +
 				((_C[2]*q2*q2)/(mB2*mB2)));
 	}

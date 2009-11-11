@@ -188,11 +188,13 @@ void QCDFactorisation::trasformAntiB(EvtParticle* parent, std::vector<EvtComplex
 	}
 }
 
-void QCDFactorisation::getFormFactors(const double q2,
+void QCDFactorisation::getFormFactors(const double q2,const double mB, const double mKstar,
 			double* const A0, double* const A1, double* const A2, double* const V,
 			double* const T1, double* const T2, double* const T3,
 			double* const xi1, double* const xi2) const{
 	
+	ffModel->setMasses(mB,mKstar);
+
 	//calculate the form factors
 	*V  = ffModel->getV(q2);
 	*A0 = ffModel->getA0(q2);
@@ -211,8 +213,8 @@ void QCDFactorisation::getAmp(EvtParticle* parent, EvtAmp& amp) const{
 	
 	EvtVector4R q = parent->getDaug(1)->getP4() + parent->getDaug(2)->getP4();
 	const double q2 = (q.mass2());
-	const double MB = constants::mB;
-	const double mK = constants::mKstar;
+	const double MB = parent->getP4().mass();
+	const double mK = parent->getDaug(0)->getP4().mass();
 	//const double q2 = 1.0;
 	const double mKhat = mK/MB;
 
@@ -369,7 +371,7 @@ void QCDFactorisation::getTnAmplitudes(const double q2, const double MB, const d
 	double ffT1, ffT2, ffT3;
 	double xi1, xi2;
 	
-	getFormFactors(q2,
+	getFormFactors(q2,MB,mK,
 			&ffA0,&ffA1,&ffA2,&ffV,
 			&ffT1,&ffT2,&ffT3,
 			&xi1,&xi2);

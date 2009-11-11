@@ -445,7 +445,7 @@ void EvtBToVllConstraints::getSpinAmplitudes(const double q2, std::vector<EvtCom
 	double ffT1, ffT2, ffT3;
 	double xi1, xi2;
 	
-	fact.getFormFactors(q2,
+	fact.getFormFactors(q2,constants::mB,constants::mKstar,
 			&ffA0,&ffA1,&ffA2,&ffV,
 			&ffT1,&ffT2,&ffT3,
 			&xi1,&xi2);

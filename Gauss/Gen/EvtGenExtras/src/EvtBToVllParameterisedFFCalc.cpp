@@ -47,7 +47,7 @@ double bdkszmm::Ball07Private::calc(const double* coeffs, const double q2) const
 	const double c5 = coeffs[5];
 	const double c6 = coeffs[6];
 
-	const double shat = q2/(constants::mB*constants::mB);
+	const double shat = q2/(mB*mB);
 	
 	return F0*exp(c1*shat + c2*shat*shat + c3*shat*shat*shat + 
 			c4*shat*shat*shat*shat + c5*shat*shat*shat*shat*shat + 
@@ -84,7 +84,7 @@ double bdkszmm::Ball07Private::getXiL(const double q2) const{
 	return calc(getCoeffs(XIL),q2);
 }
 double bdkszmm::Ball07Private::getXiT(const double q2) const{
-	return (constants::mB/(constants::mB + constants::mKstar))*calc(getCoeffs(V),q2);
+	return (mB/(mB + mKstar))*calc(getCoeffs(V),q2);
 }
 
 
@@ -102,7 +102,7 @@ double bdkszmm::AliBall00::calc(const double* coeffs, const double q2) const{
 	const double c1 = coeffs[1];
 	const double c2 = coeffs[2];
 
-	const double shat = q2/(constants::mB*constants::mB);
+	const double shat = q2/(mB*mB);
 	//eqn 3.7
 	return F0*exp( c1*shat + c2*shat*shat );
 }

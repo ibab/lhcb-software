@@ -135,7 +135,7 @@ protected:
 	}
 	
 	//can update form factors by overriding this function
-	virtual void getFormFactors(const double q2,
+	virtual void getFormFactors(const double q2,const double mB, const double mKstar,
 			double* const A0, double* const A1, double* const A2, double* const V,
 			double* const T1, double* const T2, double* const T3,
 			double* const xiL, double* const xiT) const;
