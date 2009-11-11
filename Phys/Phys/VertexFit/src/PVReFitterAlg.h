@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.h,v 1.13 2009-09-01 06:20:09 jpalac Exp $
+// $Id: PVReFitterAlg.h,v 1.14 2009-11-11 16:56:18 jpalac Exp $
 #ifndef PVREFITTERALG_H 
 #define PVREFITTERALG_H 1
 
@@ -12,6 +12,7 @@
 class IPVReffitter;
 class IPVOfflineTool;
 class ILifetimeFitter;
+class IOnOffline;
 
 /** @class PVReFitterAlg PVReFitterAlg.h
  *  
@@ -33,14 +34,7 @@ class ILifetimeFitter;
  * <b>ParticleInputLocation</b>: TES location of the particles who's related primary vertices will be re-fitted. Default "".
  *
  * <b>PrimaryVertexInputLocation</b>: TES location of the LHCb::RecVertices to be
- * re-fitted. Default LHCb::RecVertexLocation::Primary.
- *
- * <b>P2VRelationsOutputLocation</b>: TES location of the relations table 
- * relating the particles in ParticleInputLocation to the re-fitted 
- * primary vertices. Default: "".
- *
- * <b>VertexOutputLocation</b>: TES location of the 
- * KeyedContainer<LHCb::RecVertex> containing the re-fitted vertices. Default "".
+ * re-fitted. Default "". By default, location is obtained from an IOnOffline tol.
  *
  * The algorithm iterates over the LHCb::Particles in ParticleInputLocation,
  * and the LHCb::RecVertices in PrimaryVertexLocation, re-fits clones of the
@@ -48,8 +42,10 @@ class ILifetimeFitter;
  * tracks that originate from the particle, and creates a relations table
  * connecting the particle to the re-fitted vertices. The re-fitted vertices 
  * are stored  in a KeyedContainer<LHCb::RecVertex>,
- * which is placed in VertexOutputLocation. The relations table is placed in 
- * P2VRelationsOutputLocation. The re-fitting itself is a sequence of
+ * which is placed in <instance name>/_ReFittedVertices. The relations table 
+ * is placed in <instance name>/Particle2VertexRelations.
+ *
+ * The re-fitting itself is a sequence of
  * IPVOfflineTool::reDoSinglePV (if UseIPVOfflineTool==true), 
  * and IPVReFitter::remove (if UseIPVReFitter == true).
  * <b>Beware</b>: If there is more than one candidate per event, there can be 
@@ -80,10 +76,13 @@ private:
   void getTracks(const LHCb::Particle* p,
                  LHCb::Track::ConstVector& tracks) const;
 
+
 private:
 
   IPVOfflineTool* m_pvOfflineTool;
   IPVReFitter* m_pvReFitter;
+
+  IOnOffline* m_onOfflineTool;
 
   std::string m_pvOfflinetoolType;
   std::string m_pvReFitterType;
@@ -93,8 +92,9 @@ private:
   std::string m_PVInputLocation;
   std::string m_particle2VertexRelationsOutputLocation;
   std::string m_vertexOutputLocation;
+  std::string m_outputLocation;
 
-  Particle2Vertex::WTable m_p2VtxTable;
+  Particle2Vertex::Table m_p2VtxTable;
   
 };
 #endif // PVREFITTERALG_H

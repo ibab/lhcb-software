@@ -1,4 +1,4 @@
-// $Id: PVReFitterAlg.cpp,v 1.14 2009-09-01 06:20:09 jpalac Exp $
+// $Id: PVReFitterAlg.cpp,v 1.15 2009-11-11 16:56:18 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -10,7 +10,10 @@
 #include <Event/Track.h>
 #include "Kernel/IPVReFitter.h"
 #include "Kernel/ILifetimeFitter.h"
+#include "Kernel/IOnOffline.h"
 #include "TrackInterfaces/IPVOfflineTool.h"
+//
+#include "Kernel/DaVinciStringUtils.h"
 // local
 #include "PVReFitterAlg.h"
 
@@ -34,14 +37,16 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   GaudiAlgorithm ( name , pSvcLocator ),
   m_pvOfflineTool(0),
   m_pvReFitter(0),
+  m_onOfflineTool(0),
   m_pvOfflinetoolType("PVOfflineTool"),
   m_pvReFitterType("AdaptivePVReFitter"),
   m_useIPVOfflineTool(false),
   m_useIPVReFitter(true),
   m_particleInputLocation(""),
-  m_PVInputLocation(LHCb::RecVertexLocation::Primary),
+  m_PVInputLocation(""),
   m_particle2VertexRelationsOutputLocation(""),
-  m_vertexOutputLocation("")
+  m_vertexOutputLocation(""),
+  m_outputLocation("")
 
 {
 
@@ -51,10 +56,8 @@ PVReFitterAlg::PVReFitterAlg( const std::string& name,
   declareProperty("UseIPVReFitter",    m_useIPVReFitter);
   declareProperty("ParticleInputLocation",  m_particleInputLocation);
   declareProperty("PrimaryVertexInputLocation",  m_PVInputLocation);
-  declareProperty("P2VRelationsOutputLocation",  
-                  m_particle2VertexRelationsOutputLocation);
-  declareProperty("VertexOutputLocation", m_vertexOutputLocation);
-
+  declareProperty("OutputLocation", m_outputLocation);
+  
 }
 //=============================================================================
 // Destructor
@@ -86,6 +89,24 @@ StatusCode PVReFitterAlg::initialize() {
     return Error("At least one of UseIPVOfflineTool and UseIPVReFitter must be true!", StatusCode::FAILURE);
   }
 
+  m_onOfflineTool = tool<IOnOffline>("OnOfflineTool", this);
+
+  if (0==m_onOfflineTool) {
+    return Error("Could not get OnOfflineTool");
+  }
+  
+  if (m_PVInputLocation=="") {
+    m_PVInputLocation=m_onOfflineTool->primaryVertexLocation();
+  }
+  
+
+  m_outputLocation = this->name();
+  DaVinci::StringUtils::expandLocation(m_outputLocation,
+                                       m_onOfflineTool->trunkOnTES());
+
+  m_vertexOutputLocation = m_outputLocation + "/_ReFittedPVs";
+  m_particle2VertexRelationsOutputLocation = m_outputLocation + "/Particle2VertexRelations";
+
   return sc;
   
 }
@@ -94,7 +115,7 @@ StatusCode PVReFitterAlg::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PVReFitterAlg::execute() {
-
+  
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
   if (!exist<LHCb::Particle::Container>(m_particleInputLocation)) {
@@ -134,7 +155,7 @@ StatusCode PVReFitterAlg::execute() {
 
   put(vertexContainer, m_vertexOutputLocation);  
 
-  Particle2Vertex::WTable* newTable = new Particle2Vertex::WTable();
+  Particle2Vertex::Table* newTable = new Particle2Vertex::Table();
 
   verbose() << "Storing Particle->Refitted Vtx relations table in "
             << m_particle2VertexRelationsOutputLocation << endmsg;
@@ -146,9 +167,6 @@ StatusCode PVReFitterAlg::execute() {
   for ( LHCb::Particle::Container::const_iterator itP = particles->begin();
         itP != particles->end(); 
         ++itP) {
-    // need to add an incremental weight to keep the ordering as
-    // in the standard PV TES
-    double weight(1.);
     
     for (LHCb::RecVertex::Container::const_iterator itPV = vertices->begin();
          itPV != vertices->end();
@@ -162,8 +180,7 @@ StatusCode PVReFitterAlg::execute() {
                   << " into container slot with key " << (*itPV)->key() 
                   << endmsg;
         vertexContainer->insert(refittedVertex);
-        newTable->relate(*itP, refittedVertex, weight);
-        weight += 0.1;
+        newTable->relate(*itP, refittedVertex);
         verbose() << "Re-fitted vertex " << *(*itPV) << "\n as\n"
                   << *refittedVertex << endmsg;
       }
@@ -187,7 +204,7 @@ StatusCode PVReFitterAlg::execute() {
   }
 
 
-  if (exist<Particle2Vertex::WTable>(m_particle2VertexRelationsOutputLocation) )
+  if (exist<Particle2Vertex::Table>(m_particle2VertexRelationsOutputLocation) )
   {  
     verbose() << "CHECK: table is at " 
               << m_particle2VertexRelationsOutputLocation << endmsg;
