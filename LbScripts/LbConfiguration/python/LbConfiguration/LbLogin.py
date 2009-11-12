@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.56 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.57 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -271,6 +271,7 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
 
     def setPath(self):
+        log = logging.getLogger()
         ev = self._env
         if sys.platform != "win32" :
             if ev.has_key("SAVEPATH") :
@@ -297,11 +298,13 @@ class LbLoginScript(Script):
             manl = []
             if ev.has_key("MANPATH") :
                 manl = ev["MANPATH"].split(os.pathsep)
+                log.debug("Initial MANPATH is %s" % ev["MANPATH"])
             for m in manp :
                 if m not in manl :
                     manl.append(m)
             if manl :
                 ev["MANPATH"] = os.pathsep.join(manl)
+                log.debug("Updated MANPATH to %s" % ev["MANPATH"])
                 
 
     def setCVSEnv(self):
@@ -422,6 +425,7 @@ class LbLoginScript(Script):
 # Core CMT business
 
     def getNativeBin(self):
+        log = logging.getLogger()
         if sys.platform != "win32" :
             ev = self._env
             if ev.has_key("UNAME") :
@@ -434,7 +438,8 @@ class LbLoginScript(Script):
             elif m1.startswith("CYGWIN") :
                 natbin = m1
         else : 
-            natbin = "VisualC"        
+            natbin = "VisualC"
+        log.debug("Native binary is %s" % natbin)        
         return natbin
 
     def setCMTBin(self):
@@ -452,6 +457,7 @@ class LbLoginScript(Script):
         return hascmd
 
     def setCMTSystem(self):
+        log = logging.getLogger()
         ev = self._env
         if sys.platform != "win32" :
             system = self.getNativeBin()
@@ -460,6 +466,7 @@ class LbLoginScript(Script):
                 system = ev["CMTCONFIG"]
             else :
                 system = ev["CMTBIN"]
+        log.debug("CMT system is set to %s" % system)
         return system
 
     def setCMTInternals(self):
@@ -589,14 +596,17 @@ class LbLoginScript(Script):
     def setHomeDir(self):
         ev = self._env
         opts = self.options
+        log = logging.getLogger()
         if sys.platform == "win32" and not ev.has_key("HOME") :
             ev["HOME"] = os.path.join(ev["HOMEDRIVE"], ev["HOMEPATH"])
+            log.debug("Setting HOME to %s" % ev["HOME"])
         homedir = ev["HOME"]
         rhostfile = os.path.join(homedir,".rhosts")
         if sys.platform != "win32" :
             username = ev["USER"]
         else :
             username = ev["USERNAME"]
+        log.debug("User name is %s" % username)
         if not os.path.exists(rhostfile) and sys.platform != "win32" :
             self._add_echo( "Creating a %s file to use CMT" % rhostfile ) 
             self._add_echo("Joel.Closier@cern.ch")
@@ -607,6 +617,7 @@ class LbLoginScript(Script):
         cmtrcfile = os.path.join(homedir, ".cmtrc")
         if os.path.exists(cmtrcfile) :
             os.remove(cmtrcfile)
+            log.debug("Removing %s" % cmtrcfile)
         # to work with rootd the .rootauthrc file is required
         rootrcfile = os.path.join(homedir, ".rootauthrc")
         if not os.path.exists(rootrcfile) and opts.cmtsite != "standalone" :
@@ -616,12 +627,15 @@ class LbLoginScript(Script):
                 srcrootrcfile = os.path.join(opts.mysiteroot.split(os.pathsep)[0], "lhcb", "scripts", ".rootauthrc")
             if os.path.exists(srcrootrcfile) :                
                 shutil.copy(srcrootrcfile, rootrcfile)
+                log.debug("Copying %s to %s" % (srcrootrcfile, rootrcfile) )
 
         if not ev.has_key("LD_LIBRARY_PATH") :
             ev["LD_LIBRARY_PATH"] = ""
+            log.debug("Setting a default LD_LIBRARY_PATH")
 
         if not ev.has_key("ROOTSYS") :
             ev["ROOTSYS"] = ""
+            log.debug("Setting a default ROOTSYS")
 
         self.setUserArea()  
 
@@ -668,18 +682,21 @@ class LbLoginScript(Script):
     def getLocalCompilers(self, platform, binary):
         compilers = []
         ev = self._env
+        log = logging.getLogger()
         if sys.platform != "win32" :
             if platform == "amd64" :
                 platform = "x86_64"
             if platform == "ia32" :
                 platform = "i686"
             if "gcc" in os.listdir(ev["LCG_external_area"]) :
+                log.debug("Getting gcc main location")
                 gccmainloc = os.path.join(ev["LCG_external_area"], "gcc")
                 for v in os.listdir(gccmainloc) :
                     gccversloc = os.path.join(gccmainloc, v)
                     for p in os.listdir(gccversloc) :
                         if p.find(os.sep+"%s-%s" % (binary, platform)+os.sep) != -1 :
                             compilers.append(os.path.join(gccversloc, p))
+                            log.debug("Found compiler: %s" % os.path.join(gccversloc, p))
         return compilers
 
     def selectCompiler(self, platform, binary):
@@ -694,7 +711,7 @@ class LbLoginScript(Script):
             selected_compilers.sort()
             selected_compilers.reverse()
         if selected_compilers and platform == "slc5" :
-            log.debug("Found gcc 4.3 @ %s" % selected_compilers[0])
+            log.debug("Selected gcc 4.3 @ %s" % selected_compilers[0])
         return selected_compilers
 
     def getNativePlatformComponents(self):

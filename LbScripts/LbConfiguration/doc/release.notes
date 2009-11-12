@@ -1,3 +1,7 @@
+2009-11-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: some more instrumentations with debug messages.
+
 2009-11-05  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: fixed the echo statement on windows.
