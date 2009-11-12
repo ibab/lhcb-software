@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.58 2009-11-09 18:25:06 marcocle Exp $"
+__version__ = "$Id: Configuration.py,v 1.59 2009-11-12 15:40:11 szumlat Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -27,31 +27,31 @@ class Boole(LHCbConfigurableUser):
                         "ProcessPhase/Filter" ]
     
     __slots__ = {
-        "EvtMax"          : -1
-       ,"SkipEvents"      : 0
-       ,"UseSpillover"    : False
-       ,"SpilloverPaths"  : []
-       ,"TAEPrev"         : 0
-       ,"TAENext"         : 0
-       ,"TAESubdets"      : [ "CALO", "MUON" ]
-       ,"Outputs"         : [ "DIGI" ]
-       ,"DigiType"        : "Default"
-       ,"Histograms"      : "Default"
-       ,"NoWarnings"      : False
-       ,"OutputLevel"     : INFO 
-       ,"DatasetName"     : "Boole"
-       ,"DataType"        : "2009"
-       ,"DDDBtag"         : ""
-       ,"CondDBtag"       : ""
-       ,"Tell1Processing" : False
-       ,"Monitors"        : []
-       ,"MainSequence"    : []
-       ,"InitSequence"    : []
-       ,"DigiSequence"    : []
-       ,"LinkSequence"    : []
-       ,"MoniSequence"    : []
-       ,"FilterSequence"  : []
-       ,"EnablePack"      : True
+        "EvtMax"              : -1
+       ,"SkipEvents"          : 0
+       ,"UseSpillover"        : False
+       ,"SpilloverPaths"      : []
+       ,"TAEPrev"             : 0
+       ,"TAENext"             : 0
+       ,"TAESubdets"          : [ "CALO", "MUON" ]
+       ,"Outputs"             : [ "DIGI" ]
+       ,"DigiType"            : "Default"
+       ,"Histograms"          : "Default"
+       ,"NoWarnings"          : False
+       ,"OutputLevel"         : INFO 
+       ,"DatasetName"         : "Boole"
+       ,"DataType"            : "2009"
+       ,"DDDBtag"             : ""
+       ,"CondDBtag"           : ""
+       ,"VeloTell1Processing" : False
+       ,"Monitors"            : []
+       ,"MainSequence"        : []
+       ,"InitSequence"        : []
+       ,"DigiSequence"        : []
+       ,"LinkSequence"        : []
+       ,"MoniSequence"        : []
+       ,"FilterSequence"      : []
+       ,"EnablePack"          : True
         }
 
     _propertyDocDct = { 
@@ -71,7 +71,7 @@ class Boole(LHCbConfigurableUser):
        ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
-       ,'Tell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated data (Default value is False) """
+       ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (Default value is False) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """
@@ -223,7 +223,7 @@ class Boole(LHCbConfigurableUser):
             importOptions("$VELOSIMULATIONROOT/options/VeloSim.opts")
             seq.Members += [ VeloSim("VeloSim") ]
             seq.Members += [ VeloSim("VeloPUSim") ]
-            if True != self.getProp("Tell1Processing"):
+            if True != self.getProp("VeloTell1Processing"):
                 from Configurables import (VeloDataProcessor, VeloClusterMaker,
                                            PrepareVeloRawBuffer)
                 importOptions("$VELOALGORITHMSROOT/options/VeloAlgorithms.opts")
@@ -626,7 +626,7 @@ class Boole(LHCbConfigurableUser):
             if self.getProp("DataType") == "Upgrade" :
                 from Configurables import VeloMonitorSpilloverSubtr
                 GaudiSequencer("MoniVELOSeq").Members += [ VeloMonitorSpilloverSubtr() ]
-            if True == self.getProp("Tell1Processing"):
+            if True == self.getProp("VeloTell1Processing"):
                 GaudiSequencer("MoniVELOSeq").Members.remove( VeloDigit2MCHitLinker() )
                 GaudiSequencer("MoniVELOSeq").Members.remove( VeloDigiMoni() )
 
