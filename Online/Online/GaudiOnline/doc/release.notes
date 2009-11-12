@@ -2,6 +2,17 @@ Package: GaudiOnline
 Author:  Markus Frank
 
 
+! 2009-11-12 Markus Frank
+ - Add timeout algorithm. This algorithm may be used to trigger processing timeouts.
+   In the event a timeout occurs, the event processing thread throws an out-of-context
+   C++ exception, which should stop the current algorithm to process events.
+ - Add mechanism to handle exceptions such as segment violations (SIGSEGV) in the 
+   MEP framework of the HLT. In case Moore has an access violation, the Moore task
+   flags the event as bad. The Holder service then scans the event descriptor(s)
+   and may save the events contained in this mulkti event structure. All events
+   in the MEP are saved, not only the event causing the problem.
+   Further investigations must then happen offline.
+
 ! 2009-03-11 Markus Frank
  - GaudiTask.cpp Reconnect to incident service in start() if disconnected during stop()
 

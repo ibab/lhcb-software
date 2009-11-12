@@ -1,0 +1,12 @@
+ApplicationMgr.AppName               = "";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+MessageSvc.OutputLevel               = 4;
+ExceptionSvc.Catch                   = "NONE";
+ChronoStatSvc.ChronoPrintOutTable    = false;
+CounterSvc.PrintStat                 = false;
+ApplicationMgr.TopAlg                = {"StoreExplorerAlg/Explorer", "LHCb::SignalAlg/SEGV" };
+Explorer.Load                        = 0;
+Explorer.PrintFreq                   = 1.0;
+SEGV.SignalNumber                    = 11;
+SEGV.Probability                     = 0.0001;
