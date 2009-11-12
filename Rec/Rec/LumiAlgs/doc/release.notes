@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-11-12 - Rob Lambert
+ - Fixed configurable to propagate OutputLevel
+
 
 ! 2009-11-12 - Jaap Panman
  - Added LumiIntegratorConf: does a lumi integral for analysis jobs 

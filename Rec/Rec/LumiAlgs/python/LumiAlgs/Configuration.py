@@ -51,6 +51,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
        ,"LumiSequencer" : "The sequencer to add the Lumi Accounting to - essential input"
        ,"BXTypes"       : "bunch crossing types [ 'NoBeam', 'BeamCrossing','Beam1','Beam2'] "
        ,"HistoProduce"  : "No idea, Jaap should say something here"
+       ,"OutputLevel"   : "What to print to screen, default only WARNING"
        }
     
     ## Helper functions
@@ -71,6 +72,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             seqMembers.append( decoder )
             accounting = LumiAccounting('LumiCount'+i,
                                         OutputDataContainer = "/FileRecords/LumiFSR"+i)
+            accounting.OutputLevel = self.getProp("OutputLevel")
             seqMembers.append( accounting )
             
             BXMembers.append( GaudiSequencer('Lumi'+i+'Seq', 
@@ -78,6 +80,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
                                              ModeOR = False,
                                              ShortCircuit = True,
                                              MeasureTime = True,
+                                             OutputLevel = self.getProp("OutputLevel")
                                              ))
             if self.getProp('InputType') == 'DST':
                     decoder.OutputContainerName='LumiSummaries'
@@ -89,6 +92,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         '''fill the EventAccounting'''
         from Configurables import (EventAccounting, GaudiSequencer)
         accounting = EventAccounting('EventAccount')
+        accounting.OutputLevel = self.getProp("OutputLevel")
         if status is not None and status != "":
             accounting.DefaultStatus=status
             accounting.OverrideStatus=True
@@ -100,6 +104,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
         #readingFSR=LumiFileReader("TouchLumiFSR")
         from Configurables import (LumiIntegrateFSR)
         readingFSR=LumiIntegrateFSR("TouchLumiFSR")
+        readingFSR.OutputLevel = self.getProp("OutputLevel")
         return [readingFSR]
     
     ## Apply the configuration to the given sequence
@@ -145,5 +150,6 @@ class LumiAlgsConf(LHCbConfigurableUser):
         sequence.MeasureTime = True
         sequence.ModeOR = True
         sequence.ShortCircuit = False
+        sequence.OutputLevel = self.getProp("OutputLevel")
         sequence.IgnoreFilterPassed = True
         

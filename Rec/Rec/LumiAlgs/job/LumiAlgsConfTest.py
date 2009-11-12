@@ -2,6 +2,7 @@
 #
 # Place holder for testing the FSR info from an MDF
 # At the moment I don't know quite what to write :S
+# Just tests the Configurable, that's all
 #
 import os
 from Gaudi.Configuration import *
@@ -14,9 +15,8 @@ from LumiAlgs.Configuration import *
 lSeq=GaudiSequencer("LumiSequence")
 
 LumiAlgsConf().LumiSequencer=lSeq
-
-lSeq.OutputLevel=2
+LumiAlgsConf().OutputLevel=1
 
 LHCbApp().EvtMax = 100
 
-ApplicationMgr().TopAlg+=lSeq
+ApplicationMgr().TopAlg+=[lSeq]
