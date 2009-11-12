@@ -88,15 +88,19 @@ private:
 
   enum stage { initial=          0,  // i.e. did not pass 'prescale
                prescaled =       1,  // i.e. did not pass 'seed'
-               hlt       =       2,  // i.e. did not pass 'filter'
-               filtered  =       3,  // i.e. did not pass 'postscale'
-               postscaled =      4,
+               odin      =       2,  // i.e. did not pass 'filter'
+               l0du      =       3,  // i.e. did not pass 'filter'
+               hlt       =       4,  // i.e. did not pass 'filter'
+               filtered  =       5,  // i.e. did not pass 'postscale'
+               postscaled =      6,
                nStages = postscaled };
 
   const std::string& transition( const stage &s) const {
         static std::vector<std::string> s_map;
         if (s_map.empty()) {
             s_map.push_back("Prescale");
+            s_map.push_back("ODIN");
+            s_map.push_back("L0DU");
             s_map.push_back("HLT");
             s_map.push_back("Filter");
             s_map.push_back("Postscale");
