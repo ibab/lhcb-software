@@ -1,4 +1,4 @@
-// $Id: Dstar2D0Pi.cpp,v 1.5 2009-08-20 13:31:46 ibelyaev Exp $
+// $Id: Dstar2D0Pi.cpp,v 1.6 2009-11-12 13:58:16 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -89,7 +89,7 @@ StatusCode Dstar2D0Pi::MakeDstar2D0Pi(const LHCb::Particle::ConstVector& daughte
 
   // Obtain Primary Vertices:
   //const LHCb::RecVertex::Container* vPrimaryVertices =
-  //  desktop()->primaryVertices();
+  //  this->primaryVertices();
   //const LHCb::Vertex::ConstVector& vSecondaryVertices =
   //  desktop()->secondaryVertices();
 

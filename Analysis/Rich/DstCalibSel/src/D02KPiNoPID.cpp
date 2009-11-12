@@ -1,4 +1,4 @@
-// $Id: D02KPiNoPID.cpp,v 1.4 2009-08-20 13:31:46 ibelyaev Exp $
+// $Id: D02KPiNoPID.cpp,v 1.5 2009-11-12 13:58:15 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -85,7 +85,7 @@ StatusCode D02KPiNoPID::MakeD02KPi(const LHCb::Particle::ConstVector& daughters 
 {
   // Obtain Primary Vertices:
   const LHCb::RecVertex::Container* vPrimaryVertices =
-    desktop()->primaryVertices();
+    this->primaryVertices();
 
   // Event Number Now Processing
   if ( msgLevel(MSG::DEBUG) )
