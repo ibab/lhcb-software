@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.27 2009-11-11 21:12:52 wouter Exp $
+// $Id: TrackMasterFitter.h,v 1.28 2009-11-12 16:42:31 kholubye Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -93,6 +93,7 @@ private:
   
 private:
 
+ 
   ITrackExtrapolator* m_extrapolator;     ///< extrapolator
   ITrackExtrapolator* m_veloExtrapolator; ///< extrapolator for Velo-only tracks
   ITrackKalmanFilter* m_trackNodeFitter;    ///< delegate to actual track fitter (which fits from nodes)

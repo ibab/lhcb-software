@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.77 2009-11-12 09:34:28 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.78 2009-11-12 16:42:31 kholubye Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -15,6 +15,7 @@
 #include "TrackInterfaces/ITrackKalmanFilter.h"
 #include "TrackInterfaces/IMeasurementProvider.h"
 #include "TrackInterfaces/ITrackProjector.h"
+
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -131,6 +132,8 @@ StatusCode TrackMasterFitter::initialize()
   sc = m_projectorSelector.retrieve() ;
   if ( sc.isFailure() ) return sc;
 
+  
+
   m_extrapolator      = tool<ITrackExtrapolator>( m_extrapolatorName, "Extrapolator",this );
   m_veloExtrapolator  = tool<ITrackExtrapolator>( m_veloExtrapolatorName, "VeloExtrapolator",this );
   m_trackNodeFitter   = tool<ITrackKalmanFilter>( "TrackKalmanFilter", "NodeFitter", this ) ;
@@ -168,6 +171,8 @@ StatusCode TrackMasterFitter::failure( const std::string& comment ) const
 //=========================================================================
 StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
 {
+ 
+
   // any track that doesnt make it to the end is failed
   track.setFitStatus( Track::FitFailed );
   

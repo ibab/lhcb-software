@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.20 2008-09-05 13:56:39 wouter Exp $
+// $Id: TrackEventFitter.cpp,v 1.21 2009-11-12 16:42:31 kholubye Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -52,7 +52,7 @@ StatusCode TrackEventFitter::initialize() {
   debug() << "==> Initialize" << endmsg;
 
   m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
-
+  
   if ( m_tracksOutContainer == "" ) {
     m_tracksOutContainer = m_tracksInContainer;
     m_makeNewContainer   = false;

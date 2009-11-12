@@ -153,12 +153,12 @@ def ConfiguredFitVeloTT( Name = "FitVeloTT",
     eventfitter.Fitter.MakeNodes = True
     return eventfitter
 
-def ConfiguredFitSeed( Name = "FitSeed",
-                       TracksInContainer = "Rec/Track/Seed" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    eventfitter.Fitter.StateAtBeamLine = False
-    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
-    return eventfitter
+#def ConfiguredFitSeed( Name = "FitSeed",
+#                       TracksInContainer = "Rec/Track/Seed" ):
+#    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+#    eventfitter.Fitter.StateAtBeamLine = False
+#    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
+#    return eventfitter
 
 def ConfiguredFitForward( Name = "FitForward",
                          TracksInContainer = "Rec/Track/Forward" ):
@@ -223,6 +223,34 @@ def ConfiguredStraightLineFitter( Name, TracksInContainer,
     eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 
+<<<<<<< ConfiguredFitters.py
+####################################################################
+## Configurations above for different track types are obsolete     #
+## starting from TrackFitter v2r38 (see TrackFitter release notes) #
+##                                                                 #
+## From now on we use a universal fitter for all track types,      #
+## and a specially configured fitter for TTracks                   #
+##                                                                 #
+## The ConfiguredFitters above are left for backward compatibility #
+####################################################################
+
+def ConfiguredFit( Name ,
+                   TracksInContainer ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+
+def ConfiguredFitSeed( Name = "FitSeedForMatch",
+                       TracksInContainer = "Rec/Track/Seed" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    ## Such a small error is needed for TrackMatching to work properly,
+    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
+    return eventfitter
+
+
+
+
+
+=======
 def ConfiguredStraightLineFit( Name, TracksInContainer,
                                NoDriftTimes =  TrackSys().noDrifttimes()  ):
     return ConfiguredStraightLineFitter(Name, TracksInContainer, NoDriftTimes)
@@ -242,3 +270,4 @@ def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
     eventfitter.Fitter.MaxNumberOutliers = MaxNumberOutliers
     eventfitter.Fitter.ErrorQoP = [ 25, 0 ]
     return eventfitter
+>>>>>>> 1.31
