@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-11-12 - Olivier Callot
+ - Fix CompareTrack to not report saturated q/p error for poorely measured tracks
+
 ! 2009-11-10 - Chris Jones
  - Add some debug to ProtoParticle packers and unpackers + remove need for 
    temporary packed object during packing

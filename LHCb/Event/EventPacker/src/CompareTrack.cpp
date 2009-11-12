@@ -1,4 +1,4 @@
-// $Id: CompareTrack.cpp,v 1.11 2009-11-10 21:28:25 ocallot Exp $
+// $Id: CompareTrack.cpp,v 1.12 2009-11-12 07:27:01 ocallot Exp $
 // Include files 
 
 // from Gaudi
@@ -157,8 +157,9 @@ void CompareTrack::compareStates ( const LHCb::State* oSta, const LHCb::State* t
     if ( 5.e-5  < fabs( oDiag[1] - tDiag[1] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[2] - tDiag[2] ) ) isOK = false;
     if ( 5.e-8  < fabs( oDiag[3] - tDiag[3] ) ) isOK = false;
+    //== Don't report problem if the term saturated: 2.e9 times energy scale 1.e-2
     if ( 5.     < fabs( oDiag[4]*oP*1.e5 - tDiag[4]*tP*1.e5 ) &&
-         fabs( tDiag[4]*tP*1.e5 ) < 199999000 ) isOK = false;
+         fabs( tDiag[4]*tP*1.e5 ) < 1.999e7 ) isOK = false;
 
     std::vector<double> oFrac;
     oFrac.push_back(  oSta->covariance()(1,0) / oDiag[1] / oDiag[0] );
