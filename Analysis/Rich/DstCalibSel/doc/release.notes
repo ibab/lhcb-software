@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.8 2009-10-01 15:19:40 jpalac Exp $
+!$Id: release.notes,v 1.9 2009-11-12 14:08:28 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/DstCalibSel
 ! Responsible : Andrew Powell
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
+
+! 2009-11-12 - Juan Palacios
+ - src/D02KPiNoPID.cpp
+   src/Dstar2D0Pi.cpp
+  . Get primary vertices from DVAlgorithm.
+ - cmt/requirements
+  . Increase to v1r2p1
 
 !========================== DstCalibSel v1r2 2009-10-01 ======================
 
