@@ -1,4 +1,4 @@
-// $Id: TrackEffChecker.cpp,v 1.19 2009-09-01 14:01:31 smenzeme Exp $
+// $Id: TrackEffChecker.cpp,v 1.20 2009-11-12 15:42:23 kholubye Exp $
 // Include files 
 #include "TrackEffChecker.h"
 
@@ -84,7 +84,7 @@ StatusCode TrackEffChecker::execute()
   }
   
   counter("nTrack") += counter("nTracksInThisEvent").flag();
-
+  
   // we want to count ghosts etc
   ghostInfo(tracks);
 
@@ -130,7 +130,7 @@ void TrackEffChecker::ghostInfo(const LHCb::Tracks* tracks) {
 
   // counter for ghost rate  
   counter("nGhost") += nGhost;
- 
+
   // plot the event ghost rate
   if (counter("nTracksInThisEvent").flag() != 0)
     plot(nGhost/double(counter("nTracksInThisEvent").flag()),"ghost rate", -0.01, 1.01, 51);
@@ -484,7 +484,7 @@ StatusCode TrackEffChecker::finalize(){
   const double tGhost = counter("nTrack").flag() == 0 ? 0.0 :
                         double(counter("nGhost").flag())
                         /double(counter("nTrack").flag());
-  
+    
   histName = "hitpurity";
   hist = histo1D(histName);
   double pur = 0;
