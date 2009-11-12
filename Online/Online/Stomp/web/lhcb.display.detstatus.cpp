@@ -130,7 +130,7 @@ var DetStatus = function(msg)   {
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));
-    c.style.width='150px';
+    c.style.width='120px';
     this.lastMagnetReading = StyledItem('lbWeb.LHCb.LastMagnetReading',null,null);
     tr.appendChild(this.lastMagnetReading);
     tr.appendChild(c=Cell('Polarity:',null,'MonitorDataHeader'));
@@ -142,7 +142,6 @@ var DetStatus = function(msg)   {
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Current:',null,'MonitorDataHeader'));
-    c.style.width='120px';
     this.magnetCurrent = StyledItem('lbWeb.LHCb.LbMagnet.Current',null,null);
     this.magnetCurrent.style.width='120px';
     tr.appendChild(this.magnetCurrent);

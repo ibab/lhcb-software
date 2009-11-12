@@ -28,6 +28,7 @@
 }
 
 .RunStatusLogger   {
+    color:            #000000;
     background-color: #EEEEEE;
     overflow-x:       scroll;
     overflow-y:       scroll;
@@ -79,6 +80,7 @@
 }
 
 .FSMStatusLogger   {
+    color:            #000000;
     background-color: #EEEEEE;
     overflow-x:       scroll;
     overflow-y:       scroll;

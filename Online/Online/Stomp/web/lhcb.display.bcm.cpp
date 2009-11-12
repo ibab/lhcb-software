@@ -101,7 +101,9 @@ if ( !lhcb.widgets ) {
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Relative and absolute sums of readings',8,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('Relative and absolute sums of '+
+			  'sensor readings in % to beam dump threshold',
+			  8,'MonitorDataHeader'));
     c.style.backgroundColor = '#FFAAAA';
     tb.appendChild(tr);
 
@@ -480,8 +482,12 @@ var bcm_body = function()  {
   selector.provider.topic = '/topic/status';
   selector.build();
   selector.provider.start();
-  //if ( !_isInternetExplorer() )  {
-    setTimeout(function(){document.getElementsByTagName('body')[0].onload1(); },2500);
-  //}
+  if ( _isInternetExplorer() )  {
+    body.onload = body.onload1;
+    body.onload1.client = selector;
+  }
+  else {
+    setTimeout(function(){document.getElementsByTagName('body')[0].onload1(); },4000);
+  }
 }
 if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

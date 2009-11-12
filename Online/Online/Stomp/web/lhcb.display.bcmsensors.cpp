@@ -16,6 +16,7 @@ var RamsesStatus = function(msg)   {
   table.add = function() {
     var tr = document.createElement('tr');
     var td = document.createElement('td');
+    td.setAttribute('colSpan',2);
     tr.appendChild(td);
     this.body.appendChild(tr);
     return td;
@@ -25,7 +26,6 @@ var RamsesStatus = function(msg)   {
   table.body.className = 'MonitorPage';
   table.body.cellpadding = 0;
   table.body.cellspacing = 0;
-  table.header = table.add();
   table.chart = table.add();
   table.display = table.add();
   table.logDisplay = table.add();
@@ -52,23 +52,15 @@ var RamsesStatus = function(msg)   {
   }
 
   table.build = function() {
-    var div, td, tr;
+    var div, hdr, td, tr;
     var tab = document.createElement('table');
     var tb = document.createElement('tbody');
 
     tab.width = tb.width = '100%';
-    tr = document.createElement('tr');
-    tr.appendChild(div=Cell(lhcb_online_picture(),null,null));
-    tr.appendChild(div=Cell('LHCb RAMSES Radiation Monitoring',null,'MonitorBigHeader'));
-    tr.appendChild(div=Cell('',1,'MonitorTinyHeader'));
-    div.id = 'time_stamp';
-    tb.appendChild(tr);
-    tab.appendChild(tb);
-    this.header.appendChild(tab);
+    hdr = document.createElement('H1');
+    hdr.innerHTML='LHCb RAMSES Radiation Monitoring';
+    table.chart.appendChild(hdr);
 
-    tab = document.createElement('table');
-    tb  = document.createElement('tbody');
-    tab.width = tb.width = '100%';
     div = document.createElement('div');
     div.id = 'Ramses';
     div.style.backgroundColor = '#FFFFFF';
@@ -76,7 +68,7 @@ var RamsesStatus = function(msg)   {
     div.style.borderStyle = 'solid';
     div.style.width = '950px';
     div.style.overflow = 'auto';
-    this.chart.appendChild(div);
+    table.chart.appendChild(div);
     div.innerHTML = '<IMG SRC="'+_fileBase+'/Images/LHCb/Ramses_LHCb_2.jpg" width="940"></IMG>';
     // Now draw the canvas with the measurement point on it....
     this.jg = new jsGraphics('Ramses');
@@ -100,16 +92,22 @@ var RamsesStatus = function(msg)   {
     this.bindSensor('PMIL8513');
     this.bindSensor('PMIL8531');
     // Add Legend
-    document.getElementById('Legend_curr').appendChild(Cell('Current Rate',null,'Dose'));
-    document.getElementById('Legend_avg').appendChild(Cell('Average Rate',null,'Average'));
+    td = document.createElement('td');
+    td.className = 'Dose';
+    td.innerHTML = 'Current Rate';
+    document.getElementById('Legend_curr').appendChild(td);
+    td = document.createElement('td');
+    td.className = 'Average';
+    td.innerHTML = 'Average Rate';
+    document.getElementById('Legend_avg').appendChild(td);
     // Finally add suggestions text
     tr = document.createElement('tr');
-    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',null,'MonitorTinyHeader'));
+    tr.appendChild(Cell('',null,null));
+    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
     tb.appendChild(tr);
 
     tab.appendChild(tb);
     this.display.appendChild(tab);
-    setInterval(function(){document.getElementById('time_stamp').innerHTML=(new Date()).toString();},2000);
     return this;
   }
 

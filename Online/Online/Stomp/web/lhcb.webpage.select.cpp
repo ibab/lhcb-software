@@ -1,4 +1,4 @@
-var _fileBase = 'http://frankm.web.cern.ch/frankm/test/Online/Stomp/web';
+var _fileBase = 'http://cern.ch/frankm/Online';
 var _debugLoading = false;
 
 var _loadScript = function(name) 

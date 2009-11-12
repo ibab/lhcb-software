@@ -5,7 +5,7 @@ function setupHTML_HEAD() {
   HTML_HEAD.head = document.getElementsByTagName("head")[0];
   HTML_HEAD.url_base = the_displayObject.url_base;
   HTML_HEAD.url_comet = 'http://lbcomet.cern.ch/static/RunStatus';
-  HTML_HEAD.img_base  = 'http://frankm.web.cern.ch/frankm/test/Online/Stomp/web';
+  HTML_HEAD.img_base  = 'http://cern.ch/frankm/Online';
 }
 
 function setupHTML_BASE(url) {
@@ -24,7 +24,7 @@ var NavigationBar = function() {
   table.body.className = 'NavigationBar';
   table.style.width = '100%';
   table.body.style.width = '100%';
- 
+  table.cellSpacing = 2;
   table.addButton = function(text,tooltip,style, action) {
     var tr = document.createElement('tr');
     var td = document.createElement('td');
@@ -76,7 +76,9 @@ var NavigationBar = function() {
     item.img          = document.createElement('img');
     item.img.border   = 1;
     item.img.alt      = tooltip;
-
+    //item.img.src      = item.large;
+    //item.img.height   = item.large_height;
+    //item.img.width    = item.large_width;
     this.items.push(item);
     return this;
   }
@@ -113,17 +115,19 @@ var NavigationBar = function() {
       item = this.items[i];
       tr = document.createElement('tr');
       td = document.createElement('td');
+      td.className = 'NavigationBar';
       td.style.verticalAlign = 'top';
       td.style.textAlign='center';
+      td.style.border = 'solid';
+      td.style.borderWidth = '1px';
+      td.style.borderColor = '#000000';
+      
       a = document.createElement('a');
       a.href = item.url;
       if ( item.style ) a.className = item.style;
       a.appendChild(item.img);
       a.appendChild(document.createElement('br'));
       a.appendChild(document.createTextNode(item.text));
-      //a.alt = item.img.alt;
-      //a.onMouseOut = function() { window.status=''; return true;}
-      //a.onMouseOver = function() { window.status=this.alt; return true;}
       td.appendChild(a);
       tr.appendChild(td);
       this.body.appendChild(tr);
@@ -219,8 +223,16 @@ var navbar_body = function()  {
 		  'LHC status around LHCb',
 		  'JavaScript:navBar.open_url("lhcb.display.htm?type=lhc")',
 		  'NavigationBar',
-		  '../Images/lhc-logo.gif',32,20,
-		  '../Images/lhc-logo.gif',64,48);
+  		  '../Images/Beams.jpg',16,16,
+  		  '../Images/Beams.jpg',32,32);
+  //		  '../Images/LHC3.jpg',24,16,
+  //		  '../Images/LHC3.jpg',48,32);
+  navBar.addSized('Elog',
+		  'LHCb electronic logbook',
+		  'JavaScript:navBar.open_abs_url("http://lblogbook.cern.ch/Shift/")',
+		  'NavigationBar',
+		  '../Images/logbook.png',16,16,
+		  '../Images/logbook.png',32,32);
   /*
   navBar.addSized('Ramses',
 		  'Radiation Monitoring in LHCb',
@@ -242,7 +254,12 @@ var navbar_body = function()  {
 		  'NavigationBar',
 		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',32,32,
 		  'http://lhc.web.cern.ch/lhc/images/LHC.gif',48,48);
-  
+  navBar.addSized('Operations',
+		  'CERN collider operations home page',
+		  'JavaScript:navBar.open_abs_url("http://op-webtools.web.cern.ch/op-webtools/vistar/vistars.php?usr=SPS1")',
+		  'NavigationBar',
+		  '../Images/BeamsDep.jpg',80,16,
+		  '../Images/BeamsDep.jpg',120,32);
   navBar.addSized('CERN',
 		  'CERN home page',
 		  'JavaScript:navBar.open_abs_url("http://cern.ch")',
