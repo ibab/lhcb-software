@@ -1,7 +1,21 @@
-! $Id: release.notes,v 1.30 2009-08-31 17:24:05 ggiacomo Exp $
+! $Id: release.notes,v 1.31 2009-11-12 17:41:28 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20091112 v2r10 
+- use conventions agreed with Clara for DIM message publishing:
+  * one service per analysis task called OMA/analysisTask/partition/MESSAGES
+  * message content is
+    LEVEL/ID/text
+    or
+    LEVEL/CLEAR/ID
+- allow multiple analysis tasks on the same job, setting 
+  AnalysisTask.StopAlgSequence = false  
+  for all algorithms in sequence but the last one
+
+! 20091106 v2r9
+- bug fix in OMAHMerge 
 
 ! 20090831 v2r8 
 - add possibility to send alarm messages to a ascii log file (in addition to MsgService output)

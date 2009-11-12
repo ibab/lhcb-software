@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.16 2009-08-26 16:14:22 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.17 2009-11-12 17:41:28 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -17,12 +17,13 @@
 #include <map>
 #include "OMAlib/OMAEnv.h"
 #include "OnlineHistDB/OMAMessage.h"
+#include <dim/dis.hxx>
 class MsgStream;
 class TH1;
 class OnlineHistDB;
 class DimService;
 
-class OMAMsgInterface : public OMAEnv 
+class OMAMsgInterface : public OMAEnv , public DimServer
 {
 public: 
   OMAMsgInterface(OnlineHistDB* HistDB = NULL, std::string Name=""); 
@@ -73,8 +74,7 @@ private:
   void unpublishMessage(OMAMessage* &msg);
   MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;
-  std::map<OMAMessage*, DimService*> m_dimMessages;
-  std::vector<std::string> m_msgLinks;
-  int m_iMsg;
+  DimService* m_dimSvc;
+  char m_lastMessage[OnlineHistDBEnv_constants::VSIZE_MESSAGE];
 };
 #endif // OMALIB_OMAMSGINTERFACE_H
