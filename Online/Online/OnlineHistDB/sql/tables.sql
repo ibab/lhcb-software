@@ -142,11 +142,11 @@ CREATE SEQUENCE FunCode_ID START WITH 1
 create table FITFUNCTION (
  NAME varchar2(15)  constraint FIT_PK primary key 
 	USING INDEX (create index FIT_PK_IX on FITFUNCTION(NAME) ), 
- CODE int NOT NULL,
+ CODE int constraint nnu_code NOT NULL,
  DOC varchar2(1000),
- NP smallint NOT NULL,
+ NP smallint constraint nnu_np  NOT NULL,
  VPARNAMES vparameters DEFAULT NULL,
- MUSTINIT number(1) DEFAULT 0 NOT NULL,
+ MUSTINIT number(1) DEFAULT 0 constraint  nnu_mustinit NOT NULL,
  NINPUT smallint DEFAULT 0,
  VFIPARDEFVAL vthresholds DEFAULT NULL
 );
@@ -173,12 +173,12 @@ CREATE SEQUENCE HistogramSet_ID START WITH 1
 create table HISTOGRAMSET (
  HSID integer  constraint HS_PK primary key 
 	USING INDEX (create index HS_PK_IX on HISTOGRAMSET(HSID) ),
- NHS number(6) DEFAULT 1 NOT NULL ,
- HSTASK varchar2(64)  NOT NULL CONSTRAINT HS_TK references TASK(TASKNAME),
- HSALGO varchar2(64) NOT NULL,
- HSTITLE varchar2(100) NOT NULL,
+ NHS number(6) DEFAULT 1 constraint  nnu_nhs NOT NULL ,
+ HSTASK varchar2(64)  constraint nnu_hstask NOT NULL CONSTRAINT HS_TK references TASK(TASKNAME),
+ HSALGO varchar2(64) constraint nnu_hsalgo NOT NULL,
+ HSTITLE varchar2(100) constraint nnu_hstitle NOT NULL,
  CONSTRAINT HS_UNQ UNIQUE (HSTASK,HSALGO,HSTITLE) USING INDEX ,
- HSTYPE varchar2(3) NOT NULL CONSTRAINT HS_TY_CK CHECK (HSTYPE IN ('H1D','H2D','P1D','P2D','CNT')),
+ HSTYPE varchar2(3) constraint  nnu_hstype NOT NULL CONSTRAINT HS_TY_CK CHECK (HSTYPE IN ('H1D','H2D','P1D','P2D','CNT')),
  NANALYSIS number(2) DEFAULT 0,
  DESCR varchar2(4000),
  DOC varchar2(200),
@@ -196,13 +196,13 @@ CREATE INDEX HS_DISP_IX on HISTOGRAMSET(HSDISPLAY) ;
 create table HISTOGRAM (
  HID varchar2(12)  constraint H_PK primary key 
 	USING INDEX (create index H_PK_IX ON HISTOGRAM(HID) ),
- NAME varchar2(130)  NOT NULL,
- HSET integer NOT NULL CONSTRAINT H_SET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
- IHS number(6) DEFAULT 1 NOT NULL ,
+ NAME varchar2(130)  constraint  nnu_name NOT NULL,
+ HSET integer constraint  nnu_hset NOT NULL CONSTRAINT H_SET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
+ IHS number(6) DEFAULT 1 constraint nnu_ihs NOT NULL ,
  SUBTITLE varchar2(50),
  CONSTRAINT H_UNQ UNIQUE (HSET,SUBTITLE) USING INDEX ,
  IsTest   number(1),
- IsAnalysisHist number(1) DEFAULT 0 NOT NULL,
+ IsAnalysisHist number(1) DEFAULT 0 constraint nnu_isanalysishist NOT NULL,
  CREATION TIMESTAMP,
  OBSOLETENESS TIMESTAMP,
  DISPLAY integer  CONSTRAINT H_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL,
@@ -228,7 +228,7 @@ CREATE INDEX DSN_PHIX on DIMSERVICENAME(PUBHISTO) ;
 create table ALGORITHM (
  ALGNAME varchar2(30) constraint AL_PK primary key 
 	USING INDEX (create index AL_PK_IX ON ALGORITHM(ALGNAME) ),
- ALGTYPE varchar2(8)  NOT NULL CONSTRAINT AL_TY_CK CHECK ( ALGTYPE IN ('HCREATOR','CHECK')),
+ ALGTYPE varchar2(8)  constraint  nnu_algtype NOT NULL CONSTRAINT AL_TY_CK CHECK ( ALGTYPE IN ('HCREATOR','CHECK')),
  NINPUT smallint DEFAULT 0,
  GETSET number(1) DEFAULT 0,
  NPARS smallint DEFAULT 0,
@@ -240,8 +240,8 @@ create table ALGORITHM (
 
 
 create table HCREATOR (
- HCID varchar2(12)  NOT NULL constraint HC_ID references HISTOGRAM(HID) ON DELETE CASCADE,
- ALGORITHM varchar2(30) NOT NULL references ALGORITHM(ALGNAME),
+ HCID varchar2(12)  constraint nnu_hcid NOT NULL constraint HC_ID references HISTOGRAM(HID) ON DELETE CASCADE,
+ ALGORITHM varchar2(30) constraint  nnu_algorithm NOT NULL references ALGORITHM(ALGNAME),
  SOURCEH1 varchar2(12) CONSTRAINT HC_SH1 references HISTOGRAM(HID) ON DELETE CASCADE,
  SOURCEH2 varchar2(12) CONSTRAINT HC_SH2 references HISTOGRAM(HID) ON DELETE CASCADE,
  SOURCEH3 varchar2(12) CONSTRAINT HC_SH3 references HISTOGRAM(HID) ON DELETE CASCADE,
@@ -273,8 +273,8 @@ CREATE SEQUENCE Analysis_ID START WITH 1
 create table ANALYSIS (
  AID integer  constraint A_PK primary key 
 	USING INDEX (create index A_PK_IX ON ANALYSIS(AID) ),
- HSET integer NOT NULL CONSTRAINT A_HSET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
- ALGORITHM varchar2(30) NOT NULL references ALGORITHM(ALGNAME),
+ HSET integer constraint nnu_anahset NOT NULL CONSTRAINT A_HSET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
+ ALGORITHM varchar2(30) constraint nnu_anaalgorithm NOT NULL references ALGORITHM(ALGNAME),
  ANADOC varchar2(2000),
  ANAMESSAGE varchar2(200),
  MINSTATS int
@@ -284,10 +284,10 @@ CREATE INDEX A_AL_IX on ANALYSIS(ALGORITHM) ;
 
 
 create table ANASETTINGS (
- ANA integer NOT NULL CONSTRAINT ASET_ANA references ANALYSIS(AID) ON DELETE CASCADE,
- HISTO  varchar2(12) NOT NULL CONSTRAINT ASET_HISTO references HISTOGRAM(HID) ON DELETE CASCADE,
+ ANA integer constraint nnu_ana NOT NULL CONSTRAINT ASET_ANA references ANALYSIS(AID) ON DELETE CASCADE,
+ HISTO  varchar2(12) constraint nnu_anahisto NOT NULL CONSTRAINT ASET_HISTO references HISTOGRAM(HID) ON DELETE CASCADE,
  CONSTRAINT ASET_UNQ UNIQUE (ANA,HISTO) USING INDEX ,
- MASK number(1) DEFAULT 0 NOT NULL ,
+ MASK number(1) DEFAULT 0 constraint  nnu_mask NOT NULL ,
  VWARNINGS vthresholds,
  VALARMS vthresholds,
  VINPUTPARS vthresholds
@@ -311,7 +311,7 @@ create table PAGEFOLDER (
 create table PAGE (
  PageName varchar2(350)  constraint PG_pk primary key
        USING INDEX (create index PG_pk_ix on PAGE(PageName) ),
- Folder varchar2(300) NOT NULL CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
+ Folder varchar2(300) constraint nnu_folder NOT NULL CONSTRAINT PG_FD references PAGEFOLDER(PageFolderName),
  NHisto integer,
  PageDoc  varchar2(2000),
  PAGEPATTERN varchar2(100)
@@ -324,15 +324,15 @@ CREATE SEQUENCE SHH_ID START WITH 1
 
 create table SHOWHISTO (
  SHID int constraint SHH_pk  primary key USING INDEX (create index SHH_pk_ix on SHOWHISTO(SHID)),
- PAGE varchar2(350) NOT NULL CONSTRAINT SHH_PAGE references PAGE(PageName) ON DELETE CASCADE,
- PAGEFOLDER varchar2(300) NOT NULL,
- HISTO  varchar2(12) NOT NULL CONSTRAINT SHH_HISTO references HISTOGRAM(HID),
- INSTANCE smallint DEFAULT 1 NOT NULL,
+ PAGE varchar2(350) constraint  nnu_page NOT NULL CONSTRAINT SHH_PAGE references PAGE(PageName) ON DELETE CASCADE,
+ PAGEFOLDER varchar2(300) constraint nnu_pagefolder NOT NULL,
+ HISTO  varchar2(12) constraint nnu_showhistohisto NOT NULL CONSTRAINT SHH_HISTO references HISTOGRAM(HID),
+ INSTANCE smallint DEFAULT 1 constraint nnu_instance NOT NULL,
  CONSTRAINT SHH_UNQ UNIQUE (PAGE,HISTO,INSTANCE) USING INDEX ,
- CENTER_X real NOT NULL,
- CENTER_Y real NOT NULL,
- SIZE_X real NOT NULL,
- SIZE_Y real NOT NULL,
+ CENTER_X real constraint  nnu_centerx NOT NULL,
+ CENTER_Y real constraint nnu_centery NOT NULL,
+ SIZE_X real constraint nnu_sizex NOT NULL,
+ SIZE_Y real constraint nnu_sizey NOT NULL,
  MOTHERH int CONSTRAINT SHH_MOTH references SHOWHISTO(SHID) ON DELETE SET NULL,
  IOVERLAP smallint,
  SDISPLAY integer  CONSTRAINT SH_DISP references DISPLAYOPTIONS(DOID) ON DELETE SET NULL
@@ -348,10 +348,10 @@ create table ANAMESSAGE (
  ID int constraint ALR_pk primary key
        USING INDEX (create index ALR_pk_ix on ANAMESSAGE(ID) ),
  HISTO varchar2(12) CONSTRAINT ALR_HISTO references HISTOGRAM(HID) ON DELETE CASCADE,
- SAVESET varchar2(500) NOT NULL,
+ SAVESET varchar2(500) constraint nnu_saveset NOT NULL,
  TASK varchar2(64) CONSTRAINT ALR_TASK references TASK(TASKNAME), 
  ANALYSISTASK varchar2(64),
- ALEVEL varchar2(7)  NOT NULL CONSTRAINT ALR_LE_CK CHECK (ALEVEL IN ('INFO','WARNING','ALARM')) ,
+ ALEVEL varchar2(7)  constraint nnu_alevel NOT NULL CONSTRAINT ALR_LE_CK CHECK (ALEVEL IN ('INFO','WARNING','ALARM')) ,
  MSGTEXT varchar2(4000),
  ANAID integer CONSTRAINT ALR_AID references ANALYSIS(AID) ON DELETE CASCADE,
  ANANAME varchar2(300),

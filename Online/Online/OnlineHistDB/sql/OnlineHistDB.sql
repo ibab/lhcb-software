@@ -380,6 +380,9 @@ procedure DeclareHistByServiceName(ServiceName IN varchar2) is
   mytype := REGEXP_SUBSTR(ServiceName,'^.{3}');
   if  (mytype = 'Mon') then -- support for MonObjects
    mytype := REGEXP_REPLACE(ServiceName,'^Mon([^/]*)/.+$','\1');
+   if (mytype = 'P1') then
+      mytype := 'P1D';
+   end if;
   end if;
   tk := REGEXP_REPLACE(ServiceName,'^[^/]*/[^/]*_([^/]+)_[^/]*/.+$','\1');
   if (tk = ServiceName) then -- try without farm node
