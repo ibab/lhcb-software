@@ -8,6 +8,19 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-12 - Juan Palacios
+ - TupleToolGeometry.cpp
+ - TupleToolGeometry.h
+ - TupleToolPrimaries.cpp
+ - TupleToolPrimaries.h
+ - TupleToolPropertime.cpp
+ - TupleToolPropertime.h
+ - TupleToolTagging.cpp
+ - TupleToolTagging.h
+ - TupleToolVtxIsoln.cpp
+ - TupleToolVtxIsoln.h
+  . Remove use of ContextTool and replace by use of parent DVAlgoritm.
+
 ! 2009-11-06 - Patrick Koppenburg
  - Moved implemetation of Hlt routing bits reading to HltInterfaces
 
