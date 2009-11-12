@@ -106,7 +106,7 @@ if (array_key_exists("Remove_DO",$_POST)) {
   echo "<input type='submit' name='Really_Remove_DO' value='Confirm Removal of Display Options'>\n";
  }
  else if (array_key_exists("Really_Remove_DO",$_POST)) {
-   if (remove_histo_display($doid)) 
+   if (remove_histo_display($_POST["doid"])) 
      echo "Histogram Display options  deleted successfully<br><br>\n";
    else
      echo "<font color=red> <B>Got errors from remove_histo_display() </B></font><br><br>\n";
