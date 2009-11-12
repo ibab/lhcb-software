@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2009-11-12 - Jaap Panman
+ - Added LumiIntegratorConf: does a lumi integral for analysis jobs 
+   (not yet using eventFSR)
+
 ! 2009-11-11 - Jaap Panman
  - Added protection in navigate method of LumiIntegrateFSR not to attempt 
    reading not-existing FSR tree, and prevent the configurable to attempt 
