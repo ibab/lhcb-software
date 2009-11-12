@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.12 2009-11-03 12:26:28 smenzeme Exp $"
+__version__ = "$Id: Configuration.py,v 1.13 2009-11-12 17:33:55 kholubye Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,7 +27,7 @@ class TrackSys(LHCbConfigurableUser):
         }
     
     ## Possible expert options
-    KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother"]
+    KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "fastSequence"]
     ## Default track pattern recognition algorithms to run
     DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run

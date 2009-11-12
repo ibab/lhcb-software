@@ -2,7 +2,7 @@ from Gaudi.Configuration import GaudiSequencer
 from TrackSys.Configuration import *
 from GaudiKernel.SystemOfUnits import mm
 
-from Configurables import ( TrackAssociator, TrackResChecker,
+from Configurables import ( TrackAssociator, TrackResChecker, TrackOccupChecker,
                             TrackEffChecker, TrackSelector, MCReconstructible,
                             MCParticleSelector, PrimaryVertexChecker, PatLHCbID2MCParticle)
                             
@@ -145,4 +145,6 @@ TrackEffChecker("Downstream").SelectionCriteria = "ChargedLong";
 TrackEffChecker("Downstream").HistoPrint = False;
 TrackEffChecker("Downstream").StatPrint = False;
 
+GaudiSequencer("CheckPatSeq").Members  += [TrackOccupChecker("OccupancyCheck")]
 GaudiSequencer("CheckPatSeq").Members  += [PrimaryVertexChecker("PVOfflineCheck")]
+
