@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.h,v 1.17 2009-06-11 09:42:52 cattanem Exp $
+// $Id: PatSeedingTool.h,v 1.18 2009-11-12 17:18:32 kholubye Exp $
 #ifndef PATSEEDINGTOOL_H
 #define PATSEEDINGTOOL_H 1
 
@@ -299,6 +299,10 @@ class PatSeedingTool : public GaudiTool,  virtual public IPatSeedingTool,
     double m_maxOTOccupancy;
     unsigned m_ITChannels;
     unsigned m_OTChannels;
+
+    // Re-using of hits on PatForward tracks
+    bool m_onlyGood;
+    double m_discardChi2;
 
     static const unsigned int m_nSta = Tf::RegionID::OTIndex::kNStations;
     static const unsigned int m_nLay = Tf::RegionID::OTIndex::kNLayers;

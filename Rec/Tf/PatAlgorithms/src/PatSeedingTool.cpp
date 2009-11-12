@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.30 2009-09-25 19:15:29 smenzeme Exp $
+// $Id: PatSeedingTool.cpp,v 1.31 2009-11-12 17:18:32 kholubye Exp $
 // Include files
 
 #include <cmath>
@@ -174,6 +174,10 @@ PatSeedingTool::PatSeedingTool(  const std::string& type,
   // maximal occupancy
   declareProperty( "MaxITOccupancy",		m_maxITOccupancy	= 0.2 );
   declareProperty( "MaxOTOccupancy",		m_maxOTOccupancy	= 0.2 );
+
+  declareProperty( "OnlyGood",          m_onlyGood              = false  );
+  declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      ); 
+
 }
 //=============================================================================
 // Destructor
@@ -297,6 +301,40 @@ unsigned PatSeedingTool::prepareHits()
     }
     hit->setIsUsed(false);
   }
+
+  // alternatively mark only those PatFwd hits
+  // which come from tracks with bad chi2>m_discardChi2
+  if (m_onlyGood) {
+    LHCb::Tracks* fwdTracks  = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+    BOOST_FOREACH( const LHCb::Track* tF, *fwdTracks) {
+      // check for good PatFwd tracks
+      // from PatForward fit
+      if (tF->fitStatus() == LHCb::Track::Fitted) {
+        // if fitted - used chi2pdf from fit
+        if (tF->chi2PerDoF() < m_discardChi2) continue;
+      }
+      //else {
+      // otherwise use PatQuality from patreco
+      //  if (tF->info(LHCb::Track::PatQuality, -1.) < m_discardPatQual) continue;
+      //}
+      debug() << "*** Found bad PatFwd track, re-marking hits unused. ";
+      const std::vector<LHCb::LHCbID>& ids = tF->lhcbIDs();
+      int nHits = 0;
+      BOOST_FOREACH(const LHCb::LHCbID id, ids) {
+        BOOST_FOREACH( PatFwdHit* hit, range ) {
+          if (id == hit->hit()->lhcbID()) {
+            nHits++;
+            // mark hit as unused and exit this loop
+            hit->setIsUsed(false);
+            break;
+          }
+        }
+      }
+      debug() << nHits << " hits marked." << endreq;
+    }
+  }
+
+
 
   // update region cache: we need some information not directly available
   // from the Tf::-framework
