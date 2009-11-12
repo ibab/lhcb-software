@@ -127,6 +127,9 @@ StatusCode TrackStateInitTool::createTStationStates( LHCb::Track& track ) const
 	LHCb::State newState = LHCb::State( statevec ) ;
 	newState.setLocation(LHCb::State::LocationUnknown);
 	track.addToStates( newState ) ;
+  // job is done, exit the loop
+  break;
+  
       }
     }
   }

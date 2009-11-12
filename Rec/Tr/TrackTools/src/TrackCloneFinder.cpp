@@ -1,4 +1,4 @@
-// $Id: TrackCloneFinder.cpp,v 1.15 2009-08-26 09:04:04 gkrocker Exp $
+// $Id: TrackCloneFinder.cpp,v 1.16 2009-11-12 16:25:33 kholubye Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -18,6 +18,8 @@
 // 2005-05-05 : Adrian Perieanu
 // Update
 // 2009-05-08: Georg Krocker
+// Update
+// 2009-09-10: Kostyantyn Holubyev
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( TrackCloneFinder );
@@ -92,8 +94,13 @@ bool TrackCloneFinder::flagClones( LHCb::Track& track1,
       chi1 < chi2 ? track2.setFlag( LHCb::Track::Clone, true ) :
 	track1.setFlag( LHCb::Track::Clone, true );
     } else {
-      if ( m_debugLevel) 
-	debug () << "At least one of your tracks is not fitted!" << endreq;
+        if ( m_debugLevel ) 
+            debug() << "At least one of the tracks is not fitted, selecting a clone randomly" << endreq; 
+        // for fast reco sequence the clone killer is run before the fit,
+        // so chi2 is not available. However, in most cases the decision is
+        // made using the number n of LHCb IDs, so for the rare case when n1==n2
+        // we simply select the track to mark as a clone randomly
+        track2.setFlag( LHCb::Track::Clone, true );
     }
   }
   return theyAreClones ;
