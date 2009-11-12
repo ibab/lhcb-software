@@ -3,6 +3,12 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Changes to tests
+   . readdstfsr.qmt tests the written fsr exists from brunel-fest09
+   . in the future this should be adapted for other tests
+   . the test currently says success although it fails ...
+
+
  - Changes to Configurable:
    . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
      sequencing of Calo truth associators when running Calo checkers.
