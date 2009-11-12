@@ -148,6 +148,10 @@ StatusCode MEPHolderSvc::saveEvents(void* data, size_t length) {
       }
       error("Failed to get space for ERROR stream");
     }
+    // Now all events are saved. We have to release the RawEvent structures now.
+    for(SubEvents::const_iterator m=events.begin(); m!=events.end(); ++m)
+      delete (*m).second;
+    events.clear();
     error("Finished saving MEP events causing HLT errors.");
   }
   return StatusCode::SUCCESS;
