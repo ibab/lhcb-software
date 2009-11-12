@@ -2,16 +2,18 @@
 #
 # Hlt2DisplVertices : a Line for displaced vertices hunting
 #
-# Maintainer : Neal Gauvin (Gueissaz)
+# Maintainer : Neal Gauvin 
 # Date       : 16 july 2009
+# Revised    : 12 November 2009
 #
 # 2 steps :
 #      - Reconstruction of all vertices with >= 5 tracks
 #        with PatPV3D, with optimized cuts for "smaller" vertices
 #        than PV's.
 #      - Hlt2DisplVertices loops on all reconstructed vertices.
-#        The one with lowest z is not considered
+#        The one with lowest z (upstream) is not considered
 #        Vertices with at least one backward track are not considered.
+#        Vertices close to the beam line removed.
 #        2 kinds of cuts are applied to the set of displaced vertices :
 #           >1 prey passing thighter cuts
 #               --> when hunting single long-lived particles
@@ -33,10 +35,12 @@ import GaudiKernel.SystemOfUnits as units
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  "MinNbTracks"   : 0
+                ,  "RCutMethod"    : "CorrFromUpstreamPV"
                 ,  "RMin"          : 0.3 * units.mm
-                ,  "MinMass1"      : 9*units.GeV
-                ,  "MinMass2"      : 4*units.GeV
-                ,  "MinSumpt"      : 10.*units.GeV
+                ,  "MinMass1"      : 8.2*units.GeV
+                ,  "MinMass2"      : 3*units.GeV
+                ,  "MinSumpt1"      : 8.*units.GeV
+                ,  "MinSumpt2"      : 0.*units.GeV
                 ,  "RemVtxFromDet" : 1*units.mm
                 }
     
@@ -45,7 +49,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         
         from HltLine.HltLine import Hlt2Line
         from Configurables import HltANNSvc
-        from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices
+        from Configurables import PatPV3D, PVOfflineTool, PVSeed3DTool, LSAdaptPV3DFitter, Hlt2DisplVertices, Hlt2DisplVerticesDEV
         from Hlt2SharedParticles.BasicParticles import NoCutsPions
         
         # Run PatPV3D
@@ -66,10 +70,12 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         Hlt2LineDisplVertices.InputLocations = [NoCutsPions.outputSelection()]
         Hlt2LineDisplVertices.InputDisplacedVertices = Hlt2PatPV3D.OutputVerticesName 
         Hlt2LineDisplVertices.MinNbTracks = self.getProp('MinNbTracks')
+        Hlt2LineDisplVertices.RCutMethod = self.getProp('RCutMethod')
         Hlt2LineDisplVertices.RMin = self.getProp('RMin')
         Hlt2LineDisplVertices.MinMass1 = self.getProp('MinMass1')
         Hlt2LineDisplVertices.MinMass2 = self.getProp('MinMass2')
-        Hlt2LineDisplVertices.MinSumpt = self.getProp('MinSumpt')
+        Hlt2LineDisplVertices.MinSumpt1 = self.getProp('MinSumpt1')
+        Hlt2LineDisplVertices.MinSumpt2 = self.getProp('MinSumpt2')
         Hlt2LineDisplVertices.RemVtxFromDet = self.getProp('RemVtxFromDet')
         
         # Define the Hlt2 Line
@@ -77,7 +83,7 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
                         , postscale = self.postscale
-                        , PV = False
+                        , PV = True
                         )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDecision" : 50280 } )

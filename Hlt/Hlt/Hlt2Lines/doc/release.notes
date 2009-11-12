@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.73 2009-11-05 10:11:42 conti Exp $
+$Id: release.notes,v 1.74 2009-11-12 14:32:52 ngueissa Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.73 2009-11-05 10:11:42 conti Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-12 Neal Gauvin
+- Change default settings in Hlt2DisplVertices
 
 ! 2009-11-05 Geraldine Conti
 - Fix a bug in Hlt2B2JpsiXLines.py file
