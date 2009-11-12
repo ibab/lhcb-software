@@ -122,9 +122,14 @@ int SendThread::processSends(void)
       bif = new BIF(m_sockFd, ptr, totalSize);
     }
 
+//    static unsigned int dbg_CountAgain =0; //XXX
+
     ret = bif->nbSend();
     if(ret == totalSize) {
       // *m_log << MSG::INFO << "send was successful" << endmsg;
+
+//      dbg_CountAgain=0;       
+
       delete bif;
       bif = NULL;
       if(iSleep.tv_nsec > 0) {
@@ -142,7 +147,7 @@ int SendThread::processSends(void)
         continue;
       }
     } else if(ret == BIF::AGAIN) {
-          // *m_log << MSG::INFO << "send returned AGAIN "  << endmsg;
+          //*m_log << MSG::INFO << "send returned EAGAIN: " << ++dbg_CountAgain  << endmsg;
           nanosleep(&iSleep, NULL);
           if(iSleep.tv_sec < 1) {
               if(iSleep.tv_nsec >= 900000000) { 

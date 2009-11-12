@@ -226,7 +226,7 @@ StatusCode MDFWriterNet::initialize(void)
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
       if(mq_send(m_mq, msg, msg_size, 0) < 0)  {
-          *m_log << MSG::ERROR
+          *m_log << MSG::WARNING
                 << "Error sending message to the queue"
                 << "deactivating message queue"
                 << endmsg;
@@ -293,7 +293,7 @@ StatusCode MDFWriterNet::finalize(void)
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "stop%c%i", DELIMITER,  getpid() );
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::ERROR
+          *m_log << MSG::WARNING
                  << "Could not send message"
                  << "closing queue"
                  << endmsg;
@@ -352,7 +352,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
     *m_log << MSG::ERROR
            << " Exception: "
            << e.what() << endmsg; 
-    *m_log << MSG::ERROR << " Could not get new file name! Check the RunDB XML_RPC server."
+    *m_log << MSG::ERROR << " Could not get new file name! Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log"
            <<  endmsg ;
     return currFile;       
   }
@@ -369,7 +369,7 @@ File* MDFWriterNet::createAndOpenFile(unsigned int runNumber)
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "openfile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::ERROR
+          *m_log << MSG::WARNING
                  << "Could not send message"
                  << "closing queue"
                  << endmsg;
@@ -430,7 +430,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, "events=", currFile->getEvents(), 
           DELIMITER, "lumiEvents=", currFile->getLumiEvents());
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::ERROR
+          *m_log << MSG::WARNING
                  << "Could not send message"
                  << "closing queue"
                  << endmsg;
@@ -563,7 +563,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, "lumiEvents=", m_currFile->getLumiEvents());
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
-          *m_log << MSG::ERROR
+          *m_log << MSG::WARNING
                  << "Could not send message"
                  << "closing queue"
                  << endmsg;
@@ -661,9 +661,11 @@ void MDFWriterNet::notifyOpen(struct cmd_header *cmd)
   try {
     m_rpcObj->createFile(cmd->file_name, cmd->run_no);
   } catch(std::exception& e) {
-    *m_log << MSG::ERROR << "Could not create Run Database Record ";
-    *m_log << "Cause: " << e.what() << endmsg;
-    *m_log << MSG::ERROR << "Record is: FileName=" << cmd->file_name;
+    *m_log << MSG::ERROR
+           << " Exception: "
+           << e.what() << endmsg;
+    *m_log << MSG::ERROR << " Could not create Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << " Record is: FileName=" << cmd->file_name;
     *m_log << " Run Number=" << cmd->run_no << endmsg;
   }
 }
@@ -690,13 +692,15 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 	        md5sum[8],md5sum[9],md5sum[10],md5sum[11],
 	        md5sum[12],md5sum[13],md5sum[14],md5sum[15]);
 
-    *m_log << MSG::ERROR << "Could not update Run Database Record ";
-    *m_log << "Cause: " << rte.what() << endmsg;
-    *m_log << MSG::ERROR << "Record is: FileName=" << cmd->file_name;
+    *m_log << MSG::ERROR
+           << " Exception: "
+           << rte.what() << endmsg;
+    *m_log << MSG::ERROR << " Could not update Run Database Record. Check the RunDB XML_RPC logfile /clusterlogs/services/xmlrpc.log";
+    *m_log << " Record is: FileName=" << cmd->file_name;
     *m_log << " Adler32 Sum=" << cmd->data.stop_data.adler32_sum;
     *m_log << " MD5 Sum=" << md5buf << endmsg;
   }
-    *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
+  *m_log << MSG::INFO << WHERE << " notifyClose end" << endmsg;
 }
 
 

@@ -249,6 +249,9 @@ void Connection::sendCommand(struct cmd_header *header)
  */
 void Connection::sendCommand(struct cmd_header *header, void *data)
 {
+  static int failureCnt=0;
+  
+
   struct cmd_header *newHeader;
   int totalSize = 0;
   switch(header->cmd) {
@@ -265,9 +268,11 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
   do {
       newHeader = m_mmObj.allocAndCopyCommand(header, data);  /* Will always succeed. */
       if(newHeader == NULL) {
-          *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
-                 << ". Queued commands=" << m_mmObj.getAllocCmdCount() 
-                 << endmsg;
+          if(failureCnt%60==0) {
+//              *m_log << MSG::FATAL << "Buffer is full!, allocated bytes=" <<m_mmObj.getAllocByteCount() << ", MaxQueueSizeBytes=" << m_maxQueueSize 
+              *m_log << MSG::WARNING << "Writing an event was delayed due to back pressure from the writerd. Performance drop -> /clusterlogs/services/writerd.log" << endmsg;
+          }
+          failureCnt ++;
           sleep(1);
       }
   } while(newHeader == NULL && m_stopRetrying == 0);
@@ -278,8 +283,12 @@ void Connection::sendCommand(struct cmd_header *header, void *data)
       *m_log << MSG::FATAL << m_mmObj.getAllocByteCount() << " Bytes are lost." << endmsg;
       return;
   }
-  if(newHeader != NULL) {
+  if(newHeader != NULL) { 
       m_mmObj.enqueueCommand(newHeader);
+      if(failureCnt !=0) {
+          *m_log << MSG::WARNING << "Event written after " << failureCnt << " second(s)." << endmsg;
+      } 
+      failureCnt=0;
   } else {
         // Should normally never happen
         *m_log << MSG::FATAL << "ERROR: Buffer is still full, giving up. Event is lost!" << endmsg;
