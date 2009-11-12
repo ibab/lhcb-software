@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.13 2009-05-06 09:14:03 jpalac Exp $
+!$Id: release.notes,v 1.14 2009-11-12 10:02:23 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltHidValley
 ! Responsible : Marcin Kucharczyk
 ! Purpose     : Holds algorithms for selections of Hidden Valley particles
 !-----------------------------------------------------------------------------
+
+! 2009-11-12 - Juan Palacios
+ - src/Hlt2HidValley.cpp
+  . Get primaryVertices directly from DVAlgorithm base class.
+ - cmt/requirements
+  . Increase version to v1r2p4
 
 !========================== HltHidValley v1r2p3 2009-05-09 ===================
 ! 2009-04-24 - Patrick Koppenburg
