@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.3 2008-10-28 11:00:47 jpalac Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -10,7 +10,8 @@
 #include "GaudiAlg/Tuple.h"
 #include "GaudiAlg/TupleObj.h"
 
-#include <Kernel/IContextTool.h>
+#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/DVAlgorithm.h>
 #include <Event/RecVertex.h>
 
 #include <functional>
@@ -72,7 +73,7 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_context(0)
+  , m_dva(0)
 {
   declareInterface<IEventTupleTool>(this);
 }
@@ -83,7 +84,9 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 StatusCode TupleToolPrimaries::initialize(){
   if( !GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  m_context = tool<IContextTool>( "ContextTool", this );
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);
 
   return StatusCode::SUCCESS;
 }
@@ -93,10 +96,10 @@ StatusCode TupleToolPrimaries::initialize(){
 
 StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
 
-  Assert( m_context, "The context is not set!" );
+  Assert( m_dva, "Parent DValgorithm not found!" );
 
   
-  const RecVertex::Container* PV = m_context->primaryVertices();
+  const RecVertex::Container* PV = m_dva->primaryVertices();
 //   //  std::vector<double> pvx,pvy,pvz,pvex,pvey,pvez;
   std::vector<flat> pvs;
   std::vector<const flat*> refPvs;

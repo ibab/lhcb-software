@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.h,v 1.7 2009-08-13 10:48:50 rlambert Exp $
+// $Id: TupleToolGeometry.h,v 1.8 2009-11-12 13:49:25 jpalac Exp $
 #ifndef JBOREL_TUPLETOOLGEOMETRY_H
 #define JBOREL_TUPLETOOLGEOMETRY_H 1
 
@@ -7,8 +7,9 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class IContextTool;
 class IDistanceCalculator;
+class DVAlgorithm;
+
 
 namespace LHCb {
   class Particle;
@@ -98,13 +99,13 @@ private:
   StatusCode fillFlight(const LHCb::VertexBase* oriVtx, const LHCb::Particle*, 
                         std::string, Tuples::Tuple&, std::string trail = "") const ;
 
-  IContextTool* m_context;
   const IDistanceCalculator* m_dist;
   
   int m_photonID; 
   int m_pi0ID;
   bool m_fillMother;
   
+  DVAlgorithm* m_dva;
 
 };
 #endif // JBOREL_TUPLETOOLGEOMETRY_H

@@ -1,4 +1,4 @@
-// $Id: TupleToolPropertime.h,v 1.1.1.1 2007-12-12 17:46:43 pkoppenb Exp $
+// $Id: TupleToolPropertime.h,v 1.2 2009-11-12 13:49:25 jpalac Exp $
 #ifndef JBOREL_TUPLETOOLPROPERTIME_H
 #define JBOREL_TUPLETOOLPROPERTIME_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class IContextTool;
+class DVAlgorithm;
 class ILifetimeFitter;
 
 namespace LHCb {
@@ -44,7 +44,7 @@ public:
 
 
 private:
-  IContextTool* m_context;
+  DVAlgorithm* m_dva;
   ILifetimeFitter* m_fit;
 
   const LHCb::Vertex* originVertex( const  LHCb::Particle*

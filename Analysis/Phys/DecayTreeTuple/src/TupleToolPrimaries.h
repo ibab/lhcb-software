@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.h,v 1.2 2008-03-17 08:59:06 sposs Exp $
+// $Id: TupleToolPrimaries.h,v 1.3 2009-11-12 13:49:25 jpalac Exp $
 #ifndef JBOREL_TUPLETOOLEVENTINFO_H
 #define JBOREL_TUPLETOOLEVENTINFO_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
 
-class IContextTool;
+class DVAlgorithm;
 
 /** @class TupleToolPrimaries TupleToolPrimaries.h jborel/TupleToolPrimaries.h
  *
@@ -37,6 +37,6 @@ public:
   virtual StatusCode fill( Tuples::Tuple& );
 
 private:
-  IContextTool* m_context;
+  DVAlgorithm* m_dva;
 };
 #endif // JBOREL_TUPLETOOLEVENTINFO_H

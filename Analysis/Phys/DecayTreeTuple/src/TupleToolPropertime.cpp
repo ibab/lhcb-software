@@ -1,11 +1,12 @@
-// $Id: TupleToolPropertime.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
+// $Id: TupleToolPropertime.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include <Kernel/IContextTool.h>
+#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/DVAlgorithm.h>
 #include <Kernel/IPhysDesktop.h>
 #include <Kernel/ILifetimeFitter.h>
 
@@ -36,7 +37,7 @@ TupleToolPropertime::TupleToolPropertime( const std::string& type,
 					  const std::string& name,
 					  const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_context(0)
+  , m_dva(0)
   , m_fit(0)
 {
   declareInterface<IParticleTupleTool>(this);
@@ -48,7 +49,10 @@ TupleToolPropertime::TupleToolPropertime( const std::string& type,
 StatusCode TupleToolPropertime::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   
-  m_context = tool<IContextTool>( "ContextTool", this );
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);
+
   m_fit = tool<ILifetimeFitter>( m_toolName, this );
   if( !m_fit ){
     Error("Unable to retrieve the ILifetimeFitter tool");
@@ -76,7 +80,7 @@ StatusCode TupleToolPropertime::fill( const Particle* mother
     originVtx = originVertex( mother, P ); // the origin vertex is 
                                            // somewhere in the decay
   } else { // the origin vertex is the primary.
-    originVtx = m_context->desktop()->relatedVertex ( mother );
+    originVtx = m_dva->bestPV( mother );
   }
 
   if( originVtx ){} // I'm happy

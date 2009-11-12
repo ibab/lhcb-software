@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.h,v 1.2 2008-01-07 17:25:25 pkoppenb Exp $
+// $Id: TupleToolTagging.h,v 1.3 2009-11-12 13:49:25 jpalac Exp $
 #ifndef JBOREL_TUPLETOOLTAGGING_H
 #define JBOREL_TUPLETOOLTAGGING_H 1
 
@@ -7,7 +7,7 @@
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IParticleTupleTool.h"            // Interface
 
-class IContextTool;
+class DVAlgorithm;
 class IBTaggingTool;
 
 /** @class TupleToolTagging TupleToolTagging.h jborel/TupleToolTagging.h
@@ -37,7 +37,7 @@ private:
   const DVAlgorithm* getParent() const;
 
   std::string m_inputLocation, m_toolName;
-  IContextTool* m_context;
+  DVAlgorithm* m_dva;
   IBTaggingTool* m_tagging;
   
   //  bool m_extendedTagging;

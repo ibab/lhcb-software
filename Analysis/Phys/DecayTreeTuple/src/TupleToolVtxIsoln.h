@@ -7,7 +7,7 @@
 #include "Kernel/IParticleTupleTool.h"            // Interface
 #include "Kernel/IVertexFit.h"
 #include "Kernel/IGeomDispCalculator.h"
-class IContextTool;
+class DVAlgorithm;
 class IDistanceCalculator;
 
 namespace LHCb {
@@ -54,7 +54,7 @@ private:
 				    , const LHCb::Particle* ) const;
   
 
-  IContextTool* m_context;
+  DVAlgorithm* m_dva;
   const IDistanceCalculator* m_dist;
   const IVertexFit* m_pVertexFit;
   //const IGeomDispCalculator* m_ipTool;

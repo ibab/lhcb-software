@@ -6,9 +6,9 @@
 // local
 #include "TupleToolVtxIsoln.h"
 
-
+#include <Kernel/GetDVAlgorithm.h>
+#include <Kernel/DVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
-#include <Kernel/IContextTool.h>
 #include <Kernel/IPhysDesktop.h>
 
 #include "GaudiAlg/Tuple.h"
@@ -34,7 +34,7 @@ TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
                                       const std::string& name,
                                       const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_context(0) 
+  , m_dva(0) 
   , m_dist(0)
   , m_pVertexFit(0)
 {
@@ -54,32 +54,22 @@ TupleToolVtxIsoln::TupleToolVtxIsoln( const std::string& type,
 StatusCode TupleToolVtxIsoln::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   
-  m_context = tool<IContextTool>( "ContextTool", this );
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);
 
-  m_dist = m_context->distanceTool ();
+  m_dist = m_dva->distanceCalculator ();
   if( !m_dist ){
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
   }
 
-  m_pVertexFit= m_context->vertexFitter();
+  m_pVertexFit= m_dva->vertexFitter();
   if( !m_pVertexFit ){
     Error("Unable to retrieve the IVertexFit tool");
     return StatusCode::FAILURE;
   }
 
-  //IContextTool* ioo = NULL;
-     //  if ( m_geomToolName == "Default" )
-    //{
-    //ioo = tool<IContextTool>("ContextTool",this);
-    //if (0!=ioo) m_ipTool = ioo->geomTool();
-    //  }// else m_ipTool = tool<IGeomDispCalculator>(m_geomToolName,this);
-
-    //m_inputParticles=std::vector<std::string> (2);
-    //m_inputParticles[0]="/Event/Phys/StdLooseKaons";
-    //m_inputParticles[1]="/Event/Phys/StdLoosePions";
-  //m_outputLevel = 1;
-  
   return StatusCode::SUCCESS;
 }
 

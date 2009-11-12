@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.10 2009-08-14 07:57:40 rlambert Exp $
+// $Id: TupleToolGeometry.cpp,v 1.11 2009-11-12 13:49:25 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -7,9 +7,9 @@
 // local
 #include "TupleToolGeometry.h"
 
-
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/IDistanceCalculator.h>
-#include <Kernel/IContextTool.h>
 #include <Kernel/IPhysDesktop.h>
 
 #include "GaudiAlg/Tuple.h"
@@ -33,16 +33,17 @@ using namespace LHCb;
 TupleToolGeometry::TupleToolGeometry( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
-  : GaudiTool ( type, name , parent )
-  , m_context(0)
+  : 
+  GaudiTool ( type, name , parent )
   , m_dist(0)
-  ,m_photonID(22)
-  ,m_pi0ID(111)
-  ,m_fillMother(true)
+  , m_photonID(22)
+  , m_pi0ID(111)
+  , m_fillMother(true)
+  , m_dva(0)
 {
   declareInterface<IParticleTupleTool>(this);
   declareProperty("FillMother",m_fillMother=true,
-		  "Turn false if the mother is expected to be NULL, will not fill mother PV info");
+                  "Turn false if the mother is expected to be NULL, will not fill mother PV info");
   
 }
 
@@ -50,15 +51,12 @@ TupleToolGeometry::TupleToolGeometry( const std::string& type,
 
 StatusCode TupleToolGeometry::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
-  
-  m_context = tool<IContextTool>( "ContextTool", this );
 
-  if( !m_context ){
-    Error("Unable to retrieve the IContext tool");
-    return StatusCode::FAILURE;
-  }
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);  
 
-  m_dist = m_context->distanceTool ();
+  m_dist = m_dva->distanceCalculator ();
   if( !m_dist ){
     Error("Unable to retrieve the IDistanceCalculator tool");
     return StatusCode::FAILURE;
@@ -71,7 +69,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
                                     , const Particle* P
                                     , const std::string& head
                                     , Tuples::Tuple& tuple ){
-  Assert( P && (mother || !m_fillMother) && m_dist && m_context
+  Assert( P && (mother || !m_fillMother) && m_dist && m_dva
           , "No mother or particle, or tools misconfigured. This should not happen, you are inside TupleToolGeometry.cpp :( Try setting FillMother=False. " );
   
   if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID  ){
@@ -89,7 +87,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   //=========================================================================
   if ( !m_fillMother || !mother || mother != P )
   {
-    aPV = m_context->desktop()->relatedVertex ( P );
+    aPV = m_dva->bestPV ( P );
     sc = fillVertexFull(aPV,P,head,"_OWNPV",tuple);
     if (!sc) return sc;
   }
@@ -98,7 +96,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
   //=========================================================================
   if ( mother && m_fillMother )
   {
-    aPV = m_context->desktop()->relatedVertex ( mother );
+    aPV = m_dva->bestPV ( mother );
     sc = fillVertexFull(aPV,P,head,"_PV",tuple);
     if (!sc) return sc;
   }
@@ -180,7 +178,7 @@ StatusCode TupleToolGeometry::fillMinIP( const Particle* P
   // minimum IP
   double ipmin = -1;
   double minchi2 = -1 ;
-  const RecVertex::Container* PV = m_context->primaryVertices();
+  const RecVertex::Container* PV = m_dva->primaryVertices();
   for ( RecVertex::Container::const_iterator pv = PV->begin() ; pv!=PV->end() ; ++pv){
     double ip, chi2;
     StatusCode test2 = m_dist->distance ( P, *pv, ip, chi2 );

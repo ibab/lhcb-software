@@ -1,11 +1,11 @@
-// $Id: TupleToolTagging.cpp,v 1.3 2008-07-11 09:21:04 pkoppenb Exp $
+// $Id: TupleToolTagging.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
 // Include files
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SmartIF.h"
 
-#include <Kernel/IContextTool.h>
+#include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/IPhysDesktop.h>
 #include <Kernel/IBTaggingTool.h>
 #include <Kernel/DVAlgorithm.h>
@@ -38,7 +38,7 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 				      const std::string& name,
 				      const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_context(0)
+  , m_dva(0)
   , m_tagging(0)
 {
   declareInterface<IParticleTupleTool>(this);
@@ -51,15 +51,12 @@ TupleToolTagging::TupleToolTagging( const std::string& type,
 StatusCode TupleToolTagging::initialize() {
   if( ! GaudiTool::initialize() ) return StatusCode::FAILURE;
   
-  m_context = tool<IContextTool>( "ContextTool", this );
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);
 
   const DVAlgorithm* dv = getParent();
-  if( !dv ){
-    Warning("Can't find the parent DVAlgorithm, will instantiate the default tagging.").ignore();
-    m_tagging = tool<IBTaggingTool>( m_toolName, this );
-  } else {
-    m_tagging = dv->flavourTagging();
-  }
+  m_tagging = m_dva->flavourTagging();
 
   if( !m_tagging ){
     Error("Unable to retrieve the IBTaggingTool tool");
@@ -76,7 +73,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 				   , const std::string& head
 				   , Tuples::Tuple& tuple ){
 
-  Assert( P && mother && m_context && m_tagging,
+  Assert( P && mother && m_dva && m_tagging,
 	  "Should not happen, you are inside TupleToolTagging.cpp" );
 
   // nothing to tag on something which is not a B
@@ -85,7 +82,7 @@ StatusCode TupleToolTagging::fill( const Particle* mother
   //  m_tagging = getParent()->flavourTagging();
 
 
-  const VertexBase* v = m_context->desktop()->relatedVertex ( mother );
+  const VertexBase* v = m_dva->bestPV ( mother );
   const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
   
   FlavourTag theTag;
