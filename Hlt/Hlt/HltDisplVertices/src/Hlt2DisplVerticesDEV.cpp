@@ -33,17 +33,10 @@ using namespace std;
 //-----------------------------------------------------------------------------
 // Implementation file for class : Hlt2DisplVerticesDEV
 //
-// 2009-july-1 : Neal Gauvin (Gueissaz)
+// 2009-july-1 : Neal Gauvin
 //-----------------------------------------------------------------------------
 
 DECLARE_ALGORITHM_FACTORY(Hlt2DisplVerticesDEV);
-
-//=============================================================================
-// Sort containers
-//=============================================================================
-bool Hlt2DisplVerticesDEV::sortPVz(const RecVertex* first, const RecVertex* second) {
-  return first->position().z() < second->position().z();
-}
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -53,16 +46,20 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   : DVAlgorithm(name,pSvcLocator)
     , m_nbevent(0)
     , m_nbpassed(0)
+    , m_piMass(139.57)
+    , m_pt(400.)
 {
-  declareProperty("SaveInTuple", m_Save = false );
+  declareProperty("SaveInTuple", m_Save = true );
   declareProperty("DefMom", m_DefMom = true );
+  declareProperty("RCutMethod", m_RCutMethod = "CorrFromUpstreamPV" );
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
                   "Rec/Vertices/Hlt2RV");
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
   declareProperty("RMin", m_RMin = 0.3 );
-  declareProperty("MinMass1", m_MinMass1 = 9*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 4*GeV );
-  declareProperty("MinSumpt", m_MinSumpt = 10.*GeV );
+  declareProperty("MinMass1", m_MinMass1 = 8.2*GeV );
+  declareProperty("MinMass2", m_MinMass2 = 3*GeV );
+  declareProperty("MinSumpt1", m_MinSumpt1 = 8*GeV );
+  declareProperty("MinSumpt2", m_MinSumpt2 = 0*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
 }
 
@@ -83,18 +80,33 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     debug() << "==> Initialize" << endmsg;
     debug() << "---------------- CUTS on RecVertex --------------"<< endmsg;
     debug() << "No backward tracks"<< endmsg;
-    debug() << "the RV with lowest z will be disguarded"<< endmsg;
+    debug() << "the upstream RV will be disguarded"<< endmsg;
     debug() << "Min number of tracks           "<< m_MinNbtrks << endmsg;
-    debug() << "Min radial displacement        "<< m_RMin <<" mm"<< endmsg;
+    debug() << "Min radial displacement        "<< m_RMin <<" mm";
+    if( m_RCutMethod == "LocalVeloFrame" )
+      debug() << ", computed with respect to (0,0,z) in the local Velo frame" 
+	      << endmsg; 
+    else if( m_RCutMethod == "FromUpstreamPV" ){
+      debug() << ", computed with respect to the upstream PV" << endmsg;
+    } else if( m_RCutMethod == "FromUpstreamPV3D" ){
+      debug() << ", computed with respect to the upstream PV from PatPV3D" 
+	      << endmsg;
+    } else if( m_RCutMethod == "CorrFromUpstreamPV" ){
+      debug() << ", computed with respect to the upstream PV"
+	      <<" Take the position of the associated 2D RV, if any."<< endmsg;
+    } else {
+      debug() << ", computed with respect to (0,0,z) in the global LHCb frame" 
+	      << endmsg;
+    }
     debug() << "For single prey hunting :"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass1/GeV 
 	    <<" GeV"<< endmsg;
-    debug() << "Min sum of all daughter tracks "<< m_MinSumpt 
+    debug() << "Min sum of all daughter tracks "<< m_MinSumpt1/GeV 
 	    <<" GeV"<< endmsg;
     debug() << "For double prey hunting :"<< endmsg;
     debug() << "Min reconstructed mass         "<< m_MinMass2/GeV 
 	    <<" GeV"<< endmsg;
-    debug() << "Min sum of all daughter tracks "<< m_MinMass2/GeV
+    debug() << "Min sum of all daughter tracks "<< m_MinSumpt2/GeV
 	    <<" GeV"<< endmsg;
     debug() << "------------------------------------"<< endmsg;
   }
@@ -110,6 +122,32 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
       m_transSvc = svc<ITransportSvc>( "TransportSvc", true  );
   }
 
+  //Sanity checks
+  if( m_MinMass2 > m_MinMass1 ){
+    warning()<<"MinMass2 set to a value smaller than MinMass1 : "	
+             << m_MinMass2 <<"<"<< m_MinMass1 
+             <<"This is non-sense !"<< endmsg;
+    return StatusCode::FAILURE;
+  }
+
+  //get the Velo geometry
+  if( m_RCutMethod == "LocalVeloFrame" ){
+    string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
+    const IDetectorElement* lefthalv = getDet<IDetectorElement>( velo+"Left" );
+    const IDetectorElement* righthalv = 
+      getDet<IDetectorElement>( velo + "Right" );
+    const IGeometryInfo* halfgeominfo = lefthalv->geometry();
+    //check that Velo is closed
+    Gaudi::XYZPoint localorigin(0,0,0);
+    Gaudi::XYZPoint leftcenter = lefthalv->geometry()->toGlobal(localorigin);
+    Gaudi::XYZPoint rightcenter = righthalv->geometry()->toGlobal(localorigin);
+    if( abs(leftcenter.x() - rightcenter.x())> 0.1 *Gaudi::Units::mm ) {
+      info() << "Velo not closed, work in global frame" << endmsg;
+     m_RCutMethod == "";
+    }
+    //matrix to transform to local velo frame
+    m_toVeloFrame = halfgeominfo->toLocalMatrix() ;
+  }
 
   return StatusCode::SUCCESS;
 };
@@ -132,22 +170,41 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
   m_map.clear(); //Re-initialize the map
 
-  //Retrieve the RecVertex
+  //Retrieve the 3D RecVertex
   RecVertices* RVs = get<RecVertices>(m_InputDisplVertices);
-  //sort them by ascending z position
-  sort( RVs->begin(), RVs->end(), sortPVz);
-  debug()<<"Retrived "<< RVs->size() 
-	 <<" displ vertices, the one with lowest z will be disguarded" 
-	 << endmsg;
+  if(msgLevel(MSG::DEBUG))
+    debug()<<"Retrieved "<< RVs->size() 
+	   <<" displ vertices, the one with lowest z will be disguarded" 
+	   << endmsg;
   plot( RVs->size(), "NbRV", 0, 6);
   if( RVs->empty() ) return desktop()->cloneTrees(Pions);
+  //sort them by ascending z position
+  sort( RVs->begin(), RVs->end(), SortPVz);
+
+  //Retrieve the 2D RecVertex
+  RecVertices* RV2Ds;
+  if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
+    if( !exist<RecVertices>("/Event/Hlt/Vertex/PV2D") ){ 
+      warning() << "Unable to find 2D RecVertices at"
+		<<" /Event/Hlt/Vertex/PV2D" << endreq;
+      return StatusCode::SUCCESS;
+    }
+    RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
+    int size = RV2Ds->size();
+    if(msgLevel(MSG::DEBUG))
+      debug()<<"Retrieved "<< size <<" displ vertices from PatPV2D" << endmsg;
+    plot( size, "NbRV2D", 0, 6);
+    if( RV2Ds->empty() ) return StatusCode::SUCCESS;
+    //sort them by ascending z position
+    sort( RV2Ds->begin(), RV2Ds->end(), SortPVz);
+  }
 
 
   //Some check up
   //PrintTracksType();
   //PrintParticle();
 
-  vector<double> Zs, Rs, sumPt, RPt, Ms; 
+  vector<double> Xs, Ys, Zs, sumPt, RPt, Ms; 
   vector<int> Nbtrks; 
   vector<int> InDets;
 
@@ -156,21 +213,56 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   int Sel2 = 0;//for double dv hunting
 
   //Let's loop on the RecVertex
-  RecVertices::const_iterator iRV = RVs->begin(); iRV++;
-  for(; RVs->end() != iRV; iRV++) {
-    const RecVertex* RV = *iRV;
- 
-    debug()<<"Rec Vertex position "<< RV->position() << endmsg;
+  RecVertices::const_iterator iRV = RVs->begin();
+  Gaudi::XYZPoint UpPV;
+  if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
+    UpPV = (*RV2Ds->begin())->position();
+    if(msgLevel(MSG::DEBUG))
+      debug() <<"Upstream 2D RV position "<< UpPV << endmsg;
+  } else {
+    UpPV = (*iRV)->position();
+  }
 
-    //Check if RV has backward tracks to avoid PVs
-    if( HasBackwardTracks(RV) ){ 
-      debug() <<"RV has a backward track, not considered !"<< endmsg;
+  iRV++; //Do not consider first one
+  for(; RVs->end() != iRV; ++iRV) {
+    const RecVertex* RV = *iRV;
+
+    if(msgLevel(MSG::DEBUG)) 
+      debug()<<"Rec Vertex position "<< RV->position() << endmsg;
+
+    if( m_RCutMethod == "FromUpstreamPV"  || m_RCutMethod=="CorrFromUpstreamPV"
+	&& RV->position().z() < UpPV.z() ){
+      if(msgLevel(MSG::DEBUG))
+	debug() <<"RV z position comes before the upstream 2D RV," 
+		<<" not considered !"<< endmsg;
       continue;
     }
 
+    //Check if RV has backward tracks to avoid PVs
+    if( HasBackwardTracks(RV) ){ 
+      if(msgLevel(MSG::DEBUG))
+	debug() <<"RV has a backward track, not considered !"<< endmsg;
+      continue;
+    }
+
+    Gaudi::XYZPoint Pos( RV->position() );
+    if( m_RCutMethod == "LocalVeloFrame" ){
+      Pos = m_toVeloFrame * Pos;
+    }
+    else if( m_RCutMethod == "CorrFromUpstreamPV" ){
+      Pos = GetCorrPosition( RV, RV2Ds );
+    }
+
+    double R;
+    if( m_RCutMethod == "FromUpstreamPV" || 
+	m_RCutMethod == "FromUpstreamPV3D" ||
+	m_RCutMethod == "CorrFromUpstreamPV3D" ){
+      R = (RV->position() - UpPV).rho();
+    } else {
+      R = Pos.rho();
+    }
 
 
-    double R = RV->position().rho();
     double sumpt, recpt, mass;
 
     //Retrieve Particles corresponding to vertices
@@ -183,14 +275,15 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
     //Properties of reconstructed vertices
     Ms.push_back( mass );
-    Zs.push_back( RV->position().z() );
-    Rs.push_back( R );
+    Zs.push_back( Pos.z() );
+    Ys.push_back( Pos.y() );
+    Xs.push_back( Pos.x() );
     sumPt.push_back( sumpt );
     Nbtrks.push_back( RV->tracks().size() );
     RPt.push_back( recpt );
 
-    debug()<<"RV mass "<< mass <<" R "<< R <<" rec pt "<< recpt 
-	   <<" sum pt "<< sumPt << endmsg;
+    debug()<<"RV mass "<< mass/1000. <<" GeV, R "<< R <<" mm, rec pt "<< recpt 
+	   <<" GeV, sum pt "<< sumPt <<" GeV"<< endmsg;
 
     //Remove if found to be in detector material
     bool InDet = false;
@@ -202,8 +295,8 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
 
     //Criterias
     if( !InDet && R >= m_RMin ){
-      if( Ms.back() >= m_MinMass1 && sumpt >= m_MinSumpt ) Sel1++;
-      if( Ms.back() >= m_MinMass2 && sumpt >= m_MinMass2 ) Sel2++;
+      if( Ms.back() >= m_MinMass1 && sumpt >= m_MinSumpt1 ) Sel1++;
+      if( Ms.back() >= m_MinMass2 && sumpt >= m_MinSumpt2 ) Sel2++;
     }
   }    
 
@@ -213,13 +306,16 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   if( m_Save ){
     const int maxSize = 25;
     Tuple tuple = nTuple("HltLine");
+    tuple->farray( "X", Xs.begin(), Xs.end(), "Nb", maxSize );
+    tuple->farray( "Y", Ys.begin(), Ys.end(), "Nb", maxSize );
     tuple->farray( "Z", Zs.begin(), Zs.end(), "Nb", maxSize );
-    tuple->farray( "R", Rs.begin(), Rs.end(), "Nb", maxSize );
     tuple->farray( "sumPt", sumPt.begin(), sumPt.end(), "Nb", maxSize );
     tuple->farray( "NbTrks", Nbtrks.begin(), Nbtrks.end(), "Nb", maxSize );
     tuple->farray( "RPt", RPt.begin(), RPt.end(), "Nb", maxSize );
     tuple->farray( "M", Ms.begin(), Ms.end(), "Nb", maxSize );
     tuple->farray( "InDet", InDets.begin(), InDets.end(), "Nb", maxSize );
+    tuple->column( "PVx", UpPV.x() );
+    tuple->column( "PVy", UpPV.y() );
     if( !fillHeader( tuple ) ) return desktop()->cloneTrees(Pions);
     tuple->write();
   }
@@ -243,7 +339,7 @@ StatusCode Hlt2DisplVerticesDEV::finalize() {
     if(m_nbevent == 0) m_nbevent++;
     double err = 10.*std::sqrt( static_cast<double>(m_nbpassed/m_nbevent) );
     debug() << "------------- Efficiency -----------"<< endmsg;
-    debug() << "| Accepted event         "<< 100.*m_nbpassed/m_nbevent 
+    debug() << "| Accepted event (%)     "<< 100.*m_nbpassed/m_nbevent 
 	    <<"+-" << err
 	    << " ( "<< m_nbpassed <<")" << endmsg;
     debug() << "| Total number of events " << m_nbevent << endmsg;
@@ -384,9 +480,79 @@ void Hlt2DisplVerticesDEV::Kinematics( Particle::ConstVector & Parts,
 
 }
 
+//============================================================================
+// If can find an associated 2D RV return the 2D RV  
+//============================================================================
+Gaudi::XYZPoint Hlt2DisplVerticesDEV::GetCorrPosition( const RecVertex* RV, 
+						       RecVertices* RV2Ds ){
+
+  /// sort the 2D with ascending dZ : begin with 2DRV closest in z.
+  SortPVdz.refz = RV->position().z();
+  sort( RV2Ds->begin(), RV2Ds->end(), SortPVdz);
+
+  //look if I can find an associated 2D RV to this one
+  int com = 0;
+
+  //Let's put in a vector all VeloR ancestors of our 3D RV
+  vector<const Track*> RVolds;
+  for( SmartRefVector<Track>::const_iterator it = RV->tracks().begin(); 
+       it != RV->tracks().end(); ++it ){
+    if( (*it)->ancestors().empty() ) continue;
+    SmartRefVector<Track>::const_iterator ioldtk=(*it)->ancestors().begin();
+    RVolds.push_back( ioldtk->target() );
+  }
+  vector<const Track*>::const_iterator tbeg = RVolds.begin();
+  vector<const Track*>::const_iterator tend = RVolds.end();
+  vector<const Track*>::const_iterator tRV;
+
+
+  //loop on 2D RVs
+  for( RecVertices::const_iterator iRV = RV2Ds->begin(); 
+       iRV != RV2Ds->end(); ++iRV ){
+    com = 0;
+
+    //Check that the 2DRV is not too far
+    //if( abs( RV->position().z() - (*iRV)->position().z() ) > 1. )
+    //return RV->position();
+
+    //loop on the 2D RV's tracks
+    for( SmartRefVector<Track>::const_iterator it = 
+	   (*iRV)->tracks().begin(); it != (*iRV)->tracks().end(); ++it ){
+
+      //Check if track is in the 3D RV
+      tRV = tbeg;
+      while( tRV != tend ){
+
+// 	std::cout<<"Checking key "<< (*tRV)->key() <<" "<< key <<" "
+// 		 << (*tRV)->slopes() <<" "<< it->target()->slopes() 
+// 		 << std::endl;
+
+	if( (*tRV) == it->target() ){
+	  ++com;
+	  break;
+	}
+	++tRV;
+      }
+      if( com > 3 ){
+	if(msgLevel(MSG::DEBUG)) 
+	  debug()<<"3D RV position "<< RV->position() 
+		 <<" has been associated with 2D RV position "
+		 << (*iRV)->position() << endmsg;
+	plot( RV->position().z() - (*iRV)->position().z(), "RVdZ3Dto2D_trig",
+	      -1.2, 1.2 );
+	plot( (RV->position() - (*iRV)->position()).rho(), "RVdR3Dto2D_trig",
+	      0, 2 );
+	plot( (*iRV)->position().rho(), "RVR2D", 0, 1. );
+	return (*iRV)->position();
+      }
+    }
+  }
+  
+  return RV->position();
+}
 
 //============================================================================
-//  Event and run number 
+// Event and run number 
 //============================================================================
 StatusCode Hlt2DisplVerticesDEV::fillHeader( Tuple & tuple ){
 
@@ -414,6 +580,10 @@ void Hlt2DisplVerticesDEV::PrintTracksType(){
     if ( trk->checkFlag( Track::Backward ) ) s = "True !";
     debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
 	   <<" type "<<trk->type()<<" Is backward ? "<< s <<endmsg;
+//     for( SmartRefVector<Track>::const_iterator j = trk->ancestors().begin();
+// 	 j != trk->ancestors().end(); ++j )
+//       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
+// 	     <<" type "<<(*j)->type() <<endmsg;
   }
   debug()<<"Printing Foward Track content, size "<< ForwardTrks->size() <<endmsg;
   for(Track::Container::const_iterator itr = ForwardTrks->begin(); 
@@ -423,6 +593,31 @@ void Hlt2DisplVerticesDEV::PrintTracksType(){
     if ( trk->checkFlag( Track::Backward ) ) s = "True !";
     debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
 	   <<" type "<<trk->type()<<" Is backward ? "<< s <<endmsg;
+//     for( SmartRefVector<Track>::const_iterator j = trk->ancestors().begin();
+// 	 j != trk->ancestors().end(); ++j )
+//       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
+// 	     <<" type "<<(*j)->type() <<endmsg;  
+}
+
+
+  //Check the tracks from a 2D vertex...
+  debug()<<"Check the tracks from a 2D vertex"<< endmsg;
+  RecVertices* RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
+  if( RV2Ds->empty() ) return;
+  RecVertices::const_iterator iRV = RV2Ds->begin();
+  for( SmartRefVector<Track>::const_iterator itr = (*iRV)->tracks().begin();
+       itr != (*iRV)->tracks().end(); ++itr ){
+    const Track* trk = *itr;
+    string s = "False !";
+    if ( trk->checkFlag( Track::Backward ) ) s = "True !";
+    debug()<<"Track key "<< trk->key()<<" slope "<< trk->slopes() 
+	   <<" type "<<trk->type()<<" Is backward ? "<< s 
+	   <<" Looking for ancestors :" <<endmsg;
+//     for( SmartRefVector<Track>::const_iterator j = trk->ancestors().begin();
+// 	 j != trk->ancestors().end(); ++j )
+//       debug()<<"Anc. Track key "<< (*j)->key()<<" slope "<< (*j)->slopes() 
+// 	     <<" type "<<(*j)->type() <<endmsg;
+
   }
 }
 void Hlt2DisplVerticesDEV::PrintParticle(){

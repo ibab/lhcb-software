@@ -3,6 +3,14 @@
 ! Responsible : Neal Gauvin (Gueissaz)
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
+
+! 2009-Nov-12 - Neal Gauvin
+- change default settigns
+
+! 2009-Nov-9 - Neal Gauvin
+- add RCutMethod method, see Hlt2DisplVertices.h 
+  I propose to update the version to v2r0
+
 !========================== HltDisplVertices v1r1p1 2009-10-17 =================
 ! 2009-10-17 - Gerhard Raven
  - add .cvsignore in cmt directory

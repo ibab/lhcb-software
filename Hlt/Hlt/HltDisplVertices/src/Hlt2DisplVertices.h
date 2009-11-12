@@ -16,10 +16,8 @@
 
 /** @class Hlt2DisplVertices Hlt2DisplVertices.h
  *
- *
- *  @author Neal Gauvin (Gueissaz)
+ *  @author Neal Gauvin 
  *  @date   2009-july-16
- *  @version v1r0
  */
 
 class Hlt2DisplVertices : public DVAlgorithm {
@@ -48,19 +46,49 @@ private:
   bool RemVtxFromDet( const LHCb::RecVertex* );
   /// Creates a pions with 400 MeV pt from track slopes.
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
-  /// Sort all RecVertex with increasing z position
-  static bool sortPVz(const LHCb::RecVertex*, const LHCb::RecVertex* );
+  Gaudi::XYZPoint GetCorrPosition( const LHCb::RecVertex*, 
+                                   LHCb::RecVertices * );
 
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
 
+  ///To sort PVs by closest one to a z reference point in z position.
+  struct sortPVdz {
+    double refz; 
+    bool operator() ( const LHCb::RecVertex* first, 
+		      const LHCb::RecVertex* second ) { 
+
+      return std::abs( first->position().z() - refz ) < 
+	std::abs( second->position().z() - refz );
+    }
+  } SortPVdz;
+  ///To sort PVs with ascending z position 
+  struct sortPVz {
+    bool operator() ( const LHCb::RecVertex* first, 
+		      const LHCb::RecVertex* second ) { 
+      return first->position().z() < second->position().z();
+    }
+  } SortPVz;
+
+
   //Job options
   std::string m_InputDisplVertices;
   int m_MinNbtrks;     ///< Min number of daughters tracks in a RecVertex
+  /*****************************************************************
+   * the type of R cut to be applied 
+   * ""                   : cut with respect to (0,0,z)
+   * "LocalVeloFrame"     : cut with respect to (0,0,z) in the local Velo frame
+   * "FromUpstreamPV"     : cut with respect to the upstream PV (PatPV2D)
+   * "FromUpstreamPV3D"   : cut with respect to the upstream PV 3D 
+   * "CorrFromUpstreamPV" : cut with respect to the upstream PV 2D. 
+   *                        Take the position of the associated 2D RV, if any.
+   ******************************************************************/
+  std::string m_RCutMethod; 
   double m_RMin;          ///< Min radial displacement 
   double m_MinMass1;       ///< Min reconstructed mass
   double m_MinMass2;       ///< Min reconstructed mass
-  double m_MinSumpt;      ///< Min sum of all daughters track
+  double m_MinSumpt1;      ///< Min sum of all daughters track
+  double m_MinSumpt2;      ///< Min sum of all daughters track
   /*****************************************************************
    * Remove vtx reco in detector material
   * if = 0  : disabled
@@ -71,6 +99,8 @@ private:
   double m_RemVtxFromDet ;
 
   GaudiUtils::VectorMap<int, const LHCb::Particle *> m_map;
+
+  Gaudi::Transform3D m_toVeloFrame; ///< to transform to local velo frame
 
   double m_piMass;  ///< the pion mass
   double m_pt;      ///< default pt for default pions
