@@ -3,7 +3,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.108 2009-11-11 21:21:22 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.109 2009-11-12 19:51:07 rlambert Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -46,7 +46,7 @@ class Brunel(LHCbConfigurableUser):
        ,"DigiType"        : "Default"
        ,"OutputType"      : "DST"
        ,"PackType"        : "TES"
-       ,"WriteFSR"        : True
+       ,"WriteFSR"        : True 
        ,"Histograms"      : "Default"
        ,"OutputLevel"     : INFO 
        ,"NoWarnings"      : False 
@@ -140,8 +140,10 @@ class Brunel(LHCbConfigurableUser):
 
 
         # Flag to handle or not LumiEvents
-        handleLumi = inputType in ["MDF","ETC"] and not withMC
-
+        #handleLumi = inputType in ["MDF","ETC"] and not withMC
+        #don't do it for ETC, lumi has no meaning on an ETC, as we can't say you processed everything
+        handleLumi = inputType in ["MDF"] and not withMC
+        
         self.configureSequences( withMC, handleLumi )
 
         self.configureInit( inputType )
@@ -213,15 +215,17 @@ class Brunel(LHCbConfigurableUser):
         brunelSeq.Members += [ "ProcessPhase/Init" ]
         physicsSeq = GaudiSequencer( "PhysicsSeq" )
 
+        #treatment of the FSR
+        lumiSeq = GaudiSequencer("LumiSeq")
+        if self.getProp("WriteFSR") and self.getProp("InputType") in ['MDF','DST']:
+            self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
+            lumiCounters = GaudiSequencer("LumiCounters")
+            lumiSeq.Members += [ lumiCounters ]
+            LumiAlgsConf().LumiSequencer = lumiCounters
+                                                                            
+        
         # Treatment of luminosity events
         if handleLumi:
-            lumiSeq = GaudiSequencer("LumiSeq")
-            # Count the events for the FSR
-            if self.getProp("WriteFSR"):
-                self.setOtherProps(LumiAlgsConf(),["Context","DataType","InputType"])
-                lumiCounters = GaudiSequencer("LumiCounters")
-                lumiSeq.Members += [ lumiCounters ]
-                LumiAlgsConf().LumiSequencer = lumiCounters
             # Filter out Lumi only triggers from further processing, but still write to output
             from Configurables import HltRoutingBitsFilter
             physFilter = HltRoutingBitsFilter( "PhysFilter", RequireMask = [ 0x0, 0x4, 0x0 ] )

@@ -17,6 +17,8 @@ Purpose: LHCb reconstruction program
      input containers are missing (in particular for Lumi event case)
    . New option "ProductionMode", special settings for running in production,
      replaces "NoWarnings" option (kept for backward compatibility)
+   . Adapt luminosity configuration to run on raw files only. 
+     Luminosity tracking has no meaning on an ETC.
 
  - Changes to options 
    . Modify Brunel-Cosmics.py to follow changes in TrackSys v4r27
