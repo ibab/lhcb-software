@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.17 2009-01-19 11:24:39 dhcroft Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.18 2009-11-12 18:14:59 szumlat Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -206,7 +206,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
       case VeloDAQ::v3:
         VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount,errorMsg);
         if ( !errorMsg.empty() ) {
-          error() << errorMsg << endmsg;
+          //error() << errorMsg << endmsg;
+          StatusCode cluStat=Warning(errorMsg, StatusCode::SUCCESS);
+          cluStat.ignore();
         }
         break;
       default: // bank version is not supported

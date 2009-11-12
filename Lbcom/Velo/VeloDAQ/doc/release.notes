@@ -3,6 +3,12 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-11-12 - Tomasz Szumlak
+ - change the type of message that is issued after duplicate cluster has
+   been found - this is a know problem with Velo Tell1 firmware, from now
+   on when this kind of situation is encountered a Warning message will
+   be printed out  
+
 ! 2009-11-02 - Serena Oggero
  - bug fix in DecodePileUpData (switched to unsigned int)
 
