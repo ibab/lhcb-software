@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.h,v 1.17 2009-11-12 17:41:28 ggiacomo Exp $
+// $Id: OMAMsgInterface.h,v 1.18 2009-11-12 17:56:02 ggiacomo Exp $
 #ifndef OMALIB_OMAMSGINTERFACE_H 
 #define OMALIB_OMAMSGINTERFACE_H 1
 
@@ -72,6 +72,7 @@ private:
   bool lowerAlarm(OMAMessage& message);
   void publishMessage(OMAMessage* &msg);
   void unpublishMessage(OMAMessage* &msg);
+  void updateDIMservice(std::string svcString);
   MsgStream* m_outs;
   std::vector<OMAMessage*> m_MessageStore;
   DimService* m_dimSvc;

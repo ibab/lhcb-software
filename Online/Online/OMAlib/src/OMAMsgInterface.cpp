@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.24 2009-11-12 17:31:32 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.25 2009-11-12 17:56:02 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -257,12 +257,7 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
       svcContent << " on histogram " << msg->hIdentifier().data();
     svcContent << ":\n";
     svcContent << msg->msgtext();
-    std::string svcString = svcContent.str();
-    if (svcString.size() > OnlineHistDBEnv_constants::VSIZE_MESSAGE-1) {
-      svcString.resize(OnlineHistDBEnv_constants::VSIZE_MESSAGE-1);
-    }
-    strcpy ( m_lastMessage, svcString.c_str());
-    m_dimSvc->updateService( m_lastMessage );
+    updateDIMservice(svcContent.str());
   }
 }
 
@@ -270,6 +265,14 @@ void OMAMsgInterface::unpublishMessage(OMAMessage* &msg) {
   if (m_doPublish) {
     std::stringstream svcContent;
     svcContent << msg->levelString() <<  "/CLEAR/" << msg->id();
-    m_dimSvc->updateService( const_cast<char*>(svcContent.str().c_str()) );
+    updateDIMservice(svcContent.str());
   }
+}
+
+void OMAMsgInterface::updateDIMservice(std::string svcString) {
+  if (svcString.size() > OnlineHistDBEnv_constants::VSIZE_MESSAGE-1) {
+    svcString.resize(OnlineHistDBEnv_constants::VSIZE_MESSAGE-1);
+  }
+  strcpy ( m_lastMessage, svcString.c_str());
+  m_dimSvc->updateService( m_lastMessage );
 }
