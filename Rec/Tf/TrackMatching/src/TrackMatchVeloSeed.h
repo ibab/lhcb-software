@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.h,v 1.3 2008-10-23 12:27:12 wouter Exp $
+// $Id: TrackMatchVeloSeed.h,v 1.4 2009-11-12 17:22:15 kholubye Exp $
 #ifndef TRACKMATCHVELOSEED_H 
 #define TRACKMATCHVELOSEED_H 1
 
@@ -157,6 +157,10 @@ private:
   bool m_omitSeedFitOutliers; /// Omit outliers of SeedFit when creating new track
 
   bool m_writeNNVariables; /*switch on or off NN var. writing*/
+
+  bool m_discardUsedVelo;
+  double m_discardChi2;
+
 };
 
 inline bool TrackMatchVeloSeed::usedT(const LHCb::Track* aTrack) const{

@@ -1,4 +1,4 @@
-// $Id: TrackMatchVeloSeed.cpp,v 1.14 2009-10-09 07:37:55 wouter Exp $
+// $Id: TrackMatchVeloSeed.cpp,v 1.15 2009-11-12 17:22:15 kholubye Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -94,6 +94,10 @@ TrackMatchVeloSeed::TrackMatchVeloSeed( const std::string& name,
   declareProperty("OmitSeedFitOutliers", m_omitSeedFitOutliers = false) ;
   /*switch on or off NN var. writing*/
   declareProperty( "writeNNVariables", m_writeNNVariables = true);
+
+  declareProperty( "DiscardUsedVelo"      , m_discardUsedVelo    = false      );
+  declareProperty( "DiscardChi2"         , m_discardChi2    = 1.5      );
+
 }
 //=============================================================================
 // Destructor
@@ -496,9 +500,43 @@ double TrackMatchVeloSeed::determineZ( const Track* track )
 
 void TrackMatchVeloSeed::createVeloCandidates(LHCb::Tracks* tracks, VeloCandidates& candidates) {
 
-  for (Tracks::iterator iterTrack = tracks->begin(); iterTrack != tracks->end(); ++iterTrack){
+  LHCb::Tracks* fwdTracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
 
+  for (Tracks::iterator iterTrack = tracks->begin(); iterTrack != tracks->end(); ++iterTrack) {
+    
     Track* aTrack = *iterTrack;
+    
+    // Check on Velo tracks used in PatForward tracks
+    bool veloUsed = false;
+    if (m_discardUsedVelo) {
+      for ( LHCb::Tracks::const_iterator itTF = fwdTracks->begin();
+            fwdTracks->end() != itTF; itTF++ ) {
+        // check for good PatFwd tracks
+        // from PatForward fit
+        if ((*itTF)->fitStatus() == LHCb::Track::Fitted) {
+          // if fitted - used chi2pdf from fit
+          if ((*itTF)->chi2PerDoF() > m_discardChi2) continue;
+        }
+        //else {
+        // otherwise use PatQuality from patreco
+        //if ((*itTF)->info(LHCb::Track::PatQuality, -1.) > m_discardPatQual) continue;
+        //}
+        const SmartRefVector<LHCb::Track>& ancestors = (*itTF)->ancestors();
+        for ( SmartRefVector<LHCb::Track>::const_iterator itA = ancestors.begin();
+              ancestors.end() != itA; ++itA ) {
+          const LHCb::Track* velo = (*itA);
+          if ( aTrack==velo )  {
+            if(msgLevel( MSG::DEBUG ))
+              debug() << "Velo track " << aTrack->key()
+                      << " is used in good PatFwd, skipping" << endreq;
+            veloUsed = true;
+          }
+        }
+      }
+    }
+
+    if (veloUsed) continue;
+
 
     // Check on backward going velo tracks
     if ( aTrack->checkFlag( Track::Backward ) ) continue;
