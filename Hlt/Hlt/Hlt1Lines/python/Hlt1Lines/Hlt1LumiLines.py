@@ -127,7 +127,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                      ) )
 
         # define histogrammers
-        from Configurables import LumiHistoMaker, LumiHisto2dSPD, LumiHistoCurrents
+        from Configurables import LumiHistoMaker, LumiHisto2dSPD
         HistoMembers=[]
         HistoMembers.append(LumiHistoMaker('Histo'+BXType,
                                            InputVariables = createdCounters,
