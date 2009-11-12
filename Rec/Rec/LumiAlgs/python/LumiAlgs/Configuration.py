@@ -132,7 +132,7 @@ class LumiAlgsConf(LHCbConfigurableUser):
             BXMembers=self.fillFSR()
             sequence.Members += BXMembers
             
-            if status is None:
+            if status is None or status=='':
                 #by definition, all raw files are verified
                 status='VERIFIED'
         

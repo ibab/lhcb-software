@@ -1,4 +1,4 @@
-// $Id: EventAccounting.cpp,v 1.1 2009-11-11 09:25:39 rlambert Exp $
+// $Id: EventAccounting.cpp,v 1.2 2009-11-12 16:54:30 rlambert Exp $
 // Include files 
 
 // from Gaudi
@@ -77,10 +77,11 @@ StatusCode EventAccounting::initialize() {
   //check extended file incidents are defined
 #ifdef GAUDI_FILE_INCIDENTS
   m_incSvc->addListener( this, IncidentType::WroteToOutputFile);
-#endif //GAUDI_FILE_INCIDENTS
+  if ( msgLevel(MSG::DEBUG) ) debug() << "registered with incSvc" << endmsg;
   //if not then the counting is not reliable
-#ifndef GAUDI_FILE_INCIDENTS
+#else
   m_eventFSR->setStatusFlag(LHCb::EventCountFSR::UNRELIABLE);
+  warn() << "cannot register with incSvc" << endmsg;
 #endif //GAUDI_FILE_INCIDENTS
 
   return StatusCode::SUCCESS;

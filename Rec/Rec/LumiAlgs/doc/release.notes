@@ -6,6 +6,7 @@
 
 ! 2009-11-12 - Rob Lambert
  - Fixed configurable to propagate OutputLevel
+ - Fixed a logic error in EventAccounting, and the configurable
 
 
 ! 2009-11-12 - Jaap Panman
