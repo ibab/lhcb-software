@@ -13,11 +13,11 @@ class TGTextBuffer;
 class TGTextEntry;
 class TGTextEdit;
 
-class PageSaveDialog : public TGTransientFrame
+class DatabasePagePathDialog : public TGTransientFrame
 {
   public:
-    PageSaveDialog(PresenterMainFrame* gui, int width, int height, pres::MsgLevel v);
-    virtual ~PageSaveDialog();
+    DatabasePagePathDialog(PresenterMainFrame* gui, int width, int height, pres::MsgLevel v);
+    virtual ~DatabasePagePathDialog();
 
     void build();
     void ok();
@@ -31,7 +31,9 @@ class PageSaveDialog : public TGTransientFrame
     TGTextButton*   m_okButton;
     TGTextButton*   m_cancelButton;
     TGTextEntry*    m_folderNameTextEntry;
+    std::string     m_folderName;
     TGTextEntry*    m_pageNameTextEntry;
+    std::string     m_pageName;
     TGTextEntry*    m_patternFileTextEntry;
     TGTextEdit*     m_pageDescriptionTextEditor;
     pres::MsgLevel  m_verbosity;
@@ -40,7 +42,7 @@ class PageSaveDialog : public TGTransientFrame
     std::vector<DbRootHist*>      m_DbHistosOnPage;
     std::vector<DbRootHist*>::const_iterator m_DbHistosOnPageIt;
 
-    ClassDef(PageSaveDialog, 0)
+    ClassDef(DatabasePagePathDialog, 0)
 };
 
 #endif /*PAGESAVEDIALOG_H_*/

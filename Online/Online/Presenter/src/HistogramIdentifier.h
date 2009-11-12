@@ -12,6 +12,7 @@ class HistogramIdentifier
     virtual ~HistogramIdentifier();
     
     void setIdentifiersFromDim(std::string newDimServiceName);
+    void dumpMembersToConsole();
 
     std::string histogramIdentifier() const { return m_identifier; };
     std::string histogramType() const { return m_histogramType; };

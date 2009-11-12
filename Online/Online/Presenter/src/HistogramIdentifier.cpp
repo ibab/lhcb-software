@@ -54,11 +54,17 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
 //  $7 histogram name
 
   m_histogramUrlTS = newDimServiceName.c_str();
+
+  #ifdef _DEBUG
+    std::cout << "m_histogramUrlTS: " << newDimServiceName.c_str() << std::endl;
+  #endif
+
   int matchOffset(0);
 
   TObjArray* histogramUrlMatchGroup = s_histogramUrlRegexp.MatchS(m_histogramUrlTS);
 
   if (!histogramUrlMatchGroup->IsEmpty()) {
+
     m_histogramType = (((TObjString *)histogramUrlMatchGroup->At(1))->
       GetString()).Data();
     if (m_histogramType.empty()) {
@@ -87,9 +93,9 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
         m_nodeName = "";
         m_taskName = (((TObjString *)histogramUTGIDMatchGroup->At(2))->
                      GetString()).Data();
-      } else {
-        m_taskName = m_histogramUTGID;
       }
+    } else {
+        m_taskName = m_histogramUTGID;
     }
     if (histogramUTGIDMatchGroup) {
       histogramUTGIDMatchGroup->Delete();
@@ -133,7 +139,7 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
     m_identifier =  m_taskName + s_slash + m_algorithmName +
                     s_slash + m_histogramName;    
   }
-  
+
   m_dbDimServiceName = m_histogramType + s_slash + m_identifier;
   
 //   typedef enum { H1D, H2D, P1D, P2D, CNT, SAM} HistType;  
@@ -155,8 +161,8 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
 
   m_lastName = m_histogramName.substr((m_histogramName.find_last_of(s_slash,
                                       std::string::npos)-std::string::npos),
-                                      m_histogramName.length());  
-  
+                                      m_histogramName.length());
+
   if (m_isEFF) {
     TString fileName(m_lastName);
     fileName.ReplaceAll("_", "_001_");
@@ -168,3 +174,29 @@ void HistogramIdentifier::setIdentifiersFromDim(std::string newDimServiceName)
   }
 }
 
+void HistogramIdentifier::dumpMembersToConsole()
+{
+// #ifdef _DEBUG
+    std::cout << "m_histogramUrlTS " << m_histogramUrlTS << std::endl;
+    std::cout << "m_identifier " << m_identifier << std::endl;
+    std::cout << "m_histogramType " <<  m_histogramType << std::endl;
+    std::cout << "m_partitionName " <<  m_partitionName<< std::endl;
+    std::cout << "m_nodeName " << m_nodeName << std::endl;
+    std::cout << "m_taskName " << m_taskName << std::endl;
+    std::cout << "m_instanceOnNode " << m_instanceOnNode << std::endl;
+    std::cout << "m_histogramUTGID " << m_histogramUTGID << std::endl;
+    std::cout << "m_algorithmName " << m_algorithmName << std::endl;
+    std::cout << "m_isFromHistogramSet " << m_isFromHistogramSet << std::endl;
+    std::cout << "m_histogramName " << m_histogramName << std::endl;
+    std::cout << "m_setName " << m_setName << std::endl;
+    std::cout << "m_isEFF " << m_isEFF << std::endl;
+    std::cout << "m_isPlausible " << m_isPlausible << std::endl;
+    std::cout << "m_isDimFormat " << m_isDimFormat << std::endl;
+    std::cout << "m_dbDimServiceName " << m_dbDimServiceName << std::endl;
+    std::cout << "m_dbHistogramType " << m_dbHistogramType << std::endl;
+//    std::cout << "" <<  << std::endl;
+//    m_gauchocommentBeat(""),
+//    m_gauchocommentEric(""),
+
+// #endif
+}

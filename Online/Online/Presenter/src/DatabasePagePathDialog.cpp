@@ -22,13 +22,13 @@
 #include "DbRootHist.h"
 
 #include "PresenterMainFrame.h"
-#include "PageSaveDialog.h"
+#include "DatabasePagePathDialog.h"
 
 using namespace pres;
 
-ClassImp(PageSaveDialog)
+ClassImp(DatabasePagePathDialog)
 
-PageSaveDialog::PageSaveDialog(PresenterMainFrame* gui, int width,
+DatabasePagePathDialog::DatabasePagePathDialog(PresenterMainFrame* gui, int width,
   int height, MsgLevel v) :
     TGTransientFrame(gClient->GetRoot(), gui, width, height),
     m_mainFrame(gui),
@@ -36,16 +36,16 @@ PageSaveDialog::PageSaveDialog(PresenterMainFrame* gui, int width,
     m_msgBoxReturnCode(0)
 {
   SetCleanup(kDeepCleanup);
-  Connect("CloseWindow()", "PageSaveDialog", this, "DontCallClose()");
+  Connect("CloseWindow()", "DatabasePagePathDialog", this, "DontCallClose()");
   SetMWMHints(kMWMDecorAll, kMWMFuncAll, kMWMInputSystemModal);
   build();
   MapWindow();
 }
-PageSaveDialog::~PageSaveDialog()
+DatabasePagePathDialog::~DatabasePagePathDialog()
 {
   Cleanup();
 }
-void PageSaveDialog::build()
+void DatabasePagePathDialog::build()
 {
   SetLayoutBroken(true);
 
@@ -62,7 +62,7 @@ void PageSaveDialog::build()
   AddFrame(m_folderNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_folderNameTextEntry->MoveResize(16, 32, 456, 22);
-  m_folderNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
+  m_folderNameTextEntry->Connect("ReturnPressed()", "DatabasePagePathDialog",
                                  this, "setOkButton()");
 
   // canvas widget
@@ -77,7 +77,7 @@ void PageSaveDialog::build()
   m_mainFrame->listHistogramsFromHistogramDB(m_pageFolderListTree,
       FoldersAndPages, s_withoutHistograms);
   m_pageFolderListTree->Connect(
-    "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PageSaveDialog",
+    "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "DatabasePagePathDialog",
     this, "updateTextFields(TGListTreeItem*, Int_t, Int_t, Int_t)");
 
   fViewPort695->AddFrame(m_pageFolderListTree);
@@ -104,7 +104,7 @@ void PageSaveDialog::build()
   AddFrame(m_pageNameTextEntry,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_pageNameTextEntry->MoveResize(96, 256, 376, 22);
-  m_pageNameTextEntry->Connect("ReturnPressed()", "PageSaveDialog",
+  m_pageNameTextEntry->Connect("ReturnPressed()", "DatabasePagePathDialog",
                                this, "setOkButton()");
 
                                
@@ -148,7 +148,7 @@ void PageSaveDialog::build()
   AddFrame(m_okButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_okButton->MoveResize(280, 488, 80, 24);
-  m_okButton->Connect("Clicked()", "PageSaveDialog", this, "ok()");
+  m_okButton->Connect("Clicked()", "DatabasePagePathDialog", this, "ok()");
 
   m_cancelButton = new TGTextButton(this,"Cancel");
   m_cancelButton->SetTextJustify(36);
@@ -156,7 +156,7 @@ void PageSaveDialog::build()
   AddFrame(m_cancelButton,
            new TGLayoutHints(kLHintsLeft | kLHintsTop, 2, 2, 2, 2));
   m_cancelButton->MoveResize(376, 488, 80, 24);
-  m_cancelButton->Connect("Clicked()", "PageSaveDialog",
+  m_cancelButton->Connect("Clicked()", "DatabasePagePathDialog",
                           this, "CloseWindow()");
 
   MapSubwindows();
@@ -164,7 +164,7 @@ void PageSaveDialog::build()
   MapWindow();
   Resize(493, 539);
 }
-void PageSaveDialog::ok()
+void DatabasePagePathDialog::ok()
 {
   m_okButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
@@ -172,13 +172,13 @@ void PageSaveDialog::ok()
   if (m_mainFrame->isConnectedToHistogramDB()) {
 
     OnlineHistDB* m_histogramDB = m_mainFrame->histogramDB();
-    std::string folderName = m_folderNameTextEntry->GetText();
-    std::string pageName = m_pageNameTextEntry->GetText();
+    m_folderName = m_folderNameTextEntry->GetText();
+    m_pageName = m_pageNameTextEntry->GetText();
     std::string patternFile = m_patternFileTextEntry->GetText();
     std::string pageDescription = ((dynamic_cast<TGTextView*>(m_pageDescriptionTextEditor)->GetText())->AsString()).Data();
 
     try {
-      OnlineHistPage* page = m_histogramDB->getPage(s_slash+folderName+s_slash+pageName);
+      OnlineHistPage* page = m_histogramDB->getPage(s_slash+m_folderName+s_slash+m_pageName);
       std::map<TPad*,OnlineHistogram*> padOwner;
       bool thereAreOverlaps = false;
       page->removeAllHistograms();
@@ -256,7 +256,7 @@ void PageSaveDialog::ok()
     CloseWindow();
   }
 }
-void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
+void DatabasePagePathDialog::updateTextFields(TGListTreeItem* node, int, int, int)
 {
   if (0 != node) {
     char path[1024];
@@ -272,8 +272,8 @@ void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
     TObjArray* pathSlices = TPRegexp("^((?:(?:[^/]*)/)*)([^/]*)$").
                                       MatchS(dbPath.c_str());
 
-    TString folderName = ((TObjString *)pathSlices->At(1))->GetString();
-    folderName = folderName.Strip(TString::kTrailing,'/');
+    TString m_folderName = ((TObjString *)pathSlices->At(1))->GetString();
+    m_folderName = m_folderName.Strip(TString::kTrailing,'/');
     TString pageName = ((TObjString *)pathSlices->At(2))->GetString();
 
     pathSlices->Delete();
@@ -281,7 +281,7 @@ void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
 
     if (NULL != node->GetUserData()) {
        m_pageNameTextEntry->SetText(pageName);
-       m_folderNameTextEntry->SetText(folderName);
+       m_folderNameTextEntry->SetText(m_folderName);
     } else {
        m_folderNameTextEntry->SetText(dbPath.c_str());
     }
@@ -289,7 +289,7 @@ void PageSaveDialog::updateTextFields(TGListTreeItem* node, int, int, int)
     setOkButton();
   }
 }
-void PageSaveDialog::setOkButton() {
+void DatabasePagePathDialog::setOkButton() {
   if (TString(m_folderNameTextEntry->GetText()).Sizeof() > 1  &&
       TString(m_pageNameTextEntry->GetText()).Sizeof() > 1 ) {
     m_okButton->SetEnabled(true);
@@ -297,7 +297,7 @@ void PageSaveDialog::setOkButton() {
     m_okButton->SetEnabled(false);
   }
 }
-void PageSaveDialog::CloseWindow() {
+void DatabasePagePathDialog::CloseWindow() {
   m_okButton->SetState(kButtonDisabled);
   m_cancelButton->SetState(kButtonDisabled);
   DeleteWindow();

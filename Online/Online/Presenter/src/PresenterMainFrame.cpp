@@ -1,8 +1,3 @@
-// submit_elog(host_name, port, ssl, subdir, logbook, password,
-//             uname, upwd, reply, quote_on_reply, edit, suppress, encoding, attr_name, attrib, n_attr, text,
-//             attachment, buffer, att_size);
-// GauchoJob/GaudiExample/1Db0 -P HLTA0102
-
 #include <algorithm>
 #include <iostream>
 #include <vector>
@@ -74,7 +69,7 @@
 #include "PresenterMainFrame.h"
 #include "HistogramIdentifier.h"
 #include "LoginDialog.h"
-#include "PageSaveDialog.h"
+#include "DatabasePagePathDialog.h"
 #include "HistoPropDialog.h"
 #include "Archive.h"
 #include "ParallelWait.h"
@@ -300,7 +295,7 @@ void PresenterMainFrame::buildGUI()
     SetCleanup(kDeepCleanup);
     TGPicturePool* picpool = gClient->GetResourcePool()->GetPicturePool();
     SetIconPixmap((char**)presenter32);
-    // set minimun size
+    // set minimum size
     // SetWMSizeHints(400 + 200, 370+50, 2000, 1000, 1, 1);
     m_fileText = new TGHotString("&File");
     m_filePrint = new TGHotString("Save/&Print Page to File...");
@@ -836,9 +831,13 @@ void PresenterMainFrame::buildGUI()
       m_pagesFromHistoDBListTree->SetCheckMode(TGListTree::kRecursive);
       (m_pagesFromHistoDBListTree->GetFirstItem())->SetPictures(m_databaseSourceIcon,
                                                                 m_databaseSourceIcon);
-      m_pagesFromHistoDBListTree->Connect(
-        "Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)", "PresenterMainFrame",
-        this, "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+      m_pagesFromHistoDBListTree->Connect("Clicked(TGListTreeItem*, Int_t, Int_t, Int_t)",
+                                          "PresenterMainFrame", this,
+                                          "clickedPageTreeItem(TGListTreeItem*, Int_t, Int_t, Int_t)");
+
+      m_pagesFromHistoDBListTree->Connect("DataDropped(TGListTreeItem*, TDNDData*)",
+                                          "PresenterMainFrame", this,
+                                          "dataDropped(TGListTreeItem*, TDNDData*)");
   
       m_pagesFromHistoDBViewPort->AddFrame(m_pagesFromHistoDBListTree);
       m_pagesFromHistoDBListTree->SetLayoutManager(
@@ -855,6 +854,8 @@ void PresenterMainFrame::buildGUI()
   
       m_pagesContextMenu = new TGPopupMenu(fClient->GetRoot());
       m_pagesContextMenu->AddEntry("Load Page", M_LoadPage_COMMAND);
+//      m_pagesContextMenu->AddSeparator();
+//      m_pagesContextMenu->AddEntry("Move/Rename", M_Move_COMMAND);
       m_pagesContextMenu->AddSeparator();
       m_pagesContextMenu->AddEntry("Delete Page", M_DeletePage_COMMAND);
       m_pagesContextMenu->AddEntry("Delete Folder", M_DeleteFolder_COMMAND);
@@ -1322,6 +1323,62 @@ void PresenterMainFrame::buildGUI()
     DoRedraw();
   }
 }
+
+void PresenterMainFrame::dataDropped(TGListTreeItem* item, TDNDData* data)
+{
+  if (isConnectedToHistogramDB() && (ReadWrite == m_databaseMode) &&
+      item && item->IsDNDTarget() &&
+      data && data->fData &&
+      item->GetUserData()) {
+    TString fromName = static_cast<char*>(data->fData);
+    if (fromName.BeginsWith(s_FILE_URI)) {fromName.Remove(0, s_FILE_URI.length()); }
+    std::string pageName(fromName);
+
+    TString newPageName = (*static_cast<TObjString*>(item->GetUserData())).GetString();
+    if (newPageName.BeginsWith(s_FILE_URI)) { newPageName.Remove(0, s_FILE_URI.length()); }
+
+    // Tree does not handle deep recursion correctly ...target, source and 42 broken.
+    TGListTreeItem* page = 0;
+    char path[1024];
+    m_pagesFromHistoDBListTree->GetPathnameFromItem(m_pagesFromHistoDBListTree->GetSelected(), path);
+
+    if (strlen(path)) { // avoid being @root
+      std::string rootPath(path);
+      page = m_pagesFromHistoDBListTree->FindItemByPathname(rootPath.c_str());
+      if (page && (kFALSE == page->IsDNDTarget()) &&
+          (kFALSE == item->IsDNDSource())) {
+        fromName.Remove(0, fromName.Last('/')+1);
+        // when TDNDData/TGListTreeItem seems to be uninit., 2nd try works...
+        if (0 == strcmp(fromName, page->GetText())) {
+          newPageName.Append(s_slash).Append(fromName);
+          try {
+//            if (m_verbosity >= Verbose) {
+              std::cout << "mv " << pageName << " " << newPageName << std::endl;
+//            }
+            OnlineHistPage* dbPage = m_histogramDB->getPage(pageName);
+            dbPage->rename(std::string(newPageName.Data()));
+            if (m_histogramDB->commit()) {
+              m_pagesFromHistoDBListTree->Reparent(page, item);
+            }
+//            refreshPagesDBListTree();
+//            m_histogramDB->refresh();
+          } catch (std::string sqlException) {
+            setStatusBarText(sqlException.c_str(), 2);
+            if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
+            if (Batch != m_presenterMode) {
+              new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                  Form("Could delete the page to OnlineHistDB:\n\n%s\n",
+                      sqlException.c_str()),
+                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+            }
+          }
+        } else { //zut.
+        }
+      }
+    }
+  }
+}
+
 void PresenterMainFrame::CloseWindow()
 {
   if (0 != m_pageRefreshTimer) { m_pageRefreshTimer->Stop(); }
@@ -1539,7 +1596,10 @@ void PresenterMainFrame::handleCommand(Command cmd)
           }
         }
     }
-      break;      
+      break;
+    case M_Move_COMMAND:
+      moveSelectedInDB();
+      break;
     case M_DeletePage_COMMAND:
       deleteSelectedPageFromDB();
       break;
@@ -1825,11 +1885,10 @@ void PresenterMainFrame::savePageToFile()
 void PresenterMainFrame::savePageToHistogramDB()
 {
   if (ReadWrite == m_databaseMode) {
-    fClient->WaitFor(new PageSaveDialog(this, 493, 339, m_verbosity));
+    fClient->WaitFor(new DatabasePagePathDialog(this, 493, 339, m_verbosity));
 //  m_savePageToDatabaseButton->SetState(kButtonDisabled);
-
     refreshPagesDBListTree();
-    refreshHistoDBListTree();
+//    refreshHistoDBListTree();
 //    statusBar()
   }
 }
@@ -2095,7 +2154,7 @@ void PresenterMainFrame::listAlarmsFromHistogramDB(TGListTree* listView,
           nodeName = nodeName + ": ";
           nodeName = nodeName + message->ananame();
           TGListTreeItem* treeNode = listView->AddItem(treeRoot, nodeName.c_str());
-          setTreeNodeIcon(treeNode, message->levelString());        
+          setTreeNodeType(treeNode, message->levelString());        
           listView->SetCheckBox(treeNode, false);
           treeNode->SetUserData((void*)&(*m_alarmMessageIDsIt));
           delete message;
@@ -2184,12 +2243,20 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                                                      m_folderItem->GetName());
             } else {
               if (filterCriteria != Tasks) {
-                m_treeNode = listView->AddItem(m_treeNode,
-                                               m_folderItem->GetName());
-//                m_treeNode->SetPictures(m_openedFolder, m_closedFolderIcon);
+                std::string userFolderData(s_FILE_URI);
+                m_treeNode = listView->AddItem(m_treeNode, m_folderItem->GetName());
+                char path[1024];
+                m_pagesFromHistoDBListTree->GetPathnameFromItem(m_treeNode, path);
+                std::string folderPath(path);
+                // Drop DB url
+                folderPath = folderPath.erase(0, strlen(m_pagesFromHistoDBListTree->GetFirstItem()->GetText())+1);
+                userFolderData.append(folderPath);
+                TObjString *objectString = new TObjString(userFolderData.c_str());
+                m_treeNode->SetUserData(objectString);
+                m_treeNode->SetDNDSource(kFALSE);
+                m_treeNode->SetDNDTarget(kTRUE);
               }
             }
-            m_treeNode->SetUserData(0);
             if (m_folderItem == m_folderItems->Last() &&
                 filterCriteria == FoldersAndPages) {
               m_localDatabasePages.clear();
@@ -2202,9 +2269,20 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                 std::string pageName = std::string(*m_pageIt).erase(0,
                                                    (*m_folderIt).length()+1);
                 m_pageNode = listView->AddItem(m_treeNode, pageName.c_str());
-                m_pageNode->SetUserData(new TString(*m_pageIt));
+
+                std::string userPageData(s_FILE_URI);
+                char path[1024];
+                m_pagesFromHistoDBListTree->GetPathnameFromItem(m_pageNode, path);
+                std::string pagePath(path);
+                // Drop DB url
+                pagePath = pagePath.erase(0, strlen(m_pagesFromHistoDBListTree->GetFirstItem()->GetText())+1);
+                userPageData.append(pagePath);
+                TObjString *objectString = new TObjString(userPageData.c_str());
+                m_pageNode->SetUserData(objectString);
+                m_pageNode->SetDNDSource(kTRUE);
+                m_pageNode->SetDNDTarget(kFALSE);
                 listView->CheckItem(m_pageNode, false);
-                setTreeNodeIcon(m_pageNode, s_PAGE);
+                setTreeNodeType(m_pageNode, s_PAGE);
                 if (histograms) {
                   m_localDatabaseIDS.clear();
                   m_histogramTypes.clear();
@@ -2298,7 +2376,7 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
     } else {
       m_taskNode = listView->AddItem(m_taskNode,
         histogramIdentifier.histogramUTGID().c_str());
-      setTreeNodeIcon(m_taskNode, s_TASK);
+      setTreeNodeType(m_taskNode, s_TASK);
     }
     listView->SetCheckBox(m_taskNode, true);
     listView->CheckItem(m_taskNode, false);
@@ -2312,7 +2390,7 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
     } else {
       m_algorithmNode = listView->AddItem(m_algorithmNode,
                                 histogramIdentifier.algorithmName().c_str());
-      setTreeNodeIcon(m_algorithmNode, s_ALGORITHM);
+      setTreeNodeType(m_algorithmNode, s_ALGORITHM);
     }
     listView->SetCheckBox(m_algorithmNode, true);
     listView->CheckItem(m_algorithmNode, false);    
@@ -2327,7 +2405,7 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
       } else {
         m_histogramSetNode = listView->AddItem(m_histogramSetNode,
           histogramIdentifier.histogramSetName().c_str());
-        setTreeNodeIcon(m_histogramSetNode, s_SET);
+        setTreeNodeType(m_histogramSetNode, s_SET);
       }
       listView->SetCheckBox(m_histogramSetNode, true);
       listView->CheckItem(m_histogramSetNode, false);  
@@ -2355,15 +2433,15 @@ void PresenterMainFrame::fillTreeNodeWithHistograms(TGListTree* listView,
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
         m_histogramNode->SetUserData(0);
-        setTreeNodeIcon(m_histogramNode, s_LEVEL);
+        setTreeNodeType(m_histogramNode, s_LEVEL);
       }
       if (m_histogramIdItem == m_histogramIdItems->Last()) {
         m_histogramNode = listView->AddItem(m_histogramNode,
                                             m_histogramIdItem->GetName());
         listView->SetCheckBox(m_histogramNode, true);
         listView->CheckItem(m_histogramNode, false);
-        setTreeNodeIcon(m_histogramNode, *m_histogramType);
-        m_histogramNode->SetUserData(new TString(*m_histogramIt));
+        setTreeNodeType(m_histogramNode, *m_histogramType);
+        m_histogramNode->SetUserData(new TObjString((*m_histogramIt).c_str()));
       }
     }
     m_histogramIdItems->Delete();
@@ -2481,7 +2559,7 @@ void PresenterMainFrame::listRootHistogramsFrom(TDirectory* rootFile,
    }
 }
 
-void PresenterMainFrame::setTreeNodeIcon(TGListTreeItem* node,
+void PresenterMainFrame::setTreeNodeType(TGListTreeItem* node,
                                          const std::string & type)
 {
   const TGPicture*  m_icon;
@@ -2603,7 +2681,7 @@ void PresenterMainFrame::sortTreeChildrenItemsChildren(TGListTree* treeList,
 void PresenterMainFrame::deleteTreeChildrenItemsUserData(TGListTreeItem* node)
 {
   if (0 != node && 0 != (node->GetUserData())) {
-    delete (TString*)(node->GetUserData());
+    delete (TObjString*)(node->GetUserData());
     node->SetUserData(NULL);
   }
   if (0 != node && 0 != (node->GetFirstChild())) {
@@ -2614,7 +2692,7 @@ void PresenterMainFrame::deleteTreeChildrenItemsUserDataChildren(TGListTreeItem*
 {
   while (0 != node) {
     if (0 != (node->GetUserData())) {
-      delete (TString*)(node->GetUserData());
+      delete (TObjString*)(node->GetUserData());
       node->SetUserData(NULL);
     }
     if (0 != (node->GetFirstChild())) {
@@ -2981,6 +3059,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
 //    m_pickReferenceHistoButton->SetState(kButtonEngaged);
     m_pickReferenceHistoButton->SetState(kButtonUp);
     m_fileMenu->EnableEntry(SAVE_PAGE_TO_DB_COMMAND);
+    m_pagesContextMenu->EnableEntry(M_Move_COMMAND);
     m_pagesContextMenu->EnableEntry(M_DeletePage_COMMAND);
     m_pagesContextMenu->EnableEntry(M_DeleteFolder_COMMAND);
     m_histoDBContextMenu->EnableEntry(M_SetHistoPropertiesInDB_COMMAND);
@@ -2995,6 +3074,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
     m_savePageToDatabaseButton->SetState(kButtonDisabled);
     m_fileMenu->DisableEntry(SAVE_PAGE_TO_DB_COMMAND);
     m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToDB_COMMAND);
+    m_pagesContextMenu->DisableEntry(M_Move_COMMAND);
     m_pagesContextMenu->DisableEntry(M_DeletePage_COMMAND);
     m_pagesContextMenu->DisableEntry(M_DeleteFolder_COMMAND);
     m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
@@ -3366,10 +3446,11 @@ void PresenterMainFrame::clickedHistoDBTreeItem(TGListTreeItem* node,
 void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
                                              EMouseButton btn,
                                              int x, int y) {
-  if (0 != node && btn == kButton3) {
+  if ((0 != node) && (kButton3 == btn)) {
     m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
-  } else if (0 != node &&
-             NULL == node->GetFirstChild() &&
+  } else if (// (kButton1Double == btn) &&
+             (0 != node) &&
+             (NULL == node->GetFirstChild()) &&
              ((EditorOnline != m_presenterMode) || (EditorOffline != m_presenterMode))) {
     m_currentPageName = selectedPageFromDbTree();
     if (!m_currentPageName.empty() && (false == m_loadingPage)) {
@@ -3416,8 +3497,10 @@ void PresenterMainFrame::addHistoToHistoDB()
     try {
       if (0 != m_histogramDB) {
 
-        TString histoName = *static_cast<TString*>(currentNode->GetUserData());
+        TString histoName = (*static_cast<TObjString*>(currentNode->GetUserData())).GetString();
+        if (histoName.BeginsWith(s_FILE_URI)) {histoName.Remove(0, s_FILE_URI.length()); }
         HistogramIdentifier histogramService = HistogramIdentifier(std::string(histoName));
+
         m_histogramDB->declareHistogram(histogramService.taskName(),
                                         histogramService.algorithmName(),
                                         histogramService.histogramName(),
@@ -3608,7 +3691,9 @@ void PresenterMainFrame::addDimHistosToPage()
   currentNode = list->GetFirstItem();
 
   while (0 != currentNode) {
-    addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), separate);
+    TString histoID((*static_cast<TObjString*>(currentNode->GetUserData())).GetString());
+    if (histoID.BeginsWith(s_FILE_URI)) { histoID.Remove(0, s_FILE_URI.length()); }
+    addHistoToPage(std::string(histoID), separate);
     currentNode = currentNode->GetNextSibling();
   }
   list->Delete();
@@ -3632,10 +3717,10 @@ void PresenterMainFrame::addDbHistoToPage(pres::ServicePlotMode overlapMode)
       checkedTreeItems(list, m_databaseHistogramTreeList);
       TGListTreeItem* currentNode = list->GetFirstItem();      
       if (0 != currentNode) {
-        addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), separate);
+        addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()), separate);
         currentNode = currentNode->GetNextSibling();        
         while (0 != currentNode) {        
-          addHistoToPage(std::string(*static_cast<TString*>(currentNode->GetUserData())), overlapMode);
+          addHistoToPage(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()), overlapMode);
           currentNode = currentNode->GetNextSibling();
         }
       }
@@ -3789,8 +3874,7 @@ void PresenterMainFrame::setHistogramPropertiesInDB()
       currentNode = list->GetFirstItem();
       while (0 != currentNode) {
         OnlineHistogram* onlineHistogramToSet = m_histogramDB->
-          getHistogram(std::string(*static_cast<TString*>(
-                       currentNode->GetUserData())));
+          getHistogram(std::string((*static_cast<TObjString*>(currentNode->GetUserData())).GetString()));
 
         std::string descriptionField = bulkHistoOptions.m_description.Data();
 
@@ -3885,7 +3969,7 @@ void PresenterMainFrame::deleteSelectedHistoFromDB() {
       TGListTreeItem* currentNode;
       currentNode = list->GetFirstItem();
       while (0 != currentNode) {
-        std::string hist_id(*static_cast<TString*>(currentNode->GetUserData()));
+        std::string hist_id((*static_cast<TObjString*>(currentNode->GetUserData())).GetString());
         OnlineHistogram* histoToDelete = m_histogramDB->getHistogram(hist_id);
         if (histoToDelete) {
           // remove this histogram from current page if present
@@ -3930,8 +4014,10 @@ void PresenterMainFrame::enablePageLoading() {
 std::string PresenterMainFrame::selectedPageFromDbTree(){
   TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
   if (0 != node && node->GetUserData()) {
-    return std::string(*static_cast<TString*>(
-                                   node->GetUserData()));
+
+    TString pageName = (*static_cast<TObjString*>(node->GetUserData())).GetString();
+    if (pageName.BeginsWith(s_FILE_URI)) {pageName.Remove(0, s_FILE_URI.length()); }
+    return std::string(pageName);
   } else {
     return std::string("");
   }
@@ -4263,6 +4349,22 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
     enableAutoCanvasLayoutBtn();
   }  
 }
+
+void PresenterMainFrame::moveSelectedInDB()
+{
+  if (ReadWrite == m_databaseMode) {
+//    TGListTreeItem* TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
+//    selectedHistogramDatabaseItemName = PageName
+//    selectedHistogramDatabaseItemType = FolderName
+
+    DatabasePagePathDialog* databasePagePathDialog = new DatabasePagePathDialog(this, 493, 339, m_verbosity);
+//    databasePagePathDialog->set
+    fClient->WaitFor(databasePagePathDialog);
+//    newName
+    refreshPagesDBListTree();
+  }
+}
+
 void PresenterMainFrame::deleteSelectedPageFromDB()
 {
   if (Batch != m_presenterMode) {
@@ -4279,8 +4381,7 @@ void PresenterMainFrame::deleteSelectedPageFromDB()
     TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
 
     if (node && node->GetUserData()) {
-      std::string path = std::string(*static_cast<TString*>(
-                                     node->GetUserData()));
+      std::string path = std::string((*static_cast<TObjString*>(node->GetUserData())).GetString());
       try {
         OnlineHistPage* page = m_histogramDB->getPage(path);
         if (0 != page) {
@@ -4319,8 +4420,7 @@ void PresenterMainFrame::deleteSelectedFolderFromDB()
       m_pagesFromHistoDBListTree->GetPathnameFromItem(node, path);
       std::string folder = std::string(path);
       // Drop DB url
-      folder = folder.erase(0, std::string(
-        m_pagesFromHistoDBListTree->GetFirstItem()->GetText()).length()+1);
+      folder = folder.erase(0, strlen(m_pagesFromHistoDBListTree->GetFirstItem()->GetText())+1);
       if (m_verbosity >= Verbose) {
         std::cout << "Folder to delete: " << folder << std::endl;
       }

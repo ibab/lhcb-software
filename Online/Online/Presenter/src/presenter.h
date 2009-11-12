@@ -107,6 +107,8 @@ namespace pres
   static const std::string s_HPD("HPD"); // legacy compat == P1D
   static const std::string s_P2D("P2D");
   static const std::string s_CNT("CNT");  
+
+  static const std::string s_FILE_URI("file://");
   
   static const std::string s_DimWildcard("*");
   static const std::string s_Mon("Mon");

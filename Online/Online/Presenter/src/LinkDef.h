@@ -10,7 +10,7 @@
 #pragma link C++ class LoginDialog;
 #pragma link C++ class IntervalPicker;
 #pragma link C++ class ReferencePicker;
-#pragma link C++ class PageSaveDialog;
+#pragma link C++ class DatabasePagePathDialog;
 #pragma link C++ class PresenterMainFrame;
 #pragma link C++ class HistoPropDialog;
 //#pragma link C++ class Offline;

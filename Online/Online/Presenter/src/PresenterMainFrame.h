@@ -122,6 +122,7 @@ class PresenterMainFrame : public TGMainFrame
       M_RefreshDBPagesListTree_COMMAND,
       M_RefreshAlarmDBListTree_COMMAND,
       M_LoadPage_COMMAND,
+      M_Move_COMMAND,
       M_DeletePage_COMMAND,
       M_DeleteFolder_COMMAND,
       M_LAST_1_HOURS,
@@ -160,6 +161,7 @@ class PresenterMainFrame : public TGMainFrame
 
     void about();
     void buildGUI();
+    void dataDropped(TGListTreeItem* item, TDNDData* data);
     void CloseWindow();
 
     void setPresenterMode(const pres::PresenterMode & presenterMode);
@@ -225,7 +227,7 @@ class PresenterMainFrame : public TGMainFrame
                                     std::vector<std::string>* histogramTypes);
     std::string histogramDBName();
 
-    void setTreeNodeIcon(TGListTreeItem* node, const std::string & type);
+    void setTreeNodeType(TGListTreeItem* node, const std::string & type);
     void setStatusBarText(const char* text, int slice);
     void editHistogramProperties();
     void inspectHistogram();
@@ -323,6 +325,7 @@ class PresenterMainFrame : public TGMainFrame
                                 const std::string & timePoint = "",
                                 const std::string & pastDuration = "",
                                 bool pageHistoryMode = false);
+    void moveSelectedInDB();
     void deleteSelectedPageFromDB();
     void deleteSelectedFolderFromDB();
     void pickReferenceHistogram();

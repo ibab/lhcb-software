@@ -6,7 +6,7 @@
 #include "IntervalPicker.h"
 #include "LoginDialog.h"
 #include "ReferencePicker.h"
-#include "PageSaveDialog.h"
+#include "DatabasePagePathDialog.h"
 #include "HistoPropDialog.h"
 
 #endif /*CINTBOOTSTRAP_H_*/
