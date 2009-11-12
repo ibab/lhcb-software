@@ -7,7 +7,10 @@
 #include "Event/CaloPosition.h"
 #include "CaloDet/DeCalorimeter.h"
 #include <boost/foreach.hpp>
-#
+
+#include "AIDA/IProfile1D.h"
+#include "AIDA/IHistogram1D.h"
+
 class TrackCaloMatchMonitor : public GaudiHistoAlg 
 {
 public:
@@ -32,8 +35,20 @@ private:
   std::string m_caloDigitLocation;
   DeCalorimeter* m_caloDet ;
   double m_geometricZ ;
-} ;
 
+  IHistogram1D* m_dxH1[3] ;
+  IHistogram1D* m_dyH1[3] ;
+  IProfile1D* m_dyVsYPr ;
+  IProfile1D* m_dyVsXPr ;
+  IProfile1D* m_dyVsTyPr ;
+  IProfile1D* m_dyVsTxPr ;
+  IProfile1D* m_dxVsYPr ;
+  IProfile1D* m_dxVsXPr ;
+  IProfile1D* m_dxVsTyPr ;
+  IProfile1D* m_dxVsTxPr ;
+
+} ;
+ 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( TrackCaloMatchMonitor );
 
@@ -90,10 +105,36 @@ StatusCode TrackCaloMatchMonitor::initialize()
     sc = StatusCode::FAILURE ; 
   }
 
-  info() << "CaloDet: center = " 
-	 << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
-	 << " zoffset: " << m_caloDet->zOffset()
-	 << " zsize:   " << m_caloDet->zSize() << endreq ;
+  setHistoTopDir("Track/") ;
+  char histitle[128] ;
+  sprintf(histitle,"x%s - xTRK (outer)",m_caloName.c_str()) ;
+  m_dxH1[0] = book1D("dx_inn",histitle,-200,200) ;
+  sprintf(histitle,"x%s - xTRK (middle)",m_caloName.c_str()) ;
+  m_dxH1[1] = book1D("dx_mid",histitle,-200,200) ;
+  sprintf(histitle,"x%s - xTRK (inner)",m_caloName.c_str()) ;
+  m_dxH1[2] = book1D("dx_out",histitle,-200,200) ;
+  
+  sprintf(histitle,"y%s - yTRK (outer)",m_caloName.c_str()) ;
+  m_dyH1[0] = book1D("dy_inn",histitle,-200,200) ;
+  sprintf(histitle,"y%s - yTRK (middle)",m_caloName.c_str()) ;
+  m_dyH1[1] = book1D("dy_mid",histitle,-200,200) ;
+  sprintf(histitle,"y%s - yTRK (inner)",m_caloName.c_str()) ;
+  m_dyH1[2] = book1D("dy_out",histitle,-200,200) ;
+  
+  m_dxVsXPr = bookProfile1D("dxVsX","dx versus x",-3500,3500) ;
+  m_dxVsYPr = bookProfile1D("dxVsY","dx versus y",-3500,3500) ;
+  m_dxVsTxPr = bookProfile1D("dxVsTx","dx versus tx",-1,1) ;
+  m_dxVsTyPr = bookProfile1D("dxVsTy","dx versus ty",-1,1) ;
+  
+  m_dyVsXPr = bookProfile1D("dyVsX","dy versus x",-3500,3500) ;
+  m_dyVsYPr = bookProfile1D("dyVsY","dy versus y",-3500,3500) ;
+  m_dyVsTxPr = bookProfile1D("dyVsTx","dy versus tx",-1,1) ;
+  m_dyVsTyPr = bookProfile1D("dyVsTy","dy versus ty",-1,1) ;
+  
+  debug() << "CaloDet: center = " 
+	  << m_caloDet->geometry()->toGlobal(Gaudi::XYZPoint()) 
+	  << " zoffset: " << m_caloDet->zOffset()
+	  << " zsize:   " << m_caloDet->zSize() << endreq ;
 
   return sc;
 }
@@ -108,8 +149,6 @@ struct MyCaloPosition
 
 StatusCode TrackCaloMatchMonitor::execute()
 { 
-  setHistoTopDir("Track/") ;
-
   // make a list of calo positions, depending on the subsystem use clusters or cells
   std::vector< MyCaloPosition > calopositions ;
 
@@ -155,25 +194,17 @@ StatusCode TrackCaloMatchMonitor::execute()
 	double dx = cluster.pos.x() - xtrack ;
 	double dy = cluster.pos.y() - ytrack ;
 	if( std::abs(dy)<200 && std::abs(dx)<200 ) {
-	  if( cluster.cell.area()==0 ) {
-	    if(std::abs(dy)<100) plot(dx,"dx_out","xCALO - xTRK",-200,200) ;
-	    if(std::abs(dx)<100) plot(dy,"dy_out","yCALO - yTRK",-200,200) ;
-	  } else if( cluster.cell.area()==1 ) {
-	    if(std::abs(dy)<100) plot(dx,"dx_mid","xCALO - xTRK",-200,200) ;
-	    if(std::abs(dx)<100) plot(dy,"dy_mid","yCALO - yTRK",-200,200) ;
-	  } else if( cluster.cell.area()==2 ) {
-	    if(std::abs(dy)<100) plot(dx,"dx_inn","xCALO - xTRK",-200,200) ;
-	    if(std::abs(dx)<100) plot(dy,"dy_inn","yCALO - yTRK",-200,200) ;
-	  } 
+	  m_dxH1[cluster.cell.area()]->fill( dx ) ;
+	  m_dyH1[cluster.cell.area()]->fill( dy ) ;
 	  if( std::abs(dy)<200 && std::abs(dx)<100 ) {
-	    profile1D( xtrack, dy, "dyVersusX","dy versus x",-3500,3500) ;
-	    profile1D( ytrack, dy, "dyVersusY","dy versus y",-3500,3500) ;
-	    profile1D( state->tx(), dy, "dyVersusTx","dy versus Tx",-1,1) ;
-	    profile1D( state->ty(), dy, "dyVersusTy","dy versus Ty",-1,1) ;
-	    profile1D( xtrack, dx, "dxVersusX","dx versus x",-3500,3500) ;
-	    profile1D( ytrack, dx, "dxVersusY","dx versus y",-3500,3500) ;
-	    profile1D( state->tx(), dx, "dxVersusTx","dy versus Tx",-1,1) ;
-	    profile1D( state->ty(), dx, "dxVersusTy","dy versus Ty",-1,1) ;
+	    m_dxVsXPr->fill( xtrack,dx ) ;
+	    m_dxVsYPr->fill( ytrack,dx ) ;
+	    m_dxVsTxPr->fill( state->tx(),dx ) ;
+	    m_dxVsTyPr->fill( state->ty(),dx ) ;
+	    m_dyVsXPr->fill( xtrack,dy ) ;
+	    m_dyVsYPr->fill( ytrack,dy ) ;
+	    m_dyVsTxPr->fill( state->tx(),dy ) ;
+	    m_dyVsTyPr->fill( state->ty(),dy ) ;
 	  }
 	}
       }
