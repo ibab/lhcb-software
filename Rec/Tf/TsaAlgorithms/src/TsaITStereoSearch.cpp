@@ -1,4 +1,4 @@
-// $Id: TsaITStereoSearch.cpp,v 1.8 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaITStereoSearch.cpp,v 1.9 2009-11-12 17:20:33 kholubye Exp $
 
 #include <algorithm>
 
@@ -34,6 +34,8 @@ ITStereoSearch::ITStereoSearch(const std::string& type,
   declareProperty( "yTol", m_yTol = 0.9);
   declareProperty( "nY", m_nY = 4);
 
+  declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
+
   // constructer
   declareInterface<ITsaSeedStep>(this);
 
@@ -61,6 +63,7 @@ StatusCode ITStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
   //  Search for hits to form seed tracks in stereo stations
   //-------------------------------------------------------------------------
 
+ 
   for (int i = 0; i < 6; ++i){
     hits[i].reserve(200);
   }
@@ -165,6 +168,7 @@ void ITStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
             {
               debug() << "  -> " << (*itIter)->hit()->lhcbID() << endreq;
               //if ((*itIter)->isHot() == false) { // CRJ : Need to decide what to do about cleaning
+              if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
               SeedHit* hit = new SeedHit(*itIter);
               hits[lay].push_back( hit );
               //}

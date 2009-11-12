@@ -90,6 +90,9 @@ namespace Tf
       double m_outlierCutLine;
       double m_outlierCutParabola;
 
+    protected:
+      bool m_onlyUnusedHits;
+
     };
 
       double m_outlierCutLine;

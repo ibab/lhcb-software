@@ -60,6 +60,7 @@ namespace Tf
       double m_outlierCut;
       double m_yTol;
       double m_nY;
+      bool m_onlyUnusedHits;
 
       SeedLineFit* m_fitLine;
 

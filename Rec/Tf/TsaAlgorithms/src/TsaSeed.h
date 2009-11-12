@@ -1,4 +1,4 @@
-// $Id: TsaSeed.h,v 1.4 2009-02-11 08:19:54 wouter Exp $
+// $Id: TsaSeed.h,v 1.5 2009-11-12 17:20:33 kholubye Exp $
 #ifndef _TSASEED_H_
 #define _TSASEED_H_
 
@@ -17,6 +17,7 @@
 #include "TsaKernel/SeedHit.h"
 
 #include "ITsaSeedAddHits.h"
+
 
 namespace Tf
 {
@@ -64,6 +65,11 @@ namespace Tf
       ITsaStubFind* m_stubFind;
       ITsaStubLinker* m_stubLinker;
       ITsaStubExtender* m_extendStubs;
+
+      bool m_onlyGood;
+      double m_discardChi2;
+      
+
     };
 
   }

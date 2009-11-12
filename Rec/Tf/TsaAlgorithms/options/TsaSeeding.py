@@ -4,7 +4,9 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             Tf__Tsa__ITXSearch, Tf__Tsa__OTXSearch,
                             Tf__Tsa__ITStereoSearch, Tf__Tsa__OTStereoSearch,
                             Tf__Tsa__TStationHitManager, Tf__Tsa__SeedTrackCnvTool,
-                            Tf__Tsa__StubFind, Tf__Tsa__StubExtender )
+                            Tf__Tsa__StubFind, Tf__Tsa__StubExtender,
+                            Tf__Tsa__SeedAddHits
+                           )
 
 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").outputLocation = "Rec/Track/Seed"
 ## Hit cleaning options
@@ -37,6 +39,27 @@ tsaSeed.stereoS1.sector = 1
 tsaSeed.stereoS2.sector = 2
 tsaSeed.stereoS3.sector = 3
 tsaSeed.stereoS4.sector = 4
+
+
+
+# Running over unused hits
+OnlyUnusedHits = False
+
+tsaSeed.xSearchS0.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.xSearchS1.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.xSearchS2.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.xSearchS3.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.xSearchS4.OnlyUnusedHits = OnlyUnusedHits
+
+tsaSeed.stereoS0.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.stereoS1.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.stereoS2.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.stereoS3.OnlyUnusedHits = OnlyUnusedHits
+tsaSeed.stereoS4.OnlyUnusedHits = OnlyUnusedHits
+
+tsaSeed.addTool(Tf__Tsa__SeedAddHits, name="SeedAddHits")
+tsaSeed.SeedAddHits.OnlyUnusedHits = OnlyUnusedHits
+
 
 if TrackSys().fieldOff():
     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").addTool( Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool"))

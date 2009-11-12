@@ -1,5 +1,5 @@
 
-// $Id: TsaITXSearch.cpp,v 1.6 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaITXSearch.cpp,v 1.7 2009-11-12 17:20:33 kholubye Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -51,6 +51,8 @@ ITXSearch::ITXSearch(const std::string& type,
   declareProperty("nT2",m_nT2Conf = 0);
   declareProperty("deltaX", m_deltaX = 0.3*Gaudi::Units::mm);
   declareProperty("collectPolicy", m_collectPolicy = "Linear");
+  declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
+
 };
 
 ITXSearch::~ITXSearch(){
@@ -75,6 +77,7 @@ StatusCode ITXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
   //-------------------------------------------------------------------------
   //  Search for hits to form seed tracks in X stations
   //-------------------------------------------------------------------------
+
 
   //  std::vector<SeedHit*> hits[6];   //  Hits per layer in X
   for (int i = 0; i < 6; ++i){
@@ -250,6 +253,7 @@ void ITXSearch::loadData(std::vector<SeedHit*> hits[6]) const
           {
             debug() << "  -> " << (*itIter)->hit()->lhcbID() << endreq;
             //if ((*itIter)->isHot() == false) { // CRJ : Need to decide what to do about cleaning
+            if(m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
             SeedHit* hit = new SeedHit(*itIter);
             hits[lay].push_back( hit );
             //}

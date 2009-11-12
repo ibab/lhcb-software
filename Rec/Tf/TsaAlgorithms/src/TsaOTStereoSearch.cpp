@@ -1,4 +1,4 @@
-// $Id: TsaOTStereoSearch.cpp,v 1.7 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaOTStereoSearch.cpp,v 1.8 2009-11-12 17:20:33 kholubye Exp $
 
 #include <algorithm>
 
@@ -36,11 +36,14 @@ OTStereoSearch::OTStereoSearch(const std::string& type,
   declareProperty("nHit", m_nHit = 15);
   declareProperty( "nY", m_nY = 4);
   declareProperty("maxDriftRadius", m_maxDriftRadius = 2.9);
+  declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
 
   m_scth = 1.0/TsaConstants::sth;
 
   // constructer
   declareInterface<ITsaSeedStep>(this);
+
+  
 
 };
 
@@ -67,6 +70,7 @@ StatusCode OTStereoSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<S
   //-------------------------------------------------------------------------
   //  Search for hits to form seed tracks in stereo stations
   //-------------------------------------------------------------------------
+
 
   for (int i = 0; i < 6; ++i){
     hits[i].reserve(1000);
@@ -213,6 +217,7 @@ void OTStereoSearch::loadData(std::vector<SeedHit*> hits[6]) const
           //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
           if ( (*otIter)->driftRadius() >= m_maxDriftRadius )
           { debug() << "    -> Drift dist " << (*otIter)->driftRadius() << " failed max cut " << m_maxDriftRadius << endreq; continue; }
+          if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
           SeedHit* hit = new SeedHit(*otIter);
           hits[lay].push_back( hit );
         }

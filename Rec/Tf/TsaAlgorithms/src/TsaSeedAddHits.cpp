@@ -1,4 +1,4 @@
-// $Id: TsaSeedAddHits.cpp,v 1.7 2007-12-08 15:46:43 mschille Exp $
+// $Id: TsaSeedAddHits.cpp,v 1.8 2009-11-12 17:20:33 kholubye Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -27,6 +27,7 @@ SeedAddHits::SeedAddHits(const std::string& type,
   declareProperty("dCut", m_dCut = 0.18*Gaudi::Units::mm);
   declareProperty("outlierCutParabola",m_outlierCutParabola = 3.1);
   declareProperty("outlierCutLine",m_outlierCutLine = 3.5);
+  declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
 
   declareInterface<ITsaSeedAddHits>(this);
 
@@ -114,6 +115,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
   //  double dCut = 0.18;                             //  Cut on distance of hit from seed trajectory
   //  double tth = 0.08749;                           //  tan(stereo angle)
 
+ 
   Gaudi::XYZPoint iPoint;
 
   //  Loop over seed candidates
@@ -153,7 +155,7 @@ StatusCode SeedAddHits::execute(SeedTracks* seeds, SeedHits* hits ){
             for (Hits::const_iterator itIter = iRange.begin(); itIter != iRange.end(); ++itIter)
             {
               if ((*itIter)->onTrack()) continue;
-
+              if (m_onlyUnusedHits && (*itIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
               //  Find seed candidate's coordinate at the cluster (midpoint)
               //const double z = clus->zMid();
               const double z = (*itIter)->hit()->zMid();

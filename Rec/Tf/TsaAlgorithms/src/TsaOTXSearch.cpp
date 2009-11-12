@@ -1,4 +1,4 @@
-// $Id: TsaOTXSearch.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaOTXSearch.cpp,v 1.6 2009-11-12 17:20:33 kholubye Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -47,6 +47,9 @@ OTXSearch::OTXSearch(const std::string& type,
   declareProperty("maxDriftRadius", m_maxDriftRadius = 2.9*Gaudi::Units::mm);
   declareProperty("deltaX", m_deltaX = 0.75*Gaudi::Units::mm);
   declareProperty("collectPolicy", m_collectPolicy = "Curved");
+
+  declareProperty("OnlyUnusedHits", m_onlyUnusedHits = false);
+
 };
 
 OTXSearch::~OTXSearch(){
@@ -71,6 +74,7 @@ StatusCode OTXSearch::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHi
   //-------------------------------------------------------------------------
   //  Search for hits to form seed tracks in X stations
   //-------------------------------------------------------------------------
+
 
   for (int i = 0; i < 6; ++i){
     hits[i].reserve(1000);
@@ -288,6 +292,7 @@ void OTXSearch::loadData(std::vector<SeedHit*> hits[6]) const
           //if ( clus->isHot() ) { debug() << "   -> IsHot -> Rejecting" << endreq; continue; }
           if ( (*otIter)->driftRadius() >= m_maxDriftRadius )
           { debug() << "    -> Drift dist " << (*otIter)->driftRadius() << " failed max cut " << m_maxDriftRadius << endreq; continue; }
+          if (m_onlyUnusedHits && (*otIter)->hit()->testStatus(Tf::HitBase::UsedByPatForward)) continue;
           SeedHit* hit = new SeedHit(*otIter);
           hits[lay].push_back( hit );
         }

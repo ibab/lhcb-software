@@ -5,13 +5,26 @@
 
 #include "TsaSeed.h"
 
+#include "Event/Track.h"
+
 // boost
 #include "boost/lexical_cast.hpp"
 #include <boost/lambda/bind.hpp>
 #include <boost/lambda/lambda.hpp>
+#include <boost/foreach.hpp>
+
+// try
+#include "TsaKernel/TsaTStationHitManager.h"
+#include "TsaKernel/TsaSeedingHit.h"
+
 
 using namespace Tf::Tsa;
 using namespace boost::lambda;
+
+typedef Tf::Tsa::TStationHitManager ITHitMan;
+typedef Tf::Tsa::TStationHitManager::HitRange Hits;
+
+
 
 // factory defs
 DECLARE_ALGORITHM_FACTORY( Seed );
@@ -27,7 +40,9 @@ Seed::Seed(const std::string& name,
   declareProperty("seedTracksLocation", m_seedTrackLocation = SeedTrackLocation::Default);
   declareProperty("seedHitLocation",  m_seedHitLocation = SeedHitLocation::Default);
   declareProperty("seedStubLocation", m_seedStubLocation = SeedStubLocation::Default);
-
+  declareProperty("OnlyGood", m_onlyGood = false);
+  declareProperty("DiscardChi2", m_discardChi2 = 1.5);
+  
 }
 
 Seed::~Seed(){}
@@ -60,11 +75,13 @@ StatusCode Seed::initialize()
   m_xSelection = tool<ITsaSeedStep>("Tf::Tsa::XProjSelector", "xSelection" , this);
   m_finalSelection = tool<ITsaSeedStep>(m_selectorType, "finalSelection" , this);
   m_likelihood = tool<ITsaSeedStep>("Tf::Tsa::Likelihood", "likelihood" , this);
-  m_addHits = tool<ITsaSeedAddHits>("Tf::Tsa::SeedAddHits","addHits",this);
+  m_addHits = tool<ITsaSeedAddHits>("Tf::Tsa::SeedAddHits","SeedAddHits",this);
   m_stubFind = tool<ITsaStubFind>("Tf::Tsa::StubFind","stubFinder" ,this);
   m_stubLinker = tool<ITsaStubLinker>("Tf::Tsa::StubLinker","stubLinker",this);
   m_extendStubs =  tool<ITsaStubExtender>("Tf::Tsa::StubExtender","stubExtender",this);
 
+  
+  
   return sc;
 }
 
@@ -78,7 +95,42 @@ StatusCode Seed::execute(){
   seedSel->reserve(1000);
   std::vector<SeedTrack*> tempSel; tempSel.reserve(1000);
 
+  if (m_onlyGood) {
+    // retrieve all TsaSeedingHits
+    ITHitMan* m_hitMan = tool<ITHitMan>("Tf::Tsa::TStationHitManager","TsaDataManager");
+    Hits allhits = m_hitMan->hits();
+    debug() << "All Tsa hits: " << allhits.size() << endreq;
+    
+    LHCb::Tracks* fwdTracks = get<LHCb::Tracks>( LHCb::TrackLocation::Forward );
+    for ( LHCb::Tracks::const_iterator itT = fwdTracks->begin(); fwdTracks->end() != itT; ++itT ) {
+      LHCb::Track* tr = *itT;              
+      if (tr->fitStatus() == LHCb::Track::Fitted) {
+        // if fitted - used chi2pdf from fit
+        if (tr->chi2PerDoF() < m_discardChi2) continue; 
+      }
+      //else {
+      // otherwise use PatQuality from patreco
+      // maybe we will have good discriminating property from pat reco only
+      //  if (tr->info(LHCb::Track::PatQuality, -1.) < 4.0) continue;
+      //}
+      debug() << "*** Found bad PatFwd track, marking TsaSeedingHits unused. " ;
+      int nHits = 0;
+      for ( std::vector<LHCb::LHCbID>::const_iterator itId = tr->lhcbIDs().begin();
+            tr->lhcbIDs().end() != itId; ++itId ) {
+        for ( Hits::const_iterator itIter = allhits.begin(); itIter != allhits.end(); ++itIter) {
+          if ( (*itIter)->hit()->lhcbID()==(*itId) ){
+            nHits++;
+            (*itIter)->hit()->setStatus(Tf::HitBase::UsedByPatForward, false);
+            break;
+          }
+        }
+      }
+      debug() << nHits << " hits marked." << endreq; 
+    }
+  }
+  
 
+ 
   std::vector<SeedStub*> stubs[3];            //  IT stubs per station
   for (unsigned iS = 0; iS < 3; ++iS) stubs[iS].reserve(100);
 

@@ -11,6 +11,8 @@
 #include "TsaKernel/SeedHit.h"
 #include "TsaKernel/SeedTrack.h"
 
+
+
 namespace Tf
 {
   namespace Tsa
@@ -43,7 +45,9 @@ namespace Tf
       virtual StatusCode execute(std::vector<SeedTrack*>& seeds, std::vector<SeedHit*> hits[6] = 0 ) ;
 
     protected:
-
+     
+      
+      
       typedef void (XSearchBase::*collectFun)(std::vector<SeedHit*>& hits,
                                               const double x,
                                               const double z,
@@ -98,6 +102,9 @@ namespace Tf
       collectFun m_collectFun;
 
       SeedParabolaFit* m_parabolaFit;
+
+      bool m_onlyUnusedHits;
+      
 
     private:
 
