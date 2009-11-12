@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.2 2009-11-01 11:05:36 ibelyaev Exp $
+// $Id: Pi0.cpp,v 1.3 2009-11-12 11:43:00 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -75,6 +75,11 @@ namespace Kali
     Pi0 ( const Pi0& ) ;                //     the copy constructor is disabled 
     /// the assignement operator is disabled 
     Pi0& operator=( const Pi0& ) ;      // the assignement operator is disabled 
+    /// fill tuple method
+    void fillTuple ( const Tuple& ,
+                     const Gaudi::LorentzVector& , const Gaudi::LorentzVector& ,
+                     const Gaudi::LorentzVector& , double , double ,
+                     const LHCb::CaloCellID& , const LHCb::CaloCellID& , int ) ;
     // ========================================================================
   public:
     // ========================================================================
@@ -102,6 +107,38 @@ void Kali::Pi0::mirrorHandler ( Property& /* p */ )
   else 
   { Warning ( "Albert's trick for background evaluation is deactivated!", StatusCode::SUCCESS ) ; }  
   //
+}
+// ============================================================================
+// tuple fill helper function 
+// ============================================================================
+void Kali::Pi0::fillTuple ( const Tuple& tuple ,
+                            const Gaudi::LorentzVector&  p1 , const Gaudi::LorentzVector& p2 ,
+                            const Gaudi::LorentzVector& p12 ,
+                            double prs1e                    , double prs2e ,
+                            const LHCb::CaloCellID& cell1   , const LHCb::CaloCellID& cell2 , 
+                            int bkg )
+{
+    using namespace Gaudi::Units ;
+    
+    // fill N-tuple
+    tuple -> column ( "p0"   , p1 + p2  / GeV ) ;
+    tuple -> column ( "g1"   , p1       / GeV ) ;
+    tuple -> column ( "g2"   , p2       / GeV ) ;
+    
+    tuple -> column ( "pt"   , p12.Pt() / GeV ) ;
+    tuple -> column ( "pt1"  , p1.Pt()  / GeV ) ;
+    tuple -> column ( "pt2"  , p2.Pt()  / GeV ) ;
+    
+    tuple -> column ( "prs1" , prs1e ) ;
+    tuple -> column ( "prs2" , prs2e ) ;
+    
+    tuple -> column ( "ind1" , cell1.index() ) ;
+    tuple -> column ( "ind2" , cell2.index() ) ;
+    
+    tuple -> column ( "m12"  , p12.M()  / GeV ) ;
+    tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
+    
+    tuple -> write () ;
 }
 // ============================================================================
 // the proper initialization
@@ -162,38 +199,21 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     if ( 0 == g2         ) { continue ; }  // CONTINUE
     
     // trick with "mirror-background" by Albert Puig
-    
     // invert the first photon :
     Gaudi::LorentzVector p1 = g1->momentum() ;
     p1.SetPx ( -p1.Px() ) ;
     p1.SetPy ( -p1.Py() ) ;
-    const Gaudi::LorentzVector fake1 = ( p1 + g2->momentum() ) ;
-    
-    // invert the second photon 
-    Gaudi::LorentzVector p2 = g2->momentum() ;
-    p2.SetPx ( -p2.Px() ) ;
-    p2.SetPy ( -p2.Py() ) ;
-    const Gaudi::LorentzVector fake2 = ( g1->momentum() + p2 ) ;
-    
-    double fakemass [2] ;
-    fakemass [0] = fake1.M() ;
-    fakemass [1] = fake2.M() ;
-    
-    double fakept   [2] ;
-    fakept   [0] = fake1.Pt() ;
-    fakept   [1] = fake2.Pt() ;
-    
-    const bool good  =             ( m12         < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
-    bool       good1 = m_mirror && ( fakemass[0] < 250 * MeV && fakept[0] > 800 * MeV ) ;
-    bool       good2 = m_mirror && ( fakemass[1] < 250 * MeV && fakept[1] > 800 * MeV ) ;
+    const Gaudi::LorentzVector fake = ( p1 + g2->momentum() ) ;
+
+    const bool good    =             ( m12      < 250 * MeV && p12.Pt()  > 800 * MeV ) ;
+    bool       goodBkg = m_mirror && ( fake.M() < 250 * MeV && fake.Pt() > 800 * MeV ) ;
     
     if ( 0 != h1 && good ) { h1 -> fill ( m12 / GeV ) ; }
     
-    if ( (!good)  && (!good1) && (!good2) ) { continue ; }   // CONTINUE!!!
+    if ( (!good)  && (!goodBkg) ) { continue ; }   // CONTINUE!!!
     
     if ( 0 != h2 && good ) { h2 -> fill ( m12 / GeV ) ; }
     
-    //double spd1e = energyFrom ( g1 , spd ) / GeV ;
     double spd1e = seedEnergyFrom ( g1 , spd ) / GeV ;
     
     if ( 0 < spd1e ) { continue ; }
@@ -210,67 +230,27 @@ StatusCode Kali::Pi0::analyse    ()            // the only one essential method
     if ( prs1e > prs2e ) 
     {
       std::swap ( g1    , g2    ) ;
-      std::swap ( spd1e , spd2e ) ;
       std::swap ( prs1e , prs2e ) ; 
-      //
-      std::swap ( good1       , good2       ) ;
-      std::swap ( fakemass[0] , fakemass[1] ) ;
-      std::swap ( fakept  [0] , fakept  [1] ) ;
     }
+        
+    const LHCb::CaloCellID cell1 = cellID( g1 ) ;
+    const LHCb::CaloCellID cell2 = cellID( g2 ) ;    
     
-    // fill N-tuple
-    
-    tuple -> column ( "p0"   , p12             / GeV ) ;
-    tuple -> column ( "g1"   , g1->momentum()  / GeV ) ;
-    tuple -> column ( "g2"   , g2->momentum()  / GeV ) ;
-    
-    tuple -> column ( "pt"   , p12.Pt()        / GeV ) ;
-    tuple -> column ( "pt1"  , PT ( g1 )       / GeV ) ;
-    tuple -> column ( "pt2"  , PT ( g2 )       / GeV ) ;
-    
-    tuple -> column ( "prs1" , prs1e ) ;
-    tuple -> column ( "prs2" , prs2e ) ;
-    
-    const LHCb::CaloCellID cel1 = cellID( g1 ) ;
-    const LHCb::CaloCellID cel2 = cellID( g2 ) ;
-    
-    const unsigned short index1 = cel1.index() ;
-    const unsigned short index2 = cel2.index() ;
-    
-    tuple -> column ( "ind1"     , index1 ) ;
-    tuple -> column ( "ind2"     , index2 ) ;
-    
-    const bool ispd1 = 0 < spd1e ;
-    const bool ispd2 = 0 < spd2e ;
-    tuple -> column ( "spd1" , ispd1 ) ;
-    tuple -> column ( "spd2" , ispd2 ) ;
+    // fill N-tuples
     
     if  ( good ) 
     { 
-      tuple -> column ( "m12"  , m12      / GeV ) ;
-      tuple -> column ( "pt"   , p12.Pt() / GeV ) ;
-      tuple -> column ( "bkg"  , 0 , 0 , 3  ) ;
+      fillTuple( tuple , g1->momentum() , g2->momentum() , p12 , prs1e , prs2e , cell1 , cell2 , 0 ) ;
     }
-    else if ( good1 ) 
+    if ( goodBkg ) 
     {
-      tuple -> column ( "m12"  , fakemass [0] / GeV ) ;
-      tuple -> column ( "pt"   , fakept   [0] / GeV ) ;
-      tuple -> column ( "bkg"  , 1 , 0 , 3  ) ;
+      fillTuple( tuple , g1->momentum() , g2->momentum() , fake , prs1e , prs2e , cell1 , cell2 , 1 ) ;
     }
-    else if ( good2 ) 
-    {
-      tuple -> column ( "m12"  , fakemass [1] / GeV ) ;
-      tuple -> column ( "pt"   , fakept   [1] / GeV ) ;
-      tuple -> column ( "bkg"  , 2 , 0 , 3  ) ;
-    }
-    else { continue ; }  // ??
-    
-    tuple -> write () ; 
-    
+
     // finally save good photons: 
 
     photons.insert  ( g1 ) ;
-    photons.insert  ( g2 ) ;    
+    photons.insert  ( g2 ) ;
     //
   }
   
