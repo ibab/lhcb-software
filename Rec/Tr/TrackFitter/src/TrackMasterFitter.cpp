@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.76 2009-11-11 21:12:52 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.77 2009-11-12 09:34:28 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -563,7 +563,7 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
   }
   
   // update the projections. need to be done every time ref is updated
-  projectReference( track ) ;
+  sc = projectReference( track ) ;
 
   // add all the noise, if required
   if(m_applyMaterialCorrections && sc.isSuccess()) {
