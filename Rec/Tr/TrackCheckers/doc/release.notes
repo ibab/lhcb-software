@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 !======================= TrackCheckers v4r9 2009-10-30 =======================
+! 2009-11-11 Kostyantyn Holubyev
+ - Added class TrackOccupChecker for the studies of the occupancies in IT, OT, 
+   and Velo. See also root/occup.C.
+
 ! 2009-10-19 - Manuel Tobias Schiller
  - adapted TrackCheckerNT to new-style MC association on OT hit level so
    things work again with MC09 data
