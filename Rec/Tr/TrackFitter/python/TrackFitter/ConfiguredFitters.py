@@ -223,7 +223,7 @@ def ConfiguredStraightLineFitter( Name, TracksInContainer,
     eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 
-<<<<<<< ConfiguredFitters.py
+
 ####################################################################
 ## Configurations above for different track types are obsolete     #
 ## starting from TrackFitter v2r38 (see TrackFitter release notes) #
@@ -250,7 +250,11 @@ def ConfiguredFitSeed( Name = "FitSeedForMatch",
 
 
 
-=======
+
+
+
+
+
 def ConfiguredStraightLineFit( Name, TracksInContainer,
                                NoDriftTimes =  TrackSys().noDrifttimes()  ):
     return ConfiguredStraightLineFitter(Name, TracksInContainer, NoDriftTimes)
@@ -270,4 +274,4 @@ def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
     eventfitter.Fitter.MaxNumberOutliers = MaxNumberOutliers
     eventfitter.Fitter.ErrorQoP = [ 25, 0 ]
     return eventfitter
->>>>>>> 1.31
+
