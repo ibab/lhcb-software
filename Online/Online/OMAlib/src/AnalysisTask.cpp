@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.20 2009-11-05 18:55:52 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.21 2009-11-12 17:31:32 ggiacomo Exp $
 
 
 // from Gaudi
@@ -51,10 +51,15 @@ StatusCode AnalysisTask::initialize() {
   setMsgStream(&(always()));
   // add the partition name to the analysis task identifier
   m_anaTaskname = m_anaTaskname+"/"+m_partition;
-  
+  debug() << "Initializing Analysis Task "<<m_anaTaskname << endmsg;
+
+
   if ( ! m_inputFiles.empty() ) {
-    // swith off message dim publishing for offline mode
+    // offline mode: switch off message dim publishing 
     m_doPublish = false;
+  }
+  else { // online mode
+    startMessagePublishing();
   }
 
   // use HistDB if requested
@@ -87,8 +92,7 @@ StatusCode AnalysisTask::initialize() {
     }
     closeDBSession();
   }
-  else {
-    startMessagePublishing();
+  else { // online mode: start SavesetFinder for each requested monitoring task
     std::vector<std::string>::iterator iF;
     if(m_inputTasks.size()>0) {
       if (m_inputTasks[0]=="any") 

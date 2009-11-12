@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.23 2009-09-17 17:54:16 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.24 2009-11-12 17:31:32 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -13,12 +13,10 @@ OMAMsgInterface::OMAMsgInterface( OnlineHistDB* HistDB ,
                                   std::string Name) : 
   OMAEnv(HistDB, Name), m_savesetName("") , m_taskname(""), 
   m_anaName(""), m_anaid(0), m_msgInit(false), m_textLog(false),
-  m_doPublish(true), m_textLogName(""), m_outs(NULL), m_iMsg(0)
+  m_doPublish(true), m_textLogName(""), m_outs(NULL), m_dimSvc(NULL)
 {
   checkWritePermissions();
   m_MessageStore.clear();
-  if(HistDB) 
-    loadMessages();
 }
 
 OMAMsgInterface::~OMAMsgInterface() 
@@ -27,10 +25,7 @@ OMAMsgInterface::~OMAMsgInterface()
   for (iM = m_MessageStore.begin(); iM != m_MessageStore.end(); iM++) {
     delete (*iM);
   }
-  std::map<OMAMessage*, DimService*>::iterator iS;
-  for (iS = m_dimMessages.begin(); iS != m_dimMessages.end(); iS++) {
-    delete (*iS).second ;
-  }
+  if(m_dimSvc) delete m_dimSvc;
 } 
 
 
@@ -47,6 +42,10 @@ void OMAMsgInterface::checkWritePermissions() {
 
 void OMAMsgInterface::loadMessages() {
   if(m_histDB && "noMessage" != m_anaTaskname) {
+    if (m_outs) {
+     (*m_outs) << MSG::INFO << "Loading existing messages for analysis Task " <<
+       m_anaTaskname << endmsg;
+    }
     // clean up old alarms
     if (m_histDB->canwrite())
       m_histDB->deleteOldMessages(OMAconstants::AlarmExpTime, m_anaTaskname);
@@ -86,9 +85,10 @@ void OMAMsgInterface::closeLog() {
 
 void OMAMsgInterface:: startMessagePublishing() {
   if(m_doPublish) {
-    std::string ServerName="/OMA/"+m_anaTaskname;
-    DimServer::start(ServerName.c_str());
-    DimServer::autoStartOn();
+    std::string ServerName="OMA/"+m_anaTaskname;
+    std::string svcName=ServerName+"/MESSAGES";
+    m_dimSvc = new DimService(svcName.c_str(),"");    
+    start(ServerName.c_str());
   }
 }
 
@@ -247,10 +247,9 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
 #ifndef _WIN32
     std::remove(time, time+strlen(time)+1,'\n');
 #endif
-    std::stringstream svcName, svcContent;
-    svcName << "/OMA/" << m_anaTaskname << "/" << msg->levelString() <<
-      "/Message" << m_iMsg;
-    svcContent << time << " " << msg->levelString() << " from Analysis Task "
+    std::stringstream svcContent;
+    svcContent << msg->levelString() <<  "/" << msg->id() << "/"
+	       << time << " " << msg->levelString() << " from Analysis Task "
                << m_anaTaskname;
     if (! msg->ananame().empty()) 
       svcContent << " analysis " << msg->ananame().data();
@@ -258,21 +257,19 @@ void OMAMsgInterface::publishMessage(OMAMessage* &msg) {
       svcContent << " on histogram " << msg->hIdentifier().data();
     svcContent << ":\n";
     svcContent << msg->msgtext();
-    m_msgLinks.push_back( svcContent.str() );
-    char * ptr = const_cast<char*>(m_msgLinks[m_iMsg].c_str());
-    DimService* dimSvc = new DimService(svcName.str().c_str(),
-                                        ptr );
-    m_dimMessages[msg] = dimSvc;
-    m_iMsg++;
+    std::string svcString = svcContent.str();
+    if (svcString.size() > OnlineHistDBEnv_constants::VSIZE_MESSAGE-1) {
+      svcString.resize(OnlineHistDBEnv_constants::VSIZE_MESSAGE-1);
+    }
+    strcpy ( m_lastMessage, svcString.c_str());
+    m_dimSvc->updateService( m_lastMessage );
   }
 }
 
 void OMAMsgInterface::unpublishMessage(OMAMessage* &msg) {
   if (m_doPublish) {
-    DimService* svc = m_dimMessages[msg];
-    if (svc) {
-      m_dimMessages.erase(msg);
-      delete svc;
-    }
+    std::stringstream svcContent;
+    svcContent << msg->levelString() <<  "/CLEAR/" << msg->id();
+    m_dimSvc->updateService( const_cast<char*>(svcContent.str().c_str()) );
   }
 }
