@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.11 2009-11-10 12:15:15 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.12 2009-11-12 20:08:37 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -94,9 +94,12 @@ void STNZSMonitor::bookHistograms() {
     unsigned int tellID = m_useSourceID ? sourceID : (*itT).second;
     // Create a title for the histogram
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
-    HistoID histoID        = "noise_$tell" + strTellID;
-    std::string histoTitle = "Noise for Tell" + strTellID;
-    m_noiseHistos[sourceID] = bookProfile1D(histoID, histoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    HistoID noiseHistoID        = "noise_$tell" + strTellID;
+    std::string noiseHistoTitle = "Noise for Tell" + strTellID;
+    m_noiseHistos[sourceID] = bookProfile1D(noiseHistoID, noiseHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
+    HistoID pedHistoID        = "pedestal_$tell" + strTellID;
+    std::string pedHistoTitle = "Pedestal for Tell" + strTellID;
+    m_pedestalHistos[sourceID] = bookProfile1D(pedHistoID, pedHistoTitle, -0.5, nStripsPerBoard-0.5, nStripsPerBoard);
   }
 }
 
@@ -162,17 +165,22 @@ StatusCode STNZSMonitor::finalize() {
 
 void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID) {
   // Get the histogram and reset it in case it is already booked. 
-  if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() ) { 
+  if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() && m_pedestalHistos.find(sourceID) != m_pedestalHistos.end()) { 
 
-    IProfile1D* hist = m_noiseHistos.find(sourceID)->second;//->second.end();
-    hist->reset();
+    IProfile1D* noiseHist = m_noiseHistos.find(sourceID)->second;//->second.end();
+    noiseHist->reset();
+  
+    IProfile1D* pedestalHist = m_pedestalHistos.find(sourceID)->second;//->second.end();
+    pedestalHist->reset();
   
     // Loop over strips in tell1
     unsigned int strip=0;
     std::vector<double>::const_iterator itNoise = m_noiseTool->cmsNoiseBegin(sourceID);
+    std::vector<double>::const_iterator itPed = m_noiseTool->rawMeanBegin(sourceID);
     
-    for(; itNoise != m_noiseTool->cmsNoiseEnd(sourceID); ++itNoise, ++strip) {
-      hist->fill( strip, (*itNoise) );
+    for(; itNoise != m_noiseTool->cmsNoiseEnd(sourceID); ++itNoise, ++itPed, ++strip) {
+      noiseHist->fill( strip, (*itNoise) );
+      pedestalHist->fill( strip, (*itPed) );
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);

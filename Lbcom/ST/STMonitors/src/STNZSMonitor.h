@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.7 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STNZSMonitor.h,v 1.8 2009-11-12 20:08:37 mtobin Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -71,6 +71,9 @@ private:
 
   /// Map of noise histograms booked in initialize
   std::map<int, AIDA::IProfile1D*> m_noiseHistos;
+
+  /// Map of pedestal histograms booked in initialize
+  std::map<int, AIDA::IProfile1D*> m_pedestalHistos;
 
   ST::ISTNoiseCalculationTool* m_noiseTool; ///< Tool to calculate noise
   std::string m_noiseToolType; ///< Tool type (default is STNoiseCalculationTool)
