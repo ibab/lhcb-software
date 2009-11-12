@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.2 2009-11-11 13:50:05 frankb Exp $
+// $Id: TimeoutAlg.cpp,v 1.3 2009-11-12 17:54:32 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -11,8 +11,11 @@
 #include <signal.h>
 #include <pthread.h>
 #include <execinfo.h>
+#include <iostream>
 #include <iomanip>
 #endif
+
+using namespace std;
 
 /*
  *    LHCb namespace declaration
@@ -53,21 +56,21 @@ namespace LHCb  {
     struct sigaction m_sigact;
     struct sigaction m_oldact;
 
-    static      std::vector<TimeoutAlg*> m_handlers;
+    static      vector<TimeoutAlg*> m_handlers;
 
     /** @class ExceptionTracer
      */
     struct ExceptionTracer {
-      ExceptionTracer(IMessageSvc* svc=0, const std::string& nam="TimeoutAlg")     {
+      ExceptionTracer(IMessageSvc* svc=0, const string& nam="TimeoutAlg")     {
 	void * array[25];
 	MsgStream err(svc,nam);
 	int nSize = backtrace(array, 35);
 	char ** symbols = backtrace_symbols(array, nSize);
 	for (int i = 0; i < nSize; i++)         {
 	  if ( svc )
-	    err << MSG::INFO << "===" << std::setw(3) << i << "  " << symbols[i] << endmsg;
+	    err << MSG::INFO << "===" << setw(3) << i << "  " << symbols[i] << endmsg;
 	  else
-	    std::cout << nam << " [INFO] ===" << std::setw(3) << i << "  " << symbols[i] << std::endl;
+	    cout << nam << " [INFO] ===" << setw(3) << i << "  " << symbols[i] << endl;
 	}
 	free(symbols);
       }
@@ -97,12 +100,19 @@ namespace LHCb  {
 	m_handlers.erase(m_handlers.begin());
 	a->handleTimeout();
       }
-      std::cout << "ERROR << Timeout handler size is NULL!!" << std::endl;
+      cout << "ERROR << Timeout handler size is NULL!!" << endl;
       ExceptionTracer tr(0,"TimeoutAlg");
     }
 
     void handleTimeout() {
       char text[256];
+#if 0
+      cout << "Handlers:" << m_handlers.size() << "  ";
+      cout << "Sigmask:";
+      for(int i=0; i<16; ++i)
+	cout << m_blockMask.__val[i] << " ";
+      cout << endl;
+#endif
       ::pthread_sigmask(SIG_SETMASK,&m_blockMask,0);
       ::sprintf(text,"TIMEOUT during event processing after %d milliseconds",m_timeout);
       ++m_timeoutCount;
@@ -132,7 +142,7 @@ namespace LHCb  {
 
   public:
     /// Standard constructor
-    TimeoutAlg(const std::string& nam,ISvcLocator* pSvc) 
+    TimeoutAlg(const string& nam,ISvcLocator* pSvc) 
       : Algorithm(nam,pSvc), m_timeout(10000), m_incidentSvc(0), 
 	m_timerID(0), m_timeoutCount(0), m_me(0)
     {
@@ -212,7 +222,7 @@ namespace LHCb  {
     virtual void handle(const Incident& inc)    {
       if ( inc.type() == "DAQ_TIMEOUT" )  {
 	MsgStream err(msgSvc(), name());
-	err << MSG::FATAL << inc.type() << ": Timeout during event processing." << std::endl;
+	err << MSG::FATAL << inc.type() << ": Timeout during event processing." << endl;
 	++m_timeoutCount;
 	stopTimer();
       }
@@ -227,7 +237,7 @@ namespace LHCb  {
   };
 }
 
-std::vector<LHCb::TimeoutAlg*> LHCb::TimeoutAlg::m_handlers;
+vector<LHCb::TimeoutAlg*> LHCb::TimeoutAlg::m_handlers;
 
 #include "GaudiKernel/DeclareFactoryEntries.h"
 DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,TimeoutAlg)
