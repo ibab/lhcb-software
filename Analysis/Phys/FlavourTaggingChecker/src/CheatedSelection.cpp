@@ -59,7 +59,7 @@ StatusCode CheatedSelection::initialize() {
     fatal() << "Unable to retrieve PhysDesktop"<< endreq;
     return StatusCode::FAILURE;
   }
-  m_physd->imposeOutputLocation(m_outputLocation);
+  m_physd->setOutputLocation(m_outputLocation);
 
 
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
