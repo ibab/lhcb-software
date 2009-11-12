@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.88 2009-11-12 14:13:49 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.89 2009-11-12 18:30:30 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -8,7 +8,6 @@
 
 // local
 #include "PhysDesktop.h"
-//#include "Kernel/IOnOffline.h"
 #include "Kernel/DVAlgorithm.h"
 #include "Kernel/GetDVAlgorithm.h"
 #include "Event/RecVertex.h"
@@ -95,7 +94,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
     , m_refitPVs  (   )
     , m_primVerts ( 0 )
   //
-  //    , m_OnOffline     ( 0  )
     , m_p2VtxTable    (    )
     , m_p2PVMap       (    )
   //
@@ -107,7 +105,6 @@ PhysDesktop::PhysDesktop( const std::string& type,
   //  declareInterface<IIncidentListener>(this);
 
   // Declare properties
-  //                    loading conditions
 
   //                    input & output locations
   declareProperty( "InputPrimaryVertices", m_primVtxLocn );
@@ -135,8 +132,6 @@ StatusCode PhysDesktop::initialize()
     return StatusCode::FAILURE;
   }
 
-  //  m_OnOffline = tool<IOnOffline>("OnOfflineTool",this);
-
   if (m_primVtxLocn!="") {
     return Error("You have set obsolete property InputPrimaryVertices. Set it in DVAlgorithm.");
   }
@@ -145,51 +140,13 @@ StatusCode PhysDesktop::initialize()
   if (msgLevel(MSG::DEBUG)) {
     debug() << "Primary vertex location set to " << primaryVertexLocation() << endmsg;
   }
-  
-  // Output Location
-//   IInterface* p = const_cast<IInterface*>( this->parent() ) ;
-
-//   if ( 0 != p )
-//   {
-//     // set the default value using parent's name
-//     m_outputLocn = m_OnOffline->trunkOnTES() +"/"+ nameFromInterface ( p ) ;
-//     // try to overwrite the name from  parents's "OutputLocation" property:
-//     void* tmp = 0 ;
-//     StatusCode sc = p->queryInterface ( IProperty::interfaceID() , &tmp ) ;
-//     if ( sc.isSuccess() && 0 != tmp ){
-//       IProperty* pp = static_cast<IProperty*>( tmp ) ;
-//       StringProperty output = StringProperty ( "OutputLocation" , 
-//                                                "NOTDEFINED" ) ;
-//       sc = pp->getProperty( &output ) ;
-//       if ( sc.isSuccess() ) { {
-//         if ( output.value() != "" )
-//           m_outputLocn = output.value() ; }   // NB !!
-//       }
-//       // release the used interface
-//       pp->release() ;
-//     }
-//   }
 
   m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);
 
-  // check that output location is set to *SOME* value
-  //  if (m_outputLocn.empty()) Exception("OutputLocation is not set") ;
-
   return sc;
 }
-
-/*
-//=============================================================================
-// Implementation of Listener interface
-//=============================================================================
-void PhysDesktop::handle(const Incident&){
-StatusCode sc = cleanDesktop();
-if (!sc) Exception("Could not clean Desktop");
-return ;
-}
-*/
 //=============================================================================
 // Provides a reference to its internal container of particles
 //=============================================================================
@@ -650,25 +607,6 @@ StatusCode PhysDesktop::getEventInput(){
 
   if ( !m_secVerts.empty()) m_secVerts.clear(); // to make sure it is clean in this event
 
-
-  // Retrieve Primary vertices
-  if( "None" == m_primVtxLocn ) {
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Not loading any primary vertices" << endmsg;
-  } else {
-    if (msgLevel(MSG::VERBOSE)) {
-      verbose() << "Loading any primary vertices from "
-                << primaryVertexLocation() << endmsg;
-    }
-    //    StatusCode sc = getPrimaryVertices();
-    //    if ( sc.isFailure() ) return sc;
-//     if ( 0==m_primVerts) {
-//       Info( "No primary vertex container at "+primaryVertexLocation() ) ;      
-//     } else if (m_primVerts->empty()) {
-//       Info( "Empty primary vertex container at "+primaryVertexLocation() ) ;      
-//     }
-    
-  }
-
   // Retrieve Particles & Vertices from all previous processing
   // as specified in jobOptions
   
@@ -834,8 +772,6 @@ const LHCb::VertexBase* PhysDesktop::relatedVertex(const LHCb::Particle* part) c
   // cached during initialize()
   return m_dva->bestPV(part);
 
-  //return m_dva->calculateRelatedPV(part);
-
 }
 //=============================================================================
 void PhysDesktop::relate(const LHCb::Particle*   part, 
@@ -889,7 +825,6 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
   
   if (!dv_il.empty()){
     m_inputLocations = dv_il ;
-    //    fixInputLocations(m_inputLocations.begin(),m_inputLocations.end());
   }
 
   // Check if InputLocation has been set
@@ -905,9 +840,6 @@ StatusCode PhysDesktop::setInputLocations ( const std::vector<std::string>& dv_i
         iloc != m_inputLocations.end(); ++iloc ) {
     m_p2PVDefaultLocations.push_back((*iloc)+"/Particle2VertexRelations");
   }
-
-  // set PV relation locations
-  //  fixInputLocations(m_inputLocations.begin(), m_inputLocations.end());  
 
   return StatusCode::SUCCESS ;
 }
@@ -929,18 +861,4 @@ PhysDesktop::setP2PVInputLocations ( const std::vector<std::string>& location) {
     StatusCode::FAILURE;
 
 }
-//=============================================================================
-// void PhysDesktop::fixInputLocations(std::vector<std::string>::iterator begin,
-//                                     std::vector<std::string>::iterator end){
-//   const std::string& prefix = m_OnOffline->trunkOnTES();
- 
-//   for (std::vector<std::string>::iterator loc = begin; loc!=end; ++loc) {
-//     if ( (*loc).find("/") == std::string::npos ) {
-//       *loc = prefix + "/" + *loc;
-//       if ( msgLevel(MSG::VERBOSE) ) {
-//         verbose() << "Input location changed to " << *loc << endmsg;
-//       }
-//     }
-//   }
-// }
 //=============================================================================
