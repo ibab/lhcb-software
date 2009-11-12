@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.29 2009-11-06 12:23:42 poluekt Exp $
+!$Id: release.notes,v 1.30 2009-11-12 13:37:54 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-11-12 - Anton POLUEKTOV
+ - StrippingLine.py: bug fix with ODIN and L0 filters (missing import)
 
 ! 2009-11-06 - Anton POLUEKTOV 
  - StrippingLine.py: Added ODIN and L0 filters to the line options. 

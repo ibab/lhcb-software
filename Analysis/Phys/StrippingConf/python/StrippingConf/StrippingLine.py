@@ -15,7 +15,9 @@ from copy import deepcopy
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import DeterministicPrescaler as Scaler
 from Configurables import StrippingAlg
-from Configurables import LoKi__HDRFilter as HDRFilter
+from Configurables import LoKi__L0Filter    as L0Filter
+from Configurables import LoKi__HDRFilter   as HDRFilter
+from Configurables import LoKi__ODINFilter  as ODINFilter
 from Configurables import CheckPV
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
