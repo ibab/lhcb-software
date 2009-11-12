@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.21 2009-10-27 21:04:54 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.22 2009-11-12 15:28:00 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -159,8 +159,8 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(firststate.qOverP(),type + "/125","q/p of first state",-0.001,0.001) ; 
 
   if( firststate.qOverP()!=0 ) {
-    plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", -5., 205., 21);
-    plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", -0.1, 10.1, 51);
+    plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", 0., 100., 100);
+    plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", 0, 10, 100);
   }
 
   if(track.fitResult()) {
