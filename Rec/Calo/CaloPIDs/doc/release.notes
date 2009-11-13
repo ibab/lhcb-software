@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.82 2009-10-31 01:10:49 odescham Exp $ 
+! $Id: release.notes,v 1.83 2009-11-13 12:38:42 rlambert Exp $ 
 !------------------------------------------------------------------------------
 ! Package     : Calo/CaloPIDs
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! Purpose     : Calorimeter PIDs 
 !------------------------------------------------------------------------------
+
+
+!========================== CaloPIDs v5r2 2009-11-13 =========================
+! 2009-11-13 - Rob Lambert
+ - Tagged the package
 
 ! 2009-10-30 - Olivier Deschamps
  
