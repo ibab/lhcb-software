@@ -7,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
 # =============================================================================
 
 #
@@ -20,6 +20,7 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                , 'MinimumNumberOfRClusters'   : 12 # 4 tracks with 3 hits
                , 'MinimumNumberOfPhiClusters' : 12 # 4 tracks with 3 hits
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
+               , 'MinTrksPerVtx'              : 4   # 4 is the minumum value you can put here  
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )" # on what trigger types do we run?
                }
 
@@ -50,38 +51,43 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                                   , FilterOption = { 'ASide' : 'Left', 'CSide' : 'Right' }[ side ]
                                   )
             ## do the R tracking
-            rm = DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
+            drm = DefaultVeloRHitManager( side + 'DefaultVeloRHitManager'
                                          , ClusterLocation = cf.OutputClusterLocation 
                                          , LiteClusterLocation = cf.OutputLiteClusterLocation )
+            
+            rm = PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName = drm.splitName()[-1] )
+            
             rt = PatVeloRTracking( 'Hlt1Velo' + side + 'RTracking'
                                      , OutputTracksName = 'Hlt/Track/' + side + 'RZVelo'
-                                     , HitManagerName = rm.name() )
+                                     , HitManagerName = rm.splitName()[-1] )
 
             ## do the space tracking
-            pm = DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
+            dpm = DefaultVeloPhiHitManager( side + 'DefaultVeloPhiHitManager'
                                       , ClusterLocation = cf.OutputClusterLocation
                                       , LiteClusterLocation = cf.OutputLiteClusterLocation )
 
-            # wrap a new level of managment around the previous ones
-            rm = PatVeloRHitManager(   side + 'RHitManager',   DefaultHitManagerName = rm.splitName()[-1] )
-            pm = PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName = pm.splitName()[-1] )
+            pm = PatVeloPhiHitManager( side + 'PhiHitManager', DefaultHitManagerName = dpm.splitName()[-1] )
 
             tt = PatVeloTrackTool( side + 'TrackTool'
                                 , RHitManagerName = rm.splitName()[-1]
                                 , PhiHitManagerName = pm.splitName()[-1]   
-                                , TracksInHalfBoxFrame = True)
-
-            spacetool = PatVeloSpaceTool( side + 'SpaceTool'
-                                , RHitManagerName = rm.splitName()[-1]
-                                , PhiHitManagerName = pm.splitName()[-1]          
-                                , TrackToolName = tt.splitName()[-1] )          
+                                , TracksInHalfBoxFrame = True )
 
             tracks = 'Hlt/Track/%sVelo' % side
             st = PatVeloSpaceTracking('Hlt1Velo' +  side + 'SpaceTracking'
                                          , InputTracksName = rt.OutputTracksName
                                          , OutputTracksName = tracks
-                                         , SpaceToolName = spacetool.getFullName().replace('::','__') )
+                                         , SpaceToolName = 'Tf__PatVeloSpaceTool/' + side + 'SpaceTool' )
 
+            # need to knock off the type name here
+            spaceToolName = st.SpaceToolName[st.SpaceToolName.find('/')+1:]
+            st.addTool(PatVeloSpaceTool, name = spaceToolName)
+            # need to access the tool with its name as code not as a string...
+            spaceTool = eval('st.'+spaceToolName)
+            spaceTool.RHitManagerName = rm.splitName()[-1]
+            spaceTool.PhiHitManagerName = pm.splitName()[-1]
+            spaceTool.TrackToolName = 'Tf__PatVeloTrackTool/'+side+'TrackTool'
+            
             gt = PatVeloGeneralTracking( 'Hlt1Velo' + side + 'GeneralTracking'
                                            , RHitManagerName = rm.splitName()[-1]
                                            , PhiHitManagerName = pm.splitName()[-1]
@@ -99,11 +105,11 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                 , ODIN = self.getProp('ODIN')
                 , prescale = self.prescale
                 , algos =
-                [ DecodeVELO, cf, rt, st, gt, pv3D
+                [ DecodeVELO, cf, rt, st, gt, pv3D  
                 , Member( 'VF' , 'Decision'
                         , OutputSelection = '%Decision'
                         , InputSelection  = 'TES:%s' % pv3D.OutputVerticesName
-                        , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,4']
+                        , FilterDescriptor = ['VertexNumberOf' + side + 'Tracks,>,%s' %self.getProp('MinTrksPerVtx')]
                         , HistogramUpdatePeriod = 1
                         , HistoDescriptor = {'VertexNumberOf' + side + 'Tracks' : ( 'VertexNumberOf'+side+'Tracks',-0.5,39.5,40)}
                         )
