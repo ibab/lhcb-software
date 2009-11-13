@@ -6,6 +6,7 @@
 
 !========================== HltSettings v1r2 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
+ - add Physics_MinBiasL0_PassThroughHlt_Nov09 setting
  - replace NonRandomODIN and RandomODIN with ODINPhysics and ODINTechnical
 
 ! 2009-11-11 - Gerhard Raven
