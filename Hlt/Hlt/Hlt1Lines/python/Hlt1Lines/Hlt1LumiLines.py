@@ -20,11 +20,16 @@ from Configurables import DeterministicPrescaler as Scaler
 ####### create binders...
 def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
     if counterKind is LumiFromL0DU:
-        return  lambda name, value :  seq.Members.append( LumiFromL0DU( seqName+name
-                                                        , InputSelection='Trig/L0/L0DUReport'
-                                                        , CounterName=name
-                                                        , ValueName=value
-                                                        , OutputContainer='Hlt/LumiSummary' ) )
+        def _fun (name, value ) :
+          from HltLine.HltDecodeRaw import DecodeL0DU
+          if [ i for i in DecodeL0DU.members() if i not in seq.Members ] :
+              seq.Members +=  DecodeL0DU.members() 
+          seq.Members.append( LumiFromL0DU( seqName+name
+                                          , InputSelection='Trig/L0/L0DUReport'
+                                          , CounterName=name
+                                          , ValueName=value
+                                          , OutputContainer='Hlt/LumiSummary' ) )
+        return _fun
     return lambda name, inputSel : seq.Members.append( counterKind( seqName + name
                                                      , InputSelection = inputSel
                                                      , CounterName = name
@@ -43,7 +48,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
-                , 'Tracking'               : False            # use 0/1: switches on/off tracking
+                , 'EnableReco'                   : False 
                 , 'OutputLevel'            : WARNING
                 }
 
@@ -64,6 +69,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                                     , ModeOR = True
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
+                                    , Enable = self.getProp('EnableReco')
                                     , IgnoreFilterPassed = True
                                     , MeasureTime = True)
 
@@ -86,28 +92,17 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
-                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence, self.getProp('Tracking') ), { key : inputDef } ) )
+                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence, self.getProp('EnableReco') ), { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
                 if debugOPL <= DEBUG:
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
-        # create filter sequence for the tracking
-        if self.getProp('Tracking'): trackingFraction = 1
-        else: trackingFraction = 0
-        lumiRecoSequence.Members.append(
-            Sequence('LumiRecoFilterSequence'+BXType ,
-                     Members = [Scaler( 'Lumi'+BXType+'TrackingScaler' ,
-                                        AcceptFraction = trackingFraction
-                                        ),
-                                Sequence('LumiTrackRecoSequence' ,
-                                         IgnoreFilterPassed = True,
-                                         Members = PV2D.members(),
-                                         MeasureTime = True ) 
-                                ],
-                     IgnoreFilterPassed = False,
-                     MeasureTime = True ) )
+        lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
+                                                   IgnoreFilterPassed = True,
+                                                   Members = PV2D.members(),
+                                                   MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
         from Configurables import HltTrackFilter
