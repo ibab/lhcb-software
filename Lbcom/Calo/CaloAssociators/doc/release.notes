@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.67 2009-11-03 16:33:39 odescham Exp $
+! $Id: release.notes,v 1.68 2009-11-13 17:00:06 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloAssociators
 ! =============================================================================
@@ -6,6 +6,7 @@
 !               Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!===================== CaloAssociators v6r10 2009-11-13 =======================
 ! 2009-11-03 - Olivier  Deschamps
    - MCTruthOnDeman.py : fix typo
 
@@ -22,8 +23,6 @@
 ! 2009-10-26 - Olivier Deschamps
  - python/CaloAssociators/MCTruthOnDemand.py : 
 	   add explicitely the caloDigit creation in CaloDigit2MC sequence (to please HLT redefining onDemand)
-
-
 
 !===================== CaloAssociators v6r9 2009-09-02 ========================
 ! 2009-09-02 - Marco Cattaneo
