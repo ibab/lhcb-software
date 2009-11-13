@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.405 2009-10-24 09:54:32 marcocle Exp $ 
+! $Id: release.notes,v 1.406 2009-11-13 10:07:40 wouter Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-11-13 - Wouter Hulsbergen
+ - Added function to compute derivative jacobian from Transform to 3DTransformationFunctions
 
 ! 2009-10-24 - Marco Clemencic
  - Fixed a typo in src/Lib/HistoCondition.cpp
