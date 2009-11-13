@@ -2,6 +2,7 @@
 ! Package manager : Matt Needham
 !-----------------------------------------------------------------------------
 
+!======================= STAlgorithms v3r10 2009-11-13 =======================
 ! 2009-10-28 J Luisier
  - Bug fix in WriteSTNoiseConditions (that wrote the strip status)
  - Add algorithm that checks which strips are alive
