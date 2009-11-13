@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r1p1 2009-11-13 =========================
 ! 2009-11-07 - Gerhard Raven
  - In HltRoutingBitsWriter, publish counters 
 
