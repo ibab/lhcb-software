@@ -31,7 +31,6 @@ def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
                                                      , Enable = enableNonL0Counters
                                                      , OutputContainer='Hlt/LumiSummary' ) )
 
-def _createL0Counter( seqName, seq ) :
 ####### operator, meet arguments...
 def _combine( op, arg ) :
     for key,value in arg.iteritems() : op(key,value)
