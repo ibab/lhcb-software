@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.50 2009-11-05 17:38:30 ggiacomo Exp $
+! $Id: release.notes,v 1.51 2009-11-13 15:03:20 ggiacomo Exp $
 ! Package     : OnlineHistDB
 ! Responsible : Giacomo Graziani
 !
@@ -6,8 +6,11 @@
 ! or using makedoc script in this folder
 !
 
-! 20091105 v6r0
+! 20091112 v6r0
 - convert all nested tables to varrays, since they are ordered tables, but with random order #!@#&!! 
+- name NOT NULL constraints (to avoid system names affecting exports/imports)
+- fix support for Mon1P objects
+
 
 ! 20090902 v5r6
 - another fix for Analysis specific messages
