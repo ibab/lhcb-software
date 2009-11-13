@@ -1,6 +1,6 @@
-// $Id: selMC.h,v 1.1 2009-11-05 07:30:55 jpalac Exp $
+// $Id: selMC.h,v 1.2 2009-11-13 10:10:30 jpalac Exp $
 // ====================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ 
 // ====================================================================
 // Incldue files
 // ====================================================================
@@ -39,7 +39,7 @@
   *       
   * Helper file for building Reflex dictionaries for Relations 
    * @author jpalac 
-  * @date  2009-11-05 08:29:41.968874 
+  * @date  2009-11-13 11:10:08.811138 
   *       
   */      
 

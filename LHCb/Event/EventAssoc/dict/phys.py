@@ -18,6 +18,8 @@ classes += [ Rels.RelW2D( 'LHCb::CaloCluster'   , 'LHCb::Track'       , 'float' 
 classes += [ Rels.Rel1D ( 'LHCb::Track'                               , 'float'  ) ]
 classes += [ Rels.RelW1D( 'LHCb::Particle'      , 'LHCb::VertexBase'  , 'double' ) ]
 classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'LHCb::VertexBase'             ) ]
+classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'int'             ) ]
+classes += [ Rels.Rel1D( 'LHCb::Particle'       , 'double'             ) ]
 
     
 classes += [ Rels.RelW1D( 'LHCb::Particle' , 'LHCb::Particle'  , 'double' ) ]
