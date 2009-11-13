@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-13 - Marco Gersabeck
+ - Modified StrippingD2hhNoPID.py
+
 ! 2009-11-06 - Juan Palacios
  - python/StrippingSelections/StrippingJpsiInc.py
   . Re-written with selection "framework" classes.
