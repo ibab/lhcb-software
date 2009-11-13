@@ -4,6 +4,7 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+!========================== HltLuminosity v2r12 2009-11-13 ===================
 ! 2009-11-12 - Jaap Panman
  -move LumiHistoCurrents to Monitor
 
