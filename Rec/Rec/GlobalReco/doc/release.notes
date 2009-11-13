@@ -4,6 +4,11 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r28 2009-11-13 ======================
+! 2009-11-13 - Rob Lambert
+ - Tagged v6r28
+
+
 ! 2009-11-06 - Chris Jones
  - Downgrade Warnings to Info in data recreation algorithms, since this case
    will occur with new DST content.
