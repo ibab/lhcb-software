@@ -149,8 +149,8 @@ class Physics_320Vis_300L0_10Hlt1_Aug09 :
                  'Hlt1VeloCSide',
                  'Hlt1AlignVelo',
                  'Hlt1XPress',
-                 'Hlt1NonRandomODIN',
-                 'Hlt1RandomODIN',
+                 'Hlt1ODINPhysics',
+                 'Hlt1ODINTechnical',
                  'Hlt1Tell1Error' ,
                  'Hlt1Incident']
     

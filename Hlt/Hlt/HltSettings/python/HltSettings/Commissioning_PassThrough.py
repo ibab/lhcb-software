@@ -30,15 +30,15 @@ class Commissioning_PassThrough :
         Returns a list of active lines
         """
         
-        return [ 'Hlt1NonRandomODIN','Hlt1RandomODIN','Hlt1Tell1Error' ]
+        return [ 'Hlt1ODINPhysics','Hlt1ODINTechnical','Hlt1Tell1Error' ]
 
     def Thresholds(self) :
         """
         Returns a dictionary of cuts
         """
         from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-        return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1NonRandomODIN'  : 1.
-                                                            , 'Hlt1RandomODIN'     : 0. # @OnlineEnv.AcceptRate
+        return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'  : 1.
+                                                            , 'Hlt1ODINTechnical'     : 0. # @OnlineEnv.AcceptRate
                                                             , 'Hlt1Tell1Error'     : 1.
                                              }              } 
                }
