@@ -220,9 +220,11 @@ MEPErrorAdder::removeSubs() {
     delete m_subsRxOct[i];
     delete m_subsRxPkt[i];
     delete m_subsRxEvt[i];
+    delete m_subsRxMEP[i];
     delete m_subsTotRxOct[i];
     delete m_subsTotRxPkt[i];
     delete m_subsTotRxEvt[i];
+    delete m_subsTotRxMEP[i];
     delete m_subsIncEvt[i];
     delete m_subsTotBadMEP[i];
     delete m_subsTotMEPReq[i];
@@ -248,6 +250,7 @@ MEPErrorAdder::removeSubs() {
   m_subsTotRxOct.clear();
   m_subsTotRxPkt.clear();
   m_subsTotRxEvt.clear();
+  m_subsTotRxMEP.clear();
   m_subsIncEvt.clear();
   m_subsTotBadMEP.clear();
   m_subsTotMEPReq.clear();
@@ -344,11 +347,13 @@ MEPErrorAdder::infoHandler() {
     if (ReceiveArrayService(curr,m_subsRxOct[i], m_rRxOct[i], m_rxOct)) break;
     if (ReceiveArrayService(curr,m_subsRxPkt[i], m_rRxPkt[i], m_rxPkt)) break;
     if (ReceiveArrayService(curr,m_subsRxEvt[i], m_rRxEvt[i], m_rxEvt)) break;
+    if (ReceiveArrayService(curr,m_subsRxMEP[i], m_rRxMEP[i], m_rxMEP)) break;
    
     // These will not change
     if (ReceiveSingleService(curr,m_subsTotRxOct[i], m_rTotRxOct[i], m_totRxOct)) break;    
     if (ReceiveSingleService(curr,m_subsTotRxPkt[i], m_rTotRxPkt[i], m_totRxPkt)) break;    
     if (ReceiveSingleService(curr,m_subsTotRxEvt[i], m_rTotRxEvt[i], m_totRxEvt)) break;
+    if (ReceiveSingleService(curr,m_subsTotRxMEP[i], m_rTotRxMEP[i], m_totRxMEP)) break;
     if (ReceiveSingleService(curr,m_subsIncEvt[i], m_rIncEvt[i], m_incEvt)) break;    
     if (ReceiveSingleService(curr,m_subsTotBadMEP[i], m_rTotBadMEP[i], m_totBadMEP)) break;    
     if (ReceiveSingleService(curr,m_subsTotMEPReq[i], m_rTotMEPReq[i], m_totMEPReq)) break;    
@@ -463,6 +468,7 @@ MEPErrorAdder::resetAllCounters() {
   resetCounters(m_rxOct, m_nSrc);
   resetCounters(m_rxPkt, m_nSrc);
   resetCounters(m_rxEvt, m_nSrc);
+  resetCounters(m_rxMEP, m_nSrc);
   resetCounters(m_badPckFktPkt, m_nSrc);
   resetCounters(m_badLenPkt, m_nSrc);
   resetCounters(m_misPkt, m_nSrc);
@@ -484,6 +490,7 @@ MEPErrorAdder::resetRem2DCounters() {
   reset2DCounters(m_rRxOct,m_nrServices,m_nSrc);
   reset2DCounters(m_rRxPkt,m_nrServices,m_nSrc);
   reset2DCounters(m_rRxEvt,m_nrServices,m_nSrc);
+  reset2DCounters(m_rRxMEP,m_nrServices,m_nSrc);
 
   return 0;
 }
@@ -495,6 +502,7 @@ MEPErrorAdder::resetRemSingleCounters() {
   m_rTotRxOct.resize(m_nrServices,0);
   m_rTotRxPkt.resize(m_nrServices,0);
   m_rTotRxEvt.resize(m_nrServices,0);
+  m_rTotRxMEP.resize(m_nrServices,0);
   m_rIncEvt.resize(m_nrServices,0);
   m_rTotBadMEP.resize(m_nrServices,0);
   m_rTotMEPReq.resize(m_nrServices,0);
@@ -517,6 +525,7 @@ MEPErrorAdder::publishSingleCounters() {
   PUBCNT(totRxOct,           "Total received bytes");
   PUBCNT(totRxPkt,           "Total received packets");
   PUBCNT(totRxEvt,	     "Total received events");
+  PUBCNT(totRxMEP,           "Total received MEPs");
   PUBCNT(incEvt,             "Incomplete events"); 
   PUBCNT(totBadMEP,          "Total bad MEPs");
   PUBCNT(totMEPReq,          "Total requested MEPs");
@@ -544,7 +553,8 @@ MEPErrorAdder::publishArrayCounters() {
   PUBARRAYCNT(rxOct,         "Received bytes");
   PUBARRAYCNT(rxPkt,         "Received packets");
   PUBARRAYCNT(rxEvt,         "Received events");
- 
+  PUBARRAYCNT(rxMEP,         "Received MEPs"); 
+
   return 0;
 }
 
@@ -560,6 +570,7 @@ MEPErrorAdder::unpublishArrayCounters() {
   UNPUBCNT(rxOct);
   UNPUBCNT(rxPkt);
   UNPUBCNT(rxEvt);
+  UNPUBCNT(rxMEP);
 
   return 0;
 }
@@ -586,10 +597,12 @@ MEPErrorAdder::setupSubs() {
   m_subsRxOct.resize(m_nrServices,NULL);
   m_subsRxPkt.resize(m_nrServices,NULL);
   m_subsRxEvt.resize(m_nrServices,NULL);
+  m_subsRxMEP.resize(m_nrServices,NULL);
 
   m_subsTotRxOct.resize(m_nrServices,NULL);
   m_subsTotRxPkt.resize(m_nrServices,NULL);
   m_subsTotRxEvt.resize(m_nrServices,NULL);
+  m_subsTotRxMEP.resize(m_nrServices,NULL);
   m_subsIncEvt.resize(m_nrServices,NULL);
   m_subsTotBadMEP.resize(m_nrServices,NULL);
   m_subsTotMEPReq.resize(m_nrServices,NULL);
@@ -629,14 +642,18 @@ MEPErrorAdder::setupSubs() {
     	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxEvt",m_subFarms[i].c_str());
     	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-	
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/rxMEP",m_subFarms[i].c_str());
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+		
 	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxOct",m_subFarms[i].c_str());
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxPkt",m_subFarms[i].c_str());
 	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxEvt",m_subFarms[i].c_str());
 	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
-     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/incEvt",m_subFarms[i].c_str());
+    	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totRxMEP",m_subFarms[i].c_str());
+	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+      	sprintf(temp,"%s_MEPRxSTAT_1/Runable/incEvt",m_subFarms[i].c_str());
 	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s_MEPRxSTAT_1/Runable/totBadMEP",m_subFarms[i].c_str());
 	m_subsTotBadMEP[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
@@ -683,12 +700,16 @@ MEPErrorAdder::setupSubs() {
     	m_subsRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxEvt",m_listenerDnsNode.c_str(),i+1);
     	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+    	sprintf(temp,"%s%.2i_MEPRx_1/Runable/rxMEP",m_listenerDnsNode.c_str(),i+1);
+    	m_subsRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
 
 	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxOct",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxOct[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxPkt",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxPkt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxEvt",m_listenerDnsNode.c_str(),i+1);
+	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
+     	sprintf(temp,"%s%.2i_MEPRx_1/Runable/totRxMEP",m_listenerDnsNode.c_str(),i+1);
 	m_subsTotRxEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
      	sprintf(temp,"%s%.2i_MEPRx_1/Runable/incEvt",m_listenerDnsNode.c_str(),i+1);
 	m_subsIncEvt[i] = new DimInfo(temp,m_updateFrequency,m_zero,this);
