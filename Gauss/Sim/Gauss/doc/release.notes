@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-12 - Silvia Miglioranzi
+ - Added two new QMTests: gauss-dev.qmt and gauss-up.qmt (running with 
+   Gauss-DEV.py and Gauss-Upgrade.py options respectively). Added their ref 
+   files for platform slc432 and slc464.
+
 ! 2009-11-11 - Silvia Miglioranzi
  - Update of QMTest ref files (slc5). Update of gauss-gen-mc09 test.
 
