@@ -4,6 +4,8 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+!========================== HltL0Conf v2r12p1 2009-11-13 ===================
+dll file removed
 !========================== HltL0Conf v2r12 2009-10-28 ===================
 ! 2009-10-29 - Patrick Koppenburg
  - Initialize global variables
