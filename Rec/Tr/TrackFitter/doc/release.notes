@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r39 2009-11-13 ===================
 ! 2009-11-11 - Kostyantyn Holubyev
  - New configured fitters (ConfiguredFit - a simple wrapper for
    ConfiguredEventFitter, and ConfiguredFitSeed) are defined.
