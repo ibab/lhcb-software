@@ -1,9 +1,10 @@
-!$Id: release.notes,v 1.184 2009-11-06 12:31:20 mneedham Exp $
+!$Id: release.notes,v 1.185 2009-11-13 14:29:51 cattanem Exp $
 !Package         : STDet
 !Package manager : M. Needham
 !-------------------------------------------------------------------------
 
-! 2009-11-6 M Needham
+!======================== STDet v4r15 2009-11-13 =========================
+! 2009-11-06 M Needham
  - Add sensor capacitance methods
 
 ! 2009-10-28 J Luisier
@@ -14,13 +15,11 @@
  - Add conditions for common mode noise. 
  - allow updating of noise condition 
 
-
 !======================== STDet v4r14 2009-10-16 =========================
 ! 2009-09-15 - Jeroen van Tilburg
  - Change sign of tolerance in DeSTSensor::localInActive such that it is more
    intuitive. Note that with negative numbers you have the same behaviour as
    before.
-
 
 !======================== STDet v4r13 2009-09-02 =========================
 ! 2009-09-02 - Marco Cattaneo
