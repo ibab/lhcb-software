@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.57 2009-11-11 15:49:36 panmanj Exp $
+! $Id: release.notes,v 1.58 2009-11-13 08:05:31 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-13 - Gerhard Raven
+ - disable lumi algorithms which uses tracking info if tracking is switched off
 
 ! 2009-11-11 - Jaap Panman
  - tracking in LumiLines behind a (binary) prescaler

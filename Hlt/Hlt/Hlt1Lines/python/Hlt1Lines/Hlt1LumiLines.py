@@ -18,19 +18,20 @@ from Configurables import DeterministicPrescaler as Scaler
 
 
 ####### create binders...
-def _createCounter( counterKind, seqName, seq ) :
+def _createCounter( counterKind, seqName, seq, enableNonL0Counters ) :
     if counterKind is LumiFromL0DU:
-        return _createL0Counter( seqName, seq ) 
-    return lambda name, inputSel  :  seq.Members.append( counterKind( seqName + name
-                                                                 , InputSelection = inputSel
-                                                                 , CounterName = name
-                                                                 , OutputContainer='Hlt/LumiSummary' ) )
+        return  lambda name, value :  seq.Members.append( LumiFromL0DU( seqName+name
+                                                        , InputSelection='Trig/L0/L0DUReport'
+                                                        , CounterName=name
+                                                        , ValueName=value
+                                                        , OutputContainer='Hlt/LumiSummary' ) )
+    return lambda name, inputSel : seq.Members.append( counterKind( seqName + name
+                                                     , InputSelection = inputSel
+                                                     , CounterName = name
+                                                     , Enable = enableNonL0Counters
+                                                     , OutputContainer='Hlt/LumiSummary' ) )
+
 def _createL0Counter( seqName, seq ) :
-    return lambda name, value :  seq.Members.append(  LumiFromL0DU(seqName+name
-                                                                 , InputSelection='Trig/L0/L0DUReport'
-                                                                 , CounterName=name
-                                                                 , ValueName=value
-                                                                 , OutputContainer='Hlt/LumiSummary' ) )
 ####### operator, meet arguments...
 def _combine( op, arg ) :
     for key,value in arg.iteritems() : op(key,value)
@@ -40,7 +41,7 @@ def _combine( op, arg ) :
 class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
     __used_configurables__ = [ LumiCounterDefinitionConf ]
 
-    __slots__ = { 'TriggerTypes'           : ['LumiTrigger']  # ODIN trigger type accepted
+    __slots__ = { 'TriggerType'            : 'LumiTrigger'  # ODIN trigger type accepted
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 , 'LumiLines'              : ['Count','VDM']
                 , 'Tracking'               : False            # use 0/1: switches on/off tracking
@@ -86,7 +87,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
-                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence), { key : inputDef } ) )
+                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence, self.getProp('Tracking') ), { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if key == 'RZVeloBW': veloBW=True
@@ -151,7 +152,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         from HltLine.HltLine import Hlt1Line   as Line
         return Line ( 'Lumi'+BXType
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.LumiTrigger ) & ( ODIN_BXTYP == LHCb.ODIN.'+BXType+' ) '
+                    , ODIN = ' ( ODIN_TRGTYP == LHCb.ODIN.%s ) & ( ODIN_BXTYP == LHCb.ODIN.%s)' % ( self.getProp('TriggerType'),BXType )
                     , algos = [ lumiRecoSequence, lumiCountSequence, lumiHistoSequence ] 
                     , postscale = self.postscale
                     ) 
