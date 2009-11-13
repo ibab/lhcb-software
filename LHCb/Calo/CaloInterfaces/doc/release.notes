@@ -1,16 +1,17 @@
-! $Id: release.notes,v 1.68 2009-10-25 14:40:11 ibelyaev Exp $
+! $Id: release.notes,v 1.69 2009-11-13 14:08:28 cattanem Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
 
+!========================= CaloInterfaces v7r16 2009-11-13 ====================
+! 2009-11-13 - Marco Cattaneo
+ - Add new interface to dictionary
+
 ! 2009-10-25 - Vanya Belyaev
-
  - new interface ICaloDigits4Track 
- - remove unnesessary "unary_function"-base from ICaloTrackIdEvan 
-
+ - remove unnesessary "unary_function"-base from ICaloTrackIdEval
  - cmt/requirements
-
     version increment to v7r16
 
 !========================= CaloInterfaces v7r15 2009-10-16 ====================

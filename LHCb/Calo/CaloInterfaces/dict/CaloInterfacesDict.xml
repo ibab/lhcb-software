@@ -7,6 +7,7 @@
   <class name    = "ICaloClusterTool"         />
   <class name    = "ICaloCorrection"          />
   <class name    = "ICaloDigitTool"           />
+  <class name    = "ICaloDigits4Track"        />
   <class name    = "ICaloHypoLikelihood"      /> 
   <class name    = "ICaloHypoTool"            />
   <class name    = "ICaloLikelihood"          />
