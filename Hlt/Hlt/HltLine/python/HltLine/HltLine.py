@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.14 2009-11-03 16:45:28 graven Exp $ 
+# $Id: HltLine.py,v 1.15 2009-11-13 21:22:49 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.15 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -349,7 +349,7 @@ def string2Configurable( name ) :
         if ( t and cfg.getType() == t ) or cfg.getType() == 'ConfigurableGeneric' :
             return cfg
         else :
-            print 'got something for %s, don\'t know what to do with %s'%(self,str(cfg))
+            print 'got something for %s, don\'t know what to do with %s'%(name,str(cfg))
             return None
     print 'cannot convert %s into a known configurable' % name
     return None
