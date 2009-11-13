@@ -4,6 +4,9 @@
 ! Purpose     : Package for the tracking event model classes
 !-----------------------------------------------------------------------------
 
+! 2009-11-13 - Wouter Hulsbergen
+ - 'Solve' compilation problem on windows.
+
 !======================= TrackEvent v5r2 2009-11-13 ==========================
 ! 2009-11-11 - Wouter Hulsbergen
  - Hide TrackFitResult::copy
