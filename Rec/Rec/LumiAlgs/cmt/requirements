@@ -17,6 +17,7 @@ use DAQEvent        v* Event
 use EventBase       v* Event
 use LHCbKernel      v* Kernel
 use GaudiAlg        v*
+use GaudiConf       v*
 
 include_path      none
 #============================================================================

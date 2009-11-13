@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-11-13 - Rob Lambert
+ - Added GaudiConf to configuration, to pick up stdopts at run time
+
 ! 2009-11-12 - Rob Lambert
  - Fixed configurable to propagate OutputLevel
  - Fixed a logic error in EventAccounting, and the configurable
