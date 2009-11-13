@@ -118,7 +118,7 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   tmu.setOmega( 1-pn );
   tmu.setDecision(imuon->charge()>0 ? -1: 1);
   tmu.setType( Tagger::OS_Muon ); 
-  tmu.addTaggerPart(imuon);
+  tmu.addToTaggerParts(imuon);
 
   return tmu;
 }

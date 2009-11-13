@@ -185,7 +185,7 @@ Tagger TaggerPionSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     tpionS.setOmega( 1-pn );
 //   }
   tpionS.setType( Tagger::SS_Pion ); 
-  tpionS.addTaggerPart(ipionS);
+  tpionS.addToTaggerParts(ipionS);
 
   return tpionS;
 }

@@ -130,17 +130,18 @@ void BTagging::performTagging(const std::string & location)
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<const Particle*> taggerparts = itag->taggerParts();
-        std::vector<const Particle*>::iterator kp;
-        for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-          verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
-                    << " p= "  << (*kp)->p()/GeV << endreq;
-        }
+
+// 	SmartRefVector<LHCb::Particle> taggerparts = itag->taggerParts();
+// 	SmartRefVector<LHCb::Particle>::const_iterator kp;
+// 	for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
+// 	  verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+// 		    << " p= "  << (*kp)->p()/GeV << endreq;
+// 	}
       }
     }
   }
 
-  ///Output to TES (for backward compatibility)
+//   ///Output to TES (for backward compatibility)
   const std::string tagLocation = location+"/"+m_TagLocation;
   debug() << "Putting FlavourTags in " << tagLocation << endmsg;
   if(! (tags->empty()) ) put(tags, tagLocation);
@@ -148,6 +149,8 @@ void BTagging::performTagging(const std::string & location)
 }
 
 //=========================================================================
-StatusCode BTagging::finalize() { return DVAlgorithm::finalize(); }
+StatusCode BTagging::finalize() { 
+  return DVAlgorithm::finalize(); 
+}
 
 //==========================================================================

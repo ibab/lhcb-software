@@ -132,7 +132,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
     tVch.setOmega( omega );
 //   }
   tVch.setType( Tagger::VtxCharge ); 
-  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addTaggerPart(*ip);
+  for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addToTaggerParts(*ip);
 
   return tVch;
 }

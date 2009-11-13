@@ -135,7 +135,7 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   tkaon.setOmega( 1-pn );
   tkaon.setDecision(ikaon->charge()>0 ? -1: 1);
   tkaon.setType( Tagger::OS_Kaon ); 
-  tkaon.addTaggerPart(ikaon);
+  tkaon.addToTaggerParts(ikaon);
 
   return tkaon;
 }

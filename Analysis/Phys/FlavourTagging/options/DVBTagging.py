@@ -3,7 +3,7 @@
 # Example Options for BTagging algorithm
 #
 # @author Marco Musy
-# @date 2009-02-19
+# @date 2009-11-02
 #
 ########################################################################
 from Gaudi.Configuration import *
@@ -13,7 +13,6 @@ from Configurables import GaudiSequencer
 #
 # If you want to import .opts options, do this first
 #
-importOptions("$STDOPTS/PreloadUnits.opts")
 
 ########################################################################
 #
@@ -22,6 +21,7 @@ importOptions("$STDOPTS/PreloadUnits.opts")
 from Configurables import DaVinci
 DaVinci().MainOptions= "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
 
+# /afs/cern.ch/lhcb/software/releases/DAVINCI/DAVINCI_v24r4/DaVinciSys
 
 ########################################################################
 #
@@ -29,17 +29,19 @@ DaVinci().MainOptions= "$DAVINCISYSROOT/tests/options/Do09selBu2LLK.py"
 #
 from Configurables import BTagging, BTaggingTool, PhysDesktop, BTaggingChecker
 
-#btool = BTaggingTool()
-#btool.OutputLevel = 2
 
 tag = BTagging("BTagging")
-tag.InputLocations = [ "Sel09Bu2LLK" ]
-tag.OutputLevel = 3
+tag.InputLocations = [ "Phys/Sel09Bu2LLK" ]
+tag.OutputLevel = 1
+BTaggingTool().OutputLevel = 1
 
-# Flavour tagging Checker:
+
+####### Flavour tagging Checker:
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "BTagging" ]
+tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
+tagcheck.TagsLocation = "Phys/Sel09Bu2LLK/FlavourTags"
 
+######
 MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
 ########################################################################
 #
@@ -51,7 +53,7 @@ DaVinci().PrintFreq  = 1
 DaVinci().DataType   = "DC06" 
 DaVinci().Simulation    = True
 #DaVinci().UserAlgorithms = [ tag, tagcheck ]  # The algorithms
-DaVinci().MoniSequence = [  tag, tagcheck ]  # The algorithms
+DaVinci().MoniSequence = [  tag  ]  # The algorithms
 ########################################################################
 # HLT
 DaVinci().ReplaceL0BanksWithEmulated = True  ## true to rerun L0

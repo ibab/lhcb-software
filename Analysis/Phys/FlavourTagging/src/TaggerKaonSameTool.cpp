@@ -149,7 +149,7 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
 //   }
   tkaonS.setType( Tagger::SS_Kaon ); 
-  tkaonS.addTaggerPart(ikaonS);
+  tkaonS.addToTaggerParts(ikaonS);
 
   return tkaonS;
 }
