@@ -4,6 +4,7 @@
 ! Purpose     : Encode and decode Raw banks for ST
 !-----------------------------------------------------------------------------
 
+!=============================== STDAQ v3r20 2009-11-13 ======================
 ! 2009-11-05 M Needham
  - Fix warning about unchecked StatusCode
 
