@@ -4,16 +4,14 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+!========================== DigiEvent v2r13 2009-11-13 =======================
 ! 2009-10-25 - Vanya Belyaev
  - CaloDigit:
-
     add typedefs:
-
      std::vector<const LHCb::CaloDigit*>  ==> LHCb::CaloDigit::Vector  
      std::set<const LHCb::CaloDigit*>     ==> LHCb::CaloDigit::Set  
 
 - cmt/requirements
-
      version increment to v2r13 
 
 !========================== DigiEvent v2r12 2009-07-28 =======================
