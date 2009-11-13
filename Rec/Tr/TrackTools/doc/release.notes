@@ -3,6 +3,15 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-11-11 Kostyantyn Holubyev
+ - Modified TrackCloneFinder::flagClones method to randomly mark a clone
+   if chi2 information is not available from the fit. Necessary for fast
+   reconstruction.
+
+! 2009-11-11 Kostyantyn Holubyev
+ - Fixed a bug in TrackStateInitTool, in createTStationStates: break
+   statement added to prevent the undefined behavior.
+
 ! 2009-10-31 - Stephanie Hansmann-Menzemer
  - check for existence of cluster locations in TrackNNGhostId
 
@@ -12,15 +21,6 @@
 ! 2009-10-21 and 23 - Johannes Albrecht
  - fix small memory leak in TrackNNGhostId, add ghost id for all track types
 
-!======================== TrackTools v3r23 2009-11-11 ========================
-! 2009-11-11 Kostyantyn Holubyev     
- - Modified TrackCloneFinder::flagClones method to randomly mark a clone
-   if chi2 information is not available from the fit. Necessary for fast
-   reconstruction.
- 
-! 2009-11-11 Kostyantyn Holubyev
- - Fixed a bug in TrackStateInitTool, in createTStationStates: break
-   statement added to prevent the undefined behavior.
 
 !======================== TrackTools v3r22 2009-10-20 ========================
 

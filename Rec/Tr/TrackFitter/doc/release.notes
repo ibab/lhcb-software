@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-11-11 - Kostyantyn Holubyev
+ - New configured fitters (ConfiguredFit - a simple wrapper for
+   ConfiguredEventFitter, and ConfiguredFitSeed) are defined.
+   All other fitters are now obsolete. See previous comments by Wouter.
+
 ! 2009-11-11 - Wouter Hulsbergen
  - Moved projectors to masterfitter. Store seed matrix in new class KalmanFitResult.
 
@@ -13,11 +18,6 @@
  - Added configuration for cosmics fitter (with drifttimes)
 
 !=========================== TrackFitter v2r38 2009-10-20 ===================
-! 2009-11-11 - Kostyantyn Holubyev
- - New configured fitters (ConfiguredFit - a simple wrapper for 
-	 ConfiguredEventFitter, and ConfiguredFitSeed) are defined. 
-	 All other fitters are now obsolete. See previous comment.
-
 ! 2009-10-13 - Wouter Hulsbergen
  - Added extra extrapolator to TrackMasterFitter for velo-only tracks.
    Configuration now identical for all track types except Seed.
