@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.81 2009-11-05 22:49:16 dgolubko Exp $
+! $Id: release.notes,v 1.82 2009-11-13 17:01:12 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+!========================== CaloTools v5r13 2009-11-13 =========================
 ! 2009-11-05 - Dmitry GOLUBKOV
  - L0Calo2CaloTool : bugfix - make storage of all created clusters on TES the
    only supported behaviour (therefore remove the 'DuplicateClustersOnTES' property),
