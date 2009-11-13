@@ -3,7 +3,7 @@
 Internal common functions/utilities. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: _internals.py,v 1.4 2009-06-30 14:55:08 marcocle Exp $"
+__version__ = "$Id: _internals.py,v 1.5 2009-11-13 15:33:25 marcocle Exp $"
 
 # Set up the logger 
 import logging
@@ -313,19 +313,43 @@ class _relativize_url:
                              self.node, self.key, subs)
         return src
 
+## Dummy class for progress monitoring.
+#  It implements the subset of the interface of QProgressDialog
+#  (http://doc.trolltech.com/4.4/qprogressdialog.html) needed by DumpToFiles.
+class _dummyMonitor(object):
+    def setMaximum(self, max):
+        pass
+    def setValue(self, value):
+        pass
+    def value(self):
+        return 0
+    def reset(self):
+        return 0
+    def wasCanceled(self):
+        return False
+    def setLabelText(self, text):
+        pass
+    
 ## Dump the content of the database at a given time and tag to XML files.
-def DumpToFiles(connString, time=0, tag="HEAD", srcs=['/'],
-                destroot='DDDB', force=False, addext=False):
+def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
+                destroot='DDDB', force=False, addext=False,
+                monitor = None):
     log = logging.getLogger("CondDBUI.Admin.DumpToFiles")
-    log.debug("called with arguments: %s",repr((connString,time,tag,srcs,
+    log.debug("called with arguments: %s",repr((database,time,tag,srcs,
                                                 destroot,force,addext)))
+    if monitor is None:
+        monitor = _dummyMonitor()
     
     from CondDBUI import CondDB
     import os, re
     
-    # Connect to the database
-    db = CondDB(connString, defaultTag = tag)
-    log.debug("connected to database")
+    if type(database) is str:
+        # Connect to the database
+        db = CondDB(database, defaultTag = tag)
+        log.debug("connected to database '%s'", database)
+    else:
+        # Let's assume we were given a CondDBUI.CondDB instance
+        db = database
     
     # @note: This piece of code is needed if we want to allow only global tags
     # # Check the validity of the tag
@@ -341,21 +365,28 @@ def DumpToFiles(connString, time=0, tag="HEAD", srcs=['/'],
             nodes += db.getAllChildNodes(s)
         else:
             log.warning("Node '%s' does not exist. Ignored",s)
+    
+    nodes = [ n for n in set(nodes) if db.db.existsFolder(n) ]
     nodes.sort()
-    nodes = set(nodes)
+    monitor.setMaximum(len(nodes))
 
     # matching: SYSTEM "blah"
     sysIdRE = re.compile('SYSTEM[^>"\']*("[^">]*"|'+"'[^'>]*')")
     # matching: href "conddb:blah"
     hrefRE = re.compile('href *= *("conddb:[^">]*"|'+"'conddb:[^'>]*')")
-    
+    value = 0
     for node in ( n for n in nodes if db.db.existsFolder(n) ):
+        if monitor.wasCanceled():
+            break
+        monitor.setValue(value)
+        monitor.setLabelText(node)
         log.debug("retrieve data from '%s'",node)
         f = db.getCOOLNode(node)
         channels = [ i for i in f.listChannels() ]
         if len(channels) > 1:
             log.debug("processing %d channels",len(channels))
         for ch in channels:
+            monitor.setValue(value)
             try:
                 
                 data = db.getPayload(node, time, channelID = ch, tag = tag)
@@ -412,7 +443,9 @@ def DumpToFiles(connString, time=0, tag="HEAD", srcs=['/'],
                 elif "No child tag" in desc:
                     log.info("tag not found in %s", node)
                 elif "not a child of" in desc:
-                    # tag exists in a foldeset not containing the current one
+                    # tag exists in a folderset not containing the current one
                     log.info("tag not found in %s", node)
                 else:
                     raise
+        value += 1
+    monitor.setValue(value)

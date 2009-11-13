@@ -4,6 +4,7 @@
 #  Definition of the browser MainWindow class.
 
 from PyQt4.QtCore import (Qt, QObject, SIGNAL,
+                          QDateTime,
                           QRegExp)
 from PyQt4.QtGui import (QDialog,
                          QFileDialog,
@@ -16,10 +17,13 @@ from Models import NodeFieldsModel, NodeFieldsDelegate
 from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
 from Ui_NewNodeDialog import Ui_NewNodeDialog
+from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
+from Ui_ProgressDialog import Ui_ProgressDialog
 
 import os
 
-__all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog"]
+__all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog",
+           "DumpToFilesDialog", "ProgressDialog"]
 
 ## Simple validator for COOL database name
 class DBNameValidator(QRegExpValidator):
@@ -33,11 +37,10 @@ class DBNameValidator(QRegExpValidator):
         self.isAcceptable = res[0] == QValidator.Acceptable
         return res
 
-## Class containing the logic of the application.
+## Dialog to collect information to create a new database.
 class NewDatabaseDialog(QDialog, Ui_NewDatabaseDialog):
     ## Constructor.
-    #  Initializes the base class, define some internal structures and set the icon of
-    #  the window.
+    #  Initializes the base class and defines some internal structures.
     def __init__(self, parent = None, flags = Qt.Dialog):
         # Base class constructor.
         super(NewDatabaseDialog, self).__init__(parent, flags)
@@ -69,11 +72,10 @@ class NewDatabaseDialog(QDialog, Ui_NewDatabaseDialog):
         self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(self.validInputs())
 
 
-## Class containing the logic of the application.
+## Dialog to collect the information to open a database.
 class OpenDatabaseDialog(QDialog, Ui_OpenDatabaseDialog):
     ## Constructor.
-    #  Initializes the base class, define some internal structures and set the icon of
-    #  the window.
+    #  Initializes the base class and defines some internal structures.
     def __init__(self, parent = None, flags = Qt.Dialog):
         # Base class constructor.
         super(OpenDatabaseDialog, self).__init__(parent, flags)
@@ -150,6 +152,7 @@ class NodeNameValidator(QValidator):
         self.lastState = state
         return state, pos
 
+## Dialog to create a new node.
 class NewNodeDialog(QDialog, Ui_NewNodeDialog):
     def __init__(self, parent = None, flags = Qt.Dialog):
         # Base class constructor.
@@ -218,3 +221,48 @@ class NewNodeDialog(QDialog, Ui_NewNodeDialog):
         if self.fieldsView.selectionModel().hasSelection():
             index = self.fieldsView.selectionModel().currentIndex()
             self.fieldsModel.removeRow(index.row())
+
+## Dialog to dump a snapshot to files.
+class DumpToFilesDialog(QDialog, Ui_DumpToFilesDialog):
+    ## Constructor.
+    #  Initializes the base class and defines some internal structures.
+    def __init__(self, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(DumpToFilesDialog, self).__init__(parent, flags)
+        # Prepare the GUI.
+        self.setupUi(self)
+        # Initialize fields
+        self.destDir.setText(os.getcwd())
+        self.pointInTime.setDateTime(QDateTime.currentDateTime())
+    ## Open a directory selection dialog
+    def selectDirectory(self):
+        name = QFileDialog.getExistingDirectory(self, "Destination directory", os.getcwd())
+        if name:
+            self.destDir.setText(name)
+    ## Show or hide local tags in the tag combo box
+    def showLocalTags(self, show):
+        pass
+
+## Simple dialog to present progress.
+#  The dialog implements a simple monitor interface, so it can be uses in several cases.
+class ProgressDialog(QDialog, Ui_ProgressDialog):
+    ## Constructor.
+    def __init__(self, parent = None, flags = Qt.Dialog, message = "Progress"):
+        # Base class constructor.
+        super(ProgressDialog, self).__init__(parent, flags)
+        # Prepare the GUI.
+        self.setupUi(self)
+        self.setWindowTitle(message)
+        self.setResult(QDialog.Accepted)
+    def setMax(self, max):
+        self.progressBar.setMaximum(max)
+    def setCount(self, count):
+        self.progressBar.setValue(max)
+    def increment(self):
+        self.progressBar.setValue(self.progressBar.value() + 1)
+    def isCancelled(self):
+        return self.result() == QDialog.Rejected
+    def setCurrent(self, obj):
+        if obj is not None:
+            self.current.setText(obj)
+

@@ -9,6 +9,7 @@ from PyQt4.QtCore import (Qt, QObject,
                           QSettings,
                           QSize, QPoint)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
+                         QProgressDialog,
                          QHeaderView,
                          QLabel,
                          QAction,
@@ -29,8 +30,7 @@ import os
 ## Class containing the logic of the application.
 class MainWindow(QMainWindow, Ui_MainWindow):
     ## Constructor.
-    #  Initialises the base class, define some internal structures and set the icon of
-    #  the window.
+    #  Initialises the base class and defines some internal structures.
     def __init__(self, parent = None, flags = Qt.Widget):
         # Base class constructor.
         super(MainWindow, self).__init__(parent, flags)
@@ -505,8 +505,26 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ## Dump a snapshot of the current database to files
     def dumpToFiles(self):
-        self._unimplemented()
-
+        d = DumpToFilesDialog(self)
+        if d.exec_():
+            from CondDBUI.Admin import DumpToFiles
+            monitor = QProgressDialog(self)
+            monitor.setWindowModality(Qt.WindowModal)
+            monitor.setWindowTitle("Dumping to files")
+            monitor.setMinimumDuration(0)
+            DumpToFiles(database = self.db,
+                        time = d.pointInTime.toValidityKey(),
+                        tag = str(d.tag.currentText()),
+                        srcs = ['/'],
+                        destroot = str(d.destDir.text()),
+                        force = d.overwrite.isChecked(),
+                        addext = False,
+                        monitor = monitor)
+            if monitor.wasCanceled():
+                monitor.reset()
+                QMessageBox.information(self, "Dump to files canceled",
+                                        "The dump has been canceled.")
+    
     ## Create a slice of the current database to a database
     def createSlice(self):
         self._unimplemented()
