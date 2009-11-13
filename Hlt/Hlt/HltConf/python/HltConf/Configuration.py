@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.130 2009-11-05 15:54:03 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.131 2009-11-13 19:39:54 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -170,8 +170,8 @@ class HltConf(LHCbConfigurableUser):
                       , 34 : "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"  # note: we need the 'Decision' at the end to _exclude_ Hlt1Global
                       , 35 : "HLT_PASS_SUBSTR('Hlt1Velo')"  
                       , 36 : "HLT_PASS('Hlt1XPressDecision','Hlt2UnbiasedJPsiDecision')"
-                      , 37 : "HLT_PASS('Hlt1RandomODINDecision')"
-                      , 38 : "HLT_PASS('Hlt1NonRandomODINDecision')"
+                      , 37 : "HLT_PASS('Hlt1ODINPhysicsDecision')"
+                      , 38 : "HLT_PASS('Hlt1ODINTechnicalDecision')"
                       , 39 : "HLT_PASS_SUBSTR('Hlt1L0')"
                       , 40 : "HLT_PASS_RE('Hlt1.*Hadron.*Decision')"
                       , 41 : "HLT_PASS_RE('Hlt1.*SingleMuon.*Decision')"
@@ -179,7 +179,7 @@ class HltConf(LHCbConfigurableUser):
                       , 43 : "HLT_PASS_RE('Hlt1.*MuTrack.*Decision')"
                       , 44 : "HLT_PASS_RE('Hlt1.*Electron.*Decision')"
                       , 45 : "HLT_PASS_RE('Hlt1.*Pho.*Decision')"
-                      , 46 : "HLT_PASS_RE('Hlt1(?!Lumi)(?!Random)(?!NonRandom).*Decision')"    # I don't like that
+                      , 46 : "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"    # I don't like that
                       # 64--96: Hlt2
                       , 64 : "HLT_PASS('Hlt2Global')"
                       , 65 : "HLT_PASS('Hlt2DebugEventDecision')"

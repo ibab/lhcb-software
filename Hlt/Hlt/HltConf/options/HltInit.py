@@ -39,9 +39,10 @@ HltANNSvc().Hlt1SelectionID = {
     "Hlt1VeloASideDecision"                 :   61,
     "Hlt1VeloCSideDecision"                 :   62,
     # PA
-    "Hlt1RandomODINDecision"                :   70,
-    "Hlt1NonRandomODINDecision"             :   71,
+    "Hlt1ODINTechnicalDecision"             :   70,
+    "Hlt1ODINPhysicsDecision"               :   71,
     "Hlt1L0ForcedDecision"                  :   72,
+    "Hlt1L0AnyDecision"                     :   73,
     # XP
     "Hlt1XPressDecision"                    :   80,
     "Hlt1AlignVeloDecision"                 :   81,
