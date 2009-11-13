@@ -108,18 +108,18 @@ StatusCode TrackCaloMatchMonitor::initialize()
   setHistoTopDir("Track/") ;
   char histitle[128] ;
   sprintf(histitle,"x%s - xTRK (outer)",m_caloName.c_str()) ;
-  m_dxH1[0] = book1D("dx_inn",histitle,-200,200) ;
+  m_dxH1[0] = book1D("dx_out",histitle,-200,200) ;
   sprintf(histitle,"x%s - xTRK (middle)",m_caloName.c_str()) ;
   m_dxH1[1] = book1D("dx_mid",histitle,-200,200) ;
   sprintf(histitle,"x%s - xTRK (inner)",m_caloName.c_str()) ;
-  m_dxH1[2] = book1D("dx_out",histitle,-200,200) ;
+  m_dxH1[2] = book1D("dx_inn",histitle,-200,200) ;
   
   sprintf(histitle,"y%s - yTRK (outer)",m_caloName.c_str()) ;
-  m_dyH1[0] = book1D("dy_inn",histitle,-200,200) ;
+  m_dyH1[0] = book1D("dy_out",histitle,-200,200) ;
   sprintf(histitle,"y%s - yTRK (middle)",m_caloName.c_str()) ;
   m_dyH1[1] = book1D("dy_mid",histitle,-200,200) ;
   sprintf(histitle,"y%s - yTRK (inner)",m_caloName.c_str()) ;
-  m_dyH1[2] = book1D("dy_out",histitle,-200,200) ;
+  m_dyH1[2] = book1D("dy_inn",histitle,-200,200) ;
   
   m_dxVsXPr = bookProfile1D("dxVsX","dx versus x",-3500,3500) ;
   m_dxVsYPr = bookProfile1D("dxVsY","dx versus y",-3500,3500) ;
