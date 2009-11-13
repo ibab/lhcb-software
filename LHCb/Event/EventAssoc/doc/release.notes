@@ -4,6 +4,7 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+!======================= EventAssoc v5r0 2009-11-13 ========================
 ! 2009-11-13 - Juan Palacios
  - Add dictionaries for 1D tables for LHCb::Particle->int, LHCb::Particle->int
 
