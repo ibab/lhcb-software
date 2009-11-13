@@ -143,6 +143,7 @@ namespace LHCb  {
     std::vector<int64_t>            m_rxOct;
     std::vector<int64_t>            m_rxPkt;
     std::vector<int64_t>            m_rxEvt;
+    std::vector<int64_t>            m_rxMEP;
     std::vector<int>	            m_noShow; 
     /* Global counters */
     int64_t 			 m_numMEPRecvTimeouts;
@@ -159,6 +160,7 @@ namespace LHCb  {
     int64_t                     m_totRxPkt;
     int64_t                     m_totRxOct;
     int64_t			m_totRxEvt;
+    int64_t			m_totRxMEP;
     int64_t                     m_notReqPkt;
     int64_t                     m_incEvt;
     int64_t                     m_totBadMEP;
