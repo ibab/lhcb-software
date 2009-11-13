@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r14 2009-11-13 =====================
 ! 2009-11-10 - Kostyantyn Holubyev
  - Added option to run only over hits unused in the previous run of
    PatForward (OnlyUnusedHits=true). See options/TsaSeeding.py for example
