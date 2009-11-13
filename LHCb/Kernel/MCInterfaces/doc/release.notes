@@ -4,6 +4,10 @@
 ! Purpose     : Interfaces with dependency on MC
 !-----------------------------------------------------------------------------
 
+!==================== MCInterfaces v1r10 2009-11-13 ==========================
+! 2009-11-13 - Marco Cattaneo
+ - Remove hack for Gaudi v21r1 to link dictionary on windows from requirements
+
 ! 2009-11-06 - Victor Coco
  - Add an interface IHepMCParticleSelector to select GenParticle matching some 
    criteria (also add GenEvent in the requirements )
