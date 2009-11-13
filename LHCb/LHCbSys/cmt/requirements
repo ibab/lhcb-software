@@ -93,7 +93,7 @@ use CondDBEntityResolver  v5r1   Tools   # Marco Clemencic
 use DaVinciInterfaces     v1r3    Phys    # Juan Palacios
 use DaVinciKernel         v8r3    Phys    # Juan Palacios
 use DaVinciMCKernel       v4r1    Phys    # Juan Palacios
-use DaVinciTypes          v1r0    Phys    # Juan Palacios
+use DaVinciTypes          v1r1    Phys    # Juan Palacios
 use HepMCBack             v1r1   Gen     # Gloria Corti, Patrick Robbe
 use LinkerInstances       v3r5    Event   # Thomas Ruf
 use LoKi                  v8r1   Phys    # Ivan Belyaev
@@ -118,7 +118,7 @@ use STKernel              v1r18   ST      # Matt Needham
 use STTELL1Event          v1r9    ST      # Matt Needham
 use CondDBUI              v2r23   Tools   # Marco Clemencic
 use TfKernel              v2r13   Tf      # Stephanie Hansmann-Menzemer
-use TrackInterfaces       v4r8    Tr      # Matt Needham
+use TrackInterfaces       v4r9    Tr      # Matt Needham
 use TrackKernel           v1r1    Tr      # Wouter Hulsbergen
 use TsaKernel             v3r5p1  Tf      # Matt Needham
 use DetCondExample        v11r8   Ex      # Marco Clemencic
