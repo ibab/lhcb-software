@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r9 2009-11-13 ========================
 ! 2009-11-11 M Needham
  - Bug fix in TTNames class stringToChannel
 
