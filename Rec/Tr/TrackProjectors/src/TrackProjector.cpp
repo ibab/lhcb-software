@@ -1,10 +1,11 @@
-// $Id: TrackProjector.cpp,v 1.19 2009-09-25 09:08:31 wouter Exp $
+// $Id: TrackProjector.cpp,v 1.20 2009-11-13 12:40:10 wouter Exp $
 // Include files 
 
 // local
 #include "TrackProjector.h"
 
 // from GaudiKernel
+#include "GaudiKernel/ToolFactory.h" 
 #include "GaudiKernel/IMagneticFieldSvc.h"
 
 // from TrackFitEvent
@@ -27,6 +28,7 @@ using namespace LHCb;
 using namespace ROOT::Math;
 using ROOT::Math::SMatrix;
 
+DECLARE_TOOL_FACTORY( TrackProjector );
 
 //-----------------------------------------------------------------------------
 /// Retrieve the chi squared of the (last) projection
@@ -184,7 +186,23 @@ TrackProjector::alignmentDerivatives( const StateVector& statevector,
   me->project( statevector, meas ).ignore() ;
   DualVector unit = dual( m_unitPocaVector ) ;
   
+ // Calculate the derivative of the poca on measTraj to alignment parameters. Only non-zero elements:
+  Gaudi::XYZVector arm = meas.trajectory().position(m_sMeas) - pivot ;
+  ROOT::Math::SMatrix<double,3,6> dPosdAlpha ;
+  // Derivative to translation
+  dPosdAlpha(0,0) = dPosdAlpha(1,1) = dPosdAlpha(2,2) = 1 ;
+  // Derivative to rotation around x-axis
+  dPosdAlpha(1,3) = -arm.z() ;
+  dPosdAlpha(2,3) =  arm.y() ;
+  // Derivative to rotation around y-axis
+  dPosdAlpha(0,4) =  arm.z() ;
+  dPosdAlpha(2,4) = -arm.x() ;
+  // Derivative to rotation around z-axis
+  dPosdAlpha(0,5) = -arm.y() ;
+  dPosdAlpha(1,5) =  arm.x() ;
+  
+  return unit * dPosdAlpha ;
   // compute the projection matrix from parameter space onto the (signed!) unit
-  return unit*AlignTraj( meas.trajectory(), pivot ).derivative( m_sMeas );
+  //return unit*AlignTraj( meas.trajectory(), pivot ).derivative( m_sMeas );
 }
 
