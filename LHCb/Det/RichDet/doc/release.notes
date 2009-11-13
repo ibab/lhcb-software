@@ -4,6 +4,7 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+!======================== RichDet v13r0 2009-11-13 ===========================
 ! 2009-11-11 - Antonis Papanestis
  - Introduce separate refractive index for the HLT.
 
