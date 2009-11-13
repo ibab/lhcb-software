@@ -62,6 +62,7 @@ createITLiteClusters = RawBankToSTLiteClusterAlg("CreateITLiteClusters")
 createITClusters.DetType     = "IT"
 createITLiteClusters.DetType = "IT"
 
+
 ## Special OT decoder for cosmics to merge spills.
 if TrackSys().cosmics():
    from Configurables import (Tf__OTHitCreator)
@@ -70,7 +71,6 @@ if TrackSys().cosmics():
    # also adapt the MasterExtrapolator in the TrackInterpolator
    from Configurables import TrackInterpolator
    TrackInterpolator().Extrapolator.ExtraSelector = 'TrackSimpleExtraSelector'
-   
    
 GaudiSequencer("RecoITSeq").Members += [ createITClusters, createITLiteClusters ]
 
@@ -98,18 +98,11 @@ from TrackFitter.ConfiguredFitters import ConfiguredFit, ConfiguredFitSeed
 cloneKiller = TrackEventCloneKiller()
 cloneKiller.TracksInContainers = []
 
-
 #########################################################################
 # For better maintenance standard and fast reco sequences are decoupled #
 #########################################################################
 
 if "fastSequence" in TrackSys().getProp("ExpertTracking") :
-   print "###########################################"
-   print "# You are running fast reco sequence:     #"
-   print "#    pattern reco ->                      #"
-   print "#    clone killer ->                      #"
-   print "#    fitting in the Best container        #"
-   print "###########################################"
    ## Forward pattern
    if "Forward" in trackAlgs :
       track.DetectorList += [ "ForwardPat" ]
@@ -180,9 +173,6 @@ if "fastSequence" in TrackSys().getProp("ExpertTracking") :
 
 else :
    
-   print "################################################"
-   print "# You are running the standard reco sequence   #"
-   print "################################################"
    ## Forward pattern
    if "Forward" in trackAlgs :
       track.DetectorList += [ "ForwardPat", "ForwardFit" ]
@@ -286,6 +276,7 @@ else :
 ########################
 # The rest is as usual #
 ########################
+
 
 ## Velo fitting
 if "Velo" in trackAlgs :
