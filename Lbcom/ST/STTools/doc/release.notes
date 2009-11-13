@@ -2,6 +2,7 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+!=========================== STTools v3r13 2009-11-13 =========================
 ! 2009-11-09 - Mark Tobin
  - Add protection to STNoiseCalculationToolBase to make sure that the
  updateNoise method is called only once per event.
