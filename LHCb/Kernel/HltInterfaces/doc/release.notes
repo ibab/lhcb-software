@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.9 2009-11-10 17:09:22 pkoppenb Exp $
+! $Id: release.notes,v 1.10 2009-11-13 15:27:19 cattanem Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
+!============ Kernel/HltInterfaces v3r0 2009-11-13 ============================
 ! 2009-11-10 - Patrick Koppenburg
  - ReadRoutingBits : Do not break on missing RawBank
 
