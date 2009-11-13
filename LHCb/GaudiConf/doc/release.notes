@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.190 2009-11-11 16:58:24 cattanem Exp $
+! $Id: release.notes,v 1.191 2009-11-13 15:24:44 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
+!======================== GaudiConf v13r0 2009-11-13 ========================
 ! 2009-11-11 - Marco Cattaneo
  - Fix the propagation of properties from DstConf to SimConf via DigiConf
 
