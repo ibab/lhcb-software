@@ -4,18 +4,15 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r15 2009-11-13 =========================
 ! 2009-10-29 - Vanya Belyaev
-
  - CaloDAQ/CaloDigits.py
-
      remove the excessive debug printout 
-
 
 ! 2009-10-27 - Olivier Deschamps
   - CaloDigitFromRaw : add missing statusOnTES when output = ADC
 
 ! 2009-10-27 - Vanya Belyaev
-
  - new configurable to decode CaloDigits 
 
 ! 2009-10-26 - Olivier Deschamps
