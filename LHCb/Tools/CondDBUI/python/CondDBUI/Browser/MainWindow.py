@@ -9,7 +9,6 @@ from PyQt4.QtCore import (Qt, QObject,
                           QSettings,
                           QSize, QPoint)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
-                         QProgressDialog,
                          QHeaderView,
                          QLabel,
                          QAction,
@@ -508,7 +507,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         d = DumpToFilesDialog(self)
         if d.exec_():
             from CondDBUI.Admin import DumpToFiles
-            monitor = QProgressDialog(self)
+            monitor = ProgressDialog(self)
             monitor.setWindowModality(Qt.WindowModal)
             monitor.setWindowTitle("Dumping to files")
             monitor.setMinimumDuration(0)

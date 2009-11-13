@@ -3,7 +3,7 @@
 Internal common functions/utilities. 
 """
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
-__version__ = "$Id: _internals.py,v 1.5 2009-11-13 15:33:25 marcocle Exp $"
+__version__ = "$Id: _internals.py,v 1.6 2009-11-13 19:00:35 marcocle Exp $"
 
 # Set up the logger 
 import logging
@@ -12,7 +12,6 @@ log.setLevel(logging.INFO)
 
 import os
 import errno
-import sys
 import shutil
 import tempfile
 import CondDBUI
@@ -113,7 +112,7 @@ def MergeAndTag(source, target, tag, check_addition_db = True):
                 if newparent == "":
                     newparent = "/"
                 f = target_db.getCOOLNode(newparent)
-        except Exception, details:
+        except Exception:
             # it should be a new tag
             newparent = parent
             is_new_tag = True
@@ -334,19 +333,19 @@ class _dummyMonitor(object):
 def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                 destroot='DDDB', force=False, addext=False,
                 monitor = None):
-    log = logging.getLogger("CondDBUI.Admin.DumpToFiles")
-    log.debug("called with arguments: %s",repr((database,time,tag,srcs,
+    _log = logging.getLogger("CondDBUI.Admin.DumpToFiles")
+    _log.debug("called with arguments: %s",repr((database,time,tag,srcs,
                                                 destroot,force,addext)))
     if monitor is None:
         monitor = _dummyMonitor()
     
     from CondDBUI import CondDB
-    import os, re
+    import re
     
     if type(database) is str:
         # Connect to the database
         db = CondDB(database, defaultTag = tag)
-        log.debug("connected to database '%s'", database)
+        _log.debug("connected to database '%s'", database)
     else:
         # Let's assume we were given a CondDBUI.CondDB instance
         db = database
@@ -364,7 +363,7 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
         elif db.db.existsFolderSet(s):
             nodes += db.getAllChildNodes(s)
         else:
-            log.warning("Node '%s' does not exist. Ignored",s)
+            _log.warning("Node '%s' does not exist. Ignored",s)
     
     nodes = [ n for n in set(nodes) if db.db.existsFolder(n) ]
     nodes.sort()
@@ -380,11 +379,11 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
             break
         monitor.setValue(value)
         monitor.setLabelText(node)
-        log.debug("retrieve data from '%s'",node)
+        _log.debug("retrieve data from '%s'",node)
         f = db.getCOOLNode(node)
         channels = [ i for i in f.listChannels() ]
         if len(channels) > 1:
-            log.debug("processing %d channels",len(channels))
+            _log.debug("processing %d channels",len(channels))
         for ch in channels:
             monitor.setValue(value)
             try:
@@ -404,13 +403,13 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                 dirname = os.path.join(destroot,tmppath)
                 
                 if not os.path.isdir(dirname):
-                    log.debug("create directory '%s'",dirname)
+                    _log.debug("create directory '%s'",dirname)
                     os.makedirs(dirname)
                 
-                log.debug("looping over data keys")
+                _log.debug("looping over data keys")
                 for key,xml in data.items():
                     
-                    log.debug("key: '%s'",key)
+                    _log.debug("key: '%s'",key)
                     filename = nodename
                     if key != 'data':
                         filename = '%s@%s'%(key,nodename)
@@ -420,10 +419,10 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                     tmppath = os.path.join(dirname,filename)
                     
                     if not force and os.path.exists(tmppath):
-                        log.warning("file '%s' already exists: skipping",tmppath)
+                        _log.warning("file '%s' already exists: skipping",tmppath)
                         continue
                     
-                    log.debug("fixating XML")
+                    _log.debug("fixating XML")
                     
                     # fix system IDs
                     xml = _fixate_string(xml, sysIdRE, _relativize_url(node,key,nodebase))
@@ -433,18 +432,18 @@ def DumpToFiles(database, time=0, tag="HEAD", srcs=['/'],
                         # make the href to Online point to the DB
                         xml = xml.replace('"Online"', '"conddb:/Conditions/Online"')
                     
-                    log.debug("write '%s'",tmppath)
+                    _log.debug("write '%s'",tmppath)
                     open(tmppath,'w').write(xml)
                 
             except RuntimeError, x:
                 desc = str(x)
                 if "Object not found" in desc:
-                    log.info("no data in %s", node)
+                    _log.info("no data in %s", node)
                 elif "No child tag" in desc:
-                    log.info("tag not found in %s", node)
+                    _log.info("tag not found in %s", node)
                 elif "not a child of" in desc:
                     # tag exists in a folderset not containing the current one
-                    log.info("tag not found in %s", node)
+                    _log.info("tag not found in %s", node)
                 else:
                     raise
         value += 1

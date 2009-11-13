@@ -8,6 +8,7 @@ from PyQt4.QtCore import (Qt, QObject, SIGNAL,
                           QRegExp)
 from PyQt4.QtGui import (QDialog,
                          QFileDialog,
+                         QProgressDialog,
                          QDialogButtonBox,
                          QValidator,
                          QRegExpValidator)
@@ -18,7 +19,6 @@ from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
 from Ui_NewNodeDialog import Ui_NewNodeDialog
 from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
-from Ui_ProgressDialog import Ui_ProgressDialog
 
 import os
 
@@ -243,26 +243,16 @@ class DumpToFilesDialog(QDialog, Ui_DumpToFilesDialog):
     def showLocalTags(self, show):
         pass
 
-## Simple dialog to present progress.
-#  The dialog implements a simple monitor interface, so it can be uses in several cases.
-class ProgressDialog(QDialog, Ui_ProgressDialog):
-    ## Constructor.
-    def __init__(self, parent = None, flags = Qt.Dialog, message = "Progress"):
-        # Base class constructor.
-        super(ProgressDialog, self).__init__(parent, flags)
-        # Prepare the GUI.
-        self.setupUi(self)
-        self.setWindowTitle(message)
-        self.setResult(QDialog.Accepted)
-    def setMax(self, max):
-        self.progressBar.setMaximum(max)
-    def setCount(self, count):
-        self.progressBar.setValue(max)
-    def increment(self):
-        self.progressBar.setValue(self.progressBar.value() + 1)
-    def isCancelled(self):
-        return self.result() == QDialog.Rejected
-    def setCurrent(self, obj):
-        if obj is not None:
-            self.current.setText(obj)
+## Small extension to the standard QProgressDialog to show only string up to a
+#  limited size.
+class ProgressDialog(QProgressDialog):
+    ## Override QProgressDialog::setLabelText to limit the number of chars
+    #  displayed in the message.
+    def setLabelText(self, text):
+        # TODO: the limit should depend on the rendered size and not on the
+        # number of chars. 
+        if len(text) > 40:
+            QProgressDialog.setLabelText(self, "..." + text[-37:])
+        else:
+            QProgressDialog.setLabelText(self, text)
 
