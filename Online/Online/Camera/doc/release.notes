@@ -4,6 +4,10 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r11 ===============
+
+! 2009-11-13 - Nicola Mangiafave
+- Changed doc/release.notes and  cmt/requirements to release a new version.
 
 ! 2009-11-02 - Nicola Mangiafave
 - Changed Gui layout and fonts to make it more human readable.
