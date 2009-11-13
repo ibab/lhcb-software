@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.169 2009-10-29 15:19:10 robbep Exp $
+! $Id: release.notes,v 1.170 2009-11-13 17:05:02 cattanem Exp $
 ! Package		: L0/L0DU
 ! Package Manager : Olivier Deschamps
 !--------------------------------------------------------------------------
 
+!========================== L0DU v9r0 2009-11-13 ==========================
 ! 2009-10-29 - Patrick Robbe
  - Fix options to use new syntax of L0Calo options:
 	  . options/Boole.opts
