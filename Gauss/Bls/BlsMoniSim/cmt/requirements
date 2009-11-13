@@ -3,24 +3,25 @@
 # Maintainer : Vadim Talanov
 #============================================================================
 package           BlsMoniSim
-version           v0r0
-#============================================================================
+version           v1r0
+
 # Structure, i.e. directories to process. 
 #============================================================================
 branches          cmt doc src
-#============================================================================
+
+
 # Used packages. Specify the version, * at the end specifies 'any revision'
-#    Put as many lines as needed, with all packages, without the '#'
 #============================================================================
-# use   Package		v1r*	Hat
 use	MCEvent		v*	Event
 use	GaudiAlg	v*
 include_path	none
-#============================================================================
+
+
 # Component library building rule
 #============================================================================
 library          BlsMoniSim    ../src/*.cpp 
-#============================================================================
+
+
 # define component library link options
 #============================================================================
 apply_pattern    component_library library=BlsMoniSim

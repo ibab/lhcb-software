@@ -1,10 +1,10 @@
 !-----------------------------------------------------------------------------
-! Package     : myGauss/BlsMoniSim
+! Package     : Bls/BlsMoniSim
 ! Responsible : Vadim Talanov
 ! Purpose     : BlsMoniSim package documentation
 !-----------------------------------------------------------------------------
 
-!======================= BlsMoniSim v0r0 2009-10-30 ==========================
+!======================= BlsMoniSim v1r0 2009-11-13 ==========================
 ! 2009-10-30 - Vadim Talanov
  - First version for Gauss v37r5
  - Monitors two BLS counters at negative (BlsA) and positive (BlsC) X side of
