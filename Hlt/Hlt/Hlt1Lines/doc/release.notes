@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.60 2009-11-13 13:08:15 graven Exp $
+! $Id: release.notes,v 1.61 2009-11-13 19:37:45 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -7,6 +7,8 @@
 
 ! 2009-11-13 - Gerhard Raven
  - add explicit L0DU decoding for lumi
+ - rename/replace NonRandomODIN and RandomODIN with ODINPhysics and
+   ODINTechnical, add L0Any
 
 !========================== Hlt1Lines v1r8 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
