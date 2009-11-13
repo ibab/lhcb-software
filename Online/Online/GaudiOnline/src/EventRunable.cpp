@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.13 2009-11-11 13:50:05 frankb Exp $
+// $Id: EventRunable.cpp,v 1.14 2009-11-13 09:23:28 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -120,7 +120,18 @@ StatusCode EventRunable::run()   {
       
       DataObject* pObj = 0;
       m_eventTMO = false;
-      StatusCode sc = ui->nextEvent(m_evtMax);
+      StatusCode sc = StatusCode::SUCCESS;
+      try  {
+	sc = ui->nextEvent(m_evtMax);
+      }
+      catch(exception& e) {
+	sc = StatusCode::FAILURE;
+	info(string("Caught unhandled exception in main eventy loop:")+e.what());
+      }
+      catch(...) {
+	sc = StatusCode::FAILURE;
+	info(string("Caught unknown exception in main eventy loop."));
+      }
       if ( sc.isSuccess() )  {
         m_evtCount++;
         if ( m_nerr > 0 )  {
