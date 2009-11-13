@@ -58,7 +58,7 @@ int main(int argc, char **argv)
 	char aux[80];
 	char name[84], name1[132];
 	int on = 0;
-	long dnsid;
+	long dnsid = 0;
 	char extra_dns[128];
 	int new_dns = 0;
 /*
@@ -77,6 +77,10 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 */
 	dis_add_exit_handler(exit_cmnd);
 	dis_add_client_exit_handler(client_exited);
+
+	/*	while(1)
+	{
+	*/
 	for(i = 0; i< 10; i++)
 	{
 		sprintf(str[i],"%s/Service_%03d",argv[1],i);
@@ -110,10 +114,12 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 	}
 */
 	dis_start_serving( argv[1] );
+
 	if(dis_get_client(name))
 	{
 		printf("client %s\n",name);
 	}
+	
 	while(1)
 	{
 /*
@@ -133,6 +139,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 		{
 			if(!on)
 			{
+printf("Connecting New DNS \n");
 				for(i = 0; i < 10; i++)
 				{
 					sprintf(name1,"NewService%d",i);
@@ -145,6 +152,7 @@ printf("socket buffer size = %d, after = %d\n",buf_sz, buf_sz1);
 			}
 			else
 			{
+printf("DisConnecting New DNS \n");
 				for(i = 0; i < 10; i++)
 				{
 					dis_remove_service(NewIds[i]);

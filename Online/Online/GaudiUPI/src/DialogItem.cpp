@@ -4,8 +4,20 @@
 
 template<typename T> static inline void release(T*& x) { if ( x != 0 ) { delete x; x = 0; } }
 
-static inline ClientData _cnv(int i)  { return (ClientData)(long)i; }
-static inline ClientData _cnv(float f)  { return (ClientData)(long) *(int*)&f; }
+namespace {
+  union _CNV {
+    void* ptr;
+    long* _l;
+    float* _f;
+    _CNV(void* p) { ptr=p; }
+    long l() { return *_l; }
+    float f() { return *_f; }
+    void* cdata() { return *(void**)ptr; }
+  };
+};
+
+static inline ClientData _cnv(int i)    { return _CNV(&i).cdata(); }
+static inline ClientData _cnv(float f)  { return _CNV(&f).cdata(); }
 
 DialogItem::DialogItem (const std::string& fmt,const std::string& text,const std::string& def,const std::string& lo,const std::string& hi,bool list_only)  {
   init(fmt,text,(const ClientData)&def,(const ClientData)&lo,(const ClientData)&hi,list_only);
@@ -208,10 +220,10 @@ DialogItemContainer DialogItem::create (const void* item)   {
     return it;
   }
   else if ( isInteger() )  {
-    it.data()->_int[0] = *(int*)&item;
+    it.data()->_int[0] = _CNV(&item).l();
   }
   else if ( isReal() )  {
-    it.data()->_float[0] = *(float*)&item;
+    it.data()->_float[0] = _CNV(&item).f();
   }
   return it;
 }

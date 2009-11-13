@@ -211,6 +211,7 @@ public :
 	// Accessors
 	char *getName();
 	int getTimeout(int clientId);
+	int getNClients();
 private :
 	char *itsName;
 	int itsId;

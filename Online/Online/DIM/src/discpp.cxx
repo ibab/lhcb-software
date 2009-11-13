@@ -160,7 +160,7 @@ static void timeout_rout(DimRpc *t)
 */
 static void rpcin_routine( void *tagp, void *buf, int *size)
 {
-	time_t tt1, tt2;
+	time_t tt1 = 0, tt2 = 0;
 
 //	int *tag = (int *)tagp;
 //	int id = *tag;
@@ -1105,6 +1105,12 @@ int DimService::getTimeout(int clientId)
 {
 	return dis_get_timeout(itsId, clientId);
 }
+
+int DimService::getNClients()
+{
+	return dis_get_n_clients( itsId );
+}
+
 
 CmndInfo::CmndInfo(void *data, int datasize)
 {

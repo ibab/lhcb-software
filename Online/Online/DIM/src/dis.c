@@ -162,6 +162,7 @@ _DIM_PROTO( SERVICE *dis_hash_service_exists, (char *name) );
 _DIM_PROTO( SERVICE *dis_hash_service_get_next, (int *start, SERVICE *prev, int flag) );
 _DIM_PROTO( static unsigned do_dis_add_service_dns, (char *name, char *type, void *address, int size, 
 								   void (*user_routine)(), long tag, long dnsid ) );
+_DIM_PROTO( static DIS_DNS_CONN *create_dns, (long dnsid) );
 
 void dis_no_threads()
 {
@@ -273,6 +274,8 @@ static unsigned do_dis_add_service_dns( char *name, char *type, void *address, i
 	new_serv->user_secs = 0;
 	new_serv->tid = 0;
 	dnsp = dis_find_dns(dnsid);
+	if(!dnsp)
+		dnsp = create_dns(dnsid);
 	new_serv->dnsp = dnsp;
 	service_id = id_get((void *)new_serv, SRC_DIS);
 	new_serv->id = service_id;
@@ -431,6 +434,8 @@ static unsigned do_dis_add_cmnd_dns( char *name, char *type, void (*user_routine
 	service_id = id_get((void *)new_serv, SRC_DIS);
 	new_serv->id = service_id;
 	dnsp = dis_find_dns(dnsid);
+	if(!dnsp)
+		dnsp = create_dns(dnsid);
 	new_serv->dnsp = dnsp;
 	new_serv->request_head = (REQUEST *)malloc(sizeof(REQUEST));
 	dll_init( (DLL *) (new_serv->request_head) );
@@ -604,7 +609,9 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 	if(size){}
 	dnsp = find_dns_by_conn_id(conn_id);
 	if(!dnsp)
+	{
 		return;
+	}
 	switch(status)
 	{
 	case STA_DISC:	   /* connection broken */
@@ -613,7 +620,8 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 			dnsp->dns_timr_ent = NULL;
 		}
 
-		dna_close(dnsp->dns_dis_conn_id);
+		if(dnsp->dns_dis_conn_id > 0)
+			dna_close(dnsp->dns_dis_conn_id);
 		if(dnsp->serving)
 		{
 			dnsp->dns_dis_conn_id = open_dns(dnsp->dnsid, recv_dns_dis_rout, error_handler,
@@ -623,13 +631,20 @@ void recv_dns_dis_rout( int conn_id, DNS_DIS_PACKET *packet, int size, int statu
 		}
 		break;
 	case STA_CONN:		/* connection received */
-		dnsp->dns_dis_conn_id = conn_id;
-		register_services(dnsp, ALL, 0);
-		dns_timr_time = rand_tmout(WATCHDOG_TMOUT_MIN, 
+		if(dnsp->serving)
+		{
+			dnsp->dns_dis_conn_id = conn_id;
+			register_services(dnsp, ALL, 0);
+			dns_timr_time = rand_tmout(WATCHDOG_TMOUT_MIN, 
 							 WATCHDOG_TMOUT_MAX);
-		dnsp->dns_timr_ent = dtq_add_entry( Dis_timer_q,
+			dnsp->dns_timr_ent = dtq_add_entry( Dis_timer_q,
 						  dns_timr_time,
 						  do_register_services, dnsp ); 
+		}
+		else
+		{
+			dna_close(conn_id);
+		}
 		break;
 	default :	   /* normal packet */
 		if(vtohl(packet->size) != DNS_DIS_HEADER)
@@ -1587,6 +1602,42 @@ int do_update_service(unsigned service_id, int *client_ids)
 	return(found);
 }
 
+int dis_get_n_clients(unsigned service_id)
+{
+	register REQUEST *reqp;
+	register SERVICE *servp;
+	register int found = 0;
+	char str[128];
+
+	DISABLE_AST
+	if(!service_id)
+	{
+		sprintf(str, "Service Has Clients- Invalid service id");
+		error_handler(0, DIM_ERROR, DIMSVCINVAL, str);
+		ENABLE_AST
+		return(found);
+	}
+	servp = (SERVICE *)id_get_ptr(service_id, SRC_DIS);
+	if(!servp)
+	{
+		ENABLE_AST
+		return(found);
+	}
+	if(servp->id != (int)service_id)
+	{
+		ENABLE_AST
+		return(found);
+	}
+	reqp = servp->request_head;
+	while( (reqp = (REQUEST *) dll_get_next((DLL *)servp->request_head,
+		(DLL *) reqp)) ) 
+	{
+		found++;
+	}
+	ENABLE_AST
+	return found;
+}
+
 int dis_get_timeout(unsigned service_id, int client_id)
 {
 	register REQUEST *reqp;
@@ -1813,6 +1864,7 @@ void do_dis_stop_serving_dns(DIS_DNS_CONN *dnsp)
 {
 register SERVICE *servp, *prevp;
 void dim_stop_threads(void);
+int dis_no_dns();
 int hash_index, old_index;
 
 	dnsp->serving = 0;
@@ -1826,15 +1878,25 @@ int hash_index, old_index;
 		Dis_conn_id = 0;
 	}
 */
+	{
+	DISABLE_AST
+	if(dnsp->dns_timr_ent)
+	{
+		dtq_rem_entry(Dis_timer_q, dnsp->dns_timr_ent);
+		dnsp->dns_timr_ent = NULL;
+	}
 	if(dnsp->dns_dis_conn_id)
 	{
 		dna_close(dnsp->dns_dis_conn_id);
 		dnsp->dns_dis_conn_id = 0;
 	}
+	ENABLE_AST
+	}
 	{
 	DISABLE_AST
 	prevp = 0;
 	hash_index = -1;
+	old_index = -1;
 	while( (servp = dis_hash_service_get_next(&hash_index, prevp, 0)) )
 	{
 		if(servp->dnsp == dnsp)
@@ -1852,13 +1914,17 @@ int hash_index, old_index;
 	ENABLE_AST
 	}
 	dnsp->dis_first_time = 1;
-	if(dnsp->dns_timr_ent)
+/*
+	if(dnsp != Default_DNS)
 	{
-		dtq_rem_entry(Dis_timer_q, dnsp->dns_timr_ent);
-		dnsp->dns_timr_ent = NULL;
+		dll_remove(dnsp);
+		free(dnsp);
 	}
-	dll_remove(dnsp);
+*/
+/*
 	if(dll_empty(DNS_head))
+*/
+	if(dis_no_dns())
 		dis_stop_serving();
 }
 
@@ -2736,11 +2802,30 @@ DIS_DNS_CONN *dis_find_dns(long dnsid)
 
 	dnsp = (DIS_DNS_CONN *)
 			dll_search( (DLL *) DNS_head, &dnsid, sizeof(dnsid));
+/*
 	if(!dnsp)
 	{
 		dnsp = create_dns(dnsid);
 	}
+*/
 	return dnsp;
+}
+
+int dis_no_dns()
+{
+	DIS_DNS_CONN *dnsp;
+
+	dnsp = (DIS_DNS_CONN *) DNS_head;
+	while ( (dnsp = (DIS_DNS_CONN *) dll_get_next( (DLL *) DNS_head, (DLL *) dnsp)))
+	{
+/*
+		if(dnsp != Default_DNS)
+			return 0;
+*/
+		if(dnsp->serving)
+			return 0;
+	}
+	return 1;
 }
 
 DIS_DNS_CONN *find_dns_by_conn_id(int conn_id)
@@ -2760,7 +2845,7 @@ void dis_print_hash_table()
 {
 	SERVICE *servp;
 	int i;
-	int n_entries, max_entry_index;
+	int n_entries, max_entry_index = 0;
 	int max_entries = 0;
 
 	for( i = 0; i < MAX_HASH_ENTRIES; i++ ) 

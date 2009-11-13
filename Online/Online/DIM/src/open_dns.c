@@ -274,7 +274,7 @@ long dic_add_dns(char *node_name, int port_number)
 
 DNS_CONN *get_dns(DNS_CONN *connp, SRC_TYPES src_type)
 {
-	DNS_CONN *p;
+	DNS_CONN *p = 0;
 
 	init_dns_list();
 	if(connp)
@@ -332,9 +332,10 @@ SRC_TYPES src_type;
 			strcpy(node_info,dns_node);
 			for(i = 0; i < 4; i ++)
 				node_info[strlen(node_info)+i+1] = (char)0xff;
+			connp->conn_id = 0;
 			connp->connecting = 1;
 			conn_id = dna_open_client( node_info, DNS_TASK, dns_port,
-						 TCPIP, recv_rout, error_rout );
+						 TCPIP, recv_rout, error_rout, src_type );
 			connp->connecting = 0;
 			if(conn_id)
 				break;
@@ -388,10 +389,11 @@ void retry_dns_connection( DNS_CONN *connp )
 			strcpy(node_info,dns_node);
 			for(i = 0; i < 4; i ++)
 				node_info[strlen(node_info)+i+1] = (char)0xff;
+			connp->conn_id = 0;
 			connp->connecting = 1;
 			conn_id = dna_open_client( node_info, connp->task_name,
 					 dns_port, TCPIP,
-					 connp->recv_rout, connp->error_rout );
+					 connp->recv_rout, connp->error_rout, connp->src_type );
 			connp->connecting = 0;
 			if( conn_id )
 				break;
@@ -432,9 +434,13 @@ long dns_get_dnsid(int conn_id, SRC_TYPES src_type)
 	if(found)
 	{
 		if(connp == DNS_ids[src_type])
+		{
 			return (long)0;
+		}
 		else
+		{
 			return (long)connp;
+		}
 	}
 	return (long)-1;
 }

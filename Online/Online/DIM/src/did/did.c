@@ -1009,7 +1009,7 @@ void dns_control(Widget w, int tag, unsigned long *reason)
 void get_server_node()
 {
 Widget id,sel_id;
-int i, j, n_nodes, curr_index;
+int i, j, n_nodes, curr_index = 0;
 char nodes_str[MAX_NODE_NAME*MAX_CONNS], max_str[MAX_NODE_NAME];
 char *ptr, *nodeptrs[MAX_CONNS], *curr_str, *sptr;
 int get_nodes();
@@ -1634,8 +1634,11 @@ char last[16];
 		}
 		if(!(i%16))
 			strcat(tmp,"H: ");
-		sprintf(str," %02X",buff[i]);
-		strcat(tmp,str);
+		sprintf(str,"%02X",buff[i]);
+/*		strcat(tmp,str);
+*/
+		strcat(tmp," ");
+		strcat(tmp,&str[strlen(str)-2]);
 		last[i%16] = buff[i];
 		/*
 		if(i%4 == 3)
@@ -2016,7 +2019,7 @@ int read_str_char(char *str, char *cc)
 
 void did_read_string(char type, int num, void **buffer_ptr, char **str_ptr)
 {
-int i, ret;
+int i, ret = 0;
 float ff;
 double dd;
 void *ptr;
@@ -2800,7 +2803,7 @@ DNS_SERVICE_INFO *service_ptr;
 Widget id;
 char *curr_str, max_str[MAX_NAME], *sptr;
 DID_SLOT *service_list;
-int i, j, curr_index, n_services;
+int i, j, curr_index = 0, n_services;
 XmString xstr;
 void delete_str();
 
@@ -3047,13 +3050,13 @@ Widget put_popup(SERVER *servp, int type, char *title)
 
 Widget put_selection(int tag, char *title)
 {
-    Widget id;
+    Widget id = 0;
 	extern void set_title();
 
     if(pop_widget_id[tag])
-      {
-	XtDestroyWidget(pop_widget_id[tag]);
-      }
+    {
+		XtDestroyWidget(pop_widget_id[tag]);
+    }
 	  switch(tag)
 	  {
 	    case DID_SEL_NODE:

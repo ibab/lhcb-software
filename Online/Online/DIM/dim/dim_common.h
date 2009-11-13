@@ -218,6 +218,8 @@ _DIM_PROTOE( void dim_win_usleep,	(unsigned int t) );
 #define ENABLE_AST  DIM_UNLOCK
 #endif
 
+_DIM_PROTOE( void dim_print_date_time_millis,		() );
+
 /* ctime usage */
 #if defined (solaris) || (defined (LYNXOS) && !defined (__Lynx__) )
 #define my_ctime(t,str,size) ctime_r(t,str,size)

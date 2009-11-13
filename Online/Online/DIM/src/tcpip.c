@@ -835,7 +835,7 @@ int tcpip_open_client( int conn_id, char *node, char *task, int port )
 	 */
 	struct sockaddr_in sockname;
 #ifndef VxWorks
-	struct hostent *host;
+	struct hostent *host = 0;
 #else
 	int host_addr;
 #endif

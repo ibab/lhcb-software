@@ -13,7 +13,7 @@
 
 #include "dim_common.h"
 
-#define DIM_VERSION_NUMBER 1902
+#define DIM_VERSION_NUMBER 1908
 
 #define MY_LITTLE_ENDIAN	0x1
 #define MY_BIG_ENDIAN 		0x2
@@ -433,9 +433,10 @@ typedef struct {
 	int protocol;
 	int validity;
 	int n_services;
-        int old_n_services;
+	int old_n_services;
 	TIMR_ENT *timr_ent;
-        int already;
+	int already;
+	char long_task_name[MAX_TASK_NAME*2];
 } DNS_CONNECTION;
 
 extern DllExp DIM_NOSHARE DNS_CONNECTION *Dns_conns;
@@ -486,7 +487,7 @@ _DIM_PROTOE( int dna_open_server,   (char *task, void (*read_ast)(), int *protoc
 				int *port, void (*error_ast)()) );
 _DIM_PROTOE( int dna_get_node_task, (int conn_id, char *node, char *task) );
 _DIM_PROTOE( int dna_open_client,   (char *server_node, char *server_task, int port,
-                                int server_protocol, void (*read_ast)(), void (*error_ast)()) );
+                                int server_protocol, void (*read_ast)(), void (*error_ast)(), SRC_TYPES src_type ));
 _DIM_PROTOE( int dna_close,         (int conn_id) );
 _DIM_PROTOE( void dna_report_error, (int conn_id, int code, char *routine_name) );
 

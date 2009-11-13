@@ -272,6 +272,7 @@ int copy_swap_buffer_in(FORMAT_STR *format_data, void *buff_out, void *buff_in, 
 	int num, pad_num, curr_size = 0, curr_out = 0;
 	int next_par_bytes, curr_par_num, curr_par_bytes;
 	
+	num = 0;
 	if(!format_data->par_bytes) {
 		if(buff_in != buff_out)
 			memcpy( buff_out, buff_in, size );

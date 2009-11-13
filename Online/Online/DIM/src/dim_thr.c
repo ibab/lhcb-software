@@ -297,7 +297,7 @@ int dim_get_scheduler_class(int *pclass)
 int dim_set_priority(int threadId, int prio)
 {
 #ifdef __linux__
-	pthread_t id;
+	pthread_t id = MAIN_thread;
 	int ret;
 	int pclass;
 	struct sched_param param;
@@ -321,7 +321,7 @@ int dim_set_priority(int threadId, int prio)
 int dim_get_priority(int threadId, int *prio)
 {
 #ifdef __linux__
-	pthread_t id;
+	pthread_t id=MAIN_thread;
 	int ret;
 	int pclass;
 	struct sched_param param;
@@ -525,8 +525,9 @@ DWORD MAIN_thread = 0;
 HANDLE hIO_thread;
 HANDLE hALRM_thread;
 HANDLE hMAIN_thread;
-DllExp HANDLE Global_DIM_event = 0;
+DllExp HANDLE Global_DIM_event_auto = 0;
 DllExp HANDLE Global_DIM_mutex = 0;
+DllExp HANDLE Global_DIM_event_manual = 0;
 void dim_tcpip_stop(), dim_dtq_stop();
 
 typedef struct{
@@ -652,12 +653,15 @@ void dim_stop_threads()
 		TerminateThread(hALRM_thread, 0);
 	if(Global_DIM_mutex) 
 		CloseHandle(Global_DIM_mutex);
-	if(Global_DIM_event) 
-		CloseHandle(Global_DIM_event);
+	if(Global_DIM_event_auto) 
+		CloseHandle(Global_DIM_event_auto);
+	if(Global_DIM_event_manual) 
+		CloseHandle(Global_DIM_event_manual);
 	hIO_thread = 0;
 	hALRM_thread = 0;
 	Global_DIM_mutex = 0;
-	Global_DIM_event = 0;
+	Global_DIM_event_auto = 0;
+	Global_DIM_event_manual = 0;
 	dim_tcpip_stop();
 	dim_dtq_stop();
 }
@@ -824,22 +828,34 @@ void dim_unlock()
 
 void dim_pause()
 {
-	if(!Global_DIM_event)
+HANDLE handles[2];
+
+	if(!Global_DIM_event_auto)
 	{ 
-		Global_DIM_event = CreateEvent(NULL,TRUE,FALSE,NULL);
+		Global_DIM_event_auto = CreateEvent(NULL,FALSE,FALSE,NULL);
+		Global_DIM_event_manual = CreateEvent(NULL,TRUE,FALSE,NULL);
 	}
 	else 
 	{
+/*
 		WaitForSingleObject(Global_DIM_event, INFINITE);
+*/
+		handles[0] = Global_DIM_event_auto;
+		handles[1] = Global_DIM_event_manual;
+		WaitForMultipleObjects(2, handles, FALSE, INFINITE);
 	}
 }
 
 void dim_wake_up()
 {
-	if(Global_DIM_event)
+	if(Global_DIM_event_auto)
 	{
-		SetEvent(Global_DIM_event);
-		ResetEvent(Global_DIM_event);
+		SetEvent(Global_DIM_event_auto);
+	}
+	if(Global_DIM_event_manual)
+	{
+		SetEvent(Global_DIM_event_manual);
+		ResetEvent(Global_DIM_event_manual);
 	}
 }
 

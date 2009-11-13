@@ -106,7 +106,7 @@ public :
 	short getShort() { return *(short *)getData(); } ;
 	char *getString()  { return (char *)getData(); } ;
 
-	virtual void infoHandler() {};
+	virtual void infoHandler();
 	void timerHandler();
 	virtual void subscribe(char *name, int time, void *nolink, int nolinksize,
 		DimInfoHandler *handler);
@@ -380,7 +380,7 @@ public :
 	DimRpcInfo(const char *name, int time, void *nolink, int nolinksize) { 
 		subscribe((char *)name, 0, 0, nolink, nolinksize, time); };
 	
-	virtual void rpcInfoHandler() {};
+	virtual void rpcInfoHandler();
 
 	virtual ~DimRpcInfo();
 	int getId() {return itsId;};
@@ -458,6 +458,9 @@ public:
 
 	virtual void infoHandler() {};
 
+	static int dicNoCopy;
+	static void setNoDataCopy();
+	static int getNoDataCopy();
 };
 
 class DllExp DimBrowser

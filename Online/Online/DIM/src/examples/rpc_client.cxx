@@ -48,12 +48,36 @@ void do_work(void *tag)
 	while(1)
 	{
 		sleep(5);
-		dim_print_date_time();
 //		cout << "RPC Sent : " << out << endl;
 		myRpc->setData(out);
 		in = myRpc->getInt();
+dim_lock();
+dim_print_date_time();
 cout << "Instance "<<(long)tag<<" sent "<<out<< " got "<<in <<endl;
+dim_unlock();
 		out++;
+	}
+}
+
+void do_workCB()
+{
+//	DimRpcInfo *myRpc;
+	Rpc *myRpc;
+	char name[64];
+	int out, in;
+	
+	sprintf(name,"TESTRPC/INT");
+	myRpc = new Rpc(name);
+//	myRpc = new Rpc(name);
+
+	out = 1;
+	while(1)
+	{
+		dim_print_date_time();
+		cout << "RPC Sent : " << out << endl;
+		myRpc->setData(out);
+		out++;
+		sleep(5);
 	}
 }
 
@@ -62,10 +86,13 @@ int main()
 	int i;
 
 	dim_init();
+	DimClient::setNoDataCopy();
+
 	for(i = 0; i < 10; i++)
 	{
 		dim_start_thread(do_work,(void *)i);
 	}
+//	do_workCB();
 	while(1)
 		pause();
 	/*

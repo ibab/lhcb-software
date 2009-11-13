@@ -26,8 +26,10 @@
 
 /* global variables */
 typedef struct {
+	char node_name[MAX_NODE_NAME];
 	char task_name[MAX_TASK_NAME];
 	int port;
+	SRC_TYPES src_type;
 } PENDING_OPEN;
 
 static PENDING_OPEN Pending_conns[MAX_CONNS];
@@ -595,7 +597,7 @@ void dna_rem_test_write(int conn_id)
 	tcpip_rem_test_write(conn_id);
 }
 
-static int ins_pend_conn( char *task, int port )
+static int ins_pend_conn( char *node, char *task, int port, SRC_TYPES src_type )
 {
 	register PENDING_OPEN *pending_connp;
 	register int i;
@@ -605,15 +607,17 @@ static int ins_pend_conn( char *task, int port )
 	{
 		if( pending_connp->task_name[0] == '\0' )
 		{
+			strcpy(pending_connp->node_name, node);
 			strcpy(pending_connp->task_name, task);
 			pending_connp->port = port;
+			pending_connp->src_type = src_type;
 			return(i);
 		}
 	}
 	return(0);
 }
 
-static int find_pend_conn( char *task, int port )
+static int find_pend_conn( char *node, char *task, int port, SRC_TYPES src_type )
 {
 	register PENDING_OPEN *pending_connp;
 	register int i;
@@ -621,8 +625,10 @@ static int find_pend_conn( char *task, int port )
 	for( i = 1, pending_connp = &Pending_conns[1]; i < MAX_CONNS; 
 		i++, pending_connp++ )
 	{
-		if( (!strcmp(pending_connp->task_name, task)) &&
-			(pending_connp->port == port) )
+		if( (!strcmp(pending_connp->node_name, node)) &&
+			(!strcmp(pending_connp->task_name, task)) &&
+			(pending_connp->port == port) &&
+			(pending_connp->src_type == src_type))
 		{
 			return(i);
 		}
@@ -638,13 +644,14 @@ static void rel_pend_conn( int conn_id )
 
 
 int dna_open_client(char *server_node, char *server_task, int port, int server_protocol, 
-					void (*read_ast)(), void (*error_ast)())
+					void (*read_ast)(), void (*error_ast)(), SRC_TYPES src_type)
 {
 	register DNA_CONNECTION *dna_connp;
 	char str[256];
 	register int tcpip_code, conn_id, id;
 	DNA_NET local_buffer;
 	extern int get_proc_name(char *);
+	char src_type_str[64];
 
 	if(server_protocol){}
 	if(!DNA_Initialized) {
@@ -666,15 +673,21 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 		if(!strstr(server_node,"fidel"))
 		{
 #endif
-		if(!find_pend_conn(server_task, port))
+		if(!find_pend_conn(server_node, server_task, port, src_type))
 		{
-			sprintf( str,"Connecting to %s on %s", 
-				server_task, server_node );
+			if(src_type == SRC_DIS)
+				strcpy(src_type_str,"Server");
+			else if(src_type == SRC_DIC)
+				strcpy(src_type_str,"Client");
+			else
+				strcpy(src_type_str,"Unknown type");
+			sprintf( str,"%s Connecting to %s on %s", 
+				src_type_str, server_task, server_node );
 			if(!strcmp(server_task,"DIM_DNS"))
 				dna_report_error( conn_id, tcpip_code, str, DIM_ERROR, DIMDNSCNERR );
 			else
 				dna_report_error( conn_id, tcpip_code, str, DIM_ERROR, DIMTCPCNERR );
-			ins_pend_conn(server_task, port);
+			ins_pend_conn(server_node, server_task, port, src_type);
 		}
 #ifdef VMS
 		}
@@ -683,9 +696,15 @@ int dna_open_client(char *server_node, char *server_task, int port, int server_p
 		conn_free( conn_id );
 		return(0);
 	}
-	if( (id = find_pend_conn(server_task, port)) )
+	if( (id = find_pend_conn(server_node, server_task, port, src_type)) )
 	{
-		sprintf( str,"Connection established to");
+		if(src_type == SRC_DIS)
+			strcpy(src_type_str,"Server");
+		else if(src_type == SRC_DIC)
+			strcpy(src_type_str,"Client");
+		else
+			strcpy(src_type_str,"Unknown type");
+		sprintf( str,"%s Connection established to", src_type_str);
 		if(!strcmp(server_task,"DIM_DNS"))
 			dna_report_error( conn_id, -1, str, DIM_INFO, DIMDNSCNEST );
 		else

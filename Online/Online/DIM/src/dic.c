@@ -1403,7 +1403,7 @@ static int handle_dns_info( DNS_DIC_PACKET *packet )
 	  if((!bad_connp) || (retrying))
 	  {	
 		if( (conn_id = dna_open_client(node_info, task_name, port,
-					      protocol, recv_rout, error_handler)) )
+					      protocol, recv_rout, error_handler, SRC_DIC)) )
 		{
 /*
 #ifndef VxWorks
