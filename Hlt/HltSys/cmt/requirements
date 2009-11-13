@@ -16,7 +16,7 @@ use HltEcalAlley        v2r2    Hlt   # Mariusz Witek
 use HltGlobalMonitor    v2r7    Hlt   # Bruno de Paula
 use HltHidValley        v1r2p4  Hlt   # Marcin Kucharczyk
 use HltKshort           v2r0p2  Hlt   # Jaap Panman
-use HltL0Conf           v2r12   Hlt   # Johannes Albrecht
+use HltL0Conf           v2r12p1 Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r7p1  Hlt   # Alessia Satta/Sandra Amato  
 use HltLine             v1r10   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r12   Hlt   # Jaap Panman
