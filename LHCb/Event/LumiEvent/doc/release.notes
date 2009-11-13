@@ -4,6 +4,10 @@
 ! Purpose     : EventModel for Lumi data
 !-----------------------------------------------------------------------------
 
+!======================== LumiEvent v2r3 2009-11-13 ==========================
+! 2009-11-13 - Marco Cattaneo
+ - Remove hack for Gaudi v21r1 to link dictionary on windows from requirements
+
 ! 2009-11-11 - Rob Lambert
  - Edited to inculde EventCountFSR, storing how many events are in the file
    and how many were used to make the file

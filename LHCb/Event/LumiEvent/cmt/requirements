@@ -41,7 +41,3 @@ macro_append LumiEventObj2Dict_dependencies LumiEventCustomDict
 #---- Produce dictionary selection files from XML description
 #---- and build the LCG dictionary using gccxml
 apply_pattern god_dictionary files=../xml/*.xml
-
-# Hack for Gaudi v21r1 to link dictionary on windows
-private
-set EXPORT_ALL_SYMBOLS "yes" GAUDI_V21 "" GAUDI_V22 "" G21_HIDE_SYMBOLS ""
