@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.138 2009-10-29 10:50:58 robbep Exp $
+! $Id: release.notes,v 1.139 2009-11-13 17:04:00 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v10r0 2009-11-13 ========================
 ! 2009-10-29 - Patrick Robbe
  - requirements: use new base package L0/L0Base
  - L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common 
