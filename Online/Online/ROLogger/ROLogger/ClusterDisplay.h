@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.h,v 1.3 2009-09-08 17:50:38 frankb Exp $
+// $Id: ClusterDisplay.h,v 1.4 2009-11-13 18:56:53 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ClusterDisplay.h,v 1.3 2009-09-08 17:50:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/ROLogger/ClusterDisplay.h,v 1.4 2009-11-13 18:56:53 frankb Exp $
 #ifndef ROLOGGER_CLUSTERDISPLAY_H
 #define ROLOGGER_CLUSTERDISPLAY_H
 
@@ -56,7 +56,7 @@ namespace ROLogger {
     /// Number of messages to display
     int         m_numMsg;
     /// List for node names
-    char**      m_nodeList;
+    const char** m_nodeList;
     /// Show history according to node and message pattern match
     void showHistory(const char* node_match, const char* msg_match);
 

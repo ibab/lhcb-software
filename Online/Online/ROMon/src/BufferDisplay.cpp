@@ -1,4 +1,4 @@
-// $Id: BufferDisplay.cpp,v 1.2 2009-10-13 16:07:03 frankb Exp $
+// $Id: BufferDisplay.cpp,v 1.3 2009-11-13 18:56:01 frankb Exp $
 //====================================================================
 //  ROMon
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.2 2009-10-13 16:07:03 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROMon/src/BufferDisplay.cpp,v 1.3 2009-11-13 18:56:01 frankb Exp $
 
 // Framework include files
 #include "ROMon/FarmDisplay.h"
@@ -99,7 +99,7 @@ void BufferDisplay::update(const void* data) {
         const Buffers& buffs = *(*n).buffers();
         for(Buffers::const_iterator ib=buffs.begin(); ib!=buffs.end(); ib=buffs.next(ib))  {
           const Clients& clients = (*ib).clients;
-          char* bnam = (char*)(*ib).name;
+          const char* bnam = (const char*)(*ib).name;
 	  if ( ::strncmp(bnam,"Events_",7)==0 ) bnam += 7;
 	  if ( ::strncmp(bnam,"Output_",7)==0 ) bnam = "Output";
 	  if ( ::strncmp(bnam,"Input_",6)==0  ) bnam = "Input";

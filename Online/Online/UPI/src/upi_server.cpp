@@ -1919,7 +1919,7 @@ void copy_histo (SrvConnect* connect)  {
 void callback_handler (int menu_id, int item_id, int condition,
                        SrvConnect* connect)
 {
-  int remote_id;
+  int remote_id = 0;
   if (find_connect_with_id (menu_id, &remote_id) != connect) return;
   if (condition & CALL_ON_BACK_SPACE)  {
     connect->current_menu   = menu_id;

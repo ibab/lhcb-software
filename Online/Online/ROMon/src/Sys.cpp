@@ -374,7 +374,7 @@ int ROMon::readInfo(CPUset& info, size_t max_len) {
   char buff[12*4096], *p, *q, *desc, *item;
   int cnt = SysFile("/proc/cpuinfo").read(buff,sizeof(buff));
   if(cnt>0)  {
-    char * core_id="";
+    const char* core_id="";
     CPUset::Cores::iterator corIt = info.cores.reset();
     CPUset::Cores::iterator begin = corIt;
     ro_get_node_name(info.name,sizeof(info.name));

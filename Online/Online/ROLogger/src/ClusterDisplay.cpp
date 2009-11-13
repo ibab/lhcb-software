@@ -1,4 +1,4 @@
-// $Id: ClusterDisplay.cpp,v 1.9 2009-09-08 17:50:38 frankb Exp $
+// $Id: ClusterDisplay.cpp,v 1.10 2009-11-13 18:56:53 frankb Exp $
 //====================================================================
 //  ROLogger
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.9 2009-09-08 17:50:38 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/ROLogger/src/ClusterDisplay.cpp,v 1.10 2009-11-13 18:56:53 frankb Exp $
 
 #include "ROLogger/ClusterDisplay.h"
 #include "UPI/UpiSensor.h"
@@ -52,7 +52,7 @@ ClusterDisplay::ClusterDisplay(Interactor* parent, Interactor* logger, const str
   ::strcpy(m_wildMessage,"*");
   ::upic_open_detached_menu(m_id,0,0,"Error logger",m_name.c_str(),RTL::nodeName().c_str());
   ::upic_declare_callback(m_id,CALL_ON_BACK_SPACE,(Routine)backSpaceCallBack,this);
-  m_nodeList = new char*[m_nodes.size()+1];
+  m_nodeList = new const char*[m_nodes.size()+1];
   m_nodeList[0] = "*";
   if ( !m_nodes.empty() ) {
     ::upic_add_comment(CMD_COM1,("Known nodes for cluster "+m_name).c_str(),"");
