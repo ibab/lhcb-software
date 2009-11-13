@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfTools v1r8 2009-11-13 ========================
 | 2009-11-10 - Wouter Hulsbergen
   - remove an assert that was in the way in OTHitCreator
 
