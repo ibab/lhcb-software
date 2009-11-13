@@ -4,6 +4,7 @@
 ! Purpose     : Core classes for the Tf framework
 !-----------------------------------------------------------------------------
 
+!============================ TfKernel v2r13 2009-11-13 ======================
 ! 2009-11-10 - Wouter Hulsbergen
  - add method to OTHitCreator to create single hit given OTChannelID
 
