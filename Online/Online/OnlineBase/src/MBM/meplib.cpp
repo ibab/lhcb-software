@@ -168,7 +168,8 @@ void SignalHandler::handler(int signum, siginfo_t *info, void* ptr) {
       dsc.fun(signum,info,ptr);
       ::_exit(signum);
     }
-    else if ( old == SIG_DFL )  {
+    else if ( old && old == SIG_DFL )  {
+      dsc.fun(signum,info,ptr);
       ::_exit(0);
     }
   }
