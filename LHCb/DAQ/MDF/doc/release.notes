@@ -6,6 +6,10 @@
 !               MEP fragments
 !-----------------------------------------------------------------------------
 
+!========================= MDF v3r21 2009-11-13 ==============================
+! 2009-11-13  Markus Frank
+ - Fix bug in MEP decoding. Get correct upper 16 bits of L0 event ID.
+
 !========================= MDF v3r20 2009-10-16 ==============================
 ! 2009-10-04  Markus Frank
  - update printout helper for new bank types

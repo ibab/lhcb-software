@@ -1,4 +1,4 @@
-// $Id: RawEventHelpers.cpp,v 1.46 2009-10-08 15:13:12 frankb Exp $
+// $Id: RawEventHelpers.cpp,v 1.47 2009-11-13 07:52:36 frankb Exp $
 //  ====================================================================
 //  RawEventHelpers.cpp
 //  --------------------------------------------------------------------
@@ -816,7 +816,7 @@ LHCb::encodeMEP(const std::map<unsigned int, RawEvent*>& events,
     MEPFragment* f = mf->first();
     for(BankMap::iterator l=bm.begin(); l != bm.end(); ++l, f = mf->next(f))   {
       unsigned int eid = (*l).first;
-      mf->setEventID(eid&0xFFFF0000);
+      mf->setEventID(eid>>16);
       f->setEventID(eid&0xFFFF);
       f->setSize(0);
       encodeFragment((*l).second, f);
@@ -842,11 +842,12 @@ StatusCode LHCb::decodeMEP( const MEPEvent* me,
   try {
     for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
       partitionID = mf->partitionID();
-      eid_h = mf->eventID();
+      eid_h = mf->eventID()<<16;
       prev = 0;
       for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
 	eid_l = f->eventID();
-	evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
+	if ( prev && eid_l==0 ) eid_h = (mf->eventID()+1)<<16;
+	evID = eid_h + (eid_l&0xFFFF);
 	_Banks& banks = events[evID];
 	const RawBank* l = f->last();
 	for(curr=f->first(); curr<l; curr=f->next(curr)) {
@@ -899,11 +900,16 @@ LHCb::decodeMEP2EventFragments( const MEPEvent* me,
   typedef std::map<unsigned int, std::vector<MEPFragment*> > Events;
   unsigned int evID, eid_h = 0, eid_l = 0;
   for (MEPMultiFragment* mf = me->first(); mf<me->last(); mf=me->next(mf)) {
+    bool first = true;
     partitionID = mf->partitionID();
     eid_h = mf->eventID();
     for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
+      if ( first && eid_l==0 ) {
+	eid_h = (mf->eventID()+1)<<16;
+	first = false;
+      }
       eid_l = f->eventID();
-      evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
+      evID = (eid_h<<16) + (eid_l&0xFFFF);
       events[evID].push_back(f);
     }
   }
@@ -926,7 +932,8 @@ LHCb::decodeMEP2EventBanks( const MEPEvent* me,
       prev = 0;
       for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
 	eid_l = f->eventID();
-	evID = (eid_h&0xFFFF0000) + (eid_l&0xFFFF);
+	if ( prev && eid_l==0 ) eid_h = (mf->eventID()+1)<<16;
+	evID = (eid_h>>16) + (eid_l&0xFFFF);
 	std::vector<LHCb::RawBank*>& banks = events[evID];
 	const RawBank* l = f->last();
 	for(RawBank* b=f->first(); b<l; b=f->next(b)) {
@@ -957,7 +964,7 @@ LHCb::decodeFragment2Banks(const MEPFragment* f,
   if ( f )  {
     const RawBank *prev = 0;
     try {
-      unsigned int evID = (event_id_high&0xFFFF0000) + (f->eventID()&0xFFFF);
+      unsigned int evID = (event_id_high<<16) + (f->eventID()&0xFFFF);
       const RawBank* l = f->last();
       for(RawBank* b=f->first(); b<l; b=f->next(b)) {
 	checkRawBank(b,true,true);
@@ -988,6 +995,7 @@ LHCb::decodeMultiFragment2Banks(const MEPMultiFragment* mf,
     partitionID = mf->partitionID();
     eid_h = mf->eventID();
     for (MEPFragment* f = mf->first(); f<mf->last(); f=mf->next(f)) {
+      if (f != mf->first() && 0 == f->eventID() ) ++eid_h;
       StatusCode sc = decodeFragment2Banks(f,eid_h,banks);
       if ( !sc.isSuccess() )  {
         char txt[132];
