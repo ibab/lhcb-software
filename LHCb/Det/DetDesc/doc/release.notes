@@ -1,10 +1,11 @@
 ! =============================================================================
-! $Id: release.notes,v 1.406 2009-11-13 10:07:40 wouter Exp $ 
+! $Id: release.notes,v 1.407 2009-11-13 15:53:28 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
 
+!====================== DetDesc v18r16 2009-11-13 =============================
 ! 2009-11-13 - Wouter Hulsbergen
  - Added function to compute derivative jacobian from Transform to 3DTransformationFunctions
 
