@@ -7,25 +7,29 @@
 ! 2009-11-13 - Patrick Koppenburg
  - Remove options/TrackRecoHLT.py
 
-<<<<<<< release.notes
-!============================ TrackSys v4r27 2009-11-11 ======================
 ! 2009-11-11 - Kostyantyn Holubyev
  - RecoTracking.py:
-	 1) if TrackSys().ExpertTracking = [ "fastSequence" ], fast reconstruction 
-      sequence is run, which postpones all fits until Best container is formed.
-			TrackCloneFinder decides which track among the two is a clone from the 
-      numbers of LHCb IDs only. If the number of LHCb IDs for two track is the 
-      same, a clone is assigned randomly. Saves 30-40% of reconstruction time.  
-   2) Option to run PatMatch is added.
-   3) In the standard sequence:
-			a) All the track types are fitted using the same configuration of the 
-				 TrackMasterFitter.
-			b) If TrackMatching is used, the additional RefitSeed sequence is introduced 
-				 to refit Seed tracks using the standard fitter configuration.
-=======
+	 if TrackSys().ExpertTracking = [ "fastSequence" ], fast reconstruction 
+	 sequence is run, which postpones all fits until Best container is formed.
+	 TrackCloneFinder decides which track among the two is a clone from the 
+   numbers of LHCb IDs only. If the number of LHCb IDs for two track is the 
+   same, a clone is assigned randomly. Saves 30-40% of reconstruction time.
+
+! 2009-11-11 - Kostyantyn Holubyev			
+ - RecoTracking.py:   
+	 Option to run PatMatch is added.
+
+! 2009-11-11 - Kostyantyn Holubyev
+ - RecoTracking.py:				
+   In the standard sequence:
+		1) All the track types are fitted using the same configuration of the 
+		   TrackMasterFitter.
+		2) If TrackMatching is used, the additional RefitSeed sequence is introduced 
+		   to refit Seed tracks using the standard fitter configuration.
+
 ! 2009-11-03 - Stephanie Hansmann-Menzemer
  - automatic settings for cosmic reconstruction in Configurables
->>>>>>> 1.72
+
 
 !============================ TrackSys v4r26 2009-10-20 ======================
 ! 2009-10-07 - Johannes Albrecht

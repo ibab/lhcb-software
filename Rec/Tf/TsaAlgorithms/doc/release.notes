@@ -4,12 +4,12 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
-!======================= TsaAlgorithms v3r14 2009-11-10 =====================
 ! 2009-11-10 - Kostyantyn Holubyev
  - Added option to run only over hits unused in the previous run of
    PatForward (OnlyUnusedHits=true). See options/TsaSeeding.py for example
    how to set this option.
 
+! 2009-11-10 - Kostyantyn Holubyev
  - In the case of running over unused hits, added option
    to reuse hits from PatForward tracks. If OnlyGood, the hits from "bad" PatForward
    tracks with chi2 > DiscardChi2 (default 1.5) are reused.

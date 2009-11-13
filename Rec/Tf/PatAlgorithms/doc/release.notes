@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-11-11 Kostyantyn Holubyev
+ - PatSeedingTool: In the case of running over unused hits, added option
+   to reuse hits from PatForward tracks. If OnlyGood, the hits from "bad"
+	 PatForward tracks with chi2 > DiscardChi2 (default 1.5) are reused.
+
 ! 2009-11-10 Wouter Hulsbergen
  - Replace OTRawBankDecoder with OTHitCreator in PadSeedFit
 
@@ -11,11 +16,6 @@
  - Fix for unitialized member variable in PatForwardTool
 
 !========================= PatAlgorithms v3r23 2009-10-20 ====================
-! 2009-11-11 Kostyantyn Holubyev
- - PatSeedingTool: In the case of running over unused hits, added option
-   to reuse hits from PatForward tracks. If OnlyGood, the hits from "bad" PatForward
-   tracks with chi2 > DiscardChi2 (default 1.5) are reused.   
-
 ! 2009-10-13 Sascha Stahl
  - PatDownstream: Options to remove used hits and T-tracks changed.
 	 Use RemoveUsed to switch it on. If RemoveAll all hits and T-tracks
