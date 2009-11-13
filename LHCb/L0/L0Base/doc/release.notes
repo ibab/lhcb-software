@@ -4,6 +4,7 @@
 ! Purpose     : Package containing base classes for L0 components
 !-----------------------------------------------------------------------------
 
+!============================ L0Base v1r2 2009-11-13 =========================
 ! 2009-10-29 - Julien Cogan
  - Modify defaut properties for L0FromRawBase
 
