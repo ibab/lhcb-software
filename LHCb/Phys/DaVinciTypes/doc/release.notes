@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.4 2009-11-03 08:39:39 jpalac Exp $
+!$Id: release.notes,v 1.5 2009-11-13 16:42:02 cattanem Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinciTypes
 ! Responsible : Juan Palacios
 ! Purpose     : Package containing useful typedefs for Phys
 !-----------------------------------------------------------------------------
 
+!======================== DaVinciTypes v1r1 2009-11-13 =======================
 ! 2009-11-03 - Juan Palacios
  - Kernel/Particle2Vertex.h
   . Add type Map, for GaudiUtils::GaudiHashMap<const Particle*, const VertexBase*>
