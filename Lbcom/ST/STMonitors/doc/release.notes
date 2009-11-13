@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v2r0 2009-11-13 ==========================
 ! 2009-11-12 - Mark Tobin
  - Add plots of pedestals to STNZSMonitor
 
