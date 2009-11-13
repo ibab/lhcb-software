@@ -4,6 +4,7 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r1 2009-11-13 =======================
 ! 2009-11-06 - Victor Coco
  - debug channelToNeighbours (not initialised fraction..)
 
@@ -18,7 +19,6 @@
 
 ! 2009-10-21 - Victor Coco
  - remove some wild cast (usinged int <--> int and double <--> float)
-
 
 ! 2009-10-18 - Victor Coco
  - addition in DeVelPixSquare of some function to get the 3x3 neighbourg list + amelioration of channel to point and point to channel.
