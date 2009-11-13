@@ -4,6 +4,7 @@
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
 
+!========================== TrackFitEvent v4r2 2009-11-13 ====================
 ! 2009-11-11 Wouter Hulsbergen
  - added new class KalmanFitResult which derives from TrackFtResults but also holds Kalman specific info
 
