@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r30 2009-11-13 ==========================
 ! 2009-11-09 - Marco Clemencic
  - Moved the tool properties from ODINCodecBaseTool to ODINEncodeTool and
    ODINDecodeTool for higher flexibility.
