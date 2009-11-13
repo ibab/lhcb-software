@@ -1,7 +1,8 @@
 project HLT
 
-use LHCB  LHCB_v28r1
-use REC   REC_v7r7
+# will be :
+use LHCB  LHCB_v28r2
+use REC   REC_v7r8
 
 build_strategy with_installarea
 setup_strategy root
