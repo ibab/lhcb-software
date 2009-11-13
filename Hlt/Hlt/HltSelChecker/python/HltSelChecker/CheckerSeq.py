@@ -1,4 +1,4 @@
-## @file $Id: CheckerSeq.py,v 1.4 2009-10-28 17:00:32 pkoppenb Exp $
+## @file $Id: CheckerSeq.py,v 1.5 2009-11-13 08:37:41 pkoppenb Exp $
 #
 #  Create Hlt Checking sequence
 #
@@ -8,7 +8,7 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.4 2009-10-28 17:00:32 pkoppenb Exp $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Id: CheckerSeq.py,v 1.5 2009-11-13 08:37:41 pkoppenb Exp $, $Revision: 1.5 $"
 # =============================================================================
 ###############################################################################
 #
@@ -44,7 +44,7 @@ class CheckerSeq :
         DV = self._DV
         DV.EvtMax = 1000 
         DV.Hlt = True
-        DV.Hlt2Requires = 'L0'
+        DV.Hlt2Requires = 'L0+Hlt1'
         DV.DataType = self._DataType
         DV.Simulation = True
         DV.TupleFile = "HLT-"+self._Signal+".root"
