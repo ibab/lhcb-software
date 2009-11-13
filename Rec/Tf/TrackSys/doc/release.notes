@@ -3,6 +3,10 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
+
+! 2009-11-13 - Patrick Koppenburg
+ - Remove options/TrackRecoHLT.py
+
 <<<<<<< release.notes
 !============================ TrackSys v4r27 2009-11-11 ======================
 ! 2009-11-11 - Kostyantyn Holubyev
