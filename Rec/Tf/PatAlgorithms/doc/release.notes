@@ -4,6 +4,10 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v3r24 2009-11-13 ====================
+! 2009-11-13 - Rob Lambert
+ - Tag v3r24
+
 ! 2009-11-11 Kostyantyn Holubyev
  - PatSeedingTool: In the case of running over unused hits, added option
    to reuse hits from PatForward tracks. If OnlyGood, the hits from "bad"
