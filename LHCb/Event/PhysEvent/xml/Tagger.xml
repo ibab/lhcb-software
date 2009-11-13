@@ -42,21 +42,14 @@
         init = "0.50"
      />		
 
-     <attribute 
-	desc    = "Vector of Particle(s) used to build the Tagger" 
-	name    = "taggerParts" 
-	type    = "std::vector&lt;const LHCb::Particle* &gt;"
-     />
-     <method
-        type    = "void"
-        name    = "addTaggerPart"
-	argList = "const LHCb::Particle* HAS"
-        desc    = "add one Particle to Tagger list">
-        <code>  
-          m_taggerParts.push_back(HAS); 
-          return;
-        </code>
-     </method>
+ 
+      <relation
+        name="taggerParts"
+        desc="Vector of Particle(s) used to build the Tagger"
+        multiplicity="N"
+        type="LHCb::Particle"
+        />
+
 
     </class>
   </package>
