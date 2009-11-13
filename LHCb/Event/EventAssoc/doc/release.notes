@@ -4,6 +4,9 @@
 ! Purpose     : Define and build the POOL dictionaries for the relations
 !-----------------------------------------------------------------------------
 
+! 2009-11-13 - Juan Palacios
+ - Add dictionaries for 1D tables for LHCb::Particle->int, LHCb::Particle->int
+
 ! 2009-11-05 - Juan PALACIOS
  - Split selection into selMC and selPhys to reduce size of dictionaries.
    . Executable dict/selection.py imports new modules mc.py and mc.py 
