@@ -1,4 +1,5 @@
 from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
+                           TrackAlignMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
                            OTTrackMonitor, OTHitEfficiencyMonitor,TrackCaloMatchMonitor)
 from Configurables import (RecSysConf, TrackSys)
@@ -11,6 +12,7 @@ def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
     seq.Members.append( TrackFitMatchMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackV0Monitor(HistoPrint=HistoPrint) )
     seq.Members.append( TrackDiMuonMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( TrackAlignMonitor(HistoPrint=HistoPrint) )
     if "CALO" in RecSysConf().RecoSequence:
         isMip = TrackSys().cosmics()
         seq.Members.append( TrackCaloMatchMonitor("TrackEcalMatchMonitor", CaloSystem='Ecal',
