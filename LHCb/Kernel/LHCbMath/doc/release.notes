@@ -6,6 +6,7 @@
 !               All headers included in directory LHCbMath
 !-----------------------------------------------------------------------------
 
+!========================= LHCbMath v3r14 2009-11-13 =========================
 ! 2009-10-23 - Vanya Belyaev
 
  - add new tests for CPU comparison of Lomont-type 
