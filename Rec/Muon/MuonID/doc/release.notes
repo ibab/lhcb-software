@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+!======================== MuonID v7r3 2009-11-13 ===========================
+! 2009-11-13 - Rob Lambert
+ - Tagged v7r3
+
 ! 2009-11-10 - Wouter Hulsbergen
  - Make sure trackfitters are (also) configured by standard ConfiguredMasterFitter
 
