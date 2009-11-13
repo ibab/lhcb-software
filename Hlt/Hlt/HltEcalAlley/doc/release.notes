@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v2r2 2009-11-13 ===================
 ! 2009-11-02 - Gerhard Raven
  - fix compiler warnings
 
