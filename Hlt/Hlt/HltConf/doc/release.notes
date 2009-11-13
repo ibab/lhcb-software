@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.364 2009-11-13 19:39:53 graven Exp $ 
+! $Id: release.notes,v 1.365 2009-11-13 19:46:30 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,11 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== HltConf v5r2 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
  - replace RandomODIN and NonRandomODIN with ODINTechnical and ODINPhysics
  - add L0Any
 
-!========================== HltConf v5r2 2009-11-13 ===================
 ! 2009-11-05 - Patrick Koppenburg
  - Remove Hlt2Requires option (incompatible with DaVinci v24r4, needs pkoppenb_20090511)
  - Remove Hlt2Requirements sequence
