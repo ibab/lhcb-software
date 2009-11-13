@@ -1,4 +1,4 @@
-// $Id: LumiFromL0DU.cpp,v 1.8 2009-09-30 07:24:56 graven Exp $
+// $Id: LumiFromL0DU.cpp,v 1.9 2009-11-13 13:08:52 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -30,11 +30,10 @@ LumiFromL0DU::LumiFromL0DU( const std::string& name,
                                   ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
 {
-  declareProperty( "InputSelection"      , m_InputSelectionName  = "Trig/L0/L0DUReport");
+  declareProperty( "InputSelection"      , m_InputSelectionName =  LHCb::L0DUReportLocation::Default );
   declareProperty( "CounterName"         , m_CounterName);
   declareProperty( "ValueName"           , m_ValueName);
   declareProperty( "OutputContainer"     , m_OutputContainerName =  LHCb::HltLumiSummaryLocation::Default );
-  declareProperty( "L0DUFromRawToolType" , m_fromRawTool         = "L0DUFromRawTool" );
 
 }
 //=============================================================================
@@ -57,9 +56,6 @@ StatusCode LumiFromL0DU::initialize() {
          << "ValueName:         " << m_ValueName           << endmsg;
 
 
-  // get the L0 decoding tool
-  m_fromRaw = tool<IL0DUFromRawTool>( m_fromRawTool , m_fromRawTool  );
-
   // ------------------------------------------
   m_Counter = LHCb::LumiCounters::counterKeyToType(m_CounterName);
   if ( m_Counter == LHCb::LumiCounters::Unknown ) {
@@ -79,12 +75,10 @@ StatusCode LumiFromL0DU::execute() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
 
-  // decode the bank using the fromRaw Tool
-  if ( !m_fromRaw->decodeBank() ) Warning("Unable to decode L0DU rawBank", StatusCode::SUCCESS).ignore();
-  LHCb::L0DUReport fromRawReport = m_fromRaw->report();
+  const LHCb::L0DUReport*  report = get<LHCb::L0DUReport>( m_InputSelectionName );
   // get the value using its name from the fromRawReport
-  double fromRawValue = fromRawReport.dataValue(m_ValueName);
-  debug() << "found value from the raw L0DU report for " << m_ValueName << " " << fromRawValue << endreq ;
+  double fromRawValue = report->dataValue(m_ValueName);
+  if (msgLevel(MSG::DEBUG)) debug() << "found value from the L0DU report for " << m_ValueName << " " << fromRawValue << endreq ;
   int nCounter = (int) fromRawValue;
 
   // get container
