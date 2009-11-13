@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.43 2009-11-05 12:54:31 graven Exp $
+! $Id: release.notes,v 1.44 2009-11-13 11:52:14 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== HltLine v1r10 2009-11-13 ===================
 ! 2009-11-05 - Gerhard Raven
  - no longer accept partial matches when setting pre- and postscales
 
