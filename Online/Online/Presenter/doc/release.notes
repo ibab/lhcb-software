@@ -4,6 +4,10 @@
 ! Purpose     : GUI to allow the visualization of all data quality histograms
 !-----------------------------------------------------------------------------
 
+!============ Presenter v0r22 2009-11-13 =============
+2009-11-13
++ reshuffle pages in folders via DND in left panel
+
 !============ Presenter v0r21 2009-09-14 =============
 2009-09-14
 + create trendplots from MonRates in batch

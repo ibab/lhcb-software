@@ -1324,17 +1324,18 @@ void PresenterMainFrame::buildGUI()
   }
 }
 
-void PresenterMainFrame::dataDropped(TGListTreeItem* item, TDNDData* data)
+void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data)
 {
-  if (isConnectedToHistogramDB() && (ReadWrite == m_databaseMode) &&
-      item && item->IsDNDTarget() &&
+  if (isConnectedToHistogramDB() &&
+      (ReadWrite == m_databaseMode) &&
+      folder && folder->IsDNDTarget() &&
       data && data->fData &&
-      item->GetUserData()) {
+      folder->GetUserData()) {
     TString fromName = static_cast<char*>(data->fData);
     if (fromName.BeginsWith(s_FILE_URI)) {fromName.Remove(0, s_FILE_URI.length()); }
     std::string pageName(fromName);
 
-    TString newPageName = (*static_cast<TObjString*>(item->GetUserData())).GetString();
+    TString newPageName = (*static_cast<TObjString*>(folder->GetUserData())).GetString();
     if (newPageName.BeginsWith(s_FILE_URI)) { newPageName.Remove(0, s_FILE_URI.length()); }
 
     // Tree does not handle deep recursion correctly ...target, source and 42 broken.
@@ -1346,28 +1347,30 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* item, TDNDData* data)
       std::string rootPath(path);
       page = m_pagesFromHistoDBListTree->FindItemByPathname(rootPath.c_str());
       if (page && (kFALSE == page->IsDNDTarget()) &&
-          (kFALSE == item->IsDNDSource())) {
+          (kFALSE == folder->IsDNDSource())) {
         fromName.Remove(0, fromName.Last('/')+1);
         // when TDNDData/TGListTreeItem seems to be uninit., 2nd try works...
         if (0 == strcmp(fromName, page->GetText())) {
           newPageName.Append(s_slash).Append(fromName);
           try {
-//            if (m_verbosity >= Verbose) {
-              std::cout << "mv " << pageName << " " << newPageName << std::endl;
-//            }
+            if (m_verbosity >= Verbose) {
+              std::cout << "mv \"" << pageName << "\" \"" << newPageName << "\""<< std::endl;
+            }
             OnlineHistPage* dbPage = m_histogramDB->getPage(pageName);
             dbPage->rename(std::string(newPageName.Data()));
             if (m_histogramDB->commit()) {
-              m_pagesFromHistoDBListTree->Reparent(page, item);
+              std::string userPageData(s_FILE_URI);
+              userPageData.append(newPageName);
+              TObjString *objectString = new TObjString(userPageData.c_str());
+              page->SetUserData(objectString);
+              m_pagesFromHistoDBListTree->Reparent(page, folder);
             }
-//            refreshPagesDBListTree();
-//            m_histogramDB->refresh();
           } catch (std::string sqlException) {
             setStatusBarText(sqlException.c_str(), 2);
             if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
             if (Batch != m_presenterMode) {
               new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                  Form("Could delete the page to OnlineHistDB:\n\n%s\n",
+                  Form("Could move the page to OnlineHistDB:\n\n%s\n",
                       sqlException.c_str()),
                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
             }
