@@ -19,8 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v10r1 2009-11-13 ===================
 ! 2009-11-10 - Patrick Koppenburg
- - No not hard code routing bits
+ - Do not hard code routing bits
 
 ! 2009-11-07 - Gerhard Raven
  - remove stale include
