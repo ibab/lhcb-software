@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.46 2009-08-31 10:22:05 graven Exp $
+!$Id: release.notes,v 1.47 2009-11-14 13:23:34 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+!========================== HltRawData v2r1p1 2009-11-14 ===================
+! 2009-11-14 - Gerhard Raven
+ - less error messages 
 
 !========================== HltRawData v2r1 2009-08-31 ===================
 ! 2009-08-18 - Patrick Koppenburg

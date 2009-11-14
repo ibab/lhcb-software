@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.7 2009-04-18 18:52:37 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.8 2009-11-14 13:23:34 graven Exp $
 // Include files 
 
 // from Gaudi
@@ -100,7 +100,7 @@ StatusCode HltVertexReportsMaker::execute() {
      if ( sel == 0 ) {
 
        Error(" Selection name "+selName+" not in dataSvc "
-             ,StatusCode::SUCCESS, 20 );
+             ,StatusCode::SUCCESS, 1 );
        continue;
      }
 
