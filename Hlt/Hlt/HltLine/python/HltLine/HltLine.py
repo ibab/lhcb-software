@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.16 2009-11-14 15:29:48 graven Exp $ 
+# $Id: HltLine.py,v 1.17 2009-11-14 21:53:15 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.16 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -887,10 +887,10 @@ class Hlt1Line(object):
                     _add_to_hlt1_input_selections_ ( getattr( _m, attr ) )
             if hasattr ( type(_m) , 'OutputSelection' ) :
                 if hasattr ( _m , 'OutputSelection' ) :
-                    self._outputSelections += _m.OutputSelection
+                    self._outputSelections += [ _m.OutputSelection ]
                     _add_to_hlt1_output_selections_ ( _m.OutputSelection )
                 else :
-                    self._outputSelections += _m.name()
+                    self._outputSelections += [ _m.name() ]
                     _add_to_hlt1_output_selections_ ( _m.name         () )
 
         if self._outputsel is not None and self._outputsel!= decisionName( line ) :
