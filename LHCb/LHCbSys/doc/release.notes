@@ -1,12 +1,266 @@
 <PRE>
 !-----------------------------------------------------------------------------
 ! Package     : LHCbSys
-! Responsible : Florence Ranjard, Marco Cattaneo
+! Responsible : Marco Cattaneo
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
-! 2009-10-27 - Julien Cogan
- - add new package : L0/L0Base - It contains base classes for L0 components
+</PRE><H1><A NAME=v28r2>2009-11-16 LHCbSys v28r2</A></H1><PRE>
+This version uses Gaudi v21r6 and LCG_57a
+
+- Packages added: Kernel/HistoStrings - histogram <-> string conversion functions
+                  L0/L0Base           - Base classes for L0 components
+
+- Packages modified: CaloDAQ v4r15, CaloInterfaces v7r16, CaloUtils v8r8,
+    MDF v3r21, Tell1Kernel v1r9, DetDesc v18r16, DetDescCnv v4r10, RichDet v13r0,
+    STDet v4r15, VeloPixDet v1r1, DAQEvent v8r2, DigiEvent v2r13,
+    EventAssoc v5r0, EventPacker v2r0, HltEvent v8r19, LumiEvent v2r3,
+    MCEvent v2r15p2, PackedEvent v3r7, PhysEvent v11r10, RecEvent v2r23,
+    TrackEvent v5r2, GaudiConf v13r0, HltInterfaces v3r0, LHCbAlgs v2r30,
+    LHCbKernel v11r9, LHCbMath v3r14, MCInterfaces v1r10, OTDAQ v7r6,
+    DaVinciInterfaces v1r3, DaVinciKernel v8r3, DaVinciTypes v1r1,
+    LoKiCore v9r5p1, SimComponents v2r20, STKernel v1r18, TfKernel v2r13,
+    TrackInterfaces v4r9
+
+- In CaloDAQ v4r15
+  . New configurable to decode CaloDigits 
+  . New options file : CaloDigitsSeq.opts
+  . Protect CaloDataProviderFromTES against missing adc/digit 
+  . Protect CheckCaloBank against missing RawEvent
+  . CaloDigitFromRaw : remove duplicate property!
+                     : add missing statusOnTES when output = ADC
+  . CaloXXFromRaw    : clear read sourceID in clear() method
+
+- In CaloInterfaces v7r16
+  . New interface ICaloDigits4Track 
+  . Remove unnecessary "unary_function"-base from ICaloTrackIdEval
+
+- In CaloUtils v8r8
+  . Calo2Dview : 
+    o speed-up processing: 
+      + remove usage of slow HistoID/std::string cast-conversion 
+      + reduce usage of histoXD() method in case of sequential filling of the
+        same histogram
+    o implement Profile2D view
+  . CaloTrackTool : use ICaloDigits4Track 
+
+- In MDF v3r21
+  . Fix bug in MEP decoding. Get correct upper 16 bits of L0 event ID.
+
+- In Tell1Kernel v1r9
+  . Add various definitions needed for the Tell1 line in Boole
+
+- In DetDesc v18r16
+  . 3DTransformationFunctions : Added function to compute derivative jacobian
+    from Transform
+  . Added "histograms conditions" DetDesc::Histo1DCond, DetDesc::Histo2DCond :
+    Conditions which are able to hold histograms
+
+- In DetDescCnv v4r10
+  . Apply patch #3399 XmlGenericCnv uses inneficient part of Xerces-C API for DOM
+    walking. Speeds up loading LHCb geometry by about 10%
+  . Fix a memory leak in XmlGenericCnv.cpp
+  . Replace all endreq by endmsg
+  . Remove obsolete file src/component/DetDescCnv_dll.cpp
+
+- In RichDet v13r0
+  . Introduce separate refractive index for the HLT.
+
+- In STDet v4r15
+  . Add sensor capacitance methods
+  . Bug fix in setNoise, setCMnoise and setADCConversion methods
+  . Bug fix in case of unexisting cmNoise paramVector in Noise condition
+  . Add conditions for common mode noise. 
+  . Allow updating of noise condition 
+
+- In VeloPixDet v1r1
+  . Added channelToNeighbours and debug pointTo3x3Channel + channel2Point
+  . Debugging of the pointToChannel function and similar.
+  . Modify the function PixelSize so that the only argument is Channel ID
+  . Remove some wild cast (unsigned int <--> int and double <--> float)
+  . Addition in DeVelPixSquare of some function to get the 3x3 neighbourg list +
+    improvement of channel to point and point to channel.
+
+- In DAQEvent v8r2
+  . Modified ODIN.xml with the new trigger types valid since version 6 of the 
+    bank.
+  . Add new ODINTimeFilter (GPS time, EventID, BCID filtering)
+
+- In DigiEvent v2r13
+  . CaloDigit : add some typedefs
+
+- In EventAssoc v5r0
+  . Add dictionaries for 1D tables for LHCb::Particle->int, LHCb::Particle->int
+    and LHCb::RelationWeighted1D<LHCb::Particle,LHCb::Particle,double>
+  . Split selection into selMC and selPhys to reduce size of dictionaries.
+    Executable dict/selection.py imports new modules mc.py and mc.py 
+    to create dictionaries EventAssocMCDict and EventAssocPhysDict.
+
+- In EventPacker v2r0
+  . Add new packing classes for the packing of all MC information in Gauss
+    and Boole.
+  . Add packers for RichPIDs and MuonPIDs
+  . New packers explicitly store the 'packing version' in the packed DataObject.
+    Allows the 'version' of the data object to the be used to store any 
+    versioning needed in the original unpacked data.
+  . Fix CompareTrack to not report saturated q/p error for poorly measured tracks
+  . Fix a wrong decoding of likelihood and ghost probability for Track version>2
+  . Add some debug to ProtoParticle packers and unpackers + remove need for 
+    temporary packed object during packing
+  . Add an option to the packers and unpackers to optionally create the
+    output container if the input is missing. Default is to not to do so.
+  . Protect packers and unpackers from missing input data and also already 
+    existing output data
+  . Silently return no unpacked data when packed data does not exist. Needed
+    for spillover events, which are not always present.
+  . Extend the packing and unpacking to VeloPix sub-detector
+
+- In HltEvent v8r19
+  . Remove obsolete HltSummary.xml
+
+- In LumiEvent v2r3
+  . Added EventCountFSR, storing how many events are in the file and how many
+    were used to make the file
+  . Added TT track counters
+
+- In MCEvent v2r15p2
+  . Add VeloPic MC hit location
+
+- In PackedEvent v3r7
+  . Add packers for RichPIDs and MuonPIDs
+  . Add new packing classes for the packing of all MC information in Gauss
+    and Boole.
+
+- In PhysEvent v11r10
+  . Changed again xml/Tagger.xml
+
+- In RecEvent v2r23
+  . Rename locations of HLT vertices to what is actually used. Now
+       Velo2D is Hlt/Vertex/PV2D
+       Velo3D is Hlt/Vertex/PV3D
+
+- In TrackEvent v5r2
+  . Replace vector by range for nodes in Track
+  . Hide TrackFitResult copy constructor
+
+- In GaudiConf v13r0
+  . Add new SimConf Configurable that deals with all issues regarding the SIM
+    file content, including data packing and unpacking.
+  . Update DigiConf and DstConf to internally use SimConf where appropriate.
+    Also, remove any duplicated knowledge of the SIM/DIGI content (for instance
+    when copying data to the (X)DSTs).
+  . Add to DstConf flag to turn on full checks of DST data packing
+  . Add "AlwaysCreate" slot to DstConf and CaloPackingConf, to control new
+    "AlwaysCreateOutput" property of the packers
+  . Bug fix in DstConf: set up unpacking even if no DST output requested 
+  . Remove DAQ/ODIN from DST and RDST. Add ODIN bank to pRec/RawEvent on RDST
+  . Add packed RichPID and MuonPID data containers to the DST definition.
+    In addition add the associated packers to the default packing sequence and
+    the unpackers to the data on demand service.
+
+- In HltInterfaces v3r0
+  . Remove IHltSummaryTool 
+  . New functions readRoutingBits and firexRoutingBits in namespace Hlt that
+    get quick access to routing bits.
+  . Add dependency on DAQEvent
+
+- In LHCbAlgs v2r30
+  . Modified the ODINCodecBaseTool to look for the RawEvent bank in more than one
+    place, always including LHCb::RawEventLocation::Copied, 
+    LHCb::RawEventLocation::Default. The decoding has been modified to use the
+    new definition of the trigger types ODIN class (which now is only transient).
+  . Moved the tool properties from ODINCodecBaseTool to ODINEncodeTool and
+    ODINDecodeTool for higher flexibility.
+  . Add trivial algorithm that allows for sequence filtering based on the 
+    version of DataObjects. Allows for use cases like the re-creation of some
+    data depending on its version.
+
+- In LHCbKernel v11r9
+  . Bug fix in TTNames class stringToChannel
+  . OTChannelID : Added methods to retrieve sequential IDs
+  . Add packing methods for delta LL values
+  . Kernel/CaloCellID.h : add a typedef
+  . Make StandardPacker methods const
+  . Extend StandardPacker.h with methods to pack time values (TOF values 
+    for the packing of MC hits).
+
+- In LHCbMath v3r14
+  . Add new tests for CPU comparison of Lomont-type & Knuth-type compare.
+    Bottom line: Lomont-type compare is approximately 4 times more CPU efficient
+  . LHCbMath/LHCbMath.h
+    o reimplement the function "round" using boost:numeric 
+  . tests/TestRound.cpp :  new test/illustration for new "round" function.
+    Three functions are compared:
+     1. "old-round" (based on Knuth-compare) 
+     2. modified round (based on Lomont-compare)
+     2  New implementation using boost::numeric::converter 
+     Lomont-based rounding is approximately factor of 4 faster, 
+     and the new rounding is approximately factor of 10 faster...
+  . python/LHCbMath/Types.h
+    add more decorations for lines & planes & their operations, like 
+    intersections, impact parameters, distances, parallel, etc..
+  . python/LHCbMath/tests.py : add the tests for new functions 
+
+- In MCInterfaces v1r10
+  . Add an interface IHepMCParticleSelector to select GenParticle matching some 
+    criteria
+  . Add dependency on GenEvent
+
+- In OTDAQ v7r6
+  . Made OTMultiBXRawBankDecoder more verbose in initialize
+
+- In DaVinciInterfaces v1r3
+  . Kernel/IPhysDesktop.h
+    o Add void setOutputLocation(const std::string&)
+    o Add const and non-const methods Particle2Vertex::Map& Particle2VertexMap()
+    o Remove virtual const IRelatedPVFinder* relatedPVFinder() const method.
+  . Add interface for Jet to Jet matching: IJets2Jets
+  . Fix doxygen for IVertexFit.h
+
+- In DaVinciKernel v8r3
+  . DVAlgorithm:
+    o Set IPhysDesktop's outputLocation manually.
+    o Takes handling of PVs over from PhysDesktop.
+    o Add method onOffline() to get IOnOfflineTool pointer.
+    o Use DaVinci::StringUtils::expandLocation function to add context paths
+      to input locations before passing them to the PhysDesktop.
+    o IBTaggingTool* is now private.
+    o Add protected method returning list of input TES locations corresponding
+      to property InputLocations.
+  . Kernel/DaVinciStringUtils.h, src/Lib/DaVinciStringUtils.cpp
+    Add DaVinci::::StringUtils::expandLocation(string loc, string prefix).
+  . Add Kernel/DaVinciP2VVAngles.h and src/Lib/DaVinciP2VVangles.cpp
+    Namespace DaVinci::P2VVAngles with P2VV angle calculating functions.
+  . Kernel/DaVinciFun.h,  src/Lib/DaVinciFun.cpp
+    DaVinci::P2VVAngles moved to Kernel/DaVinciP2VVAngles.h and 
+    src/Lib/DaVinciP2VVangles.cpp
+  . Move Kernel/StringUtils.h to Kernel/DaVinciStringUtils.h and put 
+    implementation in src/Lib/DaVinciStringUtils.cpp
+
+- In DaVinciTypes v1r1
+  . Kernel/Particle2Vertex.h : add a typedef
+
+- In LoKiCore v9r5p1
+  . Fix an untested StatusCode in LoKi/FilterAlg.h
+
+- In SimComponents v2r20
+  . MCDecayFinder : Issue a warning (10 times) when decay is not found.
+
+- In STKernel v1r18
+  . Add interface for STNoiseCalculationTool
+  . Add method to Readout tool for mapping TELL number to source ID.
+  . STTell1Board : Use (usigned int) interstrip position from the raw buffer in
+    ADCToOffline(..). Before this value was recalculating, which could give ADC
+    offsets due to rounding difference between Tell1 and simulation.
+
+- In TfKernel v2r13
+  . Add method to OTHitCreator to create single hit given OTChannelID
+
+- In TrackInterfaces v4r9
+  . PitchResTool now returns a map of OTChannelIDs and pitch residuals.
+
+- In HltEvent v8r19, LumiEvent v2r3, MCInterfaces v1r10
+  . Remove hack for Gaudi v21r1 to link dictionary on windows from requirements
 
 </PRE><H1><A NAME=v28r1>2009-10-21 LHCbSys v28r1</A></H1><PRE>
 This version uses Gaudi v21r5 and LCG_57
