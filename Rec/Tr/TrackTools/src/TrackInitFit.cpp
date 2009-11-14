@@ -1,4 +1,4 @@
-// $Id: TrackInitFit.cpp,v 1.1 2009-11-14 16:03:49 kholubye Exp $
+// $Id: TrackInitFit.cpp,v 1.2 2009-11-14 16:20:57 kholubye Exp $
 // Include files 
 
 // from Gaudi
@@ -39,15 +39,14 @@ TrackInitFit::~TrackInitFit() {}
 //=============================================================================
 StatusCode TrackInitFit::initialize() {
 
-  if (msgLevel( MSG::DEBUG )) 
-    debug() << "==> Initialize " << endreq;
-
+  info() << "==> Initialize " << endreq;
+  
   StatusCode sc = GaudiTool::initialize();
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
+  
   m_initTrack = tool<ITrackStateInit>( m_initToolName, "Init", this);
   m_fitTrack  = tool<ITrackFitter>(m_fitToolName, "Fit", this);
-
+  
   return StatusCode::SUCCESS;
 }
 
