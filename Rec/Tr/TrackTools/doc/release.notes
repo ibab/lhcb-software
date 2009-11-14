@@ -24,7 +24,7 @@
 
 ! 2009-11-14 Kostyantyn Holubyev
  - Added a tool TrackInitFit, a wrapper around TrackStateInitTool
-   and TrackMasterFitter, to be used for dst refit
+   and TrackMasterFitter, to be used for dst refit. Interfaced to ITrackFitter
 
 !======================== TrackTools v3r22 2009-10-20 ========================
 
