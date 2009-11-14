@@ -22,7 +22,7 @@ use HltLine             v1r10   Hlt   # Vanya Belyaev, Gerhard Raven
 use HltLuminosity       v2r12   Hlt   # Jaap Panman
 use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
 use HltMuon             v3r5p1  Hlt   # Alessia Satta          
-use HltRawData          v2r1    Hlt   # Tomasz Skwarnicki
+use HltRawData          v2r1p1  Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r11p1 Hlt   # Jose Angel Hernando-Morata
 use HltSelChecker       v10r1   Hlt   # Patrick Koppenburg
 use HltSettings         v1r2    Hlt   # Parick Koppenburg, Gerhard Raven
