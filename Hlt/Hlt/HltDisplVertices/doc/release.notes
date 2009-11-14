@@ -4,7 +4,10 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
-!========================== HltDisplVertices v1r2 2009-11-13 ===================
+!========================== HltDisplVertices v1r2 2009-11-14 ===================
+! 2009-Nov-14 - Gerhard Raven
+ - fix compiler warning
+
 ! 2009-Nov-12 - Neal Gauvin
 - change default settigns
 

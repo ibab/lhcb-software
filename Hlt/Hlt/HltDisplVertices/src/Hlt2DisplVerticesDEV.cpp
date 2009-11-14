@@ -182,11 +182,11 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   sort( RVs->begin(), RVs->end(), SortPVz);
 
   //Retrieve the 2D RecVertex
-  RecVertices* RV2Ds;
+  RecVertices* RV2Ds=0;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
     if( !exist<RecVertices>("/Event/Hlt/Vertex/PV2D") ){ 
       warning() << "Unable to find 2D RecVertices at"
-		<<" /Event/Hlt/Vertex/PV2D" << endreq;
+		<<" /Event/Hlt/Vertex/PV2D" << endmsg;
       return StatusCode::SUCCESS;
     }
     RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
@@ -197,6 +197,10 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     if( RV2Ds->empty() ) return StatusCode::SUCCESS;
     //sort them by ascending z position
     sort( RV2Ds->begin(), RV2Ds->end(), SortPVz);
+  }
+  if (RV2Ds==0) {
+      warning() << "Unable to find 2D RecVertices" << endmsg;
+      return StatusCode::SUCCESS;
   }
 
 
