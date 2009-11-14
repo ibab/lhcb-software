@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.145 2009-06-16 06:52:40 cattanem Exp $
+! $Id: release.notes,v 1.146 2009-11-14 21:17:43 cattanem Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+!======================== PhysEvent v11r10 2009-11-14 =======================
+! 2009-11-13 - Marco Musy
+ - changed again xml/Tagger.xml
 
 !======================== PhysEvent v11r9 2009-06-16 ========================
 ! 2009-06-04 - Marco Musy
