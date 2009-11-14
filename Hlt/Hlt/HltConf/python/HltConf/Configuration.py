@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.131 2009-11-13 19:39:54 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.132 2009-11-14 22:10:50 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -122,7 +122,7 @@ class HltConf(LHCbConfigurableUser):
         Hlt = Sequence('Hlt', ModeOR= True, ShortCircuit = False
                        , Members = 
                        [ Sequence('Hlt1') 
-                       , Sequence('Hlt2') # NOTE: Hlt2 checks itself whether Hlt1 passed or not
+                       , Sequence('Hlt2')
                        , Sequence('HltEndSequence') 
                        ] )
 
@@ -192,14 +192,16 @@ class HltConf(LHCbConfigurableUser):
         HltRoutingBitsWriter().RoutingBits = routingBits
 
 ##################################################################################
-    def configureVertexPersistence(self) :
+    def configureVertexPersistence(self,lines) :
         """
         persistify vertices
         """
         ## and persist some vertices...
-        ## uhhh... need to pick only those in ActiveHlt1Lines...
-        from HltLine.HltLine     import hlt1Selections
-        vertices = [ i for i in hlt1Selections()['All'] if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
+        selections = []
+        from HltLine.HltLine     import hlt1Lines
+        for i in hlt1Lines() :
+               if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
+        vertices = [ i for i in selections if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
         from Configurables import HltVertexReportsMaker
         HltVertexReportsMaker().VertexSelections = vertices
         ## do not write out the candidates for the vertices we store 
@@ -353,8 +355,8 @@ class HltConf(LHCbConfigurableUser):
         activeHlt2Lines.extend( self.getProp('AdditionalHlt2Lines')  )
 
         # make sure Hlt.Global is included as soon as there is at least one Hlt. line...
-        activeHlt1Lines += [ 'Hlt1Global' ]
-        activeHlt2Lines += [ 'Hlt2Global' ]
+        if activeHlt1Lines : activeHlt1Lines += [ 'Hlt1Global' ]
+        if activeHlt2Lines : activeHlt2Lines += [ 'Hlt2Global' ]
 
         print '# List of requested Hlt1Lines : %s ' % activeHlt1Lines 
         print '# List of available Hlt1Lines : %s ' % [ i.name() for i in hlt1Lines() ] 
@@ -389,7 +391,7 @@ class HltConf(LHCbConfigurableUser):
                 i.configurable().AcceptIfSlow = True 
         
         self.configureHltMonitoring(lines1)
-        self.configureVertexPersistence()
+        self.configureVertexPersistence( [ i.name() for i in lines1 ] ) # TODO: add lines2...
         self.configureANNSelections()
 
         if self.getProp("Verbose") : print Sequence('Hlt') 
@@ -427,6 +429,7 @@ class HltConf(LHCbConfigurableUser):
         _list = ( ( "EnableHltRoutingBits"   , [ HltRoutingBitsWriter ] )
                 , ( "EnableHltGlobalMonitor" , [ HltGlobalMonitor ] )
                 , ( "SkipHltRawBankOnRejectedEvents", [ lambda : HltLine('Hlt1Global') ] )
+                # , ( "SkipHltRawBankOnRejectedEvents", [ lambda : 'Hlt1Global' ] ) # TODO: fwd Moore.WriterRequires (which is a list...)
                 , ( "EnableHltDecReports"    , [ HltDecReportsWriter ] )
                 , ( "EnableHltSelReports"    , [ HltSelReportsMaker, HltSelReportsWriter ] )
                 , ( "EnableHltVtxReports"    , [ HltVertexReportsMaker, HltVertexReportsWriter ] )

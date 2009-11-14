@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.365 2009-11-13 19:46:30 graven Exp $ 
+! $Id: release.notes,v 1.366 2009-11-14 22:10:50 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,7 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 
-!========================== HltConf v5r2 2009-11-13 ===================
+!========================== HltConf v5r2 2009-11-14 ===================
+! 2009-11-14 - Gerhard Raven
+ - make sure only active selections are registered with HltVertexReportMaker
+
 ! 2009-11-13 - Gerhard Raven
  - replace RandomODIN and NonRandomODIN with ODINTechnical and ODINPhysics
  - add L0Any
