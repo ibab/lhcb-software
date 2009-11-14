@@ -1,12 +1,14 @@
-! $Id: release.notes,v 1.44 2009-11-13 11:52:14 pkoppenb Exp $
+! $Id: release.notes,v 1.45 2009-11-14 15:29:48 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
+!========================== HltLine v1r10 2009-11-14 ===================
+! 2009-11-14 - Gerhard Raven
+ - keep track of _all_ output selections of an Hlt1 line
 
-!========================== HltLine v1r10 2009-11-13 ===================
 ! 2009-11-05 - Gerhard Raven
  - no longer accept partial matches when setting pre- and postscales
 
