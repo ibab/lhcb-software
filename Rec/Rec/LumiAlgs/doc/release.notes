@@ -4,6 +4,11 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-11-14 - Jaap Panman
+ - Added explicit createODIN in Configuration.touchFSR()
+   Temporary solution until incidentSvc reliable for FSR
+   Present setup fails for files without events 
+
 ! 2009-11-13 - Rob Lambert
  - Added GaudiConf to configuration, to pick up stdopts at run time
 

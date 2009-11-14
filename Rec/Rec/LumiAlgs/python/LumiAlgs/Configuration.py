@@ -102,10 +102,12 @@ class LumiAlgsConf(LHCbConfigurableUser):
         '''make sure the FSR is touched and readable'''
         #from Configurables import (LumiFileReader)
         #readingFSR=LumiFileReader("TouchLumiFSR")
+        from Configurables import createODIN
+        odin=createODIN()
         from Configurables import (LumiIntegrateFSR)
         readingFSR=LumiIntegrateFSR("TouchLumiFSR")
         readingFSR.OutputLevel = self.getProp("OutputLevel")
-        return [readingFSR]
+        return [ odin, readingFSR]
     
     ## Apply the configuration to the given sequence
     def __apply_configuration__(self):
