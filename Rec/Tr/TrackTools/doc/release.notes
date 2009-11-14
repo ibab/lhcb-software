@@ -22,6 +22,10 @@
  - fix small memory leak in TrackNNGhostId, add ghost id for all track types
 
 
+! 2009-11-14 Kostyantyn Holubyev
+ - Added a tool TrackInitFit, a wrapper around TrackStateInitTool
+   and TrackMasterFitter, to be used for dst refit
+
 !======================== TrackTools v3r22 2009-10-20 ========================
 
 ! 2009-10-20 Stephanie Hansmann-Menzemer
