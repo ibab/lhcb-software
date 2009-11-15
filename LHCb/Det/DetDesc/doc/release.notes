@@ -1,9 +1,22 @@
 ! =============================================================================
-! $Id: release.notes,v 1.407 2009-11-13 15:53:28 cattanem Exp $ 
+! $Id: release.notes,v 1.408 2009-11-15 16:37:15 ibelyaev Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-11-15 - Vanya Belyaev
+
+ - DetDesc/Compare.h
+
+    substitute gsl_cmp ( "Knuth's-compare") by "Lomont-compare
+    remove dependency on GLS 
+
+ - cmt/requirements
+ 
+    remove GSL-related lines   
+    version increment to v18r17 
+
 
 !====================== DetDesc v18r16 2009-11-13 =============================
 ! 2009-11-13 - Wouter Hulsbergen

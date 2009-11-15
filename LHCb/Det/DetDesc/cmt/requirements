@@ -1,7 +1,7 @@
-# $Id: requirements,v 1.124 2009-10-23 09:43:14 ibelyaev Exp $ 
+# $Id: requirements,v 1.125 2009-11-15 16:37:15 ibelyaev Exp $ 
 # =============================================================================
 package       DetDesc
-version       v18r16
+version       v18r17
 
 # =========== structure =======================================================
 branches      DetDesc doc cmt src
@@ -9,14 +9,14 @@ branches      DetDesc doc cmt src
 # =========== dependencies ====================================================
 use           GaudiKernel       v*
 use           ROOT              v* LCG_Interfaces
-use           GSL               v* LCG_Interfaces -no_auto_imports
+##use           GSL               v* LCG_Interfaces -no_auto_imports
 use           HistoStrings      v* Kernel
 
 # =========== own includes ====================================================
 apply_pattern install_more_includes more=DetDesc
 
 # =========== constituents ====================================================
-library       DetDescLib        Lib/*.cpp -import=GSL
+library       DetDescLib        Lib/*.cpp 
 
 # =========== standard patterns (the order is essential!) =====================
 apply_pattern linker_library    library=DetDescLib 
@@ -31,12 +31,3 @@ apply_pattern     reflex_dictionary                                 \
 macro_append ROOT_linkopts " -lMathCore -lGenVector " \
              WIN32 " libMathCore.lib libGenVector.lib "
 
-private
-# Note: libgslcblas is needed by libgsl, but the link is missing.
-macro_prepend GSL_linkopts " -Wl,--no-as-needed " \
-                    Darwin "" \
-                     WIN32 ""
-macro_append GSL_linkopts " -Wl,--as-needed " \
-                    Darwin "" \
-                     WIN32 ""
-end_private

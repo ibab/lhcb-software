@@ -1,4 +1,4 @@
-// $Id: Compare.h,v 1.3 2009-11-15 16:37:15 ibelyaev Exp $
+// $Id: Compare.h,v 1.4 2009-11-15 16:37:53 ibelyaev Exp $
 // ============================================================================
 #ifndef DETDESC_COMPARE_H 
 #define DETDESC_COMPARE_H 1
@@ -15,13 +15,6 @@
 // ============================================================================
 namespace DetDesc
 {
-  // ==========================================================================
-  /** @var s_tolerance 
-   *  the relative tolerance of tick/intersection comparison 
-   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
-   *  @date   2007-12-13
-   */
-  //const double s_tolerance = 2.e-8 ;
   // ==========================================================================
   /** @var s_tolerance_ULPs
    *  the tolerance in ULPs-units of tick/intersection comparison 
