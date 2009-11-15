@@ -1,54 +1,69 @@
-// $Id: Compare.h,v 1.2 2008-05-20 15:41:17 cattanem Exp $
-// =========================================================================
+// $Id: Compare.h,v 1.3 2009-11-15 16:37:15 ibelyaev Exp $
+// ============================================================================
 #ifndef DETDESC_COMPARE_H 
 #define DETDESC_COMPARE_H 1
-// =========================================================================
+// ============================================================================
 // Include files
-// =========================================================================
+// ============================================================================
+// GaudiKernel
+// ============================================================================
+#include "GaudiKernel/Lomont.h"
+// ============================================================================
 // GSL
-// =========================================================================
-#include "gsl/gsl_sys.h"
-// =========================================================================
+// ============================================================================
+// #include "gsl/gsl_sys.h"
+// ============================================================================
 namespace DetDesc
 {
-  // =======================================================================
+  // ==========================================================================
   /** @var s_tolerance 
    *  the relative tolerance of tick/intersection comparison 
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-12-13
    */
-  const double s_tolerance = 2.e-8 ;
-  // =======================================================================  
+  //const double s_tolerance = 2.e-8 ;
+  // ==========================================================================
+  /** @var s_tolerance_ULPs
+   *  the tolerance in ULPs-units of tick/intersection comparison 
+   *  @see Gaudi::Math::Lomont 
+   *  @see Gaudi::Math::lomont_comapre_double 
+   *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
+   *  @date   2007-12-13
+   */
+  const unsigned int s_tolerance_ULPs = 1000 ;
+  // ==========================================================================
   /** Compare double/floating numbers 
    *  @see gsl_fcmp 
    *  @param x1 the  first value to be compared 
    *  @param x2 the  second valeu to be compared 
-   *  @param eps the RELATIVE precision 
+   *  @param ULPs the precision in ULPs-units 
    *  @return -1 if x1 < x2 , 0 if x1 == x2 and +1 if x1 > x2 
-   *  @warning it is not a right method to compare with ZERO!
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-12-13
    */
   inline int compare 
-  ( const double x1  , 
-    const double x2  , 
-    const double eps ) { return gsl_fcmp ( x1 , x2 , eps ) ; }
-  // =======================================================================  
+  ( const double        x1   , 
+    const double        x2   , 
+    const unsigned int  ULPs ) 
+  { 
+    return 
+      Gaudi::Math::lomont_compare_double ( x1 , x2 , ULPs ) ? 0 : x1 < x2 ? -1 : 1 ;
+  }
+  // ==========================================================================
   /** Compare double/floating numbers 
    *  @see gsl_fcmp 
    *  @param x1 the  first value to be compared 
    *  @param x2 the  second valeu to be compared 
    *  @return -1 if x1 < x2 , 0 if x1 == x2 and +1 if x1 > x2 
-   *  @warning it is not a right method to compare with ZERO!
    *  @author Vanya BELYAEV ibelyaev@physics.syr.edu
    *  @date   2007-12-13
    */
   inline int compare 
   ( const double x1  , 
     const double x2  )
-  { return DetDesc::compare ( x1 , x2 , s_tolerance ) ; }
-  // =======================================================================  
-} //end of namespaceDetDesc 
+  { return DetDesc::compare ( x1 , x2 , s_tolerance_ULPs ) ; }
+  // ==========================================================================
+} //                                                   end of namespace DetDesc 
 // ============================================================================
 // The END 
 // ============================================================================
