@@ -1,4 +1,4 @@
-// $Id: TaggingTuplesData.cpp,v 1.4 2009-06-04 17:19:02 musy Exp $
+// $Id: TaggingTuplesData.cpp,v 1.5 2009-11-15 08:54:27 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -321,11 +321,11 @@ StatusCode TaggingTuplesData::execute() {
         debug() << "    decision = "
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
-        std::vector<const Particle*> taggerparts = itag->taggerParts();
-        std::vector<const Particle*>::iterator kp;
+        const SmartRefVector<Particle>& taggerparts = itag->taggerParts();
+        SmartRefVector<Particle>::const_iterator kp;
         for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-                   debug() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
-                           << " p= "  << (*kp)->p()/Gaudi::Units::GeV << endmsg;
+          debug() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+                  << " p= "  << (*kp)->p()/Gaudi::Units::GeV << endmsg;
         }
           if(tts=="OS_Muon"){
           osmuondec=itag->decision();
@@ -361,34 +361,34 @@ StatusCode TaggingTuplesData::execute() {
       nSelected++;
       Event=nSelected;
       debug() << "taggers decision" << osmuondec<<oselectrondec<<oskaondec<<
-      sskaondec<<vtxchargedec << endmsg;
-        info() << "Taggers Decision "
-               << std::setw(3) << osmuondec
-               << std::setw(3) << oselectrondec
-               << std::setw(3) << oskaondec
-               << std::setw(3) << sskaondec
-               << std::setw(3) << vtxchargedec
-               << std::setw(3) << sspiondec
-               << std::setw(3) <<  ssjetdec
-               << endreq;
+        sskaondec<<vtxchargedec << endmsg;
+      info() << "Taggers Decision "
+             << std::setw(3) << osmuondec
+             << std::setw(3) << oselectrondec
+             << std::setw(3) << oskaondec
+             << std::setw(3) << sskaondec
+             << std::setw(3) << vtxchargedec
+             << std::setw(3) << sspiondec
+             << std::setw(3) <<  ssjetdec
+             << endreq;
    }
   }
   //tuple writing
 
     if(Event>0) {
-  NTuplePtr nt(ntupleSvc(), "/NTUPLES/FILE1/200");
-  StatusCode sc = nt->write();
-  if ( !sc )
-    err() << "Cannot fill ntuple" << endreq;
-  else verbose() << " Wrote ntuple "<<endreq;
-  }
+      NTuplePtr nt(ntupleSvc(), "/NTUPLES/FILE1/200");
+      StatusCode sc = nt->write();
+      if ( !sc )
+        err() << "Cannot fill ntuple" << endreq;
+      else verbose() << " Wrote ntuple "<<endreq;
+    }
   
 
 // Onuora end
 
 
-  setFilterPassed(true);
-  return StatusCode::SUCCESS;
+    setFilterPassed(true);
+    return StatusCode::SUCCESS;
 }
 
 

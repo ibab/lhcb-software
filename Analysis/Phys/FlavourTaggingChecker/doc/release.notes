@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.65 2009-11-12 09:40:53 jpalac Exp $
+! $Id: release.notes,v 1.66 2009-11-15 08:54:27 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-11-15 - Juan Palacios
+ - src/TaggingTuplesData.cpp
+  . Adapt to change in Event/Tagger.h
 
 ! 2009-11-12 - Juan Palacios
  - src/CheatedSelection.cpp
