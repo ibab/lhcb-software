@@ -124,7 +124,7 @@ class PresenterMainFrame : public TGMainFrame
       M_LoadPage_COMMAND,
       M_Move_COMMAND,
       M_DeletePage_COMMAND,
-      M_DeleteFolder_COMMAND,
+      M_CreateFolder_COMMAND,
       M_LAST_1_HOURS,
       M_LAST_8_HOURS,
       M_Last_File,
@@ -327,7 +327,7 @@ class PresenterMainFrame : public TGMainFrame
                                 bool pageHistoryMode = false);
     void moveSelectedInDB();
     void deleteSelectedPageFromDB();
-    void deleteSelectedFolderFromDB();
+    void createFolderInDB();
     void pickReferenceHistogram();
     void saveSelectedHistogramAsReference();
     void toggleReferenceOverlay();

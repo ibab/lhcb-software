@@ -1,1 +1,1 @@
-valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-reachable=yes --num-callers=1000 --log-file=$HOME/presenterGrinderTrace.log $PRESENTERROOT/$CMTCONFIG/presenter.exe  --login no -C ../doc/presenter.cfg.local
+valgrind --tool=memcheck --leak-check=yes --leak-check=full --show-reachable=yes --num-callers=1000 --log-file=$HOME/presenterGrinderTrace.log $PRESENTERROOT/$CMTCONFIG/presenter.exe -C ../doc/presenter.cfg.mbp

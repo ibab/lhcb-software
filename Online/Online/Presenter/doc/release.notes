@@ -7,13 +7,18 @@
 !============ Presenter v0r22 2009-11-13 =============
 2009-11-13
 + reshuffle pages in folders via DND in left panel
+  note: ROOT DND often crashes when hovering mouse
+  while Highlight. (HandleEvent in GUI is "too
+  complicated and unmaintainable"[sic])
++ create folders
++ rename pages
 
 !============ Presenter v0r21 2009-09-14 =============
 2009-09-14
 + create trendplots from MonRates in batch
 + added trendplots in GUI, Database (please don't load
   pages from DB in Editor mode just yet)
-+ added TCK awareness (statusbar)
++ added TCK awareness when trendplot is present on page
 
 !============ Presenter v0r20 2009-06-16 =============
 2009-06-16

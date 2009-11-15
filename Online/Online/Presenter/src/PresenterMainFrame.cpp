@@ -20,6 +20,7 @@
 #include <TGListView.h>
 #include <TGMenu.h>
 #include <TGMsgBox.h>
+#include <TGInputDialog.h>
 #include <TGPicture.h>
 #include <TGNumberEntry.h>
 #include <TGSplitter.h>
@@ -854,11 +855,11 @@ void PresenterMainFrame::buildGUI()
   
       m_pagesContextMenu = new TGPopupMenu(fClient->GetRoot());
       m_pagesContextMenu->AddEntry("Load Page", M_LoadPage_COMMAND);
-//      m_pagesContextMenu->AddSeparator();
-//      m_pagesContextMenu->AddEntry("Move/Rename", M_Move_COMMAND);
       m_pagesContextMenu->AddSeparator();
-      m_pagesContextMenu->AddEntry("Delete Page", M_DeletePage_COMMAND);
-      m_pagesContextMenu->AddEntry("Delete Folder", M_DeleteFolder_COMMAND);
+      m_pagesContextMenu->AddEntry("Move/Rename", M_Move_COMMAND);
+      m_pagesContextMenu->AddSeparator();
+      m_pagesContextMenu->AddEntry("Delete", M_DeletePage_COMMAND);
+      m_pagesContextMenu->AddEntry("Create Folder", M_CreateFolder_COMMAND);
       m_pagesContextMenu->AddSeparator();
       m_pagesContextMenu->AddEntry("Refresh", M_RefreshDBPagesListTree_COMMAND);
       m_pagesContextMenu->Connect("Activated(Int_t)", "PresenterMainFrame",
@@ -1326,8 +1327,7 @@ void PresenterMainFrame::buildGUI()
 
 void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data)
 {
-  if (isConnectedToHistogramDB() &&
-      (ReadWrite == m_databaseMode) &&
+  if (canWriteToHistogramDB() &&
       folder && folder->IsDNDTarget() &&
       data && data->fData &&
       folder->GetUserData()) {
@@ -1340,7 +1340,8 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data)
 
     // Tree does not handle deep recursion correctly ...target, source and 42 broken.
     TGListTreeItem* page = 0;
-    char path[1024];
+    char path[s_maxPageNameLength];
+    strncpy(path, "", sizeof(path)-1);
     m_pagesFromHistoDBListTree->GetPathnameFromItem(m_pagesFromHistoDBListTree->GetSelected(), path);
 
     if (strlen(path)) { // avoid being @root
@@ -1364,13 +1365,14 @@ void PresenterMainFrame::dataDropped(TGListTreeItem* folder, TDNDData* data)
               TObjString *objectString = new TObjString(userPageData.c_str());
               page->SetUserData(objectString);
               m_pagesFromHistoDBListTree->Reparent(page, folder);
+              m_pagesFromHistoDBListTree->Sort(page);
             }
           } catch (std::string sqlException) {
             setStatusBarText(sqlException.c_str(), 2);
             if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
             if (Batch != m_presenterMode) {
               new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                  Form("Could move the page to OnlineHistDB:\n\n%s\n",
+                  Form("Could not move the page in OnlineHistDB:\n\n%s\n",
                       sqlException.c_str()),
                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
             }
@@ -1606,8 +1608,8 @@ void PresenterMainFrame::handleCommand(Command cmd)
     case M_DeletePage_COMMAND:
       deleteSelectedPageFromDB();
       break;
-    case M_DeleteFolder_COMMAND:
-      deleteSelectedFolderFromDB();
+    case M_CreateFolder_COMMAND:
+      createFolderInDB();
       break;
     case HELP_ABOUT_COMMAND:
       about();
@@ -2240,15 +2242,15 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
           m_treeNode = listView->GetFirstItem();
           while ((m_folderItem = m_folderItemsIt->Next())) {
             if ((listView->FindChildByName(m_treeNode,
-                                          m_folderItem->GetName())) &&
-                (NULL == (m_treeNode->GetUserData()))) {
+                                           m_folderItem->GetName()))) {
               m_treeNode = listView->FindChildByName(m_treeNode,
                                                      m_folderItem->GetName());
             } else {
               if (filterCriteria != Tasks) {
                 std::string userFolderData(s_FILE_URI);
                 m_treeNode = listView->AddItem(m_treeNode, m_folderItem->GetName());
-                char path[1024];
+                char path[s_maxPageNameLength];
+                strncpy(path, "", sizeof(path)-1);
                 m_pagesFromHistoDBListTree->GetPathnameFromItem(m_treeNode, path);
                 std::string folderPath(path);
                 // Drop DB url
@@ -2274,7 +2276,8 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
                 m_pageNode = listView->AddItem(m_treeNode, pageName.c_str());
 
                 std::string userPageData(s_FILE_URI);
-                char path[1024];
+                char path[s_maxPageNameLength];
+                strncpy(path, "", sizeof(path)-1);
                 m_pagesFromHistoDBListTree->GetPathnameFromItem(m_pageNode, path);
                 std::string pagePath(path);
                 // Drop DB url
@@ -3064,7 +3067,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
     m_fileMenu->EnableEntry(SAVE_PAGE_TO_DB_COMMAND);
     m_pagesContextMenu->EnableEntry(M_Move_COMMAND);
     m_pagesContextMenu->EnableEntry(M_DeletePage_COMMAND);
-    m_pagesContextMenu->EnableEntry(M_DeleteFolder_COMMAND);
+    m_pagesContextMenu->EnableEntry(M_CreateFolder_COMMAND);
     m_histoDBContextMenu->EnableEntry(M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->EnableEntry(M_DeleteDBHisto_COMMAND);
     
@@ -3079,7 +3082,7 @@ void PresenterMainFrame::showDBTools(DatabaseMode databasePermissions)
     m_histoSvcTreeContextMenu->DisableEntry(M_AddHistoToDB_COMMAND);
     m_pagesContextMenu->DisableEntry(M_Move_COMMAND);
     m_pagesContextMenu->DisableEntry(M_DeletePage_COMMAND);
-    m_pagesContextMenu->DisableEntry(M_DeleteFolder_COMMAND);
+    m_pagesContextMenu->DisableEntry(M_CreateFolder_COMMAND);
     m_histoDBContextMenu->DisableEntry(M_SetHistoPropertiesInDB_COMMAND);
     m_histoDBContextMenu->DisableEntry(M_DeleteDBHisto_COMMAND);
 
@@ -3451,19 +3454,19 @@ void PresenterMainFrame::clickedPageTreeItem(TGListTreeItem* node,
                                              int x, int y) {
   if ((0 != node) && (kButton3 == btn)) {
     m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
-  } else if (// (kButton1Double == btn) &&
+  } else if ((kButton1 == btn) &&
              (0 != node) &&
              (NULL == node->GetFirstChild()) &&
              ((EditorOnline != m_presenterMode) || (EditorOffline != m_presenterMode))) {
     m_currentPageName = selectedPageFromDbTree();
     if (!m_currentPageName.empty() && (false == m_loadingPage)) {
       loadSelectedPageFromDB(m_currentPageName, s_startupFile, m_savesetFileName, s_previousPageToHistory);
-    }     
+    }
 
-  } else if (0 != node &&
-             NULL == node->GetFirstChild() &&
-             ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode))) {
-    m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
+//  } else if (0 != node &&
+//             NULL == node->GetFirstChild() &&
+//             ((EditorOnline == m_presenterMode) || (EditorOffline == m_presenterMode))) {
+//    m_pagesContextMenu->PlaceMenu(x, y, 1, 1);
   }
 }
 void PresenterMainFrame::clickedAlarmTreeItem(TGListTreeItem* node,
@@ -4016,11 +4019,15 @@ void PresenterMainFrame::enablePageLoading() {
 
 std::string PresenterMainFrame::selectedPageFromDbTree(){
   TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
-  if (0 != node && node->GetUserData()) {
-
+  if (0 != node && node->GetUserData() &&
+      m_pagesFromHistoDBListTree->GetFirstItem() != node) {
     TString pageName = (*static_cast<TObjString*>(node->GetUserData())).GetString();
     if (pageName.BeginsWith(s_FILE_URI)) {pageName.Remove(0, s_FILE_URI.length()); }
-    return std::string(pageName);
+    if (false == pageName.IsNull()) {
+      return std::string(pageName);
+    } else {
+      return std::string("");
+    }
   } else {
     return std::string("");
   }
@@ -4144,7 +4151,7 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetWaitCursor());
         rw_pastDuration = global_pastDuration;        
       }
       if (m_verbosity >= Verbose) {
-        std::cout << "Navigation step size" << global_stepSize << std::endl;
+        std::cout << "Navigation step size " << global_stepSize << std::endl;
       }
     }
 //    startBenchmark(pageName); 
@@ -4355,24 +4362,66 @@ gVirtualX->SetCursor(GetId(), gClient->GetResourcePool()->GetDefaultCursor());
 
 void PresenterMainFrame::moveSelectedInDB()
 {
-  if (ReadWrite == m_databaseMode) {
-//    TGListTreeItem* TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
-//    selectedHistogramDatabaseItemName = PageName
-//    selectedHistogramDatabaseItemType = FolderName
+  TGListTreeItem *page = m_pagesFromHistoDBListTree->GetSelected();
+  if (canWriteToHistogramDB()) {
+    std::string selectedPage = selectedPageFromDbTree();
+    char path[256]; // s_maxPageNameLength: retstr limit
+    strncpy(path, selectedPage.c_str(), sizeof(path)-1);
+    new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
+                      "Enter new name:",
+                      path, path);
 
-    DatabasePagePathDialog* databasePagePathDialog = new DatabasePagePathDialog(this, 493, 339, m_verbosity);
-//    databasePagePathDialog->set
-    fClient->WaitFor(databasePagePathDialog);
-//    newName
-    refreshPagesDBListTree();
+    while ( strcmp(path, selectedPage.c_str()) == 0 ) {
+      new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
+                   "Please enter a valid new name.",
+                   kMBIconStop, kMBOk);
+      new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
+                        "Enter new name:",
+                        path, path);
+    }
+
+    if ( strcmp(path, "") == 0 ) { return; }
+    try {
+      std::string newPageName(path);
+      if (m_verbosity >= Verbose) {
+        std::cout << "mv \"" << selectedPage << "\" \"" << newPageName << "\""<< std::endl;
+      }
+      if (0 == page->GetFirstChild()) {
+        OnlineHistPage* dbPage = m_histogramDB->getPage(selectedPage);
+        dbPage->rename(newPageName);
+        if (m_histogramDB->commit()) {
+//          std::string userPageData(s_FILE_URI);
+//          userPageData.append(newPageName);
+//          TObjString *objectString = new TObjString(userPageData.c_str());
+//          page->SetUserData(objectString);
+//          m_pagesFromHistoDBListTree->Sort(page);
+          refreshPagesDBListTree();
+        }
+      } else {
+        if (Batch != m_presenterMode) {
+          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                       "Please select a leaf.",
+                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+        }
+      }
+    } catch (std::string sqlException) {
+      setStatusBarText(sqlException.c_str(), 2);
+      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
+      if (Batch != m_presenterMode) {
+        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                     Form("Could not move item to OnlineHistDB:\n\n%s\n",
+                          sqlException.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
+      }
+    }
   }
 }
 
 void PresenterMainFrame::deleteSelectedPageFromDB()
 {
   if (Batch != m_presenterMode) {
-    new TGMsgBox(fClient->GetRoot(), this, "Delete Page",
-                 "Are you sure to delete selected page from the database?",
+    new TGMsgBox(fClient->GetRoot(), this, "Delete",
+                 "Are you sure to delete selected item from the database?",
                  kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
     switch (m_msgBoxReturnCode) {
       case kMBNo:
@@ -4381,66 +4430,80 @@ void PresenterMainFrame::deleteSelectedPageFromDB()
   }
 
   if (canWriteToHistogramDB()) {
-    TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
+    std::string selectedItem = selectedPageFromDbTree();
 
-    if (node && node->GetUserData()) {
-      std::string path = std::string((*static_cast<TObjString*>(node->GetUserData())).GetString());
-      try {
-        OnlineHistPage* page = m_histogramDB->getPage(path);
+    if (m_verbosity >= Verbose) {
+      std::cout << "Item to delete: " << selectedItem << std::endl;
+    }
+
+    try {
+      TGListTreeItem *item = m_pagesFromHistoDBListTree->GetSelected();
+      if (m_histogramDB->removePageFolder(selectedItem) &&
+          m_histogramDB->commit()){
+        m_pagesFromHistoDBListTree->DeleteItem(item);
+      } else {
+        OnlineHistPage* page = m_histogramDB->getPage(selectedItem);
         if (0 != page) {
-          m_histogramDB->removePage(page);
-          m_histogramDB->commit();
-          refreshPagesDBListTree();
+          if (m_histogramDB->removePage(page) &&
+              m_histogramDB->commit()){
+            m_pagesFromHistoDBListTree->DeleteItem(item);
+          }
         }
-      } catch (std::string sqlException) {
-        setStatusBarText(sqlException.c_str(), 2);
-        if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-        if (Batch != m_presenterMode) {
-          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                       Form("Could not delete the page to OnlineHistDB:\n\n%s\n",
-                            sqlException.c_str()),
-                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-        }
+      }
+    } catch (std::string sqlException) {
+      setStatusBarText(sqlException.c_str(), 2);
+      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
+      if (Batch != m_presenterMode) {
+        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                     Form("Could not delete item to OnlineHistDB:\n\n%s\n",
+                          sqlException.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
     }
   }
 }
-void PresenterMainFrame::deleteSelectedFolderFromDB()
+void PresenterMainFrame::createFolderInDB()
 {
-// new TGMsgBox(fClient->GetRoot(), this, "Delete Folder",
-//              "Are you sure to delete selected folder from the Database?",
-//              kMBIconQuestion, kMBYes|kMBNo, &m_msgBoxReturnCode);
-//  switch (m_msgBoxReturnCode) {
-//    case kMBNo:
-//      return;
-//  }
   if (canWriteToHistogramDB()) {
+    std::string selectedPage = selectedPageFromDbTree();
+    selectedPage.append(s_slash);
+    char path[256]; // s_maxPageNameLength: retstr limit
+    strncpy(path, selectedPage.c_str(), sizeof(path)-1);
+    new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
+                      "Enter new name:",
+                      path, path);
 
-    TGListTreeItem* node = m_pagesFromHistoDBListTree->GetSelected();
+    while ( strcmp(path, selectedPage.c_str()) == 0 ) {
+      new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
+                   "Please enter a valid new name.",
+                   kMBIconStop, kMBOk);
+      new TGInputDialog(gClient->GetRoot(), GetMainFrame(),
+                        "Enter new name:",
+                        path, path);
+    }
+    if ( strcmp(path, "") == 0 ) { return; }
 
-    if (0 != node) {
-      char path[1024];
-      m_pagesFromHistoDBListTree->GetPathnameFromItem(node, path);
-      std::string folder = std::string(path);
-      // Drop DB url
-      folder = folder.erase(0, strlen(m_pagesFromHistoDBListTree->GetFirstItem()->GetText())+1);
+    try {
+      std::string newPageName(path);
       if (m_verbosity >= Verbose) {
-        std::cout << "Folder to delete: " << folder << std::endl;
+        std::cout << "mkdir -p \"" << newPageName << "\""<< std::endl;
       }
-
-      try {
-        m_histogramDB->removePageFolder(folder);
-        m_histogramDB->commit();
+      std::string staticRandom("/GP9m3CYZhqNL");
+      newPageName.append(staticRandom); //just a tmp name
+      OnlineHistPage* tmpPage = m_histogramDB->getPage(newPageName);
+      tmpPage->save();
+      m_histogramDB->removePage(tmpPage);
+      if (m_histogramDB->commit()) {
         refreshPagesDBListTree();
-      } catch (std::string sqlException) {
-        setStatusBarText(sqlException.c_str(), 2);
-        if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
-        if (Batch != m_presenterMode) {
-          new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                       Form("Could delete the page to OnlineHistDB:\n\n%s\n",
-                            sqlException.c_str()),
-                       kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
-        }
+      }
+    } catch (std::string sqlException) {
+      setStatusBarText(sqlException.c_str(), 2);
+      if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
+      if (Batch != m_presenterMode) {
+        new TGMsgBox(fClient->GetRoot(), this, "Database Error",
+                     Form("Could not move item to OnlineHistDB:\n\n%s\n",
+                          sqlException.c_str()),
+                     kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }
     }
   }
