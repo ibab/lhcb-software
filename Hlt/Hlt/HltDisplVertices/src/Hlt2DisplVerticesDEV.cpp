@@ -234,8 +234,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
     if(msgLevel(MSG::DEBUG)) 
       debug()<<"Rec Vertex position "<< RV->position() << endmsg;
 
-    if( m_RCutMethod == "FromUpstreamPV"  || m_RCutMethod=="CorrFromUpstreamPV"
-	&& RV->position().z() < UpPV.z() ){
+    if(( m_RCutMethod == "FromUpstreamPV"  || m_RCutMethod=="CorrFromUpstreamPV" ) && RV->position().z() < UpPV.z() ){
       if(msgLevel(MSG::DEBUG))
 	debug() <<"RV z position comes before the upstream 2D RV," 
 		<<" not considered !"<< endmsg;
