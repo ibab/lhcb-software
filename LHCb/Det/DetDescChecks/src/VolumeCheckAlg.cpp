@@ -1,4 +1,4 @@
-// $Id: VolumeCheckAlg.cpp,v 1.7 2006-12-15 16:49:14 cattanem Exp $
+// $Id: VolumeCheckAlg.cpp,v 1.8 2009-11-15 16:46:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -14,6 +14,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/VectorsAsProperty.h"
 // ============================================================================
 // DetDesc 
 // ============================================================================
@@ -32,31 +33,18 @@
 // ============================================================================
 #include "boost/progress.hpp"
 // ============================================================================
-
-// ============================================================================
 /** @file 
- *  Implementation file for class : VolumeCheckAlg
+ *  Implementation file for class DetDesc::VolumeCheck
  *  @date 2002-05-25 
  *  @author Vanya Belyaev Ivan.Belyaev@itep.ru
  */
 // ============================================================================
-
-// ============================================================================
-/** @var VolumeCheckAlgFactory
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-DECLARE_ALGORITHM_FACTORY(VolumeCheckAlg)
-// ============================================================================
-
-
-// ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name name of the algorithm
  *  @param svcloc pointer to Service Locator 
  */
 // ============================================================================
-VolumeCheckAlg::VolumeCheckAlg
+DetDesc::VolumeCheck::VolumeCheck
 ( const std::string& name   ,
   ISvcLocator*       svcloc )
   : GaudiHistoAlg  ( name , svcloc ) 
@@ -72,7 +60,6 @@ VolumeCheckAlg::VolumeCheckAlg
   , m_shotsXY      ( 10000        )  
   , m_shotsYZ      ( 10000        ) 
   , m_shotsZX      ( 10000        ) 
-  , m_vrtx         ( 3 , 0        ) 
   , m_vertex       (              ) 
 {
   declareProperty ( "Volume"               , m_volumeName   ) ;
@@ -82,27 +69,23 @@ VolumeCheckAlg::VolumeCheckAlg
   declareProperty ( "MaxX"                 , m_maxx         ) ;
   declareProperty ( "MaxY"                 , m_maxy         ) ;
   declareProperty ( "MaxZ"                 , m_maxz         ) ;
-  declareProperty ( "Shots3D"              , m_shotsSphere ) ;
-  declareProperty ( "ShotsXY"              , m_shotsXY     ) ;
-  declareProperty ( "ShotsYZ"              , m_shotsYZ     ) ;
-  declareProperty ( "ShotsZX"              , m_shotsZX     ) ; 
-  declareProperty ( "Null"                 , m_vrtx         ) ;
- };
+  declareProperty ( "Shots3D"              , m_shotsSphere  ) ;
+  declareProperty ( "ShotsXY"              , m_shotsXY      ) ;
+  declareProperty ( "ShotsYZ"              , m_shotsYZ      ) ;
+  declareProperty ( "ShotsZX"              , m_shotsZX      ) ; 
+  declareProperty ( "Null"                 , m_vertex       ) ;
+ }
 // ============================================================================
-
-//=============================================================================
-/// destructor (protected and virtual)
-//=============================================================================
-VolumeCheckAlg::~VolumeCheckAlg() {}; 
+// destructor (protected and virtual)
 // ============================================================================
-
+DetDesc::VolumeCheck::~VolumeCheck() {}
 // ============================================================================
-/** standard algorithm initialization
+/*  standard algorithm initialization
  *  @see IAlgorithm
  *  @return status code 
  */
 // ============================================================================
-StatusCode VolumeCheckAlg::initialize() 
+StatusCode DetDesc::VolumeCheck::initialize() 
 {  
   
   StatusCode sc = GaudiHistoAlg::initialize() ;
@@ -141,15 +124,6 @@ StatusCode VolumeCheckAlg::initialize()
     info() << material          << endreq ;
   }
   
-  // activate the vertex
-  if ( m_vrtx.size() <= 3 )
-  { while ( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
-  else 
-  {
-    warning()  << " Ignore extra fields in 'ShootingPoint' "<< endreq ;
-  }
-  m_vertex.SetXYZ( m_vrtx[0], m_vrtx[1], m_vrtx[2] ) ;
-  
   if ( !m_volume->isAssembly() && 0 != m_volume->solid() ) 
   {
     const ISolid* top = m_volume->solid()->coverTop();
@@ -168,17 +142,14 @@ StatusCode VolumeCheckAlg::initialize()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
-
-// ============================================================================
-/** standard execution of algorithm 
+/*  standard execution of algorithm 
  *  @see IAlgorithm
  *  @return status code 
  */
 // ============================================================================
-StatusCode VolumeCheckAlg::execute() 
+StatusCode DetDesc::VolumeCheck::execute() 
 {
   // spherical (3d) shots 
   {
@@ -370,9 +341,11 @@ StatusCode VolumeCheckAlg::execute()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
+// Declaration of the Algorithm Factory
+// ============================================================================
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DetDesc,VolumeCheck)
 // ============================================================================
 // The END 
 // ============================================================================

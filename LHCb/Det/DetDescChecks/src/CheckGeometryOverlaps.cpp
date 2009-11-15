@@ -1,4 +1,4 @@
-// $Id: CheckGeometryOverlaps.cpp,v 1.1 2007-12-19 09:49:26 ibelyaev Exp $
+// $Id: CheckGeometryOverlaps.cpp,v 1.2 2009-11-15 16:46:00 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -15,6 +15,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Vector3DTypes.h"
+#include "GaudiKernel/VectorsAsProperty.h"
 // ============================================================================
 // GaudiAlg
 // ============================================================================
@@ -35,10 +36,6 @@
 // ============================================================================
 #include "boost/progress.hpp"
 #include "boost/format.hpp"
-// ============================================================================
-// GSL 
-// ============================================================================
-#include "gsl/gsl_sys.h"
 // ============================================================================
 /** @file 
  *  Implementation file for class  DetDesc::CheckOverlap
@@ -67,13 +64,13 @@ namespace DetDesc
         if ( x2 < y1 || y2 < x1 ) { continue ; }
         const double z1 = std::max ( x1 , y1 ) ;
         const double z2 = std::min ( x2 , y2 ) ;
-        //if ( 0 > gsl_fcmp ( z1 , z2  , 1.0e-8 ) ) { return false ; }
+        // ??
         if ( z1 < z2 ) { return false ; }
-        //if ( 0 > gsl_fcmp ( z1 , z2  , 1.0e-10 ) ) { return false ; }
       } 
     }
     return true ;
   }              
+  // ==========================================================================
   std::pair<std::pair<int,int>,double> 
   notOK ( const ILVolume::Intersections& cnt ) 
   {
@@ -108,8 +105,10 @@ namespace DetDesc
    */
   class CheckOverlap : public GaudiAlgorithm 
   {
+    // ========================================================================
     /// the friend factory to instantiate the algorithm
     friend class AlgFactory<DetDesc::CheckOverlap> ;
+    // ========================================================================
   public:
     // ========================================================================
     /** standard algorithm initialization
@@ -143,12 +142,15 @@ namespace DetDesc
     virtual ~CheckOverlap(){}; 
     // ========================================================================
   private:
+    // ========================================================================
     /// check one volume 
     StatusCode checkVolume 
     ( const ILVolume* volume , const unsigned int level ) const ;
     /// make all shoots 
     StatusCode makeShots   ( const ILVolume* volume ) const ;
+    // ========================================================================
   private:
+    // ========================================================================
     // volume name 
     std::string         m_volumeName     ; ///< the logical volume name 
     // volume itself 
@@ -166,10 +168,10 @@ namespace DetDesc
     int                 m_shots          ; 
     
     // point of shooting for sphere 
-    std::vector<double> m_vrtx           ;
     Gaudi::XYZPoint                   m_vertex   ;
     mutable std::set<const ILVolume*> m_checked  ;
   } ;
+  // ==========================================================================
 } //end of namespace DetDesk
 // ============================================================================
 /*  Standard constructor
@@ -190,11 +192,14 @@ DetDesc::CheckOverlap::CheckOverlap
   , m_minz         ( -10 * Gaudi::Units::m      ) 
   , m_maxz         (  10 * Gaudi::Units::m      )
   , m_shots        ( 10000 )
-  , m_vrtx         ( 3 , 0 ) 
   , m_vertex       (  ) 
   , m_checked      ()
 {
-  declareProperty ( "Volume"               , m_volumeName   ) ;
+  declareProperty 
+    ( "Volume"       , 
+      m_volumeName   ,
+      "Volume name ot be checked"
+      ) ;
   declareProperty ( "MinX"                 , m_minx         ) ;
   declareProperty ( "MinY"                 , m_miny         ) ;
   declareProperty ( "MinZ"                 , m_minz         ) ;
@@ -202,7 +207,7 @@ DetDesc::CheckOverlap::CheckOverlap
   declareProperty ( "MaxY"                 , m_maxy         ) ;
   declareProperty ( "MaxZ"                 , m_maxz         ) ;
   declareProperty ( "Shots"                , m_shots        ) ;
-  declareProperty ( "Null"                 , m_vrtx         ) ;
+  declareProperty ( "Null"                 , m_vertex       ) ;
  }
 // ============================================================================
 /*  standard algorithm initialization
@@ -225,15 +230,6 @@ StatusCode DetDesc::CheckOverlap::initialize()
   }
   
   m_volume = getDet<ILVolume> ( m_volumeName ) ;
-  
-  // activate the vertex
-  if ( m_vrtx.size() <= 3 )
-  { while ( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
-  else 
-  {
-    warning()  << " Ignore extra fields in 'ShootingPoint' "<< endreq ;
-  }
-  m_vertex.SetXYZ( m_vrtx[0], m_vrtx[1], m_vrtx[2] ) ;
   
   if ( !m_volume->isAssembly() && 0 != m_volume->solid() ) 
   {

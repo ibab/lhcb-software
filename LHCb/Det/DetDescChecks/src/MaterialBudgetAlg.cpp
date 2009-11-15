@@ -1,4 +1,4 @@
-// $Id: MaterialBudgetAlg.cpp,v 1.11 2006-12-15 16:49:12 cattanem Exp $
+// $Id: MaterialBudgetAlg.cpp,v 1.12 2009-11-15 16:46:00 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -14,6 +14,7 @@
 #include "GaudiKernel/RndmGenerators.h"
 #include "GaudiKernel/SystemOfUnits.h"
 #include "GaudiKernel/Point3DTypes.h"
+#include "GaudiKernel/VectorsAsProperty.h"
 // ============================================================================
 // DetDesc 
 // ============================================================================
@@ -27,8 +28,6 @@
 // ============================================================================
 #include "boost/progress.hpp"
 // ============================================================================
-
-// ============================================================================
 /** @file MaterialBudgetAlg.cpp
  *  
  *  Implementation file for class MaterialBudgetAlg
@@ -37,28 +36,17 @@
  *  @date 23/04/2002 
  */
 // ============================================================================
-
-// ============================================================================
-/** @var MaterialBudgetAlgFactory
- *  Declaration of the Algorithm Factory
- */
-// ============================================================================
-DECLARE_ALGORITHM_FACTORY(MaterialBudgetAlg)
-// ============================================================================
-
-// ============================================================================
-/** Standard constructor
+/*  Standard constructor
  *  @param name name of the algorithm
  *  @param svc service locator 
  */
 // ============================================================================
-MaterialBudgetAlg::MaterialBudgetAlg
+DetDesc::MaterialBudget::MaterialBudget
 ( const std::string& name    ,
   ISvcLocator*       svc     )
   : GaudiHistoAlg   ( name , svc     ) 
   , m_trSvcName     ( "TransportSvc" )
   , m_trSvc         ( 0              )  
-  , m_vrtx          ( 3 , 0.0        )
   , m_vertex        (                )
   , m_shots         ( 1000           )
   , m_z             ( 12 * Gaudi::Units::meter     )
@@ -72,48 +60,65 @@ MaterialBudgetAlg::MaterialBudgetAlg
   , m_phiMin        (  90.           )
   , m_nbx           ( 360            )
   , m_nby           ( 300            )
-  , m_grid          (  0             )
-  , m_psrap         (  0             )
+  , m_grid          (  true          )
+  , m_psrap         (  false         )
   , m_xbinref       ( 20.0           )
   , m_ybinref       ( 20.0           )
   , m_zref          ( 10000.0        )
 {  
-  declareProperty( "TransportService" , m_trSvcName   ) ;
-  declareProperty( "ShootingPoint"    , m_vrtx        ) ;
-  declareProperty( "Shots"            , m_shots       ) ;
-  declareProperty( "zPlane"           , m_z           ) ;
-  declareProperty( "xMax"             , m_xMax        ) ;
-  declareProperty( "xMin"             , m_xMin        ) ;
-  declareProperty( "yMax"             , m_yMax        ) ;
-  declareProperty( "yMin"             , m_yMin        ) ;
-  declareProperty( "etaMax"           , m_etaMax      ) ;
-  declareProperty( "etaMin"           , m_etaMin      ) ;
-  declareProperty( "phiMax"           , m_phiMax      ) ;
-  declareProperty( "phiMin"           , m_phiMin      ) ;
-  declareProperty( "nBx"              , m_nbx         ) ;
-  declareProperty( "nBy"              , m_nby         ) ;
-  declareProperty( "Grid"             , m_grid        ) ;
-  declareProperty( "Rapidity"         , m_psrap       ) ;
-  declareProperty( "xbinref"          , m_xbinref     ) ;
-  declareProperty( "ybinref"          , m_ybinref     ) ;
-  declareProperty( "zref"             , m_zref        ) ;
-};
-// ============================================================================
-
+  declareProperty ( "TransportService" , m_trSvcName   ) ;
+  declareProperty 
+    ( "ShootingPoint"    , 
+      m_vertex           , 
+      "Position of shooting vertex") ;
+  declareProperty
+    ( "Shots"            , 
+      m_shots            , 
+      "Number of random short per event") ;
+  declareProperty 
+    ( "zPlane"           , 
+      m_z                , 
+      "Z-position of reference plane") ;
+  declareProperty 
+    ( "xMax"             , 
+      m_xMax             , 
+      "Maximal X at reference plane" ) ;
+  declareProperty 
+    ( "xMin"             , 
+      m_xMin             , 
+      "Minimal X at reference plane" ) ;
+  declareProperty 
+    ( "yMax"             ,
+      m_yMax             , 
+      "Maximal Y at reference plane" ) ;
+  declareProperty
+    ( "yMin"             , 
+      m_yMin             , 
+      "Minimal Y at reference plane" ) ;
+  declareProperty ( "etaMax"           , m_etaMax      ) ;
+  declareProperty ( "etaMin"           , m_etaMin      ) ;
+  declareProperty ( "phiMax"           , m_phiMax      ) ;
+  declareProperty ( "phiMin"           , m_phiMin      ) ;
+  declareProperty ( "nBx"              , m_nbx         ) ;
+  declareProperty ( "nBy"              , m_nby         ) ;
+  declareProperty ( "Grid"             , m_grid        ) ;
+  declareProperty ( "Rapidity"         , m_psrap       ) ;
+  declareProperty ( "xbinref"          , m_xbinref     ) ;
+  declareProperty ( "ybinref"          , m_ybinref     ) ;
+  declareProperty ( "zref"             , m_zref        ) ;
+}
 // ============================================================================
 // destructor
 // ============================================================================
-MaterialBudgetAlg::~MaterialBudgetAlg() {}; 
+DetDesc::MaterialBudget::~MaterialBudget () {}
 // ============================================================================
-
-// ============================================================================
-/** standard initialization of the algorithm
+/*  standard initialization of the algorithm
  *  @see  Algorithm
  *  @see IAlgorithm
  *  @return status code 
  */
 // ============================================================================
-StatusCode MaterialBudgetAlg::initialize() 
+StatusCode DetDesc::MaterialBudget::initialize() 
 {
   StatusCode sc = GaudiHistoAlg::initialize() ;
   if ( sc.isFailure() ) { return sc ; }
@@ -122,13 +127,6 @@ StatusCode MaterialBudgetAlg::initialize()
   
   Assert ( 0 != randSvc() , "IRndmGenSvc* poitns to NULL!" );
   
-  // activate the vertex
-  if ( m_vrtx.size() <= 3 )
-  { while( 3 != m_vrtx.size() ) { m_vrtx.push_back( 0.0 ); } }
-  else 
-  { warning() << " Ignore extra fields in 'ShootingPoint' "<< endreq ; }
-  m_vertex.SetXYZ( m_vrtx[0], m_vrtx[1], m_vrtx[2] ) ;
-  
   // transform parameters 
   if ( m_xMin >  m_xMax ) {  std::swap( m_xMin , m_xMax )  ; }
   if ( m_yMin >  m_yMax ) {  std::swap( m_yMin , m_yMax )  ; }
@@ -136,7 +134,7 @@ StatusCode MaterialBudgetAlg::initialize()
   if ( 0      >= m_nbx  ) {  m_nbx = 50                    ; }
   if ( 0      >= m_nby  ) {  m_nby = 50                    ; }
   
-  if ( m_grid != 0 && m_psrap != 0 ) 
+  if ( m_grid  && m_psrap ) 
   {
     return Error(" Asked for X-Y and Eta-Phi scans ");
   }
@@ -159,30 +157,26 @@ StatusCode MaterialBudgetAlg::initialize()
   }
   
   return StatusCode::SUCCESS;
-};
+}
 // ============================================================================
-
-// ============================================================================
-/** standard execution of the algorithm
+/*  standard execution of the algorithm
  *  @see  Algorithm
  *  @see IAlgorithm
  *  @return status code 
  */
 // ============================================================================
-StatusCode MaterialBudgetAlg::execute() 
+StatusCode DetDesc::MaterialBudget::execute() 
 {
   
   if      ( m_grid  ) { return makeGridShots  () ; }
   else if ( m_psrap ) { return makePsrapShots () ; }
   
   return makeRandomShots() ;
-};
+}
 // ============================================================================
-
+// make a random shoots
 // ============================================================================
-/// make a random shoots
-// ============================================================================
-StatusCode MaterialBudgetAlg::makeRandomShots() 
+StatusCode DetDesc::MaterialBudget::makeRandomShots() 
 {
   
   // get random number generator 
@@ -216,13 +210,11 @@ StatusCode MaterialBudgetAlg::makeRandomShots()
   }
   
   return StatusCode::SUCCESS ;
-};
+}
 // ============================================================================
-
+// make grid shoots
 // ============================================================================
-/// make grid shoots
-// ============================================================================
-StatusCode MaterialBudgetAlg::makeGridShots() 
+StatusCode DetDesc::MaterialBudget::makeGridShots() 
 {
   if ( !m_grid ) { return StatusCode::FAILURE ; }
   
@@ -267,14 +259,11 @@ StatusCode MaterialBudgetAlg::makeGridShots()
   }
   
   return StatusCode::SUCCESS ;
-} ;
+}
 // ============================================================================
-
-
+// make grid shoots
 // ============================================================================
-/// make grid shoots
-// ============================================================================
-StatusCode MaterialBudgetAlg::makePsrapShots()
+StatusCode DetDesc::MaterialBudget::makePsrapShots()
 {
   if ( !m_psrap ) { return StatusCode::FAILURE ; }
   
@@ -321,8 +310,11 @@ StatusCode MaterialBudgetAlg::makePsrapShots()
   }
   
   return StatusCode::SUCCESS ;
-} ;
-
+}
+// ============================================================================
+// Declaration of the Algorithm Factory
+// ============================================================================
+DECLARE_NAMESPACE_ALGORITHM_FACTORY(DetDesc,MaterialBudget)
 // ============================================================================
 // The End 
 // ============================================================================
