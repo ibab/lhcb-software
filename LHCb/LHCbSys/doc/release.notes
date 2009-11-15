@@ -132,7 +132,8 @@ This version uses Gaudi v21r6 and LCG_57a
     and Boole.
 
 - In PhysEvent v11r10
-  . Changed again xml/Tagger.xml
+  . Modified xml/Tagger.xml to store a SmartRef instead of a raw pointer vector
+    of particles used to decide the tagging, to allow persistency
 
 - In RecEvent v2r23
   . Rename locations of HLT vertices to what is actually used. Now
