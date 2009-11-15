@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.146 2009-11-14 21:17:43 cattanem Exp $
+! $Id: release.notes,v 1.147 2009-11-15 13:38:45 musy Exp $
 ! Package     : PhysEvent 
 ! Responsible : P. Koppenburg, J.P. Palacios
 !----------------------------------------------------------------------------
+
+- 2009-11-15 - Marco Musy
+ - modified xml/Tagger.xml to store a SmartRef instead of a raw pointer vector
+   of particles used to decide the tagging. 
+   The reason for the change is to allow ROOT persistency.
 
 !======================== PhysEvent v11r10 2009-11-14 =======================
 ! 2009-11-13 - Marco Musy
