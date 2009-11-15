@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.29 2009-05-06 15:11:20 cattanem Exp $ 
+# $Id: requirements,v 1.30 2009-11-15 16:41:53 ibelyaev Exp $ 
 # ============================================================================
 # Created    : 2005-04-22
 # Maintainer : Matt Needham, Marco Clemencic
 # ============================================================================
 package           DetDescSvc
-version           v2r3p1
+version           v2r4
 
 branches          cmt doc src
 
@@ -12,12 +12,12 @@ use DetDesc       v*   Det
 use GaudiAlg      v*
 use GaudiKernel   v*
 
-use GSL           v*   LCG_Interfaces  -no_auto_imports
-
 # ============================================================================
 # Component library building rule
 # ============================================================================
-library          DetDescSvc    ../src/*.cpp -import=GSL
+
+library          DetDescSvc    ../src/*.cpp
+
 apply_pattern    component_library library=DetDescSvc
 
 # Boost is needed only at compile time (Boost::Spirit)
