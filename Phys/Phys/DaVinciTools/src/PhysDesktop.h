@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.h,v 1.46 2009-11-11 09:10:22 jpalac Exp $
+// $Id: PhysDesktop.h,v 1.47 2009-11-16 15:53:21 jpalac Exp $
 #ifndef PHYSDESKTOP_H 
 #define PHYSDESKTOP_H 1
 
@@ -276,14 +276,7 @@ public:
   virtual void setUsingP2PV(const bool& usingP2PV) 
   {
     m_usingP2PV = usingP2PV;
-  }
-  
-
-  virtual void imposeOutputLocation(const std::string& location) 
-  {
-    return this->setOutputLocation(location);
-  }
-  
+  }  
 
 private: // data
 
