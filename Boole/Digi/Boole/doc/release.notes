@@ -3,6 +3,9 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+! 2009-11-16 - Marco Cattaneo
+ - Update references for unpacking on demand of Spillover hits containers
+
 ! 2009-11-12 - Tomasz Szumlak
  - Change name of the option that activates the Tell1 line for the Velo data 
    stream processing - now VeloTell1Processing
