@@ -1,17 +1,17 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.130 2009-11-16 11:57:34 jonrob Exp $
+! $Id: release.notes,v 1.131 2009-11-16 14:50:40 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r23 2009-11-16 =========================
 ! 2009-11-16 - Chris Jones
  - Disable clearing of CALO hypos in ProtoParticle various removeCaloXXXInfo()
    methods, since this incorrectly removes *all* hypos, not just those
    associated with the given technique. Temporary fix intil a better solution
    is found
 
-!========================= RecEvent v2r23 2009-11-13 =========================
 ! 2009-11-09 - Patrick Koppenburg
  - Rename locations of HLT vertices to what is actually used. Now
        Velo2D is Hlt/Vertex/PV2D
