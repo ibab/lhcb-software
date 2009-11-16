@@ -96,12 +96,10 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 
 StatusCode MonitorSvc::initialize() {
-  StatusCode sc = Service::initialize();
-
   MsgStream msg(msgSvc(),"MonitorSvc");
-
+  StatusCode sc = Service::initialize();
+ // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
   msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
-
 
   //const std::string& utgid = RTL::processName();
   m_utgid = RTL::processName();

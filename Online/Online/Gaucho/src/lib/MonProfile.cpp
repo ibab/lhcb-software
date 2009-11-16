@@ -245,7 +245,6 @@ void MonProfile::loadObject(){
 }
 
 void MonProfile::splitObject(){
-  MsgStream msg = createMsgStream();
   //need some protection here
   try {
      FriendOfTProfile * fot = (FriendOfTProfile *)m_profile; 
@@ -275,10 +274,10 @@ void MonProfile::splitObject(){
 
      bBinLabelX = false;
      for (int i = 1; i < (nbinsx+1) ; ++i){
-     //  std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
-     //  if (binLab.length() > 0 ){
-         const char *binLab = m_profile->GetXaxis()->GetBinLabel(i);
-	 if (strlen(binLab) > 0 ) {
+    //   std::string binLab = m_profile->GetXaxis()->GetBinLabel(i);
+    //   if (binLab.length() > 0 ){
+       const char *binLab = m_profile->GetXaxis()->GetBinLabel(i);
+       if (strlen(binLab) > 0 ){
          bBinLabelX = true;
          break;
        }
@@ -309,11 +308,13 @@ void MonProfile::splitObject(){
      isLoaded = true;
    }
   catch (const std::exception &ex){
+    MsgStream msg = createMsgStream();
     msg << MSG::WARNING << "std::exception: " << ex.what() << ". MonProfile not loaded." << endreq;
     isLoaded = false;
     return;
   }  
   catch (...){
+    MsgStream msg = createMsgStream();
     msg << MSG::WARNING << "unrecognized exception. MonProfile not loaded."<< endreq;
     isLoaded = false;
   }     

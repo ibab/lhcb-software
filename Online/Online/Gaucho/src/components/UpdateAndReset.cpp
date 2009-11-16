@@ -136,6 +136,7 @@ StatusCode UpdateAndReset::initialize() {
   
 
   if (0 == m_desiredDeltaTCycle){
+//    msg << MSG::WARNING << "Your algorithm is using the UpdateAndReset algrithm which update and reset data every desiredDeltaTCycle seconds. You didn't fill the desiredDeltaTCycle option in your options file, then we will consider 10 seconds as default." << endreq;
     m_desiredDeltaTCycle = 20;
   }
     
@@ -264,7 +265,9 @@ StatusCode UpdateAndReset::finalize() {
      manageTESHistos(false, false, true, true);
   }
   else {
-     updateData(true,false);
+    //bug? 1st parameter should be false, runnumber didn't change yet
+    // updateData(true,false);
+    updateData(false,false);
   }
   DimTimer::stop();
 
