@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.386 2009-11-09 10:20:58 pkoppenb Exp $
+! $Id: release.notes,v 1.387 2009-11-16 11:05:07 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,9 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-16 - Patrick Koppenburg
+ - Change of name of Hlt1 pass-through line.
 
 ! 2009-11-09 - Patrick Koppenburg
  - New test files with stripped DSTs

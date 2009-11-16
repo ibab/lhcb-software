@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.78 2009-11-07 12:24:47 jonrob Exp $"
+__version__ = "$Id: Configuration.py,v 1.79 2009-11-16 11:05:07 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -174,7 +174,7 @@ class DaVinci(LHCbConfigurableUser) :
             elif ( self.getProp("Hlt2Requires") == 'L0' ):
                 log.info('Hlt2 requires L0 only. Will set Hlt1 passthrough prescale to 1. Note that Hlt1Global has no useful meaning.')
                 from Hlt1Lines.Hlt1CommissioningLines import Hlt1CommissioningLinesConf
-                Hlt1CommissioningLinesConf().Prescale.update( { 'Hlt1NonRandomODIN'  : 1. } )
+                Hlt1CommissioningLinesConf().Prescale.update( { 'Hlt1ODINPhysics'  : 1. } )
             else : raise AttributeError, 'Hlt2 can require L0 or Hlt1'
                 
 #            HltConf().Hlt2Requires =  self.getProp("Hlt2Requires")                             ## enable if you want Hlt2 irrespective of Hlt1
