@@ -101,7 +101,7 @@ cloneKiller.TracksInContainers = []
 
 # Is this standard sequence?
 stdSeq = "fastSequence" not in TrackSys().getProp("ExpertTracking")
-print "*** Standard sequence: ", stdSeq
+#print "*** Standard sequence: ", stdSeq
 
 ## Forward pattern
 if "Forward" in trackAlgs :
