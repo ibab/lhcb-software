@@ -4,6 +4,10 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-16 - Silvia MIGLIORANZI
+ - Update ref files for QMTests on slc4_amd64_gcc34_dbg. Increased the time 
+   limit for gauss-up.qmt.
+
 ! 2009-11-12 - Silvia Miglioranzi
  - Added two new QMTests: gauss-dev.qmt and gauss-up.qmt (running with 
    Gauss-DEV.py and Gauss-Upgrade.py options respectively). Added their ref 
