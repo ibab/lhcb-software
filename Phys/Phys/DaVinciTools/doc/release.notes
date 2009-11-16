@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.485 2009-11-16 08:08:52 jpalac Exp $
+! $Id: release.notes,v 1.486 2009-11-16 10:50:53 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-16 - Patrick Koppenburg
+ - Revert ot PV2D in OnOfflineTool. More studies needed.
 
 ! 2009-11-11 - Juan Palacios
  - src/PhysDesktop.cpp
