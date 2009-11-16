@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-use MDF               v3r21    DAQ
+# use MDF               v3r21    DAQ
 # use DAQEvent          v7r11    Event
 #=======================================================
 # LHCb Online packages
@@ -22,7 +22,7 @@ use DIM               v19r8    Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r17    Online
+use Gaucho            v6r19    Online
 use GaudiOnline       v2r35    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
