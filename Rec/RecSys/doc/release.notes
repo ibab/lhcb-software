@@ -5,6 +5,120 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r8</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r2
+
+- Packages updated: Calo/CaloPIDs v5r2, Calo/CaloReco v5r3, Muon/MuonID v7r3,
+		Rec/GlobalReco v6r28, Tf/PatAlgorithms v3r24, Tf/PatVeloTT v3r9,
+		Tf/TfTools v1r8, Tf/TrackSys v4r27, Tr/PatPV v3r9, Tr/TrackFitEvent v4r2,
+		Tr/TrackFitter v2r39, Tr/TrackMonitors v1r15, Tr/TrackProjectors v2r26,
+		Tr/TrackTools v3r23, Tr/TrackUtils v1r31, Rec/LumiAlgs v3r0,
+		Tf/TsaAlgorithms v3r14, Tf/TrackMatching v2r25, Tr/TrackCheckers v4r10
+
+- In Calo/CaloPIDs v5r2:
+		. minor fixes by Olivier and Vanya for warnings and annoyances
+
+- In Calo/CaloReco v5r3:
+		. In CaloReco configurable, propagate OutputLevel to CaloDigitConf
+		. CaloClusterizationTool.cpp,h : remove look_neigh(),
+      use CaloFunctors::neighbours()
+		. CaloClusterizationTool.cpp : fix uninitialized neighbour cell list
+                                   for level=1
+		. make usage off CaloDigitConf configurable to access digits 
+		. CaloRecoOnDemand : CaloDigitsSeq imported from CaloDAQ 
+    . CaloElectronAlg  : fix hypothesis setting (uncorrect since a while!)
+
+- In Muon/MuonID v7r3:
+		. Make sure trackfitters are (also) configured by ConfiguredMasterFitter
+		. Update MuonIDAlg to allow it to be run when the MuonPIDs and MuonTracks 
+   		already exist in the TES.
+
+- In Rec/GlobalReco v6r28:
+		. Downgrade Warnings to Info in data recreation algorithms
+		. Change in ProtoParticles. Do not automatically add the RICH, 
+			Muon and Combined DLL information to the ProtoParticle extraInfo
+
+- In Tf/PatAlgorithms v3r24:
+		. PatSeedingTool: In the case of running over unused hits, added option
+		  to reuse hits from PatForward tracks.
+		. Replace OTRawBankDecoder with OTHitCreator in PadSeedFit
+		. Fix for unitialized member variable in PatForwardTool
+
+
+- In Tf/PatVeloTT v3r9:
+ 		. Made MagnetTool aware of field updates 
+
+- In Tf/TfTools v1r8:
+		.	remove an assert that was in the way in OTHitCreator
+
+- In Tf/TrackSys v4r27:
+		. Changes in RecoTracking.py, 
+			o for determining clones faster
+			o Added option to run PatMatch
+			o All the track types are fitted with the same TrackMasterFitter config
+		. Remove options/TrackRecoHLT.py
+		. Added cosmic configurations
+
+- In Tr/PatPV v3r9:
+		. add PatPV2DFit3D, new algorithm to fir PV 2D with quasi-3D tracks
+
+- In Tr/TrackFitEvent v4r2:
+		.	added new class KalmanFitResult which holds Kalman specific info
+
+- In Tr/TrackFitter v2r39:
+ 		. New configured fitters 
+		. Moved projectors to masterfitter. 
+		. Fix call to node range in TrackMasterFitter
+		. Added configuration for cosmics fitter (with drifttimes)
+
+- In Tr/TrackMonitors v1r15:
+		. Added TrackAlignMonitor: monitoring histos for velo/tt/it/ot
+		. Remove fullDetail from alignment histograms in IT/TTTrackMonitor
+	 	. small update of OTTrackMonitor, for the pitch resodual part.
+		. fix compilor warning in TrackCaloMatchMonitor on gdb43
+		. fix decoder for OT algorithms when running on cosmics
+		. added track-calo match algorithms
+		. modified histos in TrackMonitor
+		. fixed memory leak in OTHitEfficiencyMonitor
+
+- In Tr/TrackProjectors v2r26:
+		. Declare TrackProjector to the toolfactory
+		. Use faster/simpler computation for alignment derivatives
+		. Set default value of fitEventT0 of cosmics projector to true
+
+- In Tr/TrackTools v3r23:
+		. Modified TrackCloneFinder::flagClones method to randomly mark a clone
+		. Fixed a bug in TrackStateInitTool
+		. check for existence of cluster locations in TrackNNGhostId
+		. fix small memory leak in TrackNNGhostId, add ghost id for all track types
+	 	. Added a tool TrackInitFit, a wrapper around TrackStateInitTool
+	    and TrackMasterFitter, to be used for dst refit.
+
+- In Tr/TrackUtils v1r31:
+ 		.	Fix untested StatusCodes on calls to Warning and Error
+		. Fix a Windows warning
+		. TrackAddNNGhostId: make ghostId tool private
+
+- In Rec/LumiAlgs v3r0:
+		. New MAJOR version reflects major changes in the ideas of Lumi Counting
+		. A new FSR EventCountFSR has been added to account for in/out events
+		. The philosophy of which files should be processed has changed
+		. ETC files should be ignored, only raw files or DSTs will be accounted
+		. Configurable majorly changed.
+
+- In Tf/TsaAlgorithms v3r14:
+		. Added option to run only over hits unused in the previous run of
+	   PatForward (OnlyUnusedHits=true). See options/TsaSeeding.py for example
+		
+- In Tf/TrackMatching v2r25:
+		. TrackMatchVeloSeed: If DiscardUsedVelo, velo seeds used in "good"
+		   PatForward tracks with chi2 < DiscardChi2 (default 1.5) are discarded.
+
+- In Tr/TrackCheckers v4r10:
+		.	Added TrackOccupChecker for the studies of the occupancies in IT, OT,
+   		and Velo. See also root/occup.C.
+
+
 </PRE><H1><A NAME=v7r7>2009-10-23 RecSys v7r7</A></H1><PRE>
 This version uses Gaudi v21r5 and LHCb v28r1
 
