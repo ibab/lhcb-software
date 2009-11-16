@@ -3,6 +3,19 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r12>2009-11-16 Phys v8r12 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v8r12                                  #
+###############################################################################
+
+- Based on LHCb v28r2 and Gaudi v21r6
+
+- Highlights
+  * PhysConf: fixed for rDST and future DST contents. (Mainly PID). C. Jones.
+  * PVRelatorAlg modifications. Outputs unweighted Particle->PV relations
+  * Various bug fixes.
+
 </PRE><H1><A NAME=v8r11>2009-10-27 Phys v8r11 </A></H1><PRE>
 
 ###############################################################################
