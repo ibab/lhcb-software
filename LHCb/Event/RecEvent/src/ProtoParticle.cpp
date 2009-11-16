@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.6 2009-08-30 22:19:07 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.7 2009-11-16 11:57:34 jonrob Exp $
 
 // local
 #include "Event/ProtoParticle.h"
@@ -8,16 +8,22 @@
 // fillstream method
 std::ostream& LHCb::ProtoParticle::fillStream(std::ostream& s) const
 {
-  s << "{ " << "extraInfo :";
-  for ( ExtraInfo::const_iterator i = extraInfo().begin();
-        i != extraInfo().end(); ++i )
+  s << "{ ";
+
+  s << "CaloHypos " << this->calo();
+  s << " RichPID "  << this->richPID();
+  s << " MuonPID "  << this->muonPID();
+
+  s << " ExtraInfo ";
+  for ( ExtraInfo::const_iterator i = this->extraInfo().begin();
+        i != this->extraInfo().end(); ++i )
   {
     const LHCb::ProtoParticle::additionalInfo info = 
       static_cast<LHCb::ProtoParticle::additionalInfo>(i->first);
     s << " " << info << "=" << i->second;
   }
-  s << std::endl << " }";
-  return s;
+
+  return s << " }";
 }
 
 // Remove all Combined DLL information stored in this ProtoParticle
@@ -48,7 +54,7 @@ LHCb::ProtoParticle::removeRichInfo()
   // Set RichPID pointer to NULL
   this->setRichPID(NULL);
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -65,7 +71,7 @@ LHCb::ProtoParticle::removeMuonInfo()
   // Set MuonPID pointer to NULL
   this->setMuonPID(NULL);
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -86,9 +92,9 @@ LHCb::ProtoParticle::removeCaloEcalInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloClusChi2 );
   erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDe );
   erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDmu );
-  this->clearCalo();
+  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -102,9 +108,9 @@ LHCb::ProtoParticle::removeCaloBremInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralPrs );
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralEcal );
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloBremMatch );
-  this->clearCalo();
+  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -115,9 +121,9 @@ LHCb::ProtoParticle::removeCaloSpdInfo()
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
   erased += this->eraseInfo(LHCb::ProtoParticle::InAccSpd);
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloSpdE);
-  this->clearCalo();
+  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -129,9 +135,9 @@ LHCb::ProtoParticle::removeCaloPrsInfo()
   erased += this->eraseInfo(LHCb::ProtoParticle::InAccPrs);
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloPrsE);
   erased += this->eraseInfo(LHCb::ProtoParticle::PrsPIDe);
-  this->clearCalo();
+  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -144,9 +150,9 @@ LHCb::ProtoParticle::removeCaloHcalInfo()
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloHcalE);
   erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDe);
   erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDmu);
-  this->clearCalo();
+  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
-  this->removeCombinedInfo();
+  erased += this->removeCombinedInfo();
   return erased;
 }
 
@@ -158,5 +164,4 @@ LHCb::ProtoParticle::removeVeloInfo()
   erased += this->eraseInfo(LHCb::ProtoParticle::VeloCharge);
   return erased;
 }
-
 

@@ -1,9 +1,15 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.129 2009-11-13 15:20:44 cattanem Exp $
+! $Id: release.notes,v 1.130 2009-11-16 11:57:34 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2009-11-16 - Chris Jones
+ - Disable clearing of CALO hypos in ProtoParticle various removeCaloXXXInfo()
+   methods, since this incorrectly removes *all* hypos, not just those
+   associated with the given technique. Temporary fix intil a better solution
+   is found
 
 !========================= RecEvent v2r23 2009-11-13 =========================
 ! 2009-11-09 - Patrick Koppenburg
