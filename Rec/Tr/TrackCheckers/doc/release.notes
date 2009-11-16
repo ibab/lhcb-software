@@ -4,7 +4,7 @@
 ! Purpose     : Package for track checking algorithms (with MC truth)
 !-----------------------------------------------------------------------------
 
-!======================= TrackCheckers v4r10 2009-11-13 =======================
+!======================= TrackCheckers v4r10 2009-11-16 =======================
 ! 2009-11-11 Kostyantyn Holubyev
  - Added class TrackOccupChecker for the studies of the occupancies in IT, OT,
    and Velo. See also root/occup.C.
