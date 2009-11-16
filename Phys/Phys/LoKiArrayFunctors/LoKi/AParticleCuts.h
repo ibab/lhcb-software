@@ -1,4 +1,4 @@
-// $Id: AParticleCuts.h,v 1.6 2009-03-10 22:56:26 spradlin Exp $
+// $Id: AParticleCuts.h,v 1.7 2009-11-16 11:52:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLECUTS_H 
 #define LOKI_APARTICLECUTS_H 1
@@ -1690,8 +1690,8 @@ namespace LoKi
      *  @see IGeomDispCalculator
      *  @see LoKi::AParticles::MinDOCA
      *  @see LoKi::Cuts::ADOCAMIN
-     *  @author
-     *  @date
+     *  @author Patrick SPRADLIN 
+     *  @date   2009-03-10
      */
     typedef LoKi::AParticles::MinDOCA                                AMINDOCA ;
     // ========================================================================
@@ -1704,8 +1704,36 @@ namespace LoKi
      *  @date   10 March 2009
      */
     typedef LoKi::AParticles::AllSameBestPV                      AALLSAMEBPV ;
-  } // end of namespace LoKi::Cuts 
-} // end of namespace LoKi
+    // ========================================================================
+    /** @typedef ACUTV 
+     *  Simple adapter, that allow to use "vector-cut" (CutVal) 
+     *  as "array-cut" (ACut)
+     *  @see LoKi::AParticles::ACutV 
+     *  @see LoKi::Types::ACut 
+     *  @see LoKi::Types::ACuts 
+     *  @see LoKi::Types::CutVal
+     *  @see LoKi::Types::CutVals
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-16
+     */
+    typedef LoKi::AParticles::ACutV                                    ACUTV ;
+    // ========================================================================
+    /** @typedef AFUNV 
+     *  Simple adapter, that allow to use "vector-fun" (FunVal) 
+     *  as "array-fun" (AFun)
+     *  @see LoKi::AParticles::AFunV 
+     *  @see LoKi::Types::AFun
+     *  @see LoKi::Types::AFunc 
+     *  @see LoKi::Types::FunVal
+     *  @see LoKi::Types::FunVals
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-16
+     */
+    typedef LoKi::AParticles::AFunV                                    AFUNV ;
+    // ========================================================================
+  } //                                              end of namespace LoKi::Cuts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

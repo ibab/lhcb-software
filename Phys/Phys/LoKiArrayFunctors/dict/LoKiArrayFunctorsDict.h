@@ -1,4 +1,4 @@
-// $Id: LoKiArrayFunctorsDict.h,v 1.11 2009-05-09 19:29:41 ibelyaev Exp $
+// $Id: LoKiArrayFunctorsDict.h,v 1.12 2009-11-16 11:52:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIARRAYDICT_H 
 #define LOKI_LOKIARRAYDICT_H 1
@@ -60,6 +60,13 @@ namespace LoKi
       ( const Fun& fun  , const Type::Container& o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
       // ======================================================================
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Particle>& o ) 
+      {
+        Type::Container c ( o.begin() , o.end() ) ;
+        return fun ( Type ( c.begin() , c.end() ) ) ; 
+      }      
+      // ======================================================================
     public:
       // ======================================================================
       // __rrshift__ 
@@ -70,7 +77,7 @@ namespace LoKi
       static Fun::result_type
       __rrshift__ ( const Fun& fun  , const Type::Container&   o  ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
-      // __rrshift__ 
+      // __rrshift__      
       //static std::vector<Fun::result_type> 
       //__rrshift__ ( const Fun& fun  , const std::vector<Type>& o  ) 
       //{ return o  >> fun  ; }      
@@ -104,6 +111,13 @@ namespace LoKi
       static Fun::result_type __call__ 
       ( const Fun& fun  , const Type::Container& o ) 
       { return fun ( Type ( o.begin() , o.end() ) ) ; }
+      // ======================================================================
+      static Fun::result_type __call__ 
+      ( const Fun& fun  , const SmartRefVector<LHCb::Particle>& o ) 
+      {
+        Type::Container c ( o.begin() , o.end() ) ;
+        return fun ( Type ( c.begin() , c.end() ) ) ; 
+      }      
       // ======================================================================
     public:
       // ======================================================================

@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.13 2009-04-24 13:08:46 ibelyaev Exp $
+// $Id: AParticles.h,v 1.14 2009-11-16 11:52:14 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -1529,8 +1529,8 @@ namespace LoKi
      *  A straightforward adaptation of MaxDOCA.
      *  @see LoKi::Cuts::AMINDOCA
      *  @see IDistanceCalculator
-     *  @author 
-     *  @date 
+     *  @author  Patrick SPRADLIN
+     *  @date   2009-03-10
      */
     class MinDOCA : public DOCA 
     {
@@ -1566,8 +1566,8 @@ namespace LoKi
      *
      *  @see LoKi::Cuts::AALLSAMEBPV
      *
-     *  @author
-     *  @date
+     *  @author  Patrick SPRADLIN
+     *  @date   2009-03-10
      */
     class AllSameBestPV
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
@@ -1591,8 +1591,79 @@ namespace LoKi
       // ======================================================================
     };
     // ========================================================================
-  } // end of namespace LoKi::AParticles
-} // end of namespace LoKi 
+    /** @class ACutV 
+     *  Simple adapter which allows to use "vector-predicate" as 
+     *  "array-predicate"
+     *  @see LoKi::Cuts::AFUNV 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-16
+     */
+    class ACutV 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      ACutV  ( const LoKi::Types::CutVals& cut ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~ACutV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual ACutV* clone() const ;
+      /// MANDATORY: the only one essentiual method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      // default constructor is disabled 
+      ACutV () ;                             // default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual predicate 
+      LoKi::Types::CutVal m_cut ;                       // the actual predicate 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    /** @class AFunV 
+     *  Simple adapter which allows to use "vector-function" as 
+     *  "array-function"
+     *  @see LoKi::Cuts::AFUNV 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-16
+     */
+    class AFunV 
+      : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public:
+      // ======================================================================
+      /// constructor 
+      AFunV  ( const LoKi::Types::FunVals& fun ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~AFunV() ;
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual AFunV* clone() const ;
+      /// MANDATORY: the only one essentiual method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      // default constructor is disabled 
+      AFunV () ;                             // default constructor is disabled 
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the actual function
+      LoKi::Types::FunVal m_fun ;                       // the actual predicate 
+      // ======================================================================
+    } ;
+    // ========================================================================
+  } //                                        end of namespace LoKi::AParticles
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END
 // ============================================================================
