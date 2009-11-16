@@ -41,8 +41,7 @@ apply_pattern dim_exe name=did files=did/make_did.c
 macro_append  didlinkopts " /usr/X11R6/lib/libMrm.so.3 "\
  slc4-ia32                " /usr/X11R6/lib/libMrm.so.3 "\
  slc4-amd64               " -L/usr/X11R6/lib64 -lMrm " \
- x86_64                   " -L/usr/X11R6/lib64 -lMrm -lXt -lXm " \
- host-x86_64              " -L/usr/X11R6/lib64 -lMrm -lXt -lXm " \
+ target-x86_64            " -L/usr/X11R6/lib64 -lMrm -lXt -lXm " \
  WIN32                    " "
 
 apply_pattern dim_exe name=test_server       files=examples/test_server.c
