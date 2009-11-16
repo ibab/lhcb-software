@@ -25,52 +25,52 @@ namespace {
       : m_dir(dir), m_parent(&alg), m_numelements(numelements)
     {
       for(int i=0; i<6; ++i)
-	if( dofs.find(m_dofnames[i]) != std::string::npos )
-	  // The "G" option is important here.
-	  m_delta[i] = alg.bookProfile1D( dir + "/" + m_dofnames[i] + "VsElement", dir + " " + m_dofnames[i] ,
-					  -0.5, numelements-0.5, numelements,"G" ) ;
-	else
-	  m_delta[i] = 0 ;
+        if( dofs.find(m_dofnames[i]) != std::string::npos )
+          // The "G" option is important here.
+          m_delta[i] = alg.bookProfile1D( dir + "/" + m_dofnames[i] + "VsElement", dir + " " + m_dofnames[i] ,
+                                          -0.5, numelements-0.5, numelements,"G" ) ;
+        else
+          m_delta[i] = 0 ;
     } ;
     
     void fill( size_t id,
-	       const LHCb::Node& node,
-	       const ITrackProjector::Derivatives& deriv)
+               const LHCb::Node& node,
+               const ITrackProjector::Derivatives& deriv)
     {
       double V = node.errMeasure2() ;
       double R = node.errResidual2() ;
       for(int i=0; i<6; ++i) 
-	if(m_delta[i] != 0 ) {
-	  double Ax = deriv(0,i) ;
-	  // first compute the weight, which is the 2nd derivative
-	  // w = A^T * V^-1 * R * V^-1 * A
-	  double halfd2Chi2dX2 = Ax * 1/V * R * 1/V * Ax ;
-	  // now compute the 1 derivative
-	  if( std::abs(halfd2Chi2dX2) > 1e-15 ) {
-	    double halfdChi2dX   = Ax * 1/V * node.residual() ;
-	    // now fill the profile
-	    m_delta[i]->fill( id, halfdChi2dX / halfd2Chi2dX2, halfd2Chi2dX2 ) ;
-	  }
-	}
+        if(m_delta[i] != 0 ) {
+          double Ax = deriv(0,i) ;
+          // first compute the weight, which is the 2nd derivative
+          // w = A^T * V^-1 * R * V^-1 * A
+          double halfd2Chi2dX2 = Ax * 1/V * R * 1/V * Ax ;
+          // now compute the 1 derivative
+          if( std::abs(halfd2Chi2dX2) > 1e-15 ) {
+            double halfdChi2dX   = Ax * 1/V * node.residual() ;
+            // now fill the profile
+            m_delta[i]->fill( id, halfdChi2dX / halfd2Chi2dX2, halfd2Chi2dX2 ) ;
+          }
+        }
     }
 
     ~AlignProfile()
     {
       for(int i=0; i<6; ++i) 
-	if(m_delta[i] != 0 ) {
-	  TProfile* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_delta[i] ) ;
-	  if(pr) {
-	    IHistogram1D* pull = m_parent->book(m_dir + "/" + m_dofnames[i] + "Pull",
-						m_delta[i]->title() + " pull",-5,5) ;
-	    double xmax = i<=2 ? 0.1 : 0.001 ;
-	    IHistogram1D* delta = m_parent->book(m_dir + "/" + m_dofnames[i] + "Delta",
-						 m_delta[i]->title(),-xmax,xmax) ;
-	    for(int ibin = 1; ibin<=pr->GetNbinsX(); ++ibin) {
-	      pull->fill( pr->GetBinContent(ibin) / pr->GetBinError(ibin) ) ;
-	      delta->fill( pr->GetBinContent(ibin) ) ;
-	    }
-	  }
-	}
+        if(m_delta[i] != 0 ) {
+          TProfile* pr = Gaudi::Utils::Aida2ROOT::aida2root ( m_delta[i] ) ;
+          if(pr) {
+            IHistogram1D* pull = m_parent->book(m_dir + "/" + m_dofnames[i] + "Pull",
+                                                m_delta[i]->title() + " pull",-5,5) ;
+            double xmax = i<=2 ? 0.1 : 0.001 ;
+            IHistogram1D* delta = m_parent->book(m_dir + "/" + m_dofnames[i] + "Delta",
+                                                 m_delta[i]->title(),-xmax,xmax) ;
+            for(int ibin = 1; ibin<=pr->GetNbinsX(); ++ibin) {
+              pull->fill( pr->GetBinContent(ibin) / pr->GetBinError(ibin) ) ;
+              delta->fill( pr->GetBinContent(ibin) ) ;
+            }
+          }
+        }
     }
     
     static const std::vector<std::string> m_dofnames;
@@ -88,7 +88,7 @@ namespace {
 class TrackAlignMonitor : public GaudiHistoAlg 
 {
 public:
-   /** Standard construtor */
+  /** Standard construtor */
   TrackAlignMonitor( const std::string& name, ISvcLocator* pSvcLocator );
 
   /** Destructor */
@@ -129,7 +129,7 @@ private:
   }
   
   void transformToLocal( ITrackProjector::Derivatives& deriv,
-			 const DetectorElement& element ) const ;
+                         const DetectorElement& element ) const ;
 
 private:
   std::string m_trackLocation;
@@ -156,7 +156,7 @@ DECLARE_ALGORITHM_FACTORY( TrackAlignMonitor );
 // Standard constructor, initializes variables
 //=============================================================================
 TrackAlignMonitor::TrackAlignMonitor( const std::string& name,
-					ISvcLocator* pSvcLocator)
+                                      ISvcLocator* pSvcLocator)
   : GaudiHistoAlg( name , pSvcLocator ),
     m_projector("TrackProjector")
 {
@@ -213,41 +213,43 @@ StatusCode TrackAlignMonitor::execute()
   // make a list of calo positions, depending on the subsystem use clusters or cells
   const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
 
+  //fix by RWL to get rid of stupid nightly warnings about bracketing. 16/11/2009
   BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
     if( (track->hasT() && track->hasVelo() ) ||
-	track->checkFlag(LHCb::Track::Backward ) &&
-	(track->chi2PerDoF()< m_maxTrackChi2PerDoF) ) {
+        ( track->checkFlag(LHCb::Track::Backward ) &&
+          (track->chi2PerDoF()< m_maxTrackChi2PerDoF) ) 
+        ) {
       BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) {
-	if( node->type() == LHCb::Node::HitOnTrack ) {
-	  const LHCb::Measurement& meas = node->measurement() ;
-	  // we'll evaluate everything in global coordinates, but to
-	  // make rotations more meaningful we'll go to the center of
-	  // the local frame.
+        if( node->type() == LHCb::Node::HitOnTrack ) {
+          const LHCb::Measurement& meas = node->measurement() ;
+          // we'll evaluate everything in global coordinates, but to
+          // make rotations more meaningful we'll go to the center of
+          // the local frame.
 	  
-	  // first ignore global position. we'll do that later
-	  LHCb::StateVector state(node->state().stateVector(),node->state().z());
-	  ITrackProjector::Derivatives deriv = 
-	    m_projector->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) ;
-	  if( m_useLocalFrame && meas.detectorElement() )
-	    transformToLocal( deriv, *meas.detectorElement() ) ;
-	  LHCb::LHCbID id = meas.lhcbID() ;
-	  if(       id.isOT() ) {
-	    m_ot->fill( otUniqueID(id.otID()), *node, deriv ) ;
-	  } else if(id.isVelo() ) {
-	    m_velo->fill( veloUniqueID(id.veloID()), *node, deriv ) ;
-	  } else if(id.isIT() ) {
-	    m_it->fill( itUniqueID(id.stID()), *node, deriv ) ;
-	  } else if(id.isTT() ) {
-	    m_tt->fill( ttUniqueID(id.stID()), *node, deriv ) ;
-	  } ;
-	}
+          // first ignore global position. we'll do that later
+          LHCb::StateVector state(node->state().stateVector(),node->state().z());
+          ITrackProjector::Derivatives deriv = 
+            m_projector->alignmentDerivatives(state,meas,Gaudi::XYZPoint(0,0,0)) ;
+          if( m_useLocalFrame && meas.detectorElement() )
+            transformToLocal( deriv, *meas.detectorElement() ) ;
+          LHCb::LHCbID id = meas.lhcbID() ;
+          if(       id.isOT() ) {
+            m_ot->fill( otUniqueID(id.otID()), *node, deriv ) ;
+          } else if(id.isVelo() ) {
+            m_velo->fill( veloUniqueID(id.veloID()), *node, deriv ) ;
+          } else if(id.isIT() ) {
+            m_it->fill( itUniqueID(id.stID()), *node, deriv ) ;
+          } else if(id.isTT() ) {
+            m_tt->fill( ttUniqueID(id.stID()), *node, deriv ) ;
+          } ;
+        }
       }
     }
   return StatusCode::SUCCESS ;
 }
 
 void TrackAlignMonitor::transformToLocal( ITrackProjector::Derivatives& deriv,
-						 const DetectorElement& element ) const
+                                          const DetectorElement& element ) const
 {
   Jacobians::iterator it = m_jacobians.find( &element ) ;
   
