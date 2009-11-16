@@ -1,4 +1,4 @@
-// $Id: TupleToolTagging.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolTagging.cpp,v 1.5 2009-11-16 07:06:47 jpalac Exp $
 // Include files
 
 // from Gaudi
@@ -55,7 +55,6 @@ StatusCode TupleToolTagging::initialize() {
   if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
                              StatusCode::FAILURE);
 
-  const DVAlgorithm* dv = getParent();
   m_tagging = m_dva->flavourTagging();
 
   if( !m_tagging ){
@@ -78,9 +77,6 @@ StatusCode TupleToolTagging::fill( const Particle* mother
 
   // nothing to tag on something which is not a B
   if( !P->particleID().hasBottom() ) return StatusCode::SUCCESS; 
-
-  //  m_tagging = getParent()->flavourTagging();
-
 
   const VertexBase* v = m_dva->bestPV ( mother );
   const RecVertex* vtx = dynamic_cast<const RecVertex*>(v);
