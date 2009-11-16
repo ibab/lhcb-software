@@ -10,6 +10,8 @@
 #include "TH2.h"
 #include "TF1.h"
 #include "TGraphErrors.h"
+#include "TMinuit.h"
+#include "TFitterMinuit.h"
 
 #include <vector>
 #include <iostream>
@@ -20,29 +22,47 @@ using namespace boost::assign;
 
 #include <boost/foreach.hpp>
 
+#define PHOENIX_LIMIT 6
+#include <boost/spirit/home/classic.hpp>
+#include <boost/spirit/home/phoenix.hpp>
+
 OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator)
 {
   detector = 0;
+
+  // --- load options ---
 
   declareProperty("TrackLocation", trackLocation = LHCb::TrackLocation::Default);
 
   declareProperty("Projector", projector);
 
-  declareProperty("MaxTrackChi2", maxTrackChi2 = 16);
-  declareProperty("MaxUnbiasedChi2", maxUnbiasedChi2 = 4);
+  declareProperty("MaxTrackChi2", maxTrackChi2 = 16, "Max track Chi^2 (default 16)");
+  declareProperty("MaxUnbiasedChi2", maxUnbiasedChi2 = 4, "Max track unbiased Chi^2 (default 4)");
 
-  declareProperty("UseOutliers", useOutliers = false);
+  declareProperty("UseOutliers", useOutliers = false, "Use outliers (default false)");
 
-  declareProperty("HistDriftTime", confHistDriftTime);
-  if(confHistDriftTime.size() != 3) confHistDriftTime = list_of(-30.0)(70.0)(200);
-  declareProperty("HistDriftTimeResidual", confHistDriftTime);
-  if(confHistDriftTimeResidual.size() != 3) confHistDriftTimeResidual = list_of(-50.0)(50.0)(200);
-  declareProperty("HistDriftTimeVsDist", confHistDriftTime);
-  if(confHistDriftTimeVsDist.size() != 6) confHistDriftTimeVsDist = list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
-  declareProperty("HistModuleDT0", confHistModuleDT0);
-  if(confHistModuleDT0.size() != 3) confHistModuleDT0 = list_of(-10.0)(20.0)(120);
-  declareProperty("HistModuleT0", confHistModuleT0);
-  if(confHistModuleT0.size() != 3) confHistModuleT0 = list_of(-10.0)(20.0)(120);
+  declareProperty("HistDriftTime", histDriftTimeOpts, "Options for drift time histograms (default t = [-30, 70]/200)");
+  if(histDriftTimeOpts.size() != 3) histDriftTimeOpts= list_of(-30.0)(70.0)(200);
+
+  declareProperty("HistDriftTimeResidual", histDriftTimeResidualOpts, "Options for drift time residual histograms (default t = [-50, 50]/200)");
+  if(histDriftTimeResidualOpts.size() != 3) histDriftTimeResidualOpts = list_of(-50.0)(50.0)(200);
+
+  declareProperty("HistDriftTimeVsDist", histDriftTimeVsDistOpts, "Options for drift time VS distance histograms (default r = [-5, 5]/200 and t = [-30, 70]/200)");
+  if(histDriftTimeVsDistOpts.size() != 6) histDriftTimeVsDistOpts = list_of(-5.0)(5.0)(200)(-30.0)(70.0)(200);
+
+  declareProperty("HistModuleDT0", histModuleDT0Opts, "Options for module dT0's histogram (default t = [-10, 20]/120)");
+  if(histModuleDT0Opts.size() != 3) histModuleDT0Opts = list_of(-10.0)(20.0)(120);
+
+  declareProperty("HistModuleT0", histModuleT0Opts, "Options for module T0's histogram (default t = [-10, 20]/120)");
+  if(histModuleT0Opts.size() != 3) histModuleT0Opts = list_of(-10.0)(20.0)(120);
+
+  declareProperty("PlotModuleDriftTime", plotModuleDriftTime = false, "Plot drift time histograms per module (default false)");
+  declareProperty("PlotModuleDriftTimeVsDist", plotModuleDriftTimeVsDist = false, "Plot drift time VS distance histograms per module (default false)");
+
+  declareProperty("WriteXMLs", writeXMLs = true, "Write condition XML files (default true)");
+  declareProperty("ReadXMLs", readXMLs = true, "Read condition XML files (default true)");
+
+  declareProperty("UseMinuit", useMinuit = true, "Use Minuit to fit TR-relation (default true)");
 
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
@@ -50,21 +70,37 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
     histModuleDriftTimeResidual[s][l][q][m] = 0;
     histModuleDriftTimeVsDist[s][l][q][m] = 0;
   }
-
-  declareProperty("WriteXMLs", writeXMLs = true);
-  declareProperty("ReadXMLs", readXMLs = true);
 }
 
 StatusCode OTModuleClbrAlg::initialize()
 {
   StatusCode statusCode = GaudiHistoAlg::initialize();
 
+  // --- print options ---
+
+  info() << "TrackLocation: " << trackLocation << endmsg;
+  info() << "MaxTrackChi2: " << maxTrackChi2 << endmsg;
+  info() << "MaxUnbiasedChi2: " << maxUnbiasedChi2 << endmsg;
+  info() << "HistDriftTime: " <<
+    "t = [" << histDriftTimeOpts[0] << ", " << histDriftTimeOpts[1] << "]/" << (int)histDriftTimeOpts[2] << endmsg;
+  info() << "HistDriftTimeResidual: " <<
+    "t = [" << histDriftTimeResidualOpts[0] << ", " << histDriftTimeResidualOpts[1] << "]/" << (int)histDriftTimeResidualOpts[2] << endmsg;
+  info() << "HistDriftTimeVsDist: " <<
+    "r = [" << histDriftTimeVsDistOpts[0] << ", " << histDriftTimeVsDistOpts[1] << "]/" << (int)histDriftTimeVsDistOpts[2] <<
+    ", t = [" << histDriftTimeVsDistOpts[3] << ", " << histDriftTimeVsDistOpts[4] << "]/" << (int)histDriftTimeVsDistOpts[5] << endmsg;
+  info() << "HistModuleDT0: " <<
+    "t = [" << histModuleDT0Opts[0] << ", " << histModuleDT0Opts[1] << "]/" << (int)histModuleDT0Opts[2] << endmsg;
+  info() << "HistModuleT0: " <<
+    "t = [" << histModuleT0Opts[0] << ", " << histModuleT0Opts[1] << "]/" << (int)histModuleT0Opts[2] << endmsg;
+  info() << "WriteXMLs: " << (writeXMLs ? "true" : "false") << endmsg;
+  info() << "ReadXMLs: " << (readXMLs ? "true" : "false") << endmsg;
+  info() << "UseMinuit: " << (useMinuit ? "true" : "false") << endmsg;
+
   detector = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   if(detector == 0) return StatusCode::FAILURE;
 
   projector.retrieve().ignore();
 
-  // prepare OT elements names (stations, layers, quarters and modules)
   stationNames = list_of("T1")("T2")("T3");
   layerNames = list_of("X1")("U")("V")("X2");
   quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
@@ -74,22 +110,26 @@ StatusCode OTModuleClbrAlg::initialize()
   {
     std::string histPath = stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q] + "/" + moduleNames[m];
 
-/*
-    histModuleDriftTime[s][l][q][m] = book(histPath + "/" + "driftTime", "drift time",
-      confHistDriftTime[0], confHistDriftTime[1], (int)confHistDriftTime[2]);
-*/
+    if(plotModuleDriftTime)
+    {
+      histModuleDriftTime[s][l][q][m] = book(histPath + "/" + "driftTime", "drift time",
+        histDriftTimeOpts[0], histDriftTimeOpts[1], (int)histDriftTimeOpts[2]);
+    }
+
     histModuleDriftTimeResidual[s][l][q][m] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
-      confHistDriftTimeResidual[0], confHistDriftTimeResidual[1], (int)confHistDriftTimeResidual[2]);
-/*
-    histModuleDriftTimeVsDist[s][l][q][m] = book2D(histPath + "/" + "driftTimeVsDist", "drift time vs distance",
-      confHistDriftTimeVsDist[0], confHistDriftTimeVsDist[1], (int)confHistDriftTimeVsDist[2],
-      confHistDriftTimeVsDist[3], confHistDriftTimeVsDist[4], (int)confHistDriftTimeVsDist[5]);
-*/
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+
+    if(plotModuleDriftTimeVsDist)
+    {
+      histModuleDriftTimeVsDist[s][l][q][m] = book2D(histPath + "/" + "driftTimeVsDist", "drift time vs distance",
+        histDriftTimeVsDistOpts[0], histDriftTimeVsDistOpts[1], (int)histDriftTimeVsDistOpts[2],
+        histDriftTimeVsDistOpts[3], histDriftTimeVsDistOpts[4], (int)histDriftTimeVsDistOpts[5]);
+    }
   }
 
   histDriftTimeVsDist = book2D("driftTimeVsDist", "drift time vs distance",
-    confHistDriftTimeVsDist[0], confHistDriftTimeVsDist[1], (int)confHistDriftTimeVsDist[2],
-    confHistDriftTimeVsDist[3], confHistDriftTimeVsDist[4], (int)confHistDriftTimeVsDist[5]);
+    histDriftTimeVsDistOpts[0], histDriftTimeVsDistOpts[1], (int)histDriftTimeVsDistOpts[2],
+    histDriftTimeVsDistOpts[3], histDriftTimeVsDistOpts[4], (int)histDriftTimeVsDistOpts[5]);
 
   histModuleDT0VsModuleN = book("moduleDT0VsModuleN", "delta module T0 vs module N",
     -0.5, 432 - 0.5, 432);
@@ -97,11 +137,11 @@ StatusCode OTModuleClbrAlg::initialize()
     -0.5, 432 - 0.5, 432);
 
   histModuleDT0 = book("moduleDT0", "delta module T0",
-    confHistModuleDT0[0], confHistModuleDT0[1], (int)confHistModuleDT0[2]);
+    histModuleDT0Opts[0], histModuleDT0Opts[1], (int)histModuleDT0Opts[2]);
   histModuleT0 = book("moduleT0", "module T0",
-    confHistModuleT0[0], confHistModuleT0[1], (int)confHistModuleT0[2]);
+    histModuleT0Opts[0], histModuleT0Opts[1], (int)histModuleT0Opts[2]);
 
-  statusCode = readCondXMLs();
+  if(readXMLs) statusCode = readCondXMLs();
 
   return statusCode;
 }
@@ -125,9 +165,8 @@ StatusCode OTModuleClbrAlg::execute()
       const LHCb::FitNode* fitNode = dynamic_cast<const LHCb::FitNode*>(node);
       if(fitNode == 0) continue; // for safety
 
-      // this is realy ugly (may be use dynamic_cast, at least it will be
-      // more safe)
-      const LHCb::OTMeasurement* measurement = static_cast<const LHCb::OTMeasurement*>(&node->measurement());
+      const LHCb::OTMeasurement* measurement = dynamic_cast<const LHCb::OTMeasurement*>(&node->measurement());
+      if(measurement == 0) continue; // for safety
 
       bool isOutlier = (node->type() == LHCb::Node::Outlier);
       LHCb::State unbiasedState = isOutlier ? fitNode->state() : fitNode->unbiasedState();
@@ -138,9 +177,7 @@ StatusCode OTModuleClbrAlg::execute()
       unbiasedNode.setRefVector(unbiasedState.stateVector());
       projector->projectReference(unbiasedNode);
 
-      // calc unbiased Chi^2 - i'm not sure that it is fully correct way
-      // may be we can refit track without this node, but it will be time
-      // consuming
+      // calc unbiased Chi^2
       double residualPull = fitNode->residual() / fitNode->errResidual();
       double unbiasedChi2 = (track->chi2() - residualPull * residualPull) / (track->nDoF() - 1);
 
@@ -160,9 +197,12 @@ StatusCode OTModuleClbrAlg::finalize()
 
   statusCode = fitT0s();
   if(statusCode != StatusCode::SUCCESS) return statusCode;
-  statusCode = fitTR();
+
+  if(useMinuit) statusCode = fitTRMinuit();
+  else statusCode = fitTR();
   if(statusCode != StatusCode::SUCCESS) return statusCode;
-  statusCode = writeCondXMLs();
+
+  if(writeXMLs) statusCode = writeCondXMLs();
   if(statusCode != StatusCode::SUCCESS) return statusCode;
 
   return GaudiHistoAlg::finalize();
@@ -197,9 +237,39 @@ StatusCode OTModuleClbrAlg::fitT0s()
   // read current module T0's
   BOOST_FOREACH(const DeOTModule* module, detector->modules())
   {
-    LHCb::OTChannelID id = module->elementID();
-    t0s[id.station() - 1][id.layer()][id.quarter()][id.module() - 1] = module->strawT0(1);
+    if(module != 0)
+    {
+      LHCb::OTChannelID id = module->elementID();
+      t0s[id.station() - 1][id.layer()][id.quarter()][id.module() - 1] = module->strawT0(1);
+    }
   }
+
+  double dt0s[3][4][4][9]; memset(dt0s, 0, 432 * sizeof(double));
+  double dt0errs[3][4][4][9]; memset(dt0errs, 0, 432 * sizeof(double));
+
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
+  {
+    TH1* hist = Gaudi::Utils::Aida2ROOT::aida2root(histModuleDriftTimeResidual[s][l][q][m]);
+    if(hist == 0 || hist->GetEntries() < 16) continue;
+
+    hist->Fit("gaus", "Q0+");
+
+    TF1* func = hist->GetFunction("gaus");
+    if(func == 0) continue;
+
+    dt0s[s][l][q][m] = func->GetParameter(1);
+    dt0errs[s][l][q][m] = func->GetParError(1);
+  }
+
+  double t0mean = 0;
+  double dt0mean = 0;
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
+  {
+    t0mean += t0s[s][l][q][m];
+    dt0mean += dt0s[s][l][q][m];
+  }
+  t0mean /= 432.0;
+  dt0mean /= 432.0;
 
   TH1* histModuleDT0VsModuleN = Gaudi::Utils::Aida2ROOT::aida2root(OTModuleClbrAlg::histModuleDT0VsModuleN);
   if(histModuleDT0VsModuleN == 0) return StatusCode::FAILURE;
@@ -213,33 +283,22 @@ StatusCode OTModuleClbrAlg::fitT0s()
   TH1* histModuleT0 = Gaudi::Utils::Aida2ROOT::aida2root(OTModuleClbrAlg::histModuleT0);
   if(histModuleT0 == 0) return StatusCode::FAILURE;
 
-  // loop over all modules
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
-    // get histogram of drift time residuals for module
-    TH1* hist = Gaudi::Utils::Aida2ROOT::aida2root(histModuleDriftTimeResidual[s][l][q][m]);
-    if(hist == 0 || hist->GetEntries() < 16) continue;
-
-    // fit it - may one should use LL fit?
-    hist->Fit("gaus", "Q0+");
-
-    TF1* func = hist->GetFunction("gaus");
-    if(func == 0) continue;
-
-    // we need only one parameter of the fit - namely position of the gaus
-    double dt0 = func->GetParameter(1);
-    double t0err = func->GetParError(1);
+    double t0 = t0s[s][l][q][m] - t0mean;
+    double dt0 = dt0s[s][l][q][m] - dt0mean;
+    double dt0err = dt0errs[s][l][q][m];
 
     int moduleN = m + 9 * (q + 4 * (l + 4 * s));
 
     histModuleDT0VsModuleN->SetBinContent(moduleN, dt0);
-    histModuleDT0VsModuleN->SetBinError(moduleN, t0err);
+    histModuleDT0VsModuleN->SetBinError(moduleN, dt0err);
     histModuleDT0->Fill(dt0);
 
-    double t0 = t0s[s][l][q][m] + dt0;
+    t0 += dt0;
 
     histModuleT0VsModuleN->SetBinContent(moduleN, t0);
-    histModuleT0VsModuleN->SetBinError(moduleN, t0err);
+    histModuleT0VsModuleN->SetBinError(moduleN, dt0err);
     histModuleT0->Fill(t0);
 
     t0s[s][l][q][m] = t0;
@@ -255,10 +314,6 @@ StatusCode OTModuleClbrAlg::fitTR()
 
   TGraphErrors graphDriftTimeVsDist;
 
-  // here we fill our graph: the error values modified a bit, and every bin
-  // in the histogram is converted in one point in graph, this helps to
-  // improve the speed of fit (with more entries in the hist this speed up
-  // is quite sufficient)
   for(int ny = 0, nymax = histDriftTimeVsDist->GetYaxis()->GetNbins(); ny < nymax; ny++)
   for(int nx = 0, nxmax = histDriftTimeVsDist->GetXaxis()->GetNbins(); nx < nxmax; nx++)
   {
@@ -268,8 +323,6 @@ StatusCode OTModuleClbrAlg::fitTR()
     double entries = histDriftTimeVsDist->GetBinContent(nx, ny);
     if(entries == 0) continue;
 
-    // here base errors (0.2 mm and 2.7 ns) are fixed - it must be changed
-    // to reflect TR-relation parameters
     double xerr = 0.2 / sqrt(entries);
     double yerr = 2.7 / sqrt(entries);
 
@@ -277,31 +330,163 @@ StatusCode OTModuleClbrAlg::fitTR()
     graphDriftTimeVsDist.SetPointError(graphDriftTimeVsDist.GetN() - 1, xerr, yerr);
   }
 
-  // this is a fit function, it is a bit modified (a - offset, b - maximum
-  // drift time, c - curvature of the TR-relation)
   TF1 funcDriftTimeVsDist(
     "funcDriftTimeVsDist",
     "[0] + [1] * abs(x) / 2.45 - 4.0 * [2] * abs(x) / 2.45 * (1.0 - abs(x) / 2.45)",
     -3.0, 3.0
   );
   funcDriftTimeVsDist.SetParameters(0.0, 36.0, 5.0);
-  graphDriftTimeVsDist.Fit("funcDriftTimeVsDist", "QNR+");
+  graphDriftTimeVsDist.Fit("funcDriftTimeVsDist", "QNR");
 
-  double a = funcDriftTimeVsDist.GetParameter(0);
-  double b = funcDriftTimeVsDist.GetParameter(1);
-  double c = funcDriftTimeVsDist.GetParameter(2);
+//  double t0 = funcDriftTimeVsDist.GetParameter(0);
+  double tm = funcDriftTimeVsDist.GetParameter(1);
+  double tc = funcDriftTimeVsDist.GetParameter(2);
 
-  // convert parameters of the fit function to standard TR-relation
-  // parameters
-  trA = a;
-  trB = b - 4.0 * c;
-  trC = 4.0 * c;
+  trA = 0.0;
+  trB = tm - 4.0 * tc;
+  trC = 4.0 * tc;
+
+  trSigmaA = 2.7;
+  trSigmaB = 0.0;
+  trSigmaC = 0.0;
 
   return StatusCode::SUCCESS;
 }
 
+TH2D* histTVsR = 0;
+
+void fMinuit(int&, double*, double& result, double* par, int)
+{
+  static const double sqrt2pi = sqrt(2.0 * 3.1415927);
+
+  static const double rmax = 2.45;
+  static const double rmax2 = rmax * rmax;
+
+  // "Gaussian Quadrature" coefficiens used for integration
+  static const int M = 10;
+  static const double weights[M] = {  0.29552422, 0.29552422,  0.26926672, 0.26926672,  0.21908636, 0.21908636,  0.14945135, 0.14945135,  0.06667134, 0.06667134};
+  static const double offsets[M] = { -0.14887434, 0.14887434, -0.43339539, 0.43339539, -0.67940957, 0.67940957, -0.86506337, 0.86506337, -0.97390653, 0.97390653};
+
+  double t0 = par[0];
+  double tm = par[1];
+  double tc = par[2];
+  double sigmaRA = par[3];
+  double sigmaRB = par[4];
+  double sigmaT = par[5];
+  double rho = par[6];
+  double sigmaRBG = par[7];
+  double bg = par[8];
+
+  result = 0;
+
+  double ipr_ = 0;
+  {
+    const int N = 10;
+    const double dr_ = rmax / N;
+    for(int i = 0; i < N; i++) for(int m = 0; m < M; m++)
+    {
+      double r_ = dr_ * (2 * i + 1) - rmax;
+      r_ += offsets[m] * dr_;
+
+      ipr_ += weights[m] * ( 1.0 - exp( - 2.0 * rho * sqrt(rmax2 - r_ * r_) ) );
+    }
+    ipr_ *= dr_;
+  }
+
+  for(int nr = 0, nrmax = histTVsR->GetXaxis()->GetNbins(); nr < nrmax; nr++) for(int nt = 0, ntmax = histTVsR->GetYaxis()->GetNbins(); nt < ntmax; nt++)
+  {
+    double scale = histTVsR->GetBinContent(nr, nt);
+    if(scale == 0) continue;
+
+    double r = histTVsR->GetXaxis()->GetBinCenter(nr);
+    double t = histTVsR->GetYaxis()->GetBinCenter(nt);
+
+    double ptr = 0;
+    {
+      const int N = 6;
+      const double dr_ = rmax / N;
+      for(int i = 0; i < N; i++) for(int m = 0; m < M; m++)
+      {
+        double r_ = dr_ * (2 * i + 1) - rmax;
+        r_ += offsets[m] * dr_;
+
+        double r0_ = fabs(r_) / rmax;
+
+        double pr0 = 1.0 - exp( - 2.0 * rho * sqrt(rmax2 - r_ * r_) );
+
+        double sigmaR = sigmaRA * (1.0 - r0_) + sigmaRB * r0_;
+        double pr = exp( -0.5 * pow((r - r_) / sigmaR, 2) ) / sigmaR;
+        double prbg = exp( -0.5 * pow((r - r_) / sigmaRBG, 2) ) / sigmaRBG;
+
+        double t_ = t0 + tm * r0_ - 4.0 * tc * r0_ * (1 - r0_);
+        sigmaT = ( (tm - 4.0 * tc) + 8.0 * tc * r0_ ) * sigmaR / rmax;
+        double pt = exp( -0.5 * pow((t - t_) / sigmaT, 2) ) / sigmaT;
+
+        ptr += weights[m] * pr0 * ((1.0 - bg) * pr + bg * prbg) * pt;
+      }
+      ptr /= sqrt2pi * sqrt2pi;
+      ptr *= dr_;
+    }
+
+    result -= scale * log(ptr / ipr_);
+  }
+
+  std::cout << "." << std::flush;
+}
+
 StatusCode OTModuleClbrAlg::fitTRMinuit()
 {
+  TMinuit minuit(9);
+
+  histTVsR = Gaudi::Utils::Aida2ROOT::aida2root(histDriftTimeVsDist);
+  minuit.SetFCN(fMinuit);
+
+  minuit.DefineParameter(0, "t_0",        0.00,   0.1,  -10.0, 10.0);
+  minuit.DefineParameter(1, "t_m",       36.00,   0.1,   28.0, 45.0);
+  minuit.DefineParameter(2, "t_c",        5.00,   0.1,   -1.0,  7.0);
+
+  minuit.DefineParameter(3, "sigmaRA",    0.30,   0.01,   0.1,  1.0);
+  minuit.DefineParameter(4, "sigmaRB",    0.20,   0.01,   0.1,  1.0);
+  minuit.DefineParameter(5, "sigmaT",     2.50,   0.1,    0.1,  5.0); minuit.FixParameter(5);
+
+  minuit.DefineParameter(6, "rho",        0.70,   0.1,    0.1,  5.0);
+
+  minuit.DefineParameter(7, "sigmaRBG",   1.00,   0.01,   0.5,  5.0);
+  minuit.DefineParameter(8, "bg",         0.001,  0.001,  0.0,  1.0);
+
+  minuit.SetPrintLevel(1);
+  minuit.SetErrorDef(0.5);
+
+  minuit.mnmigr();
+
+  double t0, t0err;
+  minuit.GetParameter(0, t0, t0err);
+  double tm, tmerr;
+  minuit.GetParameter(1, tm, tmerr);
+  double tc, tcerr;
+  minuit.GetParameter(2, tc, tcerr);
+  double sigmaRA, sigmaRAerr;
+  minuit.GetParameter(3, sigmaRA, sigmaRAerr);
+  double sigmaRB, sigmaRBerr;
+  minuit.GetParameter(4, sigmaRB, sigmaRBerr);
+
+  static const double rmax = 2.45;
+
+  trA = t0;
+  trB = tm - 4.0 * tc;
+  trC = 4.0 * tc;
+
+  trSigmaA = trB * sigmaRA / rmax;
+  trSigmaB = trB * (sigmaRB - sigmaRA) / rmax + 2.0 * trC * sigmaRA / rmax;
+  trSigmaC = 2.0 * trC * (sigmaRB - sigmaRA) / rmax;
+
+  info() << "trA = " << trA << endmsg;
+  info() << "trB = " << trB / 2.45 << " * 2.45" << endmsg;
+  info() << "trC = " << trC / (2.45 * 2.45) << " * 2.45 * 2.45" << endmsg;
+  info() << "trSigmaA = " << trSigmaA << endmsg;
+  info() << "trSigmaB = " << trSigmaB / 2.45 << " * 2.45" << endmsg;
+  info() << "trSigmaC = " << trSigmaC / (2.45 * 2.45) << " * 2.45 * 2.45" << endmsg;
+
   return StatusCode::SUCCESS;
 }
 
@@ -316,7 +501,11 @@ StatusCode OTModuleClbrAlg::writeCondXMLs()
     std::string fileName = quarterId + "@" + prefix + ".xml";
 
     std::ofstream file(fileName.c_str());
-    if(file.fail()) return Warning("Failed to open file: " + fileName, StatusCode::FAILURE);
+    if(file.fail())
+    {
+      warning() << "Can't open file: '" << fileName << "'" << endmsg;
+      continue;
+    }
 
     file << "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     file << "<!DOCTYPE DDDB SYSTEM \"conddb:/DTD/structure.dtd\">\n";
@@ -331,10 +520,10 @@ StatusCode OTModuleClbrAlg::writeCondXMLs()
       file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
 
       file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
-      file << "      " << 2.7 << "\n"; // actualy one have to use value from the minuit fit
+      file << "      " << trSigmaA << " " << trSigmaB << " " << trSigmaC << "\n";
       file << "    </paramVector>\n";
       file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
-      file << "      " << 0.0 << " " << trB << " " << trC << "\n";
+      file << "      " << 0.0 /*trA*/ << " " << trB << " " << trC << "\n";
       file << "    </paramVector>\n";
       file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
       file << "      " << t0s[s][l][q][m] << "\n";
@@ -353,9 +542,106 @@ StatusCode OTModuleClbrAlg::writeCondXMLs()
   return StatusCode::SUCCESS;
 }
 
-#include <boost/spirit/include/classic.hpp>
-using namespace boost::spirit::classic;
+StatusCode OTModuleClbrAlg::readCondXMLs()
+{
+  std::string prefix = "CalibrationModules";
 
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
+  {
+    std::string quarterId = stationNames[s] + layerNames[l] + quarterNames[q];
+
+    std::string fileName = quarterId + "@" + prefix + ".xml";
+
+    // load file with condition for specific station-layer-quarter
+    std::ifstream file(fileName.c_str());
+    if(file.fail())
+    {
+      warning() << "Can't open file: '" << fileName << "'" << endmsg;
+      continue;
+    }
+
+    std::string xml;
+
+    // read file to string
+    file.seekg(0, std::ios_base::end);
+    xml.resize(file.tellg());
+    file.seekg(0, std::ios_base::beg);
+    file.read(&xml.at(0), xml.size());
+    file.close();
+
+    std::vector<double> cRt[9], cRtErr[9], cT0[9];
+
+    {
+      using namespace boost::spirit::classic;
+      using namespace boost::phoenix;
+      using namespace boost::phoenix::arg_names;
+
+      int m; std::string param;
+
+      rule<phrase_scanner_t> xmlRule =
+          !("<?xml" >> *(anychar_p - '>') >> '>') // header: <?xml ... >
+          >> !("<!DOCTYPE" >> *(anychar_p - '>') >> '>') // header <!DOCTYPE ... >
+          >> "<DDDB>"
+          >> "<catalog" >> *(anychar_p - '>') >> '>' // <catalog ... >
+          >> +(
+              lexeme_d[
+                  "<condition"
+                  >> *(
+                      (
+                          " name" >> *space_p >> '=' >> *space_p >> '\"'
+                          >> *(anychar_p - 'M') >> 'M' >> int_p[ref(m) = arg1 - 1]
+                          >> '\"'
+                      )
+                      | (anychar_p - '>')
+                  )
+                  >> '>' // <condition ... name="...M{m + 1}" ... >
+              ]
+              >> +(
+                  lexeme_d[
+                      "<paramVector"
+                      >> *(
+                          (
+                              " name" >> *space_p >> '=' >> *space_p >> '\"'
+                              >> (+(anychar_p - '\"'))[ref(param) = construct<std::string>(arg1, arg2)]
+                              >> '\"'
+                          )
+                          | (anychar_p - '>')
+                      ) >> '>' // <paramVector ... name="{param}" ... >
+                  ]
+                  >> +real_p // vector of values
+                      [
+                          if_(ref(param) == "TRParameters")
+                              [ boost::phoenix::push_back(ref(cRt)   [ref(m)], arg1) ],
+                          if_(ref(param) == "STParameters")
+                              [ boost::phoenix::push_back(ref(cRtErr)[ref(m)], arg1) ],
+                          if_(ref(param) == "TZero")
+                              [ boost::phoenix::push_back(ref(cT0)   [ref(m)], arg1) ]
+                      ]
+                  >> "</paramVector>"
+              )[ref(param) = ""]
+              >> "</condition>"
+          )[ref(m) = -1]
+          >> "</catalog>"
+          >> "</DDDB>"
+          >> end_p;
+
+      if(parse(xml.c_str(), xmlRule, space_p).full != true) return StatusCode::FAILURE;
+    }
+
+    for(int m = 0; m < 9; m++)
+    {
+      LHCb::OTChannelID id(s + 1, l, q, m + 1, 1);
+      DeOTModule* module = detector->findModule(id);
+      module->setStrawT0s(cT0[m]);
+      OTDet::RtRelation rt(2.45, cRt[m], cRtErr[m], 50);
+      module->setRtRelation(rt);
+    }
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+/*
 StatusCode OTModuleClbrAlg::readCondXMLs()
 {
   std::string prefix = "CalibrationModules";
@@ -426,8 +712,12 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
         // sequence of doubles), may be we should use it to parse the
         // whole xml
         std::vector<double> values;
-        rule<> paramVectorRule = *space_p >> *(real_p[push_back_a(values)] >> +space_p);
-        parse(paramVectorContent.c_str(), paramVectorRule);
+
+        {
+          using namespace boost::spirit::classic;
+          rule<> paramVectorRule = *space_p >> *(real_p[push_back_a(values)] >> +space_p);
+          parse(paramVectorContent.c_str(), paramVectorRule);
+        }
 
         // now depending on the name of the param we save values in
         // different variables
@@ -443,7 +733,7 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
       // right now T0's are the same for all straws (need to add some sort
       // of configuration option to be able to use different values of T0's
       // for straws or may be OTIS's)
-      LHCb::OTChannelID id(s+1, l, q, m, 1);
+      LHCb::OTChannelID id(s + 1, l, q, m, 1);
       DeOTModule* module = detector->findModule(id);
       module->setStrawT0s(t0s);
       OTDet::RtRelation rt(2.45, cRt, cRtErr, 50);
@@ -455,3 +745,4 @@ StatusCode OTModuleClbrAlg::readCondXMLs()
 
   return StatusCode::SUCCESS;
 }
+*/
