@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.8 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.9 2009-11-16 13:45:52 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -70,7 +70,7 @@ StatusCode STErrorMonitor::initialize()
     std::string strTellID  = boost::lexical_cast<std::string>(tellID);
     HistoID histoID        = "error-types_$tell" + strTellID;
     std::string histoTitle = "Error types tell" + strTellID;
-    m_errorHistos[tellID] = book2D(histoID, histoTitle, 0, noptlinks, 0, 10, nports*noptlinks, 10);
+    m_errorHistos[tellID] = book2D(histoID, histoTitle, 0., noptlinks, nports*noptlinks, 0., 10., 10);
   }
 
   return StatusCode::SUCCESS;
