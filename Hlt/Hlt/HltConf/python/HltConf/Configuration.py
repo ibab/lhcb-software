@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.132 2009-11-14 22:10:50 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.133 2009-11-16 09:44:35 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -88,7 +88,7 @@ class HltConf(LHCbConfigurableUser):
 ##################################################################################
     def confType(self) :
         """
-        Decoding fo configuration. This is where Hlt1 and 2 configurations are called.
+        Decoding of configuration. This is where Hlt1 and 2 configurations are called.
         """
         #
         # set thresholds if you can
@@ -285,7 +285,7 @@ class HltConf(LHCbConfigurableUser):
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
                                   ("Lumi"       , "Hlt1Lumi.*Decision"),
-                                  ("PA"         , "Hlt1((Non?)Random|Tell1Error)Decision"),
+                                  ("PA"         , "Hlt1(ODIN.*|Tell1Error)Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
                                 ]
@@ -471,4 +471,5 @@ class HltConf(LHCbConfigurableUser):
         HltFactory('ToolSvc.LoKi::Hybrid::HltFactory').Modules += [ 'LoKiCore.functions' ]
         self.configureRoutingBits()
 
-        appendPostConfigAction( self.postConfigAction )
+        #appendPostConfigAction( self.postConfigAction )
+        GaudiKernel.Configurable.postConfigActions.insert( 0,  self.postConfigAction )

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.366 2009-11-14 22:10:50 graven Exp $ 
+! $Id: release.notes,v 1.367 2009-11-16 09:44:35 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -7,6 +7,10 @@
 
 
 !========================== HltConf v5r2 2009-11-14 ===================
+! 2009-11-16 - Gerhard Raven
+ - make sure postconfig action in HltConf is the _first_ one; not needed
+   for HltConf itself, but it makes it easier for other users..
+
 ! 2009-11-14 - Gerhard Raven
  - make sure only active selections are registered with HltVertexReportMaker
 
