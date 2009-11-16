@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2DsK.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: Bs2DsK.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Bs -> BsK candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Bs -> BsK candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -45,12 +45,12 @@ class Bs2DsK(AlgoMC) :
     find recontructed Bs -> Ds K candidates 
     """
     ## standard constructor
-    def __init__ ( self , name = 'Bs2DsK' ) :
+    def __init__ ( self , name = 'Bs2DsK' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
-
+        return AlgoMC.__init__ ( self , name , **kwargs )
+    
     ## standard method for analyses
     def analyse( self ) :
         """
@@ -70,9 +70,10 @@ class Bs2DsK(AlgoMC) :
         
         st =  bs.validate ( self.ppSvc() )
         if st.isFailure()  : return st
-
+        
         cut = MCDECTREE(bs) 
-        mcbs = self.mcselect ('mcbs' , cut )
+        mcbs = self.mcselect ('mcbs' , ( 'B_s0' == MCABSID )  & cut  )
+            
         if mcbs.empty() or 1 < mcbs.size() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
 
@@ -143,76 +144,11 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06'  , 
-        Simulation = True    ,
-        HltType    = '' ) 
+        Simulation = True    )
     
     HistogramPersistencySvc ( OutputFile = 'Bs2DsK_Histos.root' ) 
     
     EventSelector (
-##         ##-- GAUDI data cards generated on 12/22/08 2:34 PM
-##         ##-- For Event Type = 13264011 / Data type = DST 1
-##         ##--     Configuration = DC06 - phys-v2-lumi2
-##         ##--     DST 1 datasets produced by Brunel - v30r17
-##         ##--     From DIGI 1 datasets produced by Boole - v12r10
-##         ##--     From SIM 1 datasets produced by Gauss - v25r12
-##         ##--     Database version = v30r14
-##         ##--     Cards content = physical-physical
-##         ##--     
-##         ##-- Datasets replicated at CERN
-##         ##-- 50 dataset(s) - NbEvents = 24847
-##         ##-- 
-##         Input   = [
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000009_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000013_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000014_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000015_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000018_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000020_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000021_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000023_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000026_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000029_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000030_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000031_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000032_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000033_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000034_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000035_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000036_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000038_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000039_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000040_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000043_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000044_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000046_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000047_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000048_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000049_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000050_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000051_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000052_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000055_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000056_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000057_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000058_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000059_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000060_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000061_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000062_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000063_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-##         "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00001980/DST/0000/00001980_00000064_5.dst' TYP='POOL_ROOTTREE' OPT='READ'" 
-##         ]
         Input = [
         # Bs -> Ds K 
         "DATAFILE='PFN:castor:/castor/cern.ch/user/i/ibelyaev/DaVinci/LoKiExamples/Bs2DsK_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"
@@ -230,27 +166,24 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create the local algorithm:
-    alg = Bs2DsK()
+    alg = Bs2DsK(
+        'Bs2DsK'   , 
+        ## PP -> MC relation tables 
+        PP2MCs         = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## print histos 
+        HistoPrint     = True , 
+        ## define the input particles:
+        InputLocations = [ 'StdTightKaons' ,
+                           'StdTightPions' ,
+                           'StdNoPIDsKaons']
+        )
     
     ## gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    ## PP -> MC relation tables 
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    
-    ## print histos 
-    alg.HistoPrint = True
-    
-    ## define the input locations 
-    alg.InputLocations = [
-        '/Event/Phys/StdTightKaons' ,
-        '/Event/Phys/StdTightPions' ,
-        '/Event/Phys/StdNoPIDsKaons' 
-        ]
-    
     evtSel = gaudi.evtSel()    
     evtSel.PrintFreq = 50
-
+    
     return SUCCESS 
     
 # =============================================================================
@@ -259,13 +192,18 @@ if __name__ == '__main__' :
 
     ## make printout of the own documentations 
     print __doc__
+    print __author__
+    print __version__
 
+    import GaudiPython.HistoUtils
+    
     ## configure the job:
     configure()
 
     ## run the job
     run(1000)
-    
+
+    gaudi=appMgr()
 
 # =============================================================================
 # The END 

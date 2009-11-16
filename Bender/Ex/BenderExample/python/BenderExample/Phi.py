@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Phi.py,v 1.10 2009-06-14 11:24:41 ibelyaev Exp $
+# $Id: Phi.py,v 1.11 2009-11-16 16:00:36 ibelyaev Exp $
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
 # =============================================================================
 ## import everything form bender 
 from Bender.Main import * 
@@ -45,9 +45,7 @@ class Phi(Algo) :
         """
         Standard constructor
         """ 
-        Algo.__init__ ( self , name )
-        for key in args : setattr ( self , key , args[key] )
-
+        Algo.__init__ ( self , name , **args )
 
     ## standard mehtod for analysis
     def analyse( self ) :
@@ -85,9 +83,7 @@ def configure () :
     
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
-        Simulation = True   ,
-        HltType    = '' 
-        ) 
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'Phi_Histos.root' ) 
        

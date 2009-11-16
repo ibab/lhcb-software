@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D0_twobody.py,v 1.2 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: D0_twobody.py,v 1.3 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenedrExample/D0_twobody.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -45,11 +45,11 @@ class D0_twobody(AlgoMC) :
     find recontructed D0 -> hh  candidates 
     """
     ## standard constructor
-    def __init__ ( self , name = 'D02hh' ) :
+    def __init__ ( self , name = 'D02hh' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
+        return AlgoMC.__init__ ( self , name, **kwargs  )
     
     ## standard method for analyses
     def analyse( self ) :
@@ -263,10 +263,8 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector, NTupleSvc, ApplicationMgr  
     
     daVinci = DaVinci (
-        # SkipEvents = 20000      , 
         DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        Simulation = True       ) 
     
     EventSelector (
         PrintFreq = 100 , 
@@ -281,9 +279,6 @@ def configure ( **args ) :
         ]
         )
     
-    #import L0mb
-    #import BB 
-
     HistogramPersistencySvc ( OutputFile = 'D02body_Histos.root' ) 
     NTupleSvc ( Output = [ "D02HH DATAFILE='D02body_Tuples.root' TYPE='ROOT' OPT='NEW'" ] )
     
@@ -292,20 +287,21 @@ def configure ( **args ) :
     gaudi = appMgr()
     
     ## create local algorithm:
-    alg = D0_twobody( 'D02hh' )
-    
+    alg = D0_twobody(
+        'D02hh' ,
+        ## MC-links 
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] , 
+        ## print histos 
+        HistoPrint = True    , 
+        ## print tuples 
+        NtupleLUN  = 'D02HH' , 
+        ## input particles  
+        InputLocations = [ 'StdNoPIDsPions' ]
+        )
+        
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-    alg.NtupleLUN  = 'D02HH'
-    
-    ## define inputs 
-    alg.InputLocations = [
-        '/Event/Phys/StdNoPIDsPions'
-    ]
 
     return SUCCESS 
 

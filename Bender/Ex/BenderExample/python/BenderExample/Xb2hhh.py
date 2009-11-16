@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb2hhh.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: Xb2hhh.py,v 1.4 2009-11-16 16:00:37 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Xb -> h h h candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed Xb -> h h h candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -45,11 +45,11 @@ class Xb2hhh(AlgoMC) :
     find recontructed Xb -> hhh candidates 
     """
     ## standard constructor
-    def __init__ ( self , name = 'Xb2hhh' ) :
+    def __init__ ( self , name = 'Xb2hhh' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
+        return AlgoMC.__init__ ( self , name , **kwargs )
     
     ## standard method for analyses
     def analyse( self ) :
@@ -135,9 +135,8 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector 
     
     daVinci = DaVinci (
-        DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'Xb2hhh_Histos.root' ) 
     
@@ -155,22 +154,22 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = Xb2hhh()
-    alg.ParticleCombiners = { "" :  "LoKi::VertexFitter" } 
+    alg = Xb2hhh(
+        ## particle combiners: 
+        ParticleCombiners = { "" :  "LoKi::VertexFitter" } ,
+        ## MC-links 
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]  ,
+        ## print histos 
+        HistoPrint = True  , 
+        ## input particles 
+        InputLocations = [ 'StdLooseKaons'   ,
+                           'StdLoosePions'   ,
+                           'StdLooseProtons' ]
+    )
     
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-    
-    ## define the input
-    alg.InputLocations = [
-        '/Event/Phys/StdLooseKaons'   ,
-        '/Event/Phys/StdLoosePions'   ,
-        '/Event/Phys/StdLooseProtons' 
-        ]
 
     return SUCCESS 
     

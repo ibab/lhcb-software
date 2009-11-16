@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PhiGamma.py,v 1.4 2009-06-09 11:05:24 ibelyaev Exp $ 
+# $Id: Bs2PhiGamma.py,v 1.5 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Bs2PhiGamma.py
 #  Simple module to test/verify MC-association problem for the photons
@@ -14,7 +14,7 @@ claimed by Victor Yakovenko (LAL)
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -52,7 +52,7 @@ class Bs2PhiGamma(AlgoMC) :
 
         ## get the photons
         gamma = self.select ( 'gamma' ,
-                              ( 'gamma' == ID )  & ( 1.5 * Units.GeV < PT ) )
+                              ( 'gamma' == ID )  & ( 2.5 * Units.GeV < PT ) )
         if gamma.empty() : return self.Warning ('No RC-photons are found', SUCCESS ) 
         
         ## get the reconstructed kaons
@@ -109,67 +109,45 @@ def configure() :
     from Configurables import DaVinci
     
     daVinci = DaVinci (
-        DataType   = 'DC06' , # default  
-        Simulation = True   ,
-        HltType    = '' 
+        DataType   = 'MC09' , # default  
+        Simulation = True   
         )
     
-    from Configurables import HistogramPersistencySvc, EventSelector, CellularAutomaton 
+    from Configurables import HistogramPersistencySvc, EventSelector
     HistogramPersistencySvc ( OutputFile = 'PhiGamma_Histos.root' ) 
     
-    CellularAutomaton ( 'EcalClust' , Sort = False ) 
-        
-    EventSelector ( Input   = [
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000002_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000005_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000006_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000007_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000008_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000010_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000011_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000012_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000016_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000017_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000019_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000021_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000022_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000023_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000024_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000025_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000026_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000027_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000028_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000029_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000030_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000032_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000033_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000034_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000035_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000036_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000037_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000038_5.dst' TYP='POOL_ROOTTREE' OPT='READ'",
-    "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/phys-v2-lumi2/00002019/DST/0000/00002019_00000039_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"] )
-    
+    EventSelector (
+        Input   = [
+        ## Use events, selected by Fatima 
+        ## "DATAFILE='PFN:castor:/castor/cern.ch/user/f/fsoomro/MC09Signal/PhiGammaMC09.dst' TYP='POOL_ROOTTREE' OPT='READ'",
+        ## use 'original' events 
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000001_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000002_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000003_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000004_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000005_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000006_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'",
+        "   DATAFILE='castor://castorlhcb.cern.ch:9002//castor/cern.ch/grid/lhcb/MC/MC09/DST/00005102/0000/00005102_00000007_1.dst?svcClass=lhcbdata&castorVersion=2' TYP='POOL_ROOTTREE' OPT='READ'"
+        ]
+        )
     ## get the actual application manager (create if needed)
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = Bs2PhiGamma( 'Bs2PhiGamma')
-    
-    ## print histos 
-    alg.HistoPrint = True
-    
+    alg = Bs2PhiGamma(
+        'Bs2PhiGamma'         ,
+        # print histos 
+        HistoPrint     = True ,
+        # input particles 
+        InputLocations = [
+        'StdLooseKaons'       ,
+        'StdLooseAllPhotons'
+        ]
+        )
+        
     gaudi.addAlgorithm ( alg ) 
     
-    ## define the inputs:
-    alg.InputLocations = [
-        'Phys/StdLooseKaons'      ,
-        'Phys/StdLooseAllPhotons'
-        ]    
-    
     return SUCCESS 
-
 
 
 # =============================================================================

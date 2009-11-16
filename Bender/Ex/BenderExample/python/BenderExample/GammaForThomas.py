@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: GammaForThomas.py,v 1.4 2009-06-09 11:05:24 ibelyaev Exp $ 
+# $Id: GammaForThomas.py,v 1.5 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/GammaForThomas.py
 #  Simple module to test/verify MC-association for the photons
@@ -12,7 +12,7 @@ Simple module to test/verify MC-association for the photons
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $"
 # =============================================================================
 from Bender.MainMC import * 
 import GaudiKernel.SystemOfUnits as Units
@@ -26,6 +26,7 @@ class GammaForThomas(AlgoMC) :
     """
     Simple class to test MC-associations for photons from Bs -> phi gamma 
     """
+    
     ## the only one essential method 
     def analyse ( self ) :
         """
@@ -162,9 +163,8 @@ def configure() :
     from Configurables import DaVinci, HistogramPersistencySvc, EventSelector, CellularAutomaton 
     
     daVinci = DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'PhiGamma_Histos.root' ) 
 
@@ -206,22 +206,22 @@ def configure() :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = GammaForThomas( 'Gamma')
-    
-    ## print histos 
-    alg.HistoPrint = True
-
-    ## be efficient: (not needed here)... 
-    alg.PP2MCs = []
-    
-    ## gaudi.addAlgorithm ( alg ) 
-    gaudi.setAlgorithms( [alg] )
-    
-    ## define the inputs
-    alg.InputLocations = [
+    alg = GammaForThomas(
+        'Gamma'                ,
+        ## print histos 
+        HistoPrint     = True  , 
+        ## be efficient: (not needed here)... 
+        PP2MCs         = []    , 
+        ## define the inputs
+        InputLocations = [
         ## NB: empty !!!
         #'Phys/StdLooseAllPhotons'
         ]    
+        )
+        
+    ## gaudi.addAlgorithm ( alg ) 
+    gaudi.setAlgorithms( [alg] )
+    
     
     
     return SUCCESS 

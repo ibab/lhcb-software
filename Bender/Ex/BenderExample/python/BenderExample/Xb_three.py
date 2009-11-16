@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb_three.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: Xb_three.py,v 1.4 2009-11-16 16:00:37 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/Xb_three.py
 #  The simple Bender-based example: find recontructed Xb -> h h h candidates 
@@ -32,7 +32,7 @@ to be understood...
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -48,12 +48,6 @@ class Xb_three(AlgoMC) :
     """
     find recontructed Xb -> hhh candidates 
     """
-    ## standard constructor
-    def __init__ ( self , name = 'Xb_three' ) :
-        """
-        Standard constructor
-        """ 
-        return AlgoMC.__init__ ( self , name )
     
     ## standard method for analyses
     def analyse( self ) :
@@ -392,10 +386,8 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector, NTupleSvc 
     
     daVinci = DaVinci (
-        # SkipEvents = 22000       ,
-        DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'Xb2hhh_Histos.root' ) 
     NTupleSvc ( Output = [ "HHH DATAFILE='Xb2hhh_Tuples.root' TYPE='ROOT' OPT='NEW'" ] )
@@ -417,22 +409,21 @@ def configure ( **args ) :
     gaudi = appMgr() 
   
     ## create local algorithm:
-    alg = Xb_three( 'Xb2hhh')
-    
+    alg = Xb_three(
+        'Xb2hhh' ,
+        ## MC-links 
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## LUN for N-tuples 
+        NTupleLUN = "HHH"  , 
+        ## print histos 
+        HistoPrint = True  ,
+        ## Input particles  
+        InputLocations = [ 'StdNoPIDsPions' ]
+        )
+        
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    alg.NTupleLUN = "HHH"
-    
-    ## print histos 
-    alg.HistoPrint = True
-    
-    ## define the input 
-    alg.InputLocations = [
-        '/Event/Phys/StdNoPIDsPions' 
-        ]
-
 
     return SUCCESS 
     

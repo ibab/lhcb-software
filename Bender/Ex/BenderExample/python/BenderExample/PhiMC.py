@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: PhiMC.py,v 1.10 2009-06-14 11:24:41 ibelyaev Exp $ 
+# $Id: PhiMC.py,v 1.11 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example: plot dikaon mass peak with MC-truth
 #
@@ -27,7 +27,7 @@ The simple Bender-based example plot dikaon mass peak with MC-truth
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $ "
 # =============================================================================
 ## import everything form bender
 from Bender.MainMC import *
@@ -45,9 +45,7 @@ class PhiMC(AlgoMC) :
         """
         Standard constructor
         """ 
-        AlgoMC.__init__ ( self , name )
-        for key in args :
-            setattr ( self , key , args[key] )
+        AlgoMC.__init__ ( self , name , **args )
 
     ## standard method for analyses
     def analyse( self ) :
@@ -100,9 +98,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
-        Simulation = True   ,
-        HltType    = '' 
-        ) 
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'PhiMC_Histos.root' ) 
 

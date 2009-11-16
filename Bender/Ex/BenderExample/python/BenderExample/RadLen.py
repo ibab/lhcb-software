@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RadLen.py,v 1.1 2009-06-14 11:24:41 ibelyaev Exp $ 
+# $Id: RadLen.py,v 1.2 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for radiation lenth studies 
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for radiation length studies
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender 
 from   Bender.All                  import *
@@ -46,10 +46,10 @@ class RadLen(AlgoMC) :
     
     ## standard constructor
     def __init__ ( self , name = 'RadLen' , **args ) :
-        """ standard constructor """ 
-        AlgoMC.__init__ ( self , name )
-        for key in args :
-            setattr ( self , key , args[key] )
+        """
+        standard constructor
+        """ 
+        AlgoMC.__init__ ( self , name , **args )
         self.ievent = 0 
 
     ## standard algorithm initialization
@@ -187,9 +187,8 @@ def configure ( **args ) :
     
     from Configurables import DaVinci
     daVinci = DaVinci (
-        DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = ''          ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     
     from Configurables import HistogramPersistencySvc 

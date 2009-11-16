@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Xb2mumuhh.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $
+# $Id: Xb2mumuhh.py,v 1.4 2009-11-16 16:00:37 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/Bs2DsK.py
 #  The simple Bender-based example: find recontructed Xv -> mu mu h+ h- candidates 
@@ -33,7 +33,7 @@ to be understood...
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -57,13 +57,6 @@ class Xb2mumuhh(AlgoMC) :
     """
     find recontructed Xb -> mu+ mu- h+ h- candidates 
     """
-    ## standard constructor
-    def __init__ ( self , name = 'Xb2mumuhh' ) :
-        """
-        Standard constructor
-        """ 
-        return AlgoMC.__init__ ( self , name )
-    
     ## standard method for analyses
     def analyse( self ) :
         """
@@ -166,8 +159,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
-        Simulation = True   ,
-        HltType    = '' ) 
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'Xb2mumuhh_Histos.root' ) 
     
@@ -187,22 +179,22 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = Xb2mumuhh()
+    alg = Xb2mumuhh(
+        'Xb2mumuhh'        ,
+        ## MC-links 
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## print histos 
+        HistoPrint = True  , 
+        ## input particles 
+        InputLocations = [ 'StdLooseKaons'   ,
+                           'StdLoosePions'   ,
+                           'StdLooseProtons' ,
+                           'StdLooseMuons'   ]
+        )
     
     gaudi.addAlgorithm ( alg ) 
     ##gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-    
-    ## defin the input 
-    alg.InputLocations = [
-        '/Event/Phys/StdLooseKaons'   ,
-        '/Event/Phys/StdLoosePions'   ,
-        '/Event/Phys/StdLooseProtons' ,
-        '/Event/Phys/StdLooseMuons' 
-        ]
         
     return SUCCESS 
     

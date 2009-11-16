@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: D02hh.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $
+# $Id: D02hh.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $
 # =============================================================================
 ## @file BenderExample/D02hh.py
 #  The simple Bender-based example: find recontructed D0 -> hh candidates 
@@ -28,7 +28,7 @@ The simple Bender-based example: find recontructed D0 -> hh candidates
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything from bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -45,11 +45,11 @@ class D02hh(AlgoMC) :
     find recontructed D0 -> hh  candidates 
     """
     ## standard constructor
-    def __init__ ( self , name = 'D02hh' ) :
+    def __init__ ( self , name = 'D02hh' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
+        return AlgoMC.__init__ ( self , name , **kwargs )
     
     ## standard method for analyses
     def analyse( self ) :
@@ -110,9 +110,8 @@ def configure ( **args ) :
     from Configurables import DaVinci, HistogramPersistencySvc , EventSelector 
     
     daVinci = DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06', # default  
+        Simulation = True  )
     
     HistogramPersistencySvc ( OutputFile = 'D02hh_Histos.root' ) 
     
@@ -129,21 +128,19 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = D02hh()
+    alg = D02hh(
+        'D02hh' ,
+        ## MC-relations
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## print histos 
+        HistoPrint = True ,
+        ## input particles:
+        InputLocations = [ 'StdNoPIDsPions' , 'StdNoPIDsKaons' ]
+        )
     
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-    
-    ## define the inputs:
-    alg.InputLocations = [
-        '/Event/Phys/StdNoPIDsPions'
-        , '/Event/Phys/StdNoPIDsKaons'
-        ]
-
     
     return SUCCESS 
     

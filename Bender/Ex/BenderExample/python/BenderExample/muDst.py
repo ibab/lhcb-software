@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: muDst.py,v 1.1 2009-06-14 11:24:41 ibelyaev Exp $ 
+# $Id: muDst.py,v 1.2 2009-11-16 16:00:37 ibelyaev Exp $ 
 # =============================================================================
-# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $
+# CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $
 # =============================================================================
 ## The simple Bender-script to read Micro DST
 #
@@ -29,7 +29,7 @@ The simple Bender-script to read MicroDST
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything from bender
 import ROOT 
@@ -54,10 +54,7 @@ class muDst(AlgoMC) :
         """
         Standard constructor from algorithm name and properties/attributes
         """ 
-        AlgoMC.__init__ ( self , name )
-        for k in args :
-            val = args[k] 
-            setattr( self , k , val )
+        AlgoMC.__init__ ( self , name , **args )
         self.ievent = 0
 
         
@@ -143,8 +140,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = TYPE , 
-        Simulation = True ,
-        HltType    = ''
+        Simulation = True 
         ) 
     
     HistogramPersistencySvc ( OutputFile = 'muDst_Histos_.root'                         ) 

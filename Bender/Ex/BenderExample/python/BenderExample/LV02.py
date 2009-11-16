@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: LV02.py,v 1.3 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: LV02.py,v 1.4 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/LV02.py
 # The simple Bender-based example:
@@ -30,7 +30,7 @@ show 'Bs -> Ds pi' to 'Bs -> Ds K' reflection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.4 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -48,11 +48,11 @@ class LV02Alg(AlgoMC) :
     Simple class for access MC-truth 
     """
     ## standard constructor
-    def __init__ ( self , name = 'LV02Alg' ) :
+    def __init__ ( self , name = 'LV02Alg' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return AlgoMC.__init__ ( self , name )
+        return AlgoMC.__init__ ( self , name , **kwargs )
     
     
     
@@ -85,10 +85,10 @@ class LV02Alg(AlgoMC) :
         if st.isFailure()  : return st
         
         cutk   = MCDECTREE( bsk  ) 
-        mcbsk  = self.mcselect ('mcbsk'  , cutk  )
+        mcbsk  = self.mcselect ('mcbsk'  , ( 'B_s0' == MCABSID ) & cutk  )
         
         cutpi  = MCDECTREE( bspi ) 
-        mcbspi = self.mcselect ('mcbspi' , cutpi )
+        mcbspi = self.mcselect ('mcbspi' , ( 'B_s0' == MCABSID ) & cutpi )
         
         if mcbsk.empty() and mcbspi.empty() :
             return self.Warning ( 'No mc-trees are found' , SUCCESS )        
@@ -182,8 +182,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06' , # default  
-        Simulation = True   ,
-        HltType    = ''     ) 
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'LV02_Histos.root' ) 
     
@@ -208,17 +207,17 @@ def configure ( **args ) :
     gaudi = appMgr() 
     
     ## create local algorithm:
-    alg = LV02Alg()
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    ## print histos 
-    alg.HistoPrint = True
-    alg.NTupleLUN = 'LV02'
-    
-    ## define the inputs
-    alg.InputLocations = [
-        '/Event/Phys/StdTightPions' ,
-        '/Event/Phys/StdNoPIDsKaons' 
-        ]
+    alg = LV02Alg(
+        'LV02Alg' ,
+        ## MC-links 
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## print histos 
+        HistoPrint = True   , 
+        ## LUN for N-tuples 
+        NTupleLUN = 'LV02'  ,
+        ## Input particles 
+        InputLocations = [ 'StdTightPions' , 'StdNoPIDsKaons' ]
+        )
     
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] )

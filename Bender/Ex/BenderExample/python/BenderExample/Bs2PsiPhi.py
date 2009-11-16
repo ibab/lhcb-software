@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Bs2PsiPhi.py,v 1.8 2009-05-14 17:55:00 ibelyaev Exp $ 
+# $Id: Bs2PsiPhi.py,v 1.9 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## The simple Bender-based example for Bs-> Jpsi phi selection
 #
@@ -27,7 +27,7 @@ The simple Bender-based example for Bs-> Jpsi phi selection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 ## import everything from bender 
 from Bender.All                import *
@@ -42,9 +42,9 @@ class Bs2PsiPhi(AlgoMC) :
     """
     
     ## standard constructor
-    def __init__ ( self , name = 'Bs2PsiPhi' ) :
+    def __init__ ( self , name = 'Bs2PsiPhi' , **kwargs ) :
         """ standard constructor """ 
-        return AlgoMC.__init__ ( self , name )
+        return AlgoMC.__init__ ( self , name , **kwargs )
 
     ## standard mehtod for analyses
     def analyse( self ) :
@@ -208,8 +208,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = ''          ) 
+        Simulation = True        )
     
     HistogramPersistencySvc ( OutputFile = 'Bs2PsiPhi_Histos.root' ) 
     NTupleSvc ( Output = [ "PsiPhi DATAFILE='Bs2PsiPhi_Tuples.root' TYPE='ROOT' OPT='NEW'"] )
@@ -228,11 +227,17 @@ def configure ( **args ) :
     gaudi = appMgr()
     
     ## create local algorithm:
-    alg = Bs2PsiPhi()
+    alg = Bs2PsiPhi(
+        ## print histos 
+        HistoPrint = True     ,
+        ## N-tuple LUN 
+        NTupleLUN  = "PsiPhi" ,
+        ## MC-relations
+        PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## input particles :
+        InputLocations = [ 'StdTightKaons' , 'StdTightMuons' ]
+        )
 
-    ## print histos 
-    alg.HistoPrint = True
-    alg.NTupleLUN = "PsiPhi"
                             
     ## get the application manager (create if needed)
     gaudi = appMgr()
@@ -240,13 +245,6 @@ def configure ( **args ) :
     ## if runs locally at CERN lxplus 
     gaudi.setAlgorithms( [alg] ) ## gaudi.addAlgorithm ( alg ) 
     
-    alg.PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-    
-    ## define the inputs:
-    alg.InputLocations = [
-        '/Event/Phys/StdTightKaons' ,
-        '/Event/Phys/StdTightMuons' 
-        ]
     
     return SUCCESS 
     

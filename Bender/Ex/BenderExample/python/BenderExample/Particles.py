@@ -25,7 +25,7 @@ The simple Bender-based example: count the particles
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $   "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $   "
 # =============================================================================
 
 # =============================================================================
@@ -40,11 +40,11 @@ class Particles(Algo) :
     Simple class to count particles
     """    
     ## standard constructor
-    def __init__ ( self , name = 'Particles' ) :
+    def __init__ ( self , name = 'Particles' , **kwargs ) :
         """
         Standard constructor
         """ 
-        return Algo.__init__ ( self , name )
+        return Algo.__init__ ( self , name , **kwargs )
 
     ## standard method for analysis
     def analyse( self ) :
@@ -87,25 +87,22 @@ def configure ( **args ) :
     from Configurables import DaVinci
     
     daVinci = DaVinci (
-        DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = ''          ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
 
     ## get (create if needed) the actual application manager
     gaudi = appMgr()
     
     ## create local algorithm:
-    alg = Particles()
+    alg = Particles(
+        ## define iput particles 
+        InputLocations = [ 'StdTightPions' ,
+                           'StdTightKaons' ,
+                           'StdTightMuons' ]      
+        )
     
     ##gaudi.addAlgorithm ( alg ) 
     gaudi.setAlgorithms( [alg] ) 
-    
-    ## define the inputs:
-    alg.InputLocations = [
-        '/Event/Phys/StdTightPions' ,
-        '/Event/Phys/StdTightKaons' ,
-        '/Event/Phys/StdTightMuons'
-        ]
     
     ## get input data
     import LoKiExample.Bs2Jpsiphi_mm_data as input 

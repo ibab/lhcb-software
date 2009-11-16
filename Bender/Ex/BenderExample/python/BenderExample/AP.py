@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: AP.py,v 1.1 2009-09-13 13:51:37 ibelyaev Exp $ 
+# $Id: AP.py,v 1.2 2009-11-16 16:00:36 ibelyaev Exp $ 
 # =============================================================================
 ## @file BenderExample/AP.py
 # The simple Bender-based example:
@@ -29,7 +29,7 @@ The simple Bender-based example: show ' L0 <-> K0S ' reflection
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $ "
 # =============================================================================
 ## import everything form bender
 import GaudiKernel.SystemOfUnits as Units 
@@ -51,9 +51,7 @@ class AP(AlgoMC) :
         """
         Standard constructor
         """ 
-        AlgoMC.__init__ ( self , name )
-        for key in args :
-            setattr ( self , key , args[key] ) 
+        AlgoMC.__init__ ( self , name , **args )
             
             
     ## standard method for analyses
@@ -163,8 +161,7 @@ def configure ( **args ) :
     
     daVinci = DaVinci (
         DataType   = 'DC06' , 
-        Simulation = True   ,
-        HltType    = ''     ) 
+        Simulation = True   ) 
     
     HistogramPersistencySvc ( OutputFile = 'AP_Histos.root' ) 
     
@@ -190,11 +187,15 @@ def configure ( **args ) :
     
     ## create local algorithm:
     alg = AP (
-        'AP'  
-        , PP2MCs = [ 'Relations/Rec/ProtoP/Charged' ]
-        , HistoPrint = True
-        , NTupleLUN = 'AP'
-        , InputLocations = [ 'StdNoPIDsPions' ]
+        'AP'  ,
+        ## MC-relations 
+        PP2MCs         = [ 'Relations/Rec/ProtoP/Charged' ] ,
+        ## print histograms ? 
+        HistoPrint     = True  ,
+        ## LUN for N-tuples 
+        NTupleLUN      = 'AP'  ,
+        ## input particles : 
+        InputLocations = [ 'StdNoPIDsPions' ]
         )
     
     ##gaudi.addAlgorithm ( alg ) 
@@ -209,6 +210,8 @@ if __name__ == '__main__' :
 
     ## make printout of the own documentations 
     print __doc__
+    print __author__
+    print __version__
 
     ## configure the job:
     configure()
