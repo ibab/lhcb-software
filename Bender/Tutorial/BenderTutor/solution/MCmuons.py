@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCmuons.py,v 1.13 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: MCmuons.py,v 1.14 2009-11-16 16:38:26 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'MC-muons' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -65,10 +65,8 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = ''
-        ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## get/create application manager
     gaudi = appMgr() 

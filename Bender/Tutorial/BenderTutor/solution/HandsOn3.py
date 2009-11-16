@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn3.py,v 1.14 2009-06-18 12:46:20 ibelyaev Exp $ 
+# $Id: HandsOn3.py,v 1.15 2009-11-16 16:38:26 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'Hands-On-3' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,14 +25,6 @@ class MCKaons(AlgoMC) :
     """
     The solution for the third excersize
     """
-    ## constructor
-    def __init__ ( self , name = 'MCKaons' , **args ) :
-        """
-        The constructor
-        """
-        AlgoMC.__init__ ( self , name )
-        for k in args : setattr ( self , k , args[k] )
-        
     
     ## the main analysus method 
     def analyse( self ) :
@@ -79,9 +71,8 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## configure histograms & n-tuples 
     from Gaudi.Configuration import NTupleSvc
@@ -93,7 +84,7 @@ def configure() :
     
     ## get/create application manager
     gaudi = appMgr() 
-
+    
     # modify/update the configuration:
     
     ## 1) create & configure the algorithm

@@ -1,4 +1,4 @@
-# $Id: Minimalistic_0.py,v 1.10 2009-03-04 12:56:49 ibelyaev Exp $
+# $Id: Minimalistic_0.py,v 1.11 2009-11-16 16:38:26 ibelyaev Exp $
 # =============================================================================
 
 
@@ -8,9 +8,8 @@ from Bender.Main import *
 from Configurables import DaVinci
 
 DaVinci (
-    DataType   = 'DC06'     , # default  
-    Simulation = True       ,
-    HltType    = '' ) 
+    DataType   = 'DC06' , # default  
+    Simulation = True   ) 
 
 ## get or create application manager 
 gaudi = appMgr() 

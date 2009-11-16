@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,13 +25,6 @@ class RCKaons(AlgoMC):
     """
     The solution for the fourth exersize
     """
-    ## constructor
-    def __init__ ( self , name = 'RCKaons' , **args ) :
-        """
-        The constructor
-        """
-        AlgoMC.__init__ ( self , name )
-        for k in args : setattr ( self , k , args[k] )
 
     ## the main analysis method 
     def analyse( self ) :
@@ -110,10 +103,9 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
-
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
+    
     
     ## configure histograms & n-tuples 
     from Gaudi.Configuration import NTupleSvc, HistogramPersistencySvc 
@@ -127,10 +119,13 @@ def configure() :
     
     ## 1) create& configure  the algorithm
     alg = RCKaons(
-        'RCKaons' , 
+        'RCKaons' ,
+        ## input particles 
         InputLocations = [ 'StdTightKaons' ,
-                           'StdTightMuons' ] ,      # input particles         
-        PP2MCs = ['Relations/Rec/ProtoP/Charged'] , # only charged 
+                           'StdTightMuons' ] ,      # input particles
+        ## MC-links 
+        PP2MCs = ['Relations/Rec/ProtoP/Charged'] , # only charged
+        ## LUN for N-tuples
         NTupleLUN = 'PHI'
         )
     

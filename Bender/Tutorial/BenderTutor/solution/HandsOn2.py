@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HandsOn2.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $ 
+# $Id: HandsOn2.py,v 1.13 2009-11-16 16:38:26 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'Hands-On-2' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -57,9 +57,8 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## get/create the application manager
     gaudi = appMgr() 

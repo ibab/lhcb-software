@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RCMCSelect.py,v 1.16 2009-06-18 12:46:20 ibelyaev Exp $
+# $Id: RCMCSelect.py,v 1.17 2009-11-16 16:38:26 ibelyaev Exp $
 # =============================================================================
 """
 'Solution'-file for 'RCMCselect.py' example (Bender Tutorial)
@@ -12,7 +12,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.16 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.17 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -23,15 +23,6 @@ class RCMCSelect(AlgoMC):
     """
     My analysis algorithm
     """
-    
-    ## constructor
-    def __init__ ( self , name = 'RCMCSelect' , **args ) :
-        """
-        The constructor
-        """
-        AlgoMC.__init__ ( self , name )
-        for k in args : setattr ( self , k , args[k] )
-        
 
     ## the main analysis method 
     def analyse( self ) :
@@ -139,9 +130,8 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   )
     
     from Gaudi.Configuration import HistogramPersistencySvc
     HistogramPersistencySvc ( OutputFile = 'RCMCselect_histos.root' ) 
@@ -153,11 +143,13 @@ def configure() :
     # 1) create the algorithm
     alg = RCMCSelect(
         'RCMCSelect' ,
+        ## Input particles 
         InputLocations = [ 'Phys/StdTightKaons' , 
                            'Phys/StdTightMuons' ] ,
+        ## MC-links 
         PP2MCs = ['Relations/Rec/ProtoP/Charged']
         )
-                      
+    
     # 2) add the algorithm
     #gaudi.addAlgorithm( alg )
     gaudi.setAlgorithms( [alg] )

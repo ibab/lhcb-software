@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Minimalistic.py,v 1.12 2009-03-04 12:56:49 ibelyaev Exp $
+# $Id: Minimalistic.py,v 1.13 2009-11-16 16:38:26 ibelyaev Exp $
 # =============================================================================
 """
 This is the simplest  Bender module to run the analysis job
@@ -13,7 +13,7 @@ using '*'.opts configuration
 #  @date 2006-11-16
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.12 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
 # =============================================================================
 ## get EVERYTHING from Bender
 from Bender.Main import *
@@ -27,13 +27,12 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## get/create application manager
     gaudi = appMgr() 
-
+    
     ## redefine input files 
     evtSel = gaudi.evtSel()
     import LoKiExample.Bs2Jpsiphi_mm_data as data 

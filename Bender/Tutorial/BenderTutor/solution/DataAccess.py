@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: DataAccess.py,v 1.13 2009-06-18 12:46:20 ibelyaev Exp $ 
+# $Id: DataAccess.py,v 1.14 2009-11-16 16:38:26 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'DataAccess/GetData' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 #  @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.13 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -22,15 +22,6 @@ from Bender.MainMC import *
 ## @class GetData
 #  Simple algorithm to access the data 
 class GetData(Algo):
-    # =========================================================================
-    ## standard constructor 
-    def __init__ ( self , name = 'GetData' , **args ) :
-        """
-        Standard constructor
-        """
-        ## construct the base class 
-        Algo.__init__ ( self , name )
-        for k in args : setattr ( self , k , args[k] ) 
 
     # =========================================================================
     ## the main method: analyse the event
@@ -73,9 +64,8 @@ def configure( **args ) :
     from Configurables import DaVinci
 
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## get/create Application Manager
     gaudi = appMgr()

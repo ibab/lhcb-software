@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: MCTrees.py,v 1.14 2009-06-18 12:46:20 ibelyaev Exp $ 
+# $Id: MCTrees.py,v 1.15 2009-11-16 16:38:26 ibelyaev Exp $ 
 # =============================================================================
 """
 'Solution'-file for 'MCTrees.py' example (Bender Tutorial)
@@ -14,7 +14,7 @@
 # @date   2004-10-12
 # =============================================================================
 __author__  = ' Vanya BELYAEV  Ivan.Belyaev@nikhef.nl '
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.14 $  '  
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.15 $  '  
 # =============================================================================
 ## import everything from BENDER
 from Bender.MainMC import *
@@ -25,13 +25,6 @@ class MCTrees( AlgoMC ) :
     """
     The algorthmm itself
     """
-    ## constructor
-    def __init__ ( self , name = 'MCTree' , **args ) :
-        """
-        The constructor
-        """
-        AlgoMC.__init__ ( self , name )
-        for k in args : setattr ( self , k , args[k] )
   
     ## the main analysis method 
     def analyse( self ) :
@@ -88,9 +81,8 @@ def configure() :
     from Configurables import DaVinci
     
     DaVinci (
-        DataType   = 'DC06'     , # default  
-        Simulation = True       ,
-        HltType    = '' )
+        DataType   = 'DC06' , # default  
+        Simulation = True   )
     
     ## configure histograms & n-tuples 
     from Gaudi.Configuration import NTupleSvc,HistogramPersistencySvc 
@@ -103,7 +95,9 @@ def configure() :
     # 1) create the algorithm
     alg = MCTrees(
         'MCTree'         ,
+        ## LUN for N-tuples 
         NTupleLUN = 'MC' ,
+        ## MC-links 
         PP2MCs    = []
         )
     
