@@ -7,7 +7,7 @@
     <text>$LBPYTHIAROOT/options/Pythia.opts</text>	
     <text>$GAUSSOPTS/Gauss-Job.py</text>
   </set></argument>
-  <argument name="timeout"><integer>1800</integer></argument>
+  <argument name="timeout"><integer>3600</integer></argument>
   <argument name="reference"><text>$GAUSSROOT/tests/refs/testGauss-Upgrade.ref</text></argument>
   <argument name="error_reference"><text>$GAUSSROOT/tests/refs/testGauss-Upgrade-err.ref</text></argument>
   <argument name="use_temp_dir"><enumeral>true</enumeral></argument>
