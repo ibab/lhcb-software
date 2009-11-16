@@ -1,8 +1,7 @@
 #!/bin/bash
 
-cd /home/ukerzel/cmtuser_PanoptesDevel/Panoptes_v2r3/Rich/Panoptes/cmt
-#cd /group/rich/sw/cmtuser/Panoptes_v2r3/Rich/Panoptes/cmt
-. ./setup.vars_slc4_amd64_gcc34_CalibFarm
+cd /group/rich/sw/cmtuser/Panoptes_v2r7/Rich/Panoptes/cmt
+. ./setup.vars_x86_64-slc5-gcc43-opt
 
 #
 # export environment variables
@@ -23,7 +22,8 @@ echo "PARTITION = ${PARTITION}"
 export DATAINTERFACE=`python -c "import socket;print socket.gethostbyname(socket.gethostname().split('.')[0]+'-d1')"`
 export TAN_PORT=YES
 export TAN_NODE=${DATAINTERFACE}
-export DIM_DNS_NODE=cald07
+#export DIM_DNS_NODE=cald07
+export DIM_DNS_NODE=mona08
 DYNAMIC_OPTS=/group/online/dataflow/options/${PARTITION}
 export PYTHONPATH=${DYNAMIC_OPTS}:${GAUDIONLINEROOT}/python:${PYTHONPATH}
 

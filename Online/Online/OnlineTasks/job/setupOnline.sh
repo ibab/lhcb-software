@@ -46,7 +46,7 @@ if [[ ${ARCH} == "x86_64" ]]
      if test -z "${DEBUGGING}";
        then 
 	 #echo running normal sw;
-	 if test "`uname -r`" = "2.6.18-128.1.16.el5";
+	 if test "`uname -r`" = "2.6.18-164.2.1.el5";
 	    then 
 	       export CMTCONFIG=x86_64-slc5-gcc43-opt
 	    else
@@ -54,7 +54,7 @@ if [[ ${ARCH} == "x86_64" ]]
 	 fi      
        else 
 	 #echo running debug sw;
-	 if test "`uname -r`" = "2.6.18-128.1.16.el5";
+	 if test "`uname -r`" = "2.6.18-164.2.1.el5";
 	    then 
 	       export CMTCONFIG=x86_64-slc5-gcc43-dbg
 	    else 
@@ -75,7 +75,7 @@ fi
 # remove the args because they interfere with the cmt scripts
 export HOME=/home/$(/usr/bin/whoami)
 
-echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME
+echo ${UTGID} Running as $(/usr/bin/whoami) with DIM_DNS_NODE $DIM_DNS_NODE and home $HOME , cmtconfig $CMTCONFIG
 
 #
 #  MSF: All this is unnecessary. Just create setup in cmt directory using crsetup macro (see .bashrc)
@@ -115,7 +115,11 @@ if [[ ${CMTCONFIG} == "slc4_amd64_gcc34" ]]
      fi
 fi
 export LOGFIFO=/tmp/logGaudi.fifo
-
+## MSF: For debugging only:
+##export CMTCONFIG=x86_64-slc5-gcc43-dbg
+##export GAUDIONLINEROOT=/home/online/ONLINE/Online_v4r30/Online/GaudiOnline
+##export LD_LIBRARY_PATH=$GAUDIONLINEROOT/${CMTCONFIG}:${LD_LIBRARY_PATH}:$GAUDIONLINEROOT/${CMTCONFIG}
+##echo $LD_LIBRARY_PATH
 export gaudi_exe="$GAUDIONLINEROOT/$CMTCONFIG/Gaudi.exe $GAUDIONLINEROOT/$CMTCONFIG/libGaudiOnline.so OnlineTask -msgsvc=LHCb::FmcMessageSvc"  
 export HLTOPTS=${ONLINETASKSROOT}/hltopts
 export CLASS1_TASK="${gaudi_exe} -tasktype=LHCb::Class1Task -main=/group/online/dataflow/templates/options/Main.opts"
