@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v7r0p2 2009-11-16 ===================
+! 2009-11-16 - Patrick Koppenburg
+ - add some debug protections
+
 !========================== HltBase v7r0p1 2009-10-28 ===================
 ! 2009-10-25 - Gerhard Raven
  - input selections are now const

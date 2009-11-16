@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.cpp,v 1.57 2009-10-25 21:07:10 graven Exp $
+// $Id: HltAlgorithm.cpp,v 1.58 2009-11-16 08:45:00 pkoppenb Exp $
 // Include files 
 
 #include "Event/Particle.h"
@@ -9,7 +9,7 @@
 #include "boost/lambda/bind.hpp"
 #include "boost/foreach.hpp"
 
-namespace bl = boost::lambda;
+namespace bl = boost::lambda; 
 //-----------------------------------------------------------------------------
 // Implementation file for class : HltAlgorithm
 //
@@ -119,7 +119,8 @@ StatusCode HltAlgorithm::endExecute() {
   //TODO: add flushbacks here...
   size_t n = m_outputSelection->size();
   counter("#candidates accepted") += n ; 
-  if (n>=m_minNCandidates) m_outputSelection->setDecision(true); // for non-counting triggers, this must be done explicity by hand!!!
+  // for non-counting triggers, this must be done explicity by hand!!!
+  if (n>=m_minNCandidates) m_outputSelection->setDecision(true); 
   setDecision( m_outputSelection->decision() );
 
   if (produceHistos()) {
@@ -130,7 +131,7 @@ StatusCode HltAlgorithm::endExecute() {
       fill(m_outputHisto,m_outputSelection->size(),1.);
   }
   
-  debug() << " output candidates " << m_outputSelection->size() 
+  if (msgLevel(MSG::DEBUG)) debug() << " output candidates " << m_outputSelection->size() 
           << " decision " << m_outputSelection->decision() 
           << " filterpassed " << filterPassed() << endreq;
   return StatusCode::SUCCESS;
@@ -201,7 +202,7 @@ private:
 
 const Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) {
     Assert(!selname.empty()," retrieveSelection() no selection name");
-    debug() << " retrieveSelection " << selname << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " retrieveSelection " << selname << endreq;
     const Hlt::Selection* sel = dataSvc().selection(selname,this);
     if (sel == 0 ) {
       error() << " unknown selection " << selname << endreq;
@@ -212,12 +213,13 @@ const Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) 
                      cmp_by_id(*sel))==m_inputSelections.end() ) {
       m_inputSelections.push_back(sel);
       if (produceHistos()) {
-        Assert(m_inputHistos.find(sel->id()) == m_inputHistos.end(),"retrieveSelection() already input selection "+sel->id().str());
+        Assert(m_inputHistos.find(sel->id()) == m_inputHistos.end(),
+               "retrieveSelection() already input selection "+sel->id().str());
         m_inputHistos[sel->id()] = initializeHisto(sel->id().str());
       }
-      debug() << " Input selection " << sel->id() << endreq;
+      if (msgLevel(MSG::DEBUG)) debug() << " Input selection " << sel->id() << endreq;
     }
-    debug() << " retrieved selection " << sel->id() << endreq;    
+    if (msgLevel(MSG::DEBUG)) debug() << " retrieved selection " << sel->id() << endreq;    
     return *sel;
 }
 
@@ -225,11 +227,11 @@ const Hlt::Selection& HltAlgorithm::retrieveSelection(const stringKey& selname) 
 void HltAlgorithm::setOutputSelection(Hlt::Selection* sel) {
     m_outputSelection = sel;
     sel->addInputSelectionIDs( m_inputSelections.begin(), m_inputSelections.end() );
-    debug() << " Output selection " << sel->id() << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " Output selection " << sel->id() << endreq;
     StatusCode sc = dataSvc().addSelection(sel,this,false);
     if (sc.isFailure()) {
        throw GaudiException("Failed to add Selection",sel->id().str(),StatusCode::FAILURE);
     }
     if (produceHistos()) m_outputHisto = initializeHisto(sel->id().str());
-    debug() << " registered selection " << sel->id() << " type " << sel->classID() << endreq;
+    if (msgLevel(MSG::DEBUG)) debug() << " registered selection " << sel->id() << " type " << sel->classID() << endreq;
 }
