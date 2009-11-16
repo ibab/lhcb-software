@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.89 2009-11-12 18:30:30 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.90 2009-11-16 08:08:44 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -159,7 +159,7 @@ const LHCb::Particle::ConstVector& PhysDesktop::particles() const{
 const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const 
 {
   //
-  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
+  //  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
           1).ignore();
   return m_dva->primaryVertices();
 }
