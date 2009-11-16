@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.45 2009-11-16 11:52:14 ibelyaev Exp $ 
+$Id: release.notes,v 1.46 2009-11-16 11:53:13 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
@@ -12,6 +12,7 @@ $Id: release.notes,v 1.45 2009-11-16 11:52:14 ibelyaev Exp $
  - python/LoKiArrayfunctors/functions.py
 
      add ADOCA functor 
+     add AFUNV, ACUTV adapters 
 
  - cmt/requirements 
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.14 2009-05-04 17:35:51 ibelyaev Exp $ 
+# $Id: functions.py,v 1.15 2009-11-16 11:52:14 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -87,6 +87,8 @@ ACUTDOCA      = LoKi.AParticles.MaxDOCACut
 ACUTDOCACHI2  = LoKi.AParticles.MaxDOCAChi2Cut
 ## @see LoKi::Cuts::ADAMASS
 ADAMASS       = LoKi.AParticles.AbsDeltaMass 
+## @see LoKi::Cuts::ADOCA
+ADOCA         = LoKi.AParticles.DOCA
 ## @see LoKi::Cuts::ADOCACHI2
 ADOCACHI2     = LoKi.AParticles.MaxDOCAChi2
 ## @see LoKi::Cuts::ADOCACHI2CUT
@@ -205,6 +207,12 @@ AMINDOCA      = LoKi.AParticles.MinDOCA
 
 ## @see LoKi::Cuts::AALLSAMEBPV
 AALLSAMEBPV   = LoKi.AParticles.AllSameBestPV ()
+
+
+## @see LoKi::Cuts::ACUTV 
+ACUTV         = LoKi.AParticles.ACutV
+## @see LoKi::Cuts::AFUNV 
+AFunV         = LoKi.AParticles.AFunV
 
 
 ## functional part

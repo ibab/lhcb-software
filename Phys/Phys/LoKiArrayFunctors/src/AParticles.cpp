@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.11 2009-08-20 09:22:50 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.12 2009-11-16 11:52:15 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -1347,6 +1347,78 @@ LoKi::AParticles::AllSameBestPV::operator()
   // Return true if all have the same related PV
   return havePVs && (std::distance(pvkeys.begin(), enduniq) == 1);
 }
+// ============================================================================
+
+
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::AParticles::ACutV::ACutV
+( const LoKi::Types::CutVals& cut ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate () 
+  , m_cut ( cut ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::AParticles::ACutV::~ACutV(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::ACutV*
+LoKi::AParticles::ACutV::clone() const 
+{ return new LoKi::AParticles::ACutV(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::ACutV::result_type 
+LoKi::AParticles::ACutV::operator()
+  ( LoKi::AParticles::ACutV::argument a ) const 
+{
+  LHCb::Particle::ConstVector v ( a.begin() , a.end() ) ;
+  return m_cut ( v ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::AParticles::ACutV::fillStream ( std::ostream& s ) const 
+{ return s << " ACUTV( " << m_cut << " )" ; }
+
+
+// ============================================================================
+// constructor 
+// ============================================================================
+LoKi::AParticles::AFunV::AFunV
+( const LoKi::Types::FunVals& fun ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function () 
+  , m_fun ( fun ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::AParticles::AFunV::~AFunV(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::AParticles::AFunV*
+LoKi::AParticles::AFunV::clone() const 
+{ return new LoKi::AParticles::AFunV(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::AFunV::result_type 
+LoKi::AParticles::AFunV::operator()
+  ( LoKi::AParticles::AFunV::argument a ) const 
+{
+  LHCb::Particle::ConstVector v ( a.begin() , a.end() ) ;
+  return m_fun ( v ) ;
+}
+// ============================================================================
+// OPTIONAL: nice printout 
+// ============================================================================
+std::ostream& LoKi::AParticles::AFunV::fillStream ( std::ostream& s ) const 
+{ return s << " AFUNV( " << m_fun << " )" ; }
+// ============================================================================
 
 
 
