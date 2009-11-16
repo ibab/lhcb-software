@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.367 2009-11-16 09:44:35 graven Exp $ 
+! $Id: release.notes,v 1.368 2009-11-16 09:45:07 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -6,7 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 
-!========================== HltConf v5r2 2009-11-14 ===================
+!========================== HltConf v5r2 2009-11-16 ===================
 ! 2009-11-16 - Gerhard Raven
  - make sure postconfig action in HltConf is the _first_ one; not needed
    for HltConf itself, but it makes it easier for other users..
