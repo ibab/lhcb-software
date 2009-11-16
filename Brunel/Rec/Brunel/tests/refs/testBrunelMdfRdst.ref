@@ -68,8 +68,8 @@
 # WARNING: Using default tag MC09-20090402-vc-md100 for partition SIMCOND
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Brunel version v35r7
-                                          running on lxbuild156.cern.ch on Wed Nov 11 14:07:58 2009
+                                                   Welcome to Brunel version v35r8
+                                          running on lxbuild135.cern.ch on Mon Nov 16 19:33:49 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 StatusCodeSvc        INFO initialize
@@ -81,7 +81,7 @@ DetectorDataSvc   SUCCESS Detector description database: conddb:/lhcb.xml
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.17 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 TransportSvc         INFO Initialize the static pointer to DetDesc::IGeometryErrorSvc
 TransportSvc         INFO Recovery of geometry errors is  ENABLED
 BrunelSequencer      INFO Member list: ProcessPhase/Init, GaudiSequencer/PhysicsSeq, ProcessPhase/Output, with context 'Offline'
@@ -162,7 +162,7 @@ RecoTTSeq            INFO Member list: RawBankToSTClusterAlg/CreateTTClusters, R
 RecoITSeq            INFO Member list: RawBankToSTClusterAlg/CreateITClusters, RawBankToSTLiteClusterAlg/CreateITLiteClusters, with context 'Offline'
 RecoOTSeq            INFO Member list: , with context 'Offline'
 RecoTrSeq            INFO Member list: ProcessPhase/Track, with context 'Offline'
-Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackForwardFitSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackMatchFitSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackDownstreamFitSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackVeloTTFitSeq, GaudiSequencer/TrackPostFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
+Track                INFO Member list: GaudiSequencer/TrackForwardPatSeq, GaudiSequencer/TrackForwardFitSeq, GaudiSequencer/TrackSeedPatSeq, GaudiSequencer/TrackSeedFitSeq, GaudiSequencer/TrackMatchPatSeq, GaudiSequencer/TrackMatchFitSeq, GaudiSequencer/TrackDownstreamPatSeq, GaudiSequencer/TrackDownstreamFitSeq, GaudiSequencer/TrackVeloTTPatSeq, GaudiSequencer/TrackVeloTTFitSeq, GaudiSequencer/TrackSeedRefitSeq, GaudiSequencer/TrackPostFitSeq, GaudiSequencer/TrackVeloFitSeq, GaudiSequencer/TrackAddExtraInfoSeq, GaudiSequencer/TrackEraseExtraInformationSeq, with context 'Offline'
 TrackForwardPatSeq   INFO Member list: PatForward, with context 'Offline'
 ToolSvc.OTRawBa...   INFO  countsPerBX = 64
 ToolSvc.OTRawBa...   INFO  numberOfBX  = 3
@@ -180,11 +180,11 @@ ToolSvc.PatTTMa...   INFO Start generation of VeloTT deflection LUTs
 ToolSvc.PatTTMa...   INFO Generation of VeloTT deflection LUTs finished
 ToolSvc.TrackSt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 ToolSvc.TrackSt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
-FitForward.Fitt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitForward.Fitt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 ToolSvc.TrajOTP...   INFO Use drifttime           = 1
 ToolSvc.TrajOTP...   INFO Fit drifttime residuals = 0
 ToolSvc.TrajOTP...   INFO SkipDriftTimeZeroAmbiguity= 1
+FitForward.Fitt...   INFO Short distance extrapolator: TrackParabolicExtrapolator
+FitForward.Fitt...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
 FitForward.Fitter    INFO
 FitForward.Fitter    INFO ============ TrackMasterFitter Settings ===========
 FitForward.Fitter    INFO  Upstream fit
@@ -204,24 +204,24 @@ TrackSeedPatSeq      INFO Member list: Tf::Tsa::Seed/TsaSeed, Tf::Tsa::SeedTrack
 ToolSvc.TsaData...   INFO Max OT cluster size     = 5
 ToolSvc.TsaData...   INFO Max OT module occupancy = 0.4
 ToolSvc.TsaData...   INFO Max ST sector occupancy = 48
-TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeed, with context 'Offline'
-FitSeed.Fitter....   INFO Short distance extrapolator: TrackParabolicExtrapolator
-FitSeed.Fitter....   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
-FitSeed.Fitter       INFO
-FitSeed.Fitter       INFO ============ TrackMasterFitter Settings ===========
-FitSeed.Fitter       INFO  Upstream fit
-FitSeed.Fitter       INFO  Number of fit iterations: 3
-FitSeed.Fitter       INFO  Max 2 outliers removed with outliers at chi2 > 9
-FitSeed.Fitter       INFO  State z positions at:
-FitSeed.Fitter       INFO  first/last measurement, default reference positions
-FitSeed.Fitter       INFO ==================================================
-FitSeed              INFO
-FitSeed              INFO =========== FitSeed Settings ============
-FitSeed              INFO   Tracks input container   : Rec/Track/Seed
-FitSeed              INFO   Tracks output container  : Rec/Track/Seed
-FitSeed              INFO   Fitter name              : TrackMasterFitter/Fitter
-FitSeed              INFO ==================================================
-FitSeed              INFO
+TrackSeedFitSeq      INFO Member list: TrackStateInitAlg/InitSeedFit, TrackEventFitter/FitSeedForMatch, with context 'Offline'
+FitSeedForMatch...   INFO Short distance extrapolator: TrackParabolicExtrapolator
+FitSeedForMatch...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
+FitSeedForMatch...   INFO
+FitSeedForMatch...   INFO ============ TrackMasterFitter Settings ===========
+FitSeedForMatch...   INFO  Upstream fit
+FitSeedForMatch...   INFO  Number of fit iterations: 3
+FitSeedForMatch...   INFO  Max 2 outliers removed with outliers at chi2 > 9
+FitSeedForMatch...   INFO  State z positions at:
+FitSeedForMatch...   INFO  beam line, first/last measurement, default reference positions
+FitSeedForMatch...   INFO ==================================================
+FitSeedForMatch      INFO
+FitSeedForMatch      INFO =========== FitSeedForMatch Settings ============
+FitSeedForMatch      INFO   Tracks input container   : Rec/Track/Seed
+FitSeedForMatch      INFO   Tracks output container  : Rec/Track/Seed
+FitSeedForMatch      INFO   Fitter name              : TrackMasterFitter/Fitter
+FitSeedForMatch      INFO ==================================================
+FitSeedForMatch      INFO
 TrackMatchPatSeq     INFO Member list: TrackMatchVeloSeed/TrackMatch, with context 'Offline'
 ToolSvc.TrackHe...   INFO ExtrapolatorID=5
 TrackMatchFitSeq     INFO Member list: TrackStateInitAlg/InitMatchFit, TrackEventFitter/FitMatch, with context 'Offline'
@@ -305,6 +305,24 @@ FitVeloTT            INFO   Tracks output container  : Rec/Track/VeloTT
 FitVeloTT            INFO   Fitter name              : TrackMasterFitter/Fitter
 FitVeloTT            INFO ==================================================
 FitVeloTT            INFO
+TrackSeedRefitSeq    INFO Member list: TrackStateInitAlg/InitSeedRefit, TrackEventFitter/RefitSeed, with context 'Offline'
+RefitSeed.Fitte...   INFO Short distance extrapolator: TrackParabolicExtrapolator
+RefitSeed.Fitte...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
+RefitSeed.Fitter     INFO
+RefitSeed.Fitter     INFO ============ TrackMasterFitter Settings ===========
+RefitSeed.Fitter     INFO  Upstream fit
+RefitSeed.Fitter     INFO  Number of fit iterations: 3
+RefitSeed.Fitter     INFO  Max 2 outliers removed with outliers at chi2 > 9
+RefitSeed.Fitter     INFO  State z positions at:
+RefitSeed.Fitter     INFO  beam line, first/last measurement, default reference positions
+RefitSeed.Fitter     INFO ==================================================
+RefitSeed            INFO
+RefitSeed            INFO =========== RefitSeed Settings ============
+RefitSeed            INFO   Tracks input container   : Rec/Track/Seed
+RefitSeed            INFO   Tracks output container  : Rec/Track/Seed
+RefitSeed            INFO   Fitter name              : TrackMasterFitter/Fitter
+RefitSeed            INFO ==================================================
+RefitSeed            INFO
 TrackPostFitSeq      INFO Member list: TrackEventCloneKiller, with context 'Offline'
 TrackEventClone...   INFO
 TrackEventClone...   INFO ============ TrackEventCloneKiller Settings ===========
@@ -620,12 +638,9 @@ MoniMUONSeq          INFO Member list: MuonPIDChecker/MuonPIDMonitor, with conte
 MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of IsMuonLoose
 MuonPIDMonitor       INFO initialize:: ======> Monitor Performance of (binned+integrated) DLL
 MoniVELOSeq          INFO Member list: Velo::VeloClusterMonitor/VeloClusterMonitor, Velo::VeloTrackMonitor/VeloTrackMonitor, with context 'Offline'
-MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, with context 'Offline'
+MoniTrSeq            INFO Member list: TrackMonitor, TrackVertexMonitor, TrackFitMatchMonitor, TrackV0Monitor, TrackDiMuonMonitor, TrackAlignMonitor, TrackCaloMatchMonitor/TrackEcalMatchMonitor, TrackCaloMatchMonitor/TrackSpdMatchMonitor, TrackCaloMatchMonitor/TrackPrsMatchMonitor, with context 'Offline'
 ToolSvc.TrackMa...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 ToolSvc.TrackMa...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
-TrackEcalMatchM...   INFO CaloDet: center = (0,-0.19,12932.5) zoffset: -113.5 zsize:   432
-TrackSpdMatchMo...   INFO CaloDet: center = (0,0,12336.8) zoffset: 26.93 zsize:   15.5
-TrackPrsMatchMo...   INFO CaloDet: center = (0,0,12443.3) zoffset: -26.93 zsize:   15.5
 MoniOTSeq            INFO Member list: OTTrackMonitor, OTHitEfficiencyMonitor, with context 'Offline'
 ToolSvc.TrackIn...   INFO Short distance extrapolator: TrackParabolicExtrapolator
 ToolSvc.TrackIn...   INFO Long distance extrapolator: TrackRungeKuttaExtrapolator
@@ -642,6 +657,7 @@ CaloPacking          INFO Member list: PackCaloHypo/PackPhotons, PackCaloHypo/Pa
 WriteMDFSeq          INFO Member list: WritePackedDst/MdfPacker, LHCb::MDFWriter/MdfWriter, with context 'Offline'
 MdfPacker            INFO Write containers  '/Event/Rec/Header', '/Event/Rec/Status', '/Event/pRec/Track/Best', '/Event/pRec/Rich/PIDs', '/Event/pRec/Muon/MuonPID', '/Event/pRec/Calo/Electrons', '/Event/pRec/Calo/Photons', '/Event/pRec/Calo/MergedPi0s', '/Event/pRec/Calo/SplitPhotons', '/Event/pRec/ProtoP/Charged', '/Event/pRec/ProtoP/Neutrals', '/Event/pRec/Vertex/Primary', '/Event/pRec/Vertex/V0', '/Event/pRec/RawEvent',
 MdfWriter            INFO Initialize MDFWriter
+IODataManager        INFO Referring to dataset Brunel.mdf by its file ID:7403AEA7-DED2-DE11-813F-001E4F3D8360
 MdfWriter            INFO Received event request connection.
 EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEvtCnvSvc' , 'PoolRootKeyEvtCnvSvc' ]
 ApplicationMgr       INFO Application Manager Initialized successfully
@@ -677,8 +693,8 @@ FitForward           INFO   Fitting performance   :     0.00 %
 FitForward        SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
-FitSeed              INFO   Fitting performance   :     0.00 %
-FitSeed           SUCCESS Number of counters : 1
+FitSeedForMatch      INFO   Fitting performance   :     0.00 %
+FitSeedForMatch   SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitMatch             INFO   Fitting performance   :     0.00 %
@@ -691,6 +707,10 @@ FitDownstream     SUCCESS Number of counters : 1
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitVeloTT            INFO   Fitting performance   :     0.00 %
 FitVeloTT         SUCCESS Number of counters : 1
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
+RefitSeed            INFO   Fitting performance   :     0.00 %
+RefitSeed         SUCCESS Number of counters : 1
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
  | "nTracks"                                       |         0 |          0 |     0.0000 |     0.0000 | 1.7977e+308 |-1.7977e+308 |
 FitVelo              INFO   Fitting performance   :     0.00 %
@@ -795,6 +815,11 @@ MuonPIDMonitor       INFO ------------------------------------------------------
 VeloClusterMonitorSUCCESS Booked 14 Histogram(s) : 1D=11 2D=3
 VeloTrackMonitor  SUCCESS Booked 112 Histogram(s) : 1D=19 1DProf=93
 TrackVertexMonitorSUCCESS Booked 11 Histogram(s) : 1D=5 1DProf=6
+TrackAlignMonitor    INFO Number of elements in jacobian map: 0
+TrackAlignMonitor SUCCESS Booked 27 Histogram(s) : 1D=18 1DProf=9
+TrackEcalMatchM...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
+TrackSpdMatchMo...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
+TrackPrsMatchMo...SUCCESS Booked 14 Histogram(s) : 1D=6 1DProf=8
 OTTrackMonitor    SUCCESS Booked 59 Histogram(s) : 1D=43 2D=7 1DProf=9
 OTHitEfficiency...SUCCESS Booked 47 Histogram(s) : 2D=9 1DProf=38
 TTClusterMonitor  SUCCESS Booked 10 Histogram(s) : 1D=7 2D=3
@@ -822,7 +847,7 @@ ToolSvc.Offline...SUCCESS  #WARNINGS   = 1        Message = 'No pixels produced'
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.17 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.85 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -879,7 +904,7 @@ TimingAuditor.T...   INFO        TsaSeed                |     0.000 |     0.000 
 TimingAuditor.T...   INFO        TsaSeedTrackCnv        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackSeedFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        InitSeedFit            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
-TimingAuditor.T...   INFO        FitSeed                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        FitSeedForMatch        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackMatchPatSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TrackMatch             |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackMatchFitSeq        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -895,6 +920,9 @@ TimingAuditor.T...   INFO        PatVeloTT              |     0.000 |     0.000 
 TimingAuditor.T...   INFO       TrackVeloTTFitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        InitVeloTTFit          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        FitVeloTT              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO       TrackSeedRefitSeq       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        InitSeedRefit          |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO        RefitSeed              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackPostFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO        TrackEventCloneKiller  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO       TrackVeloFitSeq         |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -1076,6 +1104,7 @@ TimingAuditor.T...   INFO      TrackVertexMonitor       |     0.000 |     0.000 
 TimingAuditor.T...   INFO      TrackFitMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackV0Monitor           |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackDiMuonMonitor       |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO      TrackAlignMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackEcalMatchMonitor    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackSpdMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO      TrackPrsMatchMonitor     |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
