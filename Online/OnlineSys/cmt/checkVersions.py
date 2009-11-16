@@ -20,11 +20,8 @@ for arg in sys.argv:
 
 
 lines = os.popen('cmt show uses | grep -v "#" | grep "use "').readlines()
-<<<<<<< checkVersions.py
 curr_dir = os.popen('pwd').readlines()[0] ###os.getcwd()
-=======
-curr_dir = os.popen('pwd').readlines()[0]
->>>>>>> 1.5
+
 dir2 = curr_dir[0:curr_dir.rfind('/')]
 if with_versions: dir2 = dir2[0:dir2.rfind('/')-1]
 dir2 = dir2[0:dir2.rfind('/')+1]

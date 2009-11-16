@@ -6,7 +6,7 @@ branches cmt doc
 #=======================================================
 # Overrides from LHCB
 #=======================================================
-#use MDF               v3r20    DAQ
+use MDF               v3r21    DAQ
 # use DAQEvent          v7r11    Event
 #=======================================================
 # LHCb Online packages
@@ -16,16 +16,16 @@ branches cmt doc
 #macro CCPCHist_use "CCPCHist v2r6 Online" target-x86_64 ""
 #use $(CCPCHist_use)
 
-use Camera            v1r9     Online
+use Camera            v1r11    Online
 use CondDBServer      v1r2     Online
-use DIM               v19r2    Online
+use DIM               v19r8    Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
 use Gaucho            v6r17    Online
-use GaudiOnline       v2r34    Online
+use GaudiOnline       v2r35    Online
 use GaudiSerialize    v0r7     Online
-use GaudiUPI          v1r11    Online
+use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
 use HPDMonitor        v1r6     Online
 use HistDBPython      v1r4     Online
@@ -34,19 +34,19 @@ use MBMDump           v1r13    Online
 use OMAlib            v2r10    Online
 #use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r0     Online
-use OnlineBase        v1r1     Online
+use OnlineBase        v1r2     Online
 use OnlineKernel      v2r1     Online
 use OnlineTools       v1r2     Online
 use OnlineTasks       v1r27    Online
 use Presenter         v0r21    Online
 use PyDIM             v2r9     Online
 use RawBankSizes      v1r5     Online
-use ROMon             v1r18    Online
-use ROLogger          v0r16    Online
-use UPI               v1r16    Online
+use ROMon             v1r19    Online
+use ROLogger          v0r17    Online
+use UPI               v1r17    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer            v1r21    Online
+use Writer            v1r22    Online
 
 # Declare this as a container package
 apply_pattern container_package
