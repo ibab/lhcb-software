@@ -1,4 +1,4 @@
-// $Id: VeloOccupancyMonitor.cpp,v 1.8 2009-09-15 11:39:50 krinnert Exp $
+// $Id: VeloOccupancyMonitor.cpp,v 1.9 2009-11-16 13:10:39 krinnert Exp $
 // Include files 
 // -------------
 
@@ -266,7 +266,7 @@ void Velo::VeloOccupancyMonitor::veloClusters() {
 
   m_clusters = 0;
   if ( !exist<LHCb::VeloClusters>( m_clusterCont ) ) {
-    warning() << "No VeloClusters found for this event!" << endmsg;
+    info() << "No VeloClusters found for this event!" << endmsg;
   } else {
     m_clusters = get<LHCb::VeloClusters>( m_clusterCont );
 
@@ -286,7 +286,7 @@ void Velo::VeloOccupancyMonitor::getOdinBank() {
 
   m_odin = 0;
   if (!exist<LHCb::ODIN> (LHCb::ODINLocation::Default)) {
-    warning() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
+    info() << "No ODIN bank found. Histograms involving bunch IDs disabled."<< endmsg;
   } else {
     m_odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default);
   }
