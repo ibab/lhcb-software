@@ -1,4 +1,4 @@
-d$Id: release.notes,v 1.58 2009-11-13 12:08:59 pkoppenb Exp $
+d$Id: release.notes,v 1.59 2009-11-16 10:50:02 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,6 +6,9 @@ d$Id: release.notes,v 1.58 2009-11-13 12:08:59 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 
 !========================== Hlt2SharedParticles v2r6 2009-11-05 =============
+! 2009-11-16 - Patrick Koppenburg
+ - Revert to PV2D. More studies needed.
+
 ! 2009-11-09 - Patrick Koppenburg
  - GoodPions and Kaons : depend on PV3D
  - v2r6
