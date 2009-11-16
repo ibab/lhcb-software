@@ -86,7 +86,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         createdCounters = []
         histoThresholds = []
         histoMaxBins = []
-        veloBW = False
         for key, definition in counters.iteritems():
             # example 'CaloEt' : [LumiFromL0DU , True , 'Sum(Et)' , 500, 6000],
             (op, flag, inputDef, threshold, bins) = definition
@@ -95,7 +94,6 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence, self.getProp('EnableReco') ), { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
-                if key == 'RZVeloBW': veloBW=True
                 if debugOPL <= DEBUG:
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
@@ -120,7 +118,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                      , ModeOR = True
                      , ShortCircuit = False
                      ) )
-
+        lumiRecoSequence.Members.append(lumiRecoFilterSequence)
         # define histogrammers
         from Configurables import LumiHistoMaker, LumiHisto2dSPD
         HistoMembers=[]

@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.62 2009-11-13 19:45:41 graven Exp $
+! $Id: release.notes,v 1.63 2009-11-16 12:15:05 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+
+! 2009-11-16 - Jaap Panman
+ - correct tracking sequence in LumiLines for RZVeloBW
 
 !========================== Hlt1Lines v1r8 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
