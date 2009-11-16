@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v3r0 2009-11-16 =========================
 ! 2009-11-14 - Jaap Panman
  - Added explicit createODIN in Configuration.touchFSR()
    Temporary solution until incidentSvc reliable for FSR
