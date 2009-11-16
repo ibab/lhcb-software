@@ -6,6 +6,96 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r8>2009-11-16 LbcomSys v7r8</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r2
+
+- Packages modified: CaloAssociators v6r10, CaloTools v5r13, HltDAQ v1r1p1,
+    L0Calo v10r0, L0DU v9r0, STAlgorithms v3r10, STDAQ v3r20, STMonitors v2r0,
+    STTools v3r13, VeloAlgorithms v5r0, VeloDAQ v4r10
+
+- In CaloAssociators v6r10
+  . MCTruthOnDemand.py :
+	  o add explicitely the caloDigit creation in CaloDigit2MC sequence
+    o fix typo
+  . CaloAssociatorConf: new configurable to access/build MCTruth for Calo objects
+  . Re-organize CaloAssociators.opts
+
+- In CaloTools v5r13
+  . L0Calo2CaloTool : 
+    o bugfix - make storage of all created clusters on TES the only supported
+      behaviour (therefore remove the 'DuplicateClustersOnTES' property)
+    o use CaloFunctors::neighbours() instead of look_neig()
+
+- In HltDAQ v1r1p1
+  . In HltRoutingBitsWriter, publish counters 
+
+- In L0Calo v10r0
+  . requirements: use new base package L0/L0Base
+  . L0CaloAlg, L0CaloCandidatesFromRaw: use new structure (common 
+    options amongst all L0 packages, defined in L0Base)
+  . L0CaloCandidatesFromRawBank: do not write candidates in TES in the tool
+    but move it outside
+  . L0CaloCompare: do not compare during the IDLEs
+  . L0Candidate: add creation from L0CaloCandidate
+
+- In L0DU v9r0
+  . Fix options to use new syntax of L0Calo options:
+	  o options/Boole.opts
+    o options/L0EmulatorSeq.opts
+    o options/L0Sequence.opts
+    o options/ReplaceL0DUBanksSeq.opts
+
+- In STAlgorithms v3r10
+  . Add algorithm that checks which strips are alive
+  . Add algorithm to write noise conditions
+
+- In STDAQ v3r20
+  . Minimize messages about lost banks 
+  . Added method to get source ID from TELL1 number to readout tool.
+  . RawBankToSTClusterAlg: Adopt changes in STKernel, STTell1Board::ADCToOffline.
+    Also, the requirement on whether the interstrip fraction was rounded up to
+    one, now depends on the interstrip stored in the raw buffer, and on a loose
+    requirement on the re-calculated interstrip fraction.
+
+- In STMonitors v2r0
+  . STNZSMonitor :
+    o Now uses ISTNoiseCalculationTool to calculate noise
+    o Add plots of pedestals
+    o Fix stupid bug with uninitalised variable
+  . Fix binning of 2d histograms for ADCs vs TELL1
+  . Add flags to only makes noise plots for certain TELL
+  . Book histograms in STErrorMonitor for online monitoring.
+  . Change noise plots to profile histograms; better for the history mode in the 
+    online monitoring.
+  . Add algorithm (STNoiseCalculation) to calculate noise in Tool.
+  . Modified the binning of some histograms in the STTAEClusterMonitor
+  . Add new algorithm STPulseMonitor. It monitors the pulse shape as a function
+    of the spill, using NZS+TAE data.
+
+- In STTools v3r13
+  . Add tool to select ladders 1 and 7 in IT for alignment
+  . Add implementations of ISTNoiseCalculationTool:
+    o Re-implementation of Nicola Chiapolini's methods that were in STNZSMonitors
+    o STNoiseCalculationToolBase: base class to provide common data accessors.
+    o STNoiseCalculcationTool: 
+      calculates noise from using ADCs from input container.
+    o STCMSNoiseCalculationTool: 
+      calculates noise after CMS using different techniques for CMS.
+
+- In VeloAlgorithms v5r0
+  . VeloTell1DataProcessor: add new methods to reorder strips
+  . Add helper method to search for sector shift - useful during strip reordering
+
+- In VeloDAQ v4r10
+  . DecodeVeloRawBuffer.cpp: Stop printing by default warnings when duplicate
+    cluster has been found. This is a known problem with Velo Tell1 firmware
+  . DecodePileUpData:
+    o bug fix: switched to unsigned int
+    o bug fix: there were some StatusCode FAILURE resulting in a crash when the
+      Event was not retreived from the right location
+    o Added a property to disable the NZS banks decoding
+
+
 </PRE><H1><A NAME=v7r7>2009-10-21 LbcomSys v7r7</A></H1><PRE>
 This version uses Gaudi v21r5 and LHCb v28r1
 
