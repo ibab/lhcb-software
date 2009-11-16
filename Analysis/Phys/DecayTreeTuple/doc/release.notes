@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-16 - Juan Palacios
+ - src/TupleToolTagging.cpp
+  . Remove unused variables.
+
 ! 2009-11-12 - Juan Palacios
  - TupleToolGeometry.cpp
  - TupleToolGeometry.h
