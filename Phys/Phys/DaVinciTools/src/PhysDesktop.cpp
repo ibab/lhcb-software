@@ -1,4 +1,4 @@
-// $Id: PhysDesktop.cpp,v 1.90 2009-11-16 08:08:44 jpalac Exp $
+// $Id: PhysDesktop.cpp,v 1.91 2009-11-16 09:47:04 jpalac Exp $
 // from Gaudi
 #include "GaudiKernel/DeclareFactoryEntries.h"
 //#include "GaudiKernel/GaudiException.h"
@@ -160,7 +160,7 @@ const LHCb::RecVertex::Container* PhysDesktop::primaryVertices() const
 {
   //
   //  Warning("IPhysDesktop::primaryVertices() obsolete. Use DVAlgotirhm::primaryVertices() directly. Getting PVs from DVAlgorithm",
-          1).ignore();
+  //          1).ignore();
   return m_dva->primaryVertices();
 }
 //=============================================================================
