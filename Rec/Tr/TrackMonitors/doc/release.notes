@@ -6,6 +6,9 @@
 
 !============================ TrackMonitors v1r15 2009-11-16 =================
 =======
+! 2009-11-16 - Wouter Hulsbergen
+ - Fix for bug in TrackAlignMonitor causing the warning
+
 ! 2009-11-16 - Rob Lambert
  - Fix for TrackAlignMonitor warning on slc5
 
