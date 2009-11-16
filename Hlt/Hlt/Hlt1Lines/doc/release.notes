@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.63 2009-11-16 12:15:05 panmanj Exp $
+! $Id: release.notes,v 1.64 2009-11-16 14:53:34 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,10 +6,10 @@
 ! -----------------------------------------------------------------------------
 
 
+!========================== Hlt1Lines v1r8 2009-11-16 ===================
 ! 2009-11-16 - Jaap Panman
  - correct tracking sequence in LumiLines for RZVeloBW
 
-!========================== Hlt1Lines v1r8 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
  - add explicit L0DU decoding for lumi
  - rename/replace NonRandomODIN and RandomODIN with ODINPhysics and
