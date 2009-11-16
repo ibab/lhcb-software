@@ -1,5 +1,5 @@
 package Gaucho
-version v6r18
+version v6r19
 
 branches Gaucho src cmt doc
 
