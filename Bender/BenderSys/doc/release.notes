@@ -1,11 +1,23 @@
 <PRE>
-! $Id: release.notes,v 1.24 2009-09-13 13:54:12 ibelyaev Exp $ 
+! $Id: release.notes,v 1.25 2009-11-16 16:40:36 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 </PRE>
+
+<H1>
+<A NAME=v12r4>2009-11-16 Bender v12r4 based on the DaVinci v24r4 </A>
+</H1>	
+
+<PRE>		
+This version is *almost* identical to the previous versions in v12 family,
+but it is based on the most fresh version of DaVinci v24r4.
+Also it is updated for new DaVinci configurable.
+Proper "at-exist" fix is implemented in Benedr.Fixes
+</PRE>
+
 
 <H1>
 <A NAME=v12r3>2009-09-13 Bender v12r3 based on the DaVinci v24rr2p1 </A>
