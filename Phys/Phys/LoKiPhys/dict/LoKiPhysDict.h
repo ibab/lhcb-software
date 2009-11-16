@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.22 2009-06-28 18:24:13 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.23 2009-11-16 11:54:27 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -88,9 +88,9 @@ namespace LoKi
     Size<const LHCb::VertexBase*>::fillStream
     ( std::ostream& s ) const { return s << "VSIZE" ; }
     // ========================================================================
-  } // end of namespace LoKi::Functors 
+  } //                                          end of namespace LoKi::Functors 
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi 
 {

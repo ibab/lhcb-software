@@ -1,9 +1,22 @@
-! $Id: release.notes,v 1.116 2009-10-16 14:09:50 cattanem Exp $ 
+! $Id: release.notes,v 1.117 2009-11-16 11:57:24 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-16 - Vanya Belyaev
+
+ - add Phys/ATypes.h from LoKiArrayFunctors package 
+
+ - add adapetrs:
+
+     P(FUN/CUT)(A/V) 
+
+ - cmt/requirements 
+  
+     version increment to v8r11 
+   
 
 ! ========================== LoKiPhys v8r10 2009-10-16 ========================
 ! 2009-10-02 - Vanya BELYAEV

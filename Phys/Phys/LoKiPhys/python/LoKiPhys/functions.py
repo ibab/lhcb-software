@@ -757,11 +757,21 @@ SOURCEDESKTOP  = LoKi.Particles.SourceDesktop
 VSOURCE        = LoKi.Vertices.SourceTES
 VSOURCEDESKTOP = LoKi.Vertices.SourceDesktop
 
+## adapters
+## @see LoKi::Cuts::PCUTA 
+PCUTA   = LoKi.Particles.PCutA
+## @see LoKi::Cuts::PCUTV
+PCUTV   = LoKi.Particles.PCutV
+## @see LoKi::Cuts::PFUNA 
+PFUNA   = LoKi.Particles.PCutA
+## @see LoKi::Cuts::PFUNV
+PFUNV   = LoKi.Particles.PCutV
 
 ## Legacy stuff
 BPVVDS_LEGACY = LoKi.Legacy.DistanceSignificanceWithBestPV () 
 TRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPt
 BPVTRGPOINTINGWPT = LoKi.Legacy.TrgPointingScoreWithPtWithBestPV ()
+
 
 
 # =============================================================================

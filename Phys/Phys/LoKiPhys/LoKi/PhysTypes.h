@@ -1,4 +1,4 @@
-// $Id: PhysTypes.h,v 1.10 2008-03-30 13:43:36 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.11 2009-11-16 11:54:26 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1
@@ -23,6 +23,7 @@ namespace LoKi
    */
   namespace  PhysTypes 
   {
+    // ========================================================================
     /// type of 'cuts' for LHCb::Particle       (interface)
     typedef LoKi::BasicFunctors<const LHCb::Particle*>::Predicate Cuts  ;
     /// type of 'functions' for LHCb::Particle  (interface)
@@ -40,23 +41,29 @@ namespace LoKi
     /// type of 'functions' for LHCb::Vertex    (assignable)
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::FunctionFromFunction   VFun ;
     //
-    
+    // ========================================================================    
     // functional types for LHCb::Particle: 
-    
+    // ========================================================================    
+    //
     // type of "map"  for LHCb::Particle (interface)
-    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Map       Maps    ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Map       Maps     ;
     // type of "map"  for LHCb::Particle (assignable)
-    typedef LoKi::Assignable<Maps>::Type                          Map     ;
+    typedef LoKi::Assignable<Maps>::Type                          Map      ;
     
     // type of "pipe"  for LHCb::Particle (interface)
-    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Pipe      Pipes   ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::Pipe      Pipes    ;
     // type of "pipe"  for LHCb::Particle (assignable)
-    typedef LoKi::Assignable<Pipes>::Type                         Pipe    ; 
+    typedef LoKi::Assignable<Pipes>::Type                         Pipe     ; 
     
     // type of "fun-val"  for LHCb::Particle (interface)
-    typedef LoKi::BasicFunctors<const LHCb::Particle*>::FunVal    FunVals ;
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::FunVal    FunVals  ;
     // type of "fun-val"  for LHCb::Particle (assignable)
-    typedef LoKi::Assignable<FunVals>::Type                       FunVal  ; 
+    typedef LoKi::Assignable<FunVals>::Type                       FunVal   ; 
+
+    // type of "fun-val"  for LHCb::Particle (interface)
+    typedef LoKi::BasicFunctors<const LHCb::Particle*>::CutVal    CutVals  ;
+    // type of "fun-val"  for LHCb::Particle (assignable)
+    typedef LoKi::Assignable<CutVals>::Type                       CutVal   ; 
     
     // type of "element"  for LHCb::Particle (interface)
     typedef LoKi::BasicFunctors<const LHCb::Particle*>::Element   Elements ;
@@ -67,9 +74,11 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::Particle*>::Source    Sources  ;
     // type of "source"  for LHCb::Particle (assignable)
     typedef LoKi::Assignable<Sources>::Type                       Source   ;
-
+    //
+    // ========================================================================
     // functional types for LHCb::VertexBase
-    
+    // ========================================================================
+    //
     // type of "map"  for LHCb::VertexBase (interface)
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Map     VMaps    ;
     // type of "map"  for LHCb::VertexBase (assignable)
@@ -94,11 +103,12 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Source  VSources  ;
     // type of "source"  for Particles (assignable)
     typedef LoKi::Assignable<VSources>::Type                      VSource   ;
-
-
-  } // end of namespace LoKi::PhysTypes
+    // ========================================================================
+  } //                                         end of namespace LoKi::PhysTypes
+  // ==========================================================================
   namespace Types 
   {    
+    // ========================================================================
     /// type of 'cuts' for LHCb::Particle        (interface)
     typedef LoKi::PhysTypes::Cuts                               Cuts  ;
     /// type of 'functions' for LHCb::Particle   (interface)
@@ -116,9 +126,10 @@ namespace LoKi
     /// type of 'functions' for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VFun                               VFun  ;  
     //
-
+    // ========================================================================
     // functional  types for LHCb::Particle 
-
+    // ========================================================================
+    //
     // type for "map" for LHCb::Particle (interface)
     typedef LoKi::PhysTypes::Maps                               Maps      ;
     // type for "map" for LHCb::Particle (assignable)
@@ -131,6 +142,10 @@ namespace LoKi
     typedef LoKi::PhysTypes::FunVals                            FunVals   ;
     // type for "fun-val" for LHCb::Particle (assignable)
     typedef LoKi::PhysTypes::FunVal                             FunVal    ;
+    // type for "cut-val" for LHCb::Particle (interface)
+    typedef LoKi::PhysTypes::FunVals                            CutVals   ;
+    // type for "cut-val" for LHCb::Particle (assignable)
+    typedef LoKi::PhysTypes::FunVal                             CutVal    ;
     // type for "element" for LHCb::Particle (interface)
     typedef LoKi::PhysTypes::Elements                           Elements  ;
     // type for "element" for LHCb::Particle (assignable)
@@ -139,9 +154,11 @@ namespace LoKi
     typedef LoKi::PhysTypes::Sources                            Sources   ;
     // type for "source" for LHCb::Particle (assignable)
     typedef LoKi::PhysTypes::Source                             Source    ;
-
+    //
+    // ========================================================================
     // functional  types for LHcb::VertexBase 
-
+    // ========================================================================
+    //
     // type for "map" for LHCb::VertexBase (interface)
     typedef LoKi::PhysTypes::VMaps                              VMaps     ;
     // type for "map" for LHCb::VertexBase (assignable)
@@ -162,9 +179,10 @@ namespace LoKi
     typedef LoKi::PhysTypes::VSources                           VSources  ;
     // type for "source" for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VSource                            VSource   ;
-
-  }  // end of namespace LoKi::Types 
-} // end of namespace LoKi
+    // ========================================================================
+  }  //                                            end of namespace LoKi::Types 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 namespace LoKi 
 {
@@ -183,7 +201,7 @@ namespace LoKi
   Constant<const LHCb::VertexBase*,bool>::fillStream ( std::ostream& s ) const 
   { return s << ( this->m_value ? "VALL" : "VNONE" ) ; }
   // ==========================================================================  
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================
