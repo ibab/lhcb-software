@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.486 2009-11-16 10:50:53 pkoppenb Exp $
+! $Id: release.notes,v 1.487 2009-11-16 15:53:43 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v19r4 2009-11-16 ===================
+
+! 2009-11-16 - Juan PALACIOS
+ - src/PhysDesktop.h
+  . Remove PhysDesktop::imposeoutputLocation
 
 ! 2009-11-16 - Patrick Koppenburg
  - Revert ot PV2D in OnOfflineTool. More studies needed.
