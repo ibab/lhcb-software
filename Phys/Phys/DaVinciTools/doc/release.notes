@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.484 2009-11-11 19:22:04 pkoppenb Exp $
+! $Id: release.notes,v 1.485 2009-11-16 08:08:52 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-11 - Juan Palacios
+ - src/PhysDesktop.cpp
+  . Temporarilly remove primaryVertices warnimg.
 
 ! 2009-11-11 - Patrick Koppenburg
  - CheckSelResults : Return false when SelResults container is not there.
