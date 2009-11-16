@@ -139,6 +139,9 @@ This version uses Gaudi v21r6 and LCG_57a
   . Rename locations of HLT vertices to what is actually used. Now
        Velo2D is Hlt/Vertex/PV2D
        Velo3D is Hlt/Vertex/PV3D
+  . Disable clearing of CALO hypos in ProtoParticle various removeCaloXXXInfo()
+    methods, since this incorrectly removes *all* hypos, not just those
+    associated with the given technique.
 
 - In TrackEvent v5r2
   . Replace vector by range for nodes in Track
