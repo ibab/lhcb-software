@@ -255,6 +255,12 @@
   <Connection name="storestrm02-d1"/>
 </ConnectionList>
 
+<ConnectionList name="StorageWriters">
+  <Connection name="store01-d1"/>
+  <Connection name="store02-d1"/>
+  <Connection name="store03-d1"/>
+</ConnectionList>
+
 <NodeType name="DefaultNode">
   <TaskList name="FMC"/>
 </NodeType>
@@ -350,6 +356,7 @@
   <TaskList name="StorageWorker"/>
   <ConnectionList name="Standard"/>
   <ConnectionList name="StorageWorker"/>
+  <ConnectionList name="StorageWriter"/>
 </NodeType>
 
 <NodeType name="PublisherNode">
