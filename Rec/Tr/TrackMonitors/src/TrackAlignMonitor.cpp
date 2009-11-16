@@ -214,11 +214,11 @@ StatusCode TrackAlignMonitor::execute()
   const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
 
   //fix by RWL to get rid of stupid nightly warnings about bracketing. 16/11/2009
-  BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
-    if( (track->hasT() && track->hasVelo() ) ||
-        ( track->checkFlag(LHCb::Track::Backward ) &&
-          (track->chi2PerDoF()< m_maxTrackChi2PerDoF) ) 
-        ) {
+  BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) {
+    if( ( (track->hasT() && track->hasVelo() ) ||
+	  track->checkFlag(LHCb::Track::Backward))  &&
+	(track->chi2PerDoF()< m_maxTrackChi2PerDoF)
+	) {
       BOOST_FOREACH( const LHCb::Node* node, track->nodes() ) {
         if( node->type() == LHCb::Node::HitOnTrack ) {
           const LHCb::Measurement& meas = node->measurement() ;
@@ -241,10 +241,11 @@ StatusCode TrackAlignMonitor::execute()
             m_it->fill( itUniqueID(id.stID()), *node, deriv ) ;
           } else if(id.isTT() ) {
             m_tt->fill( ttUniqueID(id.stID()), *node, deriv ) ;
-          } ;
+          }
         }
       }
     }
+  }
   return StatusCode::SUCCESS ;
 }
 
