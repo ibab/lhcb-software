@@ -3,7 +3,14 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
-!=========================  VeloDAQ v4r10 2009-11-13 ======================
+!=========================  VeloDAQ v4r10 2009-11-16 ======================
+! 2009-11-16 - Marco Cattaneo
+ - In DecodeVeloRawBuffer.cpp:
+   . Redo previous fix to stop printing any warnings by default. If DEBUG, ten
+     warnings are printed
+   . Protect a debug in the event loop with test on MsgLevel(MSG::DEBUG)
+ - Replace endreq by endmsg
+
 ! 2009-11-12 - Tomasz Szumlak
  - change the type of message that is issued after duplicate cluster has
    been found - this is a know problem with Velo Tell1 firmware, from now

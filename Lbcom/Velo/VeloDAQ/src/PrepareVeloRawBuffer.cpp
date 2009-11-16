@@ -1,4 +1,4 @@
-// $Id: PrepareVeloRawBuffer.cpp,v 1.25 2007-09-19 20:43:53 krinnert Exp $
+// $Id: PrepareVeloRawBuffer.cpp,v 1.26 2009-11-16 07:05:16 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -57,7 +57,7 @@ StatusCode PrepareVeloRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug() << "==> Initialise" << endreq;
+  debug() << "==> Initialise" << endmsg;
 
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
@@ -93,14 +93,13 @@ StatusCode PrepareVeloRawBuffer::execute() {
   bool isDebug   = msgLevel( MSG::DEBUG );
 
 
-  if (isDebug) debug() << "==> Execute" << endreq;
+  if (isDebug) debug() << "==> Execute" << endmsg;
 
   // Get the input container
   // Get the InternalVeloClusters from their default location 
   const LHCb::InternalVeloClusters* clusters = 0;
   if(!exist<LHCb::InternalVeloClusters>(m_clusterLoc)){
-    error()<< " ==> There are no InternalVeloClusters in TES! " <<endmsg;
-    return StatusCode::FAILURE;
+    return Error( " ==> There are no InternalVeloClusters in TES! " );
   } else {
     clusters=get<LHCb::InternalVeloClusters>(m_clusterLoc);
   }
@@ -149,7 +148,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
       storeBank(m_sensorNumbers[sensorIndex],lastOnSensor, lastOnSensor,
           rawEvent); 
       if (isDebug) debug() << "Added empty bank for sensor " 
-        << m_sensorNumbers[sensorIndex] << endreq;
+        << m_sensorNumbers[sensorIndex] << endmsg;
       sensorIndex++; // move to next on list, try again
     }
 
@@ -170,7 +169,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
     storeBank(m_sensorNumbers[sensorIndex],lastOnSensor, lastOnSensor,
         rawEvent); 
     if (isDebug) debug() << "Added empty bank for sensor " 
-      << m_sensorNumbers[sensorIndex] << endreq;
+      << m_sensorNumbers[sensorIndex] << endmsg;
     sensorIndex++; // move to next on list, try again
   }
 
@@ -182,7 +181,7 @@ StatusCode PrepareVeloRawBuffer::execute() {
 //=============================================================================
 StatusCode PrepareVeloRawBuffer::finalize() {
 
-  debug() << "==> Finalise" << endreq;
+  debug() << "==> Finalise" << endmsg;
 
   return StatusCode::SUCCESS;
 };

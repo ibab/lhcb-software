@@ -1,4 +1,4 @@
-// $Id: DecodeVeloRawBuffer.cpp,v 1.18 2009-11-12 18:14:59 szumlat Exp $
+// $Id: DecodeVeloRawBuffer.cpp,v 1.19 2009-11-16 07:05:16 cattanem Exp $
 
 #include "GaudiKernel/AlgFactory.h"
 
@@ -61,7 +61,7 @@ StatusCode DecodeVeloRawBuffer::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
-  debug () << "==> Initialise" << endreq;
+  debug () << "==> Initialise" << endmsg;
 
   // check whether enforced bank version is supported
   if(m_forcedBankVersion) {
@@ -91,8 +91,8 @@ StatusCode DecodeVeloRawBuffer::execute() {
 
   // fetch raw bank in any case
   if (!exist<LHCb::RawEvent>(m_rawEventLocation) ) {
-    debug() << "Raw Event not found in " << m_rawEventLocation
-	    << endmsg;
+    if( msgLevel(MSG::DEBUG) )
+      debug() << "Raw Event not found in " << m_rawEventLocation << endmsg;
     createEmptyBanks();
     return StatusCode::SUCCESS;
   }
@@ -122,7 +122,7 @@ StatusCode DecodeVeloRawBuffer::execute() {
 //=============================================================================
 StatusCode DecodeVeloRawBuffer::finalize() {
 
-  debug () << "==> Finalise" << endreq;
+  debug () << "==> Finalise" << endmsg;
 
   return StatusCode::SUCCESS;
 };
@@ -207,8 +207,9 @@ StatusCode DecodeVeloRawBuffer::decodeToVeloClusters(const std::vector<LHCb::Raw
         VeloDAQ::decodeRawBankToClustersV3(rawBank,sensor,m_assumeChipChannelsInRawBuffer,clusters,byteCount,errorMsg);
         if ( !errorMsg.empty() ) {
           //error() << errorMsg << endmsg;
-          StatusCode cluStat=Warning(errorMsg, StatusCode::SUCCESS);
-          cluStat.ignore();
+          unsigned int msgCount = 0;
+          if ( msgLevel(MSG::DEBUG) ) msgCount = 10;
+          Warning(errorMsg, StatusCode::SUCCESS, msgCount).ignore();
         }
         break;
       default: // bank version is not supported
