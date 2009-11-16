@@ -6,10 +6,13 @@ ApplicationMgr.Runable              = "LHCb::MEPHolderSvc/Runable";
 ApplicationMgr.ExtSvc              += { "IncidentSvc", "LHCb::MEPManager/MEPManager" };
 EmptyEventLoop.Wait                 = 3;
 MEPManager.PartitionID              = @OnlineEnv.PartitionID;
-MEPManager.Buffers                  = { "MEP" };
-//MEPManager.MapUnusedBuffers         = false;
+MEPManager.Buffers                  = { "MEP", "SEND" };
+//MEPManager.MapUnusedBuffers       = false;
+Runable.HandleErrors                = 2;
+Runable.RoutingBits                 = 1024; // 0x400
+Runable.ErrorBuffer                 = "SEND";
 Runable.Requirements                = {
-"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=ONE;Frequency=PERC;Perc=101.0"
+"EvType=1;TriggerMask=0xffffffff,0xffffffff,0xffffffff,0xffffffff;VetoMask=0,0,0,0;MaskType=ANY;UserType=VIP;Frequency=PERC;Perc=101.0"
 };
 HistogramPersistencySvc.OutputLevel  = 5;
 HistogramPersistencySvc.Warnings = false;
