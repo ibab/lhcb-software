@@ -27,26 +27,33 @@ It applies some last-moment (version-dependent) fixes
 # =============================================================================
 __author__  = 'Vanya BELYAEV ibelyaev@physics.syr.edu'
 # =============================================================================
-__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $' 
+__version__ = ' CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $' 
 # =============================================================================
+    
+## "at-exit action 
+def _bender_at_exit_ () :
+    """
+    
+    At-Exit action
+    
+    """
+
+    print '*'*80
+    print 'Bender.Fixes:  custom "atexit" handler is being invoked'
+    print '*'*80
+    
+    from GaudiPython.Bindings import AppMgr
+    g = AppMgr()
+    g.exit()
+
+    print '*'*80
+    print 'Bender.Fixes:  custom "atexit" handler has been invoked'
+    print '*'*80
 
 
+import atexit
 
-## from LoKiAlgo.decorators    import Algo   as _Algo
-## from LoKiAlgoMC.decorators  import AlgoMC as _AlgoMC
-## from GaudiPython.GaudiAlgs  import _start_
-## from GaudiPython.GaudiAlgs  import _stop_
-
-## _Algo   .start = _start_
-## _AlgoMC .start = _start_
-## _Algo   .stop  = _stop_
-## _AlgoMC .stop  = _stop_
-
-
-## print __name__ + ': LoKi.Algo*.start '
-## print __name__ + ': LoKi.Algo*.stop  '
-
-
+atexit.register( _bender_at_exit_ ) 
 
 
 # =============================================================================
