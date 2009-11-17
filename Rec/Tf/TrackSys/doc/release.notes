@@ -4,6 +4,9 @@
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
 
+! 2009-11-17 - Wouter Hulsbergen
+ - Added option to turn off material corrections in track fit
+
 !============================ TrackSys v4r27 2009-11-16 ======================
 ! 2009-11-16 - Rob Lambert
  - Kostyantyn Holubyev extra changes in RecoTracking.py
