@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.275 2009-11-17 08:12:50 pkoppenb Exp $
+! $Id: release.notes,v 1.276 2009-11-17 14:37:59 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r23 2009-11-17 ==================
 
 ! 2009-11-17 - Patrick Koppenburg
  - Correct two warnings
