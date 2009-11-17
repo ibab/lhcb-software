@@ -8,6 +8,7 @@
 
 // local
 #include "MuonIDAlg.h"
+#include "TF1.h"
 
 //boost
 #include <boost/assign/list_of.hpp>
@@ -75,6 +76,11 @@
 
 // Declaration of the Algorithm Factory
 DECLARE_ALGORITHM_FACTORY( MuonIDAlg );
+
+  double land2(Double_t *x, Double_t *par);
+  
+  double land(Double_t *x, Double_t *par);
+
 
 //=============================================================================
 // Standard constructor, initializes variables
@@ -1466,23 +1472,11 @@ double MuonIDAlg::calc_ProbMu(const double& dist0, const double *parMu){
 // date:    10/5/09
 //=====================================================================
   
-  double x = m_x;     // x-width for the integral
-  int nMax = m_nMax;   // number of steps
-  
-  double landau1 = 0;
-  double landau2 = 0;
-  double landau = 0;
   double ProbMu=0;
+  TF1 * myF = new TF1("myF",land2,0,m_x*m_nMax,5);
+  myF->SetParameters(parMu[0],parMu[1],parMu[2],parMu[3],parMu[4]);
+  ProbMu = myF->Integral(0,dist0);
 
-  for (Int_t i=0;i<nMax;i++){ 
-    double dist = x*Float_t(i);
-    if (dist<dist0){
-      landau1 = TMath::Landau(dist,parMu[0],parMu[1]);
-      landau2 = TMath::Landau(dist,parMu[2],parMu[3]);  
-      landau = (landau1 + parMu[4]*landau2);
-      ProbMu = ProbMu+x*landau;
-    } 
-  }
   if(parMu[5]>0){
     return ProbMu = ProbMu/parMu[5];  
   }else{
@@ -1500,18 +1494,11 @@ double MuonIDAlg::calc_ProbNonMu(const double& dist0, const double *parNonMu){
 // date:    10/5/09
 //=====================================================================
 
-  float x = (float)(m_x);     // x-width for the integral
-  int nMax = m_nMax;   // number of steps  
-  double landau = 0;
   double Prob=0;
+  TF1 * myF = new TF1("myF",land,0,m_x*m_nMax,2);
+  myF->SetParameters(parNonMu[0],parNonMu[1]);
+  Prob = myF->Integral(0,dist0);
 
-  for (Int_t i=0;i<nMax;i++){ 
-    double dist = x*Float_t(i);
-    if (dist<dist0){
-      landau = TMath::Landau(dist,parNonMu[0],parNonMu[1]);
-      Prob = Prob+x*landau;
-    } 
-  }
   if(parNonMu[2]>0){
     if (msgLevel(MSG::DEBUG) ) debug() << "probnmu, parNonMu[2] : "<< Prob <<","<< parNonMu[2] << endmsg;
     return Prob = Prob/parNonMu[2];  
@@ -1697,18 +1684,11 @@ double MuonIDAlg::calcNorm(double *par){
 //=====================================================================
   
   double Norm = 0.;
-  double landau1 = 0;
-  double landau2 = 0;
-  double landau = 0;
 
-  
-  for (Int_t i=0;i<m_nMax;i++){ 
-    double dist = m_x*(double)i;
-    landau1 = TMath::Landau(dist,par[0],par[1]);
-    landau2 = TMath::Landau(dist,par[2],par[3]);  
-    landau = (landau1 + par[4]*landau2);
-    Norm = Norm+m_x*landau;
-  }
+  TF1 * myF = new TF1("myF",land2,0,m_x*m_nMax,5);
+  myF->SetParameters(par[0],par[1],par[2],par[3],par[4]);
+  Norm = myF->Integral(0,m_x*m_nMax);
+
   return Norm;
 }
 
@@ -1721,13 +1701,11 @@ double MuonIDAlg::calcNorm_nmu(double *par){
 //=====================================================================
 
   double Norm = 0.;
-  double landau = 0;
-  
-  for (Int_t i=0;i<m_nMax;i++){ 
-    double dist = m_x*Float_t(i);
-    landau = TMath::Landau(dist,par[0],par[1]);
-    Norm = Norm+m_x*landau;
-  }
+
+  TF1 * myF = new TF1("myF",land,0,m_x*m_nMax,2);
+  myF->SetParameters(par[0],par[1]);
+  Norm = myF->Integral(0,m_x*m_nMax);
+
   return Norm;
 }
 //=============================================================================
@@ -1913,3 +1891,23 @@ LHCb::Track* MuonIDAlg::makeMuonTrack(const LHCb::MuonPID& mupid){
   return mtrack; 
 }
 
+double land2(Double_t *x, Double_t *par) {
+
+  double result = 0;
+  Double_t landau1 = TMath::Landau(x[0],par[0],par[1]);
+  Double_t landau2 = TMath::Landau(x[0],par[2],par[3]);  
+  result = (landau1 + par[4]*landau2);
+
+  return result;
+
+}
+
+double land(Double_t *x, Double_t *par) {
+
+  double result = 0;
+  Double_t landau1 = TMath::Landau(x[0],par[0],par[1]);
+  result = landau1;
+
+  return result;
+
+}

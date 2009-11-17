@@ -19,3 +19,8 @@ library MuonID ../src/*.cpp
 apply_pattern component_library library=MuonID
 apply_pattern install_python_modules
 
+macro_append ROOT_linkopts " -lHist -lGpad -lGraf" \
+                     WIN32 " libHist.lib libGpad.lib libGraf.lib" \
+                    osx104 " -lHist -lMatrix -lGpad -lGraf"
+macro_append ROOT_linkopts "" \
+       ROOT_GE_5_15&osx104 " -lNet "

@@ -2,6 +2,10 @@
 ! Responsible : Erica Polycarpo, Miriam Gandelman
 !-----------------------------------------------------------------------------
 
+! 2009-11-17 - Alessio Sarti
+ - Replaced 'step' integral with numerical integration (faster, more reliable)
+
+
 !======================== MuonID v7r3 2009-11-13 ===========================
 ! 2009-11-13 - Rob Lambert
  - Tagged v7r3
