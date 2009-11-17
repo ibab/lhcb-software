@@ -6,10 +6,11 @@
 
 OMACheckHolesAndSpikes::OMACheckHolesAndSpikes(OMAlib* Env) : 
   OMACheckAlg("CheckHolesAndSpikes", Env) {
-  m_ninput = 2;
+  m_ninput = 3;
   m_inputNames.push_back("Reference");  m_inputDefValues.push_back(0.);
   m_inputNames.push_back("DeltaMode");  m_inputDefValues.push_back(3.);
-  
+  m_inputNames.push_back("Normalize");  m_inputDefValues.push_back(1.);
+
   //  for (int i=1;i<=10;i++){
   //  std::stringtream ss;
   //  ss << "MaskedBin" << i;
@@ -18,9 +19,10 @@ OMACheckHolesAndSpikes::OMACheckHolesAndSpikes(OMAlib* Env) :
   m_npars = 2;
   m_parnames.push_back("MinDelta"); m_parDefValues.push_back(-999999.);
   m_parnames.push_back("MaxDelta"); m_parDefValues.push_back(+999999.);
-  m_doc = "Check for holes and spikes of histogram. Check is done against the (normalized) ref. histogram if ";
+  m_doc = "Check for holes and spikes of histogram. Check is done against the reference histogram if ";
   m_doc +=  "Reference<0, or against a fitted polynomial of degree=Reference. Delta can be a limit on the ";
   m_doc +=  "ratio (DeltaMode=1), absolute difference (DeltaMode=2), number of sigma (DeltaMode=3).";
+  m_doc +=  "Set Normalize to 0 if you don't want the reference histogram to be normalized to the online histogram";
   m_needRef = true;
 }
 
@@ -38,6 +40,7 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   if (input_pars[0] < 0.) input_pars[0]= -99.;
   int ipoly= (int)(input_pars[0] + .1 );
   DeltaMode mode = static_cast<DeltaMode> ((int)(input_pars[1] + .1 ) );
+  bool refNormalize = (input_pars[2] < 0.1) ? false : true;
   if (mode <= MinMode || mode>= MaxMode ) return;
   
   std::vector<double> refValues,refErrors;
@@ -48,7 +51,7 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
   refErrors.resize(nBx * nBy);
 
   if( ipoly>=0 ) { //polynomial fit
-    // only 1-dim histograms are supported for the moment
+    // only 1-dim histograms are supported 
     if (Histo.GetDimension() > 1) return;
     std::stringstream ss;
     ss << "pol"<<ipoly;
@@ -60,8 +63,10 @@ void OMACheckHolesAndSpikes::exec(TH1 &Histo,
     }
   }
   else if(Ref) { // compare with reference 
-    // normalize Ref to current histogram
-    Ref->Scale(Histo.Integral() / Ref->Integral() );
+    // normalize Ref to current histogram if requested
+    if (refNormalize) {
+      Ref->Scale(Histo.Integral() / Ref->Integral() );
+    }
     for (int ihx=1 ; ihx<= nBx ; ihx++) {
       for (int ihy=1 ; ihy<= nBy ; ihy++) {
         if( ihx <=  Ref->GetNbinsX() &&
