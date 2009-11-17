@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.3 2009-10-09 10:35:59 wouter Exp $
+! $Id: release.notes,v 1.4 2009-11-17 14:54:08 akozlins Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2009-11-17 Alexandr Kozlinskiy
+  - added new algorithm T0ModuleClbrAlg which will be used for timing
+    calibration.
 
 ! 2009-10-09 Wouter Hulsbergen
   - adapted to changes in LHCb::Track
