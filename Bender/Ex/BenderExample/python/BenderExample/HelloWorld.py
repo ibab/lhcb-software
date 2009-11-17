@@ -25,7 +25,7 @@ The most trivial Bender-based  'Hello,World' example
 """
 # =============================================================================
 __author__  = " Vanya BELYAEV Ivan.Belyaev@nikhef.nl "
-__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.8 $ "
+__version__ = " CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.9 $ "
 # =============================================================================
 ## import everything from Bender 
 from Bender.Main import * 
@@ -56,9 +56,8 @@ def configure ( **args ) :
     from Configurables import DaVinci
     
     daVinci = DaVinci (
-        DataType   = 'DC06'      , # default  
-        Simulation = True        ,
-        HltType    = ''          ) 
+        DataType   = 'DC06' , # default  
+        Simulation = True   ) 
     
     ## get or create the Application Manager
     gaudi = appMgr()
