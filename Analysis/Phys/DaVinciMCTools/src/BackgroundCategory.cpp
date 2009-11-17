@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.57 2009-11-03 10:26:52 gligorov Exp $
+// $Id: BackgroundCategory.cpp,v 1.58 2009-11-17 08:12:50 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -474,18 +474,20 @@ MCParticleVector BackgroundCategory::create_finalstatedaughterarray_for_mcmother
     //Need to protect against MCParticles with null endVertices,
     //which are assumed to be stable
     SmartRefVector<LHCb::MCVertex> VV = (*iP)->endVertices();
-    if (VV.size() != 0) isitstable = (*(VV.begin()))->products().empty();
-    else isitstable = true;
+    if (VV.size() != 0){ isitstable = (*(VV.begin()))->products().empty();}
+    else{ isitstable = true;}
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << (*iP)->particleID().abspid() 
-                                          << " stable: " 
-                                          << isStable( (*iP)->particleID().abspid() );
+    if (msgLevel(MSG::VERBOSE)){
+      verbose() << (*iP)->particleID().abspid() 
+                << " stable: " 
+                << isStable( (*iP)->particleID().abspid() );
 
-    if (isitstable) if (msgLevel(MSG::VERBOSE)) verbose() << endmsg; 
-    else if (msgLevel(MSG::VERBOSE)) verbose() << " products: " 
-                                               << (*(VV.begin()))->products().size() 
-                                               << endmsg ;
-
+      if (isitstable) verbose() << endmsg; 
+      else verbose() << " products: " 
+                     << (*(VV.begin()))->products().size() 
+                     << endmsg ;
+    }
+    
     if ( isitstable || 
          isStable( (*iP)->particleID().abspid() ) 
          ) {
@@ -1385,16 +1387,17 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
 
   for (iDAP = m_daughtersAndPartners.begin(); iDAP != m_daughtersAndPartners.end(); ++iDAP){
 
-    if (msgLevel(MSG::VERBOSE)) verbose() << "Reconstructed particle has PID " 
-                                          << ((*iDAP).first)->particleID().pid() 
-                                          << endmsg;
-    if ((*iDAP).second != NULL) 
-      if (msgLevel(MSG::VERBOSE)) verbose() << "Associated particle has PID " 
+    if (msgLevel(MSG::VERBOSE)) {
+      verbose() << "Reconstructed particle has PID " 
+                << ((*iDAP).first)->particleID().pid() 
+                << endmsg;
+      if ((*iDAP).second != NULL) verbose() << "Associated particle has PID " 
                                             << ((*iDAP).second)->particleID().pid() 
                                             << endmsg;
-    else  if (msgLevel(MSG::VERBOSE)) verbose() << "There is no associated particle" 
-                                                << endmsg;
-
+      else verbose() << "There is no associated particle" 
+                     << endmsg;
+    }
+    
   }
 
   return associated_mcparts;

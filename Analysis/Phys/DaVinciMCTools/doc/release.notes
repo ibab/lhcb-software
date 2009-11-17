@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.274 2009-11-10 15:33:42 pkoppenb Exp $
+! $Id: release.notes,v 1.275 2009-11-17 08:12:50 pkoppenb Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-11-17 - Patrick Koppenburg
+ - Correct two warnings
 
 ! 2009-11-10 - Patrick Koppenburg
  - Do not look into Hlt protoparticle relations by default. 

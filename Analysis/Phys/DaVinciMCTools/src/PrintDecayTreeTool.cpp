@@ -1,4 +1,4 @@
-// $Id: PrintDecayTreeTool.cpp,v 1.3 2008-03-30 18:02:14 ibelyaev Exp $
+// $Id: PrintDecayTreeTool.cpp,v 1.4 2009-11-17 08:12:50 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -623,23 +623,23 @@ void PrintDecayTreeTool::printInfo( const std::string& prefix,
         case Vy:
           {
             const LHCb::MCVertex *origin = part->originVertex();
-            if( origin )
-              if( origin )
-                log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                    << origin->position().y()/m_lengthUnit;
-              else
-                log << std::setw(m_fWidth) << " N/A ";
+            if( origin ){
+              log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+                  << origin->position().y()/m_lengthUnit;
+            } else{
+              log << std::setw(m_fWidth) << " N/A ";
+            }
           }
           break;
         case Vz:
           {
             const LHCb::MCVertex *origin = part->originVertex();
-            if( origin )
-              if( origin )
-                log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
-                    << origin->position().z()/m_lengthUnit;
-              else
+            if( origin ){  
+              log << std::setw(m_fWidth) << std::setprecision(m_fPrecision)
+                  << origin->position().z()/m_lengthUnit;
+            } else {
                 log << std::setw(m_fWidth) << " N/A ";
+            }
           }
           break;
         case theta:
