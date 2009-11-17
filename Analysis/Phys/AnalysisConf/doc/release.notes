@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.40 2009-11-10 17:32:49 pkoppenb Exp $
+!$Id: release.notes,v 1.41 2009-11-17 14:24:41 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+!========================== AnalysisConf v1r9 2009-11-17 ====================
 
 ! 2009-11-10 - Patrick Koppenburg
  - Explicit declaration of PP association
@@ -13,7 +15,6 @@
  - make use of CaloAssociatorsConf instead of CaloAssociators.opts 
  - cmt/requirements   
      version increment to v1r9 
-
 
 !========================== AnalysisConf v1r8 2009-10-28 ====================
 
