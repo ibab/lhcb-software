@@ -1,13 +1,11 @@
-// $Id: TupleToolPrimaries.h,v 1.3 2009-11-12 13:49:25 jpalac Exp $
-#ifndef JBOREL_TUPLETOOLEVENTINFO_H
-#define JBOREL_TUPLETOOLEVENTINFO_H 1
+// $Id: TupleToolPrimaries.h,v 1.4 2009-11-17 12:33:12 pkoppenb Exp $
+#ifndef JBOREL_TUPLETOOLPRIMARIES_H
+#define JBOREL_TUPLETOOLPRIMARIES_H 1
 
 // Include files
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "Kernel/IEventTupleTool.h"            // Interface
-
-class DVAlgorithm;
 
 /** @class TupleToolPrimaries TupleToolPrimaries.h jborel/TupleToolPrimaries.h
  *
@@ -37,6 +35,7 @@ public:
   virtual StatusCode fill( Tuples::Tuple& );
 
 private:
-  DVAlgorithm* m_dva;
+  std::string m_pvLocation ; ///<  PV location to be used. If empty, take context-dependent default
+
 };
-#endif // JBOREL_TUPLETOOLEVENTINFO_H
+#endif // JBOREL_TUPLETOOLPRIMARIES_H

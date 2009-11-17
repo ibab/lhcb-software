@@ -1,4 +1,4 @@
-// $Id: TupleToolPrimaries.cpp,v 1.4 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolPrimaries.cpp,v 1.5 2009-11-17 12:33:12 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -13,6 +13,7 @@
 #include <Kernel/GetDVAlgorithm.h>
 #include <Kernel/DVAlgorithm.h>
 #include <Event/RecVertex.h>
+#include "Kernel/IOnOffline.h"
 
 #include <functional>
 
@@ -73,9 +74,11 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 					const std::string& name,
 					const IInterface* parent )
   : GaudiTool ( type, name , parent )
-  , m_dva(0)
 {
   declareInterface<IEventTupleTool>(this);
+  declareProperty("InputLocation", m_pvLocation = "" , 
+                  "PV location to be used. If empty, take context-dependent default");
+  
 }
 
 //=============================================================================
@@ -84,9 +87,11 @@ TupleToolPrimaries::TupleToolPrimaries( const std::string& type,
 StatusCode TupleToolPrimaries::initialize(){
   if( !GaudiTool::initialize() ) return StatusCode::FAILURE;
 
-  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
-  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
-                             StatusCode::FAILURE);
+  if ( "" == m_pvLocation){
+    const IOnOffline* oo = tool<IOnOffline>("OnOfflineTool",this);
+    m_pvLocation = oo->primaryVertexLocation();
+  } 
+  debug() << "Will be looking for PVs at " << m_pvLocation << endmsg ;
 
   return StatusCode::SUCCESS;
 }
@@ -95,30 +100,27 @@ StatusCode TupleToolPrimaries::initialize(){
 //=============================================================================
 
 StatusCode TupleToolPrimaries::fill( Tuples::Tuple& tuple ) {
-
-  Assert( m_dva, "Parent DValgorithm not found!" );
-
   
-  const RecVertex::Container* PV = m_dva->primaryVertices();
-//   //  std::vector<double> pvx,pvy,pvz,pvex,pvey,pvez;
   std::vector<flat> pvs;
   std::vector<const flat*> refPvs;
 
-  int size = std::min<int>( PV->size(), 40 );
-
-  pvs.reserve( size );
-  refPvs.reserve( size );
-
-  RecVertex::Container::const_iterator it = PV->begin();
-  for( ; (PV->end()!=it && it-PV->begin() < size ) ; ++it ){
-    pvs.push_back( **it ); // doing this avoid using delete at the end...
-    refPvs.push_back( &(pvs.back()) ); // to use mem_fun
+  if (exist<RecVertex::Container>(m_pvLocation)){
+    const RecVertex::Container* PV = get<RecVertex::Container>(m_pvLocation);
+    unsigned int size = std::min<unsigned int>( PV->size(), 40 );  
+    pvs.reserve( size );
+    refPvs.reserve( size );
+    
+    RecVertex::Container::const_iterator it = PV->begin();
+    for( ; (PV->end()!=it && it-PV->begin() < size ) ; ++it ){
+      pvs.push_back( **it ); // doing this avoid using delete at the end...
+      refPvs.push_back( &(pvs.back()) ); // to use mem_fun
+    }
+  
+    if( PV->size() > 40 ){
+      Warning("More than 40 primaries, some PVs will not be stored.");
+    }
   }
-
-  if( PV->size() > 40 ){
-    Warning("More than 40 primaries, some PVs will not be stored.");
-  }
-
+  
   StatusCode test;
   test = tuple->farray( "PVX", std::mem_fun( &flat::x ),
 			"PVY", std::mem_fun( &flat::y ),

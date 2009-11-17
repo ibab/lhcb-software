@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-17 - Patrick Koppenburg
+ - src/MCTupleToolPrimaries : new
+ - src/TupleToolPrimaries : get PV location from OnOfflineTool, not from dva.
+   This prevented using it in EventTuple.
+
 ! 2009-11-16 - Juan Palacios
  - src/TupleToolTagging.cpp
   . Remove unused variables.
@@ -26,7 +31,7 @@
   . Remove use of ContextTool and replace by use of parent DVAlgoritm.
 
 ! 2009-11-06 - Patrick Koppenburg
- - Moved implemetation of Hlt routing bits reading to HltInterfaces
+ - Moved implementation of Hlt routing bits reading to HltInterfaces
 
 ! 2009-11-05 - Patrick Koppenburg
  - TupleToolTrigger:
