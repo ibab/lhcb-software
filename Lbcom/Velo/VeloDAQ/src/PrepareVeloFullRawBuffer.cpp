@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.cpp,v 1.7 2009-09-09 12:52:01 kakiba Exp $
+// $Id: PrepareVeloFullRawBuffer.cpp,v 1.8 2009-11-17 17:55:01 szumlat Exp $
 // Include files 
 #include <stdexcept>
 #include <exception>
@@ -31,7 +31,6 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
                                                   ISvcLocator* pSvcLocator)
   : GaudiTupleAlg ( name , pSvcLocator ),
     m_rawEvent ( 0 ),
-//    m_rawEventLoc ( LHCb::RawEventLocation::Default ),
     m_data ( ),
     m_ped ( ),
     m_numberOfSensors ( 0 ),
@@ -46,7 +45,7 @@ PrepareVeloFullRawBuffer::PrepareVeloFullRawBuffer( const std::string& name,
   declareProperty("RunWithODIN", m_runWithODIN=true); 
   declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
   declareProperty("ADCLocation", m_veloADCDataContainer=VeloFullBankLocation::Default);
- 
+  declareProperty("RoundRobin", m_roundRobin=false);
 }
 //=============================================================================
 // Destructor
@@ -76,7 +75,7 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
     getRawBanks();
     // if there is adc bank or pedestal bank begin ordering
     // for all read-out sensors
-    if(adcBankFlag()||pedBankFlag()){      
+    if(adcBankFlag()||pedBankFlag()){
       int readedSensors=numberOfSensors();
       debug()<< " read sens: " << readedSensors <<endmsg;
       for(int sensor=0; sensor<readedSensors; sensor++){
@@ -86,6 +85,8 @@ StatusCode PrepareVeloFullRawBuffer::execute() {
       // flush the vectors with pointers 
       // to the data bank after each event
       resetMemory();
+    }else if(m_roundRobin){
+      writeVeloFull();
     }
   }else{
     return ( StatusCode::SUCCESS);
@@ -198,7 +199,12 @@ StatusCode PrepareVeloFullRawBuffer::getRawBanks()
     }
   }
   //
-  if(m_data.empty()) Warning(" --> The file does not contain the NZS data");
+  if(m_data.empty()){
+    m_veloADCData=new VeloFullBanks();
+    unsigned int msgCount=0;
+    if(msgLevel(MSG::DEBUG)) msgCount=10;
+    Warning(" --> There are no NZS banks!", StatusCode::SUCCESS, msgCount).ignore();
+  }
   //
   return ( StatusCode::SUCCESS );
 }
@@ -251,7 +257,7 @@ StatusCode PrepareVeloFullRawBuffer::writeVeloFull()
 {
   debug()<< " ==> writeVeloFull() " <<endmsg;
   //
-  if(adcBankFlag()){
+  if(adcBankFlag()||(m_roundRobin)){
     put(m_veloADCData, m_veloADCDataContainer);
     debug()<< "Registered container with bank data of size: "
           << m_veloADCData->size() << ", at" 

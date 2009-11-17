@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.5 2009-09-25 13:23:49 krinnert Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.6 2009-11-17 17:55:01 szumlat Exp $
 // Include files 
 
 // from Gaudi
@@ -71,6 +71,11 @@ StatusCode SmartVeloErrorBankDecoder::execute() {
     bankStatus=storeErrorRawBanks();
   }else{
     // go to the next event
+    bankStatus=StatusCode::SUCCESS;
+  }
+
+  if ( ! bankStatus.isSuccess() ) {
+    warning() << "storing error banks aborted (possible raw bank corruption)." << endmsg;
     bankStatus=StatusCode::SUCCESS;
   }
   //
@@ -151,7 +156,7 @@ StatusCode SmartVeloErrorBankDecoder::cacheErrorRawBanks()
       if(m_isDebug) debug()<< " --> bank body size: " << (dist*sizeof(unsigned int)) <<endmsg;
     }
   }else{
-    Warning(" --> No error bank detected - skipping to the next event ");
+    Info(" --> No error bank detected - skipping to the next event ");
     return ( StatusCode::FAILURE );
   }
   if(m_isDebug) debug()<< " --> cached error bank strucure's size:" 
@@ -173,9 +178,12 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
     dataVec sources;
     // get information on error sources
     SECTORS sectors=errorDetector(bankIT->first);
-    if(sectors.size()!=SOURCES)
+    if(sectors.size()!=SOURCES) {
       if(m_isDebug) debug()<< " --> Error detected for " << (sectors.size()) 
              << " PPFPGA(s) "<<endmsg;
+      warning() << "Impossible number of PPFPGAs: " << sectors.size() << endmsg;
+      return StatusCode::FAILURE;
+    }
     // store words in error bank
     SECTORS::iterator secIT=sectors.begin();
     for( ; secIT!=sectors.end(); ++secIT){

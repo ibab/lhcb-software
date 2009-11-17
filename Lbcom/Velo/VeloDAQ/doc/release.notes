@@ -2,6 +2,11 @@
 ! Package     : VeloDAQ
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
+! 2009-11-17 - Tomasz Szumlak
+ - modify PrepareVeloFullRawBuffer algorithm to handle round-robin data
+ - add protection in SmartVeloErrorDecoder against corrupted data, this
+   problem needs to be better understood though 
+
 
 !=========================  VeloDAQ v4r10 2009-11-16 ======================
 ! 2009-11-16 - Marco Cattaneo

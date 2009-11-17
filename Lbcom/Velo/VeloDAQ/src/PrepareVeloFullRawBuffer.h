@@ -1,4 +1,4 @@
-// $Id: PrepareVeloFullRawBuffer.h,v 1.6 2009-09-09 12:52:01 kakiba Exp $
+// $Id: PrepareVeloFullRawBuffer.h,v 1.7 2009-11-17 17:55:01 szumlat Exp $
 #ifndef PREPAREVELOFULLRAWBUFFER_H 
 #define PREPAREVELOFULLRAWBUFFER_H 1
 
@@ -120,6 +120,7 @@ private:
   bool m_adcBankPresent;               /// flag to check if data is sent out
   bool m_pedBankPresent;               /// flag to check if ped is sent out
   bool m_runWithODIN;
+  bool m_roundRobin;
   
 };
 #endif // DECODEVELOFULLRAWBUFFER_H
