@@ -19,10 +19,10 @@ OMACheckHolesAndSpikes::OMACheckHolesAndSpikes(OMAlib* Env) :
   m_npars = 2;
   m_parnames.push_back("MinDelta"); m_parDefValues.push_back(-999999.);
   m_parnames.push_back("MaxDelta"); m_parDefValues.push_back(+999999.);
-  m_doc = "Check for holes and spikes of histogram. Check is done against the reference histogram if ";
-  m_doc +=  "Reference<0, or against a fitted polynomial of degree=Reference. Delta can be a limit on the ";
-  m_doc +=  "ratio (DeltaMode=1), absolute difference (DeltaMode=2), number of sigma (DeltaMode=3).";
-  m_doc +=  "Set Normalize to 0 if you don't want the reference histogram to be normalized to the online histogram";
+  m_doc = "Check for holes and spikes of histogram against the reference histogram (if ";
+  m_doc +=  "Reference<0) or against a fitted polynomial of degree=Reference. Delta can be a limit on the ";
+  m_doc +=  "ratio (DeltaMode=1), absolute difference (2), number of sigma (3).";
+  m_doc +=  "Set Normalize to 0 if you don't want the ref histogram to be normalized to the online histogram";
   m_needRef = true;
 }
 
