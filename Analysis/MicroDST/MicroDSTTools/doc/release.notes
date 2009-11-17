@@ -3,8 +3,13 @@
 ! Responsible : Juan Palacios juan.palacios@nikhef.nl
 ! Purpose     : Implementation of cloner MicroDSTTools
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.31 2009-08-27 09:25:09 jpalac Exp $
+! $Id: release.notes,v 1.32 2009-11-17 16:41:38 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2009-11-17 - Juan PALACIOS
+ - Add FlavourTagDeepCloner
+  . Clones FlavourTags with Taggers and tagger particles. Under construction.
+ - Increase version to v1r6
 
 !======================= MicroDSTTools v1r5p1 2009-08-27 =====================
 
