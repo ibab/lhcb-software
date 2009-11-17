@@ -3,11 +3,109 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
- - Changes to references to reflect changes in Brunel v35r8 output:
-   . Changed VeloTrackMonitor histograms (VeloRecMonitors v2r3) 
-   . Changed TrackMonitor histograms (TrackMonitors v1r15)
-   . Introduction of CaloDigitConf (CaloDAQ v4r15, CaloReco v5r3)
-   . Adapt to changes in GaudiConf v12r10
+
+</PRE><H1><A NAME=v35r8>2009-11-17 Brunel v35r8</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
+ and SQLDDDB v5r14, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2009 data-taking
+Output requires DaVinci v24r5 or later
+
+ - Changes to Configuration:
+   . Use new configurable to decode CaloDigits (CaloDAQ v5r15, CaloReco v5r3)
+   . Definition of MC content of DST is delegated to SimConf and DigiConf
+     configurables (GaudiConf v13r0)
+   . New option Brunel().ProductionMode", special settings for running in
+     production, replaces "NoWarnings" option (kept for backward compatibility)
+   . Adapt luminosity configuration to run on raw files only. 
+     Luminosity tracking has no meaning on an ETC (LumiAlgs v3r0).
+	 . Replace OTRawBankDecoder with OTHitCreator in PadSeedFit
+     (PatAlgorithms v3r24)
+   . Added cosmic configurations (TrackSys v4r27, TrackFitter v2r39)
+   . Added option to run PatMatch (TrackSys v4r27)
+   . Added option to TsaSeeding to run only over hits unused in the previous run
+     of PatForward (OnlyUnusedHits=true) (TsaAlgorithms v3r14)
+   . Added option to TrackMatchVeloSeed: if DiscardUsedVelo, velo seeds used in
+     "good" PatForward tracks with chi2 < DiscardChi2 (default 1.5) are discarded
+     (TrackMatching v2r25)
+
+ - Persistency changes:
+   . DAQ/ODIN removed from persistent files. Add ODIN bank to pRec/RawEvent on
+     RDST. DAQ/ODIN is now transient only, always rebuilt from ODIN raw bank, to
+     allow evolution of ODIN data content
+     (DAQEvent v8r2, GaudiConf v13r0,LHCbAlgs v2r30)
+   . All MC information on DST is now packed
+     (EventPacker v2r0, PackedEvent v3r7, GaudiConf v13r0)
+   . New XDST format for MC data, includes packed MC hits, and Spillover 
+     containers (GaudiConf v13r0)
+   . RichPIDs and MuonPIDs are no longer added to ProtoParticle as ExtraInfo.
+     They are now saved as separate packed containers (GlobalReco v6r28,
+     EventPacker v2r0, PackedEvent v3r7, GaudiConf v13r0, LHCbKernel v11r9)
+   . New packers explicitly store the 'packing version' in the packed DataObject.
+     Allows the 'version' of the data object to the be used to store any 
+     versioning needed in the original unpacked data
+     (EventPacker v2r0, GaudiKernel v27r6)
+   . Packed containers for DST are always produced, even it unpacked input is
+     missing (EventPacker v2r0, GaudiConf v13r0)
+   . Added EventCountFSR, storing how many events are in the file and how many
+     were used to make the file (LumiEvent v2r3, LumiAlgs v3r0)
+   . Add ghost id for all track types (TrackTools v3r23)
+
+ - New tuning:
+   . Apply patch #3399 XmlGenericCnv uses inneficient part of Xerces-C API for
+     DOM walking. Speeds up loading LHCb geometry by about 10% (DetDescCnv v4r10)
+   . Replace vector by range for nodes in Track (TrackEvent v5r2)
+	 . Make sure trackfitters are (also) configured by ConfiguredMasterFitter
+     (MuonID v7r3)
+   . Changes to the track fit (TrackFitEvent v4r2, TrackSys v4r27,
+       TrackFitter v2r39, TrackProjectors v2r26, TrackTools v3r23):
+     o All the track types are fitted with the same TrackMasterFitter config
+ 		 o New configured fitters 
+		 o Moved projectors to masterfitter.
+   . Major changes in Lumi counting (LumiAlgs v3r0)
+
+ - Bug fixes:
+   . Modified the dictionary for DataObject to make the version persistent. In
+     all data written up to now, version was set to zero when reading back so
+     schema evolution of e.g. post-MC09 tracks was wrong (GaudiKernel v27r6)
+   . Fixed bug #57416: improve IncidentSvc printout when an exception is thrown
+     by handlers (GaudiSvc v18r8)
+   . Add protections against incomplete or corrupt raw data (CaloDAQ v5r15)
+   . Fix a memory leak in XmlGenericCnv.cpp (DetDescCnv v4r10)
+   . Disable clearing of CALO hypos in ProtoParticle various removeCaloXXXInfo()
+     methods, since this incorrectly removes *all* hypos, not just those
+     associated with the given technique (RecEvent v2r23)
+   . Fix for unitialized member variable in PatForwardTool (PatAlgorithms v3r24)
+ 	 . Made MagnetTool aware of field updates (PatVeloTT v3r9)
+   . Fixed memory leak in OTHitEfficiencyMonitor (TrackMonitors v1r15)
+   . Fixed a bug in TrackStateInitTool (TrackTools v3r23)
+   . Fix small memory leak in TrackNNGhostId (TrackTools v3r23)
+
+ - Changes to monitoring:
+   . Speed up processing of histograms (CaloUtils v8r8)
+   . Fix CompareTrack to not report saturated q/p error for poorly measured
+     tracks (EventPacker v2r0)
+   . Add to Expert monitoring full checks up packing/unpacking integrity of
+     DST packed containers (GaudiConf v13r0, Brunel/Configuration.py)
+   . Suppress warnings about missing or corrupt data
+     (STDAQ v3r20, VeloDAQ v4r10)
+   . Improvements to monitoring for real data (STMonitors 3r13)
+   . Track monitors improvements (TrackMonitors v1r15):
+     o Added TrackAlignMonitor: monitoring histos for velo/tt/it/ot
+     o Small update of OTTrackMonitor, for the pitch residual
+     o Remove fullDetail from alignment histograms in IT/TTTrackMonitor
+		 o Added track-calo match algorithms
+		 o Modified histos in TrackMonitor
+   . Added TrackOccupChecker for the studies of the occupancies in IT, OT,
+     and Velo (TrackCheckers v4r10)
+
+ - Changes to example options
+   . Modify Brunel-Cosmics.py to follow changes in TrackSys v4r27
+   . Remove also obsolete Rich options from Brunel-Cosmics.py
+
+ - Changes to tests:
+   . brunel-fest09 test updated to test also Brunel().ProductionMode option
+   . new test readdstfsr.qmt, checks that brunel-fest09 has written an fsr
 
 </PRE><H1><A NAME=v35r7>2009-10-23 Brunel v35r7</A></H1><PRE>
 This version uses projects Gaudi v21r5, LHCb v28r1, Lbcom v7r7, Rec v7r7
