@@ -1,9 +1,11 @@
-!$Id: release.notes,v 1.9 2009-11-12 14:08:28 jpalac Exp $
+!$Id: release.notes,v 1.10 2009-11-17 14:34:33 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Rich/DstCalibSel
 ! Responsible : Andrew Powell
 ! Purpose     : RICH D* -> D0(Kpi) pi PID calbration
 !-----------------------------------------------------------------------------
+
+!========================== DstCalibSel v1r2p1 2009-11-17 ====================
 
 ! 2009-11-12 - Juan Palacios
  - src/D02KPiNoPID.cpp
