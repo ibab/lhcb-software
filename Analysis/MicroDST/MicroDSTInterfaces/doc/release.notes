@@ -4,8 +4,12 @@
 ! Purpose     : Interfaces for MicroDST cloning and storing of LHCb event
 !               model classes
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.14 2009-08-11 14:06:39 jpalac Exp $
+! $Id: release.notes,v 1.15 2009-11-17 15:53:45 jpalac Exp $
 !-----------------------------------------------------------------------------
+
+! 2009-11-17 - Juan PALACIOS
+ - Add ICloneTagger, an interface for cloning of LHCb::Tagger objects.
+ - Increase version to v1r4
 
 !===================== MicroDSTinterfaces v1r3 2009-08-11 ===================
 
