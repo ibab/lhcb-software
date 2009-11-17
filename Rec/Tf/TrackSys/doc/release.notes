@@ -23,7 +23,7 @@
    same, a clone is assigned randomly. Saves 30-40% of reconstruction time.
 
 ! 2009-11-11 - Kostyantyn Holubyev			
- - RecoTracking.py:   
+ - RecoTracking.py:
 	 Option to run PatMatch is added.
 
 ! 2009-11-11 - Kostyantyn Holubyev
