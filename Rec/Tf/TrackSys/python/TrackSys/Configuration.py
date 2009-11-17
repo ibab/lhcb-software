@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.13 2009-11-12 17:33:55 kholubye Exp $"
+__version__ = "$Id: Configuration.py,v 1.14 2009-11-17 12:50:32 wouter Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -27,7 +27,8 @@ class TrackSys(LHCbConfigurableUser):
         }
     
     ## Possible expert options
-    KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "fastSequence"]
+    KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "noMaterialCorrections",
+                                  "fastSequence"]
     ## Default track pattern recognition algorithms to run
     DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run
@@ -66,6 +67,8 @@ class TrackSys(LHCbConfigurableUser):
     def simplifiedGeometry(self) : return "simplifiedGeometry" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the kalmanSmoother option
     def kalmanSmoother(self) : return "kalmanSmoother" in self.getProp("ExpertTracking")
+    ## @brief Shortcut to the noMaterialCorrections option
+    def noMaterialCorrections(self) : return "noMaterialCorrections" in self.getProp("ExpertTracking")
 
     ## @brief Option to enable setting the special data options easily
     def setSpecialDataOption(self,option,value):
