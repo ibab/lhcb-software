@@ -1,4 +1,4 @@
-// $Id: FlavourTagDeepCloner.cpp,v 1.1 2009-11-17 16:41:27 jpalac Exp $
+// $Id: FlavourTagDeepCloner.cpp,v 1.2 2009-11-17 16:46:43 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -30,17 +30,32 @@ FlavourTagDeepCloner::FlavourTagDeepCloner( const std::string& type,
                                             const std::string& name,
                                             const IInterface* parent )
   : 
-  base_class ( type, name , parent )
+  base_class ( type, name , parent ),
+  m_particleCloner(0),
+  m_particleClonerName("ParticleCloner")
 
 {
+  declareProperty("ICloneParticle", m_particleClonerName);
 }
 //=============================================================================
 StatusCode FlavourTagDeepCloner::initialize()
 {
   debug() << "==> Initialize" << endmsg;
 
-  return base_class::initialize();
+  StatusCode sc = base_class::initialize();
+  if (! sc.isSuccess() ) return sc;
 
+  debug() << "Going to get ParticleCloner" << endmsg;
+  
+  m_particleCloner = tool<ICloneParticle>(m_particleClonerName, 
+                                          this->parent() );
+
+  if (m_particleCloner) {
+    debug() << "Found ParticleCloner " << m_particleCloner->name() << endmsg;
+  } else {
+    error() << "Failed to find ParticleCloner" << endmsg;
+  }
+  return StatusCode::SUCCESS;
 }
 //=============================================================================
 LHCb::FlavourTag* FlavourTagDeepCloner::operator() (const LHCb::FlavourTag* tag)
@@ -58,6 +73,7 @@ LHCb::FlavourTag* FlavourTagDeepCloner::clone( const LHCb::FlavourTag* tag )
 
   // will have to deal with the taggers by hand, since LHCb::Tagger is
   // not a contained object.
+  // loop over taggers, clone tagger particles, clone them, and set them.
 
   return tmp; 
 }

@@ -1,4 +1,4 @@
-// $Id: FlavourTagDeepCloner.h,v 1.1 2009-11-17 16:41:27 jpalac Exp $
+// $Id: FlavourTagDeepCloner.h,v 1.2 2009-11-17 16:46:43 jpalac Exp $
 #ifndef FLAVOURTAGDEEPCLONER_H 
 #define FLAVOURTAGDEEPCLONER_H 1
 
@@ -38,6 +38,10 @@ private:
   typedef MicroDST::BasicCopy<LHCb::FlavourTag> BasicFTCopy;
 
   LHCb::FlavourTag* clone(const LHCb::FlavourTag* tag);
+
+  ICloneParticle* m_particleCloner;
+
+  std::string m_particleClonerName;
 
 };
 #endif // FLAVOURTAGDEEPCLONER_H
