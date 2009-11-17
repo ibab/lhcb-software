@@ -1,4 +1,4 @@
-// $Id: PhysTypes.h,v 1.11 2009-11-16 11:54:26 ibelyaev Exp $
+// $Id: PhysTypes.h,v 1.12 2009-11-17 12:39:02 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PHYSTYPES_H 
 #define LOKI_PHYSTYPES_H 1
@@ -93,6 +93,11 @@ namespace LoKi
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::FunVal  VFunVals ;
     // type of "fun-val"  for LHCb::VertexBase (assignable)
     typedef LoKi::Assignable<VFunVals>::Type                      VFunVal  ; 
+
+    // type of "cut-val"  for LHCb::VertexBase (interface)
+    typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::CutVal  VCutVals  ;
+    // type of "cut-val"  for LHCb::VertexBase (assignable)
+    typedef LoKi::Assignable<VCutVals>::Type                      VCutVal   ; 
     
     // type of "element"  for LHCb::VertexBase (interface)
     typedef LoKi::BasicFunctors<const LHCb::VertexBase*>::Element VElements ;
@@ -143,9 +148,9 @@ namespace LoKi
     // type for "fun-val" for LHCb::Particle (assignable)
     typedef LoKi::PhysTypes::FunVal                             FunVal    ;
     // type for "cut-val" for LHCb::Particle (interface)
-    typedef LoKi::PhysTypes::FunVals                            CutVals   ;
+    typedef LoKi::PhysTypes::CutVals                            CutVals   ;
     // type for "cut-val" for LHCb::Particle (assignable)
-    typedef LoKi::PhysTypes::FunVal                             CutVal    ;
+    typedef LoKi::PhysTypes::CutVal                             CutVal    ;
     // type for "element" for LHCb::Particle (interface)
     typedef LoKi::PhysTypes::Elements                           Elements  ;
     // type for "element" for LHCb::Particle (assignable)
@@ -171,6 +176,10 @@ namespace LoKi
     typedef LoKi::PhysTypes::VFunVals                           VFunVals  ;
     // type for "fun-val" for LHCb::VertexBase (assignable)
     typedef LoKi::PhysTypes::VFunVal                            VFunVal   ;
+    // type for "cut-val" for LHCb::VertexBase (interface)
+    typedef LoKi::PhysTypes::VCutVals                           VCutVals  ;
+    // type for "cut-val" for LHCb::VertexBase (assignable)
+    typedef LoKi::PhysTypes::VCutVal                            VCutVal   ;
     // type for "element" for LHCb::VertexBase (interface)
     typedef LoKi::PhysTypes::VElements                          VElements ;
     // type for "element" for LHCb::VertexBase (assignable)

@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.117 2009-11-16 11:57:24 ibelyaev Exp $ 
+! $Id: release.notes,v 1.118 2009-11-17 12:39:02 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-17 - Vanya Belyaev
+
+ - PhysTypes.h
+
+    add VCutVals & CutVal 
+ 
 
 ! 2009-11-16 - Vanya Belyaev
 
