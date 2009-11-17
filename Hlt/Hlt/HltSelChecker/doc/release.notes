@@ -9,15 +9,19 @@
 ! setenv dvv 320Vis # Leptonic Hadronic Charming Effective Hlt1Only 320Vis
 !
 ! foreach a (`ls -1 options/DVTest-B*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! PV2D_PV3D_${dvv}-$a &
 ! end
 ! foreach a (`ls -1 options/DVTest-[C-Z]*.py | awk -FTest- '{print $2}' | awk -F. '{print $1}'`)
-!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! ${dvv}-$a &
+!   gaudirun.py options/DVTest-${a}.py options/${dvv}.py >! PV2D_PV3D_${dvv}-$a &
 ! end
 !
 ! python scripts/GetEfficiencies.py ${dvv}
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-17 - Patrick Koppenburg
+ - Adapt tests
+ - v10r2
 
 !========================== HltSelChecker v10r1 2009-11-13 ===================
 ! 2009-11-10 - Patrick Koppenburg

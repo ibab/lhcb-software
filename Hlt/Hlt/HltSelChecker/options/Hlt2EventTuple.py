@@ -15,7 +15,8 @@ from Configurables import EventTuple, TupleToolGeneration, TupleToolTrigger, L0F
 tuple = EventTuple("TriggerTuple")
 tuple.ToolList = [ "TupleToolEventInfo",   #  "TupleToolGeneration",
                    "TupleToolTrigger", "MCTupleToolEventType",
-                   "TupleToolTriggerRecoStats" ]
+                   "TupleToolTriggerRecoStats",
+                   "TupleToolPrimaries", "MCTupleToolPrimaries"]
 tuple.addTool( TupleToolTrigger )
 tuple.TupleToolTrigger.VerboseHlt1 = True
 tuple.TupleToolTrigger.VerboseHlt2 = True

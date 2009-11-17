@@ -6,7 +6,7 @@
  #  @date 2009-10-23
  #/
 from Gaudi.Configuration import *
-from Configurables import DaVinci
+from Configurables import DaVinci, HltConf
 from HltSelChecker.CheckerSeq import *
 #--------------------------------------------------------------
 CS = CheckerSeq( DV=DaVinci()
@@ -16,3 +16,5 @@ CS = CheckerSeq( DV=DaVinci()
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/s/sabatino/182/outputdata/psi_2S.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
 
+DaVinci().SkipEvents = 10 
+HltConf().EnableHltSelReports = False 

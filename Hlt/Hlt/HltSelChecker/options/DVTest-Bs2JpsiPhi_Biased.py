@@ -16,3 +16,8 @@ CS = CheckerSeq( DV=DaVinci()
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/b/bkhanji/MC09/BiasedBs2JpsiPhi_09.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
 
+from Configurables import DecayTreeTuple
+importOptions("$HLTSELCHECKERROOT/options/Hlt2DecayTreeTuple.py")
+DecayTreeTuple("Hlt2DecayTreeTuple").InputLocations = ["Hlt2Bs2JpsiPhiDetachedBsCombine"]
+DecayTreeTuple("Hlt2DecayTreeTuple").Decay = "B_s0 -> (^phi(1020) -> ^K+ ^K-) (^J/psi(1S) -> ^mu+ ^mu-)"
+DaVinci().MoniSequence += [ DecayTreeTuple("Hlt2DecayTreeTuple") ]
