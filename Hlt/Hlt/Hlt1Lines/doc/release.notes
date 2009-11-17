@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.64 2009-11-16 14:53:34 pkoppenb Exp $
+! $Id: release.notes,v 1.65 2009-11-17 21:24:53 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v1r8p1 2009-11-17 ==================
+! 2009-11-17 - Gerhard Raven
+ - Update Hlt1LumiLines to avoid using 'Enable=False' on a sequencer;
+   because GaudiAlgorithm::SysInitialize is aborted early, subAlgorithms 
+   are not registered, and thus not recognized by the TCK snapshot utility...
+ - In Hlt1LumiLines, reuse the same LumiReco sequencer across all lines.
 
 !========================== Hlt1Lines v1r8 2009-11-16 ===================
 ! 2009-11-16 - Jaap Panman

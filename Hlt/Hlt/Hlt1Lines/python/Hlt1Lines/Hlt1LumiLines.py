@@ -63,14 +63,19 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         debugOPL = self.getProp('OutputLevel')
         from HltLine.HltReco import PV2D
 
+        # define reco scaler
+        recoScaler = Scaler( 'LumiRecoScaler' ,  AcceptFraction = 1 if self.getProp('EnableReco') else 0 )  
+
+
         # define empty reco sequence
         seqRecoName = 'LumiReco'
-        lumiRecoSequence = Sequence(seqRecoName+BXType +'Seq'
+
+        lumiRecoSequence = Sequence(seqRecoName+'Seq'
                                     , ModeOR = True
                                     , ShortCircuit = False
                                     , OutputLevel = debugOPL
-                                    , Enable = self.getProp('EnableReco')
                                     , IgnoreFilterPassed = True
+                                    , Members = [] # reset so we build the same things several times TODO: move out of loop...
                                     , MeasureTime = True)
 
         # define empty sequence to collect counters
@@ -98,13 +103,13 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                     print '# DEBUG   : Hlt1LumiLines::HistoMaker:', BXType, key, threshold, bins
                 
         lumiRecoSequence.Members.append( Sequence('LumiTrackRecoSequence' ,
-                                                   IgnoreFilterPassed = True,
-                                                   Members = PV2D.members(),
+                                                   Members = [  recoScaler ] + PV2D.members(),
                                                    MeasureTime = True ) ) 
 
         # filter to get backward tracks (make sure it always passes by wrapping inside a sequence)
         from Configurables import HltTrackFilter
-        lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence'+BXType )
+        lumiRecoFilterSequence = Sequence( 'LumiRecoFilterSequence', Members = [] ) # reset, always build the same seq...
+        lumiRecoFilterSequence.Members.append( recoScaler )
         lumiRecoFilterSequence.Members.append(
             Sequence('HltRZVeloBWSequence'
                      , Members  = [ HltTrackFilter('HltPrepareRZVeloBW'
