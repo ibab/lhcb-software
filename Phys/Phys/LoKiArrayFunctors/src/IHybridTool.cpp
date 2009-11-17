@@ -1,4 +1,4 @@
-// $Id: IHybridTool.cpp,v 1.2 2008-02-19 15:06:18 ibelyaev Exp $
+// $Id: IHybridTool.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -28,7 +28,7 @@
 // ============================================================================
 namespace 
 {
-  const InterfaceID IID_IHybridTool ( "LoKi::IHybridTool" , 2 , 0 ) ;
+  const InterfaceID IID_IHybridTool ( "LoKi::IHybridTool" , 3 , 0 ) ;
 }
 // ============================================================================
 // Return the unique interface ID

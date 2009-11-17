@@ -1,9 +1,16 @@
-$Id: release.notes,v 1.46 2009-11-16 11:53:13 ibelyaev Exp $ 
+$Id: release.notes,v 1.47 2009-11-17 12:41:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2009-11-17 - Vanya Belyaev
+
+ - modify hybrid factory to accept (V)CutVal(s) 
+
+     needed for "embedded-monitoring"
+
 
 ! 2009-11-16 - Vanya Belyaev
 

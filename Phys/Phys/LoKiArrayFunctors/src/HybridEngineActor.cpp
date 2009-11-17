@@ -1,4 +1,4 @@
-// $Id: HybridEngineActor.cpp,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: HybridEngineActor.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -32,18 +32,21 @@ template <class TYPE>
 inline StatusCode LoKi::Hybrid::EngineActor::_add 
 ( const std::string& name , const TYPE& cut ) const 
 { 
+  // ==========================================================================
   // check the tool
   if ( !m_tool.validPointer() ) 
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::addCut/Fun(): LoKi::IHybridTool* is not connected!") ;  
-  };
+  }
+  // ==========================================================================
   // one more check 
   if ( name != m_tool->name() )
   {
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::addCut/Fun() : mismatch in LoKi::IHybridTool name!") ;  
   }
+  // ==========================================================================
   // set the cut for the tool 
   m_tool -> set ( cut ) ;
   // 
@@ -76,7 +79,7 @@ StatusCode LoKi::Hybrid::EngineActor::releaseTool
     m_tool = 0 ;
     return LoKi::Report::Error
       ("LoKi:Hybrid::EngineActor::releaseTool(): mismatch in tools " ) ;
-  } ;
+  } 
   // nullify the pointer 
   m_tool = 0 ;
   //
@@ -181,6 +184,20 @@ StatusCode LoKi::Hybrid::EngineActor::process
 StatusCode LoKi::Hybrid::EngineActor::process
 ( const std::string&           name , 
   const LoKi::Types::VFunVals& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// cut-vals 
+// ============================================================================
+// propagate the fun-val  to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&          name , 
+  const LoKi::Types::CutVals& cut  ) const { return _add ( name , cut ) ; }
+// ============================================================================
+// propagate the fun-val to the tool 
+// ============================================================================
+StatusCode LoKi::Hybrid::EngineActor::process
+( const std::string&           name , 
+  const LoKi::Types::VCutVals& cut  ) const { return _add ( name , cut ) ; }
 // ============================================================================
 // elements
 // ============================================================================

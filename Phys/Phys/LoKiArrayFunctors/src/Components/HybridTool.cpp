@@ -1,4 +1,4 @@
-// $Id: HybridTool.cpp,v 1.3 2008-03-30 13:45:03 ibelyaev Exp $
+// $Id: HybridTool.cpp,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -30,8 +30,10 @@
  */
 namespace LoKi 
 {
+  // ==========================================================================
   namespace Hybrid 
   {
+    // ========================================================================
     /** @class Tool 
      *
      *  Concrete impelmentation of LoKi::IHybridTool interface 
@@ -51,13 +53,17 @@ namespace LoKi
       , public virtual IHybridTool 
       , public virtual IHybridFactory 
     {
+      // ======================================================================
       // friend factory forn instantiation
       friend class ToolFactory<LoKi::Hybrid::Tool> ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// initialization of the tool 
       virtual StatusCode initialize () ;
       /// finalization   of the tool 
       virtual StatusCode finalize  () ;
+      // ======================================================================
     public:
       // ======================================================================
       // predicates 
@@ -224,6 +230,34 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================      
+      // "cut-vals"
+      // ======================================================================
+      /** "Factory": get the the object from python code
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&   pycode  ,
+        LoKi::Types::CutVal& func    ,
+        const std::string&   context )
+      { return _get ( pycode , m_cutvals , func , context ) ; }
+      // ======================================================================
+      /** "Factory": get the the object form python code 
+       *  @param pycode the python pseudo-code of the function
+       *  @param func the placeholder for the result 
+       *  @param context the context lines to be executed 
+       *  @return StatusCode 
+       */
+      virtual StatusCode get
+      ( const std::string&    pycode  ,
+        LoKi::Types::VCutVal& func    ,
+        const std::string&    context ) 
+      { return _get ( pycode , m_vcutvals , func , context ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================      
       // "elements"
       // ======================================================================
       /** "Factory": get the the object from python code
@@ -341,6 +375,17 @@ namespace LoKi
       // ======================================================================
     public:
       // ======================================================================
+      // cut-vals:
+      // ======================================================================
+      /// set the C++ "cut-val" for LHCb::Particle  
+      virtual void set ( const LoKi::Types::CutVals&    cut )
+      { LoKi::Hybrid::Base::_set ( m_cutvals   , cut ) ; }
+      /// set the C++ "cut-val" for LHCb::Vertex 
+      virtual void set ( const LoKi::Types::VCutVals&   cut ) 
+      { LoKi::Hybrid::Base::_set ( m_vcutvals  , cut ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
       // elements  
       // ======================================================================
       /// set the C++ "element" for LHCb::Particle  
@@ -362,21 +407,26 @@ namespace LoKi
       { LoKi::Hybrid::Base::_set ( m_vsources  , cut ) ; }
       // ======================================================================
     protected:
+      // ======================================================================
       /// constrcutor
       Tool
-    ( const std::string& type   ,
-      const std::string& name   ,
-      const IInterface*  parent ) ;
-    /// destrcutor 
-    virtual ~Tool();
-  private:
-    // the default constructor is disabled 
-    Tool() ; ///< the default constructor is disabled     
-    // the copy constructor is disabled 
-    Tool           ( const Tool& )  ; ///< the copy constructor is disabled 
-    // the assignement operator  is disabled 
-      Tool& operator=( const Tool& )  ; ///< no assignement 
+      ( const std::string& type   ,
+        const std::string& name   ,
+        const IInterface*  parent ) ;
+      /// destrcutor 
+      virtual ~Tool();
+      // ======================================================================
     private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      Tool() ;                           // the default constructor is disabled     
+      /// the copy constructor is disabled 
+      Tool           ( const Tool& )  ;     // the copy constructor is disabled 
+      /// the assignement operator  is disabled 
+      Tool& operator=( const Tool& )  ;                       // no assignement 
+      // ======================================================================
+    private:
+      // ======================================================================
       /// helper method to save many lines:
       template <class TYPE1,class TYPE2>
       inline StatusCode _get 
@@ -384,7 +434,9 @@ namespace LoKi
         TYPE1*&            local   , 
         TYPE2&             output  , 
         const std::string& context ) ;
+      // ======================================================================
     protected:
+      // ======================================================================
       // local holder of cuts 
       // predicates:
       LoKi::Types::Cuts*      m_cuts      ;
@@ -403,6 +455,9 @@ namespace LoKi
       // fun-vals:
       LoKi::Types::FunVals*   m_funvals   ;
       LoKi::Types::VFunVals*  m_vfunvals  ;      
+      // cut-vals:
+      LoKi::Types::CutVals*   m_cutvals   ;
+      LoKi::Types::VCutVals*  m_vcutvals  ;      
       // elements:
       LoKi::Types::Elements*  m_elements  ;
       LoKi::Types::VElements* m_velements ;      
@@ -415,9 +470,12 @@ namespace LoKi
       std::string m_actor   ;
       typedef std::vector<std::string> Lines   ;
       Lines       m_lines   ;
+      // ======================================================================
     } ;
-  } // end of namespace LoKi::Hybrid 
-} // end of namespace LoKi
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // helper method to sdave many lines:
 // ============================================================================
@@ -473,6 +531,9 @@ LoKi::Hybrid::Tool::Tool
   // "fun-vals":
   , m_funvals   ( 0 )
   , m_vfunvals  ( 0 )  
+  // "cut-vals":
+  , m_cutvals   ( 0 )
+  , m_vcutvals  ( 0 )  
   // "elements":
   , m_elements  ( 0 )
   , m_velements ( 0 )  
@@ -492,12 +553,14 @@ LoKi::Hybrid::Tool::Tool
   m_modules.push_back ( "LoKiArrayFunctors.decorators" ) ;
   m_modules.push_back ( "LoKiCore.functions"           ) ;
   m_modules.push_back ( "LoKiCore.math"                ) ;
+  //
   declareProperty ( "Modules" , m_modules , "Python modules to be imported" ) ;
   declareProperty ( "Actor"   , m_actor   , "The processing engine"         ) ;
   declareProperty ( "Lines"   , m_lines   , "Additional python lines"       ) ;
+  //
 } 
 // ============================================================================
-/// Destructor (virtual and protected) 
+// Destructor (virtual and protected) 
 // ============================================================================
 LoKi::Hybrid::Tool::~Tool() {}
 // ============================================================================
@@ -534,6 +597,9 @@ StatusCode LoKi::Hybrid::Tool::finalize  ()
   // fun-vals:
   if ( 0 != m_funvals   ) { delete m_funvals   ; m_funvals   = 0  ; }
   if ( 0 != m_vfunvals  ) { delete m_vfunvals  ; m_vfunvals  = 0  ; }
+  // cut-vals:
+  if ( 0 != m_cutvals   ) { delete m_cutvals   ; m_cutvals   = 0  ; }
+  if ( 0 != m_vcutvals  ) { delete m_vcutvals  ; m_vcutvals  = 0  ; }
   // elements:
   if ( 0 != m_elements  ) { delete m_elements  ; m_elements  = 0  ; }
   if ( 0 != m_velements ) { delete m_velements ; m_velements = 0  ; }

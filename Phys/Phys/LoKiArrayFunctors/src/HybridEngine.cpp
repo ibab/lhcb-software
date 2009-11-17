@@ -1,4 +1,4 @@
-// $Id: HybridEngine.cpp,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: HybridEngine.cpp,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -32,13 +32,15 @@ LoKi::Hybrid::Engine::~Engine() {}
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   template <class TYPE> 
   inline StatusCode _process 
   ( const std::string& name , const TYPE& cut )
   {
     LoKi::Hybrid::EngineActor& actor = LoKi::Hybrid::EngineActor::instance() ;
     return actor.process ( name , cut ) ;
-  } ;
+  } 
+  // ==========================================================================
 }
 // ============================================================================
 // predicates:
@@ -122,6 +124,20 @@ StatusCode LoKi::Hybrid::Engine::process
 StatusCode LoKi::Hybrid::Engine::process
 ( const std::string&           name , 
   const LoKi::Types::VFunVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// cut-Vals
+// ============================================================================
+// add the cut-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&          name , 
+  const LoKi::Types::CutVals& cut  ) const { return _process ( name , cut ) ; }
+// ============================================================================
+// add the cut-val
+// ============================================================================
+StatusCode LoKi::Hybrid::Engine::process
+( const std::string&           name , 
+  const LoKi::Types::VCutVals& cut  ) const { return _process ( name , cut ) ; }
 // ============================================================================
 // Elements
 // ============================================================================

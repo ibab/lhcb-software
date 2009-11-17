@@ -1,4 +1,4 @@
-// $Id: IHybridTool.h,v 1.3 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: IHybridTool.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDTOOL_H 
 #define LOKI_IHYBRIDTOOL_H 1
@@ -21,6 +21,7 @@
 // ============================================================================
 namespace LoKi
 { 
+  // ==========================================================================
   /** @class IHybridTool IHybridTool.h LoKi/IHybridTool.h
    *
    *  Helper interface for implementation of C++/Python "Hybrid" solution
@@ -39,8 +40,10 @@ namespace LoKi
   class IHybridTool : public virtual IAlgTool 
   {
   public:
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     // predicates:
@@ -82,6 +85,13 @@ namespace LoKi
     /// set the C++ "fun-val" for LHCb::Vertex 
     virtual void set ( const LoKi::Types::VFunVals& cut ) = 0 ;
     // ========================================================================
+    // cut-vals:
+    // ========================================================================
+    /// set the C++ "cut-val" for LHCb::Particle  
+    virtual void set ( const LoKi::Types::CutVals&  cut ) = 0 ;
+    /// set the C++ "cut-val" for LHCb::Vertex 
+    virtual void set ( const LoKi::Types::VCutVals& cut ) = 0 ;
+    // ========================================================================
     // elements:
     // ========================================================================
     /// set the C++ "element" for LHCb::Particle  
@@ -97,11 +107,15 @@ namespace LoKi
     virtual void set ( const LoKi::Types::VSources& cut ) = 0 ;
     // ========================================================================
   protected:
+    // ========================================================================
     /// destructor : virtual and protected 
-    virtual ~IHybridTool() ;
+    virtual ~IHybridTool() ;              // destructor : virtual and protected 
+    // ========================================================================
   private:
+    // ========================================================================
   }; 
-} // end of namespace LoKi 
+  // ==========================================================================
+} //                                                      end of namespace LoKi 
 // ============================================================================
 // The END 
 // ============================================================================

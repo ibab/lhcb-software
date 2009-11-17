@@ -1,4 +1,4 @@
-// $Id: HybridEngine.h,v 1.3 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: HybridEngine.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
 // ===========================================================================
 #ifndef LOKI_HYBRID_ENGINE_H 
 #define LOKI_HYBRID_ENGINE_H 1
@@ -13,11 +13,13 @@
 // ===========================================================================
 namespace LoKi 
 {  
+  // ==========================================================================
   namespace Hybrid 
   {
-    /** @class Engine HybridEngine.h LoKi/HybridEngine.h
+    // ========================================================================
+    /** @class Engine LoKi/HybridEngine.h
      *  
-     *  Helper class forn implementation of Hybrid Tools 
+     *  Helper class for implementation of Hybrid Tools 
      *
      *  This file is a part of LoKi project - 
      *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -32,11 +34,14 @@ namespace LoKi
      */
     class Engine
     {
+      // ======================================================================
     public:
+      // ======================================================================
       /// constructor
-      Engine () ;
+      Engine () ;                                                // constructor
       /// destructor 
-      virtual ~Engine( );
+      virtual ~Engine( );                                        //  destructor 
+      // ======================================================================
     public:
       // ======================================================================
       // predicates:
@@ -102,6 +107,17 @@ namespace LoKi
       ( const std::string&           name , 
         const LoKi::Types::VFunVals& cut  ) const ;
       // ======================================================================      
+      // cut-vals 
+      // ======================================================================      
+      /// add the "fun-val"
+      StatusCode process
+      ( const std::string&          name , 
+        const LoKi::Types::CutVals& cut  ) const ;
+      /// add the "fun-val"
+      StatusCode process 
+      ( const std::string&           name , 
+        const LoKi::Types::VCutVals& cut  ) const ;
+      // ======================================================================      
       // elements
       // ======================================================================      
       /// add the "element"
@@ -125,10 +141,12 @@ namespace LoKi
         const LoKi::Types::VSources&  cut  ) const ;
       // ======================================================================      
     } ;  
-  } // end of namespace LoKi::Hybrid
-} // end of namespace LoKi
-// ===========================================================================
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
 // The END 
-// ===========================================================================
+// ============================================================================
 #endif // LOKI_CUTSHOLDERHELPER_H
-// ===========================================================================
+// ============================================================================

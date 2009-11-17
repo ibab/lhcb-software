@@ -1,4 +1,4 @@
-// $Id: IHybridFactory.h,v 1.2 2008-02-19 16:13:07 ibelyaev Exp $
+// $Id: IHybridFactory.h,v 1.3 2009-11-17 12:41:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_IHYBRIDFACTORY_H 
 #define LOKI_IHYBRIDFACTORY_H 1
@@ -21,6 +21,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   /** @class IHybridFactory IHybridFactory.h LoKi/IHybridFactory.h
    *  The abstract interface to "hybrid factory"  
    *  @author Vanya BELYAEV ibelayev@physics.syr.edu
@@ -29,8 +30,10 @@ namespace LoKi
   class IHybridFactory : public virtual IAlgTool
   {
   public: 
+    // ========================================================================
     /// Return the unique interface ID
     static const InterfaceID& interfaceID() ;
+    // ========================================================================
   public:
     // ========================================================================
     // predicates 
@@ -175,6 +178,30 @@ namespace LoKi
       LoKi::Types::VFunVal& func         ,
       const std::string&    context = "" ) = 0 ;    
     // ========================================================================
+    // "cut-vals"
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&   pycode       ,
+      LoKi::Types::CutVal& func         ,
+      const std::string&   context = "" ) = 0 ;    
+    // ========================================================================
+    /** "Factory": get the the object form python code 
+     *  @param pycode the python pseudo-code of the function
+     *  @param func the placeholder for the result 
+     *  @param context the context lines to be executed 
+     *  @return StatusCode 
+     */
+    virtual StatusCode get
+    ( const std::string&    pycode       ,
+      LoKi::Types::VCutVal& func         ,
+      const std::string&    context = "" ) = 0 ;    
+    // ========================================================================
     // "elements"
     // ========================================================================
     /** "Factory": get the the object form python code 
@@ -225,11 +252,12 @@ namespace LoKi
     // ========================================================================
   protected:
     // ========================================================================
-    // virtual & protected desctructor 
-    virtual ~IHybridFactory( ); ///< Destructor
+    /// virtual & protected desctructor 
+    virtual ~IHybridFactory( );                                   // Destructor
     // ========================================================================
   } ;
-} // end of namespace LoKi
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,20 +1,22 @@
-// $Id: HybridEngineActor.h,v 1.3 2008-02-19 16:13:07 ibelyaev Exp $
-// ===========================================================================
+// $Id: HybridEngineActor.h,v 1.4 2009-11-17 12:41:41 ibelyaev Exp $
+// ============================================================================
 #ifndef LOKI_HYBRID_ENGINE_ACTOR_H 
 #define LOKI_HYBRID_ENGINE_ACTOR_H 1
-// ===========================================================================
+// ============================================================================
 // Include files
-// ===========================================================================
+// ============================================================================
 // LoKi
-// ===========================================================================
+// ============================================================================
 #include "LoKi/Interface.h"
 #include "LoKi/IHybridTool.h"
-// ===========================================================================
+// ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid 
   {
-    /** @class EngineActor HybridEngineActor.h LoKi/HybridEngineActor.h
+    // ========================================================================
+    /** @class EngineActor LoKi/HybridEngineActor.h
      *  
      *  This file is a part of LoKi project - 
      *    "C++ ToolKit  for Smart and Friendly Physics Analysis"
@@ -29,13 +31,16 @@ namespace LoKi
      */
     class EngineActor
     { 
+      // ======================================================================
     public:
-      // get the static instance 
-      static EngineActor& instance() ;
+      // ======================================================================
+      /// get the static instance 
+      static EngineActor& instance() ;               // get the static instance 
       /// connect the hybrid tool for code translation 
       StatusCode connectTool (       LoKi::IHybridTool* tool ) ;
       /// disconnect the tool 
       StatusCode releaseTool ( const LoKi::IHybridTool* tool ) ;
+      // ======================================================================
     public:
       // ======================================================================
       // predicates 
@@ -101,6 +106,17 @@ namespace LoKi
       ( const std::string&           name , 
         const LoKi::Types::VFunVals& cut  ) const ;
       // ======================================================================
+      // cut-vals
+      // ======================================================================
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::CutVals&  cut  ) const ;
+      /// propagate the fun-val to the tool 
+      StatusCode process
+      ( const std::string&           name , 
+        const LoKi::Types::VCutVals& cut  ) const ;
+      // ======================================================================
       // elements:
       // ======================================================================
       /// propagate the element to the tool 
@@ -124,27 +140,39 @@ namespace LoKi
         const LoKi::Types::VSources&  cut  ) const ;
       // ======================================================================
     protected:
+      // ======================================================================
       /// Standard constructor
-      EngineActor() ;
-      virtual ~EngineActor( ); ///< Destructor
+      EngineActor() ;                                   // Standard constructor 
+      // Destructor
+      virtual ~EngineActor() ;                          //           Destructor
+      // ======================================================================
     private:
-      // just to save some lines 
+      // ======================================================================
+      /// just to save some lines 
       template <class TYPE>
       inline StatusCode _add 
-      ( const std::string& name , const TYPE& cut ) const ; ///< just to save some lines 
+      ( const std::string& ename ,
+        const TYPE&        cut   ) const ; // just to save some lines 
+      // ======================================================================
     private:
+      // ======================================================================
       // the copy contructor is disabled 
       EngineActor           ( const EngineActor& );
       // ther assignement operator is disabled 
       EngineActor& operator=( const EngineActor& );
+      // ======================================================================
     private:
-      // the tool itself 
-      LoKi::Interface<LoKi::IHybridTool> m_tool ;
+      // ======================================================================
+      /// the tool itself 
+      LoKi::Interface<LoKi::IHybridTool> m_tool ;            // the tool itself 
+      // ======================================================================
     };
-  } // end of namespace LoKi::Hybrid
-} // end of namespace LoKi
-// ===========================================================================
+    // ========================================================================
+  } //                                            end of namespace LoKi::Hybrid
+  // ==========================================================================
+} //                                                      end of namespace LoKi
+// ============================================================================
 // The END 
-// ===========================================================================
+// ============================================================================
 #endif // LOKI_CUTSHOLDER_H
-// ===========================================================================
+// ============================================================================
