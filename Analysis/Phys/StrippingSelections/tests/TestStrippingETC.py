@@ -24,6 +24,8 @@ sc.appendStream( StreamDstar.stream )
 sc.appendStream( StreamLambda.stream )
 sc.appendStream( StreamBelectron.stream )
 
+print sc
+
 from Configurables import EventTuple, TupleToolSelResults
 
 tag = EventTuple("TagCreator")
@@ -37,7 +39,7 @@ from Configurables import DaVinci
 
 DaVinci().appendToMainSequence( [ sc.sequence() ] )   # Append the stripping selection sequence to DaVinci
 DaVinci().appendToMainSequence( [ tag ] )             # Append the TagCreator to DaVinci
-DaVinci().EvtMax = 1000                        # Number of events
+DaVinci().EvtMax = 5000                        # Number of events
 DaVinci().ETCFile = "etc.root"                 # ETC file name
 
 #importOptions("$STRIPPINGSELECTIONSROOT/tests/2008-InclBJpsiMuMu.py")     # Data file

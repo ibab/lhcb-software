@@ -45,9 +45,8 @@ Bs2KstKst.MotherCut ="(MIPCHI2DV(PRIMARY)<16) & (VFASPF(VCHI2/VDOF)<5) & (BPVVDC
 # Create StrippingLine with this selection #
 ############################################
 
-Bs2KstKstDetLine = StrippingLine('BsKst0Kst0Line'
+line = StrippingLine('BsKst0Kst0Line'
                , prescale = 1
                , algos = [Bs2KstKst]
-               , stream = 'Hadron'
             )
 

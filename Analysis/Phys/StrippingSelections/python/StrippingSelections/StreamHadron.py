@@ -13,6 +13,7 @@ from StrippingSelections import StrippingBs2PhiPhi
 from StrippingSelections import StrippingBu2D0K_D02KSPiPi
 from StrippingSelections import StrippingBu2hhh
 from StrippingSelections import StrippingTopo
+from StrippingSelections import StrippingBs2Kst0Kst0
 
 stream = StrippingStream("Hadron")
 stream.appendLines( [ 
@@ -25,5 +26,6 @@ stream.appendLines( [
 		        StrippingBu2D0K_D02KSPiPi.line2,  
 		        StrippingBu2hhh.line,  
 		        StrippingTopo.line1,
-                        StrippingTopo.line2
+                        StrippingTopo.line2, 
+                        StrippingBs2Kst0Kst0.line
 		    ] )
