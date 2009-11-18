@@ -1,4 +1,4 @@
-// $Id: FlavourTagDeepCloner.h,v 1.2 2009-11-17 16:46:43 jpalac Exp $
+// $Id: FlavourTagDeepCloner.h,v 1.3 2009-11-18 07:30:26 jpalac Exp $
 #ifndef FLAVOURTAGDEEPCLONER_H 
 #define FLAVOURTAGDEEPCLONER_H 1
 
@@ -11,6 +11,8 @@ namespace LHCb
 {
   class FlavourTag;
 }
+
+class ICloneParticle;
 
 /** @class FlavourTagDeepCloner FlavourTagDeepCloner.h
  *  

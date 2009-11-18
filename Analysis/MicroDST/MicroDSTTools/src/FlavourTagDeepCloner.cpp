@@ -1,4 +1,4 @@
-// $Id: FlavourTagDeepCloner.cpp,v 1.2 2009-11-17 16:46:43 jpalac Exp $
+// $Id: FlavourTagDeepCloner.cpp,v 1.3 2009-11-18 07:30:26 jpalac Exp $
 // Include files 
 
 // from Gaudi
@@ -9,7 +9,7 @@
 
 //MicroDST
 #include "MicroDST/ICloneTagger.h"
-
+#include "MicroDST/ICloneParticle.h"
 // local
 #include "FlavourTagDeepCloner.h"
 
