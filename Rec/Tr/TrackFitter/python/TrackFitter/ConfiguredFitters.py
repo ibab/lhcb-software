@@ -19,7 +19,7 @@ def ConfiguredMasterFitter( Name,
                             NoDriftTimes       = TrackSys().noDrifttimes(),
                             KalmanSmoother     = TrackSys().kalmanSmoother(),
                             LiteClusters       = False,
-                            ApplyMaterialCorrections = True,
+                            ApplyMaterialCorrections = not TrackSys().noMaterialCorrections(),
                             StateAtBeamLine = True ):
     if isinstance(Name,TrackMasterFitter) :
         fitter = Name
@@ -31,7 +31,7 @@ def ConfiguredMasterFitter( Name,
     # add the tools that need to be modified
     fitter.addTool( TrackMasterExtrapolator, name = "Extrapolator" )
     fitter.addTool( TrackKalmanFilter, name = "NodeFitter" )
-
+    
     # apply material corrections
     if not ApplyMaterialCorrections:
         fitter.ApplyMaterialCorrections = False
@@ -102,7 +102,7 @@ def ConfiguredEventFitter( Name,
                            NoDriftTimes       = TrackSys().noDrifttimes(),
                            KalmanSmoother     = TrackSys().kalmanSmoother(),
                            LiteClusters = False,
-                           ApplyMaterialCorrections = True,
+                           ApplyMaterialCorrections = not TrackSys().noMaterialCorrections(),
                            StateAtBeamLine = True ):
     # make sure the name is unique
     if allConfigurables.get( Name ) :
@@ -123,57 +123,7 @@ def ConfiguredEventFitter( Name,
                          name = "Fitter")
     return eventfitter
 
-def ConfiguredPrefitter( Name = "DefaultEventFitter",
-                         TracksInContainer = "Rec/Tracks/Best",
-                         FieldOff = TrackSys().fieldOff(),
-                         SimplifiedGeometry = TrackSys().simplifiedGeometry(),
-                         LiteClusters = False ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
-                                        FieldOff=FieldOff,
-                                        SimplifiedGeometry=SimplifiedGeometry,
-                                        NoDriftTimes=True,
-                                        LiteClusters=LiteClusters)
-    eventfitter.Fitter.NumberFitIterations = 1
-    eventfitter.Fitter.MaxNumberOutliers = 0
-    eventfitter.Fitter.ErrorY = 100
-    return eventfitter
 
-def ConfiguredFitVelo( Name = "FitVelo",
-                       TracksInContainer = "Rec/Track/PreparedVelo"):
-    # note that we ignore curvatue in velo. in the end that seems the
-    # most sensible thing to do.
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
-
-def ConfiguredFitVeloTT( Name = "FitVeloTT",
-                         TracksInContainer = "Rec/Track/VeloTT" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    # Make the nodes even though this is a refit, to add StateAtBeamLine
-    # (PatVeloTT also fits but does not make nodes)
-    eventfitter.Fitter.MakeNodes = True
-    return eventfitter
-
-#def ConfiguredFitSeed( Name = "FitSeed",
-#                       TracksInContainer = "Rec/Track/Seed" ):
-#    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-#    eventfitter.Fitter.StateAtBeamLine = False
-#    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
-#    return eventfitter
-
-def ConfiguredFitForward( Name = "FitForward",
-                         TracksInContainer = "Rec/Track/Forward" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
-
-def ConfiguredFitMatch( Name = "FitMatch",
-                        TracksInContainer = "Rec/Track/Match" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
- 
-def ConfiguredFitDownstream( Name = "FitDownstream",
-                             TracksInContainer = "Rec/Track/Downstream" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
 
 def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True,
                           ForceUseDriftTime = True ):
@@ -223,42 +173,6 @@ def ConfiguredStraightLineFitter( Name, TracksInContainer,
     eventfitter.Fitter.AddDefaultReferenceNodes = False
     return eventfitter
 
-
-####################################################################
-## Configurations above for different track types are obsolete     #
-## starting from TrackFitter v2r38 (see TrackFitter release notes) #
-##                                                                 #
-## From now on we use a universal fitter for all track types,      #
-## and a specially configured fitter for TTracks                   #
-##                                                                 #
-## The ConfiguredFitters above are left for backward compatibility #
-####################################################################
-
-def ConfiguredFit( Name ,
-                   TracksInContainer ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    return eventfitter
-
-def ConfiguredFitSeed( Name = "FitSeedForMatch",
-                       TracksInContainer = "Rec/Track/Seed" ):
-    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
-    ## Such a small error is needed for TrackMatching to work properly,
-    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
-    return eventfitter
-
-
-
-
-
-
-
-
-
-
-def ConfiguredStraightLineFit( Name, TracksInContainer,
-                               NoDriftTimes =  TrackSys().noDrifttimes()  ):
-    return ConfiguredStraightLineFitter(Name, TracksInContainer, NoDriftTimes)
-
 def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
                                   MaxNumberOutliers = 0 ):
     # create the OTCosmicsProjector if it doesn't exist yet
@@ -274,4 +188,53 @@ def ConfiguredCosmicsEventFitter( Name, TracksInContainer,
     eventfitter.Fitter.MaxNumberOutliers = MaxNumberOutliers
     eventfitter.Fitter.ErrorQoP = [ 25, 0 ]
     return eventfitter
+
+
+####################################################################
+## Below are configurations for 'Fit' algorithms used in           #
+## RecoTracking.py. Don't use these.                               #
+####################################################################
+
+def ConfiguredFitVelo( Name = "FitVelo",
+                       TracksInContainer = "Rec/Track/PreparedVelo"):
+    # note that we ignore curvatue in velo. in the end that seems the
+    # most sensible thing to do.
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+
+def ConfiguredFitVeloTT( Name = "FitVeloTT",
+                         TracksInContainer = "Rec/Track/VeloTT" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    # Make the nodes even though this is a refit, to add StateAtBeamLine
+    # (PatVeloTT also fits but does not make nodes)
+    eventfitter.Fitter.MakeNodes = True
+    return eventfitter
+
+def ConfiguredFitSeed( Name = "FitSeedForMatch",
+                       TracksInContainer = "Rec/Track/Seed" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    ## Such a small error is needed for TrackMatching to work properly,
+    eventfitter.Fitter.ErrorQoP = [0.04, 5e-08]
+    return eventfitter
+
+def ConfiguredFitForward( Name = "FitForward",
+                         TracksInContainer = "Rec/Track/Forward" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+
+def ConfiguredFitMatch( Name = "FitMatch",
+                        TracksInContainer = "Rec/Track/Match" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+ 
+def ConfiguredFitDownstream( Name = "FitDownstream",
+                             TracksInContainer = "Rec/Track/Downstream" ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+
+def ConfiguredFit( Name ,
+                   TracksInContainer ):
+    eventfitter = ConfiguredEventFitter(Name,TracksInContainer)
+    return eventfitter
+
 
