@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.19 2009-11-05 18:22:13 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.20 2009-11-18 15:28:27 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -243,7 +243,8 @@ class Gauss(LHCbConfigurableUser):
         MessageSvc().OutputLevel = INFO
         #ToolSvc.EvtGenTool.OutputLevel = 4 is it still necessart to reduce print?
         MessageSvc().setWarning.append( 'XmlGenericCnv' )
-        MessageSvc().Format = '% F%24W%S%7W%R%T %0W%M'
+        if not MessageSvc().isPropertySet("Format"):
+            MessageSvc().Format = '% F%24W%S%7W%R%T %0W%M'
 
 
     ##

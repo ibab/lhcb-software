@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-18 - Gloria CORTI
+ - Fix bug reported in production of not being able to set anymore the format
+   of the MessageSvc
+   . python/Gauss/Configuration.py
+
 ! 2009-11-18 - Silvia Miglioranzi
  - Update ref files for QMTests onslc4_ia32_gcc34_dbg. 
 
