@@ -69,9 +69,8 @@ MonitorSvc::MonitorSvc(const std::string& name, ISvcLocator* sl):
    declareProperty("disableDeclareInfoHistos", m_disableDeclareInfoHistos = 0);
    declareProperty("maxNumCountersMonRate", m_maxNumCountersMonRate = 1000);
       
-   declareProperty("teste", m_teste);
- 
-  MsgStream msg(msgSvc(),"MonitorSvc");
+
+   m_utgid = RTL::processName();
 }
 
 
@@ -96,13 +95,14 @@ StatusCode MonitorSvc::queryInterface(const InterfaceID& riid, void** ppvIF) {
 
 
 StatusCode MonitorSvc::initialize() {
+
   MsgStream msg(msgSvc(),"MonitorSvc");
   StatusCode sc = Service::initialize();
  // msg << MSG::DEBUG << "Initialize=====>m_disableDeclareInfoHistos : " << m_disableDeclareInfoHistos << endreq;
-  msg << MSG::INFO << "Initialize=====>m_uniqueServiceNames : " << m_uniqueServiceNames << endreq;
+
 
   //const std::string& utgid = RTL::processName();
-  m_utgid = RTL::processName();
+
   msg << MSG::DEBUG << "initialize: Setting up DIM for UTGID " << m_utgid << endreq;
 
   if ( 0 == m_disableDimRcpGaucho) {
