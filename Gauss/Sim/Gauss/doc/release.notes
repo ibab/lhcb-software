@@ -4,10 +4,12 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+!========================= Gauss v37r6 2009-11-18 ============================
 ! 2009-11-18 - Gloria CORTI
  - Fix bug reported in production of not being able to set anymore the format
    of the MessageSvc
    . python/Gauss/Configuration.py
+ - Put in Gauss-DEV.py latest tags of DDDB and SIMCOND
 
 ! 2009-11-18 - Silvia Miglioranzi
  - Update ref files for QMTests onslc4_ia32_gcc34_dbg. 
