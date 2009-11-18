@@ -4,6 +4,9 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-11-18 - Silvia Miglioranzi
+ - Update ref files for QMTests onslc4_ia32_gcc34_dbg. 
+
 ! 2009-11-16 - Silvia MIGLIORANZI
  - Update ref files for QMTests on slc4_amd64_gcc34_dbg. Increased the time 
    limit for gauss-up.qmt.
