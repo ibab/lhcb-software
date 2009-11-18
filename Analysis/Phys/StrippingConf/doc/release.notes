@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.30 2009-11-12 13:37:54 poluekt Exp $
+!$Id: release.notes,v 1.31 2009-11-18 10:46:20 poluekt Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-11-18 - Anton POLUEKTOV
+ - Printout for StrippingConf/StrippingStream/StrippingAlg.  
+   One can do "print StrippingConf" from python now. 
+ - Check if the line was declared but not appended to any stream. 
+   Warning is produced in this case. 
 
 ! 2009-11-12 - Anton POLUEKTOV
  - StrippingLine.py: bug fix with ODIN and L0 filters (missing import)

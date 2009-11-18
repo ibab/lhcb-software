@@ -23,6 +23,7 @@ class StrippingStream ( LHCbConfigurableUser ) :
     def appendLines (self, lines) : 
 	for line in lines : 
 	    self.lines().append(line)
+	    line.declareAppended()
 	    
     def createConfigurables(self, TES = False) : 
 	for line in self.lines() : 

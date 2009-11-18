@@ -60,6 +60,21 @@ _protected_ = ( 'IgnoreFilterPassed' , 'Members' , 'ModeOR', 'DecisionName', 'Pr
 # Own slots of StrippingLine
 _myslots_   = ( 'name' , 'prescale'  , 'postscale' , 'ODIN', 'L0DU', 'HLT' , 'algos' ) 
 
+
+_stripping_lines__ = []
+
+# =============================================================================
+## Add the created line into the local storage of created Hlt1Lines 
+def _add_to_stripping_lines_( line ) :
+    """
+    Add the line into the local storage of created Hlt1Lines 
+    """
+    _stripping_lines__.append ( line ) 
+
+def strippingLines () :
+    return tuple(_stripping_lines__)
+
+
 class bindMembers (object) :
     """
     Simple class to represent a set of StrippingMembers which are bound to a line
@@ -311,7 +326,17 @@ class StrippingLine(object):
         _members = _boundMembers.members()
         self._outputsel = _boundMembers.outputSelection()
         self._outputloc = _boundMembers.outputLocation()
+        
+        self._appended = False
 
+        # register into the local storage of all created Lines
+        _add_to_stripping_lines_( self ) 
+        
+    def declareAppended( self ) :
+	self._appended = True 
+	
+    def isAppended( self ) : 
+	return self._appended
 
     def createConfigurable( self ) : 
         # check for forbidden attributes
