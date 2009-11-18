@@ -3,6 +3,50 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v19r8>2009-11-19 Boole v19r8</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8
+ and SQLDDDB v5r14, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
+
+Version for post-MC09 developments. Output needs Brunel v35r8 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+Also supports simulation of upgrade geometry, this requires
+SQLDDDB v5r12 or later, AppConfig v3r5 or later
+
+ - Changes to Configuration:
+   . Definition of MC content of DIGI is delegated to SimConf configurable
+     (GaudiConf v13r0)
+   . New option Boole().ProductionMode", special settings for running in
+     production, replaces "NoWarnings" option (kept for backward compatibility)
+   . Added Velo Tell1 digitisation and clusterisation line
+     + introduces bit perfect Tell1 code (actually a high level model of the 
+       firmware that is run on the VELO acquisition boards)
+     + Switched on by new option Boole().VeloTell1Processing
+     (VeloDAQ v4r11, VeloAlgorithms v5r0, Tell1Kernel v1r9) 
+
+ - Persistency changes:
+   . All MC information on DIGI is now packed. Controlled by Boole().EnablePack
+     (EventPacker v2r0, PackedEvent v3r7, GaudiConf v13r0)
+   . "Extended" DIGI format now includes packed MC hits, and Spillover containers
+     (GaudiConf v13r0)
+
+ - New tuning:
+   . Apply patch #3399 XmlGenericCnv uses inneficient part of Xerces-C API for
+     DOM walking. Speeds up loading LHCb geometry by about 10% (DetDescCnv v4r10)
+   . Modifiled BooleInit to use the new "LumiTrigger" name of ODIN trigger type,
+     instead of "RandomTrigger", for consistency with real data
+     (DigiAlg v4r18, DAQEvent v8r2)
+
+ - Bug fixes:
+   . Modified the dictionary for DataObject to make the version persistent.
+   . Fixed bug #57416: improve IncidentSvc printout when an exception is thrown
+     by handlers (GaudiSvc v18r8)
+   . Fix a memory leak in XmlGenericCnv.cpp (DetDescCnv v4r10)
+
+ - Monitoring changes:
+   . Removed test on MCParticle/MCVertex packing and unpacking
+     (does not make sense here, should be done in Gauss)
+
 </PRE><H1><A NAME=v19r7>2009-10-22 Boole v19r7</A></H1><PRE>
 This version uses projects Gaudi v21r5, LHCb v28r1, Lbcom v7r7
  and SQLDDDB v5r13, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
