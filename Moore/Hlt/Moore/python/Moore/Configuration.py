@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.96 2009-11-18 09:36:03 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.97 2009-11-18 17:48:27 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -31,7 +31,7 @@ def _datafmt(fn) :
 
 # canonicalize tck  -- eats integer + string, returns canonical string
 def _tck(x) :
-    if type(x) == str and x[0:2] == '0x' : return x
+    if type(x) == str and x[0:2] == '0x' : return '0x%08x'%int(x,16)
     return '0x%08x'%int(x)
 
 class Moore(LHCbConfigurableUser):
@@ -148,6 +148,7 @@ class Moore(LHCbConfigurableUser):
             tmoCatcher = OnlineEnv.timeoutAlg(self.getProp('TimeOutThreshold'),True)
             tmoCatcher.OutputLevel = 2
             evtMerger.TimeoutBits = self.getProp('TimeOutBits')
+	    #ExceptionSvc().Catch = 'NONE'
             ApplicationMgr().TopAlg.append(tmoCatcher)
 
         # define the send sequence
@@ -374,7 +375,7 @@ class Moore(LHCbConfigurableUser):
     def _config_with_tck(self):
         from Configurables import HltConfigSvc
         cfg = HltConfigSvc( prefetchDir = self.getProp('prefetchConfigDir')
-                          , initialTCK = self.getProp('InitialTCK')
+                          , initialTCK =  _tck(self.getProp('InitialTCK'))
                           , checkOdin = self.getProp('CheckOdin')
                           , ConfigAccessSvc = self.getConfigAccessSvc().getFullName() ) 
         # TODO: make sure we are the first one...
@@ -408,7 +409,7 @@ class Moore(LHCbConfigurableUser):
                 self.setProp('CheckOdin',True)
             # determine the partition we run in, and adapt settings accordingly...
             if OnlineEnv.PartitionName == 'FEST' or OnlineEnv.PartitionName == 'LHCb' :
-                self.setProp('InitialTCK', OnlineEnv.InitialTCK )
+                self.setProp('InitialTCK',OnlineEnv.InitialTCK)
                 self.setProp('CheckOdin',True)
             if OnlineEnv.PartitionName == 'FEST' :
                 self.setProp('Simulation',True)

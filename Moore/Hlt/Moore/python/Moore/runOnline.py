@@ -20,6 +20,7 @@ def start() :
        Moore().CondDBtag = 'sim-20090402-vc-md100'
        Moore().UseSnapshotOnline = True
        Moore().EnableRunChangeHandler = False
+       Moore().TimeOutThreshold = 10000
     else :
        Moore().Simulation = False
        Moore().CondDBtag = 'head-20090713'
