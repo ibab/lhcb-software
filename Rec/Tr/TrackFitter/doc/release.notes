@@ -3,6 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-11-17 - Wouter Hulsbergen
+ - Update of ConfiguredFitters:
+    - use TrackSys() flag
+    - clean-up
+
 !=========================== TrackFitter v2r39 2009-11-13 ===================
 ! 2009-11-11 - Kostyantyn Holubyev
  - New configured fitters (ConfiguredFit - a simple wrapper for
