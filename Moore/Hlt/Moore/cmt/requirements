@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.90 2009-11-05 08:53:27 graven Exp $
+# $Id: requirements,v 1.91 2009-11-18 09:37:42 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v8r1
+version v8r2
 
 branches doc cmt options python
 
@@ -42,11 +42,7 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
-use Hlt2SharedParticles v2r5        Hlt
-use HltCommon           v5r13p1     Hlt
-use HltLine             v1r9        Hlt
-use TCKUtils            v1r5p1      Hlt
-use LHCbAlgs            v2r29p1     Kernel
+use  Hlt1Lines          v1r8p1   Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 
