@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.10 2009-11-18 16:37:32 gpassal Exp $
+// $Id: MuonNNetRec.cpp,v 1.11 2009-11-18 17:21:14 gpassal Exp $
 
 #include <list>
 
@@ -592,7 +592,7 @@ const std::vector<MuonHit*>* MuonNNetRec::trackhits()   {
 }
 
 
-StatusCode MuonCombRec::copyToLHCbTracks()
+StatusCode MuonNNetRec::copyToLHCbTracks()
 {
   
   typedef std::vector< MuonTrack* > MTracks;
