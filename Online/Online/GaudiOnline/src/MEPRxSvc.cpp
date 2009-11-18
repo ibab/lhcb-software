@@ -8,7 +8,7 @@
 //  Author    : Niko Neufeld
 //                  using code by B. Gaidioz and M. Frank
 //
-//      Version   : $Id: MEPRxSvc.cpp,v 1.82 2009-11-13 15:21:21 dsvantes Exp $
+//      Version   : $Id: MEPRxSvc.cpp,v 1.83 2009-11-18 16:16:24 dsvantes Exp $
 //
 //  ===========================================================
 #ifdef _WIN32
@@ -450,8 +450,8 @@ int MEPRx::addMEP(int sockfd, const MEPHdr *hdr, int srcid) {
       m_odinMEP = (u_int8_t *) newhdr;
   m_parent->m_rxEvt[srcid] += m_pf;
   m_parent->m_totRxEvt += m_pf;
-  m_parent->m_rxMEP[srcid] ++;
-  m_parent->m_totRxMEP ++;
+  m_parent->m_rxMEP[srcid]++;
+  m_parent->m_totRxMEP++;
   return (m_nrx == m_nSrc) ? spaceAction() : MEP_ADDED;
 }
 
@@ -1037,6 +1037,7 @@ void MEPRxSvc::clearCounters() {
   resetCounters(m_rxOct, m_nSrc);
   resetCounters(m_rxPkt, m_nSrc);
   resetCounters(m_rxEvt, m_nSrc);
+  resetCounters(m_rxMEP, m_nSrc);
   resetCounters(m_badPckFktPkt, m_nSrc);
   resetCounters(m_badLenPkt, m_nSrc);
   resetCounters(m_misPkt, m_nSrc);
@@ -1050,6 +1051,7 @@ void MEPRxSvc::clearCounters() {
   m_totRxOct           = 0;
   m_totRxPkt           = 0;
   m_totRxEvt	       = 0;
+  m_totRxMEP	       = 0;
   m_incEvt             = 0;
   m_totMEPReqPkt       = 0;
   m_numMEPRecvTimeouts = 0;
