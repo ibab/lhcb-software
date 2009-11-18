@@ -1,5 +1,5 @@
 # options to run mdf writer for lumi writer
-__version__ = "$Id: LumiWriterConf.py,v 1.2 2009-11-11 16:52:57 panmanj Exp $"
+__version__ = "$Id: LumiWriterConf.py,v 1.3 2009-11-18 09:35:39 panmanj Exp $"
 __author__  = "Jaap Panman"
 
 
@@ -107,9 +107,7 @@ class LumiWriterConf(LHCbConfigurableUser):
   def __apply_configuration__(self):
 
     GaudiKernel.ProcessJobOptions.PrintOff()
-
     EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
-    importOptions('$STDOPTS/DecodeRawEvent.py')
 
     # forward some settings...
     self.setOtherProps( LHCbApp(), ['EvtMax','SkipEvents','DataType'] )

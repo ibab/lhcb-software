@@ -4,6 +4,9 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+! 2009-11-18 - Jaap Panman
+ - fix to LumiWriterConf, LumiReaderConf to make unit test work in Rec environment
+
 !========================== LumiAlgs v3r0 2009-11-16 =========================
 ! 2009-11-14 - Jaap Panman
  - Added explicit createODIN in Configuration.touchFSR()
