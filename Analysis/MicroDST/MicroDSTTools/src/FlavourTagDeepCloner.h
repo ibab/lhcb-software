@@ -1,4 +1,4 @@
-// $Id: FlavourTagDeepCloner.h,v 1.3 2009-11-18 07:30:26 jpalac Exp $
+// $Id: FlavourTagDeepCloner.h,v 1.4 2009-11-18 14:42:13 jpalac Exp $
 #ifndef FLAVOURTAGDEEPCLONER_H 
 #define FLAVOURTAGDEEPCLONER_H 1
 
@@ -37,9 +37,43 @@ public:
 
 private:
 
-  typedef MicroDST::BasicCopy<LHCb::FlavourTag> BasicFTCopy;
-
   LHCb::FlavourTag* clone(const LHCb::FlavourTag* tag);
+
+  /**
+   * Clone the taggers of an LHCb::FlavourTag and replace the
+   * original taggers by the clones. The cloning of the taggers is
+   * performed by the cloneTagger method.
+   *
+   *  @author Juan PALACIOS
+   *  @date   2009-11-17
+   *
+   */
+  void cloneTaggers(LHCb::FlavourTag* tag) const;
+
+  /**
+   *
+   * Clone and LHCb::Tagger, replacing its tagger particles by clones.
+   * The cloning of the tagger particles is performed by cloneParticle.
+   *
+   *  @author Juan PALACIOS
+   *  @date   2009-11-17
+   *
+   */
+  LHCb::Tagger cloneTagger(const LHCb::Tagger& tagger) const;
+
+  /**
+   *
+   *  Clone an LHCb::Particle using an IParticleCloner.
+   *
+   *  @author Juan PALACIOS
+   *  @date   2009-11-17
+   *
+   */
+  const LHCb::Particle* cloneParticle(const LHCb::Particle* particle) const;
+
+private:
+
+  typedef MicroDST::BasicCopy<LHCb::FlavourTag> BasicFTCopy;
 
   ICloneParticle* m_particleCloner;
 
