@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.1 2009-10-30 12:06:10 gpassal Exp $
+// $Id: MuonCombRec.cpp,v 1.2 2009-11-18 16:37:32 gpassal Exp $
 // Include files 
 #include <fstream>
 
@@ -6,6 +6,14 @@
 #include "GaudiKernel/DeclareFactoryEntries.h" 
 #include "GaudiKernel/IIncidentSvc.h" 
 #include "GaudiAlg/ISequencerTimerTool.h"
+
+// from LHCbKernel
+#include "Kernel/LHCbID.h"
+
+// from TrackEvent
+#include "Event/Track.h"
+#include "Event/StateVector.h"
+#include "Event/State.h"
 
 #include "MuonTrackRec/MuonLogHit.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -69,6 +77,7 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
   declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
+  declareProperty( "TracksOutputLocation", m_trackOutputLoc  = TrackLocation::Muon );
 }
 
 //=============================================================================
@@ -389,6 +398,12 @@ StatusCode MuonCombRec::muonTrackFind() {
       err()<<"error in clone killer"<<endmsg;
     return StatusCode::FAILURE;
     }
+  }
+  // start track fitting
+  
+  StatusCode scf = trackFit();
+  if(!scf) {
+    warning()<<"WARNING: problem in track fitting"<<endmsg;
   }
   
   return StatusCode::SUCCESS;
@@ -953,5 +968,98 @@ StatusCode MuonCombRec::sortMuonHits()
     }
   }
   
+  return StatusCode::SUCCESS;
+}
+
+
+StatusCode MuonCombRec::copyToLHCbTracks()
+{
+  
+  typedef std::vector< MuonTrack* > MTracks;
+  typedef std::vector< MuonHit*   > MHits  ;
+  typedef std::vector<LHCb::MuonTileID*> MTileIDs;
+  
+  
+  const MTracks* mTracks = tracks();
+  if(mTracks == NULL) {    
+    err()<<"No track found! Can not copy anything !";
+    return StatusCode::FAILURE;
+  }
+
+  Tracks* tracks = new Tracks();
+  put( tracks, m_trackOutputLoc );
+
+  for ( MTracks::const_iterator t = mTracks->begin(), tEnd = mTracks->end(); t != tEnd; ++t ) {
+
+    /// New track
+    Track* track = new Track();
+    /// Get the hits
+    MHits hits   = (*t)->getHits();
+    /// create a state from first hit
+    LHCb::State state( StateVector( *( hits.front() ), 
+                                    Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
+                                     1 / 10000. ) );
+    state.setLocation( State::Muon );
+    Gaudi::TrackSymMatrix seedCov;
+    seedCov(0,0) = (*t)->errbx()*(*t)->errbx();
+    seedCov(2,2) = (*t)->errsx()*(*t)->errsx();
+    seedCov(1,1) = (*t)->errby()*(*t)->errby();
+    seedCov(3,3) = (*t)->errsy()*(*t)->errsy();
+    seedCov(4,4) = 0.0001;
+    state.setCovariance(seedCov);
+
+    /// add state to new track
+    debug() << "Muon state = " << state << endmsg;
+    track->addToStates( state );
+    
+    debug()<< " CopyNNETTracks "<<(*t)->getHits().size() <<" Muonits to the track and "<<endmsg;
+    int ntile=0;    
+    for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
+      const MTileIDs Tiles = (*h)->getLogPadTiles();
+      debug()<< " Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
+      for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
+        debug()<<" Tile info ====== "<< LHCbID(**it)<<endmsg;
+        track->addToLhcbIDs( LHCbID( **it ) );
+        ntile++;        
+      }
+    }
+    debug()<< " in total "<<ntile<<" tiles"<<endmsg;
+    
+    /// Sort of done Pat ;)
+        track->setPatRecStatus( Track::PatRecIDs );
+        track->setType( Track::Muon );
+
+    tracks->insert( track );
+  }
+
+  return StatusCode::SUCCESS;
+}
+
+
+//=============================================================================
+//  track fitting
+//=============================================================================
+ 
+StatusCode MuonCombRec::trackFit( )
+{
+  std::vector< MuonTrack* >::iterator itk;
+  
+  for(itk = m_tracks.begin(); itk != m_tracks.end(); itk++){
+    StatusCode tsc = (*itk)->linFit();
+    if(! tsc){
+      err()<<"Error fitting track"<<endmsg;
+      return StatusCode::FAILURE ;
+    }
+
+    if ( msgLevel(MSG::DEBUG) ){
+      debug()<<"track fitted"<<endmsg;
+      debug()<<"sx : "<<(*itk)->sx()<<" bx : "<<(*itk)->bx()<<endmsg;
+      debug()<<"sy : "<<(*itk)->sy()<<" by : "<<(*itk)->by()<<endmsg;
+      debug()<<"esx : "<<(*itk)->errsx()<<" ebx : "<< (*itk)->errbx() <<endmsg;
+      debug()<<"esy : "<<(*itk)->errsy()<<" eby : "<< (*itk)->errby() <<endmsg;
+    }
+
+  }// end loop on tracks
+
   return StatusCode::SUCCESS;
 }

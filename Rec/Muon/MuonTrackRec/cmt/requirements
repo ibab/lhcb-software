@@ -4,7 +4,7 @@
 # =============================================================================
 
 package MuonTrackRec
-version v2r1
+version v2r2
 
 
 # ================ structure =========================================
@@ -39,5 +39,3 @@ apply_pattern linker_library library=MuonTrackRecLib
 apply_pattern component_library library=MuonTrackRec
 
 #===============================================================
-
-

@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.6 2009-10-30 12:06:10 gpassal Exp $
+// $Id: MuonNNetRec.h,v 1.7 2009-11-18 16:37:32 gpassal Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -65,6 +65,8 @@ public:
   }
   virtual void setSeedStation(int seedS){}
   virtual void setSkipStation(int skipS){}
+  virtual StatusCode copyToLHCbTracks();
+
 
 private:
   IMuonHitDecode* m_decTool;
@@ -128,6 +130,8 @@ private:
   std::string m_clusterToolName;
   /// cross talk
   bool m_XTalk;
+  /// LHCb tracks output location in TES
+  std::string m_trackOutputLoc ;
     
 };
 #endif // MUONNNETREC_H

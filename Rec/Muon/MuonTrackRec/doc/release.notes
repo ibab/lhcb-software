@@ -8,6 +8,11 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2009-11-18 - v2r2 - GP
+ - new method in MuonTrackRec: copyToLHCbTracks(). Copies the MuonTracks into
+   standard LHCb::Tracks
+ - added the track fitting to MuonCombRec (it was forgotten...)
+
 ! 2009-10-30 - v2r1 - GP
  - new tracking tool MuonCombRec. Combinatorial algorithm for reconstruction 
    of tracks from the IP. Based on MuonTrackAlign package.

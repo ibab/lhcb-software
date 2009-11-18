@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.h,v 1.1 2009-10-30 12:06:10 gpassal Exp $
+// $Id: MuonCombRec.h,v 1.2 2009-11-18 16:37:32 gpassal Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -44,6 +44,7 @@ public:
     if(!m_recDone) muonTrackFind();
     return (const std::vector<MuonHit*>*) (&m_trackhits);
   }
+
   virtual inline const std::vector<MuonTrack*>* tracks()   {
     if(!m_recDone) muonTrackFind();
     return (const std::vector<MuonTrack*>*) (&m_tracks);
@@ -86,6 +87,7 @@ public:
       m_strongCloneKiller = m_optStrongCloneKiller;
     }
   }
+  virtual StatusCode copyToLHCbTracks();
 
 private:
 
@@ -187,6 +189,8 @@ private:
   /// station used for seed
   int m_optSeedStation;
   int m_seedStation;
+  /// LHCb tracks output location in TES
+  std::string m_trackOutputLoc ;
 
   // main steering reconstruction routine
   StatusCode muonTrackFind();
@@ -200,6 +204,7 @@ private:
   StatusCode muonSearch();
   StatusCode cloneKiller();    
   StatusCode strongCloneKiller();
+  StatusCode trackFit();
 
 };
 #endif // COMPONENT_MUONCOMBREC_H
