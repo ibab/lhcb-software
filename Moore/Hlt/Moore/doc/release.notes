@@ -2,6 +2,12 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v8r2 2009-11-18 ===================
+! 2009-11-18 - Gerhard Raven
+ - allow timeout catcher to be configured through Configuration.py
+ - cleanup input file handling: do not overrule EventSelector if no input
+   specified
+
 !========================== Moore v8r1 2009-11-05 ===================
 ! 2009-11-03 - Gerhard Raven
  - add 'EnableAcceptIfSlow' option 
