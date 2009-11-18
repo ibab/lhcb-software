@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.59 2009-11-12 15:40:11 szumlat Exp $"
+__version__ = "$Id: Configuration.py,v 1.60 2009-11-18 08:39:25 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -38,6 +38,7 @@ class Boole(LHCbConfigurableUser):
        ,"DigiType"            : "Default"
        ,"Histograms"          : "Default"
        ,"NoWarnings"          : False
+       ,"ProductionMode"      : False 
        ,"OutputLevel"         : INFO 
        ,"DatasetName"         : "Boole"
        ,"DataType"            : "2009"
@@ -65,7 +66,8 @@ class Boole(LHCbConfigurableUser):
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
        ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default',Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
-       ,'NoWarnings'   : """ Flag to suppress all MSG::WARNING or below (default False) - OBSOLETE - Please use OutputLevel property instead, setting it to ERROR level."""
+       ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
+       ,'ProductionMode' : """ Enables special settings for running in production """
        ,'OutputLevel'  : """ The printout level to use (default INFO) """
        ,'DatasetName'  : """ String used to build output file names """
        ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
@@ -135,17 +137,21 @@ class Boole(LHCbConfigurableUser):
         # Start the DataOnDemandSvc ahead of ToolSvc
         ApplicationMgr().ExtSvc  += [ "DataOnDemandSvc" ]
         ApplicationMgr().ExtSvc  += [ "ToolSvc" ]
-        #DataOnDemandSvc().OutputLevel = 1
  
         ProcessPhase("Init").DetectorList.insert(0,"Boole") # Always run Boole initialisation first!
         initBoole = GaudiSequencer("InitBooleSeq")
         initBoole.Members += [ "BooleInit" ]
 
-        # Better name for this would be "DiracMode"
+        # Kept for Dirac backward compatibility
         if self.getProp( "NoWarnings" ) :
-            log.warning("Boole().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Boole().OutputLevel=ERROR instead")
-            self.OutputLevel = ERROR
-            LHCbApp().setProp( "TimeStamp", True )
+            log.warning("Boole().NoWarnings=True property is obsolete and maintained for Dirac compatibility. Please use Boole().ProductionMode=True instead")
+            self.setProp( "ProductionMode", True )
+            
+        # Special settings for production
+        if self.getProp( "ProductionMode" ) :
+            self.setProp("OutputLevel", ERROR)
+            if not LHCbApp().isPropertySet( "TimeStamp" ) :
+                LHCbApp().setProp( "TimeStamp", True )
 
         # OutputLevel
         self.setOtherProp(LHCbApp(),"OutputLevel")

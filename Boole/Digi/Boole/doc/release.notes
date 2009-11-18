@@ -3,33 +3,24 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
-! 2009-11-16 - Marco Cattaneo
- - Update references for unpacking on demand of Spillover hits containers
+</PRE><H1><A NAME=v19r8>2009-11-18 Boole v19r8</A></H1></PRE>
+ - Changes to Configurable:
+   . New option "ProductionMode", special settings for running in production,
+     replaces "NoWarnings" option (kept for backward compatibility)
+   . Adapt to changes in GaudiConf v13r0
+     + Use new SimConf Configurable for details of the SIM file content + unpacking
+     + Add new "EnablePack" flag to turn on/off data packing
+   . Fix to use "LumiTrigger" instead of "RandomTrigger" in the ODIN filter algorithm.
+   . Added Tell1 digitisation and clusterisation line
+     + introduces bit perfect Tell1 code (actually a high level model of the firmware
+       that is run on the VELO acquisition boards)
+     + Switched on by new option Boole().VeloTell1Processing. 
+       This option controls both DigiVELOSeq and MoniVELOSeq composition
 
-! 2009-11-12 - Tomasz Szumlak
- - Change name of the option that activates the Tell1 line for the Velo data 
-   stream processing - now VeloTell1Processing
-
-! 2009-11-11 - Marco Cattaneo
- - Update references for removal of test on MCParticle/MCVertex packing
-   and unpacking (does not make sense here, should be done in Gauss)
-
-! 2009-11-09 - Marco Clemencic
- - Fixed the Boole configurable to use "LumiTrigger" instead of "RandomTrigger"
-   in the ODIN filter algorithm.
-
-! 2009-11-03 - Christopher Rob Jones
- - Adapt to changes in GaudiConf
-  + Use new SimConf Configurable for details of the SIM file content + unpacking
-  + Add new "EnablePack" flag to turn on/off data packing
-
-- Tell1 digitisation and clusterisation line added, this introduces
-  the bit perfect Tell1 code (actually a high level model of the firmware
-  that is run on the VELO acquisition boards)
-  In order to run it one needs to add (e.g. in the Boole-Default.py):
-  theApp = Boole()
-  theApp.Tell1Processing = True
-  This option controls both DigiVELOSeq and MoniVELOSeq composition
+ - Changes to references to reflect changes in Boole v19r8 output:
+   . Updated for unpacking on demand of Spillover hits containers
+   . Updated for removal of test on MCParticle/MCVertex packing and unpacking
+     (does not make sense here, should be done in Gauss)
 
 </PRE><H1><A NAME=v19r7>2009-10-21 Boole v19r7</A></H1></PRE>
  - Changes to Configurable:
