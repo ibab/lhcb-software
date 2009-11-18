@@ -31,7 +31,9 @@ def action() :
                 if list is not type(x) : x = [ x ]
                 for i in x : gather(i,overrule) 
     from Configurables import HltGenConfig,GaudiSequencer
-    HltGenConfig().Overrule = { 'Hlt1ODINTechnicalPreScaler' : [ 'AcceptFraction:@OnlineEnv.AcceptRate@0' ] }
+    HltGenConfig().Overrule = { 'Hlt1ODINTechnicalPreScaler' : [ 'AcceptFraction:@OnlineEnv.AcceptRate@0' ] 
+                              , 'Hlt1Tell1ErrorPreScaler'    : [ 'AcceptFraction:0' ] 
+                              }
     gather( GaudiSequencer('Hlt'), HltGenConfig().Overrule )
     print HltGenConfig()
 

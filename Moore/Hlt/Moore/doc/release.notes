@@ -7,6 +7,10 @@ Purpose     : LHCb HLT application
  - allow timeout catcher to be configured through Configuration.py
  - cleanup input file handling: do not overrule EventSelector if no input
    specified
+ - add options/CreateConfig which overrules some snapshot settings to
+   directly create a config which can have its Technical trigger acceptfraction
+   set from PVSS, and which allows switching on/off of monitoring through 
+   OnlineEnv.
 
 !========================== Moore v8r1 2009-11-05 ===================
 ! 2009-11-03 - Gerhard Raven
