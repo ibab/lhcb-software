@@ -200,7 +200,7 @@ create table HISTOGRAM (
  HSET integer constraint  nnu_hset NOT NULL CONSTRAINT H_SET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
  IHS number(6) DEFAULT 1 constraint nnu_ihs NOT NULL ,
  SUBTITLE varchar2(50),
- CONSTRAINT H_UNQ UNIQUE (HSET,SUBTITLE) USING INDEX ,
+ CONSTRAINT H_UNQ UNIQUE (HSET,SUBTITLE) USING INDEX,
  IsTest   number(1),
  IsAnalysisHist number(1) DEFAULT 0 constraint nnu_isanalysishist NOT NULL,
  CREATION TIMESTAMP,
@@ -241,7 +241,7 @@ create table ALGORITHM (
 
 create table HCREATOR (
  HCID varchar2(12)  constraint nnu_hcid NOT NULL constraint HC_ID references HISTOGRAM(HID) ON DELETE CASCADE,
- ALGORITHM varchar2(30) constraint  nnu_algorithm NOT NULL references ALGORITHM(ALGNAME),
+ ALGORITHM varchar2(30) constraint  nnu_algorithm NOT NULL constraint HC_ALGNAME references ALGORITHM(ALGNAME),
  SOURCEH1 varchar2(12) CONSTRAINT HC_SH1 references HISTOGRAM(HID) ON DELETE CASCADE,
  SOURCEH2 varchar2(12) CONSTRAINT HC_SH2 references HISTOGRAM(HID) ON DELETE CASCADE,
  SOURCEH3 varchar2(12) CONSTRAINT HC_SH3 references HISTOGRAM(HID) ON DELETE CASCADE,
@@ -274,7 +274,7 @@ create table ANALYSIS (
  AID integer  constraint A_PK primary key 
 	USING INDEX (create index A_PK_IX ON ANALYSIS(AID) ),
  HSET integer constraint nnu_anahset NOT NULL CONSTRAINT A_HSET references HISTOGRAMSET(HSID) ON DELETE CASCADE,
- ALGORITHM varchar2(30) constraint nnu_anaalgorithm NOT NULL references ALGORITHM(ALGNAME),
+ ALGORITHM varchar2(30) constraint nnu_anaalgorithm NOT NULL CONSTRAINT A_ALGNAME references ALGORITHM(ALGNAME),
  ANADOC varchar2(2000),
  ANAMESSAGE varchar2(200),
  MINSTATS int
@@ -385,7 +385,7 @@ END;
 /
 
 
-CREATE or replace FUNCTION parlength(pars parameters) return int as
+CREATE or replace FUNCTION parlength(pars vparameters) return int as
 begin
 if (pars is null) then
  return 0;
@@ -395,7 +395,7 @@ end if;
 end;
 /
 
-CREATE or replace FUNCTION parcomponent(pars parameters, i int) return VARCHAR2 as
+CREATE or replace FUNCTION parcomponent(pars vparameters, i int) return VARCHAR2 as
 out VARCHAR2(15) := NULL;
 begin
 if (pars is not null) then
