@@ -3,6 +3,11 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v8r1>2009-11-18 Moore v8r1</A></H1><PRE>
+Based on Hlt v7r2, Phys v8r12, Lbcom v7r8, Rec v7r8 and Online v4r31
+First release on top of LHCb v28r2, which contains support for ODIN 
+version 6.
+
 </PRE><H1><A NAME=v8r1>2009-11-05 Moore v8r1</A></H1><PRE>
 Based on Hlt v7r1, Phys v8r11, Lbcom v7r7, Rec v7r7 and Online v4r30
 
