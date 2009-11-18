@@ -1,4 +1,4 @@
-// $Id: Particles26.h,v 1.2 2009-04-28 16:05:12 ibelyaev Exp $
+// $Id: Particles26.h,v 1.3 2009-11-18 17:01:57 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES26_H 
 #define LOKI_PARTICLES26_H 1
@@ -9,9 +9,10 @@
 // ============================================================================
 #include "LoKi/Constants.h"
 #include "LoKi/Particles3.h"
+#include "LoKi/Particles4.h"
 // ============================================================================
 /** @file LoKi/Particles26.h
- *  File wth few functions on request  by Rob Lambert   
+ *  File wth few functions on request  by Rob Lambert & Mat Charles   
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date   2009-04-24
@@ -266,6 +267,114 @@ namespace LoKi
       virtual std::ostream& fillStream ( std::ostream& s ) const ;
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class ChildIP
+     *  Compute the IP of a daughter particle to the mother vertex.
+     * 
+     *  @see LoKi::Cuts::CHILDIP 
+     *
+     *  @author m.charles1@physics.ox.ac.uk
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-13
+     */
+    class ChildIP
+      : public LoKi::BasicFunctors<const LHCb::Particle*>::Function 
+    {
+    public:
+      // ======================================================================
+      /// Constructor from the daughter index & tool 
+      ChildIP ( const size_t               index     , 
+                const IDistanceCalculator* tool  = 0 ) ;
+      /// Constructor from the daughter index & tool 
+      ChildIP ( const size_t                                index     , 
+                const LoKi::Interface<IDistanceCalculator>& tool      ) ;
+      /// Constructor from the daughter index & nick 
+      ChildIP ( const size_t                                index     , 
+                const std::string&                          nick      ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChildIP ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildIP*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// get the tool
+      const LoKi::Interface<IDistanceCalculator>& tool () const
+      { return m_eval ; }
+      /// cast to the tool
+      operator const LoKi::Interface<IDistanceCalculator>& () const
+      { return tool() ; }
+      // ======================================================================
+      /// load the tool
+      StatusCode loadTool() const ;
+      // ======================================================================
+      /// get the tool name 
+      std::string toolName() const ;
+      // ======================================================================
+      /// set the tool
+      void setTool ( const IDistanceCalculator* t ) const
+      { m_eval.setTool ( t ) ; }
+      /// set the tool
+      void setTool ( const LoKi::Interface<IDistanceCalculator>& t ) const
+      { m_eval.setTool ( t ) ; }
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      ChildIP ();                            // default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// The actual IP evaluator 
+      LoKi::Particles::ImpParChi2 m_eval ;           // The actual IP evaluator 
+      /// index of daughter particle
+      size_t m_index ;                            // index of daughter particle
+      /// the tool nick
+      std::string  m_nick   ;                                 // the tool nick
+      // ======================================================================
+    }; 
+    // ========================================================================    
+    /** @class ChildIPChi2
+     *  Compute the chi2-IP of a daughter particle to the mother vertex.
+     * 
+     *  @see LoKi::Cuts::CHILDIPCHI2
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-13
+     */
+    class ChildIPChi2 : public ChildIP
+    {
+    public:
+      // ======================================================================
+      /// Constructor from the daughter index & tool 
+      ChildIPChi2 ( const size_t               index     , 
+                    const IDistanceCalculator* tool  = 0 ) ;
+      /// Constructor from the daughter index & tool 
+      ChildIPChi2 ( const size_t                                index     , 
+                    const LoKi::Interface<IDistanceCalculator>& tool      ) ;
+      /// Constructor from the daughter index & nick 
+      ChildIPChi2 ( const size_t                                index     , 
+                    const std::string&                          nick      ) ;
+      /// MANDATORY: virtual destructor
+      virtual ~ChildIPChi2 ();
+      /// MANDATORY: clone method ("virtual constructor")
+      virtual  ChildIPChi2*  clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument p ) const ;
+      /// OPTIONAL:  specific printout 
+      virtual std::ostream& fillStream( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// default constructor is disabled 
+      ChildIPChi2 () ;                       // default constructor is disabled 
+      // ======================================================================
+    }; 
+    // ========================================================================
   } // end of namespace LoKi::Particles 
   // ==========================================================================
 } // end of namespace LoKi
@@ -420,6 +529,26 @@ namespace LoKi
      *  @date   2009-04-24
      */
     const LoKi::Particles::DOCAChi2Max                            DOCACHI2MAX ;
+    // ========================================================================
+    /** @typedef CHILDIP
+     *  Given a parent particle, compute the distance of closest approach of a
+     *  particular daughter particle to the parent's decay vertex.
+     *
+     *  @author Mat Charles m.charles1@physics.ox.ac.uk
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-06
+     */
+    typedef LoKi::Particles::ChildIP                                  CHILDIP ;
+    // ========================================================================
+    /** @typedef CHILDIPCHI2
+     *  Given a parent particle, compute the chi2 of distance of 
+     *  closest approach of a
+     *  particular daughter particle to the parent's decay vertex.
+     *
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-06
+     */
+    typedef LoKi::Particles::ChildIPChi2                          CHILDIPCHI2 ;
     // ========================================================================
   } // end of namespace LoKi::Cuts 
   // ==========================================================================

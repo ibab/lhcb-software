@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.118 2009-11-17 12:39:02 ibelyaev Exp $ 
+! $Id: release.notes,v 1.119 2009-11-18 17:01:58 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-18 - Vanya Belyaev
+
+ - add CHILDIP     functor for Mat Charles 
+   add CHILDIPCHI2 functor
 
 ! 2009-11-17 - Vanya Belyaev
 

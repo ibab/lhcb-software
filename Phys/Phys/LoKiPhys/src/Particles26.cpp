@@ -1,4 +1,4 @@
-// $Id: Particles26.cpp,v 1.2 2009-05-13 16:30:33 ibelyaev Exp $
+// $Id: Particles26.cpp,v 1.3 2009-11-18 17:01:58 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -6,11 +6,16 @@
 // ============================================================================
 #include "Kernel/GetDVAlgorithm.h"
 #include "Kernel/DVAlgorithm.h"
-/// ===========================================================================
+// ============================================================================
+// DaVinci Interfaces
+// ============================================================================
+#include "Kernel/IDistanceCalculator.h"
+// ============================================================================
 // LoKi
 // ============================================================================
 #include "LoKi/Constants.h"
 #include "LoKi/ILoKiSvc.h"
+#include "LoKi/Interface.h"
 #include "LoKi/Child.h"
 #include "LoKi/Particles26.h"
 // ============================================================================
@@ -25,6 +30,9 @@ namespace
   // ==========================================================================
   /// the invalid particle:
   const LHCb::Particle*      const s_PARTICLE = 0 ;
+  // ==========================================================================
+  /// the invalid vertex:
+  const LHCb::VertexBase*    const s_VERTEX   = 0 ;
   // ==========================================================================
   /// the invalid tool
   const IDistanceCalculator* const s_TOOL     = 0 ;
@@ -354,6 +362,205 @@ LoKi::Particles::DOCAChi2Max::operator()
 std::ostream& LoKi::Particles::DOCAChi2Max::fillStream ( std::ostream& s ) const
 { return s << "DOCACHI2MAX(" << "'" << toolName () << "')" ; }
 
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIP::ChildIP
+( const size_t               index , 
+  const IDistanceCalculator* tool  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_eval  ( s_VERTEX , tool ) 
+  , m_index ( index )
+  , m_nick  () 
+{}
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIP::ChildIP
+( const size_t                                index , 
+  const LoKi::Interface<IDistanceCalculator>& tool  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_eval  ( s_VERTEX , tool ) 
+  , m_index ( index )
+  , m_nick  () 
+{}
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIP::ChildIP
+( const size_t        index , 
+  const std::string&  nick  ) 
+  : LoKi::BasicFunctors<const LHCb::Particle*>::Function ()
+  , m_eval  ( s_VERTEX , s_TOOL ) 
+  , m_index ( index )
+  , m_nick  ( nick  ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::ChildIP::~ChildIP(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::ChildIP*
+LoKi::Particles::ChildIP::clone() const 
+{ return new LoKi::Particles::ChildIP(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::ChildIP::result_type 
+LoKi::Particles::ChildIP::operator() 
+  ( LoKi::Particles::ChildIP::argument p ) const 
+{
+  m_eval.setVertex ( s_VERTEX ) ;
+  
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL; returning InvalidDistance" ) ;
+    return LoKi::Constants::InvalidDistance ;                         // RETURN
+  }
+  
+  const LHCb::Vertex* vertex = p->endVertex();  
+  if ( 0 == vertex ) 
+  {
+    Error ("LHCb::Particle* has a NULL endVertex; returning InvalidDistance ");
+    return LoKi::Constants::InvalidDistance ;                         // RETURN
+  }
+  
+  /// get the daughter
+  const LHCb::Particle* daughter  = LoKi::Child::child ( p , m_index ) ;
+  if ( 0 == daughter ) 
+  {
+    Error ( "Invalid daughter particle, return InvalidDistance") ;
+    return LoKi::Constants::InvalidDistance ;                         // RETURN
+  }
+  
+  // tool is valid?
+  if ( !tool() ) { loadTool () ; }  
+
+  //
+  m_eval.setVertex (   vertex ) ;
+  
+  const double ip = m_eval.ip ( daughter ) ;
+  
+  m_eval.setVertex ( s_VERTEX ) ; // re-set the vertex 
+  
+  return ip ;
+}
+// ============================================================================
+// Load the tool 
+// ============================================================================
+StatusCode LoKi::Particles::ChildIP::loadTool () const 
+{
+  // tool is valid?
+  if ( !tool() )
+  {
+    const IDistanceCalculator* dc = getDC ( m_nick , *this ) ;
+    /// finally set the tool
+    setTool ( dc ) ;
+  }
+  Assert( !(!tool()) , "Unable to locate tool!" ) ;
+  //
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
+// get toolname 
+// ============================================================================
+std::string LoKi::Particles::ChildIP::toolName() const 
+{ return ::toolName ( tool() , m_nick ) ; }
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& LoKi::Particles::ChildIP::fillStream ( std::ostream& s ) const
+{ return s << " CHILDIP( " << m_index <<",'" << toolName () << "')" ; }
+// ============================================================================
+
+
+
+
+
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIPChi2::ChildIPChi2
+( const size_t               index , 
+  const IDistanceCalculator* tool  ) 
+  : LoKi::Particles::ChildIP ( index , tool ) 
+{}
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIPChi2::ChildIPChi2
+( const size_t                                index , 
+  const LoKi::Interface<IDistanceCalculator>& tool  ) 
+  : LoKi::Particles::ChildIP ( index , tool ) 
+{}
+// ============================================================================
+// Constructor from the daughter index & tool 
+// ============================================================================
+LoKi::Particles::ChildIPChi2::ChildIPChi2
+( const size_t        index , 
+  const std::string&  nick  ) 
+  : LoKi::Particles::ChildIP ( index , nick ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor
+// ============================================================================
+LoKi::Particles::ChildIPChi2::~ChildIPChi2(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor")
+// ============================================================================
+LoKi::Particles::ChildIPChi2*
+LoKi::Particles::ChildIPChi2::clone() const 
+{ return new LoKi::Particles::ChildIPChi2(*this) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Particles::ChildIPChi2::result_type 
+LoKi::Particles::ChildIPChi2::operator() 
+  ( LoKi::Particles::ChildIPChi2::argument p ) const 
+{
+  m_eval.setVertex ( s_VERTEX ) ;
+  
+  if ( 0 == p ) 
+  {
+    Error("LHCb::Particle* points to NULL; returning InvalidChi2" ) ;
+    return LoKi::Constants::InvalidChi2 ;                         // RETURN
+  }
+  
+  const LHCb::Vertex* vertex = p->endVertex();  
+  if ( 0 == vertex ) 
+  {
+    Error ("LHCb::Particle* has a NULL endVertex; returning InvalidChi2");
+    return LoKi::Constants::InvalidChi2 ;                         // RETURN
+  }
+  
+  /// get the daughter
+  const LHCb::Particle* daughter  = LoKi::Child::child ( p , m_index ) ;
+  if ( 0 == daughter ) 
+  {
+    Error ( "Invalid daughter particle, return InvalidChi2") ;
+    return LoKi::Constants::InvalidChi2 ;                         // RETURN
+  }
+  
+  // tool is valid?
+  if ( !tool() ) { loadTool () ; }  
+
+  //
+  m_eval.setVertex (   vertex ) ;
+  
+  const double chi2 = m_eval.chi2 ( daughter ) ;
+  
+  m_eval.setVertex ( s_VERTEX ) ; // reset the vertex 
+  
+  return chi2 ;
+}
+// ============================================================================
+// OPTIONAL: nice printout
+// ============================================================================
+std::ostream& LoKi::Particles::ChildIPChi2::fillStream ( std::ostream& s ) const
+{ return s << " CHILDIPCHI( " << m_index <<",'" << toolName () << "')" ; }
+// ============================================================================
 
 // ============================================================================
 // The END 
