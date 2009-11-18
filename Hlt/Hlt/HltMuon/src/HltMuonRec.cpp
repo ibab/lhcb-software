@@ -1,4 +1,4 @@
-// $Id: HltMuonRec.cpp,v 1.16 2009-04-29 14:18:11 asatta Exp $
+// $Id: HltMuonRec.cpp,v 1.17 2009-11-18 13:19:45 dgolubko Exp $
 // Include files 
 
 #include <algorithm>
@@ -323,7 +323,7 @@ StatusCode HltMuonRec::execute() {
       temp.setX( itMuonTrack->point(i).x() );       
       temp.setY( itMuonTrack->point(i).y() );
       temp.setZ( m_station[i].z()          );
-      int ii = std::max(i,3);
+      int ii = std::min(i,3);
       temp.setTx(itMuonTrack->slopeX(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
       temp.setTy(itMuonTrack->slopeY(ii,ii+1,m_station[ii].z(),m_station[ii+1].z()) );
       temp.setLocation(LHCb::State::Muon);

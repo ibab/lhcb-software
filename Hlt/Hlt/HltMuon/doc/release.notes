@@ -4,6 +4,11 @@
 ! Purpose     : muon reconstruction for triggers 
 !-----------------------------------------------------------------------------
 
+! 2009-11-18 - Dmitry Golubkov
+ - HltMuonRec.cpp: small bugfix in the muon station counting
+ - HltMuonPoint.h: add a zero-initialization list for the default constructor
+ - increase version to v3r5p2
+
 !========================== HltMuon v3r5p1 2009-10-28 ===================
 2009-10-8 - P. Koppenburg
   - Undocumented changes by Gerhard Raven
