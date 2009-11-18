@@ -1,7 +1,7 @@
 """
 High level configuration tool(s) for Moore
 """
-__version__ = "$Id: Configuration.py,v 1.95 2009-11-11 16:29:01 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.96 2009-11-18 09:36:03 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ, path
@@ -76,6 +76,9 @@ class Moore(LHCbConfigurableUser):
         , 'HistogrammingLevel' : 'Line'
         , "RunOnline" : False
         , "UseSnapshotOnline" : True
+        , 'EnableTimeOutCatcher' : True
+        , 'TimeOutThreshold'  : 10000  # milliseconds before giving up, and directing event to time out stream
+        , 'TimeOutBits'       : 0x200
         }   
                 
 
@@ -119,10 +122,11 @@ class Moore(LHCbConfigurableUser):
 
         TAE = OnlineEnv.TAE != 0
         input   = 'EVENT' if not TAE else 'MEP'
-        mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,'SEND'],False)
+        output  = 'SEND'
+        mepMgr = OnlineEnv.mepManager(OnlineEnv.PartitionID,OnlineEnv.PartitionName,[input,output],False)
         app.Runable = OnlineEnv.evtRunable(mepMgr)
         app.ExtSvc.append(mepMgr)
-        evtMerger = OnlineEnv.evtMerger(name='Output',buffer='SEND',location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
+        evtMerger = OnlineEnv.evtMerger(name='Output',buffer=output,location='DAQ/RawEvent',datatype=OnlineEnv.MDF_NONE,routing=1)
         evtMerger.DataType = OnlineEnv.MDF_BANKS
         eventSelector = OnlineEnv.mbmSelector(input=input, TAE=TAE)
         app.ExtSvc.append(eventSelector)
@@ -140,10 +144,11 @@ class Moore(LHCbConfigurableUser):
         # Events with timeout will have routing bit 0x200 set
         # and could be redirected at the storage level to a seperate
         # output stream
-        tmoCatcher = OnlineEnv.timeoutAlg(5000,True)
-        tmoCatcher.OutputLevel = 2
-        evtMerger.TimeoutBits = 0x200
-        ApplicationMgr().TopAlg.append(tmoCatcher)
+        if self.getProp('EnableTimeOutCatcher') :
+            tmoCatcher = OnlineEnv.timeoutAlg(self.getProp('TimeOutThreshold'),True)
+            tmoCatcher.OutputLevel = 2
+            evtMerger.TimeoutBits = self.getProp('TimeOutBits')
+            ApplicationMgr().TopAlg.append(tmoCatcher)
 
         # define the send sequence
         SendSequence =  GaudiSequencer('SendSequence')
@@ -228,12 +233,12 @@ class Moore(LHCbConfigurableUser):
 
     def _configureInput(self):
         files = self.getProp('inputFiles')
-        if 'DST' in [ _ext(f) for f in files ] :
+        if len(files)==0 or 'DST' in [ _ext(f) for f in files ] :
             importOptions('$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts')
         if 'RAW' in [ _ext(f) for f in files ] :
             EventPersistencySvc().CnvServices.append( 'LHCb::RawDataCnvSvc' )
         self._configureDataOnDemand()
-        EventSelector().Input = [ _datafmt(f) for f in files ]
+        if files : EventSelector().Input = [ _datafmt(f) for f in files ]
 
     def _configureOutput(self):
         fname = self.getProp('outputFile')
