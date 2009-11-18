@@ -36,9 +36,9 @@ class Commissioning_PassThrough :
         """
         Returns a dictionary of cuts
         """
-        from Hlt1Lines.HltCommissioningLines  import HltCommissioningLinesConf
-        return { HltCommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'  : 1.
+        from Hlt1Lines.Hlt1CommissioningLines  import Hlt1CommissioningLinesConf
+        return { Hlt1CommissioningLinesConf : { 'Prescale' : { 'Hlt1ODINPhysics'  : 1.
                                                             , 'Hlt1ODINTechnical'     : 0. # @OnlineEnv.AcceptRate
-                                                            , 'Hlt1Tell1Error'     : 1.
+                                                            , 'Hlt1Tell1Error'     : 0.
                                              }              } 
                }

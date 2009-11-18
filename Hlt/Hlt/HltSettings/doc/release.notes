@@ -4,6 +4,11 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+!========================== HltSettings v1r2p1 2009-11-18 =================
+! 2009-11-18 - Gerhard Raven
+ - fix Commissioning_PassThrough.py after renaming of Hlt -> Hlt1 for Htl1
+   configurables
+
 !========================== HltSettings v1r2 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
  - add Physics_MinBiasL0_PassThroughHlt_Nov09 setting
