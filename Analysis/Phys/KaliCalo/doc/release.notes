@@ -1,11 +1,17 @@
-! $Id: release.notes,v 1.16 2009-11-16 16:06:38 jpalac Exp $ 
+! $Id: release.notes,v 1.17 2009-11-18 09:12:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.16 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.17 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+
+! 2009-11-18 - Vanya Belyaev
+
+ - ElecPresel.cpp is disabled (hopefully temporarily) due to the 
+   compilation error for Win32 platform
 
 !========================== KaliCalo v3r0 2009-11-16 ==========================
 
