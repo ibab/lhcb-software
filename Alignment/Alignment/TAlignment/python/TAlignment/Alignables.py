@@ -9,6 +9,8 @@ class Alignables( list ):
         self.m_veloRight  = "/VeloRight"
         
         self.m_tt         = "/dd/Structure/LHCb/BeforeMagnetRegion/TT"
+        self.m_ttStations = [ "TTa","TTb" ]
+        self.m_ttLayers   = [ "TTa/TTaXLayer","TTa/TTaULayer","TTb/TTbVLayer","TTb/TTbXLayer", ]
         
         self.m_it         = "/dd/Structure/LHCb/AfterMagnetRegion/T/IT"
         self.m_itStations = [ "/Station1", "/Station2", "/Station3" ]
@@ -148,6 +150,17 @@ class Alignables( list ):
 
     def TTLayers( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer", dofs )
+
+    def TTHalfLayers( self, dofs = "" ) :
+        elements = []
+        for layername in self.m_ttLayers:
+            # C-side
+            elements.append( layername + "CSide : "  +
+                             self.m_tt + "/" + layername + "/R(1Module.|2Module(1|2))." )
+            # A-side
+            elements.append( layername + "ASide : "  +
+                             self.m_tt + "/" + layername + "/R(3Module.|2Module3)." )
+        self.__append( elements, dofs )
 
     def TTHalfModules( self, dofs = "" ) :
         self.__append( self.m_tt + "/TT./.{4}Layer/.{2}Module.{2}", dofs )
