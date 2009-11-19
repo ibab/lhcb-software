@@ -4,6 +4,8 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r10 2009-11-19 ===================
+
 ! 2009-11-18 - Anton Poluektov 
  - Modified TestStripping.C root macro (summary of selection results based on ETC file). 
  - Added Bs2Kst0Kst0 line to stream Hadron
