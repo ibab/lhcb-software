@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.10 2009-10-29 10:51:48 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.11 2009-11-19 20:06:15 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -25,7 +25,7 @@ DECLARE_ALGORITHM_FACTORY( L0CaloCompare );
 
 // Standard creator
 L0CaloCompare::L0CaloCompare( const std::string& name, 
-                                    ISvcLocator* pSvcLocator )  
+                              ISvcLocator* pSvcLocator )  
   : Calo2Dview ( name , pSvcLocator ) 
 { 
   m_idleBCIdVector.push_back( 3561 ) ;
@@ -217,11 +217,17 @@ StatusCode L0CaloCompare::execute() {
                                                                   *candRef ) ) ;
       break ;
     case L0DUBase::CaloType::SpdMult:
-      debug() << " SpdMult : etCode = " << (*candRef)->etCode() 
+      // in full monitoring mode, ignore SpdMult candidates which are 
+      // partial multiplicities
+      if ( m_fullMonitoring ) break ;
+      debug() << " SpdMult (1) : etCode = " << (*candRef)->etCode() 
               << " rawId= " << rawId << endreq ;
       SpdMultRef = *candRef ;
       break ; 
     case L0DUBase::CaloType::SumEt:
+      // in full monitoring mode, ignore SumEt candidates which are 
+      // partial multiplicities
+      if ( m_fullMonitoring ) break ;
       debug() << " SumEt : etCode = " << (*candRef)->etCode() 
               << " rawId= " << rawId << endreq;
       SumEtRef = *candRef ;
@@ -240,7 +246,7 @@ StatusCode L0CaloCompare::execute() {
       
       switch ( type ) {
       case L0DUBase::CaloType::SpdMult:
-        debug() << " SpdMult : etCode = " << (*candRef)->etCode() 
+        debug() << " SpdMult (2) : etCode = " << (*candRef)->etCode() 
                 << " rawId= " << rawId << endreq ;
         SpdMultRef = *candRef ;
         break ; 
@@ -283,25 +289,28 @@ StatusCode L0CaloCompare::execute() {
         fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                     m_mapCompareTitle[ type ] ) ;
       } else {
-	//        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
-	std::pair< l0cmap::iterator , l0cmap::iterator > 
-    res = mapRef[ type ].equal_range( rawId ) ;
-	bool found = false ;
-	for ( iterMap = res.first ; iterMap != res.second ; ++iterMap ) {
-	  LHCb::L0CaloCandidate * theCand = (*iterMap).second ;
-	  etCodeRef = theCand -> etCode() ;
-	  if ( etCodeCheck == etCodeRef ) found = true ;
-	}
-	if ( ! found ) {
-	  debug() << " Same cell but different etCode : ref = " << etCodeRef  
-		  << " check = " << etCodeCheck << endreq ;
+        //        LHCb::L0CaloCandidate * theCand = (*iterMap).second ; 
+        std::pair< l0cmap::iterator , l0cmap::iterator > 
+          res = mapRef[ type ].equal_range( rawId ) ;
+        bool found = false ;
+        for ( iterMap = res.first ; iterMap != res.second ; ++iterMap ) {
+          LHCb::L0CaloCandidate * theCand = (*iterMap).second ;
+          etCodeRef = theCand -> etCode() ;
+          if ( etCodeCheck == etCodeRef ) found = true ;
+        }
+        if ( ! found ) {
+          debug() << " Same cell but different etCode : ref = " << etCodeRef  
+                  << " check = " << etCodeCheck << endreq ;
           fillCalo2D( m_mapCompareName[ type ] , caloCell , 1. , 
                       m_mapCompareTitle[ type ] ) ; 
-	}
+        }
       }
-
+      
       break ;
     case L0DUBase::CaloType::SumEt:
+      // in full monitoring mode, ignore SumET candidates which are 
+      // partial multiplicities
+      if ( m_fullMonitoring ) break ;
       {
         debug() << " SumEt : etCode = " << etCodeCheck << endreq ;
         int sumRef( 0 ) ;
@@ -318,8 +327,11 @@ StatusCode L0CaloCompare::execute() {
       }
     break ; 
     case L0DUBase::CaloType::SpdMult:
+      // in full monitoring mode, ignore SpdMult candidates which are 
+      // partial multiplicities
+      if ( m_fullMonitoring ) break ;
       { 
-        debug() << "SpdMult : etCode = " << etCodeCheck << endreq ;
+        debug() << "SpdMult (3) : etCode = " << etCodeCheck << endreq ;
         int spdRef( 0 ) ;
         int diff_SpdMult( 0 ) ;
         if ( 0 != SpdMultRef ) spdRef = SpdMultRef -> etCode() ;
@@ -327,7 +339,7 @@ StatusCode L0CaloCompare::execute() {
         if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
         else if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
         m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
-        if ( etCodeCheck != spdRef ) debug() << " SpdMult ... Pb " <<endreq;
+        if ( etCodeCheck != spdRef ) debug() << " SpdMult ... Pb (1) " <<endreq;
       }
     break ; 
     default:
@@ -360,7 +372,7 @@ StatusCode L0CaloCompare::execute() {
       break ; 
       case L0DUBase::CaloType::SpdMult:
         { 
-          debug() << "SpdMult : etCode = " << etCodeCheck << endreq ;
+          debug() << "SpdMult (4) : etCode = " << etCodeCheck << endreq ;
           int spdRef( 0 ) ;
           int diff_SpdMult( 0 ) ;
           if ( 0 != SpdMultRef ) spdRef = SpdMultRef -> etCode() ;
@@ -368,7 +380,7 @@ StatusCode L0CaloCompare::execute() {
           if (diff_SpdMult > 100.) diff_SpdMult = 100 ; 
           else if (diff_SpdMult < -100.) diff_SpdMult = -100 ; 
           m_histSpdMult_Comp -> fill( diff_SpdMult ) ; 
-          if ( etCodeCheck != spdRef ) debug() << " SpdMult ... Pb " <<endreq;
+          if ( etCodeCheck != spdRef ) debug() << " SpdMult ... Pb (2) " <<endreq;
         }
       break ;
       default: 

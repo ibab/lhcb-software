@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.139 2009-11-13 17:04:00 cattanem Exp $
+! $Id: release.notes,v 1.140 2009-11-19 20:06:15 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-11-19 - Patrick Robbe
+ - L0CaloCompare.cpp: fix the comparison of SpdMult and SumEt
 
 !========================= L0Calo v10r0 2009-11-13 ========================
 ! 2009-10-29 - Patrick Robbe
