@@ -257,7 +257,7 @@ std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
     int endYear = d_tm.tm_year + 1900;
     std::stringstream  year;
     year << std::setfill('0') << std::setw(4) << endYear;
-    oldDirPath path(m_savesetPath/path(year.str())/path(partition)/path(taskName));
+    path oldDirPath = m_savesetPath/path(year.str())/path(partition)/path(taskName);
     if (m_verbosity >= Verbose) {
       std::cout << "Legacy mode, seeking in: " << oldDirPath << std::endl;
     }
