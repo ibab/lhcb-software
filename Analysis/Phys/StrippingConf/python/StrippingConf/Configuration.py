@@ -13,7 +13,7 @@ from pprint import *
 from Gaudi.Configuration import *
 from Configurables import StrippingAlg
 from StrippingStream import StrippingStream
-from StrippingLine import strippingLines, StrippingLine
+from StrippingLine import StrippingLine
 
 class StrippingConf ( object ) :
 
@@ -35,7 +35,7 @@ class StrippingConf ( object ) :
             self.appendStream(stream)
 	
 	allAppended = True
-	
+	from StrippingLine import strippingLines
 	for line in strippingLines() : 
 	    if not line.isAppended() : 
 		log.warning("Line " + line.name() + " is declared but not appended to any stream")
@@ -244,8 +244,6 @@ def __enroll__ ( self       ,   ## the object
 
     return line
 
-StrippingAlg   . __str__ = __enroll__    
-StrippingStream. __str__ = __enroll__    
-StrippingConf  . __str__ = __enroll__    
-GaudiSequencer . __str__ = __enroll__ 
-Sequencer      . __str__ = __enroll__ 
+for conf in [StrippingAlg, StrippingStream, StrippingConf] :
+    if conf :
+        conf.__str__ = __enroll__ 
