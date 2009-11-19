@@ -55,14 +55,17 @@ void Archive::setReferencePath(const std::string & referencePath)
     std::cout << "Archive m_referencePath " << m_referencePath << std::endl;
   }  
 }
-void Archive::refreshDirectory(const DirectoryType & directoryType, const std::string & endTimeIsoString, const std::string & taskName)
+void Archive::refreshDirectory(const DirectoryType & directoryType,
+                               const boost::gregorian::date_period & datePeriod,
+                               const std::string & taskName)
 {
+
   switch (directoryType) {
     case Savesets:
-      m_foundSavesets = listRootFilesDirectory(m_savesetPath/path(endTimeIsoString.substr(0, 4))/path(m_mainFrame->currentPartition())/path(taskName));
+      m_foundSavesets = listAvailableRootFiles(m_savesetPath, datePeriod, taskName);
       break;
     case References:
-      m_foundReferences = listRootFilesDirectory(m_referencePath);
+      m_foundReferences = listAvailableRootFiles(m_referencePath, datePeriod, taskName);
       break;
     default:
       break;
@@ -209,19 +212,66 @@ void Archive::fillHistogram(DbRootHist* histogram,
   }
   histogram->setTH1FromDB();
 }
-std::vector<path> Archive::listRootFilesDirectory(const path & dirPath)
+std::vector<path> Archive::listAvailableRootFiles(const path & dirPath,
+                                                  const date_period & datePeriod,
+                                                  const std::string & taskName)
 {
   std::vector<path> foundRootFiles;
-  
-  if (exists(dirPath)) {
+  std::string partition(m_mainFrame->currentPartition());
+  for (day_iterator dateIterator(datePeriod.begin());
+      dateIterator <= datePeriod.end(); ++dateIterator) {
+    if (m_verbosity >= Verbose) {
+      std::cout << "Date: " << to_simple_string(*dateIterator) << std::endl;
+    }
+    tm d_tm = to_tm(*dateIterator);
+    Int_t year, month, day;
+    year = d_tm.tm_year + 1900;
+    month = d_tm.tm_mon + 1; // http://xkcd.com/163/
+    day = d_tm.tm_mday; // + 0 (!?);
+
+    std::stringstream  dayLocation;
+    dayLocation << dirPath.string() << s_slash <<
+               std::setfill('0') << std::setw(4) << year << s_slash <<
+               partition << s_slash << taskName << s_slash <<
+               std::setfill('0') << std::setw(2) << month << s_slash <<
+               std::setfill('0') << std::setw(2) << day   << s_slash;
+
+    path pathOfTheDay(dayLocation.str());
+    if (m_verbosity >= Verbose) {
+      std::cout << "Seeking in: " << pathOfTheDay << std::endl;
+    }
     directory_iterator end_itr;
-    for (directory_iterator itr(dirPath); itr != end_itr; ++itr) {
-      if (is_regular(itr->path()) &&
-          s_rootFileExtension == extension(itr->path()) ) {
-        foundRootFiles.push_back(itr->path());
+    if (exists(pathOfTheDay)) {
+      for (directory_iterator itr(pathOfTheDay); itr != end_itr; ++itr) {
+        if (is_regular(itr->path()) &&
+            s_rootFileExtension == extension(itr->path()) ) {
+          foundRootFiles.push_back(itr->path());
+        }
+      }
+    }
+   }
+
+// legacy: year overlapping intervals with old format not supported.
+  if (foundRootFiles.empty()) {
+    tm d_tm = to_tm(datePeriod.end());
+    int endYear = d_tm.tm_year + 1900;
+    std::stringstream  year;
+    year << std::setfill('0') << std::setw(4) << endYear;
+    oldDirPath path(m_savesetPath/path(year.str())/path(partition)/path(taskName));
+    if (m_verbosity >= Verbose) {
+      std::cout << "Legacy mode, seeking in: " << oldDirPath << std::endl;
+    }
+    if (exists(oldDirPath)) {
+      directory_iterator end_itr;
+      for (directory_iterator itr(oldDirPath); itr != end_itr; ++itr) {
+        if (is_regular(itr->path()) &&
+            s_rootFileExtension == extension(itr->path()) ) {
+          foundRootFiles.push_back(itr->path());
+        }
       }
     }
   }
+
   sort(foundRootFiles.begin(), foundRootFiles.end());
   if (m_verbosity >= Debug &&
       !foundRootFiles.empty()) {
@@ -369,9 +419,15 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
               << " timePoint " << to_iso_string(endTime)
               << " pastDuration " << durationTimeString << std::endl;
   }
-  refreshDirectory(Archive::Savesets, to_iso_string(endTime), taskname);
+
   time_duration timeDuration(duration_from_string(durationTimeString));
   ptime startTime = endTime - timeDuration;
+
+  date startDate(startTime.date());
+  date endDate(endTime.date());
+  date_period datePeriod(startDate, endDate);
+
+  refreshDirectory(Archive::Savesets, datePeriod, taskname);
 
   string taskNameFound;
   string fileTimeFound;
@@ -384,7 +440,7 @@ std::vector<path> Archive::findSavesets(const std::string & taskname,
       fileDateMatchGroup = s_fileDateRegexp.MatchS((*m_foundSavesetsIt).leaf());
       if (!fileDateMatchGroup->IsEmpty()) {
         taskNameFound = (((TObjString *)fileDateMatchGroup->At(1))->GetString()).Data();
-        fileTimeFound = (((TObjString *)fileDateMatchGroup->At(2))->GetString()).Data();
+        fileTimeFound = (((TObjString *)fileDateMatchGroup->At(3))->GetString()).Data();
         fileTime = from_iso_string(fileTimeFound);
         if (taskNameFound == taskname && !fileTime.is_not_a_date_time()) {
           if (fileTime <= endTime &&

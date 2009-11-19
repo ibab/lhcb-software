@@ -4473,7 +4473,7 @@ void PresenterMainFrame::createFolderInDB()
                       "Enter new name:",
                       path, path);
 
-    while ( strcmp(path, selectedPage.c_str()) == 0 ) {
+    while ( 0 == strcmp(path, selectedPage.c_str()) ) {
       new TGMsgBox(gClient->GetRoot(), GetMainFrame(), "Error",
                    "Please enter a valid new name.",
                    kMBIconStop, kMBOk);
@@ -4481,7 +4481,7 @@ void PresenterMainFrame::createFolderInDB()
                         "Enter new name:",
                         path, path);
     }
-    if ( strcmp(path, "") == 0 ) { return; }
+    if ( 0 == strcmp(path, "") ) { return; }
 
     try {
       std::string newPageName(path);
@@ -4501,7 +4501,7 @@ void PresenterMainFrame::createFolderInDB()
       if (m_verbosity >= Verbose) { std::cout << sqlException << std::endl; }
       if (Batch != m_presenterMode) {
         new TGMsgBox(fClient->GetRoot(), this, "Database Error",
-                     Form("Could not move item to OnlineHistDB:\n\n%s\n",
+                     Form("Could not create item in OnlineHistDB:\n\n%s\n",
                           sqlException.c_str()),
                      kMBIconExclamation, kMBOk, &m_msgBoxReturnCode);
       }

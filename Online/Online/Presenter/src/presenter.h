@@ -196,7 +196,10 @@ namespace pres
 //  LHCb_MONA0805_L0CaloDAQMon_00  
   static TPRegexp s_histogramUTGIDRegexp("^([^_/]+)_([^_/]+)_([^_/]+)_?([^_/]+)?$");  
   
-  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
+  // MuonDAQMon-20091010T113224.root
+  // MuonDAQMon-345-20091010T113224.root
+//  static TPRegexp s_fileDateRegexp("^(.*)-(\\d{8}T\\d{6})(-EOR)?\\.root$");
+  static TPRegexp s_fileDateRegexp("^([^-]+)(-\\d+)?-(\\d{8}T\\d{6})(-EOR)?\\.root$");
   static TPRegexp s_fileRunRegexp("^(.+)-run(\\d+)\\.root$");
   
  

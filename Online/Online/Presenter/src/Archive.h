@@ -9,6 +9,7 @@
 
 #include <boost/filesystem.hpp>
 #include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/date_time/gregorian/gregorian.hpp>
 #include "presenter.h"
 
 class DbRootHist;
@@ -30,7 +31,9 @@ public:
           const std::string & savesetPath,
           const std::string & referencePath);
   virtual ~Archive();
-  std::vector<boost::filesystem::path> listRootFilesDirectory(const boost::filesystem::path & dirPath);
+  std::vector<boost::filesystem::path> listAvailableRootFiles(const boost::filesystem::path & dirPath,
+                                                              const boost::gregorian::date_period & datePeriod,
+                                                              const std::string & taskName);
   std::vector<std::string> listPartitions();
   void setSavesetPath(const std::string & savesetPath);  
   std::string savesetPath() { return m_savesetPath.file_string(); }    
@@ -39,7 +42,9 @@ public:
   
   void setVerbosity(const pres::MsgLevel & verbosity) { m_verbosity = verbosity; }
   void setAnalysisLib(OMAlib* analib) { m_analysisLib = analib; }
-  void refreshDirectory(const DirectoryType & directoryType, const std::string & endTimeIsoString, const std::string & taskName);
+  void refreshDirectory(const DirectoryType & directoryType,
+                        const boost::gregorian::date_period & datePeriod,
+                        const std::string & taskName);
   void closeRootFiles();  
   void fillHistogram(DbRootHist* histogram,
                      const std::string & timePoint,

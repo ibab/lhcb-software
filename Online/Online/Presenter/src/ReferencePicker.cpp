@@ -38,52 +38,52 @@ ReferencePicker::ReferencePicker(PresenterMainFrame* gui, DbRootHist* histogram)
     path referenecePath(m_archive->referencePath() + s_slash +
                         m_histogram->taskName());
     if (exists(referenecePath)) {
-      std::vector<path> foundRootFiles = m_archive->listRootFilesDirectory(referenecePath);
-      if (!foundRootFiles.empty()) {
-        if (m_verbosity >= Verbose) {
-          std::cout << "Found " << foundRootFiles.size() <<
-                       " reference file(s)" << std::endl;
-        }
-        std::vector<path>::const_iterator foundRootFilesIt;
-        foundRootFilesIt = foundRootFiles.begin();
-        TList* list = new TList;
-        while (foundRootFilesIt != foundRootFiles.end()) {
-//          TFile *f TFile::Open()...
-          TFile rootFile((*foundRootFilesIt).file_string().c_str());
-          if (rootFile.IsZombie()) {
-            cout << "Error opening Root file: " <<
-              (*foundRootFilesIt).file_string() << endl;
-          } else {
-            TH1* referenceHisto;
-            rootFile.GetObject((m_histogram->onlineHistogram()->hname()).append(";1").c_str(),
-                               referenceHisto);
-            if (referenceHisto) {
-              referenceHisto->SetName((*foundRootFilesIt).file_string().c_str());
-              referenceHisto->SetTitle((*foundRootFilesIt).leaf().c_str());
-              list->Add(referenceHisto);        
-            }
-          }
-          ++foundRootFilesIt;
-        }
-  
-        int numberOfRefs = list->GetSize(); 
-        int rows = (int) ceil(sqrt((double)numberOfRefs));
-        int columns(rows);
-        c125->Clear();
-        c125->Divide(rows,columns);
-
-        TH1* histo;
-        TIter next(list);
-        while ((histo = (TH1 *) next())) {
-          gPad = c125->GetPad(numberOfRefs);
-          histo->DrawCopy();
-          --numberOfRefs;
-          list->Remove(histo);
-          delete histo;
-        }
-        delete list;
-        c125->Update();
-      }
+//      std::vector<path> foundRootFiles = m_archive->listRootFilesInDirectory(referenecePath);
+//      if (!foundRootFiles.empty()) {
+//        if (m_verbosity >= Verbose) {
+//          std::cout << "Found " << foundRootFiles.size() <<
+//                       " reference file(s)" << std::endl;
+//        }
+//        std::vector<path>::const_iterator foundRootFilesIt;
+//        foundRootFilesIt = foundRootFiles.begin();
+//        TList* list = new TList;
+//        while (foundRootFilesIt != foundRootFiles.end()) {
+////          TFile *f TFile::Open()...
+//          TFile rootFile((*foundRootFilesIt).file_string().c_str());
+//          if (rootFile.IsZombie()) {
+//            cout << "Error opening Root file: " <<
+//              (*foundRootFilesIt).file_string() << endl;
+//          } else {
+//            TH1* referenceHisto;
+//            rootFile.GetObject((m_histogram->onlineHistogram()->hname()).append(";1").c_str(),
+//                               referenceHisto);
+//            if (referenceHisto) {
+//              referenceHisto->SetName((*foundRootFilesIt).file_string().c_str());
+//              referenceHisto->SetTitle((*foundRootFilesIt).leaf().c_str());
+//              list->Add(referenceHisto);
+//            }
+//          }
+//          ++foundRootFilesIt;
+//        }
+//
+//        int numberOfRefs = list->GetSize();
+//        int rows = (int) ceil(sqrt((double)numberOfRefs));
+//        int columns(rows);
+//        c125->Clear();
+//        c125->Divide(rows,columns);
+//
+//        TH1* histo;
+//        TIter next(list);
+//        while ((histo = (TH1 *) next())) {
+//          gPad = c125->GetPad(numberOfRefs);
+//          histo->DrawCopy();
+//          --numberOfRefs;
+//          list->Remove(histo);
+//          delete histo;
+//        }
+//        delete list;
+//        c125->Update();
+//      }
     }
   }
 }
