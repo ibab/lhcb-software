@@ -1,4 +1,4 @@
-// $Id: ParticleCuts.h,v 1.38 2009-10-02 15:06:13 ibelyaev Exp $
+// $Id: ParticleCuts.h,v 1.39 2009-11-19 17:45:34 marcocle Exp $
 // ============================================================================
 #ifndef LOKI_PHYSPARTICLECUTS_H 
 #define LOKI_PHYSPARTICLECUTS_H 1
@@ -1294,7 +1294,7 @@ namespace LoKi
      *  Evaluate the signed \f$\chi^2\f$-vertex-vertex distance 
      *  for the various daughter particles in the cascade decay.
      *  The sign is evaluated from the sign of the expression:
-     *   \f$ \left( \vect{v}_1-\vect{v}_2\right)\cdot \vect{p}_1 \f$ 
+     *   \f$ \left( \mathbf{v}_1-\mathbf{v}_2\right)\cdot \mathbf{p}_1 \f$ 
      *   
      *  @code 
      * 

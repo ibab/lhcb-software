@@ -1,4 +1,4 @@
-// $Id: Particles22.h,v 1.2 2008-11-21 15:11:29 cattanem Exp $
+// $Id: Particles22.h,v 1.3 2009-11-19 17:45:34 marcocle Exp $
 // ============================================================================
 #ifndef LOKI_PARTICLES22_H 
 #define LOKI_PARTICLES22_H 1
@@ -223,7 +223,7 @@ namespace LoKi
      *  Simple functor wich evalautes "the signed \f$\chi^2\f$-distance" between 
      *  the 'daughetrs' vertices for the given cascade decays.
      *  The sign is evaluated from the sign of the expression:
-     *   \f$ \left( \vect{v}_1-\vect{v}_2\right)\cdot \vect{p}_1 \f$ 
+     *   \f$ \left( \mathbf{v}_1-\mathbf{v}_2\right)\cdot \mathbf{p}_1 \f$ 
      *
      *  @see LoKi::Cuts::D2DVVDCHI2SIGN
      *
