@@ -5,7 +5,7 @@
  *  Implementation file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.cpp,v 1.16 2009-11-11 17:27:29 papanest Exp $
+ *  $Id: DeRichGasRadiator.cpp,v 1.17 2009-11-19 13:15:38 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -110,13 +110,27 @@ StatusCode DeRichGasRadiator::initialize ( )
 
   // HLT temperature
   if ( hasCondition( "HltGasTemperature" ) )
+  {
     m_hltTemperatureCond = condition( "HltGasTemperature" );
+    if ( m_hltTemperatureCond == 0 )
+    {
+      msg << MSG::FATAL << "Cannot access condition HltGasTemperature" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
   else
     m_hltTemperatureCond = m_temperatureCond;
 
   // HLT pressure
   if ( hasCondition( "HltGasPressure" ) )
+  {
     m_hltPressureCond = condition( "HltGasPressure" );
+    if ( m_hltPressureCond == 0 )
+    {
+      msg << MSG::FATAL << "Cannot access condition HltGasPressure" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
   else
     m_hltPressureCond =  m_pressureCond;
 
