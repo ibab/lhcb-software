@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.9 2009-07-07 14:44:34 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.10 2009-11-19 21:40:06 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -11,8 +11,7 @@ import GaudiKernel.ProcessJobOptions
 from Configurables import ( LHCbConfigurableUser, LHCbApp, RecSysConf, TrackSys,
                             ProcessPhase, GaudiSequencer, DstConf, TAlignment, VeloAlignment,
                             CountingPrescaler )
-
-from TrackMonitors.ConfiguredTrackMonitors import ConfiguredTrackMonitorSequence
+from RecSys.Configuration import RecMoniConf
 
 ## @class Escher
 #  Configurable for Escher application
@@ -23,13 +22,13 @@ class Escher(LHCbConfigurableUser):
     ## Possible used Configurables
     #__used_configurables__ = [ TAlignment, VeloAlignment, TrackSys, RecSysConf, LHCbApp, DstConf ]
 
-    __used_configurables__ = [ TrackSys, RecSysConf, LHCbApp, DstConf, TAlignment ]
+    __used_configurables__ = [ TrackSys, RecSysConf, RecMoniConf, LHCbApp, DstConf, TAlignment ]
     ## Default main sequences for real and simulated data
     DefaultSequence = [ CountingPrescaler("EscherPrescaler")
-                        ,  "ProcessPhase/Init"
+                        , "ProcessPhase/Init"
 			, "ProcessPhase/Reco"
-                        , ConfiguredTrackMonitorSequence()
-			, GaudiSequencer("AlignSequence") ]
+			, "ProcessPhase/Moni"
+                        , GaudiSequencer("AlignSequence") ]
 
     
     # Steering options
@@ -61,6 +60,7 @@ class Escher(LHCbConfigurableUser):
                                            # for Kalman style alignment, there is a handle: UpdateConstants.
         # Following are options forwarded to RecSys
        , "RecoSequence"   	: [] # The Sub-detector reconstruction sequencing. See RecSys for default
+       , "MoniSequence"         : ["VELO","Tr", "OT","ST"]
        , "SpecialData"    	: [] # Various special data processing options. See KnownSpecialData for all options
        , "Context"		: "Offline" # The context within which to run
         }
@@ -153,7 +153,6 @@ class Escher(LHCbConfigurableUser):
                ta.Sequencer = GaudiSequencer("MpedeAlignSeq")
                alignSeq.Members.append(ta.Sequencer)
         if self.getProp("Kalman") :
-            TrackSys().ExpertTracking += [ "kalmanSmoother" ]
 	    log.info("Using Kalman style alignment!")
             self.setProp("Incident", "UpdateConstants")
             ta = TAlignment()
@@ -278,28 +277,6 @@ class Escher(LHCbConfigurableUser):
     def evtMax(self):
         return LHCbApp().evtMax()
 
-    # method to print an algorithm in the sequence
-    def printAlgo( self, algName, appMgr, prefix = ' ') :
-        #""" print algorithm name, and, if it is a sequencer, recursively those algorithms it calls"""
-        print prefix + algName
-        alg = appMgr.algorithm( algName.split( "/" )[ -1 ] )
-        prop = alg.properties()
-        if prop.has_key( "Members" ) :
-            subs = prop[ "Members" ].value()
-            for i in subs : self.printAlgo( i.strip( '"' ), appMgr, prefix + "     " )
-        elif prop.has_key( "DetectorList" ) :
-            subs = prop[ "DetectorList" ].value()
-            for i in subs : self.printAlgo( algName.split( "/" )[ -1 ] + i.strip( '"' ) + "Seq", appMgr, prefix + "     ")
-
-    # method to print all algorithms        
-    def printFlow( self ) :
-        from GaudiPython.Bindings import AppMgr
-        appMgr = AppMgr()
-        mp = appMgr.properties()
-        print "\n ****************************** Application Flow ****************************** \n"
-        for i in mp["TopAlg"].value(): self.printAlgo( i, appMgr )
-        print "\n ****************************************************************************** \n"
-        
     ## Apply the configuration
     def __apply_configuration__(self):
         
@@ -307,6 +284,10 @@ class Escher(LHCbConfigurableUser):
         GaudiKernel.ProcessJobOptions.PrintOn()
         log.info("Initializing sequences!")
         self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
+        # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
+        #self.setOtherProps(RecMoniConf(),["MoniSequence","Context","OutputType"])
+        RecMoniConf().MoniSequence = self.getProp("MoniSequence")
+        
         self.defineGeometry()
         self.defineEvents()
         self.defineOptions()
@@ -322,8 +303,6 @@ class Escher(LHCbConfigurableUser):
         log.info( LHCbApp() )
         log.info( RecSysConf() )
         log.info( TrackSys() )
+        log.info( RecMoniConf() )
         log.info( TAlignment() )
         GaudiKernel.ProcessJobOptions.PrintOff()
-
-        from GaudiKernel.Configurable import appendPostConfigAction
-        #appendPostConfigAction(self.printFlow)
