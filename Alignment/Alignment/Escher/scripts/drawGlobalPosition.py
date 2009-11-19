@@ -35,8 +35,8 @@ parser.add_option("-T", "--tag",
                   default="HEAD")
 parser.add_option("-t", "--delta-time",
                   dest="dtime", type="int",
-                  help="time interval for getting values in seconds [default: %default]",
-                      default=60)
+                  help="time interval for getting values in seconds [default: %default]. if not specified it will use exactly 1000 bins",
+                      default=-1)
 parser.add_option("-S", "--since",dest="since",
                   type="string",
                   help="begin of interval of validity"
@@ -47,6 +47,11 @@ parser.add_option("-U", "--until",dest="until",
                   help="end of interval of validity"
                   "Format: YYYY-MM-DD[_HH:MM[:SS.SSS]][UTC]",
                   default="2009-12-31")
+parser.add_option("-g", "--granularity",dest="granularity",
+                  type="int",
+                  help="granularity in seconds. if not specified, it will choose exactly 1000 bins",
+                  default=-1)
+
 (opts, args) = parser.parse_args()
 
 database    = args[0]
@@ -67,8 +72,12 @@ timeend   = intTime(opts.until,cool.ValidityKeyMax)/nsPerSecond
 print "From:  ", opts.since, " --> ", gbl.Gaudi.Time(timebegin,0).format(True,"%c")
 print "Until: ", opts.until, " --> ", gbl.Gaudi.Time(timeend,0).format(True,"%c")
 
-timeinterval = opts.dtime 
-npoints = (timeend-timebegin)/timeinterval
+if opts.dtime>0:
+    timeinterval = opts.dtime
+    npoints = (timeend-timebegin)/timeinterval
+else:
+    npoints = 1000
+    timeinterval = (timeend-timebegin)/npoints
 
 # 1 september:  1231459200
 # 15 september: 1268092800
