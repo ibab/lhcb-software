@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r12p1>2009-11-19 Phys v8r12p1 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v8r12p1                                #
+###############################################################################
+
+- Based on LHCb v28r2 and Gaudi v21r6
+
+  Phys/KaliKalo moved to Analysis project. 
+  Otherwise, exactly the same as v8r12.
+
 </PRE><H1><A NAME=v8r12>2009-11-16 Phys v8r12 </A></H1><PRE>
 
 ###############################################################################
