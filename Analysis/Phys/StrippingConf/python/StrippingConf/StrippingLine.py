@@ -14,11 +14,10 @@ import re
 from copy import deepcopy 
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import DeterministicPrescaler as Scaler
-from Configurables import StrippingAlg
 from Configurables import LoKi__L0Filter    as L0Filter
 from Configurables import LoKi__HDRFilter   as HDRFilter
 from Configurables import LoKi__ODINFilter  as ODINFilter
-from Configurables import CheckPV
+
 
 ## Convention: the name of 'Filter' algorithm inside StrippingLine
 def filterName   ( line , level = 'Stripping') :
@@ -362,7 +361,8 @@ class StrippingLine(object):
         _members = _boundMembers.members()
 
         # if needed, check Primary Vertex before running all algos
-        if checkPV : 
+        if checkPV :
+            from Configurables import CheckPV
     	    check = CheckPV("checkPV");
     	    check.MinPVs = 1;
     	    _members.insert(0, check);
@@ -381,7 +381,7 @@ class StrippingLine(object):
             mdict.update( { 'Filter' : GaudiSequencer( filterName ( line,'Stripping' ) , Members = _members ) } )
         # final cloning of all parameters:
         __mdict = deepcopy ( mdict ) 
-
+        from Configurables import StrippingAlg
         self._configurable = StrippingAlg ( self.name() , **__mdict )
         print '# created Stripping Line configurable for', name, '\n'
         print self._configurable

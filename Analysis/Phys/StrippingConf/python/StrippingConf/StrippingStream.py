@@ -11,7 +11,7 @@ __all__ = (
 from GaudiConf.Configuration import *
 from Gaudi.Configuration import GaudiSequencer, Sequencer, Configurable
 from Configurables import LHCbConfigurableUser
-from Configurables import StrippingCheck
+
 
 class StrippingStream ( LHCbConfigurableUser ) :
 
@@ -25,7 +25,8 @@ class StrippingStream ( LHCbConfigurableUser ) :
 	    self.lines().append(line)
 	    line.declareAppended()
 	    
-    def createConfigurables(self, TES = False) : 
+    def createConfigurables(self, TES = False) :
+        from Configurables import StrippingCheck
 	for line in self.lines() : 
 	    if TES :
 		self.sequence().Members += [ StrippingCheck(line.name(), 
