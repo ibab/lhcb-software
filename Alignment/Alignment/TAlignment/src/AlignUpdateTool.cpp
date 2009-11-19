@@ -485,7 +485,8 @@ namespace Al
 	    AlParameters refdelta = (*it)->currentActiveTotalDelta() ;
 	    //logmessage << delta ;
 	    for(unsigned int iactive = 0u; iactive < delta.dim(); ++iactive) 
-	      logmessage << std::setw(6)  << delta.activeParName(iactive) << ":" 
+	      logmessage << std::setiosflags(std::ios_base::left)
+			 << std::setw(6)  << delta.activeParName(iactive) << " :" 
 			 << " cur= " << std::setw(12) << refdelta.parameters()[iactive]
 			 << " delta= " << std::setw(12) << delta.parameters()[iactive] << " +/- "
 			 << std::setw(12) << AlParameters::signedSqrt(delta.covariance()[iactive][iactive]) 
