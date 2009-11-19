@@ -14,13 +14,20 @@ from Configurables import ( TrackEventFitter, TrackMasterFitter, TrackKalmanFilt
                             MeasurementProvider, StateDetailedBetheBlochEnergyCorrectionTool)
 
 def ConfiguredMasterFitter( Name,
-                            FieldOff = TrackSys().fieldOff(),
-                            SimplifiedGeometry = TrackSys().simplifiedGeometry(),
-                            NoDriftTimes       = TrackSys().noDrifttimes(),
-                            KalmanSmoother     = TrackSys().kalmanSmoother(),
+                            FieldOff = None,
+                            SimplifiedGeometry = None,
+                            NoDriftTimes       = None,
+                            KalmanSmoother     = None,
                             LiteClusters       = False,
-                            ApplyMaterialCorrections = not TrackSys().noMaterialCorrections(),
+                            ApplyMaterialCorrections = None,
                             StateAtBeamLine = True ):
+    # set the mutable default arguments
+    if FieldOff is None:                 FieldOff = TrackSys().fieldOff()
+    if SimplifiedGeometry is None:       SimplifiedGeometry = TrackSys().simplifiedGeometry()
+    if NoDriftTimes is None:             NoDriftTimes = TrackSys().noDrifttimes()
+    if KalmanSmoother is None:           KalmanSmoother = TrackSys().kalmanSmoother()
+    if ApplyMaterialCorrections is None: ApplyMaterialCorrections = not TrackSys().noMaterialCorrections()
+    
     if isinstance(Name,TrackMasterFitter) :
         fitter = Name
     else :
@@ -97,12 +104,12 @@ def ConfiguredMasterFitter( Name,
 
 def ConfiguredEventFitter( Name,
                            TracksInContainer,
-                           FieldOff = TrackSys().fieldOff(),
-                           SimplifiedGeometry = TrackSys().simplifiedGeometry(),
-                           NoDriftTimes       = TrackSys().noDrifttimes(),
-                           KalmanSmoother     = TrackSys().kalmanSmoother(),
+                           FieldOff = None,
+                           SimplifiedGeometry = None,
+                           NoDriftTimes       = None,
+                           KalmanSmoother     = None,
                            LiteClusters = False,
-                           ApplyMaterialCorrections = not TrackSys().noMaterialCorrections(),
+                           ApplyMaterialCorrections = None,
                            StateAtBeamLine = True ):
     # make sure the name is unique
     if allConfigurables.get( Name ) :
@@ -112,7 +119,7 @@ def ConfiguredEventFitter( Name,
     eventfitter.TracksInContainer = TracksInContainer
     # add the tools that need to be modified
     fittername = Name + ".Fitter"
-    eventfitter.addTool( ConfiguredMasterFitter( fittername,
+    eventfitter.addTool( ConfiguredMasterFitter( Name = fittername,
                                                  FieldOff=FieldOff,
                                                  SimplifiedGeometry=SimplifiedGeometry,
                                                  NoDriftTimes=NoDriftTimes,
@@ -125,7 +132,7 @@ def ConfiguredEventFitter( Name,
 
 
 
-def ConfiguredFastFitter( Name, FieldOff = TrackSys().fieldOff(), LiteClusters = True,
+def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
                           ForceUseDriftTime = True ):
     fitter = ConfiguredMasterFitter(Name,
                                     FieldOff=FieldOff,
@@ -164,7 +171,7 @@ def ConfiguredFastVeloOnlyEventFitter( Name, TracksInContainer ):
     return eventfitter
 
 def ConfiguredStraightLineFitter( Name, TracksInContainer,
-                                  NoDriftTimes =  TrackSys().noDrifttimes()  ):
+                                  NoDriftTimes = None ):
     eventfitter = ConfiguredEventFitter(Name,TracksInContainer,
                                         FieldOff=True,
                                         NoDriftTimes=NoDriftTimes,
