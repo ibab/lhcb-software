@@ -1,6 +1,6 @@
-# $Id: requirements,v 1.148 2009-11-19 14:13:10 jpalac Exp $
+# $Id: requirements,v 1.149 2009-11-19 15:45:28 jpalac Exp $
 package AnalysisSys
-version v3r11
+version v3r12
 
 branches doc cmt
 
@@ -35,8 +35,8 @@ use AnalysisPython              v1r5     Phys
 #
 # Stripping
 #
-use StrippingConf               v1r7   Phys   # Anton Poluektov
-use StrippingSelections         v1r9   Phys   # Anton Poluektov
+use StrippingConf               v1r8   Phys   # Anton Poluektov
+use StrippingSelections         v1r10  Phys   # Anton Poluektov
 
 ####################################################################
 use  MicroDSTBase        	v1r6p1  MicroDST          # Juan Palacios
