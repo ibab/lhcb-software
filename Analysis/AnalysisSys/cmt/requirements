@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.143 2009-10-30 14:11:58 jpalac Exp $
+# $Id: requirements,v 1.144 2009-11-19 08:00:13 jpalac Exp $
 package AnalysisSys
 version v3r11
 
@@ -7,31 +7,31 @@ branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v1r8     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r9     Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  CommonParticles            v6r2     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v9r0     Phys   # Marco Musy
-use  DaVinciFilter              v7r1     Phys   # Patrick Koppenburg - deprecated
+use  FlavourTagging             v9r0p1   Phys   # Marco Musy
+use  DaVinciFilter              v7r2     Phys   # Patrick Koppenburg - deprecated
 
 use  DaVinciMonitors            v1r5p2   Phys   # Patrick Koppenburg
-use  RichPIDQC                  v1r2p4   Rich   # Chris Jones
-use  DstCalibSel                v1r2     Rich   # Andrew Powell
+use  RichPIDQC                  v1r3     Rich   # Chris Jones
+use  DstCalibSel                v1r2p1   Rich   # Andrew Powell
 
 ####################################################################
-use  DaVinciMCTools     	v9r22    Phys   # Juan Palacios
-use  DaVinciAssociators         v9r3p5   Phys   # Vladimir Gligorov
+use  DaVinciMCTools     	v9r23    Phys   # Juan Palacios
+use  DaVinciAssociators         v9r4     Phys   # Vladimir Gligorov
 use  Particle2MCTruth           v2r3p2   Phys   # Juan Palacios
 use  VertexFitCheck             v1r4p1   Phys   # Yuehong Xie
 use  MCStandardParticles        v1r2     Phys   # Juan Palacios
-use  FlavourTaggingChecker      v3r9     Phys   # Marco Musy
+use  FlavourTaggingChecker      v3r9p1   Phys   # Marco Musy
 use  ParticleMakerChecker       v1r3p2   Phys   # Chris Jones
-use  DecayTreeTuple             v2r6     Phys   # Rob Lambert
+use  DecayTreeTuple             v2r7     Phys   # Rob Lambert
 ####################################################################
 #
 use PhysSelPython               v3r1     PhysSel
-use AnalysisPython              v1r4     Phys
+use AnalysisPython              v1r5     Phys
 #
 # Stripping
 #
