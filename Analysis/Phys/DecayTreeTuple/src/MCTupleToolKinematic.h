@@ -1,4 +1,4 @@
-// $Id: MCTupleToolKinematic.h,v 1.2 2009-06-11 15:42:59 rlambert Exp $
+// $Id: MCTupleToolKinematic.h,v 1.3 2009-11-19 12:22:05 rlambert Exp $
 #ifndef MCTUPLETOOLKINEMATIC_H 
 #define MCTUPLETOOLKINEMATIC_H 1
 
@@ -13,8 +13,6 @@
  *
  * See the properties inline documentation to toggle on/off some of
  * the columns
- *
- * - head_TRUEID : true pid
  *
  * - head_TRUEP[E|X|Y|Z] : true four vector momentum
  * - head_TRUEPT : true transverse momentum, PT
@@ -57,4 +55,4 @@ private:
 #include "isStable.h"
 
 };
-#endif // MCTUPLETOOLMCTRUTH_H
+#endif // MCTUPLETOOLKINEMATIC_H

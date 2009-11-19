@@ -8,6 +8,10 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-19 - Rob Lambert
+ - src/MCTupleToolPID.{h,cpp} new. Add MC PID.
+ - src/MCTupleToolKinematic.{h,cpp} fix doxygen
+
 !========================== DecayTreeTuple v2r7 2009-11-17 ==================
 
 ! 2009-11-17 - Patrick Koppenburg
