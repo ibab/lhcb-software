@@ -210,7 +210,8 @@ AlRobustAlignAlg::findElement(const DetectorElement& elem)
     if ( rc==0 ) {
       rc = new ElementHistos() ;
       m_histos[ alignelem->index() ] = rc ;
-      std::string dirname =  "element" + boost::lexical_cast<std::string>( alignelem->index() ) + "/"; //name + "/" ;
+      //std::string dirname =  "element" + boost::lexical_cast<std::string>( alignelem->index() ) + "/"; //name + "/" ;
+      std::string dirname =  alignelem->name() + "/" ;
       rc->resh1 = book1D(dirname + "resh1", 
 			 "Residual for " + alignelem->name(),-m_maxDistance,m_maxDistance, 100);
       rc->resfineh1 = book1D(dirname + "resfineh1", 
