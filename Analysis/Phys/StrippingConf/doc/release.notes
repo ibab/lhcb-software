@@ -1,11 +1,17 @@
-!$Id: release.notes,v 1.32 2009-11-19 14:47:39 jpalac Exp $
+!$Id: release.notes,v 1.33 2009-11-19 15:40:49 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
 
+!========================== StrippingConf v1r8 2009-11-19 ===================
+
 ! 2009-11-19 - Juan Palacios
+ - cmt/requirements
+  . increase version to v1r8
+ - python/StrippingConf/configuration.py
+  . Hide configurables that are not known at build time.
  - python/StrippingConf/StrippingLine.py, StrippingStream.py
   . Move some configurables imports to the relevant function bodies.
 
