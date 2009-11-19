@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.31 2009-11-18 10:46:20 poluekt Exp $
+!$Id: release.notes,v 1.32 2009-11-19 14:47:39 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingConf
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping framework
 ! -----------------------------------------------------------------------------
+
+! 2009-11-19 - Juan Palacios
+ - python/StrippingConf/StrippingLine.py, StrippingStream.py
+  . Move some configurables imports to the relevant function bodies.
 
 ! 2009-11-18 - Anton POLUEKTOV
  - Printout for StrippingConf/StrippingStream/StrippingAlg.  
