@@ -133,13 +133,12 @@ class TAlignment( LHCbConfigurableUser ):
 
     def postMonitorSeq( self ) :
         from Configurables import (TrackMonitor,TrackVertexMonitor)
-        monitorSeq = GaudiSequencer("AlignPostMonitorSeq")
-        monitorSeq.Members.append(TrackMonitor("AlignPostTrackMonitor",
-                                               TracksInContainer =self.getProp("TrackLocation")))
-        if self.getProp("VertexLocation") != "":
-             monitorSeq.Members.append(TrackVertexMonitor("AlignPostVertexMonitor",
-                                                          PVContainer = self.getProp("VertexLocation")))
-        return monitorSeq
+        monitorSeq = GaudiSequencer("AlignMonitorSeq")
+        postMonitorSeq = GaudiSequencer("AlignPostMonitorSeq")
+        for m in monitorSeq.Members:
+            copy = m.clone(m.name() + "Post")
+            postMonitorSeq.Members.append( copy )
+        return postMonitorSeq
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
@@ -174,7 +173,7 @@ class TAlignment( LHCbConfigurableUser ):
         if not allConfigurables.get( "AlignmentSeq" ) :
             if outputLevel == VERBOSE: print "VERBOSE: Alignment Sequencer not defined! Defining!"
 
-            alignSequencer = GaudiSequencer("KalmanAlignmentSeq")
+            alignSequencer = GaudiSequencer("AlignmentAlgSeq")
             alignSequencer.MeasureTime = True
             
             from Configurables import ( AlignAlgorithm, GetElementsToBeAligned,
