@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Changes to tests
+   . fixedfile tests added, the file used is coded into the tests, and all boole v19r8 file types are tested
+   . fixedfile-boole-v19r8-mc09-digi-extended-spillover
+	 . fixedfile-boole-v19r8-mc09-digi-extended
+   . fixedfile-boole-v19r8-mc09-digi
+   . fixedfile-boole-v19r8-mc09-mdf
+
 </PRE><H1><A NAME=v35r8>2009-11-17 Brunel v35r8</A></H1><PRE>
  - Changes to Configurable:
    . Replace CaloAssociators.opts DataOnDemandSvc options with explicit
