@@ -215,6 +215,7 @@
  091015 - fixed the --check option. It must not create any file.
  091026 - fixed the exception handling in the retrieve function
  091105 - stripped off the hat for the data package if there is one.
+ 091118 - Moved the Compat project verson to v1r3
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -227,11 +228,11 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091105'
+script_version = '091118'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r3"
-compat_version = "v1r2"
+compat_version = "v1r3"
 #-----------------------------------------------------------------------------------
 
 # url from which to get files

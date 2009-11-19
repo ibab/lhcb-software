@@ -1,3 +1,7 @@
+2009-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: moved to Compat v1r3
+
 2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/copy-Win2afs: removed useless variable.
