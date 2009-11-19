@@ -6,5 +6,6 @@ use LBCOM	LBCOM_v7r8
 use REC		REC_v7r8
 use ONLINE  ONLINE_v4r31
 
+container       MooreSys
 build_strategy	with_installarea
 setup_strategy	root
