@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.69 2009-11-13 14:08:28 cattanem Exp $
+! $Id: release.notes,v 1.70 2009-11-20 15:43:08 odescham Exp $
 ! =============================================================================
 ! Package     : CaloInterfaces
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 ! =============================================================================
+
+! 2009-11-13 - Olivier Deschamps 
+ - complete ICalo2MCTool.h interface
+
 
 !========================= CaloInterfaces v7r16 2009-11-13 ====================
 ! 2009-11-13 - Marco Cattaneo

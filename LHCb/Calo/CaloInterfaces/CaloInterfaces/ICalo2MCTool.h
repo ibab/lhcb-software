@@ -1,11 +1,10 @@
-// $Id: ICalo2MCTool.h,v 1.2 2009-09-21 10:17:34 odescham Exp $
+// $Id: ICalo2MCTool.h,v 1.3 2009-11-20 15:43:08 odescham Exp $
 #ifndef ICALO2MCTOOL_H 
 #define ICALO2MCTOOL_H 1
 
 // Include files
 // from STL
 #include <string>
-
 // from Gaudi
 #include "GaudiKernel/IAlgTool.h"
 
@@ -16,11 +15,12 @@ namespace LHCb{
   class ProtoParticle;
   class Particle;
   class MCParticle;
+  class ParticleID;
 }
 
 
 
-static const InterfaceID IID_ICalo2MCTool ( "ICalo2MCTool", 2, 0 );
+static const InterfaceID IID_ICalo2MCTool ( "ICalo2MCTool", 3, 0 );
 
 /** @class ICalo2MCTool ICalo2MCTool.h
  *  
@@ -44,11 +44,15 @@ public:
   // getters
   virtual const LHCb::MCParticle* bestMC() = 0;
   virtual const LHCb::MCParticle* maxMC() = 0;
-  virtual const LHCb::MCParticle* findMC(std::string name, double threshold = 0 ) = 0;
+  virtual const LHCb::MCParticle* findMC(LHCb::ParticleID id, double threshold = 0. ) = 0;
+  virtual const LHCb::MCParticle* findMCOrBest(LHCb::ParticleID id, double threshold = 0. ) = 0;
+  virtual const LHCb::MCParticle* findMC(std::string name, double threshold = 0. ) = 0;
+  virtual const LHCb::MCParticle* findMCOrBest(std::string name, double threshold = 0. ) = 0;
   virtual double weight(const LHCb::MCParticle*)  = 0;
   virtual double quality(const LHCb::MCParticle*) = 0;
   virtual std::string descriptor() = 0;
-
+  virtual bool isCalo(const LHCb::Particle* particle) = 0;
+  virtual bool isPureNeutralCalo(const LHCb::Particle* particle) = 0;
 protected:
 
 private:
