@@ -1,3 +1,17 @@
+2009-11-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* data/Makefile: Various improvements
+	  - auto-detection of the probable container package if not specified in
+	    project.cmt
+	  - the documentation is generated using DoxyFile.cfg in the container package
+	    (the name can be overridden with the macro DOXYFILE), but overriding
+	     - OUTPUT_DIRECTORY (uses a temporary directory then moves to InstallArea/doc),
+	     - INPUT (use the current directory),
+	     - GENERATE_TAGFILE (generate a tagfile called <PROJECT>_doxygen.tag in InstallArea/doc),
+	     - TAGFILES (add all the doxygen tags of the used projects)
+	  - include the optional file $(container)/cmt/Custom.mk to allow extensions
+	    to the makefile on a project-by-project basis 
+
 2009-11-12  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: some more instrumentations with debug messages.
