@@ -1,3 +1,7 @@
+2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/install_project.py: passed the debug flag to LbLogin and SetupProject.
+
 2009-11-18  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: moved to Compat v1r3

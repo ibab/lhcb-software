@@ -1485,6 +1485,8 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     if os.path.exists(lbloginscript) :
         from LbConfiguration.LbLogin import getLbLoginEnv
         llsargs = []
+        if debug_flag :
+            llsargs.append("--debug")
         llsargs.append("--shell=%s" % usedshell)
         llsargs.append("--mysiteroot=%s" % os.environ["MYSITEROOT"])
         llsargs.append("--scripts-version=%s" % lbscripts_version)
@@ -1502,17 +1504,16 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     if os.path.exists(setprojscript) :
         from LbConfiguration.SetupProject import SetupProject
         setuprojargs = []
+        if debug_flag :
+            setuprojargs.append("--debug")
         setuprojargs.append("--silent")
         setuprojargs.append("--shell=%s" % usedshell)
         setuprojargs.append("--output=%s" % scriptfile)
         setuprojargs.append("--no-user-area")
         setuprojargs.append(pname)
         setuprojargs.append(pversion)
+        log.debug("Running python %s %s" % (setprojscript, " ".join(setuprojargs)))
         SetupProject().main(setuprojargs)
-        cmd = "python %s --silent --shell=%s --output=%s %s %s" % (setprojscript, usedshell,scriptfile,
-                                                                    pname, pversion)
-        log.debug("Running %s" % cmd)
-#        os.system(cmd)
     else :
         log.error("%s doesn't exist" % setprojscript)
     # Setup script postprocessing
