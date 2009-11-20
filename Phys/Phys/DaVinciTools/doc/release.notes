@@ -1,8 +1,89 @@
-! $Id: release.notes,v 1.487 2009-11-16 15:53:43 jpalac Exp $
+! $Id: release.notes,v 1.488 2009-11-20 09:35:55 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-20 - Vanya Belyaev
+ - Add "Embedded" monitoring for FiltrerDesctor & CombineParticles
+  
+  ATTENTION: it require new Phys/LoKiPhys & Phys/LoKiArrayFunctors  packages 
+  ( at least LHCb v28r3 )
+  
+  The algorithm get possibility to execute "monitoring" functors 
+  that *DOES NOT AFFECT* the selection/processing. [ Well, they affect the 
+  procession only indirectly.. E.g. is one has 'illegal' functor, the 
+  processing stops ]
+
+  Both algorithm gets the general (boolean) flag Monitor 
+  ( the default value is "false") to activate the execution of 
+  monitoring functors.
+
+  Each monitoring functor has a stignature 
+
+    LHCb::Particle::ConstVector -> bool
+
+  (This signature corresponds to interal LoKi type LoKi::Types::CutVal) 
+
+
+  The specific properties:
+
+  FilterDesktop:
+  --------------
+
+  - "PreMonitor"   : monitor functor for input particles (before cuts)
+  - "PostMonitor"  : monitor functor for output particles (after all cuts)
+
+  Examples: 
+
+    myAlg = FilterDesktop ( ... ) 
+  
+    myAlg.Monitor     = True 
+    myAlg.PreMonitor  = "  monitor ( SIZE , ... )   > -1 "
+    myAlg.PostMonitor = """
+ 
+        tee     ( monitor ( SIZE                  ,  ... ) ) >>
+        tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
+        process ( monitor (            PT         ,  ... ) ) >>
+        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
+        EMPTY 
+     """ 
+ 
+
+   CombineParticles:
+   -----------------
+
+     - "DaughterMonitors"   : 
+            map of monitor functors for daughetr particles (after selection)
+     - "CombinationMonitor" : 
+            monitor functor for combinations particles (before cuts)
+     - "MotherMonitor"      : 
+            monitor functor for mother particles (after all cuts)
+ 
+
+ Examples: 
+
+   
+     myAlg = CombibneParticles ( ....  ) 
+   
+     myAlg.Monitor = True 
+     myAlg.MotherMonitor = """   
+         tee     ( monitor ( SIZE                  ,  ... ) ) >>
+        tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
+        process ( monitor (            PT         ,  ... ) ) >>
+        tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
+        EMPTY 
+    """
+ 
+   myAlg.DaughterMonitors = {
+    'K+'  : " monitor ( SIZE             , ... ) > 0 " ,
+    'pi-' : " monitor ( min_value( PT )  , ... ) > 0 " ,
+   }
+
+
+ - cmt/requirements 
+
+    verison increment to v19r5   
 
 !========================== DaVinciTools v19r4 2009-11-16 ===================
 

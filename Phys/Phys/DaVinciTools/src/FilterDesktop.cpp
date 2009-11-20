@@ -1,4 +1,4 @@
-// $Id: FilterDesktop.cpp,v 1.7 2009-09-03 13:52:39 ibelyaev Exp $
+// $Id: FilterDesktop.cpp,v 1.8 2009-11-20 09:35:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -24,13 +24,18 @@
 // ============================================================================
 namespace 
 {
+  // ==========================================================================
   /// make the plots ? 
-  inline bool validPlots ( std::string name ) 
+  inline bool validPlots ( const std::string& name ) 
   {
     if ( name.empty() ) { return false ; }
-    boost::to_lower ( name ) ;
-    return "none" != name ;
+    return "none" != boost::to_lower_copy ( name ) ;
   }
+  /// local "none"
+  typedef LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant       _PBOOL ;  
+  /// local "none"
+  typedef LoKi::BasicFunctors<LHCb::Particle::ConstVector>::BooleanConstant _CBOOL ;
+  // ==========================================================================
 }
 // ============================================================================
 using namespace LoKi ;
@@ -41,7 +46,7 @@ using namespace LoKi ;
  *
  *  The important properties (in addtion to the base class' properties)
  *    - "Factory"   : the type/name of LoKi/Bender 'hybrid' factory
- *    - "Preambulo" : the preambulo, to eb used for Bender/Python script
+ *    - "Preambulo" : the preambulo, to be used for Bender/Python script
  *    - "Code"      : the actual Bender/Python code 
  *    - "InputPlotsTool"   : the type/name of PlotTool for 'input' particles 
  *    - "InputPlotsPath"   : THS path for 'input' plots 
@@ -56,10 +61,53 @@ using namespace LoKi ;
  *    - "#passed"    : number of particles, which passed criteria
  *    - "efficiency" : the selection efficiency (per particle) 
  *  
+ *
  *  @see DVAlgorithm 
  *  @see CombineParticles 
  *  @see IHybridFactory
  * 
+ *
+ * The embedded monitoring:
+ *  
+ *    - <c>"Monitor"</c>  : swithch on/off the monitoring functors 
+ *    - <c>"PreMonitor"</c> : monitor functor for input particles (before cuts)
+ *    - <c>"PostMonitor"</c> : monitor functor for output particles (after all cuts)
+ * 
+ *  Empty string implies no monitorig.
+ *
+ *  Each monitoring functor has a signature 
+ *  <code> LHCb::Particle::ConstVector -> book </code>, 
+ *  that corresponds to internal LoKi type <code>LoKi::types::CutVal</code>
+ *   @see LoKi::Types::CutVal
+ *   @see LoKi::Types::CutVals
+ *   @see LoKi::BasicFunctors 
+ *
+ *  Examples of embedded monitoring:
+ *  
+ *  @code 
+ * 
+ *   myAlg = FilterDesktop ( ... ) 
+ * 
+ *   myAlg.Monitor     = True 
+ *   myAlg.PreMonitor  = "  monitor ( SIZE , ... )   > -1 "
+ *   myAlg.PostMonitor = """
+ *
+ *       tee     ( monitor ( SIZE                  ,  ... ) ) >>
+ *       tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
+ *       process ( monitor (            PT         ,  ... ) ) >>
+ *       tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
+ *       EMPTY 
+ *
+ *  """
+ *
+ *  @endcode 
+ *
+ *  The embedded monitoring are described in detail at 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiFAQ#How_to_monitor_various_LoKi_func">
+ *  here </a>, also see 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiFAQ#Helper_streamer_functions">
+ *  helper LoKi streamers & filters</a>
+ *  
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef,nl
  *  @date 2008-09-22
  */
@@ -120,22 +168,30 @@ protected:
   ( const std::string& name ,                  // the algorithm instance name 
     ISvcLocator*       pSvc )                   // pointer to Service Locator
     : DVAlgorithm ( name , pSvc ) 
-    // LoKi/Bender "hybrid" factory name 
+  // LoKi/Bender "hybrid" factory name 
     , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" )
-    // the preambulo 
+  // the preambulo 
     , m_preambulo ()
-    // the selection functor (predicate) itself 
-    , m_code ( "PNONE" )
-    , m_cut  ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( false ) ) 
-    // input plots 
+  // the selection functor (predicate) itself 
+    , m_code ( "PNONE"          )
+    , m_cut  ( _PBOOL ( false ) ) 
+  // general flag to switch on/off the monitoring
+    , m_monitor ( false ) 
+  // (pre-monitoring) functor 
+    , m_preMonitorCode  ( )
+    , m_preMonitor      ( _CBOOL ( false ) )
+  // (post-monitoring) functor 
+    , m_postMonitorCode ( )
+    , m_postMonitor     ( _CBOOL ( false ) )
+  // input plots 
     , m_inputPlotsTool   ( "LoKi::Hybrid::PlotTool/InputPlots"  )
     , m_inputPlots       (  0  )
     , m_inputPlotsPath   ( "I" + name  ) 
-    // output plots 
+  // output plots 
     , m_outputPlotsTool  ( "LoKi::Hybrid::PlotTool/OutputPlots" )
     , m_outputPlots      (  0  )
     , m_outputPlotsPath  ( "O" + name  )
-    // cloning rules:
+  // cloning rules:
     , m_cloneFinalStates ( false ) 
     , m_cloneDaughters   ( false ) 
     , m_cloneTree        ( false )
@@ -183,6 +239,26 @@ protected:
         "The THS path for the output plots" ) 
       -> declareUpdateHandler ( &FilterDesktop::updateHandler2 , this ) ;
     //
+    declareProperty
+      ( "Monitor" , 
+        m_monitor , 
+        "The general flag to switch on/off the monitoring" ) 
+      -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
+    
+    // (pre)monitoring code
+    declareProperty
+      ( "PreMonitor" , 
+        m_preMonitorCode  , 
+        "The code used for (pre)monitoring of input particles" )
+      -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
+    
+    // (post)monitoring code
+    declareProperty
+      ( "PostMonitor" , 
+        m_postMonitorCode  , 
+        "The code used for (post)monitoring of output particles" )
+      -> declareUpdateHandler ( &FilterDesktop::updateHandler1 , this ) ;
+    //
     declareProperty ( "CloneFinalState" , m_cloneFinalStates ) ;
     declareProperty ( "CloneDaughters"  , m_cloneDaughters   ) ;
     declareProperty ( "CloneTree"       , m_cloneTree        ) ;
@@ -221,7 +297,12 @@ public:
     /// mark as "to-be-updated" 
     m_to_be_updated2 = true ;
     debug () << "The histogramming property is updated: " << p << endreq ;
-  }
+  }  
+  // ==========================================================================
+public:
+  // ==========================================================================
+  /// general flag to switch on/off the monitoring
+  bool monitor() const { return m_monitor ; }
   // ==========================================================================
 private:
   // ==========================================================================
@@ -243,11 +324,23 @@ private:
   {
     // locate the factory
     IHybridFactory* factory = tool<LoKi::IHybridFactory> ( m_factory , this ) ;
+    
     // use the factory 
     StatusCode sc = factory-> get ( m_code , m_cut , preambulo() ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Error from LoKi/Bender 'hybrid' factory for Code='" 
                      + m_code + "'" , sc )  ; }
+    
+    // pre-monitoring: 
+    if ( monitor() && !m_preMonitorCode.empty () ) 
+    { sc = factory-> get ( m_preMonitorCode  , m_preMonitor  , preambulo() ) ; }
+    else { m_preMonitor  = _CBOOL ( false ) ; }
+    
+    // post-monitoring: 
+    if ( monitor() && !m_postMonitorCode.empty() ) 
+    { sc = factory-> get ( m_postMonitorCode , m_postMonitor , preambulo() ) ; }
+    else { m_postMonitor = _CBOOL ( false ) ; }
+    
     // release the factory (not needed anymore) 
     release ( factory ) ;
     //
@@ -310,6 +403,17 @@ private:
   /// the predicate itself 
   LoKi::BasicFunctors<const LHCb::Particle*>::PredicateFromPredicate m_cut ;
   //
+  /// general flag to switch on/off monitoring
+  bool                m_monitor ;   // general flag to switch on/off monitoring
+  /// (pre-monitoring) code 
+  std::string         m_preMonitorCode  ;         // (pre-monitoring)      code
+  /// (pre-monitoring) functor 
+  LoKi::Types::CutVal m_preMonitor      ;         // (pre-monotoring)   functor 
+  /// (post-monitoring) code 
+  std::string         m_postMonitorCode ;         // (post-monitoring)     code
+  /// (post-monitoring) functor 
+  LoKi::Types::CutVal m_postMonitor     ;         // (post-monitoring)  functor 
+  //
   // input plots
   //
   /// type/name for the input plots tool 
@@ -358,10 +462,13 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if ( sc.isFailure() ) 
     { return Error ( "The error from updateHistos" , sc ) ; }    // RETURN 
   }
-  
     
   // get the input particles 
   const LHCb::Particle::ConstVector particles = desktop() -> particles () ;
+
+  // monitor input (if required) 
+  if ( monitor() && !m_preMonitorCode.empty() ) { m_preMonitor ( particles ) ; }
+
   // make plots 
   if ( produceHistos () && 0 != m_inputPlots ) 
   { 
@@ -415,6 +522,11 @@ StatusCode FilterDesktop::execute ()       // the most interesting method
     if ( sc.isFailure () ) 
     { return Error ( "Error from Output Plots tool", sc ) ; }
   }
+  
+  // monitor output (if required) 
+  if ( monitor() && !m_postMonitorCode.empty() ) 
+  { m_postMonitor ( particles ) ; }
+
   /// make the filter decision
   setFilterPassed ( !accepted.empty() );
   // some statistics 

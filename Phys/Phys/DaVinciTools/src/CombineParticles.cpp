@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.34 2009-09-03 13:52:39 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.35 2009-11-20 09:35:55 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -51,6 +51,13 @@ namespace
     if ( name.empty() ) { return false ; }
     return "none" != boost::to_lower_copy ( name ) ;
   }
+  /// local "none"
+  typedef LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant       _PBOOL ;  
+  /// local "none"
+  typedef LoKi::BasicFunctors<LHCb::Particle::ConstVector>::BooleanConstant _CBOOL ;
+  /// local "none"
+  typedef LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant   _ABOOL ;
+  ///
   // ==========================================================================
   /** @class PV_Sentry 
    *  Helper class to guarantee the removal of relations to the 
@@ -125,6 +132,7 @@ namespace
  *    - <c>"StopAtMaxCandidates"</c>: stop or warn when the maximal number of candidates (per channel) is reached
  *    - <c>"StopIncident"</c>: the incident type to be fired in the case of stop processing
  *
+ *
  *  Few counters are produced:
  *    - "# <PID>" for each daughter 'PID': number of corresponding daugter particles 
  *    - "# <DECAY>" for each <decay>: number of selected decay candidates 
@@ -181,6 +189,54 @@ namespace
  *      }
  *
  *  @endcode
+ *
+ * 
+ *    Embedded Monitoring:
+ *
+ *    - <c>"Monitor"</c>  : swithch on/off the monitoring functors 
+ *    - <c>"DaughterMonitors"</c> : map of monitor functors for daughetr particles (after selection)
+ *    - <c>"CombinationMonitor"</c> : monitor functor for combinations particles (before cuts)
+ *    - <c>"MotherMonitor"</c> : monitor functor for mother particles (after all cuts)
+ *
+ *  Empty string implies no monitorig.
+ *
+ *  Each monitoring functor has a signature 
+ *  <code> LHCb::Particle::ConstVector -> book </code>, 
+ *  that corresponds to internal LoKi type <code>LoKi::types::CutVal</code>
+ *   @see LoKi::Types::CutVal
+ *   @see LoKi::Types::CutVals
+ *   @see LoKi::BasicFunctors 
+ *
+ * 
+ *  Examples :
+ *  
+ *  @code
+ *
+ *   myAlg = CombibneParticles ( ....  ) 
+ * 
+ *   myAlg.Monitor = True 
+ *   myAlg.MotherMonitor = """ 
+ *
+ *       tee     ( monitor ( SIZE                  ,  ... ) ) >>
+ *       tee     ( monitor ( max_value( PT )       ,  ... ) ) >>
+ *       process ( monitor (            PT         ,  ... ) ) >>
+ *       tee     ( monitor ( count ( PT > 1*GeV )  ,  ... ) ) >> 
+ *       EMPTY 
+ *
+ *   """
+ *
+ *  myAlg.DaughterMonitors = {
+ *   'K+'  : " monitor ( SIZE             , ... ) > 0 " ,
+ *   'pi-' : " monitor ( min_value( PT )  , ... ) > 0 " ,
+ *  }
+ *
+ *  @endcode 
+ *
+ *  The embedded monitoring are described in detail at 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiFAQ#How_to_monitor_various_LoKi_func">
+ *  here </a>, also see 
+ *  <a href="https://twiki.cern.ch/twiki/bin/view/LHCb/FAQ/LoKiFAQ#Helper_streamer_functions">
+ *  helper LoKi streamers & filters</a>
  *
  *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *  @date 2008-04-01
@@ -292,6 +348,11 @@ public:
   void propertyHandler1 ( Property& p ) ;
   void propertyHandler2 ( Property& p ) ;
   // ==========================================================================
+public:
+  // ==========================================================================
+  /// the general flag to switch on/off the monitoring 
+  bool monitor() const { return m_monitor ; } //   switch on/off the monitoring 
+  // ==========================================================================
 private:
   // ==========================================================================
   // the map of cuts for daughters { "PID" : "cuts" } 
@@ -299,9 +360,10 @@ private:
   // the actual type type for decay descriptors
   typedef std::vector<std::string>            Strings ;
   // ==========================================================================
-  /** @class MyCut helpe structure to hold the cuts 
-   *  Essentially it is doen to bypass the absence of dafault constructor 
-   *   for  LoKi::PhysTypes::Cut type 
+  /** @class MyCut 
+   *  helper structure to hold the cuts 
+   *  Essentially it is a some kind of  bypass the absence of default constructor 
+   *   for  LoKi::Types::Cut type 
    *  @author Vanya BELYAEV  Ivan.Belyaev@nikhef.nl
    *  @date 2008-04-19
    */
@@ -311,19 +373,26 @@ private:
     // ========================================================================
     /// the constructor 
     MyCut() 
-      : m_pid  ()  // the particle PID  
-      , m_name ()  // the particle NAME 
-      , m_cut ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant ( true ) )
+      : m_pid  ()                         // the particle PID  
+      , m_name ()                         // the particle NAME 
+      , m_cut     ( _PBOOL ( true  ) )    // the selection predicate 
+      , m_moni    ( false            )    // monitoring flag 
+      , m_monitor ( _CBOOL ( false ) )    // the monitoring functor 
     {}
     // ========================================================================
   public:
     // ========================================================================
     /// the particle pid
-    LHCb::ParticleID     m_pid  ;                       // the particle pid
+    LHCb::ParticleID        m_pid     ;                 //     the particle pid
     /// the particle name
-    std::string          m_name ;                       // the particle name
+    std::string             m_name    ;                 //    the particle name
     /// the cut itself 
-    LoKi::PhysTypes::Cut m_cut  ;                       // the cut itself 
+    LoKi::PhysTypes::Cut    m_cut     ;                 //       the cut itself 
+    // ========================================================================
+    /// the monitoring flag 
+    bool                    m_moni    ;               //    the monitoring flag 
+    /// the monitoring functor 
+    LoKi::PhysTypes::CutVal m_monitor ;               // the monitoring functor 
     // ========================================================================
   };
   // ==========================================================================
@@ -356,6 +425,21 @@ private:   // properties
   std::string  m_combinationPlotsPath  ; // the path for "Combination Plots" tool 
   /// "MotherPlots" path 
   std::string  m_motherPlotsPath       ; // the path for "Mother Plots" tool
+  // ==========================================================================
+private:
+  // ==========================================================================
+  /// the general flag to switch on/off monitoring 
+  bool         m_monitor ;      // the general flag to switch on/off monitoring 
+  /// The map of monitors for daughters 
+  Map          m_daughterMonitors ;        // The map of monitors for daughters 
+  /// the monitoring code for combinations 
+  std::string  m_combinationMonitorCode ;  //  monitoring code for combinations 
+  /// the monitoring functor for combinations 
+  LoKi::Types::CutVal m_combinationMonitor ;     // monitoring for combinations 
+  /// the monitoring code for mother particles  
+  std::string  m_motherMonitorCode    ;          //  monitoring code for mother 
+  /// the monitoring functor for mother particles 
+  LoKi::Types::CutVal m_motherMonitor ;                // monitoring for mother 
   // ==========================================================================
 private: // try to be efficient
   // ==========================================================================
@@ -428,51 +512,66 @@ CombineParticles::CombineParticles
 ( const std::string& name ,   // the algorithm instance name 
   ISvcLocator*       pSvc )   // the service locator
   : DVAlgorithm(  name , pSvc ) 
-  //
-  // properties
-  //
+//
+// properties
+//
   , m_decayDescriptors ()  // the decay descriptors 
   , m_daughterCuts     ()  // the cuts for daughter particles 
   , m_combinationCut   ( "ATRUE" ) // the cut for the combination of daughters
   , m_motherCut        ( "Configure me!"  ) // the final cut for the mother particle. Must be configured
   , m_factory  ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC")
   , m_preambulo () // the preambulo 
-  // plots:
+//
+// plots:
+//
   , m_daughtersPlotsName   ( "LoKi::Hybrid::PlotTool/DaughtersPlots"    )
   , m_combinationPlotsName ( "LoKi::Hybrid::PlotTool/CombinationPlots"  )
   , m_motherPlotsName      ( "LoKi::Hybrid::PlotTool/MotherPlots"       )
-  // plot paths:
+//
+// plot paths:
+//
   , m_daughtersPlotsPath   ( ""  )
   , m_combinationPlotsPath ( ""  )
   , m_motherPlotsPath      ( ""  )
-  // 
+//
+// monitoring 
+//
+  , m_monitor                ( false ) 
+  , m_daughterMonitors       () 
+  , m_combinationMonitorCode () 
+  , m_combinationMonitor     ( _CBOOL ( false ) ) 
+  , m_motherMonitorCode      () 
+  , m_motherMonitor          ( _CBOOL ( false ) ) 
+//
+// for "heavy" events 
+//
   , m_maxComb      ( 0     ) 
   , m_maxCombStop  ( false )
   , m_maxCand      ( 0     ) 
   , m_maxCandStop  ( false )
   , m_stopIncidentName ()
-  //
-  // locals
-  //
-  /// the actual list of the decays
+//
+// locals
+//
+// the actual list of the decays
   , m_decays ()  // the actual list of the decays
-  /// the list of cuts for daughter particles
+// the list of cuts for daughter particles
   , m_cuts   ()  // the list of cuts for daughter particles
-  // the actual cut for combination of good daughters
-  , m_acut ( LoKi::BasicFunctors<LoKi::ATypes::Combination>::BooleanConstant ( true  ) ) 
-  // the final cut the constructed mother particle
-  , m_cut  ( LoKi::BasicFunctors<const LHCb::Particle*>::BooleanConstant     ( false ) ) 
-  // plots:
+// the actual cut for combination of good daughters
+  , m_acut ( _ABOOL ( true  ) ) 
+// the final cut the constructed mother particle
+  , m_cut  ( _PBOOL ( false ) ) 
+// plots:
   , m_daughtersPlots   ( 0 )  
   , m_combinationPlots ( 0 )  
   , m_motherPlots      ( 0 )  
-  // special
+// special
   , m_inputParticles    (       ) 
   , m_useInputParticles ( false )
-  // update:
-  , m_to_be_updated1 ( true )
-  , m_to_be_updated2 ( true )
-  //
+// update:
+  , m_to_be_updated1    ( true )
+  , m_to_be_updated2    ( true )
+//
   , m_incSvc ( 0 ) 
 {
   //
@@ -542,6 +641,34 @@ CombineParticles::CombineParticles
       "The path for 'Mother      Plots'" ) 
     -> declareUpdateHandler ( &CombineParticles::propertyHandler2 , this ) ;
   //
+  // The general flag to switch on/off the monitoring
+  declareProperty 
+    ( "Monitor" , 
+      m_monitor , 
+      "The general flag to switch on/off the monitoring" ) 
+    -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
+  //
+  // The map of monitoring functors for daughter particles 
+  declareProperty 
+    ( "DaughtersMonitors" ,
+      m_daughterMonitors  , 
+      "The map of monitoring functors for daughter particles")
+    -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
+  //
+  // The monitoring functor for combinations
+  declareProperty 
+    ( "CombinationMonitor"     ,
+      m_combinationMonitorCode , 
+      "The monitoring functor for combinations before the cuts" ) 
+    -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
+  //
+  // The monitoring functor for mother particles 
+  declareProperty 
+    ( "MotherMonitor"     ,
+      m_motherMonitorCode , 
+      "The monitoring functor for mother particles after all cuts" ) 
+    -> declareUpdateHandler ( &CombineParticles::propertyHandler1 , this ) ;
+  //
   setProperty ( "HistoProduce" , false ) ;
   {
     Property* p = Gaudi::Utils::getProperty ( this , "HistoProduce" ) ;
@@ -597,9 +724,23 @@ StatusCode CombineParticles::decodeAllCuts()
     if ( sc.isFailure() ) 
     { return Error ( "Unable to  decode the cut for '" + ic->first + "':" + ic->second , sc ) ; }
     item.m_name = ic->first ;
-    item.m_pid  = LoKi::Particles::pidFromName ( ic->first ) ;
-    m_cuts.push_back ( item ) ;
+    item.m_pid  = LoKi::Particles::pidFromName ( ic->first ) ;    
+    item.m_moni = false     ;
+    //
     debug () << "The decoded cuts for '"+ ( ic->first ) +"' are: " << item.m_cut << endreq ;
+    //
+    if ( monitor() && !m_daughterMonitors.empty() ) 
+    {
+      Map::const_iterator imoni = m_daughterMonitors.find ( ic->first ) ;
+      if ( m_daughterMonitors.end() != imoni && !imoni->second.empty() ) 
+      {
+        sc = factory->get ( imoni->second , item.m_monitor , preambulo() ) ;
+        if ( sc.isFailure() ) 
+        { return Error ( "Unable to  decode the monitor for '" + ic->first + "':" + imoni->second , sc ) ; }
+        item.m_moni = true ;
+      }  
+    }
+    m_cuts.push_back ( item ) ;
   }  
   // 2) decode the cut for the combination of good daughters  
   {
@@ -698,6 +839,11 @@ StatusCode CombineParticles::execute    ()  // standard execution
       verbose() << "Input :  " << (*i)->key() << " " << (*i)->particleID().pid() << " " 
                 << (*i)->momentum() << endmsg ;
   }
+
+  // flag to monitor combinations 
+  const bool monitorCombinations  = monitor() && !m_combinationMonitorCode.empty() ;
+  // flag to monitor saved mothers 
+  const bool monitorMother        = monitor() && !m_motherMonitorCode.empty() ;
   
   // (pre)select all daughters:
   Selected daughters ;
@@ -721,8 +867,12 @@ StatusCode CombineParticles::execute    ()  // standard execution
       StatusCode sc = m_daughtersPlots -> fillPlots ( r.begin() , r.end() , r.name() ) ;
       if ( sc.isFailure() ) { Warning ("Error from DaughterPlots" , sc ) ; } 
     }
+    // monitor 
+    if ( monitor() && idau->m_moni ) 
+    { idau->m_monitor ( LHCb::Particle::ConstVector( r.begin() , r.end() ) ) ; }    
+    //
   }
-  
+
   /** get the default particle combiner/creator 
    *  @attention Particle Combiner is used for creation of Mother Particle!
    */
@@ -736,6 +886,9 @@ StatusCode CombineParticles::execute    ()  // standard execution
   // the actual type of relation table 
   typedef Particle2Vertex::LightTable Table ;
   Table& p2pv_table = desktop() ->Particle2VertexRelations() ;
+  
+  LHCb::Particle::ConstVector saved ;
+  saved.reserve ( 1000 ) ;
   
   // loop over all decays 
   for ( std::vector<Decays::Decay>::const_iterator 
@@ -796,8 +949,10 @@ StatusCode CombineParticles::execute    ()  // standard execution
       } 
       if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    No Overlap" << endmsg ;
       
-      // here we have the combination and can apply the cut:
+      // monitor combinations?
+      if ( monitorCombinations ) { m_combinationMonitor ( combination ) ; }
       
+      // here we have the combination and can apply the cut:
       if ( !m_acut ( combination ) )  
       { 
         if ( msgLevel ( MSG::VERBOSE ) ) verbose() << "    Failed Cut!" << endmsg ;
@@ -839,13 +994,14 @@ StatusCode CombineParticles::execute    ()  // standard execution
       
       // keep the good candidate:
       const LHCb::Particle* particle = desktop()->keep ( &mother ) ;
+      if ( monitorMother ) { saved.push_back  ( particle ) ; }
       
       if ( 0 != m_motherPlots ) 
       {
         StatusCode sc = m_motherPlots->fillPlots ( particle ) ;
         if ( sc.isFailure() ) { Warning ( "Error from MotherPlots" , sc ) ; } 
       }
-
+      
       // increment number of good decays 
       ++nGood       ;
       
@@ -859,6 +1015,9 @@ StatusCode CombineParticles::execute    ()  // standard execution
   
   // the final statistics 
   counter ( "# selected") += nTotal ;
+  
+  // monitor mother particles
+  if ( monitorMother ) { m_motherMonitor ( saved ) ; }
   
   // reset the "use external input" flag
   m_useInputParticles = false ;
@@ -989,25 +1148,56 @@ StatusCode CombineParticles::updateMajor  ()
     {
       // get the antiparticle:
       const std::string anti = LoKi::Particles::antiParticle ( *ipid ) ;
-      // find the cuts for particle 
-      Map::const_iterator i1 = m_daughterCuts.find ( *ipid ) ;
-      // find the cuts for antiparticle 
-      Map::const_iterator i2 = m_daughterCuts.find (  anti ) ;
-      //
-      // both cuts are already specified explicitly?
-      if      ( m_daughterCuts.end() != i1 &&  m_daughterCuts.end() != i2 ) { } // nothing to do
-      else if ( m_daughterCuts.end() != i1 ) // the cut for particle is already specified
-      { m_daughterCuts[ anti ] = m_daughterCuts[ *ipid ] ; } // use the same cust for antiparticle
-      else if ( m_daughterCuts.end() != i2 ) // the cut for anti-particle is already specified 
-      { m_daughterCuts[ *ipid ] = m_daughterCuts[ anti ] ; } // use the same cuts as particle
-      else // none cuts for particle&antiparticle are specified: use the default cuts  
-      {
-        m_daughterCuts [ *ipid ] = m_daughterCuts[""] ;  // the default cuts for particle 
-        m_daughterCuts [ anti  ] = m_daughterCuts[""] ;  // the default cuts for antiparticle 
+      
+      { // play with daughter cuts 
+        // find the cuts for particle 
+        Map::const_iterator i1 = m_daughterCuts.find ( *ipid ) ;
+        // find the cuts for antiparticle 
+        Map::const_iterator i2 = m_daughterCuts.find (  anti ) ;
+        //
+        // both cuts are already specified explicitly?
+        if      ( m_daughterCuts.end() != i1 &&  m_daughterCuts.end() != i2 ) { } // nothing to do
+        else if ( m_daughterCuts.end() != i1 ) // the cut for particle is already specified
+        { m_daughterCuts[ anti ] = m_daughterCuts[ *ipid ] ; } // use the same cust for antiparticle
+        else if ( m_daughterCuts.end() != i2 ) // the cut for anti-particle is already specified 
+        { m_daughterCuts[ *ipid ] = m_daughterCuts[ anti ] ; } // use the same cuts as particle
+        else // none cuts for particle&antiparticle are specified: use the default cuts  
+        {
+          m_daughterCuts [ *ipid ] = m_daughterCuts[""] ;  // the default cuts for particle 
+          m_daughterCuts [ anti  ] = m_daughterCuts[""] ;  // the default cuts for antiparticle 
+        }
       }
+      
+      // play the same game with daughter monitors 
+      if ( monitor() && !m_daughterMonitors.empty() ) 
+      {
+        // find the cuts for particle 
+        Map::const_iterator j1 = m_daughterMonitors.find ( *ipid ) ;
+        // find the cuts for antiparticle 
+        Map::const_iterator j2 = m_daughterMonitors.find (  anti ) ;
+        //
+        // both monitors are already specified explicitly?
+        if      ( m_daughterMonitors.end() != j1 &&  
+                  m_daughterMonitors.end() != j2 ) { } // nothing to do
+        // the monitor for particle is already specified
+        else if ( m_daughterMonitors.end() != j1 )
+        { m_daughterMonitors[ anti  ] = m_daughterMonitors[ *ipid ] ; } // use the same monitor for antiparticle
+        // the monitor for anti-particle is already specified 
+        else if ( m_daughterMonitors.end() != j2 ) 
+        { m_daughterMonitors[ *ipid ] = m_daughterMonitors[ anti  ] ; } // use the same monitor as particle        
+      }
+      
     }
-    debug () << "The updated map of daughetr cuts is : "
+    
+    debug () << "The updated map of daughter cuts is : "
              << Gaudi::Utils::toString ( m_daughterCuts ) << endreq ;
+    
+    if ( monitor() && !m_daughterMonitors.empty() )
+    {
+      debug () << "The updated map of daughter monitors is : "
+               << Gaudi::Utils::toString ( m_daughterMonitors ) << endreq ;
+    }    
+    
   }
   // 3) decode the cuts for the daughters: 
   { 
