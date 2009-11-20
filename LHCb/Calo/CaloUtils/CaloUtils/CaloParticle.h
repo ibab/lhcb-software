@@ -1,9 +1,9 @@
-// $Id: CaloParticle.h,v 1.5 2009-05-20 14:28:03 odescham Exp $ 
+// $Id: CaloParticle.h,v 1.6 2009-11-20 15:46:17 odescham Exp $ 
 // ============================================================================
 #ifndef RecEvent_CaloParticle_H
 #define RecEvent_CaloParticle_H 1
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $ 
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ 
 // ============================================================================
 // Include files
 // ============================================================================
@@ -67,8 +67,9 @@ namespace LHCb
     LHCb::Particle* particle() const ;
     // calo?
     bool isCalo() const { return m_isCalo; }
+    bool isPureNeutralCalo() const { return m_isCalo && m_neutral; }
     // ========================================================================
-  public:
+  public: 
     // ========================================================================
     // Update
     // ========================================================================
@@ -86,6 +87,7 @@ namespace LHCb
     LHCb::Particle::Vector      m_parts       ;
     LHCb::Vertex*               m_vert        ;
     bool                        m_isCalo      ;
+    bool                        m_neutral     ;
     LHCb::Particle::ConstVector m_caloEndTree ;
     // ========================================================================
   }; // class CaloParticle

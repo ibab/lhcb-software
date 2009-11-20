@@ -1,6 +1,6 @@
-// $Id: CaloParticle.cpp,v 1.5 2009-05-20 14:28:03 odescham Exp $ 
+// $Id: CaloParticle.cpp,v 1.6 2009-11-20 15:46:17 odescham Exp $ 
 // ============================================================================
-// CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 // Incldue files 
 // ============================================================================
@@ -30,8 +30,10 @@ LHCb::CaloParticle::CaloParticle
     m_parts       ( ) ,
     m_vert        ( NULL ) ,
     m_isCalo      ( true ) ,
+    m_neutral     ( true ) ,
     m_caloEndTree ( )
 {
+  if( NULL == part)m_isCalo = false;
   this -> addCaloPosition( part );
 }
 // ============================================================================
@@ -44,8 +46,10 @@ LHCb::CaloParticle::CaloParticle
   , m_parts      () 
   , m_vert       ( NULL )
   , m_isCalo     ( true )
+  , m_neutral     ( true ) 
   ,  m_caloEndTree()
 {
+  if( NULL == part)m_isCalo = false;
   setReferencePoint  ( point ) ;
   this -> addCaloPosition ( part );
   addToFlag       ( LHCb::CaloMomentum::NewReferencePoint);
@@ -61,8 +65,10 @@ LHCb::CaloParticle::CaloParticle
   , m_parts       ()
   , m_vert        ( NULL )
   , m_isCalo      ( true )
+  , m_neutral     ( true ) 
   , m_caloEndTree ()
 {
+  if( NULL == part)m_isCalo = false;
   setReferencePoint ( point , cov ) ;
   this->addCaloPosition( part );
   addToFlag( LHCb::CaloMomentum::NewReferencePoint);
@@ -77,17 +83,23 @@ void LHCb::CaloParticle::addCaloPosition ( LHCb::Particle* part )
   //  2 configuration : 
   //    - the particle is basic (e.g. photon, mergedPi0)  : use proto->calo
   //    - the particle is composite (e.g. pi0/eta->gg, Ks/B->pi0pi0->gggg, ...) : run along the decay tree
+
+  
   
   // Some checks
   this->addToFlag( LHCb::CaloMomentum::FromPart);  
   if( 0 == part){
     this->addToStatus( LHCb::CaloMomentum::NullPart);
+    m_neutral = false;
     return;
   }
   if( 0 != part->charge() ){
     this->addToStatus( LHCb::CaloMomentum::ChargedParticle);
+    m_neutral = false;
     return;    
   }
+
+
   
   // Check the particle origin (protoParticle)
   if( 0 != part->proto() ){
@@ -99,21 +111,19 @@ void LHCb::CaloParticle::addCaloPosition ( LHCb::Particle* part )
     else{      
       // particle derive from proto->caloHypo (-> photon, mergedPi0 )
       m_parts.push_back(part);
+      m_caloEndTree.push_back( part );
       LHCb::CaloMomentum::addCaloPosition( part->proto() );
     }
   }else if( !part->isBasicParticle() ){
     // particle is composite
     this->addToFlag( LHCb::CaloMomentum::FromPartDaughters);
-    //    m_caloEndTree.clear();
-    for(SmartRefVector<LHCb::Particle>::const_iterator idau = part->daughters().begin();
-        idau != part->daughters().end();++idau){ 
-      this->CaloParticleTree( *idau );
-    }
+    this->CaloParticleTree( part );
     if( m_isCalo ){
       m_parts.push_back(part);
       // the end-tree particles are pure calo objects
       for(LHCb::Particle::ConstVector::const_iterator icalo = m_caloEndTree.begin();
           icalo != m_caloEndTree.end(); ++icalo){
+        if( (*icalo)->charge() != 0 )m_neutral = false;
         LHCb::CaloMomentum::addCaloPosition( (* icalo)->proto() );
       }
     }
@@ -133,7 +143,10 @@ void LHCb::CaloParticle::addCaloPosition ( LHCb::Particle* part )
 void LHCb::CaloParticle::CaloParticleTree ( const LHCb::Particle* part )
 {
   
-  if( !m_isCalo )return;
+  if( !m_isCalo ){
+    m_caloEndTree.clear();
+    return;
+  }
   if( part->isBasicParticle() ){
     if( 0 == part->proto() )                { m_isCalo = false; }
     else if( part->proto()->calo().empty() ){ m_isCalo = false; }
@@ -172,16 +185,12 @@ void LHCb::CaloParticle::updateTree()
 {
   this->updateParticle();
   
-  for( LHCb::Particle::Vector::iterator ipart = m_parts.begin() ; 
-       ipart!=m_parts.end();++ipart)
-  {
+  for( LHCb::Particle::Vector::iterator ipart = m_parts.begin() ;ipart!=m_parts.end();++ipart){
     LHCb::Particle* part = *ipart;
-    if( !part->isBasicParticle() && LHCb::CaloMomentum::OK == this->status() )
-    { 
+    if( !part->isBasicParticle() && LHCb::CaloMomentum::OK == this->status() ){ 
       const SmartRefVector<LHCb::Particle>& daughters = part->daughters() ;
       for ( SmartRefVector<LHCb::Particle>::const_iterator idau = daughters.begin();
-            idau != daughters.end(); ++idau )
-      {
+            idau != daughters.end(); ++idau ){
         const LHCb::Particle* daughter = *idau;
         LHCb::CaloParticle caloDau 
           ( const_cast<LHCb::Particle*> ( daughter ) , // convert to non-const

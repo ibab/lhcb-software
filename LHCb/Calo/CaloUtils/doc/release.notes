@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.139 2009-11-13 14:14:22 cattanem Exp $
+! $Id: release.notes,v 1.140 2009-11-20 15:46:17 odescham Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-11-17 - Olivier Deschamps
+ - CaloParticle : 
+  - new method isPureNeutralCalo(particle) (all particle descendant is a neutral calo object e.g. pi0->gg (J/Psi->ee is not)
+  - minor cleaning
 
 !========================== CaloUtils v8r8 2009-11-13 =========================
 ! 2009-11-08 - Olivier Deschamps
