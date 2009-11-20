@@ -3,12 +3,17 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v35r9>2009-11-23 Brunel v35r9</A></H1><PRE>
  - Changes to tests
-   . fixedfile tests added, the file used is coded into the tests, and all boole v19r8 file types are tested
+   . fixedfile tests added, the file used is coded into the tests, and all boole
+     v19r8 file types are tested
    . fixedfile-boole-v19r8-mc09-digi-extended-spillover
 	 . fixedfile-boole-v19r8-mc09-digi-extended
    . fixedfile-boole-v19r8-mc09-digi
    . fixedfile-boole-v19r8-mc09-mdf
+
+ - Changes to references to reflect changes in Brunel v35r9 output:
+   . New VeloTrackMonitor histograms (VeloRecMonitors v2r3)
 
 </PRE><H1><A NAME=v35r8>2009-11-17 Brunel v35r8</A></H1><PRE>
  - Changes to Configurable:
