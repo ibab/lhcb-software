@@ -27,10 +27,13 @@ namespace LHCb
 		    switch( side+2*type ) {
 		    case 0:
 		      m_veloRA.set(station) ;
+		      break ;
 		    case 1:
 		      m_veloRC.set(station) ; 
+		      break;
 		    case 2:
 		      m_veloPhiA.set(station) ;
+		      break;
 		    case 3:
 		      m_veloPhiC.set(station) ;
 		      
