@@ -1,9 +1,19 @@
-$Id: release.notes,v 1.47 2009-11-17 12:41:41 ibelyaev Exp $ 
+$Id: release.notes,v 1.48 2009-11-20 16:06:14 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
+
+! 2009-11-20 - Vanya Belyaev
+
+ - TupleTool, PlotTool, PrintTool, 
+   HybridFilterParticles 
+   HybridFilterCriterion 
+   HybridParticleArrayFilter
+
+   add the property "Preambulo" 
+
 
 ! 2009-11-17 - Vanya Belyaev
 

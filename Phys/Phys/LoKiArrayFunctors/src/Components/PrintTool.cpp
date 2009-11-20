@@ -1,4 +1,4 @@
-// $Id: PrintTool.cpp,v 1.4 2008-05-28 11:39:20 cattanem Exp $
+// $Id: PrintTool.cpp,v 1.5 2009-11-20 16:06:15 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -25,8 +25,13 @@
 // ============================================================================
 #include "boost/format.hpp"
 // ============================================================================
+// Local 
+// ============================================================================
+#include "Preambulo.h"
+// ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Hybrid 
   {
     // ========================================================================
@@ -41,6 +46,7 @@ namespace LoKi
       : public virtual IPrintDecay 
       , public          GaudiTool
     {
+      // ======================================================================
       /// the friend factory needed for instantiation
       friend class ToolFactory<LoKi::Hybrid::PrintTool> ;
       // ======================================================================
@@ -65,15 +71,34 @@ namespace LoKi
         StatusCode sc = GaudiTool::initialize() ;
         if ( sc.isFailure() ) { return sc ; }           // RETURN 
         // decode the variables:
-        sc = decodeVars() ;
+        sc = initVars() ;
+        if ( sc.isFailure() ) { return sc ; }           // RETURN 
+        //
+        return initTable() ;
+      }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// init variables 
+      StatusCode initVars () 
+      {
+        // decode the variables:
+        StatusCode sc = decodeVars() ;
         if ( sc.isFailure() ) { return sc ; }           // RETURN 
         //
         if ( m_funcs.size() != m_vars.size() ) { return Error ( "Wrong decoding?" ) ; }
         //
+        return StatusCode::SUCCESS ;
+      }
+      /// init the table 
+      StatusCode initTable ()
+      {
+        //
         if ( m_format.empty() ) 
         {
           m_format = "|" ;
-          for ( unsigned int i = 0 ; i < m_funcs.size() ; ++i ) { m_format += "%|=15.5g||" ; } 
+          for ( unsigned int i = 0 ; i < m_funcs.size() ; ++i ) 
+          { m_format += "%|=15.5g||" ; } 
         }
         if ( m_header.empty() ) 
         { 
@@ -91,7 +116,33 @@ namespace LoKi
           m_header = fmt.str() ;
         } 
         //
-        return StatusCode::SUCCESS ;                    // RETURN 
+        return StatusCode::SUCCESS ;                    // RETURN        
+      }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the preambulo
+      std::string preambulo() const { return _preambulo( m_preambulo ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the update handler: variables , preambulo & factory
+      void propHandler1 ( Property& /* p */ )  
+      {
+        //
+        if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+        //
+        StatusCode sc = initVars () ;
+        Assert ( sc.isSuccess() , "Unable to set 'Variables'"   , sc ) ;
+      }
+      /// the update handler: format & header 
+      void propHandler2 ( Property& /* p */ )  
+      {
+        //
+        if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+        //
+        StatusCode sc = initTable () ;
+        Assert ( sc.isSuccess() , "Unable to set 'Table'"   , sc ) ;
       }
       // ======================================================================
     protected:
@@ -111,14 +162,44 @@ namespace LoKi
         , m_format      (   )
         , m_header      (   )
         , m_factory     ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC") 
+        , m_preambulo    () 
       {
         declareInterface<IPrintDecay> ( this ) ;
-        
-        declareProperty ( "Variables" , m_vars    , "The list of variables " ) ;
-        declareProperty ( "Format"    , m_format  , "The table format "      ) ;
-        declareProperty ( "Header"    , m_header  , "The table header "      ) ;
-        declareProperty ( "Factory"   , m_factory , 
-                          "Type/Name for C++/Python Hybrid Factory" ) ;
+        //
+        declareProperty 
+          ( "Format"    , 
+            m_format    , 
+            "The table format " ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::PrintTool::propHandler2 , this ) ;
+        //
+        declareProperty 
+          ( "Header"    , 
+            m_header    , 
+            "The table header " ) ->
+          declareUpdateHandler
+          ( &LoKi::Hybrid::PrintTool::propHandler2 , this ) ;
+        //
+        declareProperty 
+          ( "Variables" , 
+            m_vars      , 
+            "The list of variables " ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::PrintTool::propHandler1 , this ) ;
+        //
+        declareProperty 
+          ( "Factory"   , 
+            m_factory   , 
+            "Type/Name for C++/Python Hybrid Factory" ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::PrintTool::propHandler1 , this ) ;
+        //
+        declareProperty 
+          ( "Preambulo" , 
+            m_preambulo , 
+            "The preambulo to be used for Bender/Python script" ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::PrintTool::propHandler1 , this ) ;
       } 
       /// virtual & proptected destructor 
       virtual ~PrintTool() {}
@@ -186,13 +267,17 @@ namespace LoKi
       struct MyFunc
       {
       public:
+        // ====================================================================
         /// the default constriuctor
         MyFunc () 
         : m_fun ( LoKi::BasicFunctors<const LHCb::Particle*>::Constant( -1.e+10 ) ) 
         {}
+        // ====================================================================
       public:
+        // ====================================================================
         /// the function itself
         LoKi::PhysTypes::Fun m_fun ; // the function to be evaluated 
+        // ====================================================================
       } ;
       /// the actual type for the vector of functions
       typedef std::vector<MyFunc> Funcs ;
@@ -201,21 +286,23 @@ namespace LoKi
       // ======================================================================
       typedef std::vector<std::string> Vars ;
       /// the vector of variables (code)
-      Vars        m_vars    ; // the vector of variables (code)
+      Vars        m_vars    ;                 // the vector of variables (code)
       /// the actual vector of functions 
-      Funcs       m_funcs   ; // the actual vector of functions
+      Funcs       m_funcs   ;                 // the actual vector of functions
       /// the table format 
-      std::string m_format  ; // the table format
+      std::string m_format  ;                               // the table format
       /// the table header 
-      std::string m_header  ; // the table header 
+      std::string m_header  ;                               // the table header 
       /// the factory 
-      std::string m_factory ; // the factory
+      std::string m_factory ;                                 //    the factory
+      /// the preambulo
+      std::vector<std::string> m_preambulo ;                  //  the preambulo
       // ======================================================================
     } ;
     // ========================================================================
-  } // end of namespace LoKi::Hybrid
+  } //                                            end of namespace LoKi::Hybrid
   // ==========================================================================
-} // end of namespace LoKi
+} //                                                      end of namespace LoKi
 // ============================================================================
 /* decode the variables 
  *  @return status code
@@ -232,7 +319,7 @@ StatusCode LoKi::Hybrid::PrintTool::decodeVars ()
         m_vars.end() != ivar ; ++ivar )
   {
     MyFunc fun ;
-    StatusCode sc = factory->get ( *ivar , fun.m_fun ) ;
+    StatusCode sc = factory->get ( *ivar , fun.m_fun , preambulo() ) ;
     if ( sc.isFailure() ) 
     { return Error ( "Unable to decode '" + (*ivar) + "'" , sc) ; } // RETURN
     // add the decoded functor into the list 

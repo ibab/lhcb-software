@@ -1,4 +1,4 @@
-// $Id: HybridFilterCriterion.cpp,v 1.3 2009-08-18 09:49:22 ibelyaev Exp $
+// $Id: HybridFilterCriterion.cpp,v 1.4 2009-11-20 16:06:14 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -22,6 +22,10 @@
 // ============================================================================
 #include "LoKi/IHybridFactory.h"
 #include "LoKi/Primitives.h"
+// ============================================================================
+// Local 
+// ============================================================================
+#include "Preambulo.h"
 // ============================================================================
 namespace LoKi 
 {
@@ -59,7 +63,19 @@ namespace LoKi
     public:
       // ======================================================================
       /// initialization of the tool 
-      virtual StatusCode initialize () ;
+      virtual StatusCode initialize () 
+      {
+        // (1) initialize the base 
+        StatusCode  sc = GaudiTool::initialize() ;
+        if ( sc.isFailure() ) { return sc ; }                        // RETURN 
+        //
+        return initVar () ;
+      }
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// initialization of the tool 
+      StatusCode initVar     () ;
       // ======================================================================
     protected:
       // ======================================================================
@@ -69,6 +85,23 @@ namespace LoKi
       /// Test if filter is satisfied
       virtual bool operator()   ( const LHCb::Particle* const & part ) 
       { return m_cut ( part ) ; }
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the preambulo 
+      std::string preambulo() const { return _preambulo ( m_preambulo ) ; }      
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// the update handler
+      void propHandler ( Property& /* p */ )  
+      {
+        //
+        if ( Gaudi::StateMachine::INITIALIZED > FSMState() ) { return ; }
+        //
+        StatusCode sc = initVar () ;
+        Assert ( sc.isSuccess() , "Unable to set 'Code'"   , sc ) ;
+      }
       // ======================================================================
     protected:
       // ======================================================================
@@ -81,17 +114,31 @@ namespace LoKi
         , m_cut ( LoKi::Constant<const LHCb::Particle*,bool>( false ) ) 
         , m_code    ( "NONE")
         , m_factory ( "LoKi::Hybrid::Tool/HybridFactory:PUBLIC" ) 
+        , m_preambulo()
       {
         //
         declareInterface<IFilterCriterion> ( this ) ;
         //
         declareProperty 
           ( "Code"    , m_code    ,
-            "Python pseudocode for the filter criteria" ) ;
+            "Python pseudocode for the filter criteria" ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+        //
         declareProperty 
           ( "Factory" , m_factory , 
-            "Type/Name for C++/Python Hybrid Factory"   ) ;
-      } 
+            "Type/Name for C++/Python Hybrid Factory"   ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+        // the preambulo
+        declareProperty 
+          ( "Preambulo" , 
+            m_preambulo , 
+            "The preambulo to be used for Bender/Python script" ) ->
+          declareUpdateHandler 
+          ( &LoKi::Hybrid::FilterCriterion::propHandler , this ) ;
+        //
+       } 
       /// destructor : virtual and protected
       virtual ~FilterCriterion( ){}
       // ======================================================================
@@ -109,9 +156,11 @@ namespace LoKi
       /// the selection functor
       LoKi::Types::Cut  m_cut     ;                    // the selection functor 
       /// python pseudo-code
-      std::string       m_code    ;                    // python pseudo-code
+      std::string       m_code    ;                    //    python pseudo-code
       /// factory type/name
-      std::string       m_factory ;                    // factory type/name
+      std::string       m_factory ;                    //     factory type/name
+      /// preambulo 
+      std::vector<std::string> m_preambulo ;           //             preambulo
       // ======================================================================
     } ;
     // ========================================================================
@@ -125,24 +174,18 @@ DECLARE_NAMESPACE_TOOL_FACTORY(LoKi::Hybrid,FilterCriterion);
 // ============================================================================
 // initialization of the tool 
 // ============================================================================
-StatusCode LoKi::Hybrid::FilterCriterion::initialize () 
+StatusCode LoKi::Hybrid::FilterCriterion::initVar () 
 {
-  // (1) initialize the base 
-  StatusCode  sc = GaudiTool::initialize() ;
-  if ( sc.isFailure() ) { return sc ; }                                  // RETURN 
-  // (2) get the factory:
+  // (1) get the factory:
   IHybridFactory* factory = tool<IHybridFactory> ( m_factory , this ) ;
   if ( 0 == factory ) 
   { return Error ( "Could not locate IHybridFactory" ) ; }               // RETURN 
   // (3) use the factory to get the cuts 
-  sc = factory->get (  m_code , m_cut ) ;
+  StatusCode sc = factory->get (  m_code , m_cut , preambulo() ) ;
   if ( sc.isFailure() ) 
   { return Error ( "Error from IHybridFactory", sc   ) ; }               // RETURN 
   // 
   info() << "CUT: '" << m_cut << "' "<< endreq ;
-  //
-  // use FilterCriterionBase:
-  // setActive() ;                               ///< use FilteraCriterionBase:
   //
   return StatusCode::SUCCESS ;  
 }
