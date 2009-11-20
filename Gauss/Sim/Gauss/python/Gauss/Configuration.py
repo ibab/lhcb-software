@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.20 2009-11-18 15:28:27 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.21 2009-11-20 18:47:18 gcorti Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -616,7 +616,9 @@ class Gauss(LHCbConfigurableUser):
                     if det!= 'PuVeto': DetPiecies[region]+=[det]
             if sub == 'IT' or sub == 'OT':
                 region = 'AfterMagnetRegion'
-                DetPiecies[region]+=['T']
+                if 'T' not in DetPiecies[region]: 
+                    DetPiecies[region]+=['T']
+                
 
         for sub in self.PIDSystem:
             if sub == 'RICH':
@@ -660,8 +662,9 @@ class Gauss(LHCbConfigurableUser):
         giGaGeo = GiGaGeo()
         giGaGeo.UseAlignment      = True
         giGaGeo.AlignAllDetectors = True
-        if self.getProp("DataType") != "Upgrade" : 
-            importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # To misalign VELO
+        if self.getProp("DataType") != "Upgrade" :
+            if len(self.getProp('DetectorGeo')['VELO'])>0:
+                importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # To misalign VELO
 
     ##     #if "VELO" in geoDets: configureGeoVELO( )
     ##     #if "TT  " in geoDets: configureGeoTT( )

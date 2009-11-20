@@ -4,7 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v37r6 2009-11-18 ============================
+!========================= Gauss v38r0 2009-11-20 ============================
+! 2009-11-20 - Gloria CORTI
+ - Do not call SimVeloGeometry.py is VELO is not on the list of detectors to
+   simulate
+ - Put the Geo.StreamItems += ['/dd/Structure/LHCb/AfterMagnetRegion/T']
+   only once if both OT and IT are selected.
+
 ! 2009-11-18 - Gloria CORTI
  - Fix bug reported in production of not being able to set anymore the format
    of the MessageSvc
