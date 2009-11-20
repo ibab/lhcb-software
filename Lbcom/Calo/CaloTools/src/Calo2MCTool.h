@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.h,v 1.2 2009-09-21 10:16:52 odescham Exp $
+// $Id: Calo2MCTool.h,v 1.3 2009-11-20 15:47:18 odescham Exp $
 #ifndef CALO2MCTOOL_H 
 #define CALO2MCTOOL_H 1
 
@@ -64,9 +64,24 @@ public:
   virtual const LHCb::MCParticle* bestMC();
   virtual const LHCb::MCParticle* maxMC();
   virtual double weight(const LHCb::MCParticle*);
+  virtual const LHCb::MCParticle* findMC(LHCb::ParticleID id, double threshold = 0 );
+  virtual const LHCb::MCParticle* findMCOrBest(LHCb::ParticleID id, double threshold = 0 );
   virtual const LHCb::MCParticle* findMC(std::string name, double threshold = 0 );
+  virtual const LHCb::MCParticle* findMCOrBest(std::string name, double threshold = 0 );
   virtual double quality(const LHCb::MCParticle*);
   virtual std::string descriptor();
+  virtual bool isCalo(const LHCb::Particle* particle){
+    if( NULL == particle )return false;
+    LHCb::CaloParticle cPart = LHCb::CaloParticle( (LHCb::Particle*) particle );
+    return  cPart.isCalo();
+  }
+  virtual bool isPureNeutralCalo(const LHCb::Particle* particle){  // SHOULD BE IN CALOPARTICLE
+    if( NULL == particle )return false;
+    LHCb::CaloParticle cPart = LHCb::CaloParticle( (LHCb::Particle*) particle );
+    return cPart.isPureNeutralCalo();// non pure calorimetric object
+  }
+
+    
 
   // TO BE INTERFACED :
   int MCCategory(){return m_category;};

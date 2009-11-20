@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.cpp,v 1.4 2009-09-22 14:18:59 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.5 2009-11-20 15:47:18 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -32,10 +32,10 @@ Calo2MCTool::Calo2MCTool( const std::string& type,
   declareProperty ( "Hypo2MCTable"    , m_hypo2MCLoc ) ;
   declareProperty ( "Cluster2MCTable" , m_cluster2MCLoc ) ;
   declareProperty ( "Digit2MCTable"   , m_digit2MCLoc = "Relations/" + LHCb::CaloDigitLocation::Default ) ;
-  declareProperty ( "Cluster2Digits"  , m_cluster2Digit = false  );
-  declareProperty ( "Hypo2Cluster"    , m_hypo2Cluster  = true   ); // Direct hypo->MC relation table does not exists
-  declareProperty ( "Merged2Split"    , m_merged2Split  = false  );
-  declareProperty ( "DigitStatusFilter"  , m_sFilter    = LHCb::CaloDigitStatus::UseForEnergy       ) ;
+  declareProperty ( "Cluster2Digits"  , m_cluster2Digit = false  ); // delegate cluster->digit->MC
+  declareProperty ( "Hypo2Cluster"    , m_hypo2Cluster  = true   ); // Direct hypo->MC relation table does yet not exists
+  declareProperty ( "Merged2Split"    , m_merged2Split  = false  ); // expert usage (merged->split->cluster DOES NOT WORK so far)
+  declareProperty ( "DigitStatusFilter"  , m_sFilter    = LHCb::CaloDigitStatus::UseForEnergy       ) ; // for ..->digit->MC
   // cluster2MC table location depends on context()
 
   std::string out( context() );
@@ -89,6 +89,11 @@ StatusCode Calo2MCTool::initialize(){
   m_tool->_setProperty ( "Merged2Split"    , Gaudi::Utils::toString( m_merged2Split  ) );
   m_tool->_setProperty ( "DigitStatusFilter"  , Gaudi::Utils::toString( m_sFilter    ) ) ;
   
+
+  m_sum = 0.;
+  m_maxMC  = NULL ;
+  m_bestMC = NULL ;
+
   // 
   clear();
   return StatusCode::SUCCESS;
@@ -100,20 +105,25 @@ StatusCode Calo2MCTool::initialize(){
 /*-------------------------- from Part to MC  ------------------------*/
 // associate single particle
 ICalo2MCTool* Calo2MCTool::from(const LHCb::Particle*   part  ){
+  if( part == m_part)return this; // process only if needed    
+  
   clear();
   m_depth = 4; // particle level
   if( part == NULL )return this;
-  if( part == m_part)return this; // process only if needed
 
   // check the particle is full calorimetric (using caloParticle functionalities)
   LHCb::CaloParticle cPart = LHCb::CaloParticle( (LHCb::Particle*) part );
   if( !cPart.isCalo() ){
-    Warning("Cannot associate non calorimetric particle to MC").ignore();
+    Warning("Cannot associate non-pure calorimetric particle to MC").ignore();
     return this;
   }
 
+
   // register final state particles 
   m_parts = cPart.caloEndTree();
+  m_part = (LHCb::Particle*) part;
+  if( m_parts.size() == 0)m_parts.push_back( part );
+
 
 
   // particle->protoparticle cascade (mandatory)
@@ -125,6 +135,7 @@ ICalo2MCTool* Calo2MCTool::from(const LHCb::Particle*   part  ){
       Warning("ProtoParticle point to NULL (should not)").ignore();
       continue;
     }
+
     addProto( proto , fs );
   }
  StatusCode sc = process();
@@ -144,13 +155,17 @@ void Calo2MCTool::addProto(const LHCb::ProtoParticle* proto, const LHCb::Particl
     if( *ip == proto){ok = false;break;}
   }
   if(ok)m_protos.push_back( proto ) ;
-  if(!ok)debug() << "ProtoParticle appears twice in the same decay chain" << endreq;
-
+  if(!ok){
+    debug() << "ProtoParticle appears twice in the same decay chain" << endreq;
+    counter("ProtoParticle appears twice in the same decay chain" ) += 1.;
+  }
+  
 
   // proto->hypo cascade (mandatory)
   m_depth = 2; // hypo level
   const SmartRefVector<LHCb::CaloHypo> hypos = proto->calo();  
   if( hypos.empty() )return;
+  
   // special treatment for Bremstrahlung electrons 
   bool brem = false ;
   bool charged = false;
@@ -166,15 +181,15 @@ void Calo2MCTool::addProto(const LHCb::ProtoParticle* proto, const LHCb::Particl
     if ( !charged 
          || (charged && hypo->hypothesis() == LHCb::CaloHypo::EmCharged )
          || (charged && brem && hypo->hypothesis() == LHCb::CaloHypo::Photon ) )addHypo( hypo );
-  } 
+  }
 }
 
 // associate single protoParticle
 ICalo2MCTool* Calo2MCTool::from(const LHCb::ProtoParticle*   proto  ){
+  if( proto == m_proto)return this; // process only if needed
   clear();
   m_depth = 3; // proto level
   if( proto == NULL )return this;
-  if( proto == m_proto)return this; // process only if needed
   m_proto = (LHCb::ProtoParticle*) proto;
   addProto( proto );
   StatusCode sc = process();
@@ -194,17 +209,21 @@ void Calo2MCTool::addHypo(const LHCb::CaloHypo* hypo){
     if( *ih == hypo){ok = false;break;}
   }
   if(ok)m_hypos.push_back( hypo ) ;
-  if(!ok)debug() << "CaloHypo appears twice in the same decay chain" << endreq;
- 
+  if(!ok){
+    debug() << "CaloHypo appears twice in the same decay chain" << endreq;
+    counter("CaloHypo appears twice in the same decay chain" )+=1;
+  }
+  
   // hypo->cluster cascade if requested
   if( m_hypo2Cluster ){
     m_depth = 1; // cluster level
     const SmartRefVector<LHCb::CaloCluster> clusters = hypo->clusters();
+
     if( clusters.empty() )return;
     const LHCb::CaloCluster* cluster =
       ( clusters.size() > 1 && hypo->hypothesis() == LHCb::CaloHypo::PhotonFromMergedPi0 ) ?
       *(clusters.begin() + 1 ) : *(clusters.begin()); //@ToDO use cluster::Type (when defined)
-    if( cluster )return ;
+    if( NULL == cluster )return ;
     if( clusters.size() !=1 && hypo->hypothesis() != LHCb::CaloHypo::PhotonFromMergedPi0 )counter("ill-defined CaloHypo") += 1;
     addCluster( cluster );
   }
@@ -212,10 +231,10 @@ void Calo2MCTool::addHypo(const LHCb::CaloHypo* hypo){
 }
 // associate single hypo
 ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloHypo*   hypo  ){
+  if( hypo == m_hypo)return this; // process only if needed
   clear();
   m_depth = 2; // hypo level
   if( hypo == NULL )return this;
-  if( hypo == m_hypo)return this; // process only if needed
   m_hypo = (LHCb::CaloHypo*) hypo;
   // special case for MergedPi0
   if( hypo->hypothesis() == LHCb::CaloHypo::Pi0Merged && m_merged2Split){
@@ -246,8 +265,11 @@ void Calo2MCTool::addCluster(const LHCb::CaloCluster*   cluster  ){
   }
   
   if(ok) m_clusters.push_back( cluster ) ;
-  if(!ok) debug() << "Warning : CaloCluster appears twice in the same decay chain" << endmsg;
-
+  if(!ok){
+    debug() << "Warning : CaloCluster appears twice in the same decay chain" << endmsg;
+    counter( "Warning : CaloCluster appears twice in the same decay chain" )+=1;
+  }
+  
   // cluster->digit cascade if requested
   if(m_cluster2Digit){
     m_depth = 0;    
@@ -269,10 +291,10 @@ void Calo2MCTool::addCluster(const LHCb::CaloCluster*   cluster  ){
 }
 // associate single cluster
 ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloCluster*   cluster  ){
+  if( cluster == m_cluster)return this; // process only if needed
   clear();
   m_depth = 1;// cluster level
   if( cluster == NULL )return this;
-  if( cluster == m_cluster)return this; // process only if needed
   m_cluster = (LHCb::CaloCluster*) cluster;
   //
   addCluster( cluster );
@@ -285,10 +307,10 @@ ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloCluster*   cluster  ){
 /*-------------------------- from Digit to MC  ------------------------*/
 // associate single digit
 ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloDigit*   digit  ){
+  if( digit == m_digit)return this; // process only if needed
   clear();
   m_depth = 0; // digit level
   if( digit == NULL )return this;
-  if( digit == m_digit)return this; // process only if needed
   m_digit = (LHCb::CaloDigit*) digit;
   m_digits.push_back( digit ) ;
   StatusCode sc = process();
@@ -299,7 +321,7 @@ ICalo2MCTool* Calo2MCTool::from(const LHCb::CaloDigit*   digit  ){
 /*-------------------------- Generic processing ------------------------*/
 StatusCode Calo2MCTool::process(){
 
-  m_sum = 0;
+  m_sum = 0.;
 
   if( m_depth == 2 ){
     return Error("DIRECT HYPO->MC RELATION IS NOT YET ALLOWED",StatusCode::FAILURE);
@@ -352,6 +374,7 @@ StatusCode Calo2MCTool::process(){
     if( 0 == m_digit2MC ) 
       return Warning(" Digit <-> MC relation table not found at " + m_digit2MCLoc , StatusCode::FAILURE);
     // 2 - built (particle,weight) map
+    m_mcMap.clear();
     for( std::vector<const LHCb::CaloDigit*>::const_iterator id = m_digits.begin() ; id != m_digits.end() ; id++){
       const LHCb::CaloDigit* digit = *id;
       LHCb::Calo2MC::IDigitTable::Range digit2MCRange = m_digit2MC->relations( digit );
@@ -379,6 +402,18 @@ void Calo2MCTool::clear(){
   m_protos.clear();
   m_parts.clear();
   m_nFrag = 0;
+  m_sum = 0.;
+  m_maxMC  = NULL ;
+  m_bestMC = NULL ;
+  m_digit   = NULL; 
+  m_cluster = NULL;
+  m_hypo    = NULL;
+  m_proto   = NULL;
+  m_part    = NULL;
+  m_digit2MC= NULL;
+  m_cluster2MC=NULL;
+  m_category = 0 ;
+  m_depth    = -1 ;
 }
   
 
@@ -390,6 +425,8 @@ void Calo2MCTool::mcDigest(){
   m_maxMC  = empty ;
   m_bestMC = empty ;
 
+
+
   if( m_sum <= 0 )return;
   // loop over contributing particle :
   for( CaloMCTools::CaloMCMap::const_iterator imap = m_mcMap.begin() ; imap != m_mcMap.end() ; imap++){
@@ -397,7 +434,6 @@ void Calo2MCTool::mcDigest(){
     double w  = weight( mcPart );
     double q  = quality( mcPart );
     double m = mcPart->momentum().M();    
-
     // the most contributing MCParticle (with smallest mass when several MCPart with same weight)
     if( w >= mcMax ){
       bool ok = true;
@@ -477,6 +513,9 @@ std::string Calo2MCTool::descriptor(){
   std::stringstream ss("");
   ss  << std::endl;
   ss  << "     ---------- Calo MC contribution " ;
+  if( NULL != m_part  ) ss << "to particle (pid = " << m_part->particleID().pid() << ")" << std::endl;
+  if( m_parts.size() > 1 ) ss << " -> to " << m_parts.size() << " particle(s) -------- " << std::endl;
+  if( !m_protos.empty() ) ss << "to " << m_protos.size() << " protoParticle(s) -------- " << std::endl;
   if( !m_hypos.empty() ) ss << "to " << m_hypos.size() << " hypo(s) -------- " << std::endl;
   if( !m_digits.empty() ) ss << "to " << m_digits.size() << " digit(s) -------- " << std::endl;
   if( !m_clusters.empty() ) ss << "to " << m_clusters.size() << " cluster(s) ------- " << std::endl;
@@ -484,19 +523,47 @@ std::string Calo2MCTool::descriptor(){
   for( std::map<std::string,std::vector<const LHCb::MCParticle*> >::iterator im = m_treeMap.begin() ; m_treeMap.end()!=im;im++){
     ss  << "        -- " << (*im).first << std::endl; 
   }
+  
+  if( bestMC() != NULL ){
+    const LHCb::ParticleProperty* prop = m_ppsvc->find( bestMC()->particleID() );
+    std::string p = ( NULL != prop) ? prop->name() : "??";
+    ss << "      --> Best matching MCParticle : [" << p << "] ==  (Quality/Weight : " 
+       << quality( bestMC() ) <<" / " << weight( bestMC() )<< ")" << std::endl;
+  }
+  
+  if( maxMC() != NULL ){
+    const LHCb::ParticleProperty* prop = m_ppsvc->find( maxMC()->particleID() );
+    std::string p = ( NULL != prop) ? prop->name() : "??";
+    ss << "      --> Maximum weight MCParticle : [" << p << "] == (Quality/Weight : " 
+       << quality( maxMC() ) <<" / " << weight( maxMC() )<<")" <<  std::endl;
+  }
+  
   ss << "      -------------------------------- "; 
   return ss.str();
 }
 
 
+const LHCb::MCParticle* Calo2MCTool::findMCOrBest(LHCb::ParticleID id, double threshold ){
+  const LHCb::MCParticle* found = findMC(id,threshold);
+  if( NULL != found )return found;
+  return bestMC();
+}
+const LHCb::MCParticle* Calo2MCTool::findMCOrBest(std::string name, double threshold ){
+  const LHCb::MCParticle* found = findMC(name,threshold);
+  if( NULL != found )return found;
+  return bestMC();
+}
 const LHCb::MCParticle* Calo2MCTool::findMC(std::string name, double threshold ){
   const LHCb::ParticleProperty* prop = m_ppsvc->find( name );
   if ( prop == NULL)return NULL;
+  return findMC( prop->particleID() , threshold);
+}
+const LHCb::MCParticle* Calo2MCTool::findMC(LHCb::ParticleID id, double threshold ){
   double t = threshold;
   LHCb::MCParticle* best  = NULL;
   for( CaloMCTools::CaloMCMap::const_iterator imap = m_mcMap.begin() ; imap != m_mcMap.end() ; imap++){
     const LHCb::MCParticle* mcPart = imap->first;
-    if( mcPart->particleID().abspid() != prop->particleID().abspid() )continue;
+    if( mcPart->particleID().abspid() != id.abspid() )continue;
     double q = quality( mcPart );
     if( q < t )continue;
     t = q;
