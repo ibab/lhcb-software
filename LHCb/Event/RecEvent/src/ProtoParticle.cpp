@@ -1,33 +1,60 @@
-// $Id: ProtoParticle.cpp,v 1.7 2009-11-16 11:57:34 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.8 2009-11-20 16:21:20 jonrob Exp $
+
+#include <algorithm>
 
 // local
 #include "Event/ProtoParticle.h"
 
+// boost
+#include <boost/lambda/lambda.hpp>
+#include <boost/lambda/bind.hpp>
+
 //-----------------------------------------------------------------------------
 
-// fillstream method
-std::ostream& LHCb::ProtoParticle::fillStream(std::ostream& s) const
+// Fillstream method
+std::ostream& LHCb::ProtoParticle::fillStream( std::ostream & s ) const
 {
-  s << "{ ";
-
-  s << "CaloHypos " << this->calo();
-  s << " RichPID "  << this->richPID();
-  s << " MuonPID "  << this->muonPID();
-
-  s << " ExtraInfo ";
+  s << "{"
+    << " CaloHypos " << this->calo()
+    << " RichPID "   << this->richPID()
+    << " MuonPID "   << this->muonPID()
+    << " ExtraInfo [";
   for ( ExtraInfo::const_iterator i = this->extraInfo().begin();
         i != this->extraInfo().end(); ++i )
   {
-    const LHCb::ProtoParticle::additionalInfo info = 
+    const LHCb::ProtoParticle::additionalInfo info =
       static_cast<LHCb::ProtoParticle::additionalInfo>(i->first);
     s << " " << info << "=" << i->second;
   }
+  return s << " ] }";
+}
 
-  return s << " }";
+LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
+{
+  using namespace boost::lambda;
+
+  // number of hypos removed
+  size_t removed = 0;
+
+  // Find hypos to remove
+  const SmartRefVector<LHCb::CaloHypo>::iterator iHypoRemove =
+    std::remove_if ( m_calo.begin(), m_calo.end(), 
+                     bind( &LHCb::CaloHypo::hypothesis, _1 ) == hypo );
+  
+  // remove selected hypos
+  if ( m_calo.end() != iHypoRemove )
+  {
+    removed = m_calo.end() - iHypoRemove;
+    m_calo.erase ( iHypoRemove , m_calo.end() );
+  }
+  
+  // return number of hypos removed
+  return removed;
 }
 
 // Remove all Combined DLL information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCombinedInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -41,7 +68,7 @@ LHCb::ProtoParticle::removeCombinedInfo()
 }
 
 // Remove all RICH information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeRichInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -59,7 +86,7 @@ LHCb::ProtoParticle::removeRichInfo()
 }
 
 // Remove all MUON information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeMuonInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -76,7 +103,7 @@ LHCb::ProtoParticle::removeMuonInfo()
 }
 
 // Remove all CALO-ECAL information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCaloEcalInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -92,14 +119,15 @@ LHCb::ProtoParticle::removeCaloEcalInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloClusChi2 );
   erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDe );
   erased += this->eraseInfo( LHCb::ProtoParticle::EcalPIDmu );
-  //this->clearCalo();
+  // removed associated CaloHypos
+  erased += this->clearCalo( LHCb::CaloHypo::EmCharged );
   // Invalidate Combined DLL information since information has changed
   erased += this->removeCombinedInfo();
   return erased;
 }
 
 // Remove all CALO-BREM information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCaloBremInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -108,41 +136,40 @@ LHCb::ProtoParticle::removeCaloBremInfo()
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralPrs );
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloNeutralEcal );
   erased += this->eraseInfo( LHCb::ProtoParticle::CaloBremMatch );
-  //this->clearCalo();
+  // remove associated Hypos
+  erased += this->clearCalo( LHCb::CaloHypo::Photon );
   // Invalidate Combined DLL information since information has changed
   erased += this->removeCombinedInfo();
   return erased;
 }
 
 // Remove all CALO-SPD information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCaloSpdInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
   erased += this->eraseInfo(LHCb::ProtoParticle::InAccSpd);
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloSpdE);
-  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
   erased += this->removeCombinedInfo();
   return erased;
 }
 
 // Remove all CALO-PRS information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCaloPrsInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
   erased += this->eraseInfo(LHCb::ProtoParticle::InAccPrs);
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloPrsE);
   erased += this->eraseInfo(LHCb::ProtoParticle::PrsPIDe);
-  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
   erased += this->removeCombinedInfo();
   return erased;
 }
 
 // Remove all CALO-HCAL information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeCaloHcalInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;
@@ -150,14 +177,13 @@ LHCb::ProtoParticle::removeCaloHcalInfo()
   erased += this->eraseInfo(LHCb::ProtoParticle::CaloHcalE);
   erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDe);
   erased += this->eraseInfo(LHCb::ProtoParticle::HcalPIDmu);
-  //this->clearCalo();
   // Invalidate Combined DLL information since information has changed
   erased += this->removeCombinedInfo();
   return erased;
 }
 
 // Remove all VELO information stored in this ProtoParticle
-LHCb::ProtoParticle::ExtraInfo::size_type 
+LHCb::ProtoParticle::ExtraInfo::size_type
 LHCb::ProtoParticle::removeVeloInfo()
 {
   LHCb::ProtoParticle::ExtraInfo::size_type erased = 0;

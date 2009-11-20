@@ -1,9 +1,17 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.131 2009-11-16 14:50:40 cattanem Exp $
+! $Id: release.notes,v 1.132 2009-11-20 16:21:20 jonrob Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
+
+! 2009-11-20 - Chris Jones
+ - Improved patch for the 'CaloHypo' bug.
+  + New ProtoParticle method clearCalo( hypo ) which removes the CaloHypos of
+    the given hypothesis type only.
+  + Now, calling removeCaloBremInfo() removes the CaloHypos of type 
+    LHCb::CaloHypo::Photon and removeCaloEcalInfo removes 
+    LHCb::CaloHypo::EmCharged hypo SmartRefs only.
 
 !========================= RecEvent v2r23 2009-11-16 =========================
 ! 2009-11-16 - Chris Jones

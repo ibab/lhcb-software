@@ -20,7 +20,7 @@
        &KeyedObject;
 
        <import name="Kernel/ParticleID" soft="TRUE"/>
-       <import name="Event/CaloHypo" soft="TRUE"/>
+       <import name="Event/CaloHypo"/>
        <import name="GaudiKernel/VectorMap"/>
        <import name="Event/Track"/>
        <import name="Event/RichPID" soft="TRUE"/>
@@ -242,6 +242,15 @@
          <arg 
            type = "std::ostream" 
            name = "s"/>
+       </method>
+
+       <method 
+         name    = "clearCalo" 
+         desc    = "Remove all Calo Hypo information of the given type"
+         argList = "const LHCb::CaloHypo::Hypothesis hypo"
+         type    = "LHCb::ProtoParticle::ExtraInfo::size_type" 
+         virtual = "FALSE" 
+         const   = "FALSE">
        </method>
 
        <method 
