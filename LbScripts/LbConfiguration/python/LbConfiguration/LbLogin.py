@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.58 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.59 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -958,6 +958,16 @@ class LbLoginScript(Script):
             log.debug("Appending %s to the LD_LIBRARY_PATH" % libdir)
             ev["LD_LIBRARY_PATH"] = os.pathsep.join(ldlist)
     
+    def copyEnv(self):
+        retenv = {}
+        for v in self._env.env.keys() :
+            retenv[v] = self._env[v]
+        retaliases = {}
+        for v in self._aliases.env.keys() :
+            retaliases[v] = self._aliases[v]
+        retextra = self._extra
+        return retenv, retaliases, retextra
+    
     def setEnv(self, debug=False):
         log = logging.getLogger()
         log.debug("Entering the environment setup")
@@ -972,8 +982,9 @@ class LbLoginScript(Script):
         self.setCMTPath()
         self.setupSystem()
 
-
-        return self._env.env, self._aliases.env, self._extra
+        # return a copy otherwise the environment gets restored
+        # at the destruction of the instance
+        return self.copyEnv()
 
     def Manifest(self, debug=False):
         ev = self._env

@@ -1,6 +1,9 @@
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbConfiguration/LbLogin.py: fixed variable name for the logging level.
+	* python/LbConfiguration/LbLogin.py: 
+	- fixed variable name for the logging level.
+	- fixed bug in the function returning the dictionary of the environment. Before it was not
+	returning of copy and thus it was destroy with the instance of LbLogin.
 
 2009-11-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
