@@ -1,4 +1,4 @@
-// $Id: OMAMsgInterface.cpp,v 1.26 2009-11-17 12:29:32 ggiacomo Exp $
+// $Id: OMAMsgInterface.cpp,v 1.27 2009-11-20 10:12:04 ggiacomo Exp $
 #include <cstring>
 #include "OnlineHistDB/OnlineHistDB.h"
 #include "OMAlib/OMAMsgInterface.h"
@@ -89,7 +89,7 @@ void OMAMsgInterface:: startMessagePublishing() {
     std::string svcName=ServerName+"/MESSAGES";
     char initVal[5]="";
     m_dimSvc = new DimService(svcName.c_str(),initVal);    
-    start(ServerName.c_str());
+    DimServer::start(ServerName.c_str());
   }
 }
 
