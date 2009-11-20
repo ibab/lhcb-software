@@ -4,6 +4,7 @@
 ! Purpose     : Accounting of LumiSummaries (offline code)
 !-----------------------------------------------------------------------------
 
+!========================== LumiAlgs v3r1 2009-11-20 =========================
 ! 2009-11-18 - Jaap Panman
  - fix to LumiWriterConf, LumiReaderConf to make unit test work in Rec environment
 
