@@ -3,6 +3,18 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r5>2009-11-20 DaVinci v24r5. Release for first beam. </A></H1><PRE>
+
+Based on Phys v8r12p1, Analysis v3r12, Rec v7r8, HLT v7r2, Lbcom v7r8, LHCb v28r2, Gaudi v21r6
+
+ * Quick LHCb v28r2-based release for first 2010 beam.
+ * Highlights
+   - New ODIN type.
+   - HLT: Hlt2 TES renaming, new lines, Lumi re-structuring.
+   - PHYS: fixes for new DST contents. Various internal fixes and improvements.
+   - ANALYSIS: Fixes and additions to stripping framework/lines, MicroDST saving of 
+               complete Flavour Tagging.
+
 </PRE><H1><A NAME=v24r4>2009-10-30 DaVinci v24r4 </A></H1><PRE>
 
 Based on Phys v8r11, Analysis v3r11, Rec v7r7, HLT v7r1, Lbcom v7r7, LHCb v28r1, Gaudi v21r5
