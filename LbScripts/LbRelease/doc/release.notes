@@ -1,3 +1,10 @@
+2009-11-20  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/setup.py: list of projects removed, the one
+	from LbConfiguration.Project is used instead
+	* python/LbRelease/Nightlies/functions.py: logfile is cleaned before build
+	only if the platform has not been done yet, otherwise the output is appended
+
 2009-11-11  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbRelease/GetPack.py: switched the DIRAC repository from CVS to SVN

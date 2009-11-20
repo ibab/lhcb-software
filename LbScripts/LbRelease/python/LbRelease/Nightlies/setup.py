@@ -3,7 +3,7 @@ LHCb Nightlies settings file.
 """
 import os
 
-listOfProjectNames = ['Gaudi', 'LHCb', 'Lbcom', 'Rec', 'Analysis', 'Phys', 'Hlt', 'Online', 'Gauss', 'Boole', 'Brunel', 'DaVinci', 'Panoramix', 'Bender', 'Moore', 'Geant4', 'Panoptes', 'Alignment', 'Dirac']
+from LbConfiguration.Project import project_names as listOfProjectNames
 projectNamesDict = {}
 for p in listOfProjectNames:
     projectNamesDict[p.upper()] = p

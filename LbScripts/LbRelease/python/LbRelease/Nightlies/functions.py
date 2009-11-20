@@ -585,17 +585,17 @@ def make(slotName, projectName, minusj, minusl):
     slot, project = getSlotAndProject(slotName, projectName)
     setCmtProjectPath(slot)
 
-    # removing rubbish from log file
-    os.system('echo "(removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
-    os.chdir(generatePath(slot, project, 'TAG', projectName))
-    logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
-    logFileToBeRemoved.close()
-
     if os.path.exists(os.sep.join([generatePath(slot, project, 'TAG', projectName), 'build.'+os.environ.get('CMTCONFIG','')+'.done'])):
         configuration.system('echo "Build already done for ' + os.environ.get('CMTCONFIG', '') + '. Skipped."')
         docs(slotName, projectName)
         return
-
+    else:
+        # removing rubbish from log file
+        os.system('echo "(removing log here)" >> ' + os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log')
+        os.chdir(generatePath(slot, project, 'TAG', projectName))
+        logFileToBeRemoved = file(os.sep.join(['logs', os.environ.get('CMTCONFIG', '')])+'.log', 'w')
+        logFileToBeRemoved.close()
+    
     changeEnvVariables()
 
     os.chdir(generatePath(slot, project, 'SYSPACKAGECMT', projectName))
