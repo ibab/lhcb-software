@@ -1,3 +1,7 @@
+2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/LbLogin.py: fixed variable name for the logging level.
+
 2009-11-20  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* data/Makefile: Various improvements

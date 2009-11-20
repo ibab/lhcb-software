@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.57 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.58 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -271,7 +271,6 @@ class LbLoginScript(Script):
 #-----------------------------------------------------------------------------------
 
     def setPath(self):
-        log = logging.getLogger()
         ev = self._env
         if sys.platform != "win32" :
             if ev.has_key("SAVEPATH") :
@@ -916,9 +915,9 @@ class LbLoginScript(Script):
                 log.debug("Calling SetupProject directly")
 
             setupprojargs=[]
-            if opts.loglevel=="DEBUG" :
+            if opts.log_level=="DEBUG" :
                 setupprojargs.append("--debug")
-            if opts.loglevel=="CRITICAL" :
+            if opts.log_level=="CRITICAL" :
                 setupprojargs.append("--silent")
             if not opts.user_area_scripts :
                 setupprojargs.append("--no-user-area")
@@ -979,7 +978,7 @@ class LbLoginScript(Script):
     def Manifest(self, debug=False):
         ev = self._env
         opts = self.options
-        if opts.loglevel != "CRITICAL" :
+        if opts.log_level != "CRITICAL" :
             self._add_echo( "*" * 80 )
             if opts.scriptsvers :
                 self._add_echo( "*" + ("---- LHCb Login %s ----" % opts.scriptsvers).center(78) + "*" )
