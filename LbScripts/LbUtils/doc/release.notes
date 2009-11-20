@@ -1,3 +1,7 @@
+2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/fixWinCVSRoot: fixed variable the variable for the level of logging.
+
 2009-11-11  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbUtils/Script.py: store the config has a data member of the Script class. Delay the 
