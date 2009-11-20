@@ -153,13 +153,35 @@ class Alignables( list ):
 
     def TTHalfLayers( self, dofs = "" ) :
         elements = []
-        for layername in self.m_ttLayers:
-            # C-side
-            elements.append( layername + "CSide : "  +
-                             self.m_tt + "/" + layername + "/R(1Module.|2Module(1|2))." )
+        # we need to do TTa and TTb seperately since they are actually different
+        ttalayers = ['TTaXLayer','TTaULayer']
+        for layername in ttalayers:
             # A-side
             elements.append( layername + "ASide : "  +
-                             self.m_tt + "/" + layername + "/R(3Module.|2Module3)." )
+                             self.m_tt + "/TTa/" + layername + "/R(3Module.{2}|2Module(3.|2T))" )
+            # C-side
+            elements.append( layername + "CSide : "  +
+                             self.m_tt + "/TTa/" + layername + "/R(1Module.{2}|2Module(1.|2B))" )
+        ttblayers = ['TTbVLayer','TTbXLayer']
+        for layername in ttblayers:
+            # A-side
+            elements.append( layername + "ASide : "  +
+                             self.m_tt + "/TTb/" + layername + "/R(3Module.{2}|2Module(3B|4.|5.))" )
+            # C-side
+            elements.append( layername + "CSide : "  +
+                             self.m_tt + "/TTb/" + layername + "/R(1Module.{2}|2Module(1.|2.|3T))" )
+        self.__append( elements, dofs )
+
+    def TTBoxes( self, dofs = "" ) :
+        elements = []
+        elements.append( "TTaASide : "  +
+                         self.m_tt + "/TTa/TTa.Layer/R(3Module.{2}|2Module(3.|2T))" )
+        elements.append( "TTaCSide : "  +
+                         self.m_tt + "/TTa/TTa.Layer/R(1Module.{2}|2Module(1.|2B))" )
+        elements.append( "TTbASide : "  +
+                         self.m_tt + "/TTb/TTb.Layer/R(3Module.{2}|2Module(3B|4.|5.))")
+        elements.append( "TTbCSide : "  +
+                         self.m_tt + "/TTb/TTb.Layer/R(1Module.{2}|2Module(1.|2.|3T))" )
         self.__append( elements, dofs )
 
     def TTHalfModules( self, dofs = "" ) :
