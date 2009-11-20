@@ -5,6 +5,36 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r9</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r2
+
+- Packages updated: Rec/LumiAlgs v3r1, Velo/VeloRecMonitors v2r3,
+		Tf/TrackSys v4r28, Tr/TrackFitter v2r40
+
+- In Rec/LumiAlgs v3r1:
+		. fix in tests, to run with creating ODIN bank correctly
+
+- In Velo/VeloRecMonitors v2r3
+		. Mandatory changes for first data
+		. Some warnings fixed
+		. fix for VeloIPResolutionMonitor.cpp on Windows(TM)
+		. VeloTrackMonitor.cpp changed the default of TrackLocation
+		. VeloTrackMonitor.cpp changed option to have alignment histograms by default
+		. bugfix in VeloIPResolutionMonitor: histogram x-axis limits corrected
+		. VeloIPResolutionMonitor: 
+	  	. changed fit to '3D' IPs from Landau to 'x*gaus(x)'
+   		. added options of different fitting methods for '3D' IPs
+   		. made the limits of the underlying histos dependent on 1/PT bin
+   		. added histos of residuals of 1/PT parametrisation as fn of eta & phi
+   		. added option to refit PVs removing track for which IPs are calculated
+
+- In Tf/TrackSys v4r28
+		. Added option to turn off material corrections in track fit
+
+- In Tr/TrackFitter v2r40
+		. Important bug fix in ConfiguredFitters
+		. Minor update of ConfiguredFitters
+
 </PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r8</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r2
 

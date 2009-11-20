@@ -1,5 +1,5 @@
 package RecSys
-version v7r7
+version v7r9
 
 branches cmt doc python
  
@@ -19,7 +19,7 @@ use MuonTrackAlign       v1r8    Muon # Silvia Pozzi
 
 # Non sub-detector specific components
 use GlobalReco           v6r28   Rec  # Chris Jones
-use LumiAlgs             v3r0    Rec  # Jaap Panman
+use LumiAlgs             v3r1    Rec  # Jaap Panman
 use RecAlgs              v1r8    Rec  # Marco Cattaneo
 use RecUtils             v1r5    Rec  # Juan Palacios, Patrick Koppenburg
 
@@ -44,7 +44,7 @@ use PatAlgorithms        v3r24   Tf   # Stephanie Hansmann-Menzemer
 use PatVelo              v3r18   Tf   # David Hutchcroft
 use PatVeloTT            v3r9    Tf   # Mariusz Witek
 use TrackMatching        v2r25   Tf   # Eduardo Rodrigues
-use TrackSys             v4r27   Tf   # Stephanie Hansmann-Menzemer 
+use TrackSys             v4r28   Tf   # Stephanie Hansmann-Menzemer 
 use TsaAlgorithms        v3r14   Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
@@ -54,7 +54,7 @@ use TrackAssociators     v2r7    Tr   # Eduardo Rodrigues, Edwin Bos
 use TrackCheckers        v4r10   Tr   # Eduardo Rodrigues
 use TrackExtrapolators   v2r24   Tr   # Eduardo Rodrigues
 use TrackFitEvent        v4r2    Tr   # Eduardo Rodrigues
-use TrackFitter          v2r39   Tr   # Eduardo Rodrigues
+use TrackFitter          v2r40   Tr   # Eduardo Rodrigues
 use TrackIdealPR         v2r19   Tr   # Eduardo Rodrigues
 use TrackMCTools         v2r24   Tr   # Eduardo Rodrigues
 use TrackMonitors        v1r15   Tr   # Wouter Hulsbergen, Stephanie Menzemer
@@ -77,7 +77,7 @@ use RichENNRingFinder    v1r1    Rich # Chris Jones + Ulrich Kerzel
 use RichIFBAnalysis      v1r0    Rich # Ross Young, Chris Jones
 
 # Velo
-use VeloRecMonitors      v2r2    Velo # Malcom John, Eduardo Rodrigues
+use VeloRecMonitors      v2r3    Velo # Malcom John, Eduardo Rodrigues
 
 # Setup Python Configurables
 apply_pattern install_python_modules
