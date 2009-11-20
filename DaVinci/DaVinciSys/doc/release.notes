@@ -3,6 +3,9 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+
+  * R Lambert: Extra tests for files from Brunel v35r8, see savannah task 12602
+
 </PRE><H1><A NAME=v24r5>2009-11-20 DaVinci v24r5. Release for first beam. </A></H1><PRE>
 
 Based on Phys v8r12p1, Analysis v3r12, Rec v7r8, HLT v7r2, Lbcom v7r8, LHCb v28r2, Gaudi v21r6

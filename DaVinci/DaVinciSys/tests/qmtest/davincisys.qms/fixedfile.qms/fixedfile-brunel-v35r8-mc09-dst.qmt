@@ -1,0 +1,20 @@
+<?xml version="1.0" ?><!DOCTYPE extension  PUBLIC '-//QM/2.3/Extension//EN'  'http://www.codesourcery.com/qm/dtds/2.3/-//qm/2.3/extension//en.dtd'>
+<extension class="GaudiTest.GaudiExeTest" kind="test">
+  <argument name="program"><text>gaudirun.py</text></argument>
+  <argument name="timeout"><integer>1200</integer></argument>
+  <argument name="args"><set>
+    <text>$DAVINCISYSROOT/tests/options/SimpleMuSelection.py</text>
+    <text>--option</text>
+    <text>from DaVinci.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Brunel-v35r8-30000000-100ev-20091112-vc-md100.dst' TYP='POOL_ROOTTREE' OPT='READ'"]; DaVinci().InputType="DST"; DaVinci().DataType="MC09";</text>
+  </set></argument>
+  <argument name="validator"><text>
+findReferenceBlock("""
+BachelorMuForTestsSUCCESS Number of counters : 4
+ |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
+ |*"#accept"                                       |        72 |          5 |(  6.94444 +- 2.99587  )%|   -------   |   -------   |
+ | "#input"                                        |        72 |          9 |    0.12500 |    0.33072 |      0.0000 |      1.0000 |
+ |*"#passed"                                       |        72 |          5 |(  6.94444 +- 2.99587  )%|   -------   |   -------   |
+ |*"efficiency"                                    |         9 |          5 |(  55.5556 +- 16.5635  )%|   -------   |   -------   |
+""", stdout, result, causes, signature_offset = 0)
+</text></argument>
+</extension>
