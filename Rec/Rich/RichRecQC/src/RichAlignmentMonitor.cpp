@@ -4,7 +4,7 @@
  *  Implementation file for algorithm class : RichAlignmentMonitor
  *
  *  CVS Log :-
- *  $Id: RichAlignmentMonitor.cpp,v 1.13 2009-10-07 14:56:25 papanest Exp $
+ *  $Id: RichAlignmentMonitor.cpp,v 1.14 2009-11-20 17:32:25 cattanem Exp $
  *
  *  @author Antonis Papanestis
  *  @date   2004-02-19
@@ -164,7 +164,7 @@ StatusCode AlignmentMonitor::execute() {
 
   // If any containers are empty, form them
   if ( richTracks()->empty() ) {
-    if ( !trackCreator()->newTracks() ) return StatusCode::FAILURE;
+    if ( trackCreator()->newTracks().isFailure() ) return StatusCode::FAILURE;
     debug() << "No tracks found : Created " << richTracks()->size()
             << " RichRecTracks " << richSegments()->size()
             << " RichRecSegments" << endmsg;
@@ -179,13 +179,13 @@ StatusCode AlignmentMonitor::execute() {
     return StatusCode::SUCCESS;
   }
   if ( richPixels()->empty() ) {
-    if ( !pixelCreator()->newPixels() ) return StatusCode::FAILURE;
+    if ( !pixelCreator()->newPixels().isFailure() ) return StatusCode::FAILURE;
     debug() << "No Pixels found : Created "
             << richPixels()->size() << " RichRecPixels" << endmsg;
   }
 
   if ( richPhotons()->empty() ) {
-    photonCreator()->reconstructPhotons();
+    photonCreator()->reconstructPhotons().ignore();
     debug() << "No photons found : Created "
             << richPhotons()->size() << " RichRecPhotons" << endmsg;
   }
@@ -242,7 +242,7 @@ StatusCode AlignmentMonitor::execute() {
       const double phiRec   = gPhoton.CherenkovPhi();
       if ( !gPhoton.primaryMirror() || !gPhoton.secondaryMirror() )
       {
-        Error( "Mirror information not set in photon !" );
+        Error( "Mirror information not set in photon !" ).ignore();
         continue;
       }
       const MirrorNumber sphMirNum  = gPhoton.primaryMirror()->mirrorNumber();
