@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+ - Added a test for the fixedfile from Gauss v37r0 as in task 12602
+   . fixedfile-gauss-v37r0-mc09-sim
+
+
 </PRE><H1><A NAME=v19r8>2009-11-18 Boole v19r8</A></H1></PRE>
  - Changes to Configurable:
    . New option "ProductionMode", special settings for running in production,
