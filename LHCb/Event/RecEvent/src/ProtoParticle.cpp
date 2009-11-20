@@ -1,4 +1,4 @@
-// $Id: ProtoParticle.cpp,v 1.8 2009-11-20 16:21:20 jonrob Exp $
+// $Id: ProtoParticle.cpp,v 1.9 2009-11-20 16:36:37 jonrob Exp $
 
 #include <algorithm>
 
@@ -35,7 +35,7 @@ LHCb::ProtoParticle::clearCalo( const LHCb::CaloHypo::Hypothesis & hypo )
   using namespace boost::lambda;
 
   // number of hypos removed
-  size_t removed = 0;
+  LHCb::ProtoParticle::ExtraInfo::size_type removed = 0;
 
   // Find hypos to remove
   const SmartRefVector<LHCb::CaloHypo>::iterator iHypoRemove =
