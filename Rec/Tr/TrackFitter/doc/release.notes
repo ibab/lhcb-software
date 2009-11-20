@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r40 2009-11-20 ===================
 ! 2009-11-19 - Wouter Hulsbergen
  - Important bug fix in ConfiguredFitters: mustbe very careful with 'mutable' 
    default arguments in python. See
