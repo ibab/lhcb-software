@@ -5,6 +5,11 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v7r3>2009-11-21 HltSys v7r3</A></H1><PRE>
+ - version based on LHCb v28r3, updates to HltMuon, Hlt1Lines 
+   and HltSettings to fix three small issues, see release 
+   notes of the three packages involved.
+
 </PRE><H1><A NAME=v7r2>2009-11-13 HltSys v7r2</A></H1><PRE>
  - Version based on v28r2 for first beam 
  - New ODIN type
