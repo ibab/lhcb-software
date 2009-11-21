@@ -216,8 +216,8 @@ LHCb::RawBank* ODINCodecBaseTool::i_encode(const LHCb::ODIN *odin) {
   data[LHCb::ODIN::OrbitNumber] = odin->orbitNumber();
   data[LHCb::ODIN::L0EventIDHi] = (unsigned int) ((odin->eventNumber() >> 32) & 0xFFFFFFFF );
   data[LHCb::ODIN::L0EventIDLo] = (unsigned int) ((odin->eventNumber()) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeHi]   = (unsigned int) ((odin->gpsTime() / 1000000ull) & 0xFFFFFFFF );
-  data[LHCb::ODIN::GPSTimeLo]   = (unsigned int) ((odin->gpsTime() % 1000000ull) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeHi]   = (unsigned int) ((odin->gpsTime() >> 32) & 0xFFFFFFFF );
+  data[LHCb::ODIN::GPSTimeLo]   = (unsigned int) ((odin->gpsTime()) & 0xFFFFFFFF );
 
   data[LHCb::ODIN::Word7] = (unsigned int) ( ((odin->detectorStatus() << LHCb::ODIN::DetectorStatusBits) & LHCb::ODIN::DetectorStatusMask) |
                                              ((odin->errorBits() << LHCb::ODIN::ErrorBits) & LHCb::ODIN::ErrorMask) );
