@@ -13,9 +13,11 @@
       &StlVector;
      
       <enum 
-        name  = ''
+        name  = 'NumUniqueIDEnum'
         desc  = 'Number of unique sequential IDs'
         value = 'NumSequentialLayer = 12, NumSequentialQuarter = 48, NumSequentialModule = 432, NumSequentialOtis = 432*4, NumSequentialStraw = 432*128'
+	access = 'PUBLIC'
+	strTypConv = 'FALSE'
       />
 
       <constructor argList = "unsigned int station, unsigned int layer, unsigned int quarter, unsigned int module, unsigned int straw, 
