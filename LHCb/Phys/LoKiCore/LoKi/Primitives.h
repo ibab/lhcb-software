@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.16 2009-05-09 19:15:53 ibelyaev Exp $
+// $Id: Primitives.h,v 1.17 2009-11-21 12:39:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -2369,6 +2369,7 @@ namespace LoKi
   class Identity : public LoKi::Functor<TYPE,TYPE2>
   {
   public :
+    // ========================================================================
     /// MANDATORY: virtual destrcutor 
     virtual ~Identity(){}
     /// MANDATORY: clone mehtod ("virtual constructor")
@@ -2376,6 +2377,7 @@ namespace LoKi
     /// MANDATORY": the only one essential method 
     virtual  typename LoKi::Functor<TYPE,TYPE2>::result_type operator () 
       ( typename LoKi::Functor<TYPE,TYPE2>::argument a ) const { return a ; }    
+    // ========================================================================
   } ;
   // ==========================================================================
   /** @class PrintOut
@@ -2387,20 +2389,93 @@ namespace LoKi
   class PrintOut : public LoKi::Functor<TYPE,std::string>
   {
   public:
+    // ========================================================================
     /// MANDATORY: virtual destrcutor 
     virtual ~PrintOut(){}
     /// MANDATORY: clone mehtod ("virtual constructor")
     virtual  PrintOut* clone () const { return new PrintOut ( *this ) ; }
     /// MANDATORY": the only one essential method 
-    virtual  typename LoKi::Functor<TYPE,std::string>::result_type operator () 
+    virtual typename LoKi::Functor<TYPE,std::string>::result_type operator () 
       ( typename LoKi::Functor<TYPE,std::string>::argument a ) const 
-    { 
-      return Gaudi::Utils::toString ( a  ) ; 
-    }    
+    { return Gaudi::Utils::toString ( a  ) ; }    
+    // ========================================================================
   };
-} // end of namespace LoKi
+  // ==========================================================================
+  /** @class InRange 
+   *  Helper predicate to represent that the result of functor 
+   *  is within the certain "range" 
+   *  @author Vanya BELYAEV Ivan/Belyaev@nikhef.nl
+   *  @date 2009-11-21
+   */
+  template<class TYPE, class TYPE2=double> 
+  class InRange: public LoKi::Functor<TYPE,bool> 
+  {
+  public:
+    // ========================================================================
+    /// type for limit 
+    typedef typename boost::call_traits<TYPE2>::param_type              Type2 ;
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument              argument ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type        result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the functor and edges 
+     *  @param fun the functor 
+     *  @param low the low edge  
+     *  @param high the high edge 
+     */
+    InRange
+    ( const LoKi::Functor<TYPE,TYPE2>& fun  , 
+      Type2                            low  , 
+      Type2                            high )
+      : LoKi::Functor<TYPE,bool> () 
+      , m_fun  ( fun  ) 
+      , m_low  ( low  ) 
+      , m_high ( high ) 
+    {}
+    /// MANDATORY: virtual destructor 
+    virtual ~InRange() {}
+    /// MANDATORY: clone method ("virtual constructor")
+    virtual  InRange* clone() const { return new InRange ( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual result_type operator() ( argument a ) const 
+    {
+      typename LoKi::Functor<TYPE,TYPE2>::result_type r = m_fun.fun ( a ) ;
+      return m_low <= r && r <= m_high ;
+    }
+    /// OPTIONAL: the nice printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    {
+      return s << " inRange( " << m_fun 
+               << " , "        << m_low 
+               << " , "        << m_high << " )" ;
+      
+    }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default contructor is disabled 
+    InRange() ;                           // the default contructor is disabled 
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor itself 
+    LoKi::FunctorFromFunctor<TYPE,TYPE2> m_fun  ;         // the functor itself
+    /// the low edge 
+    TYPE2                                m_low  ;         //       the low edge 
+    /// the high edge 
+    TYPE2                                m_high ;         //       the low edge 
+    // ========================================================================
+  } ;
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
-// specializations for void-arguments
+//                                           specializations for void-arguments
 // ============================================================================
 #include "LoKi/VoidPrimitives.h"
 // ============================================================================

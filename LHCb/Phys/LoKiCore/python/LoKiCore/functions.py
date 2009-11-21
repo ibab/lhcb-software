@@ -63,6 +63,15 @@ def switch ( c  , v1 , v2  ) :
 
 
 # =============================================================================
+## Create the predicate which efficiently checks the equality of the
+#   function to some predefined value. Logically it is just 'operator==',
+#    but it should be more efficient 
+#
+#  @code
+#
+#    >>> cut = equal_to ( TrTYPE , LHCb.Track.Long )
+#  @endcode
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 def equal_to  ( f  , v ) :
     """
     Create the predicate which efficiently checks the equality of the
@@ -77,6 +86,36 @@ def equal_to  ( f  , v ) :
     # use the generic version:
     return f == v 
 
+# =============================================================================
+##    Create 'in-range' predicate, that checks the valeu of
+#     certain function is 'in-range' :
+#
+#              retult = low <= fun ( argument ) <= high 
+#
+#  @code
+#
+#    >>> fun = PT
+#    >>> cut = in_range ( PT , 0.5 * GeV , 3 * GeV )
+#
+#  @endcode
+#
+#  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+#  @date   2009-11-21
+def in_range ( fun , low , high ) :
+    """
+    Create 'in-range' predicate, that checks the valeu of
+    certain function is 'in-range' :
+
+              retult = low <= fun ( argument ) <= high 
+
+    >>> fun = PT
+    >>> cut = in_range ( PT , 0.5 * GeV , 3 * GeV )
+    
+    """
+    return fun.__in_range__ ( low , high )
+
+## ditto...
+inRange = in_range
 
 # =============================================================================
 ## Get the number of children for the object.
@@ -253,7 +292,7 @@ def count_if  ( s , *a ) :
 
 
 # =============================================================================
-## Check the presence of scertsin elements in decay tree or container 
+## Check the presence of certain elements in decay tree or container 
 def found  ( s , *a ) :
     """
     Check the presence of scertsin elements in decay tree or container 
@@ -319,7 +358,7 @@ def max_abs_value ( s , *a ) :
 ## find the element from decay tree or container whcih minimize the function
 def min_element ( s , *a ) :
     """
-    1. Find the element from decay tree or container whcih minimize the function
+    1. Find the element from decay tree or container which minimize the function
     
     2. Create 'min_element' vector function from the scalar function
     

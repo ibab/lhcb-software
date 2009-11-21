@@ -223,6 +223,7 @@ def decorateFunctionOps ( funcs , opers ) :
     _max_       = None 
     _monitor_   = None 
     _equal_to_  = None 
+    _in_range_  = None 
 
     _yields_          = None
     _process_         = None
@@ -832,7 +833,21 @@ def decorateFunctionOps ( funcs , opers ) :
             """
             return opers.__equal_to__(f,v)
         _equal_to_ . __doc__  += opers.__equal_to__  . __doc__
-            
+
+
+    # "in_range"
+    if hasattr ( opers , '__in_range__' ) :
+        def _in_range_ ( fun , low , high ) :
+            """
+            Create the predicate which checks if  the function value 'in range'
+
+            >>> fun  = ... 
+            >>> cut  = in_range ( fun , -1 , 1000 )
+
+            """
+            return opers.__in_range__ ( fun , low , high ) 
+        _in_range_ . __doc__ += opers.__in_range__ .  __doc__ 
+        
     # 'yields'
     if hasattr ( opers , '__yields__' ) :
         def _yields_ ( s ) :
@@ -1038,6 +1053,8 @@ def decorateFunctionOps ( funcs , opers ) :
         if _max_             : fun . __max__             = _max_       #
         if _monitor_         : fun . __monitor__         = _monitor_   #
         if _equal_to_        : fun . __equal_to__        = _equal_to_  #
+        if _in_range_        : fun . __in_range__        = _in_range_  #
+        
         # functional part:
         if _yields_          : fun . __yields__          = _yields_           #
         if _process_         : fun . __process__         = _process_          #

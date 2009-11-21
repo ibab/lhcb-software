@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.9 2007-11-28 13:56:33 ibelyaev Exp $
+// $Id: Math.h,v 1.10 2009-11-21 12:39:37 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -652,6 +652,32 @@ namespace LoKi
     } 
     return result ;
   }
+//   // ==========================================================================
+//   /** "in-range" function
+//    *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+//    *   @date 2009-11-21
+//    */
+//   template <class TYPE>
+//   inline LoKi::InRange<TYPE,double>
+//   inRange ( const typename LoKi::BasicFunctors<TYPE>::Function& fun  , 
+//             const double                                        low  ,
+//             const double                                        high )
+//   {
+//     return LoKi::InRange<TYPE,double>( fun , low , high ) ;
+//   }
+//   // ========================================================================== 
+//   /** "in-range" function
+//    *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+//    *   @date 2009-11-21
+//    */
+//   template <class TYPE>
+//   inline LoKi::InRange<TYPE,double>
+//   in_range ( const typename LoKi::BasicFunctors<TYPE>::Function& fun  , 
+//              const double                                        low  ,
+//              const double                                        high )
+//   {
+//     return inRange( fun , low , high ) ;
+//   }
   // ==========================================================================
 } // end of namespace LoKi
 // ============================================================================

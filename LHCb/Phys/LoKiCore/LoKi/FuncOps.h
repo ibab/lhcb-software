@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.21 2009-03-22 17:55:23 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.22 2009-11-21 12:39:36 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -270,6 +270,15 @@ namespace LoKi
       { return LoKi::EqualToValue<TYPE> ( fun , val ) ; }
       static Cut __equal_to__ ( const Func&   fun  , 
                                 const Func&   fun1 ) { return fun == fun1 ; }
+      // ======================================================================
+      // InRange 
+      static Cut __in_range__ ( const Func&  fun  , 
+                                const double val1 , 
+                                const double val2 ) 
+      {
+        return LoKi::InRange<TYPE> ( fun , val1 , val2 ) ;
+      }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class FuncOps
