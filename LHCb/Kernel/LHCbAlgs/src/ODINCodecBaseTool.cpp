@@ -108,12 +108,8 @@ LHCb::ODIN* ODINCodecBaseTool::i_decode(const LHCb::RawBank* bank, LHCb::ODIN* o
   odin->setEventNumber((temp64 << 32) + odinData[LHCb::ODIN::L0EventIDLo]);
 
   temp64 = odinData[LHCb::ODIN::GPSTimeHi];
-  if (version <= 5) {
-    odin->setGpsTime ((temp64 << 32) + odinData[LHCb::ODIN::GPSTimeLo]);
-  } else {
-    odin->setGpsTime (temp64 * 1000000ull + odinData[LHCb::ODIN::GPSTimeLo]);
-  }
-
+  odin->setGpsTime ((temp64 << 32) + odinData[LHCb::ODIN::GPSTimeLo]);
+  
   temp32 = odinData[LHCb::ODIN::Word7];
   odin->setDetectorStatus( (temp32 & LHCb::ODIN::DetectorStatusMask) >> LHCb::ODIN::DetectorStatusBits );
   odin->setErrorBits( (temp32 & LHCb::ODIN::ErrorMask) >> LHCb::ODIN::ErrorBits );
