@@ -4,6 +4,7 @@
 ! Purpose     : General purpose algorithms and tools for LHCb
 !-----------------------------------------------------------------------------
 
+!======================== LHCbAlgs v2r31 2009-11-21 ==========================
 ! 2009-11-21 - Marco Clemencic
  - Fixed a problem in the decoding of the event time in the ODIN bank version 6.
 
