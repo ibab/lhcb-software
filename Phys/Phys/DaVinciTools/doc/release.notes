@@ -1,8 +1,15 @@
-! $Id: release.notes,v 1.488 2009-11-20 09:35:55 ibelyaev Exp $
+! $Id: release.notes,v 1.489 2009-11-21 18:11:29 ibelyaev Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+! 2009-11-21 - Vanya Belyaev
+
+ - CombineParticles.cpp
+
+    - add few missing lines for decoding of monitor functors 
+
 
 ! 2009-11-20 - Vanya Belyaev
  - Add "Embedded" monitoring for FiltrerDesctor & CombineParticles

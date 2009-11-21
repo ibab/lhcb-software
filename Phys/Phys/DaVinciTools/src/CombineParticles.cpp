@@ -1,4 +1,4 @@
-// $Id: CombineParticles.cpp,v 1.35 2009-11-20 09:35:55 ibelyaev Exp $
+// $Id: CombineParticles.cpp,v 1.36 2009-11-21 18:11:29 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -738,6 +738,8 @@ StatusCode CombineParticles::decodeAllCuts()
         if ( sc.isFailure() ) 
         { return Error ( "Unable to  decode the monitor for '" + ic->first + "':" + imoni->second , sc ) ; }
         item.m_moni = true ;
+        debug () << "The decoded monitor for '"+ ( ic->first ) 
+          + "' is: " << item.m_moni << endreq ;
       }  
     }
     m_cuts.push_back ( item ) ;
@@ -756,6 +758,28 @@ StatusCode CombineParticles::decodeAllCuts()
     { return Error ( "Unable to  decode 'mother'-cut: " + m_motherCut  , sc ) ; }  
     debug () << "The decoded cut for 'mother' is: " << m_motherCut << endreq ;
   }
+  // monitor combinations ? 
+  if ( monitor() && !m_combinationMonitorCode.empty() ) 
+  {
+    StatusCode sc = factory -> get ( m_combinationMonitorCode , 
+                                     m_combinationMonitor     , preambulo () ) ;
+    if ( sc.isFailure () )
+    { return Error ( "Unable to  decode 'combination-monitor': " 
+                     + m_combinationMonitorCode  , sc ) ; }  
+    debug () << "The decoded 'combination-monitor' is: " 
+             << m_combinationMonitor << endreq ;
+  }
+  // monitor mothers ? 
+  if ( monitor() && !m_motherMonitorCode.empty() ) 
+  {
+    StatusCode sc = factory -> get ( m_motherMonitorCode , 
+                                     m_motherMonitor     , preambulo () ) ;
+    if ( sc.isFailure () )
+    { return Error ( "Unable to  decode 'mother-monitor': " 
+                     + m_motherMonitorCode  , sc ) ; }  
+    debug () << "The decoded 'mother-monitor' is: " 
+             << m_motherMonitor << endreq ;
+  }     
   //
   release ( factory ) ;
   //
