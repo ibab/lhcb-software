@@ -4,6 +4,17 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2009-11-21 - Vanya Belyaev
+
+ - python/LoKiNumbers/test.py
+
+     add the example of usage of in_range function 
+
+ - cmt/requirements 
+
+     version increment to v8r3p1 
+
+    
 !========================== LoKiNumbers v8r3 2009-10-16 =======================
 ! 2009-10-12 - Marco Cattaneo
  - Remove duplicate dictionaries already produced by Root 5.24 

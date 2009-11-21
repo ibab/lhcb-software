@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.6 2008-11-22 15:46:59 ibelyaev Exp $
+# $Id: tests.py,v 1.7 2009-11-21 12:53:57 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -32,6 +32,10 @@ print 'inp >> count ( X < 5 )                 :%s' % ( inp >> count ( X < 5 ) )
 print 'inp >> has   ( X > 5 )                 :%s' % ( inp >> has   ( X > 5 ) )
 print 'inp >> XEMPTY                          :%s' % ( inp >> XEMPTY  )
 print 'inp >> XSIZE                           :%s' % ( inp >> XSIZE   )
+
+
+print 'inp >> in_range ( X,1,5 ) :%s' % ( inp >> in_range(X,1,5)  )
+
 
 # =============================================================================
 # The END 
