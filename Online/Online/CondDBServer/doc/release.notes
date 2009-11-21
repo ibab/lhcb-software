@@ -4,6 +4,12 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+!================ Online/CondDBServer v1r3 2009-11-21 ========================
+
+! 2009-11-21 - Marco Clemencic
+ - Fixed a problem with the scripts grantPriv.py.
+   The script was just printing and not doing the actual work.
+
 !================ Online/CondDBServer v1r2 2009-06-25 ========================
 
 ! 2009-02-16 - Maria Del Carmen Barandela Pazos

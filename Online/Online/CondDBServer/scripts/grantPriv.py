@@ -22,8 +22,8 @@ for connStr in ["CondDBPrivate(owner)/PRIVATE", "CondDBOnline(owner)/ONLINE" ]:
    new_list = db.getAllNodes()
 
    if new_list != cache.get(connStr, []):
-      #proc = Popen(["coolPrivileges", connStr, "GRANT", "READER", "lhcb_conddb_reader"])
-      proc = Popen("echo " + " ".join(["coolPrivileges", '"%s"' % connStr, "GRANT", "READER", "lhcb_conddb_reader"]), shell = True)
+      proc = Popen(["coolPrivileges", connStr, "GRANT", "READER", "lhcb_conddb_reader"])
+      #proc = Popen("echo " + " ".join(["coolPrivileges", '"%s"' % connStr, "GRANT", "READER", "lhcb_conddb_reader"]), shell = True)
       proc.wait()
       cache[connStr] = db.getAllNodes()
 
