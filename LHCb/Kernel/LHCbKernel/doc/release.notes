@@ -4,6 +4,9 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+! 2009-11-22 Wouter Hulsbergen
+ - Fixed bug in OTChannelID: made enum public
+
 ! 2009-11-20 Wouter Hulsbergen
  - Fixed bug in HitPattern affecting velo pattern; introduced in august.
 
