@@ -3,7 +3,10 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
-
+! 2009-11-22 - James Mylroie-Smith
+ - in VeloExpertClusterMonitor added booked plots instead of using plot
+   added option to plot cluster size(no strips in cluster) off by default
+   now makes plots for just clusters and tracks
 !======================= VeloRecMonitors v2r3 2009-11-20 =====================
 ! 2009-11-16 - Kurt Rinnert
  - missing banks in occupancy monitor are now reported as info, not warning.
