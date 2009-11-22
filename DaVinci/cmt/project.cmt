@@ -1,8 +1,8 @@
 project DAVINCI
 
 use HLT      HLT_v7r2
-use PHYS     PHYS_v8r12p1
-use ANALYSIS ANALYSIS_v3r12
+use PHYS     PHYS_v8r12p2
+use ANALYSIS ANALYSIS_v3r12p1
 use REC      REC_v7r8
 use LBCOM    LBCOM_v7r8
 
