@@ -1,10 +1,11 @@
 !-----------------------------------------------------------------------------
-! $Id: release.notes,v 1.132 2009-11-20 16:21:20 jonrob Exp $
+! $Id: release.notes,v 1.133 2009-11-22 13:43:18 cattanem Exp $
 ! Package     : Event/RecEvent
 ! Responsible : Marco Cattaneo
 ! Purpose     : LHCb Event model. Reconstruction classes (Brunel output) 
 !-----------------------------------------------------------------------------
 
+!========================= RecEvent v2r24 2009-11-22 =========================
 ! 2009-11-20 - Chris Jones
  - Improved patch for the 'CaloHypo' bug.
   + New ProtoParticle method clearCalo( hypo ) which removes the CaloHypos of
