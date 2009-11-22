@@ -53,6 +53,7 @@ class TAlignment( LHCbConfigurableUser ):
         , "LogFile"                      : "alignlog.txt"              # log file for kalman type alignment
         , "Incident"                     : ""                          # name of handle to be executed on incident by incident server
         , "UpdateInFinalize"             : True
+        , "DatasetName"                  : "Unknown"
         }
 
     def __apply_configuration__(self):
@@ -124,6 +125,7 @@ class TAlignment( LHCbConfigurableUser ):
     def monitorSeq( self ) :
         from Configurables import (TrackMonitor,TrackVertexMonitor)
         monitorSeq = GaudiSequencer("AlignMonitorSeq")
+        monitorSeq.Members.append(TrackMonitor())
         monitorSeq.Members.append(TrackMonitor("AlignTrackMonitor",
                                                TracksInContainer =self.getProp("TrackLocation")))
         if self.getProp("VertexLocation") != "":
@@ -142,13 +144,16 @@ class TAlignment( LHCbConfigurableUser ):
 
     def writeAlg( self, subdet, condname, depths, outputLevel = INFO) :
         from Configurables import WriteAlignmentConditions
+        import getpass
         xmlfile = self.getProp('CondFilePrefix') + 'Conditions/' + subdet + '/Alignment/' +condname + '.xml'
         return WriteAlignmentConditions( 'Write' + subdet + condname + 'ToXML',
                                          OutputLevel = outputLevel,
                                          topElement = self.getProp( subdet + 'TopLevelElement' ),
                                          precision = self.getProp( "Precision" ),
                                          depths = depths,
-                                         outputFile = xmlfile )
+                                         outputFile = xmlfile,
+                                         author = getpass.getuser(),
+                                         desc = self.getProp('DatasetName') )
 
     def writeSeq( self, listOfCondToWrite ) :
         writeSequencer = GaudiSequencer( "WriteCondSeq" )
