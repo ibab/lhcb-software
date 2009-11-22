@@ -117,19 +117,16 @@ def ConfiguredEventFitter( Name,
     # create the event fitter
     eventfitter = TrackEventFitter(Name)
     eventfitter.TracksInContainer = TracksInContainer
-    # add the tools that need to be modified
-    fittername = Name + ".Fitter"
-    eventfitter.addTool( ConfiguredMasterFitter( Name = fittername,
-                                                 FieldOff=FieldOff,
-                                                 SimplifiedGeometry=SimplifiedGeometry,
-                                                 NoDriftTimes=NoDriftTimes,
-                                                 KalmanSmoother=KalmanSmoother,
-                                                 LiteClusters=LiteClusters,
-                                                 ApplyMaterialCorrections=ApplyMaterialCorrections,
-                                                 StateAtBeamLine=StateAtBeamLine),
-                         name = "Fitter")
+    # configure the fitter
+    ConfiguredMasterFitter( eventfitter.Fitter,
+                            FieldOff=FieldOff,
+                            SimplifiedGeometry=SimplifiedGeometry,
+                            NoDriftTimes=NoDriftTimes,
+                            KalmanSmoother=KalmanSmoother,
+                            LiteClusters=LiteClusters,
+                            ApplyMaterialCorrections=ApplyMaterialCorrections,
+                            StateAtBeamLine=StateAtBeamLine)
     return eventfitter
-
 
 
 def ConfiguredFastFitter( Name, FieldOff = None, LiteClusters = True,
