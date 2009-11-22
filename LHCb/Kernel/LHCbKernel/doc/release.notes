@@ -4,6 +4,7 @@
 ! Purpose: LHCb specific Kernel classes
 !--------------------------------------------------------------------------
 
+!===================== LHCbKernel v11r9p1 2009-11-22 ======================
 ! 2009-11-22 Wouter Hulsbergen
  - Fixed bug in OTChannelID: made enum public
 
