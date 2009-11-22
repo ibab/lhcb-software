@@ -1,5 +1,5 @@
 package OTMonitor
-version v2r11
+version v3r0
 
 branches cmt doc src options
 
