@@ -5,8 +5,8 @@ Purpose             : LHCb physics analysis application
 
 </PRE><H1><A NAME=v24r5p1>2009-11-22 DaVinci v24r5p1. Release for first beam. </A></H1><PRE>
 
-Based on Phys v8r12p2, Analysis v3r12p1, Rec v7r8p1, HLT v7r2p1, Lbcom v7r8p1, LHCb v28r3, Gaudi v21r6
-
+Based on Phys v8r12p2, Analysis v3r12p1, Rec v7r9, HLT v7r3, Lbcom v7r9, LHCb v28r3, Gaudi v21r6
+s
  * Quick LHCb v28r3-based release for first 2010 beam.
 
  * Highlights:
