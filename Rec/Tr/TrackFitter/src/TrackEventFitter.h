@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.h,v 1.5 2007-05-03 11:12:07 cattanem Exp $
+// $Id: TrackEventFitter.h,v 1.6 2009-11-22 09:03:33 wouter Exp $
 #ifndef TRACKFITTER_TRACKEVENTFITTER_H 
 #define TRACKFITTER_TRACKEVENTFITTER_H 1
 
@@ -6,6 +6,7 @@
 // -------------
 // from Gaudi
 #include "GaudiAlg/GaudiAlgorithm.h"
+#include "GaudiKernel/ToolHandle.h"
 
 // from TrackInterfaces
 #include "TrackInterfaces/ITrackFitter.h"
@@ -32,7 +33,7 @@ protected:
 private:
 
   /// interface to tracks fitter tool
-  ITrackFitter* m_tracksFitter;
+  ToolHandle<ITrackFitter> m_tracksFitter;
 
   // job options
   // -----------
@@ -41,9 +42,6 @@ private:
 
   /// Tracks output container path in TES (can be the same as input)
   std::string m_tracksOutContainer;
-
-  /// The fitter tool name
-  std::string m_fitterName;
 
   /// Switch in case input and output container are the same or different
   bool m_makeNewContainer;

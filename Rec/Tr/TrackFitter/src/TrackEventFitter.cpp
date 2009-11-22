@@ -1,4 +1,4 @@
-// $Id: TrackEventFitter.cpp,v 1.21 2009-11-12 16:42:31 kholubye Exp $
+// $Id: TrackEventFitter.cpp,v 1.22 2009-11-22 09:03:33 wouter Exp $
 // Include files
 // -------------
 // from Gaudi
@@ -26,15 +26,14 @@ DECLARE_ALGORITHM_FACTORY( TrackEventFitter );
 TrackEventFitter::TrackEventFitter( const std::string& name,
                                     ISvcLocator* pSvcLocator)
   : GaudiAlgorithm ( name , pSvcLocator )
-  , m_tracksFitter(0)
+  , m_tracksFitter("TrackMasterFitter/Fitter",this)
   , m_makeNewContainer(true)
 {
   declareProperty( "TracksInContainer", 
                    m_tracksInContainer  = TrackLocation::Default );
   declareProperty( "TracksOutContainer", 
                    m_tracksOutContainer = ""                  );
-  declareProperty( "Fitter",
-                   m_fitterName         = "TrackMasterFitter" );
+  declareProperty( "Fitter", m_tracksFitter) ;
 }
 
 //=============================================================================
@@ -51,7 +50,8 @@ StatusCode TrackEventFitter::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-  m_tracksFitter = tool<ITrackFitter>( m_fitterName, "Fitter", this );
+  m_tracksFitter.retrieve().ignore() ;
+  // = tool<ITrackFitter>( m_fitterName, "Fitter", this );
   
   if ( m_tracksOutContainer == "" ) {
     m_tracksOutContainer = m_tracksInContainer;
@@ -66,7 +66,7 @@ StatusCode TrackEventFitter::initialize() {
     << endmsg
     << "  Tracks input container   : " << m_tracksInContainer << endmsg
     << "  Tracks output container  : " << m_tracksOutContainer << endmsg
-    << "  Fitter name              : " << m_fitterName << endmsg
+    << "  Fitter name              : " << m_tracksFitter->name() << endmsg
     << "=================================================="
     << endmsg
     << " " << endmsg;
@@ -183,6 +183,7 @@ StatusCode TrackEventFitter::finalize() {
   info() << "  Fitting performance   : "
          << format( " %7.2f %%", perf ) << endmsg;
 
+  m_tracksFitter.release().ignore() ;
   return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
