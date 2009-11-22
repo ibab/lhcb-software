@@ -3,6 +3,9 @@ Package	:	Alignment/TAlignment
 Package Coordinator	:	Jan Amoraal, Johan Blouw
 Purpose	: collection of alignment algorithms
 
+! 2009-11-22 - Wouter Hulsbergen
+ - Fix xml writer configuration such that is fill author and description tag in xml
+
 ! 2009-11-19 - Wouter Hulsbergen
  - Added TT halflayers to Alignables.py
  - Made postMoniSeq a bit smarter in Configuration.py
