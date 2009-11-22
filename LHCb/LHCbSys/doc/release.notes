@@ -5,6 +5,61 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v28r3>2009-11-23 LHCbSys v28r3</A></H1><PRE>
+This version uses Gaudi v21r6 and LCG_57a
+
+- Packages modified: DDDB v1r24, RichDet v13r1, RecEvent v2r24, LHCbAlgs v2r31,
+    LHCbKernel v11r9p1, LoKiArrayFunctors v8r6, LoKiCore v9r6,
+    LoKiNumbers v8r3p1, LoKiPhys v8r11
+
+- In DDDB v1r24
+  . Changed default tags for 2009 data:
+    o head-20091120         for DDDB
+    o head-20091120         for LHCBCOND
+    o sim-20091112-vc-md100 for SIMCOND
+
+- In RichDet v13r1
+  . Protection against DDDB/LHCBCOND mismatch with missing conditions
+
+- In RecEvent v2r24
+  . Improved patch for the 'CaloHypo' bug.
+    o New ProtoParticle method clearCalo( hypo ) which removes the CaloHypos of
+      the given hypothesis type only.
+    o Now, calling removeCaloBremInfo() removes the CaloHypos of type 
+      LHCb::CaloHypo::Photon and removeCaloEcalInfo removes 
+      LHCb::CaloHypo::EmCharged hypo SmartRefs only.
+
+- In LHCbAlgs v2r31
+  . Fixed a problem in the decoding and encoding of the event time in the ODIN
+    bank version 6.
+
+- In LHCbKernel v11r9p1
+  . Fixed bug in OTChannelID: made enum public
+  . Fixed bug in HitPattern affecting velo pattern; introduced in august.
+
+- In LoKiArrayFunctors v8r6
+  . TupleTool, PlotTool, PrintTool, HybridFilterParticles, HybridFilterCriterion,
+    HybridParticleArrayFilter: add the property "Preambulo" 
+  . Modify hybrid factory to accept (V)CutVal(s), for "embedded-monitoring"
+  . Move Phys/ATypes.h into LoKiPhys package 
+  . python/LoKiArrayfunctors/functions.py
+    o add ADOCA functor 
+    o add AFUNV, ACUTV adapters 
+
+- In LoKiCore v9r6
+  . LoKi/Primitives.h, LoKi/VoidPrimitives.h, LoKi/FuncOps.h:
+    add new functor LoKi::InRange 
+
+- In LoKiNumbers v8r3p1
+  . python/LoKiNumbers/test.py: add the example of usage of in_range function 
+
+- In LoKiPhys v8r11
+  . Fixed a problem with the generation of the documentation (LaTeX error)
+  . add CHILDIP, CHILDIPCHI2 functors
+  . PhysTypes.h: add VCutVals & CutVal 
+  . Add Phys/ATypes.h from LoKiArrayFunctors package 
+  . Add adapters: P(FUN/CUT)(A/V) 
+
 </PRE><H1><A NAME=v28r2>2009-11-16 LHCbSys v28r2</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
