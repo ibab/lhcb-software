@@ -86,7 +86,7 @@ for i in range( opts.numiter ) :
 
     # steer the monitor sequence depending on the iteration
     appMgr.algorithm('AlignMonitorSeq').Enable = ( i == 0 )
-    appMgr.algorithm('TrackMonitorSequence').Enable = ( i == 0 )
+    appMgr.algorithm('Moni').Enable = ( i == 0 )
     if opts.numiter>1 :
        appMgr.algorithm('AlignPostMonitorSeq').Enable = ( i == opts.numiter-1 )
     
