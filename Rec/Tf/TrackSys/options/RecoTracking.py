@@ -9,7 +9,7 @@ from Configurables import ( ProcessPhase, MagneticFieldSvc,
                             DecodeVeloRawBuffer,
                             Tf__PatVeloRTracking, Tf__PatVeloSpaceTool,
                             Tf__PatVeloSpaceTracking, Tf__PatVeloGeneralTracking,
-                            Tf__PatVeloTrackTool,
+                            Tf__PatVeloTrackTool, Tf__PatVeloGeneric,
                             RawBankToSTClusterAlg, RawBankToSTLiteClusterAlg,
                             PatForward,
                             TrackEventFitter,
@@ -36,8 +36,13 @@ trackAlgs = TrackSys().getProp("TrackPatRecAlgorithms")
 ## Velo tracking
 if "Velo" in trackAlgs :
    if TrackSys().veloOpen():
-      GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
-                                                 Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      if TrackSys().beamGas(): 
+        GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
+                                                   Tf__PatVeloGeneric("PatVeloGeneric"),
+                                                   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
+      else:
+        GaudiSequencer("RecoVELOSeq").Members += [ DecodeVeloRawBuffer(),
+                                                   Tf__PatVeloGeneralTracking("PatVeloGeneralTracking")]
       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").PointErrorMin = 2*mm;
       Tf__PatVeloGeneralTracking("PatVeloGeneralTracking").addTool(Tf__PatVeloTrackTool("PatVeloTrackTool"))
       Tf__PatVeloTrackTool("PatVeloTrackTool").highChargeFract = 0.5;

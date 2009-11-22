@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.14 2009-11-17 12:50:32 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.15 2009-11-22 15:11:04 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -61,6 +61,8 @@ class TrackSys(LHCbConfigurableUser):
     def veloOpen(self) : return "veloOpen" in self.getProp("SpecialData")
     ## @brief Shortcut to the cosmics option
     def cosmics(self)  : return "cosmics"  in self.getProp("SpecialData")
+    ## @brief Shortcut to the beamGas option
+    def beamGas(self)  : return "beamGas"  in self.getProp("SpecialData")
     ## @brief Shortcut to the noDrifttimes option
     def noDrifttimes(self) : return "noDrifttimes" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the simplifiedGeometry option
