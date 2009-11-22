@@ -4,6 +4,7 @@
 ! Purpose     : Quality Control monitoring algorithms for RICH reconstruction
 !-----------------------------------------------------------------------------
 
+!======================= RichRecQC v2r34p1 2009-11-22 ========================
 ! 2009-11-20 - Marco Cattaneo
  - Fix untested StatusCodes in RichAlignmentMonitor
 
