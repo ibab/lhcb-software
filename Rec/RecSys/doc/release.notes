@@ -37,6 +37,8 @@ This version uses Gaudi v21r6 and LHCb v28r3
 		. Added option to turn off material corrections in track fit
 
 - In Tr/TrackFitter v2r40
+	  . Added property to set fixed scattering momentum, e.g. for magnet off data
+    . Made fitter a toolhandle to make adjustment of configuration easier 
 		. Important bug fix in ConfiguredFitters
 		. Minor update of ConfiguredFitters
 
