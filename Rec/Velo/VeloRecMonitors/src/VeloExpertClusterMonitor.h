@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.h,v 1.6 2009-05-19 12:24:53 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.h,v 1.7 2009-11-22 00:06:02 jmylroie Exp $
 #ifndef VELOEXPERTCLUSTERMONITOR_H 
 #define VELOEXPERTCLUSTERMONITOR_H 1
 
@@ -40,6 +40,7 @@ namespace Velo
   private:
     //    DeVelo* m_veloDet;
     StatusCode loopTracks();
+    StatusCode loopClusters();
     StatusCode plotCluster(LHCb::VeloCluster* cluster,std::string ClusterType, double theta=-400.,double prap = -400.);
     StatusCode plotSensorsADC(double& adc,std::string corr,std::string& ClusterType,int sensor_num = -400);
     StatusCode plotSensorsSize(double& clsize,std::string corr,std::string& ClusterType,int sensor_num = -400);
@@ -59,7 +60,9 @@ namespace Velo
     bool m_Matching;
     bool m_ThetaRange;
     int m_i_max;
-    
+    bool m_plotClSize;
+    AIDA::IHistogram1D *m_adc_hist[84][3];
+
     std::string m_clusterCont;
     std::string m_trackCont; 
 
@@ -68,3 +71,4 @@ namespace Velo
 }
 
 #endif // VELOEXPERTCLUSTERMONITOR_H
+
