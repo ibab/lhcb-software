@@ -3,6 +3,16 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v35r8p1>2009-11-22 Brunel v35r8p1</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
+ and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2009 data-taking
+Output requires DaVinci v24r5p1 or later
+
+- Bug fixes:
+  . Fixed a problem in the decoding and encoding of the event time in the ODIN
+    bank version 6 (LHCbAlgs v2r31)
 
 </PRE><H1><A NAME=v35r8>2009-11-17 Brunel v35r8</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
