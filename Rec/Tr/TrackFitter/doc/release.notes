@@ -3,7 +3,11 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
-!=========================== TrackFitter v2r40 2009-11-20 ===================
+!=========================== TrackFitter v2r40 2009-11-22 ===================
+! 2009-11-22 - Wouter Hulsbergen
+	- Added property to set fixed scattering momentum, e.g. for magnet off data
+  - Made fitter a toolhandle to make adjustment of configuration easier 
+
 ! 2009-11-19 - Wouter Hulsbergen
  - Important bug fix in ConfiguredFitters: mustbe very careful with 'mutable' 
    default arguments in python. See
