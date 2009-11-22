@@ -5,13 +5,15 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
-</PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r9</A></H1><PRE>
-This version uses Gaudi v21r6 and LHCb v28r2
-
-- Add SpecialData beamGas in Configuration.py
+</PRE><H1><A NAME=v7r9>2009-11-23 RecSys v7r9</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r3
 
 - Packages updated: Rec/LumiAlgs v3r1, Velo/VeloRecMonitors v2r3,
-		Tf/TrackSys v4r28, Tr/TrackFitter v2r40
+		Tf/TrackSys v4r28, Tr/TrackFitter v2r40, Tr/TrackMonitors v1r16,
+    Rich/RichRecQC v2r34p1
+
+- In RecSys v7r9:
+  . Add SpecialData beamGas in Configuration.py
 
 - In Rec/LumiAlgs v3r1:
 		. fix in tests, to run with creating ODIN bank correctly
@@ -31,11 +33,18 @@ This version uses Gaudi v21r6 and LHCb v28r2
    		. added option to refit PVs removing track for which IPs are calculated
 
 - In Tf/TrackSys v4r28
+    . Added beamGas as specialData option (VeloGeneric is thus used)
 		. Added option to turn off material corrections in track fit
 
 - In Tr/TrackFitter v2r40
 		. Important bug fix in ConfiguredFitters
 		. Minor update of ConfiguredFitters
+
+- In Tr/TrackMonitors v1r16
+    . Include OTTimeMonitor in OT sequence
+
+- In Rich/RichRecQC
+    . Fix untested StatusCodes in RichAlignmentMonitor
 
 </PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r8</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r2
