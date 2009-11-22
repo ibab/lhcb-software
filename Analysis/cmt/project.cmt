@@ -1,6 +1,6 @@
 project ANALYSIS
 
-use LHCB	LHCB_v28r2
+use LHCB	LHCB_v28r3
 
 build_strategy	with_installarea
 setup_strategy	root
