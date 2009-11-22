@@ -3,10 +3,11 @@
 ! Responsible : Eduardo Rodrigues
 ! Purpose     : Defines the global Track set of packages, for tracking.
 !-----------------------------------------------------------------------------
-! 2009-11-22 - Stephanie Hansmann-Menzemer
-- add beamGas as specialData option (VeloGeneric is thus used)
 
-!============================ TrackSys v4r28 2009-11-20 ======================
+!============================ TrackSys v4r28 2009-11-22 ======================
+! 2009-11-22 - Stephanie Hansmann-Menzemer
+ - add beamGas as specialData option (VeloGeneric is thus used)
+
 ! 2009-11-17 - Wouter Hulsbergen
  - Added option to turn off material corrections in track fit
 
