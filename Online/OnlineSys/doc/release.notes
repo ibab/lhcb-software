@@ -5,13 +5,17 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
-</PRE><H1><A NAME=v4r29>2009-11-14 OnlineSys v4r31</A></H1><PRE>
+</PRE><H1><A NAME=v4r32>2009-11-23 OnlineSys v4r32</A></H1><PRE>
+     New version v4r32 built against LHCb v28r3.
+     Fix to CondDBServer
+
+</PRE><H1><A NAME=v4r31>2009-11-14 OnlineSys v4r31</A></H1><PRE>
      New version v4r31 built against LHCb v28r2.
      - New version of DIM.
      - Fixes to GaudiOnline (Timeout implementation), GaudiUPI, Camera,
        OMAlib, OnlineHistDB, OnlineBase, ROMon, ROLogger, UPI, Writer.
     
-</PRE><H1><A NAME=v4r29>2009-09-14 OnlineSys v4r29</A></H1><PRE>
+</PRE><H1><A NAME=v4r30>2009-09-14 OnlineSys v4r30</A></H1><PRE>
      New version v4r30 built against LHCb v28r1.
      Update several requirements files to contain correct version number.
 
