@@ -1,8 +1,8 @@
-# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.2 2009-10-30 11:08:30 poluekt Exp $
+# $Id: StrippingBs2JpsiPhiPrescaled.py,v 1.3 2009-11-22 14:38:23 gcowan Exp $
 
 __author__ = ['Greig Cowan','Juan Palacios']
 __date__ = '01/10/2009'
-__version__ = '$Revision: 1.2 $'
+__version__ = '$Revision: 1.3 $'
 
 __all__ = ('name', 'Phi', 'Jpsi', 'Bs', 'sequence')
 
@@ -25,7 +25,7 @@ Jpsi = DataOnDemand("stdLooseJpsi2MuMu", Location = "Phys/StdLooseJpsi2MuMu")
 
 _BsCuts = "(ADMASS('B_s0')<300*MeV) & (BPVLTFITCHI2()<14) & (VFASPF(VCHI2)<20)"
 _Bs = CombineParticles( name,
-                        DecayDescriptor = "[B_s0 -> J/psi(1S) phi(1020)]cc",
+                        DecayDescriptor = "B_s0 -> J/psi(1S) phi(1020)",
                         MotherCut = _BsCuts)
 
 Bs = Selection ( "Sel"+name,

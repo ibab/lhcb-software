@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKSBiased.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBd2JpsiKSBiased.py,v 1.2 2009-11-22 14:38:23 gcowan Exp $
 
 __author__ = 'Fernando Rodrigues'
 __date__ = '28/08/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiKS biased stripping selection using LoKi::Hybrid and python
@@ -49,7 +49,7 @@ KSDDForBd2Jpsi2MuMuKS.Code = "  (MINTREE( ('pi+'==ABSID), P) >2.*GeV)"\
 # Bd -> JpsiKS (Biased) #
 #########################
 Bd2JpsiKSBiased = CombineParticles("Bd2JpsiKSBiased")
-Bd2JpsiKSBiased.DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc"
+Bd2JpsiKSBiased.DecayDescriptor = "B0 -> J/psi(1S) KS0"
 Bd2JpsiKSBiased.InputLocations = ["JpsiForBd2Jpsi2MuMuKS",
                                   "KSLLForBd2Jpsi2MuMuKS",
                                   "KSDDForBd2Jpsi2MuMuKS"]

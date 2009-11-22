@@ -4,6 +4,10 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-22 - Greig Cowan
+ - Removed unneccesary cc from some stripping line DecayDescriptors (JpsiKS,
+   PhiPhi).
+
 !===================== StrippingSelections v1r10 2009-11-19 ===================
 
 ! 2009-11-18 - Anton Poluektov 

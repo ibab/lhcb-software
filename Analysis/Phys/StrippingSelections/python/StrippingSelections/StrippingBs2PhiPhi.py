@@ -1,8 +1,8 @@
-# $Id: StrippingBs2PhiPhi.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBs2PhiPhi.py,v 1.2 2009-11-22 14:38:23 gcowan Exp $
 
 __author__ = 'Sebastian Schleich'
 __date__ = '05/10/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bs->PhiPhi stripping selection
@@ -31,7 +31,7 @@ Bs2PhiPhiPhi2KK = StrippingMember ( FilterDesktop
 
 Bs2PhiPhi = StrippingMember( CombineParticles
           , "Bs2PhiPhi"
-          , DecayDescriptor =  "[B_s0 -> phi(1020) phi(1020)]cc"
+          , DecayDescriptor =  "B_s0 -> phi(1020) phi(1020)"
           , InputLocations  = [ "%Bs2PhiPhiPhi2KK" ]
           , DaughtersCuts   = {"phi(1020)" : "PT>650*MeV"}
           , CombinationCut  = "(ADAMASS('B_s0')<300*MeV)&(ACHILD(PT,1)*ACHILD(PT,2)>3.2*GeV*GeV)"

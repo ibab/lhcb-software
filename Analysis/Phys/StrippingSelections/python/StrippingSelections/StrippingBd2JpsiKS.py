@@ -1,8 +1,8 @@
-# $Id: StrippingBd2JpsiKS.py,v 1.1 2009-10-13 13:24:16 poluekt Exp $
+# $Id: StrippingBd2JpsiKS.py,v 1.2 2009-11-22 14:38:23 gcowan Exp $
 
 __author__ = 'Greig Cowan'
 __date__ = '20/05/2009'
-__version__ = '$Revision: 1.1 $'
+__version__ = '$Revision: 1.2 $'
 
 '''
 Bd->JpsiKS stripping selection using LoKi::Hybrid and python
@@ -41,7 +41,7 @@ KSDDForBd2Jpsi2MuMuKS.Code = "  (MINTREE( ('pi+'==ABSID), P) >2.*GeV)"\
 # Bd -> JpsiKS #
 ################
 Bd2JpsiKS = CombineParticles("StripBd2JpsiKS")
-Bd2JpsiKS.DecayDescriptor = "[B0 -> J/psi(1S) KS0]cc"
+Bd2JpsiKS.DecayDescriptor = "B0 -> J/psi(1S) KS0"
 Bd2JpsiKS.InputLocations = ["StripKSLLForBd2Jpsi2MuMuKS",
                             "StripKSDDForBd2Jpsi2MuMuKS",
                             "StdLTUnbiasedJpsi2MuMu"]
