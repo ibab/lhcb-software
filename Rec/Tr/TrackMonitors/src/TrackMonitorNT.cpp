@@ -1,4 +1,4 @@
-// $Id: TrackMonitorNT.cpp,v 1.9 2009-10-08 14:48:55 wouter Exp $
+// $Id: TrackMonitorNT.cpp,v 1.10 2009-11-22 00:19:09 wouter Exp $
 // Include files 
 
 // from Gaudi
@@ -172,7 +172,7 @@ void TrackMonitorNT::fillNtuple(const LHCb::Track* aTrack,
 
  
 
-  int maxVelo = 40; 
+  int maxVelo = 50; 
   std::vector<double> Velo_res;
   std::vector<double> Velo_pull;
   std::vector<bool>   Velo_rType;
