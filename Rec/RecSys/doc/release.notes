@@ -8,6 +8,8 @@ Purpose: LHCb reconstruction packages.
 </PRE><H1><A NAME=v7r8>2009-11-16 RecSys v7r9</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r2
 
+- Add SpecialData beamGas in Configuration.py
+
 - Packages updated: Rec/LumiAlgs v3r1, Velo/VeloRecMonitors v2r3,
 		Tf/TrackSys v4r28, Tr/TrackFitter v2r40
 

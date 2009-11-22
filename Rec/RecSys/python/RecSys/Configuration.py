@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.18 2009-11-09 18:41:53 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.19 2009-11-22 15:11:23 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -37,7 +37,7 @@ class RecSysConf(LHCbConfigurableUser):
     ## Default reconstruction sequence for field-off data
     DefaultSubDetsFieldOff = DefaultTrackingSubdets+["CALO","RICH","MUON","PROTO"]
     ## List of known special data processing options
-    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff" ]
+    KnownSpecialData = [ "cosmics", "veloOpen", "fieldOff", "beamGas" ]
     
     ## Steering options
     __slots__ = {
