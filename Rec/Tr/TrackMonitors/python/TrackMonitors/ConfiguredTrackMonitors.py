@@ -1,7 +1,8 @@
 from Configurables import (GaudiSequencer, TrackMonitor, TrackVertexMonitor,
                            TrackAlignMonitor,
                            TrackFitMatchMonitor,TrackV0Monitor,TrackDiMuonMonitor,
-                           OTTrackMonitor, OTHitEfficiencyMonitor,TrackCaloMatchMonitor)
+                           OTTrackMonitor, OTHitEfficiencyMonitor,OTTimeMonitor,
+                           TrackCaloMatchMonitor)
 from Configurables import (RecSysConf, TrackSys)
 
 def ConfiguredTrackMonitorSequence(Name = "TrackMonitorSequence",
@@ -28,9 +29,13 @@ def ConfiguredOTMonitorSequence(Name = "MoniOTSeq",
     seq = GaudiSequencer(Name)
     seq.Members.append( OTTrackMonitor(HistoPrint=HistoPrint) )
     seq.Members.append( OTHitEfficiencyMonitor(HistoPrint=HistoPrint) )
+    seq.Members.append( OTTimeMonitor(HistoPrint=HistoPrint) )
+
     from Configurables import TrackSys
     if TrackSys().cosmics():
         OTTrackMonitor().RawBankDecoder = 'OTMultiBXRawBankDecoder'
         OTHitEfficiencyMonitor().RawBankDecoder = 'OTMultiBXRawBankDecoder'
+        OTTimeMonitor().RawBankDecoder = 'OTMultiBXRawBankDecoder'
+
     return seq
 
