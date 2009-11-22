@@ -1,5 +1,5 @@
 package LHCbSys
-version v28r2
+version v28r3
 
 branches doc cmt
 
@@ -24,7 +24,7 @@ use DetSys                v17r0   Det     # Marco Cattaneo
 use BcmDet                v1r3    Det     # Magnus Lieng
 use CaloDet               v10r3   Det     # Olivier Deschamps
 use CaloDetXmlCnv         v3r2    Det     # Olivier Deschamps
-use DDDB                  v1r23   Det     # Marco Cattaneo
+use DDDB                  v1r24   Det     # Marco Cattaneo
 use DetCond               v12r7   Det     # Marco Clemencic
 use DetDesc               v18r16  Det     # Marco Clemencic, Juan Palacios
 use DetDescChecks         v4r11   Det     # Marco Clemencic, Ivan Belyaev
@@ -33,7 +33,7 @@ use DetDescSvc            v2r3p1  Det     # Marco Clemencic, Matt Needham
 use Magnet                v5r4    Det     # Marco Cattaneo
 use MuonDet               v9r0    Det     # Alessia Satta, Alessio Sarti
 use OTDet                 v8r3    Det     # Jan Amoraal
-use RichDet               v13r0   Det     # Chris Jones
+use RichDet               v13r1   Det     # Chris Jones
 use STDet                 v4r15   Det     # Jeroen van Tilburg, Matt Needham
 use VeloDet               v13r8   Det     # Mark Tobin, Kurt Rinnert
 use VeloPixDet            v1r1    Det     # Victor Coco
@@ -54,7 +54,7 @@ use L0Event               v17r7p1 Event   # Olivier Deschamps, Julien Cogan
 use MCEvent               v2r15p2 Event   # Gloria Corti and sub-det experts
 use PackedEvent           v3r7    Event   # Marco Cattaneo, Olivier Callot
 use PhysEvent             v11r10  Event   # Patrick Koppenburg, Juan Palacios
-use RecEvent              v2r23   Event   # Marco Cattaneo and sub-det experts
+use RecEvent              v2r24   Event   # Marco Cattaneo and sub-det experts
 use TrackEvent            v5r2    Event   # Wouter Hulsbergen
 use VeloEvent             v16r7p1 Event   # Tomasz Szumlak, Chris Parkes
 
@@ -69,8 +69,8 @@ use GaudiObjDesc          v11r8
 use HistoStrings          v1r0    Kernel  # Vanya Belyaev 
 use HltInterfaces         v3r0    Kernel  # Patrick Koppenburg
 use KernelSys             v12r1   Kernel  # Marco Cattaneo
-use LHCbAlgs              v2r30   Kernel  # Marco Cattaneo
-use LHCbKernel            v11r9   Kernel  # Marco Cattaneo
+use LHCbAlgs              v2r31   Kernel  # Marco Cattaneo
+use LHCbKernel            v11r9p1 Kernel  # Marco Cattaneo
 use LHCbMath              v3r14   Kernel  # Juan Palacios
 use MCInterfaces          v1r10   Kernel  # Marco Cattaneo et al.
 use PartProp              v1r5    Kernel  # Vanya Belyaev 
@@ -99,14 +99,14 @@ use LinkerInstances       v3r5    Event   # Thomas Ruf
 use LoKi                  v8r1   Phys    # Ivan Belyaev
 use LoKiAlgo              v8r1   Phys    # Ivan Belyaev
 use LoKiAlgoMC            v8r1   Phys    # Ivan Belyaev
-use LoKiArrayFunctors     v8r5    Phys    # Ivan Belyaev
-use LoKiCore              v9r5p1  Phys    # Ivan Belyaev
+use LoKiArrayFunctors     v8r6    Phys    # Ivan Belyaev
+use LoKiCore              v9r6    Phys    # Ivan Belyaev
 use LoKiGen               v8r7    Phys    # Ivan Belyaev
 use LoKiGenMC             v8r1   Phys    # Ivan Belyaev
 use LoKiHlt               v2r4   Phys    # Ivan Belyaev
 use LoKiMC                v8r7    Phys    # Ivan Belyaev
-use LoKiNumbers           v8r3    Phys    # Ivan Belyaev
-use LoKiPhys              v8r10   Phys    # Ivan Belyaev
+use LoKiNumbers           v8r3p1  Phys    # Ivan Belyaev
+use LoKiPhys              v8r11   Phys    # Ivan Belyaev
 use LoKiPhysMC            v8r5    Phys    # Ivan Belyaev
 use MDF_ROOT              v1r2   DAQ     # Markus Frank
 use PatKernel             v2r3p1  Tf      # Stephanie Hansmann-Menzemer
