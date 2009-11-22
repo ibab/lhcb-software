@@ -4,9 +4,11 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v2r1 2009-11-22 ==========================
 ! 2009-11-16 - Mark Tobin
- - Fix an even more stupid bug in STErrorMonitor which was introduced as plot2D, book2D,
- AIDA and root all have the number of bins at a different places in their interfaces.
+ - Fix an even more stupid bug in STErrorMonitor which was introduced as plot2D,
+   book2D, AIDA and root all have the number of bins at a different places in
+   their interfaces.
 
 !======================= STMonitors v2r0 2009-11-13 ==========================
 ! 2009-11-12 - Mark Tobin
