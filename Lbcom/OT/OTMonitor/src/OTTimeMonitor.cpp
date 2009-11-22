@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.cpp,v 1.10 2009-11-22 00:13:12 wouter Exp $
+// $Id: OTTimeMonitor.cpp,v 1.11 2009-11-22 08:29:50 wouter Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -97,7 +97,8 @@ StatusCode OTTimeMonitor::finalize()
   if (fullDetail()) {
     m_occVsxHisto->scale(scalePerEvent);
   }
-  
+
+  m_decoder.release().ignore();
   return GaudiHistoAlg::finalize();
 }
 
