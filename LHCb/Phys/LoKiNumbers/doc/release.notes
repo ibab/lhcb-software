@@ -4,6 +4,7 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+!========================== LoKiNumbers v8r3p1 2009-11-22 =====================
 ! 2009-11-21 - Vanya Belyaev
 
  - python/LoKiNumbers/test.py
