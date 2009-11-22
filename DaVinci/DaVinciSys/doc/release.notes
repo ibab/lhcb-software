@@ -3,8 +3,23 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r5p1>2009-11-22 DaVinci v24r5p1. Release for first beam. </A></H1><PRE>
 
-  * R Lambert: Extra tests for files from Brunel v35r8, see savannah task 12602
+Based on Phys v8r12p2, Analysis v3r12p1, Rec v7r8p1, HLT v7r2p1, Lbcom v7r8p1, LHCb v28r3, Gaudi v21r6
+
+ * Quick LHCb v28r3-based release for first 2010 beam.
+
+ * Highlights:
+   - New embedded monitors in CombineParticles and FilterDesktop (Vanya)
+      . See Phys/DaVinciTools v19r5 release notes for more details.
+   - Extra tests for files from Brunel v35r8, see savannah task 12602 (R. Lambert)
+
+ * v24r5 highlights: 
+   - New ODIN type.
+   - HLT: Hlt2 TES renaming, new lines, Lumi re-structuring.
+   - PHYS: fixes for new DST contents. Various internal fixes and improvements.
+   - ANALYSIS: Fixes and additions to stripping framework/lines, MicroDST saving of
+	       complete Flavour Tagging.
 
 </PRE><H1><A NAME=v24r5>2009-11-20 DaVinci v24r5. Release for first beam. </A></H1><PRE>
 
