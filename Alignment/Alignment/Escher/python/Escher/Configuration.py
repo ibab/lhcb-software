@@ -3,7 +3,7 @@
 #  @author Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.10 2009-11-19 21:40:06 wouter Exp $"
+__version__ = "$Id: Configuration.py,v 1.11 2009-11-22 21:41:33 wouter Exp $"
 __author__  = "Johan Blouw <Johan.Blouw@physi.uni-heidelberg.de>"
 
 from Gaudi.Configuration  import *
@@ -285,8 +285,9 @@ class Escher(LHCbConfigurableUser):
         log.info("Initializing sequences!")
         self.setOtherProps(RecSysConf(),["SpecialData","RecoSequence","Context","OutputType"])
         # there is a bug in setOtherProps, so we cannot use it to set the MoniSequence.
-        #self.setOtherProps(RecMoniConf(),["MoniSequence","Context","OutputType"])
+        self.setOtherProps(RecMoniConf(),["Context","OutputType"])
         RecMoniConf().MoniSequence = self.getProp("MoniSequence")
+        self.setOtherProps(TAlignment(),["DatasetName"])
         
         self.defineGeometry()
         self.defineEvents()
