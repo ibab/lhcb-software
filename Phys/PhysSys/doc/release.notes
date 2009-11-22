@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r12p2>2009-11-22 Phys v8r12p2 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v8r12p2                                #
+###############################################################################
+
+- Based on LHCb v28r3 and Gaudi v21r6
+ * Build on patch release of LHCb. Add monitoring to DaVinciTools. Otherwise the
+   same as v8r12p1.
+
+
 </PRE><H1><A NAME=v8r12p1>2009-11-19 Phys v8r12p1 </A></H1><PRE>
 
 ###############################################################################
