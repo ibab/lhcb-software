@@ -3,6 +3,16 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r12p1>2009-11-22 Analysis v3r12p1 </A></H1><PRE>
+
+ - Based on patch release LHCb v28r3, and Gaudi v21r6
+
+ - v3r12 Highlights
+   * Various internal fixes.
+   * MicroDST: posibility to clone LHCb::FlavourTag with all tagging particles.
+   * Fixes/additions to stripping
+
+
 </PRE><H1><A NAME=v3r12>2009-11-17 Analysis v3r12 </A></H1><PRE>
 
  - Based on LHCb v28r2 and Gaudi v21r6
