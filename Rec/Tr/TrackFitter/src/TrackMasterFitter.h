@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.h,v 1.28 2009-11-12 16:42:31 kholubye Exp $
+// $Id: TrackMasterFitter.h,v 1.29 2009-11-22 09:02:32 wouter Exp $
 #ifndef TRACKFITTER_TRACKMASTERFITTER_H 
 #define TRACKFITTER_TRACKMASTERFITTER_H 1
 
@@ -130,6 +130,7 @@ private:
   double m_maxDeltaChi2Converged ;    ///< Maximum change in chisquare for converged fit
 
   double m_scatteringPt ;           ///< transverse momentum used for scattering if track has no good momentum estimate
+  double m_scatteringP ;            ///< momentum used for scattering in e.g. magnet off data
   double m_maxMomentumForScattering ; ///< Maximum momentum used for scattering
   size_t m_minNumVeloRHits   ; ///< Minimum number of VeloR hits
   size_t m_minNumVeloPhiHits ; ///< Minimum number of VeloPhi hits

@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.78 2009-11-12 16:42:31 kholubye Exp $
+// $Id: TrackMasterFitter.cpp,v 1.79 2009-11-22 09:02:32 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -96,6 +96,7 @@ TrackMasterFitter::TrackMasterFitter( const std::string& type,
   declareProperty( "ApplyMaterialCorrections", m_applyMaterialCorrections = true );
   declareProperty( "ApplyEnergyLossCorr", m_applyEnergyLossCorrections = true ) ;
   declareProperty( "TransverseMomentumForScattering", m_scatteringPt = 400.*Gaudi::Units::MeV );
+  declareProperty( "MomentumForScattering", m_scatteringP = -1 );
   declareProperty( "MaxMomentumForScattering", m_maxMomentumForScattering = 500.*Gaudi::Units::GeV );
   declareProperty( "MinNumVeloRHitsForOutlierRemoval",   m_minNumVeloRHits   = 2 ) ;
   declareProperty( "MinNumVeloPhiHitsForOutlierRemoval", m_minNumVeloPhiHits = 2 ) ;
@@ -698,6 +699,8 @@ StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb
       double tanth  = std::max(sqrt( slope2/(1+slope2)),1e-4) ;
       scatteringMomentum = m_scatteringPt/tanth ;
     }
+    // if m_scatteringP is set, use it
+    if( m_scatteringP>0 ) scatteringMomentum = m_scatteringP ;
 
     scatteringMomentum = std::min( scatteringMomentum, m_maxMomentumForScattering );
     fitresult.setPScatter( scatteringMomentum ) ;
