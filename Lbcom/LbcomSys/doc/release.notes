@@ -6,6 +6,26 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r9>2009-11-23 LbcomSys v7r9</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r3
+
+- Packages modified: L0Calo v10r1, OTMonitor v3r0, STMonitors v2r1, VeloDAQ v4r11
+
+- In L0Calo v10r1
+  . L0CaloCompare.cpp: fix the comparison of SpdMult and SumEt
+
+- In OTMonitor v3r0
+  . Modified OTTimeMonitor to work with LiteTimes
+
+- In STMonitors v2r1
+  . Fix an even more stupid bug in STErrorMonitor which was introduced as plot2D,
+    book2D, AIDA and root all have the number of bins at a different places in
+    their interfaces.
+
+- In VeloDAQ v4r11
+  . Modify PrepareVeloFullRawBuffer algorithm to handle round-robin data
+  . Add protection in SmartVeloErrorDecoder against corrupted data
+
 </PRE><H1><A NAME=v7r8>2009-11-16 LbcomSys v7r8</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r2
 
