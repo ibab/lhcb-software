@@ -1,4 +1,4 @@
-// $Id: VeloExpertClusterMonitor.cpp,v 1.10 2009-11-22 00:05:18 jmylroie Exp $
+// $Id: VeloExpertClusterMonitor.cpp,v 1.11 2009-11-23 14:06:36 jmylroie Exp $
 // Include files// from Gaudi
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "GaudiKernel/AlgFactory.h" 
@@ -94,28 +94,27 @@ StatusCode Velo::VeloExpertClusterMonitor::initialize() {
     
     sprintf( hname, "raw/non_corr/adc/adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID name = hname;
-    sprintf( htitle, "raw/non_corr/adc/adc_cluster_sen_%03i", no );
+    sprintf( htitle, "adc_cluster_sen_%03i", no );
     const GaudiAlg::HistoID title = htitle;
     
     m_adc_hist[i][0] = book1D( name, title, 0, 100, 1000 );
   
-    if ( exist<LHCb::Tracks>( m_trackCont ) ) {
-      sprintf( hname, "ontrack/non_corr/adc/adc_cluster_sen_%03i", no );
-      const GaudiAlg::HistoID on_name = hname;
-      sprintf( htitle, "ontrack/non_corr/adc/adc_cluster_sen_%03i", no );
-      const GaudiAlg::HistoID on_title = htitle;
-      
-      m_adc_hist[i][1] = book1D( on_name, on_title, 0, 100, 1000 );
-      
-      sprintf( hname, "ontrack/corr/adc/adc_cluster_sen_%03i", no );
-      const GaudiAlg::HistoID corr_name = hname;
-      sprintf( htitle, "ontrack/corr/adc/adc_cluster_sen_%03i", no );
-      const GaudiAlg::HistoID corr_title = htitle;
-      
-      m_adc_hist[i][2] = book1D( corr_name, corr_title, 0, 100, 1000 );
-    }
+    
+    sprintf( hname, "ontrack/non_corr/adc/adc_cluster_sen_%03i", no );
+    const GaudiAlg::HistoID on_name = hname;
+    sprintf( htitle, "adc_cluster_sen_%03i", no );
+    const GaudiAlg::HistoID on_title = htitle;
+    
+    m_adc_hist[i][1] = book1D( on_name, on_title, 0, 100, 1000 );
+    
+    sprintf( hname, "ontrack/corr/adc/adc_cluster_sen_%03i", no );
+    const GaudiAlg::HistoID corr_name = hname;
+    sprintf( htitle, "adc_cluster_sen_%03i", no );
+    const GaudiAlg::HistoID corr_title = htitle;
+    m_adc_hist[i][2] = book1D( corr_name, corr_title, 0, 100, 1000 );
+    
   }
-	
+  
 
   
   return StatusCode::SUCCESS;
@@ -515,26 +514,15 @@ StatusCode Velo::VeloExpertClusterMonitor::plotSensorsADC(double& adc, std::stri
       sensor = sensor_num;
     }
     if (ClusterType == "raw"){
-      //      std::cout<<"Raw plots\n";
       m_adc_hist[sensor][0]->fill (adc);
     } else if (ClusterType == "ontrack"){
       if (corr == "/non_corr"){
-	//	std::cout<<"Raw plots\n";
 	m_adc_hist[sensor][1]->fill (adc);
       }else if ( corr == "/corr"){
-	//	std::cout<<"Raw plots\n";
 	m_adc_hist[sensor][2]->fill (adc);
-	
       }
     }
     plot1D(adc, ClusterType+corr+"/cluster_adc", "Cluster ADC ", 0, 100, 100);
-    //   if(sensor_num!= -400){
-    //     std::string senName;
-    //     boost::format fmtEvt ( "adc_cluster_sen_%03d" ) ;
-    //     fmtEvt % sensor_num ;
-    //     senName = fmtEvt.str() ; 
-    //     plot1D(adc, ClusterType+corr+"/adc/"+senName, "Cluster ADC ", 0, 100, 100);
-    //   }
   }
   return StatusCode::SUCCESS;
 }
