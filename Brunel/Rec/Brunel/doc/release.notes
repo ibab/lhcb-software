@@ -7,13 +7,16 @@ Purpose: LHCb reconstruction program
  - Changes to tests
    . fixedfile tests added, the file used is coded into the tests, and all boole
      v19r8 file types are tested
-   . fixedfile-boole-v19r8-mc09-digi-extended-spillover
-	 . fixedfile-boole-v19r8-mc09-digi-extended
-   . fixedfile-boole-v19r8-mc09-digi
-   . fixedfile-boole-v19r8-mc09-mdf
+   . fixedfile-boole-v19r8-2009-digi-extended-spillover
+	 . fixedfile-boole-v19r8-2009-digi-extended
+   . fixedfile-boole-v19r8-2009-digi
+   . fixedfile-boole-v19r8-2009-mdf
+   . Do not fail tests if "Delta Memory for the event exceeds 3*sigma"
 
  - Changes to references to reflect changes in Brunel v35r9 output:
    . New VeloTrackMonitor histograms (VeloRecMonitors v2r3)
+   . Change to printout of track fitter names (TrackFitter v2r40)
+   . OTTimeMonitor added to MoniOTSeq (TrackMonitors v1r16)
 
 </PRE><H1><A NAME=v35r8p1>2009-11-22 Brunel v35r8p1</A></H1><PRE>
  - No changes in Rec/Brunel relative to v35r8

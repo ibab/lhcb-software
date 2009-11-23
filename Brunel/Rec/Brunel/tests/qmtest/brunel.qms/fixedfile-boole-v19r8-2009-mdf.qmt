@@ -5,9 +5,9 @@
   <argument name="args"><set>
     <text>$BRUNELROOT/tests/options/testBrunel-defaults.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Boole-v19r8-30000000-100ev-20091112-vc-md100.digi' TYP='POOL_ROOTTREE' OPT='READ'"]; Brunel().InputType="DIGI"; Brunel().DataType="MC09";</text>
+    <text>from Brunel.Configuration import *; from Configurables import LHCbApp; LHCbApp().DDDBtag="head-20091112"; LHCbApp().CondDBtag="sim-20091112-vc-md100"; EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/user/c/cattanem/testFiles/Boole-v19r8-30000000-100ev-20091112-vc-md100.mdf'  SVC='LHCb::MDFSelector'"]; Brunel().InputType="MDF"; Brunel().DataType="2009"; Brunel().Simulation=True; </text>
   </set></argument>
-  <argument name="reference"><text>../refs/fixedfile-boole-v19r8-mc09-digi.ref</text></argument>
+  <argument name="reference"><text>../refs/fixedfile-boole-v19r8-2009-mdf.ref</text></argument>
   <argument name="validator"><text>
 from Brunel.QMTest.BrunelExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
