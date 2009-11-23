@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.4 2009-11-17 14:54:08 akozlins Exp $
+! $Id: release.notes,v 1.5 2009-11-23 12:36:30 jblouw Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
+
+</PRE><H1><A NAME=v1r2>2009-11-23 OTCAlibration v1r2</A></H1><PRE>
+! 2009-11-23 Johan Blouw
+ - release version v1r2 for Alignment v4r4
+
 
 ! 2009-11-17 Alexandr Kozlinskiy
   - added new algorithm T0ModuleClbrAlg which will be used for timing
