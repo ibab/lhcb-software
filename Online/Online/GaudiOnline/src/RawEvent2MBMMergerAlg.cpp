@@ -1,4 +1,4 @@
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.13 2009-11-11 13:50:05 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/RawEvent2MBMMergerAlg.cpp,v 1.14 2009-11-23 07:26:46 frankb Exp $
 //  ====================================================================
 //  DecisionSetterAlg.cpp
 //  --------------------------------------------------------------------
@@ -52,6 +52,8 @@ namespace LHCb  {
     unsigned int  m_routingBits;
     /// Property: Word 4 of trigger mask for timeout events (Routing bits)
     unsigned int  m_timeoutBits;
+    /// Property: Force writing the event on timeout incident
+    int           m_forceEvent;
     /// Monitoring quantity: Counter of number of bytes sent
     int           m_bytesDeclared;
     /// Monitoring quantity: Counter for number of events with errors (Timeout, ...)
@@ -60,6 +62,7 @@ namespace LHCb  {
     int           m_addFID;
     /// Flag to indicate that a timeout occurred during processing
     int           m_eventTMO;
+    
 
   public:
     /// Standard algorithm constructor
@@ -71,6 +74,7 @@ namespace LHCb  {
       declareProperty("RoutingBits",    m_routingBits=NO_ROUTING);
       declareProperty("TimeoutBits",    m_timeoutBits=NO_ROUTING);
       declareProperty("AddFID",         m_addFID=0);
+      declareProperty("ForceEvent",     m_forceEvent=0);
       declareProperty("FIDLocation",    m_fidLocation="/Event");
     }
     /// Standard Destructor
@@ -144,7 +148,11 @@ namespace LHCb  {
 	err << MSG::WARNING << inc.type() << ": Write data after timeout during event processing." << std::endl;
 	++m_badEvents;
 	m_eventTMO = 1;
-	//writeEvent(m_timeoutBits);
+	if ( m_forceEvent ) {
+	  if ( writeEvent(m_timeoutBits).isSuccess() ) {
+	    m_eventTMO = 0;
+	  }
+	}
       }
     }
 

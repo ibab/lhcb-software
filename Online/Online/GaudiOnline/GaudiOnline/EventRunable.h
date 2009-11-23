@@ -1,4 +1,4 @@
-// $Id: EventRunable.h,v 1.5 2009-11-11 13:50:04 frankb Exp $
+// $Id: EventRunable.h,v 1.6 2009-11-23 07:26:46 frankb Exp $
 #ifndef GAUDISVC_EVENTRUNABLE_H
 #define GAUDISVC_EVENTRUNABLE_H 1
 
@@ -44,6 +44,8 @@ namespace LHCb  {
     int               m_evtMax;
     /// Property: Number of consecutive processing errors to stop
     int               m_nerrStop;
+    /// Property: Force exit after event timeout
+    int               m_forceTMOExit;
     /// Counter to consecutive processing errors
     int               m_nerr;
     /// Monitoring quantity: Number of events processed

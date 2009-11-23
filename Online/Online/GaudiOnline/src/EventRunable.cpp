@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.15 2009-11-19 15:29:48 niko Exp $
+// $Id: EventRunable.cpp,v 1.16 2009-11-23 07:26:46 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -24,6 +24,7 @@ EventRunable::EventRunable(const string& nam, ISvcLocator* svcLoc)
   declareProperty("NumErrorToStop", m_nerrStop=-1);
   declareProperty("MEPManager",     m_mepMgrName="LHCb::MEPManager/MEPManager");
   declareProperty("TimeoutIncident",m_tmoIncident="DAQ_TIMEOUT");
+  declareProperty("ForceTMOExit",   m_forceTMOExit = 0);
 }
 
 // Standard Destructor
@@ -125,15 +126,23 @@ StatusCode EventRunable::run()   {
 	sc = ui->nextEvent(m_evtMax);
       }
       catch(const exception& e) {
-	sc = StatusCode::SUCCESS;
+	sc = m_eventTMO ? StatusCode::SUCCESS : StatusCode::FAILURE;
 	info(string("Caught unhandled exception in main eventy loop:")+e.what());
       }
       catch(...) {
-	sc = StatusCode::FAILURE;
+	sc = m_eventTMO ? StatusCode::SUCCESS : StatusCode::FAILURE;
 	info(string("Caught unknown exception in main eventy loop."));
       }
       if ( sc.isSuccess() )  {
         m_evtCount++;
+	if ( m_eventTMO )    {
+	  m_incidentSvc->fireIncident(Incident(name(),"EVENT_TIMEOUT"));
+	  if ( m_forceTMOExit ) {
+	    Incident incident(name(),"DAQ_ERROR");
+	    m_incidentSvc->fireIncident(incident);
+	    return StatusCode::FAILURE;
+	  }
+	}
         if ( m_nerr > 0 )  {
           Incident incident(name(),"DAQ_ERROR_CLEAR");
           m_incidentSvc->fireIncident(incident);
@@ -143,9 +152,6 @@ StatusCode EventRunable::run()   {
           info("End of event input reached.");
           break;
         }
-	if ( m_eventTMO )    {
-	  m_incidentSvc->fireIncident(Incident(name(),"EVENT_TIMEOUT"));
-	}
         continue;
       }
       if ( !m_receiveEvts ) {	
