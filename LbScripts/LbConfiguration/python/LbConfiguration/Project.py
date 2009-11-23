@@ -10,7 +10,8 @@ project_names = ["Gaudi", "LHCb", "Lbcom", "Rec", "Boole", "Brunel" ,
                  "Gauss", "Phys", "Analysis", "Hlt", "Alignment", "Moore",
                  "Online", "Euler", "Geant4", "DaVinci", "Bender", "Orwell",
                  "Panoramix", "LbScripts", "Dirac", "LHCbGrid", "Panoptes", 
-                 "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga"]
+                 "Curie", "Vetra", "Compat", "VanDerMeer", "Ganga",
+                 "LHCbDIRAC", "Integration" ]
 
 # ------------------------------------------------------------------------------------
 
@@ -214,6 +215,12 @@ DaVinci.setFullSize(800000)#IGNORE:E0602
 Dirac.disableSetenvAlias()#IGNORE:E0602
 Dirac.setFullSize(500000)#IGNORE:E0602
 
+# LHCbDirac
+LHCbDIRAC.disableSetenvAlias()#IGNORE:E0602
+LHCbDIRAC.setFullSize(500000)#IGNORE:E0602
+LHCbDIRAC.setAFSVolumeName("LBDIRAC")#IGNORE:E0602
+
+
 # Euler
 Euler.setApplicationPackage("Trig/Euler")#IGNORE:E0602
 Euler.setFullSize(6000)#IGNORE:E0602
@@ -244,6 +251,11 @@ Geant4.setBaseName("GAUDI")#IGNORE:E0602
 
 # Hlt
 Hlt.setFullSize(2500000)#IGNORE:E0602
+
+# Integration
+Integration.setFullSize(2500000)#IGNORE:E0602
+Integration.setAFSVolumeName("INTEG")#IGNORE:E0602
+
 
 # Lbcom
 Lbcom.setFullSize(1500000)#IGNORE:E0602

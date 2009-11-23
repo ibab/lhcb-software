@@ -1,10 +1,12 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/Project.py: added full support for the projects LHCbDIRAC 
+	and Integration.
 	* python/LbConfiguration/LbLogin.py: 
 	- fixed the CMTCONFIG reuse. If the initial CMTCONFIG is a 
 	debug one (ends with _dbg or -dbg) the final values after LbLogin will be in debug as well.
 	Before it was relying on the "debug" argument passed to LbLogin.
-    - simplied the copy of the returned environment dictionary.
+    - simplified the copy of the returned environment dictionary.
     
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
