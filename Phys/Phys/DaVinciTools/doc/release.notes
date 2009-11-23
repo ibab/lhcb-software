@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.491 2009-11-23 16:57:30 pkoppenb Exp $
+! $Id: release.notes,v 1.492 2009-11-23 16:58:21 pkoppenb Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
@@ -6,6 +6,8 @@
 
 ! 2009-11-23 - Patrick Koppenburg
  - Change from PV2D to PV3D for Hlt2
+   . Requires tags pkoppenb-20091123 of Hlt2SharedParticles and HltLine.
+ - v19r6
 
 !========================== DaVinciTools v19r5 2009-11-22 ===================
 
