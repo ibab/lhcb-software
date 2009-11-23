@@ -1,10 +1,10 @@
 project MOORE
 
-use PHYS    PHYS_v8r12
-use HLT     HLT_v7r2
-use LBCOM	LBCOM_v7r8
-use REC		REC_v7r8
-use ONLINE  ONLINE_v4r31
+use PHYS    PHYS_v8r12p2
+use HLT     HLT_v7r3
+use LBCOM	LBCOM_v7r9
+use REC		REC_v7r9
+use ONLINE  ONLINE_v4r33
 
 container       MooreSys
 build_strategy	with_installarea
