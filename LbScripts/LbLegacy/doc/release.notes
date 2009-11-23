@@ -1,5 +1,9 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v2r4
+
+2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbLegacy/install_project.py: moved to LbScripts v4r4
 	* scripts/mkLCGCMTtar: 
 	* scripts/mkLHCbtar: 
