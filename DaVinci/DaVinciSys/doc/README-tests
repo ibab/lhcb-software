@@ -30,6 +30,7 @@ cmt qmtest_run davincisys.hlt.test_hlt12_mc09 >! hlt12_mc09 &
 cmt qmtest_run davincisys.hlt.test_hlt12_mc09_dev >! hlt12_mc09_dev & 
 cmt qmtest_run davincisys.hlt.test_hlt12_mc09_withlumi >! hlt12_mc09_withlumi & 
 cmt qmtest_run davincisys.hlt.test_hlt12_mdf >! hlt12_mdf & 
+cmt qmtest_run davincisys.hlt.test_hltMC >! hltMC & 
 cmt qmtest_run davincisys.kali.pi0 >! pi0 & 
 
 # require some of the above :
