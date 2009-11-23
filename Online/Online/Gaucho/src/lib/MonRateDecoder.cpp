@@ -183,9 +183,9 @@ void MonRateDecoder::update(MonRate *monRate) {
   msg << MSG::DEBUG << "m_newNumCounters = " << m_newNumCounters <<endreq;
 
   msg << MSG::DEBUG << "number of processes = " << m_newNumEntries <<endreq;
-
-  msg << MSG::DEBUG << "transfering " << m_oldNumCounters << " new to old counters " << endreq;
-  for (int i = 0; i < m_oldNumCounters; i++) {
+  //this used to be m_oldNumCounters - which could be unitialized the first time round
+  msg << MSG::DEBUG << "transfering " << m_newNumCounters << " new to old counters " << endreq;
+  for (int i = 0; i < m_newNumCounters; i++) {
     m_oldCounters[i] = m_newCounters[i];
   }
 
