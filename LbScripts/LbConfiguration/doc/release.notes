@@ -1,5 +1,9 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* cmt/requirements: release of version v4r4
+
+2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* python/LbConfiguration/Project.py: added full support for the projects LHCbDIRAC 
 	and Integration.
 	* python/LbConfiguration/LbLogin.py: 
