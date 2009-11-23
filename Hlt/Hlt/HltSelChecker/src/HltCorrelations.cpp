@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.4 2009-11-23 13:32:50 pkoppenb Exp $
+// $Id: HltCorrelations.cpp,v 1.5 2009-11-23 13:33:47 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -114,7 +114,6 @@ StatusCode HltCorrelations::execute() {
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
     for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
-      if (*i==90) info() << "Accepted bit 90" << endmsg ;
       if (!m_algoCorr->fillResult(bitX(*i),true));
     }
   }
