@@ -3,6 +3,50 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v35r9>2009-11-23 Brunel v35r9</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
+ and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2009 data-taking
+Output requires DaVinci v24r5p1 or later
+
+ - Configuration changes:
+   . Fixes to ConfiguredFitter
+   . Changed default tags for 2009 data (DDDB v1r24, SQLDDDB v5r15):
+     o head-20091120         for DDDB
+     o head-20091120         for LHCBCOND
+     o sim-20091112-vc-md100 for SIMCOND
+
+ - New features:
+   . Add special tuning for beam gas events (using VeloGeneric). Switched on by 
+     importOptions("$APPCONFIGOPTS/Brunel/beamGas.py")
+     (AppConfig v3r22, TrackSys v4r28, RecSys v7r9)
+
+ - New tuning:
+   . Various protections to handle real data (VeloDAQ v4r11)
+
+ - Bug fixes:
+   . Fix untested StatusCodes in RichAlignmentMonitor (Rich/RichRecQC v2r43p1)
+   . Fixed bug in HitPattern affecting velo pattern (LHCbKernel v11r9p1)
+
+ - Changes to monitoring:
+   . Several changes for first data (VeloRecMonitors v2r3)
+   . Include OTTimeMonitor in OT sequence
+     (TrackMonitors v1r16, OTMonitor v3r0,LHCbKernel v11r9p1)
+
+ - Changes to example options
+   . Add options/2009-BeamGas.py: example options for 2009 beam gas events
+     (needs AppConfig v3r22)
+
+ - Changes to tests
+   . fixedfile tests added, the file used is coded into the tests, and all boole
+     v19r8 file types are tested
+   . fixedfile-boole-v19r8-2009-digi-extended-spillover
+	 . fixedfile-boole-v19r8-2009-digi-extended
+   . fixedfile-boole-v19r8-2009-digi
+   . fixedfile-boole-v19r8-2009-mdf
+   . Do not fail tests if "Delta Memory for the event exceeds 3*sigma"
+
 </PRE><H1><A NAME=v35r8p1>2009-11-22 Brunel v35r8p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8, Rec v7r8
  and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*

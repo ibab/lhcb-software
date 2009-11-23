@@ -1,5 +1,5 @@
 package BrunelSys
-version v35r8p1
+version v35r9
 
 branches cmt doc tests
  
@@ -22,4 +22,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use LHCbAlgs v2r31 Kernel
