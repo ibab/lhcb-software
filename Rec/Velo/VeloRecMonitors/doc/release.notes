@@ -3,6 +3,9 @@
 ! Responsible : VELO monitoring group
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
+! 2009-11-23 - James Mylroie-Smith
+ -  Fixed problem with track plots
+
 ! 2009-11-22 - James Mylroie-Smith
  - in VeloExpertClusterMonitor added booked plots instead of using plot
    added option to plot cluster size(no strips in cluster) off by default
