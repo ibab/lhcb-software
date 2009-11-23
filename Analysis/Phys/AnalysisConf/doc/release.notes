@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.41 2009-11-17 14:24:41 jpalac Exp $
+!$Id: release.notes,v 1.42 2009-11-23 16:08:04 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+! 2009-11-23 - Juan PALACIOS
+ - python/AnalysisConf/BaseDSTWriter.py
+  . Fix extendSequence method so that class can be used directly for simple
+    DST writing without cloning of extra information.
+ - cmt/requirements
+  . Increase version to v1r9p1
 
 !========================== AnalysisConf v1r9 2009-11-17 ====================
 
