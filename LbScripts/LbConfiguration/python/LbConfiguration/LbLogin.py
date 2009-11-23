@@ -47,6 +47,7 @@ _scripts_dir = os.path.join(_base_dir, "scripts")
 
 from LbConfiguration.Platform import getBinaryDbg, getConfig
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
+from LbConfiguration.Platform import isBinaryDbg
 from LbConfiguration.External import CMT_version
 from LbUtils.Script import Script
 from LbUtils.Env import Environment, Aliases
@@ -57,7 +58,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.59 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.60 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -818,6 +819,8 @@ class LbLoginScript(Script):
             opts.use_nocache = False
             if not opts.no_compat and self.needsCompat() :
                 opts.no_compat = False
+            if isBinaryDbg(opts.cmtconfig) :
+                debug = True
         else :
             self.binary, self.platform, self.compdef = self.getNativePlatformComponents()
 
@@ -959,12 +962,14 @@ class LbLoginScript(Script):
             ev["LD_LIBRARY_PATH"] = os.pathsep.join(ldlist)
     
     def copyEnv(self):
-        retenv = {}
-        for v in self._env.env.keys() :
-            retenv[v] = self._env[v]
-        retaliases = {}
-        for v in self._aliases.env.keys() :
-            retaliases[v] = self._aliases[v]
+        retenv = dict(self._env.env)
+#        retenv = {}
+#        for v in self._env.env.keys() :
+#            retenv[v] = self._env[v]
+        retaliases = dict(self._aliases.env)
+#        retaliases = {}
+#        for v in self._aliases.env.keys() :
+#            retaliases[v] = self._aliases[v]
         retextra = self._extra
         return retenv, retaliases, retextra
     
