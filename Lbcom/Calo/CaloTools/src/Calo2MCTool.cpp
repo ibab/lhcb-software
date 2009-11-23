@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.cpp,v 1.5 2009-11-20 15:47:18 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.6 2009-11-23 14:11:55 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -61,6 +61,12 @@ StatusCode Calo2MCTool::initialize(){
   if (sc.isFailure()) return Error("Failed to initialize", sc);
   m_ppsvc = svc<LHCb::IParticlePropertySvc>( "LHCb::ParticlePropertySvc", true);
   if( m_ppsvc == NULL )return StatusCode::FAILURE;
+
+  // incidentSvc
+  IIncidentSvc* inc = incSvc() ;
+  if ( 0 != inc )inc -> addListener  ( this , IncidentType::BeginEvent ) ;
+  return sc;
+
 
   //
   if( !m_hypo2Cluster ){
@@ -505,7 +511,7 @@ double Calo2MCTool::weight(const LHCb::MCParticle* part){
 
 double Calo2MCTool::quality(const LHCb::MCParticle* part){
   if( part == NULL )return 0.;
-  return weight(part) * m_mcMap[part]/part->momentum().E();
+  return (part->momentum().E() != 0) ? weight(part) * m_mcMap[part]/part->momentum().E() : 0.;
 }
 
 

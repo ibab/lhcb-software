@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.h,v 1.3 2009-11-20 15:47:18 odescham Exp $
+// $Id: Calo2MCTool.h,v 1.4 2009-11-23 14:11:55 odescham Exp $
 #ifndef CALO2MCTOOL_H 
 #define CALO2MCTOOL_H 1
 
@@ -6,6 +6,9 @@
 // from Gaudi
 #include "GaudiAlg/GaudiTool.h"
 #include "CaloInterfaces/ICalo2MCTool.h"            // Interface
+#include "GaudiKernel/IIncidentListener.h"
+#include "GaudiKernel/IIncidentSvc.h" 
+#include "GaudiKernel/Incident.h" 
 // from LHCb : the calo->particle stream
 #include "Event/CaloDigit.h"
 #include "Event/CaloCluster.h"
@@ -27,7 +30,9 @@
  *  @author Olivier Deschamps
  *  @date   2009-07-27
  */
-class Calo2MCTool : public GaudiTool, virtual public ICalo2MCTool {
+class Calo2MCTool : public GaudiTool
+                  , virtual public ICalo2MCTool
+                  , virtual public IIncidentListener{
 
 public: 
   // category enum
@@ -82,6 +87,10 @@ public:
   }
 
     
+
+  /// Inform that a new incident has occurred
+  virtual void handle(const Incident& /* inc */ ) { clear();} 
+
 
   // TO BE INTERFACED :
   int MCCategory(){return m_category;};
