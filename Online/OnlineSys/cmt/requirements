@@ -18,12 +18,12 @@ branches cmt doc
 
 use Camera            v1r11    Online
 use CondDBServer      v1r3     Online
-use DIM               v19r8    Online
+use DIM               v19r8p1  Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r19    Online
-use GaudiOnline       v2r35    Online
+use Gaucho            v6r20    Online
+use GaudiOnline       v2r36    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
