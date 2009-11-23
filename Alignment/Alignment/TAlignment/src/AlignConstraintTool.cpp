@@ -350,9 +350,10 @@ namespace Al
 		= equations.element(elemindex).dStateDAlpha()(j,trkpar)/equations.numTracks() ;
 	    
 	    // Average PV position constraint
-	    for(size_t vtxpar=0; vtxpar<3; ++vtxpar) 
-	      constraints->derivatives()(ConstraintDerivatives::PVx+vtxpar,jpar) 
-		= equations.element(elemindex).dVertexDAlpha()(j,vtxpar)/equations.numVertices() ;
+	    if( equations.numVertices() > 0 )
+	      for(size_t vtxpar=0; vtxpar<3; ++vtxpar) 
+		constraints->derivatives()(ConstraintDerivatives::PVx+vtxpar,jpar) 
+		  = equations.element(elemindex).dVertexDAlpha()(j,vtxpar)/equations.numVertices() ;
 	  }
 	} 
       }
