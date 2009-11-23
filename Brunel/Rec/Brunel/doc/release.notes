@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v35r9>2009-11-23 Brunel v35r9</A></H1><PRE>
+ - Changes to example options
+   . Add options/2009-BeamGas.py: example options for 2009 beam gas events
+     (needs AppConfig v3r22)
+
  - Changes to tests
    . fixedfile tests added, the file used is coded into the tests, and all boole
      v19r8 file types are tested
