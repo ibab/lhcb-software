@@ -1,3 +1,8 @@
+2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbLegacy/LHCb_config.py: Added full support for the VanDerMeer project. It is 
+	still needed for install_project.py.
+
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: passed the debug flag to LbLogin and SetupProject.
