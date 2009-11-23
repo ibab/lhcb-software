@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.45 2009-11-14 15:29:48 graven Exp $
+! $Id: release.notes,v 1.46 2009-11-23 16:50:56 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-11-23 - Patrick Koppenburg
+ - Use PatPV2DFit3D in Hlt1 and PatPV3D in Hlt2. 
+   . HltReco.py : Change algorithms to be used
+   . HltLine.py : Depend on PV3D for Hlt2 lines requiring PV
+   . Requires tags pkoppenb-20091123 of Hlt2SharedParticles and DaVinciTools.
+ - v1r11
 
 !========================== HltLine v1r10 2009-11-14 ===================
 ! 2009-11-14 - Gerhard Raven

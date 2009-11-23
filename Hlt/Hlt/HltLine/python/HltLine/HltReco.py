@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.10 2009-10-16 09:19:17 graven Exp $
+# $Id: HltReco.py,v 1.11 2009-11-23 16:50:56 pkoppenb Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -54,7 +54,7 @@ RunCloneKiller = False
 #############################################################################################
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
-from Configurables import PatPV2D, PatPV3D, PatForward, PatForwardTool
+from Configurables import PatPV2DFit3D, PatPV3D, PatForward, PatForwardTool
 from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
@@ -129,10 +129,12 @@ cloneKiller.CloneFinderTool.RestrictedSearch = True
 
 #### Primary vertex algorithms...
 
-patPV2D = PatPV2D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
-                                 , OutputVerticesName = "Hlt/Vertex/PV2D" )  
+#patPV2D = PatPV2D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
+#                                 , OutputVerticesName = "Hlt/Vertex/PV2D" )  
+patPV2D = PatPV2DFit3D( 'HltRecoPV2D' , InputTracksName = patVeloR.OutputTracksName
+                                      , OutputVerticesName = "Hlt/Vertex/PV2D" )  
 
-recoPV3D =  PatPV3D('Hlt1RecoPV3D' )
+recoPV3D =  PatPV3D('HltRecoPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
 recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 
@@ -180,7 +182,7 @@ recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
                          , HistogramUpdatePeriod = 0 )
 
 preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
-                             , InputSelection = "TES:" + PatPV2D('HltRecoPV2D').OutputVerticesName
+                             , InputSelection = "TES:" + PatPV2DFit3D('HltRecoPV2D').OutputVerticesName
                              , RequirePositiveInputs = False
                              , OutputSelection   = "PV2D" )
 

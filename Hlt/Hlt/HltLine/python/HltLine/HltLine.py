@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.17 2009-11-14 21:53:15 graven Exp $ 
+# $Id: HltLine.py,v 1.18 2009-11-23 16:50:56 pkoppenb Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.17 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1277,8 +1277,8 @@ class Hlt2Line(object):
 
         if type(PV) != bool : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
         if not self._PVAlgorithms : 
-            from HltReco import PV2D
-            self._PVAlgorithms = PV2D.members()
+            from HltReco import PV3D
+            self._PVAlgorithms = PV3D.members()
 
         if not HLT :
             HLT = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
