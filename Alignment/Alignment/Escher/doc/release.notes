@@ -4,6 +4,11 @@ Package Coordinator : Johan Blouw
 Purpose : Gaudi application used to perform 
           alignment of the LHCb detector components
 
+</PRE><H1><A NAME=v4r4>2009-11-23 Escher v4r4</A></H1><PRE>
+! 2009-11-23 Johan Blouw
+ - release v4r4 for Alignemnt release v4r4
+
+
 ! 2009-11-19 - Wouter Hulsbergen
  - Changes to Escher configurable
    - use RecMoniConf
