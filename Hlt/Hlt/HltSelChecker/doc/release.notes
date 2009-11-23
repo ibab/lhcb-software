@@ -19,6 +19,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-11-23 - Patrick Koppenburg
+ - Bug fix in HltCorrelations: Get trigger bits only for L0-yes
+
 ! 2009-11-17 - Patrick Koppenburg
  - Adapt tests
  - v10r2

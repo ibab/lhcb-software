@@ -1,4 +1,4 @@
-// $Id: HltCorrelations.cpp,v 1.3 2009-11-10 17:11:14 pkoppenb Exp $
+// $Id: HltCorrelations.cpp,v 1.4 2009-11-23 13:32:50 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -100,18 +100,21 @@ StatusCode HltCorrelations::initialize() {
 StatusCode HltCorrelations::execute() {
 
   if (msgLevel(MSG::DEBUG)) debug() << "==> Execute" << endmsg;
+  bool l0yes = false ;
   if( exist<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default) ){
     LHCb::L0DUReport* report = get<LHCb::L0DUReport>(LHCb::L0DUReportLocation::Default);
     StatusCode sc = m_algoCorr->fillResult("L0",report->decision());
+    l0yes = report->decision() ;
     if (!sc) return sc;
   }
 
   // bits
   if (msgLevel(MSG::DEBUG)) debug() << "Reading routing bits" << endmsg;
-  if (exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
+  if (l0yes && exist<LHCb::RawEvent>(LHCb::RawEventLocation::Default)){
     LHCb::RawEvent* rawEvent = get<LHCb::RawEvent>(LHCb::RawEventLocation::Default);
     std::vector<unsigned int> yes = Hlt::firedRoutingBits(rawEvent,m_firstBit,m_lastBit);
     for (std::vector<unsigned int>::const_iterator i = yes.begin() ; i!= yes.end() ; ++i){
+      if (*i==90) info() << "Accepted bit 90" << endmsg ;
       if (!m_algoCorr->fillResult(bitX(*i),true));
     }
   }
