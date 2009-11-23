@@ -3,6 +3,10 @@ Package     : MooreSys
 Package Coordinator : G.Raven
 Purpose     : LHCb HLT application
 
+</PRE><H1><A NAME=v8r3>2009-11-23 Moore v8r3</A></H1><PRE>
+(re)Release on top of LHCb v28r3, with fixed ODIN event time 
+decoding for ODIN v6
+
 </PRE><H1><A NAME=v8r2>2009-11-18 Moore v8r2</A></H1><PRE>
 Based on Hlt v7r2, Phys v8r12, Lbcom v7r8, Rec v7r8 and Online v4r31
 First release on top of LHCb v28r2, which contains support for ODIN 
