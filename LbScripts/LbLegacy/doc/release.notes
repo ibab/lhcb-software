@@ -1,8 +1,11 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbLegacy/install_project.py: moved to LbScripts v4r4
-	* python/LbLegacy/LHCb_config.py: Added full support for the VanDerMeer project. It is 
-	still needed for install_project.py.
+	* scripts/mkLCGCMTtar: 
+	* scripts/mkLHCbtar: 
+	* python/LbLegacy/LHCb_config.py: 
+	- Added full support for the VanDerMeer project. It is still needed for install_project.py.
+	- Added full support for the projects LHCbDIRAC and Integration.
 
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 

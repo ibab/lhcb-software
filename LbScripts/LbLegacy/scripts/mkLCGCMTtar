@@ -25,12 +25,13 @@
  - 081212 - added the option for custom output file
  - 081212 - added the possibility to create the LCGGrid tarball from Dirac
  - 090107 - exclude file extension tgz, tar.gz, rpm for the tarball
+ - 091123 - added support for LHCbDirac
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil, commands
 import re
 from LbLegacy.install_project import calculateMD5
-version = '000107'
+version = '091123'
 #---------------------------------------------------------------------------
 def usage() :
     print 'Usage:'
@@ -281,7 +282,7 @@ def get_output_filename(native_version, binary, packages_versions):
     if plugins_flag == 0:
         if NAME == "LHCBGRID":
             filename = "LCGGrid_" + version
-        elif NAME == "DIRAC" :
+        elif ( NAME == "DIRAC" or NAME == "LHCBDIRAC" ):
             packver = version
             os.chdir(get_project_dir(native_version))
             for line in os.popen("cmt show projects") :

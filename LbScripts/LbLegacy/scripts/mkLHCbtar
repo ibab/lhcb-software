@@ -301,7 +301,7 @@ def make_tar(pname, pversion, binary=''):
                     dver = 'osc_vis' + '_' + dver
             if PACK == 'LHCBGRID':
                 dver = 'LCGGrid' + '_' + pversion
-            if ( PACK == 'DIRAC' or PACK == 'GANGA' ) and dnam == 'LCGCMT' :
+            if ( PACK == 'DIRAC' or PACK == 'LHCBDIRAC' or PACK == 'GANGA' ) and dnam == 'LCGCMT' :
                 dver = 'LCGGrid' + '_' + _get_grid_version(path_list)
             dbin = tar_opt
             dtar = dver+dbin

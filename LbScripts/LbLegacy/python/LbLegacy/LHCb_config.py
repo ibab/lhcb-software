@@ -57,7 +57,9 @@ lhcb_projects = {'GAUDI':'Gaudi',
                    'PANOPTES':'Panoptes',
                    'DIRAC':'Dirac',
                    'LHCBGRID':'LHCbGrid',
-                   'VANDERMEER': 'VanDerMeer'}
+                   'VANDERMEER': 'VanDerMeer',
+                   'LHCBDIRAC': 'LHCbDIRAC',
+                   'INTEGRATION': 'Integration'}
 
 applications = {'GAUSS':'Sim/Gauss', 
                 'BOOLE':'Digi/Boole', 
@@ -105,7 +107,9 @@ lhcb_vol_size = {'GAUDI':'3000000',
                  'ONLINE':'1500000', 
                  'DIRAC':'500000', 
                  'LHCbGrid': '50000',
-                 'VanDerMeer': '50000'} 
+                 'VanDerMeer': '50000',
+                 'LHCbDIRAC': '50000',
+                 'Integration': '50000'} 
 
 lhcb_base_name = {'GAUDI' : 'LCGCMT',
                     'LHCB'  : 'GAUDI',
