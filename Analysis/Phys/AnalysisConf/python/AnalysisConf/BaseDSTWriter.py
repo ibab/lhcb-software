@@ -2,7 +2,7 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: BaseDSTWriter.py,v 1.9 2009-09-28 11:13:22 jpalac Exp $"
+__version__ = "$Id: BaseDSTWriter.py,v 1.10 2009-11-23 16:06:53 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -68,7 +68,7 @@ class BaseDSTWriter(ConfigurableUser) :
         return self.outputStreamType()( self.streamName(name) )
 
     def extendSequence(self, sel) :
-        return
+        return []
     
     def addOutputStream(self, seq) :
         outStream = self.outputStream(seq.name())
