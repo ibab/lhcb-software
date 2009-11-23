@@ -23,10 +23,12 @@ def start() :
        Moore().TimeOutThreshold = 10000
     else :
        Moore().Simulation = False
-       Moore().CondDBtag = 'head-20090713'
-       Moore().DDDBtag   = 'head-20090713'
+       Moore().CondDBtag = 'head-20091112'
+       Moore().DDDBtag   = 'head-20091112'
        Moore().UseSnapshotOnline = True
        Moore().EnableRunChangeHandler = ( OnlineEnv.HLTType not in ['PA','PassThrough' ] )
+       Moore().EnableTimeOutCatcher = False
+
     
     # Forward all attributes of 'OnlineEnv' to the job options service...
     from GaudiKernel.Proxy.Configurable import ConfigurableGeneric

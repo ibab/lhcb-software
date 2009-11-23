@@ -1,12 +1,12 @@
 #============================================================================
-# $Id: requirements,v 1.92 2009-11-23 20:42:08 graven Exp $
+# $Id: requirements,v 1.93 2009-11-23 21:13:16 graven Exp $
 # Created    : 03/06/2005 by P. Koppenburg
 # Maintainer : G. Raven
 #============================================================================
 
 #============================================================================
 package Moore
-version v8r2
+version v8r3
 
 branches doc cmt options python
 
@@ -42,8 +42,6 @@ use LbcomSys            v*        -no_auto_imports
 use RecSys              v*         -no_auto_imports
 
 #-- HLT packages 
-use  Hlt1Lines          v1r8p1   Hlt
-use  HltSettings        v1r2p1   Hlt
 use HltSys		v*	     -no_auto_imports
 
 #-- Phys packages 

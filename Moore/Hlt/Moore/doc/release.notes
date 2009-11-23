@@ -2,6 +2,12 @@ Package     : Hlt/Moore
 Package Coordinator : Gerhard Raven
 Purpose     : LHCb HLT application
 
+!========================== Moore v8r3 2009-11-23 ===================
+! 2009-11-23 - Gerhard Raven
+ - for now, disable timeout catcher for LHCb partition
+ - update database tag used
+ 
+
 !========================== Moore v8r2 2009-11-18 ===================
 ! 2009-11-18 - Gerhard Raven
  - allow timeout catcher to be configured through Configuration.py
