@@ -1,3 +1,7 @@
+2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* cmt/requirements: release of version v1r19
+
 2009-11-20  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/fixWinCVSRoot: fixed variable the variable for the level of logging.
