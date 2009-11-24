@@ -1,4 +1,4 @@
-// $Id: L0MuonOutputs.h,v 1.10 2008-11-07 16:25:31 jucogan Exp $
+// $Id: L0MuonOutputs.h,v 1.11 2009-11-24 13:08:04 jucogan Exp $
 #ifndef COMPONENT_L0MUONOUTPUTS_H 
 #define COMPONENT_L0MUONOUTPUTS_H 1
 
@@ -91,7 +91,7 @@ private:
     switch(m_version) {
     case 1:
       return srcID;
-    case 2:
+    default:
       switch(srcID){
       case 1:
         return Q4;
@@ -111,7 +111,7 @@ private:
     switch(m_version) {
     case 1:
       return side;
-    case 2:
+    default:
       switch(side){
       case 0:
         return 5;
@@ -126,7 +126,7 @@ private:
     switch(m_version) {
     case 1:
       return quarter;
-    case 2:
+    default:
       switch(quarter){
       case 0:
         return 3;
@@ -145,7 +145,7 @@ private:
     switch(m_version) {
     case 1:
       return srcID;
-    case 2:
+    default:
       switch(srcID){
       case 0:
         return C;
