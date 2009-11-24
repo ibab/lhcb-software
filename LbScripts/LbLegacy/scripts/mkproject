@@ -18,6 +18,7 @@
  - 071211 - update the default link to the documentation after doxygen has been run
  - 080630 - Doesn't use the version directories any more
  - 081007 - creates the link after the build
+ - 091124 - added the parallel build mode.
 """
 #-----------------------------------------------------------------------------
 
@@ -27,6 +28,7 @@ from LbLegacy.vol_for_releases import create_volume
 from LbConfiguration.Project import getProject
 from LbConfiguration.Platform import getBinaryDbg, getBinaryOpt, isBinaryOpt
 from LbUtils.Links import fixLinks
+from LbUtils.Processes import getNumberOfCores
 
 import logging
 import sys, os, getopt, time, commands, fnmatch
@@ -34,6 +36,7 @@ import sys, os, getopt, time, commands, fnmatch
 script_version = '081007'
 script_name = 'mkproject'
 python_version = sys.version_info[:3]
+core_factor = 1.5
 
 day = time.strftime("%a, %d %b %Y %H:%M:%S",time.localtime())
 
@@ -72,6 +75,7 @@ def help() :
                                            w<eb html page>
                                            default => --action=ngucdirtxhw
 
+      --not-parallel                      - disable the parallel build
     Examples:
       cd $LHCBRELEASES
       python mkproject.py -p Brunel -v v30r3
@@ -80,7 +84,7 @@ def help() :
     sys.exit()
 
 #-----------------------------------------------------------------------------------
-def release_project(pname,pversion,action=None, yes_mode=False):
+def release_project(pname,pversion,action=None, yes_mode=False, parallel_mode=True):
     log = logging.getLogger()
 
     projconf = getProject(pname)
@@ -380,6 +384,11 @@ def release_project(pname,pversion,action=None, yes_mode=False):
         status,cmtpath = commands.getstatusoutput('cmt show set_value CMTPATH')
         log.info(' CMTPATH= %s '%(cmtpath))
         str = tbroadcast+' cmt make'
+        if parallel_mode:
+            ncores = getNumberOfCores()
+            if ncores > 1 :
+                nproc = int(ncores * core_factor)
+                str += " -j -l %s " % nproc
         log.info(' str= %s '%(str))
         rc,output = commands.getstatusoutput(str)
         print output
@@ -407,7 +416,13 @@ def release_project(pname,pversion,action=None, yes_mode=False):
                     cmd = "%s %s setup%s" % (cmtrun, command, ext)
                     for e in extraexelist[other] :
                         cmd += " -tag_add=%s" % e
-                    cmd += "; make CMTEXTRATAGS=%s" % ",".join(extraexelist[other])
+                    cmd += "; cmt make CMTEXTRATAGS=%s" % ",".join(extraexelist[other])
+                    if parallel_mode:
+                        ncores = getNumberOfCores()
+                        if ncores > 1 :
+                            nproc = int(ncores * core_factor)
+                            cmd += " -j -l %s " % nproc
+                            
                     rc = os.system(cmd)
 
         log.info('end of compilation in optimize mode ')
@@ -422,6 +437,12 @@ def release_project(pname,pversion,action=None, yes_mode=False):
         # cmt broadcast gmake tag=$CMTDEB
         os.environ['CMTCONFIG'] = CMTDEB
         str = tbroadcast+' cmt make'
+        if parallel_mode:
+            ncores = getNumberOfCores()
+            if ncores > 1 :
+                nproc = int(ncores * core_factor)
+                str += " -j -l %s " % nproc
+
         rc,output = commands.getstatusoutput(str)
         os.environ['CMTCONFIG'] = CMTCONFIG
         log.info( output )
@@ -578,6 +599,7 @@ if __name__ == "__main__":
 
     action = None
     yes_mode = False
+    parallel_mode = True
 
 
     for key,value in keys:
@@ -585,6 +607,8 @@ if __name__ == "__main__":
             help()
         if key in ('-y', '--yes'):
             yes_mode = True
+        if key in ('--not-parallel'):
+            parallel_mode = False
         if key in ( '-v', '--version'):
             pversion = value
         if key in ('-p', '--project'):
@@ -603,4 +627,4 @@ if __name__ == "__main__":
     thelog.addHandler(console)
 
 
-    release_project(pname, pversion, action, yes_mode)
+    release_project(pname, pversion, action, yes_mode, parallel_mode)
