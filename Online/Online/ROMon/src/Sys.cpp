@@ -8,6 +8,7 @@
 #include <cstring>
 #include <cstdio>
 #include <cerrno>
+#include <map>
 #include <fcntl.h>
 
 #ifdef _WIN32
@@ -529,8 +530,24 @@ int ROMon::read(Procset& procset, size_t max_len) {
           pid = ::atoi(n);
           if ( ::stat(fn_process_dir(pid),&st_buf)==0 ) {
             try {
-              struct passwd pw, *ppwd;
-	      int ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
+	      int ret = 0;
+	      string uname;
+	      static map<unsigned int,string> unames;
+	      map<unsigned int,string>::const_iterator iu=unames.find(st_buf.st_uid);
+	      if ( iu == unames.end() ) {
+		struct passwd pw, *ppwd;
+		ret = ::getpwuid_r(st_buf.st_uid,&pw,pwdbuff,sizeof(pwdbuff),&ppwd);
+		if ( 0 == ret ) {
+		  unames[st_buf.st_uid] = ppwd->pw_name;
+		  uname = ppwd->pw_name;
+		}
+		else {
+		  continue;
+		}
+	      }
+	      else {
+		uname = (*iu).second;
+	      }
               if ( 0 == ret && proc.read(pid) && status.read(pid) ) {
                 Process& p = (*pr);
 		utgid.utgid = "";
@@ -552,7 +569,7 @@ int ROMon::read(Procset& procset, size_t max_len) {
                   p.cmd[sizeof(p.cmd)-1] = 0;
                   if ( (ptr=::strchr(p.cmd,')')) ) *ptr = 0;
                 }
-                ::strncpy(p.owner,ppwd->pw_name,sizeof(p.owner));
+                ::strncpy(p.owner,uname.c_str(),sizeof(p.owner));
                 p.owner[sizeof(p.owner)-1] = 0;
                 ::strncpy(p.utgid,utgid.utgid.empty() ? "N/A" : utgid.utgid.c_str(),sizeof(p.utgid));
                 p.utgid[sizeof(p.utgid)-1] = 0;
