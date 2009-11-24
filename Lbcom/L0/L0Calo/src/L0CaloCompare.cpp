@@ -1,4 +1,4 @@
-// $Id: L0CaloCompare.cpp,v 1.11 2009-11-19 20:06:15 robbep Exp $
+// $Id: L0CaloCompare.cpp,v 1.12 2009-11-24 17:42:27 robbep Exp $
 
 // local
 #include "L0CaloCompare.h"
@@ -83,7 +83,7 @@ StatusCode L0CaloCompare::initialize() {
   debug() << "==> Monitoring histograms booking " << endmsg;
 
   std::string det( "" ) ;
-  for ( int i = 0 ; i < L0DUBase::CaloType::Pi0Global ; ++i ) {
+  for ( int i = 0 ; i <= L0DUBase::CaloType::Pi0Global ; ++i ) {
     det = "Ecal" ;
     if ( L0DUBase::CaloType::Hadron == i ) det = "Hcal" ;
     bookCalo2D( m_mapCompareName[ i ] , m_mapCompareTitle[ i ]  , det ) ; 

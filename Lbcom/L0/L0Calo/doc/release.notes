@@ -1,7 +1,12 @@
-! $Id: release.notes,v 1.141 2009-11-22 14:16:31 cattanem Exp $
+! $Id: release.notes,v 1.142 2009-11-24 17:42:27 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-11-24 - Patrick Robbe
+ - L0CaloCompare.cpp: fix name of histograms
+ - Add new algorithm: L0CaloCheckCalibCte.cpp to check
+   L0 calibration constant
 
 !========================= L0Calo v10r0 2009-11-22 ========================
 ! 2009-11-19 - Patrick Robbe
