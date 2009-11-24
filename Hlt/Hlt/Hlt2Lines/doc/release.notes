@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.75 2009-11-13 11:50:47 pkoppenb Exp $
+$Id: release.notes,v 1.76 2009-11-24 15:47:46 graven Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.75 2009-11-13 11:50:47 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-16 - Gerhard Raven
+ - Hlt2Transparant was not yet updated for the change in name of the
+   ODIN Hlt1 lines; now it is...
 
 !========================== Hlt2Lines v1r10 2009-11-13 ===================
 ! 2009-11-12 Neal Gauvin
