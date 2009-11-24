@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.3 2009-11-12 17:54:32 frankb Exp $
+// $Id: TimeoutAlg.cpp,v 1.4 2009-11-24 10:52:56 marcocle Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -46,7 +46,7 @@ namespace LHCb  {
     int           m_timeoutCount;
     /// Flag to print backtrace
     bool          m_printTrace;
-#ifdef __WIN32
+#ifdef _WIN32
     void startTimer() {}
     void stopTimer() {}
 #else
