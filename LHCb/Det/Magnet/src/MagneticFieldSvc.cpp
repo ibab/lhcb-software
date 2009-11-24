@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.45 2009-09-04 12:15:02 wouter Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.46 2009-11-24 03:42:14 smenzeme Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -177,6 +177,7 @@ StatusCode MagneticFieldSvc::initializeWithCondDB()
         << "Requested condDB but using manually set scale factor = "
         << m_scaleFactor << endmsg;
     m_scaleFromOptions = true;
+    m_magFieldGrid.setScaleFactor( m_scaleFactor ) ;
   }
   else {
     m_updMgrSvc->registerCondition( this, MagnetCondLocations::ScaleUp,

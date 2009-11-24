@@ -3,6 +3,8 @@
 ! Responsible : Adlene Hicheur, Marco Cattaneo
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
+! 2009-11-24 - Stephanie Hansmann-Menzemer
+ - bug fix: set scale factor to MagneticFieldGrid
 
 !====================== Magnet v5r4 2009-09-04 ===============================
 ! 2009-09-04 - Wouter Hulsbergen
