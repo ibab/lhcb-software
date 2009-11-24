@@ -3,6 +3,8 @@
 ! Responsible : Jose Hernando, Eduardo Rodrigues
 ! Purpose     : Package for tracking tools not accessing MC information
 !-----------------------------------------------------------------------------
+! 2009-11-24 Stephanie Hansmann-Menzemer
+ - set b field off momentum from 1 GeV to 100 GeV
 
 !======================== TrackTools v3r23 2009-11-16 ========================
 ! 2009-11-11 Kostyantyn Holubyev

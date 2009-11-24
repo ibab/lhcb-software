@@ -108,7 +108,7 @@ StatusCode FastMomentumEstimate::calculate( const LHCb::State* tState, double& q
   const double denom = p * scaleFactor * 1e6;
 
   if (std::abs(scaleFactor) < 1e-6){
-    qOverP = 1.0/Gaudi::Units::GeV;
+    qOverP = 0.01/Gaudi::Units::GeV;
     sigmaQOverP = 1.0/Gaudi::Units::MeV;
   }
   else {
