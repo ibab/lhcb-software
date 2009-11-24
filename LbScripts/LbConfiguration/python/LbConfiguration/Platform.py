@@ -129,3 +129,7 @@ binary_list = binary_opt_list + binary_dbg_list
 
 # Native platform guessing
 
+
+
+# supported shells
+supported_shells = ["csh","sh","bat"]

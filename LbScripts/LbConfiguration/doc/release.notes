@@ -1,3 +1,7 @@
+2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* scripts/genProjectSetup: new script that generates the setup script for a CMT project.
+
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/LbLogin.py: delayed the import of SetupProject in order to

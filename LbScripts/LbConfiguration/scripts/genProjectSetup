@@ -1,0 +1,92 @@
+#!/usr/bin/env python
+# $Id: genProjectSetup,v 1.1 2009-11-24 19:24:45 hmdegaud Exp $
+""" Script to generate the setup script for the LHCb CMT projects """
+
+from LbUtils.Script import Script
+from LbUtils.CVS import CVS2Version
+from LbConfiguration.Tools import genProjectSetup, getTargetShell
+from LbConfiguration.Platform import supported_shells
+import logging
+import sys
+import os
+
+
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__author__ = "hmd"
+
+class GenProjectSetupScript(Script):
+    _version = __version__
+    _description = __doc__
+    def defineOpts(self):
+        parser = self.parser
+        parser.set_defaults(shell=None)
+        parser.add_option("-s", "--shell", action="store", type="choice", metavar="SHELL",
+                          dest = "shell",
+                          choices = supported_shells,
+                          help="Select the type of shell to use. If none has been provided, the script tries to guess from the file extension")
+        parser.set_defaults(cmtconfig=None)
+        parser.add_option("-c", "--cmtconfig",
+                          dest="cmtconfig",
+                          help="set CMTCONFIG.", 
+                          fallback_env="CMTCONFIG")
+        parser.set_defaults(setup_project_extra_args=None)
+        parser.add_option("-e", "--setup-project-extra-args",
+                          dest="setup_project_extra_args",
+                          help="Extra arguments passed internally to SetupProject")
+        parser.set_defaults(output_file=None)
+        parser.add_option("-o", "--output-file",
+                          dest="output_file",
+                          help="Output file. [Default <project>_<version>_<cmtconfig>.<shell>]")
+        parser.set_defaults(strip_path=False)
+        parser.add_option("--with-strip-path",
+                          action="store_true",
+                          dest="strip_path",
+                          help="Let the strip path lines")
+        parser.add_option("--without-strip-path",
+                          action="store_false",
+                          dest="strip_path",
+                          help="Remove the strip path lines [Default]")
+        parser.set_defaults(fix_path=True)
+        parser.add_option("--fix-path",
+                          action="store_true",
+                          dest="fix_path",
+                          help="Fix the paths. [Default]")
+        parser.add_option("--no-fix-path",
+                          action="store_false",
+                          dest="fix_path",
+                          help="Don't modify the paths.")
+        
+    def main(self):
+        log = logging.getLogger()
+        opts = self.options
+        args = self.args
+        if len(args) < 2 :
+            sys.exit("No enough arguments. You should provide both project name and version.")
+        else :
+            project = args[0]
+            version = args[1]
+
+        if not opts.cmtconfig :
+            sys.exit("No CMTCONFIG provided")
+
+        if not opts.shell :
+            if opts.output_file :
+                opts.shell = getTargetShell(opts.output_file)
+        if not opts.shell :
+            log.warning("No shell type provided. Using csh by default")
+            opts.shell = "csh"
+            
+        if not opts.output_file :
+            opts.output_file = "%s.%s" % ( "_".join([project, version, opts.cmtconfig]), opts.shell )
+            log.debug("No output file provided. Using %s" % opts.output_file)
+            pass
+        genProjectSetup(opts.output_file, project, version, 
+                        opts.cmtconfig, opts.shell, opts.setup_project_extra_args,
+                        opts.strip_path, opts.fix_path)
+
+        return 0
+
+
+if __name__ == '__main__':
+    s = GenProjectSetupScript(usage="%prog [options] <project> <version>")
+    s.run()
