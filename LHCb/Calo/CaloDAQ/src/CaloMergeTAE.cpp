@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.cpp,v 1.5 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloMergeTAE.cpp,v 1.6 2009-11-24 19:53:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -30,6 +30,8 @@ CaloMergeTAE::CaloMergeTAE( const std::string& name,
   declareProperty("SumThreshold"   , m_threshold = -256);
   declareProperty("SlotThreshold"  , m_slotcut   = -256);
   declareProperty("OutputType"     , m_data = "Digits" );
+  declareProperty("OutputDataLocation", m_outputDataLoc=""      ) ;
+  declareProperty("inputExtension"     , m_inExt = "" );
   //
   m_slots.push_back("T0");
   m_slots.push_back("Prev1");
@@ -62,27 +64,34 @@ StatusCode CaloMergeTAE::initialize() {
   // get detectorElement
   if ( "Ecal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Ecal );
-    m_locDigit     = LHCb::CaloDigitLocation::Ecal;
-    m_locAdc     = LHCb::CaloAdcLocation::Ecal;
+    m_locDigit     = LHCb::CaloDigitLocation::Ecal + m_inExt;
+    m_locAdc     = LHCb::CaloAdcLocation::Ecal + m_inExt;
   } else if ( "Hcal" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Hcal );
-    m_locDigit     = LHCb::CaloDigitLocation::Hcal;
-    m_locAdc     = LHCb::CaloAdcLocation::Hcal;
+    m_locDigit     = LHCb::CaloDigitLocation::Hcal + m_inExt;
+    m_locAdc     = LHCb::CaloAdcLocation::Hcal + m_inExt;
   } else if ( "Prs" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Prs );
-    m_locDigit     = LHCb::CaloDigitLocation::Prs;
-    m_locAdc     = LHCb::CaloAdcLocation::Prs;
+    m_locDigit     = LHCb::CaloDigitLocation::Prs + m_inExt;
+    m_locAdc     = LHCb::CaloAdcLocation::Prs + m_inExt;
   } else if ( "Spd" == m_detectorName ) {
     m_calo     = getDet<DeCalorimeter>( DeCalorimeterLocation::Spd ); 
-    m_locDigit     = LHCb::CaloDigitLocation::Spd;
-    m_locAdc     = LHCb::CaloAdcLocation::Spd;
+    m_locDigit     = LHCb::CaloDigitLocation::Spd + m_inExt;
+    m_locAdc     = LHCb::CaloAdcLocation::Spd + m_inExt;
   } else {
     error() << "Unknown detector name " << m_detectorName << endmsg;
     return StatusCode::FAILURE;
   }
   //
-  m_outDigit     = "TAE/" + m_locDigit;
-  m_outAdc       = "TAE/" + m_locAdc;
+  if( "" != m_outputDataLoc ) {
+    m_outDigit = m_outputDataLoc;
+    m_outAdc   = m_outputDataLoc;  
+  }else{    
+    m_outDigit     = "TAE/" + m_locDigit;
+    m_outAdc       = "TAE/" + m_locAdc;
+  }
+  
+
   //
   if(m_slots.size() == 0){
     Error("No input slots defined").ignore();

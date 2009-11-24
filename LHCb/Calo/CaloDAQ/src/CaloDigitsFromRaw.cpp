@@ -1,4 +1,4 @@
-// $Id: CaloDigitsFromRaw.cpp,v 1.19 2009-10-27 23:45:56 odescham Exp $
+// $Id: CaloDigitsFromRaw.cpp,v 1.20 2009-11-24 19:53:42 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -40,23 +40,23 @@ CaloDigitsFromRaw::CaloDigitsFromRaw( const std::string& name,
 
 
   if( 2 == m_detectorNum ) {
-    m_outputDigits     = LHCb::CaloDigitLocation::Ecal  + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Ecal    + m_extension;
-    m_pinContainerName = LHCb::CaloAdcLocation::EcalPin + m_extension;
+    m_outputDigits     = LHCb::CaloDigitLocation::Ecal  ;
+    m_outputADCs       = LHCb::CaloAdcLocation::Ecal    ;
+    m_pinContainerName = LHCb::CaloAdcLocation::EcalPin ;
   }
   else if( 3 == m_detectorNum ) {
-    m_outputDigits     = LHCb::CaloDigitLocation::Hcal  + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Hcal    + m_extension;
-    m_pinContainerName = LHCb::CaloAdcLocation::HcalPin + m_extension;
+    m_outputDigits     = LHCb::CaloDigitLocation::Hcal  ;
+    m_outputADCs       = LHCb::CaloAdcLocation::Hcal    ;
+    m_pinContainerName = LHCb::CaloAdcLocation::HcalPin ;
   }
   else if( 1 == m_detectorNum ) {
-    m_outputDigits     = LHCb::CaloDigitLocation::Prs + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Prs + m_extension;
+    m_outputDigits     = LHCb::CaloDigitLocation::Prs ;
+    m_outputADCs       = LHCb::CaloAdcLocation::Prs ;
     m_pinContainerName = "None";
    }
   else if( 0 == m_detectorNum ) {
-    m_outputDigits     = LHCb::CaloDigitLocation::Spd + m_extension;
-    m_outputADCs       = LHCb::CaloAdcLocation::Spd + m_extension;
+    m_outputDigits     = LHCb::CaloDigitLocation::Spd ;
+    m_outputADCs       = LHCb::CaloAdcLocation::Spd ;
     m_pinContainerName = "None";
   }
 
@@ -115,9 +115,9 @@ StatusCode CaloDigitsFromRaw::initialize ( ) {
     return StatusCode::FAILURE;
   }
   if( m_digitOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloDigits on TES at " 
-                            << rootInTES() + m_outputDigits << endmsg;
+                            << rootInTES() + m_outputDigits + m_extension << endmsg;
   if( m_adcOnTES )debug() <<  "CaloDigitsFromRaw will produce CaloAdcs on TES at "
-                          << rootInTES() + m_outputADCs << endmsg;
+                          << rootInTES() + m_outputADCs + m_extension << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -146,7 +146,7 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
 
   if(m_digitOnTES){
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
-    put( digits, m_outputDigits );
+    put( digits, m_outputDigits + m_extension );
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloDigit* dig = new LHCb::CaloDigit( *itD, energyScale );
@@ -154,18 +154,18 @@ void CaloDigitsFromRaw::convertSpd ( double energyScale ) {
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endmsg;
+    debug() << m_outputDigits + m_extension << " CaloDigit container size " << digits->size() << endmsg;
   }
 
   if(m_adcOnTES){
     LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
-    put( adcs ,  m_outputADCs );
+    put( adcs ,  m_outputADCs + m_extension );
     for ( std::vector<LHCb::CaloCellID>::const_iterator itD = spdCells.begin();
           spdCells.end() != itD; ++itD ) {
       LHCb::CaloAdc* adc = new LHCb::CaloAdc( *itD, 1 );
       adcs->insert( adc );
     }
-    debug() <<  m_outputADCs << " CaloAdc container size " << adcs->size() << endmsg;
+    debug() <<  m_outputADCs + m_extension << " CaloAdc container size " << adcs->size() << endmsg;
   }
 } 
 
@@ -178,7 +178,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
   if(m_digitOnTES){
 
     LHCb::CaloDigits* digits = new LHCb::CaloDigits();
-    put( digits, m_outputDigits );
+    put( digits, m_outputDigits+ m_extension );
     const std::vector<LHCb::CaloDigit>& allDigits = m_energyTool->digits( );
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
     for ( std::vector<LHCb::CaloDigit>::const_iterator itD = allDigits.begin();
@@ -189,14 +189,14 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
     }
     std::stable_sort ( digits->begin(), digits->end(), 
                        CaloDigitsFromRaw::IncreasingByCellID() );
-    debug() << m_outputDigits << " CaloDigit container size " << digits->size() << endmsg;
+    debug() << m_outputDigits+ m_extension << " CaloDigit container size " << digits->size() << endmsg;
 
   }
   
   if(m_adcOnTES){
     // Channel ADC
     LHCb::CaloAdcs* adcs = new LHCb::CaloAdcs();
-    put( adcs ,  m_outputADCs ); 
+    put( adcs ,  m_outputADCs+ m_extension ); 
     const std::vector<LHCb::CaloAdc>& allAdcs = m_energyTool->adcs( );
     if(m_statusOnTES)m_energyTool->putStatusOnTES();
         for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allAdcs.begin();
@@ -205,7 +205,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
       adcs->insert(adc);
       verbose() << "ID " << adc->cellID() << " ADC value " << adc->adc() << endmsg;
     }
-    debug() << " CaloAdc container '"  << m_outputADCs  << "' -> size = " << adcs->size() << endmsg;
+    debug() << " CaloAdc container '"  << m_outputADCs+ m_extension  << "' -> size = " << adcs->size() << endmsg;
 
 
     // PinDiode ADC (possibly in a different container)
@@ -217,7 +217,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         pinAdcs = adcs ;
       }else{
         pinAdcs = new LHCb::CaloAdcs();
-        put(pinAdcs , m_pinContainerName);
+        put(pinAdcs , m_pinContainerName + m_extension );
       }
       for ( std::vector<LHCb::CaloAdc>::const_iterator itA = allPinAdcs.begin();
             allPinAdcs.end() != itA; ++itA ) {
@@ -225,7 +225,7 @@ void CaloDigitsFromRaw::convertCaloEnergies ( ) {
         pinAdcs->insert( pinAdc );
         verbose() << "Pin-diode : ID " << pinAdc->cellID() << " ADC value " << pinAdc->adc() << endmsg;
       }
-      debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName 
+      debug() << " Adding PIN-Diode CaloAdc to container '" << m_pinContainerName + m_extension
               << "' -> size = " << pinAdcs->size() << endmsg;
     }
   }

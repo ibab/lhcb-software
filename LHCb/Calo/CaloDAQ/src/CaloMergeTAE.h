@@ -1,4 +1,4 @@
-// $Id: CaloMergeTAE.h,v 1.3 2009-10-27 10:11:26 odescham Exp $
+// $Id: CaloMergeTAE.h,v 1.4 2009-11-24 19:53:42 odescham Exp $
 #ifndef CALOMERGETAE_H 
 #define CALOMERGETAE_H 1
 
@@ -53,6 +53,9 @@ private:
   std::string m_locAdc;
   std::string m_outAdc;
   std::string m_data;
+
+  std::string m_outputDataLoc;
+  std::string m_inExt;
   
   DeCalorimeter* m_calo;
   
