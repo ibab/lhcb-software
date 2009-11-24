@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.4 2009-11-24 10:52:56 marcocle Exp $
+// $Id: TimeoutAlg.cpp,v 1.5 2009-11-24 10:58:25 marcocle Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -49,6 +49,8 @@ namespace LHCb  {
 #ifdef _WIN32
     void startTimer() {}
     void stopTimer() {}
+    // fake, to avoid a lot ifdefs in the code
+    int m_me;
 #else
     /// Thread ID of event executing thread
     pthread_t   m_me;
