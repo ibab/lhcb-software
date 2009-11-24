@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 """ Main script to setup the basic LHCb environment """
 
-# from imp import find_module
-from SetupProject import SetupProject
 
 import sys
 import os
@@ -44,6 +42,7 @@ sys.path.insert(0,_py_dir)
 # needed for the cache use
 _scripts_dir = os.path.join(_base_dir, "scripts")
 
+from SetupProject import SetupProject
 
 from LbConfiguration.Platform import getBinaryDbg, getConfig
 from LbConfiguration.Platform import getCompiler, getPlatformType, getArchitecture
@@ -58,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.60 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.61 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):

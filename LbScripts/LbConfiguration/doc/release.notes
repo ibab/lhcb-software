@@ -1,5 +1,11 @@
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbConfiguration/LbLogin.py: delayed the import of SetupProject in order to
+	avoid the loading from the already existing PYTHONPATH. This happens when moving from 
+	one version of LbScripts to the other.
+
+2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
 	* cmt/requirements: release of version v4r4
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
