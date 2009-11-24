@@ -1,4 +1,4 @@
-// $Id: L0MuonPadsHistos.cpp,v 1.4 2009-05-28 13:51:51 jucogan Exp $
+// $Id: L0MuonPadsHistos.cpp,v 1.5 2009-11-24 13:25:37 jucogan Exp $
 // Include files 
 
 #include  <math.h>
@@ -44,6 +44,7 @@ L0MuonPadsHistos::L0MuonPadsHistos( const std::string& type,
     m_hmultiBx[sta]=NULL;
     m_hmulti[sta]=NULL;
     for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
+      m_hmap_region[sta][reg]=NULL;
       m_hmultiBx_region[sta][reg]=NULL;
     }
   }
@@ -77,12 +78,18 @@ void L0MuonPadsHistos::bookHistos(int sta,bool shortname) {
   m_hmap[sta]= h2D;
 
   hname = L0Muon::MonUtilities::hname_pads_multiBx(sta,toolname);
-  m_hmultiBx[sta]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
+  m_hmultiBx[sta]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);
   hname = L0Muon::MonUtilities::hname_pads_multi(sta,toolname);
-  m_hmulti[sta]= book1D(hname,hname,0.5,10.5,10);;
+  m_hmulti[sta]= book1D(hname,hname,0.5,10.5,10);
   for (int reg=0; reg<L0Muon::MonUtilities::NRegions; ++reg) {
     hname = L0Muon::MonUtilities::hname_pads_multiBx_region(sta,reg,toolname);
     m_hmultiBx_region[sta][reg]= book2D(hname,hname,-7.5,7.5,15,0.5,10.5,10);;
+    
+    int f=2*(1<<reg);
+    hname = L0Muon::MonUtilities::hname_pads_map_reg(sta,reg,toolname);
+    AIDA::IHistogram2D * h2D=book2D(hname,hname,-xgrid*f,xgrid*f,4*xgrid,-ygrid*f,ygrid*f,4*ygrid);
+    m_hmap_region[sta][reg]= h2D;
+
   }
 } 
 
@@ -117,6 +124,18 @@ void L0MuonPadsHistos::fillHistos(const std::vector<LHCb::MuonTileID> &pads, int
         fill(m_hmap[sta],x,y,weight);
       }
     }
+    if (m_hmap_region[sta][reg]!=NULL) {
+      int iix=X;
+      int iiy=Y;
+      L0Muon::MonUtilities::flipCoord(iix,iiy,qua);
+      double x= iix;
+      double y= iiy;
+      L0Muon::MonUtilities::offsetCoord(x,y,qua);
+      double weight=1./(1.*f*f);
+      if (m_unweighted) weight=1.;
+      fill(m_hmap_region[sta][reg],x*f,y*f,weight);
+    }
+    
     ++multi[sta][reg];
   }
 

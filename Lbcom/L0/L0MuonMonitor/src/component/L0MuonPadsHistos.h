@@ -1,4 +1,4 @@
-// $Id: L0MuonPadsHistos.h,v 1.3 2009-05-28 13:51:51 jucogan Exp $
+// $Id: L0MuonPadsHistos.h,v 1.4 2009-11-24 13:25:37 jucogan Exp $
 #ifndef COMPONENT_L0MUONPADSHISTOS_H 
 #define COMPONENT_L0MUONPADSHISTOS_H 1
 
@@ -43,6 +43,7 @@ private:
   bool  m_unweighted; // do not weight the 2D histos according to the region (e.g. for PDM runs)  
 
   AIDA::IHistogram2D * m_hmap[L0Muon::MonUtilities::NStations];
+  AIDA::IHistogram2D * m_hmap_region[L0Muon::MonUtilities::NStations][L0Muon::MonUtilities::NRegions];
   AIDA::IHistogram2D * m_hmultiBx[L0Muon::MonUtilities::NStations];
   AIDA::IHistogram1D * m_hmulti[L0Muon::MonUtilities::NStations];
   AIDA::IHistogram2D * m_hmultiBx_region[L0Muon::MonUtilities::NStations][L0Muon::MonUtilities::NRegions];
