@@ -1,4 +1,4 @@
-// $Id: TupleToolDalitz.cpp,v 1.4 2009-06-18 13:07:15 pkoppenb Exp $
+// $Id: TupleToolDalitz.cpp,v 1.5 2009-11-24 17:22:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -51,6 +51,6 @@ StatusCode TupleToolDalitz::fill( const LHCb::Particle* mother
   if ( 2>=dauts.size() ){
     return Warning("Will not fill Dalitz of two body decay "+head,StatusCode::SUCCESS,0);
   }
-  return fill(dauts,"",tuple) ;
+  return fill(dauts,"",tuple,(part->particleID().pid()<0)) ;
   
 }

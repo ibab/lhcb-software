@@ -8,6 +8,13 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-11-24 - Patrick Koppenburg
+ - (MC)TupleToolDalitz.* : do not revert all PIDs, but revert daughters if
+   mother is an antiparticle. Was getting strange results for CP-conjugate
+   decays like D->KsPiPi.
+ - Correct warnings in TupleToolPi0Info
+ - v2r8
+
 ! 2009-11-19 - Rob Lambert
  - src/MCTupleToolPID.{h,cpp} new. Add MC PID.
  - src/MCTupleToolKinematic.{h,cpp} fix doxygen

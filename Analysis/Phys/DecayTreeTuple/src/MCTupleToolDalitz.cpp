@@ -1,4 +1,4 @@
-// $Id: MCTupleToolDalitz.cpp,v 1.4 2009-02-19 11:57:16 pkoppenb Exp $
+// $Id: MCTupleToolDalitz.cpp,v 1.5 2009-11-24 17:22:25 pkoppenb Exp $
 // Include files 
 
 // from Gaudi
@@ -63,6 +63,6 @@ StatusCode MCTupleToolDalitz::fill( const LHCb::MCParticle* mother
     return Warning("Will not fill Dalitz of two body decay "+head,StatusCode::SUCCESS,0);
   }
 
-  return fill(dauts,"MC",tuple) ;
+  return fill(dauts,"MC",tuple,(part->particleID().pid()<0)) ;
   
 }

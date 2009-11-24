@@ -1,4 +1,4 @@
-// $Id: TupleToolPi0Info.h,v 1.1 2008-11-11 07:47:58 pkoppenb Exp $
+// $Id: TupleToolPi0Info.h,v 1.2 2009-11-24 17:22:26 pkoppenb Exp $
 #ifndef _TUPLETOOLEPI0INFO_H
 #define _TUPLETOOLEPI0INFO_H 1
 
@@ -60,7 +60,7 @@ private:
   mcRange getRange(const LHCb::Particle* part);
   mcRange getRange(const LHCb::ProtoParticle* proto);
   bool m_RequireMCTruth;
-  unsigned int m_Pi0ID;
+  int m_Pi0ID;
   std::vector<std::string> m_assocInputs;
 };
 #endif // _TUPLETOOLEPI0INFO_H

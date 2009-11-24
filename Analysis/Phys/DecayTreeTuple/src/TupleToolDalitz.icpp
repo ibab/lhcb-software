@@ -3,20 +3,22 @@
 //=============================================================================
 /// The templated method that does it all
 template<class TYPE>
-StatusCode fill( const std::vector<const TYPE*> dauts
-                 , const std::string head
-                 , Tuples::Tuple& tuple ){
+StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
+                 , const std::string head                  /// header
+                 , Tuples::Tuple& tuple                    /// tuple
+                 , bool revert ){                          /// revert all PID (because mother is antiparticle)
   
   bool test = true;
   
   typename std::vector<const TYPE*>::const_iterator i, j;
   for ( i = dauts.begin() ; i!= dauts.end() ; ++i){
-    std::string n1 = name( (*i)->particleID() );
+    std::string n1 = name( (*i)->particleID(), revert );
     Gaudi::LorentzVector p1 = (*i)->momentum() ;
     for ( j = dauts.begin() ; i!= j ; ++j){
-      std::string n2 = name( (*j)->particleID() );                                        
+      std::string n2 = name( (*j)->particleID(), revert );                                        
       Gaudi::LorentzVector p = p1+(*j)->momentum() ;
-      if (msgLevel(MSG::VERBOSE)) verbose() << n1 << " " << n2 << " " << p.M2() << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " " 
+                                  << head+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
       test &= tuple->column( head+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
     }
   }
@@ -26,10 +28,10 @@ StatusCode fill( const std::vector<const TYPE*> dauts
 }
 
 /// get name of particle or anti-particle
-std::string name(const LHCb::ParticleID& id)const{
-  return Decays::escape( ( id.pid()>0 ?
-                           ppSvc()->find( id )->particle() :
-                           ppSvc()->find( id )->antiParticle()->particle() )) ;
+std::string name(const LHCb::ParticleID& id, bool revert)const{
+  return Decays::escape( ( revert ?
+                           ppSvc()->find( id )->antiParticle()->particle() :
+                           ppSvc()->find( id )->particle() )) ;
 }
 
 /// get particle property serivce
