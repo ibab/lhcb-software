@@ -56,6 +56,7 @@ MuIDMonitor::MuIDMonitor( const std::string& name,
   declareProperty( "MassWindow", m_MassWin = 100.0);
   declareProperty( "JpsiAnalysis", m_JPAna = 0);
   declareProperty( "LambdaAnalysis", m_LMAna = 0);
+  declareProperty( "HitInFoi", m_hitInFoi = 0);
 
   declareProperty( "EffMassWin", m_EffWin = 20);
 
@@ -223,32 +224,34 @@ StatusCode MuIDMonitor::execute() {
   m_MuProb = 0;
   m_LklhMu = -10000; m_LklhPi = -10000;
 
-  // get the MuonCoords for each station in turn
-  LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
-  if ( coords==0 ) {
-    err() << " Cannot retrieve MuonCoords " << endreq;
-    return StatusCode::FAILURE;
-  }
-
-  // loop over the coords
-  LHCb::MuonCoords::const_iterator iCoord;
-  for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
-
-    int region = (*iCoord)->key().region();
-    int station = (*iCoord)->key().station();
-    double x,dx,y,dy,z,dz;
-    LHCb::MuonTileID tile=(*iCoord)->key();
-    sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
-    if (sc.isFailure()){
-      warning() << "Failed to get x,y,z of tile " << tile << endreq;
-      continue;
+  if(m_hitInFoi) {
+    // get the MuonCoords for each station in turn
+    LHCb::MuonCoords* coords = get<LHCb::MuonCoords>(LHCb::MuonCoordLocation::MuonCoords);
+    if ( coords==0 ) {
+      err() << " Cannot retrieve MuonCoords " << endreq;
+      return StatusCode::FAILURE;
     }
-
-    m_coordPos[station*m_NRegion+region].
-      push_back(coordExtent_(x,dx,y,dy,*iCoord));
-
+    
+    // loop over the coords
+    LHCb::MuonCoords::const_iterator iCoord;
+    for ( iCoord = coords->begin() ; iCoord != coords->end() ; iCoord++ ){
+      
+      int region = (*iCoord)->key().region();
+      int station = (*iCoord)->key().station();
+      double x,dx,y,dy,z,dz;
+      LHCb::MuonTileID tile=(*iCoord)->key();
+      sc = m_mudet->Tile2XYZ(tile,x,dx,y,dy,z,dz);
+      if (sc.isFailure()){
+	warning() << "Failed to get x,y,z of tile " << tile << endreq;
+	continue;
+      }
+      
+      m_coordPos[station*m_NRegion+region].
+	push_back(coordExtent_(x,dx,y,dy,*iCoord));
+      
+    }
   }
-
+  
   double pl1(0.),pl2(0.),pl(0.); int posPion(-1);
   bool plotFlag(kFALSE);
 
@@ -364,7 +367,11 @@ StatusCode MuIDMonitor::execute() {
 	if(m_JPAna) {
 	  //Hit in 2 * Foi just for the Probe!
 	  if(!idTag[id_jp]) {
-	    plotFlag = selectHitInFOI();
+	    if(m_hitInFoi) {
+	      plotFlag = selectHitInFOI();
+	    } else {
+	      plotFlag = kTRUE;
+	    }
 	  } else {
 	    //Tag muon has it in *2 foi PER DEFINITION
 	    plotFlag = kTRUE;

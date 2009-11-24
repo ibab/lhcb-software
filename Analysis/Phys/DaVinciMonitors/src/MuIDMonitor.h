@@ -92,7 +92,7 @@ private:
   /// Preselection momentum (no attempt to ID below this)
   double m_PreSelMomentum;
   double m_MassMean, m_MassWin, m_EffWin;
-  int m_JPAna, m_LMAna;
+  int m_JPAna, m_LMAna, m_hitInFoi;
   bool m_extrapolated, m_passed;
   int m_extrFail;
   GaudiAlg::HistoBinEdges m_edgesJPX,m_edgesLMX;
