@@ -17,9 +17,15 @@ import CMT, Log, Set
 import afs, castor
 import Storage
 import Script
-import SelfExtract
+try :
+    import SelfExtract
+except :
+    pass
 import Temporary
-import Tar
+try:
+    import Tar
+except :
+    pass
 
 ## Write the generic Makefile for CMT projects.
 #  @param filename: the name of the destination file

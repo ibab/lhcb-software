@@ -1,3 +1,10 @@
+2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbUtils/__init__.py: protected the imports which do not work in version of python
+	prior to 2.4.
+	* python/LbUtils/Processes.py: added the function getNumberOfCores. It detects on 
+	windows, OSX and Linux the number of cores available at the running machine.
+
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v1r19
