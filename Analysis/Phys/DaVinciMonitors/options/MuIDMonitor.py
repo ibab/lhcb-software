@@ -1,11 +1,11 @@
 ##############################################################################
-# $Id: MuIDMonitor.py,v 1.1 2009-11-23 13:50:16 asarti Exp $
+# $Id: MuIDMonitor.py,v 1.2 2009-11-24 13:21:28 asarti Exp $
 #
 # Author Alessio Sarti <Alessio.Sarti@lnf.infn.it>
 #
 ##############################################################################
 from Gaudi.Configuration import *
-from Configurables import MuIDMonitor, CombineParticles, ParticleMonitor, DaVinci
+from Configurables import MuIDMonitor, CombineParticles, DaVinci
 
 ##################################################################
 ## Create Lambda -> ppi candidates out of no pid protons/pions ###
@@ -67,6 +67,7 @@ MuIDLambdaPlot.EffMassWin = 2.;
 
 MuIDLambdaPlot.JpsiAnalysis = 0
 MuIDLambdaPlot.LambdaAnalysis = 1
+MuIDLambdaPlot.HitInFoi = 0
 
 #// MuonID preselection momentum (MeV/c)
 MuIDLambdaPlot.PreSelMomentum = 3000.
@@ -132,6 +133,7 @@ MuIDJpsiPlot.EffMassWin = 20.;
 
 MuIDJpsiPlot.JpsiAnalysis = 1
 MuIDJpsiPlot.LambdaAnalysis = 0
+MuIDJpsiPlot.HitInFoi = 0
 
 #// MuonID preselection momentum (MeV/c)
 MuIDJpsiPlot.PreSelMomentum = 3000.
