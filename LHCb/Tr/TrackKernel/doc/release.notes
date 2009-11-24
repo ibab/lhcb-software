@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-11-24 - Wouter Hulsbergen
+ - added method to get (biased) chi2 contribution of single track in TrackStateVertex
+
 !========================== TrackKernel v1r1 2009-10-16 ===================
 ! 2009-10-08 - Wouter Hulsbergen
  - adapted to changes in LHCb::Track
