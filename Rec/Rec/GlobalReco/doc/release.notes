@@ -4,10 +4,15 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-11-24 - Chris Jones
+ - Add work around for older data where MuonPID::IsMuonLoose() is missing (and 
+   thus false) but MuonPID::IsMuon() is true. Manually set IsMuonLoose to true
+   in this case.
+ - Improve a little the verbose printout
+
 !========================== GlobalReco v6r28 2009-11-13 ======================
 ! 2009-11-13 - Rob Lambert
  - Tagged v6r28
-
 
 ! 2009-11-06 - Chris Jones
  - Downgrade Warnings to Info in data recreation algorithms, since this case

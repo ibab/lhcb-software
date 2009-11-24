@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.12 2009-11-06 18:11:08 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.13 2009-11-24 13:31:43 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -84,6 +84,10 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
 
   // load ProtoParticles
   const ProtoParticles * protos = get<ProtoParticles>( m_protoPloc );
+  if ( msgLevel(MSG::DEBUG) )
+  {
+    debug() << "Found " << protos->size() << " ProtoParticles at " << m_protoPloc << endmsg;
+  }
 
   // Are Muon Tracks available ?
   const Tracks * muonTracks = ( !exist<Tracks>(m_muonTrackLoc) ? NULL :
@@ -106,6 +110,11 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
         iP != protos->end(); ++iP )
   {
 
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << "Trying ProtoParticle " << (*iP)->key() << endmsg;
+    }
+
     // get Track pointer
     const Track * track = (*iP)->track();
     if ( !track )
@@ -117,6 +126,10 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
     // does this proto have any Muon info in it ?
     if ( (*iP)->hasInfo(ProtoParticle::MuonPIDStatus) )
     {
+      if ( msgLevel(MSG::VERBOSE) )
+      {
+        verbose() << " -> Has MuonPID information" << endmsg;
+      }
 
       // new MuonPID
       MuonPID * pid = new MuonPID();
@@ -140,12 +153,15 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       pid->setMuonLLBg( (*iP)->info(ProtoParticle::MuonBkgLL,   0) );
       pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
 
+      // Work around for old MuonPID data objects without IsMuonLoose
+      if ( !pid->IsMuonLoose() && pid->IsMuon() ) { pid->setIsMuonLoose(true); }
+
       // Muon Track (if it exists, it will have same key as primary track)
       Track * muonTrack = ( NULL != muonTracks ? muonTracks->object(track->key()) : NULL );
       if ( muonTrack )
       {
         if ( msgLevel(MSG::DEBUG) )
-        { debug() << "Adding MuonTrack " << muonTrack->key() << " to MuonPID object" << endmsg; }
+        { debug() << " -> Adding MuonTrack " << muonTrack->key() << endmsg; }
         pid->setMuonTrack( muonTrack );
       }
 

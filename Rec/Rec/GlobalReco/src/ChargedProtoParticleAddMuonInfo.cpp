@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddMuonInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.2 2009-09-03 11:09:22 jonrob Exp $
+ * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.3 2009-11-24 13:31:43 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -95,6 +95,11 @@ StatusCode ChargedProtoParticleAddMuonInfo::execute()
 //=============================================================================
 void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) const
 {
+  if ( msgLevel(MSG::VERBOSE) )
+  {
+    verbose() << "Trying ProtoParticle " << proto->key() << endmsg;
+  }
+
   // Erase current MuonPID information
   proto->removeMuonInfo();
 
@@ -124,7 +129,14 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
   }
 
   // check Loose IsMuon flag - Reject non-muons
-  if ( !muonPID->IsMuonLoose() ) return;
+  if ( !muonPID->IsMuonLoose() ) 
+  {
+    if ( msgLevel(MSG::VERBOSE) )
+    {
+      verbose() << " -> Rejected by IsMuonLoose cut" << endmsg; 
+    }
+    return;
+  }
 
   // reference to MuonPID object
   proto->setMuonPID( muonPID );
