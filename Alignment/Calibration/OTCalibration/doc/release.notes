@@ -1,12 +1,18 @@
-! $Id: release.notes,v 1.5 2009-11-23 12:36:30 jblouw Exp $
+! $Id: release.notes,v 1.6 2009-11-24 14:50:32 akozlins Exp $
 ! Package     : OTCalibration
 ! Responsible : Wouter Hulsbergen
 ! Purpose     : Algorithm for OT rt and t0 calibration
 
+! 2009-11-24 Alexandr Kozlinskiy
+  - Update T0ModuleClbrAlg
+    * added option FitTR - fit TR-relation or not
+    * added option Granularity - t0's per module, quarter, layer or station
+    * removed output from minuit fit
+    * propogate TR-relation parameters from input xml's to output xml's
+
 </PRE><H1><A NAME=v1r2>2009-11-23 OTCAlibration v1r2</A></H1><PRE>
 ! 2009-11-23 Johan Blouw
- - release version v1r2 for Alignment v4r4
-
+  - release version v1r2 for Alignment v4r4
 
 ! 2009-11-17 Alexandr Kozlinskiy
   - added new algorithm T0ModuleClbrAlg which will be used for timing

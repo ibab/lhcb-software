@@ -26,8 +26,15 @@ using namespace boost::assign;
 #include <boost/spirit/home/classic.hpp>
 #include <boost/spirit/home/phoenix.hpp>
 
+DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg);
+
 OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocator): GaudiHistoAlg(name, pSvcLocator)
 {
+  stationNames = list_of("T1")("T2")("T3");
+  layerNames = list_of("X1")("U")("V")("X2");
+  quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
+  moduleNames = list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
+
   detector = 0;
 
   // --- load options ---
@@ -36,8 +43,10 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
 
   declareProperty("Projector", projector);
 
+  declareProperty("Granularity", granularity = 432, "T0 calibration granularity (default 432 - T0's per module)");
+
   declareProperty("MaxTrackChi2", maxTrackChi2 = 16, "Max track Chi^2 (default 16)");
-  declareProperty("MaxUnbiasedChi2", maxUnbiasedChi2 = 4, "Max track unbiased Chi^2 (default 4)");
+  declareProperty("MaxTrackUbChi2", maxTrackUbChi2 = 4, "Max track unbiased Chi^2 (default 4)");
 
   declareProperty("UseOutliers", useOutliers = false, "Use outliers (default false)");
 
@@ -63,6 +72,7 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
   declareProperty("ReadXMLs", readXMLs = true, "Read condition XML files (default true)");
 
   declareProperty("UseMinuit", useMinuit = true, "Use Minuit to fit TR-relation (default true)");
+  declareProperty("FitTR", fitTR = false, "(default false)");
 
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
@@ -70,6 +80,8 @@ OTModuleClbrAlg::OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocat
     histModuleDriftTimeResidual[s][l][q][m] = 0;
     histModuleDriftTimeVsDist[s][l][q][m] = 0;
   }
+
+  trA = trB = trC = trSigmaA = trSigmaB = trSigmaC = 0;
 }
 
 StatusCode OTModuleClbrAlg::initialize()
@@ -79,8 +91,9 @@ StatusCode OTModuleClbrAlg::initialize()
   // --- print options ---
 
   info() << "TrackLocation: " << trackLocation << endmsg;
+  info() << "Granularity: " << granularity << endmsg;
   info() << "MaxTrackChi2: " << maxTrackChi2 << endmsg;
-  info() << "MaxUnbiasedChi2: " << maxUnbiasedChi2 << endmsg;
+  info() << "MaxTrackUbChi2: " << maxTrackUbChi2 << endmsg;
   info() << "HistDriftTime: " <<
     "t = [" << histDriftTimeOpts[0] << ", " << histDriftTimeOpts[1] << "]/" << (int)histDriftTimeOpts[2] << endmsg;
   info() << "HistDriftTimeResidual: " <<
@@ -95,16 +108,12 @@ StatusCode OTModuleClbrAlg::initialize()
   info() << "WriteXMLs: " << (writeXMLs ? "true" : "false") << endmsg;
   info() << "ReadXMLs: " << (readXMLs ? "true" : "false") << endmsg;
   info() << "UseMinuit: " << (useMinuit ? "true" : "false") << endmsg;
+  info() << "FitTR: " << (fitTR ? "true" : "false") << endmsg;
 
   detector = getDet<DeOTDetector>(DeOTDetectorLocation::Default);
   if(detector == 0) return StatusCode::FAILURE;
 
   projector.retrieve().ignore();
-
-  stationNames = list_of("T1")("T2")("T3");
-  layerNames = list_of("X1")("U")("V")("X2");
-  quarterNames = list_of("Q0")("Q1")("Q2")("Q3");
-  moduleNames = list_of("M1")("M2")("M3")("M4")("M5")("M6")("M7")("M8")("M9");
 
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
@@ -125,6 +134,30 @@ StatusCode OTModuleClbrAlg::initialize()
         histDriftTimeVsDistOpts[0], histDriftTimeVsDistOpts[1], (int)histDriftTimeVsDistOpts[2],
         histDriftTimeVsDistOpts[3], histDriftTimeVsDistOpts[4], (int)histDriftTimeVsDistOpts[5]);
     }
+  }
+
+  // book drift time residual histograms for quarters
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++)
+  {
+    std::string histPath = stationNames[s] + "/" + layerNames[l] + "/" + quarterNames[q];
+    histQuarterDriftTimeResidual[s][l][q] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+  }
+
+  // book drift time residual histograms for layers
+  for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++)
+  {
+    std::string histPath = stationNames[s] + "/" + layerNames[l];
+    histLayerDriftTimeResidual[s][l] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
+  }
+
+  // book drift time residual histograms for stations
+  for(int s = 0; s < 3; s++)
+  {
+    std::string histPath = stationNames[s];
+    histStationDriftTimeResidual[s] = book(histPath + "/" + "driftTimeResidual", "drift time residual",
+      histDriftTimeResidualOpts[0], histDriftTimeResidualOpts[1], (int)histDriftTimeResidualOpts[2]);
   }
 
   histDriftTimeVsDist = book2D("driftTimeVsDist", "drift time vs distance",
@@ -181,9 +214,38 @@ StatusCode OTModuleClbrAlg::execute()
       double residualPull = fitNode->residual() / fitNode->errResidual();
       double unbiasedChi2 = (track->chi2() - residualPull * residualPull) / (track->nDoF() - 1);
 
-      if(trackChi2 < maxTrackChi2 && unbiasedChi2 < maxUnbiasedChi2 && (useOutliers || !isOutlier))
+      if(trackChi2 < maxTrackChi2 && unbiasedChi2 < maxTrackUbChi2 && (useOutliers || !isOutlier))
       {
-        fillHists(*measurement, unbiasedNode, unbiasedState);
+        const LHCb::OTChannelID& channel = measurement->channel();
+
+        int s = channel.station();
+        int l = channel.layer();
+        int q = channel.quarter();
+        int m = channel.module();
+
+        double driftTime = measurement->driftTimeFromY(unbiasedState.y());
+        if(histModuleDriftTime[s-1][l][q][m-1] != 0) fill(histModuleDriftTime[s-1][l][q][m-1], driftTime, 1.0);
+
+        LHCb::FitNode node(*fitNode);
+        LHCb::State state = fitNode->state();
+        node.setState(state);
+        node.setRefVector(state.stateVector());
+        projector->projectReference(node);
+
+        double dist = node.pocaVector().Dot(state.position() - measurement->trajectory().beginPoint());
+        double time = measurement->module().driftTimeWithError(std::abs(dist)).val;
+        double driftTimeResidual = driftTime - time;
+
+        fill(histModuleDriftTimeResidual[s-1][l][q][m-1], driftTimeResidual, 1.0);
+        fill(histQuarterDriftTimeResidual[s-1][l][q], driftTimeResidual, 1.0);
+        fill(histLayerDriftTimeResidual[s-1][l], driftTimeResidual, 1.0);
+        fill(histStationDriftTimeResidual[s-1], driftTimeResidual, 1.0);
+
+        double unbiasedDist = unbiasedNode.pocaVector().Dot(unbiasedState.position() - measurement->trajectory().beginPoint());
+
+        if(histModuleDriftTimeVsDist[s-1][l][q][m-1] != 0) fill(histModuleDriftTimeVsDist[s-1][l][q][m-1], unbiasedDist, driftTime, 1.0);
+
+        fill(histDriftTimeVsDist, unbiasedDist, driftTime, 1.0);
       }
     }
   }
@@ -198,38 +260,17 @@ StatusCode OTModuleClbrAlg::finalize()
   statusCode = fitT0s();
   if(statusCode != StatusCode::SUCCESS) return statusCode;
 
-  if(useMinuit) statusCode = fitTRMinuit();
-  else statusCode = fitTR();
-  if(statusCode != StatusCode::SUCCESS) return statusCode;
+  if(fitTR)
+  {
+    if(useMinuit) statusCode = fitTRMinuit();
+    else statusCode = fitTRSimple();
+    if(statusCode != StatusCode::SUCCESS) return statusCode;
+  }
 
   if(writeXMLs) statusCode = writeCondXMLs();
   if(statusCode != StatusCode::SUCCESS) return statusCode;
 
   return GaudiHistoAlg::finalize();
-}
-
-void OTModuleClbrAlg::fillHists(const LHCb::OTMeasurement& measurement, const LHCb::FitNode& node, const LHCb::State& state)
-{
-  const LHCb::OTChannelID& channel = measurement.channel();
-
-  double driftTime = measurement.driftTimeFromY(state.y());
-//  double driftDist = measurement.driftRadiusWithErrorFromY(state.y()).val;
-
-  double dist = node.pocaVector().Dot(state.position() - measurement.trajectory().beginPoint());
-  double time = measurement.module().driftTimeWithError(std::abs(dist)).val;
-
-  double timeResidual = driftTime - time;
-
-  int s = channel.station();
-  int l = channel.layer();
-  int q = channel.quarter();
-  int m = channel.module();
-
-  if(histModuleDriftTime[s-1][l][q][m-1] != 0) fill(histModuleDriftTime[s-1][l][q][m-1], driftTime, 1.0);
-  if(histModuleDriftTimeResidual[s-1][l][q][m-1] != 0) fill(histModuleDriftTimeResidual[s-1][l][q][m-1], timeResidual, 1.0);
-  if(histModuleDriftTimeVsDist[s-1][l][q][m-1] != 0) fill(histModuleDriftTimeVsDist[s-1][l][q][m-1], dist, driftTime, 1.0);
-
-  fill(histDriftTimeVsDist, dist, driftTime, 1.0);
 }
 
 StatusCode OTModuleClbrAlg::fitT0s()
@@ -241,6 +282,9 @@ StatusCode OTModuleClbrAlg::fitT0s()
     {
       LHCb::OTChannelID id = module->elementID();
       t0s[id.station() - 1][id.layer()][id.quarter()][id.module() - 1] = module->strawT0(1);
+
+      tcoeff = module->rtRelation().tcoeff();
+      terrcoeff = module->rtRelation().terrcoeff();
     }
   }
 
@@ -249,7 +293,24 @@ StatusCode OTModuleClbrAlg::fitT0s()
 
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
-    TH1* hist = Gaudi::Utils::Aida2ROOT::aida2root(histModuleDriftTimeResidual[s][l][q][m]);
+    TH1* hist = 0;
+
+    switch(granularity)
+    {
+    case 3:
+      hist = Gaudi::Utils::Aida2ROOT::aida2root(histStationDriftTimeResidual[s]);
+      break;
+    case 12:
+      hist = Gaudi::Utils::Aida2ROOT::aida2root(histLayerDriftTimeResidual[s][l]);
+      break;
+    case 48:
+      hist = Gaudi::Utils::Aida2ROOT::aida2root(histQuarterDriftTimeResidual[s][l][q]);
+      break;
+    case 432:
+    default:
+      hist = Gaudi::Utils::Aida2ROOT::aida2root(histModuleDriftTimeResidual[s][l][q][m]);
+    }
+
     if(hist == 0 || hist->GetEntries() < 16) continue;
 
     hist->Fit("gaus", "Q0+");
@@ -263,11 +324,13 @@ StatusCode OTModuleClbrAlg::fitT0s()
 
   double t0mean = 0;
   double dt0mean = 0;
+/*
   for(int s = 0; s < 3; s++) for(int l = 0; l < 4; l++) for(int q = 0; q < 4; q++) for(int m = 0; m < 9; m++)
   {
     t0mean += t0s[s][l][q][m];
     dt0mean += dt0s[s][l][q][m];
   }
+*/
   t0mean /= 432.0;
   dt0mean /= 432.0;
 
@@ -307,7 +370,7 @@ StatusCode OTModuleClbrAlg::fitT0s()
   return StatusCode::SUCCESS;
 }
 
-StatusCode OTModuleClbrAlg::fitTR()
+StatusCode OTModuleClbrAlg::fitTRSimple()
 {
   TH2* histDriftTimeVsDist = Gaudi::Utils::Aida2ROOT::aida2root(OTModuleClbrAlg::histDriftTimeVsDist);
   if(histDriftTimeVsDist == 0) return StatusCode::FAILURE;
@@ -430,20 +493,20 @@ void fMinuit(int&, double*, double& result, double* par, int)
 
     result -= scale * log(ptr / ipr_);
   }
-
-  std::cout << "." << std::flush;
 }
 
 StatusCode OTModuleClbrAlg::fitTRMinuit()
 {
   TMinuit minuit(9);
 
+  minuit.SetPrintLevel(-1);
+
   histTVsR = Gaudi::Utils::Aida2ROOT::aida2root(histDriftTimeVsDist);
   minuit.SetFCN(fMinuit);
 
   minuit.DefineParameter(0, "t_0",        0.00,   0.1,  -10.0, 10.0);
-  minuit.DefineParameter(1, "t_m",       36.00,   0.1,   28.0, 45.0);
-  minuit.DefineParameter(2, "t_c",        5.00,   0.1,   -1.0,  7.0);
+  minuit.DefineParameter(1, "t_m",       35.00,   0.1,   25.0, 50.0);
+  minuit.DefineParameter(2, "t_c",        3.00,   0.1,    0.0, 10.0);
 
   minuit.DefineParameter(3, "sigmaRA",    0.30,   0.01,   0.1,  1.0);
   minuit.DefineParameter(4, "sigmaRB",    0.20,   0.01,   0.1,  1.0);
@@ -454,7 +517,6 @@ StatusCode OTModuleClbrAlg::fitTRMinuit()
   minuit.DefineParameter(7, "sigmaRBG",   1.00,   0.01,   0.5,  5.0);
   minuit.DefineParameter(8, "bg",         0.001,  0.001,  0.0,  1.0);
 
-  minuit.SetPrintLevel(1);
   minuit.SetErrorDef(0.5);
 
   minuit.mnmigr();
@@ -469,8 +531,23 @@ StatusCode OTModuleClbrAlg::fitTRMinuit()
   minuit.GetParameter(3, sigmaRA, sigmaRAerr);
   double sigmaRB, sigmaRBerr;
   minuit.GetParameter(4, sigmaRB, sigmaRBerr);
+  double rho, rhoErr;
+  minuit.GetParameter(6, rho, rhoErr);
+  double sigmaRBG, sigmaRBGErr;
+  minuit.GetParameter(7, sigmaRBG, sigmaRBGErr);
+  double bg, bgErr;
+  minuit.GetParameter(8, bg, bgErr);
 
   static const double rmax = 2.45;
+
+  info() << "t0 = " << t0 << endmsg;
+  info() << "tm = " << tm << endmsg;
+  info() << "tc = " << tc << endmsg;
+  info() << "sigmaRA = " << sigmaRA << endmsg;
+  info() << "sigmaRB = " << sigmaRB << endmsg;
+  info() << "rho = " << rho << endmsg;
+  info() << "sigmaRBG = " << sigmaRBG << endmsg;
+  info() << "bg = " << bg << endmsg;
 
   trA = t0;
   trB = tm - 4.0 * tc;
@@ -520,11 +597,17 @@ StatusCode OTModuleClbrAlg::writeCondXMLs()
       file << "  <condition classID=\"5\" name=\"" << moduleId << "\">\n";
 
       file << "    <paramVector name=\"STParameters\" type=\"double\" comment=\"SigmaT parameters in ns\">\n";
-      file << "      " << trSigmaA << " " << trSigmaB << " " << trSigmaC << "\n";
+      file << "      ";
+      if(fitTR) file << trSigmaA << " " << trSigmaB << " " << trSigmaC << "\n";
+      else for(size_t i = 0; i < terrcoeff.size(); i++) file << terrcoeff[i] << " ";
       file << "    </paramVector>\n";
+
       file << "    <paramVector name=\"TRParameters\" type=\"double\" comment=\"RT parameters in ns\">\n";
-      file << "      " << 0.0 /*trA*/ << " " << trB << " " << trC << "\n";
+      file << "      ";
+      if(fitTR) file << 0.0 /*trA*/ << " " << trB << " " << trC << "\n";
+      else for(size_t i = 0; i < tcoeff.size(); i++) file << tcoeff[i] << " ";
       file << "    </paramVector>\n";
+
       file << "    <paramVector name=\"TZero\" type=\"double\" comment=\"T0s of straws in module\">\n";
       file << "      " << t0s[s][l][q][m] << "\n";
       file << "    </paramVector>\n";

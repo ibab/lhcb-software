@@ -19,16 +19,36 @@
  *  This class implements algorithms for module T0's and TR-relation
  *  calibration.
  *
- *  The granularity is per module.
- *
  *  @author Alexandr Kozlinskiy
  *  @date   2009-10-20
  */
 class OTModuleClbrAlg: public GaudiHistoAlg
 {
 private:
+  /**
+   * Station names: T1, T2, T3.
+   */
+  std::vector<std::string> stationNames;
+  /**
+   * Layer names: X1, U, V, X2
+   */
+  std::vector<std::string> layerNames;
+  /**
+   * Quarter names: Q0, Q1, Q2, Q3.
+   */
+  std::vector<std::string> quarterNames;
+  /**
+   * Module names: M1, M2, ... , M9.
+   */
+  std::vector<std::string> moduleNames;
+private:
   AIDA::IHistogram1D* histModuleDriftTime[3][4][4][9];
+
   AIDA::IHistogram1D* histModuleDriftTimeResidual[3][4][4][9];
+  AIDA::IHistogram1D* histQuarterDriftTimeResidual[3][4][4];
+  AIDA::IHistogram1D* histLayerDriftTimeResidual[3][4];
+  AIDA::IHistogram1D* histStationDriftTimeResidual[3];
+
   AIDA::IHistogram2D* histModuleDriftTimeVsDist[3][4][4][9];
 
   AIDA::IHistogram2D* histDriftTimeVsDist;
@@ -39,6 +59,9 @@ private:
   AIDA::IHistogram1D* histModuleDT0;
   AIDA::IHistogram1D* histModuleT0;
 private:
+  DeOTDetector* detector;
+  ToolHandle<ITrackProjector> projector;
+
   /**
    * Options for drift time histograms (default t = [-30, 70]/200).
    */
@@ -69,15 +92,12 @@ private:
    */
   bool plotModuleDriftTimeVsDist;
 
-  double t0s[3][4][4][9];
-  double trA, trB, trC;
-  double trSigmaA, trSigmaB, trSigmaC;
-
-  DeOTDetector* detector;
-
   std::string trackLocation;
 
-  ToolHandle<ITrackProjector> projector;
+  /**
+   * T0 calibration granularity (default 432 - T0's per module)
+   */
+  int granularity;
 
   /**
    * Max track Chi^2 (default 16).
@@ -86,7 +106,7 @@ private:
   /**
    * Max track unbiased Chi^2 (default 4).
    */
-  double maxUnbiasedChi2;
+  double maxTrackUbChi2;
 
   /**
    * Use outliers (default false).
@@ -108,21 +128,17 @@ private:
   bool useMinuit;
 
   /**
-   * Station names: T1, T2, T3.
+   *
    */
-  std::vector<std::string> stationNames;
-  /**
-   * Layer names: X1, U, V, X2
-   */
-  std::vector<std::string> layerNames;
-  /**
-   * Quarter names: Q0, Q1, Q2, Q3.
-   */
-  std::vector<std::string> quarterNames;
-  /**
-   * Module names: M1, M2, ... , M9.
-   */
-  std::vector<std::string> moduleNames;
+  bool fitTR;
+
+  std::vector<double> tcoeff;
+  std::vector<double> terrcoeff;
+
+  double t0s[3][4][4][9];
+
+  double trA, trB, trC;
+  double trSigmaA, trSigmaB, trSigmaC;
 public:
   OTModuleClbrAlg(const std::string& name, ISvcLocator* pSvcLocator);
 
@@ -130,8 +146,6 @@ public:
   StatusCode execute();
   StatusCode finalize();
 private:
-  void fillHists(const LHCb::OTMeasurement& measurement, const LHCb::FitNode& node, const LHCb::State& state);
-
   /**
    * Fit module T0's using drift time residuals histograms.
    */
@@ -140,7 +154,7 @@ private:
   /**
    * Simple TR-relation fit.
    */
-  StatusCode fitTR();
+  StatusCode fitTRSimple();
 
   /**
    * Fit TR-relation using Minuit.
@@ -157,7 +171,5 @@ private:
    */
   StatusCode readCondXMLs();
 };
-
-DECLARE_ALGORITHM_FACTORY(OTModuleClbrAlg);
 
 #endif // __OTModuleClbrAlg_h
