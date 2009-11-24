@@ -1500,116 +1500,15 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     else :
         log.error("%s doesn't exist" % lbloginscript)
 
-    # run SetupProject and create the setup script
-    setprojscript = os.path.join(lbscriptspydir, "LbConfiguration", "SetupProject.py")
-    log.debug("Using SetuProject from %s" % setprojscript)
-    if os.path.exists(setprojscript) :
-        from LbConfiguration.SetupProject import SetupProject
-        setuprojargs = []
-        if debug_flag :
-            setuprojargs.append("--debug")
-        else :
-            setuprojargs.append("--silent")
-        setuprojargs.append("--shell=%s" % usedshell)
-        setuprojargs.append("--output=%s" % scriptfile)
-        setuprojargs.append("--no-user-area")
-        setuprojargs.append(pname)
-        setuprojargs.append(pversion)
-        log.debug("Running python %s %s" % (setprojscript, " ".join(setuprojargs)))
-        SetupProject().main(setuprojargs)
+    # run genProjectSetup and create the setup script
+    genprojsetup = os.path.join(lbscriptspydir, "LbConfiguration", "Tools.py")
+    log.debug("Using genProjectSetup from %s" % genprojsetup)
+    if os.path.exists(genprojsetup) :
+        from LbConfiguration.Tools import genProjectSetup
+        genProjectSetup(scriptfile, pname, pversion, cmtconfig, 
+                        usedshell)
     else :
-        log.error("%s doesn't exist" % setprojscript)
-    # Setup script postprocessing
-    if os.path.exists(scriptfile) :
-        postProcessSetupScript(scriptfile, usedshell)
-    else :
-        log.error("%s doesn't exist" % scriptfile)
-def postProcessSetupScript(scriptfile, shell):
-    log = logging.getLogger()
-    log.debug("Postprocessing of %s" % scriptfile)
-    cleanStripPath(scriptfile, shell)
-
-def cleanStripPath(scriptfile, shell):
-    # remove the call to StripPath
-    inf = open(scriptfile, "r")
-    data = inf.readlines()
-    inf.close()
-    outf = open(scriptfile, "w")
-    found = 0
-    for l in data :
-        words = l.split()
-        if len(words)>0 and words[0] == "if" and l.find("StripPath") != -1 :
-            found = 1
-        else :
-            if found :
-                if found < 4 :
-                    found += 1
-                else :
-                    found = 0
-        if found :
-            if shell == "bat" :
-                outf.write("REM " + l )
-            else :
-                outf.write("# " + l)
-        else :
-            outf.write(l)
-    outf.close()
-    # clean up the variables
-    varlist = ["PATH", "LD_LIBRARY_PATH", "PYTHONPATH",
-               "JOBOPTSEARCHPATH", "HPATH", "MANPATH"]
-    for v in varlist :
-        varvalue = StripPath(getVariable(scriptfile, shell, v))
-        appendVariable(scriptfile, shell, v, varvalue)
-
-
-def getVariable(scriptfile, shell, varname):
-    log = logging.getLogger()
-    log.debug("Extracting %s from %s" % (varname, scriptfile))
-    inf = open(scriptfile, "r")
-    data = inf.readlines()
-    inf.close()
-    value = ""
-    for l in data :
-        words = l.split()
-        if len(words) > 1 :
-            if shell == "sh" :
-                if words[0] == "export" and words[1].startswith("%s=" % varname) :
-                    value = words[1].split("=")[1]
-                    continue
-            elif shell == "csh" and len(words)>2 :
-                if words[0] == "setenv" and words[1] == varname :
-                    value = words[2]
-                    continue
-            elif shell == "bat" :
-                if words[0] == "set" and words[1].startswith("%s=" % varname) :
-                    value = words[1].split("=")[1]
-                    continue
-    return value
-
-def appendVariable(scriptfile, shell, varname, varcont):
-    log = logging.getLogger()
-    if varcont :
-        log.debug("Appending %s to %s" % (varname, scriptfile))
-        outf = open(scriptfile, "a")
-        if shell == "sh" :
-            outf.write("export %s=%s\n" % (varname, varcont) )
-        elif shell == "csh" :
-            outf.write("setenv %s %s\n" % (varname, varcont) )
-        elif shell == "bat" :
-            outf.write("set %s=%s\n" % (varname, varcont) )
-        outf.close()
-    else :
-        log.warning("Content of %s is empty" % varname)
-
-
-def StripPath(path):
-    collected = []
-    for p in path.split(os.pathsep):
-        rp = os.path.realpath(p)
-        if os.path.exists(rp) and os.path.isdir(rp):
-            if len(os.listdir(rp)) != 0:
-                collected.append(p)
-    return os.pathsep.join(collected)
+        log.error("%s doesn't exist" % genprojsetup)
 
 # -------------------------------------------------------------------------------------------
 #

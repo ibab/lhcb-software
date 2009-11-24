@@ -1,7 +1,9 @@
 2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
-	* python/LbLegacy/install_project.py: fixed the debug level for the call
-	to SetupProject.
+	* python/LbLegacy/install_project.py: 
+	- fixed the debug level for the call to SetupProject.
+	- use the function LbConfiguration.Tools.genProjectSetup for the generation
+	of the custom setup script.
 	* scripts/mkproject: added the parallel (-j -l) mode.
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
