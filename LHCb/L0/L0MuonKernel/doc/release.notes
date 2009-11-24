@@ -4,6 +4,10 @@
 ! Purpose     : 
 !------------------------------------------------------------------------------
 
+! 2009-11-24 - Julien Cogan
+ - Modification of the error field format in the PU L0Buffer specification.
+   Update ProcDataErrors.cpp and ProcDataCnv.cpp accordingly 
+
 !============================ L0MuonKernel v8r8 2009-10-16 ==================== 
 ! 2009-10-13 - Julien Cogan
  - Change to decode bank v3

@@ -11,7 +11,7 @@ L0Muon::ProcDataErrors::ProcDataErrors()
     name=(boost::format("PU%1d par. links") % ipu).str();
     par_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF,name);
     name=(boost::format("PU%1d ser. links") % ipu).str();
-    ser_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x03F,name);
+    ser_link[ipu] =  L0Muon::ErrorHandler(" %02X",0x0FF,name);
   }
 
 }

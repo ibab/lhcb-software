@@ -1301,7 +1301,7 @@ int L0Muon::ProcDataCnv::setRegisters_for_PB_OpticalLinks(int iboard, boost::dyn
                 <<" 0x"<<std::hex<<word<<std::dec<<std::endl;
 #endif
       m_errors[iboard].opt_link[ipu].set( (word>>16)&0xFF);
-      m_errors[iboard].ser_link[ipu].set( (word>> 8)&0x3F);
+      m_errors[iboard].ser_link[ipu].set( (word>> 8)&0xFF);
       m_errors[iboard].par_link[ipu].set( (word>> 0)&0xFF);
     } // End of loop over PUs errors
     
