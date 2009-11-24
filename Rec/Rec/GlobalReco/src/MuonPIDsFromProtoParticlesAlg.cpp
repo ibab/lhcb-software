@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.13 2009-11-24 13:31:43 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.14 2009-11-24 15:35:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -154,7 +154,9 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
       pid->setNShared ( static_cast<int>((*iP)->info(ProtoParticle::MuonNShared, 0)) );
 
       // Work around for old MuonPID data objects without IsMuonLoose
-      if ( !pid->IsMuonLoose() && pid->IsMuon() ) { pid->setIsMuonLoose(true); }
+      if ( !pid->IsMuonLoose()  && pid->IsMuon() ) { pid->setIsMuonLoose(true); }
+      // Work around for old MuonPID data objects without InAcceptance
+      if ( !pid->InAcceptance() && pid->IsMuon() ) { pid->setInAcceptance(true); }
 
       // Muon Track (if it exists, it will have same key as primary track)
       Track * muonTrack = ( NULL != muonTracks ? muonTracks->object(track->key()) : NULL );

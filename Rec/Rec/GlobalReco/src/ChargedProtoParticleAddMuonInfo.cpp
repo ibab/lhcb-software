@@ -5,7 +5,7 @@
  * Implementation file for algorithm ChargedProtoParticleAddMuonInfo
  *
  * CVS Log :-
- * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.3 2009-11-24 13:31:43 jonrob Exp $
+ * $Id: ChargedProtoParticleAddMuonInfo.cpp,v 1.4 2009-11-24 15:35:25 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 28/08/2009
@@ -148,6 +148,9 @@ void ChargedProtoParticleAddMuonInfo::updateMuon( LHCb::ProtoParticle * proto ) 
 
   // Store History
   proto->addInfo( LHCb::ProtoParticle::MuonPIDStatus, muonPID->Status()   );
+
+  // print full ProtoParticle content
+  if ( msgLevel(MSG::VERBOSE) ) verbose() << *proto << endmsg;
 
 }
 

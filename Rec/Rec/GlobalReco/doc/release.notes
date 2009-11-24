@@ -5,8 +5,9 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-11-24 - Chris Jones
- - Add work around for older data where MuonPID::IsMuonLoose() is missing (and 
-   thus false) but MuonPID::IsMuon() is true. Manually set IsMuonLoose to true
+ - Add work around for older data where MuonPID::IsMuonLoose() or 
+   MuonPID::InAcceptance() is missing (and thus false) but MuonPID::IsMuon() 
+   is true. Manually set IsMuonLoose and InAcceptance to true.
    in this case.
  - Improve a little the verbose printout
 
