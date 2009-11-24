@@ -1,5 +1,5 @@
 ##############################################################################
-# $Id: DVMonitorDst.py,v 1.2 2009-11-09 13:05:37 pkoppenb Exp $
+# $Id: DVMonitorDst.py,v 1.3 2009-11-24 10:00:33 pkoppenb Exp $
 #
 # syntax: gaudirun.py $DAVINCIMONITORSROOT/options/DVMonitorDst.py
 #
@@ -23,8 +23,8 @@ DaVinci().HistogramFile = "DVMonitors.root"
 # Most of this will be configured from Dirac
 #
 ##############################################################################
-DaVinci().EvtMax = -1
-DaVinci().DataType = "MC09" # Default is "DC06"
+DaVinci().EvtMax = 1000
+DaVinci().DataType = "2009" # Default is "DC06"
 DaVinci().Simulation = True
 DaVinci().InputType = "RDST"
 EventSelector().Input   = [

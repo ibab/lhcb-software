@@ -8,16 +8,14 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
-LambdaMonitor     SUCCESS Number of counters : 9
+Jpsi2MuPiMoni     SUCCESS Number of counters : 5
  |    Counter                                      |     #     |    sum     | mean/eff^* | rms/err^*  |     min     |     max     |
- | "# Lambda0 -> p+  pi- "                         |      1266 |          3 |  0.0023697 |   0.048622 |      0.0000 |      1.0000 |
- | "# Lambda~0 -> p~-  pi+ "                       |      1266 |          3 |  0.0023697 |   0.048622 |      0.0000 |      1.0000 |
- | "# p+"                                          |      1266 |       3404 |     2.6888 |     2.8414 |      0.0000 |      22.000 |
- | "# pi+"                                         |      1266 |       3404 |     2.6888 |     2.8414 |      0.0000 |      22.000 |
- | "# pi-"                                         |      1266 |       3745 |     2.9581 |     3.0331 |      0.0000 |      23.000 |
- | "# p~-"                                         |      1266 |       3745 |     2.9581 |     3.0331 |      0.0000 |      23.000 |
- | "# selected"                                    |      1266 |          6 |  0.0047393 |   0.068680 |      0.0000 |      1.0000 |
- |*"#accept"                                       |      1266 |          6 |( 0.473934 +- 0.193024 )%|   -------   |   -------   |
+ |*"# Accepted Mothers"                            |        12 |         12 |(  100.000 +- 8.33333  )%|   -------   |   -------   |
+ |*"# Accepted Mothers in Peak"                    |         2 |          2 |(  100.000 +- 50.0000  )%|   -------   |   -------   |
+ |*"# Accepted Mothers in Sidebands"               |         9 |          9 |(  100.000 +- 11.1111  )%|   -------   |   -------   |
+ | "# Mothers"                                     |        12 |         12 |     1.0000 |     0.0000 |      1.0000 |      1.0000 |
+ |*"#accept"                                       |        10 |         10 |(  100.000 +- 10.0000  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0)
+countErrorLines({"FATAL":0})
 </text></argument>
 </extension>

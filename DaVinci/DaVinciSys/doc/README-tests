@@ -15,6 +15,7 @@ cmt qmtest_run davincisys.stripping.test_stripping >! stripping &
 cmt qmtest_run davincisys.stripping.test_commonparticles >! commonparticles & 
 cmt qmtest_run davincisys.tagging.test_tag >! tag & 
 cmt qmtest_run davincisys.io.test_dst >! dst &  
+cmt qmtest_run davincisys.io.test_realdata >! realdata &  
 cmt qmtest_run davincisys.io.test_rdst >! rdst &  
 cmt qmtest_run davincisys.io.test_decaytreetuple >! decaytreetuple & 
 cmt qmtest_run davincisys.hlt.test_tistos >! tistos & 
