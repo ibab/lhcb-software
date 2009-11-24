@@ -260,6 +260,11 @@ namespace LHCb
     return m_chi2 ;
   }
 
+  double TrackStateVertex::biasedChi2(size_t i) const
+  {
+    return m_tracks[i]->chisq(m_pos) ;
+  }
+
   TrackStateVertex::FitStatus TrackStateVertex::fit( double maxdchisq, size_t maxnumiter)
   {
     bool converged(false) ;

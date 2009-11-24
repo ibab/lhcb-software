@@ -97,6 +97,9 @@ namespace LHCb
     /// Projection matrix for state i to momentum i (matrix B in Fruhwirth)
     const ROOT::Math::SMatrix<double,5,3>& matrixB(size_t i) const ;
 
+    /// the biased chisquare contribution of a single track. (the
+    /// unbiased one I still need to compute)
+    double biasedChi2( size_t i ) const ;
   private:
     size_t symIndex( size_t i, size_t j ) const { return i*(i+1)/2 + j ; }
     const Gaudi::Matrix3x3& computeMomMomCov(size_t i, size_t j) const ;
