@@ -17,7 +17,6 @@ FileCatalog().Catalogs = [ "xmlcatalog_file:MyCatalog.xml" ]
 #-- Use latest 2009 database tags for real data
 Brunel().DataType = "2009"
 
-# Latest cosmic run, with CALO, OT and (!!) RICH2 (35569 events)
 datasetName = "062509_0000000001"
 EventSelector().Input = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62509/" + datasetName + ".raw'  SVC='LHCb::MDFSelector'"]
 

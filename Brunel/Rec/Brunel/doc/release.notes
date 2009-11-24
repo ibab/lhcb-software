@@ -3,6 +3,13 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v35r9p1>2009-11-24 Brunel v35r9p1</A></H1><PRE>
+ - Changes to example options
+   . Add options/2009-Collisions.py: example options for 2009 collisions data
+
+ - Changes to references to reflect changes in Brunel v35r9p1 output:
+   . Bug fix to use of ScaleFactor option in MagneticFieldSvc (Magnet v5r5)
+
 </PRE><H1><A NAME=v35r9>2009-11-23 Brunel v35r9</A></H1><PRE>
  - Changes to example options
    . Add options/2009-BeamGas.py: example options for 2009 beam gas events
