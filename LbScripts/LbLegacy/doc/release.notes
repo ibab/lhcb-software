@@ -1,5 +1,7 @@
 2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
+	* python/LbLegacy/install_project.py: fixed the debug level for the call
+	to SetupProject.
 	* scripts/mkproject: added the parallel (-j -l) mode.
 
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>

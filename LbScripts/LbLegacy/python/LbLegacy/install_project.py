@@ -217,6 +217,7 @@
  091105 - stripped off the hat for the data package if there is one.
  091118 - Moved the Compat project verson to v1r3
  091123 - Moved to LbScripts v4r4
+ 091124 - Fixed the log level passed to SetupProject
 """
 #------------------------------------------------------------------------------
 import sys, os, getopt, time, shutil
@@ -229,7 +230,7 @@ import socket
 from urllib import urlretrieve, urlopen, urlcleanup
 from shutil import rmtree
 
-script_version = '091123'
+script_version = '091124'
 python_version = sys.version_info[:3]
 txt_python_version = ".".join([str(k) for k in python_version])
 lbscripts_version = "v4r4"
@@ -1507,7 +1508,8 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
         setuprojargs = []
         if debug_flag :
             setuprojargs.append("--debug")
-        setuprojargs.append("--silent")
+        else :
+            setuprojargs.append("--silent")
         setuprojargs.append("--shell=%s" % usedshell)
         setuprojargs.append("--output=%s" % scriptfile)
         setuprojargs.append("--no-user-area")
