@@ -174,6 +174,7 @@ var DetectorListener = function(logger,provider,parent,msg) {
       //alert('No new data --- ignore '+data[1]);
       return null;
     }
+
     this._data = data[1];
     var systems = data[1].split('/');
     if ( systems.length < 1 || systems[0] == "DEAD" ) {

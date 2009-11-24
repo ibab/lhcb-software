@@ -1,25 +1,24 @@
 var _isInternetExplorer = function() 
 {  return navigator.appName == "Microsoft Internet Explorer"; }
 var _debugLoading = false;
+var _emulateBrowser = function()
+{  return navigator.appCodeName == 'Envjs';                   }
+_loadStatic = function(name)
+{  document.write('<SCRIPT type="'+_javascriptType+'" src="'+name+'"></SCRIPT>');   }
 
-var _loadScriptAbs = function(base,name) 
-{  document.write('<SCRIPT language="JavaScript" src="'+base+'/'+name+'"></SCRIPT>');   }
-
-var _loadScript = function(name) { _loadScriptAbs(_fileBase,name); }
-
-var _loadStatic = function(name)
-{  document.write('<SCRIPT language="JavaScript" src="'+name+'"></SCRIPT>');   }
+var _loadScriptAbs = function(base,name) { _loadStatic(base+'/'+name);     }
+var _loadScript    = function(name)      { _loadScriptAbs(_fileBase,name); }
 
 function _loadFileAbs(base,filename, filetype)   {
   // this somehow does not work!!!!
   if (filetype=="cpp"){ //if filename is a external JavaScript file
     var fileref=document.createElement('script');
-    fileref.setAttribute("type","text/javascript");
+    fileref.setAttribute("type",_javascriptType);
     fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
   }
   else if (filetype=="js"){ //if filename is a external JavaScript file
     var fileref=document.createElement('script');
-    fileref.setAttribute("type","text/javascript");
+    fileref.setAttribute("type",_javascriptType);
     fileref.setAttribute("src", base+'/'+filename+'.'+filetype);
   }
   else if (filetype=="css"){ //if filename is an external CSS file
@@ -65,8 +64,8 @@ var display_type = function()   {
     this.url_base = pars[0];
     if ( this.type != null ) {
       eval("this.header = function()     { _loadScriptAbs(_fileBase,'lhcb.display."+this.type+".cpp'); }");
-      eval("this.body   = function()     { "+this.type+"_body(); }");
-      eval("this.unload = function()     { "+this.type+"_unload(); }");
+      eval("this.body   = function()     { return "+this.type+"_body(); }");
+      eval("this.unload = function()     { return "+this.type+"_unload(); }");
     }
   }
 

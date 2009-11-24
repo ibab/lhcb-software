@@ -55,9 +55,9 @@ var OutputLogger = function(parent, len, level, style)  {
     if ( this.output != null && this.lines.length > 0 ) {
       var message = '';
       for(var i=this.curr+1; i<this.lines.length; ++i)
-        message += '&rarr; ' + this.lines[i] + '<br>';
+        message += '&rarr; ' + this.lines[i] + '<br></br>';
       for(var i=0; i<=this.curr; ++i)
-        message += '&rarr; ' + this.lines[i] + '<br>';
+        message += '&rarr; ' + this.lines[i] + '<br></br>';
       this.output.innerHTML = message;
       this.output.scrollTop = this.output.scrollHeight
     }
@@ -145,7 +145,7 @@ var OutputLogger = function(parent, len, level, style)  {
     s = s.replace("<", "&lt;", "g")
     s = s.replace(">", "&gt;", "g")
     s = s.replace(" ", "&nbsp;", "g")
-    s = s.replace("\n", "<br>", "g")
+    s = s.replace("\n", "<br></br>", "g")
     return s
   }
 
@@ -252,7 +252,7 @@ var RawItem = function(provider, name, fmt, element)   {
   /// Default callback for dataprovider on feeeding data
   e.set = function(data) {
     var s = ''+data;
-    this.innerHTML = s.replace("<", "&lt;", "g").replace(">", "&gt;", "g").replace(" ", "&nbsp;", "g").replace("\n", "<br>", "g");
+    this.innerHTML = s.replace("<", "&lt;", "g").replace(">", "&gt;", "g").replace(" ", "&nbsp;", "g").replace("\n", "<br></br>", "g");
   }
   return e;
 }

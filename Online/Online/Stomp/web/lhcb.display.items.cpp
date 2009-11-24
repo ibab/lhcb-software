@@ -109,9 +109,12 @@ var DisplayItem = function(item_name)    {
 var StyledItem = function(item_name, class_name, fmt)  {
   element = document.createElement('td');
   element.name   = item_name;
-  element.format = fmt;
-
-  element.className = class_name;
+  if ( fmt )  {
+    element.format = fmt;
+  }
+  if ( class_name ) {
+    element.className = class_name;
+  }
 
   /** Standard callback for data provider for updates
    *  @param data   Data value as string
@@ -220,7 +223,7 @@ var FSMItem = function(item_name, logger, is_child)  {
   }
 
   element.setState = function(name) {
-    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif" ALT="FSM object status">';
+    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif" ALT="">';
     return this;
   }
 
@@ -242,8 +245,9 @@ var FSMItem = function(item_name, logger, is_child)  {
   element.set = function(data)  {
     this._logger.debug('FSMItem.set:'+this.name+' '+this.__tag+' -> data:'+data);
     if ( data != null ) {
-      this.data = data;
       if ( data.length == 2 )   {
+        if ( this.data && this.data[1] == data[1] ) return this;
+        this.data = data;
 	return this.display(data[1]);
       }
     }
@@ -720,7 +724,10 @@ var RunStatusDisplay = function(partition,provider,logger) {
     prop.addFormat(prefix+'TFC.deadTime',         'Dead-time',1,'%8.2f %%');
     prop.addFormat(prefix+'TFC.runDeadTime',      'Integrated dead-time',1,'%8.2f %%');
 
-    prop.add(prefix+'Trigger.TCKLabel',           'Trigger configuration (TCK)',2);
+    if ( this._partition=='LHCb' || this._partition=='TRG' )  {
+      prop.add(prefix+'Trigger.L0Type',             'L0 configuration',1);
+    }
+    prop.add(prefix+'Trigger.TCKLabel',           'HLT configuration (TCK)',2);
 
     prop.build_horizontal();
     this.run_properties.appendChild(this.runPropertyDisplay);

@@ -8,10 +8,15 @@ _loadFile('lhcb.display.fsm','css');
 
 var SelectionBox = function() {
   select = document.createElement('select');
+  select.curr_value = null;
   select.add = function(tag, text, selected) {
     var o = document.createElement('option');
     var i = document.createTextNode(text);
-    if ( selected ) o.setAttribute('selected',selected);
+    if ( selected ) {
+      o.setAttribute('selected',selected);
+      this.selectedIndex = this.options.length-1;
+      this.curr_value = tag;
+    }
     o.setAttribute('value',tag);
     o.appendChild(i);
     this.appendChild(o);
@@ -19,7 +24,9 @@ var SelectionBox = function() {
   }
 
   select.get_value = function() {
-    return this.options[this.selectedIndex].value;
+    var o = this.options[this.selectedIndex];
+    if ( o )  return o.value;
+    return this.curr_value;
   }
   return select;
 }
@@ -156,6 +163,7 @@ var status_unload = function()  {
 }
 
 var status_body = function()  {
+  var prt  = the_displayObject['external_print'];
   var msg  = the_displayObject['messages'];
   var sys  = the_displayObject['system'];
   var body = document.getElementsByTagName('body')[0];
@@ -171,6 +179,7 @@ var status_body = function()  {
     selector.logger = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'RunStatusLogger');
   else
     selector.logger = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'RunStatusLogger');
+  if ( prt ) selector.logger.print = prt;
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
   if ( sys == null ) {

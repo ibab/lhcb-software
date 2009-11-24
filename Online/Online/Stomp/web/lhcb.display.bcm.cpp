@@ -315,7 +315,7 @@ var BcmStatus = function(msg,chart,sensors)   {
 	    crosshair: {show: true, color: "#0F0" },
 	    formatter: chart.dateFormatter({format_string:"HH:NN:SS"})
 	  },
-	  //background:  { color: "#F00", opacity:0, includeTitle: true },
+	  background:  { color: "#F00", opacity:0, includeTitle: true },
 	  auto_resize: false,
 	  show_legend: true,
 	  legend_state: 'minimized',

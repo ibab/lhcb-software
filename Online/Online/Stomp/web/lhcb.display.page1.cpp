@@ -169,9 +169,11 @@ var Page1 = function(msg, sys)   {
 
 var page1_unload = function()  {
   dataProviderReset();
+  return 1;
 }
 
 var page1_body = function()  {
+  var prt  = the_displayObject['external_print'];
   var msg  = the_displayObject['messages'];
   var sys  = the_displayObject['system'];
   var body = document.getElementsByTagName('body')[0];
@@ -187,11 +189,13 @@ var page1_body = function()  {
     selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
   else
     selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  if ( prt ) selector.logger.print = prt;
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
   selector.build();
   selector.subscribe();
   selector.provider.start();
+  return selector;
 }
 
 if ( _debugLoading ) alert('Script lhcb.display.page1.cpp loaded successfully');

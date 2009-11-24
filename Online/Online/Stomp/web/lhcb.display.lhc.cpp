@@ -176,7 +176,7 @@ var LHCStatus = function(msg)   {
     tb.className = 'MonitorData';
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Background, Permit & RF Status:',7,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('Background, Permit &amp; RF Status:',7,'MonitorDataHeader'));
     c.style.backgroundColor = '#FFAAAA';
     tb.appendChild(tr);
 
@@ -427,6 +427,45 @@ var LHCStatus = function(msg)   {
 
   /**
   */
+  table.Trigger_summary = function(logger) {
+    var c, tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+
+    tab.className  = 'MonitorData';
+    tab.width      = '100%';
+    tb.className   = 'MonitorData';
+    tb.width       = '100%';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+
+    this.l0Type        = StyledItem('lbWeb.LHCb_RunInfo.Trigger.L0Type',null, null);
+    this.HLTType       = StyledItem('lbWeb.LHCb_RunInfo.Trigger.HLTType',null, null);
+    this.TCK           = StyledItem('lbWeb.LHCb_RunInfo.Trigger.TCKLabel',null, null);
+
+    tr = document.createElement('tr');
+    tr.appendChild(c=Cell('Trigger:',null,'MonitorDataHeader'));
+    c.style.backgroundColor = '#FFAAAA';
+    c.style.width='125px';
+    c.rowSpan = 2;
+    tr.appendChild(Cell('L0:',null,'MonitorDataHeader'));
+    this.l0Type.style.width = '150px';
+    tr.appendChild(this.l0Type);
+    tr.appendChild(Cell('HLT:',null,'MonitorDataHeader'));
+    tr.appendChild(this.HLTType);
+    tb.appendChild(tr);
+
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('TCK:',1,'MonitorDataHeader'));
+    tr.appendChild(this.TCK);
+    this.TCK.colSpan = 3;
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+    return tab;
+  }
+
+  /**
+  */
   table.Cooling_summary = function() {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
@@ -548,6 +587,9 @@ var LHCStatus = function(msg)   {
     this.subscribeItem(this.l0Rate);
     this.subscribeItem(this.expStatus);
     this.subscribeItem(this.veloPosition);
+    this.subscribeItem(this.l0Type);
+    this.subscribeItem(this.HLTType);
+    this.subscribeItem(this.TCK);
 
     this.subscribeItem(this.itCoolingAlarms);
     this.subscribeItem(this.itCoolingFaults);
@@ -634,6 +676,10 @@ var LHCStatus = function(msg)   {
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
+    td1.appendChild(this.Trigger_summary(this.logger));
+    //-------------------------------------------------
+    tb1.appendChild(tr1=document.createElement('tr'));
+    tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.Magnet_summary());
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
@@ -662,6 +708,7 @@ var lhc_unload = function()  {
 
 
 var lhc_body = function()  {
+  var prt  = the_displayObject['external_print'];
   var msg  = the_displayObject['messages'];
   var body = document.getElementsByTagName('body')[0];
   var tips = init_tooltips(body);
@@ -675,6 +722,7 @@ var lhc_body = function()  {
     selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
   else
     selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  if ( prt ) selector.logger.print = prt;
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
   selector.build();

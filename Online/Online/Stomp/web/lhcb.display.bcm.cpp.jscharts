@@ -1,0 +1,204 @@
+_loadScript('lhcb.display.tooltips.cpp');
+_loadScript('lhcb.display.items.cpp');
+_loadScript('sources/jscharts.js');
+_loadFile('lhcb.display.general','css');
+
+var BcmStatus = function(msg)   {
+  var tr, td, tb, tab;
+  table           = document.createElement('table');
+  table.body      = document.createElement('tbody');
+  table.messages  = msg;
+  table.provider  = null;
+  table.logger    = null;
+
+  table.add = function() {
+    tr = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('colSpan',2);
+    tr.appendChild(td);
+    this.body.appendChild(tr);
+    return td;
+  }
+
+  table.className = 'MonitorPage';
+  table.body.className = 'MonitorPage';
+  table.body.cellpadding = 0;
+  table.body.cellspacing = 0;
+  table.chart = table.add();
+  table.display = table.add();
+  table.logDisplay = table.add();
+  table.appendChild(table.body);
+
+  var div = document.createElement('div');
+  div.id = 'chart';
+  div.style.backgroundColor = '#EEEEEE';
+  div.style.borderWidth = 1;
+  div.style.borderStyle = 'solid';
+  div.style.width = '850px';
+  div.style.height = '530px';
+  div.style.overflow = 'auto';
+  table.chart.appendChild(div);
+
+  table.add_point = function(s,a,p) {
+    if ( a.length > 100 ) a.splice(0,1);
+    a.push(p);
+    s.getDataHandler().setArray(a);
+    s.reload();
+  }
+  table.handle_data = function(data) {
+    /*
+    var t = this.table;
+    var x = (new Date()).getTime();
+    if ( t.arr_data.length > 2 ) {
+      t.chart.axis_bottom.setExtremes(t.arr_data[0][0],x);
+    }
+    t.add_point(t.series,t.arr_data,[x,data]);
+    //t.add_point(t.series_low,t.arr_low,[x,14.9]);
+    t.add_point(t.series_high,t.arr_high,[x,15.2]);
+    */
+    return data;
+  }
+
+  table.add_chart = function() {
+	var myChart = new JSChart('chart', 'line');
+	myChart.setDataArray([[1, 80],[2, 40],[3, 60],[4, 65],[5, 50],[6, 50],[7, 60],[8, 80],[9, 150],[10, 100]], 'blue');
+	myChart.setDataArray([[1, 100],[2, 55],[3, 80],[4, 115],[5, 80],[6, 70],[7, 30],[8, 130],[9, 160],[10, 170]], 'green');
+	myChart.setDataArray([[1, 150],[2, 25],[3, 100],[4, 80],[5, 20],[6, 65],[7, 0],[8, 155],[9, 190],[10, 200]], 'gray');
+	myChart.setAxisPaddingBottom(40);
+	myChart.setTextPaddingBottom(10);
+	myChart.setAxisValuesNumberY(5);
+	myChart.setIntervalStartY(0);
+	myChart.setIntervalEndY(200);
+	myChart.setLabelX([2,'p1']);
+	myChart.setLabelX([4,'p2']);
+	myChart.setLabelX([6,'p3']);
+	myChart.setLabelX([8,'p4']);
+	myChart.setLabelX([10,'p5']);
+	myChart.setAxisValuesNumberX(5);
+	myChart.setShowXValues(false);
+	myChart.setTitleColor('#454545');
+	myChart.setAxisValuesColor('#454545');
+	myChart.setLineColor('#A4D314', 'green');
+	myChart.setLineColor('#BBBBBB', 'gray');
+	myChart.setTooltip([1]);
+	myChart.setTooltip([2]);
+	myChart.setTooltip([3]);
+	myChart.setTooltip([4]);
+	myChart.setTooltip([5]);
+	myChart.setTooltip([6]);
+	myChart.setTooltip([7]);
+	myChart.setTooltip([8]);
+	myChart.setTooltip([9]);
+	myChart.setTooltip([10]);
+	myChart.setFlagColor('#9D16FC');
+	myChart.setFlagRadius(4);
+	myChart.setBackgroundImage('chart_bg.jpg');
+	myChart.setSize(616, 321);
+	myChart.draw();
+  }
+
+  /**
+   */
+  table.Cooling_summary = function() {
+    var tb, td, tr, tab = document.createElement('table');
+    tb = document.createElement('tbody');
+    tab.className  = 'MonitorData';
+    tab.width      = '100%';
+    tb.className   = 'MonitorData';
+    tb.cellSpacing = 0;
+    tb.cellPadding = 0;
+    //tab.style.borderWidth = '10px';
+
+    tr = document.createElement('tr');
+    tb.appendChild(tr);
+    td = document.createElement('td');
+    td.innerHTML = 'ST Cooling data';
+    td.colSpan = 2;
+    tr.appendChild(td);
+
+    tr = document.createElement('tr');
+    this.manifold_temp01 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param01',null,'Temperature 1: %7.2f &#186;C');
+    tr.appendChild(this.manifold_temp01);
+    this.manifold_temp02 = StyledItem('lbWeb.CaV/ItPlant.Actual.Measurements.param02',null,'Temperature 2: %7.2f &#186;C');
+    this.manifold_temp02.conversion = this.handle_data;
+    this.manifold_temp02.table = this;
+    tr.appendChild(this.manifold_temp02);
+    tb.appendChild(tr);
+    tab.appendChild(tb);
+
+    return tab;
+  }
+
+  table.subscribeItem = function(item) {
+    this.provider.subscribe(item.name,item);
+  }
+  table.subscribe = function() {
+    this.subscribeItem(this.manifold_temp01);
+    this.subscribeItem(this.manifold_temp02);
+  }
+
+
+  table.build = function() {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var t1, tb1, tr1, td1, d = new Date();
+
+    tab.width ='100%';
+    tb.width  = '100%';
+
+    tr = document.createElement('tr');
+
+    // Right hand of the display
+    tr.appendChild(td=document.createElement('td'));
+    td.appendChild(t1=document.createElement('table'));
+    td.style.width = '60%';
+    td.colSpan = 2;
+    t1.appendChild(tb1=document.createElement('tbody'));
+
+    tb1.appendChild(tr1=document.createElement('tr'));
+    tr1.appendChild(td1=document.createElement('td'));
+    td1.appendChild(this.Cooling_summary());
+
+    tb.appendChild(tr);
+
+    // Finally add suggestions text
+    tr = document.createElement('tr');
+    tr.appendChild(Cell('',null,null));
+    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
+    tb.appendChild(tr);
+
+    tab.appendChild(tb);
+    this.display.appendChild(tab);
+    this.add_chart();
+    return this;
+  }
+
+  return table;
+}
+
+var bcm_unload = function()  {
+  dataProviderReset();
+  //alert('Connection reset.\n\nBye, Bye my friend....');
+}
+
+var bcm_body = function()  {
+  var msg  = the_displayObject['messages'];
+  var body = document.getElementsByTagName('body')[0];
+  var tips = init_tooltips(body);
+  var selector;
+
+  selector = BcmStatus(msg);
+  body.appendChild(selector);
+  setWindowTitle('LHCb Detector High Voltage Status');
+  if ( msg > 0 )
+    selector.logger   = new OutputLogger(selector.logDisplay, 200, LOG_INFO, 'StatusLogger');
+  else
+    selector.logger   = new OutputLogger(selector.logDisplay,  -1, LOG_INFO, 'StatusLogger');
+  selector.provider = new DataProvider(selector.logger);
+  selector.provider.topic = '/topic/status';
+  selector.build();
+  selector.subscribe();
+  selector.provider.start();
+}
+
+if ( _debugLoading ) alert('Script lhcb.display.detstatus.cpp loaded successfully');

@@ -358,10 +358,10 @@ var collimators_unload = function()  {
 
 
 var collimators_body = function()  {
-  var msg = the_displayObject['messages'];
+  var prt  = the_displayObject['external_print'];
+  var msg  = the_displayObject['messages'];
   var body = document.getElementsByTagName('body')[0];
-  var tips  = init_tooltips(body);
-
+  var tips = init_tooltips(body);
   var selector;
 
   selector = Collimators(msg);
@@ -373,6 +373,7 @@ var collimators_body = function()  {
     selector.logger   = new OutputLogger(selector.logDisplay, 50, LOG_INFO, 'StatusLogger');
   else
     selector.logger   = new OutputLogger(selector.logDisplay, -1, LOG_INFO, 'StatusLogger');
+  if ( prt ) selector.logger.print = prt;
   selector.provider = new DataProvider(selector.logger);
   selector.provider.topic = '/topic/status';
   selector.build();

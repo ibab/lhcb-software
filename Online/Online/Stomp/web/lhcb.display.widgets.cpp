@@ -178,7 +178,7 @@ if ( !lhcb.widgets ) {
     tab.className = 'MonitorData';
     tb.className = 'MonitorData';
     
-    tab.comments   = StyledItem('lbWeb.Background.lhcComments',4,null);
+    tab.comments   = StyledItem('lbWeb.Background.lhcComments',null,null);
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
@@ -219,7 +219,7 @@ if ( !lhcb.widgets ) {
     tb.className = 'MonitorData';
     tab.width = '100%';
 
-    tab.comments   = StyledItem('lbWeb.shiftComments',4,null);
+    tab.comments   = StyledItem('lbWeb.shiftComments',null,null);
     tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('Shift comments:',null,'MonitorDataHeader'));
