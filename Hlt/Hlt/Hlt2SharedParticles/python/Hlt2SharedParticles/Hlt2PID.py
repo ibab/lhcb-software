@@ -8,22 +8,22 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.9 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
-from RichRecSys.Configuration import RichRecSysConf
 ###################################################################################
 #
 # Hlt2 PID
 #
 class Hlt2PID(LHCbConfigurableUser):
+    __used_configurables__ = [ "HltCaloRecoConf", "HltCaloPIDsConf", "RichRecSysConf" ]
     __slots__ = {
-         "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
-       , "Hlt2Tracks"                 : "Hlt/Track/Long"
-       , "Prefix"                     : "Hlt"     # default prefix for all instance names (but common)
-       , "UseRICH"                    : False 
-         }
+        "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
+        , "Hlt2Tracks"                 : "Hlt/Track/Long"
+        , "Prefix"                     : "Hlt"     # default prefix for all instance names (but common)
+        , "UseRICH"                    : False 
+        }
 ###################################################################################
     #
     # Charged ProtoParticles

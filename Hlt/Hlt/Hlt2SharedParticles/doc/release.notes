@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.62 2009-11-25 16:55:53 pkoppenb Exp $
+$Id: release.notes,v 1.63 2009-11-25 17:09:23 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -6,7 +6,7 @@ $Id: release.notes,v 1.62 2009-11-25 16:55:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 
 ! 2009-11-25 - Patrick Koppenburg
- - Remove Calo dependency
+ - Remove Calo and Rich dependency
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually

@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.20 2009-11-25 16:55:51 pkoppenb Exp $
+# $Id: requirements,v 1.21 2009-11-25 17:09:23 pkoppenb Exp $
 # Created    : 2009/04/06
 # Maintainer : P. Koppenburg & G.Raven
 
@@ -15,9 +15,6 @@ include_path      none
 use       GaudiPolicy v*                             
 use       Python      v* LCG_Interfaces 
 use       HltLine     v*  Hlt
-# use       RichRecSys  v* Rich
-# use       CaloReco    v* Calo
-# use       CaloPIDs    v* Calo
 
 # ============================================================================
 # ======= the patterns =======================================================
