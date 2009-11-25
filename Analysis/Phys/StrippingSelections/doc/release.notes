@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-25 - Alessio sarti
+ - Updated di-muon selection. Lowered IM cut, changed stream line name
+
 ! 2009-11-22 - Greig Cowan
  - Removed unneccesary cc from some stripping line DecayDescriptors (JpsiKS,
    PhiPhi).

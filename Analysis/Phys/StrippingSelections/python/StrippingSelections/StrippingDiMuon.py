@@ -6,7 +6,7 @@
 # 
 ## #####################################################################
 
-name = "JpsiInc"
+name = "DiMuonInc"
 
 __all__ = ('name', 'Jpsi', 'sequence')
 
@@ -41,7 +41,7 @@ sequence = SelectionSequence("Seq"+name,
                              )
 # Define the line
 ## ############################################################
-line = StrippingLine('JpsiInclusive'
+line = StrippingLine('DiMuonInclusive'
                            , prescale = 1.
                            , algos = [ sequence ]
                            )
