@@ -1,9 +1,12 @@
-$Id: release.notes,v 1.61 2009-11-25 15:26:14 pkoppenb Exp $
+$Id: release.notes,v 1.62 2009-11-25 16:55:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Koppenburg
+ - Remove Calo dependency
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
