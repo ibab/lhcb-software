@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.76 2009-11-24 15:47:46 graven Exp $
+$Id: release.notes,v 1.77 2009-11-25 13:27:32 jnardull Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.76 2009-11-24 15:47:46 graven Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Jacopo Nardulli
+ - Adding the robust Hlt2B2DX Lines 
 
 ! 2009-11-16 - Gerhard Raven
  - Hlt2Transparant was not yet updated for the change in name of the

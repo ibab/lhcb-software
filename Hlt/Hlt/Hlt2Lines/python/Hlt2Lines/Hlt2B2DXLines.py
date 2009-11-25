@@ -337,3 +337,9 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('B2D2hhKstarReq4BodyMW', prescale = 0.01 , algos = [ Robust4BodySeq, B2D2hhKstarPhiSeqMWFilter], postscale = self.postscale, PV = True)
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2hhKstarReq4BodyMWDecision" : 52210 } )
 
+
+        #Robust Lines
+        line = Hlt2Line('B2D2XRobust3Body', prescale = 0.001 , algos = [ Robust3BodySeq], postscale = self.postscale, PV = True)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust3BodyDecision" : 52220 } )
+        line = Hlt2Line('B2D2XRobust4Body', prescale = 0.001 , algos = [ Robust4BodySeq], postscale = self.postscale, PV = True)
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2D2XRobust4BodyDecision" : 52230 } )
