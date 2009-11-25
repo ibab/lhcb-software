@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.78 2009-11-25 15:28:28 pkoppenb Exp $
+$Id: release.notes,v 1.79 2009-11-25 17:08:25 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.78 2009-11-25 15:28:28 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Koppenburg
+ - No explicit dependency on RichRecSysConf
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
