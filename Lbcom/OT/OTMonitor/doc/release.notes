@@ -1,10 +1,12 @@
 ! Package         : OTMonitor
-! Package manager : J. Amoraal
+! Package manager : Wouter Hulsbergen
 !---------------------------------------------------------------------------
 
-!==================== OTMonitor v3r0p1 2009-11-25 ==========================
+!==================== OTMonitor v3r1 2009-11-25 ============================
 ! 2009-11-25 - Marco Cattaneo
- - Fix duplicate histogram ID in OTTimeMonitor detailed histograms
+ - Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
+   OTTimeMonitor (was crashing anyway...) 
+ - Remove unused variables in OTTimeMonitor following previous changes
  - Remove obsolete file OTMonitor_dll.cpp
 
 !==================== OTMonitor v3r0 2009-11-22 ============================

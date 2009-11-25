@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.cpp,v 1.12 2009-11-25 09:22:47 cattanem Exp $
+// $Id: OTTimeMonitor.cpp,v 1.13 2009-11-25 15:41:12 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -94,10 +94,6 @@ StatusCode OTTimeMonitor::finalize()
   double scalePerEvent = 1.0/double(m_nEvents);
   m_occPerModuleHisto->scale(scalePerEvent);
  
-  if (fullDetail()) {
-    m_occVsxHisto->scale(scalePerEvent);
-  }
-
   m_decoder.release().ignore();
   return GaudiHistoAlg::finalize();
 }
@@ -136,10 +132,6 @@ void OTTimeMonitor::initHistograms() {
     m_tdcTimeHistos.push_back( aHisto1D ) ;
   } // loop station
   
-  if ( fullDetail() ) {
-    // occupancy versus x coordinate in T3 layer 1  
-    m_occVsxHisto = book(40, "Hit occupancy in T3 layer 1 vs x", 0.0, 2984.625/Gaudi::Units::cm, 50);
-  }
 }
 
 void OTTimeMonitor::fillHistograms(const LHCb::OTLiteTime& ottime,
@@ -148,20 +140,6 @@ void OTTimeMonitor::fillHistograms(const LHCb::OTLiteTime& ottime,
   // Times and occupancy per station
   OTChannelID channel = ottime.channel();
   const int iStation = channel.station();
-  
-  // times and occupancies per layer (for all, top, corner and side modules)
-  if ( fullDetail() ) {
-    // number of times versus x-coordinate for T3 layer 1.
-    const int iLayer = channel.layer();
-    if (iStation == 3 && iLayer == 1) {
-      int iUniqueLayerNum = 10*iStation + iLayer;
-      double channelsPerBin = m_nChannelsPerLayer[iUniqueLayerNum]/50;
-      double weight = 100.0/(channelsPerBin );
-      Gaudi::XYZPoint hit = module.centerOfStraw(channel.straw());
-      m_occVsxHisto->fill(std::abs(hit.x())/Gaudi::Units::cm, weight);
-    }
-  
-  }
   
   // calibrated time for every station
   m_calTimeHistos[iStation-m_firstStation]->fill(ottime.calibratedTime());

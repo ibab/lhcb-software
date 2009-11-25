@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.h,v 1.8 2009-11-22 00:13:12 wouter Exp $
+// $Id: OTTimeMonitor.h,v 1.9 2009-11-25 15:41:12 cattanem Exp $
 #ifndef OTMONITOR_OTTIMEMONITOR_H
 #define OTMONITOR_OTTIMEMONITOR_H 1
 
@@ -57,35 +57,20 @@ class OTTimeMonitor : public GaudiHistoAlg {
  
 private:
 
-  /// Geometry
+  // Geometry
   ToolHandle<IOTRawBankDecoder> m_decoder;
   DeOTDetector* m_tracker;
   unsigned int m_nStations;    ///< number of stations (from geometry)
   unsigned int m_firstStation; ///< first OT station   (from geometry)
-  unsigned int m_nEvents;      ///< Number of events 
-
-  /// top module number for every layer
-  std::vector<unsigned int> m_nTopModules;
-  /// number of channels per station 
-  std::vector<unsigned int> m_nChannelsPerStation; 
-  /// times per layer distribution 
-  std::vector<unsigned int> m_nChannelsPerLayer;
-  ///< number of channels in top modules
-  std::vector<unsigned int> m_nChannelsTopModule;
-  ///< number of channels in corner modules
-  std::vector<unsigned int> m_nChannelsCornerModule;
-  ///< number of channels in side modules
-  std::vector<unsigned int> m_nChannelsSideModule;
+  unsigned int m_nEvents;      ///< Number of events
     
-  /// histograms
-  ///< times per event distribution
+  // histograms
+  /// times per event distribution
   AIDA::IHistogram1D* m_nTimesHisto;           
   /// occupancy per module
   AIDA::IHistogram1D* m_occPerModuleHisto ;
   /// average drifttime per module
   AIDA::IProfile1D* m_calTimePerModulePr ;
-  /// occupancy in T1 layer 1 versus x coordinate 
-  AIDA::IHistogram1D* m_occVsxHisto;  
   /// tdc time distribution for each station
   std::vector<AIDA::IHistogram1D*> m_tdcTimeHistos;
   /// calibrated time distribution for each station
