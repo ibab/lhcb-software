@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-11-25 M Needham
+ - Add options to allow seeding to work without OT drift times
+
 !======================= TsaAlgorithms v3r14 2009-11-13 =====================
 ! 2009-11-10 - Kostyantyn Holubyev
  - Added option to run only over hits unused in the previous run of

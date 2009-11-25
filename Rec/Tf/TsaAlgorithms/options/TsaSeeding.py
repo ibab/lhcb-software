@@ -64,7 +64,8 @@ tsaSeed.SeedAddHits.OnlyUnusedHits = OnlyUnusedHits
 if TrackSys().fieldOff():
     Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").addTool( Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool"))
     Tf__Tsa__SeedTrackCnvTool("SeedTrackCnvTool").pFromCurvature = True
-    
+
+
     tsaSeed.xSearchS3.sxCut = 0.40;
     tsaSeed.xSearchS4.sxCut = 0.40;
     tsaSeed.xSearchS3.collectPolicy = "Linear";
@@ -98,5 +99,28 @@ if TrackSys().fieldOff():
     tsaSeed.stubExtender.y0Cut1 = 100.;
     tsaSeed.stubExtender.txCut = 0.1;
     tsaSeed.stubExtender.tyCut = 0.1;
-      
-  
+
+
+if TrackSys().noDrifttimes():
+    
+    tsaSeed.xSearchS3.outlierCut = 21
+    tsaSeed.xSearchS4.outlierCut = 21
+    tsaSeed.stereoS3.outlierCut = 21
+    tsaSeed.stereoS4.outlierCut = 21
+    tsaSeed.xSearchS3.deltaX = 2.7
+    tsaSeed.xSearchS4.deltaX = 2.7
+    tsaSeed.xSearchS3.x0Cut = 800
+    tsaSeed.xSearchS4.x0Cut = 800
+    tsaSeed.stereoS3.syCut = 0.08 
+    tsaSeed.stereoS4.syCut = 0.08
+    tsaSeed.stereoS3.yTol = 25
+    tsaSeed.stereoS4.yTol = 25
+    tsaSeed.stereoS3.yTol2 = 20
+    tsaSeed.stereoS4.yTol2 = 20
+    tsaSeed.calcLikelihood = False
+        
+
+    
+    
+
+    
