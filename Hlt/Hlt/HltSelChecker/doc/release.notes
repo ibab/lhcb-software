@@ -19,6 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-11-25 - Patrick Koppenburg
+ - Remove obsolete FilterTrueTracks.py and OverwriteWithTruth.py. They would
+   not work anymore and (part of) the functionality has been moved to CheckerSeq.
+
 ! 2009-11-23 - Patrick Koppenburg
  - Bug fix in HltCorrelations: Get trigger bits only for L0-yes
 

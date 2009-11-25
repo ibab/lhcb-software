@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2.py,v 1.5 2009-11-17 13:56:43 pkoppenb Exp $
+### $Id: DVTestHlt2.py,v 1.6 2009-11-25 09:12:48 pkoppenb Exp $
 #
 #   Hlt 2 selections test job
 #
@@ -37,7 +37,7 @@ importOptions( "$HLTSELCHECKERROOT/options/Hlt2EventTuple.py")
 # DaVinci
 #
 from Configurables import DaVinci, HltConf
-DaVinci().EvtMax = 40000                   # Number of events  # 400000
+DaVinci().EvtMax = 400                   # Number of events  # 400000
 DaVinci().PrintFreq = 1000
 DaVinci().SkipEvents = 0
 DaVinci().DataType = "MC09"                    # Default is "DC06"
