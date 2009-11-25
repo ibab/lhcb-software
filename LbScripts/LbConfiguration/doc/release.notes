@@ -1,3 +1,12 @@
+2009-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py:
+	- removed the hacks to support Python 2.2
+	- modified the way the environment is manipulated (use a dictionary instead
+	  of the actual environment)
+	- fixed some pylint warnings
+	- updated the test script
+
 2009-11-24  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* scripts/genProjectSetup: new script that generates the setup script for a CMT project.

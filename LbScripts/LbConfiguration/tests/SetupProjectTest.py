@@ -178,7 +178,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(sp.external_only)
         self.assert_(sp.dev_dirs)
         self.assert_(sp.ask)
-        self.assertEquals(sp.loglevel,2)
+        self.assertEquals(sp.loglevel, SetupProject.VERBOSE)
         self.assertEquals(sp.output,"/tmp")
         self.assertEquals(sp.site_externals,[])
         self.assertEquals(sp.use,["abc v1","abc v2"])
@@ -194,7 +194,7 @@ class SetupProjectTestCase(unittest.TestCase):
         self.assert_(not sp.external_only)
         self.assert_(not sp.dev_dirs)
         self.assert_(not sp.ask)
-        self.assertEquals(sp.loglevel,3)
+        self.assertEquals(sp.loglevel, SetupProject.WARNING)
         self.assert_(not sp.output)
         #self.assertEquals(sp.site_externals,[])
         self.assertEquals(sp.use,[])
@@ -203,9 +203,9 @@ class SetupProjectTestCase(unittest.TestCase):
         
         sp = SetupProject.SetupProject()
         sp.parse_args(['--debug',"--mktemp","--site=CERN"])
-        self.assertEquals(sp.loglevel,1)
+        self.assertEquals(sp.loglevel, SetupProject.DEBUG)
         self.assert_(sp.mktemp)
-        self.assertEquals(sp.site_externals,["CASTOR"])
+        self.assertEquals(sp.site_externals, []) # ["CASTOR"]
         
         ### Ordering
         sp = SetupProject.SetupProject()
@@ -332,7 +332,7 @@ class SetupProjectTestCase(unittest.TestCase):
 
         x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s Brunel") % _shell)
         s = x[1].read()
-        
+
         self._check_env(s, "Brunel", v)
         
     def test_080_main(self):
@@ -592,15 +592,19 @@ class SetupProjectTestCase(unittest.TestCase):
             env['User_release_area'] = tmp_dir
             x = os.popen4((launcher + " LbConfiguration.SetupProject --shell=%s --no-auto-override Brunel %s")%(_shell,v))
             s = x[1].read().strip()
-            
+
             self._check_env(s,"Brunel",v)
             
-            if os.environ["CMTCONFIG"][0:3] != "win":
-                m = re.compile('LIBRARY_PATH=(.*)').search(s)
-            else:
-                m = re.compile('set PATH=(.*)').search(s)
+            if "win" in os.environ["CMTCONFIG"]:
+                pat = re.compile('set PATH=(.*)')
+            elif "osx" in os.environ["CMTCONFIG"]:
+                pat = re.compile('(?<!SAVED_)DYLD_LIBRARY_PATH=(.*)')
+            else: # Linux
+                pat = re.compile('(?<!SAVED_)LD_LIBRARY_PATH=(.*)')
+            m = pat.search(s)
             self.assert_(m is not None)
-            self.assert_(m.group(1).split(os.pathsep)[0].find(
+            print m.groups()
+            self.assert_(m.group(1).strip('"').split(os.pathsep)[0].find(
                             os.path.join(tmp_dir,'Brunel_%s'%v,"InstallArea"))>=0)
             #self.assert_(proj_not_found(s))
         finally:
