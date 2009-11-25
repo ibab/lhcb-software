@@ -17,8 +17,8 @@ StatusCode fill( const std::vector<const TYPE*> dauts      /// daughters
     for ( j = dauts.begin() ; i!= j ; ++j){
       std::string n2 = name( (*j)->particleID(), revert );                                        
       Gaudi::LorentzVector p = p1+(*j)->momentum() ;
-      if (msgLevel(MSG::VERBOSE)) << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " " 
-                                  << head+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
+      if (msgLevel(MSG::VERBOSE)) verbose() << (*i)->particleID().pid() << " " << (*j)->particleID().pid()  << " " 
+                                            << head+"Dalitz_"+n1+"_"+n2+"_M2"<< " " << revert << endmsg ;
       test &= tuple->column( head+"Dalitz_"+n1+"_"+n2+"_M2",p.M2()  );
     }
   }
