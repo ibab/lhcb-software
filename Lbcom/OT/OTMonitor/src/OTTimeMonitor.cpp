@@ -1,4 +1,4 @@
-// $Id: OTTimeMonitor.cpp,v 1.11 2009-11-22 08:29:50 wouter Exp $
+// $Id: OTTimeMonitor.cpp,v 1.12 2009-11-25 09:22:47 cattanem Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -138,7 +138,7 @@ void OTTimeMonitor::initHistograms() {
   
   if ( fullDetail() ) {
     // occupancy versus x coordinate in T3 layer 1  
-    m_occVsxHisto = book(31, "Hit occupancy in T3 layer 1 vs x", 0.0, 2984.625/Gaudi::Units::cm, 50);
+    m_occVsxHisto = book(40, "Hit occupancy in T3 layer 1 vs x", 0.0, 2984.625/Gaudi::Units::cm, 50);
   }
 }
 
