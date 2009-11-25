@@ -9,13 +9,14 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.1 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1L0LinesConf(HltLinesConfigurableUser) :
-   __slots__ = { 'Postscale' : { '.*' : 0.000001 } # set new default Postscale for these lines!
+   __slots__ = { 'Postscale' : { 'Hlt1L0(?!Any).*' : 0.000001 } # set new default Postscale for these lines!
+               , 'Prescale'  : { 'Hlt1L0Any'       : 0.000001 }
                , 'L0Channels' : []  # if empty, use all pre-defined channels
                }
 
@@ -28,7 +29,15 @@ class Hlt1L0LinesConf(HltLinesConfigurableUser) :
         for channel in channels :
             Line ( 'L0' + channel 
                  , prescale = self.prescale
-                 , L0DU  = "L0_CHANNEL('"+channel+"')"
+                 , L0DU  = "L0_CHANNEL('%s')" % channel
                  , algos = [ convertL0Candidates(channel) ]
                  , postscale = self.postscale
                  )
+        Line('L0Any' ,  L0DU = 'L0_DECISION' 
+            , prescale = self.prescale
+            , postscale = self.postscale
+            )
+        #Line('L0Forced', L0DU = 'L0_FORCEBIT'
+        #    , prescale = self.prescale
+        #    , postscale = self.postscale
+        #    )

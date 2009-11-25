@@ -7,7 +7,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 #
@@ -22,6 +22,7 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
                , 'MaxNumberOfClusters'        : 450 # 0.5% occupancy
                , 'MinTrksPerVtx'              : 4   # 4 is the minumum value you can put here  
                , 'ODIN'                       :"( ODIN_TRGTYP != LHCb.ODIN.LumiTrigger )" # on what trigger types do we run?
+               , 'L0DU'                       :"( L0_DECISION )" # on what trigger types do we run?
                }
 
    def __apply_configuration__(self):
@@ -103,6 +104,7 @@ class Hlt1VeloLinesConf(HltLinesConfigurableUser):
             from HltLine.HltDecodeRaw import DecodeVELO
             Line( 'Velo' + side
                 , ODIN = self.getProp('ODIN')
+                , L0DU = self.getProp('L0DU')
                 , prescale = self.prescale
                 , algos =
                 [ DecodeVELO, cf, rt, st, gt, pv3D  

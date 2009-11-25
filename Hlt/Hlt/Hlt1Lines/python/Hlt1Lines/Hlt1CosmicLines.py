@@ -9,7 +9,7 @@
 """
 # =============================================================================
 __author__  = "Stephan Nies & Jesko Merkel " 
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.2 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -27,6 +27,6 @@ class Hlt1CosmicLinesConf(HltLinesConfigurableUser):
         Line('CosmicOT'  
             , prescale = self.prescale
             , postscale = self.postscale
-            , L0DU = "L0_ALL"
+            , L0DU = "L0_DECISION"
             , algos = [ DecodeOT, HltCosmicsOT('Hlt1CosmicOTDecision', OutputSelection = 'Hlt1CosmicOTDecision') ]
             )
