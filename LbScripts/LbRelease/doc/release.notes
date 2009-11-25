@@ -1,3 +1,9 @@
+2009-11-25  Karol Kruzelecki  <Karol.Kruzelecki@cern.ch>
+
+	* python/LbRelease/Nightlies/functions.py: added Package_failure_policy
+	option for make in Nightlies and set it to ignore --> try all the groups
+	even if one fails before going to the next package
+
 2009-11-23  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* cmt/requirements: release of version v2r14

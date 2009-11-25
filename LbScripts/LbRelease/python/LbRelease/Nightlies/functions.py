@@ -644,7 +644,7 @@ def make(slotName, projectName, minusj, minusl):
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip,'+os.environ.get('CMTEXTRATAGS', '')
             else:
                 os.environ['CMTEXTRATAGS'] = 'no-pyzip'
-            configuration.system('make %s -k -j%d -l%d > make.%s.log' % (usedistcc, minusj, minusl, os.environ['CMTCONFIG']) )
+            configuration.system('make %s -k -j%d -l%d Package_failure_policy=ignore > make.%s.log' % (usedistcc, minusj, minusl, os.environ['CMTCONFIG']) )
             os.chdir(generatePath(slot, project, 'TAG', projectName))
             logFiles = []
             for r, d, f in os.walk("."):
