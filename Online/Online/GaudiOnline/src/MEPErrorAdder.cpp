@@ -23,8 +23,8 @@
 #include "GaudiOnline/MEPRxSys.h"
 
 // Publish DIM counters. DNS from environment
-#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"X", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
-#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "X", & m_ ## name [0], m_ ## name.size()*sizeof(int64_t), desc, this);} while(0);
+#define PUBCNT(name, desc) do {m_ ## name = 0; m_monSvc->declareInfo(#name,"I", & m_ ## name, sizeof(int64_t), desc, this);} while(0);
+#define PUBARRAYCNT(name, desc) do {m_monSvc->declareInfo(#name, "I", & m_ ## name [0], m_ ## name.size()*sizeof(int64_t), desc, this);} while(0);
 #define UNPUBCNT(name) do {m_monSvc->undeclareInfo(#name, this);} while(0);
 
 // Template for resetting counters
