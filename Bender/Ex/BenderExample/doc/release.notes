@@ -1,10 +1,33 @@
-! $Id: release.notes,v 1.35 2009-11-16 16:01:32 ibelyaev Exp $
+! $Id: release.notes,v 1.36 2009-11-25 11:54:38 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v12r5 2009-11-25 ====================
+
+! 2009-11-25 - Vanya Belyaev
+
+ - add example to deal wioth the firts real data
+
+   BenderExample/FirstRealData.py
+
+    it make a comparison between beam-gas and the first collision data
+    make few plots and fills the simple n-tuple with infomration
+
+     - #tracks 
+     - distance between the track to beam line 
+     - Z-coordiatane of POCA to beamline 
+     
+     - #hiys in Spd, Prs, Ecal & Hcal 
+     - energy in Spd/Prs/Ecal/Hcal 
+     - transverse ebergy on Spd/Prs/Ecal/HCal 
+
+   the helper script python/BEnderExample/FirstRealData_Tuples.py
+   make few plots 
+
 
 ! ====================== Ex/BenderExample v12r4 2009-11-16 ====================
 
