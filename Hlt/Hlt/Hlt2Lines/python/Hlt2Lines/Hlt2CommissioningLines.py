@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.11 2009-11-24 15:47:46 graven Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.12 2009-11-25 15:28:28 pkoppenb Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.11 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -29,18 +29,21 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
         Line('PassThrough' ,  HLT = "HLT_PASS_RE('^Hlt1(?!Lumi).*Decision$')"
             , prescale = self.prescale
             , postscale = self.postscale
-            , PV = False, Reco = False
+            , PV = False
             )
         Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|Velo.*|Align.*|Incident|Tell1Error)Decision$')"
             , prescale = self.prescale
             , postscale = self.postscale
-            , PV = False, Reco = False
+            , PV = False
             )
 
         from Configurables import HltCopySelection_LHCb__Track_ as HltCopyTrackSelection
+        from Configurables import Hlt2PID
+        tracks = Hlt2PID().hlt2Tracking()
         Line('Forward', prescale = self.prescale, postscale = self.postscale
-            , algos = [ HltCopyTrackSelection( 'Hlt2ForwardDecision' 
-                                             , InputSelection = 'TES:/Hlt/Track/Long' # carefull! needs info from HltLine.HltReco!!
+            , algos = [ tracks,
+                        HltCopyTrackSelection( 'Hlt2ForwardDecision' 
+                                             , InputSelection = 'TES:/Hlt/Track/Long' # careful! needs info from HltLine.HltReco!!
                                              )
                       ]
             , PV = False
@@ -53,7 +56,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
                                             , Incident = HltSelReportsMaker().DebugIncident
                                             )
                       ]
-            , PV = False, Reco = False
+            , PV = False
             )
 
         from Configurables import HltANNSvc

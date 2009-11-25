@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.18 2009-11-23 16:50:56 pkoppenb Exp $ 
+# $Id: HltLine.py,v 1.19 2009-11-25 15:21:54 pkoppenb Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.18 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.19 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1230,7 +1230,6 @@ class Hlt2Line(object):
     """
 
     _PVAlgorithms = None
-    _RecoAlgorithms = None
     ## The constructor, which defines the line
     #
     #  The major arguments
@@ -1239,7 +1238,6 @@ class Hlt2Line(object):
     #    - 'ODIN'      : the list of ODINtype names for ODINFilter 
     #    - 'L0DU'      : the list of L0Channels names for L0Filter 
     #    - 'HLT'       : the list of HLT selections for HLTFilter
-    #    - 'Reco'      : insert reconstruction (or not)
     #    - 'PV'        : insert PV reconstruction (or not)
     #    - 'algos'     : the list of actual members 
     #    - 'postscale' : the postscale factor
@@ -1253,7 +1251,6 @@ class Hlt2Line(object):
                    postscale = 1    ,   # postscale factor
                    priority  = None ,   # hint for ordering lines
                    PV        = None ,   # insert PV reconstruction at the start of the line
-                   Reco      = True ,   # request Hlt2 reconstruction sequence
                    **args           ) : # other configuration parameters
         """
         The constructor, which essentially defines the line
@@ -1268,12 +1265,6 @@ class Hlt2Line(object):
         - 'postscale' : the postscale factor
         
         """
-        if type(Reco) != bool : raise AttributeError, "Must specify Reco = True or Reco = False when constructing  Hlt2Line %s"%(name)
-        if not self._RecoAlgorithms :
-            ## TODO: push this into the individual dependency chains of eg. NoCutsPions, ...
-            #  Full reconstruction of all tracks 
-            from HltReco import HltRecoSequence
-            self._RecoAlgorithms = [ HltRecoSequence  ]
 
         if type(PV) != bool : raise AttributeError, "Must specify PV = True or PV = False when constructing  Hlt2Line %s"%(name)
         if not self._PVAlgorithms : 
@@ -1289,7 +1280,6 @@ class Hlt2Line(object):
         L0DU  = deepcopy ( L0DU  )
         HLT   = deepcopy ( HLT   )
         PV    = deepcopy ( PV    )
-        Reco  = deepcopy ( Reco  )
         algos = deepcopy ( algos )
         args  = deepcopy ( args  )
         
@@ -1304,7 +1294,6 @@ class Hlt2Line(object):
         self._L0DU      = L0DU
         self._HLT       = HLT
         self._PV        = PV
-        self._Reco      = Reco
         self._algos     = algos
         self._args      = args
 
@@ -1324,7 +1313,6 @@ class Hlt2Line(object):
 
         # bind members to line 
         xalgos = []
-        if self._Reco : xalgos += self._RecoAlgorithms
         if self._PV   : xalgos += self._PVAlgorithms 
         xalgos += algos 
         _boundMembers = bindMembers( line, xalgos )

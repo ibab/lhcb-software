@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.11 2009-11-23 16:50:56 pkoppenb Exp $
+# $Id: HltReco.py,v 1.12 2009-11-25 15:21:54 pkoppenb Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -39,7 +39,7 @@ __all__ = ( 'PV2D'            # bindMembers instance with algorithms needed to g
           , 'Seed'            # run Seeding
           , 'SeedKF'
           , 'HltRecoSequence' # Sequencer used after Hlt1, and start of Hlt2
-	      , 'HltSeedSequence' 
+	  , 'HltSeedSequence' 
           )
 #############################################################################################
 # Switches for different reco scenarios

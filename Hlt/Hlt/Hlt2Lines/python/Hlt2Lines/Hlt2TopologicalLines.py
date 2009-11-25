@@ -174,8 +174,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         from Hlt2SharedParticles.GoodParticles import GoodPions, GoodKaons
         from Hlt2SharedParticles.TopoTFInputParticles import TopoTFInputParticles
 
-
-
         ###################################################################
         # Wrapper for line construction that checks if it is to be included,
         #   and registers it to the HltANNSvc.
@@ -209,9 +207,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
 
-        Hlt2KillTooManyTopoIP = VoidFilter('Hlt2KillTooManyTopoIP'
-                                  , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
-                                  )
+        from Configurables import Hlt2PID
+        tracks = Hlt2PID().hlt2Tracking()
+        Hlt2KillTooManyTopoIPAlg = VoidFilter('Hlt2KillTooManyTopoIPAlg'
+                                              , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
+                                              )
+        Hlt2KillTooManyTopoIP = bindMembers( None, [ tracks, Hlt2KillTooManyTopoIPAlg ] )
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
         #   stage.

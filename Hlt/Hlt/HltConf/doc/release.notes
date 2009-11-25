@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.369 2009-11-25 15:09:02 pkoppenb Exp $ 
+! $Id: release.notes,v 1.370 2009-11-25 15:19:04 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
@@ -15,6 +15,7 @@
      ~ hlt2Reconstruction(self) goes to Hlt2PID
      ~ hlt2Tracks(self) goes to Hlt2PID
      ~ configureCalo(self) goes to Hlt2PID
+   . Remove dependency on CaloReco
    . More to come
  - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
    HltSharedParticles

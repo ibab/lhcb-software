@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.40 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -30,9 +30,7 @@ from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
 
 class Hlt2Conf(LHCbConfigurableUser):
     from Configurables import Hlt2PID
-    from CaloReco.Configuration   import HltCaloRecoConf 
-    from CaloPIDs.Configuration   import HltCaloPIDsConf
-    __used_configurables__ = [ Hlt2PID, HltCaloRecoConf, HltCaloPIDsConf
+    __used_configurables__ = [ Hlt2PID
                              , Hlt2TopologicalLinesConf
                              , Hlt2B2DXLinesConf 
                              , Hlt2InclusiveDiMuonLinesConf

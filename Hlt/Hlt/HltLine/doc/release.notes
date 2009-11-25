@@ -1,9 +1,20 @@
-! $Id: release.notes,v 1.46 2009-11-23 16:50:56 pkoppenb Exp $
+! $Id: release.notes,v 1.47 2009-11-25 15:21:54 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Koppenburg
+ - The Hlt2 reconstruction is separated in blocks depending on what is actually
+    needed. Allows to run making only muons and pions without 
+    requiring the calo decoding, for instance.
+    (https://savannah.cern.ch/task/?12690)
+   . Remove Reco property of Hltline (backwards incompatible)
+   . More to come
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+   HltSharedParticles
+ - v2r0
 
 ! 2009-11-23 - Patrick Koppenburg
  - Use PatPV2DFit3D in Hlt1 and PatPV3D in Hlt2. 

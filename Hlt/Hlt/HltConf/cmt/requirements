@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.61 2009-11-25 15:09:02 pkoppenb Exp $ 
+# $Id: requirements,v 1.62 2009-11-25 15:19:37 pkoppenb Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -15,9 +15,6 @@ use       Hlt2Lines   v*  Hlt
 use       Hlt2SharedParticles v* Hlt
 use       HltSettings v* Hlt
 use       HltCommon   v* Hlt
-use       CaloReco    v* Calo
-use       CaloPIDs    v* Calo
-
 
 # =============================================================================
 

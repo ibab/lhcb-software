@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.77 2009-11-25 13:27:32 jnardull Exp $
+$Id: release.notes,v 1.78 2009-11-25 15:28:28 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,18 @@ $Id: release.notes,v 1.77 2009-11-25 13:27:32 jnardull Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Koppenburg
+ - The Hlt2 reconstruction is separated in blocks depending on what is actually
+    needed. Allows to run making only muons and pions without 
+    requiring the calo decoding, for instance.
+    (https://savannah.cern.ch/task/?12690)
+   . No Reco propert in HltLine anymore
+   .; Add a dependency on Hlt2Tracks in Hlt2KillTooManyTopoIP
+   . More to come
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+   HltSharedParticles
+ - v2r0
 
 ! 2009-11-25 - Jacopo Nardulli
  - Adding the robust Hlt2B2DX Lines 

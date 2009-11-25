@@ -1,9 +1,22 @@
-$Id: release.notes,v 1.60 2009-11-23 16:55:26 pkoppenb Exp $
+$Id: release.notes,v 1.61 2009-11-25 15:26:14 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Koppenburg
+ - The Hlt2 reconstruction is separated in blocks depending on what is actually
+    needed. Allows to run making only muons and pions without 
+    requiring the calo decoding, for instance.
+    (https://savannah.cern.ch/task/?12690)
+   . Split Hlt2PID into a configurable and helper functions
+     ~ Move Calo and Track reconstruction in here (more to come)
+   . BasicParticles : Explicit dependency on the appropriate protoparticle
+   . Temporarily add dependency on CaloReco (to be cured)
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+   HltSharedParticles
+ - v3r0
 
 ! 2009-11-23 - Patrick Koppenburg
  - GoodPions and Kaons : depend on PV3D

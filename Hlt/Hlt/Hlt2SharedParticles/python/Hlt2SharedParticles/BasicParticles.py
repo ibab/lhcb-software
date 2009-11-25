@@ -8,10 +8,11 @@
 ##
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.14 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
+from HltLine.HltReco import HltRecoSequence
 from Configurables import NoPIDsParticleMaker, CombinedParticleMaker, TrackSelector
 from Configurables import PhotonMaker, PhotonMakerAlg
 from Configurables import ProtoParticleCALOFilter, ProtoParticleMUONFilter
@@ -69,29 +70,16 @@ Hlt2Photons.PhotonMaker.UnconvertedPhotons = True
 Hlt2Photons.PhotonMaker.PtCut = 200.* MeV 
 ##########################################################################
 #
-# Now all PID
-# 
+# Charged protoparticles -> pulls all the pid
+#
+caloProtos = Hlt2PID().hlt2ChargedCaloProtos( )
+muonProtos = Hlt2PID().hlt2MuonProtos( )
+hadronProtos = Hlt2PID().hlt2ChargedHadronProtos( )
 ##########################################################################
 #
 # Charged protoparticles
 #
-ChargedProtoMaker = Hlt2PID().hlt2ChargedProtos( )
-##########################################################################
-#
-# Charged protoparticles
-#
-NeutralProtoMaker = Hlt2PID().hlt2NeutralProtos()
-##########################################################################
-#
-# Calo reco (initialised in HltConf.Hlt2)
-#
-Hlt2CaloSeq = GaudiSequencer("Hlt2CaloSeq")
-
-##########################################################################
-#
-# Muon reco
-#
-Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()  
+NeutralProtos = Hlt2PID().hlt2NeutralProtos()
 ##########################################################################
 #
 # 
@@ -102,18 +90,13 @@ Hlt2MuonIDSeq = Hlt2PID().hlt2Muon()
 # for use in Hlt2 by adding:
 #
 # from Hlt2SharedParticles.BasicParticles import Muons
-# @todo : Charged protos will be split
 #
 
-__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons',
-            'ChargedProtos', 'NeutralProtos' )
+__all__ = ( 'NoCutsPions', 'NoCutsKaons', 'Muons', 'RichPIDsKaons', 'Electrons', 'Photons' )
 
-ChargedProtos = bindMembers( None, [ Hlt2CaloSeq, Hlt2MuonIDSeq, ChargedProtoMaker ] )
-NeutralProtos = bindMembers( None, [ Hlt2CaloSeq, NeutralProtoMaker ] )
-
-NoCutsPions   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsPions ] )
-NoCutsKaons   = bindMembers( None, [ ChargedProtos, Hlt2NoCutsKaons ] )
-Muons         = bindMembers( None, [ ChargedProtos, Hlt2Muons ] )
-Electrons     = bindMembers( None, [ ChargedProtos, Hlt2Electrons ] )
+NoCutsPions   = bindMembers( None, [ hadronProtos, Hlt2NoCutsPions ] )
+NoCutsKaons   = bindMembers( None, [ hadronProtos, Hlt2NoCutsKaons ] )
+Muons         = bindMembers( None, [ muonProtos , Hlt2Muons ] )
+Electrons     = bindMembers( None, [ caloProtos, Hlt2Electrons ] )
 RichPIDsKaons = bindMembers( None, [ Hlt2RichPIDsKaons ] ) # TODO: add Rich reco as dependency!!!
 Photons       = bindMembers( None, [ NeutralProtos, Hlt2Photons ] )
