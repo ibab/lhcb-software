@@ -4,6 +4,9 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-25 - Gerhard Raven
+ - switch off Tell1Error accept & update trigger type requirement for 
+   Hlt1VeloLines in Physics_MinBiasL0_PassThroughHlt_Nov09
 !========================== HltSettings v1r2p1 2009-11-18 =================
 ! 2009-11-18 - Gerhard Raven
  - fix Commissioning_PassThrough.py after renaming of Hlt -> Hlt1 for Htl1
