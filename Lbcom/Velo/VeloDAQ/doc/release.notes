@@ -3,6 +3,10 @@
 ! Responsible : Kurt Rinnert, Chris Parkes
 !--------------------------------------------------------------------------
 
+! 2009-11-25 - Kurt Rinnert
+ - fixed memory leak in SmartVeloErrorDecoder
+ - lowered message severity in PU decoding
+
 !=========================  VeloDAQ v4r11 2009-11-18 ======================
 ! 2009-11-17 - Tomasz Szumlak
  - modify PrepareVeloFullRawBuffer algorithm to handle round-robin data

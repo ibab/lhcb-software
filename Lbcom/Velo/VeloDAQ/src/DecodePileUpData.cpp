@@ -115,7 +115,7 @@ StatusCode DecodePileUpData::getRawEvent() {
 
   if ( !exist<LHCb::RawEvent>(m_rawEventLoc) )
   {
-    error() << "==> There is no RawEvent at: " 
+    info() << "==> There is no RawEvent at: " 
       << m_rawEventLoc   << endmsg;
     VeloClusters* clusters = new LHCb::VeloClusters();
     put(clusters,m_PUClusterLocation);    

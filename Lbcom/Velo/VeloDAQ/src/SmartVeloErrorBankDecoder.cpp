@@ -1,4 +1,4 @@
-// $Id: SmartVeloErrorBankDecoder.cpp,v 1.6 2009-11-17 17:55:01 szumlat Exp $
+// $Id: SmartVeloErrorBankDecoder.cpp,v 1.7 2009-11-25 07:31:12 krinnert Exp $
 // Include files 
 
 // from Gaudi
@@ -171,7 +171,6 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
   std::map<unsigned int, ITPair>::iterator bankIT;
   bankIT=m_cachedBanks.begin();
   for( ; bankIT!=m_cachedBanks.end(); ++bankIT){
-    VeloErrorBank* err=new VeloErrorBank(bankIT->first);
     EvtInfo anEvtInfo(bankIT->first);
     allEvt evtInfoData;
     allError errorInfoData;
@@ -184,6 +183,9 @@ StatusCode SmartVeloErrorBankDecoder::storeErrorRawBanks()
       warning() << "Impossible number of PPFPGAs: " << sectors.size() << endmsg;
       return StatusCode::FAILURE;
     }
+
+    VeloErrorBank* err=new VeloErrorBank(bankIT->first);
+    
     // store words in error bank
     SECTORS::iterator secIT=sectors.begin();
     for( ; secIT!=sectors.end(); ++secIT){
