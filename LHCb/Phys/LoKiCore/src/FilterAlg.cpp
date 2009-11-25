@@ -1,4 +1,4 @@
-// $Id: FilterAlg.cpp,v 1.4 2008-12-12 16:35:24 ibelyaev Exp $
+// $Id: FilterAlg.cpp,v 1.5 2009-11-25 16:39:39 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -107,7 +107,7 @@ void LoKi::FilterAlg::updateCode ( Property& /* p */ )    // update the factory
   // perform the actual immediate decoding  
   
   StatusCode sc = decode  () ;
-  Assert ( sc.isFailure() , "Error from LoKi::FilterAlg::decode()" , sc ) ;
+  Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
   
   m_code_updated      = false ;
   m_factory_updated   = false ;
@@ -136,7 +136,7 @@ void LoKi::FilterAlg::updatePreambulo ( Property& /* p */ )  // update preambulo
   // perform the actual immediate decoding  
   
   StatusCode sc = decode  () ;
-  Assert ( sc.isFailure() , "Error from LoKi::FilterAlg::decode()" , sc ) ;
+  Assert ( sc.isSuccess () , "Error from LoKi::FilterAlg::decode()" , sc ) ;
   
   m_code_updated      = false ;
   m_factory_updated   = false ;
