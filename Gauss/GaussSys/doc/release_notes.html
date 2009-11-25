@@ -3,8 +3,128 @@ Package : GaussSys
 Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
+!=============================================================================
+</PRE><H1><A NAME="v38r0">2009-11-25 - GaussSys v38r0</A></H1><PRE>
+<H2><A NAME="Note">post MC09 version, first deployement to build version for
+   analysis with 2010 data. Support Upgrade simulation. Support both MC09
+   geometry and latest DDDB+SIMCOND tags.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v28r3 (and Gaudi v21r6)</b>
+   AppConfig v3r*,
+   DecFiles v20r* , 
+   ParamFiles v8r1, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   <b>pythia6 421.2, photos 215.5, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r2 (based on geant4.9.2.p02) and Geant4Files v92r0</b>
+   XmlVis v1r11,
+   <b>herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)</b>
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 130,
+   bcvegpy (LHCb build)
+</A></H3>
+
+
+! 2009-11-25 - Gloria Corti
+ - Introduce new package Bls/BlsMoniSim for monitor or Beam Loss Scintillators
+   when they are switched on
+ - Remove Det/DDDB package as version allowing simulation for Upgrade already
+   in the LHCB project used.
+
 ! 2009-11-11 - Silvia Miglioranzi
  - Updated the ref files for the gausssys QMTest for all the platforms.
+
+!========================= Gauss v38r0 2009-11-25 ============================
+! 2009-11-25 - Silvia Miglioranzi
+ - Modified the Configuration.py in order to check the compatibility of the
+   DDDB tags chosen and the Velo geometry to be simulated (after the global
+   head-20091120 or the local velo-20091116 the new Velo geometry needs to be
+   used).
+
+! 2009-11-20 - Gloria CORTI
+ - Do not call SimVeloGeometry.py is VELO is not on the list of detectors to
+   simulate
+ - Put the Geo.StreamItems += ['/dd/Structure/LHCb/AfterMagnetRegion/T']
+   only once if both OT and IT are selected.
+
+! 2009-11-18 - Gloria CORTI
+ - Fix bug reported in production of not being able to set anymore the format
+   of the MessageSvc
+   . python/Gauss/Configuration.py
+ - Put in Gauss-DEV.py latest tags of DDDB and SIMCOND
+
+! 2009-11-18 - Silvia Miglioranzi
+ - Update ref files for QMTests onslc4_ia32_gcc34_dbg.
+
+! 2009-11-16 - Silvia MIGLIORANZI
+ - Update ref files for QMTests on slc4_amd64_gcc34_dbg. Increased the time
+   limit for gauss-up.qmt.
+
+! 2009-11-12 - Silvia Miglioranzi
+ - Added two new QMTests: gauss-dev.qmt and gauss-up.qmt (running with
+   Gauss-DEV.py and Gauss-Upgrade.py options respectively). Added their ref
+   files for platform slc432 and slc464.
+
+! 2009-11-11 - Silvia Miglioranzi
+ - Update of QMTest ref files (slc5). Update of gauss-gen-mc09 test.
+
+! 2009-11-09 - Silvia Miglioranzi
+ - Update of QMTest ref files (platforms slc4 64 and 32) for the nightly slot
+   lhcb3.
+
+! 2009-11-07 - Silvia Miglioranzi
+ - Added BlsMoniSim to the packages list and changed version in
+   Sim/Gauss/cmt/requirements
+ - Added the option Gauss-DEV.py (to run with the latest DDDB and SIMCOND)
+
+! 2009-11-05 - Silvia Miglioranzi
+ - Configuration.py was modified: DRays configurable was added and "SimPhases"
+   configurable was renamed "Phases".
+ - GenStandAlone.py was modified to use the new "Phases" configurable
+ - In BeamScintillators.py a comment was added to inform that it is valid
+   only in combination with the MC09 geometry.
+ - DRaysON-LT.opts and DRaysON-HT.py were removed. Kine-LT.py was added to steer
+   the lowering of the kinetic tresholds.
+
+! 2009-11-05 - Gloria Corti
+ - Change version of database packages
+ - Introduce new packages GaussUMC and BlsMoniSim
+
+! 2009-11-03 - Gloria CORTI
+ - Change version number of Geant4Files to pick the latest as from 9.2.
+
+! 2009-11-03 - Christopher Rob Jones
+ - Move knowledge of the output SIM file content to new SimConf() Configurable
+   in the gaudiConf package
+
+! 2009-10-23 - Chris Jones
+ - Add packing of MC data in output SIM file. Controlled by new Configurable
+   option "DataPacking". In additional some optional checking of the packing
+   can be turned on/off via the option "DataPackingChecks"
+
+! 2009-10-23 - Victor COCO
+ - Changes to Gauss configurables to be able to selectively choose the list
+   of predefined detectors to simulate. Two new properties of Gauss() have
+   been introduced:
+   . DetectorGeoDict
+   . DetectorSimDict
+   dictionaries specifying detector and subset
+   The default configuration for MC09 is
+   "DetectorGeoDict" : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'],
+                              "OT":['OT'], "RICH":['Rich1','Rich2'],
+                        "CALO":['Spd','Prs','Ecal','Hcal'],
+                        "MUON":['Muon'],"MAGNET": True }
+         "DetectorSimDict" : {"VELO":['Velo','PuVeto'], "TT":['TT'], "IT":['IT'],
+                        "OT":['OT'], "RICH":['Rich1','Rich2'],
+                        "CALO":['Spd','Prs', 'Ecal','Hcal'],
+                        "MUON":['Muon'], "MAGNET": True }
+
+! 2009-10-13 - Silvia MIGLIORANZI
+ - In all QMTests running on signal events, the option "testGauss-NoOutput.py"
+   (the Output files are not produced) is used. The reference stdoutput files
+   for slc4_amd64_gcc34 have been updated.
 
 !========================== GENSER v6r0 2009-11-04 ===========================
 ! 2009-10-22 - Hubert Degaudenzi
@@ -32,6 +152,9 @@ Purpose: LHCb Simulation program
  - Small fixes for SLC5 compilation
 
 !========================= LbPythia v8r6 2009-11-04 ==========================
+! 2009-11-9 - Neal Gauvin
+ - PythiaHiggsType as a full event cut tool : FullEventHiggsType
+
 ! 2009-10-22 - Patrick Robbe
  - Fixes for SLC5 compilation with GCC4.3
 
@@ -221,6 +344,23 @@ Purpose: LHCb Simulation program
     RootInTES for spillover locations.
  - Cache DeCalorimeter pointer in initialize()
 
+!====================== GaussMonitor v6r4 2009-11-04 =========================
+! 2009-10-19 - Silvia Miglioranzi
+ - Fixed warning in compilation on slc5: "comparisons like X<=Y<=Z do not have
+   their mathematical meaning" in:
+   - GeneratorAnalysis.cpp
+
+! 2009-03-26 - Stefania Vecchi on behalf of Olga Levitskaya
+ - added MonitorStepAction: produces histograms on the step size and number of
+   muons in Muon Filters (useful to test the multiple scattering simulation)
+
+!======================= BlsMoniSim v1r0 2009-11-13 ==========================
+! 2009-10-30 - Vadim Talanov
+ - First version for Gauss v37r5
+ - Monitors two BLS counters at negative (BlsA) and positive (BlsC) X side of
+   the beam line
+ - Creates and fills multimap of Particles-Hits separately for each BLS
+ - Fills histograms with hits/tracks spatial, time and per event distributions
 
 !=============================================================================
 </PRE><H1><A NAME="v37r5">2009-10-05 - GaussSys v37r5</A></H1><PRE>
