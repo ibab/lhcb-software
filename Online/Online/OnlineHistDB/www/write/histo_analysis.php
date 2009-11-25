@@ -50,7 +50,7 @@ function update_histo_analysis() {
     $gAna=1;
   }
   else { // just update settings for this single histogram
-    $command= "update ANASETTINGS set WARNINGS=$warnings,ALARMS=$alarms,INPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
+    $command= "update ANASETTINGS set VWARNINGS=$warnings,VALARMS=$alarms,VINPUTPARS=$inputs where ANA=$aid and HISTO='$id'";
     $gAna=0; $out=1;
   }  
 

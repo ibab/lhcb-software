@@ -467,7 +467,7 @@ function get_labels($hid,$nlx,$nly) {
  $nl=$nlx+$nly;
  $query=" SELECT ";
  for ($i=1 ; $i<=$nl; $i++) {
-   $query .= "parcomponent(BINLABELS,${i}) LAB${i}";
+   $query .= "parcomponent(VBINLABELS,${i}) LAB${i}";
    if ($i<$nl) {
      $query .= ",";
    }
