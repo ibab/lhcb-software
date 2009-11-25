@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationToolBase.h,v 1.2 2009-11-09 17:51:38 mtobin Exp $
+// $Id: STNoiseCalculationToolBase.h,v 1.3 2009-11-25 11:25:11 mtobin Exp $
 #ifndef STCMNOISECALCULATIONTOOLBASE_H 
 #define STCMNOISECALCULATIONTOOLBASE_H 1
 
@@ -135,12 +135,19 @@ namespace ST {
     std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
     bool   m_selectedTells;///< Use only selected TELL1s
     
+    bool m_countRoundRobin;///< True if you want to plot number of events per PP in round robin
+    void countRoundRobin(unsigned int TELL1SourceID, unsigned int PP);///< Plot histogram of number of round robin events
+
   private:
     virtual StatusCode calculateNoise() = 0;
 
     bool m_firstEvent;///< First call to noise calculation
     unsigned int m_eventNumber;///< Current event number
     unsigned int m_runNumber;///< Current run number
+
+    /// Keep running total of number of PPs which send the NZS banks
+    AIDA::IHistogram2D* m_2d_nEventsPerPP;
+    
   };
 }
 #endif // STCMNOISECALCULATIONTOOLBASE_H

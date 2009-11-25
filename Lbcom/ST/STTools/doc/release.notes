@@ -2,7 +2,15 @@
 ! Package manager : Jeroen van Tilburg
 !------------------------------------------------------------------------------
 
+! 2009-11-25 - Mark Tobin
+ - Add protection against empty containers in noise tools.
+ - Add histograms to count round robin NZS banks in noise tools.
+ - Add option to read pedestals from conditions database in
+ STCMSNoiseCalculationTool.
+
+
 !=========================== STTools v3r13 2009-11-13 =========================
+
 ! 2009-11-09 - Mark Tobin
  - Add protection to STNoiseCalculationToolBase to make sure that the
  updateNoise method is called only once per event.

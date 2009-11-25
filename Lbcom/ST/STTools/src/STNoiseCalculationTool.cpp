@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationTool.cpp,v 1.1 2009-10-30 12:59:47 mtobin Exp $
+// $Id: STNoiseCalculationTool.cpp,v 1.2 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -77,6 +77,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
 
   // Get the data
   const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
+  if(data->empty()) return Warning("Data is empty", StatusCode::SUCCESS, 10);
   //debug() << "Found " << data->size() << " boards." << endmsg;
 
   // loop over the data
@@ -101,6 +102,7 @@ StatusCode ST::STNoiseCalculationTool::calculateNoise() {
       
       // Count the number of events per PP
       (*nEvents)[pp]++;
+      if(m_countRoundRobin) this->countRoundRobin(tellID, pp);
 
       // Cumulative average up to m_followingPeriod; after that
       // exponential moving average

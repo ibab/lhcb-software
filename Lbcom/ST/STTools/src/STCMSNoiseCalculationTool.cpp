@@ -1,4 +1,4 @@
-// $Id: STCMSNoiseCalculationTool.cpp,v 1.2 2009-11-09 17:51:38 mtobin Exp $
+// $Id: STCMSNoiseCalculationTool.cpp,v 1.3 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -12,6 +12,9 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
+
+// Detector description for access to conditions
+#include "DetDesc/Condition.h"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -60,6 +63,10 @@ ST::STCMSNoiseCalculationTool::STCMSNoiseCalculationTool( const std::string& typ
   // Number of events used to build the pedestals
   declareProperty("PedestalBuildup",  m_pedestalBuildup = 300 );
   
+  // Read pedestal values from conditions database
+  declareProperty("PedestalsFromDB", m_readPedestals = true);
+  declareProperty("CondPath",m_condPath = "CondDB");
+  // Use integer algebra in calculations
   declareProperty("UseIntegers", m_useInts=false );
 
   // Remove outliers
@@ -115,11 +122,28 @@ StatusCode ST::STCMSNoiseCalculationTool::initialize() {
     m_cmsNEvents[TELL1SourceID].resize(4,0);
     
     // 8 pedestal configs for each TELL1
-    m_pedestalMaps[TELL1SourceID].resize(8);
-    for (int i = 0; i < 8; i++) {
-      m_pedestalMaps[TELL1SourceID][i].resize(3072, std::make_pair(0.0, 0));
+    if(m_readPedestals) {
+      m_pedestalBuildup = 0;
+      m_pedestalMaps[TELL1SourceID].resize(1);
+      std::string condPath = m_condPath + "/" + "TELL1Board" + boost::lexical_cast<std::string>(TELL1SourceID);
+      debug() << "Getting condition: " << condPath << endmsg;
+      Condition* condition = getDet<Condition>(condPath);
+      std::vector<int> pedestalValues;
+      if(condition != 0) {
+        pedestalValues = condition->param<std::vector<int> >("Pedestal_value");
+        std::vector<int>::iterator itPed = pedestalValues.begin();
+        for(; itPed != pedestalValues.end(); ++itPed) {
+          m_pedestalMaps[TELL1SourceID][0].push_back(std::make_pair((*itPed), 1));
+        }
+      } else {
+        error() << "No condition: " << condPath << endmsg;
+      }
+    } else {
+      m_pedestalMaps[TELL1SourceID].resize(8);
+      for (int i = 0; i < 8; i++) {
+        m_pedestalMaps[TELL1SourceID][i].resize(3072, std::make_pair(0.0, 0));
+      }
     }
-    
     
   }
   return StatusCode::SUCCESS;
@@ -261,24 +285,27 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
   // Get the data
   const LHCb::STTELL1Datas* data = get<LHCb::STTELL1Datas>(m_dataLocation);
   //debug() << "Found " << data->size() << " boards." << endmsg;
+  if(data->empty()) return Warning("Data is empty", StatusCode::SUCCESS, 10);
 
   // Calculate the PCN/Header combinations for each Beetle port
   calcPCNConfigs(data);
-
-  if (m_pedestalBuildup > 0) {
-    sumPedestals(data);
-    if (m_pedestalBuildup == 1) {
-      divPedestals();
-      info() << "Pedestals ready, starting noise calc." << endmsg;
+  if(!m_readPedestals) {
+    if (m_pedestalBuildup > 0) {
+      sumPedestals(data);
+      if (m_pedestalBuildup == 1) {
+        divPedestals();
+        info() << "Pedestals ready, starting noise calc." << endmsg;
+      }
+      m_pedestalBuildup--;
+      return StatusCode::SUCCESS;
     }
-    m_pedestalBuildup--;
-    return StatusCode::SUCCESS;
   }
-  
+
   m_evtNumber++;
   
   bool initRaw = false;
   if( m_evtNumber <= m_skipEvents ) {
+
     //return StatusCode::SUCCESS;
     m_skipCMS = true;  
     
@@ -316,7 +343,6 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
     std::vector<double>* rawNoise = &m_rawNoiseMap[tellID];
     std::vector<unsigned int>* rawNEvents = &m_rawNEvents[tellID];
     
-
     // Loop over the PPs that have sent data
     std::vector<unsigned int> sentPPs = (*iterBoard)->sentPPs();
     std::vector<unsigned int>::const_iterator iPP = sentPPs.begin();
@@ -325,6 +351,7 @@ StatusCode ST::STCMSNoiseCalculationTool::calculateNoise() {
       
       // Count the number of events per PP
       (*rawNEvents)[pp]++;
+      if(m_countRoundRobin) this->countRoundRobin(tellID, pp);
       
       // Cumulative average up to m_followingPeriod; after that
       // exponential moving average
@@ -457,11 +484,18 @@ void ST::STCMSNoiseCalculationTool::calcPCNConfigs( const LHCb::STTELL1Datas* da
   const LHCb::STTELL1Data::Data& header = (*(data->begin()))->header(); 
   for ( int iPort = 0; iPort < 4; iPort++ ) {
     std::bitset<3> binary;  
-    // Header configs
-    binary.set(0,(header[0][iPort*3+2] >= 129));
-    binary.set(1,(header[0][iPort*3+1] >= 129));
-    binary.set(2,(header[0][2] >= 129));
-    m_portHeader[iPort] = binary.to_ulong();
+    if(!m_readPedestals) {
+      // Header configs
+      binary.set(0,(header[0][iPort*3+2] >= 129));
+      binary.set(1,(header[0][iPort*3+1] >= 129));
+      binary.set(2,(header[0][2] >= 129));
+      m_portHeader[iPort] = binary.to_ulong();
+    } else {
+      binary.set(0,0);
+      binary.set(1,0);
+      binary.set(2,0);
+      m_portHeader[iPort] = binary.to_ulong();
+    }
   }
 }
 //==============================================================================

@@ -1,4 +1,4 @@
-// $Id: STCMSNoiseCalculationTool.h,v 1.2 2009-11-09 17:51:38 mtobin Exp $
+// $Id: STCMSNoiseCalculationTool.h,v 1.3 2009-11-25 11:25:11 mtobin Exp $
 #ifndef STCMSNOISECALCULATIONTOOL_H 
 #define STCMSNOISECALCULATIONTOOL_H 1
 
@@ -56,9 +56,10 @@ namespace ST {
     /// Something to do with pedestals
     void divPedestals();
 
-
-    unsigned int m_pedestalBuildup;/// Number of events used to build pedestals
-
+    unsigned int m_pedestalBuildup;///< Number of events used to build pedestals
+    bool m_readPedestals;///< Read pedestals from conditions database
+    std::string m_condPath; ///< Set the condition path from where pedestals will be read
+    
     /** data values for 8 pedestal value 
         tellID to access map
         vector of 8 PCN/header combinations

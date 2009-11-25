@@ -1,4 +1,4 @@
-// $Id: STNoiseCalculationToolBase.cpp,v 1.2 2009-11-09 17:51:38 mtobin Exp $
+// $Id: STNoiseCalculationToolBase.cpp,v 1.3 2009-11-25 11:25:11 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -15,6 +15,8 @@
 #include "Kernel/STBoardMapping.h"
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
+
+#include "AIDA/IHistogram2D.h"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -43,6 +45,9 @@ ST::STNoiseCalculationToolBase::STNoiseCalculationToolBase( const std::string& t
 {
   // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1) 
   declareProperty("LimitToTell",      m_limitToTell     ); 
+
+  // Count number of round robin events per PP
+  declareProperty("CountRoundRobin", m_countRoundRobin = false);
 }
 
 StatusCode ST::STNoiseCalculationToolBase::initialize() {
@@ -63,6 +68,10 @@ StatusCode ST::STNoiseCalculationToolBase::initialize() {
   m_firstEvent = true;
   m_eventNumber = 0;
   m_runNumber = 0;
+  if(m_countRoundRobin) {
+    unsigned int m_nTELL1s = readoutTool()->nBoard();
+    m_2d_nEventsPerPP = book2D("Number of NZS banks sent per PP", 0.5, m_nTELL1s+0.5, m_nTELL1s,-0.5, 3.5, 4);
+  }
   return StatusCode::SUCCESS;
 }
 
@@ -108,6 +117,14 @@ StatusCode ST::STNoiseCalculationToolBase::updateNoise() {
     return Warning( "You should only call updateNoise once per event" , StatusCode::SUCCESS , 0);
   }
   return StatusCode::SUCCESS;
+}
+//======================================================================================================================
+//
+// Count number of events in Round Robin mode
+//
+//======================================================================================================================
+void ST::STNoiseCalculationToolBase::countRoundRobin(unsigned int TELL1SourceID, unsigned int PP) {
+  m_2d_nEventsPerPP->fill(readoutTool()->SourceIDToTELLNumber(TELL1SourceID), PP);
 }
 //======================================================================================================================
 //
