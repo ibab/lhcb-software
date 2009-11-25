@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.9 2009-11-16 13:45:52 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.10 2009-11-25 13:07:20 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -59,11 +59,14 @@ StatusCode STErrorMonitor::initialize()
   // Get the maximum number of Tell1s to determine number of histogram bin
   m_maxTell1s = (this->readoutTool())->SourceIDToTELLNumberMap().size();
 
-  // Book histogram
+  // Book histograms
   m_1d_errorBanks = book1D("Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
+  m_1d_fracErrors = book1D("Fraction of ports which sent error banks",0.,1.0,1000);
 
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
+
+  m_activePorts = 0;
   for(; itT != (this->readoutTool())->SourceIDToTELLNumberMap().end(); ++itT) {
     unsigned int tellID = (*itT).second;
     // Create a title for the histogram
@@ -71,7 +74,12 @@ StatusCode STErrorMonitor::initialize()
     HistoID histoID        = "error-types_$tell" + strTellID;
     std::string histoTitle = "Error types tell" + strTellID;
     m_errorHistos[tellID] = book2D(histoID, histoTitle, 0., noptlinks, nports*noptlinks, 0., 10., 10);
+
+    // Work out the total number of links for the detector (over-estimate for TT as some links not enabled)
+    m_activePorts += nports*noptlinks;
+
   }
+  
 
   return StatusCode::SUCCESS;
 }
@@ -87,6 +95,9 @@ StatusCode STErrorMonitor::execute()
                  "first.", StatusCode::FAILURE);
   }
   STTELL1BoardErrorBanks* errors = get<STTELL1BoardErrorBanks>(m_errorLocation);
+
+  // Number of links with error banks
+  unsigned int nErrors = 0;
 
   // Loop over the error banks
   STTELL1BoardErrorBanks::const_iterator iterBank = errors->begin();
@@ -125,10 +136,14 @@ StatusCode STErrorMonitor::execute()
           unsigned int errorType = (*errorIt) -> linkInfo(beetle, port, pcn);
           double portBin = double(port)/double(nports)+beetle+pp*nBeetlesPerPPx;
           m_errorHistos[tellNum]->fill(portBin, errorType);
+          if(errorType > 0) nErrors++;
         }
       }
     }
   }  //iterBanks
+
+  double fracErrors = (double)nErrors / m_activePorts;
+  if(fracErrors > 1E-5) m_1d_fracErrors->fill(fracErrors);
 
   return StatusCode::SUCCESS;
 }

@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.h,v 1.4 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STErrorMonitor.h,v 1.5 2009-11-25 13:07:20 mtobin Exp $
 #ifndef STERRORMONITOR_H 
 #define STERRORMONITOR_H 1
 
@@ -35,6 +35,9 @@ private:
   // The maximum number of Tell1s (used to determine number of bins)
   unsigned int m_maxTell1s;
 
+  // Total number of active ports in detector
+  unsigned int m_activePorts;
+  
   // Job options
   bool m_expertHisto;         ///< Flag to turn off filling of expert histograms
   std::string m_errorLocation;///< Location of STTELL1BoardErrorBanks objects
@@ -45,6 +48,7 @@ private:
   /// Map of error histograms booked in initialize
   std::map<unsigned int, AIDA::IHistogram2D*> m_errorHistos;
 
-
+  /// Fraction of ports which send error banks
+  AIDA::IHistogram1D* m_1d_fracErrors;
 };
 #endif // STERRORMONITOR_H
