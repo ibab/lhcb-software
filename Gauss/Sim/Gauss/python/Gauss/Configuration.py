@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.21 2009-11-20 18:47:18 gcorti Exp $"
+__version__ = "$Id: Configuration.py,v 1.22 2009-11-25 10:17:23 silviam Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -46,6 +46,8 @@ from Configurables import ( GenMonitorAlg, MuonHitChecker, MCTruthMonitor,
 from Configurables import ( PackMCParticle, PackMCVertex,
                             UnpackMCParticle, UnpackMCVertex,
                             CompareMCParticle, CompareMCVertex )
+
+from DetCond.Configuration import CondDB
 
 ## @class Gauss
 #  Configurable for Gauss application
@@ -604,7 +606,13 @@ class Gauss(LHCbConfigurableUser):
         # Detector geometry to simulate
         DetPiecies = {'BeforeMagnetRegion':[],'AfterMagnetRegion':[],'DownstreamRegion':[],'MagnetRegion':['Magnet','BcmDown']}
         BasePiecies = {}
-        BasePiecies['BeforeMagnetRegion']=['Velo2Rich1']
+        # check if the new velo geometry is required with the chosen DDDB tags
+        VeloPostMC09 = False
+        VeloP = self.checkVeloDDDB(VeloPostMC09)
+        if VeloP:
+            BasePiecies['BeforeMagnetRegion']=[]
+        else:
+            BasePiecies['BeforeMagnetRegion']=['Velo2Rich1']
         BasePiecies['MagnetRegion']=['PipeInMagnet','PipeSupportsInMagnet']
         BasePiecies['AfterMagnetRegion']=['PipeAfterT','PipeSupportsAfterMagnet']
         BasePiecies['DownstreamRegion']=['PipeDownstream','PipeSupportsDownstream','PipeBakeoutDownstream']
@@ -664,7 +672,8 @@ class Gauss(LHCbConfigurableUser):
         giGaGeo.AlignAllDetectors = True
         if self.getProp("DataType") != "Upgrade" :
             if len(self.getProp('DetectorGeo')['VELO'])>0:
-                importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # To misalign VELO
+#                importOptions('$GAUSSOPTS/SimVeloGeometry.py')  # To misalign VELO
+                 self.veloGeometry(VeloP) # To misalign VELO
 
     ##     #if "VELO" in geoDets: configureGeoVELO( )
     ##     #if "TT  " in geoDets: configureGeoTT( )
@@ -1120,6 +1129,76 @@ class Gauss(LHCbConfigurableUser):
         self.configureMoni( SpillOverSlots ) #(expert or default)
         
 
+    ##
+    ##
+    def veloGeometry( self, VeloPostMC09 ):
+        """
+        File containing the list of detector element to explicitely set
+        to have misalignement in the VELO.
+        """
+        print 'VeloPostMC09',VeloPostMC09
+        Geo = GiGaInputStream('Geo')
+        Geo.StreamItems.remove("/dd/Structure/LHCb/BeforeMagnetRegion/Velo")
+
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU00")
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModulePU02")
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU01")
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/ModulePU03")
+
+        txt = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/ModuleXX"
+        import math
+        for i in range(42):
+            nr = str(i)
+            if len(nr) == 1 : nr = '0'+str(i)
+            temp1 = txt.replace('XX',nr)
+            if math.modf(float(nr)/2.)[0] > 0.1 :  temp1 = temp1.replace('Left','Right')
+            Geo.StreamItems.append(temp1)
+
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamWakeFieldCone")
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamWakeFieldCone")
+        # new description postMC09 of Velo:  
+        if VeloPostMC09:
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VacTank")
+        else:
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/UpStreamVacTank")
+            Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/DownStreamVacTank")
+        
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloRight/RFFoilRight")
+        Geo.StreamItems.append("/dd/Structure/LHCb/BeforeMagnetRegion/Velo/VeloLeft/RFFoilLeft")
+    ##
+    ##         
+    def checkVeloDDDB( self , VeloPostMC09):
+        """
+        Check if the Velo geometry is compatible with the chosen tags
+        """
+
+        # set validity limit for new Velo geometry      
+        GTagLimit = "head-20091120"       
+        GTagLimit = GTagLimit.split('-')[1].strip()
+        VeloLTagLimit = "velo-20091116"       
+        VeloLTagLimit = VeloLTagLimit.split('-')[1].strip()
+        
+        # DDDB global tag used
+        DDDBDate = LHCbApp().DDDBtag
+        DDDBDate = DDDBDate.split('-')[1].strip()
+
+        # check if/which local tag is used for Velo
+        cdb = CondDB()
+        cdbVeloDate = 0
+        for p in cdb.LocalTags:
+            if p == "DDDB":
+                taglist = list(cdb.LocalTags[p])
+                for ltag in taglist:
+                    if ltag.find("velo")!=-1 :
+                        cdbVeloDate = ltag.split('-')[1].strip()
+
+        # check if the selected tags require the new Velo geometry 
+        if (DDDBDate >= GTagLimit) or (cdbVeloDate >= VeloLTagLimit):
+            VeloPostMC09 = True
+
+        return VeloPostMC09
+    ##
+    ##
     ## Apply the configuration
     def __apply_configuration__(self):
         
@@ -1169,7 +1248,7 @@ class Gauss(LHCbConfigurableUser):
         self.setBeamSize( crossingList )
         self.setBeamParameters( crossingList )
         self.configurePhases( crossingList )  # in Boole, defineOptions() in Brunel
-        
+
         #--Configuration of output files and 'default' outputs files that can/should
         #--be overwritten in Gauss-Job.py
         self.defineOutput( crossingList )

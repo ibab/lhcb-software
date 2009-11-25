@@ -4,7 +4,13 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
-!========================= Gauss v38r0 2009-11-20 ============================
+!========================= Gauss v38r0 2009-11-25 ============================
+! 2009-11-25 - Silvia Miglioranzi
+ - Modified the Configuration.py in order to check the compatibility of the 
+   DDDB tags chosen and the Velo geometry to be simulated (after the global 
+   head-20091120 or the local velo-20091116 the new Velo geometry needs to be 
+   used).
+
 ! 2009-11-20 - Gloria CORTI
  - Do not call SimVeloGeometry.py is VELO is not on the list of detectors to
    simulate
