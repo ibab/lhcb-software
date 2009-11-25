@@ -29,19 +29,8 @@ BTagging::BTagging(const std::string& name,
 //=======================================================================
 StatusCode BTagging::initialize() { 
 
-  StatusCode sc = DVAlgorithm::initialize() ; 
-  m_inputLocations.clear();
-  if ( sc.isSuccess() )
-  {
-    SimpleProperty< std::vector<std::string> > v;
-    bool good = v.assign(*Gaudi::Utils::getProperty(this, "InputLocations"));
-    if (good) {
-      m_inputLocations = v.value();
-    } else {
-      sc = Error("Could not retrieve InputLocations");
-    }
-  }
-  return sc;
+  return DVAlgorithm::initialize() ; 
+
 }
 
 BTagging::~BTagging() {}
@@ -66,7 +55,7 @@ void BTagging::performTagging(const std::string & location)
   //look in location where Selection has put the B candidates
   const Particle::Container* parts = get<Particle::Container>( location+"/Particles" );
   if( !parts || parts->empty() ) {
-    Warning("No particles foung at "+ location, 
+    Warning("No particles found at "+ location+"/Particles", 
             StatusCode::SUCCESS,10).ignore();
     return;
   }
