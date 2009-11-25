@@ -1,10 +1,24 @@
-! $Id: release.notes,v 1.368 2009-11-16 09:45:07 graven Exp $ 
+! $Id: release.notes,v 1.369 2009-11-25 15:09:02 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+! 2009-11-25 - Patrick Koppenburg
+ - The Hlt2 reconstruction is separated in blocks depending on what is actually
+    needed. Allows to run making only muons and pions without 
+    requiring the calo decoding, for instance.
+    (https://savannah.cern.ch/task/?12690)
+   . Move Hlt2 reconstruction and PID to Hlt2PID in Hlt2SharedParticles 
+     ~ Hlt2Line does not have a Reco property anymore
+     ~ hlt2Reconstruction(self) goes to Hlt2PID
+     ~ hlt2Tracks(self) goes to Hlt2PID
+     ~ configureCalo(self) goes to Hlt2PID
+   . More to come
+ - Requires tags pkoppenb_20091125 of HltConf, HltLine, Hlt2Lines, 
+   HltSharedParticles
+ - v6r0
 
 !========================== HltConf v5r2 2009-11-16 ===================
 ! 2009-11-16 - Gerhard Raven
