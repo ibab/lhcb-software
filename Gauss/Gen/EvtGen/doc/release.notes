@@ -4,6 +4,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-11-24 - Mark Whitehead
+ - Reintroduce file EvtIncoherentMixing.cpp to fix CPV problems.
+ - EvtSSDCP.cpp: Swap EvtCPUtils::OtherB for EvtIncoherentMixing::OtherB. 
+ - EvtSSDCP.cpp: Changes by Liming to fix CPV behaviour.
+
 !========================== EvtGen v11r6 2009-11-04 ==========================
 ! 2009-10-19 - Patrick Robbe 
  - Fix gcc4.3 compilation, mainly dealing with scope of friend functions

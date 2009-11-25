@@ -29,6 +29,7 @@
 #include "EvtGenBase/EvtVector4C.hh"
 #include "EvtGenBase/EvtTensor4C.hh"
 #include "EvtGenModels/EvtSSDCP.hh"
+#include "EvtGenBase/EvtIncoherentMixing.hh"
 #include <string>
 #include "EvtGenBase/EvtConst.hh"
 using std::endl;
@@ -205,13 +206,15 @@ void EvtSSDCP::decay( EvtParticle *p){
   EvtComplex amp;
 
 
-  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
+//  EvtCPUtil::OtherB(p,t,other_b,0.5); // t is c*Dt (mm)
+  EvtIncoherentMixing::OtherB( p , t , other_b , 0.5 ) ;
+  
 
   //if (flip) t=-t;
 
   //FS We assume DGamma=GammaLow-GammaHeavy and Dm=mHeavy-mLow
-  EvtComplex expL=exp(-EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
-  EvtComplex expH=exp(EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
+  EvtComplex expH=exp(-EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
+  EvtComplex expL=exp(EvtComplex(-0.25*_dgamma*t,0.5*_dm*t));
   //FS Definition of gp and gm
   EvtComplex gp=0.5*(expL+expH);
   EvtComplex gm=0.5*(expL-expH);
@@ -233,22 +236,22 @@ void EvtSSDCP::decay( EvtParticle *p){
     if (other_b==B0B||other_b==B0Bs){
       //at t=0 we have a B0
       //report(INFO,"EvtGen") << "B0B"<<endl;
-      amp=BB*_A_f+BbarB*_Abar_f;
+      amp=BB*_A_f+barBB*_Abar_f;
       //std::cout << "noflip B0B tag:"<<amp<<std::endl;
       //amp=0.0;
     }
     if (other_b==B0||other_b==B0s){
       //report(INFO,"EvtGen") << "B0"<<endl;
-      amp=barBB*_A_f+barBbarB*_Abar_f;
+      amp=BbarB*_A_f+barBbarB*_Abar_f;
     }
   }else{
     if (other_b==B0||other_b==B0s){
-      amp=barBB*_A_fbar+barBbarB*_Abar_fbar;
+      amp=BbarB*_A_fbar+barBbarB*_Abar_fbar;
       //std::cout << "flip B0 tag:"<<amp<<std::endl;
       //amp=0.0;
     }
     if (other_b==B0B||other_b==B0Bs){
-      amp=BB*_A_fbar+BbarB*_Abar_fbar;
+      amp=BB*_A_fbar+barBB*_Abar_fbar;
     }
   }
 
