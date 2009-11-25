@@ -407,6 +407,17 @@ return out;
 end;
 /
 
+CREATE or replace FUNCTION vlabel(pars labels, i int) return VARCHAR2 as
+out VARCHAR2(30) := NULL;
+begin
+if (pars is not null) then
+ if ( i <= pars.COUNT and i>0) then
+  out := pars(i);
+ end if;
+end if;
+return out;
+end;
+/
 
 create or replace view VIEWHISTOGRAM(NAME,HID,HSID,IHS,NHS,HSTYPE,SUBTITLE,TITLE,ALGO,TASK) as
   SELECT NAME,HID,HSID,IHS,NHS,HSTYPE,SUBTITLE,HSTITLE,HSALGO,HSTASK
