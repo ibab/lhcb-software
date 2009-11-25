@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.153 2009-11-17 14:27:37 jpalac Exp $
+! $Id: release.notes,v 1.154 2009-11-25 08:42:43 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-11-25 - Juan PALACIOS
+ - BTagging
+  . Remove custom handling of InputLocations. Now taken from DVAlgorithm.
+ - cmt/requirements
+  . Increase version to v9r0p2.
 
 !========================== FlavourTagging v9r0p1 2009-11-17 =================
 
