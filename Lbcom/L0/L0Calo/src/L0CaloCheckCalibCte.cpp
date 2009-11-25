@@ -1,4 +1,4 @@
-// $Id: L0CaloCheckCalibCte.cpp,v 1.1 2009-11-24 17:42:50 robbep Exp $
+// $Id: L0CaloCheckCalibCte.cpp,v 1.2 2009-11-25 15:38:50 robbep Exp $
 // Include files 
 
 // local
@@ -94,12 +94,23 @@ StatusCode L0CaloCheckCalibCte::execute() {
     // compute expected L0ADC 
     if ( l0adcFromAdc( (*itAdcMap).second , (*itAdcMap).first ) != 
          m_l0daq -> l0Adc( (*itAdcMap).first ) ) { 
+      LHCb::CaloCellID id = (*itAdcMap).first ;
       warning() << "Mismatch ADC / L0ADC " 
                 << (*itAdcMap).first 
                 << " " << m_l0daq -> l0Adc( (*itAdcMap).first )
                 << " " << (*itAdcMap).second 
                 << " " << l0adcFromAdc((*itAdcMap).second , (*itAdcMap).first )
                 << endreq ;
+      warning() << "Calib constant should be = " 
+                << m_calo -> cellParam( id ).l0Constant()
+                << " Row = " << m_calo -> cellParam( id ).cardRow()
+                << " Column = " << m_calo -> cellParam( id ).cardColumn()
+                << " Crate = " 
+                << m_calo -> cardCrate( m_calo -> cellParam( id ).cardNumber() ) 
+                << " Slot = " 
+                << m_calo -> cardSlot( m_calo -> cellParam( id ).cardNumber() ) 
+                << endreq ;
+      
       // Plot the location of the error
       fillCalo2D( "L0CteComp" + m_detectorName ,(*itAdcMap).first , 1. ,
                   "L0Constant Mismatch " + m_detectorName ) ;

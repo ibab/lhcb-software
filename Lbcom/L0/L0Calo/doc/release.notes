@@ -1,7 +1,10 @@
-! $Id: release.notes,v 1.142 2009-11-24 17:42:27 robbep Exp $
+! $Id: release.notes,v 1.143 2009-11-25 15:38:50 robbep Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
+
+! 2009-11-25 - Patrick Robbe
+ - L0CaloCheckCalibCte.cpp: add more clear output messages
 
 ! 2009-11-24 - Patrick Robbe
  - L0CaloCompare.cpp: fix name of histograms
