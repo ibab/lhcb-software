@@ -1,5 +1,5 @@
 package BooleSys
-version v19r8
+version v19r9
 
 branches cmt doc
  
@@ -8,7 +8,7 @@ branches cmt doc
 #=======================================================
 
 # Boole application                   # Maintainer  
-use Boole               v19r8   Digi  # Marco Cattaneo
+use Boole               v19r9   Digi  # Marco Cattaneo
 use DigiAlg             v4r18   Digi  # Marco Cattaneo
 use BooleUMC            v1r0    Digi  # Tomasz Skwarnicki
 
@@ -34,7 +34,7 @@ use RichReadout         v2r12p1 Rich  # Chris Jones
 use STDigiAlgorithms    v1r7    ST    # Matt Needham
 
 # Packages from other projects updated temporarily in this release
-use VeloDAQ v4r11 Velo
+use OTMonitor v3r1 OT
 
 # Allow the generation of the SAM QMTest
 apply_pattern QMTest
