@@ -6,6 +6,8 @@ Purpose: LHCb reconstruction programs
 </PRE><H1><A NAME=v35r9p1>2009-11-27 Brunel v35r9p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
  and SQLDDDB v5r15, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+ plus the following patches: GaudiConf v13r1, Magnet v5r5, TsaAlgorithms v3r14p1,
+                             TrackFitter v2r40p1, TrackTools v3r24
 
 This is a production version for 2009 data-taking
 Output requires DaVinci v24r5p1 or later
