@@ -4,6 +4,7 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+!======================= TsaAlgorithms v3r14p1 2009-11-26====================
 ! 2009-11-25 M Needham
  - Add options to allow seeding to work without OT drift times
 
