@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.h,v 1.6 2009-05-30 11:29:00 graven Exp $
+// $Id: HltTrackMatch.h,v 1.7 2009-11-26 13:16:39 albrecht Exp $
 #ifndef HLTTRACKING_HLTTRACKMATCH_H 
 #define HLTTRACKING_HLTTRACKMATCH_H 1
 
@@ -71,5 +71,9 @@ private:
   bool m_transferIDs;
   bool m_transferAncestor;
 
+  AIDA::IHistogram1D* m_qualityHisto;
+  AIDA::IHistogram1D* m_quality2Histo;
+  AIDA::IHistogram1D* m_qualityHistoBest;
+  AIDA::IHistogram1D* m_quality2HistoBest;
 };
 #endif // HLTTRACKMATCH_H

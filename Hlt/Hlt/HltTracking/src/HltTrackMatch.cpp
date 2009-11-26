@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.15 2009-10-08 19:17:13 graven Exp $
+// $Id: HltTrackMatch.cpp,v 1.16 2009-11-26 13:16:36 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -31,6 +31,10 @@ HltTrackMatch::HltTrackMatch( const std::string& name,
   , m_tool(0)
   , m_qualityID(0)
   , m_quality2ID(0)
+  , m_qualityHisto(0)
+  , m_quality2Histo(0)
+  , m_qualityHistoBest(0)
+  , m_quality2HistoBest(0)
 {
   declareProperty("MatchName",m_matchName = "");
   
@@ -64,6 +68,14 @@ StatusCode HltTrackMatch::initialize() {
   
   sc = setReco(m_matchName);
   if ( sc.isFailure() ) return sc;
+
+  if (produceHistos()){
+    m_qualityHisto = initializeHisto(m_qualityName,0,10,100);
+    m_quality2Histo = initializeHisto(m_quality2Name,0,10,100);
+    m_qualityHistoBest = initializeHisto(m_qualityName+"Best",0,10,100);
+    m_quality2HistoBest = initializeHisto(m_quality2Name+"Best",0,10,100);
+  }
+
   
   return StatusCode::SUCCESS;
 }
@@ -169,6 +181,12 @@ StatusCode HltTrackMatch::execute() {
         // Warning(" matching failed ",0);
         continue;
       }
+
+      if (produceHistos()) {
+	fill(m_qualityHisto,quality,1.);
+	fill(m_quality2Histo,quality2,1.);
+      }
+      
       if (msgLevel(MSG::VERBOSE)) {
         verbose() << " track [1+2] quality " 
                   << quality << ", " << quality2 << endreq;
@@ -191,6 +209,20 @@ StatusCode HltTrackMatch::execute() {
     }
   }
   
+  if (produceHistos()){
+    std::vector<double> vals; 
+    vals.reserve(otracks->size());
+    BOOST_FOREACH( LHCb::Track* cand, *otracks) vals.push_back( cand->info(m_qualityID,1e6));
+    double val = *( std::min_element(vals.begin(),vals.end()) );
+    fill(m_qualityHistoBest,val,1.); 
+    vals.clear();
+    BOOST_FOREACH( LHCb::Track* cand, *otracks) vals.push_back( cand->info(m_quality2ID,1e6));
+    val = *( std::min_element(vals.begin(),vals.end()) );
+    fill(m_quality2HistoBest,val,1.); 
+  }
+  
+  
+
   if (msgLevel(MSG::DEBUG)) printInfo(" matched tracks ",*m_selections.output());
 
 
