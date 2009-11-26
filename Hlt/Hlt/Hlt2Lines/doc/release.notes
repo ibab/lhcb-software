@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.80 2009-11-26 10:49:12 panmanj Exp $
+$Id: release.notes,v 1.81 2009-11-26 12:20:49 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.80 2009-11-26 10:49:12 panmanj Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-26 - Patrick Koppenburg
+ - Inclusive Phi : No explicit dependency on RichRecSysConf
 
 ! 2009-11-26 - Jaap Panman
  - add Hlt1MiniBiasLines, Hlt1NoBiasLines in transparent decision (HltCommissioningLines)

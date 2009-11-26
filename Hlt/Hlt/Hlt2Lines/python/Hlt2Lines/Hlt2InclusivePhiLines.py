@@ -16,9 +16,6 @@ from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
 
 class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
 
-    from Configurables import RichRecSysConf
-    __used_configurables__ = ["RichRecSysConf"]
-    
     __slots__ = {  'KaonPT'             : 800      # MeV
                   ,'KaonIP'             : 0.05     # mm
                   ,'PhiMassWin'         : 12       # MeV
