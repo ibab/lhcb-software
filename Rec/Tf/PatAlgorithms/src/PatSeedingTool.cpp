@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.31 2009-11-12 17:18:32 kholubye Exp $
+// $Id: PatSeedingTool.cpp,v 1.32 2009-11-26 15:39:35 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -1236,6 +1236,11 @@ void PatSeedingTool::storeTrack ( const PatSeedTrack& track,
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() )
       debugFwdHit( hit, debug() );
   }
+  // put the chi^2 and NDF of our track fit onto the track (e.g. for use in
+  // the trigger before the track is fitted with the Kalman filter)
+  // we save chi^2/ndf on our track, so compensate
+  unsigned ndf = track.nCoords() - 5;
+  out->setChi2AndDoF(double(ndf) * track.chi2(), ndf);
   
   // get momentum estimate from track using the momentum estimation tool
   LHCb::State temp(
