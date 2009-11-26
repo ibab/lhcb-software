@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.85 2009-10-17 17:15:09 graven Exp $
+!$Id: release.notes,v 1.86 2009-11-26 13:18:17 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2009-10-26 - Johannes Albrecht
+ - add monitoring histograms for HltTrackMatch and HltTrackUpgrade
 
 !========================== HltTracking v4r3 2009-10-17 ===================
 ! 2009-10-08 - Gerhard Raven
