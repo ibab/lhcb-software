@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.82 2009-11-26 14:56:41 ngueissa Exp $
+$Id: release.notes,v 1.83 2009-11-26 18:31:42 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.82 2009-11-26 14:56:41 ngueissa Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-26 - Patrick Koppenburg
+ - Comment out Hlt2SharedTopo2Body_PionsORKaonslt2SharedTopo2Body_PionsORKaons as it beraks the reconstruction.
+   -> see bug https://savannah.cern.ch/bugs/index.php?59641
 
 ! 2009-11-26 - Neal Gauvin
  - Setting update for Hlt2DisplVertices

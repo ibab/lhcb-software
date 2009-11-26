@@ -218,7 +218,7 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   stage.
         ###################################################################
         orInput = GaudiSequencer('Hlt2SharedTopo2Body_PionsORKaons'
-                         , Members =  GoodPions.members() + GoodKaons.members()
+# PK commented #                         , Members =  GoodPions.members() + GoodKaons.members()
                          , ModeOR = True
                          , ShortCircuit = False
                          )
