@@ -35,18 +35,17 @@ DECLARE_ALGORITHM_FACTORY(Hlt2DisplVertices);
 Hlt2DisplVertices::Hlt2DisplVertices(const std::string& name,
                              ISvcLocator* pSvcLocator)
   : DVAlgorithm(name,pSvcLocator)
-    , m_piMass(139.57)
     , m_pt(400.)
 {
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
                   "Hlt/Vertices/Hlt2RV");
-  declareProperty("RCutMethod", m_RCutMethod = "CorrFromUpstreamPV" );
+  declareProperty("RCutMethod", m_RCutMethod = "FromUpstreamPV" );
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
-  declareProperty("RMin", m_RMin = 0.3 );
-  declareProperty("MinMass1", m_MinMass1 = 8.2*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 3*GeV );
-  declareProperty("MinSumpt1", m_MinSumpt1 = 8*GeV );
-  declareProperty("MinSumpt2", m_MinSumpt2 = 0*GeV );
+  declareProperty("RMin", m_RMin = 0.4 );
+  declareProperty("MinMass1", m_MinMass1 = 9*GeV );
+  declareProperty("MinMass2", m_MinMass2 = 4*GeV );
+  declareProperty("MinSumpt1", m_MinSumpt1 = 9*GeV );
+  declareProperty("MinSumpt2", m_MinSumpt2 = 4*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
 }
 
@@ -74,7 +73,7 @@ StatusCode Hlt2DisplVertices::initialize() {
       debug() << ", computed with respect to (0,0,z) in the local Velo frame" 
 	      << endmsg; 
     else if( m_RCutMethod == "FromUpstreamPV" ){
-      debug() << ", computed with respect to the upstream 2D PV" << endmsg;
+      debug() << ", computed with respect to the upstream PV" << endmsg;
     } else if( m_RCutMethod == "FromUpstreamPV3D" ){
       debug() << ", computed with respect to the upstream PV from PatPV3D" 
 	      << endmsg;
@@ -116,6 +115,10 @@ StatusCode Hlt2DisplVertices::initialize() {
              <<"This is non-sense !"<< endmsg;
     return StatusCode::FAILURE;
   }
+
+  //Get the pion mass
+  const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
+  m_piMass = Ppion->mass();
 
   //get the Velo geometry
   if( m_RCutMethod == "LocalVeloFrame" ){
@@ -165,22 +168,21 @@ StatusCode Hlt2DisplVertices::execute() {
   //sort them by ascending z position
   sort( RVs->begin(), RVs->end(), SortPVz);
 
-  //Retrieve the 2D RecVertex
-  RecVertices* RV2Ds = 0;
+  //Retrieve the RecVertex from PV official reconstruction
+  RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    if( !exist<RecVertices>("/Event/Hlt/Vertex/PV2D") ){ 
-      warning() << "Unable to find 2D RecVertices at"
-		<<" /Event/Hlt/Vertex/PV2D" << endreq;
-      return StatusCode::SUCCESS;
-    }
-    RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
-    int size = RV2Ds->size();
+    const RecVertex::Container * PVc = desktop()-> primaryVertices();
+    int size = PVc->size();
     if(msgLevel(MSG::DEBUG))
-      debug()<<"Retrieved "<< size <<" displ vertices from PatPV2D" << endmsg;
-    plot( size, "NbRV2D", 0, 6);
-    if( RV2Ds->empty() ) return StatusCode::SUCCESS;
+      debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
+    plot( size, "NbPV", 0, 6);
+    if( PVc->empty() ) return StatusCode::SUCCESS;
+    for( RecVertex::Container::const_iterator i = PVc->begin(); 
+         i != PVc->end(); ++i ){
+      PVs.push_back( *i );
+    }
     //sort them by ascending z position
-    sort( RV2Ds->begin(), RV2Ds->end(), SortPVz);
+    sort( PVs.begin(), PVs.end(), SortPVz);
   }
 
 
@@ -192,7 +194,7 @@ StatusCode Hlt2DisplVertices::execute() {
   RecVertices::const_iterator iRV = RVs->begin(); 
   Gaudi::XYZPoint UpPV;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    UpPV = (*RV2Ds->begin())->position();
+    UpPV = (*PVs.begin())->position();
     if(msgLevel(MSG::DEBUG))
       debug() <<"Upstream 2D RV position "<< UpPV << endmsg;
   } else {
@@ -216,8 +218,8 @@ StatusCode Hlt2DisplVertices::execute() {
     //Check if RV is radially displaced
     double R;
     if( m_RCutMethod == "CorrFromUpstreamPV3D" || 
-	m_RCutMethod == "FromUpstreamPV3D" ||
-	m_RCutMethod == "FromUpstreamPV" ){
+        m_RCutMethod == "FromUpstreamPV3D" ||
+        m_RCutMethod == "FromUpstreamPV" ){
       R = (RV->position() - UpPV).rho();
     } else if( m_RCutMethod == "LocalVeloFrame" ){
       Gaudi::XYZPoint localPV = m_toVeloFrame * RV->position();
@@ -239,7 +241,7 @@ StatusCode Hlt2DisplVertices::execute() {
 
     //Eventually correct the position of 3D RV with associated 2D ones.
     if( m_RCutMethod == "CorrFromUpstreamPV" && 
-	( GetCorrPosition( RV, RV2Ds ) - UpPV).rho() < m_RMin ){
+        ( GetCorrPosition( RV, PVs ) - UpPV).rho() < m_RMin ){
       if(msgLevel(MSG::DEBUG))
         debug() <<"Corr RV has an insufficent radial displacement !"<< endmsg;
       continue;
@@ -391,11 +393,11 @@ void Hlt2DisplVertices::Kinematics( Particle::ConstVector & Parts,
 // If can find an associated 2D RV return the 2D RV  
 //============================================================================
 Gaudi::XYZPoint Hlt2DisplVertices::GetCorrPosition( const RecVertex* RV, 
-						       RecVertices* RV2Ds ){
+						        RecVertex::ConstVector & PVs ){
 
   /// sort the 2D with ascending dZ : begin with 2DRV closest in z.
   SortPVdz.refz = RV->position().z();
-  sort( RV2Ds->begin(), RV2Ds->end(), SortPVdz);
+  sort( PVs.begin(), PVs.end(), SortPVdz);
 
   //look if I can find an associated 2D RV to this one
   int com = 0;
@@ -413,9 +415,9 @@ Gaudi::XYZPoint Hlt2DisplVertices::GetCorrPosition( const RecVertex* RV,
   vector<const Track*>::const_iterator tRV;
 
 
-  //loop on 2D RVs
-  for( RecVertices::const_iterator iRV = RV2Ds->begin(); 
-       iRV != RV2Ds->end(); ++iRV ){
+  //loop on PVs
+  for( RecVertex::ConstVector::const_iterator iRV = PVs.begin(); 
+       iRV != PVs.end(); ++iRV ){
     com = 0;
 
     //loop on the 2D RV's tracks

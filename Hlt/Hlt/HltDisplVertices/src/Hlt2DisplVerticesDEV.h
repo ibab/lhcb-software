@@ -51,7 +51,7 @@ private:
   bool RemVtxFromDet( const LHCb::RecVertex* );
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   Gaudi::XYZPoint GetCorrPosition( const LHCb::RecVertex*, 
-				   LHCb::RecVertices * );
+                                   LHCb::RecVertex::ConstVector & );
   Gaudi::XYZPoint Plus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
   Gaudi::XYZPoint Minus( const Gaudi::XYZPoint &, const Gaudi::XYZPoint & );
 

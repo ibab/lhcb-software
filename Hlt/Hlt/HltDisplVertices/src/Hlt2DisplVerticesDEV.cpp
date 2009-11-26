@@ -46,20 +46,19 @@ Hlt2DisplVerticesDEV::Hlt2DisplVerticesDEV(const std::string& name,
   : DVAlgorithm(name,pSvcLocator)
     , m_nbevent(0)
     , m_nbpassed(0)
-    , m_piMass(139.57)
     , m_pt(400.)
 {
   declareProperty("SaveInTuple", m_Save = true );
   declareProperty("DefMom", m_DefMom = true );
-  declareProperty("RCutMethod", m_RCutMethod = "CorrFromUpstreamPV" );
+  declareProperty("RCutMethod", m_RCutMethod = "FromUpstreamPV" );
   declareProperty("InputDisplacedVertices", m_InputDisplVertices = 
                   "Rec/Vertices/Hlt2RV");
   declareProperty("MinNbTracks", m_MinNbtrks = 0 );
-  declareProperty("RMin", m_RMin = 0.3 );
-  declareProperty("MinMass1", m_MinMass1 = 8.2*GeV );
-  declareProperty("MinMass2", m_MinMass2 = 3*GeV );
-  declareProperty("MinSumpt1", m_MinSumpt1 = 8*GeV );
-  declareProperty("MinSumpt2", m_MinSumpt2 = 0*GeV );
+  declareProperty("RMin", m_RMin = 0.4 );
+  declareProperty("MinMass1", m_MinMass1 = 9*GeV );
+  declareProperty("MinMass2", m_MinMass2 = 4*GeV );
+  declareProperty("MinSumpt1", m_MinSumpt1 = 9*GeV );
+  declareProperty("MinSumpt2", m_MinSumpt2 = 4*GeV );
   declareProperty("RemVtxFromDet", m_RemVtxFromDet = 1*mm  );
 }
 
@@ -130,6 +129,14 @@ StatusCode Hlt2DisplVerticesDEV::initialize() {
     return StatusCode::FAILURE;
   }
 
+  //Get the pion mass
+  const ParticleProperty* Ppion = ppSvc()->find( "pi+" );
+//   if ( !Ppion ) { //
+//     err() << "Cannot find particle property for the pion." << endmsg ;
+//     return StatusCode::FAILURE;
+//   }
+  m_piMass = Ppion->mass();
+
   //get the Velo geometry
   if( m_RCutMethod == "LocalVeloFrame" ){
     string velo = "/dd/Structure/LHCb/BeforeMagnetRegion/Velo/Velo";
@@ -181,28 +188,22 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   //sort them by ascending z position
   sort( RVs->begin(), RVs->end(), SortPVz);
 
-  //Retrieve the 2D RecVertex
-  RecVertices* RV2Ds=0;
+  //Retrieve the RecVertex from PV official reconstruction
+  RecVertex::ConstVector PVs;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    if( !exist<RecVertices>("/Event/Hlt/Vertex/PV2D") ){ 
-      warning() << "Unable to find 2D RecVertices at"
-		<<" /Event/Hlt/Vertex/PV2D" << endmsg;
-      return StatusCode::SUCCESS;
-    }
-    RV2Ds = get<RecVertices>("/Event/Hlt/Vertex/PV2D");
-    int size = RV2Ds->size();
+    const RecVertex::Container * PVc = desktop()-> primaryVertices();
+    int size = PVc->size();
     if(msgLevel(MSG::DEBUG))
-      debug()<<"Retrieved "<< size <<" displ vertices from PatPV2D" << endmsg;
-    plot( size, "NbRV2D", 0, 6);
-    if( RV2Ds->empty() ) return StatusCode::SUCCESS;
+      debug()<<"Retrieved "<< size <<" primary vertices" << endmsg;
+    plot( size, "NbPV", 0, 6);
+    if( PVc->empty() ) return StatusCode::SUCCESS;
+    for( RecVertex::Container::const_iterator i = PVc->begin(); 
+         i != PVc->end(); ++i ){
+      PVs.push_back( *i );
+    }
     //sort them by ascending z position
-    sort( RV2Ds->begin(), RV2Ds->end(), SortPVz);
+    sort( PVs.begin(), PVs.end(), SortPVz);
   }
-  if (RV2Ds==0) {
-      warning() << "Unable to find 2D RecVertices" << endmsg;
-      return StatusCode::SUCCESS;
-  }
-
 
   //Some check up
   //PrintTracksType();
@@ -220,9 +221,9 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
   RecVertices::const_iterator iRV = RVs->begin();
   Gaudi::XYZPoint UpPV;
   if( m_RCutMethod=="FromUpstreamPV" || m_RCutMethod=="CorrFromUpstreamPV" ){
-    UpPV = (*RV2Ds->begin())->position();
+    UpPV = (*PVs.begin())->position();
     if(msgLevel(MSG::DEBUG))
-      debug() <<"Upstream 2D RV position "<< UpPV << endmsg;
+      debug() <<"Upstream PV position "<< UpPV << endmsg;
   } else {
     UpPV = (*iRV)->position();
   }
@@ -253,7 +254,7 @@ StatusCode Hlt2DisplVerticesDEV::execute() {
       Pos = m_toVeloFrame * Pos;
     }
     else if( m_RCutMethod == "CorrFromUpstreamPV" ){
-      Pos = GetCorrPosition( RV, RV2Ds );
+      Pos = GetCorrPosition( RV, PVs );
     }
 
     double R;
@@ -486,12 +487,12 @@ void Hlt2DisplVerticesDEV::Kinematics( Particle::ConstVector & Parts,
 //============================================================================
 // If can find an associated 2D RV return the 2D RV  
 //============================================================================
-Gaudi::XYZPoint Hlt2DisplVerticesDEV::GetCorrPosition( const RecVertex* RV, 
-						       RecVertices* RV2Ds ){
+Gaudi::XYZPoint Hlt2DisplVerticesDEV::GetCorrPosition( const RecVertex* RV,
+                                        RecVertex::ConstVector & PVs ){
 
   /// sort the 2D with ascending dZ : begin with 2DRV closest in z.
   SortPVdz.refz = RV->position().z();
-  sort( RV2Ds->begin(), RV2Ds->end(), SortPVdz);
+  sort( PVs.begin(), PVs.end(), SortPVdz);
 
   //look if I can find an associated 2D RV to this one
   int com = 0;
@@ -509,9 +510,9 @@ Gaudi::XYZPoint Hlt2DisplVerticesDEV::GetCorrPosition( const RecVertex* RV,
   vector<const Track*>::const_iterator tRV;
 
 
-  //loop on 2D RVs
-  for( RecVertices::const_iterator iRV = RV2Ds->begin(); 
-       iRV != RV2Ds->end(); ++iRV ){
+  //loop on PVs
+  for( RecVertex::ConstVector::const_iterator iRV = PVs.begin(); 
+       iRV != PVs.end(); ++iRV ){
     com = 0;
 
     //Check that the 2DRV is not too far
@@ -629,7 +630,9 @@ void Hlt2DisplVerticesDEV::PrintParticle(){
 	 << InputParts.size() <<endmsg;
   for ( Particle::ConstVector::const_iterator j = InputParts.begin();
 	j != InputParts.end();++j) {
-    debug()<<"Particle id "<< (*j)->particleID().pid() <<" Mass "<< (*j)->measuredMass()/1000. << " GeV"<<" slope "<< (*j)->slopes() << endmsg;
+    debug()<<"Particle id "<< (*j)->particleID().pid() <<" Mass "
+           << (*j)->measuredMass()/1000. << " GeV"<<" slope "
+           << (*j)->slopes() << endmsg;
   }
 
 }

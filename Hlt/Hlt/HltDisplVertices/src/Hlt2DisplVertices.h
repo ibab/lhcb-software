@@ -47,7 +47,7 @@ private:
   /// Creates a pions with 400 MeV pt from track slopes.
   const LHCb::Particle* DefaultParticle( const LHCb::Track * p );
   Gaudi::XYZPoint GetCorrPosition( const LHCb::RecVertex*, 
-                                   LHCb::RecVertices * );
+                                   LHCb::RecVertex::ConstVector & );
 
   ITransportSvc * m_transSvc;
   IGeometryInfo* m_lhcbGeo;
