@@ -2,41 +2,42 @@
 # <-- End of file '/build/cattanem/Boole_HEAD/BooleSys/tests/options/testBoole.py'
 # applying configuration of Boole
 # /***** User Boole/Boole ****************************************************************************
-# |-DatasetName     = 'Boole'
-# |-Histograms      = 'NONE'  (default: 'Default')
-# |-SkipEvents      = 0
-# |-FilterSequence  = []  (default: [])
-# |-TAESubdets      = ['CALO', 'MUON']  (default: ['CALO', 'MUON'])
-# |-DDDBtag         = ''
-# |-MainSequence    = []  (default: [])
-# |-DigiType        = 'Default'
-# |-MoniSequence    = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0', 'MC']  (default: [])
-# |-TAEPrev         = 0
-# |-EnablePack      = True
-# |-DigiSequence    = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
-# |-OutputLevel     = 3
-# |-EvtMax          = 0  (default: -1)
-# |-TAENext         = 0
-# |-UseSpillover    = False
-# |-CondDBtag       = ''
-# |-InitSequence    = ['Data', 'MUON']  (default: [])
-# |-DataType        = '2009'
-# |-NoWarnings      = False
-# |-Tell1Processing = False
-# |-LinkSequence    = ['VELO', 'TT', 'IT', 'OT', 'Tr', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
-# |-SpilloverPaths  = ['Prev', 'PrevPrev', 'Next']  (default: [])
-# |-Outputs         = ['DIGI', 'MDF', 'L0ETC']  (default: ['DIGI'])
-# |-Monitors        = []  (default: [])
+# |-DatasetName         = 'Boole'
+# |-Histograms          = 'NONE'  (default: 'Default')
+# |-SkipEvents          = 0
+# |-VeloTell1Processing = False
+# |-ProductionMode      = False
+# |-FilterSequence      = []  (default: [])
+# |-TAESubdets          = ['CALO', 'MUON']  (default: ['CALO', 'MUON'])
+# |-Outputs             = ['DIGI', 'MDF', 'L0ETC']  (default: ['DIGI'])
+# |-MainSequence        = []  (default: [])
+# |-DigiType            = 'Default'
+# |-MoniSequence        = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0', 'MC']  (default: [])
+# |-TAEPrev             = 0
+# |-EnablePack          = True
+# |-DigiSequence        = ['VELO', 'TT', 'IT', 'OT', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
+# |-OutputLevel         = 3
+# |-EvtMax              = 0  (default: -1)
+# |-TAENext             = 0
+# |-UseSpillover        = False
+# |-CondDBtag           = ''
+# |-InitSequence        = ['Data', 'MUON']  (default: [])
+# |-DataType            = '2009'
+# |-NoWarnings          = False
+# |-LinkSequence        = ['VELO', 'TT', 'IT', 'OT', 'Tr', 'RICH', 'CALO', 'MUON', 'L0']  (default: [])
+# |-SpilloverPaths      = ['Prev', 'PrevPrev', 'Next']  (default: [])
+# |-DDDBtag             = ''
+# |-Monitors            = []  (default: [])
 # \----- (End of User Boole/Boole) -------------------------------------------------------------------
 # DigiWriter.ItemList    = ['/Event/Gen/Header#1', '/Event/MC/Header#1', '/Event/MC/DigiHeader#1', '/Event/DAQ/RawEvent#1', '/Event/Gen/Collisions#1', '/Event/Gen/HepMCEvents#1', '/Event/pSim/MCVertices#1', '/Event/pSim/MCParticles#1', '/Event/pSim/Rich/DigitSummaries#1', '/Event/MC/Muon/DigitsInfo#1', '/Event/Link/Trig/L0/Calo#1', '/Event/Link/Trig/L0/FullCalo#1', '/Event/Link/Raw/Velo/Clusters#1', '/Event/Link/Raw/TT/Clusters#1', '/Event/Link/Raw/IT/Clusters#1', '/Event/Link/Raw/OT/Times#1', '/Event/Link/Raw/Ecal/Digits#1', '/Event/Link/Raw/Hcal/Digits#1', '/Event/Link/Raw/Muon/Digits#1', '/Event/MC/TrackInfo#1', '/Event/Link/Raw/Velo/Clusters2MCHits#1', '/Event/Link/Raw/TT/Clusters2MCHits#1', '/Event/Link/Raw/IT/Clusters2MCHits#1', '/Event/Link/Raw/OT/Times2MCHits#1']
 # DigiWriter.OptItemList = []
-# WARNING: Default tag requested for partition DDDB (using head-20091007)
-# WARNING: Default tag requested for partition LHCBCOND (using head-20090902)
-# WARNING: Default tag requested for partition SIMCOND (using sim-20090902-vc-md100)
+# WARNING: Default tag requested for partition DDDB (using head-20091120)
+# WARNING: Default tag requested for partition LHCBCOND (using head-20091120)
+# WARNING: Default tag requested for partition SIMCOND (using sim-20091112-vc-md100)
 ApplicationMgr    SUCCESS
 ====================================================================================================================================
-                                                   Welcome to Boole version v19r7
-                                          running on lxbuild156.cern.ch on Wed Nov 11 13:58:25 2009
+                                                   Welcome to Boole version v19r8
+                                          running on lxbuild135.cern.ch on Thu Nov 26 12:03:27 2009
 ====================================================================================================================================
 ApplicationMgr       INFO Application Manager Configured successfully
 DetectorPersist...   INFO  'CnvServices':[ 'XmlCnvSvc/XmlCnvSvc' ]
@@ -48,7 +49,7 @@ EventPersistenc...   INFO  'CnvServices':[ 'PoolRootEvtCnvSvc' , 'PoolRootTreeEv
 RndmGenSvc.Engine    INFO Generator engine type:CLHEP::RanluxEngine
 RndmGenSvc.Engine    INFO Current Seed:1234567 Luxury:3
 RndmGenSvc           INFO Using Random engine:HepRndm::Engine<CLHEP::RanluxEngine>
-TimingAuditor.T...   INFO This machine has a speed about   2.17 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.94 times the speed of a 2.8 GHz Xeon.
 BooleSequencer       INFO Member list: ProcessPhase/Init, ProcessPhase/Digi, ProcessPhase/Link, ProcessPhase/Moni, ProcessPhase/Filter
 Init                 INFO Member list: GaudiSequencer/InitBooleSeq, GaudiSequencer/InitDataSeq, GaudiSequencer/InitMUONSeq
 InitBooleSeq         INFO Member list: BooleInit, GaudiSequencer/SpilloverHandler
@@ -58,8 +59,8 @@ BooleInit         SUCCESS ======================================================
 HistogramPersis...   INFO  'CnvServices':[ 'HbookHistSvc' , 'RootHistSvc' ]
 RootHistSvc          INFO Writing ROOT histograms to: UndefinedROOTOutputFileName
 HistogramPersis...   INFO Added successfully Conversion service:RootHistSvc
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonlow-G4.root as LowEnergy
-HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonflat-G4.root as MuonFlatSpillover
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonlow-G4.root as LowEnergy
+HistogramDataSvc     INFO Added stream file:/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonflat-G4.root as MuonFlatSpillover
 BooleInit            INFO Thresholds for Interaction processes : [0.01, 0.03, 0.05]
 BooleInit            INFO Thresholds for Diffractive processes : [0.1, 0.3, 0.6]
 BooleInit            INFO Thresholds for Elastic processes : [0.25, 0.5, 0.75]
@@ -69,12 +70,12 @@ InitMUONSeq          INFO Member list: MuonBackground/MuonLowEnergy, MuonBackgro
 COOLConfSvc          INFO CORAL Connection Retrial Period set to 60s
 COOLConfSvc          INFO CORAL Connection Retrial Time-Out set to 900s
 DDDB                 INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/DDDB.db/DDDB"
-DDDB                 INFO Using TAG "head-20091007"
+DDDB                 INFO Using TAG "head-20091120"
 EventClockSvc.F...   INFO Event times generated from 0 with steps of 0
 SIMCOND              INFO Connected to database "sqlite_file:/afs/cern.ch/lhcb/software/DEV/nightlies/DBASE/Det/SQLDDDB/db/SIMCOND.db/SIMCOND"
-SIMCOND              INFO Using TAG "sim-20090902-vc-md100"
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonlow-G4.root" for reading
-RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/muonflat-G4.root" for reading
+SIMCOND              INFO Using TAG "sim-20091112-vc-md100"
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonlow-G4.root" for reading
+RFileCnv             INFO opening Root file "/afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/muonflat-G4.root" for reading
 Digi                 INFO Member list: GaudiSequencer/DigiVELOSeq, GaudiSequencer/DigiTTSeq, GaudiSequencer/DigiITSeq, GaudiSequencer/DigiOTSeq, GaudiSequencer/DigiRICHSeq, GaudiSequencer/DigiCALOSeq, GaudiSequencer/DigiMUONSeq, GaudiSequencer/DigiL0Seq
 DigiVELOSeq          INFO Member list: VeloSim, VeloSim/VeloPUSim, VeloDataProcessor, VeloClusterMaker, PrepareVeloRawBuffer
 VeloSim              INFO Probability to add noise to empty strips 0.00583881
@@ -182,14 +183,14 @@ L0EmulatorSeq        INFO Member list: GaudiSequencer/L0ProcessorsSeq, L0DUAlg/L
 L0ProcessorsSeq      INFO Member list: L0CaloAlg/L0Calo, L0MuonAlg/L0Muon, PuVetoAlg/L0PuVeto
 L0Calo               INFO 192 Ecal and 54 Hcal front end cards.
 ChronoStatSvc        INFO  Number of skipped events for MemStat-1
-L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r1/data/L0MuonKernel.xml
+L0Muon               INFO XML file = /afs/cern.ch/lhcb/software/DEV/nightlies/PARAM/ParamFiles/v8r2/data/L0MuonKernel.xml
 L0Muon               INFO MuonTriggerUnit properties are:
 L0Muon               INFO  foiXSize = 4,5,0,2,4
 L0Muon               INFO  foiYSize = 0,0,0,1,1
 L0Muon               INFO  ignoreM1 = 0
 L0Muon               INFO  ignoreM2 = 0
 L0Muon               INFO  procVersion = 2
-L0MuonTrigger I...   INFO Time User   : Tot= 1.79  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.53  [s]                                             #=  1
 ToolSvc.L0CondD...   INFO Registered RAM(BCID) versions = {|}
 ToolSvc.L0DUCon...   INFO -------------------------------------------------------------
 ToolSvc.L0DUCon...   INFO **** L0DU Config loading : L0TCK = 0xDC09 ==> OK
@@ -228,6 +229,8 @@ MoniL0Seq            INFO Member list: GaudiSequencer/L0MoniSeq
 L0MoniSeq            INFO Member list: L0CaloMonit, L0MuonOnlineMonitor, L0DUReportMonitor
 MoniMCSeq            INFO Member list:
 Filter               INFO OR Member list:
+PrepareDIGI          INFO Member list: PackMCVertex, PackMCParticle, DataPacking::Pack<LHCb::MCRichDigitSummaryPacker>/MCRichDigitSummaryPacker, EventNodeKiller/MCRichNodeKiller
+MCRichDigitSumm...   INFO Input 'MC/Rich/DigitSummaries' Output 'pSim/Rich/DigitSummaries'
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootEvtCnvSvc
 EventPersistenc...   INFO Added successfully Conversion service:PoolRootTreeEvtCnvSvc
 DigiWriter           INFO Data source: EventDataSvc output: DATAFILE='PFN:Boole.digi' TYP='POOL_ROOTTREE' OPT='REC'
@@ -430,7 +433,7 @@ L0MuonOnlineMon...SUCCESS Booked 9 Histogram(s) : 1D=5 2D=4
 ToolSvc.OTChann...SUCCESS Exceptions/Errors/Warnings/Infos Statistics : 0/0/1/0
 ToolSvc.OTChann...SUCCESS  #WARNINGS   = 1        Message = 'Updating OT channel map for bank version 3'
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
-TimingAuditor.T...   INFO This machine has a speed about   2.17 times the speed of a 2.8 GHz Xeon.
+TimingAuditor.T...   INFO This machine has a speed about   1.94 times the speed of a 2.8 GHz Xeon.
 TimingAuditor.T...   INFO Algorithm          (millisec) |    <user> |   <clock> |      min       max | entries | total (s) |
 TimingAuditor.T...   INFO ------------------------------------------------------------------------------------------------
 TimingAuditor.T...   INFO EVENT LOOP                    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -572,6 +575,11 @@ TimingAuditor.T...   INFO      L0MuonOnlineMonitor      |     0.000 |     0.000 
 TimingAuditor.T...   INFO      L0DUReportMonitor        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO    MoniMCSeq                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   Filter                      |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO  PrepareDIGI                  |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   PackMCVertex                |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   PackMCParticle              |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   MCRichDigitSummaryPacker    |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
+TimingAuditor.T...   INFO   MCRichNodeKiller            |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  DigiWriter                   |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO  L0ETC                        |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
 TimingAuditor.T...   INFO   SeqWriteTag                 |     0.000 |     0.000 |    0.000       0.0 |       0 |     0.000 |
@@ -584,8 +592,8 @@ DataOnDemandSvc      INFO Handled "DataFault" incidents: 0/0/0(Alg/Node/Total).
 *****Chrono*****     INFO ****************************************************************************************************
 *****Chrono*****     INFO  The Final CPU consumption ( Chrono ) Table (ordered)
 *****Chrono*****     INFO ****************************************************************************************************
-L0MuonTrigger I...   INFO Time User   : Tot= 1.79  [s]                                             #=  1
-ChronoStatSvc        INFO Time User   : Tot=  2.7  [s]                                             #=  1
+L0MuonTrigger I...   INFO Time User   : Tot= 1.53  [s]                                             #=  1
+ChronoStatSvc        INFO Time User   : Tot= 2.44  [s]                                             #=  1
 *****Chrono*****     INFO ****************************************************************************************************
 ChronoStatSvc.f...   INFO  Service finalized successfully
 ApplicationMgr       INFO Application Manager Finalized successfully
