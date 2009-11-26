@@ -1,4 +1,4 @@
-// $Id: HltBase.icpp,v 1.24 2009-05-30 13:43:01 graven Exp $
+// $Id: HltBase.icpp,v 1.25 2009-11-26 13:43:28 albrecht Exp $
 // Include files
 
 
@@ -90,15 +90,21 @@ template <class EBASE>
 int HltBase<EBASE>::hltInfoID(const std::string& infoname) 
 {
   boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",infoname);
-  EBASE::Assert( i, " request for unknown Info ID");
-  return i->second;
+  if(!i) {
+	EBASE::info()<<"request for unknown Info id for name: "<<infoname <<endreq;
+	return 0;
+  }
+ return i->second;
 }
 
 template <class EBASE>
 std::string HltBase<EBASE>::hltInfoName(int id) 
 {
   boost::optional<IANNSvc::minor_value_type> i =  annSvc().value("InfoID",id);
-  EBASE::Assert( i, " request for unknown Info ID");
+  if(!i) {
+	EBASE::info()<<"request for unknown Info name for id: "<<id << endreq;
+	return "UNKNOWN";
+  }
   return i->first;
 }
 
