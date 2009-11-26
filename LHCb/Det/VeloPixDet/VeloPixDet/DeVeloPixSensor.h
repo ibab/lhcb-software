@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.h,v 1.6 2009-10-29 15:34:05 cocov Exp $
+// $Id: DeVeloPixSensor.h,v 1.7 2009-11-26 17:04:44 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSENSOR_H
 #define VELOPIXDET_DEVELOPIXSENSOR_H 1
 
@@ -53,6 +53,9 @@ public:
   /// Initialise the DeVeloPixSensor from the XML
   virtual StatusCode initialize();
 
+  /// Return a trajectory (for track fit) from strip + offset
+  virtual std::auto_ptr<LHCb::Trajectory> trajectory(const LHCb::VeloPixChannelID& id, 
+                                                     const std::pair<double,double> offset) const = 0;
 
   /// Calculate the nearest channel to a 3-d point.
   /// Also returns the fractional x-y position IN the pixel
@@ -63,7 +66,10 @@ public:
   /// Calculate the XYZ center of a pixel
   virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
                                                 Gaudi::XYZPoint& point) const = 0;
-  
+
+  virtual StatusCode channelToPointWithFraction( const LHCb::VeloPixChannelID& channel,
+                                                        const std::pair<double,double> offset,
+                                                 Gaudi::XYZPoint& point) const= 0;
 
   ///  Get the list of VeloPixChannelID forming the 3x3 cluster of pixel centered on point
   virtual StatusCode pointTo3x3Channels(const Gaudi::XYZPoint& point,
@@ -100,13 +106,13 @@ public:
 
   /// Convert position inside VeloPix half Box (one per side) into local position
   /// Local from is +ve x and Upstream    [directly from DeVelo, not checked]
-  inline Gaudi::XYZPoint veloHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
+  inline Gaudi::XYZPoint veloPixHalfBoxToLocal(const Gaudi::XYZPoint& boxPos) const {
     Gaudi::XYZPoint globalPos = m_halfBoxGeom->toGlobal(boxPos);
     return m_geometry->toLocal(globalPos);
   }
 
   /// Convert position inside VeloPix half Box (one per side) to global [directly from DeVelo, not checked]
-  inline Gaudi::XYZPoint veloHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
+  inline Gaudi::XYZPoint veloPixHalfBoxToGlobal(const Gaudi::XYZPoint& boxPos) const {
     return m_halfBoxGeom->toGlobal(boxPos);
   }
 
@@ -188,6 +194,13 @@ public:
   StatusCode cacheGeometry();
 
 protected:
+
+  //unsigned int m_numberOfZones;
+
+  // THIS COMES FROM THE CHANNEL ID... IF CHANNEL ID CHANGES (ie.nb bits allocated to pixels and chip num) 
+  // IT SHOULD BE MODIFIED  --> recalculated in VeloPix...Type
+  //static const unsigned long m_numberOfPixelsPerChip=65536;
+  //static const unsigned long m_numberOfChips=64;
   
   IGeometryInfo* m_geometry;
   IGeometryInfo* m_halfBoxGeom; ///< Geometry info of the parent half box  [directly from DeVelo, not checked]

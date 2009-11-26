@@ -1,4 +1,4 @@
-// $Id: DeVeloPix.cpp,v 1.2 2009-10-07 07:43:41 cocov Exp $
+// $Id: DeVeloPix.cpp,v 1.3 2009-11-26 17:04:44 cocov Exp $
 //
 // ============================================================================
 #define  VELOPIXDET_DEVELOPIX_CPP 1
@@ -324,7 +324,7 @@ StatusCode DeVeloPix::updateLeftHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
  
-  Gaudi::XYZPoint global = (*leftSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint global = (*leftSensorsBegin())->veloPixHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[LeftHalf] = global-localZero;
   
   return StatusCode::SUCCESS;
@@ -335,7 +335,7 @@ StatusCode DeVeloPix::updateRightHalfBoxOffset() {
 
   Gaudi::XYZPoint localZero(0.,0.,0.);
   
-  Gaudi::XYZPoint global = (*rightSensorsBegin())->veloHalfBoxToGlobal(localZero);
+  Gaudi::XYZPoint global = (*rightSensorsBegin())->veloPixHalfBoxToGlobal(localZero);
   m_halfBoxOffsets[RightHalf] = global-localZero;
   
   return StatusCode::SUCCESS;
