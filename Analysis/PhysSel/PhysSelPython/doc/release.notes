@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.26 2009-11-26 09:52:24 jpalac Exp $
+!$Id: release.notes,v 1.27 2009-11-26 09:54:04 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
@@ -8,6 +8,8 @@
 ! 2009-11-26 - Juan PALACIOS
  - python/PhysSelPython/Wrappers.py
   . Add clone method to SelectionSequence
+ - cmt/requirements
+  . Increase version to v3r2
 
 !==================== PhysSel/PhysSelPython v3r1 2009-10-28 ================
 
