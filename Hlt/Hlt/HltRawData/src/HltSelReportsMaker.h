@@ -1,4 +1,4 @@
-// $Id: HltSelReportsMaker.h,v 1.8 2009-08-17 08:40:39 graven Exp $
+// $Id: HltSelReportsMaker.h,v 1.9 2009-11-26 13:08:48 tskwarni Exp $
 #ifndef HLTSELREPORTSMAKER_H 
 #define HLTSELREPORTSMAKER_H 1
 
@@ -136,6 +136,9 @@ private:
   typedef std::map<std::string,int> SelectionSetting;
   typedef SimpleProperty< std::map<std::string,int> > SelectionSettingProp;
   
+  /// cache last PV selection name
+  std::string m_lastPVSelectionName;
+  int m_intPVSelID;
 
   /// Present output mode (false=normal true=debug)
   bool m_debugMode;
@@ -147,13 +150,14 @@ private:
   unsigned int m_presentInfoLevelRecVertex;
   unsigned int m_presentInfoLevelParticle;
   unsigned int m_presentInfoLevelCaloCluster;
+  unsigned int m_presentInfoLevelSelection;
   
   /// debug event period (global, can't be change per selection)  0=never 1=always e.g. 100=every 100th event
   UnsignedIntegerProperty m_debugPeriod;
 
   /// event counter (reset at every debug event)
   unsigned int m_event;
-  
+
   /// default max number of candidates for Decision selections (can be overruled by per selection setting)
   UnsignedIntegerProperty m_maxCandidatesDecision;
   UnsignedIntegerProperty m_maxCandidatesDecisionDebug;
@@ -188,6 +192,8 @@ private:
   UnsignedIntegerProperty m_infoLevelParticleDebug;
   UnsignedIntegerProperty m_infoLevelCaloCluster;
   UnsignedIntegerProperty m_infoLevelCaloClusterDebug;
+  UnsignedIntegerProperty m_infoLevelSelection;
+  UnsignedIntegerProperty m_infoLevelSelectionDebug;
 
 };
 

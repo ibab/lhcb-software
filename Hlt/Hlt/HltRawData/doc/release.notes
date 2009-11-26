@@ -1,9 +1,15 @@
-!$Id: release.notes,v 1.47 2009-11-14 13:23:34 graven Exp $
+!$Id: release.notes,v 1.48 2009-11-26 13:08:48 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-11-26 - Tomasz Skwarnicki
+ - HltSelReportsMaker: save Particle2Vertex info. 
+   No changes in Writer needed, but need new Decoder (HltDAQ v1r2 or higher) for proper restoration.
+ - HltVertexReportsMaker: save covariance matrix. 
+   If used with old Writer the new info will be simply ignored. 
 
 !========================== HltRawData v2r1p1 2009-11-14 ===================
 ! 2009-11-14 - Gerhard Raven

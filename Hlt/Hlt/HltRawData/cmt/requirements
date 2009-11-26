@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.17 2009-11-14 13:23:34 graven Exp $
+#$Id: requirements,v 1.18 2009-11-26 13:08:48 tskwarni Exp $
 #============================================================================
 # Created    : 2008-07-12
 # Maintainer : Tomasz Skwarnicki
 #============================================================================
 package           HltRawData
-version           v2r1p1
+version           v2r2
 
 #============================================================================
 # Structure, i.e. directories to process. 
@@ -24,9 +24,11 @@ end_private
 use GaudiAlg            v*
 use HltBase             v*    Hlt
 use HltInterfaces       v*    Kernel
+use Relations           v*    Kernel
 use HltEvent            v*    Event
 use DAQEvent            v*    Event
 use TrackEvent          v*    Event
+
 
 #============================================================================
 # Component library building rule

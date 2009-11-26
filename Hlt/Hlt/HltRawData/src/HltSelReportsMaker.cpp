@@ -1,10 +1,15 @@
-// $Id: HltSelReportsMaker.cpp,v 1.14 2009-08-17 08:40:39 graven Exp $
+// $Id: HltSelReportsMaker.cpp,v 1.15 2009-11-26 13:08:48 tskwarni Exp $
 // #define DEBUGCODE
 // Include files 
+#include "boost/algorithm/string/replace.hpp"
+#include "boost/format.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IIncidentSvc.h"
+#include "GaudiKernel/IRegistry.h"
+
+#include "Kernel/Particle2Vertex.h"
 
 #include "Event/HltSelReports.h"
 #include "Event/HltObjectSummary.h"
@@ -21,6 +26,8 @@
 #include "HltBase/IHltDataSvc.h"
 // local
 #include "HltSelReportsMaker.h"
+
+
 
 using namespace LHCb;
 
@@ -95,6 +102,9 @@ HltSelReportsMaker::HltSelReportsMaker( const std::string& name,
   declareProperty("InfoLevelCaloCluster", m_infoLevelCaloCluster = ((unsigned int)kMaxInfoLevel) );
   declareProperty("InfoLevelCaloClusterDebug", m_infoLevelCaloClusterDebug = ((unsigned int)kMaxInfoLevel) );
 
+  declareProperty("InfoLevelSelection", m_infoLevelSelection = ((unsigned int)kMaxInfoLevel) );
+  declareProperty("InfoLevelSelectionDebug", m_infoLevelSelectionDebug = ((unsigned int)kMaxInfoLevel) );
+
   declareProperty("DebugIncident", m_debugIncidentName = "RequestDebugEvent" );
 
 
@@ -157,11 +167,11 @@ StatusCode HltSelReportsMaker::initialize() {
      }
      if( !intSelID ){
        for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt2.begin();
-	    si!=hlt2.end();++si){
-	 if( si->first == selName ){
-	   intSelID=si->second;
-	   break;
-	 }
+            si!=hlt2.end();++si){
+         if( si->first == selName ){
+           intSelID=si->second;
+           break;
+         }
        }
      }
      m_selectionIntIDs.push_back(intSelID);
@@ -178,6 +188,9 @@ StatusCode HltSelReportsMaker::initialize() {
     }
   }
  
+  m_lastPVSelectionName = "";  
+  m_intPVSelID=0;
+
   return StatusCode::SUCCESS;
 }
 
@@ -406,6 +419,14 @@ StatusCode HltSelReportsMaker::execute() {
   
      // must also save candidates 
      int nocc(0);
+
+     // save PV association info with selection if found
+     std::string pvSelectionName("");
+     std::vector<unsigned int> packedPVKeys;
+     unsigned int nPackedPVKeys(0);
+     unsigned int iWord(0);
+     Particle2Vertex::Table* table(0);
+
      for (std::vector<ContainedObject*>::const_iterator ic = candidates.begin();
           ic != candidates.end(); ++ic) {
 
@@ -425,6 +446,63 @@ StatusCode HltSelReportsMaker::execute() {
            Particle* candi = dynamic_cast<Particle*>(*ic);
            if( candi ){
              hos = storeParticle( candi );
+
+             if( kStandardInfoLevel &  m_presentInfoLevelSelection & m_presentInfoLevel ){ 
+               if( pvSelectionName != "_" ){
+                 bool keyFound = false;             
+                 const DataObject* container = candi->parent();
+                 if( container ){
+                   IRegistry* registry = container->registry() ;
+                   if( registry ){
+                     std::string path = registry->identifier() ;
+                     boost::replace_last(path,"/Particles","/Particle2VertexRelations");
+                     if( !table ){                     
+                       if( exist< Particle2Vertex::Table >(path) ){
+                         table = get< Particle2Vertex::Table >(path);
+                       }
+                     }
+                     if( table ){                     
+                       Particle2Vertex::Table::Range rels= table->relations( candi );
+                       if( rels.size() ){
+                         const VertexBase* pv = (rels[0]).to();
+                         if(  !(pvSelectionName.length()) ){
+                           const DataObject* containerPV = pv->parent();
+                           if( containerPV ){
+                             IRegistry* registryPV = containerPV->registry() ;
+                             if( registryPV ){
+                               std::string pathPV = registryPV ->identifier();
+                               std::size_t found = pathPV.find_last_of("/");
+                               if( found != std::string::npos ){
+                                 pvSelectionName = pathPV.substr(found+1);
+                               } else {
+                                 pvSelectionName = pathPV;
+                               }
+                             }
+                           }
+                         }
+                         unsigned int key( pv->key() );
+                         key = ( key < 255 ) ? key : 254;
+                         ++nPackedPVKeys;
+                         if( 5 == nPackedPVKeys ){
+                           nPackedPVKeys = 1;
+                           packedPVKeys.push_back( iWord );
+                           iWord = 0;
+                         }
+                         iWord |= ( key >> ( nPackedPVKeys-1) );
+                         keyFound = true;                     
+                       }
+                     }
+                   }
+                 }
+                 if( !keyFound && pvSelectionName.length() ){
+                   Warning("Only some particles in the trigger selection " +
+                           selName + " have PV association - none stored", 
+                           StatusCode::SUCCESS, 10 );                 
+                   pvSelectionName = "_";               
+                 }
+               }
+             }
+             
            } else { 
              CaloCluster* candi = dynamic_cast<CaloCluster*>(*ic);
              if( candi ){
@@ -442,6 +520,66 @@ StatusCode HltSelReportsMaker::execute() {
          break;
        } 
        selSumOut.addToSubstructure(hos);
+     }
+
+     // insert PV relations if any
+     if( pvSelectionName.length()  ){
+       packedPVKeys.push_back( iWord );
+       int intPVSelID=0;       
+       if( pvSelectionName == m_lastPVSelectionName ){
+         intPVSelID = m_intPVSelID;
+       } else {
+         std::vector<IANNSvc::minor_value_type> hlt1 = m_hltANNSvc->items("Hlt1SelectionID");
+         for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt1.begin();
+              si!=hlt1.end();++si){
+           if( si->first == pvSelectionName ){
+             intPVSelID=si->second;
+             m_lastPVSelectionName = pvSelectionName;
+             m_intPVSelID = intPVSelID;
+             break;
+           }
+         }
+         if( !intPVSelID ){           
+           std::vector<IANNSvc::minor_value_type> hlt2 = m_hltANNSvc->items("Hlt2SelectionID");
+           for( std::vector<IANNSvc::minor_value_type>::const_iterator si=hlt2.begin();
+                si!=hlt2.end();++si){
+             if( si->first == pvSelectionName ){
+               intPVSelID=si->second;
+               m_lastPVSelectionName = pvSelectionName;
+               m_intPVSelID = intPVSelID;
+               break;
+             }
+           }           
+         }         
+       }
+       if( !intPVSelID ){       
+         Warning("PV selection " + pvSelectionName + 
+                 " found via Particle2Vertex for " + selName +
+                 " has unregistered name - no associations stored ",
+                 StatusCode::SUCCESS, 10 );                 
+       } else {
+         selSumOut.addToInfo("10#" + pvSelectionName ,float(intPVSelID));
+         bool notZero = false;         
+         for( std::vector<unsigned int>::iterator pWord = packedPVKeys.begin();
+              pWord != packedPVKeys.end(); ++pWord ){
+           if( *pWord ){
+             notZero = true;
+             break;
+           }
+         }
+         // store PV keys only if at least one was not zero
+         if( notZero ){           
+           int j=0;         
+           for( std::vector<unsigned int>::iterator pWord = packedPVKeys.begin();
+                pWord != packedPVKeys.end(); ++pWord, ++j ){
+             std::stringstream ss;
+             ss << "11#" << boost::format("%1$=08X") % j;
+             union IntFloat { unsigned int mInt; float mFloat; };
+             IntFloat a; a.mInt = *pWord;
+             selSumOut.addToInfo( ss.str(), a.mFloat );              
+           }         
+         }         
+       }
      }
 
      // insert selection into the container
@@ -1167,6 +1305,7 @@ void HltSelReportsMaker::setPresentInfoLevel( const std::string & selName )
     m_presentInfoLevelRecVertex = m_infoLevelRecVertexDebug;
     m_presentInfoLevelParticle = m_infoLevelParticleDebug;
     m_presentInfoLevelCaloCluster = m_infoLevelCaloClusterDebug;
+    m_presentInfoLevelSelection = m_infoLevelSelectionDebug;
     // set max number of candidates
     const SelectionSetting & infoLevelDebug =  m_infoLevelDebug.value();    
     for( SelectionSetting::const_iterator i=infoLevelDebug.begin();
@@ -1193,6 +1332,7 @@ void HltSelReportsMaker::setPresentInfoLevel( const std::string & selName )
     m_presentInfoLevelRecVertex = m_infoLevelRecVertex;
     m_presentInfoLevelParticle = m_infoLevelParticle;
     m_presentInfoLevelCaloCluster = m_infoLevelCaloCluster;
+    m_presentInfoLevelSelection = m_infoLevelSelection;
     // set max number of candidates
     const SelectionSetting & infoLevel =  m_infoLevel.value();    
     for( SelectionSetting::const_iterator i=infoLevel.begin();

@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.cpp,v 1.8 2009-11-14 13:23:34 graven Exp $
+// $Id: HltVertexReportsMaker.cpp,v 1.9 2009-11-26 13:08:48 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -160,6 +160,16 @@ StatusCode HltVertexReportsMaker::execute() {
        pVtx->setPosition( position );
        pVtx->setChi2( double(float(vbase->chi2())) );
        pVtx->setNDoF( (vbase->nDoF()>0)?vbase->nDoF():0 );       
+       // now also save covariance matrix 2009/11/26
+       const Gaudi::SymMatrix3x3 & ocov = vbase->covMatrix();       
+       Gaudi::SymMatrix3x3 cov;
+       cov[0][0] = double(float(ocov[0][0]));
+       cov[1][1] = double(float(ocov[1][1]));
+       cov[2][2] = double(float(ocov[2][2]));
+       cov[0][1] = double(float(ocov[0][1]));
+       cov[0][2] = double(float(ocov[0][2]));
+       cov[1][2] = double(float(ocov[1][2]));    
+       pVtx->setCovMatrix(cov);       
        verticesOutput->insert(pVtx);
        pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
      }
