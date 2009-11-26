@@ -35,12 +35,12 @@ import GaudiKernel.SystemOfUnits as units
 class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
     
     __slots__ = {  "MinNbTracks"   : 0
-                ,  "RCutMethod"    : "CorrFromUpstreamPV"
-                ,  "RMin"          : 0.3 * units.mm
-                ,  "MinMass1"      : 8.2*units.GeV
-                ,  "MinMass2"      : 3*units.GeV
-                ,  "MinSumpt1"      : 8.*units.GeV
-                ,  "MinSumpt2"      : 0.*units.GeV
+                ,  "RCutMethod"    : "FromUpstreamPV"
+                ,  "RMin"          : 0.4 * units.mm
+                ,  "MinMass1"      : 9*units.GeV
+                ,  "MinMass2"      : 4*units.GeV
+                ,  "MinSumpt1"      : 9.*units.GeV
+                ,  "MinSumpt2"      : 4.*units.GeV
                 ,  "RemVtxFromDet" : 1*units.mm
                 }
     
