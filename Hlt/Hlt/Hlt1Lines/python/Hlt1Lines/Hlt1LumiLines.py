@@ -53,12 +53,14 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                 }
 
 
-    def __create_lumi_line__(self, BXType, counters):
+    def __create_lumi_line__(self, BXType):
         '''
         returns an Hlt1 "Line" including input filter, reconstruction sequence and counting
         adds histogramming
         '''
-
+        # get counters
+        counters = LumiCounterDefinitionConf().defineCounters()
+        
         # debugging options
         debugOPL = self.getProp('OutputLevel')
         from HltLine.HltReco import PV2D
@@ -96,7 +98,10 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
             (op, flag, inputDef, threshold, bins) = definition
             if flag:
                 createdCounters.extend( 
-                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence, self.getProp('EnableReco') ), { key : inputDef } ) )
+                    _combine( _createCounter( op, seqCountName+BXType, lumiCountSequence,
+                                              #self.getProp('EnableReco')
+                                              True
+                                              ), { key : inputDef } ) )
                 histoThresholds.extend( [threshold] )
                 histoMaxBins.extend( [bins] )
                 if debugOPL <= DEBUG:
@@ -159,12 +164,7 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
         creates parallel HLT1 Lines for each beam crossing type
         '''
         from HltLine.HltLine import Hlt1Line   as Line
-        from HltLine.HltLine import Hlt1Member as Member
+        map( self.__create_lumi_line__, self.getProp('BXTypes') )
 
-        counters = LumiCounterDefinitionConf().defineCounters()
-        BXTypes=self.getProp('BXTypes')
-        BXMembers = []
-        for bx in BXTypes: 
-            BXMembers.append(self.__create_lumi_line__(bx, counters))
 
         

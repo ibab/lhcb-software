@@ -1,5 +1,5 @@
 # =============================================================================
-# $Id: Hlt2CommissioningLines.py,v 1.12 2009-11-25 15:28:28 pkoppenb Exp $
+# $Id: Hlt2CommissioningLines.py,v 1.13 2009-11-26 10:49:12 panmanj Exp $
 # =============================================================================
 ## @file
 #  Configuration of Hlt Lines for commissioning 
@@ -11,7 +11,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.12 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.13 $"
 # =============================================================================
 
 from HltLine.HltLinesConfigurableUser import *
@@ -31,7 +31,7 @@ class Hlt2CommissioningLinesConf(HltLinesConfigurableUser):
             , postscale = self.postscale
             , PV = False
             )
-        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|Velo.*|Align.*|Incident|Tell1Error)Decision$')"
+        Line('Transparent' ,  HLT = "HLT_PASS_RE('^Hlt1(ODIN.*|L0.*|Lumi.*|Bias.*|Velo.*|Align.*|Incident|Tell1Error)Decision$')"
             , prescale = self.prescale
             , postscale = self.postscale
             , PV = False

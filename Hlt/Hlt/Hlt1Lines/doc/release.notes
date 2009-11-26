@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.66 2009-11-25 07:40:04 graven Exp $
+! $Id: release.notes,v 1.67 2009-11-26 10:45:10 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-26 - Jaap Panman
+ - add Hlt1MiniBiasLines, Hlt1NoBiasLines
+ - instantiate all counting algos even if no reconstruction (Hlt1LumiLines)
+
 ! 2009-11-25 - Gerhard Raven
  - move Hlt1L0Any from Hlt1CommissioningLines to Hlt1L0Lines
  - replace L0_ALL by L0_DECISION where appropriate

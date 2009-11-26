@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.370 2009-11-25 15:19:04 pkoppenb Exp $ 
+! $Id: release.notes,v 1.371 2009-11-26 10:50:01 panmanj Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-26 - Jaap Panman
+ - add Hlt1MiniBiasLines, Hlt1NoBiasLines in Hlt1, HltInit
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually
