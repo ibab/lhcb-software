@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.20 2009-10-28 14:09:15 jpalac Exp $
+#$Id: Wrappers.py,v 1.21 2009-11-26 09:52:25 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -53,7 +53,6 @@ class DataOnDemand(object) :
         loc = self.outputLocation()
         loc = loc[loc.rfind("/")+1:] # grab the last string after the last '/'
         return loc
-
 
 AutomaticData = DataOnDemand
     
@@ -148,20 +147,31 @@ class SelectionSequence(object) :
 
     def __init__(self,
                  name,
-                 TopSelection,
+                 TopSelection = None,
                  EventPreSelector = [],
                  PostSelectionAlgs = [] ) :
+        from copy import copy
+        _clonableKeys = ['TopSelection',
+                         'EventPreSelector',
+                         'PostSelectionAlgs']
         self._name = name
         self.TopSelection = TopSelection
-        self.algos = []
-        self.algos += EventPreSelector
+        self.EventPreSelector = []
+        self.EventPreSelector += EventPreSelector
+        self.PostSelectionAlgs = []
+        self.PostSelectionAlgs += PostSelectionAlgs
+        self.__ctor_dict__ = {}
+        for key in _clonableKeys :
+            self.__ctor_dict__[key] = self.__dict__[key]
+        print "ctor dict:", self.__ctor_dict__
+        self.algos = copy(self.EventPreSelector)
         self.alg = self.TopSelection.algorithm()
         self.sels = [self.alg]
         if (self.alg != None) :
             self.buildSelectionList( self.TopSelection.requiredSelections )
         self.gaudiseq = None
         self.algos += self.sels
-        for postAlg in PostSelectionAlgs :
+        for postAlg in self.PostSelectionAlgs :
             self.algos.append(postAlg)
             
     def name(self) :
@@ -196,5 +206,18 @@ class SelectionSequence(object) :
                 self.sels.insert(0, sel.algorithm())
                 self.buildSelectionList( sel.requiredSelections )
 
-
-
+    def clone(self, name, **args) :
+        new_dict = update_overlap(self.__ctor_dict__, args)
+        print "\nSelectionSequence.clone: new ", new_dict
+        return SelectionSequence(name, **new_dict)
+    
+def update_overlap(dict0, dict1) :
+    '''
+    Replace entries from dict0 with those from dict1 that have
+    keys present in dict0.
+    '''
+    overlap_keys = filter(dict1.has_key, dict0.keys())
+    from copy import copy
+    result = copy(dict0)
+    for key in overlap_keys : result[key] = dict1[key]
+    return result

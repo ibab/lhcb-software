@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.25 2009-10-28 14:09:49 jpalac Exp $
+!$Id: release.notes,v 1.26 2009-11-26 09:52:24 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : PhysSel/PhysSelPython
 ! Responsible : Juan Palacios
 ! Purpose     : Helper python classes for writing offline selections
 !-----------------------------------------------------------------------------
+
+! 2009-11-26 - Juan PALACIOS
+ - python/PhysSelPython/Wrappers.py
+  . Add clone method to SelectionSequence
 
 !==================== PhysSel/PhysSelPython v3r1 2009-10-28 ================
 
