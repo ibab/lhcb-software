@@ -1,5 +1,5 @@
 package AlignmentSys
-version v4r3
+version v4r5
 
 branches cmt doc
  
@@ -24,7 +24,7 @@ use Escher		v4r4	Alignment # Johan Blouw
 # LHCb Calibration packages
 #=======================================================
 
-use OTCalibration	v1r2	Calibration # Wouter Hulsbergen
+use OTCalibration	v1r3	Calibration # Wouter Hulsbergen
 
 
 # Declare this as a container package
