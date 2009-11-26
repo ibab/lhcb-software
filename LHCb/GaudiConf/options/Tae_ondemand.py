@@ -1,6 +1,6 @@
 from Gaudi.Configuration import *
 #for triggered slot t0
-importOptions('$STDOPTS/DecodeRawEvent.opts')
+importOptions('$STDOPTS/DecodeRawEvent.py')
 
 #for the rest (except RICH and L0)
 bunch = ["Prev3","Next3","Prev2","Next2","Prev1","Next1"]
