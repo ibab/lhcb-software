@@ -1,5 +1,6 @@
-// $Id: HltSelReportsDecoder.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltSelReportsDecoder.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
 // Include files 
+#include "boost/format.hpp"
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -397,19 +398,31 @@ StatusCode HltSelReportsDecoder::execute() {
         break;
       case 1:
         {
-
-          if( stdInfo.size()!=1 ){    
-            std::ostringstream mess;
-            mess << " wrong number of StdInfo on Trigger Selection " << stdInfo.size();
-            Error( mess.str(),  StatusCode::SUCCESS, 20 );
-            for(HltSelRepRBStdInfo::StdInfo::const_iterator i=(stdInfo.begin()+1);
-                i!=stdInfo.end(); ++i){
-              std::stringstream ss;
-              ss << "z#unknown" << int(i-stdInfo.begin() );
-              infoPersistent.insert( ss.str(), floatFromInt(*i) );        
-            }      
-          } 
           infoPersistent.insert( "0#SelectionID", floatFromInt(stdInfo[0]) );
+          if( stdInfo.size()>1 ){
+            int id = (int)(  floatFromInt(stdInfo[1])+0.1 );            
+            bool found=false;            
+            for( std::vector<IANNSvc::minor_value_type>::const_iterator si=selectionNameToIntMap.begin();
+             si!=selectionNameToIntMap.end();++si){
+              if( si->second == id ){
+                infoPersistent.insert( "10#" + si->first, floatFromInt(stdInfo[1]) );        
+                found = true;                
+                break;
+              }
+            }
+            if( !found ){
+              std::ostringstream mess;
+              mess << " Did not find string key for PV-selection-ID in trigger selection in storage id=" << id;
+              Error( mess.str(),  StatusCode::SUCCESS, 10 ); 
+              infoPersistent.insert( "10#Unknown" , floatFromInt(id) );        
+            }
+            for( unsigned int ipvkeys=2; ipvkeys< stdInfo.size(); ++ipvkeys ){
+              std::stringstream ss;
+              ss << "11#" << boost::format("%1$=08X") % (ipvkeys-2) ;
+              infoPersistent.insert( ss.str(), floatFromInt( stdInfo[ipvkeys] ) );        
+            }
+          } 
+
         }
         break;
       default:

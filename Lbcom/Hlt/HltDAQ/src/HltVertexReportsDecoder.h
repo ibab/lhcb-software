@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.h,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltVertexReportsDecoder.h,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
 #ifndef HLTVERTEXREPORTSDECODER_H 
 #define HLTVERTEXREPORTSDECODER_H 1
 
@@ -21,7 +21,7 @@ class HltVertexReportsDecoder : public GaudiAlgorithm {
 public:
 
   enum HeaderIDs { kSourceID=0,
-                   kVersionNumber=0 
+                   kVersionNumber=1 
   };
 
 

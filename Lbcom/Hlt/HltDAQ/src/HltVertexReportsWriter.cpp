@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsWriter.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltVertexReportsWriter.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -145,7 +145,14 @@ StatusCode HltVertexReportsWriter::execute() {
        hltVertexReportsRawBank.push_back( doubleToInt( vtx.position().z() ) );
        hltVertexReportsRawBank.push_back( doubleToInt( vtx.chi2() ) );
        hltVertexReportsRawBank.push_back( (unsigned int)(  (vtx.nDoF()>0)?vtx.nDoF():0 ) );       
-    
+       const Gaudi::SymMatrix3x3 & cov = vtx.covMatrix();
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][0] ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[1][1] ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[2][2] ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][1] ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[0][2] ) );
+       hltVertexReportsRawBank.push_back( doubleToInt( cov[1][2] ) );
+      
      }
   }
 
@@ -170,8 +177,14 @@ StatusCode HltVertexReportsWriter::execute() {
                   << " z " << floatFromInt( hltVertexReportsRawBank[iWord+2] )
                   << " chi2 " << floatFromInt( hltVertexReportsRawBank[iWord+3] )
                   << " nDoF " << hltVertexReportsRawBank[iWord+4] 
+                  << " cov(x,x) " << floatFromInt( hltVertexReportsRawBank[iWord+5] )
+                  << " cov(y,y) " << floatFromInt( hltVertexReportsRawBank[iWord+6] )
+                  << " cov(z,z) " << floatFromInt( hltVertexReportsRawBank[iWord+7] )
+                  << " cov(x,y) " << floatFromInt( hltVertexReportsRawBank[iWord+8] )
+                  << " cov(x,z) " << floatFromInt( hltVertexReportsRawBank[iWord+9] )
+                  << " cov(y,z) " << floatFromInt( hltVertexReportsRawBank[iWord+10] )
                   << endmsg;
-        iWord += 5;
+        iWord += 11;
   
       }
     }

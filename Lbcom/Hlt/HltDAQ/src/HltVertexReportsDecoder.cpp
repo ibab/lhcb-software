@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsDecoder.cpp,v 1.1.1.1 2009-06-24 15:38:52 tskwarni Exp $
+// $Id: HltVertexReportsDecoder.cpp,v 1.2 2009-11-26 13:06:07 tskwarni Exp $
 // Include files 
 
 // from Gaudi
@@ -96,12 +96,13 @@ StatusCode HltVertexReportsDecoder::execute() {
   if( !hltVertexReportsRawBanks.size() ){
     return Warning(" No HltVertexReports RawBank in RawEvent. Quiting. ",StatusCode::SUCCESS, 20 );
   } else if( hltVertexReportsRawBanks.size() != 1 ){
-    Warning(" More then one HltSelReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
+    Warning(" More then one HltVertexReports RawBanks in RawEvent. Will process only the first one. ",StatusCode::SUCCESS, 20 );
   }
   const RawBank* hltvertexReportsRawBank = *(hltVertexReportsRawBanks.begin());
-  if( hltvertexReportsRawBank->version() > kVersionNumber ){
+  const unsigned int bankVersionNumber = hltvertexReportsRawBank->version();  
+  if( bankVersionNumber > kVersionNumber ){
     std::ostringstream mess;
-    mess <<  " HltVertexReports Raw Bank version number " << hltvertexReportsRawBank->version()
+    mess <<  " HltVertexReports Raw Bank version number " << bankVersionNumber
          << " higher than the one of the decoder " << int(kVersionNumber);
     Warning( mess.str(),  StatusCode::SUCCESS, 20 );
   }
@@ -147,7 +148,19 @@ StatusCode HltVertexReportsDecoder::execute() {
         pVtx->setPosition( position );
         pVtx->setChi2( doubleFromInt( hltVertexReportsRawBank[iWord+3] ) );
         pVtx->setNDoF( hltVertexReportsRawBank[iWord+4] );
-        iWord += 5;
+        if( bankVersionNumber==0 ){          
+          iWord += 5;
+        } else {
+          Gaudi::SymMatrix3x3 cov;
+          cov[0][0] = doubleFromInt( hltVertexReportsRawBank[iWord+5] );
+          cov[1][1] = doubleFromInt( hltVertexReportsRawBank[iWord+6] );
+          cov[2][2] = doubleFromInt( hltVertexReportsRawBank[iWord+7] );
+          cov[0][1] = doubleFromInt( hltVertexReportsRawBank[iWord+8] );
+          cov[0][2] = doubleFromInt( hltVertexReportsRawBank[iWord+9] );
+          cov[1][2] = doubleFromInt( hltVertexReportsRawBank[iWord+10] );          
+          pVtx->setCovMatrix(cov);
+          iWord += 11;
+        }
 
         verticesOutput->insert(pVtx);
         pVtxs.push_back( SmartRef<VertexBase>( pVtx ) );
