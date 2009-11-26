@@ -1,4 +1,4 @@
-// $Id: LumiCountVertices.cpp,v 1.7 2009-09-30 07:24:56 graven Exp $
+// $Id: LumiCountVertices.cpp,v 1.8 2009-11-26 10:53:14 panmanj Exp $
 // Include files 
 
 // from Gaudi
@@ -79,7 +79,7 @@ StatusCode LumiCountVertices::execute() {
   // load the track objects
   int nCounter =  0;
   if ( !exist<LHCb::RecVertices>(m_InputSelectionName) ){
-    warning() << m_InputSelectionName << " not found" << endmsg ;
+    debug() << m_InputSelectionName << " not found" << endmsg ;
   } else {
     // get the container
     m_InputContainer = get<LHCb::RecVertices>(m_InputSelectionName);

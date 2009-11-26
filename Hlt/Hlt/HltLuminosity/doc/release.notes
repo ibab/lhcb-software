@@ -4,6 +4,10 @@
 ! Purpose     : collect luminosity data and fill output bank and histos
 !-----------------------------------------------------------------------------
 
+! 2009-11-26 - Jaap Panman
+ - suppress warning messages when containers do not exist (LumiCountTracks
+   LumiCountVertices)
+
 !========================== HltLuminosity v2r12 2009-11-13 ===================
 ! 2009-11-13 - Gerhard Raven
  - LumiFromL0DU: take L0DU from TES instead of decoding it
