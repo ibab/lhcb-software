@@ -1,10 +1,8 @@
-// $Id: PatSeedTrack.cpp,v 1.4 2008-07-13 22:05:48 mschille Exp $
+// $Id: PatSeedTrack.cpp,v 1.5 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 // local
 #include "PatSeedTrack.h"
-#include "PatFwdFitParabola.h"
-#include "PatFwdFitLine.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeedTrack

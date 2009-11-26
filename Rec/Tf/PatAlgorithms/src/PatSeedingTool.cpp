@@ -1,4 +1,4 @@
-// $Id: PatSeedingTool.cpp,v 1.32 2009-11-26 15:39:35 mschille Exp $
+// $Id: PatSeedingTool.cpp,v 1.33 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -2078,7 +2078,7 @@ bool PatSeedingTool::fitLineInY ( PatFwdHits& stereo, double& y0, double& sl ) c
       ++nOK;
     }
     if ( 4 > nOK ) return false;
-    line.solve();
+    if (!line.solve()) return false;
     y0 = line.ax();
     sl = line.bx();
     // find worst hit

@@ -1,8 +1,10 @@
-// $Id: PatFwdFitLine.h,v 1.3 2009-04-07 12:17:23 ocallot Exp $
+// $Id: PatFwdFitLine.h,v 1.4 2009-11-26 18:00:48 mschille Exp $
 #ifndef PATFWDFITLINE_H
 #define PATFWDFITLINE_H 1
 
 // Include files
+#include <Math/CholeskyDecomp.h>
+using ROOT::Math::CholeskyDecomp;
 
   /** @class PatFwdFitLine PatFwdFitLine.h
    *  Simple class to fit a line
@@ -10,6 +12,7 @@
    *  @author Olivier Callot
    *  @date   2006-04-20 Initial version
    *  @date   2007-08-20 Update for A-Team framework
+   *  @date   2009-22-04 Update to use Cholesky decomposition
    */
 
   class PatFwdFitLine {
@@ -17,52 +20,48 @@
     /// Standard constructor
     PatFwdFitLine( double z = 0., double x = 0., double w = 0. ) {
       //== First point
-      double dz = 1.e-3 * z;  // use small numbers
-      m_s0   = w;
-      m_sz   = w * dz;
-      m_sz2  = w * dz * dz;
-      m_sx   = w * x;
-      m_sxz  = w * x * dz;
+      const double dz = 1.e-3 * z;  // use small numbers
+      m_mat[0] = w;
+      m_mat[1] = w * dz;
+      m_mat[2] = w * dz * dz;
+      m_rhs[0] = w * x;
+      m_rhs[1] = w * x * dz;
+      m_sol[0] = 0.;
+      m_sol[1] = 0.;
     }
 
     virtual ~PatFwdFitLine( ) {}; ///< Destructor
 
     void addPoint( double z, double x, double w ) {
-      double dz = 1.e-3*z;
-      m_s0  += w;
-      m_sz  += w * dz;
-      m_sz2 += w * dz * dz;
-      m_sx  += w * x;
-      m_sxz += w * x * dz;
+      const double dz = 1.e-3*z;
+      m_mat[0] += w;
+      m_mat[1] += w * dz;
+      m_mat[2] += w * dz * dz;
+      m_rhs[0] += w * x;
+      m_rhs[1] += w * x * dz;
     }
 
-    void solve()  {
-      double den =  m_s0  * m_sz2 - m_sz * m_sz;
-      if ( 1.e-10 > den ) den = 1.;                    // Always positive, avoid 0.
-      m_ax = ( m_sx  * m_sz2 - m_sxz * m_sz ) / den;
-      m_bx = ( m_s0  * m_sxz - m_sx  * m_sz ) / den;
-      m_bx *= 1.e-3;
+    /// return false if matrix is singular
+    bool solve() {
+      CholeskyDecomp<double, 2> decomp(m_mat);
+      if (!decomp) return false;
+      m_sol[0] = m_rhs[0];
+      m_sol[1] = m_rhs[1];
+      decomp.Solve(m_sol);
+      m_sol[1] *= 1.e-3;
+      return true;
     }
 
-    double ax() const { return m_ax; }
-    double bx() const { return m_bx; }
-    double z0() const { return 1.e3 * m_sz / m_s0; }
+    double ax() const { return m_sol[0]; }
+    double bx() const { return m_sol[1]; }
+    double z0() const { return 1.e3 * m_mat[1] / m_mat[0]; }
 
   protected:
 
   private:
-    double m_s0;
-    double m_sz;
-    double m_sz2;
-    double m_sz2m;
-    double m_sz3;
-    double m_sz4;
-    double m_sx;
-    double m_sxz;
-    double m_sxz2;
-
-    double m_ax;
-    double m_bx;
+    double m_mat[3]; /// matrix M in Mx = b
+    double m_rhs[2]; /// vector b in Mx = b
+    double m_sol[2]; /// (solution) vector x in Mx = b
   };
 
 #endif // PATFWDFITLINE_H

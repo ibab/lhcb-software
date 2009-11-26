@@ -1,4 +1,4 @@
-// $Id: PatSeeding.cpp,v 1.2 2008-05-14 17:22:18 mschille Exp $
+// $Id: PatSeeding.cpp,v 1.3 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 #include <vector>
@@ -12,8 +12,6 @@
 
 // local
 #include "PatSeeding.h"
-#include "PatFwdFitLine.h"
-#include "PatFwdPlaneCounter.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : PatSeeding

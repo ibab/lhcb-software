@@ -4,6 +4,23 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-11-26 Manuel Schiller
+ - use ROOT::Math::CholeskyDecomp provided by ROOT since version 5.24 instead
+   of reimplementing code to solve a system of linear equations in which the
+   matrix is symmetric and has positive eigenvalues (we have been using a
+   variant of this in the Kalman Filter for some time; by checking this, we
+   catch crappy tracks and numerical problems which make the chi^2 function
+   either have a saddle point in parameter space at its stationary point (at
+   least one eigenvalue is negative) or make chi^2 constant along some
+   direction in parameter space (at least on eigenvector is zero))
+   consequently use any indication of a singular matrix (or one with negative
+   eigenvalues) provided by ROOT::Math::CholeskyDecomp to stop processing that
+   track before we can divide by zero, obtain NaNs or get into any other kind
+   of trouble
+   Affected classes: PatAddTTCoord, PatDownstream, PatFwdFitLine,
+   PatFwdFitParabola, PatFwdTool, PatSeedTool, PatSeedingTool
+ - removed header files included unneccessarily in PatSeed, PatSeedTrack
+
 ! 2009-11-26 - Manuel Tobias Schiller
  - PatSeedTool: reimplement Stephanie's fix from 2009-06-11 by looking for
    diverging track parameters instead as it's slightly faster that way
@@ -27,7 +44,7 @@
 
 ! 2009-11-06 Stephanie Hansmann-Menzemer
  - Fix for unitialized member variable in PatForwardTool
-
+   
 !========================= PatAlgorithms v3r23 2009-10-20 ====================
 ! 2009-10-13 Sascha Stahl
  - PatDownstream: Options to remove used hits and T-tracks changed.

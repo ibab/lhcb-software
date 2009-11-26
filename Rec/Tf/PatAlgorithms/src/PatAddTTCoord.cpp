@@ -1,9 +1,15 @@
-// $Id: PatAddTTCoord.cpp,v 1.3 2009-05-12 11:02:03 smenzeme Exp $
+// $Id: PatAddTTCoord.cpp,v 1.4 2009-11-26 18:00:48 mschille Exp $
 // Include files
+
+#include <cmath>
 
 // from Gaudi
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/SystemOfUnits.h"
+
+// from ROOT
+#include <Math/CholeskyDecomp.h>
+using ROOT::Math::CholeskyDecomp;
 
 #include "TfKernel/RecoFuncs.h"
 
@@ -13,6 +19,7 @@
 // Implementation file for class : PatAddTTCoord
 //
 // 2006-06-29 : Olivier Callot
+// 2009-11-13 : Manuel Schiller (use CholeskyDecomp provided by ROOT)
 //-----------------------------------------------------------------------------
 
 DECLARE_TOOL_FACTORY( PatAddTTCoord );
@@ -173,43 +180,44 @@ StatusCode PatAddTTCoord::addTTClusters( LHCb::Track& track ) {
       chi2 = 1.e20;
 
       while ( 1.e10 < chi2 ) {
-        double s0   = fixedWeight;  // fix X = 0 with fixedWeight
-        double sz   = 0.;
-        double st   = 0.;
-        double sz2  = fixedWeight * (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField); // fix slope by point a z=TTfield
-        double szt  = 0.;
-        double st2  = fixedWeight;  // fix Y = 0 with fixedWeight
-        double sx   = 0.;
-        double sxz  = 0.;
-        double sxt  = 0.;
-
+	double mat[6], rhs[3];
+	mat[0] = fixedWeight; // fix X = 0 with fixedWeight
+	mat[1] = 0.;
+	mat[2] = fixedWeight * (m_zTTProj-m_zTTField)*(m_zTTProj-m_zTTField); // fix slope by point a z=TTfield
+	mat[3] = 0.;
+	mat[4] = 0.;
+	mat[5] = fixedWeight;  // fix Y = 0 with fixedWeight
+	rhs[0] = 0.;
+	rhs[1] = 0.;
+	rhs[2] = 0.;
         for ( itSel = goodTT.begin(); goodTT.end() != itSel; ++itSel ) {
           PatTTHit* tt = *itSel;
           double w    = tt->hit()->weight();
           double dz   = tt->z() - m_zTTProj;
           double t    = tt->hit()->sinT();
           double dist = tt->projection();
-          s0   += w;
-          sz   += w * dz;
-          st   += w * t;
-          sz2  += w * dz * dz;
-          szt  += w * dz * t ;
-          st2  += w * t  * t ;
-          sx   += w * dist;
-          sxz  += w * dist * dz;
-          sxt  += w * dist * t ;
+	  mat[0] += w;
+	  mat[1] += w * dz;
+	  mat[2] += w * dz * dz;
+	  mat[3] += w * t;
+	  mat[4] += w * dz * t ;
+	  mat[5] += w * t  * t ;
+	  rhs[0] += w * dist;
+	  rhs[1] += w * dist * dz;
+	  rhs[2] += w * dist * t ;
         }
-        double a1 = sz  * sz - s0  * sz2;
-        double b1 = st  * sz - s0  * szt;
-        double c1 = sx  * sz - s0  * sxz;
-        double a2 = sz  * st - s0  * szt;
-        double b2 = st  * st - s0  * st2;
-        double c2 = sx  * st - s0  * sxt;
 
-        double den = a1 * b2 - a2 * b1;
-        slope   = ( c1 * b2 - c2 * b1 ) / den;
-        offsetY = ( a1 * c2 - a2 * c1 ) / den;
-        offset  = (sx - slope * sz - offsetY * st ) / s0;
+	CholeskyDecomp<double, 3> decomp(mat);
+	if (!decomp) {
+	  chi2 = 1e42;
+	  break;
+	} else {
+	  decomp.Solve(rhs);
+	}
+	    
+	offset = rhs[0];
+	slope = rhs[1];
+	offsetY = rhs[2];
 
         chi2 = fixedWeight * ( offset * offset +
                                offsetY * offsetY +

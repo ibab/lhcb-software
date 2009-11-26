@@ -1,12 +1,17 @@
-// $Id: PatDownstream.cpp,v 1.12 2009-10-13 08:31:40 sstahl Exp $
+// $Id: PatDownstream.cpp,v 1.13 2009-11-26 18:00:48 mschille Exp $
 // Include files 
 
 #include <algorithm>
+#include <cmath>
 
 // from boost
 #include <boost/assign/list_of.hpp>
 #include <boost/array.hpp>
 #include <boost/foreach.hpp>
+
+// from ROOT
+#include <Math/CholeskyDecomp.h>
+using ROOT::Math::CholeskyDecomp;
 
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h" 
@@ -486,15 +491,16 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
   do {
     again = false;
     //== Fit, using the magnet point as constraint.
-    double s0  = 1./( track.errXMag() * track.errXMag() );
-    double sz  = 0.;
-    double st  = 0.;
-    double sz2 = 0.;
-    double szt = 0.;
-    double st2 = 0.;
-    double sx  = s0 * track.dxMagnet();//( m_magnetSave.x() - m_magnet.x() );
-    double sxz = 0.;
-    double sxt = 0.;
+    double mat[6], rhs[3];
+    mat[0] = 1./( track.errXMag() * track.errXMag() );
+    mat[1] = 0.;
+    mat[2] = 0.;
+    mat[3] = 0.;
+    mat[4] = 0.;
+    mat[5] = 0.;
+    rhs[0] = mat[0] * track.dxMagnet();//( m_magnetSave.x() - m_magnet.x() );
+    rhs[1] = 0.;
+    rhs[2] = 0.;
     int nbUV = 0;
 
     BOOST_FOREACH(PatTTHit* hit, track.hits()) {
@@ -505,15 +511,15 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
       double dist = track.distance( hit );
       double w    = hit->hit()->weight();
       double t    = hit->hit()->sinT();          
-      s0   += w;
-      sz   += w * dz;
-      st   += w * t;
-      sz2  += w * dz * dz;
-      szt  += w * dz * t ;
-      st2  += w * t  * t ;
-      sx   += w * dist;
-      sxz  += w * dist * dz;
-      sxt  += w * dist * t ;
+      mat[0] += w;
+      mat[1] += w * dz;
+      mat[2] += w * dz * dz;
+      mat[3] += w * t;
+      mat[4] += w * dz * t ;
+      mat[5] += w * t  * t ;
+      rhs[0] += w * dist;
+      rhs[1] += w * dist * dz;
+      rhs[2] += w * dist * t ;
       if ( hit->hit()->lhcbID().stID().layer() != 
            hit->hit()->lhcbID().stID().station() ) nbUV++;
       if ( m_printing ) {
@@ -523,28 +529,27 @@ void PatDownstream::fitAndRemove ( PatDownTrack& track ) {
         info() << endmsg;
       }
     }
-    double a1 = sz  * sz - s0  * sz2;
-    double b1 = st  * sz - s0  * szt;
-    double c1 = sx  * sz - s0  * sxz;
-    double a2 = sz  * st - s0  * szt;
-    double b2 = st  * st - s0  * st2;
-    double c2 = sx  * st - s0  * sxt;
-    
-    double dx, dy, dsl;
 
-    double den = a1 * b2 - a2 * b1;
-    if ( 0. == std::abs(den) ) den = 1.;      // protect FPE
-    if ( 0 == nbUV ) {
-      den = s0 * sz2 - sz * sz;
-      if ( 1.e-10 > den ) den = 1.;      // protect FPE
-      dsl = ( s0 * sxz - sx  * sz ) / den;
-      dx  = ( sx * sz2 - sxz * sz ) / den;
-      dy  = 0.;
+    if (0 != nbUV) {
+      CholeskyDecomp<double, 3> decomp(mat);
+      if (!decomp) {
+	track.setChisq(1e42);
+	return;
+      } else {
+	decomp.Solve(rhs);
+      }
     } else {
-      dsl = ( c1 * b2 - c2 * b1 ) / den;
-      dy  = ( a1 * c2 - a2 * c1 ) / den;
-      dx  = (sx - dsl * sz - dy * st ) / s0;
+      CholeskyDecomp<double, 2> decomp(mat);
+      if (!decomp) {
+	track.setChisq(1e42);
+	return;
+      } else {
+	decomp.Solve(rhs);
+      }
+      rhs[2] = 0.;
     }
+
+    const double dx = rhs[0], dsl = rhs[1], dy = rhs[2];
 
     if ( m_printing ) {
       info() << format( "  dx %7.3f dsl %7.6f dy %7.3f, displY %7.2f", 

@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.14 2009-11-26 16:07:27 mschille Exp $
+// $Id: PatSeedTool.cpp,v 1.15 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -65,7 +65,7 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
   bool ignoreX = !xOnly;   // make sense only if some stereo...
   bool first = true;
 
-  fitInitialXProjection( track, forceDebug );
+  if (!fitInitialXProjection( track, forceDebug )) return false;
 
   do {
     //== Improve X parameterisation
@@ -90,12 +90,12 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	}
 	// make sure we can solve
 	if ( 2 > nStereo ) return false;
-	line.solve();
+	if (!line.solve()) return false;
 	const double day = line.ax(), dby = line.bx();
 
 	if ( isDebug )
 	  info() << "    day " << day << " dby " << dby << endmsg;
-	if ( fabs( dby ) > 1.0 ) {
+	if ( std::abs( dby ) > 1.0 ) {
 	  // if we get a track with stereo hits on it which do not
 	  // belong together, the y fit may diverge. the problem about
 	  // this is that the hits are shifted depending on their y
@@ -104,13 +104,13 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 	  // become nan. to avoid this bad case, we stop the fit
 	  // iteration - and throw away the track in its entirety
 	  if ( isDebug )
-	    info() << "    fabs(dby) > 1.0, abandoning track!" << endmsg;
+	    info() << "    std::abs(dby) > 1.0, abandoning track!" << endmsg;
 	  return false;
 	}
 	// update track parameters
 	track.updateYParameters( day, dby );
 	// break if track parameters become stable
-	if ( fabs( day ) < 0.05 && fabs( dby ) < 0.00005 ) break;
+	if ( std::abs( day ) < 0.05 && std::abs( dby ) < 0.00005 ) break;
       }
     }
 
@@ -205,7 +205,7 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
       ++nHits;
     }
     if (3 > nHits) return false;
-    parabola.solve();
+    if (!parabola.solve()) return false;
     if (std::abs(parabola.ax()) > 1e4 || std::abs(parabola.bx()) > 5. ||
 	std::abs(parabola.cx()) > 1e-3) return false;
     track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
@@ -227,7 +227,7 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
 //  Initial fit: Find the best RL solution using the hits with highest
 //  drift distance in teh 3 stations.
 //=========================================================================
-void PatSeedTool::fitInitialXProjection (
+bool PatSeedTool::fitInitialXProjection (
 		PatSeedTrack& track, bool forceDebug ) const
 {
   // we use builtin arrays because we know there are three stations, and
@@ -249,7 +249,7 @@ void PatSeedTool::fitInitialXProjection (
   // note that the next statement makes sure we can solve the fit equations
   // below: we have at least three hits for three parameters
   if ( 0.1 > largestDrift[0] || 0.1 > largestDrift[1]
-		  || 0.1 > largestDrift[2] ) return;
+		  || 0.1 > largestDrift[2] ) return true;
 
   // twiddle the ambiguities of the three seed hits to find best combination
   double bestChi2 = 1.e10;
@@ -265,7 +265,7 @@ void PatSeedTool::fitInitialXProjection (
     BOOST_FOREACH( const PatFwdHit* hit, seeds )
       parabola.addPoint( hit->z() - track.z0(),
 	  track.distanceWithRL( hit ), hit->hit()->weight() );
-    parabola.solve();
+    if (!parabola.solve()) return false;
     track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
 
     // determine chi^2 for current combination
@@ -295,8 +295,9 @@ void PatSeedTool::fitInitialXProjection (
     parabola.addPoint( hit->z() - track.z0(),
 	track.distanceWithRL( hit ), hit->hit()->weight() );
   }
-  parabola.solve();
+  if (!parabola.solve()) return false;
   track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
+  return true;
 }
 
 //=========================================================================
@@ -317,7 +318,7 @@ bool PatSeedTool::fitInitialStereoProjection (
   }
 
   if ( 2 > nStereo ) return false;
-  firstLine.solve();
+  if (!firstLine.solve()) return false;
   if ( forceDebug ) info() << "    day " << firstLine.ax() << " dby "
     << firstLine.bx() << " initial" << endmsg;
   track.updateYParameters( firstLine.ax(), firstLine.bx() );

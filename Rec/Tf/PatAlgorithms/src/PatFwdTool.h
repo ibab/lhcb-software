@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.h,v 1.6 2008-07-18 16:10:14 cattanem Exp $
+// $Id: PatFwdTool.h,v 1.7 2009-11-26 18:00:48 mschille Exp $
 #ifndef FWDGEOMETRYTOOL_H
 #define FWDGEOMETRYTOOL_H 1
 
@@ -52,7 +52,7 @@ static const InterfaceID IID_PatFwdTool ( "PatFwdTool", 1, 0 );
     bool fitStereoCandidate( PatFwdTrackCandidate& track,
 	double maxChi2, int minPlanes ) const;
 
-    void fitXProjection ( PatFwdTrackCandidate& track,
+    bool fitXProjection ( PatFwdTrackCandidate& track,
                           PatFwdHits::iterator itBeg,
                           PatFwdHits::iterator itEnd,
                           bool onlyXPlanes  ) const;

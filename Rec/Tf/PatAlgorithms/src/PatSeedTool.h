@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.h,v 1.5 2008-08-26 09:57:02 mschille Exp $
+// $Id: PatSeedTool.h,v 1.6 2009-11-26 18:00:48 mschille Exp $
 #ifndef PATSEEDTOOL_H
 #define PATSEEDTOOL_H 1
 
@@ -53,7 +53,7 @@ class PatSeedTool : public GaudiTool {
   protected:
 
     /// do an initial fit in xz projection, fixing OT ambiguities if possible
-    void fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
+    bool fitInitialXProjection( PatSeedTrack& track, bool forceDebug ) const;
 
     /// do a fit in xz projection, return false if fewer than 3 x hits on track
     bool fitXProjection( PatSeedTrack& track, bool forceDebug ) const;

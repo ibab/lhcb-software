@@ -1,4 +1,4 @@
-// $Id: PatFwdTool.cpp,v 1.12 2009-04-20 06:24:33 cattanem Exp $
+// $Id: PatFwdTool.cpp,v 1.13 2009-11-26 18:00:48 mschille Exp $
 // Include files
 
 // from Gaudi
@@ -316,7 +316,10 @@ bool PatFwdTool::fitXCandidate ( PatFwdTrackCandidate& track,
 
   while ( maxChi2 < highestChi2 && minPlanes <= planeCount.nbDifferent() ) {
 
-    fitXProjection( track, itBeg, itEnd, true );
+    if (!fitXProjection( track, itBeg, itEnd, true )) {
+      debug() << "Abandon: Matrix not positive definite." << endreq;
+      return false;
+    }
 
     highestChi2 = 0;
     PatFwdHit* worst = *itBeg;
@@ -407,7 +410,10 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 
   while ( highestChi2 > maxChi2 ) {
     //== Improve X parameterisation
-    fitXProjection( track, track.coordBegin(), track.coordEnd(), false );
+    if (!fitXProjection( track, track.coordBegin(), track.coordEnd(), false )) {
+	    debug() << "Abandon: Matrix not positive definite." << endreq;
+	    return false;
+    }
 
     for ( unsigned int kk = 0; 10 > kk; ++kk ) {
       PatFwdFitLine line;
@@ -422,7 +428,10 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
         double w     = hit->hit()->weight();
         line.addPoint( dz, dist, w );
       }
-      line.solve();
+      if (!line.solve()) {
+        debug() << "Abandon: Matrix not positive definite." << endreq;
+	return false;
+      }
       double day = line.ax();
       double dby = line.bx();
       verbose() << "    day " << day << " dby " << dby << endmsg;
@@ -494,7 +503,7 @@ bool PatFwdTool::fitStereoCandidate ( PatFwdTrackCandidate& track,
 //  Parabolic fit to projection.
 //=========================================================================
 
-void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
+bool PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
                                   PatFwdHits::iterator itBeg,
                                   PatFwdHits::iterator itEnd,
                                   bool onlyXPlanes  ) const {
@@ -529,12 +538,12 @@ void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
     double dax, dbx, dcx;
     
     if (!m_withoutBField){
-      parabola.solve();
+      if (!parabola.solve()) return false;
       dax = parabola.ax();
       dbx = parabola.bx();
       dcx = parabola.cx();   
     } else {
-      line.solve();
+      if (!line.solve()) return false;
       dax = line.ax();
       dbx = line.bx();
       dcx = 0.0;    
@@ -552,6 +561,7 @@ void PatFwdTool::fitXProjection ( PatFwdTrackCandidate& track,
          fabs( dbx ) < 5.e-6 &&
          fabs( dcx ) < 5.e-9    ) break;  // wait until stable, due to OT.
   }
+  return true;
 }
 
 
