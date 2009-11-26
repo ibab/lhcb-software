@@ -1,4 +1,4 @@
-// $Id: HltTrackUpgrade.h,v 1.6 2009-10-08 19:17:13 graven Exp $
+// $Id: HltTrackUpgrade.h,v 1.7 2009-11-26 13:15:39 albrecht Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -35,11 +35,16 @@ public:
 private:
   void saveConfiguration();
 
+  double getTrackQuality(const LHCb::Track& tr);
+  
   std::string m_recoName;
   ITrackUpgrade* m_tool;
 
   // 1 input: Track
   // 1 output: Track
   Hlt::SelectionContainer2<LHCb::Track,LHCb::Track> m_selections;
+
+  AIDA::IHistogram1D* m_qualityHisto;
+  AIDA::IHistogram1D* m_qualityHistoBest;
 };
 #endif // HLTTRACKING_H
