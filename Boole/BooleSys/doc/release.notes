@@ -3,6 +3,36 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v19r9>2009-11-27 Boole v19r9</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9
+ and SQLDDDB v5r15, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
+ plus the following patches: EventPacker v2r1, GaudiConf v13r1, OTMonitor v3r1
+
+Version for post-MC09 developments. Output needs Brunel v35r8 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+Also supports simulation of upgrade geometry, this requires
+SQLDDDB v5r12 or later, AppConfig v3r5 or later
+
+ - Changes to configuration:
+   . Improve robustness of unpacking sequence (GaudiConf v13r1, EventPacker v2r1)
+   . Changed default tags for 2009 simulation (DDDB v1r24, SQLDDDB v5r15):
+     o head-20091120         for DDDB
+     o sim-20091112-vc-md100 for SIMCOND
+
+ - Persistency changes:
+   . Kill MC/Rich node if writing packed MCRichDigits, to avoid loading .sim
+     file when unpacking them in Brunel (GaudiConf v13r1)
+
+ - Monitoring changes
+   . Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
+     OTTimeMonitor (was crashing anyway...) (OTMonitor v3r1)
+   . OTTimeMonitor now uses OTLiteTimes (OTMonitor v3r0)
+
+ - Changes to QMTests:
+   . Added a test for the fixedfile from Gauss v37r0 as in task 12602
+     (fixedfile-gauss-v37r0-mc09-sim)
+
 </PRE><H1><A NAME=v19r8>2009-11-19 Boole v19r8</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r2, Lbcom v7r8
  and SQLDDDB v5r14, ParamFiles v8r1, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
