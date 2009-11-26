@@ -22,6 +22,7 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
+use GaudiConf     v13r1
 use Magnet        v5r5    Det
 use TsaAlgorithms v3r14p1 Tf
 use TrackFitter   v2r40p1 Tr
