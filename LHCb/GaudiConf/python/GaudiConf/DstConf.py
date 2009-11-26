@@ -1,7 +1,7 @@
 """
 High level configuration tools for LHCb applications
 """
-__version__ = "$Id: DstConf.py,v 1.32 2009-11-11 17:23:42 cattanem Exp $"
+__version__ = "$Id: DstConf.py,v 1.33 2009-11-26 10:47:45 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -85,12 +85,13 @@ class DstConf(LHCbConfigurableUser):
                 DigiConf().setProp("EnablePack", False)
                 SimConf().setProp("EnablePack", DigiConf().getProp("EnablePack") )
         else:
+            if not hasattr( self, "PackSequencer" ):
+                raise TypeError( "Packing requested but PackSequencer not defined" )
             recDir = "pRec"
             if sType != "None":
                 DigiConf().setProp("EnablePack", True)
+                self.setOtherProps(DigiConf(),["PackSequencer"])
                 SimConf().setProp("EnablePack", DigiConf().getProp("EnablePack") )
-            if not hasattr( self, "PackSequencer" ):
-                raise TypeError( "Packing requested but PackSequencer not defined" )
 
         # Add depth if not MDF
         if pType == 'MDF':

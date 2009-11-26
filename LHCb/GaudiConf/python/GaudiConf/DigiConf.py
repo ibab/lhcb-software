@@ -1,7 +1,7 @@
 """
 Configurable for Boole output
 """
-__version__ = "$Id: DigiConf.py,v 1.9 2009-11-06 14:00:36 cattanem Exp $"
+__version__ = "$Id: DigiConf.py,v 1.10 2009-11-26 10:47:45 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 __all__ = [
@@ -23,6 +23,7 @@ class DigiConf(LHCbConfigurableUser):
        , "SpilloverPaths" : []
        , "EnablePack"     : True
        , "EnableUnpack"   : True
+       , "PackSequencer"  : None
          }
 
     _propertyDocDct = { 
@@ -33,6 +34,7 @@ class DigiConf(LHCbConfigurableUser):
        ,'SpilloverPaths': """ Paths to write out when spillover is enabled """
        ,'EnablePack'    : """ Turn on/off packing of the DIGI data (where appropriate/available) """
        ,'EnableUnpack'  : """ Configure the SIM unpacking via the Data On Demand Service """
+       ,'PackSequencer' : """ Sequencer in which to run the packing algorithms """
        }
 
     __used_configurables__ = [ SimConf ]
@@ -52,6 +54,10 @@ class DigiConf(LHCbConfigurableUser):
         if dType not in self.KnownDigiTypes:
             raise TypeError( "Unknown DIGI type '%s'"%dType )
 
+        if self.getProp( "EnablePack" ):
+            if not hasattr( self, "PackSequencer" ):
+                raise TypeError( "Packing requested but PackSequencer not defined" )
+
         # get the write instance
         writer = OutputStream( self.getProp("Writer") )
         ApplicationMgr().OutStream.insert( 0, writer )
@@ -69,12 +75,17 @@ class DigiConf(LHCbConfigurableUser):
     def addMCDigitSummaries( self, writer ):
 
         simDir = "MC"
-        if self.getProp("EnablePack") : simDir = "pSim"
-
-        # Pack RICH summary info if not already done
-        from Configurables import DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_
-        RichSumPack = DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryPacker")
-        DataOnDemandSvc().AlgMap["pSim/Rich/DigitSummaries"] = RichSumPack
+        if self.getProp("EnablePack") :
+            simDir = "pSim"
+            packDigi = self.getProp("PackSequencer")
+            from Configurables import DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_
+            RichSumPack = DataPacking__Pack_LHCb__MCRichDigitSummaryPacker_("MCRichDigitSummaryPacker")
+            packDigi.Members += [ RichSumPack ]
+            # Kill the unpacked Rich node
+            from Configurables import EventNodeKiller
+            nodeKiller = EventNodeKiller("MCRichNodeKiller")
+            nodeKiller.Nodes += [ "MC/Rich" ]
+            packDigi.Members += [ nodeKiller ]
         
         writer.ItemList += [ 
             # Digitization summaries
@@ -112,13 +123,17 @@ class DigiConf(LHCbConfigurableUser):
         """
         Define content of the output dataset
         """
-
-        # Pack pSim containers for the output if not on the input file
-        DataOnDemandSvc().AlgMap["pSim/MCParticles"] = "PackMCParticle"
-        DataOnDemandSvc().AlgMap["pSim/MCVertices"]  = "PackMCVertex"
-
         simDir = "MC"
-        if self.getProp("EnablePack") : simDir = "pSim"
+        if self.getProp("EnablePack") :
+            simDir = "pSim"
+            packDigi = self.getProp("PackSequencer")
+            from Configurables import PackMCVertex
+            mcVertPacker = PackMCVertex()
+            packDigi.Members += [mcVertPacker]
+            if dType != "Minimal":
+                from Configurables import PackMCParticle
+                mcPartPacker = PackMCParticle()
+                packDigi.Members += [mcPartPacker]
 
         # Headers propagated from Gauss
         SimConf().addHeaders(writer)
@@ -182,9 +197,10 @@ class DigiConf(LHCbConfigurableUser):
             from Configurables import EventNodeKiller
             nodeKiller = EventNodeKiller("POOLNodeKiller")
             ApplicationMgr().OutStream.insert( 0, nodeKiller )
-            nodeKiller.Nodes += [ "Link", "pSim" ]
+            nodeKiller.Nodes += [ "Link" ]
             simDir = "MC"
             if self.getProp("EnablePack") : simDir = "pSim"
+            nodeKiller.Nodes += [ simDir+"/MCParticles" ]
             nodeKiller.Nodes += [ simDir+"/Velo", simDir+"/PuVeto", simDir+"/TT", simDir+"/IT",
                                   simDir+"/OT", simDir+"/Rich", simDir+"/Prs", simDir+"/Spd",
                                   simDir+"/Ecal", simDir+"/Hcal", simDir+"/Muon" ]
