@@ -3,6 +3,10 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-11-26 - Manuel Tobias Schiller
+ - use the Cholesky decomposition provided in ROOT 5.24 and up instead of our
+   own version; the ROOT version grew out of out own code in LHCbMath
+
 !=========================== TrackFitter v2r40p1 2009-11-26 =================
 ! 2009-11-26 - Wouter Hulsbergen
  - Patch to work around Gaudi problem with toolhandle configuration
@@ -108,7 +112,7 @@
 !=========================== TrackFitter v2r31 2009-02-20 ===================
 ! 2009-02-12 - Wouter Hulsbergen
  - add job option for minimum number of remaining hits in outlier removal
-	
+   
 ! 2009-02-12 - Wouter Hulsbergen
  - by request from gerhard: configuredfitter now also takes an instance as argument
 

@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.75 2009-11-11 21:12:52 wouter Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.76 2009-11-26 15:11:33 mschille Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -6,7 +6,6 @@
 
 // From LHCbMath
 #include "LHCbMath/MatrixManip.h"
-#include "LHCbMath/MatrixInversion.h"
 
 // from TrackEvent
 #include "Event/TrackFunctor.h"
@@ -470,7 +469,7 @@ StatusCode TrackKalmanFilter::smooth( FitNode& thisNode,
 
     // invert the covariance matrix
     TrackSymMatrix invNextNodeC = nextNodeC;
-    if ( !Gaudi::Math::invertPosDefSymMatrix( invNextNodeC ) ) 
+    if ( !invNextNodeC.InvertChol() ) 
       return Warning("Unable to invert matrix in smoother",StatusCode::FAILURE,0) ;
     
     // calculate gain matrix A
@@ -522,7 +521,7 @@ StatusCode TrackKalmanFilter::biSmooth( FitNode& thisNode ) const
   // Calculate the gain matrix. Start with inverting the cov matrix of the difference.
   TrackSymMatrix R = filtStateC + predRevC ;
   TrackSymMatrix invR = R ;
-  if ( !Gaudi::Math::invertPosDefSymMatrix( invR ) ) {
+  if ( !invR.InvertChol() ) {
     debug() << "unable to invert matrix in smoother" << invR << endmsg ;
     return Warning( "Unable to invert matrix in smoother", StatusCode::FAILURE,0);
   }
