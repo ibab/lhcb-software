@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.67 2009-11-26 10:45:10 panmanj Exp $
+! $Id: release.notes,v 1.68 2009-11-26 17:11:09 gligorov Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-26 V. Gligorov
+ - fixed bug in Hlt1HadronViaTLines which was caused by hardcoding a filter 
+   name as an input to another filter.
 
 ! 2009-11-26 - Jaap Panman
  - add Hlt1MiniBiasLines, Hlt1NoBiasLines
