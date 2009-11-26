@@ -4,6 +4,11 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+!============================ EventPacker v2r1 2009-11-26 ====================
+! 2009-11-26 - Marco Cattaneo
+ - PackMCParticle and PackMCVertex now return if output container exists,
+   for consistency with other packers
+
 !============================ EventPacker v2r0 2009-11-13 ====================
 ! 2009-11-12 - Olivier Callot
  - Fix CompareTrack to not report saturated q/p error for poorely measured tracks

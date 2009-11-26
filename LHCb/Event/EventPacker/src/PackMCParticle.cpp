@@ -1,4 +1,4 @@
-// $Id: PackMCParticle.cpp,v 1.8 2009-11-07 12:20:39 jonrob Exp $
+// $Id: PackMCParticle.cpp,v 1.9 2009-11-26 10:50:49 cattanem Exp $
 // Include files 
 
 // from Gaudi
@@ -40,8 +40,19 @@ PackMCParticle::~PackMCParticle() {};
 //=============================================================================
 StatusCode PackMCParticle::execute() {
 
+  // Check to see if the output data already exists.
+  if( exist<LHCb::PackedMCParticles>(m_outputName) ) {
+    if (msgLevel(MSG::DEBUG) )
+      debug() << "Output already exists at '" << m_outputName << "'" << endmsg;
+    return StatusCode::SUCCESS;
+  }
+
   // If input does not exist, and we aren't making the output regardless, just return
-  if ( !m_alwaysOutput && !exist<LHCb::MCParticles>(m_inputName) ) return StatusCode::SUCCESS;
+  if ( !m_alwaysOutput && !exist<LHCb::MCParticles>(m_inputName) ) {
+    if (msgLevel(MSG::DEBUG) )
+      debug() << "Input does not exist at '" << m_inputName << "'" << endmsg;
+    return StatusCode::SUCCESS;
+  }
 
   LHCb::MCParticles* parts = getOrCreate<LHCb::MCParticles,LHCb::MCParticles>( m_inputName );
 
