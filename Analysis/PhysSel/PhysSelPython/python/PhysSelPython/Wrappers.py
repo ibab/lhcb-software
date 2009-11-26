@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.21 2009-11-26 09:52:25 jpalac Exp $
+#$Id: Wrappers.py,v 1.22 2009-11-26 12:30:14 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -11,6 +11,8 @@ are available:
 __author__ = "Juan PALACIOS juan.palacios@nikhef.nl"
 
 __all__ = ('DataOnDemand', 'AutomaticData', 'Selection', 'SelectionSequence')
+
+from copy import copy
 
 class DataOnDemand(object) :
     """
@@ -147,32 +149,24 @@ class SelectionSequence(object) :
 
     def __init__(self,
                  name,
-                 TopSelection = None,
+                 TopSelection,
                  EventPreSelector = [],
                  PostSelectionAlgs = [] ) :
-        from copy import copy
-        _clonableKeys = ['TopSelection',
-                         'EventPreSelector',
-                         'PostSelectionAlgs']
-        self._name = name
-        self.TopSelection = TopSelection
-        self.EventPreSelector = []
-        self.EventPreSelector += EventPreSelector
-        self.PostSelectionAlgs = []
-        self.PostSelectionAlgs += PostSelectionAlgs
-        self.__ctor_dict__ = {}
-        for key in _clonableKeys :
-            self.__ctor_dict__[key] = self.__dict__[key]
+        self.__ctor_dict__ = copy(locals())
+        del self.__ctor_dict__['self']
+        del self.__ctor_dict__['name']
         print "ctor dict:", self.__ctor_dict__
-        self.algos = copy(self.EventPreSelector)
-        self.alg = self.TopSelection.algorithm()
+        self._name = name
+        self._topSelection = TopSelection
+
+        self.algos = copy(EventPreSelector)
+        self.alg = self._topSelection.algorithm()
         self.sels = [self.alg]
         if (self.alg != None) :
-            self.buildSelectionList( self.TopSelection.requiredSelections )
+            self.buildSelectionList( self._topSelection.requiredSelections )
         self.gaudiseq = None
         self.algos += self.sels
-        for postAlg in self.PostSelectionAlgs :
-            self.algos.append(postAlg)
+        self.algos += PostSelectionAlgs
             
     def name(self) :
         return self._name
@@ -193,7 +187,7 @@ class SelectionSequence(object) :
         return self.algorithm().name()
 
     def outputLocation(self) :
-        return self.TopSelection.outputLocation()
+        return self._topSelection.outputLocation()
 
     def outputLocations(self) :
         return [self.outputLocation()]
@@ -208,7 +202,6 @@ class SelectionSequence(object) :
 
     def clone(self, name, **args) :
         new_dict = update_overlap(self.__ctor_dict__, args)
-        print "\nSelectionSequence.clone: new ", new_dict
         return SelectionSequence(name, **new_dict)
     
 def update_overlap(dict0, dict1) :
@@ -217,7 +210,6 @@ def update_overlap(dict0, dict1) :
     keys present in dict0.
     '''
     overlap_keys = filter(dict1.has_key, dict0.keys())
-    from copy import copy
     result = copy(dict0)
     for key in overlap_keys : result[key] = dict1[key]
     return result
