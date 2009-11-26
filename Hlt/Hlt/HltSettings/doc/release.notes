@@ -4,6 +4,10 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-11-26 - Antonio Perez-Calero
+ - added file Debug_320Vis_300L0_NoLines_Hlt1_Aug09.py. Hlt1 thresholds configuration 
+   for Aug09 with no active lines, for develop and debug
+
 ! 2009-11-26 - Jaap Panman
  - add a setting (Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias) to 
    activate Hlt1MiniBiasLines, Hlt1NoBiasLines
