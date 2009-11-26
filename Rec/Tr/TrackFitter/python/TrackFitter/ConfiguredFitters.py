@@ -117,6 +117,8 @@ def ConfiguredEventFitter( Name,
     # create the event fitter
     eventfitter = TrackEventFitter(Name)
     eventfitter.TracksInContainer = TracksInContainer
+    # this addTool should not be necessary but unfortunately there is a problem with the toolhandle configuration
+    eventfitter.addTool( TrackMasterFitter, name="Fitter")
     # configure the fitter
     ConfiguredMasterFitter( eventfitter.Fitter,
                             FieldOff=FieldOff,
