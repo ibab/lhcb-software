@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.192 2009-11-26 10:47:45 cattanem Exp $
+! $Id: release.notes,v 1.193 2009-11-26 21:11:39 cattanem Exp $
 ! package GaudiConf
 ! package manager: M.Cattaneo
 !----------------------------------------------------------------------------
 
 !======================== GaudiConf v13r1 2009-11-26 ========================
+! 2009-11-26 - Marco Cattano for Thomas Ruf for Ricardo Gomez
+ - In Tae_ondemand.py, fix an obsolete include
+
 ! 2009-11-26 - Marco Cattaneo
  - In DigiConf:
    . Add 'PackSequencer' slot, defines sequencer where packing algorithms run
