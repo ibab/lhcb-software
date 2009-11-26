@@ -1,4 +1,4 @@
-#$Id: Wrappers.py,v 1.22 2009-11-26 12:30:14 jpalac Exp $
+#$Id: Wrappers.py,v 1.23 2009-11-26 14:07:38 jpalac Exp $
 """
 Wrapper classes for a DaVinci offline physics selection. The following classes
 are available:
@@ -37,7 +37,7 @@ class DataOnDemand(object) :
                   RequiredSelections = [] ) :
         self._name = name
         self.requiredSelections = []
-        self.Location = Location
+        self._location = Location
 
     def name(self) :
         return self._name
@@ -49,7 +49,7 @@ class DataOnDemand(object) :
         print self.name(), ".__apply_configuration(): NOT A CONFIGURABLE."
         
     def outputLocation(self) :
-        return self.Location
+        return self._location
 
     def algName(self) :
         loc = self.outputLocation()
@@ -91,19 +91,25 @@ class Selection(object) :
                  Algorithm,
                  RequiredSelections = [],
                  OutputBranch = "Phys") :
+
+        self.__ctor_dict__ = copy(locals())
+        del self.__ctor_dict__['self']
+        del self.__ctor_dict__['name']
+        
         self.requiredSelections = []
-        print "Instantiating ", name
+        print "Instantiating Selection", name
         for sel in RequiredSelections :
-            print "Adding required selection ", sel.name()
+            print "Selection: Adding Required Selection ", sel.name()
             self.requiredSelections.append(sel)
-        self.alg = Algorithm
         self._name = name
-        self.OutputBranch = OutputBranch
+        self.alg = Algorithm.clone(self._name)
+        print "Selection: cloned", type(self.alg) , Algorithm.name(), "to", self.alg.name()
+        self._outputBranch = OutputBranch
         
         for sel in self.requiredSelections :
-            print "Algo ", self.algName(),  " adding InputLocation ", sel.outputLocation()
+            print "\tAlgo ", self.algName(),  ": adding InputLocation ", sel.outputLocation()
             self.algorithm().InputLocations += [sel.outputLocation()]
-        print "Required Selection Algorithms: ", self.requiredSelections
+        print self._name, "Required Selection Algorithms: ", self.requiredSelections
 
     def name(self) :
         return self._name
@@ -118,7 +124,11 @@ class Selection(object) :
         return self.algorithm().name()
 
     def outputLocation(self) :
-        return self.OutputBranch + "/" + self.algName()
+        return self._outputBranch + "/" + self.algName()
+
+    def clone(self, name, **args) :
+        new_dict = update_overlap(self.__ctor_dict__, args)
+        return Selection(name, **new_dict)
     
 class SelectionSequence(object) :
     """
@@ -152,13 +162,13 @@ class SelectionSequence(object) :
                  TopSelection,
                  EventPreSelector = [],
                  PostSelectionAlgs = [] ) :
+
         self.__ctor_dict__ = copy(locals())
         del self.__ctor_dict__['self']
         del self.__ctor_dict__['name']
-        print "ctor dict:", self.__ctor_dict__
+
         self._name = name
         self._topSelection = TopSelection
-
         self.algos = copy(EventPreSelector)
         self.alg = self._topSelection.algorithm()
         self.sels = [self.alg]
