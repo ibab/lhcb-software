@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-26 - Marco Gersabeck
+ - Updated un-tagged prompt charm selection. Tightened and added cuts to improve retention.
+
 ! 2009-11-25 - Alessio sarti
  - Updated di-muon selection. Lowered IM cut, changed stream line name
 
