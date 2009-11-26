@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.47 2009-11-25 15:21:54 pkoppenb Exp $
+! $Id: release.notes,v 1.48 2009-11-26 22:39:47 aperezca Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-11-26 - Antonio Perez-Calero
+ - added histogram (profile) for the monitoring of number of candidates passing each 
+   algorithm inside in a given line (implemented only for HltAlgorithms as used in Hlt1)
 
 ! 2009-11-25 - Patrick Koppenburg
  - The Hlt2 reconstruction is separated in blocks depending on what is actually

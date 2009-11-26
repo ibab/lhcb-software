@@ -1,4 +1,4 @@
-// $Id: HltLine.h,v 1.8 2009-10-29 08:31:58 pkoppenb Exp $
+// $Id: HltLine.h,v 1.9 2009-11-26 22:39:48 aperezca Exp $
 #ifndef HLTLINE_H
 #define HLTLINE_H 1
 
@@ -6,6 +6,7 @@
 // from Gaudi
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IHltDataSvc.h"
+#include "HltBase/HltAlgorithm.h"
 #include "GaudiKernel/IIncidentListener.h"
 #include "GaudiAlg/GaudiHistoAlg.h"
 #include "boost/array.hpp"
@@ -30,7 +31,7 @@ class HltLine : public GaudiHistoAlg
 public:
   /// Standard constructor
   HltLine( const std::string& name, ISvcLocator* pSvcLocator );
-
+  
   virtual ~HltLine( ); ///< Destructor
 
   virtual StatusCode initialize();    ///< Algorithm initialization
@@ -65,6 +66,7 @@ public:
 
     ~HltStage() { if (m_algorithm) m_algorithm->release();}; ///< Destructor
     bool passed() const            { return algorithm()?algorithm()->filterPassed():true; }
+        
     StatusCode execute(ISequencerTimerTool* = 0);
     StatusCode initialize(ISequencerTimerTool* = 0);
     std::string toString() const { return name(); }
@@ -75,6 +77,7 @@ public:
   private:
     void setTimer( int nb )              { m_timer = nb;       }
     Algorithm* algorithm()        const  { return m_algorithm; }
+    
     bool       reverse()          const  { return m_reverse;   }
     int        timer()            const  { return m_timer;     }
     void updateHandler(Property& prop);
@@ -82,6 +85,7 @@ public:
     HltLine&    m_parent;
     ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
     Algorithm*  m_algorithm;   ///< Algorithm pointer
+    
     StringProperty  m_property;
     bool        m_reverse;     ///< Indicates that the flag has to be inverted
     bool        m_dirty;
@@ -93,7 +97,7 @@ private:
   //TODO: move into DecReport...
   enum stage { initial=          0,  // i.e. did not pass 'prescale
                prescaled =       1,  // i.e. did not pass 'seed'
-               odin      =          2 , // i.e. did not pass 'filter0'
+               odin      =       2,  // i.e. did not pass 'filter0'
                l0du      =       3,  // i.e. did not pass 'filter1'
                hlt       =       4,  // i.e. did not pass 'filter2'
                filter1ed =       5,  // i.e. did not pass 'filter3'
@@ -113,6 +117,10 @@ private:
         }
         return s_map[s];
   };
+  
+  typedef std::vector<std::pair<const Hlt::Selection*,unsigned> > SubSels;
+  SubSels m_subSels;
+  
   typedef std::vector<std::pair<const Algorithm*,unsigned> > SubAlgos;
   SubAlgos retrieveSubAlgorithms() const;
 
@@ -122,12 +130,12 @@ private:
   Algorithm* getSubAlgorithm(const std::string& name);
   IANNSvc&     annSvc() const;
   IHltDataSvc& dataSvc() const;
-
+  
   /** Private copy, assignment operator. This is not allowed **/
   HltLine( const HltLine& a );
   HltLine& operator=( const HltLine& a );
-
-
+  
+  
   boost::array<HltStage*,nStages> m_stages; ///< List of algorithms to process.
   SubAlgos          m_subAlgo;        ///< list of subalgorithms and their sub-count
   ISequencerTimerTool* m_timerTool;      ///< Pointer to the timer tool
@@ -136,6 +144,7 @@ private:
   AIDA::IHistogram1D* m_errorHisto;
   AIDA::IHistogram1D *m_timeHisto;
   AIDA::IHistogram1D *m_stepHisto;
+  AIDA::IProfile1D *m_candHisto;  //antonio
   mutable IANNSvc *m_hltANNSvc;
   mutable IHltDataSvc *m_hltDataSvc;
   StatEntity *m_acceptCounter;

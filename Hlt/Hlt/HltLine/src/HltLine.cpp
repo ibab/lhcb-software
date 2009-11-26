@@ -1,4 +1,4 @@
-// $Id: HltLine.cpp,v 1.12 2009-10-29 13:30:34 pkoppenb Exp $
+// $Id: HltLine.cpp,v 1.13 2009-11-26 22:39:47 aperezca Exp $
 // ============================================================================
 // Include files
 // ============================================================================
@@ -13,6 +13,7 @@
 // AIDA 
 // ============================================================================
 #include "AIDA/IHistogram1D.h"
+#include "AIDA/IProfile1D.h"
 #include "AIDA/IHistogram.h"
 #include "AIDA/IAxis.h"
 // ============================================================================
@@ -82,52 +83,52 @@ HltLine::HltStage::initialize(ISequencerTimerTool* timer) {
 
 StatusCode
 HltLine::HltStage::execute(ISequencerTimerTool* timertool) {
-    assert(!m_dirty);
-    if (!algorithm()              ) return StatusCode::SUCCESS;
-    if (!algorithm()->isEnabled() ) return StatusCode::SUCCESS;
-    if ( algorithm()->isExecuted()) return StatusCode::SUCCESS;
-    // TODO: bind timer at init time
-    if ( timertool ) timertool->start( timer() );
-    StatusCode result = StatusCode::FAILURE;
-    try {
-        result = algorithm()->sysExecute();
-        algorithm()->setExecuted( true );
-    } catch (...) { }
-    if ( timertool ) timertool->stop( timer() );
-    return result;
+  assert(!m_dirty);
+  if (!algorithm()              ) return StatusCode::SUCCESS;
+  if (!algorithm()->isEnabled() ) return StatusCode::SUCCESS;
+  if ( algorithm()->isExecuted()) return StatusCode::SUCCESS;
+  // TODO: bind timer at init time
+  if ( timertool ) timertool->start( timer() );
+  StatusCode result = StatusCode::FAILURE;
+  try {
+    result = algorithm()->sysExecute();
+    algorithm()->setExecuted( true );
+  } catch (...) { }
+  if ( timertool ) timertool->stop( timer() );
+  return result;
 }
 
 HltLine::SubAlgos 
 HltLine::retrieveSubAlgorithms() const {
- typedef std::list<std::pair<const Algorithm*,unsigned> > SubAlgoList;
- SubAlgoList subAlgo;
- subAlgo.push_back( std::make_pair(this,0));
- SubAlgoList::iterator i = subAlgo.begin();
- while ( i != subAlgo.end() ) {
+  typedef std::list<std::pair<const Algorithm*,unsigned> > SubAlgoList;
+  SubAlgoList subAlgo;
+  subAlgo.push_back( std::make_pair(this,0));
+  SubAlgoList::iterator i = subAlgo.begin();
+  while ( i != subAlgo.end() ) {
     std::vector<Algorithm*> *subs = i->first->subAlgorithms();
     if (!subs->empty()) {
-        unsigned depth = i->second+1;
-        SubAlgoList::iterator j = i; 
-        ++j;
-        for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k) 
-            subAlgo.insert(j, std::make_pair( *k, depth ) );
+      unsigned depth = i->second+1;
+      SubAlgoList::iterator j = i; 
+      ++j;
+      for (std::vector<Algorithm*>::const_iterator k = subs->begin();k!=subs->end();++k) 
+        subAlgo.insert(j, std::make_pair( *k, depth ) );
     }
     ++i;
- }
- subAlgo.pop_front(); // remove ourselves...
- debug() << " dumping sub algorithms: " << endmsg;
- for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
+  }
+  subAlgo.pop_front(); // remove ourselves...
+  debug() << " dumping sub algorithms: " << endmsg;
+  for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
     debug() << std::string(3+3*i->second,' ') << i->first->name() << endmsg;
- }
- // transform map such that it has algo, # of sub(sub(sub()))algorightms
-
- SubAlgos table;
- for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
+  }
+  // transform map such that it has algo, # of sub(sub(sub()))algorightms
+  
+  SubAlgos table;
+  for (SubAlgoList::const_iterator i = subAlgo.begin(); i!= subAlgo.end();++i) {
     SubAlgoList::const_iterator j = i; ++j;
     while ( j!=subAlgo.end() && j->second > i->second ) ++j;
     table.push_back(std::make_pair( i->first, std::distance(i,j) ) );
- }
- return table;
+  }
+  return table;
 }
 
 
@@ -197,7 +198,7 @@ HltLine::~HltLine() { };
 //=============================================================================
 StatusCode HltLine::initialize() {
   /// initialize the base:
-
+  
   StatusCode status = GaudiHistoAlg::initialize();
   if ( !status.isSuccess() ) return status;
 
@@ -207,17 +208,17 @@ StatusCode HltLine::initialize() {
   debug() << "==> Initialize" << endreq;
   m_jos    = svc<IJobOptionsSvc>( "JobOptionsSvc"  );
   m_algMgr = svc<IAlgManager>   ( "ApplicationMgr" );
-
+  
   // register for incidents...
   IIncidentSvc* incidentSvc = svc<IIncidentSvc>( "IncidentSvc" );
   BOOST_FOREACH( const std::string& s, m_incidents ) {
     bool rethrow = false; bool oneShot = false; long priority = 0;
     incidentSvc->addListener(this,s,priority,rethrow,oneShot);
   }
-
+  
   m_timerTool = tool<ISequencerTimerTool>( "SequencerTimerTool" );
   if ( m_timerTool->globalTiming() ) m_measureTime = true;
-
+  
   if ( m_measureTime ) {
     m_timer = m_timerTool->addTimer( name() );
     m_timerTool->increaseIndent();
@@ -237,27 +238,52 @@ StatusCode HltLine::initialize() {
   //   the stages...
   stringKey key(m_decision);
   m_selection = dataSvc().selection(key,this);
-
+  
   //== pick up (recursively!) our sub algorithms and their depth count
   //   so we can figure out in detail where we stalled...
- m_subAlgo = retrieveSubAlgorithms();
-
- //NOTE: when checking filterPassed: a sequencer can be 'true' even if some member is false...
- //ANSWER: in case positive, we skip checking all algos with depth count > current one...
- //        in case negative, we descend, and repeat there, or, if next entry has no 
- //        depth count larger, we fill bin at current position..
-
-  //== Create the monitoring histogram
+  m_subAlgo = retrieveSubAlgorithms();
+  
+  //NOTE: when checking filterPassed: a sequencer can be 'true' even if some member is false...
+  //ANSWER: in case positive, we skip checking all algos with depth count > current one...
+  //        in case negative, we descend, and repeat there, or, if next entry has no 
+  //        depth count larger, we fill bin at current position..
+  
+  //== Create the monitoring histograms
   m_errorHisto = book1D(name()+" error",name()+" error",-0.5,7.5,8);
   m_timeHisto  = book1D(name()+" walltime",name()+" log(wall time/ms)",-3,6);
   m_stepHisto  = book1D(name()+" rejection stage", name()+ " rejection stage",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
+  m_candHisto  = bookProfile1D(name()+" passing candidates",-0.5,m_subAlgo.size()-0.5,m_subAlgo.size() );
   // if possible, add labels to axis...
+  // Remove common part of the name for easier label reading (assumes name is suff. descriptive)
   std::vector<std::string> stepLabels;
+  std::string common =name();
+  debug()<<"Fill labels removing common part from the string: Hlt+line "<< common << endmsg;
   for (SubAlgos::const_iterator i = m_subAlgo.begin();i!=m_subAlgo.end();++i) {
-      stepLabels.push_back( i->first->name() );
+    std::string stepname = i->first->name(); 
+    std::string subname = stepname;
+    size_t p = stepname.find(common);
+    if (p!=std::string::npos){subname = stepname.substr(p+common.size());}
+    stepLabels.push_back( subname );
+    debug()<<"Name before: "<< stepname<< ", name after: "<< subname << endmsg;
   }
   if (!setBinLabels( m_stepHisto, stepLabels )) {
     error() << " Could not set bin labels in step histo " << endmsg;
+  }
+  if (!setBinLabels( m_candHisto, stepLabels )) {
+    error() << " Could not set bin labels in cand histo " << endmsg;
+  }
+  
+  //fill the vector of pairs (sub_selection,index)
+  unsigned bin_iter=0;
+  debug()<< " Subalgorithms in this line:" << endmsg;
+  for(SubAlgos::const_iterator it = m_subAlgo.begin(); it != m_subAlgo.end(); it++, bin_iter++){
+    debug()<< " subalgorithm: "<< it->first->name()<<" with index: "<< bin_iter << endmsg; 
+    Algorithm* algo = (Algorithm*) it->first;
+    HltAlgorithm* hlt = dynamic_cast<HltAlgorithm*>(algo);
+    if (hlt!=0){
+      Hlt::Selection* a_sel = &(hlt->outputSelection());
+      m_subSels.push_back( std::make_pair(a_sel,bin_iter));
+    }
   }
 
   //== and the counters
@@ -318,19 +344,20 @@ StatusCode HltLine::execute() {
   } 
   bool accept = !m_stages.empty(); // make sure an empty line always rejects events...
   m_caughtIncident = false; // only interested in incidents during stages->execute...
+  
   for (unsigned i=0;i<m_stages.size();++i) {
-     result = m_stages[i]->execute();
-     if (m_caughtIncident) {
-        report.setErrorBits(report.errorBits() | 0x02);
-        m_caughtIncident = false;
-     }
-     if (result.isFailure()) {
-        report.setErrorBits(report.errorBits() | 0x01);
-        break;
-     }
-     accept = m_stages[i]->passed();
-     if ( !accept ) break;
-     report.setExecutionStage( i+1 );
+    result = m_stages[i]->execute();
+    if (m_caughtIncident) {
+      report.setErrorBits(report.errorBits() | 0x02);
+      m_caughtIncident = false;
+    }
+    if (result.isFailure()) {
+      report.setErrorBits(report.errorBits() | 0x01);
+      break;
+    }
+    accept = m_stages[i]->passed();
+    if ( !accept ) break;
+    report.setExecutionStage( i+1 );
   }
   // plot the wall clock time spent...
   double elapsedTime = double(System::currentTime( System::microSec ) - startClock);
@@ -367,17 +394,35 @@ StatusCode HltLine::execute() {
      if (i->first->filterPassed()) {
         i+=i->second;
      } else {
-        if (i->second==1) break; // don't have subalgos, so this is where we stopped
-        ++i; // descend into subalgorithms, figure out which one failed.....
-        // Note: what to do if subalgos pass, but parent failed?? 
-        // actually need to invert parent/daughters, such that if daughters OK,
-        // but parent isn't, we enter the plot at the _parent_, but that should appear
-        // _after_ the daughters (which may be confusing)...
+       if (i->second==1) break; // don't have subalgos, so this is where we stopped
+       ++i; // descend into subalgorithms, figure out which one failed.....
+       // Note: what to do if subalgos pass, but parent failed?? 
+       // actually need to invert parent/daughters, such that if daughters OK,
+       // but parent isn't, we enter the plot at the _parent_, but that should appear
+       // _after_ the daughters (which may be confusing)...
      }
   }
   fill( m_stepHisto, i-m_subAlgo.begin(), 1.0);
   if ( m_measureTime ) m_timerTool->stop( m_timer );
-
+  
+  //fill candidate profile for hlt algorithms...
+  unsigned last=i-m_subAlgo.begin();
+  debug()<< " last algorithm was "<<last<<endmsg;
+  for(SubSels::const_iterator it = m_subSels.begin(); it != m_subSels.end(); it++){
+    double cands = it->first->size();
+    unsigned index = it->second;
+    debug()<< " algorithm "<< m_subAlgo[index].first->name()<<" passed? " << m_subAlgo[index].first->filterPassed()<<endmsg;
+    debug()<< " candidates: "<< cands << " for algorithm " << index << endmsg;
+    if (index<last){
+      debug()<<" filling cand profile!"<<endmsg;
+      fill(m_candHisto, index, cands,1.0);
+    }
+    else {
+      debug()<<" we got up to this algorithm! "<<endmsg;
+      break;
+    }
+  }
+  
   return m_returnOK ? StatusCode::SUCCESS : result;
 };
 
