@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 ! 2009-11-26 - Manuel Tobias Schiller
+ - PatSeedTool: reimplement Stephanie's fix from 2009-06-11 by looking for
+   diverging track parameters instead as it's slightly faster that way
+
+! 2009-11-26 - Manuel Tobias Schiller
  - PatSeedingTool: put chi^2 and ndf from our own fit on the tracks we put on
    the TES since they might be useful for the trigger (before a track is
    fitted with the Kalman filter)

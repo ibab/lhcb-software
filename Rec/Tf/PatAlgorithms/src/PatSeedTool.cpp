@@ -1,4 +1,4 @@
-// $Id: PatSeedTool.cpp,v 1.13 2009-09-25 19:15:28 smenzeme Exp $
+// $Id: PatSeedTool.cpp,v 1.14 2009-11-26 16:07:27 mschille Exp $
 // Include files
 
 #include <cmath>
@@ -192,17 +192,13 @@ bool PatSeedTool::fitTrack( PatSeedTrack& track,
 //=========================================================================
 bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
 {
-  double dist = 0;
   for ( unsigned kk = 10 ; kk-- ; ) {
     PatFwdFitParabola  parabola;
     int nHits = 0;
     BOOST_FOREACH( const PatFwdHit* hit, track.coords() ) {
       if ( !hit->isSelected() ) continue;
 
-      dist = track.distanceForFit( hit );
-      if (fabs(dist) > 10000)
-	return false;
-      
+      const double dist = track.distanceForFit( hit );
       parabola.addPoint( hit->z() - track.z0(),
 			 dist, hit->hit()->weight() );
      
@@ -210,6 +206,8 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
     }
     if (3 > nHits) return false;
     parabola.solve();
+    if (std::abs(parabola.ax()) > 1e4 || std::abs(parabola.bx()) > 5. ||
+	std::abs(parabola.cx()) > 1e-3) return false;
     track.updateParameters( parabola.ax(), parabola.bx(), parabola.cx() );
 
     if ( msgLevel( MSG::VERBOSE ) || forceDebug  ) {
@@ -218,9 +216,9 @@ bool PatSeedTool::fitXProjection ( PatSeedTrack& track, bool forceDebug ) const
     }
 
     // wait until stable, due to OT.
-    if ( fabs( parabola.ax() ) < 5.e-3 &&
-	fabs( parabola.bx() ) < 5.e-6 &&
-	fabs( parabola.cx() ) < 5.e-9    ) break;
+    if ( std::abs( parabola.ax() ) < 5.e-3 &&
+	std::abs( parabola.bx() ) < 5.e-6 &&
+	std::abs( parabola.cx() ) < 5.e-9    ) break;
   }
   return true;
 }
