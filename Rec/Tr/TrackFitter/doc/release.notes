@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r40p1 2009-11-26 =================
 ! 2009-11-26 - Wouter Hulsbergen
  - Patch to work around Gaudi problem with toolhandle configuration
 
