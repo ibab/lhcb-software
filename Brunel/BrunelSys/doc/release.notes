@@ -3,9 +3,9 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v35r9p1>2009-11-25 Brunel v35r9p1</A></H1><PRE>
+</PRE><H1><A NAME=v35r9p1>2009-11-27 Brunel v35r9p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
- and SQLDDDB v5r15, ParamFiles v8r1, FieldMap v5r3, AppConfig v3r*
+ and SQLDDDB v5r15, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
 This is a production version for 2009 data-taking
 Output requires DaVinci v24r5p1 or later
@@ -13,9 +13,14 @@ Output requires DaVinci v24r5p1 or later
  - New tuning:
    . Changed the default momentum for magnet off tracks from 1 GeV to 100 GeV.
      This is now true for seed, long, downstream tracks (TrackTools v3r24)
+   . New tuning of TsaSeed when not using OT drift times (TsaAlgorithms v3r14p1)
+   . Improve robustness of Dst packing sequence against various types of MC
+     truth content (GaudiConf v13r1)
 
  - Bug fixes:
    . MagneticFieldSvc was ignoring ScaleFactor option (Magnet v5r5)
+   . Work around to correctly pass properties to ConfiguredFitters 
+     (TrackFitters v2r40p1)
 
  - Changes to example options:
    . Add options/2009-Collisions.py: example options for 2009 collisions data

@@ -22,5 +22,7 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use Magnet     v5r5  Det
-use TrackTools v3r24 Tr
+use Magnet        v5r5    Det
+use TsaAlgorithms v3r14p1 Tf
+use TrackFitter   v2r40p1 Tr
+use TrackTools    v3r24   Tr
