@@ -24,6 +24,10 @@ SQLDDDB v5r12 or later, AppConfig v3r5 or later
    . Kill MC/Rich node if writing packed MCRichDigits, to avoid loading .sim
      file when unpacking them in Brunel (GaudiConf v13r1)
 
+ - New tuning:
+   . New version of L0MuonKernel.xml: new mapping in M1R2 following hardware real
+     implementation (ParamFiles v8r2)
+
  - Monitoring changes
    . Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
      OTTimeMonitor (was crashing anyway...) (OTMonitor v3r1)
