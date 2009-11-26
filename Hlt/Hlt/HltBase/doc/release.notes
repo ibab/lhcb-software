@@ -4,6 +4,10 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+! 2009-11-26 - Antonio Perez-Calero
+ - Modified HltAlgorithm.h and HltHistogramUtilities.h/.cpp to allow for 
+   monitoring of number of candidates passing a given algorithm inside a line
+
 ! 2009-11-26 - Johanens Albrecht
  - HltBase.icpp: remove Assert in infoID and infoName methods 
 

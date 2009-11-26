@@ -1,4 +1,4 @@
-// $Id: HltAlgorithm.h,v 1.41 2009-10-25 21:07:10 graven Exp $
+// $Id: HltAlgorithm.h,v 1.42 2009-11-26 22:44:11 aperezca Exp $
 #ifndef HLTBASE_HLTALGORITHM_H 
 #define HLTBASE_HLTALGORITHM_H 1
 
@@ -68,6 +68,14 @@ public:
         return *tsel;
   }
 
+  Hlt::Selection& outputSelection() const {
+    Assert(m_outputSelection != 0, "No defined output selection!!");
+    return *m_outputSelection;
+  }
+  
+  size_t outputSelectionSize() const 
+  {return m_outputSelection != 0?  m_outputSelection->size():0;}
+  
 
 private:
 
@@ -137,7 +145,8 @@ private:
   template<typename T>
   class TESSelectionCallBack : public CallBack {
   public:
-      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : m_selection(const_cast<typename boost::remove_const<T>::type&>(selection)),m_parent(parent) {
+      TESSelectionCallBack(T &selection,HltAlgorithm &parent) : 
+        m_selection(const_cast<typename boost::remove_const<T>::type&>(selection)),m_parent(parent) { //antonio
         assert(m_selection.id().str().substr(0,4)=="TES:");
       }
       StatusCode execute() {
