@@ -1,13 +1,26 @@
 <PRE>
 ! -----------------------------------------------------------------------------
-! $Id: release.notes,v 1.41 2009-11-24 16:34:48 ibelyaev Exp $
+! $Id: release.notes,v 1.42 2009-11-26 16:54:29 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.41 $
+! CVS tag $Name: not supported by cvs2svn $ ; version $Revision: 1.42 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/Bender
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 ! Purpose     : Python-based environment for Physics Analysis 
 ! -----------------------------------------------------------------------------
+
+! ==================== Phys/Bender v12r5p1 2009-11-26 =========================
+
+! 2009-11-26 - Vanya Belyaev
+
+ - Bender.Fixes
+
+      add decoration for iEventSelector to open properly CASTOR & RAW/MDG files
+
+ - cmt/requirements
+
+      version increment to v12r5p1 
+
 
 ! ==================== Phys/Bender v12r5 2009-11-24 ===========================
 
