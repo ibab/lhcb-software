@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.60 2009-11-18 08:39:25 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.61 2009-11-26 11:02:33 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -64,7 +64,7 @@ class Boole(LHCbConfigurableUser):
        ,'TAENext'      : """ Number of Next Time Alignment Events to generate """
        ,'TAESubdets'   : """ Subdetectors for which TAE are enabled """
        ,'Outputs'      : """ List of outputs: ['MDF','DIGI','L0ETC'] (default 'DIGI') """
-       ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default',Extended'] """
+       ,'DigiType'     : """ Defines content of DIGI file: ['Minimal','Default','Extended'] """
        ,'Histograms'   : """ Type of histograms: ['None','Default','Expert'] """
        ,'NoWarnings'   : """ OBSOLETE, kept for Dirac compatibility. Please use ProductionMode """
        ,'ProductionMode' : """ Enables special settings for running in production """
@@ -545,6 +545,17 @@ class Boole(LHCbConfigurableUser):
         importOptions("$GAUDIPOOLDBROOT/options/GaudiPoolDbRoot.opts")
 
         if "DIGI" in outputs:
+            seq = GaudiSequencer("PrepareDIGI")
+            ApplicationMgr().TopAlg += [ seq ]
+
+            # In Minimal case, filter the MCVertices before writing
+            if self.getProp("DigiType").capitalize() == "Minimal":
+                seq.Members = ["FilterMCPrimaryVtx"]
+
+            # In packed case, run the packing algorithms
+            if self.getProp( "EnablePack" ):
+                DigiConf().PackSequencer = seq
+
             writerName = "DigiWriter"
             digiWriter = OutputStream( writerName, Preload=False )
             if not digiWriter.isPropertySet( "Output" ):
@@ -558,10 +569,6 @@ class Boole(LHCbConfigurableUser):
             self.setOtherProps(DigiConf(),["DigiType","TAEPrev","TAENext","UseSpillover"])
             if self.getProp("UseSpillover"):
                 self.setOtherProps(DigiConf(),["SpilloverPaths"])
-
-            # In Minimal case, filter the MCVertices before writing
-            if self.getProp("DigiType").capitalize() == "Minimal":
-                ApplicationMgr().TopAlg.append( "FilterMCPrimaryVtx" )
 
         if "L0ETC" in outputs:
             from Configurables import L0Conf

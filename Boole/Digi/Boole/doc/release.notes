@@ -4,14 +4,18 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
 </PRE><H1><A NAME=v19r9>2009-11-26 Boole v19r9</A></H1></PRE>
- - Changes to requirements
-   . Use ParamFiles v8r2
+ - Changes to Configurable:
+   . Follow changes in DigiConf (GaudiConf v13r1)
 
- - Changes to QMTests
+ - Changes to requirements:
+   . Use ParamFiles v8r2
+   . Use EventPacker
+
+ - Changes to QMTests:
    . Added a test for the fixedfile from Gauss v37r0 as in task 12602
      (fixedfile-gauss-v37r0-mc09-sim)
 
- - Changes to references to reflect changes in Boole v19r8 output:
+ - Changes to references to reflect changes in Boole v19r9 output:
    . Changes to OTMonitor histograms (OTMonitor v3r0, v3r1)
 
 </PRE><H1><A NAME=v19r8>2009-11-18 Boole v19r8</A></H1></PRE>
