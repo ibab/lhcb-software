@@ -1,4 +1,4 @@
-// $Id: CameraTool.cpp,v 1.9 2009-11-02 12:08:29 nmangiaf Exp $
+// $Id: CameraTool.cpp,v 1.10 2009-11-27 12:57:54 nmangiaf Exp $
 // Include files
 
 // from Gaudi
@@ -42,7 +42,7 @@ CameraTool::CameraTool( const std::string& type,
 {
   declareInterface<ICameraTool>(this);
   declareProperty("ServerName",m_servername="127.0.0.1");
-  declareProperty("ServerPort",m_servport=12345);
+  declareProperty("ServerPort",m_servport=45123);
   declareProperty("ServerNames",m_servernames);
   declareProperty("ServerPorts",m_servports);
   declareProperty("Enabled",m_dosend=true);
@@ -135,17 +135,19 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
       std::ostringstream msg;
       msg << "switch "<<runNumber;
       //std::string msg = "COMMAND/9/switch "+(std::string) argv[1]+"\n";
-      //warning()<<msg.str()<<endmsg;
+
       m_newRun = false;
+      if (msgLevel(MSG::DEBUG)){
+        debug()<<"Change directory message: "<<msg.str()<<endmsg;
+        debug() <<"New run: Change Camera Directory in "<<runNumber << endmsg;
+      }
       SendAndClear(ICameraTool::CAM_COMMAND,"COMMAND",msg.str());
-      if (msgLevel(MSG::DEBUG))
-        info() << "New run: Change Camera Directory in "<<runNumber << endmsg;
     }
     else {
       std::ostringstream msg;
       debug() << "Failed in changing Camera directory after run changed.\n"
               <<" ODIN bank doesn't exists."
-              <<" It will retry when the next message arrives";
+              <<" It will retry when the next message arrives."<<endmsg;
     }    
   }//if run changed
 
@@ -161,12 +163,13 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
  
     
   if (m_dosend) {
-    
+    // loop over clients
     for (itc = m_clients.begin(); itc!= m_clients.end(); itc++){
       m_camc = (*itc);
       if (m_camc==NULL) continue;
-      
-      if (m_out.entries()>0) m_out.tostream(s);
+
+      //put attached message into the stream s
+      if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0) m_out.tostream(s);
       if (m_camc->Connect()>0) {
         char buf[3];
         while (  m_camc->rd(buf,2)==-2){};
@@ -177,9 +180,9 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
           // if (m_out.entries()<1) m_camc->nowait();
           ret = m_camc->wr(ss.str().c_str(),ss.str().length());
           if (ret != (int)ss.str().length() ) success  = false;
-          if (m_out.entries()>0)
+          if(l != ICameraTool::CAM_COMMAND)if (m_out.entries()>0)
             ret = m_camc->wr(s.str().c_str(),s.str().length());
-          if (ret != (int)s.str().length() ) success  = false;
+          if(l != ICameraTool::CAM_COMMAND)if (ret != (int)s.str().length() ) success  = false;
         }
         else {
           if (numErrBZ < 5){
@@ -221,8 +224,10 @@ int CameraTool::SendAndClear(MessageLevel l,const std::string& who,const std::st
       debug() << "Sending to CAMERA disabled. Message " << ss.str() << endmsg;
   } // else(m_dosend&&m_camc)
   
-  m_out.reset();
-  m_lastHistoNum = 0;
+  if(l != ICameraTool::CAM_COMMAND){
+    m_out.reset();
+    m_lastHistoNum = 0;
+  }
   
   return 1;
 }
