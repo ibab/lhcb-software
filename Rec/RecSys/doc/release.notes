@@ -5,6 +5,37 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v7r10>2009-11-27 RecSys v7r10</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r4
+
+- Packages updated: Rec/GlobalReco v6r29, Tf/PatAlgorithms v3r25,
+		Tf/TsaAlgorithms v3r15, Tr/TrackFitter v2r41, Tr/TrackTools v3r24
+		Tr/TrackMonitors v1r17
+
+- In Rec/GlobalReco v6r29:
+		. Add work around for older data where MuonPID::IsMuonLoose() or 
+   		MuonPID::InAcceptance() is missing
+
+- In Tf/PatAlgorithms v3r25: 
+		. Improvements in basic calculations in ROOT
+			Affected classes: PatAddTTCoord, PatDownstream, PatFwdFitLine,
+   		PatFwdFitParabola, PatFwdTool, PatSeedTool, PatSeedingTool
+			use ROOT::Math::CholeskyDecomp
+			Avoids saddle point problems in Chi2 calculation
+
+- In Tf/TsaAlgorithms v3r15:
+		.	Add options to allow seeding to work without OT drift times
+
+- In Tr/TrackFitter v2r41:
+		. correcponding fix to Tf/PatAlgorithms v3r25
+
+- In Tr/TrackTools v3r24:
+		.	set b field off momentum from 1 GeV to 100 GeV
+
+- In Tr/TrackMonitors v1r17:
+		. Protect some pointer dereferences in OTTrackMonitor
+
+
 </PRE><H1><A NAME=v7r9>2009-11-23 RecSys v7r9</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r3
 
