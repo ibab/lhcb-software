@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.h,v 1.28 2009-05-10 20:35:53 gligorov Exp $
+// $Id: BackgroundCategory.h,v 1.29 2009-11-27 07:42:26 odescham Exp $
 #ifndef BACKGROUNDCATEGORY_H 
 #define BACKGROUNDCATEGORY_H 1
 
@@ -11,6 +11,7 @@
 #include "Kernel/IParticle2MCWeightedAssociator.h"
 #include "GaudiKernel/IParticlePropertySvc.h"
 #include "GaudiKernel/ParticleProperty.h"
+#include "CaloInterfaces/ICalo2MCTool.h"
 #include "Kernel/IPrintDecay.h"
 
 typedef std::vector<const LHCb::MCParticle*> MCParticleVector;
@@ -106,7 +107,8 @@ private:
   IParticleDescendants* m_particleDescendants;
   IParticle2MCWeightedAssociator* m_smartAssociator;
   IPrintDecay* m_printDecay ;
-
+  ICalo2MCTool* m_calo2MC;
+  
   const LHCb::MCParticle* m_commonMother;
   DaughterAndPartnerVector m_daughtersAndPartners;
 
@@ -118,6 +120,7 @@ private:
   double m_softPhotonCut ; //ignore soft photons cut
   double m_lowMassCut ; /// cut applied to low-mass background
   double m_override; //see .cpp file for explanation
+  double m_caloWeight;
   double m_minWeight; //dummy sorting variable
   double m_rescut; //A cut on the minimum lifetime for a mother not to be
 			//considered a short-lived resonance

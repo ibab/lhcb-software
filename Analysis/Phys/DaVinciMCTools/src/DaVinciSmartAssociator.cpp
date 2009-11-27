@@ -1,4 +1,4 @@
-// $Id: DaVinciSmartAssociator.cpp,v 1.14 2009-10-21 10:55:58 pkoppenb Exp $
+// $Id: DaVinciSmartAssociator.cpp,v 1.15 2009-11-27 07:42:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -27,9 +27,10 @@ DaVinciSmartAssociator::DaVinciSmartAssociator( const std::string& type,
   : 
   Particle2MCAssociatorBase( type, name , parent ),
   m_weightedAssociation(0),
-  m_bkg(0)
+  m_bkg(0),
+  m_calo2MC(0)
 {
-
+  declareProperty("Calo2MCWeight", m_caloWeight=0.5);
 }
 //=============================================================================
 // Destructor
@@ -57,7 +58,19 @@ DaVinciSmartAssociator::relatedMCPsImpl(const LHCb::Particle* particle,
   if (!particle) Exception("The smart associator was asked to associate a NULL particle, exiting.").ignore();
 
   //Now we get the association result based on the particle type
-  if (particle->isBasicParticle()){ //if this is a stable
+
+  if( m_calo2MC->isPureNeutralCalo( particle ) ){ 
+    // pure neutral calo object (stable like gamma/mergedPi0 or composite like eta/resolvedPi0/Ks->pi0pi0/...)    
+    verbose() << "Associating a calorimetric particle with pid = " 
+              << particle->particleID().pid() << std::endl
+              << m_calo2MC->from(particle)->descriptor()
+              << endmsg; 
+
+    associatedParts.push_back( 
+                              MCAssociation( m_calo2MC->from(particle)->findMCOrBest( particle->particleID() , m_caloWeight),1) 
+                              );    
+
+  }else if (particle->isBasicParticle()){ //if this is a stable
       if (msgLevel(MSG::VERBOSE)) 
         verbose() << "Associating a basic particle with pid = " 
                   << particle->particleID().pid() 
@@ -99,7 +112,8 @@ StatusCode DaVinciSmartAssociator::initialize() {
   //And the P2MCPFromProtoP instance that will do the associating
   //of charged and neutral "stables" 
   m_weightedAssociation = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP",this);
-
+  // calo->MC tool
+  m_calo2MC = tool<ICalo2MCTool>("Calo2MCTool",this);
   return sc;
 }
 //=============================================================================

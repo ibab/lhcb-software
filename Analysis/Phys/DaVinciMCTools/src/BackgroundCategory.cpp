@@ -1,4 +1,4 @@
-// $Id: BackgroundCategory.cpp,v 1.58 2009-11-17 08:12:50 pkoppenb Exp $
+// $Id: BackgroundCategory.cpp,v 1.59 2009-11-27 07:42:26 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -58,6 +58,7 @@ BackgroundCategory::BackgroundCategory( const std::string& type,
   declareProperty("SemileptonicDecay", m_semileptonicDecay = 0);
   declareProperty("NumNeutrinos", m_numNeutrinos = 0);
   declareProperty("MCmatchQualityPIDoverrideLevel", m_override = 0.0); 
+  declareProperty("Calo2MCWeight", m_caloWeight=0.5); // equivalent of m_ovverride for neutral calorimetric objects
   declareProperty("ResonanceCut", m_rescut = 10.e-6);
   declareProperty("MCminWeight", m_minWeight = 0.);
 }
@@ -1234,7 +1235,19 @@ MCParticleVector BackgroundCategory::associate_particles_in_decay(ParticleVector
                                           << (*iP)->particleID().pid() 
                                           << endmsg;
 
-    if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
+    if( (*iP)->isBasicParticle() && m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
+      //if(  m_calo2MC->isPureNeutralCalo( *iP ) ){ // pure neutral calorimetric particle
+      if(NULL == m_calo2MC)
+        Exception("Something failed when making the calo->MC associators. Bye!").ignore();
+      // associating neutral is done here :
+      const LHCb::MCParticle* mcp = m_calo2MC->from(*iP)->findMCOrBest( (*iP)->particleID() , m_caloWeight );
+      verbose() << "Neutral Calo MC associated : PID = " << mcp->particleID().pid() 
+                << " | quality  : " << m_calo2MC->quality(mcp) << endmsg;
+      associated_mcparts.push_back( mcp );
+
+      // and should be removed below ...
+    }
+    else if ( isStable((*iP)->particleID().abspid()) || (*iP)->isBasicParticle() ) {
 
       //Look at the full range of associated particles
       const LHCb::MCParticle* mc_correctPID = NULL;
@@ -1489,6 +1502,8 @@ StatusCode BackgroundCategory::initialize(){
 
   m_particleDescendants = tool<IParticleDescendants>("ParticleDescendants",this);
   m_smartAssociator = tool<IParticle2MCWeightedAssociator>("P2MCPFromProtoP",this); 
+  // calo->MC tool
+  m_calo2MC = tool<ICalo2MCTool>("Calo2MCTool",this);
 
   if (msgLevel(MSG::VERBOSE)) m_printDecay = tool<IPrintDecay>("PrintDecayTreeTool",this);
 

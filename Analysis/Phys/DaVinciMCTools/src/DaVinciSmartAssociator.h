@@ -11,7 +11,7 @@
 #include "Kernel/IParticle2MCWeightedAssociator.h"
 #include "Kernel/MCAssociation.h"
 #include "Event/MCParticle.h"
-
+#include "CaloInterfaces/ICalo2MCTool.h"
 /** @class DaVinciSmartAssociator DaVinciSmartAssociator.h
  *  
  *  A ``smart'' associator for any kind of particle. Returns a vector of
@@ -59,6 +59,7 @@ private:
 
   IParticle2MCWeightedAssociator* m_weightedAssociation; //for stables
   IBackgroundCategory* m_bkg; //for composites
-
+  ICalo2MCTool* m_calo2MC; // for neutral calorimetric
+  double m_caloWeight;
 };
 #endif // DAVINCISMARTASSOCIATOR_H
