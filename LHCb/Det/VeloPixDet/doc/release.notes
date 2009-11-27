@@ -4,15 +4,16 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r2 2009-11-27 =======================
 ! 2009-11-27 - Victor Coco
  - remove uint32_t since it cause warning in win32
 
-
 ! 2009-11-26 - Victor Coco
- - bug correction of WhichChip function (edge effect supressed) + big change in the way the pixel positions are accessed, by using some static vector as in the VeloDet.
+ - bug correction of WhichChip function (edge effect supressed) + big change
+   in the way the pixel positions are accessed, by using some static vector as
+   in the VeloDet.
 
 !========================== VeloPixDet v1r1 2009-11-13 =======================
-
 ! 2009-11-06 - Victor Coco
  - debug channelToNeighbours (not initialised fraction..)
 
