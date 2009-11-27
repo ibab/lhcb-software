@@ -175,6 +175,8 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
 //=============================================================================
 StatusCode OTTrackMonitor::initialize()
 {
+  debug() << "------------ TrackMonitor::initialize() / start -------" << endmsg;
+
   StatusCode statusCode = GaudiHistoAlg::initialize(); // must be executed first
 
   m_pocatool = tool<ITrajPoca>("TrajPoca");
@@ -242,6 +244,8 @@ StatusCode OTTrackMonitor::initialize()
   histDeltaToF = book("deltaToF", "delta time of flight",
     -25, 25);
 
+  debug() << "------------ TrackMonitor::initialize() / end ---------" << endmsg;
+
   return statusCode;
 }
 
@@ -261,6 +265,8 @@ StatusCode OTTrackMonitor::finalize()
 //=========================================================================
 StatusCode OTTrackMonitor::execute()
 {
+  debug() << "------------ TrackMonitor::execute() / start ----------" << endmsg;
+
   ++m_numEvents;
 
   // may be we don't need it
@@ -317,25 +323,28 @@ StatusCode OTTrackMonitor::execute()
 
       LHCb::OTChannelID channel = measurement->channel();
 
-      int uniquelayer = uniqueLayer(channel);
-//      int uniquequarter = uniqueQuarter(channel);
-      int uniquemodule = uniqueModule(channel);
-
-      // Now, this gives access to the unbaised residual:
-      double residual = fitnode->unbiasedResidual();
-      // But we cannot obtain the unbiased 'radius', because the hit
-      // was used for the time-of-flight (at last on cosmics). This
-      // is what has been causing all the trouble. Therefore, first
-      // get the full unbiased state:
-      // double radius = meas->driftRadiusWithErrorFromY(ypos).val ;
       bool isOutlier = (node->type() == LHCb::Node::Outlier);
       LHCb::State unbiasedState = isOutlier ? fitnode->state() : fitnode->unbiasedState();
 
+      double residual = fitnode->unbiasedResidual();
+
       // project it:
       LHCb::FitNode unbiasedNode(*fitnode);
-      unbiasedNode.setState( unbiasedState );
-      unbiasedNode.setRefVector( unbiasedState.stateVector() );
-      m_projector->projectReference(unbiasedNode);
+      try
+      {
+        unbiasedNode.setState( unbiasedState );
+        unbiasedNode.setRefVector( unbiasedState.stateVector() );
+        if(m_projector->projectReference(unbiasedNode) != StatusCode::SUCCESS)
+        {
+          warning() << "Failed to project reference." << endmsg;
+          continue;
+        }
+      }
+      catch(...)
+      {
+        warning() << "Failed to create unbiased node or project reference." << endmsg;
+        continue;
+      }
 
       // and only now get the time-of-flight
       double drifttime = measurement->driftTimeFromY(unbiasedState.y());
@@ -352,6 +361,10 @@ StatusCode OTTrackMonitor::execute()
         residual *= -1.0;
         residualPull *= -1.0;
       }
+
+      int uniquelayer = uniqueLayer(channel);
+//      int uniquequarter = uniqueQuarter(channel);
+      int uniquemodule = uniqueModule(channel);
 
       fill(profileTimeResidualVsModule, uniquemodule, drifttimeResidual, 1.0);
       fill(profileResidualVsModule, uniquemodule, residual, 1.0);
@@ -428,11 +441,10 @@ StatusCode OTTrackMonitor::execute()
   BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
   {
     LHCb::OTChannelID modid = module->elementID();
-//    size_t numhits = m_decoder->decodeModule(modid).size();
-    LHCb::OTLiteTimeRange ottimes = m_decoder->decodeModule(modid);
-    size_t numhits = ottimes.size();
+    LHCb::OTLiteTimeRange liteTimes = m_decoder->decodeModule(modid);
+    size_t numhits = liteTimes.size();
     fill(histModuleHitOccupancy, uniqueModule(modid), numhits);
-    BOOST_FOREACH(const LHCb::OTLiteTime& liteTime, ottimes)
+    BOOST_FOREACH(const LHCb::OTLiteTime& liteTime, liteTimes)
     {
       fill(histOtisHitOccupancy, uniqueOtis(liteTime.channel()), 1.0);
     }
@@ -442,6 +454,8 @@ StatusCode OTTrackMonitor::execute()
   setNormalization(histModuleHitOccupancy);
   setNormalization(histModuleHotOccupancy);
   setNormalization(histModuleOutlierOccupancy);
+
+  debug() << "------------ TrackMonitor::execute() / end ------------" << endmsg;
 
   return StatusCode::SUCCESS;
 }
