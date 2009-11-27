@@ -1,8 +1,9 @@
-!  $Id: release.notes,v 1.87 2009-11-24 13:08:04 jucogan Exp $
+!  $Id: release.notes,v 1.88 2009-11-27 13:04:30 cattanem Exp $
 !Package L0Muon
 !Package manager: A.Tsaregorodtsev - Julien Cogan
 !---------------------------------------------------------------------------
 
+!========================= L0Muon v8r5p3 2009-11-24 ========================
 ! 2009-11-24 - Julien Cogan
  - Fix to decode bank v3
 

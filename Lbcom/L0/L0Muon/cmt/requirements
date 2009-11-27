@@ -1,6 +1,6 @@
 package L0Muon
 
-version v8r5p2
+version v8r5p3
 
 branches cmt src options doc
 
