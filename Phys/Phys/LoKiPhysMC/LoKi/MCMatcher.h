@@ -1,4 +1,4 @@
-// $Id: MCMatcher.h,v 1.3 2009-09-03 13:50:41 ibelyaev Exp $
+// $Id: MCMatcher.h,v 1.4 2009-11-27 13:52:41 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MCMATCHER_H 
 #define LOKI_MCMATCHER_H 1
@@ -26,6 +26,13 @@ namespace LoKi
   namespace PhysMCParticles 
   {
     // ========================================================================
+    enum ProtoPMatch {
+      All              ,  // Neutral , Charged + Upstream  
+      Charged          ,  //           Charged + Upstream 
+      ChargedLong      ,  //           Charged 
+      Neutral      
+    } ;
+    // ========================================================================
     /** @class MCMatcherBase LoKi/MCMatcher.h
      *  
      *  The special version of class LoKi::PhysMCParticles::MCTruth 
@@ -42,13 +49,6 @@ namespace LoKi
       typedef std::vector<std::string>  Locations ; // TES-locations of tables
       // ======================================================================
       typedef Decays::iNode                                             iNode ;
-      // ======================================================================
-      enum ProtoPMatch {
-        All              ,  // Neutral , Charged + Upstream  
-        Charged          ,  //           Charged + Upstream 
-        ChargedLong      ,  //           Charged 
-        Neutral      
-      } ;
       // ======================================================================
     public:
       // ======================================================================
@@ -153,8 +153,8 @@ namespace LoKi
        *  @param protoMatch the key for ProtoParticles match
        */
       MCSelMatch
-      ( const MCCuts&      cuts       , 
-        const ProtoPMatch& protoMatch ) ;
+      ( const MCCuts&      cuts             , 
+        const ProtoPMatch& protoMatch = All ) ;
       // ======================================================================
       /// MANDATORY: virtual destrcutor
       virtual ~MCSelMatch () ;
@@ -237,8 +237,8 @@ namespace LoKi
        *  @param protoMatch the key for ProtoParticles match
        */
       MCTreeMatch
-      ( const iTree&       decay      , 
-        const ProtoPMatch& protoMatch ) ;
+      ( const iTree&       decay            , 
+        const ProtoPMatch& protoMatch = All ) ;
       // ======================================================================
       /** constructor from decay descriptor and TES-locations of tables 
        *  @param decay the decay desriptor 
@@ -279,8 +279,8 @@ namespace LoKi
        *  @param protoMatch the key for ProtoParticles match
        */
       MCTreeMatch
-      ( const std::string& decay      , 
-        const ProtoPMatch& protoMatch ) ;
+      ( const std::string& decay            , 
+        const ProtoPMatch& protoMatch = All ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~MCTreeMatch() ;
@@ -351,8 +351,8 @@ namespace LoKi
         const std::string& location3 ) ;
       /// constructor from decay descriptor and TES-locations of tables 
       MCNodeMatch
-      ( const iNode&       node       , 
-        const ProtoPMatch& protoMatch ) ;
+      ( const iNode&       node             , 
+        const ProtoPMatch& protoMatch = All ) ;
       // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~MCNodeMatch() ;

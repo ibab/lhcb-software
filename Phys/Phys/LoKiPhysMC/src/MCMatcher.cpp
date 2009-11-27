@@ -1,4 +1,4 @@
-// $Id: MCMatcher.cpp,v 1.3 2009-09-03 13:50:41 ibelyaev Exp $
+// $Id: MCMatcher.cpp,v 1.4 2009-11-27 13:52:41 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -119,7 +119,7 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
  */
 // ============================================================================
 LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
-( const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch ) 
+( const LoKi::PhysMCParticles::ProtoPMatch& protoMatch ) 
   : LoKi::PhysMCParticles::MCTruth() 
   , m_locations ()
   , m_alg       ( 0 )
@@ -277,7 +277,7 @@ LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 // ======================================================================
 LoKi::PhysMCParticles::MCSelMatch::MCSelMatch
 ( const LoKi::PhysMCParticles::MCSelMatch::MCCuts&         selector , 
-  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  const LoKi::PhysMCParticles::ProtoPMatch& protoMatch )
   : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
   , m_cuts ( selector ) 
 {}
@@ -397,7 +397,7 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 // ============================================================================
 LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const LoKi::PhysMCParticles::MCTreeMatch::iTree&         decay      , 
-  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  const LoKi::PhysMCParticles::ProtoPMatch& protoMatch )
   : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
   , m_finder ( decay ) 
 {
@@ -447,7 +447,7 @@ LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 // ============================================================================
 LoKi::PhysMCParticles::MCTreeMatch::MCTreeMatch
 ( const std::string&                                       decay      , 
-  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  const LoKi::PhysMCParticles::ProtoPMatch& protoMatch )
   : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
   , m_finder ( s_INVALID ) 
 {
@@ -604,7 +604,7 @@ LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 // ============================================================================
 LoKi::PhysMCParticles::MCNodeMatch::MCNodeMatch
 ( const LoKi::PhysMCParticles::MCNodeMatch::iNode&       node      , 
-  const LoKi::PhysMCParticles::MCMatcherBase::ProtoPMatch& protoMatch )
+  const LoKi::PhysMCParticles::ProtoPMatch& protoMatch )
   : LoKi::PhysMCParticles::MCMatcherBase ( protoMatch )  
   , m_node ( node ) 
 {

@@ -1,9 +1,18 @@
-! $Id: release.notes,v 1.64 2009-10-16 14:11:06 cattanem Exp $ 
+! $Id: release.notes,v 1.65 2009-11-27 13:52:41 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Vanya Belyaev
+
+ - minor fix with the default arguments for MCMatcher functors 
+  ( required for properMC-match within DecayTreeTuple framework)
+ 
+ - cmt/requirement 
+
+     version increment to v8r6 
 
 !========================== LoKiPhysMC v8r5 2009-10-16 ========================
 ! 2009-09-03 - Vanya BELYAEV
