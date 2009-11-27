@@ -4,6 +4,7 @@
 ! Purpose     : Interface package to Geometry and Conditions DB
 !-----------------------------------------------------------------------------
 
+!========================== DDDB v1r25 2009-11-27 ============================
 ! 2009-11-27 - Illya Shapoval
  - Changed default tag for 2009 data:
    . head-20091120         for DDDB (same as before)
