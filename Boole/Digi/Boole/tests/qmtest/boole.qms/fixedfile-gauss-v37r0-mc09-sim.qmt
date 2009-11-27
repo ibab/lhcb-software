@@ -12,4 +12,5 @@
 from GaudiConf.QMTest.LHCbExclusions import preprocessor
 validateWithReference(preproc = preprocessor)
 </text></argument>
+  <argument name="unsupported_platforms"><set><text>slc4_ia32.*</text></set></argument>
 </extension>
