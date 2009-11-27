@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.68 2009-11-26 17:11:09 gligorov Exp $
+! $Id: release.notes,v 1.69 2009-11-27 00:01:54 aperezca Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Antonio Perez-Calero
+ - added histograms for muon+track lines monitoring in Hlt1MuonLines.py
 
 ! 2009-11-26 V. Gligorov
  - fixed bug in Hlt1HadronViaTLines which was caused by hardcoding a filter 
