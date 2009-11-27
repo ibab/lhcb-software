@@ -1,4 +1,4 @@
-// $Id: L0CaloCheckCalibCte.cpp,v 1.2 2009-11-25 15:38:50 robbep Exp $
+// $Id: L0CaloCheckCalibCte.cpp,v 1.3 2009-11-27 15:03:35 robbep Exp $
 // Include files 
 
 // local
@@ -95,13 +95,13 @@ StatusCode L0CaloCheckCalibCte::execute() {
     if ( l0adcFromAdc( (*itAdcMap).second , (*itAdcMap).first ) != 
          m_l0daq -> l0Adc( (*itAdcMap).first ) ) { 
       LHCb::CaloCellID id = (*itAdcMap).first ;
-      warning() << "Mismatch ADC / L0ADC " 
-                << (*itAdcMap).first 
-                << " " << m_l0daq -> l0Adc( (*itAdcMap).first )
-                << " " << (*itAdcMap).second 
-                << " " << l0adcFromAdc((*itAdcMap).second , (*itAdcMap).first )
-                << endreq ;
-      warning() << "Calib constant should be = " 
+      debug() << "Mismatch ADC / L0ADC " 
+              << (*itAdcMap).first 
+              << " " << m_l0daq -> l0Adc( (*itAdcMap).first )
+              << " " << (*itAdcMap).second 
+              << " " << l0adcFromAdc((*itAdcMap).second , (*itAdcMap).first )
+              << endreq ;
+      debug() << "Calib constant should be = " 
                 << m_calo -> cellParam( id ).l0Constant()
                 << " Row = " << m_calo -> cellParam( id ).cardRow()
                 << " Column = " << m_calo -> cellParam( id ).cardColumn()
