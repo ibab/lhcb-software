@@ -4,6 +4,8 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+!========================== GlobalReco v6r29 2009-11-27 ======================
+
 ! 2009-11-24 - Chris Jones
  - Add work around for older data where MuonPID::IsMuonLoose() or 
    MuonPID::InAcceptance() is missing (and thus false) but MuonPID::IsMuon() 
