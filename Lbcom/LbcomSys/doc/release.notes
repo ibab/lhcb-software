@@ -6,6 +6,59 @@
 !             : project contain components used by all applications except Gauss
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v7r10>2009-11-27 LbcomSys v7r10</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r4
+
+- Packages modified: CaloTools v5r14, HltDAQ v1r2, L0Calo v10r2, L0Muon v8r5p3,
+    OTMonitor v3r1, STMonitors v2r2, STTools v3r14, VeloDAQ v4r12
+
+- In CaloTools v5r14
+  . Calo2MCTool : 
+    o new methods isCalo(particle), isPureNeutralCalo(particle) 
+                  findMCOrBest(string/ParticleID,threshold)
+    o complete the code (still not fully completed)
+
+- In HltDAQ v1r2
+  . HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports 
+    (bank version=1, previous was=0). Old Decoder will not be compatibile with
+    the new content.
+  . HltSelReportsDecoder: decode Particle2Vertex info in HltObjectSummary of
+    selection. Old Decoder will give warnings about new content (if present),
+    but will work OK (bank format not changed).
+
+- In L0Calo v10r2
+  . L0CaloCompare.cpp: fix name of histograms
+  . Add new algorithm: L0CaloCheckCalibCte.cpp to check L0 calibration constants
+
+- In L0Muon v8r5p3
+  . Fix to decode bank v3
+
+- In OTMonitor v3r1
+  . Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
+    OTTimeMonitor (was crashing anyway...) 
+  . Remove unused variables in OTTimeMonitor following previous changes
+  . Remove obsolete file OTMonitor_dll.cpp
+
+- In STMonitors v2r2
+  . Add histogram in to look at the fraction of beetle ports which sent error
+    banks to STErrorMonitor algorithm
+  . Add class STNoiseCalculation which uses the noise calculation tool to
+    calculate noise!
+
+- In STTools v3r14
+  . Add tool to select ladders 1 and 7 in IT for alignment
+  . Add implementations of ISTNoiseCalculationTool:
+    o re-implementation of Nicola Chiapolini's methods from STNZSMonitors
+    o STNoiseCalculationToolBase: base class to provide common data accessors.
+    o STNoiseCalculcationTool: calculates noise from using ADCs from input 
+      container.
+    o STCMSNoiseCalculationTool: calculates noise after CMS using different
+      techniques for CMS.
+
+- In VeloDAQ v4r12
+  . Fixed memory leak in SmartVeloErrorDecoder
+  . Lowered message severity in PU decoding
+
 </PRE><H1><A NAME=v7r9>2009-11-23 LbcomSys v7r9</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r3
 
