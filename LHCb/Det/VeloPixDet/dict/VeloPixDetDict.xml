@@ -5,6 +5,5 @@
   <class name="DeVeloPixXType"   />
   <class name="DeVeloPixSquareType"   />
   <class name="std::vector<DeVeloPixSensor*>"  />
-  <class name="std::vector<DeVeloPixSquareType*>"  />
   <variable pattern="DeVeloPixLocation::*" />
 </lcgdict>

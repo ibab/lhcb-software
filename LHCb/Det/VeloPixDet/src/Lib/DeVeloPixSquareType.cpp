@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.9 2009-11-26 17:04:44 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.10 2009-11-27 08:54:10 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -208,7 +208,7 @@ StatusCode DeVeloPixSquareType::initialize()
   m_numberOfPixelsPerChipBits = (refid.pixel_lp()+1)*(refid.pixel_hp()+1);
   m_numberOfChipsBits = refid.chip()+1;
   uint32_t zeroMask = 0x00000000 ;
-  m_ChipMask = (refid.chip()  <<  m_PixelHPBit+m_PixelLPBit) | zeroMask;
+  m_ChipMask = (refid.chip()  <<  (m_PixelHPBit+m_PixelLPBit)) | zeroMask;
   m_PixelLPMask = refid.pixel_lp() | zeroMask ;
   m_PixelMask = (refid.pixel_hp()<<m_PixelLPBit  | zeroMask)| m_PixelLPMask;
   

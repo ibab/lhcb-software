@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.6 2009-11-26 17:04:44 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.7 2009-11-27 08:54:09 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -241,16 +241,17 @@ private:
   // associated sensor on the other side of the velo
   const DeVeloPixSquareType* m_otherSideSensor;
 
-  uint32_t m_ChipBit;
-  uint32_t m_PixelLPBit;
-  uint32_t m_PixelHPBit;
-  uint32_t m_PixelBit;
-  uint32_t m_numberOfPixelsPerChipBits;
-  uint32_t m_numberOfChipsBits;
   
-  uint32_t m_ChipMask ;
-  uint32_t m_PixelLPMask;
-  uint32_t m_PixelMask;
+  unsigned int m_ChipBit;
+  unsigned int m_PixelLPBit;
+  unsigned int m_PixelHPBit;
+  unsigned int m_PixelBit;
+  unsigned int m_numberOfPixelsPerChipBits;
+  unsigned int m_numberOfChipsBits;
+  
+  unsigned int m_ChipMask ;
+  unsigned int m_PixelLPMask;
+  unsigned int m_PixelMask;
   
 
   // These are references to local statics accessed via static functions
