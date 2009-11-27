@@ -4,6 +4,7 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+!======================= STMonitors v2r2 2009-11-27 ==========================
 ! 2009-11-25 - Mark Tobin
  - Add histogram in to look at the fraction of beetle ports which sent error
  banks to STErrorMonitor algorithm
