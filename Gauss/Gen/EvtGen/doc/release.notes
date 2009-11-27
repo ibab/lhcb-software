@@ -4,6 +4,9 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+! 2009-11-27 - Mark Whitehead
+ - Fix to EvtIncoherentMixing.cpp for slc5: <stdlib.h> included.
+
 ! 2009-11-24 - Mark Whitehead
  - Reintroduce file EvtIncoherentMixing.cpp to fix CPV problems.
  - EvtSSDCP.cpp: Swap EvtCPUtils::OtherB for EvtIncoherentMixing::OtherB. 

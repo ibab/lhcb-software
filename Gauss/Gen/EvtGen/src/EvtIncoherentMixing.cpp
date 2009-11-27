@@ -1,10 +1,10 @@
-// $Id: EvtIncoherentMixing.cpp,v 1.12 2009-11-25 13:41:59 mwhitehe Exp $
+// $Id: EvtIncoherentMixing.cpp,v 1.13 2009-11-27 09:09:41 mwhitehe Exp $
 // Include files 
 
 
 // local
 #include "EvtGenBase/EvtIncoherentMixing.hh"
-
+#include <stdlib.h>
 #include "EvtGenBase/EvtPDL.hh"
 #include "EvtGenBase/EvtId.hh"
 #include "EvtGenBase/EvtRandom.hh"
