@@ -160,7 +160,10 @@ void OTTrackMonitor::bookHists(int index, const std::string& prefix)
   hists[index][HIST_GOOD_DRIFTTIME] = book(prefix + "drifttimegood", "drifttime (good tracks)", -25, 75);
   hists[index][HIST_GOOD_DRIFTRADIUS] = book(prefix + "driftradiusgood", "driftradius (good tracks)", 0, 5);
   hists[index][HIST_GOOD_TRACK_DISTANCE] = book(prefix + "trkdistgood", "unbiased distance (good tracks)", -5, 5);
-  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix + "drifttimeresidualgood", "drifttime residual (rms unbiased, good tracks)", -20, 20);
+  hists[index][HIST_GOOD_DRIFTTIME_RESIDUAL] = book(prefix +
+                                                    "drifttimeresidualgood",
+                                                    "drifttime residual (rms unbiased, good tracks)",
+                                                    -20, 20);
   hists[index][HIST_GOOD_RESIDUAL] = book(prefix + "residualgood", "residual (rms unbiased, good tracks)", -2, 2);
   hists[index][HIST_GOOD_RESIDUAL_PULL] = book(prefix + "residualpullgood", "residual pull (good tracks)", -5, 5);
 
@@ -219,7 +222,8 @@ StatusCode OTTrackMonitor::initialize()
   profileResidualPullVsDistance = bookProfile1D("respullvsdistance", "residual pull versus distance",
     0, cellRadius, numDistBins);
 
-  profileTimeResidualVsDistanceGood = bookProfile1D("timeresvsdistancegood", "unbiased drifttime residual versus distance (good tracks)",
+  profileTimeResidualVsDistanceGood = bookProfile1D("timeresvsdistancegood", 
+                                                    "unbiased drifttime residual versus distance (good tracks)",
     0, cellRadius, numDistBins);
   profileResidualVsDistanceGood = bookProfile1D("resvsdistancegood", "unbiased residual versus distance (good tracks)",
     0, cellRadius, numDistBins);
@@ -277,12 +281,15 @@ StatusCode OTTrackMonitor::execute()
   // iterate over all tracks
   if(tracks != 0) { BOOST_FOREACH(const LHCb::Track* track, *tracks)
   {
+    if (!track) continue;
+    
     int timeResidualSumN = 0;
     double timeResidualSum = 0;
 
     // process only fitted tracks with nDoF >= 2
     if(track->fitStatus() != LHCb::Track::Fitted || track->nDoF() < 2) continue;
-
+    if(!m_pitchtool) continue;
+    
     std::vector< std::pair<LHCb::OTChannelID, double> > pitchRes = m_pitchtool->calcPitchResiduals(track);
     for(unsigned int i = 0; i < pitchRes.size(); ++i)
     {
@@ -309,8 +316,13 @@ StatusCode OTTrackMonitor::execute()
     // iterate over all track nodes
     BOOST_FOREACH(const LHCb::Node* node, track->nodes())
     {
+      if (!node) continue;
+      
       // process only OT nodes which are HitOnTrack or Outlier and with OT measurement
-      if((node->type() != LHCb::Node::HitOnTrack && node->type() && node->type() != LHCb::Node::Outlier) || node->measurement().type() != LHCb::Measurement::OT) continue;
+      //sanity check of measurement, check detectorElement is OK
+      if((node->type() != LHCb::Node::HitOnTrack && node->type() 
+          && node->type() != LHCb::Node::Outlier) 
+         || !node->measurement().detectorElement() || node->measurement().type() != LHCb::Measurement::OT) continue;
 
       // get fit node
       const LHCb::FitNode* fitnode = dynamic_cast<const LHCb::FitNode*>(node);
@@ -345,11 +357,14 @@ StatusCode OTTrackMonitor::execute()
         warning() << "Failed to create unbiased node or project reference." << endmsg;
         continue;
       }
-
+      
       // and only now get the time-of-flight
       double drifttime = measurement->driftTimeFromY(unbiasedState.y());
       double radius = measurement->driftRadiusWithErrorFromY(unbiasedState.y()).val;
-      double trackDistance = unbiasedNode.pocaVector().Dot( unbiasedState.position() - fitnode->measurement().trajectory().beginPoint() );
+      double trackDistance = unbiasedNode.pocaVector().Dot( 
+                                                           unbiasedState.position() - 
+                                                           fitnode->measurement().trajectory().beginPoint() );
+      
       double trackTime = measurement->module().driftTimeWithError(std::abs(trackDistance)).val;
       double drifttimeResidual = drifttime - trackTime;
       double residualScaleFactor = std::sqrt(fitnode->errMeasure() / fitnode->errUnbiasedResidual());
@@ -440,6 +455,8 @@ StatusCode OTTrackMonitor::execute()
 
   BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
   {
+    if(!module) continue;
+    
     LHCb::OTChannelID modid = module->elementID();
     LHCb::OTLiteTimeRange liteTimes = m_decoder->decodeModule(modid);
     size_t numhits = liteTimes.size();
@@ -462,6 +479,7 @@ StatusCode OTTrackMonitor::execute()
 
 void OTTrackMonitor::setNormalization(AIDA::IHistogram1D* hist) 
 {
+  if (!hist) return;
   TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(hist);
   if(h1) h1->SetEntries(m_numEvents);
 }

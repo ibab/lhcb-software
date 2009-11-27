@@ -4,6 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-11-27 - Rob Lambert
+ - OTTrackMonitor, bug 59675
+	 Try to protect against unprotected pointer dereferences,
+	 may help in the future.
+
 !============================ TrackMonitors v1r16 2009-11-22 ==================
 ! 2009-11-22 - Wouter Hulsbergen
  - Include OTTimeMonitor in OT sequence
