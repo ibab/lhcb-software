@@ -1,10 +1,27 @@
-! $Id: release.notes,v 1.36 2009-11-25 11:54:38 ibelyaev Exp $
+! $Id: release.notes,v 1.37 2009-11-27 14:22:08 ibelyaev Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Ex/BenderExample
 ! Responsible : Vanya  BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : collection of examples to run Bender - 
 !             :                    -Python based physic sanalysis 
 ! -----------------------------------------------------------------------------
+
+! ====================== Ex/BenderExample v12r5p1 2009-11-27 ==================
+
+! 2009-11-27 - Vanya Belyaev
+
+ - add the example to search for pi0-> gamma gamma for real data 
+   
+  	BenderExample/RealPi0.py
+
+  1.  Access to real data
+  2.  Access to RAW files 
+  3. "On-flight" Calorimeter recontruction 
+  4.  Regular Bender algorithm for pi0->gamma gamma 
+
+ - cmt/requirmeents 
+
+    version increment to v12r5p1 
 
 ! ====================== Ex/BenderExample v12r5 2009-11-25 ====================
 

@@ -1,5 +1,5 @@
 <PRE>
-! $Id: release.notes,v 1.27 2009-11-26 16:56:55 ibelyaev Exp $ 
+! $Id: release.notes,v 1.28 2009-11-27 14:23:51 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
@@ -8,11 +8,13 @@
 </PRE>
 
 <H1>
-<A NAME=v12r5>2009-11-26 Bender v12r5p1 based on the DaVinci v24r5p1 </A>
+<A NAME=v12r5p1>2009-11-27 Bender v12r5p1 based on the DaVinci v24r5p1 </A>
 </H1>	
 
 <PRE>		
-The decorator for iEventSelector to open RAW/MDF an dCASTO files is added into Bender.Fixes module
+The decorator for iEventSelector to open RAW/MDF an dCASTO files is added into Bender.Fixes module.
+
+Also new example is added into Ex/BenderExample module 
 </PRE>
 
 <H1>

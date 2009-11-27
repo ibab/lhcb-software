@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.109 2009-11-26 16:56:55 ibelyaev Exp $ 
+# $Id: requirements,v 1.110 2009-11-27 14:23:51 ibelyaev Exp $ 
 # =============================================================================
 # The management of the content of BENDER project:
 #                 LHCb Physics Analysis with Python  
@@ -11,7 +11,7 @@ author        Vanya BELYAEV
 use           Bender         v12r5p1 Phys 
   
 # =========== examples of usage of Bender "in practice" =======================
-use           BenderExample  v12r5   Ex
+use           BenderExample  v12r5p1 Ex
 
 # =========== Bender tutorial =================================================
 use           BenderTutor    v12r4   Tutorial
