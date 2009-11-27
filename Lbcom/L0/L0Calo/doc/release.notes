@@ -1,12 +1,12 @@
-! $Id: release.notes,v 1.145 2009-11-27 15:23:45 robbep Exp $
+! $Id: release.notes,v 1.146 2009-11-27 17:14:20 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v10r2 2009-11-27 ========================
 ! 2009-11-27 - Patrick Robbe
  - L0CaloCheckCalibCte.cpp: reduce output level of error messages
 
-!========================= L0Calo v10r2 2009-11-27 ========================
 ! 2009-11-25 - Patrick Robbe
  - L0CaloCheckCalibCte.cpp: add more clear output messages
 
