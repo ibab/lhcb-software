@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.83 2009-11-26 18:31:42 pkoppenb Exp $
+$Id: release.notes,v 1.84 2009-11-27 10:06:15 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,10 @@ $Id: release.notes,v 1.83 2009-11-26 18:31:42 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-27 - Patrick Koppenburg
+ - Restore Hlt2SharedTopo2Body_PionsORKaonslt2SharedTopo2Body_PionsORKaons, that is not
+   the main cluprit for the reconstruction. But it still needs to be looked at.
 
 ! 2009-11-26 - Patrick Koppenburg
  - Comment out Hlt2SharedTopo2Body_PionsORKaonslt2SharedTopo2Body_PionsORKaons as it beraks the reconstruction.
