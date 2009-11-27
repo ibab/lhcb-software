@@ -1,11 +1,15 @@
-! $Id: release.notes,v 1.18 2009-11-19 13:20:45 jpalac Exp $ 
+! $Id: release.notes,v 1.19 2009-11-27 10:33:03 apuignav Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.18 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.19 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter  calibration
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Albert Puig
+
+- modified Configuration.py to adapt tp PhysDesktop behavior related to PV
 
 !========================== KaliCalo v3r0p1 2009-11-19 ========================
 

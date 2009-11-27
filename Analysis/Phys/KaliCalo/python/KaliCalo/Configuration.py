@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: Configuration.py,v 1.6 2009-11-01 11:05:36 ibelyaev Exp $
+# $Id: Configuration.py,v 1.7 2009-11-27 10:33:02 apuignav Exp $
 # =============================================================================
 # @file  KaliCalo/Configuration.py
 # The basic configuration for Calorimeetr Calibrations 
@@ -36,7 +36,7 @@ The usage is fairly trivial:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 # the only one  "vizible" symbol 
 __all__  = (
@@ -257,7 +257,8 @@ class  KaliPi0Conf(LHCbConfigurableUser):
         photon.UnconvertedPhotons = True 
         photon.PtCut              = 250 
         maker.addTool ( PhysDesktop )
-        maker.PhysDesktop.InputPrimaryVertices = "None" ## NB: it saves a lot of CPU time 
+        maker.InputPrimaryVertices = 'None' ## NB: it saves a lot of CPU time 
+        #maker.PhysDesktop.InputPrimaryVertices = 'None' ## NB: it saves a lot of CPU time 
         _log.warning("KaliPi0: PID-info is disabled for PhotonMaker") 
         _log.warning("KaliPi0: Primary Vertices are disabled for StdLooseAllPhotons") 
         
@@ -285,7 +286,7 @@ class  KaliPi0Conf(LHCbConfigurableUser):
             
         kali.addTool ( PhysDesktop )
         desktop = kali.PhysDesktop
-        desktop.InputPrimaryVertices = "None"  ## NB: it saves a lot of CPU time!
+        #desktop.InputPrimaryVertices = 'None'  ## NB: it saves a lot of CPU time!
         _log.warning("KaliPi0: Primary Vertices are disabled for Kali") 
         
         return kali 
