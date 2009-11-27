@@ -1,8 +1,13 @@
-! $Id: release.notes,v 1.277 2009-11-27 07:42:26 odescham Exp $
+! $Id: release.notes,v 1.278 2009-11-27 18:03:42 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-11-27 - V. Gligorov
+ - BackgroundCategoryViaRelations : new implemenation of IBackgroundCategory
+   which reads a relations table of Particles and Categories and returns the
+   Category related to an input Particle. 
 
 ! 2009-11-21 - Olivier Deschamps
  - DaVinciSmartAssociator & BackgroundCategory : implement a dedicated tool for neutral calo particle association
