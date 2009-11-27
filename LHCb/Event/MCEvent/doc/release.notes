@@ -1,10 +1,10 @@
-! $Id: release.notes,v 1.123 2009-11-27 11:24:08 marcin Exp $
+! $Id: release.notes,v 1.124 2009-11-27 12:33:29 cattanem Exp $
 ! Package     : Event/MCEvent
 ! Responsible : Marco Cattaneo, Gloria Corti
 ! Purpose     : LHCb Event model. MC truth classes (Gauss and Boole output) 
 !-----------------------------------------------------------------------------
 
-!======================== MCEvent v2r15p2 2009-11-13 =========================
+!======================== MCEvent v2r16 2009-11-27 ===========================
 ! 2009-11-27 - Marcin Kucharczyk
  - Add MCVeloPixDeposit.xml and MCVeloPixDigit.xml oblects used by pixel Velo 
  - algorithms
