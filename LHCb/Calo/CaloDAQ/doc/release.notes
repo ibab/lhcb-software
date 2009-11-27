@@ -4,6 +4,7 @@
 ! Purpose     : Convert Calo Digit and Trigger information to RawEvent banks.
 !-----------------------------------------------------------------------------
 
+!========================== CaloDAQ v4r16 2009-11-27 =========================
 ! 2009-11-25 
  - CaloZSupAlg/CaloDigitsFromRaw : fix location extension settings
 
