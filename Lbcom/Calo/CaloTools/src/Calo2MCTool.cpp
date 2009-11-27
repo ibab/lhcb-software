@@ -1,4 +1,4 @@
-// $Id: Calo2MCTool.cpp,v 1.6 2009-11-23 14:11:55 odescham Exp $
+// $Id: Calo2MCTool.cpp,v 1.7 2009-11-27 07:46:16 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -395,7 +395,7 @@ StatusCode Calo2MCTool::process(){
     return StatusCode::SUCCESS;
   }
   mcDigest();
-  verbose() << descriptor() << endmsg;
+  verbose() << " Processing Calo2MCTool " << std::endl << descriptor() << endmsg;
   return StatusCode::SUCCESS;
 }
 
