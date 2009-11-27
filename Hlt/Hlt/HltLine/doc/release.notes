@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.48 2009-11-26 22:39:47 aperezca Exp $
+! $Id: release.notes,v 1.49 2009-11-27 12:44:16 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Patrick Koppenburg
+ - Remove PV = True/False argument of HltLine. The PV should be loaded 
+   explicitly when needed.
 
 ! 2009-11-26 - Antonio Perez-Calero
  - added histogram (profile) for the monitoring of number of candidates passing each 
