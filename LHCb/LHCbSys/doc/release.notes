@@ -5,6 +5,88 @@
 ! Purpose     : LHCb base classes and event model
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v28r4>2009-11-30 LHCbSys v28r4</A></H1><PRE>
+This version uses Gaudi v21r6 and LCG_57a
+
+- Packages modified: CaloDAQ v4r16, CaloInterfaces v7r17, CaloUtils v8r9,
+    DDDB v1r25, DetDesc v18r17, DetDescChecks v5r0, DetDescSvc v2r4,
+    Magnet v5r5, VeloPixDet v1r2, DigiEvent v2r14, EventPacker v2r1, 
+    MCEvent v2r16, GaudiConf v13r1, L0MuonKernel v8r9, LoKiCore v9r7,
+    TrackKernel v1r2
+
+- In CaloDAQ v4r16
+  . CaloZSupAlg/CaloDigitsFromRaw : fix location extension settings
+
+- In CaloInterfaces v7r17
+  . Complete ICalo2MCTool.h interface
+
+- In CaloUtils v8r9
+  . CaloParticle : 
+    o new method isPureNeutralCalo(particle) (all particle descendant is a
+      neutral calo object e.g. pi0->gg (J/Psi->ee is not)
+    o minor cleaning
+
+- In DDDB v1r25 (needs SQLDDDB v5r16)
+  . Changed default tag for 2009 data: head-20091127 for LHCBCOND
+
+- In DetDesc v18r17
+  . DetDesc/Compare.h: substitute gsl_cmp ("Knuth's-compare") by "Lomont-compare"
+  . Remove dependency on GSL 
+
+- In DetDescChecks v5r0
+  . rename algorithms, put minor fixes 
+  . provide python-scripts to run checks 
+  . add qmtests for the algorithms 
+  . remove opts-files & directory 
+  . Remove obsolete files DetDescChecks_dll.cpp and DirHbookName.h
+
+- In DetDescSvc v2r4
+  . Remove dependency on GSL 
+  . Remove obsolete file DetDescSvc_dll.cpp
+
+- In Magnet v5r5
+  . Bug fix: propagate scale factor property to MagneticFieldGrid
+
+- In VeloPixDet v1r2
+  . Bug correction of WhichChip function (edge effect supressed) + big change
+    in the way the pixel positions are accessed, by using some static vector as
+    in the VeloDet.
+
+- In DigiEvent v2r14
+  . Add VeloPixDigit.xml, VeloPixCluster.xml and VeloPixLiteCluster.xml objects
+
+- In EventPacker v2r1
+  . PackMCParticle and PackMCVertex now return if output container exists,
+    for consistency with other packers
+
+- In MCEvent v2r16
+  . Add MCVeloPixDeposit.xml and MCVeloPixDigit.xml objects
+
+- In GaudiConf v13r1
+  . In Tae_ondemand.py, fix an obsolete include
+  . In DigiConf.py:
+    o Add 'PackSequencer' slot, defines sequencer where packing algorithms run
+    o Always run PackMCParticle and PackMCVertex in this sequence (no longer on
+      demand, they anyway exit if packed containers already exist)
+    o Kill MC/Rich node if writing packed MCRichDigits
+  . In DstConf.py: Pass the PackSequencer to DigiConf
+
+- In L0MuonKernel v8r9
+  . Modification of the error field format in the PU L0Buffer specification.
+    Update ProcDataErrors.cpp and ProcDataCnv.cpp accordingly 
+
+- In LoKiCore v9r7
+  . src/FilterAlg.cpp: fix bug for decoding of "Code" and "Preambulo" properties 
+
+- In TrackKernel v1r2
+  . Added method to get (biased) chi2 contribution of single track in 
+   TrackStateVertex
+
+</PRE><H1><A NAME=v28r3>2009-11-23 LHCbSys v28r3</A></H1><PRE>
+This version uses Gaudi v21r6 and LCG_57a
+
+- Packages modified: 
+
 </PRE><H1><A NAME=v28r3>2009-11-23 LHCbSys v28r3</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
