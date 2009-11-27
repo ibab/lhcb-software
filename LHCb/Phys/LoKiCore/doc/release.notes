@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.163 2009-11-25 16:39:39 ibelyaev Exp $ 
+! $Id: release.notes,v 1.164 2009-11-27 12:36:54 cattanem Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiCore
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -15,16 +15,13 @@
 ! 
 ! -----------------------------------------------------------------------------
 
+! =========================== LoKiCore v9r7 2009-11-27 ========================
 ! 2009-11-25 - Vanya Belyaev
-
  - src/FilterAlg.cpp
-
     fix a bug  for decoding of "Code" and "Preambulo" properties 
 
  - cmt/requirements
-
     version increment to v9r7 
-
 
 ! =========================== LoKiCore v9r6 2009-11-22 ========================
 ! 2009-11-21 - Vanya Belyaev
