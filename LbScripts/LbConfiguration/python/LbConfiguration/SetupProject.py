@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.21 2009-11-27 18:18:18 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.22 2009-11-27 18:48:14 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,7 +11,7 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.21 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.22 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
@@ -475,32 +475,17 @@ else:
     _prepare_cmt_cmd = lambda cmd, args: \
                         " ".join(["cmt", cmd] + map(lambda s: '"%s"' % s, args))
 
-class CMT(object):
-	## Constructor    
-    def __init__(self, environment = None):
-        ## Dictionary to use for the local temporary environment
-        self.environment = environment
-        ## Working directory, If None, stay where we are.
-        self.cwd = None
-    def _run_cmt(self, command, args):
-        if type(args) is str:
-            args = [args]
-        cmd = _prepare_cmt_cmd(command, args)
-        env = TemporaryEnvironment()
-        if self.environment: # override (temporarily) the environment before calling cmt
-            _sync_dicts(self.environment, env)
-        cwd = self.cwd or os.getcwd()
-        return Popen(cmd, shell = True,
-                     env = self.environment, cwd = cwd,
-                     stdout = PIPE, stderr = STDOUT).communicate()[0]
-    def __getattr__(self, attr):
-        return lambda args=[]: self._run_cmt(attr, args)
-    def show_macro(self, k):
-        r = self.show(["macro", k])
-        if r.find("CMT> Error: symbol not found") >= 0:
-            return None
-        else:
-            return self.show(["macro_value", k]).strip()
+def cmt(command, args = [], environment = None, cwd = None):
+    if type(args) is str:
+        args = [args]
+    cmd = _prepare_cmt_cmd(command, args)
+    if not cwd:
+        cwd = os.getcwd()
+    if not environment:
+        environment = os.environ
+    return Popen(cmd, shell = True,
+                 env = environment, cwd = cwd,
+                 stdout = PIPE, stderr = STDOUT).communicate()[0]
 
 class GetNightlyCMTPROJECTPATH(ContentHandler):
     """SAX content handler to extract the CMTPROJECTPATH from lcg nightly build
@@ -776,10 +761,6 @@ class SetupProject:
         #  It is initialized as a copy of the current environment.
         self.environment = dict(os.environ)
         
-        # We pass the (reference to) the dictionary for the environment to
-        # let the object use it when calling cmt.
-        self.cmt = CMT(self.environment)
-
         self.opts = None
         self.args = None
 
@@ -833,12 +814,16 @@ class SetupProject:
     def _debug(self, msg, *args, **kwargs):
         apply(self._logger.debug, [msg] + list(args), kwargs)
 
+    ## Helper function to simplify the calls to CMT. 
+    def cmt(self, cmd, args = [], cwd = None):
+        return cmt(cmd, args, environment = self.environment, cwd = cwd)
+
     def check_environment(self):
         """
         Check that the current environment is usable.
         """
         self._debug("----- check_environment() -----")
-        output = self.cmt.version()
+        output = self.cmt("version")
         if output.find('command not found') > 0 or output.find('not recognized') > 0 :
             self._error("I cannot find cmt (it is not in your PATH)")
             return False
@@ -873,9 +858,9 @@ class SetupProject:
                     self.environment['CMTPATH'] = ep_pi.project_dir
             # get all the variables from <Project>Env
             localEnv = dict(self.environment)
-            self.cmt.cwd = self.project_info._projectenv_cmt_dir
-            ShellParser[self.shell](self.cmt.setup("-" + self.shell), localEnv)
-            self.cmt.cwd = None
+            ShellParser[self.shell](self.cmt("setup", "-" + self.shell,
+                                             self.project_info._projectenv_cmt_dir),
+                                    localEnv)
             # get the CMTPATH from <Project>Env without variable expansion
             cmtpath = os.popen("cmt show set CMTPATH").readlines()[-1].strip()
             if cmtpath.startswith("CMTPATH="): # remove head of the line
@@ -1329,22 +1314,19 @@ class SetupProject:
         if self.context_path:
             self.environment['CMTUSERCONTEXT'] = self.context_path
 
-        self.cmt.cwd = root_dir
-
         # check CMT
-        out = self.cmt.version()
+        out = self.cmt("version", cwd = root_dir)
         if "command not found" in out:
             raise SetupProjectError('cmt is not in your PATH')
         else:
             self._debug("----- using CMT %s -----" % out.strip())
 
         # check if the project works
-        out = self.cmt.check("configuration")
+        out = self.cmt("check", "configuration", cwd = root_dir)
         if out and not self.ignore_missing: # non empty output means error
             raise SetupProjectError(out)
 
-        script = self.cmt.setup("-" + self.shell)
-        self.cmt.cwd = None
+        script = self.cmt("setup", "-" + self.shell, cwd = root_dir)
 
         #parse the output
         new_env = dict(self.environment)
@@ -1638,9 +1620,10 @@ class SetupProject:
                     user_proj_name = "%s_%s" % (self.project_info.name, self.project_info.version)
                     user_proj_dir = os.path.join(self.user_area, user_proj_name)
                     if not os.path.exists(user_proj_dir):
-                        self.cmt.cwd = self.user_area
-                        self.cmt.create_project([user_proj_name,"-use=%s" % self.project_info.realName.replace(os.path.sep,":")])
-                        self.cmt.cwd = None
+                        self.cmt("create_project",
+                                 [user_proj_name,
+                                  "-use=%s" % self.project_info.realName.replace(os.path.sep,":")],
+                                 cwd = self.user_area)
                         if os.path.isdir(user_proj_dir):
                             messages.append('Created user project in %s' % user_proj_dir)
                             # Add the structuring style to the local project
