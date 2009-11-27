@@ -1505,8 +1505,11 @@ def genSetupScript(pname, pversion, cmtconfig, scriptfile):
     log.debug("Using genProjectSetup from %s" % genprojsetup)
     if os.path.exists(genprojsetup) :
         from LbConfiguration.Tools import genProjectSetup
+        extra_args = []
+        if debug_flag :
+            extra_args.append("--debug")
         genProjectSetup(scriptfile, pname, pversion, cmtconfig, 
-                        usedshell)
+                        usedshell, extra_args)
     else :
         log.error("%s doesn't exist" % genprojsetup)
 
