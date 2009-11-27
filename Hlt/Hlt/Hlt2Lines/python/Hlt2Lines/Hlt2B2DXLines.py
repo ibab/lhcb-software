@@ -51,12 +51,14 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         from Configurables import LoKi__VoidFilter as VoidFilter
         from Configurables import LoKi__Hybrid__CoreFactory as CoreFactory
         modules =  CoreFactory('CoreFactory').Modules
+        from HltLine.HltReco import HltRecoSequence
         for i in [ 'LoKiTrigger.decorators' ] :
             if i not in modules : modules.append(i)
             
-            Hlt2KillTooManyDXIP = VoidFilter('Hlt2KillTooManyDXIP'
+            Hlt2KillTooManyDXIPFilter = VoidFilter('Hlt2KillTooManyDXIP'
                                              , Code = "TrSOURCE('Hlt/Track/Forward') >> (TrSIZE < %(ComRobGEC)s )" % self.getProps()
                                              )
+            Hlt2KillTooManyDXIP = bindMembers( None, [HltRecoSequence, Hlt2KillTooManyDXIPFilter])
             
         ###################################################################
         # Construct a combined sequence for the input particles to the robust
