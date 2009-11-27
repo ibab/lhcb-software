@@ -1,3 +1,11 @@
+2009-11-27  Marco Clemencic  <Marco.Clemencic@cern.ch>
+
+	* python/LbConfiguration/SetupProject.py:
+	- use subprocess.Popen to call CMT instead of popen4
+	- avoid changing directory (os.chdir)
+	- improved TempDir (should be moved to LbUtils.Temporary)
+	- add structuring style and and build strategy to the local projects when created
+
 2009-11-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
 
 	* python/LbConfiguration/Tools.py: 

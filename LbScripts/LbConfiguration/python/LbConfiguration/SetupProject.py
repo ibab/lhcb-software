@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # pylint: disable-msg=E1103,W0141
-_cvs_id = "$Id: SetupProject.py,v 1.20 2009-11-25 13:33:19 marcocle Exp $"
+_cvs_id = "$Id: SetupProject.py,v 1.21 2009-11-27 18:18:18 marcocle Exp $"
 
 import os, sys, re, time
 from xml.sax import parse, ContentHandler
@@ -11,19 +11,19 @@ from tempfile import mkdtemp, mkstemp
 
 from LbConfiguration import createProjectMakefile
 from LbUtils.CVS import CVS2Version
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.20 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.21 $")
 
 # subprocess is available since Python 2.4, but LbUtils guarantees that we can
 # import it also in Python 2.3
-from subprocess import Popen, PIPE
+from subprocess import Popen, PIPE, STDOUT
 
 import logging
 # Import all levels constants for consistency with VERBOSE and ALWAYS defined below
-from logging import INFO, DEBUG, WARNING, ERROR, FATAL, CRITICAL
+from logging import INFO, DEBUG, WARNING, ERROR, FATAL
 # Extend the standard logging with one level that sits in the middle between INFO and DEBUG
 VERBOSE = (INFO + DEBUG)/2
 logging.addLevelName(VERBOSE, "VERBOSE")
-ALWAYS = CRITICAL + 10
+ALWAYS = FATAL + 10
 logging.addLevelName(ALWAYS, "ALWAYS")
 ## Specialization of the default Python Logger class to use two more levels (a la LHCb)
 class ExtendedLogger(logging.Logger):
@@ -42,13 +42,12 @@ class ExtendedLogger(logging.Logger):
 logging.setLoggerClass(ExtendedLogger)
 log = logging.getLogger(os.path.basename(__file__))
 
-
 ########################################################################
 # Useful constants
 ########################################################################
 lhcb_style_version = re.compile(r'v([0-9]+)r([0-9]+)(?:p([0-9]+))?')
 lcg_style_version = re.compile(r'([0-9]+)([a-z]?)')
-from Project import project_names
+from LbConfiguration.Project import project_names
 project_names.append("LCGCMT") # This is not an LHCb project but we know about it
 
 # List of pairs (project,[packages]) to automatically select for override
@@ -203,26 +202,41 @@ class TemporaryEnvironment:
         """
         return self.env.__iter__()
 
-class TempDir:
-    def __init__(self, keep = False):
-        self.name = mkdtemp()
-        self._keep = keep
+# FIXME: This class should be moved to LbUtils.Temporary (replacing the one there).
+class TempDir(object):
+    """Class to create a temporary directory."""
+    def __init__(self, suffix="", prefix="tmp", dir=None, keep_var="KEEPTEMPDIR"):
+        """Constructor.
+        
+        'keep_var' is used to define which environment variable will prevent the
+        deletion of the directory.
+        
+        The other arguments are the same as tempfile.mkdtemp.
+        """
+        self._keep_var = keep_var 
+        self._name = mkdtemp(suffix, prefix, dir)
 
+    def getName(self):
+        """Returns the name of the temporary directory"""
+        return self._name
+    
     def __str__(self):
-        return self.name
+        """Convert to string."""
+        return self.getName()
 
     def __del__(self):
-        if self.name:
-            # This is needed because globals are not found when invoked with "python -m"
-            import os, sys
-            from LbConfiguration.SetupProject import log, removeall
-            if "KEEPTEMPDIR" in os.environ:
-                log.always("KEEPTEMPDIR set: I do not remove the temporary directory '%s'", self.name)
+        """Destructor.
+        
+        Remove the temporary directory.
+        """
+        if self._name:
+            if self._keep_var in os.environ:
+                import logging
+                logging.info("%s set: I do not remove the temporary directory '%s'",
+                             self._keep_var, self._name)
                 return
-            removeall(self.name)
-
-    def __getattr__(self,attr):
-        return getattr(self.name,attr)
+            from shutil import rmtree
+            rmtree(self._name)
 
 def _sync_dicts(src, dest):
     # remove undefined keys
@@ -453,20 +467,32 @@ def makeProjectInfo(project = None, version = None, versions = None, search_path
         return None
     return apply(ProjectInfo,vers_tuple)
 
+if "win" in sys.platform:
+    # On Windows, Popen needs a list (when using shell=True)
+    _prepare_cmt_cmd = lambda cmd, args: ["cmt", cmd] + args
+else:
+    # on Unix, we need a string
+    _prepare_cmt_cmd = lambda cmd, args: \
+                        " ".join(["cmt", cmd] + map(lambda s: '"%s"' % s, args))
+
 class CMT(object):
+	## Constructor    
     def __init__(self, environment = None):
         ## Dictionary to use for the local temporary environment
         self.environment = environment
+        ## Working directory, If None, stay where we are.
+        self.cwd = None
     def _run_cmt(self, command, args):
         if type(args) is str:
             args = [args]
-        cmd = "cmt %s"%command
-        for arg in args:
-            cmd += ' "%s"'%arg
+        cmd = _prepare_cmt_cmd(command, args)
         env = TemporaryEnvironment()
         if self.environment: # override (temporarily) the environment before calling cmt
             _sync_dicts(self.environment, env)
-        return os.popen4(cmd)[1].read()
+        cwd = self.cwd or os.getcwd()
+        return Popen(cmd, shell = True,
+                     env = self.environment, cwd = cwd,
+                     stdout = PIPE, stderr = STDOUT).communicate()[0]
     def __getattr__(self, attr):
         return lambda args=[]: self._run_cmt(attr, args)
     def show_macro(self, k):
@@ -829,8 +855,6 @@ class SetupProject:
             return
         if self.project_info.policy =='old':# old style project
             self._debug("----- old style project -----")
-            olddir = os.getcwd()
-            os.chdir(self.project_info._projectenv_cmt_dir)
             if 'CMTPROJECTPATH' in self.environment:
                 self._debug("----- unsetenv CMTPROJECTPATH -----")
                 del self.environment['CMTPROJECTPATH']
@@ -849,7 +873,9 @@ class SetupProject:
                     self.environment['CMTPATH'] = ep_pi.project_dir
             # get all the variables from <Project>Env
             localEnv = dict(self.environment)
+            self.cmt.cwd = self.project_info._projectenv_cmt_dir
             ShellParser[self.shell](self.cmt.setup("-" + self.shell), localEnv)
+            self.cmt.cwd = None
             # get the CMTPATH from <Project>Env without variable expansion
             cmtpath = os.popen("cmt show set CMTPATH").readlines()[-1].strip()
             if cmtpath.startswith("CMTPATH="): # remove head of the line
@@ -861,7 +887,6 @@ class SetupProject:
                 if cmtpath_expanded: cmtpath = cmtpath_expanded
                 cmtpath_expanded = smartExpandVarsPath(cmtpath, localEnv)
             self.environment['CMTPATH'] = cmtpath
-            os.chdir(olddir)
             # prepend User_release_area if defined
             if self.user_area:
                 if self.environment['CMTPATH'].find(self.user_area) < 0:
@@ -925,31 +950,6 @@ class SetupProject:
 
                 return ", ".join(opts)
 
-#        class MyOption(Option):
-#            def take_action(self, action, dest, opt, value, values, parser):
-#                if action == "help":
-#                    parser.print_help(sys.stderr)
-#                    #parser.exit() # this is python 2.4
-#                    sys.exit(0)
-#                elif action == "version":
-#                    parser.print_version(sys.stderr)
-#                    #parser.exit() # this is python 2.4
-#                    sys.exit(0)
-#                return Option.take_action(self, action, dest, opt, value, values, parser)
-#
-#        parser = OptionParser(usage = "%prog [options] <project_name> [version|--ask] [options] [externals]",
-#                              formatter = MyHelpFormatter(),
-#                              option_class = MyOption,
-#                              add_help_option=False)
-#        parser.version = _cvs_id
-#
-#        parser.add_option(MyOption("-h", "--help",
-#                                   action="help",
-#                                   help="show this help message and exit"))
-#        parser.add_option(MyOption("--version",
-#                                   action="version",
-#                                   help="show program's version number and exit"))
-#
         class MyOptionParser(OptionParser):
             def print_help(self, stream = None):
                 if stream is None:
@@ -1235,9 +1235,9 @@ class SetupProject:
 
     def _prepare_tmp_local_project(self):
         # prepare temporary local project directory
-        self.tmp_root = TempDir()
+        self.tmp_root = TempDir(prefix = "SetupProject", keep_var = "SPKEEPTEMPDIR")
 
-        tmp_dir = os.path.join(self.tmp_root,"v23") # add a fake version directory to please CMT
+        tmp_dir = os.path.join(str(self.tmp_root),"v23") # add a fake version directory to please CMT
         os.mkdir(tmp_dir)
 
         self._debug("Using temporary directory '%s'"%tmp_dir)
@@ -1326,12 +1326,10 @@ class SetupProject:
             # it does not make sense to go on if the CMTPATH is not set
             raise SetupProjectError('neither CMTPATH nor CMTPROJECTPATH are set')
 
-        orig_dir = os.getcwd()
-
         if self.context_path:
             self.environment['CMTUSERCONTEXT'] = self.context_path
 
-        os.chdir(root_dir)
+        self.cmt.cwd = root_dir
 
         # check CMT
         out = self.cmt.version()
@@ -1346,7 +1344,7 @@ class SetupProject:
             raise SetupProjectError(out)
 
         script = self.cmt.setup("-" + self.shell)
-        os.chdir(orig_dir)
+        self.cmt.cwd = None
 
         #parse the output
         new_env = dict(self.environment)
@@ -1365,7 +1363,7 @@ class SetupProject:
         # FIXME: I should look for all the variables pointing to the temporary directory
 
         # remove the variables that have the temporary directory in the name
-        tmp_base_name = os.path.basename(self.tmp_root)
+        tmp_base_name = os.path.basename(str(self.tmp_root))
         for k in [ k
                    for k in new_env.keys()[:] # I need a copy of the keys
                    if tmp_base_name in k ]:
@@ -1640,12 +1638,17 @@ class SetupProject:
                     user_proj_name = "%s_%s" % (self.project_info.name, self.project_info.version)
                     user_proj_dir = os.path.join(self.user_area, user_proj_name)
                     if not os.path.exists(user_proj_dir):
-                        cur_dir = os.getcwd()
-                        os.chdir(self.user_area)
+                        self.cmt.cwd = self.user_area
                         self.cmt.create_project([user_proj_name,"-use=%s" % self.project_info.realName.replace(os.path.sep,":")])
-                        os.chdir(cur_dir)
+                        self.cmt.cwd = None
                         if os.path.isdir(user_proj_dir):
                             messages.append('Created user project in %s' % user_proj_dir)
+                            # Add the structuring style to the local project
+                            proj_file = open(os.path.join(user_proj_dir, "a"))
+                            proj_file.writelines(["build_strategy with_installarea\n",
+                                                  "structure_strategy without_version_directory\n"])
+                            proj_file.close()
+                            del proj_file
                         else:
                             messages.append('Cannot create user project in %s' % user_proj_dir)
                     # Create a project Makefile
