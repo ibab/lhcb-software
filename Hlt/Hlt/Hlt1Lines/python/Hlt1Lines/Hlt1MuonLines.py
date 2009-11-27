@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.4 2009-11-27 00:01:54 aperezca Exp $
+# $Id: Hlt1MuonLines.py,v 1.5 2009-11-27 09:13:05 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.5 $"
 # =============================================================================
 
 
@@ -95,7 +95,9 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
         from Configurables import PatMatchTool
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO
         TMatchV = [ DecodeIT
-                    , Member ('TU', 'TConf' , RecoName = 'TMuonConf')
+                    , Member ('TU', 'TConf' , RecoName = 'TMuonConf'
+                              , HistoDescriptor = { 'TMuonConfQuality': ( 'Seed track chi2',0.,20.,100) ,
+                                                    'TMuonConfQualityBest': ( 'Seed track chi2 Best',0.,20.,100)} )
                     , Member ('TF', 'DeltaP' 
                               , FilterDescriptor = ['DeltaP,>,%(Muon_DeltaPCut)s' %self.getProps()]
                               , HistoDescriptor = { 'DeltaP': ( 'DeltaP',0.,2.,100), 'DeltaPBest': ( 'DeltaPBest',0.,2.,100)}
@@ -106,13 +108,17 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                               , HistoDescriptor = { 'RZVeloTMatch_Hlt1MuonPrepTFDeltaP': ( 'RZVeloTMatch_Hlt1MuonPrepTFDeltaP',-400.,400.,100)
                                                     ,'RZVeloTMatch_Hlt1MuonPrepTFDeltaPBest': ( 'RZVeloTMatch_Hlt1MuonPrepTFDeltaPBest',-400.,400.,100)}
                               )
-                    , Member ('TU', 'Velo' , RecoName = 'Velo' )
+                    , Member ('TU', 'Velo' , RecoName = 'Velo' 
+                              , HistoDescriptor = { 'VeloQuality': ( 'Velo track chi2',0.,10.,100) ,
+                                                    'VeloQualityBest': ( 'Velo track chi2 Best',0.,10.,100)} )
                     , DecodeTT
                     , Member ('TM', 'VeloT'
                               , InputSelection1 = '%TUVelo'
                               , InputSelection2 = '%TFDeltaP'
                               , MatchName = 'VeloT'
-                              , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 ) ]
+                              , tools = [ Tool( PatMatchTool, maxMatchChi2 = 6 )]
+                              , HistoDescriptor = { 'chi2_PatMatch': ( 'Match 3dVelo-T (PatMatch)',0.,10.,100),
+                                                    'chi2_PatMatchBest': ( 'Match 3dVelo-T (PatMatch) Best',0.,10.,100) }           
                               ) 
                     ]
         ### Check if 2 muons can come from a Vertex
@@ -616,7 +622,7 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                        , postscale = self.postscale
                        )
 
-        
+         
         #------------------------- TESTING FOR IMPROVED TIMING------------------------------------------
         
         MuTrackFitMu= Line( 'MuTrackFitMu'
