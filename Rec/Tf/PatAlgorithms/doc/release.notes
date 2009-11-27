@@ -4,6 +4,8 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v3r25 2009-11-27 ====================
+
 ! 2009-11-26 Manuel Schiller
  - use ROOT::Math::CholeskyDecomp provided by ROOT since version 5.24 instead
    of reimplementing code to solve a system of linear equations in which the
