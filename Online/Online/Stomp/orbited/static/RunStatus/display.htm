@@ -1,0 +1,72 @@
+<html id="html_top">
+<head>
+  <title>LHCb online status display</title>
+  <meta HTTP-EQUIV="Pragma"  CONTENT="no-cache"></meta>
+  <meta HTTP-EQUIV="Expires" CONTENT="0"></meta>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1"></meta>
+  <meta name="description" content="Status displays for the LHCb experiment"></meta>
+
+  <script type="text/javascript">
+  var _stomp_in_use = true;
+  //  var _fileBase = 'http://cern.ch/frankm/Online';
+  //var _fileBase = 'file:///group/online/dataflow/cmtuser/Stomp/Online/Stomp/web';
+  var _fileBase = '/static/web';
+  var _lhcbScriptBase = _fileBase;
+  var _javascriptType = 'text/envjs';
+
+  </script>
+  <script type="text/envjs" src="/static/Orbited.js"></script>
+  <script type="text/javascript">
+  function enableLogger(name)  {
+    var logger = Orbited.getLogger(name);
+    //    logger.show = function(data) {    print(this.name+':'+data);        };
+    // logger.checkPane = function() {};
+    logger.enabled = true;
+    print('===== Enabled logger for:'+name);
+    return logger;
+  }
+
+  Orbited.settings.log = true;
+  Orbited.util.loggingSystem = 'PageLogger';
+Orbited.Loggers.PageLogger.show = function(data) {    print(this.name+':'+data);        };
+/*
+  enableLogger('system');
+  enableLogger('Orbited.test');
+  enableLogger('Orbited.TCPSocket');
+  enableLogger('Orbited.XSDR');
+  enableLogger('Orbited.CometSession');
+  enableLogger('Orbited.XSDRBridge');
+  enableLogger('Orbited.CometTransports.XHRStream');
+  enableLogger('Orbited.CometTransports.LongPoll');
+  enableLogger('Orbited.CometTransports.Poll');
+  enableLogger('Orbited.CometTransports.HTMLFile');
+  enableLogger('Orbited.CometTransports.SSE');
+*/
+  print('===================== Orbited logging enabled.'+Orbited.util.loggingSystem);
+  </script>
+
+  <script type="text/envjs" src="file:///group/online/dataflow/cmtuser/Stomp/Online/Stomp/web/lhcb.display.select.cpp"></script>
+<!--
+  <script type="text/envjs" src="http://cern.ch/frankm/Online/lhcb.display.select.cpp"></script>
+-->
+</head>
+<body onunload="the_displayObject.unload()">
+  <script>
+  function external_printer(level,msg) {
+    var d = (new Date()).toString().substr(16,8);
+    if ( level == LOG_VERBOSE )
+      print(d+' [VERBOSE]:  '+msg);
+    else if ( level == LOG_DEBUG )
+      print(d+' [DEBUG]:    '+msg);
+    else if ( level == LOG_INFO )
+      print(d+' [INFO]:     '+msg);
+    else if ( level == LOG_ERROR )
+      print(d+' [ERROR]:    '+msg);
+    else
+      print(d+' [UNKNOWN]:  '+msg);
+  }
+  the_displayObject.external_print = external_printer;
+  obj = the_displayObject.body();
+  </script>
+</body>
+</html>

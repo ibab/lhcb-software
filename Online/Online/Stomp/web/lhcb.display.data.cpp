@@ -8,7 +8,7 @@ var LOG_WARNING     = 1;
 var LOG_INFO        = 2;
 var LOG_DEBUG       = 3;
 var LOG_VERBOSE     = 4;
-
+alert('hello');
 /**@class OutputLogger
  *
  *
@@ -269,6 +269,7 @@ var DataProvider = function(logger)  {
   this.calls.length = 0;
   this.logger = logger;
   this.isConnected = false;
+  this.needConnection = false;
   this.topic = '/topic/home';
   _dataProvider = this;
 
@@ -296,6 +297,18 @@ var DataProvider = function(logger)  {
     else {
       _dataProvider.logger.info("Transport closed (code: " + code + ")"); 
     }
+    if ( _dataProvider.needConnection ) {
+      var reconnectHandler = function() {
+	_dataProvider.logger.info('Starting reconnect timer');
+	if ( !this._dataProvider.isConnected && this._dataProvider.needConnection ) {
+	  this._dataProvider.reconnect();
+	  setTimeout(this,5000);
+	}
+      }
+      reconnectHandler._dataProvider = _dataProvider;
+      _dataProvider.logger.info('Starting reconnection timer');
+      setTimeout(reconnectHandler,5000);
+    }
  };
 
   stomp.onerror = function(error) {
@@ -308,6 +321,7 @@ var DataProvider = function(logger)  {
 
   stomp.onconnectedframe = function() {
     _dataProvider.logger.info("Connected ..");
+    _dataProvider.needConnection = true;
     _dataProvider.isConnected = true;
     _dataProvider.connect();
   };
@@ -331,7 +345,9 @@ var DataProvider = function(logger)  {
 	    alert('Debug: Dead element: '+itm+'['+i+'] out of '+len);
 	  }
 	}
-	_dataProvider.logger.info("Update item: [" +frame.body.length+' bytes] '+ itm);
+	var d = new String(data);
+	if (d.length > 10) d = d.substr(0,10);
+	_dataProvider.logger.info("Update: [" +frame.body.length+' bytes] '+ itm+'='+d);
       }
       return;
     }
@@ -345,6 +361,7 @@ var DataProvider = function(logger)  {
   this.start = function() {
     this.logger.info("Connecting STOMP client....");
     this.service.connect('localhost', 61613, 'guest', 'guest');
+    this.needConnection = true;
     this.logger.info("Connecting STOMP client....Done");
   }
 
@@ -360,7 +377,13 @@ var DataProvider = function(logger)  {
     }
     return this;
   }
-  
+
+  this.reconnect = function() {
+    this.reset();
+    this.start();
+    return this;
+  }
+
   /** Pre-Subscribe to data items
    *  @param item      Name of stomp topic to subscribe to
    *  @param callback  Object implementing "set" method when new data is received.
@@ -459,6 +482,7 @@ var DataProvider = function(logger)  {
 var dataProviderReset = function() {
   if ( null != _dataProvider ) {
     _dataProvider.reset();
+    _dataProvider.needConnection = false;
   }
 }
 

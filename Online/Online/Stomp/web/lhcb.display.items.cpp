@@ -223,7 +223,7 @@ var FSMItem = function(item_name, logger, is_child)  {
   }
 
   element.setState = function(name) {
-    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif" ALT="">';
+    this.lock.innerHTML = '<IMG SRC="'+_fileBase+'/Images/Modes/'+name+'.gif" ALT=""></IMG>';
     return this;
   }
 
@@ -243,7 +243,7 @@ var FSMItem = function(item_name, logger, is_child)  {
    *  @return On success reference to self, null otherwise
    */
   element.set = function(data)  {
-    this._logger.debug('FSMItem.set:'+this.name+' '+this.__tag+' -> data:'+data);
+    this._logger.debug('FSMItem.set:'+this.name+' -> data:'+data);
     if ( data != null ) {
       if ( data.length == 2 )   {
         if ( this.data && this.data[1] == data[1] ) return this;
