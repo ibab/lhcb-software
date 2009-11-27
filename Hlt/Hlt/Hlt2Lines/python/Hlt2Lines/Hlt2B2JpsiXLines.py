@@ -1,8 +1,7 @@
-# $Id: Hlt2B2JpsiXLines.py,v 1.10 2009-11-05 10:11:42 conti Exp $
+# $Id: Hlt2B2JpsiXLines.py,v 1.11 2009-11-27 12:46:09 pkoppenb Exp $
 
 from Gaudi.Configuration import * 
 from HltLine.HltLinesConfigurableUser import HltLinesConfigurableUser
-
 class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 
     __slots__ = {'BsLifetimeCut': 0.15 # ps
@@ -94,7 +93,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
-                        , PV = False
                         )
 
         # Now do the detached 
@@ -105,7 +103,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                    , postscale = self.postscale
                    , algos = [Muons, jPsiCombine, NoCutsKaons, phiCombine, BsCombine]
                    , BsCombine = {"MotherCut": BsCutsDetached}
-                   , PV = True
                    )
 
 
@@ -148,7 +145,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, PhiCombine, BsCombine]
-                        , PV = False
                         )
         
         # Now do the Signal selection
@@ -198,7 +194,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, NoCutsPions, KstarCombine, BdCombine]
-                        , PV = False
                         )
         
         # Now do the Signal selection
@@ -239,7 +234,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , postscale = self.postscale
                         , algos = [HighPtJpsi2MuMu, NoCutsKaons, BuCombine]
-                        , PV = False
                         )
     
         # Now do the Signal selection
@@ -256,6 +250,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 	@author F Rodrigues
 	'''
 	from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from HltLine.HltReco import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.Ks import KsLL
@@ -286,11 +281,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsLLBiased'
 		        , prescale = self.prescale
                    	, postscale = self.postscale	
-                        , algos = [   Jpsi2MuMu, filterJpsi
+                        , algos = [   Jpsi2MuMu, PV3D, filterJpsi
                                        , KsLL,      filterKS
                                        , combineB
                                        ]
-                        , PV = True
                         )
 
 
@@ -334,7 +328,6 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
                                        , KsLL,       filterKS
                                        , combineB
                                        ]
-                        , PV = False
                         )
 
     def __makeHlt2Bd2JpsiMuMuKsDDBiasedLines(self):
@@ -344,6 +337,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from HltLine.HltReco import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD
@@ -367,11 +361,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDBiased'
                         , prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu , filterJpsi
+                        ,  algos = [   Jpsi2MuMu , PV3D, filterJpsi
                                        , KsDD
                                        , combineB
                                        ]
-                        , PV = True
                         )
 
     def __makeHlt2Bd2JpsiMuMuKsDDUnbiasedLines(self):
@@ -381,6 +374,7 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         @author F Rodrigues
         '''
         from HltLine.HltLine import Hlt2Line, Hlt2Member
+        from HltLine.HltReco import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import Jpsi2MuMu
         from Hlt2SharedParticles.V0 import KsDD
@@ -411,11 +405,10 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
         line = Hlt2Line('Bd2JpsiMuMuKsDDUnbiased'
                    	, prescale = self.prescale
                    	, postscale = self.postscale
-                        ,  algos = [   Jpsi2MuMu, filterJpsi
+                        ,  algos = [   Jpsi2MuMu, PV3D, filterJpsi
                                        , KsDD, filterKS
                                        , combineB
                                        ]
-                        , PV = False
                         )
 
     def __makeHlt2B2JpsiX_MuMuLines(self):
@@ -439,5 +432,4 @@ class Hlt2B2JpsiXLinesConf(HltLinesConfigurableUser) :
 		   	, prescale = self.prescale
                    	, postscale = self.postscale
 		   	, algos = [ DiMuon , filter ]
-			, PV = False
 			)

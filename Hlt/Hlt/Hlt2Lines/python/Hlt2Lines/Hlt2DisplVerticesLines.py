@@ -81,9 +81,8 @@ class Hlt2DisplVerticesLinesConf(HltLinesConfigurableUser) :
         # Define the Hlt2 Line
         line = Hlt2Line('DisplVertices'
                         , prescale = self.prescale
-                        , algos = [Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
+                        , algos = [ Hlt2PatPV3D, NoCutsPions, Hlt2LineDisplVertices]
                         , postscale = self.postscale
-                        , PV = True
                         )
         
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2DisplVerticesDecision" : 50280 } )

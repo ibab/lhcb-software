@@ -152,8 +152,7 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2IncPhiAddCombInfo,
                                     Hlt2InclusivePhiRich]
                         , postscale = self.postscale
-                        , PV = True
-                        )
+                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiDecision" : self.getProp('HltANNSvcID')['IncPhi'] } )
         
  
@@ -166,7 +165,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                         , algos = [ GoodKaons, 
                                     Hlt2InclusivePhi]
                         , postscale = self.postscale
-                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiRobustDecision" : self.getProp('HltANNSvcID')['IncPhiRobust'] } )
         
@@ -182,7 +180,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     GaudiSequencer("Hlt2IncPhiTFParticlesSeq"),
                                     Hlt2InclusivePhiTF]
                         , postscale = self.postscale
-                        , PV = True
                           )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiTrackFitDecision" : self.getProp('HltANNSvcID')['IncPhiTrackFit'] } )
         
@@ -202,7 +199,6 @@ class Hlt2InclusivePhiLinesConf(HltLinesConfigurableUser) :
                                     Hlt2IncPhiAddCombInfo,
                                     Hlt2InclusivePhiRichSB]
                         , postscale = self.postscale
-                          , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2IncPhiSidebandsDecision" : self.getProp('HltANNSvcID')['IncPhiSidebands'] } )
           

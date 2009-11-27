@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.84 2009-11-27 10:06:15 pkoppenb Exp $
+$Id: release.notes,v 1.85 2009-11-27 12:46:16 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,11 @@ $Id: release.notes,v 1.84 2009-11-27 10:06:15 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-27 - Patrick Koppenburg
+   https://savannah.cern.ch/task/index.php?12690
+ - Remove PV = True/False argument of HltLine. The PV should be loaded 
+   explicitly when needed.
 
 ! 2009-11-27 - Patrick Koppenburg
  - Restore Hlt2SharedTopo2Body_PionsORKaonslt2SharedTopo2Body_PionsORKaons, that is not

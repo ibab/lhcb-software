@@ -1,9 +1,14 @@
-$Id: release.notes,v 1.63 2009-11-25 17:09:23 pkoppenb Exp $
+$Id: release.notes,v 1.64 2009-11-27 12:45:53 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
+
+! 2009-11-27 - Patrick Koppenburg
+   https://savannah.cern.ch/task/index.php?12690
+ - Remove PV = True/False argument of HltLine. The PV should be loaded 
+   explicitly when needed.
 
 ! 2009-11-25 - Patrick Koppenburg
  - Remove Calo and Rich dependency

@@ -40,6 +40,5 @@ class Hlt2B2HHLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale
                         , algos = [ GoodPions, Hlt2B2HH ]
                         , postscale = self.postscale
-                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2B2HHDecision" : 50080 } )

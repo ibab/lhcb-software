@@ -66,6 +66,7 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
 
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line, Hlt2Member, bindMembers
+        from HltLine.HltReco import PV3D
         from Configurables import HltANNSvc
         from Hlt2SharedParticles.DiMuon import DiMuon
         from Configurables import FilterDesktop
@@ -95,7 +96,6 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                         , prescale = self.prescale 
                         , algos = [ DiMuon, filter ]
                         , postscale = self.postscale
-                        , PV = False
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedDiMuonDecision" : 50200 } )
             
@@ -212,9 +212,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonRobust'
                         , prescale = self.prescale 
-                        , algos = [ DiMuon, RobustDiMuon ]
+                        , algos = [ PV3D, DiMuon, RobustDiMuon ]
                         , postscale = self.postscale
-                        , PV = True
                         )
 
         #--------------------------------------------
@@ -223,9 +222,8 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
         '''
         line = Hlt2Line('BiasedDiMuonRefined'
                         , prescale = self.prescale 
-                        , algos = [ DiMuon, RobustDiMuon, RefinedDiMuon ]
+                        , algos = [ PV3D, DiMuon, RobustDiMuon, RefinedDiMuon ]
                         , postscale = self.postscale
-                        , PV = True
                         )
 
         #--------------------------------------------

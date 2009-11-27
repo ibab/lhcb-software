@@ -8,6 +8,7 @@
 ##
 from Gaudi.Configuration import *
 from HltLine.HltLine import bindMembers
+from HltLine.HltReco import PV3D
 from Configurables import FilterDesktop
 
 __all__ = ( 'TopoTFInputParticles' )
@@ -23,5 +24,6 @@ Hlt2TopoTFInputParticles = FilterDesktop("Hlt2TopoTFInputParticles"
 Hlt2TopoTFInputParticles.InputLocations  = [ "Hlt2TFPionsForTopo","Hlt2TFKaonsForTopo" ]
 
 
-TopoTFInputParticles = bindMembers( None, [ GaudiSequencer('SeqHlt2TFParticlesForTopo'), Hlt2TopoTFInputParticles ] )
+TopoTFInputParticles = bindMembers( None, [ GaudiSequencer('SeqHlt2TFParticlesForTopo'),
+                                            PV3D, Hlt2TopoTFInputParticles ] )
 

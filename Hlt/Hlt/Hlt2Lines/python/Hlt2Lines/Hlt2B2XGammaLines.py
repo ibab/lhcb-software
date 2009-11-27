@@ -57,6 +57,7 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
+        from HltLine.HltReco import PV3D
         from Configurables import HltANNSvc
         from Configurables import CombineParticles, PhysDesktop
         from Configurables import FilterDesktop
@@ -134,7 +135,6 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                     Photons,
                                     Hlt2BstoPhiGamma]
                         , postscale = self.postscale
-                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaDecision" : self.getProp('HltANNSvcID')['Bs2PhiGamma']} )
 
@@ -145,30 +145,27 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         #   use noCuts particles
         line.clone('Bs2PhiGammaNoCutsK'
                    , prescale = self.prescale
-                   , algos = [ NoCutsKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+                   , algos = [ NoCutsKaons, PV3D, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
                    , CombinePhi = {"InputLocations" : [NoCutsKaons] }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaNoCutsKDecision" :  self.getProp('HltANNSvcID')['Bs2PhiGammaNoCutsK'] } )
         
         #   Bs mass sideband
         line.clone('Bs2PhiGammaWideBMass'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+                   , algos = [GoodKaons, PV3D, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
                    , CombineBs = {"CombinationCut" :  "(ADAMASS('B_s0')<"+str(self.getProp('BMassWinSB'))+"*MeV)"  }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaWideBMassDecision" : self.getProp('HltANNSvcID')['Bs2PhiGammaWideBMass'] } )
 
         #  Bs dira monitoring
         line.clone('Bs2PhiGammaLooseDira'
                    , prescale = self.prescale
-                   , algos = [ GoodKaons, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
+                   , algos = [ GoodKaons, PV3D, Hlt2Phi4PhiGamma, Photons, Hlt2BstoPhiGamma]
                    , CombineBs = {"MotherCut" : "( (BPVDIRA > " + str(self.getProp('BDirAngleMoni'))+") & (BPVIPCHI2()<" + str(self.getProp('BsPVIPchi2'))+"))"   }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bs2PhiGammaLooseDiraDecision" : self.getProp('HltANNSvcID')['Bs2PhiGammaLooseDira'] } )
         
@@ -184,7 +181,6 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
                                     Photons,
                                     Hlt2BdtoKstGamma]
                         , postscale = self.postscale
-                        , PV = True
                         )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaDecision" :self.getProp('HltANNSvcID')['Bd2KstGamma'] } )
         
@@ -195,37 +191,33 @@ class Hlt2B2XGammaLinesConf(HltLinesConfigurableUser) :
         # use  noCuts particles
         line.clone('Bd2KstGammaNoCutsKPi'
                    , prescale = self.prescale
-                   , algos = [ NoCutsKaons, NoCutsPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [ NoCutsKaons, NoCutsPions, PV3D, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineKstar = {"InputLocations" : [NoCutsKaons, NoCutsPions] }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaNoCutsKPiDecision" : self.getProp('HltANNSvcID')['Bd2KstGammaNoCutsKPi'] } )
         #  Kst mass sideband
         line.clone('Bd2KstGammaWideKMass'
                    , prescale = self.prescale
-                   , algos = [ GoodKaons, GoodPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [ GoodKaons, GoodPions, PV3D, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0   = { "DaughtersCuts" :{ "gamma"    : "(PT>"+str(self.getProp('photonPT'))+"*MeV)",
                                                         "K*(892)0" : "(ADMASS('K*(892)0')<"+str(self.getProp('KstMassWinSB'))+"*MeV) " } }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaWideKMassDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaWideKMass'] } )
         # B0 mass sideband
         line.clone('Bd2KstGammaWideBMass'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, GoodPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [GoodKaons, GoodPions, PV3D, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0 = { "CombinationCut" :  "(ADAMASS('B0')<"+str(self.getProp('BMassWinSB'))+"*MeV)" }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaWideBMassDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaWideBMass'] } )
         # B0 dira monitoring
         line.clone('Bd2KstGammaLooseDira'
                    , prescale = self.prescale
-                   , algos = [GoodKaons, GoodPions, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
+                   , algos = [GoodKaons, GoodPions, PV3D, Hlt2Kst4KstGamma, Photons, Hlt2BdtoKstGamma]
                    , CombineB0 = { "MotherCut" :  "( (BPVDIRA > " + str(self.getProp('BDirAngleMoni'))+") & (BPVIPCHI2()<" + str(self.getProp('B0PVIPchi2'))+"))" }
                    , postscale = self.postscale
-                   , PV = True
                    )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2Bd2KstGammaLooseDiraDecision" :  self.getProp('HltANNSvcID')['Bd2KstGammaLooseDira'] } )

@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.49 2009-11-27 12:44:16 pkoppenb Exp $
+! $Id: release.notes,v 1.50 2009-11-27 12:45:21 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
@@ -6,6 +6,7 @@
 ! -----------------------------------------------------------------------------
 
 ! 2009-11-27 - Patrick Koppenburg
+   https://savannah.cern.ch/task/index.php?12690
  - Remove PV = True/False argument of HltLine. The PV should be loaded 
    explicitly when needed.
 
