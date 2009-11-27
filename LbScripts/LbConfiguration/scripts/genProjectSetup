@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# $Id: genProjectSetup,v 1.1 2009-11-24 19:24:45 hmdegaud Exp $
+# $Id: genProjectSetup,v 1.2 2009-11-27 16:58:52 hmdegaud Exp $
 """ Script to generate the setup script for the LHCb CMT projects """
 
 from LbUtils.Script import Script
@@ -11,7 +11,7 @@ import sys
 import os
 
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.1 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.2 $")
 __author__ = "hmd"
 
 class GenProjectSetupScript(Script):
@@ -81,7 +81,7 @@ class GenProjectSetupScript(Script):
             log.debug("No output file provided. Using %s" % opts.output_file)
             pass
         genProjectSetup(opts.output_file, project, version, 
-                        opts.cmtconfig, opts.shell, opts.setup_project_extra_args,
+                        opts.cmtconfig, opts.shell, opts.setup_project_extra_args.split(),
                         opts.strip_path, opts.fix_path)
 
         return 0

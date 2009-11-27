@@ -1,3 +1,8 @@
+2009-11-27  Hubert Degaudenzi  <Hubert.Degaudenzi@cern.ch>
+
+	* python/LbConfiguration/Tools.py: 
+	* scripts/genProjectSetup: changed the extra argument to SetupProject into a list
+
 2009-11-25  Marco Clemencic  <Marco.Clemencic@cern.ch>
 
 	* python/LbConfiguration/SetupProject.py:

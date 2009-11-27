@@ -123,7 +123,7 @@ def genProjectSetup(output_file, project, version, cmtconfig,
     setuprojargs.append("--output=%s" % output_file)
     setuprojargs.append("--no-user-area")
     if setup_project_extra_args :
-        setuprojargs += setup_project_extra_args.split()
+        setuprojargs += setup_project_extra_args
     setuprojargs.append(project)
     setuprojargs.append(version)
     log.debug("Running SetupProject %s" % " ".join(setuprojargs))
