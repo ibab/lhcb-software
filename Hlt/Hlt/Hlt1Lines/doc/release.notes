@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.69 2009-11-27 00:01:54 aperezca Exp $
+! $Id: release.notes,v 1.70 2009-11-27 09:14:46 albrecht Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Johannes Albrecht
+ - added configuration for monitoring of TMatchV sequence
 
 ! 2009-11-27 - Antonio Perez-Calero
  - added histograms for muon+track lines monitoring in Hlt1MuonLines.py
