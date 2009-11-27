@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+
+! 2009-11-27 - Olivier Deschamps
+  - TupleToolPi0Info : set default RequireMCTruth to false and add Warning("deprecated tool") when set to true
+  - TupleToolVtxIsoln : add protection for merged pi0 (daughter but no endVertex) 
+
 ! 2009-11-25 - Patrick Koppenburg
  - Fix compilation problem in TupleToolDalitz.icpp
 

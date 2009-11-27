@@ -98,7 +98,7 @@ StatusCode TupleToolVtxIsoln::fill( const Particle* mother
     }
   */
   const LHCb::Vertex* vtx;
-  if (P->isBasicParticle()){
+  if (P->isBasicParticle() && !P->particleID().pid() == 511){
     vtx = mother->endVertex(); //eg for the D this is the birth vertex, and the K, both are the B but why then are the plts different for these to particles
   }
   else{

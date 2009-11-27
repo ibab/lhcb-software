@@ -1,4 +1,4 @@
-// $Id: TupleToolPi0Info.cpp,v 1.2 2009-11-24 17:22:26 pkoppenb Exp $
+// $Id: TupleToolPi0Info.cpp,v 1.3 2009-11-27 08:05:36 odescham Exp $
 // Include files
 
 // from Gaudi
@@ -32,14 +32,17 @@ TupleToolPi0Info::TupleToolPi0Info( const std::string& type,
     m_Pi0ID(111)
 { 
   declareInterface<IParticleTupleTool>(this); 
-  declareProperty("RequireMCTruth",m_RequireMCTruth = true);
+  declareProperty("RequireMCTruth",m_RequireMCTruth = false);
   
 }
 //=============================================================================
 StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P 
                                   ,const std::string& head
                                   ,Tuples::Tuple& tuple ) {
+
+
   
+
   bool filltuple = true;
   if( P ){
     if (P->particleID().pid() == m_Pi0ID) { 
@@ -54,6 +57,8 @@ StatusCode TupleToolPi0Info::fill(const Particle* , const Particle* P
       
       
       if(m_RequireMCTruth == true){
+        Warning("MC association with TupleToolPi0Info is deprecated - please use the standard TupleToolMCTruth"
+                , StatusCode::SUCCESS).ignore();
         debug() << "Get the association done for a pi0 " << endmsg; 
         const MCParticle* MCPi0 = NULL;  
         const MCParticle* MCPi0Mother = NULL;  
