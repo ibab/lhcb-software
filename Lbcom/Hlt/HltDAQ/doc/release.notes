@@ -4,6 +4,7 @@
 ! Purpose     : Hlt RawBanks writers/decoders/monitors
 !-----------------------------------------------------------------------------
 
+!========================== HltDAQ v1r2 2009-11-27 ===========================
 ! 2009-11-26 - Tomasz Skwarnicki
  - HltVertexReportsWriter,Decoder: save covariance matrix in HltVertexReports 
    (bank version=1, previous was=0).
