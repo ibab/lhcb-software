@@ -1,5 +1,5 @@
 package LbcomSys
-version v7r9
+version v7r10
 
 branches doc cmt
 
@@ -15,12 +15,12 @@ use CaloAssociators   v6r10   Calo      # Olivier Deschamps
 use CaloTools         v5r13   Calo      # Olivier Deschamps
 
 # HLT
-use HltDAQ            v1r1p1  Hlt       # Tomasz Skwarnicki
+use HltDAQ            v1r2    Hlt       # Tomasz Skwarnicki
 
 # L0 trigger simulation
-use L0Calo            v10r1   L0        # Olivier Deschamps, Patrick Robbe
+use L0Calo            v10r2   L0        # Olivier Deschamps, Patrick Robbe
 use L0DU              v9r0    L0        # Olivier Deschamps   
-use L0Muon            v8r5p2  L0        # Andrei Tsarogorodtsev, Julien Cogan
+use L0Muon            v8r5p3  L0        # Andrei Tsarogorodtsev, Julien Cogan
 use L0MuonMonitor     v1r5    L0        # Julien Cogan
 use PuVeto            v7r3p1  L0        # Marko Zupan
 
@@ -29,7 +29,7 @@ use MuonAssociators   v3r2    Muon      # Alessia Satta
 
 # Outer tracker
 use OTAssociators     v4r3    OT        # Jan Amoraal
-use OTMonitor         v3r0    OT        # Wouter Hulsbergen
+use OTMonitor         v3r1    OT        # Wouter Hulsbergen
 
 # Rich
 use RichAlgorithms    v1r2    Rich      # Chris Jones
@@ -46,13 +46,13 @@ use STAlgorithms      v3r10   ST        # Jeroen van Tilburg, Matt Needham
 use STAssociators     v1r6    ST        # Jeroen van Tilburg, Matt Needham
 use STCheckers        v2r14   ST        # Jeroen van Tilburg, Matt Needham
 use STDAQ             v3r20   ST        # Jeroen van Tilburg, Matt Needham
-use STMonitors        v2r1    ST        # Mark Tobin
-use STTools           v3r13   ST        # Jeroen van Tilburg, Matt Needham
+use STMonitors        v2r2    ST        # Mark Tobin
+use STTools           v3r14   ST        # Jeroen van Tilburg, Matt Needham
 
 # Velo
 use VeloAlgorithms    v5r0    Velo      # Tomasz Szumlak
 use VeloAssociators   v2r3    Velo      # Tomasz Szumlak
-use VeloDAQ           v4r11   Velo      # Kurt Rinnert
+use VeloDAQ           v4r12   Velo      # Kurt Rinnert
 use VeloSimulation    v3r6p1  Velo      # Tomasz Szumlak
 use VeloTools         v3r4    Velo      # Tomasz Szumlak
 
