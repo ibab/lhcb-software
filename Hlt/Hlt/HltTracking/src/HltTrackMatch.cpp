@@ -1,4 +1,4 @@
-// $Id: HltTrackMatch.cpp,v 1.16 2009-11-26 13:16:36 albrecht Exp $
+// $Id: HltTrackMatch.cpp,v 1.17 2009-11-27 08:54:38 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -209,7 +209,7 @@ StatusCode HltTrackMatch::execute() {
     }
   }
   
-  if (produceHistos()){
+  if (produceHistos() && otracks->size() > 0){
     std::vector<double> vals; 
     vals.reserve(otracks->size());
     BOOST_FOREACH( LHCb::Track* cand, *otracks) vals.push_back( cand->info(m_qualityID,1e6));

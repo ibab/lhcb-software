@@ -1,9 +1,12 @@
-!$Id: release.notes,v 1.86 2009-11-26 13:18:17 albrecht Exp $
+!$Id: release.notes,v 1.87 2009-11-27 08:55:24 albrecht Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
+
+! 2009-10-27 - Johannes Albrecht
+ - HltTrackMatch: protect against emtpy output
 
 ! 2009-10-26 - Johannes Albrecht
  - add monitoring histograms for HltTrackMatch and HltTrackUpgrade
