@@ -1,8 +1,9 @@
-! $Id: release.notes,v 1.143 2009-11-25 15:38:50 robbep Exp $
+! $Id: release.notes,v 1.144 2009-11-27 13:02:52 cattanem Exp $
 ! Package	        : L0/L0Calo
 ! Package Manager : Patrick Robbe & M-H. Schune
 !--------------------------------------------------------------------------
 
+!========================= L0Calo v10r2 2009-11-27 ========================
 ! 2009-11-25 - Patrick Robbe
  - L0CaloCheckCalibCte.cpp: add more clear output messages
 
@@ -11,7 +12,7 @@
  - Add new algorithm: L0CaloCheckCalibCte.cpp to check
    L0 calibration constant
 
-!========================= L0Calo v10r0 2009-11-22 ========================
+!========================= L0Calo v10r1 2009-11-22 ========================
 ! 2009-11-19 - Patrick Robbe
  - L0CaloCompare.cpp: fix the comparison of SpdMult and SumEt
 
