@@ -12,7 +12,7 @@ use Associators       v3r7    Associators # Matt Needham
 
 # Calorimeter
 use CaloAssociators   v6r10   Calo      # Olivier Deschamps
-use CaloTools         v5r13   Calo      # Olivier Deschamps
+use CaloTools         v5r14   Calo      # Olivier Deschamps
 
 # HLT
 use HltDAQ            v1r2    Hlt       # Tomasz Skwarnicki
