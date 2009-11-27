@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!--- $Id: -->
+<!--- Author  : Victor Coco Victor.Coco@cern.ch-->
+<!--- Created : 2009-11-13 -->
+<!DOCTYPE gdd SYSTEM "gdd.dtd">
+<gdd>
+
+<package name="DigiEvent">
+    <class name="VeloPixLiteCluster" 
+     author="V. Coco" 
+     desc="A cluster as might be produced by the TELL40 but without the full information"
+     location="Raw/VeloPix/LiteClusters"
+     serializers="FALSE"
+    >
+
+
+    <import name="stdint"/>
+    <import name="Kernel/VeloPixChannelID"/>
+    <import name="Kernel/FastClusterContainer"/>
+    <import name="Kernel/SiDataFunctor"/>
+    <import name="LHCbMath/LHCbMath"/>
+ 
+    <typedef desc = "channelID type"
+       type =  "LHCb::VeloPixChannelID"
+       def = "chan_type"
+       access = "PUBLIC " />
+
+    <typedef desc = "fast container for light clusters"
+       type =  "FastClusterContainer &lt; LHCb::VeloPixLiteCluster, ulonglong &gt;"
+       def = "VeloPixLiteClusters"
+       access = "PUBLIC " />
+
+     <typedef desc = "fast container for light clusters (old name: will be removed)"
+       type =  "FastClusterContainer &lt; LHCb::VeloPixLiteCluster, ulonglong &gt;"
+       def = "FastContainer"
+       access = "PUBLIC " />
+
+     <typedef desc = "finding policy"
+       type =  "SiDataFunctor::CompareByChannel &lt; LHCb::VeloPixLiteCluster&gt;"
+       def = "findPolicy"
+       access = "PUBLIC " /> 
+
+     <constructor desc="Constructor" 
+       argList='VeloPixChannelID &amp; chan,  int threshold, std::pair&lt;double,double&gt; fracPix, bool longPix'>
+       <code>
+
+ unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)));
+ unsigned int tFracY = (LHCb::Math::round(fracPix.second *(1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)));
+ unsigned int tThres;
+ threshold &lt; 10000 ? tThres = int(threshold/10000*8): tThres = 7;
+ unsigned int tlongPix;
+ longPix == true  ? tlongPix = 1:   tlongPix= 0;
+
+ m_liteCluster = (((ulonglong)chan) &lt;&lt; channelIDBits) + 
+                 (((ulonglong)tThres) &lt;&lt; thresholdBits) +
+                 (((ulonglong)tFracX) &lt;&lt; interPixelFractionXBits) +
+                 (((ulonglong)tFracY) &lt;&lt; interPixelFractionYBits) +
+                 (((ulonglong)tlongPix) &lt;&lt; longPixBits)
+                 ;
+       </code>
+      </constructor>
+
+
+    <constructor desc="Constructor" 
+       argList='VeloPixChannelID &amp; chan ,unsigned int thres,
+                std::pair&lt;unsigned int,unsigned int&gt; fracPixel, bool longPix'>
+       <code>
+ unsigned int tlongPix;
+ longPix == true  ? tlongPix = 1:   tlongPix= 0;
+ m_liteCluster = (((ulonglong)chan) &lt;&lt; channelIDBits) +
+                 (((ulonglong)thres) &lt;&lt; thresholdBits) +
+                 (((ulonglong)fracPixel.first) &lt;&lt; interPixelFractionXBits) +
+                 (((ulonglong)fracPixel.second) &lt;&lt; interPixelFractionYBits) +
+                 (((ulonglong)tlongPix) &lt;&lt; longPixBits)
+          ;
+       </code>
+      </constructor>
+
+
+
+     <destructor  desc="destructor">
+     <code>
+     //
+     </code>
+     </destructor>
+
+     <method type='LHCb::VeloPixLiteCluster &amp;' 
+             name='operator ='
+             argList='const VeloPixLiteCluster &amp; c'  
+             const='FALSE'  desc='equal'>
+        <code>m_liteCluster = c.m_liteCluster; 
+              return *this; </code>
+     </method>
+
+     <method
+      name="interPixelFraction"
+      type="std::pair&lt;double,double&gt;"
+      desc="fractionnal positions within a pixel"
+      const="TRUE">
+     <code>
+ std::pair&lt;unsigned int,unsigned int&gt; fracUnit = fractionUnits();
+ std::pair&lt;double,double&gt; frac(double(fracUnit.first)/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)),
+  double(fracUnit.second)/double((1 &lt;&lt;interPixelFractionYBits-interPixelFractionXBits )));
+ return frac;
+     </code>
+     </method>
+
+
+     <method
+      name="interPixelFractionX"
+      type="double"
+      desc="fractionnal X position within a pixel"
+      const="TRUE">
+     <code>
+return  double(fractionUnitsX())/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits));
+     </code>
+     </method>
+
+     <method
+      name="interPixelFractionY"
+      type="double"
+      desc="fractionnal Y position within a pixel"
+      const="TRUE">
+     <code>
+return  double(fractionUnitsY())/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits));
+     </code>
+     </method>
+
+
+     <method
+      name="isLongPixel"
+      type="bool"
+      desc="is it an long pixel"
+      const="TRUE">
+     <code>
+  return (((m_liteCluster &amp; longPixMask) &gt;&gt; longPixBits) == 1);
+     </code>
+     </method>
+
+      <method
+      access="PRIVATE"
+      name="fractionUnits"
+      type="std::pair&lt;unsigned int,unsigned int&gt;"
+      desc="pair of numbers between 0 and  /8ths of the x and y size of a pixel"
+      const="TRUE"
+      >
+      <code> 
+std::pair&lt;unsigned int,unsigned int&gt; fracUnit (((m_liteCluster &amp; interPixelFractionXMask) &gt;&gt; interPixelFractionXBits),((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractionYBits)); 
+return fracUnit;
+     </code>
+     </method>
+
+      <method
+      access="PRIVATE"
+      name="fractionUnitsX"
+      type="unsigned int"
+      desc="number between 0 and  /8ths of the x size of a pixel"
+      const="TRUE"
+      >
+      <code> 
+
+return ((m_liteCluster &amp; interPixelFractionXMask) &gt;&gt; interPixelFractionXBits);
+     </code>
+     </method>
+
+      <method
+      access="PRIVATE"
+      name="fractionUnitsY"
+      type="unsigned int"
+      desc="number between 0 and  /8ths of the y size of a pixel"
+      const="TRUE"
+      >
+      <code> 
+
+return ((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractionYBits);
+     </code>
+     </method>
+
+      <method
+      access="PUBLIC"
+      name="channelID"
+      type="LHCb::VeloPixChannelID"
+      desc="The Channel"
+      const="TRUE"
+      >
+      <code> return VeloPixChannelID((m_liteCluster &amp; channelIDMask) &gt;&gt; channelIDBits); 
+     </code>
+     </method>
+
+     
+     <attribute type='bitfield64' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
+        <bitfield name='channelID' length='28' desc='channelID' 
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='threshold' length='3' desc='threshold' 
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='longPix' length='1'  desc='big or small pixel'
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='interPixelFractionX' length='3' desc='fractional position in X'
+         setMeth="FALSE" getMeth="FALSE"/>
+        <bitfield name='interPixelFractionY' length='3' desc='fractional position in Y (supposed to be equal to X one)'
+         setMeth="FALSE" getMeth="FALSE"/>
+      </attribute>
+
+  </class>
+</package>
+</gdd>
+
