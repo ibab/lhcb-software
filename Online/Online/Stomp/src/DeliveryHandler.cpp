@@ -1,4 +1,4 @@
-// $Id: DeliveryHandler.cpp,v 1.1 2009-07-03 18:10:08 frankb Exp $
+// $Id: DeliveryHandler.cpp,v 1.2 2009-11-27 16:39:45 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/DeliveryHandler.cpp,v 1.1 2009-07-03 18:10:08 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/DeliveryHandler.cpp,v 1.2 2009-11-27 16:39:45 frankb Exp $
 #include "Stomp/DeliveryHandler.h"
 #include "Stomp/StompSensor.h"
 #include "Stomp/Connector.h"
@@ -35,7 +35,7 @@ void DeliveryHandler::handle(const Event& ev)  {
         value += '#';
         value += d.value;
         m_sensor->send(d.tag,value.c_str(),value.length());
-        log() << "Publish data tag " << d.tag << ": " << value << endl;
+        // log() << "Publish data tag " << d.tag << ": " << value << endl;
         break;
       }
       default:

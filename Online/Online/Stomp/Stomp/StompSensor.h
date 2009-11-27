@@ -1,4 +1,4 @@
-// $Id: StompSensor.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Id: StompSensor.h,v 1.2 2009-11-27 16:39:42 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.1 2009-07-03 18:10:07 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/Stomp/StompSensor.h,v 1.2 2009-11-27 16:39:42 frankb Exp $
 #ifndef STOMP_STOMSERVICE_H
 #define STOMP_STOMSERVICE_H
 
@@ -43,9 +43,9 @@ namespace Stomp  {
   class StompSensor : public Sensor   {
   public:
     struct Frame {
-      char *command;
+      const char *command;
       void *headers;
-      char *body;
+      const char *body;
       int body_length;
     };
     struct Message {
@@ -107,7 +107,7 @@ namespace Stomp  {
     /// Start polling for messages....
     int start();
     /// Poll for messages....
-    int StompSensor::execute();
+    int execute();
 
     /// Sensor overload: Add interactor to sensor. Dispatch criteria is topic name
     virtual void add( Interactor* client, void* topic);

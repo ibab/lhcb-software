@@ -1,5 +1,6 @@
 #include "Stomp/StompSensor.h"
 #include <cstdlib>
+#include <cstring>
 #include "CPP/Event.h"
 #include "CPP/Interactor.h"
 

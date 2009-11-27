@@ -1,4 +1,4 @@
-// $Id: StompSensor.cpp,v 1.2 2009-08-15 16:21:13 frankb Exp $
+// $Id: StompSensor.cpp,v 1.3 2009-11-27 16:39:46 frankb Exp $
 //====================================================================
 //  Comet
 //--------------------------------------------------------------------
@@ -11,7 +11,7 @@
 //  Created    : 29/1/2008
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.2 2009-08-15 16:21:13 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/Stomp/src/StompSensor.cpp,v 1.3 2009-11-27 16:39:46 frankb Exp $
 
 #include "Stomp/StompSensor.h"
 #include "Stomp/stomp.h"
@@ -21,6 +21,8 @@
 #include "WT/wtdef.h"
 #include "CPP/Interactor.h"
 #include <cstring>
+#include <iostream>
+#include <memory>
 
 using namespace std;
 using namespace Stomp;
@@ -134,7 +136,7 @@ int StompSensor::_command(const string& cmd, const string& channel, const void* 
 /// Connect to stomp service
 int StompSensor::connect()   {
   stomp_frame frame, *pframe;
-  frame.command = "CONNECT";
+  frame.command = (char*)"CONNECT";
   frame.headers = apr_hash_make(m_pool);
   ::apr_hash_set(frame.headers, "login", APR_HASH_KEY_STRING, "hchirino");          
   ::apr_hash_set(frame.headers, "passcode", APR_HASH_KEY_STRING, "letmein");          
@@ -219,6 +221,7 @@ void StompSensor::add( Interactor* client, void* topic)  {
   if ( client && channel && isascii(channel[0]) )  {
     InteractorTable::iterator i = m_clients.find(channel);
     if ( i == m_clients.end() )  {
+      cout << "+++  Subscribed to channel: " << channel << endl;
       subscribe(channel);
     }
     m_clients[channel].push_back(client);
