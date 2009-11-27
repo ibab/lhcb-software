@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.133 2009-11-16 09:44:35 graven Exp $"
+__version__ = "$Id: Configuration.py,v 1.134 2009-11-27 13:34:42 pkoppenb Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -452,7 +452,7 @@ class HltConf(LHCbConfigurableUser):
             from Configurables import LoKi__L0Filter    as L0Filter
             from HltLine.HltDecodeRaw import DecodeL0DU
             L0accept = Sequence(name='HltEndSequenceFilter', Members = DecodeL0DU.members() + [ L0Filter( 'L0Pass', Code = "L0_DECISION" )])
-            EndMembers.insert(0,  L0accept )
+            EndMembers.insert(1,  L0accept )  # after routing bits
 ##################################################################################
     def __apply_configuration__(self):
         """

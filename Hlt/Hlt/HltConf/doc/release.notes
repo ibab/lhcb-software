@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.371 2009-11-26 10:50:01 panmanj Exp $ 
+! $Id: release.notes,v 1.372 2009-11-27 13:34:42 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-27 - Patrick Koppenburg
+ - Always run routing bits writer
+ - This solves bug https://savannah.cern.ch/bugs/index.php?59607
 
 ! 2009-11-26 - Jaap Panman
  - add Hlt1MiniBiasLines, Hlt1NoBiasLines in Hlt1, HltInit
