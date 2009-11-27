@@ -1,9 +1,9 @@
-! $Id: release.notes,v 1.83 2009-11-20 15:47:17 odescham Exp $
+! $Id: release.notes,v 1.84 2009-11-27 13:40:33 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
-
+!========================== CaloTools v5r14 2009-11-27 =========================
 ! 2009-11-17 - Olivier Deschamps
  - Calo2MCTool : 
   - new methods :
@@ -11,7 +11,6 @@
       isPureNeutralCalo(particle) 
       findMCOrBest(string/ParticleID,threshold)
   - complete the code (still not fully completed)
-
 
 !========================== CaloTools v5r13 2009-11-13 =========================
 ! 2009-11-05 - Dmitry GOLUBKOV
