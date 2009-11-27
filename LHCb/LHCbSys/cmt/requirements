@@ -11,7 +11,7 @@ branches doc cmt
 use CaloDAQ               v4r16   Calo    # Olivier Deschamps
 use CaloInterfaces        v7r17   Calo    # Olivier Deschamps
 use CaloKernel            v6r1    Calo    # Olivier Deschamps
-use CaloUtils             v8r8    Calo    # Olivier Deschamps
+use CaloUtils             v8r9    Calo    # Olivier Deschamps
 
 use MDF                   v3r21   DAQ     # Markus Frank
 use Tell1Kernel           v1r9    DAQ     # Tomasz Szumlak
