@@ -1,0 +1,22 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='MCEvent'>
+
+    <class author="Marcin Kucharczyk" desc="This class represents charge deposited in a pixel by single MCHit" id="4501" name="MCVeloPixDeposit">
+      <base name="KeyedObject&lt;int&gt;"/>
+      &KeyedObject;
+      <location name="MCVeloPixDepositLocation"   place="MC/VeloPix/Deposits"   />
+      <import name ="Kernel/VeloPixChannelID"/>
+      <import name="Event/MCHit" /> 
+       <constructor argList="double charge, LHCb::VeloPixChannelID aChan, LHCb::MCHit* aHit" 
+                    initList="m_depositedCharge(charge), m_channelID(aChan), m_mcHit(aHit)"  desc="special constructor">
+        <code></code>
+      </constructor>
+      <attribute name="depositedCharge" type="double" setMeth = "FALSE" desc="charge deposited in pixel in electrons"/>
+      <relation name="mcHit" type="LHCb::MCHit" desc="pointer to MCHit"/>
+      <attribute name="channelID" type="LHCb::VeloPixChannelID" setMeth = "FALSE" desc="channelID"/>
+    </class>
+
+ </package>
+</gdd>

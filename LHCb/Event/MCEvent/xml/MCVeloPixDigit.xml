@@ -1,0 +1,20 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='MCEvent'>
+
+    <class author="Marcin Kucharczyk" desc="Vector of all charge deposits in given pixel" id="4502" name="MCVeloPixDigit">
+      <base name="KeyedObject&lt;LHCb::VeloPixChannelID&gt;"/>
+      <template name="KeyedObjectDict" t1="LHCb::VeloPixChannelID"/>
+      &KeyedContainer;
+      <location name="MCVeloPixDigitLocation"   place="MC/VeloPix/Digits"   />
+      <import name ="Kernel/VeloPixChannelID"/>
+      <import name="MCVeloPixDeposit" soft="TRUE"/>
+      <relation name="mcDeposit" multiplicity="M" type="LHCb::MCVeloPixDeposit" desc="vector of MCVeloPixDeposits"/>
+      <method type='LHCb::VeloPixChannelID' name='channelID' const='TRUE'  desc='channel = key'>
+        <code>return key();</code>
+      </method> 
+  </class>
+  
+ </package>
+</gdd>
