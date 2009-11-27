@@ -4,10 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
-!========================== DigiEvent v2r13 2009-11-27 =======================
+!========================== DigiEvent v2r14 2009-11-27 =======================
 ! 2009-11-27 - Marcin Kucharczyk
  - Add VeloPixDigit.xml, VeloPixCluster.xml and VeloPixLiteCluster.xml objects
- - used by pixel Velo algorithms 
+   used by pixel Velo algorithms 
 
 !========================== DigiEvent v2r13 2009-11-13 =======================
 ! 2009-10-25 - Vanya Belyaev
