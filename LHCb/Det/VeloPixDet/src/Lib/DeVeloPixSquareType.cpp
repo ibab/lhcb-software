@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.10 2009-11-27 08:54:10 cocov Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.11 2009-11-28 07:32:38 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -202,12 +202,12 @@ StatusCode DeVeloPixSquareType::initialize()
   // fill a channelID 
   LHCb::VeloPixChannelID refid ((int)(pow(2,32)-1));
 
-  m_ChipBit = (uint32_t)(log(refid.chip()+1)/log(2));
-  m_PixelLPBit = (uint32_t)(log(refid.pixel_lp()+1)/log(2));
-  m_PixelHPBit = (uint32_t)(log(refid.pixel_hp()+1)/log(2));
+  m_ChipBit = (unsigned int)(log(refid.chip()+1)/log(2));
+  m_PixelLPBit = (unsigned int)(log(refid.pixel_lp()+1)/log(2));
+  m_PixelHPBit = (unsigned int)(log(refid.pixel_hp()+1)/log(2));
   m_numberOfPixelsPerChipBits = (refid.pixel_lp()+1)*(refid.pixel_hp()+1);
   m_numberOfChipsBits = refid.chip()+1;
-  uint32_t zeroMask = 0x00000000 ;
+  unsigned int zeroMask = 0x00000000 ;
   m_ChipMask = (refid.chip()  <<  (m_PixelHPBit+m_PixelLPBit)) | zeroMask;
   m_PixelLPMask = refid.pixel_lp() | zeroMask ;
   m_PixelMask = (refid.pixel_hp()<<m_PixelLPBit  | zeroMask)| m_PixelLPMask;
