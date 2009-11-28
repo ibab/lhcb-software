@@ -44,8 +44,8 @@
        argList='VeloPixChannelID &amp; chan,  int threshold, std::pair&lt;double,double&gt; fracPix, bool longPix'>
        <code>
 
- unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)));
- unsigned int tFracY = (LHCb::Math::round(fracPix.second *(1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)));
+ unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits))));
+ unsigned int tFracY = (LHCb::Math::round(fracPix.second *(1 &lt;&lt; (interPixelFractionYBits-interPixelFractionXBits))));
  unsigned int tThres;
  threshold &lt; 10000 ? tThres = int(threshold/10000*8): tThres = 7;
  unsigned int tlongPix;
@@ -99,8 +99,8 @@
       const="TRUE">
      <code>
  std::pair&lt;unsigned int,unsigned int&gt; fracUnit = fractionUnits();
- std::pair&lt;double,double&gt; frac(double(fracUnit.first)/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits)),
-  double(fracUnit.second)/double((1 &lt;&lt;interPixelFractionYBits-interPixelFractionXBits )));
+ std::pair&lt;double,double&gt; frac(double(fracUnit.first)/double((1 &lt;&lt; (interPixelFractionYBits-interPixelFractionXBits))),
+  double(fracUnit.second)/double((1 &lt;&lt;(interPixelFractionYBits-interPixelFractionXBits) )));
  return frac;
      </code>
      </method>
@@ -112,7 +112,7 @@
       desc="fractionnal X position within a pixel"
       const="TRUE">
      <code>
-return  double(fractionUnitsX())/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits));
+return  double(fractionUnitsX())/double((1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits)));
      </code>
      </method>
 
@@ -122,7 +122,7 @@ return  double(fractionUnitsX())/double((1 &lt;&lt; interPixelFractionYBits-inte
       desc="fractionnal Y position within a pixel"
       const="TRUE">
      <code>
-return  double(fractionUnitsY())/double((1 &lt;&lt; interPixelFractionYBits-interPixelFractionXBits));
+return  double(fractionUnitsY())/double((1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits)));
      </code>
      </method>
 

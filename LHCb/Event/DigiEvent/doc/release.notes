@@ -4,6 +4,10 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-11-28 - Victor Coco
+ - add some paranthesis in VeloPixLiteCluster because of warning with gcc43
+
+
 !========================== DigiEvent v2r14 2009-11-27 =======================
 ! 2009-11-27 - Marcin Kucharczyk
  - Add VeloPixDigit.xml, VeloPixCluster.xml and VeloPixLiteCluster.xml objects

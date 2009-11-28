@@ -1,4 +1,5 @@
 <lcgdict>
     <class name="FastClusterContainer<LHCb::VeloLiteCluster, int >"/> 
+    <class name="FastClusterContainer<LHCb::VeloPixLiteCluster, ulonglong >"/> 
     <class name="FastClusterContainer<LHCb::STLiteCluster, int >"/> 
 </lcgdict>
