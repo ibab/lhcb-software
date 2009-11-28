@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.13 2009-11-18 17:39:26 gpassal Exp $
+// $Id: MuonNNetRec.cpp,v 1.14 2009-11-28 10:37:47 ggiacomo Exp $
 
 #include <list>
 
@@ -60,10 +60,11 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
   declareProperty( "MaxIterations"    , m_maxIterations = 100 );
   declareProperty( "SkipStation"      , m_skipStation = -1 );
   declareProperty( "AllowHoles"       , m_allowHoles = true );
-  declareProperty( "PhysicsTiming"    , m_physicsTiming = false );
+  declareProperty( "PhysicsTiming"    , m_physicsTiming = true );
   declareProperty( "AssumeCosmics"    , m_assumeCosmics = true );
   declareProperty( "AssumePhysics"    , m_assumePhysics = false );
   declareProperty( "AddXTalk"         , m_XTalk = false);
+  declareProperty( "XtalkRadius"      , m_XtalkRadius = 1.5);
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
   declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
@@ -522,7 +523,7 @@ StatusCode MuonNNetRec::muonNNetMon(){
       if(m_XTalk) {
         //	info()<< " before "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         
-        StatusCode sct = muonTrack->AddXTalk( trackhits);
+        StatusCode sct = muonTrack->AddXTalk( trackhits, m_XtalkRadius);
         
         //	info()<< " After "<<muonTrack->getHits().size() <<" hits to the track"<<endmsg;
         

@@ -1,4 +1,4 @@
-// $Id: MuonTrack.cpp,v 1.6 2009-10-30 12:06:10 gpassal Exp $
+// $Id: MuonTrack.cpp,v 1.7 2009-11-28 10:37:47 ggiacomo Exp $
 #define MUONTRACKRECNMSPC
 #include "MuonTrackRec/MuonTrack.h"
 #include "MuonTrackRec/MuonLogPad.h"
@@ -143,9 +143,8 @@ double MuonTrack::correctTOF(double rawT,
                              double X,
                              double Y,
                              double Z) {
-  return ( rawT +
-           sqrt(X*X+Y*Y+Z*Z)/MuonTrackRec::muspeed *
-           (1-MuonTrackRec::Zref/Z) );
+ return ( rawT +
+           (sqrt(X*X+Y*Y+Z*Z)-MuonTrackRec::Zref)/MuonTrackRec::muspeed);
 }
 
 
@@ -289,50 +288,33 @@ double MuonTrack::sz() const {return ( MuonTrackRec::IsPhysics ? 1. :
                                        (m_speed>0 ? 1.: -1.) ) );}
 
 // attach Xtalk hits (by Silvia Pozzi)
-StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits)
+StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits, float cut)
 {
   int nXTalk = 0;
-  bool m_fit = true;
   
-  if( m_fit ) {
-    StatusCode sc = linFit();
-    if(!sc) 
-      return StatusCode::FAILURE;
-
-  }
+  StatusCode sc = linFit();
+  if(!sc) 
+    return StatusCode::FAILURE;
   
   // first extract the hits 
   MuonTkIt tk;
   std::vector< MuonHit* > tt_hits ;
 
-  //  std::cout << " initial track hit size "<<t_hits.size()<<std::endl;
-
-    //m_trackhits = ?????  // Container of all the hits ???  Where is it, is it available?
   std::vector<MuonHit*>::const_iterator ihT,ihH,ihK; 
   for (ihT = trackhits->begin(); ihT != trackhits->end() ; ihT++){ // loop on all the hits
-  
-    for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop in the track hits
+    
+    for (tk = m_muonTrack.begin(); tk != m_muonTrack.end(); tk++){ // loop on the track hits
       MuonHit* hit= tk->second;
       if ( hit->station() == (*ihT)->station() && 
            hit->hitID()   != (*ihT)->hitID() ) {
         
-        double deltaX = 90;
-        double deltaY = 90;
-        if ( m_fit ) {
+        double deltaX;
+        double deltaY;
           
-          deltaX = fabs( (*ihT)->X() - ( m_bx + m_sx *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dX()) ;
-          
-          deltaY = fabs( (*ihT)->Y() - ( m_by + m_sy *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dY()) ;
-          
-        } else {
-          
-          deltaX = fabs( hit->X() - (*ihT)->X() ) / (hit->hitTile_dX()/2. + (*ihT)->hitTile_dX()/2.) ;
-          
-          deltaY = fabs( hit->Y() - (*ihT)->Y() ) / (hit->hitTile_dY()/2. + (*ihT)->hitTile_dY()/2.) ;
-          
-        }
+        deltaX = fabs( (*ihT)->X() - ( m_bx + m_sx *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dX()) ;
+        deltaY = fabs( (*ihT)->Y() - ( m_by + m_sy *(*ihT)->Z() ) ) / ((*ihT)->hitTile_dY()) ;
 
-        if (deltaX<1.5 && deltaY<1.5 ) {
+        if (deltaX<cut && deltaY<cut ) {
           bool trovato = true;
           for (ihK=tt_hits.begin(); ihK!=tt_hits.end(); ihK++) 
             if ((*ihT)==(*ihK) ) trovato = false;
@@ -350,11 +332,8 @@ StatusCode MuonTrack::AddXTalk(const std::vector< MuonHit* >* trackhits)
   std::vector<MuonHit* >::iterator tj;
   for (tj=tt_hits.begin(); tj!=tt_hits.end(); tj++ ){
     idhit++;
-    //t_hits.push_back((*tj));
     this->insert(idhit,( *tj) );
   }
-
-  //std::cout << "nXTalk " << nXTalk << " added "<< tt_hits.size()<< " track "<<this->getHits().size()<<std::endl;
 
   return StatusCode::SUCCESS;
 }

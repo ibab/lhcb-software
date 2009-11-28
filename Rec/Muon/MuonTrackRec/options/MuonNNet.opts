@@ -40,6 +40,7 @@ ToolSvc.MuonNNetRec.AssumePhysics = false; // if true assume that tracks come fr
 
 
 ToolSvc.MuonNNetRec.AddXTalk      = false; // add Xtalk hits to tracks
+ToolSvc.MuonNNetRec.XtalkRadius   = 1.5;  // radius of cone around tracks (in pad size units) where hits will be added
 
 // choice of basic muon tools:
 ToolSvc.MuonNNetRec.DecodingTool = "MuonHitDecode"; // interface to MuonRawBuffer
@@ -47,4 +48,5 @@ ToolSvc.MuonNNetRec.DecodingTool = "MuonHitDecode"; // interface to MuonRawBuffe
 ToolSvc.MuonNNetRec.PadRecTool   = "MuonPadRec";
 ToolSvc.MuonNNetRec.PosTool      = "MuonDetPosTool"; // use the default tool for using standard MuonDet methods
                                           // alternative is  "MuonPosTool" from Hlt/HltMuon or Muon/MuonMonKernel  
- 
+ToolSvc.MuonNNetRec.ClusterTool  = "MuonFakeClustering" // default is no clustering
+                                          // alternative is "MuonClusterRec"

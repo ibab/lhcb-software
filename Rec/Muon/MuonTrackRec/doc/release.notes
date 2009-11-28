@@ -8,6 +8,12 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2009-11-28 - v2r3 - GG
+ minor changes:
+ - add XtalkRadius option to MuonNNetRec for controlling recovering of Xtalk hits
+ - remove compilation warnings
+ - update option files
+
 ! 2009-11-18 - v2r2 - GP
  - new method in MuonTrackRec: copyToLHCbTracks(). Copies the MuonTracks into
    standard LHCb::Tracks

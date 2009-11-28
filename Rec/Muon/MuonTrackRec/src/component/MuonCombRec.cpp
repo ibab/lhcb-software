@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.2 2009-11-18 16:37:32 gpassal Exp $
+// $Id: MuonCombRec.cpp,v 1.3 2009-11-28 10:37:47 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -70,9 +70,9 @@ MuonCombRec::MuonCombRec( const std::string& type,
                    ( 60.)(120.)(180.)(240.)   // M2
                    ( 60.)(120.)(240.)(480.)   // M3
                    ( 60.)(120.)(240.)(480.)); // M4
-  declareProperty( "PhysicsTiming"    , m_physicsTiming = false );
-  declareProperty( "AssumeCosmics"    , m_assumeCosmics = true );
-  declareProperty( "AssumePhysics"    , m_assumePhysics = false );
+  declareProperty( "PhysicsTiming"    , m_physicsTiming = true );
+  declareProperty( "AssumeCosmics"    , m_assumeCosmics = false );
+  declareProperty( "AssumePhysics"    , m_assumePhysics = true );
   declareProperty( "AddXTalk"         , m_XTalk = true);
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
