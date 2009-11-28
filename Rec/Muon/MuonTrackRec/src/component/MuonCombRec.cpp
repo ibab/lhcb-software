@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.3 2009-11-28 10:37:47 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.4 2009-11-28 18:39:40 ggiacomo Exp $
 // Include files 
 #include <fstream>
 
@@ -77,7 +77,7 @@ MuonCombRec::MuonCombRec( const std::string& type,
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
   declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
-  declareProperty( "TracksOutputLocation", m_trackOutputLoc  = TrackLocation::Muon );
+  declareProperty( "TracksOutputLocation", m_trackOutputLoc  = "Rec/Track/MuonStandalone" );
 }
 
 //=============================================================================

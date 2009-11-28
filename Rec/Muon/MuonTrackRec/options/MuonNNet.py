@@ -42,5 +42,5 @@ muonNNet.AssumePhysics = False # if True assume that tracks come from IP (only f
 
 muonNNet.AddXTalk      = False # add Xtalk hits to tracks
 muonNNet.XtalkRadius   = 1.5;  # radius of cone around tracks (in pad size units) where hits will be added
-#muonNNet.TracksOutputLocation defaults to TrackLocation::Muon
+muonNNet.TracksOutputLocation = "Rec/Track/MuonStandalone"
  

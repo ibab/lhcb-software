@@ -27,4 +27,4 @@ muonComb.AssumeCosmics = False
 muonComb.AssumePhysics = True
 muonComb.AddXTalk = True # has no effect if "MuonClusterRec" is selected
 muonComb.SeedStation = 4 # default seet station is M5
-
+muonComb.TracksOutputLocation = "Rec/Track/MuonStandalone"
