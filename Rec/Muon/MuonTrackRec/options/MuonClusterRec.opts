@@ -1,0 +1,3 @@
+ToolSvc.MuonClusterRec.PosTool      = "MuonDetPosTool"; // default tool for using standard MuonDet methods
+                                      // alternative is  "MuonPosTool" from Hlt/HltMuon
+

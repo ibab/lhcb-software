@@ -20,8 +20,8 @@ ToolSvc.MuonNNetRec.NeuronThreshold =   0.7; // neuron activation cut
 ToolSvc.MuonNNetRec.DoubleKillAngCut=   0.1; // angular cut for double length neurons killing  
 */
 
-ToolSvc.MuonNNetRec.TrackSpanCut    =   2.0; // cut on span for selected tracks                
-ToolSvc.MuonNNetRec.StationFiringCut=   2.0; // cut on # of stations firing in the track (strict >)
+ToolSvc.MuonNNetRec.TrackSpanCut    =   2 ; // cut on span for selected tracks                
+ToolSvc.MuonNNetRec.StationFiringCut=   2 ; // cut on # of stations firing in the track (strict >)
 ToolSvc.MuonNNetRec.MaxNeurons      =  400; // (def. 3000) max number of possible track segments      
 ToolSvc.MuonNNetRec.MaxIterations   =   30; // (def. 100) max number of NN iterations
 ToolSvc.MuonNNetRec.SkipStation     =   -1; // for efficiency studies (-1 for none)
@@ -34,10 +34,6 @@ ToolSvc.MuonNNetRec.PhysicsTiming = true;
 ToolSvc.MuonNNetRec.AssumeCosmics = true;  // if true, track direction inferred from y slope and not from speed fit
 ToolSvc.MuonNNetRec.AssumePhysics = false; // if true assume that tracks come from IP (only forward)
 
-// don't use this feature if you don't know what you are doing !
-//ToolSvc.MuonNNetRec.OfflineTimeAlignment = true; //if true, time offsets from ASCII file are applied to logical pads 
-//ToolSvc.MuonNNetRec.TimeResidualFile= "$MUONTRACKRECROOT/options/TimeOffsets.txt";
-
 
 ToolSvc.MuonNNetRec.AddXTalk      = false; // add Xtalk hits to tracks
 ToolSvc.MuonNNetRec.XtalkRadius   = 1.5;  // radius of cone around tracks (in pad size units) where hits will be added
@@ -46,7 +42,6 @@ ToolSvc.MuonNNetRec.XtalkRadius   = 1.5;  // radius of cone around tracks (in pa
 ToolSvc.MuonNNetRec.DecodingTool = "MuonHitDecode"; // interface to MuonRawBuffer
                                           // alternative is "MuonMonHitDecode" from Muon/MuonMonKernel
 ToolSvc.MuonNNetRec.PadRecTool   = "MuonPadRec";
-ToolSvc.MuonNNetRec.PosTool      = "MuonDetPosTool"; // use the default tool for using standard MuonDet methods
-                                          // alternative is  "MuonPosTool" from Hlt/HltMuon or Muon/MuonMonKernel  
 ToolSvc.MuonNNetRec.ClusterTool  = "MuonFakeClustering" // default is no clustering
                                           // alternative is "MuonClusterRec"
+
