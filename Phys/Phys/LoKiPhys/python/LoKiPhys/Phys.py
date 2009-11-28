@@ -335,7 +335,11 @@ _LCF.printDecay    . __doc__ += "\n" + LoKi.PrintPhys.printDecay    . __doc__
 
 # decorate SmartRefVectors:
 for _t in ( LHCb.Particle    ,
-            LHCb.VertexBase  ) :
+            LHCb.VertexBase  ,
+            LHCb.Track       ,
+            LHCb.CaloDigit   ,
+            LHCb.CaloHypo    ,
+            LHCb.CaloCluster ) :
     _tt = cpp.SmartRefVector ( _t )
     # redefine the iterator 
     _tt.__iter__ = _LCF._iter_SRV_

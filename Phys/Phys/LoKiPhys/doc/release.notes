@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.121 2009-11-22 13:47:14 cattanem Exp $ 
+! $Id: release.notes,v 1.122 2009-11-28 19:29:45 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhys
 ! Responsible : Vanya Belyaev
 ! Purpose     : "Phys"-part of new restructurized LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-11-28 - Vanya Belyaev
+
+ - LoKi/Photons.h, src/Photons.cpp
+
+   add new functions (copy form Kali) very useful for analysis phtoon candidates 
+   for the first data 
+
+ - cmt/requirements 
+
+    version increment to v8r12 
+ 
 
 ! ========================== LoKiPhys v8r11 2009-11-22 ========================
 ! 2009-11-19 - Marco Clemencic

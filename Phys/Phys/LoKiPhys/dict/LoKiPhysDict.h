@@ -1,4 +1,4 @@
-// $Id: LoKiPhysDict.h,v 1.23 2009-11-16 11:54:27 ibelyaev Exp $
+// $Id: LoKiPhysDict.h,v 1.24 2009-11-28 19:29:45 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_LOKIPHYSDICT_H 
 #define LOKI_LOKIPHYSDICT_H 1
@@ -39,6 +39,8 @@
 #include "LoKi/FinderDict.h"
 #include "LoKi/Decays.h"
 #include "LoKi/TreeOps.h"
+// ============================================================================
+#include "LoKi/Photons.h"
 // ============================================================================
 /** @file
  *  The dictionaries for the package Phys/LoKiPhys
@@ -273,6 +275,11 @@ namespace
     Decays::IDecay::Finder m_finder ;
     Decays::IDecay::Tree   m_tree   ;
     LoKi::Dicts::FinderDicts_<const LHCb::Particle*> m_finderDicts ;
+    // =======================================================================    
+    LHCb::CaloDigit::Vector  m_calo_1 ;
+    LHCb::CaloDigit::Set     m_calo_2 ;
+    LHCb::CaloCellID::Vector m_calo_3 ;
+    LHCb::CaloCellID::Set    m_calo_4 ;    
     // =======================================================================    
   } ;  
   // ==========================================================================
