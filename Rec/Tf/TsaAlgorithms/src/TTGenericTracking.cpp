@@ -1,4 +1,4 @@
-// $Id: TTGenericTracking.cpp,v 1.4 2009-10-05 07:19:05 jvantilb Exp $
+// $Id: TTGenericTracking.cpp,v 1.5 2009-11-28 20:56:27 panmanj Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -333,7 +333,7 @@ void TTGenericTracking::addAdditionalHits( Tracks* tracks, STHits& hits )
 // Find and remove the clones in the container of tracks
 void TTGenericTracking::removeClones( Tracks* tracks ) 
 {
-  std::vector<Tracks::key_type> removedKeys;
+  std::set<Tracks::key_type> removedKeys;
   Tracks::iterator iTrack = tracks->begin();
   for( ; iTrack != tracks->end(); ++iTrack ) {
     Tracks::iterator jTrack = iTrack;
@@ -344,18 +344,18 @@ void TTGenericTracking::removeClones( Tracks* tracks )
       if( nCommon == (*jTrack)->nLHCbIDs() ) {
         debug() << "Found clone. Remove track " << jTrack-tracks->begin()
                 << " from second loop." << endmsg;
-        removedKeys.push_back( (*jTrack)->key() );
+        removedKeys.insert( (*jTrack)->key() );
       } else if( nCommon == (*iTrack)->nLHCbIDs() ) {
         debug() << "Found clone. Remove track " << iTrack-tracks->begin()
                 << " from first loop." << endmsg;
-        removedKeys.push_back( (*iTrack)->key() );    
+        removedKeys.insert( (*iTrack)->key() );    
         break;
       }
     }
   }
 
   // Loop over the keys that need to be removed from the track container
-  std::vector<Tracks::key_type>::const_iterator iKey = removedKeys.begin();
+  std::set<Tracks::key_type>::const_iterator iKey = removedKeys.begin();
   for( ; iKey != removedKeys.end(); ++iKey ) {
     tracks->erase( *iKey );
   }
