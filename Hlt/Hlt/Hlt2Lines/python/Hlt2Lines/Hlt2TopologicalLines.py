@@ -75,8 +75,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                 , 'TFPointUL'               : 0.10       # unitless
                 , 'CharmRobustPointUL'      : 0.10       # unitless
                 , 'CharmTFPointUL'          : 0.10       # unitless
-                , 'DXRobustCoplanUL'        : 0.02       # in mm
-                , 'DXTFPointUL'             : 0.20       # unitless
                 , 'Prescale'                : {'Hlt2TopoTF2BodySA' : 0.001
                                                , 'Hlt2TopoTF3BodySA' : 0.001
                                                , 'Hlt2TopoTF4BodySA' : 0.001
@@ -91,35 +89,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
                                                , 'Hlt2Topo3BodyCharmSA' : 0.0005
                                                , 'Hlt2Topo4BodyCharmSA' : 0.0005
                                               }
-                # I should have the ability to turn lines on and off.
-                # I don't necessarily want to do this just with prescalers.
-                , 'IncludeLines'  : {'Hlt2Topo2BodySA'              : True
-                                   , 'Hlt2Topo3BodySA'              : True
-                                   , 'Hlt2Topo4BodySA'              : True
-                                   , 'Hlt2TopoTF2BodySA'            : True
-                                   , 'Hlt2TopoTF3BodySA'            : True
-                                   , 'Hlt2TopoTF4BodySA'            : True
-                                   , 'Hlt2TopoTF2BodyReq2Yes'       : True
-                                   , 'Hlt2TopoTF2BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF2BodyReq4Yes'       : True
-                                   , 'Hlt2TopoTF3BodyReq2Yes'       : True
-                                   , 'Hlt2TopoTF3BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF3BodyReq4Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq2Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq3Yes'       : True
-                                   , 'Hlt2TopoTF4BodyReq4Yes'       : True
-                                   # Charm lines
-                                   , 'Hlt2Topo2BodyCharmSA'         : True
-                                   , 'Hlt2TopoTF2BodyCharmSignal'   : True
-                                   , 'Hlt2TopoTF2BodyCharmWideMass' : True
-                                   , 'Hlt2Topo3BodyCharmSA'         : True
-                                   , 'Hlt2TopoTF3BodyCharmSignal'   : True
-                                   , 'Hlt2TopoTF3BodyCharmWideMass' : True
-                                   , 'Hlt2Topo4BodyCharmSA'         : True
-                                   , 'Hlt2TopoTF4BodyCharmSignal'   : True
-                                   , 'Hlt2TopoTF4BodyCharmWideMass' : True
-                                   # DX lines.  Here temporarily.
-                                   }
                 # The HltANNSvc ID numbers for each line should be configurable.
                 , 'HltANNSvcID'  : {'Hlt2Topo2BodySADecision'         : 50700
                                    , 'Hlt2Topo3BodySADecision'        : 50710
@@ -157,15 +126,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         id = self._scale(lineName,'HltANNSvcID')
         HltANNSvc().Hlt2SelectionID.update( { lineName : id } )
 
-    # The mechanism for deciding whether or not to include a line needs to be
-    #    refined.
-    def checkIncludeLine(self,line) :
-        import re
-        lclline = 'Hlt2' + line
-        for (expr,value) in self.getProp('IncludeLines').iteritems() :
-            if re.match(expr,lclline) : return value
-        return False
-
     def __apply_configuration__(self) :
         from HltLine.HltLine import Hlt2Line
         from HltLine.HltLine import Hlt2Member
@@ -179,13 +139,12 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         #   and registers it to the HltANNSvc.
         ###################################################################
         def makeLine(lineName, algos) :
-            if self.checkIncludeLine(lineName) :
-                line = Hlt2Line(lineName
+            line = Hlt2Line(lineName
                      , prescale = self.prescale
                      , postscale = self.postscale
                      , algos = algos
                     )
-                self.updateHltANNSvc(lineName)
+            self.updateHltANNSvc(lineName)
 
 
 
@@ -216,8 +175,14 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
         # Construct a combined sequence for the input particles to the robust
         #   stage.
         ###################################################################
+        encasePions = GaudiSequencer('Hlt2SharedTopo2Body_Pions'
+                         , Members =  GoodPions.members()
+                         )
+        encaseKaons = GaudiSequencer('Hlt2SharedTopo2Body_Kaons'
+                         , Members =  GoodKaons.members()
+                         )
         orInput = GaudiSequencer('Hlt2SharedTopo2Body_PionsORKaons'
-                         , Members =  GoodPions.members() + GoodKaons.members()
+                         , Members =  [ encasePions, encaseKaons ]
                          , ModeOR = True
                          , ShortCircuit = False
                          )
@@ -412,8 +377,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # CombineParticles for the robust 4-body combinations.
         # Unlike the 3-body and 4-body, apply a mass lower limit.
-        # This will not usable in the charm, and will only cover part of
-        #   the mass range for the DX robust stage.
         ###################################################################
         # There seems to be a lot of CPUT consumed in managing the large number
         #   of 4-body candidates.  The list needs to be as small as possible.
@@ -466,8 +429,6 @@ class Hlt2TopologicalLinesConf(HltLinesConfigurableUser) :
 
         # post-track-fit 4-body combinations
         # Unlike the 3-body and 4-body, apply a mass lower limit.
-        # This will not usable in the charm, and will only cover part of
-        #   the mass range for the DX robust stage.
         ###################################################################
         topoTF4Body = tfCombine(  name = 'TopoTF4Body'
                                 , inputSeq = [ lclTFInputParticles, topoTF3Body ]

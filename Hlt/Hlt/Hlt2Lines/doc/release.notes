@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.86 2009-11-27 16:12:09 pkoppenb Exp $
+$Id: release.notes,v 1.87 2009-11-28 21:11:36 spradlin Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,16 @@ $Id: release.notes,v 1.86 2009-11-27 16:12:09 pkoppenb Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-28 - P. Spradlin
+ - Hlt2TopologicalLines : Several minor changes
+    . Removed last references to the DX lines (mostly comments).
+    . Removed the obsolete IncludedLines slot and its handling.  The intended
+      purpose is better implemented at higher level by the ActiveHlt2Lines
+      mechanism in the HltSettings.
+    . Put wrapper sequences around GooPions and GoodKaons to prevent some
+      problems introduced by including them in the same sequence
+      (Hlt2SharedTopo2Body_PionsORKaons) with ShortCircuit = False.
 
 ! 2009-11-27 - Patrick Koppenburg
  - B2DXLines : large event Killer mus depend on reconstruction
