@@ -1,4 +1,4 @@
-// $Id: CaloCellIDAsProperty.h,v 1.1 2009-09-30 13:18:43 ibelyaev Exp $
+// $Id: CaloCellIDAsProperty.h,v 1.2 2009-11-28 19:12:40 ibelyaev Exp $
 // ============================================================================
 #ifndef CALOUTILS_CALOCELLIDASPROPERTY_H 
 #define CALOUTILS_CALOCELLIDASPROPERTY_H 1
@@ -87,8 +87,20 @@ namespace Gaudi
      */
     GAUDI_API
     StatusCode parse 
-    ( std::vector<LHCb::CaloCellID>& result , 
-      const std::string&             input  ) ;
+    ( LHCb::CaloCellID::Vector&  result , 
+      const std::string&         input  ) ;
+    // ========================================================================    
+    /** parse the vector of cellIDs from the string 
+     *  @param result (OUPUT) the parsed vector of cellIDs 
+     *  @param input  (INPUT) the input string
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-29
+     */
+    GAUDI_API
+    StatusCode parse 
+    ( LHCb::CaloCellID::Set&     result , 
+      const std::string&         input  ) ;
     // ========================================================================    
     /** parse the map of  { cellID : double } from the string 
      *  @param result (OUPUT) the parsed map { cellID : double } 
@@ -138,12 +150,48 @@ namespace CaloCellCode
     ( LHCb::CaloCellID&  result , 
       const std::string& input  ) ;    
     // ========================================================================
+    /** parse cellIDs from the string 
+     *  @param result (OUPUT) the parsed cellIDs 
+     *  @param input  (INPUT) the input string
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-29
+     */
+    static StatusCode cellFromString 
+    ( LHCb::CaloCellID::Set&  result , 
+      const std::string&      input  ) ;    
+    // ========================================================================
+    /** parse cellIDs from the string 
+     *  @param result (OUPUT) the parsed cellIDs 
+     *  @param input  (INPUT) the input string
+     *  @return status code 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-29
+     */
+    static StatusCode cellFromString 
+    ( LHCb::CaloCellID::Vector& result , 
+      const std::string&        input  ) ;    
+    // ========================================================================
     /** convert cellID into string 
      * @param  cell (INPUT) cell to be converted 
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2009-09-29
      */
     static std::string cellToString ( const LHCb::CaloCellID& cell ) ;
+    // ========================================================================
+    /** convert cellIDs into string 
+     *  @param  cells (INPUT) cells to be converted 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-29
+     */
+    static std::string cellToString ( const LHCb::CaloCellID::Set& cells ) ;
+    // ========================================================================
+    /** convert cellIDs into string 
+     *  @param  cells (INPUT) cells to be converted 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-09-29
+     */
+    static std::string cellToString ( const LHCb::CaloCellID::Vector& cells ) ;
     // ========================================================================
   } ;
   // ==========================================================================

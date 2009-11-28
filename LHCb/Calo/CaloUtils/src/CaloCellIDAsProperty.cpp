@@ -1,4 +1,4 @@
-// $Id: CaloCellIDAsProperty.cpp,v 1.2 2009-10-02 11:32:12 ibelyaev Exp $
+// $Id: CaloCellIDAsProperty.cpp,v 1.3 2009-11-28 19:12:40 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -23,6 +23,10 @@
 // Grammars 
 // ============================================================================
 #include "GaudiKernel/Grammars.h"
+// ============================================================================
+// GaudiKernel 
+// ============================================================================
+#include "GaudiKernel/ToStream.h"
 // ============================================================================
 /** @file 
  *  Implementation file for streaming&parsing function for class LHCb::CaloCellID 
@@ -183,6 +187,27 @@ StatusCode Gaudi::Parsers::parse
                  SkipperGrammar()             ).full ;
 }
 // ============================================================================
+/*  parse the vector of cellIDs from the string 
+ *  @param result (OUPUT) the parsed vector of cellIDs 
+ *  @param input  (INPUT) the input string
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-09-29
+ */
+// ============================================================================
+StatusCode Gaudi::Parsers::parse 
+( LHCb::CaloCellID::Set&    result , 
+  const std::string&        input  ) 
+{
+  LHCb::CaloCellID::Vector tmp ;
+  StatusCode sc = parse ( tmp , input ) ;
+  if ( sc.isFailure() ) { return sc ; }
+  //
+  result.clear() ;
+  result.insert (  tmp.begin() , tmp.end() ) ;
+  return StatusCode::SUCCESS ;
+}
+// ============================================================================
 /*  parse the map of  { cellID : double } from the string 
  *  @param result (OUPUT) the parsed map { cellID : double } 
  *  @param input  (INPUT) the input string
@@ -237,13 +262,66 @@ StatusCode CaloCellCode::Cell2String::cellFromString
   return sc ;
 }
 // ============================================================================
+/*  parse cellIDs from the string 
+ *  @param result (OUPUT) the parsed cellIDs 
+ *  @param input  (INPUT) the input string
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-09-29
+ */
+// ============================================================================
+StatusCode CaloCellCode::Cell2String::cellFromString 
+( LHCb::CaloCellID::Set& cell , const std::string& input )
+{
+  StatusCode sc =  Gaudi::Parsers::parse ( cell , input ) ;
+  if ( sc.isFailure() ) { cell.clear(); }
+  return sc ;
+}
+// ============================================================================
+/*  parse cellIDs from the string 
+ *  @param result (OUPUT) the parsed cellIDs 
+ *  @param input  (INPUT) the input string
+ *  @return status code 
+ *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ *  @date 2009-09-29
+ */
+// ============================================================================
+StatusCode CaloCellCode::Cell2String::cellFromString 
+( LHCb::CaloCellID::Vector& cell , const std::string& input )
+{
+  StatusCode sc =  Gaudi::Parsers::parse ( cell , input ) ;
+  if ( sc.isFailure() ) { cell.clear(); }
+  return sc ;
+}
+// ============================================================================
 /* convert cellID into string 
  * @param  cell (INPUT) cell to be converted 
  * @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  * @date 2009-09-29
  */
 // ============================================================================
-std::string CaloCellCode::Cell2String::cellToString ( const LHCb::CaloCellID& cell ) 
+std::string CaloCellCode::Cell2String::cellToString 
+( const LHCb::CaloCellID& cell ) 
+{ return Gaudi::Utils::toString ( cell ) ; }
+// ============================================================================
+/* convert cellIDs into string 
+ * @param  cells (INPUT) cells to be converted 
+ * @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ * @date 2009-09-29
+ */
+// ============================================================================
+std::string CaloCellCode::Cell2String::cellToString 
+( const LHCb::CaloCellID::Set& cell ) 
+{ return Gaudi::Utils::toString ( cell ) ; }
+// ============================================================================
+/* convert cellIDs into string 
+ * @param  cells (INPUT) cells to be converted 
+ * @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+ * @date 2009-09-29
+ */
+// ============================================================================
+std::string CaloCellCode::Cell2String::cellToString 
+( const LHCb::CaloCellID::Vector& cell ) 
 { return Gaudi::Utils::toString ( cell ) ; }
 // ============================================================================
 

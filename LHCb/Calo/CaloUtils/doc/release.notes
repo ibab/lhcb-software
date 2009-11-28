@@ -1,7 +1,15 @@
-! $Id: release.notes,v 1.141 2009-11-27 13:36:48 cattanem Exp $
+! $Id: release.notes,v 1.142 2009-11-28 19:12:40 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-11-28 - Vanya Belyaev
+
+ - new helper python decoratoer classes
+
+ - cmt/requirements 
+    version increment to v8r10 
+
 
 !========================== CaloUtils v8r9 2009-11-27 =========================
 ! 2009-11-17 - Olivier Deschamps
