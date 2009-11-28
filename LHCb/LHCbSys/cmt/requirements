@@ -42,7 +42,7 @@ use XmlTools              v6r3    Tools   # Marco Clemencic
 # Event data model
 use DAQEvent              v8r2    Event   # Marco Cattaneo, Markus Frank
 use EventSys              v25r0   Event   # Marco Cattaneo
-use DigiEvent             v2r14   Event   # Marco Cattaneo and sub-det experts
+use DigiEvent             v2r13   Event   # Marco Cattaneo and sub-det experts
 use EventAssoc            v5r0    Event   # Juan Palacios
 use EventBase             v2r5p1  Event   # Marco Cattaneo, Gloria Corti
 use EventPacker           v2r1    Event   # Olivier Callot
