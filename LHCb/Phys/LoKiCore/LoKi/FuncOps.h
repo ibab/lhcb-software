@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.22 2009-11-21 12:39:36 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.23 2009-11-29 14:05:06 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1
@@ -16,6 +16,7 @@
 #include  "LoKi/Filters.h"
 #include  "LoKi/compose.h"
 #include  "LoKi/ExtraInfo.h"
+#include  "LoKi/Math.h"
 // ============================================================================
 namespace LoKi
 {
@@ -273,10 +274,34 @@ namespace LoKi
       // ======================================================================
       // InRange 
       static Cut __in_range__ ( const Func&  fun  , 
-                                const double val1 , 
-                                const double val2 ) 
+                                const double low  , 
+                                const double high ) 
       {
-        return LoKi::InRange<TYPE> ( fun , val1 , val2 ) ;
+        return LoKi::inRange ( low , fun , high ) ;
+      }
+      // ======================================================================
+      // InRange 
+      static Cut __in_range__ ( const Func&  fun  , 
+                                const Func&  low  , 
+                                const double high ) 
+      {
+        return LoKi::inRange ( low , fun , high ) ;
+      }
+      // ======================================================================
+      // InRange 
+      static Cut __in_range__ ( const Func&  fun  , 
+                                const double low  , 
+                                const Func&  high ) 
+      {
+        return LoKi::inRange ( low , fun , high ) ;
+      }
+      // ======================================================================
+      // InRange 
+      static Cut __in_range__ ( const Func&  fun  , 
+                                const Func&  low  , 
+                                const Func&  high ) 
+      {
+        return LoKi::inRange ( low , fun , high ) ;
       }
       // ======================================================================
     } ;

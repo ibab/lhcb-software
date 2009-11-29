@@ -91,17 +91,16 @@ def equal_to  ( f  , v ) :
 #     certain function is 'in-range' :
 #
 #              retult = low <= fun ( argument ) <= high 
-#
 #  @code
 #
 #    >>> fun = PT
-#    >>> cut = in_range ( PT , 0.5 * GeV , 3 * GeV )
+#    >>> cut = in_range ( 0.5 * GeV , PT , 3 * GeV ) ## 0.5 * GeV <= PT <= 3 * GeV
 #
 #  @endcode
 #
 #  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 #  @date   2009-11-21
-def in_range ( fun , low , high ) :
+def in_range ( low , fun , high ) :
     """
     Create 'in-range' predicate, that checks the valeu of
     certain function is 'in-range' :
@@ -109,13 +108,14 @@ def in_range ( fun , low , high ) :
               retult = low <= fun ( argument ) <= high 
 
     >>> fun = PT
-    >>> cut = in_range ( PT , 0.5 * GeV , 3 * GeV )
+    >>> cut = in_range ( 0.5 * GeV , PT , 3 * GeV ) ## 0.5 * GeV <= PT <= 3 * GeV  
     
     """
     return fun.__in_range__ ( low , high )
 
 ## ditto...
-inRange = in_range
+inRange  = in_range
+in_Range = in_range
 
 # =============================================================================
 ## Get the number of children for the object.
