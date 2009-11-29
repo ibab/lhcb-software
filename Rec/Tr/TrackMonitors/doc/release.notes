@@ -4,7 +4,11 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
-!============================ TrackMonitors v1r17 2009-11-27 ==================
+
+!============================ TrackMonitors v1r17 2009-11-29 ==================
+! 2009-11-29 - Rob Lambert
+ - Moved pointer checking into assert statements for the event model elements
+
 ! 2009-11-27 - Rob Lambert
  - OTTrackMonitor, bug 59675
 	 Try to protect against unprotected pointer dereferences,
