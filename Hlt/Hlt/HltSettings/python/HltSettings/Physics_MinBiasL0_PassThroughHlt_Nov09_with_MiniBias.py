@@ -51,9 +51,13 @@ class Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias :
                                                              , 'Hlt1Tell1Error'     : 0.
                                                              } 
                                               }
-               , Hlt1LumiLinesConf : { 'EnableReco' : False  }
+               , Hlt1LumiLinesConf : { 'EnableReco' : True  }
                , Hlt1L0LinesConf   : { 'Prescale' : { '.*' : 1 } }
                , Hlt1VeloLinesConf : { 'Prescale' : { '.*' : 0 } }
                , Hlt1MiniBiasLinesConf : { 'Prescale' : { '.*' : 0.5 } }
-               , Hlt1NoBiasLinesConf : { 'Prescale' : { '.*' : 0.1 } }
-               }
+               , Hlt1NoBiasLinesConf : { 'Prescale' : { 'Hlt1NoBiasNoBeam'        : 0.01,
+                                                        'Hlt1NoBiasBeam1'         : 0.05,
+                                                        'Hlt1NoBiasBeam2'         : 0.01,
+                                                        'Hlt1NoBiasBeamCrossing'  : 0.1,
+                                                        } }
+                 }
