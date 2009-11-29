@@ -11,7 +11,7 @@ from HltLine.HltLine import Hlt1Line as Line
 ############# start building the minibias line(s)...
 class Hlt1MiniBiasLinesConf(HltLinesConfigurableUser) :
 
-    __slots__ = { 'L0Channel'              : 'Hadron+Muon'
+    __slots__ = { 'L0Channel'              : ['Hadron','Muon'] #'Hadron+Muon'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 }
 
@@ -19,11 +19,7 @@ class Hlt1MiniBiasLinesConf(HltLinesConfigurableUser) :
         '''
         returns an Hlt1 "Line" including input and output filter
         '''
-        lzero_list = self.getProp('L0Channel').split('+')
-        l0du = " ( L0_CHANNEL('%s') ) "%(lzero_list.pop())
-        for l0 in lzero_list:
-            l0du += " | ( L0_CHANNEL('%s') ) "%(l0)
-        print l0du
+        l0du = ' | '.join( [ (" ( L0_CHANNEL('%s') ) "%(x)) for x in  self.getProp('L0Channel') ] )
         return Line ( 'MiniBias'+BXType
                     , prescale = self.prescale
                     , ODIN = ' ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % ( BXType )

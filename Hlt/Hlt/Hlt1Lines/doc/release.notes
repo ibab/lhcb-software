@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.70 2009-11-27 09:14:46 albrecht Exp $
+! $Id: release.notes,v 1.71 2009-11-29 19:27:30 panmanj Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-11-29 - Jaap Panman
+ - Hlt1MiniBiasLines, L0Channel now given as list
+ - Hlt1LumiLines, LumiCounterDefinition: add TT-tracking
+   for the moment disabled: needs a fixed version of TTGeneralTracking.cpp
 
 ! 2009-11-27 - Johannes Albrecht
  - added configuration for monitoring of TMatchV sequence

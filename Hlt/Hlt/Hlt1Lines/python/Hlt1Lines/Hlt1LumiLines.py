@@ -129,6 +129,32 @@ class Hlt1LumiLinesConf(HltLinesConfigurableUser) :
                      , ShortCircuit = False
                      ) )
         lumiRecoSequence.Members.append(lumiRecoFilterSequence)
+        
+        # sequence to get TT tracks
+        from Configurables import RawBankToSTClusterAlg
+        from Configurables import TTGenericTracking
+        lumiTTTSequence = Sequence( 'LumiTTTSequence', Members = [] ) # reset, always build the same seq...
+        lumiTTTSequence.Members.append( recoScaler )
+        lumiTTTSequence.Members.append(
+            Sequence('TTTSequence'
+                     , Members  = [ RawBankToSTClusterAlg("lumiTTClusters",
+                                                          ),
+                                    TTGenericTracking("lumiTTT",
+                                                      MaxNumClusters = 2000,
+                                                      OutputLocation = 'Hlt/Track/TTIP',
+                                                      WindowCenter = [0,0,0],
+                                                      HalfWindowXSize = 15,
+                                                      HalfWindowYSize = 15,
+                                                      OutputLevel = WARNING,
+                                                      )
+                                    ]
+                     , MeasureTime = True
+                     , ModeOR = True
+                     , ShortCircuit = False
+                     ) )
+        ## disable for the moement 
+        ## lumiRecoSequence.Members.append(lumiTTTSequence)
+
         # define histogrammers
         from Configurables import LumiHistoMaker, LumiHisto2dSPD
         HistoMembers=[]
