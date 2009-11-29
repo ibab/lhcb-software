@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.7 2009-11-21 12:53:57 ibelyaev Exp $
+# $Id: tests.py,v 1.8 2009-11-29 14:15:07 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -34,7 +34,8 @@ print 'inp >> XEMPTY                          :%s' % ( inp >> XEMPTY  )
 print 'inp >> XSIZE                           :%s' % ( inp >> XSIZE   )
 
 
-print 'inp >> in_range ( X,1,5 ) :%s' % ( inp >> in_range(X,1,5)  )
+print 'inp >>       in_range ( 1,X,5 )  :%s' % ( inp >>       in_range(1,X,5)  )
+print 'inp >> count(in_range ( 1,X,5 )) :%s' % ( inp >> count(in_range(1,X,5)) )
 
 
 # =============================================================================

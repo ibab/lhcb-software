@@ -4,6 +4,16 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2009-11-29 - Vanya Belyaev
+
+ - python/LoKiNumbers/test.py
+
+     fix the example of usage of in_range function 
+
+ - cmt/requirements 
+     version increment to v8r3p2 
+
+
 !========================== LoKiNumbers v8r3p1 2009-11-22 =====================
 ! 2009-11-21 - Vanya Belyaev
 
