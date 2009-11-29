@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.15 2009-11-28 18:39:40 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.16 2009-11-29 19:50:54 ggiacomo Exp $
 
 #include <list>
 
@@ -68,7 +68,7 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
   declareProperty( "DecodingTool"     , m_decToolName = "MuonHitDecode");
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
   declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
-  declareProperty( "TracksOutputLocation", m_trackOutputLoc  = "Rec/Track/MuonStandalone" );
+  declareProperty( "TracksOutputLocation", m_trackOutputLoc  = "Rec/Muon/Track");
 }
 //=============================================================================
 // Destructor

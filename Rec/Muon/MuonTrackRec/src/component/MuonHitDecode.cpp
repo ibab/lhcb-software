@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.cpp,v 1.3 2009-10-06 17:16:22 ggiacomo Exp $
+// $Id: MuonHitDecode.cpp,v 1.4 2009-11-29 19:50:54 ggiacomo Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ void MuonHitDecode::handle ( const Incident& incident )
 
 void MuonHitDecode::clearHits() 
 {
-  m_tiles.clear();
+  m_tilesAndTDC.clear();
   std::vector<MuonLogHit*>::iterator ih;
   for (ih=m_hits.begin() ; ih != m_hits.end(); ih++) {
     delete (*ih);
@@ -62,7 +62,7 @@ StatusCode MuonHitDecode::initialize() {
   if(!m_recTool){
     error()<<"error retrieving the muon raw buffer decoding tool "<<endreq;
   }  
-  m_tiles.clear(); m_tiles.reserve(5000);
+  m_tilesAndTDC.clear(); m_tilesAndTDC.reserve(5000);
   m_hits.clear(); m_hits.reserve(5000);
 
   incSvc()->addListener( this, IncidentType::EndEvent );
@@ -80,6 +80,7 @@ StatusCode MuonHitDecode::decodeRawData() {
   
   int TAENum=7;
   MuonLogHit* newhit=NULL;
+  // run MuonRawBuffer on all avilable BXs
   for(int i=-TAENum;i<=TAENum;i++){
     if (!exist<LHCb::RawEvent>(locBX(i) + LHCb::RawEventLocation::Default))
       continue;
@@ -93,36 +94,40 @@ StatusCode MuonHitDecode::decodeRawData() {
     if (!sc) return sc;
 
     for(it = tileAndTDC.begin(); it != tileAndTDC.end(); it++){
-
-      // set the time taking into account the BX. must be unsigned...
+      // set the time taking into account the BX. must be positive so I need to add an offset...
       unsigned int tprim = (*it).second;
       (*it).second += (7+i)*16;
-      
       verbose()<<"time conversion: before "<<tprim
                <<" after"<<(*it).second<<endmsg;
-      m_tiles.push_back((*it).first);
-
-      newhit = new MuonLogHit( &(m_tiles.back()) );
-      long L1Number,link_number,ODE_number,ode_ch;
-      m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first, 
-                                                   L1Number,link_number,ODE_number,ode_ch);
-      unsigned int on=ODE_number, oc=ode_ch;
-      newhit->setOdeNumber( on );
-      newhit->setOdeChannel( oc );
-      short int OdeIndex=1;
-      newhit->setOdeIndex(OdeIndex ); // to be implemented
-      int time=(*it).second - 7*16; // remove the positive-forcing offset
-      newhit->setTime( time );
-
-      m_hits.push_back(newhit);
     }
-    debug()<<"Size of tileAndTDC container is: "<<tileAndTDC.size()<<endreq;
-    debug()<<"Size of MuonLogHit container is: "<<m_hits.size()<<endreq;
+
+    m_tilesAndTDC.insert(m_tilesAndTDC.end(), tileAndTDC.begin(), tileAndTDC.end());
+    debug()<<"Size of tileAndTDC tmp container in bunch "<< i <<
+      " is: "<<tileAndTDC.size()<<endreq;
+    tileAndTDC.clear();
     m_recTool->forceReset();
   }
+  debug()<<"Size of tilesAndTDC container is: "<<m_tilesAndTDC.size()<<endreq;
+
+  // create list of MuonLogHit objects
+  for(it = m_tilesAndTDC.begin(); it != m_tilesAndTDC.end(); it++){
+    newhit = new MuonLogHit( &((*it).first) );
+    long L1Number,link_number,ODE_number,ode_ch;
+    m_muonDetector->getDAQInfo()->findHWNumber ( (*it).first, 
+                                                 L1Number,link_number,ODE_number,ode_ch);
+    unsigned int on=ODE_number, oc=ode_ch;
+    newhit->setOdeNumber( on );
+    newhit->setOdeChannel( oc );
+    short int OdeIndex=1;
+    newhit->setOdeIndex(OdeIndex ); // to be implemented
+    int time=(*it).second - 7*16; // remove the positive-forcing offset
+    newhit->setTime( time );
+    
+    m_hits.push_back(newhit);
+  }
+  debug()<<"Size of MuonLogHit container is: "<<m_hits.size()<<endreq;
   
 
-  tileAndTDC.clear();
   m_hitsDecoded = true;
   return sc;
 }
