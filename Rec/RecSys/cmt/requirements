@@ -13,7 +13,7 @@ use CaloPIDs             v5r2  	 Calo # Victor Egorychev, Vanya Belyaev
 use CaloReco             v5r3    Calo # Olivier Deschamps
 
 # Muon
-use MuonID               v7r3    Muon # Erica Polycarpo, Miriam Gandelman
+use MuonID               v7r4    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonPIDChecker       v4r0    Muon # Erica Polycarpo, Miriam Gandelman
 use MuonTrackAlign       v1r8    Muon # Silvia Pozzi
 

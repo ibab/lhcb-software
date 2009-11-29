@@ -10,7 +10,10 @@ This version uses Gaudi v21r6 and LHCb v28r4
 
 - Packages updated: Rec/GlobalReco v6r29, Tf/PatAlgorithms v3r25,
 		Tf/TsaAlgorithms v3r15, Tr/TrackFitter v2r41, Tr/TrackTools v3r24
-		Tr/TrackMonitors v1r17
+		Tr/TrackMonitors v1r17, Muon/MuonID v7r4
+
+- In Muon/MuonID v7r4:
+		. Faster and more robust, minor improvements
 
 - In Rec/GlobalReco v6r29:
 		. Add work around for older data where MuonPID::IsMuonLoose() or 
