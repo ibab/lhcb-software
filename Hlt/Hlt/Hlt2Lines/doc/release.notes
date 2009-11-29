@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.87 2009-11-28 21:11:36 spradlin Exp $
+$Id: release.notes,v 1.88 2009-11-29 19:28:47 panmanj Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -8,6 +8,9 @@ $Id: release.notes,v 1.87 2009-11-28 21:11:36 spradlin Exp $
 !           ALWAYS also edit Hlt/HltSettings
 !
 !-----------------------------------------------------------------------------
+
+! 2009-11-29 - Jaap Panman
+ - HltCommissioningLines: correct passThrough for Hlt1MiniBiasLines, Hlt1NoBiasLines
 
 ! 2009-11-28 - P. Spradlin
  - Hlt2TopologicalLines : Several minor changes
