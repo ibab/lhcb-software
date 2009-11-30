@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.150 2009-11-22 10:46:34 jpalac Exp $
+# $Id: requirements,v 1.151 2009-11-30 16:38:31 jpalac Exp $
 package AnalysisSys
 version v3r12p1
 
@@ -7,15 +7,15 @@ branches doc cmt
 
 ####################################################################
 
-use  AnalysisConf               v1r9     Phys   # Patrick Koppenburg, Juan Palacios
+use  AnalysisConf               v1r9p1   Phys   # Patrick Koppenburg, Juan Palacios
 #===================================================================
 #use  AnalysisDict               v1r0     Phys   # TEMPORARY!
 #===================================================================
 use  CommonParticles            v6r2     Phys   # Patrick Koppenburg, WGs
-use  FlavourTagging             v9r0p1   Phys   # Marco Musy
-use  DaVinciFilter              v7r2     Phys   # Patrick Koppenburg - deprecated
+use  FlavourTagging             v9r0p2   Phys   # Marco Musy
+use  DaVinciFilter              v7r3     Phys   # Patrick Koppenburg - deprecated
 
-use  DaVinciMonitors            v1r5p2   Phys   # Patrick Koppenburg
+use  DaVinciMonitors            v1r6     Phys   # Patrick Koppenburg
 use  RichPIDQC                  v1r3     Rich   # Chris Jones
 use  DstCalibSel                v1r2p1   Rich   # Andrew Powell
 use  KaliCalo                   v3r0p1   Phys   # Vanya Belyaev
