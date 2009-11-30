@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.88 2009-11-29 19:28:47 panmanj Exp $
+$Id: release.notes,v 1.89 2009-11-30 09:54:20 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,6 +9,7 @@ $Id: release.notes,v 1.88 2009-11-29 19:28:47 panmanj Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v2r0 2009-11-30 ===================
 ! 2009-11-29 - Jaap Panman
  - HltCommissioningLines: correct passThrough for Hlt1MiniBiasLines, Hlt1NoBiasLines
 
