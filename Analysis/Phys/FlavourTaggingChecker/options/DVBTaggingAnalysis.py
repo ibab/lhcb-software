@@ -1,77 +1,82 @@
 ########################################################################
 #
-# Options for BTaggingAnalysis algorithm
+# Example Options for BTagging algorithm
 #
 # @author Marco Musy
-# @date 2009-07-05
+# @date 2009-11-30
 #
 ########################################################################
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer
-
-# If you want to import .opts options, do this first
-importOptions("$STDOPTS/PreloadUnits.opts")
+from Configurables import GaudiSequencer, DaVinci
 
 ########################################################################
-#
-# Some selection. 
-#
-from Configurables import BTaggingTool, BTaggingAnalysis, CheatedSelection
+# CheatedSelection. 
 
-# The CheatedSelection:
-preselSeq = CheatedSelection("CheatedSelection")
-preselSeq.AssociatorInputData = [ "Phys/TaggingPions" ]
+from Configurables import CheatedSelection, PhysDesktop
 
-# Some Real Selection:
-#importOptions( "$FLAVOURTAGGINGOPTS/DC06SelBs2DsPi.opts" )
-#preselSeq = GaudiSequencer("SeqDC06SelBs2DsPi")
-
-
-#preselSeq.OutputLevel = 2
+cheat = CheatedSelection("CheatedSelection")
+cheat.InputLocations = [ "Phys/TaggingPions" ]
+cheat.AssociatorInputData = [ "Phys/CheatedSelection/Particles" ]
+cheat.OutputLevel = 3
 
 ########################################################################
-#
-# BTaggingAnalysis 
-#
+# Flavour tagging. 
+
+from Configurables import BTagging, BTaggingTool, BTaggingAnalysis, BTaggingChecker
+
+tag = BTagging("BTagging")
+tag.InputLocations = [ "Phys/CheatedSelection"]
+tag.OutputLevel = 3
+tag.addTool( PhysDesktop )
+tag.PhysDesktop.OutputLevel = 4
+
+########################################################################
+# Flavour tagging Checker:
+
+tagcheck = BTaggingChecker("BTaggingChecker")
+tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
+tagcheck.TagsLocation = "/Event/Sel/Phys/Bu2LLK/FlavourTags"
+tagcheck.OutputLevel = 3
+
+########################################################################
+# BTaggingAnalysis ntuple creation
+
 tagana = BTaggingAnalysis("BTaggingAnalysis")
-tagana.OutputLevel = 3
+tagana.InputLocations = [ "Phys/CheatedSelection", "Phys/TaggingPions" ]
+tagana.TagOutputLocation =  "Phys/CheatedSelection/FlavourTags"
+tagana.OutputLevel = 4
 
-tagana.InputLocations = [ "Phys/CheatedB", "Phys/TaggingPions" ]
-
-MessageSvc().Format = "% F%20W%S%7W%R%T %0W%M"
 ########################################################################
-#
 # Standard configuration
-#
-from Configurables import DaVinci
-DaVinci().EvtMax     = 100                        # Number of events
+
+MessageSvc().Format = "% F%30W%S%7W%R%T %0W%M"
+
+DaVinci().EvtMax     = 100                         # Number of events
 DaVinci().SkipEvents = 0                           # Events to skip
 DaVinci().PrintFreq  = 1
-DaVinci().DataType   = "MC09"                  # Default is "DC06"
-DaVinci().Simulation    = True
 DaVinci().HistogramFile = "DVHistos.root"     # Histogram file
 DaVinci().TupleFile     = "analysis.root"     # Ntuple
 
-DaVinci().UserAlgorithms = [ preselSeq, tagana ]  # The algorithms
+DaVinci().Simulation = True
+DaVinci().DataType   = "MC09" 
+#DaVinci().DataType   = "DC06" 
+#importOptions("$FLAVOURTAGGINGOPTS/BTaggingTool_DC06.py") #to switch to DC06 tuning
+
+from Configurables import PrintDecayTree
+PrintDecayTree().InputLocations = [ "Phys/CheatedSelection"  ] 
+
+DaVinci().MoniSequence = [ PrintDecayTree(),
+                           cheat,
+                           tag,
+                           tagcheck,
+                           tagana
+                         ]  # The algorithms
 
 ########################################################################
-# HLT
-DaVinci().ReplaceL0BanksWithEmulated = True ## enable if you want to rerun L0
-#DaVinci().Hlt2IgnoreHlt1Decision = True    ## Hlt2 irrespective of Hlt1
+# example data file
 
-DaVinci().Hlt = True
-DaVinci().HltThresholdSettings = 'Physics_320Vis_300L0_10Hlt1_Aug09'
+EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/p/pkoppenb/MC09-Bu2eeK/Bu2LLK-1.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
 
-########################################################################
-# Data file BsDspi:
-#EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002034/DST/0000/00002034_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
+#bsdspi_nu3_2.txt.gz
+#EventSelector().Input   = ["DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00005272/0000/00005272_00000002_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
 
-#bujpsik dc06 stripping
-#EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/production/DC06/v1r0/00002033/DST/0000/00002033_00000001_2.dst' TYP='POOL_ROOTTREE' OPT='READ'" ]
-
-#bdjpsiee for DC08
-#EventSelector().Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/2008/DST/00003393/0000/00003393_00000001_5.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-
-#MC09 bsdspi
-EventSelector().Input   = [ "DATAFILE='PFN:castor:/castor/cern.ch/grid/lhcb/MC/MC09/DST/00004869/0000/00004869_00000001_1.dst' TYP='POOL_ROOTTREE' OPT='READ'"]
-########################################################################

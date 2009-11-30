@@ -22,15 +22,13 @@ CheatedSelection::CheatedSelection( const std::string& name,
   , m_debug(0), m_linker(0), m_forcedBtool(0)
 {
   declareProperty( "GeneratedBMassWindow", 
-		   m_GenBMassWindow =  100.0 * Gaudi::Units::MeV ); 
+                   m_GenBMassWindow =  100.0 * Gaudi::Units::MeV ); 
   declareProperty( "ReconstructedBMassWindow", 
-		   m_RecBMassWindow = 1000.0 * Gaudi::Units::MeV ); 
-  declareProperty( "MomentumTolerance", m_tolerance = 0.10 );
+                   m_RecBMassWindow = 1000.0 * Gaudi::Units::MeV ); 
+  declareProperty( "MomentumTolerance", m_tolerance = 0.10 ); // 10% of p
 
   declareProperty( "AssociatorInputData", m_setInputData );
   m_setInputData.clear();
-  declareProperty( "OutputLocation",
-                   m_outputLocation = "/Event/Phys/CheatedB" );
   declareProperty( "InputLocation",
                    m_inputLocation = "/Event/Phys/TaggingPions/Particles");
 }
@@ -53,15 +51,6 @@ StatusCode CheatedSelection::initialize() {
     fatal()<< "Unable to retrieve Link Associator tool"<<endreq;
     return StatusCode::FAILURE;
   }
-
-  m_physd = tool<IPhysDesktop> ("PhysDesktop", this);
-  if(! m_physd) {
-    fatal() << "Unable to retrieve PhysDesktop"<< endreq;
-    return StatusCode::FAILURE;
-  }
-  m_physd->setOutputLocation(m_outputLocation);
-
-
   m_debug = tool<IPrintMCDecayTreeTool> ( "PrintMCDecayTreeTool", this );
   if( ! m_debug ) {
     fatal() << "Unable to retrieve Debug tool "<< endreq;
@@ -100,8 +89,11 @@ StatusCode CheatedSelection::execute() {
 
   if(mcSignal){
     debug()<<"Found B="<<mcSignal->particleID().pid()<<endreq;
-  } else return StatusCode::SUCCESS;
-
+  } else {
+    warning()<<"No B forced to decay in this event. Skip."<<endreq;
+    return StatusCode::SUCCESS;
+  }
+  
   SignalTree( mcSignal, mcdaughter, axdaughter ); //fills daughter vectors
 
   Gaudi::LorentzVector ptotmc(0,0,0,0), ptot(0,0,0,0);
@@ -116,7 +108,7 @@ StatusCode CheatedSelection::execute() {
   } else return StatusCode::SUCCESS;
 
   debug() << "Calculated signal MCmass= " <<ptotmc.M()
-	  << "   RECmass= " <<ptot.M()<<endreq;
+          << "   RECmass= " <<ptot.M()<<endreq;
 
   //----------------------------------------------------------------------
   // Create candidate B
@@ -148,13 +140,11 @@ StatusCode CheatedSelection::execute() {
   axdaughter.push_back(candB);
   debug()<<"Going to save this B hypo to TES with "<<axdaughter.size()-1
          <<" daughters."<<endreq;
-  StatusCode sc = m_physd->saveTrees(axdaughter);
+  StatusCode sc = desktop()->saveTrees(axdaughter);
   if (sc.isFailure()) {
     warning() << "Unable to save Tree to TES" << endreq;
     return StatusCode::SUCCESS;
   }
-
-  info() << "BTAGGING MCB   " << mcSignal->particleID().pid()<<endreq;
 
   setFilterPassed( true );
   return StatusCode::SUCCESS;
@@ -179,12 +169,11 @@ void CheatedSelection::SignalTree(const MCParticle* B0,
     if( originof(*imc) == B0 ) {
       Particle* axp = m_linker->firstP( *imc );
       if( axp ) {
-        //m_debug -> printAncestor(*imc);
 
-	if( ((*imc)->p() - axp->p()) /(*imc)->p() > m_tolerance ) continue;
+        if( ((*imc)->p() - axp->p()) /(*imc)->p() > m_tolerance ) continue;
 
         debug() << " mcp=" << (*imc)->p()/Gaudi::Units::GeV
-		<< " axp=" << axp->p()/Gaudi::Units::GeV    <<endreq;
+                << " axp=" << axp->p()/Gaudi::Units::GeV    <<endreq;
         if((*imc)->particleID().abspid() != axp->particleID().abspid()) {
           debug() << "Mis-ID true " << (*imc)->particleID().pid()
                   << " reconst as " << axp->particleID().pid() << endreq;

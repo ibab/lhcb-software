@@ -1,4 +1,4 @@
-// $Id: BTaggingChecker.cpp,v 1.15 2009-04-24 09:46:55 pkoppenb Exp $
+// $Id: BTaggingChecker.cpp,v 1.16 2009-11-30 22:46:24 musy Exp $
 
 // local
 #include "BTaggingChecker.h"
@@ -58,6 +58,11 @@ StatusCode BTaggingChecker::execute() {
   const MCParticle* BS = m_forcedBtool->forcedB();
   ////////////////////////////////////////////////////
 
+  if(!BS) {
+    warning()<<"BTaggingChecker called but no B was forced to decay in MC"<<endreq;
+    return StatusCode::SUCCESS;
+  }
+  
   int tagdecision=0, ix=0;
   int truetag = BS->particleID().pid()>0 ? 1 : -1;
 
