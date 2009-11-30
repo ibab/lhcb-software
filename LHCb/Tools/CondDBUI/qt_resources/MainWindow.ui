@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>965</width>
-    <height>655</height>
+    <width>1048</width>
+    <height>582</height>
    </rect>
   </property>
   <property name="windowTitle" >
@@ -18,247 +18,21 @@
     <normaloff>:/icons/icon.png</normaloff>:/icons/icon.png</iconset>
   </property>
   <widget class="QWidget" name="mainPanel" >
-   <layout class="QVBoxLayout" name="mainPanelLayout" >
-    <property name="margin" >
-     <number>9</number>
-    </property>
+   <layout class="QVBoxLayout" name="verticalLayout_5" >
     <item>
-     <widget class="QSplitter" name="mainWidget" >
-      <property name="orientation" >
-       <enum>Qt::Horizontal</enum>
+     <widget class="QTextEdit" name="dataView" >
+      <property name="acceptDrops" >
+       <bool>false</bool>
       </property>
-      <widget class="QWidget" native="1" name="browsePanel" >
-       <layout class="QVBoxLayout" name="browsePanelLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QWidget" native="1" name="pathPanel" >
-          <layout class="QHBoxLayout" name="horizontalLayout" >
-           <property name="margin" >
-            <number>0</number>
-           </property>
-           <item>
-            <widget class="QLabel" name="pathLabel" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="text" >
-              <string>Path</string>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QComboBox" name="pathComboBox" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-             <property name="editable" >
-              <bool>false</bool>
-             </property>
-             <property name="insertPolicy" >
-              <enum>QComboBox::NoInsert</enum>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QTreeView" name="hierarchyTreeView" >
-          <property name="contextMenuPolicy" >
-           <enum>Qt::CustomContextMenu</enum>
-          </property>
-          <property name="editTriggers" >
-           <set>QAbstractItemView::NoEditTriggers</set>
-          </property>
-          <property name="showDropIndicator" stdset="0" >
-           <bool>false</bool>
-          </property>
-          <property name="headerHidden" >
-           <bool>true</bool>
-          </property>
-         </widget>
-        </item>
-       </layout>
-      </widget>
-      <widget class="QTextEdit" name="dataView" >
-       <property name="acceptDrops" >
-        <bool>false</bool>
-       </property>
-       <property name="undoRedoEnabled" >
-        <bool>false</bool>
-       </property>
-       <property name="acceptRichText" >
-        <bool>false</bool>
-       </property>
-       <property name="textInteractionFlags" >
-        <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
-       </property>
-      </widget>
-      <widget class="QWidget" native="1" name="filterPanel" >
-       <layout class="QVBoxLayout" name="filterPanelLayout" >
-        <property name="margin" >
-         <number>0</number>
-        </property>
-        <item>
-         <widget class="QGroupBox" name="iovTagFilterGroupBox" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title" >
-           <string>Filter</string>
-          </property>
-          <layout class="QFormLayout" name="iovTagFilterLayout" >
-           <property name="fieldGrowthPolicy" >
-            <enum>QFormLayout::ExpandingFieldsGrow</enum>
-           </property>
-           <property name="labelAlignment" >
-            <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
-           </property>
-           <property name="formAlignment" >
-            <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
-           </property>
-           <item row="0" column="0" >
-            <widget class="QLabel" name="sinceLabel" >
-             <property name="text" >
-              <string>From time</string>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="0" >
-            <widget class="QLabel" name="untilLabel" >
-             <property name="text" >
-              <string>To time</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="0" >
-            <widget class="QLabel" name="tagLabel" >
-             <property name="text" >
-              <string>Tag name</string>
-             </property>
-            </widget>
-           </item>
-           <item row="2" column="1" >
-            <widget class="QComboBox" name="tagComboBox" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item row="3" column="1" >
-            <widget class="QCheckBox" name="hideAutoCheckBox" >
-             <property name="toolTip" >
-              <string>If checked, the special tags starting with "_auto_" are not displayed.</string>
-             </property>
-             <property name="text" >
-              <string>Hide "_auto_" tags</string>
-             </property>
-             <property name="checked" >
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-           <item row="0" column="1" >
-            <widget class="TimePointEdit" native="1" name="sinceFilterWidget" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-           <item row="1" column="1" >
-            <widget class="TimePointEdit" native="1" name="untilFilterWidget" >
-             <property name="sizePolicy" >
-              <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
-               <horstretch>0</horstretch>
-               <verstretch>0</verstretch>
-              </sizepolicy>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="iovTableGroupBox" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title" >
-           <string>IOV Table</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout" >
-           <item>
-            <widget class="QTableView" name="iovView" >
-             <property name="enabled" >
-              <bool>true</bool>
-             </property>
-             <property name="editTriggers" >
-              <set>QAbstractItemView::NoEditTriggers</set>
-             </property>
-             <property name="selectionMode" >
-              <enum>QAbstractItemView::SingleSelection</enum>
-             </property>
-             <property name="selectionBehavior" >
-              <enum>QAbstractItemView::SelectRows</enum>
-             </property>
-            </widget>
-           </item>
-           <item>
-            <widget class="QCheckBox" name="iovUTCCheckBox" >
-             <property name="toolTip" >
-              <string>Show the IoVs as UTC</string>
-             </property>
-             <property name="text" >
-              <string>UTC</string>
-             </property>
-             <property name="checked" >
-              <bool>true</bool>
-             </property>
-            </widget>
-           </item>
-          </layout>
-         </widget>
-        </item>
-        <item>
-         <widget class="QGroupBox" name="payloadGroupBox" >
-          <property name="sizePolicy" >
-           <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
-          </property>
-          <property name="title" >
-           <string>Payload</string>
-          </property>
-          <layout class="QVBoxLayout" name="verticalLayout_2" >
-           <item>
-            <widget class="QListView" name="fieldsView" />
-           </item>
-          </layout>
-         </widget>
-        </item>
-       </layout>
-      </widget>
+      <property name="undoRedoEnabled" >
+       <bool>false</bool>
+      </property>
+      <property name="acceptRichText" >
+       <bool>false</bool>
+      </property>
+      <property name="textInteractionFlags" >
+       <set>Qt::TextSelectableByKeyboard|Qt::TextSelectableByMouse</set>
+      </property>
      </widget>
     </item>
    </layout>
@@ -268,7 +42,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>965</width>
+     <width>1048</width>
      <height>28</height>
     </rect>
    </property>
@@ -324,12 +98,256 @@
     <addaction name="actionAbout" />
     <addaction name="actionAbout_Qt" />
    </widget>
+   <widget class="QMenu" name="menuPanels" >
+    <property name="title" >
+     <string>Panels</string>
+    </property>
+   </widget>
    <addaction name="menuDataBase" />
    <addaction name="menuEdit" />
    <addaction name="menuAdvanced" />
+   <addaction name="menuPanels" />
    <addaction name="menuHelp" />
   </widget>
   <widget class="QStatusBar" name="statusbar" />
+  <widget class="QDockWidget" name="filterPanel" >
+   <property name="windowTitle" >
+    <string>Time Browser</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>2</number>
+   </attribute>
+   <widget class="QWidget" name="filterPanelContents" >
+    <layout class="QVBoxLayout" name="verticalLayout_4" >
+     <item>
+      <widget class="QGroupBox" name="iovTagFilterGroupBox" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Minimum" hsizetype="Preferred" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
+        <string>Filter</string>
+       </property>
+       <layout class="QFormLayout" name="iovTagFilterLayout" >
+        <property name="fieldGrowthPolicy" >
+         <enum>QFormLayout::ExpandingFieldsGrow</enum>
+        </property>
+        <property name="labelAlignment" >
+         <set>Qt::AlignBottom|Qt::AlignRight|Qt::AlignTrailing</set>
+        </property>
+        <property name="formAlignment" >
+         <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignTop</set>
+        </property>
+        <item row="0" column="0" >
+         <widget class="QLabel" name="sinceLabel" >
+          <property name="text" >
+           <string>From time</string>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="1" >
+         <widget class="TimePointEdit" native="1" name="sinceFilterWidget" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0" >
+         <widget class="QLabel" name="untilLabel" >
+          <property name="text" >
+           <string>To time</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="1" >
+         <widget class="TimePointEdit" native="1" name="untilFilterWidget" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Minimum" hsizetype="MinimumExpanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0" >
+         <widget class="QLabel" name="tagLabel" >
+          <property name="text" >
+           <string>Tag name</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="1" >
+         <widget class="QComboBox" name="tagComboBox" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+         </widget>
+        </item>
+        <item row="3" column="1" >
+         <widget class="QCheckBox" name="hideAutoCheckBox" >
+          <property name="toolTip" >
+           <string>If checked, the special tags starting with "_auto_" are not displayed.</string>
+          </property>
+          <property name="text" >
+           <string>Hide "_auto_" tags</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+       <zorder>sinceLabel</zorder>
+       <zorder>untilLabel</zorder>
+       <zorder>tagLabel</zorder>
+       <zorder>tagComboBox</zorder>
+       <zorder>hideAutoCheckBox</zorder>
+       <zorder>sinceFilterWidget</zorder>
+       <zorder>untilFilterWidget</zorder>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="iovTableGroupBox" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
+        <string>IOV Table</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout" >
+        <item>
+         <widget class="QTableView" name="iovView" >
+          <property name="enabled" >
+           <bool>true</bool>
+          </property>
+          <property name="editTriggers" >
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionMode" >
+           <enum>QAbstractItemView::SingleSelection</enum>
+          </property>
+          <property name="selectionBehavior" >
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QCheckBox" name="iovUTCCheckBox" >
+          <property name="toolTip" >
+           <string>Show the IoVs as UTC</string>
+          </property>
+          <property name="text" >
+           <string>UTC</string>
+          </property>
+          <property name="checked" >
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="payloadGroupBox" >
+       <property name="sizePolicy" >
+        <sizepolicy vsizetype="Expanding" hsizetype="Expanding" >
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="title" >
+        <string>Payload</string>
+       </property>
+       <layout class="QVBoxLayout" name="verticalLayout_2" >
+        <item>
+         <widget class="QListView" name="fieldsView" />
+        </item>
+       </layout>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
+  <widget class="QDockWidget" name="browsePanel" >
+   <property name="windowTitle" >
+    <string>Hierarchy Browser</string>
+   </property>
+   <attribute name="dockWidgetArea" >
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="browsePanelContents" >
+    <layout class="QVBoxLayout" name="verticalLayout_3" >
+     <item>
+      <widget class="QWidget" native="1" name="pathPanel" >
+       <layout class="QHBoxLayout" name="horizontalLayout" >
+        <property name="margin" >
+         <number>0</number>
+        </property>
+        <item>
+         <widget class="QLabel" name="pathLabel" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Preferred" hsizetype="Minimum" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="text" >
+           <string>Path</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="pathComboBox" >
+          <property name="sizePolicy" >
+           <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="editable" >
+           <bool>false</bool>
+          </property>
+          <property name="insertPolicy" >
+           <enum>QComboBox::NoInsert</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <widget class="QTreeView" name="hierarchyTreeView" >
+       <property name="contextMenuPolicy" >
+        <enum>Qt::CustomContextMenu</enum>
+       </property>
+       <property name="editTriggers" >
+        <set>QAbstractItemView::NoEditTriggers</set>
+       </property>
+       <property name="showDropIndicator" stdset="0" >
+        <bool>false</bool>
+       </property>
+       <property name="textElideMode" >
+        <enum>Qt::ElideMiddle</enum>
+       </property>
+       <property name="headerHidden" >
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <action name="actionNew" >
    <property name="text" >
     <string>New</string>
@@ -698,22 +716,6 @@
   </connection>
   <connection>
    <sender>MainWindow</sender>
-   <signal>databaseOpen(bool)</signal>
-   <receiver>mainWidget</receiver>
-   <slot>setEnabled(bool)</slot>
-   <hints>
-    <hint type="sourcelabel" >
-     <x>482</x>
-     <y>327</y>
-    </hint>
-    <hint type="destinationlabel" >
-     <x>482</x>
-     <y>330</y>
-    </hint>
-   </hints>
-  </connection>
-  <connection>
-   <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
    <receiver>actionRead_Only</receiver>
    <slot>setChecked(bool)</slot>
@@ -933,6 +935,54 @@
     <hint type="destinationlabel" >
      <x>-1</x>
      <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>filterPanel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>912</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>mainPanel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>515</x>
+     <y>294</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>browsePanel</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>128</x>
+     <y>294</y>
     </hint>
    </hints>
   </connection>

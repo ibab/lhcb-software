@@ -134,6 +134,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         QObject.connect(self.fieldsView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.showData)
         
+        # Add the list of actions to show/hide the panels
+        self.menuPanels.addAction(self.browsePanel.toggleViewAction())
+        self.menuPanels.addAction(self.filterPanel.toggleViewAction())
+        
         self.readSettings()
 
     ## Store settings into the configuration file
@@ -143,6 +147,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.beginGroup("MainWindow")
         settings.setValue("size", QVariant(self.size()))
         settings.setValue("pos", QVariant(self.pos()))
+        settings.endGroup()
+
+        settings.beginGroup("BrowsePanel")
+        settings.setValue("visible", QVariant(self.browsePanel.isVisible()))
+        settings.setValue("floating", QVariant(self.browsePanel.isFloating()))
+        settings.setValue("size", QVariant(self.browsePanel.size()))
+        settings.setValue("pos", QVariant(self.browsePanel.pos()))
+        settings.endGroup()
+        
+        settings.beginGroup("FilterPanel")
+        settings.setValue("visible", QVariant(self.filterPanel.isVisible()))
+        settings.setValue("floating", QVariant(self.filterPanel.isFloating()))
+        settings.setValue("size", QVariant(self.filterPanel.size()))
+        settings.setValue("pos", QVariant(self.filterPanel.pos()))
         settings.endGroup()
         
         settings.setValue("IOVs/UTC", QVariant(self.iovUTCCheckBox.isChecked()))
@@ -160,11 +178,25 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def readSettings(self):
         settings = QSettings()
         
-        settings.beginGroup("MainWindow");
+        settings.beginGroup("MainWindow")
         self.resize(settings.value("size", QVariant(QSize(965, 655))).toSize())
         self.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
         
+        settings.beginGroup("BrowsePanel")
+        self.browsePanel.setVisible(settings.value("visible", QVariant(True)).toBool())
+        self.browsePanel.setFloating(settings.value("floating", QVariant(False)).toBool())
+        self.browsePanel.resize(settings.value("size", QVariant(QSize(250, 655))).toSize())
+        self.browsePanel.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        settings.endGroup()
+
+        settings.beginGroup("FilterPanel")
+        self.filterPanel.setVisible(settings.value("visible", QVariant(True)).toBool())
+        self.filterPanel.setFloating(settings.value("floating", QVariant(False)).toBool())
+        self.filterPanel.resize(settings.value("size", QVariant(QSize(270, 655))).toSize())
+        self.filterPanel.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        settings.endGroup()
+
         self.iovUTCCheckBox.setChecked(settings.value("IOVs/UTC", QVariant(True)).toBool())
         
         size = settings.beginReadArray("Recent")
@@ -178,7 +210,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.endArray()
 
     ## Close Event handler
-    def closeEvent(self, event):
+    def closeEvent(self, _event):
         self.writeSettings()
     
     ## Fills the menu of standard databases from the connString dictionary.

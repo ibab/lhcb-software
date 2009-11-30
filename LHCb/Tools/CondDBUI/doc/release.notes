@@ -1,5 +1,5 @@
 ! =============================================================================
-! $Id: release.notes,v 1.130 2009-11-30 09:15:33 marcocle Exp $
+! $Id: release.notes,v 1.131 2009-11-30 18:10:02 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
@@ -9,6 +9,7 @@
  - Improvements to the new Qt4-based CondDBBrowser.
    - started the dialog for new conditions
    - minor improvements
+   - replaced the splitter with dock widgets
  
 ! 2009-11-08 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser.
