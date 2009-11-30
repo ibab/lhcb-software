@@ -1,15 +1,15 @@
-! $Id: release.notes,v 1.142 2009-11-28 19:12:40 ibelyaev Exp $
+! $Id: release.notes,v 1.143 2009-11-30 08:59:02 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
 
+! 2009-11-30 - Marco Cattaneo
+ - Remove obsolete files CaloUtils/dirHbookName.h, CaloUtils/histoHbookName.h 
+
 ! 2009-11-28 - Vanya Belyaev
-
  - new helper python decoratoer classes
-
  - cmt/requirements 
     version increment to v8r10 
-
 
 !========================== CaloUtils v8r9 2009-11-27 =========================
 ! 2009-11-17 - Olivier Deschamps
