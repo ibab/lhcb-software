@@ -5,6 +5,17 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
+</PRE><H1><A NAME=v8r0>2009-11-30 HltSys v8r0</A></H1><PRE>
+ - Updates needed by Pit (first collisions)
+ - Use PV2DFit3D in Hlt1 and PV3D in Hlt2
+   . See https://savannah.cern.ch/task/index.php?12688
+   . See https://savannah.cern.ch/bugs/index.php?59545
+ - Big changes in way Hlt2 handles PV and reconstruction:
+   . All are explicit dependencies now.
+   . See https://savannah.cern.ch/task/index.php?12690
+ - RoutingBitsWriter now always run
+   . See https://savannah.cern.ch/bugs/index.php?59607
+ 
 </PRE><H1><A NAME=v7r3>2009-11-21 HltSys v7r3</A></H1><PRE>
  - version based on LHCb v28r3, updates to HltMuon, Hlt1Lines 
    and HltSettings to fix three small issues, see release 
@@ -41,7 +52,7 @@ Purpose: LHCb High Level Trigger packages.
 </PRE><H1><A NAME=v6r6>2009-08-11 HltSys v6r6</A></H1><PRE>
  - Hlt2 framework for thresholds now complete
  - Include making of particles into lines
- - Restructing of dependencies, some python has been moved
+ - Restructing of dependencies, some python has been moved  
 
 </PRE><H1><A NAME=v6r5>2009-07-23 HltSys v6r5</A></H1><PRE>
  - Setup framework for Hlt2 thresholds. Not yet complete.

@@ -1,32 +1,32 @@
 package HltSys
-version v7r3
+version v8r0
 
 branches cmt doc 
 
-use Hlt1Lines           v1r8p1  Hlt   # Gerhard Raven
-use Hlt2Lines           v1r10   Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
-use Hlt2SharedParticles v2r6    Hlt   # Patrick Koppenburg, Gerhard Raven
-use HltBase             v7r0p2  Hlt   # Gerhard Raven
+use Hlt1Lines           v1r9    Hlt   # Gerhard Raven
+use Hlt2Lines           v2r0    Hlt   # Patrick Koppenburg, Vava Gligorov, Gerhard Raven
+use Hlt2SharedParticles v3r0    Hlt   # Patrick Koppenburg, Gerhard Raven
+use HltBase             v7r1    Hlt   # Gerhard Raven
 use HltBeamGasAlley     v2r2p1  Hlt   # Plamen Hopchev
 use HltCommon           v5r14   Hlt   # Gerhard Raven
-use HltConf             v5r2    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltConf             v6r0    Hlt   # Vanya Belyaev, Gerhard Raven
 use HltCosmics          v1r0p1  Hlt   # Stephan Nies
-use HltDisplVertices    v1r2    Hlt   # Neil Gauvin
+use HltDisplVertices    v1r3    Hlt   # Neil Gauvin
 use HltEcalAlley        v2r2    Hlt   # Mariusz Witek
 use HltGlobalMonitor    v2r7    Hlt   # Bruno de Paula
 use HltHidValley        v1r2p4  Hlt   # Marcin Kucharczyk
-use HltKshort           v2r0p2  Hlt   # Jaap Panman
+use HltKshort           v2r0p3  Hlt   # Jaap Panman
 use HltL0Conf           v2r12p1 Hlt   # Johannes Albrecht
 use HltL0MuonConf       v3r7p1  Hlt   # Alessia Satta/Sandra Amato  
-use HltLine             v1r10   Hlt   # Vanya Belyaev, Gerhard Raven
-use HltLuminosity       v2r12   Hlt   # Jaap Panman
+use HltLine             v2r0    Hlt   # Vanya Belyaev, Gerhard Raven
+use HltLuminosity       v2r13   Hlt   # Jaap Panman
 use HltMuonAlley        v3r0    Hlt   # Sandra Amato 
 use HltMuon             v3r5p2  Hlt   # Alessia Satta          
-use HltRawData          v2r1p1  Hlt   # Tomasz Skwarnicki
+use HltRawData          v2r2    Hlt   # Tomasz Skwarnicki
 use HltRecChecker       v1r11p1 Hlt   # Jose Angel Hernando-Morata
-use HltSelChecker       v10r1   Hlt   # Patrick Koppenburg
-use HltSettings         v1r2p1  Hlt   # Parick Koppenburg, Gerhard Raven
-use HltTracking         v4r3    Hlt   # Jose Angel Hernando-Morata
+use HltSelChecker       v10r2   Hlt   # Patrick Koppenburg
+use HltSettings         v1r3    Hlt   # Parick Koppenburg, Gerhard Raven
+use HltTracking         v4r4    Hlt   # Jose Angel Hernando-Morata
 use TCKPresenter        v1r1p1  Hlt   # Klaus Neumann / Stephan Nies
 use TCKUtils            v1r5p1  Hlt   # Gerhard Raven
 use Fidel               v1r3p3  Phys  # Sara Furcas    
