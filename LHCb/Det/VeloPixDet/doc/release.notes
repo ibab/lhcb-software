@@ -4,11 +4,9 @@
 ! Purpose     : Detector element for Velo Upgrade Pixel solutions
 !-----------------------------------------------------------------------------
 
+!========================== VeloPixDet v1r2 2009-11-28 =======================
 ! 2009-11-28 - Victor Coco
  - remove uint32_t since it cause warning in win32...2nd round
-
-
-!========================== VeloPixDet v1r2 2009-11-27 =======================
 
 ! 2009-11-27 - Victor Coco
  - remove uint32_t since it cause warning in win32
