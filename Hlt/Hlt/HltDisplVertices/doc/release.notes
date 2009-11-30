@@ -4,6 +4,7 @@
 ! Purpose     : Apply some cuts on reconstructed vertices
 !-----------------------------------------------------------------------------
 
+!========================== HltDisplVertices v1r3 2009-11-30 ===================
 ! 2009-Nov-26 - Neal Gauvin
  - Retrieve PVs from the desktop + fix details
 
