@@ -1,4 +1,4 @@
-// $Id: Calo2Dview.cpp,v 1.19 2009-11-08 18:12:51 odescham Exp $
+// $Id: Calo2Dview.cpp,v 1.20 2009-11-30 18:13:49 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -264,7 +264,8 @@ const GaudiHistoAlg::HistoID Calo2Dview::getUnit(const HistoID& unit, int calo, 
   if(!m_split)return unit;
   const std::string& nArea = CaloCellCode::caloArea ( calo , area);
   std::string sunit = unit.literalID();
-  int index = sunit.find_last_of("/")+1 ;
+  if( sunit == "" )sunit = std::string(unit);
+  int index = sunit.find_last_of("/")+1 ;  
   sunit.insert(index, nArea+"/");
   return  (HistoID) sunit;
 }
