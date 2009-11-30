@@ -4,6 +4,12 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r11
+ - python/StrippingSelections/StreamJpsi.py
+  . Use StrippingDiMuon instead of StrippingJpsiInc.
+
 ! 2009-11-30 - Anton Poluektov
  - Added roots scripts to show correlations between the lines and streams. 
 
