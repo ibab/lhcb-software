@@ -1,9 +1,16 @@
-!$Id: release.notes,v 1.42 2009-11-23 16:08:04 jpalac Exp $
+!$Id: release.notes,v 1.43 2009-11-30 17:04:53 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/AnalysisConf
 ! Responsible : Patrick Koppenburg
 ! Purpose     : Configuration for Analysis project
 !-----------------------------------------------------------------------------
+
+!========================== AnalysisConf v1r10 2009-11-30 ====================
+
+! 2009-11-30 - Juan PALACIOS
+ - Move BaseDSTWriter to Phys/DSTWriters.
+ - cmt/requirements
+  . Increase version to v1r10
 
 ! 2009-11-23 - Juan PALACIOS
  - python/AnalysisConf/BaseDSTWriter.py
