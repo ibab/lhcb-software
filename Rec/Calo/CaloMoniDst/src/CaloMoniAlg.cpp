@@ -1,4 +1,4 @@
-// $Id: CaloMoniAlg.cpp,v 1.8 2009-09-08 15:34:28 odescham Exp $
+// $Id: CaloMoniAlg.cpp,v 1.9 2009-11-30 20:38:32 odescham Exp $
 // Include files 
 
 // from Gaudi
@@ -67,7 +67,8 @@ CaloMoniAlg::CaloMoniAlg( const std::string& name,
   declareProperty( "removeFromHistoList" , m_removeHisto);
   //  declareProperty( "splitAreas"          , m_split=false);
   declareProperty( "listOfAreas"         , m_areas); // list of areas to be split
-  
+  declareProperty ("SaturationBin1D"       , m_sat = true);
+  declareProperty ("SaturationBin2D"       , m_sat2D = false);
 
   m_removeHisto.clear();
   m_histoList.clear();

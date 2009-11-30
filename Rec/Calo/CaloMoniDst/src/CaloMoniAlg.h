@@ -10,6 +10,9 @@
 #include "CaloUtils/Calo2Dview.h"
 #include "Kernel/CaloCellID.h"
 #include "GaudiKernel/HashMap.h"
+#include "AIDA/IAxis.h"
+#include "AIDA/IHistogram1D.h"
+#include "AIDA/IHistogram2D.h"
 // ============================================================================
 // AIDA 
 // ============================================================================
@@ -120,14 +123,30 @@ public:
 // fill histogram
   inline void hFill1(std::string hid, double value, double w=1. ){ 
     if(!doHisto(hid))return;
-    fill(h1[hid],value,w);
+    AIDA::IHistogram1D* h  = h1[hid];
+    if(m_sat){
+      if( value < h->axis().lowerEdge() )value = h->axis().lowerEdge();
+      if( value > h->axis().upperEdge() )value = h->axis().upperEdge();
+    }
+    fill(h,value,w);
   }
   inline void hFill2(std::string hid, double x, double y, double w=1. ){ 
     if(!doHisto(hid))return;
-    fill(h2[hid],x,y,w); 
+    AIDA::IHistogram2D* h  = h2[hid];
+    if(m_sat2D){
+      if( x < h->xAxis().lowerEdge() )x = h->xAxis().lowerEdge();
+      if( x > h->xAxis().upperEdge() )x = h->xAxis().upperEdge();
+      if( y < h->yAxis().lowerEdge() )y = h->yAxis().lowerEdge();
+      if( y > h->yAxis().upperEdge() )y = h->yAxis().upperEdge();
+    }
+    fill(h,x,y,w); 
   }
   inline void hFill1(LHCb::CaloCellID cellID , std::string hid, double value, double w=1. ){ 
     if(!doHisto(hid))return;
+    if(m_sat){
+      if( value < h1[hid]->axis().lowerEdge() )value = h1[hid]->axis().lowerEdge();
+      if( value > h1[hid]->axis().upperEdge() )value = h1[hid]->axis().upperEdge();
+    }
     if( m_split && !(cellID == LHCb::CaloCellID()) ) {
       // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
       std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), cellID.area() );
@@ -135,8 +154,7 @@ public:
         GaudiAlg::HistoID id(area + "/" + hid);
         fill(h1[id],value,w);
       }
-      //info() << "filling " << hid << " " << cellID << " " << value << " " << w << endmsg  ;
-      
+      //info() << "filling " << hid << " " << cellID << " " << value << " " << w << endmsg  ;      
       fill(h1[hid],value,w);
     }else{
       fill(h1[hid],value,w);
@@ -144,6 +162,12 @@ public:
   }
   inline void hFill2( LHCb::CaloCellID cellID , std::string hid, double x, double y, double w=1. ){ 
     if(!doHisto(hid))return;
+    if(m_sat2D){
+      if( x < h2[hid]->xAxis().lowerEdge() )x = h2[hid]->xAxis().lowerEdge();
+      if( x > h2[hid]->xAxis().upperEdge() )x = h2[hid]->xAxis().upperEdge();
+      if( y < h2[hid]->yAxis().lowerEdge() )y = h2[hid]->yAxis().lowerEdge();
+      if( y > h2[hid]->yAxis().upperEdge() )y = h2[hid]->yAxis().upperEdge();
+    }
     if( m_split && !(cellID == LHCb::CaloCellID()) ){
       // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
       std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum ( m_detData ), cellID.area() );
@@ -207,8 +231,10 @@ protected:
   unsigned int m_nAreas;
   unsigned int m_count;
   std::vector<unsigned int> m_mcount;
-
-
+  bool m_sat;
+  bool m_sat2D;
+  
+  
   bool doHisto(std::string histo){
     bool ok = false;
     for( std::vector<std::string>::iterator ih = m_histoList.begin() ; m_histoList.end() != ih ; ih++){
