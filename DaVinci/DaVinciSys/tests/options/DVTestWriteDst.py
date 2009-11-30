@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestWriteDst.py,v 1.9 2009-11-11 10:45:50 pkoppenb Exp $
+# $Id: DVTestWriteDst.py,v 1.10 2009-11-30 10:47:18 jpalac Exp $
 #
 # Options for a DaVinci job creating DSTs
 #
@@ -43,14 +43,18 @@ for i in MassRanges :
     name = ln+"_"+hn
 
     # define the prescale to have a constant (assumed flat) level of background
-    prescale = DeterministicPrescaler("Prescale_"+name, AcceptFraction = 100./(hm-lm))
-    filter   = FilterDesktop("Jpsi_"+name, Code = "(MM>"+ln+") & (MM<"+hn+") & (MIPCHI2DV(PRIMARY) > 2)")
-    printer  = PrintDecayTree("Print_"+name, InputLocations = [ "Jpsi_"+name ])
-    
+    prescale = DeterministicPrescaler("Prescale_"+name,
+                                      AcceptFraction = 100./(hm-lm))
+    filter   = FilterDesktop("Jpsi_"+name,
+                             Code = "(MM>"+ln+") & (MM<"+hn+") & (MIPCHI2DV(PRIMARY) > 2)")
+
     SelJpsi = Selection('SelJpsi_'+name,
                         Algorithm = filter,
                         RequiredSelections = [ MyLooseJpsi ])
-    
+
+    printer  = PrintDecayTree("Print_"+name,
+                              InputLocations = [SelJpsi.outputLocation()])    
+
     SeqJpsi = SelectionSequence('SeqJpsi_'+name
                                 , TopSelection = SelJpsi
                                 , EventPreSelector = [ prescale ]
@@ -61,7 +65,6 @@ for i in MassRanges :
                              SaveCandidates = True,
                              CopyMCTruth = True)
     seq = dstWriter.sequence()
-    # seq.Members.append(printer) # does not work
 
     DaVinci().UserAlgorithms += [ seq ]
 
