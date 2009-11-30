@@ -476,6 +476,11 @@ void  MDFWriterNet::handle(const Incident& inc)    {
       m_srvConnection->stopRetrying();
       m_WriterState = STOPPED;
   }
+/*
+  else if (inc.type() == "DAQ_ENABLE") {
+      m_WriterState = READY;
+  }
+*/
 }
 
 
@@ -563,7 +568,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     // and therefore, a good place to check if there are files that have been
     // lying open since a very long time.
     // 2- Fast run change
-/*
+
     File *tmpFile =  m_openFiles.getFirstFile();
     // Loop over all the files except the one for whom the event just came in.
     while(tmpFile) {
@@ -582,7 +587,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       }
       tmpFile = tmpFile->getNext();
     }
-*/
+
 
   }
 
@@ -777,7 +782,7 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 StatusCode MDFWriterNet::CleanUpFiles() {
   
   while (m_WriterState != STOPPED) {
-    sleep(m_runFileTimeoutSeconds);
+    sleep(1);
 
     if (pthread_mutex_lock(&m_SyncFileList)) {
       *m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
