@@ -4,6 +4,14 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-30 - Mat Charles
+ - Added two new files in python/StrippingSelections/ :
+     StrippingDstarD2KShh.py
+     StrippingDstarD2KShhRobust.py
+   These contain regular and "robust" (no PID / error info) versions of
+   selections for final states of the form D*+ -> D0 pi+, D0 -> KS h+ h'-
+   with 12 separate stripping lines in each file. More details in the code.
+
 !===================== StrippingSelections v1r11 2009-11-30 ===================
 
 ! 2009-11-30 - Juan PALACIOS
