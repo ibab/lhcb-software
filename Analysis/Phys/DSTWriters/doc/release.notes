@@ -1,11 +1,15 @@
-!$Id: release.notes,v 1.2 2009-11-30 17:00:06 jpalac Exp $
+!$Id: release.notes,v 1.3 2009-11-30 17:02:08 jpalac Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DSTWriters
 ! Responsible : Juan PALACIOS
 ! Purpose     : Python code for DST writers.
 !-----------------------------------------------------------------------------
 
+! ======================== DSTWriters v1r0 2009-11-30 ========================
+
 ! 2009-11-30 - Juan PALACIOS
  - First import into CVS.
  - Gather all DST writers here.
+
+  New package containing the three existing selection-based DST writers.
 
