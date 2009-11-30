@@ -8,7 +8,7 @@
 //-----------------------------------------------------------------------------
 // Implementation file for class : Particle2BackgroundCategoryRelationsAlg
 //
-// 2009-04-28 : Juan PALACIOS
+// 2009-11-30 : V. Gligorov
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
