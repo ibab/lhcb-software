@@ -3,6 +3,17 @@ Package             : PhysSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics packages
 
+</PRE><H1><A NAME=v8r13>2009-11-30 Phys v8r13 </A></H1><PRE>
+
+###############################################################################
+#                                 PHYS v8r13                                  #
+###############################################################################
+
+- Based on LHCb v28r4 and Gaudi v21r6
+
+ * Highlights
+  . Use PV3D in Hlt2.
+
 </PRE><H1><A NAME=v8r12p2>2009-11-22 Phys v8r12p2 </A></H1><PRE>
 
 ###############################################################################
