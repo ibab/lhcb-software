@@ -7,12 +7,12 @@
 from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
-from StrippingSelections import StrippingJpsiInc
+from StrippingSelections import StrippingDiMuon
 from StrippingSelections import StrippingMuIDCalib
 
 stream = StrippingStream("Jpsi")
 stream.appendLines( [ 
-		        StrippingJpsiInc.line, 
+		        StrippingDiMuon.line, 
 		        StrippingMuIDCalib.jp_line, 
 		        StrippingMuIDCalib.b_line 
 		    ] )
