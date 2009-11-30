@@ -3,6 +3,10 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v35r10>2009-12-01 Brunel v35r10</A></H1><PRE>
+ - Changes to references to reflect changes in Brunel v35r10 output:
+   . Improved comparison of floating point numbers (DetDesc v18r17)
+
 </PRE><H1><A NAME=v35r9p1>2009-11-24 Brunel v35r9p1</A></H1><PRE>
  - Changes to example options
    . Add options/2009-Collisions.py: example options for 2009 collisions data
