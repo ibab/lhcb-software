@@ -336,16 +336,13 @@ namespace LHCb {
     /// a broken monitoring system should not prevent the writer from working
     bool m_mq_available;
 
+    /// The boolean to stop or not the clean up thread routine.
+    bool m_CleanUpStop;
+
     /// The thread which checks file time outs.
     pthread_t m_ThreadFileCleanUp;
 
-    ///
-    enum WriterState {NOT_READY, READY, RUNNING, STOPPED};
-
-    /// 
-    WriterState m_WriterState;
- 
-    ///
+    /// A mutex to protect shared resources between the main process and the clean up thread.
     pthread_mutex_t m_SyncFileList; 
 
     /** Generates a new file name from the MDF information.
