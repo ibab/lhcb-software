@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.71 2009-11-29 19:27:30 panmanj Exp $
+! $Id: release.notes,v 1.72 2009-11-30 09:57:19 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
 
+!========================== Hlt1Lines v1r9 2009-11-30 ===================
 ! 2009-11-29 - Jaap Panman
  - Hlt1MiniBiasLines, L0Channel now given as list
  - Hlt1LumiLines, LumiCounterDefinition: add TT-tracking
