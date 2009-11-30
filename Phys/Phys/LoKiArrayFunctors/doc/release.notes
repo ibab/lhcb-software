@@ -1,10 +1,35 @@
-$Id: release.notes,v 1.50 2009-11-22 13:48:17 cattanem Exp $ 
+$Id: release.notes,v 1.51 2009-11-30 11:17:38 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiArrayFunctors
 ! Responsible : Vanya BELYAEV
 ! Purpose     : Some special "vector-like" functors to Exclusive "HLT"
 ! -----------------------------------------------------------------------------
 
+! 2009-11-30 - Vanya Belyaev
+
+ - add helper functions (on request by Alvaro Neto) to evaluate the 
+   certain functor for chaughter particles, which maximizes/minimizes 
+   he value of another functor. E.g. P of the daughter particle with maximal PT
+
+      aval_max ( P , PT ) 
+      aval_min ( P , PT ) 
+
+  The optional cuts can be applied, e.g. use only charged basic particles: 
+ 
+      aval_max ( P , PT , HASTRACK ) 
+      aval_min ( P , PT , HASTRACK ) 
+
+  The return valeu for the case of empty selection can be specified:
+
+      aval_max ( P , PT , HASTRACK , -1.e+30 ) 
+      aval_min ( P , PT , HASTRACK , +1.e+50 ) 
+
+   (the default values are:  LoKi::Constants::(Negative/Positive)Infinity
+
+ - cmt/requirements 
+
+    version increment to v8r7 
+  
 !========================== LoKiArrayFunctors v8r6 2009-11-22 =================
 ! 2009-11-21 - Vanya Belyaev
 

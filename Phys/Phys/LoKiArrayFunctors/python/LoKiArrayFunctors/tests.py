@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.3 2009-05-04 17:35:51 ibelyaev Exp $ 
+# $Id: tests.py,v 1.4 2009-11-30 11:17:38 ibelyaev Exp $ 
 # =============================================================================
 ## @file  LoKiArrayFunctors/decorators.py
 #  The set of basic decorator for objects from LoKiHlt library
@@ -40,7 +40,13 @@ from LoKiCore.math                import *
 def testAll() :
 
 
-    print ( ALV01 < 0 )  & ( AETA > 0 ) | (  AM < 50 ) & AALL 
+    print ( ALV01 < 0 )  & ( AETA > 0 ) | (  AM < 50 ) & AALL
+
+    from LoKiPhys.decorators import P, PT, Q
+    
+    print aval_max ( P , PT ) , aval_min  ( P, PT , 0 != Q )
+    print aval_min  ( P, PT , 0 != Q , 10000 )
+    
     pass 
     
 # =============================================================================

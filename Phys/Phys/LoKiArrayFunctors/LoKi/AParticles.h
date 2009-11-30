@@ -1,4 +1,4 @@
-// $Id: AParticles.h,v 1.14 2009-11-16 11:52:14 ibelyaev Exp $
+// $Id: AParticles.h,v 1.15 2009-11-30 11:17:38 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_APARTICLES_H 
 #define LOKI_APARTICLES_H 1
@@ -57,6 +57,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
+      // ======================================================================
       /// MANDATORY: virtual destructor 
       virtual ~Size() {}
       /// MANDATORY: clone method ("virtual constructor")
@@ -67,6 +68,7 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "ASIZE" ; }
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Count 
@@ -81,6 +83,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function 
     {
     public:
+      // ======================================================================
       /// Contructor from the critearia:
       Count ( const LoKi::PhysTypes::Cuts& cut ) ;
       /// copy contructor 
@@ -94,11 +97,16 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "ANUM(" << m_cut << ")" ; }
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      Count() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      Count() ;                          // the default constructor is disabled 
+      // ======================================================================
     private:
+      // ======================================================================
       LoKi::PhysTypes::Cut m_cut ;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Unique
@@ -112,6 +120,7 @@ namespace LoKi
       : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Predicate 
     {
     public:
+      // ======================================================================
       /// Contructor from the tool 
       Unique ( const ICheckOverlap*                   tool ) ;
       /// Contructor from the tool 
@@ -127,17 +136,24 @@ namespace LoKi
       /// OPTIONALLY: the nice printout 
       virtual std::ostream& fillStream ( std::ostream& s ) const 
       { return s << "AUNIQUE" ; }
+      // ======================================================================
     public:
+      // ======================================================================
       /// retrieve the tool the tool 
       const LoKi::Interface<ICheckOverlap>& get      () const { return m_tool ;}      
       /// conversion to the tool 
       operator const LoKi::Interface<ICheckOverlap>& () const { return get() ;}
+      // ======================================================================
     private:
-      // the default constructor is disabled 
-      Unique() ; ///< the default constructor is disabled 
+      // ======================================================================
+      /// the default constructor is disabled 
+      Unique() ;                         // the default constructor is disabled 
+      // ======================================================================
     private:
-      // The underlying tool;
-      LoKi::Interface<ICheckOverlap> m_tool ; ///< The underlying tool;
+      // ======================================================================
+      /// The underlying tool;
+      LoKi::Interface<ICheckOverlap> m_tool ;           // The underlying tool;
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class FourMomentum
@@ -1660,6 +1676,119 @@ namespace LoKi
       LoKi::Types::FunVal m_fun ;                       // the actual predicate 
       // ======================================================================
     } ;
+    // ========================================================================
+    /** @class MaxVal 
+     *  Find an element whcih maximaze one functor and return 
+     *  the value of another functor 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-30
+     */
+    class MaxVal : public LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function
+    {
+    public:
+      // ======================================================================
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       *  @param cut  the predicate ot be satisfied 
+       *  @param retv the value to be returned for "empty" selection 
+       */
+      MaxVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ,
+               const LoKi::Types::Cuts& cuts , 
+               const double             retv ) ;
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       *  @param cut  the predicate ot be satisfied 
+       */
+      MaxVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ,
+               const LoKi::Types::Cuts& cuts ) ;
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       */
+      MaxVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ) ;
+      /// MANDATORY: virtual destructor 
+        virtual ~MaxVal() ;
+      /// MANDATORY: clone method ("virtual constructor" ) 
+      virtual  MaxVal* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      MaxVal() ;                         // the default constructor is disabled 
+      // ======================================================================
+    protected:
+      // ======================================================================
+      /// The functor to be evaluated 
+      LoKi::Types::Fun  m_eval ;                 // The functor to be evaluated 
+      /// The functor to be maximazed 
+      LoKi::Types::Fun  m_cmpv ;                 // The functor to be maximized 
+      /// The predicate to be satisfied 
+      LoKi::Types::Cut  m_cut  ;               // The predicate to be satisfied 
+      /// return valeu for 'empty' selections 
+      double            m_retv ;         // return value for 'empty' selections 
+      // =======================================================================
+    } ;
+    // ========================================================================    
+    /** @class MinVal 
+     *  Find an element whoch minimizes the value of 
+     *  one functor and return the value of another functor 
+     *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+     *  @date 2009-11-30
+     */
+    class MinVal : public MaxVal 
+    {
+    public:
+      // ======================================================================
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       *  @param cut  the predicate ot be satisfied 
+       *  @param retv the value to be returned for "empty" selection 
+       */
+      MinVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ,
+               const LoKi::Types::Cuts& cuts , 
+               const double             retv ) ;
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       *  @param cut  the predicate ot be satisfied 
+       */
+      MinVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ,
+               const LoKi::Types::Cuts& cuts ) ;
+      /** constructor with the function and "max-value"
+       *  @param eval the function to be evaluated
+       *  @param cmpv the function to be maximazed 
+       */
+      MinVal ( const LoKi::Types::Func& eval , 
+               const LoKi::Types::Func& cmpv ) ;
+      /// MANDATORY: virtual destructor 
+      virtual ~MinVal() ;
+      /// MANDATORY: clone method ("virtual constructor" ) 
+      virtual  MinVal* clone() const ;
+      /// MANDATORY: the only one essential method 
+      virtual result_type operator() ( argument a ) const ;
+      /// OPTIONAL: nice printout 
+      virtual std::ostream& fillStream ( std::ostream& s ) const ;
+      // ======================================================================
+    private:
+      // ======================================================================
+      /// the default constructor is disabled 
+      MinVal() ;                         // the default constructor is disabled 
+      // ======================================================================
+    } ;
+    // ========================================================================
+    
     // ========================================================================
   } //                                        end of namespace LoKi::AParticles
   // ==========================================================================

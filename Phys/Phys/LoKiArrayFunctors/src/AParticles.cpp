@@ -1,4 +1,4 @@
-// $Id: AParticles.cpp,v 1.12 2009-11-16 11:52:15 ibelyaev Exp $
+// $Id: AParticles.cpp,v 1.13 2009-11-30 11:17:38 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ===========================================================================
@@ -30,6 +30,8 @@
 #include "LoKi/AParticles.h"
 #include "LoKi/AChild.h"
 #include "LoKi/AKinematics.h"
+// ============================================================================
+#include "LoKi/Algs.h"
 // ============================================================================
 // Contructor from the critearia:
 // ============================================================================
@@ -1420,6 +1422,185 @@ std::ostream& LoKi::AParticles::AFunV::fillStream ( std::ostream& s ) const
 { return s << " AFUNV( " << m_fun << " )" ; }
 // ============================================================================
 
+
+// ============================================================================
+/*  constructor with the function and "max-value"
+ *  @param eval (INPUT) the function to be evaluated
+ *  @param cmpv (INPUT) the function to be maximazed 
+ */
+// ============================================================================
+LoKi::AParticles::MaxVal::MaxVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv ,
+  const LoKi::Types::Cuts& cuts , 
+  const double             retv ) 
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  , m_eval ( eval ) 
+  , m_cmpv ( cmpv ) 
+  , m_cut  ( cuts )
+  , m_retv ( retv ) 
+{}
+// ============================================================================
+/*  constructor with the function and "max-value"
+ *  @param eval (INPUT) the function to be evaluated
+ *  @param cmpv (INPUT) the function to be maximazed 
+ */
+// ============================================================================
+LoKi::AParticles::MaxVal::MaxVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv ,
+  const LoKi::Types::Cuts& cuts )
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  , m_eval ( eval ) 
+  , m_cmpv ( cmpv ) 
+  , m_cut  ( cuts )
+  , m_retv ( LoKi::Constants::NegativeInfinity ) 
+{}
+// ============================================================================
+/* constructor with the function and "max-value"
+ *  @param eval the function to be evaluated
+ *  @param cmpv the function to be maximazed 
+ */
+// ============================================================================
+LoKi::AParticles::MaxVal::MaxVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv )
+  : LoKi::BasicFunctors<LoKi::ATypes::Combination>::Function()
+  , m_eval ( eval ) 
+  , m_cmpv ( cmpv ) 
+  , m_cut  ( LoKi::Constant<const LHCb::Particle*,bool> ( true ) )
+  , m_retv ( LoKi::Constants::NegativeInfinity ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::AParticles::MaxVal::~MaxVal(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor" ) 
+// ============================================================================
+LoKi::AParticles::MaxVal*
+LoKi::AParticles::MaxVal::clone() const 
+{ return new LoKi::AParticles::MaxVal ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::MaxVal::result_type
+LoKi::AParticles::MaxVal::operator()
+  ( LoKi::AParticles::MaxVal::argument a ) const 
+{
+  //
+  LoKi::ATypes::Combination::iterator ifind = 
+    LoKi::Algs::select_max ( a.begin       () , 
+                             a.end         () ,
+                             m_cmpv . func () , 
+                             m_cut  . func () ) ;
+  //
+  if ( a.end() == ifind ) 
+  {
+    Error ( "No elements are selected!" ) ;
+    return m_retv ;
+  }
+  //
+  return m_eval.fun ( *ifind )  ;
+}
+// ===========================================================================
+// OPTIONAL: nice printout 
+// ===========================================================================
+std::ostream&  LoKi::AParticles::MaxVal::fillStream ( std::ostream& s ) const 
+{
+  //
+  s << " aval_max( " << m_eval   
+    << " , "         << m_cmpv 
+    << " , "         << m_cut     ;
+  if ( LoKi::Constants::NegativeInfinity != m_retv ) { s << " , " << m_retv ; }
+  //
+  return s << " )" ;  
+}
+// ============================================================================
+/*  constructor with the function and "min-value"
+ *  @param eval (INPUT) the function to be evaluated
+ *  @param cmpv (INPUT) the function to be minimized
+ */
+// ============================================================================
+LoKi::AParticles::MinVal::MinVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv ,
+  const LoKi::Types::Cuts& cuts , 
+  const double             retv ) 
+  : LoKi::AParticles::MaxVal ( eval , cmpv , cuts , retv ) 
+{}
+// ============================================================================
+/*  constructor with the function and "min-value"
+ *  @param eval (INPUT) the function to be evaluated
+ *  @param cmpv (INPUT) the function to be minimized
+ */
+// ============================================================================
+LoKi::AParticles::MinVal::MinVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv ,
+  const LoKi::Types::Cuts& cuts )
+  : LoKi::AParticles::MaxVal ( eval , cmpv , cuts , LoKi::Constants::PositiveInfinity ) 
+{}
+// ============================================================================
+/* constructor with the function and "max-value"
+ *  @param eval the function to be evaluated
+ *  @param cmpv the function to be maximazed 
+ */
+// ============================================================================
+LoKi::AParticles::MinVal::MinVal 
+( const LoKi::Types::Func& eval , 
+  const LoKi::Types::Func& cmpv )
+  : LoKi::AParticles::MaxVal 
+( eval , 
+  cmpv ,
+  LoKi::Constant<const LHCb::Particle*,bool> ( true ) ,
+  LoKi::Constants::PositiveInfinity                   ) 
+{}
+// ============================================================================
+// MANDATORY: virtual destructor 
+// ============================================================================
+LoKi::AParticles::MinVal::~MinVal(){}
+// ============================================================================
+// MANDATORY: clone method ("virtual constructor" ) 
+// ============================================================================
+LoKi::AParticles::MinVal*
+LoKi::AParticles::MinVal::clone() const 
+{ return new LoKi::AParticles::MinVal ( *this ) ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::AParticles::MinVal::result_type
+LoKi::AParticles::MinVal::operator()
+  ( LoKi::AParticles::MaxVal::argument a ) const 
+{
+  //
+  LoKi::ATypes::Combination::iterator ifind = 
+    LoKi::Algs::select_min ( a.begin       () , 
+                             a.end         () ,
+                             m_cmpv . func () , 
+                             m_cut  . func () ) ;
+  //
+  if ( a.end() == ifind ) 
+  {
+    Error ( "No elements are selected!" ) ;
+    return m_retv ;
+  }
+  //
+  return m_eval.fun ( *ifind )  ;
+}
+// ===========================================================================
+// OPTIONAL: nice printout 
+// ===========================================================================
+std::ostream&  LoKi::AParticles::MinVal::fillStream ( std::ostream& s ) const 
+{
+  //
+  s << " aval_min( " << m_eval   
+    << " , "         << m_cmpv 
+    << " , "         << m_cut     ;
+  if ( LoKi::Constants::PositiveInfinity != m_retv ) { s << " , " << m_retv ; }
+  //
+  return s << " )" ;  
+}
 
 
 // ============================================================================

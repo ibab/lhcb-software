@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.15 2009-11-16 11:52:14 ibelyaev Exp $ 
+# $Id: functions.py,v 1.16 2009-11-30 11:17:38 ibelyaev Exp $ 
 # =============================================================================
 ## @file
 #  The set of basic objects from LoKiHlt library
@@ -215,6 +215,9 @@ ACUTV         = LoKi.AParticles.ACutV
 AFunV         = LoKi.AParticles.AFunV
 
 
+AVAL_MIN   = LoKi.AParticles.MinVal
+AVAL_MAX   = LoKi.AParticles.MaxVal
+
 ## functional part
 ## _va = 'std::vector<LoKi::Range_<std::vector<const LHCb::Particle*> > >' ## std.vector ( _T    )
 ## _va = std.vector ( _T    )
@@ -232,6 +235,48 @@ AFunV         = LoKi.AParticles.AFunV
 ##AElement   = LoKi.FunctorFromFunctor  ( _va , _T        ) 
 #
 
+# ==============================================================================
+## Find the daughter particle, which maximizes the value of 'cmp'-functor
+#     and evaluate for it 'val' functor
+def aval_max ( val , cmp , *args ) :
+    """
+    Find the daughter particle, which maximased the valeu of 'cmp'-functor
+    and evaluate for it 'val' functor
+
+    Evaluate P for the child with max PT:
+    
+    >>> fun = aval_max ( P , PT )
+
+    Evaluate P for the basic child with max PT:
+    
+    >>> fun = aval_max ( P , PT , BASIC &  ( 0 != Q ) , -1.e+10 ) 
+    
+    """
+    return LoKi.AParticles.MaxVal ( val , cmp , *args )
+
+
+# ==============================================================================
+## Find the daughter particle, which minimizes the value of 'cmp'-functor
+#     and evaluate for it 'val' functor
+def aval_min ( val , cmp , *args ) :
+    """
+    Find the daughter particle, which minimizes the valeu of 'cmp'-functor
+    and evaluate for it 'val' functor
+
+    Evaluate P for the child with min PT:
+    
+    >>> fun = aval_min ( P , PT )
+
+    Evaluate P for the basic child with min PT:
+    
+    >>> fun = aval_min ( P , PT , BASIC &  ( 0 != Q ) , 1.e+20 ) 
+    
+    """
+    return LoKi.AParticles.MinVal ( val , cmp , *args )
+
+
+# =============================================================================
+## Trivial function which returns the PDG mass for the given 'object'    
 def PDGM ( o ) :
     """
     Trivial function which returns the PDG mass for the given 'object'
