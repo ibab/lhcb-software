@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.86 2009-11-27 07:42:26 odescham Exp $
+# $Id: requirements,v 1.87 2009-11-30 09:18:09 odescham Exp $
 # =============================================================================
 # Created    : 19/05/2002
 # Maintainer : P. Koppenburg, J. Palacios
@@ -29,7 +29,7 @@ use  MCEvent             v*  Event
 use  LinkerEvent         v*  Event
 use  RecEvent            v*  Event
 use  CaloUtils           v*  Calo 
-use  CaloTools           v*  Calo
+use  CaloInterfaces      v*  Calo
 use  MCInterfaces        v*  Kernel
 # Extra language for translating yacc to c++
 # This is used to generate once the necessary files on Linux that are

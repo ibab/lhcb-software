@@ -1,8 +1,11 @@
-! $Id: release.notes,v 1.279 2009-11-30 04:57:08 gligorov Exp $
+! $Id: release.notes,v 1.280 2009-11-30 09:18:09 odescham Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-11-30 - Olivier Deschamps
+ - move dependency on CaloTools to CaloInterfaces
 
 ! 2009-11-30 - V. Gligorov
  - Particle2BackgroundCategoryRelationsAlg.{cpp,h} : an algorithm which takes as input
@@ -13,6 +16,7 @@
  - BackgroundCategoryViaRelations.{cpp,h} : new implemenation of IBackgroundCategory
    which reads a relations table of Particles and Categories and returns the
    Category related to an input Particle. 
+
 
 ! 2009-11-21 - Olivier Deschamps
  - DaVinciSmartAssociator & BackgroundCategory : implement a dedicated tool for neutral calo particle association
