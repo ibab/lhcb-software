@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.48 2009-11-26 13:08:48 tskwarni Exp $
+!$Id: release.notes,v 1.49 2009-11-30 09:56:46 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
 
+!========================== HltRawData v2r2 2009-11-30 ===================
 ! 2009-11-26 - Tomasz Skwarnicki
  - HltSelReportsMaker: save Particle2Vertex info. 
    No changes in Writer needed, but need new Decoder (HltDAQ v1r2 or higher) for proper restoration.
