@@ -1,4 +1,4 @@
-#$Id: requirements,v 1.1.1.1 2009-11-30 16:37:19 jpalac Exp $
+#$Id: requirements,v 1.2 2009-11-30 16:42:51 jpalac Exp $
 #============================================================================
 # Created    : 2009-11-30
 # Maintainer : Juan PALACIOS
@@ -20,6 +20,6 @@ use       Python      v* LCG_Interfaces
 include_path      none
 # =============================================================================
 # ======= the patterns ========================================================
-macro DSTWritersUserModules "DSTWriters.BaseDSTWriter" "DSTWriters.SelDSTWriter"
+macro DSTWritersConfUserModules "DSTWriters.BaseDSTWriter DSTWriters.SelDSTWriter"
 apply_pattern install_python_modules
 # =============================================================================
