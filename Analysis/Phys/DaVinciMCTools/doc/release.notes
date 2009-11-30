@@ -1,11 +1,16 @@
-! $Id: release.notes,v 1.278 2009-11-27 18:03:42 gligorov Exp $
+! $Id: release.notes,v 1.279 2009-11-30 04:57:08 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
 
+! 2009-11-30 - V. Gligorov
+ - Particle2BackgroundCategoryRelationsAlg.{cpp,h} : an algorithm which takes as input
+   a container of Particles and outputs a relations table between these and their
+   BackgroundCategories. 
+
 ! 2009-11-27 - V. Gligorov
- - BackgroundCategoryViaRelations : new implemenation of IBackgroundCategory
+ - BackgroundCategoryViaRelations.{cpp,h} : new implemenation of IBackgroundCategory
    which reads a relations table of Particles and Categories and returns the
    Category related to an input Particle. 
 
