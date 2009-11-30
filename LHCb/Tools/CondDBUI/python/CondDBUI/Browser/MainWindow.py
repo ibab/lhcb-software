@@ -317,7 +317,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #  If the database is already in the correct mode, nothing is done.
     def reopenDatabase(self, readOnly):
         path = self._path
-        print path, self._connectionString, readOnly
         if readOnly != self.db.readOnly:
             self.openDatabase(self._connectionString, readOnly)
         if path:
