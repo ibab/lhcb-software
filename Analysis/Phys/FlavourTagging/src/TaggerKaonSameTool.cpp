@@ -22,14 +22,17 @@ TaggerKaonSameTool::TaggerKaonSameTool( const std::string& type,
 
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
-  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.4 *GeV );
+  declareProperty( "KaonSame_Pt_cut", m_Pt_cut_kaonS = 0.45 *GeV );
   declareProperty( "KaonSame_P_cut",  m_P_cut_kaonS  = 4.0 *GeV );
   declareProperty( "KaonSame_IP_cut", m_IP_cut_kaonS = 3.0 );
   declareProperty( "KaonSame_Phi_cut",m_phicut_kaonS = 1.1 );
   declareProperty( "KaonSame_Eta_cut",m_etacut_kaonS = 1.0 );
-  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.4 *GeV);
-  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 4.0 );
+  declareProperty( "KaonSame_dQ_cut", m_dQcut_kaonS  = 1.6 *GeV);
+  declareProperty( "KaonS_LCS_cut",   m_lcs_cut      = 2.0 );
+  declareProperty( "KaonSPID_extracut", m_KaonSPID_extracut = 5.0 );
+
   declareProperty( "AverageOmega",    m_AverageOmega = 0.356 );
+
   m_nnet = 0;
   m_util = 0;
 }
@@ -58,8 +61,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                                 Particle::ConstVector& vtags ){
   Tagger tkaonS;
   if(!RecVert) return tkaonS;
-  const Vertex * SecVert= 0;
-  if(!allVtx.empty()) SecVert = allVtx.at(0);
+
+  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   Gaudi::LorentzVector ptotB = AXB0->momentum();
   double B0mass= ptotB.M();
@@ -69,10 +72,14 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
   //select kaonS sameside tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* ikaonS=0;
-  double ptmaxkS = -99.0;
+  double ptmaxkS = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
+
+    if((*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 )
+       - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
+       < m_KaonSPID_extracut ) continue;
 
     double Pt = (*ipart)->pt();
     double P  = (*ipart)->p();
@@ -99,11 +106,12 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       double lcs = track->chi2PerDoF();
       if( lcs > m_lcs_cut ) continue;
 
+      ncand++;
       if( Pt > ptmaxkS ) { 
         ikaonS  = (*ipart);
         ptmaxkS = Pt;
-        debug()<< " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
-               << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
+        verbose()<< " KaoS P="<< P <<" Pt="<< Pt << " IPsig=" << IPsig 
+                 << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
       }
     }
   } 
@@ -121,12 +129,8 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                           6.283-fabs(ikaonS->momentum().Phi()-B0phi));
     double dQ  = ((ptotB+ikaonS->momentum()).M() - B0mass)/GeV;
     m_util->calcIP(ikaonS, RecVert, IP, IPerr);
-//     if(SecVert) {
-//       m_util->calcIP(ikaonS, SecVert, ip, iperr);
-//       if(!iperr) IPT = ip/iperr;
-//     } else IPT = -1000.; 
 
-    std::vector<double> NNinputs(8);
+    std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
     NNinputs.at(2) = ikaonS->p()/GeV;
@@ -135,19 +139,16 @@ Tagger TaggerKaonSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     NNinputs.at(5) = deta;
     NNinputs.at(6) = dphi;
     NNinputs.at(7) = dQ;
+//    NNinputs.at(8) = m_util->getNvtx();
+    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(9) = ncand;
 
     pn = m_nnet->MLPkS( NNinputs );
 
   }
 
-//   if(pn<0.5){
-//     pn = 1-pn;
-//     tkaonS.setOmega( 1-pn );
-//     tkaonS.setDecision(ikaonS->charge()>0 ? -1: 1);
-//   } else {
-    tkaonS.setOmega( 1-pn );
-    tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
-//   }
+  tkaonS.setOmega( 1-pn );
+  tkaonS.setDecision(ikaonS->charge()>0 ? 1: -1);
   tkaonS.setType( Tagger::SS_Kaon ); 
   tkaonS.addToTaggerParts(ikaonS);
 

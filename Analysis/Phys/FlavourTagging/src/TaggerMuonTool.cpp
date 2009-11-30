@@ -25,7 +25,7 @@ TaggerMuonTool::TaggerMuonTool( const std::string& type,
   declareProperty( "NeuralNetName",  m_NeuralNetName     = "NNetTool_MLP" );
   declareProperty( "Muon_Pt_cut", m_Pt_cut_muon   = 1.1 *GeV );
   declareProperty( "Muon_P_cut",  m_P_cut_muon    = 0.0 *GeV );
-  declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 4.0 );
+  declareProperty( "Muon_lcs_cut",m_lcs_cut_muon  = 2.0 );
   declareProperty( "AverageOmega",m_AverageOmega  = 0.33 );
   m_nnet = 0;
   m_util = 0;
@@ -60,13 +60,13 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                             Particle::ConstVector& vtags ){
   Tagger tmu;
   if(!RecVert) return tmu;
-  const Vertex * SecVert= 0;
-  if(!allVtx.empty()) SecVert = allVtx.at(0);
 
+  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+  
   //select muon tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   const Particle* imuon=0;
-  double ptmaxm = -99.0;
+  double ptmaxm = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 13 ) continue;
@@ -79,13 +79,14 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     const ProtoParticle* proto = (*ipart)->proto();
     int muonNSH = (int) proto->info( ProtoParticle::MuonNShared, -1.0 );
-    debug() << " Muon P="<< P <<" Pt="<< Pt <<" muonNSH="<<muonNSH<<endreq;
+    verbose() << " Muon P="<< P <<" Pt="<< Pt <<" muonNSH="<<muonNSH<<endreq;
     if( muonNSH != 0 ) continue;
 
     const Track* track = (*ipart)->proto()->track();
     double lcs = track->chi2PerDoF();
     if(lcs>m_lcs_cut_muon) continue;
 
+    ncand++;
     if( Pt > ptmaxm ) { //Pt ordering
       imuon = (*ipart);
       ptmaxm = Pt;
@@ -99,18 +100,17 @@ Tagger TaggerMuonTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double IP, IPerr;
     m_util->calcIP(imuon, RecVert, IP, IPerr); //calculate IP
-//     if(SecVert) {
-//       m_util->calcIP(imuon, SecVert, ip, iperr); //calculate IPT
-//       if(!iperr) IPT = ip/iperr;
-//     } else IPT = -1000.; 
 
-    std::vector<double> NNinputs(5);
+    std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
     NNinputs.at(2) = imuon->p()/GeV;
     NNinputs.at(3) = imuon->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-   
+//    NNinputs.at(8) = m_util->getNvtx();
+    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(9) = ncand;
+    
     pn = m_nnet->MLPm( NNinputs );
 
   }

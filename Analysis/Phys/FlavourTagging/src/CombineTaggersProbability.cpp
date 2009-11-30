@@ -54,7 +54,7 @@ int CombineTaggersProbability::combineTaggers(FlavourTag& theTag,
     pnsum = 0.50;
     tagdecision = 0;
   }
-  debug() << "Final 1-w = " << pnsum <<endreq;
+  verbose() << "Final 1-w = " << pnsum <<endreq;
     
   //sort decision into categories ------------------
   //cat=1 will be least reliable, cat=5 most reliable

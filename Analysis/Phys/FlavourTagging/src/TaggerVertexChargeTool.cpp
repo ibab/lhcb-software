@@ -29,11 +29,11 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
 
   declareProperty( "PowerK",       m_PowerK               = 0.35 );
   declareProperty( "MinimumCharge",m_MinimumCharge        = 0.15 );
-  declareProperty( "P0",           m_P0                   = 5.259631e-01 );
-  declareProperty( "P1",           m_P1                   =-3.256825e-01 );
+  declareProperty( "P0",           m_P0                   = 5.258432e-01 );
+  declareProperty( "P1",           m_P1                   = -2.881809e-01 );
   declareProperty( "Gt075",        m_Gt075                = 0.35 );
-  declareProperty( "TracksEq2",    m_wSameSign2           = 0.420701 );
-  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.352641 );
+  declareProperty( "TracksEq2",    m_wSameSign2           = 0.442416 );
+  declareProperty( "TracksGt2",    m_wSameSignMoreThan2   = 0.384416 );
 
   declareProperty( "ProbMin",      m_ProbMin              = 0.52);
 
@@ -67,7 +67,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   std::vector<Vertex> vvec(0);
-  debug() <<"--- SVTOOL calling buildVertex: "<<endreq;
+  verbose() <<"--- SVTOOL calling buildVertex: "<<endreq;
   if(m_svtool) vvec = m_svtool -> buildVertex( *RecVert, vtags );
   if(vvec.empty()) return tVch;
   allVtx.push_back(&vvec.at(0));
@@ -85,10 +85,10 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
 //     const ProtoParticle* proto = (*ip)->proto();
 //     for( jp=ip+1; jp!=vtags.end(); jp++) {
 //       if( (*ip) == (*jp) ) { //ip is a tagger
-// 	debug()<<"found a used tagger"<<(*ip)->pt()<<endreq;
+// 	verbose()<<"found a used tagger"<<(*ip)->pt()<<endreq;
 // 	for( kp=Pfit.begin(); kp!=Pfit.end(); kp++) {
 // 	  if( proto == (*kp)->proto() ) {//ip is in SV
-// 	    debug()<<"Secondary Vertex uses OS tagger. Skip."<<endreq;
+// 	    verbose()<<"Secondary Vertex uses OS tagger. Skip."<<endreq;
 // 	    return tVch;
 // 	  }
 // 	}
@@ -101,7 +101,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
-    debug() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+    verbose() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
   }
   if(norm) Vch = Vch / norm;
   if(fabs(Vch) < m_MinimumCharge ) return tVch;
@@ -117,8 +117,8 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
     }
   }
 
-  debug() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-          <<" omega= "<< omega <<endreq;
+  verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
+            <<" omega= "<< omega <<endreq;
 
   if( 1-omega < m_ProbMin ) return tVch;
   if(   omega > m_ProbMin ) return tVch;

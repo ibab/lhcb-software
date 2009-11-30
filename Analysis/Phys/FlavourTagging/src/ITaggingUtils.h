@@ -33,5 +33,8 @@ public:
                              const LHCb::RecVertex::ConstVector& ,
                              double& , double& )=0;
   virtual int countTracks( LHCb::Particle::ConstVector& )=0;
+  virtual void setNvtx( int )=0;
+  virtual int getNvtx( )=0;
+  
 };
 #endif // ICOMBINETAGGERSTOOL_H

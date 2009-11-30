@@ -32,7 +32,8 @@ StatusCode TaggingUtils::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-
+  m_krec=0;
+  
   return StatusCode::SUCCESS; 
 }
 
@@ -106,6 +107,14 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
   }
   return nr;
 }
+//=========================================================================
+void TaggingUtils::setNvtx( int n ) { m_krec = n; }
+
+int TaggingUtils::getNvtx() { 
+  if( m_krec==0 ) err()<<"Undefined number of primary vertices! NNet will fail!"<<endreq;
+  return m_krec; 
+}
+
 //====================================================================
 StatusCode TaggingUtils::finalize() { return StatusCode::SUCCESS; }
 

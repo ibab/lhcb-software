@@ -38,12 +38,15 @@ public:
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
   int countTracks( LHCb::Particle::ConstVector& );
+  void setNvtx( int n );
+  int getNvtx();
   //-------------------------------------------------------------
 
 private:
 
   IGeomDispCalculator *m_Geom;
-
+  int m_krec;
+  
 };
 
 //===============================================================//

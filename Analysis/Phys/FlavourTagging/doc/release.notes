@@ -1,9 +1,21 @@
-! $Id: release.notes,v 1.155 2009-11-30 15:03:17 jpalac Exp $
+! $Id: release.notes,v 1.156 2009-11-30 22:42:50 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
+
+! 2009-11-30 - Marco Musy
+ - MC09 tuning by default
+ - New sets of cuts for MC09
+ - changed NN and p_i fit values
+ - hold DC06 cuts through new option file BTaggingTool_DC06.py
+   . copied NNets into DC06_NN files in src/NeuralNets
+ - BTagging, changed some output levels, 
+ - updated example option files
+ - fixed in BTagging check of existing container of particles
+ - raise to version v10r0
+
 
 !========================== FlavourTagging v9r0p2 2009-11-30 =================
 

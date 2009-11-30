@@ -40,7 +40,6 @@ public:
   virtual double MLPpS(std::vector<double>&);
 
 private:
-  double SIGMOID(double);
   void normaliseOS(std::vector<double>& );
   void normaliseSS(std::vector<double>& );
   double pol2(double x, double a0, double a1);

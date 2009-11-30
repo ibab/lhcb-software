@@ -62,7 +62,7 @@ Tagger TaggerJetSameTool::tag( const Particle* AXB0, const RecVertex* RecVert,
       aux  += pow((*ip)->pt()/GeV,k)*(*ip)->charge();
       norm += pow((*ip)->pt()/GeV,k);
       //}
-      debug() << " JetS Pt="<< Pt << " dR=" << dR <<endreq;
+      verbose() << " JetS Pt="<< Pt << " dR=" << dR <<endreq;
     }
   }
   //build jet charge same side

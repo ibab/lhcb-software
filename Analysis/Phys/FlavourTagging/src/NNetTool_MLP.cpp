@@ -16,10 +16,6 @@
 // 2008-10-10 : Marco Musy 
 //
 // Neural Net tuned with Root.
-// Inputs are:  event-multiplicity,
-// tagger p/GeV, pt/GeV, IP-significance,
-// Delta-eta between B and tagger,
-// Delta-phi, Delta-Q (= mass of B+tagger system - mass of B).
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -32,14 +28,14 @@ NNetTool_MLP::NNetTool_MLP( const std::string& type,
   GaudiTool ( type, name, parent ) { 
   declareInterface<INNetTool>(this);
 
-  declareProperty( "P0_mu_scale", m_P0mu =  9.084315e-01);
-  declareProperty( "P1_mu_scale", m_P1mu = -8.764311e-01);
-  declareProperty( "P0_e_scale",  m_P0e  =  7.937505e-01);
-  declareProperty( "P1_e_scale",  m_P1e  = -7.197138e-01);
-  declareProperty( "P0_k_scale",  m_P0k  =  9.839528e-01);
-  declareProperty( "P1_k_scale",  m_P1k  = -9.846077e-01);
-  declareProperty( "P0_ks_scale", m_P0ks =  1.004943);
-  declareProperty( "P1_ks_scale", m_P1ks = -1.017668);
+  declareProperty( "P0_mu_scale", m_P0mu =  9.715387e-01);
+  declareProperty( "P1_mu_scale", m_P1mu = -9.635686e-01);
+  declareProperty( "P0_e_scale",  m_P0e  =  9.205908e-01);
+  declareProperty( "P1_e_scale",  m_P1e  = -8.862215e-01);
+  declareProperty( "P0_k_scale",  m_P0k  =  1.015971);
+  declareProperty( "P1_k_scale",  m_P1k  = -1.021638);
+  declareProperty( "P0_ks_scale", m_P0ks =  9.703380e-01);
+  declareProperty( "P1_ks_scale", m_P1ks = -9.567222e-01);
   declareProperty( "P0_ps_scale", m_P0ps =  1.147873);
   declareProperty( "P1_ps_scale", m_P1ps = -1.241866);
     
@@ -49,11 +45,6 @@ StatusCode NNetTool_MLP::initialize() { return StatusCode::SUCCESS; }
 StatusCode NNetTool_MLP::finalize()   { return StatusCode::SUCCESS; }
 
 //=============================================================================
-double NNetTool_MLP::SIGMOID(double x){
-  if(x >  37.0) return 1.0;
-  if(x < -37.0) return 0.0;
-  return 1.0/(1.0+exp(-x));
-}
 double NNetTool_MLP::pol2(double x, double a0, double a1) {
   return a0+a1*x;
 }
@@ -67,11 +58,21 @@ void NNetTool_MLP::normaliseOS(std::vector<double>& par) {
   debug()<<"before norm "<<par<<endreq;
 
   par.at(0) /= 90.; //mult
-  par.at(1) /= 20.; //ptB
-  par.at(2) = std::min( par.at(2)/80., 1.); //partP
-  par.at(3) = std::min( par.at(3)/5., 1.); //partPt
-  par.at(4) = par.at(4)/50.; //IPPV
-  if(par.at(4)> 1.) par.at(4)= 1.; if(par.at(4)<-1.) par.at(4)=-1.;
+  par.at(1) /= 25.; //ptB
+  par.at(2) = std::min( par.at(2)/15., 1.); //partP
+  par.at(3) = std::min( par.at(3)/2.5, 1.); //partPt
+  double tmp=0;
+  if(par.at(4)<0) tmp=-sqrt(-par.at(4)); else tmp=sqrt(par.at(4));//IPPV
+  tmp /= 10.; 
+  if(tmp> 1) tmp= 1; if(tmp<-1) tmp=-1;
+  par.at(4)=tmp;
+  par.at(5) /= 2.; //nndeta
+  par.at(6) /= 3.; //nndphi
+  par.at(7) /= 12.;//nndq
+  if(par.at(7)>1.) par.at(7) = 1.;
+  par.at(8) = (par.at(8)-1)/4.;//krec
+  par.at(9) = (par.at(9)-1)/3;//ncands
+
 }
 
 void NNetTool_MLP::normaliseSS(std::vector<double>& par) { 
@@ -88,13 +89,14 @@ double NNetTool_MLP::MLPm(std::vector<double>& par) {
 
   normaliseOS(par);
   NNmuon net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
+  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
+                          par.at(8),par.at(9),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0mu, m_P1mu);// <=========
 
-  debug()<<"entering muon: rnet="<<rnet<<" pn="<<pn<<endreq;
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<endreq;
+  verbose()<<"entering muon: rnet="<<rnet<<" pn="<<pn<<endreq;
+  verbose()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   return pn;
 }; 
@@ -104,13 +106,14 @@ double NNetTool_MLP::MLPe(std::vector<double>& par) {
 
   normaliseOS( par );
   NNele net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
+  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4)
+                          ,par.at(8),par.at(9),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0e, m_P1e);// <=========
 
-  debug()<<"entering ele: rnet="<<rnet<<" pn="<<pn<<endreq;
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<endreq;
+  verbose()<<"entering ele: rnet="<<rnet<<" pn="<<pn<<endreq;
+  verbose()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   return pn;
 }; 
@@ -120,13 +123,14 @@ double NNetTool_MLP::MLPk(std::vector<double>& par ) {
 
   normaliseOS( par );
   NNkaon net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4));
+  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
+                          par.at(8),par.at(9),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0k, m_P1k);// <=========
 
-  debug()<<"entering k: rnet="<<rnet<<" pn="<<pn<<endreq;
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<endreq;
+  verbose()<<"entering k: rnet="<<rnet<<" pn="<<pn<<endreq;
+  verbose()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   return pn;
 }; 
@@ -138,14 +142,14 @@ double NNetTool_MLP::MLPkS(std::vector<double>& par) {
   normaliseSS( par );
   NNkaonS net;
   double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(6),par.at(7) );
+                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1));
   
   double pn = 1.0-pol2(rnet, m_P0ks, m_P1ks);// <=========
 
-  debug()<<"entering kS: rnet="<<rnet<<" pn="<<pn<<endreq;
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
-         <<" "<<par.at(7)<<endreq;
+  verbose()<<"entering kS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  verbose()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+           <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   return pn;
 }; 
@@ -156,15 +160,15 @@ double NNetTool_MLP::MLPpS(std::vector<double>& par) {
   normaliseOS( par );
   normaliseSS( par );
   NNpionS net;
-  double rnet = net.value(0, par.at(0),par.at(2),par.at(3),par.at(4),
-                          par.at(5),par.at(6),par.at(7) );
+  double rnet = net.value(0,par.at(0),par.at(2),par.at(3),par.at(4),
+                          par.at(5),par.at(6),par.at(7),par.at(8),par.at(9),par.at(1));
 
   double pn = 1.0-pol2(rnet, m_P0ps, m_P1ps);// <=========
 
-  debug()<<"entering pS: rnet="<<rnet<<" pn="<<pn<<endreq;
-  debug()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
-         <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
-         <<" "<<par.at(7)<<endreq;
+  verbose()<<"entering pS: rnet="<<rnet<<" pn="<<pn<<endreq;
+  verbose()<<"par = "<<par.at(0)<<" "<<par.at(2)<<" "<<par.at(3)
+           <<" "<<par.at(4)<<" "<<par.at(5)<<" "<<par.at(6)
+           <<" "<<par.at(7)<<" "<<par.at(8)<<" "<<par.at(9)<<" "<<par.at(1)<<endreq;
 
   return pn;
 };

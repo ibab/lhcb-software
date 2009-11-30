@@ -24,12 +24,12 @@ TaggerElectronTool::TaggerElectronTool( const std::string& type,
   declareProperty( "CombTech",  m_CombinationTechnique = "NNet" );
   declareProperty( "NeuralNetName",  m_NeuralNetName   = "NNetTool_MLP" );
   declareProperty( "Ele_Pt_cut",   m_Pt_cut_ele = 1.1 * GeV );
-  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 4.0 * GeV );
-  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 3.0 );
-  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -25.0 );
+  declareProperty( "Ele_P_cut",    m_P_cut_ele  = 0.0 * GeV );
+  declareProperty( "Ele_lcs_cut",  m_lcs_cut_ele= 2.0 );
+  declareProperty( "Ele_ghost_cut",m_ghost_cut_ele= -20.0 );
   declareProperty( "VeloChargeMin",m_VeloChMin  = 0.0 );
-  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.7 );
-  declareProperty( "EoverP",       m_EoverP     = 0.90 );
+  declareProperty( "VeloChargeMax",m_VeloChMax  = 1.3 );
+  declareProperty( "EoverP",       m_EoverP     = 0.85 );
   declareProperty( "AverageOmega", m_AverageOmega = 0.33 );
   m_nnet = 0;
   m_util = 0;
@@ -65,14 +65,14 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
                                 Particle::ConstVector& vtags ){
   Tagger tele;
   if(!RecVert) return tele;
-  const Vertex * SecVert= 0;
-  if(!allVtx.empty()) SecVert = allVtx.at(0);
+
+  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
 
   //select electron tagger(s)
   //if more than one satisfies cuts, take the highest Pt one
   Particle::ConstVector vele(0);
   const Particle* iele=0;
-  double ptmaxe = -99.0;
+  double ptmaxe = -99.0, ncand=0;
   Particle::ConstVector::const_iterator ipart;
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     
@@ -101,11 +101,13 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
     }
  
     if(eOverP > m_EoverP || eOverP<-100) {
-      debug() << " Elec P="<<P <<" Pt="<<Pt << " E/P=" << eOverP <<endreq;
+      verbose() << " Elec P="<<P <<" Pt="<<Pt << " E/P=" << eOverP <<endreq;
 
       double veloch = (*ipart)->proto()->info( ProtoParticle::VeloCharge, 0.0 );
       if( veloch > m_VeloChMin && veloch < m_VeloChMax ) {
-        debug() << "   veloch=" << veloch << endreq;
+        verbose() << "   veloch=" << veloch << endreq;
+        
+        ncand++;
         if( Pt > ptmaxe ) { 
           iele = (*ipart);
           ptmaxe = Pt;
@@ -121,30 +123,23 @@ Tagger TaggerElectronTool::tag( const Particle* AXB0, const RecVertex* RecVert,
 
     double IP, IPerr;
     m_util->calcIP(iele, RecVert, IP, IPerr);
-//     if(SecVert) {
-//       m_util->calcIP(iele, SecVert, ip, iperr);
-//       if(!iperr) IPT = ip/iperr;
-//     } else IPT = -1000.; 
 
-    std::vector<double> NNinputs(5);
+    std::vector<double> NNinputs(10);
     NNinputs.at(0) = m_util->countTracks(vtags);
     NNinputs.at(1) = AXB0->pt()/GeV;;
     NNinputs.at(2) = iele->p()/GeV;
     NNinputs.at(3) = iele->pt()/GeV;
     NNinputs.at(4) = IP/IPerr;
-    
+//    NNinputs.at(8) = m_util->getNvtx();
+    NNinputs.at(8) = allVtx.size();
+    NNinputs.at(9) = ncand;
+
     pn = m_nnet->MLPe( NNinputs );
 
   }
 
-//   if(pn<0.5){
-//     pn = 1-pn;
-//     tele.setOmega( 1-pn );
-//     tele.setDecision(iele->charge()>0 ? 1: -1);
-//   } else {
-    tele.setOmega( 1-pn );
-    tele.setDecision(iele->charge()>0 ? -1: 1);
-//   }  
+  tele.setOmega( 1-pn );
+  tele.setDecision(iele->charge()>0 ? -1: 1);
   tele.addToTaggerParts(iele);
   tele.setType( Tagger::OS_Electron );
 

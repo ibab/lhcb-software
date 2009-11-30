@@ -51,8 +51,12 @@ StatusCode BTagging::execute() {
 //=======================================================================
 void BTagging::performTagging(const std::string & location) 
 {
-
   //look in location where Selection has put the B candidates
+  if(!exist<LHCb::Particles>(location+"/Particles")){
+    debug()<<("No selection found in "+ location+"/Particles")<<endreq;
+    return;
+  }
+  
   const Particle::Container* parts = get<Particle::Container>( location+"/Particles" );
   if( !parts || parts->empty() ) {
     Warning("No particles found at "+ location+"/Particles", 
@@ -60,7 +64,7 @@ void BTagging::performTagging(const std::string & location)
     return;
   }
   
-  debug() << "BTagging will tag "<< parts->size() << " B hypos!" <<endreq;
+  verbose() << " Will tag "<< parts->size() << " B hypos!" <<endreq;
 
   //-------------- loop on signal B candidates from selection
   FlavourTags*  tags = new FlavourTags;
@@ -120,19 +124,19 @@ void BTagging::performTagging(const std::string & location)
                 << (itag->decision() > 0? "b":"bbar") <<endreq;
         debug() << "    omega    = " << itag->omega() <<endreq;
 
-// 	SmartRefVector<LHCb::Particle> taggerparts = itag->taggerParts();
-// 	SmartRefVector<LHCb::Particle>::const_iterator kp;
-// 	for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
-// 	  verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
-// 		    << " p= "  << (*kp)->p()/GeV << endreq;
-// 	}
+        SmartRefVector<LHCb::Particle> taggerparts = itag->taggerParts();
+        SmartRefVector<LHCb::Particle>::const_iterator kp;
+        for(kp=taggerparts.begin(); kp!=taggerparts.end(); kp++) {
+          verbose() << "    ID:" <<std::setw(4)<< (*kp)->particleID().pid() 
+                    << " p= "  << (*kp)->p()/GeV << endreq;
+        }
       }
     }
   }
 
-//   ///Output to TES (for backward compatibility)
+  //   ///Output to TES (for backward compatibility)
   const std::string tagLocation = location+"/"+m_TagLocation;
-  debug() << "Putting FlavourTags in " << tagLocation << endmsg;
+  verbose() << "Putting FlavourTags in " << tagLocation << endmsg;
   if(! (tags->empty()) ) put(tags, tagLocation);
 
 }

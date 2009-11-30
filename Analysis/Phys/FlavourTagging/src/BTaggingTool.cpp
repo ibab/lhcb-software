@@ -127,24 +127,20 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
     return StatusCode::FAILURE;
   }
 
-  const Particle::Container* parts = get<Particle::Container>( m_taggerLocation+"/Particles" );
+  const Particle::Container* parts = get<Particle::Container>(m_taggerLocation+"/Particles");
 
   const RecVertex::Container* verts = get<RecVertex::Container>(RecVertexLocation::Primary);
-  if (msgLevel(MSG::DEBUG)) debug() << "  Nr Vertices: "  << verts->size() 
-          << "  Nr Particles: " << parts->size() <<endreq;
+  if (msgLevel(MSG::VERBOSE)) verbose() << "  Nr Vertices: "  << verts->size() 
+                                        << "  Nr Particles: " << parts->size() <<endreq;
   
   //----------------------------
   RecVertex::Container::const_iterator iv;
   if( ! RecVert ) {
-    //NEEDS TO BE CHANGED:
-    //if the prim vtx is not provided by the user,
-    //choose as primary vtx the one with smallest IP wrt B signal
-    //this is a guess for the actual PV chosen by the selection.
     double kdmin = 1000000;
     for(iv=verts->begin(); iv!=verts->end(); iv++){
       double ip, iperr;
       m_util->calcIP(AXB, *iv, ip, iperr);
-      if (msgLevel(MSG::DEBUG)) debug() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() << "Vertex IP="<< ip <<" iperr="<<iperr<<endreq;
       if(iperr) if( fabs(ip/iperr) < kdmin ) {
         kdmin = fabs(ip/iperr);
         RecVert = (*iv);
@@ -157,11 +153,14 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   }
 
   //build a vector of pileup vertices --------------------------
+  Vertex::ConstVector allVtx;
   RecVertex::ConstVector PileUpVtx(0); //contains all the other primary vtx's
   for(iv=verts->begin(); iv!=verts->end(); iv++){
+    const Vertex* av=AXB->endVertex();
+    allVtx.push_back(av);
     if( (*iv) == RecVert ) continue;
     PileUpVtx.push_back(*iv);
-    if (msgLevel(MSG::DEBUG)) debug() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose() <<"Pileup Vtx z=" << (*iv)->position().z()/mm <<endreq;
   }
 
   //loop over Particles, preselect taggers ///////////////////preselection
@@ -173,10 +172,10 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts->begin(); ip != parts->end(); ip++ ){
 
-      debug() <<"part p="<<(*ip)->p()/GeV
-	     <<"  pt="<<(*ip)->pt()/GeV
-	     <<"  typ="<<(*ip)->proto()->track()->type()
-	     <<endreq;
+      if (msgLevel(MSG::VERBOSE)) verbose() <<"part p="<<(*ip)->p()/GeV
+                                            <<"  pt="<<(*ip)->pt()/GeV
+                                            <<"  typ="<<(*ip)->proto()->track()->type()
+                                            <<endreq;
 
       if( (*ip)->p()/GeV < 2.0 ) continue;               
       if( (*ip)->momentum().theta() < m_thetaMin ) continue;
@@ -189,7 +188,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       if( (*ip)->pt()/GeV >  10 ) continue;
       if( isinTree( *ip, axdaugh, distphi ) )  continue ;//exclude signal
       if( distphi < m_distphi_cut ) continue;
-      debug() <<" DISTPHI="<<distphi<<endreq;
+      verbose() <<" DISTPHI="<<distphi<<endreq;
 
       //calculate the min IP wrt all pileup vtxs
 
@@ -197,7 +196,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       m_util->calcIP( *ip, PileUpVtx, ippu, ippuerr );
       //eliminate from vtags all parts coming from a pileup vtx
       if(ippuerr) if( ippu/ippuerr<m_IPPU_cut ) continue; //preselection
-      debug() <<" IPPU="<<ippu/ippuerr<<endreq;
+      verbose() <<" IPPU="<<ippu/ippuerr<<endreq;
 
       //////////////////////////////////
       vtags.push_back(*ip);          // store tagger candidate
@@ -206,7 +205,7 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   } else {
     //tagger candidate list is already provided, it is the user responsibility
     //to check that there is not a signal B daughter inside...
-    if (msgLevel(MSG::DEBUG)) debug()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
+    if (msgLevel(MSG::VERBOSE)) verbose()<<"User tagger candidate list of size = "<<vtags.size()<<endreq;
   }
 
   //AXB is the signal B from selection
@@ -216,41 +215,32 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   ///Choose Taggers ------------------------------------------------------ 
   if (msgLevel(MSG::DEBUG)) debug() <<"evaluate taggers" <<endreq;
-  Vertex::ConstVector allVtx;
   Tagger muon, elec, kaon, kaonS, pionS, vtxCh, jetS;
 
   if(m_EnableMuon)     muon = m_taggerMu   -> tag(AXB, RecVert, allVtx, vtags);
-
   if(m_EnableElectron) elec = m_taggerEle  -> tag(AXB, RecVert, allVtx, vtags);
-
   if(m_EnableKaonOS)   kaon = m_taggerKaon -> tag(AXB, RecVert, allVtx, vtags);
-
   if(m_EnableKaonSS) if(isBs)  
-                       kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
-
+    kaonS= m_taggerKaonS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnablePionSS) if(isBd || isBu)
-                       pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
-
+    pionS= m_taggerPionS-> tag(AXB, RecVert, allVtx, vtags);
   if(m_EnableJetSame)  jetS = m_taggerJetS -> tag(AXB, RecVert, allVtx, vtags);
-
-  if(m_EnableVertexCharge){ //S. POSS:
-    //Remove in vtags all previously built OS taggers: duplicate in vtagsplusOS
-    //those parts that appear as OS taggers so that TaggerVertex can kill the tag
+  if(m_EnableVertexCharge){ 
     Particle::ConstVector vtagsPlusOS(0);
     Particle::ConstVector::const_iterator i, j;
     for ( i=vtags.begin(); i!=vtags.end(); i++ ){
       const ProtoParticle* iproto = (*i)->proto();
       for ( j=i+1; j!=vtags.end(); j++) if(iproto==(*j)->proto()) continue;
       if( m_UseVtxOnlyWithoutOS ) {
-	if(muon.type()!=0) 
-	  if(muon.taggerParts().at(0)->proto() == iproto ) 
-	    vtagsPlusOS.push_back(*i);
-	if(elec.type()!=0) 
-	  if(elec.taggerParts().at(0)->proto() == iproto ) 
-	    vtagsPlusOS.push_back(*i);
-	if(kaon.type()!=0)
-	  if(kaon.taggerParts().at(0)->proto() == iproto ) 
-	    vtagsPlusOS.push_back(*i);
+        if(muon.type()!=0) 
+          if(muon.taggerParts().at(0)->proto() == iproto ) 
+            vtagsPlusOS.push_back(*i);
+        if(elec.type()!=0) 
+          if(elec.taggerParts().at(0)->proto() == iproto ) 
+            vtagsPlusOS.push_back(*i);
+        if(kaon.type()!=0)
+          if(kaon.taggerParts().at(0)->proto() == iproto ) 
+            vtagsPlusOS.push_back(*i);
       }
       vtagsPlusOS.push_back(*i);
     }
@@ -264,13 +254,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( isBs ) taggers.push_back(&kaonS);
   if( isBu || isBd ) taggers.push_back(&pionS);
   taggers.push_back(&vtxCh);
-
-  if (msgLevel(MSG::DEBUG)) debug()<<"tagger mu   1-w = "<< 1-muon.omega() <<endreq;
-  if (msgLevel(MSG::DEBUG)) debug()<<"tagger ele  1-w = "<< 1-elec.omega() <<endreq;
-  if (msgLevel(MSG::DEBUG)) debug()<<"tagger kO   1-w = "<< 1-kaon.omega() <<endreq;
-  if( isBs ) if (msgLevel(MSG::DEBUG)) debug()<<"tagger kS   1-w = "<< 1-kaonS.omega()<<endreq;
-  if( isBu || isBd ) if (msgLevel(MSG::DEBUG)) debug()<<"tagger pS   1-w = "<< 1-pionS.omega()<<endreq;
-  if (msgLevel(MSG::DEBUG)) debug()<<"tagger vtx  1-w = "<< 1-vtxCh.omega()<<endreq;
 
   //----------------------------------------------------------------------
   //Now combine the individual tagger decisions into 
@@ -295,9 +278,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   theTag.setCategoryOS( tmp_theTagOS.category() );
   theTag.setOmegaOS   ( tmp_theTagOS.omega() );
 
-  if (msgLevel(MSG::DEBUG)) debug() <<"decision="<<theTag.decision()<<"  decisionOS="<< theTag.decisionOS()<<endreq;
-  if (msgLevel(MSG::DEBUG)) debug() <<"omega="   <<theTag.omega()   <<"  omegaOS="   << theTag.omegaOS()<<endreq;
-  if (msgLevel(MSG::DEBUG)) debug() <<"category="<<theTag.category()<<"  categoryOS="<< theTag.categoryOS()<<endreq;
 
   ///OUTPUT to Logfile ---------------------------------------------------
   int sameside = kaonS.decision();
@@ -305,19 +285,19 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
 
   RecHeader* evt = get<RecHeader> (RecHeaderLocation::Default);
 
-  debug() << "BTAGGING TAG   " 
-          << std::setw(9) << evt->runNumber()
-          << std::setw(9) << evt->evtNumber()
-          << std::setw(5) << theTag.decision()
-          << std::setw(3) << theTag.category()
-          << std::setw(5) << theTag.decisionOS()
-          << std::setw(3) << theTag.categoryOS()
-          << std::setw(5) << muon.decision()
-          << std::setw(3) << elec.decision()
-          << std::setw(3) << kaon.decision()
-          << std::setw(3) << sameside
-          << std::setw(3) << vtxCh.decision()
-          << endmsg;
+  if (msgLevel(MSG::DEBUG)) debug() << "BTAGGING TAG   " 
+                                    << std::setw(9) << evt->runNumber()
+                                    << std::setw(9) << evt->evtNumber()
+                                    << std::setw(5) << theTag.decision()
+                                    << std::setw(3) << theTag.category()
+                                    << std::setw(5) << theTag.decisionOS()
+                                    << std::setw(3) << theTag.categoryOS()
+                                    << std::setw(5) << muon.decision()
+                                    << std::setw(3) << elec.decision()
+                                    << std::setw(3) << kaon.decision()
+                                    << std::setw(3) << sameside
+                                    << std::setw(3) << vtxCh.decision()
+                                    << endmsg;
 
   return StatusCode::SUCCESS;
 }
@@ -344,10 +324,11 @@ bool BTaggingTool::isinTree(const Particle* axp, Particle::ConstVector& sons,
              && fabs(pt_axp-(*ip)->pt())< 0.01 
              && fabs(phi_axp-(*ip)->momentum().phi())< 0.1 )
         || axp->proto()==(*ip)->proto() ) {
-      if (msgLevel(MSG::DEBUG)) debug() << "excluding signal part: " << axp->particleID().pid() 
-              << " with p="<<p_axp/Gaudi::Units::GeV 
-              << " pt="<<pt_axp/Gaudi::Units::GeV 
-              << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
+      if (msgLevel(MSG::VERBOSE)) 
+        verbose() << "excluding signal part: " << axp->particleID().pid() 
+                  << " with p="<<p_axp/Gaudi::Units::GeV 
+                  << " pt="<<pt_axp/Gaudi::Units::GeV 
+                  << " proto_axp,ip="<<axp->proto()<<" "<<(*ip)->proto()<<endreq;
       return true;
     }
   }

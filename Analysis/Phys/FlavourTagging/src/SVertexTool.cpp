@@ -1,4 +1,4 @@
-// $Id: SVertexTool.cpp,v 1.12 2009-08-20 13:30:07 ibelyaev Exp $
+// $Id: SVertexTool.cpp,v 1.13 2009-11-30 22:42:51 musy Exp $
 #include "SVertexTool.h"
 #include "Event/RecVertex.h"
 //-----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ SVertexTool::~SVertexTool(){}
 //=============================================================================
 std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert, 
                                              const Particle::ConstVector& vtags){
-  debug()<<"=======SVertex Tool========"<<endreq;
+  verbose()<<"=======SVertex Tool========"<<endreq;
 //  for(Particle::ConstVector::const_iterator ip = vtags.begin(); 
 //       ip != vtags.end(); ip++) {
 //     info() <<"B vtag part= "<< (*ip)->pt()<<"  "<<(*ip)->proto()<<" id="<<
@@ -88,7 +88,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
   Particle::ConstVector vtags_unique, vtags_toexclude;
 
   //filter duplicates and apply some pre-cuts to speed up what's next
-  debug()<<"Look for seed particles"<<endreq;
+  verbose()<<"Look for seed particles"<<endreq;
   for ( ip = vtags.begin(); ip != vtags.end(); ip++ ) {
     if( !(*ip)->proto() ) continue;
 
@@ -113,7 +113,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     
     vtags_unique.push_back(*ip);
   }
-  debug() << "size of tacks for sec vtx="<<vtags_unique.size()<<endreq;
+  verbose() << "size of tracks for sec vtx="<<vtags_unique.size()<<endreq;
 
   //loop to find seed -----------------------------------
   for ( jp = vtags_unique.begin(); jp != vtags_unique.end(); jp++ ) {
@@ -188,7 +188,7 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
         Vfit = vtx;
         p1 = (*jp);
         p2 = (*kp);
-        debug() << "complete seed formed with probf="<<probf<<endreq;
+        verbose() << "complete seed formed with probf="<<probf<<endreq;
       }
     }
   }
@@ -261,13 +261,13 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
       }
       //decide if keep it or kill it
       if( worse_exist ) {
-        debug()<< "Worse=" << (*kpp_worse)->particleID().pid()
+        verbose()<< "Worse=" << (*kpp_worse)->particleID().pid()
                << " P=" << (*kpp_worse)->p()/GeV << " ipmax=" << ipmax ;
         if ( ipmax > 3.0 && Pfit.size() > 2 ) {
           Pfit.erase( kpp_worse );
-          debug() << " killed." << endreq;	
+          verbose() << " killed." << endreq;	
         } else {
-          debug() << " included." << endreq;	
+          verbose() << " included." << endreq;	
         }
       }
     }
@@ -275,11 +275,11 @@ std::vector<Vertex> SVertexTool::buildVertex(const RecVertex& RecVert,
     sc = fitter->fit( Vfit , Pfit ); //RE-FIT////////////////////
     if( !sc ) Pfit.clear();
   }
-  debug() << "================ Fit Results: " << Pfit.size() <<endreq;
+  verbose() << "================ Fit Results: " << Pfit.size() <<endreq;
   Vfit.clearOutgoingParticles();
   for( jp=Pfit.begin(); jp!=Pfit.end(); jp++ ) {
     Vfit.addToOutgoingParticles(*jp);
-    debug() << "================  pt=" << (*jp)->pt() <<endreq;
+    verbose() << "================  pt=" << (*jp)->pt() <<endreq;
   }
 
   vtxvect.push_back(Vfit);
