@@ -1,12 +1,17 @@
 ! =============================================================================
-! $Id: release.notes,v 1.129 2009-11-08 18:17:14 marcocle Exp $
+! $Id: release.notes,v 1.130 2009-11-30 09:15:33 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
+! 2009-11-30 - Marco Clemencic
+ - Improvements to the new Qt4-based CondDBBrowser.
+   - started the dialog for new conditions
+   - minor improvements
+ 
 ! 2009-11-08 - Marco Clemencic
- - Improvements to the new Qt4-based CondDBBrowser. 
+ - Improvements to the new Qt4-based CondDBBrowser.
 
 ! 2009-11-03 - Marco Clemencic
  - Fixed a compilation problem on Windows for the dictionary.

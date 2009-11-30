@@ -3,7 +3,7 @@
 #
 #  Definition of the browser MainWindow class.
 
-from PyQt4.QtCore import (Qt, QObject, SIGNAL,
+from PyQt4.QtCore import (Qt, QObject, SIGNAL, SLOT,
                           QDateTime,
                           QRegExp)
 from PyQt4.QtGui import (QDialog,
@@ -13,17 +13,19 @@ from PyQt4.QtGui import (QDialog,
                          QValidator,
                          QRegExpValidator)
 
-from Models import NodeFieldsModel, NodeFieldsDelegate
+from Models import (NodeFieldsModel, NodeFieldsDelegate, GlobalTagsListModel,
+                    CondDBNodesListModel, CondDBPayloadFieldModel)
 
 from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
 from Ui_NewNodeDialog import Ui_NewNodeDialog
 from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
+from Ui_AddConditionDialog import Ui_AddConditionDialog
 
 import os
 
 __all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog",
-           "DumpToFilesDialog", "ProgressDialog"]
+           "DumpToFilesDialog", "ProgressDialog", "AddConditionDialog"]
 
 ## Simple validator for COOL database name
 class DBNameValidator(QRegExpValidator):
@@ -231,6 +233,10 @@ class DumpToFilesDialog(QDialog, Ui_DumpToFilesDialog):
         super(DumpToFilesDialog, self).__init__(parent, flags)
         # Prepare the GUI.
         self.setupUi(self)
+        # @todo: the distinction between local tags and global tag is not yet implemented
+        self.localTags.hide()
+        self.tagsModel = GlobalTagsListModel(parent.db, self)
+        self.tag.setModel(self.tagsModel)
         # Initialize fields
         self.destDir.setText(os.getcwd())
         self.pointInTime.setDateTime(QDateTime.currentDateTime())
@@ -256,3 +262,52 @@ class ProgressDialog(QProgressDialog):
         else:
             QProgressDialog.setLabelText(self, text)
 
+## Dialog to prepare the insertion of new conditions
+class AddConditionDialog(QDialog, Ui_AddConditionDialog):
+    #__pyqtSignals__ = ("folderChanged(QString)")
+    ## Constructor.
+    #  Initializes the base class and defines some internal structures.
+    def __init__(self, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(AddConditionDialog, self).__init__(parent, flags)
+        self.db = parent.db
+        self.folderModel = CondDBNodesListModel(self.db, parent = self,
+                                                nodeType = CondDBNodesListModel.FOLDER)
+        self.fieldsModel = CondDBPayloadFieldModel(self.db, parent = self)
+        # Prepare the GUI.
+        self.setupUi(self)
+        self.folder.setModel(self.folderModel)
+        self.fields.setModel(self.fieldsModel)
+        self.folder.setCurrentIndex(-1)
+        self.until.setMaxChecked(True)
+        self.since.setDateTime(QDateTime.currentDateTime())
+        self.channel.setText("0")
+        QObject.connect(self.folder, SIGNAL("currentIndexChanged(QString)"),
+                        self.fieldsModel.setPath)
+        QObject.connect(self.fieldsModel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
+                        self.fields.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
+    
+    ## Set the value of the channel field.
+    def setChannel(self, ch):
+        if ch:
+            ch = str(ch)
+        else:
+            ch = ""
+        self.channel.setText(ch)
+    
+    ## Get the value of channel field.
+    def getChannel(self):
+        return str(self.channel.text())
+    
+    ## Set the value of the folder field.
+    def setFolder(self, folder):
+        self.folder.setCurrentIndex(self.folderModel.nodes.index(str(folder)))
+    
+    ## Set the value of the folder field.
+    def getFolder(self):
+        return str(self.folder.currentText())
+    
+    def setLocation(self, folder, channel):
+        self.setFolder(folder)
+        self.setChannel(channel)
+    

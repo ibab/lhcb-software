@@ -7,12 +7,14 @@ from PyQt4.QtCore import (Qt, QObject,
                           SIGNAL, SLOT,
                           QVariant, QDateTime,
                           QSettings,
-                          QSize, QPoint)
+                          QSize, QPoint,
+                          PYQT_VERSION_STR, qVersion)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
                          QHeaderView,
                          QLabel,
                          QAction,
                          QIcon,
+                         QMenu,
                          QStyle, QStyleFactory)
 
 from Ui_MainWindow import Ui_MainWindow
@@ -297,7 +299,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.db = None
                 title = self.appName
-                # Notify the widgets that there is not database open
+                # Notify the widgets that there is no database open
                 self.emit(SIGNAL("databaseOpen(bool)"), False)
                 self.menuEdit.setEnabled(False)
                 self.menuAdvanced.setEnabled(False)
@@ -314,8 +316,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Re-open the current database, changing the readOnly flag.
     #  If the database is already in the correct mode, nothing is done.
     def reopenDatabase(self, readOnly):
+        path = self._path
+        print path, self._connectionString, readOnly
         if readOnly != self.db.readOnly:
             self.openDatabase(self._connectionString, readOnly)
+        if path:
+            self._selectPath(path[0])
     
     ## Disconnect from the database.
     #  @see: openDatabase()
@@ -328,7 +334,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     ## Display the application information dialog box
     def aboutDialog(self):
-        from PyQt4.QtCore import PYQT_VERSION_STR, qVersion
         app = QApplication.instance()
         message = '''<p><b>%s</b><br/>%s</p>
         <p>Browser for the LHCb-COOL condition database.</p>
@@ -352,8 +357,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.emit(SIGNAL("changedPathChannel"), item.path, item.channel)
                 else:
                     self.emit(SIGNAL("changedPathChannel"), None, None)
-                # Nodes can be deleted only if they are Folders or empty FolderSets
-                self.actionDelete_Node.setEnabled(item.leaf or not item.children)
+                # Nodes can be deleted only if the database is in r/w mode and
+                # they are Folders or empty FolderSets
+                self.actionDelete_Node.setEnabled(not self.db.readOnly
+                                                  and (item.leaf or not item.children))
             except ValueError:
                 i = -1
             self.pathComboBox.setCurrentIndex(i)
@@ -437,6 +444,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _refreshModels(self, selectPath = None):
         # trigger a refresh of the caches in the models
         self.emit(SIGNAL("openedDB"), self.db)
+        self._selectPath(selectPath)
+    
+    ## Helper function to select a path in both the combo box and the hierarchy
+    #  view.
+    def _selectPath(self, selectPath = None):
         if selectPath:
             #  select the specified path
             i = self.pathComboBox.findText(selectPath)
@@ -511,18 +523,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             monitor.setWindowModality(Qt.WindowModal)
             monitor.setWindowTitle("Dumping to files")
             monitor.setMinimumDuration(0)
-            DumpToFiles(database = self.db,
-                        time = d.pointInTime.toValidityKey(),
-                        tag = str(d.tag.currentText()),
-                        srcs = ['/'],
-                        destroot = str(d.destDir.text()),
-                        force = d.overwrite.isChecked(),
-                        addext = False,
-                        monitor = monitor)
-            if monitor.wasCanceled():
+            try:
+                DumpToFiles(database = self.db,
+                            time = d.pointInTime.toValidityKey(),
+                            tag = str(d.tag.currentText()),
+                            srcs = ['/'],
+                            destroot = str(d.destDir.text()),
+                            force = d.overwrite.isChecked(),
+                            addext = False,
+                            monitor = monitor)
+                if monitor.wasCanceled():
+                    monitor.reset()
+                    QMessageBox.information(self, "Dump to files canceled",
+                                            "The dump has been canceled.")
+            except:
                 monitor.reset()
-                QMessageBox.information(self, "Dump to files canceled",
-                                        "The dump has been canceled.")
+                self.exceptionDialog()
     
     ## Create a slice of the current database to a database
     def createSlice(self):
@@ -530,7 +546,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ## Add a new condition to the selected folder+channel
     def addCondition(self):
-        self._unimplemented()
+        #self._unimplemented()
+        d = AddConditionDialog(self)
+        apply(d.setLocation, self._path)
+        if d.exec_():
+            print d.getFolder(), d.getChannel()
     
     ## Create a new tag
     def newTag(self):
@@ -539,3 +559,23 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Delete a tag
     def deleteTag(self):
         self._unimplemented()
+
+    ## Display context menu for the tree view
+    def showHierarchyContextMenu(self, position):
+        actions = []
+        index = self.hierarchyTreeView.indexAt(position)
+        if index.isValid():
+            item = index.internalPointer()
+            actions.append(self.actionCopy_path)
+            actions.append(self.actionNew_Tag)
+            if item.leaf:
+                actions.append(self.actionAdd_Condition)
+            else:
+                actions.append(self.actionNew_Node)
+            actions.append(self.actionDelete_Node)
+        if actions:
+            QMenu.exec_(actions, self.hierarchyTreeView.mapToGlobal(position))
+        
+    ## Copy the current selected path to the clipboard.
+    def copyPathToClipboard(self):
+        QApplication.clipboard().setText(self._path[0])

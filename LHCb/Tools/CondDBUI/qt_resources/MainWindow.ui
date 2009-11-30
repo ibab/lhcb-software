@@ -72,6 +72,9 @@
         </item>
         <item>
          <widget class="QTreeView" name="hierarchyTreeView" >
+          <property name="contextMenuPolicy" >
+           <enum>Qt::CustomContextMenu</enum>
+          </property>
           <property name="editTriggers" >
            <set>QAbstractItemView::NoEditTriggers</set>
           </property>
@@ -404,6 +407,11 @@
    </property>
    <property name="statusTip" >
     <string>Change the opening mode of the database (re-opens it)</string>
+   </property>
+  </action>
+  <action name="actionCopy_path" >
+   <property name="text" >
+    <string>Copy path</string>
    </property>
   </action>
  </widget>
@@ -816,6 +824,118 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>hierarchyTreeView</sender>
+   <signal>customContextMenuRequested(QPoint)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>showHierarchyContextMenu(QPoint)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>160</x>
+     <y>344</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>actionCopy_path</sender>
+   <signal>activated(int)</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyPathToClipboard()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionAdd_Condition</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionDelete_Node</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionDelete_Tag</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionNew_Node</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpenReadOnly(bool)</signal>
+   <receiver>actionNew_Tag</receiver>
+   <slot>setDisabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>482</x>
+     <y>327</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -837,6 +957,8 @@
   <slot>addCondition()</slot>
   <slot>newTag()</slot>
   <slot>deleteTag()</slot>
+  <slot>showHierarchyContextMenu(QPoint)</slot>
+  <slot>copyPathToClipboard()</slot>
   <signal>openedDB(P*)</signal>
   <signal>databaseOpen(bool)</signal>
   <signal>databaseOpenReadOnly(bool)</signal>

@@ -5,7 +5,7 @@ from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
                          QItemDelegate,
                          QComboBox, QLineEdit)
 
-from PyCool import cool
+from PyCool import cool, walk as dbwalk
 
 from Utils import *
 
@@ -257,9 +257,15 @@ class CondDBStructureModel(QAbstractItemModel):
 ## ListModel for the list of folders/folder-sets present in the database.
 #  Used by the "path" combobox.
 class CondDBNodesListModel(QAbstractListModel):
-    def __init__(self, db = None, parent = None):
+    FOLDER = 0x1
+    FOLDERSET = 0x2
+    ALL = FOLDER | FOLDERSET
+    def __init__(self, db = None, parent = None,
+                 nodeType = ALL):
         super(CondDBNodesListModel,self).__init__(parent)
         self._nodes = None
+        self.db = None
+        self.nodeType = nodeType
         self.connectDB(db)
         
     ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
@@ -280,10 +286,15 @@ class CondDBNodesListModel(QAbstractListModel):
         if self._nodes is None:
             self._nodes = self.db.getAllNodes()
             self._nodes.pop(0) # remove "/" (which is always the first one)
+            # if a filtering criterion is defined, we filter the list 
+            if self.nodeType == self.FOLDER:
+                self._nodes = filter(self.db.db.existsFolder, self._nodes)
+            elif self.nodeType == self.FOLDERSET:
+                self._nodes = filter(self.db.db.existsFolderSet, self._nodes)
         return self._nodes
     
     ## Returns the number of nodes in the database.
-    def rowCount(self, parent):
+    def rowCount(self, _parent):
         return len(self.nodes)
     
     ## Returns the name of the folder at a given index.
@@ -322,13 +333,21 @@ class CondDBTagsListModel(QAbstractListModel):
         self.setPath(None) # trigger a clean up of the cache
         self.db = db
         
-    ## Property showAutoTags
-    def hideAutoTags(self):
+    ## Property hideAutoTags
+    def getHideAutoTags(self):
         return self._hideAutoTags
     
-    ## Sets the property showAutoTags.
+    ## Hide the Auto(matic)Tags from the list
+    def hideAutoTags(self):
+        return self.setHideAutoTags(True)
+    
+    ## Show the Auto(matic)Tags from the list
+    def showAutoTags(self):
+        return self.setHideAutoTags(False)
+    
+    ## Sets the property hideAutoTags.
     def setHideAutoTags(self, value):
-        newval = value != 0
+        newval = bool(value)
         if self._hideAutoTags != newval:
             self.reset()
             self._tags = None
@@ -379,6 +398,97 @@ class CondDBTagsListModel(QAbstractListModel):
             if self._hideAutoTags:
                 tags = [t for t in tags if not t.startswith("_auto_")]
             self._tags = tags
+        return self._tags
+    
+    ## Number of tags to display.
+    def rowCount(self, parent):
+        return len(self.tags())
+    
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            if role == Qt.DisplayRole:
+                return QVariant(self.tags()[index.row()])
+        return QVariant()
+    
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if orientation == Qt.Horizontal and role == Qt.DisplayRole and section == 0:
+            return QVariant("Tag")
+        return QVariant()
+
+## Model class to retrieve the available tags in a database.
+class GlobalTagsListModel(QAbstractListModel):
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, db = None, parent = None):
+        super(GlobalTagsListModel,self).__init__(parent)
+        self.db = None
+        ## All the tags in the database in form of pairs (string name, bool local)
+        self._alltags = None
+        ## Tags to display
+        self._tags = None
+        ## Property controlling the filter on the list of tags
+        self._hideLocalTags = True
+        
+        self.connectDB(db)
+    
+    ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
+    def connectDB(self, db):
+        self._tags = None
+        self.db = db
+        
+    ## Property hideLocalTags
+    def getHideLocalTags(self):
+        return self._hideLocalTags
+    
+    ## Hide the local tags from the list
+    def hideLocalTags(self):
+        return self.setHideLocalTags(True)
+    
+    ## Show the local tags from the list
+    def showLocalTags(self):
+        return self.setHideLocalTags(False)
+    
+    ## Sets the property hideLocalTags.
+    def setHideLocalTags(self, value):
+        newval = bool(value)
+        if self._hideLocalTags != newval:
+            self.reset()
+            self._tags = None
+            self._hideLocalTags = newval
+    
+    ## Function returning the (cached) list of all tags.
+    def alltags(self):
+        if self._alltags is None:
+            _bc = BusyCursor()
+            # The tags in folderset "/" has to be added by hand because it is
+            # not considered in 2walk"
+            f = self.db.db.getFolderSet("/")
+            tags = set(f.listTags())
+            # Loop over all nodes to get the tags
+            for root, foldersets, folders in dbwalk(self.db.db,'/'):
+                if root == "/":
+                    root = "" # "/" is a special case
+                for f in [self.db.db.getFolder("%s/%s" % (root, fn))
+                          for fn in folders] + \
+                         [self.db.db.getFolderSet("%s/%s" % (root, fn))
+                          for fn in foldersets]:
+                    tags.update([t for t in f.listTags()
+                                 if not t.startswith("_auto_")])
+            tags = list(tags)
+            tags.sort()
+            tags.insert(0, "HEAD")
+            self._alltags = tags
+        return self._alltags
+
+    ## Expanded list of tags.
+    #  If the hideLocalTags property is set to True, the tags not defined in the
+    #  root folder-set are excluded from the list.
+    def tags(self):
+        if self._tags is None:
+            # @FIXME: hideLocalTags is currently ignored
+            self._tags = self.alltags()
         return self._tags
     
     ## Number of tags to display.
@@ -791,6 +901,8 @@ class CondDBPayloadFieldModel(QAbstractListModel):
     ## Set the folder for which to get the tags.
     def setPath(self, path):
         self.reset()
+        if path is not None: # Needed to use this function as a slot accepting QString
+            path = str(path)
         self._path = path
         if path and self.db.db.existsFolder(path):
             self._fields = self.db.getFolderStorageKeys(path)
