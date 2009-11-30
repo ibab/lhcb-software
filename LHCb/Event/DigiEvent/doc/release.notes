@@ -4,6 +4,12 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-11-30 - Victor Coco
+ - set the VeloPixLiteCluster bitfield by hand since the bitfield64 in order the
+ Mask that are compatible with ulonglong --> the value of the enum attributes 
+should be: 0x1234LL instead of 0x1234L otherwise underlying enum type is long
+(which is 32 bits on 32bits machine...)
+
 ! 2009-11-28 - Victor Coco
  - add some paranthesis in VeloPixLiteCluster because of warning with gcc43
 

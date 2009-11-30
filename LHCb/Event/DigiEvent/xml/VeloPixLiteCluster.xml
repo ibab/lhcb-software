@@ -13,8 +13,6 @@
      serializers="FALSE"
     >
 
-
-    <import name="stdint"/>
     <import name="Kernel/VeloPixChannelID"/>
     <import name="Kernel/FastClusterContainer"/>
     <import name="Kernel/SiDataFunctor"/>
@@ -65,6 +63,7 @@
        argList='VeloPixChannelID &amp; chan ,unsigned int thres,
                 std::pair&lt;unsigned int,unsigned int&gt; fracPixel, bool longPix'>
        <code>
+
  unsigned int tlongPix;
  longPix == true  ? tlongPix = 1:   tlongPix= 0;
  m_liteCluster = (((ulonglong)chan) &lt;&lt; channelIDBits) +
@@ -187,19 +186,24 @@ return ((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractio
      </code>
      </method>
 
-     
-     <attribute type='bitfield64' name='liteCluster' desc='lite Cluster' setMeth="FALSE" getMeth="FALSE">
-        <bitfield name='channelID' length='28' desc='channelID' 
-         setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='threshold' length='3' desc='threshold' 
-         setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='longPix' length='1'  desc='big or small pixel'
-         setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='interPixelFractionX' length='3' desc='fractional position in X'
-         setMeth="FALSE" getMeth="FALSE"/>
-        <bitfield name='interPixelFractionY' length='3' desc='fractional position in Y (supposed to be equal to X one)'
-         setMeth="FALSE" getMeth="FALSE"/>
-      </attribute>
+
+     <attribute type='ulonglong' name='liteCluster' setMeth="FALSE" getMeth="FALSE" desc='the lite Cluster'/>
+
+     <enum name='liteClusterBits' desc='position of the first bit of a given field'>
+       <enumval name = 'channelIDBits' value = '0' desc='the channelID field 1st bit position'/>
+       <enumval name = 'thresholdBits' value = '28' desc='the thresholdMask field 1st bit position'/>
+       <enumval name = 'longPixBits' value = '31' desc='the longPixMask field 1st bit position'/>
+       <enumval name = 'interPixelFractionXBits' value = '32' desc='the interPixelFractionXMask field 1st bit position'/>
+       <enumval name = 'interPixelFractionYBits' value = '35' desc='the interPixelFractionYMask field 1st bit position'/>
+     </enum>    
+
+     <enum name='liteClusterMask' desc='the given field mask'>
+       <enumval name = 'channelIDMask' value = '0xfffffffLL' desc='the channelID field mask'/>
+       <enumval name = 'thresholdMask' value = '0x70000000LL' desc='the thresholdMask field mask'/>
+       <enumval name = 'longPixMask' value = '0x80000000LL' desc='the longPixMask field mask'/>
+       <enumval name = 'interPixelFractionXMask' value = '0x700000000LL' desc='the interPixelFractionXMask field mask'/>
+       <enumval name = 'interPixelFractionYMask' value = '0x3800000000LL' desc='the interPixelFractionYMask field mask'/>
+     </enum>        
 
   </class>
 </package>
