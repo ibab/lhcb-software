@@ -281,7 +281,7 @@ StatusCode OTTrackMonitor::execute()
   // iterate over all tracks
   if(tracks != 0) { BOOST_FOREACH(const LHCb::Track* track, *tracks)
   {
-    Assert(track!=NULL, "There is a problem with the tracks container, it has a Null pointer!", StatusCode::FAILURE);
+    if(!track) Exception( "There is a problem with the tracks container, it has a Null pointer!");
     
     int timeResidualSumN = 0;
     double timeResidualSum = 0;
@@ -315,8 +315,7 @@ StatusCode OTTrackMonitor::execute()
     // iterate over all track nodes
     BOOST_FOREACH(const LHCb::Node* node, track->nodes())
     {
-      Assert(node!=NULL, "There is a problem with a track, it has a Null node!", StatusCode::FAILURE);
-
+      if(!track) Exception( "There is a problem with a track, it has a Null node!");
       
       // process only OT nodes which are HitOnTrack or Outlier and with OT measurement
       //sanity check of measurement, check detectorElement is OK
@@ -455,7 +454,8 @@ StatusCode OTTrackMonitor::execute()
 
   BOOST_FOREACH(const DeOTModule* module, m_otdet->modules())
   {
-    Assert(module!=NULL, "There is a problem with the OT, it has a Null module!", StatusCode::FAILURE);
+
+    if(!module) Exception( "There is a problem with the OT, it has a Null module!");
     
     LHCb::OTChannelID modid = module->elementID();
     LHCb::OTLiteTimeRange liteTimes = m_decoder->decodeModule(modid);
@@ -479,7 +479,9 @@ StatusCode OTTrackMonitor::execute()
 
 void OTTrackMonitor::setNormalization(AIDA::IHistogram1D* hist) 
 {
-  Assert(hist!=NULL, "You have passed a null histogram!", StatusCode::FAILURE);
+
+  if(!hist) Exception( "You have passed a null histogram!");
+  
   TH1* h1 = Gaudi::Utils::Aida2ROOT::aida2root(hist);
   if(h1) h1->SetEntries(m_numEvents);
 }
