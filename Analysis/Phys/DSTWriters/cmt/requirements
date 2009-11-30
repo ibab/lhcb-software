@@ -1,0 +1,25 @@
+#$Id: requirements,v 1.1.1.1 2009-11-30 16:37:19 jpalac Exp $
+#============================================================================
+# Created    : 2009-11-30
+# Maintainer : Juan PALACIOS
+#============================================================================
+package           DSTWriters
+version           v1r0
+
+#============================================================================
+# Structure, i.e. directories to process. 
+#============================================================================
+branches          cmt doc python
+#============================================================================
+# Used packages. Specify the version, * at the end specifies 'any revision'
+#    Put as many lines as needed, with all packages, without the '#'
+#============================================================================
+use       GaudiPolicy v*                             
+use       Python      v* LCG_Interfaces 
+
+include_path      none
+# =============================================================================
+# ======= the patterns ========================================================
+macro DSTWritersUserModules "DSTWriters.BaseDSTWriter" "DSTWriters.SelDSTWriter"
+apply_pattern install_python_modules
+# =============================================================================

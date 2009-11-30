@@ -1,0 +1,9 @@
+!$Id: release.notes,v 1.1.1.1 2009-11-30 16:37:19 jpalac Exp $
+!-----------------------------------------------------------------------------
+! Package     : Phys/DSTWriters
+! Responsible : Juan PALACIOS
+! Purpose     : Python code for DST writers.
+!-----------------------------------------------------------------------------
+
+! 2009-11-30 - Juan PALACIOS
+ - First import into CVS.
