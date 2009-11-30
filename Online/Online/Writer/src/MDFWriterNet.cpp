@@ -179,7 +179,6 @@ void MDFWriterNet::constructNet()
 
   m_log = new MsgStream(msgSvc(), name());
 
-  m_WriterState=NOT_READY;
 }
 
 /** Overrides MDFWriter::initialize(). Initialises the Connection object.
@@ -247,7 +246,8 @@ StatusCode MDFWriterNet::initialize(void)
   }
 
   m_currentRunNumber=0;
-  m_WriterState=READY;
+  m_CleanUpStop = false;
+
   if (pthread_mutex_init(&m_SyncFileList, NULL)) {
     *m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
     return StatusCode::FAILURE;
@@ -272,7 +272,7 @@ StatusCode MDFWriterNet::finalize(void)
   *m_log << MSG::INFO << " Writer " << getpid() 
          << " Finalizing." << endmsg;
 
-  m_WriterState = NOT_READY;
+  m_CleanUpStop = true;
 
   File *tmpFile;
   tmpFile = m_openFiles.getFirstFile();
@@ -474,13 +474,7 @@ void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL" || inc.type() == "DAQ_ERROR")  {
       m_srvConnection->stopRetrying();
-      m_WriterState = STOPPED;
   }
-/*
-  else if (inc.type() == "DAQ_ENABLE") {
-      m_WriterState = READY;
-  }
-*/
 }
 
 
@@ -781,7 +775,8 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 
 StatusCode MDFWriterNet::CleanUpFiles() {
   
-  while (m_WriterState != STOPPED) {
+  *m_log << MSG::INFO << WHERE << " Clean up routine started" << endmsg;
+  while (!m_CleanUpStop) {
     sleep(1);
 
     if (pthread_mutex_lock(&m_SyncFileList)) {
@@ -811,6 +806,7 @@ StatusCode MDFWriterNet::CleanUpFiles() {
       return StatusCode::FAILURE;
     }
   }
+  *m_log << MSG::INFO << WHERE << " Clean up routine ended" << endmsg;
   return StatusCode::SUCCESS;
 } 
 
@@ -818,8 +814,6 @@ StatusCode MDFWriterNet::CleanUpFiles() {
  */
 void *FileCleanUpStartup(void *object) {
     MDFWriterNet *writer = (MDFWriterNet *) object;
-
-    printf("THREAD : Running thread object in a new thread : MDFWriterNet\n");
 
     StatusCode sc = writer->CleanUpFiles();
     //printf("Deleting object\n");
