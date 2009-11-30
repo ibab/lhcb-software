@@ -1,8 +1,17 @@
-! $Id: release.notes,v 1.280 2009-11-30 09:18:09 odescham Exp $
+! $Id: release.notes,v 1.281 2009-11-30 17:24:52 jpalac Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+!========================== DaVinciMCTools v9r24 2009-11-30 ==================
+
+! 2009-11-30 - Juan PALACIOS
+ - src/Particle2BackgroundCategoryRelationsAlg.{cpp,h} 
+  . Remove unnecessary IPhysDesktop*
+  . Minor tidy-up.
+ - cmt/requirements
+  . Increase version to v9r24
 
 ! 2009-11-30 - Olivier Deschamps
  - move dependency on CaloTools to CaloInterfaces
