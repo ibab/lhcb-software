@@ -301,7 +301,10 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     
     ## Set the value of the folder field.
     def setFolder(self, folder):
-        self.folder.setCurrentIndex(self.folderModel.nodes.index(str(folder)))
+        try:
+            self.folder.setCurrentIndex(self.folderModel.nodes.index(str(folder)))
+        except ValueError:
+            pass # This may happen when the user selected a folderset
     
     ## Set the value of the folder field.
     def getFolder(self):
