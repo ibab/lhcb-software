@@ -305,7 +305,7 @@ namespace LHCb {
     int m_sndRcvSizes;
 
     /// The current run number in progress.
-    int m_currentRunNumber;
+    unsigned int m_currentRunNumber;
 
     /// Property: The stream identifier
     std::string m_streamID;
@@ -335,6 +335,18 @@ namespace LHCb {
     /// indicator if the named queue is broken or not
     /// a broken monitoring system should not prevent the writer from working
     bool m_mq_available;
+
+    /// The thread which checks file time outs.
+    pthread_t m_ThreadFileCleanUp;
+
+    ///
+    enum WriterState {NOT_READY, READY, RUNNING, STOPPED};
+
+    /// 
+    WriterState m_WriterState;
+ 
+    ///
+    pthread_mutex_t m_SyncFileList; 
 
     /** Generates a new file name from the MDF information.
      * @param runNumber  The current run number, to be included in the file name.
@@ -397,7 +409,18 @@ namespace LHCb {
 
     /// Implemented from INotifyClient.
     virtual void notifyOpen(struct cmd_header *cmd);
+
+    /// Cleans timed out files
+    virtual StatusCode CleanUpFiles();
+
   };
 }
+
+#ifndef MDF_THREADINTERFACE
+#define MDF_THREADINTERFACE
+extern "C" void *FileCleanUpStartup(void *);
+#endif // MEP_THREADINTERFACE
+
+
 #endif //MDFWRITERNET_H
 
