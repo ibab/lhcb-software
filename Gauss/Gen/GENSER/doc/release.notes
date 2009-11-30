@@ -4,6 +4,12 @@
 ! Purpose     : interface package to GENSER
 !-----------------------------------------------------------------------------
 
+! 2009-11-30 - Gloria CORTI
+ - In the LHAPDF LCG_Generators distribution the data files directory path has 
+   changed with an additional 'lhapdf' introduced. The old one now has a 
+   soft link to the new area.
+   Change the LHAPATH to point directly to the new area, to facilitate 
+   distribution via tarbal.
 
 !========================== GENSER v6r0 2009-11-04 ===========================
 ! 2009-10-22 - Hubert Degaudenzi 
