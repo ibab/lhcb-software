@@ -3,6 +3,13 @@ Package     : AnalysisSys
 Package Coordinator : Juan Palacios
 Purpose     : LHCb analysis packages
 
+</PRE><H1><A NAME=v3r13>2009-11-22 Analysis v3r13 </A></H1><PRE>
+
+ - Based on patch release LHCb v28r4, and Gaudi v21r6
+
+ - Highlights
+   * Selections and SelecitonSequences are now clonable.
+
 </PRE><H1><A NAME=v3r12p1>2009-11-22 Analysis v3r12p1 </A></H1><PRE>
 
  - Based on patch release LHCb v28r3, and Gaudi v21r6
