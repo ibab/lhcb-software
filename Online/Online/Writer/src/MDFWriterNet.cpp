@@ -45,6 +45,7 @@ DECLARE_NAMESPACE_ALGORITHM_FACTORY(LHCb,MDFWriterNet);
 
 using namespace LHCb;
 
+
 /**
  * Macro for initialising a close command.
  */
@@ -173,10 +174,12 @@ void MDFWriterNet::constructNet()
   declareProperty("Directory",             m_directory=".");
   declareProperty("FileExtension",         m_fileExtension="raw");
   declareProperty("StreamID",              m_streamID="NONE");
-  declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=30);
+  declareProperty("RunFileTimeoutSeconds", m_runFileTimeoutSeconds=10);
   declareProperty("MaxQueueSizeBytes",     m_maxQueueSizeBytes=1073741824);
 
   m_log = new MsgStream(msgSvc(), name());
+
+  m_WriterState=NOT_READY;
 }
 
 /** Overrides MDFWriter::initialize(). Initialises the Connection object.
@@ -227,8 +230,8 @@ StatusCode MDFWriterNet::initialize(void)
       snprintf(msg, msg_size, "start%c%i", DELIMITER, getpid());
       if(mq_send(m_mq, msg, msg_size, 0) < 0)  {
           *m_log << MSG::WARNING
-                << "Error sending message to the queue"
-                << "deactivating message queue"
+                << "Error sending message to the queue. "
+                << "Deactivating message queue"
                 << endmsg;
           m_mq_available = false; // prevent from further trying to protect writer
       }
@@ -243,6 +246,19 @@ StatusCode MDFWriterNet::initialize(void)
         m_incidentSvc->addListener(this, "DAQ_ERROR");
   }
 
+  m_currentRunNumber=0;
+  m_WriterState=READY;
+  if (pthread_mutex_init(&m_SyncFileList, NULL)) {
+    *m_log << MSG::ERROR << WHERE << "Failed to initialize mutex" << endmsg;
+    return StatusCode::FAILURE;
+  }
+  /// Starts thread.
+  if(pthread_create(&m_ThreadFileCleanUp, NULL, FileCleanUpStartup, this)) {
+    *m_log << MSG::ERROR << WHERE << "Failed to start File Clean Up Thread " << endmsg;
+    return StatusCode::FAILURE;
+  }
+
+
   *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
 }
@@ -255,6 +271,8 @@ StatusCode MDFWriterNet::finalize(void)
 {
   *m_log << MSG::INFO << " Writer " << getpid() 
          << " Finalizing." << endmsg;
+
+  m_WriterState = NOT_READY;
 
   File *tmpFile;
   tmpFile = m_openFiles.getFirstFile();
@@ -313,6 +331,12 @@ StatusCode MDFWriterNet::finalize(void)
       }
       m_mq_available = false;
   }
+
+  if(pthread_join(m_ThreadFileCleanUp, NULL)) {
+    *m_log << MSG::ERROR << WHERE << "File CleanUP Thread join" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS;
 }
 
@@ -450,6 +474,7 @@ void  MDFWriterNet::handle(const Incident& inc)    {
    *m_log << MSG::INFO << "Got incident:" << inc.source() << " of type " << inc.type() << endmsg;
   if (inc.type() == "DAQ_CANCEL" || inc.type() == "DAQ_ERROR")  {
       m_srvConnection->stopRetrying();
+      m_WriterState = STOPPED;
   }
 }
 
@@ -477,6 +502,11 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
    *((MDFHeader*)data)->subHeader().H1->m_runNumber = myRun;
    */
 
+  if (pthread_mutex_lock(&m_SyncFileList)) {
+    *m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+    return StatusCode::FAILURE;
+  }
+
   if ( len < 10 ) {
     *m_log << MSG::FATAL << WHERE
            << "Very small message received, not forwarding. Length is: " << len
@@ -484,10 +514,31 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     return StatusCode::SUCCESS;
   } 
 
+  static int nbLate=0;
   unsigned int runNumber = getRunNumber(data, len);
+
+  // If we get a newer run number, start a timeout on the previous run opened file. 
+
+  if(m_currentRunNumber < runNumber) {
+      if(nbLate != 0)
+          *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run previous than " << m_currentRunNumber << endmsg;
+      nbLate=0;
+
+      m_currentRunNumber = runNumber;
+  }
+
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
     m_currFile = m_openFiles.getFile(runNumber);
-    if(!m_currFile) {
+    // Do not accept event from previous runs if no file is open anymore 
+    if(!m_currFile && runNumber < m_currentRunNumber) {
+      ++nbLate;
+      if (pthread_mutex_unlock(&m_SyncFileList)) {
+        *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+        return StatusCode::FAILURE;
+      }
+      return StatusCode::SUCCESS; 
+    }
+    if(!m_currFile) { 
       *m_log << MSG::INFO << WHERE
              << "No file exists for run " << runNumber
              << " Creating a new one."
@@ -496,17 +547,23 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       if(m_currFile == NULL) {
           Incident incident(name(),"DAQ_ERROR");
           m_incidentSvc->fireIncident(incident);
+          if (pthread_mutex_unlock(&m_SyncFileList)) {
+            *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+            return StatusCode::FAILURE;
+          }
+      
           return StatusCode::FAILURE;
       }    
       m_openFiles.addFile(m_currFile);
     }
 
-    // This block is entered only in case an event from a previous run
+    // This block is entered in 2 cases: 
+    // 1- An event from a previous run
     // appears after a run has started. This should be relatively infrequent,
     // and therefore, a good place to check if there are files that have been
     // lying open since a very long time.
-    //
-
+    // 2- Fast run change
+/*
     File *tmpFile =  m_openFiles.getFirstFile();
     // Loop over all the files except the one for whom the event just came in.
     while(tmpFile) {
@@ -525,6 +582,8 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       }
       tmpFile = tmpFile->getNext();
     }
+*/
+
   }
 
   INIT_WRITE_COMMAND(&header, len,
@@ -584,6 +643,10 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   // WARNING: m_currFile might be NULL after the totalBytesWritten check above!
   // -> segmentation fault
   
+  if (pthread_mutex_unlock(&m_SyncFileList)) {
+    *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+    return StatusCode::FAILURE;
+  }
   //Close it, reset counter.
   return StatusCode::SUCCESS;
 }
@@ -710,4 +773,57 @@ void MDFWriterNet::notifyError(struct cmd_header* /*cmd*/, int /*errno*/)
 {
   /* Not Used Yet. */
 }
+
+StatusCode MDFWriterNet::CleanUpFiles() {
+  
+  while (m_WriterState != STOPPED) {
+    sleep(m_runFileTimeoutSeconds);
+
+    if (pthread_mutex_lock(&m_SyncFileList)) {
+      *m_log << MSG::ERROR << WHERE << " Locking mutex" << endmsg;
+      return StatusCode::FAILURE;
+    }
+    File *tmpFile =  m_openFiles.getFirstFile();
+    // Loop over all the files except the one for whom the event just came in.
+    while(tmpFile) {
+      if(tmpFile->getRunNumber() != m_currentRunNumber &&
+         tmpFile->getTimeSinceLastWrite() > m_runFileTimeoutSeconds) {
+        // This file hasn't been written to in a loong time. Close it.
+        *m_log << MSG::INFO << WHERE
+               << "Closing file " << tmpFile->getMonitor()->m_name << " after time out." 
+               << endmsg;
+        File *toDelete = tmpFile;
+        closeFile(tmpFile);
+        // removeFile() returns the next element after the removed one.
+        tmpFile = m_openFiles.removeFile(tmpFile);
+        delete toDelete;
+        continue;
+      }
+      tmpFile = tmpFile->getNext();
+    }
+    if (pthread_mutex_unlock(&m_SyncFileList)) {
+      *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
+      return StatusCode::FAILURE;
+    }
+  }
+  return StatusCode::SUCCESS;
+} 
+
+/** pthread startup function to manage Odin MEP.
+ */
+void *FileCleanUpStartup(void *object) {
+    MDFWriterNet *writer = (MDFWriterNet *) object;
+
+    printf("THREAD : Running thread object in a new thread : MDFWriterNet\n");
+
+    StatusCode sc = writer->CleanUpFiles();
+    //printf("Deleting object\n");
+    //delete tgtObject;
+    if (sc.isFailure())
+        return (void *) -1;
+    else
+        return (void *) 0;
+}
+
+
 #endif /* _WIN32 */
