@@ -4,6 +4,12 @@
 ! Purpose     : Monitoring algorithms after reconstruction
 !-----------------------------------------------------------------------------
 
+!========================== DaVinciMonitors v1r6 2009-11-30 ==================
+
+! 2009-11-30 - Juan PALACIOS
+ - cmt/requirements
+  . Increase version to v1r6
+
 ! 2009-11-25 - Patrick Koppenburg
  - Add this to DaVinciMonitoring.py
 
@@ -13,7 +19,7 @@
 	Added MuIDMonitor* (src, options)
  - Still need to implement the monitoring of rDST files! 
 
-!========================== DaVinciMonitors v1r5p2 2009-10-06 ===================
+!========================== DaVinciMonitors v1r5p2 2009-10-06 ================
 ! 2009-10-02 - Patrick Koppenburg
  - Comment out Muon 2 Body monitoring that does not wok on RDST.
  - v1r5p2
