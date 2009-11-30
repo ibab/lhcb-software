@@ -19,6 +19,7 @@
 !
 !-----------------------------------------------------------------------------
 
+!========================== HltSelChecker v10r2 2009-11-30 ===================
 ! 2009-11-25 - Patrick Koppenburg
  - Remove obsolete FilterTrueTracks.py and OverwriteWithTruth.py. They would
    not work anymore and (part of) the functionality has been moved to CheckerSeq.
