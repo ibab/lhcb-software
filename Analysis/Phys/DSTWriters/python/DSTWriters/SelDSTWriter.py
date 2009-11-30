@@ -2,13 +2,13 @@
 Write a DST for a single selection sequence. Writes out the entire
 contents of the input DST
 """
-__version__ = "$Id: SelDSTWriter.py,v 1.1.1.1 2009-11-30 16:37:19 jpalac Exp $"
+__version__ = "$Id: SelDSTWriter.py,v 1.2 2009-11-30 17:00:06 jpalac Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
 from GaudiConf.Configuration import *
 
-from MicroDSTConf.MicroDSTWriter import MicroDSTWriter
+from MicroDSTWriter import MicroDSTWriter
 
 class SelDSTWriter(MicroDSTWriter) :
     """
