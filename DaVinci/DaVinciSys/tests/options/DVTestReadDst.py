@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestReadDst.py,v 1.10 2009-11-11 18:44:50 pkoppenb Exp $
+# $Id: DVTestReadDst.py,v 1.11 2009-11-30 10:57:40 jpalac Exp $
 #
 # Options for a typical DaVinci job creating DSTs
 #
@@ -23,10 +23,10 @@ for i in MassRanges :
     name = ln+"_"+hn
 
     pJpsi = PrintDecayTree('PrintJpsi_'+name
-                         , InputLocations = [ "/Event/Sel/Phys/Jpsi_"+name  ])
+                         , InputLocations = [ "/Event/Sel/Phys/SelJpsi_"+name  ])
     DaVinci().UserAlgorithms += [ pJpsi ]
     f = FilterDesktop('Filter_'+name,
-                      InputLocations = [ "/Event/Sel/Phys/Jpsi_"+name  ],
+                      InputLocations = [ "/Event/Sel/Phys/SelJpsi_"+name  ],
                       Code = "(MIPCHI2DV(PRIMARY) > 2)")
     DaVinci().UserAlgorithms += [ f ]
     
