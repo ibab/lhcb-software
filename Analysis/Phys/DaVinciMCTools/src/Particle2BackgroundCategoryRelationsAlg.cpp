@@ -20,7 +20,7 @@ using namespace LHCb;
 // Standard constructor, initializes variables
 //=============================================================================
 Particle2BackgroundCategoryRelationsAlg::Particle2BackgroundCategoryRelationsAlg( const std::string& name,
-                                            ISvcLocator* pSvcLocator)
+                                                                                  ISvcLocator* pSvcLocator)
   : 
   GaudiAlgorithm ( name , pSvcLocator ),
   m_bkg(0)  
@@ -44,7 +44,6 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::initialize() {
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
   m_bkg = tool<IBackgroundCategory>( "BackgroundCategory", this );
-  m_desktop = tool<IPhysDesktop>("PhysDesktop",this) ;
 
   return (0!=m_bkg) ? StatusCode::SUCCESS : StatusCode::FAILURE;
 
@@ -59,26 +58,25 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
 
   //Check that we have an input location
   if (m_particleLocation == "") {
-    Error ( "No particle location provided" ).ignore() ;
-    return StatusCode::FAILURE;
+    return Error ( "No particle location provided" ) ;
   }
   //Get the input particles
   LHCb::Particle::Container* myParticles = get<LHCb::Particle::Container>(m_particleLocation);
   //Check that this returns something 
   if (!myParticles) {
-    Error ( "No particles at the location provided" ).ignore() ;
-    return StatusCode::FAILURE;
+    return Error ( "No particles at the location provided" );
   }
 
   //Make the relations table
-  LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>* m_catRelations = new LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>;
+  LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>* catRelations = 
+    new LHCb::Relation1D<const LHCb::Particle*, IBackgroundCategory::categories>;
 
   for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); iP != myParticles->end(); ++iP ){
     IBackgroundCategory::categories thisCat = m_bkg->category(*iP);
-    m_catRelations->relate(*iP,thisCat);
+    catRelations->relate(*iP,thisCat);
   }
 
-  put(m_catRelations,m_particleLocation+"/P2BCRelations");
+  put(catRelations,m_particleLocation+"/P2BCRelations");
  
   return StatusCode::SUCCESS;
 }

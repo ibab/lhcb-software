@@ -33,7 +33,6 @@ private:
 
   std::string m_particleLocation;
 
-  mutable IPhysDesktop* m_desktop;
   IBackgroundCategory* m_bkg;  
 };
 #endif // PARTICLE2BACKGROUNDCATEGORYRELATIONSALG_H
