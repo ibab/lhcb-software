@@ -4,6 +4,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-11-30 - Anton Poluektov
+ - Added roots scripts to show correlations between the lines and streams. 
+
 ! 2009-11-26 - Marco Gersabeck
  - Updated un-tagged prompt charm selection. Tightened and added cuts to improve retention.
 
