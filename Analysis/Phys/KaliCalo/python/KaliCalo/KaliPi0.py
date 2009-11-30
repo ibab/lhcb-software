@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: KaliPi0.py,v 1.6 2009-11-01 11:05:36 ibelyaev Exp $ 
+# $Id: KaliPi0.py,v 1.7 2009-11-30 17:24:11 ibelyaev Exp $ 
 # =============================================================================
 ## @file  KaliCalo/KaliCaloPi0.py
 #  The basic configuration to (re)run Ecal pi0-calibration
@@ -31,7 +31,7 @@ Or even:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $"
 # =============================================================================
 ## the basic import
 from Gaudi.Configuration    import *
@@ -203,16 +203,16 @@ if '__main__' == __name__ :
     import GaudiPython.HistoUtils
     from   KaliCalo.Pi0HistoFit import fitPi0Histo as fit 
     
-    kali = gaudi.algorithm('KaliPi0')
-    histos = kali.Histos()
-    if histos :
-        keys = histos.keys()
-        keys.sort() 
-        for h in keys :
-            histo = histos[h]
-            if hasattr ( histo , 'dump' ) :
-                print histo.dump(40,20,True) 
-                print 'fit result: ', fit  ( histo , 0.05 , 0.220 )
+##     kali = gaudi.algorithm('KaliPi0')
+##     histos = kali.Histos()
+##     if histos :
+##         keys = histos.keys()
+##         keys.sort() 
+##         for h in keys :
+##             histo = histos[h]
+##             if hasattr ( histo , 'dump' ) :
+##                 print histo.dump(40,20,True) 
+##                 print 'fit result: ', fit  ( histo , 0.05 , 0.220 )
                 
     
     gaudi.exit() 

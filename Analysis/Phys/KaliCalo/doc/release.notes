@@ -1,13 +1,19 @@
-! $Id: release.notes,v 1.20 2009-11-30 17:09:41 jpalac Exp $ 
+! $Id: release.notes,v 1.21 2009-11-30 17:24:11 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.20 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.21 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+
+
 !========================== KaliCalo v3r0p2 2009-11-30 ========================
+
+! 2009-11-30 - Vanya Belyaev
+
+ - remove printout to stderr from KaliPi0 example (bug #59009)
 
 ! 2009-11-30 - Juan PALACIOS
  - cmt/requirements
