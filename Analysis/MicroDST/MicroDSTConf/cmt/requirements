@@ -1,10 +1,10 @@
-#$Id: requirements,v 1.21 2009-10-14 11:27:56 jpalac Exp $
+#$Id: requirements,v 1.22 2009-11-30 17:35:11 jpalac Exp $
 #============================================================================
 # Created    : 2008-11-12
 # Maintainer : Juan PALACIOS
 #============================================================================
 package           MicroDSTConf
-version           v2r7
+version           v2r8
 
 use AnalysisConf v* Phys
 #============================================================================
@@ -21,6 +21,6 @@ set MICRODSTOPTS ${MICRODSTCONFROOT}/options
 use EventAssoc        v* Event
 use MicroDSTAlgorithm v* MicroDST
 #============================================================================
-macro MicroDSTConfConfUserModules "MicroDSTConf.PhysMicroDST MicroDSTConf.MicroDSTWriter"
+macro MicroDSTConfConfUserModules "MicroDSTConf.PhysMicroDST"
 apply_pattern install_python_modules
 #============================================================================
