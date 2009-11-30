@@ -4,6 +4,7 @@
 ! Purpose     : Hlt Base classes
 !----------------------------------------------------------------------------
 
+!========================== HltBase v7r1 2009-11-30 ===================
 ! 2009-11-26 - Antonio Perez-Calero
  - Modified HltAlgorithm.h and HltHistogramUtilities.h/.cpp to allow for 
    monitoring of number of candidates passing a given algorithm inside a line
