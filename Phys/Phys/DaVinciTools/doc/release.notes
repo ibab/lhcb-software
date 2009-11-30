@@ -1,8 +1,10 @@
-! $Id: release.notes,v 1.492 2009-11-23 16:58:21 pkoppenb Exp $
+! $Id: release.notes,v 1.493 2009-11-30 14:09:10 jpalac Exp $
 !============================================================================
 ! Package     : DaVinciTools
 ! Responsible : J. Palacios
 !============================================================================
+
+!========================== DaVinciTools v19r6 2009-11-30 ===================
 
 ! 2009-11-23 - Patrick Koppenburg
  - Change from PV2D to PV3D for Hlt2
