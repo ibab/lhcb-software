@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.4 2009-11-02 14:46:40 jblouw Exp $
+! $Id: release.notes,v 1.5 2009-12-01 09:24:57 cattanem Exp $
 ! Package     : AlignKernel
 ! Responsible : Adlene Hicheur en Wouter Hulsbergen
 !-------------------------------------------------------------------------------
+
+! 2009-12-01 Marco Cattaneo
+ - In requirements: do not overwrite lapack_linkopts set by LCG_Interfaces 
+   package, to fix linking on Windows
 
 !=========================== AlignKernel v3r1 2009-11-02 ====================
 ! 2009-11-02 Johan Blouw
