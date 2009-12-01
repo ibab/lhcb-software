@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.375 2009-12-01 10:55:50 pkoppenb Exp $ 
+! $Id: release.notes,v 1.376 2009-12-01 22:51:20 tskwarni Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-01 - Tomasz Skwarnicki
+ - set HltVertexReportsMaker().Context = "HLT" in Configuration.py
+   for OnOfflineTool in new HltVertexReportsMaker to work properly
 
 !========================== HltConf v6r0 2009-12-01 ===================
 ! 2009-12-01 - Tomasz Skwarnicki

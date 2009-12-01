@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.134 2009-11-27 13:34:42 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.135 2009-12-01 22:51:20 tskwarni Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -202,8 +202,9 @@ class HltConf(LHCbConfigurableUser):
         for i in hlt1Lines() :
                if i.name() in lines : selections.extend( [ j for j in i.outputSelections() if j not in selections ] )
         vertices = [ i for i in selections if i is 'PV2D' or   ( i.startswith('Hlt1Velo') and i.endswith('Decision') ) ]
-        from Configurables import HltVertexReportsMaker
+        from Configurables import HltVertexReportsMaker        
         HltVertexReportsMaker().VertexSelections = vertices
+        HltVertexReportsMaker().Context = "HLT"
         ## do not write out the candidates for the vertices we store 
         from Configurables import HltSelReportsMaker
         HltSelReportsMaker().SelectionMaxCandidates.update( dict( [ (i,0) for i in vertices if i.endswith('Decision') ] ) )
