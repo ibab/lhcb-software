@@ -34,8 +34,8 @@ tag.PhysDesktop.OutputLevel = 4
 # Flavour tagging Checker:
 
 tagcheck = BTaggingChecker("BTaggingChecker")
-tagcheck.InputLocations = [ "Sel09Bu2LLK" ]
-tagcheck.TagsLocation = "/Event/Sel/Phys/Bu2LLK/FlavourTags"
+tagcheck.InputLocations = [ "CheatedSelection" ]
+tagcheck.TagsLocation = "Phys/CheatedSelection/FlavourTags"
 tagcheck.OutputLevel = 3
 
 ########################################################################
