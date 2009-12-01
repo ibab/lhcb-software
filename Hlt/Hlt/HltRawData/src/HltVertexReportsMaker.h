@@ -1,4 +1,4 @@
-// $Id: HltVertexReportsMaker.h,v 1.4 2009-04-18 18:52:37 graven Exp $
+// $Id: HltVertexReportsMaker.h,v 1.5 2009-12-01 22:53:41 tskwarni Exp $
 #ifndef HLTVERTEXREPORTSMAKER_H 
 #define HLTVERTEXREPORTSMAKER_H 1
 
@@ -8,6 +8,7 @@
 #include "Event/HltVertexReports.h"
 #include "Kernel/IANNSvc.h"
 #include "HltBase/IHltDataSvc.h"
+#include "Kernel/IOnOffline.h"
 
 
 /** @class HltvertexReportsMaker HltvertexReportsMaker.h
@@ -42,7 +43,10 @@ private:
   /// HltANNSvc for making selection names to int selection ID
   IANNSvc* m_hltANNSvc;  
   IHltDataSvc* m_hltDataSvc;  
+  IOnOffline* m_onOfflineTool;
 
+  std::vector< std::string > m_selectionNames;
+  std::string m_tesPath;  
 
 };
 

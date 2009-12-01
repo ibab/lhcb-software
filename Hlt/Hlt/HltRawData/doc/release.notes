@@ -1,9 +1,13 @@
-!$Id: release.notes,v 1.49 2009-11-30 09:56:46 pkoppenb Exp $
+!$Id: release.notes,v 1.50 2009-12-01 22:53:40 tskwarni Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltRawData
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : Hlt Raw Data Makers of persisted TES info
 !-----------------------------------------------------------------------------
+
+! 2009-12-01 - Tomasz Skwarnicki
+ - HltVertexReportsMaker: input from TES locations in addition to HltDataSvc.
+   Use OnOfflineTool to get Hlt2 PV location.
 
 !========================== HltRawData v2r2 2009-11-30 ===================
 ! 2009-11-26 - Tomasz Skwarnicki
