@@ -4,6 +4,10 @@ Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
 </PRE><H1><A NAME=v35r10>2009-12-01 Brunel v35r10</A></H1><PRE>
+ - Changes to tests
+   . Update Brunel exclusions file to skip comparisons of geometry overlap
+     coordinates (but still check that number of overlaps is unchanged)
+ 
  - Changes to references to reflect changes in Brunel v35r10 output:
    . Improved comparison of floating point numbers (DetDesc v18r17)
 
