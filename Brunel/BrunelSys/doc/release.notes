@@ -12,6 +12,10 @@ Output requires DaVinci v24r5p1 or later
 
  - New tuning:
    . Improved comparison of floating point numbers (DetDesc v18r17)
+   . Changed default tag for 2009 data: head-20091127 for LHCBCOND
+     (DDDB v1r25, needs SQLDDDB v5r16)
+   . Use ROOT::Math::CholeskyDecomp to calculate chi2, avoids saddle point
+     problems. (PatAlgorithms v3r25, TrackFitter v2r41) 
 
  - Changes to tests
    . Update Brunel exclusions file to skip comparisons of geometry overlap
@@ -37,6 +41,10 @@ Output requires DaVinci v24r5p1 or later
    . MagneticFieldSvc was ignoring ScaleFactor option (Magnet v5r5)
    . Work around to correctly pass properties to ConfiguredFitters 
      (TrackFitters v2r40p1)
+
+ - Monitoring changes
+   . Remove obsolete "occupancy in T1 layer 1 versus x coordinate" histogram from
+     OTTimeMonitor expert histos (OTMonitor v3r1)
 
  - Changes to example options:
    . Add options/2009-Collisions.py: example options for 2009 collisions data
