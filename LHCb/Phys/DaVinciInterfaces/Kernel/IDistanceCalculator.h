@@ -1,4 +1,4 @@
-// $Id: IDistanceCalculator.h,v 1.3 2009-08-17 08:04:22 jpalac Exp $
+// $Id: IDistanceCalculator.h,v 1.4 2009-12-01 17:18:33 pkoppenb Exp $
 // ============================================================================
 #ifndef DAVINCIKERNEL_IDISTANCECALCULATOR_H 
 #define DAVINCIKERNEL_IDISTANCECALCULATOR_H 1
@@ -123,7 +123,9 @@ public:
    *  @param particle (input)  pointer to the particle 
    *  @param vertex   (input)  pointer to the vertex 
    *  @param imppar   (output) the value of impact parameter ("distance") 
-   *  @param chi2     (output) the chi2-value for the impact parameter 
+   *  @param chi2     (output) the chi2-value for the impact parameter. It is defined as the increase 
+   *                  of the chi2 of the PV vertex fit when one adds the track into the vertex. 
+   *                  It behaves almost like (IP/IP_error)^2
    *  @return status code 
    */
   virtual StatusCode distance 
@@ -217,7 +219,9 @@ public:
    *  @param particle (input)  pointer to the particle 
    *  @param point    (input) the fixed point 
    *  @param imppar   (output) the value of impact parameter ("distance") 
-   *  @param chi2     (output) the chi2-value for the impact parameter 
+   *  @param chi2     (output) the chi2-value for the impact parameter. It is defined as the increase
+   *                  of the chi2 of the PV vertex fit when one adds the track into the vertex.
+   *                  It behaves almost like (IP/IP_error)^2               
    *  @return status code 
    */
   virtual StatusCode distance 
