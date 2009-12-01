@@ -8,12 +8,17 @@ from HltLine.HltLinesConfigurableUser import *
 class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
     # steering variables
-    __slots__ = { 'Compan_PtCut'         :  1000.    # for global optimization 1
-                , 'Ele_IPCut'            :  0.1      # for global optimization 2
-                , 'SingleEle_PtCut'      :  3000.    # for global optimization 3 optional
-                , 'Jpsi_LowMassCut'      :  2400.
-                , 'Jpsi_HighMassCut'     :  3200.
-                , 'Ele_EtCut'            :  2600.
+    __slots__ = { 'EleIP_EtCut'            :  2600.    # single electron with IP cut
+                , 'EleIP_IPCut'            :  0.1     
+                , 'EleIP_PtCut'            :  3000.    
+                , 'Ele_EtCut'              :  2600.    # single electron without IP cut
+                , 'Ele_PtCut'              :  10000.
+                , 'DiEleIP_IPCut'          :  0.1      # di-electron with IP cut
+                , 'DiEleIP_PtCut'          :  1000.    
+                , 'DiEle_PtCut'            :  1000.    # di-electron without IP cut           
+                , 'DiEle_LowMassCut'       :  2400.
+                , 'DiEle_HighMassCut'      :  3200.
+    
                 }
 
     def __apply_configuration__(self) :
@@ -26,6 +31,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         from Configurables import L0ConfirmWithT
         from HltLine.HltReco import RZVelo, Velo, PV2D
         from HltLine.HltDecodeRaw import DecodeIT, DecodeTT, DecodeVELO, DecodeECAL
+        from Hlt1Lines.HltFastTrackFit import setupHltFastTrackFit
 
 
         ####
@@ -34,15 +40,11 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         #l0c2c.DuplicateClustersOnTES = True
         ####
         
-        COMPAN_PTCUT    = str(self.getProp('Compan_PtCut'))
-        SINGLEELE_PTCUT = str(self.getProp('SingleEle_PtCut'))
-        LOWMASS         = str(self.getProp('Jpsi_LowMassCut'))
-        HIGHMASS        = str(self.getProp('Jpsi_HighMassCut'))
-        L0ET_CUT        = str(self.getProp('Ele_EtCut'))
+        
+    
 
         ##### common bodies IP
-        IP_CUT = str(self.getProp('Ele_IPCut'))
-        prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
+        prepareElectronWithIP = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('EleIP_EtCut')) ] )
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT,'L0ConfirmWithT/TEleConf', particleType = 2 ) ] ) ] )
@@ -51,7 +53,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
-                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ]
+                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||>,'+str(self.getProp('EleIP_IPCut'))]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
@@ -59,12 +61,12 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
 
         companionTrackWithIP  = [ Velo
                                   , Member ( 'TF', 'CompanionVelo',
-                                             FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.2' ]
+                                             FilterDescriptor = [ 'IP_PV2D,||[],'+str(self.getProp('DiEleIP_IPCut')), 'DOCA_%TFVeloT,<,0.2' ]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                             )
                                   , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
-                                  , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT]
+                                  , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('DiEleIP_PtCut'))]
                                             , HistogramUpdatePeriod = 0
                                             , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                                             )
@@ -76,8 +78,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   ]
         
         ##### common bodies no IP
-        IP_CUT = "0.0"
-        prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+L0ET_CUT ] )
+        prepareElectronNoIP   = [ Member ( 'TF', 'L0Electrons', FilterDescriptor = [ 'L0ET,>,'+str(self.getProp('Ele_EtCut')) ] )
                                   , DecodeIT
                                   , Member ( 'TU', 'TConf', RecoName = 'TEleConf',
                                              tools = [ Tool( HltTrackUpgradeTool, tools = [ Tool( L0ConfirmWithT, 'L0ConfirmWithT/TEleConf',  particleType = 2 ) ] ) ] )
@@ -86,18 +87,17 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                                   , Member ( 'TU', 'Velo', RecoName = 'Velo' )
                                   , DecodeVELO, DecodeTT
                                   , Member ( 'TM', 'VeloT', InputSelection1 = '%TUVelo' , InputSelection2 = '%TUTConf' , MatchName = 'VeloT')
-                                  , Member ( 'TF', 'VeloT', FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.' ])
                                   ]
 
         companionTrackNoIP    = [ Velo
                                 , Member ( 'TF', 'CompanionVelo', 
-                                           FilterDescriptor = [ 'IP_PV2D,||[],'+IP_CUT+',3.', 'DOCA_%TFVeloT,<,0.15' ])
+                                           FilterDescriptor = [ 'DOCA_%TMVeloT,<,0.15' ])
                                 , Member ( 'TU', 'CompanionForward', RecoName = 'Forward' )
-                                , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+COMPAN_PTCUT]
+                                , Member ( 'TF', 'CompanionForward',  FilterDescriptor = ['PT,>,'+str(self.getProp('DiEle_PtCut'))]
                                           , HistogramUpdatePeriod = 0
                                           , HistoDescriptor =  { 'PT'     : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100) }
                                           )
-                                , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TFVeloT', InputSelection2 = '%TFCompanionForward',
+                                , Member ( 'VM2', 'DiElectron', InputSelection1 = '%TMVeloT', InputSelection2 = '%TFCompanionForward',
                                            FilterDescriptor = ['DOCA,<,0.2']
                                           , HistogramUpdatePeriod = 0
                                           , HistoDescriptor = { 'DOCA':('DOCA',0.,3.,100), 'DOCABest':('DOCABest',0.,3.,100) }
@@ -107,16 +107,35 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
         ##### Lines
         from Hlt1Lines.HltL0Candidates import L0Channels
         if 'Electron' in L0Channels() :
-            Line ('SingleElectron'
+            Line ('SingleElectronWithIP'
                      , prescale = self.prescale
                      , L0DU = "L0_CHANNEL('Electron')"
                      , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP
-                             + [ Member ( 'TF','Decision'
-                                        , OutputSelection = '%Decision'
-                                        , FilterDescriptor = ['PT,>,'+SINGLEELE_PTCUT]
+                             + [ Member ( 'TF','PTCut'
+                                        , FilterDescriptor = ['PT,>,'+str(self.getProp('EleIP_PtCut'))]
                                         , HistogramUpdatePeriod = 0
                                         , HistoDescriptor = { 'PT' : ('PT',0.,8000.,100), 'PTBest' : ('PTBest',0.,8000.,100)}
                                         )
+                               , Member ( 'TU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                               , Member ( 'TF', 'Decision'
+                                        , FilterDescriptor = ['FitIP_PV2D,||>,'+str(self.getProp('EleIP_IPCut'))]
+                                        , OutputSelection = '%Decision'
+                                        )         
+                               ]
+                     , postscale = self.postscale
+                     )
+
+        if 'Electron' in L0Channels() :
+            Line ('SingleElectronNoIP'
+                     , prescale = self.prescale
+                     , L0DU = "L0_CHANNEL('Electron')"
+                     , algos = [ convertL0Candidates('Electron') ] + prepareElectronNoIP
+                             + [ Member ( 'TF','PTCut'
+                                        , FilterDescriptor = ['PT,>,'+str(self.getProp('Ele_PtCut'))]
+                                        , HistogramUpdatePeriod = 0
+                                        , HistoDescriptor = { 'PT' : ('PT',0.,20000.,100), 'PTBest' : ('PTBest',0.,20000.,100)}
+                                        , OutputSelection = '%Decision'
+                                        )       
                                ]
                      , postscale = self.postscale
                      )
@@ -127,6 +146,10 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                  , algos = [ convertL0Candidates('Electron') ] + prepareElectronWithIP + companionTrackWithIP
                          + [ Member ( 'VF', 'VertexCut'
                                     , FilterDescriptor = [ 'VertexPointing_PV2D,<,0.5', 'VertexDz_PV2D,>,0.' ]
+                                    )
+                           , Member ( 'VU', 'FitTrack', RecoName = 'FitTrack', callback = setupHltFastTrackFit )
+                           , Member ( 'VF', 'FitTrack'
+                                    , FilterDescriptor =  [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiEleIP_IPCut'))]
                                     , OutputSelection = '%Decision'
                                     )
                            ]
@@ -143,7 +166,7 @@ class Hlt1ElectronLinesConf(HltLinesConfigurableUser) :
                            , DecodeECAL
                            , Member ( 'VU', 'RadCor' , RecoName = 'RadCor', tools = [ Tool( HltTrackUpgradeTool ) ] )
                            , Member ( 'VF', 'MassCut'
-                                    , FilterDescriptor = [ 'VertexDiElectronMass,[],'+LOWMASS+','+HIGHMASS ]
+                                    , FilterDescriptor = [ 'VertexDiElectronMass,[],'+str(self.getProp('DiEle_LowMassCut'))+','+str(self.getProp('DiEle_HighMassCut')) ]
                                     , HistogramUpdatePeriod = 0
                                     , HistoDescriptor = { 'VertexDiElectronMass':('VertexDiElectronMass',0.,3.,100), 'VertexDiElectronMassBest':('VertexDiElectronMassBest',0.,3.,100) }
                                     , OutputSelection = '%Decision'
