@@ -1,5 +1,5 @@
 package BrunelSys
-version v35r9p1
+version v35r10
 
 branches cmt doc tests
  
@@ -8,7 +8,7 @@ branches cmt doc tests
 #=======================================================
 
 # Brunel application
-use Brunel v35r9p1 Rec
+use Brunel v35r10 Rec
 
 # Add here any component libraries to be added as patches
 
@@ -22,8 +22,3 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use GaudiConf     v13r1
-use Magnet        v5r5    Det
-use TsaAlgorithms v3r14p1 Tf
-use TrackFitter   v2r40p1 Tr
-use TrackTools    v3r24   Tr

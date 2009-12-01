@@ -3,6 +3,20 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
+</PRE><H1><A NAME=v35r10>2009-01-02 Brunel v35r10</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
+ and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+
+This is a production version for 2009 data-taking
+Output requires DaVinci v24r5p1 or later
+
+ - New tuning:
+   . Improved comparison of floating point numbers (DetDesc v18r17)
+
+ - Changes to tests
+   . Update Brunel exclusions file to skip comparisons of geometry overlap
+     coordinates (but still check that number of overlaps is unchanged)
+
 </PRE><H1><A NAME=v35r9p1>2009-11-27 Brunel v35r9p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9, Rec v7r9
  and SQLDDDB v5r15, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
