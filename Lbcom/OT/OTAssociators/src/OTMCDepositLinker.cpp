@@ -1,4 +1,4 @@
-// $Id: OTMCDepositLinker.cpp,v 1.3 2009-04-27 16:51:31 janos Exp $
+// $Id: OTMCDepositLinker.cpp,v 1.4 2009-12-01 09:15:26 akozlins Exp $
 // Include files 
 
 // from Gaudi
@@ -40,7 +40,7 @@ OTMCDepositLinker::OTMCDepositLinker( const std::string& name,
     m_acceptTime(0.0)
 {
   declareProperty("OutputLocation", m_outputLocation = LHCb::OTTimeLocation::Default + "2MCDeposits");
-  declareProperty("AcceptTime"    , m_acceptTime     = 3.2*Gaudi::Units::ns                         );
+  declareProperty("AcceptTime"    , m_acceptTime     = 9.0*Gaudi::Units::ns                         );
 }
 
 //=============================================================================

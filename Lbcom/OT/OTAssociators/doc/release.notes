@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.47 2009-05-08 07:09:57 cattanem Exp $
+! $Id: release.notes,v 1.48 2009-12-01 09:15:26 akozlins Exp $
 ! Package     : OTAssociators
 ! Responsible : OT software group
 !-------------------------------------------------------------------------
+
+!===================== OTAssociators v4r3 2009-05-08 =====================
+! 2009-12-01 - Alexandr Kozlinskiy
+ - Change property AcceptTime in OTMCDepositLinker to 9 ns (3 sigma).
 
 !===================== OTAssociators v4r3 2009-05-08 =====================
 ! 2009-04-27 - Jan Amoraal

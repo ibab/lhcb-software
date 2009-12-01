@@ -1,4 +1,4 @@
-// $Id: OTMCDepositLinker.h,v 1.3 2009-04-27 16:51:31 janos Exp $
+// $Id: OTMCDepositLinker.h,v 1.4 2009-12-01 09:15:26 akozlins Exp $
 #ifndef OTASSOCIATORS_OTMCDEPOSITLINKER_H 
 #define OTASSOCIATORS_OTMCDEPOSITLINKER_H 1
 
@@ -22,7 +22,7 @@
  *  a delta time window within to accept a deposit with the option AcceptTime
  *  
  *  @code
- *  OTMCDepositLinker.AcceptTime = 7.8*ns; // == default
+ *  OTMCDepositLinker.AcceptTime = 9.0*ns; // == default
  *  @endcode
  *
  *  The MC linked deposits for a given channelID(key) can be retrieved, for example, in the following way 
