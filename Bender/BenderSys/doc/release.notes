@@ -1,10 +1,18 @@
 <PRE>
-! $Id: release.notes,v 1.28 2009-11-27 14:23:51 ibelyaev Exp $ 
+! $Id: release.notes,v 1.29 2009-12-01 12:51:09 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
+</PRE>
+
+<H1>
+<A NAME=v12r5p2>2009-12-01 Bender v12r5p2 based on the DaVinci v24r5p2 </A>
+</H1>	
+
+<PRE>		
+Also new example 'RealMip' is added into Ex/BenderExample module 
 </PRE>
 
 <H1>
@@ -16,6 +24,7 @@ The decorator for iEventSelector to open RAW/MDF an dCASTO files is added into B
 
 Also new example is added into Ex/BenderExample module 
 </PRE>
+
 
 <H1>
 <A NAME=v12r5>2009-11-24 Bender v12r5 based on the DaVinci v24r5p1 </A>
