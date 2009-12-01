@@ -1,14 +1,15 @@
+!$Id: release.notes,v 1.81 2009-12-01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+!===================== StrippingSelections v1r11 2009-12-01 ===================
+
 ! 2009-12-01 - Anton POLUEKTOV 
  - Added DstarD2Kshh selections to Dstar stream
  - List of all streams (allStreams) in python/StrippingSelections/Streams.py
-
-!===================== StrippingSelections v1r11 2009-12-01 ===================
 
 ! 2009-11-30 - Mat Charles
  - Added two new files in python/StrippingSelections/ :
