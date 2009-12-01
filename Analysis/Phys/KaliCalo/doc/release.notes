@@ -1,18 +1,17 @@
-! $Id: release.notes,v 1.22 2009-12-01 00:13:16 apuignav Exp $ 
+! $Id: release.notes,v 1.23 2009-12-01 06:11:09 jpalac Exp $ 
 ! -----------------------------------------------------------------------------
-! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.22 $
+! CVS tag $Name: not supported by cvs2svn $ , version $Revision: 1.23 $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/KaliCalo
 ! Responsible : Vanya BELYAEV Ivan.Belyaev@lapp.in2p3.fr
 ! Purpose     : Collection of "physics" algorithms  for Calorimeter calibration
 ! -----------------------------------------------------------------------------
 
+!========================== KaliCalo v3r0p2 2009-12-01 ========================
 
 ! 2009-12-01 - Albert Puig
 
 - Added cosPhi between the two photons to the Pi0 ntuple.
-
-!========================== KaliCalo v3r0p2 2009-11-30 ========================
 
 ! 2009-11-30 - Vanya Belyaev
 
