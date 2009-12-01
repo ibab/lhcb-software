@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.373 2009-11-30 09:55:02 pkoppenb Exp $ 
+! $Id: release.notes,v 1.374 2009-12-01 10:46:58 tskwarni Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-01 - Tomasz Skwarnicki
+ - add ID for PV3D in HltInit.py
 
 !========================== HltConf v6r0 2009-11-30 ===================
 ! 2009-11-27 - Patrick Koppenburg
