@@ -8,7 +8,7 @@
 from Gaudi.Configuration import *
 from StrippingConf.Configuration import StrippingConf
 
-from StrippingSelections import StreamBmuon, StreamHadron, StreamJpsi, StreamDstar, StreamLambda, StreamBelectron
+from StrippingSelections.Streams import allStreams
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 
@@ -16,13 +16,7 @@ MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
 # Stripping job configuration
 #
 
-sc = StrippingConf()
-sc.appendStream( StreamBmuon.stream )
-sc.appendStream( StreamHadron.stream )
-sc.appendStream( StreamJpsi.stream )
-sc.appendStream( StreamDstar.stream )
-sc.appendStream( StreamLambda.stream )
-sc.appendStream( StreamBelectron.stream )
+sc = StrippingConf( Streams = allStreams )
 
 print sc
 
