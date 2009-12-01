@@ -1,4 +1,4 @@
-// $Id: HltRadCorTool.cpp,v 1.4 2009-11-02 07:42:24 graven Exp $
+// $Id: HltRadCorTool.cpp,v 1.5 2009-12-01 21:33:10 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -32,7 +32,7 @@ HltRadCorTool::HltRadCorTool( const std::string& type,
     , m_tool(0)
     , m_tool1(0)
 {
-  declareProperty("temporaryFix", m_temporaryFix = true);
+  declareProperty("temporaryFix", m_temporaryFix = false);
   declareInterface<ITracksFromTrack>(this);
  
 }

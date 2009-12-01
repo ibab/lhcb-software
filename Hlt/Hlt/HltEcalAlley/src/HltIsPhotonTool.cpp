@@ -1,4 +1,4 @@
-// $Id: HltIsPhotonTool.cpp,v 1.12 2009-11-02 07:42:24 graven Exp $
+// $Id: HltIsPhotonTool.cpp,v 1.13 2009-12-01 21:33:10 witekma Exp $
 // Include files 
 
 // from Gaudi
@@ -30,7 +30,7 @@ HltIsPhotonTool::HltIsPhotonTool( const std::string& type,
     , m_tool1(0)
 {
   // just a safeguard against crazy clusters
-  declareProperty("temporaryFix", m_temporaryFix = true);
+  declareProperty("temporaryFix", m_temporaryFix = false);
   declareProperty("MinEtCluster", m_minEtCluster = 2000.);
   declareInterface<ITrackFunctionTool>(this);
 }
