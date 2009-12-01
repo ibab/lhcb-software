@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.374 2009-12-01 10:46:58 tskwarni Exp $ 
+! $Id: release.notes,v 1.375 2009-12-01 10:55:50 pkoppenb Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
 
+!========================== HltConf v6r0 2009-12-01 ===================
 ! 2009-12-01 - Tomasz Skwarnicki
  - add ID for PV3D in HltInit.py
 
-!========================== HltConf v6r0 2009-11-30 ===================
 ! 2009-11-27 - Patrick Koppenburg
  - Always run routing bits writer
  - This solves bug https://savannah.cern.ch/bugs/index.php?59607

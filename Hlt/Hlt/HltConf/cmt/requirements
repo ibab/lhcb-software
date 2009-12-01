@@ -1,4 +1,4 @@
-# $Id: requirements,v 1.63 2009-12-01 10:46:58 tskwarni Exp $ 
+# $Id: requirements,v 1.64 2009-12-01 10:55:50 pkoppenb Exp $ 
 # =============================================================================
 # The helper package for configuration of Hlt(1)
 # =============================================================================
@@ -14,7 +14,6 @@ use       Hlt1Lines   v*  Hlt
 use       Hlt2Lines   v*  Hlt
 use       Hlt2SharedParticles v* Hlt
 use       HltSettings v* Hlt
-use       HltCommon   v* Hlt
 
 # =============================================================================
 
