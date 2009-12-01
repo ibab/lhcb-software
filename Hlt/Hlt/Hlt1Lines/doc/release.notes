@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.73 2009-12-01 15:18:53 ksendero Exp $
+! $Id: release.notes,v 1.74 2009-12-01 20:59:49 witekma Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-12-01 - Mariusz Witek
+ - adjustment of names of cut slots
 
 ! 2009-12-01 - Katarzyna Senderowska
  - new names for photon lines to make regexp syntax simpler ( PhotonFromEleTrack -> PhotonTrackFromEle etc.)

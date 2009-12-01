@@ -10,7 +10,7 @@
 '''
 # =============================================================================
 __author__  = 'Gerhard Raven Gerhard.Raven@nikhef.nl'
-__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.3 $'
+__version__ = 'CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.4 $'
 # =============================================================================
 
 
@@ -23,11 +23,10 @@ from HltLine.HltLinesConfigurableUser import *
 
 class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
    __slots__ = { 'Pho_IsPho'         : -0.1   
-               , 'Pho_EtCut'         : 2500.
+               , 'Pho_EtCut'         : 2800.
                , 'Track_PtCut'       : 1250.
                , 'Track_IPCut'       : 0.15
                , 'DiTrack_PtCut'     : 650.  
-               , 'DiTrack_IPCut'     : 0.15  
                }
 
    def __apply_configuration__(self):
@@ -79,7 +78,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                )
                       , Velo
                       , Member ('TF', 'SecondVelo' 
-                               , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('DiTrack_IPCut'))]
+                               , FilterDescriptor = ['IP_PV2D,||>,'+str(self.getProp('Track_IPCut'))]
                                , HistogramUpdatePeriod = 0
                                , HistoDescriptor = { 'IP' : ('IP',-1.,3.,400), 'IPBest' : ('IPBest',-1.,3.,400) }
                                )
@@ -102,7 +101,7 @@ class Hlt1PhotonLinesConf(HltLinesConfigurableUser):
                                )
                       , Member ('VU', 'FitTrack',  RecoName = 'FitTrack', callback = setupHltFastTrackFit )
                       , Member ('VF', 'FitTrack'
-                               , FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('DiTrack_IPCut'))]
+                               , FilterDescriptor = [ 'FitVertexMinIP_PV2D,||>,'+str(self.getProp('Track_IPCut'))]
                                , HistoDescriptor = { 'FitVertexMinIP_PV2D':('FitVertexMinIP_PV2D',-3.,3.,100), 'FitVertexMinIP_PV2DBest':('FitVertexMinIP_PV2D',-3.,3.,100) }
                                )
                       ]
