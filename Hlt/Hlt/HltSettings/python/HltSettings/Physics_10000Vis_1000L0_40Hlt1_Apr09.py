@@ -121,14 +121,16 @@ class Physics_10000Vis_1000L0_40Hlt1_Apr09 :
                                         , 'HadCompanion_PTCut' : 950
                                         , 'HadCompanion_PointingCut' : 1.0 
                                         }
-                 , Hlt1PhotonLinesConf : { 'Pho_EtCut'          : 2800.0
-                                          , 'Track_PtCut'        : 650
-                                          , 'Track_IPCut3D'      : 0.15
-                                          , 'Pho_IsPho'          : -0.082 
+                 , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2800.0
+                                          , 'Pho_IsPho'        : -0.082 
+                                          , 'Track_IPCut'      : 0.15
+                                          , 'Track_PtCut'      : 1250.
+                                          , 'DiTrack_PtCut'    : 650
                                           }
-                 , Hlt1ElectronLinesConf : { 'SingleEle_PtCut'    : 2820.0
-                                            , 'Compan_PtCut'       : 2750
-                                            , 'Ele_IPCut'          : 0.13 
+                 , Hlt1ElectronLinesConf : { 'EleIP_PtCut'             : 2820.0
+                                            , 'EleIP_IPCut'            : 0.13 
+                                            , 'EleIPCompanion_PtCut'   : 2750
+                                            , 'EleCompanion_PtCut'     : 1000
                                             }
                  , Hlt1MuonLinesConf : { 'DiMuon_SumPtCut'    : 1480.0
                                         , 'Muon_PtCut'         : 6200

@@ -49,17 +49,17 @@ class Debug_320Vis_300L0_NoLines_Hlt1_Aug09 :
                                           , 'HadCompanion_PTCut' : 750
                                           , 'HadCompanion_PointingCut' : 0.39
                                           }
-                 , Hlt1PhotonLinesConf : {  'Pho_EtCut' : 2800.0
-                                            , 'Track_PtCut' : 650
-                                            , 'Track_IPCut3D' : 0.15
-                                            , 'Pho_IsPho' : -0.082
+                 , Hlt1PhotonLinesConf : { 'Pho_EtCut'         : 2800.0
+                                          , 'Pho_IsPho'        : -0.082 
+                                          , 'Track_IPCut'      : 0.15
+                                          , 'Track_PtCut'      : 1250.
+                                          , 'DiTrack_PtCut'    : 650
+                                          }
+                 , Hlt1ElectronLinesConf : { 'EleIP_PtCut'             : 2820.0
+                                            , 'EleIP_IPCut'            : 0.13 
+                                            , 'EleIPCompanion_PtCut'   : 2750
+                                            , 'EleCompanion_PtCut'     : 1000
                                             }
-                 
-                 
-                 , Hlt1ElectronLinesConf : { 'Ele_EtCut' : 2800.0
-                                             , 'Compan_PtCut' : 2750
-                                             , 'Ele_IPCut' : 0.13
-                                             }
                  , Hlt1MuonLinesConf : {  'DiMuon_SumPtCut' : 120.0
                                           , 'Muon_PtCut' : 1000
                                           , 'MuonIP_PtCut' : 1000

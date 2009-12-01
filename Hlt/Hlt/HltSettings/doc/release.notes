@@ -4,6 +4,10 @@
 ! Purpose     : All triggre threshold settings
 !-----------------------------------------------------------------------------
 
+! 2009-12-01 - Mariusz Witek
+ - change of Hlt1PhotonLinesConf and Hlt1ElectronLinesConf to match cut names
+   modification in photon and electron lines
+
 !========================== HltSettings v1r3 2009-11-30 ===================
 ! 2009-11-26 - Jaap Panman
  - Physics_MinBiasL0_PassThroughHlt_Nov09_with_MiniBias with four different 
