@@ -1,4 +1,4 @@
-// $Id: Pi0.cpp,v 1.3 2009-11-12 11:43:00 apuignav Exp $
+// $Id: Pi0.cpp,v 1.4 2009-12-01 00:13:16 apuignav Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -138,6 +138,16 @@ void Kali::Pi0::fillTuple ( const Tuple& tuple ,
     tuple -> column ( "m12"  , p12.M()  / GeV ) ;
     tuple -> column ( "bkg"  , bkg , 0 , 2    ) ;
     
+    Gaudi::XYZVector mom1 = p1.Vect () ;
+    Gaudi::XYZVector mom2 = p2.Vect () ;
+    if ( 1 == bkg ) {
+      mom2.SetX ( -mom2.X () ) ;
+      mom2.SetY ( -mom2.Y () ) ;
+    }
+
+    double cosPhi = mom1.Dot ( mom2 ) / ( mom1.R () * mom2.R () ) ;
+    tuple -> column ( "cosPhi" , cosPhi ) ;
+ 
     tuple -> write () ;
 }
 // ============================================================================
