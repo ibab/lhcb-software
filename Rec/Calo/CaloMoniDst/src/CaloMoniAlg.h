@@ -124,60 +124,88 @@ public:
   inline void hFill1(std::string hid, double value, double w=1. ){ 
     if(!doHisto(hid))return;
     AIDA::IHistogram1D* h  = h1[hid];
+    if( NULL == h )return;
+    double bins = (double) h->axis().bins();
+    double step = h->axis().upperEdge() - h->axis().lowerEdge();
+    step = ( bins == 0) ? 0 : step/bins/2.;
     if(m_sat){
-      if( value < h->axis().lowerEdge() )value = h->axis().lowerEdge();
-      if( value > h->axis().upperEdge() )value = h->axis().upperEdge();
+      if( value < h->axis().lowerEdge() )value = h->axis().lowerEdge()+step;
+      if( value > h->axis().upperEdge() )value = h->axis().upperEdge()-step;
     }
     fill(h,value,w);
   }
   inline void hFill2(std::string hid, double x, double y, double w=1. ){ 
     if(!doHisto(hid))return;
     AIDA::IHistogram2D* h  = h2[hid];
+    if( NULL == h )return;
+    double xbins = (double) h->xAxis().bins();
+    double xstep = h->xAxis().upperEdge() - h->xAxis().lowerEdge();
+    xstep = ( xbins == 0) ? 0 : xstep/xbins/2.;
+    double ybins = (double) h->yAxis().bins();
+    double ystep = h->yAxis().upperEdge() - h->yAxis().lowerEdge();
+    ystep = ( ybins == 0) ? 0 : ystep/ybins/2.;
+
     if(m_sat2D){
-      if( x < h->xAxis().lowerEdge() )x = h->xAxis().lowerEdge();
-      if( x > h->xAxis().upperEdge() )x = h->xAxis().upperEdge();
-      if( y < h->yAxis().lowerEdge() )y = h->yAxis().lowerEdge();
-      if( y > h->yAxis().upperEdge() )y = h->yAxis().upperEdge();
+      if( x < h->xAxis().lowerEdge() )x = h->xAxis().lowerEdge()+xstep;
+      if( x > h->xAxis().upperEdge() )x = h->xAxis().upperEdge()-xstep;
+      if( y < h->yAxis().lowerEdge() )y = h->yAxis().lowerEdge()+ystep;
+      if( y > h->yAxis().upperEdge() )y = h->yAxis().upperEdge()-ystep;
     }
     fill(h,x,y,w); 
   }
   inline void hFill1(LHCb::CaloCellID cellID , std::string hid, double value, double w=1. ){ 
     if(!doHisto(hid))return;
+    AIDA::IHistogram1D* h  = h1[hid];
+    if( NULL == h )return;
+    double bins = (double) h->axis().bins();
+    double step = h->axis().upperEdge() - h->axis().lowerEdge();
+    step = ( bins == 0) ? 0 : step/bins/2.;
     if(m_sat){
-      if( value < h1[hid]->axis().lowerEdge() )value = h1[hid]->axis().lowerEdge();
-      if( value > h1[hid]->axis().upperEdge() )value = h1[hid]->axis().upperEdge();
+      if( value < h->axis().lowerEdge() )value = h->axis().lowerEdge()+step;
+      if( value > h->axis().upperEdge() )value = h->axis().upperEdge()-step;
     }
     if( m_split && !(cellID == LHCb::CaloCellID()) ) {
       // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
       std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum( m_detData ), cellID.area() );
       if( validArea( area ) ){
         GaudiAlg::HistoID id(area + "/" + hid);
-        fill(h1[id],value,w);
+        info() << " id " << id <<endreq;
+        IHistogram1D* hh = h1[id];
+        if( NULL == hh )return;
+        fill(hh,value,w);
       }
-      //info() << "filling " << hid << " " << cellID << " " << value << " " << w << endmsg  ;      
-      fill(h1[hid],value,w);
+      fill(h,value,w);
     }else{
-      fill(h1[hid],value,w);
+      fill(h,value,w);
     } 
   }
   inline void hFill2( LHCb::CaloCellID cellID , std::string hid, double x, double y, double w=1. ){ 
     if(!doHisto(hid))return;
+    AIDA::IHistogram2D* h  = h2[hid];
+    if( NULL == h )return;
+    double xbins = (double) h->xAxis().bins();
+    double xstep = h->xAxis().upperEdge() - h->xAxis().lowerEdge();
+    xstep = ( xbins == 0) ? 0 : xstep/xbins/2.;
+    double ybins = (double) h->yAxis().bins();
+    double ystep = h->yAxis().upperEdge() - h->yAxis().lowerEdge();
+    ystep = ( ybins == 0) ? 0 : ystep/ybins/2.;
     if(m_sat2D){
-      if( x < h2[hid]->xAxis().lowerEdge() )x = h2[hid]->xAxis().lowerEdge();
-      if( x > h2[hid]->xAxis().upperEdge() )x = h2[hid]->xAxis().upperEdge();
-      if( y < h2[hid]->yAxis().lowerEdge() )y = h2[hid]->yAxis().lowerEdge();
-      if( y > h2[hid]->yAxis().upperEdge() )y = h2[hid]->yAxis().upperEdge();
+      if( x < h->xAxis().lowerEdge() )x = h->xAxis().lowerEdge()+xstep;
+      if( x > h->xAxis().upperEdge() )x = h->xAxis().upperEdge()-xstep;
+      if( y < h->yAxis().lowerEdge() )y = h->yAxis().lowerEdge()+ystep;
+      if( y > h->yAxis().upperEdge() )y = h->yAxis().upperEdge()-ystep;
     }
     if( m_split && !(cellID == LHCb::CaloCellID()) ){
       // std::string area = CaloCellCode::CaloAreaFromNum( CaloCellCode::CaloNumFromName( m_detData ), cellID.area() );
       std::string area = CaloCellCode::caloArea ( CaloCellCode::caloNum ( m_detData ), cellID.area() );
       if( validArea( area )  ){
         GaudiAlg::HistoID id(area + "/" + hid);
-        fill(h2[id],x,y,w); 
+        AIDA::IHistogram2D* hh  = h2[id];
+        fill(hh,x,y,w); 
       }      
-      fill(h2[hid],x,y,w); 
+      fill(h,x,y,w); 
     }else{
-      fill(h2[hid],x,y,w); 
+      fill(h,x,y,w); 
     } 
   }
 protected:
