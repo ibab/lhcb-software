@@ -1,9 +1,16 @@
-! $Id: release.notes,v 1.72 2009-11-30 09:57:19 pkoppenb Exp $
+! $Id: release.notes,v 1.73 2009-12-01 15:18:53 ksendero Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-12-01 - Katarzyna Senderowska
+ - new names for photon lines to make regexp syntax simpler ( PhotonFromEleTrack -> PhotonTrackFromEle etc.)
+ - new electron line: single electron no IP high PT (for Z->ee)
+ - modified cut slots to use separate names for each line 
+ - introduced final track fit to reapply IP cut
+ - photon line: 3D Velo reconstruction directly after photon confirmation followed by IP3D cut (IP2D cut removed)
 
 !========================== Hlt1Lines v1r9 2009-11-30 ===================
 ! 2009-11-29 - Jaap Panman
