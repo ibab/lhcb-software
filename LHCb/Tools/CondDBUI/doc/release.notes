@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.131 2009-11-30 18:10:02 marcocle Exp $
+! $Id: release.notes,v 1.132 2009-12-01 11:51:12 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-12-01 - Marco Clemencic
+ - Improvements to the new Qt4-based CondDBBrowser.
+   - added a find dialog to search inside the condition text
+   - added a small help for the add condition dialog
+   - added the possibility to switch to/from fixed width fonts in the central widget
 
 ! 2009-11-30 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser.

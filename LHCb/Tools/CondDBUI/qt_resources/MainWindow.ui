@@ -10,6 +10,9 @@
     <height>582</height>
    </rect>
   </property>
+  <property name="contextMenuPolicy" >
+   <enum>Qt::ActionsContextMenu</enum>
+  </property>
   <property name="windowTitle" >
    <string comment="Browser for LHCb Conditions Database" >CondDBBrowser</string>
   </property>
@@ -20,14 +23,8 @@
   <widget class="QWidget" name="mainPanel" >
    <layout class="QVBoxLayout" name="verticalLayout_5" >
     <item>
-     <widget class="QTextEdit" name="dataView" >
+     <widget class="SearchableTextEdit" name="dataView" >
       <property name="acceptDrops" >
-       <bool>false</bool>
-      </property>
-      <property name="undoRedoEnabled" >
-       <bool>false</bool>
-      </property>
-      <property name="acceptRichText" >
        <bool>false</bool>
       </property>
       <property name="textInteractionFlags" >
@@ -453,6 +450,11 @@
     <signal>validityKeyChanged(cool::ValidityKey)</signal>
    </slots>
   </customwidget>
+  <customwidget>
+   <class>SearchableTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>CondDBUI/Browser/Widgets.h</header>
+  </customwidget>
  </customwidgets>
  <resources>
   <include location="Resources.qrc" />
@@ -529,8 +531,8 @@
    <slot>selectedPath(QString)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>187</x>
-     <y>48</y>
+     <x>218</x>
+     <y>77</y>
     </hint>
     <hint type="destinationlabel" >
      <x>482</x>
@@ -561,12 +563,12 @@
    <slot>setMinimumDateTime(QDateTime)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>851</x>
-     <y>72</y>
+     <x>1027</x>
+     <y>97</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>851</x>
-     <y>95</y>
+     <x>1027</x>
+     <y>119</y>
     </hint>
    </hints>
   </connection>
@@ -577,12 +579,12 @@
    <slot>resetMaximumDateTime()</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>851</x>
-     <y>95</y>
+     <x>1027</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>851</x>
-     <y>72</y>
+     <x>1027</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>
@@ -593,12 +595,12 @@
    <slot>setMaximumDateTime(QDateTime)</slot>
    <hints>
     <hint type="sourcelabel" >
-     <x>851</x>
-     <y>95</y>
+     <x>1027</x>
+     <y>119</y>
     </hint>
     <hint type="destinationlabel" >
-     <x>851</x>
-     <y>72</y>
+     <x>1027</x>
+     <y>97</y>
     </hint>
    </hints>
   </connection>

@@ -4,14 +4,17 @@
 #  Definition of the browser MainWindow class.
 
 from PyQt4.QtCore import (Qt, QObject, SIGNAL, SLOT,
+                          QString,
                           QDateTime,
                           QRegExp)
 from PyQt4.QtGui import (QDialog,
                          QFileDialog,
                          QProgressDialog,
                          QDialogButtonBox,
+                         QMessageBox,
                          QValidator,
-                         QRegExpValidator)
+                         QRegExpValidator,
+                         QTextDocument)
 
 from Models import (NodeFieldsModel, NodeFieldsDelegate, GlobalTagsListModel,
                     CondDBNodesListModel, CondDBPayloadFieldModel)
@@ -21,11 +24,13 @@ from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
 from Ui_NewNodeDialog import Ui_NewNodeDialog
 from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
 from Ui_AddConditionDialog import Ui_AddConditionDialog
+from Ui_FindDialog import Ui_FindDialog
 
 import os
 
 __all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog",
-           "DumpToFilesDialog", "ProgressDialog", "AddConditionDialog"]
+           "DumpToFilesDialog", "ProgressDialog", "AddConditionDialog",
+           "FindDialog"]
 
 ## Simple validator for COOL database name
 class DBNameValidator(QRegExpValidator):
@@ -310,7 +315,111 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     def getFolder(self):
         return str(self.folder.currentText())
     
+    ## Set folder and channel
     def setLocation(self, folder, channel):
         self.setFolder(folder)
         self.setChannel(channel)
     
+    ## Show message box with instructions for the dialog.
+    def showHelp(self):
+        mb = QMessageBox(self)
+        mb.setText("Add a condition")
+        mb.setInformativeText("""<html><body><ol>
+<li>select a location (folder and channel)</li>
+<li>set the Interval of Validity (since and until)</li>
+<li>select a payload key and click on the button "Edit" to modify it; repeat for all the keys</li>
+<li>click on the add button (+) to add the edited condition object to the buffer</li>
+<li>repeat steps 2-4 for all the intervals of validity needed</li>
+<li>click on the "Ok" button to commit the changes to the database</li>
+</ol></body></html>""")
+        mb.setStandardButtons(QMessageBox.Ok);
+        mb.exec_()
+
+## Simple "find" dialog.
+class FindDialog(QDialog, Ui_FindDialog):
+    __pyqtSignals__ = ("find(QString,QTextDocument::FindFlags,bool)")
+    ## Constructor.
+    #  Initializes the base class and defines some internal structures.
+    def __init__(self, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(FindDialog, self).__init__(parent, flags)
+        # Prepare the GUI.
+        self.setupUi(self)
+        # data members
+        self._text = QString()
+        self._findFlags = QTextDocument.FindFlags()
+        self._wrappedSearch = True
+        self._updateCheckBoxes()
+    
+    ## Text property
+    def setText(self, value):
+        self._text = QString(value)
+    ## Text property
+    def text(self):
+        return self._text
+    
+    ## Helper function to set/unset a bit of findFlags
+    def _setFlagBit(self, bit, value):
+        if value:
+            self._findFlags |= bit
+        else:
+            self._findFlags ^= self._findFlags & bit
+        self._updateCheckBoxes()
+    ## Helper function to check the status of a bit of findFlags
+    def _getFlagBit(self, bit):
+        return bool(self._findFlags & bit)
+    
+    ## Helper function to update the checkboxes
+    def _updateCheckBoxes(self):
+        self.caseSensitive.setChecked(self.getCaseSensitive())
+        self.wholeWord.setChecked(self.getWholeWord())
+        self.wrappedSearch.setChecked(self.getWrappedSearch())
+        self.searchBackward.setChecked(self.getBackwardSearch())
+    
+    ## CaseSensitive property
+    def setCaseSensitive(self, value):
+        self._setFlagBit(QTextDocument.FindCaseSensitively, value)
+    ## CaseSensitive property
+    def getCaseSensitive(self):
+        return self._getFlagBit(QTextDocument.FindCaseSensitively)
+    
+    ## WholeWord property
+    def setWholeWord(self, value):
+        self._setFlagBit(QTextDocument.FindWholeWords, value)
+    ## WholeWord property
+    def getWholeWord(self):
+        return self._getFlagBit(QTextDocument.FindWholeWords)
+    
+    ## BackwardSearch property
+    def setBackwardSearch(self, value):
+        self._setFlagBit(QTextDocument.FindBackward, value)
+    ## BackwardSearch property
+    def getBackwardSearch(self):
+        return self._getFlagBit(QTextDocument.FindBackward)
+    
+    ## FindFlags property
+    def setFindFlags(self, value):
+        if type(value) is QTextDocument.FindFlags:
+            self._findFlags = value
+        else:
+            self._findFlags = QTextDocument.FindFlags()
+            for bit in (QTextDocument.FindBackward, QTextDocument.FindCaseSensitively, QTextDocument.FindWholeWords):
+                if value & int(bit):
+                    self._findFlags |= bit 
+        self._updateCheckBoxes()
+    ## FindFlags property
+    def getFindFlags(self):
+        return self._findFlags
+
+    ## WrappedSearch property
+    def setWrappedSearch(self, value):
+        self._wrappedSearch = value
+        self.wrappedSearch.setChecked(value)
+    ## WrappedSearch property
+    def getWrappedSearch(self):
+        return self._wrappedSearch
+
+    ## Slot to emit the signal to start the search    
+    def doFind(self):
+        self.emit(SIGNAL("find(QString,QTextDocument::FindFlags,bool)"),
+                  self._text, self._findFlags, self._wrappedSearch)

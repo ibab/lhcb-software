@@ -11,10 +11,10 @@ from PyQt4.QtCore import (Qt, QObject,
                           PYQT_VERSION_STR, qVersion)
 from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
                          QHeaderView,
-                         QLabel,
-                         QAction,
-                         QIcon,
-                         QMenu,
+                         QLabel, QIcon,
+                         QMenu, QAction,
+                         QTextDocument,
+                         QTextCursor,
                          QStyle, QStyleFactory)
 
 from Ui_MainWindow import Ui_MainWindow
@@ -163,6 +163,18 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.setValue("pos", QVariant(self.filterPanel.pos()))
         settings.endGroup()
         
+        settings.beginGroup("DataView")
+        settings.setValue("fixedwidthfont", QVariant(self.dataView.isFixedWidthFont()))
+        settings.endGroup()
+        
+        settings.beginGroup("FindDialog")
+        d = self.dataView.findDialog
+        settings.setValue("visible", QVariant(d.isVisible()))
+        settings.setValue("pos", QVariant(d.pos()))
+        settings.setValue("flags", QVariant(d.getFindFlags()))
+        settings.setValue("wrappedsearch", QVariant(d.getWrappedSearch()))
+        settings.endGroup()
+        
         settings.setValue("IOVs/UTC", QVariant(self.iovUTCCheckBox.isChecked()))
         
         settings.beginWriteArray("Recent")
@@ -195,6 +207,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.filterPanel.setFloating(settings.value("floating", QVariant(False)).toBool())
         self.filterPanel.resize(settings.value("size", QVariant(QSize(270, 655))).toSize())
         self.filterPanel.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        settings.endGroup()
+
+        settings.beginGroup("DataView")
+        self.dataView.setFixedWidthFont(settings.value("fixedwidthfont", QVariant(False)).toBool())
+        settings.endGroup()
+
+        settings.beginGroup("FindDialog")
+        d = self.dataView.findDialog
+        d.setVisible(settings.value("visible", QVariant(False)).toBool())
+        d.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        # Note: QVariant.toInt returns a tuple with the result of the conversion
+        # and a boolean for the successful conversion
+        d.setFindFlags(settings.value("flags", QVariant(0)).toInt()[0])
+        d.setWrappedSearch(settings.value("wrappedsearch", QVariant(True)).toBool())
         settings.endGroup()
 
         self.iovUTCCheckBox.setChecked(settings.value("IOVs/UTC", QVariant(True)).toBool())

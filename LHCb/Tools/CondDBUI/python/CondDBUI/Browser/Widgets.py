@@ -8,7 +8,7 @@ import time
 
 from PyCool import cool
 
-__all__ = ["TimePointEdit"]
+__all__ = ["TimePointEdit", "SearchableTextEdit"]
 
 
 class TimePointEdit(QtGui.QWidget):
@@ -193,3 +193,77 @@ class TimePointEdit(QtGui.QWidget):
     def emitValidityKeyChange(self):
         #self.emit(SIGNAL("validityKeyChange(cool::ValidityKey)"),self.toValidityKey())
         self.emit(SIGNAL("validityKeyChange"),self.toValidityKey())
+
+## Simple customization of a QPlainTextEdit.
+#  The extensions to a QPlainTextEdit are a "find" dialog (activated with Ctrl+F
+#  or the contextual menu) and the possibility to switch to/from fixed width
+#  font (via contextual menu). 
+class SearchableTextEdit(QtGui.QPlainTextEdit):
+    ## Contructor.
+    def __init__(self, parent = None):
+        super(SearchableTextEdit,self).__init__(parent)
+        
+        from Dialogs import FindDialog
+        self.findDialog = FindDialog(self)
+        
+        self.actionFind = QtGui.QAction(self)
+        self.actionFind.setObjectName("actionFind")
+        self.actionFind.setText("&Find...")
+        self.actionFind.setShortcut("Ctrl+F")
+        self.addAction(self.actionFind)
+        
+        QObject.connect(self.actionFind, SIGNAL("triggered()"), self.findDialog.show)
+        QObject.connect(self.findDialog, SIGNAL("find(QString,QTextDocument::FindFlags,bool)"),
+                        self.findInText)
+        
+        self._defaultFont = self.font()
+        self.actionFixedWidthFont = QtGui.QAction(self)
+        self.actionFixedWidthFont.setObjectName("actionFixedWidthFont")
+        self.actionFixedWidthFont.setText("Use fi&xed width font")
+        self.actionFixedWidthFont.setCheckable(True)
+        self.addAction(self.actionFixedWidthFont)
+        if self._defaultFont.fixedPitch():
+            self.actionFixedWidthFont.setChecked(True)
+            self.actionFixedWidthFont.setEnabled(False)
+        
+        QObject.connect(self.actionFixedWidthFont, SIGNAL("triggered(bool)"),
+                        self.setFixedWidthFont)
+        
+    def contextMenuEvent(self, event):
+        menu = self.createStandardContextMenu()
+        menu.addSeparator()
+        for a in self.actions():
+            menu.addAction(a)
+        menu.exec_(event.globalPos())
+        del menu
+    
+    ## Slot used by the find dialog to trigger a search in the data view
+    def findInText(self, text, flags, wrapped):
+        # look for the string
+        found = self.find(text, flags)
+        if not found and wrapped:
+            # try again for wrapped search
+            if flags & QtGui.QTextDocument.FindBackward:
+                where = QtGui.QTextCursor.End
+            else:
+                where = QtGui.QTextCursor.Start
+            self.moveCursor(where)
+            found = self.find(text, flags)
+        if not found:
+            QtGui.QMessageBox.information(self, "Not found",
+                                          "String '%s' not found in the document." % text)
+
+    ## FixedWidthFont property
+    def setFixedWidthFont(self, value):
+        if self.actionFixedWidthFont.isEnabled():
+            if value:
+                font = QtGui.QFont("Currier")
+                font.setFixedPitch(value)
+                self.setFont(font)
+            else:
+                self.setFont(self._defaultFont)
+            if self.actionFixedWidthFont.isChecked() != value:
+                self.actionFixedWidthFont.setChecked(value)
+    ## FixedWidthFont property
+    def isFixedWidthFont(self):
+        return self.actionFixedWidthFont.isChecked()

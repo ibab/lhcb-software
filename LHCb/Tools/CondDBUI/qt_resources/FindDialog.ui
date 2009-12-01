@@ -1,0 +1,232 @@
+<ui version="4.0" >
+ <author>Marco Clemencic</author>
+ <class>FindDialog</class>
+ <widget class="QDialog" name="FindDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>364</width>
+    <height>149</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Find</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout" >
+   <item>
+    <widget class="QWidget" native="1" name="criteria" >
+     <layout class="QFormLayout" name="formLayout" >
+      <property name="fieldGrowthPolicy" >
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="textLabel" >
+        <property name="text" >
+         <string>&amp;Text</string>
+        </property>
+        <property name="buddy" >
+         <cstring>searchText</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QLineEdit" name="searchText" />
+      </item>
+      <item row="1" column="1" >
+       <widget class="QCheckBox" name="caseSensitive" >
+        <property name="text" >
+         <string>Match &amp;case</string>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QCheckBox" name="wholeWord" >
+        <property name="text" >
+         <string>&amp;Whole word</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" >
+       <widget class="QCheckBox" name="searchBackward" >
+        <property name="text" >
+         <string>Search &amp;backward</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" >
+       <widget class="QCheckBox" name="wrappedSearch" >
+        <property name="text" >
+         <string>W&amp;rapped search</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" native="1" name="buttons" >
+     <layout class="QVBoxLayout" name="verticalLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QPushButton" name="findButton" >
+        <property name="text" >
+         <string>Find</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="closeButton" >
+        <property name="text" >
+         <string>Close</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="verticalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Vertical</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>20</width>
+          <height>40</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <includes/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>FindDialog</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>308</x>
+     <y>54</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>359</x>
+     <y>133</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchText</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>FindDialog</receiver>
+   <slot>setText(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>208</x>
+     <y>24</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>277</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>caseSensitive</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>FindDialog</receiver>
+   <slot>setCaseSensitive(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>74</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>276</x>
+     <y>45</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>wholeWord</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>FindDialog</receiver>
+   <slot>setWholeWord(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>72</x>
+     <y>70</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>278</x>
+     <y>75</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>wrappedSearch</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>FindDialog</receiver>
+   <slot>setWrappedSearch(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>80</x>
+     <y>101</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>276</x>
+     <y>105</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>searchBackward</sender>
+   <signal>toggled(bool)</signal>
+   <receiver>FindDialog</receiver>
+   <slot>setBackwardSearch(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>92</x>
+     <y>127</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>277</x>
+     <y>132</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>findButton</sender>
+   <signal>clicked()</signal>
+   <receiver>FindDialog</receiver>
+   <slot>doFind()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>332</x>
+     <y>17</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>362</x>
+     <y>25</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>setText(QString)</slot>
+  <slot>setCaseSensitive(bool)</slot>
+  <slot>setWholeWord(bool)</slot>
+  <slot>setBackwardSearch(bool)</slot>
+  <slot>setWrappedSearch(bool)</slot>
+  <slot>doFind()</slot>
+ </slots>
+</ui>
