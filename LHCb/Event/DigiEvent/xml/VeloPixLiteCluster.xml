@@ -39,18 +39,16 @@
        access = "PUBLIC " /> 
 
      <constructor desc="Constructor" 
-       argList='VeloPixChannelID &amp; chan,  int threshold, std::pair&lt;double,double&gt; fracPix, bool longPix'>
+       argList='VeloPixChannelID &amp; chan,  unsigned int ToT , std::pair&lt;double,double&gt; fracPix, bool longPix'>
        <code>
 
  unsigned int tFracX = (LHCb::Math::round(fracPix.first * (1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits))));
  unsigned int tFracY = (LHCb::Math::round(fracPix.second *(1 &lt;&lt; (interPixelFractionYBits-interPixelFractionXBits))));
- unsigned int tThres;
- threshold &lt; 10000 ? tThres = int(threshold/10000*8): tThres = 7;
  unsigned int tlongPix;
  longPix == true  ? tlongPix = 1:   tlongPix= 0;
 
  m_liteCluster = (((ulonglong)chan) &lt;&lt; channelIDBits) + 
-                 (((ulonglong)tThres) &lt;&lt; thresholdBits) +
+                 (((ulonglong)ToT) &lt;&lt; clustToTBits) +
                  (((ulonglong)tFracX) &lt;&lt; interPixelFractionXBits) +
                  (((ulonglong)tFracY) &lt;&lt; interPixelFractionYBits) +
                  (((ulonglong)tlongPix) &lt;&lt; longPixBits)
@@ -60,14 +58,14 @@
 
 
     <constructor desc="Constructor" 
-       argList='VeloPixChannelID &amp; chan ,unsigned int thres,
+       argList='VeloPixChannelID &amp; chan ,unsigned int ToT,
                 std::pair&lt;unsigned int,unsigned int&gt; fracPixel, bool longPix'>
        <code>
 
  unsigned int tlongPix;
  longPix == true  ? tlongPix = 1:   tlongPix= 0;
  m_liteCluster = (((ulonglong)chan) &lt;&lt; channelIDBits) +
-                 (((ulonglong)thres) &lt;&lt; thresholdBits) +
+                 (((ulonglong)ToT) &lt;&lt; clustToTBits) +
                  (((ulonglong)fracPixel.first) &lt;&lt; interPixelFractionXBits) +
                  (((ulonglong)fracPixel.second) &lt;&lt; interPixelFractionYBits) +
                  (((ulonglong)tlongPix) &lt;&lt; longPixBits)
@@ -114,6 +112,17 @@
 return  double(fractionUnitsX())/double((1 &lt;&lt;( interPixelFractionYBits-interPixelFractionXBits)));
      </code>
      </method>
+
+     <method
+      name="clustToT"
+      type="unsigned int"
+      desc="clustToT of the cluster"
+      const="TRUE">
+     <code>
+return ((m_liteCluster &amp;clustToTMask ) &gt;&gt; clustToTBits );
+     </code>
+     </method>
+
 
      <method
       name="interPixelFractionY"
@@ -191,7 +200,7 @@ return ((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractio
 
      <enum name='liteClusterBits' desc='position of the first bit of a given field'>
        <enumval name = 'channelIDBits' value = '0' desc='the channelID field 1st bit position'/>
-       <enumval name = 'thresholdBits' value = '28' desc='the thresholdMask field 1st bit position'/>
+       <enumval name = 'clustToTBits' value = '28' desc='the clustToT field 1st bit position'/>
        <enumval name = 'longPixBits' value = '31' desc='the longPixMask field 1st bit position'/>
        <enumval name = 'interPixelFractionXBits' value = '32' desc='the interPixelFractionXMask field 1st bit position'/>
        <enumval name = 'interPixelFractionYBits' value = '35' desc='the interPixelFractionYMask field 1st bit position'/>
@@ -199,7 +208,7 @@ return ((m_liteCluster &amp; interPixelFractionYMask) &gt;&gt; interPixelFractio
 
      <enum name='liteClusterMask' desc='the given field mask'>
        <enumval name = 'channelIDMask' value = '0xfffffffLL' desc='the channelID field mask'/>
-       <enumval name = 'thresholdMask' value = '0x70000000LL' desc='the thresholdMask field mask'/>
+       <enumval name = 'clustToTMask' value = '0x70000000LL' desc='the clustToTMask field mask'/>
        <enumval name = 'longPixMask' value = '0x80000000LL' desc='the longPixMask field mask'/>
        <enumval name = 'interPixelFractionXMask' value = '0x700000000LL' desc='the interPixelFractionXMask field mask'/>
        <enumval name = 'interPixelFractionYMask' value = '0x3800000000LL' desc='the interPixelFractionYMask field mask'/>
