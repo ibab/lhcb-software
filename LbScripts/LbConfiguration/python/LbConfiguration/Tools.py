@@ -111,12 +111,13 @@ def postProcessSetupScript(scriptfile, shell, strip_path=False, fix_path=True):
         if fix_path :
             fixPath(scriptfile, shell)
 
-def genProjectSetup(output_file, project, version, cmtconfig, 
+def genProjectSetup(output_file, project, version=None, cmtconfig=None, 
                     shell="csh", setup_project_extra_args=None,
                     strip_path=False, fix_path=True):
     """ generates the setup script for the CMT project """
     
-    os.environ["CMTCONFIG"] = cmtconfig
+    if cmtconfig :
+        os.environ["CMTCONFIG"] = cmtconfig
     log = logging.getLogger()
     setuprojargs = []
     setuprojargs.append("--shell=%s" % shell)
@@ -125,7 +126,8 @@ def genProjectSetup(output_file, project, version, cmtconfig,
     if setup_project_extra_args :
         setuprojargs += setup_project_extra_args
     setuprojargs.append(project)
-    setuprojargs.append(version)
+    if version :
+        setuprojargs.append(version)
     log.debug("Running SetupProject %s" % " ".join(setuprojargs))
     SetupProject().main(setuprojargs)
     if os.path.exists(output_file) :
