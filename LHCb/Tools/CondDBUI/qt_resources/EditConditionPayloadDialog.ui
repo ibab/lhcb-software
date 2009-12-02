@@ -94,7 +94,7 @@
       <item>
        <widget class="QToolButton" name="insertParamVectorButton" >
         <property name="text" >
-         <string>&lt;param&amp;vector></string>
+         <string>&lt;param&amp;Vector></string>
         </property>
        </widget>
       </item>
