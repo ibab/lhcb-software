@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.61 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.62 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -68,10 +68,6 @@ def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
     if location :
         name = os.path.join(location, name)
     return name
-    
-def generateSetupProjectCache(cachefn, project, version=None, 
-                              cmtconfig=None, setupextra=None, env=None):
-    pass
 
 
 def getLbLoginEnv(optionlist = None):
