@@ -1,4 +1,4 @@
-// $Id: IMuonHitDecode.h,v 1.4 2009-09-10 08:57:34 ggiacomo Exp $
+// $Id: IMuonHitDecode.h,v 1.5 2009-12-02 16:35:51 ggiacomo Exp $
 #ifndef MUONMONITOR_IMUONHITDECODE_H 
 #define MUONMONITOR_IMUONHITDECODE_H 1
 
@@ -39,6 +39,7 @@ public:
   }
   // specific for Online Monitoring
   virtual int banksSize(LHCb::RawBank::BankType bankType,  std::vector<int> &sizes) = 0;
+  virtual unsigned int odeErrorWord(int T1, int BX) =0;
   virtual int bankVersion() = 0;
   virtual void dumpRawBanks() = 0;  
   virtual void dumpFrame(int Tell1, int ODE) = 0;

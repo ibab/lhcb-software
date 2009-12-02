@@ -1,4 +1,4 @@
-// $Id: MuonHitDecode.h,v 1.7 2009-11-29 19:50:54 ggiacomo Exp $
+// $Id: MuonHitDecode.h,v 1.8 2009-12-02 16:35:51 ggiacomo Exp $
 #ifndef LIB_MUONHITDECODE_H 
 #define LIB_MUONHITDECODE_H 1
 
@@ -27,6 +27,7 @@ public:
   // specific for Online Monitoring, not implemented here (just avoid compil. warnings)
   virtual int banksSize(LHCb::RawBank::BankType bankType, std::vector<int> &sizes)
   { return 0* (bankType == bankType) * sizes.size();}
+  virtual unsigned int odeErrorWord(int T1, int BX) {return T1+BX;}
   virtual int bankVersion() {return 0;}
   virtual void dumpRawBanks() {}
   virtual void dumpFrame(int Tell1, int ODE) { Tell1=ODE;}
