@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.h,v 1.9 2009-10-08 19:17:13 graven Exp $
+// $Id: HltVertexUpgrade.h,v 1.10 2009-12-02 14:12:30 albrecht Exp $
 #ifndef HLTTRACKING_HLTTRACKUPGRADE_H 
 #define HLTTRACKING_HLTTRACKUPGRADE_H 1
 
@@ -49,6 +49,8 @@ private:
 
 private:
 
+ double getTrackQuality(const LHCb::Track& tr);
+
   std::string m_TESOutputVerticesName;
 
   ITrackUpgrade* m_tool;
@@ -61,6 +63,9 @@ private:
   // one input: vertex
   Hlt::SelectionContainer2<LHCb::RecVertex,LHCb::RecVertex> m_selections;
   
-
+  AIDA::IHistogram1D* m_quality1Histo;
+  AIDA::IHistogram1D* m_quality2Histo;
+  AIDA::IHistogram1D* m_quality1HistoBest;
+  AIDA::IHistogram1D* m_quality2HistoBest;
 };
 #endif // HLTTRACKING_H

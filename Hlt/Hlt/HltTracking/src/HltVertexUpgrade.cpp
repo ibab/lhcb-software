@@ -1,7 +1,9 @@
-// $Id: HltVertexUpgrade.cpp,v 1.18 2009-10-08 19:17:13 graven Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.19 2009-12-02 14:12:48 albrecht Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
+
+#include "boost/foreach.hpp"
 
 // local
 #include "HltVertexUpgrade.h"
@@ -24,6 +26,10 @@ HltVertexUpgrade::HltVertexUpgrade( const std::string& name,
                           ISvcLocator* pSvcLocator)
   : HltAlgorithm ( name , pSvcLocator )
   , m_selections(*this)
+  , m_quality1Histo(0)
+  , m_quality2Histo(0)
+  , m_quality1HistoBest(0)  
+  , m_quality2HistoBest(0)
 {
   declareProperty("RecoName", m_recoName = "empty");
   
@@ -53,7 +59,14 @@ StatusCode HltVertexUpgrade::initialize() {
   if (!m_tool) fatal() << " not able to retrieve upgrade track tool " << endreq;
   sc = m_tool->setReco(m_recoName);
   
-  return sc;
+ if (produceHistos()){
+    m_quality1Histo = initializeHisto(m_recoName+"1Quality",0,50,200);
+    m_quality2Histo = initializeHisto(m_recoName+"2Quality",0,50,200);
+    m_quality1HistoBest = initializeHisto(m_recoName+"1QualityBest",0,50,200);    
+    m_quality2HistoBest = initializeHisto(m_recoName+"2QualityBest",0,50,200);
+  }
+  
+ return sc;
 
 };
 
@@ -90,6 +103,7 @@ StatusCode HltVertexUpgrade::execute() {
     if (sc.isFailure()) return sc;
     if (tracks1.empty() || tracks2.empty() ) continue;
     debug() << " creating a vertex " << endreq;
+   
     for (std::vector<Track*>::iterator t1 = tracks1.begin();
          t1 != tracks1.end(); ++t1) {
       Track& track1 = *(*t1);
@@ -108,9 +122,55 @@ StatusCode HltVertexUpgrade::execute() {
         //   sv->setExtraInfo( vseed.extraInfo() );
       }
     }
+
+    if( produceHistos() && tracks1.size() > 0){
+      std::vector<double> vals; 
+      vals.reserve(tracks1.size());
+      BOOST_FOREACH( LHCb::Track* cand, tracks1) vals.push_back( getTrackQuality( *cand ) );
+      double val = *( std::min_element(vals.begin(),vals.end()) );
+      BOOST_FOREACH(const double& x,vals  ) fill( m_quality1Histo,x,1. );
+      fill( m_quality1HistoBest,val,1. );
+    }
+    if( produceHistos() && tracks2.size() > 0){
+      std::vector<double> vals; 
+      vals.reserve(tracks2.size());
+      BOOST_FOREACH( LHCb::Track* cand, tracks2) vals.push_back( getTrackQuality( *cand ) );
+      double val = *( std::min_element(vals.begin(),vals.end()) );
+      BOOST_FOREACH(const double& x,vals  ) fill( m_quality2Histo,x,1. );
+      fill( m_quality2HistoBest,val,1. );
+    }
+
   }
 
   debug()<<"Upgrade vertices succesful"<<endreq;
 
   return sc;
+}
+
+//TODO JA: code is duplicated from HltTrackUpgrade --> put in one location
+double HltVertexUpgrade::getTrackQuality(const LHCb::Track& tr)
+{
+  double q = 1e6;
+  
+  if( m_recoName == "Forward" 
+      || m_recoName == "GuidedForward" ){
+    q = tr.info(LHCb::Track::PatQuality,1e5);
+  }
+  else if( m_recoName == "TMuonConf"
+	   || m_recoName == "THadronConf"
+	   || m_recoName == "TEleConf"    ) {
+    //later chi2 available
+    q = tr.chi2PerDoF();
+  }
+  else if( m_recoName == "Velo" 
+	   || m_recoName == "FitTrack" 
+	   || m_recoName == "VeloTT"    ){
+  
+    q = tr.chi2PerDoF();
+  }
+  else{
+  // RadCor
+    debug()<<"no track quality available for type "<<m_recoName <<endmsg;
+  }
+  return q;
 }
