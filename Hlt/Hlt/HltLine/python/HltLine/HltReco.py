@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.12 2009-11-25 15:21:54 pkoppenb Exp $
+# $Id: HltReco.py,v 1.13 2009-12-02 13:40:15 albrecht Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -184,6 +184,12 @@ recoFwd = HltTrackUpgrade( 'Hlt1RecoForward'
 preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
                              , InputSelection = "TES:" + PatPV2DFit3D('HltRecoPV2D').OutputVerticesName
                              , RequirePositiveInputs = False
+                             , FilterDescriptor = ["VertexZPosition,>,-5000","VertexTransversePosition,>,-1"]
+                             , HistoDescriptor = {'VertexZPosition': ( 'PV2D: VertexZPosition',-200.,200.,200),
+                                                  'VertexZPositionBest': ( 'PV2D: Highest VertexZPosition',-20,200.,100),
+                                                  'VertexTransversePosition': ( 'PV2D: VertexTransversePosition',0,1,50),
+                                                  'VertexTransversePositionBest': ( 'PV2D: Highest VertexTransversePosition',0,1,50)
+                                                    }
                              , OutputSelection   = "PV2D" )
 
 
