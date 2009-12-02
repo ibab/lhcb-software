@@ -251,7 +251,7 @@ class Hlt2B2DXLinesConf(HltLinesConfigurableUser) :
         
         TF3Body = tfCombine(  name = 'TF3Body'
                               , inputSeq = [ DXTFInputParticles, TF2Body ]
-                              , decayDesc = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
+                              , decayDesc =[ "D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-","D*(2010)+ -> K*(892)0 K+", "D*(2010)+ -> K*(892)0 K-","D*(2010)+ -> K*(892)0 KS0"]
                               )
         
          
