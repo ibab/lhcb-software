@@ -1,4 +1,4 @@
-// $Id: HltFunctionFactories.cpp,v 1.33 2009-10-25 21:04:36 graven Exp $
+// $Id: HltFunctionFactories.cpp,v 1.34 2009-12-02 13:27:02 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -89,6 +89,9 @@ HltVertexFunctionFactory::~HltVertexFunctionFactory() {
 StatusCode HltVertexFunctionFactory::initialize() {
 
   StatusCode sc = HltTFunctionFactory<LHCb::RecVertex>::initialize();
+
+  declare<Hlt::VertexZPosition>("VertexZPosition");
+  declare<Hlt::VertexTransversePosition>("VertexTransversePosition");
 
   declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("VertexDz");
   declare<Hlt::DZ,zen::abs_min,const Hlt::VertexSelection>("FitVertexDz");

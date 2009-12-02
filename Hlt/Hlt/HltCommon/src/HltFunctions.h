@@ -1,4 +1,4 @@
-// $Id: HltFunctions.h,v 1.27 2009-10-12 20:02:24 graven Exp $
+// $Id: HltFunctions.h,v 1.28 2009-12-02 13:26:09 albrecht Exp $
 #ifndef HLTBASE_HLTFUNCTIONS_H 
 #define HLTBASE_HLTFUNCTIONS_H 1
 
@@ -464,6 +464,27 @@ namespace Hlt {
       return vertex.tracks()[1]->pt();
     }
     VertexTrack2PT* clone() const {return new VertexTrack2PT();}
+  };
+
+  class VertexZPosition : public Hlt::VertexFunction {
+  public:
+    explicit VertexZPosition() {}
+   
+    double operator() (const LHCb::RecVertex& vertex) const {
+      return vertex.position().z();
+    }
+    VertexZPosition* clone() const {return new VertexZPosition();}
+  };
+
+  class VertexTransversePosition : public Hlt::VertexFunction {
+  public:
+    explicit VertexTransversePosition() {}
+   
+    double operator() (const LHCb::RecVertex& vertex) const {
+      return std::sqrt(vertex.position().x()*vertex.position().x()
+		       +vertex.position().y()*vertex.position().y());
+    }
+    VertexTransversePosition* clone() const {return new VertexTransversePosition();}
   };
 
   ///* Return the number of tracks of a vertex
