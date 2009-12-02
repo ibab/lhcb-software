@@ -185,12 +185,12 @@ std::string Command::encodeResponse(int status,int nEvts=0, const std::string& e
   std::stringstream outstream;
   std::string out;
   if (status==0){
-    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "es5:errors"<< error.length() << ":" << error << "es7:commands" << data.name.length() << ":" << data.name << "e";
+    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "es5:errors"<< error.length() << ":" << error << "es7:commands" << data.name.length() << ":" << data.name << "e";
   } else if (status==1){
-    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "ees7:commands" << data.name.length() << ":" << data.name << "e";
+    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "ees7:commands" << data.name.length() << ":" << data.name << "e";
   } else if (status==2) {
-    outstream << "ds6:statusi" << status << "es6:paramsds7:sliceIDi" << data.sliceID << "es6:fileIDi" << data.fileID << "es5:nEvtsi" << nEvts << "ees7:commands" << data.name.length() << ":" << data.name << "e";
-  } 
+    outstream << "ds6:statusi" << status << "es6:paramsds6:fileIDi" << data.fileID << "es5:nEvtsi" << nEvts << "ees7:commands" << data.name.length() << ":" << data.name << "e";
+  }
   outstream >> out;
   return out;
 }

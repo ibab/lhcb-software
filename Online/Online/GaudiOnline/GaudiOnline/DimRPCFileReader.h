@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.h,v 1.11 2009-10-15 14:24:30 apuignav Exp $
+// $Id: DimRPCFileReader.h,v 1.12 2009-12-02 10:32:35 apuignav Exp $
 #ifndef GAUDIONLINE_DIMRPCFILEREADER_H
 #define GAUDIONLINE_DIMRPCFILEREADER_H
 
@@ -63,8 +63,6 @@ namespace LHCb  {
     std::string       m_idle;
     /// File ID info
     int               m_fileID;
-    /// Slice info
-    int               m_sliceID;
     /// Static DIM callback for command input
     static void cmndCallback(void* tag, void* address, int* size);
     /// Service for publishing info on read events

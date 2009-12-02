@@ -1,6 +1,8 @@
 Package: GaudiOnline
 Author:  Markus Frank
 
+! 2009-12-02 Albert Puig
+ - Removed sliceID info from DimRPCFileReader and DimRPCFileReaderCommand.
 
 ! 2009-11-12 Markus Frank
  - Add timeout algorithm. This algorithm may be used to trigger processing timeouts.

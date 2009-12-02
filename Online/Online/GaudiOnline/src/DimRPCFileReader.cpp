@@ -1,4 +1,4 @@
-// $Id: DimRPCFileReader.cpp,v 1.23 2009-10-21 07:05:33 frankb Exp $
+// $Id: DimRPCFileReader.cpp,v 1.24 2009-12-02 10:32:35 apuignav Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -35,7 +35,6 @@ DimRPCFileReader::DimRPCFileReader(const std::string& nam, ISvcLocator* svcLoc)
 {
   ::lib_rtl_create_lock(0,&m_lock);
   declareProperty("Incident",     m_incidentName="NEW_INPUT_FID");
-  declareProperty("SliceID" ,     m_sliceID=0);
 }
 
 /// Standard Destructor
@@ -71,9 +70,8 @@ StatusCode DimRPCFileReader::initialize()   {
   declareInfo("EvtCount",m_evtCount=0,"Number of events processed");
 
   m_command = new Command();
-  m_command->setSliceID( m_sliceID );
   std::stringstream outstream;
-  outstream << "ds6:statusi1es7:commands4:idles6:paramsds7:sliceIDi" << m_sliceID << "eee";
+  outstream << "ds6:statusi1es7:commands4:idles6:paramsdeee";
   outstream >> m_idle;
   m_reply = m_idle;
 
@@ -196,11 +194,6 @@ void DimRPCFileReader::handle(const Incident& inc)    {
 StatusCode DimRPCFileReader::run()   {  
   SmartIF<IAppMgrUI> ui(serviceLocator());
   if ( ui )    {
-    if ( m_command->data.sliceID < 0 )  {
-      m_reply = m_command->encodeResponse(0,0,"SliceID not set");
-      ::dis_update_service(m_rpc.first);
-      return error("Failed to get SliceID from JobOptions.");
-    }
     while(1) {
       m_receiveEvts = true;
       info ("Starting loop through events");
