@@ -160,6 +160,8 @@ class genClasses(genSrcUtils.genSrcUtils):
     cname = godClass['attrs']['name']
     hasDefaultConstructor = 0
     hasCopyConstructor = 0
+    if godClass['attrs']['defaultconstructor'] == 'FALSE':
+      hasDefaultConstructor = 1 
     if godClass.has_key('constructor'):                                         # are there any constrs defined
       for const in godClass['constructor']:
         if (not const['attrs'].has_key('argList')) and (not const.has_key('arg')):
