@@ -1,10 +1,10 @@
-# $Id: requirements,v 1.8 2009-10-20 07:44:47 marcin Exp $ 
+# $Id: requirements,v 1.9 2009-12-02 09:04:40 gcorti Exp $ 
 # =============================================================================
 # Created    : 2006-10-22
 # Maintainer : Vanya BELYAEV ibelyaev@physics.syr.edu
 # =============================================================================
 package           LbHidValley
-version           v2r2
+version           v2r3
 
 # =============== structure ===================================================
 branches          cmt doc src options LbHidValley 
