@@ -30,6 +30,8 @@ class TimePointEdit(QtGui.QWidget):
         self._edit = QtGui.QDateTimeEdit(self)
         self._edit.setObjectName("edit")
         self._edit.setTimeSpec(Qt.UTC)
+        self._edit.setContextMenuPolicy(Qt.NoContextMenu)
+        
         # Set the time range from cool ValidityKeyMin/Max.
         # Cannot use setTime_t because of the limited range.
         minTimeTuple = time.gmtime(cool.ValidityKeyMin / 1e9)
@@ -38,8 +40,8 @@ class TimePointEdit(QtGui.QWidget):
         maxTimeTuple = time.gmtime(cool.ValidityKeyMax / 1e9)
         maxDate = apply(QDate, maxTimeTuple[0:3])
         maxTime = apply(QTime, maxTimeTuple[3:6])
-        self._minDateTime = QDateTime(minDate, minTime)
-        self._maxDateTime = QDateTime(maxDate, maxTime)
+        self._minDateTime = QDateTime(minDate, minTime, Qt.UTC)
+        self._maxDateTime = QDateTime(maxDate, maxTime, Qt.UTC)
         self._edit.setDateTimeRange(self._minDateTime, self._maxDateTime)
         self._edit.setDisplayFormat("dd-MM-yyyy hh:mm:ss")
         self._edit.setCalendarPopup(True)
@@ -63,7 +65,28 @@ class TimePointEdit(QtGui.QWidget):
                                 QtGui.QSizePolicy.Minimum)
         self._layout.addWidget(self._max)
         
-        #self.setFrameShape(self.Box)
+        self.actionSet_to_minimum = QtGui.QAction(self)
+        self.actionSet_to_minimum.setObjectName("actionSet_to_minimum")
+        self.actionSet_to_minimum.setText("Set to &minimum")
+        self.addAction(self.actionSet_to_minimum)
+        QObject.connect(self.actionSet_to_minimum, SIGNAL("triggered()"),
+                        self.setToMinimum)
+        
+        self.actionSet_to_now = QtGui.QAction(self)
+        self.actionSet_to_now.setObjectName("actionSet_to_now")
+        self.actionSet_to_now.setText("Set to &now")
+        self.addAction(self.actionSet_to_now)
+        QObject.connect(self.actionSet_to_now, SIGNAL("triggered()"),
+                        self.setToNow)
+        
+        self.actionSet_to_maximum = QtGui.QAction(self)
+        self.actionSet_to_maximum.setObjectName("actionSet_to_maximum")
+        self.actionSet_to_maximum.setText("Set to ma&ximum")
+        self.addAction(self.actionSet_to_maximum)
+        QObject.connect(self.actionSet_to_maximum, SIGNAL("triggered()"),
+                        self.setToMaximum)
+        
+        self.setContextMenuPolicy(Qt.ActionsContextMenu)
         
         QtCore.QMetaObject.connectSlotsByName(self)
         
@@ -169,7 +192,7 @@ class TimePointEdit(QtGui.QWidget):
         if self._max.isChecked():
             return cool.ValidityKeyMax
         # FIXME: This is awkward, but I do not have enough resolution otherwise
-        d = self._edit.dateTime().toLocalTime()
+        d = self._edit.dateTime().toUTC()
         timeTuple = (d.date().year(), d.date().month(), d.date().day(),
                      d.time().hour(), d.time().minute(), d.time().second(),
                      0,0,-1)
@@ -182,7 +205,7 @@ class TimePointEdit(QtGui.QWidget):
             self._max.setChecked(True)
         else:
             # Cannot use setTime_t because of the limited range.
-            timeTuple = time.gmtime(valkey / 1e9)
+            timeTuple = time.gmtime(valKey / 1e9)
             d = apply(QDate, timeTuple[0:3])
             t = apply(QTime, timeTuple[3:6])
             self._edit.setDateTime(QDateTime(d, t))
@@ -193,6 +216,27 @@ class TimePointEdit(QtGui.QWidget):
     def emitValidityKeyChange(self):
         #self.emit(SIGNAL("validityKeyChange(cool::ValidityKey)"),self.toValidityKey())
         self.emit(SIGNAL("validityKeyChange"),self.toValidityKey())
+
+    ## Slot used to set the value equal to the minimum possible according to the
+    #  current constraints.
+    def setToMinimum(self):
+        spec = self._edit.timeSpec()
+        self.setDateTime(self.minimumDateTime().toTimeSpec(spec))
+    ## Slot used to set the value equal to the maximum possible according to the
+    #  current constraints.
+    def setToMaximum(self):
+        spec = self._edit.timeSpec()
+        self.setDateTime(self.maximumDateTime().toTimeSpec(spec))    
+    ## Slot used to set the value equal to the current time or to the closest
+    #  limit if it is out of bounds.
+    def setToNow(self):
+        spec = self._edit.timeSpec()
+        t = QDateTime.currentDateTime()
+        if t > self.maximumDateTime():
+            t = self.maximumDateTime()
+        elif t < self.minimumDateTime():
+            t = self.minimumDateTime()
+        self.setDateTime(t.toTimeSpec(spec))
 
 ## Simple customization of a QPlainTextEdit.
 #  The extensions to a QPlainTextEdit are a "find" dialog (activated with Ctrl+F

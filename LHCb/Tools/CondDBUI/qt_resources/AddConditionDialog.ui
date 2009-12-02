@@ -1,4 +1,5 @@
 <ui version="4.0" >
+ <author>Marco Clemencic</author>
  <class>AddConditionDialog</class>
  <widget class="QDialog" name="AddConditionDialog" >
   <property name="geometry" >
@@ -10,7 +11,7 @@
    </rect>
   </property>
   <property name="windowTitle" >
-   <string>Dialog</string>
+   <string>Add Condition</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout" >
    <item>
@@ -100,6 +101,9 @@
          </item>
          <item>
           <widget class="QPushButton" name="editKey" >
+           <property name="toolTip" >
+            <string>Edit the selected field</string>
+           </property>
            <property name="text" >
             <string>Edit</string>
            </property>
@@ -118,14 +122,18 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_3" >
       <item>
-       <widget class="QTableView" name="stackTable" />
-      </item>
-      <item>
        <widget class="QWidget" native="1" name="widget_3" >
         <layout class="QHBoxLayout" name="horizontalLayout_2" >
          <property name="margin" >
           <number>0</number>
          </property>
+         <item>
+          <widget class="QCheckBox" name="utc" >
+           <property name="text" >
+            <string>UTC</string>
+           </property>
+          </widget>
+         </item>
          <item>
           <spacer name="horizontalSpacer" >
            <property name="orientation" >
@@ -141,6 +149,9 @@
          </item>
          <item>
           <widget class="QToolButton" name="addButton" >
+           <property name="toolTip" >
+            <string>Add condition to the stack</string>
+           </property>
            <property name="text" >
             <string>add</string>
            </property>
@@ -152,6 +163,12 @@
          </item>
          <item>
           <widget class="QToolButton" name="removeButton" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+           <property name="toolTip" >
+            <string>Remove condition from the stack</string>
+           </property>
            <property name="text" >
             <string>remove</string>
            </property>
@@ -163,19 +180,46 @@
          </item>
          <item>
           <widget class="QToolButton" name="upButton" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+           <property name="toolTip" >
+            <string>Move condition up</string>
+           </property>
            <property name="text" >
             <string>up</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources.qrc" >
+             <normaloff>:/icons/up.png</normaloff>:/icons/up.png</iconset>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QToolButton" name="downButton" >
+           <property name="enabled" >
+            <bool>false</bool>
+           </property>
+           <property name="toolTip" >
+            <string>Move condition down</string>
+           </property>
            <property name="text" >
             <string>down</string>
+           </property>
+           <property name="icon" >
+            <iconset resource="Resources.qrc" >
+             <normaloff>:/icons/down.png</normaloff>:/icons/down.png</iconset>
            </property>
           </widget>
          </item>
         </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QTableView" name="conditionsStackView" >
+        <property name="selectionBehavior" >
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
        </widget>
       </item>
      </layout>
@@ -214,6 +258,7 @@
    </slots>
   </customwidget>
  </customwidgets>
+ <includes/>
  <resources>
   <include location="Resources.qrc" />
  </resources>
@@ -314,8 +359,93 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>addButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AddConditionDialog</receiver>
+   <slot>addCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>486</x>
+     <y>295</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>611</x>
+     <y>327</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AddConditionDialog</receiver>
+   <slot>removeCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>516</x>
+     <y>298</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>611</x>
+     <y>351</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>upButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AddConditionDialog</receiver>
+   <slot>moveUp()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>552</x>
+     <y>300</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>611</x>
+     <y>383</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>downButton</sender>
+   <signal>clicked()</signal>
+   <receiver>AddConditionDialog</receiver>
+   <slot>moveDown()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>582</x>
+     <y>297</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>611</x>
+     <y>416</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editKey</sender>
+   <signal>clicked()</signal>
+   <receiver>AddConditionDialog</receiver>
+   <slot>editCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>361</x>
+     <y>210</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>609</x>
+     <y>150</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>showHelp()</slot>
+  <slot>addCondition()</slot>
+  <slot>removeCondition()</slot>
+  <slot>moveUp()</slot>
+  <slot>moveDown()</slot>
+  <slot>editCondition()</slot>
  </slots>
 </ui>

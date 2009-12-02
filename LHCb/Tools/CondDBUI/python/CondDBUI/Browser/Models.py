@@ -3,7 +3,8 @@ from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTable
                           Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
                          QItemDelegate,
-                         QComboBox, QLineEdit)
+                         QComboBox, QLineEdit,
+                         QBrush, QFont)
 
 from PyCool import cool, walk as dbwalk
 
@@ -13,12 +14,15 @@ from Utils import *
 import PyCintex
 Helpers = PyCintex.gbl.CondDBUI.Helpers
 
-__all__ = ["CondDBNodesListModel",
+__all__ = ["setModelsIcons",
+           "CondDBNodesListModel",
            "CondDBStructureModel",
            "CondDBTagsListModel",
            "CondDBIoVModel",
            "CondDBPayloadFieldModel",
-           "setModelsIcons"]
+           "NodeFieldsModel",
+           "AddConditionsStackModel",
+           ]
 #import logging
 #logging.basicConfig(level=logging.INFO)
 #_log = logging.getLogger(__name__)
@@ -153,6 +157,7 @@ class CondDBStructureItem(object):
 
 
 ## ItemModel used by the CondDB tree view
+#  @todo: Re-implement using hasChildren, fetchMore and canFetchMore. http://doc.trolltech.com/4.4/model-view-model-subclassing.html#lazy-population-of-model-data
 class CondDBStructureModel(QAbstractItemModel):
     ## Constructor.
     #  @param db: CondDBUI.CondDB instance to use
@@ -508,9 +513,54 @@ class GlobalTagsListModel(QAbstractListModel):
             return QVariant("Tag")
         return QVariant()
 
+## Base class for functionalities shared by all the models handling IoVs
+class BaseIoVModel(QAbstractTableModel):
+    __pyqtSignals__ = ("setViewEnabled(bool)",
+                       "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)",
+                       #"dataChanged(const QModelIndex&,const QModelIndex&)"
+                       )
+    ## Constructor
+    def __init__(self, parent = None):
+        super(BaseIoVModel,self).__init__(parent)
+        # Property ShowUTC
+        self._showUTC = True
+        # Property DisplayFormat
+        self._format = None
+    ## Value of the property ShowUTC.
+    #  If set to True, the string returned for as data for the IoV table is UTC. 
+    def showUTC(self):
+        return self._showUTC
+    ## Set the property ShowUTC.
+    #  If set to True, the string returned for as data for the IoV table is UTC. 
+    def setShowUTC(self, value):
+        if self._showUTC != value:
+            self._showUTC = value
+            rows, cols = self.rowCount(), self.columnCount()
+            if rows and cols:
+                # Notify the view that the data has changed.
+                self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                          self.index(0,0),
+                          self.index(rows-1, cols-1))
+    ## Format to use to display the IoV limits in the table.
+    def displayFormat(self):
+        return self._format
+    ## Set the format to use to display the IoV limits in the table.
+    def setDisplayFormat(self, format):
+        self._format = format
+    ## Return the string representation of a validity key 
+    def validityKeyToString(self, valkey):
+        if valkey == cool.ValidityKeyMax:
+            s = "Max"
+        else:
+            dt = valKeyToDateTime(valkey)
+            if not self.showUTC():
+                dt = dt.toLocalTime()
+            s = dt.toString(self.displayFormat())
+        return s
 
 ## Model class for the list of IOVs
-class CondDBIoVModel(QAbstractTableModel):
+#  @todo: Re-implement using hasChildren, fetchMore and canFetchMore. http://doc.trolltech.com/4.4/model-view-model-subclassing.html#lazy-population-of-model-data
+class CondDBIoVModel(BaseIoVModel):
     __pyqtSignals__ = ("setViewEnabled(bool)",
                        "setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)",
                        #"dataChanged(const QModelIndex&,const QModelIndex&)"
@@ -529,9 +579,6 @@ class CondDBIoVModel(QAbstractTableModel):
     #  Initializes some internal data.
     def __init__(self, db = None, path = None, channel = None, tag = None, parent = None):
         super(CondDBIoVModel,self).__init__(parent)
-        
-        # Property ShowUTC
-        self._showUTC = True
         
         # "_since" is the value requested by the user,
         # "_actualSince" is the one in the cache
@@ -794,14 +841,7 @@ class CondDBIoVModel(QAbstractTableModel):
             data = self.allIoVs()[self._sinceIndex + index.row()]
             if role == Qt.DisplayRole:
                 valkey = data[index.column()]
-                if valkey == cool.ValidityKeyMax:
-                    s = "Max"
-                else:
-                    dt = valKeyToDateTime(valkey)
-                    if not self.showUTC():
-                        dt = dt.toLocalTime()
-                    s = dt.toString(self.displayFormat())
-                return QVariant(s)
+                return QVariant(self.validityKeyToString(valkey))
             elif role == Qt.ToolTipRole:
                 s = "Insertion time: %s" % data[self.INSERTION_TIME]
                 return QVariant(s)
@@ -847,31 +887,6 @@ class CondDBIoVModel(QAbstractTableModel):
         if self._allIoVs and self._selectedIndex is not None:
             return self._allIoVs[self._selectedIndex + self._sinceIndex][self.PAYLOAD]
         return None
-    
-    ## Value of the property ShowUTC.
-    #  If set to True, the string returned for as data for the IoV table is UTC. 
-    def showUTC(self):
-        return self._showUTC
-    
-    ## Set the property ShowUTC.
-    #  If set to True, the string returned for as data for the IoV table is UTC. 
-    def setShowUTC(self, value):
-        if self._showUTC != value:
-            rows, cols = self.rowCount(), self.columnCount()
-            if rows and cols:
-                # Notify the view that the data has changed.
-                self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
-                          self.index(0,0),
-                          self.index(rows-1, cols-1))
-        self._showUTC = value
-
-    ## Format to use to display the IoV limits in the table.
-    def displayFormat(self):
-        return self._format
-    
-    ## Set the format to use to display the IoV limits in the table.
-    def setDisplayFormat(self, format):
-        self._format = format
 
 ## Model class to retrieve the available fields in a folder.
 class CondDBPayloadFieldModel(QAbstractListModel):
@@ -1071,3 +1086,125 @@ class NodeFieldsModel(QAbstractTableModel):
         del self.fields[position:position+rows]
         self.endRemoveRows()
         return True
+
+## Simple class to hold the data in the AddConditionsStackModel.
+class ConditionStackItem(object):
+    ## Initialize
+    def __init__(self, since, until, channel, data):
+        self.since = since
+        self.until = until
+        if not channel:
+            channel = 0
+        self.channel = channel
+        self.data = dict(data)
+
+## Class for the management of the list conditions in the AddConditions dialog.
+class AddConditionsStackModel(BaseIoVModel):
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, parent = None):
+        super(AddConditionsStackModel, self).__init__(parent)
+        self.conditions = []
+        # list of conditions (indexes) with conflicts
+        self.conflicts = set()
+    ## Number of fields in the range.
+    def rowCount(self, parent = None):
+        return len(self.conditions)
+    ## Number of columns in the table. 
+    def columnCount(self, parent = None):
+        return 3
+    ## Get one of the conditions in the stack
+    def __getitem__(self, item):
+        return self.conditions[item]
+    ## iterate on the conditions of the stack
+    def __iter__(self):
+        return self.conditions.__iter__()
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            r = index.row()
+            if role == Qt.DisplayRole:
+                c = index.column()
+                cond = self.conditions[r]
+                if c == 2:
+                    return QVariant(str(cond.channel))
+                elif c == 0:
+                    valkey = cond.since
+                else:
+                    valkey = cond.until
+                return QVariant(self.validityKeyToString(valkey))
+            elif r in self.conflicts:
+                # Visual feedback for conflicts
+                if role == Qt.ToolTipRole:
+                    return QVariant("This Interval of Validity is overlapping with another.")
+                elif role == Qt.BackgroundRole:
+                    return QVariant(QBrush(Qt.red))
+                elif role == Qt.FontRole:
+                    font = QFont()
+                    font.setItalic(True)
+                    return QVariant(font)
+        return QVariant()
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return QVariant(("Since", "Until", "Channel")[section])
+            else:
+                return QVariant()
+        return QVariant()
+    ## Check for conflicts and fill the conflicts list:
+    def _checkConflicts(self):
+        count = len(self.conditions)
+        new_conflicts = set()
+        for i in range(count-1):
+            ci = self.conditions[i]
+            for j in range(i+1, count):
+                cj = self.conditions[j]
+                # There is an overlap if the intersection of two intervals is not empty
+                s = max(ci.since, cj.since)
+                u = min(ci.until, cj.until)
+                if (ci.channel == cj.channel) and (u > s):
+                    new_conflicts.add(i)
+                    new_conflicts.add(j)
+        result = bool(new_conflicts)
+        self.emit(SIGNAL("conflictsChanged(bool)"), result)
+        if new_conflicts != self.conflicts:
+            #self.emit(SIGNAL("layoutAboutToBeChanged()"))
+            self.conflicts = new_conflicts
+            #self.emit(SIGNAL("layoutChanged()"))
+        return result
+    ## Add a new condition object to the stack
+    def addCondition(self, since, until, channel, data):
+        condition = ConditionStackItem(since = since, until = until,
+                                       channel = channel, data = data)
+        position = self.rowCount()
+        self.beginInsertRows(QModelIndex(), position, position)
+        self.conditions.append(condition)
+        self._checkConflicts()
+        self.endInsertRows()
+    ## Remove a condition object from the stack
+    def removeCondition(self, position):
+        self.beginRemoveRows(QModelIndex(), position, position)
+        del self.conditions[position]
+        self._checkConflicts()
+        self.endRemoveRows()
+    ## Remove all the conditions in the selection (a QModelIndexList).
+    def removeConditions(self, selection):
+        positions = list(set([i.row() for i in selection]))
+        positions.sort()
+        if positions:
+            self.beginRemoveRows(QModelIndex(), positions[0], positions[-1])
+            while positions:
+                del self.conditions[positions.pop()]
+            self._checkConflicts()
+            self.endRemoveRows()
+    def moveUp(self, row):
+        if row > 0 and row < len(self.conditions):
+            self.emit(SIGNAL("layoutAboutToBeChanged()"))
+            self.conditions.insert(row-1, self.conditions.pop(row))
+            self.emit(SIGNAL("layoutChanged()"))
+    def moveDown(self, row):
+        if row >= 0 and row < (len(self.conditions)-1):
+            self.emit(SIGNAL("layoutAboutToBeChanged()"))
+            self.conditions.insert(row+1, self.conditions.pop(row))
+            self.emit(SIGNAL("layoutChanged()"))

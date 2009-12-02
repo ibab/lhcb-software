@@ -1,4 +1,5 @@
 <ui version="4.0" >
+ <author>Marco Clemencic</author>
  <class>DumpToFilesDialog</class>
  <widget class="QDialog" name="DumpToFilesDialog" >
   <property name="geometry" >
@@ -145,6 +146,7 @@
    </slots>
   </customwidget>
  </customwidgets>
+ <includes/>
  <resources/>
  <connections>
   <connection>

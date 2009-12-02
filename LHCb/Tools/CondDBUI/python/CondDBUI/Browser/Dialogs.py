@@ -14,10 +14,13 @@ from PyQt4.QtGui import (QDialog,
                          QMessageBox,
                          QValidator,
                          QRegExpValidator,
+                         QHeaderView,
+                         QItemSelectionModel,
                          QTextDocument)
 
 from Models import (NodeFieldsModel, NodeFieldsDelegate, GlobalTagsListModel,
-                    CondDBNodesListModel, CondDBPayloadFieldModel)
+                    CondDBNodesListModel, CondDBPayloadFieldModel,
+                    AddConditionsStackModel)
 
 from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
@@ -25,6 +28,7 @@ from Ui_NewNodeDialog import Ui_NewNodeDialog
 from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
 from Ui_AddConditionDialog import Ui_AddConditionDialog
 from Ui_FindDialog import Ui_FindDialog
+from Ui_EditConditionPayloadDialog import Ui_EditConditionPayloadDialog
 
 import os
 
@@ -267,6 +271,114 @@ class ProgressDialog(QProgressDialog):
         else:
             QProgressDialog.setLabelText(self, text)
 
+_xml_template_empty = """<?xml version="1.0" encoding="ISO-8859-1"?>
+<!DOCTYPE DDDB SYSTEM "conddb:/DTD/structure.dtd">
+<DDDB>
+</DDDB>
+"""
+
+## Editor of conditions payloads
+class EditConditionPayloadDialog(QDialog, Ui_EditConditionPayloadDialog):
+    ## Constructor.
+    def __init__(self, data, parent = None, flags = Qt.Dialog, externalEditor = None):
+        # Base class constructor.
+        super(EditConditionPayloadDialog, self).__init__(parent, flags)
+        # Prepare the GUI.
+        self.setupUi(self)
+        if not data:
+            raise RuntimeError("Cannot start EditConditionPayloadDialog with empty data")
+        self.data = dict(data)
+        self._field = None
+        self._externalEditor = externalEditor
+        if not self._externalEditor:
+            self.externalEditorButton.hide()
+        # useful to protect the updateData method when selectField is selected
+        self._selectingField = False
+        keys = self.data.keys()
+        keys.sort()
+        self.fields.addItems(keys)
+        self.fields.setEnabled(len(keys) > 1)
+        self.selectField(keys[0])
+    ## Fill the editor text from a file
+    def importFromFile(self):
+        filename = QFileDialog.getOpenFileName(self)
+        if filename:
+            data = open(str(filename)).read()
+            self.editor.setPlainText(data)
+    ## Save the current content of the text box to a file
+    def exportToFile(self):
+        filename = QFileDialog.getSaveFileName(self)
+        if filename:
+            xmlFile = open(str(filename), 'w')
+            xmlFile.write(str(self.editor.toPlainText()))
+            xmlFile.close()
+    ## Save the content of the editor to a temporary file and open it with an
+    #  external editor. 
+    def openInExternalEditor(self):
+        import tempfile
+        fd, name = tempfile.mkstemp(suffix = ".xml")
+        os.fdopen(fd, "w").write(str(self.editor.toPlainText()))
+        try:
+            from subprocess import Popen
+            Popen([self._externalEditor, name]).wait()
+            data = open(name).read()
+            self.editor.setPlainText(data)
+        finally:
+            os.remove(name)
+    ## insert text at the current cursor position in the editor
+    def _insertText(self, text, *args):
+        if args:
+            text = text % args
+        self.editor.textCursor().insertText(text)
+    ## Insert a default condition tag at the current cursor position
+    def insertCondition(self):
+        class_id = 5
+        name = "##_CONDITION_NAME_HERE_##"
+        text = '<condition classID="%d" name="%s">\n\n</condition>'
+        self._insertText(text, class_id, name)
+    ## Insert a default alignment condition tag at the current cursor position
+    def insertAlignmentCondition(self):
+        name = "##_CONDITION_NAME_HERE_##"
+        text = """<condition classID="6" name="%s">
+<paramVector name="dPosXYZ" type="double">0 0 0</paramVector>
+<paramVector name="dRotXYZ" type="double">0 0 0</paramVector>
+<paramVector name="pivotXYZ" type="double">0 0 0</paramVector>
+</condition>"""
+        self._insertText(text, name)
+    ## Insert a default param tag at the current cursor position
+    def insertParam(self):
+        name = "##_PARAM_NAME_HERE_##"
+        type_id = '##_INT_DOUBLE_STRING_##'
+        value = ''
+        text = '<param name="%s" type="%s">%s</param>'
+        self._insertText(text, name, type_id, value)
+    ## Insert a default paramvector tag at the current cursor position
+    def insertParamVector(self):
+        name = "##_PARAM_NAME_HERE_##"
+        type_id = '##_INT_DOUBLE_STRING_##'
+        value = ''
+        text = '<paramVector name="%s" type="%s">%s</paramVector>'
+        self._insertText(text, name, type_id, value)
+    ## Change the content of the edit box when another field is selected
+    def selectField(self, field):
+        self._field = field = str(field)
+        if field in self.data:
+            if self.fields.currentText() != field:
+                idx = self.fields.findText(field)
+                self.fields.setCurrentIndex(idx)
+            self.editor.setDocumentTitle(field)
+            self._selectingField = True # protect the updateData function
+            if self.data[field]: 
+                self.editor.setPlainText(self.data[field])
+            else:
+                # if the data is empty, use the template
+                self.editor.setPlainText(_xml_template_empty)
+            self._selectingField = False
+    ## Update the internal buffer with the content of the editor box
+    def updateData(self):
+        if not self._selectingField:
+            self.data[self._field] = str(self.editor.toPlainText())
+
 ## Dialog to prepare the insertion of new conditions
 class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     #__pyqtSignals__ = ("folderChanged(QString)")
@@ -279,22 +391,36 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         self.folderModel = CondDBNodesListModel(self.db, parent = self,
                                                 nodeType = CondDBNodesListModel.FOLDER)
         self.fieldsModel = CondDBPayloadFieldModel(self.db, parent = self)
+        self.conditionsStack = AddConditionsStackModel(parent = self)
+        self.buffer = {}
         # Prepare the GUI.
         self.setupUi(self)
         self.folder.setModel(self.folderModel)
         self.fields.setModel(self.fieldsModel)
+        self.conditionsStackView.setModel(self.conditionsStack)
+        self.conditionsStackView.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
         self.folder.setCurrentIndex(-1)
         self.until.setMaxChecked(True)
-        self.since.setDateTime(QDateTime.currentDateTime())
+        self.since.setToNow()
         self.channel.setText("0")
+        # Bind signals and slots
         QObject.connect(self.folder, SIGNAL("currentIndexChanged(QString)"),
                         self.fieldsModel.setPath)
         QObject.connect(self.fieldsModel, SIGNAL("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"),
                         self.fields.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
-    
+        QObject.connect(self.utc, SIGNAL("stateChanged(int)"),
+                        self.conditionsStack.setShowUTC)
+        QObject.connect(self.conditionsStackView.selectionModel(),
+                        SIGNAL("selectionChanged(QItemSelection,QItemSelection)"),
+                        self.changedSelection)
+        QObject.connect(self.conditionsStack, SIGNAL("conflictsChanged(bool)"),
+                        self.buttonBox.button(QDialogButtonBox.Ok), SLOT("setDisabled(bool)"))
+        # Use a consistent DisplayFormat
+        self.conditionsStack.setShowUTC(self.utc.checkState())
+        self.conditionsStack.setDisplayFormat(self.since.displayFormat())
     ## Set the value of the channel field.
     def setChannel(self, ch):
-        if ch:
+        if ch or ch == 0:
             ch = str(ch)
         else:
             ch = ""
@@ -319,6 +445,15 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     def setLocation(self, folder, channel):
         self.setFolder(folder)
         self.setChannel(channel)
+        
+    ## ShowUTC property
+    def setShowUTC(self, value):
+        if value != self.getShowUTC():
+            self.utc.setChecked(value)
+            self.conditionsStack.setShowUTC(value)
+    ## ShowUTC property
+    def getShowUTC(self):
+        return self.utc.checkState()
     
     ## Show message box with instructions for the dialog.
     def showHelp(self):
@@ -332,8 +467,63 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
 <li>repeat steps 2-4 for all the intervals of validity needed</li>
 <li>click on the "Ok" button to commit the changes to the database</li>
 </ol></body></html>""")
-        mb.setStandardButtons(QMessageBox.Ok);
+        mb.setStandardButtons(QMessageBox.Ok)
         mb.exec_()
+
+    ## Add the edited condition to the stack
+    def addCondition(self):
+        self.conditionsStack.addCondition(since   = self.since.toValidityKey(),
+                                          until   = self.until.toValidityKey(),
+                                          channel = self.getChannel(),
+                                          data    = self.buffer)
+    ## Remove the selected condition from the stack
+    def removeCondition(self):
+        selection = self.conditionsStackView.selectedIndexes()
+        self.conditionsStack.removeConditions(selection)
+    ## Move the selected condition up in the stack
+    def moveUp(self):
+        selection = set([i.row() for i in self.conditionsStackView.selectedIndexes()])
+        if len(selection) == 1:
+            row = selection.pop()
+            self.conditionsStack.moveUp(row)
+            row -= 1
+            if row >= 0:
+                index = self.conditionsStack.index(row, 0)
+                selmodel = self.conditionsStackView.selectionModel()
+                selmodel.select(index,
+                                QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows)
+    ## Move the selected condition down in the stack
+    def moveDown(self):
+        selection = set([i.row() for i in self.conditionsStackView.selectedIndexes()])
+        if len(selection) == 1:
+            row = selection.pop()
+            self.conditionsStack.moveDown(row)
+            row += 1
+            if row < self.conditionsStack.rowCount():
+                index = self.conditionsStack.index(row, 0)
+                selmodel = self.conditionsStackView.selectionModel()
+                selmodel.select(index,
+                                QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows)
+    def changedSelection(self, newSelection, oldSelection):
+        selection = self.conditionsStackView.selectedIndexes()
+        rows = set([i.row() for i in selection])
+        count = len(rows)
+        self.upButton.setEnabled(count == 1)
+        self.downButton.setEnabled(count == 1)
+        self.removeButton.setEnabled(count != 0)
+        if count == 1:
+            row = rows.pop()
+            cond = self.conditionsStack[row]
+            self.since.setValidityKey(cond.since)
+            self.until.setValidityKey(cond.until)
+            self.setChannel(cond.channel)
+            self.buffer = dict(cond.data) # I make a copy for safety
+    ## Display the condition editor
+    def editCondition(self):
+        d = EditConditionPayloadDialog(self.buffer, self)
+        d.selectField(self.fieldsModel.getFieldName())
+        if d.exec_():
+            self.buffer.update(d.data)
 
 ## Simple "find" dialog.
 class FindDialog(QDialog, Ui_FindDialog):
@@ -423,3 +613,4 @@ class FindDialog(QDialog, Ui_FindDialog):
     def doFind(self):
         self.emit(SIGNAL("find(QString,QTextDocument::FindFlags,bool)"),
                   self._text, self._findFlags, self._wrappedSearch)
+

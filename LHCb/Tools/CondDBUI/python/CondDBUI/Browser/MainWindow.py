@@ -99,7 +99,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         self.iovView.selectionModel(), SLOT("setCurrentIndex(QModelIndex,QItemSelectionModel::SelectionFlags)"))
         QObject.connect(self.iovUTCCheckBox, SIGNAL("stateChanged(int)"), iovsmodel.setShowUTC)
         iovsmodel.setShowUTC(self.iovUTCCheckBox.checkState())
-        # Use a consistent dysplayFormat 
+        # Use a consistent DisplayFormat 
         iovsmodel.setDisplayFormat(self.sinceFilterWidget.displayFormat())
         
         # connection for the fields model
@@ -605,9 +605,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def addCondition(self):
         #self._unimplemented()
         d = AddConditionDialog(self)
-        apply(d.setLocation, self._path)
+        d.setShowUTC(self.iovUTCCheckBox.checkState())
+        folder, channel = self._path
+        d.setLocation(folder, channel)
+        payload = self.models["iovs"].getPayload()
+        if payload:
+            d.buffer = payload
         if d.exec_():
-            print d.getFolder(), d.getChannel()
+            from Utils import BusyCursor
+            _bc = BusyCursor()
+            data = []
+            for cond in d.conditionsStack:
+                data.append({"since": cond.since,
+                             "until": cond.until,
+                             "channel": int(cond.channel),
+                             "payload": cond.data})
+            folder = d.getFolder()
+            self.db.storeXMLStringList(folder, data)
+            self._refreshModels(folder)
     
     ## Create a new tag
     def newTag(self):
@@ -619,20 +634,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     ## Display context menu for the tree view
     def showHierarchyContextMenu(self, position):
-        actions = []
         index = self.hierarchyTreeView.indexAt(position)
         if index.isValid():
+            menu = QMenu(self)
             item = index.internalPointer()
-            actions.append(self.actionCopy_path)
-            actions.append(self.actionNew_Tag)
             if item.leaf:
-                actions.append(self.actionAdd_Condition)
+                menu.addAction(self.actionAdd_Condition)
             else:
-                actions.append(self.actionNew_Node)
-            actions.append(self.actionDelete_Node)
-        if actions:
-            QMenu.exec_(actions, self.hierarchyTreeView.mapToGlobal(position))
-        
+                menu.addAction(self.actionNew_Node)
+            menu.addAction(self.actionNew_Tag)
+            menu.addSeparator()
+            menu.addAction(self.actionCopy_path)
+            menu.addSeparator()
+            menu.addAction(self.actionDelete_Node)
+            menu.exec_(self.hierarchyTreeView.mapToGlobal(position))
+    
     ## Copy the current selected path to the clipboard.
     def copyPathToClipboard(self):
         QApplication.clipboard().setText(self._path[0])

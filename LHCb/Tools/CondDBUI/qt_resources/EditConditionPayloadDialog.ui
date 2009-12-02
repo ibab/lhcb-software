@@ -1,0 +1,317 @@
+<ui version="4.0" >
+ <author>Marco Clemencic</author>
+ <class>EditConditionPayloadDialog</class>
+ <widget class="QDialog" name="EditConditionPayloadDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>709</width>
+    <height>441</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Edit Condition Payload</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QWidget" native="1" name="fieldsLayout" >
+     <layout class="QHBoxLayout" name="horizontalLayout_2" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QComboBox" name="fields" >
+        <property name="sizeAdjustPolicy" >
+         <enum>QComboBox::AdjustToContents</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="horizontalSpacer" >
+        <property name="orientation" >
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0" >
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" native="1" name="buttons" >
+     <layout class="QHBoxLayout" name="horizontalLayout" >
+      <property name="margin" >
+       <number>0</number>
+      </property>
+      <item>
+       <widget class="QToolButton" name="importButton" >
+        <property name="text" >
+         <string>&amp;Import</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="exportButton" >
+        <property name="text" >
+         <string>E&amp;xport</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="externalEditorButton" >
+        <property name="text" >
+         <string>&amp;External editor</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertConditionButton" >
+        <property name="text" >
+         <string>&lt;&amp;condition></string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertAlignCondButton" >
+        <property name="text" >
+         <string>&lt;&amp;align.condition></string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertParamButton" >
+        <property name="text" >
+         <string>&lt;&amp;param></string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QToolButton" name="insertParamVectorButton" >
+        <property name="text" >
+         <string>&lt;param&amp;vector></string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="SearchableTextEdit" name="editor" />
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>SearchableTextEdit</class>
+   <extends>QPlainTextEdit</extends>
+   <header>CondDBUI/Browser/Widgets.h</header>
+  </customwidget>
+ </customwidgets>
+ <includes/>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>227</x>
+     <y>420</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>295</x>
+     <y>426</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>importButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>importFromFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>51</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>48</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>exportButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>exportToFile()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>113</x>
+     <y>51</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>90</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>externalEditorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>openInExternalEditor()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>185</x>
+     <y>50</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>128</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertConditionButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>insertCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>306</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>4</x>
+     <y>164</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertAlignCondButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>insertAlignmentCondition()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>418</x>
+     <y>44</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>197</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertParamButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>insertParam()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>232</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>insertParamVectorButton</sender>
+   <signal>clicked()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>insertParamVector()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>618</x>
+     <y>49</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>3</x>
+     <y>267</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fields</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>selectField(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>64</x>
+     <y>19</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>146</x>
+     <y>3</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>editor</sender>
+   <signal>textChanged()</signal>
+   <receiver>EditConditionPayloadDialog</receiver>
+   <slot>updateData()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>43</x>
+     <y>317</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>2</x>
+     <y>317</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>importFromFile()</slot>
+  <slot>exportToFile()</slot>
+  <slot>openInExternalEditor()</slot>
+  <slot>insertCondition()</slot>
+  <slot>insertAlignmentCondition()</slot>
+  <slot>insertParam()</slot>
+  <slot>insertParamVector()</slot>
+  <slot>selectField(QString)</slot>
+  <slot>updateData()</slot>
+ </slots>
+</ui>
