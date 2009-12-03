@@ -4,6 +4,11 @@
 ! Purpose     : LHCb Simulation Application with Geant4
 !-----------------------------------------------------------------------------
 
+! 2009-12-03 - Victor Coco
+ - Modified the Configuration.py in order that VeloPix can be used (add
+   it to the detector list in __apply_configuration and uncomment the call to
+   VeloPix monitoring in configureMoni)
+
 !========================= Gauss v38r0 2009-11-25 ============================
 ! 2009-11-25 - Silvia Miglioranzi
  - Modified the Configuration.py in order to check the compatibility of the 

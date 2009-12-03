@@ -1,7 +1,7 @@
 """
 High level configuration tools for Gauss
 """
-__version__ = "$Id: Configuration.py,v 1.22 2009-11-25 10:17:23 silviam Exp $"
+__version__ = "$Id: Configuration.py,v 1.23 2009-12-03 16:42:56 cocov Exp $"
 __author__  = "Gloria Corti <Gloria.Corti@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -396,11 +396,9 @@ class Gauss(LHCbConfigurableUser):
             
             ## Set the VeloMonitor
             if len(self.getProp('DetectorMoni')['VELO'])> 0:
-                if self.getProp('DetectorMoni')['VELO'].count('VeloPix') > 0 : 
-                    ## ONLY FOR GAUSS v38r0
-                    ## from Configurables import   VeloPixGaussMoni
-                    ## detMoniSeq.Members += [ VeloPixGaussMoni( "VeloPixGaussMoni" + slot ) ]
-                    print 'Wait for Gauss v38r0'
+                if self.getProp('DetectorMoni')['VELO'].count('VeloPix') > 0 :
+                    from Configurables import   VeloPixGaussMoni
+                    detMoniSeq.Members += [ VeloPixGaussMoni( "VeloPixGaussMoni" + slot ) ]
                 else :
                     detMoniSeq.Members += [ VeloGaussMoni( "VeloGaussMoni" + slot ) ]
                     
@@ -893,7 +891,6 @@ class Gauss(LHCbConfigurableUser):
 
             # Data packing ...
             if self.getProp("EnablePack") :
-
                 packing = GaudiSequencer(self.slotName(slot)+"EventDataPacking")
                 simSlotSeq.Members += [ packing ]
                 SimConf().PackingSequencers[slot] = packing
@@ -1223,18 +1220,20 @@ class Gauss(LHCbConfigurableUser):
         # CRJ : Propagate detector list to SimConf. Probably could be simplified a bit
         #       by sychronising the options in Gauss() and SimConf()
         detlist = []
-        if 'Velo'   in self.getProp('DetectorSim')['VELO'] : detlist += ['Velo']
-        if 'PuVeto' in self.getProp('DetectorSim')['VELO'] : detlist += ['PuVeto']
-        if 'TT'     in self.getProp('DetectorSim')['TT']   : detlist += ['TT']
-        if 'IT'     in self.getProp('DetectorSim')['IT']   : detlist += ['IT']
-        if 'OT'     in self.getProp('DetectorSim')['OT']   : detlist += ['OT']
+        if 'Velo'    in self.getProp('DetectorSim')['VELO'] : detlist += ['Velo']
+        if 'PuVeto'  in self.getProp('DetectorSim')['VELO'] : detlist += ['PuVeto']
+        if 'VeloPix' in self.getProp('DetectorSim')['VELO'] : detlist += ['VeloPix']
+        if 'TT'      in self.getProp('DetectorSim')['TT']   : detlist += ['TT']
+        if 'IT'      in self.getProp('DetectorSim')['IT']   : detlist += ['IT']
+        if 'OT'      in self.getProp('DetectorSim')['OT']   : detlist += ['OT']
         if len(self.getProp('DetectorSim')['RICH'])>0      : detlist += ['Rich']
         if len(self.getProp('DetectorSim')['MUON'])>0      : detlist += ['Muon']
-        if 'Spd'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Spd']
-        if 'Prs'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Prs']
-        if 'Ecal'   in self.getProp('DetectorSim')['CALO'] : detlist += ['Ecal']
-        if 'Hcal'   in self.getProp('DetectorSim')['CALO'] : detlist += ['Hcal']
+        if 'Spd'     in self.getProp('DetectorSim')['CALO'] : detlist += ['Spd']
+        if 'Prs'     in self.getProp('DetectorSim')['CALO'] : detlist += ['Prs']
+        if 'Ecal'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Ecal']
+        if 'Hcal'    in self.getProp('DetectorSim')['CALO'] : detlist += ['Hcal']
         SimConf().setProp("Detectors",detlist)
+
 
         # Don't want SIM data unpacking enabled in DoD service
         SimConf().EnableUnpack = False
