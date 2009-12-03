@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.9 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.10 2009-12-03 18:46:37 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -137,14 +137,14 @@ void ST::STTAEClusterMonitor::bookHistograms() {
         }
         if(m_profs_ADCsVsSampleByServiceBox[quadrant] == 0) {
           m_profs_ADCsVsSampleByServiceBox[quadrant] = bookProfile1D("ADC MPV vs sampling point"+quadrant,
-                                                                     -m_maxSample, m_maxSample, m_nSamples);
+                                                                     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
         }
       } // End of TT condition
       if(m_plotBySvcBox) {
         m_2ds_ADCsVsSampleByServiceBox[svcBox] = book2D("Cluster ADC values vs sampling point "+svcBox,
                                                         -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60);
         m_profs_ADCsVsSampleByServiceBox[svcBox] = bookProfile1D("ADC MPV vs sampling point "+svcBox,
-                                                                 -m_maxSample, m_maxSample, m_nSamples);
+                                                                 -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
       }
     } // End of service box loop
   } // End of service box condition
@@ -162,7 +162,7 @@ void ST::STTAEClusterMonitor::bookHistograms() {
       m_2ds_ADCsVsSampleByDetRegion[region] = book2D("Cluster ADC values vs sampling point "+region,
                                                      -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60);
       m_profs_ADCsVsSampleByDetRegion[region] = bookProfile1D("ADC MPV vs sampling point "+region,
-                                                              -m_maxSample, m_maxSample, m_nSamples);
+                                                              -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
     };
   }
 }

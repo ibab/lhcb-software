@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.12 2009-11-12 20:08:37 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.13 2009-12-03 18:46:37 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -9,11 +9,16 @@
 #include "Kernel/ISTReadoutTool.h"
 #include "Kernel/LHCbConstants.h"
 
+// ODIN..
+#include "Event/ODIN.h"
+
 // STTELL1Event
 #include "Event/STTELL1Data.h"
 
-// AIDA
+// AIDA/root histograms
 #include "AIDA/IProfile1D.h"
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TProfile.h"
 
 // standard
 #include "gsl/gsl_math.h"
@@ -48,6 +53,9 @@ STNZSMonitor::STNZSMonitor( const std::string& name,
   declareProperty("CheckNoiseCalculation", m_checkCalculation=false);
   // Limit calculation to vector of tell1s given in terms of TELLID (eg TTTELL1 = 1) 
   declareProperty("LimitToTell",      m_limitToTell     ); 
+
+  // Use ODIN time in histograms
+  declareProperty("UseODINTime", m_useODINTime = false);
 
   /// Noise calculation tool
   declareProperty("NoiseToolType",m_noiseToolType="ST::STNoiseCalculationTool");
@@ -105,11 +113,27 @@ void STNZSMonitor::bookHistograms() {
 
 StatusCode STNZSMonitor::execute() { 
   m_evtNumber++;
+
+  // Get the time of the first event and convert to a string for the histogram title.
+  if(m_evtNumber == 1) {
+    if(m_useODINTime) {
+      m_ODIN = get<ODIN>(LHCb::ODINLocation::Default); 
+      const Gaudi::Time odinTime = m_ODIN->eventTime();
+      m_odinEvent  = "(#"+boost::lexical_cast<std::string>(m_ODIN->runNumber());
+      m_odinEvent += " on "+boost::lexical_cast<std::string>(odinTime.day(0));
+      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.month(0)+1);
+      m_odinEvent += "/"+boost::lexical_cast<std::string>(odinTime.year(0));
+      m_odinEvent += " @ "+boost::lexical_cast<std::string>(odinTime.hour(0)); 
+      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.minute(0)); 
+      m_odinEvent += ":"+boost::lexical_cast<std::string>(odinTime.second(0))+")"; 
+    }
+  }
+
   // Skip first m_skipEvents. Useful when running over CMS data.
   if( m_evtNumber < m_skipEvents ) {
     return StatusCode::SUCCESS;
   }
- 
+
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();
 
@@ -155,15 +179,14 @@ StatusCode STNZSMonitor::finalize() {
          !binary_search(m_limitToTell.begin(), m_limitToTell.end(), (this->readoutTool())->SourceIDToTELLNumber((*itH).first))) {
       continue;
     }
-    
-    updateNoiseHistogram( (*itH).first );
+    updateNoiseHistogram( (*itH).first, m_useODINTime );
     if(m_checkCalculation) dumpNoiseCalculation( (*itH).first );
   } 
 
   return ST::HistoAlgBase::finalize();// must be called after all other actions
 }
 
-void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID) {
+void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle) {
   // Get the histogram and reset it in case it is already booked. 
   if( m_noiseHistos.find(sourceID) != m_noiseHistos.end() && m_pedestalHistos.find(sourceID) != m_pedestalHistos.end()) { 
 
@@ -181,6 +204,12 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID) {
     for(; itNoise != m_noiseTool->cmsNoiseEnd(sourceID); ++itNoise, ++itPed, ++strip) {
       noiseHist->fill( strip, (*itNoise) );
       pedestalHist->fill( strip, (*itPed) );
+    }
+    if(updateTitle) {
+      TProfile* profNoise = Gaudi::Utils::Aida2ROOT::aida2root ( noiseHist );
+      std::string title=profNoise->GetTitle();
+      title += " "+m_odinEvent;
+      profNoise->SetTitle(title.c_str());
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);

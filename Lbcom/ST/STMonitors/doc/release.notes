@@ -4,6 +4,12 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+! 2009-12-03 - Mark Tobin
+ - STNZSMonitor: added possibility to include time/date in noise histogram titles
+ - STTAEClusterMonitor: fix the y range of the profile histograms to match that
+ of the 2D histograms
+ - STErrorMonitor: changed number of bins in fraction ports histogram
+
 ! 2009-12-03 - Jeroen Van Tilburg
  - STPulseMonitor: Added possibility to loop over NZS data.
 

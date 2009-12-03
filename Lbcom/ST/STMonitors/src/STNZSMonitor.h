@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.h,v 1.8 2009-11-12 20:08:37 mtobin Exp $
+// $Id: STNZSMonitor.h,v 1.9 2009-12-03 18:46:37 mtobin Exp $
 #ifndef STNZSMonitor_H
 #define STNZSMonitor_H 1
 
@@ -41,7 +41,7 @@ private:
   void bookHistograms();
 
   /// Fill the noise histograms (only called every N events and at finalize)
-  void updateNoiseHistogram(unsigned int tell1ID);
+  void updateNoiseHistogram(unsigned int tell1ID, bool updateTitle=false);
 
   //const std::string   m_basenameNoiseHisto; 
   int                 m_evtNumber;
@@ -68,6 +68,10 @@ private:
   
   std::vector< unsigned int > m_limitToTell;/// List of TELL1s to look at
   bool   m_selectedTells;///< Use only selected TELL1s
+  
+  bool m_useODINTime;///< ODIN time of first event is added to the histogram title in the finalize method
+  const LHCb::ODIN* m_ODIN;///< Time of the first event in the run
+  std::string m_odinEvent;///< String of the time of the first run
 
   /// Map of noise histograms booked in initialize
   std::map<int, AIDA::IProfile1D*> m_noiseHistos;
