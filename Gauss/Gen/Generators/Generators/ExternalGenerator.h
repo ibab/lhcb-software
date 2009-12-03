@@ -1,4 +1,4 @@
-// $Id: ExternalGenerator.h,v 1.13 2008-05-23 11:53:29 robbep Exp $
+// $Id: ExternalGenerator.h,v 1.14 2009-12-03 15:32:49 robbep Exp $
 #ifndef GENERATORS_EXTERNALGENERATOR_H 
 #define GENERATORS_EXTERNALGENERATOR_H 1
 
@@ -16,6 +16,7 @@
 class IProductionTool ;
 class IDecayTool ;
 class IGenCutTool ;
+class IParticlePropertySvc ;
 
 namespace HepMC { 
   class GenEvent ; 
@@ -174,5 +175,8 @@ class ExternalGenerator : public GaudiTool ,
 
   /// Keep original particle properties of the production generator
   bool m_keepOriginalProperties ;
+
+  /// Particle property service
+  IParticlePropertySvc * m_ppSvc ;
 };
 #endif // GENERATORS_EXTERNALGENERATOR_H
