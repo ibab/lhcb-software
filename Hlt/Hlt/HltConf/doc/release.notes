@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.377 2009-12-03 12:46:03 pkoppenb Exp $ 
+! $Id: release.notes,v 1.378 2009-12-03 13:59:02 albrecht Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-03 - Johannes Albrecht
+ - add Hlt2ExpressLines to Hlt2.py
 
 !========================== HltConf v6r0 2009-12-01 ===================
 ! 2009-12-01 - Tomasz Skwarnicki
