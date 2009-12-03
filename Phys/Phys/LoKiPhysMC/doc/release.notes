@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.65 2009-11-27 13:52:41 ibelyaev Exp $ 
+! $Id: release.notes,v 1.66 2009-12-03 13:31:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/LoKiPhysMC
 ! Responsible : Vanya BELYAEV ibelyaev@physics.syr.edu
 ! Purpose     : RC <--> MC part of LoKi 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-03 - Vanya Belyaev
+
+ - MCMatcher: automatiocally insert 'Relations/' into the path for relation table, 
+   is original path does nto work...
+
 
 ! 2009-11-27 - Vanya Belyaev
 

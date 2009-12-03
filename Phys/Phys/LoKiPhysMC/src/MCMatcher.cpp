@@ -1,4 +1,4 @@
-// $Id: MCMatcher.cpp,v 1.4 2009-11-27 13:52:41 ibelyaev Exp $
+// $Id: MCMatcher.cpp,v 1.5 2009-12-03 13:31:30 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -64,6 +64,13 @@ namespace
   /// invalid decay
   const Decays::Trees::Types_<const LHCb::MCParticle*>::Invalid s_INVALID     ;
   // ==========================================================================
+  inline std::string rels0 ( const std::string& loc  ) 
+  {
+    if ( std::string::npos != loc.find ( "Relations" ) ) { return loc ; }
+    if ( 0                 == loc.find ('/')           ) { return loc ; }
+    return "Relations/" + loc ;
+  }  
+  // ==========================================================================
 } //                                                 end of anonymous namespace
 // ============================================================================
 /*  constructor from the decay and MC-truth matching tables
@@ -127,16 +134,16 @@ LoKi::PhysMCParticles::MCMatcherBase::MCMatcherBase
   switch ( protoMatch ) 
   {
   case Neutral     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ; break ;
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Neutrals ) ) ; break ;
   case ChargedLong : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; break ;
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Charged  ) ) ; break ;
   case Charged     : 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; break ;
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Charged  ) ) ; 
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Upstream ) ) ; break ;
   default:
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Charged  ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Upstream ) ; 
-    m_locations.push_back ( LHCb::ProtoParticleLocation::Neutrals ) ;
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Charged  ) ) ; 
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Upstream ) ) ; 
+    m_locations.push_back ( rels0 ( LHCb::ProtoParticleLocation::Neutrals ) ) ;
   }
 }
 // ============================================================================
@@ -188,16 +195,34 @@ StatusCode LoKi::PhysMCParticles::MCMatcherBase::load() const  // load the data
         m_locations.end() != item ; ++item ) 
   {
     if      ( alg()->exist<LoKi::Types::TableP2MC> ( *item ) ) 
-    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MC>  ( *item ) ) ; }
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MC>  ( *item ) ) ; continue ; }
     else if ( alg()->exist<LoKi::Types::TableP2MCW> ( *item ) ) 
-    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MCW> ( *item ) ) ; }
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MCW> ( *item ) ) ; continue ; }
     else if ( alg()->exist<LoKi::Types::TablePP2MC> ( *item ) ) 
-    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TablePP2MC> ( *item ) ) ; }
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TablePP2MC> ( *item ) ) ; continue ; }
     else if ( alg()->exist<LoKi::Types::TableT2MC>  ( *item ) ) 
-    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MC>  ( *item ) ) ; }
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MC>  ( *item ) ) ; continue ; }
     else if ( alg()->exist<LoKi::Types::TableT2MCW> ( *item ) ) 
-    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MCW> ( *item ) ) ; }
-    else { Error ( "No valid relation table at '" + (*item) + "'" ) ; } 
+    { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MCW> ( *item ) ) ; continue ; }
+    else 
+    {
+      const std::string loc = rels0 ( *item ) ;
+      if ( *item == loc ) 
+      { Error ( "No valid relation table at '" + (*item) + "'" )                ; continue ; }
+      else if ( alg()->exist<LoKi::Types::TableP2MC>  ( loc ) ) 
+      { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MC>  ( loc ) ) ; continue ; }
+      else if ( alg()->exist<LoKi::Types::TableP2MCW> ( loc ) ) 
+      { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableP2MCW> ( loc ) ) ; continue ; }
+      else if ( alg()->exist<LoKi::Types::TablePP2MC> ( loc ) ) 
+      { match() -> addMatchInfo ( alg()->get<LoKi::Types::TablePP2MC> ( loc ) ) ; continue ; }
+      else if ( alg()->exist<LoKi::Types::TableT2MC>  ( loc ) ) 
+      { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MC>  ( loc ) ) ; continue ; }
+      else if ( alg()->exist<LoKi::Types::TableT2MCW> ( loc ) ) 
+      { match() -> addMatchInfo ( alg()->get<LoKi::Types::TableT2MCW> ( loc ) ) ; continue ; }
+      //
+      Error ( "No valid relation table at '" + (*item) + "'" ) ; 
+    }
+    
   }
   //
   if ( match() -> empty() ) 
