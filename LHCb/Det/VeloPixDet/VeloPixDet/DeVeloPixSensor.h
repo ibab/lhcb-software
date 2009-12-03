@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSensor.h,v 1.7 2009-11-26 17:04:44 cocov Exp $
+// $Id: DeVeloPixSensor.h,v 1.8 2009-12-03 15:05:18 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSENSOR_H
 #define VELOPIXDET_DEVELOPIXSENSOR_H 1
 
@@ -81,6 +81,9 @@ public:
 
   /// Return the pixel size (since the edge pixel might have different size)
   virtual std::pair<double,double> PixelSize(LHCb::VeloPixChannelID channel) const = 0;
+
+  /// Return true if the pixel is a long one
+  virtual bool isLong(LHCb::VeloPixChannelID channel) const = 0;
 
   /// Determines if local 3-d point is inside sensor
   virtual StatusCode isInActiveArea(const Gaudi::XYZPoint& point) const = 0;

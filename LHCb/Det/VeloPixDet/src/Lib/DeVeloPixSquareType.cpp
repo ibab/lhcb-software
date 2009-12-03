@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.cpp,v 1.12 2009-11-30 16:39:13 cattanem Exp $
+// $Id: DeVeloPixSquareType.cpp,v 1.13 2009-12-03 15:05:18 cocov Exp $
 //==============================================================================
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_CPP 1
 //==============================================================================
@@ -197,7 +197,6 @@ StatusCode DeVeloPixSquareType::initialize()
   /// Calculate the pixels position and size
   calcPixelsParam();
 
-
   // get some bits and mask field for some bit manipulation...
   // fill a channelID 
   LHCb::VeloPixChannelID refid ((int)(pow(2,32)-1));
@@ -208,10 +207,13 @@ StatusCode DeVeloPixSquareType::initialize()
   m_numberOfPixelsPerChipBits = (refid.pixel_lp()+1)*(refid.pixel_hp()+1);
   m_numberOfChipsBits = refid.chip()+1;
   unsigned int zeroMask = 0x00000000 ;
-  m_ChipMask = (refid.chip()  <<  (m_PixelHPBit+m_PixelLPBit)) | zeroMask;
-  m_PixelLPMask = refid.pixel_lp() | zeroMask ;
-  m_PixelMask = (refid.pixel_hp()<<m_PixelLPBit  | zeroMask)| m_PixelLPMask;
+  m_PixelBit = m_PixelHPBit+m_PixelLPBit;
   
+  m_ChipMask = (refid.chip()  << m_PixelBit ) | zeroMask;
+  m_PixelLPMask = refid.pixel_lp() | zeroMask ;
+  m_PixelHPMask = (refid.pixel_hp()<< m_PixelLPBit  | zeroMask);
+  m_PixelMask = (refid.pixel_hp()<< m_PixelLPBit  | zeroMask)| m_PixelLPMask;
+    
   // geometry conditions, update global position in cache
   /*updMgrSvc()->
     registerCondition(this,this->m_geometry,&DeVeloPixSquareType::updateGeometryCache);
@@ -231,7 +233,6 @@ StatusCode DeVeloPixSquareType::initialize()
 //==============================================================================
 std::auto_ptr<LHCb::Trajectory> DeVeloPixSquareType::trajectory(const LHCb::VeloPixChannelID& id,
                                                         const std::pair<double,double> offset) const {
-
   // offset is offset on R
   Gaudi::XYZPoint globalP;
   channelToPointWithFraction(id.pixel(),offset,globalP);
@@ -480,9 +481,9 @@ int DeVeloPixSquareType::WhichLadder(int chipNum) const
 int DeVeloPixSquareType::WhichChip(const Gaudi::XYZPoint& point, int ladderIndex) const
 {  
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
-  // Modified from point.x()-refPoint.x()+interChipDist()/2 to point.x()-refPoint.x()+interChipDist()/2 to recheck...
   Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()+interChipDist()/2,point.y()-refPoint.y(),point.z()-refPoint.z());
   int ChipNum = (int)(LocalPoint.x()/(chipLength()+interChipDist()));
+  
   return ChipNum;
 
 }
@@ -497,7 +498,7 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
 
   Gaudi::XYZPoint refPoint = m_ladders[ladderIndex].ReferencePoint();
   Gaudi::XYZPoint LocalPoint(point.x()-refPoint.x()-alongAxisOffset,point.y()-refPoint.y(),point.z()-refPoint.z());
-  
+
   int positionEdgePix =  (m_ladders[ladderIndex]).edgeOrientation(chipIndex);
   std::pair< int , int > thePixel;
 
@@ -506,19 +507,21 @@ std::pair<int,int> DeVeloPixSquareType::WhichPixel(const Gaudi::XYZPoint& point,
   double interchipPixSizeRIGHT = lpSize();
   if ( positionEdgePix== 1 || positionEdgePix== 0 )interchipPixSizeRIGHT = interchipPixSize();
   if ( positionEdgePix== -1 || positionEdgePix== 0 )interchipPixSizeLEFT = interchipPixSize();
+
   
   // correct for the extra length of the left pixel
   double newx = LocalPoint.x() - (interchipPixSizeLEFT-lpSize());
   // set the results for most of the case
   thePixel.first = (int)(newx/lpSize());
   fraction.first = newx/lpSize() - (int)(newx/lpSize());
+
   //modify in the case where it is on the left edge
-  
   if (newx < lpSize()  && newx > - (interchipPixSizeLEFT-lpSize())){
     thePixel.first=0; // in case it would have been negative
     fraction.first = LocalPoint.x()/interchipPixSizeLEFT;
   }
-  else if (newx <((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT && newx >((nPixCol()-2)*lpSize())){
+  else if (newx <((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT && newx >((nPixCol()-1)*lpSize())){
+    thePixel.first=(nPixCol()-1);
     fraction.first = (newx-(nPixCol()-1)*lpSize())/interchipPixSizeRIGHT;
   }
   else if (newx < - (interchipPixSizeLEFT-lpSize()) && newx >((nPixCol()-1)*lpSize())+interchipPixSizeRIGHT ){
@@ -537,14 +540,19 @@ std::pair<double,double> DeVeloPixSquareType::PixelSize(LHCb::VeloPixChannelID c
 {
   return PixelSize(channel.pixel());
 }
-
+//==============================================================================
+/// The function that retruns true if channel is a long pixel              
+//==============================================================================
+bool DeVeloPixSquareType::isLong( LHCb::VeloPixChannelID channel ) const
+{
+  return isLong(channel.pixel());
+}
 
 //==============================================================================
 /// The function that fill the members in intialisation                  
 //==============================================================================
 void DeVeloPixSquareType::calcPixelsParam()
 {
-  msg() << MSG::VERBOSE << "calcPixelsParam" << endreq;
   // we only have to do this once, strip radii pitches and phi
   // limits are stored in statics, i.e. are technically the same
   // for all instances of DeVeloRType
@@ -573,12 +581,12 @@ void DeVeloPixSquareType::calcPixelsParam()
         // ... and adding the bottom left position of the chip in the ladder
         if (ichip < 2){
           // If there is no more than 2 chips in the ladder
-          xyChip.first=(ichip)*(chipLength()+interChipDist()/2)+xyChip.first;
+          xyChip.first=xyChip.first+(ichip)*(chipLength()+interChipDist()/2);
         }   
         else{ 
           //The else is not used for TIMEPIX minplane so it have to
           //be checked for other geometry (when more than 2 chip by ladder)
-          xyChip.first=(ichip-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2)+xyChip.first;
+          xyChip.first=xyChip.first+(ichip-1)*(chipLength()+interChipDist())+(chipLength()+interChipDist()/2);
         }  
         m_xyChips.push_back(xyChip);
         // Now store the rotation to apply to the pixel coordinates:
@@ -587,13 +595,16 @@ void DeVeloPixSquareType::calcPixelsParam()
         // If the edge orientation is opposite then m_ChipSameOrientation is set to False
         // If the edge orientation is the same then m_ChipSameOrientation is set to True
         int positionEdgePix =  (m_ladders[ilad]).edgeOrientation(ichip);
+        bool sameOr;
+        if ( positionEdgePix == firstChipEdgePosition )sameOr= true;
+        else sameOr=false;
         if ( positionEdgePix == firstChipEdgePosition ) m_ChipSameOrientation.push_back(true);
         else m_ChipSameOrientation.push_back(false);
       }
     }
     //Now let's fill the informations on the pixels for first chip of first ladder
-    for(unsigned int iY = 0 ; iY < (unsigned int)nPixRow() ; iY ++){
-      for(unsigned int iX = 0 ; iX < (unsigned int)nPixCol() ; iX ++){
+    for(unsigned int iX = 0 ; iX < (unsigned int)nPixCol() ; iX ++){
+      for(unsigned int iY = 0 ; iY < (unsigned int)nPixRow() ; iY ++){
         std::pair<double,double> size (-1.,-1.);
         size.first = lpSize();
         size.second = hpSize();
@@ -608,7 +619,6 @@ void DeVeloPixSquareType::calcPixelsParam()
         // Set the pixel position in the chip
         coord.first=(iX)*lpSize()+size.first/2+xoffset;
         coord.second=(iY)*hpSize()+size.second/2;
-        
         m_xyPixels.push_back(coord);
         m_PixelsSize.push_back(size);
       }

@@ -1,4 +1,4 @@
-// $Id: DeVeloPixSquareType.h,v 1.7 2009-11-27 08:54:09 cocov Exp $
+// $Id: DeVeloPixSquareType.h,v 1.8 2009-12-03 15:05:18 cocov Exp $
 #ifndef VELOPIXDET_DEVELOPIXSQUARETYPE_H 
 #define VELOPIXDET_DEVELOPIXSQUARETYPE_H 1
 
@@ -64,7 +64,6 @@ public:
   virtual StatusCode pointToChannel(const Gaudi::XYZPoint& point,
                                     LHCb::VeloPixChannelID& channel,
                                     std::pair <double, double>& fraction) const;
-
   /// Calculate the XYZ center of a pixel
   virtual StatusCode channelToPoint( const LHCb::VeloPixChannelID& channel,
                                                 Gaudi::XYZPoint& point) const;
@@ -100,6 +99,9 @@ public:
 
   virtual std::pair<double,double> PixelSize( LHCb::VeloPixChannelID channel) const;
 
+  virtual bool isLong( LHCb::VeloPixChannelID channel ) const;
+
+
   //::::::::::::: Some classes to deal with the sensors
     
   /// Access to the sensor on the other side of the VeloPix
@@ -116,91 +118,100 @@ public:
   {   
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
+
     if (m_ChipSameOrientation[chipNum])  return m_PixelsSize[pix] ;
     else {
-      int pixlp = pix & m_PixelLPMask ;
-      if (pixlp!= 0 && pixlp!= (nPixCol()-1)) return m_PixelsSize[pix] ;
-      else if ( pixlp == 0 ) return m_PixelsSize[(unsigned int)(nPixCol()-1)] ;
-      else  return m_PixelsSize[0] ; 
+      long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
+      return m_PixelsSize[pixnew] ; 
     }
   }
 
-  /// Return the x,y position of the pixel
+  /// Return the x,y position of the pixel        
+  
   inline pixelCoord xyOfPixel(const unsigned long pixel) const {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
-    if (m_ChipSameOrientation[chipNum]){  
+
+    if (m_ChipSameOrientation[chipNum]){
       return std::make_pair(
-                            m_xyPixels[pix].first + m_xyChips[pix].first ,
-                            m_xyPixels[pix].second + m_xyChips[pix].second
+                            m_xyPixels[pix].first + m_xyChips[chipNum].first ,
+                            m_xyPixels[pix].second + m_xyChips[chipNum].second
                             );      
     }
     else{
+      // 180 deg rotation so pixel become 255-x and stating from 
+      long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return std::make_pair(
-                            m_xyChips[pix].first + chipLength() - m_xyChips[pix].first ,
-                            m_xyChips[pix].second + chipWidth() - m_xyChips[pix].second
+                            m_xyChips[chipNum].first + chipLength()+interChipDist()/2 - m_xyPixels[pixnew].first ,
+                            m_xyChips[chipNum].second + chipWidth() - m_xyPixels[pixnew].second
                             );
     }
   }
 
-  /// Return the x,y position of the pixel + fraction
+  /// Return the x,y position of the pixel + fraction                  
   inline pixelCoord xyOfPixel(unsigned long pixel, pixelCoord fraction) const {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
     if (m_ChipSameOrientation[chipNum]){  
       return std::make_pair(
-                            m_xyPixels[pix].first + m_xyChips[pix].first + (fraction.first - 0.5)*m_PixelsSize[pix].first ,
-                            m_xyPixels[pix].second + m_xyChips[pix].second + (fraction.second - 0.5)*m_PixelsSize[pix].second
+                            m_xyPixels[pix].first + m_xyChips[chipNum].first + (fraction.first - 0.5)*m_PixelsSize[pix].first ,
+                            m_xyPixels[pix].second + m_xyChips[chipNum].second + (fraction.second - 0.5)*m_PixelsSize[pix].second
                             );      
     }
     else{
+      // 180 deg rotation so pixel become 255-x and stating from 
+      long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return std::make_pair(
-                            m_xyChips[pix].first + chipLength() - 
-                            (m_xyChips[pix].first + (fraction.first - 0.5)*m_PixelsSize[pix].first) ,
-                            m_xyChips[pix].second + chipWidth() - 
-                            (m_xyChips[pix].second + (fraction.second - 0.5)*m_PixelsSize[pix].second)
+                            m_xyChips[chipNum].first + chipLength() - 
+                            (m_xyPixels[pixnew].first + (fraction.first - 0.5)*m_PixelsSize[pixnew].first) ,
+                            m_xyChips[chipNum].second + chipWidth() - 
+                            (m_xyPixels[pixnew].second + (fraction.second - 0.5)*m_PixelsSize[pixnew].second)
                             );
     }
   }
 
 
-  /// Return the x,y,z position of the pixel + fraction in local coordinates
+  /// Return the x,y,z position of the pixel + fraction in local coordinates      
   inline Gaudi::XYZPoint xyzOfPixel(unsigned long pixel, pixelCoord fraction) const {
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
     if (m_ChipSameOrientation[chipNum]){  
       return Gaudi::XYZPoint (
-                            m_xyPixels[pix].first + m_xyChips[pix].first + (fraction.first - 0.5)*m_PixelsSize[pix].first ,
-                            m_xyPixels[pix].second + m_xyChips[pix].second + (fraction.second - 0.5)*m_PixelsSize[pix].second,
+                            m_xyPixels[pix].first + m_xyChips[chipNum].first + (fraction.first - 0.5)*m_PixelsSize[pix].first ,
+                            m_xyPixels[pix].second + m_xyChips[chipNum].second + (fraction.second - 0.5)*m_PixelsSize[pix].second,
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
                             );      
     }
     else{
+      // 180 deg rotation so pixel become 255-x and stating from 
+      long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return Gaudi::XYZPoint(
-                            m_xyChips[pix].first + chipLength() - 
-                            (m_xyChips[pix].first + (fraction.first - 0.5)*m_PixelsSize[pix].first) ,
-                            m_xyChips[pix].second + chipWidth() - 
-                            (m_xyChips[pix].second + (fraction.second - 0.5)*m_PixelsSize[pix].second),
+                            m_xyChips[chipNum].first + chipLength() - 
+                            (m_xyPixels[pixnew].first + (fraction.first - 0.5)*m_PixelsSize[pixnew].first) ,
+                            m_xyChips[chipNum].second + chipWidth() - 
+                            (m_xyPixels[pixnew].second + (fraction.second - 0.5)*m_PixelsSize[pixnew].second),
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
                             );
     }
   }
   
-  /// Return the x,y,z position of the pixel + fraction in local coordinates
+  /// Return the x,y,z position of the pixel + fraction in local coordinates          
   inline Gaudi::XYZPoint xyzOfPixel(unsigned long pixel) const {    
     int chipNum =( pixel & m_ChipMask) >> m_PixelBit  ;
     int pix =  pixel & m_PixelMask ;
     if (m_ChipSameOrientation[chipNum]){  
       return Gaudi::XYZPoint(
-                            m_xyPixels[pix].first + m_xyChips[pix].first ,
-                            m_xyPixels[pix].second + m_xyChips[pix].second,
+                            m_xyPixels[pix].first + m_xyChips[chipNum].first ,
+                            m_xyPixels[pix].second + m_xyChips[chipNum].second,
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
                             );      
     }
     else{
+      // 180 deg rotation so pixel become 255-x and stating from 
+      long pixnew = ((255 - ((pix & m_PixelHPMask) >> m_PixelLPBit))<< m_PixelLPBit) | (255 - (pix & m_PixelLPMask) );
       return Gaudi::XYZPoint(
-                            m_xyChips[pix].first + chipLength() - m_xyChips[pix].first ,
-                            m_xyChips[pix].second + chipWidth() - m_xyChips[pix].second,
+                            m_xyChips[chipNum].first + chipLength() - m_xyPixels[pixnew].first ,
+                            m_xyChips[chipNum].second + chipWidth() - m_xyPixels[pixnew].second,
                             m_ladders[m_ChipsInLadder[chipNum]].ReferencePoint().z()
                             );
     }
@@ -222,7 +233,8 @@ public:
   inline Gaudi::XYZPoint halfboxXYZ(unsigned long pixel) const {
     return localToVeloPixHalfBox(xyzOfPixel( pixel));
   }
-
+  /// Return true if is a long pixel
+  inline bool isLong(unsigned long pixel) const{ return fabs(PixelSize(pixel).first - interchipPixSize()) < 0.0000001 ; }
 
 private:
   /// Store the local x,y position and fraction for each pixel in the sensor
@@ -251,6 +263,7 @@ private:
   
   unsigned int m_ChipMask ;
   unsigned int m_PixelLPMask;
+  unsigned int m_PixelHPMask;
   unsigned int m_PixelMask;
   
 
