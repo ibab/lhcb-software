@@ -4,6 +4,7 @@
 ! Purpose     : Common algorithms and tools for Hlt
 !----------------------------------------------------------------------------
 
+!========================== HltCommon v5r15 2009-12-03 ===================
 ! 2009-12-02 - Johannes Albrecht
   - HltFunctionFactories.cpp, HltFunctions.h: added Vertex z and transverse position filter 	
 
