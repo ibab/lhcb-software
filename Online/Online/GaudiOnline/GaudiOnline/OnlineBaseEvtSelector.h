@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.h,v 1.7 2009-10-21 07:05:33 frankb Exp $
+// $Id: OnlineBaseEvtSelector.h,v 1.8 2009-12-03 19:01:01 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.h
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.7 2009-10-21 07:05:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/GaudiOnline/OnlineBaseEvtSelector.h,v 1.8 2009-12-03 19:01:01 frankb Exp $
 #ifndef GAUDIONLINE_ONLINEBASEEVTSELECTOR_H
 #define GAUDIONLINE_ONLINEBASEEVTSELECTOR_H 1
 
@@ -75,6 +75,8 @@ namespace LHCb  {
     virtual StatusCode rearmEvent() = 0;
     /// Free event resources
     virtual StatusCode freeEvent() = 0;
+    /// Flag event resources
+    virtual StatusCode flagEvent(int /* flag */) {  return StatusCode::SUCCESS; }
     /// Close connection to event data source
     virtual void close() = 0;
   };
@@ -102,8 +104,14 @@ namespace LHCb  {
     /// IInterface implementation: query interfaces
     virtual StatusCode queryInterface(const InterfaceID& riid, void** ppvInterface);
 
-    /// IService implementation: Db event selector override
+    /// IService implementation: Event selector override: initialize service
     virtual StatusCode initialize();
+
+    /// IService implementation: Event selector override: start service
+    virtual StatusCode start();
+
+    /// IService implementation: Event selector override: stop service
+    virtual StatusCode stop();
 
     /// IService implementation: Service finalization
     virtual StatusCode finalize();
@@ -187,6 +195,8 @@ namespace LHCb  {
     /// Standard destructor
     virtual ~OnlineBaseEvtSelector()         {                    }
 
+    /// Access to current event context (if available)
+    const OnlineContext* eventContext() const{  return m_context; }
     /// Increase event request counter
     void increaseReqCount()    const         {  m_reqCount++;     }
     /// Increase event receive counter
@@ -203,14 +213,14 @@ namespace LHCb  {
   protected:
     /// Lock handle to suspend/resume operations
     lib_rtl_event_t               m_suspendLock;
-    /// Input buffer name (default="EVENT")
+    /// Input buffer name (default="")
     std::string                   m_input;
     /// Allow suspending event access
     bool                          m_allowSuspend;
     /// Decode data buffer
     bool                          m_decode;
-    /// Property to indicate that the connection goes to a partitioned buffer
-    bool                          m_partitionBuffer;
+    /// Property to manipulate handling of event timeouts
+    bool                          m_handleTMO;
     /// Dummy property for backwards compatibility
     int                           m_printFreq;
     /// Local GUID to be added: needed to chain GUID information for reprocessing
@@ -227,6 +237,8 @@ namespace LHCb  {
     mutable int                   m_reqCount;
     /// Flag indicating if event selector is suspended and waiting for an event
     mutable bool                  m_isWaiting;
+    /// Local context of current event held
+    mutable const OnlineContext*  m_context;
   };
 }
 #endif  // GAUDIONLINE_ONLINEBASEEVTSELECTOR_H

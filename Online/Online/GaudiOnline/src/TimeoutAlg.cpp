@@ -1,4 +1,4 @@
-// $Id: TimeoutAlg.cpp,v 1.5 2009-11-24 10:58:25 marcocle Exp $
+// $Id: TimeoutAlg.cpp,v 1.6 2009-12-03 19:01:02 frankb Exp $
 // Include files from Gaudi
 #include "GaudiKernel/MsgStream.h" 
 #include "GaudiKernel/Algorithm.h" 
@@ -38,12 +38,15 @@ namespace LHCb  {
     std::string   m_monitorSvcType;
     /// Property: Timeout value in milliseconds
     int           m_timeout;
+    /// Property: Flag to exit on timeout
+    int           m_exitTimeout;
     /// Reference to incident service
     IIncidentSvc* m_incidentSvc;
     /// Timer ID once timer is set
     unsigned long m_timerID;
     /// Timeout counter
     int           m_timeoutCount;
+    
     /// Flag to print backtrace
     bool          m_printTrace;
 #ifdef _WIN32
@@ -122,6 +125,9 @@ namespace LHCb  {
       if ( m_printTrace )  {
 	ExceptionTracer tr(msgSvc(),name());
       }
+      if ( m_exitTimeout )  {
+	::exit(0);
+      }
       throw GaudiException(text,"DAQ_TIMEOUT",StatusCode::FAILURE);
     }
 
@@ -145,13 +151,14 @@ namespace LHCb  {
   public:
     /// Standard constructor
     TimeoutAlg(const string& nam,ISvcLocator* pSvc) 
-      : Algorithm(nam,pSvc), m_timeout(10000), m_incidentSvc(0), 
+      : Algorithm(nam,pSvc), m_incidentSvc(0), 
 	m_timerID(0), m_timeoutCount(0), m_me(0)
     {
-      declareProperty("Timeout",m_timeout);
-      declareProperty("PrintTrace",m_printTrace=true);
-      declareProperty("StartIncident",m_startIncident=IncidentType::BeginEvent);
-      declareProperty("CancelIncident",m_cancelIncident=IncidentType::EndEvent);
+      declareProperty("Timeout",        m_timeout=10000);
+      declareProperty("ExitTimeout",    m_exitTimeout=true);
+      declareProperty("PrintTrace",     m_printTrace=true);
+      declareProperty("StartIncident",  m_startIncident=IncidentType::BeginEvent);
+      declareProperty("CancelIncident", m_cancelIncident=IncidentType::EndEvent);
     }
 
     /// Destructor

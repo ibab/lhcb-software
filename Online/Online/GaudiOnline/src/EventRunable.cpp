@@ -1,4 +1,4 @@
-// $Id: EventRunable.cpp,v 1.16 2009-11-23 07:26:46 frankb Exp $
+// $Id: EventRunable.cpp,v 1.17 2009-12-03 19:01:01 frankb Exp $
 #include "GaudiKernel/SmartIF.h"
 #include "GaudiKernel/Incident.h"
 #include "GaudiKernel/IAppMgrUI.h"
@@ -138,8 +138,7 @@ StatusCode EventRunable::run()   {
 	if ( m_eventTMO )    {
 	  m_incidentSvc->fireIncident(Incident(name(),"EVENT_TIMEOUT"));
 	  if ( m_forceTMOExit ) {
-	    Incident incident(name(),"DAQ_ERROR");
-	    m_incidentSvc->fireIncident(incident);
+	    m_incidentSvc->fireIncident(Incident(name(),"DAQ_ERROR"));
 	    return StatusCode::FAILURE;
 	  }
 	}

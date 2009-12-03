@@ -1,4 +1,4 @@
-// $Id: OnlineBaseEvtSelector.cpp,v 1.7 2009-10-21 07:05:33 frankb Exp $
+// $Id: OnlineBaseEvtSelector.cpp,v 1.8 2009-12-03 19:01:02 frankb Exp $
 //====================================================================
 //  OnlineBaseEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -32,7 +32,7 @@ OnlineContext::OnlineContext(const OnlineBaseEvtSelector* s) : m_sel(s), m_needF
 }
 
 OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc)
-: OnlineService(nam,svc), m_suspendLock(0), m_evtCount(0), m_reqCount(0), m_isWaiting(false)
+  : OnlineService(nam,svc), m_suspendLock(0), m_evtCount(0), m_reqCount(0), m_isWaiting(false), m_context(0)
 {
   // Requirement format:
   // "EvType=x;TriggerMask=0xfeedbabe,0xdeadfeed,0xdeadbabe,0xdeadaffe;
@@ -42,6 +42,7 @@ OnlineBaseEvtSelector::OnlineBaseEvtSelector(const string& nam, ISvcLocator* svc
   declareProperty("Input", m_input = "");
   declareProperty("Decode",m_decode = false);
   declareProperty("AllowSuspend",m_allowSuspend = false);
+  declareProperty("HandleTimeout",m_handleTMO = false);
   declareProperty("REQ1", m_Rqs[0] = "");
   declareProperty("REQ2", m_Rqs[1] = "");
   declareProperty("REQ3", m_Rqs[2] = "");
@@ -67,12 +68,12 @@ StatusCode OnlineBaseEvtSelector::queryInterface(const InterfaceID& riid, void**
   return SUCCESS;
 }
 
-// IService implementation: Db event selector override
+// IService implementation: event selector override: initialize service
 StatusCode OnlineBaseEvtSelector::initialize()    {
   // Initialize base class
   StatusCode status = OnlineService::initialize();
   if ( !status.isSuccess() )    {
-    return error("Error initializing base class Service!");
+    return error("Error initializing base class OnlineService!");
   }
   // Create lock to steer suspend/resume operations
   if ( !lib_rtl_is_success(lib_rtl_create_event(0,&m_suspendLock)) )  {
@@ -95,12 +96,31 @@ StatusCode OnlineBaseEvtSelector::initialize()    {
   m_reqCount = 0;
   declareInfo("EventsIn",m_evtCount=0,"Event received counter");
   declareInfo("EventsReq",m_reqCount=0,"Event request counter");
-  incidentSvc()->addListener(this,"DAQ_CANCEL");
   return status;
+}
+
+// IService implementation: event selector override: start service
+StatusCode OnlineBaseEvtSelector::start()    {
+  // Initialize base class
+  StatusCode status = OnlineService::start();
+  if ( !status.isSuccess() )    {
+    return error("Error starting base class OnlineService!");
+  }
+  // Need to subscribe in start; otherwise callbacks come too early
+  incidentSvc()->addListener(this,"DAQ_CANCEL");
+  incidentSvc()->addListener(this,"DAQ_TIMEOUT");
+  return status;
+}
+
+// IService implementation: event selector override: stop service
+StatusCode OnlineBaseEvtSelector::stop()    {
+  undeclareAll();
+  return OnlineService::stop();
 }
 
 // IService implementation: Service finalization
 StatusCode OnlineBaseEvtSelector::finalize()    {
+  m_context = 0;
   // Release lock to steer suspend/resume operations
   ::lib_rtl_delete_event(m_suspendLock);
   m_suspendLock = 0;
@@ -119,6 +139,16 @@ void OnlineBaseEvtSelector::handle(const Incident& inc)    {
   info("Got incident:"+inc.source()+" of type "+inc.type());
   if ( inc.type() == "DAQ_CANCEL" )  {
     if ( m_allowSuspend ) lib_rtl_unlock(m_suspendLock);
+  }
+  else if ( inc.type() == "DAQ_TIMEOUT" )  {
+    if ( m_handleTMO && m_context ) {
+      OnlineContext* ctxt = const_cast<OnlineContext*>(m_context);
+      if ( ctxt ) {
+	ctxt->flagEvent(14).ignore(); // 14 = SIGALRM; see "kill -l"
+	ctxt->freeEvent().ignore();
+      }
+      m_context = 0;
+    }
   }
 }
 
@@ -160,6 +190,7 @@ StatusCode OnlineBaseEvtSelector::next(Context& ctxt) const {
     if ( pCtxt != 0 )   {
       StatusCode sc = pCtxt->freeEvent();
       if ( !sc.isSuccess() ) {}
+      m_context = 0;
       // Need to aquire the mutex if suspended
       sc = pCtxt->rearmEvent();
       if ( !sc.isSuccess() ) {
@@ -233,6 +264,7 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
     }
     pA->setFileOffset(0);
     pAddr = pA;
+    m_context = pctxt;
     //return pA->data().first ? StatusCode::SUCCESS : StatusCode::FAILURE;
     return StatusCode::SUCCESS;
   }
@@ -242,6 +274,7 @@ OnlineBaseEvtSelector::createAddress(const Context& ctxt, IOpaqueAddress*& pAddr
 StatusCode OnlineBaseEvtSelector::releaseContext(Context*& ctxt) const  {
   OnlineContext* pCtxt = dynamic_cast<OnlineContext*>(ctxt);
   if ( pCtxt ) {
+    m_context = 0;
     pCtxt->close();
     delete pCtxt;
     pCtxt = 0;

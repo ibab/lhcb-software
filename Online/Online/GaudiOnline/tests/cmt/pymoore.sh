@@ -12,8 +12,8 @@ $BIGTERM MBMMon@${HOST}     -e "export UTGID=${NODENAME}/MBMMon;    exec -a \${U
 #
 $MINITERM EvtProd@${HOST}   -e "export UTGID=${NODENAME}/EvtProd;   exec -a \${UTGID} $Class1_task -opt=$OPTS/MEPConverter.opts"&
 start_py_task EvtHolder   "import GaudiOnlineTests;GaudiOnlineTests.runEvtHolder()"
-#start_py_task Moore_TMO   "import GaudiOnlineTests;GaudiOnlineTests.runMBMReadTimeout()"
-start_py_task Moore_SEGV  "import GaudiOnlineTests;GaudiOnlineTests.runMBMReadSEGV()"
+start_py_task Moore_TMO   "import GaudiOnlineTests;GaudiOnlineTests.runMBMReadTimeout2()"
+#start_py_task Moore_SEGV  "import GaudiOnlineTests;GaudiOnlineTests.runMBMReadSEGV()"
 #start_py_task Moore_0     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #start_py_task Moore_1     "import GaudiOnlineTests;GaudiOnlineTests.runMBMRead()"
 #

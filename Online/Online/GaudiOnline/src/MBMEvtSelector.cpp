@@ -1,4 +1,4 @@
-// $Id: MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.7 2009-12-03 19:01:02 frankb Exp $
 //====================================================================
 //  MBMEvtSelector
 //--------------------------------------------------------------------
@@ -13,7 +13,7 @@
 //  Created    : 4/01/99
 //
 //====================================================================
-// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
+// $Header: /afs/cern.ch/project/cvs/reps/lhcb/Online/GaudiOnline/src/MBMEvtSelector.cpp,v 1.7 2009-12-03 19:01:02 frankb Exp $
 #ifndef GAUDIONLINE_MBMEVTSELECTOR_H
 #define GAUDIONLINE_MBMEVTSELECTOR_H 1
 
@@ -50,10 +50,17 @@ namespace LHCb  {
     MBMContext(MBMEvtSelector* pSelector);
     /// Standard destructor 
     virtual ~MBMContext() {}
+    /// Connect to event data source
     virtual StatusCode connect(const std::string& input);
+    /// Receive event information
     virtual StatusCode receiveEvent();
+    /// Rearm event data request
     virtual StatusCode rearmEvent();
+    /// Free event resources
     virtual StatusCode freeEvent();
+    /// Flag event resources
+    virtual StatusCode flagEvent(int flag);
+    /// Close connection to event data source
     virtual void close();
   };
 
@@ -96,7 +103,7 @@ namespace LHCb  {
 }
 #endif // GAUDIONLINE_MBMEVTSELECTOR_H
 
-// $Id: MBMEvtSelector.cpp,v 1.6 2009-10-21 07:05:33 frankb Exp $
+// $Id: MBMEvtSelector.cpp,v 1.7 2009-12-03 19:01:02 frankb Exp $
 //====================================================================
 //  MBMEvtSelector.cpp
 //--------------------------------------------------------------------
@@ -196,6 +203,22 @@ StatusCode MBMContext::freeEvent()  {
         m_evdesc.setSize(0);
       }
       catch(...) {
+      }
+    }
+  }
+  return StatusCode::SUCCESS;
+}
+
+StatusCode MBMContext::flagEvent(int flag)  {
+  if ( m_consumer )  {
+    if ( m_sel->eventContext() == this ) {
+      // Can only flag Descriptor events!
+      const MBM::EventDesc& e = m_consumer->event();
+      if ( m_sel->mustDecode() && e.type == EVENT_TYPE_EVENT )  {
+	MEP_SINGLE_EVT* sevt = (MEP_SINGLE_EVT*)e.data;
+	MEPEVENT* m = (MEPEVENT*)(m_evdesc.buffer() + sevt->begin);
+	m->events[sevt->evID].status = EVENT_TYPE_BADPROC;
+	m->events[sevt->evID].signal = flag;
       }
     }
   }

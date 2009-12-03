@@ -46,6 +46,23 @@ def runMBMReadTimeout(percent=1,print_freq=0.0001):
   tmo.OutputLevel = 1
   return _run(res)
 #------------------------------------------------------------------------------------------------
+def runMBMReadTimeout2(percent=1,print_freq=0.0001):
+  res = simpleFilterApp(pid,pnam,percent=percent,print_freq=print_freq)
+  tmo = timeoutAlg(1000,True)
+  tmo.ExitTimeout = 1
+  delay = delayAlg(1500,1)
+  sel = mbmSelector(decode=None)
+  sel.HandleTimeout = True
+  #merger = evtMerger(buffer='OUT',name='Writer',location='/Event/DAQ/RawEvent',routing=0x1,datatype=MDF_NONE)
+  #merger.TimeoutBits   = 0x1000
+  ApplicationMgr().TopAlg.append(delay)
+  ApplicationMgr().TopAlg.append(tmo)
+  #ApplicationMgr().TopAlg.append(merger)
+  msgSvc().OutputLevel = 1
+  delay.OutputLevel = 1
+  tmo.OutputLevel = 1
+  return _run(res)
+#------------------------------------------------------------------------------------------------
 def runMBMReadSEGV(percent=1,print_freq=0.0001):
   res = simpleFilterApp(pid,pnam,percent=percent,print_freq=print_freq)
   segv = signalAlg(probability=1.)

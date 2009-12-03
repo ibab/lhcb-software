@@ -225,7 +225,8 @@ def evtDataSvc():
 #------------------------------------------------------------------------------------------------
 def mbmSelector(input=None,type=None,decode=True,TAE=False):
   svc = Configs.LHCb__OnlineEvtSelector('EventSelector')
-  svc.Decode     = decode
+  if decode is not None:
+    svc.Decode     = decode
   if input is not None:
     svc.Input    = input
     svc.REQ1 = _mbmRequirement(input,type,TAE)
