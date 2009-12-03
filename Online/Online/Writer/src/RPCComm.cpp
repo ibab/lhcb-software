@@ -25,7 +25,7 @@ void RPCComm::confirmFile(char *fileName,
                           const unsigned char *md5CSum,
                           unsigned long size,
                           unsigned long events,
-                          unsigned long lumiEvents
+                          unsigned long physEvents
                           )
 {
   int ret;
@@ -49,7 +49,7 @@ void RPCComm::confirmFile(char *fileName,
 
   /* Now we fill up templates. */
   snprintf(xmlData, sizeof(xmlData), CONFIRM_TEMPLATE,
-           fileName, adler32String, md5CharString, size, events, lumiEvents);
+           fileName, adler32String, md5CharString, size, events, physEvents);
   snprintf(headerData, sizeof(headerData), HEADER_TEMPLATE,
            "WriterHost",  strlen(xmlData));
 
