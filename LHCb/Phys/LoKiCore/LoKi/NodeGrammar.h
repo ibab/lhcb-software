@@ -1,6 +1,6 @@
-// $Id: NodeGrammar.h,v 1.5 2009-12-03 12:53:20 ibelyaev Exp $
+// $Id: NodeGrammar.h,v 1.6 2009-12-03 15:52:40 ibelyaev Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.5 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $
 // ============================================================================
 #ifndef LOKI_NODEGRAMMAR_H 
 #define LOKI_NODEGRAMMAR_H 1
@@ -151,11 +151,18 @@ namespace Decays
             // simple atomic expression 
             atomic    [ expression.node = arg1 ] ;
           
-          operation  = str_p ( "(" ) >> 
-            expression [ operation.node = arg1 ] >>
-            +( ( str_p( "&" ) >> expression [ operation.node  &= arg1 ] ) | 
-               ( str_p( "|" ) >> expression [ operation.node  |= arg1 ] ) ) >> ')' ;
+          operation  = 
+            ( str_p ( "(" ) >> 
+              expression [ operation.node = arg1 ] >>
+              +( ( str_p( "&" ) >> expression [ operation.node  &= arg1 ] ) | 
+                 ( str_p( "|" ) >> expression [ operation.node  |= arg1 ] ) ) >> ')' ) 
+            |
+            ( str_p ( "[" ) 
+              >> expression [ operation.node = arg1 ] 
+              >> +( str_p( "," ) >> expression [ operation.node  |= arg1 ] )
+              >> ']' ) ;
           
+              
           res = expression [ self.node = arg1 ] ; 
           
         }      
