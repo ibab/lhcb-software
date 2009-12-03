@@ -69,9 +69,9 @@ namespace LHCb {
       /// The number of events
       unsigned int m_events;
       
-      /// The number of lumi events, that means bit 34 in the trigger mask
+      /// The number of phys events, that means bit 34 in the trigger mask
       /// was set
-      unsigned int m_lumiEvents;
+      unsigned int m_physEvents;
 
       /// The sequence number of the last command that was sent for this file.
       unsigned int m_seqNum;
@@ -125,8 +125,8 @@ namespace LHCb {
     /// increases the number of events by one
     inline void incEvents() { m_mon->m_events++; }
     
-    /// increases the number of lumi events by one
-    inline void incLumiEvents() { m_mon->m_lumiEvents++; }
+    /// increases the number of phys events by one
+    inline void incPhysEvents() { m_mon->m_physEvents++; }
     
     /// set the value of events, used when there where events before the
     /// file was created
@@ -137,11 +137,11 @@ namespace LHCb {
     /// get the number of events
     inline unsigned int getEvents() { return m_mon->m_events; }
 
-    /// get the number of lumi events
-    inline unsigned int getLumiEvents() { return m_mon->m_lumiEvents; }
+    /// get the number of phys events
+    inline unsigned int getPhysEvents() { return m_mon->m_physEvents; }
 
     /// get the phys stat which is number of events - lumi events
-    inline unsigned int getPhysStat() { return m_mon->m_events - m_mon->m_lumiEvents;}
+//    inline unsigned int getPhysStat() { return m_mon->m_events - m_mon->m_lumiEvents;}
 
     /// Returns the name of the file.
     inline std::string* getFileName() { return &m_fileName; }
@@ -356,8 +356,8 @@ namespace LHCb {
     /// Returns the run number from an MDF header.
     virtual unsigned int getRunNumber(const void *data, size_t len);
 
-    /// check if an event is a lumi event
-    virtual bool checkForLumiEvent(const void*, size_t);
+    /// check if an event is a phys event
+    virtual bool checkForPhysEvent(const void*, size_t);
 
     /// Returns a File object for the specified run number
 
