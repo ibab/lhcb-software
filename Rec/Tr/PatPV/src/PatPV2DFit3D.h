@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.h,v 1.2 2009-12-03 08:49:06 pmorawsk Exp $
+// $Id: PatPV2DFit3D.h,v 1.3 2009-12-03 12:21:21 pkoppenb Exp $
 #ifndef PATPV2DFIT3D_H
 #define PATPV2DFIT3D_H 1
 
@@ -31,7 +31,7 @@ public:
 
 protected:
 
-  void PatPV2DFit3D::addTracks(int n);
+  void addTracks(int n);
 
 private:
   // steering parameters for PV reconstruction
