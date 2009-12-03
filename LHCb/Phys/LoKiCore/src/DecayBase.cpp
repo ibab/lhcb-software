@@ -1,4 +1,4 @@
-// $Id: DecayBase.cpp,v 1.4 2009-06-02 16:47:35 ibelyaev Exp $
+// $Id: DecayBase.cpp,v 1.5 2009-12-03 12:53:20 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // =============================================================================
@@ -32,8 +32,7 @@ namespace
     boost::trim ( decay ) ;
     if ( decay.empty() )                              { return decay ; } // RETURN 
     std::size_t last = decay.size() - 1 ;
-    if ( ( '[' == decay[0] && ']' == decay[last] ) || 
-         ( '(' == decay[0] && ')' == decay[last] ) )  { return decay ; } // RETURN
+    if ( '[' == decay[0] && ']' == decay[last]  )     { return decay ; } // RETURN 
     //
     return "( " + decay + " )" ; 
   } 
@@ -44,13 +43,9 @@ namespace
     boost::trim ( node ) ;
     if ( node.empty() )                               { return node ; } // RETURN
     std::size_t last = node.size() - 1 ;
-    if ( ( '[' == node[0] && ']' == node[last] ) || 
-         ( '(' == node[0] && ')' == node[last] ) )    { return node ; } // RETURN
+    if ( '[' == node[0] && ']' == node[last]  )       { return node ; } // RETURN 
     //
-    if ( std::string::npos != node.find_first_of ("&|,") ) 
-    {  return "( " + node + " )" ; }                                    // RETURN 
-    //
-    return node ;
+    return "( " + node + " )" ;
   }
   // ===========================================================================
 }
