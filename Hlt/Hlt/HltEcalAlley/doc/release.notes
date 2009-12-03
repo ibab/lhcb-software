@@ -4,6 +4,7 @@
 ! Purpose     : Ecal alley specific algorithms and tools
 !----------------------------------------------------------------------------
 
+!========================== HltEcalAlley v2r3 2009-12-03 ===================
 ! 2009-12-01 - Mariusz Witek
  - partial Calo decoding switched back
 
