@@ -5,7 +5,7 @@ Purpose: LHCb High Level Trigger packages.
          This project groups together all the packages specific to the
          LHCb High Level Trigger 
 
-</PRE><H1><A NAME=v8r0>2009-11-30 HltSys v8r0</A></H1><PRE>
+</PRE><H1><A NAME=v8r0>2009-12-03 HltSys v8r0</A></H1><PRE>
  - Updates needed by Pit (first collisions)
  - Use PV2DFit3D in Hlt1 and PV3D in Hlt2
    . See https://savannah.cern.ch/task/index.php?12688
@@ -15,6 +15,7 @@ Purpose: LHCb High Level Trigger packages.
    . See https://savannah.cern.ch/task/index.php?12690
  - RoutingBitsWriter now always run
    . See https://savannah.cern.ch/bugs/index.php?59607
+ - Update of Ecal alley
  
 </PRE><H1><A NAME=v7r3>2009-11-21 HltSys v7r3</A></H1><PRE>
  - version based on LHCb v28r3, updates to HltMuon, Hlt1Lines 
