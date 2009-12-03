@@ -5,6 +5,9 @@
 !-----------------------------------------------------------------------------
 
 !========================== HltSettings v1r4 2009-12-03 ===================
+! 2009-12-03 - Gerhard Raven
+ - follow rename Hlt1PhotonFromEleXXX to Hlt1PhotonXXXFromEle
+
 ! 2009-12-03 - Patrick Koppenburg
  - Added Unbiased Zmm line
 
