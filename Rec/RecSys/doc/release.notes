@@ -5,6 +5,19 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v7r11>2009-12-03 RecSys v7r11</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r4
+
+- Packages updated: Velo/VeloRecMonitors v2r4, Tr/PatPV v3r10
+
+- In Velo/VeloRecMonitors v2r4:
+		. in VeloExpertClusterMonitor, minor improvements and fixes
+
+- In Tr/PatPV v3r10:
+		.	major bug fix in PatPV2DFit3D 
+		  (wrong pointers of tracks were filled into vertex)
+		. optimized execution time of PatPV2DFit3D and LSAdaptPV3DFitter
+
 </PRE><H1><A NAME=v7r10>2009-11-27 RecSys v7r10</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
 
