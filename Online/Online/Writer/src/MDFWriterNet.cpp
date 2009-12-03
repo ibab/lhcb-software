@@ -49,7 +49,7 @@ using namespace LHCb;
 /**
  * Macro for initialising a close command.
  */
-#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, nooflumievents) { \
+#define INIT_CLOSE_COMMAND(h, fname, adler_32, md_5, seqno, rno, thesize, noofevents, noofphysevents) { \
     (h)->cmd = CMD_CLOSE_FILE; \
     (h)->run_no = rno;  \
     (h)->data.chunk_data.seq_num = seqno; \
@@ -57,7 +57,7 @@ using namespace LHCb;
     (md_5)->Final((h)->data.stop_data.md5_sum); \
     (h)->data.stop_data.size = thesize; \
     (h)->data.stop_data.events = noofevents; \
-    (h)->data.stop_data.lumiEvents = nooflumievents; \
+    (h)->data.stop_data.physEvents = noofphysevents; \
     strncpy((h)->file_name, (fname), MAX_FILE_NAME); \
 }
 
@@ -123,7 +123,7 @@ void File::init(const std::string& fileName, unsigned int runNumber) {
   m_mon->m_fileOpen = false;
   m_mon->m_bytesWritten = 0;
   m_mon->m_events = 0;
-  m_mon->m_lumiEvents = 0;
+  m_mon->m_physEvents = 0;
   m_fileName = fileName;
   m_md5 = new TMD5();
   m_streamID = "FULL";
@@ -257,7 +257,6 @@ StatusCode MDFWriterNet::initialize(void)
     *m_log << MSG::ERROR << WHERE << "Failed to start File Clean Up Thread " << endmsg;
     return StatusCode::FAILURE;
   }
-
 
   *m_log << MSG::INFO << " Writer " << getpid() << " Initialized." << endmsg;
   return StatusCode::SUCCESS;
@@ -422,7 +421,7 @@ void MDFWriterNet::closeFile(File *currFile)
 		     currFile->getRunNumber(),
              currFile->getBytesWritten(),
              currFile->getEvents(),
-             currFile->getLumiEvents());
+             currFile->getPhysEvents());
 //  *m_log << MSG::INFO << " Command: " << header.cmd << " "
 //         << "Filename: "   << header.file_name << " "
 //	 << "RunNumber: "  << header.run_no << " "
@@ -431,6 +430,7 @@ void MDFWriterNet::closeFile(File *currFile)
 //         << "Seq Nr: "     << header.data.chunk_data.seq_num << " "
 //         << "Size: "       << header.data.stop_data.size << " "
 //         << "Events: "     << header.data.stop_data.events << " "
+//         << "Phys:  "      << header.data.stop_data.physEvents << " " 
 //         << "Command size is: " << sizeof(header)
 //         << endmsg;
   m_srvConnection->sendCommand(&header);
@@ -443,7 +443,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "lumiEvents=", currFile->getLumiEvents()) + 1;
+          DELIMITER, "physEvents=", currFile->getPhysEvents()) + 1;
 
       char* msg = (char*) malloc(msg_size);
 //      snprintf(msg, msg_size, "closefile%c%i%c%s", DELIMITER, getpid(), DELIMITER, currFile->getMonitor()->m_name);
@@ -452,7 +452,7 @@ void MDFWriterNet::closeFile(File *currFile)
           DELIMITER, currFile->getMonitor()->m_name, 
           DELIMITER, "bytesWritten=", currFile->getBytesWritten(), 
           DELIMITER, "events=", currFile->getEvents(), 
-          DELIMITER, "lumiEvents=", currFile->getLumiEvents());
+          DELIMITER, "physEvents=", currFile->getPhysEvents());
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
                  << "Could not send message"
@@ -476,6 +476,7 @@ void  MDFWriterNet::handle(const Incident& inc)    {
       m_srvConnection->stopRetrying();
   }
 }
+
 
 
 /* Writes out the buffer to the socket through the Connection object.
@@ -517,7 +518,6 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   unsigned int runNumber = getRunNumber(data, len);
 
   // If we get a newer run number, start a timeout on the previous run opened file. 
-
   if(m_currentRunNumber < runNumber) {
       if(nbLate != 0)
           *m_log << MSG::WARNING << WHERE << nbLate << " events were lost, for run previous than " << m_currentRunNumber << endmsg;
@@ -598,10 +598,9 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
   // count event
   m_currFile->incEvents();
   
-  // physstat = (no of all events) - (lumi events)
   // check type of event
-  if( checkForLumiEvent(data, len)) {
-      m_currFile->incLumiEvents();
+  if( checkForPhysEvent(data, len)) {
+      m_currFile->incPhysEvents();
   }
  
   // after every MB send statistics
@@ -611,14 +610,14 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "lumiEvents=", m_currFile->getLumiEvents()) + 1;
+      DELIMITER, "physEvents=", m_currFile->getPhysEvents()) + 1;
       char* msg = (char*) malloc(msg_size);
       snprintf(msg, msg_size, "log%c%i%c%s%c%s%zu%c%s%u%c%s%u", 
       DELIMITER, getpid(), 
       DELIMITER, m_currFile->getMonitor()->m_name,
       DELIMITER, "bytesWritten=", totalBytesWritten,
       DELIMITER, "events=", m_currFile->getEvents(), 
-      DELIMITER, "lumiEvents=", m_currFile->getLumiEvents());
+      DELIMITER, "physEvents=", m_currFile->getPhysEvents());
 
       if(mq_send(m_mq, msg, msg_size, 0) < 0) {
           *m_log << MSG::WARNING
@@ -646,6 +645,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
     *m_log << MSG::ERROR << WHERE << " Unlocking mutex" << endmsg;
     return StatusCode::FAILURE;
   }
+
   //Close it, reset counter.
   return StatusCode::SUCCESS;
 }
@@ -666,20 +666,20 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
   return mHeader->subHeader().H1->m_runNumber;
 }
 
-/** Checks if it is an lumi event (which means that bit 34 is set).
+/** Checks if it is a phys event (which means that bit 34 is set).
  * @param data  The data from which MDF information may be retrieved
  * @param len   The length of the data.
- * @return true if it is an lumi event, false otherwise
+ * @return true if it is a phys event, false otherwise
  */
-inline bool MDFWriterNet::checkForLumiEvent(const void *data, size_t ) {
+inline bool MDFWriterNet::checkForPhysEvent(const void *data, size_t ) {
   MDFHeader *mHeader;
   RawBank* b = (RawBank*)data;
   if ( b->magic() == RawBank::MagicPattern )
     mHeader = b->begin<MDFHeader>();
   else
     mHeader = (MDFHeader*)data;
-  unsigned int lumiBitMask = mHeader->subHeader().H0->m_trMask[1];
-  if(lumiBitMask & (unsigned int) 4) {
+  unsigned int physBitMask = mHeader->subHeader().H0->m_trMask[1];
+  if(physBitMask & (unsigned int) 4) {
       return true;
   } else {
       return false;
@@ -743,7 +743,7 @@ void MDFWriterNet::notifyClose(struct cmd_header *cmd)
 			              cmd->data.stop_data.md5_sum,
                           cmd->data.stop_data.size,
                           cmd->data.stop_data.events,
-                          cmd->data.stop_data.lumiEvents);
+                          cmd->data.stop_data.physEvents);
     *m_log << MSG::INFO << "Confirmed file " << cmd->file_name << endmsg;
   } catch(std::exception& rte) {
     char md5buf[33];
