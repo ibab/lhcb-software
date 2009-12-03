@@ -1,10 +1,11 @@
-!$Id: release.notes,v 1.90 2009-12-03 10:14:28 graven Exp $
+!$Id: release.notes,v 1.91 2009-12-03 12:47:48 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/HltTracking
 ! Responsible : Jose A. Hernando
 ! Purpose     : Steering the tracking by Hlt
 !-----------------------------------------------------------------------------
 
+!========================== HltTracking v4r4 2009-12-03 ===================
 ! 2009-12-03 - Gerhard Raven
  - do not abort when a track fails to be upgraded
    (https://savannah.cern.ch/bugs/?59973)
@@ -12,7 +13,6 @@
 ! 2009-12-02 - Johannes Albrecht
  - add monitoring histograms for HltVertexUpgrade
 
-!========================== HltTracking v4r4 2009-11-30 ===================
 ! 2009-10-27 - Johannes Albrecht
  - HltTrackMatch: protect against emtpy output
 
