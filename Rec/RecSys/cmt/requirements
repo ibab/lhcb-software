@@ -45,7 +45,7 @@ use PatVelo              v3r18   Tf   # David Hutchcroft
 use PatVeloTT            v3r9    Tf   # Mariusz Witek
 use TrackMatching        v2r25   Tf   # Eduardo Rodrigues
 use TrackSys             v4r28   Tf   # Stephanie Hansmann-Menzemer 
-use TsaAlgorithms        v3r14p1 Tf   # Matt Needham
+use TsaAlgorithms        v3r14p2 Tf   # Matt Needham
 
 # Tr packages: Track Fit & Pattern Reco Validation with MonteCarlo
 use PatChecker           v3r5    Tr   # Olivier Callot, David Hutchcroft

@@ -9,6 +9,7 @@ Purpose: LHCb reconstruction packages.
 This version uses Gaudi v21r6 and LHCb v28r4
 
 - Packages updated: Velo/VeloRecMonitors v2r4, Tr/PatPV v3r10
+										Tf/TsaAlgorithms v3r14p2
 
 - In Velo/VeloRecMonitors v2r4:
 		. in VeloExpertClusterMonitor, minor improvements and fixes
@@ -17,6 +18,10 @@ This version uses Gaudi v21r6 and LHCb v28r4
 		.	major bug fix in PatPV2DFit3D 
 		  (wrong pointers of tracks were filled into vertex)
 		. optimized execution time of PatPV2DFit3D and LSAdaptPV3DFitter
+
+- In Tf/TsaAlgorithms v3r14p2
+		. bug fix, to clone killing in TTGenericTracking
+			would have crashed on real data after ~100 events
 
 </PRE><H1><A NAME=v7r10>2009-11-27 RecSys v7r10</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
