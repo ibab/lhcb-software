@@ -1,4 +1,4 @@
-// $Id: HltVertexUpgrade.cpp,v 1.19 2009-12-02 14:12:48 albrecht Exp $
+// $Id: HltVertexUpgrade.cpp,v 1.20 2009-12-03 10:14:28 graven Exp $
 // Include files
 #include "GaudiKernel/AlgFactory.h" 
 #include "GaudiKernel/IAlgManager.h"
@@ -123,7 +123,7 @@ StatusCode HltVertexUpgrade::execute() {
       }
     }
 
-    if( produceHistos() && tracks1.size() > 0){
+    if( produceHistos() && !tracks1.empty()){
       std::vector<double> vals; 
       vals.reserve(tracks1.size());
       BOOST_FOREACH( LHCb::Track* cand, tracks1) vals.push_back( getTrackQuality( *cand ) );
@@ -131,7 +131,7 @@ StatusCode HltVertexUpgrade::execute() {
       BOOST_FOREACH(const double& x,vals  ) fill( m_quality1Histo,x,1. );
       fill( m_quality1HistoBest,val,1. );
     }
-    if( produceHistos() && tracks2.size() > 0){
+    if( produceHistos() && !tracks2.size()){
       std::vector<double> vals; 
       vals.reserve(tracks2.size());
       BOOST_FOREACH( LHCb::Track* cand, tracks2) vals.push_back( getTrackQuality( *cand ) );
