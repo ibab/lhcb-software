@@ -4,6 +4,15 @@
 ! Package manager: Stefan Roiser
 !-----------------------------------------------------------------------------
 
+! 2009-12-03 - Stefan Roiser
+
+- Adding a new <class> attribute "defaultconstructor". The default for this 
+attribute is "TRUE". If set to "FALSE" no default constructor for this class 
+will be generated.
+
+ATTENTION: For I/O a default constructor is paramount, ie. using this feature 
+will not allow this class to be made persistent anymore.
+
 !======================== GaudiObjDesc v11r8 2009-06-29 ======================
 ! 2009-06-23 - Marco Cattaneo
  - In importUtils.py, disable warning C4800 on Windows when including

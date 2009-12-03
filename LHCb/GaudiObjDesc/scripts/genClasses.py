@@ -160,16 +160,14 @@ class genClasses(genSrcUtils.genSrcUtils):
     cname = godClass['attrs']['name']
     hasDefaultConstructor = 0
     hasCopyConstructor = 0
-    defaultCtorPrivate = 0
-    if godClass['attrs']['defaultCtorPrivate'] == 'TRUE':
-      defaultCtorPrivate = 1 
+    if godClass['attrs']['defaultconstructor'] == 'FALSE':
+      hasDefaultConstructor = 1 
     if godClass.has_key('constructor'):                                         # are there any constrs defined
       for const in godClass['constructor']:
         if (not const['attrs'].has_key('argList')) and (not const.has_key('arg')):
           hasDefaultConstructor = 1
         s += self.genConstructor(godClass,const,clname)
     if not (hasDefaultConstructor or clname):                                   # no constructors defined lets
-      if (defaultCtorPrivate) : s += 'private:\n\n'
       s += '  /// Default Constructor\n'                                        # generate a default ctr
       s2 = '  %s()' % cname
       indent = ' ' * (len(s2) + 3)
@@ -188,7 +186,6 @@ class genClasses(genSrcUtils.genSrcUtils):
           else                                             : s += '(),'
         if s[-1] == ',' : s = s[:-1]                                             # strip off the last ','
       s += ' {}\n\n'
-      if (defaultCtorPrivate) : s += 'public: \n\n'
     if godClass.has_key('copyconstructor'):
       if not clname :
         s += '  /// Copy Constructor\n'
