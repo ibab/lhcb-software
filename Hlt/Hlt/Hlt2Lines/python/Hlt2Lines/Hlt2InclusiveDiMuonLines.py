@@ -47,6 +47,9 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                    ,'UnbiasedBmmMinMass'      : 5200      # MeV
                    ,'UnbiasedBmmVertexChi2'   :   20
 
+                   ,'UnbiasedZmmMinMass'      :50000      # MeV
+                   ,'UnbiasedZmmPt'           :10000      # MeV
+
                    ,'BiasedSingleMuonPt'      :  700      # MeV
                    ,'BiasedMass'              :  500      # MeV
                    ,'BiasedLMass'             : 1200      # MeV
@@ -155,6 +158,18 @@ class Hlt2InclusiveDiMuonLinesConf(HltLinesConfigurableUser) :
                     )
         HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedJPsiLowDecision":  50204 } )
         
+        #--------------------------------------------
+        '''
+        unbiased Zmm
+        '''
+        line.clone( 'UnbiasedZmm'
+                    , prescale = self.prescale 
+                    , Filter = { 'Code': "(MM>"+str(self.getProp('UnbiasedZmmMinMass'))+"*MeV) "
+                                 +"& (PT>"+str(self.getProp('UnbiasedZmmPt'))+"*MeV) " }
+                    , postscale = self.postscale
+                    )
+        HltANNSvc().Hlt2SelectionID.update( { "Hlt2UnbiasedZmmDecision":   50205 } )
+
         #----------------------------------------------------------------------------------------
         '''
         Biased DiMuon Lines
