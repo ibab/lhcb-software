@@ -17,7 +17,7 @@ DECLARE_TOOL_FACTORY( TaggingUtils );
 TaggingUtils::TaggingUtils( const std::string& type,
                             const std::string& name,
                             const IInterface* parent ) :
-  GaudiTool ( type, name, parent ), m_Geom(0) {
+  GaudiTool ( type, name, parent ), m_Geom(0), m_Dist(0), m_dva(0) {
 
   declareInterface<ITaggingUtils>(this);
 
@@ -32,8 +32,16 @@ StatusCode TaggingUtils::initialize() {
     fatal() << "GeomDispCalculator could not be found" << endreq;
     return StatusCode::FAILURE;
   }
-  m_krec=0;
-  
+  m_dva = Gaudi::Utils::getDVAlgorithm ( contextSvc() ) ;
+  if (0==m_dva) return Error("Couldn't get parent DVAlgorithm", 
+                             StatusCode::FAILURE);  
+
+  m_Dist = m_dva->distanceCalculator ();
+  if( !m_Dist ){
+    Error("Unable to retrieve the IDistanceCalculator tool");
+    return StatusCode::FAILURE;
+  }
+
   return StatusCode::SUCCESS; 
 }
 
@@ -51,6 +59,14 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
   }
+
+  double ipC=0, ipChi2=0;
+  StatusCode sc2 = m_Dist->distance (axp, RecVert, ipC, ipChi2);
+  if(sc2 && ipChi2!=0) {
+//     ip=ipC;
+//     ip=ipC/sqrt(ipChi2);
+  }
+
   return sc;
 }
 //==========================================================================
@@ -67,6 +83,14 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
     ip   = ipVec.z()>0 ? ip : -ip ; 
     iperr= iperr; 
   }
+
+  double ipC=0, ipChi2=0;
+  StatusCode sc2 = m_Dist->distance (axp, RecVert, ipC, ipChi2);
+  if(sc2 && ipChi2!=0) {
+//     ip=ipC;
+//     ip=ipC/sqrt(ipChi2);
+  }
+
   return sc;
 }
 //=========================================================================
@@ -81,6 +105,11 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   for(iv = PileUpVtx.begin(); iv != PileUpVtx.end(); iv++){
     double ipx, ipex;
     sc = m_Geom->calcImpactPar(*axp, **iv, ipx, ipex);
+
+    //double ipC=0, ipChi2=0;
+    //sc = m_Dist->distance (axp, *iv, ipC, ipChi2);
+    //if(ipChi2) { ipx=ipC; ipex=ipC/sqrt(ipChi2); }
+
     if( sc ) if( ipx < ipmin ) {
       ipmin = ipx;
       ipminerr = ipex;
@@ -88,6 +117,7 @@ StatusCode TaggingUtils::calcIP( const Particle* axp,
   }
   ip  = ipmin;
   ipe = ipminerr;
+
   return lastsc;
 }
 //=========================================================================
@@ -107,14 +137,6 @@ int TaggingUtils::countTracks( Particle::ConstVector& vtags ) {
   }
   return nr;
 }
-//=========================================================================
-void TaggingUtils::setNvtx( int n ) { m_krec = n; }
-
-int TaggingUtils::getNvtx() { 
-  if( m_krec==0 ) err()<<"Undefined number of primary vertices! NNet will fail!"<<endreq;
-  return m_krec; 
-}
-
 //====================================================================
 StatusCode TaggingUtils::finalize() { return StatusCode::SUCCESS; }
 

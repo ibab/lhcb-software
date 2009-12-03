@@ -172,11 +172,6 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
   if( vtags.empty() ) { //tagger candidate list is not provided, build one
     for ( ip = parts->begin(); ip != parts->end(); ip++ ){
 
-      if (msgLevel(MSG::VERBOSE)) verbose() <<"part p="<<(*ip)->p()/GeV
-                                            <<"  pt="<<(*ip)->pt()/GeV
-                                            <<"  typ="<<(*ip)->proto()->track()->type()
-                                            <<endreq;
-
       if( (*ip)->p()/GeV < 2.0 ) continue;               
       if( (*ip)->momentum().theta() < m_thetaMin ) continue;
       if( (*ip)->charge() == 0 ) continue;               
@@ -201,6 +196,14 @@ StatusCode BTaggingTool::tag( FlavourTag& theTag, const Particle* AXB,
       //////////////////////////////////
       vtags.push_back(*ip);          // store tagger candidate
       ////////////////////////////////
+
+      if (msgLevel(MSG::DEBUG)) 
+	debug() <<"part ID="<<(*ip)->particleID().pid()
+		<<" p="<<(*ip)->p()/GeV
+		<<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+		<<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+		<<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+		<<endreq;
     }
   } else {
     //tagger candidate list is already provided, it is the user responsibility

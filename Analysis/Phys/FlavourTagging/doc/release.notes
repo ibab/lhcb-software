@@ -1,10 +1,16 @@
-! $Id: release.notes,v 1.156 2009-11-30 22:42:50 musy Exp $
+! $Id: release.notes,v 1.157 2009-12-03 00:24:28 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTagging
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Provide tools and algorithm for tagging B
 !-----------------------------------------------------------------------------
 
+! 2009-12-03 - Marco Musy
+  - changed some outputlevel again
+  - added IDistanceCalculator to substitute IGeomDispCalculator
+    but not yet activated, wait to check if possible to have a signed ip.
+  - important fixes to kaon and vertexch taggers, and in NNNetTool_MLP
+  
 ! 2009-11-30 - Marco Musy
  - MC09 tuning by default
  - New sets of cuts for MC09

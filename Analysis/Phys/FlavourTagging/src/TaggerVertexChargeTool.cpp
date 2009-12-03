@@ -29,6 +29,7 @@ TaggerVertexChargeTool::TaggerVertexChargeTool( const std::string& type,
 
   declareProperty( "PowerK",       m_PowerK               = 0.35 );
   declareProperty( "MinimumCharge",m_MinimumCharge        = 0.15 );
+
   declareProperty( "P0",           m_P0                   = 5.258432e-01 );
   declareProperty( "P1",           m_P1                   = -2.881809e-01 );
   declareProperty( "Gt075",        m_Gt075                = 0.35 );
@@ -64,17 +65,17 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
   if(!RecVert) return tVch;
   if(vtags.empty()) return tVch;
 
+  verbose()<<"allVtx.size()="<< allVtx.size() << endreq;
+
   ///--- Inclusive Secondary Vertex ---
   //look for a secondary Vtx due to opposite B
   std::vector<Vertex> vvec(0);
-  verbose() <<"--- SVTOOL calling buildVertex: "<<endreq;
   if(m_svtool) vvec = m_svtool -> buildVertex( *RecVert, vtags );
   if(vvec.empty()) return tVch;
-  allVtx.push_back(&vvec.at(0));
-  if(vvec.size()>1) allVtx.push_back(&vvec.at(1));
+  debug() <<"--- SVTOOL buildVertex returns: "<<vvec.size()<<endreq;
 
   double Vch = 0, norm = 0;
-  Particle::ConstVector Pfit = allVtx.at(0)->outgoingParticlesVector();
+  Particle::ConstVector Pfit = vvec.at(0).outgoingParticlesVector();
   //if Vertex does not contain any daughters, exit
   if(Pfit.size()<1) return tVch;
 
@@ -101,7 +102,7 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
     double a = pow((*ip)->pt()/GeV, m_PowerK);
     Vch += (*ip)->charge() * a;
     norm+= a;
-    verbose() <<"SVTOOL  VtxCh, adding track pt= "<<(*ip)->pt()<<endreq;
+    debug() <<"SVTOOL  VtxCh, adding track p= "<<(*ip)->p()<<endreq;
   }
   if(norm) Vch = Vch / norm;
   if(fabs(Vch) < m_MinimumCharge ) return tVch;
@@ -117,20 +118,14 @@ Tagger TaggerVertexChargeTool::tag( const Particle* /*AXB0*/,
     }
   }
 
-  verbose() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
-            <<" omega= "<< omega <<endreq;
+  debug() <<" VtxCh= "<< Vch <<" with "<< Pfit.size() <<" parts"
+	  <<" omega= "<< omega <<endreq;
 
   if( 1-omega < m_ProbMin ) return tVch;
   if(   omega > m_ProbMin ) return tVch;
 
-//   if(omega>0.5){
-//     omega = 1-omega;
-//     tVch.setDecision( Vch>0 ? 1 : -1 );
-//     tVch.setOmega( omega );
-//   }else{
-    tVch.setDecision( Vch>0 ? -1 : 1 );
-    tVch.setOmega( omega );
-//   }
+  tVch.setDecision( Vch>0 ? -1 : 1 );
+  tVch.setOmega( omega );
   tVch.setType( Tagger::VtxCharge ); 
   for(ip=Pfit.begin(); ip!=Pfit.end(); ip++) tVch.addToTaggerParts(*ip);
 

@@ -6,6 +6,9 @@
 #include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Kernel/IGeomDispCalculator.h"
+#include <Kernel/IDistanceCalculator.h>
+#include <Kernel/DVAlgorithm.h>
+#include <Kernel/GetDVAlgorithm.h>
 
 #include "ITaggingUtils.h"
 
@@ -38,15 +41,14 @@ public:
 		     const LHCb::RecVertex::ConstVector& ,
 		     double& , double& );
   int countTracks( LHCb::Particle::ConstVector& );
-  void setNvtx( int n );
-  int getNvtx();
   //-------------------------------------------------------------
 
 private:
 
   IGeomDispCalculator *m_Geom;
-  int m_krec;
-  
+  IDistanceCalculator *m_Dist;
+  DVAlgorithm* m_dva;
+
 };
 
 //===============================================================//

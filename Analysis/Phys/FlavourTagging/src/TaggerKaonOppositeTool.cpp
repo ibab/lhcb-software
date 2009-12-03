@@ -76,10 +76,12 @@ Tagger TaggerKaonOppositeTool::tag( const Particle* AXB0,
   for( ipart = vtags.begin(); ipart != vtags.end(); ipart++ ) {
     if( (*ipart)->particleID().abspid() != 321 ) continue;
 
-    if((*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 )
-       - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
+    double pidk=(*ipart)->proto()->info( ProtoParticle::CombDLLk, -1000.0 );
+    debug()<<"tagger k pidk="<<pidk<<endreq;
+    if(pidk==0 || pidk==-1000.0) continue;
+    if(pidk - (*ipart)->proto()->info( ProtoParticle::CombDLLp, -1000.0 ) 
        < m_PIDkp_extracut ) continue;
-
+    
     double tsa= (*ipart)->proto()->track()->likelihood();
     if(tsa < m_ghost_cut) continue;
 
