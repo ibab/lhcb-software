@@ -4,6 +4,10 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2009-12-03 - Piotr Morawski
+ - optimized execution time of PatPV2DFit3D and LSAdaptPV3DFitter
+ - bug fix in PatPV2DFit3D (wrong pointers of tracks were filled into vertex)
+
 !============================= PatPV v3r9 2009-11-13 =========================
 ! 2009-11-11 - Patrick Koppenburg
  - Remove _dll file

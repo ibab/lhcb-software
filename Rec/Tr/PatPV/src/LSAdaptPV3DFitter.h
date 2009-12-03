@@ -1,4 +1,4 @@
-// $Id: LSAdaptPV3DFitter.h,v 1.2 2008-08-28 17:38:45 witekma Exp $
+// $Id: LSAdaptPV3DFitter.h,v 1.3 2009-12-03 08:49:06 pmorawsk Exp $
 #ifndef LSADAPTPVFITTER_H
 #define LSADAPTPVFITTER_H 1
 // from Gaudi
@@ -19,15 +19,15 @@ class LSAdaptPV3DFitter : public GaudiTool, virtual public IPVFitter {
 
 public:
   // Standard constructor
-  LSAdaptPV3DFitter(const std::string& type, 
+  LSAdaptPV3DFitter(const std::string& type,
                   const std::string& name,
                   const IInterface* parent);
   // Destructor
   ~LSAdaptPV3DFitter();
   // Initialization
   virtual StatusCode initialize();
-  // Fitting 
-  StatusCode fitVertex(const Gaudi::XYZPoint seedPoint, 
+  // Fitting
+  StatusCode fitVertex(const Gaudi::XYZPoint seedPoint,
 		       std::vector<const LHCb::Track*>& tracks,
 		       LHCb::RecVertex& vtx);
 private:
@@ -36,21 +36,18 @@ private:
   double m_maxIP2PV;      // Maximum IP of a track to accept track
   double m_maxDeltaZ;     // Fit convergence condition
   double m_minTrackWeight;// Minimum Tukey's weight to accept a track
-  double m_detectorResolutionCoeff; ///< detector resolution
-  double m_multipleScatteringCoeff; ///< multiple scattering resolution
   double m_TrackErrorScaleFactor;
+  double  m_x0MS;         // X0 (tunable) of MS to add for extrapolation of
+                          // track parameters to PV
+  double m_scatCons;      // calculated from m_x0MS
   DeVelo* m_velo;
   PVTracks m_pvTracks;
 
   // Add track for PV
   void addTrackForPV(const LHCb::Track* str, PVTracks& pvTracks,
                            Gaudi::XYZPoint seed);
-  
+
   double err2d0(const LHCb::Track* track);
-  void computeErrorParameters( const LHCb::Track* track, double z,
-                                      double & minZDistToVELOCluster,
-                                      int & nbStaBeforeLastVELOCluster,
-			       double & distFirstLastVELOCluster );
   Gaudi::XYZVector impactParameterVector(const Gaudi::XYZPoint& vertex,
                                         const Gaudi::XYZPoint& point,
 					 const Gaudi::XYZVector& direction);

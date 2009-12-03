@@ -1,7 +1,7 @@
-// $Id: LSAdaptPV3DFitter.cpp,v 1.4 2008-08-28 17:38:45 witekma Exp $
-// Include files 
+// $Id: LSAdaptPV3DFitter.cpp,v 1.5 2009-12-03 08:49:06 pmorawsk Exp $
+// Include files
 // from Gaudi
-#include "GaudiKernel/ToolFactory.h" 
+#include "GaudiKernel/ToolFactory.h"
 // from Event
 #include "Event/Track.h"
 #include "Event/State.h"
@@ -19,23 +19,18 @@ LSAdaptPV3DFitter::LSAdaptPV3DFitter(const std::string& type,
                                  const IInterface* parent)
   : GaudiTool(type,name,parent) {
   declareInterface<IPVFitter>(this);
-  // Minimum number of tracks in vertex  
+  // Minimum number of tracks in vertex
   declareProperty("MinTracks", m_minTr = 5);
   // Number of iterations
   declareProperty("Iterations", m_Iterations = 20);
   // Maximum IP of a track to accept track
   declareProperty("maxIP2PV", m_maxIP2PV = 5.0 * Gaudi::Units::mm);
-  // Fit convergence condition 
-  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.001 * Gaudi::Units::mm);
+  // Fit convergence condition
+  declareProperty("maxDeltaZ", m_maxDeltaZ = 0.003 * Gaudi::Units::mm);
   // Minimum Tukey's weight to accept a track
   declareProperty("minTrackWeight", m_minTrackWeight = 0.00001);
-
-  declareProperty( "DetectorResolutionCoeff",      m_detectorResolutionCoeff =15e-3 );
-  declareProperty( "MultipleScatteringCoeff",      m_multipleScatteringCoeff =0.0001 ) ;
-
+  declareProperty( "x0MS"            , m_x0MS          =  0.02          );
   declareProperty("TrackErrorScaleFactor", m_TrackErrorScaleFactor = 1.0 );
-
-
 }
 
 //=========================================================================
@@ -45,9 +40,9 @@ StatusCode LSAdaptPV3DFitter::initialize()
 {
   StatusCode sc = GaudiTool::initialize();
   if(!sc) return sc;
-  // -> square as errors are quadratically summed
-  m_detectorResolutionCoeff *= m_detectorResolutionCoeff;
-  m_multipleScatteringCoeff *= m_multipleScatteringCoeff;
+
+  double X0 = m_x0MS;
+  m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 0.400 * Gaudi::Units::GeV );
 
   //== Get Velo detector element, to get the R sector angle
   m_velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -62,18 +57,16 @@ LSAdaptPV3DFitter::~LSAdaptPV3DFitter() {}
 //=============================================================================
 // Least square adaptive fitting method
 //=============================================================================
-StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint, 
-                                      std::vector<const LHCb::Track*>& rTracks, 
+StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
+                                      std::vector<const LHCb::Track*>& rTracks,
                                       LHCb::RecVertex& vtx)
 {
-
-  
   Gaudi::XYZPoint xyzvtx = seedPoint;
   // prepare tracks
   m_pvTracks.clear();
 
   std::vector<const LHCb::Track*>::iterator itr;
-  for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {    
+  for(itr = rTracks.begin(); itr != rTracks.end(); itr++) {
     const LHCb::Track* track = *itr;
     if ( !(track->hasVelo()) ) continue;
     addTrackForPV(track, m_pvTracks, seedPoint);
@@ -91,7 +84,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
   bool converged = false;
   int nbIter = 0;
-  while( (nbIter < 2) || (!converged && nbIter < m_Iterations) ) 
+  while( (nbIter < 2) || (!converged && nbIter < m_Iterations) )
   {
     ++nbIter;
 
@@ -101,22 +94,21 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
         hess(i,j) = 0.0;
       }
     }
-   
+
     int ntrin=0;
     for(PVTracks::iterator pvTrack = m_pvTracks.begin(); pvTrack != m_pvTracks.end(); pvTrack++) {
-
       double unitVectStd[3];
       unitVectStd[0] = pvTrack->unitVect.x();
       unitVectStd[1] = pvTrack->unitVect.y();
-      unitVectStd[2] = pvTrack->unitVect.z(); 
-      Gaudi::XYZVector ipVector = 
+      unitVectStd[2] = pvTrack->unitVect.z();
+      Gaudi::XYZVector ipVector =
         impactParameterVector(xyzvtx, pvTrack->stateG.position(), pvTrack->unitVect);
       pvTrack->vd0 = ipVector;
-      pvTrack->d0 = sqrt(ipVector.Mag2());
-      pvTrack->chi2 = (pvTrack->d0 * pvTrack->d0)/ pvTrack->err2d0;
+      pvTrack->d0 = ipVector.Mag2();
+      pvTrack->chi2 = pvTrack->d0/ pvTrack->err2d0;
 
       pvTrack->weight = getTukeyWeight(pvTrack->chi2, nbIter);
-      
+
       if (  pvTrack->weight > m_minTrackWeight ) ntrin++;
 
       double invs = (2.0 / pvTrack->err2d0) * pvTrack->weight;
@@ -142,16 +134,14 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
 
     // check nr of tracks that entered the fit
     if(ntrin < 2) return StatusCode::FAILURE;
-
     int fail;
     hess.Inverse(fail);
     if (0 != fail) {
       warning() << "Error inverting hessian matrix" << endmsg;
       return StatusCode::FAILURE;
     } else {
-      hess.Invert();
+      hess.InvertFast();
     }
-
     ROOT::Math::SVector<double,3> delta;
     delta = hess * d0vec;
 
@@ -166,12 +156,9 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     if(fabs(delta[2]) < m_maxDeltaZ) {
       converged = true;
     }
-
   } // end iteration loop
-
   if(!converged) return StatusCode::FAILURE;
-
-  // Check number of tracks and calculate chi2 
+  // Check number of tracks and calculate chi2
   int outTracks = 0;
   int nDoF = -3;
   double chi2 = 0.0;
@@ -193,7 +180,7 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
   // accepted PV
   vtx.setChi2(chi2);
   vtx.setNDoF(nDoF);
-  
+
   vtx.setPosition(xyzvtx);
   hess = hess * 2.0;
   vtx.setCovMatrix(hess);
@@ -210,38 +197,37 @@ StatusCode LSAdaptPV3DFitter::fitVertex(const Gaudi::XYZPoint seedPoint,
     debug() << "Vertex" << endmsg;
     debug() << "===================" << endmsg;
     debug() << format( "chi2/ndof %7.2f  %7.2f %5d %7.3f %7.3f %7.3f", vtx.chi2()/vtx.nDoF(), vtx.chi2(), vtx.nDoF(),
-            vtx.position().X(), vtx.position().Y(), vtx.position().Z())   
+            vtx.position().X(), vtx.position().Y(), vtx.position().Z())
             << endmsg << endmsg;
     debug() << "Tracks in this vertex" << endmsg;
     debug() << "---------------------" << endmsg;
     for(PVTracks::iterator iFitTr = m_pvTracks.begin(); iFitTr != m_pvTracks.end(); iFitTr++) {
       int invx = 0;
       if( iFitTr->weight > m_minTrackWeight) invx = 1;
-        debug() << format( "chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f %3d",  
+        debug() << format( "chi2 d0 w zc %7.2f %7.2f %7.2f %7.2f %3d",
                    iFitTr->chi2, iFitTr->d0, iFitTr->weight, iFitTr->refTrack->firstState().z(),invx) << endmsg;
-  
+
     }
   }
-
-  return StatusCode::SUCCESS;  
+  return StatusCode::SUCCESS;
 }
 
 //=============================================================================
 // Add track for PV
 //=============================================================================
 void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
-                                      PVTracks& pvTracks, Gaudi::XYZPoint seed) 
+                                      PVTracks& pvTracks, Gaudi::XYZPoint seed)
 {
   // Add new PVTrack
   PVTrack pvtrack;
   pvtrack.isUsed = false;
-  pvtrack.stateG = pvtr->firstState(); 
+  pvtrack.stateG = pvtr->firstState();
   pvtrack.unitVect = pvtrack.stateG.slopes().Unit();
-  pvtrack.d0 = sqrt( (impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect)).Mag2() );
-  if(pvtrack.d0 > m_maxIP2PV) return;
+  pvtrack.d0 = ( (impactParameterVector(seed,  pvtrack.stateG.position(),  pvtrack.unitVect)).Mag2() );
+  if(pvtrack.d0 > m_maxIP2PV*m_maxIP2PV) return;
   pvtrack.err2d0 = err2d0(pvtr);
   pvtrack.chi2 = 0;
-  if(pvtrack.err2d0 > 1.e-12) pvtrack.chi2 = (pvtrack.d0*pvtrack.d0)/pvtrack.err2d0;
+  if(pvtrack.err2d0 > 1.e-12) pvtrack.chi2 = (pvtrack.d0)/pvtrack.err2d0;
   // Keep reference to the original track
   pvtrack.refTrack = pvtr;
   pvTracks.push_back(pvtrack);
@@ -253,82 +239,15 @@ void LSAdaptPV3DFitter::addTrackForPV(const LHCb::Track* pvtr,
 //=============================================================================
 double LSAdaptPV3DFitter::err2d0(const LHCb::Track* track) {
 
-    double z = track->firstState().z();
+  double x     = track->firstState().x();
+  double y     = track->firstState().y();
+  double r     = sqrt(x*x + y*y);
+  double corr2 = (m_scatCons*r)*(m_scatCons*r);
 
-    double dist, distVELO;
-    int nbSta;
-    computeErrorParameters( track, z, dist, nbSta, distVELO );
+  double ex2 = track->firstState().errX2() + corr2;
+  double ey2 = track->firstState().errY2();
 
-    double distRatio = dist / distVELO;
-
-    double slX = track->firstState().tx();
-    double slY = track->firstState().ty();
-
-    double tanTheta = slX * slX + slY * slY;
-
-    double cosTheta = 1 / sqrt( 1 + tanTheta );
-
-    // Error coefficients tuned by hand
-    double detectorResolution = m_detectorResolutionCoeff * 
-      ( distRatio * distRatio + ( 1 + distRatio ) * ( 1 + distRatio ) );
-      
-    // The sinTheta dependence does not appear
-    // => p used instead of pt
-    // Reason: difficulty to get good vertex resolution with pt
-    double multipleScattering = m_multipleScatteringCoeff * 
-      nbSta / cosTheta * dist * dist / cosTheta / cosTheta;
-      
-    double ex2 = track->firstState().errX2() + detectorResolution + multipleScattering;
-      
-    double ey2 = track->firstState().errY2() + detectorResolution + multipleScattering;
-
-    return (ex2+ey2);
-}
-
-//=============================================================================
-// computeErrorParameters
-//=============================================================================
-void LSAdaptPV3DFitter::computeErrorParameters( const LHCb::Track* track, double z,
-                                      double & minZDistToVELOCluster,
-                                      int & nbStaBeforeLastVELOCluster,
-                                      double & distFirstLastVELOCluster ) {
-
-    double minzDist = 10000;
-
-    int nbFirstSta = 84;
-    int nbLastSta  = 0;
-
-    double zMax = - 100000;
-    double zMin = 100000;
-
-    std::vector<LHCb::LHCbID>::const_iterator it;
-
-
-    for ( it = track->lhcbIDs().begin();
-          track->lhcbIDs().end() != it; it++ ) {
-      if ( ! it->isVelo() ) continue;
-      LHCb::VeloChannelID id      = (*it).veloID();
-      int           sensor  = id.sensor();
-      double        zSensor = m_velo -> sensor(id)->z();
-      double        dist    = fabs( zSensor - z );
-
-      if( dist < minzDist )
-        minzDist = dist;
-
-      if ( sensor < nbFirstSta )
-        nbFirstSta = sensor;
-      else if ( sensor > nbLastSta )
-        nbLastSta = sensor;
-
-      if ( zSensor > zMax )
-        zMax = zSensor;
-      else if ( zSensor < zMin )
-        zMin = zSensor;
-    }
-
-    minZDistToVELOCluster      = minzDist;
-    nbStaBeforeLastVELOCluster = int(float(nbLastSta-nbFirstSta)/4.);
-    distFirstLastVELOCluster   = zMax - zMin;
+  return (ex2+ey2);
 }
 
 

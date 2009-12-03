@@ -1,4 +1,4 @@
-// $Id: PatPV2DFit3D.cpp,v 1.1 2009-11-11 15:11:49 witekma Exp $
+// $Id: PatPV2DFit3D.cpp,v 1.2 2009-12-03 08:49:06 pmorawsk Exp $
 // Include files
 
 // from Gaudi
@@ -33,7 +33,6 @@ PatPV2DFit3D::PatPV2DFit3D( const std::string& name,
   declareProperty( "maxNumPv"        , m_maxNumPv      = 10             );
   declareProperty( "maxIter"         , m_maxIter       =  3             );
   declareProperty( "minMult"         , m_minMult       =  6             );
-  declareProperty( "x0MS"            , m_x0MS          =  0.01          );
   declareProperty( "multiQualityPV"  , m_multiQualityPV   =  10         );
   declareProperty( "minBackQualityPV", m_minBackQualityPV =   2         );
   declareProperty( "dzQualityPV"     , m_dzQualityPV      =  20.*Gaudi::Units::mm     );
@@ -55,10 +54,6 @@ StatusCode PatPV2DFit3D::initialize() {
 
   debug() << "==> Initialize" << endmsg;
 
-//    double X0 = 0.0048; // 440 um of Si
-  double X0 = m_x0MS;
-  m_scatCons = (13.6*sqrt(X0)*(1.+0.038*log(X0))) / ( 0.400 * Gaudi::Units::GeV );
-
 
   //== Get Velo detector element, to get the R sector angle
   DeVelo* velo = getDet<DeVelo>( DeVeloLocation::Default );
@@ -74,11 +69,16 @@ StatusCode PatPV2DFit3D::initialize() {
                                 + (*sensorRIt)->phiMaxZone(izone) );
     m_phiOfSector[izone+4] = m_phiOfSector[izone] + M_PI;
   };
-
   Gaudi::XYZPoint localZero(0.,0.,0.);
-  m_boxOffsetLeft  = velo->rSensor(0)->veloHalfBoxToGlobal(localZero) - localZero;
-  m_boxOffsetRight = velo->rSensor(1)->veloHalfBoxToGlobal(localZero) - localZero;
-  std::cout << "velo offset" << m_boxOffsetLeft << "  " << m_boxOffsetRight << std::endl;
+  for (int iSens = 0; iSens < 2; iSens++){
+    int sensNo = iSens*40;
+    m_boxOffsetLeft[iSens]  = velo->rSensor(sensNo  )->veloHalfBoxToGlobal(localZero) - localZero;
+    m_boxOffsetRight[iSens] = velo->rSensor(sensNo+1)->veloHalfBoxToGlobal(localZero) - localZero;
+    m_zLeft[iSens]  = velo->rSensor(sensNo  )->z();
+    m_zRight[iSens] = velo->rSensor(sensNo+1)->z();
+  }
+  addTracks(100);
+
   // Access PVSeedTool
   m_pvSeedTool = tool<IPVSeeding>( "PVSeedTool", this );
   if( !m_pvSeedTool ) {
@@ -100,11 +100,10 @@ StatusCode PatPV2DFit3D::initialize() {
 // Main execution
 //=============================================================================
 StatusCode PatPV2DFit3D::execute() {
-
   debug() << "==> Execute" << endmsg;
 
   m_inputTracks   = get<LHCb::Tracks>( m_inputTracksName );
-  std::vector<const LHCb::Track*> rtracks;
+
 
   std::vector<LHCb::Track*> travec_2d;
   std::vector<LHCb::Track*> travec_3d;
@@ -112,26 +111,24 @@ StatusCode PatPV2DFit3D::execute() {
   m_outputVertices  = new LHCb::RecVertices();
   put(m_outputVertices, m_outputVerticesName);
 
-  std::vector<myTrack> myTracks;
-  myTracks.reserve( m_inputTracks->size() );
-  std::vector<myTrack>::iterator itMyTr;
-  std::vector<myVertex>::iterator itMyPv;
 
 //   to aviod edge effects
-//   double maxZ =  (200. -10.)*Gaudi::Units::mm;
-
+  double maxZ =  (200. -10.)*Gaudi::Units::mm;
 
   // select 2d tracks and fill local bookkeeping table
-  for ( std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin();
-        m_inputTracks->end() != itT; itT++ ) {
+  unsigned int nTracks = 0;
+  for ( std::vector<LHCb::Track*>::const_iterator itTr = m_inputTracks->begin(); m_inputTracks->end() != itTr; itTr++ ) {
+    nTracks++;
+  }
+//   int nTracks = m_inputTracks.size();
+  if (nTracks > m_sTracks.size()) addTracks(nTracks - m_sTracks.size());
+  std::vector<const LHCb::Track*> rtracks;
+
+  int iTrack = 0;
+  for (std::vector<LHCb::Track*>::const_iterator itT = m_inputTracks->begin(); m_inputTracks->end() != itT; itT++ ) {
     LHCb::Track* pTr2d = (*itT);
 
     if (pTr2d->checkFlag( LHCb::Track::Invalid ))   continue;
-    //    if ( pTr2d->checkFlag( LHCb::Track::Backward ))   continue;
-    //    if ( int(pTr2d->specific())>3) continue;
-
-    LHCb::Track* new2d = new LHCb::Track();
-    new2d->copy(*pTr2d);
 
     double zFirst  = pTr2d->firstState().z();
     double rFirst  = pTr2d->firstState().x();
@@ -141,55 +138,63 @@ StatusCode PatPV2DFit3D::execute() {
     int    sector  = pTr2d->specific();
     double phi     = m_phiOfSector[ sector ];
     Gaudi::TrackSymMatrix cov = pTr2d->firstState().covariance();
-
-//     correction of VeLo Offset
-    double phi_h   = phi;
     bool   isRight = sector > 3;
-    double xFirst  = rFirst*cos(phi);
-    double yFirst  = rFirst*sin(phi);
 
-     double xVeloOffset, yVeloOffset, zVeloOffset;
-     if (isRight){
-       xVeloOffset = m_boxOffsetRight.x();
-       yVeloOffset = m_boxOffsetRight.y();
-       zVeloOffset = m_boxOffsetRight.z();
-     }else{
-       xVeloOffset = m_boxOffsetLeft.x();
-       yVeloOffset = m_boxOffsetLeft.y();
-       zVeloOffset = m_boxOffsetLeft.z();
-     }
-     xFirst += xVeloOffset;
-     yFirst += yVeloOffset;
-     zFirst += zVeloOffset;
-     phi     = atan(yFirst/xFirst);
-     if (isRight) phi += M_PI;
-     rFirst  = sqrt(xFirst*xFirst + yFirst*yFirst);
-     trFirst*=cos(phi-phi_h);
+    //     correction of VeLo Offset
+    double xVeloOffset, yVeloOffset, zVeloOffset;
+    double r[2], x[2], y[2], tx, ty, z[2], xFirst, yFirst;
+    for (int it=0; it<2; it++){
+      if (isRight) {
+        xVeloOffset = m_boxOffsetRight[it].x();
+        yVeloOffset = m_boxOffsetRight[it].y();
+        zVeloOffset = m_boxOffsetRight[it].z();
+        z[it]       = m_zRight[it];
+      }else{
+        xVeloOffset = m_boxOffsetLeft[it].x();
+        yVeloOffset = m_boxOffsetLeft[it].y();
+        zVeloOffset = m_boxOffsetLeft[it].z();
+        z[it]       = m_zLeft[it];
+      }
+      r[it] =  rFirst + trFirst*(z[it] - zFirst);
+      x[it] =  r[it]*cos(phi);
+      y[it] =  r[it]*sin(phi);
 
-    double addScat = m_scatCons * trFirst;
+      x[it] += xVeloOffset;
+      y[it] += yVeloOffset;
+      z[it] += zVeloOffset;
+    }
+    tx = (x[0] - x[1])/(z[0] - z[1]);
+    ty = (y[0] - y[1])/(z[0] - z[1]);
+    trFirst = tx*cos(phi) + ty*sin(phi);
+    xFirst = x[0] + tx*(zFirst - z[0]);
+    yFirst = y[0] + ty*(zFirst - z[0]);
+    phi = atan(yFirst/xFirst);
+    if (isRight) phi += M_PI;
+
+    rFirst = sqrt(xFirst*xFirst + yFirst*yFirst);
     double z0      = zFirst - rFirst/trFirst; // where r = 0.
-    d2r0 += (addScat * (zFirst-z0))*(addScat * (zFirst-z0));
 
-    new2d->firstState().setX(xFirst);
-    new2d->firstState().setY(yFirst);
-    new2d->firstState().setZ(zFirst);
-    new2d->firstState().setTx(trFirst*cos(phi));
-    new2d->firstState().setTy(trFirst*sin(phi));
-    new2d->setType( LHCb::Track::Velo);
+    if( maxZ > fabs(z0) ) {
+      m_sTracks[iTrack]->setFlags(pTr2d->flag());
+      m_sTracks[iTrack]->setType(LHCb::Track::Velo);
+      m_sTracks[iTrack]->firstState().setX(xFirst);
+      m_sTracks[iTrack]->firstState().setY(yFirst);
+      m_sTracks[iTrack]->firstState().setZ(zFirst);
+      m_sTracks[iTrack]->firstState().setTx(trFirst*cos(phi));
+      m_sTracks[iTrack]->firstState().setTy(trFirst*sin(phi));
 
-    cov(0,0) = d2r0*cos(phi)*cos(phi);
-    cov(1,1) = d2r0*sin(phi)*sin(phi);
-    cov(2,2) = d2tr*cos(phi)*cos(phi);
-    cov(3,3) = d2tr*sin(phi)*sin(phi);
-    new2d->firstState().setCovariance(cov);
+      cov(0,0) = d2r0*cos(phi)*cos(phi);
+      cov(1,1) = d2r0*sin(phi)*sin(phi);
+      cov(2,2) = d2tr*cos(phi)*cos(phi);
+      cov(3,3) = d2tr*sin(phi)*sin(phi);
+      m_sTracks[iTrack]->firstState().setCovariance(cov);
 
-    // add MS from RF foil, constant Pt
-    rtracks.push_back(new2d);
-    travec_2d.push_back(pTr2d);
-    travec_3d.push_back(new2d);
-
+      rtracks.push_back(m_sTracks[iTrack]);
+      travec_2d.push_back(pTr2d);
+      travec_3d.push_back(m_sTracks[iTrack]);
+    }
+    iTrack++;
   }
-
   std::vector<LHCb::RecVertex> rvts;
   StatusCode scfit = m_pvsfit->reconstructMultiPVFromTracks(rtracks,rvts);
   if (scfit == StatusCode::SUCCESS) {
@@ -202,7 +207,6 @@ StatusCode PatPV2DFit3D::execute() {
        Gaudi::XYZPoint pos_shift = vertex->position();
        pos_shift.SetZ(pos_shift.z() - 0.019);
        vertex->setPosition(pos_shift);
-       
 
        // replace temporary quasi 3D tracks by original RZVelo tracks
        std::vector<LHCb::Track*> pv_tracks;
@@ -212,33 +216,44 @@ StatusCode PatPV2DFit3D::execute() {
          std::vector<LHCb::Track*>::iterator itr_found;
          itr_found = std::find(travec_3d.begin(), travec_3d.end(), *iTr );
          if ( itr_found != travec_3d.end() ) {
-           pv_tracks.push_back( travec_2d[ itr_found - travec_3d.end() ] );
+           pv_tracks.push_back( travec_2d[ itr_found - travec_3d.begin() ] );
          }
        }
        vertex->clearTracks();
        for ( std::vector<LHCb::Track*>::iterator itput = pv_tracks.begin(); itput != pv_tracks.end(); itput++) {
          vertex->addToTracks(*itput);
-       }   
+       }
        m_outputVertices->insert(vertex);
      }
-
   }
-
-  // delete created quasi-3D tracks
-  for ( std::vector<const LHCb::Track*>::iterator idel = rtracks.begin(); idel != rtracks.end(); idel++) {
-    delete *idel;
-  } 
 
   setFilterPassed(!rvts.empty());
 
   return StatusCode::SUCCESS;
 }
 
+void PatPV2DFit3D::addTracks(int n){
+  for (int fill=0; fill<n; fill++){
+    LHCb::Track* newTr = new LHCb::Track();
+    newTr->setType( LHCb::Track::Velo);
+    LHCb::State* newSt = new LHCb::State();
+    newSt->setX(.0);
+    newSt->setY(.0);
+    newSt->setZ(.0);
+    newSt->setTx(.0);
+    newSt->setTy(.0);
+    newTr->addToStates(*newSt);
+    m_sTracks.push_back(newTr);
+  }
+}
 //=============================================================================
 //  Finalize
 //=============================================================================
 StatusCode PatPV2DFit3D::finalize() {
 
+  for ( std::vector<LHCb::Track*>::iterator idel = m_sTracks.begin(); idel != m_sTracks.end(); idel++) {
+    delete *idel;
+  }
   debug() << "==> Finalize" << endmsg;
 
   return GaudiAlgorithm::finalize();  // must be called after all other actions
