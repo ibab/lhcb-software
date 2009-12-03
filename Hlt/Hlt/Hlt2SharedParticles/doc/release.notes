@@ -1,14 +1,14 @@
-$Id: release.notes,v 1.66 2009-12-02 10:29:56 jnardull Exp $
+$Id: release.notes,v 1.67 2009-12-03 12:46:47 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2SharedParticles
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
 ! Purpose     : define the shared particle used in Hlt2
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2SharedParticles v3r0 2009-12-03 ===================
 ! 2009-12-02 - Jacopo Nardulli
  - Modifications in V0.py 
 
-!========================== Hlt2SharedParticles v3r0 2009-11-30 ===================
 ! 2009-11-27 - Patrick Koppenburg
    https://savannah.cern.ch/task/index.php?12690
  - Remove PV = True/False argument of HltLine. The PV should be loaded 
