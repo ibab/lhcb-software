@@ -6,7 +6,7 @@
 """
 # =============================================================================
 __author__  = "P. Koppenburg Patrick.Koppenburg@cern.ch"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.41 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.42 $"
 # =============================================================================
 from Gaudi.Configuration import *
 from LHCbKernel.Configuration import *
@@ -23,6 +23,7 @@ from Hlt2Lines.Hlt2B2HHLines            import Hlt2B2HHLinesConf
 from Hlt2Lines.Hlt2B2LLXLines           import Hlt2B2LLXLinesConf
 from Hlt2Lines.Hlt2DisplVerticesLines   import Hlt2DisplVerticesLinesConf
 from Hlt2Lines.Hlt2CommissioningLines   import Hlt2CommissioningLinesConf
+from Hlt2Lines.Hlt2ExpressLines         import Hlt2ExpressLinesConf
 
 # Define what categories stand for
 # There are the strings used in HltThresholdSettings
@@ -42,7 +43,8 @@ class Hlt2Conf(LHCbConfigurableUser):
                              , Hlt2B2HHLinesConf
                              # , Hlt2B2LLXLinesConf                         # DO NOT RUN UNTIL CALO IS FIXED
                              , Hlt2DisplVerticesLinesConf
-                             , Hlt2CommissioningLinesConf 
+                             , Hlt2CommissioningLinesConf
+                             , Hlt2ExpressLinesConf
                              ]
     __slots__ = {
            "DataType"                   : '2009'    # datatype is one of 2009, MC09, DC06...
