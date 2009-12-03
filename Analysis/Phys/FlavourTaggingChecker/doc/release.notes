@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.68 2009-11-30 22:46:24 musy Exp $
+! $Id: release.notes,v 1.69 2009-12-03 00:34:24 musy Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/FlavourTaggingChecker
 ! Responsible : Marco Musy (marco.musy@cern.ch)
 ! Purpose     : Checker package for Phys/FlavourTagging
 !-----------------------------------------------------------------------------
+
+! 2009-12-03 - M. Musy
+ - Small fixes to BTaggingAnalysis
 
 ! 2009-11-30 - M. Musy
  - changed some output levels, 

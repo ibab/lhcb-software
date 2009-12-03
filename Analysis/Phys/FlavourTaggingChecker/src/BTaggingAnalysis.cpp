@@ -286,11 +286,14 @@ StatusCode BTaggingAnalysis::execute() {
     const MCParticle* mcp = m_assoc->relatedMCP( *ip, LHCb::MCParticleLocation::Default );
     if( mcp ) {
       sigMCID.push_back(mcp->particleID().pid());
-      if( mcp->mother() ) sigMCMothID.push_back(mcp->mother()->particleID().pid()); else sigMCMothID.push_back(0);
+      if( mcp->mother() ) sigMCMothID.push_back(mcp->mother()->particleID().pid()); 
+      else sigMCMothID.push_back(0);
       sigMCP.push_back(mcp->p()/Gaudi::Units::GeV);
       sigMCPt.push_back(mcp->pt()/Gaudi::Units::GeV);
       sigMCPhi.push_back(mcp->momentum().Phi());
-    } else { sigMCID.push_back(0); sigMCMothID.push_back(0); sigMCP.push_back(0); sigMCPt.push_back(0); sigMCPhi.push_back(0); 
+    } else { 
+      sigMCID.push_back(0); sigMCMothID.push_back(0); 
+      sigMCP.push_back(0); sigMCPt.push_back(0); sigMCPhi.push_back(0); 
     }
   }
   
@@ -540,6 +543,14 @@ StatusCode BTaggingAnalysis::execute() {
     vtags.push_back(*ip);               // Fill container of candidates
     /////////////////////////////////////
 
+    if (msgLevel(MSG::DEBUG)) 
+      debug() <<"part ID="<<(*ip)->particleID().pid()
+ 	      <<" p="<<(*ip)->p()/Gaudi::Units::GeV
+ 	      <<" PIDm="<<(*ip)->proto()->info( ProtoParticle::CombDLLmu, 0)
+ 	      <<" PIDe="<<(*ip)->proto()->info( ProtoParticle::CombDLLe, 0)
+ 	      <<" PIDk="<<(*ip)->proto()->info( ProtoParticle::CombDLLk, 0)
+ 	      <<endreq;
+
   }
 
   ///------------------------------------------------------- Fill Tagger info
@@ -670,11 +681,14 @@ StatusCode BTaggingAnalysis::execute() {
     pvFlag.push_back(vFlag);
     
     //-------------------------------------------------------
-    debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
-    debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
-    debug() << " IPsig="<<fabs(IP/IPerr) << " IPPU="<<IPPU <<endreq;
-    debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
-    debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
+    if (msgLevel(MSG::DEBUG)) {
+      debug() << " --- trtyp="<<trtyp<<" ID="<<ID<<" P="<<P<<" Pt="<<Pt <<endreq;
+      debug() << " deta="<<deta << " dphi="<<dphi << " dQ="<<dQ <<endreq;
+      debug() << " IPsig="<<fabs(IP/IPerr) << " IPPU="<<IPPU <<endreq;
+      debug() << " sigPhi="<<distphi<< " lcs " << lcs << endreq;
+      debug()<< " mNSH="<<muonNSH<< " vFlag="<<vFlag<<endreq;
+      if(vFlag) debug() << "Found to be in VTX "<<endreq;
+    }
 
     //store MC info 
     long MCID  = 0;
