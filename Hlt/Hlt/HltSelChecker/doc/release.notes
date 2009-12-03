@@ -19,7 +19,10 @@
 !
 !-----------------------------------------------------------------------------
 
-!========================== HltSelChecker v10r2 2009-11-30 ===================
+!========================== HltSelChecker v10r2 2009-12-03 ===================
+! 2009-12-03 - Patrick Koppenburg
+ - Remove protection against (crashing) PV writing in Psi2S test
+
 ! 2009-11-25 - Patrick Koppenburg
  - Remove obsolete FilterTrueTracks.py and OverwriteWithTruth.py. They would
    not work anymore and (part of) the functionality has been moved to CheckerSeq.

@@ -1,4 +1,4 @@
-### $Id: DVTestHlt2.py,v 1.6 2009-11-25 09:12:48 pkoppenb Exp $
+### $Id: DVTestHlt2.py,v 1.7 2009-12-03 12:23:23 pkoppenb Exp $
 #
 #   Hlt 2 selections test job
 #
@@ -51,7 +51,6 @@ DaVinci().TupleFile = "HLT-MB.root"     # Histogram file
 # DaVinci().ReplaceL0BanksWithEmulated = True 
 
 MessageSvc().Format = "% F%60W%S%7W%R%T %0W%M"
-HltConf().EnableHltSelReports = False 
 
 # This will speed things up, but don't do that if you add a DaVinci selection
 

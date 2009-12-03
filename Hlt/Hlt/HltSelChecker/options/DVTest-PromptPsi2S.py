@@ -16,5 +16,3 @@ CS = CheckerSeq( DV=DaVinci()
                , Input = [ "DATAFILE='PFN:castor:/castor/cern.ch/user/s/sabatino/182/outputdata/psi_2S.dst' TYP='POOL_ROOTTREE' OPT='READ'" ])
 CS.configure()
 
-DaVinci().SkipEvents = 10 
-HltConf().EnableHltSelReports = False 

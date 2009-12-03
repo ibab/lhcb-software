@@ -1,4 +1,4 @@
-$Id: release.notes,v 1.91 2009-12-03 07:51:33 albrecht Exp $
+$Id: release.notes,v 1.92 2009-12-03 12:24:58 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt2Lines
 ! Responsible : P. Koppenburg / G. Raven / V. Gligorov
@@ -9,13 +9,13 @@ $Id: release.notes,v 1.91 2009-12-03 07:51:33 albrecht Exp $
 !
 !-----------------------------------------------------------------------------
 
+!========================== Hlt2Lines v2r0 2009-11-30 ===================
 ! 2009-12-03 - Johannes Albrecht
  - Hlt2InclusiveDiMuonLines.py: add Z2mm selection
 
 ! 2009-12-02 - Jacopo Nardulli
   - Minor modifications to the B2DX lines
 
-!========================== Hlt2Lines v2r0 2009-11-30 ===================
 ! 2009-11-29 - Jaap Panman
  - HltCommissioningLines: correct passThrough for Hlt1MiniBiasLines, Hlt1NoBiasLines
 
