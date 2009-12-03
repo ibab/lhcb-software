@@ -1,14 +1,14 @@
-! $Id: release.notes,v 1.52 2009-12-02 13:42:25 albrecht Exp $
+! $Id: release.notes,v 1.53 2009-12-03 12:26:27 pkoppenb Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
 
-! 2009-12-02 - Johannes Albrecht
+!!========================== HltLine v2r0 2009-12-03 ===================
+ 2009-12-02 - Johannes Albrecht
   - HltReco.py: add dummy vertex position filters for monitoring of PV2D position
 
-!========================== HltLine v2r0 2009-11-30 ===================
 ! 2009-11-27 - Patrick Koppenburg
    https://savannah.cern.ch/task/index.php?12690
  - Remove PV = True/False argument of HltLine. The PV should be loaded 
