@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.74 2009-12-01 20:59:49 witekma Exp $
+! $Id: release.notes,v 1.75 2009-12-03 00:16:32 aperezca Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-12-03 - Antonio Perez-Calero
+ - corrected bug in Hlt1MuonLines.py (undid Gerhard changes of 11-11!)
 
 ! 2009-12-01 - Mariusz Witek
  - adjustment of names of cut slots
