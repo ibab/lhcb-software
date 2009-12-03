@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.h,v 1.1 2009-10-26 14:46:26 jvantilb Exp $
+// $Id: STPulseMonitor.h,v 1.2 2009-12-03 15:59:48 jvantilb Exp $
 #ifndef STPulseMonitor_H
 #define STPulseMonitor_H 1
 
@@ -44,6 +44,9 @@
  *    When specifying "sector", it will subdivide the histograms per sector
  *    (within a service box). By default this list is set to: {"all"}, which
  *    means that there is no subdivision.
+ *   - <b>UseNZSdata</b>: Flag to use NZS data. Default is set to true. In that
+ *     case the InputData has to be in the NZS format. If this flag is false the
+ *     InputData location has to contain STClusters.
  *  
  *  A presentation on this algorithm and the results was giving on 20.10.2009 in
  *  the ST TED run analysis meeting by Helge: http://indico.cern.ch/event/71185 
@@ -79,6 +82,7 @@ private:
   /// List to the spills to loop over. E.g. "Next1", "Central", "Prev2", etc.
   std::vector<std::string> m_spills;
 
+  bool m_useNZSdata;     ///< Flag to use either NZS or ZS data
   double m_chargeCut;    ///< Cut on the total charge of the STClusters
   unsigned int m_bunchID;///< Cut on the bunch ID (distinguish TED from cosmics)
   bool m_skipShortThick; ///< Skip short and thick ladders (for IT only)

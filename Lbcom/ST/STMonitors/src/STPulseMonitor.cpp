@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.cpp,v 1.1 2009-10-26 14:46:26 jvantilb Exp $
+// $Id: STPulseMonitor.cpp,v 1.2 2009-12-03 15:59:48 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -56,6 +56,7 @@ STPulseMonitor::STPulseMonitor( const std::string& name,
   declareProperty("BunchID",       m_bunchID        = 0u   );// BunchID 
   declareProperty("SkipShortThick",m_skipShortThick = true );
   declareProperty("DirNames",      m_dirNames       = list_of("all") );
+  declareProperty("UseNZSdata",    m_useNZSdata     = true );
   
 }
 
@@ -81,18 +82,26 @@ StatusCode STPulseMonitor::execute()
       odin->bunchId() != m_bunchID ) return StatusCode::SUCCESS;
   counter("Number of TED events") += 1;
 
-  // Get the NZS data for the 5 different spills
-  std::vector<STTELL1Datas*> data;
-  for( int iSpill = 0; iSpill < 5; ++iSpill ) {
+  // Get the NZS or ZS data for the different spills
+  std::vector<STTELL1Datas*> dataNZS;
+  std::vector<STClusters*>   dataZS;
+  for( unsigned int iSpill = 0; iSpill < m_spills.size(); ++iSpill ) {
     std::string spillName = m_spills[iSpill];
     if( spillName == "Central" ) spillName = "";
     else                         spillName = "/" + spillName;
     std::string dataLocation = "/Event" + spillName + "/" + m_dataLocation;
-    data += get<STTELL1Datas>(dataLocation) ;
+    if( m_useNZSdata ) {
+      if(!exist<STTELL1Datas>(dataLocation) ) dataNZS.push_back(0)  ;
+      dataNZS += get<STTELL1Datas>(dataLocation) ;
+    } else { 
+      if(!exist<STClusters>(dataLocation) ) dataZS.push_back(0)  ;
+      else dataZS += get<STClusters>(dataLocation) ;
+    }
+    
   }
   
   // Check cluster location exists
-  if(!exist<LHCb::STClusters>(m_clusterLocation)) return StatusCode::SUCCESS;
+  if(!exist<STClusters>(m_clusterLocation)) return StatusCode::SUCCESS;
 
   // Loop over the clusters
   LHCb::STClusters* clusters = get<LHCb::STClusters>(m_clusterLocation);
@@ -136,29 +145,47 @@ StatusCode STPulseMonitor::execute()
     if( foundBadChannel ) continue;
 
     // Loop over the spills
-    for( int iSpill = 0; iSpill < 5; ++iSpill ) {
+    for( unsigned int iSpill = 0; iSpill < m_spills.size(); ++iSpill ) {
       std::string spillName = m_spills[iSpill];
-      STTELL1Data* boardData = data[iSpill]->object(sourceID);
-      const STTELL1Data::Data& dataValues = boardData->data();
 
-      // Loop over the strips in this cluster and calculate the charge in ADC
-      double value = 0.0;
-      double highValue = 0.0;
-      STCluster::ADCVector::const_iterator iVec = adcVec.begin();
-      for( ; iVec < adcVec.end(); ++iVec ) {       
+      double charge = 0.0;
+      double highCharge = 0.0;
 
-        // Determine Tell1 channel of this strip
-        STChannelID iChan = STChannelID(int(chanID) + iVec->first);
-        STDAQ::chanPair cPair = readoutTool()->offlineChanToDAQ(iChan, 0.0);
-        int iStrip = cPair.second;
-
-        // Add the charges and find the highest charge
-        value += dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
-        if( iVec->first == highestStrip ) 
-          highValue =dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
+      if( m_useNZSdata ) {
+        if( dataNZS[iSpill] == 0 ) continue;
+        STTELL1Data* boardData = dataNZS[iSpill]->object(sourceID);
+        const STTELL1Data::Data& dataValues = boardData->data();
+        
+        // Loop over the strips in this cluster and calculate charge in ADC
+        STCluster::ADCVector::const_iterator iVec = adcVec.begin();
+        for( ; iVec < adcVec.end(); ++iVec ) {       
+          
+          // Determine Tell1 channel of this strip
+          STChannelID iChan = STChannelID(int(chanID) + iVec->first);
+          STDAQ::chanPair cPair = readoutTool()->offlineChanToDAQ(iChan, 0.0);
+          int iStrip = cPair.second;
+          
+          // Add the charges and find the highest charge
+          charge +=dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
+          if( iVec->first == highestStrip ) 
+            highCharge = 
+              dataValues[iStrip/nStripsInBeetle][iStrip%nStripsInBeetle];
+        }
+      } else { // use the ZS data (i.e. use the clusters)
+        if( dataZS[iSpill] == 0 ) continue;
+        STClusters::iterator iclus = dataZS[iSpill]->begin();
+        while( iclus != dataZS[iSpill]->end() && !(*iclus)->overlaps(cluster))
+          ++iclus;
+        if( iclus != dataZS[iSpill]->end() ) {
+          charge = (*iclus)->totalCharge();
+          highCharge = (*iclus)->maxADCValue();
+        } else {
+          continue; // To avoid peak at zero in Landau plot
+        }
       }
       
-      std::string sb = readoutTool()->serviceBox(chanID);
+
+      std::string sb = readoutTool()->serviceBox( chanID );
       std::string clusSize = boost::lexical_cast<std::string>(cluster->size());
 
       // Loop over the directories (can be used to subdivide the service box)
@@ -166,26 +193,43 @@ StatusCode STPulseMonitor::execute()
       for( ; iDir != m_dirNames.end(); ++iDir ) {
 
         // Create the directory name. 
-        std::string dir = "/" + *iDir;
+        std::string dir = *iDir;
         if( *iDir == "sector" ) // if it contains "sector", add sector name 
           dir += sector->nickname();
         if( *iDir == "type"   ) // if it contains "type", add sector type
           dir += sector->type();
 
-        // Make histograms per service box
-        plot1D(value, sb + dir + "/Charge" + spillName,
+        // Make histograms for the whole detector
+        plot1D(charge, dir + "/Charge" + spillName,
                "Charge " + spillName, -50.5, 150.5, 201);
-        plot1D(value, sb + dir + "/Charge" + clusSize + spillName,
+        plot1D(charge, dir + "/Charge" + clusSize + spillName,
                "Charge " + clusSize + "-strip "+ spillName,-50.5,150.5,201);
-        plot1D(highValue, sb + dir + "/HighestCharge" + spillName,
+        plot1D(highCharge, dir + "/HighestCharge" + spillName,
                "Highest charge " + spillName, -50.5, 150.5, 201);
         if( noise > 0.0 ) {
-          plot1D(value/noise, sb + dir + "/SN" + spillName,
+          plot1D(charge/noise, dir + "/SN" + spillName,
                  "Signal over noise " + spillName, -50.5, 150.5, 201);
-          plot1D(value/noise, sb + dir + "/SN" + clusSize + spillName,
+          plot1D(charge/noise, dir + "/SN" + clusSize + spillName,
                  "Signal over noise " + clusSize + "-strip " + spillName,
                  -50.5, 150.5, 201);
-          plot1D(highValue/noise, sb + dir + "/HighestSN" + spillName,
+          plot1D(highCharge/noise, dir + "/HighestSN" + spillName,
+                 "Highest signal over noise " + spillName, -50.5,150.5,201);
+        } 
+
+        // Make histograms per service box
+        plot1D(charge, sb + "/" + dir + "/Charge" + spillName,
+               "Charge " + spillName, -50.5, 150.5, 201);
+        plot1D(charge, sb + "/" + dir + "/Charge" + clusSize + spillName,
+               "Charge " + clusSize + "-strip "+ spillName,-50.5,150.5,201);
+        plot1D(highCharge, sb + "/" + dir + "/HighestCharge" + spillName,
+               "Highest charge " + spillName, -50.5, 150.5, 201);
+        if( noise > 0.0 ) {
+          plot1D(charge/noise, sb + "/" + dir + "/SN" + spillName,
+                 "Signal over noise " + spillName, -50.5, 150.5, 201);
+          plot1D(charge/noise, sb + "/" + dir + "/SN" + clusSize + spillName,
+                 "Signal over noise " + clusSize + "-strip " + spillName,
+                 -50.5, 150.5, 201);
+          plot1D(highCharge/noise, sb + "/" + dir + "/HighestSN" + spillName,
                  "Highest signal over noise " + spillName, -50.5,150.5,201);
         } 
       }
