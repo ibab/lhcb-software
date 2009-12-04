@@ -1,7 +1,7 @@
 """
 High level configuration tools for Boole
 """
-__version__ = "$Id: Configuration.py,v 1.61 2009-11-26 11:02:33 cattanem Exp $"
+__version__ = "$Id: Configuration.py,v 1.62 2009-12-04 15:17:46 cattanem Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from Gaudi.Configuration  import *
@@ -44,7 +44,7 @@ class Boole(LHCbConfigurableUser):
        ,"DataType"            : "2009"
        ,"DDDBtag"             : ""
        ,"CondDBtag"           : ""
-       ,"VeloTell1Processing" : False
+       ,"VeloTell1Processing" : True
        ,"Monitors"            : []
        ,"MainSequence"        : []
        ,"InitSequence"        : []
@@ -73,7 +73,7 @@ class Boole(LHCbConfigurableUser):
        ,'DataType'     : """ Data type. Default '2009' (use 'Upgrade' for LHCb Upgrade simulations)"""
        ,'DDDBtag'      : """ Tag for DDDB """
        ,'CondDBtag'    : """ Tag for CondDB """
-       ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (Default value is False) """
+       ,'VeloTell1Processing' : """ Use the Tell1 emulation bit perfect code to perform digitization and zero suppression of the simulated Velo data (default True) """
        ,'Monitors'     : """ List of monitors to execute """
        ,'MainSequence' : """ The default main sequence, see self.DefaultSequence """
        ,'InitSequence' : """ List of initialisation sequences, see KnownInitSubdets """

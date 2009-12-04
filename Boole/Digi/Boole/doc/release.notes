@@ -3,6 +3,10 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r0>2009-12-07 Boole v20r0</A></H1></PRE>
+ - Changes to Configurable:
+   . Change Boole().VeloTell1Processing default to True
+
 </PRE><H1><A NAME=v19r9>2009-11-26 Boole v19r9</A></H1></PRE>
  - Changes to Configurable:
    . Follow changes in DigiConf (GaudiConf v13r1)
