@@ -4,5 +4,4 @@ from Brunel.Configuration import *
 Brunel().OutputType = 'RDST'
 Brunel().PackType   = 'MDF'
 
-Brunel().EvtMax = 0
 Brunel().Monitors  = ["FPE","SC"]

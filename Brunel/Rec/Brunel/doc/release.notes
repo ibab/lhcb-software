@@ -11,6 +11,10 @@ Purpose: LHCb reconstruction program
        these data) (Needs AppConfig v3r25)
      + Remove beam-gas file from input data
 
+ - Changes to tests
+   . brunelmdfrdst test now processes 2009 collisions data file. Tests both the
+     2009 data processing and the mdf pack type
+
 </PRE><H1><A NAME=v35r10>2009-12-01 Brunel v35r10</A></H1><PRE>
  - Changes to tests
    . Update Brunel exclusions file to skip comparisons of geometry overlap
