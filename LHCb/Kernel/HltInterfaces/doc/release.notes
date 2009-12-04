@@ -1,10 +1,11 @@
-! $Id: release.notes,v 1.11 2009-12-04 08:11:06 graven Exp $
+! $Id: release.notes,v 1.12 2009-12-04 13:09:24 graven Exp $
 ! Package     : HltInterfaces
 ! Responsible : Gerhard Raven
 !------------------------------------------------------------------------------
 
 ! 2009-12-04 - Gerhard Raven
  - move IHltReferenceClockSvc out of HltBase and into HltInterfaces
+ - and remove it again: it has been renamed IReferenceRate, and moved to LHCbKernel
 
 !============ Kernel/HltInterfaces v3r0 2009-11-13 ============================
 ! 2009-11-10 - Patrick Koppenburg
