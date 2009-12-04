@@ -4,6 +4,13 @@
 <POOLFILECATALOG>
 
 
+  <File ID="10000000-6BB3-DE11-9269-001EC9AD0A4E">
+    <physical>
+      <pfn filetype="MDF" name="file:///castorfs/cern.ch/grid/lhcb/data/2009/RAW/FULL/FEST/FEST/57916/057916_0000000015.raw"/>
+    </physical>      
+    <logical/>
+  </File>
+
   <File ID="00000000-6BB3-DE11-9269-001EC9AD0A4E">
     <physical>
       <pfn filetype="MDF" name="file:///home/frankm/data/fakedata_000.mdf"/>

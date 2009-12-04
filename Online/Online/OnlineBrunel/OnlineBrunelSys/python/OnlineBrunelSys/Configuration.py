@@ -1,7 +1,7 @@
 """
       High level configuration tools for LHCb applications
 """
-__version__ = "$Id: Configuration.py,v 1.4 2009-10-07 21:49:11 frankb Exp $"
+__version__ = "$Id: Configuration.py,v 1.5 2009-12-04 10:24:44 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 from Gaudi.Configuration import *
@@ -33,7 +33,7 @@ class Serialisation(ConfigurableUser):
       loc = self.getProp("Location")
       buf = self.getProp("Buffer")
       lvl = self.getProp("OutputLevel")
-      explorer = self.getProp("Explorer");
+      explorer = self.getProp("Explorer")
       # First update data of the standard DST writer
       serial = Online.serialWriter(name='DstWriter',location=loc)
       serial.RequireAlgs += ['Reco']
@@ -42,8 +42,8 @@ class Serialisation(ConfigurableUser):
       writer = Online.evtMerger(buffer=buf,name=nam,location=loc,routing=0x100)
       app.OutStream.append(writer)
       if explorer:
-        exp = Online.storeExplorer(load=1,freq=0.99);
-        exp.OutputLevel = 1;
+        exp = Online.storeExplorer(load=1,freq=0.99)
+        exp.OutputLevel = 1
         app.OutStream.append(exp)
 
 

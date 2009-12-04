@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.16 2009-11-04 18:04:12 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.17 2009-12-04 10:24:44 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -26,6 +26,9 @@ def packDST(self,items):
   import OnlineEnv as Online
   import Configurables
 
+  # Put store explorer in front.
+  exp = Online.storeExplorer(load=1,freq=0.99)
+  exp.OutputLevel = 1
   # Configure DST packer algorithm
   packer = Configurables.WritePackedDst('MdfPacker')
   packer.Containers += items
@@ -38,7 +41,7 @@ def packDST(self,items):
   mergeDst.Compress = 0; # May use compress=2 as well
 
   seq = Gaudi.GaudiSequencer("WriteMDFSeq")
-  seq.Members += [ packer, dstUpdate, mergeDst ]
+  seq.Members += [ exp, packer, dstUpdate, mergeDst ]
   print 'Warning: Packing of TES DST data .... commissioned....'
 
 #============================================================================================================
