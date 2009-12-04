@@ -666,6 +666,17 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
   return mHeader->subHeader().H1->m_runNumber;
 }
 
+void displayBuf(char *buf, int size)
+{
+    int *ibuf = (int *) buf;
+    for(int i=0; i<size/4; ++i) {
+        if(i%4 == 0) printf("\n%5x:", i);
+        printf(" %8x ", ibuf[i]);
+    }
+    printf("\n");
+}
+
+
 /** Checks if it is a phys event (which means that bit 34 is set).
  * @param data  The data from which MDF information may be retrieved
  * @param len   The length of the data.
@@ -674,11 +685,34 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
 inline bool MDFWriterNet::checkForPhysEvent(const void *data, size_t ) {
   MDFHeader *mHeader;
   RawBank* b = (RawBank*)data;
-  if ( b->magic() == RawBank::MagicPattern )
+  if ( b->magic() == RawBank::MagicPattern ) {
     mHeader = b->begin<MDFHeader>();
+  }
   else
     mHeader = (MDFHeader*)data;
-  unsigned int physBitMask = mHeader->subHeader().H0->m_trMask[1];
+
+  if( !( (mHeader->size0() == mHeader->size1()) && (mHeader->size0() == mHeader->size2()) ) ) {
+      *m_log << MSG::ERROR << WHERE << "MDFHeader corrupted, aborting!" << endmsg;
+      Incident incident(name(),"DAQ_ERROR");
+      m_incidentSvc->fireIncident(incident);
+      return false;
+  }
+  unsigned int physBitMask=0;
+
+  // Expect a version 3 to apply header1 :)
+  if(mHeader->headerVersion() == 3)
+      physBitMask = mHeader->subHeader().H1->m_trMask[1];
+  else {
+      *m_log << MSG::ERROR << WHERE << "Unknown MDFHeader version " << mHeader->headerVersion() << ", aborting!" << endmsg;
+      Incident incident(name(),"DAQ_ERROR");
+      m_incidentSvc->fireIncident(incident);
+      return false; 
+  }
+
+//  displayBuf((char*)data, 56);
+
+//  displayBuf((char*)mHeader, 56);
+
   if(physBitMask & (unsigned int) 4) {
       return true;
   } else {
