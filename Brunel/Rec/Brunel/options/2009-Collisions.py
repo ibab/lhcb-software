@@ -6,6 +6,7 @@
 from GaudiKernel.ProcessJobOptions import importOptions
 importOptions("$APPCONFIGOPTS/Brunel/moff.py")
 importOptions("$APPCONFIGOPTS/Brunel/veloOpen.py")
+importOptions("$APPCONFIGOPTS/Brunel/allTracksProtoP.py")
 
 from Gaudi.Configuration import FileCatalog, EventSelector
 from Configurables import Brunel
@@ -21,6 +22,5 @@ Brunel().DataType = "2009"
 #--   90000000 - 2 files - 251 events - 0.08 GBytes
 
 EventSelector().Input = [
-    "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62556/062556_0000000001.raw' SVC='LHCb::MDFSelector'"
-    , "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62558/062558_0000000001.raw' SVC='LHCb::MDFSelector'"
+    "DATAFILE='castor:/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/62558/062558_0000000001.raw' SVC='LHCb::MDFSelector'"
     ]

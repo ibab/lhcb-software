@@ -3,6 +3,14 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+ - Changes to example options
+   . In options/2009-Collisions.py:
+     + Add importOptions("$APPCONFIGOPTS/Brunel/allTracksProtoP.py"), additional
+       options to make ProtoParticles for all track types (Brunel default is just
+       [ "Long", "Upstream", "Downstream"] but there are no Velo or TT hits in
+       these data) (Needs AppConfig v3r25)
+     + Remove beam-gas file from input data
+
 </PRE><H1><A NAME=v35r10>2009-12-01 Brunel v35r10</A></H1><PRE>
  - Changes to tests
    . Update Brunel exclusions file to skip comparisons of geometry overlap
