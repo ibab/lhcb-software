@@ -1,4 +1,4 @@
-// $Id: PatDownstream.h,v 1.7 2009-10-13 08:31:40 sstahl Exp $
+// $Id: PatDownstream.h,v 1.8 2009-12-04 17:42:18 sstahl Exp $
 #ifndef PATDOWNSTREAM_H 
 #define PATDOWNSTREAM_H 1
 
@@ -73,6 +73,7 @@ private:
   std::string   m_outputLocation;
   double        m_deltaP;
   double        m_xPredTol;
+  double        m_xPredTol2;
   double        m_tolX;
   double        m_tolUV;
   double        m_tolMomentum;
@@ -82,6 +83,8 @@ private:
   bool          m_clusterFilter;
   bool          m_removeUsed;
   bool          m_removeAll;
+  bool          m_magnetOff;
+    
   double        m_longChi2;
   double        m_maxDist;
     

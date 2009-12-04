@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.13 2009-11-26 18:00:48 mschille Exp $
+// $Id: PatDownstream.cpp,v 1.14 2009-12-04 17:42:18 sstahl Exp $
 // Include files 
 
 #include <algorithm>
@@ -54,6 +54,7 @@ PatDownstream::PatDownstream( const std::string& name,
 
   declareProperty( "deltaP"        , m_deltaP        = 2.0  );
   declareProperty( "xPredTol"      , m_xPredTol      = 150. * Gaudi::Units::mm * Gaudi::Units::GeV  );
+  declareProperty( "xPredTol2"      , m_xPredTol2      = 10. * Gaudi::Units::mm );
   declareProperty( "TolMatch"      , m_tolX          = 0.5 *  Gaudi::Units::mm );
   declareProperty( "TolUV"         , m_tolUV         = 1.0 *  Gaudi::Units::mm );
   declareProperty( "TolMomentum"   , m_tolMomentum   = 20000.    );
@@ -207,6 +208,9 @@ StatusCode PatDownstream::execute() {
     if ( 0 <= m_seedKey && m_seedKey == tr->key() ) m_printing = true;
 
     const double magScaleFactor = m_magFieldSvc->scaleFactor() ;
+    if( std::abs(magScaleFactor) > 1e-6 ){
+        m_magnetOff = false;
+    } else m_magnetOff = true;
     PatDownTrack track( tr, m_zTT, m_zMagnetParams, m_momentumParams, m_yParams, m_errZMag, magScaleFactor );
 
     //Y. Xie: get rid of particles from beampipe 
@@ -240,7 +244,8 @@ StatusCode PatDownstream::execute() {
     // check for compatible momentum
     if ( m_deltaP < fabs(deltaP) ) {
       if ( m_printing ) info() << "   --- deltaP " << deltaP << " -- rejected" << endmsg;
-      continue;
+      if ( !m_magnetOff ) continue;
+      //continue;
     }
 
     // Get hits in TT around a first track estimate
@@ -427,7 +432,9 @@ void PatDownstream::tagUsedTT( const LHCb::Track* tr ) {
 //=========================================================================
 void PatDownstream::getPreSelection( PatDownTrack& track ) {
   // Max Pt around 100 MeV for strange particle decay -> maximum displacement is in 1/p.
-  double xPredTol = m_xPredTol / fabs( track.moment() ) + 10.;  // P dependance + overal tol.
+  double xPredTol = m_xPredTol2;
+  if (std::abs(track.moment()) >  1e-6)  
+      xPredTol = m_xPredTol / fabs( track.moment() ) + m_xPredTol2;  // P dependance + overal tol.
   double yTol = xPredTol;
 
   m_xHits.clear();
@@ -683,7 +690,8 @@ bool PatDownstream::acceptCandidate( PatDownTrack& track, PatDownTrack&  bestTra
   //== Compatible momentum
   if ( m_deltaP < fabs(deltaP) ) {
     if ( m_printing ) info() << " === Deltap too big " << deltaP << endmsg;
-    return false;
+    if ( !m_magnetOff )return false;
+    //return false;
   }
 
   //== Longest -> Keeep it
