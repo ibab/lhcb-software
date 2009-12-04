@@ -3,10 +3,30 @@ Package             : DaVinciSys
 Package Coordinator : Juan Palacios
 Purpose             : LHCb physics analysis application
 
+</PRE><H1><A NAME=v24r6>2009-12-04 DaVinci v24r6. Release for (almost) first collisions. </A></H1><PRE>
+
+Based on Phys v8r13, Analysis v3r14, Rec v7r11, HLT v8r0, Lbcom v7r10, LHCb v28r4, Gaudi v21r6
+
+ * Quick LHCb v28r4-based release for Dec 5/6 collision week-end
+ 
+ * Major release of Hlt (mostly Hlt2)
+   - Updates needed by Pit (first collisions)
+   - Use PV2DFit3D in Hlt1 and PV3D in Hlt2 (the latter in Phys)
+     . See https://savannah.cern.ch/task/index.php?12688
+     . See https://savannah.cern.ch/bugs/index.php?59545
+   - Big changes in way Hlt2 handles PV and reconstruction:
+     . All are explicit dependencies now.
+     . See https://savannah.cern.ch/task/index.php?12690
+   - RoutingBitsWriter now always run
+     . See https://savannah.cern.ch/bugs/index.php?59607
+   - Update of Ecal alley
+
+ * Selections and SelecitonSequences are now clonable.
+
 </PRE><H1><A NAME=v24r5p1>2009-11-22 DaVinci v24r5p1. Release for first beam. </A></H1><PRE>
 
 Based on Phys v8r12p2, Analysis v3r12p1, Rec v7r9, HLT v7r3, Lbcom v7r9, LHCb v28r3, Gaudi v21r6
-s
+
  * Quick LHCb v28r3-based release for first 2010 beam.
 
  * Highlights:
