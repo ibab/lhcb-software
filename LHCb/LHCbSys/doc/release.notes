@@ -81,11 +81,6 @@ This version uses Gaudi v21r6 and LCG_57a
 </PRE><H1><A NAME=v28r3>2009-11-23 LHCbSys v28r3</A></H1><PRE>
 This version uses Gaudi v21r6 and LCG_57a
 
-- Packages modified: 
-
-</PRE><H1><A NAME=v28r3>2009-11-23 LHCbSys v28r3</A></H1><PRE>
-This version uses Gaudi v21r6 and LCG_57a
-
 - Packages modified: DDDB v1r24, RichDet v13r1, RecEvent v2r24, LHCbAlgs v2r31,
     LHCbKernel v11r9p1, LoKiArrayFunctors v8r6, LoKiCore v9r6,
     LoKiNumbers v8r3p1, LoKiPhys v8r11
