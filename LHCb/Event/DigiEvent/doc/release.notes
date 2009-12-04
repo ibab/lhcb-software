@@ -4,6 +4,9 @@
 ! Purpose     : Event model classes related to Digitization
 !-----------------------------------------------------------------------------
 
+! 2009-12-04 - Victor Coco
+ - fix some windows warning in VeloPixLiteCluster
+
 ! 2009-12-02 - Jeroen van Tilburg
  - Fix small bug in STCluster::contain method.
 
