@@ -1,9 +1,14 @@
-! $Id: release.notes,v 1.53 2009-12-03 12:26:27 pkoppenb Exp $
+! $Id: release.notes,v 1.54 2009-12-04 21:34:02 graven Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltLine
 ! Responsible : Gerhard Raven, Vanya Belyaev
 ! Purpose     : Infrastructure for HLT 'lines'
 ! -----------------------------------------------------------------------------
+
+
+ 2009-12-04 - Gerhard Raven
+  - update default Hlt2Line Hlt filter to HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')
+    i.e. the same as 'bit 46'
 
 !!========================== HltLine v2r0 2009-12-03 ===================
  2009-12-02 - Johannes Albrecht

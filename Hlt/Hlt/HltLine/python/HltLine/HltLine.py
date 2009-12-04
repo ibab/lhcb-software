@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltLine.py,v 1.20 2009-11-27 12:44:16 pkoppenb Exp $ 
+# $Id: HltLine.py,v 1.21 2009-12-04 21:34:03 graven Exp $ 
 # =============================================================================
 ## @file
 #
@@ -54,7 +54,7 @@ Also few helper symbols are defined:
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.20 $ "
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.21 $ "
 # =============================================================================
 
 __all__ = ( 'Hlt1Line'     ,  ## the Hlt1 line itself 
@@ -1267,7 +1267,7 @@ class Hlt2Line(object):
         """
 
         if not HLT :
-            HLT = "HLT_PASS_RE('Hlt1(?!Lumi).*Decision')"
+            HLT = "HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Decision')"
 
         ## 1) clone all arguments
         name  = deepcopy ( name  )
