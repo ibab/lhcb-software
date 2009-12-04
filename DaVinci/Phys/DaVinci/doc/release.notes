@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.389 2009-11-22 11:02:11 jpalac Exp $
+! $Id: release.notes,v 1.390 2009-12-04 10:21:18 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -8,6 +8,13 @@
 ! Do not forget to update requirements and job/DaVinci_Ganga.py before tagging
 !
 !-----------------------------------------------------------------------------
+
+
+!========================== DaVinci v24r6 2009-12-04 =======================
+
+! 2009-12-04 - Patrick Koppenburg for Juan Palacios
+ - SelDstWriter moved to Phys/DSTWriters
+ - options/MicroDSTStream.py and options/DaVinci-WriteMicroDST.py moved as well
 
 !========================== DaVinci v24r5p1 2009-11-22 =======================
 
