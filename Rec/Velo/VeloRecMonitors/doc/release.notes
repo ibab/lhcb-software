@@ -4,9 +4,10 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-12-04 - Eduardo Rodrigues
+ - irrelevant file VeloLumiRegionMon_HltInit.opts removed
 
 !======================= VeloRecMonitors v2r4 2009-12-03 =====================
-
 ! 2009-11-23 - James Mylroie-Smith
  -  Fixed problem with track plots
 
