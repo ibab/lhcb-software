@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.h,v 1.8 2009-11-28 10:37:47 ggiacomo Exp $
+// $Id: MuonNNetRec.h,v 1.9 2009-12-04 20:48:06 gpassal Exp $
 #ifndef MUONNNETREC_H 
 #define MUONNNETREC_H 1
 
@@ -14,6 +14,7 @@ class IMuonHitDecode;
 class IMuonPadRec;
 class IMuonClusterRec;
 class ISequencerTimerTool;
+class ITrackMomentumEstimate;
 
 /** @class MuonNNetRec MuonNNetRec.h
  *  
@@ -71,6 +72,9 @@ private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
   IMuonClusterRec* m_clusterTool;
+
+  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
+
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
   bool m_recOK;
@@ -132,6 +136,8 @@ private:
   float m_XtalkRadius;
   /// LHCb tracks output location in TES
   std::string m_trackOutputLoc ;
+  // B field on/off
+  bool m_Bfield;
     
 };
 #endif // MUONNNETREC_H

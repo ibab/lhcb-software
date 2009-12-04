@@ -1,4 +1,4 @@
-// $Id: MuonNNetRec.cpp,v 1.16 2009-11-29 19:50:54 ggiacomo Exp $
+// $Id: MuonNNetRec.cpp,v 1.17 2009-12-04 20:48:06 gpassal Exp $
 
 #include <list>
 
@@ -18,6 +18,8 @@
 #include "MuonTrackRec/IMuonClusterRec.h"
 #include "MuonDet/DeMuonDetector.h"
 #include "MuonNNetRec.h"
+//tools
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 using namespace LHCb;
 using namespace std;
 
@@ -69,6 +71,7 @@ MuonNNetRec::MuonNNetRec( const std::string& type,
   declareProperty( "PadRecTool"       , m_padToolName = "MuonPadRec");
   declareProperty( "ClusterTool"      , m_clusterToolName = "MuonFakeClustering");
   declareProperty( "TracksOutputLocation", m_trackOutputLoc  = "Rec/Muon/Track");
+  declareProperty( "BField"           , m_Bfield = true );
 }
 //=============================================================================
 // Destructor
@@ -619,6 +622,22 @@ StatusCode MuonNNetRec::copyToLHCbTracks()
     LHCb::State state( StateVector( *( hits.front() ), 
                                     Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
                                      1 / 10000. ) );
+
+    double qOverP, sigmaQOverP;
+    if(m_Bfield){
+      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
+      state.setQOverP(qOverP);
+    }
+
+
+    // fill momentum variables for MuonTrack
+    (*t)->setP(state.p());
+    (*t)->setPt(state.pt());
+    (*t)->setqOverP(state.qOverP());
+    (*t)->setMomentum(state.momentum());
+    
+
+    //
     state.setLocation( State::Muon );
     Gaudi::TrackSymMatrix seedCov;
     seedCov(0,0) = (*t)->errbx()*(*t)->errbx();

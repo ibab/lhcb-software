@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.5 2009-11-29 11:42:43 ggiacomo Exp $
+// $Id: MuonCombRec.cpp,v 1.6 2009-12-04 20:48:06 gpassal Exp $
 // Include files 
 #include <fstream>
 
@@ -24,7 +24,8 @@
 #include "MuonDet/DeMuonDetector.h"
 #include "Kernel/MuonTileID.h"
 #include "boost/assign/list_of.hpp"
-
+//tools
+#include "TrackInterfaces/ITrackMomentumEstimate.h"
 // local
 #include "MuonCombRec.h"
 using namespace LHCb; 
@@ -300,6 +301,14 @@ StatusCode MuonCombRec::initialize() {
     }
   }
 
+
+
+  //calculate the transverse momentum  
+  m_fCalcMomentum = tool<ITrackMomentumEstimate>("TrackPtKick");
+  debug() << "In init, PTKick from geometry " << endreq;
+
+
+
   // clear all object containers
   clear();
 
@@ -405,7 +414,7 @@ StatusCode MuonCombRec::muonTrackFind() {
   if(!scf) {
     warning()<<"WARNING: problem in track fitting"<<endmsg;
   }
-  
+
   return StatusCode::SUCCESS;
 };
 
@@ -686,7 +695,7 @@ StatusCode MuonCombRec::muonSearch() {
   }
   
   debug()<<"number of muon Tracks "<<m_tracks.size()<<endreq;
-  
+
   return StatusCode::SUCCESS;
   
 };
@@ -999,6 +1008,23 @@ StatusCode MuonCombRec::copyToLHCbTracks()
     LHCb::State state( StateVector( *( hits.front() ), 
                                     Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
                                      1 / 10000. ) );
+
+
+    double qOverP, sigmaQOverP;
+    if(m_Bfield){
+      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
+      state.setQOverP(qOverP);
+    }
+
+
+    // fill momentum variables for MuonTrack
+    (*t)->setP(state.p());
+    (*t)->setPt(state.pt());
+    (*t)->setqOverP(state.qOverP());
+    (*t)->setMomentum(state.momentum());
+    
+
+    //
     state.setLocation( State::Muon );
     Gaudi::TrackSymMatrix seedCov;
     seedCov(0,0) = (*t)->errbx()*(*t)->errbx();

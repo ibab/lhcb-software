@@ -1,4 +1,4 @@
-// $Id: MuonTrack.h,v 1.7 2009-11-28 10:37:46 ggiacomo Exp $
+// $Id: MuonTrack.h,v 1.8 2009-12-04 20:48:06 gpassal Exp $
 #ifndef MUONTRACKRECMUONTRACK_H 
 #define MUONTRACKRECMUONTRACK_H 1
 
@@ -119,6 +119,16 @@ public:
   /// cluster size (total, and in the x/y views) associated to a given hit 
   /// (only if first hit of a given station, to avoid double counting)
   int clsize(MuonHit* hit, int& xsize, int& ysize);
+  /// track momentum variables; setters
+  inline void setP( double p ){ m_trackP = p; }
+  inline void setPt( double pt ){ m_trackPt = pt; }
+  inline void setqOverP( double qp ){ m_trackqOverP = qp; }
+  inline void setMomentum(  Gaudi::XYZVector mom ){ m_trackMomentum = mom; }
+  /// track momentum variables; getters
+  inline double p() const { return m_trackP; }
+  inline double pt() const { return m_trackPt; }
+  inline double qOverP() const { return m_trackqOverP; }
+  inline Gaudi::XYZVector momentum(){ return m_trackMomentum; }
 
 
 private:
@@ -155,6 +165,11 @@ private:
   double m_sigmaspeed;
   bool m_speedFitted;
   Gaudi::XYZTPoint m_point;
+  // track momentum tracks
+  double m_trackP;
+  double m_trackPt;
+  double m_trackqOverP;
+  Gaudi::XYZVector m_trackMomentum;
   // 
 };
 

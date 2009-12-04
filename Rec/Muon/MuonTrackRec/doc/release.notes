@@ -8,6 +8,14 @@
 !               reconstruction algorithm for beam tracks
 !-----------------------------------------------------------------------------
 
+! 2009-12-04 - v2r5 - GP
+  - new methods in MuonTrack to set/get the momentum of the tracks
+	 * setP(),setPt(),setqOverP(),setMomentum()
+   * p(), pt(), qOverP(), momentum()
+		momentum is a 3D vector with the momentum components.
+   N.B ! to get momentum variables one MUST first call the method 
+   copyToLHCbTracks() which at the moment is not used by default.
+
 ! 2009-12-02 - v2r4 - GG
  minor changes:
  - bug fix in MuonHitDecode (was affecting splash-like events with huge number of hits)

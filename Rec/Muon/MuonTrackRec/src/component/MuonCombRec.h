@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.h,v 1.2 2009-11-18 16:37:32 gpassal Exp $
+// $Id: MuonCombRec.h,v 1.3 2009-12-04 20:48:06 gpassal Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -16,6 +16,7 @@ class IMuonHitDecode;
 class IMuonPadRec;
 class IMuonClusterRec;
 class ISequencerTimerTool;
+class ITrackMomentumEstimate;
 
 
 /** @class MuonCombRec MuonCombRec.h component/MuonCombRec.h
@@ -108,6 +109,9 @@ private:
   IMuonHitDecode* m_decTool;
   IMuonPadRec* m_padTool;
   IMuonClusterRec* m_clusterTool;
+
+  ITrackMomentumEstimate* m_fCalcMomentum; // momentum tool
+
   //  IMuonFastPosTool* m_posTool;
   DeMuonDetector* m_muonDetector;
   bool m_recDone;
