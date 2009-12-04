@@ -1,4 +1,4 @@
-// $Id: LHCbKernelDict.h,v 1.18 2009-09-23 10:10:25 cocov Exp $
+// $Id: LHCbKernelDict.h,v 1.19 2009-12-04 13:07:06 graven Exp $
 #ifndef DICT_LHCBKERNELDICT_H 
 #define DICT_LHCBKERNELDICT_H 1
 
@@ -41,6 +41,7 @@
 #include "Kernel/ITNames.h"
 #include "Kernel/Inspectors.h"
 #include "Kernel/HitPattern.h"
+#include "Kernel/IReferenceRate.h"
 
 // end include files
 

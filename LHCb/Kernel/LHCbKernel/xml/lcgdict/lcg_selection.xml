@@ -40,6 +40,7 @@
   <class name = "ISTClusterPosition"   />
   <class name = "ITrajPoca"            />
   <class name = "IUsedLHCbID"          />
+  <class name = "IReferenceRate"    />
   <class name = "LHCb::TTNames"   />
   <class name = "LHCb::ITNames"   />
   <class name = "LHCb::Inspector" />
