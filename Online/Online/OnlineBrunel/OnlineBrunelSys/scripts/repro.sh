@@ -30,7 +30,7 @@ start_task StorageRecv  "import GaudiOnlineTests;GaudiOnlineTests.runReceiver(bu
 sleep 3
 start_task Storage2Farm "import GaudiOnlineTests;GaudiOnlineTests.runReproSender('${HOST}/FarmRecv',buffer='Send')"
 start_task Farm2Storage "import GaudiOnlineTests;GaudiOnlineTests.runReproSender('${HOST}/StorageRecv',buffer='Output')"
-start_task RecoWR   "import GaudiOnlineTests;GaudiOnlineTests.runRecoWR('Recv',True,False,'./mdfOutput.dat')"
+#start_task RecoWR   "import GaudiOnlineTests;GaudiOnlineTests.runRecoWR('Recv',True,False,'./mdfOutput.dat')"
 #
 # $BIGTERM MBMDump@${HOST} -e "export UTGID=${NODENAME}/MBMDump; $gaudi_run libMBMDump.so mbmdump" &
 start_Brunel

@@ -3,7 +3,7 @@
 
      @author M.Frank
 """
-__version__ = "$Id: BrunelOnline.py,v 1.17 2009-12-04 10:24:44 frankb Exp $"
+__version__ = "$Id: BrunelOnline.py,v 1.18 2009-12-04 16:28:53 frankb Exp $"
 __author__  = "Markus Frank <Markus.Frank@cern.ch>"
 
 import os
@@ -26,9 +26,12 @@ def packDST(self,items):
   import OnlineEnv as Online
   import Configurables
 
+  seq = Gaudi.GaudiSequencer("WriteMDFSeq")
   # Put store explorer in front.
-  exp = Online.storeExplorer(load=1,freq=0.99)
-  exp.OutputLevel = 1
+  #exp = Online.storeExplorer(load=1,freq=0.000001)
+  #exp.OutputLevel = 1
+  #seq.Members += [ exp ]
+
   # Configure DST packer algorithm
   packer = Configurables.WritePackedDst('MdfPacker')
   packer.Containers += items
@@ -40,8 +43,7 @@ def packDST(self,items):
   mergeDst.AddFID = 1;
   mergeDst.Compress = 0; # May use compress=2 as well
 
-  seq = Gaudi.GaudiSequencer("WriteMDFSeq")
-  seq.Members += [ exp, packer, dstUpdate, mergeDst ]
+  seq.Members += [ packer, dstUpdate, mergeDst ]
   print 'Warning: Packing of TES DST data .... commissioned....'
 
 #============================================================================================================
@@ -102,11 +104,13 @@ def patchBrunel(true_online_version):
     Serialisation().Writer = 'Writer'
 
   HistogramPersistencySvc().OutputFile = ""
+  """
   brunel.MainSequence = [ "UpdateAndReset",
                           "ProcessPhase/Init",
                           "ProcessPhase/Reco",
                           "ProcessPhase/Moni",
                           "ProcessPhase/Output" ]
+                          """
   return brunel
 
 #============================================================================================================
@@ -136,6 +140,7 @@ def setupOnline():
   app.ExtSvc.append(mep)
   app.ExtSvc.append(sel)
   app.AuditAlgorithms = False
+  app.TopAlg.insert(0,"UpdateAndReset")
   Configs.MonitorSvc().OutputLevel = 5
   app.OutputLevel = 4
 
@@ -153,10 +158,10 @@ def patchMessages():
   if Gaudi.allConfigurables.has_key('MessageSvc'):
     del Gaudi.allConfigurables['MessageSvc']
   msg=Configs.LHCb__FmcMessageSvc('MessageSvc')
-  msg.fifoPath     = os.environ['LOGFIFO']
-  msg.LoggerOnly   = True
-  msg.OutputLevel  = 4
+  msg.fifoPath      = os.environ['LOGFIFO']
+  msg.LoggerOnly    = True
   msg.doPrintAlways = False
+  msg.OutputLevel   = 4
 
 #============================================================================================================
 def start():
