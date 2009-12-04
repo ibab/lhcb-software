@@ -1,0 +1,30 @@
+// Job options file. Simple Online monitoring example
+//==============================================================
+#include "$INFOOPTIONS"
+ApplicationMgr.TopAlg = {"InsertDB"};
+ApplicationMgr.DLLs = {"GaudiAlg", "GaudiAud","Gaucho"};
+ApplicationMgr.EvtMax = 10;
+ApplicationMgr.OutputLevel = 10;
+MessageSvc.OutputLevel=3;
+
+ApplicationMgr.Runable               = "LHCb::OnlineRunable/Runable";
+ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.EvtSel                = "NONE";
+Runable.Wait                         = 3;  // 1 of running as daemon
+
+//---------------------------------------------------------------------------
+// POOL file catalogs. First one is read-write, others are read only
+//---------------------------------------------------------------------------
+AuditorSvc.Auditors +=  [ "ChronoAuditor" ] ;   
+ApplicationMgr.ExtSvc += { "MonitorSvc" };
+
+InsertDB.PartitionName = @OnlineEnv.PartitionName;  // in seconds
+InsertDB.DNS = "$DIM_DNS_NODE";
+InsertDB.HLTDBFolder = "/test";
+InsertDB.HLTType = @OnlineEnv.HLTType;
+InsertDB.MonitoringTasks = { "LumiDAQMon","LumiVDMMon" };
+InsertDB.Pages = {{ "RawR_RZVeloBW" ,"RawR_RZVelo_" , "RawR_CaloEt", "RawRPUMult" , "RawR_PV2D", "RawR_SPDMult", "In_SPDMult", "In_RZVeloBW", "In_RZVelo_", "In_CaloEt","In_PV2D", "In_PUMult", "BXTypes", "Trend"}};
+
+// Modify Message Format to print algorithm name with 20 characters
+MessageSvc.Format = "% F%20W%S%7W%R%T %0W%M";
+// MessageSvc.Format = "% F%40W%S%7W%R%T %0W%M";

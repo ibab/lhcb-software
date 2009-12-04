@@ -11,12 +11,12 @@ use Gaucho       v* Online
 use GaudiAud     v*
 use OnlineHistDB v* Online
 
+library InsertDB ../src/InsertDB.cpp ../src/InsertDB.h 
+private
+macro_append InsertDB_shlibflags "-lGaucho"
 
-application InsertDB ../src/InsertDB.cpp ../src/InsertDB.h  
+apply_pattern    component_library library=InsertDB
 
 
-macro_remove cpplinkflags '-Wl,--as-needed'
-macro_remove componentshr_linkopts '-Wl,--as-needed'
-macro_remove libraryshr_linkopts '-Wl,--as-needed'
 
 
