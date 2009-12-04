@@ -1,11 +1,14 @@
-
-
 Id: release.notes,v 1.81 2009/12/01 08:44:10 jpalac Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Phys/StrippingSelections
 ! Responsible : Anton Poluektov
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
+
+! 2009-12-04 - Anton Poluektov 
+  - Added StrippingBsDsMuNu line by Kim Vervink. In Dstar stream for now. 
+  - Added StreamMinBias and StreamBelectron streams to allStreams
+
 ! 2009-12-02  Yasmine Amhis
   - Add StreamMinBias.py
   - Add StrippingMiniBias.py  
