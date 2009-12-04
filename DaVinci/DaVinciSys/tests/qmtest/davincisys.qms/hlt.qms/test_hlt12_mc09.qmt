@@ -11,7 +11,7 @@ findReferenceBlock("""
  |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Dec|      1000 |        446 |(  44.6000 +- 1.57189  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
- |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1000 |         99 |(  9.90000 +- 0.944452 )%|   -------   |   -------   |
+ |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|      1000 |        100 |(  10.0000 +- 0.948683 )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt2")
 countErrorLines({"FATAL":0})
 </text></argument>

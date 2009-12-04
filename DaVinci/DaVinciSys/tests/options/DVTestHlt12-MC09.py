@@ -1,6 +1,6 @@
 ########################################################################
 #
-# $Id: DVTestHlt12-MC09.py,v 1.6 2009-10-28 17:41:57 pkoppenb Exp $
+# $Id: DVTestHlt12-MC09.py,v 1.7 2009-12-04 09:30:20 pkoppenb Exp $
 #
 # Test for Hlt1&2. This should be identical to Hlt1 except for the Hlt settings
 #
@@ -17,9 +17,9 @@ from Configurables import GaudiSequencer
 # Standard configuration
 #
 from Configurables import DaVinci
-DaVinci().EvtMax = 1000                        # Number of events 
-DaVinci().SkipEvents = 0                       # Events to skip
-DaVinci().PrintFreq  = 100                     # Print frequency
+DaVinci().EvtMax = 1000                      # Number of events 
+# DaVinci().SkipEvents = 650                       # Events to skip
+DaVinci().PrintFreq  = 1                       # Print frequency
 DaVinci().DataType = "MC09"                    # Pretend it's real data
 DaVinci().Simulation   = True
 # DaVinci().MoniSequence += [ ReadHltSummary() ]

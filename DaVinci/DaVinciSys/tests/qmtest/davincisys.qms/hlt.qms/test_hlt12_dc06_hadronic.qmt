@@ -7,7 +7,7 @@
 </set></argument>
 <argument name="validator"><text>
 findReferenceBlock("""
- |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Dec|       200 |         61 |(  30.5000 +- 3.25557  )%|   -------   |   -------   |
+ |*"46:HLT_PASS_RE('Hlt1(?!ODIN)(?!L0)(?!Lumi).*Dec|       200 |         62 |(  31.0000 +- 3.27032  )%|   -------   |   -------   |
 """, stdout, result, causes, signature_offset = 0, id = "Hlt1")
 findReferenceBlock("""
  |*"66:HLT_PASS_RE('Hlt2(?!Transparent).*Decision')|       200 |         39 |(  19.5000 +- 2.80156  )%|   -------   |   -------   |
