@@ -4,6 +4,9 @@
 ! Purpose     : Pack and unpack events classes for smaller events
 !-----------------------------------------------------------------------------
 
+! 2009-12-04 - Christopher Rob Jones
+ - Add support for packed RichPIDs and MuonPIDs to the MDF Writer and Reader.
+
 !============================ EventPacker v2r1 2009-11-26 ====================
 ! 2009-11-26 - Marco Cattaneo
  - PackMCParticle and PackMCVertex now return if output container exists,

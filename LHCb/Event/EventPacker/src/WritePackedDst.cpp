@@ -1,8 +1,8 @@
-// $Id: WritePackedDst.cpp,v 1.5 2009-10-14 16:22:02 cattanem Exp $
-// Include files 
+// $Id: WritePackedDst.cpp,v 1.6 2009-12-04 16:40:19 jonrob Exp $
+// Include files
 
 // from Gaudi
-#include "GaudiKernel/AlgFactory.h" 
+#include "GaudiKernel/AlgFactory.h"
 #include "GaudiKernel/IOpaqueAddress.h"
 #include "Event/RawEvent.h"
 #include "Event/PackedTrack.h"
@@ -10,6 +10,8 @@
 #include "Event/PackedProtoParticle.h"
 #include "Event/PackedRecVertex.h"
 #include "Event/PackedTwoProngVertex.h"
+#include "Event/PackedRichPID.h"
+#include "Event/PackedMuonPID.h"
 #include "Event/RecHeader.h"
 #include "Event/ProcStatus.h"
 #include "Event/ODIN.h"
@@ -43,34 +45,34 @@ WritePackedDst::WritePackedDst( const std::string& name,
 //=============================================================================
 // Destructor
 //=============================================================================
-WritePackedDst::~WritePackedDst() {} 
+WritePackedDst::~WritePackedDst() {}
 
 //=============================================================================
 // Initialization
 //=============================================================================
-StatusCode WritePackedDst::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
-  if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
+StatusCode WritePackedDst::initialize()
+{
+  const StatusCode sc = GaudiAlgorithm::initialize();
+  if ( sc.isFailure() ) return sc;
 
   info() << "Write containers ";
-  for ( std::vector<std::string>::const_iterator itS = m_containers.begin(); 
+  for ( std::vector<std::string>::const_iterator itS = m_containers.begin();
         m_containers.end() != itS; ++itS ) {
     info() << " '" << *itS << "',";
   }
   info() << endmsg;
 
-  return StatusCode::SUCCESS;
+  return sc;
 }
 
 //=============================================================================
 // Main execution
 //=============================================================================
-StatusCode WritePackedDst::execute() {
+StatusCode WritePackedDst::execute()
+{
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Execute" << endmsg;
-  
+
   m_dst = new LHCb::RawEvent();
   put( m_dst, "/Event/DAQ/DstEvent" );
   m_blobNumber = 0;
@@ -79,7 +81,7 @@ StatusCode WritePackedDst::execute() {
   //== Write the opaque address of the Raw Event according to Markus specifications
   LHCb::RawEvent* evt = get<LHCb::RawEvent>( LHCb::RawEventLocation::Default );
   IRegistry* reg = evt->registry();
-  if ( !reg )  { 
+  if ( !reg )  {
     warning() << "No opaque address for " <<  LHCb::RawEventLocation::Default << " !!!" << endmsg;
     return StatusCode::FAILURE;
   }
@@ -122,6 +124,20 @@ StatusCode WritePackedDst::execute() {
       storeInBlob( bank, &(*in->beginExtra()) , in->sizeExtra()           , sizeof( std::pair<int,int> ) );
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
+    } else if ( LHCb::CLID_PackedRichPIDs        == myClID ) {
+
+      LHCb::PackedRichPIDs* in = get<LHCb::PackedRichPIDs>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedRichPID) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
+    } else if ( LHCb::CLID_PackedMuonPIDs        == myClID ) {
+
+      LHCb::PackedMuonPIDs* in = get<LHCb::PackedMuonPIDs>( *itC );
+      PackedBank bank( in );
+      storeInBlob( bank, &(*in->data().begin()), in->data().size(), sizeof(LHCb::PackedMuonPID) );
+      m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
+
     } else if ( LHCb::CLID_PackedCaloHypos       == myClID ) {
 
       LHCb::PackedCaloHypos* in = get<LHCb::PackedCaloHypos>( *itC );
@@ -160,7 +176,7 @@ StatusCode WritePackedDst::execute() {
     } else if ( LHCb::CLID_RecHeader == myClID ) {
 
       LHCb::RecHeader* in = get<LHCb::RecHeader>( *itC );
-      PackedBank bank( in );      
+      PackedBank bank( in );
       unsigned int evHigh = ((in->evtNumber() ) >> 32) && 0xFFFFFFFF;
       unsigned int evLow  = ( in->evtNumber() && 0xFFFFFFFF );
       bank.addEntry( evHigh, evLow, in->randomSeeds().size() );
@@ -177,11 +193,11 @@ StatusCode WritePackedDst::execute() {
       }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
-    } else if ( LHCb::CLID_ProcStatus == myClID ) {  
+    } else if ( LHCb::CLID_ProcStatus == myClID ) {
 
       LHCb::ProcStatus* in = get<LHCb::ProcStatus>( *itC );
       PackedBank bank( in );
-      
+
       bank.storeInt( in->aborted() );
       bank.storeInt( in->algs().size() );
       for ( unsigned int kk=0; in->algs().size() != kk; ++kk ) {
@@ -190,7 +206,7 @@ StatusCode WritePackedDst::execute() {
       }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
 
-    } else if ( LHCb::CLID_ODIN == myClID ) {  
+    } else if ( LHCb::CLID_ODIN == myClID ) {
 
       //== Get the ODIN from raw data, and copy it!
       const std::vector<LHCb::RawBank*>& odinBanks = evt->banks(LHCb::RawBank::ODIN);
@@ -199,30 +215,31 @@ StatusCode WritePackedDst::execute() {
         m_dst->addBank( odin );
       }
 
-    } else if ( LHCb::CLID_RawEvent == myClID ) {  
+    } else if ( LHCb::CLID_RawEvent == myClID ) {
 
       //== For RawEvent data, copy all banks to the output RawEvent, keep track of the banks
       LHCb::RawEvent* in = get<LHCb::RawEvent>( *itC );
-      PackedBank bank( in );      
+      PackedBank bank( in );
       for ( unsigned int bnkTyp = LHCb::RawBank::L0Calo;
             LHCb::RawBank::LastType != bnkTyp; ++bnkTyp ) {
         const std::vector<LHCb::RawBank*>& banks = in->banks( (LHCb::RawBank::BankType)bnkTyp );
         for ( std::vector<LHCb::RawBank*>::const_iterator itB = banks.begin(); banks.end() != itB; ++itB ) {
           bank.storeInt( bnkTyp );
           bank.storeInt( (*itB)->sourceID() );
-          debug() << "Added bank type " << bnkTyp << " source " << (*itB)->sourceID() << endmsg;
+          if ( msgLevel(MSG::DEBUG) )
+            debug() << "Added bank type " << bnkTyp << " source " << (*itB)->sourceID() << endmsg;
           m_dst->addBank( *itB );
         }
       }
       m_dst->addBank( m_bankNb++, LHCb::RawBank::DstBank, in->version(), bank.data() );
-      
+
     } else {
-      warning() << "--- Unknown class ID " <<  myClID 
+      warning() << "--- Unknown class ID " <<  myClID
                 << " for container " << *itC << " --" << endmsg;
       return StatusCode::FAILURE;
     }
   }
-  
+
   //== Write the DAQ status bank
 
   int len = 0;
@@ -233,7 +250,7 @@ StatusCode WritePackedDst::execute() {
       len += (*j)->totalSize();
     }
   }
-  LHCb::RawBank* hdrBank = m_dst->createBank( 0, LHCb::RawBank::DAQ, DAQ_STATUS_BANK, 
+  LHCb::RawBank* hdrBank = m_dst->createBank( 0, LHCb::RawBank::DAQ, DAQ_STATUS_BANK,
                                               sizeof(LHCb::MDFHeader)+sizeof(LHCb::MDFHeader::Header1), 0);
   LHCb::MDFHeader* hdr = (LHCb::MDFHeader*)hdrBank->data();
   hdr->setChecksum(0);
@@ -254,16 +271,6 @@ StatusCode WritePackedDst::execute() {
   m_dst->adoptBank( hdrBank, true );
 
   return StatusCode::SUCCESS;
-}
-
-//=============================================================================
-//  Finalize
-//=============================================================================
-StatusCode WritePackedDst::finalize() {
-
-  if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
-
-  return GaudiAlgorithm::finalize();  // must be called after all other actions
 }
 
 //=========================================================================
@@ -287,7 +294,7 @@ void WritePackedDst::storeInBlob( PackedBank& pBnk, const void* data, unsigned i
 
   start = &(*temp.begin());
   unsigned int len   = totSize;
- 
+
   pBnk.addEntry( len, nb, m_blobNumber );
   while ( MAXBANK < len ) {
     LHCb::RawBank* bank = m_dst->createBank( m_blobNumber++, LHCb::RawBank::DstData,

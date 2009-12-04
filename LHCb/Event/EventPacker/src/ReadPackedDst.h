@@ -1,5 +1,5 @@
-// $Id: ReadPackedDst.h,v 1.3 2009-10-09 12:58:43 frankb Exp $
-#ifndef READPACKEDDST_H 
+// $Id: ReadPackedDst.h,v 1.4 2009-12-04 16:40:19 jonrob Exp $
+#ifndef READPACKEDDST_H
 #define READPACKEDDST_H 1
 
 // Include files
@@ -19,7 +19,7 @@
  *  @date   2009-01-19
  */
 class ReadPackedDst : public GaudiAlgorithm {
-public: 
+public:
   /// Standard constructor
   ReadPackedDst( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -48,7 +48,7 @@ protected:
   //== Extract the linkMgr information and set the version
   void processLinks( DataObject* obj, unsigned char version ) {
     DataObject* dummy = 0;
-    unsigned int nbLinks = *m_data++;    
+    unsigned int nbLinks = *m_data++;
     m_size--;
     for ( unsigned int kk=0; nbLinks > kk; ++kk ) {
       std::string name = stringFromData();
@@ -68,6 +68,6 @@ private:
   int           m_size;
   ToolHandle<IGenericTool> m_odinDecoder;
   SmartIF<IAddressCreator> m_addrCreator;
-  SmartIF<IDataManagerSvc> m_evtMgr;  
+  SmartIF<IDataManagerSvc> m_evtMgr;
 };
 #endif // READPACKEDDST_H
