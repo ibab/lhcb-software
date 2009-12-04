@@ -1,5 +1,5 @@
 package GaussSys
-version v38r0
+version v38r0p1
 
 branches cmt doc
 
@@ -8,11 +8,11 @@ branches cmt doc
 #==================================================================
 
 # Gauss application: the application is not built on Win32
-macro Gauss_use         "Gauss        v38r0   Sim"  WIN32 ""
+macro Gauss_use         "Gauss        v38r0p1 Sim"  WIN32 ""
 use ${Gauss_use} 
 
 # Generator packages: Basic configuration
-macro GENSER_use        "GENSER       v6r0    Gen"  WIN32 ""
+macro GENSER_use        "GENSER       v6r1    Gen"  WIN32 ""
 macro EvtGen_use        "EvtGen       v11r6   Gen"  WIN32 ""
 macro EvtGenExtras_use  "EvtGenExtras v2r2    Gen"  WIN32 ""
 macro Generators_use    "Generators   v10r5   Gen"  WIN32 ""
@@ -27,7 +27,7 @@ use ${LbPythia_use}
 macro LbAlpGen_use      "LbAlpGen     v1r0    Gen"  WIN32 ""
 macro BcVegPy_use       "BcVegPy      v2r1    Gen"  WIN32 ""
 macro LbBcVegPy_use     "LbBcVegPy    v3r0    Gen"  WIN32 ""
-macro LbHidValley_use   "LbHidValley  v2r2    Gen"  WIN32 ""
+macro LbHidValley_use   "LbHidValley  v2r3    Gen"  WIN32 ""
 #use ${LbAlpGen_use}
 use ${BcVegPy_use}
 use ${LbBcVegPy_use}

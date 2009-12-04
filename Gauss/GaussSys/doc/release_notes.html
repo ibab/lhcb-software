@@ -4,6 +4,47 @@ Package manager : Gloria Corti
 Purpose: LHCb Simulation program
 
 !=============================================================================
+</PRE><H1><A NAME="v38r0p1">2009-12-04 - GaussSys v38r0p1</A></H1><PRE>
+<H2><A NAME="Note">post MC09 version. Identical to v38r0 but for setting path
+for LHAPDF data file to deploy on grid, enableing VeloPix and options for HiddenValley for production.
+   </A></H2>
+<H3><A NAME="Use">This version uses:
+   <b>LHCb v28r3 (and Gaudi v21r6)</b>
+   AppConfig v3r*,
+   DecFiles v20r* , 
+   ParamFiles v8r1, 
+   SQLDDDB v5r*, FieldMap v5r*,
+   <b>pythia6 421.2, photos 215.5, lhapdf 5.7.1 
+   (via LCG_GeneratorsInterfaces)
+   HepMC 2.03.11 (via LCG_Interfaces)
+   Geant4 v92r2 (based on geant4.9.2.p02) and Geant4Files v92r0</b>
+   XmlVis v1r11,
+   <b>herwig 6.510.3, jimmy 4.31.3 (via LCG_GeneratorsInterfaces)</b>
+   hijing 1.383bs.2 (via LCG_GeneratorsInterfaces),
+   pythia8 130,
+   bcvegpy (LHCb build)
+</A></H3>
+
+!========================= Gauss v38r0p1 2009-11-25 ==========================
+! 2009-12-03 - Victor Coco
+ - Modified the Configuration.py in order that VeloPix can be used (add
+   it to the detector list in __apply_configuration and uncomment the call to
+   VeloPix monitoring in configureMoni)
+
+!========================== GENSER v6r1 2009-12-04 ===========================
+! 2009-11-30 - Gloria CORTI
+ - In the LHAPDF LCG_Generators distribution the data files directory path has
+   changed with an additional 'lhapdf' introduced. The old one now has a
+   soft link to the new area.
+   Change the LHAPATH to point directly to the new area, to facilitate
+   distribution via tarbal.
+
+!========================= LbHidValley v2r3 2009-12-02 ========================
+! 2009-12-02 - Gloria CORTI
+ - Remove HidValley.opts that is now obsolete and introduce empty HidValley.py
+   as to be consistent with rule for selecting generator in production
+
+!=============================================================================
 </PRE><H1><A NAME="v38r0">2009-11-25 - GaussSys v38r0</A></H1><PRE>
 <H2><A NAME="Note">post MC09 version, first deployement to build version for
    analysis with 2010 data. Support Upgrade simulation. Support both MC09
