@@ -16,13 +16,16 @@ include_dirs      $(MUONTRACKRECROOT)
 # ================ used packages =========================================
 # requires MuonDAQ v4r4 (head) or later
 #
-use MuonDAQ      v*    Muon
+use MuonDAQ      v*     Muon
 #
-use MuonDet      v*    Det
+use MuonDet      v*     Det
 use GaudiAlg     v*
 #
-use MCEvent     v*    Event
-use LinkerEvent v*    Event
+use MCEvent     v*      Event
+use LinkerEvent v*      Event
+
+use TrackTools  v*      Tr
+use Magnet      v*      Det
 
 library MuonTrackRecLib  ../src/Lib/*.cpp
 library MuonTrackRec  *  ../src/component/*.cpp
