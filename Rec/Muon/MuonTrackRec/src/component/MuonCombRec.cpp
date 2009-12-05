@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.6 2009-12-04 20:48:06 gpassal Exp $
+// $Id: MuonCombRec.cpp,v 1.7 2009-12-05 21:27:16 svecchi Exp $
 // Include files 
 #include <fstream>
 
@@ -1009,22 +1009,6 @@ StatusCode MuonCombRec::copyToLHCbTracks()
                                     Gaudi::XYZVector( (*t)->sx(), (*t)->sy(), 1.0 ),
                                      1 / 10000. ) );
 
-
-    double qOverP, sigmaQOverP;
-    if(m_Bfield){
-      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
-      state.setQOverP(qOverP);
-    }
-
-
-    // fill momentum variables for MuonTrack
-    (*t)->setP(state.p());
-    (*t)->setPt(state.pt());
-    (*t)->setqOverP(state.qOverP());
-    (*t)->setMomentum(state.momentum());
-    
-
-    //
     state.setLocation( State::Muon );
     Gaudi::TrackSymMatrix seedCov;
     seedCov(0,0) = (*t)->errbx()*(*t)->errbx();
@@ -1034,26 +1018,34 @@ StatusCode MuonCombRec::copyToLHCbTracks()
     seedCov(4,4) = 0.0001;
     state.setCovariance(seedCov);
 
+    double qOverP, sigmaQOverP;
+    if(m_Bfield){
+      m_fCalcMomentum->calculate(&state, qOverP, sigmaQOverP);
+      state.setQOverP(qOverP);
+    }
+
+
     /// add state to new track
     debug() << "Muon state = " << state << endmsg;
     track->addToStates( state );
+    debug()<< " track slopes "<<track->slopes()<< " and momentum "<<track->p()<<" "<<track->charge()<<endmsg;
+
     
-    debug()<< " CopyNNETTracks "<<(*t)->getHits().size() <<" Muonits to the track and "<<endmsg;
+    debug()<< " MuonTracks has "<<(*t)->getHits().size() <<" Muonits "<<endmsg;
     int ntile=0;    
     for ( MHits::const_iterator h = hits.begin(); h != hits.end(); ++h ){
       const MTileIDs Tiles = (*h)->getLogPadTiles();
-      debug()<< " Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
+      debug()<< " -- Muon Hits has "<< (*h)->getLogPadTiles().size()<<" tiles in station "<< (*h)->station() <<endmsg;
       for (MTileIDs::const_iterator it = Tiles.begin(); it!= Tiles.end(); ++it){
-        debug()<<" Tile info ====== "<< LHCbID(**it)<<endmsg;
+        debug()<<" -- -- Tile info ====== "<< LHCbID(**it)<<endmsg;
         track->addToLhcbIDs( LHCbID( **it ) );
         ntile++;        
       }
     }
     debug()<< " in total "<<ntile<<" tiles"<<endmsg;
     
-    /// Sort of done Pat ;)
-        track->setPatRecStatus( Track::PatRecIDs );
-        track->setType( Track::Muon );
+    track->setPatRecStatus( Track::PatRecIDs );
+    track->setType( Track::Muon );
 
     tracks->insert( track );
   }
