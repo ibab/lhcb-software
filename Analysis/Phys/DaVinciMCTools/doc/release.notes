@@ -1,8 +1,14 @@
-! $Id: release.notes,v 1.281 2009-11-30 17:24:52 jpalac Exp $
+! $Id: release.notes,v 1.282 2009-12-05 20:28:02 gligorov Exp $
 !=============================================================================
 ! Package     : DaVinciMCTools
 ! Responsible : J.P. Palacios
 !=============================================================================
+
+! 2009-12-05 - V. Gligorov
+ - src/Particle2BackgroundCategoryRelationsAlg.{cpp,h}
+ - src/BackgroundCategoryViaRelations.{cpp,h}
+  . Change relations from Particle->enum to Particle->int
+  . Couple other minor changes to optimize performance (with thanks to Vanya) 
 
 !========================== DaVinciMCTools v9r24 2009-11-30 ==================
 
