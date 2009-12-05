@@ -1,4 +1,4 @@
-// $Id: HistoParam.h,v 1.1 2009-10-23 09:43:13 ibelyaev Exp $
+// $Id: HistoParam.h,v 1.2 2009-12-05 14:25:46 dgolubko Exp $
 // ============================================================================
 #ifndef DETDESC_HISTOPARAM_H 
 #define DETDESC_HISTOPARAM_H 1
@@ -11,6 +11,13 @@
 // ============================================================================
 #include "TH1D.h"
 #include "TH2D.h"
+
+namespace DetDesc {
+namespace Params {
+  typedef TH1D Histo1D;
+  typedef TH2D Histo2D;
+}
+}
 // ============================================================================
 /**  The declaration of the template 
  *   specialization of Param methods for the histograms 
@@ -24,7 +31,7 @@
  *   @date 2009-10-22
  */
 template<> 
-std::string Param<TH1D>::toXMLStr 
+std::string Param<DetDesc::Params::Histo1D>::toXMLStr 
 ( const std::string& name    , 
   const std::string& comment , 
   int precision              ) const ;
@@ -37,7 +44,7 @@ std::string Param<TH1D>::toXMLStr
  *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *   @date 2009-10-22
  */
-template<> std::string Param<TH1D>::toStr() const ;
+template<> std::string Param<DetDesc::Params::Histo1D>::toStr() const ;
 // ============================================================================
 /**  The declaration of the template 
  *   specialization of Param methods for the histograms 
@@ -51,7 +58,7 @@ template<> std::string Param<TH1D>::toStr() const ;
  *   @date 2009-10-22
  */
 template<> 
-std::string Param<TH2D>::toXMLStr 
+std::string Param<DetDesc::Params::Histo2D>::toXMLStr 
 ( const std::string& name    , 
   const std::string& comment , 
   int precision              ) const ;
@@ -64,7 +71,7 @@ std::string Param<TH2D>::toXMLStr
  *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
  *   @date 2009-10-22
  */
-template<> std::string Param<TH2D>::toStr() const ;
+template<> std::string Param<DetDesc::Params::Histo2D>::toStr() const ;
 // ============================================================================
 // The END 
 // ============================================================================

@@ -1,9 +1,21 @@
 ! =============================================================================
-! $Id: release.notes,v 1.409 2009-11-27 12:24:48 cattanem Exp $ 
+! $Id: release.notes,v 1.410 2009-12-05 14:25:47 dgolubko Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-12-05 - Dmitry Golubkov
+ - DetDesc/HistoParam.h: introduce namespace DetDesc::Params
+ - DetDesc/src/Lib/HistoParam.cpp: change printout from histogram conditions
+     to histogram parameters
+ - add interface functions DetDesc::Params::paramAsHisto1D and paramAsHisto2D
+	   to extract 1d and 2d histogram parameters from a Condition, new files:
+	DetDesc/ParamAsHisto.h
+	src/Lib/ParamAsHisto.cpp
+ - dict/DetDescDict.h: add include DetDesc/ParamAsHisto.h
+ - dict/DetDescDict.xml: add names of the interface functions
+ - cmt/requirements: version increment to v18r18
 
 !====================== DetDesc v18r17 2009-11-27 =============================
 ! 2009-11-15 - Vanya Belyaev

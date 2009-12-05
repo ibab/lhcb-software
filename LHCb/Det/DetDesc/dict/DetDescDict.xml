@@ -56,6 +56,8 @@
   <class name="ILVolume::Intersections" />
 
   <function pattern="DetDesc::*" />
+  <function name="DetDesc::Params::paramAsHisto1D" />
+  <function name="DetDesc::Params::paramAsHisto1D" />
 
   <exclusion>
     <class name="SolidPolycone::CmpZ" />

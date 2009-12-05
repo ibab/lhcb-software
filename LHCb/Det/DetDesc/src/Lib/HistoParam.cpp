@@ -1,4 +1,4 @@
-// $Id: HistoParam.cpp,v 1.1 2009-10-23 09:43:15 ibelyaev Exp $
+// $Id: HistoParam.cpp,v 1.2 2009-12-05 14:25:47 dgolubko Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -42,19 +42,19 @@
  */
 // ============================================================================
 template<> 
-std::string Param<TH1D>::toXMLStr 
+std::string Param<DetDesc::Params::Histo1D>::toXMLStr 
 ( const std::string& name    , 
   const std::string& comment , 
   int  /* precision */ ) const 
 {
   std::ostringstream out ;
   //
-  out << "<histo1D name=\"" << name << '"' ;                       // open TAG 
+  out << "<param name=\"" << name << "\" type=\"Histo1D\"" ;       // open TAG 
   if ( !comment.empty() ) { out << " comment=\"" << comment << '"' ; }  
   out << '>' ;
   // stream the histogram 
   Gaudi::Utils::toStream ( m_val , out ) ;
-  out << "</histo1D>" ;                                           // close TAG 
+  out << "</param>" ;                                           // close TAG 
   return out.str() ;
 }
 // ============================================================================
@@ -67,7 +67,7 @@ std::string Param<TH1D>::toXMLStr
  *   @date 2009-10-22
  */
 // ============================================================================
-template<> std::string Param<TH1D>::toStr() const 
+template<> std::string Param<DetDesc::Params::Histo1D>::toStr() const 
 { return Gaudi::Utils::toString ( m_val ) ; }    
 // ============================================================================
 /*   The declaration of the template 
@@ -83,19 +83,19 @@ template<> std::string Param<TH1D>::toStr() const
  */
 // ============================================================================
 template<> 
-std::string Param<TH2D>::toXMLStr 
+std::string Param<DetDesc::Params::Histo2D>::toXMLStr 
 ( const std::string& name    , 
   const std::string& comment , 
   int /* precision */ ) const 
 {
   std::ostringstream out ;
   //
-  out << "<histo2D name=\"" << name << '"' ;                       // open TAG 
+  out << "<param name=\"" << name << "\" type=\"Histo2D\"" ;       // open TAG 
   if ( !comment.empty() ) { out << " comment=\"" << comment << '"' ; }  
   out << '>' ;                                                   
   // stream the histogram 
   Gaudi::Utils::toStream ( m_val , out ) ;
-  out << "</histo2D>" ;                                           // close TAG 
+  out << "</param>" ;                                           // close TAG 
   return out.str() ;
 }
 // ============================================================================
@@ -108,10 +108,8 @@ std::string Param<TH2D>::toXMLStr
  *   @date 2009-10-22
  */
 // ============================================================================
-template<> std::string Param<TH2D>::toStr() const 
+template<> std::string Param<DetDesc::Params::Histo2D>::toStr() const 
 { return Gaudi::Utils::toString ( m_val ) ; }    
-// ============================================================================
-
 // ============================================================================
 // The END 
 // ============================================================================

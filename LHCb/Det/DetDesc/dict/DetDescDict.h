@@ -1,4 +1,4 @@
-// $Id: DetDescDict.h,v 1.7 2008-11-04 16:09:20 cattanem Exp $
+// $Id: DetDescDict.h,v 1.8 2009-12-05 14:25:47 dgolubko Exp $
 // ============================================================================
 #ifndef DETSYS_DETDICT_H 
 #define DETSYS_DETDICT_H 1
@@ -65,6 +65,9 @@
 // ============================================================================
 #include "DetDesc/3DTransformationFunctions.h"
 #include "DetDesc/GlobalToLocalDelta.h"
+// ============================================================================
+#include "DetDesc/ParamAsHisto.h"
+// ============================================================================
 
 /** @file 
  *   
