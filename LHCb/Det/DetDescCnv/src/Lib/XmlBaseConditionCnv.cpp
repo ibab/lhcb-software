@@ -1,4 +1,4 @@
-// $Id: XmlBaseConditionCnv.cpp,v 1.15 2009-11-02 12:38:40 cattanem Exp $
+// $Id: XmlBaseConditionCnv.cpp,v 1.16 2009-12-05 14:46:03 dgolubko Exp $
 
 // include files
 #include "GaudiKernel/CnvFactory.h"
@@ -8,11 +8,28 @@
 #include "DetDescCnv/XmlBaseConditionCnv.h"
 #include "XmlTools/IXmlSvc.h"
 
+#include "Kernel/HistoParsers.h"
+#include "DetDesc/HistoParam.h"
+
 #include <sstream>
 #include <string>
 #include <vector>
 
 class ISvcLocator;
+
+#include "TH1D.h"
+#include "TH2D.h"
+#include "TDirectory.h"
+
+// -----------------------------------------------------------------------
+namespace {
+  /// helper function for converton of 1d or 2d histograms
+  template<typename HTYPE> 
+  StatusCode _addHisto(Condition         *dataObj ,
+                       const std::string &name    ,
+                             std::string  value   ,
+                       const std::string &comment );
+}
 
 // -----------------------------------------------------------------------
 // Constructor
@@ -215,6 +232,16 @@ StatusCode XmlBaseConditionCnv::i_fillObj (xercesc::DOMElement* childElement,
         dataObj->addParam<int>(name,(int)xmlSvc()->eval(value, false),comment);
       } else if(type == "double") {
         dataObj->addParam<double>(name,xmlSvc()->eval(value, false),comment);
+      } else if(type == "Histo1D"){
+        StatusCode sc = _addHisto<DetDesc::Params::Histo1D>(dataObj, name, value, comment);
+        if ( sc.isFailure() )
+          error() << "failed to parse Histo1D name ='" << name
+                  << "' value = '" << value << "'" << endmsg;
+      } else if(type == "Histo2D"){
+        StatusCode sc = _addHisto<DetDesc::Params::Histo2D>(dataObj, name, value, comment);
+        if ( sc.isFailure() )
+          error() << "failed to parse Histo2D name ='" << name
+                  << "' value = '" << value << "'" << endmsg;      
       } else {
         dataObj->addParam<std::string>(name,value,comment);
       }
@@ -313,3 +340,41 @@ const CLID& XmlBaseConditionCnv::classID() {
   return CLID_Condition;
 }
 
+
+#include "boost/algorithm/string/trim.hpp"
+
+namespace {
+  /** helper function to convert 1d or 2d histogram from the string
+   *  representation (custom or root xml) and add it to the Condition
+   *  in the current implementation HTYPE = DetDesc::Params::Histo1D (TH1D)
+   *  or DetDesc::Params::Histo2D (TH2D) as defined in DetDesc/HistoParam.h
+   *
+   *  @param dataObj (UPDATE) - pointer to the Conditon object
+   *  @param name    (INPUT)  - name of the param tag
+   *  @param value   (INPUT)  - string representation of the histogram
+   *  @param comment (INPUT)  - the comment
+   *  @returns SUCCESS in case of successful conversion and insertion
+   */
+  template<typename HTYPE>
+  StatusCode _addHisto(Condition *dataObj,
+                       const std::string &name    ,
+                             std::string  value   ,
+                       const std::string &comment )
+  {
+    if ( !dataObj ) return StatusCode::FAILURE;
+    HTYPE histo;
+
+    bool _old_st = histo.AddDirectoryStatus();
+    histo.AddDirectory( kFALSE );
+    histo.SetDirectory( NULL   );
+
+    boost::algorithm::trim( value ) ;
+    StatusCode sc = Gaudi::Parsers::parse( histo, value );
+
+    if ( sc.isSuccess() )
+      dataObj->addParam<HTYPE>(name, histo, comment);
+    histo.AddDirectory( _old_st );
+
+    return sc;
+  }
+}

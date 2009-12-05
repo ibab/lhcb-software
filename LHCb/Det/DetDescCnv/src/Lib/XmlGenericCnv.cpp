@@ -1,4 +1,4 @@
-// $Id: XmlGenericCnv.cpp,v 1.25 2009-11-02 12:38:41 cattanem Exp $
+// $Id: XmlGenericCnv.cpp,v 1.26 2009-12-05 14:46:03 dgolubko Exp $
 
 // Include files
 #include "DetDescCnv/XmlGenericCnv.h"
@@ -265,7 +265,7 @@ StatusCode XmlGenericCnv::createObj (IOpaqueAddress* addr,
           if ( mustSubstitute ) {
             XMLCh* tempString = xercesc::XMLString::transcode( numeral.c_str() );
             element->setAttribute( serialNumberString, tempString );
-            xercesc::XMLString::release(&nameString);
+            xercesc::XMLString::release(&tempString);
           }
           try {
             // deal with the node found itself

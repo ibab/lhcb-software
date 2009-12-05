@@ -4,6 +4,11 @@
 ! Purpose     : standard converters for the LHCb Detector Description
 !------------------------------------------------------------------------------
 
+! 2009-12-05 - Dmitry GOLUBKOV
+ - src/Lib/XmlBaseConditionCnv.cpp: add converter for Histo1D and Histo2D parameters
+ - src/Lib/XmlGenericCnv.cpp: fix a missprint in releasing of a temporary string
+ - cmt/requirements: version increment to v4r11
+
 !================ DetDescCnv v4r10 2009-11-13 =================================
 ! 2009-11-02 - Marco Cattaneo
  - Apply patch #3399 XmlGenericCnv uses inneficient part of Xerces-C API for DOM
