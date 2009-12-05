@@ -72,12 +72,12 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
   //  new LHCb::Relation1D<const LHCb::Particle*, IBackgroundCategory::categories>;
   
   LHCb::Relation1D<const LHCb::Particle*,int>* catRelations =
-    new LHCb::Relation1D<const LHCb::Particle*, int>;
+    new LHCb::Relation1D<const LHCb::Particle*, int>( myParticles->size() );
 
   for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); iP != myParticles->end(); ++iP ){
     //IBackgroundCategory::categories thisCat = m_bkg->category(*iP);
     int thisCat = (int) m_bkg->category(*iP);
-    catRelations->relate(*iP,thisCat);
+    catRelations->i_relate(*iP,thisCat);
   }
 
   put(catRelations,m_particleLocation+"/P2BCRelations");
