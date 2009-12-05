@@ -1,8 +1,12 @@
-! $Id: release.notes,v 1.50 2009-11-13 11:54:53 pkoppenb Exp $
+! $Id: release.notes,v 1.51 2009-12-05 00:51:31 tskwarni Exp $
 ! Package     : TisTosTobbing
 ! Responsible : Tomasz Skwarnicki
 ! Purpose     : TisTosTobbing of the trigger 
 ! ====================================================================
+
+! 2009-12-05 - Tomasz Skwarnicki
+ - Add TESTisTos,TESSelectionTisTos which can be used
+   for TisTosTobbing of Stripping decision or any other selections in TES
 
 !========================== TisTosTobbing v3r6 2009-11-13 ===================
 ! 2009-11-05 - Patrick Koppenburg
