@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.h,v 1.3 2009-12-05 23:11:58 jvantilb Exp $
+// $Id: STPulseMonitor.h,v 1.4 2009-12-05 23:16:55 jvantilb Exp $
 #ifndef STPulseMonitor_H
 #define STPulseMonitor_H 1
 
@@ -44,6 +44,9 @@
  *    When specifying "sector", it will subdivide the histograms per sector
  *    (within a service box). By default this list is set to: {"all"}, which
  *    means that there is no subdivision.
+ *  - <b>UseNZSdata</b>: Flag to use NZS data. Default is set to true. In that
+ *    case the InputData has to be in the NZS format. If this flag is false the
+ *    InputData location has to contain STClusters.
  *  
  *  A presentation on this algorithm and the results was giving on 20.10.2009 in
  *  the ST TED run analysis meeting by Helge: http://indico.cern.ch/event/71185 
