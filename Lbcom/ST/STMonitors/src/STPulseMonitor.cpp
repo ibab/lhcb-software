@@ -1,4 +1,4 @@
-// $Id: STPulseMonitor.cpp,v 1.2 2009-12-03 15:59:48 jvantilb Exp $
+// $Id: STPulseMonitor.cpp,v 1.3 2009-12-05 23:11:58 jvantilb Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -53,7 +53,7 @@ STPulseMonitor::STPulseMonitor( const std::string& name,
   declareProperty("Spills",        m_spills         = 
                   list_of("Prev2")("Prev1")("Central")("Next1")("Next2")) ;
   declareProperty("ChargeCut",     m_chargeCut      = -1.0 );// ADC counts
-  declareProperty("BunchID",       m_bunchID        = 0u   );// BunchID 
+  declareProperty("BunchID",       m_bunchID               );// BunchID 
   declareProperty("SkipShortThick",m_skipShortThick = true );
   declareProperty("DirNames",      m_dirNames       = list_of("all") );
   declareProperty("UseNZSdata",    m_useNZSdata     = true );
@@ -78,9 +78,10 @@ StatusCode STPulseMonitor::execute()
 
   // Select the correct bunch id
   const ODIN* odin = get<ODIN> ( ODINLocation::Default );
-  if( m_bunchID != 0 &&
-      odin->bunchId() != m_bunchID ) return StatusCode::SUCCESS;
-  counter("Number of TED events") += 1;
+  if( !m_bunchID.empty() && 
+      std::find(m_bunchID.begin(), m_bunchID.end(), 
+                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  counter("Number of selected events") += 1;
 
   // Get the NZS or ZS data for the different spills
   std::vector<STTELL1Datas*> dataNZS;
