@@ -80,7 +80,7 @@ IBackgroundCategory::categories BackgroundCategoryViaRelations::category(const L
       //For the moment we only allow one category per particle so if more than one category is
       //related return undefined, else just return the category we find 
       if (range.size() == 0 || range.size() > 1) continue; 
-      else return range.begin()->to(); 
+      else return (IBackgroundCategory::categories) range.begin()->to(); 
   }
 
   //If we have not found anything else to return yet we return undefined, 

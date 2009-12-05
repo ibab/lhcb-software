@@ -39,7 +39,8 @@ protected:
 
 private:
 
-  typedef IRelation <const LHCb::Particle*,IBackgroundCategory::categories> TableP2BC;
+  //typedef IRelation <const LHCb::Particle*,IBackgroundCategory::categories> TableP2BC;
+  typedef IRelation <const LHCb::Particle*,int> TableP2BC;
   typedef std::vector<TableP2BC*> TablesP2BC;
 
   std::vector<std::string> m_P2BCLocation;

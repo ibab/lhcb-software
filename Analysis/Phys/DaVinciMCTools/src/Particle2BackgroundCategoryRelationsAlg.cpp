@@ -68,11 +68,15 @@ StatusCode Particle2BackgroundCategoryRelationsAlg::execute() {
   }
 
   //Make the relations table
-  LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>* catRelations = 
-    new LHCb::Relation1D<const LHCb::Particle*, IBackgroundCategory::categories>;
+  //LHCb::Relation1D<const LHCb::Particle*,IBackgroundCategory::categories>* catRelations = 
+  //  new LHCb::Relation1D<const LHCb::Particle*, IBackgroundCategory::categories>;
+  
+  LHCb::Relation1D<const LHCb::Particle*,int>* catRelations =
+    new LHCb::Relation1D<const LHCb::Particle*, int>;
 
   for(LHCb::Particle::Container::const_iterator iP = myParticles->begin(); iP != myParticles->end(); ++iP ){
-    IBackgroundCategory::categories thisCat = m_bkg->category(*iP);
+    //IBackgroundCategory::categories thisCat = m_bkg->category(*iP);
+    int thisCat = (int) m_bkg->category(*iP);
     catRelations->relate(*iP,thisCat);
   }
 
