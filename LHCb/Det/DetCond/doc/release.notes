@@ -1,9 +1,15 @@
-# $Id: release.notes,v 1.172 2009-06-16 06:38:57 cattanem Exp $
+# $Id: release.notes,v 1.173 2009-12-05 14:39:20 dgolubko Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Det/DetCond
 ! Responsible : Marco Clemencic
 ! Purpose     : Interface between LHCb and LGC/COOL project
 !-----------------------------------------------------------------------------
+
+! 2009-12-05 - Dmitry GOLUBKOV
+ - python/DetCond/HistoCond.py: new python module to decorate the Condition
+ object with functions which extract the histograms from the parameters and to
+ define functions which convert histograms to Condition parameter xml strings.
+ - cmt/requirements: version increment to v12r8
 
 !===================== Det/DetCond v12r7 2009-06-16 ==========================
 ! 2009-06-03 - Marco Clemencic
