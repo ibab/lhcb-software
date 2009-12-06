@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.11 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.12 2009-12-06 13:28:52 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -64,9 +64,9 @@ ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
                           ("Event/Next6/Raw/TT/Clusters")
                           ("Event/Next7/Raw/TT/Clusters");
   declareProperty( "ClusterLocations", m_clusterLocations);
-  
+  // Cuts
   declareProperty("BunchID",       m_bunchID               );// BunchID 
-
+  declareProperty("ChargeCut", m_chargeCut=12);
   /// Maximum number of strips in clusters
   declareProperty( "MaxClusterSize", m_maxClusterSize=6 );
 
@@ -240,6 +240,7 @@ void ST::STTAEClusterMonitor::monitorClusters() {
 
           // ADC values vs spill
           const double totalCharge = cluster->totalCharge();
+	  if(totalCharge < m_chargeCut) continue;
           m_2d_ADCsVsSample->fill(sample, totalCharge);
           // Always fill histograms per readout quadrant for TT
           if(detType() == "TT") {

@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.16 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.17 2009-12-06 13:28:52 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -204,9 +204,9 @@ void ST::STClusterMonitor::monitorClusters() {
 //==============================================================================
 void ST::STClusterMonitor::bookHistograms() {
   // filled in monitor clusters
-  m_1d_nClusters = book1D("Number of clusters",-20.,20020.,501);
-  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 90.,10010., 
-                                 496);
+  m_1d_nClusters = book1D("Number of clusters",0.,5000.,500);
+  m_1d_nClusters_gt_100 = book1D("Number of clusters (N > 100)", 0., 5000.,
+                                 500);
   m_2d_nClustersVsTELL1 = book2D("Number of clusters per TELL1", 0.5, 
                                  m_nTELL1s+0.5, m_nTELL1s, -5.,505., 51);
 

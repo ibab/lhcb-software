@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.h,v 1.3 2009-12-06 02:02:13 mtobin Exp $
+// $Id: STTAEClusterMonitor.h,v 1.4 2009-12-06 13:28:52 mtobin Exp $
 #ifndef STTAECLUSTERMONITOR_H 
 #define STTAECLUSTERMONITOR_H 1
 
@@ -57,6 +57,7 @@ namespace ST
     std::vector<unsigned int> m_bunchID;
 
     unsigned int m_maxClusterSize; ///< Cut on number of strips in clusters
+    double m_chargeCut;///< Cut on charge
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
     bool m_useMean;///< Use mean instead of highest bin as MPV
