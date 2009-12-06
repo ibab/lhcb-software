@@ -4,9 +4,11 @@
 ! Purpose     : Standard package for monitoring NZS and ZS data.
 !-----------------------------------------------------------------------------
 
+
 ! 2009-12-06 - Jeroen van Tilburg and Mark Tobin
  - STPulseMonitor, STClusterMonitor, STTAEClusterMonitor: Made the selection of a bunchID a list of bunchIDs.
-
+ - Added cut on ADC values of clusters when filling sampling plots.
+	
 ! 2009-12-03 - Mark Tobin
  - STNZSMonitor: added possibility to include time/date in noise histogram titles
  - STTAEClusterMonitor: fix the y range of the profile histograms to match that
