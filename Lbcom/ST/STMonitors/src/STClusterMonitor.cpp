@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.cpp,v 1.15 2009-11-09 17:55:51 mtobin Exp $
+// $Id: STClusterMonitor.cpp,v 1.16 2009-12-06 02:02:13 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -75,7 +75,8 @@ ST::STClusterMonitor::STClusterMonitor( const std::string& name,
   /// Set maximum number of clusters per TELL1
   declareProperty( "MaxClustersPerTELL1", m_maxNClusters=4000 );
 
-  declareProperty( "BCID", m_BCID=0 );
+  declareProperty("BunchID",       m_bunchID               );// BunchID 
+
 }
 //=============================================================================
 // Destructor
@@ -127,6 +128,13 @@ StatusCode ST::STClusterMonitor::initialize() {
 StatusCode ST::STClusterMonitor::execute() {
 
   if(m_debug) debug() << "==> Execute" << endmsg;
+
+  const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( !m_bunchID.empty() && 
+      std::find(m_bunchID.begin(), m_bunchID.end(), 
+                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+  plot1D(odin->bunchId(),"BCID","BCID",-0.5,6000.5,6001);
+
   counter("Number of events") += 1; 
 
   //  std::cout << "Counter: " << counter("Number of events").nEntries() << std::endl;
@@ -152,12 +160,6 @@ StatusCode ST::STClusterMonitor::finalize() {
 //=============================================================================
 void ST::STClusterMonitor::monitorClusters() {
 
-  const LHCb::ODIN* odin = get<LHCb::ODIN>(LHCb::ODINLocation::Default); 
-  const unsigned int BCID = odin->bunchId();
-  if(m_BCID != 0) {
-    if(BCID != m_BCID) return;
-  }
-  plot1D(BCID,"BCID","BCID",-0.5,6000.5,6001);
   //  std::cout << counter("Number of events").nEntries() << ": BCID: " << BCID << std::endl;
 
   // Check location exists

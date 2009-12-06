@@ -1,4 +1,4 @@
-// $Id: STClusterMonitor.h,v 1.5 2009-09-02 17:03:30 mtobin Exp $
+// $Id: STClusterMonitor.h,v 1.6 2009-12-06 02:02:13 mtobin Exp $
 #ifndef STCLUSTERMONITOR_H 
 #define STCLUSTERMONITOR_H 1
 
@@ -93,8 +93,9 @@ namespace ST
     /// Hitmaps
     AIDA::IHistogram2D* m_2d_hitmap;///< Cluster hitmap
 
-    /// Cut on BCID
-    unsigned int m_BCID;
+    /// Cut on the bunch ID (distinguish Beam from cosmics)
+    std::vector<unsigned int> m_bunchID;
+
   };
 } // End of ST namespace
 #endif // STCLUSTERMONITOR_H

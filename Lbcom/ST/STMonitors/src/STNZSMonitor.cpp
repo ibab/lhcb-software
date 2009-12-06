@@ -1,4 +1,4 @@
-// $Id: STNZSMonitor.cpp,v 1.13 2009-12-03 18:46:37 mtobin Exp $
+// $Id: STNZSMonitor.cpp,v 1.14 2009-12-06 02:02:13 mtobin Exp $
 
 // Gaudi
 #include "GaudiKernel/AlgFactory.h"
@@ -213,7 +213,7 @@ void STNZSMonitor::updateNoiseHistogram(unsigned int sourceID, bool updateTitle)
     }
   } else {
     unsigned int tellID = m_useSourceID ? sourceID : (this->readoutTool())->SourceIDToTELLNumber(sourceID);
-    Warning("No histogram booked for "+boost::lexical_cast<std::string>(tellID),50,StatusCode::SUCCESS).ignore();
+    Warning("No histogram booked for "+boost::lexical_cast<std::string>(tellID),0,StatusCode::SUCCESS).ignore();
   }
 }
 

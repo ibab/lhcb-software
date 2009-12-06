@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.cpp,v 1.10 2009-12-03 18:46:37 mtobin Exp $
+// $Id: STTAEClusterMonitor.cpp,v 1.11 2009-12-06 02:02:13 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -15,6 +15,8 @@
 #include "STDet/DeSTSector.h"
 #include "Kernel/Trajectory.h"
 
+#include "Event/ODIN.h"
+
 // from Boost
 #include <boost/assign/list_of.hpp>
 
@@ -22,6 +24,8 @@
 #include "AIDA/IHistogram1D.h"
 #include "AIDA/IHistogram2D.h"
 #include "AIDA/IProfile1D.h"
+#include "GaudiUtils/Aida2ROOT.h"
+#include "TH2D.h"
 
 //-----------------------------------------------------------------------------
 // Implementation file for class : STTAEClusterMonitor
@@ -61,6 +65,8 @@ ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
                           ("Event/Next7/Raw/TT/Clusters");
   declareProperty( "ClusterLocations", m_clusterLocations);
   
+  declareProperty("BunchID",       m_bunchID               );// BunchID 
+
   /// Maximum number of strips in clusters
   declareProperty( "MaxClusterSize", m_maxClusterSize=6 );
 
@@ -69,6 +75,12 @@ ST::STTAEClusterMonitor::STTAEClusterMonitor( const std::string& name,
 
   /// Plot by detector region
   declareProperty( "ByDetectorRegion", m_plotByDetRegion=false );
+
+  /// Use mean as MPV
+  declareProperty( "UseMeanAsMPV", m_useMean=false );
+
+  /// Select update rate for filling MPV histograms
+  declareProperty( "MPVUpdateRate", m_updateRateMPV=10 );
 
 }
 //=============================================================================
@@ -131,20 +143,20 @@ void ST::STTAEClusterMonitor::bookHistograms() {
       std::string svcBox=(*itSvcBoxes);
       if(detType() == "TT") {
         std::string quadrant = svcBox.substr(0,2);
-        if(m_2ds_ADCsVsSampleByServiceBox[quadrant] == 0) {
-          m_2ds_ADCsVsSampleByServiceBox[quadrant] = book2D("Cluster ADC values vs sampling point "+quadrant,
-                                                            -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60);
-        }
-        if(m_profs_ADCsVsSampleByServiceBox[quadrant] == 0) {
-          m_profs_ADCsVsSampleByServiceBox[quadrant] = bookProfile1D("ADC MPV vs sampling point"+quadrant,
-                                                                     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
+        if(m_histos_ADCsVsSampleByServiceBox.find(quadrant) == m_histos_ADCsVsSampleByServiceBox.end()) {
+          m_histos_ADCsVsSampleByServiceBox[quadrant] = 
+	    HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+quadrant,
+								   -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+		       bookProfile1D("ADC MPV vs sampling point"+quadrant,
+				     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
         }
       } // End of TT condition
       if(m_plotBySvcBox) {
-        m_2ds_ADCsVsSampleByServiceBox[svcBox] = book2D("Cluster ADC values vs sampling point "+svcBox,
-                                                        -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60);
-        m_profs_ADCsVsSampleByServiceBox[svcBox] = bookProfile1D("ADC MPV vs sampling point "+svcBox,
-                                                                 -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
+        m_histos_ADCsVsSampleByServiceBox[svcBox] = 
+	    HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+svcBox,
+								   -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+		       bookProfile1D("ADC MPV vs sampling point "+svcBox,
+				     -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
       }
     } // End of service box loop
   } // End of service box condition
@@ -159,10 +171,11 @@ void ST::STTAEClusterMonitor::bookHistograms() {
     for( ; itNames != names.end(); ++itNames ){
       //      std::cout << (*itNames) << std::endl;
       std::string region = (*itNames);
-      m_2ds_ADCsVsSampleByDetRegion[region] = book2D("Cluster ADC values vs sampling point "+region,
-                                                     -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60);
-      m_profs_ADCsVsSampleByDetRegion[region] = bookProfile1D("ADC MPV vs sampling point "+region,
-                                                              -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.);
+      m_histos_ADCsVsSampleByDetRegion[region] = 
+	HistoPair( Gaudi::Utils::Aida2ROOT::aida2root ( book2D("Cluster ADC values vs sampling point "+region,
+							       -m_maxSample, m_maxSample, m_nSamples, 0., 60., 60) ),
+		   bookProfile1D("ADC MPV vs sampling point "+region,
+				 -m_maxSample, m_maxSample, m_nSamples, "", 0., 60.));
     };
   }
 }
@@ -172,12 +185,19 @@ void ST::STTAEClusterMonitor::bookHistograms() {
 StatusCode ST::STTAEClusterMonitor::execute() {
 
   debug() << "==> Execute" << endmsg;
+  // Select the correct bunch id
+  const LHCb::ODIN* odin = get<LHCb::ODIN> ( LHCb::ODINLocation::Default );
+  if( !m_bunchID.empty() && 
+      std::find(m_bunchID.begin(), m_bunchID.end(), 
+                odin->bunchId()) == m_bunchID.end()) return StatusCode::SUCCESS;
+
+
   counter("Number of events") += 1; 
 
   debug() << counter("Number of events") << endmsg;
   // code goes here  
   monitorClusters();
-
+  if(!m_useMean && counter("Number of events").nEntries()%m_updateRateMPV) updateMPVHistograms();
   return StatusCode::SUCCESS;
 }
 
@@ -224,20 +244,43 @@ void ST::STTAEClusterMonitor::monitorClusters() {
           // Always fill histograms per readout quadrant for TT
           if(detType() == "TT") {
             std::string quadrant = svcBox.substr(0,2);
-            m_2ds_ADCsVsSampleByServiceBox[quadrant]->fill(sample, totalCharge);
+	    fillHistogram(m_histos_ADCsVsSampleByServiceBox[quadrant], sample, totalCharge);
           }
           if(m_plotBySvcBox) {
-            m_2ds_ADCsVsSampleByServiceBox[svcBox]->fill(sample, totalCharge);
-            m_profs_ADCsVsSampleByServiceBox[svcBox]->fill(sample, totalCharge);
+	    fillHistogram(m_histos_ADCsVsSampleByServiceBox[svcBox], sample, totalCharge);
           }
           if(m_plotByDetRegion) {
             std::string region = cluster->detRegionName();
-            m_2ds_ADCsVsSampleByServiceBox[region]->fill(sample, totalCharge);
-            m_profs_ADCsVsSampleByServiceBox[region]->fill(sample, totalCharge);
-
+            fillHistogram(m_histos_ADCsVsSampleByServiceBox[region], sample, totalCharge);
           }
         } // End of cluster condition
       }// End of cluster iterator
     } else Warning("No clusters found at "+(*itCL), StatusCode::SUCCESS, 0).ignore(); // End of cluster exists
   }// End loop over cluster locations
+}
+
+void ST::STTAEClusterMonitor::fillHistogram(HistoPair histos, int sample, double charge) {
+  histos.first->Fill(sample, charge);
+  if(m_useMean) histos.second->fill(sample, charge);
+}
+
+void ST::STTAEClusterMonitor::updateMPVHistograms() {
+  if(m_plotBySvcBox) {
+    std::map<std::string, HistoPair>::iterator iHP =  m_histos_ADCsVsSampleByServiceBox.begin();
+    for(; iHP != m_histos_ADCsVsSampleByServiceBox.end(); ++iHP) {
+      TH2D* h2d = (*iHP).second.first;
+      AIDA::IProfile1D* h1p = (*iHP).second.second;
+      h1p->reset();
+      int nbinsX=h2d->GetNbinsX();
+      for(int i=1; i<=nbinsX; ++i) {
+	TH1D* hpy = h2d->ProjectionY("hpy",i,i);
+	if ( !(0.0 < hpy->GetEntries()) ) {
+	  continue;
+	}
+	double sample = h2d->GetXaxis()->GetBinCenter(i);
+	double mpv = hpy->GetBinCenter(hpy->GetMaximumBin());
+	h1p->fill(sample, mpv);
+      }
+    }
+  }
 }

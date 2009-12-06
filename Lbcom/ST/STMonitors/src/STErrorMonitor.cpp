@@ -1,4 +1,4 @@
-// $Id: STErrorMonitor.cpp,v 1.11 2009-12-03 18:46:37 mtobin Exp $
+// $Id: STErrorMonitor.cpp,v 1.12 2009-12-06 02:02:13 mtobin Exp $
 // Include files 
 
 // from Gaudi
@@ -61,7 +61,7 @@ StatusCode STErrorMonitor::initialize()
 
   // Book histograms
   m_1d_errorBanks = book1D("Error banks per Tell1", 0.5, m_maxTell1s+0.5, m_maxTell1s);
-  m_1d_fracErrors = book1D("Fraction of ports which sent error banks",0.,1.0,500);
+  m_1d_fracErrors = book1D("Fraction of ports which sent error banks",0.,1.0,100);
 
   // Get the tell1 mapping from source ID to tell1 number
   std::map<unsigned int, unsigned int>::const_iterator itT = (this->readoutTool())->SourceIDToTELLNumberMap().begin();

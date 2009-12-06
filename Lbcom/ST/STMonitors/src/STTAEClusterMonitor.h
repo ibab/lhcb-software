@@ -1,4 +1,4 @@
-// $Id: STTAEClusterMonitor.h,v 1.2 2009-07-06 17:30:58 mtobin Exp $
+// $Id: STTAEClusterMonitor.h,v 1.3 2009-12-06 02:02:13 mtobin Exp $
 #ifndef STTAECLUSTERMONITOR_H 
 #define STTAECLUSTERMONITOR_H 1
 
@@ -9,6 +9,7 @@
 namespace LHCb{
   class STCluster;
 }
+class TH2D;
 
 /** @class STTAEClusterMonitor STTAEClusterMonitor.h
  *  
@@ -51,21 +52,30 @@ namespace ST
     unsigned int m_nSamples; ///< Number of input locations
     double m_maxSample; ///< define the max bin of samples sample
     std::vector<std::string> m_spills;///< Vector of all possible spill location for TAE events
+
+    /// Cut on the bunch ID (distinguish Beam from cosmics)
+    std::vector<unsigned int> m_bunchID;
+
     unsigned int m_maxClusterSize; ///< Cut on number of strips in clusters
     bool m_plotBySvcBox; ///< Plot by Service Box
     bool m_plotByDetRegion; ///< Plot by unique detector region
+    bool m_useMean;///< Use mean instead of highest bin as MPV
+    unsigned int m_updateMPV;///< Sets how often the histogram of the MPV is updated
     bool m_debug; ///< true if message service level is debug
     bool m_verbose; ///< true if message service level is verbose
 
+    unsigned int m_updateRateMPV;
 
-  private: // Booking histograms
+  private: // Histogram operations
     void bookHistograms();
     AIDA::IProfile1D* m_prof_clustersVsSample;
     AIDA::IHistogram2D* m_2d_ADCsVsSample;
-    std::map<std::string, AIDA::IHistogram2D*> m_2ds_ADCsVsSampleByServiceBox;
-    std::map<std::string, AIDA::IProfile1D*> m_profs_ADCsVsSampleByServiceBox;
-    std::map<std::string, AIDA::IHistogram2D*> m_2ds_ADCsVsSampleByDetRegion;
-    std::map<std::string, AIDA::IProfile1D*> m_profs_ADCsVsSampleByDetRegion;
+
+    typedef std::pair<TH2D*, AIDA::IProfile1D*> HistoPair;
+    std::map<std::string, HistoPair> m_histos_ADCsVsSampleByServiceBox;
+    std::map<std::string, HistoPair> m_histos_ADCsVsSampleByDetRegion;
+    void fillHistogram(HistoPair histoPair, int sample, double charge);
+    void updateMPVHistograms();
   };
 } // End of ST namespace
 #endif // STTAECLUSTERMONITOR_H
