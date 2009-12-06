@@ -3,6 +3,13 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+! 2009-12-06 - Wouter Hulsbergen
+ - bug fix in TrackMasterFitter::projectReference: oce statuscode with
+   limited scope was hiding another statuscode. as a result the failure was not
+   properly returned.
+
+ - added flag to set number of outlier iterations for configured fitters
+
 !=========================== TrackFitter v2r41 2009-11-27 =================
 
 ! 2009-11-26 - Manuel Tobias Schiller

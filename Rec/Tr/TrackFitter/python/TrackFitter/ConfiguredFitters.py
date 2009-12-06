@@ -20,7 +20,8 @@ def ConfiguredMasterFitter( Name,
                             KalmanSmoother     = None,
                             LiteClusters       = False,
                             ApplyMaterialCorrections = None,
-                            StateAtBeamLine = True ):
+                            StateAtBeamLine = True,
+                            MaxNumberOutliers = 2 ):
     # set the mutable default arguments
     if FieldOff is None:                 FieldOff = TrackSys().fieldOff()
     if SimplifiedGeometry is None:       SimplifiedGeometry = TrackSys().simplifiedGeometry()
@@ -48,6 +49,9 @@ def ConfiguredMasterFitter( Name,
 
     # provide a state at the beamline
     fitter.StateAtBeamLine = StateAtBeamLine
+
+    # set the maximum number of outliers removed in the fit
+    fitter.MaxNumberOutliers = MaxNumberOutliers
     
     # set up the material locator
     if SimplifiedGeometry:
@@ -110,7 +114,8 @@ def ConfiguredEventFitter( Name,
                            KalmanSmoother     = None,
                            LiteClusters = False,
                            ApplyMaterialCorrections = None,
-                           StateAtBeamLine = True ):
+                           StateAtBeamLine = True,
+                           MaxNumberOutliers = 3):
     # make sure the name is unique
     if allConfigurables.get( Name ) :
         raise ValueError, 'ConfiguredEventFitter: instance with name '+Name+' already exists'

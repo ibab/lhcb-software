@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.79 2009-11-22 09:02:32 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.80 2009-12-06 20:35:13 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -450,7 +450,6 @@ StatusCode TrackMasterFitter::projectReference( LHCb::Track& track ) const
       break ;
     } else if( node->hasMeasurement() ) {
       // if the reference is not set, issue an error
-      StatusCode sc = StatusCode::SUCCESS;
       ITrackProjector *proj = m_projectorSelector->projector(node->measurement());
       if ( proj==0 ) {
 	sc = Warning( "Could not get projector for measurement", StatusCode::FAILURE, 0 );
