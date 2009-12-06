@@ -1,4 +1,4 @@
-// $Id: Primitives.h,v 1.18 2009-11-29 14:05:06 ibelyaev Exp $
+// $Id: Primitives.h,v 1.19 2009-12-06 18:20:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_PRIMITIVES_H 
 #define LOKI_PRIMITIVES_H 1
@@ -2573,6 +2573,242 @@ namespace LoKi
     LoKi::FunctorFromFunctor<TYPE,double> m_high ;        //      the high edge 
     // ========================================================================
   } ;
+  // ==========================================================================
+  /** @class EqualToList
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-12-06
+   */
+  template <class TYPE>
+  class EqualToList : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    EqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<double>&         vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_vct ( vct ) 
+    {}
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    EqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<int>&            vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_vct ( vct.begin() , vct.end() ) 
+    {}
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    EqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<unsigned int>&            vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_fun ( fun ) 
+      , m_vct ( vct.begin() , vct.end() ) 
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~EqualToList(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  EqualToList* clone() const { return new EqualToList(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "(" << this->func() << "== " 
+               << Gaudi::Utils::toString ( m_vct ) << " )" ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    inline result_type equal_to ( argument a ) const
+    {
+      if ( m_vct.empty() ) { return  false ; }
+      //
+      const double r = m_fun.fun ( a ) ;
+      //
+      LHCb::Math::Equal_To<double> cmp ;
+      for  ( std::vector<double>::const_iterator item = m_vct.begin() ;
+             m_vct.end() != item ; ++item ) 
+      { if ( cmp ( *item , r ) ) { return  true ; } } // RETURN 
+      //
+      return false ;
+    }    
+    // ========================================================================
+  public:
+    // ========================================================================
+    const LoKi::Functor<TYPE,double>& func () const { return m_fun.func() ; }
+    /// get the vector 
+    const std::vector<double>& vect() const { return m_vct ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    EqualToList ();
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor 
+    LoKi::FunctorFromFunctor<TYPE,double> m_fun ;                // the functor 
+    /// the list 
+    std::vector<double>  m_vct ;                                 //    the list 
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class NotEqualToList
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-12-06
+   */
+  template <class TYPE>
+  class NotEqualToList : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    NotEqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<double>&         vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_equal ( fun , vct ) 
+    {}
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    NotEqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<int>&            vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_equal ( fun , vct ) 
+    {}
+    /** constructor from the function and the value 
+     *  @param fun the function
+     *  @param vct the vector of values 
+     */
+    NotEqualToList
+    ( const LoKi::Functor<TYPE,double>&  fun , 
+      const std::vector<unsigned int>&            vct ) 
+      : LoKi::Functor<TYPE,bool>() 
+      , m_equal ( fun , vct ) 
+    {}
+    // ========================================================================
+    /// MANDATORY: virtual destructor 
+    virtual ~NotEqualToList(){} ;
+    // ========================================================================
+    /// MANDATORY: clone method ("virtual construcor")
+    virtual  NotEqualToList* clone() const 
+    { return new NotEqualToList(*this); }
+    /// MANDATORY: the only one essential method :
+    virtual  result_type operator() ( argument a ) const
+    { return not_equal_to ( a ) ; }
+    /// OPTIONAL: the specific printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << "( " << this->func() << " != " 
+               << Gaudi::Utils::toString ( m_equal.vect() ) << " )" ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    inline result_type not_equal_to ( argument a ) const
+    { return !m_equal.equal_to ( a ) ; }
+    // ========================================================================
+  public:
+    // ========================================================================
+    const LoKi::Functor<TYPE,double>& func () const { return m_equal.func() ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// The default constructor is disabled 
+    NotEqualToList ();
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the functor 
+    LoKi::EqualToList<TYPE> m_equal ;                            // the functor 
+    // ========================================================================
+  };  
+  // ==========================================================================
+  /** @class XScaler
+   *  Simple scaler for predicates
+   *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *  @date 2009-12-06
+   */
+  template <class TYPE>
+  class XScaler : public LoKi::Functor<TYPE,bool>
+  {
+  private:
+    // ========================================================================
+    /// argument type
+    typedef typename LoKi::Functor<TYPE,bool>::argument argument  ; 
+    /// result type 
+    typedef typename LoKi::Functor<TYPE,bool>::result_type result_type ; 
+    // ========================================================================
+  public:
+    // ========================================================================
+    /** constructor from predicate and scale
+     *  @param cut the predicate 
+     *  @param scale the scaler 
+     */
+    XScaler 
+    ( const LoKi::Functor<TYPE,bool>& cut   , 
+      const LoKi::Functor<void,bool>& scale ) 
+      : LoKi::Functor<TYPE,bool>()
+      , m_cut    ( cut   ) 
+      , m_scaler ( scale ) 
+    {}
+    /// MANDATORY: virtual destructor 
+    virtual ~XScaler() {}
+    /// MANDATORY: clone method ("virtual constructor") 
+    virtual  XScaler* clone() const { return new XScaler ( *this ) ; }
+    /// MANDATORY: the only one essential method 
+    virtual result_type operator() ( argument a ) const 
+    {
+      return m_cut.fun ( a ) && m_scaler.fun( /* void */ ) ;
+    }
+    /// OPTIONAL: nice printout 
+    virtual std::ostream& fillStream ( std::ostream& s ) const 
+    { return s << " scale ( " << m_cut << " , " << m_scaler << " ) " ; }
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the default constructor is disabled 
+    XScaler() ;                          // the default constructor is disabled    
+    // ========================================================================
+  private:
+    // ========================================================================
+    /// the predicate 
+    LoKi::FunctorFromFunctor<TYPE,bool>  m_cut    ;            // the predicate 
+    /// the scaler 
+    LoKi::FunctorFromFunctor<void,bool>  m_scaler ;            // the scaler 
+    // ========================================================================
+  };
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================

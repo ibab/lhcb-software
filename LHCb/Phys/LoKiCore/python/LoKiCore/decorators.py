@@ -1096,6 +1096,7 @@ def decoratePredicateOps ( cuts , opers ) :
     _process_ = None
     _count_   = None
     _has_     = None
+    _scale_   = None
     
     # boolean operations: OR 
     if hasattr ( opers , '__or__' ) :
@@ -1165,7 +1166,31 @@ def decoratePredicateOps ( cuts , opers ) :
             """
             return opers.__switch__(s,v1,v2)
         _switch_  . __doc__  += opers.__switch__   . __doc__
-        
+
+    # scale
+    if hasattr ( opers , '__scale__' ) :        
+        def _scale_ ( s , sf ) :
+            """
+            Contruct the 'scaled' predicate function which acts according to the rule :
+            
+            result =  s ( value ) ? sf() : False 
+
+            It is equivalent to logical AND  between predicate and 'void' predicate
+
+            Keep the maximal rate os access less than 50 Hz:
+            >>>  cut1 = scale ( L0_DECISION , FRATE  ( 50 * Gaudi.Units.Hz ) ) 
+            
+            ## postscale at 10% o fpositive decisions (random) 
+            >>>  cut2 = scale ( L0_DECISION , FSCALE ( 0.1 ) )
+            
+            ## accept only every 3rd positive decion :
+            >>>  cut3 = scale ( L0_DECISION , FSKIP  ( 3   ) )
+            
+            Uses:\n
+            """
+            return opers.__scale__(s,sf)
+        _scale_  . __doc__  += opers.__scale__   . __doc__
+    
     # select
     if hasattr ( opers , '__select__' ) :        
         def _select_ (s) :
@@ -1241,6 +1266,7 @@ def decoratePredicateOps ( cuts , opers ) :
         if _invert_  : cut .__invert__   = _invert_    # operator!
         if _monitor_ : cut . __monitor__ = _monitor_   # monitoring 
         if _switch_  : cut . __switch__  = _switch_    # switch 
+        if _scale_   : cut . __scale__   = _scale_     # scale 
         if _select_  : cut . __select__  = _select_    # select
         if _process_ : cut . __process__ = _process_   # process 
         if _count_   : cut . __count__   = _count_     # process 

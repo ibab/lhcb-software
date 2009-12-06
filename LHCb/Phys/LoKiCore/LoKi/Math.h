@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.12 2009-12-06 18:16:33 ibelyaev Exp $
+// $Id: Math.h,v 1.13 2009-12-06 18:20:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1

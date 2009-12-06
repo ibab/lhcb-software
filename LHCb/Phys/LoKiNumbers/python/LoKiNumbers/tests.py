@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: tests.py,v 1.8 2009-11-29 14:15:07 ibelyaev Exp $
+# $Id: tests.py,v 1.9 2009-12-06 18:24:22 ibelyaev Exp $
 # =============================================================================
 ## @file
 #  @author Vanya BELYAEV ibelyaev@physics.syr.edu
@@ -36,6 +36,25 @@ print 'inp >> XSIZE                           :%s' % ( inp >> XSIZE   )
 
 print 'inp >>       in_range ( 1,X,5 )  :%s' % ( inp >>       in_range(1,X,5)  )
 print 'inp >> count(in_range ( 1,X,5 )) :%s' % ( inp >> count(in_range(1,X,5)) )
+
+## print 'inp >> XSCALE ( 0.5 )   :%s' % ( inp >> select ( XSCALE ( 0.5 ) ) )
+print 'inp >> XSKIP  ( 3 )   :%s' % ( inp >> XSKIP ( 3 ) ) 
+print 'inp >> XSKIP  ( 2 )   :%s' % ( inp >> XSKIP ( 2 ) ) 
+print 'inp >> XSKIP  ( 1 )   :%s' % ( inp >> XSKIP ( 1 ) ) 
+
+print 'inp >> scale ( XALL , SKIP  ( 2 ) ) :%s' % ( inp >> scale ( XALL , SKIP ( 2 ) ) )
+
+
+print 'inp >>  equal_to  ( X , 1 )  :%s' % ( inp >>  equal_to ( X , 1 ) )
+print 'inp >> ~equal_to  ( X , 1 )  :%s' % ( inp >> ~equal_to ( X , 1 ) )
+print 'inp >>  equal_to  ( X , [ 1 , 2, 3 ] )  :%s' % ( inp >>  equal_to ( X , [ 1 , 2, 3] ) )
+print 'inp >> ~equal_to  ( X , [ 1 , 2, 3 ] )  :%s' % ( inp >> ~equal_to ( X , [ 1 , 2, 3] ) )
+
+print 'inp >>  ( X == doubles (   1 , 2, 3   ) ) :%s' % ( inp >> ( X == doubles(  1 , 2, 3 ) ) )
+print 'inp >>  ( X != doubles ( [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ( X != doubles([ 1 , 2, 3]) ) ) 
+
+print 'inp >>  ( X == ints    (   1 , 2, 3   ) ) :%s' % ( inp >> ( X == ints (  1 , 2, 3 ) ) )
+print 'inp >>  ( X != ints    ( [ 1 , 2, 3 ] ) ) :%s' % ( inp >> ( X != ints ([ 1 , 2, 3]) ) ) 
 
 
 # =============================================================================

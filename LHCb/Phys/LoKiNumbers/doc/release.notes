@@ -4,6 +4,25 @@
 ! Purpose     : Set of dictionaries for LoKi functions 
 ! -----------------------------------------------------------------------------
 
+! 2009-12-06 - Vanya Belyaev
+
+  see task #12978
+
+ - "generic scalers"  void --> bool
+
+     SKIP  :   SKIP ( N )  - accept only Nth  
+     SCALE :   SCALE ( f ) - accept only "f"-fraction ( random!)
+     RATE  :   RATE  ( r ) - keeps the rate limit at "r"
+
+ - helpers scalers (useful for streamers)  double -> bool
+
+     XSKIP 
+     XSCALE 
+     XRATE 
+
+ - add exampel for scalers/prescalers 
+  
+
 ! 2009-11-29 - Vanya Belyaev
 
  - python/LoKiNumbers/test.py

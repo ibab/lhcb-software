@@ -1,4 +1,4 @@
-// $Id: Random.h,v 1.1 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Random.h,v 1.2 2009-12-06 18:20:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_RANDOM_H 
 #define LOKI_RANDOM_H 1
@@ -17,6 +17,7 @@
 // ============================================================================
 namespace LoKi
 {
+  // ==========================================================================
   namespace Random
   {
     // ========================================================================
@@ -64,18 +65,29 @@ namespace LoKi
       virtual  result_type operator() ( argument /* a */ ) const ;
       // ======================================================================
     public:
+      // ======================================================================
       /// get the params (if are known) 
       virtual const IRndmGen::Param* params() const { return m_param ; }
+      // ======================================================================
     private:
+      // ======================================================================
       /// no assignement operator 
-      Numbers& operator=( const Numbers& right ) ; /// no assignement operator 
+      Numbers& operator=( const Numbers& right ) ;   // no assignement operator 
+      // ======================================================================
+    public:
+      // ======================================================================
+      /// shoot! 
+      result_type shoot () const ;                                    // shoot! 
+      // ======================================================================
     private:
+      // ======================================================================
       /// the random number service 
       mutable LoKi::Interface<IRndmGenSvc>  m_service  ; // the random number service 
       /// the parameters 
       const IRndmGen::Param*                m_param    ; // the parameters 
       /// the source of random numbers 
       mutable Rndm::Numbers                 m_numbers  ; // the source of random numbers 
+      // ======================================================================
     } ;
     // ========================================================================
     /** @class Uniform 
@@ -106,6 +118,7 @@ namespace LoKi
     class Uniform : public LoKi::Random::Numbers 
     {
     public:
+      // ======================================================================
       /// constructor  from the descriptor and the service 
       Uniform 
       ( const Rndm::Flat& flat    , 
@@ -130,7 +143,9 @@ namespace LoKi
       virtual  Uniform* clone() const ;
       /// OPTIONAL: nice a nice printout 
       virtual  std::ostream& fillStream ( std::ostream& s  ) const ;
+      // ======================================================================
     public:
+      // ======================================================================
       /// get the params (if are known) 
       virtual const Rndm::Flat* params() const { return &m_flat ; }
       /// cast:
@@ -198,10 +213,12 @@ namespace LoKi
       virtual  std::ostream& fillStream ( std::ostream& s  ) const ;    
       // ======================================================================
     public:
+      // ======================================================================
       /// get the params (if are known) 
       virtual const Rndm::Gauss* params() const { return &m_gauss ; }
       /// cast:
       operator const Rndm::Gauss& () const { return m_gauss ; }
+      // ======================================================================
     private:
       // ======================================================================
       /// the descriptor 
@@ -274,7 +291,7 @@ namespace LoKi
     typedef LoKi::Random::Numbers                               XRANDOM ;
     // ========================================================================
     /** @typedef XRND
-     *  Simple functor whcih produces the random numbers acording to 
+     *  Simple functor which produces the random numbers acording to 
      *  the uniform distribution between minimal and maximal values:
      * 
      *  @code
@@ -301,7 +318,7 @@ namespace LoKi
     typedef LoKi::Random::Uniform                                 XRND     ;
     // ========================================================================
     /** @var XRNDM
-     *  Simple functor whcih produces the random numbers acording to 
+     *  Simple functor which produces the random numbers acording to 
      *  the uniform distribution between 0 and 1 
      * 
      *  @code
@@ -323,7 +340,7 @@ namespace LoKi
     const LoKi::Random::Uniform                                   XRNDM () ;
     // ========================================================================
     /** @typedef XGAUS 
-     *  Simple functor whcih produces the random numbers acording to 
+     *  Simple functor which produces the random numbers acording to 
      *  the gaussian distribution with mean and sigma 
      * 
      *  @code
@@ -376,15 +393,16 @@ namespace LoKi
      *  @endcode 
      *
      *  @attention It is known to be a bad generator!
-     *  @attention The behaviour is not reprodusible!
+     *  @attention The behaviour is not reproducible!
      *  
      *  @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
      *  @date 2008-03-19
      */        
     const LoKi::Random::Rand                                    XRAND () ;
     // ========================================================================
-  } // end of namespace LoKi::Cuts 
-} // end of namespace LoKi
+  } //                                              end of namespace LoKi::Cuts 
+  // ==========================================================================
+} //                                                      end of namespace LoKi
 // ============================================================================
 // The END 
 // ============================================================================

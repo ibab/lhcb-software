@@ -1,4 +1,4 @@
-// $Id: Random.cpp,v 1.1 2008-03-30 13:31:28 ibelyaev Exp $
+// $Id: Random.cpp,v 1.2 2009-12-06 18:20:57 ibelyaev Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -80,7 +80,12 @@ LoKi::Random::Numbers::clone() const
 // ============================================================================
 LoKi::Random::Numbers::result_type 
 LoKi::Random::Numbers::operator() 
-  ( LoKi::Random::Numbers::argument /* a */ ) const 
+  ( LoKi::Random::Numbers::argument /* a */ ) const { return shoot() ; }
+// ============================================================================
+// MANDATORY: the only one essential method 
+// ============================================================================
+LoKi::Random::Numbers::result_type 
+LoKi::Random::Numbers::shoot() const 
 {
   // everything is ok ? SHOOT! 
   if ( m_numbers ) { return m_numbers.shoot() ; }                // RETURN

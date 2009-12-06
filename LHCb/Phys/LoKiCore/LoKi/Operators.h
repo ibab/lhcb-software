@@ -1,4 +1,4 @@
-// $Id: Operators.h,v 1.10 2008-09-21 13:19:11 ibelyaev Exp $
+// $Id: Operators.h,v 1.11 2009-12-06 18:20:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_OPERATORS_H 
 #define LOKI_OPERATORS_H 1
@@ -972,7 +972,60 @@ operator* ( typename LoKi::Constant<TYPE,TYPE2>::T2 val ,
             const LoKi::Functor<TYPE,TYPE2>&        fun )
 { return LoKi::Multiply<TYPE,TYPE2> ( val , fun ) ; }
 
+
 // ============================================================================
+template <class TYPE>
+inline LoKi::EqualToList<TYPE>
+operator == ( const LoKi::Functor<TYPE,double>& fun , 
+              const std::vector<double>&        vct ) 
+{ return LoKi::EqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::EqualToList<TYPE>
+operator == ( const LoKi::Functor<TYPE,double>& fun , 
+              const std::vector<int>&           vct ) 
+{ return LoKi::EqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::NotEqualToList<TYPE>
+operator != ( const LoKi::Functor<TYPE,double>& fun , 
+              const std::vector<double>&        vct ) 
+{ return LoKi::NotEqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::NotEqualToList<TYPE>
+operator != ( const LoKi::Functor<TYPE,double>& fun , 
+              const std::vector<int>&           vct ) 
+{ return LoKi::NotEqualToList<TYPE>( fun , vct ) ; }
+
+
+// ============================================================================
+template <class TYPE>
+inline LoKi::EqualToList<TYPE>
+operator == ( const std::vector<double>&        vct ,  
+              const LoKi::Functor<TYPE,double>& fun ) 
+{ return LoKi::EqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::EqualToList<TYPE>
+operator == ( const std::vector<int>&           vct , 
+              const LoKi::Functor<TYPE,double>& fun ) 
+{ return LoKi::EqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::NotEqualToList<TYPE>
+operator != ( const std::vector<double>&        vct , 
+              const LoKi::Functor<TYPE,double>& fun ) 
+{ return LoKi::NotEqualToList<TYPE>( fun , vct ) ; }
+// ============================================================================
+template <class TYPE>
+inline LoKi::NotEqualToList<TYPE>
+operator != ( const std::vector<int>&           vct , 
+              const LoKi::Functor<TYPE,double>& fun )
+{ return LoKi::NotEqualToList<TYPE>( fun , vct ) ; }
+
+
+
 
 // ============================================================================
 // The END 

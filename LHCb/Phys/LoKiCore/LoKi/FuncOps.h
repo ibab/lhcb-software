@@ -1,4 +1,4 @@
-// $Id: FuncOps.h,v 1.24 2009-12-06 18:12:03 ibelyaev Exp $
+// $Id: FuncOps.h,v 1.25 2009-12-06 18:20:55 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_FUNCOPS_H 
 #define LOKI_FUNCOPS_H 1

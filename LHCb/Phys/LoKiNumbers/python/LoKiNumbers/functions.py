@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: functions.py,v 1.6 2008-11-21 09:06:42 ibelyaev Exp $ 
+# $Id: functions.py,v 1.7 2009-12-06 18:24:22 ibelyaev Exp $ 
 # =============================================================================
 ## @file LoKiNumbers/functions.py
 #  The full set of useful objects from LoKiNumbers library 
@@ -11,7 +11,7 @@
 Few useful objects from LoKiNumbers library
 """
 __author__  = "Vanya BELYAEV ibelyaev@physics.syr.edu"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.6 $ " 
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, version $Revision: 1.7 $ " 
 # =============================================================================
 
 import LoKiCore.decorators as _LoKiCore 
@@ -80,9 +80,20 @@ XGAUSS    = XGAUS ( 0 , 1 )
 XRAND_    = LoKi.Random.Rand
 XRAND     = LoKi.Random.Rand ( )
 
+# scalers
+
+## @see LoKi::Cuts::XRATE 
+XRATE = LoKi.Scalers.RateLimit
+## @see LoKi::Cuts::XSCALE
+XSCALE = LoKi.Scalers.RandomScale 
+## @see LoKi::Cuts::XSKIP
+XSKIP  = LoKi.Scalers.Skipper 
+
+
 ## trivia 
 XEMPTY    = LoKi.Functors.Empty ( 'double' ) ()
 XSIZE     = LoKi.Functors.Size  ( 'double' ) ()
+
 
 
 # =============================================================================

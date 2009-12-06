@@ -1,4 +1,4 @@
-// $Id: LoKiNumbersDict.h,v 1.9 2009-05-09 19:19:49 ibelyaev Exp $
+// $Id: LoKiNumbersDict.h,v 1.10 2009-12-06 18:24:22 ibelyaev Exp $
 // ============================================================================
 #ifndef DICT_LOKINUMBERSDICT_H 
 #define DICT_LOKINUMBERSDICT_H 1
@@ -16,6 +16,7 @@
 #include "LoKi/BasicFunctors.h"
 #include "LoKi/CoreTypes.h"
 #include "LoKi/Random.h"
+#include "LoKi/Scalers.h"
 #include "LoKi/Filters.h"
 // ============================================================================
 /** @file
