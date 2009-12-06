@@ -1,13 +1,20 @@
 ! =============================================================================
-! $Id: release.notes,v 1.133 2009-12-02 16:29:15 marcocle Exp $
+! $Id: release.notes,v 1.134 2009-12-06 19:46:54 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
 ! 2009-12-02 - Marco Clemencic
+ - Improvements to the new Qt4-based CondDBBrowser
+   - added the "Create slice" feature
+   - added a menu entry to copy the connection string of the current database to
+     the clipboard
+   - minor fixes and improvements
+
+! 2009-12-02 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser.
-   - completed the "add condition feature" (only few missing bits)
+   - completed the "add condition" feature (only few missing bits)
    - minor fixes and improvements
 
 ! 2009-12-01 - Marco Clemencic

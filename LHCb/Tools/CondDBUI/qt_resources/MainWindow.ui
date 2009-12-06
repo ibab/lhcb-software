@@ -49,7 +49,7 @@
     </property>
     <widget class="QMenu" name="menuRecent" >
      <property name="title" >
-      <string>Recent</string>
+      <string>&amp;Recent</string>
      </property>
     </widget>
     <widget class="QMenu" name="menuStandard" >
@@ -64,7 +64,9 @@
     <addaction name="separator" />
     <addaction name="actionRead_Only" />
     <addaction name="separator" />
-    <addaction name="actionSlice" />
+    <addaction name="actionCopy_connection_string" />
+    <addaction name="separator" />
+    <addaction name="actionCreate_slice" />
     <addaction name="actionDump_to_files" />
     <addaction name="actionClose" />
     <addaction name="separator" />
@@ -347,17 +349,17 @@
   </widget>
   <action name="actionNew" >
    <property name="text" >
-    <string>New</string>
+    <string>&amp;New</string>
    </property>
   </action>
   <action name="actionOpen" >
    <property name="text" >
-    <string>Open</string>
+    <string>&amp;Open</string>
    </property>
   </action>
-  <action name="actionSlice" >
+  <action name="actionCreate_slice" >
    <property name="text" >
-    <string>Slice</string>
+    <string>Create slice</string>
    </property>
   </action>
   <action name="actionClose" >
@@ -397,7 +399,7 @@
   </action>
   <action name="actionQuit" >
    <property name="text" >
-    <string>Quit</string>
+    <string>&amp;Quit</string>
    </property>
   </action>
   <action name="actionAbout_Qt" >
@@ -427,6 +429,11 @@
   <action name="actionCopy_path" >
    <property name="text" >
     <string>Copy path</string>
+   </property>
+  </action>
+  <action name="actionCopy_connection_string" >
+   <property name="text" >
+    <string>&amp;Copy connection string</string>
    </property>
   </action>
  </widget>
@@ -703,7 +710,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpen(bool)</signal>
-   <receiver>actionSlice</receiver>
+   <receiver>actionCreate_slice</receiver>
    <slot>setEnabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -765,7 +772,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionSlice</sender>
+   <sender>actionCreate_slice</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>createSlice()</slot>
@@ -846,7 +853,7 @@
   </connection>
   <connection>
    <sender>actionCopy_path</sender>
-   <signal>activated(int)</signal>
+   <signal>activated()</signal>
    <receiver>MainWindow</receiver>
    <slot>copyPathToClipboard()</slot>
    <hints>
@@ -988,6 +995,38 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>actionCopy_connection_string</sender>
+   <signal>activated()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>copyConnStrToClipboard()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>523</x>
+     <y>290</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>MainWindow</sender>
+   <signal>databaseOpen(bool)</signal>
+   <receiver>actionCopy_connection_string</receiver>
+   <slot>setEnabled(bool)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>523</x>
+     <y>290</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>aboutQt()</slot>
@@ -1011,6 +1050,7 @@
   <slot>deleteTag()</slot>
   <slot>showHierarchyContextMenu(QPoint)</slot>
   <slot>copyPathToClipboard()</slot>
+  <slot>copyConnStrToClipboard()</slot>
   <signal>openedDB(P*)</signal>
   <signal>databaseOpen(bool)</signal>
   <signal>databaseOpenReadOnly(bool)</signal>

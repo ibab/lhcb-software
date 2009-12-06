@@ -192,7 +192,7 @@ class TimePointEdit(QtGui.QWidget):
         if self._max.isChecked():
             return cool.ValidityKeyMax
         # FIXME: This is awkward, but I do not have enough resolution otherwise
-        d = self._edit.dateTime().toUTC()
+        d = self._edit.dateTime().toLocalTime() # mktime needs a local time
         timeTuple = (d.date().year(), d.date().month(), d.date().day(),
                      d.time().hour(), d.time().minute(), d.time().second(),
                      0,0,-1)
@@ -305,7 +305,9 @@ class SearchableTextEdit(QtGui.QPlainTextEdit):
                 font.setFixedPitch(value)
                 self.setFont(font)
             else:
-                self.setFont(self._defaultFont)
+                font = QtGui.QFont(self._defaultFont)
+                font.setFixedPitch(value)
+                self.setFont(font)
             if self.actionFixedWidthFont.isChecked() != value:
                 self.actionFixedWidthFont.setChecked(value)
     ## FixedWidthFont property

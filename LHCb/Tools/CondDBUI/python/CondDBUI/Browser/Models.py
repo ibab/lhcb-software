@@ -22,6 +22,7 @@ __all__ = ["setModelsIcons",
            "CondDBPayloadFieldModel",
            "NodeFieldsModel",
            "AddConditionsStackModel",
+           "CondDBSelectionsModel",
            ]
 #import logging
 #logging.basicConfig(level=logging.INFO)
@@ -266,11 +267,12 @@ class CondDBNodesListModel(QAbstractListModel):
     FOLDERSET = 0x2
     ALL = FOLDER | FOLDERSET
     def __init__(self, db = None, parent = None,
-                 nodeType = ALL):
+                 nodeType = ALL, needRoot = False):
         super(CondDBNodesListModel,self).__init__(parent)
         self._nodes = None
         self.db = None
         self.nodeType = nodeType
+        self.needRoot = needRoot
         self.connectDB(db)
         
     ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
@@ -290,7 +292,8 @@ class CondDBNodesListModel(QAbstractListModel):
     def nodes(self):
         if self._nodes is None:
             self._nodes = self.db.getAllNodes()
-            self._nodes.pop(0) # remove "/" (which is always the first one)
+            if not self.needRoot:
+                self._nodes.pop(0) # remove "/" (which is always the first one)
             # if a filtering criterion is defined, we filter the list 
             if self.nodeType == self.FOLDER:
                 self._nodes = filter(self.db.db.existsFolder, self._nodes)
@@ -365,22 +368,32 @@ class CondDBTagsListModel(QAbstractListModel):
     ## Set the folder for which to get the tags.
     def setPath(self, path):
         self.reset()
+        if path is not None:
+            path = str(path) # Convert to Python string since we may get QString
         self._path = path
-        if path and self.db.db.existsFolder(path):
-            f = self.db.db.getFolder(path)
-            if f.versioningMode() == cool.FolderVersioning.MULTI_VERSION:
+        if path:
+            # a path has tags if it is a multi version folder or if is is a folderset 
+            if self.db.db.existsFolder(path):
+                f = self.db.db.getFolder(path)
+                hasTags = f.versioningMode() == cool.FolderVersioning.MULTI_VERSION
+            else:
+                hasTags = self.db.db.existsFolderSet(path)
+            if hasTags:
                 # invalidate the cache
                 self._tags = None
                 if path not in self._alltags:
                     # Initialize the all-tag list (the already retrieved ones are not touched)
                     self._alltags[path] = None
-                self.emit(SIGNAL("setViewEnabled(bool)"), True)
+                # FIXME: I do not like this, but I have to emit the signal only
+                # for foldersets
+                self.emit(SIGNAL("setViewEnabled(bool)"),
+                          not self.db.db.existsFolderSet(path))
             else:
                 # single version folders do not have tags by definition
                 self._tags = self._alltags[path] = []
                 self.emit(SIGNAL("setViewEnabled(bool)"), False)
         else:
-            # If no folder is specified or the path is a folderset, use an empty cache
+            # If no folder is specified, use an empty cache
             self._tags = self._alltags[path] = []
             self.emit(SIGNAL("setViewEnabled(bool)"), False)
     
@@ -392,16 +405,20 @@ class CondDBTagsListModel(QAbstractListModel):
         return self._alltags[self._path]
     
     ## Expanded list of tags.
+    #  The information in the list is in for of tuples with (name, path, group_id)
     #  If the hideAutoTags property is set to True, the tags starting with
     #  "_auto_" are excluded from the list.
     def tags(self):
         if self._tags is None:
             tags = []
+            group = 0
             for t in self.alltags():
-                tags.append(t.name)
-                tags += t.getAncestors()
+                tags.append((t.name, self._path, group))
+                for at in t.getAncestorTags():
+                    tags.append((at.name, at.path, group))
+                group += 1
             if self._hideAutoTags:
-                tags = [t for t in tags if not t.startswith("_auto_")]
+                tags = [t for t in tags if not t[0].startswith("_auto_")]
             self._tags = tags
         return self._tags
     
@@ -412,8 +429,14 @@ class CondDBTagsListModel(QAbstractListModel):
     ## Name of the tag at a given index.
     def data(self, index, role):
         if index.isValid():
+            tag, path, group = self.tags()[index.row()]
             if role == Qt.DisplayRole:
-                return QVariant(self.tags()[index.row()])
+                return QVariant(tag)
+            elif role == Qt.ToolTipRole:
+                return QVariant(path)
+            elif role == Qt.BackgroundRole:
+                if group % 2:
+                    return QVariant(QBrush(Qt.lightGray))
         return QVariant()
     
     ## Header for the view (not used).
@@ -1208,3 +1231,74 @@ class AddConditionsStackModel(BaseIoVModel):
             self.emit(SIGNAL("layoutAboutToBeChanged()"))
             self.conditions.insert(row+1, self.conditions.pop(row))
             self.emit(SIGNAL("layoutChanged()"))
+
+## Model for the list of selections for the CondDB slice
+class CondDBSelectionsModel(BaseIoVModel):
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, parent = None):
+        super(CondDBSelectionsModel, self).__init__(parent)
+        self.selections = []
+    ## Number of fields in the range.
+    def rowCount(self, parent = None):
+        return len(self.selections)
+    ## Number of columns in the table. 
+    def columnCount(self, parent = None):
+        return 4
+    ## Get one of the conditions in the stack
+    def __getitem__(self, item):
+        return self.selections[item]
+    ## iterate on the conditions of the stack
+    def __iter__(self):
+        return self.selections.__iter__()
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            r = index.row()
+            if role == Qt.DisplayRole:
+                c = index.column()
+                s = self.selections[r]
+                if c in [0, 3]:
+                    return QVariant(str(s[c]))
+                else:
+                    return QVariant(self.validityKeyToString(s[c]))
+        return QVariant()
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return QVariant(("Path", "Since", "Until", "Tags")[section])
+            else:
+                return QVariant()
+        return QVariant()
+    ## Add a new condition object to the stack
+    def addSelection(self, path, since, until, tags):
+        # Search where to insert the selection in the list
+        i = 0
+        count = len(self.selections)
+        match = False
+        while i < count and self.selections[i][0] <= path:
+            if (self.selections[i][1:3] == (since, until) and
+                self.selections[i][0] == path):
+                match = True
+                break
+            i += 1
+        if not match:
+            # we need to do a real insert
+            self.beginInsertRows(QModelIndex(), i, i)
+            tags = list(tags)
+            tags.sort()
+            self.selections.insert(i,(path, since, until, tags))
+            self.endInsertRows()
+        else:
+            # we already have the path+IoV, let's just update the tags
+            tags = list(set(tags + self.selections[i][3]))
+            tags.sort()
+            self.selections[i] = (path, since, until, tags)
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"),
+                      self.index(i,0), self.index(i,3))
+    ## Remove a condition object from the stack
+    def removeSelection(self, row):
+        self.beginRemoveRows(QModelIndex(), row, row)
+        del self.selections[row]
+        self.endRemoveRows()

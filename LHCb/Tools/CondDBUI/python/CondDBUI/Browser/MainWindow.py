@@ -19,7 +19,7 @@ from PyQt4.QtGui import (QApplication, QMainWindow, QMessageBox,
 
 from Ui_MainWindow import Ui_MainWindow
 
-from CondDBUI import CondDB
+from CondDBUI import CondDB, PyCoolCopy
 
 from Models import *
 from Dialogs import *
@@ -561,7 +561,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                                           QMessageBox.Yes | QMessageBox.No,
                                           QMessageBox.No)
             if answer == QMessageBox.Yes:
-                self.db.deleteNode(path)
+                try:
+                    self.db.deleteNode(path)
+                except:
+                    self.exceptionDialog()
                 # Now that the node has been deleted, we have to notify the models.
                 # FIXME: this is the easiest solution to implement, but not optimal
                 self._refreshModels(parentpath(path))
@@ -599,8 +602,30 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ## Create a slice of the current database to a database
     def createSlice(self):
-        self._unimplemented()
-    
+        d = CreateSliceDialog(self)
+        partName = str(self.db.db.databaseName())
+        i = d.partition.findText(partName)
+        if i >= 0:
+            d.partition.setCurrentIndex(i)
+        else:
+            d.partition.lineEdit().setText(partName)
+        if d.exec_():
+            try:
+                selectionList = [PyCoolCopy.Selection(path, since, until, tags = tags)
+                                 for path, since, until, tags in d.selectionsModel.selections]
+                connStr = str(d.connectionString())
+                copyTool = PyCoolCopy.PyCoolCopy(self.db.db)
+                # reduce the verbosity of PyCoolCopy
+                PyCoolCopy.log.setLevel(PyCoolCopy.logging.WARNING)
+                from Utils import BusyCursor
+                _bc = BusyCursor()
+                if d.append.isChecked():
+                    copyTool.append(connStr, selectionList)
+                else:
+                    copyTool.copy(connStr, selectionList)
+            except:
+                self.exceptionDialog()
+
     ## Add a new condition to the selected folder+channel
     def addCondition(self):
         #self._unimplemented()
@@ -612,17 +637,20 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if payload:
             d.buffer = payload
         if d.exec_():
-            from Utils import BusyCursor
-            _bc = BusyCursor()
-            data = []
-            for cond in d.conditionsStack:
-                data.append({"since": cond.since,
-                             "until": cond.until,
-                             "channel": int(cond.channel),
-                             "payload": cond.data})
-            folder = d.getFolder()
-            self.db.storeXMLStringList(folder, data)
-            self._refreshModels(folder)
+            try:
+                from Utils import BusyCursor
+                _bc = BusyCursor()
+                data = []
+                for cond in d.conditionsStack:
+                    data.append({"since": cond.since,
+                                 "until": cond.until,
+                                 "channel": int(cond.channel),
+                                 "payload": cond.data})
+                folder = d.getFolder()
+                self.db.storeXMLStringList(folder, data)
+                self._refreshModels(folder)
+            except:
+                self.exceptionDialog()
     
     ## Create a new tag
     def newTag(self):
@@ -652,3 +680,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Copy the current selected path to the clipboard.
     def copyPathToClipboard(self):
         QApplication.clipboard().setText(self._path[0])
+    ## Copy the current connection string to the clipboard.
+    def copyConnStrToClipboard(self):
+        QApplication.clipboard().setText(self._connectionString)

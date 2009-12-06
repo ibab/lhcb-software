@@ -1,0 +1,502 @@
+<ui version="4.0" >
+ <class>CreateSliceDialog</class>
+ <widget class="QDialog" name="CreateSliceDialog" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>412</width>
+    <height>597</height>
+   </rect>
+  </property>
+  <property name="windowTitle" >
+   <string>Create slice</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QGroupBox" name="destinationGroup" >
+     <property name="title" >
+      <string>Destination</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout" >
+      <property name="fieldGrowthPolicy" >
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="filenameLabel" >
+        <property name="text" >
+         <string>&amp;File name</string>
+        </property>
+        <property name="buddy" >
+         <cstring>filename</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QWidget" native="1" name="filenameWidget" >
+        <layout class="QHBoxLayout" name="horizontalLayout" >
+         <property name="spacing" >
+          <number>0</number>
+         </property>
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QLineEdit" name="filename" >
+           <property name="toolTip" >
+            <string>Path to the SQLite file</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QToolButton" name="fileDialogButton" >
+           <property name="toolTip" >
+            <string>Open a dialog box to select a file</string>
+           </property>
+           <property name="text" >
+            <string>...</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="partitionLabel" >
+        <property name="text" >
+         <string>&amp;Partition</string>
+        </property>
+        <property name="buddy" >
+         <cstring>partition</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="QComboBox" name="partition" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="Expanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="toolTip" >
+         <string>Partition name: only uppercase letters or numbers</string>
+        </property>
+        <property name="editable" >
+         <bool>true</bool>
+        </property>
+        <property name="currentIndex" >
+         <number>1</number>
+        </property>
+        <property name="insertPolicy" >
+         <enum>QComboBox::NoInsert</enum>
+        </property>
+        <item>
+         <property name="text" >
+          <string>DDDB</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>LHCBCOND</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>SIMCOND</string>
+         </property>
+        </item>
+        <item>
+         <property name="text" >
+          <string>ONLINE</string>
+         </property>
+        </item>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="QCheckBox" name="append" >
+        <property name="text" >
+         <string>Append</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="selectionGroup" >
+     <property name="title" >
+      <string>Selection</string>
+     </property>
+     <layout class="QFormLayout" name="formLayout_2" >
+      <property name="fieldGrowthPolicy" >
+       <enum>QFormLayout::ExpandingFieldsGrow</enum>
+      </property>
+      <item row="0" column="0" >
+       <widget class="QLabel" name="pathLabel" >
+        <property name="text" >
+         <string>&amp;Node</string>
+        </property>
+        <property name="buddy" >
+         <cstring>path</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1" >
+       <widget class="QComboBox" name="path" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Fixed" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" >
+       <widget class="QLabel" name="sinceLabel" >
+        <property name="text" >
+         <string>&amp;Since</string>
+        </property>
+        <property name="buddy" >
+         <cstring>since</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1" >
+       <widget class="TimePointEdit" native="1" name="since" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="0" >
+       <widget class="QLabel" name="untilLabel" >
+        <property name="text" >
+         <string>&amp;Until</string>
+        </property>
+        <property name="buddy" >
+         <cstring>until</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="2" column="1" >
+       <widget class="TimePointEdit" native="1" name="until" >
+        <property name="sizePolicy" >
+         <sizepolicy vsizetype="Preferred" hsizetype="MinimumExpanding" >
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" >
+       <widget class="QLabel" name="tagsLabel" >
+        <property name="text" >
+         <string>&amp;Tags</string>
+        </property>
+        <property name="buddy" >
+         <cstring>tags</cstring>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1" >
+       <widget class="QListView" name="tags" >
+        <property name="selectionMode" >
+         <enum>QAbstractItemView::MultiSelection</enum>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="1" >
+       <widget class="QWidget" native="1" name="selectionButtons" >
+        <layout class="QHBoxLayout" name="horizontalLayout_2" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <spacer name="horizontalSpacer" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="addButton" >
+           <property name="text" >
+            <string>&amp;Add</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="selectionSetGroup" >
+     <property name="title" >
+      <string>Selection set</string>
+     </property>
+     <layout class="QVBoxLayout" name="verticalLayout_2" >
+      <item>
+       <widget class="QTableView" name="selections" >
+        <property name="selectionMode" >
+         <enum>QAbstractItemView::SingleSelection</enum>
+        </property>
+        <property name="selectionBehavior" >
+         <enum>QAbstractItemView::SelectRows</enum>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" native="1" name="selectionSetButtons" >
+        <layout class="QHBoxLayout" name="horizontalLayout_3" >
+         <property name="margin" >
+          <number>0</number>
+         </property>
+         <item>
+          <widget class="QCheckBox" name="utc" >
+           <property name="text" >
+            <string>UTC</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="horizontalSpacer" >
+           <property name="orientation" >
+            <enum>Qt::Horizontal</enum>
+           </property>
+           <property name="sizeHint" stdset="0" >
+            <size>
+             <width>40</width>
+             <height>20</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+         <item>
+          <widget class="QPushButton" name="removeButton" >
+           <property name="text" >
+            <string>&amp;Remove</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QDialogButtonBox" name="buttonBox" >
+     <property name="orientation" >
+      <enum>Qt::Horizontal</enum>
+     </property>
+     <property name="standardButtons" >
+      <set>QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>TimePointEdit</class>
+   <extends>QWidget</extends>
+   <header>CondDBUI/Browser/Widgets.h</header>
+   <container>1</container>
+   <slots>
+    <slot>setMinimumDateTime(QDateTime)</slot>
+    <slot>setMaximumDateTime(QDateTime)</slot>
+    <slot>resetMinimumDateTime()</slot>
+    <slot>resetMaximumDateTime()</slot>
+    <signal>dateTimeChanged(QDateTime)</signal>
+    <signal>dateChanged(QDate)</signal>
+    <signal>timeChanged(QTime)</signal>
+    <signal>maxChanged(bool)</signal>
+    <signal>maxChecked()</signal>
+    <signal>maxUnchecked()</signal>
+    <signal>validityKeyChanged(cool::ValidityKey)</signal>
+   </slots>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>accepted()</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>accept()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>257</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>157</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>buttonBox</sender>
+   <signal>rejected()</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>reject()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>325</x>
+     <y>580</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>286</x>
+     <y>274</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>fileDialogButton</sender>
+   <signal>clicked()</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>openFileDialog()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>379</x>
+     <y>47</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>409</x>
+     <y>46</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>addButton</sender>
+   <signal>clicked()</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>addSelection()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>373</x>
+     <y>337</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>407</x>
+     <y>318</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>removeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>removeSelection()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>376</x>
+     <y>519</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>408</x>
+     <y>491</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>path</sender>
+   <signal>currentIndexChanged(QString)</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>currentPathSelected(QString)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>359</x>
+     <y>139</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>409</x>
+     <y>143</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>since</sender>
+   <signal>dateTimeChanged(QDateTime)</signal>
+   <receiver>until</receiver>
+   <slot>setMinimumDateTime(QDateTime)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>192</x>
+     <y>169</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>119</x>
+     <y>189</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>until</sender>
+   <signal>dateTimeChanged(QDateTime)</signal>
+   <receiver>since</receiver>
+   <slot>setMaximumDateTime(QDateTime)</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>224</x>
+     <y>183</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>224</x>
+     <y>169</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>filename</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>checkValidData()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>315</x>
+     <y>46</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>358</x>
+     <y>102</y>
+    </hint>
+   </hints>
+  </connection>
+  <connection>
+   <sender>partition</sender>
+   <signal>textChanged(QString)</signal>
+   <receiver>CreateSliceDialog</receiver>
+   <slot>checkValidData()</slot>
+   <hints>
+    <hint type="sourcelabel" >
+     <x>254</x>
+     <y>78</y>
+    </hint>
+    <hint type="destinationlabel" >
+     <x>296</x>
+     <y>103</y>
+    </hint>
+   </hints>
+  </connection>
+ </connections>
+ <slots>
+  <slot>openFileDialog()</slot>
+  <slot>addSelection()</slot>
+  <slot>removeSelection()</slot>
+  <slot>currentPathSelected(QString)</slot>
+  <slot>checkValidData()</slot>
+ </slots>
+</ui>

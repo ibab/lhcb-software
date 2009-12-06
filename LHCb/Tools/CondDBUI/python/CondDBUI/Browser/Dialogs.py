@@ -20,7 +20,7 @@ from PyQt4.QtGui import (QDialog,
 
 from Models import (NodeFieldsModel, NodeFieldsDelegate, GlobalTagsListModel,
                     CondDBNodesListModel, CondDBPayloadFieldModel,
-                    AddConditionsStackModel)
+                    AddConditionsStackModel, CondDBSelectionsModel)
 
 from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
@@ -29,12 +29,13 @@ from Ui_DumpToFilesDialog import Ui_DumpToFilesDialog
 from Ui_AddConditionDialog import Ui_AddConditionDialog
 from Ui_FindDialog import Ui_FindDialog
 from Ui_EditConditionPayloadDialog import Ui_EditConditionPayloadDialog
+from Ui_CreateSliceDialog import Ui_CreateSliceDialog
 
 import os
 
 __all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog",
            "DumpToFilesDialog", "ProgressDialog", "AddConditionDialog",
-           "FindDialog"]
+           "FindDialog", "CreateSliceDialog"]
 
 ## Simple validator for COOL database name
 class DBNameValidator(QRegExpValidator):
@@ -614,3 +615,98 @@ class FindDialog(QDialog, Ui_FindDialog):
         self.emit(SIGNAL("find(QString,QTextDocument::FindFlags,bool)"),
                   self._text, self._findFlags, self._wrappedSearch)
 
+## Dialog to create a snapshot of the database
+class CreateSliceDialog(QDialog, Ui_CreateSliceDialog):
+    ## Constructor.
+    def __init__(self, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(CreateSliceDialog, self).__init__(parent, flags)
+        # Prepare the GUI.
+        self.setupUi(self)
+        # Validation of the database name
+        self.dbNameValidator = DBNameValidator(self)
+        self.partition.setValidator(self.dbNameValidator)
+        #   This is needed to ensure that the internal state of the validator is up to date 
+        self.dbNameValidator.validate(self.partition.currentText(), 0)
+        # Models
+        #   tags (re-use the tag model of the main window for its cache)
+        self.tagsModel = parent.models["tags"]
+        self.tags.setModel(self.tagsModel)
+        QObject.connect(self.tags.selectionModel(), SIGNAL("selectionChanged(QItemSelection,QItemSelection)"),
+                        self.tagsModelSelectionChanged)
+        #   paths
+        self.pathModel = CondDBNodesListModel(parent.db, self, needRoot = True)
+        self.path.setModel(self.pathModel)
+        #   selections
+        self.selectionsModel = CondDBSelectionsModel(self)
+        self.selectionsModel.setDisplayFormat(self.since.displayFormat())
+        self.selections.setModel(self.selectionsModel)
+        self.selections.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
+        self.utc.setChecked(self.selectionsModel.showUTC())
+        QObject.connect(self.utc, SIGNAL("stateChanged(int)"),
+                        self.selectionsModel.setShowUTC)
+        QObject.connect(self.selections.selectionModel(), SIGNAL("selectionChanged(QItemSelection,QItemSelection)"),
+                        self.selModelSelectionChanged)
+        # UI tuning
+        self.since.setMaxEnabled(False)
+        # Force a default initial selection
+        self.path.setCurrentIndex(0)
+        self.tagsModel.setPath(self.pathModel.nodes[0])
+        self.tags.selectionModel().select(self.tagsModel.index(0),
+                                          QItemSelectionModel.ClearAndSelect)
+        self.since.setToMinimum()
+        self.until.setMaxChecked(True)
+        # Ensure UI consistency
+        self.checkValidData()
+        self.selModelSelectionChanged()
+        self.tagsModelSelectionChanged()
+    ## Slot to set the state of the Ok button depending on the data inserted
+    def checkValidData(self):
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(self.validInputs())
+    ## Check if the inputs are suitable for a connection string
+    def validInputs(self):
+        return not self.filename.text().isEmpty() \
+                and self.dbNameValidator.isAcceptable \
+                and self.selectionsModel.rowCount()
+    ## Return the current connection string implied by the content of the dialog
+    def connectionString(self):
+        if self.validInputs():
+            cs = "sqlite_file:%s/%s" % (self.filename.text(), self.partition.currentText())
+        else:
+            cs = "" 
+        return cs
+    ## Slot reacting to a change in the selection in the selections list to
+    #  enable/disable the remove button
+    def selModelSelectionChanged(self):
+        rows = self.selections.selectionModel().selectedRows()
+        self.removeButton.setEnabled(len(rows) == 1)   
+    ## Slot reacting to a change in the selection in the tags list to
+    #  enable/disable the add button
+    def tagsModelSelectionChanged(self):
+        count = len(self.tags.selectedIndexes())
+        self.addButton.setEnabled(count != 0)   
+    ## Slot used to execute a dialog to select the filename 
+    def openFileDialog(self):
+        name = QFileDialog.getSaveFileName(self, "Database file", os.getcwd(), "*.db")
+        if name:
+            self.filename.setText(name)
+    ## Add the data for a PyCoolCopy.Selection to the list of selections
+    def addSelection(self):
+        path = str(self.path.currentText())
+        since = self.since.toValidityKey()
+        until = self.until.toValidityKey()
+        tags = []
+        for i in self.tags.selectedIndexes():
+            tags.append(str(self.tagsModel.tags()[i.row()][0]))
+        self.selectionsModel.addSelection(path, since, until, tags)
+        self.checkValidData()
+    ## Remove an entry from the list of selections
+    def removeSelection(self):
+        rows = self.selections.selectionModel().selectedRows()
+        if len(rows) == 1:
+            self.selectionsModel.removeSelection(rows[0].row())
+        self.checkValidData()
+    ## Slot triggered by a change in the node path combobox. 
+    def currentPathSelected(self, path):
+        self.tags.selectionModel().clear()
+        self.tagsModel.setPath(path)
