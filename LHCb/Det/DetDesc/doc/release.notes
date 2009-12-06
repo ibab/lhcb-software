@@ -1,9 +1,13 @@
 ! =============================================================================
-! $Id: release.notes,v 1.410 2009-12-05 14:25:47 dgolubko Exp $ 
+! $Id: release.notes,v 1.411 2009-12-06 19:13:45 dgolubko Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-12-06 - Dmitry GOLUBKOV
+ - fix link error on windows by introducing interface functions in
+  DetDesc/HistoParam.h, DetDesc/src/Lib/HistoParam.cpp
 
 ! 2009-12-05 - Dmitry Golubkov
  - DetDesc/HistoParam.h: introduce namespace DetDesc::Params

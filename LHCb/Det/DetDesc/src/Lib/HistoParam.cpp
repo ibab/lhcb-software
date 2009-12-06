@@ -1,4 +1,4 @@
-// $Id: HistoParam.cpp,v 1.2 2009-12-05 14:25:47 dgolubko Exp $
+// $Id: HistoParam.cpp,v 1.3 2009-12-06 19:13:45 dgolubko Exp $
 // ============================================================================
 // Include files 
 // ============================================================================
@@ -29,23 +29,24 @@
  *  @date 2009-10-22
  */
 // ============================================================================
-/*   The declaration of the template 
- *   specialization of Param methods for the histograms 
+// ============================================================================
+/*   Interface function converting 1d histogram to xml string
  *   @see class Param 
  *   @see class TH1D  
+ *   @param  histo     (INPUT) histogram
  *   @param  name      (INPUT) XML-tag name 
  *   @param  comment   (INPUT) the comment 
  *   @param  precision (INPUT) not used 
  *   @return XML-string
- *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *   @date 2009-10-22
+ *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Dmitry Golubkov
+ *   @date 2009-12-06
  */
 // ============================================================================
-template<> 
-std::string Param<DetDesc::Params::Histo1D>::toXMLStr 
-( const std::string& name    , 
+std::string DetDesc::Params::toXMLStr
+( const DetDesc::Params::Histo1D &histo,
+  const std::string& name    , 
   const std::string& comment , 
-  int  /* precision */ ) const 
+  int  /* precision */ )
 {
   std::ostringstream out ;
   //
@@ -53,40 +54,39 @@ std::string Param<DetDesc::Params::Histo1D>::toXMLStr
   if ( !comment.empty() ) { out << " comment=\"" << comment << '"' ; }  
   out << '>' ;
   // stream the histogram 
-  Gaudi::Utils::toStream ( m_val , out ) ;
+  ////Gaudi::Utils::toStream ( m_val , out ) ;
+  Gaudi::Utils::toStream ( histo , out ) ;
   out << "</param>" ;                                           // close TAG 
   return out.str() ;
 }
 // ============================================================================
-/*   The declaration of the template 
- *   specialization of Param methods for the histograms 
+/*   Interface function converting 1d histogram to a custom format string
  *   @see class Param 
  *   @see class TH1D  
- *   @return string representation of the histogram 
- *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *   @date 2009-10-22
+ *   @param  histo     (INPUT) histogram
+ *   @return string
+ *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Dmitry Golubkov
+ *   @date 2009-12-06
  */
+std::string DetDesc::Params::toStr( const DetDesc::Params::Histo1D &histo )
+{ return Gaudi::Utils::toString ( histo ) ; }    
 // ============================================================================
-template<> std::string Param<DetDesc::Params::Histo1D>::toStr() const 
-{ return Gaudi::Utils::toString ( m_val ) ; }    
-// ============================================================================
-/*   The declaration of the template 
- *   specialization of Param methods for the histograms 
+/*   Interface function converting 2d histogram to xml string
  *   @see class Param 
  *   @see class TH1D  
+ *   @param  histo     (INPUT) histogram
  *   @param  name      (INPUT) XML-tag name 
  *   @param  comment   (INPUT) the comment 
  *   @param  precision (INPUT) not used 
  *   @return XML-string
- *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *   @date 2009-10-22
+ *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Dmitry Golubkov
+ *   @date 2009-12-06
  */
-// ============================================================================
-template<> 
-std::string Param<DetDesc::Params::Histo2D>::toXMLStr 
-( const std::string& name    , 
+std::string DetDesc::Params::toXMLStr 
+( const DetDesc::Params::Histo2D &histo,
+  const std::string& name    , 
   const std::string& comment , 
-  int /* precision */ ) const 
+  int /* precision */ )
 {
   std::ostringstream out ;
   //
@@ -94,22 +94,21 @@ std::string Param<DetDesc::Params::Histo2D>::toXMLStr
   if ( !comment.empty() ) { out << " comment=\"" << comment << '"' ; }  
   out << '>' ;                                                   
   // stream the histogram 
-  Gaudi::Utils::toStream ( m_val , out ) ;
+  Gaudi::Utils::toStream ( histo, out ) ;
   out << "</param>" ;                                           // close TAG 
   return out.str() ;
 }
 // ============================================================================
-/*   The declaration of the template 
- *   specialization of Param methods for the histograms 
+/*   Interface function converting 2d histogram to a custom format string
  *   @see class Param 
- *   @see class TH2D  
- *   @return string representation of the histogram 
- *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
- *   @date 2009-10-22
+ *   @see class TH1D  
+ *   @param  histo     (INPUT) histogram
+ *   @return string
+ *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl, Dmitry Golubkov
+ *   @date 2009-12-06
  */
-// ============================================================================
-template<> std::string Param<DetDesc::Params::Histo2D>::toStr() const 
-{ return Gaudi::Utils::toString ( m_val ) ; }    
+std::string DetDesc::Params::toStr( const DetDesc::Params::Histo2D &histo )
+{ return Gaudi::Utils::toString ( histo ) ; }    
 // ============================================================================
 // The END 
 // ============================================================================
