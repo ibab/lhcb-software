@@ -4,7 +4,7 @@
 #  @author Chris Jones  (Christopher.Rob.Jones@cern.ch)
 #  @date   15/08/2008
 
-__version__ = "$Id: TrackCreator.py,v 1.9 2009-10-22 08:42:44 cattanem Exp $"
+__version__ = "$Id: TrackCreator.py,v 1.10 2009-12-06 14:27:21 jonrob Exp $"
 __author__  = "Chris Jones <Christopher.Rob.Jones@cern.ch>"
 
 from RichKernel.Configuration  import *
@@ -29,6 +29,8 @@ class RichTrackCreatorConfig(RichConfigurableUser):
        ,"SpecialData"  : []      # Various special data processing options. See KnownSpecialData in RecSys for all options
        ,"InputTracksLocation" : "" # The input location for tracks
        ,"OutputLevel"   : INFO    # The output level to set all algorithms and tools to use
+       ,"TrackTypes"    : [ "Forward","Match","Seed","VeloTT","KsTrack" ]
+       ,"TrackCuts"     : { } # { "Chi2Cut" : [0,50] }
         }
 
     ## @brief Set OutputLevel 
@@ -60,6 +62,14 @@ class RichTrackCreatorConfig(RichConfigurableUser):
         # Track selector
         trselname = "TrackSelector"
         trackCr.addTool( RichTools().trackSelector(trselname), name=trselname )
+
+        # Track Selector Cuts
+        #trackCr.TrackSelector.OutputLevel = 1
+        trackCr.TrackSelector.TrackAlgs = self.getProp("TrackTypes")
+        cuts = self.getProp("TrackCuts")
+        for name,cut in cuts.iteritems() :
+            trackCr.TrackSelector.setProp("Min"+name,cut[0])
+            trackCr.TrackSelector.setProp("Max"+name,cut[1])
             
         # Segment maker
         if trackCr.getType() != "Rich::Rec::DelegatedTrackCreatorFromRecoTracks" :

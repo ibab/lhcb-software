@@ -4,6 +4,10 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+! 2009-12-06 - Christopher Rob Jones
+ - Extend python Configurable for Track Creator to allow track selection
+   cuts to be over-ridden.
+
 !====================== RichRecSys v3r22 2009-10-22 ==========================
 ! 2009-10-22 - Marco Cattaneo
  - Fix python modules to avoid make error in nightlies
