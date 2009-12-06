@@ -1,4 +1,4 @@
-// $Id: Math.h,v 1.11 2009-11-29 14:05:06 ibelyaev Exp $
+// $Id: Math.h,v 1.12 2009-12-06 18:16:33 ibelyaev Exp $
 // ============================================================================
 #ifndef LOKI_MATH_H 
 #define LOKI_MATH_H 1
@@ -744,6 +744,16 @@ namespace LoKi
   {
     return inRange ( low , fun , high ) ;
   }
+  // ==========================================================================
+  /** "scale" predicate function 
+   *   @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
+   *   @date 2009-12-06
+   */
+  template <class TYPE>
+  inline LoKi::XScaler<TYPE>
+  scale ( const LoKi::Functor<TYPE, bool>& cut , 
+          const LoKi::Functor<void,bool>&  sf  ) 
+  { return LoKi::XScaler<TYPE>( cut , sf ) ;  }
   // ==========================================================================
 } //                                                      end of namespace LoKi
 // ============================================================================
