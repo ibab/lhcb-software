@@ -5,6 +5,10 @@
 !-----------------------------------------------------------------------------
 
 
+! 2009-12-07 - Manuel Tobias Schiller
+ - fix PatSeedFit to supply valid arguments to PatSeedTrack constructor in all
+   cases
+
 ! 2009-12-04 Sascha Stahl
  - PatDownstream: Added checks for magnet off, fixes division by zero
 

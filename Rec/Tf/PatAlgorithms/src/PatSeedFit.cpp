@@ -1,4 +1,4 @@
-// $Id: PatSeedFit.cpp,v 1.11 2009-11-10 14:21:26 wouter Exp $
+// $Id: PatSeedFit.cpp,v 1.12 2009-12-07 09:45:09 mschille Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 #include "Event/STLiteCluster.h"
@@ -80,6 +80,13 @@ StatusCode PatSeedFit::finalize()
   return GaudiTool::finalize();  // must be called after all other actions
 }
 
+namespace PatSeedFitUtils {
+    struct sortadapter {
+	bool operator()(const PatFwdHit& h1, const PatFwdHit& h2) const
+	{ return Tf::increasingByZ<PatForwardHit>()(&h1, &h2); }
+    };
+}
+
 /// fit a PatSeedTrack
 StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs, 
 				std::vector<LHCb::State> *states) const
@@ -95,14 +102,16 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
     get<LHCb::STLiteCluster::FastContainer>(LHCb::STLiteClusterLocation::ITClusters);
 
   // loop over LHCbIDs, extract T-station measurements
-  std::vector< PatFwdHit* > hits ;
-  std::vector< Tf::STHit* > sthits ;
-  std::vector< Tf::OTHit* > othits ;
+  std::vector< PatFwdHit > hits ;
+  std::vector< Tf::STHit > sthits;
+  std::vector< Tf::OTHit > othits;
+  hits.reserve(lhcbIDs.size());
+  sthits.reserve(lhcbIDs.size());
+  othits.reserve(lhcbIDs.size());
   
-  for( std::vector<LHCb::LHCbID>::const_iterator ihit = lhcbIDs.begin(); 
-       ihit != lhcbIDs.end(); ++ihit ) { 
-    if(  ihit->detectorType()==LHCb::LHCbID::IT ) {
-      LHCb::STChannelID stChan = ihit->stID() ;
+  BOOST_FOREACH(LHCb::LHCbID hit, lhcbIDs) {
+    if(  hit.detectorType()==LHCb::LHCbID::IT ) {
+      LHCb::STChannelID stChan = hit.stID() ;
       const DeSTSector* stSector = m_itDet->findSector( stChan );
       if(stSector==0) {
           return Error( "No sector found for IT hit!" );
@@ -112,122 +121,104 @@ StatusCode PatSeedFit::fitSeed( const std::vector<LHCb::LHCbID> lhcbIDs,
           m_stLiteContainer->find< LHCb::STLiteCluster::findPolicy >( stChan ) ;
 
       if( iclus != m_stLiteContainer->end() ) {
-          Tf::STHit* sthit = new Tf::STHit(*stSector, *iclus ) ;
-          sthits.push_back( sthit ) ;
-          hits.push_back( new PatFwdHit( *sthit ) ) ;
+          sthits.push_back( Tf::STHit(*stSector, *iclus ) ) ;
+          hits.push_back( sthits.back() ) ;
       } else {
           return Error("Cannot find lite cluster!");
       }
       
-    } else if( ihit->detectorType()==LHCb::LHCbID::OT ) {
-      Tf::OTHit* othit = new Tf::OTHit(m_othitcreator->hit( ihit->otID() )) ;
-      othits.push_back( othit ) ;
-      hits.push_back( new PatFwdHit( *othit ) ) ;
+    } else if( hit.detectorType()==LHCb::LHCbID::OT ) {
+      othits.push_back( m_othitcreator->hit( hit.otID() ) ) ;
+      hits.push_back( PatFwdHit(othits.back()) ) ;
     }
   }
   // create the PatSeedTrack
-  if( hits.size() >= 4 ) {
-    std::vector< PatFwdHit* > seedhits(4,static_cast<PatFwdHit*>(0)) ;
-    size_t numStereo(0) ;
-
-    double n=0;
-
-    BOOST_FOREACH( PatFwdHit* ihit, hits ) {
-      ihit->setSelected(true) ;
-      if( ihit->hit()->isX() ) {
-	n++;
-          if( seedhits[0] == 0 ||
-              ihit->hit()->zAtYEq0() < seedhits[0]->hit()->zAtYEq0() )
-              seedhits[0] = ihit ;
-          if( seedhits[3] == 0 ||
-              ihit->hit()->zAtYEq0() > seedhits[3]->hit()->zAtYEq0() )
-              seedhits[3] = ihit ;
-      } else {
-          ++numStereo ;
-          if( seedhits[1] == 0 ||
-              ihit->hit()->zAtYEq0() < seedhits[1]->hit()->zAtYEq0() )
-              seedhits[1] = ihit ;
-          if( seedhits[2] == 0 ||
-              ihit->hit()->zAtYEq0() > seedhits[2]->hit()->zAtYEq0() )
-              seedhits[2] = ihit ;
-      }
-    }
-
-
-    PatSeedTrack * pattrack = 
-      new PatSeedTrack(seedhits[0],seedhits[1],seedhits[2],seedhits[3], m_zReference, m_dRatio, m_initialArrow ) ;
-    
-    // save initial track parameters in case, internal fit fails later
-    double z0,bx,ax,cx,dx,ay,by;
-    pattrack->getParameters( z0, bx,ax, cx,dx,ay, by);
-
-    BOOST_FOREACH( PatFwdHit* ihit, hits ) {
-      if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) {
-	updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
-	pattrack->addCoord( ihit ) ;
-      }
-    }
-          
-    StatusCode sc = fitTrack( *pattrack, m_maxChi2, 0, false, false); 
-     
-    if(sc.isFailure()) {
-      Warning("First call to fitTrack failed", sc, 0).ignore();
-      pattrack->setParameters(z0, bx,ax, cx,dx,ay, by);
-    } else {
-    
-      BOOST_FOREACH( PatFwdHit* ihit, hits ) {
-	if( std::find(seedhits.begin(), seedhits.end(), ihit ) == seedhits.end() ) 
-	  updateHitForTrack( ihit, pattrack->yAtZ(ihit->z()), 0);
-      }
-      sc = fitTrack( *pattrack, m_maxChi2, 0, false, false);
-      if(sc.isFailure()) {
-	Warning("Second call to fitTrack failed", sc, 0).ignore();
-	pattrack->setParameters(z0, bx,ax, cx,dx,ay, by);      
-      }
-    }
-    
-    LHCb::State temp(Gaudi::TrackVector(pattrack->xAtZ(m_zReference), 
-					pattrack->yAtZ(m_zReference),
-					pattrack->xSlope(m_zReference), 
-					pattrack->ySlope(m_zReference), 0.),
-		     m_zReference, LHCb::State::AtT);
-
-    double qOverP, sigmaQOverP;
-    sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
-    
-    if(sc.isFailure()) {
-      // if our momentum tool doesn't succeed, we have to try ourselves
-      qOverP = pattrack->curvature() ;
-      sigmaQOverP = qOverP; // be conservative
-    }
-    
-    temp.setQOverP(qOverP);
-    //== overestimated covariance matrix, as input to the Kalman fit
-    Gaudi::TrackSymMatrix& cov = temp.covariance();
-    cov(0,0) = m_stateErrorX2;
-    cov(1,1) = m_stateErrorY2;
-    cov(2,2) = m_stateErrorTX2;
-    cov(3,3) = m_stateErrorTY2;
-    cov(4,4) = sigmaQOverP * sigmaQOverP;
-
-    BOOST_FOREACH( const double z, m_zOutputs ) {
-      temp.setX(pattrack->xAtZ(z));
-      temp.setY(pattrack->yAtZ(z));
-      temp.setZ(z);
-      temp.setTx(pattrack->xSlope(z));
-      temp.setTy(pattrack->ySlope(z));
-      states->push_back( temp );
-    }
-    // cleanup the track
-    delete pattrack ;
-  } else {
-    info() << "Not enough SEED hits! "<<hits.size()  << endmsg ;
+  if( hits.size() < 4 ) {
+      info() << "Not enough SEED hits! "<< hits.size()  << endmsg ;
+      return StatusCode::FAILURE;
   }
-  
-  // delete the hits
-  BOOST_FOREACH( PatFwdHit* ihit, hits ) delete ihit ;
-  BOOST_FOREACH( Tf::STHit* ihit, sthits ) delete ihit ;
-  BOOST_FOREACH( Tf::OTHit* ihit, othits ) delete ihit ;
+  std::sort(hits.begin(), hits.end(), PatSeedFitUtils::sortadapter());
+
+  std::vector< PatFwdHit* > seedhits(4,static_cast<PatFwdHit*>(0)) ;
+  size_t numStereo(0), n(0) ;
+
+  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+      ihit.setSelected(true) ;
+      if( ihit.hit()->isX() ) {
+	  ++n;
+	  if( seedhits[0] == 0 ) seedhits[0] = &ihit;
+	  seedhits[3] = &ihit;
+      } else {
+	  ++numStereo ;
+	  if( seedhits[1] == 0 ) seedhits[1] = &ihit;
+	  seedhits[2] = &ihit;
+      }
+  }
+  if ( n < 2 || numStereo < 2 ) {
+      info() << "Not enough SEED hits! "<< hits.size() << ", " <<
+	  n << " X hits, " << numStereo << " stereo hits" << endmsg ;
+      return StatusCode::FAILURE;
+  }
+
+  PatSeedTrack pattrack(seedhits[0], seedhits[1], seedhits[2], seedhits[3],
+	  m_zReference, m_dRatio, m_initialArrow ) ;
+  // save initial track parameters in case, internal fit fails later
+  double z0,bx,ax,cx,dx,ay,by;
+  pattrack.getParameters( z0, bx,ax, cx,dx,ay, by);
+
+  BOOST_FOREACH( PatFwdHit& ihit, hits ) {
+      // if the hit is not on the track, add it
+      if (seedhits.end() == 
+	      std::find(seedhits.begin(), seedhits.end(), &ihit))
+	  pattrack.addCoord( &ihit ) ;
+  }
+  pattrack.updateHits();
+
+  StatusCode sc = fitTrack( pattrack, m_maxChi2, 0, false, false); 
+  if(sc.isFailure()) {
+      Warning("First call to fitTrack failed", sc, 0).ignore();
+      pattrack.setParameters(z0, bx,ax, cx,dx,ay, by);
+  } else {
+      pattrack.updateHits();
+      sc = fitTrack( pattrack, m_maxChi2, 0, false, false);
+      if(sc.isFailure()) {
+	  Warning("Second call to fitTrack failed", sc, 0).ignore();
+	  pattrack.setParameters(z0, bx,ax, cx,dx,ay, by);      
+      }
+  }
+
+  LHCb::State temp(Gaudi::TrackVector(pattrack.xAtZ(m_zReference), 
+	      pattrack.yAtZ(m_zReference),
+	      pattrack.xSlope(m_zReference), 
+	      pattrack.ySlope(m_zReference), 0.),
+	  m_zReference, LHCb::State::AtT);
+
+  double qOverP, sigmaQOverP;
+  sc = m_momentumTool->calculate(&temp, qOverP, sigmaQOverP, true) ;
+
+  if(sc.isFailure()) {
+      // if our momentum tool doesn't succeed, we have to try ourselves
+      qOverP = pattrack.curvature() ;
+      sigmaQOverP = qOverP; // be conservative
+  }
+
+  temp.setQOverP(qOverP);
+  //== overestimated covariance matrix, as input to the Kalman fit
+  Gaudi::TrackSymMatrix& cov = temp.covariance();
+  cov(0,0) = m_stateErrorX2;
+  cov(1,1) = m_stateErrorY2;
+  cov(2,2) = m_stateErrorTX2;
+  cov(3,3) = m_stateErrorTY2;
+  cov(4,4) = sigmaQOverP * sigmaQOverP;
+
+  BOOST_FOREACH( const double z, m_zOutputs ) {
+      temp.setX(pattrack.xAtZ(z));
+      temp.setY(pattrack.yAtZ(z));
+      temp.setZ(z);
+      temp.setTx(pattrack.xSlope(z));
+      temp.setTy(pattrack.ySlope(z));
+      states->push_back( temp );
+  }
 
   return StatusCode::SUCCESS ;
 }
