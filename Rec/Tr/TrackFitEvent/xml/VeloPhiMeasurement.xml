@@ -9,6 +9,7 @@
       name        = 'VeloPhiMeasurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'VeloPhiMeasurement is a measurement made from a VeloPhiCluster.'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::VeloMeasurement' />

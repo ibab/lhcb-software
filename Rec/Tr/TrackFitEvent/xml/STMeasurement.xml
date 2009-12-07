@@ -15,6 +15,7 @@
       name        = '&OUTTYPE;'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'STMeasurement is a measurement made from a ST cluster (of TT or IT).'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />

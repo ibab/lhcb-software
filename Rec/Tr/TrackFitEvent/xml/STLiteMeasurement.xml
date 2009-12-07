@@ -16,6 +16,7 @@
       name        = 'STLiteMeasurement'
       author      = 'M Needham'
       desc        = 'STLiteMeasurement is a measurement made from a STLite cluster (of TT or IT).'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />

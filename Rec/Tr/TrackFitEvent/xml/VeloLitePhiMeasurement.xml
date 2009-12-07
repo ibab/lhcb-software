@@ -9,6 +9,7 @@
       name        = 'VeloLitePhiMeasurement'
       author      = 'David Hutchcroft'
       desc        = 'VeloLitePhiMeasurement is a measurement made from a VeloLiteCluster.'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::VeloLiteMeasurement' />

@@ -9,6 +9,7 @@
       name        = 'OTMeasurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'OTMeasurement is a measurement made from a OTTime.'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement'/>

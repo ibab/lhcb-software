@@ -9,6 +9,7 @@
       name        = 'VeloRMeasurement'
       author      = 'Jose Hernando, Eduardo Rodrigues'
       desc        = 'VeloRMeasurement is a measurement made from a VeloRCluster.'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::VeloMeasurement' />

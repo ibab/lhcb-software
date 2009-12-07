@@ -9,6 +9,7 @@
       name        = 'VeloMeasurement'
       author      = 'M Needham'
       desc        = 'Base class for a measurement made from a VeloCluster.'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />

@@ -9,6 +9,7 @@
       name        = 'MuonMeasurement'
       author      = 'Jose Hernando, Miriam Gandelman, Erica Polycarpo, Silvia Pozzi'
       desc        = 'MuonMeasurement is a measurement made from a Muon Hit'
+      defaultconstructor ='FALSE'
       serializers = 'FALSE'>
 
       <base name='LHCb::Measurement' />
