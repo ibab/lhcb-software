@@ -1,4 +1,4 @@
-// $Id: TrackMasterFitter.cpp,v 1.80 2009-12-06 20:35:13 wouter Exp $
+// $Id: TrackMasterFitter.cpp,v 1.81 2009-12-07 22:25:57 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -253,11 +253,11 @@ StatusCode TrackMasterFitter::fit( Track& track, LHCb::ParticleID pid )
     converged = iter>1 && std::abs(dchi2) < m_maxDeltaChi2Converged * track.nDoF();
     
   }
-  track.fitResult()->setNIter( iter ) ;
+  kalfitresult->setNIter( iter ) ;
   
   // Outlier removal iterations
-  iter = 1;
-  while ( iter <= m_numOutlierIter && track.nDoF() > 1 &&
+  iter = kalfitresult->nOutliers() ;
+  while ( iter < m_numOutlierIter && track.nDoF() > 1 &&
           outlierRemoved( track ) ) {
     if ( m_debugLevel ) debug() << "Outlier iteration # " << iter << endmsg;
     
@@ -587,22 +587,8 @@ StatusCode TrackMasterFitter::makeNodes( Track& track, LHCb::ParticleID pid ) co
 
 void TrackMasterFitter::fillExtraInfo(Track& track ) const 
 {
-  // This routine calculates the chisquare contributions from
-  // different segments of the track. It uses the 'delta-chisquare'
-  // contributions from the bi-directional kalman fit. Summing these
-  // leads to a real chisquare only if the contributions are
-  // uncorrelated. For a Velo-TT-T track you can then calculate:
-  //
-  // - the chisuare of the T segment and the T-TT segment by using the
-  // 'upstream' contributions 
-  //
-  // - the chisquare of the Velo segment and the Velo-TT segment by
-  // using the 'downstream' contributions
-  //
-  // Note that you cannot calculate the contribution of the TT segment
-  // seperately (unless there are no T or no Velo hits). Also, if
-  // there are Muon hits, you cannot calculate the T station part, so
-  // for now this only works for tracks without muon hits.
+  // TODO: migrate clients to use KalmanFitResult directly. Then
+  // remove the extrainfo field.
 
   // Clean up the track info
   track.eraseInfo( Track::FitVeloChi2 ) ;
@@ -611,69 +597,23 @@ void TrackMasterFitter::fillExtraInfo(Track& track ) const
   track.eraseInfo( Track::FitTNDoF ) ;
   track.eraseInfo( Track::FitMatchChi2 ) ;
   
-  // Compute the chisquare integrals for forward and backward
-  double chisqT[2]    = {0,0} ;
-  double chisqTT[2]   = {0,0} ;
-  double chisqVelo[2] = {0,0} ;
-  int    nhitsT(0), nhitsTT(0), nhitsVelo(0) ;
-  const LHCb::TrackFitResult::NodeContainer& nodes = track.fitResult()->nodes()  ;
-  for( std::vector<Node*>::const_iterator iNode = nodes.begin(); 
-       iNode != nodes.end(); ++iNode ) 
-    if( (*iNode)->hasMeasurement() &&
-	(*iNode)->type() != LHCb::Node::Outlier ) {
-      const FitNode* node = dynamic_cast<FitNode*>(*iNode) ;
-      if(!node) {
-	error() << "fillExtraInfo: node is not a FitNode" << endmsg ;
-      } else {
-	switch( node->measurement().type() ) {
-	case Measurement::VeloR:
-	case Measurement::VeloPhi:
-	case Measurement::VeloLiteR:
-	case Measurement::VeloLitePhi:
-	  chisqVelo[0] += node->deltaChi2Forward() ;
-	  chisqVelo[1] += node->deltaChi2Backward() ;
-	  ++nhitsVelo ;
-	  break;
-	case Measurement::TT:
-	  chisqTT[0] += node->deltaChi2Forward() ;
-	  chisqTT[1] += node->deltaChi2Backward() ;
-	  ++nhitsTT ;
-	  break;
-	case Measurement::OT:
-	case Measurement::IT:
-	  chisqT[0] += node->deltaChi2Forward() ;
-	  chisqT[1] += node->deltaChi2Backward() ;
-	  ++nhitsT ;
-	  break;
-	default:
-	  break;
-	}
-      }
-    }
-
-  const int nPar = track.nStates()>0 ? track.firstState().nParameters() : 5 ;
-  bool upstream = nodes.front()->z() > nodes.back()->z() ;
+  const LHCb::KalmanFitResult* kalfit =
+    static_cast<const LHCb::KalmanFitResult*>(track.fitResult()) ;
   
   if( track.hasT() ) {
-    track.addInfo( Track::FitTChi2 , upstream ? chisqT[0] : chisqT[1]) ;
-    track.addInfo( Track::FitTNDoF , nhitsT - nPar ) ;
+    track.addInfo( Track::FitTChi2 , kalfit->chi2Downstream().chi2() ) ;
+    track.addInfo( Track::FitTNDoF , kalfit->chi2Downstream().nDoF() ) ;
   }
   
   if( track.hasVelo() ) {
-    track.addInfo( Track::FitVeloChi2, upstream ? chisqVelo[1] : chisqVelo[0] ) ;
-    track.addInfo( Track::FitVeloNDoF, nhitsVelo - nPar ) ;
-    if( track.hasT() ) {
-      // Calculate the chisquare of the breakpoint between TT and T
-      double thischisqT       = upstream ? chisqT[0] : chisqT[1] ;
-      double thischisqVeloTT  = upstream ? chisqVelo[1] + chisqTT[1] : chisqVelo[0] + chisqTT[0];
-      // they should be equal, but this is safer
-      double chisqTot   = std::max( chisqT[0]+chisqTT[0]+chisqVelo[0], chisqT[1]+chisqTT[1]+chisqVelo[1] ) ;
-      double chisqMatch = chisqTot - thischisqT - thischisqVeloTT ;
-      track.addInfo( Track::FitMatchChi2, chisqMatch ) ;
-    }
+    track.addInfo( Track::FitVeloChi2, kalfit->chi2Velo().chi2() ) ;
+    track.addInfo( Track::FitVeloNDoF, kalfit->chi2Velo().nDoF() ) ;
+    if( track.hasT() ) 
+      track.addInfo( Track::FitMatchChi2, kalfit->chi2Match().chi2() ) ;
   }
 }
 
+//=========================================================================
 
 StatusCode TrackMasterFitter::updateMaterialCorrections(LHCb::Track& track, LHCb::ParticleID pid) const
 {
