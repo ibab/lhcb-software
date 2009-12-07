@@ -15,17 +15,12 @@ include_path      none
 # Used packages.
 #============================================================================
 use     PatKernel       v*      Tf
-use TfKernel  v*  Tf
+use	TfKernel	v*	Tf
 use     TrackInterfaces v*      Tr
 use     STDet           v*      Det
 use     OTDet           v*      Det
 use     OTDAQ           v*      OT
 use     PartProp        v*      Kernel
-
-use     LHCbAlgs        v*      Kernel
-use     TrackKernel   v*      Tr
-use     LinkerEvent     v*      Event
-
 #============================================================================
 # Component library building rule
 #============================================================================
