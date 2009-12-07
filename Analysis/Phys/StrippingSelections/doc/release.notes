@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-07 - Anton Poluektov 
+  - Actually added StrippingBsDsMuNu line (forgot to "cvs add" previously)
+
 ! 2009-12-04 - Anton Poluektov 
   - Added StrippingBsDsMuNu line by Kim Vervink. In Dstar stream for now. 
   - Added StreamMinBias and StreamBelectron streams to allStreams
