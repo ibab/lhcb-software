@@ -1,4 +1,4 @@
-// $Id: PitchResTool.cpp,v 1.4 2009-11-05 09:20:48 jblouw Exp $
+// $Id: PitchResTool.cpp,v 1.5 2009-12-07 10:54:58 cattanem Exp $
 #include "GaudiKernel/ToolFactory.h"
 #include "GaudiKernel/IRegistry.h"
 
@@ -123,8 +123,8 @@ std::vector<std::pair<LHCb::OTChannelID, double> > PitchResTool::calcPitchResidu
         LHCb::State state = track->closestState(zref);
         // now propagate to the zref
         if (m_extrapolator->propagate(state, zref).isFailure()) {
-	  warning() << "Failed to extrapolate state." << endreq;
-	  continue;
+          Warning( "Failed to extrapolate state.").ignore();
+          continue;
         }
         // calculate slope in measurement direction
         double tx = state.tx() * cosa + state.ty() * sina;

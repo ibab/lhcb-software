@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+!========================== TrackMonitors v1r17p1 2009-12-07 ==================
+! 2009-12-07 - Marco Cattaneo
+ - Suppress excessive warnings in PitchResTool.cpp
 
 !============================ TrackMonitors v1r17 2009-11-29 ==================
 ! 2009-11-30 - Rob Lambert
