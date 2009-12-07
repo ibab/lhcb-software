@@ -1,4 +1,4 @@
-// $Id: TrackHerabExtrapolator.cpp,v 1.26 2009-09-01 20:46:38 wouter Exp $
+// $Id: TrackHerabExtrapolator.cpp,v 1.27 2009-12-07 17:42:16 cattanem Exp $
 
 // from Gaudi
 #include "GaudiKernel/PhysicalConstants.h"
@@ -87,10 +87,10 @@ StatusCode TrackHerabExtrapolator::propagate( Gaudi::TrackVector& stateVec,
 
   // check for sucess
   if( istat != 0 ) {
-    Warning( "Runga kutta: transport impossible ", StatusCode::FAILURE, 1 );
-    if (istat == 1) Warning( "curling track", StatusCode::FAILURE, 1 );
+    std::string warnMsg = "Runga kutta: transport impossible";
+    if( 1 == istat ) warnMsg += ": curling track";
     if (transMat) *transMat = TrackMatrix( ROOT::Math::SMatrixIdentity() );  
-    return StatusCode::FAILURE;
+    return Warning( warnMsg, StatusCode::FAILURE, 1 );
   }
 
   // update the transport matrix

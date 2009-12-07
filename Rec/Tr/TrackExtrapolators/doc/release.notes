@@ -4,6 +4,10 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2009-12-07 - Marco Cattaneo
+ - Fix trivial untested StatusCode in TrackHerabExtrapolator.cpp
+ - Fix Windows warnings in TrackRungeKuttaExtrapolator.h
+
 !======================= TrackExtrapolators v2r24 2009-10-20 =================
 ! 2009-09-28 - Wouter Hulsbergen
  - Fixed division by zero in TrackRungeKuttaExtrapolator

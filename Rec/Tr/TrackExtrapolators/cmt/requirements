@@ -3,7 +3,7 @@
 # Maintainer : Eduardo Rodrigues, Jose A. Hernando
 #============================================================================
 package           TrackExtrapolators
-version           v2r24
+version           v2r24p1
 
 #============================================================================
 # Structure, i.e. directories to process. 

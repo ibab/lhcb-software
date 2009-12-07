@@ -7,9 +7,9 @@
 // Helper classes defined in cpp file
 namespace {
   typedef class ROOT::Math::SVector<double, 4u> RKTrackVector ;
-  class RKState ;
-  class RKJacobian ;
-  class RKCache ;
+  struct RKState ;
+  struct RKJacobian ;
+  struct RKCache ;
 }
 
 class TrackRungeKuttaExtrapolator: public TrackFieldExtrapolatorBase
