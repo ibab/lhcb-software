@@ -4,6 +4,7 @@
 ! Purpose     : Co-ordinates the RICH reconstruction packages
 !-----------------------------------------------------------------------------
 
+!====================== RichRecSys v3r23 2009-12-07 ==========================
 ! 2009-12-06 - Christopher Rob Jones
  - Extend python Configurable for Track Creator to allow track selection
    cuts to be over-ridden.
