@@ -1,35 +1,20 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: RealPi0.py,v 1.1 2009-11-27 14:22:08 ibelyaev Exp $
+# $Id: RealPi0.py,v 1.2 2009-12-07 18:00:44 ibelyaev Exp $
 # =============================================================================
 # @file BenderExampele/RealPi0.py
-#
-# Attempt to recontruct pi0 on real data.
-#
-# The example illustrates:
-#
-#  - access to real data
-#  - access to RAW  data
-#  - configuration for "on-flight" Photon reconstruction
-#  - the regular Bender algorith for study the di-photon combinations
-#
+# Attempt to recontruct pi0 on real data 
 # @author Vanya BELYAEV Ivan.Belyaev@nikhef.nl
 # @date 2009-11-25
 # ============================================================================
 """
-Attempt to recontruct pi0 on real data.
 
-The example illustrates:
+Attempt to recontruct pi0 on real data 
 
-  - access to real data
-  - access to RAW  data
-  - configuration for 'on-flight' Photon reconstruction
-  - the regular Bender algorith for study the di-photon combinations
-  
-  """
+"""
 # ============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.1 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
 # ============================================================================
 ## import all needed stuff:
 import ROOT                           ## needed to produce/visualize the histograms
@@ -39,11 +24,13 @@ import LHCbMath.Types                 ## easy access to various geometry routine
 
 from   Gaudi.Configuration import *   ## needed for job configuration
 
-from   GaudiKernel.SystemOfUnits import GeV,MeV 
+from   GaudiKernel.SystemOfUnits import GeV
 from   LoKiCore.functions        import doubles ## list -> std::vector<double>
 
 ## namespace Gaudi
 Gaudi = cpp.Gaudi
+
+Photons = LoKi.Photons
 
 # =============================================================================
 ## @class RealPi0
@@ -55,17 +42,28 @@ class RealPi0(Algo) :
     Simple Bender-based algorithm to reconstruct pi0 on real data 
     """
 
+    def initialize ( self ) :
+
+        
+        sc = Algo.initialize ( self )
+        if sc.isFailure() : return sc 
+
+        self.beamLine = Gaudi.Math.XYZLine ( Gaudi.Math.XYZPoint (0,0,0) ,
+                                             Gaudi.Math.XYZVector(0,0,1) )
+
+        return SUCCESS
+
+    
     ## the major analysis method 
     def analyse  (self ) :
         """
         The major analysis method
         """
 
-        ## check Calo recpontruction:
         
-        clusters = self.get('Rec/Calo/EcalClusters')
-        photons  = self.get('Rec/Calo/Photons')
-        protos   = self.get('Rec/ProtoP/Neutrals')
+        clusters = self.get ( 'Rec/Calo/EcalClusters' )
+        photons  = self.get ( 'Rec/Calo/Photons'      )
+        protos   = self.get ( 'Rec/ProtoP/Neutrals'   )
 
         gammas = self.select('g' , 'gamma' == ID  )
 
@@ -84,6 +82,12 @@ class RealPi0(Algo) :
             g1 = pi0(1)
             g2 = pi0(2)
 
+            prs1 = Photons.energyFrom     ( g1 , 'Prs') 
+            prs2 = Photons.energyFrom     ( g2 , 'Prs') 
+
+            spd1 = Photons.seedEnergyFrom ( g1 , 'Spd') 
+            spd2 = Photons.seedEnergyFrom ( g2 , 'Spd') 
+
             p = pi0.momentum(1,2)
             
             tup.column ( 'm12'  , m12           )
@@ -92,8 +96,18 @@ class RealPi0(Algo) :
             tup.column ( 'g2'   , g2.momentum() )
             tup.column ( 'pt1'  , PT ( g1 ) )
             tup.column ( 'pt2'  , PT ( g2 ) )
-            tup.write()
+
+            tup.column ( 'prs1' , prs1 )
+            tup.column ( 'prs2' , prs2 )
             
+            tup.column ( 'spd1' , spd1 )
+            tup.column ( 'spd2' , spd2 )
+
+            tup.write()
+
+            if m12 < 0.5 and min ( prs1 ,prs2 ) > 20 :
+                self.plot ( m12 , 'gamma gamma 2' , 0 , 0.5 ,  50 )
+
                       
         return SUCCESS 
 
@@ -124,7 +138,7 @@ def configure ( datafiles ) :
         )
     
     FileCatalog (
-        Catalogs = [ 'xmlcatalog_file:FirstBeamData2009.xml' ]
+        Catalogs = [ 'xmlcatalog_file:RealDataRec2.xml' ]
         )
     
     NTupleSvc (
@@ -138,12 +152,12 @@ def configure ( datafiles ) :
     OffLineCaloRecoConf (
         EnableRecoOnDemand = True  ,
         UseTracks          = False ,        
-        UseSpd             = False
+        UseSpd             = True  
         )
     
     from Configurables import NeutralProtoPAlg
     NeutralProtoPAlg (
-        LightMode      = True ,                  ## "ligght-mode", no PIDs
+        LightMode      = True ,                  ## "light-mode", no PIDs
         HyposLocations = [ 'Rec/Calo/Photons']   ## only single photons 
         )
     
@@ -164,16 +178,22 @@ def configure ( datafiles ) :
     
     photon.ConvertedPhotons   = True 
     photon.UnconvertedPhotons = True 
-    ## photon.PtCut              = 900 ## 2
+    ## photon.PtCut              = 200
     
     photon.PropertiesPrint = True
     
     maker.InputPrimaryVertices = "None" ## NB: it saves a lot of CPU time 
-        
-    ## end of static configurtaion
+
+    from Configurables import CondDB
+    
+    CondDB(UseOracle = True)
+    
+    ## end of static configuration
+
     
     ## instantiate application manager
     gaudi = appMgr()
+
     
     ## start of dynamic configuration 
     
@@ -185,10 +205,9 @@ def configure ( datafiles ) :
         )
     
     gaudi.setAlgorithms ( [
-        'NeutralProtoPAlg'  ## recontruct Neutral ProtoParticles 
-        , alg
-        ] ) 
+        'NeutralProtoPAlg' , alg ] ) 
     
+
     return SUCCESS 
 
 
@@ -199,44 +218,25 @@ if '__main__' == __name__ :
     print __doc__
     print __author__
     print __version__
+    
+    input = []
+    
+    configure ( input )
+    
+    gaudi = appMgr()
 
-    ## configure with no input data:
-    configure ( [] )
-    
-    gaudi = appMgr()  
-
-    phmaker = gaudi.tool ( 'StdLooseAllPhotons.PhotonMaker' )
-    
-    phmaker.PtCut           = 150 * MeV
-    
-    phmaker.PropertiesPrint = True 
-
-    
     evtSel = gaudi.evtsel()
+
+    ## 'New' data 
     
-    mask = '/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/BEAM1/%d/0%d_0000000001.raw'
-    
-    runs = ( 62334 , 
-             62406 ,
-             62416 ,
-             62426 , 
-             62437 ,
-             62462 ,
-             62463 ,
-             62500 , 
-             62501 , 
-             62502 , 
-             62507 , 
-             62508 ,
-             62509 ,
-             62512 ,
-             62513 , 
-             62514 , 
-             62544 ,
-             62548 ,
-             62556 ,
-             62558 ) 
-    
+    mask = '/castor/cern.ch/grid/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/%d/0%d_0000000001.raw'
+    runs = (
+        63441 , 63445 , 63446 , 63450 ,
+        63451 , 63452 , 63453 , 63454 , 63455 , 63456 , 63458 , 63461 ,
+        63462 , 63464 , 63466 , 63468 , 63470 , 63472 , 63475 , 63479 ,
+        63480 , 63481 , 63493 , 63494 , 63495 , 63496 , 63497  
+        )
+
     evtSel.open( [ mask % (r,r) for r in runs ] )
     
     run ( -1 )
@@ -249,11 +249,17 @@ if '__main__' == __name__ :
     for key in histos :
         histo = histos[key]
         if hasattr ( histo , 'dump' ) :
+            print 'KEY:', key 
             print histo.dump( 50 , 20 )
         if hasattr ( histo , 'Draw' ) :  
             histo.Draw(  histo.title() + '.gif' )
             histo.Draw(  histo.title() + '.eps' )
+        if 'gamma gamma 2' == key :
             
+            from KaliCalo.Pi0HistoFit import fitPi0Histo, pi0FitFun
+            
+            print fitPi0Histo ( histo , 0.050 , 0.300 ) 
+    
     
 # ============================================================================
 # The END 
