@@ -1,8 +1,12 @@
 !-----------------------------------------------------------------------------
 ! Package     : Tr/TrackFitEvent
-! Responsible : Jose Hernando, Eduardo Rodrigues
+! Responsible : Wouter Hulsbergen
 ! Purpose     : Package for the tracking fitting-related classes
 !-----------------------------------------------------------------------------
+
+ - removed default constructors for measurement classes
+ - added class Chisquare to hold chisquare plus dof
+ - added functionality to KalmanFitResult to compute segment/match chisquares
 
 !========================== TrackFitEvent v4r2 2009-11-13 ====================
 ! 2009-11-11 Wouter Hulsbergen
