@@ -1,11 +1,20 @@
 <PRE>
-! $Id: release.notes,v 1.29 2009-12-01 12:51:09 ibelyaev Exp $ 
+! $Id: release.notes,v 1.30 2009-12-07 18:03:30 ibelyaev Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : BenderSys
 ! Responsible : Vanya BELYAEV  vanya@nikhef.nl
 ! Purpose     : Easy/interactive python-based LHCb physics analysis
 ! -----------------------------------------------------------------------------
 </PRE>
+
+<H1>
+<A NAME=v12r6>2009-12-07 Bender v12r6 based on the DaVinci v24r6 </A>
+</H1>	
+
+<PRE>		
+The example 'RealMip' is updated for new data
+</PRE>
+
 
 <H1>
 <A NAME=v12r5p2>2009-12-01 Bender v12r5p2 based on the DaVinci v24r5p2 </A>
