@@ -1,4 +1,4 @@
-// $Id: VeloPixMCDepositCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+// $Id: VeloPixMCDepositCreator.cpp,v 1.2 2009-12-07 17:37:56 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -176,19 +176,9 @@ int VeloPixMCDepositCreator::simulatedPoints(LHCb::MCHit* hit)
 {
   if(m_isDebug) debug() << " ==> simulatedPoints() " << endmsg;
   double nrPoints = 0.0;
-  std::pair<double,double> EntryFraction, ExitFraction;
-  StatusCode EntryValid, ExitValid;
-  LHCb::VeloPixChannelID entryChannel, exitChannel;
-  const DeVeloPixSensor* sensor = m_veloPixelDet->sensor(hit->sensDetID());
-  EntryValid = sensor->pointToChannel(hit->entry(),entryChannel,EntryFraction);
-  ExitValid  = sensor->pointToChannel(hit->exit(),exitChannel,ExitFraction);
-  if(EntryValid && ExitValid) {
-    double path = hit->pathLength();
-    nrPoints = ceil(path / m_siteSize);
-    if(nrPoints > m_maxNumSites) nrPoints = double(m_maxNumSites);
-  } else {
-    Warning("pointToChannel failure");
-  }
+  double path = hit->pathLength();
+  nrPoints = ceil(path / m_siteSize);
+  if(nrPoints > m_maxNumSites) nrPoints = double(m_maxNumSites);
   return int(nrPoints);
 }
 
@@ -314,7 +304,6 @@ void VeloPixMCDepositCreator::diffuseCharge(LHCb::MCHit* hit,
     StatusCode channelValid;
     LHCb::VeloPixChannelID entryChannel;
     channelValid = sensor->pointToChannel(pnt,entryChannel,EntryFraction);
-    if(!channelValid) Warning("pointToChannel failure");
     double diffuseSig = m_diffuseSigma * sqrt(thickSi * diffuseZ);
     std::vector<LHCb::VeloPixChannelID> neighbsVec;
     StatusCode channelsValid;
