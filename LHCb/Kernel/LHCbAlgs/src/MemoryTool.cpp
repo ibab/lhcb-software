@@ -1,4 +1,4 @@
-// $Id: MemoryTool.cpp,v 1.10 2009-10-08 14:15:46 ibelyaev Exp $
+// $Id: MemoryTool.cpp,v 1.11 2009-12-07 18:18:01 cattanem Exp $
 // =============================================================================
 // Include files 
 // =============================================================================
@@ -84,7 +84,7 @@ StatusCode MemoryTool::finalize ()
        0 < m_delMem->flagMeanErr () && 
        m_delMem->flagMean() > 3 * m_delMem->flagMeanErr() ) 
   {
-    Warning ( "Mean 'delta-memory' exceeds 3*sigma" , StatusCode::SUCCESS ) ;
+    Warning( "Mean 'delta-memory' exceeds 3*sigma", StatusCode::SUCCESS).ignore();
   }
   
   m_totMem = 0 ;
@@ -156,7 +156,7 @@ void MemoryTool::execute() {
        memMB > m_totMem->flagMean() + 3 * m_totMem->flagRMS () ) 
   {
     Warning ( "Total Memory for the event exceeds 3*sigma" , 
-              StatusCode::SUCCESS , m_maxPrint     ) ;    
+              StatusCode::SUCCESS , m_maxPrint     ).ignore() ;    
     debug () << " Total Memory : " << memMB 
              << " Mean : ("        << m_totMem->flagMean () 
              << "+-"               << m_totMem->flagRMS() << ")" << endmsg ;
@@ -170,7 +170,7 @@ void MemoryTool::execute() {
        deltaMem > m_delMem->flagMean() + 3 * m_delMem->flagRMS () ) 
   {
     Warning ( "Delta Memory for the event exceeds 3*sigma" , 
-              StatusCode::SUCCESS , m_maxPrint     ) ;    
+              StatusCode::SUCCESS , m_maxPrint     ).ignore() ;    
     debug () << " Delta Memory : "  << deltaMem
              << " Mean : ("         << m_delMem->flagMean () 
              << "+-"                << m_delMem->flagRMS() << ")" << endmsg ;
@@ -184,7 +184,7 @@ void MemoryTool::execute() {
        m_delMem->flagMean() > 3 * m_delMem->flagMeanErr() ) 
   {
     Warning ( "Mean 'Delta-Memory' exceeds 3*sigma" , 
-              StatusCode::SUCCESS , m_maxPrint     ) ;
+              StatusCode::SUCCESS , m_maxPrint     ).ignore() ;
     debug () << " Memory Leak? "
              << "("  << m_delMem->flagMean() 
              << "+-" << m_delMem->flagMeanErr() << ")" << endmsg ;
