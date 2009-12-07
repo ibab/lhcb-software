@@ -22,7 +22,7 @@ apply_pattern container_package
 apply_pattern QMTestSummarize
 
 # Packages from other projects updated temporarily in this release
-use RichRecSys    v3r26   Rich
+use RichRecSys    v3r23   Rich
 use PatAlgorithms v3r26   Tf
 use TrackFitter   v2r42   Tr
 use TrackMonitors v1r17p1 Tr

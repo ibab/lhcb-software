@@ -6,7 +6,7 @@ Purpose: LHCb reconstruction programs
 </PRE><H1><A NAME=v35r10p1>2009-12-07 Brunel v35r10p1</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
  and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
- plus the following patches: RichRecSys v3r26, PatAlgorithms v3r26,
+ plus the following patches: RichRecSys v3r23, PatAlgorithms v3r26,
                              TrackFitter v2r42, TrackMonitors v1r17p1
 
 This is a production version for 2009 data-taking
