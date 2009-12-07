@@ -1,4 +1,4 @@
-// $Id: TrackKalmanFilter.cpp,v 1.76 2009-11-26 15:11:33 mschille Exp $
+// $Id: TrackKalmanFilter.cpp,v 1.77 2009-12-07 21:49:53 wouter Exp $
 // Include files 
 // -------------
 // from Gaudi
@@ -130,6 +130,7 @@ StatusCode TrackKalmanFilter::fit( LHCb::Track& track, NodeRange& nodes,
   const double threshold = 0.1 ;
   size_t npar = m_DoF != 5u ? m_DoF :
     (state.covariance()(4,4) / seedCov(4,4) < threshold ? 5 : 4) ;
+  dynamic_cast<LHCb::KalmanFitResult*>(track.fitResult())->setNTrackParameters( npar ) ;
   ndof -= npar ;
   
 
