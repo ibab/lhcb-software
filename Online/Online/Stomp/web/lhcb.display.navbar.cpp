@@ -219,6 +219,13 @@ var navbar_body = function()  {
 	     '../Images/BCM.png',
 	     '../Images/BCM.png');
 
+  navBar.add('Magnet',
+	     'Show Magnet status',
+	     'JavaScript:navBar.open_url("lhcb.display.htm?type=magnet")',
+	     'NavigationBar',
+	     '../Images/LHCb/Magnet_Icon.png',
+	     '../Images/LHCb/Magnet_Icon.png');
+
   navBar.addSized('LHC Status',
 		  'LHC status around LHCb',
 		  'JavaScript:navBar.open_url("lhcb.display.htm?type=lhc")',

@@ -150,6 +150,7 @@ var StyledItem = function(item_name, class_name, fmt)  {
       item_data = data[1];
     }
     if ( this.conversion != null )   {
+      this.conversion.target = this;
       item_data = this.conversion(item_data);
     }
     if ( fmt != null ) {

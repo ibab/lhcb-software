@@ -43,168 +43,134 @@
     border-width:     1px;
     border-color:     #000000;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
+    font-size:        100%;
     font-weight:      bold;
+    text-decoration:  none;
+    width:            100%;
+}
+
+.MonitorData  {
+    background-color: #EEEEEE;
+    color:            #000000;
+    text-align:       center;
+    font-family:      Arial, Helvetica, sans-serif;
+    font-size:        100%;
+    font-weight:      bold;
+    text-align:       left;
+    text-decoration:  none;
+    border:           none;
 }
 
 .MonitorPanel  {
     background-color: #CCCCCC;
     color:            #000000;
-    border:           solid;
-    border-width:     1px;
-    border-color:     #000000;
-    text-align:       center;
     font-family:      Arial, Helvetica, sans-serif;
+    text-align:       center;
+    text-decoration:  none;
 }
 
 .MonitorBigHeader  {
-    color:            #000000;
     background-color: #CCCCCC;
+    color:            #000000;
     text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        20px;
+    font-size:        150%;
     font-weight:      bold;
-    text-decoration:  none;
+    border:           solid;
+    border-width:     0px;
 }
 
-.MonitorTinyHeader  {
+.MonitorBigHeaderBLUE  {
+    background-color: #00BBFF;
     color:            #000000;
-    background-color: #CCCCCC;
     text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        10px;
+    font-size:        130%;
     font-weight:      bold;
-    text-decoration:  none;
-}
-
-.MonitorTableData  {
-    color:            #000000;
-    background-color: #EEEEEE;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       left;
-    text-decoration:  none;
-    border:           none;
-}
-
-.MonitorTableDataLeft  {
-    color:            #000000;
-    background-color: #EEEEEE;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       left;
-    text-decoration:  none;
-    border:           none;
-}
-
-.MonitorTableDataRight  {
-    color:            #000000;
-    background-color: #EEEEEE;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       right;
-    text-decoration:  none;
-    border:           none;
-}
-
-.MonitorTableDataCenter  {
-    color:            #000000;
-    background-color: #EEEEEE;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       center;
-    text-decoration:  none;
-    border:           none;
-}
-
-.MonitorData  {
-    color:            #000000;
-    background-color: #EEEEEE;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       left;
-    text-decoration:  none;
     border:           solid;
     border-width:     1px;
-    border-color:     #000000;
 }
 
 .MonitorDataHeader  {
-    color:            #000000;
     background-color: #DDDDDD;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
+    color:            #000000;
     text-align:       left;
-    text-decoration:  none;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
 }
 
 .MonitorDataHeaderRED  {
-    color:            #000000;
     background-color: #FFBBBB;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
     text-align:       left;
-    text-decoration:  none;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
 }
 
 .MonitorDataHeaderCenter  {
-    color:            #000000;
     background-color: #DDDDDD;
     text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
-    text-align:       center;
-    text-decoration:  none;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
 }
 
 .MonitorDataHeaderRight  {
-    color:            #000000;
     background-color: #DDDDDD;
-    text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    font-weight:      bold;
     text-align:       right;
-    text-decoration:  none;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
 }
 
 .MonitorSubHeader  {
-    color:            #000000;
     background-color: #00BBFF;
     text-align:       center;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
-    font-weight:      bold;
+    font-size:        130%;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
+}
+
+.MonitorTinyHeader  {
+    background-color: #CCCCCC;
+    color:            #000000;
+    text-align:       center;
+    font-weight:      normal;
+    font-size:        60%;
+}
+
+.MonitorTableData  {
+    background-color: #EEEEEE;
+    text-align:       left;
+}
+
+.MonitorTableDataLeft  {
+    background-color: #EEEEEE;
+    text-align:       left;
+}
+
+.MonitorTableDataRight  {
+    background-color: #EEEEEE;
+    text-align:       right;
+}
+
+.MonitorTableDataCenter  {
+    background-color: #EEEEEE;
+    text-align:       center;
+}
+
+.Text-Center  {
+    text-align:       center;
+    text-decoration:  none;
+}
+
+.Text-Right  {
+    text-align:       right;
+    text-decoration:  none;
+}
+
+.Text-Left  {
+    text-align:       left;
     text-decoration:  none;
 }
 

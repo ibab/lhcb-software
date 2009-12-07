@@ -6,9 +6,9 @@
     color: #000000;
     background-color:#CCCCCC;
     font-family:  Arial, Helvetica, sans-serif;
-    font-size:    12px;
+    font-size:    90%;
     font-weight:  bold;
-    line-height:  16px;
+    line-height:  100%;
     border:       dotted;
     border-width: 1px;
     text-decoration: none;
@@ -20,9 +20,9 @@
     color: #000000;
     background-color:#F1F166;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 90%;
     font-weight: bold;
-    line-height: 16px;
+    line-height: 100%;
     border: dotted;
     border-width:1px;
     text-decoration: none;
@@ -33,9 +33,9 @@
     color: #000000;
     background-color:#FF9900;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
     font-weight: bold;
-    line-height: 16px;
+    font-size: 90%;
+    line-height: 100%;
     border: dotted;
     border-width:1px;
     text-decoration: none;
@@ -46,9 +46,9 @@
     color: #000000;
     background-color:#FF0000;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 90%;
     font-weight: bold;
-    line-height: 16px;
+    line-height: 100%;
     border: dotted;
     border-width:1px;
     text-decoration: none;
@@ -59,38 +59,36 @@
     color: #000000;
     background-color:#0099FF;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 90%;
     font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
+    line-height:     100%;
+    border:          dotted;
+    border-width:    1px;
     text-decoration: none;
-    width:        135px;
+    width:           135px;
 }
-.FwStateOKPhysics
-{
-    color: #000000;
+.FwStateOKPhysics    {
+    color:           #000000;
     background-color:#00CC99;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 16px;
-    border: dotted;
-    border-width:1px;
+    font-family:     Arial, Helvetica, sans-serif;
+    font-size:       90%;
+    font-weight:     bold;
+    line-height:     100%;
+    border:          dotted;
+    border-width:    1px;
     text-decoration: none;
-    width:        135px;
+    width:           135px;
 }
-.FwLock
-{
-    color: #000000;
+.FwLock  {
+    color:           #000000;
     background-color:#DDDDDD;
-    font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 12px;
-    width: 12px;
-    border: dotted;
-    border-width:1px;
+    font-family:     Arial, Helvetica, sans-serif;
+    font-size:       90%;
+    font-weight:     bold;
+    line-height:     90%;
+    width:           12px;
+    border:          dotted;
+    border-width:    1px;
     text-decoration: none
 }
 

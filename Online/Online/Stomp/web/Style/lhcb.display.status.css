@@ -6,7 +6,7 @@
 /*                                                                                 */
 /***********************************************************************************/
 .RunStatus  {
-    width:            820px;
+    width:            100%;
     background-color: #CCCCCC;
     color:            #000000;
     border:           solid;
@@ -14,13 +14,13 @@
     border-color:     #000000;
     text-align:       center;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        16px;
+    font-size:        100%;
     font-weight:      bold;
 }
 
 .RunStatusPanel  {
     background-color: #CCCCCC;
-    width:            810px;
+    width:            99%;
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
@@ -32,7 +32,7 @@
     background-color: #EEEEEE;
     overflow-x:       scroll;
     overflow-y:       scroll;
-    width:            802px;
+    width:            98%;
     height:           250px;
     border:           solid;
     border-width:     1px;
@@ -44,7 +44,7 @@
     background-color: #CCCCCC;
     text-align:       center;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        20px;
+    font-size:        150%;
     font-weight:      bold;
     text-decoration:  none;
     text-align:       center;
@@ -66,7 +66,7 @@
     border-color:     #000000;
     text-align:       center;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
+    font-size:        100%;
     font-weight:      bold;
 }
 
@@ -127,9 +127,9 @@ StatusText:
     color:            #000000;
     background-color: #BBBBBB;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
+    font-size:        100%;
     font-weight:      bold;
-    line-height:      12px;
+    line-height:      100%;
     text-decoration:  none;
     text-align:       left;
     border:           solid;
@@ -142,9 +142,9 @@ StatusText:
     color:            #000000;
     background-color: #BBBBBB;
     font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
+    font-size:        100%;
     font-weight:      bold;
-    line-height:      12px;
+    line-height:      100%;
     text-decoration:  none;
     text-align:       left;
     border:           solid;
@@ -174,37 +174,32 @@ StatusText:
     border:           solid;
     border-width:     1px;
     border-color:     #000000;
+    padding:          0px;
+    spacing:          0px;
     cursor:           default;
+    font-size:        97%;
+    font-family:      Arial, Helvetica, sans-serif;
+    line-height:      100%;
+    text-decoration:  none
 }
 
 .PropertyTableItem  {
-    color:            #000000;
     background-color: #DDDDDD;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
     font-weight:      bold;
-    line-height:      16px;
-    height:           16px;
+    height:           100%;
     border:           none;
     border-width:     0px;
-    text-decoration:  none
 }
 
 .PropertyTableValue	{
-    color:            #000000;
     background-color: #FFFFFF;
-    font-family:      Arial, Helvetica, sans-serif;
-    font-size:        12px;
-    line-height:      16px;
-    height:           16px;
+    height:           100%;
     border:           none;
     border-width:     0px;
-    text-decoration:  none
 }
 
 .PropertyTableSpacer	{
-    color:            #000000;
-    background-color: #DDDDDD;
+    background-color: #CCCCCC;
     line-height:      4px;
     border:           none;
     border-width:     0px;

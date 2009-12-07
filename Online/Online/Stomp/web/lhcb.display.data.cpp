@@ -8,7 +8,7 @@ var LOG_WARNING     = 1;
 var LOG_INFO        = 2;
 var LOG_DEBUG       = 3;
 var LOG_VERBOSE     = 4;
-alert('hello');
+
 /**@class OutputLogger
  *
  *
@@ -297,17 +297,20 @@ var DataProvider = function(logger)  {
     else {
       _dataProvider.logger.info("Transport closed (code: " + code + ")"); 
     }
+    _dataProvider.logger.info("Reconnect flag:"+_dataProvider.needConnection);
+
     if ( _dataProvider.needConnection ) {
-      var reconnectHandler = function() {
+      this.reconnectHandler = function() {
+	//alert('Starting reconnect timer');
 	_dataProvider.logger.info('Starting reconnect timer');
-	if ( !this._dataProvider.isConnected && this._dataProvider.needConnection ) {
-	  this._dataProvider.reconnect();
-	  setTimeout(this,5000);
+	if ( !_dataProvider.isConnected && this._dataProvider.needConnection ) {
+	  _dataProvider.reconnect();
+	  setTimeout(reconnectHandler,5000);
 	}
       }
-      reconnectHandler._dataProvider = _dataProvider;
+      //this.reconnectHandler._dataProvider = _dataProvider;
       _dataProvider.logger.info('Starting reconnection timer');
-      setTimeout(reconnectHandler,5000);
+      setTimeout(this.reconnectHandler,5000);
     }
  };
 
@@ -382,6 +385,15 @@ var DataProvider = function(logger)  {
     this.reset();
     this.start();
     return this;
+  }
+
+  /** Pre-Subscribe to data items
+   *  @param item      stomp topic to subscribe to. Must be an object with a "name" property.
+   *
+   *  @return  Reference to self
+   */
+  this.subscribeItem = function(item)  {
+    return this.subscribe(item.name,item);
   }
 
   /** Pre-Subscribe to data items

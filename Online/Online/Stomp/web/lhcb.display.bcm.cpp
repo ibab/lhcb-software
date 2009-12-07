@@ -21,19 +21,19 @@ if ( !lhcb.widgets ) {
     var low = typ.toLowerCase();
     var bcm = StyledItem('lbWeb.BCM_DP_S0.RS2_'+typ, null, '%7.3f');
     if (typ == 'REL' ) post = ' [%]';
-    bcm.nice_name = 'BCM S0 RS2 ('+low+') '+post;
+    bcm.nice_name = 'S0 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[0] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S0.RS32_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S0 RS32 ('+low+') '+post;
+    bcm.nice_name = 'S0 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[1] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S1.RS2_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S1 RS2 ('+low+') '+post;
+    bcm.nice_name = 'S1 RS2 ('+low+') '+post;
     bcm.client = null;
     bcms[2] = bcm;
     bcm = StyledItem('lbWeb.BCM_DP_S1.RS32_'+typ, null, '%7.3f');
-    bcm.nice_name = 'BCM S1 RS32 ('+low+') '+post;
+    bcm.nice_name = 'S1 RS32 ('+low+') '+post;
     bcm.client = null;
     bcms[3] = bcm;
 
@@ -102,7 +102,7 @@ if ( !lhcb.widgets ) {
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Relative and absolute sums of '+
-			  'sensor readings in % to beam dump threshold',
+			  'BCM sensor readings in % to beam dump threshold',
 			  8,'MonitorDataHeader'));
     c.style.backgroundColor = '#FFAAAA';
     tb.appendChild(tr);

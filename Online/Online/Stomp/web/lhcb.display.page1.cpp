@@ -42,54 +42,19 @@ var Page1 = function(msg, sys)   {
     return td;
   }
 
-  table.className = 'MonitorPage';
-  table.body.className = 'MonitorPage';
-  table.body.cellpadding = 0;
-  table.body.cellspacing = 0;
+  table.className = table.body.className = 'MonitorPage';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
 
-  table.LHCb_header = lhcb.widgets.Det_Run_header;
-  table.LHCb_summary= lhcb.widgets.Det_Run_Summary;
-
-
-  table.subscribeItem = function(item) {
-    this.provider.subscribe(item.name,item);
-  }
   table.subscribe = function() {
 
     this.LHC_header.subscribe(this.provider);
     this.LHC_summary.subscribe(this.provider);
     this.LHC_operator.subscribe(this.provider);
     this.LHCb_shift.subscribe(this.provider);
-
-    this.subscribeItem(this.runNumber);
-    this.subscribeItem(this.runState);
-    this.subscribeItem(this.runType);
-    this.subscribeItem(this.runStart);
-    this.subscribeItem(this.nTriggers);
-    this.subscribeItem(this.hltNTriggers);
-    this.subscribeItem(this.l0Rate);
-    this.subscribeItem(this.l0RateRun);
-    this.subscribeItem(this.hltRate);
-    this.subscribeItem(this.hltRateRun);
-    this.subscribeItem(this.deadTime);
-    this.subscribeItem(this.deadTimeRun);
-    this.subscribeItem(this.veloPosition);
-
-    this.subscribeItem(this.bcmBeamPermit1);
-    this.subscribeItem(this.bcmBeamPermit2);
-    this.subscribeItem(this.bcmBeamPermit3);
-
-    this.subscribeItem(this.magnetField);
-    this.subscribeItem(this.magnetPolarity);
-
-    this.subscribeItem(this.figureOfMerit1);
-    this.subscribeItem(this.figureOfMerit2);
-    this.subscribeItem(this.figureOfMerit3);
-    this.subscribeItem(this.figureOfMerit4);
-
+    this.LHCb_header.subscribe(this.provider);
+    this.LHCb_summary.subscribe(this.provider);
     return this;
   }
 
@@ -98,8 +63,7 @@ var Page1 = function(msg, sys)   {
     var tb = document.createElement('tbody');
     var d = new Date();
 
-    tab.width='100%';
-    tb.width = '100%';
+    tab.className = tb.className = 'MonitorPage';
     this.heading = document.createElement('tr');
     var cell = Cell(lhcb_online_picture()+'&nbsp;'+this.system+' Page1',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
@@ -123,7 +87,7 @@ var Page1 = function(msg, sys)   {
     tr.appendChild(td);
     
     td = document.createElement('td');
-    td.appendChild(this.LHCb_header(this.system,this.logger));
+    td.appendChild(this.LHCb_header=lhcb.widgets.Det_Run_header(this.system,this.logger));
     tr.appendChild(td);
     
     
@@ -133,9 +97,9 @@ var Page1 = function(msg, sys)   {
     tr.appendChild(td);
 
     td = document.createElement('td');
-    var sum = this.LHCb_summary(this.system);
-    sum.height = '230px';
-    td.appendChild(sum);
+    this.LHCb_summary = lhcb.widgets.Det_Run_Summary(this.system);
+    this.LHCb_summary.height = '230px';
+    td.appendChild(this.LHCb_summary);
     td.rowSpan = 2;
     tr.appendChild(td);
     tb.appendChild(tr);
@@ -155,8 +119,8 @@ var Page1 = function(msg, sys)   {
 
     // Finally add suggestions text
     tr = document.createElement('tr');
-    tr.appendChild(Cell('',1,'MonitorTinyHeader'));
-    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',1,'MonitorTinyHeader'));
+    tr.appendChild(cell=Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
+    cell.style.textAlign = 'right';
     tb.appendChild(tr);
 
     tab.appendChild(tb);

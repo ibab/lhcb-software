@@ -50,10 +50,7 @@ var DetStatus = function(msg)   {
     return td;
   }
 
-  table.className = 'MonitorPage';
-  table.body.className = 'MonitorPage';
-  table.body.cellpadding = 0;
-  table.body.cellspacing = 0;
+  table.className = table.body.className = 'MonitorPage';
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -89,15 +86,12 @@ var DetStatus = function(msg)   {
      Build table with HT state of all subdetectors
   */
   table.LHCb_HT_summary = function() {
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
 
-    var tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
-
-    tab.className = 'MonitorData';
-    tb.className  = 'MonitorData';
-    tab.width     = '100%';
+    tab.className = tb.className  = 'MonitorPage';
     tab.height    = '120px';
-    tr = document.createElement('tr');
     tr.appendChild(Cell('Subdetector',1,'MonitorDataHeader'));
     tr.appendChild(Cell('HV State',1,'MonitorDataHeader'));
     tr.appendChild(Cell('Trips',1,'MonitorDataHeader'));
@@ -124,42 +118,42 @@ var DetStatus = function(msg)   {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.className = tb.className = 'MonitorPage';
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));
-    c.style.width='120px';
-    this.lastMagnetReading = StyledItem('lbWeb.LHCb.LastMagnetReading',null,null);
+    c.style.width='30%';
+    this.lastMagnetReading = StyledItem('lbWeb.lbHyst.B',null,null);
+    this.lastMagnetReading.style.width='30%';
+    this.lastMagnetReading.conversion = function(data) {
+      return data>0.5 ? 'ON' : 'OFF';
+    }
     tr.appendChild(this.lastMagnetReading);
     tr.appendChild(c=Cell('Polarity:',null,'MonitorDataHeader'));
-    c.style.width='120px';
-    this.magnetPolarity = StyledItem('lbWeb.LHCb.LbMagnet.Polarity',null,null);
-    this.magnetPolarity.style.width='120px';
+    c.style.width='20%';
+    this.magnetPolarity = StyledItem('lbWeb.LbMagnet.Polarity',null,null);
+    this.magnetPolarity.style.width='30%';
     tr.appendChild(this.magnetPolarity);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Current:',null,'MonitorDataHeader'));
-    this.magnetCurrent = StyledItem('lbWeb.LHCb.LbMagnet.Current',null,null);
-    this.magnetCurrent.style.width='120px';
+    this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'%7.3f A');
     tr.appendChild(this.magnetCurrent);
     tr.appendChild(c=Cell('Set:',null,'MonitorDataHeader'));
-    c.style.width='120px';
-    this.magnetCurrentSet = StyledItem('lbWeb.LHCb.LbMagnet.SetCurrent',null,null);
+    this.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.3f A');
     this.magnetCurrentSet.style.width='120px';
     tr.appendChild(this.magnetCurrentSet);
     tb.appendChild(tr);
 
-    this.magnetField0 = StyledItem('lbWeb.BSensor0.Babs',null,'%7.4f');
-    this.magnetField1 = StyledItem('lbWeb.BSensor1.Babs',null,'%7.4f');
-    this.magnetField2 = StyledItem('lbWeb.BSensor2.Babs',null,'%7.4f');
-    this.magnetField3 = StyledItem('lbWeb.BSensor3.Babs',null,'%7.4f');
-    this.magnetTemp0  = StyledItem('lbWeb.BSensor0.Temp',null,'%7.4f');
-    this.magnetTemp1  = StyledItem('lbWeb.BSensor1.Temp',null,'%7.4f');
-    this.magnetTemp2  = StyledItem('lbWeb.BSensor2.Temp',null,'%7.4f');
-    this.magnetTemp3  = StyledItem('lbWeb.BSensor3.Temp',null,'%7.4f');
+    this.magnetField0 = StyledItem('lbWeb.LbMagnet.BSensor0.Babs',null,'%7.4f');
+    this.magnetField1 = StyledItem('lbWeb.LbMagnet.BSensor1.Babs',null,'%7.4f');
+    this.magnetField2 = StyledItem('lbWeb.LbMagnet.BSensor2.Babs',null,'%7.4f');
+    this.magnetField3 = StyledItem('lbWeb.LbMagnet.BSensor3.Babs',null,'%7.4f');
+    this.magnetTemp0  = StyledItem('lbWeb.LbMagnet.BSensor0.Temp',null,'%7.4f');
+    this.magnetTemp1  = StyledItem('lbWeb.LbMagnet.BSensor1.Temp',null,'%7.4f');
+    this.magnetTemp2  = StyledItem('lbWeb.LbMagnet.BSensor2.Temp',null,'%7.4f');
+    this.magnetTemp3  = StyledItem('lbWeb.LbMagnet.BSensor3.Temp',null,'%7.4f');
 
     tr = document.createElement('tr');
     tr.appendChild(Cell('Probe',null,'MonitorDataHeader'));
@@ -170,7 +164,7 @@ var DetStatus = function(msg)   {
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
-    tr.appendChild(Cell('Field [T]',null,'MonitorDataHeader'));
+    tr.appendChild(Cell('Field [&nbsp;T&nbsp;]',null,'MonitorDataHeader'));
     tr.appendChild(this.magnetField0);
     tr.appendChild(this.magnetField1);
     tr.appendChild(this.magnetField2);
@@ -193,10 +187,7 @@ var DetStatus = function(msg)   {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
-
+    tab.className = tb.className   = 'MonitorPage';
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Background Status:',7,'MonitorDataHeader'));
     c.style.width='150px';
@@ -234,24 +225,17 @@ var DetStatus = function(msg)   {
   }
 
   table.Clock_summary = function() {
-    var tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
-    tab.width     = '100%';
-    tab.className = 'MonitorData';
-    tb.className  = 'MonitorData';
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
 
-    tr = document.createElement('tr');
-    tb.appendChild(tr);
-
+    tab.className = tb.className   = 'MonitorPage';
     tr.appendChild(Cell('LHC clock:',null,'MonitorDataHeader'));
     this.lhcClock = StyledItem('lbWeb.LHC.Clock',null,null);
     tr.appendChild(this.lhcClock);
     tr.appendChild(Cell('Last measured:',null,null));
     this.lhcClockReading = StyledItem('lbWeb.LHC.LastClockReading',null,null);
     tr.appendChild(this.lhcClockReading);
-
-    tr = document.createElement('tr');
-
     tb.appendChild(tr);
 
     tab.appendChild(tb);
@@ -261,18 +245,13 @@ var DetStatus = function(msg)   {
   /**
   */
   table.Velo_summary = function() {
-    var tb, td, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
+    var tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
 
-    tab.className  = 'MonitorData';
-    tab.width      = '100%';
-    tb.className   = 'MonitorData';
-    tb.cellSpacing = 0;
-    tb.cellPadding = 0;
-
+    tab.className = tb.className   = 'MonitorPage';
     // Velo position
     this.veloPosition   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.RunControl.VeloPos',          null, null);
-    tr = document.createElement('tr');
     tb.appendChild(tr);
     tr.appendChild(Cell('Velo position:',1,'MonitorDataHeader'));
     tr.appendChild(this.veloPosition);
@@ -286,12 +265,7 @@ var DetStatus = function(msg)   {
   table.Cooling_summary = function() {
     var tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
-
-    tab.className  = 'MonitorData';
-    tab.width      = '100%';
-    tb.className   = 'MonitorData';
-    tb.cellSpacing = 0;
-    tb.cellPadding = 0;
+    tab.className = tb.className   = 'MonitorPage';
 
     // Velo position
     this.itCoolingAlarms  = StyledItem('lbWeb.CaV/ItPlant.Actual.alarm', null, null);
@@ -417,17 +391,16 @@ var DetStatus = function(msg)   {
     var tb = document.createElement('tbody');
     var t1, tb1, tr1, td1, d = new Date();
 
-    tab.width ='100%';
-    tb.width  = '100%';
+    tab.width = tb.width  = '100%';
     this.heading = document.createElement('tr');
     var cell = Cell('LHCb Detector Status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
-    cell.style.width = '360px';
+    //cell.style.width = '360px';
     this.heading.appendChild(cell);
     this.head_date    = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.id = 'current_time';
     this.head_date.textAlign = 'right';
-    this.head_date.style.width = '360px';
+    //this.head_date.style.width = '50%';
     this.heading.appendChild(this.head_date);
     this.head_pic = Cell(lhcb_online_picture(),1,null);
     this.heading.appendChild(this.head_pic);
@@ -440,9 +413,11 @@ var DetStatus = function(msg)   {
 
     // Left half of the display
     tr.appendChild(td=document.createElement('td'));
-    td.style.width = '40%';
+    td.style.width = '45%';
     td.appendChild(t1=document.createElement('table'));
     t1.appendChild(tb1=document.createElement('tbody'));
+    t1.className = tb1.className = 'MonitorPage';
+    t1.style.border = tb1.style.border = 'none';
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
     td1.appendChild(this.LHCb_HT_header());
@@ -453,9 +428,11 @@ var DetStatus = function(msg)   {
     // Right hand of the display
     tr.appendChild(td=document.createElement('td'));
     td.appendChild(t1=document.createElement('table'));
-    td.style.width = '60%';
-    td.colSpan = 2;
     t1.appendChild(tb1=document.createElement('tbody'));
+    t1.className = tb1.className = 'MonitorPage';
+    t1.style.border = tb1.style.border = 'none';
+    //td.style.width = '50%';
+    td.colSpan = 2;
 
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));

@@ -14,7 +14,6 @@ var LHCStatus = function(msg)   {
   table.messages  = msg;
   table.provider  = null;
   table.logger    = null;
-
   table.add = function() {
     tr = document.createElement('tr');
     td = document.createElement('td');
@@ -26,8 +25,9 @@ var LHCStatus = function(msg)   {
 
   table.className = 'MonitorPage';
   table.body.className = 'MonitorPage';
-  table.body.cellpadding = 0;
-  table.body.cellspacing = 0;
+  table.body.cellpadding = table.body.cellspacing = 0;
+  table.style.width = table.body.style.width = '100%';
+
   table.display = table.add();
   table.logDisplay = table.add();
   table.appendChild(table.body);
@@ -36,9 +36,8 @@ var LHCStatus = function(msg)   {
     var c, tb, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.style.width = tb.style.width = '100%';
+    tab.className = tb.className = 'MonitorData';
 
     this.energy        = StyledItem('lbWeb.LHCCOM/LHC.LHC.Beam.Energy',null,'%7.1f GeV');
     this.fillNumber    = StyledItem('lbWeb.LHCCOM/LHC.LHC.RunControl.FillNumber',null,null);
@@ -74,16 +73,14 @@ var LHCStatus = function(msg)   {
     this.safeBeam2.conversion = this.safeBeam1.conversion;
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('LHC Status:',null,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
-    c.style.width='125px';
+    tr.appendChild(c=Cell('LHC Status:',null,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
     tr.appendChild(c=Cell('Fill:',null,'MonitorDataHeader'));
-    c.style.width='90px';
-    this.fillNumber.style.width='200px';
+    c.style.width = '15%';
+    this.fillNumber.style.width='25%';
     tr.appendChild(this.fillNumber);
     tr.appendChild(c=Cell('Energy:',null,'MonitorDataHeader'));
-    c.style.width='90px';
-    this.energy.style.width='200px';
+    c.style.width = '15%';
     tr.appendChild(this.energy);
     tb.appendChild(tr);
 
@@ -133,33 +130,34 @@ var LHCStatus = function(msg)   {
 
 
   table.Magnet_summary = function() {
-    var c, tb, tr, tab = document.createElement('table');
-    tb = document.createElement('tbody');
+    var c, tab = document.createElement('table');
+    var tb = document.createElement('tbody');
+    var tr = document.createElement('tr');
 
-    tab.width = '100%';
-    tab.className = 'MonitorData';
-    tb.className = 'MonitorData';
+    tab.style.width = tb.style.width = '100%';
+    tab.className = tb.className = 'MonitorData';
 
-    tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeader'));
-    c.style.width='125px';
-    c.style.backgroundColor = '#FFAAAA';
-    this.lastMagnetReading = StyledItem('lbWeb.LHCb.LastMagnetReading',null,null);
-    tr.appendChild(this.lastMagnetReading);
+    tr.appendChild(c=Cell('Magnet Status:',null,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
+    c.rowSpan = 2;
+
+    tr.appendChild(c=Cell('Field:',null,'MonitorDataHeader'));
+    c.style.width='20%';
+    this.magnetField = StyledItem('lbWeb.lbHyst.B',null,'%7.3f T');
+    this.magnetField.style.width='25%';
+    tr.appendChild(this.magnetField);
     tr.appendChild(c=Cell('Polarity:',null,'MonitorDataHeader'));
-    c.style.width='120px';
-    this.magnetPolarity = StyledItem('lbWeb.LHCb.LbMagnet.Polarity',null,null);
+    c.style.width='20%';
+    this.magnetPolarity = StyledItem('lbWeb.lbHyst.Polarity',null,null);
     tr.appendChild(this.magnetPolarity);
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Current:',null,'MonitorDataHeader'));
-    c.style.width='120px';
-    this.magnetCurrent = StyledItem('lbWeb.LHCb.LbMagnet.Current',null,null);
+    this.magnetCurrent = StyledItem('lbWeb.LbMagnet.Current',null,'%7.3f A');
     tr.appendChild(this.magnetCurrent);
     tr.appendChild(c=Cell('Set:',null,'MonitorDataHeader'));
-    this.magnetCurrentSet = StyledItem('lbWeb.LHCb.LbMagnet.SetCurrent',null,null);
-    this.magnetCurrentSet.style.width='120px';
+    this.magnetCurrentSet = StyledItem('lbWeb.LbMagnet.SetCurrent',null,'%7.2f A');
     tr.appendChild(this.magnetCurrentSet);
     tb.appendChild(tr);
 
@@ -176,8 +174,7 @@ var LHCStatus = function(msg)   {
     tb.className = 'MonitorData';
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Background, Permit &amp; RF Status:',7,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
+    tr.appendChild(c=Cell('Background, Permit &amp; RF Status:',7,'MonitorDataHeaderRED'));
     tb.appendChild(tr);
 
 
@@ -186,6 +183,7 @@ var LHCStatus = function(msg)   {
     this.LHCInject   = StyledItem('lbWeb.LHCCOM/LHC.LHC.Handshake.LHC_INJECTION',null,null);
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Hand shakes (LHC):',1,'MonitorDataHeader'));
+    c.style.width = '20%';
     tr.appendChild(c=Cell('Dump',1,'MonitorDataHeader'));
     tr.appendChild(this.LHCDump);
     tr.appendChild(Cell('  Adjust:',1,'MonitorDataHeader'));
@@ -199,7 +197,6 @@ var LHCStatus = function(msg)   {
     this.LHCbInject   = StyledItem('lbWeb.LHCCOM/LHC.LHCb.Handshake.LHCB_INJECTION',null,null);
     tr = document.createElement('tr');
     tr.appendChild(c=Cell('Hand shakes (LHCb):',1,'MonitorDataHeader'));
-    c.style.width='125px';
     tr.appendChild(c=Cell('Dump',1,'MonitorDataHeader'));
     tr.appendChild(this.LHCbDump);
     tr.appendChild(Cell('  Adjust:',1,'MonitorDataHeader'));
@@ -291,9 +288,8 @@ var LHCStatus = function(msg)   {
     // TEDs
     tr = document.createElement('tr');    
     tb.appendChild(tr);
-    tr.appendChild(cell=Cell('TED Status',1,'MonitorDataHeaderCenter'));
-    cell.style.backgroundColor = '#FFAAAA';
-    cell.style.width='125px';
+    tr.appendChild(cell=Cell('TED Status',1,'MonitorDataHeaderRED'));
+    cell.style.width = '20%';
     tr.appendChild(this.TEDTI2);
     tr.appendChild(this.TEDTI8);
     tr.appendChild(this.TEDTT40);
@@ -302,8 +298,7 @@ var LHCStatus = function(msg)   {
     // TDI 4R8
     tr = document.createElement('tr');    
     tb.appendChild(tr);
-    tr.appendChild(cell=Cell('TDI 4R8 position:',1,'MonitorDataHeader'));
-    cell.style.backgroundColor = '#FFAAAA';
+    tr.appendChild(cell=Cell('TDI 4R8 position:',1,'MonitorDataHeaderRED'));
     tr.appendChild(this.TDI_4R8_left);
     tr.appendChild(this.TDI_4R8_gap);
     tr.appendChild(this.TDI_4R8_right);
@@ -323,8 +318,7 @@ var LHCStatus = function(msg)   {
 
     tb.appendChild(tr);
 
-    this.lhcClock        = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Errors.FREQ_STATUS',null,null);
-    this.lhcClock.style.textAlign = 'right';
+    this.lhcClock        = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Settings.Errors.FREQ_STATUS','MonitorTableDataRight',null);
     this.lhcClock.conversion = function(v) {  return (v=='TRUE') ? 'Clock OK' : 'Bad Clock'; }
     this.rf2ttcPrePulses = StyledItem('lbWeb.RF2TTC/rf2ttc.Parameter.Readings.DIP.INJECTION_PREPULSE',null,null);
     this.rf2ttcPrePulses.conversion = function(v) { return (v=='TRUE') ? 'Yes' : 'No'; }
@@ -360,15 +354,14 @@ var LHCStatus = function(msg)   {
         return 'No Clock Monitoring';
       return 'System not used or PVSS project not connected';
     }
-    tr.appendChild(c=Cell('LHC Timing:',null,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
-    c.style.width='125px';
+    tr.appendChild(c=Cell('LHC Timing:',null,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
     tr.appendChild(this.rf2ttcSource);
 
     tr.appendChild(this.lhcClock);
     tr.appendChild(c=Cell('/',null,null));
     tr.appendChild(this.rf2ttcRunState);
-    tr.appendChild(c=Cell('Prepulses:',null,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('Prepulses:',null,'MonitorTableDataLeft'));
     tr.appendChild(this.rf2ttcPrePulses);
     this.rf2ttcPrePulses.style.width='60px';
 
@@ -382,12 +375,12 @@ var LHCStatus = function(msg)   {
     var c, tb, td, tr, tab = document.createElement('table');
     tb = document.createElement('tbody');
 
-    tab.className  = 'MonitorData';
-    tab.width      = '100%';
-    tb.className   = 'MonitorData';
-    tb.width       = '100%';
-    tb.cellSpacing = 0;
-    tb.cellPadding = 0;
+    tab.className   = 'MonitorData';
+    tab.style.width = '100%';
+    tb.className    = 'MonitorData';
+    tb.style.width  = '100%';
+    tb.cellSpacing  = 0;
+    tb.cellPadding  = 0;
 
     // Velo position
     this.runState      = FSMItem('lbWeb.LHCb',logger,true);
@@ -398,25 +391,24 @@ var LHCStatus = function(msg)   {
     tb.appendChild(tr);
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Experiment Status:',null,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
-    c.style.width='125px';
+    tr.appendChild(c=Cell('Experiment Status:',null,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
     this.expStatus.style.width='80px';
     tr.appendChild(this.expStatus);
 
     tr.appendChild(c=Cell('Velo position:',null,'MonitorDataHeader'));
-    c.style.width='80px';
-    this.veloPosition.style.width='50px';
+    c.style.width='15%';
+    this.veloPosition.style.width='5%';
     tr.appendChild(this.veloPosition);
 
     tr.appendChild(c=Cell('RunState:',null,'MonitorDataHeader'));
-    c.style.width='65px';
-    this.runState.style.width='130px';
+    c.style.width='15%';
+    this.runState.style.width='15%';
     this.runState.style.textAlign='center';
     tr.appendChild(this.runState);
 
     tr.appendChild(c=Cell('L0 rate:',null,'MonitorDataHeader'));
-    c.style.width='50px';
+    c.style.width='10%';
     tr.appendChild(this.l0Rate);
 
     tb.appendChild(tr);
@@ -443,14 +435,15 @@ var LHCStatus = function(msg)   {
     this.TCK           = StyledItem('lbWeb.LHCb_RunInfo.Trigger.TCKLabel',null, null);
 
     tr = document.createElement('tr');
-    tr.appendChild(c=Cell('Trigger:',null,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
-    c.style.width='125px';
+    tr.appendChild(c=Cell('Trigger:',null,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
     c.rowSpan = 2;
-    tr.appendChild(Cell('L0:',null,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('L0:',null,'MonitorDataHeader'));
+    c.style.width = '80px';
     this.l0Type.style.width = '150px';
     tr.appendChild(this.l0Type);
-    tr.appendChild(Cell('HLT:',null,'MonitorDataHeader'));
+    tr.appendChild(c=Cell('HLT:',null,'MonitorDataHeader'));
+    c.style.width = '80px';
     tr.appendChild(this.HLTType);
     tb.appendChild(tr);
 
@@ -489,9 +482,8 @@ var LHCStatus = function(msg)   {
 
     tr = document.createElement('tr');
     tb.appendChild(tr);
-    tr.appendChild(c=Cell('Cooling',1,'MonitorDataHeader'));
-    c.style.backgroundColor = '#FFAAAA';
-    c.style.width='125px';
+    tr.appendChild(c=Cell('Cooling',1,'MonitorDataHeaderRED'));
+    c.style.width = '20%';
     tr.appendChild(Cell('IT',1,'MonitorDataHeader'));
     tr.appendChild(Cell('TT',1,'MonitorDataHeader'));
     tr.appendChild(Cell('OT',1,'MonitorDataHeader'));
@@ -539,7 +531,6 @@ var LHCStatus = function(msg)   {
     this.subscribeItem(this.lifetime2);
 
     // Clock_summary
-    this.subscribeItem(this.lastMagnetReading);
     this.subscribeItem(this.lhcClock);
     this.subscribeItem(this.rf2ttcSource);
     this.subscribeItem(this.rf2ttcRunState);
@@ -555,6 +546,7 @@ var LHCStatus = function(msg)   {
     this.subscribeItem(this.TDI_4R8_right);
 
     /// Magnet_summary
+    this.subscribeItem(this.magnetField);
     this.subscribeItem(this.magnetPolarity);
     this.subscribeItem(this.magnetCurrent);
     this.subscribeItem(this.magnetCurrentSet);
@@ -615,10 +607,12 @@ var LHCStatus = function(msg)   {
 
     tab.width ='100%';
     tb.width  = '100%';
+
+    tb.className = tab.className = 'MonitorPage';
     this.heading = document.createElement('tr');
     var cell = Cell('<IMG src="http://lhc.web.cern.ch/lhc/images/LHC.gif" height="64"/> LHC machine and beam status',1,'MonitorBigHeader');
     cell.style.textAlign = 'left';
-    cell.style.width = '450px';
+    cell.style.width = '60%';
     this.heading.appendChild(cell);
     this.head_date    = Cell(d.toString(),1,'MonitorTinyHeader');
     this.head_date.id = 'current_time';
@@ -640,6 +634,7 @@ var LHCStatus = function(msg)   {
     t1.appendChild(tb1=document.createElement('tbody'));
     t1.style.width='100%';
     tb1.style.width='100%';
+    t1.style.fontSize = tb1.style.fontSize = '90%';
     //-------------------------------------------------
     tb1.appendChild(tr1=document.createElement('tr'));
     tr1.appendChild(td1=document.createElement('td'));
@@ -689,8 +684,8 @@ var LHCStatus = function(msg)   {
     tb.appendChild(tr);
     // Finally add suggestions text
     tr = document.createElement('tr');
-    tr.appendChild(Cell('',null,null));
-    tr.appendChild(Cell('Comments and suggestions to M.Frank CERN/LHCb',2,'MonitorTinyHeader'));
+    tr.appendChild(cell=Cell('Comments and suggestions to M.Frank CERN/LHCb',3,'MonitorTinyHeader'));
+    cell.style.textAlign='right';
     tb.appendChild(tr);
 
     tab.appendChild(tb);
