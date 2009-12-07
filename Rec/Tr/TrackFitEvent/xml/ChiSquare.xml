@@ -27,10 +27,21 @@
         setMeth = 'FALSE' />
 
        <attribute
-        type = 'int'
-        name = 'nDoF'
-        desc = 'number of degrees of freedom' />
-
+	 type = 'int'
+	 name = 'nDoF'
+	 desc = 'number of degrees of freedom'
+	 setMeth = 'FALSE' />
+      
+      <method
+	type = 'double'
+	name = 'chi2PerDoF'
+	desc = 'return chi2/ndof if ndof>0. returns zero otherwise.'
+	const = 'TRUE'>
+	<code>
+  return m_nDoF>0 ? m_chi2/m_nDoF : 0 ;
+        </code>
+      </method>
+	
       <method
 	type = 'LHCb::ChiSquare&amp;'
 	name = 'operator+='
