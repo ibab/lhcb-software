@@ -5,6 +5,9 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-07 - Anton Poluektov
+  - Added Strippingb2DMuX line by Liming Zhang (in Dstar stream for now) 
+
 ! 2009-12-07 - Anton Poluektov 
   - Actually added StrippingBsDsMuNu line (forgot to "cvs add" previously)
 
