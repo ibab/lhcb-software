@@ -1,0 +1,85 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!DOCTYPE gdd SYSTEM 'gdd.dtd'>
+<gdd>
+  <package name='TrackFitEvent'>
+
+<!-- ================ OTMeasurement class definition ================ -->
+
+    <class
+      name        = 'ChiSquare'
+      author      = 'Wouter Hulsbergen'
+      desc        = 'structure holding a chisquare and associated number of dofs'
+      allocator   = 'NO'
+      virtual     = 'FALSE'
+      >
+
+      <constructor
+        desc = 'Constructor'
+        initList = "m_chi2(chi2),m_nDoF(ndof)">
+        <arg type='double' name='chi2' const='TRUE' />
+        <arg type='int' name='ndof' />
+      </constructor>
+
+      <attribute
+        type = 'double'
+        name = 'chi2'
+        desc = 'chi square' 
+        setMeth = 'FALSE' />
+
+       <attribute
+        type = 'int'
+        name = 'nDoF'
+        desc = 'number of degrees of freedom' />
+
+      <method
+	type = 'LHCb::ChiSquare&amp;'
+	name = 'operator+='
+	desc = 'addition operator' >
+	<arg type = 'LHCb::ChiSquare' name='rhs' const='TRUE'/>
+        <code>
+  m_chi2 += rhs.m_chi2 ;
+  m_nDoF += rhs.m_nDoF ;
+  return *this ;
+        </code>
+      </method>
+
+      <method
+	type = 'LHCb::ChiSquare&amp;'
+	name = 'operator-='
+	desc = 'subtraction operator' >
+	<arg type = 'LHCb::ChiSquare' name='rhs' const='TRUE'/>
+        <code>
+  m_chi2 -= rhs.m_chi2 ;
+  m_nDoF -= rhs.m_nDoF ;
+  return *this ;
+        </code>
+      </method>
+
+      <method
+	type = 'LHCb::ChiSquare'
+	name = 'operator+'
+	desc = 'addition operator' >
+	<arg type = 'LHCb::ChiSquare' name='rhs' const='TRUE'/>
+	<code>
+  ChiSquare rc = *this ;
+  rc += rhs ;
+  return rc ;
+	</code>
+      </method>
+
+      <method
+	type = 'LHCb::ChiSquare'
+	name = 'operator-'
+	desc = 'subtraction operator' >
+	<arg type = 'LHCb::ChiSquare' name='rhs' const='TRUE'/>
+	<code>
+  ChiSquare rc = *this ;
+  rc -= rhs ;
+  return rc ;
+	</code>
+      </method>
+
+      
+    </class>
+  </package>
+</gdd>
