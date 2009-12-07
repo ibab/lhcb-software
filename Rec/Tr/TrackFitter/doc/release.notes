@@ -3,15 +3,14 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r42 2009-12-07 =================
 ! 2009-12-06 - Wouter Hulsbergen
  - bug fix in TrackMasterFitter::projectReference: oce statuscode with
    limited scope was hiding another statuscode. as a result the failure was not
    properly returned.
-
  - added flag to set number of outlier iterations for configured fitters
 
 !=========================== TrackFitter v2r41 2009-11-27 =================
-
 ! 2009-11-26 - Manuel Tobias Schiller
  - use the Cholesky decomposition provided in ROOT 5.24 and up instead of our
    own version; the ROOT version grew out of out own code in LHCbMath
