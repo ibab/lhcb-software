@@ -1,4 +1,4 @@
-// $Id: TrackMonitor.cpp,v 1.22 2009-11-12 15:28:00 wouter Exp $
+// $Id: TrackMonitor.cpp,v 1.23 2009-12-07 22:34:34 wouter Exp $
 // Include files 
 #include "TrackMonitor.h"
 
@@ -10,6 +10,7 @@
 #include "Event/VeloCluster.h"
 #include "Event/VeloPhiMeasurement.h"
 #include "Event/VeloRMeasurement.h"
+#include "Event/KalmanFitResult.h"
 #include "Kernel/HitPattern.h"
 #include "TrackInterfaces/IHitExpectation.h"
 #include "TrackInterfaces/IVeloExpectation.h"
@@ -158,6 +159,13 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   plot(firststate.ty(),type + "/124","ty of first state",-1.0,1.0) ;
   plot(firststate.qOverP(),type + "/125","q/p of first state",-0.001,0.001) ; 
 
+  if ( firststate.tx() != 0 || firststate.ty() != 0 ) {
+    const TrackVector& vec = firststate.stateVector();
+    double z = firststate.z();
+    z -= ( vec[0]*vec[2] + vec[1]*vec[3] ) / ( vec[2]*vec[2] + vec[3]*vec[3] );
+    plot( z, type + "/126","z closest to z-axis",-2000,2000) ;
+  }
+
   if( firststate.qOverP()!=0 ) {
     plot(track.p()/Gaudi::Units::GeV, type+"/5" ,"momentum", 0., 100., 100);
     plot(track.pt()/Gaudi::Units::GeV,type+"/6", "pt", 0, 10, 100);
@@ -254,6 +262,17 @@ void TrackMonitor::fillHistograms(const LHCb::Track& track,
   }
   plot(numoutliers,type+"/101","#outliers", -0.5, 10.5, 11);
 
+  const LHCb::KalmanFitResult* kalfit = dynamic_cast<const LHCb::KalmanFitResult*>(track.fitResult()) ;
+  if(kalfit) {
+    LHCb::ChiSquare tmp;
+    if( kalfit->chi2Velo().nDoF() > 0 )
+      plot(kalfit->chi2Velo().chi2PerDoF(),type+"/chi2PerDofVelo","chi/dof for velo segment",0,20) ;
+    if( kalfit->chi2Downstream().nDoF() > 0 ) 
+      plot(kalfit->chi2Downstream().chi2PerDoF(),type+"/chi2PerDofDownstream","chi/dof for T(Muon) segment",0,20) ;
+    if( kalfit->chi2Match().nDoF() > 0 )
+      plot(kalfit->chi2Match().chi2PerDoF(),type+"/chi2PerDofMatch","chi/dof upstream-downstream match",0,20) ;
+  }
+  
   // expert checks  
   if (fullDetail() == true){
 
