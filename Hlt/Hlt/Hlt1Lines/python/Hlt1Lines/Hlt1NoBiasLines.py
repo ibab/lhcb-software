@@ -21,7 +21,7 @@ class Hlt1NoBiasLinesConf(HltLinesConfigurableUser) :
         '''
         return Line ( 'NoBias'+BXType
                     , prescale = self.prescale
-                    , ODIN = ' ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % ( BXType )
+                    , ODIN = '(ODIN_TRGTYP == LHCb.ODIN.%s) & ( ODIN_BXTYP == LHCb.ODIN.%s ) ' % ( self.getProp('TriggerType'),BXType )
                     , algos = [ ] 
                     , postscale = self.postscale
                     ) 

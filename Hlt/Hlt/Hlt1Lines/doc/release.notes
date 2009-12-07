@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.76 2009-12-03 12:41:57 pkoppenb Exp $
+! $Id: release.notes,v 1.77 2009-12-07 14:39:11 yamhis Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
@@ -6,6 +6,11 @@
 ! -----------------------------------------------------------------------------
 
 !========================== Hlt1Lines v1r10 2009-12-03 ===================
+
+! 2009-12-07 - Yasmine Amhis. 
+  - Require the 'LumiTrigger' in the Hlt1NoBiasLine.
+  - Use only the L0DU Hadron channel in Hlt1MiniBiasLine. 
+
 ! 2009-12-03 - Antonio Perez-Calero
  - corrected bug in Hlt1MuonLines.py (undid Gerhard changes of 11-11!)
 

@@ -11,7 +11,7 @@ from HltLine.HltLine import Hlt1Line as Line
 ############# start building the minibias line(s)...
 class Hlt1MiniBiasLinesConf(HltLinesConfigurableUser) :
 
-    __slots__ = { 'L0Channel'              : ['Hadron','Muon'] #'Hadron+Muon'
+    __slots__ = { 'L0Channel'              : ['Hadron'] #'Hadron'
                 , 'BXTypes'                : ['NoBeam', 'BeamCrossing','Beam1','Beam2']
                 }
 
