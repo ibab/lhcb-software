@@ -1,6 +1,6 @@
-// $Id: CaloTrackTool.h,v 1.10 2009-10-25 14:46:51 ibelyaev Exp $
+// $Id: CaloTrackTool.h,v 1.11 2009-12-07 18:03:31 cattanem Exp $
 // ============================================================================
-// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.10 $
+// CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.11 $
 // ============================================================================
 #ifndef CALOUTILS_CALO_CALOTRACKTOOL_H 
 #define CALOUTILS_CALO_CALOTRACKTOOL_H 1
@@ -243,12 +243,12 @@ Calo::CaloTrackTool::propagate
     if ( distance <m_tolerance ) { return StatusCode::SUCCESS ; }   // RETURN 
     double mu = 0.0 ;
     if ( !Gaudi::Math::intersection ( line ( state ) , plane , point , mu ) )
-    { return Error ( "propagate: line does not cross the place" ) ; }  // RETURN 
+    { return Warning ( "propagate: line does not cross the place" ) ; }// RETURN 
     StatusCode sc = propagate ( state , point.Z() , pid ) ;
     if ( sc.isFailure() ) 
-    { return Error ( "propagate: failure from propagate" , sc  ) ; }   // RETURN
+    { return Warning ( "propagate: failure from propagate" , sc  ) ; } // RETURN
   } 
-  return Error ( "propagate: no convergency has been reached" ) ;
+  return Warning ( "propagate: no convergency has been reached" ) ;
 } 
 // ============================================================================
 // Propagate state to a given Z 
@@ -280,12 +280,24 @@ Calo::CaloTrackTool::propagate
     sc2 = fastExtrapolator () -> propagate ( state  , m_fastZ , pid ) ;
     sc1 = extrapolator     () -> propagate ( state  , z       , pid ) ;
   }
+
+  StatusCode sc = StatusCode::SUCCESS;
+  std::string errMsg = "";
+  if ( sc2.isFailure() )
+  { 
+    errMsg = "Error from FastExtrapolator";
+    sc = sc2;
+  }
   if ( sc1.isFailure() ) 
-  { return Error ("Error from extrapolator"     , sc1 ) ; }
-  if ( sc2.isFailure() ) 
-  { return Error ("Error form FastExtrapolator" , sc2 ) ; }
+  { 
+    errMsg = "Error from extrapolator";
+    sc = sc1;
+  }
   //
-  return StatusCode::SUCCESS ;
+  if( sc.isFailure() )
+    return Warning( errMsg, sc );
+  else
+    return sc;
 } 
 // ============================================================================
 // print the short infomration about track flags 

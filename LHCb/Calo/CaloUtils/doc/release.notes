@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.144 2009-11-30 18:13:49 odescham Exp $
+! $Id: release.notes,v 1.145 2009-12-07 18:03:31 cattanem Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-12-07 - Marco Cattaneo
+ - In CaloTrackTool.h: Fix trivial untested StatusCode, 
+                       Downgrade Errors to Warnings
 
 ! 2009-11-30 - Olivier Deschamps
  - Calo2Dview::getUnit() : protect against non string unit (bug or feature in HistoID::literalID())
@@ -10,7 +14,7 @@
  - Remove obsolete files CaloUtils/dirHbookName.h, CaloUtils/histoHbookName.h 
 
 ! 2009-11-28 - Vanya Belyaev
- - new helper python decoratoer classes
+ - new helper python decorator classes
  - cmt/requirements 
     version increment to v8r10 
 
