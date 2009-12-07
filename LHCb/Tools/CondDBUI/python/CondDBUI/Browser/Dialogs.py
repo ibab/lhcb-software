@@ -18,9 +18,11 @@ from PyQt4.QtGui import (QDialog,
                          QItemSelectionModel,
                          QTextDocument)
 
-from Models import (NodeFieldsModel, NodeFieldsDelegate, GlobalTagsListModel,
+from Models import (NodeFieldsModel, NodeFieldsDelegate,
+                    CondDBTagsListModel, GlobalTagsListModel,
                     CondDBNodesListModel, CondDBPayloadFieldModel,
-                    AddConditionsStackModel, CondDBSelectionsModel)
+                    AddConditionsStackModel, CondDBSelectionsModel,
+                    ChildTagDelegate, ChildTagsModel)
 
 from Ui_NewDatabaseDialog import Ui_NewDatabaseDialog
 from Ui_OpenDatabaseDialog import Ui_OpenDatabaseDialog
@@ -30,12 +32,15 @@ from Ui_AddConditionDialog import Ui_AddConditionDialog
 from Ui_FindDialog import Ui_FindDialog
 from Ui_EditConditionPayloadDialog import Ui_EditConditionPayloadDialog
 from Ui_CreateSliceDialog import Ui_CreateSliceDialog
+from Ui_NewTagDialog import Ui_NewTagDialog
+from Ui_SelectTagDialog import Ui_SelectTagDialog
 
 import os
 
 __all__ = ["NewDatabaseDialog", "OpenDatabaseDialog", "NewNodeDialog",
            "DumpToFilesDialog", "ProgressDialog", "AddConditionDialog",
-           "FindDialog", "CreateSliceDialog"]
+           "FindDialog", "CreateSliceDialog", "SelectTagDialog",
+           "NewTagDialog"]
 
 ## Simple validator for COOL database name
 class DBNameValidator(QRegExpValidator):
@@ -245,7 +250,7 @@ class DumpToFilesDialog(QDialog, Ui_DumpToFilesDialog):
         self.setupUi(self)
         # @todo: the distinction between local tags and global tag is not yet implemented
         self.localTags.hide()
-        self.tagsModel = GlobalTagsListModel(parent.db, self)
+        self.tagsModel = GlobalTagsListModel(self)
         self.tag.setModel(self.tagsModel)
         # Initialize fields
         self.destDir.setText(os.getcwd())
@@ -403,6 +408,7 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         self.folder.setCurrentIndex(-1)
         self.until.setMaxChecked(True)
         self.since.setToNow()
+        self.since.setMaxEnabled(False)
         self.channel.setText("0")
         # Bind signals and slots
         QObject.connect(self.folder, SIGNAL("currentIndexChanged(QString)"),
@@ -629,8 +635,8 @@ class CreateSliceDialog(QDialog, Ui_CreateSliceDialog):
         #   This is needed to ensure that the internal state of the validator is up to date 
         self.dbNameValidator.validate(self.partition.currentText(), 0)
         # Models
-        #   tags (re-use the tag model of the main window for its cache)
-        self.tagsModel = parent.models["tags"]
+        #   tags
+        self.tagsModel = CondDBTagsListModel(self)
         self.tags.setModel(self.tagsModel)
         QObject.connect(self.tags.selectionModel(), SIGNAL("selectionChanged(QItemSelection,QItemSelection)"),
                         self.tagsModelSelectionChanged)
@@ -710,3 +716,60 @@ class CreateSliceDialog(QDialog, Ui_CreateSliceDialog):
     def currentPathSelected(self, path):
         self.tags.selectionModel().clear()
         self.tagsModel.setPath(path)
+
+## Simple dialog to select a tag from a list
+class SelectTagDialog(QDialog, Ui_SelectTagDialog):
+    ## Constructor.
+    def __init__(self, path, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(SelectTagDialog, self).__init__(parent, flags)
+        self._path = path
+        # Prepare the GUI.
+        self.setupUi(self)
+        self.tagModel = CondDBTagsListModel(path = self._path)
+        self.tag.setModel(self.tagModel)
+    ## Returns the selected tag.
+    def getSelected(self):
+        return str(self.tag.currentText())
+    ## Executes the dialog and return the selected tag or None if canceled.
+    def run(self):
+        if self.exec_():
+            return self.getSelected()
+        return None
+
+class NewTagDialog(QDialog, Ui_NewTagDialog):
+    ## Constructor.
+    def __init__(self, db, path, parent = None, flags = Qt.Dialog):
+        # Base class constructor.
+        super(NewTagDialog, self).__init__(parent, flags)
+        self._path = path
+        self._db = db
+        self._isFolderSet = self._db.db.existsFolderSet(self._path)
+        # Prepare the GUI.
+        self.setupUi(self)
+        self.node.setText(self._path)
+        # If we are dealing with a folder, we do not need the selection of
+        # child tags.
+        self.setChildTagsPartVisible(self._isFolderSet)
+        if self._isFolderSet:
+            self.childTagsDelegate = ChildTagDelegate(self, self._path)
+            self.childTagsModel = ChildTagsModel(self._db , self._path, self)
+            self.childTags.setModel(self.childTagsModel)
+            self.childTags.setItemDelegateForColumn(1, self.childTagsDelegate)
+            self.childTags.horizontalHeader().setResizeMode(QHeaderView.ResizeToContents)
+        # Ensure consistency of the UI
+        self.checkValidData()
+    def checkValidData(self):
+        ok = not self.tag.text().isEmpty()
+        self.buttonBox.button(QDialogButtonBox.Ok).setEnabled(ok)
+    def setChildTagsPartVisible(self, visible):
+        for w in [self.childTags, self.childTagsLabel, self.fillChildTagsBtn]:
+            w.setVisible(visible)
+        s = self.size()
+        s.setHeight(1) # with this, the height will be adapted to fit the visible widgets
+        self.resize(s)
+    def fillChildTags(self):
+        d = SelectTagDialog(self._path, self)
+        tag = d.run()
+        if not tag is None:
+            self.childTagsModel.setFromParentTag(str(tag))

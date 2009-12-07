@@ -1,11 +1,19 @@
 ! =============================================================================
-! $Id: release.notes,v 1.134 2009-12-06 19:46:54 marcocle Exp $
+! $Id: release.notes,v 1.135 2009-12-07 21:39:44 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
 
-! 2009-12-02 - Marco Clemencic
+! 2009-12-07 - Marco Clemencic
+ - Improvements to the new Qt4-based CondDBBrowser
+   - added the "New tag" feature
+   - added the script to call the new browser (also .bat)
+   - renamed the old script to CondDBBrowserOld.py 
+   - added a welcome message for the first time
+   - various improvements
+
+! 2009-12-06 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser
    - added the "Create slice" feature
    - added a menu entry to copy the connection string of the current database to

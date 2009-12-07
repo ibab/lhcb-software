@@ -15,7 +15,7 @@ versionNumber = '$Name: not supported by cvs2svn $'.split()[1]
 if versionNumber == "$":
     versionNumber = 'HEAD version'
 
-versionId  = '$Id: CondDBBrowser.py,v 1.7 2009-05-22 17:14:33 marcocle Exp $'.split()
+versionId  = '$Id: CondDBBrowserOld.py,v 1.1 2009-12-07 21:39:43 marcocle Exp $'.split()
 if len(versionId) < 4:
     versionDate = 'unknown'
 else:

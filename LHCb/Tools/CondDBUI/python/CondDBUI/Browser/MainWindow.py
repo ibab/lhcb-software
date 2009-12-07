@@ -25,6 +25,7 @@ from Models import *
 from Dialogs import *
 
 from Utils import parentpath
+from CondDBUI.Browser.Models import tagsGlobalCache
 
 import os
 
@@ -52,6 +53,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._connectionString = None
         # Maximum number of entries in the list of recent databases
         self.maxRecentEntries = 10
+        # Whether to show the welcome message
+        self._showWelcome = True
         # Prepare the GUI.
         self.setupUi(self)
         # --- Part of the initialization that require the GUI objects. ---
@@ -71,9 +74,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tagComboBox.setModel(self.models["tags"])
         self.iovView.setModel(self.models["iovs"])
         self.fieldsView.setModel(self.models["fields"])
-        for m in self.models.values():
+        for m in [self.models[n] for n in ["tree", "nodes", "iovs", "fields"]]:
             QObject.connect(self, SIGNAL("openedDB"), m.connectDB)
-            
+        QObject.connect(self, SIGNAL("openedDB"), tagsGlobalCache.setDB)
+        
         QObject.connect(self.hierarchyTreeView.selectionModel(), SIGNAL("currentChanged(QModelIndex,QModelIndex)"),
                         self.selectedItem)
         
@@ -139,6 +143,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.menuPanels.addAction(self.filterPanel.toggleViewAction())
         
         self.readSettings()
+        if self._showWelcome:
+            self._showWelcome = self.showWelcomeInfo(cancel = True)
 
     ## Store settings into the configuration file
     def writeSettings(self):
@@ -147,6 +153,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.beginGroup("MainWindow")
         settings.setValue("size", QVariant(self.size()))
         settings.setValue("pos", QVariant(self.pos()))
+        settings.setValue("showwelcome", QVariant(self._showWelcome))
         settings.endGroup()
 
         settings.beginGroup("BrowsePanel")
@@ -193,6 +200,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings.beginGroup("MainWindow")
         self.resize(settings.value("size", QVariant(QSize(965, 655))).toSize())
         self.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        self._showWelcome = settings.value("showwelcome", QVariant(True)).toBool()
         settings.endGroup()
         
         settings.beginGroup("BrowsePanel")
@@ -354,6 +362,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # when a node is selected (when opening a new db there is
                     # no selection)
                     self.actionDelete_Node.setEnabled(False)
+                    # ... same for the "new tag"
+                    self.actionNew_Tag.setEnabled(False)
             else:
                 self.db = None
                 title = self.appName
@@ -418,6 +428,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # they are Folders or empty FolderSets
                 self.actionDelete_Node.setEnabled(not self.db.readOnly
                                                   and (item.leaf or not item.children))
+                self.actionNew_Tag.setEnabled(not self.db.readOnly)
             except ValueError:
                 i = -1
             self.pathComboBox.setCurrentIndex(i)
@@ -628,7 +639,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     ## Add a new condition to the selected folder+channel
     def addCondition(self):
-        #self._unimplemented()
         d = AddConditionDialog(self)
         d.setShowUTC(self.iovUTCCheckBox.checkState())
         folder, channel = self._path
@@ -654,8 +664,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     
     ## Create a new tag
     def newTag(self):
-        self._unimplemented()
-    
+        path = self._path[0]
+        d = NewTagDialog(self.db, path)
+        if d.exec_():
+            from Utils import BusyCursor
+            _bc = BusyCursor()
+            tag = str(d.tag.text())
+            if self.db.db.existsFolder(path):
+                self.db.recursiveTag(path, tag)
+            else:
+                tags = {}
+                if path == "/":
+                    p = ""
+                else:
+                    p = path
+                for n in d.childTagsModel:
+                    tags[p + "/" + n] = d.childTagsModel[n]
+                self.db.moveTagOnNodes(path, tag, tags)
+            self._refreshModels(path)
     ## Delete a tag
     def deleteTag(self):
         self._unimplemented()
@@ -683,3 +709,31 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     ## Copy the current connection string to the clipboard.
     def copyConnStrToClipboard(self):
         QApplication.clipboard().setText(self._connectionString)
+    ## Display the initial info message to notify that this is the new version
+    #  of the CondDBBrowser.
+    def showWelcomeInfo(self, cancel = False):
+        mb = QMessageBox(self)
+        mb.setWindowTitle("Welcome to the CondDBBrowser")
+        mb.setText("""<html><body>
+<p>Welcome to the Qt4-based version of the CondDBBrowser.</p>
+<p>This is a complete rewrite of the old application.
+It is not yet complete with respect to the functionalities of the old version,
+but it includes a lot of improvements and clean up.</p>
+<p>If you need one of the features not yet implemented, you can still use the old
+version invoking <tt>CondDBBrowserOld.py</tt></p>
+<p>Among the improvements you can find:
+<ul>
+<li>based on Qt4</li>
+<li>better responsiveness</li>
+<li>contextual menus</li>
+<li>improved managing of recent and standard databases</li>
+<li>extensive usage of tooltips</li>
+</ul></p>
+<p>If you find a bug post it to <a href="https://savannah.cern.ch/bugs/?group=lhcbcore">savannah</a>, for comments and
+suggestions send an email to <a href="mailto:Marco.Clemencic@cern.ch">Marco Clemencic</a>.</p> 
+</body></html>""")
+        ok = mb.addButton(QMessageBox.Ok)
+        if cancel:
+            mb.addButton(QMessageBox.Cancel)
+        mb.exec_()
+        return mb.clickedButton() != ok

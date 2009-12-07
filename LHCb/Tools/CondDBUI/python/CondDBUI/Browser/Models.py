@@ -1,4 +1,5 @@
-from PyQt4.QtCore import (QAbstractItemModel, QAbstractListModel, QAbstractTableModel,
+from PyQt4.QtCore import (QObject, QString,
+                          QAbstractItemModel, QAbstractListModel, QAbstractTableModel,
                           QVariant, QModelIndex,
                           Qt, SIGNAL, SLOT)
 from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
@@ -6,7 +7,7 @@ from PyQt4.QtGui import (QIcon, QApplication, QItemSelectionModel,
                          QComboBox, QLineEdit,
                          QBrush, QFont)
 
-from PyCool import cool, walk as dbwalk
+from PyCool import cool
 
 from Utils import *
 
@@ -15,6 +16,7 @@ import PyCintex
 Helpers = PyCintex.gbl.CondDBUI.Helpers
 
 __all__ = ["setModelsIcons",
+           "tagsGlobalCache",
            "CondDBNodesListModel",
            "CondDBStructureModel",
            "CondDBTagsListModel",
@@ -23,16 +25,68 @@ __all__ = ["setModelsIcons",
            "NodeFieldsModel",
            "AddConditionsStackModel",
            "CondDBSelectionsModel",
+           "ChildTagDelegate",
+           "ChildTagsModel",
            ]
 #import logging
 #logging.basicConfig(level=logging.INFO)
 #_log = logging.getLogger(__name__)
 
-#def _indexName(index):
-#    name = None
-#    if index.isValid():
-#        name = index.internalPointer()
-#    return name
+## Class to keep a cache of the tags in the current database
+class TagsCache(QObject):
+    ## Constructor
+    def __init__(self):
+        super(TagsCache, self).__init__()
+        self.db = None
+        self.cache = {}
+    ## Invalidate the whole cache and use the new database.
+    def setDB(self, db):
+        self.db = db
+        self.cache = {}
+        self._allTags = None
+        self.emit(SIGNAL("tagsCacheUpdated()"))
+    ## Tell if a path may have tags (i.e. it is a multi-version folder or a folderset)
+    def mayHaveTags(self, path):
+        if self.db.db.existsFolder(path):
+            f = self.db.db.getFolder(path)
+            return f.versioningMode() == cool.FolderVersioning.MULTI_VERSION
+        else:
+            return self.db.db.existsFolderSet(path)
+    ## Get the list of tags for a path
+    def getTags(self, path):
+        if self.db:
+            if not path:
+                return []
+            if path not in self.cache:
+                _bc = BusyCursor()
+                if self.mayHaveTags(path):
+                    self.cache[path] = self.db.getTagList(path)
+                else:
+                    self.cache[path] = []
+        return self.cache.get(path, [])
+    ## Get all the known tags in the database
+    def getAllTagNames(self):
+        if self.db:
+            if self._allTags is None:
+                tags = set()
+                for p in self.db.getAllNodes():
+                    tags.update([t.name for t in self.getTags(p)])
+                tags = list(tags)
+                tags.sort()
+                tags.insert(0, "HEAD")
+                self._allTags = tags
+            return self._allTags
+        return []
+    ## Invalidate the cache for a single path
+    def invalidate(self, path):
+        if path in self.cache:
+            del self.cache[path]
+            self._allTags = None
+            qpath = QString(path)
+            self.emit(SIGNAL("tagsCacheUpdated(QString)"), qpath)
+
+tagsGlobalCache = TagsCache()
+
 icons = {}
 
 ## Function to set the icons used by the models.
@@ -318,29 +372,22 @@ class CondDBNodesListModel(QAbstractListModel):
             return QVariant("Name")
         return QVariant()
 
-
 ## Model class to retrieve the available tags in a folder.
 class CondDBTagsListModel(QAbstractListModel):
-    __pyqtSignals__ = ("setViewEnabled(bool)")
     ## Constructor.
     #  Initializes some internal data.
-    def __init__(self, db = None, path = None, parent = None):
+    def __init__(self, path = None, parent = None):
+        global tagsGlobalCache
         super(CondDBTagsListModel,self).__init__(parent)
-        self.db = None
-        self._path = None
-        self._alltags = {}
+        self._path = path
         self._tags = None
         self._hideAutoTags = True
-        
-        self.connectDB(db)
         self.setPath(path)
+        QObject.connect(tagsGlobalCache, SIGNAL("tagsCacheUpdated(QString)"),
+                        self._refreshedCachePath)
+        QObject.connect(tagsGlobalCache, SIGNAL("tagsCacheUpdated()"),
+                        self._refreshedCache)
     
-    ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
-    def connectDB(self, db):
-        self._alltags = {}
-        self.setPath(None) # trigger a clean up of the cache
-        self.db = db
-        
     ## Property hideAutoTags
     def getHideAutoTags(self):
         return self._hideAutoTags
@@ -367,52 +414,36 @@ class CondDBTagsListModel(QAbstractListModel):
     
     ## Set the folder for which to get the tags.
     def setPath(self, path):
+        global tagsGlobalCache
         self.reset()
         if path is not None:
             path = str(path) # Convert to Python string since we may get QString
         self._path = path
-        if path:
-            # a path has tags if it is a multi version folder or if is is a folderset 
-            if self.db.db.existsFolder(path):
-                f = self.db.db.getFolder(path)
-                hasTags = f.versioningMode() == cool.FolderVersioning.MULTI_VERSION
-            else:
-                hasTags = self.db.db.existsFolderSet(path)
-            if hasTags:
-                # invalidate the cache
-                self._tags = None
-                if path not in self._alltags:
-                    # Initialize the all-tag list (the already retrieved ones are not touched)
-                    self._alltags[path] = None
-                # FIXME: I do not like this, but I have to emit the signal only
-                # for foldersets
-                self.emit(SIGNAL("setViewEnabled(bool)"),
-                          not self.db.db.existsFolderSet(path))
-            else:
-                # single version folders do not have tags by definition
-                self._tags = self._alltags[path] = []
-                self.emit(SIGNAL("setViewEnabled(bool)"), False)
-        else:
-            # If no folder is specified, use an empty cache
-            self._tags = self._alltags[path] = []
-            self.emit(SIGNAL("setViewEnabled(bool)"), False)
+        self._tags = None # Invalidate the internal cache
+        self.emit(SIGNAL("setViewEnabled(bool)"),
+                  bool(path and tagsGlobalCache.db.db.existsFolder(path)))
     
-    ## Function returning the (cached) list of all tags.
-    def alltags(self):
-        if self._alltags[self._path] is None:
-            _bc = BusyCursor()
-            self._alltags[self._path] = self.db.getTagList(self._path)
-        return self._alltags[self._path]
+    ## Slot to receive the notification of changes in the cache of tags
+    def _refreshedCachePath(self, path):
+        if path == self._path:
+            self.reset()
+            self._tags = None
     
+    ## Slot to receive the notification of changes in the cache of tags
+    def _refreshedCache(self):
+        self.reset()
+        self._tags = None
+
     ## Expanded list of tags.
     #  The information in the list is in for of tuples with (name, path, group_id)
     #  If the hideAutoTags property is set to True, the tags starting with
     #  "_auto_" are excluded from the list.
     def tags(self):
+        global tagsGlobalCache
         if self._tags is None:
             tags = []
             group = 0
-            for t in self.alltags():
+            for t in tagsGlobalCache.getTags(self._path):
                 tags.append((t.name, self._path, group))
                 for at in t.getAncestorTags():
                     tags.append((at.name, at.path, group))
@@ -445,27 +476,29 @@ class CondDBTagsListModel(QAbstractListModel):
             return QVariant("Tag")
         return QVariant()
 
+    ## Find the position of the specified tag in the list of known tags
+    def findPosOfTag(self, tag):
+        tags = self.tags()
+        i = 0
+        l = len(tags)
+        while i < l and tag != tags[i][0]:
+            i += 1
+        if i >= l:
+            i = -1
+        return i
+
 ## Model class to retrieve the available tags in a database.
 class GlobalTagsListModel(QAbstractListModel):
     ## Constructor.
     #  Initializes some internal data.
-    def __init__(self, db = None, parent = None):
+    def __init__(self, parent = None):
         super(GlobalTagsListModel,self).__init__(parent)
         self.db = None
-        ## All the tags in the database in form of pairs (string name, bool local)
-        self._alltags = None
         ## Tags to display
         self._tags = None
         ## Property controlling the filter on the list of tags
         self._hideLocalTags = True
-        
-        self.connectDB(db)
     
-    ## Set the CondDBUI.CondDB instance to use (triggering a refresh of the caches)
-    def connectDB(self, db):
-        self._tags = None
-        self.db = db
-        
     ## Property hideLocalTags
     def getHideLocalTags(self):
         return self._hideLocalTags
@@ -485,38 +518,15 @@ class GlobalTagsListModel(QAbstractListModel):
             self.reset()
             self._tags = None
             self._hideLocalTags = newval
-    
-    ## Function returning the (cached) list of all tags.
-    def alltags(self):
-        if self._alltags is None:
-            _bc = BusyCursor()
-            # The tags in folderset "/" has to be added by hand because it is
-            # not considered in 2walk"
-            f = self.db.db.getFolderSet("/")
-            tags = set(f.listTags())
-            # Loop over all nodes to get the tags
-            for root, foldersets, folders in dbwalk(self.db.db,'/'):
-                if root == "/":
-                    root = "" # "/" is a special case
-                for f in [self.db.db.getFolder("%s/%s" % (root, fn))
-                          for fn in folders] + \
-                         [self.db.db.getFolderSet("%s/%s" % (root, fn))
-                          for fn in foldersets]:
-                    tags.update([t for t in f.listTags()
-                                 if not t.startswith("_auto_")])
-            tags = list(tags)
-            tags.sort()
-            tags.insert(0, "HEAD")
-            self._alltags = tags
-        return self._alltags
 
     ## Expanded list of tags.
     #  If the hideLocalTags property is set to True, the tags not defined in the
     #  root folder-set are excluded from the list.
     def tags(self):
+        global tagsGlobalCache
         if self._tags is None:
             # @FIXME: hideLocalTags is currently ignored
-            self._tags = self.alltags()
+            self._tags = tagsGlobalCache.getAllTagNames()
         return self._tags
     
     ## Number of tags to display.
@@ -836,6 +846,7 @@ class CondDBIoVModel(BaseIoVModel):
         if path != self._path:
             self._cleanCache()
             self._path = self._folder = None
+            self._tag = self.HEAD # To avoid that we pick up an old tag (coming from another path)
             if path and self.db.db.existsFolder(path):
                 self._path = path
                 self._folder = self.db.db.getFolder(path)
@@ -1302,3 +1313,133 @@ class CondDBSelectionsModel(BaseIoVModel):
         self.beginRemoveRows(QModelIndex(), row, row)
         del self.selections[row]
         self.endRemoveRows()
+
+
+## QItemDelegate to select the tag for a child tag
+class ChildTagDelegate(QItemDelegate):
+    def __init__(self, parent, root):
+        super(ChildTagDelegate, self).__init__(parent)
+        self.root = str(root)
+    def createEditor(self, parent, option, index):
+        path = self.root + "/" + str(index.model().key(index.row()))
+        editor = QComboBox(parent)
+        editor.setModel(CondDBTagsListModel(path, editor))
+        return editor
+    def setEditorData(self, editor, index):
+        value = str(index.model().data(index, Qt.EditRole).toString())
+        editor.setCurrentIndex(editor.model().findPosOfTag(value))
+    def setModelData(self, editor, model, index):
+        value = editor.currentText()
+        model.setData(index, QVariant(value), Qt.EditRole)
+    def updateEditorGeometry(self, editor, option, index):
+        editor.setGeometry(option.rect)
+
+## Handle the list of nodes and tags.
+#  Poor-man implementation of an ordered map
+class ChildTagsModel(QAbstractTableModel):
+    ## Constructor.
+    #  Initializes some internal data.
+    def __init__(self, db, path, parent = None):
+        super(ChildTagsModel, self).__init__(parent)
+        self._data = []
+        self._db = db
+        if path == "/":
+            self._path = ""
+        else:
+            self._path = path
+        for n in db.getChildNodes(path):
+            n = n.rsplit("/", 1)[-1]
+            self._data.append((n, "HEAD"))
+    def setFromParentTag(self, tag):
+        newData = []
+        for n, _t in self._data:
+            path = self._path + "/" + n
+            try:
+                f = self._db.getCOOLNode(path)
+                f.resolveTag(tag)
+                newData.append((n, tag))
+            except:
+                newData.append((n, "HEAD"))
+        self._data = newData
+        self.reset()
+    ## Mapping interface: __len__
+    def __len__(self):
+        return len(self._data)
+    ## Mapping interface: __getitem__
+    def __getitem__(self, key):
+        for k, v in self._data:
+            if k == key:
+                return v
+        raise KeyError, key
+    ## Mapping interface: __setitem__
+    def __setitem__(self, key, value):
+        i = 0
+        l = self.__len__()
+        while i < l and key < self._data[i][0]:
+            i += 1
+        if i < l and key == self._data[i][0]:
+            self._data[i] = (key, value)
+        else:
+            self._data.insert(i, (key, value))
+    ## Mapping interface: __delitem__
+    def __delitem__(self, key):
+        i = 0
+        l = self.__len__()
+        while i < l and key < self._data[i][0]:
+            i += 1
+        if i < l and key == self._data[i][0]:
+            del self._data[i]
+        else:
+            raise KeyError, key
+    def key(self, i):
+        return self._data[i][0]
+    def value(self, i):
+        return self._data[i][1]
+    def keys(self):
+        return [i[0] for i in self._data]
+    def values(self):
+        return [i[1] for i in self._data]
+    def items(self):
+        return self._data
+    def iter(self):
+        return self.__iter__()
+    def __iter__(self):
+        return self.keys().__iter__()
+    ## Number of entries in the range.
+    def rowCount(self, parent = None):
+        return len(self)
+    ## Number of columns in the table. 
+    def columnCount(self, parent = None):
+        return 2
+    ## Name of the tag at a given index.
+    def data(self, index, role):
+        if index.isValid():
+            if role == Qt.DisplayRole or role == Qt.EditRole:
+                return QVariant(self._data[index.row()][index.column()])
+            elif role == Qt.ToolTipRole:
+                return QVariant()
+        return QVariant()
+    ## Header for the view (not used).
+    def headerData(self, section, orientation ,role):
+        if role == Qt.DisplayRole:
+            if orientation == Qt.Horizontal:
+                return QVariant(("Child", "Tag")[section])
+            else:
+                return QVariant()
+        return QVariant()
+    ## Flags for the item (to make the item editable)
+    def flags(self, index):
+        if not index.isValid():
+            return Qt.ItemIsEnabled
+        flags = QAbstractTableModel.flags(self, index)
+        if index.column() == 1:
+            flags |= Qt.ItemIsEditable
+        return flags
+    ## Handle the changes in the data
+    def setData(self, index, value, role):
+        if (index.isValid() and role == Qt.EditRole):
+            i = index.row()
+            self._data[i] = (self._data[i][0], str(value.toString()))
+            self.emit(SIGNAL("dataChanged(QModelIndex,QModelIndex)"), index, index)
+            return True
+        return False
