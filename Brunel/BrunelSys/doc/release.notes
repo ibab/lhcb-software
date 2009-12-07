@@ -3,7 +3,42 @@ Package: BrunelSys
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction programs
 
-</PRE><H1><A NAME=v35r10>2009-01-02 Brunel v35r10</A></H1><PRE>
+</PRE><H1><A NAME=v35r10p1>2009-12-07 Brunel v35r10p1</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
+ and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
+ plus the following patches: RichRecSys v3r26, PatAlgorithms v3r26,
+                             TrackFitter v2r42, TrackMonitors v1r17p1
+
+This is a production version for 2009 data-taking
+Output requires DaVinci v24r5p1 or later
+
+- New tuning:
+  . Extend python Configurable for Rich Track Creator to allow track selection
+    cuts to be over-ridden. Can be used for early data in conjunction with 
+    $APPCONFIGOPTS/Brunel/richLooseTrackCuts.py 
+    (AppConfig v3r26, RichRecSys v3r23)
+
+- Bug fixes:
+  . PatSeedFit: Supply valid arguments to PatSeedTrack constructor in all cases
+    (PatAlgorithms v3r26)
+  . PatDownstream: Added checks for magnet off, fixes division by zero
+    (PatAlgorithms v3r26)
+  . TrackMasterFitter::projectReference: oce statuscode with limited scope was
+    hiding another statuscode. As a result the failure was not properly returned,
+    causing crashes on early data (TrackFitter v2r42)
+  . Suppress excessive warnings in PitchResTool.cpp (TrackMonitors v1r17p1)
+
+ - Changes to example options
+   . In options/2009-Collisions.py:
+     + Add importOptions("$APPCONFIGOPTS/Brunel/allTracksProtoP.py"), additional
+       options to make ProtoParticles for all track types (Brunel default is just
+       [ "Long", "Upstream", "Downstream"]
+     + Add importOptions("$APPCONFIGOPTS/Brunel/richLooseTrackCuts.py"), 
+       additional options loosen Rich track selection in early data
+     + Add importOptions("$APPCONFIGOPTS/UseOracle.py"), to use Oracle CondDB
+     + Update example file to collisions data with all detectors included
+
+</PRE><H1><A NAME=v35r10>2009-12-02 Brunel v35r10</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10, Rec v7r10
  and SQLDDDB v5r16, ParamFiles v8r2, FieldMap v5r3, AppConfig v3r*
 
