@@ -3,17 +3,16 @@ Package: Rec/Brunel
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb reconstruction program
 
+</PRE><H1><A NAME=v35r10p1>2009-12-07 Brunel v35r10p1</A></H1><PRE>
  - Changes to example options
    . In options/2009-Collisions.py:
      + Add importOptions("$APPCONFIGOPTS/Brunel/allTracksProtoP.py"), additional
        options to make ProtoParticles for all track types (Brunel default is just
-       [ "Long", "Upstream", "Downstream"] but there are no Velo or TT hits in
-       these data) (Needs AppConfig v3r25)
-     + Remove beam-gas file from input data
-
- - Changes to tests
-   . brunelmdfrdst test now processes 2009 collisions data file. Tests both the
-     2009 data processing and the mdf pack type
+       [ "Long", "Upstream", "Downstream"]
+     + Add importOptions("$APPCONFIGOPTS/Brunel/richLooseTrackCuts.py"), 
+       additional options loosen Rich track selection in early data
+     + Add importOptions("$APPCONFIGOPTS/UseOracle.py"), to use Oracle CondDB
+     + Update example file to collisions data with all detectors included
 
 </PRE><H1><A NAME=v35r10>2009-12-01 Brunel v35r10</A></H1><PRE>
  - Changes to tests
