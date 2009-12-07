@@ -4,6 +4,9 @@
 ! Purpose     : Package for track data quality monitoring algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-12-07 - Wouter Hulsbergen
+ - Added histograms to trackmmonitor: z-closest to beamline, match-chisquare etc
+
 !========================== TrackMonitors v1r17p1 2009-12-07 ==================
 ! 2009-12-07 - Marco Cattaneo
  - Suppress excessive warnings in PitchResTool.cpp
