@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.11 2009-11-12 13:49:25 jpalac Exp $
+// $Id: TupleToolGeometry.cpp,v 1.12 2009-12-08 10:40:48 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -70,7 +70,7 @@ StatusCode TupleToolGeometry::fill( const Particle* mother
                                     , const std::string& head
                                     , Tuples::Tuple& tuple ){
   Assert( P && (mother || !m_fillMother) && m_dist && m_dva
-          , "No mother or particle, or tools misconfigured. This should not happen, you are inside TupleToolGeometry.cpp :( Try setting FillMother=False. " );
+          , "No mother or particle, or tools misconfigured. Try setting TupleToolGeometry.FillMother=False." );
   
   if( P->particleID().pid() == m_photonID ||  P->particleID().pid()  == m_pi0ID  ){
     return Warning("Will not fill geometry tuple for photons and pi0. No worry.", StatusCode::SUCCESS, 10);
@@ -133,7 +133,7 @@ StatusCode TupleToolGeometry::fillVertexFull(const LHCb::VertexBase* vtx,
 				      std::string head, std::string vtx_name, 
 				      Tuples::Tuple& tuple) const 
 {
-    if( 0==vtx ) return Error("Can't retrieve the " +vtx_name+ " vertex for " + head );
+    if( 0==vtx ) counter("Can't retrieve the " +vtx_name+ " vertex for " + head )++;
     StatusCode sc = fillVertex(vtx,head+vtx_name,tuple);
     if (!sc) return sc;
     sc = fillBPV(vtx,P,head,tuple,vtx_name);
@@ -152,20 +152,22 @@ StatusCode TupleToolGeometry::fillBPV( const VertexBase* primVtx
                                     , Tuples::Tuple& tuple
                                     , std::string trail) const {
   bool test = true ;
-  if( 0==primVtx ){ 
-    Error("No related primary vertex to compute the IP of "+head); 
-    return StatusCode::FAILURE;
-  }
   
   double ip=0, chi2=0;
-  test &= m_dist->distance ( P, primVtx, ip, chi2 );
-  if( !test ){
-    ip=-1;
-    chi2=-1;
+  if ( 0==primVtx ){
+    counter("No BPV for "+head)++;
+    test &= tuple->column( head + "_IP"+trail, -999. );
+    test &= tuple->column( head + "_IPCHI2"+trail, -999. );
+  } else {
+    test &= m_dist->distance ( P, primVtx, ip, chi2 );
+    if( !test ){
+      ip=-1;
+      chi2=-1;
+    }
+    test &= tuple->column( head + "_IP"+trail, ip );
+    test &= tuple->column( head + "_IPCHI2"+trail, chi2 );
   }
-  test &= tuple->column( head + "_IP"+trail, ip );
-  test &= tuple->column( head + "_IPCHI2"+trail, chi2 );
-
+  
   return StatusCode(test) ;
 }
 //=========================================================================
@@ -202,14 +204,27 @@ StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
   bool test = true ;
   
   // decay vertex information:
-  test &= tuple->column( vtx_name+"_", vtx->position() );
-  const Gaudi::SymMatrix3x3 & m = vtx->covMatrix ();
-  test &= tuple->column(  vtx_name + "_XERR", std::sqrt( m(0,0) ) );
-  test &= tuple->column(  vtx_name + "_YERR", std::sqrt( m(1,1) ) );
-  test &= tuple->column(  vtx_name + "_ZERR", std::sqrt( m(2,2) ) );
-  test &= tuple->column(  vtx_name + "_CHI2", vtx->chi2() );
-  test &= tuple->column(  vtx_name + "_NDOF", vtx->nDoF() );
-  test &= tuple->matrix(  vtx_name + "_COV_", m );
+  if ( 0==vtx){
+    Gaudi::XYZPoint pt(-999.,-999.,-999.) ; // arbitrary point
+    Gaudi::SymMatrix3x3 tmp; // arbitrary matrix
+    test &= tuple->column(  vtx_name+"_", pt );
+    test &= tuple->column(  vtx_name + "_XERR", -999. );
+    test &= tuple->column(  vtx_name + "_YERR", -999.  );
+    test &= tuple->column(  vtx_name + "_ZERR", -999. );
+    test &= tuple->column(  vtx_name + "_CHI2", -999. );
+    test &= tuple->column(  vtx_name + "_NDOF", -1. );
+    test &= tuple->matrix(  vtx_name + "_COV_", tmp  );
+  } else { 
+    test &= tuple->column( vtx_name+"_", vtx->position() );
+    const Gaudi::SymMatrix3x3 & m = vtx->covMatrix ();
+    test &= tuple->column(  vtx_name + "_XERR", std::sqrt( m(0,0) ) );
+    test &= tuple->column(  vtx_name + "_YERR", std::sqrt( m(1,1) ) );
+    test &= tuple->column(  vtx_name + "_ZERR", std::sqrt( m(2,2) ) );
+    test &= tuple->column(  vtx_name + "_CHI2", vtx->chi2() );
+    test &= tuple->column(  vtx_name + "_NDOF", vtx->nDoF() );
+    test &= tuple->matrix(  vtx_name + "_COV_", m );
+  }
+  
   // --------------------------------------------------
   return StatusCode(test) ;
 
@@ -224,30 +239,36 @@ StatusCode TupleToolGeometry::fillFlight( const VertexBase* oriVtx
                                           , std::string trail ) const {
   bool test = true ;
   // --------------------------------------------------
-  // flight distance
-  double dist = 0;
-  double chi2 = 0 ;
-  StatusCode sc = m_dist->distance( oriVtx, P->endVertex(), dist, chi2 );
-  if (!sc) return sc ;
-  
-  test &= tuple->column( head + "_FD"+trail, dist );
-  // test &= tuple->column( head + "_FDS", dist/edist );
-  test &= tuple->column( head + "_FDCHI2"+trail, chi2 );
-  // --------------------------------------------------
-  // cosine of (flight distance) dot (momentum):
-  // find the origin vertex. Either the primary or the origin in the
-  // decay
-  const LHCb::Vertex* evtx = P->endVertex();
-  if( !evtx ){
-    Error("Can't retrieve the end vertex for " + head );
-    return StatusCode::FAILURE;
+  if ( 0==oriVtx ){
+    test &= tuple->column( head + "_FD"+trail, -999. );
+    test &= tuple->column( head + "_FDCHI2"+trail, -999. );
+    test &= tuple->column( head + "_DIRA"+trail, -999.);    
+  } else {
+   
+    // flight distance
+    double dist = 0;
+    double chi2 = 0 ;
+    StatusCode sc = m_dist->distance( oriVtx, P->endVertex(), dist, chi2 );
+    if (!sc) return sc ;
+    
+    test &= tuple->column( head + "_FD"+trail, dist );
+    test &= tuple->column( head + "_FDCHI2"+trail, chi2 );
+    // --------------------------------------------------
+    // cosine of (flight distance) dot (momentum):
+    // find the origin vertex. Either the primary or the origin in the
+    // decay
+    const LHCb::Vertex* evtx = P->endVertex();
+    if( !evtx ){
+      Error("Can't retrieve the end vertex for " + head );
+      return StatusCode::FAILURE;
+    }
+    Gaudi::XYZVector A = P->momentum().Vect();
+    Gaudi::XYZVector B = evtx->position() - oriVtx->position ();  
+    
+    double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
+    test &= tuple->column( head + "_DIRA"+trail, cosPFD );
   }
-  Gaudi::XYZVector A = P->momentum().Vect();
-  Gaudi::XYZVector B = evtx->position() - oriVtx->position ();  
   
-  double cosPFD = A.Dot( B ) / std::sqrt( A.Mag2()*B.Mag2() );
-  test &= tuple->column( head + "_DIRA"+trail, cosPFD );
-
   return StatusCode(test);
 }
 // =====================================================

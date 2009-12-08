@@ -8,6 +8,11 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-12-08 - Patrick Koppenburg
+ - TupleToolGeometry : Do not skip candidates that have no best PV
+ - Increment to v2r9
+ - Tag pkoppenb_20091208
+
 !========================== DecayTreeTuple v2r8 2009-11-30 ==================
 
 ! 2009-11-27 - Olivier Deschamps
