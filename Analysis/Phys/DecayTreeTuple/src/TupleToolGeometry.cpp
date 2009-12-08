@@ -1,4 +1,4 @@
-// $Id: TupleToolGeometry.cpp,v 1.12 2009-12-08 10:40:48 pkoppenb Exp $
+// $Id: TupleToolGeometry.cpp,v 1.13 2009-12-08 10:46:45 pkoppenb Exp $
 // Include files
 
 // from Gaudi
@@ -212,7 +212,7 @@ StatusCode TupleToolGeometry::fillVertex( const LHCb::VertexBase* vtx
     test &= tuple->column(  vtx_name + "_YERR", -999.  );
     test &= tuple->column(  vtx_name + "_ZERR", -999. );
     test &= tuple->column(  vtx_name + "_CHI2", -999. );
-    test &= tuple->column(  vtx_name + "_NDOF", -1. );
+    test &= tuple->column(  vtx_name + "_NDOF", -1 );
     test &= tuple->matrix(  vtx_name + "_COV_", tmp  );
   } else { 
     test &= tuple->column( vtx_name+"_", vtx->position() );
