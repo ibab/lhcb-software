@@ -1,4 +1,4 @@
-// $Id: TsaLikelihood.cpp,v 1.5 2009-07-02 10:43:03 mneedham Exp $
+// $Id: TsaLikelihood.cpp,v 1.6 2009-12-08 14:44:14 mneedham Exp $
 
 // GaudiKernel
 #include "GaudiKernel/ToolFactory.h"
@@ -143,6 +143,22 @@ StatusCode Likelihood::execute(std::vector<SeedTrack*>& seeds, std::vector<SeedH
       seed->setLive( false );
       continue;
     }
+
+
+
+    // double check...
+    double nXHit = 0; double nYHit = 0;
+    std::vector<SeedPnt> upnts = seed->usedPnts();
+    for ( std::vector<SeedPnt>::const_iterator itP = upnts.begin(); upnts.end() != itP; ++itP ) {
+      itP->hit()->tfHit()->hit()->isX() ? ++nXHit : ++nYHit; 
+    }
+    if (nXHit < 4 || nYHit < 3) {
+      warning() << "Invalid track: not enough hits " << endmsg; 
+      seed->setLive(false); 
+      continue;
+    }
+
+
     int nxExp = 0;
     int nyExp = 0;
     int nxFound = 0;
