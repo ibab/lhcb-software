@@ -15,9 +15,8 @@ GaudiSequencer("CheckPatSeq").Members    += [ TrackAssociator("AssocVelo"),
                                               TrackAssociator("AssocForward"),
                                               TrackAssociator("AssocTTrack"),
                                               TrackAssociator("AssocMatch"),
+                                              TrackAssociator("AssocDownstream"),
                                               PatLHCbID2MCParticle("PatLHCbID2MCParticle")]
-if not TrackSys().veloOpen() :
-   GaudiSequencer("CheckPatSeq").Members += [ TrackAssociator("AssocDownstream")]
 
 	 
 TrackAssociator("AssocVeloRZ").TracksInContainer     = "Rec/Track/RZVelo";
@@ -49,9 +48,8 @@ GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("Velo"),
                                              TrackEffChecker("VeloTT"),
                                              TrackEffChecker("Forward"),
                                              TrackEffChecker("TTrack"),
-                                             TrackEffChecker("Match") ]
-if not TrackSys().veloOpen() :
-  GaudiSequencer("CheckPatSeq").Members += [ TrackEffChecker("Downstream") ]
+                                             TrackEffChecker("Match"),
+                                             TrackEffChecker("Downstream")]
 
 GaudiSequencer("CheckPatSeq").Members   += [ TrackEffChecker("BestTracks") ]
 
@@ -141,7 +139,7 @@ TrackEffChecker("Downstream").Selector.addTool(MCParticleSelector, name="Selecto
 TrackEffChecker("Downstream").Selector.Selector.rejectElectrons = True;
 TrackEffChecker("Downstream").Selector.Selector.rejectInteractions = True;
 TrackEffChecker("Downstream").Selector.Selector.zInteraction = 9400.;
-TrackEffChecker("Downstream").SelectionCriteria = "ChargedLong";
+TrackEffChecker("Downstream").SelectionCriteria = "ChargedDownstream";
 TrackEffChecker("Downstream").HistoPrint = False;
 TrackEffChecker("Downstream").StatPrint = False;
 
