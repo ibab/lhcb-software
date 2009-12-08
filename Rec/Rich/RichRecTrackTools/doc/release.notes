@@ -4,6 +4,9 @@
 ! Purpose     : Utility tracks tools for RICH reconstruction algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-12-08 - Christopher Rob Jones
+ - Switch from Herab to RungeRutta track extrapolator by default.
+
 !======================== RichRecTrackTools v1r15 2009-10-20 =================
 ! 2009-10-07 - Wouter Hulsbergen
  - adapted FunctionalCKResForRecoTracks to changes in LHCb::Track

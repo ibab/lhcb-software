@@ -5,7 +5,7 @@
  * Implementation file for class : Rich::Rec::DetailedTrSegMakerFromRecoTracks
  *
  * CVS Log :-
- * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.10 2009-07-30 11:25:33 jonrob Exp $
+ * $Id: RichDetailedTrSegMakerFromRecoTracks.cpp,v 1.11 2009-12-08 10:28:37 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 14/01/2002
@@ -58,7 +58,7 @@ DetailedTrSegMakerFromRecoTracks( const std::string& type,
   }
   else // offline
   { 
-    m_trExt1Name   = "TrackHerabExtrapolator";
+    m_trExt1Name   = "TrackRungeKuttaExtrapolator";
     m_trExt2Name   = "TrackParabolicExtrapolator";
     // Rads                  Aerogel   Rich1Gas  Rich2Gas
     m_zTolerance   = list_of (800*mm)  (2000*mm) (3000*mm) ;
