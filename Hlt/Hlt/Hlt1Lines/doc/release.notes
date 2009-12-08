@@ -1,9 +1,12 @@
-! $Id: release.notes,v 1.77 2009-12-07 14:39:11 yamhis Exp $
+! $Id: release.notes,v 1.78 2009-12-08 16:51:04 albrecht Exp $
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/Hlt1Lines
 ! Responsible : Gerhard Raven
 ! Purpose     : Definition and Configuration of Hlt1Lines
 ! -----------------------------------------------------------------------------
+
+! 2009-12-08 - Johannes Albrecht
+ - configure monitoring histograms in Hlt1MuonLines.py
 
 !========================== Hlt1Lines v1r10 2009-12-03 ===================
 
