@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.6 2009-12-03 00:16:32 aperezca Exp $
+# $Id: Hlt1MuonLines.py,v 1.7 2009-12-08 16:49:45 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.6 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
 # =============================================================================
 
 
@@ -128,24 +128,46 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                      ]
         ### FastFit to improve track quality
         # single track without IP cut
-        FastFitNoIP = [ Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
-                      , Member ( 'TF' , 'Chi2Mu'
-                               , FilterDescriptor = ['FitMuChi2,<,%(Muon_FitMuChi2Cut)s'%self.getProps()])
-                      , Member ( 'TF' , 'Chi2OverN'
-                               , OutputSelection = '%Decision'
-                               , FilterDescriptor = ['FitChi2OverNdf,<,%(Muon_FitChiCut)s'%self.getProps()])
-                      ]
+        FastFitNoIP = [ Member ( 'TU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit
+                                 , HistoDescriptor = { 'FitTrackQuality': ( 'Track Fit Chi2 / ndf',0.,50.,100),
+                                                       'FitTrackQualityBest': ( 'lowest track Fit Chi2 / ndf',0.,50.,100) }        
+                                 )
+                        , Member ( 'TF' , 'Chi2Mu'
+                                   , FilterDescriptor = ['FitMuChi2,<,%(Muon_FitMuChi2Cut)s'%self.getProps()]
+                                   , HistoDescriptor = { 'FitMuChi2': ( 'muon contribution to track fit chi2 / ndf',0.,50.,100),
+                                                         'FitMuChi2Best': ( 'lowest muon contribution to track fit chi2 / ndf',0.,50.,100) }  
+                                   )
+                        , Member ( 'TF' , 'Chi2OverN'
+                                   , OutputSelection = '%Decision'
+                                   , FilterDescriptor = ['FitChi2OverNdf,<,%(Muon_FitChiCut)s'%self.getProps()]
+                                   , HistoDescriptor = { 'FitChi2OverNdf': ( 'track fit chi2 / ndf',0.,50.,100),
+                                                         'FitChi2OverNdfBest': ( 'lowest track fit chi2 / ndf',0.,50.,100) }  
+                                   )
+                        ]
         # single track with IP cut
         FastFitWithIP = [ PV2D.ignoreOutputSelection()
-                        , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit )
-                        , Member ( 'TF' , 'IP' 
-                                 ,  FilterDescriptor = ['FitIP_PV2D,||>,'+str(self.getProp('Muon_IPMinCut'))])
-                        , Member ( 'TF' , 'Chi2Mu'
-                                 , FilterDescriptor = ['FitMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))])
-                                 , Member ( 'TF' , 'Chi2OverN'
-                                 , OutputSelection = '%Decision'
-                                 , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))])
-                        ]
+                          , Member ( 'TU' , 'FitTrack' , RecoName = 'FitTrack', callback = setupHltFastTrackFit
+                                     , HistoDescriptor = { 'FitTrackQuality': ( 'Track Fit Chi2 / ndf',0.,50.,100),
+                                                           'FitTrackQualityBest': ( 'lowest track Fit Chi2 / ndf',0.,50.,100) }  
+                                     )
+                          , Member ( 'TF' , 'IP' 
+                                     ,  FilterDescriptor = ['FitIP_PV2D,||>,'+str(self.getProp('Muon_IPMinCut'))]
+                                       , HistoDescriptor = {'FitIP_PV2D': ( 'muon IP to PV2D',0.,10.,400),
+                                                            'FitIP_PV2DBest': ( 'muon highest IP to PV2D',0.,10.,400)}
+                                     )
+                          , Member ( 'TF' , 'Chi2Mu'
+                                     , FilterDescriptor = ['FitMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))]
+                                     , FilterDescriptor = ['FitMuChi2,<,%(Muon_FitMuChi2Cut)s'%self.getProps()]
+                                     , HistoDescriptor = { 'FitMuChi2': ( 'muon contribution to track fit chi2 / ndf',0.,50.,100),
+                                                           'FitMuChi2Best': ( 'lowest muon contribution to track fit chi2 / ndf',0.,50.,100) } 
+                                     )
+                          , Member ( 'TF' , 'Chi2OverN'
+                                     , OutputSelection = '%Decision'
+                                     , FilterDescriptor = ['FitChi2OverNdf,<,'+str(self.getProp('Muon_FitChiCut'))]
+                                     , HistoDescriptor = { 'FitChi2OverNdf': ( 'track fit chi2 / ndf',0.,50.,100),
+                                                         'FitChi2OverNdfBest': ( 'lowest track fit chi2 / ndf',0.,50.,100) } 
+                                     )
+                          ]
         # vertex (two tracks) without IP cut
         FastFitVtxNoIP = [ Member ( 'VU' , 'FitTrack' ,      RecoName = 'FitTrack', callback = setupHltFastTrackFit)
                          , Member ( 'VF' , 'Chi2Mu'
