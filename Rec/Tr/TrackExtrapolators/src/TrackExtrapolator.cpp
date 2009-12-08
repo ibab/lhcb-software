@@ -1,4 +1,4 @@
-// $Id: TrackExtrapolator.cpp,v 1.26 2009-09-24 15:35:27 wouter Exp $
+// $Id: TrackExtrapolator.cpp,v 1.27 2009-12-08 13:33:54 cattanem Exp $
 // Include files
 
 // from Gaudi
@@ -46,7 +46,7 @@ StatusCode TrackExtrapolator::propagate( Gaudi::TrackVector& /* stateVec */,
   StatusCode sc = StatusCode::FAILURE;
 
   Warning( "Cannot propagate state vector to given Z position, see debug.",
-           StatusCode::SUCCESS, 1 );
+           StatusCode::SUCCESS, 1 ).ignore();
   
   debug() << " can not propagate state vector at z" << zOld
           << " to the z position " << zNew
@@ -146,7 +146,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
   StatusCode sc = StatusCode::FAILURE;
 
   Warning( "Cannot propagate state to Z at given point. See debug for details",
-           StatusCode::SUCCESS, 1 );
+           StatusCode::SUCCESS, 1 ).ignore();
   
   debug() << " can not propagate state at " << state.z()
           << " to point at z " << point.z()
@@ -191,7 +191,7 @@ StatusCode TrackExtrapolator::propagate( State& state,
     double dz ;
     bool success = Gaudi::Math::intersection( line, plane, intersect, dz) ;
     if( !success ) {
-      error() << "State parallel to plane!" << endreq;
+      Warning( "State parallel to plane!" ).ignore();
       break ;
     }
     distance = ( intersect - line.beginPoint()).R() ;
@@ -203,14 +203,16 @@ StatusCode TrackExtrapolator::propagate( State& state,
       double ztarget = state.z() + dz ;
       sc = propagate( state, ztarget, pid );
       if( sc.isFailure() ) {
-	error() << "Failed to propagate to z = " << ztarget << endreq;
-	break ;
+        Warning( "Failed to propagate to given z. See debug for details" ).ignore();
+        
+        debug() << "Failed to propagate to z = " << ztarget << endmsg;
+        break ;
       }
     }
   }
   
   if( iter == m_maxIter )
-    error() << "Failed to propagate to plane within tolerance." << endreq;
+    Warning( "Failed to propagate to plane within tolerance." ).ignore();
   
   return sc;
 }

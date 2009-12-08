@@ -4,6 +4,9 @@
 ! Purpose     : Package for tracking extrapolators
 !-----------------------------------------------------------------------------
 
+! 2009-12-08 - Marco Cattaneo
+ - Fix excessive warnings and untested StatusCode in TrackExtrapolator.cpp
+
 ! 2009-12-07 - Marco Cattaneo
  - Fix trivial untested StatusCode in TrackHerabExtrapolator.cpp
  - Fix Windows warnings in TrackRungeKuttaExtrapolator.h
