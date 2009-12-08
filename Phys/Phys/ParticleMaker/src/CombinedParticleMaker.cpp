@@ -4,7 +4,7 @@
  * Implmentation file for Particle maker CombinedParticleMaker
  *
  * CVS Log :-
- * $Id: CombinedParticleMaker.cpp,v 1.34 2009-04-23 14:51:46 pkoppenb Exp $
+ * $Id: CombinedParticleMaker.cpp,v 1.35 2009-12-08 12:55:07 pkoppenb Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 2006-05-03
@@ -251,25 +251,13 @@ StatusCode CombinedParticleMaker::fillParticle
   }
   */
   
-  const LHCb::Track* track     = proto->track() ;
-  const LHCb::State* usedState = 0 ;
-  // default: closest to the beam:
-  if ( 0 == usedState ) { usedState = track->stateAt( LHCb::State::ClosestToBeam    ) ; }
-  // if not availabel: first measurementr 
-  if ( 0 == usedState ) { usedState = track->stateAt( LHCb::State::FirstMeasurement ) ; }
-  // backup 
-  if ( 0 == usedState ) 
-  {
-    Warning("No state closest to beam or at first measurement for track. Using first state instead") ;
-    usedState = &track->firstState() ;
-  }
-  if (msgLevel(MSG::VERBOSE)) 
-  { verbose() << "Using '" << usedState->location() << "' state at " << usedState->position() << endmsg ; }
+  const LHCb::Track* track = proto->track() ;
+  const LHCb::State* state = usedState( track );
   
   // finally, set Particle infor from State using tool
   if (msgLevel(MSG::VERBOSE)) verbose() << "Making Particle " << pprop->particle() << " from Track with P= " 
-                                        << usedState->momentum() << endmsg ;
-  StatusCode sc = p2s()->state2Particle( *usedState, *particle );
+                                        << state->momentum() << endmsg ;
+  StatusCode sc = p2s()->state2Particle( *state, *particle );
   if (msgLevel(MSG::VERBOSE)) verbose() 
     << "Made   Particle " << pprop->particle() << " with            P= " << particle->momentum() << endmsg ;
   

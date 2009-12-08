@@ -5,7 +5,7 @@
 # http://cern.ch/lhcb-comp/Support/html/new_structure.pdf
 
 package           ParticleMaker
-version           v5r4p1
+version           v5r5
 
 # Structure, i.e. directories to process. 
 #============================================================================
