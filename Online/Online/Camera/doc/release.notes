@@ -4,6 +4,11 @@
 ! Purpose     : Package for the CAMERA application and supporting files.
 !-----------------------------------------------------------------------------
 
+=============== v1r12 ===============
+
+! 2009-12-08 - Nicola Mangiafave
+- Changed the cmt/requirement file to the new version v1r12.
+
 ! 2009-11-27 - Nicola Mangiafave
 - Fixed the bug that prevented the extra info of the first message to be visualized.
 
