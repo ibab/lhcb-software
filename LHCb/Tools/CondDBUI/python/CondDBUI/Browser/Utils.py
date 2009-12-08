@@ -1,10 +1,12 @@
 ## Utility functions useful across the various modules of the browser
 
-import time
-from PyQt4.QtCore import Qt, QDateTime, QDate, QTime
+from datetime import datetime, timedelta
+from PyQt4.QtCore import Qt, QDateTime
 from PyQt4.QtGui import QApplication
 
-__all__ = ["report", "DEBUG", "valKeyToDateTime", "basename", "parentpath",
+__all__ = ["report", "DEBUG",
+           "valKeyToDateTime", "dateTimeToValKey",
+           "basename", "parentpath",
            "BusyCursor"]
 
 # Number of times to indent output
@@ -38,13 +40,23 @@ def report(fn):
 def DEBUG(*args):
     print "DEBUG:", ", ".join(args)
 
+_epoch = datetime(1970, 1, 1, 0, 0)
 ## Helper function to convert a cool::ValidityKey to a QDateTime (UTC).
 def valKeyToDateTime(valkey):
-    # Cannot use setTime_t because of the limited range.
-    timeTuple = time.gmtime(valkey / 1e9)
-    d = apply(QDate, timeTuple[0:3])
-    t = apply(QTime, timeTuple[3:6])
-    return QDateTime(d, t, Qt.UTC)
+    dt = _epoch + timedelta(seconds = valkey / 1e9)
+    dt = QDateTime(dt)
+    dt.setTimeSpec(Qt.UTC)
+    return dt
+
+## Helper function to convert a QDateTime to a cool::ValidityKey.
+def dateTimeToValKey(dt):
+    dt = dt.toUTC()
+    dt = datetime(dt.date().year(), dt.date().month(), dt.date().day(),
+                  dt.time().hour(), dt.time().minute(), dt.time().second(),
+                  dt.time().msec() * 1000)
+    delta = dt - _epoch
+    valkey = (delta.days * 24 * 3600 + delta.seconds) * 1000000000 + delta.microseconds * 1000
+    return valkey
 
 ## Utility function to extract the basename from a path
 def basename(path):

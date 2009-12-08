@@ -4,7 +4,7 @@ from PyQt4.QtCore import (QObject, SIGNAL, SLOT,
                           Qt)
 from PyQt4.QtGui import QSizePolicy
 
-import time
+from Utils import valKeyToDateTime, dateTimeToValKey
 
 from PyCool import cool
 
@@ -33,15 +33,8 @@ class TimePointEdit(QtGui.QWidget):
         self._edit.setContextMenuPolicy(Qt.NoContextMenu)
         
         # Set the time range from cool ValidityKeyMin/Max.
-        # Cannot use setTime_t because of the limited range.
-        minTimeTuple = time.gmtime(cool.ValidityKeyMin / 1e9)
-        minDate = apply(QDate, minTimeTuple[0:3])
-        minTime = apply(QTime, minTimeTuple[3:6])
-        maxTimeTuple = time.gmtime(cool.ValidityKeyMax / 1e9)
-        maxDate = apply(QDate, maxTimeTuple[0:3])
-        maxTime = apply(QTime, maxTimeTuple[3:6])
-        self._minDateTime = QDateTime(minDate, minTime, Qt.UTC)
-        self._maxDateTime = QDateTime(maxDate, maxTime, Qt.UTC)
+        self._minDateTime = valKeyToDateTime(cool.ValidityKeyMin)
+        self._maxDateTime = valKeyToDateTime(cool.ValidityKeyMax)
         self._edit.setDateTimeRange(self._minDateTime, self._maxDateTime)
         self._edit.setDisplayFormat("dd-MM-yyyy hh:mm:ss")
         self._edit.setCalendarPopup(True)
@@ -191,12 +184,7 @@ class TimePointEdit(QtGui.QWidget):
         # Get the number of seconds since epoch and convert it to ns.
         if self._max.isChecked():
             return cool.ValidityKeyMax
-        # FIXME: This is awkward, but I do not have enough resolution otherwise
-        d = self._edit.dateTime().toLocalTime() # mktime needs a local time
-        timeTuple = (d.date().year(), d.date().month(), d.date().day(),
-                     d.time().hour(), d.time().minute(), d.time().second(),
-                     0,0,-1)
-        return int(time.mktime(timeTuple) * 1e9)
+        return dateTimeToValKey(self._edit.dateTime())
 
     ## Set the internal QDateTime from a cool::ValidityKey.
     def setValidityKey(self, valKey):
@@ -204,18 +192,13 @@ class TimePointEdit(QtGui.QWidget):
             self._edit.setDateTime(self._maxDateTime)
             self._max.setChecked(True)
         else:
-            # Cannot use setTime_t because of the limited range.
-            timeTuple = time.gmtime(valKey / 1e9)
-            d = apply(QDate, timeTuple[0:3])
-            t = apply(QTime, timeTuple[3:6])
-            self._edit.setDateTime(QDateTime(d, t))
+            self._edit.setDateTime(valKeyToDateTime(valKey))
             self._max.setChecked(False)
     
     ## Slot called by a "dateTimeChanged" signal to propagate it as a
     #  cool::ValidityKey.
     def emitValidityKeyChange(self):
-        #self.emit(SIGNAL("validityKeyChange(cool::ValidityKey)"),self.toValidityKey())
-        self.emit(SIGNAL("validityKeyChange"),self.toValidityKey())
+        self.emit(SIGNAL("validityKeyChange"), self.toValidityKey())
 
     ## Slot used to set the value equal to the minimum possible according to the
     #  current constraints.
