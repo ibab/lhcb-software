@@ -239,11 +239,24 @@ StatusCode MDFWriterNet::initialize(void)
       
   }
   if (!service("IncidentSvc", m_incidentSvc).isSuccess()) {
+      *m_log << MSG::ERROR << "Could not start incident service." << endmsg;
       return StatusCode::FAILURE;
   } else {
         m_incidentSvc->addListener(this, "DAQ_CANCEL");
         m_incidentSvc->addListener(this, "DAQ_ERROR");
   }
+
+  m_TotEvts=0;
+
+  if (!service("MonitorSvc", m_MonitorSvc).isSuccess()){ 
+    *m_log << MSG::ERROR << "Could not start monitor service." << endmsg;
+    return StatusCode::FAILURE;
+  }
+  else {
+    m_MonitorSvc->declareInfo("TotEvts", m_TotEvts, "Total events seen", this);
+  }
+
+
 
   m_currentRunNumber=0;
   m_CleanUpStop = false;
@@ -334,6 +347,20 @@ StatusCode MDFWriterNet::finalize(void)
   if(pthread_join(m_ThreadFileCleanUp, NULL)) {
     *m_log << MSG::ERROR << WHERE << "File CleanUP Thread join" << endmsg;
     return StatusCode::FAILURE;
+  }
+
+  m_TotEvts = 0;
+
+  if (m_incidentSvc) {
+    m_incidentSvc->removeListener(this);
+    m_incidentSvc->release();
+    m_incidentSvc = 0;
+  }
+
+  if (m_MonitorSvc) {
+    m_MonitorSvc->undeclareAll(this);
+    m_MonitorSvc->release();
+    m_MonitorSvc = 0;
   }
 
   return StatusCode::SUCCESS;
@@ -524,6 +551,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
       nbLate=0;
 
       m_currentRunNumber = runNumber;
+      m_TotEvts = 0;
   }
 
   if(m_currFile == NULL || runNumber != m_currFile->getRunNumber()) {
@@ -597,6 +625,7 @@ StatusCode MDFWriterNet::writeBuffer(void *const /*fd*/, const void *data, size_
 
   // count event
   m_currFile->incEvents();
+  ++m_TotEvts;
   
   // check type of event
   if( checkForPhysEvent(data, len)) {
@@ -666,16 +695,6 @@ inline unsigned int MDFWriterNet::getRunNumber(const void *data, size_t /*len*/)
   return mHeader->subHeader().H1->m_runNumber;
 }
 
-void displayBuf(char *buf, int size)
-{
-    int *ibuf = (int *) buf;
-    for(int i=0; i<size/4; ++i) {
-        if(i%4 == 0) printf("\n%5x:", i);
-        printf(" %8x ", ibuf[i]);
-    }
-    printf("\n");
-}
-
 
 /** Checks if it is a phys event (which means that bit 34 is set).
  * @param data  The data from which MDF information may be retrieved
@@ -708,10 +727,6 @@ inline bool MDFWriterNet::checkForPhysEvent(const void *data, size_t ) {
       m_incidentSvc->fireIncident(incident);
       return false; 
   }
-
-//  displayBuf((char*)data, 56);
-
-//  displayBuf((char*)mHeader, 56);
 
   if(physBitMask & (unsigned int) 4) {
       return true;
