@@ -4,6 +4,9 @@
 ! Purpose     : Holds final reconstruction code
 !-----------------------------------------------------------------------------
 
+! 2009-12-08 - Christopher Rob Jones
+ - Downgrade some INFO messages to debug.
+
 !========================== GlobalReco v6r29 2009-11-27 ======================
 
 ! 2009-11-24 - Chris Jones

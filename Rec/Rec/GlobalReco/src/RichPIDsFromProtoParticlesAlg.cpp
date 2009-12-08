@@ -5,7 +5,7 @@
  * Implementation file for algorithm RichPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.12 2009-11-06 18:11:08 jonrob Exp $
+ * $Id: RichPIDsFromProtoParticlesAlg.cpp,v 1.13 2009-12-08 19:28:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -75,8 +75,9 @@ StatusCode RichPIDsFromProtoParticlesAlg::execute()
   // check data is not already there
   if ( exist<RichPIDs>( m_richPIDloc ) )
   {
-    return Info( "Data already exists at '" + m_richPIDloc +
-                 "' -> Will NOT replace", StatusCode::SUCCESS );
+    debug() << "Data already exists at '" << m_richPIDloc
+            << "' -> Will NOT replace" << endmsg; 
+    return StatusCode::SUCCESS;
   }
 
   // load ProtoParticles

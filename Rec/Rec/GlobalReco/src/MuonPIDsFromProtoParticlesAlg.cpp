@@ -5,7 +5,7 @@
  * Implementation file for algorithm MuonPIDsFromProtoParticlesAlg
  *
  * CVS Log :-
- * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.14 2009-11-24 15:35:25 jonrob Exp $
+ * $Id: MuonPIDsFromProtoParticlesAlg.cpp,v 1.15 2009-12-08 19:28:27 jonrob Exp $
  *
  * @author Chris Jones   Christopher.Rob.Jones@cern.ch
  * @date 29/03/2006
@@ -78,8 +78,9 @@ StatusCode MuonPIDsFromProtoParticlesAlg::execute()
   // check data is not already there
   if ( exist<MuonPIDs>( m_muonPIDloc ) )
   {
-    return Info( "Data already exists at '" + m_muonPIDloc +
-                 "' -> Will NOT replace", StatusCode::SUCCESS );
+    debug() << "Data already exists at '" << m_muonPIDloc
+            << "' -> Will NOT replace" << endmsg;
+    return StatusCode::SUCCESS;
   }
 
   // load ProtoParticles
