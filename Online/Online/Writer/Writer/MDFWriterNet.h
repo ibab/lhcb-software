@@ -307,6 +307,9 @@ namespace LHCb {
     /// The current run number in progress.
     unsigned int m_currentRunNumber;
 
+    /// The number of events for the current run number.
+    int m_TotEvts;
+  
     /// Property: The stream identifier
     std::string m_streamID;
 
@@ -343,7 +346,10 @@ namespace LHCb {
     pthread_t m_ThreadFileCleanUp;
 
     /// A mutex to protect shared resources between the main process and the clean up thread.
-    pthread_mutex_t m_SyncFileList; 
+    pthread_mutex_t m_SyncFileList;
+
+    /// Monitoring service of the total number of events (just for display in the run control)
+    IMonitorSvc* m_MonitorSvc; 
 
     /** Generates a new file name from the MDF information.
      * @param runNumber  The current run number, to be included in the file name.
