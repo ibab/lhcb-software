@@ -3,6 +3,28 @@ Package: Digi/Boole
 Package Coordinator: Marco Cattaneo
 Purpose: LHCb Digitization program
 
+</PRE><H1><A NAME=v20r0>2009-12-08 Boole v20r0</A></H1><PRE>
+This version uses projects Gaudi v21r6, LHCb v28r4, Lbcom v7r10
+ and SQLDDDB v5r16p1, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
+ plus the following patches: OTAssociators v4r4
+
+Version for post-MC09 developments. Output needs Brunel v35r8 or later
+Needs SQLDDDB v5r4 or later with tags including calo-20090508 or later
+
+ - Changes to configuration:
+   . Change Boole().VeloTell1Processing default to True
+
+ - New tuning:
+   . Velo Tell1 emulation (available since Boole v19r8) replaces VeloSim as
+     default digitisation and clusterisation
+   . Improved comparison of floating point numbers (DetDesc v18r17)
+
+ - Persistency changes:
+   . Task 12542: Delta time cut applied when creating OTMCDepositLinker table
+     loosened to 9ns (3 sigma). This delta time is entered as weight in this 
+     table, and can be used as a cut when determining pattern recognition
+     efficiencies. (OTAssociators v4r4)
+
 </PRE><H1><A NAME=v19r9>2009-11-27 Boole v19r9</A></H1><PRE>
 This version uses projects Gaudi v21r6, LHCb v28r3, Lbcom v7r9
  and SQLDDDB v5r15, ParamFiles v8r2, FieldMap v5r3, L0TCK v1r2, AppConfig v3r*
