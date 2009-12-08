@@ -1,4 +1,4 @@
-// $Id: OnlineMessageSvc.cpp,v 1.16 2009-03-16 08:53:18 frankb Exp $
+// $Id: OnlineMessageSvc.cpp,v 1.17 2009-12-08 14:27:13 frankb Exp $
 
 #include "GaudiKernel/SvcFactory.h"
 #include "GaudiOnline/IErrorLogger.h"
@@ -34,7 +34,7 @@ LHCb::OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svclo
   declareProperty( "setError",    m_thresholdProp[MSG::ERROR] );
   declareProperty( "setFatal",    m_thresholdProp[MSG::FATAL] );
   declareProperty( "setAlways",   m_thresholdProp[MSG::ALWAYS] );
-  declareProperty( "LoggerOnly",  m_loggerOnly = false );
+  declareProperty( "LoggerOnly",  m_loggerOnly = true);
 
   const int defaultLimit = 500;
   declareProperty( "fatalLimit",    m_msgLimit[MSG::FATAL]   = defaultLimit );
@@ -46,7 +46,7 @@ LHCb::OnlineMessageSvc::OnlineMessageSvc( const string& name, ISvcLocator* svclo
   declareProperty( "alwaysLimit",   m_msgLimit[MSG::ALWAYS]  = 0 );
 
   declareProperty( "defaultLimit",  m_msgLimit[MSG::NIL]     = defaultLimit );
-  declareProperty( "enableSuppression", m_suppress = false );
+  declareProperty( "enableSuppression", m_suppress = false);
 }
 
 
