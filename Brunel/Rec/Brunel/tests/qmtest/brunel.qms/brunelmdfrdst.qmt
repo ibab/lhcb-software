@@ -5,7 +5,7 @@
     <text>../options/mdfrdst.py</text>
     <text>$BRUNELOPTS/2009-Collisions.py</text>
     <text>--option</text>
-    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; from Configurables import CondDB; CondDB(UseOracle = False);</text>
+    <text>from Brunel.Configuration import *; Brunel().EvtMax=200; from Configurables import CondDB; CondDB(UseOracle = False); from Configurables import MagneticFieldSvc; MagneticFieldSvc().ScaleFactor=1.; MagneticFieldSvc().Polarity=-1;</text>
   </set></argument>
   <argument name="reference"><text>../refs/testBrunelMdfRdst.ref</text></argument>
   <argument name="validator"><text>
