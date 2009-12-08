@@ -4,6 +4,9 @@
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
 
+! 2009-12-08 - Mariusz Witek
+ - PVLoose.py - options to run PV reconstruction with relaxed cuts
+
 !============================= PatPV v3r10 2009-12-03 =========================
 ! 2009-12-03 - Piotr Morawski
  - optimized execution time of PatPV2DFit3D and LSAdaptPV3DFitter
