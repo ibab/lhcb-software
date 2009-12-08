@@ -1,7 +1,13 @@
-! $Id: release.notes,v 1.145 2009-12-07 18:03:31 cattanem Exp $
+! $Id: release.notes,v 1.146 2009-12-08 15:49:08 ibelyaev Exp $
 ! Package     : CaloUtils
 ! Responsible : Olivier Deschamps odescham@in2p3.fr
 !------------------------------------------------------------------------------
+
+! 2009-12-08 - Vanya Belyaev
+
+ - CellID.py
+
+    bug fix in python decrator for std::set-container 
 
 ! 2009-12-07 - Marco Cattaneo
  - In CaloTrackTool.h: Fix trivial untested StatusCode, 

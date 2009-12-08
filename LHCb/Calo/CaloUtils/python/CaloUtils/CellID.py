@@ -12,7 +12,7 @@ Helper module to performs some decorations for LHCb::CaloCellID object
 """
 # =============================================================================
 __author__  = "Vanya BELYAEV Ivan.Belyaev@nikhef.nl"
-__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.2 $"
+__version__ = "CVS tag $Name: not supported by cvs2svn $, version $Revision: 1.3 $"
 # =============================================================================
 __all__     = () 
 # =============================================================================
@@ -71,7 +71,7 @@ def _set_iter_ ( self ) :
     _index = 0  
     while _index < _size :
         yield self.at( _index ) 
-        _indx += 1 
+        _index += 1 
 
 ## insert in set 
 def _set_insert_ ( self , obj ) :
