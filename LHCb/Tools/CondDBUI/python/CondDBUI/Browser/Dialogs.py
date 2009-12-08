@@ -32,8 +32,8 @@ from Ui_AddConditionDialog import Ui_AddConditionDialog
 from Ui_FindDialog import Ui_FindDialog
 from Ui_EditConditionPayloadDialog import Ui_EditConditionPayloadDialog
 from Ui_CreateSliceDialog import Ui_CreateSliceDialog
-from Ui_NewTagDialog import Ui_NewTagDialog
 from Ui_SelectTagDialog import Ui_SelectTagDialog
+from Ui_NewTagDialog import Ui_NewTagDialog
 
 import os
 
@@ -298,6 +298,8 @@ class EditConditionPayloadDialog(QDialog, Ui_EditConditionPayloadDialog):
         self._externalEditor = externalEditor
         if not self._externalEditor:
             self.externalEditorButton.hide()
+        else:
+            self.externalEditorButton.setText("Open in %s" % self._externalEditor)
         # useful to protect the updateData method when selectField is selected
         self._selectingField = False
         keys = self.data.keys()
@@ -390,7 +392,7 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
     #__pyqtSignals__ = ("folderChanged(QString)")
     ## Constructor.
     #  Initializes the base class and defines some internal structures.
-    def __init__(self, parent = None, flags = Qt.Dialog):
+    def __init__(self, parent = None, flags = Qt.Dialog, externalEditor = None):
         # Base class constructor.
         super(AddConditionDialog, self).__init__(parent, flags)
         self.db = parent.db
@@ -399,6 +401,7 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
         self.fieldsModel = CondDBPayloadFieldModel(self.db, parent = self)
         self.conditionsStack = AddConditionsStackModel(parent = self)
         self.buffer = {}
+        self._externalEditor = externalEditor # to be passed to the edit dialog
         # Prepare the GUI.
         self.setupUi(self)
         self.folder.setModel(self.folderModel)
@@ -512,14 +515,13 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
                 selmodel.select(index,
                                 QItemSelectionModel.ClearAndSelect | QItemSelectionModel.Rows)
     def changedSelection(self, newSelection, oldSelection):
-        selection = self.conditionsStackView.selectedIndexes()
-        rows = set([i.row() for i in selection])
+        rows = self.conditionsStackView.selectedRows()
         count = len(rows)
         self.upButton.setEnabled(count == 1)
         self.downButton.setEnabled(count == 1)
         self.removeButton.setEnabled(count != 0)
         if count == 1:
-            row = rows.pop()
+            row = rows[0].row()
             cond = self.conditionsStack[row]
             self.since.setValidityKey(cond.since)
             self.until.setValidityKey(cond.until)
@@ -527,7 +529,8 @@ class AddConditionDialog(QDialog, Ui_AddConditionDialog):
             self.buffer = dict(cond.data) # I make a copy for safety
     ## Display the condition editor
     def editCondition(self):
-        d = EditConditionPayloadDialog(self.buffer, self)
+        d = EditConditionPayloadDialog(self.buffer, self,
+                                       externalEditor = self._externalEditor)
         d.selectField(self.fieldsModel.getFieldName())
         if d.exec_():
             self.buffer.update(d.data)
@@ -770,6 +773,7 @@ class NewTagDialog(QDialog, Ui_NewTagDialog):
         self.resize(s)
     def fillChildTags(self):
         d = SelectTagDialog(self._path, self)
+        d.tagLabel.setText("&Tag to use")
         tag = d.run()
         if not tag is None:
             self.childTagsModel.setFromParentTag(str(tag))

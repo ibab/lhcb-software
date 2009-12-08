@@ -1,9 +1,15 @@
 ! =============================================================================
-! $Id: release.notes,v 1.135 2009-12-07 21:39:44 marcocle Exp $
+! $Id: release.notes,v 1.136 2009-12-08 11:05:02 marcocle Exp $
 ! =============================================================================
 ! package Tools/CondDBUI
 ! package manager : Marco Clemencic
 ! =============================================================================
+
+! 2009-12-08 - Marco Clemencic
+ - Improvements to the new Qt4-based CondDBBrowser
+   - added "delete tag" feature
+   - minor usability improvements
+   - completely covered the functionalities of the old browser
 
 ! 2009-12-07 - Marco Clemencic
  - Improvements to the new Qt4-based CondDBBrowser

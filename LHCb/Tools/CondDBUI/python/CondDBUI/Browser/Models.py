@@ -113,6 +113,10 @@ class CondDBStructureItem(object):
         self._children = None
         
         self.leaf = node.isLeaf()
+        if self.leaf:
+            self.singleVersion = node.versioningMode() == cool.FolderVersioning.SINGLE_VERSION
+        else:
+            self.singleVersion = False
         self.index = None
         
     ## Disconnect all the relations between parent and children (needed to allow

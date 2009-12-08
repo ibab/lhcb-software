@@ -54,7 +54,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # Maximum number of entries in the list of recent databases
         self.maxRecentEntries = 10
         # Whether to show the welcome message
-        self._showWelcome = True
+        self._showWelcome = True # set in readSettings
+        # External editor, to be passed to the add condition dialog
+        self._externalEditor = "emacs" # set in readSettings
         # Prepare the GUI.
         self.setupUi(self)
         # --- Part of the initialization that require the GUI objects. ---
@@ -151,35 +153,34 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = QSettings()
 
         settings.beginGroup("MainWindow")
-        settings.setValue("size", QVariant(self.size()))
-        settings.setValue("pos", QVariant(self.pos()))
-        settings.setValue("showwelcome", QVariant(self._showWelcome))
+        settings.setValue("Size", QVariant(self.size()))
+        settings.setValue("Pos", QVariant(self.pos()))
         settings.endGroup()
 
         settings.beginGroup("BrowsePanel")
-        settings.setValue("visible", QVariant(self.browsePanel.isVisible()))
-        settings.setValue("floating", QVariant(self.browsePanel.isFloating()))
-        settings.setValue("size", QVariant(self.browsePanel.size()))
-        settings.setValue("pos", QVariant(self.browsePanel.pos()))
+        settings.setValue("Visible", QVariant(self.browsePanel.isVisible()))
+        settings.setValue("Floating", QVariant(self.browsePanel.isFloating()))
+        settings.setValue("Size", QVariant(self.browsePanel.size()))
+        settings.setValue("Pos", QVariant(self.browsePanel.pos()))
         settings.endGroup()
         
         settings.beginGroup("FilterPanel")
-        settings.setValue("visible", QVariant(self.filterPanel.isVisible()))
-        settings.setValue("floating", QVariant(self.filterPanel.isFloating()))
-        settings.setValue("size", QVariant(self.filterPanel.size()))
-        settings.setValue("pos", QVariant(self.filterPanel.pos()))
+        settings.setValue("Visible", QVariant(self.filterPanel.isVisible()))
+        settings.setValue("Floating", QVariant(self.filterPanel.isFloating()))
+        settings.setValue("Size", QVariant(self.filterPanel.size()))
+        settings.setValue("Pos", QVariant(self.filterPanel.pos()))
         settings.endGroup()
         
         settings.beginGroup("DataView")
-        settings.setValue("fixedwidthfont", QVariant(self.dataView.isFixedWidthFont()))
+        settings.setValue("FixedWidthFont", QVariant(self.dataView.isFixedWidthFont()))
         settings.endGroup()
         
         settings.beginGroup("FindDialog")
         d = self.dataView.findDialog
-        settings.setValue("visible", QVariant(d.isVisible()))
-        settings.setValue("pos", QVariant(d.pos()))
-        settings.setValue("flags", QVariant(d.getFindFlags()))
-        settings.setValue("wrappedsearch", QVariant(d.getWrappedSearch()))
+        settings.setValue("Visible", QVariant(d.isVisible()))
+        settings.setValue("Pos", QVariant(d.pos()))
+        settings.setValue("Flags", QVariant(d.getFindFlags()))
+        settings.setValue("WrappedSearch", QVariant(d.getWrappedSearch()))
         settings.endGroup()
         
         settings.setValue("IOVs/UTC", QVariant(self.iovUTCCheckBox.isChecked()))
@@ -193,42 +194,46 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             i += 1
         settings.endArray()
 
+        settings.beginGroup("Misc")
+        settings.setValue("ShowWelcome", QVariant(self._showWelcome))
+        settings.setValue("ExternalEditor", QVariant(self._externalEditor))
+        settings.endGroup()
+        
     ## Load settings from the configuration file
     def readSettings(self):
         settings = QSettings()
         
         settings.beginGroup("MainWindow")
-        self.resize(settings.value("size", QVariant(QSize(965, 655))).toSize())
-        self.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
-        self._showWelcome = settings.value("showwelcome", QVariant(True)).toBool()
+        self.resize(settings.value("Size", QVariant(QSize(965, 655))).toSize())
+        self.move(settings.value("Pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
         
         settings.beginGroup("BrowsePanel")
-        self.browsePanel.setVisible(settings.value("visible", QVariant(True)).toBool())
-        self.browsePanel.setFloating(settings.value("floating", QVariant(False)).toBool())
-        self.browsePanel.resize(settings.value("size", QVariant(QSize(250, 655))).toSize())
-        self.browsePanel.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        self.browsePanel.setVisible(settings.value("Visible", QVariant(True)).toBool())
+        self.browsePanel.setFloating(settings.value("Floating", QVariant(False)).toBool())
+        self.browsePanel.resize(settings.value("Size", QVariant(QSize(250, 655))).toSize())
+        self.browsePanel.move(settings.value("Pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
 
         settings.beginGroup("FilterPanel")
-        self.filterPanel.setVisible(settings.value("visible", QVariant(True)).toBool())
-        self.filterPanel.setFloating(settings.value("floating", QVariant(False)).toBool())
-        self.filterPanel.resize(settings.value("size", QVariant(QSize(270, 655))).toSize())
-        self.filterPanel.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        self.filterPanel.setVisible(settings.value("Visible", QVariant(True)).toBool())
+        self.filterPanel.setFloating(settings.value("Floating", QVariant(False)).toBool())
+        self.filterPanel.resize(settings.value("Size", QVariant(QSize(270, 655))).toSize())
+        self.filterPanel.move(settings.value("Pos", QVariant(QPoint(0, 0))).toPoint())
         settings.endGroup()
 
         settings.beginGroup("DataView")
-        self.dataView.setFixedWidthFont(settings.value("fixedwidthfont", QVariant(False)).toBool())
+        self.dataView.setFixedWidthFont(settings.value("FixedWidthFont", QVariant(False)).toBool())
         settings.endGroup()
 
         settings.beginGroup("FindDialog")
         d = self.dataView.findDialog
-        d.setVisible(settings.value("visible", QVariant(False)).toBool())
-        d.move(settings.value("pos", QVariant(QPoint(0, 0))).toPoint())
+        d.setVisible(settings.value("Visible", QVariant(False)).toBool())
+        d.move(settings.value("Pos", QVariant(QPoint(0, 0))).toPoint())
         # Note: QVariant.toInt returns a tuple with the result of the conversion
         # and a boolean for the successful conversion
-        d.setFindFlags(settings.value("flags", QVariant(0)).toInt()[0])
-        d.setWrappedSearch(settings.value("wrappedsearch", QVariant(True)).toBool())
+        d.setFindFlags(settings.value("Flags", QVariant(0)).toInt()[0])
+        d.setWrappedSearch(settings.value("WrappedSearch", QVariant(True)).toBool())
         settings.endGroup()
 
         self.iovUTCCheckBox.setChecked(settings.value("IOVs/UTC", QVariant(True)).toBool())
@@ -242,6 +247,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             QObject.connect(action, SIGNAL("triggered()"), self.openRecentDatabase)
             self.menuRecent.addAction(action)
         settings.endArray()
+
+        settings.beginGroup("Misc")
+        self._showWelcome = settings.value("ShowWelcome", QVariant(True)).toBool()
+        self._externalEditor = str(settings.value("ExternalEditor", QVariant("emacs")).toString())
+        settings.endGroup()
 
     ## Close Event handler
     def closeEvent(self, _event):
@@ -340,6 +350,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     #  @param readOnly flag to select if the database has to be opened in read-only mode or in read/write mode
     def openDatabase(self, connString, readOnly = True):
         try:
+            # Clean the central view to avoid that old data stays there
+            self.dataView.clear()
             if connString:
                 try:
                     self.db = CondDB(connString, readOnly = readOnly)
@@ -361,9 +373,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     # The "Delete Node" entry should be active only
                     # when a node is selected (when opening a new db there is
                     # no selection)
-                    self.actionDelete_Node.setEnabled(False)
-                    # ... same for the "new tag"
-                    self.actionNew_Tag.setEnabled(False)
+                    self.actionDelete_node.setEnabled(False)
+                    # ... same for the "new tag" and "delete tag"
+                    self.actionNew_tag.setEnabled(False)
+                    self.actionDelete_tag.setEnabled(False)
             else:
                 self.db = None
                 title = self.appName
@@ -426,9 +439,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     self.emit(SIGNAL("changedPathChannel"), None, None)
                 # Nodes can be deleted only if the database is in r/w mode and
                 # they are Folders or empty FolderSets
-                self.actionDelete_Node.setEnabled(not self.db.readOnly
+                self.actionDelete_node.setEnabled(not self.db.readOnly
                                                   and (item.leaf or not item.children))
-                self.actionNew_Tag.setEnabled(not self.db.readOnly)
+                # Tags manipulation should be enabled only for FolderSets
+                # and multi-version folders
+                taggable = (not self.db.readOnly
+                            and ((not item.leaf) or (not item.singleVersion)))
+                self.actionNew_tag.setEnabled(taggable)
+                self.actionDelete_tag.setEnabled(taggable)
             except ValueError:
                 i = -1
             self.pathComboBox.setCurrentIndex(i)
@@ -447,7 +465,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 self.emit(SIGNAL("changedPathChannel"), None, None)
             # Nodes can be deleted only if they are Folders or empty FolderSets
-            self.actionDelete_Node.setEnabled(item.leaf or not item.children)
+            self.actionDelete_node.setEnabled(item.leaf or not item.children)
 
     ## Return the cool::FolderSet object currently selected in the structure tree.
     #  If the selected item is not a FolderSet, the parent is returned.
@@ -639,7 +657,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     ## Add a new condition to the selected folder+channel
     def addCondition(self):
-        d = AddConditionDialog(self)
+        d = AddConditionDialog(self, externalEditor = self._externalEditor)
         d.setShowUTC(self.iovUTCCheckBox.checkState())
         folder, channel = self._path
         d.setLocation(folder, channel)
@@ -682,10 +700,32 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                     tags[p + "/" + n] = d.childTagsModel[n]
                 self.db.moveTagOnNodes(path, tag, tags)
             self._refreshModels(path)
+    
     ## Delete a tag
     def deleteTag(self):
-        self._unimplemented()
-
+        path = self._path[0]
+        d = SelectTagDialog(path, self)
+        d.tagLabel.setText("&Tag to delete")
+        tag = d.run()
+        if tag is not None:
+            tag = str(tag)
+            message = """<p>Are you sure you want to delete the tag</p>
+            <p><center><tt>%s</tt><center></p>
+            <p>from the node</p>
+            <p><center><tt>%s</tt><center></p>
+            <p><font color="red">The action cannot be undone.</font></p>""" % (tag, path)
+            answer = QMessageBox.question(self, "Delete tag?",
+                                          message,
+                                          QMessageBox.Yes | QMessageBox.No,
+                                          QMessageBox.No)
+            if answer == QMessageBox.Yes:
+                try:
+                    self.db.deleteTag(path, tag)
+                except:
+                    self.exceptionDialog()
+                # Now that the node has been deleted, we have to notify the models.
+                # FIXME: this is the easiest solution to implement, but not optimal
+                self._refreshModels(path)
     ## Display context menu for the tree view
     def showHierarchyContextMenu(self, position):
         index = self.hierarchyTreeView.indexAt(position)
@@ -693,14 +733,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             menu = QMenu(self)
             item = index.internalPointer()
             if item.leaf:
-                menu.addAction(self.actionAdd_Condition)
+                menu.addAction(self.actionAdd_condition)
             else:
-                menu.addAction(self.actionNew_Node)
-            menu.addAction(self.actionNew_Tag)
+                menu.addAction(self.actionNew_node)
+            menu.addAction(self.actionNew_tag)
             menu.addSeparator()
             menu.addAction(self.actionCopy_path)
             menu.addSeparator()
-            menu.addAction(self.actionDelete_Node)
+            menu.addAction(self.actionDelete_node)
+            menu.addAction(self.actionDelete_tag)
             menu.exec_(self.hierarchyTreeView.mapToGlobal(position))
     
     ## Copy the current selected path to the clipboard.
@@ -716,11 +757,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         mb.setWindowTitle("Welcome to the CondDBBrowser")
         mb.setText("""<html><body>
 <p>Welcome to the Qt4-based version of the CondDBBrowser.</p>
-<p>This is a complete rewrite of the old application.
-It is not yet complete with respect to the functionalities of the old version,
-but it includes a lot of improvements and clean up.</p>
-<p>If you need one of the features not yet implemented, you can still use the old
-version invoking <tt>CondDBBrowserOld.py</tt></p>
+<p>This is a complete rewrite of the old application,  which includes a lot of
+improvements and clean up.</p>
+<p>Since it is completely new, some features may not work. In that case you can
+still use the old version invoking <tt>CondDBBrowserOld.py</tt></p>
 <p>Among the improvements you can find:
 <ul>
 <li>based on Qt4</li>

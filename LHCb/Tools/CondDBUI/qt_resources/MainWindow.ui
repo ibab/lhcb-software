@@ -45,7 +45,7 @@
    </property>
    <widget class="QMenu" name="menuDataBase" >
     <property name="title" >
-     <string>DataBase</string>
+     <string>&amp;DataBase</string>
     </property>
     <widget class="QMenu" name="menuRecent" >
      <property name="title" >
@@ -74,25 +74,25 @@
    </widget>
    <widget class="QMenu" name="menuEdit" >
     <property name="title" >
-     <string>Edit</string>
+     <string>&amp;Edit</string>
     </property>
-    <addaction name="actionAdd_Condition" />
-    <addaction name="actionNew_Tag" />
+    <addaction name="actionAdd_condition" />
+    <addaction name="actionNew_tag" />
    </widget>
    <widget class="QMenu" name="menuAdvanced" >
     <property name="enabled" >
      <bool>true</bool>
     </property>
     <property name="title" >
-     <string>Advanced</string>
+     <string>&amp;Advanced</string>
     </property>
-    <addaction name="actionNew_Node" />
-    <addaction name="actionDelete_Node" />
-    <addaction name="actionDelete_Tag" />
+    <addaction name="actionNew_node" />
+    <addaction name="actionDelete_node" />
+    <addaction name="actionDelete_tag" />
    </widget>
    <widget class="QMenu" name="menuHelp" >
     <property name="title" >
-     <string>Help</string>
+     <string>&amp;Help</string>
     </property>
     <addaction name="actionAbout" />
     <addaction name="actionAbout_Qt" />
@@ -101,7 +101,7 @@
    </widget>
    <widget class="QMenu" name="menuPanels" >
     <property name="title" >
-     <string>Panels</string>
+     <string>&amp;Panels</string>
     </property>
    </widget>
    <addaction name="menuDataBase" />
@@ -353,45 +353,63 @@
    <property name="text" >
     <string>&amp;New</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+N</string>
+   </property>
   </action>
   <action name="actionOpen" >
    <property name="text" >
     <string>&amp;Open</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+O</string>
    </property>
   </action>
   <action name="actionCreate_slice" >
    <property name="text" >
     <string>Create slice</string>
    </property>
+   <property name="shortcut" >
+    <string>Ctrl+S</string>
+   </property>
   </action>
   <action name="actionClose" >
    <property name="text" >
     <string>Close</string>
    </property>
-  </action>
-  <action name="actionAdd_Condition" >
-   <property name="text" >
-    <string>Add Condition</string>
+   <property name="shortcut" >
+    <string>Ctrl+W</string>
    </property>
   </action>
-  <action name="actionNew_Tag" >
+  <action name="actionAdd_condition" >
    <property name="text" >
-    <string>New Tag</string>
+    <string>Add condition</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl++</string>
    </property>
   </action>
-  <action name="actionNew_Node" >
+  <action name="actionNew_tag" >
    <property name="text" >
-    <string>New Node</string>
+    <string>New tag</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+T</string>
    </property>
   </action>
-  <action name="actionDelete_Node" >
+  <action name="actionNew_node" >
    <property name="text" >
-    <string>Delete Node</string>
+    <string>New node</string>
    </property>
   </action>
-  <action name="actionDelete_Tag" >
+  <action name="actionDelete_node" >
    <property name="text" >
-    <string>Delete Tag</string>
+    <string>Delete node</string>
+   </property>
+  </action>
+  <action name="actionDelete_tag" >
+   <property name="text" >
+    <string>Delete tag</string>
    </property>
   </action>
   <action name="actionAbout" >
@@ -402,6 +420,9 @@
   <action name="actionQuit" >
    <property name="text" >
     <string>&amp;Quit</string>
+   </property>
+   <property name="shortcut" >
+    <string>Ctrl+Q</string>
    </property>
   </action>
   <action name="actionAbout_Qt" >
@@ -747,7 +768,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionNew_Node</sender>
+   <sender>actionNew_node</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>newNodeDialog()</slot>
@@ -763,7 +784,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionDelete_Node</sender>
+   <sender>actionDelete_node</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>deleteNode()</slot>
@@ -795,7 +816,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionAdd_Condition</sender>
+   <sender>actionAdd_condition</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>addCondition()</slot>
@@ -811,7 +832,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionNew_Tag</sender>
+   <sender>actionNew_tag</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>newTag()</slot>
@@ -827,7 +848,7 @@
    </hints>
   </connection>
   <connection>
-   <sender>actionDelete_Tag</sender>
+   <sender>actionDelete_tag</sender>
    <signal>triggered()</signal>
    <receiver>MainWindow</receiver>
    <slot>deleteTag()</slot>
@@ -877,7 +898,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
-   <receiver>actionAdd_Condition</receiver>
+   <receiver>actionAdd_condition</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -893,7 +914,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
-   <receiver>actionDelete_Node</receiver>
+   <receiver>actionDelete_node</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -909,7 +930,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
-   <receiver>actionDelete_Tag</receiver>
+   <receiver>actionDelete_tag</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -925,7 +946,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
-   <receiver>actionNew_Node</receiver>
+   <receiver>actionNew_node</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
@@ -941,7 +962,7 @@
   <connection>
    <sender>MainWindow</sender>
    <signal>databaseOpenReadOnly(bool)</signal>
-   <receiver>actionNew_Tag</receiver>
+   <receiver>actionNew_tag</receiver>
    <slot>setDisabled(bool)</slot>
    <hints>
     <hint type="sourcelabel" >
