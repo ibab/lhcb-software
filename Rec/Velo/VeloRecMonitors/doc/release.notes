@@ -4,6 +4,12 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-12-08 - Michael Alexander
+ - VeloIPResolutionMonitor:
+  - Removal of features that are no longer required
+	- Added ntupling option
+	- Changed some default options
+
 ! 2009-12-04 - Eduardo Rodrigues
  - irrelevant file VeloLumiRegionMon_HltInit.opts removed
 

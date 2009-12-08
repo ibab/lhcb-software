@@ -1,10 +1,10 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.4 2009-10-22 14:33:41 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.5 2009-12-08 01:24:42 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
 // Include files
 // from Gaudi
-#include "GaudiAlg/GaudiHistoAlg.h"
+#include "GaudiAlg/GaudiTupleAlg.h"
 #include "GaudiKernel/ToolHandle.h"
 
 #include "TrackInterfaces/ITrackExtrapolator.h"
@@ -31,7 +31,7 @@
 namespace Velo
 {
   
-  class VeloIPResolutionMonitor : public GaudiHistoAlg {
+  class VeloIPResolutionMonitor : public GaudiTupleAlg {
   public: 
     /// Standard constructor
     VeloIPResolutionMonitor( const std::string& name, ISvcLocator* pSvcLocator );
@@ -42,28 +42,22 @@ namespace Velo
     virtual StatusCode execute   ();    ///< Algorithm execution
     virtual StatusCode finalize  ();    ///< Algorithm finalization
 
-    StatusCode fillHistos(Gaudi::XYZVector, Gaudi::XYZVector, double, double);
+    StatusCode fillHistos(Gaudi::XYZVector, Gaudi::XYZVector, double);
 
-    StatusCode plotInBin(Gaudi::XYZVector, Gaudi::XYZVector, double, int );
+    StatusCode plotInBin(Gaudi::XYZVector, Gaudi::XYZVector, int );
 
     StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
     StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
     StatusCode fit2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode plotMean( std::vector< TH1D* >, TH1D* );
-
-    StatusCode fitOutputProfiles();
-
-    //bool checkMCAssoc( const LHCb::Track*, Gaudi::XYZPoint );
-    const LHCb::Track* smearTrack( const LHCb::Track* );
     
   protected:
 
   private:
 
     bool m_requireL0;
-    
-    bool m_useVariableBins;
+
     bool m_useLogScale;
     std::vector<double> m_bins;
     double m_InversePTMin;
@@ -83,54 +77,34 @@ namespace Velo
     float m_res3DyIntercept;
     float m_res3Dgrad;
     float m_res3Dquad;
-    float m_res1DyIntercept;
-    float m_res1Dgrad;
-    float m_res1Dquad;
-    
-    /*bool m_checkAssoc;
-    bool m_useOnlyPrompt;
-    bool m_useMCPV;*/
-    
-    double m_smearConstant;
     
     std::vector<std::string> m_histoIDs;
     std::vector<std::string> m_histoTitles;
     std::vector< TH1D* > m_IPres_X_histos;
     std::vector< TH1D* > m_IPres_Y_histos;
-    std::vector< TH1D* > m_IPres_Z_histos;
     std::vector< TH1D* > m_IPres_unsigned3D_histos;
-    std::vector< TH1D* > m_IPres_signed3D_histos;
-    std::vector< TH1D* > m_IPres_signed3DPhSpCorrect_histos;
     TH1D* m_h_GaussWidthVsInversePT_X;
     TH1D* m_h_GaussWidthVsInversePT_Y;
-    TH1D* m_h_GaussWidthVsInversePT_Z;
     TH1D* m_h_MeanVsInversePT_unsigned3D;
     TH1D* m_h_SampleMeanVsInversePT_unsigned3D;
     TH1D* m_h_SglGausMeanVsInversePT_unsigned3D;
     TH1D* m_h_DblGausMeanVsInversePT_unsigned3D;
-    TH1D* m_h_GaussWidthVsInversePT_signed3D;
-    TH1D* m_h_GaussWidthVsInversePT_signed3DPhSpCorrect;
     TH1D* m_h_TrackMultiplicity;
-    TH1D* m_h_InversePTVsNTracks;
+    TH1D* m_h_InversePTFreq;
 
     bool m_takeMean3D;
     bool m_fitSglGaus3D;
     bool m_fitDblGaus3D;
     std::string m_fitOption3D;
     
-    bool m_fitOutputProfiles;
-    
     TProfile* m_p_3DphiResiduals;
     TProfile* m_p_3DetaResiduals;
-    TProfile* m_p_XphiResiduals;
-    TProfile* m_p_XetaResiduals;
-    TProfile* m_p_YphiResiduals;
-    TProfile* m_p_YetaResiduals;
   
     ITrackExtrapolator* m_trackExtrapolator;
     ToolHandle<ITrackVertexer> m_vertexer;
-    ITrackFitter* m_trackFitter;
-    IMeasurementProvider* m_measurementProvider;
+  
+    Tuple m_tuple;
+    bool m_writeTuple;
     
   };
 }

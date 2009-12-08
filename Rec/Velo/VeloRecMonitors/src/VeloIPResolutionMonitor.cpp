@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.12 2009-11-02 22:27:48 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.13 2009-12-08 01:24:42 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -15,6 +15,7 @@
 #include <Event/State.h>
 #include "Event/Track.h"
 #include "Event/L0DUReport.h"
+
 #include "Event/Node.h"
 #include "Event/Measurement.h"
 #include "Event/VeloPhiMeasurement.h"
@@ -24,16 +25,6 @@
 #include <VeloDet/DeVeloRType.h>
 
 #include <TF1.h>
-
-// These are needed if you want to employ any of the MC association related tasks
-// to do so uncomment any relevant pieces of code
-// it is also requires to add the line
-// use   DaVinciMCKernel    v*    Phys
-// to the requirements file
-/*#include "Event/MCHeader.h"
-#include "Event/MCParticle.h"
-#include "Kernel/Particle2MCLinker.h"
-#include "Kernel/IDaVinciAssociatorsWrapper.h"*/
 
 using namespace LHCb;
 using namespace Gaudi::Utils;
@@ -57,19 +48,21 @@ namespace Velo
 //=============================================================================
 Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
                                                         ISvcLocator* pSvcLocator)
-  : GaudiHistoAlg ( name , pSvcLocator ),
-    m_vertexer("TrackVertexer")
+  : GaudiTupleAlg ( name , pSvcLocator ),
+    m_vertexer("TrackVertexer"),
+    m_tuple(0)
 {
+  // set whether to write the ntuple
+  declareProperty("WriteTuple",m_writeTuple=false);
+
   // Set the binning options
-  declareProperty("BinValues", m_bins );
-  declareProperty("UseVariableBins",m_useVariableBins = false );
   declareProperty("UseLogScale",m_useLogScale = false );
   declareProperty("InversePTMin",m_InversePTMin = 0.0 );
-  declareProperty("InversePTMax",m_InversePTMax = 10.0 );
+  declareProperty("InversePTMax",m_InversePTMax = 4.0 );
   declareProperty("NBins",m_nBins = 20 );
 
   // Set whether to save the underlying histograms used to make the plots of fit results
-  declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=false);
+  declareProperty("SaveUnderlyingHistos",m_saveUnderlyingHistos=true);
   declareProperty("UnderlyingHistosLimitYIntercept1D", m_limitIntercept1D = 6.525937e-03F );
   declareProperty("UnderlyingHistosLimitGradient1D", m_limitGradient1D = 1.947187e-02F );
   declareProperty("UnderlyingHistosLimitYIntercept3D", m_limitIntercept3D = 8.524237e-03F );
@@ -79,29 +72,15 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
   // Set whether to calculate residuals as a fn. of eta and phi compared to the 1/PT parametrisation
   // and which gradient & y intercept values to use
   declareProperty("CalcResiduals", m_calcResiduals = true );
-  declareProperty("ResidualsYIntercept1D", m_res1DyIntercept = 6.160529e-03F );
-  declareProperty("ResidualsGradient1D",m_res1Dgrad = 2.018678e-02F );
-  declareProperty("ResidualsQuad1D",m_res1Dquad = -2.288513e-04F );
   declareProperty("ResidualsYIntercept3D", m_res3DyIntercept = 8.680847e-03F );
   declareProperty("ResidualsLinear3D", m_res3Dgrad = 2.656325e-02F );
   declareProperty("ResidualsQuad3D", m_res3Dquad = 1.135474e-04F );
-
-  // Set whether to use the MC PV associated to each track instead of the rec. PV
-  /*declareProperty("CheckTrackMCAssociation", m_checkAssoc = false );
-  declareProperty("UseOnlyPromptTracks", m_useOnlyPrompt = false );
-  declareProperty("UseMCPV",m_useMCPV = false );*/
-
-  // Set whether to smear the tracks used and by how much (in microns)
-  declareProperty("SmearConstant",m_smearConstant = 0. );
 
   // Set whether to check if each event has passed L0
   declareProperty("RequireL0", m_requireL0 = false );
 
   // Set whether to refit PVs without the track for which IP is being calculated
   declareProperty("RefitPVs", m_refitPVs = false );
-
-  // Set whether to fit parabolas to the output profiles and display the fit results
-  declareProperty("FitOutputProfiles",m_fitOutputProfiles = false );
 
   // Set fit options for the unsigned 3D output profile
   declareProperty("TakeMean3D",m_takeMean3D = false );
@@ -119,14 +98,13 @@ Velo::VeloIPResolutionMonitor::~VeloIPResolutionMonitor() {}
 // Initialization
 //=============================================================================
 StatusCode Velo::VeloIPResolutionMonitor::initialize() {
-  StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
+  StatusCode sc = GaudiTupleAlg::initialize(); // must be executed first
 
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Initialize" << endmsg;
 
-  // If UseMCPV or UseOnlyPrompt is set, CheckTrackMCAssociation is set
-  //if( (m_useMCPV || m_useOnlyPrompt) && !m_checkAssoc ) m_checkAssoc = true;
+  if(m_writeTuple) m_tuple = nTuple( "IPResolutionsTuple" );
 
   // Set histo dir
   setHistoTopDir( "Velo/" );
@@ -137,72 +115,18 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   // get the track extrapolator used in calculating the IPs
   m_trackExtrapolator = tool<ITrackExtrapolator>("TrackMasterExtrapolator","Extrapolator",this);
 
-  // If tracks are to be smeared get the track fitter and measurement provider
-  if( m_smearConstant != 0 ){
-    m_smearConstant *= micrometer;
-    m_trackFitter = tool<ITrackFitter>("TrackMasterFitter","Fitter",this);
-    m_measurementProvider = tool<IMeasurementProvider>("MeasurementProvider","MeasProvider", this );
-  }
-
   // if useVariableBins=false (default) and no bin values have been defined in the options file, 
   // m_nBins equal sized bins between m_InversePTMin and m_InversePTMax are used
-  if( !m_useVariableBins && m_bins.size()==0 ){
-
-    double binWidth ;
-    if( !m_useLogScale ) {
-      binWidth = (m_InversePTMax - m_InversePTMin)/(1.*m_nBins);
-      for( int i = 0; i<m_nBins+1; i++ ) m_bins.push_back( i*binWidth + m_InversePTMin );
-    }
-    else {
-      if( m_InversePTMin <= 0 ) m_InversePTMin = 0.1;
-      binWidth = (log10(m_InversePTMax) - log10(m_InversePTMin))/(1.*m_nBins);
-      for( int i = 0; i<m_nBins+1; i++ ) m_bins.push_back( i*binWidth + log10(m_InversePTMin) );
-    }
-    
+  double binWidth ;
+  if( !m_useLogScale ) {
+    binWidth = (m_InversePTMax - m_InversePTMin)/(1.*m_nBins);
+    for( int i = 0; i<m_nBins+1; i++ ) m_bins.push_back( i*binWidth + m_InversePTMin );
   }
-  //if useVariableBins=true but the bin values are not defined in the options file, a default set of bins is used
-  else if( m_bins.size()==0 ){
-    // Default bins of 1/PT in GeV-1
-    double defaultBins[23] = { 0.000,
-                               0.125, 
-                               0.250, 
-                               0.375, 
-                               0.500, 
-                               0.625, 
-                               0.750, 
-                               0.875, 
-                               1.000, 
-                               1.125, 
-                               1.250, 
-                               1.425, 
-                               1.600, 
-                               1.800, 
-                               2.000, 
-                               2.250, 
-                               2.500,
-                               2.900, 
-                               3.300, 
-                               4.650, 
-                               6.000,
-                               8.000,
-                               10.00 };
-    if( m_useLogScale ) {
-      defaultBins[0] = log10(0.1);
-      for( int i=1; i<23; i++ ) {
-        double bin = defaultBins[i];
-        defaultBins[i] = log10(bin);
-      }
-    }
-    
-    m_bins.assign( &defaultBins[0], &defaultBins[23] );
-  }
-  // If bin values are defined in the options file, and UseLogScale = True, the log of each bin value is taken
-  else if( m_useLogScale ){
-    for( int i = 0; i<(int)m_bins.size(); i++ ){
-      double bin = m_bins[i];
-      m_bins[i] = log10(bin);
-    }
-  }
+  else {
+    if( m_InversePTMin <= 0 ) m_InversePTMin = 0.1;
+    binWidth = (log10(m_InversePTMax) - log10(m_InversePTMin))/(1.*m_nBins);
+    for( int i = 0; i<m_nBins+1; i++ ) m_bins.push_back( i*binWidth + log10(m_InversePTMin) );
+  }  
 
   // book all histograms
   for( int i = 0; i<(int)m_bins.size()-1; i++ ){
@@ -238,28 +162,13 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
       m_IPres_Y_histos.push_back( Aida2ROOT::aida2root( book( "IPres_Y_"+m_histoIDs[i], 
                                                               "Resolution of IP_Y for tracks with "+m_histoTitles[i], 
                                                               -limit1D*mm, limit1D*mm, 500 ) ) );
-      m_IPres_Z_histos.push_back( Aida2ROOT::aida2root( book( "IPres_Z_"+m_histoIDs[i], 
-                                                              "Resolution of IP_Z for tracks with "+m_histoTitles[i], 
-                                                              -20.*limit1D*mm, 20.*limit1D*mm, 500 ) ) );
       m_IPres_unsigned3D_histos.push_back( Aida2ROOT::aida2root( book( "IPres_unsigned3D_"+m_histoIDs[i], 
                                                                        "Resolution of unsigned 3D IP for tracks with "
                                                                        +m_histoTitles[i],
                                                                        0.0*mm, limit3D*mm, 500 ) ) );
-      m_IPres_signed3D_histos.push_back( Aida2ROOT::aida2root( book( "IPres_signed3D_"+m_histoIDs[i], 
-                                                                     "Resolution of signed 3D IP for tracks with "
-                                                                     +m_histoTitles[i], 
-                                                                     -limit3D*mm, limit3D*mm, 500 ) ) );
-
-      m_IPres_signed3DPhSpCorrect_histos.push_back( Aida2ROOT::aida2root( book( "IPres_signed3DPhSpCorrect_"+m_histoIDs[i], 
-                                                                                "Resolution of signed 3D IP for tracks with "
-                                                                                +m_histoTitles[i]+" with phase space correction",
-                                                                                -limit3D*mm, limit3D*mm, 500 ) ) );
       m_IPres_X_histos[i]->SetXTitle("IP Resolution (mm)");
       m_IPres_Y_histos[i]->SetXTitle("IP Resolution (mm)");
-      m_IPres_Z_histos[i]->SetXTitle("IP Resolution (mm)");
       m_IPres_unsigned3D_histos[i]->SetXTitle("IP Resolution (mm)");
-      m_IPres_signed3D_histos[i]->SetXTitle("IP Resolution (mm)");
-      m_IPres_signed3DPhSpCorrect_histos[i]->SetXTitle("IP Resolution (mm)");
 
     }
     // otherwise the underlying histograms are created as ROOT histograms, and pointers to them stored in member vectors
@@ -272,22 +181,9 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
       strTitle = "Resolution of IP_Y for tracks with "+m_histoTitles[i];
       m_IPres_Y_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -limit1D*mm, limit1D*mm ) );
 
-      strID = "IPres_Z_"+m_histoIDs[i];
-      strTitle = "Resolution of IP_Z for tracks with "+m_histoTitles[i];
-      m_IPres_Z_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -20.*limit1D*mm, 20.*limit1D*mm ) );
-
       strID = "IPres_unsigned3D_"+m_histoIDs[i];
       strTitle = "Resolution of unsigned 3D IP for tracks with "+m_histoTitles[i];
       m_IPres_unsigned3D_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, 0.0*mm, limit3D*mm ) );
-
-      strID = "IPres_signed3D_"+m_histoIDs[i];
-      strTitle = "Resolution of signed 3D IP for tracks with "+m_histoTitles[i];
-      m_IPres_signed3D_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -limit3D*mm, limit3D*mm ) );
-
-      strID = "IPres_signed3DPhSpCorrect_"+m_histoIDs[i];
-      strTitle = "Resolution of signed 3D IP for tracks with "+m_histoTitles[i]+" with phase space correction";
-      m_IPres_signed3DPhSpCorrect_histos.push_back( new TH1D( strID.c_str(), strTitle.c_str(), 500, -limit3D*mm, limit3D*mm ) );
-      m_IPres_signed3DPhSpCorrect_histos[i]->Sumw2();
       
     }
     
@@ -304,23 +200,13 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                             (int)m_bins.size() -1 ));
   m_h_GaussWidthVsInversePT_X->SetXTitle(XTitle.c_str());
   m_h_GaussWidthVsInversePT_X->SetYTitle("Width of Gaussian (mm)");
-  if( m_useVariableBins ) m_h_GaussWidthVsInversePT_X->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
   m_h_GaussWidthVsInversePT_Y = Aida2ROOT::aida2root( book( "GaussWidth_IP_Y_Vs_InversePT", 
                                                             "Width of Gaussian fit to IP_Y resolution Vs 1/PT", 
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
   m_h_GaussWidthVsInversePT_Y->SetXTitle(XTitle.c_str());
-  m_h_GaussWidthVsInversePT_Y->SetYTitle("Width of Gaussian (mm)");
-  if( m_useVariableBins ) m_h_GaussWidthVsInversePT_Y->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
-  
-  m_h_GaussWidthVsInversePT_Z = Aida2ROOT::aida2root( book( "GaussWidth_IP_Z_Vs_InversePT", 
-                                                            "Width of Gaussian fit to IP_Z resolution Vs 1/PT", 
-                                                            m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                                            (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_Z->SetXTitle(XTitle.c_str());
-  m_h_GaussWidthVsInversePT_Z->SetYTitle("Width of Gaussian (mm)");
-  if( m_useVariableBins ) m_h_GaussWidthVsInversePT_Z->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
+  m_h_GaussWidthVsInversePT_Y->SetYTitle("Width of Gaussian (mm)");  
 
   if( m_fitOption3D == "TakeMean" || m_takeMean3D ){
     std::string id;
@@ -333,7 +219,6 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                   (int)m_bins.size() - 1 ) );
     m_h_SampleMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
     m_h_SampleMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-    if( m_useVariableBins ) m_h_SampleMeanVsInversePT_unsigned3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
   }
   
   if( m_fitOption3D == "FitSglGaus" || m_fitSglGaus3D ){
@@ -347,7 +232,6 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                   (int)m_bins.size() - 1 ) );
     m_h_SglGausMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
     m_h_SglGausMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-    if( m_useVariableBins ) m_h_SglGausMeanVsInversePT_unsigned3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
   }
 
   if( m_fitOption3D == "FitDblGaus" || m_fitDblGaus3D ){
@@ -361,7 +245,6 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                   (int)m_bins.size() - 1 ) );
     m_h_DblGausMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
     m_h_DblGausMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-    if( m_useVariableBins ) m_h_DblGausMeanVsInversePT_unsigned3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
   }
 
   if( m_fitOption3D == "TakeMean" ) m_h_MeanVsInversePT_unsigned3D = m_h_SampleMeanVsInversePT_unsigned3D;
@@ -371,35 +254,15 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
     Warning( "'FitOption3D' parameter must take values 'TakeMean', 'FitSglGaus', or 'FitDblGaus'" );
     return StatusCode::FAILURE;
   }
-  
-
-  m_h_GaussWidthVsInversePT_signed3D = 
-    Aida2ROOT::aida2root( book( "GaussWidth_signed3DIP_Vs_InversePT",
-                                "Width of Gaussian fit to absolute signed 3D IP resolution Vs 1/PT",
-                                m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                (int)m_bins.size() - 1 ) );
-  m_h_GaussWidthVsInversePT_signed3D->SetXTitle(XTitle.c_str());
-  m_h_GaussWidthVsInversePT_signed3D->SetYTitle("Width of Gaussian (mm)");
-  if( m_useVariableBins ) m_h_GaussWidthVsInversePT_signed3D->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
-
-  m_h_GaussWidthVsInversePT_signed3DPhSpCorrect = 
-    Aida2ROOT::aida2root( book( "GaussWidth_signed3DIP_PhSpCorrect_Vs_InversePT",
-                                "Width of Gaussian fit to signed absolute 3D IP resolution with phase space correction Vs 1/PT",
-                                m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                (int)m_bins.size() - 1 ) );
-  m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetXTitle(XTitle.c_str());
-  m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetYTitle("Width of Gaussian (mm)");
-  if( m_useVariableBins ) m_h_GaussWidthVsInversePT_signed3DPhSpCorrect->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
 
   // book additional histograms of track multiplicity and frequency of 1/PT
   m_h_TrackMultiplicity = Aida2ROOT::aida2root( book( "TrackMultiplicity", "PV Track Multiplicity", 0.0, 150.0, 75 ));
   m_h_TrackMultiplicity->SetXTitle("Number of tracks");
 
-  m_h_InversePTVsNTracks = Aida2ROOT::aida2root( book( "NTracks_Vs_InversePT", "Number of tracks found in each bin of 1/PT", 
+  m_h_InversePTFreq = Aida2ROOT::aida2root( book( "NTracks_Vs_InversePT", "Number of tracks found in each bin of 1/PT", 
                                                        m_bins[0], m_bins[ (int)m_bins.size() - 1 ], (int)m_bins.size() -1 ));
-  m_h_InversePTVsNTracks->SetXTitle(XTitle.c_str());
-  m_h_InversePTVsNTracks->SetYTitle("Number of tracks");
-  if( m_useVariableBins ) m_h_InversePTVsNTracks->SetBins( (int)m_bins.size() - 1, &m_bins[0] );
+  m_h_InversePTFreq->SetXTitle(XTitle.c_str());
+  m_h_InversePTFreq->SetYTitle("Number of tracks");
 
   // book plots of residuals wrt 1/PT parametrisation against eta and phi
   if( m_calcResiduals ){
@@ -414,30 +277,6 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
                                                               1.5, 5.5 ) );
     m_p_3DetaResiduals->SetXTitle("Track eta");
     m_p_3DetaResiduals->SetYTitle("Residuals (mm)");
-
-    m_p_XphiResiduals = Aida2ROOT::aida2root( bookProfile1D( "XphiResiduals", 
-                                                             "Residuals of X IP res. wrt. 1/PT parametrisation Vs Phi", 
-                                                             -pi, pi ) );
-    m_p_XphiResiduals->SetXTitle("Track phi");
-    m_p_XphiResiduals->SetYTitle("Residuals (mm)");
-
-    m_p_XetaResiduals = Aida2ROOT::aida2root( bookProfile1D( "XetaResiduals", 
-                                                             "Residuals of X IP res. wrt. 1/PT parametrisation Vs Eta", 
-                                                             1.5, 5.5 ) );
-    m_p_XetaResiduals->SetXTitle("Track phi");
-    m_p_XetaResiduals->SetYTitle("Residuals (mm)");
-
-    m_p_YphiResiduals = Aida2ROOT::aida2root( bookProfile1D( "YphiResiduals", 
-                                                             "Residuals of Y IP res. wrt. 1/PT parametrisation Vs Phi", 
-                                                             -pi, pi ) );
-    m_p_YphiResiduals->SetXTitle("Track phi");
-    m_p_YphiResiduals->SetYTitle("Residuals (mm)");
-
-    m_p_YetaResiduals = Aida2ROOT::aida2root( bookProfile1D( "YetaResiduals", 
-                                                             "Residuals of Y IP res. wrt. 1/PT parametrisation Vs Eta", 
-                                                             1.5, 5.5 ) );
-    m_p_YetaResiduals->SetXTitle("Track phi");
-    m_p_YetaResiduals->SetYTitle("Residuals (mm)");
 
   }
 
@@ -466,6 +305,11 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
   if( !m_requireL0 || report->decision() ){
       
     // Get PVs
+    if( !exist<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary) ){
+      counter("No data at 'Rec/Vertex/Primary'")++;
+      debug() << "No data at 'Rec/Vertex/Primary'!" << endmsg;
+      return StatusCode::SUCCESS;
+    }
     const LHCb::RecVertices* pvs = get<LHCb::RecVertices>(LHCb::RecVertexLocation::Primary);
 
     counter("Events Selected")++;
@@ -489,8 +333,8 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
       for ( SmartRefVector< LHCb::Track >::const_iterator tr = PVtracks.begin(); 
             tr != PVtracks.end() ; tr++ ){
 
-        // skip 'Velo' type tracks as they have no PT measurement
-        if( (*tr)->type() == Track::Velo ) continue;
+        // skip 'Velo' type tracks as they have no PT measurement, unless tracks are to be written to tuple
+        if( (*tr)->type() == Track::Velo && !m_writeTuple ) continue;
 
         const LHCb::Track* track = &(**tr);
 
@@ -498,20 +342,13 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         if( !m_useLogScale ) inversePT = 1./(track->pt()/GeV);
         else inversePT = log10( 1./(track->pt()/GeV) );
 
-        // Skip tracks outwith the bin range
-        if( inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT ) continue;
+        // Skip tracks outwith the bin range, unless tuple is to be written, then all tracks are taken
+        if( (inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT) && !m_writeTuple ) continue;
 
         counter("Tracks selected")++;
-
-        // if CheckTrackMCAssociations is set the tracks are associated to MC particles and the 
-        // number that are associated to prompt or secondary particles, or have no association is counted
-        // If UseOnlyPrompt is set, only track associated to prompt MC particles are used
-        /*if( m_checkAssoc ){
-          if( !checkMCAssoc( track, PVpos ) ) continue;
-          }*/
         
         // refit PV removing current track
-        if( m_refitPVs /*&& !m_useMCPV*/ ){
+        if( m_refitPVs ){
           
           std::vector< const LHCb::Track* > newTracks;
           for ( SmartRefVector< LHCb::Track >::const_iterator trackIt = PVtracks.begin(); 
@@ -529,15 +366,6 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
           else continue;
         }
 
-        // If tracks are to be smeared the error on each measurement used to make the track 
-        // is increased in quadrature by SmearConstant and the track is refitted
-        // this has been used to simulate worsening the VELO resolution
-        if( m_smearConstant != 0 ){
-
-          track = smearTrack( track );
-          
-        }
-
         // extrapolate the current track to its point of closest approach to the PV 
         // to get the 3D IP
         LHCb::State POCAtoPVstate;
@@ -547,36 +375,86 @@ StatusCode Velo::VeloIPResolutionMonitor::execute() {
         // extrapolate the current track to the same Z position as the PV to get X & Y IP
         Gaudi::XYZPoint positionAtPVZ;
         m_trackExtrapolator->position( *track, PVpos.z(), positionAtPVZ );
-        Gaudi::XYZVector XYIP( positionAtPVZ - PVpos );      
+        Gaudi::XYZVector XYIP( positionAtPVZ - PVpos );
 
-        // extrapolate the current track to its point of intersection with the horizontal plane
-        // containing the PV to get the Z IP
-        Gaudi::Plane3D horizontalPVplane( Gaudi::XYZVector(0,1,0), PVpos );
-        LHCb::State horizontalIntersectState;
-        m_trackExtrapolator->propagate( *track, horizontalPVplane, horizontalIntersectState );
-        double ZIP = horizontalIntersectState.position().z() - PVpos.z();
+        // only make histos for tracks in given PT range
+        if( inversePT > *(m_bins.rbegin()) || *(m_bins.begin()) > inversePT || track->type() != LHCb::Track::Velo )
+        {
 
-        // fill histograms
-        fillHistos( IP3D, XYIP, ZIP, inversePT );
-
-        // fill histos of residuals of the 1/PT parametrisation as a fn. of eta and phi 
-        if( m_calcResiduals ){
-          if( m_useLogScale ) inversePT = pow( (double)10., inversePT );
-          m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT
-                                    - m_res3Dquad * inversePT * inversePT );
-          m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT 
-                                    - m_res3Dquad * inversePT * inversePT );
-          m_p_XphiResiduals->Fill( track->phi(), XYIP.x() - m_res1DyIntercept - m_res1Dgrad * inversePT 
-                                   - m_res1Dquad * inversePT * inversePT );
-          m_p_XetaResiduals->Fill( track->pseudoRapidity(), XYIP.x() - m_res1DyIntercept - m_res1Dgrad * inversePT 
-                                   - m_res1Dquad * inversePT * inversePT );
-          m_p_YphiResiduals->Fill( track->phi(), XYIP.y() - m_res1DyIntercept - m_res1Dgrad * inversePT 
-                                   - m_res1Dquad * inversePT * inversePT );
-          m_p_YetaResiduals->Fill( track->pseudoRapidity(), XYIP.y() - m_res1DyIntercept - m_res1Dgrad * inversePT 
-                                   - m_res1Dquad * inversePT * inversePT );
+          m_h_InversePTFreq->Fill( inversePT );
+          
+          // fill histograms
+          fillHistos( IP3D, XYIP, inversePT );
+          
+          // fill histos of residuals of the 1/PT parametrisation as a fn. of eta and phi 
+          if( m_calcResiduals ){
+            if( m_useLogScale ) inversePT = pow( (double)10., inversePT );
+            m_p_3DphiResiduals->Fill( track->phi(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT
+                                      - m_res3Dquad * inversePT * inversePT );
+            m_p_3DetaResiduals->Fill( track->pseudoRapidity(), sqrt( IP3D.mag2() ) - m_res3DyIntercept - m_res3Dgrad * inversePT 
+                                      - m_res3Dquad * inversePT * inversePT );
+          }
         }
 
-        if( m_smearConstant != 0 ) delete track;
+        if( m_writeTuple ){
+          m_tuple->column( "TrackType", track->type() );
+          m_tuple->column( "IPRes3D", sqrt( IP3D.mag2() ) );
+          m_tuple->column( "IPRes_X", XYIP.x() );
+          m_tuple->column( "IPRes_Y", XYIP.y() );
+          m_tuple->column( "InversePT", inversePT );
+          m_tuple->column( "P", track->p() );
+          m_tuple->column( "Eta", track->pseudoRapidity() );
+          m_tuple->column( "Phi", track->phi() );
+          m_tuple->column( "TrackTx", track->slopes().x() );
+          m_tuple->column( "TrackTy", track->slopes().y() );
+          m_tuple->column( "TrackCharge", track->charge() );
+          m_tuple->column( "PVX", PVpos.x() );
+          m_tuple->column( "PVY", PVpos.y() );
+          m_tuple->column( "PVZ", PVpos.z() );
+          m_tuple->column( "TrackChi2", track->chi2() );
+          m_tuple->column( "TrackNDOF", track->nDoF() );
+          m_tuple->column( "PVNTracks", currentPV->tracks().size() );
+          m_tuple->column( "PVChi2", currentPV->chi2() );
+          m_tuple->column( "PVNDOF", currentPV->nDoF() );
+          m_tuple->column( "PVXerr", sqrt( currentPV->covMatrix()(0,0) ) );
+          m_tuple->column( "PVYerr", sqrt( currentPV->covMatrix()(1,1) ) );
+          m_tuple->column( "PVZerr", sqrt( currentPV->covMatrix()(2,2) ) );
+          std::vector<double> statesX;
+          std::vector<double> statesY;
+          std::vector<double> statesZ;
+          std::vector<unsigned int> stationNos;
+          std::vector<bool> isR;
+          std::vector<unsigned int> sensorNos;
+          for( LHCb::Track::ConstNodeRange::const_iterator inode = track->nodes().begin();
+               inode != track->nodes().end(); ++inode){
+            
+            if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
+            
+            if( (*inode)->measurement().lhcbID().isVelo() ){
+              
+              statesX.push_back( (*inode)->state().position().x() );
+              statesY.push_back( (*inode)->state().position().y() );
+              statesZ.push_back( (*inode)->state().position().z() );
+              if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi ){
+                stationNos.push_back( ((LHCb::VeloPhiMeasurement&)((*inode)->measurement())).sensor().station() );
+                sensorNos.push_back( ((LHCb::VeloPhiMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
+                isR.push_back( false );
+              }
+              else{
+                stationNos.push_back( ((LHCb::VeloRMeasurement&)((*inode)->measurement())).sensor().station() );
+                sensorNos.push_back( ((LHCb::VeloRMeasurement&)((*inode)->measurement())).sensor().sensorNumber() );
+                isR.push_back( true );
+              }
+            }
+          }
+          m_tuple->farray( "VeloStates_X", statesX, "nMeasurements", 42 );
+          m_tuple->farray( "VeloStates_Y", statesY, "nMeasurements", 42 );
+          m_tuple->farray( "VeloStates_Z", statesZ, "nMeasurements", 42 );
+          m_tuple->farray( "MeasStationNos", stationNos, "nMeasurements", 42 );
+          m_tuple->farray( "MeasSensorNos", sensorNos, "nMeasurements", 42 );
+          m_tuple->farray( "MeasIsR", isR, "nMeasurements", 42 );
+          m_tuple->write();
+        }
         
       }
     }
@@ -601,49 +479,25 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
   // do the same for IP Y resolution
   fitGaussAndPlotWidth( m_IPres_Y_histos, m_h_GaussWidthVsInversePT_Y );
 
-  // do the same for IP Z resolution
-  fitGaussAndPlotWidth( m_IPres_Z_histos, m_h_GaussWidthVsInversePT_Z );    
-
-  // do the same for unsigned 3D IP
-  fitGaussAndPlotWidth( m_IPres_signed3D_histos, m_h_GaussWidthVsInversePT_signed3D );
-
-  // do the same for the signed 3D IP with phase space correction
-  fitGaussAndPlotWidth( m_IPres_signed3DPhSpCorrect_histos, m_h_GaussWidthVsInversePT_signed3DPhSpCorrect );
-
-  // fit a Landau to the unsigned 3D IP resolution for this bin of 1/PT and plot the MPV of the fit
-  // if the fit succeeds
+  // use selected fit method for IP3D distributions
   if( m_fitOption3D == "TakeMean" || m_takeMean3D ) 
     plotMean( m_IPres_unsigned3D_histos, m_h_SampleMeanVsInversePT_unsigned3D );
   if( m_fitOption3D == "FitSglGaus" || m_fitSglGaus3D ) 
     fit2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_SglGausMeanVsInversePT_unsigned3D );
   if( m_fitOption3D == "FitDblGaus" || m_fitDblGaus3D ) 
     fitDbl2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_DblGausMeanVsInversePT_unsigned3D );
-
-  for( int i = 0; i<(int)m_bins.size()-1; i++ ){  
-    // plot the number of tracks in this bin of 1/PT
-    double nEntries = m_IPres_unsigned3D_histos[i]->GetEntries();
-    m_h_InversePTVsNTracks->SetBinContent( i+1, nEntries );
-    m_h_InversePTVsNTracks->SetBinError( i+1, sqrt( nEntries ) );
-  }
     
   if( !m_saveUnderlyingHistos ){
     for( int i=0; i<(int)m_bins.size()-1; i++ ){
       delete m_IPres_X_histos[i];
       delete m_IPres_Y_histos[i];
-      delete m_IPres_Z_histos[i];
       delete m_IPres_unsigned3D_histos[i];
-      delete m_IPres_signed3D_histos[i];
-      delete m_IPres_signed3DPhSpCorrect_histos[i];
     }
   }
 
   if( m_refitPVs ) sc = m_vertexer.release();
-
-  if( m_fitOutputProfiles ){
-    fitOutputProfiles();
-  }
   
-  return sc && GaudiAlgorithm::finalize();  // must be called after all other actions
+  return sc && GaudiTupleAlg::finalize();  // must be called after all other actions
 }
 
 
@@ -651,12 +505,12 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
 // fill histograms for a given set of track IPs and PT
 //====================================================================
 StatusCode Velo::VeloIPResolutionMonitor::fillHistos( Gaudi::XYZVector IP3D, 
-                                                      Gaudi::XYZVector XYIP, double ZIP, double inversePT )
+                                                      Gaudi::XYZVector XYIP, double inversePT )
 {
   // select the bin of 1/PT to which the track belongs
   for( int i = 0; i<(int)m_bins.size()-1; i++ ){
     if( m_bins[i] < inversePT && inversePT < m_bins[i+1] ){
-      plotInBin( IP3D, XYIP, ZIP, i );
+      plotInBin( IP3D, XYIP, i );
     }
   }
   
@@ -667,20 +521,12 @@ StatusCode Velo::VeloIPResolutionMonitor::fillHistos( Gaudi::XYZVector IP3D,
 // fill histograms in a given bin of 1/PT for the given IPs
 //====================================================================
 StatusCode Velo::VeloIPResolutionMonitor::plotInBin( Gaudi::XYZVector IP3D, 
-                                                     Gaudi::XYZVector XYIP, double ZIP, int binNo )
+                                                     Gaudi::XYZVector XYIP, int binNo )
 {
 
   m_IPres_X_histos[binNo]->Fill( XYIP.x()/mm );
   m_IPres_Y_histos[binNo]->Fill( XYIP.y()/mm );
-  m_IPres_Z_histos[binNo]->Fill( ZIP/mm );
-
   m_IPres_unsigned3D_histos[binNo]->Fill( sqrt( IP3D.Mag2() )/mm );
-  float sign = 1.;
-  if( IP3D.z() <= 0. ) sign = -1.;
-  double signedIP3D = sqrt( IP3D.Mag2() )*sign/mm;
-  m_IPres_signed3D_histos[binNo]->Fill( signedIP3D );
-  if( signedIP3D!=0 && IP3D.z() !=0 )
-    m_IPres_signed3DPhSpCorrect_histos[binNo]->Fill( signedIP3D, 1./signedIP3D/signedIP3D );
   
   return StatusCode::SUCCESS;
 }
@@ -848,242 +694,3 @@ StatusCode Velo::VeloIPResolutionMonitor::plotMean ( std::vector< TH1D* > source
   return StatusCode::SUCCESS;
   
 }
-
-//=========================================================================
-//  Fit the output profiles with parabolas and display the fit results
-//=========================================================================
-
-StatusCode Velo::VeloIPResolutionMonitor::fitOutputProfiles()
-{
-  
-  TF1* quad;
-  if( !m_useLogScale ){
-    quad = new TF1( "Quadratic", "pol2(0)" );
-    
-    quad->SetParameters( m_h_GaussWidthVsInversePT_X->GetMinimum(),
-                         ( m_h_GaussWidthVsInversePT_X->GetMaximum() - m_h_GaussWidthVsInversePT_X->GetMinimum() )
-                         / (m_bins[m_nBins-1] - m_bins[0]),
-                         0 );
-    m_h_GaussWidthVsInversePT_X->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_X resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-    quad->SetParameters( m_h_GaussWidthVsInversePT_Y->GetMinimum(),
-                         ( m_h_GaussWidthVsInversePT_Y->GetMaximum() - m_h_GaussWidthVsInversePT_Y->GetMinimum() )
-                         / (m_bins[m_nBins-1] - m_bins[0]),
-                         0 );
-    m_h_GaussWidthVsInversePT_Y->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_Y resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-    quad->SetParameters( m_h_MeanVsInversePT_unsigned3D->GetMinimum(),
-                         ( m_h_MeanVsInversePT_unsigned3D->GetMaximum() 
-                           - m_h_MeanVsInversePT_unsigned3D->GetMinimum() )
-                         / (m_bins[m_nBins-1] - m_bins[0]),
-                         0 );
-    m_h_MeanVsInversePT_unsigned3D->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_3D resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-  }
-    
-  else {
-    quad = new TF1( "Quadratic", "10^(pol2(0))" );
-
-    quad->SetParameters( m_h_GaussWidthVsInversePT_X->GetMinimum(),
-                         ( m_h_GaussWidthVsInversePT_X->GetMaximum() - m_h_GaussWidthVsInversePT_X->GetMinimum() )
-                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10., (float)m_bins[0])),
-                         0 );
-    m_h_GaussWidthVsInversePT_X->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_X resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-    quad->SetParameters( m_h_GaussWidthVsInversePT_Y->GetMinimum(),
-                         ( m_h_GaussWidthVsInversePT_Y->GetMaximum() - m_h_GaussWidthVsInversePT_Y->GetMinimum() )
-                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10.,(float)m_bins[0])),
-                         0 );
-    m_h_GaussWidthVsInversePT_Y->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_Y resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-    quad->SetParameters( m_h_MeanVsInversePT_unsigned3D->GetMinimum(),
-                         ( m_h_MeanVsInversePT_unsigned3D->GetMaximum() 
-                           - m_h_MeanVsInversePT_unsigned3D->GetMinimum() )
-                         / (pow( (float)10., (float)m_bins[m_nBins-1]) - pow( (float)10., (float)m_bins[0])),
-                         0 );
-    m_h_MeanVsInversePT_unsigned3D->Fit( quad, "QN" );
-    info() << "Results of quadratic fit to IP_3D resolution:" << endmsg;
-    info() << "Y Intercept: " << quad->GetParameter(0) << endmsg;
-    info() << "Linear term: " << quad->GetParameter(1) << endmsg;
-    info() << "Quadratic term: " << quad->GetParameter(2) << endmsg;
-    info() << "" << endmsg;
-    
-  }
-    
-  return StatusCode::SUCCESS;
-}
-
-//=========================================================================
-//  Smear VELO measurement errors on a track and refit it
-//=========================================================================
-
-const LHCb::Track* Velo::VeloIPResolutionMonitor::smearTrack( const LHCb::Track* track )
-{  
-
-  LHCb::Track* smearedTrack = track->clone();
-  m_measurementProvider->load( *smearedTrack );
-  m_trackFitter->fit( *smearedTrack );
-  
-  for( LHCb::Track::ConstNodeRange::const_iterator inode = smearedTrack->nodes().begin();
-        inode != smearedTrack->nodes().end(); ++inode){
-
-    if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
-    
-    if( (*inode)->measurement().lhcbID().isVelo() ){
-
-      // make plots of measurement resolution vs pitch for R and Phi measurements separately, before smearing
-
-      double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
-      double resolution = f*(*inode)->residual();
-
-      double measRes = (*inode)->measurement().resolution( (*inode)->state().position(),
-                                                           (*inode)->state().momentum() );
-      
-      if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi 
-          || (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi ){
-        
-        const LHCb::VeloCluster* clus = static_cast<LHCb::VeloPhiMeasurement&>
-          ((*inode)->measurement()).cluster() ;
-        const DeVeloPhiType* phiDet = &(((VeloPhiMeasurement&)((*inode)->measurement())).sensor());
-        Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
-        Gaudi::XYZPoint localPoint = 
-          (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
-        double pitch =  localPoint.Rho() * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
-
-        plot2D( pitch, resolution, "UnsmearedPhi_ClusterResolutionVsPitch_Scatter", 
-                "Unsmeared Phi Cluster Resolution Vs Pitch", 0.03, 0.11, -0.3, 0.3, 100, 200 );
-        plot2D( pitch, measRes, "UnsmearedPhi_MeasurementResolutionVsPitch_Scatter", 
-                "Unsmeared Phi Measurement Resolution Vs Pitch", 0.03, 0.11, 0., 0.04, 100, 200 );
-
-      }
-      else{   
-        const LHCb::VeloCluster* clus = 
-          static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
-        const DeVeloRType* rDet = &(((VeloRMeasurement&)((*inode)->measurement())).sensor());
-        Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
-        double pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
-
-        plot2D( pitch, resolution, "UnsmearedR_ClusterResolutionVsPitch_Scatter", 
-                "Unsmeared R Cluster Resolution Vs Pitch", 0.03, 0.11, -0.3, 0.3, 100, 200 );
-        plot2D( pitch, measRes, "UnsmearedR_MeasurementResolutionVsPitch_Scatter", 
-                "Unsmeared R Measurement Resolution Vs Pitch", 0.03, 0.11, 0., 0.04, 100, 200 );
-      }      
-      
-      double smearFactor = sqrt( measRes*measRes + m_smearConstant*m_smearConstant )/measRes;
-      (*inode)->measurement().setErrMeasure( (*inode)->measurement().errMeasure() * smearFactor );
-      
-    }
-  }          
-
-  m_trackFitter->fit( *smearedTrack );
-
-  // make plots of measurement resolution vs pitch after smearing
-
-  for( LHCb::Track::ConstNodeRange::const_iterator inode = smearedTrack->nodes().begin();
-        inode != smearedTrack->nodes().end(); ++inode){
-
-    if( (*inode)->type() != LHCb::Node::HitOnTrack ) continue;
-    
-    if( (*inode)->measurement().lhcbID().isVelo() ){
-
-      // make plots of measurement resolution vs pitch for R and Phi measurements separately, before smearing
-
-      double f = std::sqrt( (*inode)->errMeasure2()/(*inode)->errResidual2()) ;
-      double resolution = f*(*inode)->residual();
-
-      double measRes = (*inode)->measurement().resolution( (*inode)->state().position(),
-                                                           (*inode)->state().momentum() );
-      
-      if( (*inode)->measurement().type() == LHCb::Measurement::VeloPhi 
-          || (*inode)->measurement().type() == LHCb::Measurement::VeloLitePhi ){
-        
-        const LHCb::VeloCluster* clus = static_cast<LHCb::VeloPhiMeasurement&>
-          ((*inode)->measurement()).cluster() ;
-        const DeVeloPhiType* phiDet = &(((VeloPhiMeasurement&)((*inode)->measurement())).sensor());
-        Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
-        Gaudi::XYZPoint localPoint = 
-          (*inode)->measurement().detectorElement()->geometry()->toLocal( globalPoint ) ;
-        double pitch =  localPoint.Rho() * phiDet->phiPitch( unsigned(clus->strip(0)) ) ;
-
-        plot2D( pitch, resolution, "SmearedPhi_ClusterResolutionVsPitch_Scatter", 
-                "Smeared Phi Cluster Resolution Vs Pitch", 0.03, 0.11, -0.3, 0.3, 100, 200 );
-        plot2D( pitch, measRes, "SmearedPhi_MeasurementResolutionVsPitch_Scatter", 
-                "Smeared Phi Measurement Resolution Vs Pitch", 0.03, 0.11, 0., 0.04, 100, 200 );
-
-      }
-      else{   
-        const LHCb::VeloCluster* clus = 
-          static_cast<LHCb::VeloRMeasurement&>((*inode)->measurement()).cluster() ;
-        const DeVeloRType* rDet = &(((VeloRMeasurement&)((*inode)->measurement())).sensor());
-        Gaudi::XYZPoint globalPoint = (*inode)->state().position() ;
-        double pitch = rDet->rPitch( unsigned(clus->strip(0)) ) ;
-
-        plot2D( pitch, resolution, "SmearedR_ClusterResolutionVsPitch_Scatter", 
-                "Smeared R Cluster Resolution Vs Pitch", 0.03, 0.11, -0.3, 0.3, 100, 200 );
-        plot2D( pitch, measRes, "SmearedR_MeasurementResolutionVsPitch_Scatter", 
-                "Smeared R Measurement Resolution Vs Pitch", 0.03, 0.11, 0., 0.04, 100, 200 );
-
-      }
-
-    }
-  }          
-          
-  return const_cast< const LHCb::Track* >( smearedTrack );
-}
-
-//=========================================================================
-//  Check MC association of tracks, rejecting non-prompt and/or using MC PV position if selected
-//=========================================================================
-/*bool Velo::VeloIPResolutionMonitor::checkMCAssoc( const LHCb::Track* track, Gaudi::XYZPoint PVpos )
-{
-  
-  LinkedTo<LHCb::MCParticle,LHCb::Track> directLink( evtSvc(), msgSvc(), TrackLocation::Default );
-  LHCb::MCParticle* mcPart = directLink.first( track );
-  if( mcPart==NULL ){ 
-    counter("Ghost tracks")++; 
-    if( m_useMCPV || m_useOnlyPrompt ) return false; 
-  }
-  const LHCb::MCVertex* originv=mcPart->primaryVertex();
-  if( !originv ){ 
-    counter("No MC primary vertex")++; 
-    if( m_useMCPV || m_useOnlyPrompt ) return false; 
-  }
-
-  if( mcPart->mother()==NULL || (*(mcPart->mother()->endVertices().begin()))->position() == originv->position() ) {
-    counter("Prompt assoc. MC particles")++;
-  }
-  else { 
-    counter("Secondary assoc. MC particles")++;
-    if( m_useOnlyPrompt ) return false;
-  }
-  // if UseMCPV is set, the position of the origin vertex of the MC particle associated to the track is
-  // used to calculate the IPs
-  if( m_useMCPV ) PVpos = originv->position();
-  return true;
-          
-}*/
