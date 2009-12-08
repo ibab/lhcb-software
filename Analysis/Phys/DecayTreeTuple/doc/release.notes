@@ -10,6 +10,7 @@
 
 ! 2009-12-08 - V. Gligorov
  - TupleToolEventInfo : store the bunch crossing ID
+ - Tag gligorov_20091209
 
 ! 2009-12-08 - Patrick Koppenburg
  - TupleToolGeometry : Do not skip candidates that have no best PV
