@@ -6,6 +6,17 @@
 
 __author__ = "Marco Clemencic <marco.clemencic@cern.ch>"
 
+# Define few global variables to tune the behavior depending on the environment
+from os import environ as env
+__lfc_replica_svc__ = 'CORAL_LFC_BASEDIR' in env and 'LFC_HOST' in env and not 'COOL_IGNORE_LFC' in env
+
+from os.path import isdir
+__pit_special_dir__ = "/group/online/condb_viewer"
+__pit_environment__ = isdir(__pit_special_dir__)
+if __pit_environment__:
+    env["CORAL_DBLOOKUP_PATH"] = env["CORAL_AUTH_PATH"] = __pit_special_dir__
+
+
 ## Imports an options file to find the configured conditions databases.
 #  @return A dictionary associating names (of the services) to connection strings.
 def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py"):
@@ -21,11 +32,13 @@ def getStandardConnectionStrings(optionFile = "$SQLDDDBROOT/options/SQLDDDB.py")
     except ParserError:
         # Ignore errors from the parser (e.g. file not found)
         pass
-    # If we can use Oracle ...
-    from os import environ as env
-    if 'CORAL_LFC_BASEDIR' in env and 'LFC_HOST' in env and not 'COOL_IGNORE_LFC' in env:
+    # If we are at the PIT or we can use the offline Oracle ...
+    if __pit_environment__ or __lfc_replica_svc__:
         # ... add Oracle connection strings explicitly
         for c in [ "CondDB/DDDB", "CondDB/LHCBCOND", "CondDB/SIMCOND", "CondDBOnline/ONLINE" ]:
+            data[c] = c
+    if __pit_environment__: # these are only for the PIT
+        for c in [ "CondDBPrivate/PRIVATE" ]:
             data[c] = c
     return data
 
@@ -42,7 +55,7 @@ def main(argv = []):
     if __versionNumber__ == "$":
         __versionNumber__ = 'HEAD version'
 
-    __versionId__  = '$Id: Main.py,v 1.7 2009-11-06 16:50:27 marcocle Exp $'.split()
+    __versionId__  = '$Id: Main.py,v 1.8 2009-12-08 14:19:59 marcocle Exp $'.split()
     if len(__versionId__) < 4:
         __versionDate__ = 'unknown'
     else:
