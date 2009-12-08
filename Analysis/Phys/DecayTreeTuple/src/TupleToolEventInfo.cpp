@@ -1,4 +1,4 @@
-// $Id: TupleToolEventInfo.cpp,v 1.3 2009-02-11 18:02:34 pkoppenb Exp $
+// $Id: TupleToolEventInfo.cpp,v 1.4 2009-12-08 23:03:47 gligorov Exp $
 // Include files
 
 // from Gaudi
@@ -48,6 +48,7 @@ TupleToolEventInfo::TupleToolEventInfo( const std::string& type,
 StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
   int run = -1;
   int ev = -1;
+  int bcid = -1;
 
   LHCb::ODIN* odin(0);
 
@@ -55,6 +56,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
     odin = get<ODIN>( LHCb::ODINLocation::Default );
     run = odin->runNumber();
     ev = odin->eventNumber();
+    bcid = odin->bunchId();
   } else {
     Error("Can't get LHCb::ODINLocation::Default (" +
 	  LHCb::ODINLocation::Default + ")" );
@@ -66,6 +68,7 @@ StatusCode TupleToolEventInfo::fill( Tuples::Tuple& tuple ) {
   bool test = true;
   test &= tuple->column( "runNumber", run );
   test &= tuple->column( "eventNumber", ev );
+  test &= tuple->column( "BCID", bcid );
   if( msgLevel( MSG::VERBOSE ) )
     verbose() << "Returns " << test << endreq;
   return StatusCode(test);

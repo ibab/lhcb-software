@@ -8,6 +8,9 @@
 !
 !----------------------------------------------------------------------------
 
+! 2009-12-08 - V. Gligorov
+ - TupleToolEventInfo : store the bunch crossing ID
+
 ! 2009-12-08 - Patrick Koppenburg
  - TupleToolGeometry : Do not skip candidates that have no best PV
  - Increment to v2r9
