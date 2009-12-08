@@ -1,4 +1,4 @@
-// $Id: VeloPixClusterCreator.cpp,v 1.1.1.1 2009-12-04 14:16:52 marcin Exp $
+// $Id: VeloPixClusterCreator.cpp,v 1.2 2009-12-08 17:19:19 marcin Exp $
 // Include files:
 // STL
 #include <string>
@@ -168,7 +168,9 @@ StatusCode VeloPixClusterCreator::createClusters(VeloPixDigits* digitCont,
           std::pair<unsigned int,unsigned int> xyFrac = scaleFrac(xyFraction);
 	        unsigned int scaledToT = scaleToT(totSum);
           // Fill new lite cluster
-          const VeloPixLiteCluster newLiteCluster(dgt.key,scaledToT,xyFrac,
+          const VeloPixLiteCluster newLiteCluster(baryCenterChID,
+                                                  scaledToT,
+                                                  xyFrac,
                                                   isLong);
           clusterLiteCont->push_back(newLiteCluster);
           // Fill new cluster

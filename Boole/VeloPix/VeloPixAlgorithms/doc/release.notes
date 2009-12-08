@@ -3,6 +3,13 @@
 ! Responsible : Marcin Kucharczyk
 !--------------------------------------------------------------------------
 
+!================= VeloPixAlgorithms v0r0 2009-12-08 ======================
+! 2009-12-08 Marcin Kucharczyk
+ - Fix: loading now baryCenterChID instead of central one to liteCluster 
+ - in VeloPixClusterCreator
+
 !================= VeloPixAlgorithms v0r0 2009-12-07 ======================
 ! 2009-12-07 Marcin Kucharczyk
  - Some improvements in VeloPixMCDepositCreator
+
+
