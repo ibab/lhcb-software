@@ -45,7 +45,7 @@
    </property>
    <widget class="QMenu" name="menuDataBase" >
     <property name="title" >
-     <string>&amp;DataBase</string>
+     <string>&amp;Database</string>
     </property>
     <widget class="QMenu" name="menuRecent" >
      <property name="title" >
