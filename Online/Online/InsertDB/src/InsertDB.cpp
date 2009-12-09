@@ -5,12 +5,7 @@
 //  Package    : InsertDB
 //
 //  Description: This program inserts hlt histogram metadata in the Online
-//               histogram database and makes pages for HLT tasks
-//               The job options are set for Moore and LumiDAQMon
-//               InsertDB should be started from the cmt directory as follows:
-//               ./startInsertDB.sh UTGID partition dim_dns_node
-//               e.g. ./startInsertDB.sh test LHCb mona08
-//               It will only make pages when the partition is RUNNING
+//               histogram database and makes pages
 //          
 //  Author     : E.van Herwijnen
 //  Created    : 30/11/2009
@@ -99,6 +94,8 @@ StatusCode InsertDB::initialize() {
     m_alleysearchstring.push_back("Hlt1Tell1Error");
     m_alleys.push_back("Velo");
     m_alleysearchstring.push_back("Hlt1Velo");
+    m_DMalleys.push_back("GlobalMonitor");
+    m_DMalleysearchstring.push_back("HltGlobalMonitor");
  }   
  
  
@@ -109,6 +106,7 @@ StatusCode InsertDB::execute() {
    MsgStream msg(msgSvc(), name());
    if (icount==0) {
      doEFF();
+     doEFFHltExperts();
      for (int i=0;i<(int)m_monitoringtasks.size();i++) {
        doMF(m_monitoringtasks[i]);
        mtaskcount++;
@@ -246,6 +244,259 @@ void InsertDB::doEFF() {
 	   HistDB->declareHistByServiceName(rSvcname);
          }
 	 */
+	
+	//the following code is very ad-hoc, generalizations welcome
+	//but at least it saves clicking about in the presenter 
+	//now make a page per line and add the histograms & rates to the page 
+	std::string pagename;
+	std::vector<std::string > pagenames;
+	pagenames.push_back("1_Odin-L0-Hlt1");
+	pagenames.push_back("2_Hlt1alley-line");
+	pagenames.push_back("3_Time&Memory");
+	std::vector<int> nbofhistosonpages;
+	nbofhistosonpages.push_back(3);
+	nbofhistosonpages.push_back(3);
+	nbofhistosonpages.push_back(4);
+	std::string alley;
+	std::map <std::string, std::vector<std::string> >::const_iterator j;
+ 
+	for (j=lines.begin(); j!=lines.end();j++) {
+           for (int ia=0;ia<(int)m_DMalleys.size();ia++) {
+	      std::string::size_type found_alley=j->first.find(m_DMalleysearchstring[ia],0);
+	      if (found_alley !=std::string::npos) {
+	         alley=m_DMalleys[ia];
+		 break;
+	      }	 
+	   }
+	   //j->first contains the name of the line
+	   //we should only have HltGlobalMonitor
+	   for (int ip=0;ip<(int)pagenames.size();ip++) {
+              pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/DataManager/"+pagenames[ip];
+	      std::string hlt1line=j->first;
+	      OnlineHistPage* evsize = HistDB->getPage(pagename);
+	      evsize->removeAllHistograms();
+              int nbofhistosonpage = nbofhistosonpages.size();
+
+              //set up the coordinates of the histograms on the page	   
+              double xmargin = 0.03;
+              double ymargin = 0.03;
+              int nx = (int) ceil(sqrt(nbofhistosonpage));
+              int ny = nx;
+
+              if (nx <= 0) { nx = 1; }
+              if (ny <= 0) { ny = 1; }
+              double x1, y1, x2, y2;
+              double dx, dy;
+
+              dy = 1/double(ny);
+              dx = 1/double(nx);
+         	   	 	      	     
+	      int zy=0;
+	      int zx=0;
+	      std::string doc="";
+	      std::vector<std::string>::const_iterator k;
+	      for (k=j->second.begin(); k!=j->second.end(); k++) {	    
+
+	         std::string tname=*k;
+	         if (ip==0) {
+		       doc= "top left: number of accepted events by ODIN per ODIN trigger type.\ntop right: number of accepted events by L0 per L0 trigger alley.\nbottom: number of accepted events by Hlt1 per Hlt1 trigger alley.";
+		       std::string::size_type found=tname.find("ODIN trigger type",0);
+		       if (found ==std::string::npos) {
+		          found=tname.find("L0 channel",0);
+		          if (found ==std::string::npos) {
+		             found=tname.find("Hlt1 Alleys",0);
+		             if (found ==std::string::npos) {
+			     continue;
+			     }
+			  }
+		       }	    
+		  }
+		  if (ip==1) {
+		       std::string::size_type found=tname.find("Hlt1 Alleys",0);
+		       doc="top-left: Number of accepted events in Hlt1 per Hlt1 alley.(same plot as on bottom previous page)\ntop-right: Correlation matrix of accepted events in Hlt1 per Hlt1 line (horizontal and  vertical axis show the different Hlt1 lines, the color represents the number of events accepted by  this line).\nbottom: Number of accepted events by Hlt1 per Hlt1 line (zoom in)";
+		       if (found ==std::string::npos) {
+		          found=tname.find("HltLines Correlations",0);
+		          if (found ==std::string::npos) {
+		            found=tname.find("HltLines Inclusive",0);
+		            if (found ==std::string::npos) {
+			    continue;
+			    }
+			  }
+		       }       
+		   }
+		   if (ip==2) {
+		       std::string::size_type found=tname.find("Virtual memory per event",0);
+		       if (found==std::string::npos) {
+		          found=tname.find("Virtual Memory",0);
+		          if (found ==std::string::npos) {
+		             found=tname.find("time per event dist",0);
+		             if (found ==std::string::npos) {
+			         found=tname.find("time per event",0);
+		                 if (found ==std::string::npos) {
+			            continue;
+			         }				 
+			     }
+			  }
+		       } 	        
+		    }
+		      
+	            std::string histogramname="GauchoJob/"+hlt1line+"/"+tname;
+	            OnlineHistogram* h=HistDB->getHistogram(histogramname);
+	            //this code is to place the histogram in the right place on the page
+	            ok = true;	          
+	            if (zx < nx ) {
+                        x1 = zx*dx + xmargin;
+                       x2 = x1 + dx - xmargin;
+		       zx ++;
+	            }
+	            else {
+	               zy++;
+		       zx=0;
+		       x1 = zx*dx + xmargin;
+                       x2 = x1 + dx - xmargin;
+		       zx ++;
+	            }	      
+	            y2 = 1 - zy*dy - ymargin; 
+	            y1 = y2 - dy + ymargin;
+	            //add the histogram to the page
+	            ok &= (NULL !=evsize->addHistogram(h,x1,y1,x2,y2));
+                    HistogramDisplayOptions(h);
+	         }	
+	         if (ok) {
+		    //set the comments
+		    evsize->setDoc(doc);
+		    evsize->save(); 
+		 }
+	         else abort();  	
+	   }
+       }	      
+
+       msg << MSG::INFO << "Committing changes to Hist DB" << endreq;
+       HistDB->commit();
+     }
+     delete HistDB;
+}
+
+
+void InsertDB::doEFFHltExperts() {
+   //doEFF analyzes histograms published by Moore to the top level Adder
+   MsgStream msg(msgSvc(), name());
+   bool ok=true;
+
+   DimClient::setDnsNode(m_dimclientdns.c_str());  
+   DimBrowser dbr;
+   
+   msg << MSG::INFO<< "Connecting to Online HistDB" <<endreq; 
+
+   std::string password="HISTEGGIA194";
+   OnlineHistDB *HistDB = new OnlineHistDB(password,"HIST_WRITER","HISTDB");
+   if (HistDB==0) {
+       msg << MSG::INFO<< "Could not connect to Histogram database." << endreq;
+   }
+   else { 
+       HistDB->setDebug(3);
+       //lines contains the lines found. a line is a vector with histogram names inside it.
+       std::map <std::string, std::vector<std::string> > lines;
+       std::vector<std::string> pages;
+       std::vector<std::string> histograms;
+       
+       hSvcnames="MonH1D/"+m_partitionname+m_addername+"/*";
+       hSvcnames2d="MonH2D/"+m_partitionname+m_addername+"/*";
+       pSvcnames="MonP1/"+m_partitionname+m_addername+"/*";
+       rSvcnames=m_partitionname+m_addername+"/*monRate/*-flag";
+   
+       dbr.getServices(hSvcnames.c_str());
+       
+       // find the histograms and rates per line and declare them to the histdb
+       // 1d histograms
+       while( (type = dbr.getNextService(service, Dimformat)) )
+       { 
+	   hSvcname=service;
+	   std::string prefix = "MonH1D/"+m_partitionname+m_addername+"/"+m_taskname+"/"; 
+	   std::string rest=hSvcname.substr(prefix.length());
+	   std::string::size_type first_slash=rest.find("/",0);
+	   if (first_slash != std::string::npos ) {
+	     std::string line = rest.substr(0,first_slash);
+	     std::string histoname = rest.substr(first_slash+1);
+	     histograms.clear();
+	     if (lines.find(line)!= lines.end()) {
+	        //map entry exists; retrieve it
+	        histograms=lines[line];
+             }
+             histograms.push_back(histoname);
+	     lines[line]=histograms;		       	 	      	     
+           }
+	   HistDB->declareHistByServiceName(hSvcname);
+	} 
+
+        //2d histograms
+        dbr.getServices(hSvcnames2d.c_str());
+        while( (type = dbr.getNextService(service, Dimformat)) )
+        { 
+	    hSvcname2d=service;
+	    std::string prefix = "MonH2D/"+m_partitionname+m_addername+"/"+m_taskname+"/"; 
+	    std::string rest=hSvcname2d.substr(prefix.length());
+	    std::string::size_type first_slash=rest.find("/",0);
+	    if (first_slash != std::string::npos ) {
+	      std::string line = rest.substr(0,first_slash);
+	      std::string histoname = rest.substr(first_slash+1);
+	      histograms.clear();
+	      if (lines.find(line)!= lines.end()) {
+	        //map entry exists; retrieve it
+	        histograms=lines[line];
+              }
+              histograms.push_back(histoname);
+	      lines[line]=histograms;		       	 	      	     
+            } 
+	    HistDB->declareHistByServiceName(hSvcname2d);
+	}	
+	dbr.getServices(pSvcnames.c_str());
+        //profile histograms
+        while( (type = dbr.getNextService(service, Dimformat)) )
+        { 
+	    pSvcname=service;
+	    std::string prefix = "MonP1/"+m_partitionname+m_addername+"/"+m_taskname+"/"; 
+	      std::string rest=pSvcname.substr(prefix.length());
+	      std::string::size_type first_slash=rest.find("/",0);
+	      if (first_slash != std::string::npos ) {
+	      std::string line = rest.substr(0,first_slash);
+	      std::string histoname = rest.substr(first_slash+1);
+	      histograms.clear();
+	      if (lines.find(line)!= lines.end()) {
+	        //map entry exists; retrieve it
+	        histograms=lines[line];
+              }
+              histograms.push_back(histoname);
+	      lines[line]=histograms;		       	 	      	     
+           }
+	   HistDB->declareHistByServiceName(pSvcname);
+         }
+	 
+/*       disable rates for the moment
+         until Giacomo's API has support for rates
+	 msg << MSG::INFO<< "Looking for rate service: " << rSvcnames.c_str() << " using DNS: "<< m_dimclientdns<< endreq;     
+         dbr.getServices(rSvcnames.c_str());
+  
+         while( (type = dbr.getNextService(service, Dimformat)) )
+         { 
+	      rSvcname=service;   	   
+	      std::string prefix = m_partitionname+m_addername+"/"+m_taskname+"/MonitorSvc/monRate/"; 
+	      std::string rest=rSvcname.substr(prefix.length());
+	      std::string::size_type first_slash=rest.find("/",0);
+	      if (first_slash != std::string::npos ) {
+	      std::string line = rest.substr(0,first_slash);
+	      std::string histoname = rest.substr(first_slash+1);
+	      histograms.clear();
+	      if (lines.find(line)!= lines.end()) {
+	        //map entry exists; retrieve it
+	        histograms=lines[line];
+              }
+              histograms.push_back(histoname);
+	      lines[line]=histograms;		       	 	      	     
+           }
+	   HistDB->declareHistByServiceName(rSvcname);
+         }
+	 */
 	 
 	//now make a page per line and add the histograms & rates to the page 
 	std::string pagename;
@@ -261,7 +512,7 @@ void InsertDB::doEFF() {
 	      }	 
 	   }
 	   //j->first contains the name of the line
-           pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/"+alley+"/"+j->first;
+           pagename=m_hltdbfolder+"/HLT/"+m_nickname+"/HltExperts/"+alley+"/"+j->first;
 	   std::string hlt1line=j->first;
 	   OnlineHistPage* evsize = HistDB->getPage(pagename);
 	   evsize->removeAllHistograms();
@@ -494,7 +745,7 @@ void InsertDB::doMF(std::string monitoringtask) {
 	      for (k=histogramsonthispage.begin(); k!=histogramsonthispage.end(); k++) {	  
 	         cnt++;	     
 	         std::string tname=*k;
-	         OnlineHistogram* h;
+	         OnlineHistogram* h=NULL;
 	         bool hfound=false;
 
 	         for (int kn=0;kn<nh;kn++) {

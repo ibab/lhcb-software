@@ -12,6 +12,7 @@ public:
   StatusCode execute();
   StatusCode finalize();
   void doEFF();
+  void doEFFHltExperts();
   void doMF(std::string monitoringtask);
   void HistogramDisplayOptions(OnlineHistogram* h);
 
@@ -46,6 +47,8 @@ private:
    std::vector<std::string>  m_monitoringtasks;   
    std::vector<std::string> m_alleys;   
    std::vector<std::string> m_alleysearchstring;  
+   std::vector<std::string> m_DMalleys;   
+   std::vector<std::string> m_DMalleysearchstring; 
    std::vector<std::vector<std::string> > m_subfolders;
    
 };
