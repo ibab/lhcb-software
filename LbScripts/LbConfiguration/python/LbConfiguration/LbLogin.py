@@ -35,8 +35,8 @@ if os.path.basename(_base_dir) != "InstallArea" :
         sys.path.insert(0, _iapy_dir)
 
 # updating the sys.path for the bare minimum of the available scripts
-sys.path.insert(0,_pyconf_dir)
-sys.path.insert(0,_py_dir)
+sys.path.insert(0, _pyconf_dir)
+sys.path.insert(0, _py_dir)
 
 
 # needed for the cache use
@@ -57,7 +57,7 @@ import logging
 import re
 import shutil
 
-__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.62 $")
+__version__ = CVS2Version("$Name: not supported by cvs2svn $", "$Revision: 1.63 $")
 
 
 def getLoginCacheName(cmtconfig=None, shell="csh", location=None):
@@ -136,14 +136,14 @@ class LbLoginScript(Script):
         log = logging.getLogger()
         close_output = False
         if self.options.output:
-            self.output_file = open(self.options.output,"w")
+            self.output_file = open(self.options.output, "w")
             self.output_name = self.options.output
             self.options.output = None # reset the option value to avoid to reuse it
             close_output = True
         elif self.options.mktemp:
             fd, outname = mkstemp()
             self.output_name = outname
-            self.output_file = os.fdopen(fd,"w")
+            self.output_file = os.fdopen(fd, "w")
             print outname
             self.options.mktemp = None # reset the option value to avoid to reuse it
             close_output = True
@@ -172,7 +172,7 @@ class LbLoginScript(Script):
         parser.set_defaults(targetshell="csh")
         parser.add_option("--shell", action="store", type="choice", metavar="SHELL",
                           dest = "targetshell",
-                          choices = ['csh','sh','bat'],
+                          choices = ['csh', 'sh', 'bat'],
                           help="(internal) select the type of shell to use")
         parser.set_defaults(mktemp=False)
         parser.add_option("--mktemp", action="callback",
