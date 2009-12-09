@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.cpp,v 1.13 2009-12-08 01:24:42 malexand Exp $
+// $Id: VeloIPResolutionMonitor.cpp,v 1.14 2009-12-09 17:45:27 malexand Exp $
 // Include files
 #include "VeloIPResolutionMonitor.h"
 
@@ -82,11 +82,8 @@ Velo::VeloIPResolutionMonitor::VeloIPResolutionMonitor( const std::string& name,
   // Set whether to refit PVs without the track for which IP is being calculated
   declareProperty("RefitPVs", m_refitPVs = false );
 
-  // Set fit options for the unsigned 3D output profile
-  declareProperty("TakeMean3D",m_takeMean3D = false );
-  declareProperty("FitSglGaus3D",m_fitSglGaus3D = false );
-  declareProperty("FitDblGaus3D",m_fitDblGaus3D = false );
-  declareProperty("FitOption3D", m_fitOption3D = "TakeMean");
+  // Set fit option for output profiles
+  declareProperty("FitOption", m_fitOption = "NoFit");
   
 }
 //=============================================================================
@@ -190,78 +187,56 @@ StatusCode Velo::VeloIPResolutionMonitor::initialize() {
   }  
 
   // book the histograms of fit results against 1/PT using the defined bins
-  std::string XTitle;
-  if( !m_useLogScale ) XTitle = "1/PT (GeV^{-1})";
-  else XTitle = "log_{10}(1/PT) (GeV^{-1})";
+  std::string XaxisTitle;
+  if( !m_useLogScale ) XaxisTitle = "1/PT (GeV^{-1})";
+  else XaxisTitle = "log_{10}(1/PT) (GeV^{-1})";
+
+  std::string XprofileTitle, YprofileTitle, threeDprofileTitle;
+  if( m_fitOption == "FitDouble" ){
+    XprofileTitle = "Width of core of double Gaussian fit to IP_X resolution Vs 1/PT";
+    YprofileTitle = "Width of core of double Gaussian fit to IP_Y resolution Vs 1/PT";
+    threeDprofileTitle = "Mean of core of double '2D Gaussian' fit to IP_3D resolution Vs 1/PT";
+  } 
+  else if( m_fitOption =="FitSingle" ){
+    XprofileTitle = "Width of Gaussian fit to IP_X resolution Vs 1/PT";
+    YprofileTitle = "Width of Gaussian fit to IP_Y resolution Vs 1/PT";
+    threeDprofileTitle = "Mean of '2D Gaussian' fit to IP_3D resolution Vs 1/PT";
+  } 
+  else{
+    XprofileTitle = "Sample RMS of IP_X resolution Vs 1/PT";
+    YprofileTitle = "Sample RMS of IP_Y resolution Vs 1/PT";
+    threeDprofileTitle = "Sample Mean of IP_3D resolution Vs 1/PT";
+  }
   
   m_h_GaussWidthVsInversePT_X = Aida2ROOT::aida2root( book( "GaussWidth_IP_X_Vs_InversePT", 
-                                                            "Width of Gaussian fit to IP_X resolution Vs 1/PT", 
+                                                            XprofileTitle,
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_X->SetXTitle(XTitle.c_str());
+  m_h_GaussWidthVsInversePT_X->SetXTitle(XaxisTitle.c_str());
   m_h_GaussWidthVsInversePT_X->SetYTitle("Width of Gaussian (mm)");
 
   m_h_GaussWidthVsInversePT_Y = Aida2ROOT::aida2root( book( "GaussWidth_IP_Y_Vs_InversePT", 
-                                                            "Width of Gaussian fit to IP_Y resolution Vs 1/PT", 
+                                                            YprofileTitle,
                                                             m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
                                                             (int)m_bins.size() -1 ));
-  m_h_GaussWidthVsInversePT_Y->SetXTitle(XTitle.c_str());
-  m_h_GaussWidthVsInversePT_Y->SetYTitle("Width of Gaussian (mm)");  
-
-  if( m_fitOption3D == "TakeMean" || m_takeMean3D ){
-    std::string id;
-    if( m_fitOption3D == "TakeMean" ) id = "Mean_unsigned3DIP_Vs_InversePT";
-    else id = "SampleMean_unsigned3DIP_Vs_InversePT";
-    m_h_SampleMeanVsInversePT_unsigned3D = 
-      Aida2ROOT::aida2root( book( id, 
-                                  "Sample Mean of absolute unsigned 3D IP resolution Vs 1/PT",
-                                  m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                  (int)m_bins.size() - 1 ) );
-    m_h_SampleMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
-    m_h_SampleMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-  }
+  m_h_GaussWidthVsInversePT_Y->SetXTitle(XaxisTitle.c_str());
+  m_h_GaussWidthVsInversePT_Y->SetYTitle("Width of Gaussian (mm)");
   
-  if( m_fitOption3D == "FitSglGaus" || m_fitSglGaus3D ){
-    std::string id;
-    if( m_fitOption3D == "FitSglGaus" ) id = "Mean_unsigned3DIP_Vs_InversePT";
-    else id = "SglGausMean_unsigned3DIP_Vs_InversePT";
-    m_h_SglGausMeanVsInversePT_unsigned3D = 
-      Aida2ROOT::aida2root( book( id, 
-                                  "Mean of single 2D Gaussian fit to absolute unsigned 3D IP resolution Vs 1/PT",
-                                  m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                  (int)m_bins.size() - 1 ) );
-    m_h_SglGausMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
-    m_h_SglGausMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-  }
-
-  if( m_fitOption3D == "FitDblGaus" || m_fitDblGaus3D ){
-    std::string id;
-    if( m_fitOption3D == "FitDblGaus" ) id = "Mean_unsigned3DIP_Vs_InversePT";
-    else id = "DblGausMean_unsigned3DIP_Vs_InversePT";
-    m_h_DblGausMeanVsInversePT_unsigned3D = 
-      Aida2ROOT::aida2root( book( id, 
-                                  "Mean of core of double 2D Gaussian fit to absolute unsigned 3D IP resolution Vs 1/PT",
-                                  m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
-                                  (int)m_bins.size() - 1 ) );
-    m_h_DblGausMeanVsInversePT_unsigned3D->SetXTitle(XTitle.c_str());
-    m_h_DblGausMeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
-  }
-
-  if( m_fitOption3D == "TakeMean" ) m_h_MeanVsInversePT_unsigned3D = m_h_SampleMeanVsInversePT_unsigned3D;
-  else if ( m_fitOption3D == "FitSglGaus" ) m_h_MeanVsInversePT_unsigned3D = m_h_SglGausMeanVsInversePT_unsigned3D;
-  else if ( m_fitOption3D == "FitDblGaus" ) m_h_MeanVsInversePT_unsigned3D = m_h_DblGausMeanVsInversePT_unsigned3D;
-  else{
-    Warning( "'FitOption3D' parameter must take values 'TakeMean', 'FitSglGaus', or 'FitDblGaus'" );
-    return StatusCode::FAILURE;
-  }
-
+  m_h_MeanVsInversePT_unsigned3D = 
+    Aida2ROOT::aida2root( book( "Mean_unsigned3DIP_Vs_InversePT", 
+                                threeDprofileTitle,
+                                m_bins[0], m_bins[ (int)m_bins.size() - 1 ], 
+                                (int)m_bins.size() - 1 ) );
+  m_h_MeanVsInversePT_unsigned3D->SetXTitle(XaxisTitle.c_str());
+  m_h_MeanVsInversePT_unsigned3D->SetYTitle("<IP_3D> (mm)");
+  
   // book additional histograms of track multiplicity and frequency of 1/PT
   m_h_TrackMultiplicity = Aida2ROOT::aida2root( book( "TrackMultiplicity", "PV Track Multiplicity", 0.0, 150.0, 75 ));
   m_h_TrackMultiplicity->SetXTitle("Number of tracks");
 
   m_h_InversePTFreq = Aida2ROOT::aida2root( book( "NTracks_Vs_InversePT", "Number of tracks found in each bin of 1/PT", 
                                                        m_bins[0], m_bins[ (int)m_bins.size() - 1 ], (int)m_bins.size() -1 ));
-  m_h_InversePTFreq->SetXTitle(XTitle.c_str());
+  m_h_InversePTFreq->SetXTitle(XaxisTitle.c_str());
   m_h_InversePTFreq->SetYTitle("Number of tracks");
 
   // book plots of residuals wrt 1/PT parametrisation against eta and phi
@@ -472,20 +447,21 @@ StatusCode Velo::VeloIPResolutionMonitor::finalize() {
 
   if ( msgLevel(MSG::DEBUG) ) debug() << "==> Finalize" << endmsg;
 
-  // fit Gaussian to the histogram of X IP resolution for this bin of 1/PT and plot width of the Gaussian 
-  // against 1/PT, if the fit fails, the result is not plotted
-  fitGaussAndPlotWidth( m_IPres_X_histos, m_h_GaussWidthVsInversePT_X );
-
-  // do the same for IP Y resolution
-  fitGaussAndPlotWidth( m_IPres_Y_histos, m_h_GaussWidthVsInversePT_Y );
-
-  // use selected fit method for IP3D distributions
-  if( m_fitOption3D == "TakeMean" || m_takeMean3D ) 
-    plotMean( m_IPres_unsigned3D_histos, m_h_SampleMeanVsInversePT_unsigned3D );
-  if( m_fitOption3D == "FitSglGaus" || m_fitSglGaus3D ) 
-    fit2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_SglGausMeanVsInversePT_unsigned3D );
-  if( m_fitOption3D == "FitDblGaus" || m_fitDblGaus3D ) 
-    fitDbl2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_DblGausMeanVsInversePT_unsigned3D );
+  if( m_fitOption == "FitDouble" ) {
+    fitDbl2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_MeanVsInversePT_unsigned3D );
+    fitDblGaussAndPlotWidth( m_IPres_X_histos, m_h_GaussWidthVsInversePT_X );    
+    fitDblGaussAndPlotWidth( m_IPres_Y_histos, m_h_GaussWidthVsInversePT_Y );
+  }
+  else if( m_fitOption == "FitSingle" ) {
+    fit2DGausAndPlotMean( m_IPres_unsigned3D_histos, m_h_MeanVsInversePT_unsigned3D );
+    fitGaussAndPlotWidth( m_IPres_X_histos, m_h_GaussWidthVsInversePT_X );    
+    fitGaussAndPlotWidth( m_IPres_Y_histos, m_h_GaussWidthVsInversePT_Y );
+  }
+  else{
+    plotMean( m_IPres_unsigned3D_histos, m_h_MeanVsInversePT_unsigned3D );
+    plotRMS( m_IPres_X_histos, m_h_GaussWidthVsInversePT_X );    
+    plotRMS( m_IPres_Y_histos, m_h_GaussWidthVsInversePT_Y );
+  }
     
   if( !m_saveUnderlyingHistos ){
     for( int i=0; i<(int)m_bins.size()-1; i++ ){
@@ -531,6 +507,27 @@ StatusCode Velo::VeloIPResolutionMonitor::plotInBin( Gaudi::XYZVector IP3D,
   return StatusCode::SUCCESS;
 }
 
+//=========================================================================
+//  Take the RMS of each of a set of input histos & plot it in an output histo
+//=========================================================================
+StatusCode Velo::VeloIPResolutionMonitor::plotRMS ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+
+  debug() << "Making RMS histo" << endmsg;
+  
+  if( (int)sourceHistos.size() != outHisto->GetNbinsX() ) return StatusCode::SUCCESS;  
+  
+  for( int i=0; i<(int)sourceHistos.size(); i++ ){
+    
+    if( sourceHistos[i]->GetEntries() == 0 ) continue;
+
+    outHisto->SetBinContent( i+1, sourceHistos[i]->GetRMS() );
+    outHisto->SetBinError( i+1, sourceHistos[i]->GetRMSError()  );
+    
+  }
+  
+  return StatusCode::SUCCESS;
+  
+}
 
 //=========================================================================
 //  Fit gaussian to a set of histograms, and plot the fitted gaus width in an output histo
@@ -555,6 +552,46 @@ StatusCode Velo::VeloIPResolutionMonitor::fitGaussAndPlotWidth ( std::vector< TH
     else{
       outHisto->SetBinContent( i+1, fabs( Gauss->GetParameter(2) ) );
       outHisto->SetBinError( i+1, Gauss->GetParError(2) );
+      if( Gauss->GetNDF()!= 0 && m_saveUnderlyingHistos ) 
+        plot( Gauss->GetChisquare()/Gauss->GetNDF(), "FitChi2PerNDOF",
+              "Chi^{2}/NDOF of fits performed in making final histograms", 0., 10. );
+    }    
+  }
+  
+  return StatusCode::SUCCESS;
+  
+}
+
+//=========================================================================
+//  Fit double gaussian to a set of histograms, and plot the fitted core gaus width in an output histo
+//=========================================================================
+StatusCode Velo::VeloIPResolutionMonitor::fitDblGaussAndPlotWidth ( std::vector< TH1D* > sourceHistos, TH1D* outHisto ) {
+
+  debug() << "Making double Gauss fit histo" << endmsg;
+  
+  if( (int)sourceHistos.size() != outHisto->GetNbinsX() ) return StatusCode::SUCCESS;
+  
+  TF1* Gauss = new TF1("Gauss","gaus(0)+gaus(3)");
+  int fitResult;
+  
+  for( int i=0; i<(int)sourceHistos.size(); i++ ){
+    
+    if( sourceHistos[i]->GetEntries() == 0 ) continue;
+    
+    Gauss->SetParameters( sourceHistos[i]->GetMaximum(), sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS(),
+                          sourceHistos[i]->GetMaximum()/10., sourceHistos[i]->GetMean(), sourceHistos[i]->GetRMS()*10. );
+    fitResult = sourceHistos[i]->Fit( Gauss, "QN" );
+    if( fitResult!=0 ){
+      if( msgLevel(MSG::DEBUG) ) debug() << "Fit failed for histo '" << sourceHistos[i]->GetTitle() << "'" << endmsg;} 
+    else{
+      if( Gauss->GetParameter(0) > Gauss->GetParameter(3) ){
+        outHisto->SetBinContent( i+1, fabs( Gauss->GetParameter(2) ) );
+        outHisto->SetBinError( i+1, Gauss->GetParError(2) );
+      }
+      else{
+        outHisto->SetBinContent( i+1, fabs( Gauss->GetParameter(5) ) );
+        outHisto->SetBinError( i+1, Gauss->GetParError(5) );
+      }
       if( Gauss->GetNDF()!= 0 && m_saveUnderlyingHistos ) 
         plot( Gauss->GetChisquare()/Gauss->GetNDF(), "FitChi2PerNDOF",
               "Chi^{2}/NDOF of fits performed in making final histograms", 0., 10. );

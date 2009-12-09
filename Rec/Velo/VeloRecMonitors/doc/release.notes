@@ -4,6 +4,9 @@
 ! Purpose     : VELO monitoring algorithms for reconstruction data (ZS data)
 !-----------------------------------------------------------------------------
 
+! 2009-12-09 - Michael Alexander
+ - VeloIPResolutionMonitor: modified fitting options for output profiles
+
 ! 2009-12-08 - Michael Alexander
  - VeloIPResolutionMonitor:
   - Removal of features that are no longer required

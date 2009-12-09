@@ -1,4 +1,4 @@
-// $Id: VeloIPResolutionMonitor.h,v 1.5 2009-12-08 01:24:42 malexand Exp $
+// $Id: VeloIPResolutionMonitor.h,v 1.6 2009-12-09 17:45:27 malexand Exp $
 #ifndef VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 
 #define VELORECMONITORS_VELOIPRESOLUTIONMONITOR_H 1
 
@@ -46,12 +46,15 @@ namespace Velo
 
     StatusCode plotInBin(Gaudi::XYZVector, Gaudi::XYZVector, int );
 
+    StatusCode plotRMS( std::vector< TH1D* >, TH1D* );
     StatusCode fitGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
-    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );
+    StatusCode fitDblGaussAndPlotWidth( std::vector< TH1D* >, TH1D* );
+
+    StatusCode plotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fit2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
     StatusCode fitDbl2DGausAndPlotMean( std::vector< TH1D* >, TH1D* );
-    StatusCode plotMean( std::vector< TH1D* >, TH1D* );
-    
+    StatusCode fitLandauAndPlotMPV( std::vector< TH1D* >, TH1D* );    
+
   protected:
 
   private:
@@ -86,16 +89,10 @@ namespace Velo
     TH1D* m_h_GaussWidthVsInversePT_X;
     TH1D* m_h_GaussWidthVsInversePT_Y;
     TH1D* m_h_MeanVsInversePT_unsigned3D;
-    TH1D* m_h_SampleMeanVsInversePT_unsigned3D;
-    TH1D* m_h_SglGausMeanVsInversePT_unsigned3D;
-    TH1D* m_h_DblGausMeanVsInversePT_unsigned3D;
     TH1D* m_h_TrackMultiplicity;
     TH1D* m_h_InversePTFreq;
 
-    bool m_takeMean3D;
-    bool m_fitSglGaus3D;
-    bool m_fitDblGaus3D;
-    std::string m_fitOption3D;
+    std::string m_fitOption;
     
     TProfile* m_p_3DphiResiduals;
     TProfile* m_p_3DetaResiduals;
