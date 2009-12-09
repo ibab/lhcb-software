@@ -22,15 +22,15 @@ use DIM               v19r8p1  Online
 use ExampleGaucho     v3r3     Online
 # Does not work on WIN32
 # use FarmMonitor     v1r0     Online
-use Gaucho            v6r20    Online
-use GaudiOnline       v2r36    Online
+use Gaucho            v6r21    Online
+use GaudiOnline       v2r37    Online
 use GaudiSerialize    v0r7     Online
 use GaudiUPI          v1r12    Online
 #use Hugin            v1r6     Online
 use HPDMonitor        v1r6     Online
 use HistDBPython      v1r4     Online
-use InsertDB          v1r4     Online
-use MBMDump           v1r13    Online
+use InsertDB          v1r5     Online
+use MBMDump           v1r14    Online
 use OMAlib            v2r11    Online
 #use OnlineDummyReader v1r4     Online
 use OnlineHistDB      v6r1     Online
@@ -40,13 +40,13 @@ use OnlineTools       v1r2     Online
 use OnlineTasks       v1r28    Online
 use Presenter         v0r21    Online
 use PyDIM             v2r9     Online
-use RawBankSizes      v1r5     Online
-use ROMon             v1r19    Online
+use RawBankSizes      v1r6     Online
+use ROMon             v1r20    Online
 use ROLogger          v0r17    Online
 use UPI               v1r17    Online
 use UPIR              v1r2     Online
 #Obsolete: use Viewer            v1r5     Online
-use Writer            v1r22    Online
+use Writer            v1r23    Online
 
 # Declare this as a container package
 apply_pattern container_package

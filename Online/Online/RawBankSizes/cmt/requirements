@@ -1,4 +1,5 @@
 package RawBankSizes
+version v1r6
 branches cmt doc src
 use GaudiAlg      v*
 use DAQEvent      v* Event     

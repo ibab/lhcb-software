@@ -5,6 +5,11 @@
 ! Purpose     : 
 !-----------------------------------------------------------------------------
 
+</PRE><H1><A NAME=v4r34>2009-11-24 OnlineSys v4r34</A></H1><PRE>
+     New version v4r33 built against LHCb v28r4.
+     Fix to Gaucho, GaudiOnline, MBMDump, Gaucho, OnlineHistDB, OMAlib,
+     InsertDB, RawBankSizes, ROMon and Writer.
+
 </PRE><H1><A NAME=v4r33>2009-11-24 OnlineSys v4r33</A></H1><PRE>
      New version v4r33 built against LHCb v28r3.
      Fix to DIM, Gaucho, GaudiOnline & OnlineTasks
