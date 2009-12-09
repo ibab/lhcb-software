@@ -1,4 +1,4 @@
-// $Id: AnalysisTask.cpp,v 1.21 2009-11-12 17:31:32 ggiacomo Exp $
+// $Id: AnalysisTask.cpp,v 1.22 2009-12-09 08:42:49 ggiacomo Exp $
 
 
 // from Gaudi
@@ -107,7 +107,7 @@ StatusCode AnalysisTask::initialize() {
     if (m_stayHere) {
       // stay here until killed
       while (1) {
-	sleep(99999);
+        sleep(99999);
       }
     }
   }

@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.31 2009-11-12 17:41:28 ggiacomo Exp $
+! $Id: release.notes,v 1.32 2009-12-09 08:42:49 ggiacomo Exp $
 ! Package     : OMAlib
 ! Responsible : G. Graziani
 ! Purpose     : Online Monitoring Analysis library
+
+! 20091209 v2r11
+- add normalize option to OMACheckHolesAndSpikes
+- fix to allow multiple analysis task per job + MonitorSvc
 
 ! 20091112 v2r10 
 - use conventions agreed with Clara for DIM message publishing:
