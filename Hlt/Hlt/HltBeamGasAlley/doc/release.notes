@@ -4,6 +4,10 @@
 ! Purpose     : Decision algorithms for the two HLT beam-gas alleys
 !-----------------------------------------------------------------------------
 
+!========================== HltBeamGasAlley v2r2p2 2009-12-09 =================
+! 2009-12-09 Gerhard Raven
+ - remove unneeded include "HltBase/stringKey.h"
+
 !========================== HltBeamGasAlley v2r2p1 2009-10-17 =================
 ! 2009-10-17 Gerhard Raven
  - add cmt/.cvsignore

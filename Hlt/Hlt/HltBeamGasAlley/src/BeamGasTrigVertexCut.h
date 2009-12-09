@@ -4,7 +4,6 @@
 
 #include "HltBase/HltAlgorithm.h"
 #include "HltBase/HltSelectionContainer.h"
-#include "HltBase/stringKey.h"
 
 class BeamGasTrigVertexCut : public HltAlgorithm {
 
