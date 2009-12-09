@@ -4,6 +4,11 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+! 2009-12-09 - Sascha Stahl
+ - Added options file PatDownstream.py. 
+ - PatDownstream: fixes division by zero
+
+
 !========================= PatAlgorithms v3r26 2009-12-07 ====================
 ! 2009-12-07 - Manuel Tobias Schiller
  - fix PatSeedFit to supply valid arguments to PatSeedTrack constructor in all

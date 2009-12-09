@@ -1,4 +1,4 @@
-// $Id: PatDownstream.cpp,v 1.14 2009-12-04 17:42:18 sstahl Exp $
+// $Id: PatDownstream.cpp,v 1.15 2009-12-09 09:24:24 sstahl Exp $
 // Include files 
 
 #include <algorithm>
@@ -774,7 +774,12 @@ void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, 
   dTr->addToAncestors( tr );                // set the seed as ancestor
   dTr->setLhcbIDs(  tr->lhcbIDs()      );   // copy those from the Seed
   LHCb::State tState = *track.state();
-  tState.setQOverP( 1./track.moment() ); 
+  // check for FPE and magnet off
+  double QOverP = 1e-5;
+  if (std::abs(track.moment()) >  1e-6){
+      QOverP = 1.0 / track.moment();
+  }
+  tState.setQOverP( QOverP ); 
   dTr->addToStates( tState     );   // copy the state of the seed
   //== Adjust flags
   dTr->setType(         LHCb::Track::Downstream  );
@@ -792,13 +797,13 @@ void PatDownstream::storeTrack( PatDownTrack& track, LHCb::Tracks* finalTracks, 
                     m_zTTa,
                     track.slopeX(),
                     track.slopeY(),
-                    1./track.moment() );
+                    QOverP );
   Gaudi::TrackSymMatrix cov;
   cov(0,0) = m_stateErrorX2;
   cov(1,1) = m_stateErrorY2;
   cov(2,2) = m_stateErrorTX2;
   cov(3,3) = m_stateErrorTY2;
-  double errQOverP = m_stateErrorP / track.moment();
+  double errQOverP = m_stateErrorP * QOverP;
   cov(4,4) = errQOverP * errQOverP;
   
   ttState.setCovariance( cov );
