@@ -1,4 +1,4 @@
-ApplicationMgr.HistogramPersistency  = "NONE";
+ApplicationMgr.HistogramPersistency  ="NONE";
 ApplicationMgr.SvcOptMapping        += { "LHCb::MEPManager/MEPManager"};
 ApplicationMgr.ExtSvc               += { "LHCb::OnlineEvtSelector/EventSelector" };
 ApplicationMgr.Runable               = "LHCb::EventRunable/Runable";

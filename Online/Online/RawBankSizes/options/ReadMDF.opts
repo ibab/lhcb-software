@@ -1,7 +1,7 @@
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg","LHCb::RawEventTestDump/Dump" };
 //ApplicationMgr.TopAlg                = { "StoreExplorerAlg" };
 ApplicationMgr.TopAlg                = {"LHCb::RawBankSizes/RawBankSizes" };
-ApplicationMgr.EvtMax                = 1000;
+ApplicationMgr.EvtMax                = 1000000;
 ApplicationMgr.HistogramPersistency  = "ROOT";
 Dump.CheckData                       = 1;
 Dump.CheckData                       = 0;
@@ -16,12 +16,12 @@ EventPersistencySvc.CnvServices      = {"LHCb::RawDataCnvSvc"};
 EventSelector.PrintFreq              = 100;
 // Check legacy data:
 EventSelector.Input                  = {
-  "DATA='PFN:file:f:/026231_0000061897.raw' SVC='LHCb::MDFSelector'"
+  "DATA='PFN:file:/daqarea/lhcb/data/2009/RAW/FULL/LHCb/COLLISION09/63567/063567_0000000001.raw' SVC='LHCb::MDFSelector'"
 };
 
 FileCatalog.Catalogs = { "xmlcatalog_file:Cnew.xml","xmlcatalog_file:C1.xml" };
 StoreExplorerAlg.OutputLevel         = 3;
-RootHistSvc.OutputFile               = "MyHistos.root";
+RootHistSvc.OutputFile               = "/home/beat/MyHistos.root";
 RawBankSizes.number_ofRMS            = 10;
 RawBankSizes.Bins                    = 200;
 

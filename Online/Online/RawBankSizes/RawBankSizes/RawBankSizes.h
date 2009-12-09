@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.h,v 1.3 2008-07-17 13:24:07 jost Exp $
+// $Id: RawBankSizes.h,v 1.4 2009-12-09 10:08:11 jost Exp $
 #ifndef COMPONENT_RawBankSizes_H 
 #define COMPONENT_RawBankSizes_H 1
 
@@ -36,10 +36,12 @@ namespace LHCb
     }
     void fillstat (int siz)
     {
+      double lsiz;
+      lsiz = siz;
       if (siz < smin) smin = siz;
       if (siz > smax) smax = siz;
-      sum += siz;
-      sum2 += siz*siz;
+      sum += lsiz;
+      sum2 += lsiz*lsiz;
       nentries++;
     }
     void stat(double &mean, double &rms, double &s_min, double &s_max)

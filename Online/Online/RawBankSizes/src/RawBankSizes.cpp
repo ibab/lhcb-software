@@ -1,4 +1,4 @@
-// $Id: RawBankSizes.cpp,v 1.7 2009-04-15 11:57:20 jost Exp $
+// $Id: RawBankSizes.cpp,v 1.8 2009-12-09 10:08:11 jost Exp $
 // Include files 
 
 // from Gaudi
@@ -25,6 +25,7 @@ RawBankSizes::RawBankSizes( const std::string& name,
                                         ISvcLocator* pSvcLocator)
   : GaudiHistoAlg ( name , pSvcLocator )
 {
+  //  printf("New Version with DOUBLE arithmetic...\n");
    declareProperty( "bankNames"   , m_bankNames );
    declareProperty( "MaxSizeMap"  , m_max);
    declareProperty( "MaxSizeDef"  , m_def=500);
