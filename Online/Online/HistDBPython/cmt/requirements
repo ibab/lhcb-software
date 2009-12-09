@@ -3,6 +3,8 @@
 # Maintainer : Nicola Chiapolini
 # =============================================================================
 package             HistDBPython
+version             v1r5
+
 branches            cmt doc src python 
 
 use OnlineHistDB    v* Online
