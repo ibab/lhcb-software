@@ -1,4 +1,3 @@
-// $Id: PuVetoAlg.h,v 1.13 2006-09-19 14:44:25 ocallot Exp $
 #ifndef PUVETOALG_H 
 #define PUVETOALG_H 1
 
@@ -15,12 +14,24 @@
 // from LHCbKernel
 #include "Kernel/VeloChannelID.h"
 
+// histogramming 
+#include "TFile.h"
+#include "TROOT.h"
+#include <TH1.h>
+
 /** @class PuVetoAlg PuVetoAlg.h
- *  Computes the Veto algorithm, from MCVeloFEs
+ *  Computes the PileUp trigger algorithm emulator
  *
- *  @author Marko Zupan
- *  @date   06/02/2006
+ *  @author Marko Zupan, Serena Oggero
+ *
+ *
  */
+ 
+namespace AIDA {
+  class IHistogram2D;
+}
+ 
+class TFile;
 
 class PuVetoAlg : public GaudiAlgorithm {
 public:
@@ -31,11 +42,23 @@ public:
 
   virtual StatusCode initialize();    ///< Algorithm initialization
   virtual StatusCode execute   ();    ///< Algorithm execution
-
-protected:
+  virtual StatusCode finalize  ();  
+  
+//protected:
   /// fill the histogram
   void fillHisto(unsigned int hp[4][16]);
 
+  /// count the number of hits for the multiplicity 
+  void measureMult(unsigned int hp[4][16]);
+
+  /// fill in PileUp hit map
+  void fillPUmap( int wordIt, int word_Tot, unsigned int* data_Ptr, int step, unsigned int PU_hitmap[4][16] );
+  
+  /// reverse bits in PUhitmap
+  void reverseWords( unsigned int PU_hitmap[4][16] );
+  /// tool    
+  std::string binary ( unsigned int );
+  
   /// return the bin number in the variable size histogram;
   short int zBin( double z ) {
     for (int i=0;i<m_nBins;i++) {
@@ -101,6 +124,8 @@ protected:
   void rawVec(std::vector<unsigned short int> *vecin,
               std::vector<unsigned int> *vecout);
 
+protected:
+
 private:
 
   // job option parameters
@@ -110,8 +135,8 @@ private:
   unsigned short int m_lowThreshold;
   unsigned short int m_maskingWindow;
   std::string        m_binFile;
-
-  
+  int		     m_evtNum;
+  std::string	     m_rawEventLoc;
 
   // detector geometry variables
   unsigned int   m_nbPuSensor;
@@ -129,9 +154,9 @@ private:
   // bit patterns for hits before and after masking
   // there are four bit patterns, one for each
   // detector plane
-  unsigned int m_hitPattern[4][16];
+  unsigned int m_PUhitmap[4][16];
   unsigned int m_maskedPattern[4][16];
-  
+
   // binning variables (maximum number of bins hard coded to 300)
   short unsigned int m_nBins;
   double m_minHistoZ;
@@ -146,6 +171,14 @@ private:
 
   // total multiplicity counter
   unsigned int m_totMult;
-
+  TFile*        m_OutputFile;
+  std::string   m_OutputFileName;
+  bool  m_enablePlots;
+  TH1D* m_PUvertices;
+  TH1D* m_PUvertex1Pos;
+  TH1D* m_PUvertex2Pos;
+  TH1D* m_PUvertex1Height;
+  TH1D* m_PUvertex2Height;
+  TH1D* m_multiplicity;
 };
-#endif // PUVETOALG_H
+#endif // PuVetoAlg_H

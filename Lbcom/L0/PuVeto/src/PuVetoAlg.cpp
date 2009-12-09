@@ -1,6 +1,8 @@
-// $Id: PuVetoAlg.cpp,v 1.33 2008-01-11 15:16:20 graven Exp $
 // Include files
 #include <fstream>
+#include <string>
+
+
 // from Gaudi
 #include "GaudiKernel/AlgFactory.h"
 // from DAQEvent
@@ -10,12 +12,19 @@
 #include "Event/L0ProcessorData.h"
 // local
 #include "PuVetoAlg.h"
+#include "bit_order.h"
+
+// histogramming
+#include "GaudiUtils/Aida2ROOT.h"  
+#include "TFile.h"
+
 
 using namespace LHCb;
 //-----------------------------------------------------------------------------
 // Implementation file for class : PuVetoAlg
 //
 // 06/02/2006 : Marko Zupan
+// 14/07/2009 : Serena Oggero (new PU banks format)
 //-----------------------------------------------------------------------------
 
 // Declaration of the Algorithm Factory
@@ -32,11 +41,16 @@ PuVetoAlg::PuVetoAlg( const std::string& name,
   , m_lowThreshold        (    3      )
   , m_maskingWindow       (    9      )
   , m_binFile             (    ""     )
+  , m_evtNum              (    0      )
 {
-  declareProperty( "OutputContainer"    , m_outputContainer );
+  declareProperty( "OutputContainer"    , m_outputContainer ); 
   declareProperty( "PeakThreshold"      , m_lowThreshold    );
   declareProperty( "MaskingWindow"      , m_maskingWindow   );
   declareProperty( "Binning"            , m_binFile         );
+  
+  declareProperty("RawEventLocation", m_rawEventLoc=LHCb::RawEventLocation::Default);
+  declareProperty("OutputFileName", m_OutputFileName = "PUVetoAlg.root" );
+  declareProperty("MakePlots", m_enablePlots = false );
 }
 
 //=============================================================================
@@ -52,7 +66,7 @@ StatusCode PuVetoAlg::initialize() {
   StatusCode sc = GaudiAlgorithm::initialize(); // must be executed first
   if ( sc.isFailure() ) return sc;  // error printed already by GaudiAlgorithm
   
-  debug() << "==> Initialise" << endreq;
+  debug() << "==> Initialise PuVetoAlg" << endreq;
 
   DeVelo* m_velo = getDet<DeVelo>( DeVeloLocation::Default );
 
@@ -73,7 +87,8 @@ StatusCode PuVetoAlg::initialize() {
       }
     }
   }
-
+  
+  
   m_minHistoZ = -150.0;
   m_maxHistoZ = 150.0;
 
@@ -129,6 +144,7 @@ StatusCode PuVetoAlg::initialize() {
     
   }
   else { // otherwise use default binning
+    debug() << "Use the default binning" << endmsg;
     m_nBins = 85;
     m_binStart[0] = m_minHistoZ;
     m_binCenter[0] = m_minHistoZ + binlens[0]/2;
@@ -141,14 +157,14 @@ StatusCode PuVetoAlg::initialize() {
   } 
 
 
-   debug() << m_nBins << " bins, starting at z =  " << m_minHistoZ << endreq;
-   for (int i=0;i<m_nBins;i++) {
-     debug() << "bin " << i << " starts at " << m_binStart[i] 
-             << ", width " << m_binLength[i] << endreq;
-   }
+  debug() << m_nBins << " bins, starting at z =  " << m_minHistoZ << endreq;
+  for (int i=0;i<m_nBins;i++) {
+    debug() << "bin " << i << " starts at " << m_binStart[i] 
+            << ", width " << m_binLength[i] << endreq;
+  }
    
-   // Set r positions of PU "clusters" (4 strips OR-ed together)
-   const DeVeloRType* firstSens=(*(m_velo->pileUpRSensorsBegin()));
+  // Set r positions of PU "clusters" (4 strips OR-ed together)
+  const DeVeloRType* firstSens=(*(m_velo->pileUpRSensorsBegin()));
   for (int i=0;i<128;i++) {
     m_rCluster[i] = firstSens->rOfStrip(i*4+2); 
     debug() << "Cluster " << i << "  r = " << m_rCluster[i] << endreq;
@@ -171,7 +187,15 @@ StatusCode PuVetoAlg::initialize() {
   // debug() << "Peak high threshold: " << m_highThreshold << endreq;
   //debug() << "Peak high thr. position: " << m_highPosition << endreq;
   //debug() << "Peak position cut: " << m_secondPosition << endreq;
-  
+  if ( m_enablePlots ){
+    m_OutputFile = new TFile(m_OutputFileName.c_str(), "RECREATE");
+    m_OutputFile->cd();
+    m_PUvertex1Pos = new TH1D("PrimaryVerticesPos", "PrimaryVerticesPos", 300, -200., 100.);
+    m_PUvertex2Pos = new TH1D("SecondaryVerticesPos", "SecondaryVerticesPos", 300, -200., 100.);
+    m_PUvertex1Height = new TH1D("PrimaryVerticesHeight", "PrimaryVerticesHeight", 100, 0., 100.);
+    m_PUvertex2Height = new TH1D("SecondaryVerticesHeight", "SecondaryVerticesHeight", 100, 0., 100.);
+    m_multiplicity = new TH1D("Multiplicity", "Multiplicity", 512, 0., 512.);
+  }
   return StatusCode::SUCCESS;
 }
   
@@ -181,98 +205,127 @@ StatusCode PuVetoAlg::initialize() {
 StatusCode PuVetoAlg::execute() {
 
   debug() << "==> Execute" << endreq;
-  
+
   // Clear hit and masked bit patterns
   for (int k=0;k<4;k++) {
     for (int i=0;i<16;i++) {
-      m_hitPattern[k][i] = 0;
+      m_PUhitmap[k][i] = 0;
       m_maskedPattern[k][i] = 0;
     }
   }
 
   m_totMult = 0;
  
-  //*** Get the input data
+  //*** Get the input data and store them in a map m_PUhitmap[sensor][beetle]
+  RawEvent* raw = get<RawEvent>( m_rawEventLoc );
+  info() << "Get Raw Event from " << m_rawEventLoc << endmsg;
+  const std::vector<LHCb::RawBank*>& bank = raw->banks( LHCb::RawBank::L0PU );
+  debug() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
 
- 
-  // Apply a threshold on each strip, OR them by 4 and construct the hit bit pattern
-  // also store all hits in the RawEvent buffer
-
-  RawEvent* raw = get<RawEvent>( RawEventLocation::Default );
-
-  const std::vector<LHCb::RawBank*>& data = raw->banks( LHCb::RawBank::L0PU );
   std::vector<LHCb::RawBank*>::const_iterator itBnk;
-  for ( itBnk = data.begin() ; data.end() != itBnk ; itBnk++ ) {
-    unsigned int* ptData = (*itBnk)->data();
-    int bankSize = (*itBnk)->size()/4;  //== is in bytes...
-    debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
-    while ( 0 < bankSize-- ){
-      unsigned int cand = (*ptData++);
-      while ( 0 != cand ) {
-        unsigned int data = cand & 0xFFFF;
-        cand = cand >> 16;
-        unsigned int sensor = data >> 14;
-        unsigned int sfired = data & 0x3FFF;
+  for ( itBnk = bank.begin() ; bank.end() != itBnk ; itBnk++ ) {
+    LHCb::RawBank* aBank = *itBnk;
+    int version = aBank->version();
+    debug() << "Bank version is " << version << endmsg;
 
-        short unsigned int clnum = (short unsigned int) sfired / 4;
-        short unsigned int indx = (short unsigned int) clnum / 32; 
-        //32 bits per (unsigned) int
-        // replace with sizeof()*8 at some point
+    if ( version == 2 ){ // current bank format
+      unsigned int* data = aBank->data();
+      unsigned int d = 2; 
+      int wordTot = (aBank->size() / (2 * sizeof(uint32_t)));
+      debug() << "wordTot = " << wordTot << endmsg;
+      fillPUmap( d, wordTot, data, 34, m_PUhitmap );
+      // now check whether the words must be reversed or not
+      reverseWords( m_PUhitmap );
+    }
+    else if ( version == 1 ){ // old bank formatversion from Marko
+      unsigned int* ptData = (*itBnk)->data();
+      int bankSize = (*itBnk)->size()/4;  //== is in bytes...
+      debug() << "  Bank " << (*itBnk)->sourceID() << " size " << bankSize << " words" << endreq;
+      while ( 0 < bankSize-- ){
+        unsigned int cand = (*ptData++);
+        while ( 0 != cand ) {
+          unsigned int data = cand & 0xFFFF;
+          cand = cand >> 16;
+          unsigned int sensor = data >> 14;
+          unsigned int sfired = data & 0x3FFF;
 
-        if ( MSG::VERBOSE <= msgLevel() ) {
-          verbose() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
-                               data, sensor, sfired, clnum, indx );
+          short unsigned int clnum = (short unsigned int) sfired / 4;
+          short unsigned int indx = (short unsigned int) clnum / 32; 
+          //32 bits per (unsigned) int
+          // replace with sizeof()*8 at some point
+          debug() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
+                                 data, sensor, sfired, clnum, indx );
+
+          if ( MSG::VERBOSE <= msgLevel() ) {
+            verbose() << format( "Data %4x sensor%2d strip%4d clnum%3d indx%3d ",
+                                 data, sensor, sfired, clnum, indx );
+          }
+ 
+          if (!getBit(clnum%32,m_PUhitmap[sensor][indx])) {
+            setBit(clnum%32,m_PUhitmap[sensor][indx]); // 32 here again!
+            m_totMult++;
+            //verbose() << " added.";
+            debug() << " added." << endreq;
+          } else {
+            //verbose() << " exists.";
+	    debug() << " exists." << endreq;
+          }
+          //verbose() << endreq;
+	  debug() << "m_PUhitmap[" << sensor << "][ " << indx << "] is " << binary( m_PUhitmap[sensor][indx] )<< endmsg;
         }
-
-        if (!getBit(clnum%32,m_hitPattern[sensor][indx])) {
-          setBit(clnum%32,m_hitPattern[sensor][indx]); // 32 here again!
-          m_totMult++;
-          verbose() << " added.";
-        } else {
-          verbose() << " exists.";
-        }
-        verbose() << endreq;
       }
     }
-  }
-  
-  fillHisto(m_hitPattern);
 
-  // We have filled the 'histogram'. Search for maximum.
-  
+  } // loop on banks
+
+  // now evaluate PU trigger variables...  
+  measureMult( m_PUhitmap );
+  fillHisto( m_PUhitmap );
+
   unsigned short int height1,sum1;
   unsigned short int height2, sum2;
   double pos1,pos2;
   short int bin1,bin2;
   
   
-  sum1 = 0; 
-  // sum1 is no longer returned/computed still present as a dummy for testing
-  
+  sum1 = 0; // sum1 is no longer returned/computed still present as a dummy for testing
   pos1 = findPeak1( height1, bin1);
   
+  if ( m_enablePlots){
+    m_multiplicity->Fill(m_totMult);  
+    m_OutputFile->cd();
+    if ( pos1 != -999 )  
+    {
+      m_PUvertex1Pos->Fill(pos1);
+      m_PUvertex1Height->Fill(height1);
+    }
+    //if ( pos1 != -999 && height1 > 1 ) m_PUvertices->Write(); 
+    //if ( pos1 != -999 ) m_PUvertices->Write(); 
+    if ( pos1 != -999 &&  m_totMult > 30 ) m_PUvertices->Write();
+  }
   debug() << " Peak1 : Max " << height1 << " at z= " << pos1 
           << " integral " << sum1 << " bin " << bin1 << endreq;
 
+
   // mask the contributing hits, fill again and find the
   // second peak. 
-
   debug() << " Mask around z = " << bin1 
           << " window " << m_maskingWindow << endreq;
-    
-  maskHits(bin1,m_maskingWindow);
-  fillHisto(m_maskedPattern);
-  
 
+  maskHits(bin1,m_maskingWindow);
+  fillHisto( m_maskedPattern );
   pos2 = findPeak2(height2,sum2,bin2);
-      
   debug() << " 2nd Max " << height2 << " at z= " << pos2
           << " integral " << sum2 << " bin " << bin2 << endreq;
- 
+  if ( m_enablePlots){  
+    if ( pos2 != -999 ){  
+      m_PUvertex2Pos->Fill(pos2);
+      m_PUvertex2Height->Fill(height2);
+    }
+  }
   
   // Now take the decision
   // note: LODU makes its own decision based on sum2
-
   int decision;
   if ( ( m_lowThreshold > sum2 )) {
     decision = 0;
@@ -281,12 +334,10 @@ StatusCode PuVetoAlg::execute() {
     decision = 1;    // Multiple interaction
   } 
 
-  // Pass values to L0DU (untested as of 03/02/2006)
-
+  // Pass values to L0DU
   unsigned int PuWord1 = 0x10000;
   unsigned int PuWord2 = 0x10000;
-  unsigned int tmt = Saturate((unsigned int)m_totMult);
-
+  unsigned int tmt = Saturate((unsigned int)m_totMult); // temporary, to be checked
 
   PuWord1 = PuWord1 | ((((unsigned int) height1) << 
                         L0DUBase::L0Pu::Peak::Shift) &  
@@ -306,8 +357,8 @@ StatusCode PuVetoAlg::execute() {
                         L0DUBase::L0Pu::HitsLSB::Mask );
   PuWord2 = PuWord2 | (((tmt >> 2) << L0DUBase::L0Pu::HitsMSB::Shift) & 
                        L0DUBase::L0Pu::HitsMSB::Mask );
-  
-  debug() << "== Decision " << decision << endreq;
+
+  debug() << "====== Decision " << decision << endreq;
   debug() << " Peak1 z,h,s " << bin1 << " " << height1 << " " << sum1 << endreq;
   debug() << " Peak2 z,h,s " << bin2 << " " << height2 << " " << sum2 << endreq;
   debug() << " TotMult " << m_totMult << endreq;
@@ -320,31 +371,73 @@ StatusCode PuVetoAlg::execute() {
   l0PuDatas->insert( l0PuData2 ) ;
 
   put( l0PuDatas,  m_outputContainer );
-
+  debug() << "I put L0PuDatas in " << m_outputContainer << endmsg;
+  m_evtNum++;
   return StatusCode::SUCCESS;
 };
+
+//=============================================================================
+//  Finalize 
+//=============================================================================
+StatusCode PuVetoAlg::finalize() 
+{
+  if ( msgLevel(MSG::INFO) ) debug() << "==> Finalize" << endmsg;
+  if ( m_enablePlots ){
+    m_PUvertex1Pos->Write( );
+    m_PUvertex2Pos->Write( );
+    m_PUvertex1Height->Write( );
+    m_PUvertex2Height->Write( );
+    m_multiplicity->Write( );
+    m_OutputFile->Close();
+  }
+
+  return GaudiAlgorithm::finalize();  // must be called after all other actions
+}
+
+//=============================================================================
+// Count multiplicity
+//=============================================================================
+void PuVetoAlg::measureMult (unsigned int hp[4][16]) {
+  for (unsigned s=0; s<2; s++){ // sensors loops
+    for (unsigned bee=0; bee<16; bee++) { // beetles loop
+       for (unsigned bitIt=0; bitIt<32; bitIt++) { // bit mask
+         if ( getBit(bitIt, hp[s+2][bee]) ) m_totMult++; 
+         // only the front sensors are used by the hardware
+       }
+    }
+  }
+}
 
 //=========================================================================
 //  Fill the histogram
 //=========================================================================
 void PuVetoAlg::fillHisto (unsigned int hp[4][16]) {
-  
+
   // clear histo
+  debug() << "fillHisto - start " << endmsg;
   for ( unsigned int j=0 ; m_nBins > j ; j++ ) {
     m_hist[j] = 0;
   }
-  for (unsigned i=0;i<2;i++){
-    for (unsigned pia=0;pia<16;pia++) {
+
+  char name[80];
+  char title[80];
+  sprintf(name, "PU vertices-evt%d", m_evtNum);
+  sprintf(title,"PU vertices-evt%d", m_evtNum);
+  m_PUvertices = new TH1D(name, title, 85, 0., 85.);
+
+  for (unsigned i=0;i<2;i++){ // sensor i 
+    for (unsigned pia=0;pia<16;pia++) {  // beetles pia, pib 
       for (unsigned pib=0;pib<16;pib++) {
-        if( (pib>>2) != (pia>>2)  ) continue;
+        if( (pib>>2) != (pia>>2)  ) continue; // goes on only if the hits are in the same up (bottom) halves
         for (unsigned bia=0;bia<32;bia++) {
-          if (getBit(bia,hp[i][pia])==0) continue;
-          unsigned ia=(((pia<<5)|bia)%128);
+          if (getBit(bia,hp[i][pia])==0) continue; // look for hits..
+          unsigned ia=(((pia<<5)|bia)%128); 
           for (unsigned bib=0;bib<32;bib++) {
             if ( getBit(bib,hp[i+2][pib])==0) continue;
             unsigned ib=(((pib<<5)|bib)%128);
-            short int bin = m_binMatrix[i][ia][ib];
+            short int bin = m_binMatrix[i][ia][ib]; // association between hits combination and bin
             if (bin > -1) m_hist[bin]++;
+	    if (bin > -1 && m_enablePlots ) m_PUvertices->Fill( bin );
           }
         }
       }
@@ -380,9 +473,9 @@ void PuVetoAlg::maskHits ( short int bin,short int mwbins ) {
      for (int pib=0;pib<16;pib++) {
        if( (pib>>2) != (pia>>2)  ) continue;
        for (int bia=0;bia<32;bia++) {
-         if (getBit(bia,m_hitPattern[i][pia])==0) continue;
+         if (getBit(bia,m_PUhitmap[i][pia])==0) continue;
          for (int bib=0;bib<32;bib++) {
-           if (getBit(bib,m_hitPattern[i+2][pib])==0) continue;
+	   if (getBit(bib,m_PUhitmap[i+2][pib])==0) continue;
            unsigned ia =((pia<<5)|bia)%128;
            unsigned ib =((pib<<5)|bib)%128;
            if (m_maskMatrix[i][ia][ib]) {
@@ -398,7 +491,7 @@ void PuVetoAlg::maskHits ( short int bin,short int mwbins ) {
  for(int i=0;i<(int)m_nbPuSensor;i++) {
    for (int pi=0;pi<16;pi++) {
      for (int bi=0;bi<32;bi++) {
-      if (getBit(bi,m_hitPattern[i][pi]) && !getBit(bi,maskpat[i][pi])) 
+      if (getBit(bi,m_PUhitmap[i][pi]) && !getBit(bi,maskpat[i][pi])) 
         setBit(bi,m_maskedPattern[i][pi]);
      }
    }
@@ -470,3 +563,218 @@ unsigned short int PuVetoAlg::rawEncode(int sensor, int strip)
   return temp;
 }
 
+//=========================================================================
+void PuVetoAlg::reverseWords( unsigned int PU_hitmap[4][16] ) 
+{
+  for (int sens = 0; sens<4; sens++ ){
+    for ( int bee = 0; bee<16; bee++ ){
+           
+      switch(bee){
+        case 3:
+	case 5:
+	case 6:
+	case 7:
+	case 11:
+	case 13:
+	case 14:
+	case 15:
+	  reverse_bit(PU_hitmap[sens][bee]);
+	  break;
+	default:
+	  break;
+      }
+    }
+  }
+}
+//============================================================================
+void PuVetoAlg::fillPUmap( int wordIt, int word_Tot, unsigned int* data_Ptr, int step, unsigned int PU_hitmap[4][16] ){
+// id 1 is sensor 128
+// id 0 is sensor 129
+// id 3 is sensor 130
+// id 2 is sensor 131
+  while ( wordIt < word_Tot )
+    {
+      unsigned int* wordPtr = data_Ptr + wordIt;
+      unsigned int* wordPtr2 = wordPtr + step;  
+      switch(wordIt){
+	case 2:
+	 (PU_hitmap[0][2]) = *wordPtr;
+	 (PU_hitmap[0][1]) =  *wordPtr2;
+	 wordIt++;
+	 break;
+	case 3:
+	 (PU_hitmap[0][0]) =  *wordPtr;
+	 (PU_hitmap[0][3]) =  *wordPtr2;
+	 wordIt++;
+	 break;
+	case 4:
+	 (PU_hitmap[1][13]) =  *wordPtr;
+	 (PU_hitmap[1][14]) =  *wordPtr2;
+	 wordIt++;
+	 break;
+	case 5:
+	 (PU_hitmap[1][15]) =  *wordPtr;
+	 (PU_hitmap[1][12]) =  *wordPtr2;
+	 wordIt++;
+	 break;
+	case 6:
+	 (PU_hitmap[2][13]) =  *wordPtr;
+	 (PU_hitmap[2][14]) =  *wordPtr2;
+	 wordIt++;
+	 break;
+	case 7:
+	 (PU_hitmap[2][15]) =  *wordPtr;
+	 (PU_hitmap[2][12]) =  *wordPtr2;
+	 wordIt++;      
+	 break;              
+	case 8:
+	 (PU_hitmap[3][2]) =  *wordPtr;
+	 (PU_hitmap[3][1]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 9:
+	 (PU_hitmap[3][0]) =  *wordPtr;
+	 (PU_hitmap[3][3]) =  *wordPtr2;  
+	 wordIt++;      
+	 break;     
+	case 10:
+	 (PU_hitmap[0][5]) =  *wordPtr;
+	 (PU_hitmap[0][6]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 11:
+	 (PU_hitmap[0][7]) =  *wordPtr;
+	 (PU_hitmap[0][4]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 12:
+	 (PU_hitmap[1][10]) =  *wordPtr;
+	 (PU_hitmap[1][9])  =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 13:
+	 (PU_hitmap[1][8])  =  *wordPtr;
+	 (PU_hitmap[1][11]) =  *wordPtr2;
+	 wordIt++;      
+	 break;             
+	case 14:
+	 (PU_hitmap[2][10]) =  *wordPtr;
+	 (PU_hitmap[2][9])  =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 15:
+	 (PU_hitmap[2][8])   =  *wordPtr;
+	 (PU_hitmap[2][11])  =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 16:
+	 (PU_hitmap[3][5]) =  *wordPtr;
+	 (PU_hitmap[3][6]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 17:
+	 (PU_hitmap[3][7]) =  *wordPtr;
+	 (PU_hitmap[3][4]) =  *wordPtr2;
+	 wordIt++;      
+	 break;              
+	case 18:
+	 (PU_hitmap[0][10]) =  *wordPtr ;
+	 (PU_hitmap[0][9])  =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 19:
+	 (PU_hitmap[0][8]) =  *wordPtr;
+	 (PU_hitmap[0][11]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 20:
+	 (PU_hitmap[1][5]) =  *wordPtr;
+	 (PU_hitmap[1][6]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 21:
+	 (PU_hitmap[1][7]) =  *wordPtr;
+	 (PU_hitmap[1][4]) =  *wordPtr2;
+	 wordIt++;      
+	 break;             
+	case 22:
+	 (PU_hitmap[2][5]) =  *wordPtr;
+	 (PU_hitmap[2][6]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 23:
+	 (PU_hitmap[2][7]) =  *wordPtr;
+	 (PU_hitmap[2][4]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 24:
+	 (PU_hitmap[3][10]) =  *wordPtr;
+	 (PU_hitmap[3][9]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 25:
+	 (PU_hitmap[3][8]) =  *wordPtr;
+	 (PU_hitmap[3][11]) =  *wordPtr2;
+	 wordIt++;      
+	 break;              
+	case 26:
+	 (PU_hitmap[0][13]) =  *wordPtr;
+	 (PU_hitmap[0][14]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 27:
+	 (PU_hitmap[0][15]) =  *wordPtr;
+	 (PU_hitmap[0][12]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 28:
+	 (PU_hitmap[1][2]) =  *wordPtr;
+	 (PU_hitmap[1][1]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 29:
+	 (PU_hitmap[1][0]) =  *wordPtr;
+	 (PU_hitmap[1][3]) =  *wordPtr2;
+	 wordIt++;      
+	 break;             
+	case 30:
+	 (PU_hitmap[2][2]) =  *wordPtr;
+	 (PU_hitmap[2][1]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 31:
+	 (PU_hitmap[2][0]) =  *wordPtr;
+	 (PU_hitmap[2][3]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 32:
+	 (PU_hitmap[3][13]) =  *wordPtr;
+	 (PU_hitmap[3][14]) =  *wordPtr2;
+	 wordIt++;      
+	 break;     
+	case 33:
+	 (PU_hitmap[3][15]) =  *wordPtr;
+	 (PU_hitmap[3][12]) =  *wordPtr2;
+	 wordIt++;      
+	 break;  
+	 
+      } // switch case
+    } // while "beetle map"  
+}
+
+//============================================================================
+
+// binary function with strings
+
+std::string PuVetoAlg::binary( unsigned int number )
+{
+  std::string result;
+  while(number)
+  {
+    result.insert(result.begin(), number % 2 + '0');
+    number /= 2;
+  }
+  return result;
+}
+
+//============================================================================

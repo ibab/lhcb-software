@@ -1,4 +1,3 @@
-// $Id: PuVetoFillRawBuffer.h,v 1.2 2008-11-06 14:04:45 cattanem Exp $
 #ifndef PUVETOFILLRAWBUFFER_H 
 #define PUVETOFILLRAWBUFFER_H 1
 
@@ -12,15 +11,22 @@
 // from LHCbKernel
 #include "Kernel/VeloChannelID.h"
 
+class Word {
+  public:
+    unsigned int w;
+    bool flag;
+};
 
 /** @class PuVetoFillRawBuffer PuVetoFillRawBuffer.h
- *  
  *
- *  @author Olivier Callot
- *  @date   2006-09-19
+ *  
+ *  @author Serena Oggero
+ *  @date   2009-07-14
+ *  rewrite for latest L0PU bank format
  */
+ 
 class PuVetoFillRawBuffer : public GaudiAlgorithm {
-public: 
+public:
   /// Standard constructor
   PuVetoFillRawBuffer( const std::string& name, ISvcLocator* pSvcLocator );
 
@@ -31,31 +37,21 @@ public:
   virtual StatusCode finalize  ();    ///< Algorithm finalization
 
 protected:
-  unsigned short int rawEncode(int sensor, int strip) {
-    return strip + (sensor << 14);
-  }
-
-  // bit manipulation helper methods
-  unsigned short int getBit (unsigned short int bt,unsigned int tgt) {
-    return (unsigned short int) (tgt >> bt) & 1;
-  }
-
-  void rawVec ( std::vector<unsigned short int> *vecin,
-                std::vector<unsigned int> *vecout);
-
+  void inizializePUcontainer ( Word PUcontainerBee[4][16] );
+  void adjustPUcontainer ( Word PUcontainerBee[4][16] );
+  void writeDataVec ( Word PUcontainerBee[4][16], std::vector <unsigned int> & rawDataVec);
+  
+  std::string binary ( unsigned int );		      
+  
 private:
   // job option parameters
   std::string        m_inputContainer;
   double             m_threshold;
-  unsigned short int m_lowThreshold;
-  unsigned short int m_maskingWindow;
-  std::string        m_binFile;
-
-  
 
   // detector geometry variables
-  unsigned int   m_nbPuSensor;
-  unsigned int m_firstPuSensor;
-  DeVelo*        m_velo;
+  //unsigned int   m_nbPuSensor;
+  unsigned int 	m_firstPuSensor;
+  DeVelo* 	m_velo;
+  Word 		m_PUcontainerBee[4][16];
 };
 #endif // PUVETOFILLRAWBUFFER_H
