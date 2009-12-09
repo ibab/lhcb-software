@@ -1,6 +1,6 @@
 #!/usr/bin/env gaudirun.py
 # =============================================================================
-# $Id: Hlt1MuonLines.py,v 1.7 2009-12-08 16:49:45 albrecht Exp $
+# $Id: Hlt1MuonLines.py,v 1.8 2009-12-09 07:18:09 albrecht Exp $
 # =============================================================================
 ## @file
 #  Configuration of Muon Lines
@@ -14,7 +14,7 @@
 """
 # =============================================================================
 __author__  = "Gerhard Raven Gerhard.Raven@nikhef.nl"
-__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.7 $"
+__version__ = "CVS Tag $Name: not supported by cvs2svn $, $Revision: 1.8 $"
 # =============================================================================
 
 
@@ -157,7 +157,6 @@ class Hlt1MuonLinesConf(HltLinesConfigurableUser) :
                                      )
                           , Member ( 'TF' , 'Chi2Mu'
                                      , FilterDescriptor = ['FitMuChi2,<,'+str(self.getProp('Muon_FitMuChi2Cut'))]
-                                     , FilterDescriptor = ['FitMuChi2,<,%(Muon_FitMuChi2Cut)s'%self.getProps()]
                                      , HistoDescriptor = { 'FitMuChi2': ( 'muon contribution to track fit chi2 / ndf',0.,50.,100),
                                                            'FitMuChi2Best': ( 'lowest muon contribution to track fit chi2 / ndf',0.,50.,100) } 
                                      )
