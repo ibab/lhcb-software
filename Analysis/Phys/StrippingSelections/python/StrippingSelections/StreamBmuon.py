@@ -21,6 +21,7 @@ from StrippingSelections import StrippingBiasedBs2JpsiPhi
 from StrippingSelections import StrippingBu2JpsiK
 from StrippingSelections import StrippingBu2JpsiKDetached
 from StrippingSelections import StrippingBu2JpsiKDetachedR
+from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
 
 stream = StrippingStream("Bmuon")
 stream.appendLines( [ 
@@ -39,5 +40,6 @@ stream.appendLines( [
 		        StrippingBiasedBs2JpsiPhi.line,  
 		        StrippingBu2JpsiK.line,  
 		        StrippingBu2JpsiKDetached.line,  
-		        StrippingBu2JpsiKDetachedR.line
+		        StrippingBu2JpsiKDetachedR.line,
+		        StrippingBu2LLKConf().mmK()
 		    ] )

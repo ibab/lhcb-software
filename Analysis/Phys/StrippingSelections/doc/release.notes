@@ -5,6 +5,15 @@
 ! Purpose     : Stripping selections
 ! -----------------------------------------------------------------------------
 
+! 2009-12-09 - Patrick Koppenburg
+ - Added Bu->eeK and Bu->mumuK selections
+   . Added to StreamBmuon (mumu case)
+   . Added to StreamBelectron (ee case)
+   . Note that this is a configurable !
+ - StrippingBd2Kstaree.py : Use new Standard Di-Electron
+ - StrippingTopo.py : Don't prepend Phys/
+ - StrippingBd2JpsiKstarDetached.py : Don't include StdLooseDetachedKstar
+
 ! 2009-12-07 - Anton Poluektov
   - Added Strippingb2DMuX line by Liming Zhang (in Dstar stream for now) 
 

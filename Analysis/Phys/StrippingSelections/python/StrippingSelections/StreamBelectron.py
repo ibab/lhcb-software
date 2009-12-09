@@ -8,8 +8,10 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingStream import StrippingStream
 
 from StrippingSelections import StrippingBd2Kstaree
+from StrippingSelections.StrippingBu2LLK  import StrippingBu2LLKConf
 
 stream = StrippingStream("Belectron")
 stream.appendLines( [ 
-		        StrippingBd2Kstaree.line
+		        StrippingBd2Kstaree.line ,
+		        StrippingBu2LLKConf().eeK()
 		    ] )

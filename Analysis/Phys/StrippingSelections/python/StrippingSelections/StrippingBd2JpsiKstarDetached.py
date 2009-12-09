@@ -5,7 +5,6 @@ from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember
 from Configurables import FilterDesktop, CombineParticles, OfflineVertexFitter
 import GaudiKernel.SystemOfUnits as Units
-importOptions("$COMMONPARTICLESROOT/python/CommonParticles/StdLooseDetachedKstar.py")
 
 #########
 # J/psi #

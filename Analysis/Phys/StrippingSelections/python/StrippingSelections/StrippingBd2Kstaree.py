@@ -1,11 +1,15 @@
+###################################################################
+#
+# Marie-Helene Schune
+#
 from Gaudi.Configuration import *
-from Configurables import GaudiSequencer, CombineParticles
+from Configurables import GaudiSequencer, CombineParticles, FilterDesktop
 # Units
 from GaudiKernel.SystemOfUnits import *
 
 SeqPreselBd2Kstaree = GaudiSequencer("SeqPreselBd2Kstaree")
 
-DiLeptonForBd2LLKstar = CombineParticles("DiLeptonForBd2LLKstar")
+DiLeptonForBd2LLKstar = FilterDesktop("DiLeptonForBd2LLKstar")
 Kstar2KPiForBd2LLKstar = CombineParticles("Kstar2KPiForBd2LLKstar")
 PreselBd2Kstaree = CombineParticles("PreselBd2Kstaree")
 
@@ -14,11 +18,8 @@ SeqPreselBd2Kstaree.Members += [ Kstar2KPiForBd2LLKstar ]
 SeqPreselBd2Kstaree.Members += [ PreselBd2Kstaree ]
 
 # DiLepton (e+e-)
-DiLeptonForBd2LLKstar.InputLocations = ["StdLooseElectrons"]
-DiLeptonForBd2LLKstar.DecayDescriptor = "J/psi(1S) -> e+ e-"
-DiLeptonForBd2LLKstar.DaughtersCuts = {"e+": "(MINTREE(ABSID=='e+',PT)>300*MeV) & (MIPCHI2DV(PRIMARY)>2.25)" }
-DiLeptonForBd2LLKstar.CombinationCut = "AM<5500*MeV"  #"(30*MeV<AM) & (AM<1000*MeV)" applied later
-DiLeptonForBd2LLKstar.MotherCut = "(VFASPF(VCHI2/VDOF)<15)" #(BPVVD>1.0*mm) applied later
+DiLeptonForBd2LLKstar.InputLocations = ["StdLooseDiElectron"]
+DiLeptonForBd2LLKstar.Code = "(MINTREE(ABSID=='e+',PT)>300*MeV) & (MINTREE(ABSID=='e+',MIPCHI2DV(PRIMARY))>2.25) & (VFASPF(VCHI2/VDOF)<15)" 
 
 # Kstar
 Kstar2KPiForBd2LLKstar.InputLocations = ["StdTightPions", "StdTightKaons"]

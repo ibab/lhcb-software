@@ -1,6 +1,6 @@
 # Bd->KstarMuMu selection
 #
-# See RDWG talk, 08.07.2009
+# See RDWG talk, 08.07.2009, Rob Lambert
 
 from Gaudi.Configuration import *
 from StrippingConf.StrippingLine import StrippingLine, StrippingMember

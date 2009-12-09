@@ -41,7 +41,7 @@ TopoStripping2Body.MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)>1
 
 #The 'robust' 3-body
 TopoStripping3Body= CombineParticles("TopoStripping3Body")
-TopoStripping3Body.InputLocations  = ["StdNoPIDsPions", "Phys/TopoStripping2Body"]
+TopoStripping3Body.InputLocations  = ["StdNoPIDsPions", "TopoStripping2Body"]
 TopoStripping3Body.DecayDescriptors = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
 TopoStripping3Body.DaughtersCuts = {"D*(2010)+" : "ALL", "pi+" : "(PT > 400.*MeV) & (P>2*GeV) & (MIPDV(PRIMARY)>0.025*mm)"}
 TopoStripping3Body.CombinationCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
@@ -57,7 +57,7 @@ TopoStrippingTF2Body.MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)
 
 #The chi2-cut based 3-body
 TopoStrippingTF3Body= CombineParticles("TopoStrippingTF3Body")
-TopoStrippingTF3Body.InputLocations  = [ "StdNoPIDsPions", "Phys/TopoStrippingTF2Body" ]
+TopoStrippingTF3Body.InputLocations  = [ "StdNoPIDsPions", "TopoStrippingTF2Body" ]
 TopoStrippingTF3Body.DecayDescriptors = ["D*(2010)+ -> K*(892)0 pi+", "D*(2010)+ -> K*(892)0 pi-"]
 TopoStrippingTF3Body.DaughtersCuts = {"D*(2010)+" : "ALL", "pi+" : "(TRCHI2DOF<10) & (PT>400*MeV) & (P>2*GeV) & (MIPCHI2DV(PRIMARY)>9)"}
 TopoStrippingTF3Body.CombinationCut = "(AMAXDOCA('LoKi::TrgDistanceCalculator')<1.0) & AALLSAMEBPV"
@@ -66,22 +66,22 @@ TopoStrippingTF3Body.MotherCut = "(MAXTREE((('pi+'==ABSID) | ('K+'==ABSID)) ,PT)
 #Now the filters that actually apply the mass/pointing cuts
 #The 'robust' 2-body
 filterTopoStripping2Body = FilterDesktop('filterTopoStripping2Body'
-                               , InputLocations = ["Phys/TopoStripping2Body"]
+                               , InputLocations = ["TopoStripping2Body"]
                                , Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.24)"
                                )
 #The 'robust' 3-body
 filterTopoStripping3Body = FilterDesktop('filterTopoStripping3Body'
-                               , InputLocations = ["Phys/TopoStripping3Body"]
+                               , InputLocations = ["TopoStripping3Body"]
                                , Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.24)"
                                )
 #The chi2-cut based 2-body
 filterTopoStrippingTF2Body = FilterDesktop('filterTopoStrippingTF2Body'
-                               , InputLocations = ["Phys/TopoStrippingTF2Body"]
+                               , InputLocations = ["TopoStrippingTF2Body"]
                                , Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.16)"
                                )
 #The chi2-cut based 3-body
 filterTopoStrippingTF3Body = FilterDesktop('filterTopoStrippingTF3Body'
-                               , InputLocations = ["Phys/TopoStrippingTF3Body"]
+                               , InputLocations = ["TopoStrippingTF3Body"]
                                , Code = "(M > 4*GeV) & (BPVTRGPOINTINGWPT<0.16)"
                                )
 
