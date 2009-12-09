@@ -4,6 +4,9 @@
 ! Purpose     : Package for the track matching algorithms
 !-----------------------------------------------------------------------------
 
+! 2009-12-09 M Needham
+ - Add headTuning options
+
 !======================= TrackMatching v2r25 2009-11-13 ======================
 ! 2009-11-11 - Kostyantyn Holubyev
  - TrackMatchVeloSeed: If DiscardUsedVelo, velo seeds used in "good"

@@ -2,7 +2,10 @@ from TrackSys.Configuration import *
 
 from Configurables import ( TrackMatchVeloSeed )
 
+
 tkMatch = TrackMatchVeloSeed("TrackMatch")
+tkMatch.InputSeedTracks = "Rec/Track/Seed"
+
 
 if TrackSys().fieldOff():
   tkMatch.Chi2MatchingCut = 4000
@@ -14,4 +17,12 @@ if TrackSys().fieldOff():
   tkMatch.chi2TCut = 1000
   tkMatch.ExtrapolatorSeed = "TrackLinearExtrapolator"
 
-tkMatch.InputSeedTracks = "Rec/Track/Seed"
+
+
+if "headTuning" in TrackSys().getProp("ExpertTracking"):
+  tkMatch.LikCut = -35
+  tkMatch.Chi2MatchingCut = 950
+
+
+
+  
