@@ -5,7 +5,7 @@ from Configurables import ( Tf__Tsa__Seed, Tf__Tsa__SeedTrackCnv,
                             Tf__Tsa__ITStereoSearch, Tf__Tsa__OTStereoSearch,
                             Tf__Tsa__TStationHitManager, Tf__Tsa__SeedTrackCnvTool,
                             Tf__Tsa__StubFind, Tf__Tsa__StubExtender,
-                            Tf__Tsa__SeedAddHits
+                            Tf__Tsa__SeedAddHits, Tf__Tsa__Likelihood
                            )
 
 Tf__Tsa__SeedTrackCnv( "TsaSeedTrackCnv").outputLocation = "Rec/Track/Seed"
@@ -118,9 +118,10 @@ if TrackSys().noDrifttimes():
     tsaSeed.stereoS3.yTol2 = 20
     tsaSeed.stereoS4.yTol2 = 20
     tsaSeed.calcLikelihood = False
+
         
 
-    
-    
-
-    
+if "headTuning" in TrackSys().getProp("ExpertTracking"):
+    tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
+    tsaSeed.likelihood.LikCut = -40
+    Tf__Tsa__SeedTrackCnv("TsaSeedTrackCnv").LikCut = -40

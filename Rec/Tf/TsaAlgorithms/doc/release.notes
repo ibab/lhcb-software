@@ -4,6 +4,9 @@
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
 
+! 2009-12-09 M Needham
+ - Add headTuning options
+
 ! 2009-12-08 M Needham
  - Add more protection to ensure all tracks have stereo hits 
 
