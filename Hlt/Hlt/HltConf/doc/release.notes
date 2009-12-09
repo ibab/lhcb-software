@@ -1,9 +1,13 @@
-! $Id: release.notes,v 1.378 2009-12-03 13:59:02 albrecht Exp $ 
+! $Id: release.notes,v 1.379 2009-12-09 21:49:10 graven Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-09 - Gerhard Raven
+ - add Hlt1L0CALO and Hlt1L0MUON (corresponding to the L0 channels
+   in 0x2009, 0x1209 and 0x1309) to HltInit.py
 
 ! 2009-12-03 - Johannes Albrecht
  - add Hlt2ExpressLines to Hlt2.py

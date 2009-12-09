@@ -1,7 +1,7 @@
 """
 High level configuration tools for HltConf, to be invoked by Moore and DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.135 2009-12-01 22:51:20 tskwarni Exp $"
+__version__ = "$Id: Configuration.py,v 1.136 2009-12-09 21:49:10 graven Exp $"
 __author__  = "Gerhard Raven <Gerhard.Raven@nikhef.nl>"
 
 from os import environ
@@ -277,15 +277,15 @@ class HltConf(LHCbConfigurableUser):
         # the keys are the Labels for the Histograms in the GUI
         # the values are the Pattern Rules to for the Decisions contributing 
         alley_string_patterns = [ ("L0"         , "Hlt1L0.*Decision"),
+                                  ("Lumi"       , "Hlt1Lumi.*Decision"),
+                                  ("Velo"       , "Hlt1Velo.*Decision"),
                                   ("XPress"     , "Hlt1.*XPress.*Decision"),
                                   ("Hadron"     , "Hlt1.*Hadron.*Decision"),
                                   ("SingleMuon" , "Hlt1.*SingleMuon.*Decision"),
                                   ("DiMuon"     , "Hlt1.*DiMuon.*Decision"),
                                   ("MuTrack"    , "Hlt1.*MuTrack.*Decision"),
-                                  ("Velo"       , "Hlt1Velo.*Decision"),
                                   ("Electron"   , "Hlt1.*Electron.*Decision"),
                                   ("Photon"     , "Hlt1.*Pho.*Decision"),
-                                  ("Lumi"       , "Hlt1Lumi.*Decision"),
                                   ("PA"         , "Hlt1(ODIN.*|Tell1Error)Decision"),
                                   ("Global"     , ".*Global.*"),
                                   ("Other"      , ".*") # add a 'catch all' term to pick up all remaining decisions...
