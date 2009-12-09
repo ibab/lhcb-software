@@ -178,15 +178,7 @@ if "Downstream" in trackAlgs :
    track.DetectorList += [ "DownstreamPat" ]
    GaudiSequencer("TrackDownstreamPatSeq").Members += [ PatDownstream() ];
    cloneKiller.TracksInContainers += ["Rec/Track/Downstream"]
-   if "headTuning" in TrackSys().getProp("ExpertTracking"):
-      PatDownstream().xPredTol2 = 100.0
-      PatDownstream().TolMatch = 5.5
-      PatDownstream().TolUV = 6.0
-      PatDownstream().maxWindowSize = 100.0
-      PatDownstream().MaxChisq  = 20.0
-      PatDownstream().MaxDistance = 0.15
-      PatDownstream().deltaP = 3.0
-      PatDownstream().errorZMagnet = 70.0
+   importOptions("$PATALGORITHMSROOT/options/PatDownstream.py")
    if stdSeq :
       track.DetectorList += [ "DownstreamFit" ]
       GaudiSequencer("TrackDownstreamFitSeq").Members += [TrackStateInitAlg("InitDownstreamFit")]
