@@ -1,4 +1,4 @@
-!$Id: release.notes,v 1.157 2009-10-28 13:46:46 jpalac Exp $
+!$Id: release.notes,v 1.158 2009-12-09 16:58:47 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/CommonParticles
 ! Responsible : P. Koppenburg, Juan Palacios
@@ -7,6 +7,10 @@
 ! When adding a Particle make sure it is appended to one of the Standard* files
 !
 !-----------------------------------------------------------------------------
+
+! 2009-12-09 - Patrick Koppenburg
+ - New StdLooseDiElectron, a copy of the StdLooseDiMuon
+ - v6r3
 
 !========================= CommonParticles v6r2 2009-10-28 ===================
 
