@@ -5,7 +5,7 @@
  *  Header file for detector description class : DeRichGasRadiator
  *
  *  CVS Log :-
- *  $Id: DeRichGasRadiator.h,v 1.7 2009-11-11 17:27:29 papanest Exp $
+ *  $Id: DeRichGasRadiator.h,v 1.8 2009-12-10 16:47:42 papanest Exp $
  *
  *  @author Antonis Papanestis a.papanestis@rl.ac.uk
  *  @date   2006-03-02
@@ -82,20 +82,24 @@ private:
   /// coeficients and update of the Tabulated Property
   StatusCode calcSellmeirRefIndex (const std::vector<double>& momVect,
                                    const TabulatedProperty* tabProp,
-                                   SmartRef<Condition> pressureCond,
-                                   SmartRef<Condition> temperatureCond ) const;
+                                   SmartRef<Condition> gasParamCond ) const;
+
+  /// method to use the old separate temperature and pressure conditions
+  StatusCode setupOldGasConditions();
+
+  // data
 
   /// Condition holding the current temperature of radiator
   SmartRef<Condition> m_temperatureCond;
-
-  /// Condition holding the current temperature of radiator for use at the HLT
-  SmartRef<Condition> m_hltTemperatureCond;
 
   /// Condition holding the current pressure of radiator
   SmartRef<Condition> m_pressureCond;
 
   /// Condition holding the current pressure of radiator for use at the HLT
-  SmartRef<Condition> m_hltPressureCond;
+  SmartRef<Condition> m_gasParametersCond;
+
+  /// Condition holding the current pressure of radiator for use at the HLT
+  SmartRef<Condition> m_hltGasParametersCond;
 
   /// Condition holding the scale factor for the refractivity
   /// This conditions scales n-1 NOT n

@@ -4,6 +4,10 @@
 ! Purpose     : Interface to the xml description
 !-----------------------------------------------------------------------------
 
+! 2009-12-10 - Antonis Papanestis
+ - new (single) condition for the temperature and pressure of the 
+   Gas Radiators
+
 !======================== RichDet v13r1 2009-11-22 ===========================
 ! 2009-11-19 - Antonis Papanestis
  - Protection against DDDB/LHCBCOND mismatch with missing conditions
