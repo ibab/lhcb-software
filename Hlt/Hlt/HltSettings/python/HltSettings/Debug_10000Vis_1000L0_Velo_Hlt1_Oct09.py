@@ -11,6 +11,9 @@ class Debug_10000Vis_1000L0_Velo_Hlt1_Oct09 :
     @date 2009-11-2
     """
 
+    def __init__(self) :
+        self.StripEndSequence = True
+
     def verifyType(self,ref) :
         # verify self.ActiveLines is still consistent with
         # our types self.ActiveHlt2Lines and self.ActiveHlt1Lines...
