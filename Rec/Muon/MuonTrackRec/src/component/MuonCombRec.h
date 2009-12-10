@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.h,v 1.3 2009-12-04 20:48:06 gpassal Exp $
+// $Id: MuonCombRec.h,v 1.4 2009-12-10 13:54:53 svecchi Exp $
 #ifndef COMPONENT_MUONCOMBREC_H 
 #define COMPONENT_MUONCOMBREC_H 1
 
@@ -42,12 +42,13 @@ public:
 
   // implementation of interface methods
   virtual inline const std::vector<MuonHit*>* trackhits()   {
-    if(!m_recDone) muonTrackFind();
+    if(!m_recDone) muonHitFind();
     return (const std::vector<MuonHit*>*) (&m_trackhits);
   }
 
   virtual inline const std::vector<MuonTrack*>* tracks()   {
-    if(!m_recDone) muonTrackFind();
+    if(!m_recDone) muonHitFind();
+    muonTrackFind();
     return (const std::vector<MuonTrack*>*) (&m_tracks);
   }
   virtual inline const std::vector<MuonNeuron*>* useneurons()   {
@@ -74,7 +75,6 @@ public:
   virtual void setSkipStation(int skipS) 
   { 
     if( skipS >= 0) {
-      m_recDone = false; // reset the recDone flag to allow a new track reconstruction
       m_cloneKiller = false; // do not kill clones
       m_strongCloneKiller = false;  // do not kill clones
       m_skipStation = skipS; // set the station to be skipped
@@ -83,7 +83,6 @@ public:
       }
     } else {
       m_skipStation = skipS; // set the station to be skipped
-      m_recDone = false; // reset the recDone flag to allow a new track reconstruction
       m_cloneKiller = m_optCloneKiller;
       m_strongCloneKiller = m_optStrongCloneKiller;
     }
@@ -197,6 +196,7 @@ private:
   std::string m_trackOutputLoc ;
 
   // main steering reconstruction routine
+  StatusCode muonHitFind();
   StatusCode muonTrackFind();
 
   StatusCode findMatching( double x, double y,

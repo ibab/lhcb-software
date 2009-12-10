@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.7 2009-12-05 21:27:16 svecchi Exp $
+// $Id: MuonCombRec.cpp,v 1.8 2009-12-10 13:54:48 svecchi Exp $
 // Include files 
 #include <fstream>
 
@@ -325,17 +325,17 @@ StatusCode MuonCombRec::initialize() {
 };
 
 //=============================================================================
-// Main reconstruction steering routine
+// Main reconstruction steering routine HIT finding
 //=============================================================================
 
-StatusCode MuonCombRec::muonTrackFind() {
+StatusCode MuonCombRec::muonHitFind() {
   
-  // don't do the track reconstruction if already done
+  // don't do the decoding if already done
   if( m_recDone == true ) {
     return StatusCode::SUCCESS;
   }
 
-  debug()<<"running MuonCombRec::muonTrackFind"<<endmsg;
+  debug()<<"running MuonCombRec::muonHitFind"<<endmsg;
   debug()<<"log bits: recdone, hitsdone, sortdone "
          <<m_recDone<<" "
          <<m_hitsDone<<" "
@@ -364,7 +364,7 @@ StatusCode MuonCombRec::muonTrackFind() {
     m_hitsDone = true;
   }
 
-  // clear the containers
+  // clear the containers to protect from memory leak
   clear();
 
   // At this stage the minimal requirements (hits and pads) are present
@@ -380,6 +380,21 @@ StatusCode MuonCombRec::muonTrackFind() {
     }
     m_sortDone = true; // sorted MuonHit array successfully filled
   }
+  return StatusCode::SUCCESS;  
+}
+
+//=============================================================================
+// Main reconstruction steering routine TRACK finding
+//=============================================================================
+StatusCode MuonCombRec::muonTrackFind() {
+
+  debug()<< " Running the MuonCombRec::muonTrackFind "<<endmsg;
+
+  std::vector<MuonTrack*>::iterator it;
+  // reset the tracks if any
+  for(it=m_tracks.begin() ; it !=m_tracks.end() ; it++)
+    delete (*it);         // delete all the allocated MuonTrack's
+  m_tracks.clear() ;      // clear the array of pointers to MuonTrack's
   
   //find the tracks of muon candidates
   StatusCode sm = muonSearch();
@@ -990,7 +1005,7 @@ StatusCode MuonCombRec::copyToLHCbTracks()
   
   
   const MTracks* mTracks = tracks();
-  if(mTracks == NULL) {    
+  if(mTracks == NULL || mTracks->size() == 0) {    
     err()<<"No track found! Can not copy anything !";
     return StatusCode::FAILURE;
   }
