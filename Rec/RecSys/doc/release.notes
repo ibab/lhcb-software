@@ -5,6 +5,50 @@ Purpose: LHCb reconstruction packages.
          This project groups together all the reconstruction packages needed
          by one or more LHCb applications. 
 
+</PRE><H1><A NAME=v7r12>2009-12-10 RecSys v7r12</A></H1><PRE>
+This version uses Gaudi v21r6 and LHCb v28r5
+
+- Packages updated: Rich/RichRecTools v1r16, Tf/PatAlgorithms v3r27,
+                    Tr/TrackExtrapolators v2r24p1, Tr/TrackFitter v2r43,
+                    Velo/VeloRecMonitors v2r5, Tf/TsaAlgorithms v3r14p3,
+                    Tf/TrackSys v4r29, Tr/PatPV v3r11, Rec/GlobalReco v6r30,
+                    Tf/TrackMatching v2r25
+
+- In Rich/RichRecTools v1r16:
+		. Minor changes,
+      Remove obsolete fle src/RichRecTools_dll.cpp 
+      Replace all endreq with endmsg
+
+- In Tf/PatAlgorithms v3r27:
+		. bugfix and loosened tuning for early data
+			Added options file PatDownstream.py. 
+			PatDownstream: fixes division by zero
+
+- In Tr/TrackExtrapolators v2r24p1:
+		. Minor fixes to warnings and unchecked codes
+
+- In Tr/TrackFitter v2r43:
+		. bug fix: in a track refit, count outliers before removing
+		. moved code to compute segment chisquares to KalmanFitResult.
+
+- In Velo/VeloRecMonitors v2r5:
+		. Minor changes to monitors and options
+
+- In Tf/TsaAlgorithms v3r14p3:
+		.	
+
+- In Tf/TrackSys v4r29:
+		. 
+
+- In Tr/PatPV v3r11:
+		. PVLoose.py - options to run PV reconstruction with relaxed cuts
+
+- In Rec/GlobalReco v6r30:
+		. Downgrade some INFO messages to debug.
+
+- In Tf/TrackMatching v2r25:
+		. 
+
 </PRE><H1><A NAME=v7r11>2009-12-03 RecSys v7r11</A></H1><PRE>
 This version uses Gaudi v21r6 and LHCb v28r4
 
