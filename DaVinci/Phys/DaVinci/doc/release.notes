@@ -1,4 +1,4 @@
-! $Id: release.notes,v 1.390 2009-12-04 10:21:18 pkoppenb Exp $
+! $Id: release.notes,v 1.391 2009-12-10 08:27:06 pkoppenb Exp $
 !-----------------------------------------------------------------------------
 ! Package     : Phys/DaVinci
 ! Responsible : Juan Palacios
@@ -9,6 +9,9 @@
 !
 !-----------------------------------------------------------------------------
 
+! 2009-12-10 - Patrick Koppenburg
+ - Fixed documentation problem : bug #60425
+ - v24r6p1
 
 !========================== DaVinci v24r6 2009-12-04 =======================
 
