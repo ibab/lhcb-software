@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # =============================================================================
-# $Id: HltReco.py,v 1.14 2009-12-02 14:19:51 albrecht Exp $
+# $Id: HltReco.py,v 1.15 2009-12-10 00:44:59 gligorov Exp $
 # =============================================================================
 ## @file HltLine/HltReco.py
 #  Collection of predefined algorithms to perform reconstruction
@@ -55,7 +55,7 @@ RunCloneKiller = False
 from Gaudi.Configuration import *
 from Configurables import GaudiSequencer
 from Configurables import PatPV2DFit3D, PatPV3D, PatForward, PatForwardTool
-from Configurables import Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
+from Configurables import Tf__PatVeloGeneric, Tf__PatVeloRTracking, Tf__PatVeloSpaceTracking, Tf__PatVeloSpaceTool, Tf__PatVeloGeneralTracking
 from Configurables import PVOfflineTool
 from Configurables import HltTrackFilter, HltVertexFilter, HltTrackUpgrade
 from HltLine import bindMembers
@@ -80,6 +80,12 @@ patVeloR = Tf__PatVeloRTracking('HltRecoRZVelo' , OutputTracksName = "Hlt/Track/
 recoVelo = Tf__PatVeloSpaceTracking('HltRecoVelo'
                                    , InputTracksName = patVeloR.OutputTracksName
                                    , OutputTracksName = "Hlt/Track/Velo" )
+
+#We have a choice of which 3D Velo tracking (sans upgrading of 2D tracks) to use...
+recoVeloOpen = Tf__PatVeloGeneric("PatVeloGeneric", Output = "Hlt/Track/VeloOpen")
+recoVeloOpenOutput = recoVeloOpen.Output
+#recoVeloOpen = Tf__PatVeloGeneralTracking('HltRecoVeloGeneral', OutputTracksLocation = "Hlt/Track/VeloOpen" )
+#recoVeloOpenOutput = recoVeloOpen.OutputTracksLocation 
 
 Tf__PatVeloSpaceTracking("HltRecoVelo").addTool( Tf__PatVeloSpaceTool(), name="PatVeloSpaceTool" )
 Tf__PatVeloSpaceTracking("HltRecoVelo").PatVeloSpaceTool.MarkClustersUsed=True
@@ -138,6 +144,12 @@ recoPV3D =  PatPV3D('HltRecoPV3D' )
 recoPV3D.addTool( PVOfflineTool, name = 'PVOfflineTool' )
 recoPV3D.PVOfflineTool.InputTracks = [ recoVelo.OutputTracksName ]
 
+recoPV3DOpen =  PatPV3D('HltRecoPV3D' )
+PV3DOpenTool = PVOfflineTool('PVOfflineTool') 
+PV3DOpenTool.InputTracks = [recoVeloOpenOutput  ]
+recoPV3DOpen.addTool( PV3DOpenTool )
+recoPV3DOpen.OutputVerticesName = "Hlt/Vertex/PV3DOpen"
+
 ### Downstream tracking
 PatDownstream = PatDownstream()
 PatDownstream.InputLocation=recoSeeding.OutputTracksName
@@ -163,6 +175,12 @@ prepareRZVelo = HltTrackFilter( 'Hlt1PrepareRZVelo'
                               , AddInfo = False
                               , FilterDescriptor = ["IsBackward,<,0.5"]
                               , OutputSelection     = "RZVelo" )
+
+prepareVeloOpen = HltTrackFilter( 'Hlt1PrepareVeloOpen'
+                                , InputSelection = "TES:" + recoVeloOpenOutput
+                                , RequirePositiveInputs = False
+                                , AddInfo = False
+                                , OutputSelection = "VeloOpen") 
 
 prepareVelo = HltTrackFilter('HltPrepareVelo'
                             , InputSelection = "TES:" + recoVelo.OutputTracksName
@@ -192,7 +210,10 @@ preparePV2D = HltVertexFilter( 'Hlt1PreparePV2D'
                                                     }
                              , OutputSelection   = "PV2D" )
 
-
+preparePV3DOpen = HltVertexFilter( 'Hlt1PreparePV3DOpen'
+                                 , InputSelection = "TES:" + recoPV3DOpen.OutputVerticesName
+                                 , RequirePositiveInputs = False
+                                 , OutputSelection = "PV3DOpen" )
 #############################################################################################
 # Define the reconstruction sequence 
 #############################################################################################
@@ -232,6 +253,8 @@ recoSeq = GaudiSequencer('HltRecoSequence', MeasureTime = True
 
 importOptions('$HLTCONFROOT/options/TsaTool.opts')
 
+from Configurables import DecodeVeloRawBuffer
+
 ### define exported symbols (i.e. these are externally visible, the rest is NOT)
 #Forward1 = bindMembers( None, [ DecodeVELO, patVeloR, recoVelo, recoForward ] )
 PV2D     = bindMembers( None, [ DecodeVELO, patVeloR, patPV2D, preparePV2D ] )
@@ -241,6 +264,8 @@ RZVelo   = bindMembers( None, [ DecodeVELO, patVeloR, prepareRZVelo ] )
 #PV2D     = bindMembers( None, [ patVeloR, patPV2D, preparePV2D ] )
 #RZVelo   = bindMembers( None, [ patVeloR, prepareRZVelo ] )
 Velo     = bindMembers( None, [                  RZVelo , reco1Velo ] )
+VeloOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen ] )
+PV3DOpen = bindMembers( None, [ DecodeVeloRawBuffer(), recoVeloOpen, prepareVeloOpen, recoPV3DOpen, preparePV3DOpen ] )
 Forward  = bindMembers( None, [                                Velo,  recoFwd ] )
 
 # warning: Seed is _not_ selfcontained, and relies on Forward having run...
