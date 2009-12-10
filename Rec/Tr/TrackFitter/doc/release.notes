@@ -3,6 +3,7 @@
 ! Responsible : Wouter Hulsbergen
 !----------------------------------------------------------------------------
 
+!=========================== TrackFitter v2r43 2009-12-10=================
 ! 2009-12-07 - Wouter Hulsbergen
  - bug fix: in a track refit, first count the outliers before removing more of them.
  - moved code to compute segment chisquares to KalmanFitResult.
