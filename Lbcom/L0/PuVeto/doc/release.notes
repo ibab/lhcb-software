@@ -1,7 +1,11 @@
-! $Id: release.notes,v 1.54 2009-12-09 17:39:04 serena Exp $
+! $Id: release.notes,v 1.55 2009-12-10 16:34:54 serena Exp $
 ! Package     : L0/PuVeto
 ! Responsible : Serena Oggero
 !-------------------------------------------------------------------------
+
+! 2009-12-10 - Serena Oggero
+ - PuVetoAlgo fixed (uint32_t changed in unsigned int, get rid of some 
+   multiple histo bookings). All printouts are also now in debug() mode
 
 ! 2009-12-08 - Serena Oggero
  - PuVetoAlg "decoding part" re-written, to deal with the current PU bank 

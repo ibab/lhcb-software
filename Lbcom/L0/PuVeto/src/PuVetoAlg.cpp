@@ -218,7 +218,7 @@ StatusCode PuVetoAlg::execute() {
  
   //*** Get the input data and store them in a map m_PUhitmap[sensor][beetle]
   RawEvent* raw = get<RawEvent>( m_rawEventLoc );
-  info() << "Get Raw Event from " << m_rawEventLoc << endmsg;
+  debug() << "Get Raw Event from " << m_rawEventLoc << endmsg;
   const std::vector<LHCb::RawBank*>& bank = raw->banks( LHCb::RawBank::L0PU );
   debug() << "LHCb::RawBank::L0PU size is " << bank.size() << endmsg;
 
@@ -231,7 +231,7 @@ StatusCode PuVetoAlg::execute() {
     if ( version == 2 ){ // current bank format
       unsigned int* data = aBank->data();
       unsigned int d = 2; 
-      int wordTot = (aBank->size() / (2 * sizeof(uint32_t)));
+      int wordTot = (aBank->size() / (2 * sizeof(unsigned int)));
       debug() << "wordTot = " << wordTot << endmsg;
       fillPUmap( d, wordTot, data, 34, m_PUhitmap );
       // now check whether the words must be reversed or not
@@ -280,14 +280,19 @@ StatusCode PuVetoAlg::execute() {
 
   // now evaluate PU trigger variables...  
   measureMult( m_PUhitmap );
+  
+  char name[80];
+  char title[80];
+  sprintf(name, "PU vertices-evt%d", m_evtNum);
+  sprintf(title,"PU vertices-evt%d", m_evtNum);
+  m_PUvertices = new TH1D(name, title, 85, 0., 85.);
   fillHisto( m_PUhitmap );
 
   unsigned short int height1,sum1;
   unsigned short int height2, sum2;
   double pos1,pos2;
   short int bin1,bin2;
-  
-  
+    
   sum1 = 0; // sum1 is no longer returned/computed still present as a dummy for testing
   pos1 = findPeak1( height1, bin1);
   
@@ -418,12 +423,6 @@ void PuVetoAlg::fillHisto (unsigned int hp[4][16]) {
   for ( unsigned int j=0 ; m_nBins > j ; j++ ) {
     m_hist[j] = 0;
   }
-
-  char name[80];
-  char title[80];
-  sprintf(name, "PU vertices-evt%d", m_evtNum);
-  sprintf(title,"PU vertices-evt%d", m_evtNum);
-  m_PUvertices = new TH1D(name, title, 85, 0., 85.);
 
   for (unsigned i=0;i<2;i++){ // sensor i 
     for (unsigned pia=0;pia<16;pia++) {  // beetles pia, pib 
