@@ -31,6 +31,7 @@ private:
   std::string m_caloName ;
   bool m_useClusters ;
   bool m_useGeometricZ ;
+  bool m_requireTHits ;
   std::string m_clusterLocation;
   std::string m_caloDigitLocation;
   DeCalorimeter* m_caloDet ;
@@ -62,7 +63,8 @@ TrackCaloMatchMonitor::TrackCaloMatchMonitor( const std::string& name,
   declareProperty( "TrackLocation", m_trackLocation = LHCb::TrackLocation::Default  );
   declareProperty( "CaloSystem", m_caloName = "Ecal") ;
   declareProperty( "UseClusters", m_useClusters = true ) ;
-  declareProperty( "UseGeometricZ", m_useGeometricZ = false ) ; // this you need for cosmics (MIPs)
+  declareProperty( "UseGeometricZ", m_useGeometricZ = true ) ; // this you need for cosmics (MIPs)
+  declareProperty( "RequireTHits",m_requireTHits = true ) ; // this you need for cosmics (MIPs)
   //declareProperty( "ClusterContainer", m_clusterLocation = LHCb::CaloClusterLocation::Ecal ) ;
   //declareProperty( "CaloDigitContainer", m_caloDigitsLocation = LHCb::CaloDigitLocation::Ecal ) ;
 }
@@ -182,9 +184,8 @@ StatusCode TrackCaloMatchMonitor::execute()
   }
 
   const LHCb::Tracks* trackcontainer = get<LHCb::Tracks>( m_trackLocation ) ;
-
   BOOST_FOREACH( const LHCb::Track* track, *trackcontainer) 
-    if( track->hasT() ) {
+    if( !m_requireTHits || track->hasT() ) {
       const LHCb::State* state = &(track->closestState(m_geometricZ)) ;
       BOOST_FOREACH( const MyCaloPosition& cluster, calopositions) {
 	//state = &(track->closestState(pos.z())) ;
