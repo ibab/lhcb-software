@@ -19,7 +19,7 @@ if TrackSys().fieldOff():
 
 
 
-if "headTuning" in TrackSys().getProp("ExpertTracking"):
+if TrackSys().earlyData():
   tkMatch.LikCut = -35
   tkMatch.Chi2MatchingCut = 950
 
