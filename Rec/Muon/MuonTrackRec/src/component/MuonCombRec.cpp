@@ -1,4 +1,4 @@
-// $Id: MuonCombRec.cpp,v 1.8 2009-12-10 13:54:48 svecchi Exp $
+// $Id: MuonCombRec.cpp,v 1.9 2009-12-10 17:07:14 svecchi Exp $
 // Include files 
 #include <fstream>
 
@@ -401,13 +401,18 @@ StatusCode MuonCombRec::muonTrackFind() {
   if (sm.isFailure()) {
     err()<<"error in muon reconstruction"<<endmsg;
     return StatusCode::FAILURE;
+  } else {    
+    debug()<<" Found "<<m_tracks.size()<<" tracks "<<endmsg;
   }
-
+  
+  if(m_tracks.size() == 0 ) return StatusCode::SUCCESS;
+  
   // the minimal tasks i.e. filling of hit and track containers are OK
   m_recOK = true;
 
   //defines a clone if two traks share pads on M2,M3,M4 
   if (m_cloneKiller) {
+    debug()<<" run CloneKiller "<<endmsg;
     StatusCode sd = cloneKiller();
     if (sd.isFailure()) {
       err()<<"error detectClone"<<endmsg;
@@ -417,6 +422,7 @@ StatusCode MuonCombRec::muonTrackFind() {
   
  //defines a clone if two traks share pads on M2,M3
   if (m_strongCloneKiller){
+    debug()<<" run strongCloneKiller "<<endmsg;
     StatusCode sk = strongCloneKiller();
     if (sk.isFailure()) {
       err()<<"error in clone killer"<<endmsg;
@@ -425,6 +431,7 @@ StatusCode MuonCombRec::muonTrackFind() {
   }
   // start track fitting
   
+  debug()<<" Fit the track with a straight line "<<endmsg;
   StatusCode scf = trackFit();
   if(!scf) {
     warning()<<"WARNING: problem in track fitting"<<endmsg;
@@ -690,6 +697,7 @@ StatusCode MuonCombRec::muonSearch() {
       seedRegion[is]=bestCandidate[is]->region();
     }
 
+
     if( !matchingFound ) continue; // no matching in at least 1 station, go to the next seed
 
     std::vector< std::vector<MuonHit*> >::iterator im;
@@ -701,13 +709,18 @@ StatusCode MuonCombRec::muonSearch() {
         muonTrack->insert(id, (*ih));
       }
     }
+    
     // store the best candidate array
     muonTrack->setBestCandidate(bestCandidate);
     m_tracks.push_back(muonTrack);
 
     debug()<<"++ This seed has been processed, go to the next one ++"<<endmsg;
     
+    debug()<< " Best candidate information ";
+    for (int is=0; is<5; is++) debug() << is <<" "<<bestCandidate[is]<<" --- ";
+    debug()<<endmsg;
   }
+  
   
   debug()<<"number of muon Tracks "<<m_tracks.size()<<endreq;
 
