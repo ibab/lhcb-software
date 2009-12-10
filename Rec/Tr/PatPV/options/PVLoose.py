@@ -19,4 +19,4 @@ loosePVOfflineTool.addTool(looseLSAdaptPVFitter, "LSAdaptPVFitter")
 loosePVOffline = PatPVOffline("PatPVOffline")
 loosePVOffline.addTool(loosePVOfflineTool, "PVOfflineTool")
 
-loosePVOffline.OutputLevel = 2
+#loosePVOffline.OutputLevel = 4

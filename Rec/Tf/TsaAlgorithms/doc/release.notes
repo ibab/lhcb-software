@@ -3,6 +3,8 @@
 ! Responsible : M Needham
 ! Purpose     : Tsa algorithms
 !----------------------------------------------------------------------------
+! 2009-12-10 Stephanie Hansmann-Menzemer
+ - move headTuning options to RecSys specialData "earlyData"
 
 ! 2009-12-09 M Needham
  - Add headTuning options

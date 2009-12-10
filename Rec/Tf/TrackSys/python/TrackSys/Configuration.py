@@ -4,7 +4,7 @@
 #  @author Marco Cattaneo <Marco.Cattaneo@cern.ch>
 #  @date   15/08/2008
 
-__version__ = "$Id: Configuration.py,v 1.16 2009-12-08 16:14:30 sstahl Exp $"
+__version__ = "$Id: Configuration.py,v 1.17 2009-12-10 19:11:14 smenzeme Exp $"
 __author__  = "Marco Cattaneo <Marco.Cattaneo@cern.ch>"
 
 from LHCbKernel.Configuration import *
@@ -28,7 +28,7 @@ class TrackSys(LHCbConfigurableUser):
     
     ## Possible expert options
     KnownExpertTracking        = ["noDrifttimes", "simplifiedGeometry", "kalmanSmoother", "noMaterialCorrections",
-                                  "fastSequence","headTuning"]
+                                  "fastSequence"]
     ## Default track pattern recognition algorithms to run
     DefaultPatRecAlgorithms    = ["Velo","Forward","TsaSeed","Match","Downstream","VeloTT"]
     ## Default track 'extra info' algorithms to run
@@ -63,6 +63,8 @@ class TrackSys(LHCbConfigurableUser):
     def cosmics(self)  : return "cosmics"  in self.getProp("SpecialData")
     ## @brief Shortcut to the beamGas option
     def beamGas(self)  : return "beamGas"  in self.getProp("SpecialData")
+    ## @brief Shortcut to the noDrifttimes option
+    def earlyData(self): return "earlyData" in self.getProp("SpecialData")
     ## @brief Shortcut to the noDrifttimes option
     def noDrifttimes(self) : return "noDrifttimes" in self.getProp("ExpertTracking")
     ## @brief Shortcut to the simplifiedGeometry option

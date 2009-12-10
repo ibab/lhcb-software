@@ -121,7 +121,7 @@ if TrackSys().noDrifttimes():
 
         
 
-if "headTuning" in TrackSys().getProp("ExpertTracking"):
+if  TrackSys().earlyData():
     tsaSeed.addTool(Tf__Tsa__Likelihood(), name = "likelihood")
     tsaSeed.likelihood.LikCut = -40
     Tf__Tsa__SeedTrackCnv("TsaSeedTrackCnv").LikCut = -40

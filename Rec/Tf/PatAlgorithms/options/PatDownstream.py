@@ -2,7 +2,7 @@ from TrackSys.Configuration import *
 from Configurables import  PatDownstream
 
 
-if "headTuning" in TrackSys().getProp("ExpertTracking"):       
+if TrackSys().earlyData():       
     PatDownstream().xPredTol2 = 100.0
     PatDownstream().TolMatch = 5.5
     PatDownstream().TolUV = 6.0

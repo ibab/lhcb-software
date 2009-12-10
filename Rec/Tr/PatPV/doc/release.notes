@@ -3,6 +3,8 @@
 ! Responsible : Mariusz Witek
 ! Purpose     : Compute primary vertices
 !-----------------------------------------------------------------------------
+! 2009-12-10 - Stephanie Hansmann-Menzemer
+  - change debug output level accidently slipped into PVLoose.py
 
 !============================= PatPV v3r11 2009-12-10 =========================
 ! 2009-12-08 - Mariusz Witek

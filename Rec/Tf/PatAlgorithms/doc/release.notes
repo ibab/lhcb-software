@@ -3,6 +3,8 @@
 ! Responsible : Stephanie-Hansmann-Menzemer
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
+! 2009-12-10 - Stephanie Hansmann-Menzemer
+ - make PatDownstream.py use RecSys SpecialData switch "earlyData"
 
 !========================= PatAlgorithms v3r27 2009-12-09 ====================
 ! 2009-12-09 - Sascha Stahl
