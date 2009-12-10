@@ -4,6 +4,11 @@
 ! Purpose     : L0-T-track Confirmation algorithms
 !-----------------------------------------------------------------------------
 
+
+! 2009-12-10 - Johannes Albrecht
+ - MuonSeedTool: change warnings and err to debug, make more robust against 
+                 imperfect seeds
+
 !========================== HltL0Conf v2r12p1 2009-11-13 ===================
 dll file removed
 !========================== HltL0Conf v2r12 2009-10-28 ===================
