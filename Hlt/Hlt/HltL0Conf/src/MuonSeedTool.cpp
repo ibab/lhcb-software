@@ -1,4 +1,4 @@
-// $Id: MuonSeedTool.cpp,v 1.14 2009-10-29 09:04:25 pkoppenb Exp $
+// $Id: MuonSeedTool.cpp,v 1.15 2009-12-10 15:18:04 albrecht Exp $
 // Include files 
 
 // from Gaudi
@@ -97,8 +97,8 @@ StatusCode MuonSeedTool::initialize()
     info()<<"magnetic field is: "<<m_magFieldSvc->scaleFactor()
           <<" %, below 10% of nominal field! \n Use options for no field!"<<endmsg;
     m_fieldOff=true;
-    warning()<<"Tool configured for no B field!"<<endmsg;
-    warning()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
+    info()<<"Tool configured for no B field!"<<endmsg;
+    info()<<"Position and slope is set correctly, covariance and momemtum _not_!"<<endmsg;
   }
  
   return StatusCode::SUCCESS;
@@ -108,6 +108,21 @@ StatusCode MuonSeedTool::initialize()
 StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
                                     LHCb::Track& outputTrack )
 {
+
+  outputTrack.setType( LHCb::Track::Muon );
+  outputTrack.addToAncestors( inputTrack );
+  outputTrack.setFlag( Track::L0Candidate,false ); 
+
+  //prepare state here, with defaults to be updated
+  //attach to track at the end
+  LHCb::State seedState;
+  seedState.setState( inputTrack.firstState().x() , 
+		      inputTrack.firstState().y() ,
+		      inputTrack.firstState().z() ,
+		      inputTrack.firstState().tx() , 
+		      inputTrack.firstState().ty() ,
+		      inputTrack.firstState().qOverP() );
+  
   //copy lhcbids from inputTrack to outputTrack
   std::vector<LHCb::LHCbID> lhcbIDs=inputTrack.lhcbIDs();
   MuonTileID tileM2 ;
@@ -124,19 +139,19 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
     }
   }
   if(!(tileM2.isValid()&&tileM3.isValid())){   
-    err()<<"No hit in M2 and/or M3 station return "<<endmsg;
+    info()<<"No hit in M2 and/or M3 station return values of input track"<<endmsg;
+    outputTrack.addToStates( seedState );
     return StatusCode::SUCCESS;
   }
   
-  
-
   int muonRegion;
   if (tileM2){
     muonRegion = tileM2.region();
     if(msgLevel(MSG::DEBUG)) debug()<<"muonRegion "<< muonRegion<<endmsg;
   }
   else{
-    err()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<"No valid Muon Tile in M2, return input state"<<endmsg;
+    outputTrack.addToStates( seedState );
     return StatusCode::SUCCESS;
   }
   
@@ -144,23 +159,23 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
   
   StatusCode sc = m_iPosTool->calcTilePos(tileM2,xM2,dx,yM2,dy,zM2,dz);   
   if(!sc){
-    err()<<"Muon tile position at M2 not available"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<"Muon tile position at M2 not available, return input state"<<endmsg;
+    outputTrack.addToStates( seedState );
     return StatusCode::SUCCESS; 
   }
   
   sc = m_iPosTool->calcTilePos(tileM3,xM3,dx,yM3,dy,zM3,dz);
   if(!sc){
-    err()<<"Muon tile position at M3 not available"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug()<<"Muon tile position at M3 not available, return input state"<<endmsg;
+    outputTrack.addToStates( seedState );
     return StatusCode::SUCCESS; 
   }
 
   double dxdz   = (xM2 - xM3)/ ( zM2 - zM3);
   double dydz   = yM2 / double(zM2);
-  //double dydz   = (yM2 - yM3)/ ( zM2 - zM3);
-
+ 
   if(m_fieldOff) dxdz   = xM2 / double(zM2);
 
-  LHCb::State seedState;
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
   double qOverP = 0;
   double sigmaQOverP = 0;
@@ -183,10 +198,6 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::Track& inputTrack,
 
   // add to states
   outputTrack.addToStates( seedState );
-  outputTrack.setType( LHCb::Track::Muon );
-  outputTrack.addToAncestors( inputTrack );
-  outputTrack.setFlag( Track::L0Candidate,false );
-
   return StatusCode::SUCCESS;
 }
 
@@ -205,6 +216,13 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   outputTrack.addToLhcbIDs( id1 );
   outputTrack.addToLhcbIDs( id2 );
   outputTrack.addToLhcbIDs( id3 );
+  outputTrack.setType(LHCb::Track::Muon);
+  outputTrack.setFlag(Track::L0Candidate,true);
+
+  //prepare state here, with defaults to be updated
+  //attach to track at the end
+  LHCb::State seedState;
+  seedState.setState( 0,0,0,0,0,0);
   
   MuonTileID mpad2 = mpads2.front();
  
@@ -213,7 +231,8 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
     regionL0Cand = mpad2.region();
   }
   else{
-    err()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug ()<<"No valid Muon Tile in M2, quit loop"<<endmsg;
+    outputTrack.addToStates(seedState);
     return StatusCode::SUCCESS;
   }
 
@@ -239,7 +258,8 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
       //positions in M1
       sc = m_iPosTool->calcTilePos( mpad1,x, dx,y, dy,z, dz );
       if (!sc) {
-        err()<<"Unable to get Position for M1"<<endmsg;
+        if(msgLevel(MSG::DEBUG)) debug ()<<"Unable to get Position for M1"<<endmsg;
+	outputTrack.addToStates(seedState);
         continue;
       }
       
@@ -259,14 +279,16 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   double xM2 , yM2, zM2;
   sc = m_iPosTool->calcTilePos(mpad2, xM2, dx, yM2, dy, zM2, dz);
   if (!sc) {
-    err()<<"Unable to get Position for M2"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug ()<<"Unable to get Position for M2"<<endmsg;
+    outputTrack.addToStates(seedState);
     return StatusCode::SUCCESS;
   }
   
   double xM3 , yM3, zM3;
   sc = m_iPosTool->calcTilePos(mpads3.front(), xM3, dx, yM3, dy, zM3, dz );
   if (!sc) {
-    err()<<"Unable to get Position for M3"<<endmsg;
+    if(msgLevel(MSG::DEBUG)) debug ()<<"Unable to get Position for M3"<<endmsg;
+    outputTrack.addToStates(seedState);
     return StatusCode::SUCCESS;
   }
 
@@ -290,7 +312,6 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
   else{
     //no valid M1 info available -> bigger uncertainties
     dxdz   = (xM3 - xM2)/ ( zM3 - zM2);
-    //dydz   = (yM3 - yM2)/ ( zM3 - zM2);
     dydz = yM2/  zM2;
 
     stateCov(0,0) = m_sigmaX2NoM1[regionL0Cand];
@@ -302,7 +323,6 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
 
   if(m_fieldOff) dxdz = xM2 / double(zM2);
 
-  LHCb::State seedState;
   seedState.setState( xM2 , yM2 , zM2 , dxdz , dydz , 0 );
 
   double L0p = fabs( muonL0Cand.pt()/sin(muonL0Cand.theta()) ) ;
@@ -319,8 +339,5 @@ StatusCode MuonSeedTool::makeTrack( const LHCb::L0MuonCandidate& muonL0Cand,
      
   // add to states
   outputTrack.addToStates(seedState);
-  outputTrack.setType(LHCb::Track::Muon);
-  outputTrack.setFlag(Track::L0Candidate,true);
-
   return StatusCode::SUCCESS;
 }
