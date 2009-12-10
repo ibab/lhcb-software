@@ -1,7 +1,7 @@
 """
 High level configuration tools for DaVinci
 """
-__version__ = "$Id: Configuration.py,v 1.79 2009-11-16 11:05:07 pkoppenb Exp $"
+__version__ = "$Id: Configuration.py,v 1.80 2009-12-10 08:27:06 pkoppenb Exp $"
 __author__ = "Juan Palacios <juan.palacios@nikhef.nl>"
 
 from LHCbKernel.Configuration import *
@@ -65,8 +65,8 @@ class DaVinci(LHCbConfigurableUser) :
        , "L0"                 : """ Re-Run L0 """
        , "ReplaceL0BanksWithEmulated" : """ Re-run L0 and replace all data with emulation  """
        , "HltUserAlgorithms"  : """ Put here user algorithms to add to Hlt """
-       , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1'.
-                                    'L0' will require only L0, '' (empty string) will run on all events. 'Hlt1' without L0 does not make any sense.
+       , "Hlt2Requires"       : """ Definition of what Hlt2 requires to run. Default is 'L0+Hlt1' (equivalent to 'Hlt1').
+                                    'L0' will run Hlt1 in pass-all mode.
                                     """
        , "HltThresholdSettings" : """ Use some special threshold settings, for instance 'Miriam_20090430' or 'FEST' """
        , 'EnableUnpack' : """Explicitly enable/disable unpacking for input data (if specified) """
