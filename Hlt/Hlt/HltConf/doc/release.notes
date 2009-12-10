@@ -1,9 +1,15 @@
-! $Id: release.notes,v 1.379 2009-12-09 21:49:10 graven Exp $ 
+! $Id: release.notes,v 1.380 2009-12-10 00:44:06 gligorov Exp $ 
 ! -----------------------------------------------------------------------------
 ! Package     : Hlt/HltConf
 ! Responsible : Gerhard Raven
 ! Purpose     : HLT Configuration 
 ! -----------------------------------------------------------------------------
+
+! 2009-12-10 - V. Gligorov
+ - options/HltInit.py : add selections for using 3D primary vertices
+   in the hlt1 lines
+ - python/HltConf/Hlt1.py : Add the HadronViaT and HadronVeloOpen lines
+   to Hlt1 
 
 ! 2009-12-09 - Gerhard Raven
  - add Hlt1L0CALO and Hlt1L0MUON (corresponding to the L0 channels
