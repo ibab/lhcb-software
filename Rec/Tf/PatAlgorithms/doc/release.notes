@@ -4,6 +4,7 @@
 ! Purpose     : track finding
 !-----------------------------------------------------------------------------
 
+!========================= PatAlgorithms v3r27 2009-12-09 ====================
 ! 2009-12-09 - Sascha Stahl
  - Added options file PatDownstream.py. 
  - PatDownstream: fixes division by zero
