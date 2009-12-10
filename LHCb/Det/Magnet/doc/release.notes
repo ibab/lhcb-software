@@ -4,6 +4,12 @@
 ! Purpose     : Provides magnetic field map and Bdl tools
 !-----------------------------------------------------------------------------
 
+! 2009-12-10 - Marco Cattaneo
+ - Add implementation of new ILHCbMagneticFieldSvc::polarity() member to 
+   MagneticFieldSvc and MultipleMagneticFieldSvc. Note that in latter, the 
+   methods returns the polarity only if all the fields have the same polarity,
+   otherwise it throws an exception
+
 !====================== Magnet v5r5 2009-11-24 ===============================
 ! 2009-11-24 - Stephanie Hansmann-Menzemer
  - bug fix: set scale factor to MagneticFieldGrid

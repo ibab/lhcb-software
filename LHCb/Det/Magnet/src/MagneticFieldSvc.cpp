@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.cpp,v 1.46 2009-11-24 03:42:14 smenzeme Exp $
+// $Id: MagneticFieldSvc.cpp,v 1.47 2009-12-10 10:31:40 cattanem Exp $
 
 // Include files
 #include "GaudiKernel/SvcFactory.h"
@@ -35,13 +35,14 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
                                     ISvcLocator* svc ) : Service( name, svc ),
                                                          m_mapFromOptions(false),
                                                          m_scaleFromOptions(false),
+                                                         m_polarity(0),
                                                          m_mapFilesUpPtr(0),
                                                          m_mapFilesDownPtr(0),
                                                          m_scaleUpPtr(0),
                                                          m_scaleDownPtr(0),
                                                          m_currentPtr(0),
                                                          m_updMgrSvc(0),
-							 m_magFieldGridReader(*msgSvc())
+                                                         m_magFieldGridReader(*msgSvc())
 {
 
   m_constFieldVector.push_back( 0. );
@@ -65,7 +66,7 @@ MagneticFieldSvc::MagneticFieldSvc( const std::string& name,
                    "Vector of file names for the field map. If set, over-rides CondDB value" );
   declareProperty( "ScaleFactor",   m_scaleFactor = 9999.,
                    "Factor by which to rescale the field map. If set, over-rides CondDB value" );
-  declareProperty( "Polarity",      m_polarity = 0,
+  declareProperty( "Polarity",      m_polarityProperty = 0,
                    "Polarity of the magnet. If set, over-rides CondDB value" );
   
   declareProperty( "UseConstantField",    m_useConstField = false );
@@ -247,14 +248,13 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   MsgStream log(msgSvc(), name());
   log << MSG::DEBUG << "updateConditions called" << endmsg;
 
-  int polarity;
-  if( m_polarity != 0 ) {
+  if( m_polarityProperty != 0 ) {
     log << MSG::WARNING 
-        << "Requested condDB but using manually set polarity = " << m_polarity << endmsg;
-    polarity = m_polarity;
+        << "Requested condDB but using manually set polarity = " << m_polarityProperty << endmsg;
+    m_polarity = m_polarityProperty;
   }
   else
-    polarity = m_currentPtr->param<int>("Polarity");
+    m_polarity = m_currentPtr->param<int>("Polarity");
   
   // Update the scale factor
   if( !m_scaleFromOptions ) {
@@ -262,7 +262,7 @@ StatusCode MagneticFieldSvc::i_updateConditions()
     
     // ******* Check I have the correct convention!!
     std::vector<double> coeffs;
-    if( polarity > 0 )
+    if( m_polarity > 0 )
       coeffs = m_scaleUpPtr->param<std::vector<double> >("Coeffs");
     else
       coeffs = m_scaleDownPtr->param<std::vector<double> >("Coeffs");
@@ -275,9 +275,9 @@ StatusCode MagneticFieldSvc::i_updateConditions()
   StatusCode sc ;
   if( !m_mapFromOptions ) {
     
-    // ******* Check I have the correct convention!!
+    // Convention used: positive polarity is "Up" (+y), negative is "Down" (-y)
     std::vector<std::string> files;
-    if( polarity > 0 )
+    if( m_polarity > 0 )
       files = m_mapFilesUpPtr->param<std::vector<std::string> >("Files");
     else
       files = m_mapFilesDownPtr->param<std::vector<std::string> >("Files");
@@ -292,13 +292,14 @@ StatusCode MagneticFieldSvc::i_updateConditions()
       m_mapFileNames = files ;
       // update the field
       sc = m_mapFileNames.size() == 1 ?
-	m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
-	m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
+        m_magFieldGridReader.readDC06File( m_mapFileNames.front(), m_magFieldGrid ) :
+        m_magFieldGridReader.readFiles( m_mapFileNames, m_magFieldGrid ) ;
+      log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
     }
   }
   
-  log << MSG::DEBUG << "Field map files updated: " << m_mapFileNames << endmsg;
-  log << MSG::INFO << "Map scaled by factor "    << m_scaleFactor << endmsg;
+  log << MSG::INFO << "Map scaled by factor " << m_scaleFactor 
+                   << " with polarity " << m_polarity << endmsg;
   return sc ;
 }
 

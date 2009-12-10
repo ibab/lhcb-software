@@ -71,6 +71,7 @@ public:
   // These should be incorperated in a better way...
   bool   useRealMap() const; ///< True is using real map
   double scaleFactor() const; ///< accessor to m_scaleFactor
+  int polarity() const; ///< Polarity (only if they are all the same!) 
   const LHCb::MagneticFieldGrid* fieldGrid() const { return 0 ; }
 
 private:

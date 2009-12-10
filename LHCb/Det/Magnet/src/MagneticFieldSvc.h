@@ -1,4 +1,4 @@
-// $Id: MagneticFieldSvc.h,v 1.28 2009-09-01 15:09:44 wouter Exp $
+// $Id: MagneticFieldSvc.h,v 1.29 2009-12-10 10:31:40 cattanem Exp $
 #ifndef MAGNETICFIELDSVC_H
 #define MAGNETICFIELDSVC_H 1
 
@@ -86,6 +86,9 @@ public:
   }
 
   bool   useRealMap() const; ///< True is using real map
+
+  /// Return current value of polarity
+  int polarity() const { return m_polarity; }
   
   /// For consistence, always return the scale factor that is in the grid
   double scaleFactor() const { return m_magFieldGrid.scaleFactor() ; }
@@ -110,13 +113,14 @@ private:
 
   // Properties to over-ride values in CondDB
   std::vector<std::string> m_mapFileNames; ///< Field map file names
-  int                      m_polarity;     ///< Polarity
+  int                      m_polarityProperty; ///< Value of Polarity property
   double                   m_scaleFactor;  ///< Field scaling factor
 
   // Private data
     
   bool m_mapFromOptions;        ///< Set if not using condDB for field map.
   bool m_scaleFromOptions;      ///< Set if not using condDB for scale factor.
+  int  m_polarity;              ///< Polarity
   
   Condition* m_mapFilesUpPtr;   ///< Pointer to FieldMapFilesUp condition
   Condition* m_mapFilesDownPtr; ///< Pointer to FieldMapFilesDown condition

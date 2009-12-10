@@ -3,6 +3,7 @@
 #include "GaudiKernel/ISvcLocator.h"
 #include "GaudiKernel/MsgStream.h"
 #include "GaudiKernel/SystemOfUnits.h"
+#include "GaudiKernel/GaudiException.h"
 
 #include "MultipleMagneticFieldSvc.h"
 
@@ -169,5 +170,20 @@ bool MultipleMagneticFieldSvc::useRealMap() const
     realMap = realMap || (*field)->useRealMap();
   }
   return realMap;
+}
+
+//=============================================================================
+// polarity: meaningless for multiple fields unless they are all the same
+//=============================================================================
+int MultipleMagneticFieldSvc::polarity() const
+{
+  std::vector<ILHCbMagnetSvc*>::const_iterator field;
+  int polarity = (*(m_magneticFieldSvcs.begin()))->polarity();
+  for( field = m_magneticFieldSvcs.begin(); field != m_magneticFieldSvcs.end(); field++) {
+    if( (*field)->polarity() != polarity) 
+      throw GaudiException( "Invalid call to MultipleMagneticFieldSvc::polarity()",
+                            "INVALID_MULTIPLE_POLARITY", StatusCode::FAILURE );
+  }
+  return polarity;
 }
 
