@@ -1,4 +1,4 @@
-// $Id: SolidPolycone.cpp,v 1.18 2009-04-17 08:54:24 cattanem Exp $
+// $Id: SolidPolycone.cpp,v 1.19 2009-12-10 08:32:58 cattanem Exp $
 // ============================================================================
 #include "DetDesc/SolidPolycone.h"
 
@@ -77,7 +77,7 @@ void SolidPolycone::setBP()
   setZMin   ( m_triplets.front().first                  ) ;
   setZMax   ( m_triplets.front().first                  ) ;
   setRhoMax ( m_triplets.front().second.second          ) ;
-  setRMax   ( sqrt( rMax() * rMax() + zMax() * zMax() ) ) ;
+  setRMax   ( sqrt( rhoMax() * rhoMax() + zMax() * zMax() ) ) ;
   
   double rhoMin =  1.e+23 ;
   

@@ -1,9 +1,12 @@
 ! =============================================================================
-! $Id: release.notes,v 1.411 2009-12-06 19:13:45 dgolubko Exp $ 
+! $Id: release.notes,v 1.412 2009-12-10 08:32:58 cattanem Exp $ 
 ! =============================================================================
 ! package DetDesc
 ! package manager : Marco Clemencic, Juan Palacios
 ! =============================================================================
+
+! 2009-12-10 - Marco Cattaneo for Brett Viren
+ - Fix bug #60276: SolidPolycone does not define a correct bounding box
 
 ! 2009-12-06 - Dmitry GOLUBKOV
  - fix link error on windows by introducing interface functions in
